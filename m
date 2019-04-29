@@ -2,88 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1273BE9F7
-	for <lists+linux-block@lfdr.de>; Mon, 29 Apr 2019 20:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77588EB7B
+	for <lists+linux-block@lfdr.de>; Mon, 29 Apr 2019 22:16:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfD2SQk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Apr 2019 14:16:40 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46815 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2SQk (ORCPT
+        id S1729212AbfD2UQB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Apr 2019 16:16:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38928 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbfD2UQA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:16:40 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bi2so664627plb.13;
-        Mon, 29 Apr 2019 11:16:40 -0700 (PDT)
+        Mon, 29 Apr 2019 16:16:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a9so17888231wrp.6
+        for <linux-block@vger.kernel.org>; Mon, 29 Apr 2019 13:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HnQQB+q10KJ+tBjmTDVhEUeBuplkgzFkaabaWorIDK0=;
+        b=V8llIgXP6nhj3mBW9/AXO9OGQRGRnVOgd/Mgx/UqS0Dmg6P71DCInuxWyizpcBDv2v
+         s4LWS3ulfKwPBDJxaH97b/cxsArPA7/vK6pLhrgQwPdEmqCASyvUl8VDq6EE/M867QlH
+         vuLUSwu+6ZvKtN0hQBgi2CjSm7a1FwV/4h3/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aLkZ493/1cphoGwpLIb9H6qasE7OtGYtVCVCps4qXrE=;
-        b=GMgnYuebgPvTcDZfKu1oiDfjT9Cr/8GS7nbUkYUo7edo0jBZ9y6tQD4ZT+7ALW8fvO
-         hjlDHcZh5eSmUp4OL1fV5RdAI2CIL+JBEiGKe03m4OSunGl7+OmUMOpq+gFdh4YfWbof
-         2htMal6QOv6GayZoEhBigogFJCWGNMsUgEcasXMkCW15Ky+yEkEvV0Uqymk7FIjOWI/u
-         25tEb2V7t1EctnVpq2SPHE2X2LJWEaL9yGhUjn+1EeFd2LcvbQqhbLYJyFcGbuMGu9vc
-         f41LW2XFicz/6omOPjHB4m2c5p4V0bbekO6Iv7j8iq/2ftbb2rV3srEA7MxOOMmqlYiO
-         aV5w==
-X-Gm-Message-State: APjAAAUuuEu+T9rrdaa6Bc8gR5JVROXbjh3XS2RB8NdtwdGJCw0a1Kau
-        T29xojDjM8lh1Vhk6D+BXYCeBkFF
-X-Google-Smtp-Source: APXvYqwaDN3hsVmsoZIUFFdHMxshS0Ml2pvXLwfgKp2v4Jta1b0Rlg3VKQSEOvS12SWIGVS4Gp4+bw==
-X-Received: by 2002:a17:902:5910:: with SMTP id o16mr9150656pli.289.1556561799622;
-        Mon, 29 Apr 2019 11:16:39 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id d15sm11992646pfr.179.2019.04.29.11.16.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 11:16:38 -0700 (PDT)
-Message-ID: <1556561798.161891.166.camel@acm.org>
-Subject: Re: [PATCH V4 3/3] scsi: core: avoid to pre-allocate big chunk for
- sg list
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Ming Lei <ming.lei@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        Hannes Reinecke <hare@suse.com>
-Date:   Mon, 29 Apr 2019 11:16:38 -0700
-In-Reply-To: <20190428073932.9898-4-ming.lei@redhat.com>
-References: <20190428073932.9898-1-ming.lei@redhat.com>
-         <20190428073932.9898-4-ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=HnQQB+q10KJ+tBjmTDVhEUeBuplkgzFkaabaWorIDK0=;
+        b=V9XFs0TQurQhY7pQprOgkp7Filabt8M2AG367hrmym1bgj8/8ysNQlr7gPeYBFVNue
+         JRaaH6mrEMn/2Z1h+yMOheHBp/6IgVPhHv5CWzbAGwc/rHu50jcR+bwuhwBtXzs+ZfQ3
+         Atwwb+3IDRjfTz25vll62oxtA3wLJq4hlTtQOSUwIPiTmlMz8wBaoV2XamCM4EGgBd7+
+         jcTIkPiQNCZuVR1bGzn9mTbikJvXnsNTA+oxAKkFpdNe12y98XAOW7u0ck+SaJO8uO8v
+         UoMGkNVF/X+wG1zifm6lgrSRpPiXknwF8e5pOxhS3s8t3mVWtVS6KjVh0XPyDbR8ytQW
+         /42w==
+X-Gm-Message-State: APjAAAUPBPZIxWNSgc0UlaYgVLzgEyXIX96H71sbxvPTj2yZnPMvk9Ff
+        XFGp0/MtbCpmiLBZGCWKnMF6gA==
+X-Google-Smtp-Source: APXvYqzO/shy+lwWyu704q2dOX00yaUvvzyKRtzyAEk5wDzatGiK5EyHB6NgTBNQOz/tIfNcD7NiVw==
+X-Received: by 2002:adf:fb4a:: with SMTP id c10mr13358709wrs.309.1556568958675;
+        Mon, 29 Apr 2019 13:15:58 -0700 (PDT)
+Received: from localhost.localdomain (ip-93-97.sn2.clouditalia.com. [83.211.93.97])
+        by smtp.gmail.com with ESMTPSA id k6sm22864019wrd.20.2019.04.29.13.15.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 29 Apr 2019 13:15:57 -0700 (PDT)
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Subject: [PATCH 2/5] bio: fix improper use of smp_mb__before_atomic()
+Date:   Mon, 29 Apr 2019 22:14:58 +0200
+Message-Id: <1556568902-12464-3-git-send-email-andrea.parri@amarulasolutions.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, 2019-04-28 at 15:39 +-0800, Ming Lei wrote:
-+AD4 Now scsi+AF8-mq+AF8-setup+AF8-tags() pre-allocates a big buffer for IO sg list,
-+AD4 and the buffer size is scsi+AF8-mq+AF8-sgl+AF8-size() which depends on smaller
-+AD4 value between shost-+AD4-sg+AF8-tablesize and SG+AF8-CHUNK+AF8-SIZE.
-+AD4 
-+AD4 Modern HBA's DMA is often capable of deadling with very big segment
-+AD4 number, so scsi+AF8-mq+AF8-sgl+AF8-size() is often big. Suppose the max sg number
-+AD4 of SG+AF8-CHUNK+AF8-SIZE is taken, scsi+AF8-mq+AF8-sgl+AF8-size() will be 4KB.
-+AD4 
-+AD4 Then if one HBA has lots of queues, and each hw queue's depth is
-+AD4 high, pre-allocation for sg list can consume huge memory.
-+AD4 For example of lpfc, nr+AF8-hw+AF8-queues can be 70, each queue's depth
-+AD4 can be 3781, so the pre-allocation for data sg list is 70+ACo-3781+ACo-2k
-+AD4 +AD0-517MB for single HBA.
-+AD4 
-+AD4 There is Red Hat internal report that scsi+AF8-debug based tests can't
-+AD4 be run any more since legacy io path is killed because too big
-+AD4 pre-allocation.
-+AD4 
-+AD4 So switch to runtime allocation for sg list, meantime pre-allocate 2
-+AD4 inline sg entries. This way has been applied to NVMe PCI for a while,
-+AD4 so it should be fine for SCSI too. Also runtime sg entries allocation
-+AD4 has verified and run always in the original legacy io path.
-+AD4 
-+AD4 Not see performance effect in my big BS test on scsi+AF8-debug.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-Reviewed-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
+Replace the barrier with an smp_mb().
 
+Fixes: dac56212e8127 ("bio: skip atomic inc/dec of ->bi_cnt for most use cases")
+Cc: stable@vger.kernel.org
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+---
+ include/linux/bio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index e584673c18814..5becbafb84e8a 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -224,7 +224,7 @@ static inline void bio_cnt_set(struct bio *bio, unsigned int count)
+ {
+ 	if (count != 1) {
+ 		bio->bi_flags |= (1 << BIO_REFFED);
+-		smp_mb__before_atomic();
++		smp_mb();
+ 	}
+ 	atomic_set(&bio->__bi_cnt, count);
+ }
+-- 
+2.7.4
 
