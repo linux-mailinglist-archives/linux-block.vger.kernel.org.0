@@ -2,91 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43AAAEB79
-	for <lists+linux-block@lfdr.de>; Mon, 29 Apr 2019 22:16:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A440BED6B
+	for <lists+linux-block@lfdr.de>; Tue, 30 Apr 2019 01:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfD2UQE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Apr 2019 16:16:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33608 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbfD2UQD (ORCPT
+        id S1728997AbfD2Xyn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Apr 2019 19:54:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57536 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728844AbfD2Xyn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:16:03 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s18so17952310wrp.0
-        for <linux-block@vger.kernel.org>; Mon, 29 Apr 2019 13:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Tf7MLbuwm8AwySzke/NOZGkPfHj632yqYUtU8HHCGbc=;
-        b=lt2JmU9usNLupk17GENygz8xjZEYXly2t8l41TwQCwNB/wXDK7iOj5DEQUmhzdByfb
-         3mdulYuOjhKIMLP7Y1bb6H6JQDVOLvM3JhAdlgWC53GJQUEAFdK0HN122obTyWFcvnzl
-         p5eaoNHIlJvKwUhaLPWMn5i8SXw1vHRMH0NLE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Tf7MLbuwm8AwySzke/NOZGkPfHj632yqYUtU8HHCGbc=;
-        b=GrEt2gIeNzEYWmyrTZChbRg+Cr+hO0P1YrpkwQws8SC1nTvIc4JCNqhKYNdPX9y0JO
-         3WndZJR016shQ5esrORWXDT8qpga/3Q06X2A7amkWG//koL7s73qAhqK3jHYui03R7FZ
-         cMtqIHSFDogPvbl0AOUY1OZCeAHRiBl2Gf+pbOChjHg1wF2bU7846YaNq2yT4ZhN3Huw
-         zrfolQro2hhOkT+UGzgw60Bt3reiRU9ymFGGxEn3H/MmrOxG25qW4poeIfnxKNPjs8Of
-         zhyfiBP4GVMaW0gJdKQ+GrOxXS4ydIV9M0V0/u5L39RplgywOtC+ygH1uPOz7uqUUeVR
-         BC8g==
-X-Gm-Message-State: APjAAAVrjo31jiSIhsF+cYZ/EzQDgDiFLIYsFlQsteBTlEZRywhFkiMi
-        4+yOqKV0WJVeODSbi1guB6NR8w==
-X-Google-Smtp-Source: APXvYqxCWUtW1QCMY+cBeSIXhZF4eeOqHKw9FHvYl2dBn2UjRBtO2Cz5wDL0aGxLp6V2/9d/+3rzKQ==
-X-Received: by 2002:adf:df92:: with SMTP id z18mr6962697wrl.213.1556568961502;
-        Mon, 29 Apr 2019 13:16:01 -0700 (PDT)
-Received: from localhost.localdomain (ip-93-97.sn2.clouditalia.com. [83.211.93.97])
-        by smtp.gmail.com with ESMTPSA id k6sm22864019wrd.20.2019.04.29.13.16.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 29 Apr 2019 13:16:00 -0700 (PDT)
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
-Subject: [PATCH 3/5] sbitmap: fix improper use of smp_mb__before_atomic()
-Date:   Mon, 29 Apr 2019 22:14:59 +0200
-Message-Id: <1556568902-12464-4-git-send-email-andrea.parri@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+        Mon, 29 Apr 2019 19:54:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=I94i2XopXQ46FN2+ICJ8tUvwfkgSChVjAq2FWTJ7nOE=; b=XVAnUdT6fvHvWcWmZqhFeJISJ
+        MXT4h3EJtPImMuTLE+kaEEPyTB/Hi3wGtAUsFL7uO3ixt1bUt6dZ9FV9OCVXkxA/FxcoN926tiz5p
+        fhKiGBkojfqxYwvMQ+oYiTZtqEBtfO3QdZ41dqYfI2Ys9mt/FjQ+MtHD8yctwnEb5ex2wuzBOfrhx
+        RaDXgl1DKXZw+i1wTb/puevOm3kKihxGgoW7HRt8oTPpV7H4y8+a9I4FQdD8eLb7BhH+e1p9zazs2
+        DrSi5VNb+7bCqMzjG2VuPcLBF9D/iggrvSpLrwpY1CgzKDfLstdbGmPxUxJtvDNx3zqoD6Rb5lB2g
+        hNf150imw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLG6b-0004Wt-6L; Mon, 29 Apr 2019 23:54:41 +0000
+Date:   Mon, 29 Apr 2019 16:54:41 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Scheduling conflicts
+Message-ID: <20190429235440.GA13796@bombadil.infradead.org>
+References: <20190425200012.GA6391@redhat.com>
+ <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic_set() primitive.
+On Thu, Apr 25, 2019 at 02:03:34PM -0600, Jens Axboe wrote:
+> On 4/25/19 2:00 PM, Jerome Glisse wrote:
+> > Did i miss preliminary agenda somewhere ? In previous year i think
+> > there use to be one by now :)
+> 
+> You should have received an email from LF this morning with a subject
+> of:
+> 
+> LSFMM 2019: 8 Things to Know Before You Arrive!
+> 
+> which also includes a link to the schedule. Here it is:
+> 
+> https://docs.google.com/spreadsheets/d/1Z1pDL-XeUT1ZwMWrBL8T8q3vtSqZpLPgF3Bzu_jejfk
 
-Replace the barrier with an smp_mb().
-
-Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
-Cc: stable@vger.kernel.org
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: linux-block@vger.kernel.org
----
- lib/sbitmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 155fe38756ecf..4a7fc4915dfc6 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_batch(struct sbitmap_queue *sbq,
- 		 * to ensure that the batch size is updated before the wait
- 		 * counts.
- 		 */
--		smp_mb__before_atomic();
-+		smp_mb();
- 		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
- 			atomic_set(&sbq->ws[i].wait_cnt, 1);
- 	}
--- 
-2.7.4
-
+The schedule continues to evolve ... I would very much like to have
+Christoph Hellwig in the room for the Eliminating Tail Pages discussion,
+but he's now scheduled to speak in a session at the same time (16:00
+Tuesday).  I assume there'll be time for agenda-bashing at 9am tomorrow?
