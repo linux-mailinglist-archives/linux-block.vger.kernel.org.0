@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3CAFFE2
-	for <lists+linux-block@lfdr.de>; Tue, 30 Apr 2019 20:44:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637DDFFDB
+	for <lists+linux-block@lfdr.de>; Tue, 30 Apr 2019 20:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfD3Snx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Apr 2019 14:43:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56886 "EHLO
+        id S1726632AbfD3Sn3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Apr 2019 14:43:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56872 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbfD3Sn2 (ORCPT
+        with ESMTP id S1726006AbfD3Sn1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:43:28 -0400
+        Tue, 30 Apr 2019 14:43:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mAbpF8c0hCljXlnNixYDVqV/+ckI65P7ypbjPuFBFjw=; b=COyru0E9wj7FkfX/o/IsbPTsX
-        bz31Mz0wNrCFnoRaLXob0WjgcL2LpmeKkxnqBsQHmO7Hdx0WAkQR7y0DxNvNr2e22MpCyAK343ogv
-        Gq2HqFcDvleJjz4Gjc+/FlwrRjxIBbahlb0+SmCgZbEfFkdhBm2VabgkFiDyXuufQTuKD8P0kR/Iw
-        JS5E9J4w99y/CZ7P2e18kryLmygi3o7Q1nAa163JpUzrh7J2njHOMhEZkRbdy6KabKWyIDDvKpnlC
-        q27QTT+xyDC5iKhBPnFOoZCMuz62PgqThY5+JLjw+I5qKX8Qiwt3gAmIHFExCYh3MEvagCqJ8s68u
-        5x8P59vjA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=K4VHT/tnWYCDGIVje8iqm8kVvq9adPTZRQZM12UmVS4=; b=qlUVyXPN3yd7xetXbyhpIiZRNC
+        r9173mWsEdRps/sM72yBoyCHab5jKxapHDbSSwhND+FAYqlCugXvvo0LJ9pLpBsYFoOqGgeQ4hzn9
+        WhWPvhHcfYApuoX+TqpfE57XIhF+DrAZ984rjfniRYfsply6EgUrQFFug9BoSwJwfU9a/M/R5r6cb
+        cfkVMf4m56nCVLlAYW8m9OdivZV/jcv/OdWC63iwxBPdx3SnjnZLQflEVpCnwSnjiwyua3hWZ6MfG
+        L+vT9Nu4b+D5TLPWuijW1vAIwC9911d3KYnEtRkS2BCPfev4P3xFxbslqecH51yJMn3ZMeF3K3pFu
+        LjphfVeA==;
 Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLXis-0000s6-7W; Tue, 30 Apr 2019 18:43:22 +0000
+        id 1hLXit-0000sM-Or; Tue, 30 Apr 2019 18:43:23 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Josef Bacik <jbacik@fb.com>,
@@ -38,14 +38,13 @@ Cc:     Josef Bacik <jbacik@fb.com>,
         Nauman Rafique <nauman@google.com>,
         Arianna Avanzini <avanzini.arianna@gmail.com>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] block: switch all files cleared marked as GPLv2 to SPDX tags
-Date:   Tue, 30 Apr 2019 14:42:39 -0400
-Message-Id: <20190430184243.23436-2-hch@lst.de>
+Subject: [PATCH 2/5] block: switch all files cleared marked as GPLv2 or later to SPDX tags
+Date:   Tue, 30 Apr 2019 14:42:40 -0400
+Message-Id: <20190430184243.23436-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190430184243.23436-1-hch@lst.de>
 References: <20190430184243.23436-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
@@ -53,482 +52,301 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-All these files have some form of the usual GPLv2 boilerplate.  Switch
-them to use SPDX tags instead.
+All these files have some form of the usual GPLv2 or later boilerplate.
+Switch them to use SPDX tags instead.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/badblocks.c        | 10 +---------
- block/bio-integrity.c    | 16 +---------------
- block/bio.c              | 15 +--------------
- block/blk-flush.c        |  3 +--
- block/blk-integrity.c    | 16 +---------------
- block/blk-mq-debugfs.c   | 13 +------------
- block/blk-mq-pci.c       | 10 +---------
- block/blk-mq-rdma.c      | 10 +---------
- block/blk-mq-virtio.c    | 10 +---------
- block/bsg.c              |  9 +--------
- block/kyber-iosched.c    | 13 +------------
- block/opal_proto.h       | 10 +---------
- block/partitions/acorn.c |  7 +------
- block/scsi_ioctl.c       | 16 +---------------
- block/sed-opal.c         | 10 +---------
- block/t10-pi.c           | 19 +------------------
- include/linux/bio.h      | 15 +--------------
- include/linux/bvec.h     | 15 +--------------
- include/linux/sed-opal.h | 10 +---------
- 19 files changed, 19 insertions(+), 208 deletions(-)
+ block/bfq-cgroup.c      | 11 +----------
+ block/bfq-iosched.c     | 11 +----------
+ block/bfq-iosched.h     | 11 +----------
+ block/bfq-wf2q.c        | 11 +----------
+ block/bsg-lib.c         | 16 +---------------
+ block/partitions/efi.c  | 16 +---------------
+ block/partitions/efi.h  | 16 +---------------
+ block/partitions/ldm.c  | 16 +---------------
+ block/partitions/ldm.h  | 16 +---------------
+ include/linux/bsg-lib.h | 16 +---------------
+ 10 files changed, 10 insertions(+), 130 deletions(-)
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index 91f7bcf979d3..2e5f5697db35 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -1,18 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 793c027ca60e..b3796a40a61a 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -1,15 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
  /*
-  * Bad block management
-  *
-  * - Heavily based on MD badblocks code from Neil Brown
-  *
-  * Copyright (c) 2015, Intel Corporation.
+  * cgroups support for the BFQ I/O scheduler.
 - *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
+- *  This program is free software; you can redistribute it and/or
+- *  modify it under the terms of the GNU General Public License as
+- *  published by the Free Software Foundation; either version 2 of the
+- *  License, or (at your option) any later version.
 - *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- 
- #include <linux/badblocks.h>
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 1b633a3526d4..42536674020a 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -1,23 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * bio-integrity.c - bio data integrity extensions
-  *
-  * Copyright (C) 2007, 2008, 2009 Oracle Corporation
-  * Written by: Martin K. Petersen <martin.petersen@oracle.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License version
-- * 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; see the file COPYING.  If not, write to
-- * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
-- * USA.
-- *
-  */
- 
- #include <linux/blkdev.h>
-diff --git a/block/bio.c b/block/bio.c
-index 029afb121a48..683cbb40f051 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1,19 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 Jens Axboe <axboe@kernel.dk>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public Licens
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-
-- *
-  */
- #include <linux/mm.h>
- #include <linux/swap.h>
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index d95f94892015..aedd9320e605 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -1,11 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Functions to sequence PREFLUSH and FUA writes.
-  *
-  * Copyright (C) 2011		Max Planck Institute for Gravitational Physics
-  * Copyright (C) 2011		Tejun Heo <tj@kernel.org>
-  *
-- * This file is released under the GPLv2.
-- *
-  * REQ_{PREFLUSH|FUA} requests are decomposed to sequences consisted of three
-  * optional steps - PREFLUSH, DATA and POSTFLUSH - according to the request
-  * properties and hardware capability.
-diff --git a/block/blk-integrity.c b/block/blk-integrity.c
-index d1ab089e0919..7f302f7b9d84 100644
---- a/block/blk-integrity.c
-+++ b/block/blk-integrity.c
-@@ -1,23 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * blk-integrity.c - Block layer data integrity extensions
-  *
-  * Copyright (C) 2007, 2008 Oracle Corporation
-  * Written by: Martin K. Petersen <martin.petersen@oracle.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License version
-- * 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; see the file COPYING.  If not, write to
-- * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
-- * USA.
-- *
-  */
- 
- #include <linux/blkdev.h>
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index ec1d18cb643c..6aea0ebc3a73 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -1,17 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2017 Facebook
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public
-- * License v2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  */
- 
- #include <linux/kernel.h>
-diff --git a/block/blk-mq-pci.c b/block/blk-mq-pci.c
-index 1dce18553984..ad4545a2a98b 100644
---- a/block/blk-mq-pci.c
-+++ b/block/blk-mq-pci.c
-@@ -1,14 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2016 Christoph Hellwig.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- #include <linux/kobject.h>
- #include <linux/blkdev.h>
-diff --git a/block/blk-mq-rdma.c b/block/blk-mq-rdma.c
-index 45030a81a1ed..cc921e6ba709 100644
---- a/block/blk-mq-rdma.c
-+++ b/block/blk-mq-rdma.c
-@@ -1,14 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2017 Sagi Grimberg.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- #include <linux/blk-mq.h>
- #include <linux/blk-mq-rdma.h>
-diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
-index 370827163835..75a52c18a8f6 100644
---- a/block/blk-mq-virtio.c
-+++ b/block/blk-mq-virtio.c
-@@ -1,14 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2016 Christoph Hellwig.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- #include <linux/device.h>
- #include <linux/blk-mq.h>
-diff --git a/block/bsg.c b/block/bsg.c
-index f306853c6b08..833c44b3d458 100644
---- a/block/bsg.c
-+++ b/block/bsg.c
-@@ -1,13 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * bsg.c - block layer implementation of the sg v4 interface
-- *
-- * Copyright (C) 2004 Jens Axboe <axboe@suse.de> SUSE Labs
-- * Copyright (C) 2004 Peter M. Jones <pjones@redhat.com>
-- *
-- *  This file is subject to the terms and conditions of the GNU General Public
-- *  License version 2.  See the file "COPYING" in the main directory of this
-- *  archive for more details.
-- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  General Public License for more details.
   */
  #include <linux/module.h>
- #include <linux/init.h>
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index ec6a04e01bc1..c3b05119cebd 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -1,20 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
+ #include <linux/slab.h>
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index b85a4ab8b9db..f8d430f88d25 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
  /*
-  * The Kyber I/O scheduler. Controls latency by throttling queue depths using
-  * scalable techniques.
+  * Budget Fair Queueing (BFQ) I/O scheduler.
   *
-  * Copyright (C) 2017 Facebook
+@@ -12,16 +13,6 @@
+  *
+  * Copyright (C) 2017 Paolo Valente <paolo.valente@linaro.org>
+  *
+- *  This program is free software; you can redistribute it and/or
+- *  modify it under the terms of the GNU General Public License as
+- *  published by the Free Software Foundation; either version 2 of the
+- *  License, or (at your option) any later version.
 - *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public
-- * License v2 as published by the Free Software Foundation.
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  General Public License for more details.
+- *
+  * BFQ is a proportional-share I/O scheduler, with some extra
+  * low-latency capabilities. BFQ also supports full hierarchical
+  * scheduling through cgroups. Next paragraphs provide an introduction
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index eba7cd449ab4..c2faa77824f8 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -1,16 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+  * Header file for the BFQ I/O scheduler: data structures and
+  * prototypes of interface functions among BFQ components.
+- *
+- *  This program is free software; you can redistribute it and/or
+- *  modify it under the terms of the GNU General Public License as
+- *  published by the Free Software Foundation; either version 2 of the
+- *  License, or (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  General Public License for more details.
+  */
+ #ifndef _BFQ_H
+ #define _BFQ_H
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 48d899cfbe03..c9ba225081ce 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -1,19 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Hierarchical Budget Worst-case Fair Weighted Fair Queueing
+  * (B-WF2Q+): hierarchical scheduling algorithm by which the BFQ I/O
+  * scheduler schedules generic entities. The latter can represent
+  * either single bfq queues (associated with processes) or groups of
+  * bfq queues (associated with cgroups).
+- *
+- *  This program is free software; you can redistribute it and/or
+- *  modify it under the terms of the GNU General Public License as
+- *  published by the Free Software Foundation; either version 2 of the
+- *  License, or (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  General Public License for more details.
+  */
+ #include "bfq-iosched.h"
+ 
+diff --git a/block/bsg-lib.c b/block/bsg-lib.c
+index 005e2b75d775..b898a1cdf872 100644
+--- a/block/bsg-lib.c
++++ b/block/bsg-lib.c
+@@ -1,24 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  *  BSG helper library
+  *
+  *  Copyright (C) 2008   James Smart, Emulex Corporation
+  *  Copyright (C) 2011   Red Hat, Inc.  All rights reserved.
+  *  Copyright (C) 2011   Mike Christie
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- *
+  */
+ #include <linux/slab.h>
+ #include <linux/blk-mq.h>
+diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+index 39f70d968754..db2fef7dfc47 100644
+--- a/block/partitions/efi.c
++++ b/block/partitions/efi.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /************************************************************
+  * EFI GUID Partition Table handling
+  *
+@@ -7,21 +8,6 @@
+  * efi.[ch] by Matt Domsch <Matt_Domsch@dell.com>
+  *   Copyright 2000,2001,2002,2004 Dell Inc.
+  *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- *
+- *
+  * TODO:
+  *
+  * Changelog:
+diff --git a/block/partitions/efi.h b/block/partitions/efi.h
+index abd0b19288a6..3e8576157575 100644
+--- a/block/partitions/efi.h
++++ b/block/partitions/efi.h
+@@ -1,3 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
+ /************************************************************
+  * EFI GUID Partition Table
+  * Per Intel EFI Specification v1.02
+@@ -5,21 +6,6 @@
+  *
+  * By Matt Domsch <Matt_Domsch@dell.com>  Fri Sep 22 22:15:56 CDT 2000  
+  *   Copyright 2000,2001 Dell Inc.
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- * 
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- * 
+  ************************************************************/
+ 
+ #ifndef FS_PART_EFI_H_INCLUDED
+diff --git a/block/partitions/ldm.c b/block/partitions/ldm.c
+index 16766f267559..6db573f33219 100644
+--- a/block/partitions/ldm.c
++++ b/block/partitions/ldm.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /**
+  * ldm - Support for Windows Logical Disk Manager (Dynamic Disks)
+  *
+@@ -6,21 +7,6 @@
+  * Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
+  *
+  * Documentation is available at http://www.linux-ntfs.org/doku.php?id=downloads 
+- *
+- * This program is free software; you can redistribute it and/or modify it under
+- * the terms of the GNU General Public License as published by the Free Software
+- * Foundation; either version 2 of the License, or (at your option) any later
+- * version.
+- *
+- * This program is distributed in the hope that it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License along with
+- * this program (in the main directory of the source in the file COPYING); if
+- * not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+- * Boston, MA  02111-1307  USA
+  */
+ 
+ #include <linux/slab.h>
+diff --git a/block/partitions/ldm.h b/block/partitions/ldm.h
+index f4c6055df956..1ca63e97bccc 100644
+--- a/block/partitions/ldm.h
++++ b/block/partitions/ldm.h
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /**
+  * ldm - Part of the Linux-NTFS project.
+  *
+@@ -6,21 +7,6 @@
+  * Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
+  *
+  * Documentation is available at http://www.linux-ntfs.org/doku.php?id=downloads 
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License as published by the Free
+- * Software Foundation; either version 2 of the License, or (at your option)
+- * any later version.
 - *
 - * This program is distributed in the hope that it will be useful,
 - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
 - *
 - * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+- * along with this program (in the main directory of the Linux-NTFS source
+- * in the file COPYING); if not, write to the Free Software Foundation,
+- * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
  
- #include <linux/kernel.h>
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index b6e352cfe982..d9a05ad02eb5 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -1,18 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _FS_PT_LDM_H_
+diff --git a/include/linux/bsg-lib.h b/include/linux/bsg-lib.h
+index 7f14517a559b..960988d42f77 100644
+--- a/include/linux/bsg-lib.h
++++ b/include/linux/bsg-lib.h
+@@ -1,24 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
  /*
-  * Copyright © 2016 Intel Corporation
+  *  BSG helper library
   *
-  * Authors:
-  *    Rafael Antognolli <rafael.antognolli@intel.com>
-  *    Scott  Bauer      <scott.bauer@intel.com>
+  *  Copyright (C) 2008   James Smart, Emulex Corporation
+  *  Copyright (C) 2011   Red Hat, Inc.  All rights reserved.
+  *  Copyright (C) 2011   Mike Christie
 - *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
 - *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- #include <linux/types.h>
- 
-diff --git a/block/partitions/acorn.c b/block/partitions/acorn.c
-index fbeb697374d5..7587700fad4a 100644
---- a/block/partitions/acorn.c
-+++ b/block/partitions/acorn.c
-@@ -1,12 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-- *  linux/fs/partitions/acorn.c
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
 - *
-  *  Copyright (c) 1996-2000 Russell King.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  *  Scan ADFS partitions on hard disk drives.  Unfortunately, there
-  *  isn't a standard for partitioning drives on Acorn machines, so
-  *  every single manufacturer of SCSI and IDE cards created their own
-diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-index 533f4aee8567..f5e0ad65e86a 100644
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -1,20 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 Jens Axboe <axboe@suse.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public Licens
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 - *
   */
- #include <linux/kernel.h>
- #include <linux/errno.h>
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index b1aa0cc25803..a46e8d13e16d 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -1,18 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright © 2016 Intel Corporation
-  *
-  * Authors:
-  *    Scott  Bauer      <scott.bauer@intel.com>
-  *    Rafael Antognolli <rafael.antognolli@intel.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ":OPAL: " fmt
-diff --git a/block/t10-pi.c b/block/t10-pi.c
-index 62aed77d0bb9..0c0094609dd6 100644
---- a/block/t10-pi.c
-+++ b/block/t10-pi.c
-@@ -1,24 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * t10_pi.c - Functions for generating and verifying T10 Protection
-  *	      Information.
-- *
-- * Copyright (C) 2007, 2008, 2014 Oracle Corporation
-- * Written by: Martin K. Petersen <martin.petersen@oracle.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License version
-- * 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; see the file COPYING.  If not, write to
-- * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
-- * USA.
-- *
-  */
- 
- #include <linux/t10-pi.h>
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 077cecdf9437..ea73df36529a 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -1,19 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2001 Jens Axboe <axboe@suse.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public Licens
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-
-  */
- #ifndef __LINUX_BIO_H
- #define __LINUX_BIO_H
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index a4811410e4fc..545a480528e0 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -1,21 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * bvec iterator
-  *
-  * Copyright (C) 2001 Ming Lei <ming.lei@canonical.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public Licens
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-
-  */
- #ifndef __LINUX_BVEC_ITER_H
- #define __LINUX_BVEC_ITER_H
-diff --git a/include/linux/sed-opal.h b/include/linux/sed-opal.h
-index 04b124fca51e..3e76b6d7d97f 100644
---- a/include/linux/sed-opal.h
-+++ b/include/linux/sed-opal.h
-@@ -1,18 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright © 2016 Intel Corporation
-  *
-  * Authors:
-  *    Rafael Antognolli <rafael.antognolli@intel.com>
-  *    Scott  Bauer      <scott.bauer@intel.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-  */
- 
- #ifndef LINUX_OPAL_H
+ #ifndef _BLK_BSG_
+ #define _BLK_BSG_
 -- 
 2.20.1
 
