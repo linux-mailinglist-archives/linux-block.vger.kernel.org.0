@@ -2,81 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C9CF10322
-	for <lists+linux-block@lfdr.de>; Wed,  1 May 2019 01:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF47510355
+	for <lists+linux-block@lfdr.de>; Wed,  1 May 2019 01:31:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfD3XLW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Apr 2019 19:11:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43583 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3XLW (ORCPT
+        id S1726559AbfD3XbJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Apr 2019 19:31:09 -0400
+Received: from mailgw2.fjfi.cvut.cz ([147.32.9.131]:59484 "EHLO
+        mailgw2.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfD3Xa7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:11:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so7423010plp.10;
-        Tue, 30 Apr 2019 16:11:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
-         :references:date:mime-version:content-transfer-encoding;
-        bh=FXARXwM4QgylrliYg9gnUX5NvhFipcGymsRDeHVQDJI=;
-        b=EEszlnFYLyXHCGK5hVK0TR7ZzvNEwOdDnqYjozZAoFe0xvR+BEdJQ+532/3wiY6FY6
-         DeRVqssAglwf/rRWBeEYZIsKlpmkd6bMRhRwch9y+Rafnu3vxla7k21A0PokIBopxIBP
-         uRTcWVfcs2jIEZIIyQOFCTMbl4KpSOxP6NQcG1oLIgO/tyOyywokqoYOND/mwl4a+unc
-         VX3yoLh2Wn+miEdMT5ij82k7TM0AUIIGoguSXyDkG4+6hrzw2LXBo+x4dB4S6C50Jjrh
-         wcel9QF6oYT776DK/Uqm+UQ9o6ZXKFqlU0wRP/GO4oC1ytO/25tIkjSJ8mHKwbg4Y/Fn
-         LQ5w==
-X-Gm-Message-State: APjAAAWT+ChIYm4EN5V5lxORfhYwBGM6etgb93iylUqXL1Dw9zUmovzi
-        MrnQSfxKEoNzpjA+45v7HzOCNbBu52Q=
-X-Google-Smtp-Source: APXvYqys1BucDtRUXPE4Fmk0HX7m44pS+2KC6COLjJjMw17jqNuDtWeHvo+lbF0SCeqblFlEPlmj1g==
-X-Received: by 2002:a17:902:b715:: with SMTP id d21mr73635351pls.103.1556665881547;
-        Tue, 30 Apr 2019 16:11:21 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id f63sm62903342pfc.180.2019.04.30.16.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 16:11:20 -0700 (PDT)
-Message-ID: <1556664925.161891.183.camel@acm.org>
-Subject: Re: [PATCH 1/2] block: Fix a NULL pointer dereference in 
- generic_make_request()
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org
-Cc:     dm-devel@redhat.com, axboe@kernel.dk, gavin.guo@canonical.com,
-        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
-        stable@vger.kernel.org
-In-Reply-To: <20190430223722.20845-1-gpiccoli@canonical.com>
-References: <20190430223722.20845-1-gpiccoli@canonical.com>
-Content-Type: text/plain; charset="UTF-7"
-Date:   Tue, 30 Apr 2019 15:55:25 -0700
-Mime-Version: 1.0
-X-Mailer: Evolution 3.26.2-1 
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Apr 2019 19:30:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTP id 4D0A9A02D4;
+        Wed,  1 May 2019 01:21:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
+        s=20151024; t=1556666468; i=@fjfi.cvut.cz;
+        bh=ilYqmYI1sLVecoSemBH0A3zy0RgR2DNeT9RBT5MmbSo=;
+        h=From:To:Cc:Subject:Date;
+        b=L8t0ORuGVcRX15rlXRKApnMQCXn6AHSyw2OZ82HybvsnSeSGSFvrbjfLhaea4B0vK
+         vhl3wF6T/IYabjEVeLDFzQa+ANvHBwnwLvZ7vu47GzQpnxKb3dvixIMDXj+4d5rZuB
+         82dPXFY40bwJdX81d1mNzBo9NkkxXnt+VCqeqOXg=
+X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
+Received: from mailgw2.fjfi.cvut.cz ([127.0.0.1])
+        by localhost (mailgw2.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
+        with ESMTP id 2RPag0q5S8ZB; Wed,  1 May 2019 01:21:00 +0200 (CEST)
+Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTPS id 8DB6FA022D;
+        Wed,  1 May 2019 01:20:59 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw2.fjfi.cvut.cz 8DB6FA022D
+Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
+        id 37BB46004D; Wed,  1 May 2019 01:20:59 +0200 (CEST)
+From:   David Kozub <zub@linux.fjfi.cvut.cz>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: [PATCH 0/3] block: sed-opal: add support for shadow MBR done flag and write
+Date:   Wed,  1 May 2019 01:20:56 +0200
+Message-Id: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 2019-04-30 at 19:37 -0300, Guilherme G. Piccoli wrote:
-+AD4 Commit 37f9579f4c31 (+ACI-blk-mq: Avoid that submitting a bio concurrently
-+AD4 with device removal triggers a crash+ACI) introduced a NULL pointer
-+AD4 dereference in generic+AF8-make+AF8-request(). The patch sets q to NULL and
-+AD4 enter+AF8-succeeded to false+ADs right after, there's an 'if (enter+AF8-succeeded)'
-+AD4 which is not taken, and then the 'else' will dereference q in
-+AD4 blk+AF8-queue+AF8-dying(q).
-+AD4 
-+AD4 This patch just moves the 'q +AD0 NULL' to a point in which it won't trigger
-+AD4 the oops, although the semantics of this NULLification remains untouched.
-+AD4 
-+AD4 A simple test case/reproducer is as follows:
-+AD4 a) Build kernel v5.1-rc7 with CONFIG+AF8-BLK+AF8-CGROUP+AD0-n.
-+AD4 
-+AD4 b) Create a raid0 md array with 2 NVMe devices as members, and mount it
-+AD4 with an ext4 filesystem.
-+AD4 
-+AD4 c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
-+AD4 (dd of+AD0-/mnt/tmp if+AD0-/dev/zero bs+AD0-1M count+AD0-999 +ACY)+ADs sleep 0.3+ADs
-+AD4 echo 1 +AD4 /sys/block/nvme0n1/device/device/remove
-+AD4 (whereas nvme0n1 is the 2nd array member)
+This patch series extends SED Opal support: it adds IOCTL for setting the shadow
+MBR done flag which can be useful for unlocking an Opal disk on boot and it adds
+IOCTL for writing to the shadow MBR.
 
-Reviewed-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
+The code has been already submitted in [1] but it was suggested to split this
+part off. In comparison to that version, I tried to apply Scott's suggestions
+from [2].
 
+This series requires the previously-submitted Opal cleanup patches[3]. It
+applies on current linux-next/master (e.g. next-20190430).
+
+I successfully tested toggling the MBR done flag and writing the shadow MBR
+using some tools I hacked together[4] with a Samsung SSD 850 EVO drive.
+
+[1] https://lore.kernel.org/lkml/1549054223-12220-1-git-send-email-zub@linux.fjfi.cvut.cz/
+[2] https://lore.kernel.org/lkml/20190210182655.GA20491@hacktheplanet/
+[3] https://lore.kernel.org/lkml/1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz/
+[4] https://gitlab.com/zub2/opalctl
+
+Jonas Rabenstein (3):
+  block: sed-opal: add ioctl for done-mark of shadow mbr
+  block: sed-opal: ioctl for writing to shadow mbr
+  block: sed-opal: check size of shadow mbr
+
+ block/opal_proto.h            |  16 ++++
+ block/sed-opal.c              | 160 +++++++++++++++++++++++++++++++++-
+ include/linux/sed-opal.h      |   2 +
+ include/uapi/linux/sed-opal.h |  20 +++++
+ 4 files changed, 196 insertions(+), 2 deletions(-)
+
+-- 
+2.20.1
 
