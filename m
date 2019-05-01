@@ -2,168 +2,216 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7FCB10351
-	for <lists+linux-block@lfdr.de>; Wed,  1 May 2019 01:31:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE41104CC
+	for <lists+linux-block@lfdr.de>; Wed,  1 May 2019 06:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfD3XbB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Apr 2019 19:31:01 -0400
-Received: from mailgw2.fjfi.cvut.cz ([147.32.9.131]:59486 "EHLO
-        mailgw2.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfD3Xa7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:30:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTP id 01D7AA02AE;
-        Wed,  1 May 2019 01:21:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
-        s=20151024; t=1556666467; i=@fjfi.cvut.cz;
-        bh=z950GQ09xqDj1VQ8RNlQ970vQnKiBdyxx8mQuvYI/WE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XeYbulpF02/B+BotL1jrRAAWR2oWx9UOG1q6wYhoGQ435DWqxyd+7GDvgNj/C4aLd
-         lLSHAenFeR7nMVm8kJol6dMCDq5pb07QSB/6jh7+wW6LdZNr0RIGUsyX0KCWve/WBq
-         s2SXQ62BEyH7MQClFUS3uYl9wNpI++sIDqOkZ/aI=
-X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
-Received: from mailgw2.fjfi.cvut.cz ([127.0.0.1])
-        by localhost (mailgw2.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
-        with ESMTP id M9myyxcmA_3j; Wed,  1 May 2019 01:21:00 +0200 (CEST)
-Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTPS id E5AABA02B8;
-        Wed,  1 May 2019 01:20:59 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw2.fjfi.cvut.cz E5AABA02B8
-Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
-        id A66A360050; Wed,  1 May 2019 01:20:59 +0200 (CEST)
-From:   David Kozub <zub@linux.fjfi.cvut.cz>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH 3/3] block: sed-opal: check size of shadow mbr
-Date:   Wed,  1 May 2019 01:20:59 +0200
-Message-Id: <1556666459-17948-4-git-send-email-zub@linux.fjfi.cvut.cz>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+        id S1725958AbfEAE2h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 May 2019 00:28:37 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:9392 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfEAE2h (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 May 2019 00:28:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556684916; x=1588220916;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Y742O/olkIVywR1rgp+/Rsv5/sGxk3Ux2khTb42p6uo=;
+  b=CouY4TewAETKphKNbsBz/DYaMmog9ctRKT+rMkqeF8pCF1+svMY5oL8j
+   FAc7npw8cP+m+EjP55WgfOFRivJ7V42TG2nKFlORYlSVoAFfiSikuliWo
+   Gw1g2EhoXokTDDcWfeTH4jMrcRqmE9pM4jyqWV75q+CrYl9fbzstUGCFY
+   DQJdsfaG/8JzOYSOSg+N7qwRsOOw03/duMj6v1yt1z5HP9HVaydbhfmCD
+   926Bz4kQilxN23s/+5+C661nHYm6Rc1+T9j+1YtbTgbJba4aJWrCpzhMv
+   PS/MyWyhuvSyuL0ykO+mJYChyBtUm+ngP4WgG3nzUB8aVS3+HqK1la/R/
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,416,1549900800"; 
+   d="scan'208";a="108436740"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 01 May 2019 12:28:36 +0800
+IronPort-SDR: 4OFAe8/sC9fFoFKkFUvQoWwHJMagZqcDBErUoBM6G+mRa0sKg6JicxenoRFT5TOaxgEVx1hpHZ
+ WchVeHMoD9GKKB9nJg0oIwts72eTRRXgCMcAwEuw9x3HoJflNXGRlnWIzHTzRX05DVuM06mGj+
+ cka8gytWnFYFkUOnNsM7XhozNpHrLEtSp7ZKFGs8cl54gk+i2vW4+wOxT+E7PNP4vtEgLOK/nk
+ 1jTy0f0NF0btFGXKgVNux1H238M5Dg9BZZJoyrIcIoLC/u1GsHE0tDd30pJSzM0UktXIqcY0VK
+ 5ZWRzGgG4Zd4/tmBNZpbQWEf
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 30 Apr 2019 21:07:04 -0700
+IronPort-SDR: /0FhCGuvdJgYfNhcOJCsey9xe1Uf/kKO6vS0M2aqLgVt+EDkk/ayhcT3FQ7CPJnptT3pNA+1ms
+ AHVoCAEs2xgkXAc0ciZFky+SVWEEW0i1B2tmfqceuf4i5X3w/sUPVkI6q54mBtKQ9UtNbgt3zr
+ G5cSWCRJ71HvelbcHNY4H3JixsP2tlU5aHw4vdpR/WxynSu/DHh0u1hqoNS5vQRkBePo3vtEHg
+ 61wqjkZ8XB0//3w0Ni6aE6Lf97NzCnBg+qbEmfWBVnCCmpJ3pUCIkngkXg39KygtcWZQ1FiVro
+ 7Vc=
+Received: from cmercuryqemu.hgst.com ([10.202.65.32])
+  by uls-op-cesaip01.wdc.com with ESMTP; 30 Apr 2019 21:28:36 -0700
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-block@vger.kernel.org
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [RFC PATCH 00/18] blktrace: add blktrace extension support
+Date:   Tue, 30 Apr 2019 21:28:13 -0700
+Message-Id: <20190501042831.5313-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Hi,
 
-Check whether the shadow mbr does fit in the provided space on the
-target. Also a proper firmware should handle this case and return an
-error we may prevent problems or even damage with crappy firmwares.
+This patch series adds support to track more request based flags and 
+different request fields to the blktrace infrastructure.
 
-Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
-Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
----
- block/opal_proto.h | 16 ++++++++++++++++
- block/sed-opal.c   | 39 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+In this series, we increase the action and action mask field and add 
+priority and priority mask field to existing infrastructure.
 
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index b6e352cfe982..5e8df3245eb0 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -106,6 +106,7 @@ enum opal_uid {
- 	OPAL_ENTERPRISE_BANDMASTER0_UID,
- 	OPAL_ENTERPRISE_ERASEMASTER_UID,
- 	/* tables */
-+	OPAL_TABLE_TABLE,
- 	OPAL_LOCKINGRANGE_GLOBAL,
- 	OPAL_LOCKINGRANGE_ACE_RDLOCKED,
- 	OPAL_LOCKINGRANGE_ACE_WRLOCKED,
-@@ -160,6 +161,21 @@ enum opal_token {
- 	OPAL_STARTCOLUMN = 0x03,
- 	OPAL_ENDCOLUMN = 0x04,
- 	OPAL_VALUES = 0x01,
-+	/* table table */
-+	OPAL_TABLE_UID = 0x00,
-+	OPAL_TABLE_NAME = 0x01,
-+	OPAL_TABLE_COMMON = 0x02,
-+	OPAL_TABLE_TEMPLATE = 0x03,
-+	OPAL_TABLE_KIND = 0x04,
-+	OPAL_TABLE_COLUMN = 0x05,
-+	OPAL_TABLE_COLUMNS = 0x06,
-+	OPAL_TABLE_ROWS = 0x07,
-+	OPAL_TABLE_ROWS_FREE = 0x08,
-+	OPAL_TABLE_ROW_BYTES = 0x09,
-+	OPAL_TABLE_LASTID = 0x0A,
-+	OPAL_TABLE_MIN = 0x0B,
-+	OPAL_TABLE_MAX = 0x0C,
-+
- 	/* authority table */
- 	OPAL_PIN = 0x03,
- 	/* locking tokens */
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index 5acb873e9037..39e3eecca58d 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -138,6 +138,8 @@ static const u8 opaluid[][OPAL_UID_LENGTH] = {
- 
- 	/* tables */
- 
-+	[OPAL_TABLE_TABLE]
-+		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01 },
- 	[OPAL_LOCKINGRANGE_GLOBAL] =
- 		{ 0x00, 0x00, 0x08, 0x02, 0x00, 0x00, 0x00, 0x01 },
- 	[OPAL_LOCKINGRANGE_ACE_RDLOCKED] =
-@@ -1139,6 +1141,29 @@ static int generic_get_column(struct opal_dev *dev, const u8 *table,
- 	return finalize_and_send(dev, parse_and_check_status);
- }
- 
-+/*
-+ * see TCG SAS 5.3.2.3 for a description of the available columns
-+ *
-+ * the result is provided in dev->resp->tok[4]
-+ */
-+static int generic_get_table_info(struct opal_dev *dev, enum opal_uid table,
-+				  u64 column)
-+{
-+	u8 uid[OPAL_UID_LENGTH];
-+	const unsigned int half = OPAL_UID_LENGTH/2;
-+
-+	/* sed-opal UIDs can be split in two halves:
-+	 *  first:  actual table index
-+	 *  second: relative index in the table
-+	 * so we have to get the first half of the OPAL_TABLE_TABLE and use the
-+	 * first part of the target table as relative index into that table
-+	 */
-+	memcpy(uid, opaluid[OPAL_TABLE_TABLE], half);
-+	memcpy(uid+half, opaluid[table], half);
-+
-+	return generic_get_column(dev, uid, column);
-+}
-+
- static int gen_key(struct opal_dev *dev, void *data)
- {
- 	u8 uid[OPAL_UID_LENGTH];
-@@ -1554,6 +1579,20 @@ static int write_shadow_mbr(struct opal_dev *dev, void *data)
- 	u64 len;
- 	int err = 0;
- 
-+	/* do we fit in the available shadow mbr space? */
-+	err = generic_get_table_info(dev, OPAL_MBR, OPAL_TABLE_ROWS);
-+	if (err) {
-+		pr_debug("MBR: could not get shadow size\n");
-+		return err;
-+	}
-+
-+	len = response_get_u64(&dev->parsed, 4);
-+	if (shadow->size > len || shadow->offset > len - shadow->size) {
-+		pr_debug("MBR: does not fit in shadow (%llu vs. %llu)\n",
-+			 shadow->offset + shadow->size, len);
-+		return -ENOSPC;
-+	}
-+
- 	/* do the actual transmission(s) */
- 	src = (u8 __user *)(uintptr_t)shadow->data;
- 	while (off < shadow->size) {
+The userland tools part of the patch-series is followed by this
+one, here is the reference:-
+Chaitanya Kulkarni (10):
+        blktrace.h: add blktrace extension to the header
+        blktrace_api.h: update blktrace API header
+        act-mask: add blktrace extension to act_mask
+        blktrace.c: add support for extensions
+        blkparse.c: add support for extensions
+        blkparse-fmt.c: add extension support
+        iowatcher/blkparse: add extension definitions
+        blkiomon: add extension support
+        blkrawverify: add extension support
+        blktrace-tools: add extension support
+
+
+Following is the detailed overview of how this patch-series is
+organized:-
+
+1. The first few patches focus on adding block trace extension:-
+
+  blktrace: increase the size of action mask
+  blktrace: add more definitions for BLK_TC_ACT
+  blktrace: update trace to track more actions
+  kernel/trace: add KConfig to enable blktrace_ext
+
+2. Next set of patches adds support to track request based priority and
+allows the user to configure request priority maks just like action
+mask:-
+
+  blktrace: add iopriority mask
+  blktrace: add iopriority mask
+  blktrace: allow user to track iopriority
+  blktrace: add sysfs ioprio mask
+  blktrace: add debug support for extension
+
+3. Following patches just set the bio priority so that blktrace will not
+report wrong priority while tracing bios:-
+
+  block: set ioprio for write-zeroes, discard etc 
+  block: set ioprio for zone-reset
+  block: set ioprio for flush bio 
+  drivers: set bio iopriority field
+  fs: set bio iopriority field
+  power/swap: set bio iopriority field
+  mm: set bio iopriority field
+
+  Ideally, the above patches for drivers and fs category should be sent
+  separately to the respective subsystem for the RFC review purpose I
+  kept it all in the one patch.
+  
+
+4. Last two patches add support for null_blk driver to specify
+module parameter for discard and write-zeroes operations which
+makes testing easier:-
+
+  null_blk: add write-zeroes flag to nullb_device
+  null_blk: add module param discard/write-zeroes
+
+P.S. I've not added linux-btrace mailing list as I'm having trouble
+subscribing to it. 
+
+RFC is little light on the detail but would like to start the discussion
+about how should we add extensions to the block trace
+infrastructure to track more request operations and priorities.
+
+Regards,
+Chaitanya
+
+
+Chaitanya Kulkarni (18):
+  blktrace: increase the size of action mask
+  blktrace: add more definitions for BLK_TC_ACT
+  blktrace: update trace to track more actions
+  kernel/trace: add KConfig to enable blktrace_ext
+  blktrace: add iopriority mask
+  blktrace: add iopriority mask
+  blktrace: allow user to track iopriority
+  blktrace: add sysfs ioprio mask
+  blktrace: add debug support for extension
+  block: set ioprio for write-zeroes, discard etc
+  block: set ioprio for zone-reset
+  block: set ioprio for flush bio
+  drivers: set bio iopriority field
+  fs: set bio iopriority field
+  power/swap: set bio iopriority field
+  mm: set bio iopriority field
+  null_blk: add write-zeroes flag to nullb_device
+  null_blk: add module param discard/write-zeroes
+
+ block/blk-flush.c                   |   2 +
+ block/blk-lib.c                     |   6 +
+ block/blk-zoned.c                   |   2 +
+ drivers/block/drbd/drbd_actlog.c    |   2 +
+ drivers/block/drbd/drbd_bitmap.c    |   3 +
+ drivers/block/null_blk.h            |   1 +
+ drivers/block/null_blk_main.c       |  37 +++-
+ drivers/block/xen-blkback/blkback.c |   3 +
+ drivers/block/zram/zram_drv.c       |   2 +
+ drivers/lightnvm/pblk-read.c        |   2 +
+ drivers/lightnvm/pblk-write.c       |   1 +
+ drivers/md/bcache/journal.c         |   2 +
+ drivers/md/bcache/super.c           |   2 +
+ drivers/md/dm-bufio.c               |   2 +
+ drivers/md/dm-cache-target.c        |   1 +
+ drivers/md/dm-io.c                  |   2 +
+ drivers/md/dm-log-writes.c          |   5 +
+ drivers/md/dm-thin.c                |   1 +
+ drivers/md/dm-writecache.c          |   2 +
+ drivers/md/dm-zoned-metadata.c      |   4 +
+ drivers/md/md.c                     |   4 +
+ drivers/md/raid5-cache.c            |   4 +
+ drivers/md/raid5-ppl.c              |   3 +
+ drivers/nvme/target/io-cmd-bdev.c   |   7 +
+ drivers/staging/erofs/internal.h    |   3 +
+ drivers/target/target_core_iblock.c |   3 +
+ fs/btrfs/disk-io.c                  |   2 +
+ fs/btrfs/extent_io.c                |   3 +
+ fs/btrfs/raid56.c                   |   6 +
+ fs/btrfs/scrub.c                    |   2 +
+ fs/btrfs/volumes.c                  |   3 +
+ fs/buffer.c                         |   2 +
+ fs/crypto/bio.c                     |   3 +
+ fs/direct-io.c                      |   2 +
+ fs/ext4/page-io.c                   |   2 +
+ fs/ext4/readpage.c                  |   1 +
+ fs/f2fs/data.c                      |   3 +
+ fs/f2fs/segment.c                   |   1 +
+ fs/gfs2/lops.c                      |   2 +
+ fs/gfs2/meta_io.c                   |   2 +
+ fs/gfs2/ops_fstype.c                |   2 +
+ fs/hfsplus/wrapper.c                |   2 +
+ fs/iomap.c                          |   2 +
+ fs/jfs/jfs_logmgr.c                 |   3 +
+ fs/jfs/jfs_metapage.c               |   3 +
+ fs/mpage.c                          |   1 +
+ fs/nfs/blocklayout/blocklayout.c    |   2 +
+ fs/nilfs2/segbuf.c                  |   2 +
+ fs/ocfs2/cluster/heartbeat.c        |   2 +
+ fs/xfs/xfs_aops.c                   |   3 +
+ fs/xfs/xfs_buf.c                    |   2 +
+ include/linux/blktrace_api.h        |  13 +-
+ include/uapi/linux/blktrace_api.h   |  65 ++++--
+ kernel/power/swap.c                 |   2 +
+ kernel/trace/Kconfig                |  36 ++++
+ kernel/trace/blktrace.c             | 323 +++++++++++++++++++++++++++-
+ mm/page_io.c                        |   2 +
+ 57 files changed, 579 insertions(+), 26 deletions(-)
+
 -- 
-2.20.1
+2.19.1
 
