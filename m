@@ -2,202 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AFC712135
-	for <lists+linux-block@lfdr.de>; Thu,  2 May 2019 19:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 819C2121D2
+	for <lists+linux-block@lfdr.de>; Thu,  2 May 2019 20:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfEBRo2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 May 2019 13:44:28 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44222 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfEBRoU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 May 2019 13:44:20 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y13so1471493pfm.11
-        for <linux-block@vger.kernel.org>; Thu, 02 May 2019 10:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2uN5X8DUEMQPUBTVS1/pgtLkQocX9RzJ+FmBoMdljaw=;
-        b=B8710WYZnaCMf4TZVtd6PCJnURCPKXx92qNHChx45j/qLHsi9vAPUtsK3W9179oP3E
-         t666/VxF3lIq8OWdFeJkFc6WShlfeyi7OdcjJywwadlyK1KsRw9oMxXJcFwDW+PYxP6M
-         oEohYkbxS/r/wfEi9jAKVFju4CbYsWmQMr9Gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2uN5X8DUEMQPUBTVS1/pgtLkQocX9RzJ+FmBoMdljaw=;
-        b=ZrCyP44490GDotoo6+FhuQX1xjWBneRpPiTb9DXeLaycuStlO1z3idssAQF0QlxqJv
-         IqESsHxLpLp+OnbpA6V59jEA51cTxeibknevDzShrS2MjC875nB5DtxGc5UhGn2mFtdo
-         47hf0CHZImnGtcatxLuDnqZOkxz669TL5RI04eJhhhESGI7cAwV7awXr2ClKD4QN0pwB
-         zC5//8WxKwEisVcBxB5O+FnSNH5NELRvLaSG+DRJ8naQ3qhQT+sEAxurXS6/9C//nvcL
-         p9WrGYQwCPHYc8xSQTsAo0Jn4/orN+9brInC2qEp/evpLoF0gbJujaZS1byen3MICnnd
-         GJiw==
-X-Gm-Message-State: APjAAAV0mhyUFk9VBAj0NLYo/GfcUWQFRRBX7ZokO2SQ1yHYywMb6A7e
-        LyUgEqRsFwTd4VjLtAwanfp1sQ==
-X-Google-Smtp-Source: APXvYqz3MY9OMIuD+T0t4msuqTRgvVxefRUpziJVAJNiLJILsr2BmkxndT3cMrri8m2C+eL8ELrfaw==
-X-Received: by 2002:a63:4548:: with SMTP id u8mr5203600pgk.435.1556819059317;
-        Thu, 02 May 2019 10:44:19 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id w38sm48319600pgk.90.2019.05.02.10.44.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 May 2019 10:44:18 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Alexis Savery <asavery@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Evan Green <evgreen@chromium.org>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] loop: Better discard support for block devices
-Date:   Thu,  2 May 2019 10:44:09 -0700
-Message-Id: <20190502174409.74623-3-evgreen@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190502174409.74623-1-evgreen@chromium.org>
-References: <20190502174409.74623-1-evgreen@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726203AbfEBSUH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 May 2019 14:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbfEBSUG (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 2 May 2019 14:20:06 -0400
+Subject: Re: [GIT PULL] Final fixes for 5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556821203;
+        bh=ygfOKVpsP9sGXbrComAV1HNuXdLYGsbw5m3Cyf12VFY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=bqJ7Qdu+glkuP5M+h27TCjzpCQ/EwQS7V69RnVME51eOW5RM1ikncXx1dXrHrJHxk
+         WDuE+kvjikZkLL3cKgANJ+aXLX+Tfemnktg0sbIz+6aP7XNniCPeZK3HX6ksPUmHXJ
+         JsKFIj1aNbWQG9bFXKUdqTvABXiwB7iPkbt/TMLc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <3c185429-ae45-3152-572e-772d7bd54720@kernel.dk>
+References: <3c185429-ae45-3152-572e-772d7bd54720@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <3c185429-ae45-3152-572e-772d7bd54720@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ tags/for-linus-20190502
+X-PR-Tracked-Commit-Id: d4ef647510b1200fe1c996ff1cbf5ac47eb930cc
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5ce3307b6d9d25fe3c62e4749821f5e58f9161db
+Message-Id: <155682120372.31369.15279316065554688762.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 May 2019 18:20:03 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If the backing device for a loop device is a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+The pull request you sent on Thu, 2 May 2019 09:01:25 -0600:
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+> git://git.kernel.dk/linux-block.git tags/for-linus-20190502
 
-While in there, differentiate between REQ_OP_DISCARD and
-REQ_OP_WRITE_ZEROES, which are different for block devices,
-but which the loop device had just been lumping together, since
-they're largely the same for files.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5ce3307b6d9d25fe3c62e4749821f5e58f9161db
 
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
+Thank you!
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
-
-Changes in v4:
-- Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-
-Changes in v3:
-- Updated commit description
-
-Changes in v2: None
-
- drivers/block/loop.c | 57 ++++++++++++++++++++++++++++----------------
- 1 file changed, 37 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bbf21ebeccd3..ca6983a2c975 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -417,19 +417,14 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
- 	return ret;
- }
- 
--static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
-+static int lo_discard(struct loop_device *lo, struct request *rq,
-+		int mode, loff_t pos)
- {
--	/*
--	 * We use punch hole to reclaim the free space used by the
--	 * image a.k.a. discard. However we do not support discard if
--	 * encryption is enabled, because it may give an attacker
--	 * useful information.
--	 */
- 	struct file *file = lo->lo_backing_file;
--	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -599,8 +594,13 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
- 	case REQ_OP_DISCARD:
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE_ZEROES:
--		return lo_discard(lo, rq, pos);
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE:
- 		if (lo->transfer)
- 			return lo_write_transfer(lo, rq, pos);
-@@ -854,6 +854,21 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	struct request_queue *backingq;
-+
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-+	 * by block devices to keep consistent behavior with file-backed loop
-+	 * devices.
-+	 */
-+	if (S_ISBLK(inode->i_mode)) {
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -861,22 +876,24 @@ static void loop_config_discard(struct loop_device *lo)
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
-+
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- }
- 
- static void loop_unprepare_queue(struct loop_device *lo)
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
