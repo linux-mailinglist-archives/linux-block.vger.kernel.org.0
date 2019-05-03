@@ -2,131 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F36D129E2
-	for <lists+linux-block@lfdr.de>; Fri,  3 May 2019 10:28:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C63812AF0
+	for <lists+linux-block@lfdr.de>; Fri,  3 May 2019 11:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725777AbfECI22 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 May 2019 04:28:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38261 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfECI22 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 May 2019 04:28:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k16so6713458wrn.5;
-        Fri, 03 May 2019 01:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DsMl+vwcK+f5wnV/EXf52CotvofyKocfJ5vOGZcZdGI=;
-        b=WZ6oYLIJePpsZlAmhXiVEHvnIkMPw1yCGWLs+8j1RLhXijDQEGcx9eCiwBxPSiw3Nr
-         geWeBR2dhLI6lfIrG6DALSVz0jyogTOyAW9o030dB76F0i00KFhqLHBdlK1RiHpBNfXn
-         1LzhGt+NWHESLCut1UqbHhCo21aaQNWJ1TlYcIAXuJRQA2J9How7yfjor0tmdero2r60
-         Vu+zkzC8ZKfDmXH/qmqSuAkqyvsa9dNuemlMcDrroyCE20RxrfZNBKWsY74iMwGH8cag
-         V/YrXNdIFhMRA9ByG7uDAtk7haL2cN/rfITtTPBlcYs0bo6P0xnAixZgrQx4RYI77vMv
-         s85Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DsMl+vwcK+f5wnV/EXf52CotvofyKocfJ5vOGZcZdGI=;
-        b=n7Mg4GO0IOWV1PcV8hAoUmUo4yH06mAqQrGRWXL3WZvvVCAjjIPxwzaAGsMfKK7RnA
-         Ur6gzh3aEMDgNKFPTtBg830ap0S7YLiYvmT4OOZGsuaV1JsZufuzyUx25Y/dV3LZmH4M
-         KMYtSxSRTU0ZCwl3eQKvT94+DWap6Vq7XSf0P2VqlTWOvIDJAHQwVo2WAdtHpGO+qtXB
-         k5h5TIFyMJob8KCsc7z30kdWTNs4/MMLKGSLqpqLSMIz4eh7mwkXLPlD7uJxPZSx+QpZ
-         IyR/FFvkrJkH8OYKRmirfxsDuUPxLzEX4qYOPXLc7qnElEd75YW8cyU/KXv2D7LLTIVw
-         xVdg==
-X-Gm-Message-State: APjAAAV12UXWMJb/z7nMfyAI4Otjqu8MXcOMVawjX5/FBs1AUGj8Y0nI
-        FeM5fLGIriOU7SQLAE91rZ/z82vY
-X-Google-Smtp-Source: APXvYqwqydQxSxXdeB2EJx8kCuZEhiLf+dw5jAutjsGakcuFiSb5TaVWLUAawR8MOAbPvuZ9AXdy1Q==
-X-Received: by 2002:adf:e88b:: with SMTP id d11mr6082532wrm.327.1556872106605;
-        Fri, 03 May 2019 01:28:26 -0700 (PDT)
-Received: from 5WDYG62.mdi (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
-        by smtp.gmail.com with ESMTPSA id t81sm1643962wmb.47.2019.05.03.01.28.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 01:28:25 -0700 (PDT)
-From:   Romain Izard <romain.izard.pro@gmail.com>
-To:     Karel Zak <kzak@redhat.com>
-Cc:     util-linux@vger.kernel.org, linux-block@vger.kernel.org,
-        Romain Izard <romain.izard.pro@gmail.com>
-Subject: [PATCH] lib/loopdev.c: Retry LOOP_SET_STATUS64 on EAGAIN
-Date:   Fri,  3 May 2019 10:28:19 +0200
-Message-Id: <20190503082819.23112-1-romain.izard.pro@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726950AbfECJrT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 May 2019 05:47:19 -0400
+Received: from mail.stbuehler.de ([5.9.32.208]:42206 "EHLO mail.stbuehler.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbfECJrT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 3 May 2019 05:47:19 -0400
+Received: from chromobil.fritz.box (unknown [IPv6:2a02:8070:a29c:5000:823f:5dff:fe0f:b5b6])
+        by mail.stbuehler.de (Postfix) with ESMTPSA id 0CD33C007E8;
+        Fri,  3 May 2019 09:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=stbuehler.de;
+        s=stbuehler1; t=1556876836;
+        bh=HNNhAZo5XVrEo+Uqw618pAuMsJsK5ZN2WxF8rpFqaWU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=QM3GQxN4cWeLETVrDHadaXOpobocuozHgTTYBEHRxWyX9UEE3bCoxBefVrLSTHm8R
+         V4pD9YcV/tw1BzQWw0NRXdcyM9vt67W7yer6zvlQdKb4yORBbb8WvBJRSfsKJffkOr
+         kVz7i/+wqCX8c6rA1XL3AfAH9vTx+7Sw9mgCkLSE=
+From:   =?UTF-8?q?Stefan=20B=C3=BChler?= <source@stbuehler.de>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/2] io_uring: restructure io_{read,write} control flow
+Date:   Fri,  3 May 2019 11:47:14 +0200
+Message-Id: <20190503094715.2381-1-source@stbuehler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <37071226-375a-07a6-d3d3-21323145de71@kernel.dk>
+References: <37071226-375a-07a6-d3d3-21323145de71@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-A recent bugfix in the Linux kernel made it possible for the
-LOOP_SET_STATUS64 ioctl to fail when called with a non-null offset,
-with an EAGAIN errno:
+Call io_async_list_note at the end if -EAGAIN is going to be returned;
+we need iov_count for that, which we have (almost) at the same time as
+we need to free iovec.
 
-5db470e229e2 loop: drop caches if offset or block_size are changed
+Instead of using a second return value reset the normal one after
+passing it to io_rw_done.
 
-This fix changes a silent failure (where mount could sometimes access
-the backing loop image through the cache without the specified offset)
-to an explicit failure, and it has also been backported on stable
-branches.
+Unless rw_verify_area returns -EAGAIN this shouldn't result in different
+behavior.
 
-On a 5.0 kernel, other changes to the loop driver make it hard to get
-generate the EAGAIN error, but this bugfix has also been backported to
-stables branches, without these changes. At least with the 4.14 stable
-branch, the EAGAIN error can be quickly generated with the following loop:
+This change should make it easier to punt a request to the workers by
+returning -EAGAIN and still calling io_async_list_note if needed.
 
-while mount -o loop,offset=239 disk point && umount point; do :; done
-
-Retry the ioctl when it fails with EAGAIN, which means that mount or
-losetup will eventually succeed when encountering this case.
-
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Signed-off-by: Stefan Bühler <source@stbuehler.de>
 ---
- lib/loopdev.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ fs/io_uring.c | 89 ++++++++++++++++++++++-----------------------------
+ 1 file changed, 39 insertions(+), 50 deletions(-)
 
-diff --git a/lib/loopdev.c b/lib/loopdev.c
-index 5d2e95b7e..88436713e 100644
---- a/lib/loopdev.c
-+++ b/lib/loopdev.c
-@@ -1275,7 +1275,7 @@ static int loopcxt_check_size(struct loopdev_cxt *lc, int file_fd)
-  */
- int loopcxt_setup_device(struct loopdev_cxt *lc)
- {
--	int file_fd, dev_fd, mode = O_RDWR, rc = -1, cnt = 0;
-+	int file_fd, dev_fd, mode = O_RDWR, rc = -1, cnt = 0, err;
- 	int errsv = 0;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 84efb8956734..52e435a72b6f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1062,26 +1062,24 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 	ret = io_import_iovec(req->ctx, READ, s, &iovec, &iter);
+ 	if (ret)
+ 		return ret;
+-
+ 	iov_count = iov_iter_count(&iter);
++
+ 	ret = rw_verify_area(READ, file, &kiocb->ki_pos, iov_count);
+-	if (!ret) {
+-		ssize_t ret2;
++	if (ret)
++		goto out_free;
  
- 	if (!lc || !*lc->device || !lc->filename)
-@@ -1354,7 +1354,10 @@ int loopcxt_setup_device(struct loopdev_cxt *lc)
- 		goto err;
+-		/* Catch -EAGAIN return for forced non-blocking submission */
+-		ret2 = call_read_iter(file, kiocb, &iter);
+-		if (!force_nonblock || ret2 != -EAGAIN) {
+-			io_rw_done(kiocb, ret2);
+-		} else {
+-			/*
+-			 * If ->needs_lock is true, we're already in async
+-			 * context.
+-			 */
+-			if (!s->needs_lock)
+-				io_async_list_note(READ, req, iov_count);
+-			ret = -EAGAIN;
+-		}
++	/* Passthrough -EAGAIN return for forced non-blocking submission */
++	ret = call_read_iter(file, kiocb, &iter);
++	if (!(force_nonblock && ret == -EAGAIN)) {
++		io_rw_done(kiocb, ret);
++		ret = 0;
  	}
++
++out_free:
++	/* If ->needs_lock is true, we're already in async context. */
++	if (ret == -EAGAIN && !s->needs_lock)
++		io_async_list_note(READ, req, iov_count);
++
+ 	kfree(iovec);
+ 	return ret;
+ }
+@@ -1109,50 +1107,41 @@ static int io_write(struct io_kiocb *req, const struct sqe_submit *s,
+ 	ret = io_import_iovec(req->ctx, WRITE, s, &iovec, &iter);
+ 	if (ret)
+ 		return ret;
+-
+ 	iov_count = iov_iter_count(&iter);
  
--	if (ioctl(dev_fd, LOOP_SET_STATUS64, &lc->info)) {
-+	do {
-+		err = ioctl(dev_fd, LOOP_SET_STATUS64, &lc->info);
-+	} while (err && errno == EAGAIN);
-+	if (err) {
- 		rc = -errno;
- 		errsv = errno;
- 		DBG(SETUP, ul_debugobj(lc, "LOOP_SET_STATUS64 failed: %m"));
-@@ -1399,7 +1402,7 @@ err:
-  */
- int loopcxt_ioctl_status(struct loopdev_cxt *lc)
- {
--	int dev_fd, rc = -1;
-+	int dev_fd, rc = -1, err;
+ 	ret = -EAGAIN;
+-	if (force_nonblock && !(kiocb->ki_flags & IOCB_DIRECT)) {
+-		/* If ->needs_lock is true, we're already in async context. */
+-		if (!s->needs_lock)
+-			io_async_list_note(WRITE, req, iov_count);
++	if (force_nonblock && !(kiocb->ki_flags & IOCB_DIRECT))
+ 		goto out_free;
+-	}
  
- 	errno = 0;
- 	dev_fd = loopcxt_get_fd(lc);
-@@ -1410,7 +1413,10 @@ int loopcxt_ioctl_status(struct loopdev_cxt *lc)
+ 	ret = rw_verify_area(WRITE, file, &kiocb->ki_pos, iov_count);
+-	if (!ret) {
+-		ssize_t ret2;
++	if (ret)
++		goto out_free;
+ 
+-		/*
+-		 * Open-code file_start_write here to grab freeze protection,
+-		 * which will be released by another thread in
+-		 * io_complete_rw().  Fool lockdep by telling it the lock got
+-		 * released so that it doesn't complain about the held lock when
+-		 * we return to userspace.
+-		 */
+-		if (S_ISREG(file_inode(file)->i_mode)) {
+-			__sb_start_write(file_inode(file)->i_sb,
+-						SB_FREEZE_WRITE, true);
+-			__sb_writers_release(file_inode(file)->i_sb,
+-						SB_FREEZE_WRITE);
+-		}
+-		kiocb->ki_flags |= IOCB_WRITE;
++	/*
++	 * Open-code file_start_write here to grab freeze protection,
++	 * which will be released by another thread in
++	 * io_complete_rw().  Fool lockdep by telling it the lock got
++	 * released so that it doesn't complain about the held lock when
++	 * we return to userspace.
++	 */
++	if (S_ISREG(file_inode(file)->i_mode)) {
++		__sb_start_write(file_inode(file)->i_sb, SB_FREEZE_WRITE, true);
++		__sb_writers_release(file_inode(file)->i_sb, SB_FREEZE_WRITE);
++	}
++	kiocb->ki_flags |= IOCB_WRITE;
+ 
+-		ret2 = call_write_iter(file, kiocb, &iter);
+-		if (!force_nonblock || ret2 != -EAGAIN) {
+-			io_rw_done(kiocb, ret2);
+-		} else {
+-			/*
+-			 * If ->needs_lock is true, we're already in async
+-			 * context.
+-			 */
+-			if (!s->needs_lock)
+-				io_async_list_note(WRITE, req, iov_count);
+-			ret = -EAGAIN;
+-		}
++	/* Passthrough -EAGAIN return for forced non-blocking submission */
++	ret = call_write_iter(file, kiocb, &iter);
++	if (!(force_nonblock && ret == -EAGAIN)) {
++		io_rw_done(kiocb, ret);
++		ret = 0;
  	}
- 	DBG(SETUP, ul_debugobj(lc, "device open: OK"));
- 
--	if (ioctl(dev_fd, LOOP_SET_STATUS64, &lc->info)) {
-+	do {
-+		err = ioctl(dev_fd, LOOP_SET_STATUS64, &lc->info);
-+	} while (err && errno == EAGAIN);
-+	if (err) {
- 		rc = -errno;
- 		DBG(SETUP, ul_debugobj(lc, "LOOP_SET_STATUS64 failed: %m"));
- 		return rc;
++
+ out_free:
++	/* If ->needs_lock is true, we're already in async context. */
++	if (ret == -EAGAIN && !s->needs_lock)
++		io_async_list_note(WRITE, req, iov_count);
++
+ 	kfree(iovec);
+ 	return ret;
+ }
 -- 
-2.17.1
+2.20.1
 
