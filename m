@@ -2,149 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D946D158F0
-	for <lists+linux-block@lfdr.de>; Tue,  7 May 2019 07:28:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6248615CC8
+	for <lists+linux-block@lfdr.de>; Tue,  7 May 2019 08:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfEGF17 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 May 2019 01:27:59 -0400
-Received: from mail-ed1-f51.google.com ([209.85.208.51]:45611 "EHLO
-        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfEGF17 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 May 2019 01:27:59 -0400
-Received: by mail-ed1-f51.google.com with SMTP id g57so17430515edc.12
-        for <linux-block@vger.kernel.org>; Mon, 06 May 2019 22:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=MBFNJxMevG48pJHzyxmna7JyM+HsId/GulK9IbVJxcA=;
-        b=cKqE966EYoJpcFwaLW+7vPPCnFUkD9zrcBged5xkJVhxhyl6CP/yYrWZCcxliKqFph
-         xlniyUjm6CNcoFZe9eEqbVd3stPeHiPhzagkauIg67asW3A/RKvXIlgkX5G5D3A9XCTZ
-         fstxP1JRcROQkRtzbMhaVqWgQI4289PrCX3EZr4AZsAmppUfxXDjX+5kxgy5zSa56mu/
-         h69xt/UBT8M7dpfJEcn7EWeIVp6RsFHdPlgur8mezQnA5khpO1hLJL9PU7K8TKrXOqiS
-         Dj5ygRmE6MP3S+vUo8NAT/n/zruDMp9YwIgqUTR5aPbuOABE2iippXYTrjhxvKk5IPXw
-         lhZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=MBFNJxMevG48pJHzyxmna7JyM+HsId/GulK9IbVJxcA=;
-        b=Q5XGTlQb3oBCclHgjcAgMIOKY3HIkzcy5ATG5qimd+ww0Bc5+PUrVZQl9DrJNBR5Vm
-         Ati+S5ARw1nFJcvhZpPVJq3B9heLwqPHHji6GfLR/JHyyilsofBBuEB9RzjC9YbkuUuY
-         p/MkXCZ/VOApsVqgo1nToA3yILZbHKOo5Mq9ikqgImMTge2qT6ILL+23Np76W4vBhp4F
-         KSv+If0r1AjKGDlIj7mIZJHLQYRFbrFoaAxfpc+dh+nZnyLOUrCNtRk+W2Tj6kUxJbS9
-         90CdShS6GBo/NJDVS3q3CHuY/aIZ6iTk93CvXh8UM5TAXq2z4bJjN+xfUwNXAnbSROy5
-         nXgA==
-X-Gm-Message-State: APjAAAUHs7Y5ZvEOf9SouyMbDK8HPflTr09fac3R7bWPAWM0m79EUcnM
-        IPF37Wmhd0Da9u98kDLGpCk8ZQ==
-X-Google-Smtp-Source: APXvYqwyLbiU3H266HvLDvt7zxIbQABXSFxbhE5pS/0xJ9Go+lZuCbEcKMfGQISmlFmSKhsg3ysT+Q==
-X-Received: by 2002:a17:906:2301:: with SMTP id l1mr17855620eja.121.1557206876819;
-        Mon, 06 May 2019 22:27:56 -0700 (PDT)
-Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id i33sm3835646ede.47.2019.05.06.22.27.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 22:27:55 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <67CD0023-8852-43F9-A447-88E4AFFED315@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
-Date:   Tue, 7 May 2019 07:27:54 +0200
-In-Reply-To: <CAJbgVnU3-ed42CBtPv7SWdtA=__bNcSPhiXwobuVKek2-BFBig@mail.gmail.com>
-Cc:     "Konopko, Igor J" <igor.j.konopko@intel.com>,
-        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Heiner Litz <hlitz@ucsc.edu>
-References: <20190425052152.6571-1-hlitz@ucsc.edu>
- <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
- <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
- <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
- <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
- <139AF16B-E69C-4AA5-A9AC-38576BB9BD4B@javigon.com>
- <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
- <b7c03f26-90bb-ffd6-e744-6daf3bbe348d@intel.com>
- <CAJbgVnU3-ed42CBtPv7SWdtA=__bNcSPhiXwobuVKek2-BFBig@mail.gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        id S1727063AbfEGGGw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 May 2019 02:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfEGFdk (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C035F20C01;
+        Tue,  7 May 2019 05:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557207219;
+        bh=70TvJEmu8OvJflZWtXYL2j9zSm78Falniq/Upr9UmP0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JCR+6p+WrVtBRY8/bv88sRfLYsXqCCyit1/5UD+ZDZSHPBdzA0X+KPXQRomQz9T6y
+         ammL22PgEymNESxWuOfAJ+yOPCHN+WSeNxWeuV5sLiaO6UyN8tOKR3pTRwQlO1hufB
+         yNsAT6RIJ4aCyEjQVsqT7xExU+x3HCcIJxol4hAU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Kai Krakow <kai@kaishome.de>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 33/99] bfq: update internal depth state when queue depth changes
+Date:   Tue,  7 May 2019 01:31:27 -0400
+Message-Id: <20190507053235.29900-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
+References: <20190507053235.29900-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Jens Axboe <axboe@kernel.dk>
 
---Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+[ Upstream commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e ]
 
-> On 6 May 2019, at 07.16, Heiner Litz <hlitz@ucsc.edu> wrote:
->=20
-> Igor, Javier,
->=20
-> both of you are right. Here is what I came up with after some more =
-thinking.
->=20
-> We can avoid the races in 2. and 3. with the following two invariants:
-> I1: If we have a GC line with seq_id X, only garbage collect from
-> lines older than X (this addresses 2.)
-> I2: Guarantee that the open GC line always has a smaller seq_id than
-> all open user lines (this addresses 3)
->=20
-> We can enforce I2 by adding a minor seq_id. The major sequence id is
-> only incremented when allocating a user line. Whenever a GC line is
-> allocated we read the current major seq_id (open user line) and
-> increment the minor seq_id. This allows us to order all GC lines
-> before the open user line during recovery.
->=20
-> Problem with this approach:
-> Consider the following example: There exist user lines U0, U1, U2
-> (where 0,1,2 are seq_ids) and a non-empty GC5 line (with seq_id 5). If
-> we now do only sequential writes all user lines will be overwritten
-> without GC being required. As a result, data will now reside on U6,
-> U7, U8. If we now need to GC we cannot because of I1.
-> Solution: We cannot fast-forward the GC line's seq_id because it
-> contains old data, so pad the GC line with zeros, close it and open a
-> new GC9 line.
->=20
-> Generality:
-> This approach extends to schemes that use e.g. hot, warm, cold open
-> lines (adding a minor_minor_seq_id)
->=20
-> Heiner
+A previous commit moved the shallow depth and BFQ depth map calculations
+to be done at init time, moving it outside of the hotter IO path. This
+potentially causes hangs if the users changes the depth of the scheduler
+map, by writing to the 'nr_requests' sysfs file for that device.
 
+Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
+the depth changes, so that the scheduler can update its internal state.
 
-Looks like a good solution that allows us to maintain the current =
-mapping model.
+Tested-by: Kai Krakow <kai@kaishome.de>
+Reported-by: Paolo Valente <paolo.valente@linaro.org>
+Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/bfq-iosched.c      | 8 +++++++-
+ block/blk-mq.c           | 2 ++
+ include/linux/elevator.h | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-Javier
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 72510c470001..356620414cf9 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5353,7 +5353,7 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
+ 	return min_shallow;
+ }
+ 
+-static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
++static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
+ 	struct blk_mq_tags *tags = hctx->sched_tags;
+@@ -5361,6 +5361,11 @@ static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
+ 
+ 	min_shallow = bfq_update_depths(bfqd, &tags->bitmap_tags);
+ 	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, min_shallow);
++}
++
++static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
++{
++	bfq_depth_updated(hctx);
+ 	return 0;
+ }
+ 
+@@ -5783,6 +5788,7 @@ static struct elevator_type iosched_bfq_mq = {
+ 		.requests_merged	= bfq_requests_merged,
+ 		.request_merged		= bfq_request_merged,
+ 		.has_work		= bfq_has_work,
++		.depth_updated		= bfq_depth_updated,
+ 		.init_hctx		= bfq_init_hctx,
+ 		.init_sched		= bfq_init_queue,
+ 		.exit_sched		= bfq_exit_queue,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 16f9675c57e6..9ab847d0d6d2 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3123,6 +3123,8 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 		}
+ 		if (ret)
+ 			break;
++		if (q->elevator && q->elevator->type->ops.depth_updated)
++			q->elevator->type->ops.depth_updated(hctx);
+ 	}
+ 
+ 	if (!ret)
+diff --git a/include/linux/elevator.h b/include/linux/elevator.h
+index 2e9e2763bf47..6e8bc53740f0 100644
+--- a/include/linux/elevator.h
++++ b/include/linux/elevator.h
+@@ -31,6 +31,7 @@ struct elevator_mq_ops {
+ 	void (*exit_sched)(struct elevator_queue *);
+ 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+ 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
++	void (*depth_updated)(struct blk_mq_hw_ctx *);
+ 
+ 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
+ 	bool (*bio_merge)(struct blk_mq_hw_ctx *, struct bio *);
+-- 
+2.20.1
 
---Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlzRF1oACgkQPEYBfS0l
-eOAA5w//Y7hc9YZYawmU3f9VgBOR0aaGsv9Wj9/oTX44srpceZgxsLSqNfTLaree
-qA5t0keisrMDRq27BRU8UXMEJAoNnqa1BnG0CwTdA+faF7lN9nPdAzYSD0Mfc0XI
-RB6icT3oMYknVBeh36P/UlYDAX4Y8U9H8la6nSsqlY0FYQTjacb8MvBsrxqLEAZO
-43AsYTLz9IuvlrMFRhFuqSwte3kgjEU/w6OLJQvogYLHD6s5bcKdm8pis6w/xjmg
-3W3y/XhnCToS6ZsMrNUGlEd+e/IuKqadZ+iKuG0x0PSbw0IhfdlBdRwMzMCJY2JN
-7QYYzQoM+s22qCI9OK/hN2Ry9Rwe/f25Pa0dT5xwfS4ZtPDwhkmhgQmbibVQquAz
-pl4RHnr06aeX5DEj0y/ISV3KAk+O/cySh9bWCYs2XulDw3NJB1UI2/BZYGx83E2o
-fjoSYaok6WegmlgfBD/dhnpGmkWYtPZryaNo4jD4AbL9B7DgB68U6Pl5YkCZwM//
-NiCkl2MJsNjvKLtjti4OYlin7G39CggcmeV9C/2uPy8V5uVFXBMybqW6AVwaKKCw
-uufcMO/3bO9gMraKf+AIbT3Ky4OuZ66KPB8DOTNverHwyhsS01MiGMVjevDUOZdE
-S9mTFCcxaGe2eSJ3Rmz69noe0bIZTIY2ulS48ysKEV6L9oF2S74=
-=O9E7
------END PGP SIGNATURE-----
-
---Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD--
