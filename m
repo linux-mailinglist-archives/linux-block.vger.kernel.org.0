@@ -2,70 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CD781603D
-	for <lists+linux-block@lfdr.de>; Tue,  7 May 2019 11:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FDB7160AC
+	for <lists+linux-block@lfdr.de>; Tue,  7 May 2019 11:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfEGJOD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 May 2019 05:14:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33832 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfEGJOD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 May 2019 05:14:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f7so10902434wrq.1;
-        Tue, 07 May 2019 02:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:newsgroups:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GDKHQ0tjbO/eijQ7QEZ0tXsibpTksjQI9nsjSh++M8Q=;
-        b=MHnsTuV80HeugVACgM5L3Y98IlK0yXqN0CCLcjjkrZfjLjb/vHSs445SXe1FKBxljy
-         Qd1WKdSDU1/yCBciZ0Fh5kZ1l3Ps0/jC0B4bTT9aS7qZ1d1ypI5a7kYZNuHH9skxMn37
-         ze/XjxA5T43fld+TehIqixmb4zPRPhjzjvVjTMPVh4LmpAifdS6mmGfHQrt859pPuCOE
-         7nv/02SbQ1A5RJaD9w4qBiT2AGAXLiw/MFZCBvfMROBWdHgvYw0pDuD0X2ysVY5h2B/k
-         WjewMy7GrskxEJWYGKdgiLfWHVilBw18hMtZd7zt8maxLNj+F6GAoXPrqlp0SZDhrsEL
-         I7ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:newsgroups:references
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GDKHQ0tjbO/eijQ7QEZ0tXsibpTksjQI9nsjSh++M8Q=;
-        b=F4isrVR2D6ICVmHLT5D2zCg4EOfRLQK6MIShb4dumzcFzt6xOLsmHE4J1c4nVLd5p7
-         RQcpExNGtK0GnYP6mJE3WwNi7yPTJKypaW3T7HTCHZW+kF0A486+rXOzMvMcjx89SQci
-         t7ZQPxjEDlt1BH7JEIuKx1VKBTq886i62DBOYAWWtUwLUUzjZ1hG1W5IpqQ/MMaQ/nB9
-         fLZ1U57yf63osbp8SPBiwjAQyhIAYkcg3rkX+xGxBOa9DlKJ23beD4BhdTkZHpykhImT
-         OTIjzrGpIqbbpan5zC3AOic0xGarHj4aeVVSZqlgAt6eWnL4iFIvmvfQxiF6jlCn7Luo
-         /paA==
-X-Gm-Message-State: APjAAAX0LdQH9VBnzBPC57/Hoe1dVgIc7i7+STH1wOQMkRtOL3LiQCqF
-        DRAYvD0e10BH1JOV0BxacgU=
-X-Google-Smtp-Source: APXvYqwA04q4SaGZby8TRA5BxE7FFBl42JGczYpnh1J5nFHZEJ8pKPKua6+y7G2jSABdlPvNUhz7bQ==
-X-Received: by 2002:a5d:49cb:: with SMTP id t11mr11794061wrs.67.1557220441308;
-        Tue, 07 May 2019 02:14:01 -0700 (PDT)
-Received: from [172.16.8.139] (host-89-243-246-193.as13285.net. [89.243.246.193])
-        by smtp.gmail.com with ESMTPSA id j10sm38944915wrb.0.2019.05.07.02.13.59
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 02:13:59 -0700 (PDT)
+        id S1726349AbfEGJUG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 May 2019 05:20:06 -0400
+Received: from [195.159.176.226] ([195.159.176.226]:47526 "EHLO
+        blaine.gmane.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfEGJUF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 May 2019 05:20:05 -0400
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <glb-linux-block@m.gmane.org>)
+        id 1hNwGX-000cK4-PM
+        for linux-block@vger.kernel.org; Tue, 07 May 2019 11:20:01 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-block@vger.kernel.org
 From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
 Subject: Re: [PATCH 3/3] block/diskstats: more accurate approximation of
  io_ticks for slow disks
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Newsgroups: gmane.linux.kernel,gmane.linux.block
+Date:   Tue, 7 May 2019 10:13:57 +0100
+Message-ID: <d5d39e1c-59f2-b5d8-0189-020efaed4ce8@gmail.com>
 References: <155413438394.3201.15211440151043943989.stgit@buzz>
  <155413438824.3201.15254568091182734151.stgit@buzz>
-X-Mozilla-News-Host: news://nntp.gmane.org
-Message-ID: <d5d39e1c-59f2-b5d8-0189-020efaed4ce8@gmail.com>
-Date:   Tue, 7 May 2019 10:13:57 +0100
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
-MIME-Version: 1.0
+Cc:     linux-kernel@vger.kernel.org
+X-Mozilla-News-Host: news://nntp.gmane.org
 In-Reply-To: <155413438824.3201.15254568091182734151.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Cc:     linux-block@vger.kernel.org
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
@@ -266,4 +234,5 @@ Alan
 >   extern void device_add_disk(struct device *parent, struct gendisk *disk,
 > 
 > 
+
 
