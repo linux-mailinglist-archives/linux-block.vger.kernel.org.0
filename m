@@ -2,89 +2,204 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA11191CD
-	for <lists+linux-block@lfdr.de>; Thu,  9 May 2019 21:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA7D192EC
+	for <lists+linux-block@lfdr.de>; Thu,  9 May 2019 21:31:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfEITAR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 May 2019 15:00:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34318 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbfEISvr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 May 2019 14:51:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w7so1583146plz.1
-        for <linux-block@vger.kernel.org>; Thu, 09 May 2019 11:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O93f2LTd2RzZTjDNtYVogNWJjgQuNQaMHMBdRk2XAMI=;
-        b=g2DLIktkwFYrdi+KqiW8wno2niWEuEz8GfglRim1rE8cbtgGbtBQupL5sebGfvLE7h
-         6b37b+AaGf/1ib6vWx+wG+CB+AePlbXciD4ucibaevAaBC0123+99tsSLap6DrIrrQz2
-         I0r+yOkbqFte6nQ9h8MeZf4NMaCFTzP6OW0YsHtEM2hDAImzEBFrmrOAoLaHtuOEshnS
-         GftadQV0XOARxAk6n18pbZxFFv+qnw1vuu0reNm5T6u1hLL8bFEB8sfeAJ2P6n1QfQur
-         K8SFX9UWr+Cq7i9U/T/O0AO9m3dYJ6QbxLn/1cKSV1S0IjXAMzehxEa1pyHBN2ETdVM4
-         oxYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O93f2LTd2RzZTjDNtYVogNWJjgQuNQaMHMBdRk2XAMI=;
-        b=LNwnnA4Dj24RHzKpgQSm9qYwoUx7o6OZYeU0ovHJO6iM1rB4niESWJTQgDXgShJhVY
-         Os8gnkw6xIWjrgaaszjiJeeYZ9CM1gNfSApqMlEM+v8XvdwjvgcuY7Be1AIW7DRtF5RK
-         Ddvm5r0zo4UX8ruMmS1iPa8GI3UgmaZkQacvvE+TBm38twvoOusV+NkkBBkj51Zv5P9Q
-         vHV4fGlQPg3WIJwbFhvHMR3QmwiKWqlOFewAawzZf5uxTkva0z9mE26bJQegErAW+X4w
-         Tg6HoGNui5qMc5r2LI5m0Dl5XdcEINhcP1EBo60o2LhsFb3WiKnsGg1Vm8PzykpKsXox
-         SPcw==
-X-Gm-Message-State: APjAAAUySCulTcgMHBEJDs3xNLB8/vvZfdDDrzimRd9q+vW7G9RiQseH
-        CnPHVakLJ7nC2zWVlfQicWM5AUvWi89jGA==
-X-Google-Smtp-Source: APXvYqywmwB6HuzE2uC+tqtwoAs9ogvKbiqbYzImsjvrazcIA77IW9F+tn9D/Maq9YUEPpx20VSqWg==
-X-Received: by 2002:a17:902:8e8b:: with SMTP id bg11mr7441759plb.281.1557427906548;
-        Thu, 09 May 2019 11:51:46 -0700 (PDT)
-Received: from ?IPv6:2600:380:7612:320a:c991:fbc8:e3a6:409f? ([2600:380:7612:320a:c991:fbc8:e3a6:409f])
-        by smtp.gmail.com with ESMTPSA id r138sm7040292pfr.2.2019.05.09.11.51.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 11:51:45 -0700 (PDT)
-Subject: Re: [PATCH] brd: add cond_resched to brd_free_pages
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     linux-block@vger.kernel.org
-References: <alpine.LRH.2.02.1905091252300.19234@file01.intranet.prod.int.rdu2.redhat.com>
- <64c82900-aa9b-9093-82cb-30f179eda803@kernel.dk>
- <alpine.LRH.2.02.1905091448260.6131@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1578b998-40c4-52de-938f-8ef9e04cbf6d@kernel.dk>
-Date:   Thu, 9 May 2019 12:51:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.02.1905091448260.6131@file01.intranet.prod.int.rdu2.redhat.com>
-Content-Type: text/plain; charset=utf-8
+        id S1726909AbfEITbP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 May 2019 15:31:15 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60788 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfEITbP (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 9 May 2019 15:31:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 12:31:14 -0700
+X-ExtLoop1: 1
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga008.jf.intel.com with ESMTP; 09 May 2019 12:31:14 -0700
+Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 9 May 2019 12:31:13 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
+ ORSMSX115.amr.corp.intel.com ([169.254.4.162]) with mapi id 14.03.0415.000;
+ Thu, 9 May 2019 12:31:13 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
+        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>
+CC:     "hch@infradead.org" <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "jonas.rabenstein@studium.uni-erlangen.de" 
+        <jonas.rabenstein@studium.uni-erlangen.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Subject: Re: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
+ flag and write
+Thread-Topic: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
+ flag and write
+Thread-Index: AQHU/6tnJPjYcz7aREior5rwNXuvoqZWv1iAgAOVRYCAAsM0AIAGmZiA
+Date:   Thu, 9 May 2019 19:31:12 +0000
+Message-ID: <8342e25cc9d6e84c620d54c6cbe0f7244ebb7de1.camel@intel.com>
+References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+         <20190501134917.GC24132@infradead.org>
+         <alpine.LRH.2.21.1905032058110.30331@linux.fjfi.cvut.cz>
+         <20190505144330.GB1030@hacktheplanet>
+In-Reply-To: <20190505144330.GB1030@hacktheplanet>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.4.116]
+Content-Type: multipart/signed; micalg=sha-1;
+        protocol="application/x-pkcs7-signature"; boundary="=-YCN78LGfkXmWnf27gyZc"
+MIME-Version: 1.0
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/9/19 12:50 PM, Mikulas Patocka wrote:
-> 
-> 
-> On Thu, 9 May 2019, Jens Axboe wrote:
-> 
->> On 5/9/19 10:54 AM, Mikulas Patocka wrote:
->>> The loop that frees all the pages can take unbounded amount of time, so
->>> add cond_resched() to it.
->>
->> Looks fine to me, would be nice with a comment on why the cond_resched()
->> is needed though.
->>
->> -- 
->> Jens Axboe
-> 
-> OK - here I added the comment.
+--=-YCN78LGfkXmWnf27gyZc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Great thanks, applied.
+On Sun, 2019-05-05 at 10:43 -0400, Scott Bauer wrote:
+> On Fri, May 03, 2019 at 10:32:19PM +0200, David Kozub wrote:
+> > On Wed, 1 May 2019, Christoph Hellwig wrote:
+> >=20
+> > > > I successfully tested toggling the MBR done flag and writing
+> > > > the shadow MBR
+> > > > using some tools I hacked together[4] with a Samsung SSD 850
+> > > > EVO drive.
+> > >=20
+> > > Can you submit the tool to util-linux so that we get it into
+> > > distros?
+> >=20
+> > There is already Scott's sed-opal-temp[1] and a fork by Jonas that
+> > adds
+> > support for older version of these new IOCTLs[2]. There was already
+> > some
+> > discussion of getting that to util-linux.[3]
+> >=20
+> > While I like my hack, sed-opal-temp can do much more (my tool
+> > supports just
+> > the few things I actually use). But there are two things which sed-
+> > opal-temp
+> > currently lacks which my hack has:
+> >=20
+> > * It can use a PBKDF2 hash (salted by disk serial number) of the
+> > password
+> >   rather than the password directly. This makes it compatible with
+> > sedutil
+> >   and I think it's also better practice (as firmware can contain
+> > many
+> >   surprises).
+> >=20
+> > * It contains a 'PBA' (pre-boot authorization) tool. A tool
+> > intended to be
+> >   run from shadow mbr that asks for a password and uses it to
+> > unlock all
+> >   disks and set shadow mbr done flag, so after restart the computer
+> > boots
+> >   into the real OS.
+> >=20
+> > @Scott: What are your plans with sed-opal-temp? If you want I can
+> > update
+> > Jonas' patches to the adapted IOCTLs. What are your thoughts on PW
+> > hashing
+> > and a PBA tool?
+>=20
+> I will accept any and all patches to sed opal tooling, I am not
+> picky. I will
+> also give up maintainership of it is someone else feels they can
+> (rightfully
+> so) do a better job.
+>=20
+> Jon sent me a patch for the tool that will deal with writing to the
+> shadow MBR,
+> so once we know these patches are going in i'll pull that patch into
+> the tool.
+>=20
+> Then I guess that leaves PBKDF2 which I don't think will be too hard
+> to pull in.
+>=20
+> With regard to your PBA tool, is that actually being run post-
+> uefi/pre-linux?
+> IE are we writing your tool into the SMBR and that's what is being
+> run on bootup?
+>=20
+> Jon, if you think it's a good idea can you ask David if Revanth or
+> you wants
+> to take over the tooling? Or if anyone else here wants to own it then
+> let me know.
+>=20
 
--- 
-Jens Axboe
+I'll get back to you on this. Let me know if it begins to pick up a lot
+of steam and I can prioritize this.
 
+--=-YCN78LGfkXmWnf27gyZc
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+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
+PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
+AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
+HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
+b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
+JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
+bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
+SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
+MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
+gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
+AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
+gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
+ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
+p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
+7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
+NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
+CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
+FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
+bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
+IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDUwOTE5MzA0N1owIwYJ
+KoZIhvcNAQkEMRYEFHk98NfJtBUAjEXUevIjndasiw+KMA0GCSqGSIb3DQEBAQUABIIBACu252H6
+bgx5XVoe9fEE74XocWaW+nCjI5pO8ExMcRfchJW5IN77Z1oKHpT6k09Pb/tzmeOc5xDDMCHMabGY
+o2diY+d61+7XfZg/obHbMK4T0JSpKX69JO1c9460y7/2Zcl8DWaerq0Tl37JQNetqnUy7MmG0fFa
+XjntwcxkxmD7PjKX/JL7n9TcpwmCEQvp5fV/5Bj6In7ceUpJ6QPEIwG9EkidIfK8nAHjKw5zwpJJ
+ccztCt3n8CVvZa3OMy0YsJz7rqWonmIEieeD0YJ2CLOYcGkdYVBm8LOwGCKcZ4g7Yrc14zcqZGs8
+3SlbjGy3TBKMIJJYTlRRaC4pyjMrelEAAAAAAAA=
+
+
+--=-YCN78LGfkXmWnf27gyZc--
