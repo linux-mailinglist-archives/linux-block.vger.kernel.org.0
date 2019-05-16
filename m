@@ -2,71 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F31F1FD4A
-	for <lists+linux-block@lfdr.de>; Thu, 16 May 2019 03:48:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7013B1FE40
+	for <lists+linux-block@lfdr.de>; Thu, 16 May 2019 05:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfEPBqc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 May 2019 21:46:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34146 "EHLO mx1.redhat.com"
+        id S1726324AbfEPDrO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 May 2019 23:47:14 -0400
+Received: from smtpbgsg2.qq.com ([54.254.200.128]:40072 "EHLO smtpbgsg2.qq.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbfEPAiD (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 May 2019 20:38:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 916EA308623C;
-        Thu, 16 May 2019 00:38:03 +0000 (UTC)
-Received: from rh2.redhat.com (ovpn-121-189.rdu2.redhat.com [10.10.121.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E87BB1001E67;
-        Thu, 16 May 2019 00:38:02 +0000 (UTC)
-From:   Mike Christie <mchristi@redhat.com>
-To:     josef@toxicpanda.com, linux-block@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>
-Subject: [PATCH 1/1] nbd: add netlink reconfigure resize support
-Date:   Wed, 15 May 2019 19:38:00 -0500
-Message-Id: <20190516003800.28373-1-mchristi@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 16 May 2019 00:38:03 +0000 (UTC)
+        id S1726190AbfEPDrO (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 15 May 2019 23:47:14 -0400
+X-QQ-mid: bizesmtp18t1557978424tjaxdklb
+Received: from localhost.localdomain (unknown [218.76.23.26])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Thu, 16 May 2019 11:47:03 +0800 (CST)
+X-QQ-SSF: 01400000002000Q0VN60B00A0000000
+X-QQ-FEAT: s8YYpWqVDddWzOmnxU9WCnkPrNb4QHFfdkMcWx8xA45oyqjJENJibBMpdymdP
+        ZKnnsYaD0HX3JrAh76hxi2BDjPjZAJR3ufXNuX+8AgACwtwRWd2/XZZr1whvMmTUHzn7yB9
+        lBoReYD9BXus/jZq/vSWOyusaD2Fy3zi+NY4QDsqj5gq0rnb1n1u3PlpDygGgv3UsrcUGlC
+        Dm23GoesbzOjtsEMNhKpRpv3yCnJzC6u9mJOtD2edND8G3o83cVm/Zs5lLVtBFQjKxUCOlC
+        m4tpVa+BkYAihR9WB+phmEmkJeQPyYJ4Ty2gY0tEJglSUL1Nz11hznM8ihI2Q6MxdlHkVQR
+        gisRHuB
+X-QQ-GoodBg: 2
+From:   Jackie Liu <liuyun01@kylinos.cn>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>
+Subject: [PATCH 1/2] io_uring: adjust smp_rmb inside io_cqring_events
+Date:   Thu, 16 May 2019 11:46:30 +0800
+Message-Id: <1557978391-26300-1-git-send-email-liuyun01@kylinos.cn>
+X-Mailer: git-send-email 2.7.4
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign1
+X-QQ-Bgrelay: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If the device is setup with ioctl we can resize the device after the
-initial setup, but if the device is setup with netlink we cannot use the
-resize related ioctls and there is no netlink reconfigure size ATTR
-handling code.
+Whenever smp_rmb is required to use io_cqring_events,
+keep smp_rmb inside the function io_cqring_events.
 
-This patch adds netlink reconfigure resize support to match the ioctl
-interface.
-
-Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
 ---
- drivers/block/nbd.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/io_uring.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 053958a8a2ba..68b9d4b2d1be 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1939,6 +1939,15 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
- 		goto out;
- 	}
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 84efb89..516f036 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2044,6 +2044,8 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
  
-+	if (info->attrs[NBD_ATTR_SIZE_BYTES]) {
-+		u64 bytes = nla_get_u64(info->attrs[NBD_ATTR_SIZE_BYTES]);
-+		nbd_size_set(nbd, config->blksize,
-+			     div64_u64(bytes, config->blksize));
-+	}
-+	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
-+		u64 bsize = nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
-+		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
-+	}
- 	if (info->attrs[NBD_ATTR_TIMEOUT]) {
- 		u64 timeout = nla_get_u64(info->attrs[NBD_ATTR_TIMEOUT]);
- 		nbd->tag_set.timeout = timeout * HZ;
+ static unsigned io_cqring_events(struct io_cq_ring *ring)
+ {
++	/* See comment at the top of this file */
++	smp_rmb();
+ 	return READ_ONCE(ring->r.tail) - READ_ONCE(ring->r.head);
+ }
+ 
+@@ -2059,8 +2061,6 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	DEFINE_WAIT(wait);
+ 	int ret;
+ 
+-	/* See comment at the top of this file */
+-	smp_rmb();
+ 	if (io_cqring_events(ring) >= min_events)
+ 		return 0;
+ 
+@@ -2082,8 +2082,6 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 		prepare_to_wait(&ctx->wait, &wait, TASK_INTERRUPTIBLE);
+ 
+ 		ret = 0;
+-		/* See comment at the top of this file */
+-		smp_rmb();
+ 		if (io_cqring_events(ring) >= min_events)
+ 			break;
+ 
 -- 
-2.21.0
+2.7.4
+
+
 
