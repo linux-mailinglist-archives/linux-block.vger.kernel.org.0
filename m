@@ -2,139 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D5A26B19
-	for <lists+linux-block@lfdr.de>; Wed, 22 May 2019 21:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECBC5270C3
+	for <lists+linux-block@lfdr.de>; Wed, 22 May 2019 22:20:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfEVTYC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 May 2019 15:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731089AbfEVTYB (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB07217D4;
-        Wed, 22 May 2019 19:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553040;
-        bh=t83Soi+NvuAnAjhnJ0RU3VwsJP2TMAEED2QcB4xYGNg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FctIEpKUdrQcDIJ87jKol4SElf4i9QhRFhdlbYcM1I2jQcKaQy8SrcT/SxXrM/DbD
-         NV/DQ620EYUDqWI+0ODAMBC0b3aOMKd0U95uzGDeEldnSysQDWkBykepUtPQDXC/Se
-         u7HnLE3p8TZXGZ9O1+RXGVm4OxFdB2dFxc42YSr4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        id S1729771AbfEVUUu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 22 May 2019 16:20:50 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41998 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729679AbfEVUUt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 22 May 2019 16:20:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id l25so5581851eda.9
+        for <linux-block@vger.kernel.org>; Wed, 22 May 2019 13:20:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HIQjU7W1517xzC6E8FPYkI2SHzlzEbtjalA/f08V8fg=;
+        b=Ssb3QgFpKCLE3pT4cOwkR876hM6goGDPBIBAzukzGmPoIHIpAqFwCb0/bcMEYGbeku
+         NPrG9iezPZyzIt/ld41wBGAhkeZuBPLVM8SNJvFLCujIGizaTMGSf27SfMZ9NW1fk8A8
+         nteBcWfTEf/ikrPRCvito5Da/qrQUIatXJZwTboxjC97eWnIq+zfAeO5QedW6WQ67OvZ
+         G2AsNPV0hBN4DRiKlt8nr1HZQ0g9kA2nhjvPnzZh89JiaYG8yMLrNvpM9HRRs8bgsz3W
+         JBjlsbLk+/ijSvP6sdXtrSqDHoGN7so8hPo1SdiCB2FdmJvNBec3tN/Lf2vqN7MSLMTL
+         rD0w==
+X-Gm-Message-State: APjAAAUYvGvXbp0Qn9+EoICpmIP0iuzGIes7krxu+jifbD2jqqmu6Viz
+        w9S4U/GLQreZn7XJgQvRTwU=
+X-Google-Smtp-Source: APXvYqwxFbbzeFEnij6ywPND3rClzaDLu2aezuK3tbBNZK81WKU64tCi3FMqFpVPMlh8+/13I0yqdA==
+X-Received: by 2002:a50:9968:: with SMTP id l37mr91263691edb.143.1558556448074;
+        Wed, 22 May 2019 13:20:48 -0700 (PDT)
+Received: from [192.168.1.6] (178-117-55-239.access.telenet.be. [178.117.55.239])
+        by smtp.gmail.com with ESMTPSA id a3sm7330472edc.75.2019.05.22.13.20.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 13:20:47 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Reset timeout for paused hardware
+To:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 015/317] blk-mq: grab .q_usage_counter when queuing request from plug code path
-Date:   Wed, 22 May 2019 15:18:36 -0400
-Message-Id: <20190522192338.23715-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
-References: <20190522192338.23715-1-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>
+References: <20190522174812.5597-1-keith.busch@intel.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <721e059e-ed88-734c-fea2-3637e6d31f4c@acm.org>
+Date:   Wed, 22 May 2019 22:20:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522174812.5597-1-keith.busch@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+On 5/22/19 7:48 PM, Keith Busch wrote:
+> Hardware may temporarily stop processing commands that have
+> been dispatched to it while activating new firmware. Some target
+> implementation's paused state time exceeds the default request expiry,
+> so any request dispatched before the driver could quiesce for the
+> hardware's paused state will time out, and handling this may interrupt
+> the firmware activation.
+> 
+> This two-part series provides a way for drivers to reset dispatched
+> requests' timeout deadline, then uses this new mechanism from the nvme
+> driver's fw activation work.
 
-[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
+Hi Keith,
 
-Just like aio/io_uring, we need to grab 2 refcount for queuing one
-request, one is for submission, another is for completion.
+Is it essential to modify the block layer to implement this behavior
+change? Would it be possible to implement this behavior change by
+modifying the NVMe driver only, e.g. by modifying the nvme_timeout()
+function and by making that function return BLK_EH_RESET_TIMER while new
+firmware is being activated?
 
-If the request isn't queued from plug code path, the refcount grabbed
-in generic_make_request() serves for submission. In theroy, this
-refcount should have been released after the sumission(async run queue)
-is done. blk_freeze_queue() works with blk_sync_queue() together
-for avoiding race between cleanup queue and IO submission, given async
-run queue activities are canceled because hctx->run_work is scheduled with
-the refcount held, so it is fine to not hold the refcount when
-running the run queue work function for dispatch IO.
+Thanks,
 
-However, if request is staggered into plug list, and finally queued
-from plug code path, the refcount in submission side is actually missed.
-And we may start to run queue after queue is removed because the queue's
-kobject refcount isn't guaranteed to be grabbed in flushing plug list
-context, then kernel oops is triggered, see the following race:
-
-blk_mq_flush_plug_list():
-        blk_mq_sched_insert_requests()
-                insert requests to sw queue or scheduler queue
-                blk_mq_run_hw_queue
-
-Because of concurrent run queue, all requests inserted above may be
-completed before calling the above blk_mq_run_hw_queue. Then queue can
-be freed during the above blk_mq_run_hw_queue().
-
-Fixes the issue by grab .q_usage_counter before calling
-blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
-safe because the queue is absolutely alive before inserting request.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-mq-sched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 0c98b6c1ca49c..1213556a20dad 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 				  struct list_head *list, bool run_queue_async)
- {
- 	struct elevator_queue *e;
-+	struct request_queue *q = hctx->queue;
-+
-+	/*
-+	 * blk_mq_sched_insert_requests() is called from flush plug
-+	 * context only, and hold one usage counter to prevent queue
-+	 * from being released.
-+	 */
-+	percpu_ref_get(&q->q_usage_counter);
- 
- 	e = hctx->queue->elevator;
- 	if (e && e->type->ops.insert_requests)
-@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
- 			blk_mq_try_issue_list_directly(hctx, list);
- 			if (list_empty(list))
--				return;
-+				goto out;
- 		}
- 		blk_mq_insert_requests(hctx, ctx, list);
- 	}
- 
- 	blk_mq_run_hw_queue(hctx, run_queue_async);
-+ out:
-+	percpu_ref_put(&q->q_usage_counter);
- }
- 
- static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
--- 
-2.20.1
+Bart.
 
