@@ -2,78 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDDD827E1D
-	for <lists+linux-block@lfdr.de>; Thu, 23 May 2019 15:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B72027E4B
+	for <lists+linux-block@lfdr.de>; Thu, 23 May 2019 15:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbfEWN2H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 May 2019 09:28:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35321 "EHLO mga05.intel.com"
+        id S1730081AbfEWNjb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 May 2019 09:39:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39988 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730028AbfEWN2H (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 May 2019 09:28:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1729902AbfEWNjb (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 23 May 2019 09:39:31 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 06:28:06 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 06:39:31 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,503,1549958400"; 
-   d="scan'208";a="174753008"
 Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga002.fm.intel.com with ESMTP; 23 May 2019 06:28:05 -0700
-Date:   Thu, 23 May 2019 07:23:04 -0600
+  by orsmga005.jf.intel.com with ESMTP; 23 May 2019 06:39:30 -0700
+Date:   Thu, 23 May 2019 07:34:29 -0600
 From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <keith.busch@gmail.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     "Busch, Keith" <keith.busch@intel.com>,
         Jens Axboe <axboe@kernel.dk>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH 0/2] Reset timeout for paused hardware
-Message-ID: <20190523132304.GB14049@localhost.localdomain>
+        Christoph Hellwig <hch@lst.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH 2/2] nvme: reset request timeouts during fw activation
+Message-ID: <20190523133428.GC14049@localhost.localdomain>
 References: <20190522174812.5597-1-keith.busch@intel.com>
- <20190523032925.GA10601@ming.t460p>
- <CAOSXXT45jyLrKZ56QOPGWFyajtSvgPQcT+f2nj95n9Eowb44FA@mail.gmail.com>
- <20190523101311.GB15492@lst.de>
+ <20190522174812.5597-3-keith.busch@intel.com>
+ <20190523101953.GA18805@ming.t460p>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523101311.GB15492@lst.de>
+In-Reply-To: <20190523101953.GA18805@ming.t460p>
 User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, May 23, 2019 at 03:13:11AM -0700, Christoph Hellwig wrote:
-> On Wed, May 22, 2019 at 09:48:10PM -0600, Keith Busch wrote:
-> > Yeah, that's a good question. A FW update may have been initiated out
-> > of band or from another host entirely. The driver can't count on
-> > preparing for hardware pausing command processing before it's
-> > happened, but we'll always find out asynchronously after it's too late
-> > to freeze.
+On Thu, May 23, 2019 at 03:19:54AM -0700, Ming Lei wrote:
+> On Wed, May 22, 2019 at 11:48:12AM -0600, Keith Busch wrote:
+> > @@ -3605,6 +3606,11 @@ static void nvme_fw_act_work(struct work_struct *work)
+> >  				msecs_to_jiffies(admin_timeout * 1000);
+> >  
+> >  	nvme_stop_queues(ctrl);
+> > +	nvme_sync_queues(ctrl);
+> > +
+> > +	blk_mq_quiesce_queue(ctrl->admin_q);
+> > +	blk_sync_queue(ctrl->admin_q);
 > 
-> I don't think that is the case at least for spec compliant devices.
-> 
-> From NVMe 1.3:
-> 
-> Figure 49: Asynchronous Event Information - Notice
-> 
-> 1h		Firmware Activation Starting: The controller is starting
-> 		a firmware activation process during which command
-> 		processing is paused. Host software may use CSTS.PP to
-> 		determine when command processing has resumed. To clear
-> 		this event, host software reads the Firmware Slot
-> 		Information log page.
-> 
-> So we are supposed to get an AEN before the device stops processing
-> commands.
+> blk_sync_queue() may not halt timeout detection completely since the
+> timeout work may reset timer again.
 
-Hm, I read the same section, but conclude differently (and at least some
-vendors did too). A spec compliant controller activating new firmware
-without reset would stop processing commands and set CSTS.PP first,
-then send the AEN. When the host is aware to poll Processing Paused,
-the controller hasn't been processing new commands for some time.
+Doh! Didn't hit that in testing, but point taken.
+ 
+> Also reset still may come during activating FW, is that a problem?
 
-Could you give some more detail on your interpretation?
+IO timeout and user initiated resets should be avoided. A state machine
+addition may be useful here.
