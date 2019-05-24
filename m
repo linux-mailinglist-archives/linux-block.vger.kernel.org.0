@@ -2,107 +2,152 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 161012942F
-	for <lists+linux-block@lfdr.de>; Fri, 24 May 2019 11:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E734929532
+	for <lists+linux-block@lfdr.de>; Fri, 24 May 2019 11:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389542AbfEXJGb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 May 2019 05:06:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32886 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389515AbfEXJGb (ORCPT
+        id S2390046AbfEXJzp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 May 2019 05:55:45 -0400
+Received: from m9784.mail.qiye.163.com ([220.181.97.84]:30670 "EHLO
+        m9784.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389913AbfEXJzp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 May 2019 05:06:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w1so8028824ljw.0;
-        Fri, 24 May 2019 02:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pMU63N90N2a6pXKwvYAZ7NGX7dlAMOWlTR4hVN71d+g=;
-        b=nBmvoo6/aJfUJvIX7emFQp1qUTY/CPD2o5Sf9M/ecdwDcNGFOMTCIcf7dbb9BK8e3N
-         7JK3jiAIK6ETrgigaKn4XgxN4VpcNZRLdtawy7ftvEUUfsNb4dNu8Hy84sAE+68H6yg3
-         E72Okv2SpISabzjT/Z/MGaGQODbsTg+acHGfhMQePDApbBvcaKt++QCrqfX1+kHlPiJS
-         x21xalFnqurGpbb1jlzpYwx9+UjOscmghnFxafukjxFutTcdZR2ZYgSw69lTu0aUWOz7
-         78WfA+bRROnwJTXkUNGqCX3KSjkDnuLrIMXvaYzz3s9giWCawojVESQYXKaGS954qB9c
-         uoxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pMU63N90N2a6pXKwvYAZ7NGX7dlAMOWlTR4hVN71d+g=;
-        b=n/JekZstzhlZLLXWlb+doQccd/Oljzi7YLsz9rdLGkmotpuTvWAh6qr1M9/IFWnxtG
-         Cat0bPmTvbAAfH0NPFcz4TFmL67uZ1BorZhFLUQZkTJwN+7rsKf68gMfRdd0FbmmIqlO
-         fMLhnrCSAu1tVXZcaD2u+hLNs1HZWLQu1MW9xjdx74t3kKV2f8Z4jzXYJWMxijg7i+zg
-         7tAaArYd7RnvGu/VZhjlURtROiG4yMiBZP1Xk7jIyrNBYK9edAWl4rogrpb3OjHLbHMm
-         4DbIrNiktahg2WQ5XSFty+HNGcAqd+j3mbhBlfaklh0eG/xQT6bpYbLBa/hDg7v3tNuQ
-         3iAA==
-X-Gm-Message-State: APjAAAXmklDf5oGAmcl0Kz6QTzq8ZBFqnaXPoYlJN6dWEdkwEE6Xx5uP
-        Q4ZQaiPZTWmtB51lmT89H6PBvRg4fcg=
-X-Google-Smtp-Source: APXvYqy+y8pjWQek9mnm9deUaxlaSK4qdqmtS4i37KxBnt4vxKxFyj8DuOWLnjawJUkYN8ZDmJ5/2w==
-X-Received: by 2002:a2e:6a01:: with SMTP id f1mr51154780ljc.21.1558688789118;
-        Fri, 24 May 2019 02:06:29 -0700 (PDT)
-Received: from [172.31.190.215] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id n8sm480034lfe.15.2019.05.24.02.06.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 02:06:28 -0700 (PDT)
-Subject: Re: [PATCH 0/7] Adjust hybrid polling sleep time
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Fri, 24 May 2019 05:55:45 -0400
+Received: from kernel_test2.localdomain (unknown [120.132.1.243])
+        by m9784.mail.qiye.163.com (Hmail) with ESMTPA id B6CFB415E9;
+        Fri, 24 May 2019 17:48:02 +0800 (CST)
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
         linux-kernel@vger.kernel.org
-References: <cover.1556609582.git.asml.silence@gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <28d729ed-1112-501a-a5d4-6d53d6432113@gmail.com>
-Date:   Fri, 24 May 2019 12:06:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <cover.1556609582.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 1/3] nbd: fix connection timed out error after reconnecting to server
+Date:   Fri, 24 May 2019 17:43:54 +0800
+Message-Id: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-HM-Spam-Status: e1kIGBQJHllBWUlVT0tMQkJCQkJJSExLTUpZV1koWUFJQjdXWS1ZQUlXWQ
+        kOFx4IWUFZNTQpNjo3JCkuNz5ZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PS46Dio*Ezg1TSxWMTA*CEwe
+        TSMwFA9VSlVKTk5DTUJKSUNIS0xLVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQU9ISEg3Bg++
+X-HM-Tid: 0a6ae93d7ff12086kuqyb6cfb415e9
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Any suggestions?
+Some I/O requests that have been sent succussfully but have not yet been
+replied won't be resubmitted after reconnecting because of server restart,
+so we add a list to track them.
 
-You might also want to consider (and hopefully apply) the first 3
-separately as they are bug fixes. (e.g. hybrid polling turned out to be
-disabled).
-Would it be better for me to split the patchset?
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+---
+ drivers/block/nbd.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-
-On 4/30/2019 10:34 AM, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
-> 
-> Sleep time for adaptive hybrid polling is coarse and can be improved to
-> decrease CPU load. Use variation of the 3-sigma rule and runtime
-> tuning.
-> 
-> This approach gives up to 2x CPU load reduction keeping the same latency
-> distribution and throughput.
-> 
-> Pavel Begunkov (7):
->   blk-iolatency: Fix zero mean in previous stats
->   blk-stats: Introduce explicit stat staging buffers
->   blk-mq: Fix disabled hybrid polling
->   blk-stats: Add left mean deviation to blk_stats
->   blk-mq: Precalculate hybrid polling time
->   blk-mq: Track num of overslept by hybrid poll rqs
->   blk-mq: Adjust hybrid poll sleep time
-> 
->  block/blk-core.c          |   7 +-
->  block/blk-iolatency.c     |  60 ++++++++++----
->  block/blk-mq-debugfs.c    |  14 ++--
->  block/blk-mq.c            | 163 ++++++++++++++++++++++++++++----------
->  block/blk-stat.c          |  67 +++++++++++++---
->  block/blk-stat.h          |  15 +++-
->  include/linux/blk_types.h |   9 +++
->  include/linux/blkdev.h    |  17 +++-
->  8 files changed, 271 insertions(+), 81 deletions(-)
-> 
-
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 053958a..ca69d6e 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -113,6 +113,8 @@ struct nbd_device {
+ 	struct list_head list;
+ 	struct task_struct *task_recv;
+ 	struct task_struct *task_setup;
++	struct mutex outstanding_lock;
++	struct list_head outstanding_queue;
+ };
+ 
+ #define NBD_CMD_REQUEUED	1
+@@ -125,6 +127,7 @@ struct nbd_cmd {
+ 	blk_status_t status;
+ 	unsigned long flags;
+ 	u32 cmd_cookie;
++	struct list_head outstanding_entry;
+ };
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+@@ -619,6 +622,24 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
+ 	return 0;
+ }
+ 
++static struct nbd_cmd *nbd_get_cmd(struct nbd_device *nbd,
++					struct nbd_cmd *xcmd)
++{
++	struct nbd_cmd *cmd, *tmp;
++
++	mutex_lock(&nbd->outstanding_lock);
++	list_for_each_entry_safe(cmd, tmp, &nbd->outstanding_queue, outstanding_entry) {
++		if (cmd != xcmd)
++			continue;
++		list_del_init(&cmd->outstanding_entry);
++		mutex_unlock(&nbd->outstanding_lock);
++		return cmd;
++	}
++	mutex_unlock(&nbd->outstanding_lock);
++
++	return ERR_PTR(-ENOENT);
++}
++
+ /* NULL returned = something went wrong, inform userspace */
+ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ {
+@@ -714,12 +735,30 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 				req, bvec.bv_len);
+ 		}
+ 	}
++	cmd = nbd_get_cmd(nbd, cmd);
++	if (IS_ERR(cmd)) {
++		dev_err(disk_to_dev(nbd->disk), "Unexpected reply (%d) %p which not in outstanding queue\n",
++			tag, req);
++		ret = -ENOENT;
++	}
+ out:
+ 	trace_nbd_payload_received(req, handle);
+ 	mutex_unlock(&cmd->lock);
+ 	return ret ? ERR_PTR(ret) : cmd;
+ }
+ 
++static void nbd_requeue_outstanding(struct nbd_device *nbd)
++{
++	struct nbd_cmd *cmd, *tmp;
++
++	mutex_lock(&nbd->outstanding_lock);
++	list_for_each_entry_safe(cmd, tmp, &nbd->outstanding_queue, outstanding_entry) {
++		nbd_requeue_cmd(cmd);
++		list_del_init(&cmd->outstanding_entry);
++	}
++	mutex_unlock(&nbd->outstanding_lock);
++}
++
+ static void recv_work(struct work_struct *work)
+ {
+ 	struct recv_thread_args *args = container_of(work,
+@@ -742,6 +781,7 @@ static void recv_work(struct work_struct *work)
+ 
+ 		blk_mq_complete_request(blk_mq_rq_from_pdu(cmd));
+ 	}
++	nbd_requeue_outstanding(nbd);
+ 	atomic_dec(&config->recv_threads);
+ 	wake_up(&config->recv_wq);
+ 	nbd_config_put(nbd);
+@@ -892,6 +932,10 @@ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+ 		nbd_mark_nsock_dead(nbd, nsock, 1);
+ 		nbd_requeue_cmd(cmd);
+ 		ret = 0;
++	} else if (ret == 0) {
++		mutex_lock(&nbd->outstanding_lock);
++		list_add_tail(&cmd->outstanding_entry, &nbd->outstanding_queue);
++		mutex_unlock(&nbd->outstanding_lock);
+ 	}
+ out:
+ 	mutex_unlock(&nsock->tx_lock);
+@@ -1615,6 +1659,8 @@ static int nbd_dev_add(int index)
+ 	refcount_set(&nbd->config_refs, 0);
+ 	refcount_set(&nbd->refs, 1);
+ 	INIT_LIST_HEAD(&nbd->list);
++	mutex_init(&nbd->outstanding_lock);
++	INIT_LIST_HEAD(&nbd->outstanding_queue);
+ 	disk->major = NBD_MAJOR;
+ 	disk->first_minor = index << part_shift;
+ 	disk->fops = &nbd_fops;
 -- 
-Yours sincerely,
-Pavel Begunkov
+1.8.3.1
+
