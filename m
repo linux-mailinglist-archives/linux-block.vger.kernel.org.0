@@ -2,71 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 319AE2952D
-	for <lists+linux-block@lfdr.de>; Fri, 24 May 2019 11:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8BA0297E4
+	for <lists+linux-block@lfdr.de>; Fri, 24 May 2019 14:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbfEXJzo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 May 2019 05:55:44 -0400
-Received: from m9784.mail.qiye.163.com ([220.181.97.84]:30532 "EHLO
-        m9784.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389911AbfEXJzn (ORCPT
+        id S2391289AbfEXMQU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 May 2019 08:16:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45599 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390961AbfEXMQU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 May 2019 05:55:43 -0400
-X-Greylist: delayed 458 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 May 2019 05:55:42 EDT
-Received: from kernel_test2.localdomain (unknown [120.132.1.243])
-        by m9784.mail.qiye.163.com (Hmail) with ESMTPA id 1AA2E41CAB;
-        Fri, 24 May 2019 17:48:52 +0800 (CST)
-From:   Yao Liu <yotta.liu@ucloud.cn>
-To:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] nbd: mark sock as dead even if it's the last one
-Date:   Fri, 24 May 2019 17:43:56 +0800
-Message-Id: <1558691036-16281-3-git-send-email-yotta.liu@ucloud.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
-X-HM-Spam-Status: e1kIGBQJHllBWVZKVUpLSUJCQkNLTU9LT0pKWVdZKFlBSUI3V1ktWUFJV1
-        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBQ6Lhw*NDg0FCw2ITdNDyxN
-        EjpPC0xVSlVKTk5DTUJKSEhJSENDVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SUtVSkhJVUpVSU9IWVdZCAFZQUlKQ083Bg++
-X-HM-Tid: 0a6ae93e40cc2086kuqy1aa2e41cab
+        Fri, 24 May 2019 08:16:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t24so8455446otl.12
+        for <linux-block@vger.kernel.org>; Fri, 24 May 2019 05:16:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0oKTwkde9XEJOFpcJOnGspoMofZM+LnbPvQVIhROM6s=;
+        b=n7vbDCirk6msBJnOZZ4oaAP2AXRTuRnf7IgYFV5uPQDNgeXnMiqD9L5Q4zrx90w1KM
+         rcbZ+2UrgXuQsZVqM/qX+ZTEZGUSYbQMnrZmNTFA7T7lbXRofdiUXcpl90ZhNekM79B1
+         PSBYH1/aTrgAakN6ihwPRNuIKZRMDivINXAje3wHm/kkNp0ReRHY0UIys8AfgPAWFoGz
+         V43jUDajHHBiuTdDaCmjvhF+LItYrQrpE55jP1mUBqUQYJen3yMMIIwDDPzOVJy39hfC
+         jue8qdlD2iERTlts6Gjjnf0PfBScZtxp65gM6szrS+Lrq+8CRIRAwCbpbdHRMRwnF5Ez
+         GTmQ==
+X-Gm-Message-State: APjAAAWg2xKt1fE59qdYES0K+0Yaf7ViLVSasEoyQ7N2tJLjtvavWA4J
+        +Arul0BIpZ5aLA5gTraib9b6KzzcMJf7Tt2yrEdzvQ==
+X-Google-Smtp-Source: APXvYqxazIFqgvL6u5aVzpH6WHlSgorriA+H9vzek+eGtqx0gS/lpZLKygdMQDHfJnmyLHrmAXZln0j9ZIPe2DD3Xek=
+X-Received: by 2002:a9d:6a86:: with SMTP id l6mr1942853otq.93.1558700179814;
+ Fri, 24 May 2019 05:16:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190523214939.30277-1-jpittman@redhat.com> <CACVXFVNr_-A2u=8=Uni4K7HgfEBc2g1JAFfW98TY2tZKzcH9+g@mail.gmail.com>
+In-Reply-To: <CACVXFVNr_-A2u=8=Uni4K7HgfEBc2g1JAFfW98TY2tZKzcH9+g@mail.gmail.com>
+From:   John Pittman <jpittman@redhat.com>
+Date:   Fri, 24 May 2019 08:16:08 -0400
+Message-ID: <CA+RJvhxLnS+OhxfeYHY16By0njt-yd0C5R66SU81sXY7fpvzfw@mail.gmail.com>
+Subject: Re: [PATCH] block: print offending values when cloned rq limits are exceeded
+To:     Ming Lei <tom.leiming@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        David Jeffery <djeffery@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When sock dead, nbd_read_stat should return a ERR_PTR and then we should
-mark sock as dead and wait for a reconnection if the dead sock is the last
-one, because nbd_xmit_timeout won't resubmit while num_connections <= 1.
+Hi Ming; thanks for reviewing.  I've not seen anything in 5.x.
+Currently, we have a RHEL case for kernel 3.x where we've hit this
+error, but we've yet to identify root cause.  As part of debugging,
+the techs involved are having to grab the values via systemtap (which
+the end-user is resisting).  Please feel free to contact me off-list
+if you want the details on the case.  If the patch is approved here, I
+was planning to see if you would pull it into the RHEL stream for 4.x
+so we would not have to mess w/ systemtap next time.  Generally, in
+support, when we see this error it's from an admin or script setting
+bad stacking values.
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
----
- drivers/block/nbd.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 22e86f4..a557a83 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -716,15 +716,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 			if (result <= 0) {
- 				dev_err(disk_to_dev(nbd->disk), "Receive data failed (result %d)\n",
- 					result);
--				/*
--				 * If we've disconnected or we only have 1
--				 * connection then we need to make sure we
--				 * complete this request, otherwise error out
--				 * and let the timeout stuff handle resubmitting
--				 * this request onto another connection.
--				 */
--				if (nbd_disconnected(config) ||
--				    config->num_connections <= 1) {
-+				if (nbd_disconnected(config)) {
- 					cmd->status = BLK_STS_IOERR;
- 					goto out;
- 				}
--- 
-1.8.3.1
-
+On Thu, May 23, 2019 at 9:58 PM Ming Lei <tom.leiming@gmail.com> wrote:
+>
+> On Fri, May 24, 2019 at 5:50 AM John Pittman <jpittman@redhat.com> wrote:
+> >
+> > While troubleshooting issues where cloned request limits have been
+> > exceeded, it is often beneficial to know the actual values that
+> > have been breached.  Print these values, assisting in ease of
+> > identification of root cause of the breach.
+> >
+> > Signed-off-by: John Pittman <jpittman@redhat.com>
+> > ---
+> >  block/blk-core.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/block/blk-core.c b/block/blk-core.c
+> > index 419d600e6637..af62150bb1ba 100644
+> > --- a/block/blk-core.c
+> > +++ b/block/blk-core.c
+> > @@ -1199,7 +1199,9 @@ static int blk_cloned_rq_check_limits(struct request_queue *q,
+> >                                       struct request *rq)
+> >  {
+> >         if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
+> > -               printk(KERN_ERR "%s: over max size limit.\n", __func__);
+> > +               printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
+> > +                       __func__, blk_rq_sectors(rq),
+> > +                       blk_queue_get_max_sectors(q, req_op(rq)));
+> >                 return -EIO;
+> >         }
+> >
+> > @@ -1211,7 +1213,8 @@ static int blk_cloned_rq_check_limits(struct request_queue *q,
+> >          */
+> >         blk_recalc_rq_segments(rq);
+> >         if (rq->nr_phys_segments > queue_max_segments(q)) {
+> > -               printk(KERN_ERR "%s: over max segments limit.\n", __func__);
+> > +               printk(KERN_ERR "%s: over max segments limit. (%hu > %hu)\n",
+> > +                       __func__, rq->nr_phys_segments, queue_max_segments(q));
+> >                 return -EIO;
+> >         }
+>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>
+> BTW, do you still see such kind of warning since v5.1? If yes, could
+> you share something
+> more?
+>
+> Thanks,
+> Ming Lei
