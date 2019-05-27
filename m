@@ -2,240 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EE8B2B81F
-	for <lists+linux-block@lfdr.de>; Mon, 27 May 2019 17:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CDF82C168
+	for <lists+linux-block@lfdr.de>; Tue, 28 May 2019 10:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfE0PDN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 May 2019 11:03:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52818 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfE0PDN (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 May 2019 11:03:13 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D2BD53091D67;
-        Mon, 27 May 2019 15:03:12 +0000 (UTC)
-Received: from localhost (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 173511017E39;
-        Mon, 27 May 2019 15:03:07 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-scsi@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        John Garry <john.garry@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Brace <don.brace@microsemi.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 5/5] blk-mq: Wait for for hctx inflight requests on CPU unplug
-Date:   Mon, 27 May 2019 23:02:07 +0800
-Message-Id: <20190527150207.11372-6-ming.lei@redhat.com>
-In-Reply-To: <20190527150207.11372-1-ming.lei@redhat.com>
-References: <20190527150207.11372-1-ming.lei@redhat.com>
+        id S1725943AbfE1Iea (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 May 2019 04:34:30 -0400
+Received: from m9784.mail.qiye.163.com ([220.181.97.84]:51996 "EHLO
+        m9784.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfE1Iea (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 28 May 2019 04:34:30 -0400
+Received: from localhost (unknown [120.132.1.243])
+        by m9784.mail.qiye.163.com (Hmail) with ESMTPA id A3EFD419FD;
+        Tue, 28 May 2019 16:34:22 +0800 (CST)
+Date:   Tue, 28 May 2019 02:07:43 +0800
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        nbd <nbd@other.debian.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH 1/3] nbd: fix connection timed out error after
+ reconnecting to server
+Message-ID: <20190527180743.GA20702@192-168-150-246.7~>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 27 May 2019 15:03:13 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HM-Spam-Status: e1kIGBQJHllBWUtVTkhJQkJCQ0pITk5NTUxKWVdZKFlBSUI3V1ktWUFJV1
+        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6Kzo5DjgwNiNJIS4dCDoN
+        P01PCjpVSlVKTk5CS0hJT01JQ0JOVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQU9KTk43Bg++
+X-HM-Tid: 0a6afd937d9b2086kuqya3efd419fd
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Managed interrupts can not migrate affinity when their CPUs are offline.
-If the CPU is allowed to shutdown before they're returned, commands
-dispatched to managed queues won't be able to complete through their
-irq handlers.
+On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
+> On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
+> > Some I/O requests that have been sent succussfully but have not yet been
+> > replied won't be resubmitted after reconnecting because of server restart,
+> > so we add a list to track them.
+> > 
+> > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> 
+> Nack, this is what the timeout stuff is supposed to handle.  The commands will
+> timeout and we'll resubmit them if we have alive sockets.  Thanks,
+> 
+> Josef
+> 
 
-Wait in cpu hotplug handler until all inflight requests on the tags
-are completed or timeout. Wait once for each tags, so we can save time
-in case of shared tags.
-
-Based on the following patch from Keith, and use simple delay-spin
-instead.
-
-https://lore.kernel.org/linux-block/20190405215920.27085-1-keith.busch@intel.com/
-
-Some SCSI devices may have single blk_mq hw queue and multiple private
-completion queues, and wait until all requests on the private completion
-queue are completed.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-mq-tag.c |  2 +-
- block/blk-mq-tag.h |  5 +++
- block/blk-mq.c     | 94 ++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 93 insertions(+), 8 deletions(-)
-
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 7513c8eaabee..b24334f99c5d 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -332,7 +332,7 @@ static void bt_tags_for_each(struct blk_mq_tags *tags, struct sbitmap_queue *bt,
-  *		true to continue iterating tags, false to stop.
-  * @priv:	Will be passed as second argument to @fn.
-  */
--static void blk_mq_all_tag_busy_iter(struct blk_mq_tags *tags,
-+void blk_mq_all_tag_busy_iter(struct blk_mq_tags *tags,
- 		busy_tag_iter_fn *fn, void *priv)
- {
- 	if (tags->nr_reserved_tags)
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 61deab0b5a5a..9ce7606a87f0 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -19,6 +19,9 @@ struct blk_mq_tags {
- 	struct request **rqs;
- 	struct request **static_rqs;
- 	struct list_head page_list;
-+
-+#define BLK_MQ_TAGS_DRAINED           0
-+	unsigned long flags;
- };
+On the one hand, if num_connections == 1 and the only sock has dead,
+then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
+nbd_xmit_timeout will not resubmit commands that have been sent
+succussfully but have not yet been replied. The log is as follows:
  
+[270551.108746] block nbd0: Receive control failed (result -104)
+[270551.108747] block nbd0: Send control failed (result -32)
+[270551.108750] block nbd0: Request send failed, requeueing
+[270551.116207] block nbd0: Attempted send on invalid socket
+[270556.119584] block nbd0: reconnected socket
+[270581.161751] block nbd0: Connection timed out
+[270581.165038] block nbd0: shutting down sockets
+[270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
+[270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
+[270581.165580] block nbd0: Connection timed out
+[270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
+[270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
+[270581.166554] block nbd0: Connection timed out
+[270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
+[270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
+[270581.167590] block nbd0: Connection timed out
+[270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
+[270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
+[270581.168487] block nbd0: Connection timed out
+[270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
+[270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
+[270581.170540] block nbd0: Connection timed out
+[270581.173333] block nbd0: Connection timed out
+[270581.173728] block nbd0: Connection timed out
+[270581.174135] block nbd0: Connection timed out
  
-@@ -35,6 +38,8 @@ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
- extern void blk_mq_tag_wakeup_all(struct blk_mq_tags *tags, bool);
- void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
- 		void *priv);
-+void blk_mq_all_tag_busy_iter(struct blk_mq_tags *tags,
-+		busy_tag_iter_fn *fn, void *priv);
- 
- static inline struct sbq_wait_state *bt_wait_ptr(struct sbitmap_queue *bt,
- 						 struct blk_mq_hw_ctx *hctx)
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 32b8ad3d341b..ab1fbfd48374 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2215,6 +2215,65 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 	return -ENOMEM;
- }
- 
-+static int blk_mq_hctx_notify_prepare(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct blk_mq_hw_ctx	*hctx =
-+		hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_dead);
-+
-+	if (hctx->tags)
-+		clear_bit(BLK_MQ_TAGS_DRAINED, &hctx->tags->flags);
-+
-+	return 0;
-+}
-+
-+struct blk_mq_inflight_rq_data {
-+	unsigned cnt;
-+	const struct cpumask *cpumask;
-+};
-+
-+static bool blk_mq_count_inflight_rq(struct request *rq, void *data,
-+				     bool reserved)
-+{
-+	struct blk_mq_inflight_rq_data *count = data;
-+
-+	if ((blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT) &&
-+			cpumask_test_cpu(blk_mq_rq_cpu(rq), count->cpumask))
-+		count->cnt++;
-+
-+	return true;
-+}
-+
-+unsigned blk_mq_tags_inflight_rqs(struct blk_mq_tags *tags,
-+		const struct cpumask *completion_cpus)
-+{
-+	struct blk_mq_inflight_rq_data data = {
-+		.cnt = 0,
-+		.cpumask = completion_cpus,
-+	};
-+
-+	blk_mq_all_tag_busy_iter(tags, blk_mq_count_inflight_rq, &data);
-+
-+	return data.cnt;
-+}
-+
-+static void blk_mq_drain_inflight_rqs(struct blk_mq_tags *tags,
-+		const struct cpumask *completion_cpus)
-+{
-+	if (!tags)
-+		return;
-+
-+	/* Can't apply the optimization in case of private completion queues */
-+	if (completion_cpus == cpu_all_mask &&
-+			test_and_set_bit(BLK_MQ_TAGS_DRAINED, &tags->flags))
-+		return;
-+
-+	while (1) {
-+		if (!blk_mq_tags_inflight_rqs(tags, completion_cpus))
-+			break;
-+		msleep(5);
-+	}
-+}
-+
- /*
-  * 'cpu' is going away. splice any existing rq_list entries from this
-  * software queue to the hw queue dispatch list, and ensure that it
-@@ -2226,6 +2285,8 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
- 	struct blk_mq_ctx *ctx;
- 	LIST_HEAD(tmp);
- 	enum hctx_type type;
-+	struct request_queue *q;
-+	const struct cpumask *cpumask = NULL, *completion_cpus;
- 
- 	hctx = hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_dead);
- 	ctx = __blk_mq_get_ctx(hctx->queue, cpu);
-@@ -2238,14 +2299,32 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
- 	}
- 	spin_unlock(&ctx->lock);
- 
--	if (list_empty(&tmp))
--		return 0;
-+	if (!list_empty(&tmp)) {
-+		spin_lock(&hctx->lock);
-+		list_splice_tail_init(&tmp, &hctx->dispatch);
-+		spin_unlock(&hctx->lock);
- 
--	spin_lock(&hctx->lock);
--	list_splice_tail_init(&tmp, &hctx->dispatch);
--	spin_unlock(&hctx->lock);
-+		blk_mq_run_hw_queue(hctx, true);
-+	}
-+
-+	/*
-+	 * Interrupt for the current completion queue will be shutdown, so
-+	 * wait until all requests on this queue are completed.
-+	 */
-+	q = hctx->queue;
-+	if (q->mq_ops->complete_queue_affinity)
-+		cpumask = q->mq_ops->complete_queue_affinity(hctx, cpu);
-+
-+	if (!cpumask) {
-+		cpumask = hctx->cpumask;
-+		completion_cpus = cpu_all_mask;
-+	} else {
-+		completion_cpus = cpumask;
-+	}
-+
-+	if (cpumask_first_and(cpumask, cpu_online_mask) >= nr_cpu_ids)
-+		blk_mq_drain_inflight_rqs(hctx->tags, completion_cpus);
- 
--	blk_mq_run_hw_queue(hctx, true);
- 	return 0;
- }
- 
-@@ -3541,7 +3620,8 @@ EXPORT_SYMBOL(blk_mq_rq_cpu);
- 
- static int __init blk_mq_init(void)
- {
--	cpuhp_setup_state_multi(CPUHP_BLK_MQ_DEAD, "block/mq:dead", NULL,
-+	cpuhp_setup_state_multi(CPUHP_BLK_MQ_DEAD, "block/mq:dead",
-+				blk_mq_hctx_notify_prepare,
- 				blk_mq_hctx_notify_dead);
- 	return 0;
- }
--- 
-2.20.1
-
+On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
+the I/O requests will have a big delay. For example, if timeout time is 30s,
+and from sock dead to nbd_genl_reconfigure returned OK we only spend
+2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
