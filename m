@@ -2,149 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F362C44D
-	for <lists+linux-block@lfdr.de>; Tue, 28 May 2019 12:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B23B52C8A7
+	for <lists+linux-block@lfdr.de>; Tue, 28 May 2019 16:25:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfE1Kdm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 May 2019 06:33:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35500 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfE1Kdm (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 May 2019 06:33:42 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B8F3C9335531791EB208;
-        Tue, 28 May 2019 18:33:39 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 18:33:36 +0800
-Subject: Re: [PATCH V2 1/5] scsi: select reply queue from request's CPU
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20190527150207.11372-1-ming.lei@redhat.com>
- <20190527150207.11372-2-ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        <linux-scsi@vger.kernel.org>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Brace <don.brace@microsemi.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        "Sathya Prakash" <sathya.prakash@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <546f5060-d39a-3057-a181-fa3ff1b921d4@huawei.com>
-Date:   Tue, 28 May 2019 11:33:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1727656AbfE1OYo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 May 2019 10:24:44 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:37100 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfE1OYn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 28 May 2019 10:24:43 -0400
+Received: from ramsan ([84.194.111.163])
+        by xavier.telenet-ops.be with bizsmtp
+        id HqQS2000K3XaVaC01qQSyc; Tue, 28 May 2019 16:24:42 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hVd1e-00058F-2p; Tue, 28 May 2019 16:24:26 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hVd1e-00057M-0A; Tue, 28 May 2019 16:24:26 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Igor Konopko <igor.j.konopko@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 0/5] Assorted fixes discovered with gcc 4.1
+Date:   Tue, 28 May 2019 16:24:19 +0200
+Message-Id: <20190528142424.19626-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190527150207.11372-2-ming.lei@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 27/05/2019 16:02, Ming Lei wrote:
-> Hisi_sas_v3_hw, hpsa, megaraid and mpt3sas use single blk-mq hw queue
-> to submit request, meantime apply multiple private reply queues served as
-> completion queue. The mapping between CPU and reply queue is setup via
-> pci_alloc_irq_vectors_affinity(PCI_IRQ_AFFINITY) just like the usual
-> blk-mq queue mapping.
->
-> These drivers always use current CPU(raw_smp_processor_id) to figure out
-> the reply queue. Switch to use request's CPU to get the reply queue,
-> so we can drain in-flight request via blk-mq's API before the last CPU of
-> the reply queue becomes offline.
->
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  drivers/scsi/hisi_sas/hisi_sas_main.c       |  5 +++--
->  drivers/scsi/hpsa.c                         |  2 +-
->  drivers/scsi/megaraid/megaraid_sas_fusion.c |  4 ++--
->  drivers/scsi/mpt3sas/mpt3sas_base.c         | 16 ++++++++--------
->  include/scsi/scsi_cmnd.h                    | 11 +++++++++++
->  5 files changed, 25 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-> index 8a7feb8ed8d6..ab9d8e7bfc8e 100644
-> --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-> +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-> @@ -471,9 +471,10 @@ static int hisi_sas_task_prep(struct sas_task *task,
->  		return -ECOMM;
->  	}
->
-> +	/* only V3 hardware setup .reply_map */
->  	if (hisi_hba->reply_map) {
-> -		int cpu = raw_smp_processor_id();
-> -		unsigned int dq_index = hisi_hba->reply_map[cpu];
-> +		unsigned int dq_index = hisi_hba->reply_map[
-> +			scsi_cmnd_cpu(task->uldd_task)];
+	Hi all,
 
-Hi Ming,
+Ever since commit cafa0010cd51fb71 ("Raise the minimum required gcc
+version to 4.6"), I felt bored when looking at my test build logs, as I
+was no longer discovering many real issues.  Hence I started wondering
+if the modern gcc versions are really catching these classes of bugs
+caught before with gcc 4.1, or if they just go undetected.
 
-There is a problem here. For ATA commands in libsas, task->uldd_task is 
-ata_queued_cmd *, and not a scsi_cmnd *. It comes from 
-https://elixir.bootlin.com/linux/v5.2-rc2/source/drivers/scsi/libsas/sas_ata.c#L212
+I reverted some changes and applied some fixes, which allowed me to
+compile most of the kernel with gcc 4.1 again.  I built an
+m68k/allmodconfig kernel, looked at all new warnings, and fixed the ones
+that are not false positives.  The result is a patch series of 5
+patches, of which one or two fix real bugs.
 
-Please see this later code, where we have this check:
-	if (task->uldd_task) {
-		struct ata_queued_cmd *qc;
+Thanks for your comments, and for applying where appropriate!
 
-		if (dev_is_sata(device)) {
-			qc = task->uldd_task;
-			scsi_cmnd = qc->scsicmd;
-		} else {
-			scsi_cmnd = task->uldd_task;
-		}
-	}
-	rc  = hisi_sas_slot_index_alloc(hisi_hba, scsi_cmnd);
+Geert Uytterhoeven (5):
+  lightnvm: Fix uninitialized pointer in nvm_remove_tgt()
+  rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
+  net: sched: pie: Use ULL suffix for 64-bit constant
+  ALSA: fireface: Use ULL suffixes for 64-bit constants
+  [RFC] devlink: Fix uninitialized error code in
+    devlink_fmsg_prepare_skb()
 
-I suppose that we could solve by finding scsi_cmnd * earlier in 
-hisi_sas_task_prep().
+ drivers/lightnvm/core.c                      |  2 +-
+ net/core/devlink.c                           |  2 +-
+ net/rxrpc/output.c                           |  4 +++-
+ net/sched/sch_pie.c                          |  2 +-
+ sound/firewire/fireface/ff-protocol-latter.c | 10 +++++-----
+ 5 files changed, 11 insertions(+), 9 deletions(-)
 
->
->  		*dq_pointer = dq = &hisi_hba->dq[dq_index];
->  	} else {
-> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-> index 1bef1da273c2..72f9edb86752 100644
-> --- a/drivers/scsi/hpsa.c
-> +++ b/drivers/scsi/hpsa.c
-> @@ -1145,7 +1145,7 @@ static void __enqueue_cmd_and_start_io(struct ctlr_info *h,
+-- 
+2.17.1
 
-[snip]
+Gr{oetje,eeting}s,
 
-> diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
-> index 76ed5e4acd38..ab60883c2c40 100644
-> --- a/include/scsi/scsi_cmnd.h
-> +++ b/include/scsi/scsi_cmnd.h
-> @@ -332,4 +332,15 @@ static inline unsigned scsi_transfer_length(struct scsi_cmnd *scmd)
->  	return xfer_len;
->  }
->
-> +static inline int scsi_cmnd_cpu(struct scsi_cmnd *scmd)
-> +{
-> +	if (!scmd || !scmd->request)
-> +		return raw_smp_processor_id();
-> +
-> +	if (!scmd->request->mq_ctx)
-> +		return raw_smp_processor_id();
+						Geert
 
-nit: can we combine these tests? Or do you want a distinct check on 
-scmd->request->mq_ctx, since blk_mq_rq_cpu() does not check it?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +
-> +	return blk_mq_rq_cpu(scmd->request);
-> +}
-> +
->  #endif /* _SCSI_SCSI_CMND_H */
-
-Thanks
-
->
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
