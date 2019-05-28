@@ -2,112 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFEAB2CEF3
-	for <lists+linux-block@lfdr.de>; Tue, 28 May 2019 20:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 939772D930
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2019 11:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfE1SvC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 May 2019 14:51:02 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42282 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbfE1SvB (ORCPT
+        id S1725874AbfE2JiJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 May 2019 05:38:09 -0400
+Received: from m9783.mail.qiye.163.com ([220.181.97.83]:2787 "EHLO
+        m9783.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfE2JiJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 May 2019 14:51:01 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so8693516plb.9
-        for <linux-block@vger.kernel.org>; Tue, 28 May 2019 11:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lf1AnB62qhw98+618ZGhLajUkR17f9jQjLMbh4Rz9FI=;
-        b=kJXW1iPNTRcAE9Q9c+VH9v1aGEM2iCTBz5wN+z65UUimrkHePkXEv0b0l1oY+anN4l
-         WIsHpNLC3mTITPs6iksgTo9vXGR7iiVtMgupJnyesqRdsCU7XksSIfRX6SkUDr9Ua0NT
-         6AlMO9VI9Z+gbyDrgMlrmb6zTJHLo4RwNbIMbpWdkvcgq+abFWdy2ljeukAmGlyZajgd
-         zkAemVggg2YN9e3RhMvUvBcU6gibx35AyMsE+/MWTuxHtwWM2cBccZWOC2sQ3gt6mG5W
-         86BQVnqAvexCPVBnKG/IbNWS4udQRaIMj+RnmDtF1wANiK65u4qnneGcmQ1X/LK36tIw
-         AyjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lf1AnB62qhw98+618ZGhLajUkR17f9jQjLMbh4Rz9FI=;
-        b=g2GXLGcUO8YUCojtJp4OHuNAXzxD10RM60pyWsy6hYf/w97Uk+bDdcq4yzi+AQIJiK
-         wyQH7+YGNJtyPS0cARTaemM/9cjQ77FKV7SPkU2UDiM0z1ZpD3FcrdXhmHIbRWejjMsp
-         zs4bebsWHc3Kv2sfzSFiyzkYFs4jhv/AHaBjxvnqqQ6UDbb/zC6tz++u7r98FfNiUncb
-         tlB5uwxVpLDca0RXn3oKt655adPaHjPr/LACYjygtCP58LPr0wLt6DBIkNWuq555gan9
-         2u+QrlDfWwt3OXbN3xAyd+DxHT0plzZNiAszg9GAdp7fKPnNJAZohww2oORXj2ciLuZ0
-         SOAA==
-X-Gm-Message-State: APjAAAU15QDvMFSqR0xiilolU2EVYHlTE08Ma28XF/zN7XWVbaH62TBg
-        /WqSmlsRdJWO9Avh6W5aNYnsV+gjdN8=
-X-Google-Smtp-Source: APXvYqzvnaB3xomsPWJIxIOMgQ7SOE8O+VgQEpFlys1d3ApVfYJPufOQP6OgNmLxk/I7PpRdHvAZTQ==
-X-Received: by 2002:a17:902:a982:: with SMTP id bh2mr32098325plb.224.1559069460961;
-        Tue, 28 May 2019 11:51:00 -0700 (PDT)
-Received: from vader ([2620:10d:c090:200::3:6f81])
-        by smtp.gmail.com with ESMTPSA id i7sm15109099pfo.19.2019.05.28.11.50.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 28 May 2019 11:51:00 -0700 (PDT)
-Date:   Tue, 28 May 2019 11:50:59 -0700
-From:   Omar Sandoval <osandov@osandov.com>
-To:     Peng Wang <wangpeng15@xiaomi.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
-Subject: Re: [PATCH] block: use KMEM_CACHE macro
-Message-ID: <20190528185059.GB25022@vader>
-References: <20190527114835.2071-1-wangpeng15@xiaomi.com>
+        Wed, 29 May 2019 05:38:09 -0400
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 05:38:06 EDT
+Received: from localhost (unknown [120.132.1.243])
+        by m9783.mail.qiye.163.com (Hmail) with ESMTPA id A1BD9C1A9B;
+        Wed, 29 May 2019 17:31:24 +0800 (CST)
+Date:   Wed, 29 May 2019 03:04:46 +0800
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        nbd <nbd@other.debian.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
+ reconnecting to server
+Message-ID: <20190528190446.GA21513@192-168-150-246.7~>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+ <20190527180743.GA20702@192-168-150-246.7~>
+ <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527114835.2071-1-wangpeng15@xiaomi.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01OQkJCQ0xMT05JQ05ZV1koWUFJQjdXWS1ZQUlXWQ
+        kOFx4IWUFZNTQpNjo3JCkuNz5ZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAw6Hzo4Ezg3USJLOikVPU09
+        OggaCRlVSlVKTk5CSklJSUNPQ05IVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQU5OSU43Bg++
+X-HM-Tid: 0a6b02ee10a32085kuqya1bd9c1a9b
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, May 27, 2019 at 07:48:35PM +0800, Peng Wang wrote:
-> From: Peng Wang <rocking@whu.edu.cn>
+On Tue, May 28, 2019 at 12:57:59PM -0400, Josef Bacik wrote:
+> On Tue, May 28, 2019 at 02:07:43AM +0800, Yao Liu wrote:
+> > On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
+> > > On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
+> > > > Some I/O requests that have been sent succussfully but have not yet been
+> > > > replied won't be resubmitted after reconnecting because of server restart,
+> > > > so we add a list to track them.
+> > > > 
+> > > > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> > > 
+> > > Nack, this is what the timeout stuff is supposed to handle.  The commands will
+> > > timeout and we'll resubmit them if we have alive sockets.  Thanks,
+> > > 
+> > > Josef
+> > > 
+> > 
+> > On the one hand, if num_connections == 1 and the only sock has dead,
+> > then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
+> > nbd_xmit_timeout will not resubmit commands that have been sent
+> > succussfully but have not yet been replied. The log is as follows:
+> >  
+> > [270551.108746] block nbd0: Receive control failed (result -104)
+> > [270551.108747] block nbd0: Send control failed (result -32)
+> > [270551.108750] block nbd0: Request send failed, requeueing
+> > [270551.116207] block nbd0: Attempted send on invalid socket
+> > [270556.119584] block nbd0: reconnected socket
+> > [270581.161751] block nbd0: Connection timed out
+> > [270581.165038] block nbd0: shutting down sockets
+> > [270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
+> > [270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
+> > [270581.165580] block nbd0: Connection timed out
+> > [270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
+> > [270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
+> > [270581.166554] block nbd0: Connection timed out
+> > [270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
+> > [270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
+> > [270581.167590] block nbd0: Connection timed out
+> > [270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
+> > [270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
+> > [270581.168487] block nbd0: Connection timed out
+> > [270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
+> > [270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
+> > [270581.170540] block nbd0: Connection timed out
+> > [270581.173333] block nbd0: Connection timed out
+> > [270581.173728] block nbd0: Connection timed out
+> > [270581.174135] block nbd0: Connection timed out
+> >  
+> > On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
+> > the I/O requests will have a big delay. For example, if timeout time is 30s,
+> > and from sock dead to nbd_genl_reconfigure returned OK we only spend
+> > 2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
 > 
-> Use the preferred KMEM_CACHE helper for brevity.
-
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-
-> Signed-off-by: Peng Wang <rocking@whu.edu.cn>
-> ---
->  block/blk-core.c | 3 +--
->  block/blk-ioc.c  | 3 +--
->  2 files changed, 2 insertions(+), 4 deletions(-)
+> We have to wait for the full timeout anyway to know that the socket went down,
+> so it'll be re-submitted right away and then we'll wait on the new connection.
 > 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 1bf83a0df0f6..841bf0b12755 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1789,8 +1789,7 @@ int __init blk_dev_init(void)
->  	if (!kblockd_workqueue)
->  		panic("Failed to create kblockd\n");
->  
-> -	blk_requestq_cachep = kmem_cache_create("request_queue",
-> -			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
-> +	blk_requestq_cachep = KMEM_CACHE(request_queue, SLAB_PANIC);
->  
->  #ifdef CONFIG_DEBUG_FS
->  	blk_debugfs_root = debugfs_create_dir("block", NULL);
-> diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-> index 5ed59ac6ae58..58c79aeca955 100644
-> --- a/block/blk-ioc.c
-> +++ b/block/blk-ioc.c
-> @@ -408,8 +408,7 @@ struct io_cq *ioc_create_icq(struct io_context *ioc, struct request_queue *q,
->  
->  static int __init blk_ioc_init(void)
->  {
-> -	iocontext_cachep = kmem_cache_create("blkdev_ioc",
-> -			sizeof(struct io_context), 0, SLAB_PANIC, NULL);
-> +	iocontext_cachep = KMEM_CACHE(io_context, SLAB_PANIC);
-
-This will change the name of the slab in slabinfo, but I can't imagine
-that matters.
-
->  	return 0;
->  }
->  subsys_initcall(blk_ioc_init);
-> -- 
-> 2.19.1
+> Now we could definitely have requests that were submitted well after the first
+> thing that failed, so their timeout would be longer than simply retrying them,
+> but we have no idea of knowing which ones timed out and which ones didn't.  This
+> way lies pain, because we have to matchup tags with handles.  This is why we
+> rely on the generic timeout infrastructure, so everything is handled correctly
+> without ending up with duplicate submissions/replies.  Thanks,
 > 
+> Josef
+> 
+
+But as I mentioned before, if num_connections == 1, nbd_xmit_timeout won't re-submit
+commands and I/O error will occur. Should we change the condition
+		if (config->num_connections > 1)
+to
+		if (config->num_connections >= 1)
+?
