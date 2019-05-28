@@ -2,89 +2,256 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A2CB2DAD8
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2019 12:32:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F402CFF8
+	for <lists+linux-block@lfdr.de>; Tue, 28 May 2019 22:06:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbfE2Kcl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 May 2019 06:32:41 -0400
-Received: from m97179.mail.qiye.163.com ([220.181.97.179]:6940 "EHLO
-        m97179.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2Kcl (ORCPT
+        id S1726576AbfE1UGv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 May 2019 16:06:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44288 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbfE1UGv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 May 2019 06:32:41 -0400
-Received: from localhost (unknown [120.132.1.243])
-        by m97179.mail.qiye.163.com (Hmail) with ESMTPA id 1966BE01AC1;
-        Wed, 29 May 2019 18:32:33 +0800 (CST)
-Date:   Wed, 29 May 2019 04:05:54 +0800
-From:   Yao Liu <yotta.liu@ucloud.cn>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] nbd: notify userland even if nbd has already
- disconnected
-Message-ID: <20190528200554.GA21633@192-168-150-246.7~>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
- <20190524130856.zod5agp7hk74pcnr@MacBook-Pro-91.local.dhcp.thefacebook.com>
- <20190527182323.GB20702@192-168-150-246.7~>
- <5CED6385.3000802@redhat.com>
+        Tue, 28 May 2019 16:06:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g18so18977315otj.11
+        for <linux-block@vger.kernel.org>; Tue, 28 May 2019 13:06:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sAY+X/6OjvH2/kHzEFaQYM5a3NfoJCjKak4WUy8WxOg=;
+        b=mj3P8erc0d0J3qLuw81fmgBFRlYrDPpRlBWngBWwxfTjQLcEOuHasUrkeJiKgfTjg5
+         2ihuUJHu/IhG+P2YZXmBHnC9MnJXCVgKQ9BAu8qMhaUQSP4yCiMELuVtZ5X+gznhfuM4
+         v+iIvpHEHXha38/WuIY4cNU+nuFxW5oe8bpP4SRzjJ0E0+nz+L9s1upgsalq6lolvGK6
+         Lc02/3qWhL+arRMo1/y0figgjb27vsMUr7Z7RIRU6pCpcWGW1dTN31k4aZ1rN3eI0HOx
+         r+6bdabT+52797NZz8WLndOLD0Z4GFB/qVhoS465X1dHMaYCleB6Pby3H+oDG58E9Vvh
+         24Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sAY+X/6OjvH2/kHzEFaQYM5a3NfoJCjKak4WUy8WxOg=;
+        b=nFlbAumjqFamm/gMC30PbIKgUQI5X2WiJTUGC4hBYOmsKDMYQ3eSYx6aKi8oQ69O3t
+         T2c2IA9PeY3gri4gzRHPdeJwuSu2LtTmXLQvTZclh8CPHLvyElHfvMFfIywBHZrifMUW
+         Dv3Qn52LSWj+CSvjWcMPTEobGDj55Jeqldt2YNPyRyalPrrZMVA7lVUa8CrWx9+m0d8Q
+         /C1NwzWdZGAhabbuXqkjZuNdAwBGpDxZlveYPeucRNSBDu4M54UdAgsFNk0CnI170NJj
+         ymbsybKTOJyloDOi8tgAAmo2Itq//FnlbN8Indqlm+4QQ2Flv3dM2wU+c+CJrSWWuQqt
+         wVqA==
+X-Gm-Message-State: APjAAAXvQaBgHwUtU5LHcbpTIgKXaglzT+3V7+5r0KiVv+YgOZnQ4/6D
+        ytdsxTiinf5DGW3La0OiT1Hv/BgtOOVkC/hLNKoKoQ==
+X-Google-Smtp-Source: APXvYqw396edgjyJozSsCzajednRbbmIaB7gUQWyUQC+jR8mr25BB7Za7gjwtsrkkqmu/81ioRnRS6do1sBdvZD+Mmo=
+X-Received: by 2002:a9d:7347:: with SMTP id l7mr46665645otk.183.1559074010231;
+ Tue, 28 May 2019 13:06:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5CED6385.3000802@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01JQkJCQ05NT0xJS0pOWVdZKFlBSUI3V1ktWUFJV1
-        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6USo*Vjg0OiI9KgoSPyhD
-        OBNPCzhVSlVKTk5CSklOQk5ISUtIVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SUtVSkhJVUpVSU9IWVdZCAFZQUhOTk83Bg++
-X-HM-Tid: 0a6b03260a5320bdkuqy1966be01ac1
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 28 May 2019 22:06:23 +0200
+Message-ID: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:36:21AM -0500, Mike Christie wrote:
-> On 05/27/2019 01:23 PM, Yao Liu wrote:
-> > On Fri, May 24, 2019 at 09:08:58AM -0400, Josef Bacik wrote:
-> >> On Fri, May 24, 2019 at 05:43:55PM +0800, Yao Liu wrote:
-> >>> Some nbd client implementations have a userland's daemon, so we should
-> >>> inform client daemon to clean up and exit.
-> >>>
-> >>> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-> >>
-> >> Except the nbd_disconnected() check is for the case that the client told us
-> >> specifically to disconnect, so we don't want to send the notification to
-> >> re-connect because we've already been told we want to tear everything down.
-> >> Nack to this as well.  Thanks,
-> >>
-> >> Josef
-> >>
-> > 
-> > But in userland, client daemon process and process which send disconnect
-> > command are not same process, so they are not clear to each other, so
-> > client daemon expect driver inform it to exit.
-> > In addition, client daemon will get nbd status with nbd_genl_status interface
-> > after it get notified and it should not re-connect if status connected == 0
-> > 
-> 
-> When using the netlink interface you get the NBD_CMD_LINK_DEAD first
-> then the configs_refs goes to zero right?
-> 
-> nbd_disconnect_and_put -> sock_shutdown -> nbd_mark_nsock_dead
-> 
-> then later we do the final nbd_config_put?
-> 
-> Maybe it would be best to add a new netlink event to signal what has
-> happened, because the above nl and stat algorithm seems like a pain. The
-> NBD_CMD_LINK_DEAD will be sent, then userspace has to possibly poll the
-> status to check if this was caused due to nbd_genl_disconnect instead of
-> a downed link due to something like a command timeout, because the
-> refcount may not be down when userspace gets the NL event.
-> 
-> Or, I guess the admin/tool process could just send a msg to the daemon
-> process to tell it to do the netlink disconnect request.
-> 
+On Tue, May 28, 2019 at 6:05 PM David Howells <dhowells@redhat.com> wrote:
+> Add a mount notification facility whereby notifications about changes in
+> mount topology and configuration can be received.  Note that this only
+> covers vfsmount topology changes and not superblock events.  A separate
+> facility will be added for that.
+[...]
+> @@ -172,4 +167,18 @@ static inline void notify_mount(struct mount *changed,
+>                                 u32 info_flags)
+>  {
+>         atomic_inc(&changed->mnt_notify_counter);
+> +
+> +#ifdef CONFIG_MOUNT_NOTIFICATIONS
+> +       {
+> +               struct mount_notification n = {
+> +                       .watch.type     = WATCH_TYPE_MOUNT_NOTIFY,
+> +                       .watch.subtype  = subtype,
+> +                       .watch.info     = info_flags | sizeof(n),
+> +                       .triggered_on   = changed->mnt_id,
+> +                       .changed_mount  = aux ? aux->mnt_id : 0,
+> +               };
+> +
+> +               post_mount_notification(changed, &n);
+> +       }
+> +#endif
+>  }
+[...]
+> +void post_mount_notification(struct mount *changed,
+> +                            struct mount_notification *notify)
+> +{
+> +       const struct cred *cred = current_cred();
 
-Adding a new netlink event sames good.
+This current_cred() looks bogus to me. Can't mount topology changes
+come from all sorts of places? For example, umount_mnt() from
+umount_tree() from dissolve_on_fput() from __fput(), which could
+happen pretty much anywhere depending on where the last reference gets
+dropped?
+
+> +       struct path cursor;
+> +       struct mount *mnt;
+> +       unsigned seq;
+> +
+> +       seq = 0;
+> +       rcu_read_lock();
+> +restart:
+> +       cursor.mnt = &changed->mnt;
+> +       cursor.dentry = changed->mnt.mnt_root;
+> +       mnt = real_mount(cursor.mnt);
+> +       notify->watch.info &= ~WATCH_INFO_IN_SUBTREE;
+> +
+> +       read_seqbegin_or_lock(&rename_lock, &seq);
+> +       for (;;) {
+> +               if (mnt->mnt_watchers &&
+> +                   !hlist_empty(&mnt->mnt_watchers->watchers)) {
+> +                       if (cursor.dentry->d_flags & DCACHE_MOUNT_WATCH)
+> +                               post_watch_notification(mnt->mnt_watchers,
+> +                                                       &notify->watch, cred,
+> +                                                       (unsigned long)cursor.dentry);
+> +               } else {
+> +                       cursor.dentry = mnt->mnt.mnt_root;
+> +               }
+> +               notify->watch.info |= WATCH_INFO_IN_SUBTREE;
+> +
+> +               if (cursor.dentry == cursor.mnt->mnt_root ||
+> +                   IS_ROOT(cursor.dentry)) {
+> +                       struct mount *parent = READ_ONCE(mnt->mnt_parent);
+> +
+> +                       /* Escaped? */
+> +                       if (cursor.dentry != cursor.mnt->mnt_root)
+> +                               break;
+> +
+> +                       /* Global root? */
+> +                       if (mnt != parent) {
+> +                               cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
+> +                               mnt = parent;
+> +                               cursor.mnt = &mnt->mnt;
+> +                               continue;
+> +                       }
+> +                       break;
+
+(nit: this would look clearer if you inverted the condition and wrote
+it as "if (mnt == parent) break;", then you also wouldn't need that
+"continue" or the braces)
+
+> +               }
+> +
+> +               cursor.dentry = cursor.dentry->d_parent;
+> +       }
+> +
+> +       if (need_seqretry(&rename_lock, seq)) {
+> +               seq = 1;
+> +               goto restart;
+> +       }
+> +
+> +       done_seqretry(&rename_lock, seq);
+> +       rcu_read_unlock();
+> +}
+[...]
+> +SYSCALL_DEFINE5(mount_notify,
+> +               int, dfd,
+> +               const char __user *, filename,
+> +               unsigned int, at_flags,
+> +               int, watch_fd,
+> +               int, watch_id)
+> +{
+> +       struct watch_queue *wqueue;
+> +       struct watch_list *wlist = NULL;
+> +       struct watch *watch;
+> +       struct mount *m;
+> +       struct path path;
+> +       int ret;
+> +
+> +       if (watch_id < -1 || watch_id > 0xff)
+> +               return -EINVAL;
+> +
+> +       ret = user_path_at(dfd, filename, at_flags, &path);
+
+The third argument of user_path_at() contains kernel-private lookup
+flags, I'm pretty sure userspace isn't supposed to be able to control
+these directly.
+
+> +       if (ret)
+> +               return ret;
+> +
+> +       wqueue = get_watch_queue(watch_fd);
+> +       if (IS_ERR(wqueue))
+> +               goto err_path;
+> +
+> +       m = real_mount(path.mnt);
+> +
+> +       if (watch_id >= 0) {
+> +               if (!m->mnt_watchers) {
+> +                       wlist = kzalloc(sizeof(*wlist), GFP_KERNEL);
+> +                       if (!wlist)
+> +                               goto err_wqueue;
+> +                       INIT_HLIST_HEAD(&wlist->watchers);
+> +                       spin_lock_init(&wlist->lock);
+> +                       wlist->release_watch = release_mount_watch;
+> +               }
+> +
+> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
+> +               if (!watch)
+> +                       goto err_wlist;
+> +
+> +               init_watch(watch, wqueue);
+> +               watch->id               = (unsigned long)path.dentry;
+> +               watch->private          = path.mnt;
+> +               watch->info_id          = (u32)watch_id << 24;
+> +
+> +               down_write(&m->mnt.mnt_sb->s_umount);
+> +               if (!m->mnt_watchers) {
+> +                       m->mnt_watchers = wlist;
+> +                       wlist = NULL;
+> +               }
+> +
+> +               ret = add_watch_to_object(watch, m->mnt_watchers);
+> +               if (ret == 0) {
+> +                       spin_lock(&path.dentry->d_lock);
+> +                       path.dentry->d_flags |= DCACHE_MOUNT_WATCH;
+> +                       spin_unlock(&path.dentry->d_lock);
+> +                       path_get(&path);
+
+So... the watches on a mountpoint create references back to the
+mountpoint? Is your plan that umount_tree() breaks the loop by getting
+rid of the watches?
+
+If so: Is there anything that prevents installing new watches after
+umount_tree()? Because I don't see anything.
+
+It might make sense to redesign this stuff so that watches don't hold
+references on the object being watched.
+
+> +               }
+> +               up_write(&m->mnt.mnt_sb->s_umount);
+> +               if (ret < 0)
+> +                       kfree(watch);
+> +       } else if (m->mnt_watchers) {
+> +               down_write(&m->mnt.mnt_sb->s_umount);
+> +               ret = remove_watch_from_object(m->mnt_watchers, wqueue,
+> +                                              (unsigned long)path.dentry,
+> +                                              false);
+> +               up_write(&m->mnt.mnt_sb->s_umount);
+> +       } else {
+> +               ret = -EBADSLT;
+> +       }
+> +
+> +err_wlist:
+> +       kfree(wlist);
+> +err_wqueue:
+> +       put_watch_queue(wqueue);
+> +err_path:
+> +       path_put(&path);
+> +       return ret;
+> +}
