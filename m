@@ -2,114 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 481562DA0F
-	for <lists+linux-block@lfdr.de>; Wed, 29 May 2019 12:10:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085262DB17
+	for <lists+linux-block@lfdr.de>; Wed, 29 May 2019 12:55:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfE2KKw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 May 2019 06:10:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49708 "EHLO mx1.redhat.com"
+        id S1725914AbfE2KzQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 29 May 2019 06:55:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34742 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfE2KKw (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 May 2019 06:10:52 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725894AbfE2KzQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 29 May 2019 06:55:16 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B6B4C074EF2;
-        Wed, 29 May 2019 10:10:47 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B5066A96F;
-        Wed, 29 May 2019 10:10:33 +0000 (UTC)
-Date:   Wed, 29 May 2019 18:10:29 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-scsi@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Brace <don.brace@microsemi.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH V2 5/5] blk-mq: Wait for for hctx inflight requests on
- CPU unplug
-Message-ID: <20190529101028.GA15496@ming.t460p>
-References: <20190527150207.11372-1-ming.lei@redhat.com>
- <20190527150207.11372-6-ming.lei@redhat.com>
- <45daceb4-fb88-a835-8cc6-cd4c4d7cf42d@huawei.com>
- <20190529022852.GA21398@ming.t460p>
- <20190529024200.GC21398@ming.t460p>
- <5bc07fd5-9d2b-bf9c-eb77-b8cebadb9150@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 92A5430B2443;
+        Wed, 29 May 2019 10:55:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B4BC2F2A0;
+        Wed, 29 May 2019 10:55:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
+References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5bc07fd5-9d2b-bf9c-eb77-b8cebadb9150@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 29 May 2019 10:10:52 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13969.1559127310.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 29 May 2019 11:55:10 +0100
+Message-ID: <13970.1559127310@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 29 May 2019 10:55:15 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:42:00AM +0100, John Garry wrote:
-> On 29/05/2019 03:42, Ming Lei wrote:
-> > On Wed, May 29, 2019 at 10:28:52AM +0800, Ming Lei wrote:
-> > > On Tue, May 28, 2019 at 05:50:40PM +0100, John Garry wrote:
-> > > > On 27/05/2019 16:02, Ming Lei wrote:
-> > > > > Managed interrupts can not migrate affinity when their CPUs are offline.
-> > > > > If the CPU is allowed to shutdown before they're returned, commands
-> > > > > dispatched to managed queues won't be able to complete through their
-> > > > > irq handlers.
-> > > > > 
-> > > > > Wait in cpu hotplug handler until all inflight requests on the tags
-> > > > > are completed or timeout. Wait once for each tags, so we can save time
-> > > > > in case of shared tags.
-> > > > > 
-> > > > > Based on the following patch from Keith, and use simple delay-spin
-> > > > > instead.
-> > > > > 
-> > > > > https://lore.kernel.org/linux-block/20190405215920.27085-1-keith.busch@intel.com/
-> > > > > 
-> > > > > Some SCSI devices may have single blk_mq hw queue and multiple private
-> > > > > completion queues, and wait until all requests on the private completion
-> > > > > queue are completed.
-> > > > 
-> > > > Hi Ming,
-> > > > 
-> > > > I'm a bit concerned that this approach won't work due to ordering: it seems
-> > > > that the IRQ would be shutdown prior to the CPU dead notification for the
-> > > 
-> > > Managed IRQ shutdown is run in irq_migrate_all_off_this_cpu(), which is
-> > > called in the callback of takedown_cpu(). And the CPU dead notification
-> > > is always sent after that CPU becomes offline, see cpuhp_invoke_callback().
-> > 
-> > Hammm, looks we both say same thing.
-> > 
-> > Yeah, it is too late to drain requests in the cpu hotplug DEAD handler,
-> > maybe we can try to move managed IRQ shutdown after sending the dead
-> > notification.
-> > 
+Jann Horn <jannh@google.com> wrote:
+
+> > +                       /* Global root? */
+> > +                       if (mnt != parent) {
+> > +                               cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
+> > +                               mnt = parent;
+> > +                               cursor.mnt = &mnt->mnt;
+> > +                               continue;
+> > +                       }
+> > +                       break;
 > 
-> Even if the IRQ is shutdown later, all CPUs would still be dead, so none
-> available to receive the interrupt or do the work for draining the queue.
-> 
-> > I need to think of it further.
-> 
-> It would seem that we just need to be informed of CPU offlining earlier, and
-> plug the drain in there.
+> (nit: this would look clearer if you inverted the condition and wrote
+> it as "if (mnt == parent) break;", then you also wouldn't need that
+> "continue" or the braces)
 
-Yes, looks blk-mq has to be notified before unplugging CPU for this
-issue.
+It does look better with the logic inverted, but you *do* still need the
+continue.  After the if-statement, there is:
 
-And we should be careful to handle the multiple reply queue case, given the queue
-shouldn't be stopped or quieseced because other reply queues are still active.
+	cursor.dentry = cursor.dentry->d_parent;
 
-The new CPUHP state for blk-mq should be invoked after the to-be-offline
-CPU is quiesced and before it becomes offline.
+which we need to skip.  It might make sense to move that into an
+else-statement from an aesthetic point of view.
 
-Thanks,
-Ming
+David
