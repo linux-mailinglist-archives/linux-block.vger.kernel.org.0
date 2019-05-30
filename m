@@ -2,131 +2,187 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3F102EEA1
-	for <lists+linux-block@lfdr.de>; Thu, 30 May 2019 05:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1F702F13E
+	for <lists+linux-block@lfdr.de>; Thu, 30 May 2019 06:11:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbfE3DUH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 May 2019 23:20:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:19225 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732123AbfE3DUG (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7BB0983F42;
-        Thu, 30 May 2019 03:20:06 +0000 (UTC)
-Received: from [10.72.12.96] (ovpn-12-96.pek2.redhat.com [10.72.12.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 05AFE78D85;
-        Thu, 30 May 2019 03:20:03 +0000 (UTC)
-Subject: Re: [PATCH 1/2] nbd: fix crash when the blksize is zero v2
-To:     Mike Christie <mchristi@redhat.com>, josef@toxicpanda.com,
-        linux-block@vger.kernel.org
-References: <20190529201606.14903-1-mchristi@redhat.com>
- <20190529201606.14903-2-mchristi@redhat.com>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <1da22339-a5e7-676f-ce68-926460211772@redhat.com>
-Date:   Thu, 30 May 2019 11:19:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726820AbfE3ELf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 30 May 2019 00:11:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36824 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfE3ELa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 30 May 2019 00:11:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so100954wrs.3;
+        Wed, 29 May 2019 21:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h0T/MeUzCgmPrR3gk4K6fixpQQCnUhC4n3eE1p0lqFk=;
+        b=hgCnqefDl/JBYEu4+rVNRoDQ7aPZCmlANqR5qlyPz6/nnL28KsHj+EQ+oreogGLjsr
+         49zHHIs20aSdki49ikhvYEphqoaOKPHLxpS9QT0x0sDy0AvEZtAvUljqKxeG3GfnCQJO
+         F0L0iaJYn6wWdW0OO7FgacQQZqgyTbfa5CRutqF0vO71aLqR2nvafmfuSLco9oiO7lLa
+         xbdQhurZPhGnsa8IHWRD/fta8zBPRQfx6bHq9Nxs2/E2qmEf36Mtab55petXEO/xJsle
+         QUp/GiiZ8KyeuZFDLjw7eEjCFRXgNrDOKf6bAS7eMAY5GLtOdkGssTqQZVUlotsPCTfQ
+         axQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h0T/MeUzCgmPrR3gk4K6fixpQQCnUhC4n3eE1p0lqFk=;
+        b=feiRG1ykqG5Ity79nFKQI7VVAlIw+NVUeAoSFlTwz89YVFDFyPzVjNU5atcHaR9RSO
+         OvKqy7bV/G4fXfh0KzKMy65Hacp0hIkkXii/ZLdMYTmPm7KBc2u2//oU8idXycQ8ZMwa
+         1FRjCc7u06+EA8WZCqjfmdHeA+7/5xHeHYrcXYJhP2AljobUZlAC0XUgImGCO2t86ZER
+         LaHbY4lITCBGM5Xz6MV4S5pPgLZb9Aa2nwkeTEI3c+3CKm5ySBLi+9NtgmQm4p5K6aNb
+         iKBS/j8JPBH4Hn7CKP+PHfds8o5E1AGcVqzfvPUBnjmShHsrj+c3pM0v4pjqorAQg2PU
+         mEKA==
+X-Gm-Message-State: APjAAAVvBs9or7N9T8tcpksD907OSPdmbKkpcpTq4ykQbfaG8dBSSbJx
+        YdGWANzPE/z2MoVwYz1Nq5zt2WbONNk9g0dd3AI=
+X-Google-Smtp-Source: APXvYqygV+uOyMtAemWnhhiWiShh7/TIAUUBWaiU/a5IN+a5xO/PuxK6M2Z/CWDO1fezb5B4lXERYXzMhvkF61hJhQ8=
+X-Received: by 2002:adf:fbc2:: with SMTP id d2mr947614wrs.334.1559189488864;
+ Wed, 29 May 2019 21:11:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529201606.14903-2-mchristi@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 30 May 2019 03:20:06 +0000 (UTC)
+References: <20190527150207.11372-1-ming.lei@redhat.com> <20190527150207.11372-6-ming.lei@redhat.com>
+ <45daceb4-fb88-a835-8cc6-cd4c4d7cf42d@huawei.com> <20190529022852.GA21398@ming.t460p>
+ <20190529024200.GC21398@ming.t460p> <5bc07fd5-9d2b-bf9c-eb77-b8cebadb9150@huawei.com>
+ <20190529101028.GA15496@ming.t460p> <CACVXFVODeFDPHxWkdnY5CZoOJ0did4mi_ap-aXk0oo+Cp05aUQ@mail.gmail.com>
+ <94964048-b867-8610-71ea-0275651f8b77@huawei.com> <20190530022810.GA16730@ming.t460p>
+In-Reply-To: <20190530022810.GA16730@ming.t460p>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Thu, 30 May 2019 12:11:17 +0800
+Message-ID: <CACVXFVN729SgFQGUgmu1iN7P6Mv5+puE78STz8hj9J5bS828Ng@mail.gmail.com>
+Subject: Re: [PATCH V2 5/5] blk-mq: Wait for for hctx inflight requests on CPU unplug
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     John Garry <john.garry@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Don Brace <don.brace@microsemi.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2019/5/30 4:16, Mike Christie wrote:
-> From: Xiubo Li <xiubli@redhat.com>
+On Thu, May 30, 2019 at 10:28 AM Ming Lei <ming.lei@redhat.com> wrote:
 >
-> This will allow the blksize to be set zero and then use 1024 as
-> default.
+> On Wed, May 29, 2019 at 05:10:38PM +0100, John Garry wrote:
+> >
+> > > >
+> > > > And we should be careful to handle the multiple reply queue case, given the queue
+> > > > shouldn't be stopped or quieseced because other reply queues are still active.
+> > > >
+> > > > The new CPUHP state for blk-mq should be invoked after the to-be-offline
+> > > > CPU is quiesced and before it becomes offline.
+> > >
+> > > Hi John,
+> > >
+> >
+> > Hi Ming,
+> >
+> > > Thinking of this issue further, so far, one doable solution is to
+> > > expose reply queues
+> > > as blk-mq hw queues, as done by the following patchset:
+> > >
+> > > https://lore.kernel.org/linux-block/20180205152035.15016-1-ming.lei@redhat.com/
+> >
+> > I thought that this patchset had fundamental issues, in terms of working for
+> > all types of hosts. FYI, I did the backport of latest hisi_sas_v3 to v4.15
 >
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> [fix to use goto out instead of return in genl_connect]
-> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> ---
+> Could you explain it a bit about the fundamental issues for all types of
+> host?
 >
-> V2:
-> - Fix error handling in genl_connect.
-
-This change looks good to me.
-
-Thanks.
-BRs
-Xiubo
-
-
-
->   drivers/block/nbd.c | 23 ++++++++++++++++++++---
->   1 file changed, 20 insertions(+), 3 deletions(-)
+> It is just for hosts with multiple reply queues, such as hisi_sas v3,
+> megaraid_sas, mpt3sas and hpsa.
 >
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 053958a8a2ba..236253fbf455 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -135,6 +135,8 @@ static struct dentry *nbd_dbg_dir;
->   
->   #define NBD_MAGIC 0x68797548
->   
-> +#define NBD_DEF_BLKSIZE 1024
-> +
->   static unsigned int nbds_max = 16;
->   static int max_part = 16;
->   static struct workqueue_struct *recv_workqueue;
-> @@ -1237,6 +1239,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
->   		nbd_config_put(nbd);
->   }
->   
-> +static bool nbd_is_valid_blksize(unsigned long blksize)
-> +{
-> +	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
-> +	    blksize > PAGE_SIZE)
-> +		return false;
-> +	return true;
-> +}
-> +
->   /* Must be called with config_lock held */
->   static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
->   		       unsigned int cmd, unsigned long arg)
-> @@ -1252,8 +1262,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
->   	case NBD_SET_SOCK:
->   		return nbd_add_socket(nbd, arg, false);
->   	case NBD_SET_BLKSIZE:
-> -		if (!arg || !is_power_of_2(arg) || arg < 512 ||
-> -		    arg > PAGE_SIZE)
-> +		if (!arg)
-> +			arg = NBD_DEF_BLKSIZE;
-> +		if (!nbd_is_valid_blksize(arg))
->   			return -EINVAL;
->   		nbd_size_set(nbd, arg,
->   			     div_s64(config->bytesize, arg));
-> @@ -1333,7 +1344,7 @@ static struct nbd_config *nbd_alloc_config(void)
->   	atomic_set(&config->recv_threads, 0);
->   	init_waitqueue_head(&config->recv_wq);
->   	init_waitqueue_head(&config->conn_wait);
-> -	config->blksize = 1024;
-> +	config->blksize = NBD_DEF_BLKSIZE;
->   	atomic_set(&config->live_connections, 0);
->   	try_module_get(THIS_MODULE);
->   	return config;
-> @@ -1769,6 +1780,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
->   	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
->   		u64 bsize =
->   			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
-> +		if (!bsize)
-> +			bsize = NBD_DEF_BLKSIZE;
-> +		if (!nbd_is_valid_blksize(bsize)) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
->   		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
->   	}
->   	if (info->attrs[NBD_ATTR_TIMEOUT]) {
+> > with this patchset (as you may have noticed in my git send mistake), but we
+> > have not got to test it yet.
+> >
+> > On a related topic, we did test exposing reply queues as blk-mq hw queues
+> > and generating the host-wide tag internally in the LLDD with sbitmap, and
+> > unfortunately we were experiencing a significant performance hit, like 2300K
+> > -> 1800K IOPs for 4K read.
+> >
+> > We need to test this further. I don't understand why we get such a big hit.
+>
+> The performance regression shouldn't have been introduced in theory, and it is
+> because blk_mq_queue_tag_busy_iter() iterates over the same duplicated tags multiple
+> times, which can be fixed easily.
+>
+> >
+> > >
+> > > In which global host-wide tags are shared for all blk-mq hw queues.
+> > >
+> > > Also we can remove all the reply_map stuff in drivers, then solve the problem of
+> > > draining in-flight requests during unplugging CPU in a generic approach.
+> >
+> > So you're saying that removing this reply queue stuff can make the solution
+> > to the problem more generic, but do you have an idea of the overall
+> > solution?
+>
+> 1) convert reply queue into blk-mq hw queue first
+>
+> 2) then all drivers are in same position wrt. handling requests vs.
+> unplugging CPU (shutdown managed IRQ)
+>
+> The current handling in blk_mq_hctx_notify_dead() is actually wrong,
+> at that time, all CPUs on the hctx are dead, blk_mq_run_hw_queue()
+> still dispatches requests on driver's hw queue, and driver is invisible
+> to DEAD CPUs mapped to this hctx, and finally interrupt for these
+> requests on the hctx are lost.
+>
+> Frankly speaking, the above 2nd problem is still hard to solve.
+>
+> 1) take_cpu_down() shutdown managed IRQ first, then run teardown callback
+> for states in [CPUHP_AP_ONLINE, CPUHP_AP_OFFLINE) on the to-be-offline
+> CPU
+>
+> 2) However, all runnable tasks are removed from the CPU in the teardown
+> callback for CPUHP_AP_SCHED_STARTING, which is run after managed IRQs
+> are shutdown. That said it is hard to avoid new request queued to
+> the hctx with all DEAD CPUs.
+>
+> 3) we don't support to freeze queue for specific hctx yet, or that way
+> may not be accepted because of extra cost in fast path
+>
+> 4) once request is allocated, it should be submitted to driver no matter
+> if CPU hotplug happens or not. Or free it and re-allocate new request
+> on proper sw/hw queue?
+
+That looks doable, we may steal bios from the old in-queue request, then
+re-submit them via generic_make_request(), and finally free the old request,
+but RQF_DONTPREP has to be addressed via one new callback.
+
+So follows the overall solution for waiting request vs. CPU hotplug,
+which is done
+in two stages:
+
+1) in the teardown callback of new  CPUHP state of CPUHP_BLK_MQ_PREP,
+which is run before CPUHP_AP_ONLINE_IDLE,  at that time the CPU & managed
+IRQ is still alive:
+
+- stopped the hctx
+- wait in-flight requests from this hctx until all are completed
+
+2) in the teardown callback of CPUHP_BLK_MQ_DEAD, which is run
+after the CPU is dead
+
+- dequeue request queued in sw queue or scheduler queue from this hctx
+- steal bios from the dequeued request, and re-submit them via
+generic_make_request()
+- free the dequeued request, and need to free driver resource via new
+callback for
+RQF_DONTPREP, looks only SCSI needs it.
+- restart this hctx
 
 
+Thanks,
+Ming Lei
