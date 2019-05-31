@@ -2,20 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83CA130856
-	for <lists+linux-block@lfdr.de>; Fri, 31 May 2019 08:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E1830866
+	for <lists+linux-block@lfdr.de>; Fri, 31 May 2019 08:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfEaGKu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 May 2019 02:10:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57232 "EHLO mx1.suse.de"
+        id S1726331AbfEaGP0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 May 2019 02:15:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57826 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbfEaGKu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 May 2019 02:10:50 -0400
+        id S1725955AbfEaGP0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 31 May 2019 02:15:26 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 50CACAF51;
-        Fri, 31 May 2019 06:10:48 +0000 (UTC)
-Subject: Re: [PATCH 5/9] scsi: introduce scsi_cmnd_hctx_index()
+        by mx1.suse.de (Postfix) with ESMTP id 11B59AE34;
+        Fri, 31 May 2019 06:15:24 +0000 (UTC)
+Subject: Re: [PATCH 6/9] scsi: hpsa: convert private reply queue to blk-mq hw
+ queue
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>
@@ -28,7 +29,7 @@ Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
         Sathya Prakash <sathya.prakash@broadcom.com>,
         Christoph Hellwig <hch@lst.de>
 References: <20190531022801.10003-1-ming.lei@redhat.com>
- <20190531022801.10003-6-ming.lei@redhat.com>
+ <20190531022801.10003-7-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -74,12 +75,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <8e38efe6-d627-9d63-4fca-252e1839ec23@suse.de>
-Date:   Fri, 31 May 2019 08:10:47 +0200
+Message-ID: <d489e4e8-e625-4c68-4ab8-9b70e5989cc8@suse.de>
+Date:   Fri, 31 May 2019 08:15:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190531022801.10003-6-ming.lei@redhat.com>
+In-Reply-To: <20190531022801.10003-7-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -89,23 +90,59 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 5/31/19 4:27 AM, Ming Lei wrote:
-> For drivers which enable .host_tagset, introduce scsi_cmnd_hctx_index
-> to retrieve current reply queue index. If valid scsi command is provided,
-> blk-mq's hw queue's index is returned, otherwise return the queue
-> mapped from current CPU.
+> SCSI's reply qeueue is very similar with blk-mq's hw queue, both
+> assigned by IRQ vector, so map te private reply queue into blk-mq's hw
+> queue via .host_tagset.
 > 
-> Prepare for converting device's privete reply queue to blk-mq hw queue.
+> Then the private reply mapping can be removed.
 > 
-                                  ^private
-
+> Another benefit is that the request/irq lost issue may be solved in
+> generic approach because managed IRQ may be shutdown during CPU
+> hotplug.
+> 
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->  include/scsi/scsi_cmnd.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/scsi/hpsa.c | 49 ++++++++++++++++++---------------------------
+>  1 file changed, 19 insertions(+), 30 deletions(-)
 > 
-Otherwise:
+There had been requests to make the internal interrupt mapping optional;
+but I guess we first should
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index 1bef1da273c2..c7136f9f0ce1 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -51,6 +51,7 @@
+>  #include <linux/jiffies.h>
+>  #include <linux/percpu-defs.h>
+>  #include <linux/percpu.h>
+> +#include <linux/blk-mq-pci.h>
+>  #include <asm/unaligned.h>
+>  #include <asm/div64.h>
+>  #include "hpsa_cmd.h"
+> @@ -902,6 +903,18 @@ static ssize_t host_show_legacy_board(struct device *dev,
+>  	return snprintf(buf, 20, "%d\n", h->legacy_board ? 1 : 0);
+>  }
+>  
+> +static int hpsa_map_queues(struct Scsi_Host *shost)
+> +{
+> +	struct ctlr_info *h = shost_to_hba(shost);
+> +	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
+> +
+> +	/* Switch to cpu mapping in case that managed IRQ isn't used */
+> +	if (shost->nr_hw_queues > 1)
+> +		return blk_mq_pci_map_queues(qmap, h->pdev, 0);
+> +	else
+> +		return blk_mq_map_queues(qmap);
+> +}
+> +
+>  static DEVICE_ATTR_RO(raid_level);
+>  static DEVICE_ATTR_RO(lunid);
+>  static DEVICE_ATTR_RO(unique_id);
+This helper is pretty much shared between all converted drivers.
+Shouldn't we have a common function here?
+Something like
 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+scsi_mq_host_tag_map(struct Scsi_Host *shost, int offset)?
 
 Cheers,
 
