@@ -2,105 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DEFE31513
-	for <lists+linux-block@lfdr.de>; Fri, 31 May 2019 21:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DB9731F77
+	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2019 15:53:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfEaTIu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 May 2019 15:08:50 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.96]:47375 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726807AbfEaTIu (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 May 2019 15:08:50 -0400
-X-Greylist: delayed 1253 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 15:08:50 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 6D74C41430
-        for <linux-block@vger.kernel.org>; Fri, 31 May 2019 13:47:56 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id WmZIhJD3tiQerWmZIhtFMH; Fri, 31 May 2019 13:47:56 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.123.250] (port=50534 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hWmZH-0034R7-BG; Fri, 31 May 2019 13:47:55 -0500
-Date:   Fri, 31 May 2019 13:47:54 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] block: genhd: Use struct_size() helper
-Message-ID: <20190531184754.GA26040@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.123.250
-X-Source-L: No
-X-Exim-ID: 1hWmZH-0034R7-BG
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.123.250]:50534
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        id S1727299AbfFANxd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 1 Jun 2019 09:53:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:58773 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbfFANxd (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 1 Jun 2019 09:53:33 -0400
+Received: from orion.localdomain ([95.114.112.19]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MDN3O-1hOrFU0BKY-00AZwR; Sat, 01 Jun 2019 15:53:06 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     vireshk@kernel.org, b.zolnierkie@samsung.com, axboe@kernel.dk,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: RFC: declaring DT match tables (2nd take)
+Date:   Sat,  1 Jun 2019 15:52:55 +0200
+Message-Id: <1559397179-5833-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:6eR5FuObvStzaTwaSeJMTXjT3YTabwPEW7ElLE9COJw4VhtMuUe
+ 7klRWzxM0qEKRYASBKKWOgd4JLRnOW9D8256GOrsBf2kwpkGP/oPYI/+dYEax0EGgqLzyVL
+ wQvba3P8HARfrEU/VyV/vXPdPJd8HBurS3F0nasiuGJJfc1om5av0pwSQpw1Fd/IHLPPMAk
+ Fs6A8S0bThYHnX7m5zbHA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2taVwbVMVbk=:xHjxX+T6hP9V71LkUfGcf+
+ VZ6QpOwcS0hJuPHuZPfabEXDMz5mHZ1Y3FPMF/EtfV4Y3Wen2q4h/xi5TNS/NrhCg5SFg3BX6
+ SuuDgzklm8/fh2hvz9/sov7v6tOBTQfdnz+VBdrpP1Ht5butdbR0lMEk8M3S/ep/uQ+irkd78
+ B5MI8ehPCY7d0NF2Mm1cX5cnH5DhimHJFeVLZP/Kxg0OorhwduACcspyYVVwZGoKUwY1Epkcr
+ 5I9Qz05WNjwLRmTb33wjmx3xgw4uwAEI2NBT9lAkeGpctR3wADBpiVIQX17f1aJbaluFGj0dj
+ 5A0UZeWTTktaeytgznjBLu8NKrKkrAEKylBCX74HYODKWa9GPOIYIh1Q/cGXrxV2DqbqQgb2J
+ bud+gSdtrXrssHchBHaXXXVZM5CNJ+T4Qi3Mi3SJQTnSYjTbeF0s/A7aHPBSDXilZ+IHrtJoh
+ AHw67RUWzf1xVYBU4/t42NQb2ymJ9ixcwE5ANhRM6w1gDRGhbuiiVNwAfnFCZvlf8OVpwp/Nv
+ Sa7KJ78kIYpiVUngrSSO8wdH6FTsoDCc+Ys2/mVL1tqQvKcB0I0RtgMCuJbhslLxJfk4r4QxQ
+ SIDcLZVAQYiROiPo8APmfafWXWfWBH280GbQaC2aRSkxI3gVnQfazSzEbr6qnPepXxQX2qQ77
+ 8lI19iP599vJkXawWpWEBePEUuD4E7ayBh2WfSNpAc007dEd0RTysmor1cKfz35P7KLPUWAyj
+ oORAMyfac7fd2ctBb/bYPyNleMUvomnZojFIdQ==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+Hi folks,
 
-So, replace the following form:
 
-sizeof(*new_ptbl) + target * sizeof(new_ptbl->part[0])
+few days ago I've posted a RFC for getting rid of many #ifdef CONFIG_OF
+cases by using a macro that checks for it on its own.
+(see: "RFC: get rid of #ifdef CONFIG_OF's around of match tables")
 
-with:
+I've already mentioned I'm working on another approach that not just
+cares about adding the table to the module, but the also the declaration
+of the table itself. Here it is:
 
-struct_size(new_ptbl, part, target)
+Introducing a macro MODULE_DECLARE_OF_TABLE(foo, entries), which declares
+a static struct of_device_id array, fills in the entries (automatically
+adds the sentinel) and calls MODULE_DEVICE_TABLE() - if CONFIG_OF is
+enabled.
 
-Also, notice that variable size is unnecessary, hence it is removed.
+The current version isn't fully noop in absence of CONFIG_OF, but also
+declares a static const *pointer* variable, initialized NULL, with the
+same name. The idea behind: we don't need to use of_match_ptr() anymore.
 
-This code was detected with the help of Coccinelle.
+I believe, the compiler should be clever enough to find out that this
+field is always NULL and can't ever change, so it can be easily optimized
+away. (correct me if I'm wrong).
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- block/genhd.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index ad6826628e79..c674d9090f40 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1281,7 +1281,6 @@ int disk_expand_part_tbl(struct gendisk *disk, int partno)
- 	struct disk_part_tbl *new_ptbl;
- 	int len = old_ptbl ? old_ptbl->len : 0;
- 	int i, target;
--	size_t size;
- 
- 	/*
- 	 * check for int overflow, since we can get here from blkpg_ioctl()
-@@ -1298,8 +1297,8 @@ int disk_expand_part_tbl(struct gendisk *disk, int partno)
- 	if (target <= len)
- 		return 0;
- 
--	size = sizeof(*new_ptbl) + target * sizeof(new_ptbl->part[0]);
--	new_ptbl = kzalloc_node(size, GFP_KERNEL, disk->node_id);
-+	new_ptbl = kzalloc_node(struct_size(new_ptbl, part, target), GFP_KERNEL,
-+				disk->node_id);
- 	if (!new_ptbl)
- 		return -ENOMEM;
- 
--- 
-2.21.0
+Please have a look at the following example patches and let me know,
+whether we can go that way. If you're okay w/ that, I'll continue
+w/ converting the whole tree to using this approach. I've already did
+most of it, yet needs to be sorted out into easily digestable patches :)
+And I'd also do the same w/ the other table types (ACPI, PCI, I2C, ...)
+
+By the way: an interesting question arises: shall that conversion be
+done *everywhere*, or just those sites where explicit CONFIG_OF's are
+involved ?
+
+
+have fun,
+
+--mtx
+
+
+
+
 
