@@ -2,102 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3004531F81
-	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2019 15:53:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F2B32010
+	for <lists+linux-block@lfdr.de>; Sat,  1 Jun 2019 19:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfFANxa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 1 Jun 2019 09:53:30 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:40515 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfFANx3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 1 Jun 2019 09:53:29 -0400
-Received: from orion.localdomain ([95.114.112.19]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MY5XR-1h5yn83lFt-00YPOK; Sat, 01 Jun 2019 15:53:08 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     vireshk@kernel.org, b.zolnierkie@samsung.com, axboe@kernel.dk,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 4/4] drivers: ata: use MODULE_DECLARE_OF_TABLE()
-Date:   Sat,  1 Jun 2019 15:52:59 +0200
-Message-Id: <1559397179-5833-5-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559397179-5833-1-git-send-email-info@metux.net>
-References: <1559397179-5833-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:zlZQLw/7X/h00DT4khIXd7jjS4solJe6AYqFAW61yXbLkxP/FKv
- 2SIn8J4GncUnBymImySqQuvaZ6hc0os0iWfIgCYSLkrsfUdlrbRZOWW+Dl7RYMVd8VtAlXe
- VyYoxafCnE4KHfCkp85GNni5xN9+R3q29+pht6cYEC0WNM/q4+t9Ayqgq8oiA4+JHqz4sft
- Nv7++ZTKqDPO13S9DkX5Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NL9r01+H0YU=:N9E0t5e+9MRvzhoQBaW1lK
- 2gvx90Ty9dQwzFrFOja096OXdWC9vhoccvHP0T1R4HLpjjFAj+hHa4RG/4Z863q3jMBUuQ2W5
- +Fkbk4bjIaJPzGkhJdF4zRYwYXu/J28mKstKoTVXJ7aEsMt7C6mjiEZDTLZgVEsqIfl2IxZKT
- uqx9WH6/nF4LXEA0+Ck2EB8+nUWQd+oOxPxw9FvKEZ2CmNCkQckNZEDXUoz1JwWhnb0gcaRcU
- STNGY/HBIagnYyn8oZIls5tyGMOpwBovXMObz5AOfQb33Nj8yQLujlm6FS5B7E+kUoVnCkhnq
- qwiVfQO0VBim3JEienuGW7r+XIwoFSmGopFRY5yRYey6o5/y32LQIIokN5ZGa9nFPVIYlWd51
- xn67VKtNP3M0s2p8M/Oaq4cHMo/kz50dbY8KAnmZrtQYfNSuCxtpbmd2oJR2mk3nCIlAhZUrN
- VgUD6JhJ37Ar78pM7GBEQ3VOUaVf7kHv0pZAjdLmjLsiEH7SHzyRTtaOL6zpFLmzpfg2LTuyU
- DPFlrxpVztGS93UxY8MEWC8MJv6sq6xKklUEEQVUts0YtQ9FyOCqVZZDpjg+j/WryUVTJU0MU
- 0ieMX09LWeQlnBuy4WEKgDmCkvokafurb7anxKTuHlxWoP0ms4DxAn9fjhWZnSrWP4nNSSkVJ
- l0ZipRPqvrF/t5hZ/9l0XLiL5kxLl8vFpAtiQUKELnhfN56e8pmJjcSCZsLQgPKaLsxh5i+jM
- XievQ5ggM51mt1gbSjWdKm1FclP3k5m0dDHWAQ==
+        id S1726143AbfFARUN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 1 Jun 2019 13:20:13 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:45742 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFARUN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 1 Jun 2019 13:20:13 -0400
+Received: by mail-pf1-f178.google.com with SMTP id s11so8095528pfm.12
+        for <linux-block@vger.kernel.org>; Sat, 01 Jun 2019 10:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=7UNdOXcKcnEXur7jMzGGiBcZqSpK9Bjh6eWbInakmqw=;
+        b=Z3znWHJ67Dvj5mtxy/6DqDdBQgLvJ1oz9u4bxq5tH39RCxZv1yfkugCF4HODqdVmF4
+         UkMzzrVzJQIqT15zqN1AybntFJEGBP1cLsJ7FXrKaboUx8SHS30t2lE8qwNdozm8J+hW
+         MwMpWSI5hZ86btuNHvfU/Loup8tAUVwANJDez4NSrGh+JxDnZ8bfnPENTX1fqv3FdYcw
+         PTL+7hZN0Kp1UObGJmPYBiTJ4ns1hPShvP/uUUTwCBL0UiGAgnLXn0CD29AC6imisPb5
+         R7uT0dz1eJKrC+Dw5MKCuuM4t+8dnMtueoK80mzts7kbGLk36OH+pNuK89QU+Oz6W3KI
+         +q+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=7UNdOXcKcnEXur7jMzGGiBcZqSpK9Bjh6eWbInakmqw=;
+        b=q8/6yr6KJNid+3RisnSJfuRFP9scia2Ys0+DGpR8zxkzqeHuQzpo1VXoAzqx1pMGBJ
+         Hp9eCDgQ3WACZtWDO3DpovnasE7Gpc6JUf0WcsaGGMIpy7DQhRFALUBMbK9+REJCGivz
+         bx9b7Vc2mINpCYLp7ApRp6rzR4qh1YYRTkC2ceb5leX1Lxu6ghnIl+TLG144/K8jiKXp
+         so2o7xCzR0osbXJr3AOW/GpWIuAS46xD5YWxR3SBVpOWSEK7gmZZ+/Km51jozgurqcuS
+         dcGLK8ib0WSZYge/5uLG75ShUdr6PzP7QEQ0rsuUEWjfiak2gWjoa0o6II5MszjSHQsd
+         cszg==
+X-Gm-Message-State: APjAAAUbIgl+Jfg+BuUVJ6QhmeQLirtcduOpKAT7AKBqq9IdJI/sCt/z
+        M95EuiBVAxAb63upXAZV2mOlVuJi7RYtVw==
+X-Google-Smtp-Source: APXvYqx9eqZkqI9Yk2NJBarfKRml9ug7K4KyQcOrZTmjbF3fwKJ0sdWu60YFPAdxzEANxnM9X8i7Pw==
+X-Received: by 2002:a65:52c8:: with SMTP id z8mr16659607pgp.10.1559409612224;
+        Sat, 01 Jun 2019 10:20:12 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id x10sm13250676pfj.136.2019.06.01.10.20.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Jun 2019 10:20:10 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 5.2-rc3
+Message-ID: <b08832e3-1ae2-1c9d-7b82-0b31fb4ece62@kernel.dk>
+Date:   Sat, 1 Jun 2019 11:20:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Using MODULE_DECLARE_OF_TABLE() macro to get rid of some #ifdef CONFIG_OF
-and make the code a bit slimmer.
+Hi Linus,
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/ata/pata_arasan_cf.c | 9 ++-------
- drivers/ata/sata_mv.c        | 9 ++-------
- 2 files changed, 4 insertions(+), 14 deletions(-)
+Set of fixes that should go into this release. This pull request
+contains:
 
-diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
-index ebecab8..22de61f 100644
---- a/drivers/ata/pata_arasan_cf.c
-+++ b/drivers/ata/pata_arasan_cf.c
-@@ -943,13 +943,8 @@ static int arasan_cf_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(arasan_cf_pm_ops, arasan_cf_suspend, arasan_cf_resume);
- 
--#ifdef CONFIG_OF
--static const struct of_device_id arasan_cf_id_table[] = {
--	{ .compatible = "arasan,cf-spear1340" },
--	{}
--};
--MODULE_DEVICE_TABLE(of, arasan_cf_id_table);
--#endif
-+MODULE_DECLARE_OF_TABLE(arasan_cf_id_table,
-+	{ .compatible = "arasan,cf-spear1340" });
- 
- static struct platform_driver arasan_cf_driver = {
- 	.probe		= arasan_cf_probe,
-diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-index da585d2..bac48cd 100644
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -4273,14 +4273,9 @@ static int mv_platform_resume(struct platform_device *pdev)
- #define mv_platform_resume NULL
- #endif
- 
--#ifdef CONFIG_OF
--static const struct of_device_id mv_sata_dt_ids[] = {
-+MODULE_DECLARE_OF_TABLE(mv_sata_dt_ids,
- 	{ .compatible = "marvell,armada-370-sata", },
--	{ .compatible = "marvell,orion-sata", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, mv_sata_dt_ids);
--#endif
-+	{ .compatible = "marvell,orion-sata", });
- 
- static struct platform_driver mv_platform_driver = {
- 	.probe		= mv_platform_probe,
+- Series of patches fixing code comments / kerneldoc (Bart)
+
+- Don't allow loop file change for exclusive open (Jan)
+
+- Fix revalidate of hidden genhd (Jan)
+
+- Init queue failure memory free fix (Jes)
+
+- Improve rq limits failure print (John)
+
+- Fixup for queue removal/addition (Ming)
+
+- Missed error progagation for io_uring buffer registration (Pavel)
+
+Please pull!
+
+
+  git://git.kernel.dk/linux-block.git tags/for-linus-20190601
+
+
+----------------------------------------------------------------
+Bart Van Assche (8):
+      block/partitions/ldm: Convert a kernel-doc header into a non-kernel-doc header
+      block: Convert blk_invalidate_devt() header into a non-kernel-doc header
+      block: Fix throtl_pending_timer_fn() kernel-doc header
+      block: Fix blk_mq_*_map_queues() kernel-doc headers
+      block: Fix rq_qos_wait() kernel-doc header
+      block: Fix bsg_setup_queue() kernel-doc header
+      blk-mq: Fix spelling in a source code comment
+      blk-mq: Document the blk_mq_hw_queue_to_node() arguments
+
+Jan Kara (2):
+      loop: Don't change loop device under exclusive opener
+      block: Don't revalidate bdev of hidden gendisk
+
+Jes Sorensen (1):
+      blk-mq: Fix memory leak in error handling
+
+John Pittman (1):
+      block: print offending values when cloned rq limits are exceeded
+
+Ming Lei (2):
+      block: move blk_exit_queue into __blk_release_queue
+      block: don't protect generic_make_request_checks with blk_queue_enter
+
+Pavel Begunkov (1):
+      io_uring: Fix __io_uring_register() false success
+
+ block/blk-core.c       | 81 +++++++-------------------------------------------
+ block/blk-mq-cpumap.c  | 10 +++++--
+ block/blk-mq-pci.c     |  2 +-
+ block/blk-mq-rdma.c    |  4 +--
+ block/blk-mq-virtio.c  |  4 +--
+ block/blk-mq.c         |  5 +++-
+ block/blk-rq-qos.c     |  7 +++--
+ block/blk-sysfs.c      | 47 +++++++++++++++++++----------
+ block/blk-throttle.c   |  2 +-
+ block/blk.h            |  1 -
+ block/bsg-lib.c        |  1 +
+ block/genhd.c          |  4 +--
+ block/partitions/ldm.c |  2 +-
+ drivers/block/loop.c   | 18 ++++++++++-
+ fs/block_dev.c         | 25 ++++++++++------
+ fs/io_uring.c          |  2 +-
+ 16 files changed, 102 insertions(+), 113 deletions(-)
+
 -- 
-1.9.1
+Jens Axboe
 
