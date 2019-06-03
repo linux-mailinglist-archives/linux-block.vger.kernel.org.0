@@ -2,81 +2,170 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DEF334F3
-	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2019 18:30:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03A1F33740
+	for <lists+linux-block@lfdr.de>; Mon,  3 Jun 2019 19:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfFCQam (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 3 Jun 2019 12:30:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbfFCQam (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 3 Jun 2019 12:30:42 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7579081E05;
-        Mon,  3 Jun 2019 16:30:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E09DC5D9C6;
-        Mon,  3 Jun 2019 16:30:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <c95dd6cd-5530-6b70-68f6-4038edd72352@schaufler-ca.com>
-References: <c95dd6cd-5530-6b70-68f6-4038edd72352@schaufler-ca.com> <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk> <14347.1559127657@warthog.procyon.org.uk> <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com> <CAG48ez2KMrTBFzO9p8GvduXruz+FNLPyhc2YivHePsgViEoT1g@mail.gmail.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
+        id S1726663AbfFCRu6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 3 Jun 2019 13:50:58 -0400
+Received: from 22.17.110.36.static.bjtelecom.net ([36.110.17.22]:7372 "HELO
+        bsf02.didichuxing.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with SMTP id S1726708AbfFCRu5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 3 Jun 2019 13:50:57 -0400
+X-ASG-Debug-ID: 1559582378-0e410856621d6970001-Cu09wu
+Received: from BJEXMBX012.didichuxing.com (bjexmbx012.didichuxing.com [172.20.2.191]) by bsf02.didichuxing.com with ESMTP id bQFo5yPVVShGxBFW; Tue, 04 Jun 2019 01:19:38 +0800 (CST)
+X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
+Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
+ (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1263.5; Tue, 4 Jun
+ 2019 01:19:37 +0800
+Date:   Tue, 4 Jun 2019 01:19:36 +0800
+From:   Weiping Zhang <zhangweiping@didiglobal.com>
+To:     <axboe@kernel.dk>, <tj@kernel.org>, <hch@lst.de>,
+        <bvanassche@acm.org>
+CC:     <linux-block@vger.kernel.org>, <cgroups@vger.kernel.org>
+Subject: [RFC PATCH 0/2] blkcg: add support weighted round robin tagset map
+Message-ID: <cover.1559579964.git.zhangweiping@didiglobal.com>
+X-ASG-Orig-Subj: [RFC PATCH 0/2] blkcg: add support weighted round robin tagset map
+Mail-Followup-To: axboe@kernel.dk, tj@kernel.org, hch@lst.de,
+        bvanassche@acm.org, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <19413.1559579426.1@warthog.procyon.org.uk>
-Date:   Mon, 03 Jun 2019 17:30:26 +0100
-Message-ID: <19414.1559579426@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 03 Jun 2019 16:30:41 +0000 (UTC)
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [172.22.50.20]
+X-ClientProxiedBy: BJEXCAS03.didichuxing.com (172.20.36.245) To
+ BJSGEXMBX03.didichuxing.com (172.20.15.133)
+X-Barracuda-Connect: bjexmbx012.didichuxing.com[172.20.2.191]
+X-Barracuda-Start-Time: 1559582378
+X-Barracuda-URL: https://bsf02.didichuxing.com:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at didichuxing.com
+X-Barracuda-Scan-Msg-Size: 3114
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0003 1.0000 -2.0191
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.72199
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-> >> should be used. Someone or something caused the event. It can
-> >> be important who it was.
-> > The kernel's normal security model means that you should be able to
-> > e.g. accept FDs that random processes send you and perform
-> > read()/write() calls on them without acting as a subject in any
-> > security checks; let alone close().
-> 
-> Passed file descriptors are an anomaly in the security model
-> that (in this developer's opinion) should have never been
-> included. More than one of the "B" level UNIX systems disabled
-> them outright. 
+Hi, 
 
-Considering further on this, I think the only way to implement what you're
-suggesting is to add a field to struct file to record the last fputter's creds
-as the procedure of fputting is offloaded to a workqueue.
+This patchset try to add new tagset map for WRR(weighted round robin),
+like what nvme spec dose.
 
-Note that's last fputter, not the last closer, as we don't track the number of
-open fds linked to a file struct.
+The first patch add three new HCTX_TYPE_WRR_LOW/MEDIUM/HIGH, and
+a attribute blkio.wrr to enable different blkcg use different tag map.
+If the hardware queue support different priority, the driver can
+map high priority hardware queue to HCTX_TYPE_WRR_HIGH.
 
-In the case of AF_UNIX sockets that contain in-the-process-of-being-passed fds
-at the time of closure, this is further complicated by the socket fput being
-achieved in the work item - thereby adding layers of indirection.
+For high io priority block cgroup, we should change its blio.wrr to high,
+echo "major:minor high" > blkio.wrr, that its io can be servied more
+quickly. This is useful for different containers share same nvme device,
+for important containers use high prioriity hw queue, others use medium
+or low priority hw queue.
 
-It might be possible to replace f_cred rather than adding a new field, but
-that might get used somewhere after that point.
+The second patch, add a WRR for null_blk to simulate what nvme does,
+we add a new irqmode=3 to enable NULL_IRQ_WRR, a kernel thread
+will processing all haredware queue's io in WRR fasion.
 
-Note also that fsnotify_close() doesn't appear to use the last fputter's path
-since it's not available if called from deferred fput.
+A simpel test result:
 
-David
+we add 32 hw queue in total:
+defaut: 8
+read: 0
+poll: 0
+wrr_low: 8
+wrr_medium: 8
+wrr_high: 8
+
+insmod drivers/block/null_blk.ko irqmode=3 \
+	submit_queues=32 submit_queues_wrr_high=8 \
+	submit_queues_wrr_medium=8 submit_queues_wrr_low=8
+fio --bs=4k --ioengine=libaio --iodepth=16 --filename=/dev/nullb0 --direct=1 --runtime=60 --numjobs=16 --rw=randread --name=test$1 --group_reporting --gtod_reduce=1
+
+check hardware context type:
+cat /sys/kernel/debug/block/nullb0/hctx*/type
+
+default
+wrr_low
+wrr_low
+wrr_low
+wrr_low
+wrr_low
+wrr_low
+wrr_medium
+wrr_medium
+wrr_medium
+wrr_medium
+default
+wrr_medium
+wrr_medium
+wrr_medium
+wrr_medium
+wrr_high
+wrr_high
+wrr_high
+wrr_high
+wrr_high
+wrr_high
+default
+wrr_high
+wrr_high
+default
+default
+default
+default
+default
+wrr_low
+wrr_low
+
+
+1. run 3 fio in default hw queue
+fio1: 130K
+fio2: 130K
+fio3: 130K
+
+2. use different hw queue
+mkdir /sys/fs/cgroup/blkio/{low,medium, high}
+echo "251:0 high" > /sys/fs/cgroup/blkio/high/blkio.wrr
+echo "251:0 medium" > /sys/fs/cgroup/blkio/medium/blkio.wrr
+echo "251:0 low" > /sys/fs/cgroup/blkio/low/blkio.wrr
+
+echo `pidof fio1` > /sys/fs/cgroup/blkio/high/cgroup.procs
+echo `pidof fio2` > /sys/fs/cgroup/blkio/medium/cgroup.procs
+echo `pidof fio3` > /sys/fs/cgroup/blkio/low/cgroup.procs
+
+fio1: 260K
+fio2: 160K
+fio3: 60K
+
+we dispatch 8(high), 4(medium), 1(low) ios at time, to simulate
+weighted round robin policy.
+
+Weiping Zhang (2):
+  block: add weighted round robin for blkcgroup
+  null_blk: add support weighted round robin submition queue
+
+ block/blk-cgroup.c            |  88 +++++++++++++
+ block/blk-mq-debugfs.c        |   3 +
+ block/blk-mq-sched.c          |   6 +-
+ block/blk-mq-tag.c            |   4 +-
+ block/blk-mq-tag.h            |   2 +-
+ block/blk-mq.c                |  12 +-
+ block/blk-mq.h                |  17 ++-
+ block/blk.h                   |   2 +-
+ drivers/block/null_blk.h      |   7 +
+ drivers/block/null_blk_main.c | 294 ++++++++++++++++++++++++++++++++++++++++--
+ include/linux/blk-cgroup.h    |   2 +
+ include/linux/blk-mq.h        |  12 ++
+ 12 files changed, 426 insertions(+), 23 deletions(-)
+
+-- 
+2.14.1
+
