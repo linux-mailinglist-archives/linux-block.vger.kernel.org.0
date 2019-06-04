@@ -2,83 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9949B33FFE
-	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 09:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AC63405A
+	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 09:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfFDHXn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Jun 2019 03:23:43 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:61929 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfFDHXm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jun 2019 03:23:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559633025; x=1591169025;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fg+CIfq0i4Z8T9OFilsi880qv/qqeVv7+jIGZTgYjvs=;
-  b=VrBCTpgEscRW4usYhqaQGTNRKQBjvMHScKV2aX6X8USGtHEQUIUN1BI1
-   mYiSZ/cJJF7uBiKMSmYkHBYoFia0R6GYj58DzklLpiwikB9PHYixbwDt+
-   HJEg6+9tvv9d4IYgUlI2i+cz0BhOEGtMwlaYJpeVjQ6XOagVKtgz7KjZ1
-   ulZFLnanE/A5BgZLrJT4e4118gjFGN4dcNFv0yacIE2QNqDNWV1nzdbin
-   6pCeAH8OhhDpZD+736BbsI7I/nD5gyNIehKr7dQTMn9i27zU4xxhIlbYr
-   5+qT9Hh/qJeTo+xW1Vgbc3fOorXc//QV9I2c5CWZEBais6+W0kC9c8o1V
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,549,1549900800"; 
-   d="scan'208";a="209341295"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Jun 2019 15:23:45 +0800
-IronPort-SDR: 2atXjGWpA1eUP9mp5+m5TX2xp5t2JXQo74qwTsow2ovmk2Zo2evvw6QsvGoX17n17coPuLguue
- IAx7yyDvXuPT7GGAJVaTUxnsuGqmJqbu3zcDLmpYQ3lBNJDv/puvbMdwDe/u6iU4MRLBpjwnby
- REe2hgDXQZ6XoGlEnVFtowcWd7QmljUqPo6U0WkbjrryQfOFxKAtYhhpmm1BD/aesdTwDXpF8R
- WmocfXPQjf4SWnza/sKEVSXqNsH2jm1R7KqwzzPnMD15u+JfKV3U+YhU98Pm71qjXm4lHYVeLS
- JC24EN+gPE/uJMGpHD/veltS
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 04 Jun 2019 00:01:05 -0700
-IronPort-SDR: lAMa/DEaLk9hleZFNi3h8f8kQ/yXBsiYQbozLsCRXwGgBrpxcXF0eLHtPDZvaQDEYhznFdct7J
- QXeWi0H6lOyYJS/CJfRy3G86JhFeW1uHOMS4BZqEtj2TvEQnh1MT64/JdsvbRRd2kTB2snnfIY
- Y3yB8o1+dKVBKg1Qy2F9hFWVjdJR+NYsq8JwITuOgZgp88qyHBg9T0+WIKlq4kKbCa6YpcaV9D
- myFmvU69F27BoG860vdo2nP8N0Sp6wG93eAA1T3cr8wVjbbOuor9Sg35KC01kcabPU3iYA4q0u
- B/g=
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Jun 2019 00:23:42 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     Matias Bjorling <matias.bjorling@wdc.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH] block: force select mq-deadline for zoned block devices
-Date:   Tue,  4 Jun 2019 16:23:40 +0900
-Message-Id: <20190604072340.12224-1-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.21.0
+        id S1727192AbfFDHfw convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Tue, 4 Jun 2019 03:35:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46106 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbfFDHea (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 4 Jun 2019 03:34:30 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 451FB135BB;
+        Tue,  4 Jun 2019 07:34:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F2EE317D94;
+        Tue,  4 Jun 2019 07:34:13 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAMuHMdX57DKCMpLXdtZPE-w0esUNVv9-SwYjmT5=m+u9ryAiHQ@mail.gmail.com>
+References: <CAMuHMdX57DKCMpLXdtZPE-w0esUNVv9-SwYjmT5=m+u9ryAiHQ@mail.gmail.com> <20190528142424.19626-1-geert@linux-m68k.org> <20190528142424.19626-3-geert@linux-m68k.org> <15499.1559298884@warthog.procyon.org.uk>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     dhowells@redhat.com, Igor Konopko <igor.j.konopko@intel.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-block@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9305.1559633653.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 04 Jun 2019 08:34:13 +0100
+Message-ID: <9306.1559633653@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 04 Jun 2019 07:34:30 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In most use cases of zoned block devices (aka SMR disks), the
-mq-deadline scheduler is mandatory as it implements sequential write
-command processing guarantees with zone write locking. So make sure that
-this scheduler is always enabled if CONFIG_BLK_DEV_ZONED is selected.
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- block/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> I'm not such a big fan of BUG(), so I'd go for ret = -EAFNOSUPPORT, but given
+> rxrpc is already full of BUG() calls, I guess it is an acceptable solution.
 
-diff --git a/block/Kconfig b/block/Kconfig
-index 1b220101a9cb..2466dcc3ef1d 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -73,6 +73,7 @@ config BLK_DEV_INTEGRITY
- 
- config BLK_DEV_ZONED
- 	bool "Zoned block device support"
-+	select MQ_IOSCHED_DEADLINE
- 	---help---
- 	Block layer zoned block device support. This option enables
- 	support for ZAC/ZBC host-managed and host-aware zoned block devices.
--- 
-2.21.0
+Okay.  Are you okay with this going through net-next?
 
+David
