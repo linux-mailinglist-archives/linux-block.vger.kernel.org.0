@@ -2,87 +2,167 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFE4034F30
-	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 19:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8390634FCC
+	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 20:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfFDRnp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Jun 2019 13:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfFDRnp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:43:45 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96CAB208E3
-        for <linux-block@vger.kernel.org>; Tue,  4 Jun 2019 17:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559670224;
-        bh=q9FCF59QilTvzP7T56Okch9a0m+P6mELSmCw7lx2Jdg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iUJtv0HucSbDarovWS1Z7qwfmDSbs5V9BN4rc4AfZZPIhTLPWwcEgKdhs+XzNMK+s
-         pP8EDf6d0HflzvWnlJ4iq2AvL5hnyP/MdAXApObUvjiErqeduqz/IyMephgucibraL
-         8s2h2J/D8oHyhQ7Laf/f2tfZG/DdDxC54JI8t/7o=
-Received: by mail-wm1-f53.google.com with SMTP id g135so945944wme.4
-        for <linux-block@vger.kernel.org>; Tue, 04 Jun 2019 10:43:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAVpLRLfrT6IRbvuOhIBqDgsfXCiqjGO/uTcCJ7udMfaCDKTBR+W
-        tOcdCx7otQqZ7gYufkhoAAMVmwpzLLUu//3aiqJ9LA==
-X-Google-Smtp-Source: APXvYqxmFA0LxGXReVPmYeoh54PQ9wGQ/UBD/iQSPrsklI94PoCtyKGznvMTvJtTVRnlwuNsvcMNxx02fdTaRs78X5M=
-X-Received: by 2002:a1c:6242:: with SMTP id w63mr15439095wmb.161.1559670223114;
- Tue, 04 Jun 2019 10:43:43 -0700 (PDT)
+        id S1726179AbfFDSYs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Tue, 4 Jun 2019 14:24:48 -0400
+Received: from server907e.appriver.com ([204.232.250.40]:60590 "EHLO
+        server907.appriver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726352AbfFDSYs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jun 2019 14:24:48 -0400
+X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jun 2019 14:24:47 EDT
+X-Note: This Email was scanned by AppRiver SecureTide
+X-Note-AR-ScanTimeLocal: 06/04/2019 2:09:47 PM
+X-Note: SecureTide Build: 6/3/2019 7:34:16 PM UTC (2.7.9.1)
+X-Note: Filtered by 10.246.0.224
+X-Note-AR-Scan: None - PIPE
+Received: by server907.appriver.com (CommuniGate Pro PIPE 6.2.4)
+  with PIPE id 272567096; Tue, 04 Jun 2019 14:09:47 -0400
+Received: from [10.246.0.39] (HELO smtp.us.exg7.exghost.com)
+  by server907.appriver.com (CommuniGate Pro SMTP 6.2.4)
+  with ESMTPS id 272567073; Tue, 04 Jun 2019 14:09:46 -0400
+Received: from E16DN29A-S1E7.exg7.exghost.local (192.168.244.206) by
+ E16DN06C-S1E7.exg7.exghost.local (192.168.244.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 4 Jun 2019 14:09:45 -0400
+Received: from E16DN29A-S1E7.exg7.exghost.local ([fe80::a19c:46b5:a8a0:4aba])
+ by E16DN29A-S1E7.exg7.exghost.local ([fe80::a19c:46b5:a8a0:4aba%21]) with
+ mapi id 15.01.1779.000; Tue, 4 Jun 2019 14:09:46 -0400
+From:   Justin Sanders <justin@coraid.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Ed L. Cashin" <ed.cashin@acm.org>, Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v3] block: aoe: no need to check return value of
+ debugfs_create functions
+Thread-Topic: [PATCH v3] block: aoe: no need to check return value of
+ debugfs_create functions
+Thread-Index: AQHVGkVIjKqm4AaW+k6RowxiyHwjOaaMD9+A
+Date:   Tue, 4 Jun 2019 18:09:42 +0000
+Message-ID: <B606EE6D-38A5-41BA-8544-163B949EAB5A@coraid.com>
+References: <20190122152151.16139-5-gregkh@linuxfoundation.org>
+ <20190603194754.GB21877@kroah.com>
+In-Reply-To: <20190603194754.GB21877@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [208.71.233.237]
+x-rerouted-by-exchange: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5AC85A9BEEBD6D4FA432B24773C0A97B@fwd7.exghost.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 4 Jun 2019 10:43:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
-Message-ID: <CALCETrWzDR=Ap8NQ5-YrVhXCEBgr+hwpjw9fBn0m2NkZzZ7XLQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/8] Mount, FS, Block and Keyrings notifications [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Note: This Email was scanned by AppRiver SecureTide
+X-Note-AR-ScanTimeLocal: 06/04/2019 2:09:46 PM
+X-Note: SecureTide Build: 6/3/2019 7:34:16 PM UTC (2.7.9.1)
+X-Note: Filtered by 10.246.0.224
+X-Policy: GLOBAL
+X-Primary: GLOBAL@coraid.com
+X-Virus-Scan: V-
+X-Note-SnifferID: 0
+X-GBUdb-Analysis: Unknown
+X-Signature-Violations: 0-0-0-5861-c
+X-Note-419: 15.6269 ms. Fail:0 Chk:1358 of 1358 total
+X-Note: VSCH-CT/SI: 0-1358/SG:1 6/4/2019 2:09:38 PM
+X-Note: Spam Tests Failed: 
+X-Country-Path: PRIVATE->
+X-Note-Sending-IP: 10.246.0.39
+X-Note-Reverse-DNS: 
+X-Note-Return-Path: justin@coraid.com
+X-Note: User Rule Hits: 
+X-Note: Global Rule Hits: G586 G587 G588 G589 G607 G608 G756 
+X-Note: Encrypt Rule Hits: 
+X-Note: Mail Class: VALID
+X-Note-ECS-IP: 
+X-Note-ECS-Recip: gregkh@linuxfoundation.org
+X-Note-ECS-IP: 
+X-Note-ECS-Recip: linux-kernel@vger.kernel.org
+X-Note-ECS-IP: 
+X-Note-ECS-Recip: ed.cashin@acm.org
+X-Note-ECS-IP: 
+X-Note-ECS-Recip: axboe@kernel.dk
+X-Note-ECS-IP: 
+X-Note-ECS-Recip: linux-block@vger.kernel.org
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:35 AM David Howells <dhowells@redhat.com> wrote:
->
->
-> Hi Al,
->
-> Here's a set of patches to add a general variable-length notification queue
-> concept and to add sources of events for:
+Hi,
 
-I asked before and didn't see a response, so I'll ask again.  Why are
-you paying any attention at all to the creds that generate an event?
-It seems like the resulting security model will be vary hard to
-understand and probably buggy.  Can't you define a sensible model in
-which only the listener creds matter?
+> On Jun 3, 2019, at 3:47 PM, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+> 
+> Cc: "Ed L. Cashin" <ed.cashin@acm.org>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Cc: Omar Sandoval <osandov@osandov.com>
+> Cc: Justin Sanders <justin@coraid.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v3: Justin is now the maintainer of this driver, properly send it to
+>    him.
+> v2: fix uninitialized entry issue found by Omar Sandoval
+> 
+> drivers/block/aoe/aoeblk.c | 16 ++--------------
+> 1 file changed, 2 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
+> index e2c6aae2d636..bd19f8af950b 100644
+> --- a/drivers/block/aoe/aoeblk.c
+> +++ b/drivers/block/aoe/aoeblk.c
+> @@ -196,7 +196,6 @@ static const struct file_operations aoe_debugfs_fops = {
+> static void
+> aoedisk_add_debugfs(struct aoedev *d)
+> {
+> -	struct dentry *entry;
+> 	char *p;
+> 
+> 	if (aoe_debugfs_dir == NULL)
+> @@ -207,15 +206,8 @@ aoedisk_add_debugfs(struct aoedev *d)
+> 	else
+> 		p++;
+> 	BUG_ON(*p == '\0');
+> -	entry = debugfs_create_file(p, 0444, aoe_debugfs_dir, d,
+> -				    &aoe_debugfs_fops);
+> -	if (IS_ERR_OR_NULL(entry)) {
+> -		pr_info("aoe: cannot create debugfs file for %s\n",
+> -			d->gd->disk_name);
+> -		return;
+> -	}
+> -	BUG_ON(d->debugfs);
+> -	d->debugfs = entry;
+> +	d->debugfs = debugfs_create_file(p, 0444, aoe_debugfs_dir, d,
+> +					 &aoe_debugfs_fops);
+> }
+> void
+> aoedisk_rm_debugfs(struct aoedev *d)
+> @@ -472,10 +464,6 @@ aoeblk_init(void)
+> 	if (buf_pool_cache == NULL)
+> 		return -ENOMEM;
+> 	aoe_debugfs_dir = debugfs_create_dir("aoe", NULL);
+> -	if (IS_ERR_OR_NULL(aoe_debugfs_dir)) {
+> -		pr_info("aoe: cannot create debugfs directory\n");
+> -		aoe_debugfs_dir = NULL;
+> -	}
+> 	return 0;
+> }
+> 
+> -- 
+> 2.21.0
+> 
+> 
 
-> LSM support is included:
->
->  (1) The creds of the process that did the fput() that reduced the refcount
->      to zero are cached in the file struct.
->
->  (2) __fput() overrides the current creds with the creds from (1) whilst
->      doing the cleanup, thereby making sure that the creds seen by the
->      destruction notification generated by mntput() appears to come from
->      the last fputter.
+This looks good to me, thanks.
 
-That looks like duct tape that is, at best, likely to be very buggy.
+Acked-by: Justin Sanders <justin@coraid.com>
 
->
->  (3) security_post_notification() is called for each queue that we might
->      want to post a notification into, thereby allowing the LSM to prevent
->      covert communications.
+Cheers,
+Justin
 
-This seems like the wrong approach.  If an LSM wants to prevent covert
-communication from, say, mount actions, then it shouldn't allow the
-watch to be set up in the first place.
+
