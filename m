@@ -2,114 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE0B34FBA
-	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 20:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8BE35058
+	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 21:38:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfFDSRq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Jun 2019 14:17:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46741 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFDSRp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jun 2019 14:17:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so10797881pgr.13
-        for <linux-block@vger.kernel.org>; Tue, 04 Jun 2019 11:17:45 -0700 (PDT)
+        id S1726179AbfFDTio (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Jun 2019 15:38:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36183 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFDTio (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jun 2019 15:38:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a3so3541572pgb.3
+        for <linux-block@vger.kernel.org>; Tue, 04 Jun 2019 12:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5awe/yDakGGO/BxwxBGm2kDwtqm01hxaeRIR5WSClTE=;
+        b=kSGpqLi9hgVEttJY+zJphTmom5Q5BaBDXDBe5zqhVVAGx7/lugNzzuHC7qLjH6bnXr
+         IUe2OT/8ZM/oxAdRpwwWcyUEv7AUKPVc3AYzfI/eItQVRaisMwh9h7SPmJZvCIYcZO8E
+         k0KU0cJ86d1ViyKOEcuw5rfV9Iturz7XlAV/RSWm36Eo82G5fTfwPv19U8bu4Gqxr+CM
+         BOCLx6BdgS+3LP7moHlYOItVLkSA+uR6lvepvP/wm0DjH8S9/gjwkn3dESclnow+ueU/
+         4U/x1D5g4h53bvUfCc0X3Likoos40SvliquEQdlR35M4pDRvMfbhkhbCoZHuLe1G8KmI
+         OGHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jk614OW+toouchtfiZ5Ct4yS0gtaRdK4sjfv9OBX/2A=;
-        b=GgByGt39sceRXhmxInTHp9ttkdF5OuJaFrLSViP9v6+cwaMH2Z7WuVLGo5ZpeYdD/b
-         601btaUnAoDlwc4ZsENJfhGGOMsl9kHKZSXLs2nL49xQsXs52PLhyBfm7HnkHN0Jo9Ua
-         d9wZe1nnhRcByzTV0VhYOYqDKCdaUNF7Ejzu3k/rG578yMx5voGk8abRGmJg+U3lNoLQ
-         5Pzly/EI9GeEIs2z8UZeqrRuTW/SkZxeZ7GtkMDb2qVj22b/EmRZulIFhePL0vw8FGHB
-         6pLZMTVTHd7eSrkj06ecw/7MZVUNZ2higECAnu9Nx7rWfjHAMoFAotIaK3a9BUs5p6lv
-         ICSw==
-X-Gm-Message-State: APjAAAVNcoAd+dRaeUMPXwK50Q1q00znbuX7aerYPsQcXsudlg947s0t
-        Tf/nBdSy//67IC7oLIMYNGoh+nfU
-X-Google-Smtp-Source: APXvYqzR3K+z+btow0iiD9tMHgoE00W75mPkb4PB1dCHKtMP5Wdg83UJG1zuhjfIG2h46hvLZBxZGQ==
-X-Received: by 2002:aa7:956d:: with SMTP id x13mr613619pfq.132.1559672265167;
-        Tue, 04 Jun 2019 11:17:45 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id q19sm18318709pff.96.2019.06.04.11.17.44
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5awe/yDakGGO/BxwxBGm2kDwtqm01hxaeRIR5WSClTE=;
+        b=d1XzXizyyBCTWDKth2Jgn/I9D18jTVS/+ruUGqft8eBQIx5PtL+8UcCrJxeDpxjXK+
+         zyV61FKlr4bbHDGzIK7PgmWdTvMCZhu9A/AIHN9hdlpe5b39jwTKpbJj6pKdIk3dLCtv
+         o8h2lRxNdt5OCQWqwlQvmlNAO6ujUJg/M6Qn7uq4H1tu5IASqplHLn87cXZhtqG7kQ51
+         3b8pPgrbYV4RyAIXC/YZpG/16CXuFVsVoYM/GaUOIxz/j+GNm9amgDhM5HVCDNorJKSH
+         n37xlmlWCN2qsY/zyZY3IpdiS1ZtYHzDKpDRTcRNLCx0BEQon3oDgmwOoWopUUVTzr4v
+         m1Cw==
+X-Gm-Message-State: APjAAAVxcvacgL12UTTrqLhNwd5H7FtAoD3RIifQYpBrkntPe+a5UBCe
+        REKlqYqoiEm+w3RUCN/WlFE8xHbnHvQjYg==
+X-Google-Smtp-Source: APXvYqzdwHso23dJP5b3wNfTmRHfedIauNzwirK6VyEPimLWGvRmxSf7WGgEInbzWLKS1kSSfaNzKg==
+X-Received: by 2002:a63:6fce:: with SMTP id k197mr295216pgc.140.1559677123064;
+        Tue, 04 Jun 2019 12:38:43 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c129sm21243833pfa.106.2019.06.04.12.38.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 11:17:44 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>, Omar Sandoval <osandov@fb.com>
-Subject: [PATCH 2/2] blk-mq: Simplify blk_mq_make_request()
-Date:   Tue,  4 Jun 2019 11:17:36 -0700
-Message-Id: <20190604181736.903-3-bvanassche@acm.org>
-X-Mailer: git-send-email 2.20.GIT
-In-Reply-To: <20190604181736.903-1-bvanassche@acm.org>
-References: <20190604181736.903-1-bvanassche@acm.org>
+        Tue, 04 Jun 2019 12:38:41 -0700 (PDT)
+Subject: Re: [PATCH v3] block: aoe: no need to check return value of
+ debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Justin Sanders <justin@coraid.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "Ed L. Cashin" <ed.cashin@acm.org>, linux-block@vger.kernel.org
+References: <20190122152151.16139-5-gregkh@linuxfoundation.org>
+ <20190603194754.GB21877@kroah.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <168b8cf5-15ed-a4c1-6393-4f8df336a68e@kernel.dk>
+Date:   Tue, 4 Jun 2019 13:38:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603194754.GB21877@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the blk_mq_bio_to_request() call in front of the if-statement.
+On 6/3/19 1:47 PM, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Omar Sandoval <osandov@fb.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- block/blk-mq.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Applied, thanks.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 00d572265aa3..8dd4a5cccf9a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1969,10 +1969,10 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 
- 	cookie = request_to_qc_t(data.hctx, rq);
- 
-+	blk_mq_bio_to_request(rq, bio);
-+
- 	plug = current->plug;
- 	if (unlikely(is_flush_fua)) {
--		blk_mq_bio_to_request(rq, bio);
--
- 		/* bypass scheduler for flush rq */
- 		blk_insert_flush(rq);
- 		blk_mq_run_hw_queue(data.hctx, true);
-@@ -1984,8 +1984,6 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 		unsigned int request_count = plug->rq_count;
- 		struct request *last = NULL;
- 
--		blk_mq_bio_to_request(rq, bio);
--
- 		if (!request_count)
- 			trace_block_plug(q);
- 		else
-@@ -1999,8 +1997,6 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 
- 		blk_add_rq_to_plug(plug, rq);
- 	} else if (plug && !blk_queue_nomerges(q)) {
--		blk_mq_bio_to_request(rq, bio);
--
- 		/*
- 		 * We do limited plugging. If the bio can be merged, do that.
- 		 * Otherwise the existing request in the plug list will be
-@@ -2025,10 +2021,8 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 		}
- 	} else if ((q->nr_hw_queues > 1 && is_sync) || (!q->elevator &&
- 			!data.hctx->dispatch_busy)) {
--		blk_mq_bio_to_request(rq, bio);
- 		blk_mq_try_issue_directly(data.hctx, rq, &cookie);
- 	} else {
--		blk_mq_bio_to_request(rq, bio);
- 		blk_mq_sched_insert_request(rq, false, true, true);
- 	}
- 
 -- 
-2.22.0.rc3
+Jens Axboe
 
