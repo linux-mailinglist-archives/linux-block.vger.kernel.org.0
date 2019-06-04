@@ -2,167 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8390634FCC
-	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 20:24:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F087A34FB3
+	for <lists+linux-block@lfdr.de>; Tue,  4 Jun 2019 20:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfFDSYs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Tue, 4 Jun 2019 14:24:48 -0400
-Received: from server907e.appriver.com ([204.232.250.40]:60590 "EHLO
-        server907.appriver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726352AbfFDSYs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jun 2019 14:24:48 -0400
-X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jun 2019 14:24:47 EDT
-X-Note: This Email was scanned by AppRiver SecureTide
-X-Note-AR-ScanTimeLocal: 06/04/2019 2:09:47 PM
-X-Note: SecureTide Build: 6/3/2019 7:34:16 PM UTC (2.7.9.1)
-X-Note: Filtered by 10.246.0.224
-X-Note-AR-Scan: None - PIPE
-Received: by server907.appriver.com (CommuniGate Pro PIPE 6.2.4)
-  with PIPE id 272567096; Tue, 04 Jun 2019 14:09:47 -0400
-Received: from [10.246.0.39] (HELO smtp.us.exg7.exghost.com)
-  by server907.appriver.com (CommuniGate Pro SMTP 6.2.4)
-  with ESMTPS id 272567073; Tue, 04 Jun 2019 14:09:46 -0400
-Received: from E16DN29A-S1E7.exg7.exghost.local (192.168.244.206) by
- E16DN06C-S1E7.exg7.exghost.local (192.168.244.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 4 Jun 2019 14:09:45 -0400
-Received: from E16DN29A-S1E7.exg7.exghost.local ([fe80::a19c:46b5:a8a0:4aba])
- by E16DN29A-S1E7.exg7.exghost.local ([fe80::a19c:46b5:a8a0:4aba%21]) with
- mapi id 15.01.1779.000; Tue, 4 Jun 2019 14:09:46 -0400
-From:   Justin Sanders <justin@coraid.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ed L. Cashin" <ed.cashin@acm.org>, Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v3] block: aoe: no need to check return value of
- debugfs_create functions
-Thread-Topic: [PATCH v3] block: aoe: no need to check return value of
- debugfs_create functions
-Thread-Index: AQHVGkVIjKqm4AaW+k6RowxiyHwjOaaMD9+A
-Date:   Tue, 4 Jun 2019 18:09:42 +0000
-Message-ID: <B606EE6D-38A5-41BA-8544-163B949EAB5A@coraid.com>
-References: <20190122152151.16139-5-gregkh@linuxfoundation.org>
- <20190603194754.GB21877@kroah.com>
-In-Reply-To: <20190603194754.GB21877@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [208.71.233.237]
-x-rerouted-by-exchange: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5AC85A9BEEBD6D4FA432B24773C0A97B@fwd7.exghost.com>
-Content-Transfer-Encoding: 8BIT
+        id S1726700AbfFDSPc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Jun 2019 14:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbfFDSP2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 4 Jun 2019 14:15:28 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62593212F5
+        for <linux-block@vger.kernel.org>; Tue,  4 Jun 2019 18:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559672127;
+        bh=rJp5OtqEAvAiGS7xlsL6faTP+VzkPZmB2r/CXv2dDMw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mXf48L0bbJsFlXG4RQ5TuxVD4BUsGDkraMg70yTes9Vx0aGRiVCyUI6hB1cNcXT2T
+         EQOTcLwkJrjxfu0oX0teu7kbJBsSOW2daDsKYxp6iPLqEwCk/FAHCvhDbkgSjhsdEG
+         9ydu2jm6dSJLG16MzlOqlVPJ6N/Qq8YHvUFWDAm8=
+Received: by mail-wr1-f43.google.com with SMTP id r18so7834567wrm.10
+        for <linux-block@vger.kernel.org>; Tue, 04 Jun 2019 11:15:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVM2QwBNdTnnycZNRwB2ellYZ6DIRrMjSg2VOBs//LBwuiDpUUr
+        /TD6kQRvu9kiXG2AmJV+cpd/Yt9C7LXTvJOQ9qYV0A==
+X-Google-Smtp-Source: APXvYqywAF/20o2S/0PCTLXbG818xHPa7/+6N3ZxOBZHPZZP2pqS8x/IU/xPvp6CPNvySeFLxMfwJUc/1kZXrxBbZUY=
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr7169034wrj.47.1559672125928;
+ Tue, 04 Jun 2019 11:15:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Note: This Email was scanned by AppRiver SecureTide
-X-Note-AR-ScanTimeLocal: 06/04/2019 2:09:46 PM
-X-Note: SecureTide Build: 6/3/2019 7:34:16 PM UTC (2.7.9.1)
-X-Note: Filtered by 10.246.0.224
-X-Policy: GLOBAL
-X-Primary: GLOBAL@coraid.com
-X-Virus-Scan: V-
-X-Note-SnifferID: 0
-X-GBUdb-Analysis: Unknown
-X-Signature-Violations: 0-0-0-5861-c
-X-Note-419: 15.6269 ms. Fail:0 Chk:1358 of 1358 total
-X-Note: VSCH-CT/SI: 0-1358/SG:1 6/4/2019 2:09:38 PM
-X-Note: Spam Tests Failed: 
-X-Country-Path: PRIVATE->
-X-Note-Sending-IP: 10.246.0.39
-X-Note-Reverse-DNS: 
-X-Note-Return-Path: justin@coraid.com
-X-Note: User Rule Hits: 
-X-Note: Global Rule Hits: G586 G587 G588 G589 G607 G608 G756 
-X-Note: Encrypt Rule Hits: 
-X-Note: Mail Class: VALID
-X-Note-ECS-IP: 
-X-Note-ECS-Recip: gregkh@linuxfoundation.org
-X-Note-ECS-IP: 
-X-Note-ECS-Recip: linux-kernel@vger.kernel.org
-X-Note-ECS-IP: 
-X-Note-ECS-Recip: ed.cashin@acm.org
-X-Note-ECS-IP: 
-X-Note-ECS-Recip: axboe@kernel.dk
-X-Note-ECS-IP: 
-X-Note-ECS-Recip: linux-block@vger.kernel.org
+References: <155966609977.17449.5624614375035334363.stgit@warthog.procyon.org.uk>
+ <155966611030.17449.1411028213562548153.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155966611030.17449.1411028213562548153.stgit@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 4 Jun 2019 11:15:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrXLoowmrHHWWr3OqsOGBkyGsV_x0nADaEyv+_ysGQdM3g@mail.gmail.com>
+Message-ID: <CALCETrXLoowmrHHWWr3OqsOGBkyGsV_x0nADaEyv+_ysGQdM3g@mail.gmail.com>
+Subject: Re: [PATCH 1/8] security: Override creds in __fput() with last
+ fputter's creds [ver #2]
+To:     David Howells <dhowells@redhat.com>, Jann Horn <jannh@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+On Tue, Jun 4, 2019 at 9:35 AM David Howells <dhowells@redhat.com> wrote:
+>
+> So that the LSM can see the credentials of the last process to do an fput()
+> on a file object when the file object is being dismantled, do the following
+> steps:
+>
+>  (1) Cache the current credentials in file->f_fput_cred at the point the
+>      file object's reference count reaches zero.
 
-> On Jun 3, 2019, at 3:47 PM, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
-> 
-> Cc: "Ed L. Cashin" <ed.cashin@acm.org>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: linux-block@vger.kernel.org
-> Cc: Omar Sandoval <osandov@osandov.com>
-> Cc: Justin Sanders <justin@coraid.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v3: Justin is now the maintainer of this driver, properly send it to
->    him.
-> v2: fix uninitialized entry issue found by Omar Sandoval
-> 
-> drivers/block/aoe/aoeblk.c | 16 ++--------------
-> 1 file changed, 2 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
-> index e2c6aae2d636..bd19f8af950b 100644
-> --- a/drivers/block/aoe/aoeblk.c
-> +++ b/drivers/block/aoe/aoeblk.c
-> @@ -196,7 +196,6 @@ static const struct file_operations aoe_debugfs_fops = {
-> static void
-> aoedisk_add_debugfs(struct aoedev *d)
-> {
-> -	struct dentry *entry;
-> 	char *p;
-> 
-> 	if (aoe_debugfs_dir == NULL)
-> @@ -207,15 +206,8 @@ aoedisk_add_debugfs(struct aoedev *d)
-> 	else
-> 		p++;
-> 	BUG_ON(*p == '\0');
-> -	entry = debugfs_create_file(p, 0444, aoe_debugfs_dir, d,
-> -				    &aoe_debugfs_fops);
-> -	if (IS_ERR_OR_NULL(entry)) {
-> -		pr_info("aoe: cannot create debugfs file for %s\n",
-> -			d->gd->disk_name);
-> -		return;
-> -	}
-> -	BUG_ON(d->debugfs);
-> -	d->debugfs = entry;
-> +	d->debugfs = debugfs_create_file(p, 0444, aoe_debugfs_dir, d,
-> +					 &aoe_debugfs_fops);
-> }
-> void
-> aoedisk_rm_debugfs(struct aoedev *d)
-> @@ -472,10 +464,6 @@ aoeblk_init(void)
-> 	if (buf_pool_cache == NULL)
-> 		return -ENOMEM;
-> 	aoe_debugfs_dir = debugfs_create_dir("aoe", NULL);
-> -	if (IS_ERR_OR_NULL(aoe_debugfs_dir)) {
-> -		pr_info("aoe: cannot create debugfs directory\n");
-> -		aoe_debugfs_dir = NULL;
-> -	}
-> 	return 0;
-> }
-> 
-> -- 
-> 2.21.0
-> 
-> 
+I don't think it's valid to capture credentials in close().  This
+sounds very easy to spoof, especially when you consider that you can
+stick an fd in unix socket and aim it at a service that's just going
+to ignore it and close it.
 
-This looks good to me, thanks.
+IOW I think this is at least as invalid as looking at current_cred()
+in write(), which is a classic bug that gets repeated regularly.
 
-Acked-by: Justin Sanders <justin@coraid.com>
-
-Cheers,
-Justin
-
-
+--Andy
