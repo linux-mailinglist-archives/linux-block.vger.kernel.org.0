@@ -2,111 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29EC235E7B
-	for <lists+linux-block@lfdr.de>; Wed,  5 Jun 2019 15:58:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4604E35EC5
+	for <lists+linux-block@lfdr.de>; Wed,  5 Jun 2019 16:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbfFEN6O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Jun 2019 09:58:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36258 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbfFEN6O (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 5 Jun 2019 09:58:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 86654C05168F;
-        Wed,  5 Jun 2019 13:58:06 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 320F25D9CD;
-        Wed,  5 Jun 2019 13:58:01 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 09:57:59 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     gregkh <gregkh@linuxfoundation.org>
-Cc:     Alvin Zheng <Alvin@linux.alibaba.com>,
-        "darrick.wong" <darrick.wong@oracle.com>, axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        caspar <caspar@linux.alibaba.com>,
-        "joseph.qi" <joseph.qi@linux.alibaba.com>
-Subject: Re: [bug report][stable] xfstests:generic/538 failed on xfs
-Message-ID: <20190605135756.GA15671@bfoster>
-References: <f9a7b0c4-178a-4a7c-8ac6-aec79b06b810.Alvin@linux.alibaba.com>
- <20190605124227.GC17558@kroah.com>
+        id S1728377AbfFEOLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Jun 2019 10:11:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57394 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726442AbfFEOLJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 5 Jun 2019 10:11:09 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8401B7DB968CE8490F8F;
+        Wed,  5 Jun 2019 22:11:04 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Jun 2019
+ 22:10:58 +0800
+Subject: Re: [PATCH 1/9] blk-mq: allow hw queues to share hostwide tags
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20190531022801.10003-1-ming.lei@redhat.com>
+ <20190531022801.10003-2-ming.lei@redhat.com>
+CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Don Brace <don.brace@microsemi.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        "Sathya Prakash" <sathya.prakash@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <0f1773af-170a-a6b5-54ce-274dacb2b63a@huawei.com>
+Date:   Wed, 5 Jun 2019 15:10:51 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605124227.GC17558@kroah.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 05 Jun 2019 13:58:13 +0000 (UTC)
+In-Reply-To: <20190531022801.10003-2-ming.lei@redhat.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:42:27PM +0200, gregkh wrote:
-> On Wed, Jun 05, 2019 at 08:21:44PM +0800, Alvin Zheng wrote:
-> > Hi,
-> >   I was using kernel v4.19.48 and found that it cannot pass the generic/538 on xfs. The error output is as follows:
-> 
-> Has 4.19 ever been able to pass that test?  If not, I wouldn't worry
-> about it :)
-> 
+On 31/05/2019 03:27, Ming Lei wrote:
+> index 32b8ad3d341b..49d73d979cb3 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2433,6 +2433,11 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
+>  {
+>  	int ret = 0;
+>
 
-FWIW, the fstests commit references the following kernel patches for
-fixes in XFS and ext4:
+Hi Ming,
 
-  xfs: serialize unaligned dio writes against all other dio writes
-  ext4: fix data corruption caused by unaligned direct AIO
+> +	if ((set->flags & BLK_MQ_F_HOST_TAGS) && hctx_idx) {
+> +		set->tags[hctx_idx] = set->tags[0];
 
-It looks like both of those patches landed in 5.1.
+Here we set all tags same as that of hctx index 0.
 
-Brian
+> +		return true;
 
-> > 
-> >   FSTYP         -- xfs (non-debug)
-> >   PLATFORM      -- Linux/x86_64 alinux2-6 4.19.48
-> >   MKFS_OPTIONS  -- -f -bsize=4096 /dev/vdc
-> >   MOUNT_OPTIONS -- /dev/vdc /mnt/testarea/scra
-> >   generic/538 0s ... - output mismatch (see /root/usr/local/src/xfstests/results//generic/538.out.bad)
-> >       --- tests/generic/538.out   2019-05-27 13:57:06.505666465 +0800
-> >       +++ /root/usr/local/src/xfstests/results//generic/538.out.bad       2019-06-05 16:43:14.702002326 +0800
-> >       @@ -1,2 +1,10 @@
-> >        QA output created by 538
-> >       +Data verification fails
-> >       +Find corruption
-> >       +00000000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >       +*
-> >       +00000200  5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-> >       +00002000
-> >       ...
-> >       (Run 'diff -u /root/usr/local/src/xfstests/tests/generic/538.out /root/usr/local/src/xfstests/results//generic/538.out.bad'  to see the entire diff)
-> >   Ran: generic/538
-> >   Failures: generic/538
-> >   Failed 1 of 1 tests
-> >   
-> > I also found that the latest kernel (v5.2.0-rc2) of upstream can pass the generic/538 test. Therefore, I bisected and found the first good commit is 3110fc79606. This commit adds the hardware queue into the sort function. Besides, the sort function returns a negative value when the offset and queue (software and hardware) of two I/O requests are same. I think the second part of the change make senses. The kernel should not change the relative position of two I/O requests when their offset and queue are same. So I made the following changes and merged it into the kernel 4.19.48. After the modification, we can pass the generic/538 test on xfs. The same case can be passed on ext4, since ext4 has corresponding fix 0db24122bd7f ("ext4: fix data corruption caused by overlapping unaligned and aligned IO"). Though I think xfs should be responsible for this issue, the block layer code below is also problematic. Any ideas?
-> > 
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index 4e563ee..a7309cd 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -1610,7 +1610,7 @@ static int plug_ctx_cmp(void *priv, struct list_head *a, struct list_head *b)
-> > 
-> >         return !(rqa->mq_ctx < rqb->mq_ctx ||
-> >                  (rqa->mq_ctx == rqb->mq_ctx &&
-> > -                 blk_rq_pos(rqa) < blk_rq_pos(rqb)));
-> > +                 blk_rq_pos(rqa) <= blk_rq_pos(rqb)));
-> >  }
-> > 
-> >  void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
-> 
-> I would not like to take a patch that is not upstream, but rather take
-> the original commit.
-> 
-> Can 3110fc79606f ("blk-mq: improve plug list sorting") on its own
-> resolve this issue for 4.19.y?
-> 
-> thanks,
-> 
-> greg k-h
+
+As such, I think that the error handling in __blk_mq_alloc_rq_maps() is 
+made a little fragile:
+
+__blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+{
+	int i;
+
+	for (i = 0; i < set->nr_hw_queues; i++)
+		if (!__blk_mq_alloc_rq_map(set, i))
+			goto out_unwind;
+
+	return 0;
+
+out_unwind:
+	while (--i >= 0)
+		blk_mq_free_rq_map(set->tags[i]);
+
+	return -ENOMEM;
+}
+
+If __blk_mq_alloc_rq_map(, i > 1) fails for when BLK_MQ_F_HOST_TAGS FLAG 
+is set (even though today it can't), then we would try to free 
+set->tags[0] multiple times.
+
+> +	}
+> +
+>  	set->tags[hctx_idx] = blk_mq_alloc_rq_map(set, hctx_idx,
+>  					set->queue_depth, set->reserved_tags);
+
+Thanks,
+John
+
+>  	if (!set->tags[hctx_idx])
+> @@ -2451,6 +2456,9 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
+>  static void blk_mq_free_map_and_requests(struct blk_mq_tag_set *set,
+>  					
+
+
