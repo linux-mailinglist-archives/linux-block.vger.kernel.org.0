@@ -2,104 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4604E35EC5
-	for <lists+linux-block@lfdr.de>; Wed,  5 Jun 2019 16:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3813635F1B
+	for <lists+linux-block@lfdr.de>; Wed,  5 Jun 2019 16:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfFEOLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Jun 2019 10:11:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57394 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbfFEOLJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 5 Jun 2019 10:11:09 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8401B7DB968CE8490F8F;
-        Wed,  5 Jun 2019 22:11:04 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Jun 2019
- 22:10:58 +0800
-Subject: Re: [PATCH 1/9] blk-mq: allow hw queues to share hostwide tags
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20190531022801.10003-1-ming.lei@redhat.com>
- <20190531022801.10003-2-ming.lei@redhat.com>
-CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Don Brace <don.brace@microsemi.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        "Sathya Prakash" <sathya.prakash@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <0f1773af-170a-a6b5-54ce-274dacb2b63a@huawei.com>
-Date:   Wed, 5 Jun 2019 15:10:51 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1728190AbfFEOWk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Jun 2019 10:22:40 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:44346 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfFEOWj (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Jun 2019 10:22:39 -0400
+Received: by mail-pg1-f170.google.com with SMTP id n2so12471831pgp.11
+        for <linux-block@vger.kernel.org>; Wed, 05 Jun 2019 07:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o+IcDP8xywihziIgb7p/GLXZhp4cLmigR0A3EK7XJW0=;
+        b=yyD4roMK8IUzMUzyYYIle4EboYZB9IzE6GPQGoQtFvfggOvviH/3vpHFMwjPy6yMS3
+         WxYPl11RTtZxvEJUCaC/UF43bEUALvX5Jk2kEr+il/5OgV4GM+OFmk9/m42A9JOpmE6t
+         X693rS571KV6xsvo170fRaAsVnujNlNuVARoPovwK38pFU0LPWSWkSb0t7tvlC3EJMIN
+         eDpNXXsudC8vHx1QCZRIKcbDBuaPLij83tVhhdPWlQlSMuoQH3MGwO0CZCn+9E76qPum
+         wesb7zyj/jsBaJCnnLkw77Pw1DmaVxfI/cQMUYdV9YXCeSCdZlgInhZJ+2eM2++wOOzr
+         dRXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o+IcDP8xywihziIgb7p/GLXZhp4cLmigR0A3EK7XJW0=;
+        b=gnEDiu7olcJDXaFF4T8v6xBJTtH8yfgo1lTmP+hAEmyH/JWldnrv+rzm+lc8knSU3o
+         xzsa+nJsbAb9sK+mIBm399iQvr+qLDAYw1IP8Z861G+zr/aqOYNcm31ad5L4wxnf5YDE
+         pi0mQZ1HCWLXROlsIbPxGiqxLWVyQaFk7hSlLQbh78HEPJyXdt/8qVEOvl4LRg/UB3GJ
+         //jooKovzQCcIL+9KKIvV+3B6I+hGukvhhvUzdXOVIi1+lcPo+BJOK3kZVBansPoB9dk
+         hslk00G54h5ohXHyPFmvVjbb+Qku7Aw+Ro/hOV7LI1dxdViw/Kf5AnrmpFqADXgBkN26
+         zk+Q==
+X-Gm-Message-State: APjAAAXhIQ+JXrQzfrLLAQYaHUMwuSkWwhWb70fmsb6rmVlFs/ly48a3
+        d+OdZ7xKStRvGDjJFGoKNFDGKCYkAok=
+X-Google-Smtp-Source: APXvYqzeH4OGyObX0kyEFIyVLA5zY2ImKmCvMnoXbBNx09B0/gTQWHMF/IVXvqQWeh4fp7YF5zmshg==
+X-Received: by 2002:a62:6d47:: with SMTP id i68mr46913713pfc.189.1559744557582;
+        Wed, 05 Jun 2019 07:22:37 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id d9sm17865159pgl.20.2019.06.05.07.22.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 07:22:36 -0700 (PDT)
+Subject: Re: [PATCH] block: Drop unlikely before IS_ERR(_OR_NULL)
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190605142428.84784-4-wangkefeng.wang@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5142de36-e834-1514-a63c-4addea773c41@kernel.dk>
+Date:   Wed, 5 Jun 2019 08:22:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190531022801.10003-2-ming.lei@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20190605142428.84784-4-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 31/05/2019 03:27, Ming Lei wrote:
-> index 32b8ad3d341b..49d73d979cb3 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2433,6 +2433,11 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
->  {
->  	int ret = 0;
->
+On 6/5/19 8:24 AM, Kefeng Wang wrote:
+> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
+> so no need to do that again from its callers. Drop it.
 
-Hi Ming,
+Applied, thanks.
 
-> +	if ((set->flags & BLK_MQ_F_HOST_TAGS) && hctx_idx) {
-> +		set->tags[hctx_idx] = set->tags[0];
-
-Here we set all tags same as that of hctx index 0.
-
-> +		return true;
-
-
-As such, I think that the error handling in __blk_mq_alloc_rq_maps() is 
-made a little fragile:
-
-__blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
-{
-	int i;
-
-	for (i = 0; i < set->nr_hw_queues; i++)
-		if (!__blk_mq_alloc_rq_map(set, i))
-			goto out_unwind;
-
-	return 0;
-
-out_unwind:
-	while (--i >= 0)
-		blk_mq_free_rq_map(set->tags[i]);
-
-	return -ENOMEM;
-}
-
-If __blk_mq_alloc_rq_map(, i > 1) fails for when BLK_MQ_F_HOST_TAGS FLAG 
-is set (even though today it can't), then we would try to free 
-set->tags[0] multiple times.
-
-> +	}
-> +
->  	set->tags[hctx_idx] = blk_mq_alloc_rq_map(set, hctx_idx,
->  					set->queue_depth, set->reserved_tags);
-
-Thanks,
-John
-
->  	if (!set->tags[hctx_idx])
-> @@ -2451,6 +2456,9 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
->  static void blk_mq_free_map_and_requests(struct blk_mq_tag_set *set,
->  					
-
+-- 
+Jens Axboe
 
