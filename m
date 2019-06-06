@@ -2,125 +2,283 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5567F36E24
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2019 10:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE0FA37045
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2019 11:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbfFFIHe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Jun 2019 04:07:34 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:63323 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFFIHe (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Jun 2019 04:07:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559808454; x=1591344454;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=yZ0i9pTHVUGKlLcG5jz0a512FmnObBbmLwFz/oVkfOA=;
-  b=juo6kazav8bDRmaPKEony4F9rloYlaIlIorKufxoiYDVM7zExdKF2xm9
-   xAkCfQlh27FtT2JL027i8RZkMD+IOvUe9370ho1uniNKbQwX9SBRMTubI
-   qUTGpypZQElljla67M4JqQ3E2TSkDFe4hR+uE6YJ/9WFqQUl/aahbt2WP
-   oaJcQcG4Jmp0Ed+i8l5pqauvNHG4yKYucU3lu8W1EiqBuNwpA9vU3m6Ah
-   eNJbUYa6FxsthRGfaSzvgkxClwAyfCTWgS7/CnvkgP8/+AsRZ+TTnK2Si
-   rUv/zFRZZmuBZplVFKJsIs+kbLXSbL0fHECorqXjPSv17Q3IGsEZKaYiT
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.63,558,1557158400"; 
-   d="scan'208";a="111208598"
-Received: from mail-co1nam03lp2054.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.54])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 16:07:33 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yZ0i9pTHVUGKlLcG5jz0a512FmnObBbmLwFz/oVkfOA=;
- b=OUnL/npocqBsTkW5803oMet0/lQJ4ZMvbe8Z+37jTqk1PnwBhnh8zC5sIHCuEXu3bc/EIoB1+a3l/LtX3JkU0axFJ+dX2E76vGjptY0nvRwGTgWQIafxfQv34+hn9/9DQ9LZREflf3was6cja+mnX5NDBfHS77zQyEQHZgy+A6M=
-Received: from BN3PR04MB2257.namprd04.prod.outlook.com (10.166.73.148) by
- BN3PR04MB2371.namprd04.prod.outlook.com (10.166.73.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Thu, 6 Jun 2019 08:07:32 +0000
-Received: from BN3PR04MB2257.namprd04.prod.outlook.com
- ([fe80::45c:b93e:9f81:3339]) by BN3PR04MB2257.namprd04.prod.outlook.com
- ([fe80::45c:b93e:9f81:3339%7]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 08:07:32 +0000
-From:   Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     Omar Sandoval <osandov@osandov.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [PATCH blktests v2 1/2] zbd/rc: Introduce helper functions for
- zone mapping test
-Thread-Topic: [PATCH blktests v2 1/2] zbd/rc: Introduce helper functions for
- zone mapping test
-Thread-Index: AQHVF1R1TD40R7jYzkKGd94NFNsZTw==
-Date:   Thu, 6 Jun 2019 08:07:32 +0000
-Message-ID: <BN3PR04MB2257143BDA2FE73729985BCFED170@BN3PR04MB2257.namprd04.prod.outlook.com>
-References: <20190531015913.5560-1-shinichiro.kawasaki@wdc.com>
- <20190531015913.5560-2-shinichiro.kawasaki@wdc.com>
- <20190605215247.GA21734@vader>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shinichiro.kawasaki@wdc.com; 
-x-originating-ip: [199.255.47.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 25ac4359-3e9c-4065-1023-08d6ea5606df
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN3PR04MB2371;
-x-ms-traffictypediagnostic: BN3PR04MB2371:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <BN3PR04MB23713F20593FF5307011E282ED170@BN3PR04MB2371.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(39860400002)(396003)(346002)(199004)(189003)(71200400001)(71190400001)(91956017)(76116006)(66066001)(66946007)(73956011)(66556008)(6246003)(66476007)(66446008)(76176011)(64756008)(229853002)(53936002)(53546011)(6506007)(256004)(5660300002)(52536014)(74316002)(102836004)(6116002)(3846002)(9686003)(55016002)(6436002)(6916009)(186003)(316002)(26005)(2906002)(99286004)(7736002)(305945005)(478600001)(4326008)(68736007)(44832011)(486006)(54906003)(8936002)(14454004)(7696005)(8676002)(446003)(476003)(33656002)(86362001)(25786009)(81156014)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN3PR04MB2371;H:BN3PR04MB2257.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wVTKVM7MZCIuezEpWeLQf1d/Ej2RjKwvzJuuJ7CBmA9V8OV117xdAkCsErdh/88la7RGm+PN55Nuo9eAnyzCvxXOn86A5RVVRb0tQtzdPaIWIO26nMwSg6knvffBKZWy0g2w6tNBXm/nYFxbyYkcHyVTnJzNe92JlObWxW1SMI6MikQRkfRYyn9jhCZwHgeo6lDsujg5DqnPvsvZU2buVuzqhkL1fMQ9uip5q4hqNaFpgnOGjdl0Q59Nnsh561UuBAP0bpOZnel220DJabR4pJjxuF/QQswwBvfiCWfBZ57YOw+5kosuxELibqfiJ27TwRsp9mQ9YyO3NYHPSS/7RLL/GXhSTwHM98ZIW+o+s0gMRGkYFJQYbY69fPNwgqAkl+I0mvoMyEXZuYln3N0NswZ7R73BMyaISPfWzO8+Mik=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728065AbfFFJmX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Jun 2019 05:42:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60470 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfFFJmW (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:42:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E6E7E307C941;
+        Thu,  6 Jun 2019 09:42:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C5262A2E9;
+        Thu,  6 Jun 2019 09:42:00 +0000 (UTC)
+Subject: [RFC][PATCH 00/10] Mount, FS,
+ Block and Keyrings notifications [ver #3]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-usb@vger.kernel.org, dhowells@redhat.com, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 06 Jun 2019 10:41:59 +0100
+Message-ID: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25ac4359-3e9c-4065-1023-08d6ea5606df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 08:07:32.0690
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shinichiro.kawasaki@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR04MB2371
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 06 Jun 2019 09:42:22 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/6/19 6:52 AM, Omar Sandoval wrote:=0A=
-> On Fri, May 31, 2019 at 10:59:12AM +0900, Shin'ichiro Kawasaki wrote:=0A=
->> As a preparation for the zone mapping test case, add several helper=0A=
->> functions. _find_last_sequential_zone() and=0A=
->> _find_sequential_zone_in_middle() help to select test target zones.=0A=
->> _test_dev_is_logical() checks TEST_DEV is the valid test target.=0A=
->> _test_dev_has_dm_map() helps to check that the dm target is linear or=0A=
->> flakey. _get_dev_container_and_sector() helps to get the container devic=
-e=0A=
->> and sector mappings.=0A=
-> =0A=
-> This has a few shellcheck warnings:=0A=
-> =0A=
-> tests/zbd/rc:221:4: error: Remove '$' or use '_=3D$((expr))' to avoid exe=
-cuting output. [SC2084]=0A=
-> tests/zbd/rc:223:4: error: Remove '$' or use '_=3D$((expr))' to avoid exe=
-cuting output. [SC2084]=0A=
-> tests/zbd/rc:225:3: error: Remove '$' or use '_=3D$((expr))' to avoid exe=
-cuting output. [SC2084]=0A=
-> =0A=
-> And it's missing your Signed-off-by.=0A=
-> =0A=
-> Thanks!=0A=
-=0A=
-Thank you for the review and sorry about the mistakes. Will fix with v3 pat=
-ch.=0A=
-=0A=
--- =0A=
-Best Regards,=0A=
-Shin'ichiro Kawasaki=0A=
+
+Hi Al,
+
+Here's a set of patches to add a general variable-length notification queue
+concept and to add sources of events for:
+
+ (1) Mount topology events, such as mounting, unmounting, mount expiry,
+     mount reconfiguration.
+
+ (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+     errors (not complete yet).
+
+ (3) Key/keyring events, such as creating, linking and removal of keys.
+
+ (4) General device events (single common queue) including:
+
+     - Block layer events, such as device errors
+
+     - USB subsystem events, such as device/bus attach/remove, device
+       reset, device errors.
+
+One of the reasons for this is so that we can remove the issue of processes
+having to repeatedly and regularly scan /proc/mounts, which has proven to
+be a system performance problem.  To further aid this, the fsinfo() syscall
+on which this patch series depends, provides a way to access superblock and
+mount information in binary form without the need to parse /proc/mounts.
+
+
+LSM support is included, but controversial:
+
+ (1) The creds of the process that did the fput() that reduced the refcount
+     to zero are cached in the file struct.
+
+ (2) __fput() overrides the current creds with the creds from (1) whilst
+     doing the cleanup, thereby making sure that the creds seen by the
+     destruction notification generated by mntput() appears to come from
+     the last fputter.
+
+ (3) security_post_notification() is called for each queue that we might
+     want to post a notification into, thereby allowing the LSM to prevent
+     covert communications.
+
+ (?) Do I need to add security_set_watch(), say, to rule on whether a watch
+     may be set in the first place?  I might need to add a variant per
+     watch-type.
+
+ (?) Do I really need to keep track of the process creds in which an
+     implicit object destruction happened?  For example, imagine you create
+     an fd with fsopen()/fsmount().  It is marked to dissolve the mount it
+     refers to on close unless move_mount() clears that flag.  Now, imagine
+     someone looking at that fd through procfs at the same time as you exit
+     due to an error.  The LSM sees the destruction notification come from
+     the looker if they happen to do their fput() after yours.
+
+
+Design decisions:
+
+ (1) A misc chardev is used to create and open a ring buffer:
+
+	fd = open("/dev/watch_queue", O_RDWR);
+
+     which is then configured and mmap'd into userspace:
+
+	ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
+	ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+	buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
+		   MAP_SHARED, fd, 0);
+
+     The fd cannot be read or written (though there is a facility to use
+     write to inject records for debugging) and userspace just pulls data
+     directly out of the buffer.
+
+ (2) The ring index pointers are stored inside the ring and are thus
+     accessible to userspace.  Userspace should only update the tail
+     pointer and never the head pointer or risk breaking the buffer.  The
+     kernel checks that the pointers appear valid before trying to use
+     them.  A 'skip' record is maintained around the pointers.
+
+ (3) poll() can be used to wait for data to appear in the buffer.
+
+ (4) Records in the buffer are binary, typed and have a length so that they
+     can be of varying size.
+
+     This means that multiple heterogeneous sources can share a common
+     buffer.  Tags may be specified when a watchpoint is created to help
+     distinguish the sources.
+
+ (5) The queue is reusable as there are 16 million types available, of
+     which I've used 4, so there is scope for others to be used.
+
+ (6) Records are filterable as types have up to 256 subtypes that can be
+     individually filtered.  Other filtration is also available.
+
+ (7) Each time the buffer is opened, a new buffer is created - this means
+     that there's no interference between watchers.
+
+ (8) When recording a notification, the kernel will not sleep, but will
+     rather mark a queue as overrun if there's insufficient space, thereby
+     avoiding userspace causing the kernel to hang.
+
+ (9) The 'watchpoint' should be specific where possible, meaning that you
+     specify the object that you want to watch.
+
+(10) The buffer is created and then watchpoints are attached to it, using
+     one of:
+
+	keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
+	mount_notify(AT_FDCWD, "/", 0, fd, 0x02);
+	sb_notify(AT_FDCWD, "/mnt", 0, fd, 0x03);
+
+     where in all three cases, fd indicates the queue and the number after
+     is a tag between 0 and 255.
+
+(11) The watch must be removed if either the watch buffer is destroyed or
+     the watched object is destroyed.
+
+
+Things I want to avoid:
+
+ (1) Introducing features that make the core VFS dependent on the network
+     stack or networking namespaces (ie. usage of netlink).
+
+ (2) Dumping all this stuff into dmesg and having a daemon that sits there
+     parsing the output and distributing it as this then puts the
+     responsibility for security into userspace and makes handling
+     namespaces tricky.  Further, dmesg might not exist or might be
+     inaccessible inside a container.
+
+ (3) Letting users see events they shouldn't be able to see.
+
+
+Further things that could be considered:
+
+ (1) Adding a keyctl call to allow a watch on a keyring to be extended to
+     "children" of that keyring, such that the watch is removed from the
+     child if it is unlinked from the keyring.
+
+ (2) Adding global superblock event queue.
+
+ (3) Propagating watches to child superblock over automounts.
+
+
+The patches can be found here also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications
+
+Changes:
+
+ v3: I've added a USB notification source and reformulated the block
+     notification source so that there's now a common watch list, for which
+     the system call is now device_notify().
+
+     I've assigned a pair of unused ioctl numbers in the 'W' series to the
+     ioctls added by this series.
+
+     I've also added a description of the kernel API to the documentation.
+
+ v2: I've fixed various issues raised by Jann Horn and GregKH and moved to
+     krefs for refcounting.  I've added some security features to try and
+     give Casey Schaufler the LSM control he wants.
+
+David
+---
+David Howells (10):
+      security: Override creds in __fput() with last fputter's creds
+      General notification queue with user mmap()'able ring buffer
+      keys: Add a notification facility
+      vfs: Add a mount-notification facility
+      vfs: Add superblock notifications
+      fsinfo: Export superblock notification counter
+      Add a general, global device notification watch list
+      block: Add block layer notifications
+      usb: Add USB subsystem notifications
+      Add sample notification program
+
+
+ Documentation/ioctl/ioctl-number.txt   |    1 
+ Documentation/security/keys/core.rst   |   58 ++
+ Documentation/watch_queue.rst          |  492 ++++++++++++++++++
+ arch/x86/entry/syscalls/syscall_32.tbl |    3 
+ arch/x86/entry/syscalls/syscall_64.tbl |    3 
+ block/Kconfig                          |    9 
+ block/blk-core.c                       |   29 +
+ drivers/base/Kconfig                   |    9 
+ drivers/base/Makefile                  |    1 
+ drivers/base/notify.c                  |   82 +++
+ drivers/misc/Kconfig                   |   13 
+ drivers/misc/Makefile                  |    1 
+ drivers/misc/watch_queue.c             |  889 ++++++++++++++++++++++++++++++++
+ drivers/usb/core/Kconfig               |   10 
+ drivers/usb/core/devio.c               |   55 ++
+ drivers/usb/core/hub.c                 |    3 
+ fs/Kconfig                             |   21 +
+ fs/Makefile                            |    1 
+ fs/file_table.c                        |   12 
+ fs/fsinfo.c                            |   12 
+ fs/mount.h                             |   33 +
+ fs/mount_notify.c                      |  180 ++++++
+ fs/namespace.c                         |    9 
+ fs/super.c                             |  116 ++++
+ include/linux/blkdev.h                 |   15 +
+ include/linux/dcache.h                 |    1 
+ include/linux/device.h                 |    7 
+ include/linux/fs.h                     |   79 +++
+ include/linux/key.h                    |    4 
+ include/linux/lsm_hooks.h              |   15 +
+ include/linux/security.h               |   14 +
+ include/linux/syscalls.h               |    5 
+ include/linux/usb.h                    |   19 +
+ include/linux/watch_queue.h            |   87 +++
+ include/uapi/linux/fsinfo.h            |   10 
+ include/uapi/linux/keyctl.h            |    1 
+ include/uapi/linux/watch_queue.h       |  213 ++++++++
+ kernel/sys_ni.c                        |    7 
+ mm/interval_tree.c                     |    2 
+ mm/memory.c                            |    1 
+ samples/Kconfig                        |    6 
+ samples/Makefile                       |    1 
+ samples/vfs/test-fsinfo.c              |   13 
+ samples/watch_queue/Makefile           |    9 
+ samples/watch_queue/watch_test.c       |  310 +++++++++++
+ security/keys/Kconfig                  |   10 
+ security/keys/compat.c                 |    2 
+ security/keys/gc.c                     |    5 
+ security/keys/internal.h               |   30 +
+ security/keys/key.c                    |   37 +
+ security/keys/keyctl.c                 |   88 +++
+ security/keys/keyring.c                |   17 -
+ security/keys/request_key.c            |    4 
+ security/security.c                    |    9 
+ 54 files changed, 3025 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/watch_queue.rst
+ create mode 100644 drivers/base/notify.c
+ create mode 100644 drivers/misc/watch_queue.c
+ create mode 100644 fs/mount_notify.c
+ create mode 100644 include/linux/watch_queue.h
+ create mode 100644 include/uapi/linux/watch_queue.h
+ create mode 100644 samples/watch_queue/Makefile
+ create mode 100644 samples/watch_queue/watch_test.c
+
