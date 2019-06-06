@@ -2,55 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EBC337643
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2019 16:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C5F37684
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jun 2019 16:24:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfFFOUT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Jun 2019 10:20:19 -0400
-Received: from verein.lst.de ([213.95.11.211]:49883 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfFFOUS (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:20:18 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id BE3A968B20; Thu,  6 Jun 2019 16:19:50 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 16:19:50 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/13] IB/iser: set virt_boundary_mask in the scsi host
-Message-ID: <20190606141950.GB15112@lst.de>
-References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-9-hch@lst.de> <20190605202235.GC3273@ziepe.ca> <20190606062441.GB26745@lst.de> <20190606125935.GA17373@ziepe.ca>
+        id S1727378AbfFFOYZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Jun 2019 10:24:25 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:51862 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728508AbfFFOYT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Jun 2019 10:24:19 -0400
+Received: (qmail 3059 invoked by uid 2102); 6 Jun 2019 10:24:18 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 6 Jun 2019 10:24:18 -0400
+Date:   Thu, 6 Jun 2019 10:24:18 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     David Howells <dhowells@redhat.com>
+cc:     viro@zeniv.linux.org.uk,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <raven@themaw.net>,
+        <linux-fsdevel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <keyrings@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
+In-Reply-To: <155981420247.17513.18371208824032389940.stgit@warthog.procyon.org.uk>
+Message-ID: <Pine.LNX.4.44L0.1906061020000.1641-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606125935.GA17373@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:59:35AM -0300, Jason Gunthorpe wrote:
-> > Until we've sorted that out the device paramter needs to be set to
-> > the smallest value supported.
-> 
-> smallest? largest? We've been setting it to the largest value the
-> device can handle (ie 2G)
+On Thu, 6 Jun 2019, David Howells wrote:
 
-Well, in general we need the smallest value supported by any ULP,
-because if any ULP can't support a larger segment size, we must not
-allow the IOMMU to merge it to that size.  That being said I can't
-really see why any RDMA ULP should limit the size given how the MRs
-work.
+> Add a USB subsystem notification mechanism whereby notifications about
+> hardware events such as device connection, disconnection, reset and I/O
+> errors, can be reported to a monitoring process asynchronously.
+
+USB I/O errors covers an awfully large and vague field.  Do we really
+want to include them?  I'm doubtful.
+
+Alan Stern
+
