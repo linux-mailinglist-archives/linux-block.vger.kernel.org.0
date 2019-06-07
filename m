@@ -2,24 +2,24 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AF1E3840F
-	for <lists+linux-block@lfdr.de>; Fri,  7 Jun 2019 08:03:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A8A638417
+	for <lists+linux-block@lfdr.de>; Fri,  7 Jun 2019 08:04:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfFGGDl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Jun 2019 02:03:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42008 "EHLO mx1.suse.de"
+        id S1726882AbfFGGEe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Jun 2019 02:04:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42176 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbfFGGDk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:03:40 -0400
+        id S1726825AbfFGGEe (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 7 Jun 2019 02:04:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E8806AE5E;
-        Fri,  7 Jun 2019 06:03:38 +0000 (UTC)
-Subject: Re: [PATCH 4/6] block: simplify blk_recalc_rq_segments
+        by mx1.suse.de (Postfix) with ESMTP id DA3C3AC3A;
+        Fri,  7 Jun 2019 06:04:32 +0000 (UTC)
+Subject: Re: [PATCH 5/6] block: untangle the end of blk_bio_segment_split
 To:     Christoph Hellwig <hch@lst.de>, axboe@fb.com
 Cc:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org
 References: <20190606102904.4024-1-hch@lst.de>
- <20190606102904.4024-5-hch@lst.de>
+ <20190606102904.4024-6-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <0b5de1e8-3a42-1512-ba55-f8949ee65d6a@suse.de>
-Date:   Fri, 7 Jun 2019 08:03:38 +0200
+Message-ID: <1fc49e04-f0f2-afdb-1dff-82bef893d554@suse.de>
+Date:   Fri, 7 Jun 2019 08:04:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190606102904.4024-5-hch@lst.de>
+In-Reply-To: <20190606102904.4024-6-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -80,17 +80,16 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 6/6/19 12:29 PM, Christoph Hellwig wrote:
-> Return the segement and let the callers assign them, which makes the code
-> a littler more obvious.  Also pass the request instead of q plus bio
-> chain, allowing for the use of rq_for_each_bvec.
+> Now that we don't need to assign the front/back segment sizes, we can
+> duplicating the segs assignment for the split vs no-split case and
+> remove a whole chunk of boilerplate code.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  block/blk-core.c  |  4 ++--
->  block/blk-merge.c | 21 ++++++---------------
->  block/blk.h       |  2 +-
->  3 files changed, 9 insertions(+), 18 deletions(-)
-> Reviewed-by: Hannes Reinecke <hare@suse.com>
+>  block/blk-merge.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.com>
 
 Cheers,
 
