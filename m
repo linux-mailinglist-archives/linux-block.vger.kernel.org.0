@@ -2,125 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F71039DD5
-	for <lists+linux-block@lfdr.de>; Sat,  8 Jun 2019 13:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E75DD3A0BE
+	for <lists+linux-block@lfdr.de>; Sat,  8 Jun 2019 18:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfFHLoe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 8 Jun 2019 07:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60872 "EHLO mail.kernel.org"
+        id S1727287AbfFHQtP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 8 Jun 2019 12:49:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54406 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfFHLnb (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727217AbfFHQtO (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 8 Jun 2019 12:49:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207EE21707;
-        Sat,  8 Jun 2019 11:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994210;
-        bh=CxrsVp3lY/RrFqzcWFqD5j0zqFx6EsqJH/ix8qLijOo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lYPKY6uFh4EsKFM1EXjqTpa9i9JLv6rUl5p1DyokyY1KntJimB5NffFOugGtpUfLm
-         xUy1er5STT+Q8diBA0YrS+rqpQsC1iJUBWiYwXu54PISf4lgDhtfTgy5QCnNYVYFWM
-         BOlyTpKVrb/m/9+8vWk/9pYJUpBVxhwRowXi//WM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/49] loop: Don't change loop device under exclusive opener
-Date:   Sat,  8 Jun 2019 07:42:03 -0400
-Message-Id: <20190608114232.8731-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9869130842B1;
+        Sat,  8 Jun 2019 16:49:06 +0000 (UTC)
+Received: from localhost (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A0FF2A18D;
+        Sat,  8 Jun 2019 16:49:01 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH 0/2] block: fix page leak by merging to same page
+Date:   Sun,  9 Jun 2019 00:48:51 +0800
+Message-Id: <20190608164853.10938-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sat, 08 Jun 2019 16:49:14 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+Hi,
 
-[ Upstream commit 33ec3e53e7b1869d7851e59e126bdb0fe0bd1982 ]
+'pages' retrived by __bio_iov_iter_get_pages() may point to same page,
+and finally they can be merged to same page too in bio_add_page(),
+then page leak can be caused.
 
-Loop module allows calling LOOP_SET_FD while there are other openers of
-the loop device. Even exclusive ones. This can lead to weird
-consequences such as kernel deadlocks like:
+Fixes this issue by dropping the extra page ref.
 
-mount_bdev()				lo_ioctl()
-  udf_fill_super()
-    udf_load_vrs()
-      sb_set_blocksize() - sets desired block size B
-      udf_tread()
-        sb_bread()
-          __bread_gfp(bdev, block, B)
-					  loop_set_fd()
-					    set_blocksize()
-            - now __getblk_slow() indefinitely loops because B != bdev
-              block size
 
-Fix the problem by disallowing LOOP_SET_FD ioctl when there are
-exclusive openers of a loop device.
+Ming Lei (2):
+  block: introduce 'enum bvec_merge_flags' for __bio_try_merge_page
+  block: fix page leak in case of merging to same page
 
-[Deliberately chosen not to CC stable as a user with priviledges to
-trigger this race has other means of taking the system down and this
-has a potential of breaking some weird userspace setup]
+ block/bio.c         | 34 ++++++++++++++++++++++++----------
+ fs/iomap.c          |  3 ++-
+ fs/xfs/xfs_aops.c   |  3 ++-
+ include/linux/bio.h |  9 ++++++++-
+ 4 files changed, 36 insertions(+), 13 deletions(-)
 
-Reported-and-tested-by: syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/loop.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Cc: David Gibson <david@gibson.dropbear.id.au>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christoph Hellwig <hch@infradead.org>
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f1e63eb7cbca..a443910f5d6f 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -920,9 +920,20 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	if (!file)
- 		goto out;
- 
-+	/*
-+	 * If we don't hold exclusive handle for the device, upgrade to it
-+	 * here to avoid changing device under exclusive owner.
-+	 */
-+	if (!(mode & FMODE_EXCL)) {
-+		bdgrab(bdev);
-+		error = blkdev_get(bdev, mode | FMODE_EXCL, loop_set_fd);
-+		if (error)
-+			goto out_putf;
-+	}
-+
- 	error = mutex_lock_killable(&loop_ctl_mutex);
- 	if (error)
--		goto out_putf;
-+		goto out_bdev;
- 
- 	error = -EBUSY;
- 	if (lo->lo_state != Lo_unbound)
-@@ -986,10 +997,15 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	mutex_unlock(&loop_ctl_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
-+	if (!(mode & FMODE_EXCL))
-+		blkdev_put(bdev, mode | FMODE_EXCL);
- 	return 0;
- 
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
-+out_bdev:
-+	if (!(mode & FMODE_EXCL))
-+		blkdev_put(bdev, mode | FMODE_EXCL);
- out_putf:
- 	fput(file);
- out:
+
 -- 
 2.20.1
 
