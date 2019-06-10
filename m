@@ -2,121 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EA843B172
-	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2019 11:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0F6C3B2CA
+	for <lists+linux-block@lfdr.de>; Mon, 10 Jun 2019 12:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbfFJJCh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Jun 2019 05:02:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56928 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388190AbfFJJCh (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:02:37 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E0D0081DFC;
-        Mon, 10 Jun 2019 09:02:36 +0000 (UTC)
-Received: from localhost (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EAECC5C64D;
-        Mon, 10 Jun 2019 09:02:33 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH V3 2/2] block: fix page leak in case of merging to same page
-Date:   Mon, 10 Jun 2019 17:02:15 +0800
-Message-Id: <20190610090215.14412-3-ming.lei@redhat.com>
-In-Reply-To: <20190610090215.14412-1-ming.lei@redhat.com>
-References: <20190610090215.14412-1-ming.lei@redhat.com>
+        id S2388489AbfFJKPl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Jun 2019 06:15:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34857 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388734AbfFJKPl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:15:41 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so7778845otq.2
+        for <linux-block@vger.kernel.org>; Mon, 10 Jun 2019 03:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L/Fpx5ax3FSv1vsl05RpWDU1kFWGRR0oLTZTCT52Dhg=;
+        b=HES4OQU6huVUOA8Ypw9ptPG1nA4Uv6pn+9wG7iiwr56eddgvTzzs3o9ps7OsWmaP14
+         UTn7CHT2bxh23YDWcQQ5iNP86lLzVVowr7xycaDWtMEDPsgm6D90NnQLpU9P/A4O05Yt
+         fJYtzCMhSUhbPaNw/LJVCirw/kDfJE8aGx/f8pwn6ZAlbtIUEJCl3kjglikLJ1uoBGu2
+         Sxj3mBGpoJhvGUMIPPtVChaWR2IZhm3YotXjeSUCkgZdDFVSCCSbJOH6i1WNZeF0vr3E
+         faV0/pf5dStZadFTxuauD1ss2lMlSOqIYqJDc3zTZt69o49fOuLZGgYpdT8AB+JyLVBT
+         z9YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L/Fpx5ax3FSv1vsl05RpWDU1kFWGRR0oLTZTCT52Dhg=;
+        b=JgEW75DLzjel291MrHxZknZz91H9QBM8vHxEjdCdq5ScwL2v5y/kgCwJzKPnhr5h0+
+         NCwGQPsE/H3Pl9KL6V+8Rhy1pDg58OvQuEfOJt6GSv4P7fRYp5ke/lVOUubRGz+5WQfV
+         c4+I/vezNMTxA9Yat+VgcK1TEx3+euzzJLRZsbAVUdaymqfCTDbBgx2cYneyL1BAKbaJ
+         Uziz9rfSmZFPz887+Rm6WA4H9EvDr4U71e+XGBfeGHzSR/whs5hAm41vEPrlACJ8UBmg
+         VLLm3lIl1GIkog25j43lxZrVIC5DxaaCnw8hf7K17RW6W9uAmCFpNGSikVEmYMDBEI+Z
+         hT7g==
+X-Gm-Message-State: APjAAAVfQStJK/lfV2J2bze/ndHpymOCV1VfBMP1UViVqUxQ+WW5RiSj
+        mkBxWKJqDz65L35wSs5d+it3yduYlkDob1jq
+X-Google-Smtp-Source: APXvYqzefV6s2avYclwY/dRUQ6u5/mzLFwhhu2cqT8UGXIzxrCAhLCkIh+G/dVqv/C5VOJ/tssOSUw==
+X-Received: by 2002:a05:6830:1050:: with SMTP id b16mr13768724otp.228.1560161740167;
+        Mon, 10 Jun 2019 03:15:40 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-107-92-56-198.mycingular.net. [107.92.56.198])
+        by smtp.gmail.com with ESMTPSA id v18sm1091554otn.17.2019.06.10.03.15.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 03:15:38 -0700 (PDT)
+Subject: Re: [GIT PULL] Block fixes for 5.2-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <4f801c9b-4ab6-9a11-536c-ff509df8aa56@kernel.dk>
+ <CAHk-=whXfPjCtc5+471x83WApJxvxzvSfdzj_9hrdkj-iamA=g@mail.gmail.com>
+ <52daccae-3228-13a1-c609-157ab7e30564@kernel.dk>
+ <CAHk-=whca9riMqYn6WoQpuq9ehQ5KfBvBb4iVZ314JSfvcgy9Q@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ebfb27a3-23e2-3ad5-a6b3-5f8262fb9ecb@kernel.dk>
+Date:   Mon, 10 Jun 2019 04:15:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 10 Jun 2019 09:02:37 +0000 (UTC)
+In-Reply-To: <CAHk-=whca9riMqYn6WoQpuq9ehQ5KfBvBb4iVZ314JSfvcgy9Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Different iovec may use one same page, then 'pages' array filled
-by iov_iter_get_pages() may get reference of the same page several
-times. If some elements in 'pages' can be merged to same page in
-one bvec by bio_add_page(), bio_release_pages() only drops the
-page's reference once.
+On 6/9/19 10:06 AM, Linus Torvalds wrote:
+> On Sat, Jun 8, 2019 at 11:00 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> FWIW, the concept/idea goes back a few months and was discussed with
+>> the cgroup folks. But I totally agree that the implementation could
+>> have been cleaner, especially at this point in time.
+>>
+>> I'm fine with you reverting those two patches for 5.2 if you want to,
+>> and the BFQ folks can do this more cleanly for 5.3.
+> 
+> I don't think the code is _broken_, and I don't think the link_name
+> thing is wrong. So no point in reverting unless we see more issues.
+> 
+> I just wish it had been done differently, both from the patch details
+> standpoint, but also in making sure the cgroup people were aware (and
+> maybe they were, but it certainly didn't show up in the commit).
+> 
+> So I think an incremental patch like the attached would make the code
+> easier to understand (I really do mis-like random boolean flags being
+> passed around that change behavior in undocumented and non-obvious
+> ways), but I'd also want to make sure that Tejun & co are all on board
+> and know about it..
+> 
+> I'm sure this happens a lot, but during the rc series I just end up
+> *looking* at details like this a lot more, when I see changes outside
+> of a subsystem directory.
+> 
+> Tejun&co, we're talking about commit 54b7b868e826 ("cgroup: let a
+> symlink too be created with a cftype file") which didn't have any sign
+> of you guys being aware of it or having acked it.
 
-This way causes page leak reported by David Gibson.
+I talked to Tejun about this offline, and he's not a huge fan of the
+symlink. So let's revert this for now, and Paolo can do this properly
+for 5.3 instead.
 
-This issue can be triggered since 576ed913 ("block: use bio_add_page in
-bio_iov_iter_get_pages").
+Sorry for the confusion! Please pull the below.
 
-Fixes the issue by putting the page's ref if it is merged to same page.
 
-Cc: David Gibson <david@gibson.dropbear.id.au>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: linux-xfs@vger.kernel.org
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christoph Hellwig <hch@infradead.org>
-Link: https://lkml.org/lkml/2019/4/23/64
-Fixes: 576ed913 ("block: use bio_add_page in bio_iov_iter_get_pages")
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/bio.c         | 12 ++++++++++--
- include/linux/bio.h |  8 ++++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+  git://git.kernel.dk/linux-block.git tags/for-linus-20190610
 
-diff --git a/block/bio.c b/block/bio.c
-index 39e3b931dc3b..358ccb5086e6 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -652,6 +652,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 			return false;
- 		if (pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
- 			return false;
-+	/* drop page ref if the page has been added and user asks to do that */
-+	} else if (flags & BVEC_MERGE_PUT_SAME_PAGE) {
-+		put_page(page);
- 	}
- 
- 	WARN_ON_ONCE((flags & BVEC_MERGE_TO_SAME_PAGE) &&
-@@ -924,8 +927,13 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 		struct page *page = pages[i];
- 
- 		len = min_t(size_t, PAGE_SIZE - offset, left);
--		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
--			return -EINVAL;
-+
-+		if (!__bio_try_merge_page(bio, page, len, offset,
-+					BVEC_MERGE_PUT_SAME_PAGE)) {
-+			if (WARN_ON_ONCE(bio_full(bio)))
-+                                return -EINVAL;
-+			__bio_add_page(bio, page, len, offset);
-+		}
- 		offset = 0;
- 	}
- 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index ee18895431ba..0168bc5df8e4 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -428,6 +428,14 @@ enum bvec_merge_flags {
- 	 * bvec
- 	 */
- 	BVEC_MERGE_TO_SAME_PAGE = BIT(0),
-+
-+	/*
-+	 * put refcount of bio's last page if the start page to add is
-+	 * same with bio's last page. If user gets refcount of every
-+	 * page added to bio before calling bio_add_page, please consider
-+	 * to use this flag for avoiding page leak
-+	 */
-+	BVEC_MERGE_PUT_SAME_PAGE = BIT(1),
- };
- 
- extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
+
+----------------------------------------------------------------
+Jens Axboe (1):
+      cgroup/bfq: revert bfq.weight symlink change
+
+ block/bfq-cgroup.c          |  6 ++----
+ include/linux/cgroup-defs.h |  3 ---
+ kernel/cgroup/cgroup.c      | 33 ++++-----------------------------
+ 3 files changed, 6 insertions(+), 36 deletions(-)
+
 -- 
-2.20.1
+Jens Axboe
 
