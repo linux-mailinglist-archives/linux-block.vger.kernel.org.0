@@ -2,62 +2,142 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 401573C59E
-	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2019 10:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABC6E3C73B
+	for <lists+linux-block@lfdr.de>; Tue, 11 Jun 2019 11:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404451AbfFKIKU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Jun 2019 04:10:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:49030 "EHLO newverein.lst.de"
+        id S2404420AbfFKJbu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Jun 2019 05:31:50 -0400
+Received: from smtpbgbr2.qq.com ([54.207.22.56]:50056 "EHLO smtpbgbr2.qq.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404073AbfFKIKT (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:10:19 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 6BC0968B02; Tue, 11 Jun 2019 10:09:51 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 10:09:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>, Omar Sandoval <osandov@fb.com>
-Subject: Re: [PATCH 1/2] blk-mq: Remove blk_mq_put_ctx()
-Message-ID: <20190611080951.GC21815@lst.de>
-References: <20190604181736.903-1-bvanassche@acm.org> <20190604181736.903-2-bvanassche@acm.org> <20190608081907.GB19573@lst.de> <8b179799-5381-1b47-1793-f1fd39726d49@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b179799-5381-1b47-1793-f1fd39726d49@acm.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1727642AbfFKJbu (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:31:50 -0400
+X-QQ-mid: bizesmtp28t1560244170tbf8smbz
+Received: from localhost.localdomain (unknown [218.76.23.26])
+        by esmtp10.qq.com (ESMTP) with 
+        id ; Tue, 11 Jun 2019 17:09:29 +0800 (CST)
+X-QQ-SSF: 01400000002000Q0WN60000A0000000
+X-QQ-FEAT: +zKhtBiG+ybzDjhTRh0Krit0Lc54Bworhir1RDcgTVC3vFAqv+I3FRXmY4wBe
+        7qdQxv+dR3Kw9HOhcK6vVLnjJRnf7j5smTJNmVuymaV3EejAVvh0LS8WiC7bwhWPGK0pFWK
+        GnRarP9KDYLeQZ3jP/jyg1fxlg/DYJZBFwpuVw1zcjZ4gaX+xDLF8uTZKGKgQBRFALiTcaf
+        9TGELvr2JSm5SiLPsYfkcjUeKKd9T9DbjCLYbvVeheZ+DNVMCy9aipvuoPPh225psKtKa2h
+        dlWZQdKlzAnDA2VEjtJoGpL8gzGxDp/ZaqYH1yQqm7sT32c8PDcZgZapqD7qAHj8IAX7BCa
+        e26l2SVXU2GXNKEQruLC7nFzJskuA==
+X-QQ-GoodBg: 2
+From:   Jackie Liu <liuyun01@kylinos.cn>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>
+Subject: [PATCH] io_uring: replace ->needs_lock to ->in_async
+Date:   Tue, 11 Jun 2019 17:09:23 +0800
+Message-Id: <1560244163-12908-1-git-send-email-liuyun01@kylinos.cn>
+X-Mailer: git-send-email 2.7.4
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign1
+X-QQ-Bgrelay: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:00:39PM -0700, Bart Van Assche wrote:
-> On 6/8/19 1:19 AM, Christoph Hellwig wrote:
->> On Tue, Jun 04, 2019 at 11:17:35AM -0700, Bart Van Assche wrote:
->>> No code that occurs between blk_mq_get_ctx() and blk_mq_put_ctx() depends
->>> on preemption being disabled for its correctness. Since removing the CPU
->>> preemption calls does not measurably affect performance, simplify the
->>> blk-mq code by removing the blk_mq_put_ctx() function and also by not
->>> disabling preemption in blk_mq_get_ctx().
->>
->> I like the idea behinds this, but I think it makes some small issues
->> we have in the current code even worse.  As far as I can tell the idea
->> behind this call was that we operate on the same blk_mq_ctx for the
->> duration of the I/O submission.  Now it should not matter which one,
->> that is we don't care if we get preempted, but it should stay the same.
->
-> Hi Christoph,
->
-> Can you clarify this? Isn't the goal of the rq->mq_ctx = data->ctx 
-> assignment in blk_mq_rq_ctx_init() to ensure that the same blk_mq_ctx is 
-> used during I/O submission?
+In the current, ->needs_lock not only determines whether a lock is
+needed, but also determines whether the process is in an async context.
+using in_async to make it more clearly and avoid confusion.
 
-Yes.  But we still have additional blk_mq_get_ctx calls that I was
-concerned about.  But looking deeper it seems like the additional ones are
-just used locally for I/O scheduler merge decisions, and we should be ok
-even if the context changes due to a preemption between the failed merge
-and the request allocation.  That being said it would still be nice
-to pass the ctx from __blk_mq_sched_bio_merge to ->bio_merge instead
-of having to find it again in kyber_bio_merge, but that isn't urgent.
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+---
+ fs/io_uring.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0fbb486..3745fd7 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -288,7 +288,7 @@ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
+ 	bool				has_user;
+-	bool				needs_lock;
++	bool				in_async;
+ 	bool				needs_fixed_file;
+ };
+ 
+@@ -1115,11 +1115,7 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+ 			io_rw_done(kiocb, ret2);
+ 		} else {
+-			/*
+-			 * If ->needs_lock is true, we're already in async
+-			 * context.
+-			 */
+-			if (!s->needs_lock)
++			if (!s->in_async)
+ 				io_async_list_note(READ, req, iov_count);
+ 			ret = -EAGAIN;
+ 		}
+@@ -1156,8 +1152,7 @@ static int io_write(struct io_kiocb *req, const struct sqe_submit *s,
+ 
+ 	ret = -EAGAIN;
+ 	if (force_nonblock && !(kiocb->ki_flags & IOCB_DIRECT)) {
+-		/* If ->needs_lock is true, we're already in async context. */
+-		if (!s->needs_lock)
++		if (!s->in_async)
+ 			io_async_list_note(WRITE, req, iov_count);
+ 		goto out_free;
+ 	}
+@@ -1185,11 +1180,7 @@ static int io_write(struct io_kiocb *req, const struct sqe_submit *s,
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+ 			io_rw_done(kiocb, ret2);
+ 		} else {
+-			/*
+-			 * If ->needs_lock is true, we're already in async
+-			 * context.
+-			 */
+-			if (!s->needs_lock)
++			if (!s->in_async)
+ 				io_async_list_note(WRITE, req, iov_count);
+ 			ret = -EAGAIN;
+ 		}
+@@ -1601,10 +1592,10 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 			return -EAGAIN;
+ 
+ 		/* workqueue context doesn't hold uring_lock, grab it now */
+-		if (s->needs_lock)
++		if (s->in_async)
+ 			mutex_lock(&ctx->uring_lock);
+ 		io_iopoll_req_issued(req);
+-		if (s->needs_lock)
++		if (s->in_async)
+ 			mutex_unlock(&ctx->uring_lock);
+ 	}
+ 
+@@ -1667,7 +1658,7 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 
+ 		if (!ret) {
+ 			s->has_user = cur_mm != NULL;
+-			s->needs_lock = true;
++			s->in_async = true;
+ 			do {
+ 				ret = __io_submit_sqe(ctx, req, s, false);
+ 				/*
+@@ -1982,7 +1973,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
+ 			ret = -EFAULT;
+ 		} else {
+ 			sqes[i].has_user = has_user;
+-			sqes[i].needs_lock = true;
++			sqes[i].in_async = true;
+ 			sqes[i].needs_fixed_file = true;
+ 			ret = io_submit_sqe(ctx, &sqes[i], statep);
+ 		}
+@@ -2149,7 +2140,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
+ 			break;
+ 
+ 		s.has_user = true;
+-		s.needs_lock = false;
++		s.in_async = false;
+ 		s.needs_fixed_file = false;
+ 		submit++;
+ 
+-- 
+2.7.4
+
+
+
