@@ -2,94 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D18B041A89
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2019 04:56:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E72864208E
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2019 11:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406521AbfFLC4z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Jun 2019 22:56:55 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:43266 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405061AbfFLC4z (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:56:55 -0400
-Received: by mail-qk1-f175.google.com with SMTP id m14so9067836qka.10
-        for <linux-block@vger.kernel.org>; Tue, 11 Jun 2019 19:56:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q1Qi48oLh9iihq2LkIgrDslGg/Vx8JGXFp2UzVtaaTY=;
-        b=RMQH4BWHqjq0RC4v9ylnfi17XF0ibDNjTLhUooo+XTisCJ3K4g4WQRfr9liqf4mVRh
-         fEsIuJTP1CkaIzM/qag4OhmpdLJsyB8HuGySKRe9WhZSKae+YMI/XiJ+N8JpHKOtZScv
-         PZPWm6FQZuCDi7eRMAp4d4PBoj/GEmuoXzJ28zLcsZtyKyKvNK+7/LBT8gkNuQGpd7u/
-         UQJPe6A6ou9/MrQAvW6fJJzosw9sck2EeC4SeHKLlLqHBkVjHH/Cg5ATRLX8VyXtbI2R
-         0ybHqQpVMJnrONdRWcb9aZ9Uytygqx76WA1xVLzXsDrMX+HHeShBwO7+QQf/4XtYiGqF
-         2S0A==
-X-Gm-Message-State: APjAAAVtClV+ddomam/8o5ZCOb8oXKtf2yL26zE33DnlnLYXfXAggNLA
-        oSafzYGmJr7UiDNPMKzHkm/LlNjFvWZC5a95EUit2g==
-X-Google-Smtp-Source: APXvYqxctTUcbUUwKEwCDb+kAVsNlcPeMauTITiiVl5q4wHU5Gq3T5KxTJd5OAfYva1ulpddSUg3/ykgbXPYx9uR294=
-X-Received: by 2002:a37:6708:: with SMTP id b8mr61258505qkc.141.1560308214695;
- Tue, 11 Jun 2019 19:56:54 -0700 (PDT)
+        id S2407641AbfFLJUO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jun 2019 05:20:14 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:49861 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406714AbfFLJUO (ORCPT
+        <rfc822;groupwise-linux-block@vger.kernel.org:0:0>);
+        Wed, 12 Jun 2019 05:20:14 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 11:20:11 +0200
+Received: from suselix (nwb-a10-snat.microfocus.com [10.120.13.202])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 07:17:35 +0100
+Date:   Wed, 12 Jun 2019 08:17:32 +0200
+From:   Andreas Herrmann <aherrmann@suse.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH] blkio-controller.txt: Remove references to CFQ
+Message-ID: <20190612061732.GA3711@suselix>
 MIME-Version: 1.0
-References: <70cda2a3-f246-d45b-f600-1f9d15ba22ff@gmail.com>
- <87eflmpqkb.fsf@notabene.neil.brown.name> <20190222211006.GA10987@redhat.com>
- <7f0aeb7b-fdaa-0625-f785-05c342047550@kernel.dk> <20190222235459.GA11726@redhat.com>
- <CAMeeMh-2ANOr_Sb66EyA_HULkVRudD7fyOZsDbpRpDrshwnR2w@mail.gmail.com>
- <20190223024402.GA12407@redhat.com> <CAMeeMh9qLkTByWJewPR4o844wPkA-g5Hnm7aGjszuPopPAe8vA@mail.gmail.com>
-In-Reply-To: <CAMeeMh9qLkTByWJewPR4o844wPkA-g5Hnm7aGjszuPopPAe8vA@mail.gmail.com>
-From:   John Dorminy <jdorminy@redhat.com>
-Date:   Tue, 11 Jun 2019 22:56:42 -0400
-Message-ID: <CAMeeMh-6KMLgriX_7KT52ynjBMyT9yDWSMKv6YXW+yDpvv0=wA@mail.gmail.com>
-Subject: Re: block: be more careful about status in __bio_chain_endio
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.com>,
-        linux-block@vger.kernel.org,
-        device-mapper development <dm-devel@redhat.com>,
-        Milan Broz <gmazyland@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Having studied the code in question more thoroughly, my first email's
-scenario can't occur, I believe. bio_put() contains a
-atomic_dec_and_test(), which (according to
-Documentation/atomic_t.txt), having a return value, are fully ordered
-and therefore impose a general memory barrier. A general memory
-barrier means that no value set before bio_put() may be observed
-afterwards, if I accurately understand
-Documentation/memory_barriers.txt. Thus, the scenario I imagined, with
-a load from inside __bio_chain_endio() being visible in bi_end_io(),
-cannot occur.
+CFQ is gone. No need anymore to document its "proportional weight time
+based division of disk policy".
 
-However, the second email's scenario, of a compiler making two stores
-out of a conditional store, is still accurate according to my
-understanding. I continue to believe setting parent->bi_status needs
-to be a WRITE_ONCE() and any reading of parent->bi_status before
-bio_put() needs to be at least a READ_ONCE(). The last thing in that
-email is wrong for the same reason that the first email couldn't
-happen: the bio_put() general barrier means later accesses to the
-field from a single thread will freshly read the field and thereby not
-get an incorrectly cached value.
+Signed-off-by: Andreas Herrmann <aherrmann@suse.com>
+---
+ Documentation/cgroup-v1/blkio-controller.txt | 96 ++--------------------------
+ 1 file changed, 7 insertions(+), 89 deletions(-)
 
-As a concrete proposal, I believe either of the following work and fix
-the race NeilB described, as well as the compiler (or CPU) race I
-described:
-
- -     if (!parent->bi_status)
- -               parent->bi_status = bio->bi_status;
- +     if (bio->bi_status)
- +               WRITE_ONCE(parent->bi_status, bio->bi_status);
-
---or--
-
- -     if (!parent->bi_status)
- -               parent->bi_status = bio->bi_status;
- +     if (!READ_ONCE(parent->bi_status) && bio->bi_status)
- +               WRITE_ONCE(parent->bi_status, bio->bi_status);
-
-I believe the second of these might, but is not guaranteed to,
-preserve the first error observed in a child; I believe if you want to
-definitely save the first error you need an atomic.
+diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.txt
+index 673dc34d3f78..d1a1b7bdd03a 100644
+--- a/Documentation/cgroup-v1/blkio-controller.txt
++++ b/Documentation/cgroup-v1/blkio-controller.txt
+@@ -8,61 +8,13 @@ both at leaf nodes as well as at intermediate nodes in a storage hierarchy.
+ Plan is to use the same cgroup based management interface for blkio controller
+ and based on user options switch IO policies in the background.
+ 
+-Currently two IO control policies are implemented. First one is proportional
+-weight time based division of disk policy. It is implemented in CFQ. Hence
+-this policy takes effect only on leaf nodes when CFQ is being used. The second
+-one is throttling policy which can be used to specify upper IO rate limits
+-on devices. This policy is implemented in generic block layer and can be
+-used on leaf nodes as well as higher level logical devices like device mapper.
++One IO control policy is throttling policy which can be used to
++specify upper IO rate limits on devices. This policy is implemented in
++generic block layer and can be used on leaf nodes as well as higher
++level logical devices like device mapper.
+ 
+ HOWTO
+ =====
+-Proportional Weight division of bandwidth
+------------------------------------------
+-You can do a very simple testing of running two dd threads in two different
+-cgroups. Here is what you can do.
+-
+-- Enable Block IO controller
+-	CONFIG_BLK_CGROUP=y
+-
+-- Enable group scheduling in CFQ
+-	CONFIG_CFQ_GROUP_IOSCHED=y
+-
+-- Compile and boot into kernel and mount IO controller (blkio); see
+-  cgroups.txt, Why are cgroups needed?.
+-
+-	mount -t tmpfs cgroup_root /sys/fs/cgroup
+-	mkdir /sys/fs/cgroup/blkio
+-	mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+-
+-- Create two cgroups
+-	mkdir -p /sys/fs/cgroup/blkio/test1/ /sys/fs/cgroup/blkio/test2
+-
+-- Set weights of group test1 and test2
+-	echo 1000 > /sys/fs/cgroup/blkio/test1/blkio.weight
+-	echo 500 > /sys/fs/cgroup/blkio/test2/blkio.weight
+-
+-- Create two same size files (say 512MB each) on same disk (file1, file2) and
+-  launch two dd threads in different cgroup to read those files.
+-
+-	sync
+-	echo 3 > /proc/sys/vm/drop_caches
+-
+-	dd if=/mnt/sdb/zerofile1 of=/dev/null &
+-	echo $! > /sys/fs/cgroup/blkio/test1/tasks
+-	cat /sys/fs/cgroup/blkio/test1/tasks
+-
+-	dd if=/mnt/sdb/zerofile2 of=/dev/null &
+-	echo $! > /sys/fs/cgroup/blkio/test2/tasks
+-	cat /sys/fs/cgroup/blkio/test2/tasks
+-
+-- At macro level, first dd should finish first. To get more precise data, keep
+-  on looking at (with the help of script), at blkio.disk_time and
+-  blkio.disk_sectors files of both test1 and test2 groups. This will tell how
+-  much disk time (in milliseconds), each group got and how many sectors each
+-  group dispatched to the disk. We provide fairness in terms of disk time, so
+-  ideally io.disk_time of cgroups should be in proportion to the weight.
+-
+ Throttling/Upper Limit policy
+ -----------------------------
+ - Enable Block IO controller
+@@ -94,7 +46,7 @@ Throttling/Upper Limit policy
+ Hierarchical Cgroups
+ ====================
+ 
+-Both CFQ and throttling implement hierarchy support; however,
++Throttling implements hierarchy support; however,
+ throttling's hierarchy support is enabled iff "sane_behavior" is
+ enabled from cgroup side, which currently is a development option and
+ not publicly available.
+@@ -107,9 +59,8 @@ If somebody created a hierarchy like as follows.
+ 			|
+ 		     test3
+ 
+-CFQ by default and throttling with "sane_behavior" will handle the
+-hierarchy correctly.  For details on CFQ hierarchy support, refer to
+-Documentation/block/cfq-iosched.txt.  For throttling, all limits apply
++Throttling with "sane_behavior" will handle the
++hierarchy correctly. For throttling, all limits apply
+ to the whole subtree while all statistics are local to the IOs
+ directly generated by tasks in that cgroup.
+ 
+@@ -130,10 +81,6 @@ CONFIG_DEBUG_BLK_CGROUP
+ 	- Debug help. Right now some additional stats file show up in cgroup
+ 	  if this option is enabled.
+ 
+-CONFIG_CFQ_GROUP_IOSCHED
+-	- Enables group scheduling in CFQ. Currently only 1 level of group
+-	  creation is allowed.
+-
+ CONFIG_BLK_DEV_THROTTLING
+ 	- Enable block device throttling support in block layer.
+ 
+@@ -344,32 +291,3 @@ Common files among various policies
+ - blkio.reset_stats
+ 	- Writing an int to this file will result in resetting all the stats
+ 	  for that cgroup.
+-
+-CFQ sysfs tunable
+-=================
+-/sys/block/<disk>/queue/iosched/slice_idle
+-------------------------------------------
+-On a faster hardware CFQ can be slow, especially with sequential workload.
+-This happens because CFQ idles on a single queue and single queue might not
+-drive deeper request queue depths to keep the storage busy. In such scenarios
+-one can try setting slice_idle=0 and that would switch CFQ to IOPS
+-(IO operations per second) mode on NCQ supporting hardware.
+-
+-That means CFQ will not idle between cfq queues of a cfq group and hence be
+-able to driver higher queue depth and achieve better throughput. That also
+-means that cfq provides fairness among groups in terms of IOPS and not in
+-terms of disk time.
+-
+-/sys/block/<disk>/queue/iosched/group_idle
+-------------------------------------------
+-If one disables idling on individual cfq queues and cfq service trees by
+-setting slice_idle=0, group_idle kicks in. That means CFQ will still idle
+-on the group in an attempt to provide fairness among groups.
+-
+-By default group_idle is same as slice_idle and does not do anything if
+-slice_idle is enabled.
+-
+-One can experience an overall throughput drop if you have created multiple
+-groups and put applications in that group which are not driving enough
+-IO to keep disk busy. In that case set group_idle=0, and CFQ will not idle
+-on individual groups and throughput should improve.
+-- 
+2.13.7
