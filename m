@@ -2,77 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D390342176
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2019 11:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A0641D10
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jun 2019 08:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437654AbfFLJxn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jun 2019 05:53:43 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:43724 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437415AbfFLJxn (ORCPT
-        <rfc822;groupwise-linux-block@vger.kernel.org:0:0>);
-        Wed, 12 Jun 2019 05:53:43 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 11:53:41 +0200
-Received: from suselix (nwb-a10-snat.microfocus.com [10.120.13.202])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 07:50:13 +0100
-Date:   Wed, 12 Jun 2019 08:50:09 +0200
-From:   Andreas Herrmann <aherrmann@suse.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH] block/switching-sched.txt: Update to blk-mq schedulers
-Message-ID: <20190612065009.GA11361@suselix>
+        id S2391160AbfFLG6i (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jun 2019 02:58:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45279 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390376AbfFLG6i (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:58:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 23:58:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,363,1557212400"; 
+   d="scan'208";a="184148897"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Jun 2019 23:58:34 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        linux-usb@vger.kernel.org, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
+In-Reply-To: <Pine.LNX.4.44L0.1906110950440.1535-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1906110950440.1535-100000@iolanthe.rowland.org>
+Date:   Wed, 12 Jun 2019 09:58:33 +0300
+Message-ID: <87h88v1e92.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 
-Remove references to CFQ and legacy block layer which are gone.
-Update example with what's available under blk-mq.
+Hi,
 
-Signed-off-by: Andreas Herrmann <aherrmann@suse.com>
----
- Documentation/block/switching-sched.txt | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+Alan Stern <stern@rowland.harvard.edu> writes:
 
-diff --git a/Documentation/block/switching-sched.txt b/Documentation/block/switching-sched.txt
-index 3b2612e342f1..7977f6fb8b20 100644
---- a/Documentation/block/switching-sched.txt
-+++ b/Documentation/block/switching-sched.txt
-@@ -13,11 +13,9 @@ you can do so by typing:
- 
- # mount none /sys -t sysfs
- 
--As of the Linux 2.6.10 kernel, it is now possible to change the
--IO scheduler for a given block device on the fly (thus making it possible,
--for instance, to set the CFQ scheduler for the system default, but
--set a specific device to use the deadline or noop schedulers - which
--can improve that device's throughput).
-+It is possible to change the IO scheduler for a given block device on
-+the fly to select one of mq-deadline, none, bfq, or kyber schedulers -
-+which can improve that device's throughput.
- 
- To set a specific scheduler, simply do this:
- 
-@@ -30,8 +28,8 @@ The list of defined schedulers can be found by simply doing
- a "cat /sys/block/DEV/queue/scheduler" - the list of valid names
- will be displayed, with the currently selected scheduler in brackets:
- 
--# cat /sys/block/hda/queue/scheduler
--noop deadline [cfq]
--# echo deadline > /sys/block/hda/queue/scheduler
--# cat /sys/block/hda/queue/scheduler
--noop [deadline] cfq
-+# cat /sys/block/sda/queue/scheduler
-+[mq-deadline] kyber bfq none
-+# echo none >/sys/block/sda/queue/scheduler
-+# cat /sys/block/sda/queue/scheduler
-+[none] mq-deadline kyber bfq
+> On Tue, 11 Jun 2019, Felipe Balbi wrote:
+>
+>> >> >> > So for "severe" issues, yes, we should do this, but perhaps not for all
+>> >> >> > of the "normal" things we see when a device is yanked out of the system
+>> >> >> > and the like.
+>> >> >> 
+>> >> >> Then what counts as a "severe" issue?  Anything besides enumeration 
+>> >> >> failure?
+>> >> >
+>> >> > Not that I can think of at the moment, other than the other recently
+>> >> > added KOBJ_CHANGE issue.  I'm sure we have other "hard failure" issues
+>> >> > in the USB stack that people will want exposed over time.
+>> >> 
+>> >> From an XHCI standpoint, Transaction Errors might be one thing. They
+>> >> happen rarely and are a strong indication that the bus itself is
+>> >> bad. Either bad cable, misbehaving PHYs, improper power management, etc.
+>> >
+>> > Don't you also get transaction errors if the user unplugs a device in 
+>> > the middle of a transfer?  That's not the sort of thing we want to sent 
+>> > notifications about.
+>> 
+>> Mathias, do we get Transaction Error if user removes cable during a
+>> transfer? I thought we would just get Port Status Change with CC bit
+>> cleared, no?
+>
+> Even if xHCI doesn't give Transaction Errors when a cable is unplugged 
+> during a transfer, other host controllers do.  Sometimes quite a lot -- 
+> they continue to occur until the kernel polls the parent hub's 
+> interrupt ep and learns that the port is disconnected, which can take 
+> up to 250 ms.
+
+my comment was specific about XHCI. It even started with "From an XHCI
+standpoint" :-)
+
 -- 
-2.13.7
+balbi
