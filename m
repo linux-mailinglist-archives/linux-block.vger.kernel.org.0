@@ -2,131 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB5B440C5
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:09:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D6DB44266
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391396AbfFMQJZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 12:09:25 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:33968 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390126AbfFMQJY (ORCPT
+        id S2391906AbfFMQWK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 12:22:10 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39888 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403893AbfFMQV4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560442164; x=1591978164;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=su5n4xLNW58qzAoaAxPUoPfsSlPnCtTBp1pBol8VATY=;
-  b=NrDISbszoDHyfIQqHPNpBiWrv+YS0uboJ9Yh2hZrClD6xoL1uAvhFfrb
-   //VzqlJ6RllaUXshZ5TnP+dhQeW0xyJkhwvQV9OmdATuVN+11LhKo78G+
-   hsHvR9lZNLURW5nOd5U76Y5vt3lc1eTqFQmLu4JbUBl/dZPOMxsEfad1i
-   rBimsS0X92S6MsnCZn3l0jqgu8wn1PBZ/3AOLSKQhXATptrd11aotzZW3
-   YTBFXJ3xWeLfUMauNuGj4zVQgCS0eoPpz3QZTiLcOw0GF3L4kxL9+k5Xa
-   3I6SW7pztivyFHRpDaxq8tZxxcAZOxxUIcQd1+PUOkgn4ErWk5DiWN/BC
-   g==;
-X-IronPort-AV: E=Sophos;i="5.63,369,1557158400"; 
-   d="scan'208";a="110486256"
-Received: from mail-bn3nam01lp2054.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.54])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Jun 2019 00:09:23 +0800
+        Thu, 13 Jun 2019 12:21:56 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m10so32047018edv.6
+        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 09:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a6ow3VHiRZWtEE7tJ1cYT+dfsUUJYiqGdud5PjTAFlo=;
- b=sNyIkIKieg9RfLbnGWeuzxiFNsXQsizQ3aTjPfBkzR+YDA34C+BFZBuBy0G0/3Au5bQv2eOPAAWiUAIiX51klg32RP5GWqGWZVa67SBn/rbWxzoa7nYRJ0kUx4apB5Mdr4VmPuq3wnDq97NmB36XafAfIR/2Gf3ByslIemQe9eI=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
- BYAPR04MB5031.namprd04.prod.outlook.com (52.135.235.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 13 Jun 2019 16:09:21 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fc2b:fcd4:7782:53d6]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fc2b:fcd4:7782:53d6%7]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 16:09:21 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "hch@lst.de" <hch@lst.de>, "hare@suse.com" <hare@suse.com>
-Subject: Re: [PATCH V2 2/2] block: add more debug data to print_req_err
-Thread-Topic: [PATCH V2 2/2] block: add more debug data to print_req_err
-Thread-Index: AQHVIfKili8u687/I0u+DyvaCM/m5A==
-Date:   Thu, 13 Jun 2019 16:09:21 +0000
-Message-ID: <BYAPR04MB5749C95E04EE96A3B6CEE80A86EF0@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
- <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
- <d369fbbd-0d98-b804-619b-23049ee12398@acm.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ad6d38df-6f18-47f4-f9ed-08d6f0197f15
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5031;
-x-ms-traffictypediagnostic: BYAPR04MB5031:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <BYAPR04MB5031AD8A0BD9EB43860BDC4C86EF0@BYAPR04MB5031.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(366004)(39860400002)(376002)(199004)(189003)(6116002)(71200400001)(25786009)(64756008)(476003)(26005)(53546011)(102836004)(54906003)(5660300002)(186003)(110136005)(7736002)(68736007)(6506007)(76176011)(7696005)(71190400001)(99286004)(229853002)(316002)(256004)(3846002)(76116006)(66066001)(52536014)(66446008)(72206003)(33656002)(6246003)(14454004)(66556008)(66946007)(81156014)(55016002)(2501003)(4326008)(66476007)(6436002)(73956011)(446003)(8936002)(74316002)(305945005)(53936002)(486006)(81166006)(2906002)(86362001)(8676002)(9686003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5031;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7rxA9AIFqVUa+ooykK401b6CvbLrdbsDPApuQZLZQnUy/EXWKmwK48uwJ7ZR0uRBfDeezMVB69BsMkc54+B7miEBjXWhRjV+IUgGrHWiLsvIJc0gRfqws7ktwQK7rg0nGtrUXnY6Xs2RaY6iGzpAXy9/+nkjRfRJZZ2agU6CqZAS/qcAal2tLLnUGw0rFGab9o6rna0P23Xi0L/N22dmseeXSn/Duak/Ufvvp1sQjmnw1aDzfzFvoMQKQjERUFhjhZy+pnvbXZoaho++7oS3qUCyK1LzYKRII0araDuDaRk+0WnV+WTbObEx2xveNx5b1wZ1gn2UIn+ZL5vI5vUtSv66VaCX614uG12s4EY1wqQXLLrmM0PKxb8WwNV0HIto5XzTDk79keBVKq51CHjbEL1r8Oh9z8yBcsGoe4CP1nk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=globallogic.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
+        b=EhoeFLRHnBhKbWvy9HbsUZYnmSqkMjgbw/4JBVzBmKwtC2BYciZon/sGwYlwxD2ArB
+         820lhaGvsyDxIQBlup+5VKFfAjqc0UgL0AndVHVEjCUhxyB6MYwWpt9rVeipesbYJm9O
+         9LctzS/TEIahM6LL9VOCpzIV8wbDeIGYc6LpG/4Ag9cMHwzd7NIdHtF03n3uFJ5oSCsa
+         3G8seNu4kPRGCTWh5OLMltNpswqlywnH6ctZu426ea1q3OKYycClQ4ZPMg8bCkDfv5pf
+         qrUMZwVvDtNADcRslOs9acphTWeWGkYvfzJ9d44UO3i9kqBf746dXPNN4G9zYO82urgl
+         cWsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
+        b=nh4yiqI8zTPaVOiv9vcoAGx+wsc4BnM0KXZ6XUd4l1PtWQfqKcOC8PZsJ/0Aop/qkC
+         MZh2YquEA5h8dFtHXdJiNQ2QmcXqqtjO9R9Ch1H36/ryxv9sS4MaWn2OCpM60A+nZ94N
+         QWsABxKyqmfJoce5AtkRe6AE2LiJOfPJen96s4vOyvH+9yzPlg9i1Ymh470dTK1HxVof
+         yVBROD4AS07iwQS0TjUCD6+8C5CtFID7LZ5ueoc4oK0EuShEIMXkZpnMCuPk85Eqq/D7
+         qn9x0w5xkwlzESPXkdIfCKFImN7gyyM+F6a/4xzEZdbBpQBjcDRZlLmnWqD+nfLQhmUW
+         y87g==
+X-Gm-Message-State: APjAAAV7PZ+ziZwVkIEZQIeTVBdyJ4S/+w2187bzTEDfUL0uxjjVliHx
+        rBZKcTy/Lzw/mG0tMeHBYgBQe6L7jNaYOK8FMa9Ehg==
+X-Google-Smtp-Source: APXvYqxuWVuyBpuxXeXaLydjVhfXhrVUHymBl4vNZ13Z3Lq3A6ZwUrJo9f7zawIdyv/dg+ZkFHQ0nrTO50sHeOAATfU=
+X-Received: by 2002:a17:906:3948:: with SMTP id g8mr45653628eje.168.1560442914546;
+ Thu, 13 Jun 2019 09:21:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad6d38df-6f18-47f4-f9ed-08d6f0197f15
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 16:09:21.4480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Chaitanya.Kulkarni@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5031
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local> <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+ <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+In-Reply-To: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
+Date:   Thu, 13 Jun 2019 19:21:43 +0300
+Message-ID: <CAODwZ7so4cVVJmPHXGGOxKRO_0L2NjZJac73wfaHPV7ZN6ce1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 06/13/2019 08:17 AM, Bart Van Assche wrote:=0A=
-> On 6/13/19 7:16 AM, Chaitanya Kulkarni wrote:=0A=
->> +#define REQ_OP_NAME(name) [REQ_OP_##name] =3D #name=0A=
->> +static const char *const op_name[] =3D {=0A=
->> +	REQ_OP_NAME(READ),=0A=
->> +	REQ_OP_NAME(WRITE),=0A=
->> +	REQ_OP_NAME(FLUSH),=0A=
->> +	REQ_OP_NAME(DISCARD),=0A=
->> +	REQ_OP_NAME(SECURE_ERASE),=0A=
->> +	REQ_OP_NAME(ZONE_RESET),=0A=
->> +	REQ_OP_NAME(WRITE_SAME),=0A=
->> +	REQ_OP_NAME(WRITE_ZEROES),=0A=
->> +	REQ_OP_NAME(SCSI_IN),=0A=
->> +	REQ_OP_NAME(SCSI_OUT),=0A=
->> +	REQ_OP_NAME(DRV_IN),=0A=
->> +	REQ_OP_NAME(DRV_OUT),=0A=
->> +};=0A=
->> +=0A=
->> +static inline const char *op_str(int op)=0A=
->> +{=0A=
->> +	const char *op_str =3D "REQ_OP_UNKNOWN";=0A=
->> +=0A=
->> +	if (op < ARRAY_SIZE(op_name) && op_name[op])=0A=
->> +		op_str =3D op_name[op];=0A=
->> +=0A=
->> +	return op_str;=0A=
->> +}=0A=
->=0A=
-> If this patch gets applied there will be three copies in the upstream=0A=
-> code that convert a REQ_OP_* constant into a string: one in blk-core.c,=
-=0A=
-> one in blk-mq-debugfs.c and one in include/trace/events/f2fs.h. Is it=0A=
-> possible to avoid that duplication and have only one function that does=
-=0A=
-> the number-to-string conversion?=0A=
->=0A=
-Okay let me work on this refactoring and send out V3.=0A=
-> Bart.=0A=
->=0A=
-=0A=
+> I don't doubt you have a good reason to want it, I'm just not clear on why an
+> initramfs isn't an option?  You have this special kernel with your special
+> option, and you manage to get these things to boot your special kernel right?
+> So why is a initramfs with a tiny nbd-client binary in there not an option?
+>
+> Also I mean that there are a bunch of different nbd servers out there.  We have
+> our own here at Facebook, qemu has one, IIRC there's a ceph one.  They all have
+> their own connection protocols.  The beauty of NBD is that it doesn't have to
+> know about that part, it just does the block device part, and I'd really rather
+> leave it that way.  Thanks,
+>
+> Josef
+
+
+The only reason I prefer embed client into the kernel is to save
+valuable engineering time creating and supporting custom initramfs,
+that is not so easy especially on Android-based systems.
+
+Taking into account that if using NBD and creating custom initramfs
+required only for automated testing, many companies would choose
+manual deployment instead, that is bad for the human progress.
+
+I believe that all users of non-standard NBD handshake protocols could
+continue to use custom nbd-clients.
+
+Either you accept this patch or not I would like to pass review from
+maintainers and other persons that was involved in NBD development,
+thus making a step closer to get this mainlined in some future.
+
+--
+Regards,
+Roman
