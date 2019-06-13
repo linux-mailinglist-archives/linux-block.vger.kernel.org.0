@@ -2,104 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DED6A44351
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF97A446CA
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfFMQ2n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 12:28:43 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:41330 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730945AbfFMQ2n (ORCPT
+        id S1728543AbfFMQyg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 12:54:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54494 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730049AbfFMQyf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:28:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0D5E68EE147;
-        Thu, 13 Jun 2019 09:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1560443323;
-        bh=bnTJZINKg659sWer2QpR3c5NeLkXTlt8sZRt1buXvPk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ECkUStv+npI9x1oyvMYlUKctnPIORbAWAMPFhOP6is+V2N0dN63FeLtDHVGFmXEN9
-         olnXF7NIMaBfyC0lR9pZ5uuKe7/fVu8GYIhaFH5IxI0V4C0qH0rsNexLnTz8aR6g7L
-         bXanZK2NoD9Z5mhlTLsmHbmWOatkkzO48mkWks9U=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DWyDetGG-Y6c; Thu, 13 Jun 2019 09:28:42 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 5F8EA8EE0C7;
-        Thu, 13 Jun 2019 09:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1560443322;
-        bh=bnTJZINKg659sWer2QpR3c5NeLkXTlt8sZRt1buXvPk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=c7M+KVMKOhi/zNVgKex9T2JCLcgRkBWN6q8nLxckxA3LLq79BjndZCUnWrz9y/WQk
-         vti4sGZfC6NwRYlQWLwH3hj03jxQ8rT5v0Hj0sypVWw6RcOQQRZXSG8upMqmBtKosz
-         U0d3IvxaxlsMbUzAJQgIT8K/Kt0g4EjcaLtBfHUs=
-Message-ID: <1560443321.3329.42.camel@HansenPartnership.com>
-Subject: Re: [PATCH 1/8] block: add a helper function to read nr_setcs
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     dgilbert@interlog.com, Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org
-Cc:     colyli@suse.de, linux-bcache@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-btrace@vger.kernel.org,
-        kent.overstreet@gmail.com, jaegeuk@kernel.org,
-        damien.lemoal@wdc.com
-Date:   Thu, 13 Jun 2019 09:28:41 -0700
-In-Reply-To: <f8ab9587-309b-79a0-e6fc-f6683176f498@interlog.com>
-References: <20190613145955.4813-1-chaitanya.kulkarni@wdc.com>
-         <20190613145955.4813-2-chaitanya.kulkarni@wdc.com>
-         <9abfc2b8-4496-db7a-fcbb-b52102a67f8e@acm.org>
-         <f8ab9587-309b-79a0-e6fc-f6683176f498@interlog.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 12:54:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGrps7137385;
+        Thu, 13 Jun 2019 16:54:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=2qr3ZS03b7Do2yKuhnLF64PDdLnxqHZgHAUieuykJHo=;
+ b=IbN9MD6Uc+pM4AJaFQvHKcmX/NLzHDwmBJ3HURu2IkSBQGP9xP8mUrbd6glBhlEpGJ75
+ zu2XdO9nNxRIIdi4c/FFBD6myvsGBcWMecCf36nvnYFFxIBbAVcBU+dMnSy8zOmOXFSq
+ 5jogM/f2XkoiSmUjFDHCrrGWyJidD9b++U2TpRmGF0GVjjd6QgGDamoAMxdbCp5xhq+T
+ jW7YZsAjH0FEQDRT1TTt8m7vH94vFT/qsHmdP9ADVRoYqqdePsZkaJpWibqHIIgMrgnI
+ hMvVyvXu7nL1mcwITWoCQ8Na0aKOfeZl9h5Df7V3NZKA5b6+87EaB3W0faJlU6zhqx9g /A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t04eu2wv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 16:54:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGqs4J158972;
+        Thu, 13 Jun 2019 16:54:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t1jpjnqv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 16:54:01 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5DGs03L001109;
+        Thu, 13 Jun 2019 16:54:00 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 09:54:00 -0700
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block@vger.kernel.org, hch@lst.de, hare@suse.com
+Subject: Re: [PATCH V2 2/2] block: add more debug data to print_req_err
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
+        <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
+        <d369fbbd-0d98-b804-619b-23049ee12398@acm.org>
+Date:   Thu, 13 Jun 2019 12:53:57 -0400
+In-Reply-To: <d369fbbd-0d98-b804-619b-23049ee12398@acm.org> (Bart Van Assche's
+        message of "Thu, 13 Jun 2019 08:17:34 -0700")
+Message-ID: <yq1d0jhtoii.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=863
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906130122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=907 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906130123
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, 2019-06-13 at 12:07 -0400, Douglas Gilbert wrote:
-> On 2019-06-13 11:31 a.m., Bart Van Assche wrote:
-[...]
-> > Please explain what makes you think that part_nr_sects_read() must
-> > be protected 
-> > by an RCU read lock.
-> 
-> Dear reviewer,
-> Please rephrase the above sentence without the accusative tone.
-> Specifically, please do not use the phrase "what makes you think"
-> in this or any other code review. For example: "I believe that..."
-> is more accurate and less provocative.
 
-Imputing "tone" to email is something we try to avoid because it never
-ends well, particularly for non-native speakers. Some languages
-(Russian) have no articles and if you take any English phrase and strip
-out all the articles it sounds a lot more aggressive.
+Bart,
 
-> Observation: as a Canadian citizen when crossing the US border I
-> believe contradicting a US border official with the phrase "what
-> makes you think ..." could lead to a rather bad outcome :-)
-> Please make review comments with that in mind.
+> If this patch gets applied there will be three copies in the upstream
+> code that convert a REQ_OP_* constant into a string: one in
+> blk-core.c, one in blk-mq-debugfs.c and one in
+> include/trace/events/f2fs.h. Is it possible to avoid that duplication
+> and have only one function that does the number-to-string conversion?
 
-Different situation: we aren't profiling reviewers ...
+People often have a hard time correlating SCSI and block error messages
+with tracing output. So in general I'd like to see us not just trying to
+standardize the helper functions, but the actual output.
 
-> Thanks.
-> 
-> Doug Gilbert
-> 
-> P.S. Do we have any Linux code-of-conduct for reviewers?
+I.e. I think it would be great to print exactly the same string for both
+error log messages and tracepoints. Since Chaitanya is doing a lot of
+work in this area anyway, that may be worth looking into?
 
-It's the same one for all interactions:
-
-Documentation/process/code-of-conduct-interpretation.rst
-
-But I would remind everyone that diversity isn't just a
-gender/race/LGBT issue it also means being understanding of the
-potential difficulties non-native speakers have with email in English.
-
-James
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
