@@ -2,128 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 308BD43854
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF57437A4
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbfFMPFQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 11:05:16 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:51275 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732459AbfFMOQl (ORCPT
+        id S1732887AbfFMPA3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 11:00:29 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36136 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732580AbfFMOp0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:16:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560435423; x=1591971423;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mGupDbl0fHFGTfmQmhr/DVZ3FbdxDJtk461gnkiVpK0=;
-  b=UZPmMnmY+JEfn/dmj8MBaTrKz8/IPBaxtphon9BvFdKfJIrQrr+MTGnK
-   +HtvvCMZQyJ0/jgdtzq5J1U2LVpXccOJ4jw6RozAJ5N+cb86GNHRWge73
-   AuyzB21lHgMjVarUYmGVvWG/Mqnr98BqzOiUMDkeRy5ld9ReoHGROosiD
-   d3KT+vqXojK8z1247iMcy97eEYTWscmqnRK/ifHrD92s7N2wGA7qgAE1V
-   v88YUdN05u6nKh+2HPQFzx/2ftdZza7pCgWXpgNl9s/p7cIdpz4vV3mnB
-   QBYNSAB5nIKid0ySFAjtMcE6fLurgd0ICXK8cGLIIm8qLlemp5xalYjFO
-   w==;
-X-IronPort-AV: E=Sophos;i="5.63,369,1557158400"; 
-   d="scan'208";a="210177624"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Jun 2019 22:17:03 +0800
-IronPort-SDR: kbya/j09KJfbd5c5+XnZJAQYZkp0utyzyP2VZ4BLwIYv1M+aQMc6OmRXXEiPNYBDYpqCOA5/WI
- 9CLHNMZ12HNSLy2GgymTBrsnhW+KAgDNXQqwVjulEhK/wsLr+KVRj6EnD4iO112B00T1UGSYOt
- kaB0iyvY5lMD5lbGxonsQsvlmSe8M+9DK1rrg4ohDseCdsq8hom5JuBca9r3T+U6gMtJ4CtVY8
- ewNqresCQfaJplM0X8NkWfz/DuLHuTq5389XxmU0bU+I6LhVgWu+aBtKrXeGVPu52lUZ1pi49i
- Z/teqYzzlRNdJ/sSfm8DOnjQ
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 13 Jun 2019 07:16:24 -0700
-IronPort-SDR: cexlRMxtSVAshlTKkdiv/p8D76NQtpnWTC+8T8eydpeg32/vj1vpfOXzQdID73/Qbc2QVU5YbY
- j6gk6T0rkJOWD5RNPWwXTX+npBaGTVjkjilFXV9hqPpbdMkQjDZk8Ou/6Ma+H355OkzNNcSTeb
- rwfza7G7PA3vAA7nWiyuBPX5b22b/AKbqKoEkvP4hHPFXaVbgV1su2LmFtQqGS33UqbLvHfmxM
- pZF1I2GBCdG3uuYCzeS8MaeABeTo3Qhtxwd2dmMmphw6Kggi8PuxEoe8ZZgehkwAVHqFxUm3rL
- mds=
-Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Jun 2019 07:16:40 -0700
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-block@vger.kernel.org
-Cc:     hch@lst.de, hare@suse.com, bvanassche@acm.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V2 2/2] block: add more debug data to print_req_err
-Date:   Thu, 13 Jun 2019 07:16:29 -0700
-Message-Id: <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
-References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
+        Thu, 13 Jun 2019 10:45:26 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k21so28240776edq.3
+        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 07:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uvmsidGoJnOuVrNH93gzDhxt94b4IkyqxQH7sIQgBJY=;
+        b=jWjpQvqFJpy3JZ8v3eJX/wY/JM7UzO7PqMYyaXZ3zvjJxFfOHON2tSICAV3Md/FBuR
+         Y4oPZ1USj/EWpQnKcOs7XBvas6TOzv2l5znmvTTKTFx3uKVRdProUC4XDiCaAWgM/rGc
+         Kk4IdyKh8ubR8hhiNJoQU8VlFscolUuaDwjyQc/O7ksT6ViPYNrMM34FNuw5ExZO7Mcu
+         Erv24mDt50rY0r4Gd/JvyvqmL0Qm/Bd3QNiZXD9mjX3hTflwIfnOR/JGqFMUCA4Qb20+
+         npVhj+/bkWt/M+IngqB4do4HipI95akb14e9EpKZcAxnnz7WxF0eVp4EpyGGC9XYZN4a
+         YiYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uvmsidGoJnOuVrNH93gzDhxt94b4IkyqxQH7sIQgBJY=;
+        b=dVuCPGiq5gImbQAAJgtr5iiH+P3xhy6lYh0XnDQPaQNaAMraqXynnB4eUpKBvXcjav
+         4iEAP+IZFex7dPka2mg3Wx2CchVSbGHqBGgsOiGbWoeI9mM5UW7BGqgMEzyDjvkGoCDY
+         D6CLClw8zgGjF2SN+grERWc4XGQ7FMUsxddCMGg4gEJsov3p0lFO1R6ZWqCZjhaOxoba
+         E9dtaKcw+9tcm/64fCBXBLpNVLT0n83BhgaWfDtUvSXQrYiQ5IVTijKJQiXB8g3HgAbA
+         9/E2ndbByhfNWiQLa44lEXICtVEG3OllhuWXilqdOvm1tCj+uUEfAQgsfgqn0DCOfZPI
+         MkMA==
+X-Gm-Message-State: APjAAAXHbpVfHvZx3gs/W9+FgLsn77f7A9pQPJOaHJf9R6EJcYUDqTL5
+        MSuowMNhlVBLZNXue7aith6CueWIdYJomXYhL4Qe7Q==
+X-Google-Smtp-Source: APXvYqz/zNSaR5+4fJBic3BvwE8nvJYsPFgWJWIxdv0FXnRWV5GHARWaC/J29mUuifA2I9vWNxUsSCX69SK23Ui//Ww=
+X-Received: by 2002:a17:906:3d69:: with SMTP id r9mr34377374ejf.28.1560437124696;
+ Thu, 13 Jun 2019 07:45:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com> <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+In-Reply-To: <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
+Date:   Thu, 13 Jun 2019 17:45:13 +0300
+Message-ID: <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch adds more debug data on the top of the existing
-print_req_error() where we enhance the print message with the printing
-request operations in string format and other request fields.
+On Thu, Jun 13, 2019 at 4:52 PM Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> On Wed, Jun 12, 2019 at 07:31:44PM +0300, roman.stratiienko@globallogic.com wrote:
+> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> >
+> > Adding support to nbd to use it as a root device. This code essentially
+> > provides a minimal nbd-client implementation within the kernel. It opens
+> > a socket and makes the negotiation with the server. Afterwards it passes
+> > the socket to the normal nbd-code to handle the connection.
+> >
+> > The arguments for the server are passed via kernel command line.
+> > The kernel command line has the format
+> > 'nbdroot=[<SERVER_IP>:]<SERVER_PORT>/<EXPORT_NAME>'.
+> > SERVER_IP is optional. If it is not available it will use the
+> > root_server_addr transmitted through DHCP.
+> >
+> > Based on those arguments, the connection to the server is established
+> > and is connected to the nbd0 device. The rootdevice therefore is
+> > root=/dev/nbd0.
+> >
+> > Patch was initialy posted by Markus Pargmann <mpa@pengutronix.de>
+> > and can be found at https://lore.kernel.org/patchwork/patch/532556/
+> >
+> > Change-Id: I78f7313918bf31b9dc01a74a42f0f068bede312c
+> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > Reviewed-by: Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>
+>
+> Just throw nbd-client in your initramfs.  Every nbd server has it's own
+> handshake protocol, embedding one particular servers handshake protocol into the
+> kernel isn't the answer here.  Thanks,
+>
+> Josef
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- block/blk-core.c | 35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+Hello Josef,
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d1a227cfb72e..6a8a808309f0 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -144,6 +144,32 @@ static const struct {
- 	[BLK_STS_IOERR]		= { -EIO,	"I/O" },
- };
- 
-+#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
-+static const char *const op_name[] = {
-+	REQ_OP_NAME(READ),
-+	REQ_OP_NAME(WRITE),
-+	REQ_OP_NAME(FLUSH),
-+	REQ_OP_NAME(DISCARD),
-+	REQ_OP_NAME(SECURE_ERASE),
-+	REQ_OP_NAME(ZONE_RESET),
-+	REQ_OP_NAME(WRITE_SAME),
-+	REQ_OP_NAME(WRITE_ZEROES),
-+	REQ_OP_NAME(SCSI_IN),
-+	REQ_OP_NAME(SCSI_OUT),
-+	REQ_OP_NAME(DRV_IN),
-+	REQ_OP_NAME(DRV_OUT),
-+};
-+
-+static inline const char *op_str(int op)
-+{
-+	const char *op_str = "REQ_OP_UNKNOWN";
-+
-+	if (op < ARRAY_SIZE(op_name) && op_name[op])
-+		op_str = op_name[op];
-+
-+	return op_str;
-+}
-+
- blk_status_t errno_to_blk_status(int errno)
- {
- 	int i;
-@@ -176,11 +202,14 @@ static void print_req_error(struct request *req, blk_status_t status,
- 		return;
- 
- 	printk_ratelimited(KERN_ERR
--		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
-+		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
-+		"phys_seg %u prio class %u\n",
- 		caller, blk_errors[idx].name,
- 		req->rq_disk ?  req->rq_disk->disk_name : "?",
--		blk_rq_pos(req), req_op(req),
--		req->cmd_flags & ~REQ_OP_MASK);
-+		blk_rq_pos(req), req_op(req), op_str(req_op(req)),
-+		req->cmd_flags & ~REQ_OP_MASK,
-+		req->nr_phys_segments,
-+		IOPRIO_PRIO_CLASS(req->ioprio));
- }
- 
- static void req_bio_endio(struct request *rq, struct bio *bio,
--- 
-2.19.1
+Let me share some of my thoughts that was the motivation for providing
+this solution::
 
+We choose NBD as a tool to run CI tests on our platforms.
+We have a wide range of different BSP's with different kind of images
+where using NFSROOT is hard or even impossible.
+Most of these BSPs are not using initramfs and some of them are Android-based.
+
+Taking all this into account we have to put significant efforts to
+implement and test custom initramfs and it will not cover all our
+needs.
+
+Much easier way is to embed small client into the kernel and just
+enable configuration when needed.
+
+I believe such solution will be very useful for wide range of kernel users.
+
+Also, as far as I know mainline nbd-server daemon have only 2
+handshake protocols. So called OLD-STYLE and NEW-STYLE. And OLD-STYLE
+is no longer supported. So it should not be a problem, or please fix
+me if I'm wrong.
+
+Regards,
+Roman
