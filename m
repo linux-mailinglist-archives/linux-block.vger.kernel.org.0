@@ -2,52 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30C7C439F2
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 176B243BCB
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:32:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfFMPRh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 11:17:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34987 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733196AbfFMPRh (ORCPT
+        id S1727075AbfFMPbu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 11:31:50 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41503 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfFMPbt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:17:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so12053337pfd.2
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 08:17:37 -0700 (PDT)
+        Thu, 13 Jun 2019 11:31:49 -0400
+Received: by mail-pl1-f196.google.com with SMTP id s24so8286036plr.8;
+        Thu, 13 Jun 2019 08:31:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BkazCgibnfJRrHJLk1Kh1WQeyQ1tIOgDWROfBotni2c=;
-        b=YFTWNhh3emtNjXCITAQ9Ogp7VkRTOgysXWi9Kr/5+kg0iLO3tgJxur14N8rKgh54ye
-         tB77mo667NNXFiloWiaZ+jodLpV+Na/FZOmDjjTfvpAR/2d2qv8kGActbLPL/wEf5Foi
-         Rci5yMJoyu9LkMwoSRtGEsBTHRdV9Y2O/DFr137W0m/LBVsQS1O6DZsW/0UVtPo5lgzQ
-         VrEtVrmXXkUtMiEtsdAN1cUOKH0HbSwIwJrK0MHzYmk7Y2H2p7FQ1i2AzjvST4SQ4f02
-         S0ryGOv6BzrCzOye6Sd9AcHVZ+pXRHjSHSI4OdYHTsRAjYxEivP5z+qRECpuupsNQG3N
-         NPQg==
-X-Gm-Message-State: APjAAAUW/gTbbjxhG+SBBhagBF/hzcULKZx5ehWIBxLxmz0/hvjLgAf3
-        CUJFgNT8I0i8tghIG+F125k=
-X-Google-Smtp-Source: APXvYqz6mVXyl46teMVmAoKi5xUmOIadmjpF51Wa+rpEyQbCQg6AQgz2ikdgWz70WEpnAh6pBrtFzg==
-X-Received: by 2002:a63:ed06:: with SMTP id d6mr28801120pgi.267.1560439056586;
-        Thu, 13 Jun 2019 08:17:36 -0700 (PDT)
+        bh=Sw+SllUv08twj2EAyMoEep+5QsSUddK0/P8AXJZORSo=;
+        b=hzq079ExytLwC9vLrLEvXTCDpk7cLCp2hMA5+K108avL1yOKx1PskaaBNLJIIe8HHm
+         yobIkivBIPy8wnPxxzNVBuvOIFHX0sFSLtd8JWOe6HqPXLjzSh6O+ueE1gWqAxzXNIHO
+         9ARlcO47D4t8oHP4Bslyc2n9DU9aDqKKKyTdP0Lg2AsPmiY94NgbTJQhGU2h2hx/Ewag
+         BsyPT5lz29AezBVfCTtISO9TDXmqW0YZoU1WuhqmAQgnQA4SHh/QEjPYsVkqRquw2e4a
+         oNzzBmWUGPxbsbK5moxe52TQpSICijDllCZ3eG3MXTYqpFcAlbcIKHdXUYAbArGAMh4n
+         NznQ==
+X-Gm-Message-State: APjAAAUhix+xdxLBAUikust4vTojxcwhQarbfU3SnjmEuiMTQSe63nNU
+        JwrrtWvqSEcQxKTcLtpgL1g=
+X-Google-Smtp-Source: APXvYqw4oamYkUwHgg92Z05hHQ0ZGYDNMbYqfHf5XI4ShcHflr22ojcnpivazqf3vnWipfEjMdywWw==
+X-Received: by 2002:a17:902:2e81:: with SMTP id r1mr88928480plb.0.1560439909030;
+        Thu, 13 Jun 2019 08:31:49 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id w197sm38747pfd.41.2019.06.13.08.17.35
+        by smtp.gmail.com with ESMTPSA id 5sm161353pgi.28.2019.06.13.08.31.45
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 08:17:35 -0700 (PDT)
-Subject: Re: [PATCH V2 2/2] block: add more debug data to print_req_err
+        Thu, 13 Jun 2019 08:31:46 -0700 (PDT)
+Subject: Re: [PATCH 1/8] block: add a helper function to read nr_setcs
 To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         linux-block@vger.kernel.org
-Cc:     hch@lst.de, hare@suse.com
-References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
- <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
+Cc:     colyli@suse.de, linux-bcache@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-btrace@vger.kernel.org,
+        kent.overstreet@gmail.com, jaegeuk@kernel.org,
+        damien.lemoal@wdc.com
+References: <20190613145955.4813-1-chaitanya.kulkarni@wdc.com>
+ <20190613145955.4813-2-chaitanya.kulkarni@wdc.com>
 From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <d369fbbd-0d98-b804-619b-23049ee12398@acm.org>
-Date:   Thu, 13 Jun 2019 08:17:34 -0700
+Message-ID: <9abfc2b8-4496-db7a-fcbb-b52102a67f8e@acm.org>
+Date:   Thu, 13 Jun 2019 08:31:44 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
+In-Reply-To: <20190613145955.4813-2-chaitanya.kulkarni@wdc.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -56,37 +59,44 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/13/19 7:16 AM, Chaitanya Kulkarni wrote:
-> +#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
-> +static const char *const op_name[] = {
-> +	REQ_OP_NAME(READ),
-> +	REQ_OP_NAME(WRITE),
-> +	REQ_OP_NAME(FLUSH),
-> +	REQ_OP_NAME(DISCARD),
-> +	REQ_OP_NAME(SECURE_ERASE),
-> +	REQ_OP_NAME(ZONE_RESET),
-> +	REQ_OP_NAME(WRITE_SAME),
-> +	REQ_OP_NAME(WRITE_ZEROES),
-> +	REQ_OP_NAME(SCSI_IN),
-> +	REQ_OP_NAME(SCSI_OUT),
-> +	REQ_OP_NAME(DRV_IN),
-> +	REQ_OP_NAME(DRV_OUT),
-> +};
-> +
-> +static inline const char *op_str(int op)
+On 6/13/19 7:59 AM, Chaitanya Kulkarni wrote:
+> This patch introduces helper function to read the number of sectors
+> from struct block_device->bd_part member. For more details Please refer
+> to the comment in the include/linux/genhd.h for part_nr_sects_read().
+> 
+> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> ---
+>   include/linux/blkdev.h | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 592669bcc536..1ae65107182a 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1475,6 +1475,18 @@ static inline void put_dev_sector(Sector p)
+>   	put_page(p.v);
+>   }
+>   
+> +/* Helper function to read the bdev->bd_part->nr_sects */
+> +static inline sector_t bdev_nr_sects(struct block_device *bdev)
 > +{
-> +	const char *op_str = "REQ_OP_UNKNOWN";
+> +	sector_t nr_sects;
 > +
-> +	if (op < ARRAY_SIZE(op_name) && op_name[op])
-> +		op_str = op_name[op];
+> +	rcu_read_lock();
+> +	nr_sects = part_nr_sects_read(bdev->bd_part);
+> +	rcu_read_unlock();
 > +
-> +	return op_str;
+> +	return nr_sects;
 > +}
+> +
+>   int kblockd_schedule_work(struct work_struct *work);
+>   int kblockd_schedule_work_on(int cpu, struct work_struct *work);
+>   int kblockd_mod_delayed_work_on(int cpu, struct delayed_work *dwork, unsigned long delay);
+> 
 
-If this patch gets applied there will be three copies in the upstream 
-code that convert a REQ_OP_* constant into a string: one in blk-core.c, 
-one in blk-mq-debugfs.c and one in include/trace/events/f2fs.h. Is it 
-possible to avoid that duplication and have only one function that does 
-the number-to-string conversion?
+Please explain what makes you think that part_nr_sects_read() must be 
+protected by an RCU read lock.
+
+Thanks,
 
 Bart.
