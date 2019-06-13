@@ -2,119 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20BE8449C4
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 19:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34AAA44C06
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 21:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbfFMRf2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 13:35:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58914 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfFMRf2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:35:28 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0AED9C04BE09;
-        Thu, 13 Jun 2019 17:35:28 +0000 (UTC)
-Received: from [10.10.122.154] (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A4AFA19C67;
-        Thu, 13 Jun 2019 17:35:27 +0000 (UTC)
-Subject: Re: [PATCH 2/2] nbd: add netlink reconfigure resize support v3
-To:     Josef Bacik <josef@toxicpanda.com>
-References: <20190529201606.14903-1-mchristi@redhat.com>
- <20190529201606.14903-3-mchristi@redhat.com>
- <20190613170103.pludlfrz2jtkzwij@MacBook-Pro-91.local>
-Cc:     linux-block@vger.kernel.org
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5D02895F.5000205@redhat.com>
-Date:   Thu, 13 Jun 2019 12:35:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        id S1727618AbfFMTTS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 15:19:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:48754 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfFMTTS (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:19:18 -0400
+X-Greylist: delayed 5688 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 15:19:17 EDT
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DHhgvL054116;
+        Thu, 13 Jun 2019 17:43:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=j84ZJa4X+x5WSx5QJGHY2SflMYwM961qM/LO80WmcPg=;
+ b=EztMCVPD0NBZOtvnuD9FgBhXYSoJVTpJ7JlEchc9rGYRkL+CmJ65ucac6fszbb3XVUvq
+ 2OimAdIwg50EFJXg1bAlJso1vF7yGQ9Gg4ioxO/UusJr8WLJTUqhXDD8hiOVRkV8PYEY
+ dMXfE365EzZu0RHvl13HSWqLXoYbHuVSIVvFRHDdSAGGL+fjJ4rbMJzr/+FNSkZpLW73
+ ym0tLFcegKcyVX3emEZXuE/sfUFU1jh0lkaNa7Xi2r9SXupeqZi+JUrYqMSyKv7y22tW
+ 1BMa2KYf3RheLhPP9sxsCmERAA8VVeOWmJllb88F2SPLHnKfPo3S8FLSDt0k/2mMNtaB +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t04ynu1ex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 17:43:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DHhrXH153828;
+        Thu, 13 Jun 2019 17:43:58 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t04j0kg1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 17:43:57 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5DHh2rF004452;
+        Thu, 13 Jun 2019 17:43:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 10:43:02 -0700
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block@vger.kernel.org, hch@lst.de, hare@suse.com
+Subject: Re: [PATCH V2 2/2] block: add more debug data to print_req_err
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
+        <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
+        <d369fbbd-0d98-b804-619b-23049ee12398@acm.org>
+        <yq1d0jhtoii.fsf@oracle.com>
+        <be1e3944-4f5a-ca40-1496-614058fd3bb2@acm.org>
+Date:   Thu, 13 Jun 2019 13:43:00 -0400
+In-Reply-To: <be1e3944-4f5a-ca40-1496-614058fd3bb2@acm.org> (Bart Van Assche's
+        message of "Thu, 13 Jun 2019 10:05:12 -0700")
+Message-ID: <yq1tvcts7ob.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190613170103.pludlfrz2jtkzwij@MacBook-Pro-91.local>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 13 Jun 2019 17:35:28 +0000 (UTC)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906130130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906130130
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 06/13/2019 12:01 PM, Josef Bacik wrote:
-> On Wed, May 29, 2019 at 03:16:06PM -0500, Mike Christie wrote:
->> If the device is setup with ioctl we can resize the device after the
->> initial setup, but if the device is setup with netlink we cannot use the
->> resize related ioctls and there is no netlink reconfigure size ATTR
->> handling code.
->>
->> This patch adds netlink reconfigure resize support to match the ioctl
->> interface.
->>
->> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> 
-> Sorry I missed this too, but I think there's a problem with this actually.
-> 
->> ---
->>
->> V3;
->> - If the device size or block size has not changed do not call
->> nbd_size_set.
->>
->> V2:
->> - Merge reconfig and connect resize related code to helper and avoid
->> multiple nbd_size_set calls.
->>
->>  drivers/block/nbd.c | 48 ++++++++++++++++++++++++++++++---------------
->>  1 file changed, 32 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->> index 236253fbf455..9486555e6391 100644
->> --- a/drivers/block/nbd.c
->> +++ b/drivers/block/nbd.c
->> @@ -1685,6 +1685,30 @@ nbd_device_policy[NBD_DEVICE_ATTR_MAX + 1] = {
->>  	[NBD_DEVICE_CONNECTED]		=	{ .type = NLA_U8 },
->>  };
->>  
->> +static int nbd_genl_size_set(struct genl_info *info, struct nbd_device *nbd)
->> +{
->> +	struct nbd_config *config = nbd->config;
->> +	u64 bsize = config->blksize;
->> +	u64 bytes = config->bytesize;
->> +
->> +	if (info->attrs[NBD_ATTR_SIZE_BYTES])
->> +		bytes = nla_get_u64(info->attrs[NBD_ATTR_SIZE_BYTES]);
->> +
->> +	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
->> +		bsize = nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
->> +		if (!bsize)
->> +			bsize = NBD_DEF_BLKSIZE;
->> +		if (!nbd_is_valid_blksize(bsize)) {
->> +			printk(KERN_ERR "Invalid block size %llu\n", bsize);
->> +			return -EINVAL;
->> +		}
->> +	}
->> +
->> +	if (bytes != config->bytesize || bsize != config->blksize)
->> +		nbd_size_set(nbd, bsize, div64_u64(bytes, bsize));
-> 
-> This part won't actually update the bdev if there already is one because
-> nbd->task_recv is NULL for netlink related devices.  Probably need to fix that
 
-I'm not sure I understand this part of the comment. For netlink we do:
+Bart,
 
-nbd_genl_connect -> nbd_start_device:
+> I'm in favor of improving consistency. But are you sure that we can
+> modify the tracing output format without breaking any applications?
 
-nbd_start_device()
-{
-    .....
-    nbd->task_recv = current;
+Chaitanya is already working on enhancing tracing. I seem to recall
+blktrace being fairly flexible with what it digests.
 
+On top of that, we also have the option of changing the error path
+output as opposed to changing the tracing ditto should that be an issue.
 
-> to update the bdev unconditionally, and then just see if bdget_disk() returns
-> NULL in nbd_size_update.  Also I hate myself for how many size update functions
-> there are.  Thanks,
-> 
-> Josef
-> 
+My main point is that there is probably going to be close to a 1:1
+mapping between what you would want to see in an error message and what
+you would want to see in tracing. So it would be good to use the same
+plumbing for both.
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
