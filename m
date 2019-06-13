@@ -2,61 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A46DD44365
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DDCF44290
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:24:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfFMQ3L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 12:29:11 -0400
-Received: from mail-yw1-f43.google.com ([209.85.161.43]:35189 "EHLO
-        mail-yw1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730934AbfFMIf1 (ORCPT
+        id S2389105AbfFMQXf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 12:23:35 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:41360 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731022AbfFMIhj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:27 -0400
-Received: by mail-yw1-f43.google.com with SMTP id k128so8009952ywf.2
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 01:35:27 -0700 (PDT)
+        Thu, 13 Jun 2019 04:37:39 -0400
+Received: by mail-yb1-f196.google.com with SMTP id d2so7501317ybh.8
+        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 01:37:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=E9Et9thIQKwcveyw5OArkt0ti7mIXwVLr/kLmzsdkuc=;
-        b=rLvl6CbghlvG5MM7cpZKY4fnpuglneY+OyeiqcA2h9T2AQtB+ZCMA40qcUvl7QTklO
-         0NO28FsKG+40kR+1rP/XWJhwcu7aX26UZvpMdkVKLoqqAzSPELOwczCyV87u9JYvmGC3
-         Jzj4SsIXRym1WOEQySid/FsapUXbUht0R1G0bIwwu8xj8Svzn9IGuCSCgK5QsEpFuTCg
-         fmQ8trV0NUouYl1H74oUBrxIube2J4gT0/tTMvhiW2/5VCzmnH5sjfuY7W+Ky0RITtbh
-         PQJa15mSUAW0nzucBMJCFGtAfIO3D9uHPITb6G0cd/CXdJKSxfgvE/V2JnsWinQhFGIa
-         Vi1A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xQyhQbksvj61RPrZv6HE/27WZ2p7zM6vRmq6wqbq8Qs=;
+        b=Fx7IJ3Rn6+Ui58vZZjWSalUo87E2IkSKQDLMUtkgAPO4CmSr7POvW2xsqzpKzq5uhF
+         0f7g+rHnj3GBTKOCeRKhjRPPjQ4GVn+bwZdVpu+vrj/dOJr4Jj1ZIkTbJ3YLMTlyMxMN
+         dFMsKo5sE6beFBhyxH44nY5lY9n2acrQ4g7CdoyFqTBJVwOr6pTnEnT5NOllmkVF9RP6
+         IgCU7hIvmaN/Y+hE5quNLy9iXnlQ2onRzC1oZrgFYiPOaJytXxn79iHsne5eQcZMRhvR
+         OnUqbsrKe5fbWBuAfzOebwrdLBXouzVannJlsiiYbLyWJKuNqhB0elmrcQ+PNSaiuFsW
+         y3Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=E9Et9thIQKwcveyw5OArkt0ti7mIXwVLr/kLmzsdkuc=;
-        b=osRd2PMDrt9rUin1P5iec0mxx0OZq6Yo8738vhN1hQD1SuPuvwp+XN/3vpswYnDzaz
-         qU0ANDWNb6VvVysOdxTZhp3xg1BmimNhLP7VCq7bgozAGKx2bH4rCOWuRYTMhnLjQBwQ
-         ovoVYaVLJ8fVMNsYhsTDzPRose36yss2tmYdKgaWLYPXR2AA8U7rPz7+AINg4XxkjxuR
-         JOv1T2vGADq2vs9gHz41yvdzf0ImFteio57zjzLnVO3K0ZjjeWnbQ5VOyO83nxllI5Xr
-         nc/KSIrxeJbHon2Xhi3K/+yiwo0pZo/NxCOZ8RWht5p37sMFeDR22LJy4sq6h+Qeg6YO
-         YA/w==
-X-Gm-Message-State: APjAAAUJ4ht5I/zsIG2QxUEHa2OzLVK5G6mCnqkJgUtTXIaD4AsMaqLr
-        Sjv4FO0/2ToWfhDG8slNctSXUsQJMP8hVg==
-X-Google-Smtp-Source: APXvYqzKWYWZyYFEavhU0na+Eo++Q4WovsklPO+JjUhQ0ZLs+VXPJFQJCpYJAas0I4IpJB7Lb+j1hg==
-X-Received: by 2002:a81:b2c3:: with SMTP id q186mr677722ywh.379.1560414926189;
-        Thu, 13 Jun 2019 01:35:26 -0700 (PDT)
-Received: from ?IPv6:2600:380:9e2c:9b66:893e:4845:326b:1174? ([2600:380:9e2c:9b66:893e:4845:326b:1174])
-        by smtp.gmail.com with ESMTPSA id s8sm886073ywl.58.2019.06.13.01.35.24
+        bh=xQyhQbksvj61RPrZv6HE/27WZ2p7zM6vRmq6wqbq8Qs=;
+        b=kSOAEubh26XEtaWz0gIm7y4GxywFbJqHwyZi0CIojkoZmOttCCQkyHHrFcOVno0bc0
+         /1tb8jxl3qvLSxavybin+kRhTLGQdlE6CBbg6HIHm9UMNf1av05O8koNyTUW8WKJZeLB
+         SQ66Z/o7lyDgo+fGMGGbiXYcCcOtFkSDDM9SQ1+vpGy6stLbpPAvqQMWup1G+lYDFbZ5
+         Icnw5qixU+iK1NG3VCN6Zdumn1heCIiDrhwfM6i6olMDVhAZ4LdA8rlSjxR6PxTEEdyy
+         4dnXHGY5Np2vv3VER3/oH95VGsg1fvqF7Fcu+Mc3ADoNu3da0uTPHFmGdRTmRJGYUc05
+         S9Ug==
+X-Gm-Message-State: APjAAAWOeYTvveh/i8Zi0lG7hG0S8e4fbriDkaxj5lQQjPLZB7fxvhKV
+        YEcNFvnMxPbnEb8uK7nzlqJjvQ==
+X-Google-Smtp-Source: APXvYqyCnK2ALhwLtTPvX0AEYshPEqUIKjRxcqh3pgRhqVo+A2spmhGkm2WC+o0o7oMW27T55jkwSw==
+X-Received: by 2002:a25:7413:: with SMTP id p19mr39487999ybc.310.1560415057147;
+        Thu, 13 Jun 2019 01:37:37 -0700 (PDT)
+Received: from ?IPv6:2600:380:9e2c:9b66:68e0:4c59:dc75:6d4b? ([2600:380:9e2c:9b66:68e0:4c59:dc75:6d4b])
+        by smtp.gmail.com with ESMTPSA id r6sm597826ywd.47.2019.06.13.01.37.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 01:35:25 -0700 (PDT)
-Subject: Re: io_uring: buf_index and registered buffers
-To:     Stephen Bates <sbates@raithlin.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <99E68FD7-430D-4D58-920F-8705D823A4F6@raithlin.com>
+        Thu, 13 Jun 2019 01:37:36 -0700 (PDT)
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        Jan Kara <jack@suse.cz>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stable <stable@vger.kernel.org>
+References: <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+ <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+ <20190612130446.GD14578@quack2.suse.cz>
+ <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4510f6eb-9165-f239-7770-65b1596a7e18@kernel.dk>
-Date:   Thu, 13 Jun 2019 02:35:23 -0600
+Message-ID: <aca00f05-4d71-7db0-52d6-7aa0932cc5c0@kernel.dk>
+Date:   Thu, 13 Jun 2019 02:37:29 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <99E68FD7-430D-4D58-920F-8705D823A4F6@raithlin.com>
+In-Reply-To: <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,35 +88,83 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/11/19 9:11 AM, Stephen  Bates wrote:
-> Hi Jens and Team
+On 6/12/19 1:36 PM, Srivatsa S. Bhat wrote:
 > 
-> While experimenting with io_uring and liburing I seem to have hit an
-> issue with registered buffers. I can't see a way that either
-> io_uring_register() or liburing can return the buffer indicies
-> associated with registered buffers. In addition, there is no way to
-
-Why would it need to return them? The indices are the index into the
-array you passed in for registration.
-
-> set sqe.buf_index via liburing right now when submitting an IO (it is
-> memset to 0 in liburing.h). The end result is that io_uring IO start
-> to fail when we do them from a set of registered buffers.
-
-liburing is missing a lot of helpers right now, I'll happily take
-patches to bring it closer to full feature parity.
-
-> I'd be happy to work on a patch for this but could do with confirmation that this a problem and some guidance on a good approach to fixing this in both the system call and the user-space library.
+> [ Adding Greg to CC ]
 > 
-> BTW while liburing tests the creation of multiple registered buffers
-> it never issues IO against them so that would be a hole I'd like to
-> fill too.
+> On 6/12/19 6:04 AM, Jan Kara wrote:
+>> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
+>>> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
+>>>> On 5/30/19 3:45 AM, Paolo Valente wrote:
+>>>>>
+>>> [...]
+>>>>> At any rate, since you pointed out that you are interested in
+>>>>> out-of-the-box performance, let me complete the context: in case
+>>>>> low_latency is left set, one gets, in return for this 12% loss,
+>>>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+>>>>> times of applications under load [1];
+>>>>> b) 500-1000% higher throughput in multi-client server workloads, as I
+>>>>> already pointed out [2].
+>>>>>
+>>>>
+>>>> I'm very happy that you could solve the problem without having to
+>>>> compromise on any of the performance characteristics/features of BFQ!
+>>>>
+>>>>
+>>>>> I'm going to prepare complete patches.  In addition, if ok for you,
+>>>>> I'll report these results on the bug you created.  Then I guess we can
+>>>>> close it.
+>>>>>
+>>>>
+>>>> Sounds great!
+>>>>
+>>>
+>>> Hi Paolo,
+>>>
+>>> Hope you are doing great!
+>>>
+>>> I was wondering if you got a chance to post these patches to LKML for
+>>> review and inclusion... (No hurry, of course!)
+>>>
+>>> Also, since your fixes address the performance issues in BFQ, do you
+>>> have any thoughts on whether they can be adapted to CFQ as well, to
+>>> benefit the older stable kernels that still support CFQ?
+>>
+>> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
+>> doubt you'll be able to get any performance improvements for it in the
+>> stable kernels...
+>>
+> 
+> I suspected as much, but that seems unfortunate though. The latest LTS
+> kernel is based on 4.19, which still supports CFQ. It would have been
+> great to have a process to address significant issues on older
+> kernels too.
+> 
+> Greg, do you have any thoughts on this? The context is that both CFQ
+> and BFQ I/O schedulers have issues that cause I/O throughput to suffer
+> upto 10x - 30x on certain workloads and system configurations, as
+> reported in [1].
+> 
+> In this thread, Paolo posted patches to fix BFQ performance on
+> mainline. However CFQ suffers from the same performance collapse, but
+> CFQ was removed from the kernel in v5.0. So obviously the usual stable
+> backporting path won't work here for several reasons:
+> 
+>    1. There won't be a mainline commit to backport from, as CFQ no
+>       longer exists in mainline.
+> 
+>    2. This is not a security/stability fix, and is likely to involve
+>       invasive changes.
+> 
+> I was wondering if there was a way to address the performance issues
+> in CFQ in the older stable kernels (including the latest LTS 4.19),
+> despite the above constraints, since the performance drop is much too
+> significant. I guess not, but thought I'd ask :-)
+> 
+> [1]. https://lore.kernel.org/lkml/8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu/
 
-Fio uses them, as does t/io_uring from fio. I've done lots of testing
-with registered buffers, all the performance numbers done were with that
-enabled (unless otherwise noted).
-
-But yes, a test case is always a great idea!
+This issue has always been there. There will be no specific patches made
+for stable for something that doesn't even exist in the newer kernels.
 
 -- 
 Jens Axboe
