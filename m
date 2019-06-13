@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 120C843856
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 308BD43854
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732559AbfFMPFQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1732547AbfFMPFQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 13 Jun 2019 11:05:16 -0400
 Received: from esa2.hgst.iphmx.com ([68.232.143.124]:51275 "EHLO
         esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732457AbfFMOQi (ORCPT
+        with ESMTP id S1732459AbfFMOQl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:16:38 -0400
+        Thu, 13 Jun 2019 10:16:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560435419; x=1591971419;
+  t=1560435423; x=1591971423;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HOOccSOH8pQ+2CS5KZoE/1M8aO0h/o7EbmwVy1XVg0Q=;
-  b=htdhaWt701cT4A9SrNM27oCs/bwS9/huvWy8o9eKET1GvckBOCJfKUmy
-   LGrNrXuXzygxjdnqEKfAPoMd5Z1jGAUhBMJj6m6g5D/UtlrTLmDOoP7OC
-   uTfqoYTw3lBbcsq3OKojTwtrKlUrWw8YmjvaE6mpVFGhmD07WGfpyTkh/
-   mf1NN0ScC3FWtc7+hnIZKqs26PWPhxpbqXx88cgiifF0jlcZNexkjmyfY
-   pgohwwrs+xFm9rKqYOVOPUFSOmgYJcrvrUM0HoDnDKGYYh+Kp6vigCqQ0
-   nLXWAnUYJmrtJBUaL+9JnwAjzDadekOHfwBv/U0nLfVKjUAq5R+ps+K2H
-   A==;
+  bh=mGupDbl0fHFGTfmQmhr/DVZ3FbdxDJtk461gnkiVpK0=;
+  b=UZPmMnmY+JEfn/dmj8MBaTrKz8/IPBaxtphon9BvFdKfJIrQrr+MTGnK
+   +HtvvCMZQyJ0/jgdtzq5J1U2LVpXccOJ4jw6RozAJ5N+cb86GNHRWge73
+   AuyzB21lHgMjVarUYmGVvWG/Mqnr98BqzOiUMDkeRy5ld9ReoHGROosiD
+   d3KT+vqXojK8z1247iMcy97eEYTWscmqnRK/ifHrD92s7N2wGA7qgAE1V
+   v88YUdN05u6nKh+2HPQFzx/2ftdZza7pCgWXpgNl9s/p7cIdpz4vV3mnB
+   QBYNSAB5nIKid0ySFAjtMcE6fLurgd0ICXK8cGLIIm8qLlemp5xalYjFO
+   w==;
 X-IronPort-AV: E=Sophos;i="5.63,369,1557158400"; 
-   d="scan'208";a="210177617"
+   d="scan'208";a="210177624"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Jun 2019 22:16:59 +0800
-IronPort-SDR: 7DCfjMPET2lGbuUHkF23f4lq37bhB6mPbPktaPQA7FlVldECmqTW8BpjnxJWGUDUPe2ABLJnUL
- VIIvAJFthuPU0AU/yhA1q9vRjL0hZYPXnnLR+ndyO9toKyHdyRVdX/aJtNnRnekUXpQlUbZNpO
- iUyFYy5y8Lm5K1/L3IqzEXEFqDc/omZARgVYRi4FBbSJouaxbN+h/szblCQvBPC7MIbhJp5h0L
- nt7D50zXRUz6dxAqh1C+1zzevF1NPEnZO8O3bagkvjGZ7wuVi0zSgkbKNs7I4hjeIolv0nPBEk
- +cBZy1+AerCvcNgMWsMYepy8
+  by ob1.hgst.iphmx.com with ESMTP; 13 Jun 2019 22:17:03 +0800
+IronPort-SDR: kbya/j09KJfbd5c5+XnZJAQYZkp0utyzyP2VZ4BLwIYv1M+aQMc6OmRXXEiPNYBDYpqCOA5/WI
+ 9CLHNMZ12HNSLy2GgymTBrsnhW+KAgDNXQqwVjulEhK/wsLr+KVRj6EnD4iO112B00T1UGSYOt
+ kaB0iyvY5lMD5lbGxonsQsvlmSe8M+9DK1rrg4ohDseCdsq8hom5JuBca9r3T+U6gMtJ4CtVY8
+ ewNqresCQfaJplM0X8NkWfz/DuLHuTq5389XxmU0bU+I6LhVgWu+aBtKrXeGVPu52lUZ1pi49i
+ Z/teqYzzlRNdJ/sSfm8DOnjQ
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 13 Jun 2019 07:16:22 -0700
-IronPort-SDR: jC4e1gzs3EWUZbERYUfuLZioaP7gwgaX53abv7SmCBO1fy502Vc0uoWfWLGTOfvvG0U5jhai6O
- e5Vo0EAzzVMMAFesBvnw4+OvM3K1BAvP8beIdDQlx/YwXshjc+MtohZoMj1IuvMqwBr+zXqgSe
- OeE2hW4Y+2dJkMfX6VzRwWebfhqImG89rCOhh4ihCGWsRh6BNQEiybe3CSTOC+JjtNdJt2EtR0
- QiR5h+jbzAAGYuKybojkxDOeFB4fTdA8m14U7uXnVfixPedkYGQCEtWq0E+vrET9RKl8XgdeWq
- UDk=
+  by uls-op-cesaep02.wdc.com with ESMTP; 13 Jun 2019 07:16:24 -0700
+IronPort-SDR: cexlRMxtSVAshlTKkdiv/p8D76NQtpnWTC+8T8eydpeg32/vj1vpfOXzQdID73/Qbc2QVU5YbY
+ j6gk6T0rkJOWD5RNPWwXTX+npBaGTVjkjilFXV9hqPpbdMkQjDZk8Ou/6Ma+H355OkzNNcSTeb
+ rwfza7G7PA3vAA7nWiyuBPX5b22b/AKbqKoEkvP4hHPFXaVbgV1su2LmFtQqGS33UqbLvHfmxM
+ pZF1I2GBCdG3uuYCzeS8MaeABeTo3Qhtxwd2dmMmphw6Kggi8PuxEoe8ZZgehkwAVHqFxUm3rL
+ mds=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Jun 2019 07:16:38 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 13 Jun 2019 07:16:40 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     hch@lst.de, hare@suse.com, bvanassche@acm.org,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH 1/2] block: improve print_req_error
-Date:   Thu, 13 Jun 2019 07:16:28 -0700
-Message-Id: <20190613141629.2893-2-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 2/2] block: add more debug data to print_req_err
+Date:   Thu, 13 Jun 2019 07:16:29 -0700
+Message-Id: <20190613141629.2893-3-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
 References: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
@@ -60,57 +60,70 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-
-Print the calling function instead of print_req_error as a prefix, and
-print the operation and op_flags separately instead of the whole field.
+This patch adds more debug data on the top of the existing
+print_req_error() where we enhance the print message with the printing
+request operations in string format and other request fields.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-core.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ block/blk-core.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index ee1b35fe8572..d1a227cfb72e 100644
+index d1a227cfb72e..6a8a808309f0 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -167,18 +167,20 @@ int blk_status_to_errno(blk_status_t status)
- }
- EXPORT_SYMBOL_GPL(blk_status_to_errno);
+@@ -144,6 +144,32 @@ static const struct {
+ 	[BLK_STS_IOERR]		= { -EIO,	"I/O" },
+ };
  
--static void print_req_error(struct request *req, blk_status_t status)
-+static void print_req_error(struct request *req, blk_status_t status,
-+		const char *caller)
++#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
++static const char *const op_name[] = {
++	REQ_OP_NAME(READ),
++	REQ_OP_NAME(WRITE),
++	REQ_OP_NAME(FLUSH),
++	REQ_OP_NAME(DISCARD),
++	REQ_OP_NAME(SECURE_ERASE),
++	REQ_OP_NAME(ZONE_RESET),
++	REQ_OP_NAME(WRITE_SAME),
++	REQ_OP_NAME(WRITE_ZEROES),
++	REQ_OP_NAME(SCSI_IN),
++	REQ_OP_NAME(SCSI_OUT),
++	REQ_OP_NAME(DRV_IN),
++	REQ_OP_NAME(DRV_OUT),
++};
++
++static inline const char *op_str(int op)
++{
++	const char *op_str = "REQ_OP_UNKNOWN";
++
++	if (op < ARRAY_SIZE(op_name) && op_name[op])
++		op_str = op_name[op];
++
++	return op_str;
++}
++
+ blk_status_t errno_to_blk_status(int errno)
  {
- 	int idx = (__force int)status;
- 
- 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(blk_errors)))
+ 	int i;
+@@ -176,11 +202,14 @@ static void print_req_error(struct request *req, blk_status_t status,
  		return;
  
--	printk_ratelimited(KERN_ERR "%s: %s error, dev %s, sector %llu flags %x\n",
--				__func__, blk_errors[idx].name,
--				req->rq_disk ?  req->rq_disk->disk_name : "?",
--				(unsigned long long)blk_rq_pos(req),
--				req->cmd_flags);
-+	printk_ratelimited(KERN_ERR
-+		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
-+		caller, blk_errors[idx].name,
-+		req->rq_disk ?  req->rq_disk->disk_name : "?",
-+		blk_rq_pos(req), req_op(req),
-+		req->cmd_flags & ~REQ_OP_MASK);
+ 	printk_ratelimited(KERN_ERR
+-		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
++		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
++		"phys_seg %u prio class %u\n",
+ 		caller, blk_errors[idx].name,
+ 		req->rq_disk ?  req->rq_disk->disk_name : "?",
+-		blk_rq_pos(req), req_op(req),
+-		req->cmd_flags & ~REQ_OP_MASK);
++		blk_rq_pos(req), req_op(req), op_str(req_op(req)),
++		req->cmd_flags & ~REQ_OP_MASK,
++		req->nr_phys_segments,
++		IOPRIO_PRIO_CLASS(req->ioprio));
  }
  
  static void req_bio_endio(struct request *rq, struct bio *bio,
-@@ -1360,7 +1362,7 @@ bool blk_update_request(struct request *req, blk_status_t error,
- 
- 	if (unlikely(error && !blk_rq_is_passthrough(req) &&
- 		     !(req->rq_flags & RQF_QUIET)))
--		print_req_error(req, error);
-+		print_req_error(req, error, __func__);
- 
- 	blk_account_io_completion(req, nr_bytes);
- 
 -- 
 2.19.1
 
