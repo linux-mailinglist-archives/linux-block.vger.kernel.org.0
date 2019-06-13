@@ -2,123 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 046F844BE1
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 21:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B10544C1E
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 21:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfFMTNO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 15:13:14 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:36676 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfFMTNN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:13:13 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hbV9n-0009Ya-TR; Thu, 13 Jun 2019 15:13:08 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
- <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <72856150-d678-42bd-0377-82dbee6513ba@csail.mit.edu>
-Date:   Thu, 13 Jun 2019 12:13:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        id S1727846AbfFMT0y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 15:26:54 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:47232 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFMT0y (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:26:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 934972041CF;
+        Thu, 13 Jun 2019 21:26:51 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dp4pDemIbplL; Thu, 13 Jun 2019 21:26:49 +0200 (CEST)
+Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
+        by smtp.infotech.no (Postfix) with ESMTPA id E9B9C20415B;
+        Thu, 13 Jun 2019 21:26:47 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH 1/8] block: add a helper function to read nr_setcs
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block@vger.kernel.org
+Cc:     colyli@suse.de, linux-bcache@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-btrace@vger.kernel.org,
+        kent.overstreet@gmail.com, jaegeuk@kernel.org,
+        damien.lemoal@wdc.com
+References: <20190613145955.4813-1-chaitanya.kulkarni@wdc.com>
+ <20190613145955.4813-2-chaitanya.kulkarni@wdc.com>
+ <9abfc2b8-4496-db7a-fcbb-b52102a67f8e@acm.org>
+ <f8ab9587-309b-79a0-e6fc-f6683176f498@interlog.com>
+ <1560443321.3329.42.camel@HansenPartnership.com>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <9b7f2892-d8bf-8b95-c782-51b775d175ed@interlog.com>
+Date:   Thu, 13 Jun 2019 15:26:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <1560443321.3329.42.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/12/19 10:46 PM, Paolo Valente wrote:
-> 
->> Il giorno 12 giu 2019, alle ore 00:34, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
+On 2019-06-13 12:28 p.m., James Bottomley wrote:
+> On Thu, 2019-06-13 at 12:07 -0400, Douglas Gilbert wrote:
+>> On 2019-06-13 11:31 a.m., Bart Van Assche wrote:
+> [...]
+>>> Please explain what makes you think that part_nr_sects_read() must
+>>> be protected
+>>> by an RCU read lock.
 >>
-[...]
->>
->> Hi Paolo,
->>
+>> Dear reviewer,
+>> Please rephrase the above sentence without the accusative tone.
+>> Specifically, please do not use the phrase "what makes you think"
+>> in this or any other code review. For example: "I believe that..."
+>> is more accurate and less provocative.
 > 
-> Hi
-> 
->> Hope you are doing great!
->>
-> 
-> Sort of, thanks :)
-> 
->> I was wondering if you got a chance to post these patches to LKML for
->> review and inclusion... (No hurry, of course!)
->>
-> 
-> 
-> I'm having troubles testing these new patches on 5.2-rc4.  As it
-> happened with the first release candidates for 5.1, the CPU of my test
-> machine (Intel Core i7-2760QM@2.40GHz) is so slowed down that results
-> are heavily distorted with every I/O scheduler.
-> 
+> Imputing "tone" to email is something we try to avoid because it never
+> ends well, particularly for non-native speakers. Some languages
+> (Russian) have no articles and if you take any English phrase and strip
+> out all the articles it sounds a lot more aggressive.
 
-Oh, that's unfortunate!
+Like you, I am not a native North American English speaker but I
+have lived here long enough to realize that "what makes you think ..."
+is not a pleasantry and it may be fishing for an emotive
+reaction. It is not the type of expression that professionals would
+use to make a point in a public forum.
 
-> Unfortunately, I'm not competent enough to spot the cause of this
-> regression in a feasible amount of time.  I hope it'll go away with
-> next release candidates, or I'll test on 5.1.
+I'm not talking about articles (e.g. "a" and "the"), I'm talking
+about pronouns like "you" and "I". I'm not aware of any languages
+without pronouns. IMO Bart uses expressions with "you" in them too
+often when he is expressing _his_ opinion to the contrary.
+
+>> Observation: as a Canadian citizen when crossing the US border I
+>> believe contradicting a US border official with the phrase "what
+>> makes you think ..." could lead to a rather bad outcome :-)
+>> Please make review comments with that in mind.
 > 
+> Different situation: we aren't profiling reviewers ...
 
-Sounds good to me!
+Would you have used that expression when addressing a teacher at
+high school or university? I'm looking for a yardstick of where
+a reviewer should "pitch" their responses. The way you address
+someone who has the ability to make your life uncomfortable (e.g.
+by refusing you entry into their country) may just be such a
+yardstick.
 
->> Also, since your fixes address the performance issues in BFQ, do you
->> have any thoughts on whether they can be adapted to CFQ as well, to
->> benefit the older stable kernels that still support CFQ?
->>
+>> P.S. Do we have any Linux code-of-conduct for reviewers?
 > 
-> I have implanted my fixes on the existing throughput-boosting
-> infrastructure of BFQ.  CFQ doesn't have such an infrastructure.
+> It's the same one for all interactions:
 > 
-> If you need I/O control with older kernels, you may want to check my
-> version of BFQ for legacy block, named bfq-sq and available in this
-> repo:
-> https://github.com/Algodev-github/bfq-mq/
->
-
-Great! Thank you for sharing this!
- 
-> I'm willing to provide you with any information or help if needed.
+> Documentation/process/code-of-conduct-interpretation.rst
 > 
-Thank you!
+> But I would remind everyone that diversity isn't just a
+> gender/race/LGBT issue it also means being understanding of the
+> potential difficulties non-native speakers have with email in English.
 
-Regards,
-Srivatsa
-VMware Photon OS
+To quote
+   https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+to which your above reference indirectly refers:
+
+    It calls for a "harassment-free experience for everyone,
+    regardless of ... expression ..."
+
+So informing someone (not for the first time) that readers of the
+language in which they are writing, may take offence at their
+expression is: not showing an "understanding of the potential
+difficulties non-native speakers have" and thus is harassment?
+Balance that with the angle of a reviewer trying to intimidate
+the person presenting the code. Could that also be harassment?
+In this case I see little evidence of the "potential difficulties"
+to which you refer.
+
+
+More generally:
+IMO those who have power speak in a condescending fashion and act
+unilaterally in the matter of reviewing and applying patches. A
+select few are allowed to apply patches seemingly without any
+review and ignore error reports or attempts at public review.
+It certainly does not look like a system based on merit.
+
+Doug Gilbert
