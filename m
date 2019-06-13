@@ -2,106 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5608A44F1D
-	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 00:31:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7160F44FBA
+	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 01:01:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfFMWbE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 18:31:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46729 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfFMWbD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:31:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so109143pls.13;
-        Thu, 13 Jun 2019 15:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pn6FoQj1OV+3veGcFFuI7q+QIhanANL13Ea2EhicKdc=;
-        b=tDAAA9SolkB8v/oQKfNQ7t4VItoqGQohn6jP+x/n3pBnyAHAprJ+/IyM118W4fGX3v
-         mK2gETGo6syJWy2tjwtp5zGTHQcUm2NcynTwvV3D5GNS8+j8A66/e+JTdRIOLrqfoDFz
-         kSal6iVATIoQUv9ur8BcCNJo1qgZ64DoA34unsHFHycJDAuQjR5HrUcSUdgRjmPd1+yK
-         xv0HtOtmrB+qOLL/GMz35DpBkY3oDa9j0ATlZ/yTztjTNBAIn3ic6UnaMPPorS/Y0L9C
-         +w39487+Cpx/36NaT4rcfTKgv1BqUqDJ935hfAd3tGDCwlA1nUafBET7P1CYwKAgG3kv
-         2EPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=pn6FoQj1OV+3veGcFFuI7q+QIhanANL13Ea2EhicKdc=;
-        b=p8R/8ikFuF4YjGawE1FUBetZN2HLPTvT+yIPoP2KKo3ODv5iSo0cx2MZ7ojSVlecj7
-         x/dXczPXo1EL6w8ArsD2ii6RhJrdJMS+bFJu1z/sDH9IVI9xk52bwmjLaTpb3a2KteTu
-         sQnYbIoUuETqko9SRvNP/6y7ng25ZTZMoUhSre5MxAG0ZLZH8Ui82ahTpwWqwnddBG57
-         hU3RlWHxzcYF8n6+jK+ZaL+0w29HFXlJs8CJnESenq+Y3GxF2DQsrpllxPd2OtPxqM3M
-         GwRToS4Y8BGs23ChBnEFQVjIiNr5Hh35zZcNcegjheggh+JuqFa3qBXhCkZ/Ud0NmnlP
-         3kww==
-X-Gm-Message-State: APjAAAVtDyi5M5oNhdnZMwPLr6ERkEzLM0TYj8vCcZEY1sbTbHeL7g4G
-        dhklTgmIVkjfxcQcSEp7cIk+S8li
-X-Google-Smtp-Source: APXvYqzHp7kwq8cKJu/ri6EQs4IyPKGsNOnNM+CAqSIoaRYwx42mfdrLi2XckORtM/2X666CADD3EA==
-X-Received: by 2002:a17:902:7591:: with SMTP id j17mr90628227pll.200.1560465062493;
-        Thu, 13 Jun 2019 15:31:02 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:9d14])
-        by smtp.gmail.com with ESMTPSA id x6sm778796pgr.36.2019.06.13.15.31.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 15:31:01 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk, jbacik@fb.com
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, dennis@kernel.org, jack@suse.cz,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 5/5] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
-Date:   Thu, 13 Jun 2019 15:30:41 -0700
-Message-Id: <20190613223041.606735-6-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190613223041.606735-1-tj@kernel.org>
-References: <20190613223041.606735-1-tj@kernel.org>
+        id S1727028AbfFMXBH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 19:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbfFMXBH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:01:07 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71622147A;
+        Thu, 13 Jun 2019 23:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560466866;
+        bh=ijAoTvben3xHdJwjFjc2JVq20l3k6CT0SJjNIni16EE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=l7CW3kEbIEfMPyQKq84ka0PeuSuwdqPEd/rBwzyb+r1FqLLqyErPP9Iw42L52TmB5
+         2Uy1rIkSbsHxHYYCWBq3FZuNZTXRsZ2QRyHKWJRpBXggeBKNkX5qMpxYhhmmT5vXeb
+         r3sXe5wfp6Fftm3kLieDRdFmX+o6d0kmUyHdR3fc=
+Subject: Re: How to resolve an issue in swiotlb environment?
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Christoph Hellwig <hch@lst.de>,
+        Valentina Manea <valentina.manea.m@gmail.com>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <Pine.LNX.4.44L0.1906131306580.1307-100000@iolanthe.rowland.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <41caad16-3fa1-413b-0d49-594d48b88de4@kernel.org>
+Date:   Thu, 13 Jun 2019 17:01:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <Pine.LNX.4.44L0.1906131306580.1307-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-wbc_account_io() collects information on cgroup ownership of writeback
-pages to determine which cgroup should own the inode.  Pages can stay
-associated with dead memcgs but we want to avoid attributing IOs to
-dead blkcgs as much as possible as the association is likely to be
-stale.  However, currently, pages associated with dead memcgs
-contribute to the accounting delaying and/or confusing the
-arbitration.
+On 6/13/19 11:16 AM, Alan Stern wrote:
+> On Thu, 13 Jun 2019, Christoph Hellwig wrote:
+> 
+>> On Wed, Jun 12, 2019 at 10:43:11AM -0400, Alan Stern wrote:
+>>> Would it be okay to rely on the assumption that USB block devices never
+>>> have block size < 512?  (We could even add code to the driver to
+>>> enforce this, although refusing to handle such devices at all might be
+>>> worse than getting an occasional error.)
+>>
+>> sd.c only supports a few specific sector size, and none of them is
+>> < 512 bytes:
+>>
+>> 	if (sector_size != 512 &&
+>> 	    sector_size != 1024 &&
+>> 	    sector_size != 2048 &&
+>> 	    sector_size != 4096) {
+>> 	    	...
+>> 		sdkp->capacity = 0;
+> 
+> Great!  So all we have to do is fix vhci-hcd.  Then we can remove all
+> the virt_boundary_mask stuff from usb-storage and uas entirely.
+> 
+> (I'm assuming wireless USB isn't a genuine issue.  As far as I know, it
+> is pretty much abandoned at this point.)
+> 
+> Valentina and Shua: Adding SG support to vhci-hcd shouldn't be too
+> hard.  It ought to be possible even without changing the network
+> protocol.
+> 
 
-Fix it by ignoring pages associated with dead memcgs.
+I will start taking a look at this. Is there a target release in plan
+to drop virt_boundary_mask stuff?
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
----
- fs/fs-writeback.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index e41cbe8e81b9..9ebfb1b28430 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -715,6 +715,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
- void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 		    size_t bytes)
- {
-+	struct cgroup_subsys_state *css;
- 	int id;
- 
- 	/*
-@@ -726,7 +727,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 	if (!wbc->wb)
- 		return;
- 
--	id = mem_cgroup_css_from_page(page)->id;
-+	css = mem_cgroup_css_from_page(page);
-+	/* dead cgroups shouldn't contribute to inode ownership arbitration */
-+	if (!(css->flags & CSS_ONLINE))
-+		return;
-+
-+	id = css->id;
- 
- 	if (id == wbc->wb_id) {
- 		wbc->wb_bytes += bytes;
--- 
-2.17.1
+thanks,
+-- Shuah
 
