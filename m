@@ -2,84 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C8943CE1
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA3243C85
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfFMPi3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 11:38:29 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:39546 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfFMKGZ (ORCPT
+        id S1728272AbfFMPgQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 11:36:16 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:24190 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727375AbfFMKUj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:06:25 -0400
-Received: by mail-ot1-f44.google.com with SMTP id r21so18393103otq.6
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 03:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JgKtp+EVGe0+8Rc9lPcH24Uo2h5Omb1JSYyyLbVl3aU=;
-        b=Bo0PlQP8Crp3OFg26PDH6POmMArttBDrAlU+wwo7QxP0IYimixiOB982bo/8/rg374
-         cvsh0vzg24JnvfdLjIPaLSCi9NzOdxxee8Vlrvq5nhkoX0fe22rPQVE3XL9/ccgBtxJg
-         ilAtAeaKCHViTiN354G58cC6h6rKM08Sm13+yVE51HyF/45EBYGBplFhEA1+vJEobGor
-         KQ0orhQt0FNVgoiCc467Zt5dH/knGL3kR6wxZBULJ3B3vLpzL8Re8hXbgN2FvGyI8Gmt
-         xGDJbX6xV8+6q6cutYCzMGB4GGp5/vAiVUsAkDKBF/T8ndtZ2u+oHxDty2gDh9Ve/PY4
-         mx4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JgKtp+EVGe0+8Rc9lPcH24Uo2h5Omb1JSYyyLbVl3aU=;
-        b=oUFdbobXemgE2Va8p6EGAx7cxC11wY0DdBSf3BRcPuVEo+FKLFExeKhx2VWTvLs6iX
-         d/b4ekhU+Ch2hSO1KGwdvwE9vlthClXlpKyhyQHPhbXKl2PNzi/TlsWU6K681pkiaRBA
-         GBOadxpXyVfUsD8/9b3gk/YbEv2eFRU5O3iESqRHkl4ni+qHEQTmbZ6Qn0MLmCGWk1bX
-         WQiaZrr5fcf9ZRtvn1epD4dgEWV14OkK0VS3JcG+LRjnzeghJg2ef100/9Ym7gMBk3y8
-         rw875o4bPnsWRsq44pZuEPbcuupFhwaUAr0NrEOIf/sEGAnyYecw/V+L6xdBhFLDmzsq
-         BpZw==
-X-Gm-Message-State: APjAAAUnan/LZfxyyTyuYo6ny96kokGSwGnPghegx2P2GMMm9RiShUvr
-        E9f3e6iWczet7G+AFiVkVp1CHg==
-X-Google-Smtp-Source: APXvYqzYLFkrTVkgnHY4W6nYMSsB9WdZG16Yj2xmRUCUrhdWBhgSPErFYawiIGsEv/xg9cp39VdTFQ==
-X-Received: by 2002:a05:6830:1250:: with SMTP id s16mr3169397otp.158.1560420384602;
-        Thu, 13 Jun 2019 03:06:24 -0700 (PDT)
-Received: from [172.20.10.3] (mobile-107-92-59-183.mycingular.net. [107.92.59.183])
-        by smtp.gmail.com with ESMTPSA id j204sm820809oif.37.2019.06.13.03.06.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 03:06:23 -0700 (PDT)
-Subject: Re: alternative take on the same page merging leak fix v2
-To:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Cc:     David Gibson <david@gibson.dropbear.id.au>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-References: <20190613095529.25005-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
-Date:   Thu, 13 Jun 2019 04:04:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190613095529.25005-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 06:20:39 -0400
+X-IronPort-AV: E=Sophos;i="5.62,369,1554735600"; 
+   d="scan'208";a="18589667"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 13 Jun 2019 19:20:37 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 785384274AAF;
+        Thu, 13 Jun 2019 19:20:37 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     joro@8bytes.org, axboe@kernel.dk, ulf.hansson@linaro.org,
+        wsa+renesas@sang-engineering.com
+Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [RFC PATCH v6 0/5] treewide: improve R-Car SDHI performance
+Date:   Thu, 13 Jun 2019 19:20:10 +0900
+Message-Id: <1560421215-10750-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/13/19 3:55 AM, Christoph Hellwig wrote:
-> Hi Jens, hi Ming,
-> 
-> this is the tested and split version of what I think is the better
-> fix for the get_user_pages page leak, as it leaves the intelligence
-> in the callers instead of in bio_try_to_merge_page.
-> 
-> Changes since v1:
->   - drop patches not required for 5.2
->   - added Reviewed-by tags
+This patch series is based on iommu.git / next branch.
 
-Applied for 5.2, thanks.
+Since SDHI host internal DMAC of the R-Car Gen3 cannot handle two or
+more segments, the performance rate (especially, eMMC HS400 reading)
+is not good. However, if IOMMU is enabled on the DMAC, since IOMMU will
+map multiple scatter gather buffers as one contignous iova, the DMAC can
+handle the iova as well and then the performance rate is possible to
+improve. In fact, I have measured the performance by using bonnie++,
+"Sequential Input - block" rate was improved on r8a7795.
+
+To achieve this, this patch series modifies IOMMU and Block subsystem
+at first. Since I'd like to get any feedback from each subsystem whether
+this way is acceptable for upstream, I submit it to treewide with RFC.
+
+Changes from v5:
+ - Almost all patches are new code.
+ - [4/5 for MMC] This is a refactor patch so that I don't add any
+   {Tested,Reviewed}-by tags.
+ - [5/5 for MMC] Modify MMC subsystem to use bigger segments instead of
+   the renesas_sdhi driver.
+ - [5/5 for MMC] Use BLK_MAX_SEGMENTS (128) instead of local value
+   SDHI_MAX_SEGS_IN_IOMMU (512). Even if we use BLK_MAX_SEGMENTS,
+   the performance is still good.
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=127511
+
+Changes from v4:
+ - [DMA MAPPING] Add a new device_dma_parameters for iova contiguous.
+ - [IOMMU] Add a new capable for "merging" segments.
+ - [IOMMU] Add a capable ops into the ipmmu-vmsa driver.
+ - [MMC] Sort headers in renesas_sdhi_core.c.
+ - [MMC] Remove the following codes that made on v3 that can be achieved by
+	 DMA MAPPING and IOMMU subsystem:
+ -- Check if R-Car Gen3 IPMMU is used or not on patch 3.
+ -- Check if all multiple segment buffers are aligned to PAGE_SIZE on patch 3.
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=125593
+
+Changes from v3:
+ - Use a helper function device_iommu_mapped on patch 1 and 3.
+ - Check if R-Car Gen3 IPMMU is used or not on patch 3.
+ - Check if all multiple segment buffers are aligned to PAGE_SIZE on patch 3.
+ - Add Reviewed-by Wolfram-san on patch 1 and 2. Note that I also got his
+   Reviewed-by on patch 3, but I changed it from v2. So, I didn't add
+   his Reviewed-by at this time.
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=120985
+
+Changes from v2:
+ - Add some conditions in the init_card().
+ - Add a comment in the init_card().
+ - Add definitions for some "MAX_SEGS".
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=116729
+
+Changes from v1:
+ - Remove adding init_card ops into struct tmio_mmc_dma_ops and
+   tmio_mmc_host and just set init_card on renesas_sdhi_core.c.
+ - Revise typos on "mmc: tmio: No memory size limitation if runs on IOMMU".
+ - Add Simon-san's Reviewed-by on a tmio patch.
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=110485
+
+Yoshihiro Shimoda (5):
+  iommu: add an exported function to get minimum page size for a domain
+  block: sort headers on blk-setting.c
+  block: add a helper function to merge the segments by an IOMMU
+  mmc: tmio: Use dma_max_mapping_size() instead of a workaround
+  mmc: queue: Use bigger segments if IOMMU can merge the segments
+
+ block/blk-settings.c             | 40 ++++++++++++++++++++++++++++++++++------
+ drivers/iommu/iommu.c            | 18 +++++++++++++++---
+ drivers/mmc/core/queue.c         | 33 +++++++++++++++++++++++++++++----
+ drivers/mmc/host/tmio_mmc_core.c | 17 ++++-------------
+ include/linux/blkdev.h           |  2 ++
+ include/linux/iommu.h            |  1 +
+ include/linux/mmc/host.h         |  1 +
+ 7 files changed, 86 insertions(+), 26 deletions(-)
 
 -- 
-Jens Axboe
+2.7.4
 
