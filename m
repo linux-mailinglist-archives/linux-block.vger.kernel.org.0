@@ -2,87 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7092143E50
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA1B343D0E
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbfFMPsp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 11:48:45 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:46685 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731726AbfFMJSJ (ORCPT
+        id S1726795AbfFMPjS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 11:39:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38654 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731926AbfFMJzh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:18:09 -0400
-Received: by mail-yb1-f196.google.com with SMTP id p8so7530715ybo.13
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 02:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rWRYQfTQ2CGUN47KzzewtdkARkI8D2HQXHjNEPkT2fM=;
-        b=gcm4y7Z5tiPt34XEseRf897HHaBYWht5YRdwUUXywf4/NMVLTaAkyJ3n9FN2e07T56
-         laSscI/KiTjgDi9+Ak7fL1bHEUjGp4LNidEU20YZo0bXBLnFEtVwDbBw0MGXFo1hK67g
-         d8yMOD8UvmXaeXYxmBae+8Tb5N+eJKiAXsYMprxMEd/l34UB11BagkeyLTyBfRXzgtiC
-         LLDYsxuFGNJ5750N2+Zm+b8U54INv1gx9EJpypgasTP0xGE/8DkDz7Vmxz8mKxizdkzB
-         5d0Txz/8dStSmlUiNZja16qapSSOcVwr8kNLYUxyX3bPjortqwPPzrh++lshI0gqbvYf
-         WRbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rWRYQfTQ2CGUN47KzzewtdkARkI8D2HQXHjNEPkT2fM=;
-        b=lP/pGwClabXybZ+xARCLygTDuhoqFRV2AcgzsmqwnZeIQB40Q6wPxtM95kgMB9NjML
-         kqrQZQRRHQ8nbmONqlKzYokDaLGYGonBS9Et8gMyGluFoMtxeMnrezRDiSMfolhzdGBo
-         9pTFjtqztgCSpwvz9l13zmgrm0oXmug3DxAVHD2Xi2t8LpXDQ/1l31DOW0l2Wr1cOwPT
-         Um5Tukw53o6gAG4O5YJxjXZgCsA6bgmpSLrOg9BCRsILkNcUOHEUhLWR2454Cd+nV7zD
-         aog/eUVHmH5SXrr3qRtSr6Dkpgbz9Y6MszaXnGs687qYCMNPFoq7x6ExJGZMHRs8nBzm
-         HwSQ==
-X-Gm-Message-State: APjAAAWN3aXa2R9rNqu8ilVNYB04QmeUGNf52QxLm3137MCv0EDVx5y7
-        a8S4kA0JxLJhlZu/qtHM0girLGE+EwEKsN0x
-X-Google-Smtp-Source: APXvYqxLGysOgdpeENWfSfydoLuDyyMBrKZQKgBENiQq24AdUBHUlZN8NTSTBAgmInA19Qv2H7zdFw==
-X-Received: by 2002:a5b:412:: with SMTP id m18mr44123343ybp.497.1560417488445;
-        Thu, 13 Jun 2019 02:18:08 -0700 (PDT)
-Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
-        by smtp.gmail.com with ESMTPSA id l14sm625653ywb.59.2019.06.13.02.18.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 02:18:07 -0700 (PDT)
-Subject: Re: [PATCH] block/ps3vram: Use %llu to format sector_t after LBDAF
- removal
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org
-References: <20190613073006.13459-1-geert+renesas@glider.be>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <da98e8b2-8abf-77c1-ac98-6b164ebf9d34@kernel.dk>
-Date:   Thu, 13 Jun 2019 03:18:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 05:55:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gx1JcBWA6mIzaQBQDJm1Gfx2OyLZt5TKvy2MGx3QEB8=; b=FmI5HimasFGhpRPfW4DR/iRev
+        9PhmFsRSHefhFb49o8vkltx8inGtbdpqqG0yrWA3Z0D65QGc9yj0baihCj/HHgfCCPrHShh+7QHdN
+        2WhvZzkOeP8cp6ONq0oXThvIYYvrvai4aACMpkx3EwjskX5d0k6FmMTNGjG+YX8Rxm2fFg5Y8TajC
+        utZY6WBHZbiHzFfThzHS3TEo8JSDfoS78vQvIXO9VitjCASFVPvyJePIjkK+tDA29VN1YuL20fTmr
+        S2wYPMcfDrxO8tGTFa0Ob01+elkZP7hfcvTr9WhgfJH8NZhH7fk9t9cZFfg4Sct8vWhZm90On0D2q
+        Tzffqnvhg==;
+Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbMSC-0008La-BF; Thu, 13 Jun 2019 09:55:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Cc:     David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: alternative take on the same page merging leak fix v2
+Date:   Thu, 13 Jun 2019 11:55:27 +0200
+Message-Id: <20190613095529.25005-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190613073006.13459-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/13/19 1:30 AM, Geert Uytterhoeven wrote:
-> The removal of CONFIG_LBDAF changed the type of sector_t from "unsigned
-> long" to "u64" aka "unsigned long long" on 64-bit platforms, leading to
-> a compiler warning regression:
-> 
->      drivers/block/ps3vram.c: In function ‘ps3vram_probe’:
->      drivers/block/ps3vram.c:770:23: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘sector_t {aka long long unsigned int}’ [-Wformat=]
-> 
-> Fix this by using "%llu" instead.
+Hi Jens, hi Ming,
 
-Applied, thanks.
+this is the tested and split version of what I think is the better
+fix for the get_user_pages page leak, as it leaves the intelligence
+in the callers instead of in bio_try_to_merge_page.
 
--- 
-Jens Axboe
-
+Changes since v1:
+ - drop patches not required for 5.2
+ - added Reviewed-by tags
