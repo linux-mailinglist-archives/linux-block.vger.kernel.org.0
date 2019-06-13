@@ -2,94 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D6DB44266
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DED6A44351
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391906AbfFMQWK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 12:22:10 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39888 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403893AbfFMQV4 (ORCPT
+        id S1731457AbfFMQ2n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 12:28:43 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:41330 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730945AbfFMQ2n (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:21:56 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so32047018edv.6
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 09:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
-        b=EhoeFLRHnBhKbWvy9HbsUZYnmSqkMjgbw/4JBVzBmKwtC2BYciZon/sGwYlwxD2ArB
-         820lhaGvsyDxIQBlup+5VKFfAjqc0UgL0AndVHVEjCUhxyB6MYwWpt9rVeipesbYJm9O
-         9LctzS/TEIahM6LL9VOCpzIV8wbDeIGYc6LpG/4Ag9cMHwzd7NIdHtF03n3uFJ5oSCsa
-         3G8seNu4kPRGCTWh5OLMltNpswqlywnH6ctZu426ea1q3OKYycClQ4ZPMg8bCkDfv5pf
-         qrUMZwVvDtNADcRslOs9acphTWeWGkYvfzJ9d44UO3i9kqBf746dXPNN4G9zYO82urgl
-         cWsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
-        b=nh4yiqI8zTPaVOiv9vcoAGx+wsc4BnM0KXZ6XUd4l1PtWQfqKcOC8PZsJ/0Aop/qkC
-         MZh2YquEA5h8dFtHXdJiNQ2QmcXqqtjO9R9Ch1H36/ryxv9sS4MaWn2OCpM60A+nZ94N
-         QWsABxKyqmfJoce5AtkRe6AE2LiJOfPJen96s4vOyvH+9yzPlg9i1Ymh470dTK1HxVof
-         yVBROD4AS07iwQS0TjUCD6+8C5CtFID7LZ5ueoc4oK0EuShEIMXkZpnMCuPk85Eqq/D7
-         qn9x0w5xkwlzESPXkdIfCKFImN7gyyM+F6a/4xzEZdbBpQBjcDRZlLmnWqD+nfLQhmUW
-         y87g==
-X-Gm-Message-State: APjAAAV7PZ+ziZwVkIEZQIeTVBdyJ4S/+w2187bzTEDfUL0uxjjVliHx
-        rBZKcTy/Lzw/mG0tMeHBYgBQe6L7jNaYOK8FMa9Ehg==
-X-Google-Smtp-Source: APXvYqxuWVuyBpuxXeXaLydjVhfXhrVUHymBl4vNZ13Z3Lq3A6ZwUrJo9f7zawIdyv/dg+ZkFHQ0nrTO50sHeOAATfU=
-X-Received: by 2002:a17:906:3948:: with SMTP id g8mr45653628eje.168.1560442914546;
- Thu, 13 Jun 2019 09:21:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com>
- <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local> <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
- <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
-In-Reply-To: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Thu, 13 Jun 2019 19:21:43 +0300
-Message-ID: <CAODwZ7so4cVVJmPHXGGOxKRO_0L2NjZJac73wfaHPV7ZN6ce1g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
-        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+        Thu, 13 Jun 2019 12:28:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0D5E68EE147;
+        Thu, 13 Jun 2019 09:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560443323;
+        bh=bnTJZINKg659sWer2QpR3c5NeLkXTlt8sZRt1buXvPk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ECkUStv+npI9x1oyvMYlUKctnPIORbAWAMPFhOP6is+V2N0dN63FeLtDHVGFmXEN9
+         olnXF7NIMaBfyC0lR9pZ5uuKe7/fVu8GYIhaFH5IxI0V4C0qH0rsNexLnTz8aR6g7L
+         bXanZK2NoD9Z5mhlTLsmHbmWOatkkzO48mkWks9U=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DWyDetGG-Y6c; Thu, 13 Jun 2019 09:28:42 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 5F8EA8EE0C7;
+        Thu, 13 Jun 2019 09:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560443322;
+        bh=bnTJZINKg659sWer2QpR3c5NeLkXTlt8sZRt1buXvPk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=c7M+KVMKOhi/zNVgKex9T2JCLcgRkBWN6q8nLxckxA3LLq79BjndZCUnWrz9y/WQk
+         vti4sGZfC6NwRYlQWLwH3hj03jxQ8rT5v0Hj0sypVWw6RcOQQRZXSG8upMqmBtKosz
+         U0d3IvxaxlsMbUzAJQgIT8K/Kt0g4EjcaLtBfHUs=
+Message-ID: <1560443321.3329.42.camel@HansenPartnership.com>
+Subject: Re: [PATCH 1/8] block: add a helper function to read nr_setcs
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     dgilbert@interlog.com, Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block@vger.kernel.org
+Cc:     colyli@suse.de, linux-bcache@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-btrace@vger.kernel.org,
+        kent.overstreet@gmail.com, jaegeuk@kernel.org,
+        damien.lemoal@wdc.com
+Date:   Thu, 13 Jun 2019 09:28:41 -0700
+In-Reply-To: <f8ab9587-309b-79a0-e6fc-f6683176f498@interlog.com>
+References: <20190613145955.4813-1-chaitanya.kulkarni@wdc.com>
+         <20190613145955.4813-2-chaitanya.kulkarni@wdc.com>
+         <9abfc2b8-4496-db7a-fcbb-b52102a67f8e@acm.org>
+         <f8ab9587-309b-79a0-e6fc-f6683176f498@interlog.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> I don't doubt you have a good reason to want it, I'm just not clear on why an
-> initramfs isn't an option?  You have this special kernel with your special
-> option, and you manage to get these things to boot your special kernel right?
-> So why is a initramfs with a tiny nbd-client binary in there not an option?
->
-> Also I mean that there are a bunch of different nbd servers out there.  We have
-> our own here at Facebook, qemu has one, IIRC there's a ceph one.  They all have
-> their own connection protocols.  The beauty of NBD is that it doesn't have to
-> know about that part, it just does the block device part, and I'd really rather
-> leave it that way.  Thanks,
->
-> Josef
+On Thu, 2019-06-13 at 12:07 -0400, Douglas Gilbert wrote:
+> On 2019-06-13 11:31 a.m., Bart Van Assche wrote:
+[...]
+> > Please explain what makes you think that part_nr_sects_read() must
+> > be protected 
+> > by an RCU read lock.
+> 
+> Dear reviewer,
+> Please rephrase the above sentence without the accusative tone.
+> Specifically, please do not use the phrase "what makes you think"
+> in this or any other code review. For example: "I believe that..."
+> is more accurate and less provocative.
 
+Imputing "tone" to email is something we try to avoid because it never
+ends well, particularly for non-native speakers. Some languages
+(Russian) have no articles and if you take any English phrase and strip
+out all the articles it sounds a lot more aggressive.
 
-The only reason I prefer embed client into the kernel is to save
-valuable engineering time creating and supporting custom initramfs,
-that is not so easy especially on Android-based systems.
+> Observation: as a Canadian citizen when crossing the US border I
+> believe contradicting a US border official with the phrase "what
+> makes you think ..." could lead to a rather bad outcome :-)
+> Please make review comments with that in mind.
 
-Taking into account that if using NBD and creating custom initramfs
-required only for automated testing, many companies would choose
-manual deployment instead, that is bad for the human progress.
+Different situation: we aren't profiling reviewers ...
 
-I believe that all users of non-standard NBD handshake protocols could
-continue to use custom nbd-clients.
+> Thanks.
+> 
+> Doug Gilbert
+> 
+> P.S. Do we have any Linux code-of-conduct for reviewers?
 
-Either you accept this patch or not I would like to pass review from
-maintainers and other persons that was involved in NBD development,
-thus making a step closer to get this mainlined in some future.
+It's the same one for all interactions:
 
---
-Regards,
-Roman
+Documentation/process/code-of-conduct-interpretation.rst
+
+But I would remind everyone that diversity isn't just a
+gender/race/LGBT issue it also means being understanding of the
+potential difficulties non-native speakers have with email in English.
+
+James
+
