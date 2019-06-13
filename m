@@ -2,89 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A63C4416C
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:14:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00C7E44098
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 18:07:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbfFMQOQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 12:14:16 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40509 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731195AbfFMIma (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:30 -0400
-Received: by mail-yb1-f194.google.com with SMTP id g62so7503837ybg.7
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 01:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zjpXrdhZdWSVnzo1hcCmpdYCRukSqJAaG4+HlfSu5wc=;
-        b=Dww8Mp6DzN1GHQieAdQBJBXrZ6Dx9lwUFAyjoSpdOPjDv5aHFyXKPRFuPFDadk3F4N
-         PlAxkpCqcbhb6+yKQ3k3gDZlgZ8ltdDU3HqW0ffCqnxdaRQN/wD1YadQA77Sbb051t1M
-         u3hZk++QD/VFEeZiQvaXESGohxYVWpUChsQd0zFYnswawNr2oKOBEv9Rc5HGkHPQ3Rs6
-         wP+KYkzy8EYouMLVbEHXfV8pMIxqWa3daudYkLkiEWCCTSBX6kXfjntbprtvsFputU3m
-         DNZBzUHcvlxbDEeq+ZdSCnZORxSBGGAQFGxDcZryNZn+8w1MabKJ9e5hOwV6uOAdegLT
-         n3XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zjpXrdhZdWSVnzo1hcCmpdYCRukSqJAaG4+HlfSu5wc=;
-        b=L25jhQ9r3MRLnn9hGSiAdQndHZjS6/CmQDPaw/SzNGcaXZr7L9cEaLvPBjBAgjDb52
-         proKdkcHzOWFhsgDt0T+gI/zyMoeIlXUMcozwViK5DFk7iBdjSeDUNO9A3rR8PEKGy7o
-         ted29Ce4VSXCiUGyiemgVEoZ/4QiutAKGYowjAd3RIFygiBT3gvQDR+UlDFbt75YyGnn
-         xRNJvXB81eidMYi1QanoJxjtz7UEa4g1IRTJZBAwUQIZwFCEYsa3FZ0vVxSr8xWEFJF2
-         Jim0iwP5yyojeos4o+dMnP8GqKeX7X7uPzqm8ACKJahr6LuWuwZXpV9chY5shHTsElCo
-         QzPw==
-X-Gm-Message-State: APjAAAWb7g/7V7B/LckJQ43Iiz2f0tdzKzTajt5dhOp90TUu1gNvGoPu
-        4zAFA99NFIttQbhyu6ottCbG7Q==
-X-Google-Smtp-Source: APXvYqw6HbzBIcjkNiK7Q0GLBBoGGfFaDqjTHwqIkqQaT8YYX/nxFXa9ac5Nsx5wzsq/aODUxFvBaA==
-X-Received: by 2002:a25:320b:: with SMTP id y11mr14886649yby.92.1560415350170;
-        Thu, 13 Jun 2019 01:42:30 -0700 (PDT)
-Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
-        by smtp.gmail.com with ESMTPSA id 84sm769447ywp.45.2019.06.13.01.42.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 01:42:29 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: fix memory leak of UNIX domain socket inode
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com>
-References: <0000000000005bc340058983fe8e@google.com>
- <20190612215843.91294-1-ebiggers@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c8afa475-8ed9-e8ee-c66a-270bea7efad5@kernel.dk>
-Date:   Thu, 13 Jun 2019 02:40:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729546AbfFMQHJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 12:07:09 -0400
+Received: from verein.lst.de ([213.95.11.211]:36671 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731302AbfFMIp3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:29 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id DEC0668B05; Thu, 13 Jun 2019 10:44:58 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 10:44:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi
+ host
+Message-ID: <20190613084458.GB13221@lst.de>
+References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de> <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612215843.91294-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/12/19 3:58 PM, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Opening and closing an io_uring instance leaks a UNIX domain socket
-> inode.  This is because the ->file of the io_uring instance's internal
-> UNIX domain socket is set to point to the io_uring file, but then
-> sock_release() sees the non-NULL ->file and assumes the inode reference
-> is held by the file so doesn't call iput().  That's not the case here,
-> since the reference is still meant to be held by the socket; the actual
-> inode of the io_uring file is different.
-> 
-> Fix this leak by NULL-ing out ->file before releasing the socket.
-
-Thanks, applied.
-
--- 
-Jens Axboe
-
+So before I respin this series, can you help with a way to figure out
+for mpt3sas and megaraid if a given controller supports NVMe devices
+at all, so that we don't have to set the virt boundary if not?
