@@ -2,53 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB7E43865
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:06:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ACBC43855
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jun 2019 17:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732744AbfFMPFe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 11:05:34 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:40858 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732441AbfFMOO0 (ORCPT
+        id S1732457AbfFMPFQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 11:05:16 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:51275 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732456AbfFMOQg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:14:26 -0400
+        Thu, 13 Jun 2019 10:16:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560435266; x=1591971266;
+  t=1560435415; x=1591971415;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=1FypgCGtJ65K5XzjTkv2SWzZMurbjJVCpa70W1QwkhQ=;
-  b=H+G9OtYJfnvO9rBvi0EdohDB2htUxknWW4+kIL6Oom/wFCk2ZySfVQQo
-   YJmTQjdk9PirOkBKJ1CXqqWQrm7P5Db0t5kQ+c15XfSH99DcJfUOF64NP
-   8CoASSbw5NCCvqgsBUv5digeIbpOmYx2Gt3/A29etMd1Po7oNn4jsjcCA
-   1zhX1wOOL5dwk/s91NCeb1hSkpG3JecPzPOhaL8ycmx114mdR7ASNtZ9x
-   2YOSEMP1HtYGYUrkZYpGw09CfZzw7lZlSDxwLZd6QPykz8l39E2DFUR95
-   FPS6z2t9aN7uaVykpPGbFk/+vsKGyvQqjA9tohn+pOKUrPmmt5+/2NSwk
-   w==;
+  bh=2IrC1BtGXngFof1hqLZYq5xUyLgWadU1uxzxHHLzaew=;
+  b=KpmAvCMaoYv7+P7J24gM8ZTTMMIdrgIP3UzQbB3ErW6R854j6ozTuHLl
+   MvyMy+B5jgdkffRsgsKs45xtaAlDnF7n/x9rsZa6Fm2lwg4Bx1p7PAbvm
+   l3X5tMuY8G5JmEIXxwHTRhiowZUkwKoYn5on2+z/vJRUf8ByWqzMiFodD
+   ypXocLV7Vo80DdUeVWmmfyC7EDyxv6FP7Wq6goSBh70Ts7VydlUGhxxuQ
+   UxYUasSH9I2GfKru1elk/WR3Q9knMiyYMYDdcGEg/iEpkcknMCD/yHP+k
+   dUk7y85plBp8gG8kh9cbaPcdeyTkD/79YrbZerh4IsV3J79KW8cgrFLat
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.63,369,1557158400"; 
-   d="scan'208";a="111747747"
+   d="scan'208";a="210177613"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Jun 2019 22:14:23 +0800
-IronPort-SDR: Uj+vKLqK7hxHyG/4HTYmjD20hZeVNd+No+34zxIaes7Vrvc9jHSVSfscEK0ivhKMxwmv8++wu/
- IcWwNqoxP38P3rTacHZwgJ87Bv8l+TwFN8fNf+H8mWBMA3EtiG5ux1FbfI15Vz1phn84l7jpqR
- vYkAmxWNdx9/mfPA+tLUwRAqXIhUIlZZaCWSDokHLbbsF/7TZ1XYGuq/Q5rU2hn/g3wv3yUbqA
- 9WaLU8TPwlL0qwIsyuyFDB3lhAlmR8GT9sQfELnwA8PZ82ptwx4T+ZSbJnXqZsmr5VcT09kQ3K
- 4V2+nVP8Bq8N0V6lUSQaE9ug
+  by ob1.hgst.iphmx.com with ESMTP; 13 Jun 2019 22:16:55 +0800
+IronPort-SDR: +u70w5VAmyTEYGudG9u7e4sXNhIfDNV8jOc7Pn6Mm/vfE4q+Ofy50S3VwSJdMPRlkECA3O2jf4
+ 64kf5lTzvxi4TdZIXzaGjGOAv9+4mwLIm0qr3ZSLo15oFVzHrwC8AQi8gVrfEzJFgo6wmQ5h41
+ XYDsxhVfInaldY3m226mlSJORyX7g2lAa7zCSOzi0JUZxqY/ANg65cu6xXxOke2kH9J/0zKH6+
+ nXs2U8Ac14YfxrdoFhEBtV9u/qCYmif9gRloG2NLgjJeKWmgoQKHggBSVpDqV5dB2OLe81khPa
+ +RMHo3moCp+pJPdxDK7cNgkb
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 13 Jun 2019 07:14:07 -0700
-IronPort-SDR: KfS3paupNszdW/LYObcjvLbRE00WnJqf6mJiagL1KAWKBbn3bzJ/+H1mrLO0fve1MlS1x7PDbm
- ZYU1BjjaB4hxBjgM7Pwb6OYcSGislbmaIeG3g0MZlp2bue71pXru5Fi7Ve0E97U4VEs8P+5TWM
- RidQNv7sNT2RLPBqJ1+gR9pldSsmLDY2f8A9rw/jZh1FRsIunXvBLae7x6VFSeFk4htv3f75ic
- WU3bTUp9K2Idd/getJ+sIcvB2yZLDW+hbkQc4UZltyAG+ERxL47DE7fxZougzap9X+KuUE/U82
- 7r0=
+  by uls-op-cesaep02.wdc.com with ESMTP; 13 Jun 2019 07:16:19 -0700
+IronPort-SDR: wKxkHhS5/sT3VrU3EFJp8tXP5izgATSON2KdUWoHfqss7XTYJaNXLahM6hjWtmAxOL4qaDGmI3
+ 2Ph8/dEqbSvyqQJAlKScEuHYHJUyfuFN6KNGmjXUzi8jl80nBTpB+20BIbMQOydXRwyYB2X2kI
+ CKx+fNTVs7eZerQyfBGxTQFbeytd865W2rsOnh/3uJymfanRkGqqOKjshPPnPxo4zHp/373OTd
+ dUDO4mnYRsfxKok4JvJAe+dJcApcKmgXjW/1+beJyWrXGUy7Rx7f1tntaqeDAsyMIhzKQbQ3XC
+ Fzw=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Jun 2019 07:14:23 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 13 Jun 2019 07:16:35 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH] block: use req_op() to maintain consistency
-Date:   Thu, 13 Jun 2019 07:14:21 -0700
-Message-Id: <20190613141421.2698-1-chaitanya.kulkarni@wdc.com>
+Cc:     hch@lst.de, hare@suse.com, bvanassche@acm.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 0/2] block: improve print_req_error
+Date:   Thu, 13 Jun 2019 07:16:27 -0700
+Message-Id: <20190613141629.2893-1-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -57,28 +58,46 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is a pure code cleanup patch and doesn't change any functionality.
-In block layer to identify the request operation req_op() macro is
-used, so change the open coding the req_op() in the blk-mq-debugfs.c.
+Hi,
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- block/blk-mq-debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch-series is based on the initial patch posted by 
+Christoph Hellwig <hch@lst.de>. I've added one more patch to improve
+print message.
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index 6aea0ebc3a73..c6c3c4f4128a 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -341,7 +341,7 @@ static const char *blk_mq_rq_state_name(enum mq_rq_state rq_state)
- int __blk_mq_debugfs_rq_show(struct seq_file *m, struct request *rq)
- {
- 	const struct blk_mq_ops *const mq_ops = rq->q->mq_ops;
--	const unsigned int op = rq->cmd_flags & REQ_OP_MASK;
-+	const unsigned int op = req_op(rq);
- 
- 	seq_printf(m, "%p {.op=", rq);
- 	if (op < ARRAY_SIZE(op_name) && op_name[op])
+While debugging the driver and block layer this print message is very
+handy.
+
+Please consider this for 5.3.
+
+Following is the sample error message with forced REQ_OP_WRITE,
+REQ_OP_WRITE_ZEROES and REQ_OP_DISCARD failure from modified null_blk
+for testing :-
+
+ blk_update_request: I/O error, dev nullb0, sector 0 op 0x9:(WRITE_ZEROES) flags 0x400800 phys_seg 0 prio class 0
+ blk_update_request: I/O error, dev nullb0, sector 0 op 0x3:(DISCARD) flags 0x800 phys_seg 1 prio class 0
+ blk_update_request: I/O error, dev nullb0, sector 0 op 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 0
+
+I've fixed all the review comments except the one for which we want to
+use the newly added function in the include/trace/events/f2fs.h as f2fs
+code is highly coupled with the tracing structures. I'll make a separate
+patch for that change as needed.
+
+Thanks,
+-Chaitanya
+
+Changes from V1:-
+1. Get rid of the function switch case and use the passtern similar to
+   block/blk-mq-debuffs.c(Bart).
+
+Chaitanya Kulkarni (1):
+  block: add more debug data to print_req_err
+
+Christoph Hellwig (1):
+  block: improve print_req_error
+
+ block/blk-core.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
+
 -- 
 2.19.1
 
