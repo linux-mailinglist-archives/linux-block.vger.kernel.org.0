@@ -2,128 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A66459A9
-	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 11:55:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7553745B2C
+	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 13:10:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfFNJyl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Jun 2019 05:54:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:58352 "EHLO foss.arm.com"
+        id S1727162AbfFNLKz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 Jun 2019 07:10:55 -0400
+Received: from latin.grep.be ([46.4.76.168]:42671 "EHLO latin.grep.be"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727191AbfFNJyl (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:54:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A9CA2B;
-        Fri, 14 Jun 2019 02:54:40 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3343F718;
-        Fri, 14 Jun 2019 02:56:22 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 3/5] block: add a helper function to merge the
- segments by an IOMMU
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        joro@8bytes.org, axboe@kernel.dk, ulf.hansson@linaro.org,
-        wsa+renesas@sang-engineering.com
-Cc:     linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-block@vger.kernel.org, iommu@lists.linux-foundation.org,
-        hch@lst.de
-References: <1560421215-10750-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1560421215-10750-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <039d7388-ed24-c7e7-dd6a-656c719a5ed9@arm.com>
-Date:   Fri, 14 Jun 2019 10:54:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727262AbfFNLKy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:10:54 -0400
+X-Greylist: delayed 2218 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 07:10:53 EDT
+Received: from [105.227.108.147] (helo=gangtai.home.grep.be)
+        by latin.grep.be with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <w@uter.be>)
+        id 1hbjWp-0000YE-NR; Fri, 14 Jun 2019 12:33:52 +0200
+Received: from wouter by gangtai.home.grep.be with local (Exim 4.92)
+        (envelope-from <w@uter.be>)
+        id 1hbjWh-0003hH-Vl; Fri, 14 Jun 2019 12:33:43 +0200
+Date:   Fri, 14 Jun 2019 12:33:43 +0200
+From:   Wouter Verhelst <w@uter.be>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+Message-ID: <20190614103343.GB11340@grep.be>
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+ <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+ <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
 MIME-Version: 1.0
-In-Reply-To: <1560421215-10750-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+X-Speed: Gates' Law: Every 18 months, the speed of software halves.
+Organization: none
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 13/06/2019 11:20, Yoshihiro Shimoda wrote:
-> This patch adds a helper function whether a queue can merge
-> the segments by an IOMMU.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->   block/blk-settings.c   | 28 ++++++++++++++++++++++++++++
->   include/linux/blkdev.h |  2 ++
->   2 files changed, 30 insertions(+)
-> 
-> diff --git a/block/blk-settings.c b/block/blk-settings.c
-> index 45f2c52..4e4e13e 100644
-> --- a/block/blk-settings.c
-> +++ b/block/blk-settings.c
-> @@ -4,9 +4,11 @@
->    */
->   #include <linux/bio.h>
->   #include <linux/blkdev.h>
-> +#include <linux/device.h>
->   #include <linux/gcd.h>
->   #include <linux/gfp.h>
->   #include <linux/init.h>
-> +#include <linux/iommu.h>
->   #include <linux/jiffies.h>
->   #include <linux/kernel.h>
->   #include <linux/lcm.h>
-> @@ -831,6 +833,32 @@ void blk_queue_write_cache(struct request_queue *q, bool wc, bool fua)
->   }
->   EXPORT_SYMBOL_GPL(blk_queue_write_cache);
->   
-> +/**
-> + * blk_queue_can_use_iommu_merging - configure queue for merging segments.
-> + * @q:		the request queue for the device
-> + * @dev:	the device pointer for dma
-> + *
-> + * Tell the block layer about the iommu merging of @q.
-> + */
-> +bool blk_queue_can_use_iommu_merging(struct request_queue *q,
-> +				     struct device *dev)
-> +{
-> +	struct iommu_domain *domain;
-> +
-> +	/*
-> +	 * If the device DMA is translated by an IOMMU, we can assume
-> +	 * the device can merge the segments.
-> +	 */
-> +	if (!device_iommu_mapped(dev))
+On Thu, Jun 13, 2019 at 10:55:36AM -0400, Josef Bacik wrote:
+> Also I mean that there are a bunch of different nbd servers out there.  We have
+> our own here at Facebook, qemu has one, IIRC there's a ceph one.
 
-Careful here - I think this validates the comment I made when this 
-function was introduced, in that that name doesn't necesarily mean what 
-it sounds like it might mean - "iommu_mapped" was as close as we managed 
-to get to a convenient shorthand for "performs DMA through an 
-IOMMU-API-enabled IOMMU". Specifically, it does not imply that 
-translation is *currently* active; if you boot with "iommu=pt" or 
-equivalent this will still return true even though the device will be 
-using direct/SWIOTLB DMA ops without any IOMMU translation.
+I can't claim to know about the Facebook one of course, but the qemu one
+uses the same handshake protocol as anyone else. The ceph ones that I've
+seen do too (but there are various implementations of that, so...).
 
-Robin.
+> They all have their own connection protocols.  The beauty of NBD is
+> that it doesn't have to know about that part, it just does the block
+> device part, and I'd really rather leave it that way.  Thanks,
 
-> +		return false;
-> +
-> +	domain = iommu_get_domain_for_dev(dev);
-> +	/* No need to update max_segment_size. see blk_queue_virt_boundary() */
-> +	blk_queue_virt_boundary(q, iommu_get_minimum_page_size(domain) - 1);
-> +
-> +	return true;
-> +}
-> +
->   static int __init blk_settings_init(void)
->   {
->   	blk_max_low_pfn = max_low_pfn - 1;
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 592669b..4d1f7dc 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -1091,6 +1091,8 @@ extern void blk_queue_dma_alignment(struct request_queue *, int);
->   extern void blk_queue_update_dma_alignment(struct request_queue *, int);
->   extern void blk_queue_rq_timeout(struct request_queue *, unsigned int);
->   extern void blk_queue_write_cache(struct request_queue *q, bool enabled, bool fua);
-> +extern bool blk_queue_can_use_iommu_merging(struct request_queue *q,
-> +					    struct device *dev);
->   
->   /*
->    * Number of physical segments as sent to the device.
-> 
+Sure.
+
+OTOH, there is definitely also a benefit to using the same handshake
+protocol everywhere, for interoperability reasons.
+
+-- 
+To the thief who stole my anti-depressants: I hope you're happy
+
+  -- seen somewhere on the Internet on a photo of a billboard
