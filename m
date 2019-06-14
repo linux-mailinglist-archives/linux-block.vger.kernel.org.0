@@ -2,105 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64F5C450AB
-	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 02:34:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B3F4511F
+	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 03:20:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfFNAeP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 20:34:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44980 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfFNAeO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:34:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so265030pfe.11;
-        Thu, 13 Jun 2019 17:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/0EbDb07rl0+2nTNpL5MUvCUgcM2dhBTtu5L9LJF/5g=;
-        b=fQzf7NTf2AamLhEOekVA/tGq5CXzVixbTzPlZT30QW79+jP48lozuQt7de3C/lUMk6
-         7p1A90E3IRJOZrR+B2m+ZrxoFfCgONFripL6/Z6mK2eXDG56V6Zi347mNIXBIr+OhFla
-         aAg7SCSH04phUpxuD4oZnN5t/VB1pzQAvjDg+Espr09ucLisQJrJW6+c6rOQiDYNDbH5
-         xhdBaUkdvurnAXEPEiRXw/Kv2kk5D/VZ460Vakf2HZFPW/HJJLZOQ0mIDMFTThsckZhX
-         0mcILt3PpQqiZ21EFLKp0N0jJor1Tpv04ozuYMNx5aMTFznWeMM5D7UzlFmwCxJl01KW
-         1mtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=/0EbDb07rl0+2nTNpL5MUvCUgcM2dhBTtu5L9LJF/5g=;
-        b=uDPLnad4C/EA2D2qXmUkEr+QLoS1ghc1SiYmgM1uXTayEO+a+kZM9oY84WdFD7llAF
-         K5HxRmpuJ92qYgEOv0F0HQl5B563OjnlK8GWJt4kjyPq2vNLyUxaOCxjwDjjLYyNw4HB
-         KKdiCnaRyQByEzCZRT7QrL6xkSahocJ1neWMg6dN72PIyFpX35ocCRQM1GGoYQqO8I1y
-         khx7sccA4gIxk1IvFPxWsrf47uyrXJ6HjOPoFZDZ7rGvnM2ma/QbrywsOt3uLfSKmdsP
-         N7zXWtDJlj7uYbdGpkYsN+I73HV3SxqHbrToHqPDcQ/WB3LqxC6a6g5eOg562xGcRNna
-         QjIw==
-X-Gm-Message-State: APjAAAU4uUcw+6gv1EhpjrFfdgcU18/B2nPotznGLQwWX+mwiUNWUcIH
-        /zNR4U+99+7RmxAt/scZ5R3+jmU1
-X-Google-Smtp-Source: APXvYqybF/2c2vJJoH/ecmJ28qkRmO4fYSx+6HWKnNfzXIXgZ2gGvs6MVXS9F4ZKN7ITIYYq4h+QuQ==
-X-Received: by 2002:a63:e950:: with SMTP id q16mr8093874pgj.270.1560472453741;
-        Thu, 13 Jun 2019 17:34:13 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:9d14])
-        by smtp.gmail.com with ESMTPSA id p3sm898857pgh.90.2019.06.13.17.34.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 17:34:13 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH 8/8] Btrfs: extent_write_locked_range() should attach inode->i_wb
-Date:   Thu, 13 Jun 2019 17:33:50 -0700
-Message-Id: <20190614003350.1178444-9-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614003350.1178444-1-tj@kernel.org>
-References: <20190614003350.1178444-1-tj@kernel.org>
+        id S1726103AbfFNBUB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 21:20:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfFNBUB (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Jun 2019 21:20:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EC8A3082E4D;
+        Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A13A6607B2;
+        Fri, 14 Jun 2019 01:19:51 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 09:19:47 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: alternative take on the same page merging leak fix v2
+Message-ID: <20190614011946.GB14436@ming.t460p>
+References: <20190613095529.25005-1-hch@lst.de>
+ <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Chris Mason <clm@fb.com>
+On Thu, Jun 13, 2019 at 04:04:03AM -0600, Jens Axboe wrote:
+> On 6/13/19 3:55 AM, Christoph Hellwig wrote:
+> > Hi Jens, hi Ming,
+> > 
+> > this is the tested and split version of what I think is the better
+> > fix for the get_user_pages page leak, as it leaves the intelligence
+> > in the callers instead of in bio_try_to_merge_page.
+> > 
+> > Changes since v1:
+> >   - drop patches not required for 5.2
+> >   - added Reviewed-by tags
+> 
+> Applied for 5.2, thanks.
 
-extent_write_locked_range() is used when we're falling back to buffered
-IO from inside of compression.  It allocates its own wbc and should
-associate it with the inode's i_wb to make sure the IO goes down from
-the correct cgroup.
+Hi Jens & Christoph,
 
-Signed-off-by: Chris Mason <clm@fb.com>
----
- fs/btrfs/extent_io.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Looks the following change is missed in patch 1, otherwise kernel oops
+is triggered during kernel booting:
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index d7b57341ff1a..afb916a69c30 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4180,6 +4180,7 @@ int extent_write_locked_range(struct inode *inode, u64 start, u64 end,
- 		.no_wbc_acct	= 1,
- 	};
+diff --git a/block/bio.c b/block/bio.c
+index 35b3c568a48f..9ccf07c666f7 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -706,6 +706,8 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		return 0;
  
-+	wbc_attach_fdatawrite_inode(&wbc_writepages, inode);
- 	while (start <= end) {
- 		page = find_get_page(mapping, start >> PAGE_SHIFT);
- 		if (clear_page_dirty_for_io(page))
-@@ -4194,11 +4195,12 @@ int extent_write_locked_range(struct inode *inode, u64 start, u64 end,
- 	}
- 
- 	ASSERT(ret <= 0);
--	if (ret < 0) {
-+	if (ret == 0)
-+		ret = flush_write_bio(&epd);
-+	else
- 		end_write_bio(&epd, ret);
--		return ret;
--	}
--	ret = flush_write_bio(&epd);
+ 	if (bio->bi_vcnt > 0) {
++		bool same_page;
 +
-+	wbc_detach_inode(&wbc_writepages);
- 	return ret;
- }
+ 		bvec = &bio->bi_io_vec[bio->bi_vcnt - 1];
  
--- 
-2.17.1
+ 		if (page == bvec->bv_page &&
+@@ -723,7 +725,7 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		if (bvec_gap_to_prev(q, bvec, offset))
+ 			return 0;
+ 
+-		if (page_is_mergeable(bvec, page, len, offset, false) &&
++		if (page_is_mergeable(bvec, page, len, offset, &same_page) &&
+ 		    can_add_page_to_seg(q, bvec, page, len, offset)) {
+ 			bvec->bv_len += len;
+ 			goto done;
 
+Thanks,
+Ming
