@@ -2,105 +2,133 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F40245010
-	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 01:33:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBA7450BA
+	for <lists+linux-block@lfdr.de>; Fri, 14 Jun 2019 02:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfFMXc2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jun 2019 19:32:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726265AbfFMXc1 (ORCPT
+        id S1725819AbfFNAdz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jun 2019 20:33:55 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:36932 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfFNAdy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:32:27 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DNDevW031221
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 19:32:26 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3x36v96r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 13 Jun 2019 19:32:26 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-block@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Fri, 14 Jun 2019 00:32:25 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 00:32:23 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DNWMKT35389762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 23:32:22 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A8CFBE04F;
-        Thu, 13 Jun 2019 23:32:22 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F4D9BE051;
-        Thu, 13 Jun 2019 23:32:21 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.170])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Jun 2019 23:32:20 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linux-block@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/1] block/cfq : Include check to avoid NULL Pointer Dereferencing
-Date:   Thu, 13 Jun 2019 20:31:59 -0300
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613233159.26687-1-leonardo@linux.ibm.com>
-References: <20190613233159.26687-1-leonardo@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061323-0004-0000-0000-0000151BFBD0
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011257; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01217587; UDB=6.00640288; IPR=6.00998699;
- MB=3.00027300; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 23:32:24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061323-0005-0000-0000-00008C143C90
-Message-Id: <20190613233159.26687-2-leonardo@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906130176
+        Thu, 13 Jun 2019 20:33:54 -0400
+Received: by mail-pg1-f182.google.com with SMTP id 20so465869pgr.4;
+        Thu, 13 Jun 2019 17:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=oTlzP5u+wueqk5xdHgpRxhOd00u8gJeBwCjbnHotl3k=;
+        b=BzGNcoFmYi8gLKxOomEtTfMFNIXrqiP0F3yWFy2pIZq6bQXNBZWRXp+YK4O+W6BCr2
+         03Dyfn+G4eBB3Qoewqaj5dXNOGEhd5+/AUaHayk9hntIRt+00rCIjkrtozgqiu4dUT67
+         NXksTOoEBg/0aXehmbLZAvEY8gPuTmfpYZOeXwdZ+W6/stWG/qeXrkP4bwKa17v/HPEE
+         9V8TlTDTfG5rKd2Vn0dcSpmSzCnPNzfTNv9ZSXQFSxQqYOM+tQkOTpS5CANKmgM1daZg
+         LNz0VFzp3brsf7zVNzjCvQulg96AMDLT7OhuNOeL/OvusgvhPe3SUuC3odLuGzHJ91OK
+         HOZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=oTlzP5u+wueqk5xdHgpRxhOd00u8gJeBwCjbnHotl3k=;
+        b=sWaeljdmZ/wx+PkuXrZ845qNKZwXUOs+PtyNPf2GXKVPIdpeu33Y4qee8WRMGXVAEw
+         tWLdLMtytZcSvSwglMvAROF8CA5rCV89wUq4IhGkJ8QlHRpvRpemb68YB2e1+Z4CbYzi
+         N6aqWul8Vgb6XLkR00btt4WLnrw7JK9JqZ/ZqyPtA8/EzcEWh2dBPkrh+/+BPxkQxe5q
+         4Iaz/p9nRjEtlJQVMi50UkjmDzCIdhEed6ECH7l1EW39buBWwQn/iDdi7cyXaT/oowLX
+         nldCy1YA57RXmwwQaOHZ/Mv8hZbc0McdfETvCgDdgQKBxyb67e35X3E3t82tyelVbvmB
+         sDUg==
+X-Gm-Message-State: APjAAAVQ+NBii9uloUaWJUaATdqgcZz0g6qb/no5fYJ6/mPDBm3QRgMO
+        UG/FbEufC3TdRgCvmxyxHRg5xgkw
+X-Google-Smtp-Source: APXvYqwdEJlBHl1J6iniMl+4x+IcJZNUmIQ5tWeT365a3MEshvfmKjso/WA0P3Jq5VOzRc4hZcCN1g==
+X-Received: by 2002:a62:750c:: with SMTP id q12mr75920731pfc.59.1560472433969;
+        Thu, 13 Jun 2019 17:33:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:9d14])
+        by smtp.gmail.com with ESMTPSA id l1sm894960pgj.67.2019.06.13.17.33.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 17:33:53 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCHSET btrfs/for-next] btrfs: fix cgroup writeback support
+Date:   Thu, 13 Jun 2019 17:33:42 -0700
+Message-Id: <20190614003350.1178444-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Checks if cfqg is a valid pointer before dereferencing.
+Hello,
 
-There is a explicit chance for cfqg = cfq_get_next_cfqg() to return NULL,
-so 'cfqg->saved_wl_slice' would be a Null dereferencing.
+When writeback is executed asynchronously (e.g. for compression), bios
+are bounced to and issued by worker pool shared by all cgroups.  This
+leads to significant priority inversions when cgroup IO control is in
+use - IOs for a low priority cgroup can tie down the workers forcing
+higher priority IOs to wait behind them.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- block/cfq-iosched.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+This patchset adds an bio punt mechanism to blkcg.  A bio tagged with
+REQ_CGROUP_PUNT flag is bounced to the asynchronous issue context of
+the associated blkcg on bio_submit().  As the bios are issued from
+per-blkcg work items, there's no concern for priority inversions and
+it doesn't require invasive changes to the filesystems.  The mechanism
+should be generally useful for IO control support across different
+filesystems.
 
-diff --git a/block/cfq-iosched.c b/block/cfq-iosched.c
-index 2eb87444b157..2c5dd5a295ee 100644
---- a/block/cfq-iosched.c
-+++ b/block/cfq-iosched.c
-@@ -3210,9 +3210,13 @@ static struct cfq_group *cfq_get_next_cfqg(struct cfq_data *cfqd)
- 
- static void cfq_choose_cfqg(struct cfq_data *cfqd)
- {
--	struct cfq_group *cfqg = cfq_get_next_cfqg(cfqd);
-+	struct cfq_group *cfqg;
- 	u64 now = ktime_get_ns();
- 
-+	cfqg = cfq_get_next_cfqg(cfqd);
-+	if (unlikely(!cfqg))
-+		return;
-+
- 	cfqd->serving_group = cfqg;
- 
- 	/* Restore the workload type data */
--- 
-2.20.1
+btrfs async path is simplified and is updated to use REQ_CGROUP_PUNT
+for submitting asynchronous bios.  It's also updated to always and
+only account the original writeback bios against wbc so that cgroup
+inode writeback ownership arbitration isn't confused by downstream
+bios.
+
+This patchset contains the following 8 patches.  The first three are
+my blkcg patches to implement the needed mechanisms.  The latter five
+are Chris Mason's btrfs cleanup and update patches.  Please let me
+know how the patches should be routed.  Given that there currently
+aren't other users, it's likely the easiest to route all through btrfs
+tree.
+
+ 0001-blkcg-writeback-Add-wbc-no_wbc_acct.patch
+ 0002-blkcg-writeback-Implement-wbc_blkcg_css.patch
+ 0003-blkcg-implement-REQ_CGROUP_PUNT.patch
+ 0004-Btrfs-stop-using-btrfs_schedule_bio.patch
+ 0005-Btrfs-delete-the-entire-async-bio-submission-framewo.patch
+ 0006-Btrfs-only-associate-the-locked-page-with-one-async_.patch
+ 0007-Btrfs-use-REQ_CGROUP_PUNT-for-worker-thread-submitte.patch
+ 0008-Btrfs-extent_write_locked_range-should-attach-inode-.patch
+
+0001-0003 implement wbc->no_wbc_acct, wbc_blkcg_css() and
+REQ_CGROUP_PUNT.
+
+0004-0006 are prep patches to simplify / improve async bio submission.
+
+0007 makes btrfs use REQ_CGROUP_PUNT for async bios.
+
+0008 fixes wbc writeback accounting for IOs issued through
+extent_write_locked_range().
+
+This patchset is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-btrfs-cgroup-updates
+
+Thanks, diffstat follows.
+
+ block/blk-cgroup.c          |   54 +++++++++
+ block/blk-core.c            |    3 
+ fs/btrfs/compression.c      |   16 +-
+ fs/btrfs/compression.h      |    3 
+ fs/btrfs/ctree.h            |    1 
+ fs/btrfs/disk-io.c          |   25 +---
+ fs/btrfs/extent_io.c        |   15 +-
+ fs/btrfs/inode.c            |   61 ++++++++--
+ fs/btrfs/super.c            |    1 
+ fs/btrfs/volumes.c          |  264 --------------------------------------------
+ fs/btrfs/volumes.h          |   10 -
+ fs/fs-writeback.c           |    2 
+ include/linux/backing-dev.h |    1 
+ include/linux/blk-cgroup.h  |   16 ++
+ include/linux/blk_types.h   |   10 +
+ include/linux/writeback.h   |   24 +++-
+ 16 files changed, 194 insertions(+), 312 deletions(-)
+
+--
+tejun
 
