@@ -2,91 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8ED0471AF
-	for <lists+linux-block@lfdr.de>; Sat, 15 Jun 2019 20:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23BF14741F
+	for <lists+linux-block@lfdr.de>; Sun, 16 Jun 2019 12:14:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfFOS3h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Jun 2019 14:29:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45666 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfFOS3h (ORCPT
+        id S1726883AbfFPKOo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 16 Jun 2019 06:14:44 -0400
+Received: from 22.17.110.36.static.bjtelecom.net ([36.110.17.22]:21486 "HELO
+        bsf02.didichuxing.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with SMTP id S1726663AbfFPKOn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Jun 2019 14:29:37 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s22so3795741qkj.12;
-        Sat, 15 Jun 2019 11:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lZWCDkdCZYN5S0+Ul2IxfiRO29wLQTcP6wWsFwWlu8s=;
-        b=PphbEiU9i51xnvtm9V73bQYuo5cIfkeTXUcMOZ155zwXkW9k1v0AszL3HGTB5AYeTT
-         fMmrhBXuFr0sPCV8eoVVlAksctrq0Tp9EfiShBGan9umj+gy1onSVWWyp/YbfNQ8hPO0
-         /YFxWG/bnNyKmMK9S+h8oW63Tm9QU2mlTRob+1FyRqmyB1V5pEABc7CIakDbt8CPe9zk
-         5OthH7bBlGrWW0NoCY261eL7JxLB03tRJCoGI4wGle7j93IpmuJsT+faKyIQzcXuW9CI
-         btceBey/cK2gygHTP53JgjcqvJ2KM9kFr8n+9XEQeuWH9QBQVX9jjMSGKTp/Ed+ovdcz
-         DqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lZWCDkdCZYN5S0+Ul2IxfiRO29wLQTcP6wWsFwWlu8s=;
-        b=YrJsVPB46VnybZ6pvHnHjY6HMrSeX/gus1txUHXOwRyDr2FIamXMCsiuWRn3tu9mOV
-         hbYjika5yo1yBq4+4L53t5P7VlXGjBxdsHn/G3lAxaVpjcGswnWAvN9Ms5M9Kj+H1wSB
-         Z12X0UlNsBt/TCmmm54ish8unSVy7rHsUpv6DKos26iU+jBN+Av82FcyADN5Zu8QvGR9
-         3maBS/rENyGssPvbRg8GnQqz1+rwQAluN/V5baMxClAjeJts37hsxNl7r3oTH6iRpg/p
-         iYm0Qx342UpkqUgJw+fUPoKP3tgdhDQ2jb4dg9zf6eLXtZLpOnb+UBg8R9EwlqUVObHx
-         k+8A==
-X-Gm-Message-State: APjAAAXW54WSp2Z5E1QfMNc3UuA3Y2N29aPwwXYL8WbTvzGuA8C5ub8L
-        eCo6VsjWRJZwHl1zKCXqYyE=
-X-Google-Smtp-Source: APXvYqx5M5Vccns8o0Sb2Ujl3A2MXEaAf0YNJo2yyhXxfxv1/7ALY9MC70OvLseEU3n6ihO/8XZSew==
-X-Received: by 2002:a05:620a:124c:: with SMTP id a12mr82297214qkl.336.1560623376408;
-        Sat, 15 Jun 2019 11:29:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::4883])
-        by smtp.gmail.com with ESMTPSA id c5sm4004284qkb.41.2019.06.15.11.29.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 11:29:35 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 11:29:33 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
-Message-ID: <20190615182933.GH657710@devbig004.ftw2.facebook.com>
-References: <20190615182453.843275-1-tj@kernel.org>
- <20190615182453.843275-5-tj@kernel.org>
+        Sun, 16 Jun 2019 06:14:43 -0400
+X-ASG-Debug-ID: 1560680077-0e41085062309420001-Cu09wu
+Received: from BJEXCAS007.didichuxing.com (bjexcas007.didichuxing.com [172.20.2.248]) by bsf02.didichuxing.com with ESMTP id lobWH3wB56afDEbI; Sun, 16 Jun 2019 18:14:37 +0800 (CST)
+X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
+Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
+ (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 16 Jun
+ 2019 18:14:37 +0800
+Date:   Sun, 16 Jun 2019 18:14:31 +0800
+From:   Weiping Zhang <zhangweiping@didiglobal.com>
+To:     <axboe@kernel.dk>, <tj@kernel.org>, <hch@lst.de>,
+        <bvanassche@acm.org>
+CC:     <linux-block@vger.kernel.org>, <cgroups@vger.kernel.org>
+Subject: [RFC PATCH v2 0/4] blkcg: add support weighted round robin tagset map
+Message-ID: <cover.1560679439.git.zhangweiping@didiglobal.com>
+X-ASG-Orig-Subj: [RFC PATCH v2 0/4] blkcg: add support weighted round robin tagset map
+Mail-Followup-To: axboe@kernel.dk, tj@kernel.org, hch@lst.de,
+        bvanassche@acm.org, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190615182453.843275-5-tj@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [172.22.50.20]
+X-ClientProxiedBy: BJEXCAS03.didichuxing.com (172.20.36.245) To
+ BJSGEXMBX03.didichuxing.com (172.20.15.133)
+X-Barracuda-Connect: bjexcas007.didichuxing.com[172.20.2.248]
+X-Barracuda-Start-Time: 1560680077
+X-Barracuda-URL: https://bsf02.didichuxing.com:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at didichuxing.com
+X-Barracuda-Scan-Msg-Size: 1731
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0113 1.0000 -1.9475
+X-Barracuda-Spam-Score: -1.95
+X-Barracuda-Spam-Status: No, SCORE=-1.95 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.72767
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+This series try to add support Weighted Round Robin for blkcg, and
+add some module parameters to enable nvme driver WRR.
 
-On Sat, Jun 15, 2019 at 11:24:48AM -0700, Tejun Heo wrote:
-> When a shared kthread needs to issue a bio for a cgroup, doing so
-> synchronously can lead to priority inversions as the kthread can be
-> trapped waiting for that cgroup.  This patch implements
-> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
-> to a dedicated per-blkcg work item to avoid such priority inversions.
-> 
-> This will be used to fix priority inversions in btrfs compression and
-> should be generally useful as we grow filesystem support for
-> comprehensive IO control.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-> Cc: Chris Mason <clm@fb.com>
+The first patch add an WRR infrastucture for block cgroup.
+The second patch add demon WRR for null_blk to similate nvme spec.
+The last two patched try to enable WRR for nvme driver.
 
-The blkcg patches, especially this one, need Jens's review.  Jens, if
-you're okay with the changes, please let me know how you want them to
-be routed.
+For nvme part, rename write_queues to read_queues that we can add the
+wrr_low/medium/high_queues easily to support WRR. To compatible with
+READ and POLL, DEFAULT, tagset mapping, this patch set these three
+types hardware submition queue's priority to medium.
 
-Thanks.
+Changes since V1:
+ * reorder HCTX_TYPE_POLL to the last one to adopt nvme driver easily.
+ * add support WRR(Weighted Round Robin) for nvme driver
+
+Weiping Zhang (4):
+  block: add weighted round robin for blkcgroup
+  null_blk: add support weighted round robin submition queue
+  genirq/affinity: allow driver's discontigous affinity set
+  nvme: add support weighted round robin queue
+
+ block/blk-cgroup.c            |  88 +++++++++++++
+ block/blk-mq-debugfs.c        |   3 +
+ block/blk-mq-sched.c          |   6 +-
+ block/blk-mq-tag.c            |   4 +-
+ block/blk-mq-tag.h            |   2 +-
+ block/blk-mq.c                |  12 +-
+ block/blk-mq.h                |  17 ++-
+ block/blk.h                   |   2 +-
+ drivers/block/null_blk.h      |   7 +
+ drivers/block/null_blk_main.c | 294 ++++++++++++++++++++++++++++++++++++++++--
+ drivers/nvme/host/pci.c       | 195 ++++++++++++++++++++--------
+ include/linux/blk-cgroup.h    |   2 +
+ include/linux/blk-mq.h        |  12 ++
+ include/linux/interrupt.h     |   2 +-
+ kernel/irq/affinity.c         |   4 +
+ 15 files changed, 574 insertions(+), 76 deletions(-)
 
 -- 
-tejun
+2.14.1
+
