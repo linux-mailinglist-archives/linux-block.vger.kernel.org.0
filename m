@@ -2,14 +2,14 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02323499CE
+	by mail.lfdr.de (Postfix) with ESMTP id 6D140499CF
 	for <lists+linux-block@lfdr.de>; Tue, 18 Jun 2019 09:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfFRHEM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1725829AbfFRHEM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 18 Jun 2019 03:04:12 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:7915 "EHLO
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:7917 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRHEL (ORCPT
+        with ESMTP id S1727097AbfFRHEL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 18 Jun 2019 03:04:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
@@ -17,39 +17,39 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1560841452; x=1592377452;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jcHDm4jZNbyc5j1/ToWU/7RDcyYbgsu6A2aVzgajouY=;
-  b=nE5mMTn6N2Xvc22xTizgoe2ml7qGQSvurrOvZn0vg+bpwL5UtTCBm9Qg
-   vW8fxG5DgY/0NgDk1dhdmjUjP+C3sdIiq6A4CKKYHB6+F/LxKSkWj0m0P
-   adGpOyylTwp/ATyXnD7634knUqMDokQGMnerqjaHxTWvTLCpDkeN6yWG7
-   9ftgDdvtPUQo1YdGTnuv0nRrjEx/jcsZeLwjugr040ZZaoy+L11cnIWvK
-   ZsWfnbW4dbWAS3PGn0y57faQ0T+S3b49Qyu6e1ETBnGNoiniam/RZ3QQ/
-   KYzPnRBqUp/IC79q5Ujh4tod/KDDX5ebkpN+FnZOAgKlzBvX05rU1CH81
-   A==;
+  bh=Bgxxsw+aFjGTScDcN8vsmnNC5VW5TuLIHgjRPRtB3ws=;
+  b=UALdGP9uHepDtMzCR9zLETNWBl+A0nWLf/NImbDtkEV8oR+FlERQibno
+   R47DWRhlBgt/2paJMz03bnB4L9/5FJy6fdRJW6vNo22fCEQlvnmT8Q1cG
+   xPIYBg4ifQ2AZ/pouVU7+F9UY7CuR2I5H+ZHjXiwfFiKFQdK4QBUr5lDz
+   f2UMv0dQI2zO4IJlv4FfUO7Fo74gRsTyhUmZyAp6x+kF2pUyjj9KjEESl
+   zOB9F2KDtgqTIhRU8I+h4Q7YFudobVBlQdMSwQWyS5JOA/JKi6DiBbJBd
+   HluWt8ZKvL4OmRDD2mUuUBD60uCUTmH8SNs4Af09oHUr5VUypcJQ2qhK9
+   g==;
 X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
-   d="scan'208";a="115733432"
+   d="scan'208";a="115733434"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 13:42:39 +0800
-IronPort-SDR: G2N1gh+s2t89ytQ6WLnNOV+5YUzMskKQUFuGc8tXDelepIIiwXE2mJ/vZRjDUO1nqIjePcZ/LX
- n8SvVyzvY+ddNYHB9O/n2+/iFxjoBAKBRWCol+xKv695qm3OObGLMa9vBTq64DiwTt1lO/Bo0g
- 6d2+gV/qBUK3XQvJRzyaWPV6J9QKWcKof4kp2jY8SBnPzfZLKM1h7ZW/7fpE4S0A/rTzleOxKL
- doyPJ5W8jY/1UopyDwDu0XUqSDLefTtxaBLgk5C0EmjHtYRKHm84J8ehXJACoWdA7A/zerxC9f
- nYia3UoZqCZTq5D09rU0j+aa
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 13:42:44 +0800
+IronPort-SDR: VJ4Y0mXP9GmuQ05NgiZgQoUdDgfw4OG29oWVhEPKEpOCEvxgsCSyT5qO/Sv1q3wpz0tsZOqW7F
+ 1wOQ/4rnVoAgX79TvN9r6W6wazsGSM9wGztJjShloqa5o+hpFUSUINLjRzRUDBs4qnX3JrZ3w2
+ v0Tw/stEvq7lEoQVFzHyPlZwrx6WEYbHuB3RTEiC2OsriOKzVD65zLnXDUX/deVF2fwFSTumAa
+ 3f7pkWcA1tRRD482/w0dn57XzIri/Pid62xpWgO/COdRdu5C3y7R3jBKU7BxrORuA0weIjSjko
+ N1htzbTxXwT6d9NQ/WgTsqPF
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 17 Jun 2019 22:42:08 -0700
-IronPort-SDR: pHJ5L3YcV0wtQkeSwUTxqGdw7Jj/otOGXWJwv4RKBt0ApOpkUMVHSB7xwb1A/X9PWVw+Xu9z+X
- d/Hk7Beqtyr3yT8gsK7RzxZpTDSCBV+eeumjQikJwkwlK4Rgh8hIrSpIE4h6OBeLyEXCT2OimY
- J8RCDF8nlu0fZOnoZEWASuCuC4QSqA4PXV7pWA1hgupzfr6qupv3khtfLpInJ89/5QCM9D74TI
- SeJE7RKPA7xbnVI5gooIj76MX9ZpyHRU2MAbM41lruRGJsS56qzye+MmjXNzY8OU+v02qCbf/m
- vyw=
+  by uls-op-cesaep02.wdc.com with ESMTP; 17 Jun 2019 22:42:13 -0700
+IronPort-SDR: bxbWO8GnNFEEE6QeHVKkvsy0/Op5viMOXOCZEaMXB9kCzI4FGkvFg30WVH0318T3iBTsqxf+WX
+ zND16Ao+JX7XhwoCpRBh9tz8kwIk87PGub6Ypt/kBTUy4UTaDKd1aLRR3VB71gjVP0CHMrMT2G
+ ZZBCPAnEw9LsDyKbn3IP6x/5UQ2XcbvCpAnF9qaNggbnus1Egj+zfwzkSSUQe3L1W48J6W9wlN
+ WtRLLcjcUhxSgIJ+ekPd2a0Ohcu7ykK7rmLvcMkkN1FyyKTqZa7fAd4GuTKnsCRcNHTRenLDeI
+ +Qo=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip02.wdc.com with ESMTP; 17 Jun 2019 22:42:38 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 17 Jun 2019 22:42:43 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     jaegeuk@kernel.org, yuchao0@huawei.com, bvanassche@acm.org,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V3 3/6] block: use blk_op_str() in blk-mq-debugfs.c
-Date:   Mon, 17 Jun 2019 22:42:21 -0700
-Message-Id: <20190618054224.25985-4-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V3 4/6] block: update print_req_error()
+Date:   Mon, 17 Jun 2019 22:42:22 -0700
+Message-Id: <20190618054224.25985-5-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190618054224.25985-1-chaitanya.kulkarni@wdc.com>
 References: <20190618054224.25985-1-chaitanya.kulkarni@wdc.com>
@@ -60,62 +60,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that we've a helper function blk_op_str() to convert the
-REQ_OP_XXX to string XXX, adjust the code to use that. Get rid of
-the duplicate array op_name which is now present in the blk-core.c
-which we renamed it to "blk_op_name" and open coding in the
-blk-mq-debugfs.c.
+Improve the print_req_error with additional request fields which are
+helpful for debugging. Use newly introduced blk_op_str() to print the
+REQ_OP_XXX in the string format.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- block/blk-mq-debugfs.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+ block/blk-core.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index f0550be60824..68b602d4d1b8 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -261,23 +261,6 @@ static int hctx_flags_show(void *data, struct seq_file *m)
- 	return 0;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index c92b5a16a27a..88a716c3dc56 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -212,11 +212,14 @@ static void print_req_error(struct request *req, blk_status_t status,
+ 		return;
+ 
+ 	printk_ratelimited(KERN_ERR
+-		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
++		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
++		"phys_seg %u prio class %u\n",
+ 		caller, blk_errors[idx].name,
+-		req->rq_disk ?  req->rq_disk->disk_name : "?",
+-		blk_rq_pos(req), req_op(req),
+-		req->cmd_flags & ~REQ_OP_MASK);
++		req->rq_disk ? req->rq_disk->disk_name : "?",
++		blk_rq_pos(req), req_op(req), blk_op_str(req_op(req)),
++		req->cmd_flags & ~REQ_OP_MASK,
++		req->nr_phys_segments,
++		IOPRIO_PRIO_CLASS(req->ioprio));
  }
  
--#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
--static const char *const op_name[] = {
--	REQ_OP_NAME(READ),
--	REQ_OP_NAME(WRITE),
--	REQ_OP_NAME(FLUSH),
--	REQ_OP_NAME(DISCARD),
--	REQ_OP_NAME(SECURE_ERASE),
--	REQ_OP_NAME(ZONE_RESET),
--	REQ_OP_NAME(WRITE_SAME),
--	REQ_OP_NAME(WRITE_ZEROES),
--	REQ_OP_NAME(SCSI_IN),
--	REQ_OP_NAME(SCSI_OUT),
--	REQ_OP_NAME(DRV_IN),
--	REQ_OP_NAME(DRV_OUT),
--};
--#undef REQ_OP_NAME
--
- #define CMD_FLAG_NAME(name) [__REQ_##name] = #name
- static const char *const cmd_flag_name[] = {
- 	CMD_FLAG_NAME(FAILFAST_DEV),
-@@ -342,12 +325,13 @@ int __blk_mq_debugfs_rq_show(struct seq_file *m, struct request *rq)
- {
- 	const struct blk_mq_ops *const mq_ops = rq->q->mq_ops;
- 	const unsigned int op = rq->cmd_flags & REQ_OP_MASK;
-+	const char *op_str = blk_op_str(op);
- 
- 	seq_printf(m, "%p {.op=", rq);
--	if (op < ARRAY_SIZE(op_name) && op_name[op])
--		seq_printf(m, "%s", op_name[op]);
--	else
-+	if (strcmp(op_str, "UNKNOWN") == 0)
- 		seq_printf(m, "%d", op);
-+	else
-+		seq_printf(m, "%s", op_str);
- 	seq_puts(m, ", .cmd_flags=");
- 	blk_flags_show(m, rq->cmd_flags & ~REQ_OP_MASK, cmd_flag_name,
- 		       ARRAY_SIZE(cmd_flag_name));
+ static void req_bio_endio(struct request *rq, struct bio *bio,
 -- 
 2.19.1
 
