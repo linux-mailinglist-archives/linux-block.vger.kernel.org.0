@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 851F34D91E
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:32:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 820DC4D5AA
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:00:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfFTSbY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Jun 2019 14:31:24 -0400
+        id S1726027AbfFTR7x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Jun 2019 13:59:53 -0400
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:35454 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfFTR7s (ORCPT
+        with ESMTP id S1726729AbfFTR7w (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:48 -0400
+        Thu, 20 Jun 2019 13:59:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561053587; x=1592589587;
+  t=1561053592; x=1592589592;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UIxmCrioBaC0pFlPN4Qnln/402T9GIjVBNu2yOteD8U=;
-  b=T6qqjBc2vM6tfJlve9XT74CeG/j/9pY6dQEGMOPvA4TQ8aOk4e1Ul/3t
-   NBNZnC83ywsBy8si+fYJwQB2iYezN5122w8R7AWzL7cuPYpdKSOxki66s
-   hh3U1wZAO3Ak6vD07smM4q5vHZfU/ScrpwLHgcFtLtXzMxbkYq7WQxDp1
-   JKTae0Z3o4LUq8LVYXiuMKOR6IFl/WTgZXAsKnRtMGNFMfI/zhDxP8/hq
-   uuxlnNp1F0EcndR50oeLUJALSxVZNiId0HbGroAmYV7fPtAcRETQlH770
-   CcVP9oCooq64w2JvFf0/u0F5TSPfVimsUs4ssxXMJANgTXRKTnrYjfM6Y
-   A==;
+  bh=LzGOF2hHrmdE4Fm9O/m8R9d5DTCybctfUkNgYUB0sz0=;
+  b=h1YzAmyWVlsMcrfYGysBMfyiXR2CWCHu6jYhjqSt3WWlbpzJ9gWgVjCc
+   N6V3kWYnoLI//ph1Tl2fGPtpPO8nrYdBn4iW2BAlpxi7VWVpUpg68m1vn
+   jmGG1bccaVAyvlFHz03L1eHIZ43wwqMahGMfajz9Nu6uw5XIPQx82ezg/
+   /CtENVFZNewax5+QUzB53w14ZuYvD2rXojVnEMIHyVa2qJq2dh+ltitIE
+   QuUf1OZLGEv6TVaW0pOMW5OZ4dOAKpBg1n9i6qmQwTQv6/mLB7ILdydpI
+   luUzVDWvf1O69k/hVH3q7yYYK1zi0xNzFKLUkkbTP5DoD4HLpuMuMMaOu
+   w==;
 X-IronPort-AV: E=Sophos;i="5.63,397,1557158400"; 
-   d="scan'208";a="217443489"
+   d="scan'208";a="217443494"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:47 +0800
-IronPort-SDR: nSPF8C5eUWn4pXk3tCcmwGgh08LactMcH0T0rE5SgBF/E7m2auJkz/iWq0g1OAZjtzUGoWIibo
- V3p8oOd1WkqMI7tKz/21nPeNW4CKRpeidsDmjwyvBQyhi8MJ5pHomzPcGr7N/78nhcqAp6B6sH
- EaZ2xUI5ZnvA7P1V2ZFcAs5WwUq+8Bf17N/n/KwoT0dZomCTFme19iTyk1puC9jGBxxfbPq3VA
- IdQkRV6Q8wBexNlbpRr0El10q5W3IDWlTzmdrOQg03U9O54IUKNnvCU9V3yuVMunFAa4aahFZS
- LBE+cSLlL2LxXU3U0b1yDBUd
+  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:51 +0800
+IronPort-SDR: vTV0pjortiEvxihMM/f8VsNMFk+ssFBx9xxEAaCinD8CnSXG9jCkpFP02G5al2J9jqU+b0wL9n
+ Fybqba2BcvNiBVgDKUawtxYDgzBq7gU0YbP2b+vaPDQY0Qu8nTcYJxol5esWjbmljInRWEz5QO
+ /G+Ljty10hm8T/VEeSacyxbt/h7QcQ2k+rMyGTRvagj4eMt0NNZsuR/j/q4xxNVYdBwavJ5cDU
+ /rn5Ka5Cms/h/znxJ+PJHgIti/iO3SYawTXqkrcAQ/05Q/2zQcHpnZ68W7QFiH/Zd45YtMAC3z
+ 2DXmAircUfnISc7EJ16lRMYy
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:59:06 -0700
-IronPort-SDR: x0m3rKhsDcOTIcfjBX2a/YGS6Hpmirl8MY5ikoMbHaJA27SSfyyj1+CR6kxIWfQl5EKKdQWJJ2
- GdIl+duoKwXIijzVZq0qrYvPZK2lxKL2Y++DF3o5URmJFL43uTUXGPD5a2UQq81cq8Z4PZpj6q
- zQfHvZFbtHlflh0WVOPFXKDz17f4r5BZE1SDM55U/A7j0TriwBrzWp39kuVfUo8DNpBE8rEzZZ
- gvV0g3cWBA/OWsUU+Dhz3XUE67rdtljbfTlKxxn4eHH5QTUmE7mnXUPTDK1y5YhAXu1agLwWoD
- Qcg=
+  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:59:11 -0700
+IronPort-SDR: JPZCdUNbL6QrcMTJAfhtMrR5zBamamicgH4WSqgED3jPiAd2PKt7bMr642hnz4zQ0LPmIx01qg
+ uJoUrXVkMeYntFMKT0AJSupg7M/VUaWQ7EKp3THXfJNkMSki6ZzsXITTrLMeltOR2W3wKF1zEj
+ w1JQ4bAzolKBYl8QNCxA/vlviHnAGKq+IN7t5X6Bmj3g6yB1WoMlihXldMIcfYwVLgBYts75rM
+ /QVHpZRFBAAhD8L21pF2jYeez6VX19K86baB5xRO55mYzeylSH8FYv2JtozQ619RUWHZ6G8G7X
+ 5s4=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:47 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:51 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V5 3/5] block: use blk_op_str() in blk-mq-debugfs.c
-Date:   Thu, 20 Jun 2019 10:59:17 -0700
-Message-Id: <20190620175919.3273-4-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V5 4/5] block: update print_req_error()
+Date:   Thu, 20 Jun 2019 10:59:18 -0700
+Message-Id: <20190620175919.3273-5-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
 References: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
@@ -59,63 +59,39 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that we've a helper function blk_op_str() to convert the
-REQ_OP_XXX to string XXX, adjust the code to use that. Get rid of
-the duplicate array op_name which is now present in the blk-core.c
-which we renamed it to "blk_op_name" and open coding in the
-blk-mq-debugfs.c.
+Improve the print_req_error with additional request fields which are
+helpful for debugging. Use newly introduced blk_op_str() to print the
+REQ_OP_XXX in the string format.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- block/blk-mq-debugfs.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+ block/blk-core.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index a8376cc06a39..748164f4e8b1 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -261,23 +261,6 @@ static int hctx_flags_show(void *data, struct seq_file *m)
- 	return 0;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 190aba04da3e..9ec86c111920 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -212,11 +212,14 @@ static void print_req_error(struct request *req, blk_status_t status,
+ 		return;
+ 
+ 	printk_ratelimited(KERN_ERR
+-		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
++		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
++		"phys_seg %u prio class %u\n",
+ 		caller, blk_errors[idx].name,
+-		req->rq_disk ?  req->rq_disk->disk_name : "?",
+-		blk_rq_pos(req), req_op(req),
+-		req->cmd_flags & ~REQ_OP_MASK);
++		req->rq_disk ? req->rq_disk->disk_name : "?",
++		blk_rq_pos(req), req_op(req), blk_op_str(req_op(req)),
++		req->cmd_flags & ~REQ_OP_MASK,
++		req->nr_phys_segments,
++		IOPRIO_PRIO_CLASS(req->ioprio));
  }
  
--#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
--static const char *const op_name[] = {
--	REQ_OP_NAME(READ),
--	REQ_OP_NAME(WRITE),
--	REQ_OP_NAME(FLUSH),
--	REQ_OP_NAME(DISCARD),
--	REQ_OP_NAME(SECURE_ERASE),
--	REQ_OP_NAME(ZONE_RESET),
--	REQ_OP_NAME(WRITE_SAME),
--	REQ_OP_NAME(WRITE_ZEROES),
--	REQ_OP_NAME(SCSI_IN),
--	REQ_OP_NAME(SCSI_OUT),
--	REQ_OP_NAME(DRV_IN),
--	REQ_OP_NAME(DRV_OUT),
--};
--#undef REQ_OP_NAME
--
- #define CMD_FLAG_NAME(name) [__REQ_##name] = #name
- static const char *const cmd_flag_name[] = {
- 	CMD_FLAG_NAME(FAILFAST_DEV),
-@@ -342,12 +325,13 @@ int __blk_mq_debugfs_rq_show(struct seq_file *m, struct request *rq)
- {
- 	const struct blk_mq_ops *const mq_ops = rq->q->mq_ops;
- 	const unsigned int op = req_op(rq);
-+	const char *op_str = blk_op_str(op);
- 
- 	seq_printf(m, "%p {.op=", rq);
--	if (op < ARRAY_SIZE(op_name) && op_name[op])
--		seq_printf(m, "%s", op_name[op]);
--	else
-+	if (strcmp(op_str, "UNKNOWN") == 0)
- 		seq_printf(m, "%u", op);
-+	else
-+		seq_printf(m, "%s", op_str);
- 	seq_puts(m, ", .cmd_flags=");
- 	blk_flags_show(m, rq->cmd_flags & ~REQ_OP_MASK, cmd_flag_name,
- 		       ARRAY_SIZE(cmd_flag_name));
+ static void req_bio_endio(struct request *rq, struct bio *bio,
 -- 
 2.19.1
 
