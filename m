@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 820DC4D5AA
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:00:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFDD84D911
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfFTR7x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Jun 2019 13:59:53 -0400
+        id S1726079AbfFTR77 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Jun 2019 13:59:59 -0400
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:35454 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfFTR7w (ORCPT
+        with ESMTP id S1726731AbfFTR74 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:52 -0400
+        Thu, 20 Jun 2019 13:59:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561053592; x=1592589592;
+  t=1561053595; x=1592589595;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LzGOF2hHrmdE4Fm9O/m8R9d5DTCybctfUkNgYUB0sz0=;
-  b=h1YzAmyWVlsMcrfYGysBMfyiXR2CWCHu6jYhjqSt3WWlbpzJ9gWgVjCc
-   N6V3kWYnoLI//ph1Tl2fGPtpPO8nrYdBn4iW2BAlpxi7VWVpUpg68m1vn
-   jmGG1bccaVAyvlFHz03L1eHIZ43wwqMahGMfajz9Nu6uw5XIPQx82ezg/
-   /CtENVFZNewax5+QUzB53w14ZuYvD2rXojVnEMIHyVa2qJq2dh+ltitIE
-   QuUf1OZLGEv6TVaW0pOMW5OZ4dOAKpBg1n9i6qmQwTQv6/mLB7ILdydpI
-   luUzVDWvf1O69k/hVH3q7yYYK1zi0xNzFKLUkkbTP5DoD4HLpuMuMMaOu
-   w==;
+  bh=XLB4y84qryt/o20ieADyCTLritHYsqyXsy9EGUzPvOM=;
+  b=kSu7JUF6rqXRzY5q5QF7WG0Ccy2gUp83Oj+dKBDb1jZDUOpfi+qJOQlD
+   uch+o+vADwdA5spuHHemi8NiOTmCNcd6xzooIeA6I2ls764TE0+viGhPE
+   u8+jW4fo4qcJTLfFVuueuhC/5iaKOEpwZ5BHAYTNyypMz5E5toXkIk6Wh
+   gh1N2p6fWajG//3OeohhZaMa//RMCT91dD0KZkR7jhwUGnIkuHDYv4Qn8
+   VqZkFFkCx6ykXEFMSSvykXn3LVU2zPQ+XCsfIHmsCFdOsFguykbQa1vNv
+   60raa/v/mtLJ5EdajV94unkyq9mThDhq7ubW+zhqSG4AFxmB7di5E3SBC
+   A==;
 X-IronPort-AV: E=Sophos;i="5.63,397,1557158400"; 
-   d="scan'208";a="217443494"
+   d="scan'208";a="217443502"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:51 +0800
-IronPort-SDR: vTV0pjortiEvxihMM/f8VsNMFk+ssFBx9xxEAaCinD8CnSXG9jCkpFP02G5al2J9jqU+b0wL9n
- Fybqba2BcvNiBVgDKUawtxYDgzBq7gU0YbP2b+vaPDQY0Qu8nTcYJxol5esWjbmljInRWEz5QO
- /G+Ljty10hm8T/VEeSacyxbt/h7QcQ2k+rMyGTRvagj4eMt0NNZsuR/j/q4xxNVYdBwavJ5cDU
- /rn5Ka5Cms/h/znxJ+PJHgIti/iO3SYawTXqkrcAQ/05Q/2zQcHpnZ68W7QFiH/Zd45YtMAC3z
- 2DXmAircUfnISc7EJ16lRMYy
+  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:55 +0800
+IronPort-SDR: Wp/kgTa8A2JrMOIE3H1hjCi6a7kblRkECBanUCUdG7mTWkh0wi9aMbMU3uEHmDdw5/3oKlLXzy
+ r4cBdNSOIj0tpCYWs6c3aitoacpi+n1ML8VE8iSa7gc9fYeFpbTr6/4yMLMPsVGEaLeTrHved7
+ 04lYCItSbwBLNeB3vdQbToL38FyXhljbPECrDoWEWea4/9uc/CUq0+1mlb9Qif+zMoGePDer02
+ WWKkfV6lV3T+TQdvOwroedEMPLr4RKX1uYpvLaow50fxYxP5r4VCHAsygTJlSDn3U2zTaYbsdV
+ Q+0ZTELsjfT1Pc98YIEO1wQJ
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:59:11 -0700
-IronPort-SDR: JPZCdUNbL6QrcMTJAfhtMrR5zBamamicgH4WSqgED3jPiAd2PKt7bMr642hnz4zQ0LPmIx01qg
- uJoUrXVkMeYntFMKT0AJSupg7M/VUaWQ7EKp3THXfJNkMSki6ZzsXITTrLMeltOR2W3wKF1zEj
- w1JQ4bAzolKBYl8QNCxA/vlviHnAGKq+IN7t5X6Bmj3g6yB1WoMlihXldMIcfYwVLgBYts75rM
- /QVHpZRFBAAhD8L21pF2jYeez6VX19K86baB5xRO55mYzeylSH8FYv2JtozQ619RUWHZ6G8G7X
- 5s4=
+  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:59:14 -0700
+IronPort-SDR: hsa7EYi1XKrtVI5ipv9Jli4na7fl+bD6dmsIRcGpP0o9RqcN5SjJ3LCXGdi+ZIme2sDzkmjXCO
+ kGDdhty5f/7NveDvXlXm5PnxmufLwps/hKSCARIQAAUYnImkcQjQhZTaPrhre9V6KpMPw6OnJN
+ wBEHtYS/zYP7qWJAnW61Ck+kfSgdVbAwWyNn/uw+7WL0btrPDRxp07Tfw1y5bx7vKgsxQNT1pU
+ d4zlvIw8xG+tN14bR4E/goebfcOg5SS0eFAMadB0Q2x24RqcE5phkcvGfZaOdDllu3RPH8MMbI
+ xp8=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:51 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:55 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V5 4/5] block: update print_req_error()
-Date:   Thu, 20 Jun 2019 10:59:18 -0700
-Message-Id: <20190620175919.3273-5-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V5 5/5] f2fs: use block layer helper for show_bio_op macro
+Date:   Thu, 20 Jun 2019 10:59:19 -0700
+Message-Id: <20190620175919.3273-6-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
 References: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
@@ -59,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Improve the print_req_error with additional request fields which are
-helpful for debugging. Use newly introduced blk_op_str() to print the
-REQ_OP_XXX in the string format.
+Adjust the f2fs tracing code to use newly introduced block layer
+function blk_op_str() which converts the REQ_OP_XXX into the string
+XXX.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- block/blk-core.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ include/trace/events/f2fs.h | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 190aba04da3e..9ec86c111920 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -212,11 +212,14 @@ static void print_req_error(struct request *req, blk_status_t status,
- 		return;
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 53b96f12300c..e3dc031af7f5 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -76,16 +76,7 @@ TRACE_DEFINE_ENUM(CP_TRIMMED);
+ #define show_bio_type(op,op_flags)	show_bio_op(op),		\
+ 						show_bio_op_flags(op_flags)
  
- 	printk_ratelimited(KERN_ERR
--		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
-+		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
-+		"phys_seg %u prio class %u\n",
- 		caller, blk_errors[idx].name,
--		req->rq_disk ?  req->rq_disk->disk_name : "?",
--		blk_rq_pos(req), req_op(req),
--		req->cmd_flags & ~REQ_OP_MASK);
-+		req->rq_disk ? req->rq_disk->disk_name : "?",
-+		blk_rq_pos(req), req_op(req), blk_op_str(req_op(req)),
-+		req->cmd_flags & ~REQ_OP_MASK,
-+		req->nr_phys_segments,
-+		IOPRIO_PRIO_CLASS(req->ioprio));
- }
+-#define show_bio_op(op)							\
+-	__print_symbolic(op,						\
+-		{ REQ_OP_READ,			"READ" },		\
+-		{ REQ_OP_WRITE,			"WRITE" },		\
+-		{ REQ_OP_FLUSH,			"FLUSH" },		\
+-		{ REQ_OP_DISCARD,		"DISCARD" },		\
+-		{ REQ_OP_SECURE_ERASE,		"SECURE_ERASE" },	\
+-		{ REQ_OP_ZONE_RESET,		"ZONE_RESET" },		\
+-		{ REQ_OP_WRITE_SAME,		"WRITE_SAME" },		\
+-		{ REQ_OP_WRITE_ZEROES,		"WRITE_ZEROES" })
++#define show_bio_op(op)		blk_op_str(op)
  
- static void req_bio_endio(struct request *rq, struct bio *bio,
+ #define show_bio_op_flags(flags)					\
+ 	__print_flags(F2FS_BIO_FLAG_MASK(flags), "|",			\
 -- 
 2.19.1
 
