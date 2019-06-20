@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B0304D5A5
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44F694D922
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 20:32:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfFTR7k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Jun 2019 13:59:40 -0400
+        id S1726509AbfFTSb2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Jun 2019 14:31:28 -0400
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:35454 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfFTR7j (ORCPT
+        with ESMTP id S1726405AbfFTR7n (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:39 -0400
+        Thu, 20 Jun 2019 13:59:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561053579; x=1592589579;
+  t=1561053583; x=1592589583;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OrB3YKVsrL+G1BGsVU/QjCU+rmzvRnTbUqTJjO4JYIw=;
-  b=dB8g6H8gSHHy9RLrdH+xXs1hLD7mDQrRtFtXQ4tKXwWaqwqW3uFxfMoB
-   FUdYX2uRl4/1QM7Wti/Ufex8I1xsmgl/BibqFEZQx9GSLGbHrdo/uiDRw
-   c+7zv6ZRfipp9uBNP7dsz53gfmV9ahno/UaWTcEDnwjFA0cFT8MnAxJmj
-   Qfc4g4iywYHgb9yMJAfWaLA21V1OirmeHgmlIOutSXWK0MHvCn30Dy/md
-   EwBns93JN96TzST+e8k5Y8ceUkguYBar1GH8deXebPdlZeH/VkezTjmR6
-   vxorsfuPBvCtW7GcNFxHHNrwjhWO5R5VKknbsw5JDtX69niTzAci5Sj1z
-   A==;
+  bh=tkfuDcjVsH4cbJnqt6hs3NIgWxeSUr2uI5ZruO+U66k=;
+  b=d3+OplwCcp1mUVOLt8OO5rgih7wXtT4803R17EPoD9dQ2Z3NLbK79Z5Z
+   NFc48Qu/oP8Ybki3IuiYDwLZncxvLt3zLBEkl1OIZEdzNqxcb2luqqoPc
+   H9Yq5r6MFXCEZ/Waa0B/euUmXB9l4qtVjyDVBs16sII7uOIRmUDR8lCgd
+   gvANCOpNZTYF29QI3viDJPO2GTE2LoQ91LkB2C4pn30SikaFieL5xygO4
+   kuwwEmPAb70kSoMAMjS46X9QZ8N/Fnr8FF+/lDg0XGj8SazCy3jdKz2Xa
+   aDWl4a1FjlqLAxFKsYFr7ZoYF/evXKzmGEh4OCZLH8ec6X2gX50MJpvRU
+   w==;
 X-IronPort-AV: E=Sophos;i="5.63,397,1557158400"; 
-   d="scan'208";a="217443480"
+   d="scan'208";a="217443483"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:38 +0800
-IronPort-SDR: 5t5b4NUF9T9HCw8ZKnkKLGoi4NGQVjn7AcztR+GMii3mc6+uv8vWy2SLGImutixnrF9wz+ohOn
- GVNuok/iJqRjP3/72ZxC9XyjGrc9mDSUVeCdHdqfiUDY2m8BLWwdQEBq6ft+Qy7J0DGbLBCfwp
- Na8cxXUUVEwCbvUyoRIX1pH6NU/t/NwH6hCJj4NnoujCyoSzQIlpDoiLajZwRH9qpELdJwZpn6
- a8ggPOf6b7bRU7inlD8spefhX9JLBM52oi54hs+StUmoVeG4F2pksNV2Th04i4lcnQ8Q2leV45
- h2RNgSMdNCZEcQVBuhy7l9It
+  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2019 01:59:43 +0800
+IronPort-SDR: ZoiLFoQ1pFYKIpQCvJZ0aFAq1G4rw4fK3KLGKtRJgNVGXck2mMyQl55t/9qFOAd8WF2UjoWU7F
+ bEfuJCUuemrlrqhcvDbXb4o/TqCZgMmUmFiW8pauFfhyQtEtp6aqvQoWNqxDSDMSYJdR55KG/O
+ 4tdaunFXwGABZxRB1EO00ZWyZEjPYEFsX8/5mwZbAb5SvZSNb7ktR5JdsigTRBJolv8BY5XuLW
+ fgHPoHG8D1UXkRFu49LCxmFO2fuAZ1D3Cc9jMkcpS52Qm0XpcGV6INvRinkluRJoW7LSixhpb4
+ QkLE2V9uZ/babzdoUkclXtEN
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:58:57 -0700
-IronPort-SDR: WwES0NvG1XRHFGCm+XhXp4gtzggHobHl/+azZvypmQNbabtP2HIE1cQyOc5bTgzSMIigTFpgmR
- spHy7GKQRDSfxx2RJkWV/LQwZSCaV7YAtsQ9Dk1kAKi3witXs6JARMI/4/njpwEoFnO95340Ci
- g1T25aJ7Idh4Fa3tvS2B3/SkPQlGrDyjraWqaiNi7vJrQ9HZW8LWF3qHjxttEClJbypcoyMz4L
- lPPCajoa92ZYU9DY09HZSNgPENd7UJjWzl6yJPVagNGpmg3nHJnPNZevF/plt1bmgsoaxqLX4X
- Ew0=
+  by uls-op-cesaep01.wdc.com with ESMTP; 20 Jun 2019 10:59:02 -0700
+IronPort-SDR: zgsjiC+jNLq1dOi6AKdwpoIw3ZLFaOSxD9AqhttKGLTEKTxF1XINcU+Njd0zR4o10VmiZSN7zs
+ mI4rWAB5ucQ5nTAZLQ1u9w4yLO69Ym58IGgNvFRIHI3uOGLNl4X+F6JQDjnK2dztNSFjrqJeUe
+ aWenooipaYQhalSSYtGt8jxrm6vEQiCeq8gDHgKtviI1o95MuLtOSj+KfXoMJ/iKp0bKL7nhoG
+ 3H5l8RB29XmanSMrT9PZvD6os9WqzVnpZl4pdfZ6ebeKgkaBcawzf4sZj9WV4BjjnORSDECiqC
+ CkI=
 Received: from cmercuryqemu.hgst.com ([10.202.65.32])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:38 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Jun 2019 10:59:43 -0700
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V5 1/5] block: improve print_req_error
-Date:   Thu, 20 Jun 2019 10:59:15 -0700
-Message-Id: <20190620175919.3273-2-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V5 2/5] block: add centralize REQ_OP_XXX to string helper
+Date:   Thu, 20 Jun 2019 10:59:16 -0700
+Message-Id: <20190620175919.3273-3-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
 References: <20190620175919.3273-1-chaitanya.kulkarni@wdc.com>
@@ -59,58 +59,86 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+In order to centralize the REQ_OP_XXX to string conversion which can be
+used in the block layer and different places in the kernel like f2fs,
+this patch adds a new helper function along with an array similar to the
+one present in the blk-mq-debugfs.c.
 
-Print the calling function instead of print_req_error as a prefix, and
-print the operation and op_flags separately instead of the whole field.
+We keep this helper functionality centralize under blk-core.c instead of
+blk-mq-debugfs.c since blk-core.c is configured using CONFIG_BLOCK and
+it will not be dependent on blk-mq-debugfs.c which is configured using
+CONFIG_BLK_DEBUG_FS.
+
+Next patch adjusts the code in the blk-mq-debugfs.c with newly
+introduced helper.
 
 Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- block/blk-core.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ block/blk-core.c       | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/blkdev.h |  3 +++
+ 2 files changed, 39 insertions(+)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 94c6520bc786..77623cdf2e5a 100644
+index 77623cdf2e5a..190aba04da3e 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -167,18 +167,20 @@ int blk_status_to_errno(blk_status_t status)
+@@ -120,6 +120,42 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
  }
- EXPORT_SYMBOL_GPL(blk_status_to_errno);
+ EXPORT_SYMBOL(blk_rq_init);
  
--static void print_req_error(struct request *req, blk_status_t status)
-+static void print_req_error(struct request *req, blk_status_t status,
-+		const char *caller)
- {
- 	int idx = (__force int)status;
++#define REQ_OP_NAME(name) [REQ_OP_##name] = #name
++static const char *const blk_op_name[] = {
++	REQ_OP_NAME(READ),
++	REQ_OP_NAME(WRITE),
++	REQ_OP_NAME(FLUSH),
++	REQ_OP_NAME(DISCARD),
++	REQ_OP_NAME(SECURE_ERASE),
++	REQ_OP_NAME(ZONE_RESET),
++	REQ_OP_NAME(WRITE_SAME),
++	REQ_OP_NAME(WRITE_ZEROES),
++	REQ_OP_NAME(SCSI_IN),
++	REQ_OP_NAME(SCSI_OUT),
++	REQ_OP_NAME(DRV_IN),
++	REQ_OP_NAME(DRV_OUT),
++};
++#undef REQ_OP_NAME
++
++/**
++ * blk_op_str - Return string XXX in the REQ_OP_XXX.
++ * @op: REQ_OP_XXX.
++ *
++ * Description: Centralize block layer function to convert REQ_OP_XXX into
++ * string format. Useful in the debugging and tracing bio or request. For
++ * invalid REQ_OP_XXX it returns string "UNKNOWN".
++ */
++inline const char *blk_op_str(unsigned int op)
++{
++	const char *op_str = "UNKNOWN";
++
++	if (op < ARRAY_SIZE(blk_op_name) && blk_op_name[op])
++		op_str = blk_op_name[op];
++
++	return op_str;
++}
++EXPORT_SYMBOL_GPL(blk_op_str);
++
+ static const struct {
+ 	int		errno;
+ 	const char	*name;
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index ad49a775c54f..7d52c18b6fe2 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -867,6 +867,9 @@ extern void blk_execute_rq(struct request_queue *, struct gendisk *,
+ extern void blk_execute_rq_nowait(struct request_queue *, struct gendisk *,
+ 				  struct request *, int, rq_end_io_fn *);
  
- 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(blk_errors)))
- 		return;
- 
--	printk_ratelimited(KERN_ERR "%s: %s error, dev %s, sector %llu flags %x\n",
--				__func__, blk_errors[idx].name,
--				req->rq_disk ?  req->rq_disk->disk_name : "?",
--				(unsigned long long)blk_rq_pos(req),
--				req->cmd_flags);
-+	printk_ratelimited(KERN_ERR
-+		"%s: %s error, dev %s, sector %llu op 0x%x flags 0x%x\n",
-+		caller, blk_errors[idx].name,
-+		req->rq_disk ?  req->rq_disk->disk_name : "?",
-+		blk_rq_pos(req), req_op(req),
-+		req->cmd_flags & ~REQ_OP_MASK);
- }
- 
- static void req_bio_endio(struct request *rq, struct bio *bio,
-@@ -1373,7 +1375,7 @@ bool blk_update_request(struct request *req, blk_status_t error,
- 
- 	if (unlikely(error && !blk_rq_is_passthrough(req) &&
- 		     !(req->rq_flags & RQF_QUIET)))
--		print_req_error(req, error);
-+		print_req_error(req, error, __func__);
- 
- 	blk_account_io_completion(req, nr_bytes);
++/* Helper to convert REQ_OP_XXX to its string format XXX */
++extern const char *blk_op_str(unsigned int op);
++
+ int blk_status_to_errno(blk_status_t status);
+ blk_status_t errno_to_blk_status(int errno);
  
 -- 
 2.19.1
