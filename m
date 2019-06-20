@@ -2,30 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1E094CB37
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 11:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FF524CB43
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 11:45:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfFTJmy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Jun 2019 05:42:54 -0400
-Received: from verein.lst.de ([213.95.11.211]:59071 "EHLO newverein.lst.de"
+        id S1726279AbfFTJpF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Jun 2019 05:45:05 -0400
+Received: from verein.lst.de ([213.95.11.211]:59089 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731448AbfFTJmw (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:42:52 -0400
+        id S1725939AbfFTJpF (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:45:05 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 99CD768BFE; Thu, 20 Jun 2019 11:42:21 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 11:42:21 +0200
+        id 2F52868B05; Thu, 20 Jun 2019 11:44:35 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 11:44:34 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: blk-cgroup cleanups
-Message-ID: <20190620094220.GA24189@lst.de>
-References: <20190606102624.3847-1-hch@lst.de>
+To:     axboe@fb.com
+Cc:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org
+Subject: Re: remove bi_phys_segments and related cleanups
+Message-ID: <20190620094434.GA24225@lst.de>
+References: <20190606102904.4024-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606102624.3847-1-hch@lst.de>
+In-Reply-To: <20190606102904.4024-1-hch@lst.de>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
@@ -34,9 +32,9 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 ping?
 
-On Thu, Jun 06, 2019 at 12:26:18PM +0200, Christoph Hellwig wrote:
-> Hi all,
+On Thu, Jun 06, 2019 at 12:28:58PM +0200, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> below are a couple of cleanups I came up with when trying to understand
-> the blk-cgroup code.
+> this series removes the bi_phys_segments member in struct bio
+> and cleans up various areas around it.
 ---end quoted text---
