@@ -2,112 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 687D34D2F1
-	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 18:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2FE34D3D0
+	for <lists+linux-block@lfdr.de>; Thu, 20 Jun 2019 18:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfFTQNA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Jun 2019 12:13:00 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:59512 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbfFTQNA (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:13:00 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdzg8-00046J-T8; Thu, 20 Jun 2019 10:12:58 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdzg6-0005xF-V3; Thu, 20 Jun 2019 10:12:47 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 20 Jun 2019 10:12:40 -0600
-Message-Id: <20190620161240.22738-29-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
+        id S1726795AbfFTQcs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Jun 2019 12:32:48 -0400
+Received: from mail-ed1-f45.google.com ([209.85.208.45]:35215 "EHLO
+        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfFTQcs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:32:48 -0400
+Received: by mail-ed1-f45.google.com with SMTP id p26so5613689edr.2
+        for <linux-block@vger.kernel.org>; Thu, 20 Jun 2019 09:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lWaahTvqeFpcpOtko+DL9aqqDWntV26lpwBJ5O+GW9Q=;
+        b=Ug1/ChKVDzZOYIsyHhPlKIGz91/Caw12cOGtM3k4qGRp0QUaNpaZajCdz1zUwJVnUU
+         7hrEBLN5/30FS9zP1pmuXFOeTOFVTWQv6iudmJr2WyzkGjk/jBIgpLHR5Hb7Hp9GwxAq
+         iVNNU/nNvttkOibLuAO8CYjoTxQTFLqMWrNGki6x3KloaUI4L/P42naGG2d1RXzD92nS
+         utDAceIRT21JKaiDyEJwfXUG0u4F5Z6UU798naR+FLS7p932QPO1usvR/BG+CHz26Ind
+         NV5+qAwaZYvaYBM1V4c/jK0cYw81pun9SmNQEg58GsmqfIXyBRIjiMCUiIrfZIkqrLwe
+         cLLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lWaahTvqeFpcpOtko+DL9aqqDWntV26lpwBJ5O+GW9Q=;
+        b=RhR6EbQNrJgRBv12EPlQ7tQOwwQAFsWF90hmlkAXWozI5MHd56VI3eswLP92PlIIKl
+         3t2itqFJdgckM440ZaIHy3cr8OXUvgP9tI5RZSCq5wYSSZQcIckUhxsiafuKNQdU7FTn
+         9vBUkgUuGX7ARCiqPikeSFGt5bHtUe7XN+qjFLHcfduroy8CpEr8IBNYJrptfjHMvA9B
+         8WvSTvvQYqVmvYlh6rxrKmQE3rAYKSlsymieZws+3b/33GbWgYozN0fcreY+si1WkuVr
+         QYz/bS8EoM/XT8mE6QbmFq14cXSJcdpOY7otJ/zDjdGKFMlEE7N8k1s/3yYe2LloCit1
+         rJLw==
+X-Gm-Message-State: APjAAAVGKewKJVzDQt4RuAyGvFF2NYKbdv04gZYff/SsBqBMIFAvQ5Zs
+        UKPUAm2Gmrd/CRsQI7K4sRD6nA==
+X-Google-Smtp-Source: APXvYqyUXASWweDho/JuDfLx0BFLxa/LvWX2vKj9OspUCh/7y6SIk9wCcu7jn9dzMR3d1xj/+9Smqw==
+X-Received: by 2002:a50:9203:: with SMTP id i3mr123016558eda.302.1561048366254;
+        Thu, 20 Jun 2019 09:32:46 -0700 (PDT)
+Received: from [192.168.1.208] (ip-5-186-115-204.cgn.fibianet.dk. [5.186.115.204])
+        by smtp.gmail.com with ESMTPSA id d3sm8925edd.88.2019.06.20.09.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 09:32:45 -0700 (PDT)
+Subject: Re: blk-cgroup cleanups
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190606102624.3847-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2afccbe4-ef5e-6a74-551d-d91b2d1a267a@kernel.dk>
+Date:   Thu, 20 Jun 2019 10:32:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, axboe@kernel.dk, hch@lst.de, bhelgaas@google.com, dan.j.williams@intel.com, sagi@grimberg.me, kbusch@kernel.org, jgg@ziepe.ca, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [RFC PATCH 28/28] memremap: Remove PCI P2PDMA page memory type
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <20190606102624.3847-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There are no more users of MEMORY_DEVICE_PCI_P2PDMA and
-is_pci_p2pdma_page(), so remove them.
+On 6/6/19 4:26 AM, Christoph Hellwig wrote:
+> Hi all,
+> 
+> below are a couple of cleanups I came up with when trying to understand
+> the blk-cgroup code.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- include/linux/memremap.h |  5 -----
- include/linux/mm.h       | 13 -------------
- 2 files changed, 18 deletions(-)
+Applied, thanks.
 
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 1732dea030b2..2e5d9fcd4d69 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -51,16 +51,11 @@ struct vmem_altmap {
-  * wakeup event whenever a page is unpinned and becomes idle. This
-  * wakeup is used to coordinate physical address space management (ex:
-  * fs truncate/hole punch) vs pinned pages (ex: device dma).
-- *
-- * MEMORY_DEVICE_PCI_P2PDMA:
-- * Device memory residing in a PCI BAR intended for use with Peer-to-Peer
-- * transactions.
-  */
- enum memory_type {
- 	MEMORY_DEVICE_PRIVATE = 1,
- 	MEMORY_DEVICE_PUBLIC,
- 	MEMORY_DEVICE_FS_DAX,
--	MEMORY_DEVICE_PCI_P2PDMA,
- };
- 
- /*
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index dd0b5f4e1e45..f5fa9ec440e3 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -966,19 +966,6 @@ static inline bool is_device_public_page(const struct page *page)
- 		page->pgmap->type == MEMORY_DEVICE_PUBLIC;
- }
- 
--#ifdef CONFIG_PCI_P2PDMA
--static inline bool is_pci_p2pdma_page(const struct page *page)
--{
--	return is_zone_device_page(page) &&
--		page->pgmap->type == MEMORY_DEVICE_PCI_P2PDMA;
--}
--#else /* CONFIG_PCI_P2PDMA */
--static inline bool is_pci_p2pdma_page(const struct page *page)
--{
--	return false;
--}
--#endif /* CONFIG_PCI_P2PDMA */
--
- #else /* CONFIG_DEV_PAGEMAP_OPS */
- static inline void dev_pagemap_get_ops(void)
- {
 -- 
-2.20.1
+Jens Axboe
 
