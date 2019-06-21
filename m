@@ -2,78 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C96674E258
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 10:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF33D4E2C8
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 11:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfFUIsz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jun 2019 04:48:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35608 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfFUIsz (ORCPT
+        id S1726404AbfFUJMK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jun 2019 05:12:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38096 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfFUJMJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jun 2019 04:48:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w20so1356827edd.2
-        for <linux-block@vger.kernel.org>; Fri, 21 Jun 2019 01:48:54 -0700 (PDT)
+        Fri, 21 Jun 2019 05:12:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b11so4515791lfa.5
+        for <linux-block@vger.kernel.org>; Fri, 21 Jun 2019 02:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t6tylhnbQpj1jAhFBa0rAUXZzkXjsMfz2Ana0lXAfNo=;
-        b=g5YlHCaQAlLDmldSUhxDuKeMbwZmSdbJP0pdBqdPrpFMWSk7NgHLSpYUCCbFImSvLv
-         sU9VkypB9692DZ2w3qjFUUf6N8aEyKwznxxI7KCEmeeeN7i0lzx8fwSxZTxdAreMec4M
-         UcdMadpgDWCmgAwgad1ZcdAAIzsuVFGP3PptjVlyKyrIbPMJEwbfpOjqaHLnk0hfz+Xu
-         +dWweoGYFf/FyWkxB0b66zXxIzO9HzxCpx5MxVq6wMMkxXxTY3KCNzLMV14Yuvy0JK9L
-         xzppw9j+ZK1KOEYZaWwB/unBbWK+0DBLmNGN9FEZ1pMyhXP+uWTxMxXSe6Au55r/anyg
-         vqpg==
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=723zdSxWmoIrgdl5a9Vt9oyfiq9xWUVExK76ZlKKCm0=;
+        b=GNLUMzSRQRmkYgy9HO+y6XgqaWAZIWNFVi9h69iWiliFFjd9IFHmqVG76eQ4YHiOXn
+         /+WpPrRrgqs+Q4/nRaDJUuYJ5iYYybvpYZRhZkoxB4NW6FRbfJllLFSG6yH4O+FtoTrL
+         vipl5QyBxeB9tn8ZT7ciGgPGYFWj4Cv97DYEktPOREq0mukGacs6qdtgVSKrI8m9O+Ie
+         ZVogQ0rB4hMzCPst7UYN5PboCgVC5NL74msG2oJJC1t+Fr4yMI1RghX/o+g0j5elqWwI
+         ZSNPebq1fPPvXyym+LyJOAF1PfVldlI56S6slBqYLZgdVLqDah3A2biq1kw9I0VgzZiY
+         t6vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=t6tylhnbQpj1jAhFBa0rAUXZzkXjsMfz2Ana0lXAfNo=;
-        b=J4zWvPo8Uko6zMwNNSYxb8+9MNXQvwKN5yltH3/1TWhM+HeavKe1Qj759ORKi3a3Zj
-         wEmq5vMXWUTBUCVfTFK/Xl3s3wdUPdDUoNI1KYmwLGPXRGkx7K1QKlssQG+NEWXzercA
-         /tFjy1UoLemkPYVHH+vgqLzZT5Aqz1KyvaE3WTelb6kPA8/Fisr/2WSM0U1m85xi0/ZV
-         u1GQYVOmdb6T1Hrb7mklIulhg2+VT5JZJrt9RgZCV0HAMHJRQGFaAsdhabMB3jkYyLgd
-         vlAcBK99xL7SikjuZgoFFbb5f6EbR7JMdFfNpjKYZKveifhD+NHdDZAGtiqdR34+6YM9
-         7fJw==
-X-Gm-Message-State: APjAAAUm8jENG+ckRGqdeN/eozzG0kr48nSEM74kUlYpnmqmHRa0vYTd
-        b9IK+ws8uYBbJ/e4bO/bK0EZ498Ftd7TYwHR
-X-Google-Smtp-Source: APXvYqyUkh2RasSYvNJRiNGjFx2DUsNhZL3V6e4Q95Cp5/uZbHJ7uOjwN8WR2atsf+BlT1S0Vevkhw==
-X-Received: by 2002:a17:906:2605:: with SMTP id h5mr89106520ejc.178.1561106933830;
-        Fri, 21 Jun 2019 01:48:53 -0700 (PDT)
-Received: from [192.168.1.208] (ip-5-186-115-204.cgn.fibianet.dk. [5.186.115.204])
-        by smtp.gmail.com with ESMTPSA id m6sm638892ede.2.2019.06.21.01.48.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Jun 2019 01:48:52 -0700 (PDT)
-Subject: Re: [PATCH for-block] cgroup: export css_next_descendant_pre for bfq
-To:     Christoph Hellwig <hch@lst.de>, tj@kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, linux-block@vger.kernel.org
-Cc:     cgroups@vger.kernel.org
-References: <20190621082248.11427-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c516717e-fb04-108a-02d4-28ed37140f1b@kernel.dk>
-Date:   Fri, 21 Jun 2019 02:48:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        bh=723zdSxWmoIrgdl5a9Vt9oyfiq9xWUVExK76ZlKKCm0=;
+        b=Xk/1ryY/6LZHxUU7erwyneRd9ARpGvZB+EJuaE6ZXwk54wwjuhcCfZKfIEvPFr3+Mq
+         xM2hgeXItOvxk2lElM9xRLm/30OO4yQ8gbJeXphw13SoqU8p3FaJ+9bhMDnI+Ly4Zno4
+         2VEy/SaAwcq1VtWIJtk5+++bMnZcgXQYHTQ+Qb7xXjgknqRC/VGj0wSNXJ8Pzejt5u3a
+         c3PuNOgR3IW8T1EMSYuRefoU5TadnYH1jcKVO/5ct2IlnmVDJb0KaXZGgPPAfO+HbUuO
+         powOJrbUoOUQ590Bk4ljbgVAE7g39DqzYhN1Jt6JvwD8EEjCfl/1KOhADFHfgCdMu2L6
+         APdw==
+X-Gm-Message-State: APjAAAUtexFKJuoEyoR8WkRUi7eHdBjxvaup+S8qVCqzT9kQPqBoE5Nw
+        KrElQoo7XDLQUSERJMOn6UHXnw==
+X-Google-Smtp-Source: APXvYqzI16rVPuwHp28e4FF+f2uPEhf7qLRQa3YMIi0B/32uwA4eiEFweuEIRbWyoQXAZqvXJsPNMw==
+X-Received: by 2002:ac2:528e:: with SMTP id q14mr38367414lfm.17.1561108327647;
+        Fri, 21 Jun 2019 02:12:07 -0700 (PDT)
+Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.gmail.com with ESMTPSA id z26sm303178ljz.64.2019.06.21.02.12.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 02:12:06 -0700 (PDT)
+From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
+To:     axboe@fb.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
+Subject: [GIT PULL 0/2] lightnvm updates for 5.3
+Date:   Fri, 21 Jun 2019 11:11:58 +0200
+Message-Id: <20190621091200.23168-1-mb@lightnvm.io>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190621082248.11427-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/21/19 2:22 AM, Christoph Hellwig wrote:
-> The bfq schedule now uses css_next_descendant_pre directly after
-> the stats functionality depending on it has been from the core
-> blk-cgroup code to bfq.  Export the symbol so that bfq can still
-> be build modular.
+Hi Jens,
 
-Applied, thanks.
+A couple of patches for the 5.3 window. Geert fixed an uninitialized
+pointer bug, and Heiner fixed up a bug when merging bio pages in pblk.
+
+Thank you,
+Matias
+
+Geert Uytterhoeven (1):
+  lightnvm: fix uninitialized pointer in nvm_remove_tgt()
+
+Heiner Litz (1):
+  lightnvm: pblk: fix freeing of merged pages
+
+ drivers/lightnvm/core.c      |  2 +-
+ drivers/lightnvm/pblk-core.c | 16 +++++++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
 -- 
-Jens Axboe
+2.19.1
 
