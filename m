@@ -2,170 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A644E881
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 15:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDFB94E8AB
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 15:13:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfFUNHg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jun 2019 09:07:36 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41863 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfFUNHg (ORCPT
+        id S1726365AbfFUNNm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jun 2019 09:13:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39672 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfFUNNm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:07:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id s21so5903302lji.8
-        for <linux-block@vger.kernel.org>; Fri, 21 Jun 2019 06:07:34 -0700 (PDT)
+        Fri, 21 Jun 2019 09:13:42 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m10so10061489edv.6
+        for <linux-block@vger.kernel.org>; Fri, 21 Jun 2019 06:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KIxiEPjPFTJ+1vxbl5yjwf7laBnZVBburPM3Qsvxjsc=;
-        b=jAkjttrkDBc5StTWyglwMWmrFO5xfZMZEC4/aXMujoVsmJjiVumNp87/zZAkoldEE8
-         owN6HkrMnD9li+fb0BQuGz+pdNmonPApcLo2UC5s/As+WvpPXm6Ae4a9KqIRojiU04cX
-         KKYXnVSTkkmIUcdOIY1IwzqKt9bIBvIOjMfEsmvnNiPEMhQkCWDAIHC7oGmqIM0MfWSx
-         2lMX0vWAOdnCAFaWuQgX4llUeqNe/dWyQT5F9eirTWV3QTSeiK0Lg0x+5IvLmbg9jxqa
-         GVVr15lFJs3acP1kyx5aRviZYeEn7le4EWriJvOYYdS3MhRmRuUdX0X5C2NNu1pVZlZ/
-         FMlQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6XGwmeOwlKSVTBVyAsB4aFpWNvK64SOug+dbRa2dIBc=;
+        b=g2i7pJ4dd03mZG0WQzNY70IuD4isWP6wrHJbt1eDPspbrH8LWdsARy2JRG4gqKdJTe
+         fFSESnljolpzF8FJ2LxIehaicnqD8HYbwc87MH8WGh2RMypCpcxRMhRA8WcQGXzuiPLF
+         fsSDTogw2zQbDAS5UoCul66pOy9vKzg5qQCyfUJUY2mj+I/NClbvi23Z+n3OGwMQgPGP
+         gBSJBV5yMMM56V0h9TweNvPidIDP4sO4KbiRPGLLjAr9MwwycYdebLwgqruNRE7GI9cj
+         Gf0uVj6NEwiyCqzbHB46TXQE5fEdUp8chtO6woeasKD/2xMCkzs1tAAxFbAHM50GM+FZ
+         TbEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KIxiEPjPFTJ+1vxbl5yjwf7laBnZVBburPM3Qsvxjsc=;
-        b=GIzykp1GGjtSxbP065Xb6DEssFxZvsvmYXIKPS7Z5GXfaYP0ebPsTfS4sBc4W4+Z8/
-         WUNIE0HJp/TH4OSE0OeEKmVtdeqOzl0fTt9eC4O+7cWTe44FrQs5K1ABUQkv4LC81n6/
-         xfcro7YlKgTSwZ9ZpIMAQDpFm8z1aR7A2Z2ePMdT++ev9TP1Ns+c735egeJNXVevtnWp
-         OZLf6DO8sOz7+kYt9i1N0vo7LGDn0dRzkTG5w/E9/lh7wq07BMHae5dMKCI9ay0ZIzKP
-         EI74OoGiu29ipbEU2Ot5IUHo5cc1heNGnTkiru3ywVuQpqqNpOLb/NfXPqgx0BemGwPe
-         vTcg==
-X-Gm-Message-State: APjAAAWcvJmqYVkcdgltgp8dILDiAFJJsNP93hgFbt300B+zOBWVxrqB
-        D2rNr2qovY37F0cpZbhDcbBdPg==
-X-Google-Smtp-Source: APXvYqztGCnsvf/snvO0fvZpXnEV5w6WCjbqDHG4Xxb6KNLNPuizWdxlt0NMN+AmNi/deF5LAXFr2A==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr10590901ljj.51.1561122453679;
-        Fri, 21 Jun 2019 06:07:33 -0700 (PDT)
-Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id r2sm387100lfi.51.2019.06.21.06.07.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 06:07:33 -0700 (PDT)
-From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-To:     axboe@fb.com, hch@lst.de, damien.lemoal@wdc.com,
-        chaitanya.kulkarni@wdc.com, dmitry.fomichev@wdc.com,
-        ajay.joshi@wdc.com, aravind.ramesh@wdc.com,
-        martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com,
-        agk@redhat.com, snitzer@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH 4/4] dm: add zone open, close and finish support
-Date:   Fri, 21 Jun 2019 15:07:11 +0200
-Message-Id: <20190621130711.21986-5-mb@lightnvm.io>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190621130711.21986-1-mb@lightnvm.io>
-References: <20190621130711.21986-1-mb@lightnvm.io>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6XGwmeOwlKSVTBVyAsB4aFpWNvK64SOug+dbRa2dIBc=;
+        b=fqgtxAJk/HvTXsDTvKxfaCT7W1A4d0BMqDcAy6bV7lA/cqlC+WZCCrUH3RJzZvSrgF
+         GZRgeb4Tnn+IFCI0HOyRFBEFqBErdRN9qgvdcygNfVnFABOJqiLZBgQRapv+mPWgO6Sd
+         6mcTWGRyInxBLRkxSo9ZAdCSlW5BBoltCMvj7j0zmcw+xoDhjegzkc8glS6rF2IvtIt9
+         nelu/RG3saz7IaAzr57ex0akOgaUPBK8yl24geTblE+ld40oofofcaIWV8ywQ/BeQJi5
+         Vo2eNDumV3M13uY94WzEPFKCYF75M0GX57Auh9EXj7pxL9KG2q2aW3sp5enTy0ImPbiJ
+         6Kmw==
+X-Gm-Message-State: APjAAAV/UfFVIzSuCPCqIDryBOJTNZZb9cxQNWhhzUC9fw8SLaa8kZEW
+        exySkzFrc0wnaU1P43B1O+UyiG7zgqVsWb8K
+X-Google-Smtp-Source: APXvYqwVT0b/aSjmvor1evdYxZfzrvzWzHWaYbG4iA2o71fd9yUMI2T+qcmwrC0vkwMVxY8q3NxZEw==
+X-Received: by 2002:a05:6402:1612:: with SMTP id f18mr84636664edv.231.1561122819639;
+        Fri, 21 Jun 2019 06:13:39 -0700 (PDT)
+Received: from [192.168.1.208] (ip-5-186-115-204.cgn.fibianet.dk. [5.186.115.204])
+        by smtp.gmail.com with ESMTPSA id d12sm422255ejd.65.2019.06.21.06.13.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2019 06:13:38 -0700 (PDT)
+Subject: Re: [io_uring]: fio's io_uring engine causing general protection
+ fault
+To:     Stephen Bates <sbates@raithlin.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     "fio-owner@vger.kernel.org" <fio-owner@vger.kernel.org>
+References: <7A8449F0-0E79-43B0-9FDD-45292691F0F2@raithlin.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4882e4e8-2c58-9c37-9131-91217baa55c5@kernel.dk>
+Date:   Fri, 21 Jun 2019 07:13:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7A8449F0-0E79-43B0-9FDD-45292691F0F2@raithlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ajay Joshi <ajay.joshi@wdc.com>
+On 6/21/19 6:40 AM, Stephen  Bates wrote:
+> Hi
+> 
+> I hit the following General Protection Fault when testing io_uring via the io_uring engine in fio. This was on a VM running 5.2-rc5 and the latest version of fio. The issue occurs for both null_blk and fake NVMe drives. I have not tested bare metal or real NVMe SSDs. The fio script used is given below.
+> 
+> [io_uring]
+> time_based=1
+> runtime=60
+> filename=/dev/nvme2n1 (note /dev/nullb0 also fails)
+> ioengine=io_uring
+> bs=4k
+> rw=readwrite
+> direct=1
+> fixedbufs=1
+> sqthread_poll=1
+> sqthread_poll_cpu=0
+> 
+> [  964.540374] general protection fault: 0000 [#1] SMP PTI
+> [  964.542041] CPU: 0 PID: 872 Comm: io_uring-sq Not tainted 5.2.0-rc5-cpacket-io-uring #1
+> [  964.545589] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+> [  964.549761] RIP: 0010:fput_many+0x7/0x90
+> [  964.551522] Code: 01 48 85 ff 74 17 55 48 89 e5 53 48 8b 1f e8 a0 f9 ff ff 48 85 db 48 89 df 75 f0 5b 5d f3 c3 0f 1f 40 00 0f 1f 44 00 00 89 f6 <f0> 48 29 77 38 74 01 c3 55 48 89 e5 53 48 89 fb 65 48 \
+> 8b 3c 25 c0
+> [  964.559031] RSP: 0018:ffffadeb817ebc50 EFLAGS: 00010246
+> [  964.561112] RAX: 0000000000000004 RBX: ffff8f46ad477480 RCX: 0000000000001805
+> [  964.563911] RDX: 0000000000000000 RSI: 0000000000000001 RDI: f18b51b9a39552b5
+> [  964.566580] RBP: ffffadeb817ebc58 R08: ffff8f46b7a318c0 R09: 000000000000015d
+> [  964.569109] R10: ffffadeb817ebce8 R11: 0000000000000020 R12: ffff8f46ad4cd000
+> [  964.571623] R13: 00000000fffffff7 R14: ffffadeb817ebe30 R15: 0000000000000004
+> [  964.574153] FS:  0000000000000000(0000) GS:ffff8f46b7a00000(0000) knlGS:0000000000000000
+> [  964.577020] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  964.578917] CR2: 000055828f0bbbf0 CR3: 0000000232176004 CR4: 00000000003606f0
+> [  964.581221] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  964.583511] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  964.585808] Call Trace:
+> [  964.586626]  ? fput+0x13/0x20
+> [  964.587613]  io_free_req+0x20/0x40
+> [  964.588733]  io_put_req+0x1b/0x20
+> [  964.589795]  io_submit_sqe+0x40a/0x680
+> [  964.590919]  ? __switch_to_asm+0x34/0x70
+> [  964.592090]  ? __switch_to_asm+0x40/0x70
+> [  964.593270]  io_submit_sqes+0xb9/0x160
+> [  964.594392]  ? io_submit_sqes+0xb9/0x160
+> [  964.595564]  ? __switch_to_asm+0x40/0x70
+> [  964.596737]  ? __switch_to_asm+0x34/0x70
+> [  964.597918]  ? __schedule+0x3f2/0x6a0
+> [  964.599015]  ? __switch_to_asm+0x34/0x70
+> [  964.600444]  io_sq_thread+0x1af/0x470
+> [  964.601568]  ? __switch_to_asm+0x34/0x70
+> [  964.602655]  ? wait_woken+0x80/0x80
+> [  964.603625]  ? __switch_to+0x85/0x410
+> [  964.604638]  ? __switch_to_asm+0x40/0x70
+> [  964.605726]  ? __switch_to_asm+0x34/0x70
+> [  964.606811]  ? __schedule+0x3f2/0x6a0
+> [  964.607827]  kthread+0x105/0x140
+> [  964.608725]  ? io_submit_sqes+0x160/0x160
+> [  964.609836]  ? kthread+0x105/0x140
+> [  964.610780]  ? io_submit_sqes+0x160/0x160
+> [  964.611887]  ? kthread_destroy_worker+0x50/0x50
+> [  964.613158]  ret_from_fork+0x35/0x40
+> [  964.614148] Modules linked in: crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel aes_x86_64 crypto_simd cryptd glue_helper joydev input_leds serio_raw mac_hid sch_fq_codel sunrpc null_blk \
+> ip_tables x_tables autofs4 8139too psmouse 8139cp floppy mii i2c_piix4 pata_acpi
+> [  964.620856] ---[ end trace bdbba818b310272c ]---
 
-Implement REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH
-support to allow explicit control of zone states.
+Try this patch. Technically, it's not valid to use sqthread without
+fixed files registered through io_uring_register(), and this case
+looks to me like we're just not initializing ->file before we end
+up failing the request due to a violation of that requirement.
 
-Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>
----
- drivers/md/dm-flakey.c    | 7 +++----
- drivers/md/dm-linear.c    | 2 +-
- drivers/md/dm.c           | 5 +++--
- include/linux/blk_types.h | 8 ++++++++
- 4 files changed, 15 insertions(+), 7 deletions(-)
+Not tested, on vacation...
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index a9bc518156f2..fff529c0732c 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -280,7 +280,7 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
- 	struct flakey_c *fc = ti->private;
- 
- 	bio_set_dev(bio, fc->dev->bdev);
--	if (bio_sectors(bio) || bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_sectors(bio) || bio_is_zone_mgmt_op(bio))
- 		bio->bi_iter.bi_sector =
- 			flakey_map_sector(ti, bio->bi_iter.bi_sector);
- }
-@@ -322,8 +322,7 @@ static int flakey_map(struct dm_target *ti, struct bio *bio)
- 	struct per_bio_data *pb = dm_per_bio_data(bio, sizeof(struct per_bio_data));
- 	pb->bio_submitted = false;
- 
--	/* Do not fail reset zone */
--	if (bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_is_zone_mgmt_op(bio))
- 		goto map_bio;
- 
- 	/* Are we alive ? */
-@@ -384,7 +383,7 @@ static int flakey_end_io(struct dm_target *ti, struct bio *bio,
- 	struct flakey_c *fc = ti->private;
- 	struct per_bio_data *pb = dm_per_bio_data(bio, sizeof(struct per_bio_data));
- 
--	if (bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_is_zone_mgmt_op(bio))
- 		return DM_ENDIO_DONE;
- 
- 	if (!*error && pb->bio_submitted && (bio_data_dir(bio) == READ)) {
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index ad980a38fb1e..217a1dee8197 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -90,7 +90,7 @@ static void linear_map_bio(struct dm_target *ti, struct bio *bio)
- 	struct linear_c *lc = ti->private;
- 
- 	bio_set_dev(bio, lc->dev->bdev);
--	if (bio_sectors(bio) || bio_op(bio) == REQ_OP_ZONE_RESET)
-+	if (bio_sectors(bio) || bio_is_zone_mgmt_op(bio))
- 		bio->bi_iter.bi_sector =
- 			linear_map_sector(ti, bio->bi_iter.bi_sector);
- }
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 5475081dcbd6..f4507ec20a57 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1176,7 +1176,8 @@ static size_t dm_dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 
- /*
-  * A target may call dm_accept_partial_bio only from the map routine.  It is
-- * allowed for all bio types except REQ_PREFLUSH and REQ_OP_ZONE_RESET.
-+ * allowed for all bio types except REQ_PREFLUSH, REQ_OP_ZONE_RESET,
-+ * REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH.
-  *
-  * dm_accept_partial_bio informs the dm that the target only wants to process
-  * additional n_sectors sectors of the bio and the rest of the data should be
-@@ -1629,7 +1630,7 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
- 		ci.sector_count = 0;
- 		error = __send_empty_flush(&ci);
- 		/* dec_pending submits any data associated with flush */
--	} else if (bio_op(bio) == REQ_OP_ZONE_RESET) {
-+	} else if (bio_is_zone_mgmt_op(bio)) {
- 		ci.bio = bio;
- 		ci.sector_count = 0;
- 		error = __split_and_process_non_flush(&ci);
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 067ef9242275..fd2458cd1a49 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -398,6 +398,14 @@ static inline bool op_is_zone_mgmt_op(enum req_opf op)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 86a2bd721900..485832deb7ea 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -579,6 +579,7 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+ 		state->cur_req++;
  	}
- }
  
-+/*
-+ * Check if the bio is zoned operation.
-+ */
-+static inline bool bio_is_zone_mgmt_op(struct bio *bio)
-+{
-+	return op_is_zone_mgmt_op(bio_op(bio));
-+}
-+
- static inline bool op_is_write(unsigned int op)
- {
- 	return (op & 1);
++	req->file = NULL;
+ 	req->ctx = ctx;
+ 	req->flags = 0;
+ 	/* one is dropped after submission, the other at completion */
+@@ -1801,10 +1802,8 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
+ 		req->sequence = ctx->cached_sq_head - 1;
+ 	}
+ 
+-	if (!io_op_needs_file(s->sqe)) {
+-		req->file = NULL;
++	if (!io_op_needs_file(s->sqe))
+ 		return 0;
+-	}
+ 
+ 	if (flags & IOSQE_FIXED_FILE) {
+ 		if (unlikely(!ctx->user_files ||
+
 -- 
-2.19.1
+Jens Axboe
 
