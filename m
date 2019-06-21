@@ -2,102 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4B234E2C4
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 11:12:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52AF84E2F6
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jun 2019 11:15:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfFUJMN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jun 2019 05:12:13 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40635 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfFUJMM (ORCPT
+        id S1726439AbfFUJPa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jun 2019 05:15:30 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60282 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726232AbfFUJP3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jun 2019 05:12:12 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a9so4504003lff.7
-        for <linux-block@vger.kernel.org>; Fri, 21 Jun 2019 02:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=k4aXc+WCbb0KX3YXwP2LFgbpd81EOKzrd5cyRZaZTSg=;
-        b=sSFnuYhsFN1JD56EIiE1pEfjm6C0QSyZG31411kwJRybXeYFh6pC5C8yQp22lVlwXe
-         0RZW82JsiuTifNXgpYfDvor7psQ1a+TZHnK57CSfKwGHg+AeqA4JmUZrBMhfnlvhPGET
-         K5cisM7SCV5xW754YlV5rHRAgZN9L262ZefebDu/MTCz8ZLuXTwkkfmzCTXJTdXuO1Ub
-         e6Bo+iqKVs6StBtV4THNiGApkGGzW/T9Bnkiacm15kj30YQfuNKOrQcErGQ8y1FS5OOa
-         /xzpWU9gkb9vV2I8975rGq7NbVaO18XGeU6FmtFxgNTnIgzW5g/LSYuJzeYPkJrnCn75
-         py3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=k4aXc+WCbb0KX3YXwP2LFgbpd81EOKzrd5cyRZaZTSg=;
-        b=IFMlII8dC24KAhJojubpnr5ZgJka6i3ESCKU4AdrmKEBY6sNPjJSIknJ4u+hDhMuaO
-         Qx4aO2/clC04In1xbKlYIVfzDyU6YPAjTmYP16hNiQhbQ4HIrkE6XDzNnqwnbCUIRUyW
-         JA2z8sp6/8HYJ/factm2LqjU2/e1bv9tpuQl6/ubffUR2PR1mKsAkiv59RLNc1KeltHK
-         OaokIOeX/x51PLfnVvfxa26ldL/499oIgOYmGpYNuLhoZBh+Agz4UEfOExx8zgO1i75S
-         pu5vwUuej8H4ylxvB91LucVGCjo3lV7Ijrjv7xyHfCUTwJdF3hu8p3IuNUBJPWczODiT
-         8OoA==
-X-Gm-Message-State: APjAAAVMJTAw0ngaKjv6EjivbmaTjGrB/MRY7IR3G8DOKav/DOH3+fkO
-        AKxxcO2gGehaf2lewVbrCPMIy1ny3Go=
-X-Google-Smtp-Source: APXvYqzvbOWqaN5hXsBK1NV7YAT9x6a/dav5F34bCxNcV082rL8AhKA+NiD88XxrJVwsEh/8uCeRfA==
-X-Received: by 2002:a05:6512:24a:: with SMTP id b10mr65728968lfo.37.1561108330334;
-        Fri, 21 Jun 2019 02:12:10 -0700 (PDT)
-Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id z26sm303178ljz.64.2019.06.21.02.12.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 02:12:09 -0700 (PDT)
-From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-To:     axboe@fb.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL 2/2] lightnvm: fix uninitialized pointer in nvm_remove_tgt()
-Date:   Fri, 21 Jun 2019 11:12:00 +0200
-Message-Id: <20190621091200.23168-3-mb@lightnvm.io>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190621091200.23168-1-mb@lightnvm.io>
+        Fri, 21 Jun 2019 05:15:29 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5L959OU013692;
+        Fri, 21 Jun 2019 02:15:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=flqjpcj4fWLOyAG8SvHboxGOc+E72I/m8STWy4fDd2g=;
+ b=NAniB6lMCdtP6q3N5NLBrmVNjQBlWSudza4J8q/W1xR98UxxlB6r8ZMqabmpZeQIK4Sd
+ U3AMU8YuoXnm1aEweYh6Qzz15lU/rU4e5gX3se+HQLoaKh20qQXUdgJDQMsVMSUw/UJu
+ 2n/TkuTrnl8rNkaSyT94ivtJPO4jORSoStU= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t8tnk8aph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jun 2019 02:15:27 -0700
+Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 21 Jun 2019 02:15:23 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 21 Jun 2019 02:15:22 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 21 Jun 2019 02:15:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=flqjpcj4fWLOyAG8SvHboxGOc+E72I/m8STWy4fDd2g=;
+ b=m7FhTSeHXDSLp7Gn4LZSv/B3sKKXV/Xj7X+cJPxznNxBXUNkKNG0exf6Nhg1KqXvBJjGmACfZ4NTJGz3dF7DHPvkgrFRaXaYgAhFH0Yi6ayNpggG2DRfDOK9FZ39QTg9+X8euNw2QAGkkW9Lsz//YLPEMXdnEKGxUSqWU6iiGMc=
+Received: from CY4PR15MB1463.namprd15.prod.outlook.com (10.172.159.10) by
+ CY4PR15MB1814.namprd15.prod.outlook.com (10.172.77.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 21 Jun 2019 09:15:21 +0000
+Received: from CY4PR15MB1463.namprd15.prod.outlook.com
+ ([fe80::39f5:87bb:21d:2031]) by CY4PR15MB1463.namprd15.prod.outlook.com
+ ([fe80::39f5:87bb:21d:2031%10]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
+ 09:15:00 +0000
+From:   Jens Axboe <axboe@fb.com>
+To:     =?utf-8?B?TWF0aWFzIEJqw7hybGluZw==?= <mb@lightnvm.io>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL 0/2] lightnvm updates for 5.3
+Thread-Topic: [GIT PULL 0/2] lightnvm updates for 5.3
+Thread-Index: AQHVKBFxHHI1YIZeCES8RExyO+fe0Kal02qA
+Date:   Fri, 21 Jun 2019 09:14:59 +0000
+Message-ID: <a3ca86b4-42ad-006f-e2f2-6c63049ad5fb@fb.com>
 References: <20190621091200.23168-1-mb@lightnvm.io>
+In-Reply-To: <20190621091200.23168-1-mb@lightnvm.io>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0306.eurprd05.prod.outlook.com
+ (2603:10a6:7:93::37) To CY4PR15MB1463.namprd15.prod.outlook.com
+ (2603:10b6:903:fa::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.186.115.204]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccc7b057-747b-44c2-0500-08d6f628ef4f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1814;
+x-ms-traffictypediagnostic: CY4PR15MB1814:
+x-microsoft-antispam-prvs: <CY4PR15MB18143FA7969D0EC25984A964C0E70@CY4PR15MB1814.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1186;
+x-forefront-prvs: 0075CB064E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(316002)(99286004)(2616005)(26005)(102836004)(6916009)(5660300002)(52116002)(476003)(76176011)(66066001)(86362001)(31696002)(14454004)(71446004)(53546011)(68736007)(3846002)(11346002)(6116002)(25786009)(386003)(6506007)(36756003)(446003)(6246003)(4326008)(186003)(6512007)(6486002)(2906002)(486006)(6436002)(73956011)(66946007)(66476007)(64756008)(66446008)(66556008)(558084003)(54906003)(8936002)(81156014)(81166006)(8676002)(256004)(31686004)(53936002)(71200400001)(71190400001)(229853002)(7736002)(305945005)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1814;H:CY4PR15MB1463.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VmaITFq7xK09b4aHiUx5phubQGtdyoKRW2SMmWB5TdDMhEyi/9yi2hQxEhp1C1udoRgSUTpXlL70Agky7g8weQmJnoTenMQXzpcmnaYPUhRfU+8a7eCAepG24HRnzkgs8eogyz+OMRe8ZXuZJk23HSUXdUS0w/d9cYIS9F1nQ1aI4VcqO9LFxkW3Z76wDYl7TY8wDOpaXopWDn1A2ioExu3P+2r7+R40frqZjlPh/CEztweHw7krZJQ76Lx3snXLcLPZ3Z/mGaNubjHCxTEBrgtBy/DJQ2s+kLnuqItWWdeLbuQsd6+LgWxRFvTsOI/vIVRBGayElEasC47DJp7mQLrWzZcoiNCtAdW65oHQREbLyUQQkocacdhZgcQmpXouPqTjLRLNn+5OrBqPkw99V3tqtpexXfmI3Q4IoZe4jIE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BFC8252CF0F4B243AB2D07557DA31C5E@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccc7b057-747b-44c2-0500-08d6f628ef4f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 09:15:00.2999
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: axboe@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1814
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=825 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210077
+X-FB-Internal: deliver
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-
-With gcc 4.1:
-
-    drivers/lightnvm/core.c: In function ‘nvm_remove_tgt’:
-    drivers/lightnvm/core.c:510: warning: ‘t’ is used uninitialized in this function
-
-Indeed, if no NVM devices have been registered, t will be an
-uninitialized pointer, and may be dereferenced later.  A call to
-nvm_remove_tgt() can be triggered from userspace by issuing the
-NVM_DEV_REMOVE ioctl on the lightnvm control device.
-
-Fix this by preinitializing t to NULL.
-
-Fixes: 843f2edbdde085b4 ("lightnvm: do not remove instance under global lock")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
----
- drivers/lightnvm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 7d555b110ecd..a600934fdd9c 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -478,7 +478,7 @@ static void __nvm_remove_target(struct nvm_target *t, bool graceful)
-  */
- static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
- {
--	struct nvm_target *t;
-+	struct nvm_target *t = NULL;
- 	struct nvm_dev *dev;
- 
- 	down_read(&nvm_lock);
--- 
-2.19.1
-
+T24gNi8yMS8xOSAzOjExIEFNLCBNYXRpYXMgQmrDuHJsaW5nIHdyb3RlOg0KPiBIaSBKZW5zLA0K
+PiANCj4gQSBjb3VwbGUgb2YgcGF0Y2hlcyBmb3IgdGhlIDUuMyB3aW5kb3cuIEdlZXJ0IGZpeGVk
+IGFuIHVuaW5pdGlhbGl6ZWQNCj4gcG9pbnRlciBidWcsIGFuZCBIZWluZXIgZml4ZWQgdXAgYSBi
+dWcgd2hlbiBtZXJnaW5nIGJpbyBwYWdlcyBpbiBwYmxrLg0KDQpBcHBsaWVkLCB0aGFua3MuDQoN
+Ci0tIA0KSmVucyBBeGJvZQ0KDQo=
