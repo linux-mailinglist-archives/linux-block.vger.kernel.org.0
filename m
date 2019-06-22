@@ -2,87 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83D5A4F438
-	for <lists+linux-block@lfdr.de>; Sat, 22 Jun 2019 09:48:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA50A4F6EA
+	for <lists+linux-block@lfdr.de>; Sat, 22 Jun 2019 18:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfFVHsD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 22 Jun 2019 03:48:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46089 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfFVHsD (ORCPT
+        id S1726397AbfFVQ2z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 22 Jun 2019 12:28:55 -0400
+Received: from sonic301-3.consmr.mail.bf2.yahoo.com ([74.6.129.42]:34084 "EHLO
+        sonic301-3.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726357AbfFVQ2u (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 22 Jun 2019 03:48:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d4so13504477edr.13
-        for <linux-block@vger.kernel.org>; Sat, 22 Jun 2019 00:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j0pTpoFtmc61TrE7sVJUbFMdNf+iYrYrV8+0Uja02OE=;
-        b=c8FoU+4dqExKBTLPzwfEuZfZvPYjsZ8EKlrwIHunw6FBD2BpmgfTl5AdrHAOyXv3LN
-         ZuDLqNgp4tWSb4ZPQDjS8EeNhP7mFo81qG3tZMS+EdrlQdnRevu3IjWasj7/askxh/rv
-         01YdUfNbJXsM3hgvN3JvfB57hA1Kvr0BsAG8kypeR+rr5IPpTWmJa8Nh8Zumvh+Pva0P
-         ip+fXQf/TMGtT31sdQDm7GgbikV+op2EJEJiIoqXpXbg3iHMTNwgNrvu5EWvrNCx5cun
-         MOtHukaPWa8hU6I4s+EfjArfpkOR2jwWa4X+AWVXsdn3VW+Ml6PWHsX0+Zq5Xf1bYLyz
-         5LKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j0pTpoFtmc61TrE7sVJUbFMdNf+iYrYrV8+0Uja02OE=;
-        b=WO0T18WkiyQJrgDYvvaCRiYKh/VCRGLxqIvlwT3w6XDNXFhDriMCd6He/GN36hZt3o
-         tZXhdTEGBmJSEk+GTrPjIG4+RnoGS2rvPFjdI1sJpnEf5Q1zPluZszkO4B46SF19/H6d
-         ZdlcCEpN2uHfiGExyVgBwNtKbmr/1RH9sfdbRDxoOPXrBkSaiejHPmLlCAWT2jL+ecXA
-         JHXzziiV15hEQgwkUQ1pzDRpHNa7TwkVIxWaaW3qpbqPR4XRw99u4FrpCuMlbZwwFsK2
-         saS8XkFDiq4N/1Ul8f6UAU1fYJ+iFWzqrPL8+gngP4kN+N7K4dbe1QUSbonLk+NIjBBg
-         J2ag==
-X-Gm-Message-State: APjAAAXUTGYisEkEyLVjKKGlU79J2TQQCDV9NrJi6nwzJshh5MuCn1sS
-        7ZmLfMfN/AHnwBYhrkkMz8XfJw==
-X-Google-Smtp-Source: APXvYqzOxk9pjGU/H/ABIdrhPcodDd8kEwAUrnjExUJvJ6W2eUB/gcDzK12O10XAJ5CRU4PDGfWt5Q==
-X-Received: by 2002:a50:9157:: with SMTP id f23mr40671128eda.79.1561189681874;
-        Sat, 22 Jun 2019 00:48:01 -0700 (PDT)
-Received: from [192.168.1.208] (ip-5-186-115-204.cgn.fibianet.dk. [5.186.115.204])
-        by smtp.gmail.com with ESMTPSA id dc1sm785697ejb.39.2019.06.22.00.48.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Jun 2019 00:48:01 -0700 (PDT)
-Subject: Re: [io_uring]: fio's ./t/io_uring on /dev/nullb0 causing CPU stalls
-To:     Stephen Bates <sbates@raithlin.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Cc:     "fio-owner@vger.kernel.org" <fio-owner@vger.kernel.org>
-References: <02CA47A4-B51C-4393-9C90-8EAFFE825669@raithlin.com>
- <5660C665-196B-4A4F-B61A-0A7569B6056C@raithlin.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b3f4f22c-5f83-0118-d930-bd3745884baf@kernel.dk>
-Date:   Sat, 22 Jun 2019 01:48:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sat, 22 Jun 2019 12:28:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220929; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=FwrBLUl7u665XwQeVPTq5hUQ4Ptv5qPcwgE0MfCyAxPjQW66W+sBKlTITy95Xiak8M/9mL3k87XvuhuNYmdzjOXFqAsXXJ7ZeR0tr0xQhaR4qpp9+I79zHB4JVXDeOtUnrv/ni1DEn3m49tSMIml9+1SbDvUcui/xLYzcB7mOtvlwJJC6bBkcbOwJW8drH7WnSKYQVlUvO9PRg8+IWYABo4m/HoTrmg3JSd7+tfq1bmdsTjreC9G6uwJClVG1p8XyGEOijmNqXv9Ivunj8UzUvxVldTIg/taTAKdSlSG3i+xbnz28LKLpxSK2+M63p52Vf+hNJ0OycyVj1TkO+H8OQ==
+X-YMail-OSG: BClZlNgVM1mJa1pSUAMlnjmDwJQUKDn0osVKNVIeZ6AC0JZQ8NzrV_.P2vPToBw
+ lk4l1yMYy0P1wu9iKWHPF1vwWtED.NCcY6jE.jXdELnZdUngnDzcX.f1Ik7TcPjN._6dUftCNvSG
+ 0ilPDIIh6JKut3rld3EDzfXqVTEprJFL10dLfXEmdNXy8_9HzWnLN9Uxxh6FWr8nj4DbExyF48M8
+ b8CzHn8AtWzh0fDjJqMRXb5UR1L1fHF.mq4wk_41bl8VHLLREhO8D9AiMB_Iou.TvP.xektI4Uzf
+ lBotEg54S8nbe5a5a2eamKaLSiD6XaCIzSQkrGwkgk9qzk7J4361PG1C2lAWhSULJjGYH.uKi9SH
+ 8omXh8MvwuZmVU7umqXbA4eIFWV8ruRR3qRFWtA.2B0Eer.D49EbNovsAu.wRPm8yYyL6YMdaoys
+ 3vYAkjype1yPgR0gHAH3zObnNPMrtMzQfsTzcaha59dNYsVWPRo5EvcFgAIKXVIUqnKnooWuODru
+ O4SgrdrM8PGEZGs5dJS.h.dJB3gwQ.0I1wf1Q_CLgJhbPMrumaMiWl3ifhN9G_CCxrGhRPRltqdB
+ RyAvAXGENXKEJswzM.sYWHkLQyblOWaGX5TLKzeDGaJCZVu7CtZvQ0aNcyWtqrf4SAtE7MK9SqUH
+ 7phABBxeBrGdyDkvdUQOX_EPh25.Hb3SncDKllMEIHjvEdwbQcMGmqMEDVCI8Jh0nfgpjh259ODl
+ q.bGW_sz63_QvjPWXygjUQ4RzfXiei1bHIkvbkPAHc04dS.Qr8LP1Jyxp2QD0wtNtJgo5RScK99X
+ P5NPqcNAR8eez8YgXpk3cKLQCR9JSylhL6QyUVACODhQSLMO_l73eEDpWzNQUeEQLrEwA53TFUO9
+ BXx4lR26gADp4OeWMANR3pTNDn8J7Oc5G1l.tF8AqVFtdsoB5vgCdw0tzoX9_22cJzNNteihaN9H
+ ktOSXaCeUY26x9DWNkYi7HTOCc9F4vHnioRwelB9Lv.KGDeGPUJBBPmfcn0xXC8MB2YTlUFeVHzN
+ FJsHhvFz9eJx.VwEAdhJs3DHW6xmbj9a_RSOf.BoLPiAvMAdoBe_1sVY8nFOqhuBwpkbj17TOzIW
+ ts0JEWafkyantIFw8kEnIr0AHDEAK4aB1fgOVS8TQpbEaj2tB4pKHPa4OOjXszQAPBozr7PYVj2f
+ 6AcwHFYhcmsrFfliX20p43dgFMRY8GMXgvUWeegBAeAuOTxCoUC9WvAdL
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:28:49 +0000
+Date:   Sat, 22 Jun 2019 16:28:46 +0000 (UTC)
+From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
+Reply-To: miss.fmayusuf11@gmail.com
+Message-ID: <270302503.296556.1561220926635@mail.yahoo.com>
+Subject: From:Miss: Fatima Yusuf.
 MIME-Version: 1.0
-In-Reply-To: <5660C665-196B-4A4F-B61A-0A7569B6056C@raithlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/21/19 6:06 AM, Stephen  Bates wrote:
-> Hi
-> 
->> I hit the following BUG when testing fio's t/io_uring test on a null
->> block device
-> 
-> I confirmed the same BUG occurs on 5.2-rc5. I also managed to hit a
-> similar bug if I use the io_uring engine in fio but only when the
-> hipri engine option is enabled.
 
-Can't seem to reproduce this, but from your description, seems to be
-specific to polled IO.
 
-Do you have any options set for null_blk? Can you send your kernel
-.config as well?
+From:Miss: Fatima Yusuf.
 
--- 
-Jens Axboe
+For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
 
+I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
+
+Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
+
+I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
+
+I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
+
+My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
+
+I am waiting to hear from you.
+Yours Sincerely,
+Miss.Fatima Yusuf.
