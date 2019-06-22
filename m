@@ -2,65 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA50A4F6EA
-	for <lists+linux-block@lfdr.de>; Sat, 22 Jun 2019 18:28:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6170D4F810
+	for <lists+linux-block@lfdr.de>; Sat, 22 Jun 2019 21:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfFVQ2z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 22 Jun 2019 12:28:55 -0400
-Received: from sonic301-3.consmr.mail.bf2.yahoo.com ([74.6.129.42]:34084 "EHLO
-        sonic301-3.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726357AbfFVQ2u (ORCPT
+        id S1726342AbfFVTiv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 22 Jun 2019 15:38:51 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:40167 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfFVTiv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 22 Jun 2019 12:28:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220929; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=FwrBLUl7u665XwQeVPTq5hUQ4Ptv5qPcwgE0MfCyAxPjQW66W+sBKlTITy95Xiak8M/9mL3k87XvuhuNYmdzjOXFqAsXXJ7ZeR0tr0xQhaR4qpp9+I79zHB4JVXDeOtUnrv/ni1DEn3m49tSMIml9+1SbDvUcui/xLYzcB7mOtvlwJJC6bBkcbOwJW8drH7WnSKYQVlUvO9PRg8+IWYABo4m/HoTrmg3JSd7+tfq1bmdsTjreC9G6uwJClVG1p8XyGEOijmNqXv9Ivunj8UzUvxVldTIg/taTAKdSlSG3i+xbnz28LKLpxSK2+M63p52Vf+hNJ0OycyVj1TkO+H8OQ==
-X-YMail-OSG: BClZlNgVM1mJa1pSUAMlnjmDwJQUKDn0osVKNVIeZ6AC0JZQ8NzrV_.P2vPToBw
- lk4l1yMYy0P1wu9iKWHPF1vwWtED.NCcY6jE.jXdELnZdUngnDzcX.f1Ik7TcPjN._6dUftCNvSG
- 0ilPDIIh6JKut3rld3EDzfXqVTEprJFL10dLfXEmdNXy8_9HzWnLN9Uxxh6FWr8nj4DbExyF48M8
- b8CzHn8AtWzh0fDjJqMRXb5UR1L1fHF.mq4wk_41bl8VHLLREhO8D9AiMB_Iou.TvP.xektI4Uzf
- lBotEg54S8nbe5a5a2eamKaLSiD6XaCIzSQkrGwkgk9qzk7J4361PG1C2lAWhSULJjGYH.uKi9SH
- 8omXh8MvwuZmVU7umqXbA4eIFWV8ruRR3qRFWtA.2B0Eer.D49EbNovsAu.wRPm8yYyL6YMdaoys
- 3vYAkjype1yPgR0gHAH3zObnNPMrtMzQfsTzcaha59dNYsVWPRo5EvcFgAIKXVIUqnKnooWuODru
- O4SgrdrM8PGEZGs5dJS.h.dJB3gwQ.0I1wf1Q_CLgJhbPMrumaMiWl3ifhN9G_CCxrGhRPRltqdB
- RyAvAXGENXKEJswzM.sYWHkLQyblOWaGX5TLKzeDGaJCZVu7CtZvQ0aNcyWtqrf4SAtE7MK9SqUH
- 7phABBxeBrGdyDkvdUQOX_EPh25.Hb3SncDKllMEIHjvEdwbQcMGmqMEDVCI8Jh0nfgpjh259ODl
- q.bGW_sz63_QvjPWXygjUQ4RzfXiei1bHIkvbkPAHc04dS.Qr8LP1Jyxp2QD0wtNtJgo5RScK99X
- P5NPqcNAR8eez8YgXpk3cKLQCR9JSylhL6QyUVACODhQSLMO_l73eEDpWzNQUeEQLrEwA53TFUO9
- BXx4lR26gADp4OeWMANR3pTNDn8J7Oc5G1l.tF8AqVFtdsoB5vgCdw0tzoX9_22cJzNNteihaN9H
- ktOSXaCeUY26x9DWNkYi7HTOCc9F4vHnioRwelB9Lv.KGDeGPUJBBPmfcn0xXC8MB2YTlUFeVHzN
- FJsHhvFz9eJx.VwEAdhJs3DHW6xmbj9a_RSOf.BoLPiAvMAdoBe_1sVY8nFOqhuBwpkbj17TOzIW
- ts0JEWafkyantIFw8kEnIr0AHDEAK4aB1fgOVS8TQpbEaj2tB4pKHPa4OOjXszQAPBozr7PYVj2f
- 6AcwHFYhcmsrFfliX20p43dgFMRY8GMXgvUWeegBAeAuOTxCoUC9WvAdL
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:28:49 +0000
-Date:   Sat, 22 Jun 2019 16:28:46 +0000 (UTC)
-From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
-Reply-To: miss.fmayusuf11@gmail.com
-Message-ID: <270302503.296556.1561220926635@mail.yahoo.com>
-Subject: From:Miss: Fatima Yusuf.
+        Sat, 22 Jun 2019 15:38:51 -0400
+Received: by mail-wr1-f51.google.com with SMTP id p11so9705476wre.7
+        for <linux-block@vger.kernel.org>; Sat, 22 Jun 2019 12:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ANjjY8Rh0UaBi+L+QlwWhKYsKX4sBFreV6BGed2sdaU=;
+        b=xxdConYxKchtiLYDpULGAnYoE5TK4G4PboR7+Ad8BFltYnf5fKPG4ysWyaqQ53nVO+
+         jOzgAyBMqQC+juY/uHlrBd00jUe1vDjQ0aCuWmE2rUsjS39j3ia+0mVSrHTUa6mVo/rc
+         ViE3Zm5meCnt61DXudthAcjdAL1hsMmyogC1hbdJXy+KJxI2RKkAMbL5KZ8zZF0fc8PQ
+         L6LHP8e/h5RMnR8Y2DrTJnZCzUuoUme1kTnCud7Tubp61L2CgtmawLvwJSxPAn9VKhSe
+         9/R8zZusXA1hZeFQTOSdb6LVn8DzaTjm0P4/qko13DHYfu2apHI78VasQwYxp8l8+kPf
+         8cvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ANjjY8Rh0UaBi+L+QlwWhKYsKX4sBFreV6BGed2sdaU=;
+        b=l+WwhsoM8XFKU2nPSqH9qr4yJ0R1RUQOmKxFg8hCTrgAsluLbOWUxIZHkYWl+vzfUd
+         ACFh2b8gIJ1cxEnHlabkVR/HeqHVwcTrMB+Zh9YBoS6dugZtvZNMmG3ogAslLmq+HxQv
+         /omgGLeasGN0At++hR77ZRz4PkmRCzxyrfcbrHGwnFZtqC0oMN1/p9VtANHY+NrQqdH5
+         8aPd6Xga9EpPkEfMfPDHCfcF0J/SjMT8xPFN1m+wdIN5Hnf8drRTf+/Tpf8CYC+i9pSW
+         EZ0zCxHeT0mjroaYHR8G7WmUYETK8OSFLuJg4Eqwp5+SvnKdiu5In1DiA0lOpgoX/0HK
+         5BjQ==
+X-Gm-Message-State: APjAAAUsANWHo4XEBk0fj9/st+/suG6fDRw3tGH1vsPUqlTOz8kQLyt5
+        dmXFTpzyOr1rms4hhFrcmNsnyoQ+Usk=
+X-Google-Smtp-Source: APXvYqwDeDcUMfnA7RD01Pvi1I42PUeo6nS2ejuf5kqS0AzelwZ1EFQ2DYHtWXjIafsW6/L2dW5gXg==
+X-Received: by 2002:adf:b643:: with SMTP id i3mr11745951wre.284.1561232328886;
+        Sat, 22 Jun 2019 12:38:48 -0700 (PDT)
+Received: from localhost.localdomain (88-147-39-13.dyn.eolo.it. [88.147.39.13])
+        by smtp.gmail.com with ESMTPSA id h90sm7506441wrh.15.2019.06.22.12.38.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 22 Jun 2019 12:38:48 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX 0/1] block, bfq: fix mistake causing violation of service guarantees
+Date:   Sat, 22 Jun 2019 21:38:02 +0200
+Message-Id: <20190622193803.33044-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Jens,
+any chance this trivial, but rather critical fix makes it into 5.2?
 
+Thanks,
+Paolo
 
-From:Miss: Fatima Yusuf.
+Paolo Valente (1):
+  block, bfq: fix operator in BFQQ_TOTALLY_SEEKY
 
-For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
+ block/bfq-iosched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
-
-Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
-
-I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
-
-I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
-
-My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
-
-I am waiting to hear from you.
-Yours Sincerely,
-Miss.Fatima Yusuf.
+--
+2.20.1
