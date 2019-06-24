@@ -2,92 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 517D851B79
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 21:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D482951B95
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 21:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbfFXTh0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 15:37:26 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:41078 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729405AbfFXThZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:37:25 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hfUm8-0002Af-EH; Mon, 24 Jun 2019 13:37:13 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
- <20190620193353.GF19891@ziepe.ca> <20190624073126.GB3954@lst.de>
- <20190624134641.GA8268@ziepe.ca> <20190624135024.GA11248@lst.de>
- <20190624135550.GB8268@ziepe.ca>
- <7210ba39-c923-79ca-57bb-7cf9afe21d54@deltatee.com>
- <20190624181632.GC8268@ziepe.ca>
- <bbd81ef9-b4f7-3ba7-7f93-85f602495e19@deltatee.com>
- <20190624185444.GD8268@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <980b6d6b-0232-51b6-5aae-03fa8e7fc8e5@deltatee.com>
-Date:   Mon, 24 Jun 2019 13:37:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726414AbfFXTln (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 15:41:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39397 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbfFXTlH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Jun 2019 15:41:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so15155307wrt.6
+        for <linux-block@vger.kernel.org>; Mon, 24 Jun 2019 12:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J6McyXpHhvJ62Wx5SvCqGaB8/OSzRVB/5VC6vTy2TqQ=;
+        b=M48+BroHFQYMi06n4mupqxhg0lJK+JUAVqf5zHxFG54TrAZYIrIWtQUPbfLJhowVfY
+         nha7AD8YdXoLitLaAIuvmXGtIlr0gJfEkS8Ir4FSHGlf6R191KkvGz+ie7RevmS0hbyH
+         tOIz9XGsYXVfkUZxFaUZQaMcXIKXc3VdKe/8I09ftsegvoJ6IONcP55/knMzWpu5v9+V
+         Wi3TELxFuVq+OGYDSZ1Az+t/uyW1KrJZvtZlrVf8zaporbdn9tEexXV4RvLls+RjZWls
+         lh6ZfGKNdpHun6Ky9xnYfIbip8UwcW4DPTnmTk7Txy+AeSEwTYHjDkawFzMMt8SqFQKV
+         P/Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J6McyXpHhvJ62Wx5SvCqGaB8/OSzRVB/5VC6vTy2TqQ=;
+        b=olwC76Y7hMEy9GeuC3306lbcAopoIBLkegm+i8YpalEq0PC19G/0FApdSvgoKZhJEv
+         7Ur5EfJMBVyFqFwSHF6CxBUv1HcBCNcQwwRWWozGNobsxaPoMrc1kYG8ptmd5v5ixuY9
+         j31rGVdX71Q85KEAVVBgmLep5U+qVN4FHYoSLofJTMaVO8NPwwmh1L3PnN3YPqCk0Nk1
+         rf4NcvqS9KYmTZzb24qr/LLzarohOR2/0Yf24hLN19PFHXz24/+9Bp2v35OC5QEuIXxr
+         2qiNzmKBJ6rSy+xF2Y16/1cAcfswK+jriD7fW9YwgtUTzeqbVmHHkwdmQFw/ITq3RfYR
+         O+Ng==
+X-Gm-Message-State: APjAAAWfsRnOf+3XpNGHZ2NyP/3uLFIdT3OIz9cs8d5oAEKWjPR8dsFm
+        KzPq+Ft21Yo5Jmp5vPmE09OfKg==
+X-Google-Smtp-Source: APXvYqyD1eXJ9voOpGfL9zu8E91jQPk0kmAnjvPBM0hwFXNjfqm/29dKOBYYxImoXX6UVfSxyoJczA==
+X-Received: by 2002:adf:dfc4:: with SMTP id q4mr37375067wrn.54.1561405265273;
+        Mon, 24 Jun 2019 12:41:05 -0700 (PDT)
+Received: from localhost.localdomain (146-241-101-27.dyn.eolo.it. [146.241.101.27])
+        by smtp.gmail.com with ESMTPSA id q25sm17615395wrc.68.2019.06.24.12.41.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 12:41:04 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        bottura.nicola95@gmail.com, srivatsa@csail.mit.edu,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT 0/7] boost throughput with synced I/O, reduce latency and fix a bandwidth bug
+Date:   Mon, 24 Jun 2019 21:40:35 +0200
+Message-Id: <20190624194042.38747-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190624185444.GD8268@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, hch@lst.de, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Jens,
+this series, based against for-5.3/block, contains:
+1) The improvements to recover the throughput loss reported by
+   Srivatsa [1] (first five patches)
+2) A preemption improvement to reduce I/O latency
+3) A fix of a subtle bug causing loss of control over I/O bandwidths
 
+Thanks,
+Paolo
 
-On 2019-06-24 12:54 p.m., Jason Gunthorpe wrote:
-> On Mon, Jun 24, 2019 at 12:28:33PM -0600, Logan Gunthorpe wrote:
-> 
->>> Sounded like this series does generate the dma_addr for the correct
->>> device..
->>
->> This series doesn't generate any DMA addresses with dma_map(). The
->> current p2pdma code ensures everything is behind the same root port and
->> only uses the pci bus address. This is valid and correct, but yes it's
->> something to expand upon.
-> 
-> I think if you do this it still has to be presented as the same API
-> like dma_map that takes in the target device * and produces the device
-> specific dma_addr_t
+[1] https://lkml.org/lkml/2019/5/17/755
 
-Yes, once we consider the case where it can go through the root complex,
-we will need an API similar to dma_map(). We got rid of that API because
-it wasn't yet required or used by anything and, per our best practices,
-we don't add features that aren't used as that is more confusing for
-people reading/reworking the code.
+Paolo Valente (7):
+  block, bfq: reset inject limit when think-time state changes
+  block, bfq: fix rq_in_driver check in bfq_update_inject_limit
+  block, bfq: update base request service times when possible
+  block, bfq: bring forward seek&think time update
+  block, bfq: detect wakers and unconditionally inject their I/O
+  block, bfq: preempt lower-weight or lower-priority queues
+  block, bfq: re-schedule empty queues if they deserve I/O plugging
 
-> Otherwise this whole thing is confusing and looks like *all* of it can
-> only work under the switch assumption
+ block/bfq-iosched.c | 952 ++++++++++++++++++++++++++++++--------------
+ block/bfq-iosched.h |  25 +-
+ 2 files changed, 686 insertions(+), 291 deletions(-)
 
-Hopefully it'll be clearer once we do the work to map for going through
-the root complex. It's not that confusing to me. But it's all orthogonal
-to the dma_addr_t through the block layer concept.
-
-Logan
+--
+2.20.1
