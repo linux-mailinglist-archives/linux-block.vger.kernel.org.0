@@ -2,159 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0E55103E
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 17:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4225177D
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 17:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbfFXPY0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 11:24:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38371 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbfFXPYZ (ORCPT
+        id S1729094AbfFXPnN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 11:43:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39290 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfFXPnN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 11:24:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z75so4689241pgz.5;
-        Mon, 24 Jun 2019 08:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lgND2Ln1TBQQyZCEAnGKpymz91Liq3socwltmWkX9XY=;
-        b=dYAtPv+90C/VZ7Prob7WQ5L59If12of+wMC6Hzb+7Dxwqz1ZgnNyG3pu8E4fGOUchx
-         drEImF0lbTOnCDOkUHGSZ7wbgkQYOSfBftt5Q2NIikF4PEKMSJOdhOUCOptP29vcLORw
-         4CctNYGVzXWa36/or8Mi3nVXspD7250Hy5k7ZffISYCusmRjAFkrze+gc227HLVWP4bC
-         DSO1o7pkfyEsrudhx5FZh3kbAJMRR1JBcozhBJN02fwQZFo4HwEq5u2nzCXIWxHSt25H
-         ycz2LRsZ58khQZoxbwBOK+QXlgmm393SvEZ7K8z1sKW6gnzzibIBjVLReb9U/sBvDyct
-         JUHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lgND2Ln1TBQQyZCEAnGKpymz91Liq3socwltmWkX9XY=;
-        b=CvRBx8XtBlAYaVsBwUpUMaUwA8AyDxkG0oGZuxibhrvdUeYu0pptsv7vIBZS2Hpu7Q
-         wVoOysE+pW4/6xpNWg0C8ZO8wf0E4LH7HbVFYmCgMV62ZXeyk6vExIuW22xqYjTFT6iF
-         QTnsDF3RjoR17MgN0Hc/2fLvjrrBCHDBMNXdHhHCose5KaIf3Ayy+vOKsQPYktjGp8V3
-         GLHWZAl4K7xr8bB/cElilIZcTTLB+UKWHl1JHWNiaXezvuWlbt4r9SkkQsQIUXb1mFku
-         ncYntF5h4PnpWsgYjEYsDicMkgzqUFW9t+ybHjunWBuUiHLxBMotyflzA5EFxoZlka6m
-         Emzw==
-X-Gm-Message-State: APjAAAXYXJVUTIqsMSvXWQusIxiNsGL+AG/1T6Zi9Mb6MijpXS/2JmGI
-        JxNiroCqGcTY0EVFjuBiAfDSogEm
-X-Google-Smtp-Source: APXvYqzU0xboNWcd1kQ0aKYSSAhpeljyXHqy7joHYSYu4QAPkAdS78BDlsinBHJX48WO1Ly5IHRJlA==
-X-Received: by 2002:a17:90b:d8a:: with SMTP id bg10mr25646706pjb.92.1561389865084;
-        Mon, 24 Jun 2019 08:24:25 -0700 (PDT)
-Received: from bridge.tencent.com ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id e63sm20066869pgc.62.2019.06.24.08.24.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 08:24:24 -0700 (PDT)
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
-To:     axboe@kernel.dk, keith.busch@intel.com, hare@suse.com,
-        ming.lei@redhat.com, osandov@fb.com, sagi@grimberg.me,
-        bvanassche@acm.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wenbin Zeng <wenbinzeng@tencent.com>
-Subject: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug
-Date:   Mon, 24 Jun 2019 23:24:07 +0800
-Message-Id: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 24 Jun 2019 11:43:13 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfR79-0000Pc-UN; Mon, 24 Jun 2019 17:42:40 +0200
+Date:   Mon, 24 Jun 2019 17:42:39 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Weiping Zhang <zhangweiping@didiglobal.com>
+cc:     axboe@kernel.dk, Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, bvanassche@acm.org,
+        keith.busch@intel.com, minwoo.im.dev@gmail.com,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous
+ affinity set
+In-Reply-To: <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
+Message-ID: <alpine.DEB.2.21.1906241740320.32342@nanos.tec.linutronix.de>
+References: <cover.1561385989.git.zhangweiping@didiglobal.com> <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently hctx->cpumask is not updated when hot-plugging new cpus,
-as there are many chances kblockd_mod_delayed_work_on() getting
-called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
-on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
-reporting excessive "run queue from wrong CPU" messages because
-cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
+On Mon, 24 Jun 2019, Weiping Zhang wrote:
 
-This patch added a cpu-hotplug handler into blk-mq, updating
-hctx->cpumask at cpu-hotplug.
+> The driver may implement multiple affinity set, and some of
+> are empty, for this case we just skip them.
 
-Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
----
- block/blk-mq.c         | 29 +++++++++++++++++++++++++++++
- include/linux/blk-mq.h |  1 +
- 2 files changed, 30 insertions(+)
+Why? What's the point of creating empty sets? Just because is not a real
+good justification.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ce0f5f4..2e465fc 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -39,6 +39,8 @@
- #include "blk-mq-sched.h"
- #include "blk-rq-qos.h"
- 
-+static enum cpuhp_state cpuhp_blk_mq_online;
-+
- static void blk_mq_poll_stats_start(struct request_queue *q);
- static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
- 
-@@ -2215,6 +2217,21 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 	return -ENOMEM;
- }
- 
-+static int blk_mq_hctx_notify_online(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct blk_mq_hw_ctx *hctx;
-+
-+	hctx = hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_online);
-+
-+	if (!cpumask_test_cpu(cpu, hctx->cpumask)) {
-+		mutex_lock(&hctx->queue->sysfs_lock);
-+		cpumask_set_cpu(cpu, hctx->cpumask);
-+		mutex_unlock(&hctx->queue->sysfs_lock);
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * 'cpu' is going away. splice any existing rq_list entries from this
-  * software queue to the hw queue dispatch list, and ensure that it
-@@ -2251,6 +2268,9 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
- 
- static void blk_mq_remove_cpuhp(struct blk_mq_hw_ctx *hctx)
- {
-+	if (cpuhp_blk_mq_online > 0)
-+		cpuhp_state_remove_instance_nocalls(cpuhp_blk_mq_online,
-+						    &hctx->cpuhp_online);
- 	cpuhp_state_remove_instance_nocalls(CPUHP_BLK_MQ_DEAD,
- 					    &hctx->cpuhp_dead);
- }
-@@ -2310,6 +2330,9 @@ static int blk_mq_init_hctx(struct request_queue *q,
- {
- 	hctx->queue_num = hctx_idx;
- 
-+	if (cpuhp_blk_mq_online > 0)
-+		cpuhp_state_add_instance_nocalls(cpuhp_blk_mq_online,
-+						 &hctx->cpuhp_online);
- 	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
- 
- 	hctx->tags = set->tags[hctx_idx];
-@@ -3544,6 +3567,12 @@ unsigned int blk_mq_rq_cpu(struct request *rq)
- 
- static int __init blk_mq_init(void)
- {
-+	cpuhp_blk_mq_online = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-+					"block/mq:online",
-+					blk_mq_hctx_notify_online, NULL);
-+	if (cpuhp_blk_mq_online <= 0)
-+		pr_warn("blk_mq_init: failed to setup cpu online callback\n");
-+
- 	cpuhp_setup_state_multi(CPUHP_BLK_MQ_DEAD, "block/mq:dead", NULL,
- 				blk_mq_hctx_notify_dead);
- 	return 0;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 15d1aa5..5241659 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -58,6 +58,7 @@ struct blk_mq_hw_ctx {
- 
- 	atomic_t		nr_active;
- 
-+	struct hlist_node	cpuhp_online;
- 	struct hlist_node	cpuhp_dead;
- 	struct kobject		kobj;
- 
--- 
-1.8.3.1
+Leaving the patch for Ming.
 
+Thanks,
+
+	tglx
+
+> Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+> ---
+>  kernel/irq/affinity.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index f18cd5aa33e8..6d964fe0fbd8 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -295,6 +295,10 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>  		unsigned int this_vecs = affd->set_size[i];
+>  		int ret;
+>  
+> +		/* skip empty affinity set */
+> +		if (this_vecs == 0)
+> +			continue;
+> +
+>  		ret = irq_build_affinity_masks(affd, curvec, this_vecs,
+>  					       curvec, masks);
+>  		if (ret) {
+> -- 
+> 2.14.1
+> 
+> 
