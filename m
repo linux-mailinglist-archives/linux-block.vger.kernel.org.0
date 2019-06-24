@@ -2,24 +2,24 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2567F504BF
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 10:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D35C0504C8
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 10:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfFXIoY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 04:44:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37758 "EHLO mx1.redhat.com"
+        id S1727650AbfFXIo7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 04:44:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39756 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbfFXIoX (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 04:44:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1726690AbfFXIo7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Jun 2019 04:44:59 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 485AF31628FA;
-        Mon, 24 Jun 2019 08:44:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52803A00F9;
+        Mon, 24 Jun 2019 08:44:56 +0000 (UTC)
 Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B0AC1001B01;
-        Mon, 24 Jun 2019 08:43:57 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 16:43:52 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0FDC45C21F;
+        Mon, 24 Jun 2019 08:44:46 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 16:44:42 +0800
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
@@ -32,41 +32,48 @@ Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Kashyap Desai <kashyap.desai@broadcom.com>,
         Sathya Prakash <sathya.prakash@broadcom.com>,
         Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/9] block: null_blk: introduce module parameter of
- 'g_host_tags'
-Message-ID: <20190624084351.GA10941@ming.t460p>
+Subject: Re: [PATCH 1/9] blk-mq: allow hw queues to share hostwide tags
+Message-ID: <20190624084441.GB10941@ming.t460p>
 References: <20190531022801.10003-1-ming.lei@redhat.com>
- <20190531022801.10003-3-ming.lei@redhat.com>
- <2f592878-4381-b6bb-2023-200a7df7093c@acm.org>
+ <20190531022801.10003-2-ming.lei@redhat.com>
+ <90d85b99-3bc0-fb3b-8537-aeac03414eae@acm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f592878-4381-b6bb-2023-200a7df7093c@acm.org>
+In-Reply-To: <90d85b99-3bc0-fb3b-8537-aeac03414eae@acm.org>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 24 Jun 2019 08:44:23 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 24 Jun 2019 08:44:59 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, May 31, 2019 at 08:39:04AM -0700, Bart Van Assche wrote:
+On Fri, May 31, 2019 at 08:37:39AM -0700, Bart Van Assche wrote:
 > On 5/30/19 7:27 PM, Ming Lei wrote:
-> > +static int g_host_tags = 0;
+> > diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> > index 6aea0ebc3a73..3d6780504dcb 100644
+> > --- a/block/blk-mq-debugfs.c
+> > +++ b/block/blk-mq-debugfs.c
+> > @@ -237,6 +237,7 @@ static const char *const alloc_policy_name[] = {
+> >   static const char *const hctx_flag_name[] = {
+> >   	HCTX_FLAG_NAME(SHOULD_MERGE),
+> >   	HCTX_FLAG_NAME(TAG_SHARED),
+> > +	HCTX_FLAG_NAME(HOST_TAGS),
+> >   	HCTX_FLAG_NAME(BLOCKING),
+> >   	HCTX_FLAG_NAME(NO_SCHED),
+> >   };
 > 
-> Static variables should not be explicitly initialized to zero.
+> The name BLK_MQ_F_HOST_TAGS suggests that tags are shared across a SCSI
+> host. That is misleading since this flag means that tags are shared across
+> hardware queues. Additionally, the "host" term is a term that comes from the
+> SCSI world and this patch is a block layer patch. That makes me wonder
+> whether another name should be used to reflect that all hardware queues
+> share the same tag set? How about renaming BLK_MQ_F_TAG_SHARED into
+> BLK_MQ_F_TAG_QUEUE_SHARED and renaming BLK_MQ_F_HOST_TAGS into
+> BLK_MQ_F_TAG_HCTX_SHARED?
 
-OK
+Looks fine, will do it in V2.
 
-> 
-> > +module_param_named(host_tags, g_host_tags, int, S_IRUGO);
-> > +MODULE_PARM_DESC(host_tags, "All submission queues share one tags");
->                                                             ^^^^^^^^
-> Did you perhaps mean "one tagset"?
-
-tagset means one set of tags, here all submission queues share one
-single tag space(tags), see 'struct blk_mq_tags'.
-
-
-thanks, 
+Thanks,
 Ming
