@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19E9D51B94
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 21:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F26E951B8F
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 21:41:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfFXTlK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 15:41:10 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45951 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730396AbfFXTlJ (ORCPT
+        id S1730675AbfFXTlM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 15:41:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38224 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729740AbfFXTlL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 15:41:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so15138296wre.12
-        for <linux-block@vger.kernel.org>; Mon, 24 Jun 2019 12:41:08 -0700 (PDT)
+        Mon, 24 Jun 2019 15:41:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so510914wmj.3
+        for <linux-block@vger.kernel.org>; Mon, 24 Jun 2019 12:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=atnBayrLpc2AX2svhMGsm60ysNZ9T7b+BNR7ZDTK0cg=;
-        b=loOF0OsDukaQjB4gzqEHf33xXpdkbvyUk80B+5eIPhILYl3VwyDSvqJO1sDzZPH6vR
-         rYRmMEWXgZZ+gLv5AELdm+O8YH2kQdVu5DaDMI8iW08rgE1dfcsAHgsEalivjQKP7Jk5
-         ccts3YWXMX9OGdxCu3hjcf8sqVTErfRXU8/mZo9lefPBvJg7DWfUfAEC10ylbMWRFaoO
-         +xisJCFcz4ITFGyNEpO6/c8P6ktheNpleL+RrZ09eT0srbMUAvnBR3usvSU1419Bmp9e
-         GDd6dNe/u6Axk6UZpZxbMgrpyHrxioQvGQOnpNn7WlkjsFbxeTQA/5Wg4ZJTcbJlMJlA
-         7stA==
+        bh=jFdPqD3TBf44a7c2W86e+D5nf2bSFpU6DQYW7s1Xtyc=;
+        b=jUz3pIK7GFLYzyZZC1NLM+qmBubKD0cR/ksXweLYxKtD6meQ2jRbJtvdVHenpdSe5h
+         SxEErNwcmnsz62OBV3TPzqQd+x0zxqhF1UFlCDFLJPFXmVMshLuI7zYRWEPue7bSyXGg
+         CC2Zl+gZjmxDeP3gVJMd/Xfc22sMsFvft1DcMuJluj3TVPmmq/EN3xDeN8ZbW8i7gUZz
+         IkcWUe82yllfLovacQzbIin5axowhDCoF5fyMhSfXUVg+88PQsEnavEGi92WVc/Y4kaD
+         5SlZSuExJuMXfFqLR+xYOqqUB/wcKjUdsoAoHU0pYRkqmXUgXg1ZCggRbyTgTmGKrri4
+         5f/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=atnBayrLpc2AX2svhMGsm60ysNZ9T7b+BNR7ZDTK0cg=;
-        b=BsMAiKBNoePJDS90if+/5l3Fl9tRlswMgQ+BYR8+jX1p6ukIqyMve9BaSnnKz9SFPa
-         HNx5RBc31rN9nGJVKG4scQJg7/9/YPK6N/dLWcOEBQdgs7/dqi7ba5gftoTrp+urc7W7
-         saQdSM0WM6EFP3c9TLSC0ZphVTbnV2HqU6KrfQ9Pas6ZFTTK0ResmFn+FtY4szbjIPaH
-         MI1fGGCcw43/N/ZI5l8gshRQLy+D5xyIGVGyeL6l0Iicnj8WHev7UVtHBlGrLxhLJZCX
-         eUn/oKaybGh+eJhz6Set/EZbxrfYkSb3TfoSh710bP0+Co9olpSsUHw2zDbqaCRMTvqo
-         L5Ug==
-X-Gm-Message-State: APjAAAWsQMGUBfP8BLfwEhCbXMR4p8lhdZVtfBtaNexwIPtPcUNvh67N
-        u3nBmXSUUPf7jPzLqgihdxtKEvPDETM=
-X-Google-Smtp-Source: APXvYqwqN7K2xUrBvStkw/0/+NWC3qsndEhJuGUuF96jm/cvwuGDunI66D16FAF8RBYMz+iCOUSBqg==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr34579834wrn.160.1561405267903;
-        Mon, 24 Jun 2019 12:41:07 -0700 (PDT)
+        bh=jFdPqD3TBf44a7c2W86e+D5nf2bSFpU6DQYW7s1Xtyc=;
+        b=SkBe612aQpXNVm21aaS/c4kgRgz35GlUX5/iWub9P1ppaBRV7oZcFk7xG+fZpQfYvn
+         Jj8IY7pUaKLRV6N0hA5oUzjoumegZqPcyfJdJSNM3Jla8oC5rZKfJ2l+shMzCydHe4AQ
+         5D4KtPoGlbtdcRKmjSXXdt+qBhvbvDF3KRPurmFafONevqAS8fnsFiJwQ5xps3TcPGeo
+         yJpA77/PnLJG6yN4nQmjmQRa4meSZdCoy/j6fSZXbwAxNKAQRkqlPn1PDleeGv7NhR5o
+         Jyvdfc9oOhG5S9qB+JWbpwMP1xj0NCSBzUhOpigzC08sxG4nwv2alvar+d+o8Gnki8zR
+         DGCQ==
+X-Gm-Message-State: APjAAAWsxv1MqMpvGhttqwpmc6r94Kv3049uEM0/bsw5V2//qRmrJw/8
+        b8ecxbwjh+QE1ZygygfiUa3t6w==
+X-Google-Smtp-Source: APXvYqw5BDG/KxnETCwgHcWNNFORB2nJcwBnAbM0CYqBtkprJrxohc9+YIkIZCm2UUlrcx7NuoUwbw==
+X-Received: by 2002:a7b:cb84:: with SMTP id m4mr18108832wmi.50.1561405269151;
+        Mon, 24 Jun 2019 12:41:09 -0700 (PDT)
 Received: from localhost.localdomain (146-241-101-27.dyn.eolo.it. [146.241.101.27])
-        by smtp.gmail.com with ESMTPSA id q25sm17615395wrc.68.2019.06.24.12.41.06
+        by smtp.gmail.com with ESMTPSA id q25sm17615395wrc.68.2019.06.24.12.41.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 12:41:07 -0700 (PDT)
+        Mon, 24 Jun 2019 12:41:08 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
         bottura.nicola95@gmail.com, srivatsa@csail.mit.edu,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT 2/7] block, bfq: fix rq_in_driver check in bfq_update_inject_limit
-Date:   Mon, 24 Jun 2019 21:40:37 +0200
-Message-Id: <20190624194042.38747-3-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT 3/7] block, bfq: update base request service times when possible
+Date:   Mon, 24 Jun 2019 21:40:38 +0200
+Message-Id: <20190624194042.38747-4-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190624194042.38747-1-paolo.valente@linaro.org>
 References: <20190624194042.38747-1-paolo.valente@linaro.org>
@@ -65,46 +65,47 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-One of the cases where the parameters for injection may be updated is
-when there are no more in-flight I/O requests. The number of in-flight
-requests is stored in the field bfqd->rq_in_driver of the descriptor
-bfqd of the device. So, the controlled condition is
-bfqd->rq_in_driver == 0.
+I/O injection gets reduced if it increases the request service times
+of the victim queue beyond a certain threshold.  The threshold, in its
+turn, is computed as a function of the base service time enjoyed by
+the queue when it undergoes no injection.
 
-Unfortunately, this is wrong because, the instruction that checks this
-condition is in the code path that handles the completion of a
-request, and, in particular, the instruction is executed before
-bfqd->rq_in_driver is decremented in such a code path.
-
-This commit fixes this issue by just replacing 0 with 1 in the
-comparison.
+As a consequence, for injection to work properly, the above base value
+has to be accurate. In this respect, such a value may vary over
+time. For example, it varies if the size or the spatial locality of
+the I/O requests in the queue change. It is then important to update
+this value whenever possible. This commit performs this update.
 
 Tested-by: Srivatsa S. Bhat <srivatsa@csail.mit.edu>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ block/bfq-iosched.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 9bc10198ddff..05041f84b8da 100644
+index 05041f84b8da..62442083b147 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -5481,8 +5481,14 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
- 	 * total service time, and there seem to be the right
- 	 * conditions to do it, or we can lower the last base value
- 	 * computed.
-+	 *
-+	 * NOTE: (bfqd->rq_in_driver == 1) means that there is no I/O
-+	 * request in flight, because this function is in the code
-+	 * path that handles the completion of a request of bfqq, and,
-+	 * in particular, this function is executed before
-+	 * bfqd->rq_in_driver is decremented in such a code path.
- 	 */
--	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 0) ||
-+	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 1) ||
- 	    tot_time_ns < bfqq->last_serv_time_ns) {
- 		bfqq->last_serv_time_ns = tot_time_ns;
- 		/*
+@@ -5496,7 +5496,18 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
+ 		 * start trying injection.
+ 		 */
+ 		bfqq->inject_limit = max_t(unsigned int, 1, old_limit);
+-	}
++	} else if (!bfqd->rqs_injected && bfqd->rq_in_driver == 1)
++		/*
++		 * No I/O injected and no request still in service in
++		 * the drive: these are the exact conditions for
++		 * computing the base value of the total service time
++		 * for bfqq. So let's update this value, because it is
++		 * rather variable. For example, it varies if the size
++		 * or the spatial locality of the I/O requests in bfqq
++		 * change.
++		 */
++		bfqq->last_serv_time_ns = tot_time_ns;
++
+ 
+ 	/* update complete, not waiting for any request completion any longer */
+ 	bfqd->waited_rq = NULL;
 -- 
 2.20.1
 
