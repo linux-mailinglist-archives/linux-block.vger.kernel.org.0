@@ -2,307 +2,287 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 881335190B
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 18:53:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BC1851A4F
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jun 2019 20:15:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfFXQxp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 12:53:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58542 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728010AbfFXQxp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:53:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 873ECAE74;
-        Mon, 24 Jun 2019 16:53:43 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 254671E2F23; Mon, 24 Jun 2019 18:53:43 +0200 (CEST)
-Date:   Mon, 24 Jun 2019 18:53:43 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
-Message-ID: <20190624165343.GP32376@quack2.suse.cz>
-References: <20190615182453.843275-1-tj@kernel.org>
- <20190615182453.843275-5-tj@kernel.org>
+        id S1728912AbfFXSPH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 14:15:07 -0400
+Received: from mx.ewheeler.net ([66.155.3.69]:35806 "EHLO mx.ewheeler.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728095AbfFXSPG (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Jun 2019 14:15:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mx.ewheeler.net (Postfix) with ESMTP id 65FA3A0692;
+        Mon, 24 Jun 2019 18:15:05 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ewheeler.net
+Received: from mx.ewheeler.net ([127.0.0.1])
+        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id AAlO9Xf1o3LH; Mon, 24 Jun 2019 18:15:04 +0000 (UTC)
+Received: from mx.ewheeler.net (mx.ewheeler.net [66.155.3.69])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx.ewheeler.net (Postfix) with ESMTPSA id C9245A067D;
+        Mon, 24 Jun 2019 18:15:03 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 18:14:59 +0000 (UTC)
+From:   Eric Wheeler <bcache@lists.ewheeler.net>
+X-X-Sender: lists@mx.ewheeler.net
+To:     Coly Li <colyli@suse.de>
+cc:     linux-block@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:BCACHE (BLOCK LAYER CACHE)" <linux-bcache@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent
+ for hardware raid5/6
+In-Reply-To: <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
+Message-ID: <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
+References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de> <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net> <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
+User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190615182453.843275-5-tj@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: MULTIPART/MIXED; BOUNDARY="-1690155773-122018265-1561399774=:1114"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat 15-06-19 11:24:48, Tejun Heo wrote:
-> When a shared kthread needs to issue a bio for a cgroup, doing so
-> synchronously can lead to priority inversions as the kthread can be
-> trapped waiting for that cgroup.  This patch implements
-> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
-> to a dedicated per-blkcg work item to avoid such priority inversions.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---1690155773-122018265-1561399774=:1114
+Content-Type: TEXT/PLAIN; CHARSET=ISO-2022-JP
+
+On Mon, 24 Jun 2019, Coly Li wrote:
+
+> On 2019/6/23 7:16 上午, Eric Wheeler wrote:
+> > From: Eric Wheeler <git@linux.ewheeler.net>
+> > 
+> > While some drivers set queue_limits.io_opt (e.g., md raid5), there are
+> > currently no SCSI/RAID controller drivers that do.  Previously stripe_size
+> > and partial_stripes_expensive were read-only values and could not be
+> > tuned by users (eg, for hardware RAID5/6).
+> > 
+> > This patch enables users to save the optimal IO size via sysfs through
+> > the backing device attributes stripe_size and partial_stripes_expensive
+> > into the bcache superblock.
+> > 
+> > Superblock changes are backwards-compatable:
+> > 
+> > *  partial_stripes_expensive: One bit was used in the superblock flags field
+> > 
+> > *  stripe_size: There are eight 64-bit "pad" fields for future use in
+> >    the superblock which default to 0; from those, 32-bits are now used
+> >    to save the stripe_size and load at device registration time.
+> > 
+> > Signed-off-by: Eric Wheeler <bcache@linux.ewheeler.net>
 > 
-> This will be used to fix priority inversions in btrfs compression and
-> should be generally useful as we grow filesystem support for
-> comprehensive IO control.
+> Hi Eric,
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-> Cc: Chris Mason <clm@fb.com>
+> In general I am OK with this patch. Since Peter comments lots of SCSI
+> RAID devices reports a stripe width, could you please list the hardware
+> raid devices which don't list stripe size ? Then we can make decision
+> whether it is necessary to have such option enabled.
 
-Looks good to me. You can add:
+Perhaps they do not set stripe_width using io_opt? I did a grep to see if 
+any of them did, but I didn't see them. How is stripe_width indicated by 
+RAID controllers? 
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+If they do set io_opt, then at least my Areca 1883 does not set io_opt as 
+of 4.19.x. I also have a LSI MegaRAID 3108 which does not report io_opt as 
+of 4.1.x, but that is an older kernel so maybe support has been added 
+since then.
 
-								Honza
+Martin,
 
-> ---
->  block/blk-cgroup.c          | 53 +++++++++++++++++++++++++++++++++++++
->  block/blk-core.c            |  3 +++
->  include/linux/backing-dev.h |  1 +
->  include/linux/blk-cgroup.h  | 16 ++++++++++-
->  include/linux/blk_types.h   | 10 +++++++
->  include/linux/writeback.h   | 12 ++++++---
->  6 files changed, 91 insertions(+), 4 deletions(-)
+Where would stripe_width be configured in the SCSI drivers? Is it visible 
+through sysfs or debugfs so I can check my hardware support without 
+hacking debugging the kernel?
+
 > 
-> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> index 07600d3c9520..48239bb93fbe 100644
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -53,6 +53,7 @@ static struct blkcg_policy *blkcg_policy[BLKCG_MAX_POLS];
->  static LIST_HEAD(all_blkcgs);		/* protected by blkcg_pol_mutex */
->  
->  static bool blkcg_debug_stats = false;
-> +static struct workqueue_struct *blkcg_punt_bio_wq;
->  
->  static bool blkcg_policy_enabled(struct request_queue *q,
->  				 const struct blkcg_policy *pol)
-> @@ -88,6 +89,8 @@ static void __blkg_release(struct rcu_head *rcu)
->  
->  	percpu_ref_exit(&blkg->refcnt);
->  
-> +	WARN_ON(!bio_list_empty(&blkg->async_bios));
-> +
->  	/* release the blkcg and parent blkg refs this blkg has been holding */
->  	css_put(&blkg->blkcg->css);
->  	if (blkg->parent)
-> @@ -113,6 +116,23 @@ static void blkg_release(struct percpu_ref *ref)
->  	call_rcu(&blkg->rcu_head, __blkg_release);
->  }
->  
-> +static void blkg_async_bio_workfn(struct work_struct *work)
-> +{
-> +	struct blkcg_gq *blkg = container_of(work, struct blkcg_gq,
-> +					     async_bio_work);
-> +	struct bio_list bios = BIO_EMPTY_LIST;
-> +	struct bio *bio;
-> +
-> +	/* as long as there are pending bios, @blkg can't go away */
-> +	spin_lock_bh(&blkg->async_bio_lock);
-> +	bio_list_merge(&bios, &blkg->async_bios);
-> +	bio_list_init(&blkg->async_bios);
-> +	spin_unlock_bh(&blkg->async_bio_lock);
-> +
-> +	while ((bio = bio_list_pop(&bios)))
-> +		submit_bio(bio);
-> +}
-> +
->  /**
->   * blkg_alloc - allocate a blkg
->   * @blkcg: block cgroup the new blkg is associated with
-> @@ -138,6 +158,9 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
->  
->  	blkg->q = q;
->  	INIT_LIST_HEAD(&blkg->q_node);
-> +	spin_lock_init(&blkg->async_bio_lock);
-> +	bio_list_init(&blkg->async_bios);
-> +	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
->  	blkg->blkcg = blkcg;
->  
->  	for (i = 0; i < BLKCG_MAX_POLS; i++) {
-> @@ -1583,6 +1606,25 @@ void blkcg_policy_unregister(struct blkcg_policy *pol)
->  }
->  EXPORT_SYMBOL_GPL(blkcg_policy_unregister);
->  
-> +bool __blkcg_punt_bio_submit(struct bio *bio)
-> +{
-> +	struct blkcg_gq *blkg = bio->bi_blkg;
-> +
-> +	/* consume the flag first */
-> +	bio->bi_opf &= ~REQ_CGROUP_PUNT;
-> +
-> +	/* never bounce for the root cgroup */
-> +	if (!blkg->parent)
-> +		return false;
-> +
-> +	spin_lock_bh(&blkg->async_bio_lock);
-> +	bio_list_add(&blkg->async_bios, bio);
-> +	spin_unlock_bh(&blkg->async_bio_lock);
-> +
-> +	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
-> +	return true;
-> +}
-> +
->  /*
->   * Scale the accumulated delay based on how long it has been since we updated
->   * the delay.  We only call this when we are adding delay, in case it's been a
-> @@ -1783,5 +1825,16 @@ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta)
->  	atomic64_add(delta, &blkg->delay_nsec);
->  }
->  
-> +static int __init blkcg_init(void)
-> +{
-> +	blkcg_punt_bio_wq = alloc_workqueue("blkcg_punt_bio",
-> +					    WQ_MEM_RECLAIM | WQ_FREEZABLE |
-> +					    WQ_UNBOUND | WQ_SYSFS, 0);
-> +	if (!blkcg_punt_bio_wq)
-> +		return -ENOMEM;
-> +	return 0;
-> +}
-> +subsys_initcall(blkcg_init);
-> +
->  module_param(blkcg_debug_stats, bool, 0644);
->  MODULE_PARM_DESC(blkcg_debug_stats, "True if you want debug stats, false if not");
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index a55389ba8779..5879c1ec044d 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1165,6 +1165,9 @@ EXPORT_SYMBOL_GPL(direct_make_request);
->   */
->  blk_qc_t submit_bio(struct bio *bio)
->  {
-> +	if (blkcg_punt_bio_submit(bio))
-> +		return BLK_QC_T_NONE;
-> +
->  	/*
->  	 * If it's a regular read/write or a barrier with data attached,
->  	 * go through the normal accounting stuff before submission.
-> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-> index f9b029180241..35b31d176f74 100644
-> --- a/include/linux/backing-dev.h
-> +++ b/include/linux/backing-dev.h
-> @@ -48,6 +48,7 @@ extern spinlock_t bdi_lock;
->  extern struct list_head bdi_list;
->  
->  extern struct workqueue_struct *bdi_wq;
-> +extern struct workqueue_struct *bdi_async_bio_wq;
->  
->  static inline bool wb_has_dirty_io(struct bdi_writeback *wb)
->  {
-> diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-> index 76c61318fda5..ffb2f88e87c6 100644
-> --- a/include/linux/blk-cgroup.h
-> +++ b/include/linux/blk-cgroup.h
-> @@ -134,13 +134,17 @@ struct blkcg_gq {
->  
->  	struct blkg_policy_data		*pd[BLKCG_MAX_POLS];
->  
-> -	struct rcu_head			rcu_head;
-> +	spinlock_t			async_bio_lock;
-> +	struct bio_list			async_bios;
-> +	struct work_struct		async_bio_work;
->  
->  	atomic_t			use_delay;
->  	atomic64_t			delay_nsec;
->  	atomic64_t			delay_start;
->  	u64				last_delay;
->  	int				last_use;
-> +
-> +	struct rcu_head			rcu_head;
->  };
->  
->  typedef struct blkcg_policy_data *(blkcg_pol_alloc_cpd_fn)(gfp_t gfp);
-> @@ -763,6 +767,15 @@ static inline bool blk_throtl_bio(struct request_queue *q, struct blkcg_gq *blkg
->  				  struct bio *bio) { return false; }
->  #endif
->  
-> +bool __blkcg_punt_bio_submit(struct bio *bio);
-> +
-> +static inline bool blkcg_punt_bio_submit(struct bio *bio)
-> +{
-> +	if (bio->bi_opf & REQ_CGROUP_PUNT)
-> +		return __blkcg_punt_bio_submit(bio);
-> +	else
-> +		return false;
-> +}
->  
->  static inline void blkcg_bio_issue_init(struct bio *bio)
->  {
-> @@ -910,6 +923,7 @@ static inline char *blkg_path(struct blkcg_gq *blkg) { return NULL; }
->  static inline void blkg_get(struct blkcg_gq *blkg) { }
->  static inline void blkg_put(struct blkcg_gq *blkg) { }
->  
-> +static inline bool blkcg_punt_bio_submit(struct bio *bio) { return false; }
->  static inline void blkcg_bio_issue_init(struct bio *bio) { }
->  static inline bool blkcg_bio_issue_check(struct request_queue *q,
->  					 struct bio *bio) { return true; }
-> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> index 791fee35df88..e8b42a786315 100644
-> --- a/include/linux/blk_types.h
-> +++ b/include/linux/blk_types.h
-> @@ -321,6 +321,14 @@ enum req_flag_bits {
->  	__REQ_RAHEAD,		/* read ahead, can fail anytime */
->  	__REQ_BACKGROUND,	/* background IO */
->  	__REQ_NOWAIT,           /* Don't wait if request will block */
-> +	/*
-> +	 * When a shared kthread needs to issue a bio for a cgroup, doing
-> +	 * so synchronously can lead to priority inversions as the kthread
-> +	 * can be trapped waiting for that cgroup.  CGROUP_PUNT flag makes
-> +	 * submit_bio() punt the actual issuing to a dedicated per-blkcg
-> +	 * work item to avoid such priority inversions.
-> +	 */
-> +	__REQ_CGROUP_PUNT,
->  
->  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
->  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-> @@ -347,6 +355,8 @@ enum req_flag_bits {
->  #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
->  #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
->  #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
-> +#define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
-> +
->  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
->  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
->  
-> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-> index 800ee031e88a..be602c42aab8 100644
-> --- a/include/linux/writeback.h
-> +++ b/include/linux/writeback.h
-> @@ -70,6 +70,7 @@ struct writeback_control {
->  	unsigned range_cyclic:1;	/* range_start is cyclic */
->  	unsigned for_sync:1;		/* sync(2) WB_SYNC_ALL writeback */
->  	unsigned no_wbc_acct:1;		/* skip wbc IO accounting */
-> +	unsigned punt_to_cgroup:1;	/* cgrp punting, see __REQ_CGROUP_PUNT */
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	struct bdi_writeback *wb;	/* wb this writeback is issued under */
->  	struct inode *inode;		/* inode being written out */
-> @@ -86,12 +87,17 @@ struct writeback_control {
->  
->  static inline int wbc_to_write_flags(struct writeback_control *wbc)
->  {
-> +	int flags = 0;
-> +
-> +	if (wbc->punt_to_cgroup)
-> +		flags = REQ_CGROUP_PUNT;
-> +
->  	if (wbc->sync_mode == WB_SYNC_ALL)
-> -		return REQ_SYNC;
-> +		flags |= REQ_SYNC;
->  	else if (wbc->for_kupdate || wbc->for_background)
-> -		return REQ_BACKGROUND;
-> +		flags |= REQ_BACKGROUND;
->  
-> -	return 0;
-> +	return flags;
->  }
->  
->  static inline struct cgroup_subsys_state *
+> Another point is, this patch changes struct cache_sb, it is no problem
+> to change on-disk format. I plan to update the super block version soon,
+> to store more configuration persistently into super block. stripe_size
+> can be added to cache_sb with other on-disk changes.
+
+Maybe bumping version makes sense, but even if you do not, this is safe to 
+use on systems without bumping the version because the values are unused 
+and default to 0.
+
+--
+Eric Wheeler
+
+> 
+> Thanks.
+> 
+> Coly Li
+> 
+> 
+> > ---
+> >  Documentation/admin-guide/bcache.rst | 21 +++++++++++++++++++++
+> >  drivers/md/bcache/super.c            | 15 ++++++++++++++-
+> >  drivers/md/bcache/sysfs.c            | 33 +++++++++++++++++++++++++++++++--
+> >  include/uapi/linux/bcache.h          |  6 ++++--
+> >  4 files changed, 70 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/bcache.rst b/Documentation/admin-guide/bcache.rst
+> > index c0ce64d..ef82022 100644
+> > --- a/Documentation/admin-guide/bcache.rst
+> > +++ b/Documentation/admin-guide/bcache.rst
+> > @@ -420,6 +420,12 @@ dirty_data
+> >  label
+> >    Name of underlying device.
+> >  
+> > +partial_stripes_expensive
+> > +  Flag to bcache that partial or unaligned stripe_size'd
+> > +  writes to the backing device are expensive (e.g., RAID5/6 incur
+> > +  read-copy-write). Writing this sysfs attribute updates the superblock
+> > +  and also takes effect immediately.  See also stripe_size, below.
+> > +
+> >  readahead
+> >    Size of readahead that should be performed.  Defaults to 0.  If set to e.g.
+> >    1M, it will round cache miss reads up to that size, but without overlapping
+> > @@ -458,6 +464,21 @@ stop
+> >    Write to this file to shut down the bcache device and close the backing
+> >    device.
+> >  
+> > +stripe_size
+> > +  The stripe size in bytes of the backing device for optimial
+> > +  write performance (also known as the "stride width"). This is set
+> > +  automatically when using a device driver sets blk_limits_io_opt
+> > +  (e.g., md, rbd, skd, zram, virtio_blk).  No hardware RAID controller
+> > +  sets blk_limits_io_opt as of 2019-06-15, so configure this to suit
+> > +  your needs.  Note that you must unregister and re-register the backing
+> > +  device after making a change to stripe_size.
+> > +
+> > +  Where N is the number of data disks,
+> > +    RAID5: stripe_size = (N-1)*RAID_CHUNK_SIZE.
+> > +    RAID6: stripe_size = (N-2)*RAID_CHUNK_SIZE.
+> > +
+> > +  See also partial_stripes_expensive, above.
+> > +
+> >  writeback_delay
+> >    When dirty data is written to the cache and it previously did not contain
+> >    any, waits some number of seconds before initiating writeback. Defaults to
+> > diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> > index 1b63ac8..d0b9501 100644
+> > --- a/drivers/md/bcache/super.c
+> > +++ b/drivers/md/bcache/super.c
+> > @@ -80,6 +80,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
+> >  
+> >  	sb->flags		= le64_to_cpu(s->flags);
+> >  	sb->seq			= le64_to_cpu(s->seq);
+> > +	sb->stripe_size		= le32_to_cpu(s->stripe_size);
+> >  	sb->last_mount		= le32_to_cpu(s->last_mount);
+> >  	sb->first_bucket	= le16_to_cpu(s->first_bucket);
+> >  	sb->keys		= le16_to_cpu(s->keys);
+> > @@ -221,6 +222,7 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
+> >  
+> >  	out->flags		= cpu_to_le64(sb->flags);
+> >  	out->seq		= cpu_to_le64(sb->seq);
+> > +	out->stripe_size	= cpu_to_le32(sb->stripe_size);
+> >  
+> >  	out->last_mount		= cpu_to_le32(sb->last_mount);
+> >  	out->first_bucket	= cpu_to_le16(sb->first_bucket);
+> > @@ -1258,7 +1260,18 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
+> >  
+> >  	dc->disk.stripe_size = q->limits.io_opt >> 9;
+> >  
+> > -	if (dc->disk.stripe_size)
+> > +	if (dc->sb.stripe_size) {
+> > +		if (dc->disk.stripe_size &&
+> > +		    dc->disk.stripe_size != dc->sb.stripe_size) {
+> > +			pr_warn("superblock stripe_size (%d) overrides bdev stripe_size (%d)\n",
+> > +				(int)dc->sb.stripe_size,
+> > +				(int)dc->disk.stripe_size);
+> > +		}
+> > +
+> > +		dc->disk.stripe_size = dc->sb.stripe_size;
+> > +		dc->partial_stripes_expensive =
+> > +			(unsigned int)BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb);
+> > +	} else if (dc->disk.stripe_size)
+> >  		dc->partial_stripes_expensive =
+> >  			q->limits.raid_partial_stripes_expensive;
+> >  
+> > diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+> > index bfb437f..4ebca52 100644
+> > --- a/drivers/md/bcache/sysfs.c
+> > +++ b/drivers/md/bcache/sysfs.c
+> > @@ -111,8 +111,8 @@
+> >  rw_attribute(writeback_rate_minimum);
+> >  read_attribute(writeback_rate_debug);
+> >  
+> > -read_attribute(stripe_size);
+> > -read_attribute(partial_stripes_expensive);
+> > +rw_attribute(stripe_size);
+> > +rw_attribute(partial_stripes_expensive);
+> >  
+> >  rw_attribute(synchronous);
+> >  rw_attribute(journal_delay_ms);
+> > @@ -343,6 +343,35 @@ static ssize_t bch_snprint_string_list(char *buf,
+> >  		}
+> >  	}
+> >  
+> > +	if (attr == &sysfs_stripe_size) {
+> > +		int v = strtoul_or_return(buf);
+> > +
+> > +		if (v & 0x1FF) {
+> > +			pr_err("stripe_size must be a muliple of 512-byte sectors");
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		v >>= 9;
+> > +
+> > +		if (v != dc->sb.stripe_size) {
+> > +			dc->sb.stripe_size = v;
+> > +			pr_info("stripe_size=%d, re-register to take effect.",
+> > +				v<<9);
+> > +			bch_write_bdev_super(dc, NULL);
+> > +		} else
+> > +			pr_info("stripe_size is already set to %d.", v<<9);
+> > +	}
+> > +
+> > +	if (attr == &sysfs_partial_stripes_expensive) {
+> > +		int v = strtoul_or_return(buf);
+> > +
+> > +		if (v != BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb)) {
+> > +			SET_BDEV_PARTIAL_STRIPES_EXPENSIVE(&dc->sb, v);
+> > +			dc->partial_stripes_expensive = v;
+> > +			bch_write_bdev_super(dc, NULL);
+> > +		}
+> > +	}
+> > +
+> >  	if (attr == &sysfs_stop_when_cache_set_failed) {
+> >  		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
+> >  		if (v < 0)
+> > diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
+> > index 5d4f58e..ee60914 100644
+> > --- a/include/uapi/linux/bcache.h
+> > +++ b/include/uapi/linux/bcache.h
+> > @@ -172,7 +172,9 @@ struct cache_sb {
+> >  
+> >  	__u64			flags;
+> >  	__u64			seq;
+> > -	__u64			pad[8];
+> > +	__u32			stripe_size;
+> > +	__u32			pad_u32;
+> > +	__u64			pad_u64[7];
+> >  
+> >  	union {
+> >  	struct {
+> > @@ -230,7 +232,7 @@ static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
+> >  #define BDEV_STATE_CLEAN		1U
+> >  #define BDEV_STATE_DIRTY		2U
+> >  #define BDEV_STATE_STALE		3U
+> > -
+> > +BITMASK(BDEV_PARTIAL_STRIPES_EXPENSIVE,	struct cache_sb, flags, 60, 1);
+> >  /*
+> >   * Magic numbers
+> >   *
+> > 
+> 
+> 
 > -- 
-> 2.17.1
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Coly Li
+> 
+---1690155773-122018265-1561399774=:1114--
