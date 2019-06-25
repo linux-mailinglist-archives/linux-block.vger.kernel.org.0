@@ -2,122 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6E3D52097
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jun 2019 04:27:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2689520B7
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jun 2019 04:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfFYC1V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jun 2019 22:27:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59594 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbfFYC1V (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jun 2019 22:27:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 20BCF85365;
-        Tue, 25 Jun 2019 02:27:20 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CA1660BE2;
-        Tue, 25 Jun 2019 02:27:12 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 10:27:07 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     =?utf-8?B?d2VuYmluemVuZyjmm77mlofmlowp?= <wenbinzeng@tencent.com>
-Cc:     Wenbin Zeng <wenbin.zeng@gmail.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keith.busch@intel.com" <keith.busch@intel.com>,
-        "hare@suse.com" <hare@suse.com>, "osandov@fb.com" <osandov@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
- mail)
-Message-ID: <20190625022706.GE23777@ming.t460p>
-References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
- <20190625015512.GC23777@ming.t460p>
- <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
+        id S1730589AbfFYCq2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jun 2019 22:46:28 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:51033 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730581AbfFYCq2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Jun 2019 22:46:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561430789; x=1592966789;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oQYTRRb4w7hg1e0SdjKzlTX0Gjm46D514gz8bl+y+aA=;
+  b=MgpOZDQqh1+oivw8s8aXHR6fCywjL0P60FY2JP8rOEDd76WiU7JBV6RY
+   Qernn2iU5zEhQAtsoBn2SNho0s/5czX1r9D8To3G/omjLQjoO0AuyzvVa
+   XGWDTlxBQInhIVgr1IM7LToP35EukQqfiVocWfPYC/m7nkfMaWzFgdzT5
+   shf1S3TPg8gapCGMtEqsjJkc6yIKlG6kA8vpJ0i1olrHhJxhNOa3osv2e
+   lIyOb8vkOemRmWnojhPaMeCEDpG21w4Td0M69nb9+aRJ1iX9knY5gCdih
+   d1wVwA76+nBuP9rRCK3jJDt75XtRIJO41Wrt7FEStWVNofZ0W60Q/lZDn
+   g==;
+X-IronPort-AV: E=Sophos;i="5.63,413,1557158400"; 
+   d="scan'208";a="112654037"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Jun 2019 10:46:28 +0800
+IronPort-SDR: gZwptn6SYaogOGWg5mug86EHFZUaHPZ+XXDUAPvPLtIZNUsT4qvXUkeq0GP5uy2rO2WtfJ3R/G
+ bMmZk9BDpJlC8Cs6ThqTyutCwzkK0+TKp05Kb39v1yRHxUXAKpnJ2lxbTxuztRCuCyoV07up4t
+ NsaVEp7Oi6uEpxxaCyHzAis4fBXjr4/mlRgwSRk9qmXBfH74gDF/gXMPDiKB6cKU7gr+X5csOU
+ gnk48TFfvMqj7lejacotxxcjtDjoXmlvQyGqUqr7rFYzDZkTi6s4vo03BFwthmGZjGAaVElkh5
+ Lz/Qa6+d1tWCz1v6LQQz2OpI
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 24 Jun 2019 19:45:45 -0700
+IronPort-SDR: ZxB01YmPsaiImBCl+TUFfap8Et9tixPw4umy1n0o/B9GU5icNVQq0VYR4PyasY3g+SUt1/rDUT
+ mqwzJXEFLS+YWaKofIXdmRI+7y0SiaDMro29i22IkNdK74C6hBYXWceZUTLcTAGRHslx81braI
+ NTPURWcrXkhUm2P0GWTMnNd7cw0Z9VE6zQz6LNZkbArjt3BtkjZW+b+ElJ0grJEeWEV2C/GU7E
+ GfU7igE6pRdaraYVUOmSZNy8Mlo+cTo0uN3lQxPzOzQ/lordNTBU7OZSfiUwSiuRJja1XQukXt
+ gNw=
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip01.wdc.com with ESMTP; 24 Jun 2019 19:46:26 -0700
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH 0/3] Fix zone revalidation memory allocation failures
+Date:   Tue, 25 Jun 2019 11:46:22 +0900
+Message-Id: <20190625024625.23976-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 25 Jun 2019 02:27:20 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:14:46AM +0000, wenbinzeng(曾文斌) wrote:
-> Hi Ming,
-> 
-> > -----Original Message-----
-> > From: Ming Lei <ming.lei@redhat.com>
-> > Sent: Tuesday, June 25, 2019 9:55 AM
-> > To: Wenbin Zeng <wenbin.zeng@gmail.com>
-> > Cc: axboe@kernel.dk; keith.busch@intel.com; hare@suse.com; osandov@fb.com;
-> > sagi@grimberg.me; bvanassche@acm.org; linux-block@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; wenbinzeng(曾文斌) <wenbinzeng@tencent.com>
-> > Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet mail)
-> > 
-> > On Mon, Jun 24, 2019 at 11:24:07PM +0800, Wenbin Zeng wrote:
-> > > Currently hctx->cpumask is not updated when hot-plugging new cpus,
-> > > as there are many chances kblockd_mod_delayed_work_on() getting
-> > > called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
-> > 
-> > There are only two cases in which WORK_CPU_UNBOUND is applied:
-> > 
-> > 1) single hw queue
-> > 
-> > 2) multiple hw queue, and all CPUs in this hctx become offline
-> > 
-> > For 1), all CPUs can be found in hctx->cpumask.
-> > 
-> > > on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
-> > > reporting excessive "run queue from wrong CPU" messages because
-> > > cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
-> > 
-> > The message means CPU hotplug race is triggered.
-> > 
-> > Yeah, there is big problem in blk_mq_hctx_notify_dead() which is called
-> > after one CPU is dead, but still run this hw queue to dispatch request,
-> > and all CPUs in this hctx might become offline.
-> > 
-> > We have some discussion before on this issue:
-> > 
-> > https://lore.kernel.org/linux-block/CACVXFVN729SgFQGUgmu1iN7P6Mv5+puE78STz8hj
-> > 9J5bS828Ng@mail.gmail.com/
-> > 
-> 
-> There is another scenario, you can reproduce it by hot-plugging cpus to kvm guests via qemu monitor (I believe virsh setvcpus --live can do the same thing), for example:
-> (qemu) cpu-add 1
-> (qemu) cpu-add 2
-> (qemu) cpu-add 3
-> 
-> In such scenario, cpu 1, 2 and 3 are not visible at boot, hctx->cpumask doesn't get synced when these cpus are added.
+This series addresses a reccuring problem with zone revalidation
+failures observed during extensive testing with memory constrained
+system and device hot-plugging.
 
-It is CPU cold-plug, we suppose to support it.
+The problem source is failure to allocate large memory areas with
+alloc_pages() or kmalloc() in blk_revalidate_disk_zones() to store the
+disk array of zones (struct blk_zone) or in sd_zbc_report_zones() for
+the report zones command reply buffer.
 
-The new added CPUs should be visible to hctx, since we spread queues
-among all possible CPUs(), please see blk_mq_map_queues() and
-irq_build_affinity_masks(), which is like static allocation on CPU
-resources.
+The solution proposed here is to:
+1) limit the number of zones to be reported with a single report zones
+command execution, and
+2) Use vmalloc to allocate large-ish arrays and buffers in place of
+alloc_pages() and kmalloc().
 
-Otherwise, you might use an old kernel or there is bug somewhere.
+With these changes, tests do not show any zone revalidation failures
+while not impacting the time taken for a disk initial zone inspection
+during device scan.
 
-> 
-> > >
-> > > This patch added a cpu-hotplug handler into blk-mq, updating
-> > > hctx->cpumask at cpu-hotplug.
-> > 
-> > This way isn't correct, hctx->cpumask should be kept as sync with
-> > queue mapping.
-> 
-> Please advise what should I do to deal with the above situation? Thanks a lot.
+Damien Le Moal (3):
+  block: Allow mapping of vmalloc-ed buffers
+  sd_zbc: Fix report zones buffer allocation
+  block: Limit zone array allocation size
 
-As I shared in last email, there is one approach discussed, which seems
-doable.
+ block/bio.c            |  8 ++++-
+ block/blk-zoned.c      | 29 +++++++---------
+ drivers/scsi/sd_zbc.c  | 79 +++++++++++++++++++++++++++++++-----------
+ include/linux/blkdev.h |  5 +++
+ 4 files changed, 84 insertions(+), 37 deletions(-)
 
-Thanks,
-Ming
+-- 
+2.21.0
+
