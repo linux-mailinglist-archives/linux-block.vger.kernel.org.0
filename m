@@ -2,62 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAFBE5A6CA
-	for <lists+linux-block@lfdr.de>; Sat, 29 Jun 2019 00:18:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6D1F5A792
+	for <lists+linux-block@lfdr.de>; Sat, 29 Jun 2019 01:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfF1WSY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Jun 2019 18:18:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49821 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfF1WSY (ORCPT
+        id S1726813AbfF1X3J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Jun 2019 19:29:09 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:49912 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1X3J (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Jun 2019 18:18:24 -0400
-Received: from mail-qk1-f198.google.com ([209.85.222.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1hgzCH-0004r5-S5
-        for linux-block@vger.kernel.org; Fri, 28 Jun 2019 22:18:22 +0000
-Received: by mail-qk1-f198.google.com with SMTP id 199so2733258qkj.9
-        for <linux-block@vger.kernel.org>; Fri, 28 Jun 2019 15:18:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eU5oGuW9La28t+68D36cpP8/gkaEFB1F4a4O+Bgz2zY=;
-        b=sySerLMszHsq6Pqsz1UYeF0OPBBOV3GWVj+ijSuwk+SoASyBU0ORyFnV/dlSME7K7y
-         4Pgl/8LUJN3tK3GsvhKI/BCi+k7v4Tn0ptE9CWmLpL18Y9m/ASKkMrWM5TMGppnews26
-         Q/9sAyYLg6u+1mjPMKNA1nAPZEm5GrSYpDBP49XdKs7iWSKSFt/7eEoi6DNcpc33PHoW
-         7JKJh/NUE9atbAB5ATMalb7TqebcP+EcaYHGOI3E0SOWezxj27dK2wyPxZG667Um9Iwj
-         8CIEbgd2347JJMqJSAr8dwgx+xpi/ifkqhQiWxIIPHbF400mCJVtfkAGatIY5cnQM/hk
-         Hn3Q==
-X-Gm-Message-State: APjAAAWo1kGYJHkyRU8fISruF+LzfXPccxG4JVSOFBzuJJbo86eYGqyP
-        qqRMuQdvbkP5VP2eUoPX1CymT8DkFPG1gkq9b4X7htnDAbE9G/Vgyzl8m7NfCPfXLqWZ31q6zK+
-        7nTT5Cy6z/QF4ld0JA41fWNg73G9ExksUl6vL6HmD
-X-Received: by 2002:ac8:25d9:: with SMTP id f25mr10149283qtf.256.1561760301016;
-        Fri, 28 Jun 2019 15:18:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwXflS3fVT7sl7MEqs9zXpsmfGIy8mVABLEYn4jY1JzbGKQVFnhhjFC5EeMXcdL1+8hZ1l0tg==
-X-Received: by 2002:ac8:25d9:: with SMTP id f25mr10149268qtf.256.1561760300804;
-        Fri, 28 Jun 2019 15:18:20 -0700 (PDT)
-Received: from localhost ([179.110.97.158])
-        by smtp.gmail.com with ESMTPSA id l6sm1532557qkc.89.2019.06.28.15.18.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 15:18:20 -0700 (PDT)
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-To:     stable@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, sashal@kernel.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        gpiccoli@canonical.com, jay.vosburgh@canonical.com,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [4.19.y PATCH 2/2] md/raid0: Do not bypass blocking queue entered for raid0 bios
-Date:   Fri, 28 Jun 2019 19:17:59 -0300
-Message-Id: <20190628221759.18274-2-gpiccoli@canonical.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190628221759.18274-1-gpiccoli@canonical.com>
-References: <20190628221759.18274-1-gpiccoli@canonical.com>
+        Fri, 28 Jun 2019 19:29:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561764591; x=1593300591;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OsJ4533FGIsd9sT3eaMWIKnkvnlm7ICcCh8oC0A01v8=;
+  b=JZANTjydQ760Vyib04Eq6QwID6y6kSyYn3GWw4UJLM+Ss6kN6Wnnlo5S
+   KEV72MXcaHglbG3IZtItG4QJyrvBQ7PrkAj+ieaw1lx5290jeHDjgo0gN
+   KHbmMdDyDxzGTwOK7QZiJxJjxAaH51hYqb9z9DrLSzYhRl16LBY742vKu
+   PCXKQr8HOqxg5N5JWHuHDfBb15SRmlwBrG2WFGCJYYsb146grmEkOyM/u
+   Y65XXl5jeI681843TFfu0/YOtex35Aj89jb88xIIoESnCI7r/KDOBg2UD
+   /bnbCEdLWAczMWkTftSqFvQP1KGzxhje5dtAUvGQSATatbVl9NYbSCgzN
+   w==;
+X-IronPort-AV: E=Sophos;i="5.63,429,1557158400"; 
+   d="scan'208";a="211646990"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2019 07:29:50 +0800
+IronPort-SDR: PNy7bUaEnRk5MK6j3lKEw8ISLd05lEPHKzqbsQguxgo9UGfExwzcDyXm9+rMfTxCl796Il+iOl
+ JlRqWc3NQCfS77i15EM6JMlMocUlZv9FunJN4Wcf9K/hcVT3W9VHcCnsq3YpSot188j3RYi2nw
+ ZJXg/GW70WuTePP5q7ec3qLz3PdSO09e0FM1ZwtJxhRSxKbxlWGS5Ubxf4vDxests2tr8nXgnc
+ lLanRBq+4cjkt1aO1Fjr59l0oou9jwzh4hcTZDEzExZJhW0BASwf5BPafKs4/IRmb6jp/82H8k
+ UXFVEceYaJ9tavCmGwiPRoxg
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 28 Jun 2019 16:28:13 -0700
+IronPort-SDR: 2Sy2JUfh+VD4vfM57pkQDgfzmKGQXgMknyoE0gu3c51JSNrsJjYKR3+2c8/4adaj/3V8ingvO6
+ sqkJVditaIkyThMpZ5W/ZnGnsjVRDPVxfLpw18kFutJzJXUlVoda2RzJgjh8ok6BjqL7ggjksZ
+ tSx7f/g1u8apzYeRbumNX9sm09RianykeqBLQI9DHumpNrXqQI2W4nJWy0byYvTCGrRvpflSyV
+ bYWQJ8EnW+2O4h0i9KpDvf8sHIBN0io940Gv7wb1z5C+P4wdLEB9HH7LUY8VHg8y9aWEX8T00x
+ jUQ=
+Received: from cmercuryqemu.hgst.com ([10.202.65.32])
+  by uls-op-cesaip01.wdc.com with ESMTP; 28 Jun 2019 16:29:08 -0700
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-block@vger.kernel.org
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH] null_blk: fix type mismatch null_handle_cmd()
+Date:   Fri, 28 Jun 2019 16:29:04 -0700
+Message-Id: <20190628232904.31211-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -65,125 +57,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
------------------------------------------------------------------
-This patch is not on mainline and is meant to 4.19 stable *only*.
-After the patch description there's a reasoning about that.
------------------------------------------------------------------
+In null_handle_cmd() when device is configured as zoned, variable op is
+decalred as an int, where it is used to hold values of type
+REQ_OP_XXX which is of type enum req_opf. Change the type from
+int to enum req_opf.
 
-Commit cd4a4ae4683d ("block: don't use blocking queue entered for
-recursive bio submits") introduced the flag BIO_QUEUE_ENTERED in order
-split bios bypass the blocking queue entering routine and use the live
-non-blocking version. It was a result of an extensive discussion in
-a linux-block thread[0], and the purpose of this change was to prevent
-a hung task waiting on a reference to drop.
-
-Happens that md raid0 split bios all the time, and more important,
-it changes their underlying device to the raid member. After the change
-introduced by this flag's usage, we experience various crashes if a raid0
-member is removed during a large write. This happens because the bio
-reaches the live queue entering function when the queue of the raid0
-member is dying.
-
-A simple reproducer of this behavior is presented below:
-a) Build kernel v4.19.56-stable with CONFIG_BLK_DEV_THROTTLING=y.
-
-b) Create a raid0 md array with 2 NVMe devices as members, and mount
-it with an ext4 filesystem.
-
-c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
-(dd of=/mnt/tmp if=/dev/zero bs=1M count=999 &); sleep 0.3;
-echo 1 > /sys/block/nvme1n1/device/device/remove
-(whereas nvme1n1 is the 2nd array member)
-
-This will trigger the following warning/oops:
-
-------------[ cut here ]------------
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000155
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-RIP: 0010:blk_throtl_bio+0x45/0x970
-[...]
-Call Trace:
- generic_make_request_checks+0x1bf/0x690
- generic_make_request+0x64/0x3f0
- raid0_make_request+0x184/0x620 [raid0]
- ? raid0_make_request+0x184/0x620 [raid0]
- md_handle_request+0x126/0x1a0
- md_make_request+0x7b/0x180
- generic_make_request+0x19e/0x3f0
- submit_bio+0x73/0x140
-[...]
-
-This patch changes raid0 driver to fallback to the "old" blocking queue
-entering procedure, by clearing the BIO_QUEUE_ENTERED from raid0 bios.
-This prevents the crashes and restores the regular behavior of raid0
-arrays when a member is removed during a large write.
-
-[0] lore.kernel.org/linux-block/343bbbf6-64eb-879e-d19e-96aebb037d47@I-love.SAKURA.ne.jp
-
-----------------------------
-Why this is not on mainline?
-----------------------------
-
-The patch was originally submitted upstream in linux-raid and
-linux-block mailing-lists - it was initially accepted by Song Liu,
-but Christoph Hellwig[1] observed that there was a clean-up series
-ready to be accepted from Ming Lei[2] that fixed the same issue.
-
-The accepted patches from Ming's series in upstream are: commit
-47cdee29ef9d ("block: move blk_exit_queue into __blk_release_queue") and
-commit fe2008640ae3 ("block: don't protect generic_make_request_checks
-with blk_queue_enter"). Those patches basically do a clean-up in the
-block layer involving:
-
-1) Putting back blk_exit_queue() logic into __blk_release_queue(); that
-path was changed in the past and the logic from blk_exit_queue() was
-added to blk_cleanup_queue().
-
-2) Removing the guard/protection in generic_make_request_checks() with
-blk_queue_enter().
-
-The problem with Ming's series for -stable is that it relies in the
-legacy request IO path removal. So it's "backport-able" to v5.0+,
-but doing that for early versions (like 4.19) would incur in complex
-code changes. Hence, it was suggested by Christoph and Song Liu that
-this patch was submitted to stable only; otherwise merging it upstream
-would add code to fix a path removed in a subsequent commit.
-
-[1] lore.kernel.org/linux-block/20190521172258.GA32702@infradead.org
-[2] lore.kernel.org/linux-block/20190515030310.20393-1-ming.lei@redhat.com
-
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Fixes: cd4a4ae4683d ("block: don't use blocking queue entered for recursive bio submits")
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/md/raid0.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/block/null_blk_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index ac1cffd2a09b..f4daa56d204d 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -547,6 +547,7 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
- 			trace_block_bio_remap(bdev_get_queue(rdev->bdev),
- 				discard_bio, disk_devt(mddev->gendisk),
- 				bio->bi_iter.bi_sector);
-+		bio_clear_flag(bio, BIO_QUEUE_ENTERED);
- 		generic_make_request(discard_bio);
- 	}
- 	bio_endio(bio);
-@@ -602,6 +603,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 				disk_devt(mddev->gendisk), bio_sector);
- 	mddev_check_writesame(mddev, bio);
- 	mddev_check_write_zeroes(mddev, bio);
-+	bio_clear_flag(bio, BIO_QUEUE_ENTERED);
- 	generic_make_request(bio);
- 	return true;
- }
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 22303e59a274..99328ded60d1 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1198,7 +1198,7 @@ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
+ 	if (!cmd->error && dev->zoned) {
+ 		sector_t sector;
+ 		unsigned int nr_sectors;
+-		int op;
++		enum req_opf op;
+ 
+ 		if (dev->queue_mode == NULL_Q_BIO) {
+ 			op = bio_op(cmd->bio);
 -- 
-2.22.0
+2.21.0
 
