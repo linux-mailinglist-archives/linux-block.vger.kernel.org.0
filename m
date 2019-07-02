@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D685D07E
-	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2019 15:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9981A5D083
+	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2019 15:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfGBNX7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Jul 2019 09:23:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40946 "EHLO huawei.com"
+        id S1727077AbfGBNXw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Jul 2019 09:23:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40950 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbfGBNXx (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:23:53 -0400
+        id S1726963AbfGBNXw (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:23:52 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8185FB2B9D1B45AE75A8;
+        by Forcepoint Email with ESMTP id 9252A2D5C714C1E33159;
         Tue,  2 Jul 2019 21:23:49 +0800 (CST)
 Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 21:23:41 +0800
+ 21:23:42 +0800
 From:   Hou Tao <houtao1@huawei.com>
 To:     <linux-raid@vger.kernel.org>, <songliubraving@fb.com>
 CC:     <neilb@suse.com>, <linux-block@vger.kernel.org>,
         <snitzer@redhat.com>, <agk@redhat.com>, <dm-devel@redhat.com>,
         <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [RFC PATCH 1/3] md-debugfs: add md_debugfs_create_files()
-Date:   Tue, 2 Jul 2019 21:29:16 +0800
-Message-ID: <20190702132918.114818-2-houtao1@huawei.com>
+Subject: [RFC PATCH 2/3] md: export inflight io counters and internal stats in debugfs
+Date:   Tue, 2 Jul 2019 21:29:17 +0800
+Message-ID: <20190702132918.114818-3-houtao1@huawei.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702132918.114818-1-houtao1@huawei.com>
 References: <20190702132918.114818-1-houtao1@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.90.53.225]
 X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
@@ -38,94 +38,154 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It will be used by the following patches to create debugfs files
-under /sys/kernel/debug/mdX.
+There are so many io counters and stats/flags in md, so I think
+export these info in debugfs will be helpful for online-debugging,
+especially when the vmlinux and crash utility are not available.
+And these files can also be utilized during code understanding.
+
+Debug info are divided into two debugfs files:
+* iostat
+  contains io counters and io related stats (e.g., mddev->pending_writes
+  and the active status of mddev->sb_wait)
+* stat
+  contains internal stats or flags (e.g., mddev->sb_flags)
+
+These two debugfs files will be created both by md-core and the used
+md-personality for each md device. This patch creates debug files
+for md-core under /sys/kernel/debug/block/mdX, and the following patch
+will creates these files for RAID1. The following lines show the hierarchy
+of debugfs files created for a RAID1 device:
+
+  $ pwd
+  /sys/kernel/debug/block/md0
+  $ tree
+  .
+  ├── iostat
+  ├── raid1
+  │   ├── iostat
+  │   └── stat
+  └── stat
 
 Signed-off-by: Hou Tao <houtao1@huawei.com>
 ---
- drivers/md/Makefile     |  2 +-
- drivers/md/md-debugfs.c | 35 +++++++++++++++++++++++++++++++++++
- drivers/md/md-debugfs.h | 16 ++++++++++++++++
- 3 files changed, 52 insertions(+), 1 deletion(-)
- create mode 100644 drivers/md/md-debugfs.c
- create mode 100644 drivers/md/md-debugfs.h
+ drivers/md/md.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/md/md.h |  1 +
+ 2 files changed, 66 insertions(+)
 
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index be7a6eb92abc..49355e3b4cce 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -19,7 +19,7 @@ dm-cache-y	+= dm-cache-target.o dm-cache-metadata.o dm-cache-policy.o \
- dm-cache-smq-y   += dm-cache-policy-smq.o
- dm-era-y	+= dm-era-target.o
- dm-verity-y	+= dm-verity-target.o
--md-mod-y	+= md.o md-bitmap.o
-+md-mod-y	+= md.o md-bitmap.o md-debugfs.o
- raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
- dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
- linear-y	+= md-linear.o
-diff --git a/drivers/md/md-debugfs.c b/drivers/md/md-debugfs.c
-new file mode 100644
-index 000000000000..318c35fed24f
---- /dev/null
-+++ b/drivers/md/md-debugfs.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Based on debugfs_create_files() in blk-mq */
-+
-+#include <linux/fs.h>
-+#include <linux/debugfs.h>
-+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9801d540fea1..dceb8fd59ba0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -64,11 +64,14 @@
+ #include "md.h"
+ #include "md-bitmap.h"
+ #include "md-cluster.h"
 +#include "md-debugfs.h"
+ 
+ #ifndef MODULE
+ static void autostart_arrays(int part);
+ #endif
+ 
++extern struct dentry *blk_debugfs_root;
 +
-+static int md_debugfs_open(struct inode *inode, struct file *file)
+ /* pers_list is a list of registered personalities protected
+  * by pers_lock.
+  * pers_lock does extra service to protect accesses to
+@@ -5191,6 +5194,65 @@ md_attr_store(struct kobject *kobj, struct attribute *attr,
+ 	return rv;
+ }
+ 
++static int md_dbg_iostat_show(struct seq_file *m, void *data)
 +{
-+	const struct md_debugfs_file *dbg_file = inode->i_private;
-+	void *data = d_inode(file_dentry(file)->d_parent)->i_private;
++	struct mddev *mddev = m->private;
++	int active_bm_io = 0;
 +
-+	return single_open(file, dbg_file->show, data);
++	spin_lock(&mddev->lock);
++	if (mddev->bitmap)
++		active_bm_io = atomic_read(&mddev->bitmap->pending_writes);
++	spin_unlock(&mddev->lock);
++
++	seq_printf(m, "active_io %d\n",
++			atomic_read(&mddev->active_io));
++	seq_printf(m, "sb_wait %d pending_writes %d\n",
++			waitqueue_active(&mddev->sb_wait),
++			atomic_read(&mddev->pending_writes));
++	seq_printf(m, "recovery_active %d\n",
++			atomic_read(&mddev->recovery_active));
++	seq_printf(m, "bitmap pending_writes %d\n", active_bm_io);
++
++	return 0;
 +}
 +
-+static const struct file_operations md_debugfs_fops = {
-+	.owner = THIS_MODULE,
-+	.open = md_debugfs_open,
-+	.llseek = seq_lseek,
-+	.read = seq_read,
-+	.release = single_release,
++static int md_dbg_stat_show(struct seq_file *m, void *data)
++{
++	struct mddev *mddev = m->private;
++
++	seq_printf(m, "flags 0x%lx\n", mddev->flags);
++	seq_printf(m, "sb_flags 0x%lx\n", mddev->sb_flags);
++	seq_printf(m, "recovery 0x%lx\n", mddev->recovery);
++
++	return 0;
++}
++
++static const struct md_debugfs_file md_dbg_files[] = {
++	{.name = "iostat", .show = md_dbg_iostat_show},
++	{.name = "stat", .show = md_dbg_stat_show},
++	{},
 +};
 +
-+void md_debugfs_create_files(struct dentry *parent, void *data,
-+		const struct md_debugfs_file *files)
++static void md_unregister_debugfs(struct mddev *mddev)
 +{
-+	const struct md_debugfs_file *file;
-+
-+	d_inode(parent)->i_private = data;
-+
-+	for (file = files; file->name; file++)
-+		debugfs_create_file(file->name, 0444, parent,
-+				(void *)file, &md_debugfs_fops);
++	debugfs_remove_recursive(mddev->debugfs_dir);
 +}
-diff --git a/drivers/md/md-debugfs.h b/drivers/md/md-debugfs.h
-new file mode 100644
-index 000000000000..13b581d4ab63
---- /dev/null
-+++ b/drivers/md/md-debugfs.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +
-+#ifndef _MD_DEBUGFS_H
-+#define _MD_DEBUGFS_H
-+
-+#include <linux/seq_file.h>
-+#include <linux/debugfs.h>
-+
-+struct md_debugfs_file {
++static void md_register_debugfs(struct mddev *mddev)
++{
 +	const char *name;
-+	int (*show)(struct seq_file *m, void *data);
-+};
++	struct dentry *dir;
 +
-+extern void md_debugfs_create_files(struct dentry *parent, void *data,
-+		const struct md_debugfs_file *files);
-+#endif
++	name = kobject_name(&disk_to_dev(mddev->gendisk)->kobj);
++	dir = debugfs_create_dir(name, blk_debugfs_root);
++	if (!IS_ERR_OR_NULL(dir)) {
++		md_debugfs_create_files(dir, mddev, md_dbg_files);
++		mddev->debugfs_dir = dir;
++	} else {
++		mddev->debugfs_dir = NULL;
++	}
++}
++
+ static void md_free(struct kobject *ko)
+ {
+ 	struct mddev *mddev = container_of(ko, struct mddev, kobj);
+@@ -5227,6 +5289,7 @@ static void mddev_delayed_delete(struct work_struct *ws)
+ {
+ 	struct mddev *mddev = container_of(ws, struct mddev, del_work);
+ 
++	md_unregister_debugfs(mddev);
+ 	sysfs_remove_group(&mddev->kobj, &md_bitmap_group);
+ 	kobject_del(&mddev->kobj);
+ 	kobject_put(&mddev->kobj);
+@@ -5353,6 +5416,8 @@ static int md_alloc(dev_t dev, char *name)
+ 	if (mddev->kobj.sd &&
+ 	    sysfs_create_group(&mddev->kobj, &md_bitmap_group))
+ 		pr_debug("pointless warning\n");
++
++	md_register_debugfs(mddev);
+ 	mutex_unlock(&mddev->open_mutex);
+  abort:
+ 	mutex_unlock(&disks_mutex);
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 7c930c091193..e79ef2101c45 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -466,6 +466,7 @@ struct mddev {
+ 	unsigned int			good_device_nr;	/* good device num within cluster raid */
+ 
+ 	bool	has_superblocks:1;
++	struct dentry *debugfs_dir;
+ };
+ 
+ enum recovery_flags {
 -- 
 2.22.0
 
