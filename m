@@ -2,66 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D47A85CC61
-	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2019 11:07:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C335D095
+	for <lists+linux-block@lfdr.de>; Tue,  2 Jul 2019 15:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGBJHk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Jul 2019 05:07:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33978 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727035AbfGBJHj (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:07:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7316B128;
-        Tue,  2 Jul 2019 09:07:38 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jul 2019 11:07:38 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
+        id S1726457AbfGBNZr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Jul 2019 09:25:47 -0400
+Received: from verein.lst.de ([213.95.11.211]:42581 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfGBNZr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:25:47 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E589C68B20; Tue,  2 Jul 2019 15:25:44 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 15:25:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
 To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH liburing 2/2] Fix the use of memory barriers
-In-Reply-To: <20190701214232.29338-3-bvanassche@acm.org>
-References: <20190701214232.29338-1-bvanassche@acm.org>
- <20190701214232.29338-3-bvanassche@acm.org>
-Message-ID: <5d5931e08e338a8a8edb1e58a33a120e@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>, Omar Sandoval <osandov@fb.com>
+Subject: Re: [PATCH 1/2] blk-mq: Remove blk_mq_put_ctx()
+Message-ID: <20190702132544.GA15798@lst.de>
+References: <20190701154730.203795-1-bvanassche@acm.org> <20190701154730.203795-2-bvanassche@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701154730.203795-2-bvanassche@acm.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Bart,
+On Mon, Jul 01, 2019 at 08:47:29AM -0700, Bart Van Assche wrote:
+> No code that occurs between blk_mq_get_ctx() and blk_mq_put_ctx() depends
+> on preemption being disabled for its correctness. Since removing the CPU
+> preemption calls does not measurably affect performance, simplify the
+> blk-mq code by removing the blk_mq_put_ctx() function and also by not
+> disabling preemption in blk_mq_get_ctx().
 
-On 2019-07-01 23:42, Bart Van Assche wrote:
+Looks good,
 
-...
-
-> +#if defined(__x86_64__)
-> +#define smp_store_release(p, v)			\
-> +do {						\
-> +	barrier();				\
-> +	WRITE_ONCE(*(p), (v));			\
-> +} while (0)
-> +
-> +#define smp_load_acquire(p)			\
-> +({						\
-> +	typeof(*p) ___p1 = READ_ONCE(*(p));	\
-> +	barrier();				\
-> +	___p1;					\
-> +})
-
-Can we have these two macros for x86_32 as well?
-For i386 it will take another branch with full mb,
-which is not needed.
-
-Besides that both patches looks good to me.
-
---
-Roman
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
