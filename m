@@ -2,117 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3013E5E15A
-	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 11:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B55915E39A
+	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 14:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGCJta (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Jul 2019 05:49:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48768 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726434AbfGCJt3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:49:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF7D6AFAE;
-        Wed,  3 Jul 2019 09:49:28 +0000 (UTC)
+        id S1726305AbfGCMQK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Jul 2019 08:16:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:51029 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbfGCMQK (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 3 Jul 2019 08:16:10 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B139E68B05; Wed,  3 Jul 2019 14:16:08 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 14:16:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>, Matias Bjorling <mb@lightnvm.io>,
+        linux-block@vger.kernel.org
+Subject: Re: remove bi_phys_segments and related cleanups
+Message-ID: <20190703121608.GC7671@lst.de>
+References: <a703a5cb-1e39-6194-698a-56dbc4577f25@fb.com> <bbc9baba-19f2-03ec-59dc-adab225eb3b2@kernel.dk> <20190702133406.GC15874@lst.de> <bfe8a4b5-901e-5ac4-e11c-0e6ccc4faec2@kernel.dk> <20190702182934.GA20763@lst.de> <ef4a5fb5-9d79-75e1-1231-fdfc14f91835@kernel.dk> <20190703000055.GA28981@lst.de> <a01c861b-8c5c-0f6d-4ca8-00e97bcecbd9@kernel.dk> <cdc56c4e-37ad-812c-076b-cb2c7eb0c01a@kernel.dk> <20190703013536.GA31366@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 03 Jul 2019 11:49:27 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH liburing 2/2] Fix the use of memory barriers
-In-Reply-To: <0bffbfd9-a57e-857f-4699-856295a11f3a@acm.org>
-References: <20190701214232.29338-1-bvanassche@acm.org>
- <20190701214232.29338-3-bvanassche@acm.org>
- <5d5931e08e338a8a8edb1e58a33a120e@suse.de>
- <876fa5e3-f050-b95c-a30c-755d1e0430d1@acm.org>
- <723180510314b2928ba97752e5383202@suse.de>
- <0bffbfd9-a57e-857f-4699-856295a11f3a@acm.org>
-Message-ID: <2cd14f5d8cfcc36dec90574ff8a9e8b5@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703013536.GA31366@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2019-07-02 22:31, Bart Van Assche wrote:
-> On 7/2/19 11:40 AM, Roman Penyaev wrote:
->> On 2019-07-02 18:17, Bart Van Assche wrote:
->>> On 7/2/19 2:07 AM, Roman Penyaev wrote:
->>>> Hi Bart,
->>>> 
->>>> On 2019-07-01 23:42, Bart Van Assche wrote:
->>>> 
->>>> ...
->>>> 
->>>>> +#if defined(__x86_64__)
->>>>> +#define smp_store_release(p, v)            \
->>>>> +do {                        \
->>>>> +    barrier();                \
->>>>> +    WRITE_ONCE(*(p), (v));            \
->>>>> +} while (0)
->>>>> +
->>>>> +#define smp_load_acquire(p)            \
->>>>> +({                        \
->>>>> +    typeof(*p) ___p1 = READ_ONCE(*(p));    \
->>>>> +    barrier();                \
->>>>> +    ___p1;                    \
->>>>> +})
->>>> 
->>>> Can we have these two macros for x86_32 as well?
->>>> For i386 it will take another branch with full mb,
->>>> which is not needed.
->>>> 
->>>> Besides that both patches looks good to me.
->>> 
->>> Hi Roman,
->>> 
->>> Thanks for having taken a look. From Linux kernel source file
->>> arch/x86/include/asm/barrier.h:
->>> 
->>> #ifdef CONFIG_X86_32
->>> #define mb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)",\
->>>         "mfence", X86_FEATURE_XMM2) ::: "memory", "cc")
->>> #define rmb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)",\
->>>         "lfence", X86_FEATURE_XMM2) ::: "memory", "cc")
->>> #define wmb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)",\
->>>         "sfence", X86_FEATURE_XMM2) ::: "memory", "cc")
->>> #else
->>> #define mb()     asm volatile("mfence":::"memory")
->>> #define rmb()    asm volatile("lfence":::"memory")
->>> #define wmb()    asm volatile("sfence" ::: "memory")
->>> #endif
->>> 
->>> In other words, I think that 32-bit and 64-bit systems really have to
->>> be treated in a different way.
->> 
->> I meant smp_load_acquire / smp_store_release
+On Wed, Jul 03, 2019 at 03:35:36AM +0200, Christoph Hellwig wrote:
+> I didn't run with online discard, but I tried FITRIM (with XFS).
 > 
-> Hi Roman,
-> 
+> I'll try looking into ext4.  I remember we had some weird one offs in that
+> area for the different ways the physical segments are calculated, so this
+> makes sense.  Off to dinner now, but I'll look into it tomorrow.
 
-Hi Bart,
-
-It seems you took the chunk of the code with macros from
-tools/arch/x86/include/asm/barrier.h, where indeed smp_store_release
-and smp_load_acquire are defined only for x86-64.  If I am not mistaken
-kernel defines both __smp_store_release / __smp_load_acquire equally
-for x86 memory model in arch/x86/include/asm/barrier.h.
-
-> Since there are 32-bit x86 CPUs that can reorder loads and stores
-
-Only "loads may be reordered with earlier stores"
-(Intel® 64 and IA-32 Architectures, section 8.2.3.4), but "stores are 
-not
-reordered with earlier loads" (section 8.2.3.3), so smp_store_release 
-and
-and smp_load_acquire can be relaxed.
-
---
-Roman
-
+ext4 reproduced the bug instantly, but it was Write Zeroes, not Discard.
+Which explains the whole thing as ext4 is the only major user of Write
+Zeroes.  A oatch will be on its way shortly.
