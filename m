@@ -2,50 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4E95DA5D
-	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 03:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8CCE5DAE9
+	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 03:32:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfGCBKR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Jul 2019 21:10:17 -0400
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:37776 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBKR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Jul 2019 21:10:17 -0400
-Received: by mail-pl1-f172.google.com with SMTP id bh12so240630plb.4
-        for <linux-block@vger.kernel.org>; Tue, 02 Jul 2019 18:10:16 -0700 (PDT)
+        id S1727239AbfGCBco (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Jul 2019 21:32:44 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38660 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727203AbfGCBcn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Jul 2019 21:32:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 9so264103ple.5
+        for <linux-block@vger.kernel.org>; Tue, 02 Jul 2019 18:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SUyMsQTAT4Xex1w0m5orXD/uZpdvPJFFkpqi7cw7ARc=;
-        b=Cx5YBwQxfHbcSYTVPaaiJ095/bU5COtLFsgp3iJFRhkzhR3ZpKFNRIDHKG25E65Vck
-         emq5ODbKKS6w1+ZAAPrC8NrV/i+C6hhZPdPpF/cHVgPU/vb7CFk5gokRVt8m86TxyNzJ
-         ztNT63j2t/v10F5hsOtK8vz/Ar+61linqF5VkxecGZYg1ftz0dLQ/0RbEanr5gyTPWlH
-         S4lPmzMl3mBr2q+cXP6ZiUpI3+7eDGak6dv/DtzS2BdDLgQXQPvQzpeQOJ6uHc0NO/pk
-         yMBBorh6ye5whXiOcXma9ZrWNqY2UCyYdgThYOvdlNlYQoz02NsjaR108ZkVky8WbHXl
-         9zdA==
+        bh=ZLRZX+RONwb2eRUl7r9hydyKH3F+PBiS+tpvLQ0Hmao=;
+        b=neCh9IFAmo31SuxfCsQA23K+wZBWzYv/E5zqx5twbFpRb2mIps3lUBN8UDzbAh31gt
+         Ju796BiKDC9ann3eDY9vmLuuP2IBgQ64NWPuWIVTMZFtLN7mZh36omsqZ/ceuwuZM+nb
+         9PxMZ0VYjYwyl6NxBDd7dxFPkiRroDOQhziCGD6LYcG453SP8uOwoxH+y4ZsJm9gu6XD
+         ceC0Ziy4xhSDjNNNvMU2Mc/KD1xGtCfYpNx0CPM3Z+pYFV2RBbgARAZqUItu9ukW3pGG
+         e5pzPo37DDkZPDRGwtgYgIhc4W3D0srBVj/EHJw7/Sg/iFaBAUnmUSBY6VB8e6f1sSaw
+         OESA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SUyMsQTAT4Xex1w0m5orXD/uZpdvPJFFkpqi7cw7ARc=;
-        b=IVUr0C+VKXN9mf1/u9ihzt4MhTgwzsqTnYjefnNXS0k5eNU86tMNRqK7o3rXtS75js
-         XpgQdZNWs4eonR0fFBdJeF/pFR+aStd4fsLytjWLR3kkCKZotI5ZarxGvE7hWVEDHKbQ
-         r2q/b+ziI+lwy8xOPro2Ipbal02oCADNfRuIsoNW/EYl5Zl+QPb2nFHXqFEsI8i7uam2
-         Cu0yZf6xenaJRo7en4oVDkC/KTbBNEK6d+SiLyHJUj0dZoOvq1lvIvV4tzUM2gErfi14
-         BV33IvsdLu1rDbRiDE0rGUUZtr5R4czRADskaHiF5e1Ikr+LC2G+0HyCy+vohVFvuAde
-         oZ8Q==
-X-Gm-Message-State: APjAAAX7jsohCL8QR4F/lAFSw4MMho/DCAWrr9PC7HDpj0ZukwPRnZxj
-        +kguwRFFnIRbP4WaUG9HWbnnlz1GFmHNAg==
-X-Google-Smtp-Source: APXvYqxW36FHRIjXYS5pXxmunWiBZKGCXGnyaRwQqwIRANxRpZzwuv+sjdiy6l2cN0We/BCxA+MC1A==
-X-Received: by 2002:a17:902:8696:: with SMTP id g22mr37716047plo.249.1562116215616;
-        Tue, 02 Jul 2019 18:10:15 -0700 (PDT)
+        bh=ZLRZX+RONwb2eRUl7r9hydyKH3F+PBiS+tpvLQ0Hmao=;
+        b=e9W/KkPm6WPqWT3DGraP84It/R20jHYLvOJhajvAWEo1RiBZ06Nb8pU377swvDz7hW
+         bPB0mf6RAx29nnim6hukvexfGBHfYwP5PZBFG1ImeaEfA508oVakK9zlTqOn9+P4DqnG
+         /yfpaRjOPby6AZidfvICycyhPPb4tQtN2FJ2jTFChV9Hdqvvv98uMK6RclayJI6yIDuB
+         Z+uVdepp6/r/IQ7t0ifzm+9iBlZMembjyp4gy23x0HepoxAmHoUhjYcuLyA2WSw0GcLv
+         81PWqesLziTVVS7l1cPEVykVexHA91QhFbiBCyDjp4ic6qREKv0lc+HhYhPV5LFvkcfL
+         4tQw==
+X-Gm-Message-State: APjAAAVBNgg5YkORaumgltBDaXSNHS7JvwPMgwD1jol8lZF9wavsi/vR
+        lPvYHBebtJGwEXFNhaBbpDCs78XSH1BmhQ==
+X-Google-Smtp-Source: APXvYqxOQRbpmyu6wMUqqAf+08VF/cTyFAl07N3J7SWRD+e3BbfTodwv/OOJSXw/mLpArPye+RZtHg==
+X-Received: by 2002:a17:902:1102:: with SMTP id d2mr38586266pla.149.1562117562858;
+        Tue, 02 Jul 2019 18:32:42 -0700 (PDT)
 Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id o95sm214586pjb.4.2019.07.02.18.10.14
+        by smtp.gmail.com with ESMTPSA id q63sm345291pfb.81.2019.07.02.18.32.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 18:10:14 -0700 (PDT)
+        Tue, 02 Jul 2019 18:32:42 -0700 (PDT)
 Subject: Re: remove bi_phys_segments and related cleanups
+From:   Jens Axboe <axboe@kernel.dk>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org
 References: <20190606102904.4024-1-hch@lst.de>
@@ -56,13 +57,13 @@ References: <20190606102904.4024-1-hch@lst.de>
  <20190702182934.GA20763@lst.de>
  <ef4a5fb5-9d79-75e1-1231-fdfc14f91835@kernel.dk>
  <20190703000055.GA28981@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a01c861b-8c5c-0f6d-4ca8-00e97bcecbd9@kernel.dk>
-Date:   Tue, 2 Jul 2019 19:10:13 -0600
+ <a01c861b-8c5c-0f6d-4ca8-00e97bcecbd9@kernel.dk>
+Message-ID: <cdc56c4e-37ad-812c-076b-cb2c7eb0c01a@kernel.dk>
+Date:   Tue, 2 Jul 2019 19:32:40 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190703000055.GA28981@lst.de>
+In-Reply-To: <a01c861b-8c5c-0f6d-4ca8-00e97bcecbd9@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,35 +72,43 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/2/19 6:00 PM, Christoph Hellwig wrote:
-> On Tue, Jul 02, 2019 at 12:37:59PM -0600, Jens Axboe wrote:
->>> I couldn't get that to boot in my test systems even with mainline,
->>> but that seems to be do to systemd waiting for some crap not supported
->>> in the config.
+On 7/2/19 7:10 PM, Jens Axboe wrote:
+> On 7/2/19 6:00 PM, Christoph Hellwig wrote:
+>> On Tue, Jul 02, 2019 at 12:37:59PM -0600, Jens Axboe wrote:
+>>>> I couldn't get that to boot in my test systems even with mainline,
+>>>> but that seems to be do to systemd waiting for some crap not supported
+>>>> in the config.
+>>>>
+>>>> But with my usual test config I've just completed a test run with
+>>>> KASAN enabled on a VWC=1 driver with no issues, so this keeps puzzling
+>>>> me.
 >>>
->>> But with my usual test config I've just completed a test run with
->>> KASAN enabled on a VWC=1 driver with no issues, so this keeps puzzling
->>> me.
+>>> Let me know what you want me to try. I can't reproduce it in qemu, but
+>>> it's 100% on my laptop. My qemu drives also have VWC=1, so it's not
+>>> (just) that.
 >>
->> Let me know what you want me to try. I can't reproduce it in qemu, but
->> it's 100% on my laptop. My qemu drives also have VWC=1, so it's not
->> (just) that.
+>> I seriously have no idea unfortunately.  It works fine for me both
+>> on qemu and on a real WD SN720 drive on my laptop.  Just for curiosity
+>> you could try to pad the bio structure and see if bloating it to the
+>> old size makes any difference.
 > 
-> I seriously have no idea unfortunately.  It works fine for me both
-> on qemu and on a real WD SN720 drive on my laptop.  Just for curiosity
-> you could try to pad the bio structure and see if bloating it to the
-> old size makes any difference.
+> No change with the padding, put it in the same place. Still insta crash
+> before I get to login prompt, or right after I login and run sync.
+> 
+>> The other things that comes to mind is that when Johannes removed
+>> BIO_SEG_VALID there also were some unexplainable side effects,
+>> I'll look into seeing if there was any similarity.
+> 
+> Do you have a link?
+> 
+> I'll try and poke a bit here.
 
-No change with the padding, put it in the same place. Still insta crash
-before I get to login prompt, or right after I login and run sync.
+The issue is a discard request, 4kb, with a bio but no bi_io_vec.
+The sync is a red herring, apart from the fact that it triggers
+the ext4 discards.
 
-> The other things that comes to mind is that when Johannes removed
-> BIO_SEG_VALID there also were some unexplainable side effects,
-> I'll look into seeing if there was any similarity.
-
-Do you have a link?
-
-I'll try and poke a bit here.
+I'm guessing, when you tried to reproduce, that you didn't have discard
+enabled?
 
 -- 
 Jens Axboe
