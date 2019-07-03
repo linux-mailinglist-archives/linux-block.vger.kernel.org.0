@@ -2,120 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57BB05D9AB
-	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 02:50:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB4E95DA5D
+	for <lists+linux-block@lfdr.de>; Wed,  3 Jul 2019 03:10:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfGCAu1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Jul 2019 20:50:27 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43283 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGCAu0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Jul 2019 20:50:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so237179pgv.10
-        for <linux-block@vger.kernel.org>; Tue, 02 Jul 2019 17:50:26 -0700 (PDT)
+        id S1726736AbfGCBKR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Jul 2019 21:10:17 -0400
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:37776 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBKR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Jul 2019 21:10:17 -0400
+Received: by mail-pl1-f172.google.com with SMTP id bh12so240630plb.4
+        for <linux-block@vger.kernel.org>; Tue, 02 Jul 2019 18:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZWwYr6O3tiOc5lWF56ulDA9pRcqusbdisVXTs1Pb+fs=;
-        b=AJ6E73LEeTQ60TV7MqG9ZbNeGcL4+ODQxlqYw4uUto0c+0517Yn2sQISVpvOuAKjKG
-         k4rZc8JHnRB6kovJ4Q00fQ3s4gNGPyINsFLXbxaLkjLmfTZsXp+5kchVnq8MWEhOdpSe
-         Q48nybcCkEM2t81fSakAiP4KZY0HlEqX3hLzpUo0SwCW9pGlMzFTDXAsDVQXvzzZ1DHU
-         bh1ND71xLdwlKq9TnJbELh+V7jMv58EWvh1+gL11mwFcPlzsG+imoOt4aXSJRMuxRaOm
-         svfP2tTuQa4btswl0Iccc/BeFY0zhBnHIwKvyQ7iG6ct4k+Tfm13IEfDd9ySAuFQY3hz
-         ZFXQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SUyMsQTAT4Xex1w0m5orXD/uZpdvPJFFkpqi7cw7ARc=;
+        b=Cx5YBwQxfHbcSYTVPaaiJ095/bU5COtLFsgp3iJFRhkzhR3ZpKFNRIDHKG25E65Vck
+         emq5ODbKKS6w1+ZAAPrC8NrV/i+C6hhZPdPpF/cHVgPU/vb7CFk5gokRVt8m86TxyNzJ
+         ztNT63j2t/v10F5hsOtK8vz/Ar+61linqF5VkxecGZYg1ftz0dLQ/0RbEanr5gyTPWlH
+         S4lPmzMl3mBr2q+cXP6ZiUpI3+7eDGak6dv/DtzS2BdDLgQXQPvQzpeQOJ6uHc0NO/pk
+         yMBBorh6ye5whXiOcXma9ZrWNqY2UCyYdgThYOvdlNlYQoz02NsjaR108ZkVky8WbHXl
+         9zdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZWwYr6O3tiOc5lWF56ulDA9pRcqusbdisVXTs1Pb+fs=;
-        b=cIRtt1u5HWFbFRbeaHTcLmU22Z6YQhpTrlWKLDHAu6sG4Hp5qwZ8ZQwuuEycTIxMWe
-         hZiSlX0br5u/+KPEWieHf/iTTM926edOvwrFdcTIgmg02qGvN3ugqS/TArbT8LFmN/MR
-         BhOICtcbjHjhmIG1ncRj2yjZsPXi0scwMwRg/z/R1ETkr4F2lDIxbHbMxVXhTZYm2gGc
-         MP5qWYy8UmPXZnUoQnaQy+633NVVdQKHY6kLU8RqrTZYeoGa+SmxewrmUJzUCdZEqzfx
-         yvZdI3vPpjW1lqMMpl2+20is9ttudcT1h5nCJExcmGDBkqdwRJedaZntHSV9qXwcUx9i
-         0OIQ==
-X-Gm-Message-State: APjAAAXVo9Rj70sSgvT4NOyhUhKBul7H4BbVCLqhLLSussMjLMOYfdeO
-        VujheDbtgwHjhtG27MnHtzAROKMjdrU=
-X-Google-Smtp-Source: APXvYqwibmteSvxZ9mD4EXO7JscIFVbqKdIk9aRiaNZQCILYiLSOPZ2KqB/kEdXsbFRLgbjZFj32tg==
-X-Received: by 2002:a17:90a:cf0d:: with SMTP id h13mr8805697pju.63.1562115026302;
-        Tue, 02 Jul 2019 17:50:26 -0700 (PDT)
-Received: from localhost ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id d6sm279276pgf.55.2019.07.02.17.50.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 17:50:25 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 09:50:23 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-mm@kvack.org, linux-block@vger.kernel.org,
-        bvanassche@acm.org, axboe@kernel.dk,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH 3/5] block: allow block_dump to print all REQ_OP_XXX
-Message-ID: <20190703005023.GC19081@minwoo-desktop>
-References: <20190701215726.27601-1-chaitanya.kulkarni@wdc.com>
- <20190701215726.27601-4-chaitanya.kulkarni@wdc.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SUyMsQTAT4Xex1w0m5orXD/uZpdvPJFFkpqi7cw7ARc=;
+        b=IVUr0C+VKXN9mf1/u9ihzt4MhTgwzsqTnYjefnNXS0k5eNU86tMNRqK7o3rXtS75js
+         XpgQdZNWs4eonR0fFBdJeF/pFR+aStd4fsLytjWLR3kkCKZotI5ZarxGvE7hWVEDHKbQ
+         r2q/b+ziI+lwy8xOPro2Ipbal02oCADNfRuIsoNW/EYl5Zl+QPb2nFHXqFEsI8i7uam2
+         Cu0yZf6xenaJRo7en4oVDkC/KTbBNEK6d+SiLyHJUj0dZoOvq1lvIvV4tzUM2gErfi14
+         BV33IvsdLu1rDbRiDE0rGUUZtr5R4czRADskaHiF5e1Ikr+LC2G+0HyCy+vohVFvuAde
+         oZ8Q==
+X-Gm-Message-State: APjAAAX7jsohCL8QR4F/lAFSw4MMho/DCAWrr9PC7HDpj0ZukwPRnZxj
+        +kguwRFFnIRbP4WaUG9HWbnnlz1GFmHNAg==
+X-Google-Smtp-Source: APXvYqxW36FHRIjXYS5pXxmunWiBZKGCXGnyaRwQqwIRANxRpZzwuv+sjdiy6l2cN0We/BCxA+MC1A==
+X-Received: by 2002:a17:902:8696:: with SMTP id g22mr37716047plo.249.1562116215616;
+        Tue, 02 Jul 2019 18:10:15 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id o95sm214586pjb.4.2019.07.02.18.10.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 18:10:14 -0700 (PDT)
+Subject: Re: remove bi_phys_segments and related cleanups
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org
+References: <20190606102904.4024-1-hch@lst.de>
+ <a703a5cb-1e39-6194-698a-56dbc4577f25@fb.com>
+ <bbc9baba-19f2-03ec-59dc-adab225eb3b2@kernel.dk>
+ <20190702133406.GC15874@lst.de>
+ <bfe8a4b5-901e-5ac4-e11c-0e6ccc4faec2@kernel.dk>
+ <20190702182934.GA20763@lst.de>
+ <ef4a5fb5-9d79-75e1-1231-fdfc14f91835@kernel.dk>
+ <20190703000055.GA28981@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a01c861b-8c5c-0f6d-4ca8-00e97bcecbd9@kernel.dk>
+Date:   Tue, 2 Jul 2019 19:10:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190703000055.GA28981@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190701215726.27601-4-chaitanya.kulkarni@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 5143a8e19b63..9855c5d5027d 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1127,17 +1127,15 @@ EXPORT_SYMBOL_GPL(direct_make_request);
->   */
->  blk_qc_t submit_bio(struct bio *bio)
->  {
-> +	unsigned int count = bio_sectors(bio);
+On 7/2/19 6:00 PM, Christoph Hellwig wrote:
+> On Tue, Jul 02, 2019 at 12:37:59PM -0600, Jens Axboe wrote:
+>>> I couldn't get that to boot in my test systems even with mainline,
+>>> but that seems to be do to systemd waiting for some crap not supported
+>>> in the config.
+>>>
+>>> But with my usual test config I've just completed a test run with
+>>> KASAN enabled on a VWC=1 driver with no issues, so this keeps puzzling
+>>> me.
+>>
+>> Let me know what you want me to try. I can't reproduce it in qemu, but
+>> it's 100% on my laptop. My qemu drives also have VWC=1, so it's not
+>> (just) that.
+> 
+> I seriously have no idea unfortunately.  It works fine for me both
+> on qemu and on a real WD SN720 drive on my laptop.  Just for curiosity
+> you could try to pad the bio structure and see if bloating it to the
+> old size makes any difference.
 
-Chaitanya,
+No change with the padding, put it in the same place. Still insta crash
+before I get to login prompt, or right after I login and run sync.
 
-Could it have a single empty line right after this just like you have
-for the if-statement below for the block_dump.  It's just a nitpick.
+> The other things that comes to mind is that when Johannes removed
+> BIO_SEG_VALID there also were some unexplainable side effects,
+> I'll look into seeing if there was any similarity.
 
->  	/*
->  	 * If it's a regular read/write or a barrier with data attached,
->  	 * go through the normal accounting stuff before submission.
->  	 */
->  	if (bio_has_data(bio)) {
-> -		unsigned int count;
->  
->  		if (unlikely(bio_op(bio) == REQ_OP_WRITE_SAME))
->  			count = queue_logical_block_size(bio->bi_disk->queue) >> 9;
-> -		else
-> -			count = bio_sectors(bio);
->  
->  		if (op_is_write(bio_op(bio))) {
->  			count_vm_events(PGPGOUT, count);
-> @@ -1145,15 +1143,16 @@ blk_qc_t submit_bio(struct bio *bio)
->  			task_io_account_read(bio->bi_iter.bi_size);
->  			count_vm_events(PGPGIN, count);
->  		}
-> +	}
->  
-> -		if (unlikely(block_dump)) {
-> -			char b[BDEVNAME_SIZE];
-> -			printk(KERN_DEBUG "%s(%d): %s block %Lu on %s (%u sectors)\n",
-> -			current->comm, task_pid_nr(current),
-> -				blk_op_str(bio_op(bio)),
-> -				(unsigned long long)bio->bi_iter.bi_sector,
-> -				bio_devname(bio, b), count);
-> -		}
-> +	if (unlikely(block_dump)) {
-> +		char b[BDEVNAME_SIZE];
-> +
-> +		printk(KERN_DEBUG "%s(%d): %s block %Lu on %s (%u sectors)\n",
-> +		current->comm, task_pid_nr(current),
-> +			blk_op_str(bio_op(bio)),
-> +			(unsigned long long)bio->bi_iter.bi_sector,
-> +			bio_devname(bio, b), count);
+Do you have a link?
 
-It would be great if non-data command is traced, I think.
+I'll try and poke a bit here.
 
-Reviewed-by: Minwoo Im <minwoo.im.dev@gmail.com>
+-- 
+Jens Axboe
+
