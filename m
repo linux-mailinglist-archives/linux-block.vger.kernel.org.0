@@ -2,86 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BD3263D4A
-	for <lists+linux-block@lfdr.de>; Tue,  9 Jul 2019 23:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D539563D6C
+	for <lists+linux-block@lfdr.de>; Tue,  9 Jul 2019 23:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfGIV1p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 Jul 2019 17:27:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:32972 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfGIV1p (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Jul 2019 17:27:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u15so16549741oiv.0;
-        Tue, 09 Jul 2019 14:27:44 -0700 (PDT)
+        id S1728957AbfGIVld (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 Jul 2019 17:41:33 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34079 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIVld (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Jul 2019 17:41:33 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k10so241095qtq.1;
+        Tue, 09 Jul 2019 14:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
+        b=ZlaVdzKR62QMVBXExU9yecMvvjrWv8pcrvYYz0tUBQsKOLGNKSV5xNTkinxqgIqCgS
+         HCVlwMsbqDmAOOUh8vx8/AMcBziTzA++EN/SxF22aFYfg9JJl/IikxqOUwcog7DAmDAR
+         f3bOc18RFmELS57k6X6Y5nAaP3+lZsUSK3l2XCl5CIbFa3JKm8chgH/lxW35c0INZaii
+         unu8dLxIq56kVcfKpFqwvQJUe1o/2gJNfpeZJneMA1cgX1r+0oglkb1NrIMHIMF/1cFv
+         W1l7fs4qDJuewO0qsb3PpdlXhmFeKW7Nh6KaKJ4ghjLIiws6HHB9UBoZf25KvZLE1q61
+         9ACw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JFmZc74oeeM35zjBvo4+BukpLYLvklQy3qJm+E2OtJU=;
-        b=KlBUku48coRkOcM346aG1N84w+w094WErXhf3NDNsJ8Ev4ofPfyJ84st/VXAHZ+qWN
-         hbjUjMNtuFYssDOkZVmwQd3jjZ2aRHB7LzZXMudOMxdKhUXjQvgE99NClgNPIO9Hpbsn
-         DIzB9bQbLC40kM7pMc6/KHr5SMVkYeHFCvBdMqfHphhwbUtugNsyLNSNokIRfza2ig2X
-         /PMvJE1angF7Z5mFBMnIgt+z1vmKeipku7Z9X8AxWGgPHhFuGAHgyr6b+hgeRoZvAitO
-         MaMZtVMtexu/mDiDaPJDmIj/PXEPssl8OybHTMF+x7fDOqDtGMhu4cZlWCM+hLUEM+WA
-         /zRg==
-X-Gm-Message-State: APjAAAVI9Ye44jivetFVqOZCFmvvH+8LUTdSKcFV7Un8OFJwL0f6DqB6
-        JHSlWrWIbWHqb/KJfPSj59g=
-X-Google-Smtp-Source: APXvYqxDF0A6yCgF0FCviLWVZqNRm5Hbs7TmfD5YpmIKbBad5iRl8KSOywojmloSncHdk6BuyEh3eg==
-X-Received: by 2002:aca:d7d5:: with SMTP id o204mr1337022oig.16.1562707664103;
-        Tue, 09 Jul 2019 14:27:44 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id o18sm140782ote.63.2019.07.09.14.27.42
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
+        b=M/UUUnu4lrcb/B4xKwzQa+Eixbk/9+qFOWzAOi8i0gXP3w81VpP8KJfjL4AsdcwqP8
+         Ofv/+Ouea/IZ7JxAfWlthk9W0d9ubXhMMSnqJor9nRhkgaAFmZfVkqJdxRbH0Rtq54Nk
+         3kTfiFZ2b+QnrCIITwmpvPak/XSVv0IkTPd1pjEzG+iKKrtjiFDZCIcvpS6iJAr2UfEP
+         7mbbNzyXJBwUVzMIGomI/hAhxKJ8csQli7R09VeEYEu16fgpkjDyIfom6Qq0Bkzm2q6U
+         YcsABqSF7ZY4YuCM6HGl6OfsLPf5wjOdQSM1R9ddmEWoeCs6ee+M6Pl83W3uESXcRseI
+         D6cw==
+X-Gm-Message-State: APjAAAXd++SY4N9siO6zFxge5jz5boLB2izxIUs4Mjhc2Kt0FasqGWVo
+        YlzpCTg6KQjkke5J8LUV37M=
+X-Google-Smtp-Source: APXvYqxaoI19YT2qAqYhYrPj4SUcXRaqW0XeVWjsErjSs90LfkZJ+RwXWeVsjac2cGBC6uCKXbNK6g==
+X-Received: by 2002:a0c:b521:: with SMTP id d33mr21593820qve.239.1562708492394;
+        Tue, 09 Jul 2019 14:41:32 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:fa50])
+        by smtp.gmail.com with ESMTPSA id x8sm138972qka.106.2019.07.09.14.41.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 14:27:43 -0700 (PDT)
-Subject: Re: [PATCH v4 00/25] InfiniBand Transport (IBTRS) and Network Block
- Device (IBNBD)
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Jinpu Wang <jinpuwang@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        Roman Pen <r.peniaev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190620150337.7847-1-jinpuwang@gmail.com>
- <CAHg0HuzUaKs-ACHah-VdNHbot0_usx4ErMesVAw8+DFR63FFqw@mail.gmail.com>
- <20190709110036.GQ7034@mtr-leonro.mtl.com>
- <CAD9gYJL=fo4Oa2hmU4WZgQrzypRbzoPrrFjNQKP2EZFXYxYNCA@mail.gmail.com>
- <20190709120606.GB3436@mellanox.com>
- <CAMGffE=T+FVfVzV5cCtVrm_6ikdJ9pjpFsPgx+t0EUpegoZELQ@mail.gmail.com>
- <20190709131932.GI3436@mellanox.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <1cd86f4b-7cd1-4e00-7111-5c8e09ba06be@grimberg.me>
-Date:   Tue, 9 Jul 2019 14:27:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 09 Jul 2019 14:41:31 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 14:41:29 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH] blk-cgroup: turn on psi memstall stuff
+Message-ID: <20190709214129.GK657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190709131932.GI3436@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Josef Bacik <jbacik@fb.com>
 
->> Thanks Jason for feedback.
->> Can you be  more specific about  "the invalidation model for MR was wrong"
-> 
-> MR's must be invalidated before data is handed over to the block
-> layer. It can't leave MRs open for access and then touch the memory
-> the MR covers.
+With the psi stuff in place we can use the memstall flag to indicate
+pressure that happens from throttling.
 
-Jason is referring to these fixes:
-2f122e4f5107 ("nvme-rdma: wait for local invalidation before completing 
-a request")
-4af7f7ff92a4 ("nvme-rdma: don't complete requests before a send work 
-request has completed")
-b4b591c87f2b ("nvme-rdma: don't suppress send completions")
+Signed-off-by: Josef Bacik <jbacik@fb.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-cgroup.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 1f7127b03490..6ed515b78cb3 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -29,6 +29,7 @@
+ #include <linux/ctype.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/tracehook.h>
++#include <linux/psi.h>
+ #include "blk.h"
+ 
+ #define MAX_KEY_LEN 100
+@@ -1644,6 +1645,7 @@ static void blkcg_scale_delay(struct blkcg_gq *blkg, u64 now)
+  */
+ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ {
++	unsigned long pflags;
+ 	u64 now = ktime_to_ns(ktime_get());
+ 	u64 exp;
+ 	u64 delay_nsec = 0;
+@@ -1670,11 +1672,8 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ 	 */
+ 	delay_nsec = min_t(u64, delay_nsec, 250 * NSEC_PER_MSEC);
+ 
+-	/*
+-	 * TODO: the use_memdelay flag is going to be for the upcoming psi stuff
+-	 * that hasn't landed upstream yet.  Once that stuff is in place we need
+-	 * to do a psi_memstall_enter/leave if memdelay is set.
+-	 */
++	if (use_memdelay)
++		psi_memstall_enter(&pflags);
+ 
+ 	exp = ktime_add_ns(now, delay_nsec);
+ 	tok = io_schedule_prepare();
+@@ -1684,6 +1683,9 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ 			break;
+ 	} while (!fatal_signal_pending(current));
+ 	io_schedule_finish(tok);
++
++	if (use_memdelay)
++		psi_memstall_leave(&pflags);
+ }
+ 
+ /**
