@@ -2,92 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B82E864D03
-	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 21:52:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ADB764D2A
+	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 22:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfGJTwf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Jul 2019 15:52:35 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46986 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfGJTwd (ORCPT
+        id S1727595AbfGJUFl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Jul 2019 16:05:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42888 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfGJUFl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:52:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so3771293qtn.13
-        for <linux-block@vger.kernel.org>; Wed, 10 Jul 2019 12:52:33 -0700 (PDT)
+        Wed, 10 Jul 2019 16:05:41 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so1747124plb.9
+        for <linux-block@vger.kernel.org>; Wed, 10 Jul 2019 13:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=h2XA2X1ZY1EHxtyN0Imads8NvEkfjbdW711+ZDB5c94=;
-        b=1p+GRmWLsFIydILSpH4SUU4qr33pL1CfrGVK7adXHtu2RSh053cgJVt/KL03koY5Gn
-         +IE3FsqsOtjrvoaqjzN+STTVBDYcATwAhiiZ72usKmSe+2GmdGTw1VqUJ81hmVRPqt9H
-         WVj4/Hj7zFsQ8S6Nbzk0xZZZsKW6+YytJ25j+yLDZfZhiDbpUnAxCfHiWBhQTNDZ1k6X
-         cogq57vJw2oU8h0NdUvaJkKFy1dL3TbV6KTF9ZGhf1fy1PVEBOBt9AxARFnuvgi3ohVY
-         QKgO1aJtdScOA9O3P99DUQsZDSLrrRDeG2axQh+RCu2+Oqna0uk/n/Ihmh9h7Bc0bSLL
-         l8ug==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=+J7k3U3x+MRZN/LFpUbnrqKvYz2U9hb1CG3aK8Zr/vU=;
+        b=nL2ApRDlvcyc3VPFaDFLDpiqo+pa+wS/CfQsGXcOuXn8lFEq2JU3crYTE/gV79AwKV
+         0f0v5IyP37gPqgruN7bofyMpjD5SGWEZuBJXSu+qj1Er2VGNTpNzbMWuXZN0nxKzfFwK
+         /6RdBo5xBkPyPgCRnO8R96jBAgsoX1t8WXgoIC7Wf+1q6wKJwgBtdoU8o4yvlwCSwMS+
+         2hcV1Ku1T4mTsz13i9xqiUz8pF1/e6dggnd2dsgVi2M6TwezrkxnZILY7A/tSZ4SnP0s
+         ZGxLovZ+nGowDHKOmEhOURWKyBk2sUtk7b6HWr8NxuEumKpEBW4QWRulOGn5NzpF8v7E
+         GNew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=h2XA2X1ZY1EHxtyN0Imads8NvEkfjbdW711+ZDB5c94=;
-        b=gJoYNr+MpaQRkBXCKjRScAvPRIyUX2goyuwJn6cNa3V6h9nF6yYAG3u55Iq21vvM2h
-         sJAXQNwT3lr79mMeYgk4PgELRiHwu2TwJQ7j1onbuYmg75DBFGk295a4Onuwz755X4aS
-         SUJL8IHxJYXgnpga8LjNUkB3qVBRSZFX3pd54OoplbBmTM59riHY47bkXZLvIMQDvBkm
-         uCh/4OJwfQ6axcNRSolnGHEBEpySc94NgJz/Fp9P1nBx7S81fv0TbdaxJA7kibTdqwvO
-         1xAzuLAiaEBhgmplvtQCJLRUFdeGG9zWiIYcxpNXEQ3FXmY3JqGvFlMCC0WESLmXzQOX
-         4toQ==
-X-Gm-Message-State: APjAAAXuA4PERaU9f671CQXI57NUfzlulI8rQLn2Dt7YTF7cfRvR3E/3
-        DGkX3mk1b61hHEcXUGYYaRTDlQ==
-X-Google-Smtp-Source: APXvYqyBfvrfYhxjdfcV4ySFNAvtIm75K1LNcIgBlruRP7C/8rwENvmllFbXCx4jBoSGkRQebtMdHQ==
-X-Received: by 2002:ac8:2fa8:: with SMTP id l37mr25255325qta.358.1562788352412;
-        Wed, 10 Jul 2019 12:52:32 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::5ce])
-        by smtp.gmail.com with ESMTPSA id i1sm1386769qtb.7.2019.07.10.12.52.31
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+J7k3U3x+MRZN/LFpUbnrqKvYz2U9hb1CG3aK8Zr/vU=;
+        b=QtGwcwhQ27aIJ8FqVXSGew/TirQ4c8bxLZ20XLY+RL2zmHAQhZhNfs1EX3rTysmusR
+         JVtp1mfpRH75g5Km2XvHHpwHwy3B2VhZ9QjcqB8XWSzZLCHql6wE7K2/P3+MvXiB57UX
+         OhDIuJnQaP6QatsievNTlPL0+lFOyGz7V+2djU+TCY2IDUz4u59BzjbcFmS14BHbZX97
+         CAZNmMUoG9mPSKmEtOYMS5slPEoVbpOZtwslgng3gP5oPuxmdeX7hsbiVWW2XbxsPT74
+         5AwSBnjwrzvjnSBkmrM8NZARG53qAeDMl6Pliu4lUhu2PSkmI8/j2YT8kIo3Zx9SgFTX
+         t18g==
+X-Gm-Message-State: APjAAAXlNSqX6MtrmVeVMVLnvHeKEafyg8B0v+er/ehKqUKH6wOs7fYb
+        v7oidbWYpluCSSlwst1Z4f6JtXdeHP1xsg==
+X-Google-Smtp-Source: APXvYqy6uFfDzkCbnpA9m/e7EdK5E0Wat02PTWj7Iv4RY8L39izJcg18JeOc6V7oCeyb8g2OvklnuA==
+X-Received: by 2002:a17:902:26c:: with SMTP id 99mr11027plc.215.1562789140023;
+        Wed, 10 Jul 2019 13:05:40 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id s66sm3500274pgs.39.2019.07.10.13.05.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 12:52:31 -0700 (PDT)
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     kernel-team@fb.com, axboe@kernel.dk, linux-block@vger.kernel.org
-Subject: [PATCH 2/2] rq-qos: fix missed wake-ups in rq_qos_throttle
-Date:   Wed, 10 Jul 2019 15:52:27 -0400
-Message-Id: <20190710195227.92322-2-josef@toxicpanda.com>
-X-Mailer: git-send-email 2.13.5
-In-Reply-To: <20190710195227.92322-1-josef@toxicpanda.com>
-References: <20190710195227.92322-1-josef@toxicpanda.com>
+        Wed, 10 Jul 2019 13:05:39 -0700 (PDT)
+Subject: Re: [PATCH V3] block: Disable write plugging for zoned block devices
+To:     Damien Le Moal <damien.lemoal@wdc.com>, linux-block@vger.kernel.org
+References: <20190710161831.25250-1-damien.lemoal@wdc.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c9b5b4cd-68d5-7c29-8f76-ad5b04007594@kernel.dk>
+Date:   Wed, 10 Jul 2019 14:05:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190710161831.25250-1-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We saw a hang in production with WBT where there was only one waiter in
-the throttle path and no outstanding IO.  This is because of the
-has_sleepers optimization that is used to make sure we don't steal an
-inflight counter for new submitters when there are people already on the
-list.
+Looks fine to me now, but doesn't apply cleanly to master/for-linus.
 
-We can race with our check to see if the waitqueue has any waiters (this
-is done locklessly) and the time we actually add ourselves to the
-waitqueue.  If this happens we'll go to sleep and never be woken up
-because nobody is doing IO to wake us up.
-
-Fix this by checking if the waitqueue has multiple sleepers after we add
-ourselves to the list, that way we have an uptodate view of the list.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- block/blk-rq-qos.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 659ccb8b693f..b39b5f3fb01b 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -244,6 +244,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 		return;
- 
- 	prepare_to_wait_exclusive(&rqw->wait, &data.wq, TASK_UNINTERRUPTIBLE);
-+	has_sleeper = wq_has_multiple_sleepers(&rqw->wait);
- 	do {
- 		if (data.got_token)
- 			break;
 -- 
-2.17.1
+Jens Axboe
 
