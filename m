@@ -2,80 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D138F64C93
-	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 21:11:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D7A864D04
+	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 21:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfGJTLW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Jul 2019 15:11:22 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35109 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbfGJTLW (ORCPT
+        id S1728210AbfGJTwd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Jul 2019 15:52:33 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42839 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJTwb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:11:22 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a127so2523995oii.2;
-        Wed, 10 Jul 2019 12:11:21 -0700 (PDT)
+        Wed, 10 Jul 2019 15:52:31 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so2894727qkm.9
+        for <linux-block@vger.kernel.org>; Wed, 10 Jul 2019 12:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id;
+        bh=7LrlK+yNNAjChYy/KKDWPKU1AjfJ6+kVoZtH7HVXgDk=;
+        b=mbcEIb07lqT+Z3l0i7Q6mn7bsmxOkVz5EIr4O7is29m/Z9VmB8Lwt2qzOiG59dHNx5
+         CAqIC/UQjbm1xjptJif+P4Gul1WL9gab/L+V9jpBrOvNY8Gct3CEhCS6kSYMvq2oYWp+
+         yjwL1jRAlMvuUOnD1Z2jMpWoobCQwipkoDBrFptMDxdj27XFsG9UBPv4sOGwhryGArV+
+         /10YrTZqTni+LzVKfKw9cgWK96dUpRQYlWDAs1+pJgvYghcY8ed060idj1Nfuz5KNPox
+         ZVcoPTpEYlvrK0bqJHjp6qVW+2YGQrvJwV7BQdg8nhPJxwL8LXwGWOIWZqdGc0MeccJ5
+         NETw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KQsowOAJzdxitXTMpH3lblSmCoy4bvYraioAuVTlH0E=;
-        b=ZbA5rjTt/8pELagnPJKbktXwu1A0spTpj+EWh0U6z8UhCzmzyd1w+P2O4CQn+0YcBM
-         8WdWmSTYTST6gEHeX8HXk3RPHJl8qh9bEltssWme22uG0cnfwYpaEmJtiq9/OPnXjAMf
-         rAjLDGrIJ5gBSwb/4i3YnxfZCayJ910dtxp8F5g6VF9Cs3t4PMP30LMdqFrJ1nUOSdvP
-         XSUmsqK0KFznmhthc3KFRUcZx/EFlQvVUyg6ALa7x9hx5cHUg/WcqRZ+faXn5utt+ZOl
-         UFT8isp0CBX/YhYRJ85FsGZJ3owygGAIi8l+P2FRg4D7an8DWs0sou4JhjyNce1ghtmC
-         emAQ==
-X-Gm-Message-State: APjAAAVNEBbGyNpQYNf9M/978UTcuB20//Suo3Sg4CJECuzCmxInMLUJ
-        +jlHiMdLC5DsXw3nQ1ScEzM=
-X-Google-Smtp-Source: APXvYqzhi60ZA8pBUMOpA7Q5O/i+52Fm54ujejeqfbXfJdwFQBqaZlwX8Hf448W4XQP0ePWxsPbU8A==
-X-Received: by 2002:aca:3006:: with SMTP id w6mr4486266oiw.5.1562785881206;
-        Wed, 10 Jul 2019 12:11:21 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id o26sm1001874otl.34.2019.07.10.12.11.18
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=7LrlK+yNNAjChYy/KKDWPKU1AjfJ6+kVoZtH7HVXgDk=;
+        b=Gx4G/1OENlSjBF7AFLuuIoWGZVfgQA1sfRG+ute3XnBDETHK4qa2n6xktSJ44kK6/B
+         fBHyZfCr+oBLpMl9v5jXDuKKjOGkwiO59FVSn4gdERkhI6wdTWthE4mOBtMAdPJc8JOQ
+         VsO9C3OSUsj3hB4yO2mxTsiOQH3oJaazrL8RxTGosKeOl6EGMrqu/MJtN1QU45A5dFMI
+         wSED3yM2a7OsAeJtQWsmA7OXyVoBSVn551SQEGrcc54jkNKp9G7FcqY+SvTAqnSJAZ95
+         +2NOtqeGtGOAQp1IGAD1XqWZyhTTf5w2ZRdyRCj+GAmddNjbvEKozjzpjekWnU2EKG8E
+         iN9g==
+X-Gm-Message-State: APjAAAU+8wTeUmIp0nbyBzv+Jlx59BgZ867phmsNT+5XSYqk1DccsD+X
+        Q+MJvjaI+W4b6uwthYncgWaDEhR0s7DIJg==
+X-Google-Smtp-Source: APXvYqzrX5Mu1F+rJEn/mze6e18ppOiP76Z8WHG3lMMHqzs63hTFSa9n5x3JOorwaVTHB5e/gE1Qww==
+X-Received: by 2002:a37:9d13:: with SMTP id g19mr19799619qke.124.1562788349890;
+        Wed, 10 Jul 2019 12:52:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::5ce])
+        by smtp.gmail.com with ESMTPSA id f133sm1554254qke.62.2019.07.10.12.52.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 12:11:20 -0700 (PDT)
-Subject: Re: [PATCH v4 00/25] InfiniBand Transport (IBTRS) and Network Block
- Device (IBNBD)
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, axboe@kernel.dk,
-        Christoph Hellwig <hch@infradead.org>, bvanassche@acm.org,
-        dledford@redhat.com, Roman Pen <r.peniaev@gmail.com>,
-        gregkh@linuxfoundation.org
-References: <20190620150337.7847-1-jinpuwang@gmail.com>
- <CAHg0HuzUaKs-ACHah-VdNHbot0_usx4ErMesVAw8+DFR63FFqw@mail.gmail.com>
- <a8f2f1d2-b5d9-92fc-40c8-090af0487723@grimberg.me>
- <20190710135519.GA4051@ziepe.ca>
- <c49bf227-5274-9d13-deba-a405c75d1358@grimberg.me>
- <20190710172505.GD4051@ziepe.ca>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <930e0bc6-8c5c-97b5-c500-0bd1706b32c1@grimberg.me>
-Date:   Wed, 10 Jul 2019 12:11:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190710172505.GD4051@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 10 Jul 2019 12:52:29 -0700 (PDT)
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     kernel-team@fb.com, axboe@kernel.dk, linux-block@vger.kernel.org
+Subject: [PATCH 1/2] wait: add wq_has_multiple_sleepers helper
+Date:   Wed, 10 Jul 2019 15:52:26 -0400
+Message-Id: <20190710195227.92322-1-josef@toxicpanda.com>
+X-Mailer: git-send-email 2.13.5
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+rq-qos sits in the io path so we want to take locks as sparingly as
+possible.  To accomplish this we try not to take the waitqueue head lock
+unless we are sure we need to go to sleep, and we have an optimization
+to make sure that we don't starve out existing waiters.  Since we check
+if there are existing waiters locklessly we need to be able to update
+our view of the waitqueue list after we've added ourselves to the
+waitqueue.  Accomplish this by adding this helper to see if there are
+more than two waiters on the waitqueue.
 
->> I still do not understand why this should give any notice-able
->> performance advantage.
-> 
-> Usually omitting invalidations gives a healthy bump.
-> 
-> Also, RDMA WRITE is generally faster than READ at the HW level in
-> various ways.
+Suggested-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+---
+ include/linux/wait.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Yes, but this should be essentially identical to running nvme-rdma
-with 512KB of immediate-data (the nvme term is in-capsule data).
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index b6f77cf60dd7..89c41a7b3046 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -126,6 +126,27 @@ static inline int waitqueue_active(struct wait_queue_head *wq_head)
+ 	return !list_empty(&wq_head->head);
+ }
+ 
++/**
++ * wq_has_multiple_sleepers - check if there are multiple waiting prcesses
++ * @wq_head: wait queue head
++ *
++ * Returns true of wq_head has multiple waiting processes.
++ *
++ * Please refer to the comment for waitqueue_active.
++ */
++static inline bool wq_has_multiple_sleepers(struct wait_queue_head *wq_head)
++{
++	/*
++	 * We need to be sure we are in sync with the
++	 * add_wait_queue modifications to the wait queue.
++	 *
++	 * This memory barrier should be paired with one on the
++	 * waiting side.
++	 */
++	smp_mb();
++	return !list_is_singular(&wq_head->head);
++}
++
+ /**
+  * wq_has_sleeper - check if there are any waiting processes
+  * @wq_head: wait queue head
+-- 
+2.17.1
 
-In the upstream nvme target we have inline_data_size port attribute
-that is tunable for that (defaults to PAGE_SIZE).
