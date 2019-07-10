@@ -2,57 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B4F64A3B
-	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 17:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C78C64A9C
+	for <lists+linux-block@lfdr.de>; Wed, 10 Jul 2019 18:18:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbfGJP5r (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Jul 2019 11:57:47 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:17045 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbfGJP5n (ORCPT
+        id S1727528AbfGJQSg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Jul 2019 12:18:36 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:25698 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbfGJQSg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:57:43 -0400
+        Wed, 10 Jul 2019 12:18:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1562774264; x=1594310264;
+  t=1562775516; x=1594311516;
   h=from:to:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=ZMJYA93t5ZPNvDC8ldQOlUNs9dyqwjHpuHvWsuSSxi0=;
-  b=VKckY0OehiTwvYTjOjhSBl2QYlp4sxjF6vw/idmedUIXFhC7dwobwoUD
-   fqa8Uy+/qDovPKqJvuPQjVO5YRMDJexH2SYD/iqFmT8nffSuN1jkAE1Wf
-   bdYJq/eEiOdnhDAm0+wXv9E5qKoEvqqCSKE2/rtnayk4wHRT58r2POrBP
-   /CTcDaFU/d+xNyjkfIziyeX5FZzCMcyEkQzfMs0kQ4iboUra0n5NA8MFJ
-   hPzpCVqXoui4YGIGuJ6qNKQ/DPNXLzJ5QQwv5Si+lEQtodPCV4ccfWkFo
-   FYj2yzTujJMiH/bceptiuHoYX4exV//7HCM1ccKUD4Qsbh+qhm/HWRQqB
-   w==;
-IronPort-SDR: GvOCxMIfYCgWKZ4jLaZMvmApexPQSBeE/HDePOs0Bo5UwRj0HYOX++PEDE4/9tJueZuvNoNu0R
- fYxeTIi7WhUeGItl3H1TPeDYy0zuKH4zYm1xPPS0JStB+Yp1yHt0q20m0enoM8PnNEp6FgR8jR
- 97phgnS0mYYtOAMkezcWpPXNuPac2rlWGpmplkzq4jPb7573T+UsDWMfA7IOL6c27OjuBcblYB
- 5YlGsU5Df0G2pCxdNnY/ONsY6y5i+ocUcpIUxNgb1h2oHga6FxXu463RJsbBWQ2tiSSO/9LKZW
- Yhc=
+  bh=2GYmRz/cqU/GcOrb6cQ/fAYZVV1DBRix49T1KwGMTh8=;
+  b=mOeDQxfNHpfakkyTzVW2vHXakJos0UESYHpBxIYXf2+X3zlP9fKn9DE7
+   EUde9OGDrB1X7Baj1RlHBa7DUNJ+gZU/1QL20YDeQL1eTO/LN87krhV/8
+   4BbH4CCEExKUsgF7ESCHUZJxUwKvuc/0hGM/u4V71VafAGSAlFPML+pzF
+   yNopNSsRqd2b7vA8nh62bK4C4jWmc4wVnXB3/YMwPVpAFVMRa7CrDkusK
+   6jT5MiPb/Z73c1T2cqysacx5UzlBw9iVPPRnincZIcgfTVgKEMdEeQIG5
+   lVCCrFX3/cB/rWdU7dxfNurq5smSX9ql2mRSu7irtde7KD+Mtprll5/63
+   A==;
+IronPort-SDR: s/ZjOkFUYlLxFcoPcE4W67qVQxr5D026oHHwbzuCBH6ux5jgmhtoy5uABXip/msphlYZQ6NqIE
+ FlNkVKPHImlht38BY3km/htC7T6vY31TcymLFHCmdPP7yaojMGxW4otsN5t4htpowDRDGdFpLV
+ 3k40v1fX+RiDYIOuML8dzFkabCIqTPPt8XoYC45pikq7L2SjFYTKuuhz8LCP9VofhDkeTY5W78
+ I8CWsMUL/nWbv0wtQEcEIRB2C76kKGzQpGJZ58O/dfNT4NkRpYpZLHoUInLMAPlAFiNqc0TbVL
+ 4Z0=
 X-IronPort-AV: E=Sophos;i="5.63,475,1557158400"; 
-   d="scan'208";a="114296345"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 10 Jul 2019 23:57:43 +0800
-IronPort-SDR: WM/KjArt1EPUOscijVgxrwYbNnDqxaqU6x4rGqoVIyiMwv+eQFkOmH22Ib0RRh+9aCaJ3dtNyU
- HKmVD6IgOwZB0QKnKn8W5PdKCRJdIPiEPzbh3nkWtRyiEZ3uRpkwQb9tDshJZXaNojV0skcvcw
- ggZlPpRmbvOwR3c4jZ0QK5miWrFQajl03H+aTx4hIFC7F0MGPWyC7QG6pgrk0QJ2ZMYwoRhqG6
- peJAnfPm8T4f+P03u/Qt5IgCkkh50iF9StUlej9d0R47/F4LtMmbP3WwDkL1GEEO0fKyEwJgQ6
- NOseXIGamBydNago5QUVibCw
+   d="scan'208";a="112681105"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Jul 2019 00:18:33 +0800
+IronPort-SDR: RNitutdDi6vX3eHm6bJnSAUeFNoHGmNlG9HuErXOiCozecvbvXdNIe4yJcBaMMQDzfVJGio2aD
+ Efpwps+nIKgjH8qRyRnbNOCZt4OFNersonzpLsuKKEPW+Vd6gaXYuZzdwjxaHtkHLLBYxM7idr
+ SVkz2/CduvwGoukn2g6pFFnQPPie+GsqnGyjYUnl8uVUjC2VrGnDIe197H04TkHs7Rvhe7u7g/
+ H7oWYga7cVlBz0ALLMePt3lMo4nyyICStrxKm4JnFQCn1zM/5QfvjD0Qn97YhAPixBDX7wB3z5
+ 4MQCsz738zEB2IjF7mWLQBK+
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 10 Jul 2019 08:56:28 -0700
-IronPort-SDR: BJ4+w8wKxS01LYFvEWVzlvgPJxZdqfEaWm02h8g+pHmy1qa7OTNeaE96FmOzd5HzS44Hy6G/ZL
- pGnjJZgf/6W68VogA7N0Y3Ln/jLu5vw8r+9kVlVgwMLUWbXQANJ9eGjCGHNshVMShGBSxNy7jD
- kjNXA3+vnlVLo1dXNau+uC3OGveo4hIUTG6MqF7p17OHU1AyHuKQFmbU542zKvB7P5NErW5d6P
- nN+dKYyKu+tkABJ/Ll6fnHfAPcTwPF3zmK3+rGbqPw8cV/zVSY3Of9a4irLeDecJAfTUA2AiCh
- 7zo=
+  by uls-op-cesaep02.wdc.com with ESMTP; 10 Jul 2019 09:17:14 -0700
+IronPort-SDR: KUnJrVp/WXTiFGA9FL6vWMmEKl7HtIVbpALMQyrhWxJg37Yxb5sxfSUxbk4BFeGNVgGK/hjwrM
+ fhQfbi/pvAlorWR0Dw6+b3KIp+wwmRdGr1neji6DFMCRwmIMCSEtIp6F1sF2d/y0hV6XOmYvs7
+ HYMXn59izd2PFvSlsXkJLTZmCcKIaAAiRT+5W2YXYSjGimZkI7YkSz6MhVtiWel/0sqQZFsr7q
+ H/oLKCpcvH6wHdAsJ2rAsiVFm3mhpn5h1x8ElY1XHhQ0HlkyriEOoof0ASDpF375V2n1Bf1Ni2
+ Jr8=
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 10 Jul 2019 08:57:42 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 10 Jul 2019 09:18:32 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH] block: Fix elevator name declaration
-Date:   Thu, 11 Jul 2019 00:57:41 +0900
-Message-Id: <20190710155741.11292-1-damien.lemoal@wdc.com>
+Subject: [PATCH V3] block: Disable write plugging for zoned block devices
+Date:   Thu, 11 Jul 2019 01:18:31 +0900
+Message-Id: <20190710161831.25250-1-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,32 +61,129 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The elevator_name field in struct elevator_type is declared as an array
-of characters (ELV_NAME_MAX size) but in practice used as a string
-pointer with its initialization done statically within each
-elevator elevator_type structure declaration.
+Simultaneously writing to a sequential zone of a zoned block device
+from multiple contexts requires mutual exclusion for BIO issuing to
+ensure that writes happen sequentially. However, even for a well
+behaved user correctly implementing such synchronization, BIO plugging
+may interfere and result in BIOs from the different contextx to be
+reordered if plugging is done outside of the mutual exclusion section,
+e.g. the plug was started by a function higher in the call chain than
+the function issuing BIOs.
 
-Change the declaration of elevator_name to the more appropriate
-"const char *" type.
+         Context A                     Context B
+
+   | blk_start_plug()
+   | ...
+   | seq_write_zone()
+     | mutex_lock(zone)
+     | bio-0->bi_iter.bi_sector = zone->wp
+     | zone->wp += bio_sectors(bio-0)
+     | submit_bio(bio-0)
+     | bio-1->bi_iter.bi_sector = zone->wp
+     | zone->wp += bio_sectors(bio-1)
+     | submit_bio(bio-1)
+     | mutex_unlock(zone)
+     | return
+   | -----------------------> | seq_write_zone()
+  				| mutex_lock(zone)
+     				| bio-2->bi_iter.bi_sector = zone->wp
+     				| zone->wp += bio_sectors(bio-2)
+				| submit_bio(bio-2)
+				| mutex_unlock(zone)
+   | <------------------------- |
+   | blk_finish_plug()
+
+In the above example, despite the mutex synchronization ensuring the
+correct BIO issuing order 0, 1, 2, context A BIOs 0 and 1 end up being
+issued after BIO 2 of context B, when the plug is released with
+blk_finish_plug().
+
+While this problem can be addressed using the blk_flush_plug_list()
+function (in the above example, the call must be inserted before the
+zone mutex lock is released), a simple generic solution in the block
+layer avoid this additional code in all zoned block device user code.
+The simple generic solution implemented with this patch is to introduce
+the internal helper function blk_mq_plug() to access the current
+context plug on BIO submission. This helper returns the current plug
+only if the target device is not a zoned block device or if the BIO to
+be plugged is not a write operation. Otherwise, the caller context plug
+is ignored and NULL returned, resulting is all writes to zoned block
+device to never be plugged.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- include/linux/elevator.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-core.c |  2 +-
+ block/blk-mq.c   |  2 +-
+ block/blk-mq.h   | 32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 9842e53623f3..b73e6f35fbad 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -75,7 +75,7 @@ struct elevator_type
- 	size_t icq_size;	/* see iocontext.h */
- 	size_t icq_align;	/* ditto */
- 	struct elv_fs_entry *elevator_attrs;
--	char elevator_name[ELV_NAME_MAX];
-+	const char *elevator_name;
- 	const char *elevator_alias;
- 	struct module *elevator_owner;
- #ifdef CONFIG_BLK_DEBUG_FS
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 8340f69670d8..3957ea6811c3 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -645,7 +645,7 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+ 	struct request *rq;
+ 	struct list_head *plug_list;
+ 
+-	plug = current->plug;
++	plug = blk_mq_plug(q, bio);
+ 	if (!plug)
+ 		return false;
+ 
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ce0f5f4ede70..90be5bb6fa1b 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1969,7 +1969,7 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
+ 
+ 	cookie = request_to_qc_t(data.hctx, rq);
+ 
+-	plug = current->plug;
++	plug = blk_mq_plug(q, bio);
+ 	if (unlikely(is_flush_fua)) {
+ 		blk_mq_put_ctx(data.ctx);
+ 		blk_mq_bio_to_request(rq, bio);
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index 633a5a77ee8b..4a63c96188c5 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -238,4 +238,36 @@ static inline void blk_mq_clear_mq_map(struct blk_mq_queue_map *qmap)
+ 		qmap->mq_map[cpu] = 0;
+ }
+ 
++/*
++ * blk_mq_plug() - Get caller context plug
++ * @q: request queue
++ * @bio : the bio being submitted by the caller context
++ *
++ * Plugging, by design, may delay the insertion of BIOs into the elevator in
++ * order to increase BIO merging opportunities. This however can cause BIO
++ * insertion order to change from the order in which submit_bio() is being
++ * executed in the case of multiple contexts concurrently issuing BIOs to a
++ * device, even if these context are synchronized to tightly control BIO issuing
++ * order. While this is not a problem with regular block devices, this ordering
++ * change can cause write BIO failures with zoned block devices as these
++ * require sequential write patterns to zones. Prevent this from happening by
++ * ignoring the plug state of a BIO issuing context if the target request queue
++ * is for a zoned block device and the BIO to plug is a write operation.
++ *
++ * Return current->plug if the bio can be plugged and NULL otherwise
++ */
++static inline struct blk_plug *blk_mq_plug(struct request_queue *q,
++					   struct bio *bio)
++{
++	/*
++	 * For regular block devices or read operations, use the context plug
++	 * which may be NULL if blk_start_plug() was not executed.
++	 */
++	if (!blk_queue_is_zoned(q) || !op_is_write(bio_op(bio)))
++		return current->plug;
++
++	/* Zoned block device write operation case: do not plug the BIO */
++	return NULL;
++}
++
+ #endif
 -- 
 2.21.0
 
