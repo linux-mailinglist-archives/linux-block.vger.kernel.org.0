@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B10CE6770F
-	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 01:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 309B367710
+	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 01:57:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfGLX54 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Jul 2019 19:57:56 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60284 "EHLO ale.deltatee.com"
+        id S1727431AbfGLX55 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Jul 2019 19:57:57 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:60292 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfGLX54 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Jul 2019 19:57:56 -0400
+        id S1727370AbfGLX55 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 12 Jul 2019 19:57:57 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hm5QG-0004Oy-Dy; Fri, 12 Jul 2019 17:57:55 -0600
+        id 1hm5QG-0004Oz-Dz; Fri, 12 Jul 2019 17:57:56 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hm5QE-0005uO-IO; Fri, 12 Jul 2019 17:57:50 -0600
+        id 1hm5QE-0005uR-LE; Fri, 12 Jul 2019 17:57:50 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Omar Sandoval <osandov@fb.com>
@@ -27,8 +27,8 @@ Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 12 Jul 2019 17:57:35 -0600
-Message-Id: <20190712235742.22646-6-logang@deltatee.com>
+Date:   Fri, 12 Jul 2019 17:57:36 -0600
+Message-Id: <20190712235742.22646-7-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190712235742.22646-1-logang@deltatee.com>
 References: <20190712235742.22646-1-logang@deltatee.com>
@@ -42,7 +42,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
         version=3.4.2
-Subject: [PATCH blktests 05/12] nvme/005: Don't rely on modprobing to set the multipath paramater
+Subject: [PATCH blktests 06/12] nvme/015: Ensure the namespace is flushed not the char device
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -50,83 +50,31 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On test systems with existing nvme drives or built-in modules it may not
-be possible to remove nvme-core in order to re-probe it with
-multipath=1.
+Flushing the char device now results in the warning:
 
-Instead, skip the test if the multipath parameter is not already set
-ahead of time.
+   nvme nvme1: using deprecated NVME_IOCTL_IO_CMD ioctl on the char
+	device!
 
-Note: the multipath parameter of nvme-core is set by default if
-CONFIG_NVME_MULTIPATH is set so this will only affect systems
-that explicitly disable it via the module parameter.
+Instead, call the flush on the namespace.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- common/rc      | 16 ++++++++++++++++
- tests/nvme/005 | 10 ++--------
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ tests/nvme/015 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/common/rc b/common/rc
-index 5dd2c9512fd2..49050c71dabf 100644
---- a/common/rc
-+++ b/common/rc
-@@ -55,6 +55,22 @@ _have_module_param() {
- 	return 0
- }
+diff --git a/tests/nvme/015 b/tests/nvme/015
+index 47e1b048e16d..ca1216163e16 100755
+--- a/tests/nvme/015
++++ b/tests/nvme/015
+@@ -39,7 +39,7 @@ test() {
  
-+_have_module_param_value() {
-+	local value
-+
-+	if ! _have_module_param "$1" "$2"; then
-+		return 1
-+	fi
-+
-+	value=$(cat "/sys/module/$1/parameters/$2")
-+	if [[ "${value}" != "$3" ]]; then
-+		SKIP_REASON="$1 module parameter $2 must be set to $3"
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
- _have_program() {
- 	if command -v "$1" >/dev/null 2>&1; then
- 		return 0
-diff --git a/tests/nvme/005 b/tests/nvme/005
-index e72fc809c936..91c164de73e6 100755
---- a/tests/nvme/005
-+++ b/tests/nvme/005
-@@ -12,18 +12,13 @@ QUICK=1
+ 	dd if=/dev/urandom of="/dev/${nvmedev}n1" count=128000 bs=4k status=none
  
- requires() {
- 	_have_modules loop nvme-core nvme-loop nvmet && \
--		_have_module_param nvme-core multipath && _have_configfs
-+		_have_module_param_value nvme_core multipath Y && \
-+		_have_configfs
- }
+-	nvme flush "/dev/${nvmedev}" -n 1
++	nvme flush "/dev/${nvmedev}n1" -n 1
  
- test() {
- 	echo "Running ${TEST_NAME}"
+ 	nvme disconnect -n "${subsys_name}"
  
--	# Clean up all stale modules
--	modprobe -r nvme-loop
--	modprobe -r nvme-core
--	modprobe -r nvmet
--
--	modprobe nvme-core multipath=1
- 	modprobe nvmet
- 	modprobe nvme-loop
- 
-@@ -57,7 +52,6 @@ test() {
- 	rm "$TMPDIR/img"
- 
- 	modprobe -r nvme-loop
--	modprobe -r nvme-core
- 	modprobe -r nvmet
- 
- 	echo "Test complete"
 -- 
 2.17.1
 
