@@ -2,123 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F1A96780C
-	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 05:51:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AB2767810
+	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 05:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfGMDvm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Jul 2019 23:51:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39110 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfGMDvm (ORCPT
+        id S1727474AbfGMD7A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Jul 2019 23:59:00 -0400
+Received: from smtpbguseast2.qq.com ([54.204.34.130]:42774 "EHLO
+        smtpbguseast2.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbfGMD7A (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Jul 2019 23:51:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l9so10351508qtu.6;
-        Fri, 12 Jul 2019 20:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BIrfInZig2JFWZrOWBTKrHopPohB0GRCvYl01XlQKZc=;
-        b=ZO/2nJnHNQ2qP7JqBYlDAInlXCZ42/Lr3cAJKTE93dAAc/YgOLRcmj3tDxyRcoEFTM
-         nF0Y0r5lIq4pw5sa1jcqBPj2UPtRMCvUlwqD9P2XJ9HL+S1X8lahHheSUETAlHka3hoh
-         cP+sSXgtayChoSFmJS8kBRUIUtQOqBG7CDDO6JN4YdQ1XD3HLlLOk/MVG8XXehMKMTsI
-         zPZE1NJirzf/BWokbBh2V4uT1XX8ZX6H7zVrA9sOXNAwqTlIEm9epxwnU+Iqyucf+NMO
-         BiFzeCG+qRzjQooz7Pkx5Q0VNsq9sMKjVw7XSDtxCtsf7AZ/kPTB8yPUW3VC6pPZUB84
-         dm2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BIrfInZig2JFWZrOWBTKrHopPohB0GRCvYl01XlQKZc=;
-        b=GVQXOTtoZxCUQj8EBsKFejjBBdhSwDFGjJmdTQFO96KHXG4uj6MtE36zQrkxiahT9x
-         vA4848B9Y0I3TMgXXx41AphxbpbLfi1P4j1csW1VKKx1F+qruaZpbvnviol0itEcT5sb
-         +s+ZYV0kK80MWfANuN7HRVUI9YJXYa3Q/aDly83M/L9AkXBo/jdCWpdTE1xxUuvXmkmn
-         gnMHXSrbtZ+0HhOrKe+uk+iTrLONZssMJSJWjZjC0nwHzm3tXnGXCzq9ge+3K0S+lPLW
-         knsrudVQI0cJ2e440rKP/F7Jy/XPkC3YJAVZMiRqipKv5dqhCP3DIbfX1Ym8SZ12GCxs
-         QlwQ==
-X-Gm-Message-State: APjAAAUHE+CV6r/fs9iXxA3EreXr1yjcYi12IZ6GzdtFpsWMKVI3IlSA
-        iGPllAlDKNNtUorsGACheWme6Cq2IS8=
-X-Google-Smtp-Source: APXvYqx0Bqx9PNV/NH77bSGg/D0QxTXGktkqhu5Gw5ZEee0AX3Kg3fl6hyGKoI7XJsr3xK/YvlXbag==
-X-Received: by 2002:ac8:40cc:: with SMTP id f12mr9063427qtm.256.1562989900733;
-        Fri, 12 Jul 2019 20:51:40 -0700 (PDT)
-Received: from localhost.localdomain ([186.212.49.5])
-        by smtp.gmail.com with ESMTPSA id j2sm4823692qtb.89.2019.07.12.20.51.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 20:51:39 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER)
-Subject: [PATCH] block: elevator.c: Check elevator kernel argument again
-Date:   Sat, 13 Jul 2019 00:52:21 -0300
-Message-Id: <20190713035221.31508-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 12 Jul 2019 23:59:00 -0400
+X-QQ-mid: bizesmtp21t1562990329twuqv0la
+Received: from localhost.localdomain (unknown [113.240.168.78])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Sat, 13 Jul 2019 11:58:43 +0800 (CST)
+X-QQ-SSF: 01400000002000H0ZG31B00A0000000
+X-QQ-FEAT: F6eslHfxP6otbQDg1Ha2cTCgOTwLjTi0TR1A/EDVDYE6I7JyO1NLqxvOxWPog
+        6sdKvZStQTmC0UVBMl2GoG5fDjrTcYh0IQ+a07mOOYui6IzVcZAhiXzjKxaCVnUcHR+5/fG
+        gN+PwjrypHb2vt2LXKWK+tzjwiVsEFdWa7tBo2Tj4lR0Ug/Di7+5+esTkdnK4saz7dpmOYU
+        fYih7bGvJmEiLO1Zzq2s3QDkCPDjEGpdHsWV1nvO9b8+5jSwssZloJf9YzJcPlShHKPkfYC
+        nUz/XghAWiH9Hpjv5+bPez5UyuiXVpkZOfUg/Rj/XnoM+YfIEELFgBajCTO/lHooaLloiOI
+        KNpoEfF
+X-QQ-GoodBg: 2
+From:   Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Subject: [PATCH 1/2] io_uring: make req from defer and link list not touch async list
+Date:   Sat, 13 Jul 2019 11:58:25 +0800
+Message-Id: <20190713035826.2987-1-liuzhengyuan@kylinos.cn>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign1
+X-QQ-Bgrelay: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since the inclusion of blk-mq, elevator= kernel argument was not being
-considered anymore, making it impossible to specify a specific elevator
-at boot time as it was used before.
+We would queue a work for each req in defer and link list without
+increasing async->cnt, so we shouldn't decrease it while exiting
+from workqueue as well as shouldn't process the req in async list.
 
-This is done by checking chosen_elevator global variable, which is
-populated once elevator= kernel argument is passed. Without this patch,
-mq-deadline is the only elevator that is can be used at boot time.
-
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 ---
+ fs/io_uring.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
- I found this issue while inspecting why noop scheduler was gone, and so I found
- that was now impossible to use a scheduler different from mq-deadeline.
-
- Am I missing something? Is this a desirable behavior?
-
- One more question: currently we can't specify a "none" scheduler, like it used
- to be "noop". This is also on purpose? If it's not, I can provide a patch for
- it.
-
- block/elevator.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/block/elevator.c b/block/elevator.c
-index 2f17d66d0e61..41ce7ba099ba 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -601,7 +601,7 @@ int elevator_switch_mq(struct request_queue *q,
-  */
- int elevator_init_mq(struct request_queue *q)
- {
--	struct elevator_type *e;
-+	struct elevator_type *e = NULL;
- 	int err = 0;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 7e932c572f26..3e48fd7cd08f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -333,7 +333,8 @@ struct io_kiocb {
+ #define REQ_F_IO_DRAIN		16	/* drain existing IO first */
+ #define REQ_F_IO_DRAINED	32	/* drain done */
+ #define REQ_F_LINK		64	/* linked sqes */
+-#define REQ_F_FAIL_LINK		128	/* fail rest of links */
++#define REQ_F_LINKED		128	/* linked sqes done */
++#define REQ_F_FAIL_LINK		256	/* fail rest of links */
+ 	u64			user_data;
+ 	u32			result;
+ 	u32			sequence;
+@@ -630,6 +631,7 @@ static void io_req_link_next(struct io_kiocb *req)
+ 			nxt->flags |= REQ_F_LINK;
+ 		}
  
- 	if (q->nr_hw_queues != 1)
-@@ -615,9 +615,18 @@ int elevator_init_mq(struct request_queue *q)
- 	if (unlikely(q->elevator))
- 		goto out_unlock;
++		nxt->flags |= REQ_F_LINKED;
+ 		INIT_WORK(&nxt->work, io_sq_wq_submit_work);
+ 		queue_work(req->ctx->sqo_wq, &nxt->work);
+ 	}
+@@ -1845,6 +1847,10 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 		/* async context always use a copy of the sqe */
+ 		kfree(sqe);
  
--	e = elevator_get(q, "mq-deadline", false);
--	if (!e)
--		goto out_unlock;
-+	/* if elevator was used as kernel argument, try to load it */
-+	if (*chosen_elevator) {
-+		e = elevator_get(q, chosen_elevator, false);
-+		if (!e)
-+			pr_err("io scheduler %s not found", chosen_elevator);
-+	}
++		/* req from defer and link list needn't dec async_list->cnt */
++		if (req->flags & (REQ_F_IO_DRAINED | REQ_F_LINKED))
++			goto out;
 +
-+	if (!e) {
-+		e = elevator_get(q, "mq-deadline", false);
-+		if (!e)
-+			goto out_unlock;
-+	}
+ 		if (!async_list)
+ 			break;
+ 		if (!list_empty(&req_list)) {
+@@ -1892,6 +1898,7 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 		}
+ 	}
  
- 	err = blk_mq_init_sched(q, e);
- 	if (err)
++out:
+ 	if (cur_mm) {
+ 		set_fs(old_fs);
+ 		unuse_mm(cur_mm);
 -- 
-2.22.0
+2.19.1
+
+
 
