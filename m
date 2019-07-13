@@ -2,38 +2,34 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 221246780F
-	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 05:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B317967883
+	for <lists+linux-block@lfdr.de>; Sat, 13 Jul 2019 06:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfGMD7A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Jul 2019 23:59:00 -0400
-Received: from smtpbguseast2.qq.com ([54.204.34.130]:42753 "EHLO
-        smtpbguseast2.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfGMD7A (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Jul 2019 23:59:00 -0400
-X-QQ-mid: bizesmtp21t1562990331txpxhzya
+        id S1726301AbfGMEzf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 13 Jul 2019 00:55:35 -0400
+Received: from smtpbgeu1.qq.com ([52.59.177.22]:37147 "EHLO smtpbgeu1.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbfGMEzf (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 13 Jul 2019 00:55:35 -0400
+X-QQ-mid: bizesmtp29t1562993729tihfd2ck
 Received: from localhost.localdomain (unknown [113.240.168.78])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Sat, 13 Jul 2019 11:58:50 +0800 (CST)
-X-QQ-SSF: 01400000002000H0ZG31B00A0000000
-X-QQ-FEAT: vvh+TVF7+rVoEP4+Rm3xc9ceJjlvXatM5gNN8+RBmzlLxAXv6UNttlgp8kO6g
-        CGrcef0Qtcv+lwqvZMVYj8NPQHORGA/RuMyi9MWJOTN6tYwtNtaEQ6jw9G8HB1UJgm5zZin
-        oDVoir6Hs5/5pEhMpSJdBD5f3eC+3yuE/yOEmCmlDC3KuAHOCi1cqyKXQ/0xDNh1i/ShbQB
-        WyS5lUVJdzwKXSmfvOKU2WhK1SqUz5ndTGPBSyyKjuxAtuGTcp5uqQrnUQ78bDavyxtiXJr
-        himHEvwt7MZmwWyymne2pCcvhgtRvJvW14ABwRKTcSn/8QOaAYhx50CgkUNYeyI7LyYth6e
-        RgHBSA7WRsy7NJh9mE=
+        by esmtp10.qq.com (ESMTP) with 
+        id ; Sat, 13 Jul 2019 12:54:55 +0800 (CST)
+X-QQ-SSF: 01400000002000H0ZG31000A0000000
+X-QQ-FEAT: OZolv6ISmR8qCm/mxIqdlafCh5LSh31lYdNBe8/GBg7KEGcr0eIPTtlovptFA
+        zWy+yob5FbxVLj4SG2xchlHsyC4vGaXdLUd1K/uiVeYuEDRhznfoZunuU7iJVmKyotTYY7D
+        qUuW1YHF0WNzoVakCtZFFVmGNTFoe8kwSgIbTrYiJKa7e/PXD9vQbBn9Qo+8NJ0zkEvQ8KD
+        27b77NldjNlbYguQ2sEsSD4PiiXxEOORQcGjkqBU0wcJK7SQKv2RBOTSZQzRV1MIain/NBJ
+        wYjoklTwi2/VlyonqKjbLV0dk69HjArjKrzPFQgAX5R645x6Sesu93OyD2xvrVQgm2JGJEW
+        MXAeH5D
 X-QQ-GoodBg: 2
 From:   Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Subject: [PATCH 2/2] io_uring: fix the judging condition in io_sequence_defer
-Date:   Sat, 13 Jul 2019 11:58:26 +0800
-Message-Id: <20190713035826.2987-2-liuzhengyuan@kylinos.cn>
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH 3/3] io_uring: use kmem_cache to alloc sqe
+Date:   Sat, 13 Jul 2019 12:54:54 +0800
+Message-Id: <20190713045454.2929-1-liuzhengyuan@kylinos.cn>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190713035826.2987-1-liuzhengyuan@kylinos.cn>
-References: <20190713035826.2987-1-liuzhengyuan@kylinos.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
@@ -44,29 +40,85 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-sq->cached_sq_head and cq->cached_cq_tail are both unsigned int.
-if cached_sq_head gets overflowed before cached_cq_tail, then we
-may miss a barrier req. As cached_cq_tail moved always following
-cached_sq_head, the NQ should be enough.
+As we introduced three lists(async, defer, link), there could been
+many sqe allocation. A natural idea is using kmem_cache to satisfy
+the allocation just like io_kiocb does.
 
 Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 3e48fd7cd08f..55294ef82102 100644
+index 392cbf777f25..c325193a20bd 100644
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -429,7 +429,7 @@ static inline bool io_sequence_defer(struct io_ring_ctx *ctx,
- 	if ((req->flags & (REQ_F_IO_DRAIN|REQ_F_IO_DRAINED)) != REQ_F_IO_DRAIN)
- 		return false;
+@@ -368,6 +368,7 @@ struct io_submit_state {
+ static void io_sq_wq_submit_work(struct work_struct *work);
  
--	return req->sequence > ctx->cached_cq_tail + ctx->sq_ring->dropped;
-+	return req->sequence != ctx->cached_cq_tail + ctx->sq_ring->dropped;
- }
+ static struct kmem_cache *req_cachep;
++static struct kmem_cache *sqe_cachep;
  
- static struct io_kiocb *io_get_deferred_req(struct io_ring_ctx *ctx)
+ static const struct file_operations io_uring_fops;
+ 
+@@ -1673,14 +1674,14 @@ static int io_req_defer(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	if (!io_sequence_defer(ctx, req) && list_empty(&ctx->defer_list))
+ 		return 0;
+ 
+-	sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
++	sqe_copy = kmem_cache_alloc(sqe_cachep, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!sqe_copy)
+ 		return -EAGAIN;
+ 
+ 	spin_lock_irq(&ctx->completion_lock);
+ 	if (!io_sequence_defer(ctx, req) && list_empty(&ctx->defer_list)) {
+ 		spin_unlock_irq(&ctx->completion_lock);
+-		kfree(sqe_copy);
++		kmem_cache_free(sqe_cachep, req);
+ 		return 0;
+ 	}
+ 
+@@ -1845,7 +1846,7 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 		}
+ 
+ 		/* async context always use a copy of the sqe */
+-		kfree(sqe);
++		kmem_cache_free(sqe_cachep, (void *)sqe);
+ 
+ 		/* req from defer and link list needn't dec async_list->cnt */
+ 		if (req->flags & (REQ_F_IO_DRAINED | REQ_F_LINKED))
+@@ -1991,7 +1992,7 @@ static int io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	if (ret == -EAGAIN && !(req->flags & REQ_F_NOWAIT)) {
+ 		struct io_uring_sqe *sqe_copy;
+ 
+-		sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
++		sqe_copy = kmem_cache_alloc(sqe_cachep, GFP_KERNEL | __GFP_NOWARN);
+ 		if (sqe_copy) {
+ 			struct async_list *list;
+ 
+@@ -2076,12 +2077,13 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
+ 	if (*link) {
+ 		struct io_kiocb *prev = *link;
+ 
+-		sqe_copy = kmemdup(s->sqe, sizeof(*sqe_copy), GFP_KERNEL);
++		sqe_copy = kmem_cache_alloc(sqe_cachep, GFP_KERNEL | __GFP_NOWARN);
+ 		if (!sqe_copy) {
+ 			ret = -EAGAIN;
+ 			goto err_req;
+ 		}
+ 
++		memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
+ 		s->sqe = sqe_copy;
+ 		memcpy(&req->submit, s, sizeof(*s));
+ 		list_add_tail(&req->list, &prev->link_list);
+@@ -3470,6 +3472,7 @@ SYSCALL_DEFINE4(io_uring_register, unsigned int, fd, unsigned int, opcode,
+ static int __init io_uring_init(void)
+ {
+ 	req_cachep = KMEM_CACHE(io_kiocb, SLAB_HWCACHE_ALIGN | SLAB_PANIC);
++	sqe_cachep = KMEM_CACHE(io_uring_sqe, SLAB_HWCACHE_ALIGN | SLAB_PANIC);
+ 	return 0;
+ };
+ __initcall(io_uring_init);
 -- 
 2.19.1
 
