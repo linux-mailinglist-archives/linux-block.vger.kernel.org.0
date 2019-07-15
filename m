@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CE6C68EE7
-	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 16:10:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C211690A2
+	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 16:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388050AbfGOOKi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Jul 2019 10:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
+        id S2390725AbfGOOXT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Jul 2019 10:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388887AbfGOOKe (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:34 -0400
+        id S2390188AbfGOOXS (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:23:18 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A51A7206B8;
-        Mon, 15 Jul 2019 14:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926E32053B;
+        Mon, 15 Jul 2019 14:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199834;
-        bh=P+a33z2AUuQ3biJYt7k2JnSFAiYRG/ndINhwwrXdH70=;
+        s=default; t=1563200597;
+        bh=3FUXEOahWPk0BdWzwzeTpwlxEqT6Y1R0u8qqxkpNXGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKyubp7YvCaouWhiUxIevyT649pDpAAllTTp2u1Y0yFngW+PHu1IXdxspFIorMYiu
-         j57PHhyP6rpthIpp0njIn1I8LHdIS/I4YqGcVCjylpQohnzjWwm2cxY4trmGfoJ2ID
-         jOd70vE56QOIZXX6276kC38R7CS6tKB9NJmrf6NI=
+        b=08Cpr3JNrubjxtPE/DXG+ioNi8GrCGA0mHtHo3f9M3VfC2t14DHYCt7KA4u3kySOB
+         WEVW7R40CkmIXPMUlDU/WdNBX1u+jQhUlIa+jC69PWXNeQbqGMkMaqs4ZRXvCvzr6n
+         1BiMbiVtlEtVcx+F8T0w4jNC/0h4WlNf2gxS8+v4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiner Litz <hlitz@ucsc.edu>,
@@ -30,12 +30,12 @@ Cc:     Heiner Litz <hlitz@ucsc.edu>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 121/219] lightnvm: pblk: fix freeing of merged pages
-Date:   Mon, 15 Jul 2019 10:02:02 -0400
-Message-Id: <20190715140341.6443-121-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 088/158] lightnvm: pblk: fix freeing of merged pages
+Date:   Mon, 15 Jul 2019 10:16:59 -0400
+Message-Id: <20190715141809.8445-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
-References: <20190715140341.6443-1-sashal@kernel.org>
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -63,10 +63,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
-index 6ca868868fee..7393d64757a1 100644
+index 95be6e36c7dd..80710c62ac29 100644
 --- a/drivers/lightnvm/pblk-core.c
 +++ b/drivers/lightnvm/pblk-core.c
-@@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
+@@ -288,14 +288,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
  void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
  			 int nr_pages)
  {
