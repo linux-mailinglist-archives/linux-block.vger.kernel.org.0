@@ -2,87 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7895A68CF3
-	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 15:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0351768CA6
+	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 15:53:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732727AbfGONzL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Jul 2019 09:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732259AbfGONzL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:55:11 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F3C12067C;
-        Mon, 15 Jul 2019 13:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198909;
-        bh=uIxwGh11w8bs6mPsamrje8/1REWkHMV4vr8N6bdpo3I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cyvL04hlASNaNDH8EEzlAgw9KR31VFCVkd7c0kyxTZXgZ052bTWKlghmgmwf+PRdN
-         TGbT/+w043zm3tZ2mWp4TM6jQlI3PtMUY/tYwHFh6b4PFpRQWbuLzrFpB+vCvhQKs1
-         38Wqp+Hbm/jpzIDuc8CCyCP9+e68xZOiqks04WHc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 138/249] lightnvm: fix uninitialized pointer in nvm_remove_tgt()
-Date:   Mon, 15 Jul 2019 09:45:03 -0400
-Message-Id: <20190715134655.4076-138-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+        id S1731735AbfGONwy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Jul 2019 09:52:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33921 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731752AbfGONwy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:52:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so7460069pfo.1
+        for <linux-block@vger.kernel.org>; Mon, 15 Jul 2019 06:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0V2mBu6FYx4cMtcSGcye6x8Ut9HBWrXqdo4bnPYOIBs=;
+        b=cUndtAoSclRDbi4ERxPslBm1nkQDppOdNGhxE981ZEXGpiKVSRFJIlaLXECLEL3Ubh
+         ohJ3Pf8kbht/nNWEqDXT7y1gF6R9XXj2kE6RX8fWIms/RLLlGV1xLY69G8yHgRILa2aE
+         CBuGwwQ45KhvV1xZUSyRN/d1l3yBNOTqvzjgV5wm1f+i00TFNzxE1ogSBj9l7P1poNpS
+         klRO0VZsemeXeOPNTR8emPzZCHvqsCDzvLyFD2vaIePsD5J6EevnRgs2rM/i1UJVlA7l
+         +Vw0+821CZhGHIpPZAY8oUak1vbyhi/liTNOdm8nlDyIJ/UN97bt73kEf2ByeSaO/IT9
+         JpYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0V2mBu6FYx4cMtcSGcye6x8Ut9HBWrXqdo4bnPYOIBs=;
+        b=KTxMzYzG57UiBDiRzM2H85FTCf4tgR4fNJZlAjyrfUQh3NhUGiPDd/8nTwmryhW+L1
+         UinYNt+iAzFYJj1DdSVJbkj6r730ygoknRNFmYW7Xbf4OYPUEnHb5CT25EE+yD+WAhgE
+         qBSMQlNW4NnM9d5314Yy3MOjIUO12ZxMyq0tyvbCzCNIvEkf/6a5BUW+EPxjH+P22MEy
+         /2PD7UBIkUjbPlGPAfBJhZVjAetp8pmaXWLz1hLUvkgriqSdWHgDNuPPvgXnijxTeTcr
+         JtulZlo+oX5ROB/oh9cePL4qImRkBA8WSqFSgSOwiTy09tY1i2cRVX4tPGKzP82Yiptr
+         rfKQ==
+X-Gm-Message-State: APjAAAXOoZp1V5QdzlHtmCu0Sx03lshaKd8HMLuCfijqS+DORVOxl4LC
+        4kyM4Bxecpfcdq2TfK5jktFx0JjNzGk=
+X-Google-Smtp-Source: APXvYqyLNq4KfSGcXgpn7eFfD+z+OJ2JwfO3jE4cBLjuHsjPwZ1D3gXdq/76icRxJMChD7z5x6g//w==
+X-Received: by 2002:a63:5b52:: with SMTP id l18mr27167050pgm.21.1563198773049;
+        Mon, 15 Jul 2019 06:52:53 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id v22sm16379992pgk.69.2019.07.15.06.52.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 06:52:52 -0700 (PDT)
+Subject: Re: [PATCH 3/3] io_uring: use kmem_cache to alloc sqe
+To:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Cc:     linux-block@vger.kernel.org
+References: <20190713045454.2929-1-liuzhengyuan@kylinos.cn>
+ <1f56dacc-6f69-35ff-dfb9-0b3e91696e36@kernel.dk>
+ <5d2bf52d.1c69fb81.af3a2.b57fSMTPIN_ADDED_BROKEN@mx.google.com>
+ <BD843851-A62C-4368-A78B-F863A72E589C@kernel.dk>
+ <5d2c1314.1c69fb81.ecfb1.bf96SMTPIN_ADDED_BROKEN@mx.google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6059ea46-b87f-e8e9-5e41-47b77f4c4c60@kernel.dk>
+Date:   Mon, 15 Jul 2019 07:52:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <5d2c1314.1c69fb81.ecfb1.bf96SMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+On 7/14/19 11:45 PM, Zhengyuan Liu wrote:
+> 
+> On 7/15/19 11:51 AM, Jens Axboe wrote:
+>> On Jul 14, 2019, at 9:38 PM, Zhengyuan Liu <liuzhengyuan@kylinos.cn> wrote:
+>>>
+>>>> On 7/14/19 5:44 AM, Jens Axboe wrote:
+>>>>> On 7/12/19 10:54 PM, Zhengyuan Liu wrote:
+>>>>> As we introduced three lists(async, defer, link), there could been
+>>>>> many sqe allocation. A natural idea is using kmem_cache to satisfy
+>>>>> the allocation just like io_kiocb does.
+>>>> A change like this needs to come with some performance numbers
+>>>> or utilization numbers showing the benefit. I have considered
+>>>> doing this before, but just never got around to testing if it's
+>>>> worth while or not.
+>>>> Have you?
+>>> I only did some simple testing with fio. The benefit was deeply depend on the IO  scenarios. For random and direct IO , it appears to be nearly no seq copying, but for buffered sequential rw, it appears to be more than 60% copying compared to original submition.
+>> Right, which is great as it’s then working as designed! But my
+>> question was, for that sequential case, what kind of speed up (or
+>> reduction in overhead) do you see from allocating the unit out of
+>> slab vs kmalloc? There has to be a win there for the change to be
+>> worthwhile.
+>
+> Thanks for your comments  Jens. No speed up indeed in overhead from my
+> testing.
 
-[ Upstream commit 2f5af4ab7de14bd35f3435e6a47300276bbb6c17 ]
+Then I suggest we just drop this change, it only makes sense if there's
+a win.
 
-With gcc 4.1:
-
-    drivers/lightnvm/core.c: In function ‘nvm_remove_tgt’:
-    drivers/lightnvm/core.c:510: warning: ‘t’ is used uninitialized in this function
-
-Indeed, if no NVM devices have been registered, t will be an
-uninitialized pointer, and may be dereferenced later.  A call to
-nvm_remove_tgt() can be triggered from userspace by issuing the
-NVM_DEV_REMOVE ioctl on the lightnvm control device.
-
-Fix this by preinitializing t to NULL.
-
-Fixes: 843f2edbdde085b4 ("lightnvm: do not remove instance under global lock")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/lightnvm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 7d555b110ecd..a600934fdd9c 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -478,7 +478,7 @@ static void __nvm_remove_target(struct nvm_target *t, bool graceful)
-  */
- static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
- {
--	struct nvm_target *t;
-+	struct nvm_target *t = NULL;
- 	struct nvm_dev *dev;
- 
- 	down_read(&nvm_lock);
 -- 
-2.20.1
+Jens Axboe
 
