@@ -2,42 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C211690A2
-	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 16:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D233769565
+	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 16:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390725AbfGOOXT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Jul 2019 10:23:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54120 "EHLO mail.kernel.org"
+        id S2387972AbfGOO4d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Jul 2019 10:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390188AbfGOOXS (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:23:18 -0400
+        id S2390006AbfGOOWR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:22:17 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926E32053B;
-        Mon, 15 Jul 2019 14:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3849B21841;
+        Mon, 15 Jul 2019 14:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200597;
-        bh=3FUXEOahWPk0BdWzwzeTpwlxEqT6Y1R0u8qqxkpNXGQ=;
+        s=default; t=1563200537;
+        bh=eflVd/TBCznpHOlph0rvv5Y/cnF+YGvAub+CSpoCRk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=08Cpr3JNrubjxtPE/DXG+ioNi8GrCGA0mHtHo3f9M3VfC2t14DHYCt7KA4u3kySOB
-         WEVW7R40CkmIXPMUlDU/WdNBX1u+jQhUlIa+jC69PWXNeQbqGMkMaqs4ZRXvCvzr6n
-         1BiMbiVtlEtVcx+F8T0w4jNC/0h4WlNf2gxS8+v4=
+        b=zOROzWYV5BwE6QWi4FWNUWo7tdkwrb5ODP7lSq7c+hsYFPuOXoygFHeYDiXN/JUHo
+         XwCXNsGF2jNvfwWTc81Us6UFjcLiBkj5Hj2QAwOUu/ckyKpoibnlx9HIwwc+GaRF5C
+         cDbLeka+WJv4NXB19Rxo9Qe3WKYQElm8yLwttMhw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Litz <hlitz@ucsc.edu>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 088/158] lightnvm: pblk: fix freeing of merged pages
-Date:   Mon, 15 Jul 2019 10:16:59 -0400
-Message-Id: <20190715141809.8445-88-sashal@kernel.org>
+Cc:     Bob Liu <bob.liu@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 071/158] block: null_blk: fix race condition for null_del_dev
+Date:   Mon, 15 Jul 2019 10:16:42 -0400
+Message-Id: <20190715141809.8445-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -46,50 +42,89 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Heiner Litz <hlitz@ucsc.edu>
+From: Bob Liu <bob.liu@oracle.com>
 
-[ Upstream commit 510fd8ea98fcb586c01aef93d87c060a159ac30a ]
+[ Upstream commit 7602843fd873cae43a444b83b14dfdd114a9659c ]
 
-bio_add_pc_page() may merge pages when a bio is padded due to a flush.
-Fix iteration over the bio to free the correct pages in case of a merge.
+Dulicate call of null_del_dev() will trigger null pointer error like below.
+The reason is a race condition between nullb_device_power_store() and
+nullb_group_drop_item().
 
-Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
-Reviewed-by: Javier González <javier@javigon.com>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+  CPU#0                         CPU#1
+  ----------------              -----------------
+  do_rmdir()
+   >configfs_rmdir()
+    >client_drop_item()
+     >nullb_group_drop_item()
+                                nullb_device_power_store()
+				>null_del_dev()
+
+      >test_and_clear_bit(NULLB_DEV_FL_UP
+       >null_del_dev()
+       ^^^^^
+       Duplicated null_dev_dev() triger null pointer error
+
+				>clear_bit(NULLB_DEV_FL_UP
+
+The fix could be keep the sequnce of clear NULLB_DEV_FL_UP and null_del_dev().
+
+[  698.613600] BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+[  698.613608] #PF error: [normal kernel read fault]
+[  698.613611] PGD 0 P4D 0
+[  698.613619] Oops: 0000 [#1] SMP PTI
+[  698.613627] CPU: 3 PID: 6382 Comm: rmdir Not tainted 5.0.0+ #35
+[  698.613631] Hardware name: LENOVO 20LJS2EV08/20LJS2EV08, BIOS R0SET33W (1.17 ) 07/18/2018
+[  698.613644] RIP: 0010:null_del_dev+0xc/0x110 [null_blk]
+[  698.613649] Code: 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b eb 97 e8 47 bb 2a e8 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 54 53 <8b> 77 18 48 89 fb 4c 8b 27 48 c7 c7 40 57 1e c1 e8 bf c7 cb e8 48
+[  698.613654] RSP: 0018:ffffb887888bfde0 EFLAGS: 00010286
+[  698.613659] RAX: 0000000000000000 RBX: ffff9d436d92bc00 RCX: ffff9d43a9184681
+[  698.613663] RDX: ffffffffc11e5c30 RSI: 0000000068be6540 RDI: 0000000000000000
+[  698.613667] RBP: ffffb887888bfdf0 R08: 0000000000000001 R09: 0000000000000000
+[  698.613671] R10: ffffb887888bfdd8 R11: 0000000000000f16 R12: ffff9d436d92bc08
+[  698.613675] R13: ffff9d436d94e630 R14: ffffffffc11e5088 R15: ffffffffc11e5000
+[  698.613680] FS:  00007faa68be6540(0000) GS:ffff9d43d14c0000(0000) knlGS:0000000000000000
+[  698.613685] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  698.613689] CR2: 0000000000000018 CR3: 000000042f70c002 CR4: 00000000003606e0
+[  698.613693] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  698.613697] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  698.613700] Call Trace:
+[  698.613712]  nullb_group_drop_item+0x50/0x70 [null_blk]
+[  698.613722]  client_drop_item+0x29/0x40
+[  698.613728]  configfs_rmdir+0x1ed/0x300
+[  698.613738]  vfs_rmdir+0xb2/0x130
+[  698.613743]  do_rmdir+0x1c7/0x1e0
+[  698.613750]  __x64_sys_rmdir+0x17/0x20
+[  698.613759]  do_syscall_64+0x5a/0x110
+[  698.613768]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/block/null_blk_main.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
-index 95be6e36c7dd..80710c62ac29 100644
---- a/drivers/lightnvm/pblk-core.c
-+++ b/drivers/lightnvm/pblk-core.c
-@@ -288,14 +288,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
- void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
- 			 int nr_pages)
- {
--	struct bio_vec bv;
--	int i;
--
--	WARN_ON(off + nr_pages != bio->bi_vcnt);
--
--	for (i = off; i < nr_pages + off; i++) {
--		bv = bio->bi_io_vec[i];
--		mempool_free(bv.bv_page, &pblk->page_bio_pool);
-+	struct bio_vec *bv;
-+	struct page *page;
-+	int i, e, nbv = 0;
-+
-+	for (i = 0; i < bio->bi_vcnt; i++) {
-+		bv = &bio->bi_io_vec[i];
-+		page = bv->bv_page;
-+		for (e = 0; e < bv->bv_len; e += PBLK_EXPOSED_PAGE_SIZE, nbv++)
-+			if (nbv >= off)
-+				mempool_free(page++, &pblk->page_bio_pool);
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 093b614d6524..c5c0b7c89481 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -321,11 +321,12 @@ static ssize_t nullb_device_power_store(struct config_item *item,
+ 		set_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
+ 		dev->power = newp;
+ 	} else if (dev->power && !newp) {
+-		mutex_lock(&lock);
+-		dev->power = newp;
+-		null_del_dev(dev->nullb);
+-		mutex_unlock(&lock);
+-		clear_bit(NULLB_DEV_FL_UP, &dev->flags);
++		if (test_and_clear_bit(NULLB_DEV_FL_UP, &dev->flags)) {
++			mutex_lock(&lock);
++			dev->power = newp;
++			null_del_dev(dev->nullb);
++			mutex_unlock(&lock);
++		}
+ 		clear_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
  	}
- }
  
 -- 
 2.20.1
