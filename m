@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F9CC6954B
-	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 16:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4DBC69724
+	for <lists+linux-block@lfdr.de>; Mon, 15 Jul 2019 17:09:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389618AbfGOOXB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Jul 2019 10:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
+        id S1732409AbfGON5M (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Jul 2019 09:57:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390674AbfGOOXA (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:23:00 -0400
+        id S1732378AbfGON5L (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6247A21852;
-        Mon, 15 Jul 2019 14:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5B420C01;
+        Mon, 15 Jul 2019 13:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200580;
-        bh=vauugTCYVpPt88MXNLLkXnhFnLKvJhyTJlH9KoPuBvk=;
+        s=default; t=1563199030;
+        bh=3jtqXFsdy9+nN0Tz9J17po0Nvk+gwLyZ0NOhRPT6fiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vm0W0mJlXsMtzsqBw7YGIC7dyyKPExkjUk73htj1HwPsvM+j3TpVXVtLh1+T33CMJ
-         EJsaSoUFHUWsH02C5Y1TX5XI8oYaIlbRQnn13P3mYWiq5yjs7N8jvXmT9ovIn56+gG
-         rnMlEJurkUL9lsKLorb0UFGIDVqQgatIJNt//ixU=
+        b=sfR32nCtKz8xD9WS4lRGJ7KWIV4gmH8X34QtasGm+iXgRy41+Qz4x2AlTLP52Nv9I
+         nrDyMmxGFIpBq9oSPZ4VsMgGRBKb3jmKxP6aW51bXeUhwXoB6ThCKQj/QGDT3Dzqok
+         upMLmaGOsJnvxMjnUiKNWretx3DnJk1dRPhufpWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dennis Zhou <dennis@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S . Bhat" <srivatsa@csail.mit.edu>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 082/158] blk-iolatency: only account submitted bios
-Date:   Mon, 15 Jul 2019 10:16:53 -0400
-Message-Id: <20190715141809.8445-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 169/249] block, bfq: fix rq_in_driver check in bfq_update_inject_limit
+Date:   Mon, 15 Jul 2019 09:45:34 -0400
+Message-Id: <20190715134655.4076-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,39 +44,53 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Dennis Zhou <dennis@kernel.org>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit a3fb01ba5af066521f3f3421839e501bb2c71805 ]
+[ Upstream commit db599f9ed9bd31b018b6c48ad7c6b21d5b790ecf ]
 
-As is, iolatency recognizes done_bio and cleanup as ending paths. If a
-request is marked REQ_NOWAIT and fails to get a request, the bio is
-cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
-This results in underflowing the inflight counter. Fix this by only
-accounting bios that were actually submitted.
+One of the cases where the parameters for injection may be updated is
+when there are no more in-flight I/O requests. The number of in-flight
+requests is stored in the field bfqd->rq_in_driver of the descriptor
+bfqd of the device. So, the controlled condition is
+bfqd->rq_in_driver == 0.
 
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
+Unfortunately, this is wrong because, the instruction that checks this
+condition is in the code path that handles the completion of a
+request, and, in particular, the instruction is executed before
+bfqd->rq_in_driver is decremented in such a code path.
+
+This commit fixes this issue by just replacing 0 with 1 in the
+comparison.
+
+Reported-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Tested-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iolatency.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ block/bfq-iosched.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 6b8396ccb5c4..75df47ad2e79 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -565,6 +565,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg)
- 		return;
- 
-+	/* We didn't actually submit this bio, don't account it. */
-+	if (bio->bi_status == BLK_STS_AGAIN)
-+		return;
-+
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index e5db3856b194..404e776aa36d 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5398,8 +5398,14 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
+ 	 * total service time, and there seem to be the right
+ 	 * conditions to do it, or we can lower the last base value
+ 	 * computed.
++	 *
++	 * NOTE: (bfqd->rq_in_driver == 1) means that there is no I/O
++	 * request in flight, because this function is in the code
++	 * path that handles the completion of a request of bfqq, and,
++	 * in particular, this function is executed before
++	 * bfqd->rq_in_driver is decremented in such a code path.
+ 	 */
+-	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 0) ||
++	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 1) ||
+ 	    tot_time_ns < bfqq->last_serv_time_ns) {
+ 		bfqq->last_serv_time_ns = tot_time_ns;
+ 		/*
 -- 
 2.20.1
 
