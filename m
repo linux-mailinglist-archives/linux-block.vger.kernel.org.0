@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5ABB6C01F
-	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B125A6C025
+	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfGQRNO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jul 2019 13:13:14 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60192 "EHLO ale.deltatee.com"
+        id S1731255AbfGQRNS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jul 2019 13:13:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:60238 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731085AbfGQRNO (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:13:14 -0400
+        id S1731243AbfGQRNR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:13:17 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUM-00012o-Uy; Wed, 17 Jul 2019 11:13:14 -0600
+        id 1hnnUM-00012q-Uz; Wed, 17 Jul 2019 11:13:17 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUK-0000sL-42; Wed, 17 Jul 2019 11:13:08 -0600
+        id 1hnnUK-0000sR-CH; Wed, 17 Jul 2019 11:13:08 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Omar Sandoval <osandov@fb.com>
@@ -27,8 +27,8 @@ Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 17 Jul 2019 11:12:48 -0600
-Message-Id: <20190717171259.3311-2-logang@deltatee.com>
+Date:   Wed, 17 Jul 2019 11:12:50 -0600
+Message-Id: <20190717171259.3311-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190717171259.3311-1-logang@deltatee.com>
 References: <20190717171259.3311-1-logang@deltatee.com>
@@ -42,7 +42,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
         version=3.4.2
-Subject: [PATCH blktests v2 01/12] Add filter function for nvme discover
+Subject: [PATCH blktests v2 03/12] nvme: Add new test to verify the generation counter
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -50,116 +50,122 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Michael Moese <mmoese@suse.de>
+Now that the other discovery tests ignore the generation counter value,
+create a new test to specifically check that it increments when
+subsystems are added or removed from ports and when allow_any_host
+is set/unset.
 
-Several NVMe tests (002, 016, 017) used a pipe to a sed call filtering
-the output. This call is moved to a new filter function nvme/rc and
-the calls to sed are replaced by this function.
-
-Additionally, the test nvme/016 failed for me due to the Generation
-counter being greater than 1, so the new filter function was expanded to
-replace the Generation counter with 'X'.
-
-Signed-off-by: Michael Moese <mmoese@suse.de>
-[logang@deltatee.com: added missing changes to 002.out and 017.out]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/nvme/002     | 2 +-
- tests/nvme/002.out | 2 +-
- tests/nvme/016     | 2 +-
- tests/nvme/016.out | 2 +-
- tests/nvme/017     | 2 +-
- tests/nvme/017.out | 2 +-
- tests/nvme/rc      | 5 +++++
- 7 files changed, 11 insertions(+), 6 deletions(-)
+ tests/nvme/030     | 76 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/030.out |  2 ++
+ tests/nvme/rc      |  5 +++
+ 3 files changed, 83 insertions(+)
+ create mode 100755 tests/nvme/030
+ create mode 100644 tests/nvme/030.out
 
-diff --git a/tests/nvme/002 b/tests/nvme/002
-index 106a5a8395f2..ceac1c677bd4 100755
---- a/tests/nvme/002
-+++ b/tests/nvme/002
-@@ -32,7 +32,7 @@ test() {
- 		_add_nvmet_subsys_to_port "${port}" "blktests-subsystem-$i"
- 	done
- 
--	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
-+	nvme discover -t loop | _filter_discovery
- 
- 	for ((i = iterations - 1; i >= 0; i--)); do
- 		_remove_nvmet_subsystem_from_port "${port}" "blktests-subsystem-$i"
-diff --git a/tests/nvme/002.out b/tests/nvme/002.out
-index aa71d8f5f5f8..7437a21f60a9 100644
---- a/tests/nvme/002.out
-+++ b/tests/nvme/002.out
-@@ -1,6 +1,6 @@
- Running nvme/002
- 
--Discovery Log Number of Records 1000, Generation counter 1000
-+Discovery Log Number of Records 1000, Generation counter X
- =====Discovery Log Entry 0======
- trtype:  loop
- adrfam:  pci
-diff --git a/tests/nvme/016 b/tests/nvme/016
-index 966d5dc0a4a2..dd1b84a16daa 100755
---- a/tests/nvme/016
-+++ b/tests/nvme/016
-@@ -34,7 +34,7 @@ test() {
- 	port="$(_create_nvmet_port "loop")"
- 	_add_nvmet_subsys_to_port "$port" "${subsys_nqn}"
- 
--	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
-+	nvme discover -t loop | _filter_discovery
- 	_remove_nvmet_subsystem_from_port "${port}" "${subsys_nqn}"
- 	_remove_nvmet_port "${port}"
- 
-diff --git a/tests/nvme/016.out b/tests/nvme/016.out
-index 59bd2935346f..b70603144d5c 100644
---- a/tests/nvme/016.out
-+++ b/tests/nvme/016.out
-@@ -1,6 +1,6 @@
- Running nvme/016
- 
--Discovery Log Number of Records 1, Generation counter 1
-+Discovery Log Number of Records 1, Generation counter X
- =====Discovery Log Entry 0======
- trtype:  loop
- adrfam:  pci
-diff --git a/tests/nvme/017 b/tests/nvme/017
-index 0b86bece9520..5f8d60907293 100755
---- a/tests/nvme/017
-+++ b/tests/nvme/017
-@@ -37,7 +37,7 @@ test() {
- 	port="$(_create_nvmet_port "loop")"
- 	_add_nvmet_subsys_to_port "${port}" "${subsys_name}"
- 
--	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
-+	nvme discover -t loop | _filter_discovery
- 	_remove_nvmet_subsystem_from_port "${port}" "${subsys_name}"
- 	_remove_nvmet_port "${port}"
- 
-diff --git a/tests/nvme/017.out b/tests/nvme/017.out
-index 4b0877aaf3ca..cf212971d180 100644
---- a/tests/nvme/017.out
-+++ b/tests/nvme/017.out
-@@ -1,6 +1,6 @@
- Running nvme/017
- 
--Discovery Log Number of Records 1, Generation counter 1
-+Discovery Log Number of Records 1, Generation counter X
- =====Discovery Log Entry 0======
- trtype:  loop
- adrfam:  pci
+diff --git a/tests/nvme/030 b/tests/nvme/030
+new file mode 100755
+index 000000000000..963e1ad7118c
+--- /dev/null
++++ b/tests/nvme/030
+@@ -0,0 +1,76 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-3.0+
++# Copyright (C) 2019 Logan Gunthorpe
++#
++# Test nvme discovery generation counter
++
++. tests/nvme/rc
++
++DESCRIPTION="ensure the discovery generation counter is updated appropriately"
++QUICK=1
++
++requires() {
++	_have_program nvme &&
++	_have_modules loop nvme-loop nvmet &&
++	_have_configfs
++}
++
++
++checkgenctr() {
++	local last=$1
++	local msg=$2
++	local genctr
++
++	genctr=$(_discovery_genctr)
++	if (( "${genctr}" <= "${last}" )); then
++		echo "Generation counter not incremented when ${msg} (${genctr} <= ${last})"
++	fi
++
++	echo "${genctr}"
++}
++
++test() {
++	local port
++	local genctr
++	local subsys="blktests-subsystem-"
++
++	echo "Running ${TEST_NAME}"
++
++	modprobe nvmet
++	modprobe nvme-loop
++
++	port="$(_create_nvmet_port "loop")"
++
++	_create_nvmet_subsystem "${subsys}1" "$(losetup -f)"
++	_add_nvmet_subsys_to_port "${port}" "${subsys}1"
++
++	genctr=$(_discovery_genctr)
++
++	_create_nvmet_subsystem "${subsys}2" "$(losetup -f)"
++	_add_nvmet_subsys_to_port "${port}" "${subsys}2"
++
++	genctr=$(checkgenctr "${genctr}" "adding a subsystem to a port")
++
++	echo 0 > "${NVMET_CFS}/subsystems/${subsys}2/attr_allow_any_host"
++
++	genctr=$(checkgenctr "${genctr}" "clearing attr_allow_any_host")
++
++	echo 1 > "${NVMET_CFS}/subsystems/${subsys}2/attr_allow_any_host"
++
++	genctr=$(checkgenctr "${genctr}" "setting attr_allow_any_host")
++
++	_remove_nvmet_subsystem_from_port "${port}" "${subsys}2"
++	_remove_nvmet_subsystem "${subsys}2"
++
++	genctr=$(checkgenctr "${genctr}" "removing a subsystem from a port")
++
++	_remove_nvmet_subsystem_from_port "${port}" "${subsys}1"
++	_remove_nvmet_subsystem "${subsys}1"
++
++	_remove_nvmet_port "${port}"
++
++	modprobe -r nvme-loop
++	modprobe -r nvmet
++
++	echo "Test complete"
++}
+diff --git a/tests/nvme/030.out b/tests/nvme/030.out
+new file mode 100644
+index 000000000000..93e51905b5d4
+--- /dev/null
++++ b/tests/nvme/030.out
+@@ -0,0 +1,2 @@
++Running nvme/030
++Test complete
 diff --git a/tests/nvme/rc b/tests/nvme/rc
-index eff1dd992460..22833d8ef9bb 100644
+index 74e316248ef5..7be6c903611b 100644
 --- a/tests/nvme/rc
 +++ b/tests/nvme/rc
-@@ -118,3 +118,8 @@ _find_nvme_loop_dev() {
- 		fi
- 	done
+@@ -124,3 +124,8 @@ _filter_discovery() {
+ 		  -e '/Discovery Log Number|Log Entry|trtype|subnqn/p'
+ 
  }
 +
-+_filter_discovery() {
-+	sed -r  -e "s/portid:  [0-9]+/portid:  X/" \
-+		-e "s/Generation counter [0-9]+/Generation counter X/"
++_discovery_genctr() {
++	nvme discover -t loop |
++		sed -n -e 's/^.*Generation counter \([0-9]\+\).*$/\1/p'
 +}
 -- 
 2.17.1
