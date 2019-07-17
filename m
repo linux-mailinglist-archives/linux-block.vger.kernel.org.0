@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7756C020
-	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2696C6C026
+	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbfGQRNQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jul 2019 13:13:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60218 "EHLO ale.deltatee.com"
+        id S1731178AbfGQRNT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jul 2019 13:13:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:60260 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731208AbfGQRNP (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:13:15 -0400
+        id S1731264AbfGQRNS (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:13:18 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUQ-00012x-8g; Wed, 17 Jul 2019 11:13:15 -0600
+        id 1hnnUQ-00012y-Ag; Wed, 17 Jul 2019 11:13:18 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUL-0000sm-2y; Wed, 17 Jul 2019 11:13:09 -0600
+        id 1hnnUL-0000sp-5f; Wed, 17 Jul 2019 11:13:09 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Omar Sandoval <osandov@fb.com>
@@ -27,8 +27,8 @@ Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 17 Jul 2019 11:12:57 -0600
-Message-Id: <20190717171259.3311-11-logang@deltatee.com>
+Date:   Wed, 17 Jul 2019 11:12:58 -0600
+Message-Id: <20190717171259.3311-12-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190717171259.3311-1-logang@deltatee.com>
 References: <20190717171259.3311-1-logang@deltatee.com>
@@ -42,7 +42,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
         version=3.4.2
-Subject: [PATCH blktests v2 10/12] nvme: Ensure all ports and subsystems are removed on cleanup
+Subject: [PATCH blktests v2 11/12] common: Use sysfs instead of modinfo for _have_module_param()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -50,69 +50,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This ensures any test that fails or is interrupted will cleanup
-their subsystems. This will prevent the system from being left
-in an inconsistent state that will fail subsequent tests.
+Using modinfo fails if the given module is built-in.
+
+Instead, if the module is already in the kernel, check for the
+parameter in sysfs.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/nvme/rc | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ common/rc | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 16bdb7f0c083..a6b4d5938680 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -25,6 +25,49 @@ _test_dev_is_nvme() {
+diff --git a/common/rc b/common/rc
+index a487cc69026c..41aee3aaa735 100644
+--- a/common/rc
++++ b/common/rc
+@@ -48,6 +48,12 @@ _have_modules() {
  }
  
- _cleanup_nvmet() {
-+	local dev
-+	local port
-+	local subsys
-+	local transport
-+	local name
-+
-+	if [[ ! -d "${NVMET_CFS}" ]]; then
-+		return 0
+ _have_module_param() {
++	if [ -d "/sys/module/$1" ]; then
++		if [ -e "/sys/module/$1/parameters/$2" ]; then
++			return 0
++		fi
 +	fi
 +
-+	# Don't let successive Ctrl-Cs interrupt the cleanup processes
-+	stty -isig
-+
-+	shopt -s nullglob
-+
-+	for dev in /sys/class/nvme/nvme*; do
-+		dev="$(basename "$dev")"
-+		transport="$(cat "/sys/class/nvme/${dev}/transport")"
-+		if [[ "$transport" == "loop" ]]; then
-+			echo "WARNING: Test did not clean up loop device: ${dev}"
-+			nvme disconnect -d "${dev}"
-+		fi
-+	done
-+
-+	for port in "${NVMET_CFS}"/ports/*; do
-+		name=$(basename "${port}")
-+		echo "WARNING: Test did not clean up port: ${name}"
-+		rm -f "${port}"/subsystems/*
-+		rmdir "${port}"
-+	done
-+
-+	for subsys in "${NVMET_CFS}"/subsystems/*; do
-+		name=$(basename "${subsys}")
-+		echo "WARNING: Test did not clean up subsystem: ${name}"
-+		for ns in "${subsys}"/namespaces/*; do
-+			rmdir "${ns}"
-+		done
-+		rmdir "${subsys}"
-+	done
-+
-+	shopt -u nullglob
-+	stty isig
-+
- 	modprobe -r nvme-loop
- 	modprobe -r nvmet
- }
+ 	if ! modinfo -F parm -0 "$1" | grep -q -z "^$2:"; then
+ 		SKIP_REASON="$1 module does not have parameter $2"
+ 		return 1
 -- 
 2.17.1
 
