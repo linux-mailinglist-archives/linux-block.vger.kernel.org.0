@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC9286C01D
-	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5ABB6C01F
+	for <lists+linux-block@lfdr.de>; Wed, 17 Jul 2019 19:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfGQRNO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1731144AbfGQRNO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Wed, 17 Jul 2019 13:13:14 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60178 "EHLO ale.deltatee.com"
+Received: from ale.deltatee.com ([207.54.116.67]:60192 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731111AbfGQRNO (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S1731085AbfGQRNO (ORCPT <rfc822;linux-block@vger.kernel.org>);
         Wed, 17 Jul 2019 13:13:14 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUM-00012n-Uz; Wed, 17 Jul 2019 11:13:13 -0600
+        id 1hnnUM-00012o-Uy; Wed, 17 Jul 2019 11:13:14 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hnnUJ-0000sJ-W9; Wed, 17 Jul 2019 11:13:08 -0600
+        id 1hnnUK-0000sL-42; Wed, 17 Jul 2019 11:13:08 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Omar Sandoval <osandov@fb.com>
@@ -27,9 +27,11 @@ Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 17 Jul 2019 11:12:47 -0600
-Message-Id: <20190717171259.3311-1-logang@deltatee.com>
+Date:   Wed, 17 Jul 2019 11:12:48 -0600
+Message-Id: <20190717171259.3311-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190717171259.3311-1-logang@deltatee.com>
+References: <20190717171259.3311-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
@@ -37,9 +39,10 @@ X-SA-Exim-Rcpt-To: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.2
-Subject: [PATCH blktests v2 00/12] Fix nvme block test issues
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH blktests v2 01/12] Add filter function for nvme discover
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -47,111 +50,117 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Changes since v1:
- * Use second sed expression instead of another call to grep
-   in _filter_discovery() for Patch 2 (per Omar)
- * Redirect error output to $FULL in for nvme/018 in Patch 7
-   (Per Johannes)
- * Rework _have_module_param() in Patch 11 so that it supports
-   cases where the module is not inserted.
+From: Michael Moese <mmoese@suse.de>
 
---
+Several NVMe tests (002, 016, 017) used a pipe to a sed call filtering
+the output. This call is moved to a new filter function nvme/rc and
+the calls to sed are replaced by this function.
 
-This patchset cleans up a number of issues and pain points
-I've had with getting the nvme blktests to pass and run cleanly.
+Additionally, the test nvme/016 failed for me due to the Generation
+counter being greater than 1, so the new filter function was expanded to
+replace the Generation counter with 'X'.
 
-The first three patches are meant to fix the Generation Counter
-issue that's been discussed before but hasn't been fixed in months.
-I primarily use a slightly fixed up patch posted by Michael Moese[1]
-but add another patch to properly test the Generation Counter that
-would no longer be tested otherwise.
+Signed-off-by: Michael Moese <mmoese@suse.de>
+[logang@deltatee.com: added missing changes to 002.out and 017.out]
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ tests/nvme/002     | 2 +-
+ tests/nvme/002.out | 2 +-
+ tests/nvme/016     | 2 +-
+ tests/nvme/016.out | 2 +-
+ tests/nvme/017     | 2 +-
+ tests/nvme/017.out | 2 +-
+ tests/nvme/rc      | 5 +++++
+ 7 files changed, 11 insertions(+), 6 deletions(-)
 
-I've also taken it a step further to filter out more of the discovery
-information so that we are less fragile against churn and less dependant
-on the version of nvme-cli in use. This should also fix the issue discussed
-in [2].
-
-Patches 4 through 7 fix a number of smaller issues I've found with
-individual tests.
-
-Patches 8 through 10 implement a system to ensure the nvme tests
-clean themselves up properly especially when ctrl-c is used to
-interrupt a test (working with the tests before this was a huge
-pain seeing,  when you ctrl-c, you have to either manually clean
-up the nvmet configuration or reboot to get the system in a state
-where it's sane to run the tests again).
-
-Patches 11 and 12 make some minor changes that allow running the
-tests with the nvme modules built into the kernel.
-
-With these patches, plus a couple I've sent to the nvme list for the
-kernel, I can consistently pass the entire nvme suite with the
-exception of the lockdep false-positive with nvme/012 that still
-seems to be in a bit of contention[3].
-
-[1] https://github.com/osandov/blktests/pull/34
-[2] https://lore.kernel.org/linux-block/20190505150611.15776-4-minwoo.im.dev@gmail.com/
-[3] https://lore.kernel.org/lkml/20190214230058.196511-22-bvanassche@acm.org/
-
---
-
-Logan Gunthorpe (11):
-  nvme: More agressively filter the discovery output
-  nvme: Add new test to verify the generation counter
-  nvme/003,004: Add missing calls to nvme disconnect
-  nvme/005: Don't rely on modprobing to set the multipath paramater
-  nvme/015: Ensure the namespace is flushed not the char device
-  nvme/018: Ignore error message generated by nvme read
-  check: Add the ability to call a cleanup function after a test ends
-  nvme: Cleanup modprobe lines into helper functions
-  nvme: Ensure all ports and subsystems are removed on cleanup
-  common: Use sysfs instead of modinfo for _have_module_param()
-  nvme: Ignore errors when removing modules
-
-Michael Moese (1):
-  Add filter function for nvme discover
-
- check              |    9 +
- common/rc          |   24 +
- tests/nvme/002     |   10 +-
- tests/nvme/002.out | 6003 +-------------------------------------------
- tests/nvme/003     |    6 +-
- tests/nvme/003.out |    1 +
- tests/nvme/004     |    6 +-
- tests/nvme/004.out |    1 +
- tests/nvme/005     |   16 +-
- tests/nvme/006     |    6 +-
- tests/nvme/007     |    6 +-
- tests/nvme/008     |    6 +-
- tests/nvme/009     |    5 +-
- tests/nvme/010     |    6 +-
- tests/nvme/011     |    6 +-
- tests/nvme/012     |    6 +-
- tests/nvme/013     |    6 +-
- tests/nvme/014     |    6 +-
- tests/nvme/015     |    5 +-
- tests/nvme/016     |    6 +-
- tests/nvme/016.out |    9 +-
- tests/nvme/017     |    8 +-
- tests/nvme/017.out |    9 +-
- tests/nvme/018     |    8 +-
- tests/nvme/019     |    6 +-
- tests/nvme/020     |    5 +-
- tests/nvme/021     |    6 +-
- tests/nvme/022     |    6 +-
- tests/nvme/023     |    6 +-
- tests/nvme/024     |    6 +-
- tests/nvme/025     |    6 +-
- tests/nvme/026     |    6 +-
- tests/nvme/027     |    6 +-
- tests/nvme/028     |    6 +-
- tests/nvme/029     |    6 +-
- tests/nvme/030     |   72 +
- tests/nvme/030.out |    2 +
- tests/nvme/rc      |   65 +
- 38 files changed, 216 insertions(+), 6162 deletions(-)
- create mode 100755 tests/nvme/030
- create mode 100644 tests/nvme/030.out
-
---
+diff --git a/tests/nvme/002 b/tests/nvme/002
+index 106a5a8395f2..ceac1c677bd4 100755
+--- a/tests/nvme/002
++++ b/tests/nvme/002
+@@ -32,7 +32,7 @@ test() {
+ 		_add_nvmet_subsys_to_port "${port}" "blktests-subsystem-$i"
+ 	done
+ 
+-	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
++	nvme discover -t loop | _filter_discovery
+ 
+ 	for ((i = iterations - 1; i >= 0; i--)); do
+ 		_remove_nvmet_subsystem_from_port "${port}" "blktests-subsystem-$i"
+diff --git a/tests/nvme/002.out b/tests/nvme/002.out
+index aa71d8f5f5f8..7437a21f60a9 100644
+--- a/tests/nvme/002.out
++++ b/tests/nvme/002.out
+@@ -1,6 +1,6 @@
+ Running nvme/002
+ 
+-Discovery Log Number of Records 1000, Generation counter 1000
++Discovery Log Number of Records 1000, Generation counter X
+ =====Discovery Log Entry 0======
+ trtype:  loop
+ adrfam:  pci
+diff --git a/tests/nvme/016 b/tests/nvme/016
+index 966d5dc0a4a2..dd1b84a16daa 100755
+--- a/tests/nvme/016
++++ b/tests/nvme/016
+@@ -34,7 +34,7 @@ test() {
+ 	port="$(_create_nvmet_port "loop")"
+ 	_add_nvmet_subsys_to_port "$port" "${subsys_nqn}"
+ 
+-	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
++	nvme discover -t loop | _filter_discovery
+ 	_remove_nvmet_subsystem_from_port "${port}" "${subsys_nqn}"
+ 	_remove_nvmet_port "${port}"
+ 
+diff --git a/tests/nvme/016.out b/tests/nvme/016.out
+index 59bd2935346f..b70603144d5c 100644
+--- a/tests/nvme/016.out
++++ b/tests/nvme/016.out
+@@ -1,6 +1,6 @@
+ Running nvme/016
+ 
+-Discovery Log Number of Records 1, Generation counter 1
++Discovery Log Number of Records 1, Generation counter X
+ =====Discovery Log Entry 0======
+ trtype:  loop
+ adrfam:  pci
+diff --git a/tests/nvme/017 b/tests/nvme/017
+index 0b86bece9520..5f8d60907293 100755
+--- a/tests/nvme/017
++++ b/tests/nvme/017
+@@ -37,7 +37,7 @@ test() {
+ 	port="$(_create_nvmet_port "loop")"
+ 	_add_nvmet_subsys_to_port "${port}" "${subsys_name}"
+ 
+-	nvme discover -t loop | sed -r -e "s/portid:  [0-9]+/portid:  X/"
++	nvme discover -t loop | _filter_discovery
+ 	_remove_nvmet_subsystem_from_port "${port}" "${subsys_name}"
+ 	_remove_nvmet_port "${port}"
+ 
+diff --git a/tests/nvme/017.out b/tests/nvme/017.out
+index 4b0877aaf3ca..cf212971d180 100644
+--- a/tests/nvme/017.out
++++ b/tests/nvme/017.out
+@@ -1,6 +1,6 @@
+ Running nvme/017
+ 
+-Discovery Log Number of Records 1, Generation counter 1
++Discovery Log Number of Records 1, Generation counter X
+ =====Discovery Log Entry 0======
+ trtype:  loop
+ adrfam:  pci
+diff --git a/tests/nvme/rc b/tests/nvme/rc
+index eff1dd992460..22833d8ef9bb 100644
+--- a/tests/nvme/rc
++++ b/tests/nvme/rc
+@@ -118,3 +118,8 @@ _find_nvme_loop_dev() {
+ 		fi
+ 	done
+ }
++
++_filter_discovery() {
++	sed -r  -e "s/portid:  [0-9]+/portid:  X/" \
++		-e "s/Generation counter [0-9]+/Generation counter X/"
++}
+-- 
 2.17.1
+
