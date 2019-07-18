@@ -2,49 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFDE6C9C2
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 09:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 341A96CADA
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 10:21:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfGRHJC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Jul 2019 03:09:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56806 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726383AbfGRHJC (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:09:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1CE95ABC6;
-        Thu, 18 Jul 2019 07:09:01 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 09:09:00 +0200
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Omar Sandoval <osandov@fb.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Michael Moese <mmoese@suse.de>, Theodore Ts'o <tytso@mit.edu>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH blktests v2 12/12] nvme: Ignore errors when removing
- modules
-Message-ID: <20190718070900.GL15760@x250.microfocus.com>
-References: <20190717171259.3311-1-logang@deltatee.com>
- <20190717171259.3311-13-logang@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190717171259.3311-13-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726386AbfGRIVQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Jul 2019 04:21:16 -0400
+Received: from pv50p00im-tydg10021701.me.com ([17.58.6.54]:49418 "EHLO
+        pv50p00im-tydg10021701.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbfGRIVP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:21:15 -0400
+X-Greylist: delayed 328 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 04:21:15 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1563437746; bh=rygbksnDqOaSKR3XLkW4e13nzvuYk7oKU0GX4JXNTak=;
+        h=Content-Type:Subject:From:Date:Message-Id:To;
+        b=zhAH42hbz4XLf76nlyZ8NQLNle36tqzflOlDKDaesle5jD6G5c8o8WaYeAOe6mCTe
+         hJVEqJ8tlB58zEmDMcTX3Nq16TBNrxqI6USRO5QpK1QgBn6aBkgdmE3VAICyRVSMTV
+         8aosauw1040CDhtSUwF2BahpBlVu51CtHemJVaUo2/YXAxwj/mcPvZcJsAb7DtnUOT
+         R0dBcGKOlzbzLKFw/4SG431ABvMt9kni7RXHeZuyTWDxrTpVc/vJuFik0Si5C7JXPY
+         7wNlpiwz27vWvI6a1UGTobMxeBiGOtqcXsm8mAvu/DUsV5rCwuW9dF7qF5fmse56U0
+         MoLnUCSn/8zNQ==
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net [220.133.187.190])
+        by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id 235F3840296;
+        Thu, 18 Jul 2019 08:15:44 +0000 (UTC)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] loop: Don't change loop device under exclusive opener
+From:   Kai-Heng Feng <kaihengfeng@me.com>
+In-Reply-To: <b0f27980-be75-bded-3e74-bce14fc7ea47@kernel.dk>
+Date:   Thu, 18 Jul 2019 16:15:42 +0800
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-block@vger.kernel.org,
+        John Lenton <john.lenton@canonical.com>,
+        jean-baptiste.lallement@canonical.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <894DDAA8-2ADD-467C-8E4F-4DE6B9A50625@me.com>
+References: <20190516140127.23272-1-jack@suse.cz>
+ <50edd0fa-9cfa-38e1-8870-0fbc5c618522@kernel.dk>
+ <20190527122915.GB9998@quack2.suse.cz>
+ <b0f27980-be75-bded-3e74-bce14fc7ea47@kernel.dk>
+To:     Jan Kara <jack@suse.cz>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1812120000 definitions=main-1907180095
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
+Hi Jan,
+
+at 21:34, Jens Axboe <axboe@kernel.dk> wrote:
+
+> On 5/27/19 6:29 AM, Jan Kara wrote:
+>> On Thu 16-05-19 14:44:07, Jens Axboe wrote:
+>>> On 5/16/19 8:01 AM, Jan Kara wrote:
+>>>> Loop module allows calling LOOP_SET_FD while there are other openers of
+>>>> the loop device. Even exclusive ones. This can lead to weird
+>>>> consequences such as kernel deadlocks like:
+>>>>
+>>>> mount_bdev()				lo_ioctl()
+>>>>    udf_fill_super()
+>>>>      udf_load_vrs()
+>>>>        sb_set_blocksize() - sets desired block size B
+>>>>        udf_tread()
+>>>>          sb_bread()
+>>>>            __bread_gfp(bdev, block, B)
+>>>> 					  loop_set_fd()
+>>>> 					    set_blocksize()
+>>>>              - now __getblk_slow() indefinitely loops because B != bdev
+>>>>                block size
+>>>>
+>>>> Fix the problem by disallowing LOOP_SET_FD ioctl when there are
+>>>> exclusive openers of a loop device.
+>>>>
+>>>> [Deliberately chosen not to CC stable as a user with priviledges to
+>>>> trigger this race has other means of taking the system down and this
+>>>> has a potential of breaking some weird userspace setup]
+>>>>
+>>>> Reported-and-tested-by:  
+>>>> syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
+>>>> Signed-off-by: Jan Kara <jack@suse.cz>
+>>>> ---
+>>>>   drivers/block/loop.c | 18 +++++++++++++++++-
+>>>>   1 file changed, 17 insertions(+), 1 deletion(-)
+>>>>
+>>>> Hi Jens!
+>>>>
+>>>> What do you think about this patch? It fixes the problem but it also
+>>>> changes user visible behavior so there are chances it breaks some
+>>>> existing setup (although I have hard time coming up with a realistic
+>>>> scenario where it would matter).
+>>>
+>>> I also have a hard time thinking about valid cases where this would be a
+>>> problem. I think, in the end, that fixing the issue is more important
+>>> than a potentially hypothetical use case.
+>>>
+>>>> Alternatively we could change getblk() code handle changing block
+>>>> size. That would fix the particular issue syzkaller found as well but
+>>>> I'm not sure what else is broken when block device changes while fs
+>>>> driver is working with it.
+>>>
+>>> I think your solution here is saner.
+>>
+>> Will you pick up the patch please? I cannot find it in your tree...  
+>> Thanks!
+>
+> Done!
+
+This patch introduced a regression [1].
+A reproducer can be found at [2].
+
+[1] https://bugs.launchpad.net/bugs/1836914
+[2] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1836914/comments/4
+
+Kai-Heng
+
+>
+> -- 
+> Jens Axboe
+
+
