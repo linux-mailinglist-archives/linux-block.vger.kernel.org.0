@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC556C98A
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 08:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE49C6C98B
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 08:59:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfGRG6h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Jul 2019 02:58:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54850 "EHLO mx1.suse.de"
+        id S1726304AbfGRG7H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Jul 2019 02:59:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54974 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726304AbfGRG6h (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:58:37 -0400
+        id S1726090AbfGRG7G (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 18 Jul 2019 02:59:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5F0A2ABC6;
-        Thu, 18 Jul 2019 06:58:35 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 08:58:34 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 68517ABC6;
+        Thu, 18 Jul 2019 06:59:05 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 08:59:05 +0200
 From:   Johannes Thumshirn <jthumshirn@suse.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -23,15 +23,16 @@ Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Michael Moese <mmoese@suse.de>, Theodore Ts'o <tytso@mit.edu>,
         Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH blktests v2 01/12] Add filter function for nvme discover
-Message-ID: <20190718065834.GA15760@x250.microfocus.com>
+Subject: Re: [PATCH blktests v2 02/12] nvme: More agressively filter the
+ discovery output
+Message-ID: <20190718065905.GB15760@x250.microfocus.com>
 References: <20190717171259.3311-1-logang@deltatee.com>
- <20190717171259.3311-2-logang@deltatee.com>
+ <20190717171259.3311-3-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190717171259.3311-2-logang@deltatee.com>
+In-Reply-To: <20190717171259.3311-3-logang@deltatee.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
