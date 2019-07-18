@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CCD56C9BB
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 09:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE58A6C9BD
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jul 2019 09:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfGRHHF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Jul 2019 03:07:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56532 "EHLO mx1.suse.de"
+        id S1726472AbfGRHHs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Jul 2019 03:07:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56612 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbfGRHHF (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:07:05 -0400
+        id S1726383AbfGRHHr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 18 Jul 2019 03:07:47 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A2C3AD93;
-        Thu, 18 Jul 2019 07:07:03 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 09:07:03 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 68BD7ABC6;
+        Thu, 18 Jul 2019 07:07:46 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 09:07:46 +0200
 From:   Johannes Thumshirn <jthumshirn@suse.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -23,16 +23,16 @@ Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Michael Moese <mmoese@suse.de>, Theodore Ts'o <tytso@mit.edu>,
         Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH blktests v2 08/12] check: Add the ability to call a
- cleanup function after a test ends
-Message-ID: <20190718070703.GH15760@x250.microfocus.com>
+Subject: Re: [PATCH blktests v2 09/12] nvme: Cleanup modprobe lines into
+ helper functions
+Message-ID: <20190718070745.GI15760@x250.microfocus.com>
 References: <20190717171259.3311-1-logang@deltatee.com>
- <20190717171259.3311-9-logang@deltatee.com>
+ <20190717171259.3311-10-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190717171259.3311-9-logang@deltatee.com>
+In-Reply-To: <20190717171259.3311-10-logang@deltatee.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
