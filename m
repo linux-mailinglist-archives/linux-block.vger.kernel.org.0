@@ -2,122 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A57F770689
-	for <lists+linux-block@lfdr.de>; Mon, 22 Jul 2019 19:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D956D70750
+	for <lists+linux-block@lfdr.de>; Mon, 22 Jul 2019 19:30:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfGVRM1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Jul 2019 13:12:27 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40938 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbfGVRM1 (ORCPT
+        id S1726347AbfGVRaw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Jul 2019 13:30:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46733 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfGVRaw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:12:27 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so17671157pfp.7
-        for <linux-block@vger.kernel.org>; Mon, 22 Jul 2019 10:12:27 -0700 (PDT)
+        Mon, 22 Jul 2019 13:30:52 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i8so17969022pgm.13;
+        Mon, 22 Jul 2019 10:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=3WkrBlhQGLRNnJo/MXZZ7vnmbCcs74q4XJirvLk0V8M=;
+        b=sMnH79elSRWNVhT7udK5QBveox3svU97zhfgWSuiCqRHFr423/n22/TjxOGShUPHJ5
+         glbE8Wkj/A91exHCpMAiiYFTrwYE2AYlLInM/cMkICuEY06qwxfkjqDZbyNJBstapcx5
+         jKcRXT60w04z9Fuv0T7Bl0HZFY83C7lrE63T4HC9+vEZpE/7LWqKKAYCwhmr6rJN+SUw
+         XYRSydbnF0NZE1keAvOjfQZLePK/QKpKaaLs3BLj750WLkx5I+SCHdGWB4dRiF2KsziF
+         242EFmmgJr+o1jBWMLck5PWTILTWnu3nKdEzqlxRK01QVEQjJTWjocpHmG4mHeaufh/z
+         OzDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HYs1psmKSo4dwLQmfCgpezaUpRcFNkV2ILZlTlqS0ok=;
-        b=Un0X/Ed3RakQiUkpe0Qu+OccLQnwOWtUjoKlmrRX5Sz3EM7xpWetQE1DT78hgRe1i+
-         DVmvXUDx9GSLAZLGHqsNXxMog7v5it6vxQcG0BlYOC/BS203ULvCobdCmwO6AbKQ1CRD
-         +shaWLGOgSanh3fZhCbaq5yGHEKwn/G8DNxyaL+4AvbY4z/S1vt592BE3PWhZeKfAgeG
-         JEAttTwDxMzHlzBjNoJEwJPF9/uElku7gI6m1Pd5VfBtOMgZuSYsg7fdCKNPUZf0Jgi+
-         ojQLjPyUg4tmL1AxMl62ccn/IZ/JZ/43dy7n9V61rlltbgISyghiibIwozUIg1ht12da
-         rN9A==
-X-Gm-Message-State: APjAAAWXY04gENAXgqOjGx6NCZ2xDgetfBqcGb47TiZEb0vfpoiFyX5P
-        +XfhxTB1X6lLecuFiOMcRLIHx2z1
-X-Google-Smtp-Source: APXvYqyjQdilrJufoLXTNcT2lfXRi8I00GvmOuuZ7VYvM3dO/HAFP1NpgEtW1WMSkcixwAIVdiVMrg==
-X-Received: by 2002:a17:90a:8a0b:: with SMTP id w11mr77601013pjn.125.1563815546637;
-        Mon, 22 Jul 2019 10:12:26 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id t26sm31196528pgu.43.2019.07.22.10.12.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 10:12:25 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.com>
-Subject: [PATCH 5/5] block: Improve physical block alignment of split bios
-Date:   Mon, 22 Jul 2019 10:12:10 -0700
-Message-Id: <20190722171210.149443-6-bvanassche@acm.org>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-In-Reply-To: <20190722171210.149443-1-bvanassche@acm.org>
-References: <20190722171210.149443-1-bvanassche@acm.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=3WkrBlhQGLRNnJo/MXZZ7vnmbCcs74q4XJirvLk0V8M=;
+        b=azr9CHQ59Ig9F7Pwh67GYzOFuTlgaehW/DVteIICL3dDq28jIXEbH7x2Sr6JW7xh83
+         YRyGesMjfYC5jOmQ9BUySq6xj9gWOiDklB/eCYQwVsm4UOGhyW7ih/zhIRCwN+Xphq9J
+         gFx2Bni/UicE69xhdrgLLIQDvwG9qqAKCRr7u68qn4bsCOj8GnTvOKqNYwGNdDqsAVmn
+         miBr6V539URHCFSZuXPbgMP5RoE5ton7h4i2EpyLZWZhPqrNhi9IYb10Y5Lr6vEC6nqu
+         WACSMsZLlxApxwYro4dYPgqyKNTK5R+WwRLywWR2SCnAjgj3qo9ZxxAj3glnF7hoDk7R
+         mITA==
+X-Gm-Message-State: APjAAAVDjllKVoMA47IEoSxv/h8s/+VS+N+UpCelRLShFOB7MdoQj1nH
+        GwXkZyfHv9RBVGLZgXft6qBMjCzJ
+X-Google-Smtp-Source: APXvYqybia81FEHbBtIsKy2f17+dgZLRK5oM7wUDCFjbIJnf2XyxwwRcQFfFwNNfePBYPs7mNxd6QQ==
+X-Received: by 2002:aa7:8d98:: with SMTP id i24mr1343890pfr.199.1563816651231;
+        Mon, 22 Jul 2019 10:30:51 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o12sm30748558pjr.22.2019.07.22.10.30.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 10:30:50 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hsin-Yi Wang <hsinyi@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
+Date:   Mon, 22 Jul 2019 10:30:48 -0700
+Message-Id: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Consider the following example:
-* The logical block size is 4 KB.
-* The physical block size is 8 KB.
-* max_sectors equals (16 KB >> 9) sectors.
-* A non-aligned 4 KB and an aligned 64 KB bio are merged into a single
-  non-aligned 68 KB bio.
+In bfq_insert_request(), bfqq is initialized with:
+	bfqq = bfq_init_rq(rq);
+In bfq_init_rq(), we find:
+	if (unlikely(!rq->elv.icq))
+		return NULL;
+Indeed, rq->elv.icq can be NULL if the memory allocation in
+create_task_io_context() failed.
 
-The current behavior is to split such a bio into (16 KB + 16 KB + 16 KB
-+ 16 KB + 4 KB). The start of none of these five bio's is aligned to a
-physical block boundary.
+A comment in bfq_insert_request() suggests that bfqq is supposed to be
+non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, as
+debugging and practical experience shows, this is not the case in the
+above situation.
 
-This patch ensures that such a bio is split into four aligned and
-one non-aligned bio instead of being split into five non-aligned bios.
-This improves performance because most block devices can handle aligned
-requests faster than non-aligned requests.
+This results in the following crash.
 
-Since the physical block size is larger than or equal to the logical
-block size, this patch preserves the guarantee that the returned
-value is a multiple of the logical block size.
+Unable to handle kernel NULL pointer dereference
+	at virtual address 00000000000001b0
+...
+Call trace:
+ bfq_setup_cooperator+0x44/0x134
+ bfq_insert_requests+0x10c/0x630
+ blk_mq_sched_insert_requests+0x60/0xb4
+ blk_mq_flush_plug_list+0x290/0x2d4
+ blk_flush_plug_list+0xe0/0x230
+ blk_finish_plug+0x30/0x40
+ generic_writepages+0x60/0x94
+ blkdev_writepages+0x24/0x30
+ do_writepages+0x74/0xac
+ __filemap_fdatawrite_range+0x94/0xc8
+ file_write_and_wait_range+0x44/0xa0
+ blkdev_fsync+0x38/0x68
+ vfs_fsync_range+0x68/0x80
+ do_fsync+0x44/0x80
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+The problem is relatively easy to reproduce by running an image with
+failslab enabled, such as with:
+
+cd /sys/kernel/debug/failslab
+echo 10 > probability
+echo 300 > times
+
+Avoid the problem by checking if bfqq is NULL before using it. With the
+NULL check in place, requests with missing io context are queued
+immediately, and the crash is no longer seen.
+
+Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to insert or merge")
+Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
+Cc: Hsin-Yi Wang <hsinyi@google.com>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- block/blk-merge.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ block/bfq-iosched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index a6bc08255b1b..48e6725b32ee 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -132,16 +132,29 @@ static struct bio *blk_bio_write_same_split(struct request_queue *q,
- 	return bio_split(bio, q->limits.max_write_same_sectors, GFP_NOIO, bs);
- }
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 72860325245a..56f3f4227010 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
  
-+/*
-+ * Return the maximum number of sectors from the start of a bio that may be
-+ * submitted as a single request to a block device. If enough sectors remain,
-+ * align the end to the physical block size. Otherwise align the end to the
-+ * logical block size. This approach minimizes the number of non-aligned
-+ * requests that are submitted to a block device if the start of a bio is not
-+ * aligned to a physical block boundary.
-+ */
- static inline unsigned get_max_io_size(struct request_queue *q,
- 				       struct bio *bio)
- {
- 	unsigned sectors = blk_max_size_offset(q, bio->bi_iter.bi_sector);
--	unsigned mask = queue_logical_block_size(q) - 1;
-+	unsigned max_sectors = sectors;
-+	unsigned pbs = queue_physical_block_size(q) >> SECTOR_SHIFT;
-+	unsigned lbs = queue_logical_block_size(q) >> SECTOR_SHIFT;
-+	unsigned start_offset = bio->bi_iter.bi_sector & (pbs - 1);
- 
--	/* aligned to logical block size */
--	sectors &= ~(mask >> 9);
-+	max_sectors += start_offset;
-+	max_sectors &= ~(pbs - 1);
-+	if (max_sectors > start_offset)
-+		return max_sectors - start_offset;
- 
--	return sectors;
-+	return sectors & (lbs - 1);
- }
- 
- static unsigned get_max_segment_size(const struct request_queue *q,
+ 	spin_lock_irq(&bfqd->lock);
+ 	bfqq = bfq_init_rq(rq);
+-	if (at_head || blk_rq_is_passthrough(rq)) {
++	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
+ 		if (at_head)
+ 			list_add(&rq->queuelist, &bfqd->dispatch);
+ 		else
 -- 
-2.22.0.657.g960e92d24f-goog
+2.7.4
 
