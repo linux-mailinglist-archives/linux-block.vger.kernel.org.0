@@ -2,46 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56EE570687
-	for <lists+linux-block@lfdr.de>; Mon, 22 Jul 2019 19:12:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B266670688
+	for <lists+linux-block@lfdr.de>; Mon, 22 Jul 2019 19:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfGVRMY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Jul 2019 13:12:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44808 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbfGVRMY (ORCPT
+        id S1730678AbfGVRM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Jul 2019 13:12:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46484 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbfGVRM0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:12:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so17965725pgl.11
-        for <linux-block@vger.kernel.org>; Mon, 22 Jul 2019 10:12:24 -0700 (PDT)
+        Mon, 22 Jul 2019 13:12:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so17671337pfb.13
+        for <linux-block@vger.kernel.org>; Mon, 22 Jul 2019 10:12:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Jq2pZEjtAzuyucvqSgELmmCJOFoY2SOnEEkwGFrFqKo=;
-        b=OYCzDTS4n1UCCEQoONttNpVCUhQWmxUOChHpLZ2cKia2F4dm9LPwNl986J5taSSv0L
-         +BnYr9OQUdH9lUD97OFbvIWiPHBoCtewba7dp58SDJDlaju9VbWGoc8/3ggDf91QJQms
-         9Mcj6AjKqYOnVUIFnsi97kd9Sfvk02Ymcp5AxVNi9rLYZW1215FH+/Xc+3/x72y7rm6t
-         9cgcxNkKf2mmQAZiCMTUIun5S0bafsLja33ClcUjtYcX2XmDJU3xbBRPsQGe+ExiddH0
-         zJsgfsIzYiEoPIhWxUfquZer34u5mMXfadcaI1MC+kF3/Ptbn1nCAi+7ner0Nrk6mOOF
-         xBTg==
-X-Gm-Message-State: APjAAAVto737pLzX/vm/xAcCwwhXTuVL6XvKUZ/FYRLhvX/B0WBzCKwX
-        Q1dDm7CfWHubTwmRLG8rAv0=
-X-Google-Smtp-Source: APXvYqxhygMuebo/fszLq4zxq91f0xY0CA+3QF6CtiwHesDMbQzzewWci4SNuyH62hBm3BafQLA8zQ==
-X-Received: by 2002:a63:f048:: with SMTP id s8mr44523372pgj.26.1563815543737;
-        Mon, 22 Jul 2019 10:12:23 -0700 (PDT)
+        bh=Lpbzzr3ZSzw/j2x3jxMSTnzwpwcRoRgPv+EISeqNwpc=;
+        b=m6hmz17ihKDYmuMDitTt8GXhbSQYszZe4gicI9CREza9jrhPQNj/yjt/prvEs5TlBn
+         Cs2+5MuGw6/7B+2+X20SWY0rqL86F4/uUEVW9gyi3dlBtWj2td4hMv3i7piKxj4eOl5U
+         zsqhTkmB8NDaQLN0mAe3hZC8+liDoxsNM9onEcXj7bUW5fzufoMjUGWDCIYLaxNSaYf+
+         pHNd1EG2XAjjE9wXc1VRBkMqyIa26CoLj7PujSJajoEC3I1vDqBu5iPdWrijyQ85GtD1
+         zLg4OgBF0L5wYDUTprJzq9MzgXux+iDitjyhV/04zV6+ysGVupjwiBgl7YyHZkBquwdC
+         4ADA==
+X-Gm-Message-State: APjAAAXeopoUh6IBdtJ2Qag4XVOJaHANvDQiJ/DeyXwYv+jbjG1qVyuo
+        U7Ujmt7lAoMgvaSOdEhWJDI=
+X-Google-Smtp-Source: APXvYqzjZj9XNDplo9K8xz5FP6It/ttb5phyls9Ghq466QbupeG7mB4RZ5clPNQYTblZAbDlhR6BZA==
+X-Received: by 2002:a63:c23:: with SMTP id b35mr39089612pgl.265.1563815545061;
+        Mon, 22 Jul 2019 10:12:25 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id t26sm31196528pgu.43.2019.07.22.10.12.22
+        by smtp.gmail.com with ESMTPSA id t26sm31196528pgu.43.2019.07.22.10.12.23
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 10:12:22 -0700 (PDT)
+        Mon, 22 Jul 2019 10:12:24 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
         Hannes Reinecke <hare@suse.com>
-Subject: [PATCH 3/5] block: Micro-optimize bvec_split_segs()
-Date:   Mon, 22 Jul 2019 10:12:08 -0700
-Message-Id: <20190722171210.149443-4-bvanassche@acm.org>
+Subject: [PATCH 4/5] block: Simplify blk_bio_segment_split()
+Date:   Mon, 22 Jul 2019 10:12:09 -0700
+Message-Id: <20190722171210.149443-5-bvanassche@acm.org>
 X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
 In-Reply-To: <20190722171210.149443-1-bvanassche@acm.org>
 References: <20190722171210.149443-1-bvanassche@acm.org>
@@ -52,71 +52,127 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since bvec_split_segs() is in the hot path, optimize this function
-by removing two if-tests. Other than requiring that the @sectors pointer
-is not NULL, this patch does not change the behavior of bvec_split_segs().
+Move the max_sectors check into bvec_split_segs() such that a single
+call to that function can do all the necessary checks. This patch
+optimizes the fast path further, namely if a bvec fits in a page.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-merge.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ block/blk-merge.c | 68 +++++++++++++++++++++++------------------------
+ 1 file changed, 33 insertions(+), 35 deletions(-)
 
 diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 51ed971709c3..7cea5050bbcf 100644
+index 7cea5050bbcf..a6bc08255b1b 100644
 --- a/block/blk-merge.c
 +++ b/block/blk-merge.c
-@@ -167,17 +167,17 @@ static bool bvec_split_segs(const struct request_queue *q,
- {
- 	unsigned len = bv->bv_len;
- 	unsigned total_len = 0;
--	unsigned new_nsegs = 0, seg_size = 0;
-+	unsigned seg_size = 0;
+@@ -157,22 +157,36 @@ static unsigned get_max_segment_size(const struct request_queue *q,
+ 		     queue_max_segment_size(q));
+ }
  
- 	/*
- 	 * Multi-page bvec may be too big to hold in one segment, so the
- 	 * current bvec has to be splitted as multiple segments.
- 	 */
--	while (len && new_nsegs + *nsegs < max_segs) {
-+	while (len && *nsegs < max_segs) {
+-/*
+- * Split the bvec @bv into segments, and update all kinds of
+- * variables.
++/**
++ * bvec_split_segs - verify whether or not a bvec should be split in the middle
++ * @q:        [in] request queue associated with the bio associated with @bv
++ * @bv:       [in] bvec to examine
++ * @nsegs:    [in,out] Number of segments in the bio being built. Incremented
++ *            by the number of segments from @bv that may be appended to that
++ *            bio without exceeding @max_segs
++ * @sectors:  [in,out] Number of sectors in the bio being built. Incremented
++ *            by the number of sectors from @bv that may be appended to that
++ *            bio without exceeding @max_sectors
++ * @max_segs: [in] upper bound for *@nsegs
++ * @max_sectors: [in] upper bound for *@sectors
++ *
++ * When splitting a bio, it can happen that a bvec is encountered that is too
++ * big to fit in a single segment and hence that it has to be split in the
++ * middle. This function verifies whether or not that should happen. The value
++ * %true is returned if and only if appending the entire @bv to a bio with
++ * *@nsegs segments and *@sectors sectors would make that bio unacceptable for
++ * the block driver.
+  */
+ static bool bvec_split_segs(const struct request_queue *q,
+ 			    const struct bio_vec *bv, unsigned *nsegs,
+-			    unsigned *sectors, unsigned max_segs)
++			    unsigned *sectors, unsigned max_segs,
++			    unsigned max_sectors)
+ {
+-	unsigned len = bv->bv_len;
++	unsigned max_len = (min(max_sectors, UINT_MAX >> 9) - *sectors) << 9;
++	unsigned len = min(bv->bv_len, max_len);
+ 	unsigned total_len = 0;
+ 	unsigned seg_size = 0;
+ 
+-	/*
+-	 * Multi-page bvec may be too big to hold in one segment, so the
+-	 * current bvec has to be splitted as multiple segments.
+-	 */
+ 	while (len && *nsegs < max_segs) {
  		seg_size = get_max_segment_size(q, bv->bv_offset + total_len);
  		seg_size = min(seg_size, len);
+@@ -187,8 +201,8 @@ static bool bvec_split_segs(const struct request_queue *q,
  
--		new_nsegs++;
-+		(*nsegs)++;
- 		total_len += seg_size;
- 		len -= seg_size;
+ 	*sectors += total_len >> 9;
  
-@@ -185,11 +185,7 @@ static bool bvec_split_segs(const struct request_queue *q,
- 			break;
+-	/* split in the middle of the bvec if len != 0 */
+-	return !!len;
++	/* tell the caller to split the bvec if it is too big to fit */
++	return len > 0 || bv->bv_len > max_len;
+ }
+ 
+ /**
+@@ -229,34 +243,18 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
+ 		if (bvprvp && bvec_gap_to_prev(q, bvprvp, bv.bv_offset))
+ 			goto split;
+ 
+-		if (sectors + (bv.bv_len >> 9) > max_sectors) {
+-			/*
+-			 * Consider this a new segment if we're splitting in
+-			 * the middle of this vector.
+-			 */
+-			if (nsegs < max_segs &&
+-			    sectors < max_sectors) {
+-				/* split in the middle of bvec */
+-				bv.bv_len = (max_sectors - sectors) << 9;
+-				bvec_split_segs(q, &bv, &nsegs,
+-						&sectors, max_segs);
+-			}
++		if (nsegs < max_segs &&
++		    sectors + (bv.bv_len >> 9) <= max_sectors &&
++		    bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
++			nsegs++;
++			sectors += bv.bv_len >> 9;
++		} else if (bvec_split_segs(q, &bv, &nsegs, &sectors, max_segs,
++					 max_sectors)) {
+ 			goto split;
+ 		}
+ 
+-		if (nsegs == max_segs)
+-			goto split;
+-
+ 		bvprv = bv;
+ 		bvprvp = &bvprv;
+-
+-		if (bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
+-			nsegs++;
+-			sectors += bv.bv_len >> 9;
+-		} else if (bvec_split_segs(q, &bv, &nsegs, &sectors,
+-				max_segs)) {
+-			goto split;
+-		}
  	}
  
--	if (new_nsegs) {
--		*nsegs += new_nsegs;
--		if (sectors)
--			*sectors += total_len >> 9;
--	}
-+	*sectors += total_len >> 9;
- 
- 	/* split in the middle of the bvec if len != 0 */
- 	return !!len;
-@@ -349,6 +345,7 @@ EXPORT_SYMBOL(blk_queue_split);
- unsigned int blk_recalc_rq_segments(struct request *rq)
- {
- 	unsigned int nr_phys_segs = 0;
-+	unsigned int nr_sectors = 0;
- 	struct req_iterator iter;
- 	struct bio_vec bv;
- 
-@@ -365,7 +362,8 @@ unsigned int blk_recalc_rq_segments(struct request *rq)
- 	}
+ 	*segs = nsegs;
+@@ -363,7 +361,7 @@ unsigned int blk_recalc_rq_segments(struct request *rq)
  
  	rq_for_each_bvec(bv, rq, iter)
--		bvec_split_segs(rq->q, &bv, &nr_phys_segs, NULL, UINT_MAX);
-+		bvec_split_segs(rq->q, &bv, &nr_phys_segs, &nr_sectors,
-+				UINT_MAX);
+ 		bvec_split_segs(rq->q, &bv, &nr_phys_segs, &nr_sectors,
+-				UINT_MAX);
++				UINT_MAX, UINT_MAX);
  	return nr_phys_segs;
  }
  
