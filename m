@@ -2,55 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7EF740DF
-	for <lists+linux-block@lfdr.de>; Wed, 24 Jul 2019 23:33:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45B8E740E1
+	for <lists+linux-block@lfdr.de>; Wed, 24 Jul 2019 23:35:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfGXVdu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 Jul 2019 17:33:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41434 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGXVdu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:33:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 14:33:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="181251022"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga002.jf.intel.com with ESMTP; 24 Jul 2019 14:33:49 -0700
-Date:   Wed, 24 Jul 2019 15:30:54 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     davidc502 <davidc502@tds.net>, linux-block@vger.kernel.org,
-        ilnux-nvme@lists.infradead.org
-Subject: Re: fstrim error - AORUS NVMe Gen4 SSD
-Message-ID: <20190724213054.GA5921@localhost.localdomain>
-References: <fb510e33-5c81-6d62-fcde-a2989b3a1a8f@tds.net>
- <20190723021928.GF30776@ming.t460p>
- <4a7ec7aa-f6ee-f9dc-4a17-38f2b169c721@tds.net>
- <20190723043803.GB13829@ming.t460p>
+        id S1728237AbfGXVfc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 24 Jul 2019 17:35:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51488 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGXVfc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:35:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so43099689wma.1;
+        Wed, 24 Jul 2019 14:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEg8P4rVHcrzMYhNW3Mur+QDB3HpJjXn10bDzy/W1dU=;
+        b=FbHzUbNIRJIGHu+HQ5A9Eh6R1q4UeAJh8+tWiwT08ohIPEMFxT7aVfx9zgzsQDD2fB
+         KruNsqSXmMCdS9HO40PV7eAKwpEej7xONalYlw0+s1ICZinA049e2myqlSOggtQGPrNY
+         umzJYNIiljkPZOSYVVN61ciuv7ul4tLI/vccY6R/K4+idnp0hYbBJVISZiCMOLIBnVZe
+         tZ0QwZai8ddysrQ8HI/LZFmGg3edb6NvrU48w5bbEQHuMmqyIfe1opf3H/aSTKUinm6h
+         yDOHdrqXmd9hjLBGHOU+ReHxZPJIx2c1qVs66EqTvE32zKy9DW/UkL2PckJHaGlswNxf
+         rFcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEg8P4rVHcrzMYhNW3Mur+QDB3HpJjXn10bDzy/W1dU=;
+        b=XhBJRatI82gKXyYvlRRdgGWs5xdhK5ihOR7fnovkuvTAcCc6mDz9ryUyvtduK8DJFn
+         qV1Lch1LVtVO9LNYgWbi0qaM0zaKEtllzkDcMOLTt24V+UJ6Qot8y+fabxNHKuPr6IdK
+         4GiuUZbQQqESoz/6F/PKaUe9gGec/rfa7cOkN13uKD1TR0xEeEk3b6LKHUwO+EWUZx4c
+         odODl0cu2jhQu39Nn49lMXFSsAGpfs6MFWGiTUl+tl81Tjqd+OoO6HJv5dDCxsy/6Jfh
+         INpuiq0siQ8EzSpn0RwJ2WegtRffYW2jF44LusetkgTmjB40n00EVbf7WREgekQDLOXy
+         6d4g==
+X-Gm-Message-State: APjAAAUQYTLQNjxVSoGalnx6wKHbhX0fxSixDMW/WXOpLYPcMujYkYvL
+        CUMMMx13aT7ZNl0znrgc1Ds=
+X-Google-Smtp-Source: APXvYqymZNM9wh4T1b+PC2J4rXPEdqjaxxAtVl8cEwb1iDURMmx3hTPvsO5YYbiqtbZ1LUihLIX6Hw==
+X-Received: by 2002:a1c:a019:: with SMTP id j25mr75148878wme.95.1564004130210;
+        Wed, 24 Jul 2019 14:35:30 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.147.168])
+        by smtp.gmail.com with ESMTPSA id u186sm80799083wmu.26.2019.07.24.14.35.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 14:35:29 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, josef@toxicpanda.com
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [RESEND RFC PATCH 0/2] Fix misuse of blk_rq_stats in blk-iolatency
+Date:   Thu, 25 Jul 2019 00:35:08 +0300
+Message-Id: <cover.1560510935.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723043803.GB13829@ming.t460p>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:38:04PM +0800, Ming Lei wrote:
-> From the IO trace, discard command(nvme_cmd_dsm) is failed:
-> 
->   kworker/15:1H-462   [015] .... 91814.342452: nvme_setup_cmd: nvme0: disk=nvme0n1, qid=7, cmdid=552, nsid=1, flags=0x0, meta=0x0, cmd=(nvme_cmd_dsm nr=0, attributes=4)
->           <idle>-0     [013] d.h. 91814.342708: nvme_complete_rq: nvme0: disk=nvme0n1, qid=7, cmdid=552, res=0, retries=0, flags=0x0, status=8198
-> 
-> And the returned error code is 0x8198, I am not sure how to parse the
-> 'Command Specific Status Values' of 0x98, maybe Christoph, Keith or our other
-> NVMe guys can help to understand the failure.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-The 198h status code is still marked reserved in the latest spec for an
-NVM command set, so not sure what to make of it. I think we would have
-to refer back to the vendor.
+There are implicit assumptions about struct blk_rq_stats, which make
+it's very easy to misuse. The first patch fixes consequences, and the
+second employs type-system to prevent recurrences.
+
+Acked-by: Josef Bacik <josef@toxicpanda.com>
+
+Pavel Begunkov (2):
+  blk-iolatency: Fix zero mean in previous stats
+  blk-stats: Introduce explicit stat staging buffers
+
+ block/blk-iolatency.c     | 60 ++++++++++++++++++++++++++++++---------
+ block/blk-stat.c          | 48 +++++++++++++++++++++++--------
+ block/blk-stat.h          |  9 ++++--
+ include/linux/blk_types.h |  6 ++++
+ 4 files changed, 94 insertions(+), 29 deletions(-)
+
+-- 
+2.22.0
+
