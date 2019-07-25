@@ -2,137 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 341D574395
-	for <lists+linux-block@lfdr.de>; Thu, 25 Jul 2019 05:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0299874730
+	for <lists+linux-block@lfdr.de>; Thu, 25 Jul 2019 08:32:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbfGYDD7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 Jul 2019 23:03:59 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:33938 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389521AbfGYDD7 (ORCPT
+        id S1727038AbfGYGcV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 25 Jul 2019 02:32:21 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:54550 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfGYGcV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:03:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TXkDTDf_1564023836;
-Received: from localhost(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TXkDTDf_1564023836)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 25 Jul 2019 11:03:56 +0800
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-To:     linux-block@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 3/3] blk-throttle: add throttled io/bytes counter
-Date:   Thu, 25 Jul 2019 11:03:55 +0800
-Message-Id: <1564023835-99554-3-git-send-email-joseph.qi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1564023835-99554-1-git-send-email-joseph.qi@linux.alibaba.com>
-References: <1564023835-99554-1-git-send-email-joseph.qi@linux.alibaba.com>
+        Thu, 25 Jul 2019 02:32:21 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 1F8F025AD7E;
+        Thu, 25 Jul 2019 16:32:19 +1000 (AEST)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id 0C222E2209B; Thu, 25 Jul 2019 08:32:17 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 08:32:17 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     ulf.hansson@linaro.org, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, joro@8bytes.org, axboe@kernel.dk,
+        wsa+renesas@sang-engineering.com, linux-mmc@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-block@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v8 1/5] dma: Introduce dma_get_merge_boundary()
+Message-ID: <20190725063216.z26gvdtjwwkmrs3e@verge.net.au>
+References: <1563859608-19456-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1563859608-19456-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563859608-19456-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add another 2 interfaces to stat io throttle information:
-  blkio.throttle.total_io_queued
-  blkio.throttle.total_bytes_queued
+On Tue, Jul 23, 2019 at 02:26:44PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds a new DMA API "dma_get_merge_boundary". This function
+> returns the DMA merge boundary if the DMA layer can merge the segments.
+> This patch also adds the implementation for a new dma_map_ops pointer.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-These interfaces are used for monitoring throttled io/bytes and
-analyzing if delay has relations with io throttle.
-
-Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
----
- block/blk-throttle.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 1db461c..acc9feb 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -183,6 +183,10 @@ struct throtl_grp {
- 	struct blkg_rwstat wait_time;
- 	/* total IOs completed */
- 	struct blkg_rwstat completed;
-+	/* total bytes throttled */
-+	struct blkg_rwstat total_bytes_queued;
-+	/* total IOs throttled */
-+	struct blkg_rwstat total_io_queued;
- };
- 
- /* We measure latency for request size from <= 4k to >= 1M */
-@@ -496,7 +500,9 @@ static struct blkg_policy_data *throtl_pd_alloc(gfp_t gfp, int node)
- 
- 	if (blkg_rwstat_init(&tg->service_time, gfp) ||
- 	    blkg_rwstat_init(&tg->wait_time, gfp) ||
--	    blkg_rwstat_init(&tg->completed, gfp))
-+	    blkg_rwstat_init(&tg->completed, gfp) ||
-+	    blkg_rwstat_init(&tg->total_bytes_queued, gfp) ||
-+	    blkg_rwstat_init(&tg->total_io_queued, gfp))
- 		goto err;
- 
- 	throtl_service_queue_init(&tg->service_queue);
-@@ -528,6 +534,8 @@ static struct blkg_policy_data *throtl_pd_alloc(gfp_t gfp, int node)
- 	blkg_rwstat_exit(&tg->service_time);
- 	blkg_rwstat_exit(&tg->wait_time);
- 	blkg_rwstat_exit(&tg->completed);
-+	blkg_rwstat_exit(&tg->total_bytes_queued);
-+	blkg_rwstat_exit(&tg->total_io_queued);
- 	kfree(tg);
- 	return NULL;
- }
-@@ -630,6 +638,10 @@ static void throtl_pd_offline(struct blkg_policy_data *pd)
- 				    &tg->wait_time);
- 		blkg_rwstat_add_aux(&blkg_to_tg(parent)->completed,
- 				    &tg->completed);
-+		blkg_rwstat_add_aux(&blkg_to_tg(parent)->total_bytes_queued,
-+				    &tg->total_bytes_queued);
-+		blkg_rwstat_add_aux(&blkg_to_tg(parent)->total_io_queued,
-+				    &tg->total_io_queued);
- 	}
- }
- 
-@@ -641,6 +653,8 @@ static void throtl_pd_free(struct blkg_policy_data *pd)
- 	blkg_rwstat_exit(&tg->service_time);
- 	blkg_rwstat_exit(&tg->wait_time);
- 	blkg_rwstat_exit(&tg->completed);
-+	blkg_rwstat_reset(&tg->total_bytes_queued);
-+	blkg_rwstat_reset(&tg->total_io_queued);
- 	kfree(tg);
- }
- 
-@@ -651,6 +665,8 @@ static void throtl_pd_reset(struct blkg_policy_data *pd)
- 	blkg_rwstat_reset(&tg->service_time);
- 	blkg_rwstat_reset(&tg->wait_time);
- 	blkg_rwstat_reset(&tg->completed);
-+	blkg_rwstat_reset(&tg->total_bytes_queued);
-+	blkg_rwstat_reset(&tg->total_io_queued);
- }
- 
- static struct throtl_grp *
-@@ -1170,6 +1186,9 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
- 	throtl_qnode_add_bio(bio, qn, &sq->queued[rw]);
- 
- 	sq->nr_queued[rw]++;
-+	blkg_rwstat_add(&tg->total_bytes_queued, bio_op(bio),
-+			throtl_bio_data_size(bio));
-+	blkg_rwstat_add(&tg->total_io_queued, bio_op(bio), 1);
- 	throtl_enqueue_tg(tg);
- }
- 
-@@ -1641,6 +1660,16 @@ static int tg_print_rwstat(struct seq_file *sf, void *v)
- 		.private = offsetof(struct throtl_grp, completed),
- 		.seq_show = tg_print_rwstat,
- 	},
-+	{
-+		.name = "throttle.total_bytes_queued",
-+		.private = offsetof(struct throtl_grp, total_bytes_queued),
-+		.seq_show = tg_print_rwstat,
-+	},
-+	{
-+		.name = "throttle.total_io_queued",
-+		.private = offsetof(struct throtl_grp, total_io_queued),
-+		.seq_show = tg_print_rwstat,
-+	},
- 	{ }	/* terminate */
- };
- 
--- 
-1.8.3.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
