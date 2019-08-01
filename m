@@ -2,47 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A917E605
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 00:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA5367E601
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 00:51:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfHAWvD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Aug 2019 18:51:03 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39276 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730457AbfHAWu4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Aug 2019 18:50:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so30903510pfn.6
-        for <linux-block@vger.kernel.org>; Thu, 01 Aug 2019 15:50:56 -0700 (PDT)
+        id S2390104AbfHAWu5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Aug 2019 18:50:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39277 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732058AbfHAWu5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Aug 2019 18:50:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f17so30903544pfn.6
+        for <linux-block@vger.kernel.org>; Thu, 01 Aug 2019 15:50:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WFknHuGrAVuRUIDZ0JwPLjzFM/nqpojzKm+Ph0JQmZA=;
-        b=HWEAl3xWIN+voenZC1Kx6Dt3zcW5nztirJ2lPfahh4BUrAPdqJVWiGTdKroFLIOhxn
-         TInQhTvNyqHrfJxvohYXRH9IcjcxqY2YfQhwCHCT1nhNkzcHTxLrdpS/rcArSlvoKqlA
-         GcS78zWy14+DB9SMueeHJRzu1sdJ4hzL6EFa0dXfLYrIyW+BYmN0ZOgYt3Wc6yc6MfSK
-         2ph/cP7n2q/PWcUz6xAWLVTsRVO5JdEeJIpYaBtJhdHbgotKxoyuuBsvM0D3YAHJ1zlF
-         2Izd8GIunhRXJo4SiNfMJapX8mo0WPVb5aTInTgfuDAqva55CrSwFGGVMF3abDCWuUy2
-         6CKA==
-X-Gm-Message-State: APjAAAX/IdoHZpeY/WWSZMskFYuG54H82r72Wg14BhP8dlXHhTDqLS0S
-        AzLGLm9MznFRKwN+OCb32RNUrDFP
-X-Google-Smtp-Source: APXvYqymGJgSsA5bCsSzCP3bljvW6IYDAGFmgcxvVCkoVk49SiahFOEaQhCcvHh/hIv6fLjeNEQC7w==
-X-Received: by 2002:a62:8643:: with SMTP id x64mr57818429pfd.7.1564699855526;
-        Thu, 01 Aug 2019 15:50:55 -0700 (PDT)
+        bh=v78JLgMrSx/P5onOsxF4EDc4WPnU4qR8t9YihlIqQaU=;
+        b=reu7sh9Hfb+pNwzBG9PzCusDvikglDMANnB2uHYp4GV5snAU6JKnKc4Vmdb6w/7+Te
+         /dYcMf0ejGcTr+VrYd4ODkQdFn93b6I/qJFGx0xil5AEuvw8BFwcYEAIT9m3hs2Pvqiy
+         YyLVE6p/ztLwZJnifiaevS9JAIw4Jr54c+GqbRHyivbgbhToj8h4FY7UDBEnnz2rxEmx
+         WLJnpCnXXLLL0ZJ6bUlg6QdRYcGWbOT1r698+jD4D+KsUD6cuLn4Vl3/Xa6a0vfpdjre
+         IOZsSmOd0zilLF6iZS65J8PStpKD4DjwexBoV9v2Fd1Gx+Mq7sWfOU/mJLnsNYKPeRmd
+         EiYQ==
+X-Gm-Message-State: APjAAAVlKriORo89ZgHnFIQxFAsZJRKMk6UnDoc2eM6Zhe71H/QBYegz
+        Vi3WcJMHdUubgJEwt1nfhcw=
+X-Google-Smtp-Source: APXvYqwGNpkamVrKl+/oxfrJHBlcmf+w3fU1mK05os9fKX6DQFDTeW0dfDtmK7paeuufjwZdq/C2ZA==
+X-Received: by 2002:a17:90a:384d:: with SMTP id l13mr1175179pjf.86.1564699856632;
+        Thu, 01 Aug 2019 15:50:56 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id d12sm35472010pfn.11.2019.08.01.15.50.54
+        by smtp.gmail.com with ESMTPSA id d12sm35472010pfn.11.2019.08.01.15.50.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 15:50:54 -0700 (PDT)
+        Thu, 01 Aug 2019 15:50:55 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
         Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.com>
-Subject: [PATCH v2 2/5] block: Document the bio splitting functions
-Date:   Thu,  1 Aug 2019 15:50:41 -0700
-Message-Id: <20190801225044.143478-3-bvanassche@acm.org>
+Subject: [PATCH v2 3/5] block: Simplify bvec_split_segs()
+Date:   Thu,  1 Aug 2019 15:50:42 -0700
+Message-Id: <20190801225044.143478-4-bvanassche@acm.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190801225044.143478-1-bvanassche@acm.org>
 References: <20190801225044.143478-1-bvanassche@acm.org>
@@ -53,102 +52,75 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since what the bio splitting functions do is nontrivial, document these
-functions.
+Simplify this function by by removing two if-tests. Other than requiring
+that the @sectors pointer is not NULL, this patch does not change the
+behavior of bvec_split_segs().
 
 Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/bio.c       |  4 ++--
- block/blk-merge.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 2 deletions(-)
+ block/blk-merge.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 299a0e7651ec..0fff4eb9eb1e 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1842,8 +1842,8 @@ EXPORT_SYMBOL(bio_endio);
-  * @bio, and updates @bio to represent the remaining sectors.
-  *
-  * Unless this is a discard request the newly allocated bio will point
-- * to @bio's bi_io_vec; it is the caller's responsibility to ensure that
-- * @bio is not freed before the split.
-+ * to @bio's bi_io_vec. It is the caller's responsibility to ensure that
-+ * neither @bio nor @bs are freed before the split bio.
-  */
- struct bio *bio_split(struct bio *bio, int sectors,
- 		      gfp_t gfp, struct bio_set *bs)
 diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 8344d94f13e0..51ed971709c3 100644
+index 51ed971709c3..7cea5050bbcf 100644
 --- a/block/blk-merge.c
 +++ b/block/blk-merge.c
-@@ -195,6 +195,25 @@ static bool bvec_split_segs(const struct request_queue *q,
- 	return !!len;
- }
- 
-+/**
-+ * blk_bio_segment_split - split a bio in two bios
-+ * @q:    [in] request queue pointer
-+ * @bio:  [in] bio to be split
-+ * @bs:	  [in] bio set to allocate the clone from
-+ * @segs: [out] number of segments in the bio with the first half of the sectors
-+ *
-+ * Clone @bio, update the bi_iter of the clone to represent the first sectors
-+ * of @bio and update @bio->bi_iter to represent the remaining sectors. The
-+ * following is guaranteed for the cloned bio:
-+ * - That it has at most get_max_io_size(@q, @bio) sectors.
-+ * - That it has at most queue_max_segments(@q) segments.
-+ *
-+ * Except for discard requests the cloned bio will point at the bi_io_vec of
-+ * the original bio. It is the responsibility of the caller to ensure that the
-+ * original bio is not freed before the cloned bio. The caller is also
-+ * responsible for ensuring that @bs is only destroyed after processing of the
-+ * split bio has finished.
-+ */
- static struct bio *blk_bio_segment_split(struct request_queue *q,
- 					 struct bio *bio,
- 					 struct bio_set *bs,
-@@ -251,6 +270,19 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
- 	return bio_split(bio, sectors, GFP_NOIO, bs);
- }
- 
-+/**
-+ * __blk_queue_split - split a bio and submit the second half
-+ * @q:       [in] request queue pointer
-+ * @bio:     [in, out] bio to be split
-+ * @nr_segs: [out] number of segments in the first bio
-+ *
-+ * Split a bio into two bios, chain the two bios, submit the second half and
-+ * store a pointer to the first half in *@bio. If the second bio is still too
-+ * big it will be split by a recursive call to this function. Since this
-+ * function may allocate a new bio from @q->bio_split, it is the responsibility
-+ * of the caller to ensure that @q is only released after processing of the
-+ * split bio has finished.
-+ */
- void __blk_queue_split(struct request_queue *q, struct bio **bio,
- 		unsigned int *nr_segs)
+@@ -167,17 +167,17 @@ static bool bvec_split_segs(const struct request_queue *q,
  {
-@@ -295,6 +327,17 @@ void __blk_queue_split(struct request_queue *q, struct bio **bio,
+ 	unsigned len = bv->bv_len;
+ 	unsigned total_len = 0;
+-	unsigned new_nsegs = 0, seg_size = 0;
++	unsigned seg_size = 0;
+ 
+ 	/*
+ 	 * Multi-page bvec may be too big to hold in one segment, so the
+ 	 * current bvec has to be splitted as multiple segments.
+ 	 */
+-	while (len && new_nsegs + *nsegs < max_segs) {
++	while (len && *nsegs < max_segs) {
+ 		seg_size = get_max_segment_size(q, bv->bv_offset + total_len);
+ 		seg_size = min(seg_size, len);
+ 
+-		new_nsegs++;
++		(*nsegs)++;
+ 		total_len += seg_size;
+ 		len -= seg_size;
+ 
+@@ -185,11 +185,7 @@ static bool bvec_split_segs(const struct request_queue *q,
+ 			break;
  	}
+ 
+-	if (new_nsegs) {
+-		*nsegs += new_nsegs;
+-		if (sectors)
+-			*sectors += total_len >> 9;
+-	}
++	*sectors += total_len >> 9;
+ 
+ 	/* split in the middle of the bvec if len != 0 */
+ 	return !!len;
+@@ -349,6 +345,7 @@ EXPORT_SYMBOL(blk_queue_split);
+ unsigned int blk_recalc_rq_segments(struct request *rq)
+ {
+ 	unsigned int nr_phys_segs = 0;
++	unsigned int nr_sectors = 0;
+ 	struct req_iterator iter;
+ 	struct bio_vec bv;
+ 
+@@ -365,7 +362,8 @@ unsigned int blk_recalc_rq_segments(struct request *rq)
+ 	}
+ 
+ 	rq_for_each_bvec(bv, rq, iter)
+-		bvec_split_segs(rq->q, &bv, &nr_phys_segs, NULL, UINT_MAX);
++		bvec_split_segs(rq->q, &bv, &nr_phys_segs, &nr_sectors,
++				UINT_MAX);
+ 	return nr_phys_segs;
  }
  
-+/**
-+ * blk_queue_split - split a bio and submit the second half
-+ * @q:   [in] request queue pointer
-+ * @bio: [in, out] bio to be split
-+ *
-+ * Split a bio into two bios, chains the two bios, submit the second half and
-+ * store a pointer to the first half in *@bio. Since this function may allocate
-+ * a new bio from @q->bio_split, it is the responsibility of the caller to
-+ * ensure that @q is only released after processing of the split bio has
-+ * finished.
-+ */
- void blk_queue_split(struct request_queue *q, struct bio **bio)
- {
- 	unsigned int nr_segs;
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
