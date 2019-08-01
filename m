@@ -2,110 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 194407D94C
-	for <lists+linux-block@lfdr.de>; Thu,  1 Aug 2019 12:21:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4157DA02
+	for <lists+linux-block@lfdr.de>; Thu,  1 Aug 2019 13:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfHAKVy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Aug 2019 06:21:54 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:26358 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbfHAKVx (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Aug 2019 06:21:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564654913; x=1596190913;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=aggZcSPS3xcvRMHLy9IinQXiE+ZvVRSbcBtZoLj/F4g=;
-  b=YqBJJjS6GoStoNQpWJHoROEZcd2KKEhOd3nHlnU8gfNlWqHHEOmfvVyI
-   C03v3zpSBeZWkZYtZUUeqCnluNuHJK5s80i/uBTY2L3LTm3sLbdB9mCJm
-   iJA3lktwBRBZkyG7AfReFwnUNbvqQ1ib3qqesLUqvdS8AjwqbSx1IwXfW
-   mIaot/lAFrZ57RAQ2ohHCIYLcALU0hbFPRrNCjUdUXhaXWLleQn+7Gw3W
-   676j2GFk4sy8/QGnSQdLhQXB2fGBeMShjP1SKMz58R/I4UHYm7RXBztgv
-   c/ByKw/3c4/qtbJEs8ABTbMzDo+Tvr22m9/vgAJBTUDzNybJ77cCBtQKq
-   w==;
-IronPort-SDR: iK9+j0B4RbdyIKW9gVm03fhgInGRdSVXtEI1LqZ6U8MY1alFhJtRZCyRqqI2AWS5bU/KVdxhci
- 0vSV19/rrmVzmC7nHT0OOUvip3He6hB+5lx+jP6YtK6HNfSzI57XoGlbV5pKgl6AXFflSfkC0D
- Vf2Ehg5pzWBCZ07QP4vk3CSR3zwGe7yQuMLagNnHf5EFeG6ZESpf6bp6coYdFJ2rZDDqNHQEiR
- zliiQe6k0udjvvXQvyIXIv37lu4TVpl/ylGvVarprxZDjcuX2WFILreqkHB+uTUverAPQib96f
- GBU=
-X-IronPort-AV: E=Sophos;i="5.64,333,1559491200"; 
-   d="scan'208";a="119354034"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Aug 2019 18:21:53 +0800
-IronPort-SDR: A0woRhtM1LGZy8wIHUqT/3GV92gke4qFHM7SJnDR0+vxI2BY3OGfeq6xc8R2uf3gzMC4AD7wqK
- lyzX+fM/Vv3XzKpDkwD45+nxC8HB7AIDa5PEYWn2dHnrY2T4lD7iZGMCgffF9sos17F0qvBKa/
- e4rTchDOGPH6VUoevo4bOA6V5u0JO6PaFIi07Cga9jUcCFPK4qjv+uBrRy57IgB8WOdx15zao3
- KvKWlHofcmwr7D0oM44+P27Xvq2/bG2EYkzLpHW8mjWkXFCtXlXvMiaPmi06UKoKCXi0961Axx
- 2FKIolv2HJ/pORli2ip3hVE+
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 03:19:53 -0700
-IronPort-SDR: XXG0M4GeBFx5HpeeIOTmwj9toy4UsYn6yAHH7CxQMWJWJ1RcmALjud/5osXoUHqG1mSvtrmX4T
- C5Gmoa+wl4aHqQHgKR7sQrLI2YizWhqafmqL7F21zlD4q0iCq4F+PRs8q6b1LFLPf/COYUnwuW
- VMTBxDdFvsYgPXdXLYjg2aqTECq+tr85Anw3nYVul4R7ED+UM4jJ2bdvF38ah2P+oY1CG5hYTc
- ywAZrcHKcKoYKj2AsQlSlqZnIqcmLFwmKk4Wtm9ct/NHUGf6aczsEPvrFKMq2oBhvblFpyOUFA
- xLM=
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Aug 2019 03:21:53 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     Masato Suzuki <masato.suzuki@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>
-Subject: [PATCH] block: Fix __blkdev_direct_IO()
-Date:   Thu,  1 Aug 2019 19:21:51 +0900
-Message-Id: <20190801102151.7846-1-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1729084AbfHALGl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Aug 2019 07:06:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62436 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730316AbfHALGk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:06:40 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71B33WN185623
+        for <linux-block@vger.kernel.org>; Thu, 1 Aug 2019 07:06:39 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u3wkm3cva-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-block@vger.kernel.org>; Thu, 01 Aug 2019 07:06:38 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-block@vger.kernel.org> from <sth@linux.ibm.com>;
+        Thu, 1 Aug 2019 12:06:34 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 1 Aug 2019 12:06:32 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71B6EDs34537768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Aug 2019 11:06:14 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFC36AE059;
+        Thu,  1 Aug 2019 11:06:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCEC6AE056;
+        Thu,  1 Aug 2019 11:06:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  1 Aug 2019 11:06:30 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 76690E02D9; Thu,  1 Aug 2019 13:06:30 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
+        borntraeger@de.ibm.com, gor@linux.ibm.com
+Subject: [PATCH 0/1] sending DASD patches through linux-block
+Date:   Thu,  1 Aug 2019 13:06:29 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19080111-0020-0000-0000-000003594D5F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080111-0021-0000-0000-000021AD5C00
+Message-Id: <20190801110630.82432-1-sth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010116
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The recent fix to properly handle IOCB_NOWAIT for async O_DIRECT IO
-(patch 6a43074e2f46) introduced two problems with BIO fragment handling
-for direct IOs:
-1) The dio size processed is claculated by incrementing the ret variable
-by the size of the bio fragment issued for the dio. However, this size
-is obtained directly from bio->bi_iter.bi_size AFTER the bio submission
-which may result in referencing the bi_size value after the bio
-completed, resulting in an incorrect value use.
-2) The ret variable is not incremented by the size of the last bio
-fragment issued for the bio, leading to an invalid IO size being
-returned to the user.
+Hi Jens,
 
-Fix both problem by using dio->size (which is incremented before the bio
-submission) to update the value of ret after bio submissions, including
-for the last bio fragment issued.
+we would like to get our DASD related patches upstream through your
+linux-block git tree in the future.
+We hope to get a better integration and that we are able to identify
+potential conflicts with generic blocklayer changes earlier.
 
-Fixes: 6a43074e2f46 ("block: properly handle IOCB_NOWAIT for async O_DIRECT IO")
-Reported-by: Masato Suzuki <masato.suzuki@wdc.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- fs/block_dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I hope this is OK for you. I have attached a first patch that fixes a
+bug in the DASD driver. This patch is based on the master branch of your
+linux-block git tree.
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index c2a85b587922..75cc7f424b3a 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -439,6 +439,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
- 					ret = -EAGAIN;
- 				goto error;
- 			}
-+			ret = dio->size;
- 
- 			if (polled)
- 				WRITE_ONCE(iocb->ki_cookie, qc);
-@@ -465,7 +466,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
- 				ret = -EAGAIN;
- 			goto error;
- 		}
--		ret += bio->bi_iter.bi_size;
-+		ret = dio->size;
- 
- 		bio = bio_alloc(gfp, nr_pages);
- 		if (!bio) {
+Please let me know if I should change something in my workflow.
+
+Kind regards,
+Stefan
+
+Stefan Haberland (1):
+  s390/dasd: fix endless loop after read unit address configuration
+
+ drivers/s390/block/dasd_alias.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
 -- 
-2.21.0
+2.17.1
 
