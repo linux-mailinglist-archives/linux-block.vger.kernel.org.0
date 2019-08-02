@@ -2,65 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C94A17FAAE
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DAA7FAF1
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403936AbfHBNeV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Aug 2019 09:34:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44964 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405641AbfHBNeQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Aug 2019 09:34:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so36091525pgl.11
-        for <linux-block@vger.kernel.org>; Fri, 02 Aug 2019 06:34:16 -0700 (PDT)
+        id S2392045AbfHBNgG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Aug 2019 09:36:06 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45558 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391995AbfHBNgD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Aug 2019 09:36:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so33679284plr.12
+        for <linux-block@vger.kernel.org>; Fri, 02 Aug 2019 06:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Uv11iay6UFn4yJKiuRstOy4WPPsctn3pPbReDqThk3Q=;
-        b=kRGXaQzIzBD52EJQZLvx4W+R0mDukgkxPnTUtTJlin+4rhjjL3JwTS/DVVx5rwAkSa
-         SIWKf2ijtW91Uttw2C1OI59ojRKF9ryFw8rVixagdxpZTimERrrCNasTGB5/stbhoari
-         +i3LXap+w1gTBsArj8PxA2/skOLPWE3VOP8nLSd6EST6CCsevy3JQvSmilf7ie9ynLMQ
-         /W/JIrlISKOvINrxvwJqf4wbqIFZh+EhwSBmHBfnY8+hi6Qv4U3RQFux+3WROQ6WpAv/
-         p0TVqRVUi+DcebHtKU9uGycN8/+n/kp1eD6FBxPvVC7DsDZVXYagIhXsUwGkOyIpqPPV
-         7Baw==
+        bh=T8Y9uplBuADagAyvawsaUNa9HXTJPGyWYVF88FZ4+As=;
+        b=qZuLfLa03ZGjHUp+mSTrXfUPgOUd6d2KkKGEoBnrKEKT6zDDDYEmG9aghc4CXfnQGZ
+         qHJIen0GKvy2T1wgzdrbXdOHRvrnhYP08YcLe9FCXVWkW0mmm3XKtIZnxTGAT9DbuQAt
+         NgMccFAo2o8ymX6Z9i8KbpTVPBKm+0ELS5dMDKfSljtd/x0tWfTtGuVUseJma/ePr4DA
+         vES22y2WZeGfab/gkWFAh9SFMi8qgWJkP9wHfb0yeWKSk4lOc43b8a5kB9tY6T9WQmuk
+         T6QMSbhNBIug8qZkcmj9t69LjPqjIfTUB1SwZ0YzwsFvYfPbqRFru/Lu8O1atY5AaXP0
+         +Q2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Uv11iay6UFn4yJKiuRstOy4WPPsctn3pPbReDqThk3Q=;
-        b=Q+CalaKMDIlAtLxpkbLI/GUScbfdRBjtI5Fz2lfGU+WY3qlDSup7N8gMNrKu9yL7rr
-         6OW9teGs2OqUWZD6T+9kVhAgny335D8ER3PUyn5Ljwnrl1AhqKPy1Dyj8+PDs0uZ2zK+
-         OyDk4dgVtVcK+ZxM1zKHE/HbI65PtRskaJHsVT4JaOa006ftQ6C7uhKvTPoNT0OmGWQN
-         YDuP1Ltk/o0dFiHFPa4rTR8APjy3qGuJwiio8lci/7O7Yb8AUK4CZPKEDiXxqajfkFPZ
-         YEv6AP+3wWaCC38GlydDIlN++haiHBv2GZP//o1eYcOXsrkxlu6Msz7qDY6xW3yyweys
-         dL4w==
-X-Gm-Message-State: APjAAAW+SJWjqnjhBiuXpgLi9MNSydAwHtJRc/tFd0V7hxiKr9jErhqj
-        IhCspFteA6Sx5/L+KEMMSoE=
-X-Google-Smtp-Source: APXvYqx/wS2ev9Ujce/PRf10xzsSqr2moZjX9x1IBr/b4cR0jjJrYFw4BFRr9McpP2lKE+D895IgUg==
-X-Received: by 2002:a17:90a:36a7:: with SMTP id t36mr4347365pjb.34.1564752855745;
-        Fri, 02 Aug 2019 06:34:15 -0700 (PDT)
+        bh=T8Y9uplBuADagAyvawsaUNa9HXTJPGyWYVF88FZ4+As=;
+        b=Tmnguyyv8CPban4RYK888O49cR8vmMpgRecrMVJFzFvWcz1p4k2RfuKZin2mML8hvu
+         6le3Mnt2slMO/3AT6eQ+moN338rWE05blV0BFjSJCVvXXjl/LX6sNxLbqFsO36C0S2LS
+         9CPs/W6EvL4v/dfd9l56GdCzGUBds29xbIiouRs+vYFMYGBF3+vqJzUE60lhXFrlwIgM
+         Q2MY28Ph/hXMjXRHoUZAt4a0J7bOO92DcPeZmGK7wQrkDomatm9b77tidxyMwv0ojBHp
+         phNzbm5VttQ4/cCNneyIpA7RBk+FadzZd4st5pmQP6v6hkJYPCpEjsj32AK2mR89gQsp
+         w0Lw==
+X-Gm-Message-State: APjAAAWxGG42WLLdtwrT0tmHAnzYIxbwUOiLtwL42s8WLLRfhAIorcuT
+        WamVLk9Vd8nU79vxAzmU9oE=
+X-Google-Smtp-Source: APXvYqwHCXHkwZ99ryFpG7gfKHaVnODQLsDoPHdfWyE/HSaQSIRVIYXzaiJLTr1myB8/pahX4P4DaA==
+X-Received: by 2002:a17:902:968c:: with SMTP id n12mr1759361plp.59.1564752962127;
+        Fri, 02 Aug 2019 06:36:02 -0700 (PDT)
 Received: from [192.168.200.229] (rrcs-76-80-14-36.west.biz.rr.com. [76.80.14.36])
-        by smtp.gmail.com with ESMTPSA id v12sm67199728pgr.86.2019.08.02.06.34.14
+        by smtp.gmail.com with ESMTPSA id o129sm52040543pfg.1.2019.08.02.06.36.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 06:34:14 -0700 (PDT)
-Subject: Re: [PATCH V2 0/5] blk-mq: wait until completed req's complete fn is
- run
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190724034843.10879-1-ming.lei@redhat.com>
+        Fri, 02 Aug 2019 06:36:01 -0700 (PDT)
+Subject: Re: [PATCH] block: Fix a comment in blk_cleanup_queue()
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Hannes Reinecke <hare@suse.com>,
+        James Smart <james.smart@broadcom.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>
+References: <20190801223955.141237-1-bvanassche@acm.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <040caa53-897e-287b-00be-7541bce88b7d@kernel.dk>
-Date:   Fri, 2 Aug 2019 07:34:13 -0600
+Message-ID: <6533b14a-d258-e9aa-e0b0-8c8380439879@kernel.dk>
+Date:   Fri, 2 Aug 2019 07:35:59 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724034843.10879-1-ming.lei@redhat.com>
+In-Reply-To: <20190801223955.141237-1-bvanassche@acm.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,20 +71,10 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/23/19 9:48 PM, Ming Lei wrote:
-> Hi,
-> 
-> blk-mq may schedule to call queue's complete function on remote CPU via
-> IPI, but never provide any way to synchronize the request's complete
-> fn.
-> 
-> In some driver's EH(such as NVMe), hardware queue's resource may be freed &
-> re-allocated. If the completed request's complete fn is run finally after the
-> hardware queue's resource is released, kernel crash will be triggered.
-> 
-> Fixes this issue by waitting until completed req's complete fn is run.
+On 8/1/19 4:39 PM, Bart Van Assche wrote:
+> Change a reference to the legacy block layer into a reference to blk-mq.
 
-Queued up for 5.4, thanks Ming.
+Applied, thanks.
 
 -- 
 Jens Axboe
