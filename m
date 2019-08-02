@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA2E87F9BE
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:30:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE2DC7F9AC
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394435AbfHBN3N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Aug 2019 09:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        id S1730313AbfHBN2U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Aug 2019 09:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394329AbfHBNZL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:11 -0400
+        id S2394525AbfHBN0P (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597AA21773;
-        Fri,  2 Aug 2019 13:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565EB21852;
+        Fri,  2 Aug 2019 13:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752310;
-        bh=q4d4x2lkfsO0GUeJ0SOejnd4a/QA+DlwwvcJ+8ajbZA=;
+        s=default; t=1564752375;
+        bh=23B8luakk6bxCcsYaOoRRvGgRBG7IONl/QGkKxDbqvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yLsSAG6evG1eeV6BSuSQOikvJX2HZfOmJt0e8Qj3BOUtPAgRdGNXef4Z5MRfobDn
-         KRDUu1EcrUmS9Vs12paGZTQ0nfu13Mfc48LuH4jO7cMUACHfdCxDvsXHn/p46nGJrH
-         c/rOoomc1shDIAUDw6vwGwQdC/IlvIBLh1v+JRyE=
+        b=q4k1GU1DH4aJNt5ax34tXvn2EuLMi+BVwVufL7iQ6vdNu6u3k86a/mM38oAlnvHho
+         F2T7capDVks/rgHeXHPUDxsYaCBq5exQCy0JteXpC+jvhTW+mMvp9UnFQNoCwca5Wb
+         tUgtmF2dDh6v0m6JWXPnCBPgb4rH0ztjW1+UhJuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
@@ -30,12 +30,12 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 21/30] drbd: dynamically allocate shash descriptor
-Date:   Fri,  2 Aug 2019 09:24:13 -0400
-Message-Id: <20190802132422.13963-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 15/22] drbd: dynamically allocate shash descriptor
+Date:   Fri,  2 Aug 2019 09:25:39 -0400
+Message-Id: <20190802132547.14517-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
-References: <20190802132422.13963-1-sashal@kernel.org>
+In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
+References: <20190802132547.14517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -70,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 1aad373da50e2..8fbdfaacc2226 100644
+index 83957a1e15ed7..8e8e4ccb128f3 100644
 --- a/drivers/block/drbd/drbd_receiver.c
 +++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5237,7 +5237,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+@@ -5297,7 +5297,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
  	unsigned int key_len;
  	char secret[SHARED_SECRET_MAX]; /* 64 byte */
  	unsigned int resp_size;
@@ -82,7 +82,7 @@ index 1aad373da50e2..8fbdfaacc2226 100644
  	struct packet_info pi;
  	struct net_conf *nc;
  	int err, rv;
-@@ -5250,6 +5250,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+@@ -5310,6 +5310,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
  	memcpy(secret, nc->shared_secret, key_len);
  	rcu_read_unlock();
  
@@ -96,7 +96,7 @@ index 1aad373da50e2..8fbdfaacc2226 100644
  	desc->tfm = connection->cram_hmac_tfm;
  	desc->flags = 0;
  
-@@ -5392,7 +5399,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+@@ -5452,7 +5459,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
  	kfree(peers_ch);
  	kfree(response);
  	kfree(right_response);
