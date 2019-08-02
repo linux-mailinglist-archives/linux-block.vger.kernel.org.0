@@ -2,64 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 142AF7EA79
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 04:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30E707EAD8
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 05:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfHBCx6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Aug 2019 22:53:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37843 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfHBCx5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Aug 2019 22:53:57 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so33069926plr.4
-        for <linux-block@vger.kernel.org>; Thu, 01 Aug 2019 19:53:57 -0700 (PDT)
+        id S1730941AbfHBD5p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Aug 2019 23:57:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42310 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbfHBD5o (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Aug 2019 23:57:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so35346270pgb.9
+        for <linux-block@vger.kernel.org>; Thu, 01 Aug 2019 20:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BvkY4aVBVPfmgyNrK1xBM8Fg1dpebDjbELoJMy6SXxI=;
-        b=fEkUMSb8f0VAD/xcGka5xQk7/E6jRDQogO9opCbYglQs6NjrKOX44pm2RKm+zwT1W4
-         Mqvow+9ZBifiKM8Bhf4C2nAVjnTcvkJIldn+kS5xB3NVmk5dGX++Bcr87eLoX0L1kdY4
-         hmNwPudcy8RJlOL+HDls7F+LHPUB84lhlq4edLEVljT8UyPFE2p46H63IiD+LZj70ZxQ
-         A2G/tonzfkrMXh9QYsx5TWYHDcz9QrLqibOfR6qAWA8O4om8CYrBPBL2jVzxRX+Z6Wzy
-         chtYca2cRhes4z2MK5kKL7JUi00FDWFvcjAi/bgpO6Exv2DUhZcxUELO7ikwGTT5tLL4
-         rfAg==
+        bh=hpB9ww8EWgTbKIu/vDphodNz7BlPJgOXt0hZXWNaRRE=;
+        b=rqxUXr2AbstRYuUvajB6bOEJxqpauI7Wev9AXFL/UefXKQKpwQ+KArinQC8fgu2O66
+         Mkc8+c5wld6D5fkMJkHCq5OS/fUdU5bjm9+phFV0lUCszmuaVj73vgmFIaWdpamWIEoh
+         80Vhrv/J7/wZgVK0syEdhhx6q0qm1BzzqiqHFVfLxmLkBs20i9T2zTwy86wezFMIbhF7
+         YyMhmUxhcbUcJSpBflL3ssq6dPdb42Y/yAdNEOFqW40wQH6x+xM6V2+IDO3JdURkEsny
+         jsi5AICQYL/2is5iaSsVlCwJdFxAwRYX7yJwyL4JaCU3/frnItwYPR8VjjQb6C6JDA+9
+         kv4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BvkY4aVBVPfmgyNrK1xBM8Fg1dpebDjbELoJMy6SXxI=;
-        b=ti460CU9//7P+KCUveocp68KSADtOhfxkcLQSfwe1RTyTQHkyDOF6XwSgaPBquZkNz
-         Fw2RNZQqD5NE00BjZMOaEXCp48IQ99MzEWzVGuh3b11jL9fDoi91PHHKhv+O3y6t/B2i
-         FBvMurHxAXn9bMqG7amwSZ3n5QyXkrStKSoG3OKNJkoRikBYMBNfss8KoDQUQcqc39gv
-         9NINkhzg6TqH1mp1WST2A1MKHOaMg5nea3qi6PJ5Zl/oMmbalhvynxwSS8XDqcDw+sZT
-         B4X0jxPoCzoJHqvdYeUTybBSn4u2NCJ2Sia8qVViUcjphvGpZ/po6QvQYuDAIpNWS2+O
-         OKLQ==
-X-Gm-Message-State: APjAAAWA0/WNmikH8jx0UYR2I6Ip6/dmB/Cty/8kW9kutxAvyivJvTsH
-        depvS5SrRcYQMWsXQdjfybQ=
-X-Google-Smtp-Source: APXvYqy8GNhUeLTLw/HJEURnHibq3O3UhDOV9vTMK2iJwmC7Cez4RItwvtxsxOo4Vsu7fmErZFtYVg==
-X-Received: by 2002:a17:902:7d86:: with SMTP id a6mr128929986plm.199.1564714074979;
-        Thu, 01 Aug 2019 19:47:54 -0700 (PDT)
-Received: from [192.168.200.229] (rrcs-76-80-14-36.west.biz.rr.com. [76.80.14.36])
-        by smtp.gmail.com with ESMTPSA id p2sm100756471pfb.118.2019.08.01.19.47.52
+        bh=hpB9ww8EWgTbKIu/vDphodNz7BlPJgOXt0hZXWNaRRE=;
+        b=BJx6OxxznRlO0D7UmAofvN2sI5mQm/gDyqv96DPD+xYmGHAo+8Q2QzIwVg+FPMgl8T
+         qLKrRyWlPk5mpbjZ7NWFdiZRkbzbqNxI06YrAY1PH8UYioFlcCX6jfwKhPQGYYXoO+b7
+         cuj+TFN/ETTWQbZ+/tFJz49YkTEaZafAdo+jnYYfwBfbOJ9hI33v3pJiksl9xTA56SHd
+         6k/g708+tTlVvCtW0foqts4IgcFH0ddkVXxPe/4KOdrrUmqJH3G5au10zDADEdGdmJ0z
+         bVoyQPmg1p4V8eCgsNzMvKLawCCvu2KEfWWT0maOlNZvmzJOGDOds5E1P0kIjmCEUcSf
+         Nijw==
+X-Gm-Message-State: APjAAAVJXWmzoswMG3t2qMmtGfBZ52WevUjlS4Pzfrw9bhGs7ItNK0LX
+        /U1E2IS+MF4Nb5Lnxa1XARk=
+X-Google-Smtp-Source: APXvYqzsAK2DkGhbGk/xxPqvstYt28+Pouzz3w4xrGwXAelEj9NooEyyB7/H+rwwOxlT6nCOJCyLhg==
+X-Received: by 2002:a63:7b4d:: with SMTP id k13mr119736915pgn.182.1564718264104;
+        Thu, 01 Aug 2019 20:57:44 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c081:1134::11cc? ([2620:10d:c090:180::1:d9b1])
+        by smtp.gmail.com with ESMTPSA id 131sm6216660pge.37.2019.08.01.20.57.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 19:47:53 -0700 (PDT)
-Subject: Re: [PATCH 1/1] s390/dasd: fix endless loop after read unit address
- configuration
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
-        borntraeger@de.ibm.com, gor@linux.ibm.com
-References: <20190801110630.82432-1-sth@linux.ibm.com>
- <20190801110630.82432-2-sth@linux.ibm.com>
+        Thu, 01 Aug 2019 20:57:42 -0700 (PDT)
+Subject: Re: [PATCH] block: Fix __blkdev_direct_IO()
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     Masato Suzuki <masato.suzuki@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+References: <20190801102151.7846-1-damien.lemoal@wdc.com>
+ <19115dcc-8a4b-8bb7-f8db-e2474196a5d0@kernel.dk>
+ <BYAPR04MB581699C381CE35C34DE45EBCE7D90@BYAPR04MB5816.namprd04.prod.outlook.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <20c4971d-68cd-b4d0-fb40-deef771602b1@kernel.dk>
-Date:   Thu, 1 Aug 2019 20:47:51 -0600
+Message-ID: <0bf921d3-162b-8e51-63fa-5da757ccbbd2@kernel.dk>
+Date:   Thu, 1 Aug 2019 21:57:39 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190801110630.82432-2-sth@linux.ibm.com>
+In-Reply-To: <BYAPR04MB581699C381CE35C34DE45EBCE7D90@BYAPR04MB5816.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -68,23 +68,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/1/19 5:06 AM, Stefan Haberland wrote:
-> After getting a storage server event that causes the DASD device driver
-> to update its unit address configuration during a device shutdown there is
-> the possibility of an endless loop in the device driver.
+On 8/1/19 7:05 PM, Damien Le Moal wrote:
+> On 2019/08/02 4:51, Jens Axboe wrote:
+>> On 8/1/19 4:21 AM, Damien Le Moal wrote:
+>>> The recent fix to properly handle IOCB_NOWAIT for async O_DIRECT IO
+>>> (patch 6a43074e2f46) introduced two problems with BIO fragment handling
+>>> for direct IOs:
+>>> 1) The dio size processed is claculated by incrementing the ret variable
+>>> by the size of the bio fragment issued for the dio. However, this size
+>>> is obtained directly from bio->bi_iter.bi_size AFTER the bio submission
+>>> which may result in referencing the bi_size value after the bio
+>>> completed, resulting in an incorrect value use.
+>>> 2) The ret variable is not incremented by the size of the last bio
+>>> fragment issued for the bio, leading to an invalid IO size being
+>>> returned to the user.
+>>>
+>>> Fix both problem by using dio->size (which is incremented before the bio
+>>> submission) to update the value of ret after bio submissions, including
+>>> for the last bio fragment issued.
+>>
+>> Thanks, applied. Do you have a test case? I ran this through the usual
+>> xfstests and block bits, but didn't catch anything.
+>>
 > 
-> In the system log there will be ongoing DASD error messages with RC: -19.
+> The problem was detected with our weekly RC test runs for zoned block
+> devices.  RC1 last week was OK, but failures happen on RC2 Monday. We
+> never hit a oops for the BIO reference after submission but we were
+> getting a lot of unaligned write errors for all types of zoned drive
+> tested (real SMR disks, tcmu-runner ZBC handler disks and nullblk in
+> zoned mode) using various applications (fio, dd, ...)
 > 
-> The reason is that the loop starting the ruac request only terminates when
-> the retry counter is decreased to 0. But in the sleep_on function there are
-> early exit paths that do not decrease the retry counter.
+> Masato isolated the problem to very large direct writes and could
+> reliably recreate the problem with a dd doing a single 8MB write to a
+> sequential zone.  With this case, blktrace showed that the 8MB write
+> was split into multiple BIOs (expected) and the whole 8MB being
+> cleanly written sequentially. But this was followed by a stream of
+> small 4K writes starting around the end of the 8MB chunk, but within
+> it, causing unaligned write errors (overwrite in sequential zones not
+> being possible).
 > 
-> Prevent an endless loop by handling those cases separately.
+> dd if=/dev/zero of=/dev/nullb0 bs=8M oflag=direct count=1
 > 
-> Remove the unnecessary do..while loop since the sleep_on function takes
-> care of retries by itself.
+> On a nullblk disk in zoned mode should recreate the problem, and
+> blktrace revealing that dd sees a short write for the 8M IO and issues
+> remaining as 4K requests.
+> 
+> Using a regular disk, this however does not generate any error at all,
+> which may explain why you did not see any problem. I think we can
+> create a blktest case for this using nullblk in zoned mode. Would you
+> like us to send one ?
 
-Applied for 5.3, thanks.
+Thanks for the detailed explanation. I think we should absolutely have a
+blktests case for this, even if O_DIRECT isn't strictly block level,
+it's definitely in a grey zone that I think we should cover.
 
 -- 
 Jens Axboe
