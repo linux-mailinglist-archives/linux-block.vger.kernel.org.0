@@ -2,61 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8B17FB03
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D187FB16
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392103AbfHBNgS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Aug 2019 09:36:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46687 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392140AbfHBNgR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Aug 2019 09:36:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so33637092plz.13
-        for <linux-block@vger.kernel.org>; Fri, 02 Aug 2019 06:36:16 -0700 (PDT)
+        id S2406016AbfHBNg7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Aug 2019 09:36:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41480 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404870AbfHBNg5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Aug 2019 09:36:57 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so25745975pgg.8
+        for <linux-block@vger.kernel.org>; Fri, 02 Aug 2019 06:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gcYPbkJCzR3yzBT4yRJWzMKrfncN/11MLd/vWc609SA=;
-        b=MeCTKCBpwnUhYR1D0XypWXIETuL3nvPB0hB7qo5Zvh385wB3kWovl1E3+rEbd8LtYE
-         wfp/tZBuARA6SXIlXeHEe62KHxK+BzU2FY+SLgNkYhNV9SLLtb0ydH7C5IrH5rRpq6BZ
-         kgGbXhMDwjLem3X5ZKRFvgjkpVLzM6xXJaawOVzw2RCLgOQd/WNHi+9dkShLXe00K2v2
-         6BamISfTkn7j4Puy7IQA9/4BVc2qRGaEwbWGrGtK86LaX0c9sWZA2il2/2PR/+VLP5/l
-         vRQ6q6zU/grRtJ+Aa2yD/gfyipwCd+lgyJzLuyqgk2R3OjuD3Vao4kmlAoev4AN9hn8S
-         k6JA==
+        bh=U3jPLfm3ofwMgO759g2VpsFRe3iCYn6Dwae+C5pZ458=;
+        b=c3ijjhIUXrIFVfz+16YNMWgA4OjuY0cHBqda1mZ4ngjXG4gV42jbIwwt8CT5Ejx1++
+         rD8qa2R4b7095x++1mVHj6mIevPE+vP/+ojHqYy/vRhRboqoXZiXLGxtjee69v0HhaWI
+         MKZOJepl89tsdrN1aRhTlPC1k49mxuly+VjY2f16KoX4ufM84AvcaKLvpRr98f00MAta
+         X9zsMtowviAooCF6V8983kDqBMG79kn6/ysfbny2VtjWbObrBY5Bm6GyLMycyzlfken0
+         EP4KXWqPdMvW3B7zcVLqzCn5ex2di59vGBrwwt64llCjmtZ6a/k/QuCxP70gWvtXY+zU
+         DgNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gcYPbkJCzR3yzBT4yRJWzMKrfncN/11MLd/vWc609SA=;
-        b=lmW7Yc7GqsJQU+1czBzGhtm35wPs8ywpT9/9j64sZwzxxKrMIXOxJqTgxy8IgGxSLY
-         +4vHy7Fsy3p8BUhXdzB2MCRf/QilwCVEikOeKnVb8OVeEUMgAxPWsxzh3R1XxPWvoxD4
-         om/qW6xrRODu9drKUvEIIhrZHGu+I9N6HtQZCVOQZThIH/Vtak1TFsLjjN0ZsFH3A393
-         e7M/c12Ky7NaOgAwvyeuSdvE2/UAjPjcosrE/ySyKF/9TfRLpnuLeIRkWr1oEzx01sUI
-         nGMoggKdhLwvoXeWlVrp8iH9uj1RuDgG6a1GWxFrv3Y2hgOzzeaGf6Pu3ztM3qLVFX3v
-         RUnw==
-X-Gm-Message-State: APjAAAXcfQqXL/Jl1M9o4ULk4sksRjl/ARFu/3seE+YRCUza7jyQbyHj
-        YxShvrE/w5G0NXlUviJpAS0=
-X-Google-Smtp-Source: APXvYqwYyfEFUbsPd38C5HAIn/fZbDZU4LEDTE6/5z9sIJNniaAV1F1ahC+kPgUlIwTW5XHTGXGMfw==
-X-Received: by 2002:a17:902:2aea:: with SMTP id j97mr118465614plb.153.1564752976447;
-        Fri, 02 Aug 2019 06:36:16 -0700 (PDT)
+        bh=U3jPLfm3ofwMgO759g2VpsFRe3iCYn6Dwae+C5pZ458=;
+        b=pJdI3tiZSZx0nE2f8GlTKfV8pspr+AdsXUMEDgiKz/SMtQ1wieci19dgUMyHBvQs8O
+         O8m1v9CJui7a2AQCKNYtjAciHvY7XE0ZEgMvY7JzNy/1/dXQdpvjK7e9//GhuSJid7sl
+         KJGzkrYMX+N9oX+Xs7V5Z6i7qNWOOENFLSc716abbBG21Hd5TJE4pZ5YpBnAEU6SjeSS
+         m3RkojD0flZE2iRjXavYQC/cjuM/13hDi3OkNc4wp6jLxo2HZf1FKsqqIeOKORT8JVwG
+         CBo7KR3GnRvMBKe2FCtQ+jawant5cRFvXu1KyYdn1s2t7KKJUkKaOjCNmMsiHogp50WB
+         dgFA==
+X-Gm-Message-State: APjAAAWRemME4jObwQe4c72P2XJs489jyCrcvquzX/t0H1yfyNIUnXYZ
+        gcJHjWcVhj2EGZ0OPUE9D+8=
+X-Google-Smtp-Source: APXvYqx024JtT6h+CIqiXxuy/WdmCLbvFCiN3AE5RgAojmeLIymyEWklLgaBdPFCGqrszPi4ygvAFQ==
+X-Received: by 2002:a65:5082:: with SMTP id r2mr97758250pgp.170.1564753016781;
+        Fri, 02 Aug 2019 06:36:56 -0700 (PDT)
 Received: from [192.168.200.229] (rrcs-76-80-14-36.west.biz.rr.com. [76.80.14.36])
-        by smtp.gmail.com with ESMTPSA id r61sm8309513pjb.7.2019.08.02.06.36.15
+        by smtp.gmail.com with ESMTPSA id f8sm42308919pgd.58.2019.08.02.06.36.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 06:36:15 -0700 (PDT)
-Subject: Re: [PATCH] block: Fix spelling in the header above blkg_lookup()
+        Fri, 02 Aug 2019 06:36:56 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] Optimize bio splitting
 To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>
-References: <20190801223907.141042-1-bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20190801225044.143478-1-bvanassche@acm.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8f12fb9e-71fc-7677-9ac2-815937b1d751@kernel.dk>
-Date:   Fri, 2 Aug 2019 07:36:14 -0600
+Message-ID: <d3e2bb78-138b-0d35-93fb-6e9d5b0ed0f2@kernel.dk>
+Date:   Fri, 2 Aug 2019 07:36:54 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190801223907.141042-1-bvanassche@acm.org>
+In-Reply-To: <20190801225044.143478-1-bvanassche@acm.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,10 +64,18 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/1/19 4:39 PM, Bart Van Assche wrote:
-> See also commit 8f4236d9008b ("block: remove QUEUE_FLAG_BYPASS and ->bypass") # v5.0.
+On 8/1/19 4:50 PM, Bart Van Assche wrote:
+> Hi Jens,
+> 
+> This patch series improves bio splitting in several ways:
+> - Reduce the number of CPU cycles spent in bio splitting code.
+> - Make the bio splittig code easier to read.
+> - Optimize alignment of split bios.
+> 
+> Please consider this patch series for kernel v5.4.
 
 Applied, thanks.
+
 
 -- 
 Jens Axboe
