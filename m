@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 942237F876
-	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E667FAFB
+	for <lists+linux-block@lfdr.de>; Fri,  2 Aug 2019 15:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393291AbfHBNUK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Aug 2019 09:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393281AbfHBNUJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S2393284AbfHBNUJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Fri, 2 Aug 2019 09:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393280AbfHBNUH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D19218A3;
-        Fri,  2 Aug 2019 13:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711662087C;
+        Fri,  2 Aug 2019 13:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752008;
-        bh=ritnmQKeXCNUkl00pdK+bMvgCPeyD/nYb7rU9HK3wAE=;
+        s=default; t=1564752006;
+        bh=rL23VPL5LiMMzW9WGs9qMwcc3Mu20T2X1ST1LCulyRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvXV1hSIK+Ae3Gj1VvZ8kwBVeWWfKa+aEfIUNKxDJN5vYfnkuIn+Q7Tegab0RUPxO
-         LssHxI/JAZf7sDnhL7ldvHNBZBVVEpOgepEHn3BN1S8HNxPFP0fDhQlY9FEWiCY/2j
-         rGgVlurPZTj0S2uDxEp6d6x3dxZVoHILsXLHjow4=
+        b=07nHCnBRznje0SLb5zH9zB5lwXFnmx6LzHynYrYO6E75dO6Bs+VtXevx5jwjowNa4
+         OZd9cLkoJKZrOctxVPdQ8VLWEgkE8OZVhMHTBnxztxeVT0w2ZiRhM4rTMLqlirXBJS
+         ugUnSZsHqVUaihXCNJpf5uLzTjzgnxrNTLiUbiqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Josef Bacik <josef@toxicpanda.com>,
         Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/76] rq-qos: use a mb for got_token
-Date:   Fri,  2 Aug 2019 09:18:48 -0400
-Message-Id: <20190802131951.11600-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 12/76] rq-qos: don't reset has_sleepers on spurious wakeups
+Date:   Fri,  2 Aug 2019 09:18:46 -0400
+Message-Id: <20190802131951.11600-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -45,49 +45,37 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit ac38297f7038cd5b80d66f8809c7bbf5b70031f3 ]
+[ Upstream commit 64e7ea875ef63b2801be7954cf7257d1bfccc266 ]
 
-Oleg noticed that our checking of data.got_token is unsafe in the
-cleanup case, and should really use a memory barrier.  Use a wmb on the
-write side, and a rmb() on the read side.  We don't need one in the main
-loop since we're saved by set_current_state().
+If we raced with somebody else getting an inflight counter we could fail
+to get an inflight counter with no sleepers on the list, and thus need
+to go to sleep.  In this case has_sleepers should be true because we are
+now relying on the waker to get our inflight counter for us.  And in the
+case of spurious wakeups we'd still want this to be the case.  So set
+has_sleepers to true if we went to sleep to make sure we're woken up the
+proper way.
 
 Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-rq-qos.c | 3 +++
- 1 file changed, 3 insertions(+)
+ block/blk-rq-qos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index e3ab75e4df9ea..06d024204f504 100644
+index 659ccb8b693fa..e5d75280b431e 100644
 --- a/block/blk-rq-qos.c
 +++ b/block/blk-rq-qos.c
-@@ -202,6 +202,7 @@ static int rq_qos_wake_function(struct wait_queue_entry *curr,
- 		return -1;
- 
- 	data->got_token = true;
-+	smp_wmb();
- 	list_del_init(&curr->entry);
- 	wake_up_process(data->task);
- 	return 1;
-@@ -245,6 +246,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 
- 	prepare_to_wait_exclusive(&rqw->wait, &data.wq, TASK_UNINTERRUPTIBLE);
- 	do {
-+		/* The memory barrier in set_task_state saves us here. */
- 		if (data.got_token)
+@@ -260,7 +260,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
  			break;
- 		if (!has_sleeper && acquire_inflight_cb(rqw, private_data)) {
-@@ -255,6 +257,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 			 * which means we now have two. Put our local token
- 			 * and wake anyone else potentially waiting for one.
- 			 */
-+			smp_rmb();
- 			if (data.got_token)
- 				cleanup_cb(rqw, private_data);
- 			break;
+ 		}
+ 		io_schedule();
+-		has_sleeper = false;
++		has_sleeper = true;
+ 	} while (1);
+ 	finish_wait(&rqw->wait, &data.wq);
+ }
 -- 
 2.20.1
 
