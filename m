@@ -2,63 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B7E80477
-	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2019 07:01:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32B09804F1
+	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2019 09:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfHCFBk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 3 Aug 2019 01:01:40 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:43902 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHCFBk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 3 Aug 2019 01:01:40 -0400
-Received: by mail-io1-f54.google.com with SMTP id k20so3505669ios.10
-        for <linux-block@vger.kernel.org>; Fri, 02 Aug 2019 22:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=csquare-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=/vk/77LSDoOzoE1ULKx1uk+L67ix7QMx5QSiEUP86do=;
-        b=SgyYIeatgQLyy3cF4iGKgPhKHYZKVidyUYUEvSO6R6SAA+CI31RqCoLeBJq6V/hHir
-         LIdYGJFHExkRd9ciS0bNNyh/D7pa6Oe3Lvipv0vq6h4TNKQeSjn5bWoQHO8wi1iBu3uL
-         z2ZD67MIDuFWoOTk0TUbti/5cgTVfMA5cJcUE692a+FqaeeK6ZH5ON2ZXMkUZtQeAv6c
-         OJBUnwB2/itVaeSjaJfsCDXFDYbeysT2jF/mBa5m7Ibq1SkMhHvzvm/LXDnLVqBUG+LH
-         kRvqVfSA0x/hzcYXhSS8l1siEHzMfz5YGSVeqSOocpKP9j8FBQ1PYd5osMGaEmq2Cv6B
-         xdJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=/vk/77LSDoOzoE1ULKx1uk+L67ix7QMx5QSiEUP86do=;
-        b=EZ4xDc1/d8McQ7wOU/f/MsXXRElsLyq5Bb11w4NOBeTcCT2RyppzgF/tCS2x5UBuXv
-         URqCz3lw7EF3QceC7wX6BgOnjglv2MUpISNCp0NjhyhQE5T+a2zPJMmYGdNZa8tLKgVe
-         K4Q/8U8v4Fng+Fr9sinopHPEiKmDR5AxaGGyL7P2MaFfg2AqfvSd8+9aFLkJZPXrejfZ
-         l4sGgi8ONdLTmEfKuGE8cbBwTGQ0KG9wvU2eU/LZR9a+5+ldm55Uo3yOtuGDc8feHVNI
-         Nhnxxy4mUpYwQwzym8rI/IahP3nkQYh7E5lju+slwk9gndadrgg1tgBBn9a3Ftlxf87A
-         pbhQ==
-X-Gm-Message-State: APjAAAWVqbOYKBGsgo5pwRgpt29XZigDwDopUZDw8HPRDgVZyQskti8n
-        95RDGsDWz1nCES4Tt9YZcAiUmZq2GaCYN4+mYYbJtios
-X-Google-Smtp-Source: APXvYqyTWPhaI0/tFkENa12WEGl3Jwbecm83cHbvt/2xahLMVSl2Orzbn16UafknCDMMcv6em579/WYKsXxEmIdcIK8=
-X-Received: by 2002:a5d:9f4a:: with SMTP id u10mr2979784iot.243.1564808499618;
- Fri, 02 Aug 2019 22:01:39 -0700 (PDT)
+        id S1727101AbfHCHGv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 3 Aug 2019 03:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbfHCHGv (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 3 Aug 2019 03:06:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D01206A2;
+        Sat,  3 Aug 2019 07:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564816009;
+        bh=pPLKovyN1NMpp946XJreXv1Y0yg1S4P9Y162ukSMn64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rlojk96gVoiyivb+U7yrIkDTuHtioqnhmcEmMjAk1MQVJmXSmgcGRpi/2JLag+Dd6
+         M19hr//PiOu9iNAJPJwAfgv2wtT5dx2nyCeRHoSIIHS1qKxvoiJQ2X4AR13zqgfnZk
+         KxaPAYdBHbY01Ff9SDG1UhnB5NnA5pYpWqC1XkA0=
+Date:   Sat, 3 Aug 2019 09:06:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        sparclinux@vger.kernel.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, rds-devel@oss.oracle.com,
+        linux-rdma@vger.kernel.org, Suniel Mahesh <sunil.m@techveda.org>,
+        x86@kernel.org, amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mihaela Muraru <mihaela.muraru21@gmail.com>,
+        xen-devel@lists.xenproject.org, devel@lists.orangefs.org,
+        linux-media@vger.kernel.org,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        intel-gfx@lists.freedesktop.org,
+        Kishore KP <kishore.p@techveda.org>,
+        linux-block@vger.kernel.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sidong Yang <realwakka@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 15/34] staging/vc04_services: convert put_page() to
+ put_user_page*()
+Message-ID: <20190803070621.GA2508@kroah.com>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802022005.5117-16-jhubbard@nvidia.com>
 MIME-Version: 1.0
-From:   John Sully <john@csquare.ca>
-Date:   Sat, 3 Aug 2019 01:01:28 -0400
-Message-ID: <CACVf4-7Y5w_AXXruXV37ng_9ZbRY=4TMoq91UYGBRaEAcnS+LQ@mail.gmail.com>
-Subject: Invalidating Caches When a Block Device Changes
-To:     linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802022005.5117-16-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+On Thu, Aug 01, 2019 at 07:19:46PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mihaela Muraru <mihaela.muraru21@gmail.com>
+> Cc: Suniel Mahesh <sunil.m@techveda.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Sidong Yang <realwakka@gmail.com>
+> Cc: Kishore KP <kishore.p@techveda.org>
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devel@driverdev.osuosl.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  .../vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
 
-I'm writing a block device driver for a device who's data might change
-without the kernel performing any specific writes.  I'm looking for a
-way to inform any upstream caches that the data it holds is no longer
-valid and must be discarded.
-
-I've found APIs for flushing caches *to* the block device, but none
-that makes sense to call within the context of the block device driver
-itself when it has learned the underlying device itself has changed.
-
-Can anyone point me to the proper APIs?
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
