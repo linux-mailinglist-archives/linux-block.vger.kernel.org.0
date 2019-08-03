@@ -2,90 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D928A804E4
-	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2019 09:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2E880551
+	for <lists+linux-block@lfdr.de>; Sat,  3 Aug 2019 10:45:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfHCHGy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 3 Aug 2019 03:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
+        id S2387728AbfHCIpy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 3 Aug 2019 04:45:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59094 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfHCHGx (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 3 Aug 2019 03:06:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387692AbfHCIpy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 3 Aug 2019 04:45:54 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756402173E;
-        Sat,  3 Aug 2019 07:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564816011;
-        bh=fAm+JJVlEEdZsZEnQU6VmG7AlISaD9fVfUjXl/e9MGA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EvBQbY6tUIAsZP4MFxGmLRqZJjlnz59fmNMbvE0jfno1B+JXE+PNryIyzSAnXbr8N
-         +lgw4Y3y5zL8NJKrLYjFHjBcr6/6qlTB3yc6rbylv5fVS7aSSqYd41B1eBmWwcN4jJ
-         e48QvmU3i/Btia6YyxF5rYYxbA6/qQXbJH8nGzR0=
-Date:   Sat, 3 Aug 2019 09:06:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fbdev@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, rds-devel@oss.oracle.com,
-        linux-rdma@vger.kernel.org, x86@kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, xen-devel@lists.xenproject.org,
-        devel@lists.orangefs.org, linux-media@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, linux-block@vger.kernel.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Frank Haverkamp <haver@linux.vnet.ibm.com>
-Subject: Re: [PATCH 10/34] genwqe: convert put_page() to put_user_page*()
-Message-ID: <20190803070640.GB2508@kroah.com>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-11-jhubbard@nvidia.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id C4EFB307D970;
+        Sat,  3 Aug 2019 08:45:53 +0000 (UTC)
+Received: from localhost (ovpn-116-62.ams2.redhat.com [10.36.116.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E679E608C2;
+        Sat,  3 Aug 2019 08:45:50 +0000 (UTC)
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        Aarushi Mehta <mehta.aaru20@gmail.com>,
+        linux-block@vger.kernel.org, Julia Suvorova <jusual@mail.ru>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [PATCH liburing 0/4] spec: rpmlint fixes in preparation for Fedora packaging
+Date:   Sat,  3 Aug 2019 09:45:22 +0100
+Message-Id: <20190803084526.3837-1-stefanha@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802022005.5117-11-jhubbard@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Sat, 03 Aug 2019 08:45:54 +0000 (UTC)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 07:19:41PM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> This changes the release code slightly, because each page slot in the
-> page_list[] array is no longer checked for NULL. However, that check
-> was wrong anyway, because the get_user_pages() pattern of usage here
-> never allowed for NULL entries within a range of pinned pages.
-> 
-> Cc: Frank Haverkamp <haver@linux.vnet.ibm.com>
-> Cc: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/misc/genwqe/card_utils.c | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
+This series addresses the remaining rpm issues that I'm aware of.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Jens: Once the patches are merged and you publish a 0.1 release tag I could
+roll the first liburing rpm for Fedora.  liburing itself is in good shape for
+wider consumption but maybe it makes sense to wait for kernel issues to settle.
+There are qemu-iotests failures that are probably kernel bugs (hopefully known
+ones!) and will be investigated soon.
+
+Stefan Hajnoczi (4):
+  COPYING: update to latest LGPL v2.1 text
+  spec: use Fedora "LGPLv2+" license identifier
+  spec: add URL tag
+  spec: fix <liburing/*.h> permissions
+
+ COPYING       | 79 +++++++++++++++++++++------------------------------
+ liburing.spec |  5 ++--
+ 2 files changed, 36 insertions(+), 48 deletions(-)
+
+-- 
+2.21.0
+
