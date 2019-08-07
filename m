@@ -2,87 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F30B78546B
-	for <lists+linux-block@lfdr.de>; Wed,  7 Aug 2019 22:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E57885481
+	for <lists+linux-block@lfdr.de>; Wed,  7 Aug 2019 22:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388218AbfHGUSv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Aug 2019 16:18:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43094 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387985AbfHGUSv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Aug 2019 16:18:51 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j11so9053347otp.10
-        for <linux-block@vger.kernel.org>; Wed, 07 Aug 2019 13:18:51 -0700 (PDT)
+        id S2389419AbfHGUeS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Aug 2019 16:34:18 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34763 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389420AbfHGUeR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Aug 2019 16:34:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so20638986qtq.1;
+        Wed, 07 Aug 2019 13:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YtTOyOh7n4OSBhFF5Ofb8nIUnCfl2LFnKWkhzBBAffc=;
-        b=QyscVgQMwss6LhQyj1lFVqmTQAro7UK8NZEW+A49jcEG+eroRD7i/8237PF/XE9R0N
-         GYHs+n3zneJFG2kOOYx5xLOUTV4fCfchRIN2RJBDybmP7Az0o7gBKt+NXpIMUj5alBag
-         CDisu2pvaABvIyggVxp/CtFAsu30XOZPR5E4VTDiS4JwjIoHmK8NqgwDVu2InmaAXKsD
-         FsK67bJVExI44ndjDTuQXhJ0wgKD+U3e+mWEurQBwrL5dDEGhgfzbZ9Cg5c/bhYwxvkj
-         Cr8zWvSMYzP3tGOo601Rns+yLiQhLrz7f2kxwXCdnQEwqAW3CHICJJAgPZeDnx6qvtWd
-         SEsQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IC+13V8Mtk7y8HC7bnHIWtqIcy1I5HJyllIeTOClBTQ=;
+        b=gA2Gxo3VVUUiZocJ2EWD7FWO7YBQ8ft67UkLPK3AQg2nN2DoElFq/GksGEaLO+Xxs7
+         yBG49lmFjj6YiLTjAaIGIQ41gk0yijO+ArJDE8dr0MOM8hPWXP6zZJu4zTmZ5U0pgrQi
+         HknnD6KZRyK/MCSoGtYJTTYotU0YW8UoTRgeuRn+pC5MZtc7pzuYv6kj3xs5K4Iq01gZ
+         86PLHXMC6iInXVPSj6NydUiB8ADQvz4JihwAriUqmR/FNZBo1PmtDfw6VQ/NCCRIFgf2
+         ZxOvpizlKlGxc62Gw+giLRS40hco+rKNH4/JXvGmrSXjrc5JQOrAHKmp7zbC6NOQ0jDG
+         Tr4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YtTOyOh7n4OSBhFF5Ofb8nIUnCfl2LFnKWkhzBBAffc=;
-        b=EAU1v7KV0IS5NzTCxwcQ2AcwRebLNQQVfk8+SZntLm9T+YNWUGWa9R+dgDxsmCGXGj
-         UzCIT/3jQrVHjNcYrWMJfPFl0YO3JUNqc+TGmi8/O4rB+GUianS/nu122mW4zFLU5S0I
-         Mb/F4A+3/60CKUzJc88LYiKCgHwQwBym16KvYDlPgM52ezuL6RC9us73GJGVPRcyMKod
-         Dx+ctB51mtZiz6WsBTz1KoVC+Nf4/qRFv2XgWx2HrjzORDxgAvJ+zdfDmNyWdveo2BSx
-         no2aiZMoxymOa5IEPL8v/TSXe26cKk0KaH9XWWt7yCuUNBbI03YU0GIkh0hf1OEMm81D
-         pNiQ==
-X-Gm-Message-State: APjAAAUWw6sJihimmpBNt1CBZbQOzP7FiOe4LxnQzBwqOFvH8b0gtO0V
-        pGILt0qGvNN19auLhU2fDYd8PBFUFJR/qVpV/nk=
-X-Google-Smtp-Source: APXvYqzI3rTp+c5fdrmSLVwDb/fNoSD0s4JtDkqsz1I0a2G4rQFM2m35K4d2Ox2fhuRPnjmPZa+ORKa5C2PRRSAklkA=
-X-Received: by 2002:a6b:f910:: with SMTP id j16mr11265479iog.256.1565209130751;
- Wed, 07 Aug 2019 13:18:50 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IC+13V8Mtk7y8HC7bnHIWtqIcy1I5HJyllIeTOClBTQ=;
+        b=WErBU2JVTnivnYok6uEqcbprxPiFogqS8RZo0a6+HyUTYt7ZZbdRdp7DjriLbZP9FM
+         hTLPCbPlWurgcPH4UQuOQVd2alH63aQta6EdWKthwa2RIhaphAjoRJkpf0RitAeerEu7
+         R8FrxQiJAG+JVEsqTEiT4FWHMonNIVX25Kb0S9/tEY3j2XV8pIGgidJzitJ6ON5L/jpH
+         2an+loySG7FaJuwm178kc5UC8ikuz9MwTgX2KlIg3W3rUxG9MBiO8ApECiYWNEeEoBQ9
+         dccOpuRq7hgYCUicWe5foiDPzzXPOYlaa/nDC/watiAdM65cFzNxh7YQkhBcv7EqTyuX
+         zq2Q==
+X-Gm-Message-State: APjAAAUW0fFX/ofCROSzuf0qY51pIgPG2w36AH2fe9W72nVeUmLyVeIJ
+        biKp/9TJmZm8lmf3W0Q0zO0=
+X-Google-Smtp-Source: APXvYqzu1jOsh0kIjF9dIWwpYxRpLf5Yj5gvt8IrWIJbtljX2Px5uBUwWjZwjoub/a03bW3NQndjfA==
+X-Received: by 2002:ac8:45d2:: with SMTP id e18mr9931619qto.258.1565210056622;
+        Wed, 07 Aug 2019 13:34:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:49ab])
+        by smtp.gmail.com with ESMTPSA id t11sm6284977qkt.85.2019.08.07.13.34.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 13:34:15 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 13:34:14 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-ID: <20190807203414.GA554060@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-3-tj@kernel.org>
+ <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
+ <20190807183151.GM136335@devbig004.ftw2.facebook.com>
+ <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
 MIME-Version: 1.0
-Received: by 2002:a05:6638:58e:0:0:0:0 with HTTP; Wed, 7 Aug 2019 13:18:49
- -0700 (PDT)
-Reply-To: ubanivincent@yandex.com
-From:   Ubani Vincent <sportsjooh3@gmail.com>
-Date:   Wed, 7 Aug 2019 20:18:49 +0000
-Message-ID: <CAA4EzvC2VSxrDXG_TFa9AFTSdiagMdXTzDy6-GkkqvDsP-8H-Q@mail.gmail.com>
-Subject: I HOPE TO HEAR FROM YOU SOON
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With due respect,
+Hello,
 
-Good day and compliments, I know this letter will definitely come to
-you as a surprise, I am (Mr.Ubani Vincent) the Head of file Department
-in African development bank. In my department we discovered an
-abandoned sum of 15 million USA dollars. In an account that belongs to
-one of our foreign customer who died along with all his family in the
-Asia Earth Quake Disaster and all the relation died along side with
-him at the Earth Quake Disaster leaving nobody behind for the claim. I
-want you stand as next of kin to the deceased. I agree that 40% of
-this money will be for you as foreign partner, in respect to the
-provision of a foreign account and 60% would be for me. Upon receipt
-of your reply, I will send to you by email the text of the
-application. I will not fail to bring to your notice that this
-transaction is hitch free and that you should not entertain any atom
-of fear as all required arrangements have been made for the transfer.
+On Wed, Aug 07, 2019 at 12:00:37PM -0700, Andrew Morton wrote:
+> OK, but why is recycling a problem?  For example, file descriptors
+> recycle as aggressively as is possible, and that doesn't cause any
+> trouble.  Presumably recycling is a problem with cgroups because of
+> some sort of stale reference problem?
 
-I am waiting for your immediate response as you receive this mail.
-Yours faithfully,
-Mr. Ubani Vincent.
+Oh, because there are use cases where the consumers are detached from
+the lifetime synchronization.  In this example, the benefit of using
+IDs is that memcgs don't need to pin foreign bdi_wb's and just look up
+and verify when it wants to flush them.  If we use pointers, we have
+to pin the objects which then requires either shooting down those
+references with timers or somehow doing reverse lookup to shoot them
+down when bdi_wb is taken offline.  If we use IDs which can be
+recycling aggressively, there can be pathological cases where remote
+flushes are issued on the wrong target possibly repeatedly, which may
+or may not be a real problem.
 
-FILL THIS FORM BELLOW AND RESEND IT TO ME THROUGH THIS
-EMAIL:(ubanivincent@yandex.com).
-1) Your Full Name ....
-2) Your Age .....
-3) Your Cell Phone Number ...
-4) Your Country .......
-5) Your Occupation ....
-6) Sex ............
+For cgroup ID, the problem is more immediate.  We give out the IDs to
+userspace and there is no way to shoot those references down when the
+cgroup goes away and the ID gets recycled, so when the user comes back
+and asks "I want to attach this bpf program to the cgroup identified
+with this ID", we can end up attaching it to the wrong cgroup if we
+recycle IDs.  cgroup ended up with two separate IDs, which is kinda
+dumb.
 
-You have to keep everything secret as to enable the transfer to move
-very smoothly in to the account you will prove to the bank.
+tl;dr is that it's either cumbersome or impossible to synchronize the
+users of these IDs, so if they get recycled, they end up identifying
+the wrong thing.
+
+Thanks.
+
+-- 
+tejun
