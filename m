@@ -2,72 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 563D28535D
-	for <lists+linux-block@lfdr.de>; Wed,  7 Aug 2019 21:01:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F30B78546B
+	for <lists+linux-block@lfdr.de>; Wed,  7 Aug 2019 22:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfHGTAk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Aug 2019 15:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGTAk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:00:40 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8554B21EF2;
-        Wed,  7 Aug 2019 19:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565204438;
-        bh=H8GQL47oZOjHGMHt6mc7yPh3DyXvvruf/VfI2fdq1XA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YlgkEarDGN0iPkWPaV/pbw5ncD7rQmx4yJoKPQ9nlm4ouA1+CTa9RxYW+98Vy24gI
-         qJ6E09hPzeZhxEQ6ywpXQDT2SLGtRgRNv3zVoSJY1Fz2VgEHGrOKuc89UnlAoTAMXS
-         uihlSf1Qg+aa309BG0I7DD0CeJ2fpdTb3Y3u8rXk=
-Date:   Wed, 7 Aug 2019 12:00:37 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
-Subject: Re: [PATCH 2/4] bdi: Add bdi->id
-Message-Id: <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
-In-Reply-To: <20190807183151.GM136335@devbig004.ftw2.facebook.com>
-References: <20190803140155.181190-1-tj@kernel.org>
-        <20190803140155.181190-3-tj@kernel.org>
-        <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
-        <20190807183151.GM136335@devbig004.ftw2.facebook.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S2388218AbfHGUSv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Aug 2019 16:18:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43094 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387985AbfHGUSv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Aug 2019 16:18:51 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j11so9053347otp.10
+        for <linux-block@vger.kernel.org>; Wed, 07 Aug 2019 13:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=YtTOyOh7n4OSBhFF5Ofb8nIUnCfl2LFnKWkhzBBAffc=;
+        b=QyscVgQMwss6LhQyj1lFVqmTQAro7UK8NZEW+A49jcEG+eroRD7i/8237PF/XE9R0N
+         GYHs+n3zneJFG2kOOYx5xLOUTV4fCfchRIN2RJBDybmP7Az0o7gBKt+NXpIMUj5alBag
+         CDisu2pvaABvIyggVxp/CtFAsu30XOZPR5E4VTDiS4JwjIoHmK8NqgwDVu2InmaAXKsD
+         FsK67bJVExI44ndjDTuQXhJ0wgKD+U3e+mWEurQBwrL5dDEGhgfzbZ9Cg5c/bhYwxvkj
+         Cr8zWvSMYzP3tGOo601Rns+yLiQhLrz7f2kxwXCdnQEwqAW3CHICJJAgPZeDnx6qvtWd
+         SEsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=YtTOyOh7n4OSBhFF5Ofb8nIUnCfl2LFnKWkhzBBAffc=;
+        b=EAU1v7KV0IS5NzTCxwcQ2AcwRebLNQQVfk8+SZntLm9T+YNWUGWa9R+dgDxsmCGXGj
+         UzCIT/3jQrVHjNcYrWMJfPFl0YO3JUNqc+TGmi8/O4rB+GUianS/nu122mW4zFLU5S0I
+         Mb/F4A+3/60CKUzJc88LYiKCgHwQwBym16KvYDlPgM52ezuL6RC9us73GJGVPRcyMKod
+         Dx+ctB51mtZiz6WsBTz1KoVC+Nf4/qRFv2XgWx2HrjzORDxgAvJ+zdfDmNyWdveo2BSx
+         no2aiZMoxymOa5IEPL8v/TSXe26cKk0KaH9XWWt7yCuUNBbI03YU0GIkh0hf1OEMm81D
+         pNiQ==
+X-Gm-Message-State: APjAAAUWw6sJihimmpBNt1CBZbQOzP7FiOe4LxnQzBwqOFvH8b0gtO0V
+        pGILt0qGvNN19auLhU2fDYd8PBFUFJR/qVpV/nk=
+X-Google-Smtp-Source: APXvYqzI3rTp+c5fdrmSLVwDb/fNoSD0s4JtDkqsz1I0a2G4rQFM2m35K4d2Ox2fhuRPnjmPZa+ORKa5C2PRRSAklkA=
+X-Received: by 2002:a6b:f910:: with SMTP id j16mr11265479iog.256.1565209130751;
+ Wed, 07 Aug 2019 13:18:50 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:6638:58e:0:0:0:0 with HTTP; Wed, 7 Aug 2019 13:18:49
+ -0700 (PDT)
+Reply-To: ubanivincent@yandex.com
+From:   Ubani Vincent <sportsjooh3@gmail.com>
+Date:   Wed, 7 Aug 2019 20:18:49 +0000
+Message-ID: <CAA4EzvC2VSxrDXG_TFa9AFTSdiagMdXTzDy6-GkkqvDsP-8H-Q@mail.gmail.com>
+Subject: I HOPE TO HEAR FROM YOU SOON
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 7 Aug 2019 11:31:51 -0700 Tejun Heo <tj@kernel.org> wrote:
+With due respect,
 
-> Hello,
-> 
-> On Tue, Aug 06, 2019 at 04:01:02PM -0700, Andrew Morton wrote:
-> > On Sat,  3 Aug 2019 07:01:53 -0700 Tejun Heo <tj@kernel.org> wrote:
-> > > There currently is no way to universally identify and lookup a bdi
-> > > without holding a reference and pointer to it.  This patch adds an
-> > > non-recycling bdi->id and implements bdi_get_by_id() which looks up
-> > > bdis by their ids.  This will be used by memcg foreign inode flushing.
-> > 
-> > Why is the id non-recycling?  Presumably to address some
-> > lifetime/lookup issues, but what are they?
-> 
-> The ID by itself is used to point to the bdi from cgroup and idr
-> recycles really aggressively.  Combined with, for example, loop device
-> based containers, stale pointing can become pretty common.  We're
-> having similar issues with cgroup IDs.
+Good day and compliments, I know this letter will definitely come to
+you as a surprise, I am (Mr.Ubani Vincent) the Head of file Department
+in African development bank. In my department we discovered an
+abandoned sum of 15 million USA dollars. In an account that belongs to
+one of our foreign customer who died along with all his family in the
+Asia Earth Quake Disaster and all the relation died along side with
+him at the Earth Quake Disaster leaving nobody behind for the claim. I
+want you stand as next of kin to the deceased. I agree that 40% of
+this money will be for you as foreign partner, in respect to the
+provision of a foreign account and 60% would be for me. Upon receipt
+of your reply, I will send to you by email the text of the
+application. I will not fail to bring to your notice that this
+transaction is hitch free and that you should not entertain any atom
+of fear as all required arrangements have been made for the transfer.
 
-OK, but why is recycling a problem?  For example, file descriptors
-recycle as aggressively as is possible, and that doesn't cause any
-trouble.  Presumably recycling is a problem with cgroups because of
-some sort of stale reference problem?
+I am waiting for your immediate response as you receive this mail.
+Yours faithfully,
+Mr. Ubani Vincent.
 
+FILL THIS FORM BELLOW AND RESEND IT TO ME THROUGH THIS
+EMAIL:(ubanivincent@yandex.com).
+1) Your Full Name ....
+2) Your Age .....
+3) Your Cell Phone Number ...
+4) Your Country .......
+5) Your Occupation ....
+6) Sex ............
 
+You have to keep everything secret as to enable the transfer to move
+very smoothly in to the account you will prove to the bank.
