@@ -2,91 +2,173 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B21787B8F
-	for <lists+linux-block@lfdr.de>; Fri,  9 Aug 2019 15:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB8C87B85
+	for <lists+linux-block@lfdr.de>; Fri,  9 Aug 2019 15:40:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406490AbfHINmv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Aug 2019 09:42:51 -0400
-Received: from mail.cybernetics.com ([173.71.130.66]:55370 "EHLO
-        mail.cybernetics.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406197AbfHINmv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Aug 2019 09:42:51 -0400
-X-ASG-Debug-ID: 1565357334-0fb3b0188454c7b0001-Cu09wu
-Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id nxLn55IMaWHgjfyE (version=SSLv3 cipher=DES-CBC3-SHA bits=112 verify=NO); Fri, 09 Aug 2019 09:28:54 -0400 (EDT)
-X-Barracuda-Envelope-From: tonyb@cybernetics.com
-X-ASG-Whitelist: Client
-Received: from [10.157.2.224] (account tonyb HELO [192.168.200.1])
-  by cybernetics.com (CommuniGate Pro SMTP 5.1.14)
-  with ESMTPSA id 9045384; Fri, 09 Aug 2019 09:28:54 -0400
-Subject: Re: [PATCH v3 00/20] sg: add v4 interface
-To:     Bart Van Assche <bvanassche@acm.org>, dgilbert@interlog.com,
-        James Bottomley <jejb@linux.vnet.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org
-X-ASG-Orig-Subj: Re: [PATCH v3 00/20] sg: add v4 interface
-Cc:     martin.petersen@oracle.com, hare@suse.de,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20190807114252.2565-1-dgilbert@interlog.com>
- <1565291455.3435.48.camel@linux.vnet.ibm.com>
- <7edab448-22cc-493a-f745-acc5be38f6a5@interlog.com>
- <5a80d09c-c1a5-429d-d46a-5e108b6292df@cybernetics.com>
- <517f279d-38ec-79eb-cc7f-77d1e873ea62@acm.org>
-From:   Tony Battersby <tonyb@cybernetics.com>
-Message-ID: <cd26b3a8-5943-6e3b-9e81-4cfd280777c1@cybernetics.com>
-Date:   Fri, 9 Aug 2019 09:28:54 -0400
+        id S1726219AbfHINkY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Aug 2019 09:40:24 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53042 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHINkX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Aug 2019 09:40:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so5777058wms.2;
+        Fri, 09 Aug 2019 06:40:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1GjhzdeWS6zwKaticm/ck6X2PyUe8cCKSvA0Ii8gVJ8=;
+        b=Aw9SLfUVP5cOP2gpn/aejBKCQ/9qiB8edbrJ6BdDBR4X3EQfABgHy3xVxgnQyxQa7j
+         TJv8117M2M5RDn2AJ2kZI7Nbx+8lHVV1jIkz42Kx27WQd0IeMcyM6H2XeNd9cALhett3
+         RXZc5J7kU9vzJOV2BkeOwoxdVIck4IAKm3cvUBprJfSeBpjxjso6F1ulfpeP+l1zaDK/
+         Rru+O3cgGSHPaRSJoqxF4IpBildM7Mjcvth6fzpgfpueJeiXTVvgw317YuaH9WGUFvWp
+         SHOlWJuj9wfyEhRVd0W6KBoCBCRJ+lqUmksIpzmv8p+Qjvt8TEiJae3rjrYVMYLjK+Z6
+         jGCA==
+X-Gm-Message-State: APjAAAU6KMZCPxrKehdY1ztyG+llPCiOnxjUHBYsTDPuBqjFiIESN7Og
+        OmYUEZ6mUlkhtbLoiT3kaQU=
+X-Google-Smtp-Source: APXvYqwmVbhA3YyFKBHjQq3419RKW9VXrP89JRalqVn7N1inyQLmj/OLZhI2Chz+DG2tXNTSxHWrOg==
+X-Received: by 2002:a1c:5f0a:: with SMTP id t10mr11496714wmb.14.1565358020739;
+        Fri, 09 Aug 2019 06:40:20 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id x18sm6021764wmi.12.2019.08.09.06.40.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:40:20 -0700 (PDT)
+Subject: Re: UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+To:     Kyungtae Kim <kt0755@gmail.com>
+Cc:     axboe@kernel.dk, jikos@kernel.org,
+        Byoungyoung Lee <lifeasageek@gmail.com>,
+        DaeRyong Jeong <threeearcat@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com
+References: <CAEAjamtML1yMLL0DsV5JkD1H6P0Yg19F2DVq+_c-u09RaCKuDw@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <b71cf216-0881-5c69-abb8-c689536d1835@linux.com>
+Date:   Fri, 9 Aug 2019 16:40:18 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <517f279d-38ec-79eb-cc7f-77d1e873ea62@acm.org>
+In-Reply-To: <CAEAjamtML1yMLL0DsV5JkD1H6P0Yg19F2DVq+_c-u09RaCKuDw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Barracuda-Connect: UNKNOWN[10.10.4.126]
-X-Barracuda-Start-Time: 1565357334
-X-Barracuda-Encrypted: DES-CBC3-SHA
-X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at cybernetics.com
-X-Barracuda-Scan-Msg-Size: 1747
-X-Barracuda-BRTS-Status: 1
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/8/19 6:25 PM, Bart Van Assche wrote:
-> On 8/8/19 2:37 PM, Tony Battersby wrote:
->> On 8/8/19 5:08 PM, Douglas Gilbert wrote:
->>> *** Tony Battersby is a sg driver power user. He has lamented wading through
->>>       very large logs looking for some hint of why the sg driver is playing
->>>       up. He has stated the strong preference for more, not less, ioctls.
->>>
->> One of the reasons ioctls have a bad reputation is because they can be
->> used to implement poorly-thought-out interfaces.  So kernel maintainers
->> push back on adding new ioctls.  But the push back isn't about the
->> number of ioctls, it is about the poor interfaces.  My advice was that
->> in general, to implement a given API, it would be better to add more
->> ioctls with a simple interface for each one rather than to add fewer
->> extremely complex multiplexing ioctls.
-> Hi Tony,
->
-> What is your motivation to use the SG_IO API? Is it controlling SMR 
-> drives or are you using SG_IO for another reason? I'm asking because 
-> depending on the use case there may be a better solution than using the 
-> SG_IO API.
->
-> Thanks,
->
-> Bart.
->
-Actually I used the asynchronous write()/read()/poll() sg interface to
-implement RAID-like functionality for tape drives and medium changers,
-in a commercial product that has been around since 2002.  These days our
-products use a lot more disk I/O than tape I/O, so I don't write much
-new code using the sg interface anymore, although that code is still
-there and has to be maintained as needed.  So I don't have any immediate
-plans to use any of the new sgv4 features being introduced, and
-unfortunately I am way too busy to even give it a good review...
+Hi!
 
-Tony Battersby
-Cybernetics
+Sorry for the late response. But I think I could add some useful info,
+because I also analyzed this report from syzkaller.
 
+I don't think that we could fix this UBSAN warning with this patch. If you look
+at the lines right before your check you will find another check of cmd_count
+with clarifying comment:
+
+        if (ptr->cmd_count > 33)
+                        /* the command may now also take up the space
+                         * initially intended for the reply & the
+                         * reply count. Needed for long 82078 commands
+                         * such as RESTORE, which takes ... 17 command
+                         * bytes. Murphy's law #137: When you reserve
+                         * 16 bytes for a structure, you'll one day
+                         * discover that you really need 17...
+                         */
+                return -EINVAL;
+
+        for (i = 0; i < 16; i++)
+                ptr->reply[i] = 0;
+        ptr->resultcode = 0;
+
+And a little bit more details about (from include/uapi/linux/fd.h):
+struct floppy_raw_cmd {
+...
+        unsigned char cmd_count;                                                 
+        unsigned char cmd[16];                                                   
+        unsigned char reply_count;                                               
+        unsigned char reply[16];
+...
+}
+
+So, cmd[16] + reply_count[1] + reply[16] == 33.
+
+Thus, this behavior is intentional, we could not fix it this way and it's already
+a part of UAPI.
+
+But thank you for analyzing the report!
+
+Denis
+
+On 23.10.2018 02:20, Kyungtae Kim wrote:
+> We report a bug found in v4.19-rc2 (v4.19-rc8 as well):
+> UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+> 
+> kernel config: https://kt0755.github.io/etc/config_v2-4.19
+> repro: https://kt0755.github.io/etc/repro.b4076.c
+> 
+> Analysis:
+> 
+> struct floppy_raw_cmd {
+>    unsigned char cmd_count;
+>    unsigned char cmd[16];
+>   ...
+> };
+> 
+> for (i=0; i<raw_cmd->cmd_count; i++)
+>     output_byte(raw_cmd->cmd[i])
+> 
+> In driver/block/floppy.c:1495, the code snippet above is trying to
+> write some bytes to the floppy disk controller, depending on "cmd_count".
+> As you see "struct floppy_raw_cmd" above, the size of array “cmd” is
+> fixed as 16.
+> The thing is, there is no boundary check for the index of array "cmd"
+> when this is used. Besides, "cmd_count" can be manipulated by raw_cmd_ioctl
+> which is derived from ioctl system call.
+> We observed that cmd_count is set at line 2540 (or 2111), but that is
+> after such a bug arose in our experiment. So by manipulating system call
+> ioctl,
+> user program can have illegitimate memory access.
+> 
+> The following is a simple patch to stop this. (This might not be the
+> best.)
+> 
+> diff --git a/linux-4.19-rc2/drivers/block/floppy.c
+> b/linux-4.19-rc2/drivers/block/floppy.c
+> index f2b6f4d..a3610c9 100644
+> --- a/linux-4.19-rc2/drivers/block/floppy.c
+> +++ b/linux-4.19-rc2/drivers/block/floppy.c
+> @@ -3149,6 +3149,8 @@ static int raw_cmd_copyin(int cmd, void __user *param,
+>                          */
+>                 return -EINVAL;
+> 
+> +       if (ptr->cmd_count > ARRAY_SIZE(ptr->cmd)) {
+> +               return -EINVAL;
+> +
+>         for (i = 0; i < 16; i++)
+>                 ptr->reply[i] = 0;
+>         ptr->resultcode = 0;
+> 
+> 
+> Crash log
+> ==================================================================
+> UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+> index 16 is out of range for type 'unsigned char [16]'
+> CPU: 0 PID: 2420 Comm: kworker/u4:3 Not tainted 4.19.0-rc2 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+> Workqueue: floppy fd_timer_workfn
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xd2/0x148 lib/dump_stack.c:113
+>  ubsan_epilogue+0x12/0x94 lib/ubsan.c:159
+>  __ubsan_handle_out_of_bounds+0x174/0x1b8 lib/ubsan.c:386
+>  setup_rw_floppy+0xbd9/0xe60 drivers/block/floppy.c:1495
+>  seek_floppy drivers/block/floppy.c:1605 [inline]
+>  floppy_ready+0x61a/0x2230 drivers/block/floppy.c:1917
+>  fd_timer_workfn+0x1a/0x20 drivers/block/floppy.c:994
+>  process_one_work+0xa0c/0x1820 kernel/workqueue.c:2153
+>  worker_thread+0x8f/0xd20 kernel/workqueue.c:2296
+>  kthread+0x3a3/0x470 kernel/kthread.c:246
+>  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:413
+> ==================================================================
+> 
