@@ -2,81 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3423987B83
-	for <lists+linux-block@lfdr.de>; Fri,  9 Aug 2019 15:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B21787B8F
+	for <lists+linux-block@lfdr.de>; Fri,  9 Aug 2019 15:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405948AbfHINjN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Aug 2019 09:39:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43570 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfHINjM (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Aug 2019 09:39:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i189so46089338pfg.10
-        for <linux-block@vger.kernel.org>; Fri, 09 Aug 2019 06:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4mLbV3+IIPFRVOOTtY625mFctKb4+0bNW5BuMGIIWco=;
-        b=1e5gSlgswt/OZba0NZEBKx58NWnHk92juUT7wscb3N0Rn7EJOsIB0GEOdYQgdpIC+J
-         T7cxxnelfY2WhaNmUJ7ZQ+CuJFbCOkOCKAgPZcEkCWfeF8UdVTDtwaXtn7GUHXSgMg8w
-         wj5QTJPT3F8FI4r1wGRYmCnC2U8leefeHQhxuHrUxvr7kgGSuT9GmfeuCLDq7VkEIzil
-         MEELbCP0ujfbcfhkuYXLe06gcw+IwnVLWZ9j035nw5vFzwLr9kczOLoKOsvTdf5qxLcg
-         mEFlx/9MTGU9MibYMFErNgGgJDssaXL7BzlDp9oKUtsiHofKBPI0ZD+dM6bnaBvnma/8
-         rKhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4mLbV3+IIPFRVOOTtY625mFctKb4+0bNW5BuMGIIWco=;
-        b=i8I+u2/Hof7TyFZ3vrX4cBMmrU3DZNQLoH66LYgBKM7tg6qM7xFG6Bqj5+UUmqB7rA
-         QsfJUJyDkwgKcnsHlFUAOBcxumWIz6PrfgHJ9tptfmdQ4i1Nm7rmfGDiwxGelo1RJWcY
-         ot36mKK//oTIyTeFaOAD9e35hjF2L7WO56Ycki7fLwoxdx7Qzs0QsCBOrshMpW8qkZBi
-         JvV9QVz7UTyHnmvjJn//KPokGHyZwkEDGnIfebUVp3WM/lfqhMU17CsA0FOKgRr+QYoH
-         CnuN5JJjD5kzpyo+HOt+WVLKlsyVkcYMkFHLtnrTp8V/ARzsc8QUL8MjxuyBdrckdbo4
-         nBGQ==
-X-Gm-Message-State: APjAAAWhoVEhI3MISQtl5MZTRZn6TeHHZSsWu4FVbUpJyQqcS8Om5Xaf
-        k/MWyHaYUi5pMTIpqa50rIVTwvfNKIETpg==
-X-Google-Smtp-Source: APXvYqxqHhwnZezreygykpD+dDVAUBdIBkf1MltaJ+uvBHcI3YkbW8v4U4AxcNIf9METEct77K9jnA==
-X-Received: by 2002:aa7:9407:: with SMTP id x7mr22225946pfo.163.1565357951682;
-        Fri, 09 Aug 2019 06:39:11 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:80e5:933f:36b7:b13c? ([2605:e000:100e:83a1:80e5:933f:36b7:b13c])
-        by smtp.gmail.com with ESMTPSA id b16sm161676193pfo.54.2019.08.09.06.39.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:39:10 -0700 (PDT)
-Subject: Re: [PATCH v2 0/1] bcache fixes for Linux v5.3-rc4
-To:     Coly Li <colyli@suse.de>
-Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
-References: <20190809061405.73653-1-colyli@suse.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ff3a984c-f9f9-de23-adcc-32a702c7c075@kernel.dk>
-Date:   Fri, 9 Aug 2019 06:39:09 -0700
+        id S2406490AbfHINmv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Aug 2019 09:42:51 -0400
+Received: from mail.cybernetics.com ([173.71.130.66]:55370 "EHLO
+        mail.cybernetics.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406197AbfHINmv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Aug 2019 09:42:51 -0400
+X-ASG-Debug-ID: 1565357334-0fb3b0188454c7b0001-Cu09wu
+Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id nxLn55IMaWHgjfyE (version=SSLv3 cipher=DES-CBC3-SHA bits=112 verify=NO); Fri, 09 Aug 2019 09:28:54 -0400 (EDT)
+X-Barracuda-Envelope-From: tonyb@cybernetics.com
+X-ASG-Whitelist: Client
+Received: from [10.157.2.224] (account tonyb HELO [192.168.200.1])
+  by cybernetics.com (CommuniGate Pro SMTP 5.1.14)
+  with ESMTPSA id 9045384; Fri, 09 Aug 2019 09:28:54 -0400
+Subject: Re: [PATCH v3 00/20] sg: add v4 interface
+To:     Bart Van Assche <bvanassche@acm.org>, dgilbert@interlog.com,
+        James Bottomley <jejb@linux.vnet.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org
+X-ASG-Orig-Subj: Re: [PATCH v3 00/20] sg: add v4 interface
+Cc:     martin.petersen@oracle.com, hare@suse.de,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190807114252.2565-1-dgilbert@interlog.com>
+ <1565291455.3435.48.camel@linux.vnet.ibm.com>
+ <7edab448-22cc-493a-f745-acc5be38f6a5@interlog.com>
+ <5a80d09c-c1a5-429d-d46a-5e108b6292df@cybernetics.com>
+ <517f279d-38ec-79eb-cc7f-77d1e873ea62@acm.org>
+From:   Tony Battersby <tonyb@cybernetics.com>
+Message-ID: <cd26b3a8-5943-6e3b-9e81-4cfd280777c1@cybernetics.com>
+Date:   Fri, 9 Aug 2019 09:28:54 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190809061405.73653-1-colyli@suse.de>
+In-Reply-To: <517f279d-38ec-79eb-cc7f-77d1e873ea62@acm.org>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Barracuda-Connect: UNKNOWN[10.10.4.126]
+X-Barracuda-Start-Time: 1565357334
+X-Barracuda-Encrypted: DES-CBC3-SHA
+X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at cybernetics.com
+X-Barracuda-Scan-Msg-Size: 1747
+X-Barracuda-BRTS-Status: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/8/19 11:14 PM, Coly Li wrote:
-> Hi Jens,
-> 
-> I have a bug report that is frequent happens in product environment,
-> the problem was introduced in Linux v5.2, we should have the fix in
-> in Linux v5.3.
-> 
-> I add the missing 'Fixes:' field for the patch in v2.
-> 
-> Thanks in advance for taking this.
+On 8/8/19 6:25 PM, Bart Van Assche wrote:
+> On 8/8/19 2:37 PM, Tony Battersby wrote:
+>> On 8/8/19 5:08 PM, Douglas Gilbert wrote:
+>>> *** Tony Battersby is a sg driver power user. He has lamented wading through
+>>>       very large logs looking for some hint of why the sg driver is playing
+>>>       up. He has stated the strong preference for more, not less, ioctls.
+>>>
+>> One of the reasons ioctls have a bad reputation is because they can be
+>> used to implement poorly-thought-out interfaces.  So kernel maintainers
+>> push back on adding new ioctls.  But the push back isn't about the
+>> number of ioctls, it is about the poor interfaces.  My advice was that
+>> in general, to implement a given API, it would be better to add more
+>> ioctls with a simple interface for each one rather than to add fewer
+>> extremely complex multiplexing ioctls.
+> Hi Tony,
+>
+> What is your motivation to use the SG_IO API? Is it controlling SMR 
+> drives or are you using SG_IO for another reason? I'm asking because 
+> depending on the use case there may be a better solution than using the 
+> SG_IO API.
+>
+> Thanks,
+>
+> Bart.
+>
+Actually I used the asynchronous write()/read()/poll() sg interface to
+implement RAID-like functionality for tape drives and medium changers,
+in a commercial product that has been around since 2002.  These days our
+products use a lot more disk I/O than tape I/O, so I don't write much
+new code using the sg interface anymore, although that code is still
+there and has to be maintained as needed.  So I don't have any immediate
+plans to use any of the new sgv4 features being introduced, and
+unfortunately I am way too busy to even give it a good review...
 
-Applied, thanks.
-
--- 
-Jens Axboe
+Tony Battersby
+Cybernetics
 
