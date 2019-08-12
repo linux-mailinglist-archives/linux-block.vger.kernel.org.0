@@ -2,95 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1864C89905
-	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2019 10:53:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C88D48991D
+	for <lists+linux-block@lfdr.de>; Mon, 12 Aug 2019 10:59:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfHLIxS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 12 Aug 2019 04:53:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51430 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbfHLIxR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:53:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 90514F5FCA48DD1BC675;
-        Mon, 12 Aug 2019 16:53:14 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
- 16:53:06 +0800
-Subject: Re: [PATCH] blk-mq: Fix memory leak in blk_mq_init_allocated_queue
- error handling
-To:     <axboe@kernel.dk>, <ming.lei@redhat.com>,
-        <linux-block@vger.kernel.org>
-CC:     <yi.zhang@huawei.com>, <bvanassche@acm.org>
-References: <1563891042-25448-1-git-send-email-zhengbin13@huawei.com>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <52cb9a64-b67f-114e-ddc2-338d8d201f40@huawei.com>
-Date:   Mon, 12 Aug 2019 16:53:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        id S1727170AbfHLI7L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 12 Aug 2019 04:59:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29065 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbfHLI7L (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:59:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 01:59:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="193913406"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 01:59:07 -0700
+Subject: Re: [RFC PATCH 0/7] Add MMC packed function
+To:     Baolin Wang <baolin.wang@linaro.org>, Jens Axboe <axboe@kernel.dk>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+References: <cover.1563782844.git.baolin.wang@linaro.org>
+ <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <8abff7d6-0a3e-efe7-e8ec-9309fada9121@intel.com>
+Date:   Mon, 12 Aug 2019 11:58:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1563891042-25448-1-git-send-email-zhengbin13@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ping
+On 12/08/19 8:20 AM, Baolin Wang wrote:
+> Hi,
+> 
+> On Mon, 22 Jul 2019 at 21:10, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>
+>> Hi All,
+>>
+>> Now some SD/MMC controllers can support packed command or packed request,
+>> that means it can package multiple requests to host controller to be handled
+>> at one time, which can improve the I/O performence. Thus this patchset is
+>> used to add the MMC packed function to support packed request or packed
+>> command.
+>>
+>> In this patch set, I implemented the SD host ADMA3 transfer mode to support
+>> packed request. The ADMA3 transfer mode can process a multi-block data transfer
+>> by using a pair of command descriptor and ADMA2 descriptor. In future we can
+>> easily expand the MMC packed function to support packed command.
+>>
+>> Below are some comparison data between packed request and non-packed request
+>> with fio tool. The fio command I used is like below with changing the
+>> '--rw' parameter and enabling the direct IO flag to measure the actual hardware
+>> transfer speed.
+>>
+>> ./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
+>>
+>> My eMMC card working at HS400 Enhanced strobe mode:
+>> [    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+>> [    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
+>> [    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+>> [    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+>> [    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+>>
+>> 1. Non-packed request
+>> I tested 3 times for each case and output a average speed.
+>>
+>> 1) Sequential read:
+>> Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
+>> Average speed: 28.7MiB/s
 
-On 2019/7/23 22:10, zhengbin wrote:
-> If blk_mq_init_allocated_queue->elevator_init_mq fails, need to release
-> the previously requested resources.
->
-> Fixes: d34849913 ("blk-mq-sched: allow setting of default IO scheduler")
-> Signed-off-by: zhengbin <zhengbin13@huawei.com>
-> ---
->  block/blk-mq.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index b038ec6..e001610 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2845,6 +2845,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
->  struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
->  						  struct request_queue *q)
->  {
-> +	int ret = -ENOMEM;
-> +
->  	/* mark the queue as mq asap */
->  	q->mq_ops = set->ops;
->
-> @@ -2906,17 +2908,18 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
->  	blk_mq_map_swqueue(q);
->
->  	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
-> -		int ret;
-> -
->  		ret = elevator_init_mq(q);
->  		if (ret)
-> -			return ERR_PTR(ret);
-> +			goto err_tag_set;
->  	}
->
->  	return q;
->
-> +err_tag_set:
-> +	blk_mq_del_queue_tag_set(q);
->  err_hctxs:
->  	kfree(q->queue_hw_ctx);
-> +	q->nr_hw_queues = 0;
->  err_sys_init:
->  	blk_mq_sysfs_deinit(q);
->  err_poll:
-> --
-> 2.7.4
->
->
-> .
->
+This seems surprising low for a HS400ES card.  Do you know why that is?
 
+>>
+>> 2) Random read:
+>> Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
+>> Average speed: 14.3MiB/s
+>>
+>> 3) Sequential write:
+>> Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
+>> Average speed: 24.7MiB/s
+>>
+>> 4) Random write:
+>> Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
+>> Average speed: 19.2MiB/s
+>>
+>> 2. Packed request
+>> In packed request mode, I set the host controller can package maximum 10
+>> requests at one time (Actually I can increase the package number), and I
+>> enabled read/write packed request mode. Also I tested 3 times for each
+>> case and output a average speed.
+>>
+>> 1) Sequential read:
+>> Speed: 165MiB/s, 167MiB/s, 164MiB/s
+>> Average speed: 165.3MiB/s
+>>
+>> 2) Random read:
+>> Speed: 147MiB/s, 141MiB/s, 144MiB/s
+>> Average speed: 144MiB/s
+>>
+>> 3) Sequential write:
+>> Speed: 87.8MiB/s, 89.1MiB/s, 90.0MiB/s
+>> Average speed: 89MiB/s
+>>
+>> 4) Random write:
+>> Speed: 90.9MiB/s, 89.8MiB/s, 90.4MiB/s
+>> Average speed: 90.4MiB/s
+>>
+>> Form above data, we can see the packed request can improve the performance greatly.
+>> Any comments are welcome. Thanks a lot.
+> 
+> Any comments for this patch set? Thanks.
+
+Did you consider adapting the CQE interface?
