@@ -2,114 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5A8D8B27B
-	for <lists+linux-block@lfdr.de>; Tue, 13 Aug 2019 10:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 595BF8B31F
+	for <lists+linux-block@lfdr.de>; Tue, 13 Aug 2019 10:55:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfHMIbV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Aug 2019 04:31:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4668 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727784AbfHMIbU (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:31:20 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1687FFF1F082E568E156;
-        Tue, 13 Aug 2019 16:31:15 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
- 16:31:03 +0800
-Subject: Re: [PATCH 0/9] blk-mq/scsi: convert private reply queue into blk_mq
- hw queue
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20190531022801.10003-1-ming.lei@redhat.com>
- <d1c786d8-d3a9-551b-52fb-fe6f7805e50e@huawei.com>
-CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Don Brace <don.brace@microsemi.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        "Sathya Prakash" <sathya.prakash@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        chenxiang <chenxiang66@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b862dfc7-dfcf-1986-8f18-75ae7f02510c@huawei.com>
-Date:   Tue, 13 Aug 2019 09:30:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1726992AbfHMIzx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Aug 2019 04:55:53 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35666 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfHMIzx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:55:53 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so9178338pgv.2
+        for <linux-block@vger.kernel.org>; Tue, 13 Aug 2019 01:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ucCbtaW3mcUwvCMG4hOmvtcjTxgqi+7JEdXZz9T3lJY=;
+        b=EnerXueC/oHIgi3d8kdA6kpQUiCSirhtoEY8tvY8KCioL7GUWlR8Nz6R+0z4FWxsSR
+         kUG7onaKxLTzs4zX0N9P0hBFHa4iFwuBEhoX76WmnsjcePu3blAoRSfYFDRYlMUAmw6/
+         efcSgb55Tia2jQLzRggpA41X9dZXOCEYDcSLoOE25dGqBPczWFdg+W6M4zP12D47sbyB
+         1ChLzYZakj4JDWcBz3Ye/K9A1HdgqmH19Jzz0ebaA3i9b+3V1CugBKR9gWfQ3bvhLsBz
+         B0a1Y8QL0q/HnY3Xy947yEV4rTVcMhIC2cjpxD099iOh64HD0Ho5sCJaOk9XZqdcGY35
+         9GzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ucCbtaW3mcUwvCMG4hOmvtcjTxgqi+7JEdXZz9T3lJY=;
+        b=jXPJsQ3J3UmYq+ONcX03D7jY/C6c0109v33idps4uYCmYPalCyiobyV/YJporwPFl+
+         PxSPzeMlicy2DuLjUuDQOJ9Ci54qcbQ2tn0WZj9B8Hb1dUMH9rzAveBD9eKS5WHLDoGK
+         63mHDuZhTdXj72iEXhAASMbJqwAJS2a4Ww1fsuibWCy47xaO1aBZsKxDR6fEXCeJgb6y
+         OkwGmB0ixhxZIkQexaywffsn20NdcbezOR3cq8AjnWdjKpZouRS73Dl3ieQL5m/mpPMz
+         zg3hYCDodc1vpBv8FUVHNGdUF7PC/5ps4fHHI5hkq88nOu+6mA46q0fAgUsu2TQvp72m
+         WJnw==
+X-Gm-Message-State: APjAAAUpIfBvdceo9F6Tq3jxQf3WvmBr5RBnMCBeNVch93wSPo71G/S5
+        bMIDfKB40TgMafKLrlXWjYw=
+X-Google-Smtp-Source: APXvYqxHceLaVGjvvL/xLId6nl6YAKyl9ta49XmgSlKJB9llHLPKFXesVSJowg/Pt9CNHuhpYT82lA==
+X-Received: by 2002:a65:52c5:: with SMTP id z5mr33767479pgp.118.1565686552559;
+        Tue, 13 Aug 2019 01:55:52 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.110.75])
+        by smtp.gmail.com with ESMTPSA id l25sm132216686pff.143.2019.08.13.01.55.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 01:55:52 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] blk-sysfs: Make structure queue_attr_group constant
+Date:   Tue, 13 Aug 2019 14:25:41 +0530
+Message-Id: <20190813085541.7856-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <d1c786d8-d3a9-551b-52fb-fe6f7805e50e@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 04/06/2019 09:49, John Garry wrote:
-> On 31/05/2019 03:27, Ming Lei wrote:
->> Hi,
+The static structure queue_attr_group is used only once, when it is
+passed as the second argument to the function sysfs_create_group().
+However, the second parameter of sysfs_create_group() is already defined
+as constant. Hence make queue_attr_group itself constant, as it is never
+modified.
+Issue found with Coccinelle.
 
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ block/blk-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Ming,
-
-I'm raising the hostwide tags issue again, which I brought up in 
-https://www.spinics.net/lists/linux-block/msg43754.html
-
-Here's that discussion:
-
- >> I don't mean to hijack this thread, but JFYI we're getting around to 
-test
- >> https://github.com/ming1/linux/commits/v5.2-rc-host-tags-V2 - 
-unfortunately
- >> we're still seeing a performance regression. I can't see where it's 
-coming
- >> from. We're double-checking the test though.
- >
- > host-tag patchset is only for several particular drivers which use
- > private reply queue as completion queue.
- >
- > This patchset is for handling generic blk-mq CPU hotplug issue, and
- > the several particular scsi drivers(hisi_sas_v3, hpsa, megaraid_sas and
- > mp3sas) won't be covered so far.
- >
- > I'd suggest to move on for generic blk-mq devices first given now blk-mq
- > is the only request IO path now.
- >
- > There are at least two choices for us to handle drivers/devices with
- > private completion queue:
- >
- > 1) host-tags
- > - performance issue shouldn't be hard to solve, given it is same with
- > with single tags in theory, and just corner cases is there.
- >
- > What I am not glad with this approach is that blk-mq-tag code becomes 
-mess.
-
-Right, not so neat. And we see a 3M vs 2.4M IOPS drop with this 
-patchset. That's without any optimisation like discussed in 
-https://lkml.org/lkml/2019/8/10/124
-
-And I don't know about any impact of performance of hosts which already 
-exposed multiple queues.
-
-Note that it's still much better than the 700K IOPS we see without 
-managed interrupts at all.
-
- >
- > 2) private callback
- > - we could define private callback to drain each completion queue in
- >   driver simply.
-
-Yeah, but then we raise the question of why the LLDD can't just register 
-for hotplug handler itself.
-
-Personally I prefer #1. I'll have a look at the issues when I get a chance.
-
-Much appreciated,
-John
-
-
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 977c659dcd18..9401b0cc2e29 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -783,7 +783,7 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
+ 	return attr->mode;
+ }
+ 
+-static struct attribute_group queue_attr_group = {
++static const struct attribute_group queue_attr_group = {
+ 	.attrs = queue_attrs,
+ 	.is_visible = queue_attr_visible,
+ };
+-- 
+2.19.1
 
