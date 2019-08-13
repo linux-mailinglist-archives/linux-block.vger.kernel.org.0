@@ -2,139 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB8FD8BECA
-	for <lists+linux-block@lfdr.de>; Tue, 13 Aug 2019 18:39:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA4408BED8
+	for <lists+linux-block@lfdr.de>; Tue, 13 Aug 2019 18:42:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfHMQj7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Aug 2019 12:39:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41986 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfHMQj6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:39:58 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F10F718A484;
-        Tue, 13 Aug 2019 16:39:57 +0000 (UTC)
-Received: from rh2.redhat.com (ovpn-122-147.rdu2.redhat.com [10.10.122.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 491A142422;
-        Tue, 13 Aug 2019 16:39:57 +0000 (UTC)
-From:   Mike Christie <mchristi@redhat.com>
-To:     axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>
-Subject: [PATCH 4/4] nbd: fix zero cmd timeout handling v2
-Date:   Tue, 13 Aug 2019 11:39:52 -0500
-Message-Id: <20190813163952.23486-5-mchristi@redhat.com>
-In-Reply-To: <20190813163952.23486-1-mchristi@redhat.com>
-References: <20190813163952.23486-1-mchristi@redhat.com>
+        id S1726769AbfHMQmh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Aug 2019 12:42:37 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:45777 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfHMQmh (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:42:37 -0400
+Received: by mail-lf1-f51.google.com with SMTP id a30so14150431lfk.12
+        for <linux-block@vger.kernel.org>; Tue, 13 Aug 2019 09:42:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmurf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=9/me9AyG3+z6/xBlLhKMnSijxn45CKmb1z2Iv3P/dzo=;
+        b=Ig3ZzK+fbGTSrw/5GbSSMVy9Zpdv88Boor0HPHtvGm4xnqukiJtymfGX6EEzU+bEY5
+         +3UQje/xQPKXY5vwfyb+7cAx6IXN0AlPJSn4xN12tTlL2vGLSCa4zglEWXavBVRmyZLz
+         DmfkPwBXmPee++bW8uSKrCBlPIKYatsIakfZ6nrz01wuoQH8oAKAYDTr9c2RspXTOn66
+         5wdlxUJlYA97iSFZRPD0HdzQb8pHNN+SusaQtQyz8OZJW2sRzPXdYxk2cqgvDb48B6oi
+         mMGHwt5pt8XKgdGIrJgU9dJfjO+MJrI+52GKESoxpo9cuC2sjvTjLvVCKgLPUV0+GAtM
+         6S1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=9/me9AyG3+z6/xBlLhKMnSijxn45CKmb1z2Iv3P/dzo=;
+        b=jScuDthpGY2FpzhYFttmJ/BJRGWcfx7BoeY9x76PGjGn75/7my0sfANsyDnLDFAwu1
+         OKXiJiKz8HWrW0fdQ4troqNXnU43Nn1ncOyaaVNvYvjHSJX9uFd9zFWFtR20/ZxV2YsZ
+         Dh+iuhJZLBchIu+I+r7ly3qhTGBa+u87DhzZuyBBeSyk7FepkTG6MjPpgv7PPJnVd0gP
+         fcV9lT2x2S2olk7EKyZplkGcwOb0LAeUVnEy5qvb0S3BMER66yCbHNYbBfunpvxAWQCe
+         aiC0LJlttLCtHexn6w/N9PNEY1VDF26IZ7ibqup7O2MUtU0q9H3rjeQ91TvFVGrd5F+o
+         RyRg==
+X-Gm-Message-State: APjAAAU6a/DlW7Vz78YQpqGL33T3P83n8M8CzwlTF6fqJmaUGPwIm1s4
+        GcgHqOJm6VowkbjH7G0s0y0cCvWem8seTL9YfeYsKEO9B6YYCA==
+X-Google-Smtp-Source: APXvYqw2K8dKfpIRXdKZX8OSLXlp1MPn/llit6XOxB44tETSUpS4EgaAG3Gghx+coNXEVqpLvP++tkH3h6qzlylZ7uU=
+X-Received: by 2002:a19:9111:: with SMTP id t17mr23000185lfd.113.1565714554325;
+ Tue, 13 Aug 2019 09:42:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 13 Aug 2019 16:39:58 +0000 (UTC)
+From:   Chris Murphy <chris@cmurf.com>
+Date:   Tue, 13 Aug 2019 10:42:23 -0600
+Message-ID: <CAMN_aZAEVowMRhjrODJ1wrnMK6jejqBipciyxWSJx6i+8SmrQQ@mail.gmail.com>
+Subject: [bug] segfault btrfs fi usage on seed sprout
+To:     Btrfs BTRFS <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This fixes a regression added in 4.9 with commit:
+segfault 'btrfs fi usage' on two device btrfs seed+sprout volume
+https://bugzilla.kernel.org/show_bug.cgi?id=204569
 
-commit 0eadf37afc2500e1162c9040ec26a705b9af8d47
-Author: Josef Bacik <jbacik@fb.com>
-Date:   Thu Sep 8 12:33:40 2016 -0700
+kernel 5.2.8
+btrfs-progs 5.2.1
 
-    nbd: allow block mq to deal with timeouts
+'btrfs fi show' does work:
+Label: 'first'  uuid: f7638175-SNIP
+        Total devices 2 FS bytes used 841.10GiB
+        devid    2 size 1024.00GiB used 882.00GiB path /dev/mapper/first
+        devid    3 size 698.62GiB used 2.06GiB path /dev/mapper/sdc
 
-where before the patch userspace would set the timeout to 0 to disable
-it. With the above patch, a zero timeout tells the block layer to use
-the default value of 30 seconds. For setups where commands can take a
-long time or experience transient issues like network disruptions this
-then results in IO errors being sent to the application.
+devid2 is the seed
+devid3 is the sprout
 
-To fix this, the patch still uses the common block layer timeout
-framework, but if zero is set, nbd just logs a message and then resets
-the timer when it expires.
+Mount options
+/dev/mapper/first on /mnt/first type btrfs
+(rw,noatime,seclabel,space_cache=v2,subvolid=5,subvol=/)
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
----
+'btrfs fi usage /mnt/first' crashes with segmentation fault and no
+other messages
 
-V2 - We used to allow apps to reset the timeout to 0. The first version
-of the patch only allowed it to be initialized to 0, so this adds the
-reset feature back.
+dmesg shows
+[126052.599013] btrfs[14847]: segfault at 7ffe5e1e1018 ip
+000000000046db14 sp 00007ffe5e1df1a0 error 4 in btrfs[40c000+7c000]
+[126052.599034] Code: 28 48 c7 40 08 00 00 00 00 48 8b 74 24 08 48 89
+70 18 48 8b 74 24 10 48 01 70 08 48 83 c3 20 48 3b 5c 24 18 0f 84 12
+ff ff ff <48> 8b 2b 41 8b 0e 85 c9 7e 95 49 8b 17 8d 41 ff 48 c1 e0 05
+48 8d
 
 
- drivers/block/nbd.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index ebc98cf76365..98c618e5732c 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -121,6 +121,7 @@ struct nbd_cmd {
- 	struct mutex lock;
- 	int index;
- 	int cookie;
-+	int retries;
- 	blk_status_t status;
- 	unsigned long flags;
- 	u32 cmd_cookie;
-@@ -407,10 +408,25 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 			nbd_config_put(nbd);
- 			return BLK_EH_DONE;
- 		}
--	} else {
--		dev_err_ratelimited(nbd_to_dev(nbd),
--				    "Connection timed out\n");
- 	}
-+
-+	if (!nbd->tag_set.timeout) {
-+		/*
-+		 * Userspace sets timeout=0 to disable socket disconnection,
-+		 * so just warn and reset the timer.
-+		 */
-+		cmd->retries++;
-+		dev_info(nbd_to_dev(nbd), "Possible stuck request %p: control (%s@%llu,%uB). Runtime %u seconds\n",
-+			req, nbdcmd_to_ascii(req_to_nbd_cmd_type(req)),
-+			(unsigned long long)blk_rq_pos(req) << 9,
-+			blk_rq_bytes(req), (req->timeout / HZ) * cmd->retries);
-+
-+		mutex_unlock(&cmd->lock);
-+		nbd_config_put(nbd);
-+		return BLK_EH_RESET_TIMER;
-+	}
-+
-+	dev_err_ratelimited(nbd_to_dev(nbd), "Connection timed out\n");
- 	set_bit(NBD_TIMEDOUT, &config->runtime_flags);
- 	cmd->status = BLK_STS_IOERR;
- 	mutex_unlock(&cmd->lock);
-@@ -531,6 +547,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 	}
- 	cmd->index = index;
- 	cmd->cookie = nsock->cookie;
-+	cmd->retries = 0;
- 	request.type = htonl(type | nbd_cmd_flags);
- 	if (type != NBD_CMD_FLUSH) {
- 		request.from = cpu_to_be64((u64)blk_rq_pos(req) << 9);
-@@ -1254,7 +1271,8 @@ static bool nbd_is_valid_blksize(unsigned long blksize)
- static void nbd_set_cmd_timeout(struct nbd_device *nbd, u64 timeout)
- {
- 	nbd->tag_set.timeout = timeout * HZ;
--	blk_queue_rq_timeout(nbd->disk->queue, timeout * HZ);
-+	if (timeout)
-+		blk_queue_rq_timeout(nbd->disk->queue, timeout * HZ);
- }
- 
- /* Must be called with config_lock held */
-@@ -1287,8 +1305,7 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
- 		nbd_size_set(nbd, config->blksize, arg);
- 		return 0;
- 	case NBD_SET_TIMEOUT:
--		if (arg)
--			nbd_set_cmd_timeout(nbd, arg);
-+		nbd_set_cmd_timeout(nbd, arg);
- 		return 0;
- 
- 	case NBD_SET_FLAGS:
 -- 
-2.20.1
-
+Chris
