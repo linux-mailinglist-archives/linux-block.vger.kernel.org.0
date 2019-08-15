@@ -2,88 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A13C98E310
-	for <lists+linux-block@lfdr.de>; Thu, 15 Aug 2019 05:13:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DFDD8E363
+	for <lists+linux-block@lfdr.de>; Thu, 15 Aug 2019 06:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfHODNW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Aug 2019 23:13:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42160 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfHODNW (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Aug 2019 23:13:22 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05BC74628B;
-        Thu, 15 Aug 2019 03:13:22 +0000 (UTC)
-Received: from [10.10.120.60] (ovpn-120-60.rdu2.redhat.com [10.10.120.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E90D1001B02;
-        Thu, 15 Aug 2019 03:13:21 +0000 (UTC)
-Subject: Re: [PATCH] nbd: add a missed nbd_config_put() in nbd_xmit_timeout()
-To:     "sunke (E)" <sunke32@huawei.com>, josef@toxicpanda.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-References: <1565613086-13776-1-git-send-email-sunke32@huawei.com>
- <05b3cd4a-d2c1-5ad7-7a39-64bac470032a@huawei.com>
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5D54CDD0.1010701@redhat.com>
-Date:   Wed, 14 Aug 2019 22:13:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        id S1725832AbfHOEHq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Aug 2019 00:07:46 -0400
+Received: from bout01.mta.xmission.com ([166.70.11.15]:55824 "EHLO
+        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfHOEHp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:07:45 -0400
+X-Greylist: delayed 350 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 00:07:45 EDT
+Received: from mx04.mta.xmission.com ([166.70.13.214])
+        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1hy73A-0004tc-VC; Wed, 14 Aug 2019 22:07:45 -0600
+Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
+        by mx04.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1hy73A-0002wD-6o; Wed, 14 Aug 2019 22:07:44 -0600
+Received: from hacktheplanet (unknown [8.25.222.2])
+        by plesk14.xmission.com (Postfix) with ESMTPSA id C94F472909;
+        Thu, 15 Aug 2019 04:07:43 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 00:07:41 -0400
+From:   Scott Bauer <sbauer@plzdonthack.me>
+To:     Revanth Rajashekar <revanth.rajashekar@intel.com>
+Cc:     linux-block@vger.kernel.org,
+        Jonathan Derrick <jonathan.derrick@intel.com>
+Message-ID: <20190815040741.GC31938@hacktheplanet>
+References: <20190813214340.15533-1-revanth.rajashekar@intel.com>
+ <20190813214340.15533-4-revanth.rajashekar@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <05b3cd4a-d2c1-5ad7-7a39-64bac470032a@huawei.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 15 Aug 2019 03:13:22 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813214340.15533-4-revanth.rajashekar@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-XM-SPF: eid=1hy73A-0002wD-6o;;;mid=<20190815040741.GC31938@hacktheplanet>;;;hst=mx04.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
+X-SA-Exim-Connect-IP: 166.70.198.161
+X-SA-Exim-Mail-From: sbauer@plzdonthack.me
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on sa06.xmission.com
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=8.0 tests=ALL_TRUSTED,BAYES_50,
+        DCC_CHECK_NEGATIVE,T_TM2_M_HEADER_IN_MSG,T_TooManySym_01,
+        T_TooManySym_02,XMNoVowels,XMSubLong,XM_UncommonTLD01
+        autolearn=disabled version=3.4.2
+X-Spam-Report: * -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4399]
+        *  1.5 XMNoVowels Alpha-numberic number with no vowels
+        *  0.7 XMSubLong Long Subject
+        *  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+        * -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+        *      [sa06 1397; Body=1 Fuz1=1 Fuz2=1]
+        *  0.0 T_TooManySym_01 4+ unique symbols in subject
+        *  0.5 XM_UncommonTLD01 Less-common TLD
+        *  0.0 T_TooManySym_02 5+ unique symbols in subject
+X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Revanth Rajashekar <revanth.rajashekar@intel.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 258 ms - load_scoreonly_sql: 0.04 (0.0%),
+        signal_user_changed: 2.8 (1.1%), b_tie_ro: 1.98 (0.8%), parse: 1.00
+        (0.4%), extract_message_metadata: 15 (5.7%), get_uri_detail_list: 0.72
+        (0.3%), tests_pri_-1000: 27 (10.5%), tests_pri_-950: 1.58 (0.6%),
+        tests_pri_-900: 1.21 (0.5%), tests_pri_-90: 17 (6.5%), check_bayes: 15
+        (5.9%), b_tokenize: 4.8 (1.9%), b_tok_get_all: 4.1 (1.6%),
+        b_comp_prob: 1.78 (0.7%), b_tok_touch_all: 2.3 (0.9%), b_finish: 0.83
+        (0.3%), tests_pri_0: 177 (68.7%), check_dkim_signature: 0.76 (0.3%),
+        check_dkim_adsp: 3.8 (1.5%), poll_dns_idle: 0.86 (0.3%), tests_pri_10:
+        2.2 (0.9%), tests_pri_500: 11 (4.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 3/3] block: sed-opal: OPAL_METHOD_LENGTH defined twice
+X-Spam-Flag: No
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on mx04.mta.xmission.com)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Josef had ackd my patch for the same thing here:
+On Tue, Aug 13, 2019 at 03:43:40PM -0600, Revanth Rajashekar wrote:
+> Signed-off-by: Revanth Rajashekar <revanth.rajashekar@intel.com>
+Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
 
-https://www.spinics.net/lists/linux-block/msg43800.html
-
-so maybe Jens will pick that up with the rest of the set Josef had acked:
-
-https://www.spinics.net/lists/linux-block/msg43809.html
-
-to make it easier.
-
-On 08/14/2019 08:27 PM, sunke (E) wrote:
-> ping
-> 
-> ÔÚ 2019/8/12 20:31, Sun Ke Ð´µÀ:
->> When try to get the lock failed, before return, execute the
->> nbd_config_put() to decrease the nbd->config_refs.
->>
->> If the nbd->config_refs is added but not decreased. Then will not
->> execute nbd_clear_sock() in nbd_config_put(). bd->task_setup will
->> not be cleared away. Finally, print"Device being setup by another
->> task" in nbd_add_sock() and nbd device can not be reused.
->>
->> Fixes: 8f3ea35929a0 ("nbd: handle unexpected replies better")
->> Signed-off-by: Sun Ke <sunke32@huawei.com>
->> ---
->>   drivers/block/nbd.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->> index e21d2de..a69a90a 100644
->> --- a/drivers/block/nbd.c
->> +++ b/drivers/block/nbd.c
->> @@ -357,8 +357,10 @@ static enum blk_eh_timer_return
->> nbd_xmit_timeout(struct request *req,
->>       }
->>       config = nbd->config;
->>   -    if (!mutex_trylock(&cmd->lock))
->> +    if (!mutex_trylock(&cmd->lock)) {
->> +        nbd_config_put(nbd);
->>           return BLK_EH_RESET_TIMER;
->> +    }
->>         if (config->num_connections > 1) {
->>           dev_err_ratelimited(nbd_to_dev(nbd),
->>
-> 
-
+Two things,
+Can we also change the title of this commit to:
+"Removed duplicate OPAL_METHOD_LENGTH definition"
+2nd, I'm dumb as hell now adays, why doesn't this throw a compiler error for multiple declarations?
