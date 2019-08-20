@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A831C9615A
-	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2019 15:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 249A196121
+	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2019 15:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfHTNqq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Aug 2019 09:46:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
+        id S1730691AbfHTNmj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Aug 2019 09:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbfHTNlp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:45 -0400
+        id S1730686AbfHTNmj (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:39 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB73B2087E;
-        Tue, 20 Aug 2019 13:41:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9ECF22DBF;
+        Tue, 20 Aug 2019 13:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308504;
-        bh=iDD40kvBDaWUwYrHhhS3QcnGpCBQmHUNgN2uM+gM11M=;
+        s=default; t=1566308558;
+        bh=V581wTsLKMtFtMR2oTBYW0l+2Swk69Zfs3/wGLPhHn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbWwRaudrgbm2Lbh0Z7UQlx4X6ked7rscRfAi88XGMYzu/u7sDCgncnkNdTWtB726
-         sta/vNhDCcsbtjUAkD3mWizbou0Cld6VWuXRyIhRfWbX5oh/0AB8AIlo2NnuDP7n7O
-         yGvoGk2bOWuYhJg85jY4nXtS3PMipzqeSY6xQtX4=
+        b=wPYmgq4H86f4ELuSVX379qd4Ar4UbF02x6L/gG4mI4CQ3EVZbYUgPoFgbEjiJDLYJ
+         umeBnCLWdrIsNHXnNtFSE7kfieCk3cOYsG7VxT7uR/RTEZdpmuC7MAiAQ3n1gc6/Wx
+         vYcSn5gkJBJXzIfv5X7cnhdAduAnktb3eXm1eYcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
@@ -30,12 +30,12 @@ Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 35/44] xen/blkback: fix memory leaks
-Date:   Tue, 20 Aug 2019 09:40:19 -0400
-Message-Id: <20190820134028.10829-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/27] xen/blkback: fix memory leaks
+Date:   Tue, 20 Aug 2019 09:42:06 -0400
+Message-Id: <20190820134213.11279-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
-References: <20190820134028.10829-1-sashal@kernel.org>
+In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
+References: <20190820134213.11279-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -66,18 +66,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 3ac6a5d180717..b90dbcd99c03e 100644
+index a4bc74e72c394..55869b362fdfb 100644
 --- a/drivers/block/xen-blkback/xenbus.c
 +++ b/drivers/block/xen-blkback/xenbus.c
-@@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 		}
+@@ -974,6 +974,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
  	}
+ 	blkif->nr_ring_pages = nr_grefs;
  
 +	err = -ENOMEM;
  	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
  		req = kzalloc(sizeof(*req), GFP_KERNEL);
  		if (!req)
-@@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+@@ -996,7 +997,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
  	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
  	if (err) {
  		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
@@ -86,7 +86,7 @@ index 3ac6a5d180717..b90dbcd99c03e 100644
  	}
  
  	return 0;
-@@ -1007,8 +1008,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+@@ -1016,8 +1017,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
  		}
  		kfree(req);
  	}
