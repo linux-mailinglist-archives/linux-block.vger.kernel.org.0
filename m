@@ -2,100 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46F21960CA
-	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2019 15:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C59F9615E
+	for <lists+linux-block@lfdr.de>; Tue, 20 Aug 2019 15:47:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfHTNnV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Aug 2019 09:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730838AbfHTNnU (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:20 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AEF22DA7;
-        Tue, 20 Aug 2019 13:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308600;
-        bh=oDMtXJEa9ZCWsIE/vDnDWDnZvkXGuWpAVpKSJlV98jQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q/hKToztDS+fjZQT5ds3FpQsw2PnSbxd2pl/LVjkUDPiMfXsIq3S0bM5wvx3qZuED
-         Q+w5xAkcY7e8bNiYZS4lfEywbiL4dJTsIFnZyldoT5Z4vXm3xFubVelqS2WhFtB66r
-         WKRlKp3AOIhD8cc8Lxmo+H6tRuCso7XpSvUz1OUU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 4/7] xen/blkback: fix memory leaks
-Date:   Tue, 20 Aug 2019 09:43:12 -0400
-Message-Id: <20190820134315.11720-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134315.11720-1-sashal@kernel.org>
-References: <20190820134315.11720-1-sashal@kernel.org>
+        id S1729961AbfHTNq5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Aug 2019 09:46:57 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:32873 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729927AbfHTNq4 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:46:56 -0400
+Received: by mail-io1-f45.google.com with SMTP id z3so12276901iog.0
+        for <linux-block@vger.kernel.org>; Tue, 20 Aug 2019 06:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ne+94cPFo/SkN/NTN2diba+DfBaSFsxhXIBcFFBIymE=;
+        b=LVOmETGZdoxOWuIIcU/xeonAnLl3Jq4E1oVF8NHLupSyOdqXsrLnT3OxFeK2mq37/x
+         zUjG36vDI80CvpR5nmcip2ws7BsqweW4xO9J+xOU4D1uSgCjoLkdWuMVx0sfS9wCn4Md
+         7GC+ldB0+xRhA3USETZvjsz5qgk9MITdOQcoCyurO9LIE+ft9uAA5RQIB3/hPkNlcloI
+         nokJq6EEivhPgL0pl7a8jQnCnPg7zN1IH5dFzquWr+DqxC5VCHHepuwE4/RUCsfnbJJr
+         5HOTvy+3/xVoMVdtcmHcTqcEYxwa0U2jGaMWWqpQxa0smsD46vWoBo2MmeM6oF+h8vaH
+         cVOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ne+94cPFo/SkN/NTN2diba+DfBaSFsxhXIBcFFBIymE=;
+        b=ebPTp9T+om3/rvTMagV6HUUKK4YeHj0ct1+8A3k9sgbs9YEG/dSkJx85Nbj2Xf17iL
+         Lvl1CgsMsaEfxvtPCYQ5Mz6qOJBuzSC/7f6syeGBQYZDhCk3/vtbFjP8xELVDtoUDmGG
+         +mrDpqrLuorv/MiVLGMHdYrkT2cmaWKzkd7CGzgunlpDFiUWlJ2y5s2xuRAxoexoHZqT
+         rW3Xj9arvzDj2R5KdR6EBDTMKx+2o6X3MkT4RiOwPLNeYJQlYZQ67TMN+JZeKBfnk5Sx
+         uOSbLoFvdQzKYiGnpM0rZpPHS4Zx1b8UWT/b7Fru2jBC7UYGzKta9Qrb1guALaigyASe
+         btNg==
+X-Gm-Message-State: APjAAAVjDx3h8b8fW1rLXJ7YeuvpiS9iWiGX9FnBJfs56EfjOfQEEj6D
+        umunKWnzUnfe54SxUqcLLwA7TRtMfoxU/A==
+X-Google-Smtp-Source: APXvYqyAkqaXqMXGYnHyhCgPvDB1GiMeNUd/9hIYwnE2bL5itK4SlnzYXMvUGdtHya3xjUcde8gHeQ==
+X-Received: by 2002:a5d:8352:: with SMTP id q18mr30274898ior.154.1566308815536;
+        Tue, 20 Aug 2019 06:46:55 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v13sm23975564iol.60.2019.08.20.06.46.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 06:46:54 -0700 (PDT)
+Subject: Re: [PATCH] liburing/barrier.h: Add prefix to arm barriers
+To:     Julia Suvorova <jusual@redhat.com>
+Cc:     linux-block@vger.kernel.org, Stefan Hajnoczi <stefanha@gmail.com>,
+        Aarushi Mehta <mehta.aaru20@gmail.com>
+References: <20190820124236.19608-1-jusual@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bf1ef25a-9048-4aa8-9bae-f5b7ec94e4a9@kernel.dk>
+Date:   Tue, 20 Aug 2019 07:46:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820124236.19608-1-jusual@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+On 8/20/19 6:42 AM, Julia Suvorova wrote:
+> Rename the newly added arm barriers and READ/WRITE_ONCE
+> to avoid using popular names.
 
-[ Upstream commit ae78ca3cf3d9e9f914bfcd0bc5c389ff18b9c2e0 ]
+Applied, thanks. I missed this when I applied yours.
 
-In read_per_ring_refs(), after 'req' and related memory regions are
-allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
-etc. However, if this mapping process fails, no cleanup is performed,
-leading to memory leaks. To fix this issue, invoke the cleanup before
-returning the error.
-
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/xen-blkback/xenbus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 5dfe6e8af1408..ad736d7de8383 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -967,6 +967,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	}
- 	blkif->nr_ring_pages = nr_grefs;
- 
-+	err = -ENOMEM;
- 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
- 		req = kzalloc(sizeof(*req), GFP_KERNEL);
- 		if (!req)
-@@ -989,7 +990,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
- 	if (err) {
- 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
--		return err;
-+		goto fail;
- 	}
- 
- 	return 0;
-@@ -1009,8 +1010,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 		}
- 		kfree(req);
- 	}
--	return -ENOMEM;
--
-+	return err;
- }
- 
- static int connect_ring(struct backend_info *be)
 -- 
-2.20.1
+Jens Axboe
 
