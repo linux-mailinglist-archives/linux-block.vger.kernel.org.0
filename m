@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABAD097E7E
-	for <lists+linux-block@lfdr.de>; Wed, 21 Aug 2019 17:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 883DD97F24
+	for <lists+linux-block@lfdr.de>; Wed, 21 Aug 2019 17:41:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfHUPU2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Aug 2019 11:20:28 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34561 "EHLO
+        id S1727226AbfHUPlf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Aug 2019 11:41:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34920 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbfHUPU1 (ORCPT
+        with ESMTP id S1726802AbfHUPlf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:20:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d3so1516817plr.1;
-        Wed, 21 Aug 2019 08:20:27 -0700 (PDT)
+        Wed, 21 Aug 2019 11:41:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn20so1536695plb.2
+        for <linux-block@vger.kernel.org>; Wed, 21 Aug 2019 08:41:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3MUq+62+q1BeUoRQx7zO7y16Wzsx2TMcCZIVUVIU9eY=;
-        b=sO1S5EA5j0t+D7clETxg7G+8UTnGgsYoQ7eFOh7/ZjshHnHibLdfWLL+NCMD3mS0Gd
-         ksTC6MMnSu3z5wdNlpgNupPC+G+/SyplDTlvD4olT7m2/aoLsogZBEeNiDKmfckgtqnH
-         TWbE8M/PdoRIux6hSXXPOtFpDUWt/MTd27+33LL3Q1jtnRpJWKIN7y55ClEkuVxZYtMv
-         ZiDj7w1GUB4lhaYd3YsPn6nx/tfVrFoqGNzYdIPAb+ailB3/rOGz3wFKXwvP5pGVA21M
-         JROmiCcE+UA5O/G/StE0U8zTeHhiW9wGUzKgBPRMsaafu89xxYtOfXyXy6vO+QMuO61H
-         D5yA==
-X-Gm-Message-State: APjAAAVjA/cbGLTJnhKdMBYocXgKkebWPrfbXiYZw4Z8jhD7C+j+1a/C
-        cHoR6+DHLbuYqGrvf674H7LmEjZO
-X-Google-Smtp-Source: APXvYqx6VTY8SvYnIPYD7H96skDVbqUBUIX20kmnwYVW6I6VpfiIPm7l7ctI4G1jHo6dMIyND4saiQ==
-X-Received: by 2002:a17:902:543:: with SMTP id 61mr34273025plf.20.1566400826268;
-        Wed, 21 Aug 2019 08:20:26 -0700 (PDT)
+        bh=crisZJ7D+vC3F3uLPwL+1nRE93mFXssO3OIJRXjUNTg=;
+        b=OEzIbrfgXUEXy+cLl1Xs75P3qXuE3U9SeJQCvMO6a7cgOP1i8QJCZw0+dMC6U7JAtC
+         5/ZWBZgoRbLu0fLrUSTLCXDzHBAH0fGUymf5Rz4Df7ejIBccFiK0QMMDrQtkzXC32IZ7
+         VzPEG+2PAnClPkGTXELh2mELYQDOwU/Ip+EkEIiPmgCPykEGm0QjytGjsTNGDx4rxxqD
+         Cw7JfZ1z8AFIbUNv804Ea+y3nS6656cOxAEjWUZDep05PC0HEhlrpw8gpXwME/th1lw0
+         Ldd7NoNVwnkW/t49OXm45TZApOH79EWtJsQVtSATJc9jyUPEGlsAYVF1sS5AwK6ofrdr
+         QrCg==
+X-Gm-Message-State: APjAAAVFR5N4RU9hxOHQTJAC9LUylDpEEdUfxR7z+uvDj7HKb8K06zRh
+        IxPIAgW8yQA83ULqah2Ol1I=
+X-Google-Smtp-Source: APXvYqzDA0GtTXF7S+CLebYfnQ9gp8K9UCz2HD8DHvCg7X7E0HHqKOpTNiwf8rBHUHoGpz15c8Akbw==
+X-Received: by 2002:a17:902:d690:: with SMTP id v16mr19309438ply.318.1566402094589;
+        Wed, 21 Aug 2019 08:41:34 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id s72sm31859475pgc.92.2019.08.21.08.20.24
+        by smtp.gmail.com with ESMTPSA id y16sm25598684pfn.173.2019.08.21.08.41.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Aug 2019 08:20:25 -0700 (PDT)
-Subject: Re: [PATCH V5 0/9] block: use right accessor to read nr_sects
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org
-Cc:     colyli@suse.de, linux-bcache@vger.kernel.org,
-        linux-btrace@vger.kernel.org, xen-devel@lists.xenproject.org,
-        kent.overstreet@gmail.com, yuchao0@huawei.com, jaegeuk@kernel.org,
-        damien.lemoal@wdc.com, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, linux-scsi@vger.kernel.org
-References: <20190821061423.3408-1-chaitanya.kulkarni@wdc.com>
+        Wed, 21 Aug 2019 08:41:33 -0700 (PDT)
+Subject: Re: [PATCH] block: don't acquire .sysfs_lock before removing mq &
+ iosched kobjects
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Mike Snitzer <snitzer@redhat.com>
+References: <20190816135506.29253-1-ming.lei@redhat.com>
+ <09092247-1623-57ff-6297-1abd9a8cc8a2@acm.org>
+ <20190821030052.GD24167@ming.t460p>
 From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <1aaf1d56-c1a2-957c-28b6-048f9965f412@acm.org>
-Date:   Wed, 21 Aug 2019 08:20:24 -0700
+Message-ID: <d27b430e-ed9b-7de7-5947-c93f1753c529@acm.org>
+Date:   Wed, 21 Aug 2019 08:41:32 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190821061423.3408-1-chaitanya.kulkarni@wdc.com>
+In-Reply-To: <20190821030052.GD24167@ming.t460p>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,14 +59,22 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/20/19 11:14 PM, Chaitanya Kulkarni wrote:
-> In the blk-zoned, bcache, f2fs, target-pscsi, xen and blktrace
-> implementation block device->hd_part->number of sectors field is
-> accessed directly without any appropriate locking or accessor function.
-> There is an existing accessor function present in the in
-> include/linux/genhd.h which should be used to read the
-> bdev->hd_part->nr_sects.
+On 8/20/19 8:00 PM, Ming Lei wrote:
+> On Tue, Aug 20, 2019 at 02:21:10PM -0700, Bart Van Assche wrote:
+>> -	/*
+>> -	 * Remove the sysfs attributes before unregistering the queue data
+>> -	 * structures that can be modified through sysfs.
+>> -	 */
+>>   	if (queue_is_mq(q))
+>> -		blk_mq_unregister_dev(disk_to_dev(disk), q);
+>> -	mutex_unlock(&q->sysfs_lock);
+>> -
+>> +		kobject_uevent(q->mq_kobj, KOBJ_REMOVE);
+> 
+> Could you explain why you move the above line here?
 
-For the entire series:
+I'm not sure whether kobject_del() deletes any objects attached to the 
+deleted kobj. This change ensures that kobject_uevent() is called before 
+the parent object of q->mq_kobj is deleted.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Bart.
