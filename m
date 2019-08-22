@@ -2,78 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E61C599773
-	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2019 16:55:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E66C99805
+	for <lists+linux-block@lfdr.de>; Thu, 22 Aug 2019 17:22:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbfHVOyL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Aug 2019 10:54:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42831 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbfHVOyL (ORCPT
+        id S2389146AbfHVPVB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Aug 2019 11:21:01 -0400
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:50479 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389038AbfHVPVB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:54:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y1so3603981plp.9
-        for <linux-block@vger.kernel.org>; Thu, 22 Aug 2019 07:54:11 -0700 (PDT)
+        Thu, 22 Aug 2019 11:21:01 -0400
+Received: by mail-wm1-f52.google.com with SMTP id v15so6050050wml.0
+        for <linux-block@vger.kernel.org>; Thu, 22 Aug 2019 08:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J3YgGpXbrKQChiIbL9RIJ74I0ACDqCIQRcWEjtb7+qc=;
+        b=zWam6WhhG3qEy/a1cJrD/hvQngGX/9zZNrlhYJ9WhqYxuhfSWPmNbQ5q5EzBtGGcFY
+         QN9n4XFbexIC+RoTAtlz9tGs8cl1lz4tWViai/IfWdMQPEVRbBpQkt9Hnl6UefSBPodG
+         eOqWZtVLUVjKMUYh4F4yolQinHvxoJuqXeO7ls065cvFf+lwHEEcl/uwQFXpdKa6uobo
+         nqrgsYLvmC7+2ny7zNxO2Gs5RavMze6Qs0+gGymhyI+5fOtKXj3RmAoeswbBhq0KnLiw
+         OMAIGyEXxv3GfVtOYjclGCPhDwKQlNDrop9mvrK853MEr022rRGOVJ05Kew6fTwWx91Y
+         GmOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=i+1K6o+xU0wds7U7OAi01E44/TiWnXscnx9OSYa+MG0=;
-        b=VO5TXOMozfcPD2VPTV1pbD7BgA8DRLYH9crrEcloJDeEku5vw2v4myiJEV5GgHd8ER
-         QsQcfhDbd191hm1Qt5ya7GJCliJWXYquifXGZqEyqfK+RAFJqvTcr6Uce/MiUABP9CMM
-         OJh3lUEaqQOiwTm0Qe2ntpZ+Z9nY6xFDIZPN/etU4JYxPe4QdXqjIJK72DJICS3GzPgy
-         ixNfpr6Wo7+m1NyXJ4qjRKCbSFFzqG7/Ldb0NadHGITT+BuEvTp/fAHsjA2Q7SEHpeBi
-         7dobnMcaIBL4raFtHoOIKqrqrvAMRYa2l82b4X0Mp8yqu28mNU3R6h5TpK1D6wFvU1/Q
-         klwQ==
-X-Gm-Message-State: APjAAAX+Ted9qhb9Q4QiChdQlp80/CtcStYsi3rf+t32lmmF7g2gOA0b
-        B1CvJ7qTIeXftLjq1QOpl+hqSjPx
-X-Google-Smtp-Source: APXvYqyohRjKZ4KXdfXIBFPjU8WL1cOSwB9E0BFtzjjJ+lJkVPQTG7Do0Qfcz7kEGueVSlOSODhXTw==
-X-Received: by 2002:a17:902:ba81:: with SMTP id k1mr41599208pls.213.1566485650551;
-        Thu, 22 Aug 2019 07:54:10 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id c12sm28539818pfc.22.2019.08.22.07.54.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2019 07:54:09 -0700 (PDT)
-Subject: Re: [PATCH] tools/io_uring: Fix memory ordering
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Julia Suvorova <jusual@redhat.com>
-References: <20190820172958.92837-1-bvanassche@acm.org>
- <20190822131406.GH20491@stefanha-x1.localdomain>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <03b1e141-3e52-8df6-943a-97192f7a34a0@acm.org>
-Date:   Thu, 22 Aug 2019 07:54:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=J3YgGpXbrKQChiIbL9RIJ74I0ACDqCIQRcWEjtb7+qc=;
+        b=Zj/inPi2sfKsIpDIxre3jL90Nw5ThscKbg6qPbeuo78ELfJY9T09K24SD3Afiwiwb/
+         F2kzU+WSiz0+DBx+A8Ery6V3oLaxCDwcWJMYYQDATu56IpIru1p72zRl1tuwpwXflUfi
+         S5HkQ++WA8pHs/4DwLuoREUzOD7kiu1lRj2T6LAbKx+BsTWgdMtl07YjZVy7cgtuktcO
+         Y6nRbmsyEuKvvK/RjfyO9HFxR8fySVgJvRVpOxvUAmiLoXZ45gyDDdZWrpbYC5CiGqsu
+         uEV3liMb5W6nx5cKejHWE8DDPrDeW1te6eNXZ1nnm4F56w+2ZrU2LWL2cM4cSp48c22w
+         eUXw==
+X-Gm-Message-State: APjAAAVGWXXUwKcWxNaE8M2eYEY8f+WRh2sobB5H+M4hba1jNcDglEs9
+        QLiQAlgkAEd5DQfDjoUhgBH/cQ==
+X-Google-Smtp-Source: APXvYqwLVRiZycBwPEqUp0/01LDS0CVDmgJEvFbmSIMFi1mw9mOJLZJbESTF2oRVAQJJXeGiW4OwYA==
+X-Received: by 2002:a1c:18d:: with SMTP id 135mr7066479wmb.171.1566487259187;
+        Thu, 22 Aug 2019 08:20:59 -0700 (PDT)
+Received: from localhost.localdomain (146-241-115-105.dyn.eolo.it. [146.241.115.105])
+        by smtp.gmail.com with ESMTPSA id a19sm79833974wra.2.2019.08.22.08.20.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 08:20:58 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH 0/4] block, bfq: series of improvements and small fixes of the injection mechanism
+Date:   Thu, 22 Aug 2019 17:20:33 +0200
+Message-Id: <20190822152037.15413-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190822131406.GH20491@stefanha-x1.localdomain>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/22/19 6:14 AM, Stefan Hajnoczi wrote:
-> On Tue, Aug 20, 2019 at 10:29:58AM -0700, Bart Van Assche wrote:
->> Order head and tail stores properly against CQE / SQE memory accesses.
->> Use <asm/barrier.h> instead of the io_uring "barrier.h" header file.
-> 
-> Where does this header file come from?
-> 
-> Linux has an asm-generic/barrier.h file which is not uapi and therefore
-> not installed in /usr/include.
-> 
-> I couldn't find an asm/barrier.h in the Debian packages collection
-> either.
+Hi Jens,
+this patch series makes the injection mechanism better at preserving
+control on I/O.
 
-There two flavours of the asm/barrier.h header file present in the 
-kernel tree. I think that the arch/*/include/asm/barrier.h header files 
-are intended for kernel code and that the tools/include/asm/barrier.h 
-header file is intended for the user space code in the tools directory.
+Thanks,
+Paolo
 
-Bart.
+Paolo Valente (4):
+  block, bfq: update inject limit only after injection occurred
+  block, bfq: reduce upper bound for inject limit to max_rq_in_driver+1
+  block, bfq: increase update frequency of inject limit
+  block, bfq: push up injection only after setting service time
+
+ block/bfq-iosched.c | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
+
+--
+2.20.1
