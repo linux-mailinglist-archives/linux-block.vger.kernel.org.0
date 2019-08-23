@@ -2,144 +2,145 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BACC9A43A
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2019 02:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8A19A46B
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2019 02:50:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfHWAPg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Aug 2019 20:15:36 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:30884 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbfHWAPf (ORCPT
+        id S1731436AbfHWAuu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Aug 2019 20:50:50 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:38832 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731521AbfHWAuu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Aug 2019 20:15:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1566519335; x=1598055335;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=1/sXotb39VxftqsUW6LppcYGmJszREq2zKKiqRbq4T0=;
-  b=rIwVyH8TVo8sm5PAtjs5bh/ObAt/Wr/vLRlZDmZEWKz9iwi7qjLdTK2w
-   c8gvbNC3CiTd4ULhC+tNuXCzcAM9ak8IzES6TD+DMxF0N3djSbzexYGj7
-   EC5AT3ZAduh/dtz3LX8l66QLZNqsks86vctJpoG6K6MRoumVNQwboB25x
-   XfjhURD3LAl29+AJ4kgXKzAXiRKcdmltEXnvyMl+YjQQYmwQMn8odkFwt
-   tpMN8517Vgk5EL1yfOTZT40v6/ht7SLVuixoOJtsP9UvgweRuZv/TZdds
-   nLF2AxEv5PwvA160+qE/3UwrQZEibsZPWISowgfECl5yfAC8IFD7iwEtX
-   g==;
-IronPort-SDR: ur/3BZhYUbmuTH9aCMLNELu7xjfAMfsh1YJeg9k7AKtWRNO6paZc1foARjLcRm5Flxjt8A6gk3
- rpNGEigT+ri/PNdHUntCaitZ+tBKXA7bQYdGG3p/JJrZmvNkW2dwK1uFyf7ehgqc3ST8q76CW5
- 9FzcuXrvVnL0p+Dw+XskRj7zpjq9B9b8wsKkuCDMyj96Ar/TDo08w7rfSOLlKaC6mBQS711bC3
- go9ggCeMUPxUzKuAWxIWYoWZ/ZZYmE47ZeoMV7HrSxWX2eFUSRuAG/9vnNB6Lcm3OK0aZGKKdJ
- +P4=
-X-IronPort-AV: E=Sophos;i="5.64,419,1559491200"; 
-   d="scan'208";a="121063672"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Aug 2019 08:15:34 +0800
-IronPort-SDR: S+VjhqF77i/bskYajMCfikb/2DoQjI83FCi84X2YPY2UV7lwud6VXmNjEr34bVzmvwZjGdCi82
- yAzn8S/Ww8pCq25eG1gbNlo1gNN0Uh26KdARFbFQ0/fAeLI3TVTaVOXBNF5MV/En4EAvWq8AMZ
- KwvopRfjD5CcIXd3YHXegYjztxmSIko5NhUFdNISba0fgwnze816znhss3A5QN2177Kbl5k7kj
- 0rkY+yCZDny9exkHX4PLRNYP87C5pndO5r1v7Tncqm4kqe/xNFDeZSxbLF7Zwd/ZhWAsPUaAtj
- kiIQv0446VF49BRgFdjr86V9
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 17:12:53 -0700
-IronPort-SDR: 6Cn9DR2qGuiJxq+052IiwcBG8ldiHkyGCFxCdsxGDK+mRb6ZqtMGEpyrEERh2AMf5MbXs/Rp7d
- bPU8BOJ5ScZTktiX2pA+jsCZXxk4zFvJlVSZh1KmSr2FbQHPfXgiqD6PZsGuaqewlQnZjhWZnc
- QZspxzuwRuqkH8nvLPH8CWFwm3qzgP1yJa97C6xM73KNawYCtFvxK5uWoMabSk3KwxLDn5bVG3
- mTyVfHO2iDtpjJYmZIOHm2ht8HzXgn7ptyqkDCma4D1gbZI06wwkSzRKeClEtr1GiSd1qO3VYN
- j1s=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 22 Aug 2019 17:15:34 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 7/7] block: Delay default elevator initialization
-Date:   Fri, 23 Aug 2019 09:15:28 +0900
-Message-Id: <20190823001528.5673-8-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190823001528.5673-1-damien.lemoal@wdc.com>
-References: <20190823001528.5673-1-damien.lemoal@wdc.com>
+        Thu, 22 Aug 2019 20:50:50 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190823005045epoutp03cb2b3a33f92a14911610b59d64a5b2d4~9ZvRk74Oz2268722687epoutp03C
+        for <linux-block@vger.kernel.org>; Fri, 23 Aug 2019 00:50:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190823005045epoutp03cb2b3a33f92a14911610b59d64a5b2d4~9ZvRk74Oz2268722687epoutp03C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566521445;
+        bh=f2ThUHwqU6SxyDkaBykTiPQlcm0wcRMy3IpQiQiChcs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qjJP3CPDZUoPqC+TllhSHlEzayDCNEEA/ZeZhRffZlSa6IWzZNyyy/WghomGNCSH3
+         Ll12acSDQNebr7Gm85XsT73lLM+iAcMPvCd+fTuz8IXicflKfBccxTrV2stA77r50K
+         SbznIaYWExt+HtvjAggHXAnol3/leqScWyxLjaic=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20190823005044epcas2p4d26d2085b61ee54bd5954b1c574ebbe6~9ZvRA3S2Y1951719517epcas2p4w;
+        Fri, 23 Aug 2019 00:50:44 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.184]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 46F2rL3vD7zMqYkk; Fri, 23 Aug
+        2019 00:50:42 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.38.04149.2683F5D5; Fri, 23 Aug 2019 09:50:42 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6~9ZvObUZVL1059310593epcas2p3U;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190823005041epsmtrp1e67b842e0eeb29d74f2dcb22b227f249~9ZvOaIzfb2194621946epsmtrp1o;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+X-AuditID: b6c32a46-fd5ff70000001035-b2-5d5f38625f08
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F7.1A.03706.1683F5D5; Fri, 23 Aug 2019 09:50:41 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190823005041epsmtip2748af0669304060f493849067826a76f~9ZvOI_Fjj0682606826epsmtip2h;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/9] crypt: Add diskcipher
+Date:   Fri, 23 Aug 2019 09:50:41 +0900
+Message-ID: <00da01d5594c$c9d87390$5d895ab0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdVZTE1TDvDE+uWuReO+5O58h7ifGg==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLsWRmVeSWpSXmKPExsWy7bCmhW6SRXysweKVkhZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UTk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koK
+        eYm5qbZKLj4Bum6ZOUC/KymUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKDA0L9IoT
+        c4tL89L1kvNzrQwNDIxMgSoTcjI6Ly5kKvjFXLFyz1PWBsaJzF2MnBwSAiYSL6bdBLK5OIQE
+        djBKHLn/Csr5xCix9PRDFgjnG6PEowUX2GFafl3vYoNI7GWUuPn/HVTLS0aJna+nsoBUsQlo
+        S2w+vooRxBYR0JXYfGM5O0gRs8A/doknnw6BFQkL6EnMeLCYCcRmEVCV2PysF2gsBwevgKXE
+        q49qIGFeAUGJkzOfgJUzC8hLbH87B+pwBYkdZ19DzdeTeN4xnR2iRkRidmcb2EESAj/ZJSb9
+        ameBaHCR6JtwBcoWlnh1fAvUO1ISL/vboOx6iavLFrNDNPcwSpz5BZMwlpj1rJ0R5DhmAU2J
+        9bv0QUwJAWWJI7egbuOT6Dj8lx0izCvR0SYE0agiMffTZSaIsJTEh546iLCHRPPBDrYJjIqz
+        kDw5C8mTs5A8Mwth7QJGllWMYqkFxbnpqcVGBUbIkb2JEZwvtNx2MC4553OIUYCDUYmHt6Aj
+        LlaINbGsuDL3EKMEB7OSCG/ZRKAQb0piZVVqUX58UWlOavEhRlNgFExklhJNzgfmsrySeENT
+        IzMzA0tTC1MzIwslcd5N3DdjhATSE0tSs1NTC1KLYPqYODilGhhb2VZ9bj/4j9m9Iuf7vUUs
+        J3MWHf0j1lTS2eO4QTdzw8b5G6K8pjDqvjtzN9nhxX13G1vnkq0G1TZrtL/4bHvHupRDP5rx
+        VqSo+KHqV+sObK02DLrOElD9o+/Xi+W1bfOcdJRutyZXXz9cM4dTcjbnAX/x5gzHh1uvntDf
+        efu79KO5c470TF6hxFKckWioxVxUnAgA7+Q96S0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsWy7bCSvG6iRXyswZrzuhZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UVw2Kak5mWWpRfp2CVwZnRcXMhX8Yq5YuecpawPjROYuRk4O
+        CQETiV/Xu9i6GLk4hAR2M0qc+72aHSIhJbG1fQ9UkbDE/ZYjrBBFzxklDhw4BVbEJqAtsfn4
+        KkYQW0RAV2LzjeVgcWaBaRwSuz6Ig9jCAnoSMx4sZgKxWQRUJTY/6wXaxsHBK2Ap8eqjGkiY
+        V0BQ4uTMJywgYWag8raNjBBT5CW2v50DdYKCxI6zr6E26Uk875gOtUlEYnZnG/MERsFZSCbN
+        Qpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECE4BWpo7GC8viT/E
+        KMDBqMTDW9ARFyvEmlhWXJl7iFGCg1lJhLdsIlCINyWxsiq1KD++qDQntfgQozQHi5I479O8
+        Y5FCAumJJanZqakFqUUwWSYOTqkGxpkCz5+oMws9PX3b/Iwkf+SF3W8rQ53jHge67jXfcttX
+        XfWf/YkDt2PWHm6XO/JJRet0fPHMFRtncfxadl8yhy+f9dwq5ZWcKeFMbiHrX7L3Sj37OZvd
+        4obsuk/CfvZi882OzLqbKXEtsXAff8/CwM0+Hnof3BSz71z2LO/ouybA31ka2n+AWYmlOCPR
+        UIu5qDgRAIuCqND9AgAA
+X-CMS-MailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
+References: <CGME20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6@epcas2p3.samsung.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When elevator_init_mq() is called from blk_mq_init_allocated_queue(),
-the only information known about the device is the number of hardware
-queues as the block device scan by the device driver is not completed
-yet. The device type and the device required features are not set yet,
-preventing to correctly choose the default elevator most suitable for
-the device.
+On Wed, 22 Aug 2019 at 17:37, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Your patch looks corrupted - wrapped by mailer. The easiest way
+> usually is to use git format-patch and git send-email - then you do
+> not have to worry about formatting etc.
+>
+> Best regards,
+> Krzysztof
 
-This currently affects all multi-queue zoned block devices which default
-to the "none" elevator instead of the required "mq-deadline" elevator.
-These drives currently include host-managed SMR disks connected to a
-smartpqi HBA and null_blk block devices with zoned mode enabled.
-Upcoming NVMe Zoned Namespace devices will also be affected.
+I'm using outlook instead of 'git send-email' because of workplace policy.
+It's probably broken when I copied the code.
+Thanks for your notice. I will be more careful.
 
-Fix this by moving the execution of elevator_init_mq() from
-blk_mq_init_allocated_queue() into __device_add_disk() to allow for the
-device driver to probe the device characteristics and set attributes
-of the device request queue prior to the elevator initialization.
-
-Also to make sure that the elevator initialization is never done while
-requests are in-flight (there should be none when the device driver
-calls device_add_disk()), freeze and quiesce the device request queue
-before executing blk_mq_init_sched().
-
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- block/blk-mq.c   | 2 --
- block/elevator.c | 7 +++++++
- block/genhd.c    | 3 +++
- 3 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 274e168c8535..34e9541945dc 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2906,8 +2906,6 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 	blk_mq_add_queue_tag_set(set, q);
- 	blk_mq_map_swqueue(q);
- 
--	elevator_init_mq(q);
--
- 	return q;
- 
- err_hctxs:
-diff --git a/block/elevator.c b/block/elevator.c
-index ec75dfee7e96..9218bc86845f 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -688,7 +688,14 @@ void elevator_init_mq(struct request_queue *q)
- 	if (!e)
- 		return;
- 
-+	blk_mq_freeze_queue(q);
-+	blk_mq_quiesce_queue(q);
-+
- 	err = blk_mq_init_sched(q, e);
-+
-+	blk_mq_unquiesce_queue(q);
-+	blk_mq_unfreeze_queue(q);
-+
- 	if (err) {
- 		pr_warn("\"%s\" elevator initialization failed, "
- 			"falling back to \"none\"\n", e->elevator_name);
-diff --git a/block/genhd.c b/block/genhd.c
-index 54f1f0d381f4..d2114c25dccd 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -734,6 +734,9 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 				    exact_match, exact_lock, disk);
- 	}
- 	register_disk(parent, disk, groups);
-+
-+	elevator_init_mq(disk->queue);
-+
- 	if (register_queue)
- 		blk_register_queue(disk);
- 
--- 
-2.21.0
+Thanks for your reply
+Boojin Kim.
 
