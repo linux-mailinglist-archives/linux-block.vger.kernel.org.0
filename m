@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F5949A435
-	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2019 02:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C0FB9A437
+	for <lists+linux-block@lfdr.de>; Fri, 23 Aug 2019 02:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfHWAPb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Aug 2019 20:15:31 -0400
+        id S1728263AbfHWAPc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Aug 2019 20:15:32 -0400
 Received: from esa3.hgst.iphmx.com ([216.71.153.141]:30872 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728224AbfHWAPb (ORCPT
+        with ESMTP id S1728262AbfHWAPc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Aug 2019 20:15:31 -0400
+        Thu, 22 Aug 2019 20:15:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1566519331; x=1598055331;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=afa1tg1LDkqSoP1c7eXH5X/bvtdyWo7csNQ4j7EqvZo=;
-  b=UW/Fu5AFM/l4Qw5ww12JgLyhSUcMfytgi+4TJUmwdipY9Iuf2roYBOe5
-   vfMLlkLf7a1MriFNl2pKt1ot8EReJosof3074bJZ+fbjHgE63fRZzpRnt
-   gBo5QKa8lC2ZSO4BnOh+uBIPQjFSlu8tcK5ISqT9ZeViW49ow3NuNl5dA
-   fLeFIFji6T2xORJxWP0rfMwX+ZUjwiHy3NRFh9ziilKIWjyxqLuQCdLR5
-   IRVw0n4hRZw48Fl73ueUoss4XN9dUoMMmtPpF34ZcskmM+od1BxB1msFo
-   clV9u6fVRqU0w3gtv+7tU6JfJAurPYOkt7NJupaDYnrnHt9OLT4lPo345
-   Q==;
-IronPort-SDR: EIQYCN8HXo1s2f/xMykw7mFAHjvN6hOq0XOE0WFzMfDoX5sRt9JYyX9DLRGuMFMkvI115CH0dW
- Meq1ltr7GawhBQkWcB24wEq/hqhSmd3HZ55b0EjZtlBMElSGd47FJav8t/T5NwYmPYoMCDa9kv
- ACb4N0YMkuDkQ02L3zV+ccVWD4On97JjNhl+z261jVRExECFQXKDTPSheWefukoo88QD/QbxfE
- Zv2Glpd9LwLCVXinezVCO/k/PFdmePpJQus2hLuTXfO4UTMVR7qgPzztVHeUlnIRD5rqpFxm/W
- boE=
+  bh=2VOOI9y5LEc9gNFG0XBbhG4PU+RZhuVcJ68XilDuZH8=;
+  b=FQnInb4UethKEcKqW6fFEhQ2cHbNvCWR6muWlDsWD1jV2ZRQfKVUTBaz
+   NWzpYvQGUOIiNXVFIgfKp4NM/CAslH4EVln0Xrq+lVEvJLOtBduREhSza
+   lDigH0zLIkjWvCcE5ysqmOx71FLMcmXYIzdqw4mlMJJ7+X25JEKg+kLK7
+   EpFkYdnIWsbUtw9Le9ekWjZEcH/6KMUBMtwQYedNfvrSulgxl2le02m77
+   Cr+fMNgsa/2Rt6wL+y5dq8LzXiF5LAD1VQvVcvcQIo2oAIsk9D3cGyRjd
+   gv2sOepPlV2C26jGkBVMl9n/cNzUYyLQQiYFD8kN+F/mF2pHlw0rbBKcx
+   g==;
+IronPort-SDR: +H+DicjrgZCso2ZMERZTQL8mz3LDTqLwsf7GMRkuZb12sDfkngumVWeP20rYOQGIjq6xvu+0iD
+ myErxpPqbcE1CeEw4mffAUQxyLboXUZpBFV5aXssHQHtPjfj3OFxpg5Y2mzYhTFQ7JCT2qpS4y
+ 4JYwcvXeizSh/d9jfdj1AyKATxumGXZykSay4XJneT+wwi6lGEU/FSWEEtfP4idGsh4RQqZgLh
+ kTvU+AHcWMIJeI1NFqIHfFBHFT7uDpwSMeyw/kUemRv2dugT4IMILOFr++GFcChPwK7aHvlAhS
+ j74=
 X-IronPort-AV: E=Sophos;i="5.64,419,1559491200"; 
-   d="scan'208";a="121063664"
+   d="scan'208";a="121063665"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Aug 2019 08:15:30 +0800
-IronPort-SDR: e/7RDop+a9nVGZ8JYjaGenwXDB7Szd037//NtnKk21Dq2Wyk3wPqMmkzw/NaoHh1srta2JruNW
- KM2tqKvQ4aJZHwbiE5R7gUJ/liA3/wml/owQNZbDNBOVk2OTEllIwQhmhdH/vZRZEWc1E9U/6Z
- RyprIXgefKNYW2GbM2EIqchshHhy/+CEQ0VGbMe2SXlTeGtsS+Hv1V2rsc3Erjj5wyXWtFxf/l
- QrHFsuOQUHgq9Bupagwpvl1+IW4RaSVoNZ50E17fC+zZ1/32qDDTBYXWF04Tj6AM1nTVV+kbrC
- X7nYOca31ta1TxgvfY/34Rko
+  by ob1.hgst.iphmx.com with ESMTP; 23 Aug 2019 08:15:31 +0800
+IronPort-SDR: VlikhWZdbDpAr0pgUMS8vg8wRYsdwVMfWhMgARRcSjsIHTPTk8aSaS4Oy+t4PXTpYLnLlTUZRe
+ 7+okyaLiCrXPXEdwHjHBVMv/YUuIl5SZfgv7LU4F10Iv0U2aW+E/CcjAM2J58i83RBi+S5Joci
+ G4c5CZmjnT/wg52kjaxYB4MWRohtK7xMR3/z8TbqhZhjma5UpmsyiIfdXRRHEq1Na76QkdRWWe
+ zokquc8zHakrbvzJUuWbRHpaVmTVch6WZgCpzmNwVdq295TFhYq65QDBsEQ/FGkH+DO2rftg3t
+ dp30bmdc3+zMIvZK60QxzrXl
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 17:12:49 -0700
-IronPort-SDR: LXUp74Oo553PSa8NWjYlE7z8x7igdHo2eV8evB2gkLF+roK5fzBbT31GqzoJ3q4XHnKizZuDfx
- EPUAv3sQH3YduCC7zFS6ol8/iRyOC+F/ZD49FHg2/amHPIQS0V6LHWyuQ3H8seCcmzTJ6uplLw
- PudSOy1zvD9HJvKUY2U5aLiPdc5/jsYfWXeV03DA8ma85UaWZHQ4eWp4GHV64jkBHIdOS3O5WS
- jGHhTwPOpdPJ931Abn4onkgXRkWx0KdRTgDq5WO2mcok3SXuSN2sBSScXzlY19VlCsaJgP6Ppr
- 0ZY=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 17:12:50 -0700
+IronPort-SDR: sBfg77FSBLsBaM3Xbw4KVf8zevcSNSrk9oFl/xiNScJuxvGHVNRJQYFjVEc2pv7JNCzpUekViu
+ Ft2B80ktff0qYj4u0yKM5xzPsMg9hHcWALxypRwpY5IIzky2fJll63EZoUCxE7RHa3Q4wbzG4U
+ 9vxw6Kb8bGf122VJ86Nu1IsYapeIGdfwOCE/EuNx/otNGLQ+LBvH9y9UHSFY45rOnPxahb4beL
+ MlgNmmIrJrZTVNTIFQ7FpqKK9OUArheToRG5h1fL3PnUimbHqpXJo31eKTzJmzTE5Scjk8orpJ
+ ioA=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 22 Aug 2019 17:15:30 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 22 Aug 2019 17:15:31 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 1/7] block: Cleanup elevator_init_mq() use
-Date:   Fri, 23 Aug 2019 09:15:22 +0900
-Message-Id: <20190823001528.5673-2-damien.lemoal@wdc.com>
+Subject: [PATCH 2/7] block: Change elevator_init_mq() to always succeed
+Date:   Fri, 23 Aug 2019 09:15:23 +0900
+Message-Id: <20190823001528.5673-3-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190823001528.5673-1-damien.lemoal@wdc.com>
 References: <20190823001528.5673-1-damien.lemoal@wdc.com>
@@ -64,86 +64,111 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of checking a queue tag_set BLK_MQ_F_NO_SCHED flag before
-calling elevator_init_mq() to make sure that the queue supports IO
-scheduling, use the elevator.c function elv_support_iosched() in
-elevator_init_mq(). This does not introduce any functional change but
-ensure that elevator_init_mq() does the right thing based on the queue
-settings.
+If the default elevator chosen is mq-deadline, elevator_init_mq() may
+return an error if the mq-deadline initialization fails, leading to
+blk_mq_init_allocated_queue() returning an error, which in turn will
+cause the block device initialization to fail.
+
+Instead of taking such extreme measure, handle mq-deadline
+initialization failures in the same manner as if mq-deadline being not
+available (no module to load), that is, default to the "none" scheduler.
+With this change, elevator_init_mq() return type can be changed to void.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- block/blk-mq.c   |  8 +++-----
- block/elevator.c | 23 +++++++++++++----------
- 2 files changed, 16 insertions(+), 15 deletions(-)
+ block/blk-mq.c   |  8 +-------
+ block/blk.h      |  2 +-
+ block/elevator.c | 17 ++++++++++-------
+ 3 files changed, 12 insertions(+), 15 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 509f69fdfcf2..556c774a0f0d 100644
+index 556c774a0f0d..274e168c8535 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2908,11 +2908,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+@@ -2846,8 +2846,6 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
+ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 						  struct request_queue *q)
+ {
+-	int ret = -ENOMEM;
+-
+ 	/* mark the queue as mq asap */
+ 	q->mq_ops = set->ops;
+ 
+@@ -2908,14 +2906,10 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
  	blk_mq_add_queue_tag_set(set, q);
  	blk_mq_map_swqueue(q);
  
--	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
--		ret = elevator_init_mq(q);
--		if (ret)
--			goto err_tag_set;
--	}
-+	ret = elevator_init_mq(q);
-+	if (ret)
-+		goto err_tag_set;
+-	ret = elevator_init_mq(q);
+-	if (ret)
+-		goto err_tag_set;
++	elevator_init_mq(q);
  
  	return q;
  
+-err_tag_set:
+-	blk_mq_del_queue_tag_set(q);
+ err_hctxs:
+ 	kfree(q->queue_hw_ctx);
+ 	q->nr_hw_queues = 0;
+diff --git a/block/blk.h b/block/blk.h
+index de6b2e146d6e..ddb292bb6caf 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -184,7 +184,7 @@ void blk_account_io_done(struct request *req, u64 now);
+ 
+ void blk_insert_flush(struct request *rq);
+ 
+-int elevator_init_mq(struct request_queue *q);
++void elevator_init_mq(struct request_queue *q);
+ int elevator_switch_mq(struct request_queue *q,
+ 			      struct elevator_type *new_e);
+ void __elevator_exit(struct request_queue *, struct elevator_queue *);
 diff --git a/block/elevator.c b/block/elevator.c
-index 2f17d66d0e61..1ed2710f1950 100644
+index 1ed2710f1950..7fff06751633 100644
 --- a/block/elevator.c
 +++ b/block/elevator.c
-@@ -594,16 +594,26 @@ int elevator_switch_mq(struct request_queue *q,
- 	return ret;
- }
+@@ -603,19 +603,19 @@ static inline bool elv_support_iosched(struct request_queue *q)
  
-+static inline bool elv_support_iosched(struct request_queue *q)
-+{
-+	if (q->tag_set && (q->tag_set->flags & BLK_MQ_F_NO_SCHED))
-+		return false;
-+	return true;
-+}
-+
  /*
-- * For blk-mq devices, we default to using mq-deadline, if available, for single
-- * queue devices.  If deadline isn't available OR we have multiple queues,
-- * default to "none".
-+ * For blk-mq devices supporting IO scheduling, we default to using mq-deadline,
-+ * if available, for single queue devices. If deadline isn't available OR we
-+ * have multiple queues, default to "none".
+  * For blk-mq devices supporting IO scheduling, we default to using mq-deadline,
+- * if available, for single queue devices. If deadline isn't available OR we
+- * have multiple queues, default to "none".
++ * if available, for single queue devices. If deadline isn't available OR
++ * deadline initialization fails OR we have multiple queues, default to "none".
   */
- int elevator_init_mq(struct request_queue *q)
+-int elevator_init_mq(struct request_queue *q)
++void elevator_init_mq(struct request_queue *q)
  {
  	struct elevator_type *e;
  	int err = 0;
  
-+	if (!elv_support_iosched(q))
-+		return 0;
-+
- 	if (q->nr_hw_queues != 1)
- 		return 0;
+ 	if (!elv_support_iosched(q))
+-		return 0;
++		return;
  
-@@ -685,13 +695,6 @@ static int __elevator_change(struct request_queue *q, const char *name)
- 	return elevator_switch(q, e);
+ 	if (q->nr_hw_queues != 1)
+-		return 0;
++		return;
+ 
+ 	/*
+ 	 * q->sysfs_lock must be held to provide mutual exclusion between
+@@ -630,11 +630,14 @@ int elevator_init_mq(struct request_queue *q)
+ 		goto out_unlock;
+ 
+ 	err = blk_mq_init_sched(q, e);
+-	if (err)
++	if (err) {
++		pr_warn("\"%s\" elevator initialization failed, "
++			"falling back to \"none\"\n", e->elevator_name);
+ 		elevator_put(e);
++	}
++
+ out_unlock:
+ 	mutex_unlock(&q->sysfs_lock);
+-	return err;
  }
  
--static inline bool elv_support_iosched(struct request_queue *q)
--{
--	if (q->tag_set && (q->tag_set->flags & BLK_MQ_F_NO_SCHED))
--		return false;
--	return true;
--}
--
- ssize_t elv_iosched_store(struct request_queue *q, const char *name,
- 			  size_t count)
- {
+ 
 -- 
 2.21.0
 
