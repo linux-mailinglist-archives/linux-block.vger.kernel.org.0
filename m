@@ -2,66 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7809A9F055
-	for <lists+linux-block@lfdr.de>; Tue, 27 Aug 2019 18:38:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A27399F077
+	for <lists+linux-block@lfdr.de>; Tue, 27 Aug 2019 18:41:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfH0QiB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Aug 2019 12:38:01 -0400
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:44593 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfH0QiB (ORCPT
+        id S1728312AbfH0QlL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Aug 2019 12:41:11 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52634 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727401AbfH0QlL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:38:01 -0400
-Received: by mail-pl1-f171.google.com with SMTP id t14so12031524plr.11
-        for <linux-block@vger.kernel.org>; Tue, 27 Aug 2019 09:38:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rGjhiT6dMpMoSrZXIUECRp6N3/WNZEug3kElTQ33hfk=;
-        b=ATy0WgRrEbi/qxWb2sD5ZPgB9XhhLXUBn6mwboKl6gsT9t1vnIj2x/kjViAqn5Q7vo
-         sChqk6uP60QWGtlpcgRa4sfHLEC1jy1/oY7Jqt91vh8/31hFo9OkD6MuLNwAho5n6nNd
-         axp31pUXPoWY850Wj8o4xAgdL/Y8n+e7TQ0QAngHYnO5O3YuobaIwsznZq17ZR3bneE8
-         Kp5FD7Wr/ZeqGe/ZOPVmEvMDi1tv/d+YjgQFb3FRrN7PUJGYJ0naIYlf4G3p0JH+BREP
-         kgILqlXOoqkF0FsooggcPyrZxFQz6iGh1VxPC5IuLrM8l5J7d1b3PIsDt+PzZ6LPZLcK
-         v8DA==
-X-Gm-Message-State: APjAAAVjELsgBLTj7j+i7BoQgEHABDr7n9jzrL5HQYgkYrT/MuNWth/J
-        uuV8Qrh26gKlz/6SqFmzQZ4=
-X-Google-Smtp-Source: APXvYqzNMzekVFbt1whm3wg+h0wYiF5Rke9xZcLze4oG2JiULWjQBwuQkjIdKR1bynjlLRdth224pg==
-X-Received: by 2002:a17:902:e9:: with SMTP id a96mr13475120pla.169.1566923880301;
-        Tue, 27 Aug 2019 09:38:00 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id j6sm17036577pfg.158.2019.08.27.09.37.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 09:37:59 -0700 (PDT)
-Subject: Re: [PATCH V4 5/5] block: split .sysfs_lock into two locks
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Mike Snitzer <snitzer@redhat.com>
-References: <20190827110148.808-1-ming.lei@redhat.com>
- <20190827110148.808-6-ming.lei@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <7f0593f7-356c-6fef-f280-024c0ead9fcf@acm.org>
-Date:   Tue, 27 Aug 2019 09:37:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 12:41:11 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7RGeCWG021084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 12:40:13 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 70A4F42049E; Tue, 27 Aug 2019 12:40:12 -0400 (EDT)
+Date:   Tue, 27 Aug 2019 12:40:12 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     "boojin.kim" <boojin.kim@samsung.com>
+Cc:     "'Satya Tangirala'" <satyat@google.com>,
+        "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/9] block: support diskcipher
+Message-ID: <20190827164012.GN28066@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "boojin.kim" <boojin.kim@samsung.com>,
+        'Satya Tangirala' <satyat@google.com>,
+        'Herbert Xu' <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Eric Biggers' <ebiggers@kernel.org>, 'Chao Yu' <chao@kernel.org>,
+        'Jaegeuk Kim' <jaegeuk@kernel.org>,
+        'Andreas Dilger' <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
+        'Mike Snitzer' <snitzer@redhat.com>,
+        'Alasdair Kergon' <agk@redhat.com>, 'Jens Axboe' <axboe@kernel.dk>,
+        'Krzysztof Kozlowski' <krzk@kernel.org>,
+        'Kukjin Kim' <kgene@kernel.org>,
+        'Jaehoon Chung' <jh80.chung@samsung.com>,
+        'Ulf Hansson' <ulf.hansson@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+References: <CGME20190827083334epcas2p115d479190b9a72c886f66569add78203@epcas2p1.samsung.com>
+ <03b201d55cb2$1d4d31b0$57e79510$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190827110148.808-6-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03b201d55cb2$1d4d31b0$57e79510$@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/27/19 4:01 AM, Ming Lei wrote:
-> The kernfs built-in lock of 'kn->count' is held in sysfs .show/.store
-> path. Meantime, inside block's .show/.store callback, q->sysfs_lock is
-> required.
- > [ ... ]
+On Tue, Aug 27, 2019 at 05:33:33PM +0900, boojin.kim wrote:
+> 
+> Dear Satya.
+> Keyslot manager is a good solution for ICE. And probably no issue for FMP.
+> But, I think it's complicated for FMP because FMP doesn't need
+> any keyslot control.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Hi Boojin,
+
+I think the important thing to realize here is that there are a large
+number of hardware devices for which the keyslot manager *is* needed.
+And from the upstream kernel's perspective, supporting two different
+schemes for supporting the inline encryption feature is more
+complexity than just supporting one which is general enough to support
+a wider variety of hardware devices.
+
+If you want somethig which is only good for the hardware platform you
+are charged to support, that's fine if it's only going to be in a
+Samsung-specific kernel.  But if your goal is to get something that
+works upstream, especially if it requires changes in core layers of
+the kernel, it's important that it's general enough to support most,
+if not all, if the hardware devices in the industry.
+
+Regards,
+
+					- Ted
