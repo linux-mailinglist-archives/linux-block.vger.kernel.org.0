@@ -2,146 +2,171 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D0F7A01EA
-	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 14:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF4EA056A
+	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 16:57:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfH1Mha (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Aug 2019 08:37:30 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:63354 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726300AbfH1Mha (ORCPT
+        id S1726617AbfH1O5E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Aug 2019 10:57:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32801 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfH1O5E (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:37:30 -0400
-X-IronPort-AV: E=Sophos;i="5.64,441,1559487600"; 
-   d="scan'208";a="25152958"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2019 21:37:26 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1C34940062B8;
-        Wed, 28 Aug 2019 21:37:26 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     ulf.hansson@linaro.org, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, joro@8bytes.org, axboe@kernel.dk
-Cc:     wsa+renesas@sang-engineering.com, linux-mmc@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-block@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v10 4/4] mmc: queue: Use bigger segments if DMA MAP layer can merge the segments
-Date:   Wed, 28 Aug 2019 21:35:43 +0900
-Message-Id: <1566995743-5614-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566995743-5614-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1566995743-5614-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Wed, 28 Aug 2019 10:57:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go14so117638plb.0;
+        Wed, 28 Aug 2019 07:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JzE5osCTB92XAPpUB75wCbGts3OVhlEyRxVtEnEhM+s=;
+        b=VjafpiHn+H/Yn3ttsfJr5HQonWbXr70KXEmx0gnO39ej1X0lllUFu7YbyJzR5Xmb9X
+         pY0MEvyRHBq6SoRV4pw+e/OmRF/9Ehmn4pnpjmXbIoDrLQYFA8C9P9aGUbIOlna4K/I4
+         mT+IWsYtQgekyP8NBtddxS1iUw6KL5tX04Dx7XgdvJNuYVNLJ5pUu/TqaSLavXroCTwk
+         DROvd2xkRwR6S5fsE5R6gJvu2pWY2Ge2zJVIHxb2DOwQdxx5MBbCwd4EcRuUXTEofiat
+         opgF80qTA4p6UTx+mzD7884oIHIhoISj9+zM2f/MYFY07q2OMiOfrYacY/cVAXX67/j8
+         ujdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JzE5osCTB92XAPpUB75wCbGts3OVhlEyRxVtEnEhM+s=;
+        b=mxtU+I4Vv+ITY/jdLO9XoM8KuBOOtI/eWaCxY2Av0HeLbthPe4DyNCHXZ6OTVPZNXv
+         kPWcqTGevlyKtFEkVeaFskS8IxNuH+CCi3M+x4GQdaCK8qBLFqi6/etUsWyLUu40tbr4
+         Scl9La4Q6lIRUpCuA0Sq2pbW/ut/Wy3oFY9SimdRZXDtZgPMO7u7JInGLzlKf5iCCMPk
+         psH8OrF9Ix+PSOWsDHB+fxFHxAmFyn+lwN3dGfQeLLetJFHj7k6AHZM5VBOoPJUJmPV7
+         6Coxj1SlPtC9VQSFWRHV6VsoQT/DJkizsKN9/hd9LOK7h9iuZBkh1xf9QY31BtTPPwcA
+         7TDg==
+X-Gm-Message-State: APjAAAUGBmDT3Cc2O2EP/1Dk7inkxS3nvf28tjSK8U7iXzShJobf7pYl
+        ZTMeb0npBSvQNymO0z2qXlKfzY9C49zkx68kWUw=
+X-Google-Smtp-Source: APXvYqx4jFzQQN92tBres1dfrzux0bEqo1UfkwxDaRPm7h+C4Zv52PksySBqfNdYulxwW35s56T3DlTv/QuLEuZvtpY=
+X-Received: by 2002:a17:902:426:: with SMTP id 35mr4859364ple.192.1567004222800;
+ Wed, 28 Aug 2019 07:57:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <1565888399-21550-1-git-send-email-akinobu.mita@gmail.com>
+ <1565888399-21550-5-git-send-email-akinobu.mita@gmail.com>
+ <20190817145509.GA18381@amd> <925633c4-a459-5e84-9c9a-502a504fdc82@gmail.com>
+ <20190819143842.GA25401@amd> <7c4c4853-7e3a-0618-92a0-337e248e2b4c@gmail.com>
+ <c937b7e0-02c6-ae9a-aaf7-16a2ef29886d@gmail.com> <CAC5umyjxkeR3rhf3XZvwkxLvc-0ENEkQfOLnk8A12Qazr9Et8w@mail.gmail.com>
+ <86309c4f-bcee-182c-369f-fcc883f379c6@gmail.com> <CAC5umyibEMrxhZv0TyS6hYHR+oyj2Oby+LVsjrYmMV8u-chXRQ@mail.gmail.com>
+ <1f7928a1-61ba-72f0-fd03-2208856cd8b8@gmail.com>
+In-Reply-To: <1f7928a1-61ba-72f0-fd03-2208856cd8b8@gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Wed, 28 Aug 2019 23:56:51 +0900
+Message-ID: <CAC5umygq7p63sAnL+cqe35RqXpFDv=CyuEMiWGQy76=_uq8ZHg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] block: introduce LED block device activity trigger
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-block@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org,
+        Frank Steiner <fsteiner-mail1@bio.ifi.lmu.de>,
+        Dan Murphy <dmurphy@ti.com>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the max_segs of a mmc host is smaller than 512, the mmc
-subsystem tries to use 512 segments if DMA MAP layer can merge
-the segments, and then the mmc subsystem exposes such information
-to the block layer by using blk_queue_can_use_dma_map_merging().
+2019=E5=B9=B48=E6=9C=8828=E6=97=A5(=E6=B0=B4) 6:23 Jacek Anaszewski <jacek.=
+anaszewski@gmail.com>:
+>
+> On 8/27/19 4:03 PM, Akinobu Mita wrote:
+> > 2019=E5=B9=B48=E6=9C=8825=E6=97=A5(=E6=97=A5) 0:53 Jacek Anaszewski <ja=
+cek.anaszewski@gmail.com>:
+> >>
+> >> On 8/23/19 6:00 PM, Akinobu Mita wrote:
+> >>> 2019=E5=B9=B48=E6=9C=8820=E6=97=A5(=E7=81=AB) 3:38 Jacek Anaszewski <=
+jacek.anaszewski@gmail.com>:
+> >>>>
+> >>>> On 8/19/19 8:22 PM, Jacek Anaszewski wrote:
+> >>>>> On 8/19/19 4:38 PM, Pavel Machek wrote:
+> >>>>>> On Sat 2019-08-17 22:07:43, Jacek Anaszewski wrote:
+> >>>>>>> On 8/17/19 4:55 PM, Pavel Machek wrote:
+> >>>>>>>> On Fri 2019-08-16 01:59:58, Akinobu Mita wrote:
+> >>>>>>>>> This allows LEDs to be controlled by block device activity.
+> >>>>>>>>>
+> >>>>>>>>> We already have ledtrig-disk (LED disk activity trigger), but t=
+he lower
+> >>>>>>>>> level disk drivers need to utilize ledtrig_disk_activity() to m=
+ake the
+> >>>>>>>>> LED blink.
+> >>>>>>>>>
+> >>>>>>>>> The LED block device trigger doesn't require the lower level dr=
+ivers to
+> >>>>>>>>> have any instrumentation. The activity is collected by polling =
+the disk
+> >>>>>>>>> stats.
+> >>>>>>>>>
+> >>>>>>>>> Example:
+> >>>>>>>>>
+> >>>>>>>>> echo block-nvme0n1 > /sys/class/leds/diy/trigger
+> >>>>>>>>
+> >>>>>>>> Lets use one trigger "block" and have the device as a parameter,
+> >>>>>>>> please.
+> >>>>>>>>
+> >>>>>>>> We already have 1000 cpu triggers on 1000 cpu machines, and yes,=
+ its a
+> >>>>>>>> disaster we'll need to fix. Lets not repeat the same mistake her=
+e.
+> >>>>>>>>
+> >>>>>>>> I guess it may be slightly more work. Sorry about that.
+> >>>>>>>
+> >>>>>>> We should be able to list available block devices to set,
+> >>>>>>> so the problem would be not avoided anyway.
+> >>>>>>
+> >>>>>> Should we? We need to list triggers, but we may not list all the d=
+evices...
+> >>>>>
+> >>>>> This is similar to usbport trigger that lists available
+> >>>>> ports as files in a sub-directory. We might eventually go
+> >>>>> in this direction.
+> >>>>
+> >>>> I must withdraw this statement. This is not similar to usbport
+> >>>> trigger. The difference is that with ledtrig-block we have separate
+> >>>> triggers per each device and I am not aware if there is some central=
+ized
+> >>>> mechanism similar to blocking_notifier_chain (usb_notifier_list
+> >>>> in drivers/usb/core/notify.c) available for block devices, that
+> >>>> would allow to gather all available block devs under common trigger.
+> >>>>
+> >>>> Moreover I remember Greg once discouraged using notifier chains
+> >>>> as they are unsafe, so we would need some other solution anyway.
+> >>>
+> >>> I start thinking that we should implement the LED block device activi=
+ty
+> >>> trigger in userspace.  The userspace application firstly activates
+> >>> one-shot LED trigger and periodically reads /sys/block/<disk>/stat an=
+d
+> >>> writes /sys/class/leds/<led>/shot if there is any disk activity.
+> >>
+> >> This would suboptimal solution. I have another idea - let's get back
+> >> to the implementation of ledtrig-blk in genhd.c. We would be registeri=
+ng
+> >> one trigger on module initialization in a function with __init modifie=
+r.
+> >> Then we would need to add/remove triggers to the ledtrig-blk in
+> >> register_blkdev()/unregister_blkdev(). And registered triggers would
+> >> be listed in block_devs directory created by the trigger.
+> >>
+> >> You can compare how drivers/usb/core/ledtrig-usbport.c maintains
+> >> similar directory of usb ports.
+> >
+> > It could be possible, but I have yet another idea.  What about introduc=
+ing
+> > /proc/led-triggers and /sys/class/leds/<led>/current-trigger?
+> > The /sys/class/leds/<led>/trigger will be obsoleted by these two files.
+> >
+> > The /proc/led-triggers is read only and no PAGE_SIZE limitation by the
+> > seq_file interface.  So we can list all triggers in this file.
+> >
+> > The /sys/class/leds/<led>/current-trigger is almost identical to
+> > /sys/class/leds/<led>/trigger.  The only difference is that
+> > 'current-trigger' only shows the current trigger name.
+>
+> There's not need to come up with yet another trigger interface.
+> We just need to convert sysfs trigger attribute type to binary.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
- drivers/mmc/core/queue.c | 35 ++++++++++++++++++++++++++++++++---
- include/linux/mmc/host.h |  1 +
- 2 files changed, 33 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 7102e2e..1e29b30 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -21,6 +21,8 @@
- #include "card.h"
- #include "host.h"
- 
-+#define MMC_DMA_MAP_MERGE_SEGMENTS	512
-+
- static inline bool mmc_cqe_dcmd_busy(struct mmc_queue *mq)
- {
- 	/* Allow only 1 DCMD at a time */
-@@ -193,6 +195,12 @@ static void mmc_queue_setup_discard(struct request_queue *q,
- 		blk_queue_flag_set(QUEUE_FLAG_SECERASE, q);
- }
- 
-+static unsigned int mmc_get_max_segments(struct mmc_host *host)
-+{
-+	return host->can_dma_map_merge ? MMC_DMA_MAP_MERGE_SEGMENTS :
-+					 host->max_segs;
-+}
-+
- /**
-  * mmc_init_request() - initialize the MMC-specific per-request data
-  * @q: the request queue
-@@ -206,7 +214,7 @@ static int __mmc_init_request(struct mmc_queue *mq, struct request *req,
- 	struct mmc_card *card = mq->card;
- 	struct mmc_host *host = card->host;
- 
--	mq_rq->sg = mmc_alloc_sg(host->max_segs, gfp);
-+	mq_rq->sg = mmc_alloc_sg(mmc_get_max_segments(host), gfp);
- 	if (!mq_rq->sg)
- 		return -ENOMEM;
- 
-@@ -362,13 +370,23 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
- 		blk_queue_bounce_limit(mq->queue, BLK_BOUNCE_HIGH);
- 	blk_queue_max_hw_sectors(mq->queue,
- 		min(host->max_blk_count, host->max_req_size / 512));
--	blk_queue_max_segments(mq->queue, host->max_segs);
-+	if (host->can_dma_map_merge)
-+		WARN(!blk_queue_can_use_dma_map_merging(mq->queue,
-+							mmc_dev(host)),
-+		     "merging was advertised but not possible");
-+	blk_queue_max_segments(mq->queue, mmc_get_max_segments(host));
- 
- 	if (mmc_card_mmc(card))
- 		block_size = card->ext_csd.data_sector_size;
- 
- 	blk_queue_logical_block_size(mq->queue, block_size);
--	blk_queue_max_segment_size(mq->queue,
-+	/*
-+	 * After blk_queue_can_use_dma_map_merging() was called with succeed,
-+	 * since it calls blk_queue_virt_boundary(), the mmc should not call
-+	 * both blk_queue_max_segment_size().
-+	 */
-+	if (!host->can_dma_map_merge)
-+		blk_queue_max_segment_size(mq->queue,
- 			round_down(host->max_seg_size, block_size));
- 
- 	dma_set_max_seg_size(mmc_dev(host), queue_max_segment_size(mq->queue));
-@@ -418,6 +436,17 @@ int mmc_init_queue(struct mmc_queue *mq, struct mmc_card *card)
- 	mq->tag_set.cmd_size = sizeof(struct mmc_queue_req);
- 	mq->tag_set.driver_data = mq;
- 
-+	/*
-+	 * Since blk_mq_alloc_tag_set() calls .init_request() of mmc_mq_ops,
-+	 * the host->can_dma_map_merge should be set before to get max_segs
-+	 * from mmc_get_max_segments().
-+	 */
-+	if (host->max_segs < MMC_DMA_MAP_MERGE_SEGMENTS &&
-+	    dma_get_merge_boundary(mmc_dev(host)))
-+		host->can_dma_map_merge = 1;
-+	else
-+		host->can_dma_map_merge = 0;
-+
- 	ret = blk_mq_alloc_tag_set(&mq->tag_set);
- 	if (ret)
- 		return ret;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 4a351cb..c5662b3 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -396,6 +396,7 @@ struct mmc_host {
- 	unsigned int		retune_paused:1; /* re-tuning is temporarily disabled */
- 	unsigned int		use_blk_mq:1;	/* use blk-mq */
- 	unsigned int		retune_crc_disable:1; /* don't trigger retune upon crc */
-+	unsigned int		can_dma_map_merge:1; /* merging can be used */
- 
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
--- 
-2.7.4
-
+OK, I'll try it.
