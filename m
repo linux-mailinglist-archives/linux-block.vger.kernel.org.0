@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6119F854
-	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 04:29:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 455469F857
+	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 04:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfH1C34 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Aug 2019 22:29:56 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:27205 "EHLO
+        id S1726391AbfH1C36 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Aug 2019 22:29:58 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:27210 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfH1C3z (ORCPT
+        with ESMTP id S1726178AbfH1C34 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Aug 2019 22:29:55 -0400
+        Tue, 27 Aug 2019 22:29:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1566959395; x=1598495395;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=Zf0MDQJRBxCXI8NccwOPMOrHOvfBpcXR5EU39nZ7Dyg=;
-  b=S9iGmRKXxQY1JlBL+o+1S5io795eB4lcYw+JbpxNXDQSnxZvYLwyTLuh
-   Z3xQBYSXNrYUbQAdlooCVq+qSFRSqZluHTuxjX3ZPzB7qFsz5ZauuNbuQ
-   yObvuMPprKG1HnlU7FMyqKdcD3KU6in4Ead2RSoqC2uvvg8JjAb2Cs5EC
-   l+keUIrzyYYjvtNFtVUNGyG4JdoALIUTx0n7mlCRhNY0izeownLy8UZGG
-   o9aTeUoa/aGQpLYMLNVGNyN2AIoXpKwI20hJju5UehUl2lc8vxfyzSvi2
-   zVFrza0ixUi+p9CnswW1boWRxSURgCLCSpLzQkx+23BwrljHi/jphX0Io
-   w==;
-IronPort-SDR: qVtdCY6WFUPRmbH45zPor39j+2gRxxD0aj/MEKxSvXOoX/Ip1b3y0sUo8cNNfkw8KGJWfE9Ogh
- 1Tvvyfys1RRkl++OVm7qZGligqknijP9+xB5id6jvhri2cxNc2A6ZEUIVUY3FYJcd7jBlkXWDP
- 2jD+M2C/E7NHPqsD0dNv81X4KdK4ztNmclND3fRFmUrhMJtn+eCv53BkZj23ZBkMY/weFWNMZR
- xtyS9yx3GY4gGv3Th9+UaKgnrzgxEHmgb8Z6Il+zukyhvULRRajIR0JzIdDooG77TmYkVXukeU
- aOs=
+  bh=OfotJnMRsLgxqnsb0ALm0ooV/tnerfPYqKG+KQ8XLzo=;
+  b=mMvyqrC+CxaclqsBG0D/770ixwZwgDcB8Af5Y9vW8wN5/caZCH/NvgzJ
+   9gfYZbbvWaR9ATdYnYDb828IcRZW++1KXcLr9XC6XH4F72qQHJ4o6tmHO
+   UMM++oW7XTF1jZgpcuV+61IAOw+lyii5HN0pFPJzHtaEemaVXkN+n68/+
+   7C/2CtvyQKH821b49IK7L5fITNyHBG3EbSPhl/jW6XmJe2OerjcNX6ML0
+   slVUaE8YyNWWrXx0fzd6C9QQedSzRi7bF8297wZGsFJIm4/rSMq9wMToO
+   y0IZp9RKMRXOrP3iZgNlw0/YMFrllfgHHKryTn7RLWo/rzMLLdk0H8B+y
+   A==;
+IronPort-SDR: v8ECnTyxFzVAjXUp81uLzlP2FlNzYd/W9mrVfjYtG/E+t0GzgKn6b4dD1vcqiK6ZkWrAGSGZPM
+ ZRs191Pj4EHw5TRkAsU34qOk0maRb1f72cWA3/Qmc1YT0QaAeR1gMOH25KuQU7hHoG9FFmvAlC
+ VgYawWcNkX6USopD+06rcpKqnYKjNKi4Qq68IHErJhkfOjOGeH80GvrekPV/lFFP6X5x35n/w+
+ j2sFDYa9j0vfwSp5peSSwmVPycD5ItlDz8TXg/pfxaLLYTEcufq322d+vxuGWvFY3FQhGsGpNv
+ ous=
 X-IronPort-AV: E=Sophos;i="5.64,439,1559491200"; 
-   d="scan'208";a="223475489"
+   d="scan'208";a="223475493"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Aug 2019 10:29:54 +0800
-IronPort-SDR: PivQC/MBfjxKhW3RnhHzhpsyNbB70PzT+w2SrfNcPsbkLi2vy5qR08pihBKMJWUOVmqu8NwbXX
- MswBSlH8j5D+mKUoQfOXTXwcSgR4OsTQ9O845BnoeqrXq58GjXahxfFKtP8rOVq8OpvOXnv70R
- qS491c/F72CxD3CXa+4dG5TfuW8q3xPadvMXa9GrN+fJm0LWYItz2eURSIw1oSNqa7F1STfMq3
- JiFkh33oKwHDqiZHSNmYTcVwSdU3CPdRKYAhxprzdb3tKY0JxBQzlJB8XkfqQq9jIop6lM+pqy
- OYtiAqkzU0BWp75RSNKXUlMc
+  by ob1.hgst.iphmx.com with ESMTP; 28 Aug 2019 10:29:55 +0800
+IronPort-SDR: 9CZgos8OF4Uus0NGPjtJ/6KgXQD53+RbLtbD5kGmPDZCHtNxbW8raNpzJUTL2G79QJDqi2I1df
+ 2l8R0BAmgbjmm2lBXTWcr1MlyC0uY4qSqtoCDtNpzMawATt2bdpqo21zZYYYqKWkXEWBY5njaO
+ M3wllVvvtN4HoharGrK9LckFRwHPsoD3JmHRVTQyEoT4d52msoCGYMzxfB256QwH0XI2GyW3nf
+ UjkW4n/7Dm58tmuS9zdipJ8suYdvuQTxVAm0azuLw+CvYmNrGfXVM8qeG97KJPltU77ktq6bLW
+ EtMjwq4ksYghDHzsUzQqkzfZ
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 19:27:05 -0700
-IronPort-SDR: kmSQCPvY9Yl0P/qLqPk/7Ph9bHEtL1zCCQibdcjMqEsQEPdKNFI36yY1BDK4OqFTfBSXa3f/Ib
- DXDfkhZgtbulqDbiuBT8r6Y/WOqxV40j8mr+DJTiXMlzniXlTnLfDN/rMdqDF4XY1q6ah+EcNa
- g+urg21gD9iHa4LNwY2EV1N68n/SRMWdoU4HH1+IWcA+uwe7YePUgjGM5XxUG71iydSHBgPcCy
- 0dQiZ0QLZPyY+786x8Di2QFzAcxB2lMfdqJglkRKJq7IixXRCh8qg1zKFOLXT7nDdSEl44rAM6
- cu8=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 19:27:06 -0700
+IronPort-SDR: OxfdaPKtErLUOmeJXPjFRG0QeJZ46k5uZk8BFVrkxmxpxaf8OnsbH+NZzGiYehdORVmyl/zpSl
+ yJbi+RW4DC4s11m1nFhDvdKVgdN+L/WjofH6dW/VqVGNpsDG8beLbS1TqQp8LORr6wa+5ON4fX
+ 8qY0QQom5PPieWcHeGAhOreX4Vm/PBQHFdZKVtdgDPWEj0Ax99shKBJysAhZDC/m22fiiztICy
+ L8hQfBJmWTZ+IHDCfs/nHehBvbM7xtC892XRjqI2KYCQf9V0TsbhHG4EzmaNvkk8RMiGJcunJj
+ BGY=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Aug 2019 19:29:54 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Aug 2019 19:29:55 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         linux-scsi@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v2 6/7] block: Set ELEVATOR_F_ZBD_SEQ_WRITE for nullblk zoned disks
-Date:   Wed, 28 Aug 2019 11:29:46 +0900
-Message-Id: <20190828022947.23364-7-damien.lemoal@wdc.com>
+Subject: [PATCH v2 7/7] scsi: Set ELEVATOR_F_ZBD_SEQ_WRITE for ZBC disks
+Date:   Wed, 28 Aug 2019 11:29:47 +0900
+Message-Id: <20190828022947.23364-8-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190828022947.23364-1-damien.lemoal@wdc.com>
 References: <20190828022947.23364-1-damien.lemoal@wdc.com>
@@ -68,7 +68,7 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Using the helper blk_queue_required_elevator_features(), set the
 elevator feature ELEVATOR_F_ZBD_SEQ_WRITE as required for the request
-queue of null_blk devices created with zoned mode enabled.
+queue of SCSI ZBC disks.
 
 This feature requirement can always be satisfied as the mq-deadline
 elevator is always selected for in-kernel compilation when
@@ -76,22 +76,22 @@ CONFIG_BLK_DEV_ZONED (zoned block device support) is enabled.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- drivers/block/null_blk_main.c | 2 ++
+ drivers/scsi/sd_zbc.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index b26a178d064d..b29b273690b0 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1695,6 +1695,8 @@ static int null_add_dev(struct nullb_device *dev)
- 		blk_queue_chunk_sectors(nullb->q, dev->zone_size_sects);
- 		nullb->q->limits.zoned = BLK_ZONED_HM;
- 		blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, nullb->q);
-+		blk_queue_required_elevator_features(nullb->q,
-+						ELEVATOR_F_ZBD_SEQ_WRITE);
- 	}
+diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
+index 367614f0e34f..de4019dc0f0b 100644
+--- a/drivers/scsi/sd_zbc.c
++++ b/drivers/scsi/sd_zbc.c
+@@ -493,6 +493,8 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
+ 	blk_queue_chunk_sectors(sdkp->disk->queue,
+ 			logical_to_sectors(sdkp->device, zone_blocks));
+ 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, sdkp->disk->queue);
++	blk_queue_required_elevator_features(sdkp->disk->queue,
++					     ELEVATOR_F_ZBD_SEQ_WRITE);
+ 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
  
- 	nullb->q->queuedata = nullb;
+ 	/* READ16/WRITE16 is mandatory for ZBC disks */
 -- 
 2.21.0
 
