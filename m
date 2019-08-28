@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E6A9F8F0
-	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 05:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18DC89F8F3
+	for <lists+linux-block@lfdr.de>; Wed, 28 Aug 2019 05:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfH1DzE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Aug 2019 23:55:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44983 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfH1DzD (ORCPT
+        id S1726583AbfH1DzJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Aug 2019 23:55:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39236 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfH1DzH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Aug 2019 23:55:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so544537plr.11
-        for <linux-block@vger.kernel.org>; Tue, 27 Aug 2019 20:55:03 -0700 (PDT)
+        Tue, 27 Aug 2019 23:55:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y200so768457pfb.6
+        for <linux-block@vger.kernel.org>; Tue, 27 Aug 2019 20:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mxNtarX9nX57XJxkArjO2AM3QUOz0wzt/JnfD0VPOK0=;
-        b=F4caB0aZl1+ljrrlr2ZXzSJ64Udep2IJeA7lQGcAGXBMsyDN9JCNHMO6FT0Ar5vP0v
-         UnJCBrHKqZHlbtTQE09XNLLGK9s6lXCj0RfiEUYHCKkZZT3DyfafbE7GpO6RUlwg+E8T
-         EDITDAEd81fTvZLyUoEhaX1ib77eZxhg/UoEi81UsG9KE3s0ZgZqgkTAa8cMari6sOBz
-         BiasbpjnO/EnhLafHhn/4W5YObrmcFzXPTkbANjmau0q6sNwnLh/HDhWRGDe0dfDU182
-         lkes5Qnwe7Mcqt21kTvs3UN/UlyCzS3m/4xDlaMvoRd5eiDJFX2ROW2Xo/vuHPiT5E/i
-         l6ZA==
+        bh=Spd8tWh4JGn3fBDEW8q9V28IkZ0ZVpCm4ISnu3nMaQM=;
+        b=aQ2B4fFB6wrF6qbAgHFZWLIJBhdhVTA/hv4KAiq7MVYvRbBqWjbP6CrvRB/d4Ulqx1
+         tRKuf+FbiNADlKz00WPw49rPF4mULQpIOTB+kw/E2Y6UwD9re9KqwiCxrBa3LvPOQZxB
+         CRFelNFwgRThHt/CP9knGc0RrVtZSieKNJrnXkTRCah08mW/Q9Najk8yXZ9lyN05ivTL
+         3SXFC3gQHIkTVYriMvQtHHPhHv5EmY5AmL0qwbYs99S9wjJAi8i+NqkhVRSzcgKlLbhX
+         lhKWX4P7PqsksULwa+wWvhUYYh/yIn+RxNYVaBrtxNgLQki5OHp17zyR+AGns9sF50HT
+         auHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mxNtarX9nX57XJxkArjO2AM3QUOz0wzt/JnfD0VPOK0=;
-        b=lNHkpfE4Z5wno3eO+ogvtzQVvetkrtKAB2NaLWDOJLy+yv7F3i9mKolwLs25jQJUq8
-         Ug/lJQR8tVGD+ve618xTjWGHou0U8LECRO8OusVzQIKdBZbezXBLDpgMlYAFLMAYUchj
-         a+yXE6n1iI2vMEikm8Zt5mZIUyFAlAB3RB3zessytOlfyRt0n9PzZNiM6JSHt3feLOZW
-         oVWeWjrye5JMQH134IuC2Cg8YVTuxLQitN7qsRdbUc8FQgHhUb+1iCIrD+l3wqE5muxg
-         EwaH46NRkp3nAoKbsmHeHaAXVR6Tc8t7Kb74I8byVFIk+IAGMkgICisv07Oq2ZZOBm6M
-         EeWQ==
-X-Gm-Message-State: APjAAAW4avZQGjfHqFBHXw7o65NI9fzu2ychJiPDKa8RRyaDvKgTWHpM
-        9WSkDDWrCN0PXOR0R9tmNU9t9g==
-X-Google-Smtp-Source: APXvYqx3e2ELfBN+TGYLKM3FzD+6OoDzIwJzZbWpZcxu0XdIQBMS++7j1DfCl/f6RY1tc9dYTvz3FQ==
-X-Received: by 2002:a17:902:aa43:: with SMTP id c3mr2177445plr.11.1566964502988;
-        Tue, 27 Aug 2019 20:55:02 -0700 (PDT)
+        bh=Spd8tWh4JGn3fBDEW8q9V28IkZ0ZVpCm4ISnu3nMaQM=;
+        b=pj7FojxkaEV46A7BlS3FVj8EwlXWnxIXlnorCD/ABJP8zLwWIB4pPVOzq9ZvcnVPxk
+         cKgDQt/EeOhJWDKup95f872CMmePfuM92q/wIk6ziUrISomUEp4+3v9l/P1iLX3BpUNa
+         CkXUJJWbBx3aZpCej3mklPCAxbCJuSmCO6jcN3qUZeS0XckPIlmGhJ4ozSCiR7vpfY8I
+         EPj5EndzhIstzRWa4hCHtoNVQz7jGUkqHZdrHacvGb6iIUKxfNTYWn1AkxnQ6TAkT8ub
+         twYIk349HwZKU0THh/MsPF/sL1biHwKb45nku9LPvncsF8gicsUKjnzetRLZM3daDa8X
+         k0Nw==
+X-Gm-Message-State: APjAAAX+J6YLWmXV9ddFyFsvwe9u9XDyWzLE7zeAxc5ps+7Kk+k8LjaK
+        L0zfIaRX2CCmOscc2x4qCqQf1g==
+X-Google-Smtp-Source: APXvYqy+6Ftbx8LvBpqhPjKILebxq24WFzWwB/gDOQ9g3NCj3QSvlR1tmVSPJXa8Ir3vxCUxmkJFEA==
+X-Received: by 2002:a65:608e:: with SMTP id t14mr1619143pgu.373.1566964506583;
+        Tue, 27 Aug 2019 20:55:06 -0700 (PDT)
 Received: from localhost ([61.120.150.70])
-        by smtp.gmail.com with ESMTPSA id i124sm902847pfe.61.2019.08.27.20.55.02
+        by smtp.gmail.com with ESMTPSA id q10sm944776pfl.8.2019.08.27.20.55.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 20:55:02 -0700 (PDT)
+        Tue, 27 Aug 2019 20:55:06 -0700 (PDT)
 From:   Fam Zheng <zhengfeiran@bytedance.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, paolo.valente@linaro.org, fam@euphon.net,
         duanxiongchun@bytedance.com, cgroups@vger.kernel.org,
         zhangjiachen.jc@bytedance.com, tj@kernel.org,
         linux-block@vger.kernel.org
-Subject: [PATCH v3 1/3] bfq: Fix the missing barrier in __bfq_entity_update_weight_prio
-Date:   Wed, 28 Aug 2019 11:54:51 +0800
-Message-Id: <20190828035453.18129-2-zhengfeiran@bytedance.com>
+Subject: [PATCH v3 2/3] bfq: Extract bfq_group_set_weight from bfq_io_set_weight_legacy
+Date:   Wed, 28 Aug 2019 11:54:52 +0800
+Message-Id: <20190828035453.18129-3-zhengfeiran@bytedance.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20190828035453.18129-1-zhengfeiran@bytedance.com>
 References: <20190828035453.18129-1-zhengfeiran@bytedance.com>
@@ -64,29 +64,93 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The comment of bfq_group_set_weight says the reading of prio_changed
-should happen before the reading of weight, but a memory barrier is
-missing here. Add it now, to match the smp_wmb() there.
+This function will be useful when we update weight from the soon-coming
+per-device interface.
 
 Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
 Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-wf2q.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bfq-cgroup.c | 60 ++++++++++++++++++++++++----------------------
+ 1 file changed, 32 insertions(+), 28 deletions(-)
 
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index c9ba225081ce..05f0bf4a1144 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -744,6 +744,8 @@ __bfq_entity_update_weight_prio(struct bfq_service_tree *old_st,
- 		}
- #endif
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 0f6cd688924f..28e5a9241237 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -918,6 +918,36 @@ static int bfq_io_show_weight(struct seq_file *sf, void *v)
+ 	return 0;
+ }
  
-+		/* Matches the smp_wmb() in bfq_group_set_weight. */
-+		smp_rmb();
- 		old_st->wsum -= entity->weight;
++static void bfq_group_set_weight(struct bfq_group *bfqg, u64 weight)
++{
++	/*
++	 * Setting the prio_changed flag of the entity
++	 * to 1 with new_weight == weight would re-set
++	 * the value of the weight to its ioprio mapping.
++	 * Set the flag only if necessary.
++	 */
++	if ((unsigned short)weight != bfqg->entity.new_weight) {
++		bfqg->entity.new_weight = (unsigned short)weight;
++		/*
++		 * Make sure that the above new value has been
++		 * stored in bfqg->entity.new_weight before
++		 * setting the prio_changed flag. In fact,
++		 * this flag may be read asynchronously (in
++		 * critical sections protected by a different
++		 * lock than that held here), and finding this
++		 * flag set may cause the execution of the code
++		 * for updating parameters whose value may
++		 * depend also on bfqg->entity.new_weight (in
++		 * __bfq_entity_update_weight_prio).
++		 * This barrier makes sure that the new value
++		 * of bfqg->entity.new_weight is correctly
++		 * seen in that code.
++		 */
++		smp_wmb();
++		bfqg->entity.prio_changed = 1;
++	}
++}
++
+ static int bfq_io_set_weight_legacy(struct cgroup_subsys_state *css,
+ 				    struct cftype *cftype,
+ 				    u64 val)
+@@ -936,34 +966,8 @@ static int bfq_io_set_weight_legacy(struct cgroup_subsys_state *css,
+ 	hlist_for_each_entry(blkg, &blkcg->blkg_list, blkcg_node) {
+ 		struct bfq_group *bfqg = blkg_to_bfqg(blkg);
  
- 		if (entity->new_weight != entity->orig_weight) {
+-		if (!bfqg)
+-			continue;
+-		/*
+-		 * Setting the prio_changed flag of the entity
+-		 * to 1 with new_weight == weight would re-set
+-		 * the value of the weight to its ioprio mapping.
+-		 * Set the flag only if necessary.
+-		 */
+-		if ((unsigned short)val != bfqg->entity.new_weight) {
+-			bfqg->entity.new_weight = (unsigned short)val;
+-			/*
+-			 * Make sure that the above new value has been
+-			 * stored in bfqg->entity.new_weight before
+-			 * setting the prio_changed flag. In fact,
+-			 * this flag may be read asynchronously (in
+-			 * critical sections protected by a different
+-			 * lock than that held here), and finding this
+-			 * flag set may cause the execution of the code
+-			 * for updating parameters whose value may
+-			 * depend also on bfqg->entity.new_weight (in
+-			 * __bfq_entity_update_weight_prio).
+-			 * This barrier makes sure that the new value
+-			 * of bfqg->entity.new_weight is correctly
+-			 * seen in that code.
+-			 */
+-			smp_wmb();
+-			bfqg->entity.prio_changed = 1;
+-		}
++		if (bfqg)
++			bfq_group_set_weight(bfqg, val);
+ 	}
+ 	spin_unlock_irq(&blkcg->lock);
+ 
 -- 
 2.22.1
 
