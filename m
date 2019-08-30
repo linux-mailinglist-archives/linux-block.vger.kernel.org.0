@@ -2,91 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38B9BA3AF0
-	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2019 17:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95AA0A3AF9
+	for <lists+linux-block@lfdr.de>; Fri, 30 Aug 2019 17:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfH3PtZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Aug 2019 11:49:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43964 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3PtZ (ORCPT
+        id S1727751AbfH3PuZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Aug 2019 11:50:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42936 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfH3PuZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Aug 2019 11:49:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id b11so8052706qtp.10;
-        Fri, 30 Aug 2019 08:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EWG1xprHq5soDnqsOoV5sXd5YRcA3js3J4A3/q6CGlU=;
-        b=Wgqj8hYGo0A/I1gghmpb6uViT1RJgL5Ci/oQGuwImhV3JUnrMed5W6Api9CJ4JKZmb
-         jY/ufazdF5ggWnW70uWNMlWT1cKToe11F9WFbdSXajVHeyCRRXDzkotHY3xf9VDEyA7A
-         JQD4yjvtNO20WNyKTLvfU88pTkfrk+FZ+BIdC9xtrc/qTUdY1cOmUC5IhhdbwCJTm9eD
-         I/znZT9RBs31QbkRncZVHi5g8UE2o2JQDMWWxc1jXx3BISZ4D3lq4/F14jhTzfMfOpih
-         8isdIRt9jNllkKjnRdMIH7l4sV1Gojj5gdUHbt0KActpBD/L3fu/QUTTMOuteCilHqth
-         G4sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EWG1xprHq5soDnqsOoV5sXd5YRcA3js3J4A3/q6CGlU=;
-        b=Yz+XfjDcGp+BsuDUxQQOFhUYRz+8+sfctyuk7or5hB1KR5DAwoGRWtMZa1+8naKzBa
-         j7uA8Bdw3evI5uvyLP1YddIAtO9THfhKTARSQco8GTOB3VuP5130LjTkQOFCeYC6SmUR
-         GJ6OCOZeazi046lq2/5n8FX8gR2UCDOfMt8VxTinAdeBki3acwFUAcGt2U0+qbC2QSgp
-         lNXZmga8BJo8qmkR+nywe2EwRP9SwlWZFAoISKULUEgKniDuJDMtbsvkc7bGH3dEUeBA
-         knB7+8IBtGistFEaM0EIvfQejQk8uHNYRSVRR+c9notF/B8P7HVjh+kRFSO9CIbYZMdZ
-         kKsQ==
-X-Gm-Message-State: APjAAAWhTAA1O8LYLs2Xd5YPBxgkLUuHX8cZiyFSUfDAbOTZNP1mXCwZ
-        A+LHax2PCuLIUPi621o9iOM=
-X-Google-Smtp-Source: APXvYqyFRZU9QBAkzb28H9Q+R/5xB+7uaYqUf2sCiz0G9RGsOQcoyI03rNeLOsDzNUFbov3MavZYTQ==
-X-Received: by 2002:ac8:363c:: with SMTP id m57mr9461040qtb.240.1567180163904;
-        Fri, 30 Aug 2019 08:49:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::d0dd])
-        by smtp.gmail.com with ESMTPSA id y67sm2965672qkd.40.2019.08.30.08.49.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 08:49:23 -0700 (PDT)
-Date:   Fri, 30 Aug 2019 08:49:21 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH block/for-next] writeback: add tracepoints for cgroup
- foreign writebacks
-Message-ID: <20190830154921.GZ2263813@devbig004.ftw2.facebook.com>
-References: <20190829224701.GX2263813@devbig004.ftw2.facebook.com>
- <20190830154023.GC25069@quack2.suse.cz>
+        Fri, 30 Aug 2019 11:50:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jKLZ9AV4Cad35GVTWRj4qMk4Kj0vjxf5uuMYmkOMgQM=; b=uPARJ3orrGsiJB42mMqVRNTsi
+        FtVgdPrcmYDIkLdtdrY4xxPet7vxfI/PykXneJ2pU0g6sa3nLsdJKYasFzWIR70lznoOyfa392xvu
+        31OSlpr+tw6B3k3bid7RQ5aK8NMT75HZmZ7HFYh2ICUT7fkg//detK0CdHqpJ7edFi/k/dLahx4Df
+        TcjIJ15HMTpO4r6qQawJE7fc3fk3wgL8pkWKSzizo3lmZKs00HchVxR6/nhXRQbA1PhGiUV9mXkvo
+        Glw7gZOLpfDCmmfoDzyg1NXnBTJ8SH78miIfY+Jp/dfw2+nTK7V+vVz8WUoXommnSXw0cQ1R4sH+3
+        SU8oEYHDA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3jAO-0007o7-H4; Fri, 30 Aug 2019 15:50:24 +0000
+Date:   Fri, 30 Aug 2019 08:50:24 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Martijn Coenen <maco@android.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundatio.org,
+        kernel-team@android.com, narayan@google.com, dariofreni@google.com,
+        ioffe@google.com, jiyong@google.com, maco@google.com
+Subject: Re: [PATCH] loop: change queue block size to match when using DIO.
+Message-ID: <20190830155024.GA23882@infradead.org>
+References: <20190828103229.191853-1-maco@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830154023.GC25069@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190828103229.191853-1-maco@android.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello, Jan.
+On Wed, Aug 28, 2019 at 12:32:29PM +0200, Martijn Coenen wrote:
+> The loop driver assumes that if the passed in fd is opened with
+> O_DIRECT, the caller wants to use direct I/O on the loop device.
+> However, if the underlying filesystem has a different block size than
+> the loop block queue, direct I/O can't be enabled. Instead of requiring
+> userspace to manually change the blocksize and re-enable direct I/O,
+> just change the queue block size to match.
 
-On Fri, Aug 30, 2019 at 05:40:23PM +0200, Jan Kara wrote:
-> > +	TP_fast_assign(
-> > +		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
-> > +		__entry->bdi_id		= wb->bdi->id;
-> > +		__entry->ino		= page->mapping->host->i_ino;
-> > +		__entry->memcg_id	= wb->memcg_css->id;
-> > +		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
-> > +		__entry->page_cgroup_ino = page->mem_cgroup->css.cgroup->kn->id.ino;
-> > +	),
-> 
-> Are the page dereferences above safe? I suppose lock_page_memcg() protects
-> the page->mem_cgroup->css.cgroup->kn->id dereference? But page->mapping
-> does not seem to be protected by page lock?
-
-Hah, I assumed it would work because there are preceding if
-(page_mapping()) tests in the dirty paths -
-e.g. __set_page_dirty_nobuffers().  Oh, regardless of that assumption,
-I should have used page_mapping().
-
-Thanks.
-
--- 
-tejun
+Why can't we enable the block device in that case?  All the usual
+block filesystems support 512 byte aligned direct I/O with a 4k
+file system block size (as long as the underlying block device
+sector size is also 512 bytes).
