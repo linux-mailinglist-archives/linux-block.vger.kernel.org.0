@@ -2,85 +2,375 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5170A6ACB
-	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2019 16:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26B83A6CA7
+	for <lists+linux-block@lfdr.de>; Tue,  3 Sep 2019 17:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725782AbfICOGl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Sep 2019 10:06:41 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33645 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfICOGl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Sep 2019 10:06:41 -0400
-Received: by mail-io1-f66.google.com with SMTP id m11so4190401ioo.0
-        for <linux-block@vger.kernel.org>; Tue, 03 Sep 2019 07:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0p3oWLhAQWaGVemN+5EpRiaC7HumZE71N/2ba/fW6JY=;
-        b=1Q9bi1VIzUqAMTYaHO9z9TpvDFwOZ+0dH9NVanlMlykig3srm3wskTSPXdjXa6Jrbv
-         1HA9BfwMkf/TPF5ev2nhry6re0D+KIJQzTm5/b/mIcWDg0+kDFx3xVuf1mbs0cEldcw0
-         bJxlBU0u0D0soKewZHyXOY5hYpTi15LMaAa3ctQ8YWhToZhcZ3rXitF6ziQCUZA47GaT
-         x/vdPsZUW30aYziNM+ESkpRcvfYkBt9uAjhT8ChgpTCNP0okGG0g5jVB54W4cytIaFAT
-         t9cjEpdy0S6rd1jiLNmOzj6kqyfKx3lJfYKaNgr+XxD3Heed5+Y72l169Gnpcr3/oqxX
-         M+Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0p3oWLhAQWaGVemN+5EpRiaC7HumZE71N/2ba/fW6JY=;
-        b=Xl9sOXSAXZkT0cOckz4t0JnxpNHzArS4CKgM5WAiCxkWvhwmcBzV2aevTykI25Femb
-         bmtJ0m6gKx/etXFfcCobWpOzvRcfAjfSa8AFTxGyd6t0nQMKs6j+uqa1IK28m6NQE932
-         v5EgYp0X/iXwXlRnN5jC4V2/N3BlLMwo1AAqFDAoUqnLsVYsvPYVF/6a9MKEJQmtxH2K
-         MnXcvQYK6/uStx6FOnsaYI9ih0FEZJeI4OSd7JC2SP7SxIxffw+1kTEMATVjKxMsJ7Cf
-         /iNakOMPi1IoLZzrL3CRjHp+0L8JyJ59bJiJVuJ9w2VL9d7mbXonMXvt8imqP0wm3mrJ
-         NPPQ==
-X-Gm-Message-State: APjAAAUl9N4rAyhMVZhobt9zZXcfaHzC/5SqbCaAg0kJhckkM5KN+exp
-        wnYiQn5gMwPKWYNuRrmY4bhzZvxBtIbIpg==
-X-Google-Smtp-Source: APXvYqx03uOP/C8Dqwl5Q+wDp0JvHsGemvVGA6YOvYAgWggFpmv/rcZ3Ucmu6Ek5/kCC5fF+sj+pcg==
-X-Received: by 2002:a05:6602:2508:: with SMTP id i8mr29737153ioe.91.1567519600140;
-        Tue, 03 Sep 2019 07:06:40 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k21sm15220719iob.49.2019.09.03.07.06.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 07:06:39 -0700 (PDT)
-Subject: Re: [RESEND PATCH 0/4] Remove elevator kernel parameter
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20190828011930.29791-1-marcos.souza.org@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <80b367d6-393e-330a-c5df-f48e73bae86b@kernel.dk>
-Date:   Tue, 3 Sep 2019 08:06:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190828011930.29791-1-marcos.souza.org@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1729582AbfICPOT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Sep 2019 11:14:19 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:47248 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727667AbfICPOT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Sep 2019 11:14:19 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from maxg@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 3 Sep 2019 18:14:15 +0300
+Received: from r-vnc12.mtr.labs.mlnx (r-vnc12.mtr.labs.mlnx [10.208.0.12])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x83FEFl1016624;
+        Tue, 3 Sep 2019 18:14:15 +0300
+From:   Max Gurtovoy <maxg@mellanox.com>
+To:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        martin.petersen@oracle.com, linux-nvme@lists.infradead.org,
+        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me
+Cc:     shlomin@mellanox.com, israelr@mellanox.com,
+        Max Gurtovoy <maxg@mellanox.com>
+Subject: [PATCH 1/4] block: centrelize PI remapping logic to the block layer
+Date:   Tue,  3 Sep 2019 18:14:12 +0300
+Message-Id: <1567523655-23989-1-git-send-email-maxg@mellanox.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/27/19 7:19 PM, Marcos Paulo de Souza wrote:
-> This is just a resend, now with reviews by Hannes and Bob in place. These
-> patches were based in linux-block/for-next branch.
-> 
-> Original cover letter:
-> After the first patch sent[1], together with some background from Jens[2], this
-> patchset aims to remove completely elevator kernel parameter, since it is not
-> being used since blk-mq was set by default.
-> 
-> Along with elevator code, some documentation was also updated to remove elevator
-> references.
+Currently dif_prepare/dif_complete functions are called during the
+NVMe and SCSi layers command preparetion/completion, but their actual
+place should be the block layer since T10-PI is a general data integrity
+feature that is used by block storage protocols.
 
-Applied, but:
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+---
+ block/blk-core.c         |  6 ++++++
+ block/blk-mq.c           |  4 ++++
+ block/t10-pi.c           | 11 ++++-------
+ drivers/nvme/host/core.c | 28 +++++++++++++++++++---------
+ drivers/scsi/sd.c        | 28 ++++++++++------------------
+ drivers/scsi/sd.h        |  1 -
+ drivers/scsi/sd_dif.c    |  2 +-
+ include/linux/genhd.h    |  1 +
+ include/linux/t10-pi.h   | 10 ++++------
+ 9 files changed, 49 insertions(+), 42 deletions(-)
 
-1) Folded patch 1+2
-2) Patch 3+4 .txt files are dead
-
+diff --git a/block/blk-core.c b/block/blk-core.c
+index d0cc6e1..58ecfd3 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -34,6 +34,7 @@
+ #include <linux/ratelimit.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/t10-pi.h>
+ #include <linux/debugfs.h>
+ #include <linux/bpf.h>
+ 
+@@ -1405,6 +1406,11 @@ bool blk_update_request(struct request *req, blk_status_t error,
+ 	if (!req->bio)
+ 		return false;
+ 
++	if (blk_integrity_rq(req) && req_op(req) == REQ_OP_READ &&
++	    error == BLK_STS_OK)
++		t10_pi_complete(req,
++				nr_bytes / queue_logical_block_size(req->q));
++
+ 	if (unlikely(error && !blk_rq_is_passthrough(req) &&
+ 		     !(req->rq_flags & RQF_QUIET)))
+ 		print_req_error(req, error, __func__);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 0835f4d..30ec078 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -30,6 +30,7 @@
+ #include <trace/events/block.h>
+ 
+ #include <linux/blk-mq.h>
++#include <linux/t10-pi.h>
+ #include "blk.h"
+ #include "blk-mq.h"
+ #include "blk-mq-debugfs.h"
+@@ -693,6 +694,9 @@ void blk_mq_start_request(struct request *rq)
+ 		 */
+ 		rq->nr_phys_segments++;
+ 	}
++
++	if (blk_integrity_rq(rq) && req_op(rq) == REQ_OP_WRITE)
++		t10_pi_prepare(rq);
+ }
+ EXPORT_SYMBOL(blk_mq_start_request);
+ 
+diff --git a/block/t10-pi.c b/block/t10-pi.c
+index 0c00946..a6d9722 100644
+--- a/block/t10-pi.c
++++ b/block/t10-pi.c
+@@ -171,7 +171,6 @@ static blk_status_t t10_pi_type3_verify_ip(struct blk_integrity_iter *iter)
+ /**
+  * t10_pi_prepare - prepare PI prior submitting request to device
+  * @rq:              request with PI that should be prepared
+- * @protection_type: PI type (Type 1/Type 2/Type 3)
+  *
+  * For Type 1/Type 2, the virtual start sector is the one that was
+  * originally submitted by the block layer for the ref_tag usage. Due to
+@@ -181,8 +180,9 @@ static blk_status_t t10_pi_type3_verify_ip(struct blk_integrity_iter *iter)
+  *
+  * Type 3 does not have a reference tag so no remapping is required.
+  */
+-void t10_pi_prepare(struct request *rq, u8 protection_type)
++void t10_pi_prepare(struct request *rq)
+ {
++	u8 protection_type = rq->rq_disk->protection_type;
+ 	const int tuple_sz = rq->q->integrity.tuple_size;
+ 	u32 ref_tag = t10_pi_ref_tag(rq);
+ 	struct bio *bio;
+@@ -222,12 +222,10 @@ void t10_pi_prepare(struct request *rq, u8 protection_type)
+ 		bip->bip_flags |= BIP_MAPPED_INTEGRITY;
+ 	}
+ }
+-EXPORT_SYMBOL(t10_pi_prepare);
+ 
+ /**
+  * t10_pi_complete - prepare PI prior returning request to the block layer
+  * @rq:              request with PI that should be prepared
+- * @protection_type: PI type (Type 1/Type 2/Type 3)
+  * @intervals:       total elements to prepare
+  *
+  * For Type 1/Type 2, the virtual start sector is the one that was
+@@ -239,9 +237,9 @@ void t10_pi_prepare(struct request *rq, u8 protection_type)
+  *
+  * Type 3 does not have a reference tag so no remapping is required.
+  */
+-void t10_pi_complete(struct request *rq, u8 protection_type,
+-		     unsigned int intervals)
++void t10_pi_complete(struct request *rq, unsigned int intervals)
+ {
++	u8 protection_type = rq->rq_disk->protection_type;
+ 	const int tuple_sz = rq->q->integrity.tuple_size;
+ 	u32 ref_tag = t10_pi_ref_tag(rq);
+ 	struct bio *bio;
+@@ -276,4 +274,3 @@ void t10_pi_complete(struct request *rq, u8 protection_type,
+ 		}
+ 	}
+ }
+-EXPORT_SYMBOL(t10_pi_complete);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index d3d6b7b..b91ea60 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -659,8 +659,6 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
+ 			if (WARN_ON_ONCE(!nvme_ns_has_pi(ns)))
+ 				return BLK_STS_NOTSUPP;
+ 			control |= NVME_RW_PRINFO_PRACT;
+-		} else if (req_op(req) == REQ_OP_WRITE) {
+-			t10_pi_prepare(req, ns->pi_type);
+ 		}
+ 
+ 		switch (ns->pi_type) {
+@@ -683,13 +681,6 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
+ 
+ void nvme_cleanup_cmd(struct request *req)
+ {
+-	if (blk_integrity_rq(req) && req_op(req) == REQ_OP_READ &&
+-	    nvme_req(req)->status == 0) {
+-		struct nvme_ns *ns = req->rq_disk->private_data;
+-
+-		t10_pi_complete(req, ns->pi_type,
+-				blk_rq_bytes(req) >> ns->lba_shift);
+-	}
+ 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD) {
+ 		struct nvme_ns *ns = req->rq_disk->private_data;
+ 		struct page *page = req->special_vec.bv_page;
+@@ -1693,6 +1684,24 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	blk_mq_unfreeze_queue(disk->queue);
+ }
+ 
++static void nvme_set_disk_prot_type(struct nvme_ns *ns, struct gendisk *disk)
++{
++	switch (ns->pi_type) {
++	case NVME_NS_DPS_PI_TYPE1:
++		disk->protection_type = T10_PI_TYPE1_PROTECTION;
++		break;
++	case NVME_NS_DPS_PI_TYPE2:
++		disk->protection_type = T10_PI_TYPE2_PROTECTION;
++		break;
++	case NVME_NS_DPS_PI_TYPE3:
++		disk->protection_type = T10_PI_TYPE3_PROTECTION;
++		break;
++	default:
++		disk->protection_type = T10_PI_TYPE0_PROTECTION;
++		break;
++	}
++}
++
+ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ {
+ 	struct nvme_ns *ns = disk->private_data;
+@@ -1712,6 +1721,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 		ns->pi_type = id->dps & NVME_NS_DPS_PI_MASK;
+ 	else
+ 		ns->pi_type = 0;
++	nvme_set_disk_prot_type(ns, disk);
+ 
+ 	if (ns->noiob)
+ 		nvme_set_chunk_size(ns);
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 149d406..fa7e7d4 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -55,7 +55,6 @@
+ #include <linux/sed-opal.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pr.h>
+-#include <linux/t10-pi.h>
+ #include <linux/uaccess.h>
+ #include <asm/unaligned.h>
+ 
+@@ -309,7 +308,7 @@ static void sd_set_flush_flag(struct scsi_disk *sdkp)
+ {
+ 	struct scsi_disk *sdkp = to_scsi_disk(dev);
+ 
+-	return sprintf(buf, "%u\n", sdkp->protection_type);
++	return sprintf(buf, "%u\n", sdkp->disk->protection_type);
+ }
+ 
+ static ssize_t
+@@ -329,7 +328,7 @@ static void sd_set_flush_flag(struct scsi_disk *sdkp)
+ 		return err;
+ 
+ 	if (val <= T10_PI_TYPE3_PROTECTION)
+-		sdkp->protection_type = val;
++		sdkp->disk->protection_type = val;
+ 
+ 	return count;
+ }
+@@ -343,8 +342,8 @@ static void sd_set_flush_flag(struct scsi_disk *sdkp)
+ 	struct scsi_device *sdp = sdkp->device;
+ 	unsigned int dif, dix;
+ 
+-	dif = scsi_host_dif_capable(sdp->host, sdkp->protection_type);
+-	dix = scsi_host_dix_capable(sdp->host, sdkp->protection_type);
++	dif = scsi_host_dif_capable(sdp->host, sdkp->disk->protection_type);
++	dix = scsi_host_dix_capable(sdp->host, sdkp->disk->protection_type);
+ 
+ 	if (!dix && scsi_host_dix_capable(sdp->host, T10_PI_TYPE0_PROTECTION)) {
+ 		dif = 0;
+@@ -1209,17 +1208,15 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
+ 
+ 	fua = rq->cmd_flags & REQ_FUA ? 0x8 : 0;
+ 	dix = scsi_prot_sg_count(cmd);
+-	dif = scsi_host_dif_capable(cmd->device->host, sdkp->protection_type);
+-
+-	if (write && dix)
+-		t10_pi_prepare(cmd->request, sdkp->protection_type);
++	dif = scsi_host_dif_capable(cmd->device->host,
++				    sdkp->disk->protection_type);
+ 
+ 	if (dif || dix)
+ 		protect = sd_setup_protect_cmnd(cmd, dix, dif);
+ 	else
+ 		protect = 0;
+ 
+-	if (protect && sdkp->protection_type == T10_PI_TYPE2_PROTECTION) {
++	if (protect && sdkp->disk->protection_type == T10_PI_TYPE2_PROTECTION) {
+ 		ret = sd_setup_rw32_cmnd(cmd, write, lba, nr_blocks,
+ 					 protect | fua);
+ 	} else if (sdp->use_16_for_rw || (nr_blocks > 0xffff)) {
+@@ -2051,11 +2048,6 @@ static int sd_done(struct scsi_cmnd *SCpnt)
+ 					   "sd_done: completed %d of %d bytes\n",
+ 					   good_bytes, scsi_bufflen(SCpnt)));
+ 
+-	if (rq_data_dir(SCpnt->request) == READ && scsi_prot_sg_count(SCpnt) &&
+-	    good_bytes)
+-		t10_pi_complete(SCpnt->request, sdkp->protection_type,
+-				good_bytes / scsi_prot_interval(SCpnt));
+-
+ 	return good_bytes;
+ }
+ 
+@@ -2204,7 +2196,7 @@ static int sd_read_protection_type(struct scsi_disk *sdkp, unsigned char *buffer
+ 	else if (scsi_host_dif_capable(sdp->host, type))
+ 		ret = 1;
+ 
+-	if (sdkp->first_scan || type != sdkp->protection_type)
++	if (sdkp->first_scan || type != sdkp->disk->protection_type)
+ 		switch (ret) {
+ 		case -ENODEV:
+ 			sd_printk(KERN_ERR, sdkp, "formatted with unsupported" \
+@@ -2221,7 +2213,7 @@ static int sd_read_protection_type(struct scsi_disk *sdkp, unsigned char *buffer
+ 			break;
+ 		}
+ 
+-	sdkp->protection_type = type;
++	sdkp->disk->protection_type = type;
+ 
+ 	return ret;
+ }
+@@ -2813,7 +2805,7 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
+ 	if (sdp->type != TYPE_DISK && sdp->type != TYPE_ZBC)
+ 		return;
+ 
+-	if (sdkp->protection_type == 0)
++	if (sdkp->disk->protection_type == 0)
+ 		return;
+ 
+ 	res = scsi_mode_sense(sdp, 1, 0x0a, buffer, 36, SD_TIMEOUT,
+diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
+index 38c5094..770b6b0f 100644
+--- a/drivers/scsi/sd.h
++++ b/drivers/scsi/sd.h
+@@ -94,7 +94,6 @@ struct scsi_disk {
+ 	unsigned int	medium_access_timed_out;
+ 	u8		media_present;
+ 	u8		write_prot;
+-	u8		protection_type;/* Data Integrity Field */
+ 	u8		provisioning_mode;
+ 	u8		zeroing_mode;
+ 	unsigned	ATO : 1;	/* state of disk ATO bit */
+diff --git a/drivers/scsi/sd_dif.c b/drivers/scsi/sd_dif.c
+index 4cadb26..cbd0cce 100644
+--- a/drivers/scsi/sd_dif.c
++++ b/drivers/scsi/sd_dif.c
+@@ -28,7 +28,7 @@ void sd_dif_config_host(struct scsi_disk *sdkp)
+ {
+ 	struct scsi_device *sdp = sdkp->device;
+ 	struct gendisk *disk = sdkp->disk;
+-	u8 type = sdkp->protection_type;
++	u8 type = sdkp->disk->protection_type;
+ 	struct blk_integrity bi;
+ 	int dif, dix;
+ 
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 8b5330d..5f58736 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -219,6 +219,7 @@ struct gendisk {
+ 	int node_id;
+ 	struct badblocks *bb;
+ 	struct lockdep_map lockdep_map;
++	u8 protection_type;/* Data Integrity Field */
+ };
+ 
+ static inline struct gendisk *part_to_disk(struct hd_struct *part)
+diff --git a/include/linux/t10-pi.h b/include/linux/t10-pi.h
+index 3e2a80c..108008e 100644
+--- a/include/linux/t10-pi.h
++++ b/include/linux/t10-pi.h
+@@ -54,15 +54,13 @@ static inline u32 t10_pi_ref_tag(struct request *rq)
+ extern const struct blk_integrity_profile t10_pi_type3_ip;
+ 
+ #ifdef CONFIG_BLK_DEV_INTEGRITY
+-extern void t10_pi_prepare(struct request *rq, u8 protection_type);
+-extern void t10_pi_complete(struct request *rq, u8 protection_type,
+-			    unsigned int intervals);
++extern void t10_pi_prepare(struct request *rq);
++extern void t10_pi_complete(struct request *rq, unsigned int intervals);
+ #else
+-static inline void t10_pi_complete(struct request *rq, u8 protection_type,
+-				   unsigned int intervals)
++static inline void t10_pi_complete(struct request *rq, unsigned int intervals)
+ {
+ }
+-static inline void t10_pi_prepare(struct request *rq, u8 protection_type)
++static inline void t10_pi_prepare(struct request *rq)
+ {
+ }
+ #endif
 -- 
-Jens Axboe
+1.8.3.1
 
