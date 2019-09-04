@@ -2,96 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD608A7E1E
-	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2019 10:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CC56A7E4F
+	for <lists+linux-block@lfdr.de>; Wed,  4 Sep 2019 10:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfIDInD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Sep 2019 04:43:03 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:39226 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbfIDInC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Sep 2019 04:43:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567586582; x=1599122582;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=65sWvjk5mPPhDUCeQo2jzp42YPYH5RvbY9fx3ldHQWY=;
-  b=YHJn0MQxDs/v4stNLENfO0q5iEVwdgY3nFKdfjQ9jMEHyJOFKpvY2URh
-   aFhOdGRy1ABIqLShfmJQp8J9WE3vOt/X2F5PaySC78FtwnpYV2t8+xFM5
-   uaaCp2pub06JGINrLuDEPsfBKH/n+qtBpeVDw/BCOBhBKn3ubR/l3KCqm
-   XEq/fzf7NQBvYivBD9Cni7aD/kOFMlta+ZIWBf1UAUalVYMczNZR4Ma/R
-   C9dcoIQOo8d2+UwKzzjggz016D1EXZvrkyqD9uYZrOmyn0TGVXs12u8iJ
-   h2px0Tq1HrMv6er41BnXZTJQ4wMHe/pFMwXUfWFeWmxSdlbezsOSjpp81
-   g==;
-IronPort-SDR: fW2ClYUlOf5U/4T+uwYAGTZc17TbPMqvpvGs+9o5wUjAirlUSXXUodoxkOcIUd7PhNh3ZuAGOd
- JeJUABggq7XyNlFFNfcxA3HNlHdkBL6ICrmk0JSCkh3qm1zcC0ttodYPqrHOcaBJl14/7aIFEr
- 02chGCP26UP6P2KODNxz8y9FLvLxAvpFYtkiBMH4dqeerczoXR0pzd0o2CkDHdblZ7k1hd/EHD
- VMp+va54AJoOJxSu6p1URdJK9ae2VJehS1Wxb4KAnNo06sPmDdB2KJq7ceoMK90CdWrb5OsjhC
- 3xg=
-X-IronPort-AV: E=Sophos;i="5.64,465,1559491200"; 
-   d="scan'208";a="117374689"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Sep 2019 16:42:56 +0800
-IronPort-SDR: D76xAKBuOxsMiJKEnJs9r+66lSxkXGRLhPT7aQPS4T1p90cnnZAbVlhFPUzYL1n76DfjewX7Eh
- t+bheACs51qxVrjAcbFa/4AlbHTMc4Fq0Mht1y7au2xOTb+/0bk3UJTNJi1BfvotDOFZGq8M4B
- zLtKcpCtcgfCkyV7VWJn0htFMJt75prqPZSZESRkEByfJ3uVgK1w75VmcD3ueclxfBgHPpcot8
- +PbyxZQxYSd3Z6/u56dIdTJ4Vkd4sbmTfNgnR8sV/ClPawuBqktpHgtBjTkFWr0sa6nrKtWxKU
- YRAOU786riM4FN5TkHSf2owj
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 01:39:54 -0700
-IronPort-SDR: gF/tvgc9dPWmXlj5N6N9a7caqNGW332k+/U/Yrz/Nvuoe7JK35iVWpBqGdtdHtOAvSjhpTY6Jm
- XZ4GfaX0L8d0C0GQ5UQ0iO68x4OUq6RR63SXxFZAWzv2AH+5S39oaqcYmWREMdF5Gj0FJOPgUw
- FHrl+3VGKobfXZBMFyd1mY56Lejzmxr7TCyo7CgrhMG3a7AiDUsNvafA3+x8MHYb9AZHeI38wq
- h+OJ0r6Yh+Gjq/SOzzwe9iPbqkdILIskJUk5K4/q5WR8pUZ/TftNVZjI0PQuQxgSUkI1Y0V85N
- vDw=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Sep 2019 01:42:55 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v3 7/7] sd: Set ELEVATOR_F_ZBD_SEQ_WRITE for ZBC disks
-Date:   Wed,  4 Sep 2019 17:42:47 +0900
-Message-Id: <20190904084247.23338-8-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190904084247.23338-1-damien.lemoal@wdc.com>
-References: <20190904084247.23338-1-damien.lemoal@wdc.com>
+        id S1726240AbfIDItn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Sep 2019 04:49:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49054 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729313AbfIDItl (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:49:41 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 18CE4E902B7178CFCB40;
+        Wed,  4 Sep 2019 16:49:40 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 16:49:29 +0800
+Subject: Re: [PATCH] paride/pf: need to set queue to NULL before put_disk
+To:     <tim@cyberelk.net>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>
+References: <1565686784-50375-1-git-send-email-zhengbin13@huawei.com>
+ <1565686784-50375-2-git-send-email-zhengbin13@huawei.com>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <2006dc45-e532-8b5d-240f-e4681c03ae24@huawei.com>
+Date:   Wed, 4 Sep 2019 16:49:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565686784-50375-2-git-send-email-zhengbin13@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Using the helper blk_queue_required_elevator_features(), set the
-elevator feature ELEVATOR_F_ZBD_SEQ_WRITE as required for the request
-queue of SCSI ZBC disks.
+ping
 
-This feature requirement can always be satisfied as the mq-deadline
-elevator is always selected for in-kernel compilation when
-CONFIG_BLK_DEV_ZONED (zoned block device support) is enabled.
-
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- drivers/scsi/sd_zbc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
-index 367614f0e34f..de4019dc0f0b 100644
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -493,6 +493,8 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
- 	blk_queue_chunk_sectors(sdkp->disk->queue,
- 			logical_to_sectors(sdkp->device, zone_blocks));
- 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, sdkp->disk->queue);
-+	blk_queue_required_elevator_features(sdkp->disk->queue,
-+					     ELEVATOR_F_ZBD_SEQ_WRITE);
- 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
- 
- 	/* READ16/WRITE16 is mandatory for ZBC disks */
--- 
-2.21.0
+On 2019/8/13 16:59, zhengbin wrote:
+> In pf_init_units, if blk_mq_init_sq_queue fails, need to set queue to
+> NULL before put_disk, otherwise null-ptr-deref Read will occur.
+>
+> put_disk
+>   kobject_put
+>     disk_release
+>       blk_put_queue(disk->queue)
+>
+> Fixes: 77218ddf46d8 ("paride: convert pf to blk-mq")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: zhengbin <zhengbin13@huawei.com>
+> ---
+>  drivers/block/paride/pf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
+> index 1e9c50a..6b7d4ca 100644
+> --- a/drivers/block/paride/pf.c
+> +++ b/drivers/block/paride/pf.c
+> @@ -300,8 +300,8 @@ static void __init pf_init_units(void)
+>  		disk->queue = blk_mq_init_sq_queue(&pf->tag_set, &pf_mq_ops,
+>  							1, BLK_MQ_F_SHOULD_MERGE);
+>  		if (IS_ERR(disk->queue)) {
+> -			put_disk(disk);
+>  			disk->queue = NULL;
+> +			put_disk(disk);
+>  			continue;
+>  		}
+>
+> --
+> 2.7.4
+>
+>
+> .
+>
 
