@@ -2,97 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C112AA943
-	for <lists+linux-block@lfdr.de>; Thu,  5 Sep 2019 18:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D48AA95C
+	for <lists+linux-block@lfdr.de>; Thu,  5 Sep 2019 18:52:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbfIEQoD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Sep 2019 12:44:03 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55237 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387716AbfIEQoC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Sep 2019 12:44:02 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from maxg@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 5 Sep 2019 19:43:57 +0300
-Received: from r-vnc12.mtr.labs.mlnx (r-vnc12.mtr.labs.mlnx [10.208.0.12])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x85Ghux4018224;
-        Thu, 5 Sep 2019 19:43:57 +0300
-From:   Max Gurtovoy <maxg@mellanox.com>
-To:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        martin.petersen@oracle.com, linux-nvme@lists.infradead.org,
-        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me
-Cc:     shlomin@mellanox.com, israelr@mellanox.com,
-        Max Gurtovoy <maxg@mellanox.com>
-Subject: [PATCH 3/3] nvme: remove PI values definition from NVMe subsystem
-Date:   Thu,  5 Sep 2019 19:43:56 +0300
-Message-Id: <1567701836-29725-3-git-send-email-maxg@mellanox.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <1567701836-29725-1-git-send-email-maxg@mellanox.com>
-References: <1567701836-29725-1-git-send-email-maxg@mellanox.com>
+        id S1733232AbfIEQwf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Sep 2019 12:52:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:47510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728254AbfIEQwf (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:52:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D10D28;
+        Thu,  5 Sep 2019 09:52:34 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4354C3F718;
+        Thu,  5 Sep 2019 09:52:33 -0700 (PDT)
+Subject: Re: sched: make struct task_struct::state 32-bit
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+ <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com>
+Date:   Thu, 5 Sep 2019 17:52:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use block layer definition instead of re-defining it with the same
-values.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
----
- drivers/nvme/host/core.c | 12 ++++++------
- include/linux/nvme.h     |  3 ---
- 2 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 1850ccd..0f799bd 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -663,11 +663,11 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
- 		}
- 
- 		switch (req->rq_disk->protection_type) {
--		case NVME_NS_DPS_PI_TYPE3:
-+		case T10_PI_TYPE3_PROTECTION:
- 			control |= NVME_RW_PRINFO_PRCHK_GUARD;
- 			break;
--		case NVME_NS_DPS_PI_TYPE1:
--		case NVME_NS_DPS_PI_TYPE2:
-+		case T10_PI_TYPE1_PROTECTION:
-+		case T10_PI_TYPE2_PROTECTION:
- 			control |= NVME_RW_PRINFO_PRCHK_GUARD |
- 					NVME_RW_PRINFO_PRCHK_REF;
- 			cmnd->rw.reftag = cpu_to_le32(t10_pi_ref_tag(req));
-@@ -1498,13 +1498,13 @@ static void nvme_init_integrity(struct gendisk *disk, u16 ms)
- 
- 	memset(&integrity, 0, sizeof(integrity));
- 	switch (disk->protection_type) {
--	case NVME_NS_DPS_PI_TYPE3:
-+	case T10_PI_TYPE3_PROTECTION:
- 		integrity.profile = &t10_pi_type3_crc;
- 		integrity.tag_size = sizeof(u16) + sizeof(u32);
- 		integrity.flags |= BLK_INTEGRITY_DEVICE_CAPABLE;
- 		break;
--	case NVME_NS_DPS_PI_TYPE1:
--	case NVME_NS_DPS_PI_TYPE2:
-+	case T10_PI_TYPE1_PROTECTION:
-+	case T10_PI_TYPE2_PROTECTION:
- 		integrity.profile = &t10_pi_type1_crc;
- 		integrity.tag_size = sizeof(u16);
- 		integrity.flags |= BLK_INTEGRITY_DEVICE_CAPABLE;
-diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index 01aa6a6..8d45c3e 100644
---- a/include/linux/nvme.h
-+++ b/include/linux/nvme.h
-@@ -381,9 +381,6 @@ enum {
- 	NVME_NS_DPC_PI_TYPE1	= 1 << 0,
- 	NVME_NS_DPS_PI_FIRST	= 1 << 3,
- 	NVME_NS_DPS_PI_MASK	= 0x7,
--	NVME_NS_DPS_PI_TYPE1	= 1,
--	NVME_NS_DPS_PI_TYPE2	= 2,
--	NVME_NS_DPS_PI_TYPE3	= 3,
- };
- 
- struct nvme_ns_id_desc {
--- 
-1.8.3.1
+On 05/09/2019 16:51, Markus Elfring wrote:
+> Can a transformation approach like the following work also
+> for your software?
+> 
+> @replacement@
+> 
+> identifier func, p, state_var;
+> 
+> @@
+> 
+>  func(...,
+>       struct task_struct *p,
+>       ...
+> ,
+> -     long
+> +     int
+>       state_var
+> ,
+>       ...)
+> 
+>  {
+> 
+>  ...
+> 
+>  }
+> 
+> 
 
+I actually got rid of the task_struct* parameter and now just match
+against task_struct.p accesses in the function body, which has the
+added bonus of not caring about the order of the parameters.
+
+Still not there yet but making progress in the background, hope it's
+passable entertainment to see me struggle my way there :)
+
+> 
+> Regards,
+> Markus
+> 
