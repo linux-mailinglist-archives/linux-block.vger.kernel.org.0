@@ -2,19 +2,19 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C215ACF7D
-	for <lists+linux-block@lfdr.de>; Sun,  8 Sep 2019 17:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC798ACF7F
+	for <lists+linux-block@lfdr.de>; Sun,  8 Sep 2019 17:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfIHP0s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 8 Sep 2019 11:26:48 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34015 "EHLO
+        id S1729089AbfIHP0w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 8 Sep 2019 11:26:52 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34028 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729077AbfIHP0r (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 8 Sep 2019 11:26:47 -0400
+        with ESMTP id S1727154AbfIHP0w (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 8 Sep 2019 11:26:52 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from maxg@mellanox.com)
         with ESMTPS (AES256-SHA encrypted); 8 Sep 2019 18:26:45 +0300
 Received: from r-vnc12.mtr.labs.mlnx (r-vnc12.mtr.labs.mlnx [10.208.0.12])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x88FQjLj011361;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x88FQjLk011361;
         Sun, 8 Sep 2019 18:26:45 +0300
 From:   Max Gurtovoy <maxg@mellanox.com>
 To:     linux-block@vger.kernel.org, axboe@kernel.dk,
@@ -22,9 +22,9 @@ To:     linux-block@vger.kernel.org, axboe@kernel.dk,
         keith.busch@intel.com, hch@lst.de, sagi@grimberg.me
 Cc:     shlomin@mellanox.com, israelr@mellanox.com,
         Max Gurtovoy <maxg@mellanox.com>
-Subject: [PATCH v4 2/3] block: don't remap ref tag for T10 PI type 0
-Date:   Sun,  8 Sep 2019 18:26:44 +0300
-Message-Id: <1567956405-5585-2-git-send-email-maxg@mellanox.com>
+Subject: [PATCH v4 3/3] nvme: remove PI values definition from NVMe subsystem
+Date:   Sun,  8 Sep 2019 18:26:45 +0300
+Message-Id: <1567956405-5585-3-git-send-email-maxg@mellanox.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1567956405-5585-1-git-send-email-maxg@mellanox.com>
 References: <1567956405-5585-1-git-send-email-maxg@mellanox.com>
@@ -33,72 +33,72 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Only type 1 and type 2 have a reference tag by definition.
+Use block layer definition instead of re-defining it with the same
+values.
 
-Suggested-by: Keith Busch <kbusch@kernel.org>
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
 ---
 
 changes from v3:
- - added blk_integrity_need_remap helper
+ - added Reviewed-by signature
 
 ---
- block/t10-pi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/nvme/host/core.c | 12 ++++++------
+ include/linux/nvme.h     |  3 ---
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/block/t10-pi.c b/block/t10-pi.c
-index a33eac4..753b5a8 100644
---- a/block/t10-pi.c
-+++ b/block/t10-pi.c
-@@ -168,6 +168,12 @@ static blk_status_t t10_pi_type3_verify_ip(struct blk_integrity_iter *iter)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index bdc0a64..a1c0ce0 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -663,11 +663,11 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
+ 		}
+ 
+ 		switch (req->rq_disk->protection_type) {
+-		case NVME_NS_DPS_PI_TYPE3:
++		case T10_PI_TYPE3_PROTECTION:
+ 			control |= NVME_RW_PRINFO_PRCHK_GUARD;
+ 			break;
+-		case NVME_NS_DPS_PI_TYPE1:
+-		case NVME_NS_DPS_PI_TYPE2:
++		case T10_PI_TYPE1_PROTECTION:
++		case T10_PI_TYPE2_PROTECTION:
+ 			control |= NVME_RW_PRINFO_PRCHK_GUARD |
+ 					NVME_RW_PRINFO_PRCHK_REF;
+ 			cmnd->rw.reftag = cpu_to_le32(t10_pi_ref_tag(req));
+@@ -1498,13 +1498,13 @@ static void nvme_init_integrity(struct gendisk *disk, u16 ms)
+ 
+ 	memset(&integrity, 0, sizeof(integrity));
+ 	switch (disk->protection_type) {
+-	case NVME_NS_DPS_PI_TYPE3:
++	case T10_PI_TYPE3_PROTECTION:
+ 		integrity.profile = &t10_pi_type3_crc;
+ 		integrity.tag_size = sizeof(u16) + sizeof(u32);
+ 		integrity.flags |= BLK_INTEGRITY_DEVICE_CAPABLE;
+ 		break;
+-	case NVME_NS_DPS_PI_TYPE1:
+-	case NVME_NS_DPS_PI_TYPE2:
++	case T10_PI_TYPE1_PROTECTION:
++	case T10_PI_TYPE2_PROTECTION:
+ 		integrity.profile = &t10_pi_type1_crc;
+ 		integrity.tag_size = sizeof(u16);
+ 		integrity.flags |= BLK_INTEGRITY_DEVICE_CAPABLE;
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 01aa6a6..8d45c3e 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -381,9 +381,6 @@ enum {
+ 	NVME_NS_DPC_PI_TYPE1	= 1 << 0,
+ 	NVME_NS_DPS_PI_FIRST	= 1 << 3,
+ 	NVME_NS_DPS_PI_MASK	= 0x7,
+-	NVME_NS_DPS_PI_TYPE1	= 1,
+-	NVME_NS_DPS_PI_TYPE2	= 2,
+-	NVME_NS_DPS_PI_TYPE3	= 3,
  };
- EXPORT_SYMBOL(t10_pi_type3_ip);
  
-+static inline bool blk_integrity_need_remap(struct gendisk *disk)
-+{
-+	return disk->protection_type == T10_PI_TYPE1_PROTECTION ||
-+		disk->protection_type == T10_PI_TYPE2_PROTECTION;
-+}
-+
- /**
-  * t10_pi_prepare - prepare PI prior submitting request to device
-  * @rq:              request with PI that should be prepared
-@@ -178,7 +184,7 @@ static blk_status_t t10_pi_type3_verify_ip(struct blk_integrity_iter *iter)
-  * likely to be different. Remap protection information to match the
-  * physical LBA.
-  *
-- * Type 3 does not have a reference tag so no remapping is required.
-+ * Types 0 and 3 don't have a reference tag so no remapping is required.
-  */
- void t10_pi_prepare(struct request *rq)
- {
-@@ -186,7 +192,7 @@ void t10_pi_prepare(struct request *rq)
- 	u32 ref_tag = t10_pi_ref_tag(rq);
- 	struct bio *bio;
- 
--	if (rq->rq_disk->protection_type == T10_PI_TYPE3_PROTECTION)
-+	if (!blk_integrity_need_remap(rq->rq_disk))
- 		return;
- 
- 	__rq_for_each_bio(bio, rq) {
-@@ -234,7 +240,7 @@ void t10_pi_prepare(struct request *rq)
-  * to the device, we should remap it back to virtual values expected by the
-  * block layer.
-  *
-- * Type 3 does not have a reference tag so no remapping is required.
-+ * Types 0 and 3 don't have a reference tag so no remapping is required.
-  */
- void t10_pi_complete(struct request *rq, unsigned int nr_bytes)
- {
-@@ -243,7 +249,7 @@ void t10_pi_complete(struct request *rq, unsigned int nr_bytes)
- 	u32 ref_tag = t10_pi_ref_tag(rq);
- 	struct bio *bio;
- 
--	if (rq->rq_disk->protection_type == T10_PI_TYPE3_PROTECTION)
-+	if (!blk_integrity_need_remap(rq->rq_disk))
- 		return;
- 
- 	__rq_for_each_bio(bio, rq) {
+ struct nvme_ns_id_desc {
 -- 
 1.8.3.1
 
