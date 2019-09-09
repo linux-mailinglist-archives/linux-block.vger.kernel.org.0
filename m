@@ -2,322 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69786AD961
-	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2019 14:51:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65AC0AD973
+	for <lists+linux-block@lfdr.de>; Mon,  9 Sep 2019 14:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfIIMvM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Sep 2019 08:51:12 -0400
-Received: from smtpbgbr2.qq.com ([54.207.22.56]:36875 "EHLO smtpbgbr2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbfIIMvM (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:51:12 -0400
-X-QQ-mid: bizesmtp11t1568033453tf4qhb1h
-Received: from Macbook.pro (unknown [218.76.23.26])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Mon, 09 Sep 2019 20:50:53 +0800 (CST)
-X-QQ-SSF: 01400000002000R0YS90000A0000000
-X-QQ-FEAT: gDbwoeOnDAEuwlpPa1umbkYuO1HekZrCNkyN/Ro43B4CgwBXBW493VH6JKLWt
-        e1ZRBc7KFXOX9xGNFBlFyvw6amd54Kw7qFOWXqvY4n2adcK49srp4/zKpTr8QvLlidMIs8w
-        Ixq8n3d70mWAnLHOlCSNGCBrTaTC1RavvKJ5673xpyGCu/RVo/TWFIUgb1e5Rdj1ISS6Vip
-        L0VF2F/SgtmbTuWIhmT3x8dYwg5dlYI7tz5uqatDjtwMaOZ3r5qWvYPSC1cwh3x0+U7Dubj
-        yhEU3GyUUrk7AgdS/2glCHTSqYFVb+izwgOvX2eHirnjd2wm6ZSQ3xpIQtrG9++H+fjJo3v
-        gSJW8cVZ5pk4JwpFSrgoE+lOAgtNQ==
-X-QQ-GoodBg: 2
-From:   Jackie Liu <liuyun01@kylinos.cn>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>
-Subject: [PATCH 2/2] io_uring: add support for link with drain
-Date:   Mon,  9 Sep 2019 20:50:40 +0800
-Message-Id: <20190909125040.7119-2-liuyun01@kylinos.cn>
+        id S1726856AbfIIM5D (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Sep 2019 08:57:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38487 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfIIM5D (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Sep 2019 08:57:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so14535191wme.3;
+        Mon, 09 Sep 2019 05:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DqBuAhLk8WUfA1MYmYB0V6NwagpBGla+VruOq7texiI=;
+        b=pfMQ0N0vQFNrlf7+Euo0B+eu/R9lqsB2N6y/Zf6dCfmXjNpc8lVq/rsNd2K+m/tdQo
+         NsFPf3E58S5t836nUBN7kByqFDaUYjcByFgizXjX8zh6Bdaoao+7/LInzczFiFpa/6GH
+         o7mqH05RH2yNis8PC9tXH6aEStmnoebyLhBnpid2qbxrYPXn1Htbxt79QXLE9U/2FZxC
+         9wfDYFiU0sNaVZ8yoBoHlqRlWuDgjTvEmzVzPykw86/tB6E4Ii0843fous5s9lrSCuWX
+         pByoxLxJyXxNzv4PEsTvmPreXk3vpGXiB4/E2bAnqXdN0WoZLOoFmeHvK93xRSip9rKH
+         egtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DqBuAhLk8WUfA1MYmYB0V6NwagpBGla+VruOq7texiI=;
+        b=Zgwd58UwS5zNQVuPWmP1Pk6oNRwtwz8PUaXTiR1qvqtUo9dCCVWcrPikvJSAyYCh6S
+         aYbpgRCxa9PgCqRmzzoo1+hOw6PNAhG8MZ9TgwCgT9B6PGVD0QFWTRXyf75oroV4IsRd
+         f36JaUoRqQnjQ71CnS5danIR6OjavtE6wHbhnK4RrtLYHti3zFcW7VjtyyvS++TiVdvD
+         45oiY9YhmcCV63Lo9RAs2Dhv2gInbYhuzp7Hl+VlTHP/tQ7d0YOOkxlGGiZztFscQgw9
+         jkhI/HyYyIWSagd6J/qfHW1P+n24zMNd5z/dTUdSgDWIkhN/+dLiMsN7pvOTUqjBlgqj
+         gdRg==
+X-Gm-Message-State: APjAAAUR7upX4qkPxWmrqA33q6tsb6HLmACrH9pjuT4/Fu2cC0/NeC2O
+        JQoneORF0j059TB0yXjywYa6MYcK
+X-Google-Smtp-Source: APXvYqyXgpZUJfJVC5gENHP0+6FV5H/yIWLx5Co3Rn4FgyQ44vdgInN4M/6j6o9YKW+BKqfij5Bjrw==
+X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr17217044wmi.24.1568033820460;
+        Mon, 09 Sep 2019 05:57:00 -0700 (PDT)
+Received: from localhost (p2E5BE0B8.dip0.t-ipconnect.de. [46.91.224.184])
+        by smtp.gmail.com with ESMTPSA id r16sm16166050wrc.81.2019.09.09.05.56.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 05:56:59 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-block@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH 0/3] mmc: Fix scatter/gather on SDHCI
+Date:   Mon,  9 Sep 2019 14:56:55 +0200
+Message-Id: <20190909125658.30559-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190909125040.7119-1-liuyun01@kylinos.cn>
-References: <20190909125040.7119-1-liuyun01@kylinos.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign2
-X-QQ-Bgrelay: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-To support the link with drain, we need to do two parts.
+From: Thierry Reding <treding@nvidia.com>
 
-There is an sqes:
+Commit 158a6d3ce3bc ("iommu/dma: add a new dma_map_ops of
+get_merge_boundary()") causes scatter/gather to break for SDHCI and
+potentially other MMC hosts.
 
-    0     1     2     3     4     5     6
- +-----+-----+-----+-----+-----+-----+-----+
- |  N  |  L  |  L  | L+D |  N  |  N  |  N  |
- +-----+-----+-----+-----+-----+-----+-----+
+The reason is that the commit ends up tricking the block layer into
+believing that there's effectively no limit on the segment size. While
+this may be true for some device, it's certainly not true for all. The
+DMA descriptors used by SDHCI, for example, have a 16-bit field that
+contains the number of bytes to transmit for that particular transfer.
+As a result of the segment size exceeding the capabilities of the
+hardware, the scatterlist ends up containing entries that are too large
+to fit into a single descriptor.
 
-First, we need to ensure that the io before the link is completed,
-there is a easy way is set drain flag to the link list's head, so
-all subsequent io will be inserted into the defer_list.
+This small series fixes this by making the block layer respect the
+segment size restrictions set for the device. It also prevents the MMC
+queue code to attempt to overwrite the maximum segment size of a device
+that may already have been set up. Finally it configures the maximum
+segment size for SDHCI. The last step is technically not required
+because the maximum segment size for SDHCI coincides with the default,
+but I think it's better to be explicit here.
 
-	+-----+
-    (0) |  N  |
-	+-----+
-           |          (2)         (3)         (4)
-	+-----+     +-----+     +-----+     +-----+
-    (1) | L+D | --> |  L  | --> | L+D | --> |  N  |
-	+-----+     +-----+     +-----+     +-----+
-           |
-	+-----+
-    (5) |  N  |
-	+-----+
-           |
-	+-----+
-    (6) |  N  |
-	+-----+
+As a result, all entries in the scatterlist are now small enough to fit
+into SDHCI DMA descriptors. Some improvements could be made to how the
+scatterlist is packed. For example, the dma-iommu code compacts the SG
+entries so that they result in segments less than the maximum segment,
+but doesn't split up individual entries. This often results in holes in
+the individual segments. In order to create full 64 KiB segments with
+only the last segment being partial, the code would have to split up
+individual entries. This should be possible but is not done as part of
+this series.
 
-Second, ensure that the following IO will not be completed first,
-an easy way is to create a mirror of drain io and insert it into
-defer_list, in this way, as long as drain io is not processed, the
-following io in the defer_list will not be actively process.
+Thierry
 
-	+-----+
-    (0) |  N  |
-	+-----+
-           |          (2)         (3)         (4)
-	+-----+     +-----+     +-----+     +-----+
-    (1) | L+D | --> |  L  | --> | L+D | --> |  N  |
-	+-----+     +-----+     +-----+     +-----+
-           |
-	+-----+
-   ('3) |  D  |   <== This is a shadow of (3)
-	+-----+
-           |
-	+-----+
-    (5) |  N  |
-	+-----+
-           |
-	+-----+
-    (6) |  N  |
-	+-----+
+Thierry Reding (3):
+  block: Respect the device's maximum segment size
+  mmc: core: Respect MMC host's maximum segment size
+  mmc: sdhci: Set DMA maximum segment size to 64 KiB
 
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
----
- fs/io_uring.c | 114 ++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 97 insertions(+), 17 deletions(-)
+ block/blk-settings.c     | 24 +++++++++++++++---------
+ drivers/mmc/core/queue.c |  2 --
+ drivers/mmc/host/sdhci.c |  5 +++++
+ drivers/mmc/host/sdhci.h |  1 +
+ 4 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 06d048341fa4..b03630ced9ae 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -336,6 +336,7 @@ struct io_kiocb {
- #define REQ_F_LINK		64	/* linked sqes */
- #define REQ_F_LINK_DONE		128	/* linked sqes done */
- #define REQ_F_FAIL_LINK		256	/* fail rest of links */
-+#define REQ_F_SHADOW_DRAIN	512	/* link-drain shadow req */
- 	u64			user_data;
- 	u32			result;
- 	u32			sequence;
-@@ -367,6 +368,7 @@ struct io_submit_state {
- };
- 
- static void io_sq_wq_submit_work(struct work_struct *work);
-+static void __io_free_req(struct io_kiocb *req);
- 
- static struct kmem_cache *req_cachep;
- 
-@@ -472,6 +474,11 @@ static void io_commit_cqring(struct io_ring_ctx *ctx)
- 	__io_commit_cqring(ctx);
- 
- 	while ((req = io_get_deferred_req(ctx)) != NULL) {
-+		if (req->flags & REQ_F_SHADOW_DRAIN) {
-+			/* Just for drain, free it. */
-+			__io_free_req(req);
-+			continue;
-+		}
- 		req->flags |= REQ_F_IO_DRAINED;
- 		queue_work(ctx->sqo_wq, &req->work);
- 	}
-@@ -2039,10 +2046,14 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
- 	flags = READ_ONCE(s->sqe->flags);
- 	fd = READ_ONCE(s->sqe->fd);
- 
--	if (flags & IOSQE_IO_DRAIN) {
-+	if (flags & IOSQE_IO_DRAIN)
- 		req->flags |= REQ_F_IO_DRAIN;
--		req->sequence = s->sequence;
--	}
-+	/*
-+	 * All io need record the previous position, if LINK vs DARIN,
-+	 * it can be used to mark the position of the first IO in the
-+	 * link list.
-+	 */
-+	req->sequence = s->sequence;
- 
- 	if (!io_op_needs_file(s->sqe))
- 		return 0;
-@@ -2064,20 +2075,11 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
- 	return 0;
- }
- 
--static int io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
-+static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 			struct sqe_submit *s)
- {
- 	int ret;
- 
--	ret = io_req_defer(ctx, req, s->sqe);
--	if (ret) {
--		if (ret != -EIOCBQUEUED) {
--			io_free_req(req);
--			io_cqring_add_event(ctx, s->sqe->user_data, ret);
--		}
--		return 0;
--	}
--
- 	ret = __io_submit_sqe(ctx, req, s, true);
- 	if (ret == -EAGAIN && !(req->flags & REQ_F_NOWAIT)) {
- 		struct io_uring_sqe *sqe_copy;
-@@ -2120,6 +2122,64 @@ static int io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 	return ret;
- }
- 
-+static int io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
-+			struct sqe_submit *s)
-+{
-+	int ret;
-+
-+	ret = io_req_defer(ctx, req, s->sqe);
-+	if (ret) {
-+		if (ret != -EIOCBQUEUED) {
-+			io_free_req(req);
-+			io_cqring_add_event(ctx, s->sqe->user_data, ret);
-+		}
-+		return 0;
-+	}
-+
-+	return __io_queue_sqe(ctx, req, s);
-+}
-+
-+static int io_queue_link_head(struct io_ring_ctx *ctx, struct io_kiocb *req,
-+			      struct sqe_submit *s, struct io_kiocb *shadow)
-+{
-+	int ret;
-+	int need_submit = false;
-+
-+	if (!shadow)
-+		return io_queue_sqe(ctx, req, s);
-+
-+	/*
-+	 * Mark the first IO in link list as DRAIN, let all the following
-+	 * IOs enter the defer list. all IO needs to be completed before link
-+	 * list.
-+	 */
-+	req->flags |= REQ_F_IO_DRAIN;
-+	ret = io_req_defer(ctx, req, s->sqe);
-+	if (ret) {
-+		if (ret != -EIOCBQUEUED) {
-+			io_free_req(req);
-+			io_cqring_add_event(ctx, s->sqe->user_data, ret);
-+			return 0;
-+		}
-+	} else {
-+		/*
-+		 * If ret == 0 means that all IOs in front of link io are
-+		 * running done. let's queue link head.
-+		 */
-+		need_submit = true;
-+	}
-+
-+	/* Insert shadow req to defer_list, blocking next IOs */
-+	spin_lock_irq(&ctx->completion_lock);
-+	list_add_tail(&shadow->list, &ctx->defer_list);
-+	spin_unlock_irq(&ctx->completion_lock);
-+
-+	if (need_submit)
-+		return __io_queue_sqe(ctx, req, s);
-+
-+	return 0;
-+}
-+
- #define SQE_VALID_FLAGS	(IOSQE_FIXED_FILE|IOSQE_IO_DRAIN|IOSQE_IO_LINK)
- 
- static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
-@@ -2264,6 +2324,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- {
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
-+	struct io_kiocb *shadow_req = NULL;
- 	bool prev_was_link = false;
- 	int i, submitted = 0;
- 
-@@ -2278,11 +2339,20 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- 		 * that's the end of the chain. Submit the previous link.
- 		 */
- 		if (!prev_was_link && link) {
--			io_queue_sqe(ctx, link, &link->submit);
-+			io_queue_link_head(ctx, link, &link->submit, shadow_req);
- 			link = NULL;
- 		}
- 		prev_was_link = (sqes[i].sqe->flags & IOSQE_IO_LINK) != 0;
- 
-+		if (link && (sqes[i].sqe->flags & IOSQE_IO_DRAIN)) {
-+			if (!shadow_req) {
-+				shadow_req = io_get_req(ctx, NULL);
-+				shadow_req->flags |= (REQ_F_IO_DRAIN | REQ_F_SHADOW_DRAIN);
-+				refcount_dec(&shadow_req->refs);
-+			}
-+			shadow_req->sequence = sqes[i].sequence;
-+		}
-+
- 		if (unlikely(mm_fault)) {
- 			io_cqring_add_event(ctx, sqes[i].sqe->user_data,
- 						-EFAULT);
-@@ -2296,7 +2366,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- 	}
- 
- 	if (link)
--		io_queue_sqe(ctx, link, &link->submit);
-+		io_queue_link_head(ctx, link, &link->submit, shadow_req);
- 	if (statep)
- 		io_submit_state_end(&state);
- 
-@@ -2432,6 +2502,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
- {
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
-+	struct io_kiocb *shadow_req = NULL;
- 	bool prev_was_link = false;
- 	int i, submit = 0;
- 
-@@ -2451,11 +2522,20 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
- 		 * that's the end of the chain. Submit the previous link.
- 		 */
- 		if (!prev_was_link && link) {
--			io_queue_sqe(ctx, link, &link->submit);
-+			io_queue_link_head(ctx, link, &link->submit, shadow_req);
- 			link = NULL;
- 		}
- 		prev_was_link = (s.sqe->flags & IOSQE_IO_LINK) != 0;
- 
-+		if (link && (s.sqe->flags & IOSQE_IO_DRAIN)) {
-+			if (!shadow_req) {
-+				shadow_req = io_get_req(ctx, NULL);
-+				shadow_req->flags |= (REQ_F_IO_DRAIN | REQ_F_SHADOW_DRAIN);
-+				refcount_dec(&shadow_req->refs);
-+			}
-+			shadow_req->sequence = s.sequence;
-+		}
-+
- 		s.has_user = true;
- 		s.needs_lock = false;
- 		s.needs_fixed_file = false;
-@@ -2465,7 +2545,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
- 	io_commit_sqring(ctx);
- 
- 	if (link)
--		io_queue_sqe(ctx, link, &link->submit);
-+		io_queue_link_head(ctx, link, &link->submit, shadow_req);
- 	if (statep)
- 		io_submit_state_end(statep);
- 
 -- 
 2.23.0
-
-
 
