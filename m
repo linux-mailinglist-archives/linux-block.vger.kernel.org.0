@@ -2,169 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D375CB2861
-	for <lists+linux-block@lfdr.de>; Sat, 14 Sep 2019 00:28:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B241B2867
+	for <lists+linux-block@lfdr.de>; Sat, 14 Sep 2019 00:31:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404103AbfIMW2W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Sep 2019 18:28:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45770 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404102AbfIMW2W (ORCPT
+        id S2404047AbfIMWbr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Sep 2019 18:31:47 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53976 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404024AbfIMWbq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:28:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l16so33384524wrv.12;
-        Fri, 13 Sep 2019 15:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tdU6m/5tnwqD2qEYA/L7MQWWo5R8oi1LocB0y0eYQ5o=;
-        b=kaCyKRboocVKY5DzrnmVkwAz3ufQOPecnpbfl0Pc+D4eIMRI5NZ0HGkVHGhPxhNh+v
-         L4Ar2MhJFDzzidnTeNm4mmmi9oWJifQFHeRhxj7t8B8VWLubK2DRzAPXH+UYJKgJWUA2
-         pt3v8z69izjqbxeQWFiLIKr+ksf6qiS7ygM31lExJ5/1OJ2EPXjRXuoplnaheaMuNXr2
-         mSNkvZBvGlB8I9+UQin+KwTFoHPJlKjE2PFcaXt6LgBM0PXMq5Samx0YaHrjvBXhc86W
-         npc8AuSEOPbpCRqBv6cBo5mVroPMrENfhBtsVs3ZP+M3KXUtmORZMm6bjR72Wmw0L6TB
-         zqvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tdU6m/5tnwqD2qEYA/L7MQWWo5R8oi1LocB0y0eYQ5o=;
-        b=jv1W1qjk7prLQHZfD7Y/buk1AHkdP9unuGNDrMYkPDGxxLTYj5QGZFTDiLCbaCQrRF
-         XPHeYPGvXyXfuU79sXNOtkL8efMTTMgDtcWUk2i1uKZ5cyhtnv8ycikvKcggk/dtdfUr
-         uz9EhoXodW+6qcXZ/3LIANnyObSf+TdNHa8Fq+52kNIq+ty57tLe6yBVvhuvV3Do+a7E
-         b//CMHIJ5aUUbE3/aLqQ0RWKM492UJCH+aPiMWXNczUvvAdiqMhdwF05tdFVNWDH2kf8
-         K77b3OmLGxHxmKM/ioo8dT+lMjjhG+OwJKjB8QThcv1B1lAM6D3xSX4HwTeDoqAPntuc
-         vTPA==
-X-Gm-Message-State: APjAAAUSxf1n+tXojNbApgvMWlCzU1ZqniDBQJ/QojbMwMw9nM5Knyfx
-        iA5WWWN3yFUwd83CvHEMTKk=
-X-Google-Smtp-Source: APXvYqwXiqK8hNMctc+9E3sU6LIcYAWLGA9V42DhmIKlW9MfqVSe7zqG/u+mPMuejMGFWA7GlMsAXw==
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr5982765wrv.30.1568413700857;
-        Fri, 13 Sep 2019 15:28:20 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.151.137])
-        by smtp.gmail.com with ESMTPSA id d12sm3456107wme.33.2019.09.13.15.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 15:28:20 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [RFC PATCH 2/2] io_uring: Optimise cq waiting with wait_threshold
-Date:   Sat, 14 Sep 2019 01:28:02 +0300
-Message-Id: <71aa08dfd7fee3093845957cdcf32b21f9194892.1568413210.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1568413210.git.asml.silence@gmail.com>
-References: <cover.1568413210.git.asml.silence@gmail.com>
+        Fri, 13 Sep 2019 18:31:46 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMTb46002552;
+        Fri, 13 Sep 2019 22:31:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=AytNg7Y7pX8v7DSd9Lm6chkJVbM/QLIa9/YYRNsXJpY=;
+ b=HXUJIqd/1NrjT8MwU8LQ9nuvE/iikC+T8GG/0eoU1QhIia/SdtoMiSGv0TBTmF4Yqo37
+ BvenJ1K37tiLXbY8OYto/rYPRQgaX/gMmQHwy5ki7AzQ7L0oacS8CkNtcC+ZXj9eYLYH
+ IS+YWk11+T/4RLParSq/IBl+iIC2Ebjq9X9b+6ZJo2uypqkiiPvmkqXcHU2ADurjqAs9
+ 8k3lJDj++5bwvP+p1mNzUSakzXtVgAcl+f4FgBl5AgVl8Dfd1XEczC1El7iMVNZqbseG
+ dwsnK9HS0yJmHMpDuoFxAZpSZJL7Cl42n/94Zq0gj9hj8UVl1vgZv9+b4yBCJi6AeKVm uQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2uytd379ck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 22:31:31 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMSYct010694;
+        Fri, 13 Sep 2019 22:31:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uytdxc071-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 22:31:30 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8DMVT0m022663;
+        Fri, 13 Sep 2019 22:31:29 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Sep 2019 15:31:28 -0700
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, linux-block@vger.kernel.org,
+        martin.petersen@oracle.com, linux-nvme@lists.infradead.org,
+        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me,
+        shlomin@mellanox.com, israelr@mellanox.com
+Subject: Re: [PATCH v5 2/2] block: centralize PI remapping logic to the block layer
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1568215397-15496-1-git-send-email-maxg@mellanox.com>
+        <1568215397-15496-2-git-send-email-maxg@mellanox.com>
+        <380932df-2119-ad86-8bb2-3eccb005c949@kernel.dk>
+Date:   Fri, 13 Sep 2019 18:31:21 -0400
+In-Reply-To: <380932df-2119-ad86-8bb2-3eccb005c949@kernel.dk> (Jens Axboe's
+        message of "Wed, 11 Sep 2019 16:01:11 -0600")
+Message-ID: <yq18sqrde12.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=815
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909130220
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=902 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909130220
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
 
-While waiting for completion events in io_cqring_wait(), the process
-will be waken up inside wait_threshold_interruptible() on any request
-completion, check num of events in completion queue and potentially go
-to sleep again.
+Jens,
 
-Apparently, there could be a lot of such spurious wakeups with lots of
-overhead. It especially manifests itself, when min_events is large, and
-completions are arriving one by one or in small batches (that usually
-is true).
+> While I like the idea of centralizing stuff like this, I'm also not
+> happy with adding checks like this to the fast path.
 
-E.g. if device completes requests one by one and io_uring_enter is
-waiting for 100 events, then there will be ~99 spurious wakeups.
+Yeah, but at least it's just checking a request queue flag.
 
-Use new wait_threshold_*() instead, which won't wake it up until
-necessary number of events is collected.
-
-Performance test:
-The first thread generates requests (QD=512) one by one, so they will
-be completed in the similar pattern. The second thread waiting for
-128 events to complete.
-
-Tested with null_blk with 5us delay
-and 3.8GHz Intel CPU.
-
-throughput before: 270 KIOPS
-throughput after:  370 KIOPS
-So, ~40% throughput boost on this exaggerate test.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 37395208a729..17d2d30b763a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -70,6 +70,7 @@
- #include <linux/nospec.h>
- #include <linux/sizes.h>
- #include <linux/hugetlb.h>
-+#include <linux/wait_threshold.h>
- 
- #include <uapi/linux/io_uring.h>
- 
-@@ -403,6 +404,13 @@ static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
- 	return ctx;
- }
- 
-+static unsigned int io_cqring_events(struct io_rings *rings)
-+{
-+	/* See comment at the top of this file */
-+	smp_rmb();
-+	return READ_ONCE(rings->cq.tail) - READ_ONCE(rings->cq.head);
-+}
-+
- static inline bool io_sequence_defer(struct io_ring_ctx *ctx,
- 				     struct io_kiocb *req)
- {
-@@ -521,7 +529,7 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
- static void io_cqring_ev_posted(struct io_ring_ctx *ctx)
- {
- 	if (waitqueue_active(&ctx->wait))
--		wake_up(&ctx->wait);
-+		wake_up_threshold(&ctx->wait, io_cqring_events(ctx->rings));
- 	if (waitqueue_active(&ctx->sqo_wait))
- 		wake_up(&ctx->sqo_wait);
- 	if (ctx->cq_ev_fd)
-@@ -546,7 +554,7 @@ static void io_ring_drop_ctx_refs(struct io_ring_ctx *ctx, unsigned refs)
- 	percpu_ref_put_many(&ctx->refs, refs);
- 
- 	if (waitqueue_active(&ctx->wait))
--		wake_up(&ctx->wait);
-+		wake_up_threshold(&ctx->wait, io_cqring_events(ctx->rings));
- }
- 
- static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
-@@ -681,12 +689,6 @@ static void io_put_req(struct io_kiocb *req)
- 		io_free_req(req);
- }
- 
--static unsigned io_cqring_events(struct io_rings *rings)
--{
--	/* See comment at the top of this file */
--	smp_rmb();
--	return READ_ONCE(rings->cq.tail) - READ_ONCE(rings->cq.head);
--}
- 
- /*
-  * Find and free completed poll iocbs
-@@ -2591,7 +2593,8 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			return ret;
- 	}
- 
--	ret = wait_event_interruptible(ctx->wait, io_cqring_events(rings) >= min_events);
-+	ret = wait_threshold_interruptible(ctx->wait, min_events,
-+					   io_cqring_events(rings));
- 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 	if (ret == -ERESTARTSYS)
- 		ret = -EINTR;
 -- 
-2.22.0
-
+Martin K. Petersen	Oracle Linux Engineering
