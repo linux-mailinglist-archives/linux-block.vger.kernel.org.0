@@ -2,118 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EF1FB3CFF
-	for <lists+linux-block@lfdr.de>; Mon, 16 Sep 2019 16:57:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16913B3CFD
+	for <lists+linux-block@lfdr.de>; Mon, 16 Sep 2019 16:57:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfIPO52 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Sep 2019 10:57:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33262 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfIPO52 (ORCPT
+        id S1727176AbfIPO5W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Sep 2019 10:57:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36185 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfIPO5W (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:57:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so5656968wrs.0
-        for <linux-block@vger.kernel.org>; Mon, 16 Sep 2019 07:57:26 -0700 (PDT)
+        Mon, 16 Sep 2019 10:57:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m29so159488pgc.3
+        for <linux-block@vger.kernel.org>; Mon, 16 Sep 2019 07:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FjoybZxqlhO6j7YUJJKcSzxvlQi+UbRquVjBeqmyC2c=;
-        b=S5eRfVJOWhP5W1QSvt4g1gkUmyEWabYd9Mn/cu8wMEteZNREzuMn1X00jsW4RdoTlq
-         eX0VLKOP72egm8OnxhBumEK3Oj1tQqUJ0qgx0IBGihRdcLfl5AnuGpconHCKCRkGyTWx
-         zeAGU5WFv1TLArbVx87SCMAQVwVTDu4g/1+a0kcxrEG2psiYiWQIRxNhrFAssJrrjW6/
-         AWyh7Gsc/WokE1t7Y+30Xyo0oJEQODEv9bGb06IUewXjAWARGSC21xONVmXGwutLgTmb
-         xgBkTb2ZsPoXWO+evcuum3AT9UtA9Zn0xXYx20zo8EaiC55l3dUiiAQfikM9xF8o7vbR
-         8njw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7WUNnN9yv61rt6RXUBjyfgyIhNh7aVIJr3pGT7+CnMg=;
+        b=mKNgvD5so4AGdkx4mkBeWTYa3r8Fm5dmfCEXgKPu7EOkmrzxT7SeJixToGX/PDai4z
+         PouMD+FWY+yLUMyOnetznsuFLfVrdDOHmf7OnhLqz+RCOE8ocHaVL1wk9omdhs9qr7Po
+         vTaFA6I6q/F1r1UCPaXjijc0UxP1SDYt9G7vxE1QWGns0SHQYmPCjyJusHH8/UdoI7JK
+         daPATNGa6VHYDv7y2HbTRIjiFtmfeezD8xkQjAAT5Q5ZuQs99DgswY33ufxkh9Dc3Sn8
+         6e0wkKeYk+/j9ilKR5lmDxSC3zqXWP8LUPWmxqKMnb6XzYAUKz6XfQGSojk9MnLAFVc2
+         DbQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FjoybZxqlhO6j7YUJJKcSzxvlQi+UbRquVjBeqmyC2c=;
-        b=WY7UH2RtjWf0nZ6N2o2wUmBFcqGjlQPNdGRr4q06UjzaRAxR9VbdVi/zSszugWY4Cx
-         Ln69XtlW8LMFWUGlac6WoSDZOkWGv6EvEe/uRetfqnf4Zjz7KaEspfm/t9vW+oUvOK0K
-         kWKoDBNvQyoN3vbcwLvTOoonzlVJRR1xr/41T4vX8yqYokGdDGqaXvxC6a+zCv3amRTy
-         TMYkgdXkYHmWiibu6hnGQMxoUcBgJb1Rfc5jddos4fgJ6eOhNb3w4XY8zCUyB/PNYwVd
-         NvGlC5STLFG7R8GatAt5ghuXpM94e6L7FvsMvhQ1Gm7MkLMGEEv3TmJnlV4liKqefxV+
-         c/hQ==
-X-Gm-Message-State: APjAAAW9ECmsJ/L41SxxeG91BzITP0YrFOAq9JaAQxuMQExkknsslBjP
-        ZKo07UuBnaGTV8s8SLSHFqUprcsBlD/7qcTZG9YC8TFs2ug=
-X-Google-Smtp-Source: APXvYqzw+p99VUGvMgaRQPud63PDoqaKWLR+7eNkDR13nQz/3Sa0fvN5CR2Oz4v7draPRAWxmuSdZRWgISnjRONDB9U=
-X-Received: by 2002:adf:8444:: with SMTP id 62mr190185wrf.202.1568645845836;
- Mon, 16 Sep 2019 07:57:25 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7WUNnN9yv61rt6RXUBjyfgyIhNh7aVIJr3pGT7+CnMg=;
+        b=gN+ZybVGkOq5hRLO5sv2EbxSZ3QKvas6CE+58lYWD13jpqmlgNM5+zXkQH9rzF13ZV
+         qzTzUCrn7mS6fckTCh0hdYhY4+fPjZpJ7OWbKzuUu/MqaWeL7uVw5050uccbxniCZt8F
+         BCRyUwhjNo4QXrzXZNfbUftpmggrIxpjRu8dzOHCVzVs25xcTntqkrhST6W4cFJ/5KwI
+         Yc7bh5G6vSX669m+R7uxcf41spJs/CXTs2YYUVgXs5HIf0ypWDnfp+lM3OS16Sb9yHce
+         wtiYoxzJrgSrWn7XMIBpL343eh80FwnF5dS+45sJJ19nnQJnn+7sfyXhF+3pFueg7GIf
+         l8Jw==
+X-Gm-Message-State: APjAAAUStBe/nDwXve7Zjn5BNMlV2X7FtqUERkExgI6hPm7Gr2M1nhQy
+        g52USk9MpPjmRde/bqlIh3ri2Fq9qL9cyg==
+X-Google-Smtp-Source: APXvYqwNJ5iLvpSHH/8GfUPkCJnmc9k4dCLIT6kuDM0OHFDEjWpwYV02cv4diyjelI9+gIvh7UMqvQ==
+X-Received: by 2002:a63:6d0:: with SMTP id 199mr25066981pgg.299.1568645841195;
+        Mon, 16 Sep 2019 07:57:21 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:30f3:8cde:93f5:74f2? ([2605:e000:100e:83a1:30f3:8cde:93f5:74f2])
+        by smtp.gmail.com with ESMTPSA id b3sm58303667pfp.65.2019.09.16.07.57.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 07:57:20 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] block: use symbolic constants for t10_pi type
+To:     Christoph Hellwig <hch@lst.de>, Max Gurtovoy <maxg@mellanox.com>
+Cc:     linux-block@vger.kernel.org, martin.petersen@oracle.com,
+        linux-nvme@lists.infradead.org, keith.busch@intel.com,
+        sagi@grimberg.me, shlomin@mellanox.com, israelr@mellanox.com
+References: <1568493253-18142-1-git-send-email-maxg@mellanox.com>
+ <20190916075151.GA25796@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7465169a-dc9d-ae72-99bd-204e7402c279@kernel.dk>
+Date:   Mon, 16 Sep 2019 08:57:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190620150337.7847-1-jinpuwang@gmail.com> <20190620150337.7847-16-jinpuwang@gmail.com>
- <4fbad80b-f551-131e-9a5c-a24f1fa98fea@acm.org> <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
-In-Reply-To: <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Mon, 16 Sep 2019 16:57:15 +0200
-Message-ID: <CAMGffEmnTG4ixN1Hfy7oY93TgG3qQtF9TkpGzi=BxWm5a2i3Eg@mail.gmail.com>
-Subject: Re: [PATCH v4 15/25] ibnbd: private headers with IBNBD protocol
- structs and helpers
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
-        Roman Pen <roman.penyaev@profitbricks.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190916075151.GA25796@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> > > +#define _IBNBD_FILEIO  0
-> > > +#define _IBNBD_BLOCKIO 1
-> > > +#define _IBNBD_AUTOIO  2
-> >  >
-> > > +enum ibnbd_io_mode {
-> > > +     IBNBD_FILEIO = _IBNBD_FILEIO,
-> > > +     IBNBD_BLOCKIO = _IBNBD_BLOCKIO,
-> > > +     IBNBD_AUTOIO = _IBNBD_AUTOIO,
-> > > +};
-> >
-> > Since the IBNBD_* and _IBNBD_* constants have the same numerical value,
-> > are the former constants really necessary?
-> Seems we can remove _IBNBD_*.
-Sorry, checked again,  we defined _IBNBD_* constants to show the right
-value for def_io_mode description.
-If we remove the _IBNBD_*, then the modinfo shows:
-def_io_mode:By default, export devices in blockio(IBNBD_BLOCKIO) or
-fileio(IBNBD_FILEIO) mode. (default: IBNBD_BLOCKIO (blockio))
-instead of:
-parm:           def_io_mode:By default, export devices in blockio(1)
-or fileio(0) mode. (default: 1 (blockio))
+On 9/16/19 1:51 AM, Christoph Hellwig wrote:
+> On Sat, Sep 14, 2019 at 11:34:12PM +0300, Max Gurtovoy wrote:
+>> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+>> Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+> 
+> A little bit of a changelog would have been nice, but otherwise this
+> looks fine to me:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
+Yeah, please always include a commit message. There's always some
+possible explanation, even if you think the title covers it.
 
-> > > +/**
-> > > + * struct ibnbd_msg_io_old - message for I/O read/write for
-> > > + * ver < IBNBD_PROTO_VER_MAJOR
-> > > + * This structure is there only to know the size of the "old" message format
-> > > + * @hdr:     message header
-> > > + * @device_id:       device_id on server side to find the right device
-> > > + * @sector:  bi_sector attribute from struct bio
-> > > + * @rw:              bitmask, valid values are defined in enum ibnbd_io_flags
-> > > + * @bi_size:    number of bytes for I/O read/write
-> > > + * @prio:       priority
-> > > + */
-> > > +struct ibnbd_msg_io_old {
-> > > +     struct ibnbd_msg_hdr hdr;
-> > > +     __le32          device_id;
-> > > +     __le64          sector;
-> > > +     __le32          rw;
-> > > +     __le32          bi_size;
-> > > +};
-> >
-> > Since this is the first version of IBNBD that is being sent upstream, I
-> > think that ibnbd_msg_io_old should be left out.
-After discuss with Danil, we will remove the ibnbd_msg_io_old next round.
+-- 
+Jens Axboe
 
-Regards,
-
---
-Jack Wang
-Linux Kernel Developer
-Platform Engineering Compute (IONOS Cloud)
