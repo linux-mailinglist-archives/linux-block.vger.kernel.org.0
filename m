@@ -2,107 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6171B3CFB
-	for <lists+linux-block@lfdr.de>; Mon, 16 Sep 2019 16:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EF1FB3CFF
+	for <lists+linux-block@lfdr.de>; Mon, 16 Sep 2019 16:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbfIPO4L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Sep 2019 10:56:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55625 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388876AbfIPO4L (ORCPT
+        id S1730758AbfIPO52 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Sep 2019 10:57:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33262 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfIPO52 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:56:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g207so105401wmg.5
-        for <linux-block@vger.kernel.org>; Mon, 16 Sep 2019 07:56:08 -0700 (PDT)
+        Mon, 16 Sep 2019 10:57:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so5656968wrs.0
+        for <linux-block@vger.kernel.org>; Mon, 16 Sep 2019 07:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=gBWC3snefCabDrXZ1x4w/4vScF2L6+ltsxd1AOElg+8=;
-        b=OjrwaYz2AQwT5OelSHDlmDJTq6d0W9vtp6R/Mf+Rxp3t1feUrbsXjI3gOk5kiQBo/F
-         efj1fQ7n39FshL6tti/+V7aMUF2f3svbaUUu5cj8lO3QiMcrEurtxCpsGvugrG50YT+A
-         Vkakk7cd9B2ISXHfmQrfSP1J7zemHWVgL0HteBJA/zQYrq8/07FlLfJ2JXCqFSlpZipo
-         88Qf1QCBSnjzOpgUndKfw8fL5YW1M69Dpl2EvndiWoLC249vJBdEF2svILgs/I/WMmwI
-         YyeYDzcEQUIOLOQEWyXgcLDiA1Ief9EiZZElT/V4q94l6RwEJ5GA2bWqnVfi1XDzhM48
-         d8iw==
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FjoybZxqlhO6j7YUJJKcSzxvlQi+UbRquVjBeqmyC2c=;
+        b=S5eRfVJOWhP5W1QSvt4g1gkUmyEWabYd9Mn/cu8wMEteZNREzuMn1X00jsW4RdoTlq
+         eX0VLKOP72egm8OnxhBumEK3Oj1tQqUJ0qgx0IBGihRdcLfl5AnuGpconHCKCRkGyTWx
+         zeAGU5WFv1TLArbVx87SCMAQVwVTDu4g/1+a0kcxrEG2psiYiWQIRxNhrFAssJrrjW6/
+         AWyh7Gsc/WokE1t7Y+30Xyo0oJEQODEv9bGb06IUewXjAWARGSC21xONVmXGwutLgTmb
+         xgBkTb2ZsPoXWO+evcuum3AT9UtA9Zn0xXYx20zo8EaiC55l3dUiiAQfikM9xF8o7vbR
+         8njw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=gBWC3snefCabDrXZ1x4w/4vScF2L6+ltsxd1AOElg+8=;
-        b=AvU6tfuNiHBsaih/JZkhinQ151KmNl0BuiBoi1BN305lSZRNqR7oBTwijIIESuAsWr
-         Aw5yKPE0z3/HUK6xhWiUGK1yWZbqmfIXnuGCynS6kWFL04ejrlbBuBevF8iaQBD4DwS0
-         /iadNOAADOTJwdbs3fpkPi0EytzA/yl4Adie5xRGwTD3ysTg0hGv/3lNDyv982lsGMHf
-         X2GDFa8eHcsj4h5OfHyh76zDfM7elOgoVh1oehp1r/PKh4zlu+NJQfXeM9imDkAWT/2R
-         F4ATlDt/loMJYYVjkZXO5tM1LxRuCEznay+jR3M8wHdqvfoH2C2YE3ZQcO5WuXETEPBr
-         eh0Q==
-X-Gm-Message-State: APjAAAXbYQIV3Y5mp+A6/dOHafwuw2wojDXjOtS2ZNNy2cqa1T1aC487
-        XGVW+w6VvxsEb2hELaT7CTWzUQ==
-X-Google-Smtp-Source: APXvYqxxGliveFj5rRtU91G+rUagNoaG4zG7frcMy88jLejSwZ6OCXSOBT0eN5UBYzyWzrdq23T4cQ==
-X-Received: by 2002:a05:600c:141:: with SMTP id w1mr77779wmm.75.1568645768078;
-        Mon, 16 Sep 2019 07:56:08 -0700 (PDT)
-Received: from [192.168.0.101] (146-241-102-115.dyn.eolo.it. [146.241.102.115])
-        by smtp.gmail.com with ESMTPSA id n8sm99707wma.7.2019.09.16.07.56.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 07:56:07 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/1] block, bfq: remove bfq prefix from cgroups filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190909073117.20625-1-paolo.valente@linaro.org>
-Date:   Mon, 16 Sep 2019 16:56:06 +0200
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>, oleksandr@natalenko.name,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <80C56C11-DA21-4036-9006-2F459ACE9A8C@linaro.org>
-References: <20190909073117.20625-1-paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FjoybZxqlhO6j7YUJJKcSzxvlQi+UbRquVjBeqmyC2c=;
+        b=WY7UH2RtjWf0nZ6N2o2wUmBFcqGjlQPNdGRr4q06UjzaRAxR9VbdVi/zSszugWY4Cx
+         Ln69XtlW8LMFWUGlac6WoSDZOkWGv6EvEe/uRetfqnf4Zjz7KaEspfm/t9vW+oUvOK0K
+         kWKoDBNvQyoN3vbcwLvTOoonzlVJRR1xr/41T4vX8yqYokGdDGqaXvxC6a+zCv3amRTy
+         TMYkgdXkYHmWiibu6hnGQMxoUcBgJb1Rfc5jddos4fgJ6eOhNb3w4XY8zCUyB/PNYwVd
+         NvGlC5STLFG7R8GatAt5ghuXpM94e6L7FvsMvhQ1Gm7MkLMGEEv3TmJnlV4liKqefxV+
+         c/hQ==
+X-Gm-Message-State: APjAAAW9ECmsJ/L41SxxeG91BzITP0YrFOAq9JaAQxuMQExkknsslBjP
+        ZKo07UuBnaGTV8s8SLSHFqUprcsBlD/7qcTZG9YC8TFs2ug=
+X-Google-Smtp-Source: APXvYqzw+p99VUGvMgaRQPud63PDoqaKWLR+7eNkDR13nQz/3Sa0fvN5CR2Oz4v7draPRAWxmuSdZRWgISnjRONDB9U=
+X-Received: by 2002:adf:8444:: with SMTP id 62mr190185wrf.202.1568645845836;
+ Mon, 16 Sep 2019 07:57:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190620150337.7847-1-jinpuwang@gmail.com> <20190620150337.7847-16-jinpuwang@gmail.com>
+ <4fbad80b-f551-131e-9a5c-a24f1fa98fea@acm.org> <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
+In-Reply-To: <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 16 Sep 2019 16:57:15 +0200
+Message-ID: <CAMGffEmnTG4ixN1Hfy7oY93TgG3qQtF9TkpGzi=BxWm5a2i3Eg@mail.gmail.com>
+Subject: Re: [PATCH v4 15/25] ibnbd: private headers with IBNBD protocol
+ structs and helpers
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
+        Roman Pen <roman.penyaev@profitbricks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-News of this change?  Can we have it (or the solution with the
-symlinks if you prefer it) for 5.4?
+> > > +#define _IBNBD_FILEIO  0
+> > > +#define _IBNBD_BLOCKIO 1
+> > > +#define _IBNBD_AUTOIO  2
+> >  >
+> > > +enum ibnbd_io_mode {
+> > > +     IBNBD_FILEIO = _IBNBD_FILEIO,
+> > > +     IBNBD_BLOCKIO = _IBNBD_BLOCKIO,
+> > > +     IBNBD_AUTOIO = _IBNBD_AUTOIO,
+> > > +};
+> >
+> > Since the IBNBD_* and _IBNBD_* constants have the same numerical value,
+> > are the former constants really necessary?
+> Seems we can remove _IBNBD_*.
+Sorry, checked again,  we defined _IBNBD_* constants to show the right
+value for def_io_mode description.
+If we remove the _IBNBD_*, then the modinfo shows:
+def_io_mode:By default, export devices in blockio(IBNBD_BLOCKIO) or
+fileio(IBNBD_FILEIO) mode. (default: IBNBD_BLOCKIO (blockio))
+instead of:
+parm:           def_io_mode:By default, export devices in blockio(1)
+or fileio(0) mode. (default: 1 (blockio))
 
-Thanks,
-Paolo
 
-> Il giorno 9 set 2019, alle ore 09:31, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> Hi Jens,
-> now that BFQ's weight interface has been fixed [1], can we proceed
-> with this change?
->=20
-> In addition to acking this solution, in [2] Tejun already suggested a
-> reduced version of the present patch. In Tejun's version, only
-> bfq.weight is changed. But I guess that legacy code may use also some
-> of the other bfq parameters in cgroups, without the bfq prefix. Apart
-> from that, any version is ok for me, provided that it solves the
-> current confusing situation for userspace [3].
->=20
-> Thanks,
-> Paolo
->=20
-> [1] https://lkml.org/lkml/2019/8/27/1716
-> [2] =
-https://www.mail-archive.com/linux-block@vger.kernel.org/msg35823.html
-> [3] https://github.com/systemd/systemd/issues/7057
->=20
-> Angelo Ruocco (1):
->  block, bfq: delete "bfq" prefix from cgroup filenames
->=20
-> block/bfq-cgroup.c | 46 +++++++++++++++++++++++-----------------------
-> 1 file changed, 23 insertions(+), 23 deletions(-)
->=20
-> --
-> 2.20.1
+> > > +/**
+> > > + * struct ibnbd_msg_io_old - message for I/O read/write for
+> > > + * ver < IBNBD_PROTO_VER_MAJOR
+> > > + * This structure is there only to know the size of the "old" message format
+> > > + * @hdr:     message header
+> > > + * @device_id:       device_id on server side to find the right device
+> > > + * @sector:  bi_sector attribute from struct bio
+> > > + * @rw:              bitmask, valid values are defined in enum ibnbd_io_flags
+> > > + * @bi_size:    number of bytes for I/O read/write
+> > > + * @prio:       priority
+> > > + */
+> > > +struct ibnbd_msg_io_old {
+> > > +     struct ibnbd_msg_hdr hdr;
+> > > +     __le32          device_id;
+> > > +     __le64          sector;
+> > > +     __le32          rw;
+> > > +     __le32          bi_size;
+> > > +};
+> >
+> > Since this is the first version of IBNBD that is being sent upstream, I
+> > think that ibnbd_msg_io_old should be left out.
+After discuss with Danil, we will remove the ibnbd_msg_io_old next round.
 
+Regards,
+
+--
+Jack Wang
+Linux Kernel Developer
+Platform Engineering Compute (IONOS Cloud)
