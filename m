@@ -2,156 +2,222 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7534CB44F8
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 02:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6759EB47A1
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 08:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732735AbfIQAuo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Sep 2019 20:50:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60312 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732054AbfIQAuo (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Sep 2019 20:50:44 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B0893082132;
-        Tue, 17 Sep 2019 00:50:44 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44FA35D6A9;
-        Tue, 17 Sep 2019 00:50:36 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 08:50:32 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Yufen Yu <yuyufen@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, hch@infradead.org,
-        keith.busch@intel.com, tj@kernel.org, zhangxiaoxu5@huawei.com
-Subject: Re: [PATCH] block: fix null pointer dereference in
- blk_mq_rq_timed_out()
-Message-ID: <20190917005030.GD6199@ming.t460p>
-References: <20190907102450.40291-1-yuyufen@huawei.com>
- <20190912024618.GE2731@ming.t460p>
- <b3d7b459-5f31-d473-2508-20048119c1b2@huawei.com>
- <20190912041658.GA5020@ming.t460p>
- <d3549c6d-ca07-efa9-af15-7cee61ce5ff2@huawei.com>
- <20190912100755.GB9897@ming.t460p>
- <04b485ad-90e6-7752-b74f-9694de9c22a6@huawei.com>
+        id S1729416AbfIQGn0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Sep 2019 02:43:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45430 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726953AbfIQGn0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:43:26 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3444CB6FA7B2C93B4FD6;
+        Tue, 17 Sep 2019 14:43:25 +0800 (CST)
+Received: from RH5885H-V3.huawei.com (10.90.53.225) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 17 Sep 2019 14:43:16 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <sunke32@huawei.com>, <osandov@fb.com>,
+        <linux-block@vger.kernel.org>
+Subject: [PATCH blktests v2] nbd/003:add mount and clear_sock test for nbd
+Date:   Tue, 17 Sep 2019 14:49:51 +0800
+Message-ID: <1568702991-69027-1-git-send-email-sunke32@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04b485ad-90e6-7752-b74f-9694de9c22a6@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 17 Sep 2019 00:50:44 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 05:27:39PM +0800, Yufen Yu wrote:
-> 
-> 
-> On 2019/9/12 18:07, Ming Lei wrote:
-> > On Thu, Sep 12, 2019 at 04:49:15PM +0800, Yufen Yu wrote:
-> > > 
-> > > On 2019/9/12 12:16, Ming Lei wrote:
-> > > > On Thu, Sep 12, 2019 at 11:29:18AM +0800, Yufen Yu wrote:
-> > > > > On 2019/9/12 10:46, Ming Lei wrote:
-> > > > > > On Sat, Sep 07, 2019 at 06:24:50PM +0800, Yufen Yu wrote:
-> > > > > > > There is a race condition between timeout check and completion for
-> > > > > > > flush request as follow:
-> > > > > > > 
-> > > > > > > timeout_work    issue flush      issue flush
-> > > > > > >                    blk_insert_flush
-> > > > > > >                                     blk_insert_flush
-> > > > > > > blk_mq_timeout_work
-> > > > > > >                    blk_kick_flush
-> > > > > > > 
-> > > > > > > blk_mq_queue_tag_busy_iter
-> > > > > > > blk_mq_check_expired(flush_rq)
-> > > > > > > 
-> > > > > > >                    __blk_mq_end_request
-> > > > > > >                   flush_end_io
-> > > > > > >                   blk_kick_flush
-> > > > > > >                   blk_rq_init(flush_rq)
-> > > > > > >                   memset(flush_rq, 0)
-> > > > > > Not see there is memset(flush_rq, 0) in block/blk-flush.c
-> > > > > Call path as follow:
-> > > > > 
-> > > > > blk_kick_flush
-> > > > >       blk_rq_init
-> > > > >           memset(rq, 0, sizeof(*rq));
-> > > > Looks I miss this one in blk_rq_init(), sorry for that.
-> > > > 
-> > > > Given there are only two users of blk_rq_init(), one simple fix could be
-> > > > not clearing queue in blk_rq_init(), something like below?
-> > > > 
-> > > > diff --git a/block/blk-core.c b/block/blk-core.c
-> > > > index 77807a5d7f9e..25e6a045c821 100644
-> > > > --- a/block/blk-core.c
-> > > > +++ b/block/blk-core.c
-> > > > @@ -107,7 +107,9 @@ EXPORT_SYMBOL_GPL(blk_queue_flag_test_and_set);
-> > > >    void blk_rq_init(struct request_queue *q, struct request *rq)
-> > > >    {
-> > > > -	memset(rq, 0, sizeof(*rq));
-> > > > +	const int offset = offsetof(struct request, q);
-> > > > +
-> > > > +	memset((void *)rq + offset, 0, sizeof(*rq) - offset);
-> > > >    	INIT_LIST_HEAD(&rq->queuelist);
-> > > >    	rq->q = q;
-> > > > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > > > index 1ac790178787..382e71b8787d 100644
-> > > > --- a/include/linux/blkdev.h
-> > > > +++ b/include/linux/blkdev.h
-> > > > @@ -130,7 +130,7 @@ enum mq_rq_state {
-> > > >     * especially blk_mq_rq_ctx_init() to take care of the added fields.
-> > > >     */
-> > > >    struct request {
-> > > > -	struct request_queue *q;
-> > > > +	struct request_queue *q;	/* Must be the 1st field */
-> > > >    	struct blk_mq_ctx *mq_ctx;
-> > > >    	struct blk_mq_hw_ctx *mq_hctx;
-> > > Not set req->q as '0' can just avoid BUG_ON for NULL pointer deference.
-> > > 
-> > > However, the root problem is that 'flush_rq' have been reused while
-> > > timeout function handle it currently. That means mq_ops->timeout() may
-> > > access old values remained by the last flush request and make the wrong
-> > > decision.
-> > > 
-> > > Take the race condition in the patch as an example.
-> > > 
-> > > blk_mq_check_expired
-> > >      blk_mq_rq_timed_out
-> > >          req->q->mq_ops->timeout  // Driver timeout handle may read old data
-> > >      refcount_dec_and_test(&rq)
-> > >      __blk_mq_free_request   // If rq have been reset has '1' in
-> > > blk_rq_init(), it will be free here.
-> > > 
-> > > So, I think we should solve this problem completely. Just like normal
-> > > request,
-> > > we can prevent flush request to call end_io when timeout handle the request.
-> > Seems it isn't specific for 'flush_rq', and it should be one generic issue
-> > for any request which implements .end_io.
-> > 
-> > For requests without defining .end_io, rq->ref is applied for protecting
-> > its lifetime. However, rq->end_io() is still called even if rq->ref doesn't
-> > drop to zero.
-> > 
-> > If the above is correct, we need to let rq->ref to cover rq->end_io().
-> 
-> We ignore the fact that we may also need to free 'rq' after calling
-> rq->end_io(),
-> such as end_clone_request(), mq_flush_data_end_io().
-> 
-> If  we let 'rq->ref' to cover rq->end_io(), 'rq->ref' have been decreased to
-> '0'
-> before calling __blk_mq_free_request(). Then, the function will never be
-> called.
-> 
-> So, I think flush request may need to be fixed individually.
+Add the test case to check nbd devices.This test case catches regressions
+fixed by commit 92b5c8f0063e4 "nbd: replace kill_bdev() with
+__invalidate_device() again".
 
-Thinking of this issue further, given other cases of .end_io() still
-depends on blk_mq_free_request() for freeing request, it is fine
-to just fix flush request.
+Establish the nbd connection.Run two processes.One do mount and umount,
+anther one do clear_sock ioctl.
 
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+---
+ src/Makefile           |  3 ++-
+ src/mount_clear_sock.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nbd/003          | 66 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nbd/003.out      |  1 +
+ 4 files changed, 137 insertions(+), 1 deletion(-)
+ create mode 100644 src/mount_clear_sock.c
+ create mode 100644 tests/nbd/003
+ create mode 100644 tests/nbd/003.out
 
-Thanks,
-Ming
+diff --git a/src/Makefile b/src/Makefile
+index 917d6f4..acd7327 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -10,7 +10,8 @@ C_TARGETS := \
+ 	sg/syzkaller1 \
+ 	nbdsetsize \
+ 	loop_change_fd \
+-	zbdioctl
++	zbdioctl \
++	mount_clear_sock
+ 
+ CXX_TARGETS := \
+ 	discontiguous-io
+diff --git a/src/mount_clear_sock.c b/src/mount_clear_sock.c
+new file mode 100644
+index 0000000..f6eef5a
+--- /dev/null
++++ b/src/mount_clear_sock.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-3.0+
++// Copyright (C) 2019 Sun Ke
++
++#include <stdio.h>
++#include <stdlib.h>
++
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++
++#include <linux/nbd.h>
++#include <assert.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mount.h>
++#include <linux/fs.h>
++
++void clear_sock(int fd)
++{
++	int err;
++
++	err = ioctl(fd, NBD_CLEAR_SOCK, 0);
++	if (err) {
++		perror("ioctl");
++	}
++}
++
++void mount_nbd(char *dev, char *mp, char *fs)
++{
++	mount(dev, mp, fs, MS_NOSUID | MS_SYNCHRONOUS, 0);
++	umount(mp);
++}
++
++int main(int argc, char **argv)
++{
++	if (argc != 4) {
++		fprintf(stderr, "usage: $0 MOUNTPOINT DEV FS");
++		return EXIT_FAILURE;
++	}
++
++	char *mp = argv[1];
++	char *dev = argv[2];
++	char *fs = argv[3];
++	
++	static int fd = -1;
++
++	fd = open(dev, O_RDWR);
++	if (fd < 0 ) {
++		perror("open");
++	}
++
++	if (fork() == 0) {
++		mount_nbd(dev, mp, fs);
++		exit(0);
++	}
++	if (fork() == 0) {
++		clear_sock(fd);
++		exit(0);
++	}
++	while(wait(NULL) > 0)
++		continue;
++	
++	close(fd);
++
++	return 0;
++}
+diff --git a/tests/nbd/003 b/tests/nbd/003
+new file mode 100644
+index 0000000..45093aa
+--- /dev/null
++++ b/tests/nbd/003
+@@ -0,0 +1,66 @@
++#!/bin/bash
++
++# SPDX-License-Identifier: GPL-3.0+
++# Copyright (C) 2019 Sun Ke
++#
++# Test nbd device resizing. Regression test for patch 
++#
++# 2b5c8f0063e4 ("nbd: replace kill_bdev() with __invalidate_device() again")
++
++
++DESCRIPTION="resize a connected nbd device"
++QUICK=1
++
++fs_type=ext4
++disk_capacity=256M
++run_cnt=1
++
++requires() {
++	_have_nbd && _have_src_program mount_clear_sock
++}
++
++_start_nbd_mount_server() {
++
++	fallocate -l $1 "${TMPDIR}/mnt_$i"
++
++	if [[ "$2"x = "ext4"x ]]; then
++		mkfs.ext4 "${TMPDIR}/mnt_$i" >> "$FULL" 2>&1
++	else
++		mkdosfs "${TMPDIR}/mnt_$i" >> "$FULL" 2>&1
++	fi
++	nbd-server 800$i "${TMPDIR}/mnt_$i" >> "$FULL" 2>&1
++
++	mkdir -p "${TMPDIR}/$i"
++}
++
++_stop_nbd_mount_server() {
++	pkill -9 -f 800$i
++	rm -f "${TMPDIR}/mnt_$i"
++	rm -rf "${TMPDIR}/$i"
++}
++
++test() {
++	echo "Running ${TEST_NAME}"
++	for ((i = 0; i < 15; i++))
++	do
++		_start_nbd_mount_server  $disk_capacity $fs_type
++		nbd-client localhost 800$i /dev/nbd$i >> "$FULL" 2>&1
++		if [[ "$?" -ne "0" ]]; then
++			echo "nbd$i connnect failed" 
++		fi 
++	done
++
++	for ((j = 0; j < $run_cnt; j++))
++	do
++		for ((i = 0; i < 15; i++))
++		do
++			src/mount_clear_sock  "${TMPDIR}/$i" /dev/nbd$i $fs_type
++		done
++	done	
++
++	for ((i = 0; i < 15; i++))
++	do
++		nbd-client -d /dev/nbd$i
++		_stop_nbd_mount_server
++	done
++}
+diff --git a/tests/nbd/003.out b/tests/nbd/003.out
+new file mode 100644
+index 0000000..aa340db
+--- /dev/null
++++ b/tests/nbd/003.out
+@@ -0,0 +1 @@
++Running nbd/003
+-- 
+2.13.6
+
