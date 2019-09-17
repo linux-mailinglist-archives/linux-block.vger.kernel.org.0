@@ -2,83 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D009B51B8
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 17:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DFF0B51B9
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 17:42:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfIQPmH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Sep 2019 11:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbfIQPmH (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:42:07 -0400
-Received: from localhost (unknown [77.137.89.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2CB52171F;
-        Tue, 17 Sep 2019 15:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568734926;
-        bh=Cs9d1NkB4qUoDkwuZrTgkp77GLRkyvP7Xqf3CmGIlKE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=niTsgqzBynMTMZ7IJhyt0HpXRowaAMQxofie64ypEQI5fNX5hLevcX664d2xTgcQa
-         MH8w8RndhWSoUa7pBrkUMYdyiua6yGiphKlLZk4rKB1Uo1SsaxqpwxmhhT4VcxGKZD
-         v26Q9NJYrgFU7dVJOVwfaowWmsRnzZxmUkKrKtw0=
-Date:   Tue, 17 Sep 2019 18:41:50 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
-        Roman Pen <roman.penyaev@profitbricks.com>
-Subject: Re: [PATCH v4 15/25] ibnbd: private headers with IBNBD protocol
- structs and helpers
-Message-ID: <20190917154150.GE18203@unreal>
-References: <20190620150337.7847-1-jinpuwang@gmail.com>
- <20190620150337.7847-16-jinpuwang@gmail.com>
- <4fbad80b-f551-131e-9a5c-a24f1fa98fea@acm.org>
- <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
- <20190916052729.GB18203@unreal>
- <25bd79e1-9523-8354-873a-0ff1db92659a@acm.org>
+        id S1729761AbfIQPmN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Sep 2019 11:42:13 -0400
+Received: from sonic309-13.consmr.mail.bf2.yahoo.com ([74.6.129.123]:36887
+        "EHLO sonic309-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729760AbfIQPmN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:42:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1568734931; bh=FCjWGTqDRXQUUN8ivg02MDhbiDKrvltOcpc7W52q/3U=; h=Date:From:Reply-To:Subject:From:Subject; b=VGNY0U3giuxgy+w/uWgwSdVV8NAr3IHMqCK6hSQzKYqCcPOrjvwKkeyHOdbUliCC26mcf5B0o8zjOghXC2X87rYVWPdz+VQZQFvyXrjqiYdRjd+YcJ5g5b8x/hPgmV323f+iU+U0Y8PP9ocWwL0t/1Lb9EkHLaWUn+kMOLfOOLh74+mb5QgY4pMcVAtXrkPfMxT+9E96x58FAYo3VzIgI41CsEhHle3QEP4cHT6vFHFZfIggcYOS+dU5S8IBq03RmD+2KxDFXrR21tCr+APP72sEDrs5sZwn3O/r/Kpqv/l2Kj0EuoJ3eklwgT3EzrfsNz3t45pA3toCHs9xMEdI8g==
+X-YMail-OSG: DNUdW4kVM1kdd.8apoFGEYGMhAPKjnjasA.gDeLzb4D9zBdNbzdlGy7TGN_x.x6
+ lQW1NEa2_XOFaRau0wgck6lT_OZfnJYMywrnwSZABJIqtWwbhHoDVijrgxY6OmsvoZUx.9PCibmE
+ c0QHwNoZvmzxuiVuwf72.Lra9H.RMfsTmQrn_4XOGWB17971LZR73lS1CIm3bBezQzK1op7MGO8A
+ mXmA1X9_50rHyn2KfdrPiQrnWH98vHE0lUHKr7g7068clB5kOlEFBG7Vq13uaMytC5EJVxsYf28N
+ mqLY3yRQpJ.vaUHkoT1DK60bdwNERpP5YPxYdVRErTK63S8PSL9X3c4ei1PX_zcygRj47ukMaUKW
+ iKQaKYmUEAEbFakKVcIo6B3Kg1qyVMkQe9aMAMFihhpo8CO3nt_I3tQeLfwntkRugLaNwvRUW1LN
+ a0iUdWCkKYrx.g3CKx_1ymLi9tww7diXwEq15aTq72Ll9PQfzYqKn.iWysIMvUNVoiala.sl.v1M
+ k7xDOCznjMImF0UXf5qJFx2BVrLVbtIE28Qn7Up5ZYfziZ7JWyzs9V3GTvwzI8CRCZwxX6.Dg0IQ
+ JT6xhdUBpiVPnH_PeS8nuTzOgukreMC4u4jMBv2NxB5YqA0pCddxUf_cBJ2laP_GhkZgZB6eM51y
+ 6fZXwG.3B27Bi643.qJiNEAixja4.APPpquf8dCFLDHQ.8IWSgS6ZT3mzXH28yjkBvWR0Ge5WFEn
+ FPmtCfpZhekpbgBwCRCvGXkMZIDwMDh5hCYFU8UgCnLS2Uyu8_A9FAP4oKeuLzp8n1AZqpu4P_An
+ UIpfDMHoUCsJoZgVP40DezJzgzE6j27zGcrUMu1sVZxYi1.gpwn4TbN5jIxZqkRtTiLmAQ2lyWHR
+ Ug0XjrYfL1EtP3Cs2jYwzznyNDR88_jCBAIrsF9.an4jRkVAMjFFyXyzFKjNr.NT5JASoZ8qpwjt
+ Iw6JKkkj6uWhwlNFSUPs8uGBQykypNPvsSDEuUhaNnEw6Q9elPrj1mzLcfxq_adS.3SqfZiDjcu9
+ BAtebMo7IJGu1TAyhzo_8B1ZNWSvz_4CGKrLB9DqLSpt2.mFpwyl_iWvnUbEPRDaDuXiJjeVeKTh
+ o1KhoK.wP2.qC.UaESJ.9sjxt14.NPdFwNSaJQkbX62TBcHkcvZIwObX6YugmisjIyfOb56kC4JE
+ bp1AA5RBd3RlUlBbOu7T3JKONRZu8plrTe1UBq.xtHjfOeGbazKyX7oAlN91QuIvrcgtVvsGHRZg
+ 4EPjbCbU8KY_k0htsYfhnPTlN6hufEPXCP.Y-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.bf2.yahoo.com with HTTP; Tue, 17 Sep 2019 15:42:11 +0000
+Date:   Tue, 17 Sep 2019 15:42:09 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh101@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1008059605.5821128.1568734929747@mail.yahoo.com>
+Subject: CONFIDENTIAL FROM MS LISA HUGH(BUSINESS)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25bd79e1-9523-8354-873a-0ff1db92659a@acm.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 06:45:17AM -0700, Bart Van Assche wrote:
-> On 9/15/19 10:27 PM, Leon Romanovsky wrote:
-> > On Sun, Sep 15, 2019 at 04:30:04PM +0200, Jinpu Wang wrote:
-> > > On Sat, Sep 14, 2019 at 12:10 AM Bart Van Assche <bvanassche@acm.org> wrote:
-> > > > > +/* TODO: should be configurable */
-> > > > > +#define IBTRS_PORT 1234
-> > > >
-> > > > How about converting this macro into a kernel module parameter?
-> > > Sounds good, will do.
-> >
-> > Don't rush to do it and defer it to be the last change before merging,
-> > this is controversial request which not everyone will like here.
->
-> Hi Leon,
->
-> If you do not agree with changing this macro into a kernel module parameter
-> please suggest an alternative.
 
-I didn't review code so my answer can be not fully accurate, but opening
-some port to use this IB* seems strange from my non-sysadmin POV.
-What about using RDMA-CM, like NVMe?
 
-Thanks
+Dear Friend,
 
->
-> Thanks,
->
-> Bart.
+I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank,
+
+There is this fund that was keep in my custody years ago,please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment and the amount is (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me after success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other .
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+
+Ms Lisa Hugh
