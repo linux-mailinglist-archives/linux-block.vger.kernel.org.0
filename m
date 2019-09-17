@@ -2,72 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DFF0B51B9
-	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 17:42:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB99FB51D1
+	for <lists+linux-block@lfdr.de>; Tue, 17 Sep 2019 17:52:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfIQPmN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Sep 2019 11:42:13 -0400
-Received: from sonic309-13.consmr.mail.bf2.yahoo.com ([74.6.129.123]:36887
-        "EHLO sonic309-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729760AbfIQPmN (ORCPT
+        id S1729765AbfIQPwm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Sep 2019 11:52:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51269 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfIQPwm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:42:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1568734931; bh=FCjWGTqDRXQUUN8ivg02MDhbiDKrvltOcpc7W52q/3U=; h=Date:From:Reply-To:Subject:From:Subject; b=VGNY0U3giuxgy+w/uWgwSdVV8NAr3IHMqCK6hSQzKYqCcPOrjvwKkeyHOdbUliCC26mcf5B0o8zjOghXC2X87rYVWPdz+VQZQFvyXrjqiYdRjd+YcJ5g5b8x/hPgmV323f+iU+U0Y8PP9ocWwL0t/1Lb9EkHLaWUn+kMOLfOOLh74+mb5QgY4pMcVAtXrkPfMxT+9E96x58FAYo3VzIgI41CsEhHle3QEP4cHT6vFHFZfIggcYOS+dU5S8IBq03RmD+2KxDFXrR21tCr+APP72sEDrs5sZwn3O/r/Kpqv/l2Kj0EuoJ3eklwgT3EzrfsNz3t45pA3toCHs9xMEdI8g==
-X-YMail-OSG: DNUdW4kVM1kdd.8apoFGEYGMhAPKjnjasA.gDeLzb4D9zBdNbzdlGy7TGN_x.x6
- lQW1NEa2_XOFaRau0wgck6lT_OZfnJYMywrnwSZABJIqtWwbhHoDVijrgxY6OmsvoZUx.9PCibmE
- c0QHwNoZvmzxuiVuwf72.Lra9H.RMfsTmQrn_4XOGWB17971LZR73lS1CIm3bBezQzK1op7MGO8A
- mXmA1X9_50rHyn2KfdrPiQrnWH98vHE0lUHKr7g7068clB5kOlEFBG7Vq13uaMytC5EJVxsYf28N
- mqLY3yRQpJ.vaUHkoT1DK60bdwNERpP5YPxYdVRErTK63S8PSL9X3c4ei1PX_zcygRj47ukMaUKW
- iKQaKYmUEAEbFakKVcIo6B3Kg1qyVMkQe9aMAMFihhpo8CO3nt_I3tQeLfwntkRugLaNwvRUW1LN
- a0iUdWCkKYrx.g3CKx_1ymLi9tww7diXwEq15aTq72Ll9PQfzYqKn.iWysIMvUNVoiala.sl.v1M
- k7xDOCznjMImF0UXf5qJFx2BVrLVbtIE28Qn7Up5ZYfziZ7JWyzs9V3GTvwzI8CRCZwxX6.Dg0IQ
- JT6xhdUBpiVPnH_PeS8nuTzOgukreMC4u4jMBv2NxB5YqA0pCddxUf_cBJ2laP_GhkZgZB6eM51y
- 6fZXwG.3B27Bi643.qJiNEAixja4.APPpquf8dCFLDHQ.8IWSgS6ZT3mzXH28yjkBvWR0Ge5WFEn
- FPmtCfpZhekpbgBwCRCvGXkMZIDwMDh5hCYFU8UgCnLS2Uyu8_A9FAP4oKeuLzp8n1AZqpu4P_An
- UIpfDMHoUCsJoZgVP40DezJzgzE6j27zGcrUMu1sVZxYi1.gpwn4TbN5jIxZqkRtTiLmAQ2lyWHR
- Ug0XjrYfL1EtP3Cs2jYwzznyNDR88_jCBAIrsF9.an4jRkVAMjFFyXyzFKjNr.NT5JASoZ8qpwjt
- Iw6JKkkj6uWhwlNFSUPs8uGBQykypNPvsSDEuUhaNnEw6Q9elPrj1mzLcfxq_adS.3SqfZiDjcu9
- BAtebMo7IJGu1TAyhzo_8B1ZNWSvz_4CGKrLB9DqLSpt2.mFpwyl_iWvnUbEPRDaDuXiJjeVeKTh
- o1KhoK.wP2.qC.UaESJ.9sjxt14.NPdFwNSaJQkbX62TBcHkcvZIwObX6YugmisjIyfOb56kC4JE
- bp1AA5RBd3RlUlBbOu7T3JKONRZu8plrTe1UBq.xtHjfOeGbazKyX7oAlN91QuIvrcgtVvsGHRZg
- 4EPjbCbU8KY_k0htsYfhnPTlN6hufEPXCP.Y-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.bf2.yahoo.com with HTTP; Tue, 17 Sep 2019 15:42:11 +0000
-Date:   Tue, 17 Sep 2019 15:42:09 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh101@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <1008059605.5821128.1568734929747@mail.yahoo.com>
-Subject: CONFIDENTIAL FROM MS LISA HUGH(BUSINESS)
+        Tue, 17 Sep 2019 11:52:42 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so4130352wme.1
+        for <linux-block@vger.kernel.org>; Tue, 17 Sep 2019 08:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qKP299nn9dAVscWnwEGtfjquUeakNIYf9tui2aZbZM0=;
+        b=jdDgDADtN8x3yMOTTXEl9p6of/mhIZcOuq9lDQNLJcyuXfxihEU4kmzF2DeCj3kQcG
+         S0ug0mzOtlb/Q7emX2Apa9kF62FVkKObR8J8SrA7J1xJNb0/n6K/jdht9LXmqko5ENrP
+         ZzUEiVrKILWSr9+l/tn/pxMxtVtCPxeECujoaFGm5FnCzVFbwDRK3/W3JDH8D+jFteIw
+         3/ETBijHdcvNoG933pa6SSs9a0MNM9ZEO6Il/U746bYeateMui/HpGXZD0dc0uMgHOtm
+         sCv+06raWPUJw2NH/teoQp+SSM6CJ92nDDXX384+/qypnbECAtweqmMIye5iKsztRoos
+         trHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qKP299nn9dAVscWnwEGtfjquUeakNIYf9tui2aZbZM0=;
+        b=EIpRY7Nc8VeZxBjUKz9a0WtHz7ZUxMJSHPBsaELRkTaW3aEkvrMAPXkr44pgt+kSi1
+         y3q4xJAhcBOUc52hMRYQPasO6mLCS4+aK1HmpPlMpARMSzZKOjWztDtQAKLv8aSh/MPc
+         H5oZmmT2MfiiLqt3gx7rIkIpzMnyGrvOkJpYb8zib3+G1koPIMqAzfef6xtVMAWyQWJT
+         MKken4rMmFsxuRdIkk3yrFT2BxEzOLi3z1Hf+ujiN0NdMlnKBm+EqhAh+kLG7MgEsOXx
+         1OhKV7taRuLE/XP81p4tAMXP4c/G36zToah8GeQQ/vUDKYT8ykM6oYgrEftpQsKHQVnn
+         Z8ng==
+X-Gm-Message-State: APjAAAW0TravYCMXWzq4Gt8zuCPBLdzr73dwDmRjeDmr49LjOLMMquou
+        Vk0M6AEFZ90gVqazLhjeX9JV8TvxdHAKStUpA/jb7g==
+X-Google-Smtp-Source: APXvYqy4g+sPWDvtjuzHam2AP/YjYBLiMEbmD1GTZF1aE6eRxGVi944aZKF9bVr2VAzVelcad2qvz8kSYFdA3tCFMmU=
+X-Received: by 2002:a1c:4384:: with SMTP id q126mr4559194wma.153.1568735558937;
+ Tue, 17 Sep 2019 08:52:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190620150337.7847-1-jinpuwang@gmail.com> <20190620150337.7847-16-jinpuwang@gmail.com>
+ <4fbad80b-f551-131e-9a5c-a24f1fa98fea@acm.org> <CAMGffEnVFHpmDCiazHFX1jwi4=p401T9goSkes3j1AttV0t1Ng@mail.gmail.com>
+ <20190916052729.GB18203@unreal> <25bd79e1-9523-8354-873a-0ff1db92659a@acm.org>
+ <20190917154150.GE18203@unreal>
+In-Reply-To: <20190917154150.GE18203@unreal>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 17 Sep 2019 17:52:27 +0200
+Message-ID: <CAMGffEmK6Crv9e1NWXxo8P2mGVfhVKZ_uZRx6_P63Uts1vu2NQ@mail.gmail.com>
+Subject: Re: [PATCH v4 15/25] ibnbd: private headers with IBNBD protocol
+ structs and helpers
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
+        Roman Pen <roman.penyaev@profitbricks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 5:42 PM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Mon, Sep 16, 2019 at 06:45:17AM -0700, Bart Van Assche wrote:
+> > On 9/15/19 10:27 PM, Leon Romanovsky wrote:
+> > > On Sun, Sep 15, 2019 at 04:30:04PM +0200, Jinpu Wang wrote:
+> > > > On Sat, Sep 14, 2019 at 12:10 AM Bart Van Assche <bvanassche@acm.org> wrote:
+> > > > > > +/* TODO: should be configurable */
+> > > > > > +#define IBTRS_PORT 1234
+> > > > >
+> > > > > How about converting this macro into a kernel module parameter?
+> > > > Sounds good, will do.
+> > >
+> > > Don't rush to do it and defer it to be the last change before merging,
+> > > this is controversial request which not everyone will like here.
+> >
+> > Hi Leon,
+> >
+> > If you do not agree with changing this macro into a kernel module parameter
+> > please suggest an alternative.
+>
+> I didn't review code so my answer can be not fully accurate, but opening
+> some port to use this IB* seems strange from my non-sysadmin POV.
+> What about using RDMA-CM, like NVMe?
+Hi Leon,
 
+We are using rdma-cm, the port number here is same like addr_trsvcid
+in NVMeoF, it controls which port
+rdma_listen is listening on.
 
-Dear Friend,
+Currently, it's hardcoded, I've adapted the code to have a kernel
+module parameter port_nr in ibnbd_server, so it's possible
+to change it if the sysadmin wants.
 
-I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank,
-
-There is this fund that was keep in my custody years ago,please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment and the amount is (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me after success.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
-
-Below information is what i need from you so will can be reaching each other .
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-
-Ms Lisa Hugh
+Thanks,
+-- 
+Jack Wang
+Linux Kernel Developer
+Platform Engineering Compute (IONOS Cloud)
