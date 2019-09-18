@@ -2,91 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67097B59B1
-	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2019 04:32:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE13B59B8
+	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2019 04:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfIRCcS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Sep 2019 22:32:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34207 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIRCcS (ORCPT
+        id S1727321AbfIRCiR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Sep 2019 22:38:17 -0400
+Received: from smtpbguseast2.qq.com ([54.204.34.130]:55475 "EHLO
+        smtpbguseast2.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfIRCiR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Sep 2019 22:32:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d3so2404900plr.1
-        for <linux-block@vger.kernel.org>; Tue, 17 Sep 2019 19:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dbqlB3qRrBdKkDcgMmNFTF8DJMVlPpT3DzzG1y1NtZM=;
-        b=IdTd2sn5nRirwiMAvQda1/KKoT0ugMKNz+9m28l3JOYeq5MZzI6ul+LqkAOHnu+UNt
-         qgNai68qfusgc3UCCWClBUy0zpZzdUsQD/rAND3giClK5gOsi2rB5sU6G5/exzjiEeVl
-         6Vw/2MG4LZZhZlTZW059ep/S6K2CJltrVdwoG3V17FTD44XaReGYrjIQrYy2my3b9Qy9
-         gunJD74/n05O/qX2v/CumvMoExYiZFsyx/H+tvyoUhw5CK1NHfTNv+Dz5FLbu8BV4Pg+
-         AfLL3jEN4hNsQPd2hj1A117bmGDXV5zVNArLqpChoMoieYiohEyA3tqDP5ApYm2CuUJQ
-         9oOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dbqlB3qRrBdKkDcgMmNFTF8DJMVlPpT3DzzG1y1NtZM=;
-        b=bHmB/vnZQryzP5bwFSrGasSqYp40hwdwVEuYisCwftFNkA0gYyBySeUTdvr41MCYnM
-         Ulf261QwW0jk9XDfeF1FFOj1kGuCyXSfh878UScgCXA1UNkav07k5PxYzjb8ZknsMaMa
-         /7JRkSaBKJP4N8YquOaecAE2tcJNeHoMmTZ+c5fHY9F0CIHjuObzyTlEqrVM2PNoTXb7
-         YVD7PlgUWcWCCcpSsWz/T3DuS/xluPOBXKRu4DywEo8B+o5J5gBekMw9yogE+OmDtWUx
-         fprs1m4HoParBfDNZzTFj0C5izoJFyolV7purn50hpVxMmIE5U+Weq5CZd0vsF1Fggbw
-         4rZw==
-X-Gm-Message-State: APjAAAUh2zqesNq4R0FHqYY2s/JTxkvNvuXZH9LuX9FHnYPLYr7YJn+q
-        ZA7SL6n2DJ1LmjECMo1yCkjN3g==
-X-Google-Smtp-Source: APXvYqz5g54cBRK0Q5eLyZd9W/XRv5gQwWw3OfLVEJwaUFU1MjaoiJV6ujcG9HNwiZkRPfrpEDEQbg==
-X-Received: by 2002:a17:902:ff08:: with SMTP id f8mr1790128plj.309.1568773936216;
-        Tue, 17 Sep 2019 19:32:16 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id s19sm4209846pfe.86.2019.09.17.19.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 19:32:15 -0700 (PDT)
-Subject: Re: [PATCH V2 0/2] block: track per requests type merged count
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org
-Cc:     osandov@fb.com, bvanassche@acm.org
-References: <20190918005454.6872-1-chaitanya.kulkarni@wdc.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <369ecccb-06ca-68d0-1474-34abdc2e8851@kernel.dk>
-Date:   Tue, 17 Sep 2019 20:32:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190918005454.6872-1-chaitanya.kulkarni@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Sep 2019 22:38:17 -0400
+X-QQ-mid: bizesmtp28t1568774274t3j1jc44
+Received: from localhost.localdomain (unknown [218.76.23.26])
+        by esmtp10.qq.com (ESMTP) with 
+        id ; Wed, 18 Sep 2019 10:37:53 +0800 (CST)
+X-QQ-SSF: 01400000002000R0YS90000A0000000
+X-QQ-FEAT: pNle6v+TNkMA1o6k1aN/rf0K/y7OwEeXrM4rpfe7u8iw8U5hyr1uMOL0ll0jz
+        yGjAQtylLjKWTj23JDYAjnbpUuPpzqzP+kEORqp1/IGzefyb2Z0sYZot37JnbSPgM5WumDt
+        o0sURkuHBboQq1+t7qdMeb+BfQe5IDot4x6Jp/TQnigriQQqte9ygbsH51U6PsMaj4p7d28
+        sR8d5GnlGCkrI96IZO1Z5AmRGVNs/Pa7J0ukr8mPVEmaO6YqXxGKDUcJ8qmzYQZ4N2852Bs
+        7JlhnCBhXWKt+/2Tj5ZTDx7HGK1nEhmNzdia2CLrQx/52cfUQXM7CR0ydYiTBTdefffs1Zt
+        HVmEHxZrzuF9iWNR5TqpHcBdTRiTw==
+X-QQ-GoodBg: 2
+From:   Jackie Liu <liuyun01@kylinos.cn>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH RESEND 1/2] io_uring: use kmemdup instead of kmalloc and memcpy
+Date:   Wed, 18 Sep 2019 10:37:52 +0800
+Message-Id: <1568774273-19434-1-git-send-email-liuyun01@kylinos.cn>
+X-Mailer: git-send-email 2.7.4
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign4
+X-QQ-Bgrelay: 1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/17/19 6:54 PM, Chaitanya Kulkarni wrote:
-> Hi,
-> 
-> With current debugfs block layer infrastructure, we only get the total
-> merge count which includes all the requests types, but we don't get
-> the per request type merge count.
-> 
-> This patch-series replaces the rq_merged variable into the
-> rq_merged array so that we can track the per request type merged stats.
-> 
-> Instead of having one number for all the requests which are merged,
-> with this now we can get the detailed number of the merged requests
-> per request type which is mergeable.
-> 
-> This is helpful in the understanding merging of the requests under
-> different workloads and for the special requests such as discard which
-> implements request specific merging mechanism.
+Just clean up the code, no function changes.
 
-Regular io stats get merging stats for read/write/trim. Why do we need
-something else for this?
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+---
+ fs/io_uring.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0dadbdb..42a684e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2098,13 +2098,11 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	if (ret == -EAGAIN && !(req->flags & REQ_F_NOWAIT)) {
+ 		struct io_uring_sqe *sqe_copy;
+ 
+-		sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
++		sqe_copy = kmemdup(s->sqe, sizeof(*sqe_copy), GFP_KERNEL);
+ 		if (sqe_copy) {
+ 			struct async_list *list;
+ 
+-			memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
+ 			s->sqe = sqe_copy;
+-
+ 			memcpy(&req->submit, s, sizeof(*s));
+ 			list = io_async_list_from_sqe(ctx, s->sqe);
+ 			if (!io_add_to_prev_work(list, req)) {
 -- 
-Jens Axboe
+2.7.4
+
+
 
