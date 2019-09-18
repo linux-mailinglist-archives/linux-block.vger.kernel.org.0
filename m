@@ -2,82 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7F2B59B7
-	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2019 04:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2A2B59CF
+	for <lists+linux-block@lfdr.de>; Wed, 18 Sep 2019 04:41:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfIRCiD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Sep 2019 22:38:03 -0400
-Received: from smtpbg702.qq.com ([203.205.195.102]:44039 "EHLO
-        smtpproxy21.qq.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727264AbfIRCiD (ORCPT
+        id S1726074AbfIRClx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Sep 2019 22:41:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44231 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfIRClx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Sep 2019 22:38:03 -0400
-X-Greylist: delayed 1638 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 22:38:03 EDT
-X-QQ-mid: bizesmtp28t1568774276thdo4m77
-Received: from localhost.localdomain (unknown [218.76.23.26])
-        by esmtp10.qq.com (ESMTP) with 
-        id ; Wed, 18 Sep 2019 10:37:55 +0800 (CST)
-X-QQ-SSF: 01400000002000R0YS90000A0000000
-X-QQ-FEAT: gDbwoeOnDAE5syuAuZ/6ujTciWVNQTqCOssCtM/iCik5QuQjKPtLxpgSTOrYT
-        YxYZUHsVeciQm7gONcaRw3qPmlzMZViaMcv4Y10EgrrqSA9Jv919xNJ3AAXEUujfmraoYPc
-        OPSoQGOCADs3GftKkR4mk+sBB0YFCKbjDzw5kmMkdgmHm6KjSvnPqTetSYr0b/vKgI+x/Ka
-        7fK/CQ5w52jFywI3qZUQBy4l1MB6YPIky1Cd1Fi43sqOl14MRTD+UrOZDSAlizc+6YqVWrm
-        6xs+vtAvQsHqm7BVU5azLOgk8jc9MjOE8JsWm0OxcTjCvo0oalaX/qgLGvId0hEJ96bRf+/
-        VUgSjZnVFTlcE9nbjo=
-X-QQ-GoodBg: 2
-From:   Jackie Liu <liuyun01@kylinos.cn>
-To:     axboe@kernel.dk
+        Tue, 17 Sep 2019 22:41:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so3345022pfn.11
+        for <linux-block@vger.kernel.org>; Tue, 17 Sep 2019 19:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XLH+QDfucuonGTHbjiPB3QV6rBa5Rb9Ayh4on+IFuuM=;
+        b=jMKJ/QVNJeitmnq5PqC3cmngVTenmvy+LoQf/pr1gbpSdWMblWSQOumwj68MbI5vae
+         t5ZagEYLtptyuqL0f/vl/S8CK/mTl1C2nnZXwazI/vfLKhdUNsY9UOIbvieoWGzD8HVv
+         HyOw1EMY2rHcwLCgP+pFMWKm8IKseeTGArniVDsHVMNvyHjS74rDlLco5C1pX5mOgxrM
+         e0WoVsmopdRrb+1P7NUlpXMqzM5XPw77Xn8HHcZ5uObmyt3wWlyjF9dBfWmytyw5kRyX
+         6VzUK+pnQUUxOlrYV96g7ED1RoberixrhjSQYfIdMcUJxHEij7stmo//GvuJDS1Ujr9c
+         rDUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XLH+QDfucuonGTHbjiPB3QV6rBa5Rb9Ayh4on+IFuuM=;
+        b=RIGzpUHPmNze2zdA5A45VAphM/4jcPvb6fY8c+gERrOWkuL4yUhYspdAkqqHdpVLRi
+         CDHLbaGCp4zMHjPtSC+pkWB60bjIbLjkQQoL4AxtN6Z69tIEzOQDLMLBb80qfBy3S6w6
+         7Hh74JSJlGhQB73z5K/2YlbdXCH5OGFNRDW1ror9WRyVWec5R/0uAs/f8G7zrlYg3za0
+         vLWpI9YKW6eaLF4EZf5IcdWMz+Q0FjBu7sH2CBeh7cCHYoq/TKWI12PvJDYb9fO6N3Hw
+         AsIMO5dKjhK8CZP6/BEAjYiiL3SQJLZSsM5hLL3cYIIUOx1rm9st17+abmKzWoO8hrOg
+         JAiw==
+X-Gm-Message-State: APjAAAWGygN9pq1nwAtpqH6cUSoEZyxzOQji6IQBMopuCpVgaL7aESye
+        Gwhc/DC6k2t1iFsWfJpwl5+mM/qsueLfUw==
+X-Google-Smtp-Source: APXvYqx1jERbjRy9813h1D1lEV/HgB+Ni8p+YqWhf+s+dtC7pCa4XnpCNFATvNd3+E1kyztshcEY1A==
+X-Received: by 2002:a62:76d1:: with SMTP id r200mr1738446pfc.27.1568774511817;
+        Tue, 17 Sep 2019 19:41:51 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id u5sm5201472pfl.25.2019.09.17.19.41.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 19:41:50 -0700 (PDT)
+Subject: Re: [PATCH RESEND 1/2] io_uring: use kmemdup instead of kmalloc and
+ memcpy
+To:     Jackie Liu <liuyun01@kylinos.cn>
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH RESEND 2/2] io_uring: fix use-after-free of shadow_req
-Date:   Wed, 18 Sep 2019 10:37:53 +0800
-Message-Id: <1568774273-19434-2-git-send-email-liuyun01@kylinos.cn>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568774273-19434-1-git-send-email-liuyun01@kylinos.cn>
 References: <1568774273-19434-1-git-send-email-liuyun01@kylinos.cn>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign2
-X-QQ-Bgrelay: 1
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5a5c8378-72f2-5196-c421-40b1fbc4a26a@kernel.dk>
+Date:   Tue, 17 Sep 2019 20:41:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1568774273-19434-1-git-send-email-liuyun01@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is a potential dangling pointer problem. we never clean
-shadow_req, if there are multiple link lists in this series of
-sqes, then the shadow_req will not reallocate, and continue to
-use the last one. but in the previous, his memory has been
-released, thus forming a dangling pointer. let's clean up him
-and make sure that every new link list can reapply for a new
-shadow_req.
+On 9/17/19 8:37 PM, Jackie Liu wrote:
+> Just clean up the code, no function changes.
 
-Fixes: 4fe2c963154c ("io_uring: add support for link with drain")
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
----
- fs/io_uring.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks, sorry for missing these. Applied both.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 42a684e..1621243 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2357,6 +2357,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- 			io_queue_link_head(ctx, link, &link->submit, shadow_req,
- 						true);
- 			link = NULL;
-+			shadow_req = NULL;
- 		}
- 		prev_was_link = (sqes[i].sqe->flags & IOSQE_IO_LINK) != 0;
- 
-@@ -2543,6 +2544,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
- 			io_queue_link_head(ctx, link, &link->submit, shadow_req,
- 						force_nonblock);
- 			link = NULL;
-+			shadow_req = NULL;
- 		}
- 		prev_was_link = (s.sqe->flags & IOSQE_IO_LINK) != 0;
- 
 -- 
-2.7.4
-
-
+Jens Axboe
 
