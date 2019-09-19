@@ -2,114 +2,152 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAFFFB7777
-	for <lists+linux-block@lfdr.de>; Thu, 19 Sep 2019 12:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D7CB79AE
+	for <lists+linux-block@lfdr.de>; Thu, 19 Sep 2019 14:44:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfISKaa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Sep 2019 06:30:30 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54459 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731993AbfISKa3 (ORCPT
+        id S2389413AbfISMol (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Sep 2019 08:44:41 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:54748 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387520AbfISMol (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:30:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so3804080wmp.4
-        for <linux-block@vger.kernel.org>; Thu, 19 Sep 2019 03:30:28 -0700 (PDT)
+        Thu, 19 Sep 2019 08:44:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1568897081; x=1600433081;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Z21KyimuM5OK4QFm7v1RYgDhW6FxRwRQkbAFkFrYK20=;
+  b=ACW8s/EmU1yVEid2ANSzHQDDA0nBwwi48iHogPDx21iXfdSVY+OcDCed
+   C06wHo6AKzZYfJCbcprwKCNexmOwgRSd5k32WEdxf3t67hmUPMDk0I5lI
+   SOqyGuAE6psgAuSV3cmoVzbgxSd/m1PagR95e8mqdd2NT2lmO7mL2dwVX
+   0B9rAF4lJoN0XVEdaxOHm8CZdHn4iOVZaXp7waaGUfgnvbNUOYWPRGU1A
+   IsJ8mSLq26wq2pM0y5TBy4fBQFeSP0D0Zzr7/8+yk00NXcwyhcFFEpHl2
+   WZ2l5anjC167d2KLqGx171m7+QSUDvJzDd3XOJO6ZsfgCFiV38MEGL7f5
+   Q==;
+IronPort-SDR: uPf9VGLZHXo5xHnmwSQr4pYZJEmlHXjIEa7Iw+gvEr9q/MSISubuCkXo/rvjGGCNbwKB+xwQiK
+ PjJ+W9lG3FJRvHWiR8xaRKFi7ZDzUdA2dCyA2uifWSATooaF0kbpK1Vhhk2tSG3r6agnCIdWKl
+ 9kFNzZdaMTd7/A2rS6xai7ZkmK5pfeHTwRCzAk3geRN1936KMiNwS7BMpL7zdtRthUbRs+1oOZ
+ BGVBMK9A+ADjZWqWDjHdKBerRKWzy3G/9NfqwUZuG6am+v0lE73CMPycn/7L1sm3Z7BQfiTMds
+ MqY=
+X-IronPort-AV: E=Sophos;i="5.64,523,1559491200"; 
+   d="scan'208";a="123105756"
+Received: from mail-co1nam03lp2053.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.53])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Sep 2019 20:44:40 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZDamdiSIYmbd1hbIX8ZRwSYIpCVRcbLYyB6ecDjp5pcNu0pcd86EIGWfRJ2UCER4kAOHokQuPc9DUNcEk5dCYt8RCSftDbmyFOeV2zggVFAH5QD7+IqcDbug4BWK3fKXY3FlCoxpjJqLeE58w9mdDOOm8wFNXZOhtkrucgJWRSC9MyBIJRCVQt8gC5Uf0pL78Brvbj7C5K2G33BAEAJJrUVYYsedtMnq1wrsNqNjIAKDKbVsBFxMmlPVtYxirtMKkTqndYnNHpQdhwy09cqEeL7bIi824Rv87zqF/2lC1w+703Wf5vuXUvX0wA+RMeygpvZ/H7gCpa0lwXiflT/gDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z21KyimuM5OK4QFm7v1RYgDhW6FxRwRQkbAFkFrYK20=;
+ b=NQ4qT+DSliF87aVrSpvJ/ukGrFgPvl76AgsEw1bS77/ogIqfhqyne4XsIMIRa46jgzRFp0VppeEZB0tgXYtnl7lFJZSK49ePk1dqmiMMNFji28W54KCSCkIeIBs8AJx8d8nYMLQJopBZQo2eQ19ODisnBn2G2rRULFg6iBVOIv2aeFNZF7CAg8ENTL4kwNkg9hd/BTra1y1za/GlOeI+l/o/G5D7/DNyGz/VUGeftCYv1QjhODJ5OwCtGdGrC0h8T34Y5kuQuns0wD9T59ItDzLZktVJyPnfhhiAURmEyCN5O1bgVOZZ/ST+cLH50VNOJHRgZLjNXK3j0ChfiSZqkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t/3e+y/i+U/e7E0tP6HdpGIig2OZ6uJrDHlIZd5LDyU=;
-        b=KOGoe+X+GWq+RgbjP85n85JO2Cj3fgftxUQgMGhjylhj1zIB/zN3tfqgTz+r8DUUIQ
-         VzqiWowNqv13F+qAB35G3KZ/MiaPrnHoMj75KeUOUINRGa4WvUhMFdt7tu7mfDyaKNey
-         /hW8LC8p7Mb5Y1cLCfEoyfDFIWMcB8MIm4sl45QiSGaaawOX9ag8i/1JKCMXlq5qbl+r
-         B1GdkxWKnFATffum5RqVRzuy4QhJ1zzo5XbJIovJgeRu4M6WQJdS0YKffeguTJchoZSI
-         EtIkj2e+mQXCAIZ62tTdSMJOr/lGg9FAEl+YD/E1Qbt1ohcOy9PSFHk0TPq5c+oB8wwu
-         h25g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/3e+y/i+U/e7E0tP6HdpGIig2OZ6uJrDHlIZd5LDyU=;
-        b=XuFxW2BVECAj0dhMfpOWU+Y+6kie18eyV6GBq+cgKQZsiDySjICqxZAXFFiALTu8Ux
-         6jWLLkX68gDX5VHgPqqiA8StHQDoon0jFRRL63NsayPnPjjL1qdpvDvvhYvNJ4RmItFa
-         qsiw2F4F6bSjMjsgD8OoXuRXZ5ayG78mdwiLD+kfzRasstyUxmbBs2f5HYX7XBZ6W+2C
-         U/eZ9UmhoNEXsNwsoEywd8qRofnHtrZCs6ZVYQQEpBoAwoMwtgXQZAxfP+yNkxdo5NX6
-         6WlR7C6g8G4Y+b/OD1/lTpeiDXxO5jZdpC3Q3I2Ilsr3jchrHcRAQ2mF3ouuJOuGDd1/
-         RErA==
-X-Gm-Message-State: APjAAAU0ujKCzjRx0TI/61unFk/PSk234zI2h8UnGOFGeEkAdgblELr5
-        KV8xdbLFEA7e8LAmNTGE6Lhmj91fCCnozH72rkUNjQ==
-X-Google-Smtp-Source: APXvYqyc8sbmSsHU8ly1hAIFrdu76M1WYCZD3LiHgVu2Ru2ZxaBI4ECe50q7rK6RNa01pvPQBqyNswrf7cegY3GgLRU=
-X-Received: by 2002:a05:600c:c2:: with SMTP id u2mr2018042wmm.37.1568889027653;
- Thu, 19 Sep 2019 03:30:27 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z21KyimuM5OK4QFm7v1RYgDhW6FxRwRQkbAFkFrYK20=;
+ b=Mdad7dUtGZB5J3k9l3pHb0tfOI83ZR1GLaXWjTkiXFmlE5AufixdpweqGMWYWBfJRu7VzpY7d++wtUEbFMdGJVdq2JYOjw9zjz+rLX6moOkhJ6NZ3XGYjhzV1796+4FIyZtEWzaNa0PAWKJxKOGEkq5hDplWn3ctmCUmiJUNHw8=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
+ BYAPR04MB5013.namprd04.prod.outlook.com (52.135.233.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.19; Thu, 19 Sep 2019 12:44:38 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::9821:67e1:9799:b117]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::9821:67e1:9799:b117%3]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
+ 12:44:38 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "Liu, Sunny" <ping.liu@lenovonetapp.com>,
+        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <james.bottomley@hansenpartnership.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>
+Subject: Re: [RFC PATCH 0/2] blk-mq I/O scheduling fixes
+Thread-Topic: [RFC PATCH 0/2] blk-mq I/O scheduling fixes
+Thread-Index: AQHVbtGArbQxrIRB/UOO5+Jp36iGNw==
+Date:   Thu, 19 Sep 2019 12:44:38 +0000
+Message-ID: <BYAPR04MB5816266B5EEBA1E800E73116E7890@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190919094547.67194-1-hare@suse.de>
+ <BJXPR01MB02964BA1F5E67B7B6CB39EE7F4890@BJXPR01MB0296.CHNPR01.prod.partner.outlook.cn>
+ <BYAPR04MB581634BD1F85CA9768AC780FE7890@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BJXPR01MB0296594F3E478B5BFD4DA2ABF4890@BJXPR01MB0296.CHNPR01.prod.partner.outlook.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [193.86.95.52]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44290bf1-25d5-4cab-5200-08d73cff2282
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR04MB5013;
+x-ms-traffictypediagnostic: BYAPR04MB5013:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB5013C898125EB5DF9AAD39CAE7890@BYAPR04MB5013.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(189003)(199004)(66066001)(229853002)(5660300002)(6436002)(9686003)(55016002)(52536014)(8936002)(14454004)(3846002)(6116002)(6246003)(7736002)(26005)(25786009)(478600001)(71190400001)(86362001)(71200400001)(2906002)(305945005)(256004)(476003)(486006)(54906003)(74316002)(66556008)(102836004)(186003)(76176011)(53546011)(76116006)(6506007)(55236004)(446003)(7696005)(99286004)(81166006)(81156014)(66946007)(91956017)(66446008)(316002)(64756008)(66476007)(4326008)(110136005)(33656002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5013;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xAbcr1TKWgBLXcKilC2JFwrF/8UM51OnLKrSMgX3lWfBfyKsddfOqofE1KWtNCYDMNJi0tNak2uzaV3fOdoxfTwAE0wcg7MrvxR22vNtRLU6guoj26MMRu3TJ0AYbTJLrml5Y5CQ3W2EyXo1xEk+A2AeS88P/wTm8z+j0tBBIorc1zV2Nmi8Cot5E8Ig9KLLvlvUz7DYDLr/cHBQGKk3fEp5gALEirT/JO5leQXyiPHlGush4FkwRFqZSHBS3kchhgngsOLbL4IGhxNZlCpBfE8JHzBfaKdkIplcFG587eAMuCmSijzxSfXGW40BozXTPLAf2X2SrHTBsS6ZDhC6Nr3QmftZG+epA+aVCiG5q+JMyFTrmkMrB1nlDxCQyjuE78tYZ4P1mOnR0SFQz/OXfFI61T3Q2V26JPCZmdihDHE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190620150337.7847-1-jinpuwang@gmail.com> <20190620150337.7847-26-jinpuwang@gmail.com>
- <79f11a21-3d4f-96de-113c-1b77734ac428@acm.org>
-In-Reply-To: <79f11a21-3d4f-96de-113c-1b77734ac428@acm.org>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Thu, 19 Sep 2019 12:30:16 +0200
-Message-ID: <CAMGffE==yJ7gjreTMxMTnMhLKQKQO9R1YKvsfJzHfYOMfr2_tQ@mail.gmail.com>
-Subject: Re: [PATCH v4 25/25] MAINTAINERS: Add maintainer for IBNBD/IBTRS modules
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
-        Roman Pen <roman.penyaev@profitbricks.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44290bf1-25d5-4cab-5200-08d73cff2282
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 12:44:38.7458
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 921pD5fifUcMJ5r2EHF5owVtMqxs765KS6UOg1hsn7PgSDo+jTLk1BYKAfq71Y6BNNUR4rXz+/BxwFdt86OSIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5013
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 1:56 AM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 6/20/19 8:03 AM, Jack Wang wrote:
-> > From: Roman Pen <roman.penyaev@profitbricks.com>
-> >
-> > Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-> > Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> > ---
-> >   MAINTAINERS | 14 ++++++++++++++
-> >   1 file changed, 14 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a6954776a37e..0b7fd93f738d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7590,6 +7590,20 @@ IBM ServeRAID RAID DRIVER
-> >   S:  Orphan
-> >   F:  drivers/scsi/ips.*
-> >
-> > +IBNBD BLOCK DRIVERS
-> > +M:   IBNBD/IBTRS Storage Team <ibnbd@cloud.ionos.com>
-> > +L:   linux-block@vger.kernel.org
-> > +S:   Maintained
-> > +T:   git git://github.com/profitbricks/ibnbd.git
-> > +F:   drivers/block/ibnbd/
-> > +
-> > +IBTRS TRANSPORT DRIVERS
-> > +M:   IBNBD/IBTRS Storage Team <ibnbd@cloud.ionos.com>
-> > +L:   linux-rdma@vger.kernel.org
-> > +S:   Maintained
-> > +T:   git git://github.com/profitbricks/ibnbd.git
-> > +F:   drivers/infiniband/ulp/ibtrs/
-> > +
-> >   ICH LPC AND GPIO DRIVER
-> >   M:  Peter Tyser <ptyser@xes-inc.com>
-> >   S:  Maintained
->
-> I think the T: entry is for kernel trees against which developers should
-> prepare their patches. Since the ibnbd repository on github is an
-> out-of-tree kernel driver I don't think that it should appear in the
-> MAINTAINERS file.
->
-> Bart.
->
->
-Ok, we will remove the link to github.
-
-Thanks,
-Jinpu
+On 2019/09/19 12:59, Liu, Sunny wrote:=0A=
+> Thank very much for your quickly advice.=0A=
+> =0A=
+> The problem drive is sata HDD 7200rpm in raid 5.=0A=
+=0A=
+Sorry, I read "SDD" where you had written "HDD" :)=0A=
+Is this a hardware RAID ? Or is this using dm/md raid ?=0A=
+=0A=
+> If using Fio libaio iodepth=3D128 numjob=3D2, the bad performance will be=
+ as below=0A=
+> in red. But there is no problem with numjob=3D1. In our solution, *multip=
+le=0A=
+> threads* should be used.=0A=
+=0A=
+Your data does not have the numjobs=3D1 case for kernel 5.2.9. You should r=
+un that=0A=
+for comparison with the numjobs=3D2 case on the same kernel.=0A=
+=0A=
+> From the testing result, BFQ low-latency had good performance, but it sti=
+ll has=0A=
+> problem in 1m seq write.=0A=
+> =0A=
+> The data is come from centos 7.6 (kernel 3.10.0-975) and kernel 5.2.9 wit=
+h BFQ=0A=
+> and bcache enabled. No bcache configure.=0A=
+> =0A=
+> Is there any parameter can solve the 1m and upper seq write problem with=
+=0A=
+> multiple threads?=0A=
+=0A=
+Not sure what the problem is here. You could look at a blktrace of each cas=
+e to=0A=
+see if there is any major difference in the command patterns sent to the di=
+sks=0A=
+of your array, in particular command size.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
