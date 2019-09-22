@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 828F9BAA62
-	for <lists+linux-block@lfdr.de>; Sun, 22 Sep 2019 21:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88EC3BA99B
+	for <lists+linux-block@lfdr.de>; Sun, 22 Sep 2019 21:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfIVTZm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 22 Sep 2019 15:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        id S2405654AbfIVTRO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 22 Sep 2019 15:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407203AbfIVSwJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:52:09 -0400
+        id S1729374AbfIVSzt (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:55:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF79B2190F;
-        Sun, 22 Sep 2019 18:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9986E208C2;
+        Sun, 22 Sep 2019 18:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178328;
-        bh=7mbt/MR23Cq3RngDGbuCsKYRWXTfMwedUxRS8ns4pmM=;
+        s=default; t=1569178549;
+        bh=J2DOie5+rJ5lNglv194L5tZNcZlQOsaZ5mRHla4X5YE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdfdnUmneGwntFju2wftBuzhywj6d3H/NQPj/vhlGX3ACre7zIhuSgTB4j5v7r5up
-         CjxOlpUeS3thfAberOBm6YmatRiiF7phrKhW+3HpFszaPvPK+DM8QYdU0S1iNygvbL
-         CZHbw7Va6LZeYhRBOnEeNoK25XDTu9HiEaZ+qsXc=
+        b=CbcYBRZLgIAoNmlbfqk9/yCzd6dcR2SKCeUZ15akoGeoxpA8jijtzQZllFtUP/cqz
+         3CpX4cYE0oFpghCUH9c6UdpihHkH4pIsKDivllzjduiPSeEUAGxomZcWVfXPY975OT
+         Nr6CZ3n3bizNuLa2EcGtFKZxpWVsNLZZw2sTKftc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mike Christie <mchristi@redhat.com>,
         Josef Bacik <josef@toxicpanda.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.2 093/185] nbd: add missing config put
-Date:   Sun, 22 Sep 2019 14:47:51 -0400
-Message-Id: <20190922184924.32534-93-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 067/128] nbd: add missing config put
+Date:   Sun, 22 Sep 2019 14:53:17 -0400
+Message-Id: <20190922185418.2158-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,10 +69,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 57aebc6e1c288..5d5e52c6509ce 100644
+index fa60f265ee506..b1c7009de1f4d 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -355,8 +355,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+@@ -353,8 +353,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
  	}
  	config = nbd->config;
  
