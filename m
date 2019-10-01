@@ -2,36 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BE2BC3D3A
-	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 18:58:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 153E4C3CE2
+	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 18:55:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbfJAQlo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Oct 2019 12:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
+        id S1732017AbfJAQml (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Oct 2019 12:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731270AbfJAQln (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:43 -0400
+        id S1732073AbfJAQmj (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 787A721906;
-        Tue,  1 Oct 2019 16:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E49321D82;
+        Tue,  1 Oct 2019 16:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948103;
-        bh=oSN9Cn1zQHdh/Pl1gG+9mshtPat0ykifj8O0qi2zwvE=;
+        s=default; t=1569948159;
+        bh=+n3gJ1VrqbqNkcBk7vhlCR91tUTb6AximTmpMzZNXhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEt6lSFvBVTJeAvWxCRv7ruAH4RHbyCTjEjXZoffrDRXFf6ZiVVIM+9mzjin8fu8l
-         w0WHZXp3TjPjR2wsAcQQIa13lXKGzwuGSzdgTjJjAZWF45uESRhP9XbalU3n4Yu+1Q
-         lJR2pfg5kThcZBef0xvXg2YPc0upEH9k8AARYRyI=
+        b=DO1DrFphJfrg20WyNzAHO84ZNCoAouP7RhpahnK0fICjv1c3ZqqC8r2suMbVH4OLj
+         R6+XsZJMGfFu6BnTobks3wyWS0hReWIDPULDX2D5fOZh4QlJNYb/lHJqQTolGD60cp
+         /tm8FKVb2k8ZsnCGz0VNICVf94EHRTQ58BqR76ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/63] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:40:36 -0400
-Message-Id: <20191001164125.15398-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 48/63] blk-mq: move lockdep_assert_held() into elevator_exit
+Date:   Tue,  1 Oct 2019 12:41:10 -0400
+Message-Id: <20191001164125.15398-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -44,66 +46,65 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
+[ Upstream commit 284b94be1925dbe035ce5218d8b5c197321262c7 ]
 
-rbd_dev_image_id() allocates space for length but passes a smaller
-value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
-allocate space for length.  Fix both to be consistent.
+Commit c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+removes q->sysfs_lock from elevator_init_mq(), but forgot to deal with
+lockdep_assert_held() called in blk_mq_sched_free_requests() which is
+run in failure path of elevator_init_mq().
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+blk_mq_sched_free_requests() is called in the following 3 functions:
+
+	elevator_init_mq()
+	elevator_exit()
+	blk_cleanup_queue()
+
+In blk_cleanup_queue(), blk_mq_sched_free_requests() is followed exactly
+by 'mutex_lock(&q->sysfs_lock)'.
+
+So moving the lockdep_assert_held() from blk_mq_sched_free_requests()
+into elevator_exit() for fixing the report by syzbot.
+
+Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+Fixed: c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ block/blk-mq-sched.c | 2 --
+ block/blk.h          | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index e5009a34f9c26..e78794bfcbbef 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4696,17 +4696,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 2766066a15dbf..3cf555f127006 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -554,8 +554,6 @@ void blk_mq_sched_free_requests(struct request_queue *q)
+ 	struct blk_mq_hw_ctx *hctx;
+ 	int i;
  
- static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
- {
-+	size_t size;
- 	void *reply_buf;
- 	int ret;
- 	void *p;
- 
--	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
-+	/* Response will be an encoded string, which includes a length */
-+	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
-+	reply_buf = kzalloc(size, GFP_KERNEL);
- 	if (!reply_buf)
- 		return -ENOMEM;
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
- 				  &rbd_dev->header_oloc, "get_object_prefix",
--				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
-+				  NULL, 0, reply_buf, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret < 0)
- 		goto out;
-@@ -5676,7 +5679,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 	dout("rbd id object name is %s\n", oid.name);
- 
- 	/* Response will be an encoded string, which includes a length */
+-	lockdep_assert_held(&q->sysfs_lock);
 -
- 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
- 	response = kzalloc(size, GFP_NOIO);
- 	if (!response) {
-@@ -5688,7 +5690,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
- 				  "get_id", NULL, 0,
--				  response, RBD_IMAGE_ID_LEN_MAX);
-+				  response, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret == -ENOENT) {
- 		image_id = kstrdup("", GFP_KERNEL);
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		if (hctx->sched_tags)
+ 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
+diff --git a/block/blk.h b/block/blk.h
+index 7814aa207153c..38938125ab729 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -184,6 +184,8 @@ void elv_unregister_queue(struct request_queue *q);
+ static inline void elevator_exit(struct request_queue *q,
+ 		struct elevator_queue *e)
+ {
++	lockdep_assert_held(&q->sysfs_lock);
++
+ 	blk_mq_sched_free_requests(q);
+ 	__elevator_exit(q, e);
+ }
 -- 
 2.20.1
 
