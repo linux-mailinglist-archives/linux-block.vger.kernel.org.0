@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE570C3B7C
-	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 18:46:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BE2BC3D3A
+	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 18:58:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389904AbfJAQod (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Oct 2019 12:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
+        id S1731283AbfJAQlo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Oct 2019 12:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbfJAQoc (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:32 -0400
+        id S1731270AbfJAQln (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CD62190F;
-        Tue,  1 Oct 2019 16:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787A721906;
+        Tue,  1 Oct 2019 16:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948271;
-        bh=TEK+zAQbvi1BTh6kB8nuK+T1uHONDTyXZsyakcosRwA=;
+        s=default; t=1569948103;
+        bh=oSN9Cn1zQHdh/Pl1gG+9mshtPat0ykifj8O0qi2zwvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCIeanhCW3Ss3iE/qzaCpzx4Vqi64huWVSTH46w7H22ykd+Zc8mmo0O73wYlXd0m/
-         SKs0r52tQrDX2W/O0sevGAzQLTlEh6oOema5hLqD0Q2GOaR8t/MG7ePHaQoWHh7/iW
-         nrrA+wydy/F2XoP6Y1PBdLrYTa9qQ4zDU3U2jsa8=
+        b=iEt6lSFvBVTJeAvWxCRv7ruAH4RHbyCTjEjXZoffrDRXFf6ZiVVIM+9mzjin8fu8l
+         w0WHZXp3TjPjR2wsAcQQIa13lXKGzwuGSzdgTjJjAZWF45uESRhP9XbalU3n4Yu+1Q
+         lJR2pfg5kThcZBef0xvXg2YPc0upEH9k8AARYRyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
         Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/29] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:44:01 -0400
-Message-Id: <20191001164423.16406-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 14/63] rbd: fix response length parameter for encoded strings
+Date:   Tue,  1 Oct 2019 12:40:36 -0400
+Message-Id: <20191001164125.15398-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
+References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index f2b1994d58a06..4a9bff6ec0756 100644
+index e5009a34f9c26..e78794bfcbbef 100644
 --- a/drivers/block/rbd.c
 +++ b/drivers/block/rbd.c
-@@ -4911,17 +4911,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
+@@ -4696,17 +4696,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
  
  static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
  {
@@ -87,7 +87,7 @@ index f2b1994d58a06..4a9bff6ec0756 100644
  	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
  	if (ret < 0)
  		goto out;
-@@ -5815,7 +5818,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+@@ -5676,7 +5679,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
  	dout("rbd id object name is %s\n", oid.name);
  
  	/* Response will be an encoded string, which includes a length */
@@ -95,7 +95,7 @@ index f2b1994d58a06..4a9bff6ec0756 100644
  	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
  	response = kzalloc(size, GFP_NOIO);
  	if (!response) {
-@@ -5827,7 +5829,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+@@ -5688,7 +5690,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
  
  	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
  				  "get_id", NULL, 0,
