@@ -2,83 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9612C36B8
-	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 16:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E6B9C3932
+	for <lists+linux-block@lfdr.de>; Tue,  1 Oct 2019 17:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388902AbfJAOKO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Oct 2019 10:10:14 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35782 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731280AbfJAOKO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Oct 2019 10:10:14 -0400
-Received: by mail-io1-f65.google.com with SMTP id q10so48367608iop.2
-        for <linux-block@vger.kernel.org>; Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
-        b=Am2icvsCpWu9R2jUDF5p07FY8Xh6t9Zk2ZbZUtTvUV4Deh3tXSewk/lOIhmxj7NCVY
-         hwoNwW4X4LHYD40xbyrfVyv+6HfcA9SQDcC5KWQ1hs0OQbcz0koawBX9QQr96Nn/QtOz
-         Cmp9v8GC5RgZaOd96XvdRc06fphYAjIcRrMkKY+0x/kg5at0EUsSiIKTGAHEURxzXh0r
-         knuWvO2YMyL1DMHtoVLR3wW76wouPj+0AJUhbK+/T0U2BqruBULXooT/zjGmLoK+7xh1
-         uXQoJI3xiCWXfVwSqoDbLNuzqL4vftHrJvswGMzCX0AgtofFV/sgrWp3pJ/fSxnkHAfq
-         Mn1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
-        b=Z1d22jlwpFLrHF98rZxRoxp8VSLQ88wEPn7jhJ6aWNXLj8wvrap5y2J2lrdYZRb17q
-         OIwBTZofEU8/G4noSZ0f3k4FN9nBt8/S70k+CpNP6IKDX2qEUDRs5WPVAu80TTn/hax3
-         PETZvTTaqYbKJEVv5STZ+43o2BH3YPFyIcfy6si59cNwIHBWnkuLHcoBcptoN0C48Hsk
-         nPQoteyg0rvK1y9A39PaCNKO6vAADnF1juvHFQ+6HIWdWvNVmV50EHnUWVLfb/o04SNG
-         +PimWRDYmfQtstUwHoGTbQRuQ15wSUuet1ZRL7QOpqsfNuFEElVCQtRBcz3l7eciHPWX
-         xwAA==
-X-Gm-Message-State: APjAAAVLLOn8VJeGMb4mfEeUFlaGFJPg8/SToRHDPEz/bZlRsDcHA/S7
-        KCJwoDfObyZYYqXmBDmP1KpWDQ==
-X-Google-Smtp-Source: APXvYqwyQ78cSYCEY59QpZFzt9hWgZe8cTZEsDwwEpX7/UuXo/5xfiD6Z3upSoLEMYx8IRdazyU8mQ==
-X-Received: by 2002:a6b:8bd8:: with SMTP id n207mr5770851iod.147.1569939012260;
-        Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c8sm7042439ile.9.2019.10.01.07.10.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 07:10:11 -0700 (PDT)
-Subject: Re: [PATCH v2] loop: change queue block size to match when using DIO.
-To:     Martijn Coenen <maco@android.com>, hch@infradead.org,
-        ming.lei@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com
-References: <20190828103229.191853-1-maco@android.com>
- <20190904194901.165883-1-maco@android.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c65da8b1-755c-57f5-d49d-fb25e8dc809b@kernel.dk>
-Date:   Tue, 1 Oct 2019 08:10:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2389636AbfJAPet (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Oct 2019 11:34:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8992 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389331AbfJAPet (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:34:49 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91FS3m9147428
+        for <linux-block@vger.kernel.org>; Tue, 1 Oct 2019 11:34:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc8f7u0d6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-block@vger.kernel.org>; Tue, 01 Oct 2019 11:34:45 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-block@vger.kernel.org> from <sth@linux.ibm.com>;
+        Tue, 1 Oct 2019 16:34:42 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 1 Oct 2019 16:34:41 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91FYdoq59310252
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 15:34:39 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9196B52050;
+        Tue,  1 Oct 2019 15:34:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 7E7365204E;
+        Tue,  1 Oct 2019 15:34:39 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 13FE3E05A2; Tue,  1 Oct 2019 17:34:39 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com
+Subject: [PATCH 0/2] s390/dasd: fixes for thin provisioning support
+Date:   Tue,  1 Oct 2019 17:34:37 +0200
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190904194901.165883-1-maco@android.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100115-0016-0000-0000-000002B3031A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100115-0017-0000-0000-000033140329
+Message-Id: <20191001153439.62672-1-sth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=862 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010138
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/4/19 1:49 PM, Martijn Coenen wrote:
-> The loop driver assumes that if the passed in fd is opened with
-> O_DIRECT, the caller wants to use direct I/O on the loop device.
-> However, if the underlying block device has a different block size than
-> the loop block queue, direct I/O can't be enabled. Instead of requiring
-> userspace to manually change the blocksize and re-enable direct I/O,
-> just change the queue block sizes to match, as well as the io_min size.
+Hi Jens,
 
-Applied, thanks.
+please see the following two patches that
+
+- fix a bug in the thin provisioning base support
+- revert a commit because of possible data corruption
+
+Regards,
+Stefan
+
+
+Jan Höppner (1):
+  s390/dasd: Fix error handling during online processing
+
+Stefan Haberland (1):
+  Revert "s390/dasd: Add discard support for ESE volumes"
+
+ drivers/s390/block/dasd_eckd.c | 81 +++++-----------------------------
+ 1 file changed, 11 insertions(+), 70 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
