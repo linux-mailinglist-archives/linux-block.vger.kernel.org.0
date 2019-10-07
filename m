@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD28CDBD6
-	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2019 08:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EBD8CDBDA
+	for <lists+linux-block@lfdr.de>; Mon,  7 Oct 2019 08:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfJGGXc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Oct 2019 02:23:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59074 "EHLO mx1.suse.de"
+        id S1726889AbfJGG1l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Oct 2019 02:27:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60060 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727010AbfJGGXc (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 7 Oct 2019 02:23:32 -0400
+        id S1726202AbfJGG1k (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 7 Oct 2019 02:27:40 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 08AADABE9;
-        Mon,  7 Oct 2019 06:23:30 +0000 (UTC)
-Subject: Re: [PATCH V2 RESEND 3/5] blk-mq: stop to handle IO before hctx's all
- CPUs become offline
+        by mx1.suse.de (Postfix) with ESMTP id B4655ABE9;
+        Mon,  7 Oct 2019 06:27:38 +0000 (UTC)
+Subject: Re: [PATCH V2 RESEND 4/5] blk-mq: re-submit IO in case that hctx is
+ dead
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
         Bart Van Assche <bvanassche@acm.org>,
@@ -25,7 +25,7 @@ Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Keith Busch <keith.busch@intel.com>
 References: <20191006024516.19996-1-ming.lei@redhat.com>
- <20191006024516.19996-4-ming.lei@redhat.com>
+ <20191006024516.19996-5-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -71,12 +71,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <efd6edfa-cde1-7ad3-d04f-1204770e6b42@suse.de>
-Date:   Mon, 7 Oct 2019 08:23:29 +0200
+Message-ID: <b49232fb-83fb-b037-c259-9217e3c9f17b@suse.de>
+Date:   Mon, 7 Oct 2019 08:27:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191006024516.19996-4-ming.lei@redhat.com>
+In-Reply-To: <20191006024516.19996-5-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -86,26 +86,11 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 10/6/19 4:45 AM, Ming Lei wrote:
-> Most of blk-mq drivers depend on managed IRQ's auto-affinity to setup
-> up queue mapping. Thomas mentioned the following point[1]:
+> When all CPUs in one hctx are offline, we shouldn't run this hw queue
+> for completing request any more.
 > 
-> "
->  That was the constraint of managed interrupts from the very beginning:
-> 
->   The driver/subsystem has to quiesce the interrupt line and the associated
->   queue _before_ it gets shutdown in CPU unplug and not fiddle with it
->   until it's restarted by the core when the CPU is plugged in again.
-> "
-> 
-> However, current blk-mq implementation doesn't quiesce hw queue before
-> the last CPU in the hctx is shutdown. Even worse, CPUHP_BLK_MQ_DEAD is
-> one cpuhp state handled after the CPU is down, so there isn't any chance
-> to quiesce hctx for blk-mq wrt. CPU hotplug.
-> 
-> Add new cpuhp state of CPUHP_AP_BLK_MQ_ONLINE for blk-mq to stop queues
-> and wait for completion of in-flight requests.
-> 
-> [1] https://lore.kernel.org/linux-block/alpine.DEB.2.21.1904051331270.1802@nanos.tec.linutronix.de/
+> So steal bios from the request, and resubmit them, and finally free
+> the request in blk_mq_hctx_notify_dead().
 > 
 > Cc: Bart Van Assche <bvanassche@acm.org>
 > Cc: Hannes Reinecke <hare@suse.com>
@@ -114,19 +99,43 @@ On 10/6/19 4:45 AM, Ming Lei wrote:
 > Cc: Keith Busch <keith.busch@intel.com>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->  block/blk-mq-tag.c         |  2 +-
->  block/blk-mq-tag.h         |  2 ++
->  block/blk-mq.c             | 65 ++++++++++++++++++++++++++++++++++++++
->  include/linux/blk-mq.h     |  1 +
->  include/linux/cpuhotplug.h |  1 +
->  5 files changed, 70 insertions(+), 1 deletion(-)
+>  block/blk-mq.c | 48 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 41 insertions(+), 7 deletions(-)
 > 
-I really don't like the zillions of 'XXX_in_flight()' helper in blk-mq;
-blk_mq_queue_inflight(), blk_mq_in_flight(), blk_mq_in_flight_rw() et al.
-Can't you implement your one on top of the already existing?
-
-Otherwise:
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index d991c122abf2..0b35fdbd1f17 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2280,10 +2280,30 @@ static int blk_mq_hctx_notify_online(unsigned int cpu, struct hlist_node *node)
+>  	return 0;
+>  }
+>  
+> +static void blk_mq_resubmit_io(struct request *rq)
+> +{
+> +	struct bio_list list;
+> +	struct bio *bio;
+> +
+> +	bio_list_init(&list);
+> +	blk_steal_bios(&list, rq);
+> +
+> +	while (true) {
+> +		bio = bio_list_pop(&list);
+> +		if (!bio)
+> +			break;
+> +
+> +		generic_make_request(bio);
+> +	}
+> +
+> +	blk_mq_cleanup_rq(rq);
+> +	blk_mq_end_request(rq, 0);
+> +}
+> +
+Hmm. Not sure if this is a good idea.
+Shouldn't we call 'blk_mq_end_request()' before calling
+generic_make_request()?
+otherwise the cloned request might be completed before original one,
+which looks a bit dodgy to me; and might lead to quite a recursion if we
+have several dead cpus to content with ...
 
 Cheers,
 
