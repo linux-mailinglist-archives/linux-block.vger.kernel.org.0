@@ -2,90 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8500CF59C
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2019 11:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0420DCFA6D
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2019 14:52:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfJHJGl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Oct 2019 05:06:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3219 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729926AbfJHJGk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:06:40 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B4501630ADD6AEE8753;
-        Tue,  8 Oct 2019 17:06:37 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 17:06:31 +0800
-Subject: Re: [PATCH V3 0/5] blk-mq: improvement on handling IO during CPU
- hotplug
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-References: <20191008041821.2782-1-ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Keith Busch <keith.busch@intel.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <bf9687ef-4a90-73f7-3028-4c5d56c8d66b@huawei.com>
-Date:   Tue, 8 Oct 2019 10:06:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1731073AbfJHMw2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Oct 2019 08:52:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34037 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730944AbfJHMwZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Oct 2019 08:52:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so13483192wrp.1
+        for <linux-block@vger.kernel.org>; Tue, 08 Oct 2019 05:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CY2v7yIbUQO+kUdb+ns8XxSwsNG79RB1PtGsa0u/5rk=;
+        b=prN+G4P3hgi5YODFv5NZFDI29CilqP4ENwL0w25Ei8wzkTOtWzj89ShELBr94Puqk1
+         kSpd9RM0FCxuGN+phyvgBYRQLgiPMDCkkgXPp3MTdVJ+sEQQat2Z/WPBhotYAhj2XV+U
+         Dy7tTfUToI4j6R0YTkB+gZ1mEsfVrzVkz3zYSZwHvQ0BqMMAjYt9eUFcT5eYWq2F9FJQ
+         GeZ3B31kJIUsg1j2gXwLjZ57L2JSDh1tsqHVF2JTro+kJBDKiQyZPHe/yrCkZBnr2FE8
+         MvXOigkMDjo6MdjzWDSIuBjGbSjsUIUZDm/18AkhiImsPXWFeslFRXYEMvJV78tuwy4A
+         h10w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CY2v7yIbUQO+kUdb+ns8XxSwsNG79RB1PtGsa0u/5rk=;
+        b=h6yHNW6WtJ4bUYeUsqxmMf6DSdHkltq9VWhDuJ3s76U0JmqS3mfchWvXgnR6iL//MU
+         kP7COoSF3fTctDGcXaItxc0+2cYfzdTdl+cryFxp9kNw+hsuMseTy2SVSnJ7hgSJIsfe
+         2HEzkw3Goqxg0YU8kL9Oj3QRem9YOu3V9aZXmtBuutDXrOBQRVYc4pHqywH+SxMUchMo
+         GaJxRNvzeZrCeBSQH78whhs3D3wPH4BFFoCEseootO7tOefbdQQnadt6H3s6LLYcG3G8
+         8KRHwGvcd9MgLhrlQbiJmqcNlckm2EcUXB3SBzJJzxG/qq1T4nWXm4oSVyFNmBJKwqlv
+         flmg==
+X-Gm-Message-State: APjAAAUoR4g0Dy+qZz2FZ/54POl8Ekq0wMTw54/9pSZTf7Pk9mwHgkcC
+        SCAq36VmSJYJcN1BjMpAyNTq/6/i
+X-Google-Smtp-Source: APXvYqz3eI5jsBEfJYtMQV+LGG1lfKQ+I990SIPoEWaJJpfqJLPSLAu6/9n1vb6yRPyl2Qf+3SGbsw==
+X-Received: by 2002:adf:fb48:: with SMTP id c8mr428052wrs.247.1570539144140;
+        Tue, 08 Oct 2019 05:52:24 -0700 (PDT)
+Received: from localhost.corp.ad.zalando.net ([185.85.220.201])
+        by smtp.gmail.com with ESMTPSA id a14sm2525879wmm.44.2019.10.08.05.52.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 05:52:23 -0700 (PDT)
+From:   Dmitrii Dolgov <9erthalion6@gmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org
+Cc:     Dmitrii Dolgov <9erthalion6@gmail.com>
+Subject: [RFC v1] io_uring: add io_uring_link trace event
+Date:   Tue,  8 Oct 2019 14:53:57 +0200
+Message-Id: <20191008125357.25265-1-9erthalion6@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191008041821.2782-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 08/10/2019 05:18, Ming Lei wrote:
-> Hi,
->
-> Thomas mentioned:
->     "
->      That was the constraint of managed interrupts from the very beginning:
->
->       The driver/subsystem has to quiesce the interrupt line and the associated
->       queue _before_ it gets shutdown in CPU unplug and not fiddle with it
->       until it's restarted by the core when the CPU is plugged in again.
->     "
->
-> But no drivers or blk-mq do that before one hctx becomes dead(all
-> CPUs for one hctx are offline), and even it is worse, blk-mq stills tries
-> to run hw queue after hctx is dead, see blk_mq_hctx_notify_dead().
->
-> This patchset tries to address the issue by two stages:
->
-> 1) add one new cpuhp state of CPUHP_AP_BLK_MQ_ONLINE
->
-> - mark the hctx as internal stopped, and drain all in-flight requests
-> if the hctx is going to be dead.
->
-> 2) re-submit IO in the state of CPUHP_BLK_MQ_DEAD after the hctx becomes dead
->
-> - steal bios from the request, and resubmit them via generic_make_request(),
-> then these IO will be mapped to other live hctx for dispatch
->
-> Please comment & review, thanks!
->
-> John, I don't add your tested-by tag since V3 have some changes,
-> and I appreciate if you may run your test on V3.
->
+To trace io_uring activity one can get an information from workqueue and
+io trace events, but looks like some parts could be hard to identify.
+E.g. it's not easy to figure out that one work was started after another
+due to a link between them.
 
-Will do, Thanks
+For that purpose introduce io_uring_link trace event, that will be fired
+when a request is added to a link_list.
 
-> V3:
-> 	- re-organize patch 2 & 3 a bit for addressing Hannes's comment
-> 	- fix patch 4 for avoiding potential deadlock, as found by Hannes
->
-> V2:
-> 	- patch4 & patch 5 in V1 have been merged to block tree, so remove
-> 	  them
-> 	- addres
+Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+---
+ fs/io_uring.c                   |  4 ++++
+ include/Kbuild                  |  1 +
+ include/trace/events/io_uring.h | 42 +++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+)
+ create mode 100644 include/trace/events/io_uring.h
 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index bfbb7ab3c4e..63e4b592d69 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -71,6 +71,9 @@
+ #include <linux/sizes.h>
+ #include <linux/hugetlb.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/io_uring.h>
++
+ #include <uapi/linux/io_uring.h>
+ 
+ #include "internal.h"
+@@ -2488,6 +2491,7 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
+ 
+ 		s->sqe = sqe_copy;
+ 		memcpy(&req->submit, s, sizeof(*s));
++		trace_io_uring_link(&req->work, &prev->work);
+ 		list_add_tail(&req->list, &prev->link_list);
+ 	} else if (s->sqe->flags & IOSQE_IO_LINK) {
+ 		req->flags |= REQ_F_LINK;
+diff --git a/include/Kbuild b/include/Kbuild
+index ffba79483cc..61b66725d25 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -1028,6 +1028,7 @@ header-test-			+= trace/events/fsi_master_gpio.h
+ header-test-			+= trace/events/huge_memory.h
+ header-test-			+= trace/events/ib_mad.h
+ header-test-			+= trace/events/ib_umad.h
++header-test-			+= trace/events/io_uring.h
+ header-test-			+= trace/events/iscsi.h
+ header-test-			+= trace/events/jbd2.h
+ header-test-			+= trace/events/kvm.h
+diff --git a/include/trace/events/io_uring.h b/include/trace/events/io_uring.h
+new file mode 100644
+index 00000000000..56245c31a1e
+--- /dev/null
++++ b/include/trace/events/io_uring.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM io_uring
++
++#if !defined(_TRACE_IO_URING_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_IO_URING_H
++
++#include <linux/tracepoint.h>
++
++/**
++ * io_uring_link - called immediately before the io_uring work added into
++ * 				   link_list of the another request.
++ * @work:			pointer to linked struct work_struct
++ * @target_work:	pointer to previous struct work_struct,
++ * 					that would contain @work
++ *
++ * Allows to track linked requests in io_uring.
++ */
++TRACE_EVENT(io_uring_link,
++
++	TP_PROTO(struct work_struct *work, struct work_struct *target_work),
++
++	TP_ARGS(work, target_work),
++
++	TP_STRUCT__entry (
++		__field(  void *,	work			)
++		__field(  void *,	target_work		)
++	),
++
++	TP_fast_assign(
++		__entry->work			= work;
++		__entry->target_work	= target_work;
++	),
++
++	TP_printk("io_uring work struct %p linked after %p",
++			  __entry->work, __entry->target_work)
++);
++
++#endif /* _TRACE_IO_URING_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.21.0
 
