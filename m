@@ -2,130 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D33D01BD
-	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2019 21:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95401D01D8
+	for <lists+linux-block@lfdr.de>; Tue,  8 Oct 2019 22:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbfJHTzj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Oct 2019 15:55:39 -0400
-Received: from mail-ed1-f44.google.com ([209.85.208.44]:32827 "EHLO
-        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730548AbfJHTzT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Oct 2019 15:55:19 -0400
-Received: by mail-ed1-f44.google.com with SMTP id c4so16867146edl.0
-        for <linux-block@vger.kernel.org>; Tue, 08 Oct 2019 12:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=aMQQgi7dIXVBnmVMSSMCLgb3oXTzeafbZdgWl2Y7dgh9d3yilS1+9yTnvWoS7+GzUk
-         LWbTYKnbDzuBJ3/U6U4a0Txwis4unkVKDohWYyBjnKYrTLghN7laSYeGp1/FcmznDyEO
-         GS9pgiMN+uT0qCjbihaa5wuvtHOM98vqOW8UVjJ7Cv+EprgLSNS8LJdhrjnJyNqQEN56
-         5sfOyU15h4kpoOXNgzNljIz5N8IZnpl4XHLYJYLCwvTOpHMRDfM3ywlgrk+4Qs+isMtv
-         bwWMXB9P8rpPXCaQx70qpw2S2sG0Q07XznOIe3PPQ9uFVdh7+iWMtRM+rtyrWFblwrYM
-         wXZw==
+        id S1729794AbfJHUBm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Oct 2019 16:01:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40822 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbfJHUBm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Oct 2019 16:01:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x127so8365pfb.7;
+        Tue, 08 Oct 2019 13:01:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=BcnD2lHEKH1M0CEyKJizaJF7q9T27XP2cIijq4XRs4flVoSilbHuunzqNkO2lFTDma
-         WdLqkj3QGQLYgNBVeCjGROwDasddChtYHOUzRM7Qv2PcHDZWVY2NqIBYhfpbdv72qF3o
-         0Wy+OpXVJ8FxEYaB9hhwwLZmQfPZqHwcy6Iz1Op0Rjb2Cg524bApsFN6d411xFE+SNbK
-         f8C2rA6oIe3l+IYPN8mB7oHM2pxTVQa2MyUx1aJSJPzmsz2UqgLH9vp7c/rjaOAfYsY6
-         htQyZ3jN+R92QKqvbL8lbs3GvQ018Rzj+zlEaxJ3UkM9pyvme8zTDnjeUKb65CknzW31
-         gIAg==
-X-Gm-Message-State: APjAAAX8lczpdCsYjswS4rU6SElYJ+PEifBg5SBpMwsF3h1qd7uL5m3c
-        fQ3gYAMHMq4hEe3Z8kgDvZ6eoxjbaY4eH2xBZpE=
-X-Google-Smtp-Source: APXvYqxaZfvXk0/G1PfPN40JEbEfue6b7v2Lk/SQWmnUxoxmnZyxXwpPNC4UPIh9mJw4kQ9atMHeHG1Orcb22TWXOSk=
-X-Received: by 2002:a50:c306:: with SMTP id a6mr36339639edb.108.1570564517490;
- Tue, 08 Oct 2019 12:55:17 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xPXZ9kF4GFL6v89vFU2ZEHo7SfcEsi52mwigB/rCYtY=;
+        b=BhI4JlPi1lB8pPxSfgsAth6LhYsw8p7P5yuNRi37rMX+qWOcNBYGl8KeFR3V2TVz2N
+         2v9VFIVAmv9P+eo+as+cjYCs6EaDPx18OLjpSj2hX71zbYQSHGiajGeg+r6r4PuLll4O
+         PUIPHRX1TU8Z76NcOSdnSXabZEZEhaWkEtrhX+d/U/i1Ry00h0H3gNcw8lGIxPrVm8Jf
+         gaEW2cactPIijXISDHBBQ8NaZiDHTRN30Ek7JbF4/eDF2X4THDaGVy5tu8CzMkH0oUhS
+         VRuTiUf/Ro/SEfFCgLA8uwHPJ8hXiQdbZkUqkMTegV614E8O6cfJpT78y0KlIdVAgXTT
+         duHA==
+X-Gm-Message-State: APjAAAXjV0nitAyGxrzdxV64EQmrvwruEZSQwl/qfFnU29L1pyek/dTv
+        LH3pVYnipl0Y3M1mLAkMhN8=
+X-Google-Smtp-Source: APXvYqzsPBEPcjwVojznWXBeDxWR7tzrTuazlMQklON6Ok06EdIXuptFWD3mT4f/ths+IK6uvLL+tQ==
+X-Received: by 2002:aa7:96f3:: with SMTP id i19mr41662272pfq.32.1570564901292;
+        Tue, 08 Oct 2019 13:01:41 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id z29sm17759300pff.23.2019.10.08.13.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 13:01:40 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, kernel@collabora.com
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+ <854l0j19go.fsf@collabora.com> <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
+ <85zhibyt14.fsf@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
+Date:   Tue, 8 Oct 2019 13:01:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:16
- -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   MONEY GRAM <currency1000000@gmail.com>
-Date:   Tue, 8 Oct 2019 20:55:16 +0100
-Message-ID: <CAPqfnSEO==O6BEtBbcMMZfh3qcY4Bz0qndhCqbcLqZx4DCs44A@mail.gmail.com>
-Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <85zhibyt14.fsf@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
-M.T.C.N:78393135
+On 10/8/19 11:46 AM, Gabriel Krisman Bertazi wrote:
+> Hmm, sorry, but I'm confused.  I'm sure I'm missing something simple,
+> since I haven't touched this in a while, so maybe you can quickly point
+> me in the right direction?
+> 
+> I see blk_mq_requeue_request() being used by device drivers to retry
+> requests that failed, but if I read the code correctly, the flushed
+> queue seems to be moved to hctx->dispatch when the device
+> driver returned BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE to
+> blk_mq_dispatch_rq_list(). I thought BLK_STS_RESOURCE was returned by
+> the driver on .queue_rq() to signal there was no more resources on the
+> hardware to service further requests.
 
-Attn: Beneficiary,
+Hi Gabriel,
 
-This is to inform you that the America Embassy office was instructed
-to transfer your fund $980,000.00 U.S Dollars compensating all the
-SCAM VICTIMS and your email was found as one of the VICTIMS. by
-America security leading team and America representative officers so
-between today the 8th of October till 1ST Of December 2019 you will
-be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
-that we have already sent the $6,000 dollars this morning to avoid
-cancellation of your payment, remain the total sum of $980,000.00.
+The simplified version of how requests are requeued as follows:
+* A block driver calls blk_mq_requeue_request().
+* blk_mq_requeue_request() calls blk_mq_add_to_requeue_list()
+* blk_mq_add_to_requeue_list() executes the following code:
+     list_add_tail(&rq->queuelist, &q->requeue_list)
+* A block driver or the block layer core calls
+   blk_mq_kick_requeue_list() or blk_mq_delay_kick_requeue_list(). Both
+   functions trigger a call of blk_mq_requeue_work().
+* blk_mq_requeue_work() processes q->requeue_list.
 
-You have only six hours to call this office upon the receipt of this
-email the maximum amount you will be receiving per a day starting from
-today's $6,000 and the Money Transfer Control Number of today is
-below.
+Bart.
 
-NOTE; The sent $6,000 is on hold because of the instruction from IMF
-office, they asked us to place it on hold by requesting the (Clean
-Bill Record Certificate) which will cost you $25 in order to fulfill
-all the necessary obligation to avoid any hitches while sending you
-the payment through MONEY GRAM money transfer, the necessary
-obligation I mean here is to obtain the (Clean Bill Record
-Certificate)
 
-Below is the information of today track it in our
-
-websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
-to see is available to pick up by the receiver, but if we didn't here
-from you soon we'll pickup it up from line for security reason to
-avoid hackers stealing the money online.
-
-Money Transfer Control Number M.T.C.N)::78393135
-SENDERS FIRST NAME: John
-SENDERS LAST NAME: Chun
-SENDERS COUNTRY...BENIN REPUBLIC
-TEXT QUESTION: A
-ANSWER: B
-AMOUNT: $6,000
-
-We need the below details from you, to enable us place the payment to
-your name and transfer the fund to you.
-
-(Full Receivers name)...................
-(You're Country)................................
-(Address)......................................
-(Phone NuMBER-...............................
-(You're Age)............................
-(OCCUPATION)..REAL ESTATE..................
-(A Copy of Your ID CARD).SEE ATTACHMENTS.............
-
-HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
-AND THAT IS ALL YOU HAVE TO DO ASAP.
-
-The payment will be sending to below information, such as:
-
-Receiver.............. ALAN UDE
-Country................Benin Republic
-Amount: ....................$25
-Question: .....................A
-Answer:................... B
-Sender...............Name:
-MTCN :..............
-
-According to the instruction and order we received from IMF the their
-requested $25 must be made directly to the above info's.
-
-Furthermore you are advised to call us as the instruction was passed
-that within 6hours without hearing from you, Count your payment
-canceled. Number to call is below listed manager director office of
-release order:
-DR.ALAN UDE
-Director MONEY GRAM-Benin
