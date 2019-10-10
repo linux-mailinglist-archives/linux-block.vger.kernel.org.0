@@ -2,49 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6F3D329E
-	for <lists+linux-block@lfdr.de>; Thu, 10 Oct 2019 22:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0C0D3468
+	for <lists+linux-block@lfdr.de>; Fri, 11 Oct 2019 01:36:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfJJUnT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Oct 2019 16:43:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54944 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJJUnT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:43:19 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 653C128D353
-Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
-To:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com
-References: <20191008001416.12656-1-andrealmeid@collabora.com>
- <16a10539-c0a0-e411-8f9a-1f0830579986@acm.org>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <2408cae2-94bf-0b1e-9a87-e4303f44fd68@collabora.com>
-Date:   Thu, 10 Oct 2019 17:41:56 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726358AbfJJXgb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Oct 2019 19:36:31 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:57852 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbfJJXga (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:36:30 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIhyu-0006HU-S1; Thu, 10 Oct 2019 17:36:29 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIhyt-0004Al-Fl; Thu, 10 Oct 2019 17:36:27 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>
+Date:   Thu, 10 Oct 2019 17:36:26 -0600
+Message-Id: <20191010233626.15998-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <16a10539-c0a0-e411-8f9a-1f0830579986@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, axboe@kernel.dk, sbates@raithlin.com, logang@deltatee.com, hch@lst.de
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH] block: account statistics for passthrough requests
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Bart,
+Presently, passthrough requests are not accounted for because
+blk_do_io_stat() expressly rejects them. Based on some digging
+in the history, this doesn't seem like a concious decision but
+one that evolved from the change from blk_fs_request() to
+blk_rq_is_passthrough().
 
-On 10/8/19 3:12 PM, Bart Van Assche wrote:
-> On 10/7/19 5:14 PM, André Almeida wrote:
-...
-> 
-> Bart.
+To support this, call blk_account_io_start() in blk_execute_rq_nowait()
+and remove the passthrough check in blk_do_io_stat().
 
-Thanks you for your extensive and detailed feedback. I'm applying those
-changes for v3.
+Link: https://lore.kernel.org/linux-block/20191010100526.GA27209@lst.de/
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>
+---
 
-André
+This change is needed for the NVMe-of passthru work that is in progress.
+Christoph suggested sending it as its own patch. (See the link
+in the commit message for more information.)
+
+ block/blk-exec.c | 2 ++
+ block/blk.h      | 7 ++-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/block/blk-exec.c b/block/blk-exec.c
+index 1db44ca0f4a6..e20a852ae432 100644
+--- a/block/blk-exec.c
++++ b/block/blk-exec.c
+@@ -55,6 +55,8 @@ void blk_execute_rq_nowait(struct request_queue *q, struct gendisk *bd_disk,
+ 	rq->rq_disk = bd_disk;
+ 	rq->end_io = done;
+
++	blk_account_io_start(rq, true);
++
+ 	/*
+ 	 * don't check dying flag for MQ because the request won't
+ 	 * be reused after dying flag is set
+diff --git a/block/blk.h b/block/blk.h
+index 47fba9362e60..2bea40180b6f 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -242,14 +242,11 @@ int blk_dev_init(void);
+  * Contribute to IO statistics IFF:
+  *
+  *	a) it's attached to a gendisk, and
+- *	b) the queue had IO stats enabled when this request was started, and
+- *	c) it's a file system request
++ *	b) the queue had IO stats enabled when this request was started
+  */
+ static inline bool blk_do_io_stat(struct request *rq)
+ {
+-	return rq->rq_disk &&
+-	       (rq->rq_flags & RQF_IO_STAT) &&
+-		!blk_rq_is_passthrough(rq);
++	return rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
+ }
+
+ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+--
+2.20.1
