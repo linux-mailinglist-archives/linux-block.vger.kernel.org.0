@@ -2,77 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A2DAD2A76
-	for <lists+linux-block@lfdr.de>; Thu, 10 Oct 2019 15:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F67FD2BDC
+	for <lists+linux-block@lfdr.de>; Thu, 10 Oct 2019 15:57:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387828AbfJJNK1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Oct 2019 09:10:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37253 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387897AbfJJNKZ (ORCPT
+        id S1726131AbfJJN47 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Oct 2019 09:56:59 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]:46798 "EHLO
+        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfJJN47 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:10:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f22so6731278wmc.2
-        for <linux-block@vger.kernel.org>; Thu, 10 Oct 2019 06:10:23 -0700 (PDT)
+        Thu, 10 Oct 2019 09:56:59 -0400
+Received: by mail-qt1-f181.google.com with SMTP id u22so8765725qtq.13
+        for <linux-block@vger.kernel.org>; Thu, 10 Oct 2019 06:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=GO77O9NugfDMF3sM0pFxjAVwqVXEKORDEOteZl6SPpM=;
-        b=CGCreGJpdYxCMpEc/r9slhW8rmU4TymtGsZBbMvDrYU9kNDYb/svfNqW4a9C3bf+BM
-         kbbK67I1e9UwX3fKfloVVqGUficTgv9o2fidC9QOglrpEVTLPie7uGXXXMLngCYMp9E6
-         e1G7SoSNqGaXSVVCXpOpdpvb0A8fMNBKZxZ0BtpQtjukZwxsZRCmNZI4BAshhKy/TpMX
-         cw6GUcF4zQkxYbiYk8Zc9Q5BgmsPWwDaAcit4uR9TdxpIZhjqfdPdhnWI4FmlB59CCrQ
-         jL4JcdQ1JsmKakx8RnWJPmM+NlHwOF4if6xijGII/IpnJBxXJ+ZMDdPqVJen2xHSCBhr
-         7XbA==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xCIpw3rx5fAU7TZxetuXrfOkSP3oSGobe1/1dnDRzEg=;
+        b=brKX8AGHf56UdvlCsUj5lynFN7p2wFZCJuBYmwXCDdSzFgAaI9gfA1q3qkzv82RA+U
+         /uHcR686GkdkDho3KfFU1yiVPVJkILyHqueQd/JI53BMEbca009zkDMC09BKHMve1Q23
+         2YG/1SSczpRDdIpP6ho66sVbAyzX6dCREa8zBTyj8rBzaWM4732J2UnyXjj9kT6I1tfl
+         bJJOU+FFB0fD0HUH3rOs2wuPU93ijXF5+QjV3IzMaMGbIC2FzLkxyGpKpSsMoVeJ4dhA
+         2qZ6ayAaDzjN/fJUPbJtw72TJoihF8m8RTZI5+NWJNRWBhfACtZkaFfOWc++vji7xq9H
+         SiXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=GO77O9NugfDMF3sM0pFxjAVwqVXEKORDEOteZl6SPpM=;
-        b=l5oZv+8oGvlSmDGlEYy34Lr/2uK5kNd6hPUpFaBPYxqT+ZflhiVb8tf0M+GroFtSIp
-         /VcAkV/MfqsJZj/w5CfJKwss6bG6ClLUjXEjN9dK9R8fBbpQr0fZ83sA5IREKFY+8/i3
-         ZiGlu4wygGWjBmoLODpFSUMCHQOMS+yRcH3ZUz/vaD4rUXkrzbMfsC5ZBJh98d/MmvlM
-         Xwm+QmI24mYyKy9LJmQhpHFda2fwpkZWN8q7T0CEy+taHMC9evxYcycdQ3rBXedGjLvE
-         T0dtWPPa21mUWkeyz+0q6+H/ZIjpKlR9ihwrujMlRgWidKLB06a2qXMVCGAjeFaonZ/U
-         pU8w==
-X-Gm-Message-State: APjAAAUnF0P+n+c9TcJpvQ/uExquqMf++S/XGrqewCOKXiFM/U+CZ6TZ
-        QaJp1k1UbqwSEK3d7t6nAiA6rg4/hoeZBPwV8cTkEA==
-X-Google-Smtp-Source: APXvYqz37xeAxTc9n4Vw6+baO3ezaqmb44jTN53afpnazNh08T2YGGy0G+RdMm3GW6VpJFx3Vu2hAyZqrm4Tj/MIr/c=
-X-Received: by 2002:a7b:c3cf:: with SMTP id t15mr7388687wmj.85.1570713023114;
- Thu, 10 Oct 2019 06:10:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xCIpw3rx5fAU7TZxetuXrfOkSP3oSGobe1/1dnDRzEg=;
+        b=kzOap2yllBCS5n4Ro3liccq4i/Lqf+hy69tGFA0vVy/SKpCY2BYmJNLxwFVTLQSwcK
+         Xqc953vmkEsML+PqBeSvJZdR/Zz6ALyZs0n9AR6VKcOuSWXqz17yOj/9+AdHMyWkwOB/
+         t9v6F4xMUTPVeSYagnf8l2BDPlA14v9dWO+6XNB3eBl3lhZnnTH+r2LmYIZNFrTyApdf
+         YJo7tTpQOg7XlQMgnsf4NiPc11Jr7YatYtOjhiJtUo1esrYX7zsdDa3JtaE20UhY9EQl
+         EzJT0KEZaW845xIPso2osXP0OWC1kbd6MgN1MJd3tgXmn5cZkq82gf2DfriuYNGoNP5j
+         GLdQ==
+X-Gm-Message-State: APjAAAUDuwPjnQSBWNe9KQK80tzKObxMgw8xcSuZ/kMs4nD60aaE4S9D
+        n8di3Jkn0Gk+QWxz+bmhFFHsRQ==
+X-Google-Smtp-Source: APXvYqxF6jvlqWBmKjnV4d0At+yaZviJsRJz9ErCCzA10Wz8LUzxdZSHuOOstTpwT2Pj5APaz0YHHw==
+X-Received: by 2002:aed:3ec8:: with SMTP id o8mr10598501qtf.386.1570715817086;
+        Thu, 10 Oct 2019 06:56:57 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::18ce])
+        by smtp.gmail.com with ESMTPSA id b16sm3235944qtk.65.2019.10.10.06.56.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 06:56:56 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 09:56:55 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     xiubli@redhat.com
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, mchristi@redhat.com,
+        ming.lei@redhat.com, linux-block@vger.kernel.org
+Subject: Re: [PATCH] nbd: fix possible sysfs duplicate warning
+Message-ID: <20191010135654.lvdawtrzk7df6id3@macbook-pro-91.dhcp.thefacebook.com>
+References: <20190919061427.3990-1-xiubli@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:adf:efc4:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:10:22
- -0700 (PDT)
-Reply-To: sunrisefundingltd50@gmail.com
-From:   "Coryna Rizky Amelia, SST" <coryna_fk@ub.ac.id>
-Date:   Thu, 10 Oct 2019 14:10:22 +0100
-Message-ID: <CADotR_p9GxtkfVe36w7PBHwuwOdZcV4TCMOT+O50+azDL8EhmA@mail.gmail.com>
-Subject: Apply For Financial investment at a lower rate 2%
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919061427.3990-1-xiubli@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-Hello,
+On Thu, Sep 19, 2019 at 11:44:27AM +0530, xiubli@redhat.com wrote:
+> From: Xiubo Li <xiubli@redhat.com>
+> 
+> 1. nbd_put takes the mutex and drops nbd->ref to 0. It then does
+> idr_remove and drops the mutex.
+> 
+> 2. nbd_genl_connect takes the mutex. idr_find/idr_for_each fails
+> to find an existing device, so it does nbd_dev_add.
+> 
+> 3. just before the nbd_put could call nbd_dev_remove or not finished
+> totally, but if nbd_dev_add try to add_disk, we can hit:
+> 
+> debugfs: Directory 'nbd1' with parent 'block' already present!
+> 
+> This patch will make sure all the disk add/remove stuff are done
+> by holding the nbd_index_mutex lock.
+> 
+> Signed-off-by: Xiubo Li <xiubli@redhat.com>
+> Reported-by: Mike Christie <mchristi@redhat.com>
 
-We are private lenders based in UK.
-Do you need a loan (credit) as soon as possible. Are you in search of
-money to solve your personal needs or finance your business venture,
-then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+Sorry, don't know how I missed this.
 
-* We offer personal loan & huge capital loan at 2% interest rate to
-the general public both locally and internationally.
-* Credit amount range from $5,000.00 -- $500,000.00 and above.
-* Special $10,000,000.00 Loan offer for huge project also available.
-* Loan period of 6 months -- 10 years.
-* Loan is granted 24 hours after approval and accredited, directly in
-hand or bank account.
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-Please note that you are advised to contact us for more details via
-the following e-mail address below;
+Thanks,
 
-EMAIL : sunrisefundingltd50@gmail.com
-FIRM : Sunrise Funding Ltd UK.
+Josef
