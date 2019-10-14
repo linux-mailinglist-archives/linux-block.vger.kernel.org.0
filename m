@@ -2,448 +2,176 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B46ABD6256
-	for <lists+linux-block@lfdr.de>; Mon, 14 Oct 2019 14:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AF79D65C1
+	for <lists+linux-block@lfdr.de>; Mon, 14 Oct 2019 17:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbfJNMVa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Oct 2019 08:21:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59566 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726169AbfJNMVa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:21:30 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 24CA7D7B711912EB37B1;
-        Mon, 14 Oct 2019 20:21:28 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 20:21:23 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     <linux-block@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <axboe@kernel.dk>, <ast@kernel.org>
-CC:     <hare@suse.com>, <osandov@fb.com>, <ming.lei@redhat.com>,
-        <damien.lemoal@wdc.com>, <bvanassche@acm.org>,
-        <daniel@iogearbox.net>, <kafai@fb.com>, <songliubraving@fb.com>,
-        <yhs@fb.com>
-Subject: [RFC PATCH 2/2] selftests/bpf: add test program for redirecting IO completion CPU
-Date:   Mon, 14 Oct 2019 20:28:33 +0800
-Message-ID: <20191014122833.64908-3-houtao1@huawei.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191014122833.64908-1-houtao1@huawei.com>
-References: <20191014122833.64908-1-houtao1@huawei.com>
+        id S1733154AbfJNPBx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Oct 2019 11:01:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40267 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733155AbfJNPBx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:01:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so38526506iof.7
+        for <linux-block@vger.kernel.org>; Mon, 14 Oct 2019 08:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=RBbFQbsMRuGkFH9TOgKa/APZMAZbJ864y+kjiYJrE1U=;
+        b=FyIKuo/nViMZB3JBD0ppimRpUjkKGlCbCtnS3RaKr5QF54lzSukRxZ1ViCzdNwtCPT
+         2XxJTF5X6x9JolYpyauRll0g5Kuypy6sRNnEMCapkXc8XmB81MTO8pdaBDRHCNwCsdEm
+         v9O93eD8EZKlKhsrZ3ZYmEtX09LJcrASkZk107sM964Zcbz5GSFb/l3lOwfaY/3wlHQE
+         31ZCtZwN1LUpafKO3dOxLel4a2JzWevqqU7+eWynbaO0AtlNZXzqxxGGI9nDkHEvL+0U
+         KS1bA1abFAjaDmrH7F/WCJhhIxc0vYtJsqOh/Jk+eTx7nl93YGQxA8Nly7kOvBynfEmr
+         5p4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RBbFQbsMRuGkFH9TOgKa/APZMAZbJ864y+kjiYJrE1U=;
+        b=TPaxBfwJZt9vguFx+CNxkVdGMvUZgnH3VpqcPI7SSBrzdDqzvAt/Al2LrAYwrGiGq5
+         t2JU0AuliXsY6UdGyujerpUQnl9C05iyxUsVIqi6jJ/Kb3kf5n1jTNW+8ma4phaefsL0
+         v2sTGZi0v+lZs/H+638fX/aA4oTY5tg1ZBt/+h+TksQw+m8NeosiqHEBq5llmdetmyXe
+         XBt8j0myewv3SC3eGm5KCsaVLc7nGpPxH0jF5htu8Fo+jQEIT4+hHxZt9aa1aNjP6qVm
+         tBUmI1XXY4eJpgxedAb6uY8uRZ1mTKfOhkMB0BamGQPX7271sJn1sc6gQpItG2OOdyz1
+         mmZw==
+X-Gm-Message-State: APjAAAX7Cy9OUUqcQFhqHaudd8iL+dGsYX10pLkmqok+drI3XARE4eTz
+        YgkRvc7ml8we3EkSmh+qJ2UVcw==
+X-Google-Smtp-Source: APXvYqy7R2KYT8rrTdebUklRG5eUH535i1PHVhhWSlMcKP9wtSFI8a0ITsiyPE+xbjE+BpkN1mKp8Q==
+X-Received: by 2002:a05:6602:2581:: with SMTP id p1mr17932218ioo.32.1571065310732;
+        Mon, 14 Oct 2019 08:01:50 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v19sm12201951iol.24.2019.10.14.08.01.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 08:01:49 -0700 (PDT)
+Subject: Re: WARNING: refcount bug in sock_wfree (2)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     syzbot <syzbot+c0ba5b9e742f049a2edf@syzkaller.appspotmail.com>,
+        davem@davemloft.net, hare@suse.com, jmoyer@redhat.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <0000000000006819150594d5e956@google.com>
+ <0ba7cb74-507e-7fb5-6147-1d5fee34155f@kernel.dk>
+Message-ID: <511c839b-f261-8538-17e7-89bffc82e63a@kernel.dk>
+Date:   Mon, 14 Oct 2019 09:01:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+In-Reply-To: <0ba7cb74-507e-7fb5-6147-1d5fee34155f@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-A simple round-robin strategy is implemented to redirect the IO
-completion handling to all online CPUs or specific CPU set cyclically.
+On 10/13/19 9:25 PM, Jens Axboe wrote:
+> On 10/13/19 8:49 PM, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    442630f6 Add linux-next specific files for 20191008
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=158fa6bf600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=af1bfeef713eefdd
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=c0ba5b9e742f049a2edf
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a861b3600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1769f48b600000
+>>
+>> The bug was bisected to:
+>>
+>> commit 6c080ff07363389cb4092193eb333639f0392b8c
+>> Author: Jens Axboe <axboe@kernel.dk>
+>> Date:   Thu Oct 3 14:11:03 2019 +0000
+>>
+>>        io_uring: allow sparse fixed file sets
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1344b993600000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10c4b993600000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=1744b993600000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+c0ba5b9e742f049a2edf@syzkaller.appspotmail.com
+>> Fixes: 6c080ff07363 ("io_uring: allow sparse fixed file sets")
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 0 PID: 8691 at lib/refcount.c:190
+>> refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+>> WARNING: CPU: 0 PID: 8691 at lib/refcount.c:190
+>> refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 0 PID: 8691 Comm: syz-executor322 Not tainted 5.4.0-rc2-next-20191008
+>> #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>     __dump_stack lib/dump_stack.c:77 [inline]
+>>     dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>     panic+0x2e3/0x75c kernel/panic.c:221
+>>     __warn.cold+0x2f/0x35 kernel/panic.c:582
+>>     report_bug+0x289/0x300 lib/bug.c:195
+>>     fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>     fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>>     do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>>     do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>>     invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+>> RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+>> RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Code: 1d b0 f0 7f 06 31 ff 89 de e8 6c d7 30 fe 84 db 75 94 e8 23 d6 30 fe
+>> 48 c7 c7 20 81 e6 87 c6 05 90 f0 7f 06 01 e8 e8 15 02 fe <0f> 0b e9 75 ff
+>> ff ff e8 04 d6 30 fe e9 6e ff ff ff 48 89 df e8 e7
+>> RSP: 0018:ffff8880a8267a28 EFLAGS: 00010282
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>> RDX: 0000000000000000 RSI: ffffffff815cb676 RDI: ffffed101504cf37
+>> RBP: ffff8880a8267ac0 R08: ffff888090e363c0 R09: fffffbfff14eeb42
+>> R10: fffffbfff14eeb41 R11: ffffffff8a775a0f R12: 00000000fffffd02
+>> R13: 0000000000000001 R14: ffff8880a8267a98 R15: 0000000000000001
+>>     sock_wfree+0x10c/0x190 net/core/sock.c:1958
+>>     unix_destruct_scm+0x115/0x170 net/unix/scm.c:149
+>>     io_destruct_skb+0x62/0x80 fs/io_uring.c:2995
+>>     skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
+>>     skb_release_all+0x16/0x60 net/core/skbuff.c:663
+>>     __kfree_skb net/core/skbuff.c:679 [inline]
+>>     kfree_skb net/core/skbuff.c:697 [inline]
+>>     kfree_skb+0x101/0x3c0 net/core/skbuff.c:691
+>>     __io_sqe_files_scm+0x429/0x640 fs/io_uring.c:3049
+>>     io_sqe_files_scm fs/io_uring.c:3071 [inline]
+>>     io_sqe_files_register fs/io_uring.c:3154 [inline]
+>>     __io_uring_register+0x1f69/0x2d70 fs/io_uring.c:4152
+>>     __do_sys_io_uring_register fs/io_uring.c:4204 [inline]
+>>     __se_sys_io_uring_register fs/io_uring.c:4186 [inline]
+>>     __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:4186
+>>     do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>>     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> RIP: 0033:0x440279
+>> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+>> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+>> RSP: 002b:00007ffeeedc31e8 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
+>> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440279
+>> RDX: 0000000020000280 RSI: 0000000000000002 RDI: 0000000000000003
+>> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+>> R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000401b00
+>> R13: 0000000000401b90 R14: 0000000000000000 R15: 0000000000000000
+>> Kernel Offset: disabled
+>> Rebooting in 86400 seconds..
+> 
+> I think this will do it, but that's just from looking at the code,
+> haven't tried to reproduce anything yet.
+> 
+> I'll take a closer look tomorrow and verify.
 
-Using the following command to distribute the IO completion of vda
-to all online CPUs:
+Took a closer look, and verified that this is indeed the issue, and that
+the patch does fix it. I'm going to apply this to my for-5.5/io_uring
+branch, which is where the offending commit it queued up.
 
-	./test_blkdev_ccpu -d /dev/vda
-
-And the following command to distribute the IO completion of nvme0n1
-to a specific CPU set:
-	./test_blkdev_ccpu -d /dev/nvme0n1 -s 4,8,10-13
-
-Signed-off-by: Hou Tao <houtao1@huawei.com>
----
- tools/include/uapi/linux/bpf.h                |   2 +
- tools/lib/bpf/libbpf.c                        |   1 +
- tools/lib/bpf/libbpf_probes.c                 |   1 +
- tools/testing/selftests/bpf/Makefile          |   1 +
- .../selftests/bpf/progs/blkdev_ccpu_rr.c      |  66 +++++
- .../testing/selftests/bpf/test_blkdev_ccpu.c  | 246 ++++++++++++++++++
- 6 files changed, 317 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/blkdev_ccpu_rr.c
- create mode 100644 tools/testing/selftests/bpf/test_blkdev_ccpu.c
-
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 77c6be96d676..36aa35e29be2 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -173,6 +173,7 @@ enum bpf_prog_type {
- 	BPF_PROG_TYPE_CGROUP_SYSCTL,
- 	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE,
- 	BPF_PROG_TYPE_CGROUP_SOCKOPT,
-+	BPF_PROG_TYPE_BLKDEV,
- };
- 
- enum bpf_attach_type {
-@@ -199,6 +200,7 @@ enum bpf_attach_type {
- 	BPF_CGROUP_UDP6_RECVMSG,
- 	BPF_CGROUP_GETSOCKOPT,
- 	BPF_CGROUP_SETSOCKOPT,
-+	BPF_BLKDEV_IOC_CPU,
- 	__MAX_BPF_ATTACH_TYPE
- };
- 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e0276520171b..5a849d6d30be 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -3579,6 +3579,7 @@ static bool bpf_prog_type__needs_kver(enum bpf_prog_type type)
- 	case BPF_PROG_TYPE_PERF_EVENT:
- 	case BPF_PROG_TYPE_CGROUP_SYSCTL:
- 	case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-+	case BPF_PROG_TYPE_BLKDEV:
- 		return false;
- 	case BPF_PROG_TYPE_KPROBE:
- 	default:
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index 4b0b0364f5fc..311e13e778a3 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -102,6 +102,7 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
- 	case BPF_PROG_TYPE_FLOW_DISSECTOR:
- 	case BPF_PROG_TYPE_CGROUP_SYSCTL:
- 	case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-+	case BPF_PROG_TYPE_BLKDEV:
- 	default:
- 		break;
- 	}
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 6889c19a628c..6a36234adfea 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -30,6 +30,7 @@ TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_lpm_map test
- 	test_cgroup_storage test_select_reuseport test_section_names \
- 	test_netcnt test_tcpnotify_user test_sock_fields test_sysctl test_hashmap \
- 	test_btf_dump test_cgroup_attach xdping
-+TEST_GEN_PROGS += test_blkdev_ccpu
- 
- BPF_OBJ_FILES = $(patsubst %.c,%.o, $(notdir $(wildcard progs/*.c)))
- TEST_GEN_FILES = $(BPF_OBJ_FILES)
-diff --git a/tools/testing/selftests/bpf/progs/blkdev_ccpu_rr.c b/tools/testing/selftests/bpf/progs/blkdev_ccpu_rr.c
-new file mode 100644
-index 000000000000..6f66d51fe6af
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/blkdev_ccpu_rr.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Hou Tao <houtao1@huawei.com>
-+ */
-+#include <linux/bpf.h>
-+#include "bpf_helpers.h"
-+
-+/* Index to CPU set */
-+struct bpf_map_def SEC("maps") idx_map = {
-+	.type = BPF_MAP_TYPE_ARRAY,
-+	.key_size = sizeof(__u32),
-+	.value_size = sizeof(__u32),
-+	.max_entries = 1,
-+};
-+BPF_ANNOTATE_KV_PAIR(idx_map, __u32, __u32);
-+
-+/* Size of CPU set */
-+struct bpf_map_def SEC("maps") cnt_map = {
-+	.type = BPF_MAP_TYPE_ARRAY,
-+	.key_size = sizeof(__u32),
-+	.value_size = sizeof(__u32),
-+	.max_entries = 1,
-+};
-+BPF_ANNOTATE_KV_PAIR(cnt_map, __u32, __u32);
-+
-+/* CPU set */
-+struct bpf_map_def SEC("maps") cpu_map = {
-+	.type = BPF_MAP_TYPE_ARRAY,
-+	.key_size = sizeof(__u32),
-+	.value_size = sizeof(__u32),
-+	.max_entries = 256,
-+};
-+BPF_ANNOTATE_KV_PAIR(cpu_map, __u32, __u32);
-+
-+SEC("ccpu_demo")
-+int customized_round_robin_ccpu(void *ctx)
-+{
-+	__u32 key = 0;
-+	__u32 *idx_ptr;
-+	__u32 *cnt_ptr;
-+	__u32 *cpu_ptr;
-+	__u32 idx;
-+	__u32 cnt;
-+
-+	idx_ptr = bpf_map_lookup_elem(&idx_map, &key);
-+	if (!idx_ptr)
-+		return -1;
-+	idx = (*idx_ptr)++;
-+
-+	cnt_ptr = bpf_map_lookup_elem(&cnt_map, &key);
-+	if (!cnt_ptr)
-+		return -1;
-+	cnt = *cnt_ptr;
-+	if (!cnt)
-+		return -1;
-+
-+	idx %= cnt;
-+	cpu_ptr = bpf_map_lookup_elem(&cpu_map, &idx);
-+	if (!cpu_ptr)
-+		return -1;
-+
-+	return *cpu_ptr;
-+}
-+
-+char _license[] SEC("license") = "GPL";
-+__u32 _version SEC("version") = 1;
-diff --git a/tools/testing/selftests/bpf/test_blkdev_ccpu.c b/tools/testing/selftests/bpf/test_blkdev_ccpu.c
-new file mode 100644
-index 000000000000..ec5981e7e2ed
---- /dev/null
-+++ b/tools/testing/selftests/bpf/test_blkdev_ccpu.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Hou Tao <houtao1@huawei.com>
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <assert.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <linux/bpf.h>
-+#include <bpf/bpf.h>
-+#include <bpf/libbpf.h>
-+
-+#include "bpf_util.h"
-+#include "bpf_rlimit.h"
-+
-+static int
-+print_all_levels(enum libbpf_print_level level,
-+		 const char *format, va_list args)
-+{
-+	return vfprintf(stderr, format, args);
-+}
-+
-+static void sig_handler(int num)
-+{
-+}
-+
-+static int parse_cpu_set(const char *str, const unsigned int **cpus,
-+	int *cpu_nr)
-+{
-+	int total;
-+	unsigned int *set;
-+	int err;
-+	int idx;
-+	const char *from;
-+
-+	total = libbpf_num_possible_cpus();
-+	if (total <= 0)
-+		return -1;
-+
-+	set = calloc(total, sizeof(*set));
-+	if (!set) {
-+		printf("Failed to alloc cpuset (cpu nr: %d)\n", total);
-+		return -1;
-+	}
-+
-+	if (!str) {
-+		for (idx = 0; idx < total; idx++)
-+			set[idx] = idx;
-+		*cpus = set;
-+		*cpu_nr = total;
-+
-+		return 0;
-+	}
-+
-+	err = 0;
-+	idx = 0;
-+	from = str;
-+	while (1) {
-+		char *endptr;
-+		int start;
-+		int end;
-+
-+		start = strtol(from, &endptr, 10);
-+		if (*endptr != '-' && *endptr != ',' &&
-+			(*endptr != '\0' || endptr == from)) {
-+			err = -1;
-+			break;
-+		}
-+		if (*endptr == '\0' || *endptr == ',') {
-+			printf("add cpu %d\n", start);
-+			set[idx++] = start;
-+			if (*endptr == '\0')
-+				break;
-+		}
-+		from = endptr + 1;
-+		if (*endptr == ',')
-+			continue;
-+
-+		end = strtol(from, &endptr, 10);
-+		if (*endptr != ',' && (*endptr != '\0' || endptr == from)) {
-+			err = -1;
-+			break;
-+		}
-+		for (; start <= end; start++) {
-+			printf("add cpu %d\n", start);
-+			set[idx++] = start;
-+		}
-+		if (*endptr == '\0')
-+			break;
-+		from = endptr + 1;
-+	}
-+
-+	if (err) {
-+		printf("invalid cpu set spec '%s'\n", from);
-+		free(set);
-+		return -1;
-+	}
-+
-+	*cpus = set;
-+	*cpu_nr = idx;
-+
-+	return 0;
-+}
-+
-+static int load_cpu_set(struct bpf_object *obj, const unsigned int *cpus,
-+	int cnt)
-+{
-+	const char *name;
-+	struct bpf_map *map;
-+	int fd;
-+	int idx;
-+
-+	name = "cpu_map";
-+	map = bpf_object__find_map_by_name(obj, name);
-+	if (!map) {
-+		printf("no map %s\n", name);
-+		return -1;
-+	}
-+
-+	fd = bpf_map__fd(map);
-+	if (fd < 0) {
-+		printf("invalid fd for map %s\n", name);
-+		return -1;
-+	}
-+
-+	for (idx = 0; idx < cnt; idx++) {
-+		if (bpf_map_update_elem(fd, &idx, &cpus[idx], 0)) {
-+			printf("%s[%u] = %u error %s\n",
-+					name, idx, cpus[idx], strerror(errno));
-+			return -1;
-+		}
-+		printf("%s[%u] = %u\n", name, idx, cpus[idx]);
-+	}
-+
-+	name = "cnt_map";
-+	map = bpf_object__find_map_by_name(obj, name);
-+	if (!map) {
-+		printf("no map %s\n", name);
-+		return -1;
-+	}
-+
-+	fd = bpf_map__fd(map);
-+	if (fd < 0) {
-+		printf("invalid fd for map %s\n", name);
-+		return -1;
-+	}
-+
-+	idx = 0;
-+	if (bpf_map_update_elem(fd, &idx, &cnt, 0)) {
-+		printf("%s[%u] = %u error %s\n",
-+				name, idx, cnt, strerror(errno));
-+		return -1;
-+	}
-+	printf("%s[%u] = %u\n", name, idx, cnt);
-+
-+	return 0;
-+}
-+
-+static void usage(const char *cmd)
-+{
-+	printf("Usage: %s -d blk_device [-s cpu_set]\n"
-+			"  round-robin all CPUs: %s -d /dev/sda\n"
-+			"  round-robin specific CPUs: %s -d /dev/sda -s 4-7,12-15\n",
-+			cmd, cmd, cmd);
-+	exit(1);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int opt;
-+	const char *prog = "./blkdev_ccpu_rr.o";
-+	const char *bdev;
-+	const char *cpu_set_str = NULL;
-+	const unsigned int *cpus;
-+	int cpu_nr;
-+	struct bpf_object *obj;
-+	int prog_fd;
-+	int bdev_fd;
-+
-+	while ((opt = getopt(argc, argv, "d:s:h")) != -1) {
-+		switch (opt) {
-+		case 'd':
-+			bdev = optarg;
-+			break;
-+		case 's':
-+			cpu_set_str = optarg;
-+			break;
-+		case 'h':
-+			usage(argv[0]);
-+			break;
-+		}
-+	}
-+
-+	if (!bdev)
-+		usage(argv[0]);
-+
-+	printf("blk device %s, cpu set %s\n", bdev, cpu_set_str);
-+
-+	signal(SIGINT, sig_handler);
-+	signal(SIGQUIT, sig_handler);
-+
-+	libbpf_set_print(print_all_levels);
-+
-+	if (parse_cpu_set(cpu_set_str, &cpus, &cpu_nr))
-+		goto out;
-+
-+	if (bpf_prog_load(prog, BPF_PROG_TYPE_BLKDEV, &obj, &prog_fd)) {
-+		printf("Failed to load %s\n", prog);
-+		goto out;
-+	}
-+
-+	if (load_cpu_set(obj, cpus, cpu_nr))
-+		goto out;
-+
-+	bdev_fd = open(bdev, O_RDWR);
-+	if (bdev_fd < 0) {
-+		printf("Failed to open %s %s\n", bdev, strerror(errno));
-+		goto out;
-+	}
-+
-+	/* Attach bpf program */
-+	if (bpf_prog_attach(prog_fd, bdev_fd, BPF_BLKDEV_IOC_CPU, 0)) {
-+		printf("Failed to attach %s %s\n", prog, strerror(errno));
-+		goto out;
-+	}
-+
-+	printf("Attached, use Ctrl-C to detach\n\n");
-+
-+	pause();
-+
-+	if (bpf_prog_detach(bdev_fd, BPF_BLKDEV_IOC_CPU)) {
-+		printf("Failed to detach %s %s\n", prog, strerror(errno));
-+		goto out;
-+	}
-+
-+	return 0;
-+out:
-+	return 1;
-+}
 -- 
-2.22.0
+Jens Axboe
 
