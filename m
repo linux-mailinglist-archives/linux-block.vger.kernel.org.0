@@ -2,63 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86554D8389
-	for <lists+linux-block@lfdr.de>; Wed, 16 Oct 2019 00:21:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5ABED8383
+	for <lists+linux-block@lfdr.de>; Wed, 16 Oct 2019 00:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389311AbfJOWV4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Oct 2019 18:21:56 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35956 "EHLO
+        id S1731275AbfJOWVL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Oct 2019 18:21:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38210 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfJOWVz (ORCPT
+        with ESMTP id S1726417AbfJOWVK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:21:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so21891758ljj.3
-        for <linux-block@vger.kernel.org>; Tue, 15 Oct 2019 15:21:54 -0700 (PDT)
+        Tue, 15 Oct 2019 18:21:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so21906577ljj.5
+        for <linux-block@vger.kernel.org>; Tue, 15 Oct 2019 15:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=d/Zz9M4vXV5ymfLbgnz4oj5mAYZiyyFZ4Ij6h9abXFA=;
-        b=AlIXJO/ZLBv/p7d/ORSQnj90qcyxXZ/L4tcwMN1ksd4hi9eaymWS714WViotqQRLhk
-         vIRHrilEHfQt3hkm1+JjO4o2Ud7MKCdkuXafJuo44Fo4GYyzQ/9AmESct2Xx7IfOK7Ok
-         haqnjvvfI/PnFSGBeuzLe9ZId2U0u1ulJkPj0=
+        bh=igJfeABa6M5mmcDSZ9XAWyfxDlpeT34TBKS5Vu4WYQ8=;
+        b=LIYdbK/WEFGMNdD+uIGw2BasCdPDikOSk/1C31c/6KJAoWeweWvBbkEnJF4PHN8TkH
+         BgZdUCf/ZYXj115hlOqd/koyMkdZG6Il9yGalmukOiV4kTIOYCVZSlLQpLqR2NWtyVYg
+         nGZ/n1OZmV0DBw+aQ4pzCSwYlzFEdDM+SUZEQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=d/Zz9M4vXV5ymfLbgnz4oj5mAYZiyyFZ4Ij6h9abXFA=;
-        b=JfmUN9mQobe80Fo/ocs39YFcnwpsO82bXNI2eAIUP2Q4CJi63u4XVKG8UlEBEzeO05
-         GdL5rBrAn12rer2gYq4zeGx/mD5qsvS/ayY5NJX0BMZO4+8oSrHcurN0oFkwKhKkeUSM
-         V47el55ZklVu0luVMLzXwMxL7CLWH4K765uFJbGIi0ppwS3zV0LHtbaqf9fQIkdjjKjS
-         N5QPpURqxlvUPxzjZM9ueNYY3LMejdpK+bUxjhiUWsWrSsUqIAp83ZkETF+UcDN4tGRK
-         wvpz7NWSflAW0Z1P9swe09ZjmUx464xUGpbw2b3A90CcQlSHJga8QatoXKxPEcTnIDVd
-         59cg==
-X-Gm-Message-State: APjAAAW6JNalN240d+GljxJdWInvvCouhc/mPlY2eIIzejZzOI3xrjEU
-        Dj72H58sflVG/qtCb0w3aPBu+WS0fs8=
-X-Google-Smtp-Source: APXvYqzOI70mfvwP6mAH/Dn+VfKEaAZCeT4o2iGW3Yb1b7m5/LEzVguaRPf3JSIOGAIIrx34dbPrVA==
-X-Received: by 2002:a2e:970b:: with SMTP id r11mr22949227lji.56.1571178113487;
-        Tue, 15 Oct 2019 15:21:53 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id m15sm5818991ljg.97.2019.10.15.15.21.53
+        bh=igJfeABa6M5mmcDSZ9XAWyfxDlpeT34TBKS5Vu4WYQ8=;
+        b=LkyqbqKxLwEfJLtUqelozIGtmTzqkj7/DNx+SN4TpQ74CsJpTRiSky8p4sfSV9JodB
+         9gB+OxOMwGdkTE8qnSZIgYuwpx5VAL/VZt4cy5WBqPnfXFhj6O1xgRgr5URE1egHzr1w
+         zd42dEq0qbHbQye80F+XYV9LoFFpo+u/XTtXlHq+VpdhbywNcDG9IJnF8+XMiccMYxAd
+         peGbAgzfG5YcyNIWSTd7VxhBVShu0Zh2aKUQxj02F9Qbh4Y9AoFs9pN07ICN6+94aZ5D
+         lRoWLTh7ulwEOQjoaSYyuTRTw0+qsB3wFXbEZc3IJUxKvyYXMSzrqlvf5Hx8LCCXSzMp
+         r45Q==
+X-Gm-Message-State: APjAAAXZKpZpaRw9wfWHT9WwharCOWnipiw4Pcn7kMBQpw9B0ZfBFJvm
+        SJBt1D5knBowjsvmLtnBfDW5RZXdGj0=
+X-Google-Smtp-Source: APXvYqyt7qaEjj0gg5ZzicDkWwLZug8qXKMb8ouEcxcOAdNmrIZeVTMbWQuE/7tV+3fgux4oc0HYKg==
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr23366634ljk.152.1571178066756;
+        Tue, 15 Oct 2019 15:21:06 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id y4sm5542755ljd.82.2019.10.15.15.21.03
         for <linux-block@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 15:21:53 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id n14so21855623ljj.10
-        for <linux-block@vger.kernel.org>; Tue, 15 Oct 2019 15:21:53 -0700 (PDT)
-X-Received: by 2002:a2e:6a04:: with SMTP id f4mr23595993ljc.97.1571177667184;
- Tue, 15 Oct 2019 15:14:27 -0700 (PDT)
+        Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id r2so15701612lfn.8
+        for <linux-block@vger.kernel.org>; Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr22573654lfl.134.1571178063150;
+ Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
 MIME-Version: 1.0
 References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
- <157117608708.15019.1998141309054662114.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157117608708.15019.1998141309054662114.stgit@warthog.procyon.org.uk>
+ <157117614109.15019.15677943675625422728.stgit@warthog.procyon.org.uk>
+In-Reply-To: <157117614109.15019.15677943675625422728.stgit@warthog.procyon.org.uk>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 15 Oct 2019 15:14:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whiz1sHXu8SVZKEC2dup=r5JMrftPtEt6ff9Ea8dyH8yQ@mail.gmail.com>
-Message-ID: <CAHk-=whiz1sHXu8SVZKEC2dup=r5JMrftPtEt6ff9Ea8dyH8yQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/21] Add a prelocked wake-up
-To:     David Howells <dhowells@redhat.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>
+Date:   Tue, 15 Oct 2019 15:20:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wivjB8Va7K_eK_fx+Z1vpbJ82DW=eVfyP33ZDusaK44EA@mail.gmail.com>
+Message-ID: <CAHk-=wivjB8Va7K_eK_fx+Z1vpbJ82DW=eVfyP33ZDusaK44EA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] pipe: Check for ring full inside of the
+ spinlock in pipe_write()
+To:     David Howells <dhowells@redhat.com>
 Cc:     Casey Schaufler <casey@schaufler-ca.com>,
         Stephen Smalley <sds@tycho.nsa.gov>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,39 +75,13 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 2:48 PM David Howells <dhowells@redhat.com> wrote:
+On Tue, Oct 15, 2019 at 2:49 PM David Howells <dhowells@redhat.com> wrote:
 >
-> Add a wakeup call for a case whereby the caller already has the waitqueue
-> spinlock held.
+> +                       if (head - pipe->tail == buffers) {
 
-That naming is crazy.
+Can we just have helper inline functions for these things?
 
-We already have helper functions like this, and they are just called
-"wake_up_locked()".
+You describe them in the commit message of 03/21 (good), but it would
+be even better if the code was just self-describing..
 
-So the "prelocked" naming is just odd. Make it be
-wake_up_interruptible_sync_poll_locked().
-
-The helper function should likely be
-
-  void __wake_up_locked_sync_key(struct wait_queue_head *wq_head,
-unsigned int mode, void *key)
-  {
-        __wake_up_common(wq_head, mode, 1, WF_SYNC, key, NULL);
-  }
-  EXPORT_SYMBOL_GPL(__wake_up_locked_sync_key);
-
-to match the other naming patterns there.
-
-[ Unrelated ]
-
-Looking at that mess of functions, I also wonder if we should try to
-just remove the bookmark code again. It was cute, and it was useful,
-but I think the problem with the page lock list may have been fixed by
-commit 9a1ea439b16b ("mm: put_and_wait_on_page_locked() while page is
-migrated") which avoids the retry condition with
-migrate_page_move_mapping().
-
-Tim/Kan? Do you have the problematic load still?
-
-              Linus
+           Linus
