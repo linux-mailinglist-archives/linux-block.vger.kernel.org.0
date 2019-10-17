@@ -2,103 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63358DB8F3
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2088DB903
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395254AbfJQV1h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Oct 2019 17:27:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40022 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391137AbfJQV1h (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:27:37 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5738259465;
-        Thu, 17 Oct 2019 21:27:37 +0000 (UTC)
-Received: from rh2.redhat.com (ovpn-125-4.rdu2.redhat.com [10.10.125.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C30600C4;
-        Thu, 17 Oct 2019 21:27:36 +0000 (UTC)
-From:   Mike Christie <mchristi@redhat.com>
-To:     nbd@other.debian.org, rjones@redhat.com, ebiggers@kernel.org,
-        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>,
-        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
-Subject: [PATCH] nbd: verify socket is supported during setup
-Date:   Thu, 17 Oct 2019 16:27:34 -0500
-Message-Id: <20191017212734.10778-1-mchristi@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 17 Oct 2019 21:27:37 +0000 (UTC)
+        id S1732272AbfJQV3S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Oct 2019 17:29:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41809 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503626AbfJQV3G (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:29:06 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t10so1746980plr.8
+        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=tMeBvPAu/snFk/ZPJWMF475l7uZR3V3Ts1VuHVs/VKw=;
+        b=NLu/eh3BWYTcxSFuHGsdclWdtfMJT0RPjUDj6O5pS4MGhEn3zHAkNItvNhrYPVoYJh
+         rNuJ4g57itm5nkqCm1dYE76Lw1+jH03fm0WAwEb8eOvfELFpBrvxQ3kJ1D7gJ33P8vN8
+         IO4gzbRNkjJZM1dPT4vmGkYjE1JijsUXYqLDPvmFSgZIquw0peU6TxBS4zlj6tyVOX9r
+         Qy4d25g/gKSYibLcAdCJiVwjRy7b16STj7rUijFQxFKlMoulT6YVtDNHMKs5il1gC7df
+         u6zjmqEieBy2n8JWuBTgrkefLDWCyG+nx3eoTiFBZggT4CONZf2VEHmnIDBtOsGSd5A1
+         gUiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tMeBvPAu/snFk/ZPJWMF475l7uZR3V3Ts1VuHVs/VKw=;
+        b=HfxUXyI6TxdnTRLI2oLBXwdcEL2kx+0y9j4goA/dt3ktC9luA77bkNR5ex/kjHJ2Je
+         q7YpPHD52afkdmN3AYB2a1dKAb/vC5vf2c+ivUzi36/25YNIE3vgp2cQT4xWAct5/0WA
+         jzFs20tb2NcapT/4iGFueJyMqp0v1ZKT5lf4mBdCTiCmY11ZQWAhu5uSMEO0QK5LLv9s
+         q474lHeGwICNNuNr78NIcVLzn16z0uc+WBq4fGa4nl3wSExIyNAFbCnSIevkSK9U9VHv
+         YmUNU/k0+u072Smbvl9EfK/UflBU3SSUqnfa4oGHrFLh8jChVEIdNIfxQoksWHVoSDsw
+         4oog==
+X-Gm-Message-State: APjAAAWIucpAeo0ZjqObv0jeepTI0vtypZCYaXcq8fVd8BFTl1SGhA3A
+        ZAx46aMDrNqVrrQupYvN8Zan5FosU91XjA==
+X-Google-Smtp-Source: APXvYqzH19pzf1njnqDSZUlOEXjG7OVdD3B2eEfJIrre2dWVOCMwE4Y23nsYa+FocLtp8QtjpHqwTw==
+X-Received: by 2002:a17:902:a618:: with SMTP id u24mr6057295plq.112.1571347744548;
+        Thu, 17 Oct 2019 14:29:04 -0700 (PDT)
+Received: from x1.thefacebook.com ([2620:10d:c090:180::e2ce])
+        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 14:29:03 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org
+Cc:     davem@davemloft.net, netdev@vger.kernel.org
+Subject: [PATCHSET] io_uring: add support for accept(4)
+Date:   Thu, 17 Oct 2019 15:28:55 -0600
+Message-Id: <20191017212858.13230-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-nbd requires socket families to support the shutdown method so the nbd
-recv workqueue can be woken up from its sock_recvmsg call. If the socket
-does not support the callout we will leave recv works running or get hangs
-later when the device or module is removed.
+This series adds support for applications doing async accept()
+through io_uring.
 
-This adds a check during socket connection/reconnection to make sure the
-socket being passed in supports the needed callout.
+Patch 1 is just a prep patch, adding support for inheriting a process
+file table for commands.
 
-Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Mike Christie <mchristi@redhat.com>
----
- drivers/block/nbd.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+Patch 2 abstracts out __sys_accept4_file(), which is the same as
+__sys_accept4(), except it takes a struct file and extra file flags.
+Should not have any functional changes.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 478aa86fc1f2..7bd9e92f6bb7 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -972,6 +972,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	return ret;
- }
- 
-+static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
-+				     int *err)
-+{
-+	struct socket *sock;
-+
-+	*err = 0;
-+	sock = sockfd_lookup(fd, err);
-+	if (!sock)
-+		return NULL;
-+
-+	if (sock->ops->shutdown == sock_no_shutdown) {
-+		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
-+	return sock;
-+}
-+
- static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 			  bool netlink)
- {
-@@ -981,7 +1000,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 	struct nbd_sock *nsock;
- 	int err;
- 
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
- 
-@@ -1033,7 +1052,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
- 	int i;
- 	int err;
- 
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
- 
+And finally patch 3 adds support for IORING_OP_ACCEPT. sqe->fd is
+the file descriptor, sqe->addr holds a pointer to struct sockaddr,
+sqe->addr2 holds a pointer to socklen_t, and finally sqe->accept_flags
+holds the flags for accept(4).
+
+The series is against my for-5.5/io_uring tree, and also exists
+as a for-5.5/io_uring-test branch. I've got a test case for this
+that I haven't pushed to liburing yet, will do so shortly.
+
+ fs/io_uring.c                 | 56 ++++++++++++++++++++++++++++--
+ include/linux/socket.h        |  3 ++
+ include/uapi/linux/io_uring.h |  7 +++-
+ net/socket.c                  | 65 ++++++++++++++++++++++-------------
+ 4 files changed, 103 insertions(+), 28 deletions(-)
+
 -- 
-2.20.1
+Jens Axboe
+
 
