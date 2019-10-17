@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDC2DB8FF
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC10DB902
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503664AbfJQV3L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Oct 2019 17:29:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39388 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503654AbfJQV3K (ORCPT
+        id S2503669AbfJQV3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Oct 2019 17:29:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46515 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503659AbfJQV3M (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:29:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v4so2440386pff.6
-        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:10 -0700 (PDT)
+        Thu, 17 Oct 2019 17:29:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so2426340pfg.13
+        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=t/7vAwNRes/OgSWHDpsbdJG9hBx8gt3i+4E5Djauy08=;
-        b=fL/x/mF0mKRLsVdh+dTKxKht0va6UZTptQijstDQ+mxE+lCA1zJctEyFbJr4ZUr+gW
-         4gapsi0HxqSDjYfpJkRzfarcajQPqxe60/hKp9nfil6uBJRunxv79YdmKYJP6oT+e+qB
-         2Otk4ugVGzFYcr6i6yqzC9VQP6W8wjQ+mUmvm5gWPV1dIp4C0fs+ejMrlQqhZ/nVtSLT
-         3M/VS7nMXGNwFPa1EYwt7GWtomVU3RoeGX5nTBwlsHy7rfB36fiPFmPTR+eIsGGq7z76
-         mT2aNP4IsQWJtUIOpxsxFyI0kj16+JfsRBf/0gzcHBuvPlu0KT+w+RWxTbWHdHfxtG6s
-         m3SQ==
+        bh=doYdHShm7Cj6c5yy0xMLHFKPEk8aJtR5YML+JUnmtX8=;
+        b=hPSBkvGihBWMfS/THlqQxutH+w1AuaWzHDziJJpI2bdMNmcS9hr71S7mmR59eGs6tO
+         m+lypp2NuuiH6ZEKSdXFuXQmhwpCT4hHn2SnqGc/h00eWTlsYA9+hXmUNTV2byEWJOdw
+         erCSC+bcyauQNJHW1EnbnfqdleE2R7/boxRATJz8tnhrn/8jYRhx0QFoaJ4iVg9YNxxo
+         gyNEC9Nr+vGrAGYjna0SYqIptcQ6CeZ+mrTsIuNlZSHsmAJd/tkpgaTYq+Xoa3hftBkB
+         PgVrtlzpfPdDuBZTRJYhkH24W3SEeJyJmQwKvhJZerHEMVfhwBhm9c5V93wEAKC6hoUI
+         yPBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=t/7vAwNRes/OgSWHDpsbdJG9hBx8gt3i+4E5Djauy08=;
-        b=NIgQ2M/fwCMA2bgo5Bn6n7YWJqDS0etDB5BQAZtEBO3oswZZIlQjLeSV1SFPPnld3z
-         3ONd9RItYRBeX/+dXIwy9s7/jAAKhs1v9rHiwKIdvWbM0WC8G6Q0EAhBxAMKd11mmXDE
-         9jz9aeUvDVgQFcedyHo0DJpqJWbRqjVJOU8iHktaHF3ZU5RIycgJr2nJXfwu+qXhGfhz
-         sNCLnY0yqVWVrbtpzJwce6RQ4yToz2K8o/JtpEPwYJ0FiUpLBiUF573aTUyHvcpA7dwi
-         YNxLprENJEeGIlMo3mSFaDd2LwN+ObCPsWvCDAmiJx8g0tpDIq4haI5x+MyzhhDlpaop
-         wVBQ==
-X-Gm-Message-State: APjAAAXQHEzt4SAXoRRQ2My/CItYSNzQf7vpSK7HD5luDVHsJh/oN+GV
-        0NVVlc/Jr8ZbOB5y7KAubMAh13QMfEtBog==
-X-Google-Smtp-Source: APXvYqw65pCCcLYeaf21mep1NwRzBJTCNVlFgTO5nxL3xO5V1yrj/5N6zT0zFBgarGPJ//ENeBWVpQ==
-X-Received: by 2002:a17:90a:6508:: with SMTP id i8mr6863936pjj.44.1571347749177;
-        Thu, 17 Oct 2019 14:29:09 -0700 (PDT)
+        bh=doYdHShm7Cj6c5yy0xMLHFKPEk8aJtR5YML+JUnmtX8=;
+        b=WEhXdkylZeIwkWecjaw+Ph2ZP9CK5/52CUSt2EewzbtI3j7ulE1J1dcMIkSXaBO2ii
+         x6NuWkHQe4NlSc6JzMTSql6PyoohJ28sZBuoBUIpuXMATdLkOsop10uw7NFLlEzZs8uq
+         HYsSdE2Ev3zaIVFwlyJT0jXehUN6+pcUe4c+xsreMx2jJHTCUDMGrx40Z4KEkSa5MSVw
+         /xJo5j3a2lJC6iZIOM3OzxgSLq6NVPxOmqikHsN/pY0MCyNYPnCeIOEZF4lMncMGB0K/
+         IDY4zQOaaabJTDqtnDcXOwlEiRWvZsM3hdNPgNLYqA4pAkR9A1wsTITv24ehftA16U7J
+         O2kQ==
+X-Gm-Message-State: APjAAAWeJiIKin2ag24XDAUUpk8MidBVwUjFvBS/n4smoq0dUa3u28Kd
+        qjLodtXWDG12glxcLnjXr2wNIPnk+vJo4g==
+X-Google-Smtp-Source: APXvYqyEn7Tz/OO0FGVOq3vwqrkRJjAra9c1NDd8sbbDTq7xFSlmrOLUotkwy3IcJD1TD48GEh9BrQ==
+X-Received: by 2002:a17:90a:17e1:: with SMTP id q88mr6872814pja.134.1571347751462;
+        Thu, 17 Oct 2019 14:29:11 -0700 (PDT)
 Received: from x1.thefacebook.com ([2620:10d:c090:180::e2ce])
-        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.06
+        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 14:29:08 -0700 (PDT)
+        Thu, 17 Oct 2019 14:29:10 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     davem@davemloft.net, netdev@vger.kernel.org,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 2/3] net: add __sys_accept4_file() helper
-Date:   Thu, 17 Oct 2019 15:28:57 -0600
-Message-Id: <20191017212858.13230-3-axboe@kernel.dk>
+Subject: [PATCH 3/3] io_uring: add support for IORING_OP_ACCEPT
+Date:   Thu, 17 Oct 2019 15:28:58 -0600
+Message-Id: <20191017212858.13230-4-axboe@kernel.dk>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191017212858.13230-1-axboe@kernel.dk>
 References: <20191017212858.13230-1-axboe@kernel.dk>
@@ -59,157 +59,101 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is identical to __sys_accept4(), except it takes a struct file
-instead of an fd, and it also allows passing in extra file->f_flags
-flags. The latter is done to support masking in O_NONBLOCK without
-manipulating the original file flags.
+This allows an application to call accept4() in an async fashion. Like
+other opcodes, we first try a non-blocking accept, then punt to async
+context if we have to.
 
-No functional changes in this patch.
-
-Cc: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- include/linux/socket.h |  3 ++
- net/socket.c           | 65 ++++++++++++++++++++++++++----------------
- 2 files changed, 44 insertions(+), 24 deletions(-)
+ fs/io_uring.c                 | 35 +++++++++++++++++++++++++++++++++++
+ include/uapi/linux/io_uring.h |  7 ++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index fc0bed59fc84..dd061f741bc1 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -392,6 +392,9 @@ extern int __sys_recvfrom(int fd, void __user *ubuf, size_t size,
- extern int __sys_sendto(int fd, void __user *buff, size_t len,
- 			unsigned int flags, struct sockaddr __user *addr,
- 			int addr_len);
-+extern int __sys_accept4_file(struct file *file, unsigned file_flags,
-+			struct sockaddr __user *upeer_sockaddr,
-+			 int __user *upeer_addrlen, int flags);
- extern int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
- 			 int __user *upeer_addrlen, int flags);
- extern int __sys_socket(int family, int type, int protocol);
-diff --git a/net/socket.c b/net/socket.c
-index 6a9ab7a8b1d2..40ab39f6c5d8 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1690,24 +1690,13 @@ SYSCALL_DEFINE2(listen, int, fd, int, backlog)
- 	return __sys_listen(fd, backlog);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ad462237275e..8d183a6b08d4 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1694,6 +1694,38 @@ static int io_recvmsg(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ #endif
  }
  
--/*
-- *	For accept, we attempt to create a new socket, set up the link
-- *	with the client, wake up the client, then return the new
-- *	connected fd. We collect the address of the connector in kernel
-- *	space and move it to user at the very end. This is unclean because
-- *	we open the socket then return an error.
-- *
-- *	1003.1g adds the ability to recvmsg() to query connection pending
-- *	status to recvmsg. We need to add that support in a way thats
-- *	clean when we restructure accept also.
-- */
--
--int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
--		  int __user *upeer_addrlen, int flags)
-+int __sys_accept4_file(struct file *file, unsigned file_flags,
-+		       struct sockaddr __user *upeer_sockaddr,
-+		       int __user *upeer_addrlen, int flags)
- {
- 	struct socket *sock, *newsock;
- 	struct file *newfile;
--	int err, len, newfd, fput_needed;
-+	int err, len, newfd;
- 	struct sockaddr_storage address;
- 
- 	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
-@@ -1716,14 +1705,14 @@ int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
- 	if (SOCK_NONBLOCK != O_NONBLOCK && (flags & SOCK_NONBLOCK))
- 		flags = (flags & ~SOCK_NONBLOCK) | O_NONBLOCK;
- 
--	sock = sockfd_lookup_light(fd, &err, &fput_needed);
-+	sock = sock_from_file(file, &err);
- 	if (!sock)
- 		goto out;
- 
- 	err = -ENFILE;
- 	newsock = sock_alloc();
- 	if (!newsock)
--		goto out_put;
-+		goto out;
- 
- 	newsock->type = sock->type;
- 	newsock->ops = sock->ops;
-@@ -1738,20 +1727,21 @@ int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
- 	if (unlikely(newfd < 0)) {
- 		err = newfd;
- 		sock_release(newsock);
--		goto out_put;
-+		goto out;
- 	}
- 	newfile = sock_alloc_file(newsock, flags, sock->sk->sk_prot_creator->name);
- 	if (IS_ERR(newfile)) {
- 		err = PTR_ERR(newfile);
- 		put_unused_fd(newfd);
--		goto out_put;
-+		goto out;
- 	}
- 
- 	err = security_socket_accept(sock, newsock);
- 	if (err)
- 		goto out_fd;
- 
--	err = sock->ops->accept(sock, newsock, sock->file->f_flags, false);
-+	err = sock->ops->accept(sock, newsock, sock->file->f_flags | file_flags,
-+					false);
- 	if (err < 0)
- 		goto out_fd;
- 
-@@ -1772,15 +1762,42 @@ int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
- 
- 	fd_install(newfd, newfile);
- 	err = newfd;
--
--out_put:
--	fput_light(sock->file, fput_needed);
- out:
- 	return err;
- out_fd:
- 	fput(newfile);
- 	put_unused_fd(newfd);
--	goto out_put;
-+	goto out;
++static int io_accept(struct io_kiocb *req, const struct io_uring_sqe *sqe,
++		     struct io_kiocb **nxt, bool force_nonblock)
++{
++#if defined(CONFIG_NET)
++	struct sockaddr __user *addr;
++	int __user *addr_len;
++	unsigned file_flags;
++	int flags, ret;
 +
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
++
++	addr = (struct sockaddr __user *) READ_ONCE(sqe->addr);
++	addr_len = (int __user *) READ_ONCE(sqe->addr2);
++	flags = READ_ONCE(sqe->accept_flags);
++	file_flags = force_nonblock ? O_NONBLOCK : 0;
++
++	ret = __sys_accept4_file(req->file, file_flags, addr, addr_len, flags);
++	if (ret == -EAGAIN && force_nonblock) {
++		req->flags |= REQ_F_NEED_FILES;
++		return -EAGAIN;
++	}
++	if (ret < 0 && (req->flags & REQ_F_LINK))
++		req->flags |= REQ_F_FAIL_LINK;
++	io_cqring_add_event(req->ctx, sqe->user_data, ret);
++	io_put_req(req, nxt);
++	return 0;
++#else
++	return -EOPNOTSUPP;
++#endif
 +}
 +
-+/*
-+ *	For accept, we attempt to create a new socket, set up the link
-+ *	with the client, wake up the client, then return the new
-+ *	connected fd. We collect the address of the connector in kernel
-+ *	space and move it to user at the very end. This is unclean because
-+ *	we open the socket then return an error.
-+ *
-+ *	1003.1g adds the ability to recvmsg() to query connection pending
-+ *	status to recvmsg. We need to add that support in a way thats
-+ *	clean when we restructure accept also.
-+ */
-+
-+int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
-+		  int __user *upeer_addrlen, int flags)
-+{
-+	int ret = -EBADF;
-+	struct fd f;
-+
-+	f = fdget(fd);
-+	if (f.file) {
-+		ret = __sys_accept4_file(f.file, 0, upeer_sockaddr,
-+						upeer_addrlen, flags);
-+		if (f.flags)
-+			fput(f.file);
-+	}
-+
-+	return ret;
- }
+ static void io_poll_remove_one(struct io_kiocb *req)
+ {
+ 	struct io_poll_iocb *poll = &req->poll;
+@@ -2144,6 +2176,9 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	case IORING_OP_TIMEOUT_REMOVE:
+ 		ret = io_timeout_remove(req, s->sqe);
+ 		break;
++	case IORING_OP_ACCEPT:
++		ret = io_accept(req, s->sqe, nxt, force_nonblock);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 6dc5ced1c37a..f82d90e617a6 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -19,7 +19,10 @@ struct io_uring_sqe {
+ 	__u8	flags;		/* IOSQE_ flags */
+ 	__u16	ioprio;		/* ioprio for the request */
+ 	__s32	fd;		/* file descriptor to do IO on */
+-	__u64	off;		/* offset into file */
++	union {
++		__u64	off;	/* offset into file */
++		__u64	addr2;
++	};
+ 	__u64	addr;		/* pointer to buffer or iovecs */
+ 	__u32	len;		/* buffer size or number of iovecs */
+ 	union {
+@@ -29,6 +32,7 @@ struct io_uring_sqe {
+ 		__u32		sync_range_flags;
+ 		__u32		msg_flags;
+ 		__u32		timeout_flags;
++		__u32		accept_flags;
+ 	};
+ 	__u64	user_data;	/* data to be passed back at completion time */
+ 	union {
+@@ -65,6 +69,7 @@ struct io_uring_sqe {
+ #define IORING_OP_RECVMSG	10
+ #define IORING_OP_TIMEOUT	11
+ #define IORING_OP_TIMEOUT_REMOVE	12
++#define IORING_OP_ACCEPT	13
  
- SYSCALL_DEFINE4(accept4, int, fd, struct sockaddr __user *, upeer_sockaddr,
+ /*
+  * sqe->fsync_flags
 -- 
 2.17.1
 
