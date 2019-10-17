@@ -2,158 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DC10DB902
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EF92DBA27
+	for <lists+linux-block@lfdr.de>; Fri, 18 Oct 2019 01:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503669AbfJQV3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Oct 2019 17:29:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46515 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503659AbfJQV3M (ORCPT
+        id S2389107AbfJQX22 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Oct 2019 19:28:28 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:33063 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441686AbfJQX21 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:29:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so2426340pfg.13
-        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:12 -0700 (PDT)
+        Thu, 17 Oct 2019 19:28:27 -0400
+Received: by mail-pg1-f182.google.com with SMTP id i76so2257338pgc.0
+        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 16:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=doYdHShm7Cj6c5yy0xMLHFKPEk8aJtR5YML+JUnmtX8=;
-        b=hPSBkvGihBWMfS/THlqQxutH+w1AuaWzHDziJJpI2bdMNmcS9hr71S7mmR59eGs6tO
-         m+lypp2NuuiH6ZEKSdXFuXQmhwpCT4hHn2SnqGc/h00eWTlsYA9+hXmUNTV2byEWJOdw
-         erCSC+bcyauQNJHW1EnbnfqdleE2R7/boxRATJz8tnhrn/8jYRhx0QFoaJ4iVg9YNxxo
-         gyNEC9Nr+vGrAGYjna0SYqIptcQ6CeZ+mrTsIuNlZSHsmAJd/tkpgaTYq+Xoa3hftBkB
-         PgVrtlzpfPdDuBZTRJYhkH24W3SEeJyJmQwKvhJZerHEMVfhwBhm9c5V93wEAKC6hoUI
-         yPBw==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=SM2pGjs7eERwodoor6ExqPgfO/oST5cuHUExEmzvoj4=;
+        b=Vtx1dqyNHmC7TZ2gAunIg7QjUSP20NnMBF3dCIFwRL9Kt5DD0DbN8gMTTsMG7KSuqu
+         4eMxCtz2RthI09mdvcWyJlssoVNxTekL36N6B6PNe5Mb60ZXjz4z+6qs4Bw/8wKbvw/K
+         eQ9jmkHfWKrzs+wzBalykK2boOje6VniqeTmAgJ9SdwRGTnI5fcfWdef7CXQAgXZRFOJ
+         y4SqfucKfWcYuc8fqE9X9jPBtXzq6T3eZkUrOANIz8VXFBDV8/PMLFKrxS5X07WSabFs
+         0BMr6tFPNUQ7PYuq6TDZKeUA0i3ZY0RdfbVwXx3Oee5rYFA+Ge7sA5nJH+PokIEoUVeK
+         mLIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=doYdHShm7Cj6c5yy0xMLHFKPEk8aJtR5YML+JUnmtX8=;
-        b=WEhXdkylZeIwkWecjaw+Ph2ZP9CK5/52CUSt2EewzbtI3j7ulE1J1dcMIkSXaBO2ii
-         x6NuWkHQe4NlSc6JzMTSql6PyoohJ28sZBuoBUIpuXMATdLkOsop10uw7NFLlEzZs8uq
-         HYsSdE2Ev3zaIVFwlyJT0jXehUN6+pcUe4c+xsreMx2jJHTCUDMGrx40Z4KEkSa5MSVw
-         /xJo5j3a2lJC6iZIOM3OzxgSLq6NVPxOmqikHsN/pY0MCyNYPnCeIOEZF4lMncMGB0K/
-         IDY4zQOaaabJTDqtnDcXOwlEiRWvZsM3hdNPgNLYqA4pAkR9A1wsTITv24ehftA16U7J
-         O2kQ==
-X-Gm-Message-State: APjAAAWeJiIKin2ag24XDAUUpk8MidBVwUjFvBS/n4smoq0dUa3u28Kd
-        qjLodtXWDG12glxcLnjXr2wNIPnk+vJo4g==
-X-Google-Smtp-Source: APXvYqyEn7Tz/OO0FGVOq3vwqrkRJjAra9c1NDd8sbbDTq7xFSlmrOLUotkwy3IcJD1TD48GEh9BrQ==
-X-Received: by 2002:a17:90a:17e1:: with SMTP id q88mr6872814pja.134.1571347751462;
-        Thu, 17 Oct 2019 14:29:11 -0700 (PDT)
-Received: from x1.thefacebook.com ([2620:10d:c090:180::e2ce])
-        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 14:29:10 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SM2pGjs7eERwodoor6ExqPgfO/oST5cuHUExEmzvoj4=;
+        b=uBifV93LD0UG8BbTUHBFqTpwl7R1p3JHsUhxcJettS8kB57tts3z06Mf/z93WUrssb
+         SVNWj3xmcMgiIUpY0gWW4AFQza/JqBADYL/EfBnHFA8tfptMEX5SovZHgB889cqDZ60D
+         H1T6lYPFm9DU0V8t12p+aSd/gocwWekbCcdlmbgzeRxOPwFt3NIVxL4vFflDiTKUUPQz
+         6Enuo7RTS4fqIRQfTOHMrmQ/xHa29KG9G1QOk9sVwYladN3lC6ReT+1kWrP+Nlilm1ep
+         JHRs49o5YaqUwe15LU6MqkDHewtgcJdGyFwLrOlrAN4kbIqFYO+c4cuAYkGtBUwPECp/
+         fL+g==
+X-Gm-Message-State: APjAAAVQyUeX1j7SZzlEVoluoLrF0zFi2o+IdUD8lDbW71Q0aTVd5iya
+        BWrYdstBUrR7JkfipZ5hveFlUzJth+FHtw==
+X-Google-Smtp-Source: APXvYqyGBnJM7sHAQQQt+V7WXbqXjyjIYcJqz3FVVW6ixHXO0TqUAZk65aOlWairAN1zp788136AKw==
+X-Received: by 2002:a63:d916:: with SMTP id r22mr6870074pgg.46.1571354906212;
+        Thu, 17 Oct 2019 16:28:26 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c081:1132::1120? ([2620:10d:c090:180::9d76])
+        by smtp.gmail.com with ESMTPSA id t141sm5820247pfc.65.2019.10.17.16.28.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 16:28:25 -0700 (PDT)
+Subject: Re: [RFC v3] io_uring: add set of tracing events
+To:     Dmitrii Dolgov <9erthalion6@gmail.com>, linux-block@vger.kernel.org
+References: <20191015170201.27131-1-9erthalion6@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/3] io_uring: add support for IORING_OP_ACCEPT
-Date:   Thu, 17 Oct 2019 15:28:58 -0600
-Message-Id: <20191017212858.13230-4-axboe@kernel.dk>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191017212858.13230-1-axboe@kernel.dk>
-References: <20191017212858.13230-1-axboe@kernel.dk>
+Message-ID: <af0fc0a7-11cc-08e6-cdfd-6b55fc208c8f@kernel.dk>
+Date:   Thu, 17 Oct 2019 17:28:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191015170201.27131-1-9erthalion6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This allows an application to call accept4() in an async fashion. Like
-other opcodes, we first try a non-blocking accept, then punt to async
-context if we have to.
+On 10/15/19 11:02 AM, Dmitrii Dolgov wrote:
+> To trace io_uring activity one can get an information from workqueue and
+> io trace events, but looks like some parts could be hard to identify via
+> this approach. Making what happens inside io_uring more transparent is
+> important to be able to reason about many aspects of it, hence introduce
+> the set of tracing events.
+> 
+> All such events could be roughly divided into two categories:
+> 
+> * those, that are helping to understand correctness (from both kernel
+>    and an application point of view). E.g. a ring creation, file
+>    registration, or waiting for available CQE. Proposed approach is to
+>    get a pointer to an original structure of interest (ring context, or
+>    request), and then find relevant events. io_uring_queue_async_work
+>    also exposes a pointer to work_struct, to be able to track down
+>    corresponding workqueue events.
+> 
+> * those, that provide performance related information. Mostly it's about
+>    events that change the flow of requests, e.g. whether an async work
+>    was queued, or delayed due to some dependencies. Another important
+>    case is how io_uring optimizations (e.g. registered files) are
+>    utilized.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/io_uring.c                 | 35 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/io_uring.h |  7 ++++++-
- 2 files changed, 41 insertions(+), 1 deletion(-)
+Looks good to me, I've applied it for some testing. Thanks!
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index ad462237275e..8d183a6b08d4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1694,6 +1694,38 @@ static int io_recvmsg(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- #endif
- }
- 
-+static int io_accept(struct io_kiocb *req, const struct io_uring_sqe *sqe,
-+		     struct io_kiocb **nxt, bool force_nonblock)
-+{
-+#if defined(CONFIG_NET)
-+	struct sockaddr __user *addr;
-+	int __user *addr_len;
-+	unsigned file_flags;
-+	int flags, ret;
-+
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
-+
-+	addr = (struct sockaddr __user *) READ_ONCE(sqe->addr);
-+	addr_len = (int __user *) READ_ONCE(sqe->addr2);
-+	flags = READ_ONCE(sqe->accept_flags);
-+	file_flags = force_nonblock ? O_NONBLOCK : 0;
-+
-+	ret = __sys_accept4_file(req->file, file_flags, addr, addr_len, flags);
-+	if (ret == -EAGAIN && force_nonblock) {
-+		req->flags |= REQ_F_NEED_FILES;
-+		return -EAGAIN;
-+	}
-+	if (ret < 0 && (req->flags & REQ_F_LINK))
-+		req->flags |= REQ_F_FAIL_LINK;
-+	io_cqring_add_event(req->ctx, sqe->user_data, ret);
-+	io_put_req(req, nxt);
-+	return 0;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
-+}
-+
- static void io_poll_remove_one(struct io_kiocb *req)
- {
- 	struct io_poll_iocb *poll = &req->poll;
-@@ -2144,6 +2176,9 @@ static int __io_submit_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 	case IORING_OP_TIMEOUT_REMOVE:
- 		ret = io_timeout_remove(req, s->sqe);
- 		break;
-+	case IORING_OP_ACCEPT:
-+		ret = io_accept(req, s->sqe, nxt, force_nonblock);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 6dc5ced1c37a..f82d90e617a6 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -19,7 +19,10 @@ struct io_uring_sqe {
- 	__u8	flags;		/* IOSQE_ flags */
- 	__u16	ioprio;		/* ioprio for the request */
- 	__s32	fd;		/* file descriptor to do IO on */
--	__u64	off;		/* offset into file */
-+	union {
-+		__u64	off;	/* offset into file */
-+		__u64	addr2;
-+	};
- 	__u64	addr;		/* pointer to buffer or iovecs */
- 	__u32	len;		/* buffer size or number of iovecs */
- 	union {
-@@ -29,6 +32,7 @@ struct io_uring_sqe {
- 		__u32		sync_range_flags;
- 		__u32		msg_flags;
- 		__u32		timeout_flags;
-+		__u32		accept_flags;
- 	};
- 	__u64	user_data;	/* data to be passed back at completion time */
- 	union {
-@@ -65,6 +69,7 @@ struct io_uring_sqe {
- #define IORING_OP_RECVMSG	10
- #define IORING_OP_TIMEOUT	11
- #define IORING_OP_TIMEOUT_REMOVE	12
-+#define IORING_OP_ACCEPT	13
- 
- /*
-  * sqe->fsync_flags
 -- 
-2.17.1
+Jens Axboe
 
