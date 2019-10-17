@@ -2,85 +2,151 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2088DB903
-	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8506ADB8FE
+	for <lists+linux-block@lfdr.de>; Thu, 17 Oct 2019 23:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbfJQV3S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Oct 2019 17:29:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41809 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503626AbfJQV3G (ORCPT
+        id S2503660AbfJQV3K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Oct 2019 17:29:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38173 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503652AbfJQV3I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:29:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t10so1746980plr.8
-        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:05 -0700 (PDT)
+        Thu, 17 Oct 2019 17:29:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h195so2444264pfe.5
+        for <linux-block@vger.kernel.org>; Thu, 17 Oct 2019 14:29:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=tMeBvPAu/snFk/ZPJWMF475l7uZR3V3Ts1VuHVs/VKw=;
-        b=NLu/eh3BWYTcxSFuHGsdclWdtfMJT0RPjUDj6O5pS4MGhEn3zHAkNItvNhrYPVoYJh
-         rNuJ4g57itm5nkqCm1dYE76Lw1+jH03fm0WAwEb8eOvfELFpBrvxQ3kJ1D7gJ33P8vN8
-         IO4gzbRNkjJZM1dPT4vmGkYjE1JijsUXYqLDPvmFSgZIquw0peU6TxBS4zlj6tyVOX9r
-         Qy4d25g/gKSYibLcAdCJiVwjRy7b16STj7rUijFQxFKlMoulT6YVtDNHMKs5il1gC7df
-         u6zjmqEieBy2n8JWuBTgrkefLDWCyG+nx3eoTiFBZggT4CONZf2VEHmnIDBtOsGSd5A1
-         gUiA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=92CYtTRoYQ39d46k61SL6rtGzWXElvZP8rT1pbbx14I=;
+        b=drb8GIXsLGMmBXEwez6fklfxs4YzPgKuEtRwcZZj/pxkrrf1TdJuvM94qU90HWW3k6
+         tsjMmQ9PekHc61/M30oibRHORCDFGnxCrMU7avMUx9dndND6uNcIovXO605z4qCtD/SE
+         rHQbOrvxbPAUUe532OhbMl9X4Jf/QFdBq735dGzJRVuEiq5FgH53SmCGnR2J4Wm1aSGS
+         dw5nNouwe0WhfwLmjhnX4FSIxAQbGLbvclKixz85IRxfjD8UBbVFJwxNoCl9WuggMu/0
+         QcrwVNIWodhl0qaMjTx2mLnNbGZvoNMicRA6BJdaab9o05iARGWbb53/ZBu+nZy70+gg
+         vJRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tMeBvPAu/snFk/ZPJWMF475l7uZR3V3Ts1VuHVs/VKw=;
-        b=HfxUXyI6TxdnTRLI2oLBXwdcEL2kx+0y9j4goA/dt3ktC9luA77bkNR5ex/kjHJ2Je
-         q7YpPHD52afkdmN3AYB2a1dKAb/vC5vf2c+ivUzi36/25YNIE3vgp2cQT4xWAct5/0WA
-         jzFs20tb2NcapT/4iGFueJyMqp0v1ZKT5lf4mBdCTiCmY11ZQWAhu5uSMEO0QK5LLv9s
-         q474lHeGwICNNuNr78NIcVLzn16z0uc+WBq4fGa4nl3wSExIyNAFbCnSIevkSK9U9VHv
-         YmUNU/k0+u072Smbvl9EfK/UflBU3SSUqnfa4oGHrFLh8jChVEIdNIfxQoksWHVoSDsw
-         4oog==
-X-Gm-Message-State: APjAAAWIucpAeo0ZjqObv0jeepTI0vtypZCYaXcq8fVd8BFTl1SGhA3A
-        ZAx46aMDrNqVrrQupYvN8Zan5FosU91XjA==
-X-Google-Smtp-Source: APXvYqzH19pzf1njnqDSZUlOEXjG7OVdD3B2eEfJIrre2dWVOCMwE4Y23nsYa+FocLtp8QtjpHqwTw==
-X-Received: by 2002:a17:902:a618:: with SMTP id u24mr6057295plq.112.1571347744548;
-        Thu, 17 Oct 2019 14:29:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=92CYtTRoYQ39d46k61SL6rtGzWXElvZP8rT1pbbx14I=;
+        b=IlCa65lC0Jb9UW+buo5k0vS8o/RHqzaasIbbi8vTyZDNkbkMFvjzIX2eP3tbNua9ZN
+         39H9h7k9sXIbO6Uxg/V6S4BKZpemT0XFWAWLghlxh6DAungMaidx87pYPO/7ord393ck
+         NgKD0R8oOWQtb1un87ZrGHEwamGg3B0MdjHg4HBb2bcazUUwVARbIm1QCQX9OIRDF2IW
+         AAOcvNgUy3o5l6syr7gXdwnqAEJGf27Huhoavam7NQlIWAJIbeNEkXTyuRhqfLGs1znI
+         AztwVQzIR/z2UQGozyVOxtbDwpuQpIDZ/BpmhXGhZlTjgfW36Jym7u3138VMEaP/erW8
+         FLGw==
+X-Gm-Message-State: APjAAAVpI4Lq5DrNY2pptsaR1RAJen1xARzfEVnZoFwwkA7nf/f7i8b+
+        Mb6DgoYbqWSb58YqVC4hZvD2iUUbku7zZQ==
+X-Google-Smtp-Source: APXvYqwm6GLu+zFMnlkzYvu+ZSQTI4qYWKTk3BDgsOmRpNYNQA9qzo5v+4MOGw8e3K+rfAcgXcbalw==
+X-Received: by 2002:a17:90a:8c14:: with SMTP id a20mr6821770pjo.77.1571347746552;
+        Thu, 17 Oct 2019 14:29:06 -0700 (PDT)
 Received: from x1.thefacebook.com ([2620:10d:c090:180::e2ce])
-        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.01
+        by smtp.gmail.com with ESMTPSA id w6sm4296446pfw.84.2019.10.17.14.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 14:29:03 -0700 (PDT)
+        Thu, 17 Oct 2019 14:29:05 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
-Cc:     davem@davemloft.net, netdev@vger.kernel.org
-Subject: [PATCHSET] io_uring: add support for accept(4)
-Date:   Thu, 17 Oct 2019 15:28:55 -0600
-Message-Id: <20191017212858.13230-1-axboe@kernel.dk>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 1/3] io_uring: add support for async work inheriting files table
+Date:   Thu, 17 Oct 2019 15:28:56 -0600
+Message-Id: <20191017212858.13230-2-axboe@kernel.dk>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191017212858.13230-1-axboe@kernel.dk>
+References: <20191017212858.13230-1-axboe@kernel.dk>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This series adds support for applications doing async accept()
-through io_uring.
+This is in preparation for adding opcodes that need to modify files
+in a process file table, either adding new ones or closing old ones.
 
-Patch 1 is just a prep patch, adding support for inheriting a process
-file table for commands.
+If an opcode needs this, it must set REQ_F_NEED_FILES in the request
+structure. If work that needs to get punted to async context have this
+set, they will grab a reference to the process file table. When the
+work is completed, the reference is dropped again.
 
-Patch 2 abstracts out __sys_accept4_file(), which is the same as
-__sys_accept4(), except it takes a struct file and extra file flags.
-Should not have any functional changes.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ fs/io_uring.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-And finally patch 3 adds support for IORING_OP_ACCEPT. sqe->fd is
-the file descriptor, sqe->addr holds a pointer to struct sockaddr,
-sqe->addr2 holds a pointer to socklen_t, and finally sqe->accept_flags
-holds the flags for accept(4).
-
-The series is against my for-5.5/io_uring tree, and also exists
-as a for-5.5/io_uring-test branch. I've got a test case for this
-that I haven't pushed to liburing yet, will do so shortly.
-
- fs/io_uring.c                 | 56 ++++++++++++++++++++++++++++--
- include/linux/socket.h        |  3 ++
- include/uapi/linux/io_uring.h |  7 +++-
- net/socket.c                  | 65 ++++++++++++++++++++++-------------
- 4 files changed, 103 insertions(+), 28 deletions(-)
-
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 635856023fdf..ad462237275e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -267,10 +267,11 @@ struct io_ring_ctx {
+ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
++	bool				has_user : 1;
++	bool				in_async : 1;
++	bool				needs_fixed_file : 1;
+ 	u32				sequence;
+-	bool				has_user;
+-	bool				in_async;
+-	bool				needs_fixed_file;
++	struct files_struct		*files;
+ };
+ 
+ /*
+@@ -323,6 +324,7 @@ struct io_kiocb {
+ #define REQ_F_FAIL_LINK		256	/* fail rest of links */
+ #define REQ_F_SHADOW_DRAIN	512	/* link-drain shadow req */
+ #define REQ_F_TIMEOUT		1024	/* timeout request */
++#define REQ_F_NEED_FILES	2048	/* needs to assume file table */
+ 	u64			user_data;
+ 	u32			result;
+ 	u32			sequence;
+@@ -2191,6 +2193,7 @@ static inline bool io_sqe_needs_user(const struct io_uring_sqe *sqe)
+ static void io_sq_wq_submit_work(struct work_struct *work)
+ {
+ 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
++	struct files_struct *old_files = NULL;
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct mm_struct *cur_mm = NULL;
+ 	struct async_list *async_list;
+@@ -2220,6 +2223,10 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 				set_fs(USER_DS);
+ 			}
+ 		}
++		if (s->files && !old_files) {
++			old_files = current->files;
++			current->files = s->files;
++		}
+ 
+ 		if (!ret) {
+ 			s->has_user = cur_mm != NULL;
+@@ -2312,6 +2319,11 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+ 		unuse_mm(cur_mm);
+ 		mmput(cur_mm);
+ 	}
++	if (old_files) {
++		struct files_struct *files = current->files;
++		current->files = old_files;
++		put_files_struct(files);
++	}
+ }
+ 
+ /*
+@@ -2413,6 +2425,8 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 
+ 			s->sqe = sqe_copy;
+ 			memcpy(&req->submit, s, sizeof(*s));
++			if (req->flags & REQ_F_NEED_FILES)
++				req->submit.files = get_files_struct(current);
+ 			list = io_async_list_from_sqe(ctx, s->sqe);
+ 			if (!io_add_to_prev_work(list, req)) {
+ 				if (list)
+@@ -2633,6 +2647,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 		s->index = head;
+ 		s->sqe = &ctx->sq_sqes[head];
+ 		s->sequence = ctx->cached_sq_head;
++		s->files = NULL;
+ 		ctx->cached_sq_head++;
+ 		return true;
+ 	}
 -- 
-Jens Axboe
-
+2.17.1
 
