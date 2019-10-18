@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D94EDDD1B3
-	for <lists+linux-block@lfdr.de>; Sat, 19 Oct 2019 00:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B42C0DD354
+	for <lists+linux-block@lfdr.de>; Sat, 19 Oct 2019 00:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfJRWFW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Oct 2019 18:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        id S1733289AbfJRWHu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Oct 2019 18:07:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbfJRWFS (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:18 -0400
+        id S1733241AbfJRWHs (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647D9222D2;
-        Fri, 18 Oct 2019 22:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D95CE222D1;
+        Fri, 18 Oct 2019 22:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436317;
-        bh=o8P20wrNaZNXOqJF+YTebFW1ptiMmPp0UsImFpua9LQ=;
+        s=default; t=1571436467;
+        bh=7anIju3GzbRm18JdCkJS7Bg+9lKUk0OQ3BDxqqY5L24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hOi6OKOZyAfd3fQ4xIALDojORDcMCOL+lnIB6L0+vYbAVo4atc6LMcq6bi5d32vtB
-         pkMjAZOMTzODOeRG0ILTybSJ4IGkc9j78Ts8W+PCqrob/IGCaafawGJeYBT/Ln0JQb
-         JO3bv4YPr7tao2DyAte/fAhp0gcZIKDMXZUdrZa8=
+        b=Bu2c6ZrzQNAgR6iUWOCpixSD+B04Rsv6aarfMBTMe8KLw9q7Wx2uK/MQyVraFke2I
+         UH8guMLvzeUnMb6sox1lEzGI8oKUoucXPhGlKZnPbwVMg7ikEz2U9Bvk6HlqPLRrOf
+         G9ys6yR/f1qX27nunWHK5WhWXcguntLWaS2eoS90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xiubo Li <xiubli@redhat.com>, Mike Christie <mchristi@redhat.com>,
         Josef Bacik <josef@toxicpanda.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.3 85/89] nbd: fix possible sysfs duplicate warning
-Date:   Fri, 18 Oct 2019 18:03:20 -0400
-Message-Id: <20191018220324.8165-85-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 097/100] nbd: fix possible sysfs duplicate warning
+Date:   Fri, 18 Oct 2019 18:05:22 -0400
+Message-Id: <20191018220525.9042-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
-References: <20191018220324.8165-1-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,10 +72,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 0b727f7432f9e..bd164192045b0 100644
+index bc2fa4e85f0ca..d445195945618 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -230,8 +230,8 @@ static void nbd_put(struct nbd_device *nbd)
+@@ -228,8 +228,8 @@ static void nbd_put(struct nbd_device *nbd)
  	if (refcount_dec_and_mutex_lock(&nbd->refs,
  					&nbd_index_mutex)) {
  		idr_remove(&nbd_index_idr, nbd->index);
