@@ -2,272 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D25D8DEB25
-	for <lists+linux-block@lfdr.de>; Mon, 21 Oct 2019 13:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1E1DECD7
+	for <lists+linux-block@lfdr.de>; Mon, 21 Oct 2019 14:53:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfJULk5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Oct 2019 07:40:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43328 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbfJULk5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:40:57 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9CFA98614F2B7073ECD1;
-        Mon, 21 Oct 2019 19:40:53 +0800 (CST)
-Received: from localhost.localdomain (10.175.124.28) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 21 Oct 2019 19:40:43 +0800
-From:   yangerkun <yangerkun@huawei.com>
-To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-CC:     <yi.zhang@huawei.com>, <houtao1@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH liburing] Add test for overflow of timeout request's sequence
-Date:   Mon, 21 Oct 2019 20:02:17 +0800
-Message-ID: <20191021120217.31213-1-yangerkun@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        id S1726767AbfJUMxq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Oct 2019 08:53:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33837 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727256AbfJUMxq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:53:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571662424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z1ne9nHEe0n21mZZ0VzO+ppilu0NzYXp+z/uDCmekFQ=;
+        b=Duf//l38jLZt0UItFD7LS8ZPIvGXZads/8GYya73owK0NFIW4dY5oDqIPO0NZE8ldeheR+
+        AfIcxHFXR+4PJYWTA5LFs3u/qY6Ych+BEt0AK+mV88NFgR2vv4R60nCG0r5BphXPSLYXJU
+        /qA7a+uXScsfPKnJDU+YB1dAhL3ISfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-DYAcTfNCPlaZxS3VyE-9zQ-1; Mon, 21 Oct 2019 08:53:43 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61F5E1800E00;
+        Mon, 21 Oct 2019 12:53:41 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD81460BE2;
+        Mon, 21 Oct 2019 12:53:33 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 20:53:28 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH V4 0/5] blk-mq: improvement on handling IO during CPU
+ hotplug
+Message-ID: <20191021125327.GA25864@ming.t460p>
+References: <d30420d7-74d9-4417-1bbe-8113848e74fa@huawei.com>
+ <20191016120729.GB5515@ming.t460p>
+ <9dbc14ab-65cd-f7ac-384c-2dbe03575ee7@huawei.com>
+ <55a84ea3-647d-0a76-596c-c6c6b2fc1b75@huawei.com>
+ <20191020101404.GA5103@ming.t460p>
+ <10aac76a-26bb-bcda-c6ea-b39ca66d6740@huawei.com>
+ <20191021093448.GA22635@ming.t460p>
+ <9e6e86a5-7247-4648-9df9-61f81d2df413@huawei.com>
+ <20191021102401.GB22635@ming.t460p>
+ <c98c0cd5-950d-5404-eeaf-4e4ed6c86acc@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <c98c0cd5-950d-5404-eeaf-4e4ed6c86acc@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: DYAcTfNCPlaZxS3VyE-9zQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Before 5da0fb1ab34c ("io_uring: consider the overflow of sequence for
-timeout req"). We can meet some situation like below:
+On Mon, Oct 21, 2019 at 12:49:53PM +0100, John Garry wrote:
+> > > >=20
+> > >=20
+> > > Yes, we share tags among all queues, but we generate the tag - known =
+as IPTT
+> > > - in the LLDD now, as we can no longer use the request tag (as it is =
+not
+> > > unique per all queues):
+> > >=20
+> > > https://github.com/hisilicon/kernel-dev/commit/087b95af374be6965583c1=
+673032fb33bc8127e8#diff-f5d8fff19bc539a7387af5230d4e5771R188
+> > >=20
+> > > As I said, the branch is messy and I did have to fix 087b95af374.
+> >=20
+> > Firstly this way may waste lots of memory, especially the queue depth i=
+s
+> > big, such as, hisilicon V3's queue depth is 4096.
+> >=20
+> > Secondly, you have to deal with queue busy efficiently and correctly,
+> > for example, your real hw tags(IPTT) can be used up easily, and how
+> > will you handle these dispatched request?
+>=20
+> I have not seen scenario of exhausted IPTT. And IPTT count is same as SCS=
+I
+> host.can_queue, so SCSI midlayer should ensure that this does not occur.
 
-1. setup
-2. prepare 4 timeout req which expected count is 1,1,2,UINT_MAX, and the
-sequence of this 4 requests will be 1,2,4,2, this 4 requests will not
-lead the change of cached_cq_tail and sq_dropped until the timeout
-really happened. So the tail_index in io_timeout will still be 0.
-3. based on the above and before this patch, the order of timeout_list
-will be req1->req2->req4->req3, which the right order should be
-req1->req2->req3->req4.
-4. setup two nop requests. And the timeout requests will return
-correctly with the patch.
+That check isn't correct, and each hw queue should have allowed
+.can_queue in-flight requests.
 
-Add this testcase to cover it.
+>=20
+> >=20
+> > Finally, you have to evaluate the performance effect, this is highly
+> > related with how to deal with out-of-IPTT.
+>=20
+> Some figures from our previous testing:
+>=20
+> Managed interrupt without exposing multiple queues: 3M IOPs
+> Managed interrupt with exposing multiple queues: 2.6M IOPs
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
----
- test/Makefile           |   4 +-
- test/timeout-overflow.c | 184 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 186 insertions(+), 2 deletions(-)
- create mode 100644 test/timeout-overflow.c
+Then you see the performance regression.
 
-diff --git a/test/Makefile b/test/Makefile
-index 3ab5f81..89937a3 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -7,7 +7,7 @@ all_targets += poll poll-cancel ring-leak fsync io_uring_setup io_uring_register
- 		917257daa0fe-test b19062a56726-test eeed8b54e0df-test link \
- 		send_recvmsg a4c0b3decb33-test 500f9fbadef8-test timeout \
- 		sq-space_left stdout cq-ready cq-peek-batch file-register \
--		cq-size 8a9973408177-test a0908ae19763-test
-+		cq-size 8a9973408177-test a0908ae19763-test timeout-overflow
- 
- include ../Makefile.quiet
- 
-@@ -22,7 +22,7 @@ test_srcs := poll.c poll-cancel.c ring-leak.c fsync.c io_uring_setup.c \
- 	eeed8b54e0df-test.c link.c send_recvmsg.c a4c0b3decb33-test.c \
- 	500f9fbadef8-test.c timeout.c sq-space_left.c stdout.c cq-ready.c\
- 	cq-peek-batch.c file-register.c cq-size.c 8a9973408177-test.c \
--	a0908ae19763-test.c
-+	a0908ae19763-test.c timeout-overflow.c
- 
- test_objs := $(patsubst %.c,%.ol,$(test_srcs))
- 
-diff --git a/test/timeout-overflow.c b/test/timeout-overflow.c
-new file mode 100644
-index 0000000..8d4763b
---- /dev/null
-+++ b/test/timeout-overflow.c
-@@ -0,0 +1,184 @@
-+/*
-+ * Description: run timeout overflow test
-+ *
-+ */
-+#include <errno.h>
-+#include <stdio.h>
-+#include <limits.h>
-+#include <sys/time.h>
-+
-+#include "liburing.h"
-+
-+#define TIMEOUT_MSEC	1000
-+static int not_supported;
-+
-+static int check_timeout_support()
-+{
-+	struct io_uring_sqe *sqe;
-+	struct io_uring_cqe *cqe;
-+	struct __kernel_timespec ts;
-+	struct io_uring ring;
-+	int ret;
-+
-+	ret = io_uring_queue_init(8, &ring, 0);
-+	if (ret) {
-+		printf("ring setup failed\n");
-+		return 1;
-+	}
-+	sqe = io_uring_get_sqe(&ring);
-+	ts.tv_sec = TIMEOUT_MSEC / 1000;
-+	ts.tv_nsec = 0;
-+	io_uring_prep_timeout(sqe, &ts, 1, 0);
-+
-+	ret = io_uring_submit(&ring);
-+	if (ret < 0) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = io_uring_wait_cqe(&ring, &cqe);
-+	if (ret < 0) {
-+		printf("wait completion %d\n", ret);
-+		goto err;
-+	}
-+
-+	if (cqe->res == -EINVAL) {
-+		not_supported = 1;
-+		printf("Timeout not supported, ignored\n");
-+		return 0;
-+	}
-+	io_uring_cqe_seen(&ring, cqe);
-+
-+	return 0;
-+err:
-+	return 1;
-+
-+}
-+
-+/*
-+ * We first setup 4 timeout requests, which require a count value of 1, 1, 2,
-+ * UINT_MAX, so the sequence is 1, 2, 4, 2. Before really timeout, this 4
-+ * requests will not lead the change of cq_cached_tail, so as sq_dropped.
-+ *
-+ * And before this patch. The order of this four requests will be req1->req2->
-+ * req4->req3. Actually, it should be req1->req2->req3->req4.
-+ *
-+ * Then, if there is 2 nop req. All timeout requests expect req4 will completed
-+ * successful after the patch. And req1/req2 will completed successful with
-+ * req3/req4 return -ETIME without this patch!
-+ */
-+static int test_timeout_overflow()
-+{
-+	struct io_uring_sqe *sqe;
-+	struct io_uring_cqe *cqe;
-+	struct __kernel_timespec ts;
-+	struct io_uring ring;
-+	int i, ret;
-+
-+	ret = io_uring_queue_init(16, &ring, 0);
-+	if (ret) {
-+		printf("ring setup failed\n");
-+		return 1;
-+	}
-+
-+	ts.tv_sec = TIMEOUT_MSEC / 1000;
-+	ts.tv_nsec = 0;
-+	for (i = 0; i < 4; i++) {
-+		unsigned num;
-+		sqe = io_uring_get_sqe(&ring);
-+		switch (i) {
-+			case 0:
-+			case 1:
-+				num = 1;
-+				break;
-+			case 2:
-+				num = 2;
-+				break;
-+			case 3:
-+				num = UINT_MAX;
-+				break;
-+		}
-+		io_uring_prep_timeout(sqe, &ts, num, 0);
-+	}
-+
-+	for (i = 0; i < 2; i++) {
-+		sqe = io_uring_get_sqe(&ring);
-+		io_uring_prep_nop(sqe);
-+		io_uring_sqe_set_data(sqe, (void *) 1);
-+	}
-+	ret = io_uring_submit(&ring);
-+	if (ret < 0) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	i = 0;
-+	while (i < 6) {
-+		ret = io_uring_wait_cqe(&ring, &cqe);
-+		if (ret < 0) {
-+			printf("wait completion %d\n", ret);
-+			goto err;
-+		}
-+
-+		/*
-+		 * cqe1: first nop req
-+		 * cqe2: first timeout req, because of cqe1
-+		 * cqe3: second timeout req because of cqe1 + cqe2
-+		 * cqe4: second nop req
-+		 * cqe5~cqe6: the left three timeout req
-+		 */
-+		switch (i) {
-+			case 0:
-+			case 3:
-+				if (io_uring_cqe_get_data(cqe) != (void *) 1) {
-+					printf("nop not seen as 1 or 2\n");
-+					goto err;
-+				}
-+				break;
-+			case 1:
-+			case 2:
-+			case 4:
-+				if (cqe->res == -ETIME) {
-+					printf("expected not return -ETIME for the "
-+					       "%d'th timeout req\n", i - 1);
-+					goto err;
-+				}
-+				break;
-+			case 5:
-+				if (cqe->res != -ETIME) {
-+					printf("expected return -ETIME for the "
-+					       "%d'th timeout req\n", i - 1);
-+					goto err;
-+				}
-+				break;
-+		}
-+		io_uring_cqe_seen(&ring, cqe);
-+		i++;
-+	}
-+
-+	return 0;
-+err:
-+	return 1;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret;
-+
-+	ret = check_timeout_support();
-+	if (ret) {
-+		printf("ring setup failed\n");
-+		return 1;
-+	}
-+
-+	if (not_supported)
-+		return 0;
-+
-+	ret = test_timeout_overflow();
-+	if (ret) {
-+		printf("test_timeout_overflow failed\n");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
--- 
-2.17.2
+
+Thanks,
+Ming
 
