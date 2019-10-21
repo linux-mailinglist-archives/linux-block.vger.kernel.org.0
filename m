@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D233DE520
-	for <lists+linux-block@lfdr.de>; Mon, 21 Oct 2019 09:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3ADDE521
+	for <lists+linux-block@lfdr.de>; Mon, 21 Oct 2019 09:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfJUHOZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Oct 2019 03:14:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47206 "EHLO mx1.suse.de"
+        id S1727049AbfJUHOj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Oct 2019 03:14:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47298 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbfJUHOZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:14:25 -0400
+        id S1726480AbfJUHOi (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:14:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3884ABD3;
-        Mon, 21 Oct 2019 07:14:22 +0000 (UTC)
-Subject: Re: [PATCH 1/2 v2] nvme: Cleanup and rename nvme_block_nr()
+        by mx1.suse.de (Postfix) with ESMTP id BD50CABD3;
+        Mon, 21 Oct 2019 07:14:36 +0000 (UTC)
+Subject: Re: [PATCH 2/2 v2] nvme: Introduce nvme_lba_to_sect()
 To:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
         Keith Busch <kbusch@kernel.org>,
         Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
         Jens Axboe <axboe@kernel.dk>
 References: <20191021034004.11063-1-damien.lemoal@wdc.com>
- <20191021034004.11063-2-damien.lemoal@wdc.com>
+ <20191021034004.11063-3-damien.lemoal@wdc.com>
 From:   Johannes Thumshirn <jthumshirn@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
@@ -80,12 +80,12 @@ Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
  l2t2TyTuHm7wVUY2J3gJYgG723/PUGW4LaoqNrYQUr/rqo6NXw6c+EglRpm1BdpkwPwAng63
  W5VOQMdnozD2RsDM5GfA4aEFi5m00tE+8XPICCtkduyWw+Z+zIqYk2v+zraPLs9Gs0X2C7X0
  yvqY9voUoJjG6skkOToGZbqtMX9K4GOv9JAxVs075QRXL3brHtHONDt6udYobzz+
-Message-ID: <6228088c-86ec-a4cd-bef2-6a852cdbfa54@suse.de>
-Date:   Mon, 21 Oct 2019 09:14:22 +0200
+Message-ID: <990a3207-bd64-ec3c-586d-971989e8dc51@suse.de>
+Date:   Mon, 21 Oct 2019 09:14:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191021034004.11063-2-damien.lemoal@wdc.com>
+In-Reply-To: <20191021034004.11063-3-damien.lemoal@wdc.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -96,6 +96,7 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Looks good,
 Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+
 -- 
 Johannes Thumshirn                            SUSE Labs Filesystems
 jthumshirn@suse.de                                +49 911 74053 689
