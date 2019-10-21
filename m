@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2432DF822
-	for <lists+linux-block@lfdr.de>; Tue, 22 Oct 2019 00:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 788FDDF824
+	for <lists+linux-block@lfdr.de>; Tue, 22 Oct 2019 00:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfJUWnI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Oct 2019 18:43:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38427 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJUWnI (ORCPT
+        id S1727264AbfJUWnL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Oct 2019 18:43:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39890 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbfJUWnL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:43:08 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so8686743pgt.5
-        for <linux-block@vger.kernel.org>; Mon, 21 Oct 2019 15:43:08 -0700 (PDT)
+        Mon, 21 Oct 2019 18:43:11 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v4so9332253pff.6
+        for <linux-block@vger.kernel.org>; Mon, 21 Oct 2019 15:43:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kH6arMtNKhExAQtmx+B/ga34kxbYtksoL7+f/odhzAo=;
-        b=k3vk8cZREe6Y5YF9OM62KK8nARXffDtkvOMx6R9xPJqBA6wyo+CObuAuRF/kKfxnhs
-         jc0mINEo5rVnMOt5isCOxjMPytkBn9hqZfresHHdKZJcmR50w0oxLe+x4RedBUrKyyNK
-         jQRo2ZgnXwPYNXGDuHMNlm/ZnsF65vqpfN2HCLuggncUSrxtAbVamvvUvAdNg1iM1wtz
-         aDYviEN6Df06Zy5bx5Mkh3oibVQBm12VeVQO7xoEJ8xSxYcs4/ROe5Nq9xmcrBG6Ooe1
-         PTHA6j7kmKR72ihRwW6Tj3R+RhuycaCr7lixaebxY0AuAYnkGABf1UECAhwFB8r2gGuo
-         wW+Q==
-X-Gm-Message-State: APjAAAWh7kWxsY9k06TZwu0e8Xl5LHqf1PPWm9/NyQ+LUMclEBwAYBwT
-        4DxY8R7nXy9vkMal7k+QvQ0=
-X-Google-Smtp-Source: APXvYqxu22ftwVOeFHXKBFRqIfeISWgt//PMqeTzZsrK/3ofmcaUADIAD3+TZ3Nj2rWoV2MjIDXqkg==
-X-Received: by 2002:a62:38d5:: with SMTP id f204mr470676pfa.75.1571697787688;
-        Mon, 21 Oct 2019 15:43:07 -0700 (PDT)
+        bh=K03SxJG5UM5QLbF/Apnz7RCTvF9NtEiDW4IzmGypazw=;
+        b=MmLf0mRGD9CodF/T9HX6f5m4CEBXyVtZEkI/0Xxx5sJs6LG3WbV3xtw2LR1AB10viu
+         DoJPTxSdZ4sLm6XAjaPIxUD5McchzxknWMfYor+2bPV2rDazlKqYFIn/pNnW8XfkFuhE
+         zAacLVhnu/bWqj4Sc+tX9sLQKuStWdx1nyaPTR4kU/ndZRBSV4yA6JUM5DyxiV5ykJC3
+         vk4BzW1mHRnM/Trlj38u0iz3CXGK3QkD5na1S+icdzjqguAFsDpxwPyu6OqH6adGzkI/
+         ILP0Y1AYBpl5f0r/nZQqDINl4s0UmvRSJBKLsh87FwrYmu7XDXAZpy2S5jQsLKzymrbc
+         naog==
+X-Gm-Message-State: APjAAAWaD3HG280VWzQ/ZlsCWnsm8N0+CQtgZdOfPyfg7jvBCM2W9hOh
+        VdhlTcaq9vtlNGRMyWJsmhfMSqhHMd0=
+X-Google-Smtp-Source: APXvYqw+oxZDfXFKLck8hk+qGu21exc/GLYHCRDm/JguV1JgrDJ907UAZGMtnfQc+d4dRl8knQj3ig==
+X-Received: by 2002:a63:dd11:: with SMTP id t17mr266772pgg.242.1571697788920;
+        Mon, 21 Oct 2019 15:43:08 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id u9sm15944763pjb.4.2019.10.21.15.43.06
+        by smtp.gmail.com with ESMTPSA id u9sm15944763pjb.4.2019.10.21.15.43.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 15:43:06 -0700 (PDT)
+        Mon, 21 Oct 2019 15:43:08 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -42,9 +42,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Ming Lei <ming.lei@redhat.com>,
         Hannes Reinecke <hare@suse.com>,
         Johannes Thumshirn <jthumshirn@suse.de>
-Subject: [PATCH 1/4] block: Remove the synchronize_rcu() call from __blk_mq_update_nr_hw_queues()
-Date:   Mon, 21 Oct 2019 15:42:56 -0700
-Message-Id: <20191021224259.209542-2-bvanassche@acm.org>
+Subject: [PATCH 2/4] block: Fix a race between blk_poll() and blk_mq_update_nr_hw_queues()
+Date:   Mon, 21 Oct 2019 15:42:57 -0700
+Message-Id: <20191021224259.209542-3-bvanassche@acm.org>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191021224259.209542-1-bvanassche@acm.org>
 References: <20191021224259.209542-1-bvanassche@acm.org>
@@ -55,16 +55,10 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since the blk_mq_{,un}freeze_queue() calls in __blk_mq_update_nr_hw_queues()
-already serialize __blk_mq_update_nr_hw_queues() against
-blk_mq_queue_tag_busy_iter(), the synchronize_rcu() call in
-__blk_mq_update_nr_hw_queues() is not necessary. Hence remove it.
-
-Note: the synchronize_rcu() call in __blk_mq_update_nr_hw_queues() was
-introduced by commit f5bbbbe4d635 ("blk-mq: sync the update nr_hw_queues with
-blk_mq_queue_tag_busy_iter"). Commit 530ca2c9bd69 ("blk-mq: Allow blocking
-queue tag iter callbacks") removed the rcu_read_{,un}lock() calls that
-correspond to the synchronize_rcu() call in __blk_mq_update_nr_hw_queues().
+If blk_poll() is called if no requests are in progress, it may happen that
+blk_mq_update_nr_hw_queues() modifies the data structures used by blk_poll(),
+e.g. q->queue_hw_ctx[]. Fix this race by serializing blk_poll() against
+blk_mq_update_nr_hw_queues().
 
 Cc: Christoph Hellwig <hch@infradead.org>
 Cc: Ming Lei <ming.lei@redhat.com>
@@ -72,24 +66,65 @@ Cc: Hannes Reinecke <hare@suse.com>
 Cc: Johannes Thumshirn <jthumshirn@suse.de>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c | 4 ----
- 1 file changed, 4 deletions(-)
+ block/blk-mq.c | 38 +++++++++++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8538dc415499..7528678ef41f 100644
+index 7528678ef41f..ea64d951f411 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -3242,10 +3242,6 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+@@ -3439,19 +3439,7 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
+ 	return blk_mq_poll_hybrid_sleep(q, hctx, rq);
+ }
  
- 	list_for_each_entry(q, &set->tag_list, tag_set_list)
- 		blk_mq_freeze_queue(q);
--	/*
--	 * Sync with blk_mq_queue_tag_busy_iter.
--	 */
--	synchronize_rcu();
- 	/*
- 	 * Switch IO scheduler to 'none', cleaning up the data associated
- 	 * with the previous scheduler. We will switch back once we are done
+-/**
+- * blk_poll - poll for IO completions
+- * @q:  the queue
+- * @cookie: cookie passed back at IO submission time
+- * @spin: whether to spin for completions
+- *
+- * Description:
+- *    Poll for completions on the passed in queue. Returns number of
+- *    completed entries found. If @spin is true, then blk_poll will continue
+- *    looping until at least one completion is found, unless the task is
+- *    otherwise marked running (or we need to reschedule).
+- */
+-int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
++static int __blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
+ {
+ 	struct blk_mq_hw_ctx *hctx;
+ 	long state;
+@@ -3503,6 +3491,30 @@ int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
+ 	__set_current_state(TASK_RUNNING);
+ 	return 0;
+ }
++
++/**
++ * blk_poll - poll for IO completions
++ * @q:  the queue
++ * @cookie: cookie passed back at IO submission time
++ * @spin: whether to spin for completions
++ *
++ * Description:
++ *    Poll for completions on the passed in queue. Returns number of
++ *    completed entries found. If @spin is true, then blk_poll will continue
++ *    looping until at least one completion is found, unless the task is
++ *    otherwise marked running (or we need to reschedule).
++ */
++int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
++{
++	int ret;
++
++	if (!percpu_ref_tryget(&q->q_usage_counter))
++		return 0;
++	ret = __blk_poll(q, cookie, spin);
++	blk_queue_exit(q);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(blk_poll);
+ 
+ unsigned int blk_mq_rq_cpu(struct request *rq)
 -- 
 2.23.0.866.gb869b98d4c-goog
 
