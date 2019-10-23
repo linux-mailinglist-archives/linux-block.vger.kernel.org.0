@@ -2,123 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A81E3E11CB
-	for <lists+linux-block@lfdr.de>; Wed, 23 Oct 2019 07:44:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31A15E1271
+	for <lists+linux-block@lfdr.de>; Wed, 23 Oct 2019 08:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfJWFow (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Oct 2019 01:44:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39082 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfJWFov (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Oct 2019 01:44:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r141so8674480wme.4
-        for <linux-block@vger.kernel.org>; Tue, 22 Oct 2019 22:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Yxvk4JK0S6fOQxsokBnmhH3TcJSOZWVYOtlV6nQoCzM=;
-        b=IFQbUvYUvIHygSN9UBfOAvTiOyAzVBISTOa5oYkQV7XmGLlGYuvqaeduwqDjZf7K/e
-         SQDZFmJeyHwpYRriWd5Nw2SSe3qrPJifJuCW0PwujfTLdYgFxe+mBVIu5EjjpfFDas4b
-         ZFsJhWPjdQVgMj7ILlz3158WwsfWdOr4KiDokAQqJZsGMG+qn5d1YC6Ub6GHPn6fRbcR
-         VjLGYvNaCMSA/huILsbMGgR/4rntEmKbyAOGT9zdGIt4ElfUIX9yDoehNxnQ1B8zRBjK
-         D3+k9tktvAsX7k0YeKEdQ8+l3k2AFN/jC7+bAXc2YX9R2y8OKdKEqb0CDJ4jAEipvBZ0
-         d9Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Yxvk4JK0S6fOQxsokBnmhH3TcJSOZWVYOtlV6nQoCzM=;
-        b=Nx2uOdoV0IfpFyoyaQM29GUUkR9WJ6e7MK+y3y9QBTSfVGExUpkqGQeF25cz0PHLwW
-         1Z/4GHgEZ1NEYlVL6rNL9WCqkM7EHGOz5PsUv8FivM2VkswLBC9TKv60+0yDUBN7vCT1
-         FJNg9XscRqGX2pEkg0iSNu+sUXpVv6JSWKZgeOPtPTIgAkmkTiLkoDO9xwXQsh+fZpX2
-         y403VFhYM5s1Z+elk9wkx8mtfzSYqMRADSai86QoXnJryZIfa+W9ESvZWbCzShxYj1h4
-         pympJz+9Q3FMuqjvhnp/PYnmj0UZQ20APM4uRitEZBbya4FQnQ+f/r8wS5JcvKAph7el
-         rC3w==
-X-Gm-Message-State: APjAAAX55G0QVNrwm5Kcw7rTHDsqQvjIQ1ayAQp9If+PCbCej41dBVwN
-        0ODT+ct4jGesC1YnCZmjpN99fA==
-X-Google-Smtp-Source: APXvYqxWENcAhG3ml7y69a4emJVDFc6t3DUaWlnyAPA/Dv2uJdnijYtDiaKwsMRWVlPpsLWX9yZGeA==
-X-Received: by 2002:a1c:5f42:: with SMTP id t63mr445601wmb.163.1571809489836;
-        Tue, 22 Oct 2019 22:44:49 -0700 (PDT)
-Received: from [192.168.0.102] (84-33-74-57.dyn.eolo.it. [84.33.74.57])
-        by smtp.gmail.com with ESMTPSA id 200sm14202462wme.32.2019.10.22.22.44.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 22:44:49 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/2] block, bfq: make bfq disable iocost and present a
- double interface
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <19BC0425-559E-433A-ACAD-B12FA02E20E4@linaro.org>
-Date:   Wed, 23 Oct 2019 07:44:47 +0200
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>, oleksandr@natalenko.name,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <94E51269-62DC-427A-A81C-3851ABC818BC@linaro.org>
-References: <20191001193316.3330-1-paolo.valente@linaro.org>
- <19BC0425-559E-433A-ACAD-B12FA02E20E4@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+        id S2389335AbfJWGsu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Oct 2019 02:48:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727194AbfJWGsu (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:48:50 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A10E148BAB5BDD4AFAC2;
+        Wed, 23 Oct 2019 14:48:43 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 14:48:37 +0800
+From:   "zhangyi (F)" <yi.zhang@huawei.com>
+To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH 1/2] io_uring : correct timeout req sequence when waiting timeout
+Date:   Wed, 23 Oct 2019 15:10:08 +0800
+Message-ID: <20191023071009.13891-1-yi.zhang@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ping
+The sequence number of reqs on the timeout_list before the timeout req
+should be adjusted in io_timeout_fn(), because the current timeout req
+will consumes a slot in the cq_ring and cq_tail pointer will be
+increased, otherwise other timeout reqs may return in advance without
+waiting for enough wait_nr.
 
-> Il giorno 9 ott 2019, alle ore 16:25, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> Jens, Tejun,
-> can we proceed with this double-interface solution?
->=20
-> Thanks,
-> Paolo
->=20
->> Il giorno 1 ott 2019, alle ore 21:33, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>=20
->> Hi Jens,
->>=20
->> the first patch in this series is Tejun's patch for making BFQ =
-disable
->> io.cost. The second patch makes BFQ present both the bfq-prefixes
->> parameters and non-prefixed parameters, as suggested by Tejun [1].
->>=20
->> In the first patch I've tried to use macros not to repeat code
->> twice. checkpatch complains that these macros should be enclosed in
->> parentheses. I don't see how to do it. I'm willing to switch to any
->> better solution.
->>=20
->> Thanks,
->> Paolo
->>=20
->> [1] https://lkml.org/lkml/2019/9/18/736
->>=20
->> Paolo Valente (1):
->> block, bfq: present a double cgroups interface
->>=20
->> Tejun Heo (1):
->> blkcg: Make bfq disable iocost when enabled
->>=20
->> Documentation/admin-guide/cgroup-v2.rst |   8 +-
->> Documentation/block/bfq-iosched.rst     |  40 ++--
->> block/bfq-cgroup.c                      | 260 =
-++++++++++++------------
->> block/bfq-iosched.c                     |  32 +++
->> block/blk-iocost.c                      |   5 +-
->> include/linux/blk-cgroup.h              |   5 +
->> kernel/cgroup/cgroup.c                  |   2 +
->> 7 files changed, 201 insertions(+), 151 deletions(-)
->>=20
->> --
->> 2.20.1
->=20
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+---
+ fs/io_uring.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 67dbe0201e0d..e7a856392a23 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1877,7 +1877,7 @@ static int io_poll_add(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
+ {
+ 	struct io_ring_ctx *ctx;
+-	struct io_kiocb *req;
++	struct io_kiocb *req, *prev;
+ 	unsigned long flags;
+ 
+ 	req = container_of(timer, struct io_kiocb, timeout.timer);
+@@ -1885,6 +1885,15 @@ static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
+ 	atomic_inc(&ctx->cq_timeouts);
+ 
+ 	spin_lock_irqsave(&ctx->completion_lock, flags);
++	/*
++	 * Adjust the reqs sequence before the current one because it
++	 * will consume a slot in the cq_ring and the the cq_tail pointer
++	 * will be increased, otherwise other timeout reqs may return in
++	 * advance without waiting for enough wait_nr.
++	 */
++	prev = req;
++	list_for_each_entry_continue_reverse(prev, &ctx->timeout_list, list)
++		prev->sequence++;
+ 	list_del(&req->list);
+ 
+ 	io_cqring_fill_event(ctx, req->user_data, -ETIME);
+-- 
+2.17.2
 
