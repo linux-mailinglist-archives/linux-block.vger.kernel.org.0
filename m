@@ -2,28 +2,30 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31A15E1271
-	for <lists+linux-block@lfdr.de>; Wed, 23 Oct 2019 08:48:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA1A4E1270
+	for <lists+linux-block@lfdr.de>; Wed, 23 Oct 2019 08:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389335AbfJWGsu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Oct 2019 02:48:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37158 "EHLO huawei.com"
+        id S2389356AbfJWGst (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Oct 2019 02:48:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37164 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727194AbfJWGsu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:48:50 -0400
+        id S2389335AbfJWGst (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:48:49 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A10E148BAB5BDD4AFAC2;
+        by Forcepoint Email with ESMTP id A720A873D06817A3774E;
         Wed, 23 Oct 2019 14:48:43 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 14:48:37 +0800
+ 14:48:38 +0800
 From:   "zhangyi (F)" <yi.zhang@huawei.com>
 To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
 CC:     <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 1/2] io_uring : correct timeout req sequence when waiting timeout
-Date:   Wed, 23 Oct 2019 15:10:08 +0800
-Message-ID: <20191023071009.13891-1-yi.zhang@huawei.com>
+Subject: [PATCH 2/2] io_uring: correct timeout req sequence when inserting a new entry
+Date:   Wed, 23 Oct 2019 15:10:09 +0800
+Message-ID: <20191023071009.13891-2-yi.zhang@huawei.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191023071009.13891-1-yi.zhang@huawei.com>
+References: <20191023071009.13891-1-yi.zhang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.124.28]
@@ -33,11 +35,20 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The sequence number of reqs on the timeout_list before the timeout req
-should be adjusted in io_timeout_fn(), because the current timeout req
-will consumes a slot in the cq_ring and cq_tail pointer will be
-increased, otherwise other timeout reqs may return in advance without
-waiting for enough wait_nr.
+The sequence number of the timeout req (req->sequence) indicate the
+expected completion request. Because of each timeout req consume a
+sequence number, so the sequence of each timeout req on the timeout
+list shouldn't be the same. But now, we may get the same number (also
+incorrect) if we insert a new entry before the last one, such as submit
+such two timeout reqs on a new ring instance below.
+
+                    req->sequence
+ req_1 (count = 2):       2
+ req_2 (count = 1):       2
+
+Then, if we submit a nop req, req_2 will still timeout even the nop req
+finished. This patch fix this problem by adjust the sequence number of
+each reordered reqs when inserting a new entry.
 
 Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 ---
@@ -45,34 +56,36 @@ Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
  1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 67dbe0201e0d..e7a856392a23 100644
+index e7a856392a23..4a395a7a36c1 100644
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -1877,7 +1877,7 @@ static int io_poll_add(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
- {
- 	struct io_ring_ctx *ctx;
--	struct io_kiocb *req;
-+	struct io_kiocb *req, *prev;
- 	unsigned long flags;
+@@ -1912,6 +1912,7 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct list_head *entry;
+ 	struct timespec64 ts;
++	unsigned span = 0;
  
- 	req = container_of(timer, struct io_kiocb, timeout.timer);
-@@ -1885,6 +1885,15 @@ static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
- 	atomic_inc(&ctx->cq_timeouts);
+ 	if (unlikely(ctx->flags & IORING_SETUP_IOPOLL))
+ 		return -EINVAL;
+@@ -1960,9 +1961,17 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		if (ctx->cached_sq_head < nxt_sq_head)
+ 			tmp += UINT_MAX;
  
- 	spin_lock_irqsave(&ctx->completion_lock, flags);
-+	/*
-+	 * Adjust the reqs sequence before the current one because it
-+	 * will consume a slot in the cq_ring and the the cq_tail pointer
-+	 * will be increased, otherwise other timeout reqs may return in
-+	 * advance without waiting for enough wait_nr.
-+	 */
-+	prev = req;
-+	list_for_each_entry_continue_reverse(prev, &ctx->timeout_list, list)
-+		prev->sequence++;
- 	list_del(&req->list);
+-		if (tmp >= tmp_nxt)
++		if (tmp > tmp_nxt)
+ 			break;
++
++		/*
++		 * Sequence of reqs after the insert one and itself should
++		 * be adjusted because each timeout req consumes a slot.
++		 */
++		span++;
++		nxt->sequence++;
+ 	}
++	req->sequence -= span;
+ 	list_add(&req->list, entry);
+ 	spin_unlock_irq(&ctx->completion_lock);
  
- 	io_cqring_fill_event(ctx, req->user_data, -ETIME);
 -- 
 2.17.2
 
