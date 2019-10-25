@@ -2,104 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 282A8E45CA
-	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 10:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2589E4751
+	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 11:32:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404708AbfJYIfL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Oct 2019 04:35:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21265 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404705AbfJYIfL (ORCPT
+        id S2438611AbfJYJbq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Oct 2019 05:31:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35577 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406341AbfJYJbp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:35:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571992510;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gsc+0cnWp+SeXo5Ab/Z5m/x0oLsQUzNBoPuLzeohPH8=;
-        b=NOPUEBQcEdYBmqATxtXkRECvwvwTFH+9JO5ZYGM6BHmE/mluTOZi+2GQUBQyru2lR6UaZ4
-        1iYY5FOhu12pgVbavx/TQkfDfBV9WRRAe37Mf0+MJSFznfgbKUMPSOo0gbGPEnZC7mPyq3
-        dUL/Jzb7wLq4cjMVOw5lX8zi5Dp5tlg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-Yt-flKkyMo6CKNT7t3AOmw-1; Fri, 25 Oct 2019 04:35:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5E9E800D41;
-        Fri, 25 Oct 2019 08:35:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AFDF84100;
-        Fri, 25 Oct 2019 08:35:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wiMho2AhcTWC3-3zGK7639XL9UT=AheMXY0pxGHDACn6g@mail.gmail.com>
-References: <CAHk-=wiMho2AhcTWC3-3zGK7639XL9UT=AheMXY0pxGHDACn6g@mail.gmail.com> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk> <30394.1571936252@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+        Fri, 25 Oct 2019 05:31:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v6so1293781wmj.0;
+        Fri, 25 Oct 2019 02:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=744iXlZUhGtRbNI1jwDoT8T6tb3N+po5FhQinftwlTo=;
+        b=LqUBCze/eivip+ZIDjECbEB58Y/7xWHJBXDj5tzXBtpt1zWGgvTw640ukfDBWNMETm
+         fGPAF34nNY0w11lIpVSlKjvMnZkF71iCsphBi45EL398J7kr5uk9bzdxVQCCecpUO/u+
+         Op0CobKkWrjEvvk4/gnTtjqag8uBRs0ZAiSpZg4xtK2UgqBtDXUfszBa8yaJtF40pg4l
+         PliGYjrROykwSO8a/jEf9JApm3goNC6DYF9ZbGRsFW0DJmJrLcI08Pi2ov6nVND6HT/c
+         Y9/MDBTA68OtETtofeNbREOoTTHEmE0KUkl3Cf363sqz5XXzUvtU8NwjHhPt1XeaNESb
+         ICaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=744iXlZUhGtRbNI1jwDoT8T6tb3N+po5FhQinftwlTo=;
+        b=k6yjkxr6jdZgP6hF2NglISa/SLicVkk49af4eXyTf0AHD3X+AaOO20gWzPFbz8OKot
+         zV74HT57GLiwQL0u2u3ldIKGs086HIW3OFoS1LCZyUecvn70+m7aW3Qy35IXZdTlnsZ1
+         1d2e7qnLBWJzuiuimHDCf7U7uJtzaaykZT7MLQJaZ29oV6qghSwtSnDcSRaRzgTwEdPu
+         eDrrp33p9DAEpZq08HIZAPah2CuTw8G1woZmhH7hwWg0nbKQJyUbmfPCRWYnh2s/v+cE
+         pawVrPX1yUWxpZIp4g9+kFX7WdL7PIco1m90nmduAmTsMtiYF+OT1WWM3Tf6ZNS9R4Pz
+         YpXQ==
+X-Gm-Message-State: APjAAAVsMHiD5ONWXi0K+ztklWDezb4InLJLGb1bwR+QZ5hPl88d8IC+
+        VMPh4qAJlMxYkvdFoBYyvdA=
+X-Google-Smtp-Source: APXvYqwrW/mpMB4LaY43U1dcwxF8rn16v3ktVqOYZfY0RKSfqIdoRp/DIw6/SQ3Uc3BqDzLr9Q0sYA==
+X-Received: by 2002:a1c:a791:: with SMTP id q139mr2495930wme.155.1571995903661;
+        Fri, 25 Oct 2019 02:31:43 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.132.16])
+        by smtp.gmail.com with ESMTPSA id l7sm2054551wro.17.2019.10.25.02.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 02:31:42 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 0/3][for-linus] Fix bunch of bugs in io_uring
+Date:   Fri, 25 Oct 2019 12:31:28 +0300
+Message-Id: <cover.1571991701.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-ID: <9190.1571992499.1@warthog.procyon.org.uk>
-Date:   Fri, 25 Oct 2019 09:34:59 +0100
-Message-ID: <9191.1571992499@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: Yt-flKkyMo6CKNT7t3AOmw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-> > The keyrings testsuite needs the ability to wait for all the outstandin=
-g
-> > notifications in the queue to have been processed so that it can then g=
-o
-> > through them to find out whether the notifications it expected have bee=
-n
-> > emitted.
->=20
-> Can't you just do
->=20
->     ioctl(fd, FIONREAD, &count);
->=20
-> in a loop instead? "No paperwork. Just sprinkle some msleep() crack on
-> him, and let's get out of here"
+The issues are mostly unrelated. The fixes are done with simplicity
+and easiness to merge in mind. It may introduce a slight performance
+regression, which I intend to address in following patches for-next.
 
-Using FIONREAD like this means that I would have to quiesce the tests in or=
-der
-to sync up.  For the moment that's fine, but at some point I would like to =
-be
-able to stress test the system by running tests in parallel against the sam=
-e
-keyring.  Each test needs to check with the monitor whether its keys have
-generated the appropriate notifications against a backdrop of events being
-continuously generated by other tests.
+Pavel Begunkov (3):
+  io_uring: Fix corrupted user_data
+  io_uring: Fix broken links with offloading
+  io_uring: Fix race for sqes with userspace
 
-I can hold this patch for now.  Let me see if I can come up with a better w=
-ay
-to do it.  Maybe it can be done by dead reckoning, holding up until either
-we've counted out a complete ring-full of notifications or read() has come =
-up
-empty.
+ fs/io_uring.c | 67 ++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 37 insertions(+), 30 deletions(-)
 
-David
+-- 
+2.23.0
 
