@@ -2,46 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 045B0E5192
-	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 18:50:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A8B3E5195
+	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 18:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409570AbfJYQu0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Oct 2019 12:50:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33483 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409568AbfJYQuT (ORCPT
+        id S2409587AbfJYQuV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Oct 2019 12:50:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36233 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409570AbfJYQuU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:50:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c184so1959774pfb.0
-        for <linux-block@vger.kernel.org>; Fri, 25 Oct 2019 09:50:18 -0700 (PDT)
+        Fri, 25 Oct 2019 12:50:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 23so1906189pgk.3
+        for <linux-block@vger.kernel.org>; Fri, 25 Oct 2019 09:50:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=syNrOfb9Q7f5mhuUJblvs9iqQxdsYjyJP048Bqy1Znw=;
-        b=cLPm4gbMW278Bm5lspfi5gq/lQWMsJTGINgLuRupVXovboa0O2bNBTUtITEgdCX+LZ
-         Syhxa4PWDVr3AD/QHzfAQiGn6nAxh/W2m52FaPsdQXB9np/IGw1RcFIIn71B8gfFPtws
-         OsGXhWVLoFfpfLo3rQZ4HtXjQVFjqAmev8jOIrPBPTUADt3aNs9eu8wKxYXfwzQ9gaLc
-         1U45SB77ZfBECjuEetXbZZkXIL76KgewsCR3wcQ2TKIhHlBFX35cX6YbnBLMh1mVaICz
-         PxalIEsP+MLSgC582y1ya44E7ONgTQUg1P1KdMKm82/6Nt4k0m7nXsrCCs6W9my/l9Aa
-         mqQg==
-X-Gm-Message-State: APjAAAUjsVWmLRHQvRYgwSUe0D60ezzrm7/q8yfg1yhhT3pcBQXyQyiM
-        8jb/qHxy1qsjeWmbcPBIlTHTz/b9
-X-Google-Smtp-Source: APXvYqzG1wpWxiK20p/eGGtwn4nZq35Q5dXSIIHdEft5H9rLmXh2o5P3XZy4fn02lsVDGFR/fR85Kg==
-X-Received: by 2002:a65:6898:: with SMTP id e24mr5596139pgt.358.1572022218087;
-        Fri, 25 Oct 2019 09:50:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Nc1ug63CH73vTb+uKvAKYhTrY+3OfJCTIh8JbxXvNNg=;
+        b=ctg0MbzAE1BquUuqiaUa2HyfPjxBD73oDfiHM6iat/yNau4Tat68r+5wTHs8oFdOFb
+         1MaULWUFFuxyVXLwFqQBgp7ab+vGSAuCS45pDzvRKt/47QtpzgW7ikka76mIRI1u2wax
+         eyK/2CNbUpkkk2dnigYags1WrzkbR24W+KsaQAprfgm47XmA+1C4zyP8rTpvTAedQL9L
+         p05nFYQCl5RV+BPeBzxL74Sd3k8Al3WQuQF8wEvYl1Zm0I6H3G3dlfWDjn0/D1836jVA
+         m2Gjp5onQPrySD9gwmwqMtR/41SIsyl7PGLoOVFw/i+5k1Wyj1B+l4kkrey7WIn+VOuu
+         0fFw==
+X-Gm-Message-State: APjAAAXw+1+uf8e2hYfkm/SC1UKunlhSwFCR30vhcwk38mAdixeqkfFg
+        ouZ5iJhy9IuuuCFXoHdk8/M=
+X-Google-Smtp-Source: APXvYqyOScN7zvGNB4bLBgMIjCypd17KbXq83hzT1zsAWTy3UQ3KvPmrnN6StZGaN3sENMdkaQ9s8w==
+X-Received: by 2002:a63:a849:: with SMTP id i9mr5580314pgp.237.1572022219580;
+        Fri, 25 Oct 2019 09:50:19 -0700 (PDT)
 Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id c8sm4088158pfi.117.2019.10.25.09.50.16
+        by smtp.gmail.com with ESMTPSA id c8sm4088158pfi.117.2019.10.25.09.50.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 09:50:17 -0700 (PDT)
+        Fri, 25 Oct 2019 09:50:18 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v2 0/3] Reduce the amount of memory required for request queues
-Date:   Fri, 25 Oct 2019 09:50:07 -0700
-Message-Id: <20191025165010.211462-1-bvanassche@acm.org>
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Subject: [PATCH v2 1/3] block: Remove the synchronize_rcu() call from __blk_mq_update_nr_hw_queues()
+Date:   Fri, 25 Oct 2019 09:50:08 -0700
+Message-Id: <20191025165010.211462-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+In-Reply-To: <20191025165010.211462-1-bvanassche@acm.org>
+References: <20191025165010.211462-1-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -49,28 +56,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+Since the blk_mq_{,un}freeze_queue() calls in __blk_mq_update_nr_hw_queues()
+already serialize __blk_mq_update_nr_hw_queues() against
+blk_mq_queue_tag_busy_iter(), the synchronize_rcu() call in
+__blk_mq_update_nr_hw_queues() is not necessary. Hence remove it.
 
-This patch series reduces the amount of memory required for request queues
-and also includes a patche that is the result of reviewing code related
-to the modified code. Please consider these patches for kernel version v5.5.
+Note: the synchronize_rcu() call in __blk_mq_update_nr_hw_queues() was
+introduced by commit f5bbbbe4d635 ("blk-mq: sync the update nr_hw_queues with
+blk_mq_queue_tag_busy_iter"). Commit 530ca2c9bd69 ("blk-mq: Allow blocking
+queue tag iter callbacks") removed the rcu_read_{,un}lock() calls that
+correspond to the synchronize_rcu() call in __blk_mq_update_nr_hw_queues().
 
-Thanks,
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Jianchao Wang <jianchao.w.wang@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-mq.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Bart.
-
-Changes compared to v1:
-- Dropped the blk_poll() patch from this series.
-
-Bart Van Assche (3):
-  block: Remove the synchronize_rcu() call from
-    __blk_mq_update_nr_hw_queues()
-  block: Reduce the amount of memory required per request queue
-  block: Reduce the amount of memory used for tag sets
-
- block/blk-mq.c | 75 +++++++++++++++++++++++++++++++-------------------
- 1 file changed, 47 insertions(+), 28 deletions(-)
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 8538dc415499..7528678ef41f 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3242,10 +3242,6 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_freeze_queue(q);
+-	/*
+-	 * Sync with blk_mq_queue_tag_busy_iter.
+-	 */
+-	synchronize_rcu();
+ 	/*
+ 	 * Switch IO scheduler to 'none', cleaning up the data associated
+ 	 * with the previous scheduler. We will switch back once we are done
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
