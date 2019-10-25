@@ -2,174 +2,228 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 057A6E5193
-	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 18:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C959E51AC
+	for <lists+linux-block@lfdr.de>; Fri, 25 Oct 2019 18:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409519AbfJYQuc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Oct 2019 12:50:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34325 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440789AbfJYQuX (ORCPT
+        id S2502588AbfJYQzd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Oct 2019 12:55:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40318 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731452AbfJYQzc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:50:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so1958685pfa.1
-        for <linux-block@vger.kernel.org>; Fri, 25 Oct 2019 09:50:23 -0700 (PDT)
+        Fri, 25 Oct 2019 12:55:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so3121303wro.7;
+        Fri, 25 Oct 2019 09:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=+26/Ar9cTG9Hh1vjUEV5zDdPiLg86ysd6ifDvgpwm3M=;
+        b=ikG+Qy7ITFbLrrZn/9iW/ypSgP4djjAtm1hxQ4rGsM+XLNKzQGEnf+tQ7TW4uY3nmo
+         bYdFBdUfQ792TFaAOagBY/FViUdcxdAx72EoKAXJXBaKO0PyQn7UQFfvkRRB9QEGd0rx
+         CIJglX93xT9JqYXZz4bMMqcsM0DvyYrqzX0ymqwn42w87CCFhC+eQcA74HhHOOdOnmIx
+         H35BRpnchLnmOW8riYlybpGzidLtrOerrMnUaHq7bxYoPd1DlLGBBzibtDIj632Aow8b
+         FVlUXGgM7aotdperwAtysk6wdwJgbAYMe/Y8AWo1wMvqE0aV2UzLHk719xJBMN5moYnr
+         9Oig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CU0k9qROSs1SMECH5+HOGD2NHrqwUXVzrsyMYyRmrwk=;
-        b=e/4jHcxBkrWMKyCQysBzsL1IYNbABmTvAcXCQUxKFDT9QMJyvOMPtJKa0xo1PGpTIj
-         Kfcu6EAjIhhe6l09X5kkzO7b8ANvLUxFUPrSyj+Kdoa9u0otKInaTay9QB7lr5e1FvqX
-         LOe00aZA4CU7iuqEdaz7P1fCUSmMD9ftMTVkQ/ZNlfC5aUfEseDsppzpKo5m2wnLEVDj
-         5D6xBbPPClPxajpixMtiK9Awca9Kbv4GyEJEe3KB4e1OGvVt0M8SFUXTGaPNa0drHTh+
-         eVCozkv/GxC/gNYHWNJWUtbQ8s7TcOs/z9bqkbWnuguguxCh7eTURYAfjp91szMa31om
-         yOWw==
-X-Gm-Message-State: APjAAAXo+fr/Xo9bOLxZzWSdbqJODro6JR2xYXt+tsh2kJErQ2Xpwtmr
-        /+XfcOWfLRiJUDKV3Nh/BMI=
-X-Google-Smtp-Source: APXvYqz8hQoUcMKExVT6fSqCyp43/UBP4sTyOcmuT14wy6Y9Ktkx8vlkDISQ5RWwWp6QTRkwm7UG/g==
-X-Received: by 2002:a17:90b:153:: with SMTP id em19mr5390374pjb.22.1572022222551;
-        Fri, 25 Oct 2019 09:50:22 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id c8sm4088158pfi.117.2019.10.25.09.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 09:50:21 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>
-Subject: [PATCH v2 3/3] block: Reduce the amount of memory used for tag sets
-Date:   Fri, 25 Oct 2019 09:50:10 -0700
-Message-Id: <20191025165010.211462-4-bvanassche@acm.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-In-Reply-To: <20191025165010.211462-1-bvanassche@acm.org>
-References: <20191025165010.211462-1-bvanassche@acm.org>
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=+26/Ar9cTG9Hh1vjUEV5zDdPiLg86ysd6ifDvgpwm3M=;
+        b=Z1/rI/c/c7lFA8PE+NjNosyWQnyTWXQ0FGKAbiGX62s8veD06MwpbBM3kgZ8pC3uSw
+         QKh8CICH0EYvbMldAZWNn/DQk9JpH3auUKcB+D8cMaF6JBl4MDLOE8+OEWWdjZcvCNuP
+         pGcnacpfDFzEHMFeZ3jw/KBeqsat6iVe2hHJke/06DkT5SWLM6RyIOvc2W30KaJKkEKV
+         q+EwppgF9aZesFSuIXa9fiEgqKIHYQT2Bp65ZcZOkmNqug2i2i1ab7MSc8lcgcLzOjtY
+         iNmhjdda1kWZRI7BeVS1nXhcH10i7BJKnfww2B4A73j4ATfyURFY9ap+ucvRGDMlgz6g
+         D2dw==
+X-Gm-Message-State: APjAAAWmxg9lPyN4gAIP6FWgJ4RVJlWPB3p9BwvGqyu2aQMsMqJZ9soj
+        gmw8IRw1j/mjO49dLlHGejCV5XI9
+X-Google-Smtp-Source: APXvYqxSlB1UfwYIGCdCW9zl+vlOMKOl1LNevgy3Q/JP1gE3gqV/ZZnHW3WG5W7WFdRUkldSpxqqWQ==
+X-Received: by 2002:adf:dd87:: with SMTP id x7mr3881514wrl.278.1572022529490;
+        Fri, 25 Oct 2019 09:55:29 -0700 (PDT)
+Received: from [192.168.43.159] ([109.126.132.16])
+        by smtp.gmail.com with ESMTPSA id h205sm2950531wmf.35.2019.10.25.09.55.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2019 09:55:28 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
+ <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
+ <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
+ <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
+ <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
+ <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
+ <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [BUG] io_uring: defer logic based on shared data
+Message-ID: <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
+Date:   Fri, 25 Oct 2019 19:55:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of allocating an array of size nr_cpu_ids for set->tags, allocate
-an array of size set->nr_hw_queues. This patch improves behavior that was
-introduced by commit 868f2f0b7206 ("blk-mq: dynamic h/w context count").
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4
+Content-Type: multipart/mixed; boundary="8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
+Subject: Re: [BUG] io_uring: defer logic based on shared data
+References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
+ <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
+ <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
+ <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
+ <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
+ <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
+ <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+In-Reply-To: <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
 
-Reallocating tag sets from inside __blk_mq_update_nr_hw_queues() is safe
-because:
-- All request queues that share the tag sets are frozen before the tag sets
-  are reallocated.
-- blk_mq_queue_tag_busy_iter() holds q->q_usage_counter while active and
-  hence is serialized against __blk_mq_update_nr_hw_queues().
+--8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- block/blk-mq.c | 47 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 17 deletions(-)
+On 25/10/2019 19:44, Jens Axboe wrote:
+> On 10/25/19 10:40 AM, Pavel Begunkov wrote:
+>> On 25/10/2019 19:32, Jens Axboe wrote:
+>>> On 10/25/19 10:27 AM, Jens Axboe wrote:
+>>>> On 10/25/19 10:21 AM, Pavel Begunkov wrote:
+>>>>> On 25/10/2019 19:03, Jens Axboe wrote:
+>>>>>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
+>>>>>>> I found 2 problems with __io_sequence_defer().
+>>>>>>>
+>>>>>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
+>>>>>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, =
+so
+>>>>>>> it can be maliciously changed.
+>>>>>>>
+>>>>>>> see sent liburing test (test/defer *_hung()), which left an unkil=
+lable
+>>>>>>> process for me
+>>>>>>
+>>>>>> OK, how about the below. I'll split this in two, as it's really tw=
+o
+>>>>>> separate fixes.
+>>>>> cached_sq_dropped is good, but I was concerned about cached_cq_over=
+flow.
+>>>>> io_cqring_fill_event() can be called in async, so shouldn't we do s=
+ome
+>>>>> synchronisation then?
+>>>>
+>>>> We should probably make it an atomic just to be on the safe side, I'=
+ll
+>>>> update the series.
+>>>
+>>> Here we go, patch 1:
+>>>
+>>> http://git.kernel.dk/cgit/linux-block/commit/?h=3Dfor-linus&id=3Df2a2=
+41f596ed9e12b7c8f960e79ccda8053ea294
+>>>
+>>> patch 2:
+>>>
+>>> http://git.kernel.dk/cgit/linux-block/commit/?h=3Dfor-linus&id=3Db7d0=
+297d2df5bfa0d1ecf9d6c66d23676751ef6a
+>>>
+>> 1. submit rqs (not yet completed)
+>> 2. poll_list is empty, inflight =3D 0
+>> 3. async completed and placed into poll_list
+>>
+>> So, poll_list is not empty, but we won't get to polling again.
+>> At least until someone submitted something.
+>=20
+> But if they are issued, the will sit in ->poll_list as well. That list
+> holds both "submitted, but pending" and completed entries.
+>=20
+Missed it, then should work. Thanks!
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ba09cda49953..df41b2d16261 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2833,19 +2833,6 @@ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
- 	mutex_unlock(&q->sysfs_lock);
- }
- 
--/*
-- * Maximum number of hardware queues we support. For single sets, we'll never
-- * have more than the CPUs (software queues). For multiple sets, the tag_set
-- * user may have set ->nr_hw_queues larger.
-- */
--static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
--{
--	if (set->nr_maps == 1)
--		return nr_cpu_ids;
--
--	return max(set->nr_hw_queues, nr_cpu_ids);
--}
--
- struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 						  struct request_queue *q,
- 						  bool elevator_init)
-@@ -3012,6 +2999,29 @@ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
- 	}
- }
- 
-+static int blk_mq_realloc_tag_set_tags(struct blk_mq_tag_set *set,
-+				  int cur_nr_hw_queues, int new_nr_hw_queues)
-+{
-+	struct blk_mq_tags **new_tags;
-+
-+	if (cur_nr_hw_queues >= new_nr_hw_queues)
-+		return 0;
-+
-+	new_tags = kcalloc_node(new_nr_hw_queues, sizeof(struct blk_mq_tags *),
-+				GFP_KERNEL, set->numa_node);
-+	if (!new_tags)
-+		return -ENOMEM;
-+
-+	if (set->tags)
-+		memcpy(new_tags, set->tags, cur_nr_hw_queues *
-+		       sizeof(*set->tags));
-+	kfree(set->tags);
-+	set->tags = new_tags;
-+	set->nr_hw_queues = new_nr_hw_queues;
-+
-+	return 0;
-+}
-+
- /*
-  * Alloc a tag set to be associated with one or more request queues.
-  * May fail with EINVAL for various error conditions. May adjust the
-@@ -3065,9 +3075,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 	if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
- 		set->nr_hw_queues = nr_cpu_ids;
- 
--	set->tags = kcalloc_node(nr_hw_queues(set), sizeof(struct blk_mq_tags *),
--				 GFP_KERNEL, set->numa_node);
--	if (!set->tags)
-+	if (blk_mq_realloc_tag_set_tags(set, 0, set->nr_hw_queues) < 0)
- 		return -ENOMEM;
- 
- 	ret = -ENOMEM;
-@@ -3108,7 +3116,7 @@ void blk_mq_free_tag_set(struct blk_mq_tag_set *set)
- {
- 	int i, j;
- 
--	for (i = 0; i < nr_hw_queues(set); i++)
-+	for (i = 0; i < set->nr_hw_queues; i++)
- 		blk_mq_free_map_and_requests(set, i);
- 
- 	for (j = 0; j < set->nr_maps; j++) {
-@@ -3266,6 +3274,10 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 		blk_mq_sysfs_unregister(q);
- 	}
- 
-+	if (blk_mq_realloc_tag_set_tags(set, set->nr_hw_queues, nr_hw_queues) <
-+	    0)
-+		goto reregister;
-+
- 	prev_nr_hw_queues = set->nr_hw_queues;
- 	set->nr_hw_queues = nr_hw_queues;
- 	blk_mq_update_queue_map(set);
-@@ -3282,6 +3294,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 		blk_mq_map_swqueue(q);
- 	}
- 
-+reregister:
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
- 		blk_mq_sysfs_register(q);
- 		blk_mq_debugfs_register_hctxs(q);
--- 
-2.24.0.rc0.303.g954a862665-goog
+> + ret =3D iters =3D 0;
+A small suggestion, could we just initialise it in declaration
+to be a bit more concise?
+e.g. int ret =3D 0, iters =3D 0;=20
 
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+And let me test it as both patches are ready.
+
+--=20
+Yours sincerely,
+Pavel Begunkov
+
+
+--8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD--
+
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2zKPEACgkQWt5b1Glr
++6WY9xAApA/8lOF88RBWaaOKQJ6/xNjJZp+POTQp6hqDYumk1KyxZTCUOOuj4BuI
+2GFfKoYAHdvy3AhqNMnD+DtL7PKV0kzBqjwfs6iO8Glhhe/Ex7ec9/Ix+CV6taCJ
+MTrF6zLQ4UbaWKOuMuAPiEmiEMvLrZxoT6723S71mH2RKWQGf7A3BTLNa1lwsKLl
+GEGnukBB3iLhs4p2rwCfJoodeA5dkwE6E/RhCJCTQJ0EWSw3vToz+IEHSOhnarc4
+7P61D4LEoKHAh4d4aXP2LCRX3e1JSIPybWnJPV/Vy3TD1BfaCyj2et47xhmc6CwT
+9fW8XLFHV+dWHFI0KFwi1uXB48hxEsqmCggS2HzvFhEtHjvwX7QcDv/wUrb4pPWq
+72TVOPrChPHOdm98k7wrs/HDQN4xvR+clYHcoV0ec/KOUJ9TCsf6nMinpHCtI6g7
+XSgNTxP1NsAlk1gcvKfonj0MO60tDocFSeg8OEgMVBw8CjgSLAfwh/AKBAk4bFIV
+L6T2dlJZarg0XAE8o4eKYhIig2HBFH4Yb2UjsoyTI5xr2Q076633/BotVgy9/Dw2
+RXe+wRSyg8rLJPnF1Abq9ZNg8yO5YknCLDf20cP4bELJPBqO8xff3u+2sd8RPiVt
+zv7NqBE1IC6kHtNQLQpvz01NKtmtK0lIOZMlcDVYWm6F4+4pncA=
+=NA7N
+-----END PGP SIGNATURE-----
+
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4--
