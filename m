@@ -2,114 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B59E62CF
-	for <lists+linux-block@lfdr.de>; Sun, 27 Oct 2019 15:03:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231B6E62D6
+	for <lists+linux-block@lfdr.de>; Sun, 27 Oct 2019 15:05:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfJ0ODz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 27 Oct 2019 10:03:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35800 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfJ0ODz (ORCPT
+        id S1726690AbfJ0OFx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Oct 2019 10:05:53 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:11568 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfJ0OFw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:03:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so8570581lji.2
-        for <linux-block@vger.kernel.org>; Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
-        b=UBVoDLidxhGRZnO3t3s9odW+975NWscpsgyn72pMoIFtMXrLI8gYCDX8RoEk4dUGpu
-         XShVkulYmvYa4f4vPiGJkAOAAjj/NBHXSLZISLlhGaOzl5SAbZ6BhT9CpKJEgEzb8LhN
-         G2c7dQQvyPPapIvGT5FeHB9zbcHI3CN4A0Ff0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
-        b=iE1oFfxMS2HwylWUjoI9lvMXqoXnpyU8IW0yIuoc9d21IYAKZhal4mxmLfED7JwrbX
-         jNsIYPA4vB6eMRrKgkMLHP6zRCbpM6krXXhQrwnonUwgvb9HI6jRXdFp7hLPziVMGeKp
-         DOZ0+N03VRq7OYKSElUEH5N2MOt89eKdDktVfrM3ae7m7LHwJTR62o/1RCnydKuJKhZi
-         lOdhmdVHyIBekMCgCXl5vJgttBmRFKdLInAHKYVd+mbDoGdalwgR7VU/waO/5DnBuct4
-         /2ZOW7/yzLJRcX6Erzs75jjHS+H1JNY0cwNFXP+ET+T9ASIYlAYk0Sox2sbP4STXGg7a
-         cztw==
-X-Gm-Message-State: APjAAAUnigSNEIyMq5VcOAB/lXDMHUglPzAVAu0FRAzTpjYHqkhK5LCH
-        u7QQBDJTBsk3NiNBeDT2od+XuYoTDFzpRw==
-X-Google-Smtp-Source: APXvYqyPlSkx5WQKUgLKKB229T6ojZS9cKHb8u4dx8XtYhaPyxK2LW2p6vLKoYIIxvkN60I8XQKY8g==
-X-Received: by 2002:a2e:8947:: with SMTP id b7mr2933734ljk.29.1572185033138;
-        Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id k82sm6231113lje.101.2019.10.27.07.03.52
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id 139so8375312ljf.1
-        for <linux-block@vger.kernel.org>; Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr8760744ljp.133.1572185032112;
- Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
+        Sun, 27 Oct 2019 10:05:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1572185222; x=1603721222;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=utIVpuMkwaTdskTo45vxPM/J/8/lle5F97i1zeRPlaI=;
+  b=MvI++XDP5mHmNbryaJiiO0YV9cH5oCdvEm2sa2ICnPTL/oxs9Leummb7
+   uBAAZ7KPObiyGOZFxbuy1R3DEEOs6Tr75clDvPtpagwkK0S9h/5WP8IZa
+   +Jg6dOYRr0QQcV2uq8coLdtNiG/HN8snIwKe7ppDo4fhKT7OOe8R8qP5n
+   di8lAxX58q1XjVVlQyDIQ/DBVn4eYcsxZqBMn++efh927TmhZf5XngDY4
+   Djw9Ub0QYF7D5S2VWmk53wTTNamAPv+siyEYqsTWsjzdxjQmutFb/VBoQ
+   uAAwAbPgxOQQ4bHJcTL8RwZYlHbtNeMPjLwVoyEWAYDfDhovmn2C/JPx9
+   w==;
+IronPort-SDR: 0fgX3hgxsqOxx4JMXPjA0PkrT5b03a/Qs3bLjqWSPQozgu2aM69ReTHhr3g2fW8T7DcpMe8QZQ
+ X6pShLvum9kqI4/QvtOG1qTSYLltu4uQrVeKn//UAH3sf6Bm1Hsv3jZvV99yLQruIBsd85B8Mu
+ tKkMH4z1FF8+4g7mh4MEUucKOYQwMVkZS5vHTn+PPZxs8upt8loTVmqQmLmc6sYZ3eqxodl2M6
+ C97wzDBCC4PGPkc9Krkm3cr4H1A/7e1gaREkk1iwVB7OUcNjb68wW8T8WSbIu5ckCuIpZubkQB
+ 9ys=
+X-IronPort-AV: E=Sophos;i="5.68,236,1569254400"; 
+   d="scan'208";a="222578532"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Oct 2019 22:07:02 +0800
+IronPort-SDR: YmdfsQJsC+cUkTScAHfzAN0ZfF0CK0mD+J4wuORYuRu+u5upRxdY94BIeVnLka89qM/H8VcegG
+ haq9JNoY4z0QOI8jKP/BqOmrcft3uFEp7/IMehce/Ylgq9iGfJIVG86TmdpAJ7wVts7cuZYQHW
+ cMbum8sWOiMEENXJZ63FGnFkZ8XJGBPS8y0NZWJAlSv9jwJW6FAfw6dyWDTLpyjMjlMF+J0OlJ
+ LygZWMmBEjRT4qfEUjFH+lmmUhOzUrLlD397O+PRO4/eK3GKlL2Pa+QV8RHWskA/cGTmjAaW+w
+ ZXN3bgoWk4m72Bg/eIROjuPg
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 07:01:15 -0700
+IronPort-SDR: +RZzKRYzw04dKAZWap4nRW126plQWlg5ewBORgqIOHsG+JaBctwQxupeWsJuzTXv5gowAeF0eh
+ X8WPaAQu3Vur/D8ASXdNogN+xAudZYi6dYSbj4KKAof4dUKREP1ajzZN5vsocLv0BFf/9AgGiH
+ 7XeurbURQa/MmJ0MRgnKi359C/OqtsdN8FbD7S/uS+pPaE6RWYTKX1mLxV+7ss73+B6Z8A+KQH
+ h1ajkIbfurdX22hvijRmEq1rpG/6yTkjZhbjuoNPK2oj8Q/wmf9g95hhlY8ogoQLwchkUqFNA8
+ was=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Oct 2019 07:05:50 -0700
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>
+Cc:     Ajay Joshi <ajay.joshi@wdc.com>,
+        Matias Bjorling <matias.bjorling@wdc.com>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 0/8] Zone management commands support
+Date:   Sun, 27 Oct 2019 23:05:41 +0900
+Message-Id: <20191027140549.26272-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 27 Oct 2019 10:03:35 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
-Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This still has signs of that earlier series:
+This series implements a few improvements and cleanups to zone block
+device zone reset operations with the first three patches.
 
-On Wed, Oct 23, 2019 at 4:17 PM David Howells <dhowells@redhat.com> wrote:
->
->                 if (rem >= ibuf->len) {
->                         *obuf = *ibuf;
->                         ibuf->ops = NULL;
-> -                       pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
-> -                       pipe->nrbufs--;
-> +                       tail++;
-> +                       pipe_commit_read(pipe, tail);
->                 } else {
->                         if (!pipe_buf_get(pipe, ibuf))
->                                 goto out_free;
+The remaining of the series patches introduce zone open, close and
+finish support, allowing users of zoned block devices to explicitly
+control the condition (state) of zones.
 
-with those odd "pipe_commit_read/write()" helpers.
+While these operations are not stricktly necessary for the correct
+operation of zoned block devices, the open and close operations can
+improve performance for some device implementations of the ZBC and ZAC
+standards under write workloads. The finish zone operation, which
+transition a zone to the full state, can also be useful to protect a
+zone data by preventing further zone writes.
 
-They make no sense, and they don't make things more legible.
+These operations are implemented by introducing the new
+REQ_OP_ZONE_OPEN, REQ_OP_ZONE_CLOSE and REQ_OP_ZONE_FINISH request codes
+and the function blkdev_zone_mgmt() to issue these requests. This new
+function also replaces the former blkdev_reset_zones() function to reset
+zones write pointer.
 
-It's shorter and more obvious to just write
+The new ioctls BLKOPENZONE, BLKCLOSEZONE and BLKFINISHZONE are also
+defined to allow applications to issue these new requests without
+resorting to a device passthrough interface (e.g. SG_IO).
 
-   pipe->head = head;
+Support for these operations is added to the SCSI sd driver, to the dm
+infrastructure (dm-linear and dm-flakey targets) and to the null_blk
+driver.
 
-than it is to write
+Ajay Joshi (5):
+  block: add zone open, close and finish operations
+  block: add zone open, close and finish ioctl support
+  scsi: sd_zbc: add zone open, close, and finish support
+  dm: add zone open, close and finish support
+  null_blk: add zone open, close, and finish support
 
-   pipe_commit_write(pipe, head);
+Damien Le Moal (3):
+  block: Remove REQ_OP_ZONE_RESET plugging
+  block: Simplify REQ_OP_ZONE_RESET_ALL handling
+  scsi: sd_zbc: Fix sd_zbc_complete()
 
-Even when the addition of the notifications,  it's all under the
-pipe->wait.lock, so it's all just regular assignments.
+ block/blk-core.c               | 12 +++--
+ block/blk-zoned.c              | 99 ++++++++++++++++++----------------
+ block/ioctl.c                  |  5 +-
+ drivers/block/null_blk_zoned.c | 33 ++++++++++--
+ drivers/md/dm-flakey.c         |  7 ++-
+ drivers/md/dm-linear.c         |  2 +-
+ drivers/md/dm-zoned-metadata.c |  6 +--
+ drivers/md/dm.c                |  5 +-
+ drivers/scsi/sd.c              | 15 +++++-
+ drivers/scsi/sd.h              |  8 +--
+ drivers/scsi/sd_zbc.c          | 43 +++++++--------
+ fs/f2fs/segment.c              |  3 +-
+ include/linux/blk_types.h      | 25 +++++++++
+ include/linux/blkdev.h         | 15 +++---
+ include/uapi/linux/blkzoned.h  | 17 ++++--
+ 15 files changed, 192 insertions(+), 103 deletions(-)
 
-Now, if at some point it starts doing fancy lockless things, at _that_
-point the updates might become more complex, but that's a potential
-future thing that wouldn't be relevant for a while, and isn't a reason
-to make the code more obscure now.
+-- 
+2.21.0
 
-Hmm?
-
-             Linus
