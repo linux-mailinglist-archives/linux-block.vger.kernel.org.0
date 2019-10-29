@@ -2,67 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E781E8645
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2019 12:04:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7787DE87B8
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2019 13:07:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbfJ2LE2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Oct 2019 07:04:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49982 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2LE2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:04:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1ZbSp1CPL1cN9bi6Y9K+vpaW0lBwJnmkUNhvWg9tzjs=; b=Ld/JXI5ZJayM4AljENdLIke5G
-        OOfKWI2qFEGEdflRVLCCx4tigevR6zkw3gco5hLBdqx2sIENBwvy/Rmtx1JF/3/mtz1XH7ba4fQEv
-        +BpJMN6MW/X3vjjfEwX1xsmHv1YV7+pM7Ts2/NDKK4tmGZYJHmRoKK8SoMT6U9pvZnP/2zhkaDHU9
-        noC1Ph/Yjm0je2aVrwgobtEyV5N5Ftrz6bN5tVT9hzJh+CYyvtEFAQObGJw8UNSdYI00PGNN36kJi
-        LswI1+rIyTMOg6OqPppO8DGTlepaAeuftobg8zua6a0eP+doVsegGD04NOuG2Ng2GqByOW7l3Ah3A
-        1AxTQAT+A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPPIX-0004jT-PL; Tue, 29 Oct 2019 11:04:25 +0000
-Date:   Tue, 29 Oct 2019 04:04:25 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Coly Li <colyli@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <kbusch@kernel.org>, linux-bcache@vger.kernel.org
-Subject: Re: [PATCH V3] block: optimize for small block size IO
-Message-ID: <20191029110425.GA4382@infradead.org>
-References: <20191029105125.12928-1-ming.lei@redhat.com>
+        id S1728943AbfJ2MHu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Tue, 29 Oct 2019 08:07:50 -0400
+Received: from s0090.ppsmtp.net ([91.90.154.91]:47998 "EHLO s0090.ppsmtp.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfJ2MHu (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:07:50 -0400
+X-Greylist: delayed 35214 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 08:07:49 EDT
+Received: from pps.filterd (s0090.ppsmtp.net [127.0.0.1])
+        by s0090.ppsmtp.net (8.16.0.27/8.16.0.27) with SMTP id x9T2IlrZ017424;
+        Tue, 29 Oct 2019 03:18:47 +0100
+Received: from mail.schuetz.net ([212.185.169.233])
+        by s0090.ppsmtp.net with ESMTP id 2vx8bh8576-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 03:18:47 +0100
+Received: from julia02 (localhost [127.0.0.1])
+        by mail.schuetz.net (Postfix) with ESMTP id 09073201C26D;
+        Tue, 29 Oct 2019 03:18:47 +0100 (CET)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029105125.12928-1-ming.lei@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Subject: Dear Friend,
+To:     Recipients <infocarfer1@aim.com>
+From:   "Mr.R.C" <infocarfer1@aim.com>
+Date:   Tue, 29 Oct 2019 02:18:31 +0000
+Reply-To: infocarfer@aim.com
+X-TNEFEvaluated: 1
+Message-ID: <OF9E20FB0B.9E64E8D5-ON882584A2.000CB464@schuetz.net>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Description: Mail message body
+X-Proofpoint-ID: SID=2vx8bh8576 QID=2vx8bh8576-1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
+ signatures=0
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I still haven't seen an explanation why this simple thing doesn't work
-just as well:
+Dear Friend,
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 48e6725b32ee..f3073700166f 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -309,6 +309,11 @@ void __blk_queue_split(struct request_queue *q, struct bio **bio,
- 				nr_segs);
- 		break;
- 	default:
-+		if ((*bio)->bi_vcnt == 1 &&
-+		    (*bio)->bi_io_vec[0].bv_len <= PAGE_SIZE) {
-+			*nr_segs = 1;
-+			return;
-+		}
- 		split = blk_bio_segment_split(q, *bio, &q->bio_split, nr_segs);
- 		break;
- 	}
+I am Vice Chairman of Hang Seng Bank, I have Important Matter to Discuss with you concerning my late client, Died without a NEXT OF KIN. Send me your private email for full details information. email me at (infocarfer@aim.com)
+Mail:
+Regards
