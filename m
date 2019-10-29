@@ -2,47 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7787DE87B8
-	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2019 13:07:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A433DE87D2
+	for <lists+linux-block@lfdr.de>; Tue, 29 Oct 2019 13:13:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfJ2MHu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Tue, 29 Oct 2019 08:07:50 -0400
-Received: from s0090.ppsmtp.net ([91.90.154.91]:47998 "EHLO s0090.ppsmtp.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfJ2MHu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:07:50 -0400
-X-Greylist: delayed 35214 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 08:07:49 EDT
-Received: from pps.filterd (s0090.ppsmtp.net [127.0.0.1])
-        by s0090.ppsmtp.net (8.16.0.27/8.16.0.27) with SMTP id x9T2IlrZ017424;
-        Tue, 29 Oct 2019 03:18:47 +0100
-Received: from mail.schuetz.net ([212.185.169.233])
-        by s0090.ppsmtp.net with ESMTP id 2vx8bh8576-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 03:18:47 +0100
-Received: from julia02 (localhost [127.0.0.1])
-        by mail.schuetz.net (Postfix) with ESMTP id 09073201C26D;
-        Tue, 29 Oct 2019 03:18:47 +0100 (CET)
+        id S1727064AbfJ2MNU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Oct 2019 08:13:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40309 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727438AbfJ2MNU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:13:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o28so13377767wro.7
+        for <linux-block@vger.kernel.org>; Tue, 29 Oct 2019 05:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=XYis85XXQhcd2SkQXzhhTcjdkLmbB4AJeu/17MYU70E=;
+        b=t7JjoPEwPSSydswS392SYh13NcpoFMCqxk453K0LxF2N+BbcpCwncngTLztjwptqnN
+         DcdVEGmykDPCydMbW2YwSvf5RlGoEPPKtYiPCbAgNULnfEYodbvxYq2Pi5k/Cunw5Jmr
+         eW6nFyQBoHoUSeErDkefQf39fCX0/34vFmRueybkqpdIw+qdVm3Jysta6U0S15jXl7yy
+         plustJSkpG3dGL0X/JtD3CggTDq6s4AMMY25L8xtWSj25ni4M7wZ1xVUwv/MQIOXMxeb
+         QbHWCxrn4iatTv1tVFVFpY0tZU8DVD8bLN6TkuWEPKxUxTSVIyALF+y5LXI/d7Z+ogzb
+         rIVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XYis85XXQhcd2SkQXzhhTcjdkLmbB4AJeu/17MYU70E=;
+        b=G56A93W5VzsWC+uT3tR37KqKtZRfWpD2b5aVcQ7Xn3VCPF2TX9+SFUszeKlgc9gs3j
+         m1njQIipxxtE3H707lX9TyQiTFV7XsMFlvnhanCxTseCHP02IRVCH3F10l1xdbDW6+6s
+         jfVn/W4KrIB+5jy8MqDLO58ewwtLeUYvkdoBa1PQ0eWhkOYZ2Q8KHzlMYGUyew55su1f
+         EjXa4dMa7zOPrLrH/Vql/DG3qxwo+Nh2+UhHo2fHSS6aArc4SjUVJ/cJ9uuHfSZOQVXF
+         jjUq8xYU33Fq/tD5aywNSsK967ODP9SO+5S0gNDOOcFZKosexeGedJAogJ+McTJ+mggT
+         n+sQ==
+X-Gm-Message-State: APjAAAW02D0Pl199kP+dKJCe7njSEPxgkVMWLIYd9xxzbfCHI9JNaCAL
+        X4nSQlMt2aiCVA6Brv2BZJTvLw==
+X-Google-Smtp-Source: APXvYqxYNZl6KADg03qJIEP+vtpqMpRTmeTJBC0MGbnAV8ZdmD8Gf4I3Y1BqR0OGyyksPz3If0R3Cg==
+X-Received: by 2002:a5d:6203:: with SMTP id y3mr19765135wru.142.1572351198151;
+        Tue, 29 Oct 2019 05:13:18 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id p1sm2533019wmg.11.2019.10.29.05.13.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 05:13:17 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 13:13:16 +0100
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>,
+        Ajay Joshi <ajay.joshi@wdc.com>,
+        Matias Bjorling <matias.bjorling@wdc.com>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH 1/8] block: Remove REQ_OP_ZONE_RESET plugging
+Message-ID: <20191029121316.o7o7cjurn6qp2gse@MacBook-Pro.gnusmas>
+References: <20191027140549.26272-1-damien.lemoal@wdc.com>
+ <20191027140549.26272-2-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-Subject: Dear Friend,
-To:     Recipients <infocarfer1@aim.com>
-From:   "Mr.R.C" <infocarfer1@aim.com>
-Date:   Tue, 29 Oct 2019 02:18:31 +0000
-Reply-To: infocarfer@aim.com
-X-TNEFEvaluated: 1
-Message-ID: <OF9E20FB0B.9E64E8D5-ON882584A2.000CB464@schuetz.net>
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Description: Mail message body
-X-Proofpoint-ID: SID=2vx8bh8576 QID=2vx8bh8576-1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
- signatures=0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191027140549.26272-2-damien.lemoal@wdc.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
+On 27.10.2019 23:05, Damien Le Moal wrote:
+>REQ_OP_ZONE_RESET operations cannot be merged as these bios and requests
+>do not have a size and are never sequential due to the zone start sector
+>position required for their execution. As a result, there is no point in
+>using a plug around blkdev_reset_zones() bio issuing loop. This patch
+>removes this unnecessary plugging.
+>
+>Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>---
+> block/blk-zoned.c | 4 ----
+> 1 file changed, 4 deletions(-)
+>
+>diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+>index 4bc5f260248a..7fe376eede86 100644
+>--- a/block/blk-zoned.c
+>+++ b/block/blk-zoned.c
+>@@ -258,7 +258,6 @@ int blkdev_reset_zones(struct block_device *bdev,
+> 	sector_t zone_sectors;
+> 	sector_t end_sector = sector + nr_sectors;
+> 	struct bio *bio = NULL;
+>-	struct blk_plug plug;
+> 	int ret;
+>
+> 	if (!blk_queue_is_zoned(q))
+>@@ -283,7 +282,6 @@ int blkdev_reset_zones(struct block_device *bdev,
+> 	    end_sector != bdev->bd_part->nr_sects)
+> 		return -EINVAL;
+>
+>-	blk_start_plug(&plug);
+> 	while (sector < end_sector) {
+>
+> 		bio = blk_next_bio(bio, 0, gfp_mask);
+>@@ -301,8 +299,6 @@ int blkdev_reset_zones(struct block_device *bdev,
+> 	ret = submit_bio_wait(bio);
+> 	bio_put(bio);
+>
+>-	blk_finish_plug(&plug);
+>-
+> 	return ret;
+> }
+> EXPORT_SYMBOL_GPL(blkdev_reset_zones);
+>-- 
+>2.21.0
+>
 
-I am Vice Chairman of Hang Seng Bank, I have Important Matter to Discuss with you concerning my late client, Died without a NEXT OF KIN. Send me your private email for full details information. email me at (infocarfer@aim.com)
-Mail:
-Regards
+Looks good to me.
+
+Reviewed-by: Javier González <javier@javigon.com>
