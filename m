@@ -2,27 +2,29 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BC49EA627
-	for <lists+linux-block@lfdr.de>; Wed, 30 Oct 2019 23:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF1CBEA628
+	for <lists+linux-block@lfdr.de>; Wed, 30 Oct 2019 23:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfJ3W2h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Oct 2019 18:28:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39724 "EHLO
+        id S1726646AbfJ3W2k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Oct 2019 18:28:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39730 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfJ3W2h (ORCPT
+        with ESMTP id S1726377AbfJ3W2k (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:28:37 -0400
+        Wed, 30 Oct 2019 18:28:40 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: tonyk)
-        with ESMTPSA id 6391C28F108
+        with ESMTPSA id 29E3F28F109
 From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
 To:     linux-block@vger.kernel.org
 Cc:     osandov@fb.com, kernel@collabora.com, krisman@collabora.com,
         =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH blktests v2 0/3] Add --config argument for custom config filenames
-Date:   Wed, 30 Oct 2019 19:27:04 -0300
-Message-Id: <20191030222707.10142-1-andrealmeid@collabora.com>
+Subject: [PATCH blktests v2 1/3] check: Make "device-only" option a valid option
+Date:   Wed, 30 Oct 2019 19:27:05 -0300
+Message-Id: <20191030222707.10142-2-andrealmeid@collabora.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030222707.10142-1-andrealmeid@collabora.com>
+References: <20191030222707.10142-1-andrealmeid@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -31,57 +33,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of just using the default config file, one may also find useful to
-specify which configuration file would like to use without editing the config
-file, like this:
+"--device-only" option is described at the "Usage" help message and it's
+even parsed as an option by the main code. However, since it's not a
+parameter of getopt, when trying to use it will trigger a "unrecognized
+option". Fix that to allow usage of this option.
 
-$ ./check --config=tests_nvme
-...
-$ ./check -c tests_scsi
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+ check | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This pull request solves this. This change means to be optional, in the sense
-that the default behavior should not be modified and current setups will not be
-affect by this. To check if this is true, I have done the following test:
-
-- Print the value of variables $DEVICE_ONLY, $QUICK_RUN, $TIMEOUT,
-  $RUN_ZONED_TESTS, $OUTPUT, $EXCLUDE
-  
-- Run with the following setups:
-    - with a config file in the dir
-    - without a config file in the dir
-    - configuring using command line arguments
-
-With both original code and with my changes, I validated that the values
-remained the same. Then, I used the argument --config=test_config to check that
-the values of variables are indeed changing.
-
-This patchset add this feature, update the docs and fix a minor issue with a
-command line argument. Also, I have changed "# shellcheck disable=SC1091" to
-"# shellcheck source=/dev/null", since it seems the proper way to disable this
-check according to shellcheck documentation[1].
-
-Thanks,
-André
-
-Changes since v1:
-- Reorder commit, so bug fix comes first
-- Document multiple -c options behavior
-
-
-[1] https://github.com/koalaman/shellcheck/wiki/SC1090#exceptions
-
-This patch is also avaible at GitHub:
-https://github.com/osandov/blktests/pull/56
-
-André Almeida (3):
-  check: Make "device-only" option a valid option
-  check: Add configuration file option
-  Documentation: Add information about `--config` argument
-
- Documentation/running-tests.md |  4 +++-
- check                          | 30 +++++++++++++++++++++++++-----
- 2 files changed, 28 insertions(+), 6 deletions(-)
-
+diff --git a/check b/check
+index 981058c..a19b9dc 100755
+--- a/check
++++ b/check
+@@ -650,7 +650,7 @@ Miscellaneous:
+ 	esac
+ }
+ 
+-if ! TEMP=$(getopt -o 'do:q::x:h' --long 'quick::,exclude:,output:,help' -n "$0" -- "$@"); then
++if ! TEMP=$(getopt -o 'do:q::x:h' --long 'device-only,quick::,exclude:,output:,help' -n "$0" -- "$@"); then
+ 	exit 1
+ fi
+ 
 -- 
 2.23.0
 
