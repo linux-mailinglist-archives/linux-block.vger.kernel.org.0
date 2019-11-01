@@ -2,103 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC38EC5B5
-	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2019 16:39:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83252EC5F6
+	for <lists+linux-block@lfdr.de>; Fri,  1 Nov 2019 16:55:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfKAPjO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 1 Nov 2019 11:39:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26232 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727100AbfKAPjO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Nov 2019 11:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572622753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hHv6A+h/Dq+ReB2buZXJaNywCF6LwXpddH9bma5MoT0=;
-        b=JpQi41XtIjXk13n+kVPeh1xTklckwATC/cyhm1kw3UfJDMLdJ7+E37s8rLlcpmGTGb1eWj
-        35ed93jPF0B7+JzO79g9nAREYA/xHYNbDb4lyBxNkZEu1vmpDEbHFeZeEtCzjKGR5ZqbN1
-        jQ694sINfsMrXHzGJQrf0f+xjM8zSf0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-tkS-tnEbNJuwIoKMtCvYvg-1; Fri, 01 Nov 2019 11:39:09 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E60BD1800D67;
-        Fri,  1 Nov 2019 15:39:07 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FFA85C3FD;
-        Fri,  1 Nov 2019 15:39:07 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iocost: don't nest spin_lock_irq in ioc_weight_write()
-References: <20191031105341.GA26612@mwanda>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 01 Nov 2019 11:39:06 -0400
-In-Reply-To: <20191031105341.GA26612@mwanda> (Dan Carpenter's message of "Thu,
-        31 Oct 2019 13:53:41 +0300")
-Message-ID: <x49d0ebd2sl.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1729146AbfKAPzu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 1 Nov 2019 11:55:50 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45998 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729155AbfKAPzt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Nov 2019 11:55:49 -0400
+Received: by mail-il1-f193.google.com with SMTP id b12so9032819ilf.12
+        for <linux-block@vger.kernel.org>; Fri, 01 Nov 2019 08:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KqYLJklOErTzrVm5Bzbb6HQh9gI4PrbbORQE30GcC5Y=;
+        b=pUJIzGj/MPv1EKc2k3aNehKVojTiwbi36zg1sckIL11PdqXfau1yGsXj1t9CSJeyKL
+         3i/jp/TX/JDBG+iju9GRvxcye9SA9yiSTdccj7/EyUgYmTSSLRFNkcsvQASN37kQDgQc
+         jnResb6aJSg07Bq5suGRVdOqTkrlyY1YMgTmHgQc7tz+apzSU8zlfJ8cqPEt/z1Bd3OE
+         3WNB6qm/Pkg8xI5aHgZ1XzvGw6eZK1PwDo4winMpdBi8I/fqM1G/oYqHCv2wNxwHhj5m
+         N0Nph5NSOfE5c8csPVkAAUkUAiHHdFA9X2wHOboX58ouCDBOqdL9C38hXp5o3eU3+tNB
+         N8dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KqYLJklOErTzrVm5Bzbb6HQh9gI4PrbbORQE30GcC5Y=;
+        b=germHwnL4LlRmX+dketvG2BjEPE/W0z4ROXw1v8aYkDfDQ27OqI0yuljaewEIt9+u9
+         aZ6t9Z5BmG0zv2F82h4OLdnBwBGL92WOvSCV7fn2tvnJ0K8mFN+QXCDzB8TNBtzeg/ZL
+         DDB7Wn/JaOtljYmiXsow4dYm+n3AKMILJOKl/5ZilC+lNiGZeqorGUbvY5USjxwnnEr5
+         9/QYusO4UR2kI15P6yfzzXljikNMkWatvCiZQNynUZF24bTY6+pWydyUaqucbpWNHhl/
+         oMTCOhwi7qDwCmOBOSXDvwGTXRD/+VUR2UlTcN7M2fvBhiA/kpQqA70FZ8IovJEsN4VT
+         Zo+Q==
+X-Gm-Message-State: APjAAAUrP2i83ij8YTdqJWIFi89T8i211hY3NPUL7CC8g5KfhPAH6lwf
+        iNskEn9/U63BCrwFKAQnempDOCVORij3TkDV1A==
+X-Google-Smtp-Source: APXvYqwNtyKjT0pXbrd92BXP7Yur4/d12tLIQphfDkWOJF9bZR6SLYcfNyjCPNgVxkpA0mTQo/BiL8Zaftdd9XRgWqY=
+X-Received: by 2002:a92:1d8d:: with SMTP id g13mr8826976ile.35.1572623748630;
+ Fri, 01 Nov 2019 08:55:48 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: tkS-tnEbNJuwIoKMtCvYvg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 1 Nov 2019 08:55:48 -0700 (PDT)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Mary Coster, I.M.F director-Benin" 
+        <info.zennitbankplcnigerian@gmail.com>
+Date:   Fri, 1 Nov 2019 16:55:48 +0100
+Message-ID: <CABHzvrmPdjgy_vBxQMfJ2YwGwj1RyCvQt1Oy5GJczarHTQb=pg@mail.gmail.com>
+Subject: Contact Money Gram international service-Benin to receive your
+ payment funds US$2.500,000 Million
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dan Carpenter <dan.carpenter@oracle.com> writes:
-
-> This code causes a static analysis warning:
->
->     block/blk-iocost.c:2113 ioc_weight_write() error: double lock 'irq'
->
-> We disable IRQs in blkg_conf_prep() and re-enable them in
-> blkg_conf_finish().  IRQ disable/enable should not be nested because
-> that means the IRQs will be enabled at the first unlock instead of the
-> second one.
-
-Can you please also add a comment stating that irqs were disabled in
-blkg_conf_prep?  Otherwise future readers will surely be scratching
-their heads trying to figure out why we do things two different ways in
-the same function.
-
-Thanks!
-Jeff
-
->
-> Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  block/blk-iocost.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-> index 2a3db80c1dce..a7ed434eae03 100644
-> --- a/block/blk-iocost.c
-> +++ b/block/blk-iocost.c
-> @@ -2110,10 +2110,10 @@ static ssize_t ioc_weight_write(struct kernfs_ope=
-n_file *of, char *buf,
->  =09=09=09goto einval;
->  =09}
-> =20
-> -=09spin_lock_irq(&iocg->ioc->lock);
-> +=09spin_lock(&iocg->ioc->lock);
->  =09iocg->cfg_weight =3D v;
->  =09weight_updated(iocg);
-> -=09spin_unlock_irq(&iocg->ioc->lock);
-> +=09spin_unlock(&iocg->ioc->lock);
-> =20
->  =09blkg_conf_finish(&ctx);
->  =09return nbytes;
-
+Attn Dear,Funds Beneficiary.
+Contact Money Gram international service-Benin to receive your payment
+funds US$2.500,000 Million approved this morning through the UN
+payment settlement organization.
+Contact Person, Mr. John Dave.
+Official Director.Money Gram-Benin
+Email: moneygram.1820@outlook.fr
+Telephone +229 62619517
+Once you get intouch with Mr. John Dave, Money Gram Director, send to
+him your address including your phone numbers. He will be sending the
+transfer to you  $5000.00 USD daily until you received your complete
+payment $2.5m from the office.
+Note,I have paid the whole service fees for you but only small money
+you been required to send to this office is $23.00 only via Money Gram
+transfer.
+God bless
+Mary Coster, I.M.F director-Benin
+m.coster@aol.com
