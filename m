@@ -2,62 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57104EDA5B
-	for <lists+linux-block@lfdr.de>; Mon,  4 Nov 2019 09:08:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95009EDA92
+	for <lists+linux-block@lfdr.de>; Mon,  4 Nov 2019 09:27:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfKDIIu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 4 Nov 2019 03:08:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40784 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726441AbfKDIIu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:08:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B38B7AD8C;
-        Mon,  4 Nov 2019 08:08:48 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F38F61E4809; Mon,  4 Nov 2019 09:08:47 +0100 (CET)
-Date:   Mon, 4 Nov 2019 09:08:47 +0100
-From:   Jan Kara <jack@suse.cz>
+        id S1727499AbfKDI1Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 4 Nov 2019 03:27:25 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40439 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726100AbfKDI1Z (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 4 Nov 2019 03:27:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572856044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QdQl81n0UTgWStNxUsm/z1Hfm51ZVadasHNxoeSSYqM=;
+        b=SXG/WNwTq3b7qROcfst324KI1ulXqVpHUYCbng9ilkWhGLT0QfRA5oiIHs04texmE4oL6/
+        2mjo2ByCr0ErJ+Cd+8FYxRrFcl+zYDDzmeSNRePnfzmH5jkZ9rEQKHTvHli8lO+ryGHglQ
+        TgN578CNdSn2cwK5AyLe9f/6e0E3GyY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-7qjl8rWvMKGKxqfofxscWQ-1; Mon, 04 Nov 2019 03:27:17 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFFBA2A3;
+        Mon,  4 Nov 2019 08:27:16 +0000 (UTC)
+Received: from localhost (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A18E26FAA;
+        Mon,  4 Nov 2019 08:27:12 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org
-Subject: Re: [PATCH 0/2] bdev: Refresh bdev size for disks without
- partitioning
-Message-ID: <20191104080847.GA22379@quack2.suse.cz>
-References: <20191021083132.5351-1-jack@suse.cz>
- <bdc9f71e-09ea-9a4c-08fd-d5b60263f11d@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH] blk-mq: make sure that line break can be printed
+Date:   Mon,  4 Nov 2019 16:26:53 +0800
+Message-Id: <20191104082653.3279-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdc9f71e-09ea-9a4c-08fd-d5b60263f11d@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 7qjl8rWvMKGKxqfofxscWQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun 03-11-19 07:53:10, Jens Axboe wrote:
-> On 10/21/19 2:37 AM, Jan Kara wrote:
-> > Hello,
-> > 
-> > I've been debugging for quite a long time strange issues with encrypted DVDs
-> > not being readable on Linux (bko#194965). In the end I've tracked down the
-> > problem to the fact that block device size is not updated when the media is
-> > inserted in case the DVD device is already open. This is IMO a bug in block
-> > device code as the size gets properly update in case the device has partition
-> > scanning enabled.  The following series fixes the problem by refreshing disk
-> > size on each open even for devices with partition scanning disabled.
-> 
-> It's really confusing to have different behavior for partition vs whole device.
-> This series looks good to me, the size change code is really hard to follow.
-> 
-> I don't see any serious objections here, I'm going to queue this up for
-> 5.4.
+8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores"=
+)
+avoids sysfs buffer overflow, and reserves one charactor for line break.
+However, the last snprintf() doesn't get correct 'size' parameter passed
+in, so fixed it.
 
-Thanks Jens! I'll look into refactoring the size change / revalidation code
-so that it's easier to understand what's going on...
+Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU=
+ cores")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ block/blk-mq-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
+index 4caa56d1bc85..062229395a50 100644
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -175,7 +175,7 @@ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_=
+hw_ctx *hctx, char *page)
+ =09=09pos +=3D ret;
+ =09}
+=20
+-=09ret =3D snprintf(pos + page, size - pos, "\n");
++=09ret =3D snprintf(pos + page, size + 1 - pos, "\n");
+ =09return pos + ret;
+ }
+=20
+--=20
+2.20.1
+
