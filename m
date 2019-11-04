@@ -2,115 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8702EE1E4
-	for <lists+linux-block@lfdr.de>; Mon,  4 Nov 2019 15:08:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 036D3EE1C8
+	for <lists+linux-block@lfdr.de>; Mon,  4 Nov 2019 15:01:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfKDOIJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 4 Nov 2019 09:08:09 -0500
-Received: from smtprelay0214.hostedemail.com ([216.40.44.214]:47015 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727766AbfKDOIJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:08:09 -0500
-X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 09:08:08 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 631D018026108;
-        Mon,  4 Nov 2019 13:59:11 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id A5FAF18223251;
-        Mon,  4 Nov 2019 13:59:09 +0000 (UTC)
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,rostedt@goodmis.org,:::::::::::::::::::::::::::::::::::::::,RULES_HIT:41:69:355:379:541:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1431:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2693:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3870:3871:3872:3873:4605:5007:6261:6742:7576:7875:8603:8957:10004:10400:10848:10967:11026:11232:11658:11914:12043:12296:12297:12438:12683:12740:12760:12895:13439:14096:14097:14181:14659:14721:21080:21451:21627:30054:30064:30080:30090:30091,0,RBL:146.247.46.6:@goodmis.org:.lbl8.mailshell.net-62.8.41.100 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: pot84_899e0f45ebd55
-X-Filterd-Recvd-Size: 3574
-Received: from grimm.local.home (unknown [146.247.46.6])
-        (Authenticated sender: rostedt@goodmis.org)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 Nov 2019 13:59:05 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 08:59:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Song Liu <liu.song.a23@gmail.com>, cgroups@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] kernfs: Convert to u64 id
-Message-ID: <20191104085901.06035a26@grimm.local.home>
-In-Reply-To: <20191104084520.398584-2-namhyung@kernel.org>
-References: <20191104084520.398584-1-namhyung@kernel.org>
-        <20191104084520.398584-2-namhyung@kernel.org>
-X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727913AbfKDOBk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 4 Nov 2019 09:01:40 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41848 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727891AbfKDOBk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 4 Nov 2019 09:01:40 -0500
+Received: by mail-io1-f66.google.com with SMTP id r144so18503276iod.8
+        for <linux-block@vger.kernel.org>; Mon, 04 Nov 2019 06:01:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Sif2sVDBigk80VOSIbDHJQK/86lz3qMxwcMcFfuFv4w=;
+        b=wHvf49pwwMQ+3Nw/A2K/DGAGMblywBCF3YNSbrBMaU4cXZdOTcf16ZarePd66qSAWr
+         XWhUo4+y5K1G3brNPLuRHWabRdMSqH+gRtQiczLwY0jP47Jv+zysx3vmEJUKjTNc6F4q
+         PBPy4+HRW5pjssbHz/G+zZOjLENWpWqe4vTZ34jb6MvWYr7NahMG8j1YqUG2L82tcEd5
+         V/9cR7ZB3UEkmncVq8zh/444G1HMlIfneHkA472VUgMm5Io2WjsLt+rhlMZrf7ZvQVx7
+         FhSqXWkvnAPJPg0k7wNt6/5CnMp055EMJiGnG1VotG+6nWA2CnmJUMCwHbUZ+4Eu+uWN
+         +57w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sif2sVDBigk80VOSIbDHJQK/86lz3qMxwcMcFfuFv4w=;
+        b=FYAuQnQSqCispOuMsr2TybGMchdkIcDIQCMDBZwHyGFOtZMpv/QovvMeNNT7b9ZXAt
+         /oKskIJ1DmhmEEfHeC0OSUwj5lWEXcA4AC4k168cjnxnt5tCG6is9CIMfpM3Vbqn/RgC
+         haTz9hP58PkS3r+4ZPs4fQIMVddMfhWKG/F+MVLcLiOz7tfW7yz+zsI61JyI138Hj83G
+         kL5m7lc928kmMB/q8lQJycrxwL2I0rdkoyN9dgHWFZrVvSTxmuU7RXt0fY3Jp2icIoZJ
+         e4ch+IxWL0W2Pxw6k8834BCpOH03vBrfBLBfYzUqT1AadpLuywnqssBVqCUMdaFKeapZ
+         PKVA==
+X-Gm-Message-State: APjAAAW6QztCfcTMXKFbILvArlpiXrmse1FWnjK3wRPsoHKDOJYex5An
+        b6DAQL7vY0JH9hhJ9C3l1dESDQ==
+X-Google-Smtp-Source: APXvYqzO0Qfj1MwL0EJ18S1x2n5g1OAke6Tbw6rrr0nOCfXLWdagq5vk6PnvWEzmCJC0eXBO2t9lOw==
+X-Received: by 2002:a5d:9808:: with SMTP id a8mr18329322iol.2.1572876099702;
+        Mon, 04 Nov 2019 06:01:39 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p19sm2444483ili.56.2019.11.04.06.01.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 06:01:38 -0800 (PST)
+Subject: Re: [RFC] io_uring: stop only support read/write for ctx with
+ IORING_SETUP_IOPOLL
+To:     yangerkun <yangerkun@huawei.com>, Bob Liu <bob.liu@oracle.com>,
+        linux-block@vger.kernel.org
+Cc:     houtao1@huawei.com, yi.zhang@huawei.com
+References: <20191104085608.44816-1-yangerkun@huawei.com>
+ <a01cc299-69e7-daa2-6894-1c60aaa64e67@oracle.com>
+ <3fd0dee1-52d6-4ea8-53d8-2c88b7fedce6@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <50de6a43-fc11-aada-40e6-f3fee6523d49@kernel.dk>
+Date:   Mon, 4 Nov 2019 07:01:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <3fd0dee1-52d6-4ea8-53d8-2c88b7fedce6@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon,  4 Nov 2019 17:45:19 +0900
-Namhyung Kim <namhyung@kernel.org> wrote:
-
-> From: Tejun Heo <tj@kernel.org>
+On 11/4/19 4:46 AM, yangerkun wrote:
 > 
-> The kernfs_id was an union type sharing a 64bit id with 32bit ino +
-> gen.  But it resulted in using 32bit inode even on 64bit systems.
-> Also dealing with an union is annoying especially if you just want to
-> use a single id.
 > 
-> Thus let's get rid of the kernfs_node_id type and use u64 directly.
-> The upper 32bit is used for gen and lower is for ino on 32bit systems.
-> The kernfs_id_ino() and kernfs_id_gen() helpers will take care of the
-> bit handling depends on the system word size.
+> On 2019/11/4 18:09, Bob Liu wrote:
+>> On 11/4/19 4:56 PM, yangerkun wrote:
+>>> There is no problem to support other type request for the ctx with
+>>> IORING_SETUP_IOPOLL.
+>>
+>> Could you describe the benefit of doing this?
 > 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Martin KaFai Lau <kafai@fb.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: linux-block@vger.kernel.org
-> Cc: bpf@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> [namhyung: fix build error in bpf_get_current_cgroup_id()]
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  fs/kernfs/dir.c                  | 36 ++++++++-----
->  fs/kernfs/file.c                 |  4 +-
->  fs/kernfs/inode.c                |  4 +-
->  fs/kernfs/kernfs-internal.h      |  2 -
->  fs/kernfs/mount.c                | 92 +++++++++++++++++++-------------
->  include/linux/cgroup.h           | 17 +++---
->  include/linux/exportfs.h         |  5 ++
->  include/linux/kernfs.h           | 47 +++++++++-------
+> Hi,
+> 
+> I am trying to replace libaio with io_uring in InnoDB/MariaDB(which
+> build on xfs/nvme). And in order to simulate the timeout mechanism
+> like io_getevents, firstly, to use the poll function of io_uring's fd
+> has been selected and it really did work. But while trying to enable
+> IORING_SETUP_IOPOLL since xfs has iopoll function interface, the
+> mechanism will fail since io_uring_poll does check the cq.head between
+> cached_cq_tail, which will not update until we call io_uring_enter and
+> do the poll. So, instead, I decide to use timeout requests in
+> io_uring but will return -EINVAL since we enable IORING_SETUP_IOPOLL
+> at the same time. I think this combination is a normal scene so as
+> the other combination descibed in this patch. I am not sure does it a
+> good solution for this problem, and maybe there exists some better way.
 
->  include/trace/events/writeback.h | 92 ++++++++++++++++----------------
+I think we can support timeouts pretty easily with SETUP_IOPOLL, but we
+can't mix and match everything. Pretty sure I've written at length about
+that before, but the tldr is that for purely polled commands, we won't
+have an IRQ event. That's the case for nvme if it's misconfigured, but
+for an optimal setup where nvme is loaded with poll queues, there will
+never be an interrupt for the command. This means that we can never wait
+in io_cqring_wait(), we must always call the iopoll poller, because if
+we wait we might very well be waiting for events that will never happen
+unless we actively poll for them.
 
-I only looked at the above file, and didn't see anything bad about it.
+This could be supported if we accounted requests, but I don't want to
+add that kind of overhead. Same with the lock+irqdisable you had to add
+for this, it's not acceptable overhead.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Sounds like you just need timeout support for polling? If so, then that
+is supportable as we know that these events will trigger an async event
+when they happen. Either that, or it triggers when we poll for
+completions. So it's safe to support, and we can definitely do that.
 
--- Steve
+But don't mix polled IO with "normal" IO, it just won't work without
+extra additions that I'm not willing to pay the cost of.
 
 
->  kernel/bpf/helpers.c             |  2 +-
->  kernel/cgroup/cgroup.c           |  5 +-
->  kernel/trace/blktrace.c          | 66 +++++++++++------------
->  net/core/filter.c                |  4 +-
->  13 files changed, 207 insertions(+), 169 deletions(-)
+-- 
+Jens Axboe
 
