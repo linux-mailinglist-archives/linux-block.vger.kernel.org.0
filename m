@@ -2,101 +2,127 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F53AF0221
-	for <lists+linux-block@lfdr.de>; Tue,  5 Nov 2019 17:03:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 873CBF025B
+	for <lists+linux-block@lfdr.de>; Tue,  5 Nov 2019 17:09:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390001AbfKEQDK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Nov 2019 11:03:10 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23341 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389966AbfKEQDJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:03:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572969788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pLj9LlV805f/L7J5FbyPXxXB07oTibsiCCSGb45ogQg=;
-        b=DAxnbXOel7GR/PEe2t6Mrv+03Xuzy/G2FGswsUfLa3WuDKMrcLU58JE3w5zv0Q9mvuNpPY
-        I1VMJVfrzlKq4LH4UyFmZKsbkrhlnt52r9X2+0oUwwfFrHC4TmVAq484vO9YuFSB3J2CDA
-        meGCgBaj17ZWJu0UuOPTyX1me2I6xBY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-9SUU8LceOXeOLaVGd4SGTA-1; Tue, 05 Nov 2019 11:03:06 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B43698017DD;
-        Tue,  5 Nov 2019 16:03:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 980C81FA;
-        Tue,  5 Nov 2019 16:03:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
-References: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Details on the UAPI of implementing notifications on pipes
+        id S2390035AbfKEQJ5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Nov 2019 11:09:57 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39448 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389907AbfKEQJ5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Nov 2019 11:09:57 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 15so21612942qkh.6;
+        Tue, 05 Nov 2019 08:09:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=me3lESL1ggtumWsSVDttQmUrbEo7485lmzzekY64N38=;
+        b=tPrZdHjJcV0IzlK9UurrMNrUsqfSlMSqpZQhPr+KB57uDynjOd2cTm7wzPG77+mtk+
+         hLy4rIuS5QDPxR2XJOLho/ugr6NpnXyf0z2qcsyEs1KXsWE9iEwSbsL5HK0pA0vxrdRX
+         RBmf7MvgZoeS34lShwgpJj4mMhwED4aY97WiHDCa09wdQQw3dEbBYj1qurBcXocQ253p
+         NOj/Fk6JB7X5eax98zJ3qHft9JtWqDZD4pM4D8np4axWPcwEM7cjLQ/Z8FzI96R6rpFz
+         2xv70RhmHogmpE1IRKYvm5C6SePm7MjU72MVcm51XYWQSpWchtuiI+mDMKCXRc9E8u76
+         4/YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=me3lESL1ggtumWsSVDttQmUrbEo7485lmzzekY64N38=;
+        b=KpHRn3rZ/zMv16JjZdT0yR6w8hqcq/VlHKUtlX06P9UWC2zwfUIdSofBle0SGwRwOf
+         8VW0JozIrgMk4/XugmHraM6DXcS0a7V4ybpBN7zORuLWdfOrfv110fI4bS7Zw92fk5/F
+         sORYFI9INa0wxRQwTRUdQXbbXno/QLgUTMzSzYQYYPYPRI8gR+FtsQV/lPfVYsZWoy4Y
+         6d3dQKH2L6p1bxVToiWxzDTuiZmQtuilg23rZOE40+K52rzCppoojGMQGbxI2fJJ0UiZ
+         rAJHxCuwKqFXOZ3bd2z65WalJRkX3LUxUgY8b51zNcydj0mH+f3cbvnQJFmluc5Rg0MT
+         HQrA==
+X-Gm-Message-State: APjAAAVkQ9okXWt1LYTEZ51SgAYDxMF3tUByfrLans5KFH9yqAxF6Naa
+        fiNc2v6ieSjusS0rZ3eOdIkm7xmA
+X-Google-Smtp-Source: APXvYqzLB/L7Dj+A7FHR7I7t9gslk7a7ssseyWvo6BBPcRa35boS1fXIjPGUdSu+UaCEGKaUJHUgAg==
+X-Received: by 2002:a05:620a:a85:: with SMTP id v5mr11569535qkg.471.1572970195651;
+        Tue, 05 Nov 2019 08:09:55 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:bc42])
+        by smtp.gmail.com with ESMTPSA id o2sm10936208qkf.68.2019.11.05.08.09.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 08:09:55 -0800 (PST)
+Date:   Tue, 5 Nov 2019 08:09:51 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Roman Gushchin <guro@fb.com>, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Josef Bacik <jbacik@fb.com>
+Subject: [PATCH block/for-5.4-fixes] blkcg: make blkcg_print_stat() print
+ stats only for online blkgs
+Message-ID: <20191105160951.GS3622521@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-ID: <18579.1572969779.1@warthog.procyon.org.uk>
-Date:   Tue, 05 Nov 2019 16:02:59 +0000
-Message-ID: <18580.1572969779@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 9SUU8LceOXeOLaVGd4SGTA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-So to implement notifications on top of pipes, I've hacked it together a bi=
-t
-in the following ways:
+blkcg_print_stat() iterates blkgs under RCU and doesn't test whether
+the blkg is online.  This can call into pd_stat_fn() on a pd which is
+still being initialized leading to an oops.
 
- (1) I'm passing O_TMPFILE to the pipe2() system call to indicate that you
-     want a notifications pipe.  This prohibits splice and co. from being
-     called on it as I don't want to have to try to fix iov_iter_revert() t=
-o
-     handle kernel notifications being intermixed with splices.
+The heaviest operation - recursively summing up rwstat counters - is
+already done while holding the queue_lock.  Expand queue_lock to cover
+the other operations and skip the blkg if it isn't online yet.  The
+online state is protected by both blkcg and queue locks, so this
+guarantees that only online blkgs are processed.
 
-     The choice of O_TMPFILE was just for convenience, but it needs to be
-     something different.  I could, for instance, add a constant,
-     O_NOTIFICATION_PIPE with the same *value* as O_TMPFILE.  I don't think
-     it's likely that it will make sense to use O_TMPFILE with a pipe, but =
-I
-     also don't want to eat up another O_* constant just for this.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Roman Gushchin <guro@fb.com>
+Cc: Josef Bacik <jbacik@fb.com>
+Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
+Cc: stable@vger.kernel.org # v4.19+
+---
+ block/blk-cgroup.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-     Unfortunately, pipe2() doesn't have any other arguments into from whic=
-h I
-     can steal a bit.
-
- (2) I've added a pair of ioctls to configure the notifications bits.  They=
-'re
-     ioctls as I just reused the ioctl code from my devmisc driver.  Should=
- I
-     use fcntl() instead, such as is done for F_SETPIPE_SZ?
-
-     The ioctls do two things: set the ring size to a number of slots (so
-     similarish to F_SETPIPE_SZ) and set filters.
-
-Any thoughts on how better to represent these bits?
-
-Thanks,
-David
-
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -934,9 +934,14 @@ static int blkcg_print_stat(struct seq_f
+ 		int i;
+ 		bool has_stats = false;
+ 
++		spin_lock_irq(&blkg->q->queue_lock);
++
++		if (!blkg->online)
++			goto skip;
++
+ 		dname = blkg_dev_name(blkg);
+ 		if (!dname)
+-			continue;
++			goto skip;
+ 
+ 		/*
+ 		 * Hooray string manipulation, count is the size written NOT
+@@ -946,8 +951,6 @@ static int blkcg_print_stat(struct seq_f
+ 		 */
+ 		off += scnprintf(buf+off, size-off, "%s ", dname);
+ 
+-		spin_lock_irq(&blkg->q->queue_lock);
+-
+ 		blkg_rwstat_recursive_sum(blkg, NULL,
+ 				offsetof(struct blkcg_gq, stat_bytes), &rwstat);
+ 		rbytes = rwstat.cnt[BLKG_RWSTAT_READ];
+@@ -960,8 +963,6 @@ static int blkcg_print_stat(struct seq_f
+ 		wios = rwstat.cnt[BLKG_RWSTAT_WRITE];
+ 		dios = rwstat.cnt[BLKG_RWSTAT_DISCARD];
+ 
+-		spin_unlock_irq(&blkg->q->queue_lock);
+-
+ 		if (rbytes || wbytes || rios || wios) {
+ 			has_stats = true;
+ 			off += scnprintf(buf+off, size-off,
+@@ -999,6 +1000,8 @@ static int blkcg_print_stat(struct seq_f
+ 				seq_commit(sf, -1);
+ 			}
+ 		}
++	skip:
++		spin_unlock_irq(&blkg->q->queue_lock);
+ 	}
+ 
+ 	rcu_read_unlock();
