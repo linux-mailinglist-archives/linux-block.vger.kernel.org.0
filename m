@@ -2,65 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C3A3F4D91
-	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 14:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53BDDF4DAC
+	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 15:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKHNys (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Nov 2019 08:54:48 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37161 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfKHNys (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Nov 2019 08:54:48 -0500
-Received: by mail-io1-f66.google.com with SMTP id 1so6439678iou.4
-        for <linux-block@vger.kernel.org>; Fri, 08 Nov 2019 05:54:46 -0800 (PST)
+        id S1726806AbfKHOA1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Nov 2019 09:00:27 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33855 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfKHOA1 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Nov 2019 09:00:27 -0500
+Received: by mail-io1-f65.google.com with SMTP id q83so6472757iod.1
+        for <linux-block@vger.kernel.org>; Fri, 08 Nov 2019 06:00:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qhj0pYG/xfb9ZXayAFQZBmgKNwxw6I0CpoVt3iCpB1E=;
-        b=SlnJ0kzDnF+zUVdem+qMS9wPqFOmE4StE78W5pCkwNeQbv3pcDv/6wbvF9Wzsyej6a
-         mVp7dDiaYBiGAGozWrA6DxU2eqJdpfSno8KXt6N44vL8mUfNvXdzzYobLagSEhGYPhrs
-         mzyYec6kzQhLmNdjY3HpzPswzummUVIV45W7ewSXze6ksqYRjkIb1DF+8/l6g8hTmj2v
-         fIX6tTXrTKWoCMPy1kBumphFKsg9wM5PQsZUGEbNAeOy7ZCati+IAS6/F2UO+ZcMlhPY
-         PGiFXKKj/j2YC08ktmwhITccWfmu87EX9XndOE3MVtY2nXzWQpsFSPja6+o5cvtUHFrd
-         VSzQ==
+        bh=KEuhZ33eIV/glmtuQ5poEJOSDRMIrF2oY+6h0/MtVAA=;
+        b=gpk3+ULfInJYqzl3rYrWaDELsYsXgwdFE3j2+S5035oR+iomWsv37XKBYxg2OVPjK7
+         iVxokJY3RG4KNjq2TTDO8iw5zli1Iatg4K+3h5rDh5MzMLVyg/VsRi8sXAS2FDQL5k6b
+         cDG5ISCHTJsk+ToRMhF4UgfoqwCBtq/BwUEhEh4v3vNM4YuavV4iueYUJDKbs4tGG+8n
+         Jt8n2Kp6aMr0T3S0byde05KiMIoBuSC+9eqS0EwE6gEN1XcgX1UHgCh4UHuS24Dl2QXI
+         RB8HyptKgwlP5XPYNS46S4sfXwb8cquxN9e7pvW7S52+AnLHn4o7BJpsRLhaix4PEuzw
+         Vxew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qhj0pYG/xfb9ZXayAFQZBmgKNwxw6I0CpoVt3iCpB1E=;
-        b=YsQqQCVyDws7O1CgD7KTnYlpak+cgNtR1e2AMON3ZT3vidsYMwEAnVsPQblqhJG/dD
-         j60NK0ztAxGKoITWz326Yzu6MPevP8HpBXMvaWox5qNxxpolJ5spQnC2v57st8/Td1dT
-         NTbMdGuWAJrmxz4SoHFJ+fWSeS+rCnHUIYBmR2nTIdJAYgypJMp3tMl/GcQhut34Kpqw
-         iTYTr8CuvmS3pufqcjNRoZ4gf5Z1Mnb7Ekw3fWseFJn3S1oZC1TSn5VDFTVAdeYFKbXD
-         xXWstIC84fq3N1f2kZ8BLFr6RD6wS5bHS6afjIJsy4cvPjnxytx3LBUz2W3oyyhWi+eR
-         ZkKw==
-X-Gm-Message-State: APjAAAXF0Js36ggD0HJrtU+LN1ieNFy0n2ulZT/EJJHiyzeDMBskcp6X
-        X2MZp+7Fq+i4ALGZkZax+Tre1Q==
-X-Google-Smtp-Source: APXvYqxT7wKu6Rb3KLuV8PJsLUA7DGTaBKo+K+FqKHR5/THatlVz8nZOFOdzmcrdjerSlYdgOa+70A==
-X-Received: by 2002:a05:6602:198:: with SMTP id m24mr9909819ioo.34.1573221285861;
-        Fri, 08 Nov 2019 05:54:45 -0800 (PST)
+        bh=KEuhZ33eIV/glmtuQ5poEJOSDRMIrF2oY+6h0/MtVAA=;
+        b=JdM7NeBSAP4r66YqBTfK+VsrHOB7mutn4MQ2G0ZnzwWhh8iStk5S9QvTBCp7+/8phv
+         s2M7hwWbwl83QapgAzTFYGEdupGH4I0JVRNeAhICboKgFEVeOEtsmDD7d6s7elh7ouU6
+         Wb7U9WR8voetGYQXg3MYNtSelsGJHm8RXPm+y88NIF2tAPGcGXVicQ/n4AYzHvBLgbFv
+         TSKaDUN1GSXT+3ZdbI+GYnQhuC7MXrUzubxn6xwoRpNa0/SIeL1BHRdnLEXAgdewEFF4
+         L7/H2yDYKoAVFU+ORnOusTHIPwDeVWWWhbxak/4Dx7U37bcFb9jaTMBp3y/iNebbZ3R1
+         Sqbw==
+X-Gm-Message-State: APjAAAXFvjBA/0hoCyltPqIEMTPH7ZiNWf+1DNMpYsfXSTandMrxyhel
+        em8+fzCaKMm9weY8NNhSMYiYzpzJLz8=
+X-Google-Smtp-Source: APXvYqwob9FkYol+7aGgOb3rQGHbggXEkkQstkcSHbqJ62kEtBHRkoLcW6tA9NvcG1QWWcPsD34Z1w==
+X-Received: by 2002:a6b:f415:: with SMTP id i21mr1853377iog.109.1573221625819;
+        Fri, 08 Nov 2019 06:00:25 -0800 (PST)
 Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p19sm776620ili.56.2019.11.08.05.54.44
+        by smtp.gmail.com with ESMTPSA id c5sm461109ioc.26.2019.11.08.06.00.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 05:54:45 -0800 (PST)
-Subject: Re: [PATCH] block: drbd: remove a stay unlock in
- __drbd_send_protocol()
-To:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20191107074847.GA11695@mwanda> <6906816.cRlsrm7Sor@fat-tyre>
+        Fri, 08 Nov 2019 06:00:24 -0800 (PST)
+Subject: Re: [PATCH 0/2] block: two fixes on avoiding bio splitting
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20191108101528.31735-1-ming.lei@redhat.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <17fea9d1-39f8-1d91-5509-5f520009b9c9@kernel.dk>
-Date:   Fri, 8 Nov 2019 06:54:43 -0700
+Message-ID: <5f313803-95ab-632b-aaf1-6957ca58aabc@kernel.dk>
+Date:   Fri, 8 Nov 2019 07:00:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <6906816.cRlsrm7Sor@fat-tyre>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191108101528.31735-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
@@ -68,17 +64,16 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/8/19 3:46 AM, Philipp Reisner wrote:
-> Hi Dan,
+On 11/8/19 3:15 AM, Ming Lei wrote:
+> Hi,
 > 
-> yes, your patch it obviously correct. The comment you are
-> referring to is badly worded. We will remove it.
+> The 1st patch fixes kernel panic issue which is caused by not
+> splitting bio.
 > 
-> Jens,
-> 
-> are you taking this patch as it is?
+> The 2nd patch requets to change the limit as SZ_4K instead of
+> PAGE_SIZE which can be big enough to break some devies.
 
-Yep, I'll queue it up.
+Both changes make sense to me, applied, thanks.
 
 -- 
 Jens Axboe
