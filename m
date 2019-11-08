@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 919C6F4129
-	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 08:18:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EB71F4132
+	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 08:18:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKHHSR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Nov 2019 02:18:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60600 "EHLO mx1.suse.de"
+        id S1729970AbfKHHSq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Nov 2019 02:18:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60690 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725886AbfKHHSQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 8 Nov 2019 02:18:16 -0500
+        id S1725886AbfKHHSq (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 8 Nov 2019 02:18:46 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60752B186;
-        Fri,  8 Nov 2019 07:18:14 +0000 (UTC)
-Subject: Re: [PATCH 6/9] null_blk: clean up report zones
+        by mx1.suse.de (Postfix) with ESMTP id CEFC1B186;
+        Fri,  8 Nov 2019 07:18:43 +0000 (UTC)
+Subject: Re: [PATCH 7/9] null_blk: Add zone_nr_conv to features
 To:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         linux-scsi@vger.kernel.org,
@@ -24,7 +24,7 @@ To:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-f2fs-devel@lists.sourceforge.net,
         Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
 References: <20191108015702.233102-1-damien.lemoal@wdc.com>
- <20191108015702.233102-7-damien.lemoal@wdc.com>
+ <20191108015702.233102-8-damien.lemoal@wdc.com>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -70,12 +70,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <176bf3c7-dde3-42b0-2f82-21489d0213f5@suse.de>
-Date:   Fri, 8 Nov 2019 08:18:14 +0100
+Message-ID: <660732e5-6f30-f6d7-acf4-54259cd810f8@suse.de>
+Date:   Fri, 8 Nov 2019 08:18:43 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191108015702.233102-7-damien.lemoal@wdc.com>
+In-Reply-To: <20191108015702.233102-8-damien.lemoal@wdc.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -84,20 +84,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/8/19 2:56 AM, Damien Le Moal wrote:
-> From: Christoph Hellwig <hch@lst.de>
+On 11/8/19 2:57 AM, Damien Le Moal wrote:
+> For a null_blk device with zoned mode enabled, the number of
+> conventional zones can be configured through configfs with the
+> zone_nr_conv parameter. Add this missing parameter in the features
+> string.
 > 
-> Make the instance name match the method name and define the name to NULL
-> instead of providing an inline stub, which is rather pointless for a
-> method call.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 > ---
->  drivers/block/null_blk.h       | 11 +++--------
->  drivers/block/null_blk_main.c  |  2 +-
->  drivers/block/null_blk_zoned.c |  4 ++--
->  3 files changed, 6 insertions(+), 11 deletions(-)
+>  drivers/block/null_blk_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+> index 2687eb36441c..27fb34d7da31 100644
+> --- a/drivers/block/null_blk_main.c
+> +++ b/drivers/block/null_blk_main.c
+> @@ -467,7 +467,7 @@ nullb_group_drop_item(struct config_group *group, struct config_item *item)
+>  
+>  static ssize_t memb_group_features_show(struct config_item *item, char *page)
+>  {
+> -	return snprintf(page, PAGE_SIZE, "memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size\n");
+> +	return snprintf(page, PAGE_SIZE, "memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_nr_conv\n");
+>  }
+>  
+>  CONFIGFS_ATTR_RO(memb_group_, features);
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
