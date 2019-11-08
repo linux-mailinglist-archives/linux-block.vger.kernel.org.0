@@ -2,128 +2,222 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A587F53C3
-	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 19:50:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 030BBF578A
+	for <lists+linux-block@lfdr.de>; Fri,  8 Nov 2019 21:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfKHSuZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Nov 2019 13:50:25 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:53151 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfKHSuY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Nov 2019 13:50:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1573239025; x=1604775025;
-  h=from:to:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=MMT8oK6f80z3AxJMhfh17WJXlM/067bjRtHO3CL6iBc=;
-  b=IbeitPbTh2xjhsGdKcVq0dq6nny5a0Nx40Clih1mYZxku+S+DJvypVh8
-   Uw9gi/HkSwz/sdqglzsRr1YgoTRgyCKj8QutKlMGoRstr2Q5yViwyjsLX
-   PBfnYTH65c3qxXsMMyAO6fzC5qZzuEHReJM1qsxZXmZheBXzvt7z2/w8x
-   0oCnQX7O9spXtSZaHrHiiD0/UujGoqu22q4wj2qgDf7wf4+36unxjiIzQ
-   T1xi3s7csgQ/7ekjDAtWbO7PCn/tWPKX1kppvuoMOkRoamvCYILGdu157
-   FR8Vq8C/dRi5h3jNRkCgWaGeZFTWAAgoZo0eNd44N6eTc/2GVoEfcpbSn
-   w==;
-IronPort-SDR: OxAJnPtem5ArCNNmgAVdLDOppM+BK5Tb9NnJsuKeGM8R5R4Y3a0T7nCp6T54Md7PGlVNLpLk1t
- lcKJJRshIyytgz+REu0JZ3KU+HneXrpzBAiWc2xz/nLrT29p4Ym7r+W6uyNwiIQfX7bzm1TiIA
- NitoxPqaHsDdEoVA4/ITi+aaYiwrakwCDBc4fKLjAJU9quLVe8HT8ddxmikm3G+0g7yc1ZIOi9
- Rr3h4CVapQ46nbsCazkoO+ZQkXu4IP0uXXjK+M1Gdrsbo5I/xt/AcotqSbuHxsOLSF74BPhRqT
- E3E=
-X-IronPort-AV: E=Sophos;i="5.68,282,1569254400"; 
-   d="scan'208";a="126961447"
-Received: from mail-cys01nam02lp2056.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.56])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Nov 2019 02:50:24 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WTwE3aFfP+gppccZDMRR5XzZv22htUxNJz/XkZUPK5OIPPiQHZ54RK0QdlCDtEtD9BlRO8XWWyq7JXI/3gzAEGRQorRqkUkzaYNH8MgKMB2rJ0gP+YQtM2FOOPoISGawIOzSe/hN4n7F/z4OQgGcdGGeLLiIHPX8bBzC23IyZ1IjrsIipDlARP8Unk56ZB6fhAfk9bdrnJsDa12ZyKVXJSUojUjVviGcJmWb07OhXHfPomsLkmUwJqchRkitj+8UeUvokRq6iby+823kkfSyKNlY+9iR0QA/mzFCt4k2YjetoLL0JCE+vG/xT5qpBYLK+LqOF+i6eWljwYtU3BLl9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l9878wIrxKKWXUHm58f2RklIM4TRXT/ZEmsge8xZ00g=;
- b=e5R0MIzkHJBLqmf88IlUk+zgUHnAP9yqDNl2vQ0mqew2drMUX0oB1bnTyUlJcfKcq9mOoPk6V2RUwKZJjJmJdZkXVwKDRIqV5DaecomoL1zW9ZrfXt9kG8WgYoucRnaZaFG6IjKMLtsV052HKunBFB1Jbb+9dGbeFACHovQ/Y5Y7+33+w6Pd21pRuwZvgnfZ4oi99I995LMOAjVNG7w8SV0CduobcxzIllcWnIbvJ0FyK31B5N+604L8pHduTRO+BBxaF+T46SaBkcut0WJePIWwrlaMeksCRH4ZQGrOhORdkHdkDW1p2Yq6pPI2wyLolmifD7ke/zbHlkLkosfutQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l9878wIrxKKWXUHm58f2RklIM4TRXT/ZEmsge8xZ00g=;
- b=PiMgTMIcDaV701I0ppo+y45FHF2nKsIl//72iIvXcJrxmASimMWSf1v5forjDhnZfZ5ABUPy3jxL3CVktnIqFUAm4TjCkOM9WQvik0UQvx3hoMcV/Sjv3MtIli/+fiAHB1yu/bWsN488kZRdyLhSgqViUIrqxYGHwKMruJoBME4=
-Received: from DM6PR04MB5754.namprd04.prod.outlook.com (20.179.52.22) by
- DM6PR04MB4042.namprd04.prod.outlook.com (20.176.87.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Fri, 8 Nov 2019 18:50:22 +0000
-Received: from DM6PR04MB5754.namprd04.prod.outlook.com
- ([fe80::65c4:52fd:1454:4b04]) by DM6PR04MB5754.namprd04.prod.outlook.com
- ([fe80::65c4:52fd:1454:4b04%7]) with mapi id 15.20.2430.020; Fri, 8 Nov 2019
- 18:50:22 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
-Subject: Re: [PATCH 2/9] block: cleanup the !zoned case in
- blk_revalidate_disk_zones
-Thread-Topic: [PATCH 2/9] block: cleanup the !zoned case in
- blk_revalidate_disk_zones
-Thread-Index: AQHVldfc9s3RcjAaAUWO67LxGbcSfg==
-Date:   Fri, 8 Nov 2019 18:50:22 +0000
-Message-ID: <DM6PR04MB5754E84538F2E0AC9C3FD797867B0@DM6PR04MB5754.namprd04.prod.outlook.com>
-References: <20191108015702.233102-1-damien.lemoal@wdc.com>
- <20191108015702.233102-3-damien.lemoal@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 335b990a-eac9-4400-7934-08d7647c8272
-x-ms-traffictypediagnostic: DM6PR04MB4042:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR04MB4042D948C540A667C897611B867B0@DM6PR04MB4042.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(189003)(199004)(81156014)(229853002)(99286004)(14454004)(66946007)(6246003)(86362001)(102836004)(4744005)(8936002)(305945005)(14444005)(486006)(76176011)(5660300002)(66446008)(7736002)(446003)(74316002)(81166006)(478600001)(66476007)(66556008)(64756008)(33656002)(9686003)(55016002)(186003)(52536014)(6436002)(476003)(110136005)(26005)(91956017)(2501003)(25786009)(316002)(256004)(7696005)(71200400001)(3846002)(6116002)(53546011)(6506007)(71190400001)(66066001)(76116006)(2906002)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR04MB4042;H:DM6PR04MB5754.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1VefVcdWrIleAOQ3p2ujBxXhf7nDGY/mWMgl1miqXRiNkPRH/3yNKUPdqBrZFONYt2zIPOgHuCsVfE5pxxb2sVFF5Ewp+7y8iwrHpzK0PBYNJYgQDhIZ0FXBPkehb4cH6bilx+s1CW71yZaHnralPe0ae492BqAzF2Y4AN49KZfLoxihP/+wru6mDrQMu1fcNpw5irXx0ipAn9QY2EXq5I4KtuBJoz0bo2Jls57xHv+EC6JdIf41VZDDycWPN0DhpeyDDC25jwpiaLdIzAqji3Akh7s1UaQzz+Wn0Y2iliNxSrtkR3bjF7JZ6cR5zY3MZlKLBMeVzYbkWfeX9WKyUGh8IvzL2yVz5jp9EQnY2D3EkULohxfqgpWmx8zGA8MMZNUbmgTxI/hifHw25Oba4iFGkLEdjkRiRtkYdpMKWmo4zvZgW/1vgReWpGBFmjY6
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2389271AbfKHTX6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Nov 2019 14:23:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46511 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732379AbfKHSxc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Nov 2019 13:53:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573239211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9FwgetzyW8P48cGLGqGtD4GfxfTRlJoRiG4n2Dado8Y=;
+        b=ixqLj5/qZDjREgmFuroudJ1XpJJThA7TmnfmjNiz/xXh0D5/QaD8nmFy3+UxkfB05PebK8
+        4V7uYVbTuhfhpbR+9T2I29gTw3mIakBVJAROwWFQXv2UaGUtRlIbsOxuh+BPQ0z6bVV4jy
+        I5ul+Cx5+KjskUkgnJ9q5bBA0jM3bw4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-RDOnMV84OlO0Y-tz_4aX-A-1; Fri, 08 Nov 2019 13:53:28 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C2C88017E0;
+        Fri,  8 Nov 2019 18:53:26 +0000 (UTC)
+Received: from rh2.redhat.com (ovpn-125-42.rdu2.redhat.com [10.10.125.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF6A1600C9;
+        Fri,  8 Nov 2019 18:53:24 +0000 (UTC)
+From:   Mike Christie <mchristi@redhat.com>
+To:     mhocko@kernel.org, david@fromorbit.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        martin@urbackup.org, Damien.LeMoal@wdc.com
+Cc:     Mike Christie <mchristi@redhat.com>
+Subject: [PATCH] Add prctl support for controlling mem reclaim V3
+Date:   Fri,  8 Nov 2019 12:53:19 -0600
+Message-Id: <20191108185319.9326-1-mchristi@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 335b990a-eac9-4400-7934-08d7647c8272
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 18:50:22.1658
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +/mqLsfKPN3fR+TDy77ZwhjMImDOwK/kri/RvC4q0GO80xZhwyDiqmL1NWs7qnBqBzYH6yUBd8F/q1coVcm/pTrSxdRZINhHJecRK7nqAHc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4042
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: RDOnMV84OlO0Y-tz_4aX-A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good to me.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-On 11/07/2019 05:57 PM, Damien Le Moal wrote:=0A=
-> From: Christoph Hellwig<hch@lst.de>=0A=
->=0A=
-> blk_revalidate_disk_zones is never called for non-zoned devices.  Just=0A=
-> return early and warn instead of trying to handle this case.=0A=
->=0A=
-> Signed-off-by: Christoph Hellwig<hch@lst.de>=0A=
-> Signed-off-by: Damien Le Moal<damien.lemoal@wdc.com>=0A=
-> ---=0A=
-=0A=
+There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+amd nbd that have userspace components that can run in the IO path. For
+example, iscsi and nbd's userspace deamons may need to recreate a socket
+and/or send IO on it, and dm-multipath's daemon multipathd may need to
+send SG IO or read/write IO to figure out the state of paths and re-set
+them up.
+
+In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+memalloc_*_save/restore functions to control the allocation behavior,
+but for userspace we would end up hitting an allocation that ended up
+writing data back to the same device we are trying to allocate for.
+The device is then in a state of deadlock, because to execute IO the
+device needs to allocate memory, but to allocate memory the memory
+layers want execute IO to the device.
+
+Here is an example with nbd using a local userspace daemon that performs
+network IO to a remote server. We are using XFS on top of the nbd device,
+but it can happen with any FS or other modules layered on top of the nbd
+device that can write out data to free memory.  Here a nbd daemon helper
+thread, msgr-worker-1, is performing a write/sendmsg on a socket to execute
+a request. This kicks off a reclaim operation which results in a WRITE to
+the nbd device and the nbd thread calling back into the mm layer.
+
+[ 1626.609191] msgr-worker-1   D    0  1026      1 0x00004000
+[ 1626.609193] Call Trace:
+[ 1626.609195]  ? __schedule+0x29b/0x630
+[ 1626.609197]  ? wait_for_completion+0xe0/0x170
+[ 1626.609198]  schedule+0x30/0xb0
+[ 1626.609200]  schedule_timeout+0x1f6/0x2f0
+[ 1626.609202]  ? blk_finish_plug+0x21/0x2e
+[ 1626.609204]  ? _xfs_buf_ioapply+0x2e6/0x410
+[ 1626.609206]  ? wait_for_completion+0xe0/0x170
+[ 1626.609208]  wait_for_completion+0x108/0x170
+[ 1626.609210]  ? wake_up_q+0x70/0x70
+[ 1626.609212]  ? __xfs_buf_submit+0x12e/0x250
+[ 1626.609214]  ? xfs_bwrite+0x25/0x60
+[ 1626.609215]  xfs_buf_iowait+0x22/0xf0
+[ 1626.609218]  __xfs_buf_submit+0x12e/0x250
+[ 1626.609220]  xfs_bwrite+0x25/0x60
+[ 1626.609222]  xfs_reclaim_inode+0x2e8/0x310
+[ 1626.609224]  xfs_reclaim_inodes_ag+0x1b6/0x300
+[ 1626.609227]  xfs_reclaim_inodes_nr+0x31/0x40
+[ 1626.609228]  super_cache_scan+0x152/0x1a0
+[ 1626.609231]  do_shrink_slab+0x12c/0x2d0
+[ 1626.609233]  shrink_slab+0x9c/0x2a0
+[ 1626.609235]  shrink_node+0xd7/0x470
+[ 1626.609237]  do_try_to_free_pages+0xbf/0x380
+[ 1626.609240]  try_to_free_pages+0xd9/0x1f0
+[ 1626.609245]  __alloc_pages_slowpath+0x3a4/0xd30
+[ 1626.609251]  ? ___slab_alloc+0x238/0x560
+[ 1626.609254]  __alloc_pages_nodemask+0x30c/0x350
+[ 1626.609259]  skb_page_frag_refill+0x97/0xd0
+[ 1626.609274]  sk_page_frag_refill+0x1d/0x80
+[ 1626.609279]  tcp_sendmsg_locked+0x2bb/0xdd0
+[ 1626.609304]  tcp_sendmsg+0x27/0x40
+[ 1626.609307]  sock_sendmsg+0x54/0x60
+[ 1626.609308]  ___sys_sendmsg+0x29f/0x320
+[ 1626.609313]  ? sock_poll+0x66/0xb0
+[ 1626.609318]  ? ep_item_poll.isra.15+0x40/0xc0
+[ 1626.609320]  ? ep_send_events_proc+0xe6/0x230
+[ 1626.609322]  ? hrtimer_try_to_cancel+0x54/0xf0
+[ 1626.609324]  ? ep_read_events_proc+0xc0/0xc0
+[ 1626.609326]  ? _raw_write_unlock_irq+0xa/0x20
+[ 1626.609327]  ? ep_scan_ready_list.constprop.19+0x218/0x230
+[ 1626.609329]  ? __hrtimer_init+0xb0/0xb0
+[ 1626.609331]  ? _raw_spin_unlock_irq+0xa/0x20
+[ 1626.609334]  ? ep_poll+0x26c/0x4a0
+[ 1626.609337]  ? tcp_tsq_write.part.54+0xa0/0xa0
+[ 1626.609339]  ? release_sock+0x43/0x90
+[ 1626.609341]  ? _raw_spin_unlock_bh+0xa/0x20
+[ 1626.609342]  __sys_sendmsg+0x47/0x80
+[ 1626.609347]  do_syscall_64+0x5f/0x1c0
+[ 1626.609349]  ? prepare_exit_to_usermode+0x75/0xa0
+[ 1626.609351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This patch adds a new prctl command that daemons can use after they have
+done their initial setup, and before they start to do allocations that
+are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
+flags so both userspace block and FS threads can use it to avoid the
+allocation recursion and try to prevent from being throttled while
+writing out data to free up memory.
+
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+---
+V3=20
+- Drop NOFS, set PF_LESS_THROTTLE and rename prctl flag to reflect it
+is more general and can support both FS and block devices. Both fuse
+and block device daemons, nbd and tcmu-runner, have been tested to
+confirm the more restrictive PF_MEMALLOC_NOIO also works for fuse.
+
+- Use CAP_SYS_RESOURCE instead of admin.
+
+V2:
+- Use prctl instead of procfs.
+- Add support for NOFS for fuse.
+- Check permissions.
+
+
+ include/uapi/linux/capability.h |  1 +
+ include/uapi/linux/prctl.h      |  4 ++++
+ kernel/sys.c                    | 26 ++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
+
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capabilit=
+y.h
+index 240fdb9a60f6..272dc69fa080 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -301,6 +301,7 @@ struct vfs_ns_cap_data {
+ /* Allow more than 64hz interrupts from the real-time clock */
+ /* Override max number of consoles on console allocation */
+ /* Override max number of keymaps */
++/* Control memory reclaim behavior */
+=20
+ #define CAP_SYS_RESOURCE     24
+=20
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 7da1b37b27aa..07b4f8131e36 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -234,4 +234,8 @@ struct prctl_mm_map {
+ #define PR_GET_TAGGED_ADDR_CTRL=09=0956
+ # define PR_TAGGED_ADDR_ENABLE=09=09(1UL << 0)
+=20
++/* Control reclaim behavior when allocating memory */
++#define PR_SET_IO_FLUSHER=09=0957
++#define PR_GET_IO_FLUSHER=09=0958
++
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a611d1d58c7d..08c6b682fa99 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2486,6 +2486,32 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, a=
+rg2, unsigned long, arg3,
+ =09=09=09return -EINVAL;
+ =09=09error =3D GET_TAGGED_ADDR_CTRL();
+ =09=09break;
++=09case PR_SET_IO_FLUSHER:
++=09=09if (!capable(CAP_SYS_RESOURCE))
++=09=09=09return -EPERM;
++
++=09=09if (arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09if (arg2 =3D=3D 1)
++=09=09=09current->flags |=3D PF_MEMALLOC_NOIO | PF_LESS_THROTTLE;
++=09=09else if (!arg2)
++=09=09=09current->flags &=3D ~(PF_MEMALLOC_NOIO | PF_LESS_THROTTLE);
++=09=09else
++=09=09=09return -EINVAL;
++=09=09break;
++=09case PR_GET_IO_FLUSHER:
++=09=09if (!capable(CAP_SYS_RESOURCE))
++=09=09=09return -EPERM;
++
++=09=09if (arg2 || arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09if (current->flags & (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE))
++=09=09=09error =3D 1;
++=09=09else
++=09=09=09error =3D 0;
++=09=09break;
+ =09default:
+ =09=09error =3D -EINVAL;
+ =09=09break;
+--=20
+2.20.1
+
