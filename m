@@ -2,200 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7181FAFE6
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 12:43:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6E4FB100
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 14:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfKMLnR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Nov 2019 06:43:17 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43945 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKMLnR (ORCPT
+        id S1727112AbfKMNCf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Nov 2019 08:02:35 -0500
+Received: from vulcan.natalenko.name ([104.207.131.136]:39748 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfKMNCe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:43:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so1961497wra.10
-        for <linux-block@vger.kernel.org>; Wed, 13 Nov 2019 03:43:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NWmx5zlrVzI636UV5zn7jwNNYyPpT2kzazOSeqZFCPQ=;
-        b=C0Dbe7TCduZqSim4I/9b7E74bGQO34GH/iKoO+dE+3EHLfWv1lLPGbvorBCoaRGMDb
-         48v7HTSQHP1LaVgvLNGy/yOxyJTlvTeKuq2CZR/Q7GIgmnQIbkvYhHi8TV/Ec+0WSA8P
-         awH+k+k5IQBNK5RO6uqKbJl7dFmz19ED4sy2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=NWmx5zlrVzI636UV5zn7jwNNYyPpT2kzazOSeqZFCPQ=;
-        b=jof95ZB5iV62Ym3ATLZMYCy5NsnxYKK2NTfuUu9+CgZMd6xTJgGQ+LUeBFqpNW74Gr
-         Hbj9ah16/KKwIF6/qWx27Cz+BmPOlmbtHhDfgq7wEeSRDH5Cs7DJDEmp1VuxMfa4X2WI
-         IPrbZF175iBUMHL8xrywz/qAXCNbeJfw9VTsbmt9+2+l9KmRkjKKG0aeZ92o8xbbUvGe
-         OyaCKAovfKSeFG+d5G7QM+lezxav8mfMAm6VN8jdMkwC2dF6uIQHBXL3mBpUuQnWGGDz
-         TNrSvBdBSmmoUd5pFxhAdIVzOH13wsDlcXE4OkeQWZxvozWfEpHDxLA1rHHIZlpms0IR
-         ywcQ==
-X-Gm-Message-State: APjAAAWq/KzV4Fipcq3R0jdVrPTMz2D8ur1v0xqt1TgLTsW9YgbBnbvx
-        oTxocMU5SZ4lns7tVtiBY0vtwg==
-X-Google-Smtp-Source: APXvYqw4ALVmGTh9KFISsJCvLVpFEzXuyu2WMWEkcAdM7khXUlUWKA93QR1nKFP8k/o5YdLFIE0ItA==
-X-Received: by 2002:a5d:50ce:: with SMTP id f14mr2625324wrt.219.1573645394576;
-        Wed, 13 Nov 2019 03:43:14 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id w4sm2544060wrs.1.2019.11.13.03.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 03:43:13 -0800 (PST)
-Date:   Wed, 13 Nov 2019 12:43:11 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/23] mm/gup: track dma-pinned pages: FOLL_PIN,
- FOLL_LONGTERM
-Message-ID: <20191113114311.GP23790@phenom.ffwll.local>
-Mail-Followup-To: Jan Kara <jack@suse.cz>,
-        John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>, David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112203802.GD5584@ziepe.ca>
- <02fa935c-3469-b766-b691-5660084b60b9@nvidia.com>
- <CAKMK7uHvk+ti00mCCF2006U003w1dofFg9nSfmZ4bS2Z2pEDNQ@mail.gmail.com>
- <7b671bf9-4d94-f2cc-8453-863acd5a1115@nvidia.com>
- <20191113101210.GD6367@quack2.suse.cz>
+        Wed, 13 Nov 2019 08:02:34 -0500
+X-Greylist: delayed 310 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 08:02:33 EST
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 3DA9F628C1D;
+        Wed, 13 Nov 2019 13:57:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1573649839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5lJHmk092HI/n/t3HGbtqhY5NJJ/zYeiYOZoPfSWoV8=;
+        b=KflpJlhUhEVlin+lNNHQWX1kTlF4c1gNrPhtrV2UqmrK1UcmXVlG2RYGtHWbje5+kkNlwy
+        h/aTjcodHZEpUULAbfWhbcb/TBRdAB35NNB66MvZQDpCIAufvyGAcweYUFPWk68ULOSyXU
+        oCWqgAA4vFV0FXjE4ISYmMmPPrWmbg0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113101210.GD6367@quack2.suse.cz>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 Nov 2019 13:57:19 +0100
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
+        Chris Evich <cevich@redhat.com>,
+        Patrick Dung <patdung100@gmail.com>,
+        Thorsten Schubert <tschubert@bafh.org>
+Subject: Re: [PATCH BUGFIX] block, bfq: deschedule empty bfq_queues not
+ referred by any process
+In-Reply-To: <20191112074856.40433-1-paolo.valente@linaro.org>
+References: <20191112074856.40433-1-paolo.valente@linaro.org>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <bb393dcaa426786e0963cf0e70f0b062@natalenko.name>
+X-Sender: oleksandr@natalenko.name
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:12:10AM +0100, Jan Kara wrote:
-> On Wed 13-11-19 01:02:02, John Hubbard wrote:
-> > On 11/13/19 12:22 AM, Daniel Vetter wrote:
-> > ...
-> > > > > Why are we doing this? I think things got confused here someplace, as
-> > > > 
-> > > > 
-> > > > Because:
-> > > > 
-> > > > a) These need put_page() calls,  and
-> > > > 
-> > > > b) there is no put_pages() call, but there is a release_pages() call that
-> > > > is, arguably, what put_pages() would be.
-> > > > 
-> > > > 
-> > > > > the comment still says:
-> > > > > 
-> > > > > /**
-> > > > >   * put_user_page() - release a gup-pinned page
-> > > > >   * @page:            pointer to page to be released
-> > > > >   *
-> > > > >   * Pages that were pinned via get_user_pages*() must be released via
-> > > > >   * either put_user_page(), or one of the put_user_pages*() routines
-> > > > >   * below.
-> > > > 
-> > > > 
-> > > > Ohhh, I missed those comments. They need to all be changed over to
-> > > > say "pages that were pinned via pin_user_pages*() or
-> > > > pin_longterm_pages*() must be released via put_user_page*()."
-> > > > 
-> > > > The get_user_pages*() pages must still be released via put_page.
-> > > > 
-> > > > The churn is due to a fairly significant change in strategy, whis
-> > > > is: instead of changing all get_user_pages*() sites to call
-> > > > put_user_page(), change selected sites to call pin_user_pages*() or
-> > > > pin_longterm_pages*(), plus put_user_page().
-> > > 
-> > > Can't we call this unpin_user_page then, for some symmetry? Or is that
-> > > even more churn?
-> > > 
-> > > Looking from afar the naming here seems really confusing.
-> > 
-> > 
-> > That look from afar is valuable, because I'm too close to the problem to see
-> > how the naming looks. :)
-> > 
-> > unpin_user_page() sounds symmetrical. It's true that it would cause more
-> > churn (which is why I started off with a proposal that avoids changing the
-> > names of put_user_page*() APIs). But OTOH, the amount of churn is proportional
-> > to the change in direction here, and it's really only 10 or 20 lines changed,
-> > in the end.
-> > 
-> > So I'm open to changing to that naming. It would be nice to hear what others
-> > prefer, too...
-> 
-> FWIW I'd find unpin_user_page() also better than put_user_page() as a
-> counterpart to pin_user_pages().
+Hi.
 
-One more point from afar on pin/unpin: We use that a lot in graphics for
-permanently pinned graphics buffer objects. Which really only should be
-used for scanout. So at least graphics folks should have an appropriate
-mindset and try to make sure we don't overuse this stuff.
--Daniel
+On 12.11.2019 08:48, Paolo Valente wrote:
+> Since commit 3726112ec731 ("block, bfq: re-schedule empty queues if
+> they deserve I/O plugging"), to prevent the service guarantees of a
+> bfq_queue from being violated, the bfq_queue may be left busy, i.e.,
+> scheduled for service, even if empty (see comments in
+> __bfq_bfqq_expire() for details). But, if no process will send
+> requests to the bfq_queue any longer, then there is no point in
+> keeping the bfq_queue scheduled for service.
+> 
+> In addition, keeping the bfq_queue scheduled for service, but with no
+> process reference any longer, may cause the bfq_queue to be freed when
+> descheduled from service. But this is assumed to never happen, and
+> causes a UAF if it happens. This, in turn, caused crashes [1, 2].
+> 
+> This commit fixes this issue by descheduling an empty bfq_queue when
+> it remains with not process reference.
+> 
+> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
+> 
+> Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they
+> deserve I/O plugging")
+> Reported-by: Chris Evich <cevich@redhat.com>
+> Reported-by: Patrick Dung <patdung100@gmail.com>
+> Reported-by: Thorsten Schubert <tschubert@bafh.org>
+> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+> ---
+>  block/bfq-iosched.c | 31 +++++++++++++++++++++++++------
+>  1 file changed, 25 insertions(+), 6 deletions(-)
+> 
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 0319d6339822..ba68627f7740 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -2713,6 +2713,27 @@ static void bfq_bfqq_save_state(struct bfq_queue 
+> *bfqq)
+>  	}
+>  }
+> 
+> +
+> +static
+> +void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue 
+> *bfqq)
+> +{
+> +	/*
+> +	 * To prevent bfqq's service guarantees from being violated,
+> +	 * bfqq may be left busy, i.e., queued for service, even if
+> +	 * empty (see comments in __bfq_bfqq_expire() for
+> +	 * details). But, if no process will send requests to bfqq any
+> +	 * longer, then there is no point in keeping bfqq queued for
+> +	 * service. In addition, keeping bfqq queued for service, but
+> +	 * with no process ref any longer, may have caused bfqq to be
+> +	 * freed when dequeued from service. But this is assumed to
+> +	 * never happen.
+> +	 */
+> +	if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list))
+> +		bfq_del_bfqq_busy(bfqd, bfqq, false);
+> +
+> +	bfq_put_queue(bfqq);
+> +}
+> +
+>  static void
+>  bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
+>  		struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
+> @@ -2783,8 +2804,7 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct
+> bfq_io_cq *bic,
+>  	 */
+>  	new_bfqq->pid = -1;
+>  	bfqq->bic = NULL;
+> -	/* release process reference to bfqq */
+> -	bfq_put_queue(bfqq);
+> +	bfq_release_process_ref(bfqd, bfqq);
+>  }
+> 
+>  static bool bfq_allow_bio_merge(struct request_queue *q, struct 
+> request *rq,
+> @@ -4899,7 +4919,7 @@ static void bfq_exit_bfqq(struct bfq_data *bfqd,
+> struct bfq_queue *bfqq)
+> 
+>  	bfq_put_cooperator(bfqq);
+> 
+> -	bfq_put_queue(bfqq); /* release process reference */
+> +	bfq_release_process_ref(bfqd, bfqq);
+>  }
+> 
+>  static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
+> @@ -5001,8 +5021,7 @@ static void bfq_check_ioprio_change(struct
+> bfq_io_cq *bic, struct bio *bio)
+> 
+>  	bfqq = bic_to_bfqq(bic, false);
+>  	if (bfqq) {
+> -		/* release process reference on this queue */
+> -		bfq_put_queue(bfqq);
+> +		bfq_release_process_ref(bfqd, bfqq);
+>  		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic);
+>  		bic_set_bfqq(bic, bfqq, false);
+>  	}
+> @@ -5963,7 +5982,7 @@ bfq_split_bfqq(struct bfq_io_cq *bic, struct
+> bfq_queue *bfqq)
+> 
+>  	bfq_put_cooperator(bfqq);
+> 
+> -	bfq_put_queue(bfqq);
+> +	bfq_release_process_ref(bfqq->bfqd, bfqq);
+>  	return NULL;
+>  }
+
+I'm not sure if I see things right, but this commit along with v5.3.11 
+kernel causes almost all boots to hang (for instance, on mounting the 
+FS). Once the scheduler is changed to something else than BFQ (I set the 
+I/O scheduler early via udev rule), multiple reboots go just fine.
+
+Is this commit also applicable to 5.3 kernels? Or I'm testing a dumb 
+thing?
+
+Thanks.
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+   Oleksandr Natalenko (post-factum)
