@@ -2,82 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFAEFB46A
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 16:57:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64923FB4DB
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 17:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfKMP5e (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Nov 2019 10:57:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39040 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfKMP5e (ORCPT
+        id S1728240AbfKMQUt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Nov 2019 11:20:49 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33874 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfKMQUt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:57:34 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x28so1937188pfo.6;
-        Wed, 13 Nov 2019 07:57:34 -0800 (PST)
+        Wed, 13 Nov 2019 11:20:49 -0500
+Received: by mail-qk1-f194.google.com with SMTP id 205so2258774qkk.1;
+        Wed, 13 Nov 2019 08:20:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BgjpAWhUsNd321xRdgYc+Qsl4mTKgPBuEJhT5kvzP4c=;
+        b=PPgZ/DfOQB2NdizWDHzrIuVUEf8lBy5hSeDWmvmPCeyUkUklrL10lTD5KA6FChpjJk
+         kPksEM7ZmApk1toieecuIDOk7KFS1fhjpApBmNvVSZzFjkvJVAQ31AuFO8iULfoM4UtH
+         gYn9GmcrpKv0N74kANWg4byXvPDpLaWpHNPXCHxXNXCPiSnuJPONT3M9dRh7npXlX/S2
+         l5VMxmzbf0PGS35IDtk8OvtUdhVOl7cQ0NHtyRBXPI9nkdcSN6ePYPphtWkLcAuWQs7I
+         iHZ8e5FmgdP8ExQg/4+tAZfBJIZSf/ki5R8vx4YdqR0CkEwBw86wNSYUmtD4Tj23jFKt
+         RjKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6pyZ1939MoivKuyRR7oEn6mya6iiO1vxsXSZDomB2Uc=;
-        b=ieA+Vg3QbXR9cGeOpyTZYExJIPKz8fO6QP4NyYhk0ulqlxyJw1Hl1DK5VDe+Ne0phj
-         By8PGXxGYhQpncR6zN7aaYONJgcRHgILmHu78B5rFTCsuOXq35b461gV9IRjvbu/XE0z
-         oi1FGzJD1HUjopFTqo00r+x8KrweDhw15DlOyCGWze443nTe43DdR7smrh3gZvZmEXnS
-         iFuKmmJ6s7YG1rv4z87R48aMTbVEMOZp5OSmZMiTNboPfUt+RxuqJ5cP/2vC+HtPgIvA
-         yyJIVTSX1wPSQOm8ftkQ3A/g5Z/kImMq9nmPqu9Q99eYCNiHdYWUZrIEmeJ4AbtAaxyJ
-         mXjA==
-X-Gm-Message-State: APjAAAVGJb/1qFJ6NjuobprweEILWEPHKsfSr09KCCkzEeN697O9wFwD
-        J/z8jAN0ObmSN8lRgJuwlLsNE8Ra
-X-Google-Smtp-Source: APXvYqyZ19Er5vajaooa3G10t17WIDxwieqazKrX2GvWj784lAzORY6FmwqMGtH1LL4li4XUhuwcog==
-X-Received: by 2002:aa7:8210:: with SMTP id k16mr5229524pfi.84.1573660653156;
-        Wed, 13 Nov 2019 07:57:33 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id b26sm2838452pfo.158.2019.11.13.07.57.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 07:57:32 -0800 (PST)
-Subject: Re: [PATCH] block: Fix the typo in comment of function
- deadline_latter_request
-To:     Xianting Tian <xianting_tian@126.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1573658479-13094-1-git-send-email-xianting_tian@126.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <d2218346-5005-09f7-4777-dd59a1674778@acm.org>
-Date:   Wed, 13 Nov 2019 07:57:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BgjpAWhUsNd321xRdgYc+Qsl4mTKgPBuEJhT5kvzP4c=;
+        b=rOFXIrwE+G/cKR9p6UKkZeADwp50qA6JBfPx4J8w/+yStztRK3bYKPJm6rHAUVm62p
+         JPxq0F0JWuWFnRgmhpkzNV3O8wdQYRRPqKdu+DTlyuIccORrhvmJoM3AolxtcZrBMkAT
+         nRDmTh89i2AodRQ2olkSoFKccemWgz4zqOZGyxqAGl07KPEVkY2nKQC94nJxzhDtpwR5
+         iVAF4cfuDX3bnm1/ELfG9QstO97S/p3u9VyyaJDbMw6ZO0oYWcf7dh1ZjSmTALpYGI1v
+         PGryjdRAVqQ8R1StT6l4dBsmVNdzuf1pe/TAsKwTZGKe6JH4HP1zBGMGjRlCDfe+3O2l
+         CgMA==
+X-Gm-Message-State: APjAAAUAqSedTDgPLGFlKta4Az8rLlhuurHyGbdeXCOjRd6AYk3oSoRk
+        Bt7pIyxROTM2q6/ggWKLq7s=
+X-Google-Smtp-Source: APXvYqwAYh9N8uNHYxxAjGuaXY45395Am/9P7k3KMvmn4xfHfq+KlMAQkHWozUCPX54oGMDPFlzMiA==
+X-Received: by 2002:a37:a7c6:: with SMTP id q189mr3022192qke.469.1573662048230;
+        Wed, 13 Nov 2019 08:20:48 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:69f2])
+        by smtp.gmail.com with ESMTPSA id k3sm1112686qkj.119.2019.11.13.08.20.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 08:20:47 -0800 (PST)
+Date:   Wed, 13 Nov 2019 08:20:45 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com
+Subject: Re: [PATCH] iocost: check active_list of all the ancestors in
+ iocg_activate()
+Message-ID: <20191113162045.GH4163745@devbig004.ftw2.facebook.com>
+References: <1573629691-6619-1-git-send-email-jiufei.xue@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <1573658479-13094-1-git-send-email-xianting_tian@126.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573629691-6619-1-git-send-email-jiufei.xue@linux.alibaba.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/13/19 7:21 AM, Xianting Tian wrote:
-> Fix the typo "`" to "'"
+On Wed, Nov 13, 2019 at 03:21:31PM +0800, Jiufei Xue wrote:
+> There is a bug that checking the same active_list over and over again
+> in iocg_activate(). The intention of the code was checking whether all
+> the ancestors and self have already been activated. So fix it.
 > 
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
-> ---
->   block/mq-deadline.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-> index b490f47..6047192 100644
-> --- a/block/mq-deadline.c
-> +++ b/block/mq-deadline.c
-> @@ -71,7 +71,7 @@ struct deadline_data {
->   }
->   
->   /*
-> - * get the request after `rq' in sector-sorted order
-> + * get the request after 'rq' in sector-sorted order
->    */
->   static inline struct request *
->   deadline_latter_request(struct request *rq)
-> 
+> Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-I'm not sure that's a typo. I think that's a common style for quoting text.
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Bart.
+Jens, can you please apply this patch?
+
+Thans.
+
+-- 
+tejun
