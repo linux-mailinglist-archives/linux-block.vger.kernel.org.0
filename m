@@ -2,17 +2,17 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 806E6FB672
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 18:30:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FE8FB677
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 18:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfKMRap (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Nov 2019 12:30:45 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54152 "EHLO huawei.com"
+        id S1727254AbfKMRat (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Nov 2019 12:30:49 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54150 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726443AbfKMRap (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S1726392AbfKMRap (ORCPT <rfc822;linux-block@vger.kernel.org>);
         Wed, 13 Nov 2019 12:30:45 -0500
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DC7CA7D6366D8098886D;
+        by Forcepoint Email with ESMTP id D7A63D7FBDBE91609F52;
         Thu, 14 Nov 2019 01:30:42 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
@@ -21,10 +21,12 @@ From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH 0/2] blk-mq/sbitmap: Delete some unused functions
-Date:   Thu, 14 Nov 2019 01:27:20 +0800
-Message-ID: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 1/2] blk-mq: Delete blk_mq_has_free_tags() and blk_mq_can_queue()
+Date:   Thu, 14 Nov 2019 01:27:21 +0800
+Message-ID: <1573666042-176756-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
+References: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -34,21 +36,76 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Function blk_mq_can_queue() never seemed to ever have been referenced, so
-delete it and any other now-unused callees.
+These functions are not referenced, so delete them.
 
-John Garry (2):
-  blk-mq: Delete blk_mq_has_free_tags() and blk_mq_can_queue()
-  sbitmap: Delete sbitmap_any_bit_clear()
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ block/blk-mq-tag.c     | 8 --------
+ block/blk-mq-tag.h     | 1 -
+ block/blk-mq.c         | 6 ------
+ include/linux/blk-mq.h | 1 -
+ 4 files changed, 16 deletions(-)
 
- block/blk-mq-tag.c      |  8 --------
- block/blk-mq-tag.h      |  1 -
- block/blk-mq.c          |  6 ------
- include/linux/blk-mq.h  |  1 -
- include/linux/sbitmap.h |  9 ---------
- lib/sbitmap.c           | 17 -----------------
- 6 files changed, 42 deletions(-)
-
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 008388e82b5c..fbacde454718 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -15,14 +15,6 @@
+ #include "blk-mq.h"
+ #include "blk-mq-tag.h"
+ 
+-bool blk_mq_has_free_tags(struct blk_mq_tags *tags)
+-{
+-	if (!tags)
+-		return true;
+-
+-	return sbitmap_any_bit_clear(&tags->bitmap_tags.sb);
+-}
+-
+ /*
+  * If a previously inactive queue goes active, bump the active user count.
+  * We need to do this before try to allocate driver tag, then even if fail
+diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+index 61deab0b5a5a..15bc74acb57e 100644
+--- a/block/blk-mq-tag.h
++++ b/block/blk-mq-tag.h
+@@ -28,7 +28,6 @@ extern void blk_mq_free_tags(struct blk_mq_tags *tags);
+ extern unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data);
+ extern void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
+ 			   struct blk_mq_ctx *ctx, unsigned int tag);
+-extern bool blk_mq_has_free_tags(struct blk_mq_tags *tags);
+ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 					struct blk_mq_tags **tags,
+ 					unsigned int depth, bool can_grow);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 5c9adcaa27ac..323c9cb28066 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -260,12 +260,6 @@ void blk_mq_wake_waiters(struct request_queue *q)
+ 			blk_mq_tag_wakeup_all(hctx->tags, true);
+ }
+ 
+-bool blk_mq_can_queue(struct blk_mq_hw_ctx *hctx)
+-{
+-	return blk_mq_has_free_tags(hctx->tags);
+-}
+-EXPORT_SYMBOL(blk_mq_can_queue);
+-
+ /*
+  * Only need start/end time stamping if we have iostat or
+  * blk stats enabled, or using an IO scheduler.
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index dc03e059fdff..11cfd6470b1a 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -424,7 +424,6 @@ void blk_mq_free_tag_set(struct blk_mq_tag_set *set);
+ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule);
+ 
+ void blk_mq_free_request(struct request *rq);
+-bool blk_mq_can_queue(struct blk_mq_hw_ctx *);
+ 
+ bool blk_mq_queue_inflight(struct request_queue *q);
+ 
 -- 
 2.17.1
 
