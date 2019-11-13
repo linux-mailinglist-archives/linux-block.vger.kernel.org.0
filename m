@@ -2,17 +2,17 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 259A2FB18A
-	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 14:40:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27ABFFB183
+	for <lists+linux-block@lfdr.de>; Wed, 13 Nov 2019 14:40:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfKMNk3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Nov 2019 08:40:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40766 "EHLO huawei.com"
+        id S1726434AbfKMNkf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Nov 2019 08:40:35 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40724 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727129AbfKMNk3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:40:29 -0500
+        id S1726186AbfKMNke (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:40:34 -0500
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 226C13C6C4E38D3107F6;
+        by Forcepoint Email with ESMTP id 1BE813B0E12517482024;
         Wed, 13 Nov 2019 21:40:24 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
@@ -24,10 +24,12 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-scsi@vger.kernel.org>, <ming.lei@redhat.com>,
         <hare@suse.com>, <bvanassche@acm.org>, <chenxiang66@hisilicon.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC 0/5] blk-mq/scsi: Provide hostwide shared tags for SCSI HBAs
-Date:   Wed, 13 Nov 2019 21:36:44 +0800
-Message-ID: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC 1/5] blk-mq: Remove some unused function arguments
+Date:   Wed, 13 Nov 2019 21:36:45 +0800
+Message-ID: <1573652209-163505-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -37,55 +39,110 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is a 2nd stab at solving the problem of hostwide shared tags for SCSI
-HBAs.
+The struct blk_mq_hw_ctx * argument in blk_mq_put_tag(),
+blk_mq_poll_nsecs(), and blk_mq_poll_hybrid_sleep() is unused, so remove
+it.
 
-As discussed previously, Ming Lei's most recent series in [0] to use
-hctx[0] tags for all hctx for a host was a bit messy and intrusive, so seen
-as a no go. Indeed, blk-mq is designed for separate tags per hctx.
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ block/blk-mq-tag.c |  4 ++--
+ block/blk-mq-tag.h |  3 +--
+ block/blk-mq.c     | 10 ++++------
+ block/blk-mq.h     |  2 +-
+ 4 files changed, 8 insertions(+), 11 deletions(-)
 
-This series introduces a different approach to solve that problem, in
-keeping the per-hctx tags but introducing a new separate shared set of
-tags, which SCSI HBAs can use for a hostwide tags.
-
-Adding support for shared tags should not have a significant performance
-impact for when shared tags are not requested.
-
-Currently I just fixed up the hisi_sas driver to use the shared tags,
-but should not be much trouble to change others over.
-
-Patch #3 is quite experimental at this point. I also threw in a minor
-tidy-up patch.
-
-[0] https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/
-
-Hannes Reinecke (1):
-  scsi: Add template flag 'host_tagset'
-
-John Garry (3):
-  blk-mq: Remove some unused function arguments
-  blk-mq: Facilitate a shared tags per tagset
-  scsi: hisi_sas: Switch v3 hw to MQ
-
-Ming Lei (1):
-  blk-mq: rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
-
- block/blk-core.c                       |  1 +
- block/blk-flush.c                      |  2 +
- block/blk-mq-debugfs.c                 |  4 +-
- block/blk-mq-tag.c                     | 91 +++++++++++++++++++++++++-
- block/blk-mq-tag.h                     |  8 +--
- block/blk-mq.c                         | 91 +++++++++++++++++++-------
- block/blk-mq.h                         | 11 +++-
- drivers/scsi/hisi_sas/hisi_sas.h       |  3 +-
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 43 ++++++------
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 85 ++++++++++--------------
- drivers/scsi/scsi_lib.c                |  2 +
- include/linux/blk-mq.h                 |  5 +-
- include/linux/blkdev.h                 |  1 +
- include/scsi/scsi_host.h               |  3 +
- 14 files changed, 242 insertions(+), 108 deletions(-)
-
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 008388e82b5c..53b4a9414fbd 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -191,8 +191,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
+ 	return tag + tag_offset;
+ }
+ 
+-void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
+-		    struct blk_mq_ctx *ctx, unsigned int tag)
++void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
++		    unsigned int tag)
+ {
+ 	if (!blk_mq_tag_is_reserved(tags, tag)) {
+ 		const int real_tag = tag - tags->nr_reserved_tags;
+diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+index 61deab0b5a5a..b16f138e75f8 100644
+--- a/block/blk-mq-tag.h
++++ b/block/blk-mq-tag.h
+@@ -26,8 +26,7 @@ extern struct blk_mq_tags *blk_mq_init_tags(unsigned int nr_tags, unsigned int r
+ extern void blk_mq_free_tags(struct blk_mq_tags *tags);
+ 
+ extern unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data);
+-extern void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
+-			   struct blk_mq_ctx *ctx, unsigned int tag);
++extern void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx, unsigned int tag);
+ extern bool blk_mq_has_free_tags(struct blk_mq_tags *tags);
+ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 					struct blk_mq_tags **tags,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 6e3b15f70cd7..16aa20d23b67 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -499,9 +499,9 @@ static void __blk_mq_free_request(struct request *rq)
+ 	blk_pm_mark_last_busy(rq);
+ 	rq->mq_hctx = NULL;
+ 	if (rq->tag != -1)
+-		blk_mq_put_tag(hctx, hctx->tags, ctx, rq->tag);
++		blk_mq_put_tag(hctx->tags, ctx, rq->tag);
+ 	if (sched_tag != -1)
+-		blk_mq_put_tag(hctx, hctx->sched_tags, ctx, sched_tag);
++		blk_mq_put_tag(hctx->sched_tags, ctx, sched_tag);
+ 	blk_mq_sched_restart(hctx);
+ 	blk_queue_exit(q);
+ }
+@@ -3354,7 +3354,6 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb)
+ }
+ 
+ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+-				       struct blk_mq_hw_ctx *hctx,
+ 				       struct request *rq)
+ {
+ 	unsigned long ret = 0;
+@@ -3387,7 +3386,6 @@ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+ }
+ 
+ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+-				     struct blk_mq_hw_ctx *hctx,
+ 				     struct request *rq)
+ {
+ 	struct hrtimer_sleeper hs;
+@@ -3407,7 +3405,7 @@ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+ 	if (q->poll_nsec > 0)
+ 		nsecs = q->poll_nsec;
+ 	else
+-		nsecs = blk_mq_poll_nsecs(q, hctx, rq);
++		nsecs = blk_mq_poll_nsecs(q, rq);
+ 
+ 	if (!nsecs)
+ 		return false;
+@@ -3462,7 +3460,7 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
+ 			return false;
+ 	}
+ 
+-	return blk_mq_poll_hybrid_sleep(q, hctx, rq);
++	return blk_mq_poll_hybrid_sleep(q, rq);
+ }
+ 
+ /**
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index 32c62c64e6c2..78d38b5f2793 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -208,7 +208,7 @@ static inline bool blk_mq_get_dispatch_budget(struct blk_mq_hw_ctx *hctx)
+ static inline void __blk_mq_put_driver_tag(struct blk_mq_hw_ctx *hctx,
+ 					   struct request *rq)
+ {
+-	blk_mq_put_tag(hctx, hctx->tags, rq->mq_ctx, rq->tag);
++	blk_mq_put_tag(hctx->tags, rq->mq_ctx, rq->tag);
+ 	rq->tag = -1;
+ 
+ 	if (rq->rq_flags & RQF_MQ_INFLIGHT) {
 -- 
 2.17.1
 
