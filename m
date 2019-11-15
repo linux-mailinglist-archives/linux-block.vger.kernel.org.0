@@ -2,194 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 004C4FE0F8
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 16:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97C32FE201
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 16:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfKOPNr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Nov 2019 10:13:47 -0500
-Received: from mail-io1-f41.google.com ([209.85.166.41]:44593 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOPNq (ORCPT
+        id S1727653AbfKOPtn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Nov 2019 10:49:43 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43852 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbfKOPtm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:13:46 -0500
-Received: by mail-io1-f41.google.com with SMTP id j20so10749536ioo.11
-        for <linux-block@vger.kernel.org>; Fri, 15 Nov 2019 07:13:45 -0800 (PST)
+        Fri, 15 Nov 2019 10:49:42 -0500
+Received: by mail-io1-f67.google.com with SMTP id r2so5764811iot.10
+        for <linux-block@vger.kernel.org>; Fri, 15 Nov 2019 07:49:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nl3wTCoLMUeCBIWD8WqaehgSPLUmMgTb4iNO52iRxzk=;
-        b=XMtUITRAFXEkzTEh5ZCkNbP+Wu1s4jBNFZYlgHgQOzgifst9FxS8ZDVQUjxBPT1Vk1
-         oZ+ia9cZeux+cguxR6xyuK9YQdvvRgHIA+hZOSUjdeSwdx77W76uBpFQIkVPfpBWK6Xu
-         BM7jqH4hnDpcilcbImw1GkxKu+kXSOyR+08sLEAKmryP6jUBz4PhMCIhBk8zpd2dtSug
-         757z+VVvl9Ya5v2WxjDN2ZQMWDe5sLCkR6bIN/k/FJMVPHkuC9VbDWuLpVgl0pP/mxmy
-         B73sN3dtXL2JjbCBfpksMZOMUA2EMTqftC5KguO136c9sXWreIUwcm3XgnoF6cVlFfRV
-         vVNQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
+        b=T96mBsWswYjsm0w7ecYkWpV509ib/ulk9bHbI0Xwo0rzkePegh7rSfOcmzGbyf8vTc
+         lns/HOXyf4/6jOYDVIgZ/CZyIfN2m2y88qVdmXSABhNsP0MXDIRsHGSOOd7wWkwuGiQx
+         ehcoBpFXp6INIFq3jwmveina1L3fsWjpzHRhMvlhwo8OJ8Dy4xuFXwCrYZiL/Ja/dmiU
+         sEvBblBcC09ww5H/W1Li3rJXBc1TYjMn46kjeboNwYGUiqFeNnjz46iJxarBlBzUTpau
+         7EU4w1MkRxjhgPFrJ2/ipVqnuE4IawmENFYcW1JVUg9OFLrEKZvfb77T8+3XayPV4Zd+
+         KrHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nl3wTCoLMUeCBIWD8WqaehgSPLUmMgTb4iNO52iRxzk=;
-        b=kKHH8kqTYkMmAeSY8WKw7InFPEDHTZib+FBXMkXGJQZuytEAVmol1p90RfawIN/mxm
-         87kDPQAVWubFqRh9FX1tV2GYlaIxnjOQCaiMd5A16ulM81cCZGshW3zFouHxeVba58bD
-         Ny7xsaeT6ooFgIFR51DlttV1ebVxOb594Rg7T80U6M9nxtke7TJN+MhQo6tLyMQW8g71
-         9BYz+Fu6hll57ISBzGk+yzIc/Yt5TkKLThTzd8RCOw9Lsp8cWvD9HOgbwHe8t/KNEOGc
-         mFDoYllrLaETQCA8vgfV2W3OcOBmZef1EhSFdaRbrNwBiU4EzIpTtEI0EZR15Vp3Lna6
-         2lRg==
-X-Gm-Message-State: APjAAAVUszrk3d8Sp06iyU2K0Iraxn4B0or750dHYYjHV3Iuhm7Vo9r/
-        s4RpK40qk/Nkg1Ulw77QAxPQBA==
-X-Google-Smtp-Source: APXvYqzuvZHK6ig+6fL99J73Po0VpXkbzccVHtOXx7NvIDQ0oRAhGlnRIaW9yOtk6fyiCqz4ePiGKw==
-X-Received: by 2002:a05:6638:229:: with SMTP id f9mr1184316jaq.64.1573830824952;
-        Fri, 15 Nov 2019 07:13:44 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id e67sm1634672ill.42.2019.11.15.07.13.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 07:13:43 -0800 (PST)
-Subject: Re: [PATCHSET 0/2] io_uring support for linked timeouts
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     zeba.hrvoje@gmail.com, liuyun01@kylinos.cn
-References: <20191105211130.6130-1-axboe@kernel.dk>
- <4566889a-7e12-9bfd-b2a1-716d8b934684@gmail.com>
- <9b6cd06b-cd6c-d7e5-157b-32c1e2e9ceac@kernel.dk>
- <3c0ef10d-9524-e2e2-abf2-e1b0bcee9223@gmail.com>
- <178bae7d-3162-7de2-8bb8-037bac70469b@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d0f1065e-f295-6c0d-66cc-a424ec72751b@kernel.dk>
-Date:   Fri, 15 Nov 2019 08:13:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
+        b=VlSx3T0H5SM+sQAj6p0bcxctG7LUtbs8Kr5bh3pKe6GHaoHwtNa78WeKlVyhUkkzip
+         wPnjyt09bhxP333kWechfexeDJvavKC0Ad7ewPapDeqyPaaExQkjp2knEwGGnaCw5kkd
+         1sTUO4KDf1wo8jSHWSXmygqPiuwJBx90ORdVwOu/q/K/MH9nULi603mQVGCS4UN1ToSy
+         Fwg8oRCK0u9B7EFXHzeYsR6nUStmYa2nWg3qT8tovtucquo33EZWvRTEclpdJfoxc3i1
+         JSkp56lK7JI068eFMZN896yWr3qYjRWoWtoPiHuSOiadc7zRjmQlvW8DjVyBUgpi2r7N
+         q5Jw==
+X-Gm-Message-State: APjAAAXP9O6k1jR/xDi64DEma+NJDdh6MvnwDDvdJYde5yPzo4D/3ZLk
+        f4R0rdoAp9M/SpRLvfcKRfcv/soGizmKSUOydA==
+X-Google-Smtp-Source: APXvYqxEj1beLI6zhjihT/lmX2Dk324PGcIr8veC5c+0F/PFQKT7AeNYgljOGh72OwNqCMMZvqGkvMbSAqCkDjgGkjg=
+X-Received: by 2002:a5e:8e02:: with SMTP id a2mr1343031ion.269.1573832982053;
+ Fri, 15 Nov 2019 07:49:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <178bae7d-3162-7de2-8bb8-037bac70469b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 15 Nov 2019 07:49:41
+ -0800 (PST)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Ms.Mary Coster" <info.zennitbankplcnigerian@gmail.com>
+Date:   Fri, 15 Nov 2019 16:49:41 +0100
+Message-ID: <CABHzvrkUQbbmg0Gr7foD3OjAJiY7Fd37=SW3mU=fnOPOcOyNdQ@mail.gmail.com>
+Subject: Goodnews, I have deposited your transfer total amount US$4.8million
+ Dollars with Money Gram this morning. we agreed you will be receiving it
+ $5000.00 daily.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/15/19 7:21 AM, Pavel Begunkov wrote:
-> On 15/11/2019 12:40, Pavel Begunkov wrote:
->>>> Finally got to this patch. I think, find it adding too many edge cases
->>>> and it isn't integrated consistently into what we have now. I would love
->>>> to hear your vision, but I'd try to implement them in such a way, that it
->>>> doesn't need to modify the framework, at least for some particular case.
->>>> In other words, as opcodes could have been added from the outside with a
->>>> function table.
->>>
->>> I agree, it could do with a bit of cleanup. Incrementals would be
->>> appreciated!
->>>
->>>> Also, it's not so consistent with the userspace API as well.
->>>>
->>>> 1. If we specified drain for the timeout, should its start be delayed
->>>> until then? I would prefer so.
->>>>
->>>> E.g. send_msg + drained linked_timeout, which would set a timeout from the
->>>> start of the send.
->>>
->>> What cases would that apply to, what would the timeout even do in this
->>> case? The point of the linked timeout is to abort the previous command.
->>> Maybe I'm not following what you mean here.
->>>
->> Hmm, got it a bit wrong with defer. io_queue_link_head() can defer it
->> without setting timeout. However, it seems that io_wq_submit_work()
->> won't set a timer, as it uses __io_submit_sqe(), but not
->> __io_queue_sqe(), which handles all this with linked timeouts.
->>
->> Indeed, maybe it be, that you wanted to place it in __io_submit_sqe?
->>
->>>> 2. Why it could be only the second one in a link? May we want to cancel
->>>> from a certain point?
->>>> e.g. "op1 -> op2 -> timeout -> op3" cancels op2 and op3
->>>
->>> Logically it need not be the second, it just has to follow another
->>> request. Is there a bug there?
->>>
->> __io_queue_sqe looks only for the second one in a link. Other linked
->> timeouts will be ignored, if I get the code right.
->>
->> Also linking may (or __may not__) be an issue. As you remember, the head
->> is linked through link_list, and all following with list.
->> i.e. req_head.link_list <-> req.list <-> req.list <-> req.list
->>
->> free_req() (last time I saw it), expects that timeout's previous request
->> is linked with link_list. If a timeout can fire in the middle of a link
->> (during execution), this could be not the case. But it depends on when
->> we set an timeout.
->>
->> BTW, personally I'd link them all through link_list. E.g. may get rid of
->> splicing in free_req(). I'll try to make it later.
->>
->>>> 3. It's a bit strange, that the timeout affects a request from the left,
->>>> and after as an consequence cancels everything on the right (i.e. chain).
->>>> Could we place it in the head? So it would affect all requests on the right
->>>> from it.
->>>
->>> But that's how links work, though. If you keep linking, then everything
->>> that depends on X will fail, if X itself isn't succesful.
->>>
->> Right. That's about what userspace API would be saner. To place timeout
->> on the left of a request, or on the right, with the same resulting effect.
->>
->> Let put this question away until the others are clear.
->>
->>>> 4. I'd prefer to handle it as a new generic command and setting a timer
->>>> in __io_submit_sqe().
->>>>
->>>> I believe we can do it more gracefully, and at the same moment giving
->>>> more freedom to the user. What do you think?
->>>
->>> I just think we need to make sure the ground rules are sane. I'm going
->>> to write a few test cases to make sure we do the right thing.
->>>
->>
-> Ok, let me try to state some rules to discuss:
-
-> 1. REQ -> LINK_TIMEOUT
-> is a valid use case
-
-Yes
-
-> 2. timeout is set at the moment of starting execution of operation.
-> e.g. REQ1, REQ2|DRAIN -> LINK_TIMEOUT
->
-> Timer is set at the moment, when everything is drained and we
-> sending REQ. i.e. after completion of REQ1
-
-Right, the timeout is prepped before REQ2 is started, armed when it is
-started (if not already done). The prep + arm split is important to
-ensure that a short timeout doesn't even find REQ2.
-
-> 3. REQ1 -> LINK_TIMEOUT1 -> REQ2 -> LINK_TIMEOUT2
-> 
-> is valid, and LINK_TIMEOUT2 will be set, at the moment of
-> start of REQ2's execution. It also mean, that if
-> LINK_TIMEOUT1 fires, it will cancel REQ1, and REQ2
-> with LINK_TIMEOUT2 (with proper return values)
-
-That's not valid with the patches I sent. It could be, but we'd need to
-fix that bit.
-
-> 4. REQ1, LINK_TIMEOUT
-> is invalid, fail it
-
-Correct
-
-> 5. LINK_TIMEOUT1 -> LINK_TIMEOUT2
-> Fail first, link-fail (aka cancelled) for the second one
-
-Correct
-
-> 6. REQ1 -> LINK_TIMEOUT1 -> LINK_TIMEOUT2
-> execute REQ1+LINK_TIMEOUT1, and then fail LINK_TIMEOUT2 as
-> invalid. Also, LINK_TIMEOUT2 could be just cancelled
-> (e.g. if fail_links for REQ1)
-
-Given case 5, why would this one be legal?
-
--- 
-Jens Axboe
-
+Attn, Dear
+Goodnews, I have deposited your transfer total amount US$4.8million
+Dollars with Money Gram this morning. we agreed you will be receiving
+it $5000.00 daily.
+Contact Mr. John Dave Director, Money Gram to pick up your first Money
+Gram payment $5000.00 today.
+Contact Person; Mr. John Dave Director, Money Gram,International
+Remittance-Benin
+Email; moneygram.1820@outlook.fr
+Telephone; +229 62619517
+Please re-confirm your address to him once again such as listed below.
+1.Your Full Name..............................
+2.Address.........................
+3.Country....................
+4.Sex.........................................
+5.Your telephone numbers..........................
+6. Copy of your ID...........................
+This is to avoid sending your funds to wrong person, He is waiting to
+hear from you urgent today.
+Let me know once you pick up your transfer $5000.00 today.
+Finally, Note I have paid for the service fees, but only money will
+send to him is $90.00 transfer fee before you can pick up the transfer
+today.
+Ask, Mr. John Dave Director, Money Gram to give you direction where to
+send your transfer fee $90.00 only to Him Immediately so that you can
+pick up $5000.00 us dollars today.
+Thanks for undrstanding.
+Mary Coster
+m.coster@aol.com
