@@ -2,420 +2,391 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC22FD456
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 06:30:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78CCEFD564
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 06:59:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfKOFaL convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Fri, 15 Nov 2019 00:30:11 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36320 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfKOFaK (ORCPT
+        id S1727362AbfKOF4i (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Nov 2019 00:56:38 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10678 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbfKOFx4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Nov 2019 00:30:10 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k13so5275044pgh.3;
-        Thu, 14 Nov 2019 21:30:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3PwQNFgZYE7Xh0BKs+9unAnIULPVCb51GWIcfMGfUVw=;
-        b=EmiYC+YHfhMxvhS0SV9aQx4ypRHpoalPpof0rJRC96svN1/uwoAbtQIyTeh+YqAhVB
-         t/5pvpfuv9vTWe1BhMWgONKKLSM9DbK7NSjB9KZqJISQc1gkpUQV8oW1Tfk4F72y7QoL
-         h8NhfLOpN2mJZ325tZgOX3isOvTlSwXExo7xQRDZnotTgrX+HuLIcKdHd1a0aPPN9MmY
-         K2MIAZN5hs+prmzKYREMIrhLAo8aiKW4kqSSZRYTo5V5mVZiCkdOHsDiWfxoJ1VJlLtx
-         LYy7O2eJIc6SJGiXwzS1qeC3L9MUL24l4+q2s4DtPSeYS0JurEw8424qVaDTkdPDksiu
-         MHNA==
-X-Gm-Message-State: APjAAAU3hnX+1gpsf2/4Ai+WjFwjpL+ZflGfZEyukJ4WP9a9ujd8XWo6
-        UyTRsm3hgE0D4KR2mYXJJ34=
-X-Google-Smtp-Source: APXvYqxtL5V4TLoYcoAL0wT929R8hvEYKQ+9iZTuu2DtvglDu6/I6cztOO16UjnN8LNp7iCCqBkbvw==
-X-Received: by 2002:a17:90b:300c:: with SMTP id hg12mr17526965pjb.75.1573795807930;
-        Thu, 14 Nov 2019 21:30:07 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:a8:5ff4:69e:fa0f:e8ac? ([2601:647:4000:a8:5ff4:69e:fa0f:e8ac])
-        by smtp.gmail.com with ESMTPSA id z7sm10240645pfr.165.2019.11.14.21.30.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 21:30:06 -0800 (PST)
-Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-To:     John Garry <john.garry@huawei.com>, Hannes Reinecke <hare@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hare@suse.com" <hare@suse.com>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-4-git-send-email-john.garry@huawei.com>
- <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
- <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
- <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
- <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
- <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
- <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <c34c0ce2-40a8-e4fc-3366-1f7b906da5a3@acm.org>
-Date:   Thu, 14 Nov 2019 21:30:04 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 00:53:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dce3d680000>; Thu, 14 Nov 2019 21:53:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 14 Nov 2019 21:53:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 14 Nov 2019 21:53:44 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
+ 2019 05:53:43 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
+ 2019 05:53:43 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 15 Nov 2019 05:53:43 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dce3d670000>; Thu, 14 Nov 2019 21:53:43 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v5 00/24] mm/gup: track dma-pinned pages: FOLL_PIN
+Date:   Thu, 14 Nov 2019 21:53:16 -0800
+Message-ID: <20191115055340.1825745-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573797224; bh=EIIdjw6QQ9kSONnEf59U1mlHiT9Q6HqodmatoE1cjqA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=rgXmOvqJLUo/ZNL6R7UkGzxvqCKE5WKHqMmP0+iUXVkRb9nVOvZtuUaXsxx+g0hvw
+         USCml0g4Xj9gnMThzuGP0XooWuUgL3BZi8rN9HnLsSF/ZfKGE9JK9ODF+1j4xKGKKx
+         Kjd8uP62IYmf+IaKtfXpbNOVkq4BJ50LTRBKNV1Ev1yyj4mYvamUtFK4O/EC89p79d
+         kWkvXX5AzRiTRcobYhC67nR/ylU+VkX5dx/i83HqhrWpLHm+6AY5RXPlgFGHo27Z9Y
+         kPbE6a2d0M0lCnv7dwu2CqvWyQ4S7nTXoE+6eNPxeKnYzuEwgwKV+QllT6GsMJ4wGz
+         VafELb6SBcMhg==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/14/19 1:41 AM, John Garry wrote:
-> On 13/11/2019 18:38, Hannes Reinecke wrote:
->>> Hi Hannes,
->>>
->>>> Oh, my. Indeed, that's correct.
->>>
->>> The tags could be kept in sync like this:
->>>
->>> shared_tag = blk_mq_get_tag(shared_tagset);
->>> if (shared_tag != -1)
->>>      sbitmap_set(hctx->tags, shared_tag);
->>>
->>> But that's obviously not ideal.
->>>
->> Actually, I _do_ prefer keeping both in sync.
->> We might want to check if the 'normal' tag is set (typically it would not, but then, who knows ...)
->> The beauty here is that both 'shared' and 'normal' tag are in sync, so if a driver would be wanting to use the tag as index into a command array it can do so without any surprises.
->>
->> Why do you think it's not ideal?
-> 
-> A few points:
-> - Getting a bit from one tagset and then setting it in another tagset is a bit clunky.
-> - There may be an atomicity of the getting the shared tag bit and setting the hctx tag bit - I don't think that there is.
-> - Consider that sometimes we may want to check if there is space on a hw queue - checking the hctx tags is not really proper any longer, as typically there would always be space on hctx, but not always the shared tags. We did delete blk_mq_can_queue() yesterday, which
-> would be an example of that. Need to check if there are others.
-> 
-> Having said all that, the obvious advantage is performance gain, can still use request.tag and so maybe less intrusive changes.
-> 
-> I'll have a look at the implementation. The devil is mostly in the detail...
+Hi,
 
-Wouldn't that approach trigger a deadlock if it is attempted to allocate the last
-tag from two different hardware queues? How about sharing tag sets across hardware
-queues, e.g. like in the (totally untested) patch below?
+Please note that two of these patches are also out for review
+separately, and may go in earlier than this series. This series
+requires those, so to ease review and testing, they are also
+included here: patches 4 and 5, the devmap cleanups.
 
-Thanks,
+There is a git repo and branch, for convenience:
 
-Bart.
+    git@github.com:johnhubbard/linux.git pin_user_pages_tracking_v5
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index b3f2ba483992..3678e95ec947 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -211,8 +211,6 @@ static const struct blk_mq_debugfs_attr blk_mq_debugfs_queue_attrs[] = {
- #define HCTX_STATE_NAME(name) [BLK_MQ_S_##name] = #name
- static const char *const hctx_state_name[] = {
- 	HCTX_STATE_NAME(STOPPED),
--	HCTX_STATE_NAME(TAG_ACTIVE),
--	HCTX_STATE_NAME(SCHED_RESTART),
- };
- #undef HCTX_STATE_NAME
+Despite the large number of changes, it does feel like the review
+comments are converging, btw.
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index ca22afd47b3d..6262584dca09 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -64,18 +64,18 @@ void blk_mq_sched_assign_ioc(struct request *rq)
-  */
- void blk_mq_sched_mark_restart_hctx(struct blk_mq_hw_ctx *hctx)
- {
--	if (test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state))
-+	if (test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state))
- 		return;
+Changes since v4:
 
--	set_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
-+	set_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_mark_restart_hctx);
+* Renamed put_user_page*() --> unpin_user_page().
 
- void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
- {
--	if (!test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state))
-+	if (!test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state))
- 		return;
--	clear_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
-+	clear_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
+* Removed all pin_longterm_pages*() calls. We will use FOLL_LONGTERM
+  at the call sites. (FOLL_PIN, however, remains an internal gup flag).
 
- 	blk_mq_run_hw_queue(hctx, true);
- }
-@@ -479,12 +479,15 @@ static int blk_mq_sched_alloc_tags(struct request_queue *q,
- /* called in queue's release handler, tagset has gone away */
- static void blk_mq_sched_tags_teardown(struct request_queue *q)
- {
-+	struct blk_mq_tags *sched_tags = NULL;
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
+  This is very nice: many patches just change three characters now:
+  get_user_pages --> pin_user_pages. I think we've found the right
+  balance of wrapper calls and gup flags, for the call sites.
 
- 	queue_for_each_hw_ctx(q, hctx, i) {
--		if (hctx->sched_tags) {
-+		if (hctx->sched_tags != sched_tags) {
- 			blk_mq_free_rq_map(hctx->sched_tags);
-+			if (!sched_tags)
-+				sched_tags = hctx->sched_tags;
- 			hctx->sched_tags = NULL;
- 		}
- 	}
-@@ -512,6 +515,10 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
- 				   BLKDEV_MAX_RQ);
+* Updated a lot of documentation and commit logs to match the above
+  two large changes.
 
- 	queue_for_each_hw_ctx(q, hctx, i) {
-+		if (i > 0 && q->tag_set->share_tags) {
-+			hctx->sched_tags = q->queue_hw_ctx[0]->sched_tags;
-+			continue;
-+		}
- 		ret = blk_mq_sched_alloc_tags(q, hctx, i);
- 		if (ret)
- 			goto err;
-@@ -556,8 +563,11 @@ void blk_mq_sched_free_requests(struct request_queue *q)
- 	int i;
+* Changed gup_benchmark tests and run_vmtests, to adapt to one less
+  use case: there is no pin_longterm_pages() call anymore.
 
- 	queue_for_each_hw_ctx(q, hctx, i) {
--		if (hctx->sched_tags)
-+		if (hctx->sched_tags) {
- 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
-+			if (q->tag_set->share_tags)
-+				break;
-+		}
- 	}
- }
+* This includes a new devmap cleanup patch from Dan Williams, along
+  with a rebased follow-up: patches 4 and 5, already mentioned above.
 
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 126021fc3a11..15174a646468 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -82,7 +82,7 @@ static inline bool blk_mq_sched_has_work(struct blk_mq_hw_ctx *hctx)
+* Fixed patch 10 ("mm/gup: introduce pin_user_pages*() and FOLL_PIN"),
+  so as to make pin_user_pages*() calls act as placeholders for the
+  corresponding get_user_pages*() calls, until a later patch fully
+  implements the DMA-pinning functionality.
 
- static inline bool blk_mq_sched_needs_restart(struct blk_mq_hw_ctx *hctx)
- {
--	return test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
-+	return test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
- }
+  Thanks to Jan Kara for noticing that.
 
- #endif
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 586c9d6e904a..770fe2324230 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -23,8 +23,8 @@
-  */
- bool __blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
- {
--	if (!test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state) &&
--	    !test_and_set_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
-+	if (!test_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state) &&
-+	    !test_and_set_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
- 		atomic_inc(&hctx->tags->active_queues);
+* Fixed the implementation of pin_user_pages_remote().
 
- 	return true;
-@@ -48,7 +48,7 @@ void __blk_mq_tag_idle(struct blk_mq_hw_ctx *hctx)
- {
- 	struct blk_mq_tags *tags = hctx->tags;
+* Further tweaked patch 2 ("mm/gup: factor out duplicate code from four
+  routines"), in response to Jan Kara's feedback.
 
--	if (!test_and_clear_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
-+	if (!test_and_clear_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
- 		return;
+* Dropped a few reviewed-by tags  due to changes that invalidated
+  them.
 
- 	atomic_dec(&tags->active_queues);
-@@ -67,7 +67,7 @@ static inline bool hctx_may_queue(struct blk_mq_hw_ctx *hctx,
 
- 	if (!hctx || !(hctx->flags & BLK_MQ_F_TAG_SHARED))
- 		return true;
--	if (!test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
-+	if (!test_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
- 		return true;
+Changes since v3:
 
- 	/*
-@@ -220,7 +220,7 @@ static bool bt_iter(struct sbitmap *bitmap, unsigned int bitnr, void *data)
- 	 * We can hit rq == NULL here, because the tagging functions
- 	 * test and set the bit before assigning ->rqs[].
- 	 */
--	if (rq && rq->q == hctx->queue)
-+	if (rq && rq->q == hctx->queue && rq->mq_hctx == hctx)
- 		return iter_data->fn(hctx, rq, iter_data->data, reserved);
- 	return true;
- }
-@@ -341,8 +341,11 @@ void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
- 	int i;
+* VFIO fix (patch 8): applied further cleanup: removed a pre-existing,
+  unnecessary release and reacquire of mmap_sem. Moved the DAX vma
+  checks from the vfio call site, to gup internals, and added comments
+  (and commit log) to clarify.
 
- 	for (i = 0; i < tagset->nr_hw_queues; i++) {
--		if (tagset->tags && tagset->tags[i])
-+		if (tagset->tags && tagset->tags[i]) {
- 			blk_mq_all_tag_busy_iter(tagset->tags[i], fn, priv);
-+			if (tagset->share_tags)
-+				break;
-+		}
- 	}
- }
- EXPORT_SYMBOL(blk_mq_tagset_busy_iter);
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index d0c10d043891..f75fa936b090 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -4,6 +4,11 @@
+* Due to the above, made a corresponding fix to the
+  pin_longterm_pages_remote(), which was actually calling the wrong
+  gup internal function.
 
- #include "blk-mq.h"
+* Changed put_user_page() comments, to refer to pin*() APIs, rather than
+  get_user_pages*() APIs.
 
-+enum {
-+	BLK_MQ_T_ACTIVE		= 1,
-+	BLK_MQ_T_SCHED_RESTART	= 2,
-+};
-+
- /*
-  * Tag address space map.
-  */
-@@ -11,6 +16,11 @@ struct blk_mq_tags {
- 	unsigned int nr_tags;
- 	unsigned int nr_reserved_tags;
+* Reverted an accidental whitespace-only change in the IB ODP code.
 
-+	/**
-+	 * @state: BLK_MQ_T_* flags. Defines the state of the hw
-+	 * queue (active, scheduled to restart).
-+	 */
-+	unsigned long	state;
- 	atomic_t active_queues;
+* Added a few more reviewed-by tags.
 
- 	struct sbitmap_queue bitmap_tags;
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index fec4b82ff91c..81d4d6a96098 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2404,6 +2404,12 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
- {
- 	int ret = 0;
 
-+	if (hctx_idx > 0 && set->share_tags) {
-+		WARN_ON_ONCE(!set->tags[0]);
-+		set->tags[hctx_idx] = set->tags[0];
-+		return 0;
-+	}
-+
- 	set->tags[hctx_idx] = blk_mq_alloc_rq_map(set, hctx_idx,
- 					set->queue_depth, set->reserved_tags);
- 	if (!set->tags[hctx_idx])
-@@ -2423,8 +2429,10 @@ static void blk_mq_free_map_and_requests(struct blk_mq_tag_set *set,
- 					 unsigned int hctx_idx)
- {
- 	if (set->tags && set->tags[hctx_idx]) {
--		blk_mq_free_rqs(set, set->tags[hctx_idx], hctx_idx);
--		blk_mq_free_rq_map(set->tags[hctx_idx]);
-+		if (hctx_idx == 0 || !set->share_tags) {
-+			blk_mq_free_rqs(set, set->tags[hctx_idx], hctx_idx);
-+			blk_mq_free_rq_map(set->tags[hctx_idx]);
-+		}
- 		set->tags[hctx_idx] = NULL;
- 	}
- }
-@@ -2568,7 +2576,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
+Changes since v2:
 
- 	mutex_lock(&set->tag_list_lock);
- 	list_del_rcu(&q->tag_set_list);
--	if (list_is_singular(&set->tag_list)) {
-+	if (list_is_singular(&set->tag_list) && !set->share_tags) {
- 		/* just transitioned to unshared */
- 		set->flags &= ~BLK_MQ_F_TAG_SHARED;
- 		/* update existing queue */
-@@ -2586,7 +2594,7 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
- 	/*
- 	 * Check to see if we're transitioning to shared (from 1 to 2 queues).
- 	 */
--	if (!list_empty(&set->tag_list) &&
-+	if ((!list_empty(&set->tag_list) || set->share_tags) &&
- 	    !(set->flags & BLK_MQ_F_TAG_SHARED)) {
- 		set->flags |= BLK_MQ_F_TAG_SHARED;
- 		/* update existing queue */
-@@ -2911,15 +2919,21 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
- {
- 	int i;
+* Added a patch to convert IB/umem from normal gup, to gup_fast(). This
+  is also posted separately, in order to hopefully get some runtime
+  testing.
 
--	for (i = 0; i < set->nr_hw_queues; i++)
--		if (!__blk_mq_alloc_rq_map(set, i))
-+	for (i = 0; i < set->nr_hw_queues; i++) {
-+		if (i > 0 && set->share_tags) {
-+			set->tags[i] = set->tags[0];
-+		} else if (!__blk_mq_alloc_rq_map(set, i))
- 			goto out_unwind;
-+	}
+* Changed the page devmap code to be a little clearer,
+  thanks to Jerome for that.
 
- 	return 0;
+* Split out the page devmap changes into a separate patch (and moved
+  Ira's Signed-off-by to that patch).
 
- out_unwind:
--	while (--i >= 0)
-+	while (--i >= 0) {
-+		if (i > 0 && set->share_tags)
-+			continue;
- 		blk_mq_free_rq_map(set->tags[i]);
-+	}
+* Fixed my bug in IB: ODP code does not require pin_user_pages()
+  semantics. Therefore, revert the put_user_page() calls to put_page(),
+  and leave the get_user_pages() call as-is.
 
- 	return -ENOMEM;
- }
-@@ -3016,6 +3030,10 @@ static int blk_mq_realloc_tag_set_tags(struct blk_mq_tag_set *set,
-  * May fail with EINVAL for various error conditions. May adjust the
-  * requested depth down, if it's too large. In that case, the set
-  * value will be stored in set->queue_depth.
-+ *
-+ * @set: tag set for which to allocate tags.
-+ * @share_tags: If true, allocate a single set of tags and share it across
-+ *	hardware queues.
-  */
- int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- {
-@@ -3137,6 +3155,12 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (!hctx->tags)
- 			continue;
-+		if (i > 0 && set->share_tags) {
-+			hctx->tags[i] = hctx->tags[0];
-+			if (hctx->sched_tags)
-+				hctx->sched_tags[i] = hctx->sched_tags[0];
-+			continue;
-+		}
- 		/*
- 		 * If we're using an MQ scheduler, just update the scheduler
- 		 * queue depth. This is similar to what the old code would do.
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 11cfd6470b1a..dd5517476314 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -224,10 +224,13 @@ enum hctx_type {
-  * @numa_node:	   NUMA node the storage adapter has been connected to.
-  * @timeout:	   Request processing timeout in jiffies.
-  * @flags:	   Zero or more BLK_MQ_F_* flags.
-+ * @share_tags:	   Whether or not to share one tag set across hardware queues.
-  * @driver_data:   Pointer to data owned by the block driver that created this
-  *		   tag set.
-- * @tags:	   Tag sets. One tag set per hardware queue. Has @nr_hw_queues
-- *		   elements.
-+ * @tags:	   Array of tag set pointers. Has @nr_hw_queues elements. If
-+ *		   share_tags has not been set, all tag set pointers are
-+ *		   different. If share_tags has been set, all tag_set pointers
-+ *		   are identical.
-  * @tag_list_lock: Serializes tag_list accesses.
-  * @tag_list:	   List of the request queues that use this tag set. See also
-  *		   request_queue.tag_set_list.
-@@ -243,6 +246,7 @@ struct blk_mq_tag_set {
- 	int			numa_node;
- 	unsigned int		timeout;
- 	unsigned int		flags;
-+	bool			share_tags;
- 	void			*driver_data;
+      * As part of the revert, I am proposing here a change directly
+        from put_user_pages(), to release_pages(). I'd feel better if
+        someone agrees that this is the best way. It uses the more
+        efficient release_pages(), instead of put_page() in a loop,
+        and keep the change to just a few character on one line,
+        but OTOH it is not a pure revert.
 
- 	struct blk_mq_tags	**tags;
-@@ -394,8 +398,6 @@ enum {
- 	BLK_MQ_F_ALLOC_POLICY_BITS = 1,
+* Loosened the FOLL_LONGTERM restrictions in the
+  __get_user_pages_locked() implementation, and used that in order
+  to fix up a VFIO bug. Thanks to Jason for that idea.
 
- 	BLK_MQ_S_STOPPED	= 0,
--	BLK_MQ_S_TAG_ACTIVE	= 1,
--	BLK_MQ_S_SCHED_RESTART	= 2,
+    * Note the use of release_pages() in IB: is that OK?
 
- 	BLK_MQ_MAX_DEPTH	= 10240,
+* Added a few more WARN's and clarifying comments nearby.
 
+* Many documentation improvements in various comments.
+
+* Moved the new pin_user_pages.rst from Documentation/vm/ to
+  Documentation/core-api/ .
+
+* Commit descriptions: added clarifying notes to the three patches
+  (drm/via, fs/io_uring, net/xdp) that already had put_user_page()
+  calls in place.
+
+* Collected all pending Reviewed-by and Acked-by tags, from v1 and v2
+  email threads.
+
+* Lot of churn from v2 --> v3, so it's possible that new bugs
+  sneaked in.
+
+NOT DONE: separate patchset is required:
+
+* __get_user_pages_locked(): stop compensating for
+  buggy callers who failed to set FOLL_GET. Instead, assert
+  that FOLL_GET is set (and fail if it's not).
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Original cover letter (edited to fix up the patch description numbers)
+
+This applies cleanly to linux-next and mmotm, and also to linux.git if
+linux-next's commit 20cac10710c9 ("mm/gup_benchmark: fix MAP_HUGETLB
+case") is first applied there.
+
+This provides tracking of dma-pinned pages. This is a prerequisite to
+solving the larger problem of proper interactions between file-backed
+pages, and [R]DMA activities, as discussed in [1], [2], [3], and in
+a remarkable number of email threads since about 2017. :)
+
+A new internal gup flag, FOLL_PIN is introduced, and thoroughly
+documented in the last patch's Documentation/vm/pin_user_pages.rst.
+
+I believe that this will provide a good starting point for doing the
+layout lease work that Ira Weiny has been working on. That's because
+these new wrapper functions provide a clean, constrained, systematically
+named set of functionality that, again, is required in order to even
+know if a page is "dma-pinned".
+
+In contrast to earlier approaches, the page tracking can be
+incrementally applied to the kernel call sites that, until now, have
+been simply calling get_user_pages() ("gup"). In other words, opt-in by
+changing from this:
+
+    get_user_pages() (sets FOLL_GET)
+    put_page()
+
+to this:
+    pin_user_pages() (sets FOLL_PIN)
+    put_user_page()
+
+Because there are interdependencies with FOLL_LONGTERM, a similar
+conversion as for FOLL_PIN, was applied. The change was from this:
+
+    get_user_pages(FOLL_LONGTERM) (also sets FOLL_GET)
+    put_page()
+
+to this:
+    pin_longterm_pages() (sets FOLL_PIN | FOLL_LONGTERM)
+    put_user_page()
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Patch summary:
+
+* Patches 1-9: refactoring and preparatory cleanup, independent fixes
+
+* Patch 10: introduce pin_user_pages(), FOLL_PIN, but no functional
+           changes yet
+* Patches 11-16: Convert existing put_user_page() callers, to use the
+                 new pin*()
+* Patch 17: Activate tracking of FOLL_PIN pages.
+* Patches 18-20: convert various callers
+* Patches: 21-23: gup_benchmark and run_vmtests support
+* Patch 24: rename put_user_page*() --> unpin_user_page*()
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Testing:
+
+* I've done some overall kernel testing (LTP, and a few other goodies),
+  and some directed testing to exercise some of the changes. And as you
+  can see, gup_benchmark is enhanced to exercise this. Basically, I've been
+  able to runtime test the core get_user_pages() and pin_user_pages() and
+  related routines, but not so much on several of the call sites--but those
+  are generally just a couple of lines changed, each.
+
+  Not much of the kernel is actually using this, which on one hand
+  reduces risk quite a lot. But on the other hand, testing coverage
+  is low. So I'd love it if, in particular, the Infiniband and PowerPC
+  folks could do a smoke test of this series for me.
+
+  Also, my runtime testing for the call sites so far is very weak:
+
+    * io_uring: Some directed tests from liburing exercise this, and they p=
+ass.
+    * process_vm_access.c: A small directed test passes.
+    * gup_benchmark: the enhanced version hits the new gup.c code, and pass=
+es.
+    * infiniband (still only have crude "IB pingpong" working, on a
+                  good day: it's not exercising my conversions at runtime..=
+.)
+    * VFIO: compiles (I'm vowing to set up a run time test soon, but it's
+                      not ready just yet)
+    * powerpc: it compiles...
+    * drm/via: compiles...
+    * goldfish: compiles...
+    * net/xdp: compiles...
+    * media/v4l2: compiles...
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Next:
+
+* Get the block/bio_vec sites converted to use pin_user_pages().
+
+* Work with Ira and Dave Chinner to weave this together with the
+  layout lease stuff.
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+[1] Some slow progress on get_user_pages() (Apr 2, 2019): https://lwn.net/A=
+rticles/784574/
+[2] DMA and get_user_pages() (LPC: Dec 12, 2018): https://lwn.net/Articles/=
+774411/
+[3] The trouble with get_user_pages() (Apr 30, 2018): https://lwn.net/Artic=
+les/753027/
+
+
+Dan Williams (1):
+  mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+
+John Hubbard (23):
+  mm/gup: pass flags arg to __gup_device_* functions
+  mm/gup: factor out duplicate code from four routines
+  mm/gup: move try_get_compound_head() to top, fix minor issues
+  mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
+  goldish_pipe: rename local pin_user_pages() routine
+  IB/umem: use get_user_pages_fast() to pin DMA pages
+  media/v4l2-core: set pages dirty upon releasing DMA buffers
+  vfio, mm: fix get_user_pages_remote() and FOLL_LONGTERM
+  mm/gup: introduce pin_user_pages*() and FOLL_PIN
+  goldish_pipe: convert to pin_user_pages() and put_user_page()
+  IB/{core,hw,umem}: set FOLL_PIN via pin_user_pages*(), fix up ODP
+  mm/process_vm_access: set FOLL_PIN via pin_user_pages_remote()
+  drm/via: set FOLL_PIN via pin_user_pages_fast()
+  fs/io_uring: set FOLL_PIN via pin_user_pages()
+  net/xdp: set FOLL_PIN via pin_user_pages()
+  mm/gup: track FOLL_PIN pages
+  media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page()
+    conversion
+  vfio, mm: pin_user_pages (FOLL_PIN) and put_user_page() conversion
+  powerpc: book3s64: convert to pin_user_pages() and put_user_page()
+  mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding
+    "1"
+  mm/gup_benchmark: support pin_user_pages() and related calls
+  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
+    coverage
+  mm, tree-wide: rename put_user_page*() to unpin_user_page*()
+
+ Documentation/core-api/index.rst            |   1 +
+ Documentation/core-api/pin_user_pages.rst   | 233 ++++++++
+ arch/powerpc/mm/book3s64/iommu_api.c        |  12 +-
+ drivers/gpu/drm/via/via_dmablit.c           |   6 +-
+ drivers/infiniband/core/umem.c              |  19 +-
+ drivers/infiniband/core/umem_odp.c          |  13 +-
+ drivers/infiniband/hw/hfi1/user_pages.c     |   4 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.c |   8 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c  |   4 +-
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |   8 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |   4 +-
+ drivers/infiniband/sw/siw/siw_mem.c         |   4 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c   |   8 +-
+ drivers/nvdimm/pmem.c                       |   6 -
+ drivers/platform/goldfish/goldfish_pipe.c   |  35 +-
+ drivers/vfio/vfio_iommu_type1.c             |  35 +-
+ fs/io_uring.c                               |   6 +-
+ include/linux/mm.h                          | 155 +++++-
+ include/linux/mmzone.h                      |   2 +
+ include/linux/page_ref.h                    |  10 +
+ mm/gup.c                                    | 561 +++++++++++++++-----
+ mm/gup_benchmark.c                          |  74 ++-
+ mm/huge_memory.c                            |  54 +-
+ mm/hugetlb.c                                |  39 +-
+ mm/memremap.c                               |  76 ++-
+ mm/process_vm_access.c                      |  28 +-
+ mm/vmstat.c                                 |   2 +
+ net/xdp/xdp_umem.c                          |   4 +-
+ tools/testing/selftests/vm/gup_benchmark.c  |  21 +-
+ tools/testing/selftests/vm/run_vmtests      |  22 +
+ 30 files changed, 1104 insertions(+), 350 deletions(-)
+ create mode 100644 Documentation/core-api/pin_user_pages.rst
+
+--=20
+2.24.0
 
