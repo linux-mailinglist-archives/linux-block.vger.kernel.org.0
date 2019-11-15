@@ -2,27 +2,26 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EC8EFDAC5
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 11:08:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B534FDAC9
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 11:08:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKOKIZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Nov 2019 05:08:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47648 "EHLO mx1.suse.de"
+        id S1727192AbfKOKIy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Nov 2019 05:08:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47784 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727065AbfKOKIY (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:08:24 -0500
+        id S1727004AbfKOKIy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:08:54 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38708B229;
-        Fri, 15 Nov 2019 10:08:22 +0000 (UTC)
-Subject: Re: [PATCH 5/7] block: remove (__)blkdev_reread_part as an exported
- API
+        by mx1.suse.de (Postfix) with ESMTP id B82FBB022;
+        Fri, 15 Nov 2019 10:08:51 +0000 (UTC)
+Subject: Re: [PATCH 6/7] block: move clearing bd_invalidated into
+ check_disk_size_change
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        Stefan Haberland <sth@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
 References: <20191114143438.14681-1-hch@lst.de>
- <20191114143438.14681-6-hch@lst.de>
+ <20191114143438.14681-7-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -68,12 +67,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <01ea27d7-9b0d-2001-843e-bbb06b610f83@suse.de>
-Date:   Fri, 15 Nov 2019 11:08:21 +0100
+Message-ID: <71fc0a5b-ad15-3041-9ea8-8e37b398931d@suse.de>
+Date:   Fri, 15 Nov 2019 11:08:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191114143438.14681-6-hch@lst.de>
+In-Reply-To: <20191114143438.14681-7-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -83,21 +82,14 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 11/14/19 3:34 PM, Christoph Hellwig wrote:
-> In general drivers should never mess with partition tables directly.
-> Unfortunately s390 and loop do for somewhat historic reasons, but they
-> can use bdev_disk_changed directly instead when we export it as they
-> satisfy the sanity checks we have in __blkdev_reread_part.
+> Both callers of check_disk_size_change clear bd_invalidate directly
+> after the call, so move the clearing into check_disk_size_change
+> itself.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Stefan Haberland <sth@linux.ibm.com>	[dasd]
-> Reviewed-by: Jan Kara <jack@suse.cz>
 > ---
->  block/ioctl.c                   | 35 +++++----------------------------
->  drivers/block/loop.c            | 13 +++++++-----
->  drivers/s390/block/dasd_genhd.c |  4 +++-
->  fs/block_dev.c                  |  7 +++++++
->  include/linux/fs.h              |  2 --
->  5 files changed, 23 insertions(+), 38 deletions(-)
+>  fs/block_dev.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
