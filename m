@@ -2,26 +2,26 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B534FDAC9
-	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 11:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A13FDACD
+	for <lists+linux-block@lfdr.de>; Fri, 15 Nov 2019 11:09:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfKOKIy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Nov 2019 05:08:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47784 "EHLO mx1.suse.de"
+        id S1727022AbfKOKJR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Nov 2019 05:09:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47856 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727004AbfKOKIy (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:08:54 -0500
+        id S1727089AbfKOKJR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:09:17 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B82FBB022;
-        Fri, 15 Nov 2019 10:08:51 +0000 (UTC)
-Subject: Re: [PATCH 6/7] block: move clearing bd_invalidated into
- check_disk_size_change
+        by mx1.suse.de (Postfix) with ESMTP id 24160B022;
+        Fri, 15 Nov 2019 10:09:15 +0000 (UTC)
+Subject: Re: [PATCH 7/7] block: move setting bd_invalidated from flush_disk to
+ check_disk_change
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Jan Kara <jack@suse.cz>
 Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
 References: <20191114143438.14681-1-hch@lst.de>
- <20191114143438.14681-7-hch@lst.de>
+ <20191114143438.14681-8-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -67,12 +67,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <71fc0a5b-ad15-3041-9ea8-8e37b398931d@suse.de>
-Date:   Fri, 15 Nov 2019 11:08:51 +0100
+Message-ID: <118ce019-45ce-138c-afe2-5793c33ea0c9@suse.de>
+Date:   Fri, 15 Nov 2019 11:09:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191114143438.14681-7-hch@lst.de>
+In-Reply-To: <20191114143438.14681-8-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,14 +82,34 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 11/14/19 3:34 PM, Christoph Hellwig wrote:
-> Both callers of check_disk_size_change clear bd_invalidate directly
-> after the call, so move the clearing into check_disk_size_change
-> itself.
+> The only other caller of flush_disk instantly clears the flag, so don't
+> bother setting it there.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/block_dev.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  fs/block_dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index ee63c2732fa2..f60739b5a24f 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -1403,7 +1403,6 @@ static void flush_disk(struct block_device *bdev, bool kill_dirty)
+>  		       "resized disk %s\n",
+>  		       bdev->bd_disk ? bdev->bd_disk->disk_name : "");
+>  	}
+> -	bdev->bd_invalidated = 1;
+>  }
+>  
+>  /**
+> @@ -1491,6 +1490,7 @@ int check_disk_change(struct block_device *bdev)
+>  		return 0;
+>  
+>  	flush_disk(bdev, true);
+> +	bdev->bd_invalidated = 1;
+>  	if (bdops->revalidate_disk)
+>  		bdops->revalidate_disk(bdev->bd_disk);
+>  	return 1;
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
