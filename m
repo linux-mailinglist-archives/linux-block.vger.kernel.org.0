@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90E1CFEE66
-	for <lists+linux-block@lfdr.de>; Sat, 16 Nov 2019 16:51:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB31BFEF89
+	for <lists+linux-block@lfdr.de>; Sat, 16 Nov 2019 16:59:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfKPPv0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Nov 2019 10:51:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        id S1729670AbfKPP7b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Nov 2019 10:59:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730745AbfKPPvZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:25 -0500
+        id S1731336AbfKPPxz (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:55 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5205320895;
-        Sat, 16 Nov 2019 15:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0798921920;
+        Sat, 16 Nov 2019 15:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919484;
+        s=default; t=1573919634;
         bh=rerAJvjwdtQCiHvZLYvd1cdCUR0ciLOvhCZJulM6qU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIdkv8wvU+EfSfW3k0DWKrXgztvkY6UoTakKAbcNKDWKjehBpy82y853/Shz6YVxf
-         LM5oFbWtO8fpEP7fTDOZf95f65Jr4gzaBjjUhXRVVtEIPb3L5JF1McUka/5V2MYgRE
-         Ot9vXDanPitJYGNOYbqvvbgGDS/e+9t+nK2QzC4M=
+        b=JCZNhxKwjGxtxqZ2tZ2fHemZ4c85eK/MLdBkQQ8UFEJ7vD9Jbh+YAOxWuxmLK8kcf
+         CE/XoakToDEIZJXopq7VFJIT5Z3BZUxGI1HjQbEV8Bh1EP9NoBdZIIt4N/l1LvPq1j
+         /ZzmE3IS/cnRtAicK7qK9MIRYxFSck12eAEFOtR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Omar Sandoval <osandov@fb.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/99] amiflop: clean up on errors during setup
-Date:   Sat, 16 Nov 2019 10:49:38 -0500
-Message-Id: <20191116155103.10971-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 13/77] amiflop: clean up on errors during setup
+Date:   Sat, 16 Nov 2019 10:52:35 -0500
+Message-Id: <20191116155339.11909-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
-References: <20191116155103.10971-1-sashal@kernel.org>
+In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
+References: <20191116155339.11909-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
