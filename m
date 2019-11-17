@@ -2,130 +2,130 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3F92FF6FE
-	for <lists+linux-block@lfdr.de>; Sun, 17 Nov 2019 02:24:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80F25FF77A
+	for <lists+linux-block@lfdr.de>; Sun, 17 Nov 2019 04:34:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbfKQBYJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Nov 2019 20:24:09 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44040 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfKQBYJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Nov 2019 20:24:09 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q26so8499057pfn.11
-        for <linux-block@vger.kernel.org>; Sat, 16 Nov 2019 17:24:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KPxl3u7L3GlcXlM/9wrTnePSjY0GXz3o+xu74TyxWHs=;
-        b=km0or/O/WMGS3e9JSlSDlT2z68zpXkNkDZwGsvzoN1kS+LYA7menXIeN/v6WqAbX5N
-         0sP9BzxAc4Rohnu/SlhVSwhfT7qEw2Fpu0frOwGgMMLdHOF377pPAAOPqDd3IZjXvzLv
-         J69h7j6CYgngT18rzGCyroJZWwL40Mgbl9E/U9bSRHFAzwxg9UvagVEd4CJxfxtfcN/H
-         ZD3G0EovL/dqqCs/wW5Mi4xbWcsdSYAQYhFBFnBl6v9NDjRMxMasXywFjS5KuAsG8q/Y
-         ZBtkRFm7qNH/YnL2IDx5SA6EpatHOydWEbOU0uKkipQ5iYRcjyF9XBuEubUdTkaoowni
-         fq7w==
-X-Gm-Message-State: APjAAAXxdP/lGHK/406TyPdbSaLTvnrSxwlO0kgRoA+PJMw11ZubM4W6
-        cSLFJeg69euAX7BHIOov9cU=
-X-Google-Smtp-Source: APXvYqwjb/2YyfbelUeebQr0cWH3xh60cFuARPf/yu3Cv5vcIiEftPwkhkzUWd0B2UsfoT4gqAsOSA==
-X-Received: by 2002:a63:b49:: with SMTP id a9mr11864pgl.386.1573953847960;
-        Sat, 16 Nov 2019 17:24:07 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:a8:25f9:8344:b76c:ad19? ([2601:647:4000:a8:25f9:8344:b76c:ad19])
-        by smtp.gmail.com with ESMTPSA id n23sm14569252pff.137.2019.11.16.17.24.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Nov 2019 17:24:06 -0800 (PST)
-From:   Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH RFC 0/3] blk-mq/nvme: use blk_mq_alloc_request() for
- NVMe's connect request
-To:     Ming Lei <ming.lei@redhat.com>, Sagi Grimberg <sagi@grimberg.me>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        James Smart <james.smart@broadcom.com>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <20191115104238.15107-1-ming.lei@redhat.com>
- <8f4402a0-967d-f12d-2f1a-949e1dda017c@grimberg.me>
- <20191116071754.GB18194@ming.t460p>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <4a39a98e-19bc-0a9a-3d92-ceab2c656037@acm.org>
-Date:   Sat, 16 Nov 2019 17:24:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726233AbfKQDeh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Nov 2019 22:34:37 -0500
+Received: from mx.ewheeler.net ([173.205.220.69]:51881 "EHLO mx.ewheeler.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfKQDeg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 Nov 2019 22:34:36 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mx.ewheeler.net (Postfix) with ESMTP id 69FEAA0633;
+        Sun, 17 Nov 2019 03:27:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ewheeler.net
+Received: from mx.ewheeler.net ([127.0.0.1])
+        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id GCXGcbXGoszj; Sun, 17 Nov 2019 03:27:05 +0000 (UTC)
+Received: from mx.ewheeler.net (mx.ewheeler.net [173.205.220.69])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx.ewheeler.net (Postfix) with ESMTPSA id AEFA6A0440;
+        Sun, 17 Nov 2019 03:27:05 +0000 (UTC)
+Date:   Sun, 17 Nov 2019 03:27:02 +0000 (UTC)
+From:   Eric Wheeler <bcache@lists.ewheeler.net>
+X-X-Sender: lists@mx.ewheeler.net
+To:     Coly Li <colyli@suse.de>
+cc:     axboe@kernel.dk, linux-bcache@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 01/10] bcache: fix fifo index swapping condition in
+ journal_pin_cmp()
+In-Reply-To: <20191113053346.63536-2-colyli@suse.de>
+Message-ID: <alpine.LRH.2.11.1911170326310.23583@mx.ewheeler.net>
+References: <20191113053346.63536-1-colyli@suse.de> <20191113053346.63536-2-colyli@suse.de>
+User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20191116071754.GB18194@ming.t460p>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2019-11-15 23:17, Ming Lei wrote:
-> Now blk-mq takes a static queue mapping between CPU and hw queues, given
-> CPU hotplug may happen any time, so the specified hw queue may become
-> inactive any time.
+On Wed, 13 Nov 2019, Coly Li wrote:
 
-Hi Ming,
+> Fifo structure journal.pin is implemented by a cycle buffer, if the back
+> index reaches highest location of the cycle buffer, it will be swapped
+> to 0. Once the swapping happens, it means a smaller fifo index might be
+> associated to a newer journal entry. So the btree node with oldest
+> journal entry won't be selected in bch_btree_leaf_dirty() to reference
+> the dirty B+tree leaf node. This problem may cause bcache journal won't
+> protect unflushed oldest B+tree dirty leaf node in power failure, and
+> this B+tree leaf node is possible to beinconsistent after reboot from
+> power failure.
+> 
+> This patch fixes the fifo index comparing logic in journal_pin_cmp(),
+> to avoid potential corrupted B+tree leaf node when the back index of
+> journal pin is swapped.
 
-I can trigger a race between blk_mq_alloc_request_hctx() and
-CPU-hotplugging by running blktests. The patch below fixes that race
-on my setup. Does this patch also fix the race(s) that you ran into?
-
-Thanks,
-
-Bart.
+Can this cc stable?  It looks like <100 lines.
 
 
-Subject: [PATCH] blk-mq: Fix a race between blk_mq_alloc_request_hctx() and
- CPU hot-plugging
+--
+Eric Wheeler
 
----
- block/blk-mq.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 20a71dcdc339..16057aa2307f 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -442,13 +442,15 @@ struct request *blk_mq_alloc_request_hctx(struct request_queue *q,
- 	if (WARN_ON_ONCE(!(flags & BLK_MQ_REQ_NOWAIT)))
- 		return ERR_PTR(-EINVAL);
 
--	if (hctx_idx >= q->nr_hw_queues)
--		return ERR_PTR(-EIO);
--
- 	ret = blk_queue_enter(q, flags);
- 	if (ret)
- 		return ERR_PTR(ret);
-
-+	if (hctx_idx >= q->nr_hw_queues) {
-+		blk_queue_exit(q);
-+		return ERR_PTR(-EIO);
-+	}
-+
- 	/*
- 	 * Check if the hardware context is actually mapped to anything.
- 	 * If not tell the caller that it should skip this queue.
+> 
+> Signed-off-by: Coly Li <colyli@suse.de>
+> ---
+>  drivers/md/bcache/btree.c   | 26 ++++++++++++++++++++++++++
+>  drivers/md/bcache/journal.h |  4 ----
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+> index ba434d9ac720..00523cd1db80 100644
+> --- a/drivers/md/bcache/btree.c
+> +++ b/drivers/md/bcache/btree.c
+> @@ -528,6 +528,32 @@ static void btree_node_write_work(struct work_struct *w)
+>  	mutex_unlock(&b->write_lock);
+>  }
+>  
+> +/* return true if journal pin 'l' is newer than 'r' */
+> +static bool journal_pin_cmp(struct cache_set *c,
+> +			    atomic_t *l,
+> +			    atomic_t *r)
+> +{
+> +	int l_idx, r_idx, f_idx, b_idx;
+> +	bool ret = false;
+> +
+> +	l_idx = fifo_idx(&(c)->journal.pin, (l));
+> +	r_idx = fifo_idx(&(c)->journal.pin, (r));
+> +	f_idx = (c)->journal.pin.front;
+> +	b_idx = (c)->journal.pin.back;
+> +
+> +	if (l_idx > r_idx)
+> +		ret = true;
+> +	/* in case fifo back pointer is swapped */
+> +	if (b_idx < f_idx) {
+> +		if (l_idx <= b_idx && r_idx >= f_idx)
+> +			ret = true;
+> +		else if (l_idx >= f_idx && r_idx <= b_idx)
+> +			ret = false;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static void bch_btree_leaf_dirty(struct btree *b, atomic_t *journal_ref)
+>  {
+>  	struct bset *i = btree_bset_last(b);
+> diff --git a/drivers/md/bcache/journal.h b/drivers/md/bcache/journal.h
+> index f2ea34d5f431..06b3eaab7d16 100644
+> --- a/drivers/md/bcache/journal.h
+> +++ b/drivers/md/bcache/journal.h
+> @@ -157,10 +157,6 @@ struct journal_device {
+>  };
+>  
+>  #define BTREE_FLUSH_NR	8
+> -
+> -#define journal_pin_cmp(c, l, r)				\
+> -	(fifo_idx(&(c)->journal.pin, (l)) > fifo_idx(&(c)->journal.pin, (r)))
+> -
+>  #define JOURNAL_PIN	20000
+>  
+>  #define journal_full(j)						\
+> -- 
+> 2.16.4
+> 
+> 
