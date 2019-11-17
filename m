@@ -2,153 +2,130 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6A7FF11C
-	for <lists+linux-block@lfdr.de>; Sat, 16 Nov 2019 17:10:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3F92FF6FE
+	for <lists+linux-block@lfdr.de>; Sun, 17 Nov 2019 02:24:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbfKPPtY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Nov 2019 10:49:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfKPPtW (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:22 -0500
-Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 977EA20857;
-        Sat, 16 Nov 2019 15:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919362;
-        bh=yBjFzhPXopZMDn2CcBcQl8G9pKCxB5RUD8DZ79AQZmM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhL3rrtcDktA195x+pyZ0dEFPrIKj5tdFLbqIig0V2ECVwvop+8OetK973Op5XF2W
-         7rkeoSR3glt0rc0uwsS4Uo4ug8zgFDayWfRUJRM8QwGMLgqLnyFlW16rZJDWDhxVhS
-         X2gV+ybgOwQ05E+KpmbOZcYyUJ1KfIF8GRpRjzz8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 083/150] block: fix the DISCARD request merge
-Date:   Sat, 16 Nov 2019 10:46:21 -0500
-Message-Id: <20191116154729.9573-83-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
-References: <20191116154729.9573-1-sashal@kernel.org>
+        id S1726007AbfKQBYJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Nov 2019 20:24:09 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44040 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfKQBYJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 Nov 2019 20:24:09 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q26so8499057pfn.11
+        for <linux-block@vger.kernel.org>; Sat, 16 Nov 2019 17:24:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KPxl3u7L3GlcXlM/9wrTnePSjY0GXz3o+xu74TyxWHs=;
+        b=km0or/O/WMGS3e9JSlSDlT2z68zpXkNkDZwGsvzoN1kS+LYA7menXIeN/v6WqAbX5N
+         0sP9BzxAc4Rohnu/SlhVSwhfT7qEw2Fpu0frOwGgMMLdHOF377pPAAOPqDd3IZjXvzLv
+         J69h7j6CYgngT18rzGCyroJZWwL40Mgbl9E/U9bSRHFAzwxg9UvagVEd4CJxfxtfcN/H
+         ZD3G0EovL/dqqCs/wW5Mi4xbWcsdSYAQYhFBFnBl6v9NDjRMxMasXywFjS5KuAsG8q/Y
+         ZBtkRFm7qNH/YnL2IDx5SA6EpatHOydWEbOU0uKkipQ5iYRcjyF9XBuEubUdTkaoowni
+         fq7w==
+X-Gm-Message-State: APjAAAXxdP/lGHK/406TyPdbSaLTvnrSxwlO0kgRoA+PJMw11ZubM4W6
+        cSLFJeg69euAX7BHIOov9cU=
+X-Google-Smtp-Source: APXvYqwjb/2YyfbelUeebQr0cWH3xh60cFuARPf/yu3Cv5vcIiEftPwkhkzUWd0B2UsfoT4gqAsOSA==
+X-Received: by 2002:a63:b49:: with SMTP id a9mr11864pgl.386.1573953847960;
+        Sat, 16 Nov 2019 17:24:07 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:a8:25f9:8344:b76c:ad19? ([2601:647:4000:a8:25f9:8344:b76c:ad19])
+        by smtp.gmail.com with ESMTPSA id n23sm14569252pff.137.2019.11.16.17.24.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 Nov 2019 17:24:06 -0800 (PST)
+From:   Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH RFC 0/3] blk-mq/nvme: use blk_mq_alloc_request() for
+ NVMe's connect request
+To:     Ming Lei <ming.lei@redhat.com>, Sagi Grimberg <sagi@grimberg.me>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+References: <20191115104238.15107-1-ming.lei@redhat.com>
+ <8f4402a0-967d-f12d-2f1a-949e1dda017c@grimberg.me>
+ <20191116071754.GB18194@ming.t460p>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <4a39a98e-19bc-0a9a-3d92-ceab2c656037@acm.org>
+Date:   Sat, 16 Nov 2019 17:24:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191116071754.GB18194@ming.t460p>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Jianchao Wang <jianchao.w.wang@oracle.com>
+On 2019-11-15 23:17, Ming Lei wrote:
+> Now blk-mq takes a static queue mapping between CPU and hw queues, given
+> CPU hotplug may happen any time, so the specified hw queue may become
+> inactive any time.
 
-[ Upstream commit 69840466086d2248898020a08dda52732686c4e6 ]
+Hi Ming,
 
-There are two cases when handle DISCARD merge.
-If max_discard_segments == 1, the bios/requests need to be contiguous
-to merge. If max_discard_segments > 1, it takes every bio as a range
-and different range needn't to be contiguous.
+I can trigger a race between blk_mq_alloc_request_hctx() and
+CPU-hotplugging by running blktests. The patch below fixes that race
+on my setup. Does this patch also fix the race(s) that you ran into?
 
-But now, attempt_merge screws this up. It always consider contiguity
-for DISCARD for the case max_discard_segments > 1 and cannot merge
-contiguous DISCARD for the case max_discard_segments == 1, because
-rq_attempt_discard_merge always returns false in this case.
-This patch fixes both of the two cases above.
+Thanks,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Bart.
+
+
+Subject: [PATCH] blk-mq: Fix a race between blk_mq_alloc_request_hctx() and
+ CPU hot-plugging
+
 ---
- block/blk-merge.c | 46 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 36 insertions(+), 10 deletions(-)
+ block/blk-mq.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 8d60a5bbcef93..94650cdf2924b 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -659,6 +659,31 @@ static void blk_account_io_merge(struct request *req)
- 		part_stat_unlock();
- 	}
- }
-+/*
-+ * Two cases of handling DISCARD merge:
-+ * If max_discard_segments > 1, the driver takes every bio
-+ * as a range and send them to controller together. The ranges
-+ * needn't to be contiguous.
-+ * Otherwise, the bios/requests will be handled as same as
-+ * others which should be contiguous.
-+ */
-+static inline bool blk_discard_mergable(struct request *req)
-+{
-+	if (req_op(req) == REQ_OP_DISCARD &&
-+	    queue_max_discard_segments(req->q) > 1)
-+		return true;
-+	return false;
-+}
-+
-+enum elv_merge blk_try_req_merge(struct request *req, struct request *next)
-+{
-+	if (blk_discard_mergable(req))
-+		return ELEVATOR_DISCARD_MERGE;
-+	else if (blk_rq_pos(req) + blk_rq_sectors(req) == blk_rq_pos(next))
-+		return ELEVATOR_BACK_MERGE;
-+
-+	return ELEVATOR_NO_MERGE;
-+}
- 
- /*
-  * For non-mq, this has to be called with the request spinlock acquired.
-@@ -676,12 +701,6 @@ static struct request *attempt_merge(struct request_queue *q,
- 	if (req_op(req) != req_op(next))
- 		return NULL;
- 
--	/*
--	 * not contiguous
--	 */
--	if (blk_rq_pos(req) + blk_rq_sectors(req) != blk_rq_pos(next))
--		return NULL;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 20a71dcdc339..16057aa2307f 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -442,13 +442,15 @@ struct request *blk_mq_alloc_request_hctx(struct request_queue *q,
+ 	if (WARN_ON_ONCE(!(flags & BLK_MQ_REQ_NOWAIT)))
+ 		return ERR_PTR(-EINVAL);
+
+-	if (hctx_idx >= q->nr_hw_queues)
+-		return ERR_PTR(-EIO);
 -
- 	if (rq_data_dir(req) != rq_data_dir(next)
- 	    || req->rq_disk != next->rq_disk
- 	    || req_no_special_merge(next))
-@@ -705,11 +724,19 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 * counts here. Handle DISCARDs separately, as they
- 	 * have separate settings.
- 	 */
--	if (req_op(req) == REQ_OP_DISCARD) {
-+
-+	switch (blk_try_req_merge(req, next)) {
-+	case ELEVATOR_DISCARD_MERGE:
- 		if (!req_attempt_discard_merge(q, req, next))
- 			return NULL;
--	} else if (!ll_merge_requests_fn(q, req, next))
-+		break;
-+	case ELEVATOR_BACK_MERGE:
-+		if (!ll_merge_requests_fn(q, req, next))
-+			return NULL;
-+		break;
-+	default:
- 		return NULL;
-+	}
- 
- 	/*
- 	 * If failfast settings disagree or any of the two is already
-@@ -834,8 +861,7 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
- 
- enum elv_merge blk_try_merge(struct request *rq, struct bio *bio)
- {
--	if (req_op(rq) == REQ_OP_DISCARD &&
--	    queue_max_discard_segments(rq->q) > 1)
-+	if (blk_discard_mergable(rq))
- 		return ELEVATOR_DISCARD_MERGE;
- 	else if (blk_rq_pos(rq) + blk_rq_sectors(rq) == bio->bi_iter.bi_sector)
- 		return ELEVATOR_BACK_MERGE;
--- 
-2.20.1
+ 	ret = blk_queue_enter(q, flags);
+ 	if (ret)
+ 		return ERR_PTR(ret);
 
++	if (hctx_idx >= q->nr_hw_queues) {
++		blk_queue_exit(q);
++		return ERR_PTR(-EIO);
++	}
++
+ 	/*
+ 	 * Check if the hardware context is actually mapped to anything.
+ 	 * If not tell the caller that it should skip this queue.
