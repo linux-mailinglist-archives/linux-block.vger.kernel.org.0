@@ -2,247 +2,163 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ABBF10026E
-	for <lists+linux-block@lfdr.de>; Mon, 18 Nov 2019 11:32:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ADC2100265
+	for <lists+linux-block@lfdr.de>; Mon, 18 Nov 2019 11:31:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfKRKcC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Nov 2019 05:32:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25800 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726461AbfKRKcB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:32:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574073119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=umM+99ErFcMwK7HA93tRo1cw8l8CdV7G6pVpKtihSRg=;
-        b=KUoHkbUvjjHRJ0tuvNCnK7USxSwa2kwNk3x/sVkM8oMJtIIySSjSUDa3E1Z8rjGNTluHs4
-        tqTl4mlU7HiKayWplGrC516CY0tOr+iR6bGiT/ua56+z+hFuZRJSTfWAulYG7GpWxaVp80
-        1ZIWgUdsKam9G6H76DYNVMfkPz6z9x0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-D7VhB1bQN2u8zg82HQRrdg-1; Mon, 18 Nov 2019 05:31:56 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DA511800D7D;
-        Mon, 18 Nov 2019 10:31:54 +0000 (UTC)
-Received: from localhost (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3913175E30;
-        Mon, 18 Nov 2019 10:31:50 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Bart Van Assche <bart.vanassche@wdc.com>
-Subject: [PATCH 4/4] scsi: core: don't limit per-LUN queue depth for SSD
-Date:   Mon, 18 Nov 2019 18:31:17 +0800
-Message-Id: <20191118103117.978-5-ming.lei@redhat.com>
-In-Reply-To: <20191118103117.978-1-ming.lei@redhat.com>
-References: <20191118103117.978-1-ming.lei@redhat.com>
+        id S1726614AbfKRKbn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Nov 2019 05:31:43 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2107 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726536AbfKRKbn (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:31:43 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BE6B832AB0F642FAD420;
+        Mon, 18 Nov 2019 10:31:41 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 18 Nov 2019 10:31:41 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 18 Nov
+ 2019 10:31:41 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+ <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+ <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
+ <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
+ <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
+ <c34c0ce2-40a8-e4fc-3366-1f7b906da5a3@acm.org>
+ <8e7bd2cb-1035-13ba-05db-d8e12c61df1f@huawei.com>
+ <6b85f172-695c-4757-3794-455b8d55e015@acm.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <1ba51afd-cce5-f7b2-704c-06e00db027bc@huawei.com>
+Date:   Mon, 18 Nov 2019 10:31:40 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: D7VhB1bQN2u8zg82HQRrdg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6b85f172-695c-4757-3794-455b8d55e015@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-SCSI core uses the atomic variable of sdev->device_busy to track
-in-flight IO requests dispatched to this scsi device. IO request may be
-submitted from any CPU, so the cost for maintaining the shared atomic
-counter can be very big on big NUMA machine with lots of CPU cores.
+On 15/11/2019 17:57, Bart Van Assche wrote:
+> On 11/15/19 2:24 AM, John Garry wrote:
+>> Bart Van Assche wrote:
+>> > How about sharing tag sets across hardware
+>> > queues, e.g. like in the (totally untested) patch below?
+>>
+>> So this is similar in principle what Ming Lei came up with here:
+>> https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/ 
+>>
+>> However your implementation looks neater, which is good.
+>>
+>> My concern with this approach is that we can't differentiate which 
+>> tags are allocated for which hctx, and sometimes we need to know that.
+>>
 
-sdev->queue_depth is usually used for two purposes: 1) improve IO merge;
-2) fair IO request scattered among all LUNs.
+Hi Bart,
 
-blk-mq already provides fair request allocation among all active shared
-request queues(LUNs), see hctx_may_queue().
+>> An example here was blk_mq_queue_tag_busy_iter(), which iterates the 
+>> bits for each hctx. This would just be broken by that change, unless 
+>> we record which bits are associated with each hctx.
+> 
+> I disagree. In bt_iter() I added " && rq->mq_hctx == hctx" such that 
+> blk_mq_queue_tag_busy_iter() only calls the callback function for 
+> matching (hctx, rq) pairs.
 
-NVMe doesn't have such per-request-queue(namespace) queue depth, so it
-is reasonable to ignore the limit for SCSI SSD too. Also IO merge won't
-play big role for reaching top SSD performance.
+OK, I see. I assumed that rq->mq_hctx was statically set when we 
+initially allocate the static requests per hctx; but that doesn’t appear 
+so - it's set in blk_mq_get_request()->blk_mq_rq_ctx_init().
 
-With this patch, big cost for tracking in-flight per-LUN requests via
-atomic variable can be saved.
+> 
+>> Another example was __blk_mq_tag_idle(), which looks problematic.
+> 
+> Please elaborate.
 
-Given QUEUE_FLAG_NONROT is read in IO path, we have to freeze queue
-before changing this flag.
+Again, this was for the same reason being that I thought we could not 
+differentiate which rqs were associated with which hctx.
 
-Cc: Sathya Prakash <sathya.prakash@broadcom.com>
-Cc: Chaitra P B <chaitra.basappa@broadcom.com>
-Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-sysfs.c       | 14 +++++++++++++-
- drivers/scsi/scsi_lib.c | 24 ++++++++++++++++++------
- drivers/scsi/sd.c       |  4 ++++
- 3 files changed, 35 insertions(+), 7 deletions(-)
+> 
+>> For debugfs, when we examine 
+>> /sys/kernel/debug/block/.../hctxX/tags_bitmap, wouldn't that be the 
+>> tags for all hctx (hctx0)?
+>>
+>> For debugging reasons, I would say we want to know which tags are 
+>> allocated for a specific hctx, as this is tightly related to the 
+>> requests for that hctx.
+> 
+> That is an open issue in the patch I posted and something that needs to 
+> be addressed. One way to address this is to change the 
+> sbitmap_bitmap_show() calls into calls to a function that only shows 
+> those bits for which rq->mq_hctx == hctx.
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index fca9b158f4a0..9cc0dd5f88a1 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -281,6 +281,18 @@ QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
- QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
- #undef QUEUE_SYSFS_BIT_FNS
-=20
-+static ssize_t queue_store_nonrot_freeze(struct request_queue *q,
-+=09=09const char *page, size_t count)
-+{
-+=09size_t ret;
-+
-+=09blk_mq_freeze_queue(q);
-+=09ret =3D queue_store_nonrot(q, page, count);
-+=09blk_mq_unfreeze_queue(q);
-+
-+=09return ret;
-+}
-+
- static ssize_t queue_zoned_show(struct request_queue *q, char *page)
- {
- =09switch (blk_queue_zoned_model(q)) {
-@@ -642,7 +654,7 @@ static struct queue_sysfs_entry queue_write_zeroes_max_=
-entry =3D {
- static struct queue_sysfs_entry queue_nonrot_entry =3D {
- =09.attr =3D {.name =3D "rotational", .mode =3D 0644 },
- =09.show =3D queue_show_nonrot,
--=09.store =3D queue_store_nonrot,
-+=09.store =3D queue_store_nonrot_freeze,
- };
-=20
- static struct queue_sysfs_entry queue_zoned_entry =3D {
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 62a86a82c38d..72655a049efd 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -354,7 +354,8 @@ void scsi_device_unbusy(struct scsi_device *sdev, struc=
-t scsi_cmnd *cmd)
- =09if (starget->can_queue > 0)
- =09=09atomic_dec(&starget->target_busy);
-=20
--=09atomic_dec(&sdev->device_busy);
-+=09if (!blk_queue_nonrot(sdev->request_queue))
-+=09=09atomic_dec(&sdev->device_busy);
- }
-=20
- static void scsi_kick_queue(struct request_queue *q)
-@@ -410,7 +411,8 @@ static void scsi_single_lun_run(struct scsi_device *cur=
-rent_sdev)
-=20
- static inline bool scsi_device_is_busy(struct scsi_device *sdev)
- {
--=09if (atomic_read(&sdev->device_busy) >=3D sdev->queue_depth)
-+=09if (!blk_queue_nonrot(sdev->request_queue) &&
-+=09=09=09atomic_read(&sdev->device_busy) >=3D sdev->queue_depth)
- =09=09return true;
- =09if (atomic_read(&sdev->device_blocked) > 0)
- =09=09return true;
-@@ -1283,8 +1285,12 @@ static inline int scsi_dev_queue_ready(struct reques=
-t_queue *q,
- =09=09=09=09  struct scsi_device *sdev)
- {
- =09unsigned int busy;
-+=09bool bypass =3D blk_queue_nonrot(sdev->request_queue);
-=20
--=09busy =3D atomic_inc_return(&sdev->device_busy) - 1;
-+=09if (!bypass)
-+=09=09busy =3D atomic_inc_return(&sdev->device_busy) - 1;
-+=09else
-+=09=09busy =3D 0;
- =09if (atomic_read(&sdev->device_blocked)) {
- =09=09if (busy)
- =09=09=09goto out_dec;
-@@ -1298,12 +1304,16 @@ static inline int scsi_dev_queue_ready(struct reque=
-st_queue *q,
- =09=09=09=09   "unblocking device at zero depth\n"));
- =09}
-=20
-+=09if (bypass)
-+=09=09return 1;
-+
- =09if (busy >=3D sdev->queue_depth)
- =09=09goto out_dec;
-=20
- =09return 1;
- out_dec:
--=09atomic_dec(&sdev->device_busy);
-+=09if (!bypass)
-+=09=09atomic_dec(&sdev->device_busy);
- =09return 0;
- }
-=20
-@@ -1624,7 +1634,8 @@ static void scsi_mq_put_budget(struct blk_mq_hw_ctx *=
-hctx)
- =09struct request_queue *q =3D hctx->queue;
- =09struct scsi_device *sdev =3D q->queuedata;
-=20
--=09atomic_dec(&sdev->device_busy);
-+=09if (!blk_queue_nonrot(sdev->request_queue))
-+=09=09atomic_dec(&sdev->device_busy);
- }
-=20
- static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
-@@ -1731,7 +1742,8 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ct=
-x *hctx,
- =09case BLK_STS_OK:
- =09=09break;
- =09case BLK_STS_RESOURCE:
--=09=09if (atomic_read(&sdev->device_busy) ||
-+=09=09if ((!blk_queue_nonrot(sdev->request_queue) &&
-+=09=09     atomic_read(&sdev->device_busy)) ||
- =09=09    scsi_device_blocked(sdev))
- =09=09=09ret =3D BLK_STS_DEV_RESOURCE;
- =09=09break;
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 0744c34468e1..c3d47117700d 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2927,7 +2927,9 @@ static void sd_read_block_characteristics(struct scsi=
-_disk *sdkp)
- =09rot =3D get_unaligned_be16(&buffer[4]);
-=20
- =09if (rot =3D=3D 1) {
-+=09=09blk_mq_freeze_queue(q);
- =09=09blk_queue_flag_set(QUEUE_FLAG_NONROT, q);
-+=09=09blk_mq_unfreeze_queue(q);
- =09=09blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, q);
- =09}
-=20
-@@ -3123,7 +3125,9 @@ static int sd_revalidate_disk(struct gendisk *disk)
- =09=09 * cause this to be updated correctly and any device which
- =09=09 * doesn't support it should be treated as rotational.
- =09=09 */
-+=09=09blk_mq_freeze_queue(q);
- =09=09blk_queue_flag_clear(QUEUE_FLAG_NONROT, q);
-+=09=09blk_mq_unfreeze_queue(q);
- =09=09blk_queue_flag_set(QUEUE_FLAG_ADD_RANDOM, q);
-=20
- =09=09if (scsi_device_supports_vpd(sdp)) {
---=20
-2.20.1
+Yeah, understood.
 
+> 
+>>> @@ -341,8 +341,11 @@ void blk_mq_tagset_busy_iter(struct 
+>>> blk_mq_tag_set *tagset,
+>>>       int i;
+>>>
+>>>       for (i = 0; i < tagset->nr_hw_queues; i++) {
+>>> -        if (tagset->tags && tagset->tags[i])
+>>> +        if (tagset->tags && tagset->tags[i]) {
+>>>               blk_mq_all_tag_busy_iter(tagset->tags[i], fn, priv);
+>>
+>> As I mentioned earlier, wouldn't this iterate over all tags for all 
+>> hctx's, when we just want the tags for hctx[i]?
+>>
+>> Thanks,
+>> John
+>>
+>> [Not trimming reply for future reference]
+>>
+>>> +            if (tagset->share_tags)
+>>> +                break;
+>>> +        }
+>>>       }
+>>>   }
+>>>   EXPORT_SYMBOL(blk_mq_tagset_busy_iter);
+> 
+> Since blk_mq_tagset_busy_iter() loops over all hardware queues all what 
+> is changed is the order in which requests are examined. I am not aware 
+> of any block driver that calls blk_mq_tagset_busy_iter() and that 
+> depends on the order of the requests passed to the callback function.
+> 
+
+OK, fine.
+
+So, to me, this approach also seems viable then.
+
+I am however not so happy with how we use blk_mq_tag_set.tags[0] for the 
+shared tags; I would like to use blk_mq_tag_set.shared_tags and make 
+blk_mq_tag_set.tags[] point at blk_mq_tag_set.shared_tags or maybe not 
+blk_mq_tag_set.tags[] at all. However maybe that change may be more 
+intrusive.
+
+And another more real concern is that we miss a check somewhere for 
+rq->mq_hctx == hctx when examining the bits on the shared tags.
+
+Thanks,
+John
