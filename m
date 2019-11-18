@@ -2,107 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60683100503
-	for <lists+linux-block@lfdr.de>; Mon, 18 Nov 2019 13:01:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49B3B1005E5
+	for <lists+linux-block@lfdr.de>; Mon, 18 Nov 2019 13:49:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKRMB2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Nov 2019 07:01:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37606 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727073AbfKRMB1 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:01:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E73AFB071;
-        Mon, 18 Nov 2019 12:01:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8AEB01E4B0D; Mon, 18 Nov 2019 11:34:09 +0100 (CET)
-Date:   Mon, 18 Nov 2019 11:34:09 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 15/24] fs/io_uring: set FOLL_PIN via pin_user_pages()
-Message-ID: <20191118103409.GI17319@quack2.suse.cz>
-References: <20191115055340.1825745-1-jhubbard@nvidia.com>
- <20191115055340.1825745-16-jhubbard@nvidia.com>
+        id S1726506AbfKRMt5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Nov 2019 07:49:57 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33801 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfKRMt4 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:49:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e6so19347968wrw.1
+        for <linux-block@vger.kernel.org>; Mon, 18 Nov 2019 04:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HzafYSZxnPK6IARPnsA3hMeydxdZ+vWMbZqlbTbu264=;
+        b=JfccVARt1sSwpJGTtDR8EMG4H4J/sFy2OH3nynkFuMHRxl+B/4tBnlPH1t/AFzSMXe
+         Sen39S4GOvg2QYLvVw2MyTOp2DZ1puxe+p6E5NcZNP1Ob/e2t7LTdJtFrgcrhbFPheFI
+         UC2IoNp6MzlGmH26HSM6eVNlbhZN7U86J+KM1iuD3TohtdP3kCBiKL77SGdq7aAFtAjM
+         w26F5x2v+4ZSOA0W9UtRFYezkUk2p5flSGSEsNPd5iEY4f3ifhx4MwkWwwG9hLUOgJy9
+         soFmSksPFEZDHxxqyXtqfUstoHODD+ThInY49iLReF5J8+0AiJXN0JYlshdrqjl7bMze
+         JFoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HzafYSZxnPK6IARPnsA3hMeydxdZ+vWMbZqlbTbu264=;
+        b=OGxlCFNsGu+ZmGi0PORy5R4nNzPqIIjZto68ntMw9YAI+gvXtRAcA+G71QMusDJz4q
+         4V64FzcewUssdb9stm/tTVDWCZrkNuH5WtKO18PNoubbGPlab72hxkOSDs8NQg1gPAB8
+         h9DKM4DwcCXPBcWduZcBOg655Cw6D8VcMRWuJotZZDc393DdmOVM+twem/YFL8x2OHJY
+         3aFmsdG6S4G9BTcUpjo2i1nnjhh+cE4E0ZZFtY+CglS4EEWQi1jX2JMoguNWhBSS1DGw
+         aL1esqitxJRDt21VL1Si8WufHK0/0/5lL4z7wOHNA3R8iBjV/LW01Spy98UQf39aDJ2J
+         j67Q==
+X-Gm-Message-State: APjAAAVmudZmqMTrATDWyTMCA0OKn8HJH0JNjofXpX1c4kCP+RjcQIoR
+        DNn0EeTOyoPlV0yYhzTgC6bjgblxdkG+ZWhMFKa/JkMB
+X-Google-Smtp-Source: APXvYqyPEWCBhJ6YujPNRNnxWClv1u1FteWv8iwzp4+o+/LP1jXVeMYlfUwe8Y64NjPffy6VraPunQNj4d7JF1MKos8=
+X-Received: by 2002:adf:979a:: with SMTP id s26mr30720656wrb.92.1574081394736;
+ Mon, 18 Nov 2019 04:49:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115055340.1825745-16-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191118110122.50070-1-bigeasy@linutronix.de>
+In-Reply-To: <20191118110122.50070-1-bigeasy@linutronix.de>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Mon, 18 Nov 2019 20:49:43 +0800
+Message-ID: <CACVXFVO6BA1HDUL=0XZzPVDDg0YYTyKwC1ajcXQ0OjF3VWpuHg@mail.gmail.com>
+Subject: Re: [PATCH] block: Don't disable interrupts in trigger_softirq()
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu 14-11-19 21:53:31, John Hubbard wrote:
-> Convert fs/io_uring to use the new pin_user_pages() call, which sets
-> FOLL_PIN. Setting FOLL_PIN is now required for code that requires
-> tracking of pinned pages, and therefore for any code that calls
-> put_user_page().
-> 
-> In partial anticipation of this work, the io_uring code was already
-> calling put_user_page() instead of put_page(). Therefore, in order to
-> convert from the get_user_pages()/put_page() model, to the
-> pin_user_pages()/put_user_page() model, the only change required
-> here is to change get_user_pages() to pin_user_pages().
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+On Mon, Nov 18, 2019 at 7:03 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> trigger_softirq() is always invoked as a SMP-function call which is
+> always invoked with disables interrupts.
+>
+> Don't disable interrupt in trigger_softirq() because interrupts are
+> already disabled.
+>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->  fs/io_uring.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index f9a38998f2fc..cff64bd00db9 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -3433,7 +3433,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
->  
->  		ret = 0;
->  		down_read(&current->mm->mmap_sem);
-> -		pret = get_user_pages(ubuf, nr_pages,
-> +		pret = pin_user_pages(ubuf, nr_pages,
->  				      FOLL_WRITE | FOLL_LONGTERM,
->  				      pages, vmas);
->  		if (pret == nr_pages) {
-> -- 
-> 2.24.0
-> 
+>  block/blk-softirq.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/block/blk-softirq.c b/block/blk-softirq.c
+> index 457d9ba3eb204..6e7ec87d49faa 100644
+> --- a/block/blk-softirq.c
+> +++ b/block/blk-softirq.c
+> @@ -42,17 +42,13 @@ static __latent_entropy void blk_done_softirq(struct softirq_action *h)
+>  static void trigger_softirq(void *data)
+>  {
+>         struct request *rq = data;
+> -       unsigned long flags;
+>         struct list_head *list;
+>
+> -       local_irq_save(flags);
+>         list = this_cpu_ptr(&blk_cpu_done);
+>         list_add_tail(&rq->ipi_list, list);
+>
+>         if (list->next == &rq->ipi_list)
+>                 raise_softirq_irqoff(BLOCK_SOFTIRQ);
+> -
+> -       local_irq_restore(flags);
+>  }
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Ming Lei
