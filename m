@@ -2,281 +2,197 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1957101A02
-	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2019 08:06:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90EB1101A0D
+	for <lists+linux-block@lfdr.de>; Tue, 19 Nov 2019 08:11:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSHF5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Nov 2019 02:05:57 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:52212 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727145AbfKSHF4 (ORCPT
+        id S1726994AbfKSHLI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Nov 2019 02:11:08 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:51965 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfKSHLH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:05:56 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJ73hYn009047;
-        Mon, 18 Nov 2019 23:05:30 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=qI6V5date5LOpgUANTAHpyiGkFplUbk4ChWLOvlSdmA=;
- b=iGiGCmUj2uUjcqzfkg7YiVPZukTBVpsZIFaIXjCkvjgSZyMIawX761pmrwlPST6natBC
- xkLV8ae7sfsZeAuvi0Sk7ev2egcB2aNuZbM+1oyWehMTy/4k6NiP6LYjb4pB3pggvWxk
- +IyiHIaoZkUVpOpBOObERjJvBZTqRckSP2a4D7cgt2jNYCf5uHadeOFe706JOW0hf/Ap
- /pjbEuG9iEzopGaP6JNY/TLu2XDyEF8pyDYPB8cad1PIhMm19vv9+rNMDsGb46b5pdUb
- JzA/cTUi8eEYwBdaWzv5LvgTEknh9ePCANHkzkX+jyzotXxRbWAWc0Q4cZRlQVt4tXWT Tg== 
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2051.outbound.protection.outlook.com [104.47.40.51])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2wadjy9hhq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Nov 2019 23:05:29 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=deFm+XWE/9KpxY7Nq7fywyV0l3+ScXO5rVxqle0NWolar+LYHQRxHEY5GWWu1FSzCQA22uC9OZa1bZGzXGmkZl0N8Tkw20jJlHLuz+DzZePOSK32jjgRtxHASCbFHTriXVQSqvP1/f+g6XoLN7r8xASibQuMkSQID5Utc4/NETrpvTrxccDsSFMz+lXe/hQMwoj6sqIkiBmFNq37BIX3RmDuy2x31wNSxieSIHFbfq6tN5/7/5pOxwvtJGlzPI8HEBHkaRu9QVBBh2XANKHGq8FRJXGhK4KC0asu77Lst+Mun413uatPFvjRESjCo1vq+cpvYVFOHvXhZMUTvPAt9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qI6V5date5LOpgUANTAHpyiGkFplUbk4ChWLOvlSdmA=;
- b=lOe+KpsiQa8WsMKHxca6eibrso5wEQBy7rew8RTHkWN7V/0awBjEDXgMtDTPeeRO/q1t3bjUpvrlUTbU6NAavXpJBaDBzDkhusRb3arx1mP+a9cUGqVi12JBOAeR6AP1QxhQzTvv9hqYau8/oxNjOhh/yJP9f0LnWuNDX9WiPuwH3XFsBNTIOc/h2+vXTJ2DxxgJ1HOjFNjptGXhgf9bocna5zzKv0V3RVMYvdPbUk78WDCkcH/qm1E1wL1vbZtMaFMJ+7tzEPb8BwSnLo5OUIKf5jesiLoA+F8kgBpMxwOCAP5ABYHaDUEfOJXJ2b68y/h931a3X2Kk0tlfA56UdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 158.140.1.28) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=cadence.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qI6V5date5LOpgUANTAHpyiGkFplUbk4ChWLOvlSdmA=;
- b=1MnMJmOAFfVLx5g0XMEsvThknnQh8t9LHy3cdXUYeb50JHU3HPxSP6qehE/HaPhumbJ/eeSVvqELxNmZOZv5yV27aun0RdVMuR9KN9WLleCsnMRdar2gb9Up0bf16sF5GwBd/mG0e+NKit5trbMpJ7zH+fos9Lq3hUXzA5Bvww4=
-Received: from BYAPR07CA0057.namprd07.prod.outlook.com (2603:10b6:a03:60::34)
- by CY1PR07MB2587.namprd07.prod.outlook.com (2a01:111:e400:c60e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.27; Tue, 19 Nov
- 2019 07:05:26 +0000
-Received: from MW2NAM12FT015.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe5a::206) by BYAPR07CA0057.outlook.office365.com
- (2603:10b6:a03:60::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
- Transport; Tue, 19 Nov 2019 07:05:26 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- MW2NAM12FT015.mail.protection.outlook.com (10.13.180.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 07:05:25 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id xAJ75LMB023874
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 18 Nov 2019 23:05:24 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Tue, 19 Nov 2019 08:05:20 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 19 Nov 2019 08:05:20 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xAJ75KYc024629;
-        Tue, 19 Nov 2019 08:05:20 +0100
-Received: (from sheebab@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xAJ75Kks024628;
-        Tue, 19 Nov 2019 08:05:20 +0100
-From:   sheebab <sheebab@cadence.com>
-To:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
-        <beanhuo@micron.com>, <yuehaibing@huawei.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vigneshr@ti.com>, <linux-block@vger.kernel.org>
-CC:     <rafalc@cadence.com>, <mparab@cadence.com>,
-        sheebab <sheebab@cadence.com>
-Subject: [PATCH RESEND 2/2] scsi: ufs: Update L4 attributes on manual hibern8 exit in Cadence UFS.
-Date:   Tue, 19 Nov 2019 08:04:42 +0100
-Message-ID: <1574147082-22725-3-git-send-email-sheebab@cadence.com>
-X-Mailer: git-send-email 2.4.5
-In-Reply-To: <1574147082-22725-1-git-send-email-sheebab@cadence.com>
-References: <1574147082-22725-1-git-send-email-sheebab@cadence.com>
+        Tue, 19 Nov 2019 02:11:07 -0500
+Received: by mail-il1-f200.google.com with SMTP id x2so18503156ilk.18
+        for <linux-block@vger.kernel.org>; Mon, 18 Nov 2019 23:11:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1v1aJGS9HsUrUeldziyx6a61zXZusa4khlXNwtE+IaY=;
+        b=gCBqKWqgxyZtE2d1K4Nj8EDn2SWowOUPQyvxujNWhyKqwU6x/+PhDzT9Y0EL6Az7BG
+         8+l3uQFREZ73hKLicYSEHMDCQ9wuxiVlGWDZyEa7JZ/O4LZ4uKQGM1Noya/22LXjxkiA
+         UkZZyMLxTny2ey1TOmpq2jpUHggOqy1O5mQsLg9RiOCUPOaoCxkiYSmn3e3aO80gYhco
+         6Pl4nKJzKfT88cetfx9SpKi8YZaNHF0mkrRqImNBVTnyd5AO4P7EA9ByRFoiEjPBCP9w
+         OW2zxcZ+91MRQBZBAEEGriE3ybEkHe191kFceKARIYAuRQHxbR+zdTmCv/UBqQCuCfaH
+         3aRA==
+X-Gm-Message-State: APjAAAXD17CYEImy/zcM2Rd7uIRQa9r2ViwkCAQbRUtM3+HwPfXj2ZQg
+        PVbZIHOWwudG212kAP9WxvfSR8hFq2Rh050YsKGJ2zh8q/vY
+X-Google-Smtp-Source: APXvYqxdZZYLE8OwNy2FHsJ6YSwh9lfsT9xQC0okfneLSAj5kdGsa3xWwAJ48k79fXa8r+kRMVUkJ2bjDtHRQJYu9sPljXFHVOaK
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(36092001)(189003)(199004)(107886003)(76176011)(51416003)(478600001)(8676002)(26826003)(50226002)(36756003)(47776003)(4326008)(16586007)(42186006)(54906003)(316002)(14444005)(7636002)(5660300002)(7416002)(6666004)(86362001)(126002)(356004)(426003)(50466002)(76130400001)(186003)(26005)(87636003)(110136005)(2906002)(2616005)(8936002)(246002)(336012)(11346002)(305945005)(2201001)(70586007)(486006)(70206006)(48376002)(476003)(446003)(921003)(1121003)(83996005)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2587;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 015bca00-b35e-493b-79bc-08d76cbeda63
-X-MS-TrafficTypeDiagnostic: CY1PR07MB2587:
-X-Microsoft-Antispam-PRVS: <CY1PR07MB2587E6B19E9FCAD176B8B3E0A44C0@CY1PR07MB2587.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 022649CC2C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: X/QFX0xrSda+crQPYtcg2+eVNP9XjjaUMqtItpSqnTApibSw4axrTKOolTzJxmjSjO4vv6GY4UvmexWpJlcTitusG9MeHbDVtjG/46edoJm3kyyIbKoJIngtAVbW9PK4pHj5BmBYAHKqE3xFZWPGi4h1NEJUqnB6H8Sj6wK9zewWETgMCrUv2H7MOkyIh5EKp0nalnWvWWI40RHGFmu/QZxds2hNoWwk/EHnn6xNDlPRjWuiOuHgxV1U7OHjK5QI/o91Ks0LWGabVh286UDL9zaCQJ+bBAYpO+2c5PU7J1KeaEbxtrpDiO9EOcSRtJ7VeYRXwi39Lm4j27y/4vcaNq+HAhY88gigMR+YhY/Adhi3UEwXntQlYKX/P1JIOLU9JSorAYRt+8fMxK2bGQDf6u8kBVJ6K5Zuvrtqea6m9qFOPcn7202V4oMiTI7dcvk1
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 07:05:25.9182
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 015bca00-b35e-493b-79bc-08d76cbeda63
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2587
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-19_01:2019-11-15,2019-11-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 phishscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1911190065
+X-Received: by 2002:a05:6e02:cd0:: with SMTP id c16mr22275430ilj.226.1574147466718;
+ Mon, 18 Nov 2019 23:11:06 -0800 (PST)
+Date:   Mon, 18 Nov 2019 23:11:06 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000093f8c20597adc469@google.com>
+Subject: KASAN: use-after-free Read in blkcg_print_stat (2)
+From:   syzbot <syzbot+9bfadf534cf2fd1b5eb8@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Backup L4 attributes duirng manual hibern8 entry
-and restore the L4 attributes on manual hibern8 exit as per JESD220C.
+Hello,
 
-Signed-off-by: sheebab <sheebab@cadence.com>
+syzbot found the following crash on:
+
+HEAD commit:    fe30021c Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1196cb3ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1aab6d4187ddf667
+dashboard link: https://syzkaller.appspot.com/bug?extid=9bfadf534cf2fd1b5eb8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9bfadf534cf2fd1b5eb8@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in dev_name include/linux/device.h:1342 [inline]
+BUG: KASAN: use-after-free in blkg_dev_name block/blk-cgroup.c:498 [inline]
+BUG: KASAN: use-after-free in blkcg_print_stat+0xb26/0xc00  
+block/blk-cgroup.c:942
+Read of size 8 at addr ffff8880a01b2050 by task syz-executor.1/16053
+
+CPU: 0 PID: 16053 Comm: syz-executor.1 Not tainted 5.4.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  dev_name include/linux/device.h:1342 [inline]
+  blkg_dev_name block/blk-cgroup.c:498 [inline]
+  blkcg_print_stat+0xb26/0xc00 block/blk-cgroup.c:942
+  cgroup_seqfile_show+0x1a8/0x300 kernel/cgroup/cgroup.c:3816
+  kernfs_seq_show+0x14f/0x1b0 fs/kernfs/file.c:167
+  seq_read+0x4ca/0x1110 fs/seq_file.c:229
+  kernfs_fop_read+0xed/0x560 fs/kernfs/file.c:251
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  do_readv+0x15b/0x330 fs/read_write.c:1034
+  __do_sys_readv fs/read_write.c:1125 [inline]
+  __se_sys_readv fs/read_write.c:1122 [inline]
+  __x64_sys_readv+0x75/0xb0 fs/read_write.c:1122
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a639
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd336772c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a639
+RDX: 00000000000001a5 RSI: 00000000200002c0 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd3367736d4
+R13: 00000000004c7ecd R14: 00000000004de160 R15: 00000000ffffffff
+
+Allocated by task 12327:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  device_create_groups_vargs+0x8e/0x270 drivers/base/core.c:2828
+  device_create_vargs+0x45/0x60 drivers/base/core.c:2886
+  bdi_register_va.part.0+0x91/0x940 mm/backing-dev.c:940
+  bdi_register_va mm/backing-dev.c:976 [inline]
+  bdi_register+0x12a/0x140 mm/backing-dev.c:973
+  bdi_register_owner+0x6a/0x110 mm/backing-dev.c:983
+  __device_add_disk+0xe09/0x1230 block/genhd.c:739
+  device_add_disk+0x2b/0x40 block/genhd.c:763
+  add_disk include/linux/genhd.h:429 [inline]
+  loop_add+0x635/0x8d0 drivers/block/loop.c:2061
+  loop_control_ioctl drivers/block/loop.c:2162 [inline]
+  loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2144
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 16049:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  device_create_release+0x16/0x20 drivers/base/power/wakeup_stats.c:130
+  device_release+0x7a/0x210 drivers/base/core.c:1101
+  kobject_cleanup lib/kobject.c:693 [inline]
+  kobject_release lib/kobject.c:722 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  kobject_put.cold+0x289/0x2e6 lib/kobject.c:739
+  put_device drivers/base/core.c:2301 [inline]
+  device_unregister+0x28/0x40 drivers/base/core.c:2409
+  bdi_unregister+0x428/0x610 mm/backing-dev.c:1016
+  del_gendisk+0x896/0xb30 block/genhd.c:810
+  loop_remove+0x3c/0xd0 drivers/block/loop.c:2079
+  loop_control_ioctl drivers/block/loop.c:2178 [inline]
+  loop_control_ioctl+0x320/0x360 drivers/block/loop.c:2144
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a01b2000
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 80 bytes inside of
+  2048-byte region [ffff8880a01b2000, ffff8880a01b2800)
+The buggy address belongs to the page:
+page:ffffea0002806c80 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0
+raw: 01fffc0000000200 ffffea0002374088 ffffea0002730148 ffff8880aa400e00
+raw: 0000000000000000 ffff8880a01b2000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a01b1f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a01b1f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a01b2000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff8880a01b2080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a01b2100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/scsi/ufs/cdns-pltfrm.c | 97 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 95 insertions(+), 2 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-index adbbd60..5510567 100644
---- a/drivers/scsi/ufs/cdns-pltfrm.c
-+++ b/drivers/scsi/ufs/cdns-pltfrm.c
-@@ -19,6 +19,14 @@
- 
- #define CDNS_UFS_REG_HCLKDIV	0xFC
- #define CDNS_UFS_REG_PHY_XCFGD1	0x113C
-+#define CDNS_UFS_MAX 12
-+
-+struct cdns_ufs_host {
-+	/**
-+	 * cdns_ufs_dme_attr_val - for storing L4 attributes
-+	 */
-+	u32 cdns_ufs_dme_attr_val[CDNS_UFS_MAX];
-+};
- 
- /**
-  * cdns_ufs_enable_intr - enable interrupts
-@@ -47,6 +55,77 @@ static void cdns_ufs_disable_intr(struct ufs_hba *hba, u32 intrs)
- }
- 
- /**
-+ * cdns_ufs_get_l4_attr - get L4 attributes on local side
-+ * @hba: per adapter instance
-+ *
-+ */
-+static void cdns_ufs_get_l4_attr(struct ufs_hba *hba)
-+{
-+	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
-+
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERDEVICEID),
-+		       &host->cdns_ufs_dme_attr_val[0]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERCPORTID),
-+		       &host->cdns_ufs_dme_attr_val[1]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
-+		       &host->cdns_ufs_dme_attr_val[2]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PROTOCOLID),
-+		       &host->cdns_ufs_dme_attr_val[3]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTFLAGS),
-+		       &host->cdns_ufs_dme_attr_val[4]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
-+		       &host->cdns_ufs_dme_attr_val[5]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
-+		       &host->cdns_ufs_dme_attr_val[6]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
-+		       &host->cdns_ufs_dme_attr_val[7]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
-+		       &host->cdns_ufs_dme_attr_val[8]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
-+		       &host->cdns_ufs_dme_attr_val[9]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTMODE),
-+		       &host->cdns_ufs_dme_attr_val[10]);
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
-+		       &host->cdns_ufs_dme_attr_val[11]);
-+}
-+
-+/**
-+ * cdns_ufs_set_l4_attr - set L4 attributes on local side
-+ * @hba: per adapter instance
-+ *
-+ */
-+static void cdns_ufs_set_l4_attr(struct ufs_hba *hba)
-+{
-+	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
-+
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID),
-+		       host->cdns_ufs_dme_attr_val[0]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID),
-+		       host->cdns_ufs_dme_attr_val[1]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
-+		       host->cdns_ufs_dme_attr_val[2]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PROTOCOLID),
-+		       host->cdns_ufs_dme_attr_val[3]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS),
-+		       host->cdns_ufs_dme_attr_val[4]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
-+		       host->cdns_ufs_dme_attr_val[5]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
-+		       host->cdns_ufs_dme_attr_val[6]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
-+		       host->cdns_ufs_dme_attr_val[7]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
-+		       host->cdns_ufs_dme_attr_val[8]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
-+		       host->cdns_ufs_dme_attr_val[9]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE),
-+		       host->cdns_ufs_dme_attr_val[10]);
-+	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
-+		       host->cdns_ufs_dme_attr_val[11]);
-+}
-+
-+/**
-  * Sets HCLKDIV register value based on the core_clk
-  * @hba: host controller instance
-  *
-@@ -134,6 +213,7 @@ static void cdns_ufs_hibern8_notify(struct ufs_hba *hba, enum uic_cmd_dme cmd,
- 		 * before manual hibernate entry.
- 		 */
- 		cdns_ufs_enable_intr(hba, UFSHCD_UIC_HIBERN8_MASK);
-+		cdns_ufs_get_l4_attr(hba);
- 	}
- 	if (status == POST_CHANGE && cmd == UIC_CMD_DME_HIBER_EXIT) {
- 		/**
-@@ -141,6 +221,7 @@ static void cdns_ufs_hibern8_notify(struct ufs_hba *hba, enum uic_cmd_dme cmd,
- 		 * after manual hibern8 exit.
- 		 */
- 		cdns_ufs_disable_intr(hba, UFSHCD_UIC_HIBERN8_MASK);
-+		cdns_ufs_set_l4_attr(hba);
- 	}
- }
- 
-@@ -245,15 +326,27 @@ static int cdns_ufs_pltfrm_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id;
- 	struct ufs_hba_variant_ops *vops;
- 	struct device *dev = &pdev->dev;
-+	struct cdns_ufs_host *host;
-+	struct ufs_hba *hba;
- 
- 	of_id = of_match_node(cdns_ufs_of_match, dev->of_node);
- 	vops = (struct ufs_hba_variant_ops *)of_id->data;
- 
- 	/* Perform generic probe */
- 	err = ufshcd_pltfrm_init(pdev, vops);
--	if (err)
-+	if (err) {
- 		dev_err(dev, "ufshcd_pltfrm_init() failed %d\n", err);
--
-+		goto out;
-+	}
-+	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-+	if (!host) {
-+		err = -ENOMEM;
-+		dev_err(dev, "%s: no memory for cdns host\n", __func__);
-+		goto out;
-+	}
-+	hba =  platform_get_drvdata(pdev);
-+	ufshcd_set_variant(hba, host);
-+out:
- 	return err;
- }
- 
--- 
-2.7.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
