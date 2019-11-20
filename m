@@ -2,57 +2,152 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B0D410371F
-	for <lists+linux-block@lfdr.de>; Wed, 20 Nov 2019 10:58:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09AB0103721
+	for <lists+linux-block@lfdr.de>; Wed, 20 Nov 2019 10:59:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfKTJ6l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Nov 2019 04:58:41 -0500
-Received: from sonic311-23.consmr.mail.ne1.yahoo.com ([66.163.188.204]:44128
-        "EHLO sonic311-23.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727671AbfKTJ6l (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:58:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1574243918; bh=+JEosOT2sVu+hkruxS8M8QchlzaUMN4I7aAE0kLIJgE=; h=Date:From:Reply-To:Subject:From:Subject; b=C5tL3bpRHuqLW1HV9psxSvTpMBFzCiw/tGE8PpIb7NJ4HBxTXamrVADpmTejlRWJImW53a2DV7DujMD0GqIkxhI4EvqrkiRPAkhQc3KBUTcGti/fMYhQ4Imdg+V5qknsNaBTyj85GO732lG7+tYWZTD/bxFg+kK9ajZvQwn+zWqLCoA15qLGHO8R6HTlv64d6GK4nZKDy5585yXcgxDDblN/I5vW64NXIE20LSV0k9VR4QFyiORanTmgm46O60TfI9b0zGVKMifNrB+EP3ycQM3UfxxxT14X+/HsAKtO1CIOtUbYmu4o7NHpvKkrWCAoIHHCUQIzS45+6Xb5omuWMQ==
-X-YMail-OSG: 8RA5.GQVM1mDyeKtYGNpMuDP3OOmh92DUC6ayGK0P7M71GM.CUdKKEy3mxWK9.h
- 7BuZ52XhYqo_txwj_zO12Ou9hqsIn9scgrYs.5pJa2w4n4ZqTwH5FdE3twQkQNIhMbgBi.CyVMzK
- deFlPDRg3qeiuAAucorh.rWvetOTbGrSp7l.jtbqdGp73_tx3Fdpf0mibLZuLAbXOebQcIp2FOr7
- JCPMomgRZG5pga9C1x3HA59t5baJzjAwzqiO6cM0JJ.s9pY_WAajNLKLCnsUipSYaNiE18IGPkAX
- cbgZjwoFpWd1pMVqkJYlLf8Bu6fTHiFW03w1xf_so0MIIw_jhg85in9Hg_7M7ec1Zs2othjDyoXs
- pu5t8pkjPHD3vPXIeqzhAmJuCcoywkwJv3gt1LKp2qyIXleXt2R3YHNpZ8AcEQlbxMbwPV9rrq7b
- 8NIOdiUDaBCbKwwgrf2YpVW8sPktesms5Xc6URsLj..bqN66y2XpxAP61CZZnbh4eeKsMGb_VH_g
- 8UyClOjdmivimV6YZCoeEzvRfZ88rWWz3h3TrsvBwAY273USVfKxiV.OB6mkcbvIhdG9.5S1eYYx
- Cgmj47ce5ffUtHjJvk9m94z_4NCQZi8gLdRdWrqiUuoCAKRLYAwCyFDFF46Jt7AG7BtRKyWRfWIc
- GI2ZG71KFvZMA.49pPCdyjuRS4ne3VouAWVspmn38BqD6S.ON.RFktBJ6M0DSysyDHzTfIkUOo7O
- XPA6lEaKxR1nYld5CUyOjRR8TF7ol7cCVTOeiuFF4UwoOocxqhuOUTyTuif5q9W0RdoHEF3leJ4F
- cT4MamONbkxniVvRpdws9zEX7HSlXJ6iI6TbB1I6fe0CFmJ6YbOt6GLQYGJDlifSrX9ECpJaZEgi
- sIZ6wAYl8dkbTwFcUGNI5ctSDOPT.LJfQGMsP4eGRhBIKQ_cp9okha8xNtld7uP8MOx79KF6Wxp1
- TelSWAwsdDxki0v7PauF92Mna9NgJNTM22QuQYZQNCOEE.zGElcoAXj969tz02E7bKjbSBW7x8hl
- Biytn.amCeFg4hp4THkFpVxD4SIPlLY_uIYzhHKKDzwVCiu.sqMWT36wpcwtTzd1UIEft9JP9oGv
- sJCNZ_yo4mAtHEoupYD.0fxXfVydwpwoDvnuiatPvFfdqEbwXsQrqVluMkWqmslwfQ9DOD6xiL39
- ZCM5mfzeLyhEzKMtTlkpKguKhKK0t5UfwcBYN2UNBEoMDye2Nax4xMPfXCtk1VlXxbi06.vAvWxZ
- w7..2ur1NVFYEGHBu7KLcIsq2m14MkIZnUGnUCxTUvaCH4._Bze.gNTzU6rBsTD7zOgqTHex8Ww-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Wed, 20 Nov 2019 09:58:38 +0000
-Date:   Wed, 20 Nov 2019 09:58:34 +0000 (UTC)
-From:   "Mustafa Sani," <sanimustafa87@gmail.com>
-Reply-To: mustafasani281@gmail.com
-Message-ID: <737013925.2814914.1574243914906@mail.yahoo.com>
-Subject: My good friend,
+        id S1728157AbfKTJ7L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Nov 2019 04:59:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59876 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727124AbfKTJ7K (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:59:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9862569BA5;
+        Wed, 20 Nov 2019 09:59:08 +0000 (UTC)
+Subject: Re: [PATCH 3/4] scsi: sd: register request queue after
+ sd_revalidate_disk is done
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "Ewan D . Milne" <emilne@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bart.vanassche@wdc.com>
+References: <20191118103117.978-1-ming.lei@redhat.com>
+ <20191118103117.978-4-ming.lei@redhat.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <a5e67097-9c56-6cc7-37bf-fb704bfd95b9@suse.de>
+Date:   Wed, 20 Nov 2019 10:59:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191118103117.978-4-ming.lei@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 11/18/19 11:31 AM, Ming Lei wrote:
+> Prepare for improving SSD performance in the following patch, which
+> needs to read queue flag of QUEUE_FLAG_NONROT in IO path. So we have
+> to freeze queue before changing this flag in sd_revalidate_disk().
+> 
+> However, queue freezing becomes quite slow after the queue is registered
+> because RCU period is involved.
+> 
+> So delay registering queue after sd_revalidate_disk() is done for
+> avoiding slow queue freezing which will be added to sd_revalidate_disk()
+> in the following patch.
+> 
+> Cc: Sathya Prakash <sathya.prakash@broadcom.com>
+> Cc: Chaitra P B <chaitra.basappa@broadcom.com>
+> Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+> Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+> Cc: Ewan D. Milne <emilne@redhat.com>
+> Cc: Christoph Hellwig <hch@lst.de>,
+> Cc: Hannes Reinecke <hare@suse.de>
+> Cc: Bart Van Assche <bart.vanassche@wdc.com>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  drivers/scsi/sd.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 03163ac5fe95..0744c34468e1 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3368,12 +3368,14 @@ static int sd_probe(struct device *dev)
+>  	}
+>  
+>  	blk_pm_runtime_init(sdp->request_queue, dev);
+> -	device_add_disk(dev, gd, NULL);
+> +	device_add_disk_no_queue_reg(dev, gd);
+>  	if (sdkp->capacity)
+>  		sd_dif_config_host(sdkp);
+>  
+>  	sd_revalidate_disk(gd);
+>  
+> +	blk_register_queue(gd);
+> +
+>  	if (sdkp->security) {
+>  		sdkp->opal_dev = init_opal_dev(sdp, &sd_sec_submit);
+>  		if (sdkp->opal_dev)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
+Cheers,
 
-My good friend,
-
-I just want to know if you, can help me, to transfer the amount of ($6Million). After the transfer we have to share it, 50% for me, and 50% for you. Please let me know if you can help me for more information regarding the transfer. I hope you can work with me honestly?
-
-Thanks.
-
- Mustafa Sani,
+Hannes
+-- 
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
