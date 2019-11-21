@@ -2,98 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B86104863
-	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2019 03:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C968B104889
+	for <lists+linux-block@lfdr.de>; Thu, 21 Nov 2019 03:30:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfKUCAq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Nov 2019 21:00:46 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35841 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfKUCAq (ORCPT
+        id S1726722AbfKUCaV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Nov 2019 21:30:21 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40140 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbfKUCaV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:00:46 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k13so743587pgh.3
-        for <linux-block@vger.kernel.org>; Wed, 20 Nov 2019 18:00:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9xapPHDVf3PXGdJNv/Of7REbSrhUR9JDR9JGay/Sbz0=;
-        b=MhroK2m3cXwzUewkA6lyJHsjsIuZN7JmW6RfzTSbyx0cZfvoFkkibIuSjgfM4yu+aI
-         ISVuIgtLFPBgJX7EK7kUekT7vxwfR9I16GSMzU9GBsaXF04kifcQo/bLPeZ2BSMVQ95k
-         DfW/ApPqsSiC2WnRvG+7jXpOksDE8+STha3ko8LY8bPvAc6BKRLqOq4xnC90zR7vTjmx
-         wgv2Gy3mR1AzxDtdtb3XcypnT/+6dZNUn0OX06Q8ZL7FWL7SZFGsfWZZjKX0+Czp1xCm
-         fjFdT/HpqDCH+VKdL96h8RACb7wgO9t3YXiBxqbfYcebJS27mXGuwZRmuShh+/v2fjug
-         isRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9xapPHDVf3PXGdJNv/Of7REbSrhUR9JDR9JGay/Sbz0=;
-        b=iAx9wAa/7+4BdgWgcXIARbCpZ9vwiSwHCnbiEVlHnw0srX0kvI8gNiC2g5Ag1CtoRA
-         HvgFAYgwnfIT+pw7cvR3xF1aSkmURII86r4MOc97sxSA0sSqlJSYhjg5cA85xAghdBoS
-         yl1oeZ4RTg/NWMVqrgyRjR7pxx64YFmznHW+19h7J0mAmByON0fAaZkjz38Go+IOVgpe
-         ZTjKnC4lrFt4rG+L7+IPmo5CI/X5Oyj5y5MWiKTCmNtgXCDIos9aJfKVh0T7g1qH8RTa
-         mGeaC8AmyrROl4vU+UUkdVsUkRV3xoCq58YBoOP7yVCCfdJJFIXWZtB97Zt33Tg6gPU0
-         411A==
-X-Gm-Message-State: APjAAAV/8l0WUvCSjH5XBZzyb9QTHJcRcCS3KnFZvPTTgMx1z0QF7WaB
-        EYCgLIbTcWM6KjnoY0PM73w48A==
-X-Google-Smtp-Source: APXvYqzPCUUyrUhLNbEH09DScv2yuCoJodtIQUrm92K+ARqktL/H1Fjmtq72cnbqy5pOKRdhPJs2yA==
-X-Received: by 2002:aa7:82d8:: with SMTP id f24mr7583923pfn.55.1574301644181;
-        Wed, 20 Nov 2019 18:00:44 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id 193sm767514pfv.18.2019.11.20.18.00.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 18:00:43 -0800 (PST)
-Subject: Re: null_handle_cmd() doesn't initialize data when reading
-To:     Alexander Potapenko <glider@google.com>
-Cc:     linux-block@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Dmitriy Vyukov <dvyukov@google.com>
-References: <CAG_fn=VBHmBgqLi35tD27NRLH2tEZLH=Y+rTfZ3rKNz9ipG+jQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d204a9d7-3722-5e55-d6cc-3018e366981e@kernel.dk>
-Date:   Wed, 20 Nov 2019 16:12:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 21:30:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574303420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tV0z8tD74raQUE/RldsvuzKkMSOMH3lprBVwapvdajw=;
+        b=FmXa9fYmsETnZfgaihgEZci/zQ3TCdDp+mhUpp63c0zmvjGDlQoCYkzLjnXhEAG+AqY8ue
+        jCzgoOfKaBqHYtmHjd/Xt/Wv6ATSqYr38ES5kZixEqtR9fAKvX8XWSISmMYu6gNjuVEq+t
+        fS1EzV3xCC4raLa/GEzRhWZIgGofC3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-G54DyUyuOBKajZXgmttXbQ-1; Wed, 20 Nov 2019 21:24:10 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94285107ACC4;
+        Thu, 21 Nov 2019 02:24:07 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 674EB5E268;
+        Thu, 21 Nov 2019 02:23:58 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 10:23:53 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sumanesh Samanta <sumanesh.samanta@broadcom.com>
+Cc:     Ewan Milne <emilne@redhat.com>, axboe@kernel.dk,
+        bart.vanassche@wdc.com, hare@suse.de, hch@lst.de,
+        jejb@linux.ibm.com, Kashyap Desai <kashyap.desai@broadcom.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>
+Subject: Re: [PATCH 4/4] scsi: core: don't limit per-LUN queue depth for SSD
+Message-ID: <20191121022353.GH24548@ming.t460p>
+References: <c7c78e42173ad8bc6e8c775bf6e98f54@mail.gmail.com>
+ <20191121012148.GE24548@ming.t460p>
+ <CADbZ7Fqcx4rWLB7MMVj+J+9n0bMGENj-WZZijiOHN0WrL6OV0A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAG_fn=VBHmBgqLi35tD27NRLH2tEZLH=Y+rTfZ3rKNz9ipG+jQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CADbZ7Fqcx4rWLB7MMVj+J+9n0bMGENj-WZZijiOHN0WrL6OV0A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: G54DyUyuOBKajZXgmttXbQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/15/19 3:16 AM, Alexander Potapenko wrote:
-> Hi Jens,
-> 
-> I'm debugging an issue in nullb driver reported by KMSAN at QEMU startup.
-> There are numerous reports like the one below when checking nullb for
-> different partition types.
-> Basically, read_dev_sector() allocates a cache page which is then
-> wrapped into a bio and passed to the device driver, but never
-> initialized.
-> 
-> I've tracked the problem down to a call to null_handle_cmd(cmd,
-> /*sector*/0, /*nr_sectors*/8, /*op*/0).
-> Turns out all the if-branches in this function are skipped, so neither
-> of null_handle_throttled(), null_handle_flush(),
-> null_handle_badblocks(), null_handle_memory_backed(),
-> null_handle_zoned() is executed, and we proceed directly to
-> nullb_complete_cmd().
-> 
-> As a result, the pages read from the nullb device are never
-> initialized, at least at boot time.
-> How can we fix this?
-> 
-> This bug may also have something to do with
-> https://groups.google.com/d/topic/syzkaller-bugs/d0fmiL9Vi9k/discussion.
+On Wed, Nov 20, 2019 at 06:50:02PM -0700, Sumanesh Samanta wrote:
+> >>You just see large IO size from driver side or device side, and do you
+> >>know why the big size IO is submitted to driver? Block layer's IO merge
+> >>contributes a lot for that, and IO merge usually starts to work
+>=20
+> May be it contribute to some extent, but I do not think streaming
+> applications have any incentive/reason to give small IO. An
+> application like Netflix need to read as much data as soon as possible
+> and serve to customers, they have no reason to read in small chunks.
+> In fact, they read in huge chunks.
+> That is why sequential IO is normally large chunks and random IO (
+> which is more DB kind of operations ) is small IO.
+> Only exception I know of is database REDO logs, that are small
+> sequential IO, because there the DB is logging small transactions --
+> but they go to SSDs.
 
-Probably just want to have the read path actually memset() them to
-zero, or something like that.
+We can't cover all typical workloads here, and I can write a application
+easily to generate such sequential IO. Even though it is an unusual
+workloads or application, someone still may report it as one regression,
+so we can't risk to bypass .device_busy for HDD.
 
--- 
-Jens Axboe
+>=20
+> >>Yeah, that is why my patches just bypass sdev->device_busy for SSD, and
+> >>looks you misunderstood the idea behind the patches, right?
+>=20
+> No, I got the idea, I am just saying most high end controllers have an
+> IO size limit  , and even if the block layer merges IO, it does not
+> help, since they have to be broken to the max size the controller
+> supports. Also, most high end controllers have their own merging
+> logic, and hence not too much dependent on upper layer merging for
+> them
+
+If the controller's max size is exposed to block layer, block will
+make a proper size IO for controller. I believe all sane drivers do
+that.
+
+Anyway using per-LUN NONROT flag is flexible and reasonable, which
+won't need driver's change.=20
+
+
+Thanks,=20
+Ming
 
