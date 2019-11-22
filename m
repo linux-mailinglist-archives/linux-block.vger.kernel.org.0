@@ -2,37 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F041106140
-	for <lists+linux-block@lfdr.de>; Fri, 22 Nov 2019 06:55:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A1C7106565
+	for <lists+linux-block@lfdr.de>; Fri, 22 Nov 2019 07:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfKVFzG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 Nov 2019 00:55:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
+        id S1728182AbfKVFvd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 Nov 2019 00:51:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728706AbfKVFw7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:59 -0500
+        id S1726802AbfKVFvd (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C5232068F;
-        Fri, 22 Nov 2019 05:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3F72073F;
+        Fri, 22 Nov 2019 05:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401977;
-        bh=AkmH7/23k2qjTXz17Saidwk9VDL7TkNqlVi282KJW4M=;
+        s=default; t=1574401892;
+        bh=cE1PO+QmHaBe5myBtegunEdnraOxCVMCTh1gItlg7xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HnfRxW3Vw+L/z52IcCrpp/p5WO51yH3clAtrOLvbjOZ8j8TnLOAE2IRa1LuMeX9f0
-         MfsFLTVa2W6nVKvhUsbsfdqcEJUj7SzhqYbOn0OwHDSCd14wocl8lL8RE/ouzMLj9E
-         gUUjxJlj6ssTKVvQwNfZHjDCVIETmYE5vRoej29s=
+        b=zrtEukCoZN2xenMkX+M23pqmlskHC53quzMHKoT5agdE5Xrk4XKwElfB7NUZoD+ml
+         YcSU74J/zEEjzjuxTP3DEicp4RAMy8kH+OET7/sDzXSqGED14gXbquEBHr0hOnLVAd
+         uLHkY2UdgFzaqa1AilfvqZoiFJGqZv5hf9Gc5cB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Faiz Abbas <faiz_abbas@ti.com>,
-        linux-block@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 196/219] mmc: core: align max segment size with logical block size
-Date:   Fri, 22 Nov 2019 00:48:48 -0500
-Message-Id: <20191122054911.1750-189-sashal@kernel.org>
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 125/219] drbd: ignore "all zero" peer volume sizes in handshake
+Date:   Fri, 22 Nov 2019 00:47:37 -0500
+Message-Id: <20191122054911.1750-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -45,75 +43,114 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
 
-[ Upstream commit c53336c8f5f29043fded57912cc06c24e12613d7 ]
+[ Upstream commit 94c43a13b8d6e3e0dd77b3536b5e04a84936b762 ]
 
-Logical block size is the lowest possible block size that the storage
-device can address. Max segment size is often related with controller's
-DMA capability. And it is reasonable to align max segment size with
-logical block size.
+During handshake, if we are diskless ourselves, we used to accept any size
+presented by the peer.
 
-SDHCI sets un-aligned max segment size, and causes ADMA error, so
-fix it by aligning max segment size with logical block size.
+Which could be zero if that peer was just brought up and connected
+to us without having a disk attached first, in which case both
+peers would just "flip" their volume sizes.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-block@vger.kernel.org
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Now, even a diskless node will ignore "zero" sizes
+presented by a diskless peer.
+
+Also a currently Diskless Primary will refuse to shrink during handshake:
+it may be frozen, and waiting for a "suitable" local disk or peer to
+re-appear (on-no-data-accessible suspend-io). If the peer is smaller
+than what we used to be, it is not suitable.
+
+The logic for a diskless node during handshake is now supposed to be:
+believe the peer, if
+ - I don't have a current size myself
+ - we agree on the size anyways
+ - I do have a current size, am Secondary, and he has the only disk
+ - I do have a current size, am Primary, and he has the only disk,
+   which is larger than my current size
+
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/block.c | 6 ------
- drivers/mmc/core/queue.c | 9 ++++++++-
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 33 +++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index eee004fb3c3e3..527ab15c421f9 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2384,12 +2384,6 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 	snprintf(md->disk->disk_name, sizeof(md->disk->disk_name),
- 		 "mmcblk%u%s", card->host->index, subname ? subname : "");
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 3cdadf75c82da..c9e8d61dea248 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -3980,6 +3980,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	struct o_qlim *o = (connection->agreed_features & DRBD_FF_WSAME) ? p->qlim : NULL;
+ 	enum determine_dev_size dd = DS_UNCHANGED;
+ 	sector_t p_size, p_usize, p_csize, my_usize;
++	sector_t new_size, cur_size;
+ 	int ldsc = 0; /* local disk size changed */
+ 	enum dds_flags ddsf;
  
--	if (mmc_card_mmc(card))
--		blk_queue_logical_block_size(md->queue.queue,
--					     card->ext_csd.data_sector_size);
--	else
--		blk_queue_logical_block_size(md->queue.queue, 512);
--
- 	set_capacity(md->disk, size);
+@@ -3987,6 +3988,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	if (!peer_device)
+ 		return config_unknown_volume(connection, pi);
+ 	device = peer_device->device;
++	cur_size = drbd_get_capacity(device->this_bdev);
  
- 	if (mmc_host_cmd23(card->host)) {
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 18aae28845ec9..becc6594a8a47 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -355,6 +355,7 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
- {
- 	struct mmc_host *host = card->host;
- 	u64 limit = BLK_BOUNCE_HIGH;
-+	unsigned block_size = 512;
+ 	p_size = be64_to_cpu(p->d_size);
+ 	p_usize = be64_to_cpu(p->u_size);
+@@ -3997,7 +3999,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	device->p_size = p_size;
  
- 	if (mmc_dev(host)->dma_mask && *mmc_dev(host)->dma_mask)
- 		limit = (u64)dma_max_pfn(mmc_dev(host)) << PAGE_SHIFT;
-@@ -368,7 +369,13 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
- 	blk_queue_max_hw_sectors(mq->queue,
- 		min(host->max_blk_count, host->max_req_size / 512));
- 	blk_queue_max_segments(mq->queue, host->max_segs);
--	blk_queue_max_segment_size(mq->queue, host->max_seg_size);
-+
-+	if (mmc_card_mmc(card))
-+		block_size = card->ext_csd.data_sector_size;
-+
-+	blk_queue_logical_block_size(mq->queue, block_size);
-+	blk_queue_max_segment_size(mq->queue,
-+			round_down(host->max_seg_size, block_size));
+ 	if (get_ldev(device)) {
+-		sector_t new_size, cur_size;
+ 		rcu_read_lock();
+ 		my_usize = rcu_dereference(device->ldev->disk_conf)->disk_size;
+ 		rcu_read_unlock();
+@@ -4015,7 +4016,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		/* Never shrink a device with usable data during connect.
+ 		   But allow online shrinking if we are connected. */
+ 		new_size = drbd_new_dev_size(device, device->ldev, p_usize, 0);
+-		cur_size = drbd_get_capacity(device->this_bdev);
+ 		if (new_size < cur_size &&
+ 		    device->state.disk >= D_OUTDATED &&
+ 		    device->state.conn < C_CONNECTED) {
+@@ -4080,9 +4080,36 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		 *
+ 		 * However, if he sends a zero current size,
+ 		 * take his (user-capped or) backing disk size anyways.
++		 *
++		 * Unless of course he does not have a disk himself.
++		 * In which case we ignore this completely.
+ 		 */
++		sector_t new_size = p_csize ?: p_usize ?: p_size;
+ 		drbd_reconsider_queue_parameters(device, NULL, o);
+-		drbd_set_my_capacity(device, p_csize ?: p_usize ?: p_size);
++		if (new_size == 0) {
++			/* Ignore, peer does not know nothing. */
++		} else if (new_size == cur_size) {
++			/* nothing to do */
++		} else if (cur_size != 0 && p_size == 0) {
++			drbd_warn(device, "Ignored diskless peer device size (peer:%llu != me:%llu sectors)!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++		} else if (new_size < cur_size && device->state.role == R_PRIMARY) {
++			drbd_err(device, "The peer's device size is too small! (%llu < %llu sectors); demote me first!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++			conn_request_state(peer_device->connection, NS(conn, C_DISCONNECTING), CS_HARD);
++			return -EIO;
++		} else {
++			/* I believe the peer, if
++			 *  - I don't have a current size myself
++			 *  - we agree on the size anyways
++			 *  - I do have a current size, am Secondary,
++			 *    and he has the only disk
++			 *  - I do have a current size, am Primary,
++			 *    and he has the only disk,
++			 *    which is larger than my current size
++			 */
++			drbd_set_my_capacity(device, new_size);
++		}
+ 	}
  
- 	INIT_WORK(&mq->recovery_work, mmc_mq_recovery_handler);
- 	INIT_WORK(&mq->complete_work, mmc_blk_mq_complete_work);
+ 	if (get_ldev(device)) {
 -- 
 2.20.1
 
