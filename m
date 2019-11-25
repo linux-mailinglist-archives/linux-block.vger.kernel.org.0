@@ -2,626 +2,331 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A43AE10876B
-	for <lists+linux-block@lfdr.de>; Mon, 25 Nov 2019 05:22:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC2410896C
+	for <lists+linux-block@lfdr.de>; Mon, 25 Nov 2019 08:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfKYEUU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 Nov 2019 23:20:20 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9430 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfKYEUU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 Nov 2019 23:20:20 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddb56810000>; Sun, 24 Nov 2019 20:20:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 20:20:15 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 24 Nov 2019 20:20:15 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 04:20:15 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 25 Nov 2019 04:20:15 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ddb567e000b>; Sun, 24 Nov 2019 20:20:14 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
+        id S1725851AbfKYHtC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Nov 2019 02:49:02 -0500
+Received: from mga02.intel.com ([134.134.136.20]:6732 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfKYHtB (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:49:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 23:48:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
+   d="gz'50?scan'50,208,50";a="409535234"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Nov 2019 23:48:53 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iZ977-0003dW-3y; Mon, 25 Nov 2019 15:48:53 +0800
+Date:   Mon, 25 Nov 2019 15:47:56 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     kbuild-all@lists.01.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Jan Kara <jack@suse.cz>,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
         David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
         Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 19/19] mm, tree-wide: rename put_user_page*() to unpin_user_page*()
-Date:   Sun, 24 Nov 2019 20:20:11 -0800
-Message-ID: <20191125042011.3002372-20-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191125042011.3002372-1-jhubbard@nvidia.com>
-References: <20191125042011.3002372-1-jhubbard@nvidia.com>
+        linux-kselftest@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-rdma@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        linux-media@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-block@vger.kernel.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 07/19] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+Message-ID: <201911251525.Awsu7Kl2%lkp@intel.com>
+References: <20191125042011.3002372-8-jhubbard@nvidia.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574655617; bh=L30X02STdzs46l0dDtsMk0uHzlhbmBQK6c5RMaBXpAk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=h7X+z4BQUWt8vjhxC6a2Th4W2q2oCPUpb5eZB9cTAIE9Nz3/Qn/62P68hLTu1DnSE
-         moJwC2aCCkfpknpzWdfPIGdbPIDlAUmL4vZmmLDH/J9I4rlI2wLPjgzSjnHiVr1lY0
-         lylHVRSzfe5jHve47AcXHTUDWA7pE9mgYjiyvWpBDdH1kTs2Ufu3dm+TUtWjUKNZxA
-         of3rDzzPkPUnpCaPCNLyjI4S01l2NbY5MJ4syusBnP7wsMZw+oA+3LzBJ+sr8KeeMp
-         4Hi/06pSUb++n+H8BjNU+OU/0cWVjQJyhO15HgSB3zS0jZAprZP4spZ08UjWuW6uai
-         kBZ11wA9O3qYg==
+Content-Type: multipart/mixed; boundary="xgai4iybgx2i3zyn"
+Content-Disposition: inline
+In-Reply-To: <20191125042011.3002372-8-jhubbard@nvidia.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In order to provide a clearer, more symmetric API for pinning
-and unpinning DMA pages. This way, pin_user_pages*() calls
-match up with unpin_user_pages*() calls, and the API is a lot
-closer to being self-explanatory.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+--xgai4iybgx2i3zyn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi John,
+
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on rdma/for-next]
+[also build test ERROR on v5.4 next-20191122]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/John-Hubbard/pin_user_pages-reduced-risk-series-for-Linux-5-5/20191125-125637
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+config: sh-rsk7269_defconfig (attached as .config)
+compiler: sh4-linux-gcc (GCC) 7.4.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.4.0 make.cross ARCH=sh 
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   mm/gup.o: In function `pin_user_pages_remote':
+>> gup.c:(.text+0x4a4): undefined reference to `get_user_pages_remote'
+
 ---
- Documentation/core-api/pin_user_pages.rst   |  2 +-
- arch/powerpc/mm/book3s64/iommu_api.c        |  6 ++--
- drivers/gpu/drm/via/via_dmablit.c           |  4 +--
- drivers/infiniband/core/umem.c              |  2 +-
- drivers/infiniband/hw/hfi1/user_pages.c     |  2 +-
- drivers/infiniband/hw/mthca/mthca_memfree.c |  6 ++--
- drivers/infiniband/hw/qib/qib_user_pages.c  |  2 +-
- drivers/infiniband/hw/qib/qib_user_sdma.c   |  6 ++--
- drivers/infiniband/hw/usnic/usnic_uiom.c    |  2 +-
- drivers/infiniband/sw/siw/siw_mem.c         |  2 +-
- drivers/media/v4l2-core/videobuf-dma-sg.c   |  4 +--
- drivers/platform/goldfish/goldfish_pipe.c   |  4 +--
- drivers/vfio/vfio_iommu_type1.c             |  2 +-
- fs/io_uring.c                               |  4 +--
- include/linux/mm.h                          | 26 ++++++++---------
- mm/gup.c                                    | 32 ++++++++++-----------
- mm/process_vm_access.c                      |  4 +--
- net/xdp/xdp_umem.c                          |  2 +-
- 18 files changed, 56 insertions(+), 56 deletions(-)
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
 
-diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core=
--api/pin_user_pages.rst
-index 4f26637a5005..bba96428ade7 100644
---- a/Documentation/core-api/pin_user_pages.rst
-+++ b/Documentation/core-api/pin_user_pages.rst
-@@ -220,7 +220,7 @@ since the system was booted, via two new /proc/vmstat e=
-ntries: ::
-     /proc/vmstat/nr_foll_pin_requested
-=20
- Those are both going to show zero, unless CONFIG_DEBUG_VM is set. This is
--because there is a noticeable performance drop in put_user_page(), when th=
-ey
-+because there is a noticeable performance drop in unpin_user_page(), when =
-they
- are activated.
-=20
- References
-diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s6=
-4/iommu_api.c
-index 196383e8e5a9..dd7aa5a4f33c 100644
---- a/arch/powerpc/mm/book3s64/iommu_api.c
-+++ b/arch/powerpc/mm/book3s64/iommu_api.c
-@@ -168,7 +168,7 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, uns=
-igned long ua,
-=20
- free_exit:
- 	/* free the references taken */
--	put_user_pages(mem->hpages, pinned);
-+	unpin_user_pages(mem->hpages, pinned);
-=20
- 	vfree(mem->hpas);
- 	kfree(mem);
-@@ -211,8 +211,8 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_=
-mem_t *mem)
- 		if (!page)
- 			continue;
-=20
--		put_user_pages_dirty_lock(&mem->hpages[i], 1,
--					  MM_IOMMU_TABLE_GROUP_PAGE_DIRTY);
-+		unpin_user_pages_dirty_lock(&mem->hpages[i], 1,
-+					    MM_IOMMU_TABLE_GROUP_PAGE_DIRTY);
-=20
- 		mem->hpas[i] =3D 0;
- 	}
-diff --git a/drivers/gpu/drm/via/via_dmablit.c b/drivers/gpu/drm/via/via_dm=
-ablit.c
-index 37c5e572993a..719d036c9384 100644
---- a/drivers/gpu/drm/via/via_dmablit.c
-+++ b/drivers/gpu/drm/via/via_dmablit.c
-@@ -188,8 +188,8 @@ via_free_sg_info(struct pci_dev *pdev, drm_via_sg_info_=
-t *vsg)
- 		kfree(vsg->desc_pages);
- 		/* fall through */
- 	case dr_via_pages_locked:
--		put_user_pages_dirty_lock(vsg->pages, vsg->num_pages,
--					  (vsg->direction =3D=3D DMA_FROM_DEVICE));
-+		unpin_user_pages_dirty_lock(vsg->pages, vsg->num_pages,
-+					   (vsg->direction =3D=3D DMA_FROM_DEVICE));
- 		/* fall through */
- 	case dr_via_pages_alloc:
- 		vfree(vsg->pages);
-diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.=
-c
-index 39a1542e6707..663b5c785716 100644
---- a/drivers/infiniband/core/umem.c
-+++ b/drivers/infiniband/core/umem.c
-@@ -54,7 +54,7 @@ static void __ib_umem_release(struct ib_device *dev, stru=
-ct ib_umem *umem, int d
-=20
- 	for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->sg_nents, 0) {
- 		page =3D sg_page_iter_page(&sg_iter);
--		put_user_pages_dirty_lock(&page, 1, umem->writable && dirty);
-+		unpin_user_pages_dirty_lock(&page, 1, umem->writable && dirty);
- 	}
-=20
- 	sg_free_table(&umem->sg_head);
-diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/h=
-w/hfi1/user_pages.c
-index 9a94761765c0..3b505006c0a6 100644
---- a/drivers/infiniband/hw/hfi1/user_pages.c
-+++ b/drivers/infiniband/hw/hfi1/user_pages.c
-@@ -118,7 +118,7 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsig=
-ned long vaddr, size_t np
- void hfi1_release_user_pages(struct mm_struct *mm, struct page **p,
- 			     size_t npages, bool dirty)
- {
--	put_user_pages_dirty_lock(p, npages, dirty);
-+	unpin_user_pages_dirty_lock(p, npages, dirty);
-=20
- 	if (mm) { /* during close after signal, mm can be NULL */
- 		atomic64_sub(npages, &mm->pinned_vm);
-diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.c b/drivers/infiniba=
-nd/hw/mthca/mthca_memfree.c
-index 8269ab040c21..78a48aea3faf 100644
---- a/drivers/infiniband/hw/mthca/mthca_memfree.c
-+++ b/drivers/infiniband/hw/mthca/mthca_memfree.c
-@@ -482,7 +482,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mth=
-ca_uar *uar,
-=20
- 	ret =3D pci_map_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
- 	if (ret < 0) {
--		put_user_page(pages[0]);
-+		unpin_user_page(pages[0]);
- 		goto out;
- 	}
-=20
-@@ -490,7 +490,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mth=
-ca_uar *uar,
- 				 mthca_uarc_virt(dev, uar, i));
- 	if (ret) {
- 		pci_unmap_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
--		put_user_page(sg_page(&db_tab->page[i].mem));
-+		unpin_user_page(sg_page(&db_tab->page[i].mem));
- 		goto out;
- 	}
-=20
-@@ -556,7 +556,7 @@ void mthca_cleanup_user_db_tab(struct mthca_dev *dev, s=
-truct mthca_uar *uar,
- 		if (db_tab->page[i].uvirt) {
- 			mthca_UNMAP_ICM(dev, mthca_uarc_virt(dev, uar, i), 1);
- 			pci_unmap_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
--			put_user_page(sg_page(&db_tab->page[i].mem));
-+			unpin_user_page(sg_page(&db_tab->page[i].mem));
- 		}
- 	}
-=20
-diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniban=
-d/hw/qib/qib_user_pages.c
-index 7fc4b5f81fcd..342e3172ca40 100644
---- a/drivers/infiniband/hw/qib/qib_user_pages.c
-+++ b/drivers/infiniband/hw/qib/qib_user_pages.c
-@@ -40,7 +40,7 @@
- static void __qib_release_user_pages(struct page **p, size_t num_pages,
- 				     int dirty)
- {
--	put_user_pages_dirty_lock(p, num_pages, dirty);
-+	unpin_user_pages_dirty_lock(p, num_pages, dirty);
- }
-=20
- /**
-diff --git a/drivers/infiniband/hw/qib/qib_user_sdma.c b/drivers/infiniband=
-/hw/qib/qib_user_sdma.c
-index 1a3cc2957e3a..a67599b5a550 100644
---- a/drivers/infiniband/hw/qib/qib_user_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_user_sdma.c
-@@ -317,7 +317,7 @@ static int qib_user_sdma_page_to_frags(const struct qib=
-_devdata *dd,
- 		 * the caller can ignore this page.
- 		 */
- 		if (put) {
--			put_user_page(page);
-+			unpin_user_page(page);
- 		} else {
- 			/* coalesce case */
- 			kunmap(page);
-@@ -631,7 +631,7 @@ static void qib_user_sdma_free_pkt_frag(struct device *=
-dev,
- 			kunmap(pkt->addr[i].page);
-=20
- 		if (pkt->addr[i].put_page)
--			put_user_page(pkt->addr[i].page);
-+			unpin_user_page(pkt->addr[i].page);
- 		else
- 			__free_page(pkt->addr[i].page);
- 	} else if (pkt->addr[i].kvaddr) {
-@@ -706,7 +706,7 @@ static int qib_user_sdma_pin_pages(const struct qib_dev=
-data *dd,
- 	/* if error, return all pages not managed by pkt */
- free_pages:
- 	while (i < j)
--		put_user_page(pages[i++]);
-+		unpin_user_page(pages[i++]);
-=20
- done:
- 	return ret;
-diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/=
-hw/usnic/usnic_uiom.c
-index 600896727d34..bd9f944b68fc 100644
---- a/drivers/infiniband/hw/usnic/usnic_uiom.c
-+++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
-@@ -75,7 +75,7 @@ static void usnic_uiom_put_pages(struct list_head *chunk_=
-list, int dirty)
- 		for_each_sg(chunk->page_list, sg, chunk->nents, i) {
- 			page =3D sg_page(sg);
- 			pa =3D sg_phys(sg);
--			put_user_pages_dirty_lock(&page, 1, dirty);
-+			unpin_user_pages_dirty_lock(&page, 1, dirty);
- 			usnic_dbg("pa: %pa\n", &pa);
- 		}
- 		kfree(chunk);
-diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/si=
-w/siw_mem.c
-index e53b07dcfed5..e2061dc0b043 100644
---- a/drivers/infiniband/sw/siw/siw_mem.c
-+++ b/drivers/infiniband/sw/siw/siw_mem.c
-@@ -63,7 +63,7 @@ struct siw_mem *siw_mem_id2obj(struct siw_device *sdev, i=
-nt stag_index)
- static void siw_free_plist(struct siw_page_chunk *chunk, int num_pages,
- 			   bool dirty)
- {
--	put_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
-+	unpin_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
- }
-=20
- void siw_umem_release(struct siw_umem *umem, bool dirty)
-diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2=
--core/videobuf-dma-sg.c
-index 162a2633b1e3..13b65ed9e74c 100644
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -349,8 +349,8 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
- 	BUG_ON(dma->sglen);
-=20
- 	if (dma->pages) {
--		put_user_pages_dirty_lock(dma->pages, dma->nr_pages,
--					  dma->direction =3D=3D DMA_FROM_DEVICE);
-+		unpin_user_pages_dirty_lock(dma->pages, dma->nr_pages,
-+					    dma->direction =3D=3D DMA_FROM_DEVICE);
- 		kfree(dma->pages);
- 		dma->pages =3D NULL;
- 	}
-diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/g=
-oldfish/goldfish_pipe.c
-index 2a5901efecde..1ab207ec9c94 100644
---- a/drivers/platform/goldfish/goldfish_pipe.c
-+++ b/drivers/platform/goldfish/goldfish_pipe.c
-@@ -360,8 +360,8 @@ static int transfer_max_buffers(struct goldfish_pipe *p=
-ipe,
-=20
- 	*consumed_size =3D pipe->command_buffer->rw_params.consumed_size;
-=20
--	put_user_pages_dirty_lock(pipe->pages, pages_count,
--				  !is_write && *consumed_size > 0);
-+	unpin_user_pages_dirty_lock(pipe->pages, pages_count,
-+				    !is_write && *consumed_size > 0);
-=20
- 	mutex_unlock(&pipe->lock);
- 	return 0;
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type=
-1.c
-index 18bfc2fc8e6d..a177bf2c6683 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -310,7 +310,7 @@ static int put_pfn(unsigned long pfn, int prot)
- 	if (!is_invalid_reserved_pfn(pfn)) {
- 		struct page *page =3D pfn_to_page(pfn);
-=20
--		put_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
-+		unpin_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
- 		return 1;
- 	}
- 	return 0;
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 0f7898b1c4b0..c5eaaa04e4d6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4064,7 +4064,7 @@ static int io_sqe_buffer_unregister(struct io_ring_ct=
-x *ctx)
- 		struct io_mapped_ubuf *imu =3D &ctx->user_bufs[i];
-=20
- 		for (j =3D 0; j < imu->nr_bvecs; j++)
--			put_user_page(imu->bvec[j].bv_page);
-+			unpin_user_page(imu->bvec[j].bv_page);
-=20
- 		if (ctx->account_mem)
- 			io_unaccount_mem(ctx->user, imu->nr_bvecs);
-@@ -4209,7 +4209,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx =
-*ctx, void __user *arg,
- 			 * release any pages we did get
- 			 */
- 			if (pret > 0)
--				put_user_pages(pages, pret);
-+				unpin_user_pages(pages, pret);
- 			if (ctx->account_mem)
- 				io_unaccount_mem(ctx->user, nr_pages);
- 			kvfree(imu->bvec);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5fabbc5d10f3..96dd865e3fc9 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1036,27 +1036,27 @@ static inline void put_page(struct page *page)
- }
-=20
- /**
-- * put_user_page() - release a gup-pinned page
-+ * unpin_user_page() - release a gup-pinned page
-  * @page:            pointer to page to be released
-  *
-  * Pages that were pinned via pin_user_pages*() must be released via eithe=
-r
-- * put_user_page(), or one of the put_user_pages*() routines. This is so t=
-hat
-- * eventually such pages can be separately tracked and uniquely handled. I=
-n
-+ * unpin_user_page(), or one of the unpin_user_pages*() routines. This is =
-so
-+ * that eventually such pages can be separately tracked and uniquely handl=
-ed. In
-  * particular, interactions with RDMA and filesystems need special handlin=
-g.
-  *
-- * put_user_page() and put_page() are not interchangeable, despite this ea=
-rly
-- * implementation that makes them look the same. put_user_page() calls mus=
-t
-+ * unpin_user_page() and put_page() are not interchangeable, despite this =
-early
-+ * implementation that makes them look the same. unpin_user_page() calls m=
-ust
-  * be perfectly matched up with pin*() calls.
-  */
--static inline void put_user_page(struct page *page)
-+static inline void unpin_user_page(struct page *page)
- {
- 	put_page(page);
- }
-=20
--void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
--			       bool make_dirty);
-+void unpin_user_pages_dirty_lock(struct page **pages, unsigned long npages=
-,
-+				 bool make_dirty);
-=20
--void put_user_pages(struct page **pages, unsigned long npages);
-+void unpin_user_pages(struct page **pages, unsigned long npages);
-=20
- #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
- #define SECTION_IN_PAGE_FLAGS
-@@ -2586,7 +2586,7 @@ struct page *follow_page(struct vm_area_struct *vma, =
-unsigned long address,
- #define FOLL_ANON	0x8000	/* don't do file mappings */
- #define FOLL_LONGTERM	0x10000	/* mapping lifetime is indefinite: see below=
- */
- #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
--#define FOLL_PIN	0x40000	/* pages must be released via put_user_page() */
-+#define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
-=20
- /*
-  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with eac=
-h
-@@ -2621,7 +2621,7 @@ struct page *follow_page(struct vm_area_struct *vma, =
-unsigned long address,
-  * Direct IO). This lets the filesystem know that some non-file-system ent=
-ity is
-  * potentially changing the pages' data. In contrast to FOLL_GET (whose pa=
-ges
-  * are released via put_page()), FOLL_PIN pages must be released, ultimate=
-ly, by
-- * a call to put_user_page().
-+ * a call to unpin_user_page().
-  *
-  * FOLL_PIN is similar to FOLL_GET: both of these pin pages. They use diff=
-erent
-  * and separate refcounting mechanisms, however, and that means that each =
-has
-@@ -2629,7 +2629,7 @@ struct page *follow_page(struct vm_area_struct *vma, =
-unsigned long address,
-  *
-  *     FOLL_GET: get_user_pages*() to acquire, and put_page() to release.
-  *
-- *     FOLL_PIN: pin_user_pages*() to acquire, and put_user_pages to relea=
-se.
-+ *     FOLL_PIN: pin_user_pages*() to acquire, and unpin_user_pages to rel=
-ease.
-  *
-  * FOLL_PIN and FOLL_GET are mutually exclusive for a given function call.
-  * (The underlying pages may experience both FOLL_GET-based and FOLL_PIN-b=
-ased
-@@ -2639,7 +2639,7 @@ struct page *follow_page(struct vm_area_struct *vma, =
-unsigned long address,
-  * FOLL_PIN should be set internally by the pin_user_pages*() APIs, never
-  * directly by the caller. That's in order to help avoid mismatches when
-  * releasing pages: get_user_pages*() pages must be released via put_page(=
-),
-- * while pin_user_pages*() pages must be released via put_user_page().
-+ * while pin_user_pages*() pages must be released via unpin_user_page().
-  *
-  * Please see Documentation/vm/pin_user_pages.rst for more information.
-  */
-diff --git a/mm/gup.c b/mm/gup.c
-index ef1bfd374a11..1229a09e129b 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -52,7 +52,7 @@ static inline struct page *try_get_compound_head(struct p=
-age *page, int refs)
- }
-=20
- /**
-- * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned p=
-ages
-+ * unpin_user_pages_dirty_lock() - release and optionally dirty gup-pinned=
- pages
-  * @pages:  array of pages to be maybe marked dirty, and definitely releas=
-ed.
-  * @npages: number of pages in the @pages array.
-  * @make_dirty: whether to mark the pages dirty
-@@ -62,19 +62,19 @@ static inline struct page *try_get_compound_head(struct=
- page *page, int refs)
-  *
-  * For each page in the @pages array, make that page (or its head page, if=
- a
-  * compound page) dirty, if @make_dirty is true, and if the page was previ=
-ously
-- * listed as clean. In any case, releases all pages using put_user_page(),
-- * possibly via put_user_pages(), for the non-dirty case.
-+ * listed as clean. In any case, releases all pages using unpin_user_page(=
-),
-+ * possibly via unpin_user_pages(), for the non-dirty case.
-  *
-- * Please see the put_user_page() documentation for details.
-+ * Please see the unpin_user_page() documentation for details.
-  *
-  * set_page_dirty_lock() is used internally. If instead, set_page_dirty() =
-is
-  * required, then the caller should a) verify that this is really correct,
-  * because _lock() is usually required, and b) hand code it:
-- * set_page_dirty_lock(), put_user_page().
-+ * set_page_dirty_lock(), unpin_user_page().
-  *
-  */
--void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
--			       bool make_dirty)
-+void unpin_user_pages_dirty_lock(struct page **pages, unsigned long npages=
-,
-+				 bool make_dirty)
- {
- 	unsigned long index;
-=20
-@@ -85,7 +85,7 @@ void put_user_pages_dirty_lock(struct page **pages, unsig=
-ned long npages,
- 	 */
-=20
- 	if (!make_dirty) {
--		put_user_pages(pages, npages);
-+		unpin_user_pages(pages, npages);
- 		return;
- 	}
-=20
-@@ -113,21 +113,21 @@ void put_user_pages_dirty_lock(struct page **pages, u=
-nsigned long npages,
- 		 */
- 		if (!PageDirty(page))
- 			set_page_dirty_lock(page);
--		put_user_page(page);
-+		unpin_user_page(page);
- 	}
- }
--EXPORT_SYMBOL(put_user_pages_dirty_lock);
-+EXPORT_SYMBOL(unpin_user_pages_dirty_lock);
-=20
- /**
-- * put_user_pages() - release an array of gup-pinned pages.
-+ * unpin_user_pages() - release an array of gup-pinned pages.
-  * @pages:  array of pages to be marked dirty and released.
-  * @npages: number of pages in the @pages array.
-  *
-- * For each page in the @pages array, release the page using put_user_page=
-().
-+ * For each page in the @pages array, release the page using unpin_user_pa=
-ge().
-  *
-- * Please see the put_user_page() documentation for details.
-+ * Please see the unpin_user_page() documentation for details.
-  */
--void put_user_pages(struct page **pages, unsigned long npages)
-+void unpin_user_pages(struct page **pages, unsigned long npages)
- {
- 	unsigned long index;
-=20
-@@ -137,9 +137,9 @@ void put_user_pages(struct page **pages, unsigned long =
-npages)
- 	 * single operation to the head page should suffice.
- 	 */
- 	for (index =3D 0; index < npages; index++)
--		put_user_page(pages[index]);
-+		unpin_user_page(pages[index]);
- }
--EXPORT_SYMBOL(put_user_pages);
-+EXPORT_SYMBOL(unpin_user_pages);
-=20
- #ifdef CONFIG_MMU
- static struct page *no_page_table(struct vm_area_struct *vma,
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index fd20ab675b85..de41e830cdac 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -126,8 +126,8 @@ static int process_vm_rw_single_vec(unsigned long addr,
- 		pa +=3D pinned_pages * PAGE_SIZE;
-=20
- 		/* If vm_write is set, the pages need to be made dirty: */
--		put_user_pages_dirty_lock(process_pages, pinned_pages,
--					  vm_write);
-+		unpin_user_pages_dirty_lock(process_pages, pinned_pages,
-+					    vm_write);
- 	}
-=20
- 	return rc;
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index d071003b5e76..ac182c38f7b0 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -212,7 +212,7 @@ static int xdp_umem_map_pages(struct xdp_umem *umem)
-=20
- static void xdp_umem_unpin_pages(struct xdp_umem *umem)
- {
--	put_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
-+	unpin_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
-=20
- 	kfree(umem->pgs);
- 	umem->pgs =3D NULL;
---=20
-2.24.0
+--xgai4iybgx2i3zyn
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+G9HQ+MVog/4PrXqS7NK5AAA=
+
+--xgai4iybgx2i3zyn--
