@@ -2,174 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2D5A109AE4
-	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2019 10:14:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7675109B89
+	for <lists+linux-block@lfdr.de>; Tue, 26 Nov 2019 10:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfKZJO3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Nov 2019 04:14:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41714 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727464AbfKZJO2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:14:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E5C55BA49;
-        Tue, 26 Nov 2019 09:14:23 +0000 (UTC)
-From:   Hannes Reinecke <hare@suse.de>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        James Bottomley <james.bottomley@hansenpartnership.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        John Garry <john.garry@huawei.com>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 8/8] hpsa: switch to using blk-mq
-Date:   Tue, 26 Nov 2019 10:14:16 +0100
-Message-Id: <20191126091416.20052-9-hare@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191126091416.20052-1-hare@suse.de>
-References: <20191126091416.20052-1-hare@suse.de>
+        id S1727615AbfKZJyW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Nov 2019 04:54:22 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:45003 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfKZJyW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:54:22 -0500
+Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MIcux-1id3ni2ZFN-00Efhg; Tue, 26 Nov 2019 10:54:19 +0100
+Received: by mail-qv1-f50.google.com with SMTP id t5so162603qvs.5;
+        Tue, 26 Nov 2019 01:54:19 -0800 (PST)
+X-Gm-Message-State: APjAAAWytZ+TnxxhQykXakGeTpTnytGBlQEHkltdCYIT7uidqL9O9RpR
+        LtoZpb7GL+XGAGyPC6EZrA8NeMHu9b6emaj5Gww=
+X-Google-Smtp-Source: APXvYqzfzjkp9uCV/32ns/7FRgNOHtxQYJSAtQE1mAt193WKi70vgeZxBNUsgLiFbHYA3VpUR2G+JAWWe+LrlJHioYc=
+X-Received: by 2002:ad4:404e:: with SMTP id r14mr32738089qvp.4.1574762058335;
+ Tue, 26 Nov 2019 01:54:18 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
+ <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
+ <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
+ <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
+ <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
+ <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com> <1C0831B6-CA26-4794-9686-E7384713C756@linaro.org>
+In-Reply-To: <1C0831B6-CA26-4794-9686-E7384713C756@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 26 Nov 2019 10:54:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a27PLB_rXkxuyOuK_eKvSSi29fekebcwsoTRLSAOmRX+w@mail.gmail.com>
+Message-ID: <CAK8P3a27PLB_rXkxuyOuK_eKvSSi29fekebcwsoTRLSAOmRX+w@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Add MMC software queue support
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:F4qBgONcda6uvVnW/sY+/qgy/oA8tIrpZ0Ug69hENvuxR7e1QFZ
+ GVtk3336XAPu6j44gZNVR0aZaQJoGuEZuSyqxEvXnT8FPsS1cNLw7wIGwaN2GxXImb4Abem
+ Djva5NMFgIq4vAug39A6Ll0vwiqZll3nvDWp07/PZ6XSLtV81XvQev7D6LxiX72AjUZ735i
+ 4dTqGIrwkF4scyU7Uk1/g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9juBk/clAeQ=:7lxmgSuGXYgYG4mFNRV5ky
+ EgIhUJjBmo6Poe0zd7sQOSz2l86811OMt0m8yFWj7KRFGsb+VujbbnSar2cKGmIjxmS+DytkR
+ 76dOD4BPiks6uthQ6HYMwChaX4TAeXmy+cLcObZnSfwTjRHkbfJvxUuew87SJE2VylnVFk5nj
+ jpJ5K4AZbjaimY75DynryB7ii95yVWLSQqrynPF/oK199NqNNanhUCfFI6sFLakboRbGOVNva
+ XMUj/musrBWWwuxomKYcv2ckpIQlKkpUZDxKb4PV/VmlPAsb6HzPLzgshxHxxxPwj+0qFayDU
+ ndsNHh1QAWDuGdMjZVrjXC6o9xK3aR/ZfHG2PI6BICWBBVxut/86PbWnAWvvH96pO3soj+eU2
+ 6dnFMWrVZasYSUZaJTRljU8uIdtULTYpjQSwFxtsLLliJMtR1WDaxSy+U0zLdA4z3fXeTChAf
+ Qfg4jJZbuBa+gaGOtZD/emGzYQBuvMJWxaa4qMl2l8PEFE+fimeF353Ah39QZ/5P+fXjnvAuk
+ zh4k17/dD3kq9muONF2BnovnjZR6KcM3VXOpzqXnqReHSKi+EAVJfWFj5D6V/gfi4Xku10GDu
+ K8u+Rp83WUgDnAizXOZSLb/MMSrPyYVqNQ3aIJxrg0kDrFJR+XcJ+QS+9OOReGlntRua799iw
+ s1IwVejyxC5PTw0y0isACEIDmz0xcvCVTBDuwPNMMVn7BwJ8bJUJoTnVZrnMXDVBMvN8gt15W
+ JbraY1uRYr5Ty7Mpk1vlYZ5znBWdx3+pH4bdkvUoLnTkD5Sd7EskT0wSWxDJt7uax8ykeKyIT
+ esA+l870E6mQBPG1XinvPGF+AY+yP8MtLbBzeKmpS21ur5vazgZyv1+naqfDKKM5fa5jzdYb8
+ 3FP76n/dLJqIRxyyqhxg==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Enable host_tagset and switch to using blk-mq.
+On Tue, Nov 26, 2019 at 8:41 AM Paolo Valente <paolo.valente@linaro.org> wrote:
+> > Il giorno 22 nov 2019, alle ore 10:50, Arnd Bergmann <arnd@arndb.de> ha scritto:
+> > On Mon, Nov 18, 2019 at 11:04 AM (Exiting) Baolin Wang <baolin.wang@linaro.org> wrote:
+> > Paolo, can you comment on why this is currently done, or if it can
+> > be changed? It seems to me that sending multiple requests at
+> > once would also have a significant benefit on the per-request overhead
+> > on NVMe devices with with bfq.
+> >
+>
+> Hi,
+> actually, "one request dispatched at a time" is not a peculiarity of
+> bfq.  Any scheduler can provide only one request at a time, with the
+> current blk-mq API for I/O schedulers.
+>
+> Yet, when it is time to refill an hardware queue, blk-mq pulls as many
+> requests as it deems appropriate from the scheduler, by invoking the
+> latter multiple times.  See blk_mq_do_dispatch_sched() in
+> block/blk-mq-sched.c.
+>
+> I don't know where the glitch for MMC is with respect to this scheme.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
----
- drivers/scsi/hpsa.c | 44 +++++++-------------------------------------
- drivers/scsi/hpsa.h |  1 -
- 2 files changed, 7 insertions(+), 38 deletions(-)
+Right, this is what is puzzling me as well: in both blk_mq_do_dispatch_sched()
+and blk_mq_do_dispatch_ctx(), we seem to always take one request from
+the scheduler and dispatch it to the device, regardless of the driver or
+the scheduler, so there should only ever be one request in the local list.
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index ac39ed79ccaa..2b811c981b43 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -974,6 +974,7 @@ static struct scsi_host_template hpsa_driver_template = {
- 	.shost_attrs = hpsa_shost_attrs,
- 	.max_sectors = 2048,
- 	.no_write_same = 1,
-+	.host_tagset = 1,
- };
- 
- static inline u32 next_command(struct ctlr_info *h, u8 q)
-@@ -1138,12 +1139,14 @@ static void dial_up_lockup_detection_on_fw_flash_complete(struct ctlr_info *h,
- static void __enqueue_cmd_and_start_io(struct ctlr_info *h,
- 	struct CommandList *c, int reply_queue)
- {
-+	u32 blk_tag = blk_mq_unique_tag(c->scsi_cmd->request);
-+
- 	dial_down_lockup_detection_during_fw_flash(h, c);
- 	atomic_inc(&h->commands_outstanding);
- 	if (c->device)
- 		atomic_inc(&c->device->commands_outstanding);
- 
--	reply_queue = h->reply_map[raw_smp_processor_id()];
-+	reply_queue = blk_mq_unique_tag_to_hwq(blk_tag);
- 	switch (c->cmd_type) {
- 	case CMD_IOACCEL1:
- 		set_ioaccel1_performant_mode(h, c, reply_queue);
-@@ -5628,8 +5631,6 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
- 	/* Get the ptr to our adapter structure out of cmd->host. */
- 	h = sdev_to_hba(cmd->device);
- 
--	BUG_ON(cmd->request->tag < 0);
--
- 	dev = cmd->device->hostdata;
- 	if (!dev) {
- 		cmd->result = DID_NO_CONNECT << 16;
-@@ -5805,7 +5806,7 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
- 	sh->hostdata[0] = (unsigned long) h;
- 	sh->irq = pci_irq_vector(h->pdev, 0);
- 	sh->unique_id = sh->irq;
--
-+	sh->nr_hw_queues = h->msix_vectors > 0 ? h->msix_vectors : 1;
- 	h->scsi_host = sh;
- 	return 0;
- }
-@@ -5831,7 +5832,8 @@ static int hpsa_scsi_add_host(struct ctlr_info *h)
-  */
- static int hpsa_get_cmd_index(struct scsi_cmnd *scmd)
- {
--	int idx = scmd->request->tag;
-+	u32 blk_tag = blk_mq_unique_tag(scmd->request);
-+	int idx = blk_mq_unique_tag_to_tag(blk_tag);
- 
- 	if (idx < 0)
- 		return idx;
-@@ -7431,26 +7433,6 @@ static void hpsa_disable_interrupt_mode(struct ctlr_info *h)
- 	h->msix_vectors = 0;
- }
- 
--static void hpsa_setup_reply_map(struct ctlr_info *h)
--{
--	const struct cpumask *mask;
--	unsigned int queue, cpu;
--
--	for (queue = 0; queue < h->msix_vectors; queue++) {
--		mask = pci_irq_get_affinity(h->pdev, queue);
--		if (!mask)
--			goto fallback;
--
--		for_each_cpu(cpu, mask)
--			h->reply_map[cpu] = queue;
--	}
--	return;
--
--fallback:
--	for_each_possible_cpu(cpu)
--		h->reply_map[cpu] = 0;
--}
--
- /* If MSI/MSI-X is supported by the kernel we will try to enable it on
-  * controllers that are capable. If not, we use legacy INTx mode.
-  */
-@@ -7847,9 +7829,6 @@ static int hpsa_pci_init(struct ctlr_info *h)
- 	if (err)
- 		goto clean1;
- 
--	/* setup mapping between CPU and reply queue */
--	hpsa_setup_reply_map(h);
--
- 	err = hpsa_pci_find_memory_BAR(h->pdev, &h->paddr);
- 	if (err)
- 		goto clean2;	/* intmode+region, pci */
-@@ -8575,7 +8554,6 @@ static struct workqueue_struct *hpsa_create_controller_wq(struct ctlr_info *h,
- 
- static void hpda_free_ctlr_info(struct ctlr_info *h)
- {
--	kfree(h->reply_map);
- 	kfree(h);
- }
- 
-@@ -8584,14 +8562,6 @@ static struct ctlr_info *hpda_alloc_ctlr_info(void)
- 	struct ctlr_info *h;
- 
- 	h = kzalloc(sizeof(*h), GFP_KERNEL);
--	if (!h)
--		return NULL;
--
--	h->reply_map = kcalloc(nr_cpu_ids, sizeof(*h->reply_map), GFP_KERNEL);
--	if (!h->reply_map) {
--		kfree(h);
--		return NULL;
--	}
- 	return h;
- }
- 
-diff --git a/drivers/scsi/hpsa.h b/drivers/scsi/hpsa.h
-index f8c88fc7b80a..ea4a609e3eb7 100644
---- a/drivers/scsi/hpsa.h
-+++ b/drivers/scsi/hpsa.h
-@@ -161,7 +161,6 @@ struct bmic_controller_parameters {
- #pragma pack()
- 
- struct ctlr_info {
--	unsigned int *reply_map;
- 	int	ctlr;
- 	char	devname[8];
- 	char    *product_name;
--- 
-2.16.4
+Yet, both the blk_mq_dispatch_rq_list() function and the NVMe driver
+appear to be written based on the idea that there are multiple entries
+in this list. The one place that I see putting multiple requests on the
+local list before dispatching them is the end of
+blk_mq_sched_dispatch_requests():
 
+        if (!list_empty(&rq_list)) {
+              ...
+                }
+        } else if (has_sched_dispatch) {
+                blk_mq_do_dispatch_sched(hctx);
+        } else if (hctx->dispatch_busy) {
+                /* dequeue request one by one from sw queue if queue is busy */
+                blk_mq_do_dispatch_ctx(hctx);
+        } else {
+->             blk_mq_flush_busy_ctxs(hctx, &rq_list);        <----
+                blk_mq_dispatch_rq_list(q, &rq_list, false);
+        }
+
+So as you said, if we use an elevator (has_sched_dispatch == true),
+we only get one request, but without an elevator, we get into this
+optimized path.
+
+Could we perhaps change the ops.dispatch_request() function to pass
+down the list as in https://paste.ubuntu.com/p/MfSRwKqFCs/ ?
+
+      Arnd
