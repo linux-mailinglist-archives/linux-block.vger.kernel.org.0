@@ -2,161 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0454F10C6DA
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2019 11:39:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBE610C839
+	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2019 12:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfK1Kis (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Nov 2019 05:38:48 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7174 "EHLO huawei.com"
+        id S1726281AbfK1Lxf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Nov 2019 06:53:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45362 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726133AbfK1Kir (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:38:47 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 580AC7EBE1F7FFC1E90C;
-        Thu, 28 Nov 2019 18:38:45 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 28 Nov 2019
- 18:38:35 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <sunke32@huawei.com>, <josef@toxicpanda.com>
-CC:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <nbd@other.debian.org>, <linux-kernel@vger.kernel.org>,
-        <mchristi@redhat.com>
-Subject: [PATCH] nbd: fix potential deadlock in nbd_config_put()
-Date:   Thu, 28 Nov 2019 18:45:51 +0800
-Message-ID: <1574937951-92828-1-git-send-email-sunke32@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726191AbfK1Lxe (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 28 Nov 2019 06:53:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 25474AF37;
+        Thu, 28 Nov 2019 11:53:33 +0000 (UTC)
+From:   Roman Penyaev <rpenyaev@suse.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Roman Penyaev <rpenyaev@suse.de>
+Subject: [PATCH 1/1] io_uring: add mapping support for NOMMU archs
+Date:   Thu, 28 Nov 2019 12:53:22 +0100
+Message-Id: <20191128115322.416956-1-rpenyaev@suse.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I got a deadlock report from syzkaller:
+That is a bit weird scenario but I find it interesting to run fio loads
+using LKL linux, where MMU is disabled.  Probably other real archs which
+run uClinux can also benefit from this patch.
 
-[  234.427696] ============================================
-[  234.428327] WARNING: possible recursive locking detected
-[  234.429011] 5.4.0-rc4+ #1 Not tainted
-[  234.429528] --------------------------------------------
-[  234.430162] kworker/u9:0/894 is trying to acquire lock:
-[  234.430911] ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: flush_workqueue+0xbc/0xfe8
-[  234.432330]
-[  234.432330] but task is already holding lock:
-[  234.432927] ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: process_one_work+0x6a0/0x17e8
-[  234.433983]
-[  234.433983] other info that might help us debug this:
-[  234.434615]  Possible unsafe locking scenario:
-[  234.434615]
-[  234.435263]        CPU0
-[  234.435613]        ----
-[  234.436019]   lock((wq_completion)knbd0-recv);
-[  234.436521]   lock((wq_completion)knbd0-recv);
-[  234.437166]
-[  234.437166]  *** DEADLOCK ***
-[  234.437166]
-[  234.437763]  May be due to missing lock nesting notation
-[  234.437763]
-[  234.438559] 3 locks held by kworker/u9:0/894:
-[  234.439040]  #0: ffff0000d3aca128 ((wq_completion)knbd0-recv){+.+.}, at: process_one_work+0x6a0/0x17e8
-[  234.440185]  #1: ffff0000d344fd50 ((work_completion)(&args->work)){+.+.}, at: process_one_work+0x6a0/0x17e8
-[  234.442209]  #2: ffff0000d723cd78 (&nbd->config_lock){+.+.}, at: refcount_dec_and_mutex_lock+0x5c/0x128
-[  234.443380]
-[  234.443380] stack backtrace:
-[  234.444271] CPU: 3 PID: 894 Comm: kworker/u9:0 Not tainted 5.4.0-rc4+ #1
-[  234.444989] Hardware name: linux,dummy-virt (DT)
-[  234.446077] Workqueue: knbd0-recv recv_work
-[  234.446909] Call trace:
-[  234.447372]  dump_backtrace+0x0/0x358
-[  234.447877]  show_stack+0x28/0x38
-[  234.448347]  dump_stack+0x15c/0x1ec
-[  234.448838]  __lock_acquire+0x12ec/0x2f78
-[  234.449474]  lock_acquire+0x180/0x590
-[  234.450075]  flush_workqueue+0x104/0xfe8
-[  234.450587]  drain_workqueue+0x164/0x390
-[  234.451090]  destroy_workqueue+0x30/0x560
-[  234.451598]  nbd_config_put+0x308/0x700
-[  234.452093]  recv_work+0x198/0x1f0
-[  234.452556]  process_one_work+0x7ac/0x17e8
-[  234.453189]  worker_thread+0x36c/0xb70
-[  234.453788]  kthread+0x2f4/0x378
-[  234.454257]  ret_from_fork+0x10/0x18
-
-The root cause is recv_work() is the last one to drop the config
-ref and try to destroy the workqueue from inside the work queue.
-
-There are two ways to fix the bug. The first way is flushing the
-workqueue before dropping the initial refcount and making sure
-recv_work() will not be the last owner of nbd_config. However it
-is hard for ioctl interface. Because nbd_clear_sock_ioctl() may
-not be invoked, so we need to flush the workqueue in nbd_release()
-and that will lead to another deadlock because recv_work can not
-exit from nbd_read_stat() loop.
-
-The second way is using another work to put nbd_config asynchronously
-for recv_work().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 ---
- drivers/block/nbd.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 57 +++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 51 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 5753246..e7685a3 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -110,6 +110,7 @@ struct nbd_device {
- 	refcount_t config_refs;
- 	refcount_t refs;
- 	struct nbd_config *config;
-+	struct work_struct config_release;
- 	struct mutex config_lock;
- 	struct gendisk *disk;
- 	struct workqueue_struct *recv_workq;
-@@ -152,6 +153,7 @@ static int part_shift;
- static int nbd_dev_dbg_init(struct nbd_device *nbd);
- static void nbd_dev_dbg_close(struct nbd_device *nbd);
- static void nbd_config_put(struct nbd_device *nbd);
-+static void nbd_config_put_async(struct nbd_device *nbd);
- static void nbd_connect_reply(struct genl_info *info, int index);
- static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info);
- static void nbd_dead_link_work(struct work_struct *work);
-@@ -789,7 +791,7 @@ static void recv_work(struct work_struct *work)
- 	}
- 	atomic_dec(&config->recv_threads);
- 	wake_up(&config->recv_wq);
--	nbd_config_put(nbd);
-+	nbd_config_put_async(nbd);
- 	kfree(args);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8a0381f1a43b..ebe9f9e6e81b 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3536,12 +3536,11 @@ static int io_uring_release(struct inode *inode, struct file *file)
+ 	return 0;
  }
  
-@@ -1222,6 +1224,22 @@ static void nbd_config_put(struct nbd_device *nbd)
- 	}
- }
- 
-+static void nbd_config_release_work(struct work_struct *work)
-+{
-+	struct nbd_device *nbd = container_of(work, struct nbd_device,
-+						   config_release);
-+	nbd_config_put(nbd);
-+}
-+
-+static void nbd_config_put_async(struct nbd_device *nbd)
-+{
-+	if (refcount_dec_not_one(&nbd->config_refs))
-+		return;
-+
-+	INIT_WORK(&nbd->config_release, nbd_config_release_work);
-+	schedule_work(&nbd->config_release);
-+}
-+
- static int nbd_start_device(struct nbd_device *nbd)
+-static int io_uring_mmap(struct file *file, struct vm_area_struct *vma)
++static void *io_uring_validate_mmap_request(struct file *file,
++					    loff_t pgoff, size_t sz)
  {
- 	struct nbd_config *config = nbd->config;
+-	loff_t offset = (loff_t) vma->vm_pgoff << PAGE_SHIFT;
+-	unsigned long sz = vma->vm_end - vma->vm_start;
+ 	struct io_ring_ctx *ctx = file->private_data;
+-	unsigned long pfn;
++	loff_t offset = pgoff << PAGE_SHIFT;
+ 	struct page *page;
+ 	void *ptr;
+ 
+@@ -3554,17 +3553,59 @@ static int io_uring_mmap(struct file *file, struct vm_area_struct *vma)
+ 		ptr = ctx->sq_sqes;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	page = virt_to_head_page(ptr);
+ 	if (sz > page_size(page))
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
++
++	return ptr;
++}
++
++#ifdef CONFIG_MMU
++
++static int io_uring_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	size_t sz = vma->vm_end - vma->vm_start;
++	unsigned long pfn;
++	void *ptr;
++
++	ptr = io_uring_validate_mmap_request(file, vma->vm_pgoff, sz);
++	if (IS_ERR(ptr))
++		return PTR_ERR(ptr);
+ 
+ 	pfn = virt_to_phys(ptr) >> PAGE_SHIFT;
+ 	return remap_pfn_range(vma, vma->vm_start, pfn, sz, vma->vm_page_prot);
+ }
+ 
++#else /* !CONFIG_MMU */
++
++static int io_uring_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	return vma->vm_flags & (VM_SHARED | VM_MAYSHARE) ? 0 : -EINVAL;
++}
++
++static unsigned int io_uring_nommu_mmap_capabilities(struct file *file)
++{
++	return NOMMU_MAP_DIRECT | NOMMU_MAP_READ | NOMMU_MAP_WRITE;
++}
++
++static unsigned long io_uring_nommu_get_unmapped_area(struct file *file,
++	unsigned long addr, unsigned long len,
++	unsigned long pgoff, unsigned long flags)
++{
++	void *ptr;
++
++	ptr = io_uring_validate_mmap_request(file, pgoff, len);
++	if (IS_ERR(ptr))
++		return PTR_ERR(ptr);
++
++	return (unsigned long) ptr;
++}
++
++#endif /* !CONFIG_MMU */
++
+ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 		u32, min_complete, u32, flags, const sigset_t __user *, sig,
+ 		size_t, sigsz)
+@@ -3639,6 +3680,10 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ static const struct file_operations io_uring_fops = {
+ 	.release	= io_uring_release,
+ 	.mmap		= io_uring_mmap,
++#ifndef CONFIG_MMU
++	.get_unmapped_area = io_uring_nommu_get_unmapped_area,
++	.mmap_capabilities = io_uring_nommu_mmap_capabilities,
++#endif
+ 	.poll		= io_uring_poll,
+ 	.fasync		= io_uring_fasync,
+ };
 -- 
-2.7.4
+2.24.0
 
