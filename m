@@ -2,161 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A23C910CF72
-	for <lists+linux-block@lfdr.de>; Thu, 28 Nov 2019 22:12:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39F4210D02F
+	for <lists+linux-block@lfdr.de>; Fri, 29 Nov 2019 01:26:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfK1VM3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Nov 2019 16:12:29 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39429 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfK1VM0 (ORCPT
+        id S1726656AbfK2A0B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Nov 2019 19:26:01 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31530 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726655AbfK2A0A (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Nov 2019 16:12:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so29515744wrt.6;
-        Thu, 28 Nov 2019 13:12:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=OJIbPjHQmKLscXvEELpJQJK3dKB4Msg/Vy9NKsHE9co=;
-        b=oScINBvjs475mEFUHeEgMihefU3ksmRy37nar6Vl5ofyc3H8GsvODLgyv7EbjbTTAu
-         C7qJftZnPwY8JsCeJ54p3BT0xdQc0lP3hqzPV1Sb1IgFn6s+wrjbpdUIHs8+VERyREG/
-         YQxYsQ5Gvlv9EPlyx425Fx8oVieuiTLqKwP/nkg59M4nixZKMdsN+MnEoSGSN2Q2GG5x
-         BXw708vtdD/OMP5J0g4wpWghf9ueR4unYLV1QdQRcpEPZWtG3jiAAZyasSBXa3y4Ibq2
-         9eLm8uiT0aAXlBX4TWK6dTAHADdQYzpgLPJY5TTKsWWfAaiFEU+Eypxy8NosMsFMKrNj
-         9OZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OJIbPjHQmKLscXvEELpJQJK3dKB4Msg/Vy9NKsHE9co=;
-        b=e75Fbj1SkZ2y6noyFotdFmY9w6x3EEBWeVRm+iG18GnHBI4w2W6jtjbaZe6DFFKutt
-         uQrlVRwXVPIZVZa7i3ttugackS3x9WnHn0ofNwJxi3ojDuuzOHeXMWrgBO5CwP8HH+tu
-         LhiYTNsp5C5SS5yZk4bPciJH3rl05gurDVB0H5TT4vUw9NYO9DnS/iA2xVE/UnEixCvB
-         goP1uYHQyowDrsqZijS2K6IOuajTSMO6t8LGqb52ud16f5N+JTiLAgfPV8KRwy5ERCm1
-         CRrF6Z/L+YcPN0su8+LjnIujcGUCtiq0j/XnkItWlNIp5UdXs/0BXmQBKavS1STgfhH2
-         Y6cg==
-X-Gm-Message-State: APjAAAXIQKFplENd94lggtxU6ryjPxoCtrvDGTDchaAYdkzLLLjwd4ii
-        I7Gu91hrNfpr8D886XjrxhU=
-X-Google-Smtp-Source: APXvYqywCK1v1R526VWzc1R7MqbdJ8g7i/DSrkXD9DaShCzlSMYNArDB3n7VzKCAm4r2B0I3W65amQ==
-X-Received: by 2002:adf:dc02:: with SMTP id t2mr8725230wri.39.1574975543344;
-        Thu, 28 Nov 2019 13:12:23 -0800 (PST)
-Received: from localhost.localdomain ([109.126.143.74])
-        by smtp.gmail.com with ESMTPSA id l26sm11620809wmj.48.2019.11.28.13.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2019 13:12:22 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] blk-mq: optimise blk_mq_flush_plug_list()
-Date:   Fri, 29 Nov 2019 00:11:55 +0300
-Message-Id: <021a4aad9f3f9ee13661006e945d642eafd69d9d.1574974577.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1574974577.git.asml.silence@gmail.com>
-References: <cover.1574974577.git.asml.silence@gmail.com>
+        Thu, 28 Nov 2019 19:26:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574987158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P07r2iHQlRL7YpE8GyJm4hL/1kEs3SHdvQU2XugBgys=;
+        b=fZVtPNidQzqlJY0JOZ2k2+gMOCOnN2bwJU2pctlRbkZmuVkzdZsQhBhlZo2B1vfgp/0F4P
+        E4LCzsx4JpjrefUZQzUXQXFnRZ3utFWq8TCPuW8qtd7K46qkN/YsW8Jqg4hXrf0oWJqCFd
+        2dCIn4jjQLbpNdljMTBFKLni7nA/st0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-ajoAp75nOeaYXd9gMFLSOA-1; Thu, 28 Nov 2019 19:25:55 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E67721803818;
+        Fri, 29 Nov 2019 00:25:53 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BAAB5D717;
+        Fri, 29 Nov 2019 00:25:44 +0000 (UTC)
+Date:   Fri, 29 Nov 2019 08:25:40 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        James Bottomley <james.bottomley@hansenpartnership.com>,
+        Bart van Assche <bvanassche@acm.org>,
+        John Garry <john.garry@huawei.com>, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Kashyap Desai <kashyap.desai@broadcom.com>
+Subject: Re: [PATCH 4/8] blk-mq: Facilitate a shared sbitmap per tagset
+Message-ID: <20191129002540.GA1829@ming.t460p>
+References: <20191126091416.20052-1-hare@suse.de>
+ <20191126091416.20052-5-hare@suse.de>
+ <20191126110527.GE32135@ming.t460p>
+ <8a10e2f0-bbdc-8b47-a118-0fd7837ef44e@suse.de>
+ <20191126155445.GB17602@ming.t460p>
+ <5561a568-a559-fee8-83aa-449befedae47@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5561a568-a559-fee8-83aa-449befedae47@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: ajoAp75nOeaYXd9gMFLSOA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of using list_del_init() in a loop, that generates a lot of
-unnecessary memory read/writes, iterate from the first request of a
-batch and cut out a sublist with list_cut_before().
+On Wed, Nov 27, 2019 at 06:02:54PM +0100, Hannes Reinecke wrote:
+> On 11/26/19 4:54 PM, Ming Lei wrote:
+> > On Tue, Nov 26, 2019 at 12:27:50PM +0100, Hannes Reinecke wrote:
+> > > On 11/26/19 12:05 PM, Ming Lei wrote:
+> [ .. ]
+> > > >  From performance viewpoint, all hctx belonging to this request que=
+ue should
+> > > > share one scheduler tagset in case of BLK_MQ_F_TAG_HCTX_SHARED, cau=
+se
+> > > > driver tag queue depth isn't changed.
+> > > >=20
+> > > Hmm. Now you get me confused.
+> > > In an earlier mail you said:
+> > >=20
+> > > > This kind of sharing is wrong, sched tags should be request
+> > > > queue wide instead of tagset wide, and each request queue has
+> > > > its own & independent scheduler queue.
+> > >=20
+> > > as in v2 we _had_ shared scheduler tags, too.
+> > > Did I misread your comment above?
+> >=20
+> > Yes, what I meant is that we can't share sched tags in tagset wide.
+> >=20
+> > Now I mean we should share sched tags among all hctxs in same request
+> > queue, and I believe I have described it clearly.
+> >=20
+> I wonder if this makes a big difference; in the end, scheduler tags are
+> primarily there to allow the scheduler to queue more requests, and
+> potentially merge them. These tags are later converted into 'real' ones v=
+ia
+> blk_mq_get_driver_tag(), and only then the resource limitation takes hold=
+.
+> Wouldn't it be sufficient to look at the number of outstanding commands p=
+er
+> queue when getting a scheduler tag, and not having to implement yet anoth=
+er
+> bitmap?
 
-Apart from removing the list node initialisation part, this is more
-register-friendly, and the assembly uses the stack less intensively.
+Firstly too much((nr_hw_queues - 1) times) memory is wasted. Secondly IO
+latency could be increased by too deep scheduler queue depth. Finally CPU
+could be wasted in the retrying of running busy hw queue.
 
-list_empty() at the beginning is done with hope, that the compiler can
-optimise out the same check in the following list_splice_init().
+Wrt. driver tags, this patch may be worse, given the average limit for
+each LUN is reduced by (nr_hw_queues) times, see hctx_may_queue().
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- block/blk-mq.c | 57 +++++++++++++++++---------------------------------
- 1 file changed, 19 insertions(+), 38 deletions(-)
+Another change is bt_wait_ptr(). Before your patches, there is single
+.wait_index, now the number of .wait_index is changed to nr_hw_queues.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index f32a3cfdd34e..3c71d52b6401 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1678,14 +1678,10 @@ static int plug_rq_cmp(void *priv, struct list_head *a, struct list_head *b)
- 
- void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
- {
--	struct blk_mq_hw_ctx *this_hctx;
--	struct blk_mq_ctx *this_ctx;
--	struct request_queue *this_q;
--	struct request *rq;
- 	LIST_HEAD(list);
--	LIST_HEAD(rq_list);
--	unsigned int depth;
- 
-+	if (list_empty(&plug->mq_list))
-+		return;
- 	list_splice_init(&plug->mq_list, &list);
- 
- 	if (plug->rq_count > 2 && plug->multiple_queues)
-@@ -1693,42 +1689,27 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
- 
- 	plug->rq_count = 0;
- 
--	this_q = NULL;
--	this_hctx = NULL;
--	this_ctx = NULL;
--	depth = 0;
--
--	while (!list_empty(&list)) {
--		rq = list_entry_rq(list.next);
--		list_del_init(&rq->queuelist);
--		BUG_ON(!rq->q);
--		if (rq->mq_hctx != this_hctx || rq->mq_ctx != this_ctx) {
--			if (this_hctx) {
--				trace_block_unplug(this_q, depth, !from_schedule);
--				blk_mq_sched_insert_requests(this_hctx, this_ctx,
--								&rq_list,
--								from_schedule);
--			}
--
--			this_q = rq->q;
--			this_ctx = rq->mq_ctx;
--			this_hctx = rq->mq_hctx;
--			depth = 0;
-+	do {
-+		struct list_head rq_list;
-+		struct request *rq, *head_rq = list_entry_rq(list.next);
-+		struct list_head *pos = &head_rq->queuelist; /* skip first */
-+		struct blk_mq_hw_ctx *this_hctx = head_rq->mq_hctx;
-+		struct blk_mq_ctx *this_ctx = head_rq->mq_ctx;
-+		unsigned int depth = 1;
-+
-+		list_for_each_continue(pos, &list) {
-+			rq = list_entry_rq(pos);
-+			BUG_ON(!rq->q);
-+			if (rq->mq_hctx != this_hctx || rq->mq_ctx != this_ctx)
-+				break;
-+			depth++;
- 		}
- 
--		depth++;
--		list_add_tail(&rq->queuelist, &rq_list);
--	}
--
--	/*
--	 * If 'this_hctx' is set, we know we have entries to complete
--	 * on 'rq_list'. Do those.
--	 */
--	if (this_hctx) {
--		trace_block_unplug(this_q, depth, !from_schedule);
-+		list_cut_before(&rq_list, &list, pos);
-+		trace_block_unplug(head_rq->q, depth, !from_schedule);
- 		blk_mq_sched_insert_requests(this_hctx, this_ctx, &rq_list,
- 						from_schedule);
--	}
-+	} while(!list_empty(&list));
- }
- 
- static void blk_mq_bio_to_request(struct request *rq, struct bio *bio,
--- 
-2.24.0
+Also the run queue number is increased a lot in SCSI's IO completion, see
+scsi_end_request().
+
+Kashyap Desai has performance benchmark on fast megaraid SSD, and you can
+ask him to provide performance data for this patches.
+
+Thanks,
+Ming
 
