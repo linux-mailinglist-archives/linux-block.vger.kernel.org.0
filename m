@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C31810EC73
-	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2019 16:39:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 852AB10EC6C
+	for <lists+linux-block@lfdr.de>; Mon,  2 Dec 2019 16:39:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfLBPj2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1727555AbfLBPj2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Mon, 2 Dec 2019 10:39:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44698 "EHLO mx1.suse.de"
+Received: from mx2.suse.de ([195.135.220.15]:44716 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727545AbfLBPj2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:39:28 -0500
+        id S1727549AbfLBPj1 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 2 Dec 2019 10:39:27 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6D16AC1A3;
+        by mx1.suse.de (Postfix) with ESMTP id 6E5A7C1A7;
         Mon,  2 Dec 2019 15:39:25 +0000 (UTC)
 From:   Hannes Reinecke <hare@suse.de>
 To:     "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -21,10 +21,10 @@ Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         James Bottomley <james.bottomley@hansenpartnership.com>,
         John Garry <john.garry@huawei.com>,
         Ming Lei <ming.lei@redhat.com>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH 02/11] blk-mq: rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
-Date:   Mon,  2 Dec 2019 16:39:05 +0100
-Message-Id: <20191202153914.84722-3-hare@suse.de>
+        linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 03/11] blk-mq: rename blk_mq_update_tag_set_depth()
+Date:   Mon,  2 Dec 2019 16:39:06 +0100
+Message-Id: <20191202153914.84722-4-hare@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191202153914.84722-1-hare@suse.de>
 References: <20191202153914.84722-1-hare@suse.de>
@@ -33,163 +33,97 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+The function does not set the depth, but rather transitions from
+shared to non-shared queues and vice versa.
+So rename it to blk_mq_update_tag_set_shared() to better reflect
+its purpose.
 
-BLK_MQ_F_TAG_SHARED actually means that tags is shared among request
-queues, all of which should belong to LUNs attached to same HBA.
-
-So rename it to make the point explicitly.
-
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
 ---
- block/blk-mq-debugfs.c |  2 +-
- block/blk-mq-tag.c     |  2 +-
- block/blk-mq-tag.h     |  4 ++--
- block/blk-mq.c         | 20 ++++++++++----------
- include/linux/blk-mq.h |  2 +-
- 5 files changed, 15 insertions(+), 15 deletions(-)
+ block/blk-mq-tag.c | 18 ++++++++++--------
+ block/blk-mq.c     |  8 ++++----
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index b3f2ba483992..33a40ae1d60f 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -236,7 +236,7 @@ static const char *const alloc_policy_name[] = {
- #define HCTX_FLAG_NAME(name) [ilog2(BLK_MQ_F_##name)] = #name
- static const char *const hctx_flag_name[] = {
- 	HCTX_FLAG_NAME(SHOULD_MERGE),
--	HCTX_FLAG_NAME(TAG_SHARED),
-+	HCTX_FLAG_NAME(TAG_QUEUE_SHARED),
- 	HCTX_FLAG_NAME(BLOCKING),
- 	HCTX_FLAG_NAME(NO_SCHED),
- };
 diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 53b4a9414fbd..d7aa23c82dbf 100644
+index d7aa23c82dbf..f5009587e1b5 100644
 --- a/block/blk-mq-tag.c
 +++ b/block/blk-mq-tag.c
-@@ -73,7 +73,7 @@ static inline bool hctx_may_queue(struct blk_mq_hw_ctx *hctx,
+@@ -440,24 +440,22 @@ static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
+ 				       node);
+ }
+ 
+-static struct blk_mq_tags *blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
+-						   int node, int alloc_policy)
++static int blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
++				   int node, int alloc_policy)
  {
- 	unsigned int depth, users;
+ 	unsigned int depth = tags->nr_tags - tags->nr_reserved_tags;
+ 	bool round_robin = alloc_policy == BLK_TAG_ALLOC_RR;
  
--	if (!hctx || !(hctx->flags & BLK_MQ_F_TAG_SHARED))
-+	if (!hctx || !(hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED))
- 		return true;
- 	if (!test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
- 		return true;
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 66d04dea0bdb..6c0f7c9ce9f6 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -55,7 +55,7 @@ extern void __blk_mq_tag_idle(struct blk_mq_hw_ctx *);
+ 	if (bt_alloc(&tags->bitmap_tags, depth, round_robin, node))
+-		goto free_tags;
++		return -ENOMEM;
+ 	if (bt_alloc(&tags->breserved_tags, tags->nr_reserved_tags, round_robin,
+ 		     node))
+ 		goto free_bitmap_tags;
  
- static inline bool blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
- {
--	if (!(hctx->flags & BLK_MQ_F_TAG_SHARED))
-+	if (!(hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED))
- 		return false;
+-	return tags;
++	return 0;
+ free_bitmap_tags:
+ 	sbitmap_queue_free(&tags->bitmap_tags);
+-free_tags:
+-	kfree(tags);
+-	return NULL;
++	return -ENOMEM;
+ }
  
- 	return __blk_mq_tag_busy(hctx);
-@@ -63,7 +63,7 @@ static inline bool blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
+ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+@@ -478,7 +476,11 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+ 	tags->nr_tags = total_tags;
+ 	tags->nr_reserved_tags = reserved_tags;
  
- static inline void blk_mq_tag_idle(struct blk_mq_hw_ctx *hctx)
- {
--	if (!(hctx->flags & BLK_MQ_F_TAG_SHARED))
-+	if (!(hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED))
- 		return;
+-	return blk_mq_init_bitmap_tags(tags, node, alloc_policy);
++	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
++		kfree(tags);
++		tags = NULL;
++	}
++	return tags;
+ }
  
- 	__blk_mq_tag_idle(hctx);
+ void blk_mq_free_tags(struct blk_mq_tags *tags)
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 16aa20d23b67..6b39cf0efdcd 100644
+index 6b39cf0efdcd..91950d3e436a 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -302,7 +302,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 		rq->tag = -1;
- 		rq->internal_tag = tag;
- 	} else {
--		if (data->hctx->flags & BLK_MQ_F_TAG_SHARED) {
-+		if (data->hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED) {
- 			rq_flags = RQF_MQ_INFLIGHT;
- 			atomic_inc(&data->hctx->nr_active);
- 		}
-@@ -1118,7 +1118,7 @@ static bool blk_mq_mark_tag_wait(struct blk_mq_hw_ctx *hctx,
- 	wait_queue_entry_t *wait;
- 	bool ret;
- 
--	if (!(hctx->flags & BLK_MQ_F_TAG_SHARED)) {
-+	if (!(hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED)) {
- 		blk_mq_sched_mark_restart_hctx(hctx);
- 
- 		/*
-@@ -1249,7 +1249,7 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 				 * For non-shared tags, the RESTART check
- 				 * will suffice.
- 				 */
--				if (hctx->flags & BLK_MQ_F_TAG_SHARED)
-+				if (hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED)
- 					no_tag = true;
- 				break;
- 			}
-@@ -2358,7 +2358,7 @@ blk_mq_alloc_hctx(struct request_queue *q, struct blk_mq_tag_set *set,
- 	spin_lock_init(&hctx->lock);
- 	INIT_LIST_HEAD(&hctx->dispatch);
- 	hctx->queue = q;
--	hctx->flags = set->flags & ~BLK_MQ_F_TAG_SHARED;
-+	hctx->flags = set->flags & ~BLK_MQ_F_TAG_QUEUE_SHARED;
- 
- 	INIT_LIST_HEAD(&hctx->hctx_list);
- 
-@@ -2575,9 +2575,9 @@ static void queue_set_hctx_shared(struct request_queue *q, bool shared)
- 
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (shared)
--			hctx->flags |= BLK_MQ_F_TAG_SHARED;
-+			hctx->flags |= BLK_MQ_F_TAG_QUEUE_SHARED;
- 		else
--			hctx->flags &= ~BLK_MQ_F_TAG_SHARED;
-+			hctx->flags &= ~BLK_MQ_F_TAG_QUEUE_SHARED;
+@@ -2581,8 +2581,8 @@ static void queue_set_hctx_shared(struct request_queue *q, bool shared)
  	}
  }
  
-@@ -2603,7 +2603,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
- 	list_del_rcu(&q->tag_set_list);
- 	if (list_is_singular(&set->tag_list)) {
+-static void blk_mq_update_tag_set_depth(struct blk_mq_tag_set *set,
+-					bool shared)
++static void blk_mq_update_tag_set_shared(struct blk_mq_tag_set *set,
++					 bool shared)
+ {
+ 	struct request_queue *q;
+ 
+@@ -2605,7 +2605,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
  		/* just transitioned to unshared */
--		set->flags &= ~BLK_MQ_F_TAG_SHARED;
-+		set->flags &= ~BLK_MQ_F_TAG_QUEUE_SHARED;
+ 		set->flags &= ~BLK_MQ_F_TAG_QUEUE_SHARED;
  		/* update existing queue */
- 		blk_mq_update_tag_set_depth(set, false);
+-		blk_mq_update_tag_set_depth(set, false);
++		blk_mq_update_tag_set_shared(set, false);
  	}
-@@ -2620,12 +2620,12 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
- 	 * Check to see if we're transitioning to shared (from 1 to 2 queues).
- 	 */
- 	if (!list_empty(&set->tag_list) &&
--	    !(set->flags & BLK_MQ_F_TAG_SHARED)) {
--		set->flags |= BLK_MQ_F_TAG_SHARED;
-+	    !(set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)) {
-+		set->flags |= BLK_MQ_F_TAG_QUEUE_SHARED;
+ 	mutex_unlock(&set->tag_list_lock);
+ 	INIT_LIST_HEAD(&q->tag_set_list);
+@@ -2623,7 +2623,7 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
+ 	    !(set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)) {
+ 		set->flags |= BLK_MQ_F_TAG_QUEUE_SHARED;
  		/* update existing queue */
- 		blk_mq_update_tag_set_depth(set, true);
+-		blk_mq_update_tag_set_depth(set, true);
++		blk_mq_update_tag_set_shared(set, true);
  	}
--	if (set->flags & BLK_MQ_F_TAG_SHARED)
-+	if (set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)
+ 	if (set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)
  		queue_set_hctx_shared(q, true);
- 	list_add_tail_rcu(&q->tag_set_list, &set->tag_list);
- 
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 0bf056de5cc3..147185394a25 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -225,7 +225,7 @@ struct blk_mq_ops {
- 
- enum {
- 	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
--	BLK_MQ_F_TAG_SHARED	= 1 << 1,
-+	BLK_MQ_F_TAG_QUEUE_SHARED	= 1 << 1,
- 	BLK_MQ_F_BLOCKING	= 1 << 5,
- 	BLK_MQ_F_NO_SCHED	= 1 << 6,
- 	BLK_MQ_F_ALLOC_POLICY_START_BIT = 8,
 -- 
 2.16.4
 
