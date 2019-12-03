@@ -2,101 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0615210F592
-	for <lists+linux-block@lfdr.de>; Tue,  3 Dec 2019 04:26:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DED2010F5F4
+	for <lists+linux-block@lfdr.de>; Tue,  3 Dec 2019 04:52:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLCD0k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Dec 2019 22:26:40 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38036 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfLCD0k (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Dec 2019 22:26:40 -0500
-Received: by mail-oi1-f194.google.com with SMTP id b8so1958689oiy.5
-        for <linux-block@vger.kernel.org>; Mon, 02 Dec 2019 19:26:39 -0800 (PST)
+        id S1726491AbfLCDwp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Dec 2019 22:52:45 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38177 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLCDwp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Dec 2019 22:52:45 -0500
+Received: by mail-pl1-f195.google.com with SMTP id o8so1123913pls.5;
+        Mon, 02 Dec 2019 19:52:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blockbridge-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LwpIDBucvKjpCN15l8CmiENKWiJ3fV7rlV+B6EGUY/Q=;
-        b=uMRhepsMu54o9CknQNkBGlVn/d9qy8xO+eU0zmh4MITzbVKaCBeSRy+aJ/PP3/JOMQ
-         n5zQiSfEKe35TPViuH2uRohl67uxsx9P1Z63dXSkXzveAEGVF3xEqnFY3reQYbHZJYB+
-         5aGzLn+qzcY4WFFKjE9rRNtySBtfsawB08cY/e8Ajku/lxSAcuBkTvXYl6oRD5DcsB/x
-         foQMpBqwsmXvd50oD3SNv8pgWLRUHRJxkNYN8+Arr6U3m++sENJzesJ54aDM9MWMYH+5
-         XOrtAKD6WJhlLK9pU5XPW0pFlsZpN5E1C8XLc6mJTd8MG47+iMbtPDYjA1EdNeyToH26
-         Xk2Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WFPxR8j8Ztw3QpWL9VkRXvZS+yt+ltqE6fy7Q8AVdEU=;
+        b=oDGWBbGaEAdv/Tjq+aQgC6JgVI+zjjUkguaejS3WXRSvTAjQuNmVZEIw8at6VqbZ/C
+         w22kRTOZ0dwKZRvBBRWpDodDadUcX71J61eSF8xaxQBAH3BgHC8YnA40iSo1QTjgDmEd
+         L49Egm4Ea4oOKoKM/rUtS9clmCglpfMoAQn0ueTlQTrJwEPSBaoK3Qcvh/kOVH32ePFK
+         Ta4x3WHPnKsBzzpIOATXki7MIxOJdIEfx3bmzOKLDkBU32syQVVCvIe787DzTRLh6hrr
+         QZTE6a/J5Mq8B+fb3MI+AK0190JQRhrRi39SYC6YqMUPDcazLgy7TY30ce8bWxMEeQUj
+         YtHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LwpIDBucvKjpCN15l8CmiENKWiJ3fV7rlV+B6EGUY/Q=;
-        b=hOhbqdgRkAfVm8n3r7cNChdQzHqlTD5z7FzinvPQiv1JlpSNLK2jaywsWak3wl7CEn
-         xTJNH//te7DiWIamN+SvAgbji4CgqGEFxWjzI5+yfCKzT3fLVKJfVNd9ckvx5WpgWjnv
-         317Y1a2bi6q+HuLyyZJSGqkm9366HdIuvHRWa5aN9PBqVf02Lpw3tsgDP1Ut+FTofyEb
-         t8FvtcpoDqWou2bbGOwvWyUgO2dOnc4k7XPBCFkllLnaq4DrWR9ITACXapUEYT3CpzQH
-         2iQNsvLc6+5uuYfv12XpgndyQpp8pe5lsT9Vy7d9i8EXS2xACHIWuD/5Pl+uGj5HplVT
-         8kPw==
-X-Gm-Message-State: APjAAAXmZSd+uobncde3lcIA71trjhL5l/r8Zpcq2NWbLuxo52SYoGl+
-        6pHr0jht08bnyaWtm49/r851Y6VI7Mk0mpoUsNnedw==
-X-Google-Smtp-Source: APXvYqwz4mfuLXrSsp718O29itUq1yXjgDG5hOd8dyAdMUbt6utvr7bHWcM09Cww6W0Y6cXJadQ8xNl2lKC2MLvNsE0=
-X-Received: by 2002:a05:6808:b2d:: with SMTP id t13mr2009175oij.83.1575343599018;
- Mon, 02 Dec 2019 19:26:39 -0800 (PST)
-MIME-Version: 1.0
-References: <CAAFE1bd9wuuobpe4VK7Ty175j7mWT+kRmHCNhVD+6R8MWEAqmw@mail.gmail.com>
- <20191128015748.GA3277@ming.t460p> <CA+VdTb_-CGaPjKUQteKVFSGqDz-5o-tuRRkJYqt8B9iOQypiwQ@mail.gmail.com>
- <20191128025822.GC3277@ming.t460p> <CAAFE1bfsXsKGyw7SU_z4NanT+wmtuJT=XejBYbHHMCDQwm73sw@mail.gmail.com>
- <20191128091210.GC15549@ming.t460p> <CAAFE1beMkvyRctGqpffd3o_QtDH0CrmQSb=fV4GzqMUXWzPyOw@mail.gmail.com>
- <20191203005849.GB25002@ming.t460p> <CAAFE1bcG8c1Q3iwh-LUjruBMAuFTJ4qWxNGsnhfKvGWHNLAeEQ@mail.gmail.com>
- <20191203031444.GB6245@ming.t460p>
-In-Reply-To: <20191203031444.GB6245@ming.t460p>
-From:   Stephen Rust <srust@blockbridge.com>
-Date:   Mon, 2 Dec 2019 22:26:28 -0500
-Message-ID: <CAAFE1besnb=HV4C_buORYpWbkXecmtybwX8d_Ka2NsKmiym53w@mail.gmail.com>
-Subject: Re: Data corruption in kernel 5.1+ with iSER attached ramdisk
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Rob Townley <rob.townley@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        target-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WFPxR8j8Ztw3QpWL9VkRXvZS+yt+ltqE6fy7Q8AVdEU=;
+        b=a3kLN8vI6mCC891RUbodSMmyUHtX5GbGi21uMJ6/4FpYIkr9mnCyaGaofjdGt8TqTi
+         jyAMpoTL5nySn+B6jthu+EtYN8t9upyxy5i0peDFaqSXYGHScs4gNyEttT2Hl8psFyzl
+         2rZGDca/9eFZv92OCMcsy+4nDZ7SOo/iKaj+JYze/JjsXWU/BVhEonFLbz8kvJTY2598
+         9PlFKLdctyZmxKq50GhQoXENSRP104/SlJXJsSQVXJgWZ4Y87b1ylWf8v8rajmz9e/6W
+         v1xIKe5XgIVhbQFN6pwPdue+1qihuuLtl5iSUNYoPV4MxhHqZpZuYFKsszr1NvKVg7G9
+         Zudg==
+X-Gm-Message-State: APjAAAUkXFecCZ1riDNLGiohUfuiyCQzI6O14RK+uVg8aEJJjmjAWTy6
+        CXjJmeZZ57g2yunZcmZROdI=
+X-Google-Smtp-Source: APXvYqzieSs1UI75yXehyUjLI9b+KyuJgvG4DNnaak5PZ4QOKccR85gkkaDwsfT2lzNyUfk2PbNyGA==
+X-Received: by 2002:a17:902:14f:: with SMTP id 73mr2953143plb.19.1575345165095;
+        Mon, 02 Dec 2019 19:52:45 -0800 (PST)
+Received: from localhost.localdomain (23.83.226.166.16clouds.com. [23.83.226.166])
+        by smtp.gmail.com with ESMTPSA id l9sm1111206pgh.34.2019.12.02.19.52.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Dec 2019 19:52:44 -0800 (PST)
+From:   Guoju Fang <fangguoju@gmail.com>
+To:     colyli@suse.de
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
+        Guoju Fang <fangguoju@gmail.com>
+Subject: [PATCH] bcache: print written and keys in trace_bcache_btree_write
+Date:   Mon,  2 Dec 2019 22:48:41 -0500
+Message-Id: <1575344921-20254-1-git-send-email-fangguoju@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> oops, it should have been (arg4 & 511) != 0.
+It's useful to dump written block and keys on btree write, this patch
+add them into trace_bcache_btree_write.
 
-Yep, there they are:
+Signed-off-by: Guoju Fang <fangguoju@gmail.com>
+---
+ include/trace/events/bcache.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-# /usr/share/bcc/tools/trace -K 'bio_add_page ((arg4 & 511) != 0) "%d
-%d", arg3, arg4'
-PID     TID     COMM            FUNC             -
-7411    7411    kworker/31:1H   bio_add_page     512 76
-        bio_add_page+0x1 [kernel]
-        sbc_execute_rw+0x28 [kernel]
-        __target_execute_cmd+0x2e [kernel]
-        target_execute_cmd+0x1c1 [kernel]
-        iscsit_execute_cmd+0x1e7 [kernel]
-        iscsit_sequence_cmd+0xdc [kernel]
-        isert_recv_done+0x780 [kernel]
-        __ib_process_cq+0x78 [kernel]
-        ib_cq_poll_work+0x29 [kernel]
-        process_one_work+0x179 [kernel]
-        worker_thread+0x4f [kernel]
-        kthread+0x105 [kernel]
-        ret_from_fork+0x1f [kernel]
+diff --git a/include/trace/events/bcache.h b/include/trace/events/bcache.h
+index e4526f8..0bddea6 100644
+--- a/include/trace/events/bcache.h
++++ b/include/trace/events/bcache.h
+@@ -275,7 +275,8 @@
+ 		__entry->keys	= b->keys.set[b->keys.nsets].data->keys;
+ 	),
+ 
+-	TP_printk("bucket %zu", __entry->bucket)
++	TP_printk("bucket %zu written block %u + %u",
++		__entry->bucket, __entry->block, __entry->keys)
+ );
+ 
+ DEFINE_EVENT(btree_node, bcache_btree_node_alloc,
+-- 
+1.8.3.1
 
-7753    7753    kworker/26:1H   bio_add_page     4096 76
-        bio_add_page+0x1 [kernel]
-        sbc_execute_rw+0x28 [kernel]
-        __target_execute_cmd+0x2e [kernel]
-        target_execute_cmd+0x1c1 [kernel]
-        iscsit_execute_cmd+0x1e7 [kernel]
-        iscsit_sequence_cmd+0xdc [kernel]
-        isert_recv_done+0x780 [kernel]
-        __ib_process_cq+0x78 [kernel]
-        ib_cq_poll_work+0x29 [kernel]
-        process_one_work+0x179 [kernel]
-        worker_thread+0x4f [kernel]
-        kthread+0x105 [kernel]
-        ret_from_fork+0x1f [kernel]
