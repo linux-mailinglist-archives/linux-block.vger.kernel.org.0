@@ -2,64 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B98D61128CD
-	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 11:05:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F08FE11293B
+	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 11:24:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfLDKFc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Dec 2019 05:05:32 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45485 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfLDKFc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Dec 2019 05:05:32 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so7286079ioi.12
-        for <linux-block@vger.kernel.org>; Wed, 04 Dec 2019 02:05:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=0U2fHNNCgdknbXARMcY+ZndmXeDKQHas3xsSaGMd4pw=;
-        b=CpWQEkjd36eJH1K0bBzJu9B6dcq43c7xANGTYJoEKhzgN20dC3bMpiE0yfShEJ+rN8
-         I7OiLyKOu/yXQeZ1pWsh3msjXgZNTf+fkl7bGeNYFYGunv6XbkrBTTWUO3VaSBgo4hKK
-         xm98KOq0zzIMoa1taw7uke7fDbgrJkgrgVPfpcBue7Jadrw1dOFyJgAU4sFLAEQvOfxp
-         0tTf0Go7h69dClGdnnSJ1CHj/3/esp+MFe0OKJZv6fDWpVRtbUyf054DgVWmCaZkx2l1
-         FHSkybXaKRTSHyIgWilo79E8pIa4XgpgDHFhuTibyfMUqPEwO+qYodcvMwrbgJYXCL4w
-         SGWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=0U2fHNNCgdknbXARMcY+ZndmXeDKQHas3xsSaGMd4pw=;
-        b=ftFYsjME8dgC3RwQp2L9Cx3dA4sPKcQZhwFTrrgft3bSAYjD35hgNE0p4eFV1440Nw
-         whLCSmLx7X7QUE9HkdKQrWgz2cnOkpoYUroukNpdDUSoTQX40nblpRDSzEUHZsB7q1fQ
-         txxYcXdCYNZhKbVRaWVO11RDUpgOPlmFWE5YNwBENSoKXjENxhBpexbriCV+qeivkhqH
-         1lFhjyjbO0zkM9s/3+wjq01mVvEk0GTI6CegWUC2BMy7jTZ22nWkCxwAvG8Zyp0rzXju
-         +bMz6G15SQdaX6Gy5jzSk3xzsscCAKhN3URP98xdUA1i0rCtcz8qip2qlKtXdN4iI8R0
-         R6Dw==
-X-Gm-Message-State: APjAAAXHFOnYPIi/pGlxDGHFtLRzH+SwAjGe5HsYq8yqmmMLJf7eGMP6
-        XV2j5O1dEKoiAhRKFk0qzqHVHqFPuf7xUC4RSg==
-X-Google-Smtp-Source: APXvYqx96vCxEs1JxozokQblfiPns7nLWA5rqqM5IsOH/FOe3qN2XXBycQD0oo5PHkkMvE19I85wGCppN60wRWRstbs=
-X-Received: by 2002:a5e:8a48:: with SMTP id o8mr1499153iom.52.1575453931310;
- Wed, 04 Dec 2019 02:05:31 -0800 (PST)
+        id S1727351AbfLDKYg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Dec 2019 05:24:36 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2154 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726899AbfLDKYg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:24:36 -0500
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 8B14B77D71B06C2BE9CD;
+        Wed,  4 Dec 2019 10:24:35 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 4 Dec 2019 10:24:35 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 4 Dec 2019
+ 10:24:35 +0000
+Subject: Re: [PATCH 04/11] blk-mq: Facilitate a shared sbitmap per tagset
+To:     Hannes Reinecke <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        "James Bottomley" <james.bottomley@hansenpartnership.com>,
+        Ming Lei <ming.lei@redhat.com>, <linux-scsi@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+References: <20191202153914.84722-1-hare@suse.de>
+ <20191202153914.84722-5-hare@suse.de>
+ <ab7555b2-2e95-6fb1-2e44-fe3a323a24e4@huawei.com>
+ <5beb7d51-500e-5bda-4e46-8414fd8b64ff@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <6c8b8676-a3c7-6fd5-3b6d-c0b469c80756@huawei.com>
+Date:   Wed, 4 Dec 2019 10:24:34 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Received: by 2002:a02:c84a:0:0:0:0:0 with HTTP; Wed, 4 Dec 2019 02:05:30 -0800 (PST)
-Reply-To: lindajonathan993@gmail.com
-From:   Miss Linda <mrsamadiissa798@gmail.com>
-Date:   Wed, 4 Dec 2019 02:05:30 -0800
-Message-ID: <CAHgm8d9qjqHHTcj2wqT1aBaSiG6fXexQMX3iiGDhFieVb6D_Sw@mail.gmail.com>
-Subject: Late love lead
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5beb7d51-500e-5bda-4e46-8414fd8b64ff@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hey dear
+On 03/12/2019 15:02, Hannes Reinecke wrote:
+>>> +     */
+>> If you don't have a shared sched bitmap - which I didn't think we needed
+>> - then all we need is a simple sbitmap_queue_resize(&tagset->__bitmap_tags)
+>>
+>> Otherwise it's horrible to resize shared sched bitmaps...
+>>
+> Resizing shared sched bitmaps is done in patch 6/11.
+> General idea is to move the scheduler bitmap into the request queue
+> (well, actually the elevator), as this gives us a per-request_queue
+> bitmap. Which is actually what we want here, as the scheduler will need
+> to look at all requests, hence needing to access to the same bitmap.
+> And it also gives us an easy way of resizing the sched tag bitmap, as
+> then we can resize the bitmap on a per-queue basis, and leave the
+> underlying tagset bitmap untouched.
 
-Nice to meet you, Am Miss Linda I found your email here in google
-search and I picked
-interest to contact you. I've something very important which I would like
-to discuss with you and I would appreciate if you respond back to me
-through my email address as to tell you more about me with my
-photos, my private email as fellows??   lindajonathan993@gmail.com
+OK, but I am just concerned if that is really required in this series 
+and whether it is just another obstacle to getting it accepted.
 
-From, Linda
+Thanks,
+John
+
+> 
+> [ .. ]
+>>> diff --git a/block/blk-mq.h b/block/blk-mq.h
+>>> index 78d38b5f2793..4c1ea206d3f4 100644
+>>> --- a/block/blk-mq.h
+>>> +++ b/block/blk-mq.h
+
