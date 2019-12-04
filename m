@@ -2,68 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DAEA112C3F
-	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 14:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 658CD112CE7
+	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 14:50:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfLDNFK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Dec 2019 08:05:10 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45896 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfLDNFJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Dec 2019 08:05:09 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so6527320edw.12
-        for <linux-block@vger.kernel.org>; Wed, 04 Dec 2019 05:05:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=I81Ynm6LU0TBIF3mobw3f+g2sB4hxBuSkk1bFBlc9Og=;
-        b=arWhuG/K8e9O4YNuHuNwncVrHo44P47PDbbpazf/VAkApTjmWDg+2konfAHAw/JRZ1
-         q8qZk6FzWHwrGg0cNxP90m3kdnR/5Zw5FETXh1FmAIUYUu7Kso20rKEPFOFTatEdgufd
-         qjizgmMI/9zWzR59POBeafbZhJ4jUW9OAiDL0RvVFUxOGiFwrfSItfaVOPg09NkOuzhU
-         D/32JnDruCtLqLUnNuYgnrjrBk+9bHdP66yjZoiDctjL4XmHxYmQ0/wD4AKSpdtFlqyy
-         ADy8SglWatXi5NALO45ce+qKmntC4fc7FCNqUlaG0stYO8GJQMDFdYtBcz5QkFKZNGJy
-         qjfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=I81Ynm6LU0TBIF3mobw3f+g2sB4hxBuSkk1bFBlc9Og=;
-        b=JHVou7zkFEs4DJ6ehT4r3gD2lrC2gDEkYlAeGGjs5vQ/78pt6osn4/WPTqLg9F/PNM
-         tpF4PM+8/ZsEcj/vuKoH7R/5rmBIe9jmOfVyzgzXAtm98Z7F2/zquO9X7e2s6dWfCwFC
-         9npV3zwzhpgTipNhkxbMjpKBfmC+1CGHhVIPCAO4QUDabt07SfXseg384k0WssWz1jZt
-         OdKR+JV0P7kg/U1NAUXhmOirt+7C5cwETn35L9NihNSQvv6F48IKD3Vivcqg6kO6zaA4
-         KJmy4rDV5SoYbULOrZV5wzy/BpxD0WD2qCWIyeFaicOVkjpv6F8K0PzAQHm9wbY89b0w
-         9vMg==
-X-Gm-Message-State: APjAAAUDLIkEf54KKamdMTCaV1KXSrt76V+d/bUEeufYOeQ8UJO+X5BR
-        5QBA8Ob/XpIUr1CQymIkB8fYmaw8LL5CQ4oaW3I=
-X-Google-Smtp-Source: APXvYqzlrhLEKHg1Y3m0fQqBP3mUlVTAfs+qto2r/FlNB1jyjHLLpa3xR7wMRnM8P+C0VfKCbUoj6jUjG2v6cjQJ98Y=
-X-Received: by 2002:a17:906:b6c8:: with SMTP id ec8mr2942708ejb.64.1575464707687;
- Wed, 04 Dec 2019 05:05:07 -0800 (PST)
+        id S1727956AbfLDNux (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Dec 2019 08:50:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54446 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727949AbfLDNux (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Dec 2019 08:50:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575467452;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VA9lOoBJgqCxzPUvXrp+l1oPS8XjH4P1e6jO6rnjjg8=;
+        b=OJ7sCRzpAFHmkmjvScZK+ZWJJayWKCrEtho6ALh87721wwgjnz93ZSucLusj5PU/zu65xb
+        EUCUbCg4gGZNkTGXbtaive6QysHfLVQSN2jy9eARPF37aozuoW5+jy9CyxCjHRnaGehoq/
+        UN/SeTipLbR6nVPB0fX20jIj4n9stdY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-sTXKKfdVOFaPo2t4eAi-uw-1; Wed, 04 Dec 2019 08:50:49 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2144D91206;
+        Wed,  4 Dec 2019 13:50:47 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C826E19C68;
+        Wed,  4 Dec 2019 13:50:32 +0000 (UTC)
+Date:   Wed, 4 Dec 2019 21:50:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Phil Auld <pauld@redhat.com>, Dave Chinner <david@fromorbit.com>,
+        Hillf Danton <hdanton@sina.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191204135014.GA21449@ming.t460p>
+References: <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191128094003.752-1-hdanton@sina.com>
+ <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
+ <20191202024625.GD24512@ming.t460p>
+ <20191202040256.GE2695@dread.disaster.area>
+ <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
+ <20191202212210.GA32767@lorien.usersys.redhat.com>
+ <CAKfTPtC7uycC3b2ngOFUqOh9-Fcz7h-151aaYJbLJFXrNq-gkw@mail.gmail.com>
 MIME-Version: 1.0
-Reply-To: kabiruwahid1117@gmail.com
-Received: by 2002:a05:6402:1585:0:0:0:0 with HTTP; Wed, 4 Dec 2019 05:05:07
- -0800 (PST)
-From:   Mr Kabiru Wahid <kabiruwahid1117@gmail.com>
-Date:   Wed, 4 Dec 2019 09:05:07 -0400
-X-Google-Sender-Auth: -UIQ0VbQyfRucrYrFfbgChPtPd4
-Message-ID: <CAOTe9ZpC+AidXJM4Mv=w_8sQwTSgCWmS0QHD2W_V_GX5q+c1dA@mail.gmail.com>
-Subject: Business Relationship!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtC7uycC3b2ngOFUqOh9-Fcz7h-151aaYJbLJFXrNq-gkw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: sTXKKfdVOFaPo2t4eAi-uw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend
+On Tue, Dec 03, 2019 at 10:45:38AM +0100, Vincent Guittot wrote:
+> On Mon, 2 Dec 2019 at 22:22, Phil Auld <pauld@redhat.com> wrote:
+> >
+> > Hi Vincent,
+> >
+> > On Mon, Dec 02, 2019 at 02:45:42PM +0100 Vincent Guittot wrote:
+> > > On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote=
+:
+> >
+> > ...
+> >
+> > > > So, we can fiddle with workqueues, but it doesn't address the
+> > > > underlying issue that the scheduler appears to be migrating
+> > > > non-bound tasks off a busy CPU too easily....
+> > >
+> > > The root cause of the problem is that the sched_wakeup_granularity_ns
+> > > is in the same range or higher than load balance period. As Peter
+> > > explained, This make the kworker waiting for the CPU for several load
+> > > period and a transient unbalanced state becomes a stable one that the
+> > > scheduler to fix. With default value, the scheduler doesn't try to
+> > > migrate any task.
+> >
+> > There are actually two issues here.   With the high wakeup granularity
+> > we get the user task actively migrated. This causes the significant
+> > performance hit Ming was showing. With the fast wakeup_granularity
+> > (or smaller IOs - 512 instead of 4k) we get, instead, the user task
+> > migrated at wakeup to a new CPU for every IO completion.
+>=20
+> Ok, I haven't noticed that this one was a problem too. Do we have perf
+> regression ?
 
-I am Kabiru Wahid,  I am contacting you in respect of my late client
-fund $15.5 Million Dollars deposited with a bank here in Burkina which
-is about to be confiscated by his bank after many years unclaimed,
-Kindly indicate your interest by sending me your full data, You will
-be entitle to 50%;40% for me and 10% to defray all cost You should be
-rest assured that this is 100% risk-free also free from any
-scam/fraudulent act.
+Follows the test result on one server(Dell, R630: Haswell-E):
 
-Yours Sincerely
-Mr Kabiru Wahid
+kernel.sched_wakeup_granularity_ns =3D 4000000
+kernel.sched_min_granularity_ns =3D 3000000
+
+---------------------------------------
+test              =09=09        | IOPS
+---------------------------------------
+./xfs_complete 512      =09    | 7.8K=20
+---------------------------------------
+taskset -c 8 ./xfs_complete 512 | 9.8K=20
+---------------------------------------
+
+Thanks,
+Ming
+
