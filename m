@@ -2,112 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49E56112B0F
-	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 13:09:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D8D9112BBE
+	for <lists+linux-block@lfdr.de>; Wed,  4 Dec 2019 13:43:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfLDMJd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Dec 2019 07:09:33 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46507 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDMJd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Dec 2019 07:09:33 -0500
+        id S1727855AbfLDMnI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Dec 2019 07:43:08 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38691 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727818AbfLDMm6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Dec 2019 07:42:58 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 14so7568983qtf.5
+        for <linux-block@vger.kernel.org>; Wed, 04 Dec 2019 04:42:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575461372; x=1606997372;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0XU4I7wfx1XBSj0BFbZC9Xa7eD2pt9HXv+vFrvgGosk=;
-  b=a3RVxmLZJ+QxCLCZlYVTFQDTFxjReRRcSMKyx2VCUIJP2OhJvugZfhZm
-   kOABMbEsKxc5DpJOe+AH5T1rw7v835nZn3dgwAWUnPcmgmAEoC4orkNLV
-   DdV4xQ6WXJR8EGjzJr5StI93RhxJM31E21b+DvQyYGNW38qxzDRptK2y0
-   A=;
-IronPort-SDR: pPAh3VyOKYzmvWOsJiLjzYBAm32158CHQmvaLASrfxIVhw/Vd2V9GFkK4QdemQZ6v2teZ/0XXt
- hOgcUUWlP9RQ==
-X-IronPort-AV: E=Sophos;i="5.69,277,1571702400"; 
-   d="scan'208";a="11545631"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Dec 2019 12:09:19 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 86FCCA26C9;
-        Wed,  4 Dec 2019 12:09:17 +0000 (UTC)
-Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 12:09:16 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
- EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 12:09:15 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
- mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 4 Dec 2019 12:09:13 +0000
-Subject: Re: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
- pools if a memory pressure is detected
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191204113419.2298-1-sjpark@amazon.com>
- <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
-From:   <sjpark@amazon.com>
-Message-ID: <fcf414ab-4ee4-bafc-6683-5527df7a9731@amazon.com>
-Date:   Wed, 4 Dec 2019 13:09:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
+        b=AkbuvF8WWOeGkFuNbpEiUPeHs0D9XYCrvYJnn3sJBPk0l/N+bAJ+lU7by52a8c0/XL
+         X5y/+uJVi5SRPzgKpD7LZp2RSO63H/dWhNB+Sgv8CnTmnW6HnNvEkrD3pvFKiHue+ji0
+         Cyct4Vs7hozR5hYKDh8cJJMkT72K9aPHj93bK1Ew++bIIM698i5hGwNXpwVN8RyOlTlg
+         ekVZP06isuUhwZwFxkLwU0Sye3HMnEDkq9yUmWZzxA1JTm8RzibEufZxYTJilauyHwzc
+         pKJFDkaXtzzvkeOyU7ajhljX9QykaA8Ur2FHYJunK1Sxosbxld4ODKAYs9j7AB06Aipc
+         jW5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
+        b=ubV/xnNlzx3hQu1ceGoOwo3+4tivDYMw6PYneNfBBd84o0VmJ95RgSrUcUUdfZYMU6
+         FGg7qYT5yUfH3qSZqm5ITuQnPuy7rDqt6bL38QRwvfXlP5fcwQao/d0Jy+tNQ2x/vPxZ
+         h4Yx5wlLMr8010aUXYZ03vrAXS9HbDzJpuCh9XehWtNLz8cFUU91Y9bqTHV64IQTX0J/
+         DfWrjU7iOTybZzmSuHS+ymB9Gi2OtRohoISyCZPc8wbxBPZ/ZOHJ/L+nf+UFhYoNBnb9
+         p7glonXlg+SXnQ0+J+wDC1PPYwhnpjraZChO2VUEDzZ6tbFqvWDbY1c5r3HCEU+svXYc
+         wayA==
+X-Gm-Message-State: APjAAAX5i/3Hf+Mj15gG7YxRcd/7xw5cpD5atPMRBakLi0jjthCuMa/o
+        npLqSP6krLmhGoIS8urs+y5h0mmLmttBYkOS8J0=
+X-Google-Smtp-Source: APXvYqzw3gCG5cnmI6368TWfhjS/+LLSHd6b95oZCOsPTpsAjIN23auDStB1pQ1PTnMah1qk6gl8uYsnTPaZ7k01uH0=
+X-Received: by 2002:ac8:4a81:: with SMTP id l1mr2434940qtq.357.1575463377714;
+ Wed, 04 Dec 2019 04:42:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Received: by 2002:ac8:2f0c:0:0:0:0:0 with HTTP; Wed, 4 Dec 2019 04:42:57 -0800 (PST)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Rev.Dr Emmanuel Okoye CEO Ecobank-benin" 
+        <westernunion.benin982@gmail.com>
+Date:   Wed, 4 Dec 2019 13:42:57 +0100
+Message-ID: <CAP=nHBJXiPmPL21x=_0BHWRk_3N3Yax+tTxcFi=t=AhN7g==1Q@mail.gmail.com>
+Subject: God has remembered your prayers I have already sent you Money Gram
+ payment of $5000.00 today, MG 1029-8096
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 04.12.19 12:52, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Xen-devel <xen-devel-bounces@lists.xenproject.org> On Behalf Of
->> SeongJae Park
->> Sent: 04 December 2019 11:34
->> To: konrad.wilk@oracle.com; roger.pau@citrix.com; axboe@kernel.dk
->> Cc: sj38.park@gmail.com; xen-devel@lists.xenproject.org; linux-
->> block@vger.kernel.org; linux-kernel@vger.kernel.org; Park, Seongjae
->> <sjpark@amazon.com>
->> Subject: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
->> pools if a memory pressure is detected
->>
->> Each `blkif` has a free pages pool for the grant mapping.  The size of
->> the pool starts from zero and be increased on demand while processing
->> the I/O requests.  If current I/O requests handling is finished or 100
->> milliseconds has passed since last I/O requests handling, it checks and
->> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>
->> Therefore, `blkfront` running guests can cause a memory pressure in the
->> `blkback` running guest by attaching arbitrarily large number of block
->> devices and inducing I/O.
-> OOI... How do guests unilaterally cause the attachment of arbitrary numbers of PV devices?
-Good point.  Many systems have their limit for the maximum number of the
-devices.  Thus, 'arbitrarily' large number of devices cannot be attached.  So,
-there is the upperbound.  System administrators might be able to avoid the
-memory pressure problem by setting the limit low enough or giving more memory
-to the 'blkback' running guest.
+Attn, dear Beneficiary.
 
-However, many systems also tempt to set the limit high enough so that guests
-can satisfy and to give minimal memory to the 'blkback' running guest for cost
-efficiency.
+God has remembered your prayers
+I have already sent you Money Gram payment of $5000.00 today, MG 1029-8096
+This is because we have finally concluded to effect your transfer
+funds of $4.8,000.000usd
+through MONEY GRAM International Fund transfer Service
+Each payment will be sending to you by $5000.00 daily until the
+($4.8,000.000usd) is completely transferred
+we have this morning sent  MONEY GRAM payment of $5,000.00 in your name today
+So contact the MONEY GRAM Agent to pick up this first payment of $5000 now
 
-I believe this patchset can be helpful for such situations.
+Contact person Mrs. Alan Ude
+Dir. MONEY GRAM Service,Benin
+Phone number: +229 98856728
+E-mail: moneygram.1820@outlook.fr
 
-Anyway, using the term 'arbitrarily' is obvisously my fault.  I will update the
-description in the next version of patchset.
+Ask him to give you the complete mtcn, sender name, question and
+answer to enable you
+pick up the $5000.00 sent today,
+Also you are instructed to re-confirm your information's
+to Mrs.Alan Ude as listed below to avoid wrong transactions.
 
+(1Your Full name:............................................
+(2 Phone number.....................................................
+(3 Contact address:.....................................
+(4 Age:..................................................................
+(5 Country..............................................
+(6) Sex .................................................................
+(7) your occupation...........................................
 
-Thanks,
-SeongJae Park
+(8)Passport/By Attach or Drivers License Number:
+Contact Mrs. Alan Ude for your MONEY GRAM payment of $4.8,000.000usd
+Note please: I have paid service fees for you but the only money you
+are required
+to send to Mrs. Alan Ude is $90.00 only Transfer fee before you can
+pick up your transfer today.
 
->
->   Paul
->
+Send it to via Money Gram
+Receiver's Name-----Alan Ude
+Country----------Benin
+Address-----------Cotonou
+Quest--------Honest
+Ans-----------Trust
 
+I done all my best for you to receive your transfer now ok.
+We need your urgent reply
+Best Regards
+Rev.Dr Emmanuel Okoye
+CEO Ecobank-benin
+
+If we did not receive it urgent from you today,
+I will go ahead and release you funds to Mrs. Lyndia Ppaulson as your
+representative.
