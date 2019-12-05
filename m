@@ -2,36 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C2D3113E8E
-	for <lists+linux-block@lfdr.de>; Thu,  5 Dec 2019 10:52:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C56C113F12
+	for <lists+linux-block@lfdr.de>; Thu,  5 Dec 2019 11:09:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfLEJwn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Dec 2019 04:52:43 -0500
-Received: from verein.lst.de ([213.95.11.211]:54325 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728604AbfLEJwn (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:52:43 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A670668B05; Thu,  5 Dec 2019 10:52:40 +0100 (CET)
-Date:   Thu, 5 Dec 2019 10:52:40 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        id S1729018AbfLEKI7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Dec 2019 05:08:59 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728991AbfLEKI7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:08:59 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C1262334311276191A39;
+        Thu,  5 Dec 2019 10:08:57 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 5 Dec 2019 10:08:57 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Thu, 5 Dec 2019
+ 10:08:57 +0000
+Subject: Re: [PATCH] block: fix memleak of bio integrity data
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>,
         Justin Tee <justin.tee@broadcom.com>,
         Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] block: fix memleak of bio integrity data
-Message-ID: <20191205095240.GA21803@lst.de>
 References: <20191205020901.18737-1-ming.lei@redhat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <94d1d847-c2f5-f0ed-fcd3-a6a30ad1962b@huawei.com>
+Date:   Thu, 5 Dec 2019 10:08:56 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20191205020901.18737-1-ming.lei@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+On 05/12/2019 02:09, Ming Lei wrote:
+> From: Justin Tee <justin.tee@broadcom.com>
+> 
+> 7c20f11680a4 ("bio-integrity: stop abusing bi_end_io") moves
+> bio_integrity_free from bio_uninit() to bio_integrity_verify_fn()
+> and bio_endio(). This way looks wrong because bio may be freed
+> without calling bio_endio(), for example, blk_rq_unprep_clone() is
+> called from dm_mq_queue_rq() when the underlying queue of dm-mpath
+> is busy.
+> 
+> So memory leak of bio integrity data is caused by commit 7c20f11680a4.
+> 
+> Fixes this issue by re-adding bio_integrity_free() to bio_uninit().
+> 
+> Fixes: 7c20f11680a4 ("bio-integrity: stop abusing bi_end_io")
+> Cc: Justin Tee <justin.tee@broadcom.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> 
+> Add commit log, and simplify/fix the original patch wroten by Justin.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+written
+
+> 
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+
+Don't forget the author SoB...
+
+> ---
+>   block/bio-integrity.c | 2 +-
