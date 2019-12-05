@@ -2,111 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 000CF1145FF
-	for <lists+linux-block@lfdr.de>; Thu,  5 Dec 2019 18:33:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C71F11146BF
+	for <lists+linux-block@lfdr.de>; Thu,  5 Dec 2019 19:18:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfLERdZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Dec 2019 12:33:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43793 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730142AbfLERdZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Dec 2019 12:33:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so3099092lfq.10
-        for <linux-block@vger.kernel.org>; Thu, 05 Dec 2019 09:33:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=/eKd/FDqrplPYUuvbR0AiU2l8M+m4LPxDGweCaRKq6w=;
-        b=M56np70zVr1VfiJPsuEXyT4OG9+Mgq+nZRonIdlMO0qNjSITB1EVwHnE+jM9THnBNz
-         3vX00ZNLigUAoH1Qop/bcwkoEis8chlXpTrSREoavAISt/m/5l5mLyPd23rMwP17l/QA
-         7M9TY3swoS1z9u0iCZT3it6ySOEzIm2iiZPAY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=/eKd/FDqrplPYUuvbR0AiU2l8M+m4LPxDGweCaRKq6w=;
-        b=W8FrPzf9tbHKGLU9Tkq/AYYAbE9QymC1+nlDFQwMbmmRttROCWlUucwktczYrSDRS1
-         CKDCnI8qego7m1Z1bdZycXxOogJ2Ah3/LxNqoS1xw8+OoSEkPOy2p7aaoBTtw3UHpJky
-         ME/1j4qX0P8hOW9zjreR/dRK6OYt/4or4TH4McTMFhJqf+60m3zeM5OZdcYlYTtxlN0e
-         dACCI229UYlCam89OzGhUuoIkEFuhDViROtNIzx2Qj3/btzLcdlJN4B64gSfe4VBu224
-         3Kn92oq6l4aM0i7PYXyB38pGonT05Qs0B10ZJhazzJU0PMXhj2Vm/mcqLjA4CEks4V0I
-         4y1Q==
-X-Gm-Message-State: APjAAAUfwkMaIzS5SBdfo6i97tqctdvZoXFNdYHfR7kBjnnANWpYAZ9K
-        Ak057X67T3xbxrx4ETM4uQB158Gdhis=
-X-Google-Smtp-Source: APXvYqyMFFh1Ku5b4KvPsSgbn0bRZdgnuPztxsszFwrcl//16LSooFh2tD8CmDcQSqoCs1nY0RZXUw==
-X-Received: by 2002:a19:6e43:: with SMTP id q3mr5476669lfk.152.1575567202483;
-        Thu, 05 Dec 2019 09:33:22 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id t1sm5283669lji.98.2019.12.05.09.33.20
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 09:33:21 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id c9so2601867lfi.6
-        for <linux-block@vger.kernel.org>; Thu, 05 Dec 2019 09:33:20 -0800 (PST)
-X-Received: by 2002:ac2:430e:: with SMTP id l14mr2520386lfh.79.1575567200366;
- Thu, 05 Dec 2019 09:33:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191205125826.GK2734@twin.jikos.cz> <31452.1574721589@warthog.procyon.org.uk>
- <1593.1575554217@warthog.procyon.org.uk> <20191205172127.GW2734@suse.cz>
-In-Reply-To: <20191205172127.GW2734@suse.cz>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Dec 2019 09:33:04 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whw+R5GVQdpV6J_5afQ=76vtBPzBPRj6-zG1tnhT32Pag@mail.gmail.com>
-Message-ID: <CAHk-=whw+R5GVQdpV6J_5afQ=76vtBPzBPRj6-zG1tnhT32Pag@mail.gmail.com>
-Subject: Re: [GIT PULL] pipe: Notification queue preparation
-To:     David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1729956AbfLESSR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Dec 2019 13:18:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51778 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfLESSR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:18:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 19D9CAEF9;
+        Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id B1D0EDA733; Thu,  5 Dec 2019 19:18:09 +0100 (CET)
+Date:   Thu, 5 Dec 2019 19:18:09 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
         Christian Brauner <christian@brauner.io>,
         keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pipe: Notification queue preparation
+Message-ID: <20191205181809.GX2734@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, David Howells <dhowells@redhat.com>,
+        torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, keyrings@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191205172127.GW2734@suse.cz>
+ <20191205125826.GK2734@twin.jikos.cz>
+ <31452.1574721589@warthog.procyon.org.uk>
+ <1593.1575554217@warthog.procyon.org.uk>
+ <21493.1575566720@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21493.1575566720@warthog.procyon.org.uk>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 9:22 AM David Sterba <dsterba@suse.cz> wrote:
->
-> I rerun the test again (with a different address where it's stuck), there's
-> nothing better I can get from the debug info, it always points to pipe_wait,
-> disassembly points to.
+On Thu, Dec 05, 2019 at 05:25:20PM +0000, David Howells wrote:
+> I've just posted a couple of patches - can you check to see if they fix your
+> problem?
+> 
+> https://lore.kernel.org/linux-fsdevel/157556649610.20869.8537079649495343567.stgit@warthog.procyon.org.uk/T/#t
 
-Hah. I see another bug.
-
-"pipe_wait()" depends on the fact that all events that wake it up
-happen with the pipe lock held.
-
-But we do some of the "do_wakeup()" handling outside the pipe lock now
-on the reader side
-
-        __pipe_unlock(pipe);
-
-        /* Signal writers asynchronously that there is more room. */
-        if (do_wakeup) {
-                wake_up_interruptible_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM);
-                kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-        }
-
-However, that isn't new to this series _either_, so I don't think
-that's it. It does wake up things inside the lock _too_ if it ended up
-emptying a whole buffer.
-
-So it could be triggered by timing and behavior changes, but I doubt
-this pipe_wait() thing is it either. The fact that it bisects to the
-thing that changes things to use head/tail pointers makes me think
-there's some other incorrect update or comparison somewhere.
-
-That said, "pipe_wait()" is an abomination. It should use a proper
-wait condition and use wait_event(), but the code predates all of
-that. I suspect pipe_wait() goes back to the dark ages with the BKL
-and no actual races between kernel code.
-
-               Linus
+Not fixed, the test still hangs with the same call stack.
