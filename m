@@ -2,61 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC00115A29
-	for <lists+linux-block@lfdr.de>; Sat,  7 Dec 2019 01:29:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB903115A78
+	for <lists+linux-block@lfdr.de>; Sat,  7 Dec 2019 02:04:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfLGA3b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 Dec 2019 19:29:31 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34045 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfLGA3b (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Dec 2019 19:29:31 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f4so10888842wmj.1
-        for <linux-block@vger.kernel.org>; Fri, 06 Dec 2019 16:29:30 -0800 (PST)
+        id S1726442AbfLGBEB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 Dec 2019 20:04:01 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46073 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfLGBEB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Dec 2019 20:04:01 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d20so9509933ljc.12
+        for <linux-block@vger.kernel.org>; Fri, 06 Dec 2019 17:04:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=S7m9By4/eRnSy0vxdfJ6TocT5eJ8gcKLceyHvlHTn3o=;
-        b=UAczeQ0cY+yX9guoET55ezclAqEIwgyAMzPt2ZKBWIbIEt/pMnh3AM4wfp6V+VJf5N
-         /t6chYtkaELTCMsYIAwEqK7Ua++MAsqMO7EBu71mj4Fnlls+x4upb8tVoG2CKNwhblXl
-         GZWv+vxa+pk1bnKGno8f6HZ0ZmxLsefDKEHUp1ThC1gheUMLLO9GE4KYBuoyxwVDBQHN
-         +TWbv9hzxOJ/nyPcm2o6z2SaO7Kv5KPSrhGMjlDOWxjvXF61G6B8vS09UDIp3Kqr/FVJ
-         bo7yk/PV6MjG5BE7V9e+BVzlMyDYxzemK0FCoiLj7UmqPUvOwHSq+EWh2p0uz94KzjFK
-         8hKg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
+        b=F9QgFlzOLVDvV/NH9kO5C38Tw6X+Hr1zV9nvDrPtaW9IdmdHU1TNQTmWgtmr08QLWs
+         m/LzPoUZk/NRRXSGyCni67pyjPAjI1csctIc4AcmS9vEoOX/8bco5LDaWzkI+5Pvvxsm
+         tA5h/kF2wpsxbPSmFh84K3eYpHR4dbqT6qkZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=S7m9By4/eRnSy0vxdfJ6TocT5eJ8gcKLceyHvlHTn3o=;
-        b=To5DHgY1oaW7x62BjoS6NAiL5xFf/YGcBCsPhDTL1upp4EnnutzIV779/s73YrepP/
-         HObSW0dJkOcM56ebfaQnVBLoHvThPlh/G591efC58zWx4b712FEg8Ww2NWeSXBpaNgvs
-         Z5Y2hfHH4/2bIU+RWz+1Pmia5hgxTd+zw804HDCWmuq7eoGNSX2TiDvqPVLq3/Xst2DA
-         RsjqCn6M0ETnDLeQJ/LMk4qV5P/ylMW1rRNA48PEVwyn6CgdQumZmBR4I0vG69Cl3V6v
-         cy6AM1uxUtL3dyjPBKknoCpDevsy8B4lX3P4QVf+zdlXay97R+CWXhZpvVmb2MtaLSqN
-         VSvg==
-X-Gm-Message-State: APjAAAWpjjAziXSh8I2tGijyKOdBQc8IqJ4aPEeNZ1U6ADY7KI/pBNNC
-        vSvtcrnHpqy1fUmP3j+8KYVkGgoIc4VUQAbLcLE=
-X-Google-Smtp-Source: APXvYqyph35gV3V54gW4I7K644Z0gktlmZ+TXi6PJ8di3vm3dUTlaeyqr+FE+GZusDLWVMAtrDQhs4P9pROrLOxshFQ=
-X-Received: by 2002:a1c:96c4:: with SMTP id y187mr13234108wmd.112.1575678569910;
- Fri, 06 Dec 2019 16:29:29 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
+        b=to2ZITJq0Tlh2t5U/xGBs5/War5Djba8Lbty6mShrXOMldshW+4pFGc2nhl1UvWJwG
+         4cJZy1LvKIXMBIv3NT47WqhWcQorOt9Zm0kPA72I/nEaKeoc7qyj4HCS3l6Pm31EqxNM
+         iig97OPZwE8Qwup50c3hzawGM7eYRyAux2/THmYvLLNS2W7EUMw6yq84ka4ag9PrTg0r
+         RsHyVdJ1mjmEAynECBv2fiqOVWyWmMVEiI2X1KP7EGWYC+DluCGNp+FXa2m7m9AAey5O
+         jh6ndJfVp06hCVRKVVOPOGrE2X+rbhOdlBdaG8L/iauJl6gwLcbme084g2nY3PXD9Xwt
+         VOSw==
+X-Gm-Message-State: APjAAAUO8B6bS7w6wQeJQb+B2LVT75TKl89UZs4NPepGtQ0a/BIvgdS+
+        EQxUJdEloUdX27NPt70/Ren+mRcJMnc=
+X-Google-Smtp-Source: APXvYqweCz1SG/MXYNcDiN9oA380SO/QxuSfbFSVH7y3r0Y5jk2F4QuKqRQdrB7lDawQgcz4mTvetw==
+X-Received: by 2002:a2e:914d:: with SMTP id q13mr10172665ljg.198.1575680638977;
+        Fri, 06 Dec 2019 17:03:58 -0800 (PST)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id c23sm7260632ljj.78.2019.12.06.17.03.56
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 17:03:57 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 203so6562598lfa.12
+        for <linux-block@vger.kernel.org>; Fri, 06 Dec 2019 17:03:56 -0800 (PST)
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr9400181lfk.52.1575680636244;
+ Fri, 06 Dec 2019 17:03:56 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a5d:678e:0:0:0:0:0 with HTTP; Fri, 6 Dec 2019 16:29:29 -0800 (PST)
-Reply-To: mrs.aalia.ahmed@gmail.com
-From:   "Mrs.Aalia.Ahmed" <adamhana1907@gmail.com>
-Date:   Sat, 7 Dec 2019 00:29:29 +0000
-Message-ID: <CAOGreOkqZQY02Qc7dHVxdRFWYrTLKw3DvePG3mBc3_8d8rdvmw@mail.gmail.com>
-Subject: OK
-To:     undisclosed-recipients:;
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
+ <20191207000015.GA1757@latitude>
+In-Reply-To: <20191207000015.GA1757@latitude>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Dec 2019 17:03:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
+Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings My Dearest One.
+On Fri, Dec 6, 2019 at 4:00 PM Johannes Hirte
+<johannes.hirte@datenkhaos.de> wrote:
+>
+> Tested with 5.4.0-11505-g347f56fb3890 and still the same wrong behavior.
 
-My name is Mrs.Aalia.Ahmed, i saw your profile and became interested
-in you, please contact me through my email address
-(mrs.aalia.ahmed@gmail.com) to know each other and i have something
-very important to tell you, i wait for your response to my email ID.
-(mrs.aalia.ahmed@gmail.com
+Ok, we'll continue looking.
+
+That said, your version string is strange.
+
+Commit 347f56fb3890 should be  "v5.4.0-13174-g347f56fb3890", the fact
+that you have "11505" confuses me.
+
+The hash is what matters, but I wonder what is going on that you have
+the commit count in that version string so wrong.
+
+                   Linus
