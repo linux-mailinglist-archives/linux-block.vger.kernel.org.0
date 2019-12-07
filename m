@@ -2,158 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62537115B62
-	for <lists+linux-block@lfdr.de>; Sat,  7 Dec 2019 07:47:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C4F5115E18
+	for <lists+linux-block@lfdr.de>; Sat,  7 Dec 2019 19:59:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbfLGGre (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 7 Dec 2019 01:47:34 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43557 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfLGGrd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 7 Dec 2019 01:47:33 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so6928126lfq.10
-        for <linux-block@vger.kernel.org>; Fri, 06 Dec 2019 22:47:32 -0800 (PST)
+        id S1726626AbfLGS7j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 7 Dec 2019 13:59:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39866 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLGS7i (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 7 Dec 2019 13:59:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id s14so10724182wmh.4
+        for <linux-block@vger.kernel.org>; Sat, 07 Dec 2019 10:59:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UPyMBRgocz3Gumc8hl0udOJ28y6fAihoSPqhWLZGSXM=;
-        b=h7pAQHlrS6wsadii68Qu+ijamfwzEaVopIOIiDv9h0hJUjMnoGk9P+OtTNLnGmPppc
-         W7AxQS9TnRlwOWRH1bRJ+xNjY0XkB6HAqCnGY1EtuiQ1JktHJD/nePqvOv+A95wC7Xjr
-         6eP1E881/JjuF6eV/8qFgevKqrjb1xXHiV/Ag=
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=LvpxQRRYJHPl/HMTn0zSCJc2tb2wBsjsoY0M462SFMs=;
+        b=c3ulfSaLqsVq3iP2vELAyCyV+pXoDyw6hEsXE133zV/aXbbIasdzD9m++4c6Bey5lV
+         yo6Z7ZbqrUx9Sbhp5BE/qvBPZvVBMoQDTaSzoCe3sTG/ZuAHLHZ2tyOVMGbrDHOFOKFY
+         BVTGxtRSsZuKslvQ4RTAeoSm/6YqLjTRxkkL+LL9Igoqq4Ktz+sEdHWoionDbIVTdEFs
+         DK+nDHwnYj6ekFtvfvABpSX0H6TsOyEogiSNi/4Mi24TcoKwtBnpHpIbuOLr83Lvi71z
+         2XdAk3qx0G7KNyFesVokZ1BnlwLzRnFp3gQVCVoGNAjJ5JfGg3XAg8HzddmRik/h3HvN
+         OuLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPyMBRgocz3Gumc8hl0udOJ28y6fAihoSPqhWLZGSXM=;
-        b=sDmj8twItVQHSEy6SSEbL+Ldq8yaqD//bb9dWtdMrrNloYEEBHpb4/AsDgd9oE1QXW
-         vIGdN1dZQNM3QXsXI3IFuH+wc57mTR3QhO0ZTTbEj+IfYak1ZHETi5J1yfJN6fMZmE8V
-         iZTuCRSz64I3dkDn2NhodNr3WKArm6sJsG0jrp4/1eniEQlme+j5QjlHZvdJDpx685Au
-         jR/n3g/2CGFWP3cAHwK+E/2aSd5rmaoznni0nEpbXafo4Y9Fl2mPjTrQ5SvnsTVMt8Qz
-         KPZs4ZViM+md2cplYohOjfHDuZIJ1h8h89qDwOmkgLSnNW1D/2duP9puY9pmKARx6Tc2
-         E0Tw==
-X-Gm-Message-State: APjAAAXbZAOrrGeIfCrWwN15sBsInwOZDMm9AFUg88jw7AE6Q0yJQnCD
-        SI+gyKoS0y+f0ftK96tuV+FhqwZ+1A0=
-X-Google-Smtp-Source: APXvYqwo7AQv7oKJoSX2c8/407o42DtMYCrowiPJEaIMX4t0UZ5S5wR5vjRpg5Tm0fBYO2gKteNviQ==
-X-Received: by 2002:a19:7b18:: with SMTP id w24mr10219790lfc.48.1575701251145;
-        Fri, 06 Dec 2019 22:47:31 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id k25sm7544632lji.42.2019.12.06.22.47.28
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 22:47:29 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id h23so10004842ljc.8
-        for <linux-block@vger.kernel.org>; Fri, 06 Dec 2019 22:47:28 -0800 (PST)
-X-Received: by 2002:a2e:9041:: with SMTP id n1mr10951802ljg.133.1575701247153;
- Fri, 06 Dec 2019 22:47:27 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=LvpxQRRYJHPl/HMTn0zSCJc2tb2wBsjsoY0M462SFMs=;
+        b=VOCrXe6cDyvwfpcGqj/USn9oLtB29tvpBrp87oQOUuHaY0Z0tvFznN6uPJWY+P8e6J
+         Mp983x97xf8qZc74XQP5NuFfC91wZ2R7lRaDWz5XTUsUYGb1sfHeFyjIOQTfBWzQHdPN
+         wmkZQdgiT4JyWAWPXgo8nF1Fa808rZ8dhgva7pRQejlUpkXNhv2r9ySEfVcoHQmFKOMD
+         562ogKpZ5W5mt3FB7MEu+Y7B5Hfizk9f5c5k9Z5pQtixtjIa6xfnZ27BJgIaKcj499QP
+         ITy+dc9lqEzCPmauJPJkM2S8S/gt1L3ZVxP1hAo1eEf3QR8ImbAVGUsOpZWPZ17uOxRu
+         U7EQ==
+X-Gm-Message-State: APjAAAUMM97K3AHrmi5bKuEbQqXLF8JCm4zkpJ6towJOE08D0pHLLpyZ
+        7f1y5Rge5lJKd6dH2SopkzphT3s3VEGFhoTQwCI=
+X-Google-Smtp-Source: APXvYqxS26Nq5VaodSppBRwydNC+TIciFnMGLUIIT4tDf3ZBKyNFEmO6xBaH7ghM6Mvg7+H3wphbMCXyVV3rCVlzREk=
+X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr16032281wmj.177.1575745176062;
+ Sat, 07 Dec 2019 10:59:36 -0800 (PST)
 MIME-Version: 1.0
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
- <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
- <20191207000015.GA1757@latitude>
-In-Reply-To: <20191207000015.GA1757@latitude>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 6 Dec 2019 22:47:11 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgkmG9xu_tvMbFTUyn3f2knr7POHjiwMtEmNxXzdPN8wg@mail.gmail.com>
-Message-ID: <CAHk-=wgkmG9xu_tvMbFTUyn3f2knr7POHjiwMtEmNxXzdPN8wg@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Reply-To: sebastient766@gmail.com
+Received: by 2002:a05:6000:182:0:0:0:0 with HTTP; Sat, 7 Dec 2019 10:59:35
+ -0800 (PST)
+From:   =?UTF-8?B?TXIuU8OpYmFzdGllbiBUb25p?= <sebastient766@gmail.com>
+Date:   Sat, 7 Dec 2019 10:59:35 -0800
+X-Google-Sender-Auth: xqLd-ULvMtV-dK8-a2I6jzfebXE
+Message-ID: <CAG3TQM18iU5JCWBy2s-n+MN7dpp+D96anRipwU2S64sLmN6PuA@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 4:00 PM Johannes Hirte
-<johannes.hirte@datenkhaos.de> wrote:
->
-> Tested with 5.4.0-11505-g347f56fb3890 and still the same wrong behavior.
-> Reliable testcase is facebook, where timeline isn't updated with firefox.
+FROM MR.S=C3=89BASTIEN TONI
+AUDIT& ACCOUNT MANAGER
+BANK OF AFRICA (B.O.A)
+OUAGADOUGOU BURKINA FASO
+WEST AFRICA.
 
-Hmm. I'm not on FB, so that's not a great test for me.
+Dear Friend,
 
-But I've been staring at the code for a long time, and I did find another issue.
+With due respect, I have decided to contact you on
+abusinesstransaction  that will be beneficial to both of us. At the
+bank last account and  auditing evaluation, my staffs came across an
+old account which was being maintained by a foreign client who we
+learn was among the deceased passengers of motor accident on
+November.2003, the deceased was unable to run this account since his
+death. Theaccount has  remained dormant without the knowledge of his
+family since it was put in a  safe deposit account in the bank for
+future investment by the client.
 
-poll() and select() were subtly racy and broken. The code did
+Since his demise, even the members of his family haven't applied for
+claims  over this fund and it has been in the safe deposit account
+until I  discovered that it cannot be claimed since our client
+isaforeign nationaland we are sure that he has no next of kin here to
+file claims over the money. As the director of the department, this
+discovery was brought to my office so as to decide what is to bedone.I
+ decided to seek ways through which to transfer this money out of the
+bank  and
+out of the country too.
 
-        unsigned int head = READ_ONCE(pipe->head);
-        unsigned int tail = READ_ONCE(pipe->tail);
+The total amount in the account is 18.6 million with my positions as
+staffs  of the bank, I am handicapped because I cannot operate foreign
+accounts and  cannot lay bonafide claim over this money. The client
+was a foreign  national and you will only be asked to act as his next
+of kin and I will  supply you with all the necessary information and
+bank data to assist you in being able to transfer this money to any
+bank of your  choice where this money could be transferred into.The
+total sum will be  shared as follows: 50% for me, 50% for you and
+expenses incidental occur  during the transfer will be incur by both
+of us. The transfer is risk free on both sides hence you are going to
+follow my instruction till the fund  transfer to your account. Since I
+work in this bank that is why you should  be confident in the success
+of this transaction because you will be updated with information as at
+when desired.
 
-which is ok in theory - select and poll can be racy, and doing racy
-reads is ok and we do it in other places too.
+I will wish you to keep this transaction secret and confidential as I
+am  hoping to retire with my share of this money at the end of
+transaction  which will be when this money is safety in your account.
+I will then come over to your country for sharing according to the
+previously agreed percentages. You might even have to advise me on
+possibilities of investment in your country or elsewhere of our
+choice. May  God help you to help me to a restive retirement, Amen,And
+You have to  contact me through my private e-mail
+at(sebastient766@gmail.com)Please for further information and inquires
+feel free to contact me back immediately for more explanation and
+better  understanding I want you to assure me your capability of
+handling this  project with trust by providing me your following
+information details such as:
 
-But when you don't do proper locking and do racy poll/select, you need
-to make sure that *if* you were wrong, and said "there's nothing
-pending", you need to have added yourself to the wait-queue so that
-any changes caused poll to update.
+(1)NAME..............
+(2)AGE:................
+(3)SEX:.....................
+(4)PHONE NUMBER:.................
+(5)OCCUPATION:.....................
+(6)YOUR COUNTRY:.....................
 
-And the new pipe code did that wrong. It added itself to the poll wait
-queues *after* it had read that racy data, so you could get into a
-race where
-
- - poll reads stale data
-
-      - data changes, wakeup happens
-
- - poll adds itself to the poll wait queue after the wakeup
-
- - poll returns "nothing to read/write" based on stale data, and never
-saw the wakeup event that told it otherwise.
-
-So a patch something like the appended (whitespace-damaged once again,
-because it's untested and I've only been _looking_ a the code) might
-solve that issue.
-
-That said, the race here is quite small. Since that firefox problem is
-apparently repeatable for you, the timing is either _very_ unlucky, or
-there is something else going on too.
-
-                  Linus
-
---- snip snip ---
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index c561f7f5e902..4c39ea9b3419 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -557,12 +557,24 @@ pipe_poll(struct file *filp, poll_table *wait)
- {
-        __poll_t mask;
-        struct pipe_inode_info *pipe = filp->private_data;
--       unsigned int head = READ_ONCE(pipe->head);
--       unsigned int tail = READ_ONCE(pipe->tail);
-+       unsigned int head, tail;
-
-+       /*
-+        * Reading only -- no need for acquiring the semaphore.
-+        *
-+        * But because this is racy, the code has to add the
-+        * entry to the poll table _first_ ..
-+        */
-        poll_wait(filp, &pipe->wait, wait);
-
--       /* Reading only -- no need for acquiring the semaphore.  */
-+       /*
-+        * .. and only then can you do the racy tests. That way,
-+        * if something changes and you got it wrong, the poll
-+        * table entry will wake you up and fix it.
-+        */
-+       head = READ_ONCE(pipe->head);
-+       tail = READ_ONCE(pipe->tail);
-+
-        mask = 0;
-        if (filp->f_mode & FMODE_READ) {
-                if (!pipe_empty(head, tail))
+Yours sincerely,
+Mr.S=C3=A9bastien Toni
