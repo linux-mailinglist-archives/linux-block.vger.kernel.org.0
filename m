@@ -2,124 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C4F5115E18
-	for <lists+linux-block@lfdr.de>; Sat,  7 Dec 2019 19:59:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E3A116122
+	for <lists+linux-block@lfdr.de>; Sun,  8 Dec 2019 08:47:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfLGS7j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 7 Dec 2019 13:59:39 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39866 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfLGS7i (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 7 Dec 2019 13:59:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id s14so10724182wmh.4
-        for <linux-block@vger.kernel.org>; Sat, 07 Dec 2019 10:59:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=LvpxQRRYJHPl/HMTn0zSCJc2tb2wBsjsoY0M462SFMs=;
-        b=c3ulfSaLqsVq3iP2vELAyCyV+pXoDyw6hEsXE133zV/aXbbIasdzD9m++4c6Bey5lV
-         yo6Z7ZbqrUx9Sbhp5BE/qvBPZvVBMoQDTaSzoCe3sTG/ZuAHLHZ2tyOVMGbrDHOFOKFY
-         BVTGxtRSsZuKslvQ4RTAeoSm/6YqLjTRxkkL+LL9Igoqq4Ktz+sEdHWoionDbIVTdEFs
-         DK+nDHwnYj6ekFtvfvABpSX0H6TsOyEogiSNi/4Mi24TcoKwtBnpHpIbuOLr83Lvi71z
-         2XdAk3qx0G7KNyFesVokZ1BnlwLzRnFp3gQVCVoGNAjJ5JfGg3XAg8HzddmRik/h3HvN
-         OuLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=LvpxQRRYJHPl/HMTn0zSCJc2tb2wBsjsoY0M462SFMs=;
-        b=VOCrXe6cDyvwfpcGqj/USn9oLtB29tvpBrp87oQOUuHaY0Z0tvFznN6uPJWY+P8e6J
-         Mp983x97xf8qZc74XQP5NuFfC91wZ2R7lRaDWz5XTUsUYGb1sfHeFyjIOQTfBWzQHdPN
-         wmkZQdgiT4JyWAWPXgo8nF1Fa808rZ8dhgva7pRQejlUpkXNhv2r9ySEfVcoHQmFKOMD
-         562ogKpZ5W5mt3FB7MEu+Y7B5Hfizk9f5c5k9Z5pQtixtjIa6xfnZ27BJgIaKcj499QP
-         ITy+dc9lqEzCPmauJPJkM2S8S/gt1L3ZVxP1hAo1eEf3QR8ImbAVGUsOpZWPZ17uOxRu
-         U7EQ==
-X-Gm-Message-State: APjAAAUMM97K3AHrmi5bKuEbQqXLF8JCm4zkpJ6towJOE08D0pHLLpyZ
-        7f1y5Rge5lJKd6dH2SopkzphT3s3VEGFhoTQwCI=
-X-Google-Smtp-Source: APXvYqxS26Nq5VaodSppBRwydNC+TIciFnMGLUIIT4tDf3ZBKyNFEmO6xBaH7ghM6Mvg7+H3wphbMCXyVV3rCVlzREk=
-X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr16032281wmj.177.1575745176062;
- Sat, 07 Dec 2019 10:59:36 -0800 (PST)
-MIME-Version: 1.0
-Reply-To: sebastient766@gmail.com
-Received: by 2002:a05:6000:182:0:0:0:0 with HTTP; Sat, 7 Dec 2019 10:59:35
- -0800 (PST)
-From:   =?UTF-8?B?TXIuU8OpYmFzdGllbiBUb25p?= <sebastient766@gmail.com>
-Date:   Sat, 7 Dec 2019 10:59:35 -0800
-X-Google-Sender-Auth: xqLd-ULvMtV-dK8-a2I6jzfebXE
-Message-ID: <CAG3TQM18iU5JCWBy2s-n+MN7dpp+D96anRipwU2S64sLmN6PuA@mail.gmail.com>
-Subject: Dear Friend,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1725820AbfLHHr2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 8 Dec 2019 02:47:28 -0500
+Received: from mx.sdf.org ([205.166.94.20]:58762 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfLHHr1 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 8 Dec 2019 02:47:27 -0500
+X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Dec 2019 02:47:27 EST
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id xB87gPvL016505
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Sun, 8 Dec 2019 07:42:25 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id xB87gNOS011043;
+        Sun, 8 Dec 2019 07:42:23 GMT
+Date:   Sun, 8 Dec 2019 07:42:23 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201912080742.xB87gNOS011043@sdf.org>
+To:     chenxiang66@hisilicon.com, ming.lei@redhat.com
+Subject: Re: The irq Affinity is changed after the patch(Fixes: b1a5a73e64e9 ("genirq/affinity: Spread vectors on node according to nr_cpu ratio"))
+Cc:     axboe@kernel.dk, john.garry@huawei.com, kbusch@kernel.org,
+        linux-block@vger.kernel.org, linuxarm@huawei.com, lkml@sdf.org,
+        tglx@linutronix.de
+In-Reply-To: <a8a89884-8323-ff70-f35e-0fcf5d7afefc@hisilicon.com>
+References: <d59f7f7a-975a-2032-aa61-7cbff7585d33@hisilicon.com>,
+    <20191119014204.GA391@ming.t460p>,
+    <a8a89884-8323-ff70-f35e-0fcf5d7afefc@hisilicon.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-FROM MR.S=C3=89BASTIEN TONI
-AUDIT& ACCOUNT MANAGER
-BANK OF AFRICA (B.O.A)
-OUAGADOUGOU BURKINA FASO
-WEST AFRICA.
+On Tue, 19 Nov 2019 at 11:05:55 +0800, chenxiang (M)" <chenxiang66@hisilicon.com> wrote:
+> Sorry, I can't access the link you provide, but I can provide those
+> irqs' affinity in the attachment.  I also write a small testcase,
+> and find id is 1, 2, 3, 0 after calling sort().
+> 
+> struct ex_s {
+>     int id;
+>     int cpus;
+> };
+> struct ex_s ex_total[4] = {
+>     {0, 8},
+>     {1, 8},
+>     {2, 8},
+>     {3, 8}
+> };
+> 
+> static int cmp_func(const void *l, const void *r)
+> {
+>     const struct ex_s *ln = l;
+>     const struct ex_s *rn = r;
+> 
+>     return ln->cpus - rn->cpus;
+> }
 
-Dear Friend,
+Your cmp_func is the problem.  sort() in the Linux kernel, like
+qsort() in the C library, has never been stable, meaning that if
+cmp_func() returns 0, there is no guarantee what order *l and *r
+will end up in.  Minor changes to the implementation can change the
+result.  You're sorting on the cpus field, which is all 8, so your
+cmp_func is saying "I don't care what order the results appear in".
 
-With due respect, I have decided to contact you on
-abusinesstransaction  that will be beneficial to both of us. At the
-bank last account and  auditing evaluation, my staffs came across an
-old account which was being maintained by a foreign client who we
-learn was among the deceased passengers of motor accident on
-November.2003, the deceased was unable to run this account since his
-death. Theaccount has  remained dormant without the knowledge of his
-family since it was put in a  safe deposit account in the bank for
-future investment by the client.
+(A web search on "stable sort" will produce decades of discussion
+on the subject, but basically an unstable sort has numerous
+implementation advantages, and problems can usually be solved by
+adjusting the comparison function.)
 
-Since his demise, even the members of his family haven't applied for
-claims  over this fund and it has been in the safe deposit account
-until I  discovered that it cannot be claimed since our client
-isaforeign nationaland we are sure that he has no next of kin here to
-file claims over the money. As the director of the department, this
-discovery was brought to my office so as to decide what is to bedone.I
- decided to seek ways through which to transfer this money out of the
-bank  and
-out of the country too.
+If you want to sort by ->id if ->cpus is the same, then change the
+cmp_func to say so:
 
-The total amount in the account is 18.6 million with my positions as
-staffs  of the bank, I am handicapped because I cannot operate foreign
-accounts and  cannot lay bonafide claim over this money. The client
-was a foreign  national and you will only be asked to act as his next
-of kin and I will  supply you with all the necessary information and
-bank data to assist you in being able to transfer this money to any
-bank of your  choice where this money could be transferred into.The
-total sum will be  shared as follows: 50% for me, 50% for you and
-expenses incidental occur  during the transfer will be incur by both
-of us. The transfer is risk free on both sides hence you are going to
-follow my instruction till the fund  transfer to your account. Since I
-work in this bank that is why you should  be confident in the success
-of this transaction because you will be updated with information as at
-when desired.
+static int cmp_func(const void *l, const void *r)
+{
+    const struct ex_s *ln = l;
+    const struct ex_s *rn = r;
 
-I will wish you to keep this transaction secret and confidential as I
-am  hoping to retire with my share of this money at the end of
-transaction  which will be when this money is safety in your account.
-I will then come over to your country for sharing according to the
-previously agreed percentages. You might even have to advise me on
-possibilities of investment in your country or elsewhere of our
-choice. May  God help you to help me to a restive retirement, Amen,And
-You have to  contact me through my private e-mail
-at(sebastient766@gmail.com)Please for further information and inquires
-feel free to contact me back immediately for more explanation and
-better  understanding I want you to assure me your capability of
-handling this  project with trust by providing me your following
-information details such as:
-
-(1)NAME..............
-(2)AGE:................
-(3)SEX:.....................
-(4)PHONE NUMBER:.................
-(5)OCCUPATION:.....................
-(6)YOUR COUNTRY:.....................
-
-Yours sincerely,
-Mr.S=C3=A9bastien Toni
+    if (ln->cpus != rn->cpus)
+	return ln->cpus - rn->cpus;
+    else
+	return ln->id - rn->id;
+}
+(This simple subtract-based compare depends on the fact that "cpus"
+and "id" are both guaranteed to fit into 31 bits.  If there's any chance
+The true difference could exceed INT_MAX, you need to get a bit fancier.)
