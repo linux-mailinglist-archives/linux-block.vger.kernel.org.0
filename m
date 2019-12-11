@@ -2,148 +2,217 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AA211A1EE
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 03:54:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B547811A330
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 04:51:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfLKCyI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Dec 2019 21:54:08 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17227 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbfLKCxk (ORCPT
+        id S1726717AbfLKDvO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Dec 2019 22:51:14 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36336 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLKDvN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:53:40 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df05a1d0001>; Tue, 10 Dec 2019 18:53:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Dec 2019 18:53:38 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Dec 2019 18:53:38 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 02:53:38 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 11 Dec 2019 02:53:37 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df05a300002>; Tue, 10 Dec 2019 18:53:37 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v9 25/25] selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN coverage
-Date:   Tue, 10 Dec 2019 18:53:18 -0800
-Message-ID: <20191211025318.457113-26-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191211025318.457113-1-jhubbard@nvidia.com>
-References: <20191211025318.457113-1-jhubbard@nvidia.com>
+        Tue, 10 Dec 2019 22:51:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so8366654pjc.3;
+        Tue, 10 Dec 2019 19:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=w9o4gMDR79zJbq+/ILGvB1xN+aaga7BtIGFfI8prB5M=;
+        b=cb2c4Qu1c1VKdo14t+tdEIreffodBdWgrfZOnau+8AaTsPYBHxEDq2ozEzFFz/pEXz
+         1Pz5xgaVxS7aheHrbjvMvC0DfUNyVafnjbnzBHpv7NUksimAVRA4gVCZVj8Ydn64MoVb
+         CSt+5FDPXEO6+HIN1gVgL2lUTUC0OSJJD+IC0nahZy4jbR2rtY9d53t++mdn3OYc1Jj9
+         PAQUqBaUzQA1lWISbOFvz5im/enk1rQV5SA86x8ZF0GMnO3BK7HOp+osbtQhfGOBFXHm
+         gKXy/czYdBvRWV7jv/jpcYv/8/AfbBfxTfHGyhIYxJrKgDDf18qfGpkIS34S2xVClL79
+         X7dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=w9o4gMDR79zJbq+/ILGvB1xN+aaga7BtIGFfI8prB5M=;
+        b=Fa9/NQ616nFX+TBgw/Sf8v1bTWPQ4DWe/H4DVPrnlCWW7n7gCOTvsdCv6U/5ChU3/W
+         nAQl3KE/faPj9UP92wstvUdsxheKDQqsbs2BmlTBNoqrrmk4JOu8hFnX2iILWrrgbdXq
+         K0wBT+e5NuV8N+fDf1k+1glmKKWZeN6wYXo5mtLfkObHHmrxd6mj3lYWwnbuPWUu1B0u
+         8zlUlqc/DA/8lWgFt3GDdqmcqXLHGhn0Tj59NkXhpxijBIKI4xtl5G4jvwQH/zQ6uk4l
+         Ga9QOz0jegBt9DQMVuhrI83L97cPiQUL0ID4emRTCoANrKW7NmzNPLkTE5DWoRJS0cJf
+         KvKw==
+X-Gm-Message-State: APjAAAWawWc4hUaUwA/nhTy27IfGx05Go60ACqxK+oj9AktRTFydz83m
+        opy+Ddga/zYJ53//3NPVABI=
+X-Google-Smtp-Source: APXvYqwV5LToqYXF+yA4cMixtRX1yiBntc+ibWAwq4CQnG/WEECa7yTzQkoSqPhBeU9QcWl0npySrg==
+X-Received: by 2002:a17:902:6909:: with SMTP id j9mr1012338plk.136.1576036272826;
+        Tue, 10 Dec 2019 19:51:12 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id u3sm501061pga.72.2019.12.10.19.51.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 19:51:11 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     roger.pau@citrix.com
+Cc:     sjpark@amazon.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pdurrant@amazon.com, xen-devel@lists.xenproject.org,
+        SeongJae Park <sjpark@amazon.de>, sj38.park@gmail.com
+Subject: Re: Re: [PATCH v5 1/2] xenbus/backend: Add memory pressure handler callback
+Date:   Wed, 11 Dec 2019 04:50:58 +0100
+Message-Id: <20191211035058.11479-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576032797; bh=efjW/rF0EGuRthlOGEU05IQnyHi57jZRzyopoxtDk8c=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=jHA0ByLj6QYFV7n2rBCzqPPa0Q5IP+7x/G8P6mLvVFTEJzqowAWdJqPwWnruswBro
-         lpqfRzvKktTAc+zH4nLabgjThi49XGxeN4DzH53ip1UebXi644j4LuLdlW9mBohUa6
-         SqdUZeet0abo7Kiy7j2yqxOvyhcj3tYFHqQG/LZggQlkcI6EZw4H9s49zoYBV6eHmG
-         8C2IAQPjpWKhfziN+V9Kfo//HwuPhn/a7K84mDN+lqXArlPK/gOgmyBFj7ACDpGNEx
-         eiEUFhIGc89HsbF2aNRnPaRmMHQo4tuBuTQNPTmDKBJn39TpGjnTZWk4Eqa+uj+5g4
-         0zJ9szbQSw+FA==
+In-Reply-To: <20191210101635.GD980@Air-de-Roger>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It's good to have basic unit test coverage of the new FOLL_PIN
-behavior. Fortunately, the gup_benchmark unit test is extremely
-fast (a few milliseconds), so adding it the the run_vmtests suite
-is going to cause no noticeable change in running time.
+On Tue, 10 Dec 2019 11:16:35 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 
-So, add two new invocations to run_vmtests:
+> > Granting pages consumes backend system memory.  In systems configured
+> > with insufficient spare memory for those pages, it can cause a memory
+> > pressure situation.  However, finding the optimal amount of the spare
+> > memory is challenging for large systems having dynamic resource
+> > utilization patterns.  Also, such a static configuration might lack a
+> 
+> s/lack a/lack/
+> 
+> > flexibility.
+> > 
+> > To mitigate such problems, this commit adds a memory reclaim callback to
+> > 'xenbus_driver'.  Using this facility, 'xenbus' would be able to monitor
+> > a memory pressure and request specific devices of specific backend
+> 
+> s/monitor a/monitor/
+> 
+> > drivers which causing the given pressure to voluntarily release its
+> 
+> ...which are causing...
+> 
+> > memory.
+> > 
+> > That said, this commit simply requests every callback registered driver
+> > to release its memory for every domain, rather than issueing the
+> 
+> s/issueing/issuing/
+> 
+> > requests to the drivers and the domain in charge.  Such things will be
+> 
+> I'm afraid I don't understand the "domain in charge" part of this
+> sentence.
+> 
+> > done in a futur.  Also, this commit focuses on memory only.  However, it
+> 
+> ... done in a future change. Also I think the period after only should
+> be removed in order to tie both sentences together.
+> 
+> > would be ablt to be extended for general resources.
+> 
+> s/ablt/able/
+> 
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  drivers/xen/xenbus/xenbus_probe_backend.c | 31 +++++++++++++++++++++++
+> >  include/xen/xenbus.h                      |  1 +
+> >  2 files changed, 32 insertions(+)
+> > 
+> > diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > index b0bed4faf44c..5a5ba29e39df 100644
+> > --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+> > +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > @@ -248,6 +248,34 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+> >  	return NOTIFY_DONE;
+> >  }
+> >  
+> > +static int xenbus_backend_reclaim(struct device *dev, void *data)
+> > +{
+> > +	struct xenbus_driver *drv;
+> 
+> Newline and const.
+> 
+> > +	if (!dev->driver)
+> > +		return -ENOENT;
+> > +	drv = to_xenbus_driver(dev->driver);
+> > +	if (drv && drv->reclaim)
+> > +		drv->reclaim(to_xenbus_device(dev));
+> 
+> You seem to completely ignore the return of the reclaim hook...
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * Returns 0 always because we are using shrinker to only detect memory
+> > + * pressure.
+> > + */
+> > +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
+> > +				struct shrink_control *sc)
+> > +{
+> > +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
+> > +			xenbus_backend_reclaim);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct shrinker xenbus_backend_shrinker = {
+> > +	.count_objects = xenbus_backend_shrink_count,
+> > +	.seeks = DEFAULT_SEEKS,
+> > +};
+> > +
+> >  static int __init xenbus_probe_backend_init(void)
+> >  {
+> >  	static struct notifier_block xenstore_notifier = {
+> > @@ -264,6 +292,9 @@ static int __init xenbus_probe_backend_init(void)
+> >  
+> >  	register_xenstore_notifier(&xenstore_notifier);
+> >  
+> > +	if (register_shrinker(&xenbus_backend_shrinker))
+> > +		pr_warn("shrinker registration failed\n");
+> > +
+> >  	return 0;
+> >  }
+> >  subsys_initcall(xenbus_probe_backend_init);
+> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+> > index 869c816d5f8c..cdb075e4182f 100644
+> > --- a/include/xen/xenbus.h
+> > +++ b/include/xen/xenbus.h
+> > @@ -104,6 +104,7 @@ struct xenbus_driver {
+> >  	struct device_driver driver;
+> >  	int (*read_otherend_details)(struct xenbus_device *dev);
+> >  	int (*is_ready)(struct xenbus_device *dev);
+> > +	unsigned (*reclaim)(struct xenbus_device *dev);
+> 
+> ... hence I wonder why it's returning an unsigned when it's just
+> ignored.
+> 
+> IMO it should return an int to signal errors, and the return should be
+> ignored.
 
-1) Run gup_benchmark with normal get_user_pages().
+I first thought similarly and set the callback to return something.  However,
+as this callback is called to simply notify the memory pressure and ask the
+driver to free its memory as many as possible, I couldn't easily imagine what
+kind of errors that need to be handled by its caller can occur in the callback,
+especially because current blkback's callback implementation has no such error.
+So, if you and others agree, I would like to simply set the return type to
+'void' for now and defer the error handling to a future change.
 
-2) Run gup_benchmark with pin_user_pages(). This is much like
-the first call, except that it sets FOLL_PIN.
+> 
+> Also, I think it would preferable for this function to take an extra
+> parameter to describe the resource the driver should attempt to free
+> (ie: memory or interrupts for example). I'm however not able to find
+> any existing Linux type to describe such resources.
 
-Running these two in quick succession also provide a visual
-comparison of the running times, which is convenient.
+Yes, such extention would be the right direction.  However, because there is no
+existing Linux type to describe the type of resources to reclaim as you also
+mentioned, there could be many different opinions about its implementation
+detail.  In my opinion, it could be also possible to simply add another
+callback for another resource type.  That said, because currently we have an
+use case and an implementation for the memory pressure only, I would like to
+let it as is for now and defer the extension as a future work, if you and
+others have no objection.
 
-The new invocations are fairly early in the run_vmtests script,
-because with test suites, it's usually preferable to put the
-shorter, faster tests first, all other things being equal.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Thanks,
+SeongJae Park
 
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftes=
-ts/vm/run_vmtests
-index a692ea828317..df6a6bf3f238 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -112,6 +112,28 @@ echo "NOTE: The above hugetlb tests provide minimal co=
-verage.  Use"
- echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
- echo "      hugetlb regression testing."
-=20
-+echo "--------------------------------------------"
-+echo "running 'gup_benchmark -U' (normal/slow gup)"
-+echo "--------------------------------------------"
-+./gup_benchmark -U
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
-+echo "------------------------------------------"
-+echo "running gup_benchmark -b (pin_user_pages)"
-+echo "------------------------------------------"
-+./gup_benchmark -b
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
- echo "-------------------"
- echo "running userfaultfd"
- echo "-------------------"
---=20
-2.24.0
-
+> 
+> Thanks, Roger.
+> 
+> 
