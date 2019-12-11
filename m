@@ -2,65 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DF9711BE20
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 21:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C776111BEB6
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 21:57:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfLKUnw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Dec 2019 15:43:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47718 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLKUnw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:43:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6vrmgfi+4nbdOkVEhxkfkbfonRvSVMuVgBeRSgTCURI=; b=NcEGA0EkSkv9urc5oY45erA5Z
-        kXMIkX3ZMDeFK8SWl9RakM896GU6zgqje8VCLvgL5UJGrzzEr41Qo1pjfNiqQsyziQ2Dk9hJ+5lE+
-        QIgQkDtzXTe7pXcKDDRyhb07+79di9ZGqv/adl8bpbOrU+YrVDloSW8xdbTdhm9i4dG2m6IW83Ba6
-        ybYDR4rrxzAkdx6chLYkVLYLqCqdwW309zN3WiWY+N09/Nfa6s7vSYsVbU6bZc9YhRoUtYp/CC3AX
-        eSgWkApm5FVsSIPQrdYEd61PvbDxXpHygQNjynxLQpBIBGpG4m/uvjY0LDDx5eAH9h1WgzKXKfQ3N
-        xfRTG8YiA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if8pp-0005Dn-Py; Wed, 11 Dec 2019 20:43:49 +0000
-Date:   Wed, 11 Dec 2019 12:43:49 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Chris Mason <clm@fb.com>, Dave Chinner <david@fromorbit.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCHSET v3 0/5] Support for RWF_UNCACHED
-Message-ID: <20191211204349.GO32169@bombadil.infradead.org>
-References: <20191211152943.2933-1-axboe@kernel.dk>
- <CAHk-=wjz3LE1kznro1dozhk9i9Dr4pCnkj7Fuccn2xdWeGHawQ@mail.gmail.com>
- <d0adcde2-3106-4fea-c047-4d17111bab70@kernel.dk>
- <e43a2700-8625-e136-dc9d-d0d2da5d96ac@kernel.dk>
- <CAHk-=wje8i3DVcO=fMC4tzKTS5+eHv0anrVZa_JENQt08T=qCQ@mail.gmail.com>
- <0d4e3954-c467-30a7-5a8e-7c4180275533@kernel.dk>
+        id S1726771AbfLKU5l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Dec 2019 15:57:41 -0500
+Received: from ms.lwn.net ([45.79.88.28]:58190 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfLKU5l (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:57:41 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 7D799739;
+        Wed, 11 Dec 2019 20:57:38 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 13:57:37 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFQ=?= =?UTF-8?B?w7ZwZWw=?= 
+        <bjorn.topel@intel.com>, Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v9 10/25] mm/gup: introduce pin_user_pages*() and
+ FOLL_PIN
+Message-ID: <20191211135737.581add2f@lwn.net>
+In-Reply-To: <20191211025318.457113-11-jhubbard@nvidia.com>
+References: <20191211025318.457113-1-jhubbard@nvidia.com>
+        <20191211025318.457113-11-jhubbard@nvidia.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d4e3954-c467-30a7-5a8e-7c4180275533@kernel.dk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:08:32PM -0700, Jens Axboe wrote:
-> > The fact that you see that xas_create() so prominently would imply
-> > perhaps add_to_swap_cache(), which certainly implies that the page
-> > shrinking isn't hitting the file pages...
-> 
-> That's presumably misleading, as it's just lookups. But yes,
-> confusing...
+On Tue, 10 Dec 2019 18:53:03 -0800
+John Hubbard <jhubbard@nvidia.com> wrote:
 
-While xas_create() could be called directly, it's more often called
-through xas_store() ... which would be called if we're storing a shadow
-entry to replace a page, which this workload would presumably be doing.
+> Introduce pin_user_pages*() variations of get_user_pages*() calls,
+> and also pin_longterm_pages*() variations.
+
+Just a couple of nits on the documentation patch
+
+> +++ b/Documentation/core-api/pin_user_pages.rst
+> @@ -0,0 +1,232 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +====================================================
+> +pin_user_pages() and related calls
+> +====================================================
+> +
+> +.. contents:: :local:
+> +
+> +Overview
+> +========
+> +
+> +This document describes the following functions: ::
+> +
+> + pin_user_pages
+> + pin_user_pages_fast
+> + pin_user_pages_remote
+
+You could just say "the following functions::" and get the result you're
+after with a slightly less alien plain-text reading experience.
+
+Of course, you could also just say "This document describes
+pin_user_pages(), pin_user_pages_fast(), and pin_user_pages_remote()." But
+that's a matter of personal taste, I guess.  Using the function() notation
+will cause the docs system to automatically link to the kerneldoc info,
+though.  
+
+> +Basic description of FOLL_PIN
+> +=============================
+> +
+> +FOLL_PIN and FOLL_LONGTERM are flags that can be passed to the get_user_pages*()
+> +("gup") family of functions. FOLL_PIN has significant interactions and
+> +interdependencies with FOLL_LONGTERM, so both are covered here.
+> +
+> +FOLL_PIN is internal to gup, meaning that it should not appear at the gup call
+> +sites. This allows the associated wrapper functions  (pin_user_pages*() and
+> +others) to set the correct combination of these flags, and to check for problems
+> +as well.
+> +
+> +FOLL_LONGTERM, on the other hand, *is* allowed to be set at the gup call sites.
+> +This is in order to avoid creating a large number of wrapper functions to cover
+> +all combinations of get*(), pin*(), FOLL_LONGTERM, and more. Also, the
+> +pin_user_pages*() APIs are clearly distinct from the get_user_pages*() APIs, so
+> +that's a natural dividing line, and a good point to make separate wrapper calls.
+> +In other words, use pin_user_pages*() for DMA-pinned pages, and
+> +get_user_pages*() for other cases. There are four cases described later on in
+> +this document, to further clarify that concept.
+> +
+> +FOLL_PIN and FOLL_GET are mutually exclusive for a given gup call. However,
+> +multiple threads and call sites are free to pin the same struct pages, via both
+> +FOLL_PIN and FOLL_GET. It's just the call site that needs to choose one or the
+> +other, not the struct page(s).
+> +
+> +The FOLL_PIN implementation is nearly the same as FOLL_GET, except that FOLL_PIN
+> +uses a different reference counting technique.
+> +
+> +FOLL_PIN is a prerequisite to FOLL_LONGTGERM. Another way of saying that is,
+
+FOLL_LONGTERM typoed there.
+
+Thanks,
+
+jon
