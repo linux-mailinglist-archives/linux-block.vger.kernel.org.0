@@ -2,44 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 200AA11B15A
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 16:30:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CFD811B17C
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 16:31:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfLKPaM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Dec 2019 10:30:12 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:61065 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387966AbfLKPaK (ORCPT
+        id S2387702AbfLKPax (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Dec 2019 10:30:53 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10288 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387680AbfLKPaw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:30:10 -0500
+        Wed, 11 Dec 2019 10:30:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576078210; x=1607614210;
+  t=1576078251; x=1607614251;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=m7nbgl2u0koiXf/XsA21xWuJDhFDTqL8hhIcGJQO/ns=;
-  b=qyPDW5BJVD6pQ66zeAtBZ7VLqb+rQsjDhjQ/wzo3Ic7f/rjHgkAJCDu9
-   BeOmFVy08PDKw2okSjbFi8UTxeT1QDK+10AmqfDntCaYMaFOJ0n/Zo3TX
-   X+vwfLyHDsGoIhWzrZ+dkTudSbeQ0RVLTLCEdXkjqhvx5ZsSuJxJRGUo3
-   0=;
-IronPort-SDR: 4GuYu5bux2FjlFDxqmxuq57ilbkO5edyeI/1nMkdV9vzHCHfele8wzk9nIAxN04sSYwiqygnzs
- kyHNvVe+sbcw==
+  bh=SKfQoX2A8rZ0EnP2XkyIWyJjMF/So/eVFwUYzJEpgTw=;
+  b=trIiLL+jeKQk4aIryp5tyAmL9BBvgLbLwpkQEUcbXbYVIX8jXMhRc7WU
+   /kPttwswhWMzcjH70fTRxWCqqY7AaO1iMlLRMzR6KliXstR+se+VlQJ8Q
+   c/qDWjbxAQDutpUJss0YkxROM6pc3ZSuiIjIlMWs6FzNghY/BNpKJELqP
+   k=;
+IronPort-SDR: ynn3GjgWJ7AJmj+IiCD63/an9xfGjEvulKIW2ESukaoYU3xV38CEmegp9TBobp4VnugtQwnRoH
+ dToGlfSk+tuQ==
 X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
-   d="scan'208";a="8046840"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 11 Dec 2019 15:30:09 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 32C03A2C58;
-        Wed, 11 Dec 2019 15:30:08 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:07 +0000
+   d="scan'208";a="14303724"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Dec 2019 15:30:40 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 0FDA8A2146;
+        Wed, 11 Dec 2019 15:30:39 +0000 (UTC)
+Received: from EX13D32EUB004.ant.amazon.com (10.43.166.212) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
 Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:06 +0000
+ EX13D32EUB004.ant.amazon.com (10.43.166.212) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
 Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
  mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 15:30:04 +0000
+ 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 15:30:07 +0000
 From:   Paul Durrant <pdurrant@amazon.com>
 To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -47,9 +47,9 @@ CC:     Paul Durrant <pdurrant@amazon.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Juergen Gross <jgross@suse.com>,
         "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH v3 2/4] xenbus: limit when state is forced to closed
-Date:   Wed, 11 Dec 2019 15:29:54 +0000
-Message-ID: <20191211152956.5168-3-pdurrant@amazon.com>
+Subject: [PATCH v3 3/4] xen/interface: re-define FRONT/BACK_RING_ATTACH()
+Date:   Wed, 11 Dec 2019 15:29:55 +0000
+Message-ID: <20191211152956.5168-4-pdurrant@amazon.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152956.5168-1-pdurrant@amazon.com>
 References: <20191211152956.5168-1-pdurrant@amazon.com>
@@ -61,18 +61,19 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If a driver probe() fails then leave the xenstore state alone. There is no
-reason to modify it as the failure may be due to transient resource
-allocation issues and hence a subsequent probe() may succeed.
+Currently these macros are defined to re-initialize a front/back ring
+(respectively) to values read from the shared ring in such a way that any
+requests/responses that are added to the shared ring whilst the front/back
+is detached will be skipped over. This, in general, is not a desirable
+semantic since most frontend implementations will eventually block waiting
+for a response which would either never appear or never be processed.
 
-If the driver supports re-binding then only force state to closed during
-remove() only in the case when the toolstack may need to clean up. This can
-be detected by checking whether the state in xenstore has been set to
-closing prior to device removal.
+Since the macros are currently unused, take this opportunity to re-define
+them to re-initialize a front/back ring using specified values. This also
+allows FRONT/BACK_RING_INIT() to be re-defined in terms of
+FRONT/BACK_RING_ATTACH() using a specified value of 0.
 
-NOTE: Re-bind support is indicated by new boolean in struct xenbus_driver,
-      which defaults to false. Subsequent patches will add support to
-      some backend drivers.
+NOTE: BACK_RING_ATTACH() will be used directly in a subsequent patch.
 
 Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 ---
@@ -80,56 +81,64 @@ Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: Stefano Stabellini <sstabellini@kernel.org>
 
-v2:
- - Introduce the 'allow_rebind' flag
- - Expand the commit comment
----
- drivers/xen/xenbus/xenbus_probe.c | 12 ++++++++++--
- include/xen/xenbus.h              |  1 +
- 2 files changed, 11 insertions(+), 2 deletions(-)
+A patch to add the FRONT/BACK_RING_ATTACH() macros to the canonical
+ring.h in xen.git will be sent once the definitions have been agreed.
 
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 5aa29396c9e3..378486b79f96 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -255,7 +255,6 @@ int xenbus_dev_probe(struct device *_dev)
- 	module_put(drv->driver.owner);
- fail:
- 	xenbus_dev_error(dev, err, "xenbus_dev_probe on %s", dev->nodename);
--	xenbus_switch_state(dev, XenbusStateClosed);
- 	return err;
- }
- EXPORT_SYMBOL_GPL(xenbus_dev_probe);
-@@ -276,7 +275,16 @@ int xenbus_dev_remove(struct device *_dev)
+v2:
+ - change definitions to take explicit initial index values
+---
+ include/xen/interface/io/ring.h | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
+index 3f40501fc60b..2af7a1cd6658 100644
+--- a/include/xen/interface/io/ring.h
++++ b/include/xen/interface/io/ring.h
+@@ -125,35 +125,24 @@ struct __name##_back_ring {						\
+     memset((_s)->pad, 0, sizeof((_s)->pad));				\
+ } while(0)
  
- 	free_otherend_details(dev);
+-#define FRONT_RING_INIT(_r, _s, __size) do {				\
+-    (_r)->req_prod_pvt = 0;						\
+-    (_r)->rsp_cons = 0;							\
++#define FRONT_RING_ATTACH(_r, _s, _i, __size) do {			\
++    (_r)->req_prod_pvt = (_i);						\
++    (_r)->rsp_cons = (_i);						\
+     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+     (_r)->sring = (_s);							\
+ } while (0)
  
--	xenbus_switch_state(dev, XenbusStateClosed);
-+	/*
-+	 * If the toolstack has forced the device state to closing then set
-+	 * the state to closed now to allow it to be cleaned up.
-+	 * Similarly, if the driver does not support re-bind, set the
-+	 * closed.
-+	 */
-+	if (!drv->allow_rebind ||
-+	    xenbus_read_driver_state(dev->nodename) == XenbusStateClosing)
-+		xenbus_switch_state(dev, XenbusStateClosed);
+-#define BACK_RING_INIT(_r, _s, __size) do {				\
+-    (_r)->rsp_prod_pvt = 0;						\
+-    (_r)->req_cons = 0;							\
+-    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+-    (_r)->sring = (_s);							\
+-} while (0)
++#define FRONT_RING_INIT(_r, _s, __size) FRONT_RING_ATTACH(_r, _s, 0, __size)
+ 
+-/* Initialize to existing shared indexes -- for recovery */
+-#define FRONT_RING_ATTACH(_r, _s, __size) do {				\
+-    (_r)->sring = (_s);							\
+-    (_r)->req_prod_pvt = (_s)->req_prod;				\
+-    (_r)->rsp_cons = (_s)->rsp_prod;					\
++#define BACK_RING_ATTACH(_r, _s, _i, __size) do {			\
++    (_r)->rsp_prod_pvt = (_i);						\
++    (_r)->req_cons = (_i);						\
+     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+-} while (0)
+-
+-#define BACK_RING_ATTACH(_r, _s, __size) do {				\
+     (_r)->sring = (_s);							\
+-    (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
+-    (_r)->req_cons = (_s)->req_prod;					\
+-    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+ } while (0)
+ 
++#define BACK_RING_INIT(_r, _s, __size) BACK_RING_ATTACH(_r, _s, 0, __size)
 +
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(xenbus_dev_remove);
-diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-index 869c816d5f8c..24228a102141 100644
---- a/include/xen/xenbus.h
-+++ b/include/xen/xenbus.h
-@@ -93,6 +93,7 @@ struct xenbus_device_id
- struct xenbus_driver {
- 	const char *name;       /* defaults to ids[0].devicetype */
- 	const struct xenbus_device_id *ids;
-+	bool allow_rebind; /* avoid setting xenstore closed during remove */
- 	int (*probe)(struct xenbus_device *dev,
- 		     const struct xenbus_device_id *id);
- 	void (*otherend_changed)(struct xenbus_device *dev,
+ /* How big is this ring? */
+ #define RING_SIZE(_r)							\
+     ((_r)->nr_ents)
 -- 
 2.20.1
 
