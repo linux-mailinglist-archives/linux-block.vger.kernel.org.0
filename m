@@ -2,207 +2,281 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C1811A05E
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 02:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64FFF11A2C7
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 03:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfLKBOU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Dec 2019 20:14:20 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43833 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726364AbfLKBOU (ORCPT
+        id S1727773AbfLKC6D (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Dec 2019 21:58:03 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2012 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfLKCxZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:14:20 -0500
-Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6BDCB3A17C3;
-        Wed, 11 Dec 2019 12:14:16 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ieqZz-0006ks-OJ; Wed, 11 Dec 2019 12:14:15 +1100
-Date:   Wed, 11 Dec 2019 12:14:15 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, willy@infradead.org, clm@fb.com
-Subject: Re: [PATCH 5/5] iomap: support RWF_UNCACHED for buffered writes
-Message-ID: <20191211011415.GE19213@dread.disaster.area>
-References: <20191210204304.12266-1-axboe@kernel.dk>
- <20191210204304.12266-6-axboe@kernel.dk>
+        Tue, 10 Dec 2019 21:53:25 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df05a1b0000>; Tue, 10 Dec 2019 18:53:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 10 Dec 2019 18:53:22 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 10 Dec 2019 18:53:22 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 02:53:21 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 11 Dec 2019 02:53:20 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df05a1f0001>; Tue, 10 Dec 2019 18:53:20 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v9 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+Date:   Tue, 10 Dec 2019 18:52:53 -0800
+Message-ID: <20191211025318.457113-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210204304.12266-6-axboe@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=jrjSQ4xLuvOdQEvsSiwA:9 a=1EYIUCybxSlyurgE:21
-        a=lqDuZKyFASzqTwhE:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576032796; bh=/WTOHnB7CdtD0f3PohhiCno24zNn42F7wC221pdIYa8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=jvF78ikFtZ+2LRb6zlzvhEFYdNllf3T6MCCl8UlevyvsbIciGEno8wF/kma4/WFif
+         dQim8EanlpiHsyr9dogEGRSxTr7tYNQ+0HjzLSOGoD17EJ2t0C+8qAEVEKWuV/eN8p
+         xNezGZi8gOvg08O1UKz4NNlfI5nTe9X8pTu+C8wzXyPqENZUQ/R5S8TZKutIiwrahw
+         EeJKU8x8wI2WBWRbFGYJ4uhxKduqy3xOQqovjS2vHXgesmV7rdQ9CWb4p13vEioix2
+         +ONu8pCLF5rf5eTew/56/JIMCv4YA+zc3jWOFdsnb8Bd8VQBJqWEZPj6ykYVbtCwyz
+         oBuY0ZX4UHRVQ==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:43:04PM -0700, Jens Axboe wrote:
-> This adds support for RWF_UNCACHED for file systems using iomap to
-> perform buffered writes. We use the generic infrastructure for this,
-> by tracking pages we created and calling write_drop_cached_pages()
-> to issue writeback and prune those pages.
-> 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-.....
->  static loff_t
->  iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  		unsigned flags, struct iomap *iomap, struct iomap *srcmap)
->  {
-> +	struct address_space *mapping = inode->i_mapping;
->  	struct iov_iter *i = data;
-> +	struct pagevec pvec;
->  	long status = 0;
->  	ssize_t written = 0;
->  
-> +	pagevec_init(&pvec);
-> +
+Hi,
 
-Ok, so the actor is called after we've already mapped and allocated
-an extent of arbitrary length. It may be a delalloc extent, it might
-be unwritten, it could be a COW mapping, etc.
+This implements an API naming change (put_user_page*() -->
+unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
+extends that tracking to a few select subsystems. More subsystems will
+be added in follow up work.
 
->  	do {
->  		struct page *page;
->  		unsigned long offset;	/* Offset into pagecache page */
->  		unsigned long bytes;	/* Bytes to write to page */
->  		size_t copied;		/* Bytes copied from user */
-> +		bool drop_page = false;	/* drop page after IO */
-> +		unsigned lflags = flags;
->  
->  		offset = offset_in_page(pos);
->  		bytes = min_t(unsigned long, PAGE_SIZE - offset,
-> @@ -832,10 +851,17 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  			break;
->  		}
->  
-> -		status = iomap_write_begin(inode, pos, bytes, 0, &page, iomap,
-> -				srcmap);
-> -		if (unlikely(status))
-> +retry:
-> +		status = iomap_write_begin(inode, pos, bytes, lflags, &page,
-> +						iomap, srcmap);
-> +		if (unlikely(status)) {
-> +			if (status == -ENOMEM && (lflags & IOMAP_UNCACHED)) {
-> +				drop_page = true;
-> +				lflags &= ~IOMAP_UNCACHED;
-> +				goto retry;
-> +			}
->  			break;
-> +		}
->  
->  		if (mapping_writably_mapped(inode->i_mapping))
->  			flush_dcache_page(page);
-> @@ -844,10 +870,16 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  
->  		flush_dcache_page(page);
->  
-> +		if (drop_page)
-> +			get_page(page);
-> +
->  		status = iomap_write_end(inode, pos, bytes, copied, page, iomap,
->  				srcmap);
-> -		if (unlikely(status < 0))
-> +		if (unlikely(status < 0)) {
-> +			if (drop_page)
-> +				put_page(page);
->  			break;
-> +		}
->  		copied = status;
->  
->  		cond_resched();
-> @@ -864,15 +896,29 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  			 */
->  			bytes = min_t(unsigned long, PAGE_SIZE - offset,
->  						iov_iter_single_seg_count(i));
-> +			if (drop_page)
-> +				put_page(page);
->  			goto again;
->  		}
-> +
-> +		if (drop_page &&
-> +		    ((pos >> PAGE_SHIFT) != ((pos + copied) >> PAGE_SHIFT))) {
-> +			if (!pagevec_add(&pvec, page))
-> +				write_drop_cached_pages(&pvec, mapping);
-> +		} else {
-> +			if (drop_page)
-> +				put_page(page);
-> +			balance_dirty_pages_ratelimited(inode->i_mapping);
-> +		}
+Christoph Hellwig, a point of interest:
 
-This looks like it's a problem: this is going to write the
-data, which can cause the extent mapping of the file to change
-beyond the range that was written (e.g. due to speculative delayed
-allocation) and so the iomap we have already cached to direct write
-behaviour may now be stale.
+a) I've moved the bulk of the code out of the inline functions, as
+   requested, for the devmap changes (patch 4: "mm: devmap: refactor
+   1-based refcounting for ZONE_DEVICE pages").
 
-IOWs, to be safe we need to terminate the write loop at this point,
-return to iomap_apply() and remap the range we are writing into so
-that we don't end up using a stale iomap. That kinda defeats the
-purpose of iomap - we are trying to do a single extent mapping per
-IO instead of per-page, and this pulls it back to an iomap per 16
-pages for large user IOs. And it has the issues with breaking
-delayed allocation optimisations, too.
+Changes since v8:
 
-Hence, IMO, this is the wrong layer in iomap to be dealing with
-writeback and cache residency for uncached IO. We should be caching
-residency/invalidation at a per-IO level, not a per-page level.
+* Merged the "mm/gup: pass flags arg to __gup_device_* functions" patch
+  into the "mm/gup: track FOLL_PIN pages" patch, as requested by
+  Christoph and Jan.
 
-Sure, have the write actor return a flag (e.g. in the iomap) to say
-that it encountered cached pages so that we can decide whether or
-not to invalidate the entire range we just wrote in iomap_apply, but
-doing it between mappings in iomap_apply means that the writeback is
-done once per user IO, and cache invalidation only occurs if no
-cached pages were encountered during that IO. i.e. add this to
-iomap_apply() after ops->iomap_end() has been called:
+* Changed void grab_page() to bool try_grab_page(), and handled errors
+  at the call sites. (From Jan's review comments.) try_grab_page()
+  attempts to avoid page refcount overflows, even when counting up with
+  GUP_PIN_COUNTING_BIAS increments.
 
+* Fixed a bug that I'd introduced, when changing a BUG() to a WARN().
 
-	if (flags & RWF_UNCACHED) {
-		ret = filemap_write_and_wait_range(mapping, start, end);
-		if (ret)
-			goto out;
+* Added Jan's reviewed-by tag to the " mm/gup: allow FOLL_FORCE for
+  get_user_pages_fast()" patch.
 
-		if (!drop_cache)
-			goto out;
+* Documentation: pin_user_pages.rst: fixed an incorrect gup_benchmark
+  invocation, left over from the pin_longterm days, spotted while preparing
+  this version.
 
-		/*
-		 * Try to invalidate cache pages for the range we
-		 * just wrote. We don't care if invalidation fails
-		 * as the write has still worked and leaving clean
-		 * uptodate pages * in the page cache isn't a
-		 * corruption vector for uncached IO.
-		 */
-		invalidate_inode_pages2_range(mapping,
-				start >> PAGE_SHIFT, end >> PAGE_SHIFT);
-	}
-out:
-	return written ? written : ret;
-}
+* Rebased onto today's linux.git (-rc1), and re-tested.
 
-Note that this doesn't solve the write error return issue. i.e.
-if filemap_write_and_wait_range() fails, should that error be
-returned or ignored?
+Changes since v7:
 
-And that leads to my next question: what data integrity guarantees
-does RWF_UNCACHED give? What if the underlying device has a volatile
-write cache or we dirtied metadata during block allocation? i.e.  to
-a user, "UNCACHED" kinda implies that the write has ended up on
-stable storage because they are saying "do not cache this data". To
-me, none of this implementation guarantees data integrity, and users
-would still need O_DSYNC or fsync() with RWF_UNCACHED IO. That seems
-sane to me (same as direct io requirements) but whatever is decided
-here, it will need to be spelled out clearly in the man page so that 
-users don't get it wrong.
+* Rebased onto Linux 5.5-rc1
 
-Cheers,
+* Reworked the grab_page() and try_grab_compound_head(), for API
+  consistency and less diffs (thanks to Jan Kara's reviews).
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+* Added Leon Romanovsky's reviewed-by tags for two of the IB-related
+  patches.
+
+* patch 4 refactoring changes, as mentioned above.
+
+There is a git repo and branch, for convenience:
+
+    git@github.com:johnhubbard/linux.git pin_user_pages_tracking_v8
+
+For the remaining list of "changes since version N", those are all in
+v7, which is here:
+
+  https://lore.kernel.org/r/20191121071354.456618-1-jhubbard@nvidia.com
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Overview:
+
+This is a prerequisite to solving the problem of proper interactions
+between file-backed pages, and [R]DMA activities, as discussed in [1],
+[2], [3], and in a remarkable number of email threads since about
+2017. :)
+
+A new internal gup flag, FOLL_PIN is introduced, and thoroughly
+documented in the last patch's Documentation/vm/pin_user_pages.rst.
+
+I believe that this will provide a good starting point for doing the
+layout lease work that Ira Weiny has been working on. That's because
+these new wrapper functions provide a clean, constrained, systematically
+named set of functionality that, again, is required in order to even
+know if a page is "dma-pinned".
+
+In contrast to earlier approaches, the page tracking can be
+incrementally applied to the kernel call sites that, until now, have
+been simply calling get_user_pages() ("gup"). In other words, opt-in by
+changing from this:
+
+    get_user_pages() (sets FOLL_GET)
+    put_page()
+
+to this:
+    pin_user_pages() (sets FOLL_PIN)
+    unpin_user_page()
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Testing:
+
+* I've done some overall kernel testing (LTP, and a few other goodies),
+  and some directed testing to exercise some of the changes. And as you
+  can see, gup_benchmark is enhanced to exercise this. Basically, I've
+  been able to runtime test the core get_user_pages() and
+  pin_user_pages() and related routines, but not so much on several of
+  the call sites--but those are generally just a couple of lines
+  changed, each.
+
+  Not much of the kernel is actually using this, which on one hand
+  reduces risk quite a lot. But on the other hand, testing coverage
+  is low. So I'd love it if, in particular, the Infiniband and PowerPC
+  folks could do a smoke test of this series for me.
+
+  Runtime testing for the call sites so far is pretty light:
+
+    * io_uring: Some directed tests from liburing exercise this, and
+                they pass.
+    * process_vm_access.c: A small directed test passes.
+    * gup_benchmark: the enhanced version hits the new gup.c code, and
+                     passes.
+    * infiniband: ran "ib_write_bw", which exercises the umem.c changes,
+                  but not the other changes.
+    * VFIO: compiles (I'm vowing to set up a run time test soon, but it's
+                      not ready just yet)
+    * powerpc: it compiles...
+    * drm/via: compiles...
+    * goldfish: compiles...
+    * net/xdp: compiles...
+    * media/v4l2: compiles...
+
+[1] Some slow progress on get_user_pages() (Apr 2, 2019): https://lwn.net/A=
+rticles/784574/
+[2] DMA and get_user_pages() (LPC: Dec 12, 2018): https://lwn.net/Articles/=
+774411/
+[3] The trouble with get_user_pages() (Apr 30, 2018): https://lwn.net/Artic=
+les/753027/
+
+Dan Williams (1):
+  mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+
+John Hubbard (24):
+  mm/gup: factor out duplicate code from four routines
+  mm/gup: move try_get_compound_head() to top, fix minor issues
+  mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
+  goldish_pipe: rename local pin_user_pages() routine
+  mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
+  vfio: fix FOLL_LONGTERM use, simplify get_user_pages_remote() call
+  mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+  IB/umem: use get_user_pages_fast() to pin DMA pages
+  mm/gup: introduce pin_user_pages*() and FOLL_PIN
+  goldish_pipe: convert to pin_user_pages() and put_user_page()
+  IB/{core,hw,umem}: set FOLL_PIN via pin_user_pages*(), fix up ODP
+  mm/process_vm_access: set FOLL_PIN via pin_user_pages_remote()
+  drm/via: set FOLL_PIN via pin_user_pages_fast()
+  fs/io_uring: set FOLL_PIN via pin_user_pages()
+  net/xdp: set FOLL_PIN via pin_user_pages()
+  media/v4l2-core: set pages dirty upon releasing DMA buffers
+  media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page()
+    conversion
+  vfio, mm: pin_user_pages (FOLL_PIN) and put_user_page() conversion
+  powerpc: book3s64: convert to pin_user_pages() and put_user_page()
+  mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding
+    "1"
+  mm, tree-wide: rename put_user_page*() to unpin_user_page*()
+  mm/gup: track FOLL_PIN pages
+  mm/gup_benchmark: support pin_user_pages() and related calls
+  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
+    coverage
+
+ Documentation/core-api/index.rst            |   1 +
+ Documentation/core-api/pin_user_pages.rst   | 232 ++++++++
+ arch/powerpc/mm/book3s64/iommu_api.c        |  10 +-
+ drivers/gpu/drm/via/via_dmablit.c           |   6 +-
+ drivers/infiniband/core/umem.c              |  19 +-
+ drivers/infiniband/core/umem_odp.c          |  13 +-
+ drivers/infiniband/hw/hfi1/user_pages.c     |   4 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.c |   8 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c  |   4 +-
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |   8 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |   4 +-
+ drivers/infiniband/sw/siw/siw_mem.c         |   4 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c   |   8 +-
+ drivers/nvdimm/pmem.c                       |   6 -
+ drivers/platform/goldfish/goldfish_pipe.c   |  35 +-
+ drivers/vfio/vfio_iommu_type1.c             |  35 +-
+ fs/io_uring.c                               |   6 +-
+ include/linux/mm.h                          | 149 ++++-
+ include/linux/mmzone.h                      |   2 +
+ include/linux/page_ref.h                    |  10 +
+ mm/gup.c                                    | 598 +++++++++++++++-----
+ mm/gup_benchmark.c                          |  74 ++-
+ mm/huge_memory.c                            |  26 +-
+ mm/hugetlb.c                                |  25 +-
+ mm/memremap.c                               |  76 ++-
+ mm/process_vm_access.c                      |  28 +-
+ mm/swap.c                                   |  24 +
+ mm/vmstat.c                                 |   2 +
+ net/xdp/xdp_umem.c                          |   4 +-
+ tools/testing/selftests/vm/gup_benchmark.c  |  21 +-
+ tools/testing/selftests/vm/run_vmtests      |  22 +
+ 31 files changed, 1109 insertions(+), 355 deletions(-)
+ create mode 100644 Documentation/core-api/pin_user_pages.rst
+
+--=20
+2.24.0
+
