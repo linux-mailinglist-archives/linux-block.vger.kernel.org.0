@@ -2,89 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E33211BE8C
-	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 21:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A7B11BE3C
+	for <lists+linux-block@lfdr.de>; Wed, 11 Dec 2019 21:46:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfLKUu2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Dec 2019 15:50:28 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:35685 "EHLO
+        id S1726975AbfLKUqT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Dec 2019 15:46:19 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:38855 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfLKUu1 (ORCPT
+        with ESMTP id S1726771AbfLKUp5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:50:27 -0500
+        Wed, 11 Dec 2019 15:45:57 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MRCBm-1iK9Wr1CTc-00N6b3; Wed, 11 Dec 2019 21:45:01 +0100
+ 1N0o7f-1hkohk3wnd-00wiOe; Wed, 11 Dec 2019 21:45:10 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Jens Axboe <axboe@kernel.dk>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@fb.com>
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Justin Sanders <justin@coraid.com>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org
-Subject: [PATCH 06/24] compat_ioctl: block: handle Persistent Reservations
-Date:   Wed, 11 Dec 2019 21:42:40 +0100
-Message-Id: <20191211204306.1207817-7-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Daniel Walter <dwalter@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-um@lists.infradead.org, linux-block@vger.kernel.org
+Subject: [PATCH 07/24] compaT_ioctl: ubd, aoe: use blkdev_compat_ptr_ioctl
+Date:   Wed, 11 Dec 2019 21:42:41 +0100
+Message-Id: <20191211204306.1207817-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191211204306.1207817-1-arnd@arndb.de>
 References: <20191211204306.1207817-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MERO8zqQm/hzGxvh7HZnjW9vQ1ZkuwnxVUEsPHkICjTXF72YTAX
- GzMR0NQXrHDUH1Ymk9up4NF0oLy5R2DPdiNH0cZ5VKqru27Xw4DQslx1eJSQWf06CCL1CNf
- jgBrKB7/+0fQuGpKbgn+ah/UhrVsIriUPnvb9s0qeTnOjN0sopsSOo5nNWQRPuh8beEa46x
- CqJxhbbw4iH1L6KK+ABTw==
+X-Provags-ID: V03:K1:gy8z+YAlxaJ9blvRYgmlwoOjM5ATVorSryFF8QdI4xwnfePEif2
+ ZPqNZhXPZ2zKjqu+nHu5cY9UbimuPi3idKRpKUHXeFhUocrdiKGZl1/ztl9P/tv6FzJ/PhQ
+ QfZ8OcX0GLkWwfNM3Vvs0xduPX27a2+KLP8a3SGV7HE9F75Njm6oBeKzUmFnAvHr12Ec8N9
+ 5gn9BVCoxS5wHBp8wOO0g==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cgHM/oukC3A=:Wr9cjDcJN40wTgqwfOa2OY
- IeB4iEnKqfNoRtRGuXIwtlpmRnDA+FXs7+eBPsV3Jtcv7d5IVtBbcJmfIW5Jq2GTuk4rqxiZG
- upmoAj6LgLqs/Xga9Dvv3jZwEz4E6KHff+Z7KEjINDweoqJV7C8SkI1177LjWSxknHaesB0Q5
- BjXEId+7YKOx03fWONcPFlB411QY5y32LND3+HeBcQM1FO1iVA+d15fICtU5rAtUwdg/J18SA
- k8eCOqXrWszndNXc+gnRwLq6O32FMoXeBONlMKkSOBAeEJOMyO7DqM/BxKRhRKAqZ2wgI1qfP
- TkPb+PfBTqlvfXQrJaYNahGpIVImte/G46I83l43XRdEBp9PvtxdWZ4haYTdngDQKN5yX3oXO
- uXgi0/BXVLT1gKvLnz4kRLfePf0H3qBBY6Ex30UinIn5gLxRDlDqZApaVwkU8wy7aKFt1jUb9
- ihFLXWJ6uxSKiB7bzLHfHZksBhL7Mvc/eLbS2/zJwZp/vchOB/uAD8bmhwn4AtsXP+sOkHikd
- t2HrJqmN2rMiGWFSIB4OVqIQkaoHABPCZOjowivoRLnLO4SQBSJNAbfzF/SOtoY9wlCfC2kSr
- wENXIPN6oQLrNRvceFj+PrbKDiDFQE/2+dFF+qQJlbH+VnzeBpVgAqV7i8IpNy0LfMzGuXEq/
- N90+kCpIPtN+R2PGwv1Jv08WFACU+uGWXH3WMib15C4h1o3sA7kUEBrIp3qsAbR3+O14ebLQo
- b0m349+vlPkY7mdXIAqMELR9ztbqWPLSAkLrziNrgq2KP+J/t/0Q2Y7+x+RtBamThBy8hkYiQ
- rg02cnlfarh5rkL6HtGaqMnHHoW7tbUaNsiJYR/5Za2agv6fEKGSLJ+o6uCXNcdnFHxoaYFTO
- 26SDlJk8ZBEKbCH6Zjyg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pGK6m1crKsA=:gSjJQpNokt5OeOSFQeubXS
+ DhaKLPBBb6EV6alKwS18pbLZRwhjKMomynM6uF1IwkqUjosaLsZM5+fPzPTj8qcCy3o/bvOwH
+ ak7ENd0/P9BEOfygvkRK/sXam/1u76ZTGCHaowaE3HMgWdLm9nqlluqoXOTs/Fd2bujikB0Is
+ AmWz+dOLA7fovKnGj+0oVpPptqiYyDbtX/GSGi7EqN6K5gmr1HrDHd+tj1ZSC08UdOlCGZGCu
+ IwBvuLdlgsdnEWnEV3tmDNgqWm4Ttd9r5m30tPJLnByHL83pkyWR0Z4L4vI7JqnEYy44gTLb0
+ IMwp1vEBhGRws4JPpInvZbQ+0MvlDuk20B8fxUByf4ihqvnZi7FWnJ7Q39NR8oWoTNONmqm64
+ 9SCQaclMLWn9UYQypRTiJfpbR1eLtANQTZOMCSTZZ8C717vegRMJtsSM7d8yySarspbydIClD
+ NIU7HCCBp+OZ/j2z0MHerIfJ++Q5nY22EAdBnqLN7Z9Faswsn6mOj9S3cio22FmZkwoKtmJwH
+ FzaZEi/of2JEyPSYXrmUEKDgQxOEj+obRUPtt9kogZRoE2aFCnUj5dfZT6qgwCZVdsxo998PC
+ dCZmerXpuxR4YytniK67YdDWyX1RXOrapkFwk+rBwcRMAE7HMAFRAblqF4l1SeLuYK7QHfgx+
+ +3+QmrVkplwr1i0Nkn0I+bNKP0/Tfc4BP0Rr1c8cfvERunmo/gbQumMgI98O+9FPHPabF3g5m
+ iB33cvRo47XAQc1md8dzuy9DuqR4oNh/yFNLdzDwNFrp+74V1cGw7aGxXXpPZPNQpYFwUAu0y
+ uaWmDUA6OYy4cA2yP5Ia24bfQsCYvmIeIdnTNcaMMsQsAwh/3ObdpFUTbiYn44CScMJmpYMEH
+ 9z/m1cveMeFXPF7tB5tA==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-These were added to blkdev_ioctl() in linux-5.5 but not
-blkdev_compat_ioctl, so add them now.
+These drivers implement the HDIO_GET_IDENTITY and CDROMVOLREAD ioctl
+commands, which are compatible between 32-bit and 64-bit user space and
+traditionally handled by compat_blkdev_driver_ioctl().
 
-Cc: <stable@vger.kernel.org> # v4.4+
-Fixes: bbd3e064362e ("block: add an API for Persistent Reservations")
+As a prerequisite to removing that function, make both drivers use
+blkdev_compat_ptr_ioctl() as their .compat_ioctl callback.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- block/compat_ioctl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/um/drivers/ubd_kern.c | 1 +
+ drivers/block/aoe/aoeblk.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/block/compat_ioctl.c b/block/compat_ioctl.c
-index 5b13e344229c..f16ae92065d7 100644
---- a/block/compat_ioctl.c
-+++ b/block/compat_ioctl.c
-@@ -408,6 +408,14 @@ long compat_blkdev_ioctl(struct file *file, unsigned cmd, unsigned long arg)
- 	case BLKTRACETEARDOWN: /* compatible */
- 		ret = blk_trace_ioctl(bdev, cmd, compat_ptr(arg));
- 		return ret;
-+	case IOC_PR_REGISTER:
-+	case IOC_PR_RESERVE:
-+	case IOC_PR_RELEASE:
-+	case IOC_PR_PREEMPT:
-+	case IOC_PR_PREEMPT_ABORT:
-+	case IOC_PR_CLEAR:
-+		return blkdev_ioctl(bdev, mode, cmd,
-+				(unsigned long)compat_ptr(arg));
- 	default:
- 		if (disk->fops->compat_ioctl)
- 			ret = disk->fops->compat_ioctl(bdev, mode, cmd, arg);
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index 6627d7c30f37..582eb5b1f09b 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -113,6 +113,7 @@ static const struct block_device_operations ubd_blops = {
+         .open		= ubd_open,
+         .release	= ubd_release,
+         .ioctl		= ubd_ioctl,
++        .compat_ioctl	= blkdev_compat_ptr_ioctl,
+ 	.getgeo		= ubd_getgeo,
+ };
+ 
+diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
+index bd19f8af950b..7b32fb673375 100644
+--- a/drivers/block/aoe/aoeblk.c
++++ b/drivers/block/aoe/aoeblk.c
+@@ -329,6 +329,7 @@ static const struct block_device_operations aoe_bdops = {
+ 	.open = aoeblk_open,
+ 	.release = aoeblk_release,
+ 	.ioctl = aoeblk_ioctl,
++	.compat_ioctl = blkdev_compat_ptr_ioctl,
+ 	.getgeo = aoeblk_getgeo,
+ 	.owner = THIS_MODULE,
+ };
 -- 
 2.20.0
 
