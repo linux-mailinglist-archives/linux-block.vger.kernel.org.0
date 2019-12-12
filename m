@@ -2,77 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F41C011CABA
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2019 11:29:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1FD11CB69
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2019 11:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbfLLK3v (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 12 Dec 2019 05:29:51 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42787 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728461AbfLLK3v (ORCPT
+        id S1728850AbfLLKzR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Thu, 12 Dec 2019 05:55:17 -0500
+Received: from luna.lichtvoll.de ([194.150.191.11]:55953 "EHLO
+        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728802AbfLLKzR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:29:51 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z14so1150844qkg.9
-        for <linux-block@vger.kernel.org>; Thu, 12 Dec 2019 02:29:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=YAwJgUH5RQkH3idjqMvC56MC8tzHFjjSfPGzAFX1Q2g=;
-        b=qxNO19/m08B1nnZ1i06e7TKVPuoUvJ8N8zvO33UeYHsPIRkJ5FppwVFqUzKpjOVUgW
-         k11aDc0SMqWK2jk9IZNFbp00CvFn90PyQ1Q6TjBAlDpZ8a/PR50oRXB+a6vNaLJKMO8A
-         oS2BlEq1FDJDll7wPSkj+eED3IPJXB4c/T2EDu/1Z6iFSYgDlY2qKAQHr2/V0SKimais
-         W3peGeKH5Gj7FV5qEWf45z9PI4wedeqt4fCXxbH14JgRHmMa36/uJQLJpJdAIriImKDY
-         NHB8zUUWCqpGMxa6XejA3sofq5g6yLG1Q9dym6Yzhuoursg1eLiBg2ZXRC7jf1AtFrcv
-         UHJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=YAwJgUH5RQkH3idjqMvC56MC8tzHFjjSfPGzAFX1Q2g=;
-        b=GM0bctdTYeqdO5G92sK2gBsjfbQSoEYkMyTa5G2sHs857YOQp8GUkobFK94AkR9hvL
-         4XYOskOT31gwWqtHXaB0FDgRU82PeHVMp+/fpfCmr3apdVXJ29Bl94B+Z4r37sNqcup2
-         yCNzHRHvFWXeDqF2jR4pxtBXaKPL7QnzRdU4DZD6EYh9A1Ayq6j7Xrqz0CBSm9NX0+GL
-         +eZyrW1pPrH3O98gtlZSOkx2BDsH7BtSymjttG4YijIjtZVmyZhPlZDo5DuUMvy8O4HX
-         7S56h9AAA8SrpfLxOEqycLTgaHAF9nmOglEoGoaY8RVryOtxfRZ5NnnbVGJZRsQT/4oN
-         eUEA==
-X-Gm-Message-State: APjAAAVDlqBYZDR1lBibvMH1+BZN6oPyc5wBHNZb2VbkFZX6W++zj/2q
-        F37asNfmraEIZET4TFP0Khx/TBnpoVfmbELo0II=
-X-Google-Smtp-Source: APXvYqwS9CxpQC9E+PgjayrmqNXNRtwznlZlKr4BiBbedW+XSbg8CXKIRVNrlG+0a+ln3FZK4ug9kQrmA+FACComP7Y=
-X-Received: by 2002:a37:ae07:: with SMTP id x7mr4331128qke.28.1576146590171;
- Thu, 12 Dec 2019 02:29:50 -0800 (PST)
+        Thu, 12 Dec 2019 05:55:17 -0500
+X-Greylist: delayed 604 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 05:55:16 EST
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.lichtvoll.de (Postfix) with ESMTPSA id 1A8D699848;
+        Thu, 12 Dec 2019 11:45:07 +0100 (CET)
+From:   Martin Steigerwald <martin@lichtvoll.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, willy@infradead.org, clm@fb.com,
+        torvalds@linux-foundation.org, david@fromorbit.com
+Subject: Re: [PATCHSET v3 0/5] Support for RWF_UNCACHED
+Date:   Thu, 12 Dec 2019 11:44:59 +0100
+Message-ID: <63049728.ylUViGSH3C@merkaba>
+In-Reply-To: <20191211152943.2933-1-axboe@kernel.dk>
+References: <20191211152943.2933-1-axboe@kernel.dk>
 MIME-Version: 1.0
-Reply-To: bashamzebdani@gmail.com
-Received: by 2002:a0c:c131:0:0:0:0:0 with HTTP; Thu, 12 Dec 2019 02:29:49
- -0800 (PST)
-From:   "Mr.Basham Zebdani" <bashamzebdani@gmail.com>
-Date:   Thu, 12 Dec 2019 02:29:49 -0800
-X-Google-Sender-Auth: OeFrswRqKJgjQef2V-sPQOBXsJE
-Message-ID: <CAC74ftXCFNKuetw-nrhYDQA9y08nhdmo8Vr=DjrYoCkEqNTziA@mail.gmail.com>
-Subject: PRODUCT SUPPLY
-To:     undisclosed-recipients:;
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: mail.lichtvoll.de;
+        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Sir/ Madam,
+Hi Jens.
 
-I am writing  you from  the Republic of Burkina Faso for  trade
-inquiry. I want to send you a request for quote. Please send me your
-brochure,  product catalog and pricing information.
+Jens Axboe - 11.12.19, 16:29:38 CET:
+> Recently someone asked me how io_uring buffered IO compares to mmaped
+> IO in terms of performance. So I ran some tests with buffered IO, and
+> found the experience to be somewhat painful. The test case is pretty
+> basic, random reads over a dataset that's 10x the size of RAM.
+> Performance starts out fine, and then the page cache fills up and we
+> hit a throughput cliff. CPU usage of the IO threads go up, and we have
+> kswapd spending 100% of a core trying to keep up. Seeing that, I was
+> reminded of the many complaints I here about buffered IO, and the
+> fact that most of the folks complaining will ultimately bite the
+> bullet and move to O_DIRECT to just get the kernel out of the way.
+> 
+> But I don't think it needs to be like that. Switching to O_DIRECT
+> isn't always easily doable. The buffers have different life times,
+> size and alignment constraints, etc. On top of that, mixing buffered
+> and O_DIRECT can be painful.
+> 
+> Seems to me that we have an opportunity to provide something that sits
+> somewhere in between buffered and O_DIRECT, and this is where
+> RWF_UNCACHED enters the picture. If this flag is set on IO, we get
+> the following behavior:
+> 
+> - If the data is in cache, it remains in cache and the copy (in or
+> out) is served to/from that.
+> 
+> - If the data is NOT in cache, we add it while performing the IO. When
+> the IO is done, we remove it again.
+> 
+> With this, I can do 100% smooth buffered reads or writes without
+> pushing the kernel to the state where kswapd is sweating bullets. In
+> fact it doesn't even register.
 
-Also tell me your nearest sales  office to Burkina Faso. We hope to
-build a long term business relationship with your respective  company
-therefore your information and cooperation will be much  appreciated.
+A question from a user or Linux Performance trainer perspective:
 
-Please do not hesitate to contact me if you need any further
-information or help from our side and hope to hear from you soon.
+How does this compare with posix_fadvise() with POSIX_FADV_DONTNEED that 
+for example the nocache¹ command is using? Excerpt from manpage 
+posix_fadvice(2):
 
-Mr, Basham Zebdani
+       POSIX_FADV_DONTNEED
+              The specified data will not be accessed  in  the  near
+              future.
 
-Basham Zebdani Et Commerce Sarl.
-NO. 816, Avenue Joseph Ki-Zerbo .
-Ouagadougou 101 Burkina Faso.
+              POSIX_FADV_DONTNEED  attempts to free cached pages as‐
+              sociated with the specified region.  This  is  useful,
+              for  example,  while streaming large files.  A program
+              may periodically request the  kernel  to  free  cached
+              data  that  has already been used, so that more useful
+              cached pages are not discarded instead.
 
-Cell Phone, +226 55667447
+[1] packaged in Debian as nocache or available herehttps://github.com/
+Feh/nocache
+
+In any way, would be nice to have some option in rsync… I still did not 
+change my backup script to call rsync via nocache.
+
+Thanks,
+Martin
+
+> Comments appreciated! This should work on any standard file system,
+> using either the generic helpers or iomap. I have tested ext4 and xfs
+> for the right read/write behavior, but no further validation has been
+> done yet. Patches are against current git, and can also be found here:
+> 
+> https://git.kernel.dk/cgit/linux-block/log/?h=buffered-uncached
+> 
+>  fs/ceph/file.c          |  2 +-
+>  fs/dax.c                |  2 +-
+>  fs/ext4/file.c          |  2 +-
+>  fs/iomap/apply.c        | 26 ++++++++++-
+>  fs/iomap/buffered-io.c  | 54 ++++++++++++++++-------
+>  fs/iomap/direct-io.c    |  3 +-
+>  fs/iomap/fiemap.c       |  5 ++-
+>  fs/iomap/seek.c         |  6 ++-
+>  fs/iomap/swapfile.c     |  2 +-
+>  fs/nfs/file.c           |  2 +-
+>  include/linux/fs.h      |  7 ++-
+>  include/linux/iomap.h   | 10 ++++-
+>  include/uapi/linux/fs.h |  5 ++-
+>  mm/filemap.c            | 95
+> ++++++++++++++++++++++++++++++++++++----- 14 files changed, 181
+> insertions(+), 40 deletions(-)
+> 
+> Changes since v2:
+> - Rework the write side according to Chinners suggestions. Much
+> cleaner this way. It does mean that we invalidate the full write
+> region if just ONE page (or more) had to be created, where before it
+> was more granular. I don't think that's a concern, and on the plus
+> side, we now no longer have to chunk invalidations into 15/16 pages
+> at the time.
+> - Cleanups
+> 
+> Changes since v1:
+> - Switch to pagevecs for write_drop_cached_pages()
+> - Use page_offset() instead of manual shift
+> - Ensure we hold a reference on the page between calling ->write_end()
+> and checking the mapping on the locked page
+> - Fix XFS multi-page streamed writes, we'd drop the UNCACHED flag
+> after the first page
+
+
+-- 
+Martin
+
+
