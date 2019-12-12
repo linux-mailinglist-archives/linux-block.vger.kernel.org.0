@@ -2,150 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7E1111C749
-	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2019 09:20:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA88E11C8F5
+	for <lists+linux-block@lfdr.de>; Thu, 12 Dec 2019 10:18:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfLLITg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 12 Dec 2019 03:19:36 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4024 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728457AbfLLITf (ORCPT
+        id S1728256AbfLLJSD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 12 Dec 2019 04:18:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:41161 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfLLJSD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:19:35 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df1f8040002>; Thu, 12 Dec 2019 00:19:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 12 Dec 2019 00:19:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 12 Dec 2019 00:19:23 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 08:19:21 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 08:19:21 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 12 Dec 2019 08:19:21 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df1f8090001>; Thu, 12 Dec 2019 00:19:21 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v10 25/25] selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN coverage
-Date:   Thu, 12 Dec 2019 00:19:17 -0800
-Message-ID: <20191212081917.1264184-26-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191212081917.1264184-1-jhubbard@nvidia.com>
-References: <20191212081917.1264184-1-jhubbard@nvidia.com>
+        Thu, 12 Dec 2019 04:18:03 -0500
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MYvoW-1iAeaH2EHg-00UtcV; Thu, 12 Dec 2019 10:18:01 +0100
+Received: by mail-qk1-f177.google.com with SMTP id k6so1027076qki.5;
+        Thu, 12 Dec 2019 01:18:01 -0800 (PST)
+X-Gm-Message-State: APjAAAU0UtilEnUCQTaJYmBUXTRahod+qULvJwS1XeKjKQFtJ0CwesBs
+        e4tLZV27XkGr9zodnIP0oANEw+fK0owckrsCN/g=
+X-Google-Smtp-Source: APXvYqxQ00UNQvIg4lRrwqZ6prCq1ld+K+cVy4gCbiI7WVM1uWsZJdRSTMNOdaexs+HkrBjFyzUyLfqiJWBof8X+Tg8=
+X-Received: by 2002:a37:5b45:: with SMTP id p66mr7106225qkb.394.1576142280134;
+ Thu, 12 Dec 2019 01:18:00 -0800 (PST)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576138757; bh=efjW/rF0EGuRthlOGEU05IQnyHi57jZRzyopoxtDk8c=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=WWDMGVYOnHd3iWE+NQQYwhBWbPaghrkNlNIExThbsN/YXyZZxolHhixKxcf8GqE/k
-         zF9jZ17Pvol2P/BjE3xhCV/rhnk5thJMSeLFQqOfOazFqY5oolm1j6pVo0cd95tKbN
-         F31zukDFvOKYBV2dvENEhMUn1B91vbhd3i4wJGjJ4RPIwCJFToXC8m4sBIBpz2px5U
-         F9hMccp4L8YeXaEKmlNprmiR65S6O7E7EzTLOutDvfCdRwF9rvkBaMisYbAmbMtoYZ
-         vv3yw+6/SqlvDkIXoOmGW7/OgE7PrZmOTmWZH9P9/nHXXZF5hmGt2C7TTl7TTSsXNI
-         G9Ljkzb2cb+0w==
+References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-16-arnd@arndb.de>
+ <20191211180155-mutt-send-email-mst@kernel.org> <858768fb-5f79-8259-eb6a-a26f18fb0e04@redhat.com>
+In-Reply-To: <858768fb-5f79-8259-eb6a-a26f18fb0e04@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Dec 2019 10:17:44 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2hxD9aaabf2sK3ozqVdr2pbDS10W+Z6oT4idk=AitwVQ@mail.gmail.com>
+Message-ID: <CAK8P3a2hxD9aaabf2sK3ozqVdr2pbDS10W+Z6oT4idk=AitwVQ@mail.gmail.com>
+Subject: Re: [PATCH 15/24] compat_ioctl: scsi: move ioctl handling into drivers
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jason Wang <jasowang@redhat.com>,
+        Doug Gilbert <dgilbert@interlog.com>,
+        =?UTF-8?Q?Kai_M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:etAzTzAXTBuE1n7+RgDQ+4qewvW2SmRgdxlCZwQKwACTZ0dz46t
+ uvymLy48UI4w/Ne1YF85QhRqNe+A38yuaXH2ehQFJF/qMb55lDdn2eD2rQDSGqwpT5tYr4j
+ Vbk74ffHDk5L7vaPzcr3wT5bAsdHAo6DPQnCjQZSsKQMJprIh4+ZgGANy9m2XC3TfzY1ZhP
+ MkpvfSl1bPLcfpV8NO4aw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yoo1EQsxf+0=:9LgzVd8CwF7yxMCHZSmNWu
+ WnBvulPLYwgf38Zp4K0uCs1cYV5iPCSXtFGTmjOgRQ9JifXQ+32SrQYJHyWlkOmKhW/sqAORB
+ 4GMTFDK2+VswTTv53x9LjylGqrdlr3Mr9ull+Xkh9EH+eyAa2oggDcenwKfGuhqAz0EX0sbYI
+ 3l6g61e5RpsTD7+35HNH4Ic4Ceh9IV+GxyStxizrOeYYieb9+b68SyoRjdB9rPmvMzFw8JMgS
+ no7x7+u0z9/EzualpgN5UZjVtZwogbxmeWqZIcuVFy3Wue2/fj9x5887PtsWC2HFKiVUbCm34
+ /1zPQlQtL0ipLgp1UkozTy0kQp4UoPgcmFuW7rmliP0oxcvRPzG+oYp/Gk5Nt3nBiETuO6SXK
+ 9B1lzKXf/Fee8nbmoMdUIl8YC7VkPeV53+oiWVEm8SWGJrF3QDiDLkBCUKKpS3tmAQGIz16Jk
+ e5ZRYy5Vjpb0nUQcJrt/DCZoW0H7Hp8tK1gJLuYDdvSnHYDvjQhkpR1coIDk6ATkmyBiQzsAL
+ bLOhOVYS6vG5Bc4y/dcDHnCk0sQET77QG56/ZZecBvsMQWoOJVDpvioIr1wOTRmnFb9b4BNa4
+ TYstnQmBCTV94YmDRffcDU565z087vhJs2CIvttvMWhB1dS8sdp3UDdXdTOTzL6MkjNJni2fL
+ UMwe/9x5lm8Fkr5Uv8PEv/zN85zC0WCE7/wXDEYMBIpCguBtVoqBGbstw8xJJuWq9Bz9gDx6q
+ r3Zjes2Gh/vZMTUoZiSGa2GuQk0+q/16wU8eyFD9oaWfVOnjFE37C3BAqEduZt6eFSO6Gte9p
+ kWkVq7AYrX6JA9IWhQYFXe2VuXwBBEt0wiVFkqOA16shup+GNRN0qFlL9e+qhfScuIe9VUS6A
+ 0pH7F4DrlVid+mTCKSNA==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It's good to have basic unit test coverage of the new FOLL_PIN
-behavior. Fortunately, the gup_benchmark unit test is extremely
-fast (a few milliseconds), so adding it the the run_vmtests suite
-is going to cause no noticeable change in running time.
+On Thu, Dec 12, 2019 at 1:28 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> On 12/12/19 00:05, Michael S. Tsirkin wrote:
+> >> @@ -405,6 +405,9 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+> >>
+> >>  static const struct block_device_operations virtblk_fops = {
+> >>      .ioctl  = virtblk_ioctl,
+> >> +#ifdef CONFIG_COMPAT
+> >> +    .compat_ioctl = blkdev_compat_ptr_ioctl,
+> >> +#endif
+> >>      .owner  = THIS_MODULE,
+> >>      .getgeo = virtblk_getgeo,
+> >>  };
+> > Hmm - is virtio blk lumped in with scsi things intentionally?
+>
+> I think it's because the only ioctl for virtio-blk is SG_IO.  It makes
+> sense to lump it in with scsi, but I wouldn't mind getting rid of
+> CONFIG_VIRTIO_BLK_SCSI altogether.
 
-So, add two new invocations to run_vmtests:
+It currently calls scsi_cmd_blk_ioctl(), which implements a bunch of ioctl
+commands, including some that are unrelated to SG_IO:
 
-1) Run gup_benchmark with normal get_user_pages().
+                case SG_GET_VERSION_NUM:
+                case SCSI_IOCTL_GET_IDLUN:
+                case SCSI_IOCTL_GET_BUS_NUMBER:
+                case SG_SET_TIMEOUT:
+                case SG_GET_TIMEOUT:
+                case SG_GET_RESERVED_SIZE:
+                case SG_SET_RESERVED_SIZE:
+                case SG_EMULATED_HOST:
+                case SG_IO: {
+                case CDROM_SEND_PACKET:
+                case SCSI_IOCTL_SEND_COMMAND:
+                case CDROMCLOSETRAY:
+                case CDROMEJECT:
 
-2) Run gup_benchmark with pin_user_pages(). This is much like
-the first call, except that it sets FOLL_PIN.
+My patch changes all callers of this function, and the idea is
+to preserve the existing behavior through my series, so I think
+it makes sense to keep my patch as is.
 
-Running these two in quick succession also provide a visual
-comparison of the running times, which is convenient.
+I would assume that calling scsi_cmd_blk_ioctl() is harmless
+here, but if you want to remove it or limit the set of supported
+commands, that should be independent of my change.
 
-The new invocations are fairly early in the run_vmtests script,
-because with test suites, it's usually preferable to put the
-shorter, faster tests first, all other things being equal.
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftes=
-ts/vm/run_vmtests
-index a692ea828317..df6a6bf3f238 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -112,6 +112,28 @@ echo "NOTE: The above hugetlb tests provide minimal co=
-verage.  Use"
- echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
- echo "      hugetlb regression testing."
-=20
-+echo "--------------------------------------------"
-+echo "running 'gup_benchmark -U' (normal/slow gup)"
-+echo "--------------------------------------------"
-+./gup_benchmark -U
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
-+echo "------------------------------------------"
-+echo "running gup_benchmark -b (pin_user_pages)"
-+echo "------------------------------------------"
-+./gup_benchmark -b
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
- echo "-------------------"
- echo "running userfaultfd"
- echo "-------------------"
---=20
-2.24.0
-
+       Arnd
