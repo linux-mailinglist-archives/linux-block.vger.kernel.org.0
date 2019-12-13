@@ -2,136 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9375011E6AF
-	for <lists+linux-block@lfdr.de>; Fri, 13 Dec 2019 16:37:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1872A11E743
+	for <lists+linux-block@lfdr.de>; Fri, 13 Dec 2019 16:59:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbfLMPgR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Dec 2019 10:36:17 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41692 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbfLMPgQ (ORCPT
+        id S1728073AbfLMP7e (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Dec 2019 10:59:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51919 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728001AbfLMP7e (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:36:16 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so1750680pgk.8;
-        Fri, 13 Dec 2019 07:36:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HItEjzDojjooTRgp7O+9O0H7zbWi0kBed0e15OEYpt0=;
-        b=WGmHyUFRPZ2ZOsbgcmAPSFO/Jexvz5NhLELGWHpv4Tl7qQZg36Vg1cx8oxxQ1a/E/l
-         EpkpKqjdaGAGiWyOm+O7jp87MuU04zC2UgwiOV71LLy4XY6o2Ai499milKGvgTZClPXd
-         8cXbdDeNoLvi/fBx35UA9HHFm8dpmuGDNYDAltfHpPiutYGj2dPxtvwOEBxRyti/aA89
-         l3D1qL3yyee9OuIAkYTHYJP/KJoLRnMdh4oqoE5+3R0TrgiP0pLEbjmjX/nLxEVtgcZx
-         n4PYI+yrps2gpGDaMFk8KaqSqtDKEQaECLkTtO1OIuv5l43esfdmWGkDyuEwfX9MJgHf
-         o0Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HItEjzDojjooTRgp7O+9O0H7zbWi0kBed0e15OEYpt0=;
-        b=ECuun0qVHpA2DuJuAtbuVZdGl5FZSDEGPpYROYHPT3Jj5WhhUMRbsoA25588fgJEfC
-         v2MTekkJaid/gWV+Vy3+kmUWL2cwyYUBO1wFY4otO51lkxLYLji8eb2WNbOeLuP05I/l
-         /huKHailAPOtEGOBtpZZhQLKt7vw5yDFSBNhiPGuczPR6tC34iFke592/8TbBlrw4has
-         ynztKxY3AcrGdyAiLnT0uFIgZ8iaF8dHzTg8DQ7FZeW1FfCpxldEE1D3GBmvi/AR/KUk
-         lQLIpoxlMI4sTFIbbbCibiL0GjFyf6AgIh4zBcSTdu7uEK1TbtBzRe4uVWGZRpNZMOwP
-         OWYQ==
-X-Gm-Message-State: APjAAAWZHyK1e5YFoTXberY3zDDglpyKIkLbgoFDmuIfQKxmgZqCgvL2
-        f2AziWnJsKt3qcpyA+w2OXA=
-X-Google-Smtp-Source: APXvYqxC4ktjLQPkeK71MAy6/aFEcGoWvqtBT2iJQcTdeQzmCeLS4XtlZzU1Y8SN2p03/7qGvSO/4A==
-X-Received: by 2002:a62:1a16:: with SMTP id a22mr69199pfa.34.1576251375146;
-        Fri, 13 Dec 2019 07:36:15 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id w131sm12039217pfc.16.2019.12.13.07.36.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:36:14 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 4/4] xen/blkback: Consistently insert one empty line between functions
-Date:   Fri, 13 Dec 2019 15:35:46 +0000
-Message-Id: <20191213153546.17425-5-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213153546.17425-1-sjpark@amazon.de>
-References: <20191213153546.17425-1-sjpark@amazon.de>
+        Fri, 13 Dec 2019 10:59:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576252773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BoYH2dN+d+OPTlIiZKP3wf2JnR3H8TCTQB2aVmVmUc8=;
+        b=hZ+vB+gVURFFTmUwV5AptSXT3nmtLf35KXCROfc1uUKvSpmz6M0VU3/Rl4hp3RinX05yso
+        8xtt3IERDURE4dilQUZHK/nIJx4hX7xvOvXa8kXMp8j0HvfVtm+lUl9aXsjuampwxWHVMK
+        DQtULaPf6P6Z3Sea7YTJ5BCMClyWuEI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-8hh-eXS6Ot2tdBenEMvDgw-1; Fri, 13 Dec 2019 10:59:31 -0500
+X-MC-Unique: 8hh-eXS6Ot2tdBenEMvDgw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70326593AF;
+        Fri, 13 Dec 2019 15:59:30 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2CBE60BF3;
+        Fri, 13 Dec 2019 15:59:27 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH liburing] spec: additional Fedora RPM cleanups
+References: <20191213101640.1180590-1-stefanha@redhat.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Fri, 13 Dec 2019 10:59:26 -0500
+In-Reply-To: <20191213101640.1180590-1-stefanha@redhat.com> (Stefan Hajnoczi's
+        message of "Fri, 13 Dec 2019 10:16:40 +0000")
+Message-ID: <x49lfrg2p41.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The number of empty lines between functions in the xenbus.c is
-inconsistent.  This trivial style cleanup commit fixes the file to
-consistently place only one empty line.
+Stefan Hajnoczi <stefanha@redhat.com> writes:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- drivers/block/xen-blkback/xenbus.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+> Cole Robinson made some more suggestions:
+>
+>  * Use %set_build_flags before ./configure to get the default compiler
+>    flags.
+>
+>  * Use '%license COPYING' instead of %doc.
+>
+>  * Do not ship the static library.  This is distro policy and Fedora
+>    would ship a separate -static package if static libraries are
+>    desired.
+>
+>  * Source: should be the URL to the sources.  URL: should be the URL of
+>    the website or git repo.
+>
+>  * The devel package needs
+>    Requires: %{name}%{?_isa} = %{version}-%{release}
+>
+> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 4f6ea4feca79..dc0ea123c74c 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -432,7 +432,6 @@ static void xenvbd_sysfs_delif(struct xenbus_device *dev)
- 	device_remove_file(&dev->dev, &dev_attr_physical_device);
- }
- 
--
- static void xen_vbd_free(struct xen_vbd *vbd)
- {
- 	if (vbd->bdev)
-@@ -489,6 +488,7 @@ static int xen_vbd_create(struct xen_blkif *blkif, blkif_vdev_t handle,
- 		handle, blkif->domid);
- 	return 0;
- }
-+
- static int xen_blkbk_remove(struct xenbus_device *dev)
- {
- 	struct backend_info *be = dev_get_drvdata(&dev->dev);
-@@ -572,6 +572,7 @@ static void xen_blkbk_discard(struct xenbus_transaction xbt, struct backend_info
- 	if (err)
- 		dev_warn(&dev->dev, "writing feature-discard (%d)", err);
- }
-+
- int xen_blkbk_barrier(struct xenbus_transaction xbt,
- 		      struct backend_info *be, int state)
- {
-@@ -656,7 +657,6 @@ static int xen_blkbk_probe(struct xenbus_device *dev,
- 	return err;
- }
- 
--
- /*
-  * Callback received when the hotplug scripts have placed the physical-device
-  * node.  Read it and the mode node, and create a vbd.  If the frontend is
-@@ -748,7 +748,6 @@ static void backend_changed(struct xenbus_watch *watch,
- 	}
- }
- 
--
- /*
-  * Callback received when the frontend's state changes.
-  */
-@@ -823,7 +822,6 @@ static void frontend_changed(struct xenbus_device *dev,
- 	}
- }
- 
--
- /* Once a memory pressure is detected, squeeze free page pools for a while. */
- static unsigned int buffer_squeeze_duration_ms = 10;
- module_param_named(buffer_squeeze_duration_ms,
-@@ -844,7 +842,6 @@ static void reclaim_memory(struct xenbus_device *dev)
- 
- /* ** Connection ** */
- 
--
- /*
-  * Write the physical details regarding the block device to the store, and
-  * switch to Connected state.
--- 
-2.17.1
+LGTM
+
+Acked-by: Jeff Moyer <jmoyer@redhat.com>
 
