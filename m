@@ -2,170 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8ACB121DF7
-	for <lists+linux-block@lfdr.de>; Mon, 16 Dec 2019 23:30:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0D5F121ECA
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2019 00:10:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfLPWZm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Dec 2019 17:25:42 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11904 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfLPWZm (ORCPT
+        id S1726487AbfLPXKf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Dec 2019 18:10:35 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38164 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfLPXKe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:25:42 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df8045b0003>; Mon, 16 Dec 2019 14:25:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 16 Dec 2019 14:25:40 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 16 Dec 2019 14:25:40 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 22:25:39 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 16 Dec 2019 22:25:40 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df804630007>; Mon, 16 Dec 2019 14:25:39 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Jason Gunthorpe" <jgg@mellanox.com>
-Subject: [PATCH v11 06/25] mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
-Date:   Mon, 16 Dec 2019 14:25:18 -0800
-Message-ID: <20191216222537.491123-7-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216222537.491123-1-jhubbard@nvidia.com>
-References: <20191216222537.491123-1-jhubbard@nvidia.com>
+        Mon, 16 Dec 2019 18:10:34 -0500
+Received: by mail-io1-f67.google.com with SMTP id v3so8927989ioj.5
+        for <linux-block@vger.kernel.org>; Mon, 16 Dec 2019 15:10:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dCnC/jfvEWt+z7fAdBW+xSdl7SEaUneQSHaq+EB0tW8=;
+        b=A860KQ4K3o5h8+6NmyV0mWqxB7G9iucprwDUlid50DJIt930o0EdvyrIQmDddU8BU/
+         bII7+rThzGEDdo1NoanT+8dfcEbll4RsPU/2r2erpSocVBIUD8HBJv/ZJ1ydcHCtI1Np
+         V5hqkNOaMZx3TmRNaZ1sCyvu6URHi990RaWsTjZd+axtL0dF6DkRNbqZoRcqmNkY3QEg
+         /8Ycnsxw0i50SdGvYuPFBq+MGZ3yMfzTwU5bQEeG8LS4MaZ+3mbDQgvVmTM7dSPBmjhD
+         lNQlUwedlAFoXrSrY7l3oXi86KE2p/ZLiYZxfh48oTu9MZ9P07dNtHABxC7j6VZJvVAt
+         3M8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dCnC/jfvEWt+z7fAdBW+xSdl7SEaUneQSHaq+EB0tW8=;
+        b=HWOFzI5SbS/Zbvcb30BwNv000tRGKGmX06dX6XF+gL4gKrvgJqlurMEt3/Moj4yjAU
+         cfxBCmYBae46PwZFnCoycQwJLWXFt032w6egosl8t8bQ0YK+vtMzwtCXUr7hU4M4pPXR
+         ELta0zdSE0ZJhgmXZyE9RE1DjI+BGh7lRGOMhBrvAhisQg4lZtTFXDFIMq3CJmcPHqqr
+         2GtBFjr1jb1A1dWtfczkLIXuWeJu9ZakCSMWt+IghbWPjcow1p9xBjMlAB4PdPgZqmUa
+         Y1eGOS9OGLt0NKshm0w05lAIPXYF4oJ2HdzkVVuj0Yu/Tt1w6LoHgP5nRFDhPl5OXnhZ
+         zJrA==
+X-Gm-Message-State: APjAAAUdDd1voqJHRCektqUmi3opQGcYwhpDpIWkHN72Rk/WXywbQHFn
+        DMImOFMwhRjFM3XIZf8yHOZnbA==
+X-Google-Smtp-Source: APXvYqzbm6Awsl5NFoCXB4S8ZwNWX05gmf9fBekjP0vGzfoTbJRwv3EC4ru2y7C/PxbU2pyATedezQ==
+X-Received: by 2002:a5d:875a:: with SMTP id k26mr1430389iol.45.1576537833871;
+        Mon, 16 Dec 2019 15:10:33 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id h71sm6259626ila.30.2019.12.16.15.10.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 15:10:33 -0800 (PST)
+Subject: Re: [PATCH block/for-5.5-fixes] iocost: over-budget forced IOs should
+ schedule async delay
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>
+References: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fc474a2f-4e1b-8c9f-06bf-b479f7455c77@kernel.dk>
+Date:   Mon, 16 Dec 2019 16:10:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576535132; bh=pHcF/JgrO8KeSOsS86nDJ20lSwdOqaEOcNhZlGV+6X4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=fZjlZTZ7Vbi1UgU4La0mAIzvFPGxtcV/3TRdC914TLvm5b6cNB4AhM/QoM7Yn8aP4
-         ai1i0UP0njpGa3f+/Xdmz13bSgdXJhNbWknElzZ1qqR47hw3cjuWjf3pTCsNOO64Ex
-         ehMkR6rEzZuF4/r51eAy/c6IFU5KSD1cjrhw3V4dH09JubNkfSHuPtlE1wwHiKY2nP
-         cWLbhCcaCXDrQ9Idyz31qZ5jyYBAWRrXEXkrsw8kWKO6Shq5q6ETelz+1XbYSUYnJz
-         et9dwP/Y+InWrgcVZi8JLCuww0cSHgjKjKKA++n7nb2vlZ50c4p9CQI+id36OXQqld
-         Kb05yokn6WhYQ==
+In-Reply-To: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-As it says in the updated comment in gup.c: current FOLL_LONGTERM
-behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
-FS DAX check requirement on vmas.
+On 12/16/19 2:34 PM, Tejun Heo wrote:
+> When over-budget IOs are force-issued through root cgroup,
+> iocg_kick_delay() adjusts the async delay accordingly but doesn't
+> actually schedule async throttle for the issuing task.  This bug is
+> pretty well masked because sooner or later the offending threads are
+> gonna get directly throttled on regular IOs or have async delay
+> scheduled by mem_cgroup_throttle_swaprate().
+> 
+> However, it can affect control quality on filesystem metadata heavy
+> operations.  Let's fix it by invoking blkcg_schedule_throttle() when
+> iocg_kick_delay() says async delay is needed.
 
-However, the corresponding restriction in get_user_pages_remote() was
-slightly stricter than is actually required: it forbade all
-FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
-that do not set the "locked" arg.
+Applied, thanks Tejun.
 
-Update the code and comments to loosen the restriction, allowing
-FOLL_LONGTERM in some cases.
-
-Also, copy the DAX check ("if a VMA is DAX, don't allow long term
-pinning") from the VFIO call site, all the way into the internals
-of get_user_pages_remote() and __gup_longterm_locked(). That is:
-get_user_pages_remote() calls __gup_longterm_locked(), which in turn
-calls check_dax_vmas(). This check will then be removed from the VFIO
-call site in a subsequent patch.
-
-Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
-and to Dan Williams for helping clarify the DAX refactoring.
-
-Tested-by: Alex Williamson <alex.williamson@redhat.com>
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- mm/gup.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 3ecce297a47f..c0c56888e7cc 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -29,6 +29,13 @@ struct follow_page_context {
- 	unsigned int page_mask;
- };
-=20
-+static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
-+						  struct mm_struct *mm,
-+						  unsigned long start,
-+						  unsigned long nr_pages,
-+						  struct page **pages,
-+						  struct vm_area_struct **vmas,
-+						  unsigned int flags);
- /*
-  * Return the compound head page with ref appropriately incremented,
-  * or NULL if that failed.
-@@ -1179,13 +1186,23 @@ long get_user_pages_remote(struct task_struct *tsk,=
- struct mm_struct *mm,
- 		struct vm_area_struct **vmas, int *locked)
- {
- 	/*
--	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-+	 * Parts of FOLL_LONGTERM behavior are incompatible with
- 	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
--	 * vmas.  As there are no users of this flag in this call we simply
--	 * disallow this option for now.
-+	 * vmas. However, this only comes up if locked is set, and there are
-+	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
-+	 * allow what we can.
- 	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
--		return -EINVAL;
-+	if (gup_flags & FOLL_LONGTERM) {
-+		if (WARN_ON_ONCE(locked))
-+			return -EINVAL;
-+		/*
-+		 * This will check the vmas (even if our vmas arg is NULL)
-+		 * and return -ENOTSUPP if DAX isn't allowed in this case:
-+		 */
-+		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
-+					     vmas, gup_flags | FOLL_TOUCH |
-+					     FOLL_REMOTE);
-+	}
-=20
- 	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
- 				       locked,
---=20
-2.24.1
+-- 
+Jens Axboe
 
