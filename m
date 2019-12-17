@@ -2,94 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97655122EF8
-	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2019 15:39:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C92F122FEB
+	for <lists+linux-block@lfdr.de>; Tue, 17 Dec 2019 16:16:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfLQOj5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Dec 2019 09:39:57 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44334 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbfLQOj5 (ORCPT
+        id S1726487AbfLQPQo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Dec 2019 10:16:44 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39322 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfLQPQo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:39:57 -0500
-Received: by mail-io1-f66.google.com with SMTP id b10so11207874iof.11
-        for <linux-block@vger.kernel.org>; Tue, 17 Dec 2019 06:39:57 -0800 (PST)
+        Tue, 17 Dec 2019 10:16:44 -0500
+Received: by mail-ed1-f66.google.com with SMTP id t17so1305554eds.6
+        for <linux-block@vger.kernel.org>; Tue, 17 Dec 2019 07:16:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hSvlHPa+iglQscNJSf7xQ/5HwRTlC6yUkzeNdFCcqV8=;
-        b=1w7hkIWzvLtMu/dLZZMcZIijlZyfYWT25XG5COOJJfc8oH+ykaNVmhW+kyy47uEmxT
-         44BfhsIy0PIQPcGGVhchbkR3/gV/mUaau6NjOzs4QWM9ffCFMNcxvMItscKe+DnZ8qPF
-         Po3NAj4x4dgXGv6qHecBmhualhrDq1w6EvAdBXsygv8MWFEzZ7R9YWkEgVggpMNvni6n
-         n37RGtE7bIULBdKOjo8NKGU+SO0IhHzTxOZvEEt83L9ftLfxh3r/Lej6KO9UMyH6X+iN
-         W11mqMTLUelQXj54y55ExU0ini0NqxR9dbme6TbUTRm5QE3/urjzZE6sDy95hbxBcJ6x
-         ntdg==
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=oo5dfyG2tT7KW4ai4U1JQW/HcOx4QSEZ7es4QC1dN3g=;
+        b=DFmKYPmrl6MB4C7iv+/j5aC++xi8uesL8p+EHf946Mv0lrHFbnoJm0rt87ipWFc0Oe
+         EK2fjpziGKLUba8QLnazMixZtW4C5C3AjHdBgzIxie3xCwrslADJt04ixPkurTG4kLhn
+         GCSn15OISqRrLlZLMOMudMLsDflQjrSxxa6ifPL0Scx4l7gJNTlBLYy9Il0Opbz4w32P
+         2YRzbAWfPeQ74ZDQuJsqxLp8Sy1DP+vlWYotS+SKcHkymfuQ5JY+JxNOIqoVDobZbA0N
+         0u2FhjywTJLamXhzMajSssHTv0Ya2lfvg4SbVQX1M+8wKmm1kUtW3tejNc4TMSR+TFKO
+         61qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hSvlHPa+iglQscNJSf7xQ/5HwRTlC6yUkzeNdFCcqV8=;
-        b=DAm5u0PEHCgCPT8NtrDP1SSCBmaJUdOVVd8WE0/tk8lCOh2NXL5ot/zQOh7yw9rZ3/
-         Q3t7MCOzXEQCqoCd5vQ0G0kSGr2PaMdBXxXU19sJkglkBogkQHJTYmJ1C3ZqxtZfuSoQ
-         cF2/8H9XjwqP9awE4SOHSNDyTRfeBjJqWGiQxEVCWwZIJQRyzlFEbTsVEqk95RJSX2HU
-         8u+uyATEJcP4+x1wwspvNmhVkZxdIwg3vqKgCdkxkMqMi2zCxVEjPopxGP4JYClBttoS
-         SQZXyIlRkCieVv/7ps/n0K+w7buVi7BfYrF4qeMpgEawPhy9Ef9bj5V8D4s5uvfWfYxy
-         T+Hg==
-X-Gm-Message-State: APjAAAU4OusUOa5HR6KB5nlQfJF8phk6yUY88F3AKouIYR1TU40ekZfU
-        QoRt1y9F1sH1cU7Y8xTpL8+zQw==
-X-Google-Smtp-Source: APXvYqyLgOsF8+OSoa6LuQKDnmSyMVA3kpVF98IU1cYOBzMtc4vb4+N38upf1F2528sIApqSicZCyw==
-X-Received: by 2002:a6b:680d:: with SMTP id d13mr3796828ioc.188.1576593596972;
-        Tue, 17 Dec 2019 06:39:56 -0800 (PST)
-Received: from x1.thefacebook.com ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id w21sm5285255ioc.34.2019.12.17.06.39.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:39:56 -0800 (PST)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=oo5dfyG2tT7KW4ai4U1JQW/HcOx4QSEZ7es4QC1dN3g=;
+        b=MHmB49gJ3pWJd5YJj1CMeT8gXY9hKJkukSKbycJCvQAovcb/8NNh4AJe9aa4DPJ+9b
+         xO4wAD25jHFSZimpvSwi2pWrEUB4KZEoR5ZaEYrpbeGHTKrzJeoQS6Xb4YpNclQyS9CG
+         rTsp3aMh2MKWrvEQOIze4v17b7/K3g/pnw/N6LYndYaM0T/zPSxnxaBHKTf2kuddNlF3
+         4FoFCFEu1xP19YnRMmAiW9u2b1TmWgWZqk9Hh2F6WTWW2BJKPiCfp7UFajmSQ5+MxubI
+         9IE1UFIVdgCSvfl/G+Bbf8nMycy0mXgifex3pX3RMUSqHoweA7nsmY2RgMIkjwqkM7Av
+         4/qQ==
+X-Gm-Message-State: APjAAAU3dCSfE1kFREvrsl0PJ4eAzHWJCfjhADIe1QJDiXR2EUAg3A5x
+        lkX1P1xUE7tQdwxdWzOClcGzRA==
+X-Google-Smtp-Source: APXvYqyNK5O/+F8eW07W9dexy3Sw+pAdXZu8yDWlHgzxnV7z2k3f6kSU9ASk5K09eEz5bfXZ0BqPug==
+X-Received: by 2002:a50:b066:: with SMTP id i93mr5808711edd.251.1576595802144;
+        Tue, 17 Dec 2019 07:16:42 -0800 (PST)
+Received: from ?IPv6:2a02:247f:ffff:2540:f83b:3dd6:f8d3:a846? ([2001:1438:4010:2540:f83b:3dd6:f8d3:a846])
+        by smtp.gmail.com with ESMTPSA id u34sm4316edc.83.2019.12.17.07.16.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Dec 2019 07:16:41 -0800 (PST)
+Subject: Re: [PATCH 1/6] fs: add read support for RWF_UNCACHED
+To:     Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
 Cc:     willy@infradead.org, clm@fb.com, torvalds@linux-foundation.org,
-        david@fromorbit.com, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 6/6] xfs: don't do delayed allocations for uncached buffered writes
-Date:   Tue, 17 Dec 2019 07:39:48 -0700
-Message-Id: <20191217143948.26380-7-axboe@kernel.dk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191217143948.26380-1-axboe@kernel.dk>
+        david@fromorbit.com
 References: <20191217143948.26380-1-axboe@kernel.dk>
+ <20191217143948.26380-2-axboe@kernel.dk>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <1d0bf482-8786-00b7-310d-4de38607786d@cloud.ionos.com>
+Date:   Tue, 17 Dec 2019 16:16:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217143948.26380-2-axboe@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This data is going to be written immediately, so don't bother trying
-to do delayed allocation for it.
 
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/xfs/xfs_iomap.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On 12/17/19 3:39 PM, Jens Axboe wrote:
+> If RWF_UNCACHED is set for io_uring (or preadv2(2)), we'll use private
+> pages for the buffered reads. These pages will never be inserted into
+> the page cache, and they are simply droped when we have done the copy at
+> the end of IO.
+>
+> If pages in the read range are already in the page cache, then use those
+> for just copying the data instead of starting IO on private pages.
+>
+> A previous solution used the page cache even for non-cached ranges, but
+> the cost of doing so was too high. Removing nodes at the end is
+> expensive, even with LRU bypass. On top of that, repeatedly
+> instantiating new xarray nodes is very costly, as it needs to memset 576
+> bytes of data, and freeing said nodes involve an RCU call per node as
+> well. All that adds up, making uncached somewhat slower than O_DIRECT.
+>
+> With the current*solition*, we're basically at O_DIRECT levels of
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 28e2d1f37267..d0cd4a05d59f 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -847,8 +847,11 @@ xfs_buffered_write_iomap_begin(
- 	int			allocfork = XFS_DATA_FORK;
- 	int			error = 0;
- 
--	/* we can't use delayed allocations when using extent size hints */
--	if (xfs_get_extsz_hint(ip))
-+	/*
-+	 * Don't do delayed allocations when using extent size hints, or
-+	 * if we were asked to do uncached buffered writes.
-+	 */
-+	if (xfs_get_extsz_hint(ip) || (flags & IOMAP_UNCACHED))
- 		return xfs_direct_write_iomap_begin(inode, offset, count,
- 				flags, iomap, srcmap);
- 
--- 
-2.24.1
+Maybe it is 'solution' here.
 
+Thanks,
+Guoqing
