@@ -2,108 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 004F5125CE2
-	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2019 09:44:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7AC2125D12
+	for <lists+linux-block@lfdr.de>; Thu, 19 Dec 2019 09:56:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfLSIoA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Dec 2019 03:44:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726623AbfLSIoA (ORCPT
+        id S1726609AbfLSI46 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Dec 2019 03:56:58 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:39806 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLSI46 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:44:00 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJ8gaZ5122320
-        for <linux-block@vger.kernel.org>; Thu, 19 Dec 2019 03:43:59 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x00shtsqk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 19 Dec 2019 03:43:58 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-block@vger.kernel.org> from <sth@linux.ibm.com>;
-        Thu, 19 Dec 2019 08:43:56 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 19 Dec 2019 08:43:54 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBJ8hroQ36110468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 08:43:53 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05B23AE058;
-        Thu, 19 Dec 2019 08:43:53 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E81DEAE04D;
-        Thu, 19 Dec 2019 08:43:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 19 Dec 2019 08:43:52 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 91757E02C5; Thu, 19 Dec 2019 09:43:52 +0100 (CET)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-Subject: [PATCH 3/3] s390/dasd: fix typo in copyright statement
-Date:   Thu, 19 Dec 2019 09:43:52 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219084352.75114-1-sth@linux.ibm.com>
-References: <20191219084352.75114-1-sth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19121908-0012-0000-0000-000003767B16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121908-0013-0000-0000-000021B26D11
-Message-Id: <20191219084352.75114-4-sth@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_08:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=1
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- impostorscore=0 mlxlogscore=696 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912190074
+        Thu, 19 Dec 2019 03:56:58 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ8sATp136393;
+        Thu, 19 Dec 2019 08:56:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=zgbUyIwZSlRwJrqDCWGlA4t1prryEIZ4r9PN/qSElVc=;
+ b=Pq66JbP2S3ux0zcsdOhwsA6fLEOnwGhzwvqSe4rf6/KC26HITyE8QZosS0Au8DESR1lp
+ SgDoCiibuFVCZPXphi/5jIKDoRTjyDwf9bb1GOpex5B4IzkL38CH0M+azYwKiBWXoor8
+ y8xmFMOED0k7HF74222sMEmGVQyacm83iG0fhj/G6IlzXPuqZq2giNUoTm2JE5WrsaCw
+ 5qRXrJpnM9CSjZj5L7gVwIEEELEDI/N5q6RAgwjVBw80wuptW3ae2oxbWMV+jmsnjOfM
+ 6hOXHaZ8X0xGCeSnymnz3AeWDlxBQg0hrwslSrk+gmh9dLdaHB29QV/LCEW3mzxjseEi 1Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wvrcrjv19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 08:56:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ8s7sN064759;
+        Thu, 19 Dec 2019 08:56:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2wyp0957p8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 08:56:55 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJ8usjk012521;
+        Thu, 19 Dec 2019 08:56:54 GMT
+Received: from [10.191.9.152] (/10.191.9.152)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 00:56:54 -0800
+Subject: Re: [PATCH] block: streamline merge possibility checks
+To:     Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>
+References: <20191218194156.29430-1-dmitry.fomichev@wdc.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <c76929ea-2fcb-bbd3-a394-5d42f619191e@oracle.com>
+Date:   Thu, 19 Dec 2019 16:56:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20191218194156.29430-1-dmitry.fomichev@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190076
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190076
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-coypright -> copyright
+On 12/19/19 3:41 AM, Dmitry Fomichev wrote:
+> Checks for data direction in attempt_merge() and blk_rq_merge_ok()
+> are redundant and will always succeed when the both I/O request
+> operations are equal. Therefore, remove them.
+> 
+> Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+> ---
+>  block/blk-merge.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/block/blk-merge.c b/block/blk-merge.c
+> index d783bdc4559b..796451aed7d6 100644
+> --- a/block/blk-merge.c
+> +++ b/block/blk-merge.c
+> @@ -745,8 +745,7 @@ static struct request *attempt_merge(struct request_queue *q,
+>  	if (req_op(req) != req_op(next))
+>  		return NULL;
+>  
+> -	if (rq_data_dir(req) != rq_data_dir(next)
+> -	    || req->rq_disk != next->rq_disk)
+> +	if (req->rq_disk != next->rq_disk)
+>  		return NULL;
+>  
+>  	if (req_op(req) == REQ_OP_WRITE_SAME &&
+> @@ -868,10 +867,6 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
+>  	if (req_op(rq) != bio_op(bio))
+>  		return false;
+>  
+> -	/* different data direction or already started, don't merge */
+> -	if (bio_data_dir(bio) != rq_data_dir(rq))
+> -		return false;
+> -
 
-Reported-by: Kate Stewart <kstewart@linuxfoundation.org>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd_fba.h  | 2 +-
- drivers/s390/block/dasd_proc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
-diff --git a/drivers/s390/block/dasd_fba.h b/drivers/s390/block/dasd_fba.h
-index 8f75df06e893..45ddabec4017 100644
---- a/drivers/s390/block/dasd_fba.h
-+++ b/drivers/s390/block/dasd_fba.h
-@@ -2,7 +2,7 @@
- /*
-  * Author(s)......: Holger Smolinski <Holger.Smolinski@de.ibm.com>
-  * Bugreports.to..: <Linux390@de.ibm.com>
-- * Coypright IBM Corp. 1999, 2000
-+ * Copyright IBM Corp. 1999, 2000
-  *
-  */
- 
-diff --git a/drivers/s390/block/dasd_proc.c b/drivers/s390/block/dasd_proc.c
-index 1770b99f607e..8d4d69ea5baf 100644
---- a/drivers/s390/block/dasd_proc.c
-+++ b/drivers/s390/block/dasd_proc.c
-@@ -5,7 +5,7 @@
-  *		    Carsten Otte <Cotte@de.ibm.com>
-  *		    Martin Schwidefsky <schwidefsky@de.ibm.com>
-  * Bugreports.to..: <Linux390@de.ibm.com>
-- * Coypright IBM Corp. 1999, 2002
-+ * Copyright IBM Corp. 1999, 2002
-  *
-  * /proc interface for the dasd driver.
-  *
--- 
-2.17.1
+>  	/* must be same device */
+>  	if (rq->rq_disk != bio->bi_disk)
+>  		return false;
+> 
 
