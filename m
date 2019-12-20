@@ -2,161 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5B71127BC0
-	for <lists+linux-block@lfdr.de>; Fri, 20 Dec 2019 14:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F11D127BD0
+	for <lists+linux-block@lfdr.de>; Fri, 20 Dec 2019 14:37:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfLTNe0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 20 Dec 2019 08:34:26 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:35222 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfLTNe0 (ORCPT
+        id S1727362AbfLTNhM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 20 Dec 2019 08:37:12 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41174 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbfLTNhM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:34:26 -0500
-Received: by mail-qv1-f66.google.com with SMTP id u10so3536782qvi.2
-        for <linux-block@vger.kernel.org>; Fri, 20 Dec 2019 05:34:25 -0800 (PST)
+        Fri, 20 Dec 2019 08:37:12 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so8253807eds.8
+        for <linux-block@vger.kernel.org>; Fri, 20 Dec 2019 05:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5r9Zi+Au/gtKbsFaE0fKhn5Z9mh4Uiv+qjM4b27ESt8=;
-        b=gS91bsS4NjRyWzEDV454oc5qOgomjYBCltRmKzH7Nu9vdI8tQd65a6Yp2TVGSlgA1T
-         37v5Lb1zFtvOvSi94i0Yt83/4AqEpVzmzRwSkFPiESUgqKx4PUFqFCjV/s3xXBOVi9U4
-         w+ZUvVeXy6xbZ8B7zSi+DLnr0w1yjX7v6UIJiebq6UOkRZYcGvU4/THsXU/G/ZDo26P9
-         Xc2y8nF265eAeIX5xgl66hBVWEixNbJ1XzQjNRNan6ViT+Wn6RFHm+C8bWOAWNCFyUU3
-         D0D+BCr//3+mjkgiCcFfBfObTFOz8gI7nHowmgBdF1XYr9LIFcBR6SXbWA6e0W7l8hfH
-         tNRQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=50JOspM+D5uQA1idUmqCAlYXHzloHl9GF50bsF5DwpE=;
+        b=Pyz6jIG02iZwTEvTwR06OUoUe1v8COBOxTWVLidguSYmIUTWzoamuRCnInrwe5DiTh
+         Lw3K7ICKLAJuY61mSuChW94Z6Zm4aRZu0uoYsdk6vETrkYJ6jxi1hMozPng1oTJEbQ7K
+         aFg/h4qM9sX3e8r0beymSY1RQESCl5CHeQ77l6RLPiTCF9POA4JEw3HWzA24qIoNH2oq
+         b3/wRtWsI2RGgVw0H9/nUEa2EV/h92by6OfeXkfgUI5OjdOJSo20sp6Z6/LlgrWucupK
+         ptN2EuK09kNIffBtFGaA67KZpbgSNq6I6czYOtORMBFpDGEHzh1ciEb8kowY/gSrYiC1
+         XSlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5r9Zi+Au/gtKbsFaE0fKhn5Z9mh4Uiv+qjM4b27ESt8=;
-        b=mqHJ4mvfF1S3lhu5qp3eUt10eGnPtvH8vCB3ODQG8sWaOszfjrwD1NWbOjtUn3y0lE
-         l1KGEHhWLjO+XX2bhA4GdODgQjBNxwNX+k+zL/8rqO2Hx23HSeZbrSn7cGmj/viQYWvI
-         /GO2stesbmkkWv8wpVX4m0AxFThNBCFZOSmkK6TyjFm2I8CcGQjlxM8lqrPfIQJsWAAJ
-         S3oGvdCWSTasndLVct1yNQ1lLzjE1T+LAYm8V1Gm6PhBE6Q+Oflq7uPlu2d6bkq8XhRg
-         RMOFdyPSUJ8jKUGIk13uvXJ+ZMMgVz8ANhpgrOyob7p9P+PVoL8I2f9jI6gBzVPZjEXB
-         nzOw==
-X-Gm-Message-State: APjAAAUYZ9V+LinhJWfzeX3O/G0y6GHAWzoErXzcO4Nro3JX2b98WRn7
-        HfzYGR9tAh64C3oZT5s7T0L6Aw==
-X-Google-Smtp-Source: APXvYqz9az5JjtCMEl1OLVSzBMZYIFm7RbLMGJ3PjpAUx1pKMUVrf5ynor78RCoLoFWtbwHwcCO7NQ==
-X-Received: by 2002:a0c:893d:: with SMTP id 58mr4949386qvp.4.1576848864984;
-        Fri, 20 Dec 2019 05:34:24 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id q73sm2786969qka.56.2019.12.20.05.34.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Dec 2019 05:34:24 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iiIQB-0003cq-Co; Fri, 20 Dec 2019 09:34:23 -0400
-Date:   Fri, 20 Dec 2019 09:34:23 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-Message-ID: <20191220133423.GA13506@ziepe.ca>
-References: <20191216222537.491123-1-jhubbard@nvidia.com>
- <20191219132607.GA410823@unreal>
- <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
- <20191219210743.GN17227@ziepe.ca>
- <42a3e5c1-6301-db0b-5d09-212edf5ecf2a@nvidia.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=50JOspM+D5uQA1idUmqCAlYXHzloHl9GF50bsF5DwpE=;
+        b=B0eDcVJ1XiabBALuJ1Qg9Cpt9WO3qKTULncBtX4/2bbtxOpHH9QphW8/B1Q8E2NF7C
+         2u2QIEeYiUiB5ucHF7jPqHgrsEatXxIPU8Lm+M5qpcn6CE5JGZ5sinACoEUfQHUDlKvX
+         wi6GrocIMUsgsQUFDHlyT86XkYU3yJJnE5C4NaMTSVS/kJOb4GlaIq0zf8tAIR8SMnDP
+         Usq8CPZkzgXzqE/VkPMv7AAoYV02nkNZWV4d6K27O/gOJ6a5dn6kBHhD9MMC3hXVQQVK
+         dTMyibBwtabvn4vOtPqSG/byio9BQDLAutI6m85X3JzoJGmkGDrs2Pi/+oDOeJXJO5Vf
+         dMcg==
+X-Gm-Message-State: APjAAAVJw+AGwOpLskUwQv5DP9wg2IVDVkzwtaVUOVd+P0i1rtGECFHn
+        OobYnz3Hz97u61dwFSNa6rNXNsy1jw4z7/evEQk=
+X-Google-Smtp-Source: APXvYqzY5v68PF+c1AfMYCRu0dAoqAu7CT3RF1BS6Fuq4AA0IhZqka7desg0iTNUEfydpKB/pdoGVEgPqtE0R90+izw=
+X-Received: by 2002:a17:906:939a:: with SMTP id l26mr15031163ejx.91.1576849030141;
+ Fri, 20 Dec 2019 05:37:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42a3e5c1-6301-db0b-5d09-212edf5ecf2a@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:a17:906:779b:0:0:0:0 with HTTP; Fri, 20 Dec 2019 05:37:09
+ -0800 (PST)
+Reply-To: davidparkens@outlook.com
+From:   DAVIDPERKINS <perkensdavid@gmail.com>
+Date:   Fri, 20 Dec 2019 13:37:09 +0000
+Message-ID: <CAJ0pwFBHgjBKchaH5d34Li3B6UovgWYnQDoXOanWaHFUPBUGEQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 01:13:54PM -0800, John Hubbard wrote:
-> On 12/19/19 1:07 PM, Jason Gunthorpe wrote:
-> > On Thu, Dec 19, 2019 at 12:30:31PM -0800, John Hubbard wrote:
-> > > On 12/19/19 5:26 AM, Leon Romanovsky wrote:
-> > > > On Mon, Dec 16, 2019 at 02:25:12PM -0800, John Hubbard wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > This implements an API naming change (put_user_page*() -->
-> > > > > unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
-> > > > > extends that tracking to a few select subsystems. More subsystems will
-> > > > > be added in follow up work.
-> > > > 
-> > > > Hi John,
-> > > > 
-> > > > The patchset generates kernel panics in our IB testing. In our tests, we
-> > > > allocated single memory block and registered multiple MRs using the single
-> > > > block.
-> > > > 
-> > > > The possible bad flow is:
-> > > >    ib_umem_geti() ->
-> > > >     pin_user_pages_fast(FOLL_WRITE) ->
-> > > >      internal_get_user_pages_fast(FOLL_WRITE) ->
-> > > >       gup_pgd_range() ->
-> > > >        gup_huge_pd() ->
-> > > >         gup_hugepte() ->
-> > > >          try_grab_compound_head() ->
-> > > 
-> > > Hi Leon,
-> > > 
-> > > Thanks very much for the detailed report! So we're overflowing...
-> > > 
-> > > At first look, this seems likely to be hitting a weak point in the
-> > > GUP_PIN_COUNTING_BIAS-based design, one that I believed could be deferred
-> > > (there's a writeup in Documentation/core-api/pin_user_page.rst, lines
-> > > 99-121). Basically it's pretty easy to overflow the page->_refcount
-> > > with huge pages if the pages have a *lot* of subpages.
-> > > 
-> > > We can only do about 7 pins on 1GB huge pages that use 4KB subpages.
-> > 
-> > Considering that establishing these pins is entirely under user
-> > control, we can't have a limit here.
-> 
-> There's already a limit, it's just a much larger one. :) What does "no limit"
-> really mean, numerically, to you in this case?
-
-I guess I mean 'hidden limit' - hitting the limit and failing would
-be managable.
-
-I think 7 is probably too low though, but we are not using 1GB huge
-pages, only 2M..
-
-> > If the number of allowed pins are exhausted then the
-> > pin_user_pages_fast() must fail back to the user.
-> 
-> I'll poke around the IB call stack and see how much of that return
-> path is in place, if any. Because it's the same situation for
-> get_user_pages_fast().  This code just added a warning on overflow
-> so we could spot it early.
-
-All GUP callers must be prepared for failure, IB should be fine...
-
-Jason
+-- 
+How are you ? i am general david perkins from united state .
+Ce mai faci ? eu sunt general David Perkins din statul unit.
