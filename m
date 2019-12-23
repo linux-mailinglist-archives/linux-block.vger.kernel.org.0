@@ -2,223 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 557CB12911B
-	for <lists+linux-block@lfdr.de>; Mon, 23 Dec 2019 04:11:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F518129230
+	for <lists+linux-block@lfdr.de>; Mon, 23 Dec 2019 08:20:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfLWDL2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 22 Dec 2019 22:11:28 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42916 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726557AbfLWDL2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 22 Dec 2019 22:11:28 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CF194F06F464B68A80EE;
-        Mon, 23 Dec 2019 11:11:25 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Dec 2019
- 11:11:14 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <linux-block@vger.kernel.org>, <osandov@fb.com>
-CC:     <sunke32@huawei.com>
-Subject: [PATCH blktests v4] nbd/003:add mount and clear_sock test for nbd
-Date:   Mon, 23 Dec 2019 11:18:29 +0800
-Message-ID: <1577071109-68332-1-git-send-email-sunke32@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725880AbfLWHUS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Dec 2019 02:20:18 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40920 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLWHUS (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 23 Dec 2019 02:20:18 -0500
+Received: by mail-io1-f65.google.com with SMTP id x1so15245798iop.7
+        for <linux-block@vger.kernel.org>; Sun, 22 Dec 2019 23:20:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ttGL4+rAzNXTX2Tnq6h3tFr0OQnGnOOLQHuyK09xGds=;
+        b=Ayjkb78OydEZ0TXht2CsrKKwoCTFkm9UnPn3zsidkYkIYw2wiQnviHOcqiCaqikM9H
+         Hv/Ha+zqTgmi3yLih80kG69nDr1ibnvdAlzVaBtSxGraACXYR0l1XswHDSmUE6MwMhxu
+         aDqKWPdzSizb0sOnFnAIEFlcj1SF4x04ARWlbmdU0qE1LBnq/uqxjaPAEC+xSRpOE70e
+         truTDaxC/v8xTLbdJgMnJUGGGvRsvz6r+tMFmoTe54FeBKkBWZvSWsNzDdWF5FRKx4hN
+         Sru98DsnNTQS6rG7B9C61+LFcn8tyisIlzZuNtY4W1AX9vO66IbJB37qHG7DkfpBn9Tn
+         3p+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ttGL4+rAzNXTX2Tnq6h3tFr0OQnGnOOLQHuyK09xGds=;
+        b=bGoVHdocBrMASioirexoPuE8RrGDZ09+T8q4lZTi4hBAglHDYFHqplgvYN2Pilim75
+         ZoULFD5y2G3G0/En0eKKHbXoL7ezst6XlQi6vN2Po2hRJ0LbWfyYZXUDx1BjjNkyNl5c
+         W1Zn+qiKwYUpwS+vCqSpN8hRtqGdvGC7PZW2crLjY+iJCDaiuJIdS5duUAqAeA1gXLKu
+         grDCqOBCCWyFkR/t5i0mI7SqMGyBw7JambVrn8aRUHhPlN47GYIKzsneh1Ylv/tQVwSR
+         zOao0bJvSL0Yzgx7LFNw2ZJdhoTYKvdyoqrkpAQ/pDrDXmboilY90xQ9mNZ6h0rpkw8X
+         pV+g==
+X-Gm-Message-State: APjAAAUv15QaD3Icwe5m7s37ToyRtbH123ta0bN4WV1SgtaY4Mcy/oMm
+        CCCTb2RFbdJq6i1KwRW2eXb+X5f+h+heDSz9WLJa9w==
+X-Google-Smtp-Source: APXvYqxmmbOZRBX89vHfbtplFNPe+MDeKEj2hP6ww1S4gdn0Gj+xT5VYvprwy2anSIalcKcQGZ2Bi4ykXgtm9CMOFYU=
+X-Received: by 2002:a5d:84d6:: with SMTP id z22mr18136770ior.54.1577085617331;
+ Sun, 22 Dec 2019 23:20:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+References: <20191220155109.8959-1-jinpuwang@gmail.com> <20191220155109.8959-26-jinpuwang@gmail.com>
+ <655f25d2-7c3f-989a-0aa4-9f8f72c63c6b@amazon.com>
+In-Reply-To: <655f25d2-7c3f-989a-0aa4-9f8f72c63c6b@amazon.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 23 Dec 2019 08:20:08 +0100
+Message-ID: <CAMGffEmhYhhYhhZ++7hd9c3n7jOwgUKiC7vwNc4y++KMgqrEEg@mail.gmail.com>
+Subject: Re: [PATCH v5 25/25] MAINTAINERS: Add maintainers for RNBD/RTRS modules
+To:     Gal Pressman <galpress@amazon.com>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add the test case to check nbd device. This test case catches regressions
-fixed by commit 92b5c8f0063e4 "nbd: replace kill_bdev() with
-__invalidate_device() again".
+On Sun, Dec 22, 2019 at 10:55 AM Gal Pressman <galpress@amazon.com> wrote:
+>
+> On 20/12/2019 17:51, Jack Wang wrote:
+> > From: Jack Wang <jinpu.wang@cloud.ionos.com>
+> >
+> > Danil and me will maintain RNBD/RTRS modules.
+> >
+> > Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
+> > Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+> > ---
+> >  MAINTAINERS | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index cc0a4a8ae06a..e0caeac43fc8 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -7955,6 +7955,20 @@ IBM ServeRAID RAID DRIVER
+> >  S:   Orphan
+> >  F:   drivers/scsi/ips.*
+> >
+> > +RNBD BLOCK DRIVERS
+> > +M:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+> > +M:   Jack Wang <jinpu.wang@cloud.ionos.com>
+> > +L:   linux-block@vger.kernel.org
+> > +S:   Maintained
+> > +F:   drivers/block/rnbd/
+> > +
+> > +RTRS TRANSPORT DRIVERS
+> > +M:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+> > +M:   Jack Wang <jinpu.wang@cloud.ionos.com>
+> > +L:   linux-rdma@vger.kernel.org
+> > +S:   Maintained
+> > +F:   drivers/infiniband/ulp/rtrs/
+> > +
+> >  ICH LPC AND GPIO DRIVER
+> >  M:   Peter Tyser <ptyser@xes-inc.com>
+> >  S:   Maintained
+> >
+>
+> Entries should be added in alphabetical order.
+Thanks, Gal,
+Will fix the next round.
 
-Establish the nbd connection. Run two processes. The first one do mount
-and umount, and the other one do clear_sock ioctl.
-
-Signed-off-by: Sun Ke <sunke32@huawei.com>
-[Omar: simplify]
-Signed-off-by: Omar Sandoval <osandov@fb.com>
----
-simplified nbd/003 -> v4
-1. mkfs.ext4 /dev/nbd0 >> "$FULL" 2>&1.
-2. Allow mount and umount to fail. if clear sock do the first, mount and
-   umount can not be successful.
-3. Add the loops to 5000. So it is very likely to trigger the BUGON.
----
- src/Makefile           |  5 +--
- src/mount_clear_sock.c | 91 ++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/nbd/003          | 30 +++++++++++++++++
- tests/nbd/003.out      |  1 +
- 4 files changed, 125 insertions(+), 2 deletions(-)
- create mode 100644 src/mount_clear_sock.c
- create mode 100644 tests/nbd/003
- create mode 100644 tests/nbd/003.out
-
-diff --git a/src/Makefile b/src/Makefile
-index 917d6f4..3b587f6 100644
---- a/src/Makefile
-+++ b/src/Makefile
-@@ -4,12 +4,13 @@ HAVE_C_HEADER = $(shell if echo "\#include <$(1)>" |		\
- 
- C_TARGETS := \
- 	loblksize \
-+	loop_change_fd \
- 	loop_get_status_null \
-+	mount_clear_sock \
-+	nbdsetsize \
- 	openclose \
- 	sg/dxfer-from-dev \
- 	sg/syzkaller1 \
--	nbdsetsize \
--	loop_change_fd \
- 	zbdioctl
- 
- CXX_TARGETS := \
-diff --git a/src/mount_clear_sock.c b/src/mount_clear_sock.c
-new file mode 100644
-index 0000000..ba9ed71
---- /dev/null
-+++ b/src/mount_clear_sock.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-3.0+
-+// Copyright (C) 2019 Sun Ke
-+
-+#include <assert.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <sys/mount.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <linux/fs.h>
-+#include <linux/nbd.h>
-+
-+int main(int argc, char **argv)
-+{
-+	const char *mountpoint, *dev, *fstype;
-+	int loops, fd;
-+
-+	if (argc != 5) {
-+		fprintf(stderr, "usage: %s DEV MOUNTPOINT FSTYPE LOOPS", argv[0]);
-+		return EXIT_FAILURE;
-+	}
-+
-+	dev = argv[1];
-+	mountpoint = argv[2];
-+	fstype = argv[3];
-+	loops = atoi(argv[4]);
-+
-+	fd = open(dev, O_RDWR);
-+	if (fd == -1) {
-+		perror("open");
-+		return EXIT_FAILURE;
-+	}
-+
-+	for (int i = 0; i < loops; i++) {
-+		pid_t mount_pid, clear_sock_pid;
-+		int wstatus;
-+
-+		mount_pid = fork();
-+		if (mount_pid == -1) {
-+			perror("fork");
-+			return EXIT_FAILURE;
-+		}
-+		if (mount_pid == 0) {
-+			mount(dev, mountpoint, fstype,
-+				  MS_NOSUID | MS_SYNCHRONOUS, 0);
-+			umount(mountpoint);
-+			exit(EXIT_SUCCESS);
-+		}
-+
-+		clear_sock_pid = fork();
-+		if (clear_sock_pid == -1) {
-+			perror("fork");
-+			return EXIT_FAILURE;
-+		}
-+		if (clear_sock_pid == 0) {
-+			if (ioctl(fd, NBD_CLEAR_SOCK, 0) == -1) {
-+				perror("ioctl");
-+				exit(EXIT_FAILURE);
-+			}
-+			exit(EXIT_SUCCESS);
-+		}
-+
-+		if (waitpid(mount_pid, &wstatus, 0) == -1) {
-+			perror("waitpid");
-+			return EXIT_FAILURE;
-+		}
-+		if (!WIFEXITED(wstatus) ||
-+		    WEXITSTATUS(wstatus) != EXIT_SUCCESS) {
-+			fprintf(stderr, "mount process failed");
-+			return EXIT_FAILURE;
-+		}
-+
-+		if (waitpid(clear_sock_pid, &wstatus, 0) == -1) {
-+			perror("waitpid");
-+			return EXIT_FAILURE;
-+		}
-+		if (!WIFEXITED(wstatus) ||
-+		    WEXITSTATUS(wstatus) != EXIT_SUCCESS) {
-+			fprintf(stderr, "NBD_CLEAR_SOCK process failed");
-+			return EXIT_FAILURE;
-+		}
-+	}
-+
-+	close(fd);
-+	return EXIT_SUCCESS;
-+}
-diff --git a/tests/nbd/003 b/tests/nbd/003
-new file mode 100644
-index 0000000..57fb63a
---- /dev/null
-+++ b/tests/nbd/003
-@@ -0,0 +1,30 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2019 Sun Ke
-+#
-+# Regression test for commit 2b5c8f0063e4 ("nbd: replace kill_bdev() with
-+# __invalidate_device() again").
-+
-+. tests/nbd/rc
-+
-+DESCRIPTION="mount/unmount concurrently with NBD_CLEAR_SOCK"
-+QUICK=1
-+
-+requires() {
-+	_have_nbd && _have_src_program mount_clear_sock
-+}
-+
-+test() {
-+	echo "Running ${TEST_NAME}"
-+
-+	_start_nbd_server
-+	nbd-client -L -N export localhost /dev/nbd0 >> "$FULL" 2>&1
-+	mkfs.ext4 /dev/nbd0 >> "$FULL" 2>&1
-+
-+	mkdir -p "${TMPDIR}/mnt"
-+	src/mount_clear_sock /dev/nbd0 "${TMPDIR}/mnt" ext4 5000
-+	umount "${TMPDIR}/mnt" > /dev/null 2>&1
-+
-+	nbd-client -d /dev/nbd0 >> "$FULL" 2>&1
-+	_stop_nbd_server
-+}
-diff --git a/tests/nbd/003.out b/tests/nbd/003.out
-new file mode 100644
-index 0000000..aa340db
---- /dev/null
-+++ b/tests/nbd/003.out
-@@ -0,0 +1 @@
-+Running nbd/003
--- 
-2.13.6
-
+Regards,
+Jack
