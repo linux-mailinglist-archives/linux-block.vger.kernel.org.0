@@ -2,76 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1DB012A9F5
-	for <lists+linux-block@lfdr.de>; Thu, 26 Dec 2019 04:10:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B39A012AA09
+	for <lists+linux-block@lfdr.de>; Thu, 26 Dec 2019 04:39:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLZDKf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Dec 2019 22:10:35 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47498 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbfLZDKf (ORCPT
+        id S1726933AbfLZDje (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Dec 2019 22:39:34 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34825 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfLZDje (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Dec 2019 22:10:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlwmUT6_1577329818;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TlwmUT6_1577329818)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 26 Dec 2019 11:10:33 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Jens Axboe <axboe@kernel.dk>
+        Wed, 25 Dec 2019 22:39:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so12273566pgk.2
+        for <linux-block@vger.kernel.org>; Wed, 25 Dec 2019 19:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2LoNnrg8/MyU7ECXfmG6IB7BzK3+XYl9Hp6H8NLt4zM=;
+        b=06/uzh3FNHZ73GGwKi0y/+9z5AlflDyf/bnCPO81hytsOKHWWLzyf0GfQ/LkCthGvU
+         eAJsYCUeGfOO55GZbld5E9OzKBMGt/6zOTqsa6AKle4axSerM0R3kgSk1Hnxtm5bq4ZK
+         inKAj4NtEsgrXxrn1IhGT0eewjcjtznSILKy9G57MkTpMcqLCFBKKEcFyIB4mzv457na
+         FKyzGN+/F/EfM2VmgT9L+4wk3nz9ghBud/l5OUNnpsin+VSXmmULizET1olmaMNIFM+O
+         JfHQRhtpAGSgT0DJ+8Sx8WLgYCb+xNfIkfhgSP4gJeFsPKOhW+ryuw2wvB8WSChojGBr
+         THSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2LoNnrg8/MyU7ECXfmG6IB7BzK3+XYl9Hp6H8NLt4zM=;
+        b=XVfq5ixacohLNyno8TUd5xG90pikKAIeEYoV83xgl4LVwPoGlGKwvfE4achxLr0YIA
+         mXUFxrzykDQdzyxP4jXokHhcqHk2hNEktMnF6vXLte09TW+YoONBK7nxZIYwo4EvXTpd
+         FCACtww9y25uLumk8q2sEgnHjgdwSvm06WiXNaffQXYNqiO91CDuWUIxjqdX8qtLIODX
+         9RI2iW1Z2TSc8LANzNKAHd8yaTxlor0nWIhpn6rP2Qa0eyYG+5bQQYcPtW4sn05t8ROT
+         K5Vv/9XbPMjTw9wMPaSEzmkpzx7jVtpoF2qyj9rwxhLWhY0AeCLqwtZXD5qIEmSSjtcQ
+         7Fzw==
+X-Gm-Message-State: APjAAAVqWxD36mjpcmjrowKb66IhnoyeIX49dQpPaMfhQQ7Sgt3B2TvQ
+        2uA/BOEc5OqHf3kCCsg8AkY+tp3+WSqRug==
+X-Google-Smtp-Source: APXvYqzM3gpiLAHHkcvCuSoGqVQCTNz1IrNcjQoG+esM7Ab+m7Nh0bFXUYFDus8hzhROo5BUIeM2jg==
+X-Received: by 2002:a63:4e0e:: with SMTP id c14mr46160249pgb.237.1577331573938;
+        Wed, 25 Dec 2019 19:39:33 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id o134sm29031425pfg.137.2019.12.25.19.39.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Dec 2019 19:39:33 -0800 (PST)
+Subject: Re: [PATCH v2] block: make the io_ticks counter more accurate
+To:     Wen Yang <wenyang@linux.alibaba.com>
 Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, xlpang@linux.alibaba.com,
-        Wen Yang <wenyang@linux.alibaba.com>,
         Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] block: make the io_ticks counter more accurate
-Date:   Thu, 26 Dec 2019 11:10:14 +0800
-Message-Id: <20191226031014.58970-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+References: <20191226031014.58970-1-wenyang@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <41175786-8a02-62e0-fc79-955ec0e74aeb@kernel.dk>
+Date:   Wed, 25 Dec 2019 20:39:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191226031014.58970-1-wenyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of the jiffies, we should update the io_ticks counter
-with the passed in parameter 'now'.
+On 12/25/19 8:10 PM, Wen Yang wrote:
+> Instead of the jiffies, we should update the io_ticks counter
+> with the passed in parameter 'now'.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: linux-block@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-v2->v1: Use the same clock source for io_ticks and other statistics in the diskstats
+I'm still missing some justification for this. What exactly is this
+patch trying to solve or improve? Your commit message says "we should",
+but why?
 
- block/blk-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 379f6f5..da7de9f 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1365,7 +1365,7 @@ void blk_account_io_done(struct request *req, u64 now)
- 		part_stat_lock();
- 		part = req->part;
- 
--		update_io_ticks(part, jiffies);
-+		update_io_ticks(part, nsecs_to_jiffies(now));
- 		part_stat_inc(part, ios[sgrp]);
- 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
- 		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
-@@ -1407,7 +1407,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
- 		rq->part = part;
- 	}
- 
--	update_io_ticks(part, jiffies);
-+	update_io_ticks(part, nsecs_to_jiffies(ktime_get_ns()));
- 
- 	part_stat_unlock();
- }
 -- 
-1.8.3.1
+Jens Axboe
 
