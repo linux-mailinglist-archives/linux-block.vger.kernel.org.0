@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B0812E36D
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 08:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB68F12E37A
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 08:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgABHx2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jan 2020 02:53:28 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:60261 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgABHx1 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jan 2020 02:53:27 -0500
+        id S1727822AbgABHx7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jan 2020 02:53:59 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:19249 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbgABHx7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jan 2020 02:53:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1577951607; x=1609487607;
+  t=1577951638; x=1609487638;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=Lu5wUxicX2nqy1FtOE1ySeTvkT4l5dpgfpukGpnD/kE=;
-  b=EClBXzcbr2dv3hrI54y1oRkaFHJvD3xrwDa1T3IhOJffQJvMczJr9P/U
-   TGZoNSuM/aWNSn7pGz5FfswAI9meZCW496ZU90UTMVv8AKZOY5CmZAm1I
-   jzJGAoy0UUjFkUBGxzywFU0xX13RMSAfglkUs6U3WYgpBeMNb9dg4iUku
-   I=;
-IronPort-SDR: F+UfTDX7e6DI5Y0hnnkPGHSJNSsLUL5ST+80JyH2hyUDVkICXF/Vb8r+IexeFcg9wbkNgDJqdx
- jSPWiT2OsRlw==
-X-IronPort-AV: E=Sophos;i="5.69,386,1571702400"; 
-   d="scan'208";a="10648269"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 02 Jan 2020 07:53:25 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 51581A22C7;
-        Thu,  2 Jan 2020 07:53:22 +0000 (UTC)
-Received: from EX13D11UWC002.ant.amazon.com (10.43.162.174) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 2 Jan 2020 07:53:22 +0000
+  bh=RlibLQQganA2BZ89ch7dSkDd5ROuDmDBz+7MfRKKRsw=;
+  b=Vg4tM9WsSJ5EkkuakHUyAMxgZ2+Mbja2rMcFU/ET9tFFwx9FxI1MLjFD
+   yiNG59A+gCAPJeOwkcY0+D6/pl+qPTqicV8llmCYKAVFkhrYlyCcKs+wT
+   G+YC55SCupAwkyA31x4uJ3P6183zzknphFLdGWS31Z1GESQqlj0vSFRPD
+   4=;
+IronPort-SDR: PPLhSY4jNtRBa2o7qMz8aHt3QgFdThFlbslEB5/L+ZcMKItPHVxhHM7qn/Q5Y0LGcfjtOs8+LX
+ D3R9mD+FVJHA==
+X-IronPort-AV: E=Sophos;i="5.69,385,1571702400"; 
+   d="scan'208";a="11240006"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 02 Jan 2020 07:53:57 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 93F49A1F00;
+        Thu,  2 Jan 2020 07:53:54 +0000 (UTC)
+Received: from EX13D01UWA003.ant.amazon.com (10.43.160.107) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:23 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D11UWC002.ant.amazon.com (10.43.162.174) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 2 Jan 2020 07:53:21 +0000
+ EX13d01UWA003.ant.amazon.com (10.43.160.107) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:23 +0000
 Received: from localhost (172.23.204.141) by mail-relay.amazon.com
  (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Thu, 2 Jan 2020 07:53:20 +0000
+ Transport; Thu, 2 Jan 2020 07:53:22 +0000
 From:   Balbir Singh <sblbir@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-nvme@lists.infradead.org>
 CC:     <axboe@kernel.dk>, <ssomesh@amazon.com>, <jejb@linux.ibm.com>,
         <hch@lst.de>, <mst@redhat.com>, <Chaitanya.Kulkarni@wdc.com>,
         Balbir Singh <sblbir@amazon.com>
-Subject: [resend v1 3/5] drivers/block/xen-blkfront.c: Convert to use disk_set_capacity
-Date:   Thu, 2 Jan 2020 07:53:13 +0000
-Message-ID: <20200102075315.22652-4-sblbir@amazon.com>
+Subject: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use disk_set_capacity
+Date:   Thu, 2 Jan 2020 07:53:14 +0000
+Message-ID: <20200102075315.22652-5-sblbir@amazon.com>
 X-Mailer: git-send-email 2.16.5
 In-Reply-To: <20200102075315.22652-1-sblbir@amazon.com>
 References: <20200102075315.22652-1-sblbir@amazon.com>
@@ -59,37 +59,27 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 block/genhd provides disk_set_capacity() for sending
-RESIZE notifications via uevents.
+RESIZE notifications via uevents. This notification is
+newly added to NVME devices
 
 Signed-off-by: Balbir Singh <sblbir@amazon.com>
 ---
- drivers/block/xen-blkfront.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-index 23c86350a5ab..bed7050a697d 100644
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -2337,7 +2337,6 @@ static void blkfront_connect(struct blkfront_info *info)
- 	unsigned long sector_size;
- 	unsigned int physical_sector_size;
- 	unsigned int binfo;
--	char *envp[] = { "RESIZE=1", NULL };
- 	int err, i;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 667f18f465be..cb214e914fc2 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1808,7 +1808,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	    ns->lba_shift > PAGE_SHIFT)
+ 		capacity = 0;
  
- 	switch (info->connected) {
-@@ -2352,10 +2351,8 @@ static void blkfront_connect(struct blkfront_info *info)
- 			return;
- 		printk(KERN_INFO "Setting capacity to %Lu\n",
- 		       sectors);
--		set_capacity(info->gd, sectors);
-+		disk_set_capacity(info->gd, sectors);
- 		revalidate_disk(info->gd);
--		kobject_uevent_env(&disk_to_dev(info->gd)->kobj,
--				   KOBJ_CHANGE, envp);
+-	set_capacity(disk, capacity);
++	disk_set_capacity(disk, capacity);
  
- 		return;
- 	case BLKIF_STATE_SUSPENDED:
+ 	nvme_config_discard(disk, ns);
+ 	nvme_config_write_zeroes(disk, ns);
 -- 
 2.16.5
 
