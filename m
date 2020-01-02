@@ -2,180 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AF7712E172
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 02:23:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A56912E36E
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 08:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgABBXe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jan 2020 20:23:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45782 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725895AbgABBXe (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jan 2020 20:23:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577928213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DsepRmJjvT4cYPy6QHyiU0FOUdA3CmEcRr+bW/pGgyA=;
-        b=avKJYtaXNu3YKSlvu439j2WUdjTe17umPJWuzOwoitPTanvbuH5JqNWUzaqqzZDXtyCiHo
-        6aponk52d/NkhxO2nK6czTdPTpEZsq2w7v/5VZZvrox9Nv+W89IOKcy7m7ZjDSVmoLD3Hs
-        CW8vgAizz16t1dK5W5S9B/YqvpURLpk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-NjYHBSVINhyEOiJSU7-ydQ-1; Wed, 01 Jan 2020 20:23:31 -0500
-X-MC-Unique: NjYHBSVINhyEOiJSU7-ydQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 846B4420DB;
-        Thu,  2 Jan 2020 01:23:29 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2141078E9E;
-        Thu,  2 Jan 2020 01:23:19 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 09:23:14 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     Yufen Yu <yuyufen@huawei.com>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, hch@lst.de, zhengchuan@huawei.com,
-        yi.zhang@huawei.com, paulmck@kernel.org, joel@joelfernandes.org,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH] block: make sure last_lookup set as NULL after part
- deleted
-Message-ID: <20200102012314.GB16719@ming.t460p>
-References: <20191231110945.10857-1-yuyufen@huawei.com>
- <a9ce86d6-dadb-9301-7d76-8cef81d782fd@huawei.com>
+        id S1727768AbgABHxe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jan 2020 02:53:34 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:18013 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgABHxe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jan 2020 02:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577951613; x=1609487613;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=PVg07FoUIijqCDgNCxD6SqGn7u8VxPLR6RUrEx5u2Xs=;
+  b=dLFl/AbOeGdRIBz3NymYSOhglVOSDz76UA5YyM3i4c66oa9vrnPaGTL3
+   IZOXGX5VYohLxQFCJpVtE6LUpIJiId8OW5zZD6lzAzjPDzZ2HP0NL2yYx
+   9Lsf/Nz7BrQudKxM7f3G+vizakmYv6Xeao2Ee2ShEwIvXQkKe7CQrz831
+   Y=;
+IronPort-SDR: Q8h005rSzjI1pkx7eTWj8InTdlJl4q+w4jgOi5elBCR2/fK7u77rpRkaQyTWfDNiEVbVkVRzrV
+ rNnJKZ4HaWXw==
+X-IronPort-AV: E=Sophos;i="5.69,385,1571702400"; 
+   d="scan'208";a="16411671"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Jan 2020 07:53:21 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 65A71A1ED5;
+        Thu,  2 Jan 2020 07:53:19 +0000 (UTC)
+Received: from EX13D01UWA003.ant.amazon.com (10.43.160.107) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13d01UWA003.ant.amazon.com (10.43.160.107) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:17 +0000
+Received: from localhost (172.23.204.141) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Thu, 2 Jan 2020 07:53:16 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, <ssomesh@amazon.com>, <jejb@linux.ibm.com>,
+        <hch@lst.de>, <mst@redhat.com>, <Chaitanya.Kulkarni@wdc.com>,
+        Balbir Singh <sblbir@amazon.com>
+Subject: [resend v1 0/5] Add support for block disk resize notification
+Date:   Thu, 2 Jan 2020 07:53:10 +0000
+Message-ID: <20200102075315.22652-1-sblbir@amazon.com>
+X-Mailer: git-send-email 2.16.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9ce86d6-dadb-9301-7d76-8cef81d782fd@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 10:55:47PM +0800, Hou Tao wrote:
-> Hi,
-> 
-> On 2019/12/31 19:09, Yufen Yu wrote:
-> > When delete partition executes concurrently with IOs issue,
-> > it may cause use-after-free on part in disk_map_sector_rcu()
-> > as following:
-> snip
-> 
-> > 
-> > diff --git a/block/genhd.c b/block/genhd.c
-> > index ff6268970ddc..39fa8999905f 100644
-> > --- a/block/genhd.c
-> > +++ b/block/genhd.c
-> > @@ -293,7 +293,23 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
-> >  		part = rcu_dereference(ptbl->part[i]);
-> >  
-> >  		if (part && sector_in_part(part, sector)) {
-> snip
-> 
-> >  			rcu_assign_pointer(ptbl->last_lookup, part);
-> > +			part = rcu_dereference(ptbl->part[i]);
-> > +			if (part == NULL) {
-> > +				rcu_assign_pointer(ptbl->last_lookup, NULL);
-> > +				break;
-> > +			}
-> >  			return part;
-> >  		}
-> >  	}
-> 
-> Not ensure whether the re-read can handle the following case or not:
-> 
-> process A                                 process B                          process C
-> 
-> disk_map_sector_rcu():                    delete_partition():               disk_map_sector_rcu():
-> 
-> rcu_read_lock
-> 
->   // need to iterate partition table
->   part[i] != NULL   (1)                   part[i] = NULL (2)
->                                           smp_mb()
->                                           last_lookup = NULL (3)
->                                           call_rcu()  (4)
->     last_lookup = part[i] (5)
-> 
-> 
->                                                                              rcu_read_lock()
->                                                                              read last_lookup return part[i] (6)
->                                                                              sector_in_part() is OK (7)
->                                                                              return part[i] (8)
-> 
->   part[i] == NULL (9)
->       last_lookup = NULL (10)
->   rcu_read_unlock() (11)
->                                            one RCU grace period completes
->                                            __delete_partition() (12)
->                                            free hd_partition (13)
->                                                                              // use-after-free
->                                                                              hd_struct_try_get(part[i])  (14)
-> 
-> * the number in the parenthesis is the sequence of events.
-> 
-> Maybe RCU experts can shed some light on this problem, so cc +paulmck@kernel.org, +joel@joelfernandes.org and +RCU maillist.
-> 
-> If the above case is possible, maybe we can fix the problem by pinning last_lookup through increasing its ref-count
-> (the following patch is only compile tested):
-> 
-> diff --git a/block/genhd.c b/block/genhd.c
-> index 6e8543ca6912..179e0056fae1 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -279,7 +279,14 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
->  		part = rcu_dereference(ptbl->part[i]);
-> 
->  		if (part && sector_in_part(part, sector)) {
-> -			rcu_assign_pointer(ptbl->last_lookup, part);
-> +			struct hd_struct *old;
-> +
-> +			if (!hd_struct_try_get(part))
-> +				break;
-> +
-> +			old = xchg(&ptbl->last_lookup, part);
-> +			if (old)
-> +				hd_struct_put(old);
->  			return part;
->  		}
->  	}
-> @@ -1231,7 +1238,11 @@ static void disk_replace_part_tbl(struct gendisk *disk,
->  	rcu_assign_pointer(disk->part_tbl, new_ptbl);
-> 
->  	if (old_ptbl) {
-> -		rcu_assign_pointer(old_ptbl->last_lookup, NULL);
-> +		struct hd_struct *part;
-> +
-> +		part = xchg(&old_ptbl->last_lookup, NULL);
-> +		if (part)
-> +			hd_struct_put(part);
->  		kfree_rcu(old_ptbl, rcu_head);
->  	}
->  }
-> diff --git a/block/partition-generic.c b/block/partition-generic.c
-> index 98d60a59b843..441c1c591c04 100644
-> --- a/block/partition-generic.c
-> +++ b/block/partition-generic.c
-> @@ -285,7 +285,8 @@ void delete_partition(struct gendisk *disk, int partno)
->  		return;
-> 
->  	rcu_assign_pointer(ptbl->part[partno], NULL);
-> -	rcu_assign_pointer(ptbl->last_lookup, NULL);
-> +	if (cmpxchg(&ptbl->last_lookup, part, NULL) == part)
-> +		hd_struct_put(part);
->  	kobject_put(part->holder_dir);
->  	device_del(part_to_dev(part));
+Allow block/genhd to notify user space about disk size changes
+using a new helper disk_set_capacity(), which is a wrapper on top
+of set_capacity(). disk_set_capacity() will only notify if
+the current capacity or the target capacity is not zero.
 
-IMO this approach looks good.
+Background:
 
-Given partition is actually protected by percpu-refcount now, I guess the
-RCU annotation for referencing ->part[partno] and ->last_lookup may not
-be necessary, together with the part->rcu_work.
+As a part of a patch to allow sending the RESIZE event on disk capacity
+change, Christoph (hch@lst.de) requested that the patch be made generic
+and the hacks for virtio block and xen block devices be removed and
+merged via a generic helper.
 
+This series consists of 5 changes. The first one adds the basic
+support for changing the size and notifying. The follow up patches
+are per block subsystem changes. Other block drivers can add their
+changes as necessary on top of this series.
 
-Thanks,
-Ming
+Testing:
+1. I did some basic testing with an NVME device, by resizing it in
+the backend and ensured that udevd received the event.
+
+NOTE: After these changes, the notification might happen before
+revalidate disk, where as it occured later before.
+
+Balbir Singh (5):
+  block/genhd: Notify udev about capacity change
+  drivers/block/virtio_blk.c: Convert to use disk_set_capacity
+  drivers/block/xen-blkfront.c: Convert to use disk_set_capacity
+  drivers/nvme/host/core.c: Convert to use disk_set_capacity
+  drivers/scsi/sd.c: Convert to use disk_set_capacity
+
+ block/genhd.c                | 19 +++++++++++++++++++
+ drivers/block/virtio_blk.c   |  4 +---
+ drivers/block/xen-blkfront.c |  5 +----
+ drivers/nvme/host/core.c     |  2 +-
+ drivers/scsi/sd.c            |  2 +-
+ include/linux/genhd.h        |  1 +
+ 6 files changed, 24 insertions(+), 9 deletions(-)
+
+-- 
+2.16.5
 
