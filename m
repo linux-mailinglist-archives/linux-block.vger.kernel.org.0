@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A99212E377
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 08:53:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C3E512E36B
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jan 2020 08:53:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgABHxn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jan 2020 02:53:43 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:13891 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbgABHxe (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jan 2020 02:53:34 -0500
+        id S1727659AbgABHxZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jan 2020 02:53:25 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:35797 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgABHxZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jan 2020 02:53:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1577951614; x=1609487614;
+  t=1577951605; x=1609487605;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=4qUj5u+oxc6hneYGlI2C/8YFgqo7dDcV2dUhIEALWZk=;
-  b=VaEYoJu2j4/kmV0WmTRWhh4izEyWBb44D3dTwgBDJcIjci2OPvqEK6db
-   ueYsddt7VTSZD5Op/j6z9TFMsnvbxUqAc8Qj9dErxIKJ2NU4zGrAntzWK
-   FRA7dLOwmm895mOgskFw1eWwxUzWbP1n99k1i7vkR8IvAiynBdyWkCi7R
-   E=;
-IronPort-SDR: DdkJEDsnq8BF7n8r5K3LtX4Lt3Cx0ND9gS41qTOlfsRwfIuOoR8+Aud6YpOvPng1lPX/lFdwEM
- rVXxoDTImHuw==
-X-IronPort-AV: E=Sophos;i="5.69,385,1571702400"; 
-   d="scan'208";a="17779134"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Jan 2020 07:53:23 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 003DF1416C4;
-        Thu,  2 Jan 2020 07:53:19 +0000 (UTC)
-Received: from EX13D01UWA004.ant.amazon.com (10.43.160.99) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 2 Jan 2020 07:53:19 +0000
+  bh=bFqvuHtUJ2uTuBGE5u3MI0p2QpGGNs+AUqkx0RpdLvY=;
+  b=wEv2x8t7KYv9Lih6EHzXMF8++oG5ZlHqJuhW7PJFSmIh+2pAmL8sRShl
+   jij0QyEyazFcn7sOYjZ3kpDPw4VnqyO9QFKokfWvJbTRWJFi62nU/r4UE
+   HHeHojS0EzWkrKWzxbIEUUM7W6gXLAaLYwj8BV2PSQDMR3m8mTl/UWm/c
+   k=;
+IronPort-SDR: RNTC/4q3xGWHPIh9vssYnvrzBZGJuP19UJzRbqvoIonGLncvhmcp0JXo+YaHAWgnXjsCY0bewp
+ oZ4tNqPWAC5A==
+X-IronPort-AV: E=Sophos;i="5.69,386,1571702400"; 
+   d="scan'208";a="9797737"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Jan 2020 07:53:22 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 438D1A1E23;
+        Thu,  2 Jan 2020 07:53:21 +0000 (UTC)
+Received: from EX13D11UWB003.ant.amazon.com (10.43.161.206) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:20 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13d01UWA004.ant.amazon.com (10.43.160.99) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 2 Jan 2020 07:53:18 +0000
+ EX13D11UWB003.ant.amazon.com (10.43.161.206) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:20 +0000
 Received: from localhost (172.23.204.141) by mail-relay.amazon.com
  (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Thu, 2 Jan 2020 07:53:18 +0000
+ Transport; Thu, 2 Jan 2020 07:53:19 +0000
 From:   Balbir Singh <sblbir@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-nvme@lists.infradead.org>
 CC:     <axboe@kernel.dk>, <ssomesh@amazon.com>, <jejb@linux.ibm.com>,
         <hch@lst.de>, <mst@redhat.com>, <Chaitanya.Kulkarni@wdc.com>,
         Balbir Singh <sblbir@amazon.com>
-Subject: [resend v1 1/5] block/genhd: Notify udev about capacity change
-Date:   Thu, 2 Jan 2020 07:53:11 +0000
-Message-ID: <20200102075315.22652-2-sblbir@amazon.com>
+Subject: [resend v1 2/5] drivers/block/virtio_blk.c: Convert to use disk_set_capacity
+Date:   Thu, 2 Jan 2020 07:53:12 +0000
+Message-ID: <20200102075315.22652-3-sblbir@amazon.com>
 X-Mailer: git-send-email 2.16.5
 In-Reply-To: <20200102075315.22652-1-sblbir@amazon.com>
 References: <20200102075315.22652-1-sblbir@amazon.com>
@@ -58,61 +58,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow block/genhd to notify user space (via udev) about disk size changes
-using a new helper disk_set_capacity(), which is a wrapper on top
-of set_capacity(). disk_set_capacity() will only notify via udev if
-the current capacity or the target capacity is not zero.
+block/genhd provides disk_set_capacity() for sending
+RESIZE notifications via uevents.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Someswarudu Sangaraju <ssomesh@amazon.com>
 Signed-off-by: Balbir Singh <sblbir@amazon.com>
 ---
- block/genhd.c         | 19 +++++++++++++++++++
- include/linux/genhd.h |  1 +
- 2 files changed, 20 insertions(+)
+ drivers/block/virtio_blk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index ff6268970ddc..94faec98607b 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -46,6 +46,25 @@ static void disk_add_events(struct gendisk *disk);
- static void disk_del_events(struct gendisk *disk);
- static void disk_release_events(struct gendisk *disk);
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index fbbf18ac1d5d..9848c94a7eb4 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -479,18 +479,16 @@ static void virtblk_update_capacity(struct virtio_blk *vblk, bool resize)
+ 		   cap_str_10,
+ 		   cap_str_2);
  
-+/*
-+ * Set disk capacity and notify if the size is not currently
-+ * zero and will not be set to zero
-+ */
-+void disk_set_capacity(struct gendisk *disk, sector_t size)
-+{
-+	sector_t capacity = get_capacity(disk);
-+
-+	set_capacity(disk, size);
-+	if (capacity != 0 && size != 0) {
-+		char *envp[] = { "RESIZE=1", NULL };
-+
-+		kobject_uevent_env(&disk_to_dev(disk)->kobj, KOBJ_CHANGE, envp);
-+	}
-+}
-+
-+EXPORT_SYMBOL_GPL(disk_set_capacity);
-+
-+
- void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
+-	set_capacity(vblk->disk, capacity);
++	disk_set_capacity(vblk->disk, capacity);
+ }
+ 
+ static void virtblk_config_changed_work(struct work_struct *work)
  {
- 	if (queue_is_mq(q))
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index a927829bb73a..f1a5ddcc781d 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -449,6 +449,7 @@ static inline int get_disk_ro(struct gendisk *disk)
- extern void disk_block_events(struct gendisk *disk);
- extern void disk_unblock_events(struct gendisk *disk);
- extern void disk_flush_events(struct gendisk *disk, unsigned int mask);
-+extern void disk_set_capacity(struct gendisk *disk, sector_t size);
- extern unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask);
+ 	struct virtio_blk *vblk =
+ 		container_of(work, struct virtio_blk, config_work);
+-	char *envp[] = { "RESIZE=1", NULL };
  
- /* drivers/char/random.c */
+ 	virtblk_update_capacity(vblk, true);
+ 	revalidate_disk(vblk->disk);
+-	kobject_uevent_env(&disk_to_dev(vblk->disk)->kobj, KOBJ_CHANGE, envp);
+ }
+ 
+ static void virtblk_config_changed(struct virtio_device *vdev)
 -- 
 2.16.5
 
