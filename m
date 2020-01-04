@@ -2,80 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E6B113037E
-	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2020 17:24:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07BDD130380
+	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2020 17:24:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgADQYW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 4 Jan 2020 11:24:22 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:23893 "EHLO rere.qmqm.pl"
+        id S1726219AbgADQYY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 4 Jan 2020 11:24:24 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:43152 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgADQYW (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 4 Jan 2020 11:24:22 -0500
+        id S1726004AbgADQYX (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 4 Jan 2020 11:24:23 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qnCl6JwHzGW;
-        Sat,  4 Jan 2020 17:24:19 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qnCm5QvSzqH;
+        Sat,  4 Jan 2020 17:24:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578155060; bh=0Ibkxtl3RMglzBvk5sTiwiF51FZCh2BbOtGA/FEpe/c=;
-        h=Date:From:Subject:To:Cc:From;
-        b=kC0TUgMw/wFF8OMRJHdIQDOzxU0Deg6UcNU+t2n5gu2+Tvt1SCZj8JiCf4/vlJBFF
-         Dfwso0e+m7V+BtPchWNrdkLy/kIw8rQhYWZfOndKrMrhLpgVxGs3c89pYzVMXUCfAt
-         woux21TrLbT5eLVKdzg7RALch83A19Z/PtZFctldisDme8/HOaOOdHsR+/MJqNFpM7
-         Y726YMMgtnBrJKCsUsKby6mjTJqIjz3fsTP2gB3+Gd9+0+PO/6xrml2K9F7l6UBy3E
-         O8jpOK8/U332q0NprBRcqxnq8bDnrO8yxyPjrFkrM4S5CitLYdqfRfjgjKsseIpktP
-         iY+k/9v6W2CNg==
+        t=1578155060; bh=SJg9+JjaSMHNa+k1IX8sg3nhFNF9mHiHz291qBzLAzk=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=msCqm+84765w7SpzJsxnOwOi7tPzAgsIQPFtxj72jU1VlDaI3CyKtkWcp9BAtbLzv
+         RwKbR6/C5LOnNohSvLnSAHVOIzS0xrCfpRbxJMq1zfbuVk1xfENTdZjinXffSeWN1g
+         J81kpUCX2gF8so+57y7RgnFhEc+aXSzf/UbABr5osi+RcTh6nEwSHrNdGnSc3Sdhok
+         TwFlrUEVl88b93HErq53okY6V65oeeLBKRs1LUvx1RiGpOlSOVPLmU3Nz532YFrF8H
+         t3L+WTfhs0N2yVglbv3tOephyJ+vX9LO0qn7SrMu/Gmdh8UPiiIFoZDt4b6GbIHG0k
+         wQv3ym7N20Q/g==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sat, 04 Jan 2020 17:24:18 +0100
-Message-Id: <6e542430795eeddb718db88cb08224d2e1bc6b4b.1578154967.git.mirq-linux@rere.qmqm.pl>
+Date:   Sat, 04 Jan 2020 17:24:20 +0100
+Message-Id: <2b13cbb612add74856aa88a71375db3718d4aae6.1578154967.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <6e542430795eeddb718db88cb08224d2e1bc6b4b.1578154967.git.mirq-linux@rere.qmqm.pl>
+References: <6e542430795eeddb718db88cb08224d2e1bc6b4b.1578154967.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 1/2] block: parse cmdline partitions first
+Subject: [PATCH 2/2] block: allow empty cmdline partition set
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
+To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make sure cmdline-provided partitions override anything that is
-on the disk.
+Make no-partitions setting valid. This makes it possible to prevent
+kernel from trying to read partition table from a device.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- block/partitions/check.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Documentation/block/cmdline-partition.rst | 2 +-
+ block/cmdline-parser.c                    | 8 +++-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/block/partitions/check.c b/block/partitions/check.c
-index ffe408fead0c..f0b6454b7767 100644
---- a/block/partitions/check.c
-+++ b/block/partitions/check.c
-@@ -40,6 +40,13 @@
- int warn_no_part = 1; /*This is ugly: should make genhd removable media aware*/
+diff --git a/Documentation/block/cmdline-partition.rst b/Documentation/block/cmdline-partition.rst
+index 530bedff548a..a5ccacee982f 100644
+--- a/Documentation/block/cmdline-partition.rst
++++ b/Documentation/block/cmdline-partition.rst
+@@ -13,7 +13,7 @@ Users can easily change the partition.
+ The format for the command line is just like mtdparts:
  
- static int (*check_part[])(struct parsed_partitions *) = {
-+	/*
-+	 * Let cmdline override whatever there is on disk.
-+	 */
-+#ifdef CONFIG_CMDLINE_PARTITION
-+	cmdline_partition,
-+#endif
-+
- 	/*
- 	 * Probe partition formats with tables at disk address 0
- 	 * that also have an ADFS boot block at 0xdc0.
-@@ -67,9 +74,6 @@ static int (*check_part[])(struct parsed_partitions *) = {
- 	adfspart_check_ADFS,
- #endif
+ blkdevparts=<blkdev-def>[;<blkdev-def>]
+-  <blkdev-def> := <blkdev-id>:<partdef>[,<partdef>]
++  <blkdev-def> := <blkdev-id>:[<partdef>[,<partdef>]]
+     <partdef> := <size>[@<offset>](part-name)
  
--#ifdef CONFIG_CMDLINE_PARTITION
--	cmdline_partition,
--#endif
- #ifdef CONFIG_EFI_PARTITION
- 	efi_partition,		/* this must come before msdos */
- #endif
+ <blkdev-id>
+diff --git a/block/cmdline-parser.c b/block/cmdline-parser.c
+index f2a14571882b..bc63e46e7bfc 100644
+--- a/block/cmdline-parser.c
++++ b/block/cmdline-parser.c
+@@ -133,11 +133,9 @@ static int parse_parts(struct cmdline_parts **parts, const char *bdevdef)
+ 		next_subpart = &(*next_subpart)->next_subpart;
+ 	}
+ 
+-	if (!newparts->subpart) {
+-		pr_warn("cmdline partition has no valid partition.");
+-		ret = -EINVAL;
+-		goto fail;
+-	}
++	if (!newparts->subpart)
++		pr_warn("%s: cmdline partition has no valid partitions.",
++			newparts->name);
+ 
+ 	*parts = newparts;
+ 
 -- 
 2.20.1
 
