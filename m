@@ -2,87 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BDD130380
-	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2020 17:24:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F036D1303CA
+	for <lists+linux-block@lfdr.de>; Sat,  4 Jan 2020 18:43:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgADQYY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 4 Jan 2020 11:24:24 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:43152 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgADQYX (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 4 Jan 2020 11:24:23 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qnCm5QvSzqH;
-        Sat,  4 Jan 2020 17:24:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578155060; bh=SJg9+JjaSMHNa+k1IX8sg3nhFNF9mHiHz291qBzLAzk=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=msCqm+84765w7SpzJsxnOwOi7tPzAgsIQPFtxj72jU1VlDaI3CyKtkWcp9BAtbLzv
-         RwKbR6/C5LOnNohSvLnSAHVOIzS0xrCfpRbxJMq1zfbuVk1xfENTdZjinXffSeWN1g
-         J81kpUCX2gF8so+57y7RgnFhEc+aXSzf/UbABr5osi+RcTh6nEwSHrNdGnSc3Sdhok
-         TwFlrUEVl88b93HErq53okY6V65oeeLBKRs1LUvx1RiGpOlSOVPLmU3Nz532YFrF8H
-         t3L+WTfhs0N2yVglbv3tOephyJ+vX9LO0qn7SrMu/Gmdh8UPiiIFoZDt4b6GbIHG0k
-         wQv3ym7N20Q/g==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sat, 04 Jan 2020 17:24:20 +0100
-Message-Id: <2b13cbb612add74856aa88a71375db3718d4aae6.1578154967.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <6e542430795eeddb718db88cb08224d2e1bc6b4b.1578154967.git.mirq-linux@rere.qmqm.pl>
-References: <6e542430795eeddb718db88cb08224d2e1bc6b4b.1578154967.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 2/2] block: allow empty cmdline partition set
+        id S1726083AbgADRnL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 4 Jan 2020 12:43:11 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35906 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgADRnL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 4 Jan 2020 12:43:11 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n59so5997378pjb.1
+        for <linux-block@vger.kernel.org>; Sat, 04 Jan 2020 09:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=jZIYqat9Vk8RmyHO0YqI0lp82fLcvzGDD4xWJ1k/iR4=;
+        b=op/7M5rI392GPcNGx3WX48R4F8QEXUY5NxJ+yJtrXKpHIjOF4noV5etYr9rQ95gIFg
+         D6yGKnnNeZJYZAcEQZ8h1nW5jzjmsiwtPJHcyaNwK546FtCX4XUWw9F2oLo62K3wyDQl
+         o41dWdigBrnFNu3H7XeYQcoxAAgb/p/tTPYGZnXhunXFjObcjXjYeNBkDbqp1PluxzkM
+         D2UeP2l3O4G4mwA1XasHLuPQ8hZ0ARKYKLfDNkI1s66RUBaDKXDOlLaK7lBBqFLdsCiX
+         6wq71svNnrPPEBF0i/T/NInId6d3Mz7n8fU7yRRoztuf8GDmDd77FXxLqIUlTs9W+t5K
+         npPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=jZIYqat9Vk8RmyHO0YqI0lp82fLcvzGDD4xWJ1k/iR4=;
+        b=GusItCjxV1EGYcbyK+xx3QPl8riglNiXJJP895k5bDImqRoEvWZ//QxzK7zxjIrAXZ
+         IkVplUtWXQ+7BRHuRzW2z79IThhHE7TjDEcNaYBMapD9wk4ROBe8jAl1ivEdbCtk+git
+         fREKCtrfqqYRe3khIrrDma/ZTsiWhwI1KjHVly9JELdMcPzn4yW5AEemkMnrjbBWvqGI
+         49QGUFer2Y1+nHMDq8zwMTjRMCexIkdU+YjTIdGI3sVAHYiHUcwDYgndPDUuhy/B2GkQ
+         OLDTvLsgjqdXS1G+7FYmj8ORyuxR/NMbvg/KaZzBWPrQkA3h/C3/l5WCMDakWSXM6Vr7
+         4ExA==
+X-Gm-Message-State: APjAAAWIG7W5Rx3stbPntMay3+dsWM5R+xlcnNsMsY0JhrNkAOgCW3fk
+        +kiPnaxYltSJGuEZw2os6iDmLr/AItBDgQ==
+X-Google-Smtp-Source: APXvYqyXEBFQgvyv97mN9RAUHG3TkNqCyih9TNUuoDHkyzGwbM/K2Gr5Aw43qmyM59zXqGGRTRXrJQ==
+X-Received: by 2002:a17:90b:309:: with SMTP id ay9mr32756941pjb.22.1578159791128;
+        Sat, 04 Jan 2020 09:43:11 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:c432:634e:2cbb:b7c? ([2605:e000:100e:8c61:c432:634e:2cbb:b7c])
+        by smtp.gmail.com with ESMTPSA id e6sm71828165pfh.32.2020.01.04.09.43.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jan 2020 09:43:10 -0800 (PST)
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] block: remove unused mp_bvec_last_segment
+Message-ID: <d8642060-8984-f584-6d93-6fcf032d6b6e@kernel.dk>
+Date:   Sat, 4 Jan 2020 10:43:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make no-partitions setting valid. This makes it possible to prevent
-kernel from trying to read partition table from a device.
+After commit 85a8ce62c2ea ("block: add bio_truncate to fix guard_bio_eod")
+this function is unused, remove it.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
 ---
- Documentation/block/cmdline-partition.rst | 2 +-
- block/cmdline-parser.c                    | 8 +++-----
- 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/block/cmdline-partition.rst b/Documentation/block/cmdline-partition.rst
-index 530bedff548a..a5ccacee982f 100644
---- a/Documentation/block/cmdline-partition.rst
-+++ b/Documentation/block/cmdline-partition.rst
-@@ -13,7 +13,7 @@ Users can easily change the partition.
- The format for the command line is just like mtdparts:
- 
- blkdevparts=<blkdev-def>[;<blkdev-def>]
--  <blkdev-def> := <blkdev-id>:<partdef>[,<partdef>]
-+  <blkdev-def> := <blkdev-id>:[<partdef>[,<partdef>]]
-     <partdef> := <size>[@<offset>](part-name)
- 
- <blkdev-id>
-diff --git a/block/cmdline-parser.c b/block/cmdline-parser.c
-index f2a14571882b..bc63e46e7bfc 100644
---- a/block/cmdline-parser.c
-+++ b/block/cmdline-parser.c
-@@ -133,11 +133,9 @@ static int parse_parts(struct cmdline_parts **parts, const char *bdevdef)
- 		next_subpart = &(*next_subpart)->next_subpart;
+diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+index 679a42253170..a81c13ac1972 100644
+--- a/include/linux/bvec.h
++++ b/include/linux/bvec.h
+@@ -153,26 +153,4 @@ static inline void bvec_advance(const struct bio_vec *bvec,
  	}
+ }
  
--	if (!newparts->subpart) {
--		pr_warn("cmdline partition has no valid partition.");
--		ret = -EINVAL;
--		goto fail;
+-/*
+- * Get the last single-page segment from the multi-page bvec and store it
+- * in @seg
+- */
+-static inline void mp_bvec_last_segment(const struct bio_vec *bvec,
+-					struct bio_vec *seg)
+-{
+-	unsigned total = bvec->bv_offset + bvec->bv_len;
+-	unsigned last_page = (total - 1) / PAGE_SIZE;
+-
+-	seg->bv_page = bvec->bv_page + last_page;
+-
+-	/* the whole segment is inside the last page */
+-	if (bvec->bv_offset >= last_page * PAGE_SIZE) {
+-		seg->bv_offset = bvec->bv_offset % PAGE_SIZE;
+-		seg->bv_len = bvec->bv_len;
+-	} else {
+-		seg->bv_offset = 0;
+-		seg->bv_len = total - last_page * PAGE_SIZE;
 -	}
-+	if (!newparts->subpart)
-+		pr_warn("%s: cmdline partition has no valid partitions.",
-+			newparts->name);
- 
- 	*parts = newparts;
- 
+-}
+-
+ #endif /* __LINUX_BVEC_ITER_H */
+
 -- 
-2.20.1
+Jens Axboe
 
