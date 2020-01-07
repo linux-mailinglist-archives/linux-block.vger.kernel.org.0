@@ -2,123 +2,275 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE8D71335CD
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2020 23:33:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A37341336C5
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jan 2020 23:49:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgAGWdB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Jan 2020 17:33:01 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41380 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGWdB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jan 2020 17:33:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id w62so561067pfw.8
-        for <linux-block@vger.kernel.org>; Tue, 07 Jan 2020 14:33:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XRiS/kenaXg7SZmNLSxylaMfUm+yt4xVkhJf7MIsuM0=;
-        b=mIXOWeDRssPm9xYaJbB0pMhXHGtyJ0N/bPkzg5r8WArlJeS1/EDmPmYz70Hz76BaU+
-         nzLNyeMrGMVg4kUWmBqN+gEt87UhbdWjq20ICoROOgns0bWlKk62r51ll77NMcp9BSVT
-         vO9x43Ti+Q6Mn3iy/0s/bIJfgh8gJVfQofsP2CpJ/Qsw0A2CI7FEVEcaRl93ppzmMhMZ
-         FUauXclxBLmtmiu02d/5NQb+QzRennpCQ0wwPJ8PVADJwwWPNWBkiIy7y8B9YIVqVg7Y
-         RhpFLREaAQrIfhm2x50bBHLig+mHGAT0as5l2rSyH7hMOcDUh85/CRTMKfgb5OdjvgWP
-         HpoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XRiS/kenaXg7SZmNLSxylaMfUm+yt4xVkhJf7MIsuM0=;
-        b=rT7Cb/k53H31ilUk18TlNWjlN493x/1yWGhnGecBSyWma2V+FmJrCKUzM6PmRLMW20
-         EY06zCTs586XbRLuT8cwh6YJccLBVKmzrqphCNiGgpRKdCPSC4x815vDtiL5ogpbxR7E
-         SdB+3h98hm4P/rtGSbMxPPQN1/5sP28PHcWFSRplkVnTI1QBr8zgBHcA2kqsk3OzuL8d
-         0WZCxmdmxsu9SsRPgNW15i67rOQB1WhWzaP5NpUKBOXjb/uOjNLpOQBoesmZQENWXYdy
-         NqCoLTZBRjYJ4S9PL9iFgX4fAYG1KwLdNRFO1B8aXo/rWdO5ABsuk/b3CHYpU8RWJiZM
-         QiOg==
-X-Gm-Message-State: APjAAAXbYG4Xgg1TuQ/j1pzuVxrJrUtcC8Qr8joDQYoagSzB1rc0fHfr
-        rk0/0kvlygJPdk3iHd4wKSHtrHafo+s=
-X-Google-Smtp-Source: APXvYqzTmk/w38eM+QUnrT21lreh59E8q2tHSB3ZFcAdt0J7PzWOBdTeIkX/fbtcyO4DUtGwdAPMSg==
-X-Received: by 2002:a63:fd10:: with SMTP id d16mr1810632pgh.177.1578436380843;
-        Tue, 07 Jan 2020 14:33:00 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id g22sm746358pgk.85.2020.01.07.14.32.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 14:33:00 -0800 (PST)
-Subject: Re: [PATCH] block: fix splitting segments
-To:     Ming Lei <ming.lei@redhat.com>, Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>
-References: <20191229023230.28940-1-ming.lei@redhat.com>
- <20200107124708.GA20285@roeck-us.net> <20200107152339.GA23622@ming.t460p>
- <20200107181145.GA22076@roeck-us.net> <20200107223035.GA7505@ming.t460p>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <25ce5140-ee29-c32c-7f5e-b8c6da5c7e90@kernel.dk>
-Date:   Tue, 7 Jan 2020 15:32:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728357AbgAGWsv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Jan 2020 17:48:51 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5120 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgAGWqF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jan 2020 17:46:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e150a160001>; Tue, 07 Jan 2020 14:45:42 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 14:46:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 14:46:00 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 22:45:59 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 7 Jan 2020 22:45:59 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e150a270002>; Tue, 07 Jan 2020 14:45:59 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v12 00/22] mm/gup: prereqs to track dma-pinned pages: FOLL_PIN
+Date:   Tue, 7 Jan 2020 14:45:36 -0800
+Message-ID: <20200107224558.2362728-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200107223035.GA7505@ming.t460p>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578437143; bh=e35VbuH+5Gvq6hzdX1wkd7Gwo0Ev1/RydrM5ojZBtqQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=q07jqBkOQ+8W+FWIGxHzDq9+K2aqK0l1baYh9tHJ5YgbVqzpzGrCVUbh8IIOz9ivr
+         N8DeNKRxsksmaQmBj8DLUTfJNvVvliRP3A7UvdrQSBrUtqohAPvBbP6gW+d+uir7zj
+         N71u+jUUFG3a29ne3zY3zxuWMeCOBJOlbx0/C+htFPSQNDX+WeFBXBUo/FQBTcKPK+
+         fsKaVOXRA1UshywnsPhWCDuIhCymH6YPuMQwJ7/7x7UJimvasG4+G3pmoTyD3poYdy
+         39n4NbY3ownCfiBLFE6x3ANsClgsjxgyIpUe1k8mz3p84SQo7eboSdCD6jky2z1c7L
+         WmXHM0fQFkghw==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/7/20 3:30 PM, Ming Lei wrote:
-> On Tue, Jan 07, 2020 at 10:11:45AM -0800, Guenter Roeck wrote:
->> On Tue, Jan 07, 2020 at 11:23:39PM +0800, Ming Lei wrote:
->>> On Tue, Jan 07, 2020 at 04:47:08AM -0800, Guenter Roeck wrote:
->>>> Hi,
->>>>
->>>> On Sun, Dec 29, 2019 at 10:32:30AM +0800, Ming Lei wrote:
->>>>> There are two issues in get_max_segment_size():
->>>>>
->>>>> 1) the default segment boudary mask is bypassed, and some devices still
->>>>> require segment to not cross the default 4G boundary
->>>>>
->>>>> 2) the segment start address isn't taken into account when checking
->>>>> segment boundary limit
->>>>>
->>>>> Fixes the two issues.
->>>>>
->>>>> Fixes: dcebd755926b ("block: use bio_for_each_bvec() to compute multi-page bvec count")
->>>>> Signed-off-by: Ming Lei <ming.lei@redhat.com>
->>>>
->>>> This patch, pushed into mainline as "block: fix splitting segments on
->>>> boundary masks", results in the following crash when booting 'versatilepb'
->>>> in qemu from disk. Bisect log is attached. Detailed log is at
->>>> https://kerneltests.org/builders/qemu-arm-master/builds/1410/steps/qemubuildcommand/logs/stdio
->>>>
->>>> Guenter
->>>>
->>>> ---
->>>> Crash:
->>>>
->>>> kernel BUG at block/bio.c:1885!
->>>> Internal error: Oops - BUG: 0 [#1] ARM
->>>
->>> Please apply the following debug patch, and post the log.
->>>
->>
->> Here you are:
->>
->> max_sectors 2560 max_segs 96 max_seg_size 65536 mask ffffffff
->> c738da80: 8c80/0 2416 28672, 0
->>          total sectors 56
->>
->> (I replaced %p with %px).
->>
-> 
-> Please try the following patch and see if it makes a difference.
-> If not, replace trace_printk with printk in previous debug patch,
-> and apply the debug patch only & post the log.
+Hi,
 
-If it is a 32-bit issue, then we should use a 64-bit type to make
-this nicer than ULL. But it seems reasonable that it could be!
+The "track FOLL_PIN pages" would have been the very next patch, but it is
+not included here because I'm still debugging a bug report from Leon.
+Let's get all of the prerequisite work (it's been reviewed) into the tree
+so that future reviews are easier. It's clear that any fixes that are
+required to the tracking patch, won't affect these patches here.
 
--- 
-Jens Axboe
+This implements an API naming change (put_user_page*() -->
+unpin_user_page*()), and also adds FOLL_PIN page support, up to
+*but not including* actually tracking FOLL_PIN pages. It extends
+the FOLL_PIN support to a few select subsystems. More subsystems will
+be added in follow up work.
+
+Christoph Hellwig, a point of interest:
+
+a) I've moved the bulk of the code out of the inline functions, as
+   requested, for the devmap changes (patch 4: "mm: devmap: refactor
+   1-based refcounting for ZONE_DEVICE pages").
+
+Changes since v11: Fixes resulting from Kirill Shutemov's review, plus
+a fix for a kbuild robot-reported warning.
+
+* Only include the first 22 patches: up to, but not including, the "track
+  FOLL_PIN pages" patch.
+
+* Improved the efficiency of put_compound_head(), by avoiding get_page()
+  entirely, and instead doing the mass subtraction on one less than
+  refs, followed by a final put_page().
+
+* Got rid of the forward declaration of __gup_longterm_locked(), by
+  moving get_user_pages_remote() further down in gup.c
+
+* Got rid of a redundant page_is_devmap_managed() call, and simplified
+  put_devmap_managed_page() as part of that small cleanup.
+
+* Changed put_devmap_managed_page() to do an early out if the page is
+  not devmap managed. This saves an indentation level.
+
+* Applied the same type of change to __unpin_devmap_managed_user_page(),
+  which has the same checks.
+
+* Changed release_pages() to handle the changed put_devmap_managed_page()
+  API.
+
+* Removed EXPORT_SYMBOL(free_devmap_managed_page), as it is not required,
+  after the other refactoring.
+
+* Fixed a kbuild robot sparse warning: added "static" to
+  try_pin_compound_head()'s declaration.
+
+There is a git repo and branch, for convenience:
+
+    git@github.com:johnhubbard/linux.git pin_user_pages_tracking_v8
+
+For the remaining list of "changes since version N", those are all in
+v11, which is here:
+
+  https://lore.kernel.org/r/20191216222537.491123-1-jhubbard@nvidia.com
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Overview:
+
+This is a prerequisite to solving the problem of proper interactions
+between file-backed pages, and [R]DMA activities, as discussed in [1],
+[2], [3], and in a remarkable number of email threads since about
+2017. :)
+
+A new internal gup flag, FOLL_PIN is introduced, and thoroughly
+documented in the last patch's Documentation/vm/pin_user_pages.rst.
+
+I believe that this will provide a good starting point for doing the
+layout lease work that Ira Weiny has been working on. That's because
+these new wrapper functions provide a clean, constrained, systematically
+named set of functionality that, again, is required in order to even
+know if a page is "dma-pinned".
+
+In contrast to earlier approaches, the page tracking can be
+incrementally applied to the kernel call sites that, until now, have
+been simply calling get_user_pages() ("gup"). In other words, opt-in by
+changing from this:
+
+    get_user_pages() (sets FOLL_GET)
+    put_page()
+
+to this:
+    pin_user_pages() (sets FOLL_PIN)
+    unpin_user_page()
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Testing:
+
+* I've done some overall kernel testing (LTP, and a few other goodies),
+  and some directed testing to exercise some of the changes. And as you
+  can see, gup_benchmark is enhanced to exercise this. Basically, I've
+  been able to runtime test the core get_user_pages() and
+  pin_user_pages() and related routines, but not so much on several of
+  the call sites--but those are generally just a couple of lines
+  changed, each.
+
+  Not much of the kernel is actually using this, which on one hand
+  reduces risk quite a lot. But on the other hand, testing coverage
+  is low. So I'd love it if, in particular, the Infiniband and PowerPC
+  folks could do a smoke test of this series for me.
+
+  Runtime testing for the call sites so far is pretty light:
+
+    * io_uring: Some directed tests from liburing exercise this, and
+                they pass.
+    * process_vm_access.c: A small directed test passes.
+    * gup_benchmark: the enhanced version hits the new gup.c code, and
+                     passes.
+    * infiniband: Ran rdma-core tests: rdma-core/build/bin/run_tests.py
+    * VFIO: compiles (I'm vowing to set up a run time test soon, but it's
+                      not ready just yet)
+    * powerpc: it compiles...
+    * drm/via: compiles...
+    * goldfish: compiles...
+    * net/xdp: compiles...
+    * media/v4l2: compiles...
+
+[1] Some slow progress on get_user_pages() (Apr 2, 2019): https://lwn.net/A=
+rticles/784574/
+[2] DMA and get_user_pages() (LPC: Dec 12, 2018): https://lwn.net/Articles/=
+774411/
+[3] The trouble with get_user_pages() (Apr 30, 2018): https://lwn.net/Artic=
+les/753027/
+
+
+Dan Williams (1):
+  mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+
+John Hubbard (21):
+  mm/gup: factor out duplicate code from four routines
+  mm/gup: move try_get_compound_head() to top, fix minor issues
+  mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
+  goldish_pipe: rename local pin_user_pages() routine
+  mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
+  vfio: fix FOLL_LONGTERM use, simplify get_user_pages_remote() call
+  mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+  IB/umem: use get_user_pages_fast() to pin DMA pages
+  media/v4l2-core: set pages dirty upon releasing DMA buffers
+  mm/gup: introduce pin_user_pages*() and FOLL_PIN
+  goldish_pipe: convert to pin_user_pages() and put_user_page()
+  IB/{core,hw,umem}: set FOLL_PIN via pin_user_pages*(), fix up ODP
+  mm/process_vm_access: set FOLL_PIN via pin_user_pages_remote()
+  drm/via: set FOLL_PIN via pin_user_pages_fast()
+  fs/io_uring: set FOLL_PIN via pin_user_pages()
+  net/xdp: set FOLL_PIN via pin_user_pages()
+  media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page()
+    conversion
+  vfio, mm: pin_user_pages (FOLL_PIN) and put_user_page() conversion
+  powerpc: book3s64: convert to pin_user_pages() and put_user_page()
+  mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding
+    "1"
+  mm, tree-wide: rename put_user_page*() to unpin_user_page*()
+
+ Documentation/core-api/index.rst            |   1 +
+ Documentation/core-api/pin_user_pages.rst   | 232 +++++++++
+ arch/powerpc/mm/book3s64/iommu_api.c        |  10 +-
+ drivers/gpu/drm/via/via_dmablit.c           |   6 +-
+ drivers/infiniband/core/umem.c              |  19 +-
+ drivers/infiniband/core/umem_odp.c          |  13 +-
+ drivers/infiniband/hw/hfi1/user_pages.c     |   4 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.c |   8 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c  |   4 +-
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |   8 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |   4 +-
+ drivers/infiniband/sw/siw/siw_mem.c         |   4 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c   |   8 +-
+ drivers/nvdimm/pmem.c                       |   6 -
+ drivers/platform/goldfish/goldfish_pipe.c   |  35 +-
+ drivers/vfio/vfio_iommu_type1.c             |  35 +-
+ fs/io_uring.c                               |   6 +-
+ include/linux/mm.h                          |  95 +++-
+ mm/gup.c                                    | 495 ++++++++++++--------
+ mm/gup_benchmark.c                          |   9 +-
+ mm/memremap.c                               |  75 ++-
+ mm/process_vm_access.c                      |  28 +-
+ mm/swap.c                                   |  27 +-
+ net/xdp/xdp_umem.c                          |   4 +-
+ tools/testing/selftests/vm/gup_benchmark.c  |   6 +-
+ 25 files changed, 762 insertions(+), 380 deletions(-)
+ create mode 100644 Documentation/core-api/pin_user_pages.rst
+
+--=20
+2.24.1
 
