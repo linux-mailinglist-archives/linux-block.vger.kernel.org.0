@@ -2,89 +2,248 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E551350A8
-	for <lists+linux-block@lfdr.de>; Thu,  9 Jan 2020 01:52:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A7631350C0
+	for <lists+linux-block@lfdr.de>; Thu,  9 Jan 2020 02:00:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgAIAwE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jan 2020 19:52:04 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:53500 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgAIAwE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:52:04 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ipM2z-0004er-Vz; Wed, 08 Jan 2020 17:51:38 -0700
-To:     =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+        id S1726758AbgAIBAM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jan 2020 20:00:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35018 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbgAIBAM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jan 2020 20:00:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0090wLNK047958;
+        Thu, 9 Jan 2020 00:58:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=U9W9OGdyVHVyoP6glrzGJi9ys2HKa08nDmzlsOwBhyU=;
+ b=FYDHltDJR+ZZHaiC5MYg8Ls6mMnDXnd+Dp6qfe2PSSD9z9wJfrBwEeGuJn6SGY/I9ZDU
+ FqSSIWeJI+4THksuaGly3UxDhI1H0js94NZmOkEU49zMZrkHD6kPy7wmUBh/bFj8vJI/
+ Yu9jglywk1IJhCpoBoF+LVdqp4Nvs824qQGn0/b7THlnYhOgG87QlHcvulyP1GLGRwLe
+ ucBSrmlqEob8BBPMUnEBV9WdJ7icK4FunoANuLrGifzy0n4SQQcMv8OZfSmW92vQZhYe
+ 8fx171Jw285kxF8MJ3axVuadfy0tC7e8/tygyBqwH2yei3Z+cK29tEftpMKPXTYAUREr BQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xajnq7f5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 00:58:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0090rqRO143766;
+        Thu, 9 Jan 2020 00:56:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xdmrx1e82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 00:56:51 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0090umQG025466;
+        Thu, 9 Jan 2020 00:56:49 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jan 2020 16:56:48 -0800
+Subject: Re: [PATCH] block: streamline merge possibility checks
+To:     Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>
 Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "hare@suse.de" <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Stephen Bates <sbates@raithlin.com>,
-        "msnitzer@redhat.com" <msnitzer@redhat.com>,
-        "mpatocka@redhat.com" <mpatocka@redhat.com>,
-        "zach.brown@ni.com" <zach.brown@ni.com>,
-        "roland@purestorage.com" <roland@purestorage.com>,
-        "rwheeler@redhat.com" <rwheeler@redhat.com>,
-        "frederick.knight@netapp.com" <frederick.knight@netapp.com>,
-        Matias Bjorling <Matias.Bjorling@wdc.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "stephen@eideticom.com" <stephen@eideticom.com>
-References: <BYAPR04MB5749820C322B40C7DBBBCA02863F0@BYAPR04MB5749.namprd04.prod.outlook.com>
- <20200108101759.32gkjxakxigolail@mpHalley.local>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <7b3cc17c-6a34-56b9-8353-f86a4015669d@deltatee.com>
-Date:   Wed, 8 Jan 2020 17:51:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+References: <20191218194156.29430-1-dmitry.fomichev@wdc.com>
+ <df9c90e7-9aa7-4f77-7161-1bc38de6f8ba@oracle.com>
+ <20200108134437.GF4455@infradead.org>
+ <BN8PR04MB643390C7263ACE2AFBDF5917E13E0@BN8PR04MB6433.namprd04.prod.outlook.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <4dea4331-9de3-e6b7-c453-05f9baeaec00@oracle.com>
+Date:   Thu, 9 Jan 2020 08:56:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20200108101759.32gkjxakxigolail@mpHalley.local>
+In-Reply-To: <BN8PR04MB643390C7263ACE2AFBDF5917E13E0@BN8PR04MB6433.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: stephen@eideticom.com, joshi.k@samsung.com, Matias.Bjorling@wdc.com, frederick.knight@netapp.com, rwheeler@redhat.com, roland@purestorage.com, zach.brown@ni.com, mpatocka@redhat.com, msnitzer@redhat.com, sbates@raithlin.com, hch@lst.de, kbusch@kernel.org, martin.petersen@oracle.com, hare@suse.de, bvanassche@acm.org, axboe@kernel.dk, lsf-pc@lists.linux-foundation.org, dm-devel@redhat.com, linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org, linux-block@vger.kernel.org, Chaitanya.Kulkarni@wdc.com, javier@javigon.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [LSF/MM/BFP ATTEND] [LSF/MM/BFP TOPIC] Storage: Copy Offload
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001090006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001090007
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On 2020-01-08 3:17 a.m., Javier González wrote:
-> I think this is good topic and I would like to participate in the
-> discussion too. I think that Logan Gunthorpe would also be interested
-> (Cc). Adding Kanchan too, who is also working on this and can contribute
-> to the discussion
+On 1/9/20 6:02 AM, Dmitry Fomichev wrote:
+>> -----Original Message-----
+>> From: Christoph Hellwig <hch@infradead.org>
+>> Sent: Wednesday, January 8, 2020 8:45 AM
+>> To: Bob Liu <bob.liu@oracle.com>
+>> Cc: Dmitry Fomichev <Dmitry.Fomichev@wdc.com>; linux-
+>> block@vger.kernel.org; Jens Axboe <axboe@kernel.dk>; Damien Le Moal
+>> <Damien.LeMoal@wdc.com>
+>> Subject: Re: [PATCH] block: streamline merge possibility checks
+>>
+>> On Fri, Dec 20, 2019 at 02:50:05PM +0800, Bob Liu wrote:
+>>> On 12/19/19 3:41 AM, Dmitry Fomichev wrote:
+>>>> Checks for data direction in attempt_merge() and blk_rq_merge_ok()
+>>>
+>>> Speak about these two functions, do you think attempt_merge() can be
+>> built on blk_rq_merge_ok()?
+>>> Things like..
+>>> diff --git a/block/blk-merge.c b/block/blk-merge.c
+>>> index 48e6725..2a00c4c 100644
+>>> --- a/block/blk-merge.c
+>>> +++ b/block/blk-merge.c
+>>> @@ -724,28 +724,7 @@ static enum elv_merge blk_try_req_merge(struct
+>> request *req,
+>>>  static struct request *attempt_merge(struct request_queue *q,
+>>>                                      struct request *req, struct request *next)
+>>>  {
+>>> -       if (!rq_mergeable(req) || !rq_mergeable(next))
+>>> -               return NULL;
+>>> -
+>>> -       if (req_op(req) != req_op(next))
+>>> -               return NULL;
+>>> -
+>>> -       if (rq_data_dir(req) != rq_data_dir(next)
+>>> -           || req->rq_disk != next->rq_disk)
+>>> -               return NULL;
+>>> -
+>>> -       if (req_op(req) == REQ_OP_WRITE_SAME &&
+>>> -           !blk_write_same_mergeable(req->bio, next->bio))
+>>> -               return NULL;
+>>> -
+>>> -       /*
+>>> -        * Don't allow merge of different write hints, or for a hint with
+>>> -        * non-hint IO.
+>>> -        */
+>>> -       if (req->write_hint != next->write_hint)
+>>> -               return NULL;
+>>> -
+>>> -       if (req->ioprio != next->ioprio)
+>>> +       if (!blk_rq_merge_ok(req, next->bio))
+>>>                 return NULL;
+>>
+>> This looks sensible, but we might have to be a bit more careful.
+>> rq_mergeable checks for RQF_NOMERGE_FLAGS and various ops, while
+>> bio_mergeable is missing those.  So I think you need to go through
+>> carefully if we need to keep any extra checks, but otherwise using
+>> blk_rq_merge_ok looks sensible.
 > 
-> We discussed this in the context of P2P at different SNIA events in the
-> context of computational offloads and also as the backend implementation
-> for Simple Copy, which is coming in NVMe. Discussing this (again) at
-> LSF/MM and finding a way to finally get XCOPY merged would be great.
+> I tried this patch as is and, indeed, it leads to blktests failures and filesystem
+> errors, apparently because of the RQF_NOMERGE_FLAGS  difference.
+> However, the patch below seems to work - I've been running my host system
+> with it for a couple of days with no issues. This one is added on top of
+> "block: streamline merge possibility checks" patch.
+> 
+> From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+> Date: Wed, 8 Jan 2020 14:24:06 -0500
+> Subject: [PATCH] block: simplify merge checks
+> 
+> The code parts to decide on merge possibility in attempt_merge() and
+> blk_rq_merge_ok() look very similar. It is possible to move these
+> checks to a common inline helper function.
+> 
+> Suggested-by: Bob Liu <bob.liu@oracle.com>
+> Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+> ---
+>  block/blk-merge.c | 56 +++++++++++++++++++++++++++--------------------
+>  1 file changed, 32 insertions(+), 24 deletions(-)
+> 
+> diff --git a/block/blk-merge.c b/block/blk-merge.c
+> index f68d67b367d6..49052a53051f 100644
+> --- a/block/blk-merge.c
+> +++ b/block/blk-merge.c
+> @@ -732,6 +732,36 @@ static enum elv_merge blk_try_req_merge(struct request *req,
+>  	return ELEVATOR_NO_MERGE;
+>  }
+>  
+> +static inline bool blk_rq_mergeable(struct request *rq, struct bio *bio)
+> +{
+> +	if (!rq_mergeable(rq))
+> +		return false;
+> +
+> +	if (req_op(rq) != bio_op(bio))
+> +		return false;
+> +
+> +	/* must be same device */
+> +	if (rq->rq_disk != bio->bi_disk)
+> +		return false;
+> +
+> +	/* must be using the same buffer */
+> +	if (req_op(rq) == REQ_OP_WRITE_SAME &&
+> +	    !blk_write_same_mergeable(rq->bio, bio))
+> +		return false;
+> +
+> +	/*
+> +	 * Don't allow merge of different write hints, or for a hint with
+> +	 * non-hint IO.
+> +	 */
+> +	if (rq->write_hint != bio->bi_write_hint)
+> +		return false;
+> +
+> +	if (rq->ioprio != bio_prio(bio))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * For non-mq, this has to be called with the request spinlock acquired.
+>   * For mq with scheduling, the appropriate queue wide lock should be held.
+> @@ -739,7 +769,7 @@ static enum elv_merge blk_try_req_merge(struct request *req,
+>  static struct request *attempt_merge(struct request_queue *q,
+>  				     struct request *req, struct request *next)
+>  {
+> -	if (!blk_rq_merge_ok(req, next->bio))
+> +	if (!rq_mergeable(next) || !blk_rq_mergeable(req, next->bio))
+>  		return NULL;
+>  
+>  	/*
+> @@ -841,35 +871,13 @@ int blk_attempt_req_merge(struct request_queue *q, struct request *rq,
+>  
+>  bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
+>  {
+> -	if (!rq_mergeable(rq) || !bio_mergeable(bio))
+> -		return false;
+> -
+> -	if (req_op(rq) != bio_op(bio))
+> -		return false;
+> -
+> -	/* must be same device */
+> -	if (rq->rq_disk != bio->bi_disk)
+> +	if (!bio_mergeable(bio) || !blk_rq_mergeable(rq, bio))
+>  		return false;
+>  
 
-Yes, I would definitely be interested in discussing copy offload
-especially in the context of P2P. Sorting out a userspace interface for
-this that supports a P2P use case would be very beneficial to a lot of
-folks.
+Nitpick, I think bio_mergeable(bio) can also put inside blk_rq_mergeable().
+Anyway, looks fine to me, thanks!
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
-Thanks,
+>  	/* only merge integrity protected bio into ditto rq */
+>  	if (blk_integrity_merge_bio(rq->q, rq, bio) == false)
+>  		return false;
+>  
+> -	/* must be using the same buffer */
+> -	if (req_op(rq) == REQ_OP_WRITE_SAME &&
+> -	    !blk_write_same_mergeable(rq->bio, bio))
+> -		return false;
+> -
+> -	/*
+> -	 * Don't allow merge of different write hints, or for a hint with
+> -	 * non-hint IO.
+> -	 */
+> -	if (rq->write_hint != bio->bi_write_hint)
+> -		return false;
+> -
+> -	if (rq->ioprio != bio_prio(bio))
+> -		return false;
+> -
+>  	return true;
+>  }
+>  
+> 
 
-Logan
