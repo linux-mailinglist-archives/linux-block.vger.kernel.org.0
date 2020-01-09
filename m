@@ -2,309 +2,185 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 156921350B4
-	for <lists+linux-block@lfdr.de>; Thu,  9 Jan 2020 01:57:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 848AF135104
+	for <lists+linux-block@lfdr.de>; Thu,  9 Jan 2020 02:36:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgAIA5t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jan 2020 19:57:49 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:32800 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgAIA5s (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jan 2020 19:57:48 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0090qqBS043377;
-        Thu, 9 Jan 2020 00:57:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=8APKy5hu6fZR1SB/kjNmh2M9/bS50I1Gn9AQkrPQuMk=;
- b=sWeKkrP0wGk3WKbTCFXTQt2K/6zNRGMTNdEsXZkZ+lSPWa6JsUmnhRFUDjUxf5M+sbcC
- kGr9EMtYLQBjiutFSI96IcY8UBfRmjHdTC86ezV+MXSFUb8izGGVlHSB7c85CnH4XL2R
- TRwd2fyk+5UNinWuNN5//OUl04WueKW34tcdLxbA7jq0tZF36LJL+3VvIJCXQCptrKbt
- ejyhgY9yi48oouajL79CTQVyzRdE7JOGycYtyx7qXHhrmvzfMEGBmbZCFVz+TtycVcw2
- RXEeZ61JATlweeZH1u7xX5aoWZqIkGNovDt+rb0nnBEz4AwGDXB/ZVGGBbZYW6JnVVEf dQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xajnq7ewv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 00:57:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0090rsLE143974;
-        Thu, 9 Jan 2020 00:57:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xdmrx1g23-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 00:57:43 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0090vgH7032109;
-        Thu, 9 Jan 2020 00:57:42 GMT
-Received: from [192.168.1.14] (/114.88.246.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Jan 2020 16:57:42 -0800
-Subject: Re: [RFC PATCH] dm-zoned: extend the way of exposing zoned block
- device
-To:     Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "shirley.ma@oracle.com" <shirley.ma@oracle.com>
-References: <20200108071212.27230-1-Nobody@nobody.com>
- <BYAPR04MB5816BA749332D2FC6CE3993AE73E0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <9e7d2f84-6efa-7c44-2313-860d5e8ed067@oracle.com>
- <BN8PR04MB6433B93DE0B03DC0EC30DD44E13E0@BN8PR04MB6433.namprd04.prod.outlook.com>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <d098d71b-be6f-2ddc-09f6-dd0e55bd1a66@oracle.com>
-Date:   Thu, 9 Jan 2020 08:57:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1727417AbgAIBgI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jan 2020 20:36:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23787 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726654AbgAIBgI (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jan 2020 20:36:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578533767;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YhyWrWDGvcl94uzmvSKGpPrbMTLcTs6IkrsCj7b5ty0=;
+        b=Mk6ZJSBj+49Qp6a8Qk7+b87KB6dyj5tdolXfWE/E1/+hOD3WlkRC15kZvohxGr6FxBq24i
+        MfDPg/ypfO8Svjd04mI0SiZUZj1EJqgaNkYwURs2U76cxq+XaQtkSBSUZMPjV04BZ+NKM2
+        UDMwLKWDVnycv7KlXRH/gp4EMhzaiZM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-CX9vaYQMOhG1QaRRuC85zQ-1; Wed, 08 Jan 2020 20:36:03 -0500
+X-MC-Unique: CX9vaYQMOhG1QaRRuC85zQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC8948024D2;
+        Thu,  9 Jan 2020 01:36:01 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA79210842A9;
+        Thu,  9 Jan 2020 01:35:55 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 09:35:51 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, houtao1@huawei.com,
+        hch@lst.de, yi.zhang@huawei.com, zhengchuan@huawei.com
+Subject: Re: [PATCH] block: cache index instead of part self to avoid
+ use-after-free
+Message-ID: <20200109013551.GB9655@ming.t460p>
+References: <20200106073510.10825-1-yuyufen@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <BN8PR04MB6433B93DE0B03DC0EC30DD44E13E0@BN8PR04MB6433.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001090006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001090006
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106073510.10825-1-yuyufen@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/9/20 6:46 AM, Dmitry Fomichev wrote:
->> -----Original Message-----
->> From: linux-block-owner@vger.kernel.org <linux-block-
->> owner@vger.kernel.org> On Behalf Of Bob Liu
->> Sent: Wednesday, January 8, 2020 8:46 AM
->> To: Damien Le Moal <Damien.LeMoal@wdc.com>; dm-devel@redhat.com
->> Cc: linux-block@vger.kernel.org; snitzer@redhat.com; Dmitry Fomichev
->> <Dmitry.Fomichev@wdc.com>; martin.petersen@oracle.com;
->> shirley.ma@oracle.com
->> Subject: Re: [RFC PATCH] dm-zoned: extend the way of exposing zoned
->> block device
->>
->> On 1/8/20 3:40 PM, Damien Le Moal wrote:
->>> On 2020/01/08 16:13, Nobody wrote:
->>>> From: Bob Liu <bob.liu@oracle.com>
->>>>
->>>> Motivation:
->>>> Now the dm-zoned device mapper target exposes a zoned block
->> device(ZBC) as a
->>>> regular block device by storing metadata and buffering random writes in
->>>> conventional zones.
->>>> This way is not very flexible, there must be enough conventional zones
->> and the
->>>> performance may be constrained.
->>>> By putting metadata(also buffering random writes) in separated device
->> we can get
->>>> more flexibility and potential performance improvement e.g by storing
->> metadata
->>>> in faster device like persistent memory.
->>>>
->>>> This patch try to split the metadata of dm-zoned to an extra block
->>>> device instead of zoned block device itself.
->>>> (Buffering random writes also in the todo list.)
->>>>
->>>> Patch is at the very early stage, just want to receive some feedback about
->>>> this extension.
->>>> Another option is to create an new md-zoned device with separated
->> metadata
->>>> device based on md framework.
->>>
->>> For metadata only, it should not be hard at all to move to another
->>> conventional zone device. It will however be a little more tricky for
->>> conventional zones used for data since dm-zoned assumes that this
->> random
->>> write space is also zoned. Moving this space to a conventional device
->>> requires implementing a zone emulation (fake zones) for the regular
->>> drive, using a zone size that matches the size of sequential zones.
->>>
->>
->> Indeed.
->> I'll try to implement zone emulation next version.
->>
->>> Beyond this, dm-zoned also needs to be changed to accept partial drives
->>> and the dm core code to accept mixing of regular and zoned disks (that
->>> is forbidden now).
->>>
->>
->> Do you mean the check in device_area_is_invalid()?
->>
->>  320         /*
->>  321          * If the target is mapped to zoned block device(s), check
->>  322          * that the zones are not partially mapped.
->>  323          */
->>  324         if (bdev_zoned_model(bdev) != BLK_ZONED_NONE) {
->>
->>> Another approach worth exploring is stacking dm-zoned as is on top of a
->>> modified dm-linear with the ability to emulate conventional zones on top
->>> of a regular block device (you only need report zones method
->>> implemented). That is much easier to do. We actually hacked something
->>> like that last month to see the performance change and saw a jump from
->>> 56 MB/s to 250 MB/s for write intensive workloads (file creation on
->>> ext4). I am not so warm in this approach though as it modifies dm-linear
->>> and we want to keep it very lean and simple. Modifying dm-zoned to allow
->>> support for a device pair is a better approach I think.
->>>
->>>>
->>>> Signed-off-by: Bob Liu <bob.liu@oracle.com>
->>>> ---
->>>>  drivers/md/dm-zoned-metadata.c |  6 +++---
->>>>  drivers/md/dm-zoned-target.c   | 15 +++++++++++++--
->>>>  drivers/md/dm-zoned.h          |  1 +
->>>>  3 files changed, 17 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-
->> metadata.c
->>>> index 22b3cb0..89cd554 100644
->>>> --- a/drivers/md/dm-zoned-metadata.c
->>>> +++ b/drivers/md/dm-zoned-metadata.c
->>>> @@ -439,7 +439,7 @@ static struct dmz_mblock
->> *dmz_get_mblock_slow(struct dmz_metadata *zmd,
->>>>
->>>>  	/* Submit read BIO */
->>>>  	bio->bi_iter.bi_sector = dmz_blk2sect(block);
->>>> -	bio_set_dev(bio, zmd->dev->bdev);
->>>> +	bio_set_dev(bio, zmd->dev->meta_bdev);
->>>>  	bio->bi_private = mblk;
->>>>  	bio->bi_end_io = dmz_mblock_bio_end_io;
->>>>  	bio_set_op_attrs(bio, REQ_OP_READ, REQ_META | REQ_PRIO);
->>>> @@ -593,7 +593,7 @@ static int dmz_write_mblock(struct dmz_metadata
->> *zmd, struct dmz_mblock *mblk,
->>>>  	set_bit(DMZ_META_WRITING, &mblk->state);
->>>>
->>>>  	bio->bi_iter.bi_sector = dmz_blk2sect(block);
->>>> -	bio_set_dev(bio, zmd->dev->bdev);
->>>> +	bio_set_dev(bio, zmd->dev->meta_bdev);
->>>>  	bio->bi_private = mblk;
->>>>  	bio->bi_end_io = dmz_mblock_bio_end_io;
->>>>  	bio_set_op_attrs(bio, REQ_OP_WRITE, REQ_META | REQ_PRIO);
->>>> @@ -620,7 +620,7 @@ static int dmz_rdwr_block(struct dmz_metadata
->> *zmd, int op, sector_t block,
->>>>  		return -ENOMEM;
->>>>
->>>>  	bio->bi_iter.bi_sector = dmz_blk2sect(block);
->>>> -	bio_set_dev(bio, zmd->dev->bdev);
->>>> +	bio_set_dev(bio, zmd->dev->meta_bdev);
->>>>  	bio_set_op_attrs(bio, op, REQ_SYNC | REQ_META | REQ_PRIO);
->>>>  	bio_add_page(bio, page, DMZ_BLOCK_SIZE, 0);
->>>>  	ret = submit_bio_wait(bio);
->>>> diff --git a/drivers/md/dm-zoned-target.c b/drivers/md/dm-zoned-
->> target.c
->>>> index 70a1063..55c64fe 100644
->>>> --- a/drivers/md/dm-zoned-target.c
->>>> +++ b/drivers/md/dm-zoned-target.c
->>>> @@ -39,6 +39,7 @@ struct dm_chunk_work {
->>>>   */
->>>>  struct dmz_target {
->>>>  	struct dm_dev		*ddev;
->>>> +	struct dm_dev           *metadata_dev;
->>>
->>> This naming would be confusing as it implies metadata only. If you also
->>> want to move the random write zones to a regular device, then I would
->>> suggest names like:
->>>
->>> ddev -> zoned_bdev (the zoned device, e.g. SMR disk)
->>> metadata_dev -> reg_bdev (regular block device, e.g. an SSD)
->>>
->>
->> Will update.
->>
->>> The metadata+random write (fake) zones space can use the regular block
->>> device, and all sequential zones are assumed to be on the zoned device.
->>> Care must be taken to handle the case of a zoned device that has
->>> conventional zones: these could be used as is, not needing any reclaim,
->>
->> Agree, that won't make things too complicate.
->> Thank you for all the suggestions.
->>
->> Regards,
->> Bob
->>
->>> so potentially contributing to further optimization.
->>>
->>>>
->>>>  	unsigned long		flags;
->>>>
->>>> @@ -701,6 +702,7 @@ static int dmz_get_zoned_device(struct dm_target
->> *ti, char *path)
->>>>  		goto err;
->>>>  	}
->>>>
->>>> +	dev->meta_bdev = dmz->metadata_dev->bdev;
->>>>  	dev->bdev = dmz->ddev->bdev;
->>>>  	(void)bdevname(dev->bdev, dev->name);
->>>>
->>>> @@ -761,7 +763,7 @@ static int dmz_ctr(struct dm_target *ti, unsigned
->> int argc, char **argv)
->>>>  	int ret;
->>>>
->>>>  	/* Check arguments */
->>>> -	if (argc != 1) {
->>>> +	if (argc != 2) {
->>>>  		ti->error = "Invalid argument count";
->>>>  		return -EINVAL;
->>>>  	}
+On Mon, Jan 06, 2020 at 03:35:10PM +0800, Yufen Yu wrote:
+> When delete partition executes concurrently with IOs issue,
+> it may cause use-after-free on part in disk_map_sector_rcu()
+> as following:
 > 
-> I like the idea to have an additional device in dm-zoned as the source of random
-> zones as opposed to using block range concatenation via dm-linear. But,
-> shouldn't we retain the possibility to use just the conventional zones that exist
-> on the drive? This seems necessary for backwards compatibility. In the code
-> above, if the arg count is one, the processing probably should fall back to the
-> existing way of using drive's conventional zones.
+> blk_account_io_start(req1)  delete_partition  blk_account_io_start(req2)
 > 
+> rcu_read_lock()
+> disk_map_sector_rcu
+> part = rcu_dereference(ptbl->part[4])
+>                            rcu_assign_pointer(ptbl->part[4], NULL);
+>                            rcu_assign_pointer(ptbl->last_lookup, NULL);
+> rcu_assign_pointer(ptbl->last_lookup, part);
+> 
+>                            hd_struct_kill(part)
+> !hd_struct_try_get
+>   part = &rq->rq_disk->part0;
+> rcu_read_unlock()
+>                            __delete_partition
+>                            call_rcu
+>                                             rcu_read_lock
+>                                             disk_map_sector_rcu
+>                                             part = rcu_dereference(ptbl->last_lookup);
+> 
+>                            delete_partition_work_fn
+>                            free(part)
+>                                             hd_struct_try_get(part)
+>                                             BUG_ON use-after-free
+> 
+> req1 try to get 'ptbl->part[4]', while the part is beening
+> deleted. Although the delete_partition() will set last_lookup
+> as NULL, req1 can overwrite it as 'part[4]' again.
+> 
+> After calling call_rcu() and free() for the part, req2 can
+> access the part by last_lookup, resulting in use after free.
+> 
+> In fact, this bug has been reported by syzbot:
+>     https://lkml.org/lkml/2019/1/4/357
+> 
+> To fix the bug, we try to cache index of part[] instead of
+> part[i] itself in last_lookup. Even if the index may been
+> re-assign, others can either get part[i] as value of NULL,
+> or get the new allocated part[i] after call_rcu. Both of
+> them is okay.
+> 
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> ---
+>  block/genhd.c             | 15 +++++++++------
+>  block/partition-generic.c |  2 +-
+>  include/linux/genhd.h     |  3 ++-
+>  3 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index ff6268970ddc..97447281a4f5 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -282,18 +282,21 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
+>  	struct disk_part_tbl *ptbl;
+>  	struct hd_struct *part;
+>  	int i;
+> +	int last_lookup;
+>  
+>  	ptbl = rcu_dereference(disk->part_tbl);
+> -
+> -	part = rcu_dereference(ptbl->last_lookup);
+> -	if (part && sector_in_part(part, sector))
+> -		return part;
+> +	last_lookup = READ_ONCE(ptbl->last_lookup);
+> +	if (last_lookup > 0 && last_lookup < ptbl->len) {
+> +		part = rcu_dereference(ptbl->part[last_lookup]);
+> +		if (part && sector_in_part(part, sector))
+> +			return part;
+> +	}
+>  
+>  	for (i = 1; i < ptbl->len; i++) {
+>  		part = rcu_dereference(ptbl->part[i]);
+>  
+>  		if (part && sector_in_part(part, sector)) {
+> -			rcu_assign_pointer(ptbl->last_lookup, part);
+> +			WRITE_ONCE(ptbl->last_lookup, i);
+>  			return part;
+>  		}
+>  	}
+> @@ -1263,7 +1266,7 @@ static void disk_replace_part_tbl(struct gendisk *disk,
+>  	rcu_assign_pointer(disk->part_tbl, new_ptbl);
+>  
+>  	if (old_ptbl) {
+> -		rcu_assign_pointer(old_ptbl->last_lookup, NULL);
+> +		WRITE_ONCE(old_ptbl->last_lookup, 0);
+>  		kfree_rcu(old_ptbl, rcu_head);
+>  	}
+>  }
+> diff --git a/block/partition-generic.c b/block/partition-generic.c
+> index 1d20c9cf213f..a9fd24ae3acb 100644
+> --- a/block/partition-generic.c
+> +++ b/block/partition-generic.c
+> @@ -284,7 +284,7 @@ void delete_partition(struct gendisk *disk, int partno)
+>  		return;
+>  
+>  	rcu_assign_pointer(ptbl->part[partno], NULL);
+> -	rcu_assign_pointer(ptbl->last_lookup, NULL);
+> +	WRITE_ONCE(ptbl->last_lookup, 0);
+>  	kobject_put(part->holder_dir);
+>  	device_del(part_to_dev(part));
+>  
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 8bb63027e4d6..9be4fb8f8b8b 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -160,7 +160,8 @@ enum {
+>  struct disk_part_tbl {
+>  	struct rcu_head rcu_head;
+>  	int len;
+> -	struct hd_struct __rcu *last_lookup;
+> +	/* Cache last lookup part[] index */
+> +	int last_lookup;
+>  	struct hd_struct __rcu *part[];
+>  };
 
-Yeah, that's better. Will update.
-Thanks! -Bob
+As we discussed in the following link:
 
->>>> @@ -774,8 +776,16 @@ static int dmz_ctr(struct dm_target *ti, unsigned
->> int argc, char **argv)
->>>>  	}
->>>>  	ti->private = dmz;
->>>>
->>>> +	/* Get the metadata block device */
->>>> +	ret = dm_get_device(ti, argv[0], dm_table_get_mode(ti->table),
->>>> +			&dmz->metadata_dev);
->>>> +	if (ret) {
->>>> +		dmz->metadata_dev = NULL;
->>>> +		goto err;
->>>> +	}
->>>> +
->>>>  	/* Get the target zoned block device */
->>>> -	ret = dmz_get_zoned_device(ti, argv[0]);
->>>> +	ret = dmz_get_zoned_device(ti, argv[1]);
->>>>  	if (ret) {
->>>>  		dmz->ddev = NULL;
->>>>  		goto err;
->>>> @@ -856,6 +866,7 @@ static int dmz_ctr(struct dm_target *ti, unsigned
->> int argc, char **argv)
->>>>  err_dev:
->>>>  	dmz_put_zoned_device(ti);
->>>>  err:
->>>> +	dm_put_device(ti, dmz->metadata_dev);
->>>>  	kfree(dmz);
->>>>
->>>>  	return ret;
->>>> diff --git a/drivers/md/dm-zoned.h b/drivers/md/dm-zoned.h
->>>> index 5b5e493..e789ff5 100644
->>>> --- a/drivers/md/dm-zoned.h
->>>> +++ b/drivers/md/dm-zoned.h
->>>> @@ -50,6 +50,7 @@
->>>>   */
->>>>  struct dmz_dev {
->>>>  	struct block_device	*bdev;
->>>> +	struct block_device     *meta_bdev;
->>>>
->>>>  	char			name[BDEVNAME_SIZE];
->>>>
->>>>
-> 
+https://lore.kernel.org/linux-block/5cc465cc-d68c-088e-0729-2695279c7853@huawei.com/T/#m9a959cc91ff8c6387f83aa5c505581159b5b6571
+
+This way works, but adding a little overhead to the fast path, one indirect
+memory reference, especially ->part[->last_lookup] may take one extra cacheline.
+
+I will post one patch to fix the issue without adding the extra overhead.
+
+
+Thanks,
+Ming
 
