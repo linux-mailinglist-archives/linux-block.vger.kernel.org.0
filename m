@@ -2,120 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E00A136670
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2020 06:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2C221366BC
+	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2020 06:34:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgAJFK1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Jan 2020 00:10:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:47059 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgAJFK1 (ORCPT
+        id S1726671AbgAJFeW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Jan 2020 00:34:22 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:50342 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgAJFeW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:10:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so400104pgb.13
-        for <linux-block@vger.kernel.org>; Thu, 09 Jan 2020 21:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=go3mxZ5ZmLbwmx8GTJxQxCx+NZCTeXNXyfqEUrRnDxk=;
-        b=ZGW7dznsjSxgENIeb6ilmin2M4KDQaIGov9K1GfzhaB3sLZAtmaSwX/R2JenuRXi1F
-         8vKT+U8NfzYPjLzvVZN2g+YncJ2IaYi9pFiTdFVBm1nArIxe1nEuI7vSiOSGvSRdDtgB
-         E5pCsEMba+b88hH+IyPASJedfAdUOTs1gQP1CLaPz+YiHg8o9LTtQ4HQ5mkn1nwQ+Ej7
-         eXl85r66YO4YEXYadvP9G32qNdJr6jAB01K/hRXDk0Vb56+kR40iX87UjpYOMDt8DsLj
-         ihvlt+UvBHXc84b8gbQ3YnDyszQ0Z4IfzbwnIQCBrbYuC2+Z31KIOERPgmNHWNWJFT/q
-         Q+Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=go3mxZ5ZmLbwmx8GTJxQxCx+NZCTeXNXyfqEUrRnDxk=;
-        b=GogwzjSxujPwCQtIExsadIeOQ2YWeL8OTYpi6e2iDFEDEcKV7bjLSFN2LXxerILyaY
-         yineMBX28bu3BWsFtavPYSu/mh2Dwv654cosGt5x2+Yb+nluAaTwObvDOjis4fRIBn5A
-         /wBQ/ERn/zr9AJ7FJfFEk+lSACY/zCsQO1vU4IwZyyTLq20daG+7x8XnTwRbkot/r3Xd
-         L++euHHDtV/p3OkEFPGY7EdBK52cBpuCNLFGHpajCJ5u8MnH4UP6qzzRTLgRWIFybBQg
-         5Pl0hdD81ZYUTelpkKPvQEVC1+mkW2/PDNSv3IgM4c4tVomjN4bwyYImTkLLukq0LUHU
-         parA==
-X-Gm-Message-State: APjAAAUUuiW7qsUCaolzWeQpahAz8mDlHkVTvTv3e6A8yvirODCgnzB5
-        mfIqx7De+K5DQ/wBu4rxvrGu54Mx
-X-Google-Smtp-Source: APXvYqzyMW3G6h23MPzc+OoA9cGN5deDEgWVthwo9AtXViSHGHhGh3czwqz5/lfqtgo7Pzjjz7HemQ==
-X-Received: by 2002:a65:4d46:: with SMTP id j6mr2125835pgt.63.1578633026530;
-        Thu, 09 Jan 2020 21:10:26 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g26sm834345pfo.130.2020.01.09.21.10.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 21:10:25 -0800 (PST)
-Subject: Re: [PATCH] block: fix splitting segments
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org
-References: <20191229023230.28940-1-ming.lei@redhat.com>
- <20200108140248.GA2896@infradead.org> <20200109020341.GC9655@ming.t460p>
- <20200109071616.GA32217@infradead.org>
- <cd3f3aa8-4880-f06b-7ac5-1982b890ca53@kernel.dk>
- <20200110025801.GC4501@ming.t460p> <20200110030006.GD4501@ming.t460p>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0c25bc64-d249-0b83-1d5d-6f7226293fb6@roeck-us.net>
-Date:   Thu, 9 Jan 2020 21:10:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 00:34:22 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5NNMX031215;
+        Fri, 10 Jan 2020 05:33:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=IY5ypyWB8E0NmjrXstQmSbrKj69APzR1aWp/wYV3cCM=;
+ b=n1Zn+uUKIbGajBv+fxV0zAXxrdFGkcPLS5xYgLavxm4mmAnjqQ0PgL5ryM6p7aXpgq37
+ hEPh1k96klPemk7mZ8fDXrR+cU1C+OWj2JjeU3npupNb6rA7uo7jEpWvvZK86QW4ZwUh
+ s6JwpoT4q5dPR5Ln4WgCknvgueVVorv+c/uF2ViQJBcpMvwOxwkTFw3F4lFUgI1JlaFJ
+ pOVMkDjP3CqLHRDJYg9P9LfKlTe5ST/cvz433esof96u3kCogSV5q1vjNUhgsetRe8vC
+ 65NJXlD0hY/OltdB4kCs0eyY8HxoJQmQ7pEEQq7ZjPpPKZhFO8k3g6j726OZYC1P6DgE vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xajnqfq75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 05:33:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5Oge4175226;
+        Fri, 10 Jan 2020 05:33:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xeh8yxj4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 05:33:40 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00A5XVT1011528;
+        Fri, 10 Jan 2020 05:33:32 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Jan 2020 21:33:31 -0800
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        "linux-block\@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-nvme\@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "dm-devel\@redhat.com" <dm-devel@redhat.com>,
+        "lsf-pc\@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "axboe\@kernel.dk" <axboe@kernel.dk>,
+        "hare\@suse.de" <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Stephen Bates <sbates@raithlin.com>,
+        "msnitzer\@redhat.com" <msnitzer@redhat.com>,
+        "mpatocka\@redhat.com" <mpatocka@redhat.com>,
+        "zach.brown\@ni.com" <zach.brown@ni.com>,
+        "roland\@purestorage.com" <roland@purestorage.com>,
+        "rwheeler\@redhat.com" <rwheeler@redhat.com>,
+        "frederick.knight\@netapp.com" <frederick.knight@netapp.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>
+Subject: Re: [LSF/MM/BFP ATTEND] [LSF/MM/BFP TOPIC] Storage: Copy Offload
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <BYAPR04MB5749820C322B40C7DBBBCA02863F0@BYAPR04MB5749.namprd04.prod.outlook.com>
+        <fda88fd3-2d75-085e-ca15-a29f89c1e781@acm.org>
+Date:   Fri, 10 Jan 2020 00:33:27 -0500
+In-Reply-To: <fda88fd3-2d75-085e-ca15-a29f89c1e781@acm.org> (Bart Van Assche's
+        message of "Wed, 8 Jan 2020 19:18:54 -0800")
+Message-ID: <yq1pnfrx4d4.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200110030006.GD4501@ming.t460p>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001100047
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001100047
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/9/20 7:00 PM, Ming Lei wrote:
-> On Fri, Jan 10, 2020 at 10:58:01AM +0800, Ming Lei wrote:
->> On Thu, Jan 09, 2020 at 08:18:04AM -0700, Jens Axboe wrote:
->>> On 1/9/20 12:16 AM, Christoph Hellwig wrote:
->>>> On Thu, Jan 09, 2020 at 10:03:41AM +0800, Ming Lei wrote:
->>>>> It has been addressed in:
->>>>>
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=block-5.5&id=ecd255974caa45901d0b8fab03626e0a18fbc81a
->>>>
->>>> That is probably correct, but still highly suboptimal for most 32-bit
->>>> architectures where physical addresses are 32 bits wide.  To fix that
->>>> the proper phys_addr_t type should be used.
->>>
->>> I'll swap it for phys_addr_t - we used to use dma_address_t or something
->>> like that, but I missed this type.
->>
->> Guenter mentioned that 'page_to_phys(start_page) as well as offset are
->> sometimes 0'[1].
->>
->> If that(zero page physical address) can happen when phys_addr_t is 32bit,
->> I guess phys_addr_t may not work too.
->>
->> Guener, could you test the patch in link[2] again?
->>
->>
->> [1] https://lore.kernel.org/linux-block/20200108023822.GB28075@ming.t460p/T/#m5862216b960454fc41a85204defbb887983bfd75
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=block-5.5&id=b6a89c4a9590663f80486662fe9a9c1f4cee31f4
-> 
-> Loop Guener in.
-> 
 
-The patch at [2] doesn't work.
+Bart,
 
-My understanding is that the page in question is not mapped when
-get_max_segment_size() is called (after all, the operation is the
-result of a page fault). This is why page_to_phys() returns 0.
+> * Copying must be supported not only within a single storage device but
+>   also between storage devices.
 
-You'll either need a local u64 variable, or use some other means
-to handle that situation. Something like
+Identifying which devices to permit copies between has been challenging.
+That has since been addressed in T10.
 
-     phys_addr_t paddr = page_to_phys(start_page);
+> * VMware, which uses XCOPY (with a one-byte length ID, aka LID1).
 
-     if (paddr == 0)
-	return queue_max_segment_size(q);
+I don't think LID1 vs LID4 is particularly interesting for the Linux use
+case. It's just an additional command tag since the copy manager is a
+third party.
 
-at the beginning of the function might do, though there might
-still be a problem when the page is later assigned and crosses
-a segment boundary (if that is possible).
+> * Microsoft, which uses ODX (aka LID4 because it has a four-byte length
+>   ID).
 
-Guenter
+Microsoft uses the token commands.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
