@@ -2,113 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2C221366BC
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2020 06:34:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F2B136746
+	for <lists+linux-block@lfdr.de>; Fri, 10 Jan 2020 07:18:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgAJFeW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Jan 2020 00:34:22 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50342 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgAJFeW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:34:22 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5NNMX031215;
-        Fri, 10 Jan 2020 05:33:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=IY5ypyWB8E0NmjrXstQmSbrKj69APzR1aWp/wYV3cCM=;
- b=n1Zn+uUKIbGajBv+fxV0zAXxrdFGkcPLS5xYgLavxm4mmAnjqQ0PgL5ryM6p7aXpgq37
- hEPh1k96klPemk7mZ8fDXrR+cU1C+OWj2JjeU3npupNb6rA7uo7jEpWvvZK86QW4ZwUh
- s6JwpoT4q5dPR5Ln4WgCknvgueVVorv+c/uF2ViQJBcpMvwOxwkTFw3F4lFUgI1JlaFJ
- pOVMkDjP3CqLHRDJYg9P9LfKlTe5ST/cvz433esof96u3kCogSV5q1vjNUhgsetRe8vC
- 65NJXlD0hY/OltdB4kCs0eyY8HxoJQmQ7pEEQq7ZjPpPKZhFO8k3g6j726OZYC1P6DgE vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xajnqfq75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 05:33:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5Oge4175226;
-        Fri, 10 Jan 2020 05:33:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xeh8yxj4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 05:33:40 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00A5XVT1011528;
-        Fri, 10 Jan 2020 05:33:32 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jan 2020 21:33:31 -0800
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        "linux-block\@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-nvme\@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "dm-devel\@redhat.com" <dm-devel@redhat.com>,
-        "lsf-pc\@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        "axboe\@kernel.dk" <axboe@kernel.dk>,
-        "hare\@suse.de" <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Stephen Bates <sbates@raithlin.com>,
-        "msnitzer\@redhat.com" <msnitzer@redhat.com>,
-        "mpatocka\@redhat.com" <mpatocka@redhat.com>,
-        "zach.brown\@ni.com" <zach.brown@ni.com>,
-        "roland\@purestorage.com" <roland@purestorage.com>,
-        "rwheeler\@redhat.com" <rwheeler@redhat.com>,
-        "frederick.knight\@netapp.com" <frederick.knight@netapp.com>,
-        Matias Bjorling <Matias.Bjorling@wdc.com>
-Subject: Re: [LSF/MM/BFP ATTEND] [LSF/MM/BFP TOPIC] Storage: Copy Offload
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <BYAPR04MB5749820C322B40C7DBBBCA02863F0@BYAPR04MB5749.namprd04.prod.outlook.com>
-        <fda88fd3-2d75-085e-ca15-a29f89c1e781@acm.org>
-Date:   Fri, 10 Jan 2020 00:33:27 -0500
-In-Reply-To: <fda88fd3-2d75-085e-ca15-a29f89c1e781@acm.org> (Bart Van Assche's
-        message of "Wed, 8 Jan 2020 19:18:54 -0800")
-Message-ID: <yq1pnfrx4d4.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        id S1731441AbgAJGS0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Jan 2020 01:18:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbgAJGS0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 10 Jan 2020 01:18:26 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67DDD20673;
+        Fri, 10 Jan 2020 06:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578637104;
+        bh=E83v9s/velUj5ZMKMl2BVwEb+LgFHUZZtzb8Bqy9gU4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xyN7PM3sGWyQc+Q3C57MHsA5e3wjktENkcTqPjjN48EhTVMfLAOcEH7WXcehyQGC6
+         CqtX3KktH3VHkouuRDRBfqb+OHlpZenFzzhBLqVYkQH/7WfrzKZ0q/vtCiat2KM09/
+         /73s9E3NXSaD1yHiJUh5GvaXRcpQoPXGGxrOfGV8=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Barani Muthukumaran <bmuthuku@qti.qualcomm.com>,
+        Can Guo <cang@codeaurora.org>,
+        Satya Tangirala <satyat@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>
+Subject: [RFC PATCH 0/5] Inline crypto support on DragonBoard 845c
+Date:   Thu,  9 Jan 2020 22:16:29 -0800
+Message-Id: <20200110061634.46742-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001100047
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001100047
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hello,
 
-Bart,
+This patchset implements UFS inline crypto support on the DragonBoard
+845c, using the Qualcomm Inline Crypto Engine (ICE) that's present on
+the Snapdragon 845 SoC.
 
-> * Copying must be supported not only within a single storage device but
->   also between storage devices.
+This is based on top of the patchset "[PATCH v6 0/9] Inline Encryption
+Support" by Satya Tangirala, which adds support for the UFS standard
+inline crypto, the block layer changes needed to use inline crypto, and
+support for inline crypto in fscrypt (ext4 and f2fs encryption).  Link:
+https://lkml.kernel.org/r/20191218145136.172774-1-satyat@google.com
 
-Identifying which devices to permit copies between has been challenging.
-That has since been addressed in T10.
+This new patchset is mostly a RFC showing hardware inline crypto working
+on a publicly available development board that runs the mainline Linux
+kernel.  While patches 1-2 could be applied now, patches 3-5 depend on
+the main "Inline Encryption Support" patchset being merged first.
 
-> * VMware, which uses XCOPY (with a one-byte length ID, aka LID1).
+Most of the logic needed to use ICE is already handled by ufshcd-crypto
+and the blk-crypto framework, which are introduced by the "Inline
+Encryption Support" patchset.  Therefore, this new patchset just adds
+the vendor-specific parts.  I also only implemented support for version
+3 of the ICE hardware, which seems to be easier to use than older
+versions; and for now I only implemented UFS support, not eMMC.
 
-I don't think LID1 vs LID4 is particularly interesting for the Linux use
-case. It's just an additional command tag since the copy manager is a
-third party.
+Due to these factors, I was able to greatly simplify the driver from the
+vendor's original.  It seems to work fine in some preliminary testing
+with fscrypt, and with a blk-crypto self-test I'm also working on.  But
+I'd appreciate feedback from anyone who may be more familiar with this
+hardware as to whether I might have missed anything important.
 
-> * Microsoft, which uses ODX (aka LID4 because it has a four-byte length
->   ID).
+This patchset is also available in git at
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/tag/?h=db845c-crypto-v1
 
-Microsoft uses the token commands.
+Eric Biggers (5):
+  firmware: qcom_scm: Add support for programming inline crypto keys
+  arm64: dts: sdm845: add Inline Crypto Engine registers and clock
+  scsi: ufs: add quirk to disable inline crypto support
+  scsi: ufs: add program_key() variant op
+  scsi: ufs-qcom: add Inline Crypto Engine support
+
+ MAINTAINERS                          |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |  13 +-
+ drivers/firmware/qcom_scm-32.c       |  14 ++
+ drivers/firmware/qcom_scm-64.c       |  31 ++++
+ drivers/firmware/qcom_scm.c          |  78 +++++++++
+ drivers/firmware/qcom_scm.h          |   9 +
+ drivers/scsi/ufs/Kconfig             |   1 +
+ drivers/scsi/ufs/Makefile            |   4 +-
+ drivers/scsi/ufs/ufs-qcom-ice.c      | 247 +++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufs-qcom.c          |  14 +-
+ drivers/scsi/ufs/ufs-qcom.h          |  35 ++++
+ drivers/scsi/ufs/ufshcd-crypto.c     |  27 ++-
+ drivers/scsi/ufs/ufshcd.h            |  12 ++
+ include/linux/qcom_scm.h             |  17 ++
+ 14 files changed, 490 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/scsi/ufs/ufs-qcom-ice.c
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.24.1
+
