@@ -2,125 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC54C13F715
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 20:09:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35AA013FA1E
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 21:02:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437379AbgAPTJP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jan 2020 14:09:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:50548 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437384AbgAPTJL (ORCPT
+        id S1729342AbgAPUCi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jan 2020 15:02:38 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35514 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgAPUCh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:09:11 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GJ90pJ086933;
-        Thu, 16 Jan 2020 19:09:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vUJOBc8L8fwN+W+E7e9d5o4B0yc2nHeZhq+4rpw/zzQ=;
- b=r+Y7DAdia7cR9Jzs4WsSjQM/O1aJgfiX1L/2E8IJm9X6nFFxIfaG4IKvo5PZJgbDsW7A
- Ygx3mQzpxvcYhQro5n0QXsHsvafxunwQFYKRKkmID78iO73epV02d1pRdPHrIHJfYXcK
- gcaxqKIA+4di4w+Frpm/GlXZegn69C5PHV6+p9mj7qDbKKrQpObc9IV/NbMRgcduGBp9
- reNdb0ydpFaf2uqw+TOfG/jJ4QZ6nWfNyXEPBvdZAsBNyYM9WI7z/N5gW1+oy6uAX+0z
- 7k3LXwoi6kowSM2FaTBCBiUSAhMxfg9jZP0l/pNDv35An55xk8bnXJGnAozwi9HfwL6R Rg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xf73yvhda-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 19:09:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GJ8I2O107727;
-        Thu, 16 Jan 2020 19:09:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2xj1ptmawu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 19:09:08 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00GJ9704020695;
-        Thu, 16 Jan 2020 19:09:07 GMT
-Received: from [10.154.185.48] (/10.154.185.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 11:09:07 -0800
+        Thu, 16 Jan 2020 15:02:37 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s7so2163712pjc.0
+        for <linux-block@vger.kernel.org>; Thu, 16 Jan 2020 12:02:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9m+rC+oUDolU1XALd3i8OyKuH4mxh+m2TciQNEVn8O0=;
+        b=ieSfAt4ECnxqa8cYWLvKBJN7d7uKIygQjPqx/MZS2YAX0XTkQAr1lJ8IWiXtUl8nD+
+         u9HRJDekI1Dp+FRWxoquVQOWKhQELaw8zvPWy9gJN+hG86BWvUNRlF3XB8N5ncbxJZTT
+         gHdZurBQ/OwpmzRfUPVxHtvFPksBq/OgZ0pMypB1A6sn3DADO7gA325jB/kV3sai1NOs
+         tUGg1MyBzFVELB39jNnTksHPdHXsh7fcoBFAA53DirIlby0cbxVZFTtnubihNWC0wzpU
+         HQbRyYhG4AhorZRHB7f0XjELPLiXoNeXMVIV9rSwmtzK5C9VWddHYc8ueOt0h1Q0sW8W
+         c0Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9m+rC+oUDolU1XALd3i8OyKuH4mxh+m2TciQNEVn8O0=;
+        b=Zb2C6e1Isco41gFYo7nLCTOT34em3QoPs+/yiwmKFbTpmGM8XW6WcM8/yJmiUMgjLN
+         1OCFURSoYML6HwWM1xXceAwJ78RYsg+bM9q/vPSDWuKao8YqO5tyw8J6d8dBKwuyxFcM
+         5ErlElzwREQwCdxT4ZIBBvLk3jvEaqYf/O7cu4oH5pKMacbUgDZ7Jr0bSfJoJZqioDWu
+         P7q7UYB0kbohxnX2x7LIyYVQ076YVU3qAI8zmxNG8Zo9OlXW1S4EOSWpxgforVONiZoZ
+         ZpPiP1uzaBh41bh8hkCRRndBNT0wQY3fnav0A7tLH9uWOKi+U9yG1dPNLtc3W+dPd8D+
+         IRcQ==
+X-Gm-Message-State: APjAAAVdUxqxIFJ69UjRvSRSdy7X1ms0elzAyTFSYwm4L3wac8HO9hML
+        nWUEn0Q65EjLdeqhl+6ez0UvMw==
+X-Google-Smtp-Source: APXvYqwspA/ISVxq7O+kTNMHPp/+Ds3gQg1UEVb7NDrnymuJaIe3jmDH6uqM0kJudwXVbwaNhIeTgg==
+X-Received: by 2002:a17:90a:cc04:: with SMTP id b4mr1059251pju.136.1579204957167;
+        Thu, 16 Jan 2020 12:02:37 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1132::1012? ([2620:10d:c090:180::ab9])
+        by smtp.gmail.com with ESMTPSA id d22sm26131500pfo.187.2020.01.16.12.02.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 12:02:36 -0800 (PST)
 Subject: Re: [RFC 2/2] io_uring: acquire ctx->uring_lock before calling
  io_issue_sqe()
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org
+To:     Bijan Mottahedeh <bijan.mottahedeh@oracle.com>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@gmail.com>
 References: <1579142266-64789-1-git-send-email-bijan.mottahedeh@oracle.com>
  <1579142266-64789-3-git-send-email-bijan.mottahedeh@oracle.com>
  <9b359dde-3bb6-5886-264b-4bee90be9e25@kernel.dk>
  <8f7986c7-e5b4-8f24-1c71-666c01b16c8b@kernel.dk>
  <1397cd55-37a6-4e14-91ac-eb3c35e7d962@kernel.dk>
-From:   Bijan Mottahedeh <bijan.mottahedeh@oracle.com>
-Message-ID: <b43835cd-3bd6-705e-df51-923bbec78c67@oracle.com>
-Date:   Thu, 16 Jan 2020 11:08:59 -0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <b43835cd-3bd6-705e-df51-923bbec78c67@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <18346d15-d89d-9d28-1ef8-77574d44dce7@kernel.dk>
+Date:   Thu, 16 Jan 2020 13:02:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1397cd55-37a6-4e14-91ac-eb3c35e7d962@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b43835cd-3bd6-705e-df51-923bbec78c67@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Antivirus: Avast (VPS 200115-2, 01/15/2020), Outbound message
-X-Antivirus-Status: Clean
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160153
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/16/2020 8:22 AM, Jens Axboe wrote:
-> On 1/15/20 9:42 PM, Jens Axboe wrote:
->> On 1/15/20 9:34 PM, Jens Axboe wrote:
->>> On 1/15/20 7:37 PM, Bijan Mottahedeh wrote:
->>>> io_issue_sqe() calls io_iopoll_req_issued() which manipulates poll_list,
->>>> so acquire ctx->uring_lock beforehand similar to other instances of
->>>> calling io_issue_sqe().
->>> Is the below not enough?
->> This should be better, we have two that set ->in_async, and only one
->> doesn't hold the mutex.
+On 1/16/20 12:08 PM, Bijan Mottahedeh wrote:
+> On 1/16/2020 8:22 AM, Jens Axboe wrote:
+>> On 1/15/20 9:42 PM, Jens Axboe wrote:
+>>> On 1/15/20 9:34 PM, Jens Axboe wrote:
+>>>> On 1/15/20 7:37 PM, Bijan Mottahedeh wrote:
+>>>>> io_issue_sqe() calls io_iopoll_req_issued() which manipulates poll_list,
+>>>>> so acquire ctx->uring_lock beforehand similar to other instances of
+>>>>> calling io_issue_sqe().
+>>>> Is the below not enough?
+>>> This should be better, we have two that set ->in_async, and only one
+>>> doesn't hold the mutex.
+>>>
+>>> If this works for you, can you resend patch 2 with that? Also add a:
+>>>
+>>> Fixes: 8a4955ff1cca ("io_uring: sqthread should grab ctx->uring_lock for submissions")
+>>>
+>>> to it as well. Thanks!
+>> I tested and queued this up:
 >>
->> If this works for you, can you resend patch 2 with that? Also add a:
+>> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.5&id=11ba820bf163e224bf5dd44e545a66a44a5b1d7a
 >>
->> Fixes: 8a4955ff1cca ("io_uring: sqthread should grab ctx->uring_lock for submissions")
+>> Please let me know if this works, it sits on top of the ->result patch you
+>> sent in.
 >>
->> to it as well. Thanks!
-> I tested and queued this up:
->
-> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.5&id=11ba820bf163e224bf5dd44e545a66a44a5b1d7a
->
-> Please let me know if this works, it sits on top of the ->result patch you
-> sent in.
->
-That works, thanks.
+> That works, thanks.
+> 
+> I'm however still seeing a use-after-free error in the request 
+> completion path in nvme_unmap_data().  It happens only when testing with 
+> large block sizes in fio, typically > 128k, e.g. bs=256k will always hit it.
+> 
+> This is the error:
+> 
+> DMA-API: nvme 0000:00:04.0: device driver tries to free DMA memory it 
+> has not allocated [device address=0x6b6b6b6b6b6b6b6b] [size=1802201963 
+> bytes]
+> 
+> and this warning occasionally:
+> 
+> WARN_ON_ONCE(blk_mq_rq_state(rq) != MQ_RQ_IDLE);
+> 
+> It seems like a request might be issued multiple times but I can't see 
+> anything in io_uring code that would account for it.
 
-I'm however still seeing a use-after-free error in the request 
-completion path in nvme_unmap_data().  It happens only when testing with 
-large block sizes in fio, typically > 128k, e.g. bs=256k will always hit it.
+Both of them indicate reuse, and I agree I don't think it's io_uring. It
+really feels like an issue with nvme when a poll queue is shared, but I
+haven't been able to pin point what it is yet.
 
-This is the error:
+The 128K is interesting, that would seem to indicate that it's related to
+splitting of the IO (which would create > 1 IO per submitted IO).
 
-DMA-API: nvme 0000:00:04.0: device driver tries to free DMA memory it 
-has not allocated [device address=0x6b6b6b6b6b6b6b6b] [size=1802201963 
-bytes]
-
-and this warning occasionally:
-
-WARN_ON_ONCE(blk_mq_rq_state(rq) != MQ_RQ_IDLE);
-
-It seems like a request might be issued multiple times but I can't see 
-anything in io_uring code that would account for it.
-
---bijan
-
-
+-- 
+Jens Axboe
 
