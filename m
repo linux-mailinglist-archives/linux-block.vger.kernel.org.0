@@ -2,39 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A75213F880
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 20:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0E6513F6D6
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 20:07:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgAPTS6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jan 2020 14:18:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39056 "EHLO mail.kernel.org"
+        id S2388198AbgAPTHe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jan 2020 14:07:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgAPQy2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:28 -0500
+        id S2388049AbgAPRBP (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5104A22525;
-        Thu, 16 Jan 2020 16:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C806520730;
+        Thu, 16 Jan 2020 17:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193667;
-        bh=wL/Vwkoh3kn1CKFREu9YqM3f6u8k3b3UToJfRagg7Ow=;
+        s=default; t=1579194075;
+        bh=VH6Ot6iZUhwLCZjJgw6dRkJxF8WjyXnJUUWjVLlB6WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVyJnyekGEmvVNnS/2lZlN86hDVox0RM4vq1cQbTKWi7xoj+4ro/hEF19req3tpXg
-         Gct4kZ799Cxh+u7p9Seox6UTp4+JYc0PBG6VgfgM44494PYZzKzNPBXikrSrEzXJSU
-         wxb+LzlBdYeMUES1YSD1W1gB2RgZ0mDDtDMO6HVU=
+        b=U1fG0Y0vF60f94ebjswDzcvAHvcknAN8jiF0vHmCB/Qz6y5w9WpZPi0tLE9GMcj6u
+         40ny+6XWbBIfXDzcZT+aDAi2tICToAltw6xgx/ZeNOzcIE9YDWXnZyw669V9nv77XK
+         N8Xdr+SNe7mlGfzvICElV1jo6wCzr+csG9uZOhyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Justin Tee <justin.tee@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 193/205] block: fix memleak of bio integrity data
-Date:   Thu, 16 Jan 2020 11:42:48 -0500
-Message-Id: <20200116164300.6705-193-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 182/671] block: don't use bio->bi_vcnt to figure out segment number
+Date:   Thu, 16 Jan 2020 11:51:31 -0500
+Message-Id: <20200116165940.10720-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,85 +43,48 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Justin Tee <justin.tee@broadcom.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit ece841abbed2da71fa10710c687c9ce9efb6bf69 ]
+[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
 
-7c20f11680a4 ("bio-integrity: stop abusing bi_end_io") moves
-bio_integrity_free from bio_uninit() to bio_integrity_verify_fn()
-and bio_endio(). This way looks wrong because bio may be freed
-without calling bio_endio(), for example, blk_rq_unprep_clone() is
-called from dm_mq_queue_rq() when the underlying queue of dm-mpath
-is busy.
+It is wrong to use bio->bi_vcnt to figure out how many segments
+there are in the bio even though CLONED flag isn't set on this bio,
+because this bio may be splitted or advanced.
 
-So memory leak of bio integrity data is caused by commit 7c20f11680a4.
+So always use bio_segments() in blk_recount_segments(), and it shouldn't
+cause any performance loss now because the physical segment number is figured
+out in blk_queue_split() and BIO_SEG_VALID is set meantime since
+bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
 
-Fixes this issue by re-adding bio_integrity_free() to bio_uninit().
-
-Fixes: 7c20f11680a4 ("bio-integrity: stop abusing bi_end_io")
+Reviewed-by: Omar Sandoval <osandov@fb.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by Justin Tee <justin.tee@broadcom.com>
-
-Add commit log, and simplify/fix the original patch wroten by Justin.
-
+Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 2 +-
- block/bio.c           | 3 +++
- block/blk.h           | 4 ++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ block/blk-merge.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index fb95dbb21dd8..bf62c25cde8f 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -87,7 +87,7 @@ EXPORT_SYMBOL(bio_integrity_alloc);
-  * Description: Used to free the integrity portion of a bio. Usually
-  * called from bio_free().
-  */
--static void bio_integrity_free(struct bio *bio)
-+void bio_integrity_free(struct bio *bio)
- {
- 	struct bio_integrity_payload *bip = bio_integrity(bio);
- 	struct bio_set *bs = bio->bi_pool;
-diff --git a/block/bio.c b/block/bio.c
-index c822ceb7c4de..006bcc52a77e 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -233,6 +233,9 @@ struct bio_vec *bvec_alloc(gfp_t gfp_mask, int nr, unsigned long *idx,
- void bio_uninit(struct bio *bio)
- {
- 	bio_disassociate_blkg(bio);
-+
-+	if (bio_integrity(bio))
-+		bio_integrity_free(bio);
- }
- EXPORT_SYMBOL(bio_uninit);
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 2776ee6c5c3d..7efa8c3e2b72 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -309,13 +309,7 @@ void blk_recalc_rq_segments(struct request *rq)
  
-diff --git a/block/blk.h b/block/blk.h
-index ffea1691470e..ee3d5664d962 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -122,6 +122,7 @@ static inline void blk_rq_bio_prep(struct request *rq, struct bio *bio,
- #ifdef CONFIG_BLK_DEV_INTEGRITY
- void blk_flush_integrity(void);
- bool __bio_integrity_endio(struct bio *);
-+void bio_integrity_free(struct bio *bio);
- static inline bool bio_integrity_endio(struct bio *bio)
+ void blk_recount_segments(struct request_queue *q, struct bio *bio)
  {
- 	if (bio_integrity(bio))
-@@ -167,6 +168,9 @@ static inline bool bio_integrity_endio(struct bio *bio)
- {
- 	return true;
- }
-+static inline void bio_integrity_free(struct bio *bio)
-+{
-+}
- #endif /* CONFIG_BLK_DEV_INTEGRITY */
+-	unsigned short seg_cnt;
+-
+-	/* estimate segment number by bi_vcnt for non-cloned bio */
+-	if (bio_flagged(bio, BIO_CLONED))
+-		seg_cnt = bio_segments(bio);
+-	else
+-		seg_cnt = bio->bi_vcnt;
++	unsigned short seg_cnt = bio_segments(bio);
  
- unsigned long blk_rq_timeout(unsigned long timeout);
+ 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
+ 			(seg_cnt < queue_max_segments(q)))
 -- 
 2.20.1
 
