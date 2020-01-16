@@ -2,129 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D94F313D9C3
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 13:18:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9885F13DA21
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 13:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgAPMSF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jan 2020 07:18:05 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2273 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgAPMSE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:18:04 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 650C1496F414022771CF;
-        Thu, 16 Jan 2020 12:18:01 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 16 Jan 2020 12:18:00 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 16 Jan
- 2020 12:18:00 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [Question] about shared tags for SCSI drivers
-To:     Ming Lei <ming.lei@redhat.com>, Yufen Yu <yuyufen@huawei.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>, <hare@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <bd959b9f-78dd-e0e7-0421-8d7e3cd2f41b@huawei.com>
- <20200116090347.GA7438@ming.t460p>
-Message-ID: <26ba5f43-e3f7-9b10-9b1b-af9b9742b2d4@huawei.com>
-Date:   Thu, 16 Jan 2020 12:17:59 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1726371AbgAPMgi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jan 2020 07:36:38 -0500
+Received: from relay.sw.ru ([185.231.240.75]:39058 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbgAPMgh (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:36:37 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1is4NM-0000yM-QR; Thu, 16 Jan 2020 15:35:52 +0300
+Subject: [PATCH block v2 0/3] block: Introduce REQ_NOZERO flag for
+ REQ_OP_WRITE_ZEROES operation
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, axboe@kernel.dk, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
+        darrick.wong@oracle.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
+Date:   Thu, 16 Jan 2020 15:35:51 +0300
+Message-ID: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-In-Reply-To: <20200116090347.GA7438@ming.t460p>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 16/01/2020 09:03, Ming Lei wrote:
+(was "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
+ to reflect extents allocation in block device internals")
 
-(fixed title)
+v2: Introduce new flag for REQ_OP_WRITE_ZEROES instead of
+    introduction a new operation as suggested by Martin K. Petersen.
+    Removed ext4-related patch to focus on block changes
+    for now.
 
-> On Thu, Jan 16, 2020 at 12:06:02PM +0800, Yufen Yu wrote:
->> Hi, all
->>
->> Shared tags is introduced to maintains a notion of fairness between
->> active users. This may be good for nvme with multiple namespace to
->> avoid starving some users. Right?
-> 
-> Actually nvme namespace is LUN of scsi world.
-> 
-> Shared tags isn't for maintaining fairness, it is just natural sw
-> implementation of scsi host's tags, since every scsi host shares
-> tags among all LUNs. If the SCSI host supports real MQ, the tags
-> is hw-queue wide, otherwise it is host wide.
-> 
->>
->> However, I don't understand why we introduce the shared tag for SCSI.
->> IMO, there are two concerns for scsi shared tag:
->>
->> 1) For now, 'shost->can_queue' is used as queue depth in block layer.
+Information about continuous extent placement may be useful
+for some block devices. Say, distributed network filesystems,
+which provide block device interface, may use this information
+for better blocks placement over the nodes in their cluster,
+and for better performance. Block devices, which map a file
+on another filesystem (loop), may request the same length extent
+on underlining filesystem for less fragmentation and for batching
+allocation requests. Also, hypervisors like QEMU may use this
+information for optimization of cluster allocations.
 
-Note that in scsi_alloc_sdev(), sdev default queue depth is set to 
-shost->cmd_per_lun. Slightly different for ATA devices - see 
-ata_scsi_dev_config().
+This patchset introduces REQ_NOZERO flag for REQ_OP_WRITE_ZEROES,
+which makes a block device to allocate blocks instead of actual
+blocks zeroing. This may be used for forwarding user's fallocate(0)
+requests into block device internals. E.g., in loop driver this
+will result in allocation extents in backing-file, so subsequent
+write won't fail by the reason of no available space. Distributed
+network filesystems will be able to assign specific servers for
+specific extents, so subsequent write will be more efficient.
 
-There is then also the scsi_host_template.change_queue_depth() callback 
-for SCSI hosts can use to set this.
+Patch [1/3] is preparation, patch [2/3] introduces REQ_NOZERO flag
+and implements all the logic, patch [3/3] adds loop as the first
+user of the flag.
 
->> And all target drivers share tags on one host. Then, the max tags for
->> each target can get:
->>
->> 	depth = max((bt->sb.depth + users - 1) / users, 4U);
+Note, that here is only block-related patches, example of usage
+for ext4 with a performance numbers may be seen in [1].
 
-The host HW is limited by the amount of simultaneous commands it can 
-issue, regardless of where these tags are managed.
+[1] https://lore.kernel.org/linux-ext4/157599697369.12112.10138136904533871162.stgit@localhost.localdomain/T/#me5bdd5cc313e14de615d81bea214f355ae975db0
 
-And you seem to be assuming in this equation that all users will own a 
-subset of host tags, which is not true.
+---
 
->>
->> But, each target driver may have their own capacity of tags and queue depth.
->> Does shared tag limit target device bandwidth?
-> 
-> No, if the 'target driver' means LUN, each LUN hasn't its independent
-> tags, maybe it has its own queue depth, which is often for maintaining
-> fairness among all active LUNs, not real queue depth.
-> 
-> You may see the patches[1] which try to bypass per-LUN queue depth for SSD.
-> 
-> [1] https://lore.kernel.org/linux-block/20191118103117.978-1-ming.lei@redhat.com/
-> 
->>
->> 2) When add new target or remove device, it may need to freeze other device
->> to update hctx->flags of BLK_MQ_F_TAG_SHARED. That may hurt performance.
-> 
-> Add/removing device isn't a frequent event, so it shouldn't be a real
-> issue, or you have seen effect on real use case?
-> 
->>
->> Recently we discuss abort hostwide shared tags for SCSI[0] and sharing tags
->> across hardware queues[1]. These discussion are abort shared tag. But, I
->> confuse whether shared tag across hardware queues can solve my concerns as mentioned.
-> 
-> Both [1] and [0] are for converting some single queue SCSI host into MQ
-> because these HBAs support multiple reply queue for completing request,
-> meantime they only have single tags(so they are SQ driver now). So far
-> not many such kind of hardwares(HPSA, hisi sas, megaraid_sas, ...).
-> 
-> 
-> Thanks,
-> Ming
-> 
+Kirill Tkhai (3):
+      block: Add @flags argument to bdev_write_zeroes_sectors()
+      block: Add support for REQ_NOZERO flag
+      loop: Add support for REQ_NOZERO
 
-thanks Ming
 
-> .
-> 
+ block/blk-core.c                    |    6 +++---
+ block/blk-lib.c                     |   17 ++++++++++-------
+ block/blk-merge.c                   |    9 ++++++---
+ block/blk-settings.c                |   17 +++++++++++++++++
+ drivers/block/loop.c                |   15 ++++++++++++---
+ drivers/md/dm-kcopyd.c              |    2 +-
+ drivers/target/target_core_iblock.c |    4 ++--
+ fs/block_dev.c                      |    4 ++++
+ include/linux/blk_types.h           |    5 ++++-
+ include/linux/blkdev.h              |   34 ++++++++++++++++++++++++++--------
+ 10 files changed, 85 insertions(+), 28 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
