@@ -2,92 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2CA413E137
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 17:48:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EA5613EC68
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jan 2020 18:56:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgAPQsc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jan 2020 11:48:32 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43367 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730232AbgAPQsa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:48:30 -0500
-Received: by mail-il1-f196.google.com with SMTP id v69so18756687ili.10
-        for <linux-block@vger.kernel.org>; Thu, 16 Jan 2020 08:48:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bFLululrHyNVTerjV5qHGSuYnmSk+QWZwMjtdQsoK/0=;
-        b=PbMEuBcJAwCk3nMl9/l/u/X8Erkh52bBa9x/blf0HuWLu6Jca1LktHJ1lftbuyHEUz
-         bBYfMofflBjMVTqc+JYEKd8hgz9TFkGmO7ny94+irja4ELai5SlgLffjZcEopWFK9Xj1
-         Z7spjwzPgWQOSvfWsYelLk5u6cruLt2eUb3LwNkunvLROcQ7ddIn/NEkcoe/HqfbE3LF
-         sH9SNIH+lwL4Em87tAvgXD4r/UplkR/rZXfIOJ3W1bteGFxoOdDRFBl5PtPTH0Qb69EW
-         B9Gp2Ca2eCm+TQW6il0nlbCgwh9oCqzQ1Me4pOiIoKYnP5UbAcof0tiu4JJKVp/MecCt
-         lNIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bFLululrHyNVTerjV5qHGSuYnmSk+QWZwMjtdQsoK/0=;
-        b=iiuxm7/Rd0Z5X7VUtDY5iCrmwgkVYSFL4/bMrKVnL45TXu1F0DaAOvAS2UHNPI45TB
-         hucctEqCKHgBdV1lc3682L8/3YT1E+NMmhyb7Y0TXX0RsalJ1EaC+MvwPcnPOntpLp19
-         nMOHqtCb9BrpH7cdaQpJ5gWpLm19fmrJldnt8DnCrMNtUE9sNKE3scKWdaL/S6hjj6KT
-         YFPJx9STzt4jWhNJaQC1/mGEYu+Gg5w6w8yoDGBA1u0TZHsU1CqXgRON6l68hIguKszV
-         lSXv7DcQq5BJsPWiUPpLK7mPavvpurVFzTdGNd49TC3BYum+ysCm7iXSmQatsl4z1p8J
-         Z/Bg==
-X-Gm-Message-State: APjAAAXcgwZ2/An8hokirTaYAt13trdB6msqClQIhygnEyfO0qbA8kW/
-        W3QNYQV7P4OX7n30BG/dGqSRD0URi3gKZCn49KLY8A==
-X-Google-Smtp-Source: APXvYqwsk6jeD0P2DEllAtVfuNPrwHKY6gD0RDqyTH2mR+m786/lNvecRXjSb2uDyeKol/hWpYHP2nTVq7rq5LZT+Q8=
-X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr4147307ilj.298.1579193310228;
- Thu, 16 Jan 2020 08:48:30 -0800 (PST)
+        id S1729138AbgAPR4c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jan 2020 12:56:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394016AbgAPRnw (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:52 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 171B524730;
+        Thu, 16 Jan 2020 17:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196632;
+        bh=EsOFQ6AR3Udi8fHehBcmn+Mp+kyo+XV+cNAgevfSMpo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P9MeyV8BIva7G8TguXK+h2HGW3XWtRk6i5yL12svV/jEAAL1hU/eq9tqZ48zVUxJr
+         Px8wqRqF+xnqe2LEVzkdxmfzbMnKJS5PV6xMb1XwkcUtso4a1Ne5z6N4rufYJRNOHS
+         2lkF8E+zViWbkQQx5MIe5zNY4FB0IDCeaSo0CyOU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 045/174] block: don't use bio->bi_vcnt to figure out segment number
+Date:   Thu, 16 Jan 2020 12:40:42 -0500
+Message-Id: <20200116174251.24326-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200116125915.14815-1-jinpuwang@gmail.com> <20200116125915.14815-7-jinpuwang@gmail.com>
- <20200116145300.GC12433@unreal> <CAMGffE=pym8iz4OVxx7s6i37AU+KPFN3AeVrCTOpLx+N8A9dEQ@mail.gmail.com>
- <20200116155301.GC10759@ziepe.ca>
-In-Reply-To: <20200116155301.GC10759@ziepe.ca>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Thu, 16 Jan 2020 17:48:19 +0100
-Message-ID: <CAMGffE=0VX2SwNFBd+EeR3Grh=bSGrkGFqbWkORYoocDbYUy6g@mail.gmail.com>
-Subject: Re: [PATCH v7 06/25] RDMA/rtrs: client: main functionality
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Leon Romanovsky <leon@kernel.org>, Jack Wang <jinpuwang@gmail.com>,
-        linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Roman Penyaev <rpenyaev@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 4:53 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Jan 16, 2020 at 04:43:41PM +0100, Jinpu Wang wrote:
-> > > > +             wake_up(&clt->permits_wait);
-> > > > +}
-> > > > +EXPORT_SYMBOL(rtrs_clt_put_permit);
-> > > > +
-> > > > +struct rtrs_permit *rtrs_permit_from_pdu(void *pdu)
-> > > > +{
-> > > > +     return pdu - sizeof(struct rtrs_permit);
-> > >
-> > > C standard doesn't allow pointer arithmetic on void*.
-> > gcc never complains,  searched aournd:
-> > https://stackoverflow.com/questions/3523145/pointer-arithmetic-for-void-pointer-in-c
-> >
-> > You're right, will fix.
->
-> The kernel extensively uses a gcc extension treating arithmatic on a
-> void * as the same as a u8, you can leave it for kernel code.
->
-> But is generally a big question why code is written like that, always
-> better to use a struct and container_of
->
-> Jason
-Thanks, in fact, it's just a function not used, will remove.
+From: Ming Lei <ming.lei@redhat.com>
+
+[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
+
+It is wrong to use bio->bi_vcnt to figure out how many segments
+there are in the bio even though CLONED flag isn't set on this bio,
+because this bio may be splitted or advanced.
+
+So always use bio_segments() in blk_recount_segments(), and it shouldn't
+cause any performance loss now because the physical segment number is figured
+out in blk_queue_split() and BIO_SEG_VALID is set meantime since
+bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
+
+Reviewed-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-merge.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 7225511cf0b4..b8f1eaeeaac2 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -296,13 +296,7 @@ void blk_recalc_rq_segments(struct request *rq)
+ 
+ void blk_recount_segments(struct request_queue *q, struct bio *bio)
+ {
+-	unsigned short seg_cnt;
+-
+-	/* estimate segment number by bi_vcnt for non-cloned bio */
+-	if (bio_flagged(bio, BIO_CLONED))
+-		seg_cnt = bio_segments(bio);
+-	else
+-		seg_cnt = bio->bi_vcnt;
++	unsigned short seg_cnt = bio_segments(bio);
+ 
+ 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
+ 			(seg_cnt < queue_max_segments(q)))
+-- 
+2.20.1
+
