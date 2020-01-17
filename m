@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E6114037F
-	for <lists+linux-block@lfdr.de>; Fri, 17 Jan 2020 06:25:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6F61140387
+	for <lists+linux-block@lfdr.de>; Fri, 17 Jan 2020 06:26:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgAQFZd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Jan 2020 00:25:33 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55989 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729327AbgAQFZb (ORCPT
+        id S1729399AbgAQFZg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Jan 2020 00:25:36 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36412 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729365AbgAQFZf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:25:31 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d5so2629139pjz.5;
-        Thu, 16 Jan 2020 21:25:31 -0800 (PST)
+        Fri, 17 Jan 2020 00:25:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so9385626plm.3;
+        Thu, 16 Jan 2020 21:25:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=nxaLy9F6yE2CecepgHfL+z5cQMSlQrayHjxpSI6bCwI=;
-        b=hvYxXIn0tdSfCKR32UMVyUwVIAzSQtbnsUQpvvqwhuWpsLLnDF+XXOmFTIV864g6BL
-         CSLX7lJeC/1KAEbUB6xTjFUNBlgkm3Q/v53Z+vcq8cyhwQtLZ+N2WUaaxcFqb0Xv6gU8
-         DEoLFk3D5LPK7yro5VgeB8+sVJOZco9K3A94a/qQmB3HIAsbQlqmeCjGpztncyogCwkc
-         V2ENT6lnBicFjrqzYrasrC6jHzBfmPk/PB/GVozchwVYzviD1s0wFF0sZzFyoF7hYiM6
-         71hyk8fCiaCNaLvxOLE0xFZ8Kh+wHpoIcitziS13112Cd71iUiNfZJ9apkD3nDZw5ukr
-         Z7bw==
+        bh=vshR8ZZS65iuxTZnSrp2TIMyJRg+REwdcMvoNFK8Uas=;
+        b=Ia2y461WWqsew/Nr0qQp/XeD57dkMTXASnn1DHFrRDSCoOUf9ZWqHP29B40IwljdiW
+         c7fwiMwpu0DuUBZ0j+20I2vqt70/3Ga8kpwaORFwFjwI8JdeO96uOKcAMotMG/SKzcmf
+         ZEp7gGEmQcB6a+iQ3i7udYPPME8CkGLAxt4hTHp0I6lTDgOoOBvSr8UOTpEFl3l63KpE
+         z962g7q80l6nH+/55zrcZpyAv05Qb/GkFbqXZna0FOSo+QPCDvrIJVk3vh0EU92d0GM2
+         U9lMFrKVLHNWuv7xpzsIakdqsTu+JVzk6vIJ4romGMlzK1TICpGQw+WsXoRn6ML0/guy
+         Lz4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=nxaLy9F6yE2CecepgHfL+z5cQMSlQrayHjxpSI6bCwI=;
-        b=Vz83whDeE6J4MjIbu3X9QshBndVInLJ/BWjHHwAeIbkjJS5y0NJd5u1mAq+z6UUsnC
-         IoVVYVlqpTHPqC25j2hVxVoS93q82uf3xVOaYjNoAg8B/T2wNSqkuoTpPN5kua8yJbYu
-         AWYMt9bd/nsclmg5mnX9uUYvVDIlmz4dLVKQj3i0aeQo/FHgDmR0ybLTtNGikaa7MfMo
-         1qRH501vkDH6dFNgxHX0W/xujIOQKxLodMQcoUbgw9gEzV0MwxlxVNHjuJY2v0NvGj/G
-         4EIeEjCPTjHM2jOV1XtgLc9HO59Pay0tSLct74PXC86+JPsCq+P1qNi40fM7K5z2gBNU
-         zplQ==
-X-Gm-Message-State: APjAAAUW0AT/gAX2GpRDG/n5U+ZmXICfBztNnzBtfgm7BYJOTFWOkLD7
-        fr0JVEpGlZLtQHS5idFmuO8=
-X-Google-Smtp-Source: APXvYqz05UCb1S5G9rNU+MhgC5WiZHFPMWCPRi3Z2lwqjuMLGHgq7B5AM7Qo8cir8gPMBgmTINFHDg==
-X-Received: by 2002:a17:902:be06:: with SMTP id r6mr23548273pls.99.1579238730834;
-        Thu, 16 Jan 2020 21:25:30 -0800 (PST)
+        bh=vshR8ZZS65iuxTZnSrp2TIMyJRg+REwdcMvoNFK8Uas=;
+        b=q1/rhe7/7Va+VS2PV/I6Z8HQfk0UIM0ikpIAuU5agQto7CgB7WMvJD+Etyojj/XsDA
+         1YReenJUStS01NXYIfDWKBkTceTLeoh9O65qAGwR2aFA9m5/sbHst5m207E/wZcrhcbA
+         k3iKUrxeS+6mHNpI/uboYKtTO+89923FCKmJtJAwf43+qvrfNZFpmQU1H6C77YiQl65m
+         TouPs+AOpel83/bQ1xwf4SUTN+QoHSZ2qrj7pS3aoX+RkYaDnlndOq8E69UZGWuq+qzu
+         8hLhglwXYAiLPWsCLaibOEwDOS4lYZGn+lp6FK94Rg+5vqUDmJG/kUuqVXdtIGVtLYhB
+         lRWw==
+X-Gm-Message-State: APjAAAX3YOw2O4I2QqzgkjacveEF7yDK2nnBKPd8XaqhzQVf0NY+5EUV
+        aLwsbxrlftCu/m2OzDmITAY=
+X-Google-Smtp-Source: APXvYqz+7uHPswUe5D1+F7j/RyQcwdr1sC1jzDwbyO/TfPqswW7E23SRHl7atkmaCnGuxMSHbqgtlA==
+X-Received: by 2002:a17:90a:d0c5:: with SMTP id y5mr3544709pjw.126.1579238734646;
+        Thu, 16 Jan 2020 21:25:34 -0800 (PST)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c26sm28844756pfj.101.2020.01.16.21.25.27
+        by smtp.gmail.com with ESMTPSA id c26sm28844756pfj.101.2020.01.16.21.25.31
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 16 Jan 2020 21:25:30 -0800 (PST)
+        Thu, 16 Jan 2020 21:25:34 -0800 (PST)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     axboe@kernel.dk, paolo.valente@linaro.org, adrian.hunter@intel.com,
         ulf.hansson@linaro.org
@@ -52,9 +52,9 @@ Cc:     zhang.lyra@gmail.com, orsonzhai@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, baolin.wang7@gmail.com,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-block@vger.kernel.org
-Subject: [RFC PATCH 5/8] mmc: host: sdhci: Factor out the command configuration
-Date:   Fri, 17 Jan 2020 13:24:24 +0800
-Message-Id: <47c4217fd274b77e2fb5c86812cce883c8ed9bd2.1579164456.git.baolin.wang7@gmail.com>
+Subject: [RFC PATCH 6/8] mmc: host: sdhci: Remove redundant sg_count member of struct sdhci_host
+Date:   Fri, 17 Jan 2020 13:24:25 +0800
+Message-Id: <07402baeaf54340483c8aa15c324939ba31e0473.1579164456.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1579164455.git.baolin.wang7@gmail.com>
 References: <cover.1579164455.git.baolin.wang7@gmail.com>
@@ -65,108 +65,85 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the SD command configuration into one separate function to simplify
-the sdhci_send_command(). Moreover this function can be used to support
-ADMA3 transfer mode in following patches.
+The mmc_data structure has a member to save the mapped sg count, so
+no need introduce a redundant sg_count of struct sdhci_host, remove it.
+This is also a preparation patch to support ADMA3 transfer mode.
 
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/mmc/host/sdhci.c |   65 +++++++++++++++++++++++++++-------------------
- 1 file changed, 38 insertions(+), 27 deletions(-)
+ drivers/mmc/host/sdhci.c |   12 +++++-------
+ drivers/mmc/host/sdhci.h |    2 --
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 907a35e..f517121 100644
+index f517121..645785d 100644
 --- a/drivers/mmc/host/sdhci.c
 +++ b/drivers/mmc/host/sdhci.c
-@@ -1350,9 +1350,43 @@ static void sdhci_finish_data(struct sdhci_host *host)
- 	}
+@@ -707,7 +707,7 @@ static void sdhci_adma_mark_end(void *desc)
  }
  
--void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
-+static int sdhci_get_command(struct sdhci_host *host, struct mmc_command *cmd)
+ static void sdhci_adma_table_pre(struct sdhci_host *host,
+-	struct mmc_data *data, int sg_count)
++	struct mmc_data *data)
  {
- 	int flags;
-+
-+	if ((cmd->flags & MMC_RSP_136) && (cmd->flags & MMC_RSP_BUSY)) {
-+		pr_err("%s: Unsupported response type!\n",
-+			mmc_hostname(host->mmc));
-+		cmd->error = -EINVAL;
-+		sdhci_finish_mrq(host, cmd->mrq);
-+		return -EINVAL;
-+	}
-+
-+	if (!(cmd->flags & MMC_RSP_PRESENT))
-+		flags = SDHCI_CMD_RESP_NONE;
-+	else if (cmd->flags & MMC_RSP_136)
-+		flags = SDHCI_CMD_RESP_LONG;
-+	else if (cmd->flags & MMC_RSP_BUSY)
-+		flags = SDHCI_CMD_RESP_SHORT_BUSY;
-+	else
-+		flags = SDHCI_CMD_RESP_SHORT;
-+
-+	if (cmd->flags & MMC_RSP_CRC)
-+		flags |= SDHCI_CMD_CRC;
-+	if (cmd->flags & MMC_RSP_OPCODE)
-+		flags |= SDHCI_CMD_INDEX;
-+
-+	/* CMD19 is special in that the Data Present Select should be set */
-+	if (cmd->data || cmd->opcode == MMC_SEND_TUNING_BLOCK ||
-+	    cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)
-+		flags |= SDHCI_CMD_DATA;
-+
-+	return SDHCI_MAKE_CMD(cmd->opcode, flags);
-+}
-+
-+void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
-+{
-+	int command;
- 	u32 mask;
- 	unsigned long timeout;
+ 	struct scatterlist *sg;
+ 	unsigned long flags;
+@@ -721,14 +721,12 @@ static void sdhci_adma_table_pre(struct sdhci_host *host,
+ 	 * We currently guess that it is LE.
+ 	 */
  
-@@ -1402,32 +1436,9 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
- 
- 	sdhci_set_transfer_mode(host, cmd);
- 
--	if ((cmd->flags & MMC_RSP_136) && (cmd->flags & MMC_RSP_BUSY)) {
--		pr_err("%s: Unsupported response type!\n",
--			mmc_hostname(host->mmc));
--		cmd->error = -EINVAL;
--		sdhci_finish_mrq(host, cmd->mrq);
-+	command = sdhci_get_command(host, cmd);
-+	if (command < 0)
- 		return;
--	}
+-	host->sg_count = sg_count;
 -
--	if (!(cmd->flags & MMC_RSP_PRESENT))
--		flags = SDHCI_CMD_RESP_NONE;
--	else if (cmd->flags & MMC_RSP_136)
--		flags = SDHCI_CMD_RESP_LONG;
--	else if (cmd->flags & MMC_RSP_BUSY)
--		flags = SDHCI_CMD_RESP_SHORT_BUSY;
--	else
--		flags = SDHCI_CMD_RESP_SHORT;
+ 	desc = host->adma_table;
+ 	align = host->align_buffer;
+ 
+ 	align_addr = host->align_addr;
+ 
+-	for_each_sg(data->sg, sg, host->sg_count, i) {
++	for_each_sg(data->sg, sg, data->sg_count, i) {
+ 		addr = sg_dma_address(sg);
+ 		len = sg_dma_len(sg);
+ 
+@@ -800,7 +798,7 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+ 		bool has_unaligned = false;
+ 
+ 		/* Do a quick scan of the SG list for any unaligned mappings */
+-		for_each_sg(data->sg, sg, host->sg_count, i)
++		for_each_sg(data->sg, sg, data->sg_count, i)
+ 			if (sg_dma_address(sg) & SDHCI_ADMA2_MASK) {
+ 				has_unaligned = true;
+ 				break;
+@@ -812,7 +810,7 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+ 
+ 			align = host->align_buffer;
+ 
+-			for_each_sg(data->sg, sg, host->sg_count, i) {
++			for_each_sg(data->sg, sg, data->sg_count, i) {
+ 				if (sg_dma_address(sg) & SDHCI_ADMA2_MASK) {
+ 					size = SDHCI_ADMA2_ALIGN -
+ 					       (sg_dma_address(sg) & SDHCI_ADMA2_MASK);
+@@ -1110,7 +1108,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+ 			WARN_ON(1);
+ 			host->flags &= ~SDHCI_REQ_USE_DMA;
+ 		} else if (host->flags & SDHCI_USE_ADMA) {
+-			sdhci_adma_table_pre(host, data, sg_cnt);
++			sdhci_adma_table_pre(host, data);
+ 			sdhci_set_adma_addr(host, host->adma_addr);
+ 		} else {
+ 			WARN_ON(sg_cnt != 1);
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index a5df807..7bbdd8a 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -585,8 +585,6 @@ struct sdhci_host {
+ 	struct sg_mapping_iter sg_miter;	/* SG state for PIO */
+ 	unsigned int blocks;	/* remaining PIO blocks */
+ 
+-	int sg_count;		/* Mapped sg entries */
 -
--	if (cmd->flags & MMC_RSP_CRC)
--		flags |= SDHCI_CMD_CRC;
--	if (cmd->flags & MMC_RSP_OPCODE)
--		flags |= SDHCI_CMD_INDEX;
--
--	/* CMD19 is special in that the Data Present Select should be set */
--	if (cmd->data || cmd->opcode == MMC_SEND_TUNING_BLOCK ||
--	    cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)
--		flags |= SDHCI_CMD_DATA;
- 
- 	timeout = jiffies;
- 	if (host->data_timeout)
-@@ -1438,7 +1449,7 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
- 		timeout += 10 * HZ;
- 	sdhci_mod_timer(host, cmd->mrq, timeout);
- 
--	sdhci_writew(host, SDHCI_MAKE_CMD(cmd->opcode, flags), SDHCI_COMMAND);
-+	sdhci_writew(host, command, SDHCI_COMMAND);
- }
- EXPORT_SYMBOL_GPL(sdhci_send_command);
- 
+ 	void *adma_table;	/* ADMA descriptor table */
+ 	void *align_buffer;	/* Bounce buffer */
+ 	void *integr_table;	/* ADMA3 intergrate descriptor table */
 -- 
 1.7.9.5
 
