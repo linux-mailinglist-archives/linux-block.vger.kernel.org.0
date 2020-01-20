@@ -2,147 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6402143172
-	for <lists+linux-block@lfdr.de>; Mon, 20 Jan 2020 19:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75DCC143246
+	for <lists+linux-block@lfdr.de>; Mon, 20 Jan 2020 20:32:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgATS2P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Jan 2020 13:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATS2P (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:28:15 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA2422525;
-        Mon, 20 Jan 2020 18:28:13 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 13:28:12 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] block: introduce block_rq_error tracepoint
-Message-ID: <20200120132812.384274d3@gandalf.local.home>
-In-Reply-To: <20200110221500.19678-1-xiyou.wangcong@gmail.com>
-References: <20200110221500.19678-1-xiyou.wangcong@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727829AbgATTcB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Jan 2020 14:32:01 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46693 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgATTcA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:32:00 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m8so543595edi.13
+        for <linux-block@vger.kernel.org>; Mon, 20 Jan 2020 11:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=kLfnsSTIjE2YEe6HI6GtqXd6cMnhTRLMcstoRngEtLrpsW8Des52P9cJGak3H8TgGi
+         7pI7x0ReUsZVA5020Qw65cEVulbgAqf7PV7Yj5z98jIQHYXuhdjNseji1wTJmoRk9owd
+         jH0nw85bxKb6JNDbbMZz77rTtrhB/lrp1T9+1Yzp1e0fAmiYnPF2y/wqE3N2vxlEpqDg
+         Q62+v45VGQo8fprIjkXGYdl8n0+0lt4RTeTWLmEirmHeh05e1zsbOQ1RyEmjVmqN0eJc
+         PRg9w7tG3wGqyiL8Rgrtjody799fKx6nbHvtMQHhCmcCncWFfzoetJS1edNfQP320vCH
+         Vilg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=YJ0pirojWqiu4Pf8xnxKJ+Lwt0BAfpr9DpLtwB0o/8B7LUCxWez+nhpFIbi4zb5Sxx
+         t3MgiVBwrBcZpilQ8NjetXHDzk1UdYEJg9HRUXK2VKN9CdK3Qgy9jpC4K1MGsdy9MW3t
+         2ne1/4gP9ANycREWIkz0VZ5Ll2Fkm9B+XxgT2k8PMuTsuqSL+i8sJhVBfz3m+oHoS1u/
+         1g7OeyVjJG+9RfLEKKgCyoQRyPp+nF4kB0JtcPiJi1iRlWCI+ol+S5uTQmHwlTW4DFhA
+         sSYtjlpe5qe0Xyvv8+M84lgpMbRefVkUYwbHJpYaQELJmUpV7T+2hFDBIxt5Rr75EbQL
+         MyKQ==
+X-Gm-Message-State: APjAAAX++ME5fRec0GbuFcWmUQhMNTBygzqlVM9Vf8qaMoMbFV7mlo9n
+        8UNx5bvMP2MaEVokfeJiIR35JzZFkDzcJFT+OZc=
+X-Google-Smtp-Source: APXvYqwPh6D8ihOXjaVWGs/0GLulEekGPU0xOOyxhr7PagnLX+E8xWeQy/UQ09ZNp2jZFCCt0xVGiodDu+D5No4niKg=
+X-Received: by 2002:a05:6402:505:: with SMTP id m5mr609398edv.15.1579548719077;
+ Mon, 20 Jan 2020 11:31:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:31:57
+ -0800 (PST)
+Reply-To: mcclainejohn.13@gmail.com
+From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
+Date:   Mon, 20 Jan 2020 20:31:57 +0100
+Message-ID: <CAOE+jAB9Cv76tHqc-hO92yWjVshCsALoX=zT1ruNmX+0-Bjyxw@mail.gmail.com>
+Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
+ valued the sum of $12.8Million United States Dollars
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, 10 Jan 2020 14:15:00 -0800
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
+Attn: Dear Beneficiary,
 
-> Currently, rasdaemon uses the existing tracepoint block_rq_complete
-> and filters out non-error cases in order to capture block disk errors.
-> 
-> But there are a few problems with this approach:
-> 
-> 1. Even kernel trace filter could do the filtering work, there is
->    still some overhead after we enable this tracepoint.
-> 
-> 2. The filter is merely based on errno, which does not align with kernel
->    logic to check the errors for print_req_error().
-> 
-> 3. block_rq_complete only provides dev major and minor to identify
->    the block device, it is not convenient to use in user-space.
-> 
-> So introduce a new tracepoint block_rq_error just for the error case
-> and provides the device name for convenience too. With this patch,
-> rasdaemon could switch to block_rq_error.
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> ---
->  block/blk-core.c             |  4 +++-
->  include/trace/events/block.h | 43 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 089e890ab208..0c7ad70d06be 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
->  #endif
->  
->  	if (unlikely(error && !blk_rq_is_passthrough(req) &&
-> -		     !(req->rq_flags & RQF_QUIET)))
-> +		     !(req->rq_flags & RQF_QUIET))) {
-> +		trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
->  		print_req_error(req, error, __func__);
-> +	}
->  
->  	blk_account_io_completion(req, nr_bytes);
->  
-> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-> index 81b43f5bdf23..a0f63f4d50c4 100644
-> --- a/include/trace/events/block.h
-> +++ b/include/trace/events/block.h
-> @@ -145,6 +145,49 @@ TRACE_EVENT(block_rq_complete,
->  		  __entry->nr_sector, __entry->error)
->  );
->  
-> +/**
-> + * block_rq_error - block IO operation error reported by device driver
-> + * @rq: block operations request
-> + * @error: status code
-> + * @nr_bytes: number of completed bytes
-> + *
-> + * The block_rq_error tracepoint event indicates that some portion
-> + * of operation request has failed as reported by the device driver.
-> + */
-> +TRACE_EVENT(block_rq_error,
-> +
-> +	TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
-> +
-> +	TP_ARGS(rq, error, nr_bytes),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(  dev_t,	dev			)
-> +		__field(  char *,	name			)
+I wish to inform you that the diplomatic agent conveying your ATM CARD
+valued the sum of $12.8Million United States Dollars has misplaced
+your address and he is currently stranded at (George Bush
+International Airport) Houston Texas USA now
+We required you to reconfirm the following information's below to him
+so that he can deliver your Payment CARD to you today or tomorrow
+morning as information provided with open communications via email and
+telephone for security reasons.
+HERE IS THE DETAILS  HE NEED FROM YOU URGENT
+YOUR FULL NAME:========
+ADDRESS:========
+MOBILE NO:========
+NAME OF YOUR NEAREST AIRPORT:========
+A COPY OF YOUR IDENTIFICATION :========
 
-Please make this a string() field and not a pointer to name.
+Note; do contact the diplomatic agent immediately through the
+information's listed below
+Contact Person: Diplomatic Agent, Mr. Mcclaine John
+EMAIL: mcclainejohn.13@gmail.com
+Tel:(223) 777-7518
 
-> +		__field(  sector_t,	sector			)
-> +		__field(  unsigned int,	nr_sector		)
-> +		__field(  int,		error			)
-> +		__array(  char,		rwbs,	RWBS_LEN	)
-> +		__dynamic_array( char,	cmd,	1		)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev	   = rq->rq_disk ? disk_devt(rq->rq_disk) : 0;
-> +		__entry->name	   = rq->rq_disk ? rq->rq_disk->disk_name : "?";
-> +		__entry->sector    = blk_rq_pos(rq);
-> +		__entry->nr_sector = nr_bytes >> 9;
-> +		__entry->error     = error;
-> +
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
-> +		__get_str(cmd)[0] = '\0';
-> +	),
-> +
-> +	TP_printk("%d,%d %s %s (%s) %llu + %u [%d]",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->name, __entry->rwbs, __get_str(cmd),
+Contact the diplomatic agent immediately
+because he is waiting to hear from you today with the needed information's.
 
-The ring buffer will hold a pointer to a location that may no longer
-exist, and cause a fault when read. Also, this makes the user space
-utilities trace-cmd and perf useless to know what the name is, as they
-read the raw ring buffer data directly.
+NOTE: The Diplomatic agent does not know that the content of the
+consignment box is $12.800,000,00 Million United States Dollars and on
+no circumstances should you let him know the content. The consignment
+was moved from here as family treasures, so never allow him to open
+the box. Please I have paid delivery fees for you but the only money
+you must send to Mcclaine John is your ATM CARD delivery fee $25.00
+only. text Him as you contact Him Immediately
 
--- Steve
-
-
-> +		  (unsigned long long)__entry->sector,
-> +		  __entry->nr_sector, __entry->error)
-> +);
-> +
->  DECLARE_EVENT_CLASS(block_rq,
->  
->  	TP_PROTO(struct request_queue *q, struct request *rq),
-
+Thanks,
+with Regards.
+Prof, William Roberts
+Director DHL COURIER SERVICES-Benin
