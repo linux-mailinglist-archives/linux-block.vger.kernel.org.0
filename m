@@ -2,80 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F5F41439C5
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jan 2020 10:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEBB8143ABC
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jan 2020 11:20:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgAUJra (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jan 2020 04:47:30 -0500
-Received: from relay.sw.ru ([185.231.240.75]:55060 "EHLO relay.sw.ru"
+        id S1729624AbgAUKTj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jan 2020 05:19:39 -0500
+Received: from relay.sw.ru ([185.231.240.75]:56168 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgAUJra (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:47:30 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        id S1729259AbgAUKTR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 21 Jan 2020 05:19:17 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.92.3)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1itq7p-0005tQ-B0; Tue, 21 Jan 2020 12:47:09 +0300
-Subject: Re: [PATCH block v2 2/3] block: Add support for REQ_NOZERO flag
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
+        id 1itqcJ-00068A-Oo; Tue, 21 Jan 2020 13:18:40 +0300
+Subject: [PATCH v3 0/7] block: Introduce REQ_ALLOCATE flag for
+ REQ_OP_WRITE_ZEROES
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
         Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
         ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
         minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
         andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
         ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
- <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
- <yq14kwpibf6.fsf@oracle.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <3791a7fa-ea0c-d8ea-4b41-c968454b3787@virtuozzo.com>
-Date:   Tue, 21 Jan 2020 12:47:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
+Date:   Tue, 21 Jan 2020 13:18:39 +0300
+Message-ID: <157960153921.97730.9973412459876396302.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-In-Reply-To: <yq14kwpibf6.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 21.01.2020 09:14, Martin K. Petersen wrote:
-> 
-> Kirill,
-> 
->> +	if (flags & BLKDEV_ZERO_NOUNMAP)
->> +		req_flags |= REQ_NOUNMAP;
->> +	if (flags & BLKDEV_ZERO_ALLOCATE)
->> +		req_flags |= REQ_NOZERO|REQ_NOUNMAP;
-> 
-> I find there is some dissonance between using BLKDEV_ZERO_ALLOCATE to
-> describe this operation in one case and REQ_NOZERO in the other.
-> 
-> I understand why not zeroing is important in your case. However, I think
-> the allocation aspect is semantically more important. Also, in the case
-> of SCSI, the allocated blocks will typically appear zeroed. So from that
-> perspective REQ_NOZERO doesn't really make sense. I would really prefer
-> to use REQ_ALLOCATE to describe this operation. I agree that "do not
-> write every block" is important too. I just don't have a good suggestion
-> for how to express that as an additional qualifier to REQ_ALLOCATE_?.
+(was "[PATCH block v2 0/3] block: Introduce REQ_NOZERO flag
+      for REQ_OP_WRITE_ZEROES operation";
+ was "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
+      to reflect extents allocation in block device internals")
 
-No problem, I'll rename the modifier.
+v3: Rename REQ_NOZERO to REQ_ALLOCATE.
+    Split helpers to separate patches.
+    Add a patch, disabling max_allocate_sectors inheritance for dm.
 
-> Also, adding to the confusion: In the context of SCSI, ANCHOR requires
-> UNMAP. So my head hurts a bit when I read REQ_NOZERO|REQ_NOUNMAP and
-> have to translate that into ANCHOR|UNMAP.
-> 
-> Longer term, I think we should consider introducing REQ_OP_SINGLE_RANGE
-> or something like that as an umbrella operation that can be used to
-> describe zeroing, allocating, and other things that operate on a single
-> LBA range with no payload. Thus removing both the writiness and the
-> zeroness from the existing REQ_OP_WRITE_ZEROES conduit.
-> 
-> Naming issues aside, your patch looks fine. I'll try to rebase my SCSI
-> patches on top of your series to see how things fit.
+v2: Introduce new flag for REQ_OP_WRITE_ZEROES instead of
+    introduction a new operation as suggested by Martin K. Petersen.
+    Removed ext4-related patch to focus on block changes
+    for now.
 
-Ok, thanks.
+Information about continuous extent placement may be useful
+for some block devices. Say, distributed network filesystems,
+which provide block device interface, may use this information
+for better blocks placement over the nodes in their cluster,
+and for better performance. Block devices, which map a file
+on another filesystem (loop), may request the same length extent
+on underlining filesystem for less fragmentation and for batching
+allocation requests. Also, hypervisors like QEMU may use this
+information for optimization of cluster allocations.
+
+This patchset introduces REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES,
+which makes a block device to allocate blocks instead of actual
+blocks zeroing. This may be used for forwarding user's fallocate(0)
+requests into block device internals. E.g., in loop driver this
+will result in allocation extents in backing-file, so subsequent
+write won't fail by the reason of no available space. Distributed
+network filesystems will be able to assign specific servers for
+specific extents, so subsequent write will be more efficient.
+
+Patches [1-3/7] are preparation on helper functions, patch [4/7]
+introduces REQ_ALLOCATE flag and implements all the logic,
+patch [5/7] adds one more helper, patch [6/7] disables REQ_ALLOCATE
+for dm, which inherits limits from underlining block devices,
+patch [7/7] adds loop as the first user of the flag.
+
+Note, that here is only block-related patches, example of usage
+for ext4 with a performance numbers may be seen in [1].
+
+[1] https://lore.kernel.org/linux-ext4/157599697369.12112.10138136904533871162.stgit@localhost.localdomain/T/#me5bdd5cc313e14de615d81bea214f355ae975db0
+
+---
+
+Kirill Tkhai (7):
+      block: Add @flags argument to bdev_write_zeroes_sectors()
+      block: Pass op_flags into blk_queue_get_max_sectors()
+      block: Introduce blk_queue_get_max_write_zeroes_sectors()
+      block: Add support for REQ_ALLOCATE flag
+      block: Add blk_queue_max_allocate_sectors()
+      dm: Directly disable max_allocate_sectors for now
+      loop: Add support for REQ_ALLOCATE
+
+
+ block/blk-core.c                    |    6 +++---
+ block/blk-lib.c                     |   17 ++++++++++-------
+ block/blk-merge.c                   |    9 ++++++---
+ block/blk-settings.c                |   17 +++++++++++++++++
+ drivers/block/loop.c                |   15 ++++++++++++---
+ drivers/md/dm-kcopyd.c              |    2 +-
+ drivers/md/dm-table.c               |    2 ++
+ drivers/md/md.h                     |    1 +
+ drivers/target/target_core_iblock.c |    4 ++--
+ fs/block_dev.c                      |    4 ++++
+ include/linux/blk_types.h           |    5 ++++-
+ include/linux/blkdev.h              |   34 ++++++++++++++++++++++++++--------
+ 12 files changed, 88 insertions(+), 28 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+
