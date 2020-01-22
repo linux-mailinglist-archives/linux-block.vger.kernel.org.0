@@ -2,100 +2,162 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5EE914533A
-	for <lists+linux-block@lfdr.de>; Wed, 22 Jan 2020 11:58:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A93101453AB
+	for <lists+linux-block@lfdr.de>; Wed, 22 Jan 2020 12:22:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgAVK6c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Jan 2020 05:58:32 -0500
-Received: from relay.sw.ru ([185.231.240.75]:49996 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbgAVK6b (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:58:31 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1iuDiL-0002gz-Dg; Wed, 22 Jan 2020 13:58:25 +0300
-Subject: [PATCH v5 6/6] loop: Add support for REQ_ALLOCATE
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
-Date:   Wed, 22 Jan 2020 13:58:25 +0300
-Message-ID: <157969070494.174869.1733513737078026259.stgit@localhost.localdomain>
-In-Reply-To: <157968992539.174869.7490844754165043549.stgit@localhost.localdomain>
-References: <157968992539.174869.7490844754165043549.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        id S1726049AbgAVLWz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Jan 2020 06:22:55 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37942 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVLWz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:22:55 -0500
+Received: by mail-il1-f194.google.com with SMTP id f5so4880641ilq.5
+        for <linux-block@vger.kernel.org>; Wed, 22 Jan 2020 03:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uUH030Ucjx6wSEh1Tt9g3o7Wsr/XQCAziEWCTfW8SaU=;
+        b=hFzLiDN2F6hBrM+mkVatQqv7WzKq5KtkV6j6dpCDUcjBK9CXbj1bzvr9AqOHVTOPhP
+         QiF0lZMIGQ3CdgBg4Lm/p7D9WmZcnlTjqkBKs5BoxaWmpvZA8vQyIFTHyJY8372CfgX6
+         y6sV6/x9VhLkexaQo2QAk2/6zccDRKl5/5K92RBfaKqMZTKMLjoyX1s52OapBjP+qeJu
+         uLpUiIhcJYzgXNq+xk2nwmWW+UDTg1JdgxLRIAtuKh82umP0ZAKJzkil1zGgQmCKS4oa
+         88+z443ylZjUmfHe9A2/eoVsBcOorD2Zwnp7/hNJ93URcHXBBae31XpZDE+UwE6Ietn2
+         TXxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uUH030Ucjx6wSEh1Tt9g3o7Wsr/XQCAziEWCTfW8SaU=;
+        b=km9x74UwdKQl7cXkM2msL7XYsHw48zeYJQyo4mhVeaA4cqSSZCU0dVqb4i6p0bTzcA
+         zkqZPk+Y0Sf1g2FXlLhjjJJ08ZaEx/zyExHTVApFTnsS1f6f+652K+dv9EJksjz0khXT
+         2Czs35m2ODySQLL7bRzb682E5hglbkYYtatELtVNrlRUTwV7NhPW33O5TFfKJ7iSEycs
+         oQqp18+FUmiiMBgELJ5kvwMiN3Pl1aViQKgMTQhYAsEOiy0ElhrrPiTspZ0xIyI/hxEW
+         kY0X0yWh0cnggRYxr1TeACMqlbqRXqzeK++fqcc0AIZLWg3qCzNczlfBh1R/2u4mChOZ
+         MoRg==
+X-Gm-Message-State: APjAAAWVc/wEBdc6zgeSLbyz/6SJPHa/FDGdE+3LHkXcp75ZyBwCEzZ4
+        Sn8t8/qvhboItqedmH9pDKvUiVKApmjNZynkksrnAg==
+X-Google-Smtp-Source: APXvYqzTMw8qEqKroHt7vwE597QMda9Tc/gz8Br0vBdbrDEYp5bQ1g4btVjQp1LbkwgUVxCU41VQGL82druMFSll0KI=
+X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr7381160ilj.298.1579692174515;
+ Wed, 22 Jan 2020 03:22:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200116125915.14815-1-jinpuwang@gmail.com> <20200116125915.14815-18-jinpuwang@gmail.com>
+ <20200120134815.GH51881@unreal>
+In-Reply-To: <20200120134815.GH51881@unreal>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Wed, 22 Jan 2020 12:22:43 +0100
+Message-ID: <CAMGffEkt1v+OkWOZfFBitYpqYHxB2+RHSjZbbLBZFPSuRXPMXQ@mail.gmail.com>
+Subject: Re: [PATCH v7 17/25] block/rnbd: client: main functionality
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Roman Penyaev <rpenyaev@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Support for new modifier of REQ_OP_WRITE_ZEROES command.
-This results in allocation extents in backing file instead
-of actual blocks zeroing.
+> > +/**
+> > + * rnbd_get_cpu_qlist() - finds a list with HW queues to be rerun
+> > + * @sess:    Session to find a queue for
+> > + * @cpu:     Cpu to start the search from
+> > + *
+> > + * Description:
+> > + *     Each CPU has a list of HW queues, which needs to be rerun.  If a list
+> > + *     is not empty - it is marked with a bit.  This function finds first
+> > + *     set bit in a bitmap and returns corresponding CPU list.
+> > + */
+> > +static struct rnbd_cpu_qlist *
+> > +rnbd_get_cpu_qlist(struct rnbd_clt_session *sess, int cpu)
+> > +{
+> > +     int bit;
+> > +
+> > +     /* First half */
+> > +     bit = find_next_bit(sess->cpu_queues_bm, nr_cpu_ids, cpu);
+>
+> Is it protected by any lock?
+We hold requeue_lock when set/clear bit, and disable preemption via
+get_cpu_ptr when find_next_bit.
+even it fails to get latest bit, it just cause an rerun the queue.
+>
+> > +     if (bit < nr_cpu_ids) {
+> > +             return per_cpu_ptr(sess->cpu_queues, bit);
+> > +     } else if (cpu != 0) {
+> > +             /* Second half */
+> > +             bit = find_next_bit(sess->cpu_queues_bm, cpu, 0);
+> > +             if (bit < cpu)
+> > +                     return per_cpu_ptr(sess->cpu_queues, bit);
+> > +     }
+> > +
+> > +     return NULL;
+> > +}
+> > +
+> > +static inline int nxt_cpu(int cpu)
+> > +{
+> > +     return (cpu + 1) % nr_cpu_ids;
+> > +}
+> > +
+> > +/**
+> > + * rnbd_rerun_if_needed() - rerun next queue marked as stopped
+> > + * @sess:    Session to rerun a queue on
+> > + *
+> > + * Description:
+> > + *     Each CPU has it's own list of HW queues, which should be rerun.
+> > + *     Function finds such list with HW queues, takes a list lock, picks up
+> > + *     the first HW queue out of the list and requeues it.
+> > + *
+> > + * Return:
+> > + *     True if the queue was requeued, false otherwise.
+> > + *
+> > + * Context:
+> > + *     Does not matter.
+> > + */
+> > +static inline bool rnbd_rerun_if_needed(struct rnbd_clt_session *sess)
+>
+> No inline function in C files.
+First time saw such request, there are so many inline functions in C
+files across the tree
+grep inline drivers/infiniband/core/*.c
+drivers/infiniband/core/addr.c:static inline bool
+ib_nl_is_good_ip_resp(const struct nlmsghdr *nlh)
+drivers/infiniband/core/cma.c:static inline u8 cma_get_ip_ver(const
+struct cma_hdr *hdr)
+drivers/infiniband/core/cma.c:static inline void cma_set_ip_ver(struct
+cma_hdr *hdr, u8 ip_ver)
+drivers/infiniband/core/cma.c:static inline void release_mc(struct kref *kref)
+drivers/infiniband/core/cma.c:static inline struct sockaddr
+*cma_src_addr(struct rdma_id_private *id_priv)
+drivers/infiniband/core/cma.c:static inline struct sockaddr
+*cma_dst_addr(struct rdma_id_private *id_priv)
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- drivers/block/loop.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> > +{
+> > +     struct rnbd_queue *q = NULL;
+> > +     struct rnbd_cpu_qlist *cpu_q;
+> > +     unsigned long flags;
+> > +     int *cpup;
+> > +
+> > +     /*
+> > +      * To keep fairness and not to let other queues starve we always
+> > +      * try to wake up someone else in round-robin manner.  That of course
+> > +      * increases latency but queues always have a chance to be executed.
+> > +      */
+> > +     cpup = get_cpu_ptr(sess->cpu_rr);
+> > +     for (cpu_q = rnbd_get_cpu_qlist(sess, nxt_cpu(*cpup)); cpu_q;
+> > +          cpu_q = rnbd_get_cpu_qlist(sess, nxt_cpu(cpu_q->cpu))) {
+> > +             if (!spin_trylock_irqsave(&cpu_q->requeue_lock, flags))
+> > +                     continue;
+> > +             if (likely(test_bit(cpu_q->cpu, sess->cpu_queues_bm))) {
+>
+> Success oriented approach please.
+sorry, I don't quite get your point.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..bfe76d9adf09 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -581,6 +581,15 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	return 0;
- }
- 
-+static unsigned int write_zeroes_to_fallocate_mode(unsigned int flags)
-+{
-+	if (flags & REQ_ALLOCATE)
-+		return 0;
-+	if (flags & REQ_NOUNMAP)
-+		return FALLOC_FL_ZERO_RANGE;
-+	return FALLOC_FL_PUNCH_HOLE;
-+}
-+
- static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- {
- 	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
-@@ -604,9 +613,7 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 		 * write zeroes the range.  Otherwise, punch them out.
- 		 */
- 		return lo_fallocate(lo, rq, pos,
--			(rq->cmd_flags & REQ_NOUNMAP) ?
--				FALLOC_FL_ZERO_RANGE :
--				FALLOC_FL_PUNCH_HOLE);
-+			write_zeroes_to_fallocate_mode(rq->cmd_flags));
- 	case REQ_OP_DISCARD:
- 		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_WRITE:
-@@ -877,6 +884,7 @@ static void loop_config_discard(struct loop_device *lo)
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
-+		blk_queue_max_allocate_sectors(q, 0);
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- 		return;
- 	}
-@@ -886,6 +894,7 @@ static void loop_config_discard(struct loop_device *lo)
- 
- 	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
- 	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	blk_queue_max_allocate_sectors(q, UINT_MAX >> 9);
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
- }
- 
-
-
+Thanks Leon for review.
