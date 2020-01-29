@@ -2,101 +2,195 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DF6714D112
-	for <lists+linux-block@lfdr.de>; Wed, 29 Jan 2020 20:14:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F2B114D39B
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jan 2020 00:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgA2TOv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Jan 2020 14:14:51 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38330 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgA2TOv (ORCPT
+        id S1726528AbgA2X3Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Jan 2020 18:29:25 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:24315 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgA2X3Z (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:14:51 -0500
-Received: by mail-qt1-f196.google.com with SMTP id c24so383830qtp.5
-        for <linux-block@vger.kernel.org>; Wed, 29 Jan 2020 11:14:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
-        b=qDNg86QOF5KVlsbn4GgZrRW7GKmFpkTIQxI82I9XCBezHFaW8+0wbu/FBYr+7AGK77
-         4KHW6kzPk9W9TFaPhlJs1hTFXCtKAjPggt2rYcoxQcpuUQfz9TEcP66LeMHHqPqyxtcL
-         lSKy+vdQjukzabTccQOAOpzoeEDlKSfXgP1rn8hJtdAfAQPiE4dsok92G+lHchXgzoyw
-         T2ZGcW5xJUa3yAQNIREF9OM6DBV/9gqpZAriIKNF4biTPFRV6CcfM6yptRiEyTfl6W3X
-         zDiYhow1bprXpbzVn7m+XBZKG+qkJdrmbStVYOKQlL9GCZ/fhIG6VHof7YpT4YGiAwQh
-         TXgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
-        b=VUROwb0MABEj5AMaIpO4DjBTdFBCPkOAdhBhcIr2ddkIosDjyAsjb04aseTm7B96WC
-         uX65lHIoUMnVS97MHpNZIxTY4oUgFvfo+uShDkswljjl3USKtGC52fDdLyyLJWafXoQ3
-         uBpFIL0fglOC0Qa5kK3p53AvbHvmm6Pi79BEkX6CK9ftaq/GFgIbCob/xgJDFocPrQUL
-         aWBji/mOjyoRWOG6KwyZSrO6JaQIyQkS0nLmIu6CBZsCQhdL3ZbNglS+c8FZA8wDA9ux
-         HHkvPsPfe2JbSfDCZsvO7b35OwdMvFevBayLFgfNDOFfoF8Zcz3NAX37nr61qvGE9IJp
-         aiGg==
-X-Gm-Message-State: APjAAAWD8x2BcaY1PCXgu92R9yxGVprEmZlLRUN7tCCWWrpp6cyEXunb
-        yjSKpAnIBeByCri2G//dpnAUI/9GSqKgxBqpspM=
-X-Google-Smtp-Source: APXvYqxsEKzRV7m9+FwVVFoYHiuFsnOPwa7NwVWLNRRDceIsoN+TIlOG+ehBtCg2kRsRKH+vMGDIB29kfpsztSxRld8=
-X-Received: by 2002:ac8:544f:: with SMTP id d15mr762821qtq.53.1580325290125;
- Wed, 29 Jan 2020 11:14:50 -0800 (PST)
+        Wed, 29 Jan 2020 18:29:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580340564; x=1611876564;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=smzJ9aLrfZQAYLsAFApydMD2EtHWMA2/FV/r3qlGdVQ=;
+  b=H9IQZNQEfIPr4/RZ2nfS0VDQsnFFpnUEKKVxX2dC7g0/amTt8P3d00xc
+   F20TnE7XoTO8gWHonuxuX1sQ8kLrEHGTY2YO83zkdlrqlmlyilOOD04Iz
+   uON395db82m5joOBoA5jVihmpruol6pWvPugIuSM6molx3z+q90F8K1d/
+   4IjsGjVlimHMPHfY1SUxRSDiXqCIa8F8dJpB3klunV8EPkwA9ujd+cJ22
+   8Nro9l5wcGfaBjawY0uvOZtyuGrWhaZ/zaAp/pNUUXilR5goFD5qf+HrF
+   8EvfZ0sLtRl8silyEA7C3RUGEYjYBZSHxSUS6sPI3x+dqh8yERkLb0tBr
+   w==;
+IronPort-SDR: fzY+EEAYnXTRPqTtQndMlZXAR5RsP+lB7SNdo7POF/4P3FPaDYoFtIEuPCf4I0tbyRETf5so8a
+ jVQ5363qFBgq6pjH//ob67EwORpMMVrN1OXuuiIFWyuSh5Xv4YaV2FftqJmnjanNkd2QPz0osY
+ 59Np51ory+m63kKkRE739WWB9oZwnUubpbr7CPYJkTj5WZIfiqR0TuLKECLAfhJjWXpuOq/h59
+ lRJ95A0HMr1yx0HOObvCRFrTFiSTzRze/12OyuuhEhFIRskizULGUhvDIUZfHy+1eXmz5qfmO1
+ 9DQ=
+X-IronPort-AV: E=Sophos;i="5.70,379,1574092800"; 
+   d="scan'208";a="128691689"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jan 2020 07:29:23 +0800
+IronPort-SDR: y6Zh5eheB/TCh3q9SoBtqy68X3eyvMODXrKD9trIGn6Xk3vB4riBHizhmernqzWqHFFjculgL1
+ Ub7S83mCLoVn6ypkwtQGMu+Lc1GXZbYJ2CBHxaVjT6JR8YbFw89kVXZEStpy6i3iWIqayexJsV
+ LQkgzJfcsF+rKBTfMW0s1Pmq6MkrEFCca3vGbn4rDwx4OhC9prTDOK7dD8Yb3ZpDMLRwBpMpc/
+ v/pVp/A9R/D8iLKD7+F6YjnhR6adNjYrAJU/YbDTy56UnsTvs8nYmzaL/XpK4EBPq+sMtjlDNn
+ av8kdP/p4E0u8cTL+fgM3Zg1
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:22:36 -0800
+IronPort-SDR: liBZ+o5bt2p6wTYvaZcxXBghRE4XJlqf98IhZuF8dDoPxuEMVI0jeCl63SHUJySWZsOkPxT3XH
+ 7QjiaXBZd0nSazaK5yZ9JamH0N8zviNAzVkOQpQ8ZTMd6G9zaeTERnHZWQ7on8czrnn61gIIER
+ AZhvyK7TdsC5hugdqRWQ1HNpURnqs0zWNMCgcsOag4jAXkZtBmyf/PYPLLVu5x+9DWezSnHmqg
+ BD6qMpNZP6JelVSwJxP5nNy0Rc0H1/RWqq4K1zFCRzze9WDyUyCb5dwdHKRO5skdAYqV/i/UyU
+ 87Y=
+WDCIronportException: Internal
+Received: from iouring.labspan.wdc.com (HELO iouring.sc.wdc.com) ([10.6.138.107])
+  by uls-op-cesaip01.wdc.com with ESMTP; 29 Jan 2020 15:29:24 -0800
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH 0/5 blktest] nvme: add cntlid and model testcases
+Date:   Wed, 29 Jan 2020 15:29:16 -0800
+Message-Id: <20200129232921.11771-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Received: by 2002:a05:6214:1413:0:0:0:0 with HTTP; Wed, 29 Jan 2020 11:14:49
- -0800 (PST)
-Reply-To: RevWrightWatson@yandex.com
-From:   "Rev.Wright Watson" <mrali.abun@gmail.com>
-Date:   Wed, 29 Jan 2020 20:14:49 +0100
-Message-ID: <CAPWv7SwSnVS_9ROyVP1yK6GuFjqCTdnkGC9dS00unZfc=BTpuw@mail.gmail.com>
-Subject: Dear Beloved,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Beloved,
-
-I'm Reverend Wright Watson, I was born in USA, 1945, I was ordained
-into the Catholic Priesthood.
-
-Please take your time to read this message, although we have never met
-before, this is no spam, It's a real message sent to you. I know also
-that you will be amazed at the level of trust that I am willing to
-place in a person that I have never seen nor spoken with. If I can
-receive favor from someone I barely know, its not bad entrusting this
-project to unknown person as long as my spirit directed me to you.
-
-I have been a catholic priest for over 22 years. I spent about 10
-years serving at Africa, Burkina Faso to be precise, I spend most time
-in Ouagadougou Cathedral.
-Presently, I had a heart surgery on the 23-11-2018 and the Doctors
-have informed me that I cannot live longer; I had a serious bleeding
-after the operation.
-Before I left Ouagadougou to my country for the surgery, a priest
-friend of mine visited me from Netherlands with three companion, when
-they went back, one among his companion Transferred 10M$ in my
-personal account with Bank of Africa and advised that I use the money
-to help the poor, handicaps and less privileges because he saw the
-level hardship then.
-
-Because of my present health condition, I cannot live to proceed with
-the projects, therefore, I have decided to appoint you to reclaim the
-money which total sum of $10,970,000.00 (Ten million Nine Hundred and
-seventy Thousand US DOLLARS).
-
-I want you to use this sum to make the world a better place for the
-poor and less privileged, help the needy and also help your family
-members.
-
-I took this decision because I was raised in an Orphanage so I don't
-have relatives and presently, I'm still in the hospital, where I am
-undergoing treatment. That's why I have decided to contact you so that
-you can contact my account manager in Bank of Africa, reclaim the
-money and make good use of it.
-
-then you can contact me through private email
-addres(RevWrightWatson@yandex.com)
+This is a small patch-series which adds two new testcases for
+setting up controller IDs and model from configfs.
 
 Regards,
-Rev.Wright Watson
+Chaitanya
+
+
+Chaitanya Kulkarni (5):
+  nvme: allow target subsys set cntlid min/max
+  nvme: test target cntlid min cntlid max
+  nvme: allow target subsys set model
+  nvme: test target model attribute
+  nvme: make new testcases backward compatible
+
+ tests/nvme/033     | 61 ++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/033.out |  4 +++
+ tests/nvme/034     | 63 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/034.out |  3 +++
+ tests/nvme/rc      | 24 ++++++++++++++++++
+ 5 files changed, 155 insertions(+)
+ create mode 100755 tests/nvme/033
+ create mode 100644 tests/nvme/033.out
+ create mode 100755 tests/nvme/034
+ create mode 100644 tests/nvme/034.out
+
+Test Log :-
+
+Without cntlid_min/max and model patches :-
+
+nvme/002 (create many subsystems and test discovery)         [passed]
+    runtime  15.246s  ...  15.053s
+nvme/003 (test if we're sending keep-alives to a discovery controller) [passed]
+    runtime  10.057s  ...  10.063s
+./check: no group or test named nvme/0004
+nvme/005 (reset local loopback target)                       [not run]
+    nvme_core module does not have parameter multipath
+nvme/006 (create an NVMeOF target with a block device-backed ns) [passed]
+    runtime  0.057s  ...  0.065s
+nvme/007 (create an NVMeOF target with a file-backed ns)     [passed]
+    runtime  0.036s  ...  0.038s
+nvme/008 (create an NVMeOF host with a block device-backed ns) [passed]
+    runtime  1.233s  ...  1.240s
+nvme/009 (create an NVMeOF host with a file-backed ns)       [passed]
+    runtime  1.203s  ...  1.208s
+nvme/014 (flush a NVMeOF block device-backed ns)             [passed]
+    runtime  14.572s  ...  16.051s
+nvme/015 (unit test for NVMe flush for file backed ns)       [passed]
+    runtime  13.584s  ...  13.948s
+nvme/016 (create/delete many NVMeOF block device-backed ns and test discovery) [passed]
+    runtime  9.877s  ...  10.750s
+nvme/017 (create/delete many file-ns and test discovery)     [passed]
+    runtime  18.902s  ...  15.584s
+nvme/019 (test NVMe DSM Discard command on NVMeOF block-device ns) [passed]
+    runtime  1.217s  ...  1.237s
+nvme/020 (test NVMe DSM Discard command on NVMeOF file-backed ns) [passed]
+    runtime  1.204s  ...  1.193s
+nvme/021 (test NVMe list command on NVMeOF file-backed ns)   [passed]
+    runtime  1.204s  ...  1.195s
+nvme/022 (test NVMe reset command on NVMeOF file-backed ns)  [passed]
+    runtime    ...  1.334s
+nvme/023 (test NVMe smart-log command on NVMeOF block-device ns) [passed]
+    runtime  1.218s  ...  1.231s
+nvme/024 (test NVMe smart-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.207s  ...  1.196s
+nvme/025 (test NVMe effects-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.191s  ...  1.195s
+nvme/026 (test NVMe ns-descs command on NVMeOF file-backed ns) [passed]
+    runtime  1.192s  ...  1.196s
+nvme/027 (test NVMe ns-rescan command on NVMeOF file-backed ns) [passed]
+    runtime  1.211s  ...  1.191s
+nvme/028 (test NVMe list-subsys command on NVMeOF file-backed ns) [passed]
+    runtime  1.204s  ...  1.211s
+nvme/033 (Test NVMeOF target cntlid[min|max] attributes)     [not run]
+    attr_cntlid_[min|max] not found
+nvme/034 (Test NVMeOF target model attribute)                [not run]
+    attr_cntlid_model not found
+
+With cntlid_min/max and model patches :-
+
+nvme/002 (create many subsystems and test discovery)         [passed]
+    runtime  15.053s  ...  11.918s
+nvme/003 (test if we're sending keep-alives to a discovery controller) [passed]
+    runtime  10.063s  ...  10.058s
+./check: no group or test named nvme/0004
+nvme/005 (reset local loopback target)                       [not run]
+    nvme_core module does not have parameter multipath
+nvme/006 (create an NVMeOF target with a block device-backed ns) [passed]
+    runtime  0.065s  ...  0.065s
+nvme/007 (create an NVMeOF target with a file-backed ns)     [passed]
+    runtime  0.038s  ...  0.036s
+nvme/008 (create an NVMeOF host with a block device-backed ns) [passed]
+    runtime  1.240s  ...  1.239s
+nvme/009 (create an NVMeOF host with a file-backed ns)       [passed]
+    runtime  1.208s  ...  1.207s
+nvme/014 (flush a NVMeOF block device-backed ns)             [passed]
+    runtime  16.051s  ...  15.345s
+nvme/015 (unit test for NVMe flush for file backed ns)       [passed]
+    runtime  13.948s  ...  13.977s
+nvme/016 (create/delete many NVMeOF block device-backed ns and test discovery) [passed]
+    runtime  10.750s  ...  9.698s
+nvme/017 (create/delete many file-ns and test discovery)     [passed]
+    runtime  15.584s  ...  15.514s
+nvme/019 (test NVMe DSM Discard command on NVMeOF block-device ns) [passed]
+    runtime  1.237s  ...  1.232s
+nvme/020 (test NVMe DSM Discard command on NVMeOF file-backed ns) [passed]
+    runtime  1.193s  ...  1.192s
+nvme/021 (test NVMe list command on NVMeOF file-backed ns)   [passed]
+    runtime  1.195s  ...  1.195s
+nvme/022 (test NVMe reset command on NVMeOF file-backed ns)  [passed]
+    runtime  1.334s  ...  1.340s
+nvme/023 (test NVMe smart-log command on NVMeOF block-device ns) [passed]
+    runtime  1.231s  ...  1.218s
+nvme/024 (test NVMe smart-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.196s  ...  1.205s
+nvme/025 (test NVMe effects-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.195s  ...  1.191s
+nvme/026 (test NVMe ns-descs command on NVMeOF file-backed ns) [passed]
+    runtime  1.196s  ...  1.186s
+nvme/027 (test NVMe ns-rescan command on NVMeOF file-backed ns) [passed]
+    runtime  1.191s  ...  1.192s
+nvme/028 (test NVMe list-subsys command on NVMeOF file-backed ns) [passed]
+    runtime  1.211s  ...  1.187s
+nvme/033 (Test NVMeOF target cntlid[min|max] attributes)     [passed]
+    runtime  1.213s  ...  1.200s
+nvme/034 (Test NVMeOF target model attribute)                [passed]
+    runtime  1.223s  ...  1.204s
+
+
+-- 
+2.22.1
+
