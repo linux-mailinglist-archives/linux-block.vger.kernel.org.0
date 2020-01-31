@@ -2,83 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 256B514EA95
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 11:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2442114EAB4
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 11:38:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgAaKYS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Jan 2020 05:24:18 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2335 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728071AbgAaKYS (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:24:18 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 80F9BF5241C2970A8448;
-        Fri, 31 Jan 2020 10:24:15 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 31 Jan 2020 10:24:15 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
- 2020 10:24:14 +0000
-Subject: Re: [PATCH V5 0/6] blk-mq: improvement CPU hotplug
-To:     Ming Lei <tom.leiming@gmail.com>
-CC:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Hannes Reinecke" <hare@suse.com>, Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Keith Busch <keith.busch@intel.com>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <20200115114409.28895-1-ming.lei@redhat.com>
- <929dbfac-de46-a947-6a2c-f4d8d504c631@huawei.com>
- <6dbe8c9f-af4e-3157-b6e9-6bbf43efb1e1@huawei.com>
- <CACVXFVN8io2Pj1HZWLy=z1dbDrE3h9Q6B0DA4gdGOdK3+bRRPg@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b1f67efb-585d-e0c1-460f-52be0041b37a@huawei.com>
-Date:   Fri, 31 Jan 2020 10:24:13 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <CACVXFVN8io2Pj1HZWLy=z1dbDrE3h9Q6B0DA4gdGOdK3+bRRPg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        id S1728394AbgAaKiE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Jan 2020 05:38:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55846 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728372AbgAaKiE (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 31 Jan 2020 05:38:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9330DAFF4;
+        Fri, 31 Jan 2020 10:38:01 +0000 (UTC)
+From:   Hannes Reinecke <hare@suse.de>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Sage Weil <sage@redhat.com>, Daniel Disseldorp <ddiss@suse.com>,
+        Jens Axboe <axboe@kernel.dk>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 00/15] rbd: switch to blk-mq
+Date:   Fri, 31 Jan 2020 11:37:24 +0100
+Message-Id: <20200131103739.136098-1-hare@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
->> [  141.976109] Call trace:
->> [  141.978550]  __switch_to+0xbc/0x218
->> [  141.982029]  blk_mq_run_work_fn+0x1c/0x28
->> [  141.986027]  process_one_work+0x1e0/0x358
->> [  141.990025]  worker_thread+0x40/0x488
->> [  141.993678]  kthread+0x118/0x120
->> [  141.996897]  ret_from_fork+0x10/0x18
-> 
-> Hi John,
-> 
-> Thanks for your test!
-> 
+Hi all,
 
-Hi Ming,
+this patchset implements multiqueue support for rbd, which gives
+a nice performance benefit (I measured up to 25% on my grid).
+To achieve this several steps are required:
+1) drop the 'state_mutex' in rbd_img_advance.
+   To do so the state machines had to be reordered so ensure
+   no race windows are left when invoking asynchronous methods.
+2) Embed image request into the block request to save a memory
+   allocation in the hot path
+3) Enable one queue per CPU to enhance parallelism.
 
-> Could you test the following patchset and only the last one is changed?
-> 
-> https://github.com/ming1/linux/commits/my_for_5.6_block
+I also took the opportunity to clean up the state machines, by
+adding a 'done' step and ensuring that the step is always set
+correctly upon exit. This allows for better debugging as now
+the final states must always be set when destroying an object.
 
-For SCSI testing, I will ask my colleague Xiang Chen to test when he 
-returns to work. So I did not see this issue for my SCSI testing for 
-your original v5, but I was only using 1x as opposed to maybe 20x SAS disks.
+As usual, comments and reviews are welcome.
 
-BTW, did you test NVMe? For some reason I could not trigger a scenario 
-where we're draining the outstanding requests for a queue which is being 
-deactivated - I mean, the queues were always already quiesced.
+Hannes Reinecke (15):
+  rbd: lock object request list
+  rbd: use READ_ONCE() when checking the mapping size
+  rbd: reorder rbd_img_advance()
+  rbd: reorder switch statement in rbd_advance_read()
+  rbd: reorder switch statement in rbd_advance_write()
+  rbd: add 'done' state for rbd_obj_advance_copyup()
+  rbd: use callback for image request completion
+  rbd: add debugging statements for the state machine
+  rbd: count pending object requests in-line
+  rbd: kill 'work_result'
+  rbd: drop state_mutex in __rbd_img_handle_request()
+  rbd: kill img_request kref
+  rbd: schedule image_request after preparation
+  rbd: embed image request as blk_mq request payload
+  rbd: switch to blk-mq
 
-Thanks,
-John
+ drivers/block/rbd.c | 418 ++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 240 insertions(+), 178 deletions(-)
+
+-- 
+2.16.4
+
