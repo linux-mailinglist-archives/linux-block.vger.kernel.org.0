@@ -2,89 +2,245 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B12614EA03
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 10:25:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1270C14EA3D
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 10:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgAaJZE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Jan 2020 04:25:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52124 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgAaJZE (ORCPT
+        id S1728213AbgAaJuD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Jan 2020 04:50:03 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39984 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgAaJuC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:25:04 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t23so7095628wmi.1
-        for <linux-block@vger.kernel.org>; Fri, 31 Jan 2020 01:25:03 -0800 (PST)
+        Fri, 31 Jan 2020 04:50:02 -0500
+Received: by mail-io1-f68.google.com with SMTP id x1so7452376iop.7;
+        Fri, 31 Jan 2020 01:50:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DCb/xDvlwv6fnMWcXIG/HuzVabukmnqhy19nDjpW0Wc=;
-        b=qw7cjjs1E8pWma/72zrvOGI0LqLcmxYxDNX+xebO0ZXD6XnnEZrYR2icMTWMxOo11x
-         F+wRvfqULKxmJcGxieJbO086EJay6OGEsbHP6tHgABYafP/Teswf2cZwWrXYsa7SqmbI
-         3bb4SNv6etWoSXR/9ozFtALKoJGqTFLxUICBAguPNVkhjtXoXRCf+uvvKvyk6AHNgbkU
-         DaJzmtjCJbLCCnejvJ9bAecH55lijryvFRtmRABSNSaMqWMXNiitRQ2SsZd20oAw28M5
-         T4AFoEMW+8wabyt5BGv0AeHmdzruE70Hpd+8bQ2XK30FWlM68XNb17vgB/rWvtraOpGx
-         buiw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fmM/bFlNhYJ6pK3y4fj2TMdyoYPF2i614veuquv5rYA=;
+        b=oc3LLI/RWNL3QTbNfmJPQ8/JdesRbh5tlwy1mo/InsGarsP79OFh6kHrDEhTeqqQa4
+         N3ShmbiAbTkTVbCAM+iTUhuQz66KOXOeEteRrPmKYys9+60skMiuzKRbPp+T1CjZmx66
+         zUvBKpZUPhbZMu7mLavki7HuVMCICTNKnfPR7djNJRvrM5WORILhueNacUnoRfTOzq8x
+         GWRZ36eNV0EaWNxRVqIRSt6TsOLrbIxLSH9Zr7ZBFEZStbsG92wtWmKdTMHG1Z/hR07M
+         fmhMjRoE7WFkrWQXFL5i5111EbTotrg3+j6rtvFSjaz+vqjtg/ZHr1Q/sCg2WfeW5Etz
+         nfEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DCb/xDvlwv6fnMWcXIG/HuzVabukmnqhy19nDjpW0Wc=;
-        b=GBFobLnEF+O/ygdVJvqXCk72SwQZyhXq0apEauWhRqPZNxH4iOmpanKxsGOwVod2u0
-         reFA+mkMwMxQB2BQMRSrQY/OvbcFkusFNS9dxEBMy8K+d6XBYr2XOHYBgAyCOjOKx43s
-         xBOk7cflLUKa/u5OtF0FI+LoyS1XXNbhZb2KLDDYekUWfE6cmsVNmJWFSkrUL24goLpG
-         grPngodZvnShSQRe21OYoUu7kT9AfDY+Sw8rVqOn4P+eGxYspDFw/geowNGuYDYvVzv9
-         yWLClhXx0QuG7N9AckJJCwdi1d6Naw8bFirVLeKGYSaY/Fq4oKBVaJLgTlGOenkzKigd
-         Ni3g==
-X-Gm-Message-State: APjAAAVEOeGJpkbS4lLZNE+HgayaPH2CZ5J+edx404f+pzury7Pcieh9
-        cYQAQmofvtLYOtnZ9bnQ5FY/9g==
-X-Google-Smtp-Source: APXvYqwccI1zx5QiGLNXp4CTKPCYw4Fm19ZA2sJEKNWeNsHlMN4OdFKxyBQLewXej8EjpkXXtknjmA==
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr11728395wmk.68.1580462703028;
-        Fri, 31 Jan 2020 01:25:03 -0800 (PST)
-Received: from localhost.localdomain (88-147-73-186.dyn.eolo.it. [88.147.73.186])
-        by smtp.gmail.com with ESMTPSA id 16sm10144364wmi.0.2020.01.31.01.25.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jan 2020 01:25:02 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        patdung100@gmail.com, cevich@redhat.com,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX 6/6] block, bfq: clarify the goal of bfq_split_bfqq()
-Date:   Fri, 31 Jan 2020 10:24:09 +0100
-Message-Id: <20200131092409.10867-7-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200131092409.10867-1-paolo.valente@linaro.org>
-References: <20200131092409.10867-1-paolo.valente@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fmM/bFlNhYJ6pK3y4fj2TMdyoYPF2i614veuquv5rYA=;
+        b=ZXN0Tcvsu6V0N4ky+qzWhIpHnF68nzzR3mS4XYB/WQBWrAEG7BiiyOfP9XlR26SBYP
+         ScAa6BF09pVsYS5jh6lxzmrw9cYNTGtO6F7hHZMBwXj6tk3Ubv8ZbAXlZKgP3WZGW+nk
+         Zbjzr6rVlK4A1uI1GaQvEIkqeZfPu6Y3Pv+7PK4po/SZdprb56LD+46P+CQx1BoYHom+
+         fvDQGaJ/+AdlkOjG8B+KwpHi6NMXtFXoFpqHpkPw2gIrcRcid3XQvje8lNNbyH6QwjF7
+         19mYzQXhXYHeXf7gyyeIgArTpw3D3fzGfkaFPiLS1JymmhrP8wjSCg7Dl7InceIKqLar
+         fJBQ==
+X-Gm-Message-State: APjAAAUwQNbZRJxptG1ipALf4IBdwK4hHb5R9t3moDdgFtnhv/VxGM46
+        O1XdZrZX7OrLsxfvb5pwKwTv+4bJWDVgtkC46Nc=
+X-Google-Smtp-Source: APXvYqx5mtx3j9hBpuAXIek6JBrbsplBDT4bCtGM+p18owB6Eot0XI+DijaiKL2UodCt44WmEG6jVqGKNwh2RAEh1nI=
+X-Received: by 2002:a02:ce5c:: with SMTP id y28mr7739371jar.96.1580464201898;
+ Fri, 31 Jan 2020 01:50:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200130114258.8482-1-hare@suse.de> <2fc165f5ad9ea0ec8a0878eabe800ca0af3e10b8.camel@redhat.com>
+ <b786e9dd-02c1-e117-db92-aa3f50804bc7@suse.de>
+In-Reply-To: <b786e9dd-02c1-e117-db92-aa3f50804bc7@suse.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 31 Jan 2020 10:50:12 +0100
+Message-ID: <CAOi1vP8U=vpFiKmbeheMKQiy6y_XfGBgCvLZF_OQbhz78x2iTg@mail.gmail.com>
+Subject: Re: [PATCH] rbd: lock object request list
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Laurence Oberman <loberman@redhat.com>,
+        Sage Weil <sage@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The exact, general goal of the function bfq_split_bfqq() is not that
-apparent. Add a comment to make it clear.
+On Thu, Jan 30, 2020 at 4:39 PM Hannes Reinecke <hare@suse.de> wrote:
+>
+> On 1/30/20 3:26 PM, Laurence Oberman wrote:
+> > On Thu, 2020-01-30 at 12:42 +0100, Hannes Reinecke wrote:
+> >> The object request list can be accessed from various contexts
+> >> so we need to lock it to avoid concurrent modifications and
+> >> random crashes.
+> >>
+> >> Signed-off-by: Hannes Reinecke <hare@suse.de>
+> >> ---
+> >>  drivers/block/rbd.c | 31 ++++++++++++++++++++++++-------
+> >>  1 file changed, 24 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> >> index 5710b2a8609c..ddc170661607 100644
+> >> --- a/drivers/block/rbd.c
+> >> +++ b/drivers/block/rbd.c
+> >> @@ -344,6 +344,7 @@ struct rbd_img_request {
+> >>
+> >>      struct list_head        lock_item;
+> >>      struct list_head        object_extents; /* obj_req.ex structs */
+> >> +    struct mutex            object_mutex;
+> >>
+> >>      struct mutex            state_mutex;
+> >>      struct pending_result   pending;
+> >> @@ -1664,6 +1665,7 @@ static struct rbd_img_request
+> >> *rbd_img_request_create(
+> >>      INIT_LIST_HEAD(&img_request->lock_item);
+> >>      INIT_LIST_HEAD(&img_request->object_extents);
+> >>      mutex_init(&img_request->state_mutex);
+> >> +    mutex_init(&img_request->object_mutex);
+> >>      kref_init(&img_request->kref);
+> >>
+> >>      return img_request;
+> >> @@ -1680,8 +1682,10 @@ static void rbd_img_request_destroy(struct
+> >> kref *kref)
+> >>      dout("%s: img %p\n", __func__, img_request);
+> >>
+> >>      WARN_ON(!list_empty(&img_request->lock_item));
+> >> +    mutex_lock(&img_request->object_mutex);
+> >>      for_each_obj_request_safe(img_request, obj_request,
+> >> next_obj_request)
+> >>              rbd_img_obj_request_del(img_request, obj_request);
+> >> +    mutex_unlock(&img_request->object_mutex);
+> >>
+> >>      if (img_request_layered_test(img_request)) {
+> >>              img_request_layered_clear(img_request);
+> >> @@ -2486,6 +2490,7 @@ static int __rbd_img_fill_request(struct
+> >> rbd_img_request *img_req)
+> >>      struct rbd_obj_request *obj_req, *next_obj_req;
+> >>      int ret;
+> >>
+> >> +    mutex_lock(&img_req->object_mutex);
+> >>      for_each_obj_request_safe(img_req, obj_req, next_obj_req) {
+> >>              switch (img_req->op_type) {
+> >>              case OBJ_OP_READ:
+> >> @@ -2510,7 +2515,7 @@ static int __rbd_img_fill_request(struct
+> >> rbd_img_request *img_req)
+> >>                      continue;
+> >>              }
+> >>      }
+> >> -
+> >> +    mutex_unlock(&img_req->object_mutex);
+> >>      img_req->state = RBD_IMG_START;
+> >>      return 0;
+> >>  }
+> >> @@ -2569,6 +2574,7 @@ static int rbd_img_fill_request_nocopy(struct
+> >> rbd_img_request *img_req,
+> >>       * position in the provided bio (list) or bio_vec array.
+> >>       */
+> >>      fctx->iter = *fctx->pos;
+> >> +    mutex_lock(&img_req->object_mutex);
+> >>      for (i = 0; i < num_img_extents; i++) {
+> >>              ret = ceph_file_to_extents(&img_req->rbd_dev->layout,
+> >>                                         img_extents[i].fe_off,
+> >> @@ -2576,10 +2582,12 @@ static int rbd_img_fill_request_nocopy(struct
+> >> rbd_img_request *img_req,
+> >>                                         &img_req->object_extents,
+> >>                                         alloc_object_extent,
+> >> img_req,
+> >>                                         fctx->set_pos_fn, &fctx-
+> >>> iter);
+> >> -            if (ret)
+> >> +            if (ret) {
+> >> +                    mutex_unlock(&img_req->object_mutex);
+> >>                      return ret;
+> >> +            }
+> >>      }
+> >> -
+> >> +    mutex_unlock(&img_req->object_mutex);
+> >>      return __rbd_img_fill_request(img_req);
+> >>  }
+> >>
+> >> @@ -2620,6 +2628,7 @@ static int rbd_img_fill_request(struct
+> >> rbd_img_request *img_req,
+> >>       * or bio_vec array because when mapped, those bio_vecs can
+> >> straddle
+> >>       * stripe unit boundaries.
+> >>       */
+> >> +    mutex_lock(&img_req->object_mutex);
+> >>      fctx->iter = *fctx->pos;
+> >>      for (i = 0; i < num_img_extents; i++) {
+> >>              ret = ceph_file_to_extents(&rbd_dev->layout,
+> >> @@ -2629,15 +2638,17 @@ static int rbd_img_fill_request(struct
+> >> rbd_img_request *img_req,
+> >>                                         alloc_object_extent,
+> >> img_req,
+> >>                                         fctx->count_fn, &fctx-
+> >>> iter);
+> >>              if (ret)
+> >> -                    return ret;
+> >> +                    goto out_unlock;
+> >>      }
+> >>
+> >>      for_each_obj_request(img_req, obj_req) {
+> >>              obj_req->bvec_pos.bvecs = kmalloc_array(obj_req-
+> >>> bvec_count,
+> >>                                            sizeof(*obj_req-
+> >>> bvec_pos.bvecs),
+> >>                                            GFP_NOIO);
+> >> -            if (!obj_req->bvec_pos.bvecs)
+> >> -                    return -ENOMEM;
+> >> +            if (!obj_req->bvec_pos.bvecs) {
+> >> +                    ret = -ENOMEM;
+> >> +                    goto out_unlock;
+> >> +            }
+> >>      }
+> >>
+> >>      /*
+> >> @@ -2652,10 +2663,14 @@ static int rbd_img_fill_request(struct
+> >> rbd_img_request *img_req,
+> >>                                         &img_req->object_extents,
+> >>                                         fctx->copy_fn, &fctx->iter);
+> >>              if (ret)
+> >> -                    return ret;
+> >> +                    goto out_unlock;
+> >>      }
+> >> +    mutex_unlock(&img_req->object_mutex);
+> >>
+> >>      return __rbd_img_fill_request(img_req);
+> >> +out_unlock:
+> >> +    mutex_unlock(&img_req->object_mutex);
+> >> +    return ret;
+> >>  }
+> >>
+> >>  static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+> >> @@ -3552,6 +3567,7 @@ static void rbd_img_object_requests(struct
+> >> rbd_img_request *img_req)
+> >>
+> >>      rbd_assert(!img_req->pending.result && !img_req-
+> >>> pending.num_pending);
+> >>
+> >> +    mutex_lock(&img_req->object_mutex);
+> >>      for_each_obj_request(img_req, obj_req) {
+> >>              int result = 0;
+> >>
+> >> @@ -3564,6 +3580,7 @@ static void rbd_img_object_requests(struct
+> >> rbd_img_request *img_req)
+> >>                      img_req->pending.num_pending++;
+> >>              }
+> >>      }
+> >> +    mutex_unlock(&img_req->object_mutex);
+> >>  }
+> >>
+> >>  static bool rbd_img_advance(struct rbd_img_request *img_req, int
+> >> *result)
+> >
+> > Looks good to me. Just wonder how we escaped this for so long.
+> >
+> > Reviewed-by: Laurence Oberman <loberman@redhat.com>
+> >
+> The whole state machine is utterly fragile.
+> I'll be posting a patchset to clean stuff up somewhat,
+> but it's still a beast.
 
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-iosched.c | 2 ++
- 1 file changed, 2 insertions(+)
+What do you want me to do about this patch then?
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 28770ec7c06f..347e96292117 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5983,6 +5983,8 @@ static void bfq_finish_requeue_request(struct request *rq)
- }
- 
- /*
-+ * Removes the association between the current task and bfqq, assuming
-+ * that bic points to the bfq iocontext of the task.
-  * Returns NULL if a new bfqq should be allocated, or the old bfqq if this
-  * was the last process referring to that bfqq.
-  */
--- 
-2.20.1
+> I'm rather surprised that it doesn't break more often ...
 
+If you or Laurence saw it break, I would appreciate the details.
+
+Thanks,
+
+                Ilya
