@@ -2,89 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F47314E9F2
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 10:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7EFC14EA0C
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 10:25:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgAaJQd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Jan 2020 04:16:33 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39718 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgAaJQd (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:16:33 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ixSOT-0007Vt-8L; Fri, 31 Jan 2020 12:15:17 +0300
-Subject: Re: [PATCH block v2 2/3] block: Add support for REQ_NOZERO flag
-To:     Christoph Hellwig <hch@infradead.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
+        id S1728260AbgAaJY7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Jan 2020 04:24:59 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53191 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgAaJY7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:24:59 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so7086019wmc.2
+        for <linux-block@vger.kernel.org>; Fri, 31 Jan 2020 01:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSXbMxnOg8YIX/3kR6+7l+XVNm8PvjjA37JEVs4qXJA=;
+        b=ui7hbxTOZhC0wBm4XNnnM0Qrgnmx1S1n0GrL/Laudw0hYYdsR1GLIa9vOUBxjFZlHz
+         HhUqsfWj+95bLSa2fDIqoAy2Sju/2K+fz2mPXDywWxSV9lAQNBE+sibovuiLHGDn2Prc
+         ts8yBm+V8hKRLucF6mM+5eGEnjgbMResPLnLf/15pN9uHZtj/qWPBth7G5O0cFI62R1Q
+         rPrruQnZ0uu+PVy+Lx2pwT4PKKZcD3H/USUe5xcWlKF+KPCBZ78CkF8gtcKU0r32MACG
+         ZVt+ZjVbWcZ5MHz/pAqB1m1kSJWBdYp4SL6FZcgsZMg868zQsB2SMjufSaUHf2HvDowP
+         s0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSXbMxnOg8YIX/3kR6+7l+XVNm8PvjjA37JEVs4qXJA=;
+        b=UYtLbECYX1MtOTkV37OFn1XPpMZ/Up/XcMr7tMd6O5bEpds2dgyQnGwYktEzDIwMcE
+         6ioN6FAhkSut+1ik7eR3NiK8C9DzRbbolTUPyVlDERXqrxBqnK4PVdVzzgVN02tBOEKd
+         AABPl+KEoiqQ1yE6NREso3PHmImCW5A2+o9l6ZUpzZd5eE2cOxu2P9JexMWwDifXcvuL
+         uoSeQBplOLFGKdPVANcFV/jwPeNG2sEFbbVnKOwUHG56wfvK+BhhBbmLF4byLHuZTCNa
+         DkRsIZWu+PnvegtxTpXKZSrAvAyttNmyK0bfiE1kwb4JJ7Soxg5oOpQBN0zWDbfG4XWJ
+         eqGg==
+X-Gm-Message-State: APjAAAU5ffUZ1NojXyv+uQAZMZC1ILMNkjxv8+btryOU0yY0o6KEbfRz
+        aVimgpcFP/Ng4ixU691MDep7wA==
+X-Google-Smtp-Source: APXvYqwIzUPuurz2q/j3XhmwutPdbx25t66VPpjsBDm8EXvsA9RKUuu8D/EHwhxi1yQ72R9rcNqNdA==
+X-Received: by 2002:a1c:7c11:: with SMTP id x17mr11703127wmc.168.1580462695648;
+        Fri, 31 Jan 2020 01:24:55 -0800 (PST)
+Received: from localhost.localdomain (88-147-73-186.dyn.eolo.it. [88.147.73.186])
+        by smtp.gmail.com with ESMTPSA id 16sm10144364wmi.0.2020.01.31.01.24.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 Jan 2020 01:24:54 -0800 (PST)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
- <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
- <yq14kwpibf6.fsf@oracle.com> <20200131062343.GA6267@infradead.org>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <683bb62a-9667-d2c7-0437-7a6343819382@virtuozzo.com>
-Date:   Fri, 31 Jan 2020 12:15:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        patdung100@gmail.com, cevich@redhat.com,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX 0/6] block, bfq: series of fixes, and not only, for some recently reported issues
+Date:   Fri, 31 Jan 2020 10:24:03 +0100
+Message-Id: <20200131092409.10867-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200131062343.GA6267@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi, Christoph,
+Hi Jens,
+these patches are mostly fixes for the issues reported in [1, 2]. All
+patches have been publicly tested in the dev version of BFQ.
 
-On 31.01.2020 09:23, Christoph Hellwig wrote:
-> On Tue, Jan 21, 2020 at 01:14:05AM -0500, Martin K. Petersen wrote:
->> I find there is some dissonance between using BLKDEV_ZERO_ALLOCATE to
->> describe this operation in one case and REQ_NOZERO in the other.
->>
->> I understand why not zeroing is important in your case. However, I think
->> the allocation aspect is semantically more important. Also, in the case
->> of SCSI, the allocated blocks will typically appear zeroed. So from that
->> perspective REQ_NOZERO doesn't really make sense. I would really prefer
->> to use REQ_ALLOCATE to describe this operation. I agree that "do not
->> write every block" is important too. I just don't have a good suggestion
->> for how to express that as an additional qualifier to REQ_ALLOCATE_?.
-> 
-> Agreed.  Nevermind the problem of a REQ_OP_WRITE_ZEROES operations with
-> a NOZERO flag causing a massive confusion to the reader.
-> 
->> Also, adding to the confusion: In the context of SCSI, ANCHOR requires
->> UNMAP. So my head hurts a bit when I read REQ_NOZERO|REQ_NOUNMAP and
->> have to translate that into ANCHOR|UNMAP.
->>
->> Longer term, I think we should consider introducing REQ_OP_SINGLE_RANGE
->> or something like that as an umbrella operation that can be used to
->> describe zeroing, allocating, and other things that operate on a single
->> LBA range with no payload. Thus removing both the writiness and the
->> zeroness from the existing REQ_OP_WRITE_ZEROES conduit.
-> 
-> What is the benefit of a multipler there?  Given all this flags
-> confusion I'm almost tempted to just split up REQ_OP_WRITE_ZEROES into
-> REQ_OP_ALLOCATE ("cheap") and REQ_OP_WRITE_ZEROES ("potentially
-> expensive") and just let the caller handle the difference.  Everytime
-> we try to encode semantic differences into flags we're eventually
-> running into trouble.  Sais the person that added REQ_UNMAP..
+Thanks,
+Paolo
 
-We started from separated REQ_OP_ASSIGN_RANGE in v1, but then we decided
-to use a modifier because this looks better and scatters less over
-I/O stack. See "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
-to reflect extents allocation in block device internals" series for the details.
-(https://lkml.org/lkml/2020/1/7/1616 and neighbouring messages).
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
 
-Last version of the patchset is v5 and it's here: https://lkml.org/lkml/2020/1/22/643
+Paolo Valente (6):
+  block, bfq: do not plug I/O for bfq_queues with no proc refs
+  block, bfq: do not insert oom queue into position tree
+  block, bfq: get extra ref to prevent a queue from being freed during a
+    group move
+  block, bfq: extend incomplete name of field on_st
+  block, bfq: get a ref to a group when adding it to a service tree
+  block, bfq: clarify the goal of bfq_split_bfqq()
 
-Kirill
+ block/bfq-cgroup.c  | 12 ++++++++++--
+ block/bfq-iosched.c | 20 +++++++++++++++++++-
+ block/bfq-iosched.h |  3 ++-
+ block/bfq-wf2q.c    | 27 ++++++++++++++++++++++-----
+ 4 files changed, 53 insertions(+), 9 deletions(-)
+
+--
+2.20.1
