@@ -2,107 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9612E14EA98
-	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 11:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 256B514EA95
+	for <lists+linux-block@lfdr.de>; Fri, 31 Jan 2020 11:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgAaK0y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Jan 2020 05:26:54 -0500
-Received: from vulcan.natalenko.name ([104.207.131.136]:38618 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgAaK0y (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:26:54 -0500
-X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 Jan 2020 05:26:54 EST
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id F0DCE6AE285;
-        Fri, 31 Jan 2020 11:20:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1580466060;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JyCL1AIFRsZZJc5TqF/kQuvXxI+4j7HIOhnVeMP3yZ4=;
-        b=eFZRubqsAd6wKnBlDqS8xYSyzrE/OXUhl4kBSTrY0qR+h8rh3JnjwATOfPykZwc6CTQoSL
-        2JrWVkPumzGpxxX08aMeH/Jg6vIfNXjCEwhM4w/r/hHMRvcQaV+vyZTgsvmA9VaIldE/oE
-        cTEqSU/csPYUPXaf8360TPtmDbVoMTA=
+        id S1728268AbgAaKYS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Jan 2020 05:24:18 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2335 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728071AbgAaKYS (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 31 Jan 2020 05:24:18 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 80F9BF5241C2970A8448;
+        Fri, 31 Jan 2020 10:24:15 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 31 Jan 2020 10:24:15 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
+ 2020 10:24:14 +0000
+Subject: Re: [PATCH V5 0/6] blk-mq: improvement CPU hotplug
+To:     Ming Lei <tom.leiming@gmail.com>
+CC:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Hannes Reinecke" <hare@suse.com>, Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Keith Busch <keith.busch@intel.com>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <20200115114409.28895-1-ming.lei@redhat.com>
+ <929dbfac-de46-a947-6a2c-f4d8d504c631@huawei.com>
+ <6dbe8c9f-af4e-3157-b6e9-6bbf43efb1e1@huawei.com>
+ <CACVXFVN8io2Pj1HZWLy=z1dbDrE3h9Q6B0DA4gdGOdK3+bRRPg@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b1f67efb-585d-e0c1-460f-52be0041b37a@huawei.com>
+Date:   Fri, 31 Jan 2020 10:24:13 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CACVXFVN8io2Pj1HZWLy=z1dbDrE3h9Q6B0DA4gdGOdK3+bRRPg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 Jan 2020 11:20:59 +0100
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bfq-iosched@googlegroups.com,
-        patdung100@gmail.com, cevich@redhat.com
-Subject: Re: [PATCH BUGFIX 3/6] block, bfq: get extra ref to prevent a queue
- from being freed during a group move
-In-Reply-To: <20200131092409.10867-4-paolo.valente@linaro.org>
-References: <20200131092409.10867-1-paolo.valente@linaro.org>
- <20200131092409.10867-4-paolo.valente@linaro.org>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <784c55c0f37a1a448c31e73e28bef6f8@natalenko.name>
-X-Sender: oleksandr@natalenko.name
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello.
+>> [  141.976109] Call trace:
+>> [  141.978550]  __switch_to+0xbc/0x218
+>> [  141.982029]  blk_mq_run_work_fn+0x1c/0x28
+>> [  141.986027]  process_one_work+0x1e0/0x358
+>> [  141.990025]  worker_thread+0x40/0x488
+>> [  141.993678]  kthread+0x118/0x120
+>> [  141.996897]  ret_from_fork+0x10/0x18
+> 
+> Hi John,
+> 
+> Thanks for your test!
+> 
 
-On 31.01.2020 10:24, Paolo Valente wrote:
-> In bfq_bfqq_move(), the bfq_queue, say Q, to be moved to a new group
-> may happen to be deactivated in the scheduling data structures of the
-> source group (and then activated in the destination group). If Q is
-> referred only by the data structures in the source group when the
-> deactivation happens, then Q is freed upon the deactivation.
-> 
-> This commit addresses this issue by getting an extra reference before
-> the possible deactivation, and releasing this extra reference after Q
-> has been moved.
-> 
-> Tested-by: Chris Evich <cevich@redhat.com>
-> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-> ---
->  block/bfq-cgroup.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-> index e1419edde2ec..8ab7f18ff8cb 100644
-> --- a/block/bfq-cgroup.c
-> +++ b/block/bfq-cgroup.c
-> @@ -651,6 +651,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct
-> bfq_queue *bfqq,
->  		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
->  				false, BFQQE_PREEMPTED);
-> 
-> +	/*
-> +	 * get extra reference to prevent bfqq from being freed in
-> +	 * next possible deactivate
-> +	 */
-> +	bfqq->ref++;
+Hi Ming,
 
-Shouldn't this be hidden under some macro (bfq_get_queue_ref(), for 
-instance) and also converted from int into refcount_t?
-
-> +
->  	if (bfq_bfqq_busy(bfqq))
->  		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
->  	else if (entity->on_st)
-> @@ -670,6 +676,8 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct
-> bfq_queue *bfqq,
+> Could you test the following patchset and only the last one is changed?
 > 
->  	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
->  		bfq_schedule_dispatch(bfqd);
-> +	/* release extra ref taken above */
-> +	bfq_put_queue(bfqq);
->  }
-> 
->  /**
+> https://github.com/ming1/linux/commits/my_for_5.6_block
 
--- 
-   Oleksandr Natalenko (post-factum)
+For SCSI testing, I will ask my colleague Xiang Chen to test when he 
+returns to work. So I did not see this issue for my SCSI testing for 
+your original v5, but I was only using 1x as opposed to maybe 20x SAS disks.
+
+BTW, did you test NVMe? For some reason I could not trigger a scenario 
+where we're draining the outstanding requests for a queue which is being 
+deactivated - I mean, the queues were always already quiesced.
+
+Thanks,
+John
