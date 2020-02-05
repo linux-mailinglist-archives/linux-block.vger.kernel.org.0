@@ -2,99 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1E89152905
-	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2020 11:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90E80153280
+	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2020 15:08:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgBEKUs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Feb 2020 05:20:48 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46038 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgBEKUs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Feb 2020 05:20:48 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d9so1094113qte.12
-        for <linux-block@vger.kernel.org>; Wed, 05 Feb 2020 02:20:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
-        b=hdQLxCQSd9bARnwDt0wyo40Z0EXmrXzoERGQmfraboQwG6ZJlXL2wPUUh1/8G/OX1A
-         wcGn3uXh5zm6c9bl7wd9LVvRNnPlWYW33/Qk9pghMyCjByMDi6MbEeCiOyJBUnQ3QCjG
-         efQkdblKWF9UeMpfYkyLEpcS9V3oGe1BvcTogNNxq9i90mtaobPr8D+EMhCJVWd1xd9u
-         rm2UHf62Pv5lvMmwnKaNj4TGzLEQa5p6yiv6H2551TZ3krd3iSpWhkivxTaDKcVXcR01
-         xv07GwyXHWacE578I4ENvrlZUj95kPyDf1so5dN83yfHlZRi6TUUbKz6KwSZYNOsNuQ9
-         EnrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
-        b=lZe16BhCiAwblZpezW2RpJSYonnyTMhpxWKOFW+KyhxCJ32z0ukKEgb7Ow1x+wA0w1
-         BYjS7MehIVXx/rXuEmNE9xaNf7AWjH2XB6sQFR4rHYsMUpHg/h2qYFpzIoKCnhb1z963
-         duYmLuAq6s5CBR+xjNrm2NG17bd88q0lE+2Iq9k2ryMidl3FRZRDP71X3WSFxm9kaZEd
-         HsTAQe9I23WiLvqGMiU3ppbcbqnP16TzK70vugRquox5ZSlFiGpZalF2YCUjxKd0msAm
-         zxSqELmcuY45UMnDLuXDmCkBjeZiv/wz8DpynKJYMKU00fbjAwIX0qWZIe2kSGa1Hx7q
-         O5hg==
-X-Gm-Message-State: APjAAAUD6eAkSSL7FvLsoU3kY+ro6Y4iKDcQ9YyU8YclYcaz09p/wGPD
-        uars7R6+RYrbwwiGD4JGbIGSI6cdPXuQ+u9QuHY=
-X-Google-Smtp-Source: APXvYqwyFc6b5UC60NcBTfaDSZ7XFYRHD5XNi0N3jYNxkQPuD9kGKa1mn+QZZILGPVJPfi7Jdnwdv0ixR6mvfcxZPR8=
-X-Received: by 2002:ac8:2939:: with SMTP id y54mr32504079qty.109.1580898046889;
- Wed, 05 Feb 2020 02:20:46 -0800 (PST)
+        id S1728129AbgBEOIR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Feb 2020 09:08:17 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2375 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728123AbgBEOIR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:08:17 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id B830912A42B455C449F3;
+        Wed,  5 Feb 2020 14:08:15 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 5 Feb 2020 14:08:14 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 5 Feb 2020
+ 14:08:15 +0000
+Subject: Re: [PATCH V5 0/6] blk-mq: improvement CPU hotplug
+From:   John Garry <john.garry@huawei.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Ming Lei <tom.leiming@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Hannes Reinecke" <hare@suse.com>, Christoph Hellwig <hch@lst.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        Keith Busch <kbusch@kernel.org>,
+        "liudongdong (C)" <liudongdong3@huawei.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>
+References: <20200115114409.28895-1-ming.lei@redhat.com>
+ <929dbfac-de46-a947-6a2c-f4d8d504c631@huawei.com>
+ <6dbe8c9f-af4e-3157-b6e9-6bbf43efb1e1@huawei.com>
+ <CACVXFVN8io2Pj1HZWLy=z1dbDrE3h9Q6B0DA4gdGOdK3+bRRPg@mail.gmail.com>
+ <b1f67efb-585d-e0c1-460f-52be0041b37a@huawei.com>
+ <CACVXFVOk3cnRqyngYjHPPtLM1Wn8p3=hP8C3tBns9nDQAnoCyQ@mail.gmail.com>
+ <14cb0d17-f9e6-ffa8-7a98-bd602c72273f@huawei.com>
+ <56502aa9-d4ad-5ede-5184-13f1817c77d7@huawei.com>
+ <CACVXFVNiBOBdtwuW=q4aSmUMAnn6Gfpg6BGhcQu44s58NZ08Ww@mail.gmail.com>
+ <20200201110539.03db5434@why> <87sgjutufz.fsf@nanos.tec.linutronix.de>
+ <3db522f4-c0c3-ce0f-b0e3-57ee1176bbf8@huawei.com>
+ <797432ab-1ef5-92e3-b512-bdcee57d1053@huawei.com>
+ <CACVXFVOijCDjFa339Dyxnp9_0W5UjDyF-a42Dmo-6pogu+rp5Q@mail.gmail.com>
+ <b0f35177-70f3-541d-996b-ebb364634225@huawei.com>
+ <f759c5bca7de4b2af2e1cabd2f476e3c@kernel.org>
+ <7ae71bf1-fd1f-d97e-1e72-646e2e6c8b3c@huawei.com>
+Message-ID: <c8a31bf9-7e25-aff1-e0df-7d9106324b9f@huawei.com>
+Date:   Wed, 5 Feb 2020 14:08:13 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Received: by 2002:a37:a4cb:0:0:0:0:0 with HTTP; Wed, 5 Feb 2020 02:20:46 -0800 (PST)
-Reply-To: RevWrightWatson@yandex.com
-From:   "Rev.Wright Watson" <iykemannwachukwuchambers@gmail.com>
-Date:   Wed, 5 Feb 2020 11:20:46 +0100
-Message-ID: <CAGQOd6JyNdHtLvEh=4TOVq2fxjntVoy2T_YF60r2AnsoEVW4dg@mail.gmail.com>
-Subject: Dear Beloved,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7ae71bf1-fd1f-d97e-1e72-646e2e6c8b3c@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Beloved,
+On 03/02/2020 18:16, John Garry wrote:
+> On 03/02/2020 15:43, Marc Zyngier wrote:
+>> On 2020-02-03 12:56, John Garry wrote:
+>>
+>> [...]
+>>
+>>>> Can you trigger it after disabling irqbalance?
+>>>
+>>> No, so tested by killing the irqbalance process and it ran for 25
+>>> minutes without issue.
+>>
+>> OK, that's interesting.
+>>
+>> Can you find you whether irqbalance tries to move an interrupt to an 
+>> offlined CPU?
+>> Just putting a trace into git_set_affinity() should be enough.
+>>
+> 
 
-I'm Reverend Wright Watson, I was born in USA, 1945, I was ordained
-into the Catholic Priesthood.
+Just an update here: I have tried this same test on a new model dev 
+board and I don't experience the same issue. It's quite stable.
 
-Please take your time to read this message, although we have never met
-before, this is no spam, It's a real message sent to you. I know also
-that you will be amazed at the level of trust that I am willing to
-place in a person that I have never seen nor spoken with. If I can
-receive favor from someone I barely know, its not bad entrusting this
-project to unknown person as long as my spirit directed me to you.
+I'd like to get to the bottom of the issue reported, but I feel that the 
+root cause may be a BIOS issue and I will get next to no BIOS support 
+for that particular board. Hmmm.
 
-I have been a catholic priest for over 22 years. I spent about 10
-years serving at Africa, Burkina Faso to be precise, I spend most time
-in Ouagadougou Cathedral.
-Presently, I had a heart surgery on the 23-11-2018 and the Doctors
-have informed me that I cannot live longer; I had a serious bleeding
-after the operation.
-Before I left Ouagadougou to my country for the surgery, a priest
-friend of mine visited me from Netherlands with three companion, when
-they went back, one among his companion Transferred 10M$ in my
-personal account with Bank of Africa and advised that I use the money
-to help the poor, handicaps and less privileges because he saw the
-level hardship then.
+Thanks,
+John
 
-Because of my present health condition, I cannot live to proceed with
-the projects, therefore, I have decided to appoint you to reclaim the
-money which total sum of $10,970,000.00 (Ten million Nine Hundred and
-seventy Thousand US DOLLARS).
-
-I want you to use this sum to make the world a better place for the
-poor and less privileged, help the needy and also help your family
-members.
-
-I took this decision because I was raised in an Orphanage so I don't
-have relatives and presently, I'm still in the hospital, where I am
-undergoing treatment. That's why I have decided to contact you so that
-you can contact my account manager in Bank of Africa, reclaim the
-money and make good use of it.
-
-then you can contact me through private email
-addres(RevWrightWatson@yandex.com)
-
-Regards,
-Rev.Wright Watson
