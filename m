@@ -2,147 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD6E15270E
-	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2020 08:36:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E89152905
+	for <lists+linux-block@lfdr.de>; Wed,  5 Feb 2020 11:20:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgBEHgE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Feb 2020 02:36:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgBEHgE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:36:04 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9942082E;
-        Wed,  5 Feb 2020 07:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580888163;
-        bh=n6o7wWQTA4s8aqk96q3w/6anRogQN4od5Sii5HmNmSg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Asok7CXnwefCnjUsDtKL6rcUulerYyKIjohfoE0MCopRF1A4GrSwSs5y+JyF4Ah2P
-         V9SjZve6qKHIGzgLbIhDt/82c9hLVDEizHOQVJiIaiGPjJz2uS3Ht3WY825qSoVhSv
-         7vKWVVkT1QAEhsFN750aTQYD44YttZKasa9HwnC0=
-Date:   Tue, 4 Feb 2020 23:36:01 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Satya Tangirala <satyat@google.com>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Barani Muthukumaran <bmuthuku@qti.qualcomm.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        Kim Boojin <boojin.kim@samsung.com>
-Subject: Re: [PATCH v6 0/9] Inline Encryption Support
-Message-ID: <20200205073601.GA191054@sol.localdomain>
-References: <20191218145136.172774-1-satyat@google.com>
- <20200108140556.GB2896@infradead.org>
- <20200108184305.GA173657@google.com>
- <20200117085210.GA5473@infradead.org>
- <20200201005341.GA134917@google.com>
- <20200203091558.GA28527@infradead.org>
- <20200204033915.GA122248@google.com>
- <20200204145832.GA28393@infradead.org>
- <20200204212110.GA122850@gmail.com>
+        id S1728263AbgBEKUs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Feb 2020 05:20:48 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46038 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbgBEKUs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Feb 2020 05:20:48 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d9so1094113qte.12
+        for <linux-block@vger.kernel.org>; Wed, 05 Feb 2020 02:20:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
+        b=hdQLxCQSd9bARnwDt0wyo40Z0EXmrXzoERGQmfraboQwG6ZJlXL2wPUUh1/8G/OX1A
+         wcGn3uXh5zm6c9bl7wd9LVvRNnPlWYW33/Qk9pghMyCjByMDi6MbEeCiOyJBUnQ3QCjG
+         efQkdblKWF9UeMpfYkyLEpcS9V3oGe1BvcTogNNxq9i90mtaobPr8D+EMhCJVWd1xd9u
+         rm2UHf62Pv5lvMmwnKaNj4TGzLEQa5p6yiv6H2551TZ3krd3iSpWhkivxTaDKcVXcR01
+         xv07GwyXHWacE578I4ENvrlZUj95kPyDf1so5dN83yfHlZRi6TUUbKz6KwSZYNOsNuQ9
+         EnrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gl8m333ia74OFZpNmB4o7kIcYlvQPFpoCsxlN0OXKb0=;
+        b=lZe16BhCiAwblZpezW2RpJSYonnyTMhpxWKOFW+KyhxCJ32z0ukKEgb7Ow1x+wA0w1
+         BYjS7MehIVXx/rXuEmNE9xaNf7AWjH2XB6sQFR4rHYsMUpHg/h2qYFpzIoKCnhb1z963
+         duYmLuAq6s5CBR+xjNrm2NG17bd88q0lE+2Iq9k2ryMidl3FRZRDP71X3WSFxm9kaZEd
+         HsTAQe9I23WiLvqGMiU3ppbcbqnP16TzK70vugRquox5ZSlFiGpZalF2YCUjxKd0msAm
+         zxSqELmcuY45UMnDLuXDmCkBjeZiv/wz8DpynKJYMKU00fbjAwIX0qWZIe2kSGa1Hx7q
+         O5hg==
+X-Gm-Message-State: APjAAAUD6eAkSSL7FvLsoU3kY+ro6Y4iKDcQ9YyU8YclYcaz09p/wGPD
+        uars7R6+RYrbwwiGD4JGbIGSI6cdPXuQ+u9QuHY=
+X-Google-Smtp-Source: APXvYqwyFc6b5UC60NcBTfaDSZ7XFYRHD5XNi0N3jYNxkQPuD9kGKa1mn+QZZILGPVJPfi7Jdnwdv0ixR6mvfcxZPR8=
+X-Received: by 2002:ac8:2939:: with SMTP id y54mr32504079qty.109.1580898046889;
+ Wed, 05 Feb 2020 02:20:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204212110.GA122850@gmail.com>
+Received: by 2002:a37:a4cb:0:0:0:0:0 with HTTP; Wed, 5 Feb 2020 02:20:46 -0800 (PST)
+Reply-To: RevWrightWatson@yandex.com
+From:   "Rev.Wright Watson" <iykemannwachukwuchambers@gmail.com>
+Date:   Wed, 5 Feb 2020 11:20:46 +0100
+Message-ID: <CAGQOd6JyNdHtLvEh=4TOVq2fxjntVoy2T_YF60r2AnsoEVW4dg@mail.gmail.com>
+Subject: Dear Beloved,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 01:21:11PM -0800, Eric Biggers wrote:
-> On Tue, Feb 04, 2020 at 06:58:32AM -0800, Christoph Hellwig wrote:
-> > On Mon, Feb 03, 2020 at 07:39:15PM -0800, Satya Tangirala wrote:
-> > > Wouldn't that mean that all the other requests in the queue, even ones that
-> > > don't even need any inline encryption, also don't get processed until the
-> > > queue is woken up again?
-> > 
-> > For the basic implementation yes.
-> > 
-> > > And if so, are we really ok with that?
-> > 
-> > That depends on the use cases.  With the fscrypt setup are we still
-> > going to see unencrypted I/O to the device as well?  If so we'll need
-> > to refine the setup and only queue up unencrypted requests.  But I'd
-> > still try to dumb version first and then refine it.
-> 
-> Definitely, for several reasons:
-> 
-> - Not all files on the filesystem are necessarily encrypted.
-> - Filesystem metadata is not encrypted (except for filenames, but those don't
->   use inline encryption).
-> - Encryption isn't necessarily being used on all partitions on the disk.
-> 
-> It's also not just about unencrypted vs. encrypted, since just because someone
-> is waiting for one keyslot doesn't mean we should pause all encrypted I/O to the
-> device for all keyslots.
-> 
-> > 
-> > > As you said, we'd need the queue to wake up once a keyslot is available.
-> > > It's possible that only some hardware queues and not others get blocked
-> > > because of keyslot programming, so ideally, we could somehow make the
-> > > correct hardware queue(s) wake up once a keyslot is freed. But the keyslot
-> > > manager can't assume that it's actually blk-mq that's being used
-> > > underneath,
-> > 
-> > Why?  The legacy requet code is long gone.
-> > 
-> > > Also I forgot to mention this in my previous mail, but there may be some
-> > > drivers/devices whose keyslots cannot be programmed from an atomic context,
-> > > so this approach which might make things difficult in those situations (the
-> > > UFS v2.1 spec, which I followed while implementing support for inline
-> > > crypto for UFS, does not care whether we're in an atomic context or not,
-> > > but there might be specifications for other drivers, or even some
-> > > particular UFS inline encryption hardware that do).
-> > 
-> > We have an option to never call ->queue_rq from atomic context
-> > (BLK_MQ_F_BLOCKING).  But do you know of existing hardware that behaves
-> > like this or is it just hypothetical?
-> 
-> Maybe -- check the Qualcomm ICE (Inline Crypto Engine) driver I posted at
-> https://lkml.kernel.org/linux-block/20200110061634.46742-1-ebiggers@kernel.org/.
-> The hardware requires vendor-specific SMC calls to program keys, rather than the
-> UFS standard way.  It's currently blocking, since the code to make the SMC calls
-> in drivers/firmware/qcom_scm*.c uses GFP_KERNEL and mutex_lock().
-> 
-> I'll test whether it can work in atomic context by using GFP_ATOMIC and
-> qcom_scm_call_atomic() instead.  (Adding a spinlock might be needed too.)
-> 
+Dear Beloved,
 
-The vendor-specific SMC calls do seem to work in atomic context, at least on
-SDA845.  However, in ufshcd_program_key(), the calls to pm_runtime_get_sync()
-and ufshcd_hold() can also sleep.
+I'm Reverend Wright Watson, I was born in USA, 1945, I was ordained
+into the Catholic Priesthood.
 
-I think we can move the pm_runtime_get_sync() to ufshcd_crypto_keyslot_evict(),
-since the block layer already ensures the device is not runtime-suspended while
-requests are being processed (see blk_queue_enter()).  I.e., keyslots can be
-evicted independently of any bio, but that's not the case for programming them.
+Please take your time to read this message, although we have never met
+before, this is no spam, It's a real message sent to you. I know also
+that you will be amazed at the level of trust that I am willing to
+place in a person that I have never seen nor spoken with. If I can
+receive favor from someone I barely know, its not bad entrusting this
+project to unknown person as long as my spirit directed me to you.
 
-That still leaves ufshcd_hold(), which is still needed to ungate the UFS clocks.
-It does accept an 'async' argument, which is used by ufshcd_queuecommand() to
-schedule work to ungate the clocks and return SCSI_MLQUEUE_HOST_BUSY.
+I have been a catholic priest for over 22 years. I spent about 10
+years serving at Africa, Burkina Faso to be precise, I spend most time
+in Ouagadougou Cathedral.
+Presently, I had a heart surgery on the 23-11-2018 and the Doctors
+have informed me that I cannot live longer; I had a serious bleeding
+after the operation.
+Before I left Ouagadougou to my country for the surgery, a priest
+friend of mine visited me from Netherlands with three companion, when
+they went back, one among his companion Transferred 10M$ in my
+personal account with Bank of Africa and advised that I use the money
+to help the poor, handicaps and less privileges because he saw the
+level hardship then.
 
-So in blk_mq_dispatch_rq_list(), we could potentially try to acquire the
-keyslot, and if it can't be done because either none are available or because
-something else needs to be waited for, we can put the request back on the
-dispatch list -- similar to how failure to get a driver tag is handled.
+Because of my present health condition, I cannot live to proceed with
+the projects, therefore, I have decided to appoint you to reclaim the
+money which total sum of $10,970,000.00 (Ten million Nine Hundred and
+seventy Thousand US DOLLARS).
 
-However, if I understand correctly, that would mean that all requests to the
-same hardware queue would be blocked whenever someone is waiting for a keyslot
--- even unencrypted requests and requests for unrelated keyslots.
+I want you to use this sum to make the world a better place for the
+poor and less privileged, help the needy and also help your family
+members.
 
-It's possible that would still be fine for the Android use case, as vendors tend
-to add enough keyslots to work with Android, provided that they choose the
-fscrypt format that uses one key per encryption policy rather than one key per
-file.  I.e., it might be the case that no one waits for keyslots in practice
-anyway.  But, it seems it would be undesirable for a general Linux kernel
-framework, which could potentially be used with per-file keys or with hardware
-that only has a *very* small number of keyslots.
+I took this decision because I was raised in an Orphanage so I don't
+have relatives and presently, I'm still in the hospital, where I am
+undergoing treatment. That's why I have decided to contact you so that
+you can contact my account manager in Bank of Africa, reclaim the
+money and make good use of it.
 
-Another option would be to allocate the keyslot in blk_mq_get_request(), where
-sleeping is still allowed, but some merging was already done.
+then you can contact me through private email
+addres(RevWrightWatson@yandex.com)
 
-- Eric
+Regards,
+Rev.Wright Watson
