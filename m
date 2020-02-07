@@ -2,119 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27446155FAC
-	for <lists+linux-block@lfdr.de>; Fri,  7 Feb 2020 21:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DDF2155FBD
+	for <lists+linux-block@lfdr.de>; Fri,  7 Feb 2020 21:40:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBGUiL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Feb 2020 15:38:11 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35247 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgBGUiK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Feb 2020 15:38:10 -0500
-Received: by mail-il1-f193.google.com with SMTP id g12so700769ild.2
-        for <linux-block@vger.kernel.org>; Fri, 07 Feb 2020 12:38:09 -0800 (PST)
+        id S1727491AbgBGUkW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Feb 2020 15:40:22 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32896 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBGUkW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Feb 2020 15:40:22 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q81so3321999oig.0
+        for <linux-block@vger.kernel.org>; Fri, 07 Feb 2020 12:40:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dg4oON5J4q1fP44KHqOQveBtLzhE62D/XRXrye9zUFs=;
-        b=H0AXpVHi3OoVTO5fMc/MD/deUKtMKczIoMcgUbYSgxYbrqJgdaHtDiU4YpHoR6SOQo
-         ANzA42tykPyEQj6LIC+i+fKdwMEG7htXYQMrFnRkY+U8kTKi4GtgpLOfC/S92/LLUmzT
-         H2IWFt8QKHw6JLdIu44Eq2stfN3FbZ4RU/vKyQszPtE2ujYpQfC411+6tlpTBOkEnc8R
-         j9qUeuO76mFpi4ryetJraTCoBySQVeOqlGm3JKDYcstbMH+qbtBTGy16AwrE/4fvl8Uw
-         prWpNBk8XfObuiJbH75+YPZQ39M85395DyhxR61gWaeBVnfMpFvt6ILxcSw+3YGlVbxu
-         xc4A==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=G3vURSQOvSfym6GqL5qCR0Eef9YA9bo0RtU0UNSHZ0P154liq6nj0pP6gcjlFqJJPA
+         pKRQnkScBgv932UZHHNblcbuEqzuQEzPM4yp7Nm998F2nvPItHJ3Ww86OtAhmrCQq+nI
+         pKIm6N7lKoBlralx8ETPINJ1E+AnXPlOwJdNOgmWsgIaWAQBcgIsfne+6cMtPhGZTouS
+         KhX63qJv3f3PpVpkavcRkfRhDEkZgWtVbogMANo4KNIi2bptCtgkKE6QGBA7TGY3eShL
+         Az3jTVCoxKK0zJncfJ0H2PBVgz1Pz/iWQoEx1CaAejuBuCcK+rZ/kN/STxyjt5y3quR3
+         S7Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dg4oON5J4q1fP44KHqOQveBtLzhE62D/XRXrye9zUFs=;
-        b=VfTN9MNO1Iu1W9bhayVwF6fB8Pct3y3bpYXw3Zs5VT3GMuu9J14s5t0sVakhXQgXcS
-         3saoObFZvO8emI4gvMe9ntEhR+Kdm09pp9cOMMzlbbW7nD9QR/q3895IBfEbZdye8ayP
-         PIYgam/dMRD0lhRIxOW12elyb5wngeCflX6goIJkZ8EyvXgeJrzv/dFHaIlfpn6czVA6
-         bm+GXgpEoCWMtNw3D3m/mW3y3oY6zG9N6pZCA0+ggL8UTIxjwRsUEgl7O9XZwYP0xGmN
-         UdXCxygZVFmFuy4/u9+Gr+5eH6WT/bV6oJWHdIjdOHJ9Tx4cEUvJo0CMv9iVe+dxotEK
-         dR0Q==
-X-Gm-Message-State: APjAAAUr0htQGpviSPXrhgBii3twpqfBuJwnySMuPpFDz2cUe9wMFBQr
-        kX2g9n4aH/rzUdaoeSAK2Y5t86vAYSFX7h1CBM+4XA==
-X-Google-Smtp-Source: APXvYqyTqUEaeiRszM4nM+OgnMVDTccPNheMsyBNPQIZ4n7gi3IrYrOGJJCZk5Op6+0SWXNMyDf3QEdg9TZqFqZVb4E=
-X-Received: by 2002:a92:af99:: with SMTP id v25mr1287002ill.289.1581107888526;
- Fri, 07 Feb 2020 12:38:08 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=t19j77X30r90xARS0xGiWzANTPaEX+VJ6fAd00Ff5tJn94POkXQ3EM7iR62xDv38lI
+         G0/tVFXaqmO/2H6C5JoOyn35lh6UfNFL1Wm7nJbjB4yFEnraGsX1bKcfHr0E726OdAj6
+         YNfKSao3HN8wACxUDzhgpviP8xOx9/4jt5F8OfQzNiTOOO8JymzNpoOe0CHi8XeieYIr
+         o8/qzINnb1tGO/ANTwB2fo9EOd0CjR82aEVUcyPnfbZmWl69kKBleWHbhV+FZ+CppLp1
+         Pem4Jr2Ml4B99W18FKhuDGal2KZEZ39K814ACFM03a68E2L32sXmJBpY6qrjjSCBVg63
+         ZNoA==
+X-Gm-Message-State: APjAAAW5hkIkR3AE3OozpNfj7w+yiCRjhE1TOJN/o/9OQX4WEDd5YX6q
+        kUSiu9Fs3DZ7EyCjacrnp7Fd4H7vFVZsVjkv2Ng=
+X-Google-Smtp-Source: APXvYqzN7ajbuLnyLYQwurekLKD61VAgl70puXn2VR1xZnNL2UAjutIg/nsSAZ38o1qV0L9IzzdWg9SxMg/UJXSMP94=
+X-Received: by 2002:aca:c691:: with SMTP id w139mr3358062oif.17.1581108021108;
+ Fri, 07 Feb 2020 12:40:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
- <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org> <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
- <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org>
-In-Reply-To: <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Fri, 7 Feb 2020 12:37:56 -0800
-Message-ID: <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
- in one go
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Received: by 2002:a4a:d508:0:0:0:0:0 with HTTP; Fri, 7 Feb 2020 12:40:20 -0800 (PST)
+Reply-To: auch197722@gmail.com
+From:   "Mr. Theophilus Odadudu" <cristinamedina0010@gmail.com>
+Date:   Fri, 7 Feb 2020 15:40:20 -0500
+Message-ID: <CAPNvSTib=Bg9sRNNHErSAmBj=QFzRMn8DZQEN5XBwkcVkSHcMw@mail.gmail.com>
+Subject: LETTER OF INQUIRY
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 12:19 PM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 2/7/20 10:45 AM, Salman Qazi wrote:
-> > If I were to write this as a for-loop, it will look like this:
-> >
-> > for (i = 0; i == 0 || (run_again && i < 2); i++) {
-> > /* another level of 8 character wide indentation */
-> >      run_again = false;
-> >     /* a bunch of code that possibly sets run_again to true
-> > }
-> >
-> > if (run_again)
-> >      blk_mq_run_hw_queue(hctx, true);
->
-> That's not what I meant. What I meant is a loop that iterates at most
-> two times and also to break out of the loop if run_again == false.
->
+Good Day,
 
-I picked the most compact variant to demonstrate the problem.  Adding
-breaks isn't
-really helping the readability.
+I work as a clerk in a Bank here in Nigeria, I have a very
+confidential Business Proposition for you. There is a said amount of
+money floating in the bank unclaimed, belonging to the bank Foreign
+customer who die with his family in the Ethiopian Airline crash of
+March 11, 2019.
 
-for (i = 0; i < 2; i++) {
-  run_again = false;
-/* bunch of code that possibly sets it to true */
-...
- if (!run_again)
-    break;
-}
-if (run_again)
-    blk_mq_run_hw_queue(hctx, true);
+I seek your good collaboration to move the fund for our benefit. we
+have agreed that 40% be yours once you help claim.
 
-When I read this, I initially assume that the loop in general runs
-twice and that this is the common case.  It has the
-same problem with conveying intent.  Perhaps, more importantly, the
-point of using programming constructs is to shorten and simplify the
-code.
-There are still two if-statements in addition to the loop. We haven't
-gained much by introducing the loop.
+Do get back to with 1) Your Full Name: (2) Residential Address: (3)
+Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
+funds.
 
-> BTW, I share your concern about the additional indentation by eight
-> positions. How about avoiding deeper indentation by introducing a new
-> function?
-
-If there was a benefit to introducing the loop, this would be a good
-call.  But the way I see it, the introduction of another
-function is yet another way in which the introduction of the loop
-makes the code less readable.
-
-This is not a hill I want to die on.  If the maintainer agrees with
-you on this point, I will use a loop.
->
-> Thanks,
->
-> Bart.
+Regards
+Theophilus Odadudu
