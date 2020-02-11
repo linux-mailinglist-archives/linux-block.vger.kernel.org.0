@@ -2,70 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C88BA158FA5
-	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2020 14:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFA0159114
+	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2020 14:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgBKNPk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Feb 2020 08:15:40 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56740 "EHLO huawei.com"
+        id S1729509AbgBKN5z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Feb 2020 08:57:55 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9722 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728958AbgBKNPk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:15:40 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 20DB77D8FE978E7D8852;
-        Tue, 11 Feb 2020 21:15:30 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.224) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
- 21:15:29 +0800
-Subject: Re: [PATCH] block: genhd: skip blk_register_region() for disk using
- ext-dev
-From:   Hou Tao <houtao1@huawei.com>
-To:     <linux-block@vger.kernel.org>
-CC:     Jens Axboe <axboe@kernel.dk>
-References: <20191111014946.54533-1-houtao1@huawei.com>
-Message-ID: <47ca3cc9-35bf-6474-f4b5-6e95e94d27b5@huawei.com>
-Date:   Tue, 11 Feb 2020 21:15:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1729996AbgBKN5w (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:57:52 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BE598280D4FDEA4C0563;
+        Tue, 11 Feb 2020 21:57:47 +0800 (CST)
+Received: from [10.173.220.74] (10.173.220.74) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 11 Feb 2020 21:57:44 +0800
+Subject: Re: [PATCH] bdi: fix use-after-free for bdi device
+From:   Yufen Yu <yuyufen@huawei.com>
+To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC:     <jack@suse.cz>, <bvanassche@acm.org>, <tj@kernel.org>
+References: <20200211140038.146629-1-yuyufen@huawei.com>
+Message-ID: <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
+Date:   Tue, 11 Feb 2020 21:57:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191111014946.54533-1-houtao1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200211140038.146629-1-yuyufen@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
+X-Originating-IP: [10.173.220.74]
 X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ping ?
 
-On 2019/11/11 9:49, Hou Tao wrote:
-> It doesn't incur any harm now when the range parameter of
-> blk_register_region() is zero, but let's skip the useless call of
-> blk_register_region() for disk which uses ext-dev.
+> __blkg_prfill_rwstat() tries to get the device name by
+> 'bdi->dev', while the 'dev' has been freed by bdi_unregister().
+> Then, blkg_dev_name() will return an invalid name pointer,
+> resulting in crash on string(). The race as following:
 > 
-> Signed-off-by: Hou Tao <houtao1@huawei.com>
-> ---
->  block/genhd.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> CPU1                          CPU2
+> blkg_print_stat_bytes
+>                                __scsi_remove_device
+>                                del_gendisk
+>                                  bdi_unregister
 > 
-> diff --git a/block/genhd.c b/block/genhd.c
-> index 26b31fcae217..c61b59b550b0 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -739,8 +739,9 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
->  		ret = bdi_register_owner(disk->queue->backing_dev_info,
->  						disk_to_dev(disk));
->  		WARN_ON(ret);
-> -		blk_register_region(disk_devt(disk), disk->minors, NULL,
-> -				    exact_match, exact_lock, disk);
-> +		if (disk->minors)
-> +			blk_register_region(disk_devt(disk), disk->minors, NULL,
-> +						exact_match, exact_lock, disk);
->  	}
->  	register_disk(parent, disk, groups);
->  	if (register_queue)
+>                                  put_device(bdi->dev)
+>                                    kfree(bdi->dev)
+> __blkg_prfill_rwstat
+>    blkg_dev_name
+>      //use the freed bdi->dev
+>      dev_name(blkg->q->backing_dev_info->dev)
+>                                  bdi->dev = NULL
 > 
 
+There is another simple way to fix the problem.
+
+Since blkg_dev_name() have been coverd by rcu_read_lock/unlock(),
+we can wait all rcu reader to finish before free 'bdi->dev' to avoid use-after-free.
+
+But I am not sure if this solution will introduce new problems.
+
+
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 62f05f605fb5..6f322473ca4d 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -1007,15 +1007,19 @@ static void bdi_remove_from_list(struct backing_dev_info *bdi)
+
+  void bdi_unregister(struct backing_dev_info *bdi)
+  {
++       struct device *dev = bdi->dev;
+         /* make sure nobody finds us on the bdi_list anymore */
+         bdi_remove_from_list(bdi);
+         wb_shutdown(&bdi->wb);
+         cgwb_bdi_unregister(bdi);
+
+-       if (bdi->dev) {
++       if (dev) {
+                 bdi_debug_unregister(bdi);
+-               device_unregister(bdi->dev);
+                 bdi->dev = NULL;
++               device_del(dev);
++               /* wait all rcu reader of bdi->dev before free dev */
++               synchronize_rcu();
++               put_device(dev);
+         }
+
+         if (bdi->owner) {
