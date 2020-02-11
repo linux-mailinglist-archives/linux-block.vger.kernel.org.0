@@ -2,289 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C1215909B
-	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2020 14:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF728159521
+	for <lists+linux-block@lfdr.de>; Tue, 11 Feb 2020 17:39:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgBKNxk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Feb 2020 08:53:40 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54246 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729674AbgBKNxj (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:39 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AC4654E584C1934F9423;
-        Tue, 11 Feb 2020 21:53:37 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
- 21:53:34 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-CC:     <jack@suse.cz>, <bvanassche@acm.org>, <tj@kernel.org>
-Subject: [PATCH] bdi: fix use-after-free for bdi device
-Date:   Tue, 11 Feb 2020 22:00:38 +0800
-Message-ID: <20200211140038.146629-1-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.16.2.dirty
+        id S1730926AbgBKQjX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Feb 2020 11:39:23 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45191 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730918AbgBKQjX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:39:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581439161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xky2KislxK5IxZzkAgr2Tmutbb9TMu3YGRpEz4bopS4=;
+        b=SeGYZFIcUCXxXQGnx3Y4o+PR7K1jJSPZTq7rT+waWdznkPa5d4SgMw3J1n7TDm5OF+4dG6
+        Ak1OKNk5dyMUoMeyJlmWQ0V5m5cpang28S89wfD/kin768gml2wA85mHrnc/Xq9MKAW54i
+        ah5dirq9Orwu9iXmgp8O0PpOSF9BNsQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-V-cC41HZPnSqRFAyQOy5mA-1; Tue, 11 Feb 2020 11:39:17 -0500
+X-MC-Unique: V-cC41HZPnSqRFAyQOy5mA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 972E810054E3;
+        Tue, 11 Feb 2020 16:39:15 +0000 (UTC)
+Received: from [10.10.123.148] (ovpn-123-148.rdu2.redhat.com [10.10.123.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A48F60BF1;
+        Tue, 11 Feb 2020 16:39:14 +0000 (UTC)
+Subject: Re: [v3] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
+To:     "sunke (E)" <sunke32@huawei.com>, josef@toxicpanda.com,
+        axboe@kernel.dk
+References: <20200210073241.41813-1-sunke32@huawei.com>
+ <5E418D62.8090102@redhat.com>
+ <c3531fc5-73b3-6ef4-816e-97f491f45c18@huawei.com>
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5E42D8B1.406@redhat.com>
+Date:   Tue, 11 Feb 2020 10:39:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+In-Reply-To: <c3531fc5-73b3-6ef4-816e-97f491f45c18@huawei.com>
+Content-Type: text/plain; charset=utf-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We reported a kernel crash:
+On 02/10/2020 10:12 PM, sunke (E) wrote:
+>=20
+>=20
+> =E5=9C=A8 2020/2/11 1:05, Mike Christie =E5=86=99=E9=81=93:
+>> On 02/10/2020 01:32 AM, Sun Ke wrote:
+>>> Open /dev/nbdX first, the config_refs will be 1 and
+>>> the pointers in nbd_device are still null. Disconnect
+>>> /dev/nbdX, then reference a null recv_workq. The
+>>> protection by config_refs in nbd_genl_disconnect is useless.
+>>>
+>>> To fix it, just add a check for a non null task_recv in
+>>> nbd_genl_disconnect.
+>>>
+>>> Signed-off-by: Sun Ke <sunke32@huawei.com>
+>>> ---
+>>> v1 -> v2:
+>>> Add an omitted mutex_unlock.
+>>>
+>>> v2 -> v3:
+>>> Add nbd->config_lock, suggested by Josef.
+>>> ---
+>>>   drivers/block/nbd.c | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>>> index b4607dd96185..870b3fd0c101 100644
+>>> --- a/drivers/block/nbd.c
+>>> +++ b/drivers/block/nbd.c
+>>> @@ -2008,12 +2008,20 @@ static int nbd_genl_disconnect(struct sk_buff
+>>> *skb, struct genl_info *info)
+>>>                  index);
+>>>           return -EINVAL;
+>>>       }
+>>> +    mutex_lock(&nbd->config_lock);
+>>>       if (!refcount_inc_not_zero(&nbd->refs)) {
+>>> +        mutex_unlock(&nbd->config_lock);
+>>>           mutex_unlock(&nbd_index_mutex);
+>>>           printk(KERN_ERR "nbd: device at index %d is going down\n",
+>>>                  index);
+>>>           return -EINVAL;
+>>>       }
+>>> +    if (!nbd->recv_workq) {
+>>> +        mutex_unlock(&nbd->config_lock);
+>>> +        mutex_unlock(&nbd_index_mutex);
+>>> +        return -EINVAL;
+>>> +    }
+>>> +    mutex_unlock(&nbd->config_lock);
+>>>       mutex_unlock(&nbd_index_mutex);
+>>>       if (!refcount_inc_not_zero(&nbd->config_refs)) {
+>>>           nbd_put(nbd);
+>>>
+>>
+>> With my other patch then we will not need this right? It handles your
+>> case by just being integrated with the existing checks in:
+>>
+>> nbd_disconnect_and_put->nbd_clear_sock->sock_shutdown
+>>
+>> ...
+>>
+>> static void sock_shutdown(struct nbd_device *nbd)
+>> {
+>>
+>> ....
+>>
+>>          if (config->num_connections =3D=3D 0)
+>>                  return;
+>>
+>>
+>> num_connections is zero for your case since we never did a
+>> nbd_genl_disconnect so we would return here.
+>>
+>>
+>> .
+>>
+> Hi Mike
+>=20
+> Your point is not right totally.
+>=20
+> Yes, config->num_connections is 0 and will return in sock_shutdown. The=
+n
+> it will back to nbd_disconnect_and_put and do flush_workqueue
+> (nbd->recv_workq).
+>=20
+> nbd_disconnect_and_put
+>     ->nbd_clear_sock
+>         ->sock_shutdown
+>     ->flush_workqueue
+>=20
 
-[201962.639350] Call trace:
-[201962.644403]  string+0x28/0xa0
-[201962.650501]  vsnprintf+0x5f0/0x748
-[201962.657472]  seq_vprintf+0x70/0x98
-[201962.664442]  seq_printf+0x7c/0xa0
-[201962.671238]  __blkg_prfill_rwstat+0x84/0x128
-[201962.679949]  blkg_prfill_rwstat_field+0x94/0xc0
-[201962.689182]  blkcg_print_blkgs+0xcc/0x140
-[201962.697370]  blkg_print_stat_bytes+0x4c/0x60
-[201962.706083]  cgroup_seqfile_show+0x58/0xc0
-[201962.714446]  kernfs_seq_show+0x44/0x50
-[201962.722112]  seq_read+0xd4/0x4a8
-[201962.728732]  kernfs_fop_read+0x16c/0x218
-[201962.736748]  __vfs_read+0x60/0x188
-[201962.743717]  vfs_read+0x94/0x150
-[201962.750338]  ksys_read+0x6c/0xd8
-[201962.756958]  __arm64_sys_read+0x24/0x30
-[201962.764800]  el0_svc_common+0x78/0x130
-[201962.772466]  el0_svc_handler+0x38/0x78
-[201962.780131]  el0_svc+0x8/0xc
+My patch removed that extra flush_workqueue in nbd_disconnect_and_put.
 
-__blkg_prfill_rwstat() tries to get the device name by
-'bdi->dev', while the 'dev' has been freed by bdi_unregister().
-Then, blkg_dev_name() will return an invalid name pointer,
-resulting in crash on string(). The race as following:
-
-CPU1                          CPU2
-blkg_print_stat_bytes
-                              __scsi_remove_device
-                              del_gendisk
-                                bdi_unregister
-
-                                put_device(bdi->dev)
-                                  kfree(bdi->dev)
-__blkg_prfill_rwstat
-  blkg_dev_name
-    //use the freed bdi->dev
-    dev_name(blkg->q->backing_dev_info->dev)
-                                bdi->dev = NULL
-
-To fix the bug, we add a new spinlock for bdi to protect
-the device. Then, blk_dev_name() returns valid name or
-'NULL', both of them will be okay.
-
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- block/blk-cgroup-rwstat.c        |  3 ++-
- block/blk-cgroup.c               | 26 +++++++++++++++++++-------
- block/blk-iocost.c               |  9 ++++++---
- block/blk-iolatency.c            |  3 ++-
- block/blk-throttle.c             |  3 ++-
- include/linux/backing-dev-defs.h |  1 +
- include/linux/blk-cgroup.h       |  2 +-
- mm/backing-dev.c                 |  8 ++++++--
- 8 files changed, 39 insertions(+), 16 deletions(-)
-
-diff --git a/block/blk-cgroup-rwstat.c b/block/blk-cgroup-rwstat.c
-index 85d5790ac49b..20ef51cb3ea4 100644
---- a/block/blk-cgroup-rwstat.c
-+++ b/block/blk-cgroup-rwstat.c
-@@ -49,7 +49,8 @@ u64 __blkg_prfill_rwstat(struct seq_file *sf, struct blkg_policy_data *pd,
- 		[BLKG_RWSTAT_ASYNC]	= "Async",
- 		[BLKG_RWSTAT_DISCARD]	= "Discard",
- 	};
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 	u64 v;
- 	int i;
- 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index a229b94d5390..41bf7513c249 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -492,12 +492,22 @@ static int blkcg_reset_stats(struct cgroup_subsys_state *css,
- 	return 0;
- }
- 
--const char *blkg_dev_name(struct blkcg_gq *blkg)
-+char *blkg_dev_name(struct blkcg_gq *blkg, char *dname)
- {
- 	/* some drivers (floppy) instantiate a queue w/o disk registered */
--	if (blkg->q->backing_dev_info->dev)
--		return dev_name(blkg->q->backing_dev_info->dev);
--	return NULL;
-+	struct backing_dev_info *bdi = blkg->q->backing_dev_info;
-+
-+	/*
-+	 * We use spinlock to protect bdi->dev, avoiding
-+	 * the device been freed by bdi_unregister().
-+	 */
-+	spin_lock_irq(&bdi->lock);
-+	if (bdi->dev)
-+		strlcpy(dname, dev_name(bdi->dev), 32);
-+	else
-+		dname = NULL;
-+	spin_unlock_irq(&bdi->lock);
-+	return dname;
- }
- 
- /**
-@@ -551,7 +561,8 @@ EXPORT_SYMBOL_GPL(blkcg_print_blkgs);
-  */
- u64 __blkg_prfill_u64(struct seq_file *sf, struct blkg_policy_data *pd, u64 v)
- {
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 
- 	if (!dname)
- 		return 0;
-@@ -749,7 +760,8 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
- 
- 	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
- 		struct blkg_iostat_set *bis = &blkg->iostat;
--		const char *dname;
-+		char dev_name[32];
-+		char *dname;
- 		char *buf;
- 		u64 rbytes, wbytes, rios, wios, dbytes, dios;
- 		size_t size = seq_get_buf(sf, &buf), off = 0;
-@@ -762,7 +774,7 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
- 		if (!blkg->online)
- 			goto skip;
- 
--		dname = blkg_dev_name(blkg);
-+		dname = blkg_dev_name(blkg, dev_name);
- 		if (!dname)
- 			goto skip;
- 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 27ca68621137..d38d2f81343e 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2047,7 +2047,8 @@ static void ioc_pd_free(struct blkg_policy_data *pd)
- static u64 ioc_weight_prfill(struct seq_file *sf, struct blkg_policy_data *pd,
- 			     int off)
- {
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 	struct ioc_gq *iocg = pd_to_iocg(pd);
- 
- 	if (dname && iocg->cfg_weight)
-@@ -2133,7 +2134,8 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
- static u64 ioc_qos_prfill(struct seq_file *sf, struct blkg_policy_data *pd,
- 			  int off)
- {
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	const char *dname = blkg_dev_name(pd->blkg, dev_name);
- 	struct ioc *ioc = pd_to_iocg(pd)->ioc;
- 
- 	if (!dname)
-@@ -2304,7 +2306,8 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
- static u64 ioc_cost_model_prfill(struct seq_file *sf,
- 				 struct blkg_policy_data *pd, int off)
- {
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 	struct ioc *ioc = pd_to_iocg(pd)->ioc;
- 	u64 *u = ioc->params.i_lcoefs;
- 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index c128d50cb410..71bcbd757889 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -868,7 +868,8 @@ static u64 iolatency_prfill_limit(struct seq_file *sf,
- 				  struct blkg_policy_data *pd, int off)
- {
- 	struct iolatency_grp *iolat = pd_to_lat(pd);
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 
- 	if (!dname || !iolat->min_lat_nsec)
- 		return 0;
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 98233c9c65a8..83b0b43fe4a3 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -1560,7 +1560,8 @@ static u64 tg_prfill_limit(struct seq_file *sf, struct blkg_policy_data *pd,
- 			 int off)
- {
- 	struct throtl_grp *tg = pd_to_tg(pd);
--	const char *dname = blkg_dev_name(pd->blkg);
-+	char dev_name[32];
-+	char *dname = blkg_dev_name(pd->blkg, dev_name);
- 	char bufs[4][21] = { "max", "max", "max", "max" };
- 	u64 bps_dft;
- 	unsigned int iops_dft;
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005a..c98dac4a7953 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -227,6 +227,7 @@ struct backing_dev_info {
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *debug_dir;
- #endif
-+	spinlock_t lock;		/* protects dev */
- };
- 
- enum {
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index e4a6949fd171..6034ef9cf07a 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -198,7 +198,7 @@ int blkcg_activate_policy(struct request_queue *q,
- void blkcg_deactivate_policy(struct request_queue *q,
- 			     const struct blkcg_policy *pol);
- 
--const char *blkg_dev_name(struct blkcg_gq *blkg);
-+char *blkg_dev_name(struct blkcg_gq *blkg, char *dev_name);
- void blkcg_print_blkgs(struct seq_file *sf, struct blkcg *blkcg,
- 		       u64 (*prfill)(struct seq_file *,
- 				     struct blkg_policy_data *, int),
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 62f05f605fb5..a5aa00ec2d8a 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -859,6 +859,7 @@ static int bdi_init(struct backing_dev_info *bdi)
- 	INIT_LIST_HEAD(&bdi->bdi_list);
- 	INIT_LIST_HEAD(&bdi->wb_list);
- 	init_waitqueue_head(&bdi->wb_waitq);
-+	spin_lock_init(&bdi->lock);
- 
- 	ret = cgwb_bdi_init(bdi);
- 
-@@ -1007,15 +1008,18 @@ static void bdi_remove_from_list(struct backing_dev_info *bdi)
- 
- void bdi_unregister(struct backing_dev_info *bdi)
- {
-+	struct device *dev = bdi->dev;
- 	/* make sure nobody finds us on the bdi_list anymore */
- 	bdi_remove_from_list(bdi);
- 	wb_shutdown(&bdi->wb);
- 	cgwb_bdi_unregister(bdi);
- 
--	if (bdi->dev) {
-+	if (dev) {
- 		bdi_debug_unregister(bdi);
--		device_unregister(bdi->dev);
-+		spin_lock(&bdi->lock);
- 		bdi->dev = NULL;
-+		spin_unlock(&bdi->lock);
-+		device_unregister(dev);
- 	}
- 
- 	if (bdi->owner) {
--- 
-2.16.2.dirty
+The idea of the patch was to move the flush calls to when we do
+sock_shutdown in the config (connect, disconnect, clear sock) code
+paths, because that is the time we know we will need to kill the recv
+workers and wait for them to complete so we know they are not still
+running when userspace does a new config operation.
 
