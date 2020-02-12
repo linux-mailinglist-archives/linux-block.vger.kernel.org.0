@@ -2,68 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A51F15B2A8
-	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2020 22:20:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C0E15B2C2
+	for <lists+linux-block@lfdr.de>; Wed, 12 Feb 2020 22:33:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgBLVUG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Feb 2020 16:20:06 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:37253 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgBLVUG (ORCPT
+        id S1727692AbgBLVdr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Feb 2020 16:33:47 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41287 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLVdq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:20:06 -0500
-Received: by mail-qt1-f180.google.com with SMTP id w47so2777923qtk.4
-        for <linux-block@vger.kernel.org>; Wed, 12 Feb 2020 13:20:05 -0800 (PST)
+        Wed, 12 Feb 2020 16:33:46 -0500
+Received: by mail-qt1-f194.google.com with SMTP id l21so2789047qtr.8
+        for <linux-block@vger.kernel.org>; Wed, 12 Feb 2020 13:33:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1bU26zeh4MdvuXmPDJT4p/4xaGLd8hghveN0fr+YHY4=;
-        b=Tv8esNDefrmk6Kmupm/EaTHf5ru45YLxxKqNNXRtAkjaOpWSIkrYF7ukgonzPJtxtI
-         VTXwBRSnGvkB52o0AXsJpZ/CEopmaaKj9kAZ44DADajQ0Rx42OL8WGbkptPAWhTsXwQD
-         3+CTMy1x3F9kNFtlEf+ecVOcA4HlOPUJxOROaVMZMjxPDNIu92BFIWopQuOYndUs2TZu
-         cUpUnTvKx5Phfb3S2mFJsDBSC3gwq1ZDXmRyd8TvhyUqzp3b8o4Eh/l6XJ1Lu6f0ORR6
-         SsylezaiR9VrEFGjUrSigplD/+rIaqMtX/d4JDogrHZ7JjQ1Ns82RELnTtPqq2BZJIKp
-         2SiA==
+        bh=CB1ulDKxwf2tqP+HI+yYRfi4ISHZYVmjSyJfHnJrRmQ=;
+        b=XYBgb2D/QSiYyLKz+WU5/HJUkBSXlNqM5+J4mVNuY8V59H/+qg31E2bYLEPHvqvkyq
+         CdVdB03l1WMdiCG6Stup6FaShbB+Gu09yi6DFdQ+FfY8kCvhfMQr0ysGM6a5R/ryIPCU
+         cIZ9XSH8AjizxhdmW+dFH4rP8dLHbsl+GobHWU5AuQoK4PxFSAvvT9M70CnF4TwhBLeH
+         Cg6B5tz1ibbSXtZ6mJRMksWMgp/pAsYVxg4JQ2M3lZMWQeLXglddhOZqnQrQlrTyBC3e
+         RieL+zmOtsfz14/UWbwx7mI6kdSXgj4fE3ccN01eIl2eJtR2SyGCzdZ3dK8KltcRAszD
+         PHUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=1bU26zeh4MdvuXmPDJT4p/4xaGLd8hghveN0fr+YHY4=;
-        b=hEP+VcOhbuMiEEn2BvdwNBLLDucwCE5s9oAOWFGKm4Wnzgt9zKKoQ+98veZq7+vX0X
-         sAE7RgiW/b2vCNaA+aybhJDofbXi1LoerhYgh2zboGGNu3kbmgHFR4xggJqhUToMV6nJ
-         bMA6LUXRlcBIb+LF+uPIxhL5IYLVwoqXlAhhKmFK57GWmDfDdZrKx+RMpIETuX/qYj40
-         FKOHCRR9SuUrciDnr79GyITLS02VBxIwcKK4J0L0yvy6qw4Tlkfi2lZsJJ3KnTQnbzPP
-         +xQIqVdd7bMK+1mIcbCyDsAQ2I5Q13ZXiOK7v36eQ1eY4y06He/1WqnhYfSEvm4FOdbs
-         aBqg==
-X-Gm-Message-State: APjAAAVqTw6g4F9rj1Zp1i2fu1+Ji85NzD6FYjTddhdOnCvHoXzznGSz
-        PxFsJGOT6pCCUlAew2gtfB0=
-X-Google-Smtp-Source: APXvYqwiKoGH+Fide9YL6ATH4CTwLKYFzJDPZMJBo6X3q/gMEPXa8DYj1BEQ0TXNUKxJtj1UVk0qYg==
-X-Received: by 2002:ac8:1ca:: with SMTP id b10mr8779886qtg.314.1581542405153;
-        Wed, 12 Feb 2020 13:20:05 -0800 (PST)
+        bh=CB1ulDKxwf2tqP+HI+yYRfi4ISHZYVmjSyJfHnJrRmQ=;
+        b=D1S3dzO8ZFHnndeanKPWF9SUGtUl/S/VsQtxOWLRMBSdDQFiRGnscJb0ULXGOaPHHF
+         Dz1usB4xvvUo13z9fraEikKyrR1hsFwLZlQdZPiTfS5KtEcFrqYX44AMEoN/7uuPKOOl
+         b5sHNOsu2IUIvq8yvscvITMC/XC9HaBpqO1Z4oqkRux9I10hhxDVnkRzHmxlyd2W2IpR
+         QXS3Df4+5oQi2zl8Eygj7GJJHLlpFWxX1KVuWAr8xFazgzIV+NhQAzaDFxKBUWadQMgT
+         dlpWKti4g4p0NOJM9a5+OH53Iq/Ex+yEvh0+q3c0T8z+85tSCgdW08IlIXBOtGkgZdWI
+         czEA==
+X-Gm-Message-State: APjAAAUWenJUCfFPx9pVW8p2u5f5l9PQeHXW6A1NOZ8KeZMreTCu3qnf
+        kr5lWjy8ebEr1ttf7rGxbfc=
+X-Google-Smtp-Source: APXvYqzOJycJV34qt3zPAx8k3/WHi+CbQXH8RYVh9RE2N0I0Y4MJ33HQkoi9MRKE9iTxErIV5C0fEg==
+X-Received: by 2002:aed:3e53:: with SMTP id m19mr9088468qtf.387.1581543225561;
+        Wed, 12 Feb 2020 13:33:45 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::1:985a])
-        by smtp.gmail.com with ESMTPSA id w41sm211462qtj.49.2020.02.12.13.20.04
+        by smtp.gmail.com with ESMTPSA id p135sm109084qke.2.2020.02.12.13.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 13:20:04 -0800 (PST)
-Date:   Wed, 12 Feb 2020 16:20:04 -0500
+        Wed, 12 Feb 2020 13:33:44 -0800 (PST)
+Date:   Wed, 12 Feb 2020 16:33:44 -0500
 From:   Tejun Heo <tj@kernel.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block <linux-block@vger.kernel.org>
-Subject: Re: iocost_monitor.py tells that iocost is not enabled
-Message-ID: <20200212212004.GD80993@mtj.thefacebook.com>
-References: <8FD4B865-5984-476F-BE47-98938D162749@linaro.org>
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, jack@suse.cz,
+        bvanassche@acm.org
+Subject: Re: [PATCH] bdi: fix use-after-free for bdi device
+Message-ID: <20200212213344.GE80993@mtj.thefacebook.com>
+References: <20200211140038.146629-1-yuyufen@huawei.com>
+ <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8FD4B865-5984-476F-BE47-98938D162749@linaro.org>
+In-Reply-To: <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There was a change to drgn which required a minor update to the script
-(9ea37e24d4a9). Can you see whether you see the failure w/ the commit
-applied?
+Hello, Yufen.
+
+On Tue, Feb 11, 2020 at 09:57:44PM +0800, Yufen Yu wrote:
+> There is another simple way to fix the problem.
+> 
+> Since blkg_dev_name() have been coverd by rcu_read_lock/unlock(),
+> we can wait all rcu reader to finish before free 'bdi->dev' to avoid use-after-free.
+> 
+> But I am not sure if this solution will introduce new problems.
+
+So, I don't see why bdi->dev should be freed before bdi itself does.
+Would something like the following work?
+
+bdi_unregister()
+{
+        ...
+        if (bdi->dev) {
+                ...
+                device_get(bdi->dev);   // to be put on release
+                device_unregister(bdi->dev);
+        }
+        ...
+}
+
+release_bdi()
+{
+        ...
+        if (bdi->dev) {
+                // warn if dev is still registered
+                device_put(bdi->dev);
+        }
+        ...
+}
 
 Thanks.
 
