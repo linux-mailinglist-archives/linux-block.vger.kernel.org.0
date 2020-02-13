@@ -2,68 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6BBC15B47A
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 00:07:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C80B215B5B3
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 01:10:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgBLXHH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Feb 2020 18:07:07 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47354 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727692AbgBLXHH (ORCPT
+        id S1729259AbgBMAJ5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Feb 2020 19:09:57 -0500
+Received: from avon.wwwdotorg.org ([104.237.132.123]:57194 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729176AbgBMAJ5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:07:07 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-101.corp.google.com [104.133.0.101] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01CN6rwI006237
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Feb 2020 18:06:53 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id CAA92420324; Wed, 12 Feb 2020 18:06:52 -0500 (EST)
-Date:   Wed, 12 Feb 2020 18:06:52 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Salman Qazi <sqazi@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Gwendal Grignou <gwendal@google.com>,
-        Jesse Barnes <jsbarnes@google.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-Message-ID: <20200212230652.GA145444@mit.edu>
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+        Wed, 12 Feb 2020 19:09:57 -0500
+X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:09:57 EST
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 843671C0423;
+        Wed, 12 Feb 2020 17:02:44 -0700 (MST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Simon Glass <sjg@chromium.org>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Subject: dd, close(), sync, and the Linux disk cache
+Message-ID: <b7ad1223-4224-da46-4c48-50427360f31c@wwwdotorg.org>
+Date:   Wed, 12 Feb 2020 17:02:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is a problem we've been strugging with in other contexts.  For
-example, if you have the hung task timer set to 2 minutes, and the
-system to panic if the hung task timer exceeds that, and an NFS server
-which the client is writing to crashes, and it takes longer for the
-NFS server to come back, that might be a situation where we might want
-to exempt the hung task warning from panic'ing the system.  On the
-other hand, if the process is failing to schedule for other reasons,
-maybe we would still want the hung task timeout to go off.
+Jens et. al.,
 
-So I've been meditating over whether the right answer is to just
-globally configure the hung task timer to something like 5 or 10
-minutes (which would require no kernel changes, yay?), or have some
-way of telling the hung task timeout logic that it shouldn't apply, or
-should have a different timeout, when we're waiting for I/O to
-complete.
+If I dd to an SD card (e.g. via a USB SD card reader), is it required to 
+run sync afterward in order to guarantee that all written data is 
+written to the SD card? I'm running dd with a simple command-line like 
+"dd if=file.img of=/dev/sdc".
 
-It seems to me that perhaps there's a different solution here for your
-specific case, which is what if there is a asynchronous version of
-BLKSECDISCARD, either using io_uring or some other interface?  That
-bypasses the whole issue of how do we modulate the hung task timeout
-when it's a situation where maybe it's OK for a userspace thread to
-block for more than 120 seconds, without having to either completely
-disable the hung task timeout, or changing it globally to some much
-larger value.
+In practice on my system, strace shows me that dd completes its write 
+operations relatively quickly, since many are buffered in the kernel. 
+However, dd's call to close() takes a very long time. I believe this 
+delay is due to the kernel flushing all the buffers to disk, and so a 
+sync is not required. I found code in the kernel that does appear to do 
+this:
 
-					- Ted
+https://elixir.bootlin.com/linux/v5.5/source/fs/block_dev.c#L2145
+dev_blk_fops.release = blkdev_close
+blkdev_close calls blkdev_put
+blkdev_put calls __blkdev_put
+__blkdev_put calls sync_blockdev if the device open count is 0
+sync_blockdev calls __sync_blockdev with the wait flag set
+__sync_blockdev calls filemap_write_and_wait
+
+However, Simon finds that when he dd's to an SD card, he needs to 
+execute sync afterward to avoid a corrupted SD card. I'm trying to 
+understand what the difference is, and whether sync is the correct 
+solution for this issue, or just something that happens to take some 
+time (e.g. to flush buffers to the sytem's main hard disk) during which 
+some other issue is typically resolved.
+
+For reference, I've seen the "no sync required" behaviour on my laptop 
+with a built-in PCIe SD reader which shows up as /dev/mmcblkN and on my 
+desktop using a USB SD reader which shows up as /dev/sdN. Simon is I 
+believe using a USB SD card reader, which is actually a mux device that 
+allows switching the SD card between hosts, with the host->host switch 
+happening immediately after the dd (or dd+sync) completes.
