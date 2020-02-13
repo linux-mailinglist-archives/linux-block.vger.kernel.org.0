@@ -2,266 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F4F415B5AC
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 01:07:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EB3815B692
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 02:20:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgBMAH6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Feb 2020 19:07:58 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46676 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBMAH5 (ORCPT
+        id S1729276AbgBMBUu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Feb 2020 20:20:50 -0500
+Received: from mail-il1-f181.google.com ([209.85.166.181]:36548 "EHLO
+        mail-il1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729185AbgBMBUu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:07:57 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e21so3061078qtp.13;
-        Wed, 12 Feb 2020 16:07:56 -0800 (PST)
+        Wed, 12 Feb 2020 20:20:50 -0500
+Received: by mail-il1-f181.google.com with SMTP id b15so3521650iln.3
+        for <linux-block@vger.kernel.org>; Wed, 12 Feb 2020 17:20:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
-        b=jmvVOhaXi+4hUwokVKiclEzfFZs0kumgKecddVwQJ6W4BYeb4eunfR42QH1BanKgXe
-         MWQhbMX2xwNbvy0w6kTd2sh93gkpDWROStsMnfu41dD9mtVfKl5N/rEJCKmqqY4aoAcn
-         kpev9dqGLS1dzO5YtQPFJGED458NEkCaq8BEWGqGQcyVhuH/okSHYJfODuu/8aZmP4cG
-         C3ZXndp9Fcx2UthovyxMFXfFmE7hwC77Y/SZbgnh3Ul4OJATixPYCRxJfupisKXfC2C1
-         oGZSd76/0NwAuj1H3V+4klnwdDUYqolEtgnvSXfBSw3iRwkHKOmYNLCadx1UHUFV8fTN
-         Nsbw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mHNas6UsXn7Nf8sBWZiCEeYXkSgWOiwfe+b1rjkowDU=;
+        b=jDyUKoU12U5rX4bR742TJbOo0bcz8Ph6GJnr7yKk8hsnm8+zh0h8WvzQ+5/ExuJJd9
+         K1V4U05uH/IE3a/IloM1LlHZ2XAMM+pHD7V2kTN5M1H8cHTKl04gYepCTbPBfi8MCa4G
+         b4K/LiyRKLaEblX1V1Zx7K3Nyf1SMqGCvBE1/i5O+QmifHakisvf5o/4JttKOW7dByQb
+         rtal656EZxAH4RilPS1U01l8EV6J4SQTj/FFMZult3+yzr4b2eH82B9ef0TuGCjtLQsS
+         RZgRDpQvcEwX000bTGLxMoxtMNlLTvTTn6LkbNaS7Ek1GNGnVG+37SxBY357R4saWJ4O
+         6IkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
-        b=hDWJu8nIZL3fgb9prQlc26AjjMLjIS+Wo6ek49B06wKhiHNNSYvS8HHenfKSIoX7Fo
-         bcQuFahDq3lNBxXkgWjol8r4JT0y+u0inv1D9AXEPVs3AlAa++nAbDiK0qpV50NAwBKp
-         ePRUTOKhF3WXH2tjnPXVS5/USjRctDtd5fSQslpTmvIrS9FSXe9yiNFUZiKb1Id6alnG
-         umFOMFrbVpVEouzntkVsAu4l5n8PpkLDXe3JJEq3F210q6DYLF/5uUFVDL/j2ApCGcA6
-         +60RFlHXWqH4VUxcruwhCBZS/5RZdTIUIOWkw5QFDMYzLICK0BvCUwYGXScKpEbVlxnn
-         L+0A==
-X-Gm-Message-State: APjAAAWp1lQ3k5fkr1kLyhjdNiiAhRJNbbaiLKt4ckZ6dPejCRK0hRVA
-        aKFW0T+eePXffa2emsuWbHg=
-X-Google-Smtp-Source: APXvYqxkglYm+ctYrqwr6O5FMziGEB0S7P4tMND0bpObW7mupop3DlvqhOJzX02e+LxNJ9Ob5nbkpw==
-X-Received: by 2002:ac8:3ac3:: with SMTP id x61mr9574212qte.25.1581552475996;
-        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:985a])
-        by smtp.gmail.com with ESMTPSA id 64sm312550qkh.98.2020.02.12.16.07.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
-Date:   Wed, 12 Feb 2020 19:07:54 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Dan Schatzberg <dschatzberg@fb.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH 2/2] loop: charge i/o per cgroup
-Message-ID: <20200213000754.GD88887@mtj.thefacebook.com>
-References: <20200205223348.880610-1-dschatzberg@fb.com>
- <20200205223348.880610-3-dschatzberg@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mHNas6UsXn7Nf8sBWZiCEeYXkSgWOiwfe+b1rjkowDU=;
+        b=BALCzl4iYAT4qKH+Iwnk1+omHvgu71p+S75t2ZCaMrOsEWbPtuLUuErrBEEg5zQjQQ
+         ExhSNRj87t/yeFZPEfK5biQtzc5xDHvVaxcWwrtJvMl/p9tD1UqnA9baC1E0eM4/Q6iq
+         mu09M0dIkUy4DLMfvqMsfsOXmpmgluMvRyomSA1Us+ao0NmUbAH+oGgMbJo1Ie00aGLW
+         cgK4VOcZQCN7oK09J+velu2NFAwgz4QL3+pwywYEYY2iIWS8sLHEo7pofDKiKSSXhazg
+         SCLfQWm3svAPMROWxaftaPXLm+4QSX9o13Z3gQtdss1pcRTQtdpd4z6a5P3SHA3w+8Mu
+         fkuQ==
+X-Gm-Message-State: APjAAAXnv93Ytvk4ctwnOJvCKnP1c8879cLi2K7knitiXdiWuO0cyYre
+        Pn4A1y5TBgWaq409mJjQ2Gy5EkPbm+ji5nHmcdeDIA==
+X-Google-Smtp-Source: APXvYqyNpvHvjqpaaZba0hZuyG5sXWzOSR2xDWNUcLL2J13F009UDLsF4Rm3JnE6GLQT48KmEBZIr1Uk+FTKLg2QnvE=
+X-Received: by 2002:a05:6e02:df2:: with SMTP id m18mr13577866ilj.56.1581556849306;
+ Wed, 12 Feb 2020 17:20:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205223348.880610-3-dschatzberg@fb.com>
+References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+ <20200212230652.GA145444@mit.edu>
+In-Reply-To: <20200212230652.GA145444@mit.edu>
+From:   Salman Qazi <sqazi@google.com>
+Date:   Wed, 12 Feb 2020 17:20:38 -0800
+Message-ID: <CAKUOC8UwjUyX1Ou-Gad29-DsyYHMtmLjwV9_0ghGUx=ys_drbA@mail.gmail.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Gwendal Grignou <gwendal@google.com>,
+        Jesse Barnes <jsbarnes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+On Wed, Feb 12, 2020 at 3:07 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> This is a problem we've been strugging with in other contexts.  For
+> example, if you have the hung task timer set to 2 minutes, and the
+> system to panic if the hung task timer exceeds that, and an NFS server
+> which the client is writing to crashes, and it takes longer for the
+> NFS server to come back, that might be a situation where we might want
+> to exempt the hung task warning from panic'ing the system.  On the
+> other hand, if the process is failing to schedule for other reasons,
+> maybe we would still want the hung task timeout to go off.
+>
+> So I've been meditating over whether the right answer is to just
+> globally configure the hung task timer to something like 5 or 10
+> minutes (which would require no kernel changes, yay?), or have some
+> way of telling the hung task timeout logic that it shouldn't apply, or
+> should have a different timeout, when we're waiting for I/O to
+> complete.
 
-On Wed, Feb 05, 2020 at 02:33:48PM -0800, Dan Schatzberg wrote:
-> -static int loop_kthread_worker_fn(void *worker_ptr)
-> -{
-> -	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-> -	return kthread_worker_fn(worker_ptr);
-> +	flush_workqueue(lo->workqueue);
-> +	destroy_workqueue(lo->workqueue);
+The problem that I anticipate in our space is that a generous timeout
+will make impatient people reboot their chromebooks, losing us
+information
+about hangs.  But, this can be worked around by having multiple
+different timeouts.  For instance, a thread that is expecting to do
+something slow, can set a flag
+to indicate that it wishes to be held against the more generous
+criteria.  This is something I am tempted to do on older kernels where
+we might not feel
+comfortable backporting io_uring.
 
-destroy_workqueue() implies draining, so the explicit flush isn't
-necessary.
+>
+> It seems to me that perhaps there's a different solution here for your
+> specific case, which is what if there is a asynchronous version of
+> BLKSECDISCARD, either using io_uring or some other interface?  That
+> bypasses the whole issue of how do we modulate the hung task timeout
+> when it's a situation where maybe it's OK for a userspace thread to
+> block for more than 120 seconds, without having to either completely
+> disable the hung task timeout, or changing it globally to some much
+> larger value.
 
->  static int loop_prepare_queue(struct loop_device *lo)
->  {
-> +	lo->workqueue = alloc_workqueue("loop%d",
-> +					WQ_FREEZABLE | WQ_MEM_RECLAIM |
-> +					WQ_HIGHPRI,
-> +					lo->lo_number);
-> +	if (IS_ERR(lo->workqueue))
->  		return -ENOMEM;
+This is worth evaluating.
 
-Given that these can be pretty cpu intensive and a single work item
-can be saturated by multiple cpus keepings queueing bios, it probably
-would be better to use an unbound workqueue (WQ_UNBOUND) and let the
-scheduler figure out.
+Thanks,
 
-> +struct loop_worker {
-> +	struct rb_node rb_node;
-> +	struct work_struct work;
-> +	struct list_head cmd_list;
-> +	struct loop_device *lo;
-> +	int css_id;
-> +};
-> +
-> +static void loop_workfn(struct work_struct *work);
-> +static void loop_rootcg_workfn(struct work_struct *work);
-> +
-> +static void loop_queue_on_rootcg_locked(struct loop_device *lo,
-> +					struct loop_cmd *cmd)
-> +{
+Salman
 
-lockdep_assert_held() here?
-
-> +	list_add_tail(&cmd->list_entry, &lo->rootcg_cmd_list);
-> +	if (list_is_first(&cmd->list_entry, &lo->rootcg_cmd_list))
-> +		queue_work(lo->workqueue, &lo->rootcg_work);
-
-I'd just call queue_work() without the preceding check. Trying to
-requeue an active work item is pretty cheap.
-
-> +}
-> +
-> +static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
-> +{
-> +	struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
-                                 ^
-                                 This isn't necessary, right?
-
-> +	struct loop_worker *cur_worker, *worker = NULL;
-> +	int css_id = 0;
-> +
-> +	if (cmd->blk_css)
-
-We usually use blkcg_css as the name.
-
-> +		css_id = cmd->blk_css->id;
-> +
-> +	spin_lock_irq(&lo->lo_lock);
-> +
-> +	if (!css_id) {
-> +		loop_queue_on_rootcg_locked(lo, cmd);
-> +		goto out;
-> +	}
-> +	node = &(lo->worker_tree.rb_node);
-> +
-> +	while (*node) {
-> +		parent = *node;
-> +		cur_worker = container_of(*node, struct loop_worker, rb_node);
-> +		if (cur_worker->css_id == css_id) {
-> +			worker = cur_worker;
-> +			break;
-> +		} else if (cur_worker->css_id < 0) {
-> +			node = &((*node)->rb_left);
-                                 ^
-                                I'd keep only the inner parentheses.
-
-> +		} else {
-> +			node = &((*node)->rb_right);
-> +		}
-> +	}
-> +	if (worker) {
-> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
-
-Maybe goto and unindent else block?
-
-> +	} else {
-> +		worker = kmalloc(sizeof(struct loop_worker), GFP_NOIO);
-
-I think the gpf flag combo you wanna use is GFP_NOWAIT | __GFP_NOWARN
-- we don't wanna enter direct reclaim from here or generate warnings.
-Also, I personally tend to use kzalloc() for small stuff by default as
-it doesn't really cost anything while making things easier / safer
-later when adding new fields, but up to you.
-
-> +		/*
-> +		 * In the event we cannot allocate a worker, just
-> +		 * queue on the rootcg worker
-> +		 */
-> +		if (!worker) {
-> +			loop_queue_on_rootcg_locked(lo, cmd);
-> +			goto out;
-> +		}
-> +		worker->css_id = css_id;
-
-Maybe blkcg_css_id would be clearer? Your call for sure tho.
-
-> +		INIT_WORK(&worker->work, loop_workfn);
-> +		INIT_LIST_HEAD(&worker->cmd_list);
-> +		worker->lo = lo;
-> +		rb_link_node(&worker->rb_node, parent, node);
-> +		rb_insert_color(&worker->rb_node, &lo->worker_tree);
-> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
-> +		queue_work(lo->workqueue, &worker->work);
-
-It might be better to share the above two lines between existing and
-new worker paths. I think you're missing queue_work() for the former.
-
-> @@ -1942,6 +2006,9 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
->  	struct request *rq = blk_mq_rq_from_pdu(cmd);
->  	const bool write = op_is_write(req_op(rq));
->  	struct loop_device *lo = rq->q->queuedata;
-> +#ifdef CONFIG_MEMCG
-> +	struct cgroup_subsys_state *mem_css;
-
-memcg_css is what we've been using; however, I kinda like blk/mem_css.
-Maybe we should rename the others. Please feel free to leave as-is.
-
-> @@ -1958,26 +2041,50 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
->  	}
->  }
->  
-> +static void loop_process_work(struct loop_worker *worker,
-> +			struct list_head *cmd_list, struct loop_device *lo)
->  {
-> +	int orig_flags = current->flags;
-> +	struct loop_cmd *cmd;
-> +
-> +	while (1) {
-> +		spin_lock_irq(&lo->lo_lock);
-> +		if (list_empty(cmd_list)) {
-
-Maybe break here and cleanup at the end of the function?
-
-> +			if (worker)
-> +				rb_erase(&worker->rb_node, &lo->worker_tree);
-> +			spin_unlock_irq(&lo->lo_lock);
-> +			kfree(worker);
-> +			current->flags = orig_flags;
-
-I wonder whether we wanna keep them around for a bit. A lot of IO
-patterns involve brief think times between accesses and this would be
-constantly creating and destroying constantly.
-
-> +			return;
-> +		}
->  
-> +		cmd = container_of(
-> +			cmd_list->next, struct loop_cmd, list_entry);
-> +		list_del(cmd_list->next);
-> +		spin_unlock_irq(&lo->lo_lock);
-> +		current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-
-I think we can set this at the head of the function and
-
-> +		loop_handle_cmd(cmd);
-> +		current->flags = orig_flags;
-
-restore them before returning.
-
-> @@ -587,6 +587,7 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
->  	rcu_read_unlock();
->  	return css;
->  }
-> +EXPORT_SYMBOL_GPL(cgroup_get_e_css);
-
-Can you please mention the above in the changelog? Also, it'd be great
-to have rationales there too.
-
-Thanks.
-
--- 
-tejun
+>
+>                                         - Ted
