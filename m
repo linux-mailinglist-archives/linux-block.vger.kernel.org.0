@@ -2,109 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4CE15BA28
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 08:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EBE715BA47
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 08:51:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgBMHj4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Feb 2020 02:39:56 -0500
-Received: from relay.sw.ru ([185.231.240.75]:41056 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbgBMHj4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:39:56 -0500
-Received: from [192.168.15.156] (helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j2961-0001Tq-5i; Thu, 13 Feb 2020 10:39:37 +0300
-Subject: [PATCH v7 6/6] loop: Add support for REQ_ALLOCATE
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        darrick.wong@oracle.com
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ktkhai@virtuozzo.com
-Date:   Thu, 13 Feb 2020 10:39:35 +0300
-Message-ID: <158157957565.111879.5952051034259419400.stgit@localhost.localdomain>
-In-Reply-To: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
-References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        id S1729728AbgBMHvq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Feb 2020 02:51:46 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9732 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729383AbgBMHvq (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Feb 2020 02:51:46 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 91ECADF154BA53207527;
+        Thu, 13 Feb 2020 15:51:44 +0800 (CST)
+Received: from [10.173.220.74] (10.173.220.74) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 13 Feb 2020 15:51:40 +0800
+Subject: Re: [PATCH] bdi: fix use-after-free for bdi device
+To:     Tejun Heo <tj@kernel.org>
+CC:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>, <jack@suse.cz>,
+        <bvanassche@acm.org>
+References: <20200211140038.146629-1-yuyufen@huawei.com>
+ <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
+ <20200212213344.GE80993@mtj.thefacebook.com>
+ <fd9d78b9-1119-27cc-fa74-04cb85d4f578@huawei.com>
+ <20200213034818.GE88887@mtj.thefacebook.com>
+From:   Yufen Yu <yuyufen@huawei.com>
+Message-ID: <fa6183c5-b92c-c431-37ab-09638f890f6c@huawei.com>
+Date:   Thu, 13 Feb 2020 15:51:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200213034818.GE88887@mtj.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.74]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Support for new modifier of REQ_OP_WRITE_ZEROES command.
-This results in allocation extents in backing file instead
-of actual blocks zeroing.
+Hi,
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- drivers/block/loop.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+On 2020/2/13 11:48, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Feb 13, 2020 at 10:46:34AM +0800, Yufen Yu wrote:
+>> For each time of register, bdi_register() will try to create a new 'dev'.
+>>
+>> bdi_register
+>>      bdi_register_va
+>>          if (bdi->dev) // if bdi->dev is not NULL, return directly
+>>              return 0;
+>>          dev = device_create_vargs()...
+>>
+>> So, I think freeing bdi->dev until bdi itself does may be a problem
+>> for drivers that supported re-registration bdi, such as:
+> 
+> Ugh, thanks for noticing that. I guess the right thing to do is then
+> going full RCU. What do you think about expanding your previous patch
+> so that ->dev has __rcu annotation, users use the RCU accessors and
+> the device is destroyed asynchronously through call_rcu()?
+> 
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..0704167a5aaa 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -581,6 +581,16 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	return 0;
- }
- 
-+/* Convert REQ_OP_WRITE_ZEROES modifiers into fallocate mode */
-+static unsigned int write_zeroes_to_fallocate_mode(unsigned int flags)
-+{
-+	if (flags & REQ_ALLOCATE)
-+		return 0;
-+	if (flags & REQ_NOUNMAP)
-+		return FALLOC_FL_ZERO_RANGE;
-+	return FALLOC_FL_PUNCH_HOLE;
-+}
-+
- static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- {
- 	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
-@@ -599,14 +609,8 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
- 	case REQ_OP_WRITE_ZEROES:
--		/*
--		 * If the caller doesn't want deallocation, call zeroout to
--		 * write zeroes the range.  Otherwise, punch them out.
--		 */
- 		return lo_fallocate(lo, rq, pos,
--			(rq->cmd_flags & REQ_NOUNMAP) ?
--				FALLOC_FL_ZERO_RANGE :
--				FALLOC_FL_PUNCH_HOLE);
-+			write_zeroes_to_fallocate_mode(rq->cmd_flags));
- 	case REQ_OP_DISCARD:
- 		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_WRITE:
-@@ -877,6 +881,7 @@ static void loop_config_discard(struct loop_device *lo)
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
-+		blk_queue_max_allocate_sectors(q, 0);
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- 		return;
- 	}
-@@ -886,6 +891,7 @@ static void loop_config_discard(struct loop_device *lo)
- 
- 	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
- 	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	blk_queue_max_allocate_sectors(q, UINT_MAX >> 9);
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
- }
- 
+If we destroy the device asynchronously by call_rcu(), we may need to
+add a new member 'rcu_head' into struct backing_dev_info. Right?
+The code may be like:
 
+bdi_unregister()
+{
+	...
+	if (bdi->dev) {
+		...
+		device_get(bdi->dev);
+		device_unregister(bdi->dev);
+		bdi->dev = NULL; //XXX
+		bdi_get(bdi); //avoiding bdi to be freed before calling bdi_release_device
+		call_rcu(&bdi->rcu_head, bdi_release_device);
+	}
+		...
+}
 
+bdi_release_device()
+{
+	...
+	put_device(bdi->dev);//XXX
+	bdi_put(bdi);
+}
+
+But, the problem is how do we get 'bdi->dev' in bdi_release_device().
+If we do not set bdi->dev as 'NULL', re-registration bdi may cannot work well.
+
+If I get it wrong, please point it out.
+
+Thanks
+Yufen
