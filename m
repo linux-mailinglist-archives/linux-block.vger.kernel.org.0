@@ -2,100 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1965215B9CA
-	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 07:53:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E7F315BA26
+	for <lists+linux-block@lfdr.de>; Thu, 13 Feb 2020 08:40:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgBMGxd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Feb 2020 01:53:33 -0500
-Received: from freki.datenkhaos.de ([81.7.17.101]:48960 "EHLO
-        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgBMGxc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Feb 2020 01:53:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by freki.datenkhaos.de (Postfix) with ESMTP id 7193C2288D32;
-        Thu, 13 Feb 2020 07:53:30 +0100 (CET)
-Received: from freki.datenkhaos.de ([127.0.0.1])
-        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ip891DUpbuya; Thu, 13 Feb 2020 07:53:26 +0100 (CET)
-Received: from latitude (vpn136.rz.tu-ilmenau.de [141.24.172.136])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by freki.datenkhaos.de (Postfix) with ESMTPSA;
-        Thu, 13 Feb 2020 07:53:26 +0100 (CET)
-Date:   Thu, 13 Feb 2020 07:53:21 +0100
-From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Kai =?utf-8?B?TcOka2lzYXJh?= <Kai.Makisara@kolumbus.fi>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ira Weiny <ira.weiny@intel.com>, Iustin Pop <iustin@k1024.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 13/22] compat_ioctl: scsi: move ioctl handling into
- drivers
-Message-ID: <20200213065321.GA8696@latitude>
-References: <20200102145552.1853992-1-arnd@arndb.de>
- <20200102145552.1853992-14-arnd@arndb.de>
- <20200212211452.GA5726@latitude>
- <CAK8P3a0oPpMC8367sEs+9Ae=wFH30BHAq+aRDbWLyeVLuNOnEw@mail.gmail.com>
+        id S1729883AbgBMHj4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Feb 2020 02:39:56 -0500
+Received: from relay.sw.ru ([185.231.240.75]:41054 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729757AbgBMHj4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 13 Feb 2020 02:39:56 -0500
+Received: from [192.168.15.156] (helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j295S-0001TQ-1z; Thu, 13 Feb 2020 10:39:02 +0300
+Subject: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for
+ REQ_OP_WRITE_ZEROES
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        darrick.wong@oracle.com
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ktkhai@virtuozzo.com
+Date:   Thu, 13 Feb 2020 10:39:01 +0300
+Message-ID: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0oPpMC8367sEs+9Ae=wFH30BHAq+aRDbWLyeVLuNOnEw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2020 Feb 12, Arnd Bergmann wrote:
-> On Wed, Feb 12, 2020 at 10:15 PM Johannes Hirte
-> <johannes.hirte@datenkhaos.de> wrote:
-> >
-> > On 2020 Jan 02, Arnd Bergmann wrote:
-> 
-> >
-> > Error in getting drive hardware properties
-> > Error in getting drive reading properties
-> > Error in getting drive writing properties
-> > __________________________________
-> >
-> > Disc mode is listed as: CD-DA
-> > ++ WARN: error in ioctl CDROMREADTOCHDR: Bad address
-> >
-> > cd-info: Can't get first track number. I give up.
-> 
-> Right, there was also a report about breaking the Fedora installer,
-> see https://bugzilla.redhat.com/show_bug.cgi?id=1801353
-> 
-> There is a preliminary patch that should fix this, I'll post a
-> version with more references tomorrow:
-> https://www.happyassassin.net/temp/0001-Replace-.ioctl-with-.compat_ioctl-in-three-appropria.patch
+(was "[PATCH block v2 0/3] block: Introduce REQ_NOZERO flag
+      for REQ_OP_WRITE_ZEROES operation";
+ was "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
+      to reflect extents allocation in block device internals")
 
-Yes, I can confirm that the patch fix it.
+v7: Two comments changed.
 
--- 
-Regards,
-  Johannes Hirte
+v6: req_op() cosmetic change.
+
+v5: Kill dm|md patch, which disables REQ_ALLOCATE for these devices.
+    Disable REQ_ALLOCATE for all stacking devices instead of this.
+
+v4: Correct argument for mddev_check_write_zeroes().
+
+v3: Rename REQ_NOZERO to REQ_ALLOCATE.
+    Split helpers to separate patches.
+    Add a patch, disabling max_allocate_sectors inheritance for dm.
+
+v2: Introduce new flag for REQ_OP_WRITE_ZEROES instead of
+    introduction a new operation as suggested by Martin K. Petersen.
+    Removed ext4-related patch to focus on block changes
+    for now.
+
+Information about continuous extent placement may be useful
+for some block devices. Say, distributed network filesystems,
+which provide block device interface, may use this information
+for better blocks placement over the nodes in their cluster,
+and for better performance. Block devices, which map a file
+on another filesystem (loop), may request the same length extent
+on underlining filesystem for less fragmentation and for batching
+allocation requests. Also, hypervisors like QEMU may use this
+information for optimization of cluster allocations.
+
+This patchset introduces REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES,
+which makes a block device to allocate blocks instead of actual
+blocks zeroing. This may be used for forwarding user's fallocate(0)
+requests into block device internals. E.g., in loop driver this
+will result in allocation extents in backing-file, so subsequent
+write won't fail by the reason of no available space. Distributed
+network filesystems will be able to assign specific servers for
+specific extents, so subsequent write will be more efficient.
+
+Patches [1-3/6] are preparation on helper functions, patch [4/6]
+introduces REQ_ALLOCATE flag and implements all the logic,
+patch [5/6] adds one more helper, patch [6/6] adds loop
+as the first user of the flag.
+
+Note, that here is only block-related patches, example of usage
+for ext4 with a performance numbers may be seen in [1].
+
+[1] https://lore.kernel.org/linux-ext4/157599697369.12112.10138136904533871162.stgit@localhost.localdomain/T/#me5bdd5cc313e14de615d81bea214f355ae975db0
+---
+
+Kirill Tkhai (6):
+      block: Add @flags argument to bdev_write_zeroes_sectors()
+      block: Pass op_flags into blk_queue_get_max_sectors()
+      block: Introduce blk_queue_get_max_write_zeroes_sectors()
+      block: Add support for REQ_ALLOCATE flag
+      block: Add blk_queue_max_allocate_sectors()
+      loop: Add support for REQ_ALLOCATE
+
+
+ block/blk-core.c                    |    6 +++---
+ block/blk-lib.c                     |   17 ++++++++++-------
+ block/blk-merge.c                   |    9 ++++++---
+ block/blk-settings.c                |   17 +++++++++++++++++
+ drivers/block/loop.c                |   20 +++++++++++++-------
+ drivers/md/dm-kcopyd.c              |    2 +-
+ drivers/target/target_core_iblock.c |    4 ++--
+ fs/block_dev.c                      |    4 ++++
+ include/linux/blk_types.h           |    6 ++++++
+ include/linux/blkdev.h              |   34 ++++++++++++++++++++++++++--------
+ 10 files changed, 88 insertions(+), 31 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
