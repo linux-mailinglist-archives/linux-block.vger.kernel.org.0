@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B46915E630
-	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 17:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8281515EAE5
+	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 18:17:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405337AbgBNQVL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Feb 2020 11:21:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        id S2391766AbgBNQLW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 Feb 2020 11:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405324AbgBNQVJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:09 -0500
+        id S2391487AbgBNQLV (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C956C24747;
-        Fri, 14 Feb 2020 16:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB472469D;
+        Fri, 14 Feb 2020 16:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697268;
-        bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
+        s=default; t=1581696680;
+        bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6Sg+1aYenfS/M2NIL1bVhvj7C0ZTE/BzV+ZF0fAmIbMUOEZSKDg4OZph3XrE0mHU
-         NQdmSC15lJgOXQWfouI6+Dc11isgt7Wpjvu+1mW5C4zFbtFXcgKuglfJu+PWskmCMr
-         rdClHNi2wE+Y9XetSJGK5Tvo0gHCMiUwEAi42uBU=
+        b=Z8RK7YIi0yx2u/QI4L1BAqBrzvpjAlfvVbKdhv4MC4VfAR/0MIe7fKKULHj28kGMH
+         JhPIq8MpGUATlftBYtBLFTmwUbZq98Nwds/JpFR75oJXt9GxcyM2HGhHY0iDMPEnmz
+         8xdnOpKD07pQNOuUKd/SV5/nFrPTyiHYTO1g6YJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
         Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 182/186] brd: check and limit max_part par
-Date:   Fri, 14 Feb 2020 11:17:11 -0500
-Message-Id: <20200214161715.18113-182-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 448/459] brd: check and limit max_part par
+Date:   Fri, 14 Feb 2020 11:01:38 -0500
+Message-Id: <20200214160149.11681-448-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -106,10 +106,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 2d7178f7754ed..0129b1921cb36 100644
+index c548a5a6c1a00..79f18cfa7049f 100644
 --- a/drivers/block/brd.c
 +++ b/drivers/block/brd.c
-@@ -529,6 +529,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+@@ -470,6 +470,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
  	return kobj;
  }
  
@@ -135,7 +135,7 @@ index 2d7178f7754ed..0129b1921cb36 100644
  static int __init brd_init(void)
  {
  	struct brd_device *brd, *next;
-@@ -552,8 +571,7 @@ static int __init brd_init(void)
+@@ -493,8 +512,7 @@ static int __init brd_init(void)
  	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
  		return -EIO;
  
