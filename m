@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A816415EF99
-	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 18:49:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C6115EE4E
+	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 18:40:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388879AbgBNP7U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Feb 2020 10:59:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
+        id S2388964AbgBNQEL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 Feb 2020 11:04:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388821AbgBNP7T (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:19 -0500
+        id S2389861AbgBNQEI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DBC24654;
-        Fri, 14 Feb 2020 15:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 646EE24699;
+        Fri, 14 Feb 2020 16:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695958;
-        bh=RWrPWhIW4nq0JRUzQClNsebzVS2WeaoqVeS3VclYGbw=;
+        s=default; t=1581696248;
+        bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eoMJqD+m9qs80mdclkQafwmsbxSm1POn/y/MNT3DFGr9SV6FM27Mj0VoMymrLhhKx
-         GIQqAcwiwGCllkGjqTIfabzgXEFgRACHLSXW7Cfs4g6F/idXtSskRFsZ4R8h5lrpk7
-         b7fn/0w1wN+dpJa1qYGAyh0/DEzG1Ov1ieAaOK4U=
+        b=XAakfZlb0hDrBUZmZZdYTTyGVBnoXeFlr6m4/6uQdWMuysDdJvzEtC1NJgjy8phzx
+         yxWQGXV4biU73cm+bTsNB9ERMZTKLWROjd/1L8BDlLzUKXpkkTa+lK3vthYf4mf88Y
+         3LqWacCd6MKOCbThOflXPh5bekKz8GvLPmBXXE/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 488/542] rbd: work around -Wuninitialized warning
-Date:   Fri, 14 Feb 2020 10:48:00 -0500
-Message-Id: <20200214154854.6746-488-sashal@kernel.org>
+Cc:     Sun Ke <sunke32@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org,
+        nbd@other.debian.org
+Subject: [PATCH AUTOSEL 5.4 105/459] nbd: add a flush_workqueue in nbd_start_device
+Date:   Fri, 14 Feb 2020 10:55:55 -0500
+Message-Id: <20200214160149.11681-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,42 +43,54 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Sun Ke <sunke32@huawei.com>
 
-[ Upstream commit a55e601b2f02df5db7070e9a37bd655c9c576a52 ]
+[ Upstream commit 5c0dd228b5fc30a3b732c7ae2657e0161ec7ed80 ]
 
-gcc -O3 warns about a dummy variable that is passed
-down into rbd_img_fill_nodata without being initialized:
+When kzalloc fail, may cause trying to destroy the
+workqueue from inside the workqueue.
 
-drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
-drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
-  fctx->iter = *fctx->pos;
+If num_connections is m (2 < m), and NO.1 ~ NO.n
+(1 < n < m) kzalloc are successful. The NO.(n + 1)
+failed. Then, nbd_start_device will return ENOMEM
+to nbd_start_device_ioctl, and nbd_start_device_ioctl
+will return immediately without running flush_workqueue.
+However, we still have n recv threads. If nbd_release
+run first, recv threads may have to drop the last
+config_refs and try to destroy the workqueue from
+inside the workqueue.
 
-Since this is a dummy, I assume the warning is harmless, but
-it's better to initialize it anyway and avoid the warning.
+To fix it, add a flush_workqueue in nbd_start_device.
 
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/nbd.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index 2b184563cd32e..38dcb39051a7f 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -2662,7 +2662,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
- 			       u64 off, u64 len)
- {
- 	struct ceph_file_extent ex = { off, len };
--	union rbd_img_fill_iter dummy;
-+	union rbd_img_fill_iter dummy = {};
- 	struct rbd_img_fill_ctx fctx = {
- 		.pos_type = OBJ_REQUEST_NODATA,
- 		.pos = &dummy,
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b4607dd961852..78181908f0df6 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1265,6 +1265,16 @@ static int nbd_start_device(struct nbd_device *nbd)
+ 		args = kzalloc(sizeof(*args), GFP_KERNEL);
+ 		if (!args) {
+ 			sock_shutdown(nbd);
++			/*
++			 * If num_connections is m (2 < m),
++			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
++			 * But NO.(n + 1) failed. We still have n recv threads.
++			 * So, add flush_workqueue here to prevent recv threads
++			 * dropping the last config_refs and trying to destroy
++			 * the workqueue from inside the workqueue.
++			 */
++			if (i)
++				flush_workqueue(nbd->recv_workq);
+ 			return -ENOMEM;
+ 		}
+ 		sk_set_memalloc(config->socks[i]->sock->sk);
 -- 
 2.20.1
 
