@@ -2,99 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB71915EE37
-	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 18:39:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4DDD15F2E9
+	for <lists+linux-block@lfdr.de>; Fri, 14 Feb 2020 19:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389956AbgBNRjU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Feb 2020 12:39:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45534 "EHLO mx2.suse.de"
+        id S1730813AbgBNPvh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 Feb 2020 10:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389941AbgBNQEa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3B00FABEA;
-        Fri, 14 Feb 2020 16:04:28 +0000 (UTC)
-Subject: Re: [LSF/MM/BPF TOPIC] NVMe HDD
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Tim Walker <tim.t.walker@seagate.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-References: <CANo=J14resJ4U1nufoiDq+ULd0k-orRCsYah8Dve-y8uCjA62Q@mail.gmail.com>
- <20200211122821.GA29811@ming.t460p>
- <CANo=J14iRK8K3bc1g3rLBp=QTLZQak0DcHkvgZS2f=xO_HFgxQ@mail.gmail.com>
- <BYAPR04MB5816AA843E63FFE2EA1D5D23E71B0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <yq1blq3rxzj.fsf@oracle.com>
- <CANo=J16cDBUDWdV7tdY33UO0UT0t-g7jRfMVTxZpePvLew7Mxg@mail.gmail.com>
- <yq1r1yzqfyb.fsf@oracle.com> <2d66bb0b-29ca-6888-79ce-9e3518ee4b61@suse.de>
- <20200214144007.GD9819@redsun51.ssa.fujisawa.hgst.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <d043a58d-6584-1792-4433-ac2cc39526ca@suse.de>
-Date:   Fri, 14 Feb 2020 17:04:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1730388AbgBNPvg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6675124676;
+        Fri, 14 Feb 2020 15:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695496;
+        bh=SW0AGWU43L1UZ/wqfndLFzbkWOYuZ1G2GYhqzyIz6A0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y4A/imC88DFEaP+elpPnKpPLn5s9EeEAeEuufV6EeF2HdUebfyOsxU0XFGhRjIJq+
+         S4XQC/gT37cEBuL6bETcU7SLKGb6WBNxHwcAHtRnoE17X4Cdsxbg9pxSfgpwlmsbh4
+         DQALTEVVCauGO6C4/W026/ZwHg9jpvVDs28cm+w8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 124/542] drivers/block/zram/zram_drv.c: fix error return codes not being returned in writeback_store
+Date:   Fri, 14 Feb 2020 10:41:56 -0500
+Message-Id: <20200214154854.6746-124-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200214144007.GD9819@redsun51.ssa.fujisawa.hgst.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/14/20 3:40 PM, Keith Busch wrote:
-> On Fri, Feb 14, 2020 at 08:32:57AM +0100, Hannes Reinecke wrote:
->> On 2/13/20 5:17 AM, Martin K. Petersen wrote:
->>> People often artificially lower the queue depth to avoid timeouts. The
->>> default timeout is 30 seconds from an I/O is queued. However, many
->>> enterprise applications set the timeout to 3-5 seconds. Which means that
->>> with deep queues you'll quickly start seeing timeouts if a drive
->>> temporarily is having issues keeping up (media errors, excessive spare
->>> track seeks, etc.).
->>>
->>> Well-behaved devices will return QF/TSF if they have transient resource
->>> starvation or exceed internal QoS limits. QF will cause the SCSI stack
->>> to reduce the number of I/Os in flight. This allows the drive to recover
->>> from its congested state and reduces the potential of application and
->>> filesystem timeouts.
->>>
->> This may even be a chance to revisit QoS / queue busy handling.
->> NVMe has this SQ head pointer mechanism which was supposed to handle
->> this kind of situations, but to my knowledge no-one has been
->> implementing it.
->> Might be worthwhile revisiting it; guess NVMe HDDs would profit from that.
-> 
-> We don't need that because we don't allocate enough tags to potentially
-> wrap the tail past the head. If you can allocate a tag, the queue is not
-> full. And convesely, no tag == queue full.
-> 
-It's not a problem on our side.
-It's a problem on the target/controller side.
-The target/controller might have a need to throttle I/O (due to QoS 
-settings or competing resources from other hosts), but currently no 
-means of signalling that to the host.
-Which, incidentally, is the underlying reason for the DNR handling 
-discussion we had; NetApp tried to model QoS by sending "Namespace not 
-ready" without the DNR bit set, which of course is a totally different 
-use-case as the typical 'Namespace not ready' response we get (with the 
-DNR bit set) when a namespace was unmapped.
+From: Colin Ian King <colin.king@canonical.com>
 
-And that is where SQ head pointer updates comes in; it would allow the 
-controller to signal back to the host that it should hold off sending 
-I/O for a bit.
-So this could / might be used for NVMe HDDs, too, which also might have 
-a need to signal back to the host that I/Os should be throttled...
+[ Upstream commit 3b82a051c10143639a378dcd12019f2353cc9054 ]
 
-Cheers,
+Currently when an error code -EIO or -ENOSPC in the for-loop of
+writeback_store the error code is being overwritten by a ret = len
+assignment at the end of the function and the error codes are being
+lost.  Fix this by assigning ret = len at the start of the function and
+remove the assignment from the end, hence allowing ret to be preserved
+when error codes are assigned to it.
 
-Hannes
+Addresses Coverity ("Unused value")
+
+Link: http://lkml.kernel.org/r/20191128122958.178290-1-colin.king@canonical.com
+Fixes: a939888ec38b ("zram: support idle/huge page writeback")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/zram/zram_drv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 4285e75e52c34..1bf4a908a0bd9 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -626,7 +626,7 @@ static ssize_t writeback_store(struct device *dev,
+ 	struct bio bio;
+ 	struct bio_vec bio_vec;
+ 	struct page *page;
+-	ssize_t ret;
++	ssize_t ret = len;
+ 	int mode;
+ 	unsigned long blk_idx = 0;
+ 
+@@ -762,7 +762,6 @@ static ssize_t writeback_store(struct device *dev,
+ 
+ 	if (blk_idx)
+ 		free_block_bdev(zram, blk_idx);
+-	ret = len;
+ 	__free_page(page);
+ release_init_lock:
+ 	up_read(&zram->init_lock);
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.20.1
+
