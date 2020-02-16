@@ -2,55 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCA1A160182
-	for <lists+linux-block@lfdr.de>; Sun, 16 Feb 2020 04:13:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F0716026B
+	for <lists+linux-block@lfdr.de>; Sun, 16 Feb 2020 09:09:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBPDM4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Feb 2020 22:12:56 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40413 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBPDMx (ORCPT
+        id S1726020AbgBPIJr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 16 Feb 2020 03:09:47 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39702 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgBPIJr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Feb 2020 22:12:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so14875758wmi.5
-        for <linux-block@vger.kernel.org>; Sat, 15 Feb 2020 19:12:52 -0800 (PST)
+        Sun, 16 Feb 2020 03:09:47 -0500
+Received: by mail-qt1-f196.google.com with SMTP id c5so10018227qtj.6;
+        Sun, 16 Feb 2020 00:09:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
-        b=t9E/auRDZ2NhuwJg8c7fdI6cTavfVIkYj8aSuYWfHS4sN2USGnzhGQE4Ep5t7N9V7j
-         aGQH/tjHx070ySTmGuvmUzZWWVEhu7pzVtkIG25eKGdHbAZbYyQSvY2EH46FhwV5DGK7
-         Do813mWHW/rdYq8MST/Jhg8K6tSTSk1e9edfsgWU47cRXtAuNWGgqemBy2AGuhyjVxCh
-         ARNePePfbETLUmXTuQKHNZmBWq+UaGktV5GQJNEFk0am/xGVpQA7q4mkAeB5pFZRQZN9
-         gJjDCP8x16NSxumLlHrZ6NwDoW70BMsxH7Al4C4J4yAHrr/ilAJGJ1eZFjny7v3NDq3z
-         10CQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dNEzfTwUBmfbDmP8jHrIogG2oGgC1+4D3raZbBbSc2I=;
+        b=VmKAFLhpDtAwHFCSjp+NzMIgHyhm7krjkidskFg0N+Fgdz3R8JDO3b8ne9kX2NFKY+
+         N/GybcS2uUJYFLbORG6aDUumIctsLO+Be5ocFLSryqNoTi+9rDFflc5gpxK+RKw1+Io/
+         n88bkYbb9GtMZ/vk5gE20Oue9ZjRBfLFFDCNBLu+HP1A2TycZn6CtUMlARKRH4vGlG4M
+         ig34rD5d25IBzbXpRYhrTD01cJRhTk9nw4VwW4ldj26nRlASBkqDb3QHKjwIJg6/eOCD
+         MMD6AR29nHG9e3OxFlZGf9E7wRVQhM5ujrZu534Vpv+52f9/1EdXj4e0dwx5Bp2ei4oZ
+         JmRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
-        b=Rq+kHhof5/nzLaHPemB3vlVwDecR1i75c0HAxgjzkvboJzdKujAJt5hFzu/nL2cSQM
-         PWDrNl1PjaKKykHUbFMy0P7wxyAXDdgOfT+yEK20kIg0YUn2LCRxqWAncYxi54Cnhdsf
-         jU8AxtfS6SvcWd4gpgsbzWzlgEwEHvib52VStBef2kiS4aFa2WNuqZEQmmQ2zrzdm8xL
-         q0nWarSIWcMk/XdNFgdYC8HpaB8KgbTQAcePtQhR4HLMo6zuJvGLJoiwW/xdb5/zgDL0
-         ft+GkGGr73yCGWmE9u3PlEq+vRaQM5izqSW2akRyYpWO1zOzPkO0Whgd2l1pXLMu/GIu
-         H1jg==
-X-Gm-Message-State: APjAAAXiB3mCPW4BofcigJi94JA1lgPIiXQ7+8hjEW4jC7W4rFjTZDuP
-        k+9I0MWw5SwaqTSV9tf2mXx+2tFMbJFxGw8qtiI=
-X-Google-Smtp-Source: APXvYqwvlw4SI9bgKBPwZePjexDET4/rtoytQKZYlF8Iozd8fIyZzsIyzcREjHMM3pdpVJoKf2y3VLXJSTYN5nAB2oc=
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr14142688wmc.165.1581822771566;
- Sat, 15 Feb 2020 19:12:51 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dNEzfTwUBmfbDmP8jHrIogG2oGgC1+4D3raZbBbSc2I=;
+        b=VfHtnrsmKl/URU+kHaUAv3G5HFNSPhYdIG9Ce1wsDV/GhflDerjacvV9AFyGy5zu/S
+         wby6buuJNTIJ39hH6NwjAy9G6mUrqJicVf9jEU/L8rqLpVhEmJ91h9mHSmhbK4ZEPcm0
+         k/ye1dQ++OGUhWjqV2L7s46sXwJrg3y/mp1+v3dZGYPgMzeknw3INhy3wgs9LTfPJQqT
+         lgb3n24Zv89rI/pWyJNIXSLa538MJG4XRdy9YQ5+bHRnhGU+uEjAjkhJxqwQkVQg2TKP
+         ZHZFXKzrpfZYKjpXsJq+IZYK31zEubUrBgoIE9iX4f/mAVNzTRen3V5/4kTLU3c7H8gB
+         CnLA==
+X-Gm-Message-State: APjAAAUOpTjwDPCTaeUUWt7qnGDRjIerK6I1mqWxBc6HrtQNr9dMWbhA
+        soHsXE0PwmBfsEZHtCO6y3b2XK/Se5ETb6d+Eww=
+X-Google-Smtp-Source: APXvYqyWsEgZR3nj4ltlF/cwwuK/9RC88Bxi124aJCUSlJQqix+GJMRtc5vW2gcs32HrxaV4C+AM8gxZqKNu36C+0WQ=
+X-Received: by 2002:ac8:47cc:: with SMTP id d12mr9206563qtr.246.1581840585855;
+ Sun, 16 Feb 2020 00:09:45 -0800 (PST)
 MIME-Version: 1.0
-Reply-To: mrsanna.h.bruun119@gmail.com
-Received: by 2002:a5d:6701:0:0:0:0:0 with HTTP; Sat, 15 Feb 2020 19:12:50
- -0800 (PST)
-From:   "Mrs. Anna H. Bruun" <mrsanna.h.bruun119@gmail.com>
-Date:   Sat, 15 Feb 2020 19:12:50 -0800
-X-Google-Sender-Auth: v8n70C2JnobQxi8BnJ66Kx_WTPg
-Message-ID: <CAKipdRnigysA_HLCjucc_1O=Y=-n8xB=JUB9--6=945exD+_-A@mail.gmail.com>
-Subject: My Greetings
-To:     undisclosed-recipients:;
+References: <cover.1580786525.git.zhangweiping@didiglobal.com> <20200204154200.GA5831@redsun51.ssa.fujisawa.hgst.com>
+In-Reply-To: <20200204154200.GA5831@redsun51.ssa.fujisawa.hgst.com>
+From:   Weiping Zhang <zwp10758@gmail.com>
+Date:   Sun, 16 Feb 2020 16:09:34 +0800
+Message-ID: <CAA70yB5qAj8YnNiPVD5zmPrrTr0A0F3v2cC6t2S1Fb0kiECLfw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Add support Weighted Round Robin for blkcg and nvme
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Nadolski, Edmund" <edmund.nadolski@intel.com>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-nvme@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
@@ -58,48 +65,121 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-My Dear
+Keith Busch <kbusch@kernel.org> =E4=BA=8E2020=E5=B9=B42=E6=9C=884=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8811:42=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Feb 04, 2020 at 11:30:45AM +0800, Weiping Zhang wrote:
+> > This series try to add Weighted Round Robin for block cgroup and nvme
+> > driver. When multiple containers share a single nvme device, we want
+> > to protect IO critical container from not be interfernced by other
+> > containers. We add blkio.wrr interface to user to control their IO
+> > priority. The blkio.wrr accept five level priorities, which contains
+> > "urgent", "high", "medium", "low" and "none", the "none" is used for
+> > disable WRR for this cgroup.
+>
+Hi Bush,
 
-My Name is Mrs. Anna H. Bruun, from Norway. I know that this message
-will be a surprise to you. Firstly, I am married to Mr. Patrick Bruun,
-A gold merchant who owns a small gold Mine in Burkina Faso; He died of
-Cardiovascular Disease in mid-March 2011. During his life time he
-deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five hundre=
-d
-thousand Euros in a bank in Ouagadougou the capital city of Burkina
-Faso. The deposited money was from the sale of the shares, death
-benefits payment and entitlements of my deceased husband by his
-company.
+> The NVMe protocol really doesn't define WRR to be a mechanism to mitigate
+> interference, though. It defines credits among the weighted queues
+> only for command fetching, and an urgent strict priority class that
+> starves the rest. It has nothing to do with how the controller should
+> prioritize completion of those commands, even if it may be reasonable to
+> assume influencing when the command is fetched should affect its
+> completion.
+>
+Thanks your feedback, the fio test result on WRR shows that, the high-wrr-f=
+io
+get more bandwidth/iops and low latency. I think it's a good feature
+for the case
+that run multiple workload with different priority, especially for
+container colocation.
 
-I am sending this message to you praying that it will reach you in
-good health, since I am not in good health condition in which I sleep
-every night without knowing if I may be alive to see the next day. I
-am suffering from long time cancer and presently i am partially
-suffering from a stroke illness which has become almost impossible for
-me to move around. I am married to my late husband for over 4 years
-before he died and is unfortunately that we don't have a child, my
-doctor confided in me that i have less chance to live. Having known my
-health condition, I decided to contact you to claim the fund since I
-don't have any relation I grew up from the orphanage home,
+> On the "weighted" strict priority, there's nothing separating "high"
+> from "low" other than the name: the "set features" credit assignment
+> can invert which queues have higher command fetch rates such that the
+> "low" is favoured over the "high".
+>
+If there is no limitation in the hardware controller, we can add more
+checking in
+"set feature command". I think mostly people won't give "low" more
+credits than "high",
+it really does not make sense.
 
-I have decided to donate what I have to you for the support of helping
-Motherless babies/Less privileged/Widows' because I am dying and
-diagnosed of cancer for about 2 years ago. I have been touched by God
-Almighty to donate from what I have inherited from my late husband to
-you for good work of God Almighty. I have asked Almighty God to
-forgive me and believe he has, because He is a Merciful God I will be
-going in for an operation surgery soon
+> There's no protection against the "urgent" class starving others: normal
+> IO will timeout and trigger repeated controller resets, while polled IO
+> will consume 100% of CPU cycles without making any progress if we make
+> this type of queue available without any additional code to ensure the
+> host behaves..
+>
+I think we can just disable it in the software layer , actually, I have no =
+real
+application need this.
 
-This is the reason i need your services to stand as my next of kin or
-an executor to claim the funds for charity purposes. If this money
-remains unclaimed after my death, the bank executives or the
-government will take the money as unclaimed fund and maybe use it for
-selfish and worthless ventures, I need a very honest person who can
-claim this money and use it for Charity works, for orphanages, widows
-and also build schools for less privilege that will be named after my
-late husband and my name; I need your urgent answer to know if you
-will be able to execute this project, and I will give you more
-Information on how the fund will be transferred to your bank account.
+> On the driver implementation, the number of module parameters being
+> added here is problematic. We already have 2 special classes of queues,
+> and defining this at the module level is considered too coarse when
+> the system has different devices on opposite ends of the capability
+> spectrum. For example, users want polled queues for the fast devices,
+> and none for the slower tier. We just don't have a good mechanism to
+> define per-controller resources, and more queue classes will make this
+> problem worse.
+>
+We can add a new "string" module parameter, which contains a model number,
+in most cases, the save product with a common prefix model number, so
+in this way
+nvme can distinguish the different performance devices(hign or low end).
+Before create io queue, nvme driver can get the device's Model number(40 By=
+tes),
+then nvme driver can compare device's model number with module parameter, t=
+o
+decide how many io queues for each disk;
 
-Thanks
-Mrs. Anna H.
+/* if model_number is MODEL_ANY, these parameters will be applied to
+all nvme devices. */
+char dev_io_queues[1024] =3D "model_number=3DMODEL_ANY,
+poll=3D0,read=3D0,wrr_low=3D0,wrr_medium=3D0,wrr_high=3D0,wrr_urgent=3D0";
+/* these paramters only affect nvme disk whose model number is "XXX" */
+char dev_io_queues[1024] =3D "model_number=3DXXX,
+poll=3D1,read=3D2,wrr_low=3D3,wrr_medium=3D4,wrr_high=3D5,wrr_urgent=3D0;";
+
+struct dev_io_queues {
+        char model_number[40];
+        unsigned int poll;
+        unsgined int read;
+        unsigned int wrr_low;
+        unsigned int wrr_medium;
+        unsigned int wrr_high;
+        unsigned int wrr_urgent;
+};
+
+We can use these two variable to store io queue configurations:
+
+/* default values for the all disk, except whose model number is not
+in io_queues_cfg */
+struct dev_io_queues io_queues_def =3D {};
+
+/* user defined values for a specific model number */
+struct dev_io_queues io_queues_cfg =3D {};
+
+If we need multiple configurations( > 2), we can also extend
+dev_io_queues to support it.
+
+> On the blk-mq side, this implementation doesn't work with the IO
+> schedulers. If one is in use, requests may be reordered such that a
+> request on your high-priority hctx may be dispatched later than more
+> recent ones associated with lower priority. I don't think that's what
+> you'd want to happen, so priority should be considered with schedulers
+> too.
+>
+Currently, nvme does not use io scheduler by defalut, if user want to make
+wrr compatible with io scheduler, we can add other patches to handle this.
+
+> But really, though, NVMe's WRR is too heavy weight and difficult to use.
+> The techincal work group can come up with something better, but it looks
+> like they've lost interest in TPAR 4011 (no discussion in 2 years, afaics=
+).
+
+For the test result, I think it's a useful feature.
+It really gives high priority applications high iops/bandwith and low laten=
+cy,
+and it makes software very thin and simple.
