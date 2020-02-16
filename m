@@ -2,223 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B744A15FEB1
-	for <lists+linux-block@lfdr.de>; Sat, 15 Feb 2020 14:54:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCA1A160182
+	for <lists+linux-block@lfdr.de>; Sun, 16 Feb 2020 04:13:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgBONyZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Feb 2020 08:54:25 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10181 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbgBONyZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Feb 2020 08:54:25 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A5D3DDC9F6972F513505;
-        Sat, 15 Feb 2020 21:54:22 +0800 (CST)
-Received: from [10.173.220.74] (10.173.220.74) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 15 Feb 2020 21:54:19 +0800
-Subject: Re: [PATCH] bdi: fix use-after-free for bdi device
-To:     Tejun Heo <tj@kernel.org>
-CC:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>, <jack@suse.cz>,
-        <bvanassche@acm.org>
-References: <20200211140038.146629-1-yuyufen@huawei.com>
- <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
- <20200212213344.GE80993@mtj.thefacebook.com>
- <fd9d78b9-1119-27cc-fa74-04cb85d4f578@huawei.com>
- <20200213034818.GE88887@mtj.thefacebook.com>
- <fa6183c5-b92c-c431-37ab-09638f890f6c@huawei.com>
- <20200213135809.GH88887@mtj.thefacebook.com>
- <f369a99d-e794-0c1b-85cf-83b577fb0f46@huawei.com>
- <20200214140514.GL88887@mtj.thefacebook.com>
-From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <32a14db2-65e0-5d5c-6c53-45b3474d841d@huawei.com>
-Date:   Sat, 15 Feb 2020 21:54:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1727740AbgBPDM4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 15 Feb 2020 22:12:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40413 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgBPDMx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sat, 15 Feb 2020 22:12:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so14875758wmi.5
+        for <linux-block@vger.kernel.org>; Sat, 15 Feb 2020 19:12:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
+        b=t9E/auRDZ2NhuwJg8c7fdI6cTavfVIkYj8aSuYWfHS4sN2USGnzhGQE4Ep5t7N9V7j
+         aGQH/tjHx070ySTmGuvmUzZWWVEhu7pzVtkIG25eKGdHbAZbYyQSvY2EH46FhwV5DGK7
+         Do813mWHW/rdYq8MST/Jhg8K6tSTSk1e9edfsgWU47cRXtAuNWGgqemBy2AGuhyjVxCh
+         ARNePePfbETLUmXTuQKHNZmBWq+UaGktV5GQJNEFk0am/xGVpQA7q4mkAeB5pFZRQZN9
+         gJjDCP8x16NSxumLlHrZ6NwDoW70BMsxH7Al4C4J4yAHrr/ilAJGJ1eZFjny7v3NDq3z
+         10CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
+        b=Rq+kHhof5/nzLaHPemB3vlVwDecR1i75c0HAxgjzkvboJzdKujAJt5hFzu/nL2cSQM
+         PWDrNl1PjaKKykHUbFMy0P7wxyAXDdgOfT+yEK20kIg0YUn2LCRxqWAncYxi54Cnhdsf
+         jU8AxtfS6SvcWd4gpgsbzWzlgEwEHvib52VStBef2kiS4aFa2WNuqZEQmmQ2zrzdm8xL
+         q0nWarSIWcMk/XdNFgdYC8HpaB8KgbTQAcePtQhR4HLMo6zuJvGLJoiwW/xdb5/zgDL0
+         ft+GkGGr73yCGWmE9u3PlEq+vRaQM5izqSW2akRyYpWO1zOzPkO0Whgd2l1pXLMu/GIu
+         H1jg==
+X-Gm-Message-State: APjAAAXiB3mCPW4BofcigJi94JA1lgPIiXQ7+8hjEW4jC7W4rFjTZDuP
+        k+9I0MWw5SwaqTSV9tf2mXx+2tFMbJFxGw8qtiI=
+X-Google-Smtp-Source: APXvYqwvlw4SI9bgKBPwZePjexDET4/rtoytQKZYlF8Iozd8fIyZzsIyzcREjHMM3pdpVJoKf2y3VLXJSTYN5nAB2oc=
+X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr14142688wmc.165.1581822771566;
+ Sat, 15 Feb 2020 19:12:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200214140514.GL88887@mtj.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.74]
-X-CFilter-Loop: Reflected
+Reply-To: mrsanna.h.bruun119@gmail.com
+Received: by 2002:a5d:6701:0:0:0:0:0 with HTTP; Sat, 15 Feb 2020 19:12:50
+ -0800 (PST)
+From:   "Mrs. Anna H. Bruun" <mrsanna.h.bruun119@gmail.com>
+Date:   Sat, 15 Feb 2020 19:12:50 -0800
+X-Google-Sender-Auth: v8n70C2JnobQxi8BnJ66Kx_WTPg
+Message-ID: <CAKipdRnigysA_HLCjucc_1O=Y=-n8xB=JUB9--6=945exD+_-A@mail.gmail.com>
+Subject: My Greetings
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi, tejun
+My Dear
 
-On 2020/2/14 22:05, Tejun Heo wrote:
-> Hello,
-> 
-> On Fri, Feb 14, 2020 at 10:50:01AM +0800, Yufen Yu wrote:
->>> So, unregistering can leave ->dev along and re-registering can test
->>> whether it's NULL and if not put the existing one and put a new one
->>> there. Wouldn't that work?
->>
->> Do you mean set bdi->dev as 'NULL' in call_rcu() callback function
->> (i.e. bdi_release_device()) and test 'bdi->dev' in bdi_register_va()?
->>
->> I think that may do not work.
->> We cannot make sure the order of rcu callback function and re-registering.
->> Then bdi_release_device() may put the new allocated device by re-registering.
-> 
-> No, I meant not freeing bdi->dev on deregistration and only doing so
-> when it actually needs to - on re-registration or release. So, sth
-> like the following.
-> 
-> * Unregister: Unregister bdi->dev but don't free it. Leave the pointer
->    alone.
-> 
-> * Re-register: If bdi->dev is not null, initiate RCU-free and update
->    bdi->dev to the new dev.
- >
- > * Release: If bdi->dev is not NULL, initiate RCU-free of it.
+My Name is Mrs. Anna H. Bruun, from Norway. I know that this message
+will be a surprise to you. Firstly, I am married to Mr. Patrick Bruun,
+A gold merchant who owns a small gold Mine in Burkina Faso; He died of
+Cardiovascular Disease in mid-March 2011. During his life time he
+deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five hundre=
+d
+thousand Euros in a bank in Ouagadougou the capital city of Burkina
+Faso. The deposited money was from the sale of the shares, death
+benefits payment and entitlements of my deceased husband by his
+company.
 
-Okay, I think we can do that.
+I am sending this message to you praying that it will reach you in
+good health, since I am not in good health condition in which I sleep
+every night without knowing if I may be alive to see the next day. I
+am suffering from long time cancer and presently i am partially
+suffering from a stroke illness which has become almost impossible for
+me to move around. I am married to my late husband for over 4 years
+before he died and is unfortunately that we don't have a child, my
+doctor confided in me that i have less chance to live. Having known my
+health condition, I decided to contact you to claim the fund since I
+don't have any relation I grew up from the orphanage home,
 
-When do re-register, we need to update bdi->dev as 'NULL' or the new dev
-before invoking call_rcu() to free '->dev'. So readers started after call_rcu()
-cannot read the old dev, like:
+I have decided to donate what I have to you for the support of helping
+Motherless babies/Less privileged/Widows' because I am dying and
+diagnosed of cancer for about 2 years ago. I have been touched by God
+Almighty to donate from what I have inherited from my late husband to
+you for good work of God Almighty. I have asked Almighty God to
+forgive me and believe he has, because He is a Merciful God I will be
+going in for an operation surgery soon
 
-bdi_register_va()
-{
-	...
-	if (bdi->dev) {
-		//rcu_assgin_pointer(bdi->dev, new_dev);
-		rcu_assgin_pointer(bdi->dev, NULL);
-		call_rcu();//rcu callback function will free the old dev
-	}
-	...
-}
+This is the reason i need your services to stand as my next of kin or
+an executor to claim the funds for charity purposes. If this money
+remains unclaimed after my death, the bank executives or the
+government will take the money as unclaimed fund and maybe use it for
+selfish and worthless ventures, I need a very honest person who can
+claim this money and use it for Charity works, for orphanages, widows
+and also build schools for less privilege that will be named after my
+late husband and my name; I need your urgent answer to know if you
+will be able to execute this project, and I will give you more
+Information on how the fund will be transferred to your bank account.
 
-After assigning new value for bdi->dev, rcu callback function cannot get
-the old device. So I think we may need to replace the '->dev' with a new
-struct pointer, in which includes '->dev' and 'rcu_head'. We pass the
-struct.rcu_head pointer to call_rcu() and then it can get old dev address.
-
-IMO, maybe we can maintain the original code logic, fix the problem like:
-
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005a..e2de4a4e5392 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -185,6 +185,11 @@ struct bdi_writeback {
-  #endif
-  };
-
-+struct bdi_rcu_device {
-+	struct device *dev;
-+	struct rcu_head rcu_head;
-+};
-+
-  struct backing_dev_info {
-  	u64 id;
-  	struct rb_node rb_node; /* keyed by ->id */
-@@ -219,7 +224,7 @@ struct backing_dev_info {
-  #endif
-  	wait_queue_head_t wb_waitq;
-
--	struct device *dev;
-+	struct bdi_rcu_device *rcu_dev;
-  	struct device *owner;
-
-  	struct timer_list laptop_mode_wb_timer;
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 62f05f605fb5..05f07ce19091 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -850,7 +850,7 @@ static int bdi_init(struct backing_dev_info *bdi)
-  {
-  	int ret;
-
--	bdi->dev = NULL;
-+	bdi->rcu_dev = NULL;
-
-  	kref_init(&bdi->refcnt);
-  	bdi->min_ratio = 0;
-@@ -932,20 +932,28 @@ struct backing_dev_info *bdi_get_by_id(u64 id)
-
-  int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
-  {
--	struct device *dev;
-  	struct rb_node *parent, **p;
-+	struct bdi_rcu_device *rcu_dev;
-
--	if (bdi->dev)	/* The driver needs to use separate queues per device */
-+	/* The driver needs to use separate queues per device */
-+	if (bdi->rcu_dev)
-  		return 0;
-
--	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
--	if (IS_ERR(dev))
--		return PTR_ERR(dev);
-+	rcu_dev = kzalloc(sizeof(struct bdi_rcu_device), GFP_KERNEL);
-+	if (!rcu_dev)
-+		return -ENOMEM;
-+
-+	rcu_dev->dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0),
-+						bdi, fmt, args);
-+	if (IS_ERR(rcu_dev->dev)) {
-+		kfree(rcu_dev);
-+		return PTR_ERR(rcu_dev->dev);
-+	}
-
-  	cgwb_bdi_register(bdi);
--	bdi->dev = dev;
-+	bdi->rcu_dev = rcu_dev;
-
--	bdi_debug_register(bdi, dev_name(dev));
-+	bdi_debug_register(bdi, dev_name(rcu_dev->dev));
-  	set_bit(WB_registered, &bdi->wb.state);
-
-  	spin_lock_bh(&bdi_lock);
-@@ -1005,17 +1013,28 @@ static void bdi_remove_from_list(struct backing_dev_info *bdi)
-  	synchronize_rcu_expedited();
-  }
-
-+static void bdi_put_device_rcu(struct rcu_head *rcu)
-+{
-+	struct bdi_rcu_device *rcu_dev = container_of(rcu,
-+			struct bdi_rcu_device, rcu_head);
-+	put_device(rcu_dev->dev);
-+	kfree(rcu_dev);
-+}
-+
-  void bdi_unregister(struct backing_dev_info *bdi)
-  {
-+	struct bdi_rcu_device *rcu_dev = bdi->rcu_dev;
-  	/* make sure nobody finds us on the bdi_list anymore */
-  	bdi_remove_from_list(bdi);
-  	wb_shutdown(&bdi->wb);
-  	cgwb_bdi_unregister(bdi);
-
--	if (bdi->dev) {
-+	if (rcu_dev) {
-  		bdi_debug_unregister(bdi);
--		device_unregister(bdi->dev);
--		bdi->dev = NULL;
-+		get_device(rcu_dev->dev);
-+		device_unregister(rcu_dev->dev);
-+		rcu_assign_pointer(bdi->rcu_dev, NULL);
-+		call_rcu(&rcu_dev->rcu_head, bdi_put_device_rcu);
-  	}
-
-  	if (bdi->owner) {
-@@ -1031,7 +1050,7 @@ static void release_bdi(struct kref *ref)
-
-  	if (test_bit(WB_registered, &bdi->wb.state))
-  		bdi_unregister(bdi);
--	WARN_ON_ONCE(bdi->dev);
-+	WARN_ON_ONCE(bdi->rcu_dev);
-  	wb_exit(&bdi->wb);
-  	cgwb_bdi_exit(bdi);
-  	kfree(bdi);
-
-
-
-
-
-
-
+Thanks
+Mrs. Anna H.
