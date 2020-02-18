@@ -2,90 +2,149 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF805162A1D
-	for <lists+linux-block@lfdr.de>; Tue, 18 Feb 2020 17:12:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 519C7162CCC
+	for <lists+linux-block@lfdr.de>; Tue, 18 Feb 2020 18:28:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgBRQMF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Feb 2020 11:12:05 -0500
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:39866 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQMF (ORCPT
+        id S1726768AbgBRR2y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Feb 2020 12:28:54 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:19382 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBRR2p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:12:05 -0500
-Received: by mail-oi1-f180.google.com with SMTP id z2so20616180oih.6
-        for <linux-block@vger.kernel.org>; Tue, 18 Feb 2020 08:12:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
-        b=sBI24QLXeAMxnYobfUFiAmd4xR2PTbf+BdHJLpEnENN3qmIvaSodggHdxVC0a8TFor
-         daiCdzzMriYxSKIJDxlEJfBopsHtk8VdOYbkisI/98VtSvYnBm/rESBdpNEJJPXu0FF8
-         0BOofIxPjKHH2UCJaaashNaSc+UrHk7gBR97j07A04GcQwrzuXuIgsQCEq/JmIEOeDi/
-         mfRYWHmCsOX35tJZn56nzIQq+sayeHW3VdvXIXHmKnTOmW5kNVP/nDcGO4e6Plhn6dWU
-         U5qibufJ9kPP1ziTSLn4iP65+lhELzA/Z1ZgW2XEkCMDGEs440z34HMvlcKrmZoj1Nu0
-         Wv2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
-        b=YKOFtFe2kzm+DFx1nH+58XzgZzW9Fehj4MmzNjghEq+GPciuu97otySj2aTany45vR
-         QIEk5cADm9ddAmUVZbnmLXy4HnbAC27TaGPdv6hb7F1oU3p9FtqU/9jbIpLtUMFVteQt
-         5tq1dzNauFCTfEM6Ano8xA+IoX8/gIZauN4ro6Rs9tmxD/JHOHfnjqIxlxh1oSjeU57c
-         39shz4qktRIFF7k3tL3kXFF6DWM+mthI8V2ePwKxg60gcZbwJXX3LBCfoAPQmHPukRIa
-         adjGfsfe3V9BELYlt6BRqQH2b6hXUA22LWu5RHlgM335f7szqITpnO901lYv1Dox5B/N
-         Le1w==
-X-Gm-Message-State: APjAAAWvSIERCRDzLUNVUaBfWrxH1jw+8aW7KMR6T8cBM/RD5Su7Q6V9
-        47J765LWY60NB24sSS/fgc1+Qj4wu11m4pZEyv7JAg==
-X-Google-Smtp-Source: APXvYqyItQcqBDeH/j9bd5sgRpZfMvMbTo7/hzatU4ZDPYxeI+o76a9irGBqbSncYfhrdjrsgUL2OhHxhb9qaNUNIWU=
-X-Received: by 2002:aca:fcc1:: with SMTP id a184mr1665266oii.36.1582042324768;
- Tue, 18 Feb 2020 08:12:04 -0800 (PST)
+        Tue, 18 Feb 2020 12:28:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582046926; x=1613582926;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=y1DvgfMLY6am9T4EUoU2acjdmlJYxmMPJUoxeuMBSAQ=;
+  b=DllHCT1dIIGzuYaQKzyexcOOcz/i0Z3vuDerfPKWManS0cMXwbBTnFo0
+   1VWAAdheeUiYDoCuTwjloUFgv+cH5hyEYvqHu4IvyG/l6wo/6qTUGvQs/
+   u40YM3UEeoUh0JyZpXK0lqxlebyPAWh1ugivlKXz+smG8rf3IaQDUteNB
+   l9IWsuF1qOchGt6UbJrD3+X9S/shmtdE4vhgspLQjPE0rPofBQLYkLbjb
+   6fULaLJqnkMOf17CE6VosCnypqDwEOPEp3Ue7AZd2fxADZcmaxAeek+wC
+   IieCOZn7FuV4Cmj5mZTelFa361r0FH39NzAMR+JPwViSe1oAssjkvbvQC
+   Q==;
+IronPort-SDR: EpwGJJFdpnzrUbLOzvLjRradncKT+XrYmbr8uOcfObcxdYKg+3QBqTrmyRAs/N+1zy1YQ1Ho55
+ CBiVvQkctGhFuBaMj5ztE4BGkPpcs+MGcDT0GkUlvz8Kt9MfwIChjIH0Ns5OpdPKtZJJPNmlXw
+ ROSirmrBENJzquYgwxhTam+XzY5f4MOXaPTlzky4l+9O0wgkpd6GQ3uNfbBLZF8SFXMX6Si9RP
+ MhKXPmRh7u6rMy9WcNDHzeLijJPKuUuyOz0M8X1gh8z8fDkFfbkzpjslCy6B4pJtKlSIxVcDAT
+ ZIg=
+X-IronPort-AV: E=Sophos;i="5.70,456,1574092800"; 
+   d="scan'208";a="231976942"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Feb 2020 01:28:46 +0800
+IronPort-SDR: jbjSf+yI8eX1+bYTItf3PpGmHLfIMq4yj64nZ/BiJTuHz5uxqmmn6GBqU4AG6g/+Or+gSTZ5ZF
+ LNrFWar5MKFc419LDvYneSYU8zl2ja4Y030xhgFe9VaJHbacS5ZSwEI7zqorC5SD6Ospr6m8ln
+ cBDryzZGRIOrRkVP939DaPRcQlHJU1Aj/sYOOAA+TiU04QD0R8oknQssBP3bQ8uM6TBlmM47QL
+ GYLX/g1tcOZbZsCF60Fz9jU6+j7Zowbzs7eLx7McV+YfOtZL+TsL+f8+7i5SJQgWYzTVZYocgp
+ RPSfe9rxUdZf0BBuq58vFPTN
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 09:21:23 -0800
+IronPort-SDR: regFz++hL4c3o5HKRALSPtrF2eG8fZPUbvrKNo0ZQMVqs8flhrZd6nWuJaBafKVew1BiWjNpdM
+ X+i7wXe0zn/xbcBOohcQfMUDD5A4fWVE2NWoZEiB58Fpav6/7qfaqCurdkq1Dc/166wojW/sdo
+ 6vcZARtRScdZEhYimSSIzeVhFUEKhzNkRUp9oqs//XSvny62QTVsFGpnp1w2yeLh+khnwF/iy+
+ rjMNelvyGzh3Zmx2J91gKgz0PGwQyezHXFyehlU+Z8qvgmr40Xl507fsE7m0ooEoI1g29LVcoc
+ eZI=
+WDCIronportException: Internal
+Received: from iouring.labspan.wdc.com (HELO iouring.sc.wdc.com) ([10.6.138.107])
+  by uls-op-cesaip01.wdc.com with ESMTP; 18 Feb 2020 09:28:44 -0800
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     damien.lemoal@wdc.com, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 0/3] null_blk: add tracnepoints for zoned mode
+Date:   Tue, 18 Feb 2020 09:28:37 -0800
+Message-Id: <20200218172840.4097-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
- <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org> <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
- <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com> <20200215034652.GA19867@ming.t460p>
-In-Reply-To: <20200215034652.GA19867@ming.t460p>
-From:   Jesse Barnes <jsbarnes@google.com>
-Date:   Tue, 18 Feb 2020 08:11:53 -0800
-Message-ID: <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Salman Qazi <sqazi@google.com>, Ming Lei <tom.leiming@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
-> What are the 'other operations'? Are they block IOs?
->
-> If yes, that is why I suggest to fix submit_bio_wait(), which should cover
-> most of sync bio submission.
->
-> Anyway, the fix is simple & generic enough, I'd plan to post a formal
-> patch if no one figures out better doable approaches.
+Hi,
 
-Yeah I think any block I/O operation that occurs after the
-BLKSECDISCARD is submitted will also potentially be affected by the
-hung task timeouts, and I think your patch will address that.  My only
-concern with it is that it might hide some other I/O "hangs" that are
-due to device misbehavior instead.  Yes driver and device timeouts
-should generally catch those, but with this in place we might miss a
-few bugs.
+Recently we've added several new operations for zoned block devices
+blk-zone.c ZBD). These operations have a direct effect on the
+zone-state machine present in the null_blk_zoned.c. 
 
-Given the nature of these types of storage devices though, I think
-that's a minor issue and not worth blocking the patch on, given that
-it should prevent a lot of false positive hang reports as Salman
-demonstrated.
+This will allow us to add new testcases in blktests in order to verify
+the correct operations on the driver side.
 
-Thanks,
-Jesse
+This is a small patch series which adds tracepoints for the null_blk
+block driver when configured in a zoned mode (with command line
+parameter zoned=1).
+
+The first patch is a prep patch that adds a helper to stringify zone
+conditions which we use in the trace, the second patch adds new
+tracepoint definitions and the third patch allows null_blk_zoned to
+trace operations.
+
+Please have a look at the end for sample output.
+
+The change-log is present in the respective patches.
+
+Regards,
+Chaitanya              
+
+
+Chaitanya Kulkarni (3):
+  block: add a zone condition debug helper
+  null_blk: add tracepoint helpers for zoned mode
+  null_blk: add trace in null_blk_zoned.c
+
+ block/blk-zoned.c              | 32 ++++++++++++++
+ drivers/block/Makefile         |  3 ++
+ drivers/block/null_blk_trace.c | 20 +++++++++
+ drivers/block/null_blk_trace.h | 78 ++++++++++++++++++++++++++++++++++
+ drivers/block/null_blk_zoned.c | 12 +++++-
+ include/linux/blkdev.h         | 10 +++++
+ 6 files changed, 154 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/block/null_blk_trace.c
+ create mode 100644 drivers/block/null_blk_trace.h
+
+
+Sample Test Output :-
+
+# modprobe null_blk zoned=1 zone_size=128 gb=1 bs=4096
+# cd /sys/kernel/debug/tracing/
+# echo 1 > events/nullb/enable; cat trace_pipe 
+# for i in open close finish reset; do blkzone $i /dev/nullb0; done 
+# dd if=/dev/zero of=/dev/nullb0 bs=4k count=5
+
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=0 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=1 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=2 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=3 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=4 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=5 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=6 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_OPEN       zone_no=7 zone_cond=EXP_OPEN  
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=0 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=1 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=2 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=3 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=4 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=5 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=6 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_CLOSE      zone_no=7 zone_cond=EMPTY     
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=0 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=1 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=2 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=3 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=4 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=5 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=6 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_FINISH     zone_no=7 zone_cond=FULL      
+nullb_zone_op: disk=nullb0,  req=ZONE_RESET_ALL  zone_no=0 zone_cond=EMPTY 
+nullb_zone_op: disk=nullb0,  req=WRITE           zone_no=0 zone_cond=IMP_OPEN  
+nullb_zone_op: disk=nullb0,  req=WRITE           zone_no=0 zone_cond=IMP_OPEN  
+nullb_zone_op: disk=nullb0,  req=WRITE           zone_no=0 zone_cond=IMP_OPEN  
+nullb_zone_op: disk=nullb0,  req=WRITE           zone_no=0 zone_cond=IMP_OPEN  
+nullb_zone_op: disk=nullb0,  req=WRITE           zone_no=0 zone_cond=IMP_OPEN
+
+-- 
+2.22.1
+
