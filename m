@@ -2,43 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4CC164A58
-	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 17:29:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 113D5164A60
+	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 17:29:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSQ3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Feb 2020 11:29:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60632 "EHLO
+        id S1726719AbgBSQ3p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Feb 2020 11:29:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33338 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgBSQ3N (ORCPT
+        with ESMTP id S1726659AbgBSQ3p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:29:13 -0500
+        Wed, 19 Feb 2020 11:29:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hn7DQDonTg5ZLUi5HWwm6QqNVXWAGzFqxUeSMPbsib0=; b=N62EAJ+kjp750uA4yJHdeNR/I8
-        zJc8cNgFKUEu5i/A22F56Dhij9Ye0u/MLcfRWV6WBUytqGg2T1Y4baOx6qDM3ImpCgTiQA2aIiZ4v
-        WuVEin/4bvbJhCIYN57/nuECR+Z1kSfs6QJH2k+AmX5QylOkPNQexmM/776bSkFdBI/Fxfs0zKeG6
-        0RbXbQa5EyUHOJJSJu5E14n9FaZgbDRaSyGP5A2ebzDJZpLYuFvaMzOErxYbpmaKCjehWlJx87eTt
-        EZzZkzjnYlyXe0g76/ApYUAicsuNjbQLSCAk4G4JBNkBCoUucRPcgO8nes3B+K0Q4Fl+aHDRh2GGa
-        uHkgfbiA==;
+        bh=iUyZYR9GtHsqp6ca6i8w76xqJZyMl4tEiGeZvPZ5XXM=; b=niu1WAtKtAqafCCgRnj1JNZOXf
+        ZNg1RNu47+eanqVjpOW+IAZM/BXCIVxN+mN7JkRzIEg0qv0EowwspUeEnHKxq9bMg8428bbtR04sK
+        yUg9OeN1BvAPfnN9JnziullUjPSWkl4Gs47fB7qhsO8RVTef6AR2PEFylzOJ5PoaqFXJmRWvWnoZp
+        IlreGaqAU6a6/xs0PqP05ECrnd3c6hcOUYoXE3Gh7N525gxSAYGkPxXup+eRp3I7iy+knrtC0ML8u
+        5ISHTwK6wIDAp8SB0T6x/6ZTA17A7roH2FKkw40TQYJpWtHELTVkoJpUq3IChmpeyCSeM3a72NGi7
+        BVBYhTwA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4SDo-00034D-UJ; Wed, 19 Feb 2020 16:29:12 +0000
-Date:   Wed, 19 Feb 2020 08:29:12 -0800
+        id 1j4SEL-0003Id-DW; Wed, 19 Feb 2020 16:29:45 +0000
+Date:   Wed, 19 Feb 2020 08:29:45 -0800
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     damien.lemoal@wdc.com, axboe@kernel.dk, linux-block@vger.kernel.org
-Subject: Re: [PATCH V2 0/3] null_blk: add tracnepoints for zoned mode
-Message-ID: <20200219162912.GC10644@infradead.org>
-References: <20200218172840.4097-1-chaitanya.kulkarni@wdc.com>
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/3] bcache: move macro btree() and btree_root() into
+ btree.h
+Message-ID: <20200219162945.GD10644@infradead.org>
+References: <20200215082858.128025-1-colyli@suse.de>
+ <20200215082858.128025-2-colyli@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218172840.4097-1-chaitanya.kulkarni@wdc.com>
+In-Reply-To: <20200215082858.128025-2-colyli@suse.de>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-s/tracnepoints/tracepoints/ ?
+On Sat, Feb 15, 2020 at 04:28:56PM +0800, Coly Li wrote:
+> In order to accelerate bcache registration speed, the macro btree()
+> and btree_root() will be referenced out of btree.c. This patch moves
+> them from btree.c into btree.h with other relative function declaration
+> in btree.h, for the following changes.
+
+Can you give them a bcache_ prefix?  That names are awfully generic
+and bound to clash sooner or later.
