@@ -2,83 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA3FD164B98
-	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 18:13:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14367164D26
+	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 18:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgBSRNf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Feb 2020 12:13:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42746 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgBSRNf (ORCPT
+        id S1726762AbgBSR6K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Feb 2020 12:58:10 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33793 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726609AbgBSR6I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:13:35 -0500
-Received: by mail-io1-f65.google.com with SMTP id z1so1367040iom.9
-        for <linux-block@vger.kernel.org>; Wed, 19 Feb 2020 09:13:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E7P/YRJ7NRLXP5j7uZoB4Xy1U6Bu5a/mvMz2cDAjg/s=;
-        b=j15SO/r/JRx+y9gS/MYmBwyYNE02UEUPGvgqKisdut0Z5LMtKHljtTRoEKSCnNNhs/
-         L1SC/le2wQWl52Ci6RBH+gEGzJoVifdYlBVkqc+3yuF7NK02paJQfRY5/H1EzvLB6p0L
-         bQLx507O1Ud2ZgYNWg+X5NAEDossEcaEqh+NaWSmUawSl59jsogIc3Xhlr3VDA839OHZ
-         sfJZOmVJwlX8zvc6kWWgsOSEgYhwu3deHr6gBrh5xDFhC7kv+glGkaiZJqz86hoCEFH/
-         9npEm+sMMAghtzvnmWuNjoV08gYQ7XmwDWlmSVk7y8HAb0nGM1yFqF5WK2cmd7l8nR0q
-         Zt8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E7P/YRJ7NRLXP5j7uZoB4Xy1U6Bu5a/mvMz2cDAjg/s=;
-        b=ZQcUKcS40b14s9jbChQ9DdMHHFADTKx7d3p+Lw2X419WacbrItNpveZT+3oYgAgbY3
-         T/5/IAnsAiPu3Q5XbNh2beBej2ktCbgGkIyed7TogYggCla2bIDDssKSFEI01vj4tU3H
-         MxmHD2o7rq3j+3diIjxZ3XJaywjbMuuZOtpR+ioVeKhhk2cLdemjeGzFCb7d+tbeuPl1
-         ExWaPdZOxFW6IxKcpFLEly/Y3AKhHJsbHSwaYw47nVeBlP31xucGP59F6aCe1SD/kdcI
-         PV1Q5M4PKNhL2rVMOqAAu7ZvBFHf3cUKMizm05G1vav2P9tPpD4NTYSv6EvncKNhs52+
-         qSAQ==
-X-Gm-Message-State: APjAAAW4JVzi3hE0Wq+o9IZKHwwBlh9ct9Uc+ifNSfbVxkN3bKpWRWJ2
-        xlYwnNZQOgm0I/lhQphRAkePGKK6EWFf9tzIJ9U=
-X-Google-Smtp-Source: APXvYqwfMw8yFSEy+AeXQUZmYsGwreunmLRqAMOcb1imkeAMdbsUn4ILVzQkXKXA8Pl0ufKn0377cdeY8pfWrvpr2nw=
-X-Received: by 2002:a02:2a06:: with SMTP id w6mr22457936jaw.63.1582132414993;
- Wed, 19 Feb 2020 09:13:34 -0800 (PST)
+        Wed, 19 Feb 2020 12:58:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582135087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=osE6Os536TzWa3Iu36fjeW3PyeJPL+4fg4AlWyJ2Fe8=;
+        b=drYbqUA1xg3lpJxhAz5S6eh0DMSDTZVRycjQDl28eeWPmrk0QuwGSWlTUscQ84DLRvypYn
+        pwLyFsDiro18/y8He0somEQUUR+FX1m5wLMwhroTYayZmZAmQ3QKgV2UyHSwwYA3sLcedR
+        UFtv5XZIPNXuOhVDgIBshJWe7q24Ir4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-Bt2leHTQP2q-fUD22d082g-1; Wed, 19 Feb 2020 12:57:59 -0500
+X-MC-Unique: Bt2leHTQP2q-fUD22d082g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1470D100550E;
+        Wed, 19 Feb 2020 17:57:57 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE60648;
+        Wed, 19 Feb 2020 17:57:53 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 15:11:34 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
+Message-ID: <20200219151134.GI1078625@stefanha-x1.localdomain>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
 MIME-Version: 1.0
-References: <b7ad1223-4224-da46-4c48-50427360f31c@wwwdotorg.org>
- <20200219163258.GB18377@infradead.org> <dfff89c0-d3cf-96a0-7f44-4d2256a3aba3@wwwdotorg.org>
-In-Reply-To: <dfff89c0-d3cf-96a0-7f44-4d2256a3aba3@wwwdotorg.org>
-From:   Alberto Faria <albertofaria2@gmail.com>
-Date:   Wed, 19 Feb 2020 17:13:24 +0000
-Message-ID: <CAHB4L8htX_dsr01qegp4nOKk-_krVLSjLWJCv8LiobcmQZ+qgA@mail.gmail.com>
-Subject: Re: dd, close(), sync, and the Linux disk cache
-To:     Stephen Warren <swarren@wwwdotorg.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Simon Glass <sjg@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
+Content-Disposition: inline
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+--zqjkMoGlbUJ91oFe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Can you explain further why it's necessary given that the kernel
-> explicitly blocks execution of close() to flush buffers to disk,
-> assuming the process is the last one with the device open? Am I
-> misinterpreting the code path I mentioned later in my email? In
-> practice, I can see this happening when I use dd.
+On Thu, Feb 13, 2020 at 01:37:26PM +0100, Halil Pasic wrote:
+> Two patches are handling new edge cases introduced by doing DMA mappings
+> (which can fail) in virtio core.
+>=20
+> I stumbled upon this while stress testing I/O for Protected Virtual
+> Machines. I deliberately chose a tiny swiotlb size and have generated
+> load with fio. With more than one virtio-blk disk in use I experienced
+> hangs.
+>=20
+> The goal of this series is to fix those hangs.
+>=20
+> Halil Pasic (2):
+>   virtio-blk: fix hw_queue stopped on arbitrary error
+>   virtio-blk: improve virtqueue error to BLK_STS
+>=20
+>  drivers/block/virtio_blk.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>=20
+>=20
+> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+> --=20
+> 2.17.1
+>=20
 
-From what I could gather empirically, close() does write dirty pages
-from the block device's page cache to disk but does not submit a
-"flush" request to the device driver. Depending on the driver and
-device, this may be necessary to ensure that data is persistently
-stored (e.g., if the device features an internal write-back cache).
-Performing a sync command with the block device as an argument, or
-reopening the device and invoking fsync() or fdatasync(), submits
-and awaits that request.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-The existence or non-existence of a device-internal write-back
-cache, and differences in the timing and policies of such a cache,
-may explain why in some cases the sync appears necessary and in
-others it doesn't.
+--zqjkMoGlbUJ91oFe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Alberto Faria
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5NUCYACgkQnKSrs4Gr
+c8j5Pgf+MI41fd9a93cz9zlmiW7E/b+B99Zg/shlPYBcQXo0INymDnvknnpzLpqK
+uHn5ZGq85kM6+ls29Zhh4w7bxiJlBBNRzCkIIRxe5CwyOptQPcKHONreD1suCGT0
+boXaZtrbU1Wt1bWRBK4F9OLZcyIFxUESQ36b1r1VddZsKeFETUXAwjpSEU9bVCZ6
+qJfDp9RLYVvFISB17avVnsqyw8xO9mVI3RyIdzQATERL9W3DVxaacULruMmlBHvq
+T3nt4WcQjbTHEmTjvpnwGg2Oz4uvaRGm617bv082XAOP+Xr0h9uNU119WKCYk1Qk
+VML23VMN5owhMcib+gUXV3/9bQQkYQ==
+=GsRc
+-----END PGP SIGNATURE-----
+
+--zqjkMoGlbUJ91oFe--
+
