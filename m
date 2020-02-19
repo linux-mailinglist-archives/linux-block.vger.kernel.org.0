@@ -2,62 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7BF016459D
-	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 14:36:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0BC91647F1
+	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 16:12:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgBSNgc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Wed, 19 Feb 2020 08:36:32 -0500
-Received: from scm.imp.edu.mx ([132.247.16.103]:18945 "EHLO scm.imp.edu.mx"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgBSNgc (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:36:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 1A6EC18AC7C;
-        Wed, 19 Feb 2020 06:11:25 -0600 (CST)
-X-Virus-Scanned: by SpamTitan at imp.edu.mx
-Received: from scm.imp.edu.mx (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 3BDD118DA14;
-        Wed, 19 Feb 2020 04:51:46 -0600 (CST)
-Authentication-Results: scm.imp.edu.mx; none
-Received: from imp.edu.mx (unknown [10.249.93.105])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 39D5318D9F9;
-        Wed, 19 Feb 2020 04:51:42 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 23609180635F4E;
-        Wed, 19 Feb 2020 04:51:43 -0600 (CST)
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id VKJQCI3YEdu1; Wed, 19 Feb 2020 04:51:43 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 0235E180635F44;
-        Wed, 19 Feb 2020 04:51:43 -0600 (CST)
-X-Virus-Scanned: amavisd-new at imp.edu.mx
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lUsOR2y12Kdm; Wed, 19 Feb 2020 04:51:42 -0600 (CST)
-Received: from [45.147.4.119] (unknown [45.147.4.119])
-        by imp.edu.mx (Postfix) with ESMTPSA id A3A89180635F4E;
-        Wed, 19 Feb 2020 04:51:41 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726739AbgBSPMD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Feb 2020 10:12:03 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45523 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgBSPMC (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:12:02 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a2so367464qko.12
+        for <linux-block@vger.kernel.org>; Wed, 19 Feb 2020 07:12:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n+SHsILg/1tswq9R8SBNEMGUgYVfB/wPfRGE9VNJMS8=;
+        b=IRwttiSbmJWxnB+PgBI1s4bJTTbBK34CFJSYtcd6DREJyMyHA18rF0uilM2mIAz3jn
+         X9r4fIZ+DJOCyvCouzQAECk60MFE4V/ibV0xnxecHLfHGKoXKW1/ifYnl67qLBAco+jq
+         B7mOmgKKzURep4S9dDmqnyqgUQOpWNEOsv+vjJjCwPYt35HRYe39JdyPFr6Ldfwbew33
+         707fQoOFXIlXutG/+V/cTlvhKxHJ1LzbcYAc6n/eUowxMLpuW7A9qbZLgOWAM6ERSrii
+         HdTyIjdEYwRbB5Mfi6aXfFF9ENXoW8HepwUZjkPNckyJkyaLwOEZFqLrBgiFpfQqnI/K
+         DLeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=n+SHsILg/1tswq9R8SBNEMGUgYVfB/wPfRGE9VNJMS8=;
+        b=PNhE8N1sdZD1CT3c7Vm06yf7YhdiYiAPmfhnhpylkSAt5axpn52BYsNzRmoz8rp/qd
+         lBL7Wy5jQpZtm0Oxk3LxXU4zs9VkfUMK0LRQMJwOeOEO0RYPdQEDuWZRZAES3QgTrGkT
+         KMLORP+Mnntyj92wbVZis5xG6fknYs/PnyxTKm3lOe8FTAvkHUT+ahG9SzRsv/V7/ntR
+         iYztFTCS19yMRR29XTosEr3VgSXF6bd0bqNQDd/fPHviKXyCN6OOJzY9oPKcGWIp3cXQ
+         BKNUrJ+Rx7HE0RMZi7GQlNNLl2gidpi3KZ29zUfcvVh2Edbtll8K3tgQl7ysMTiTcNOR
+         iPGw==
+X-Gm-Message-State: APjAAAUcbCBwhHHGQfyVYLiDAeQeMD+4kcFLem2xoQ4BD2+GLxTas7kz
+        A2B7SeA3wGjIutO/dSHcb7hCcfj/SgU=
+X-Google-Smtp-Source: APXvYqxd1A2wZSvD8WKDX7W9mv+zYGzLQxciYLC5qdf9xdI9RE8mmDDk9iN5gije67VsTJ4csrcXiw==
+X-Received: by 2002:a37:9306:: with SMTP id v6mr2115603qkd.257.1582125121469;
+        Wed, 19 Feb 2020 07:12:01 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:e7ce])
+        by smtp.gmail.com with ESMTPSA id d197sm1122238qkc.16.2020.02.19.07.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:12:00 -0800 (PST)
+Date:   Wed, 19 Feb 2020 10:12:00 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Yufen Yu <yuyufen@huawei.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, bvanassche@acm.org
+Subject: Re: [PATCH] bdi: fix use-after-free for bdi device
+Message-ID: <20200219151200.GA698990@mtj.thefacebook.com>
+References: <b7cd6193-586b-f4e0-9a5d-cc961eafaf81@huawei.com>
+ <20200212213344.GE80993@mtj.thefacebook.com>
+ <fd9d78b9-1119-27cc-fa74-04cb85d4f578@huawei.com>
+ <20200213034818.GE88887@mtj.thefacebook.com>
+ <fa6183c5-b92c-c431-37ab-09638f890f6c@huawei.com>
+ <20200213135809.GH88887@mtj.thefacebook.com>
+ <f369a99d-e794-0c1b-85cf-83b577fb0f46@huawei.com>
+ <20200214140514.GL88887@mtj.thefacebook.com>
+ <32a14db2-65e0-5d5c-6c53-45b3474d841d@huawei.com>
+ <20200219125505.GP16121@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: 19-02-2020
-To:     Recipients <mucios@imp.edu.mx>
-From:   "urs portmann" <mucios@imp.edu.mx>
-Date:   Wed, 19 Feb 2020 21:51:39 +1100
-Reply-To: onube@qq.com
-Message-Id: <20200219105141.A3A89180635F4E@imp.edu.mx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219125505.GP16121@quack2.suse.cz>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Guten Morgen,
-                                          19-02-2020
-Wir haben versucht, Sie zu erreichen und haben noch nichts von Ihnen gehört. Haben Sie unsere letzte E-Mail über Ihre S.p.e.n.d.e erhalten? Wenn nicht, melden Sie sich bitte bei uns, um weitere Informationen zu erhalten.
+Hello, Jan.
 
-Wir warten darauf, von Ihnen zu hören, sobald Sie diese Nachricht erhalten, die Sie bei der weiteren Vorgehensweise unterstützt.
+On Wed, Feb 19, 2020 at 01:55:05PM +0100, Jan Kara wrote:
+> Also I was wondering about one thing: If we really care about bdi->dev only
+> for the name, won't we be much better off with just copying the name to
+> bdi->name on registration? Sure it would consume a bit of memory for the
+> name copy but I don't think we really care and things would be IMO *much*
+> simpler that way... Yufen, Tejun, what do you think?
 
-Mfg
-urs portmann
+Yeah, could be. So, object lifetimes in block layer have been kinda
+janky mostly for historical reasons and in a lot of cases ppl apply
+bandaids to work around immediate problems and at other times things
+get restructured and properly fixed. Given how the objects are used
+here, it'd be a typical case for RCU protecting bdi->dev and I wonder,
+in the longer term, that'd be a better way to go than special-casing
+name. That said, it's not a strong opinion.
+
+Thanks.
+
+-- 
+tejun
