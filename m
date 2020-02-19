@@ -2,48 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F04164A7B
-	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 17:34:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F87164A84
+	for <lists+linux-block@lfdr.de>; Wed, 19 Feb 2020 17:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgBSQeD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Feb 2020 11:34:03 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34142 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgBSQeD (ORCPT
+        id S1726787AbgBSQfb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Feb 2020 11:35:31 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39048 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgBSQfb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:34:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kvvlMPs9AAhAXpaJ/VQKWKqR+Z43B+ioinocZAU646w=; b=Rdlyb6dGJGY7RmNXjZ5XMIRq7h
-        Mg9k0tx88a+iQOS286IjD0Y0OZ4DmQkT5+bwZL0ukOLGrDzlKEBmJtWcwMIkdOAFLMsOtJquSjT59
-        FTF9RSSXzqwsuTMY8MzCfPOA5KZA6U52dzLjEQWH1NLveZDt4N6m0MmrYtDyNN/38JYiO8NwBKwsS
-        wbd9eyG093ic+5dbPCNeu4nnZ3gUs9vcC3J5rzXCIfBQ4DE0p/T6hvQIs4X+4PnQ7N+dFQ3Qg3svC
-        j5mLfFNMMWP1h9Fba2tYrMrshKtoYQ+wOQHha6kiawN+3SdZKjv7mkIaqPLDg1VAfTCqwhkCoJylL
-        YTjVvgTA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4SIU-0005if-GC; Wed, 19 Feb 2020 16:34:02 +0000
-Date:   Wed, 19 Feb 2020 08:34:02 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, hare@suse.de
-Subject: Re: [PATCH] block, zoned: fix integer overflow with BLKRESETZONE et
- al
-Message-ID: <20200219163402.GC18377@infradead.org>
-References: <20200212174027.GA3535@avx2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212174027.GA3535@avx2>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 19 Feb 2020 11:35:31 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 84so317911pfy.6
+        for <linux-block@vger.kernel.org>; Wed, 19 Feb 2020 08:35:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=we5icCwKH7wtzWPIKFMGX7T64gNUQ2rwppnXpkujsgc=;
+        b=IxS5D35PUpZ4W/W31ACAmHqS3zXpV4fPjKTP0qt5vHjRmQ7ULld7JCJqEyV0megCWh
+         V5GZ0KwVmyxbQdp2DdaFejehLEKOw79WA48wlkTsOgG6/JWPjM3lttecWoE/LuAIs47Y
+         vMsW7/tS7tUErcbQGNOH0GgYwABxpZTHOC3O4dEX/rR9YCX3QiznBmtNdCC6uEuzeSSP
+         wutfWn8NgKPjYNOZgs+wVagKI6ddJaWoaBq+R5NG5ZTm6PMWj19m0a0jh/Cm4d7V6V8I
+         rryQ+pvrkIXryG9AH7UwTGAs/4djVgIfcqwPdN7oPoi7m4DuRjy44IPbvkH/lMhqRpMy
+         txUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=we5icCwKH7wtzWPIKFMGX7T64gNUQ2rwppnXpkujsgc=;
+        b=D6f9d8x2c2zDyg/wBhSGcHnoPR968tU5tbvK55vTuupaC7Slr1BU1SvfiO5fCIO9z2
+         kX8UdVbSZBBUuyET51B/E1QF2RowR2a6GPji3LIY+yg7UWyaUmagIi6xO2cTZfW/PEy8
+         Ie7d4gom7UOnBPSgL3rDQaXBbU71ZCnQl/Gt6lr1QiVbnC4ECwYecaq7ApfxFnEWGvyu
+         qteTqMSSl/mpTAD13v2MzC2a3nqxk9faaNzwD7Z6YhoawP3X7X/nabKu9DkD4XjldHhQ
+         QGm4756J8TTbR+NqNodwQEzKmxicc+A39Z4DKZSvP37TTfIm2VPRfpPX1Tt5Q07+HniA
+         dcmg==
+X-Gm-Message-State: APjAAAXT30HDEGPuvQtfEvT9M6v13VTXTdw+oHaLqbQC7xySQ68GOIii
+        /+2kGrWyAKTnv0JgkrSUGTPtSw==
+X-Google-Smtp-Source: APXvYqwSdsODu7zccpKrFxgdkqZ2V3Tz2ufXcP/EGIacggwu+HvE1k0rOH2EfuwurNPaMsFtl6GLfQ==
+X-Received: by 2002:a63:4e63:: with SMTP id o35mr27453704pgl.279.1582130130574;
+        Wed, 19 Feb 2020 08:35:30 -0800 (PST)
+Received: from nb01257.pb.local ([240e:82:3:25f6:4c45:9495:5474:a6b5])
+        by smtp.gmail.com with ESMTPSA id c10sm194921pgj.49.2020.02.19.08.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 08:35:29 -0800 (PST)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH] block: fix comment for blk_cloned_rq_check_limits
+Date:   Wed, 19 Feb 2020 17:34:15 +0100
+Message-Id: <20200219163415.7618-1-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+Since the later description mentioned "checked against the new queue
+limits", so make the change to avoid confusion.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+ block/blk-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Can you wire up your test for blktests?
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 9019f6a7adf8..6d36c2ad40ba 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1202,7 +1202,7 @@ EXPORT_SYMBOL(submit_bio);
+ 
+ /**
+  * blk_cloned_rq_check_limits - Helper function to check a cloned request
+- *                              for new the queue limits
++ *                              for the new queue limits
+  * @q:  the queue
+  * @rq: the request being checked
+  *
+-- 
+2.17.1
+
