@@ -2,266 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 131AB16B2D2
-	for <lists+linux-block@lfdr.de>; Mon, 24 Feb 2020 22:40:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F95216B2C1
+	for <lists+linux-block@lfdr.de>; Mon, 24 Feb 2020 22:38:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgBXVkx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Feb 2020 16:40:53 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbgBXVks (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:40:48 -0500
-X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO5Wx008701;
-        Mon, 24 Feb 2020 22:24:05 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 10/10] floppy: cleanup: expand the reply_buffer macros
-Date:   Mon, 24 Feb 2020 22:23:52 +0100
-Message-Id: <20200224212352.8640-11-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <20200224212352.8640-1-w@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
+        id S1727703AbgBXVhy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Feb 2020 16:37:54 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37254 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVhy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:37:54 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so7630020qtk.4;
+        Mon, 24 Feb 2020 13:37:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/oLy8oVuts+NDR86rWT12f1DfuTi/T+KFkIcevjcIVk=;
+        b=G/dqJBKUaChhHiklV5Lw+49KVuJF9AbPOpkfS+2n6Qk8wkhPUVDGGMJD5uvSfRAwOx
+         xzJfG8b8FMlMdMb4KndOLEFwTqa8kpbf1gnvD3wJ7DmQ3+a0myrZMyoZ7gQm/CiO1t8Y
+         AQ2niiTydeDa2Tm4yZZQAzuwao4ut8S7wQoFQU7h30tlwtv05ivIKuBQl9CAbTmUQykG
+         vhhobIrRrVhM0SrntztkE7e08WvFc+q24oNp6mNiqulz617fl7f3YoSmNWXPrsOexSXk
+         /3UsPWtixv84JHg6mkf5BwIRJHok/gkKO/3aAOD4Hc4Tpta4BGbVr3rVA37at/r8be18
+         XmfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/oLy8oVuts+NDR86rWT12f1DfuTi/T+KFkIcevjcIVk=;
+        b=n+6QsJu2ObyNHEveuhnu+qYroaJy0gAsJTXbcQsYvc9dVStvuojn0mPEGi1dgX2OoZ
+         /7S9zDtKdYrMAE1QGffFdzgWTEQPqGvhgQaqI/9sabhFQ/VeCF9Ryf4IAp3cd4i/4j4c
+         cVw4jdWwRfUwe1BH/IVBfzZK4639Vdmx0ZxztSDEcoEnEDpjgQHzFLjL81/ywHhrmvCK
+         6Sw595eXAgAvvLdes0FKvMpuZFnhIgdszjNjHqhDRLVUOoqD6+RW65sYZ3niVktzZmoh
+         wOyMeg6n/Io/V26hBbE3TUojHB12qduptw3MW6LTx37qw6/QTr0fGA/OcTaktSkdGdZC
+         CqyA==
+X-Gm-Message-State: APjAAAUuxBOFYrrwCsWdtRvVTUzMdFYvLbB6K/Fe3kA9bgmOcQrwewDD
+        cKiYcMuuf3vSTVPYfyJ4TTM=
+X-Google-Smtp-Source: APXvYqw6QDKZMmbPqHOGHQZTwBxnfivEGgL5joDo4YpHdeSL71y1/54B9Y6S4a4M109nogftkRXbJg==
+X-Received: by 2002:ac8:5419:: with SMTP id b25mr51215597qtq.390.1582580273055;
+        Mon, 24 Feb 2020 13:37:53 -0800 (PST)
+Received: from dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com ([2620:10d:c091:500::2:b19b])
+        by smtp.gmail.com with ESMTPSA id c10sm6404718qkb.4.2020.02.24.13.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:37:52 -0800 (PST)
+Date:   Mon, 24 Feb 2020 16:37:50 -0500
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
+Message-ID: <20200224213750.GA3773@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com>
+ <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+ <alpine.LSU.2.11.2002231058520.5735@eggly.anvils>
+ <alpine.LSU.2.11.2002231710420.7354@eggly.anvils>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2002231710420.7354@eggly.anvils>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Several macros were used to access reply_buffer[] at discrete positions
-without making it obvious they were relying on this. These ones have
-been replaced by their offset in the reply buffer to make these accesses
-more obvious.
+On Sun, Feb 23, 2020 at 05:11:12PM -0800, Hugh Dickins wrote:
+> On Sun, 23 Feb 2020, Hugh Dickins wrote:
+> > On Thu, 20 Feb 2020, Dan Schatzberg wrote:
+> > 
+> > > memalloc_use_memcg() worked for kernel allocations but was silently
+> > > ignored for user pages.
+> > > 
+> > > This patch establishes a precedence order for who gets charged:
+> > > 
+> > > 1. If there is a memcg associated with the page already, that memcg is
+> > >    charged. This happens during swapin.
+> > > 
+> > > 2. If an explicit mm is passed, mm->memcg is charged. This happens
+> > >    during page faults, which can be triggered in remote VMs (eg gup).
+> > > 
+> > > 3. Otherwise consult the current process context. If it has configured
+> > >    a current->active_memcg, use that. Otherwise, current->mm->memcg.
+> > > 
+> > > Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
+> > > would always charge the root cgroup. Now it looks up the current
+> > > active_memcg first (falling back to charging the root cgroup if not
+> > > set).
+> > > 
+> > > Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > Acked-by: Tejun Heo <tj@kernel.org>
+> > 
+> > Acked-by: Hugh Dickins <hughd@google.com>
+> > 
+> > Yes, internally we have some further not-yet-upstreamed complications
+> > here (mainly, the "memcg=" mount option for all charges on a tmpfs to
+> > be charged to that memcg); but what you're doing here does not obstruct
+> > adding that later, they fit in well with the hierarchy that you (and
+> > Johannes) mapped out above, and it's really an improvement for shmem
+> > not to be referring to current there - thanks.
+> 
+> I acked slightly too soon. There are two other uses of "try_charge" in
+> mm/shmem.c: we can be confident that the userfaultfd one knows what mm
+> it's dealing with, but the shmem_swapin_page() instance has a similar
+> use of current->mm, that you also want to adjust to NULL, don't you?
+> 
+> Hugh
 
-Signed-off-by: Willy Tarreau <w@1wt.eu>
----
- drivers/block/floppy.c | 86 +++++++++++++++++++++++++++-----------------------
- 1 file changed, 47 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 0d53335..d521899 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -341,14 +341,14 @@ static bool initialized;
- #define MAX_REPLIES 16
- static unsigned char reply_buffer[MAX_REPLIES];
- static int inr;		/* size of reply buffer, when called from interrupt */
--#define ST0		(reply_buffer[0])
--#define ST1		(reply_buffer[1])
--#define ST2		(reply_buffer[2])
--#define ST3		(reply_buffer[0])	/* result of GETSTATUS */
--#define R_TRACK		(reply_buffer[3])
--#define R_HEAD		(reply_buffer[4])
--#define R_SECTOR	(reply_buffer[5])
--#define R_SIZECODE	(reply_buffer[6])
-+#define ST0		0
-+#define ST1		1
-+#define ST2		2
-+#define ST3		0	/* result of GETSTATUS */
-+#define R_TRACK		3
-+#define R_HEAD		4
-+#define R_SECTOR	5
-+#define R_SIZECODE	6
- 
- #define SEL_DLY		(2 * HZ / 100)
- 
-@@ -1366,34 +1366,37 @@ static int fdc_dtr(void)
- static void tell_sector(void)
- {
- 	pr_cont(": track %d, head %d, sector %d, size %d",
--		R_TRACK, R_HEAD, R_SECTOR, R_SIZECODE);
-+		reply_buffer[R_TRACK], reply_buffer[R_HEAD],
-+		reply_buffer[R_SECTOR],
-+		reply_buffer[R_SIZECODE]);
- }				/* tell_sector */
- 
- static void print_errors(void)
- {
- 	DPRINT("");
--	if (ST0 & ST0_ECE) {
-+	if (reply_buffer[ST0] & ST0_ECE) {
- 		pr_cont("Recalibrate failed!");
--	} else if (ST2 & ST2_CRC) {
-+	} else if (reply_buffer[ST2] & ST2_CRC) {
- 		pr_cont("data CRC error");
- 		tell_sector();
--	} else if (ST1 & ST1_CRC) {
-+	} else if (reply_buffer[ST1] & ST1_CRC) {
- 		pr_cont("CRC error");
- 		tell_sector();
--	} else if ((ST1 & (ST1_MAM | ST1_ND)) ||
--		   (ST2 & ST2_MAM)) {
-+	} else if ((reply_buffer[ST1] & (ST1_MAM | ST1_ND)) ||
-+		   (reply_buffer[ST2] & ST2_MAM)) {
- 		if (!probing) {
- 			pr_cont("sector not found");
- 			tell_sector();
- 		} else
- 			pr_cont("probe failed...");
--	} else if (ST2 & ST2_WC) {	/* seek error */
-+	} else if (reply_buffer[ST2] & ST2_WC) {	/* seek error */
- 		pr_cont("wrong cylinder");
--	} else if (ST2 & ST2_BC) {	/* cylinder marked as bad */
-+	} else if (reply_buffer[ST2] & ST2_BC) {	/* cylinder marked as bad */
- 		pr_cont("bad cylinder");
- 	} else {
- 		pr_cont("unknown error. ST[0..2] are: 0x%x 0x%x 0x%x",
--			ST0, ST1, ST2);
-+			reply_buffer[ST0], reply_buffer[ST1],
-+			reply_buffer[ST2]);
- 		tell_sector();
- 	}
- 	pr_cont("\n");
-@@ -1417,28 +1420,28 @@ static int interpret_errors(void)
- 	}
- 
- 	/* check IC to find cause of interrupt */
--	switch (ST0 & ST0_INTR) {
-+	switch (reply_buffer[ST0] & ST0_INTR) {
- 	case 0x40:		/* error occurred during command execution */
--		if (ST1 & ST1_EOC)
-+		if (reply_buffer[ST1] & ST1_EOC)
- 			return 0;	/* occurs with pseudo-DMA */
- 		bad = 1;
--		if (ST1 & ST1_WP) {
-+		if (reply_buffer[ST1] & ST1_WP) {
- 			DPRINT("Drive is write protected\n");
- 			clear_bit(FD_DISK_WRITABLE_BIT,
- 				  &drive_state[current_drive].flags);
- 			cont->done(0);
- 			bad = 2;
--		} else if (ST1 & ST1_ND) {
-+		} else if (reply_buffer[ST1] & ST1_ND) {
- 			set_bit(FD_NEED_TWADDLE_BIT,
- 				&drive_state[current_drive].flags);
--		} else if (ST1 & ST1_OR) {
-+		} else if (reply_buffer[ST1] & ST1_OR) {
- 			if (drive_params[current_drive].flags & FTD_MSG)
- 				DPRINT("Over/Underrun - retrying\n");
- 			bad = 0;
- 		} else if (*errors >= drive_params[current_drive].max_errors.reporting) {
- 			print_errors();
- 		}
--		if (ST2 & ST2_WC || ST2 & ST2_BC)
-+		if (reply_buffer[ST2] & ST2_WC || reply_buffer[ST2] & ST2_BC)
- 			/* wrong cylinder => recal */
- 			drive_state[current_drive].track = NEED_2_RECAL;
- 		return bad;
-@@ -1522,14 +1525,16 @@ static int blind_seek;
- static void seek_interrupt(void)
- {
- 	debugt(__func__, "");
--	if (inr != 2 || (ST0 & 0xF8) != 0x20) {
-+	if (inr != 2 || (reply_buffer[ST0] & 0xF8) != 0x20) {
- 		DPRINT("seek failed\n");
- 		drive_state[current_drive].track = NEED_2_RECAL;
- 		cont->error();
- 		cont->redo();
- 		return;
- 	}
--	if (drive_state[current_drive].track >= 0 && drive_state[current_drive].track != ST1 && !blind_seek) {
-+	if (drive_state[current_drive].track >= 0 &&
-+	    drive_state[current_drive].track != reply_buffer[ST1] &&
-+	    !blind_seek) {
- 		debug_dcl(drive_params[current_drive].flags,
- 			  "clearing NEWCHANGE flag because of effective seek\n");
- 		debug_dcl(drive_params[current_drive].flags, "jiffies=%lu\n",
-@@ -1539,7 +1544,7 @@ static void seek_interrupt(void)
- 					/* effective seek */
- 		drive_state[current_drive].select_date = jiffies;
- 	}
--	drive_state[current_drive].track = ST1;
-+	drive_state[current_drive].track = reply_buffer[ST1];
- 	floppy_ready();
- }
- 
-@@ -1559,8 +1564,8 @@ static void check_wp(void)
- 		debug_dcl(drive_params[current_drive].flags,
- 			  "checking whether disk is write protected\n");
- 		debug_dcl(drive_params[current_drive].flags, "wp=%x\n",
--			  ST3 & 0x40);
--		if (!(ST3 & 0x40))
-+			  reply_buffer[ST3] & 0x40);
-+		if (!(reply_buffer[ST3] & 0x40))
- 			set_bit(FD_DISK_WRITABLE_BIT,
- 				&drive_state[current_drive].flags);
- 		else
-@@ -1634,7 +1639,7 @@ static void recal_interrupt(void)
- 	debugt(__func__, "");
- 	if (inr != 2)
- 		fdc_state[fdc].reset = 1;
--	else if (ST0 & ST0_ECE) {
-+	else if (reply_buffer[ST0] & ST0_ECE) {
- 		switch (drive_state[current_drive].track) {
- 		case NEED_1_RECAL:
- 			debugt(__func__, "need 1 recal");
-@@ -1672,7 +1677,7 @@ static void recal_interrupt(void)
- 			break;
- 		}
- 	} else
--		drive_state[current_drive].track = ST1;
-+		drive_state[current_drive].track = reply_buffer[ST1];
- 	floppy_ready();
- }
- 
-@@ -1734,7 +1739,7 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
- 			if (do_print)
- 				print_result("sensei", inr);
- 			max_sensei--;
--		} while ((ST0 & 0x83) != UNIT(current_drive) &&
-+		} while ((reply_buffer[ST0] & 0x83) != UNIT(current_drive) &&
- 			 inr == 2 && max_sensei);
- 	}
- 	if (!handler) {
-@@ -2292,7 +2297,7 @@ static void rw_interrupt(void)
- 	int heads;
- 	int nr_sectors;
- 
--	if (R_HEAD >= 2) {
-+	if (reply_buffer[R_HEAD] >= 2) {
- 		/* some Toshiba floppy controllers occasionnally seem to
- 		 * return bogus interrupts after read/write operations, which
- 		 * can be recognized by a bad head number (>= 2) */
-@@ -2305,7 +2310,7 @@ static void rw_interrupt(void)
- 	nr_sectors = 0;
- 	ssize = DIV_ROUND_UP(1 << raw_cmd->cmd[SIZECODE], 4);
- 
--	if (ST1 & ST1_EOC)
-+	if (reply_buffer[ST1] & ST1_EOC)
- 		eoc = 1;
- 	else
- 		eoc = 0;
-@@ -2315,17 +2320,20 @@ static void rw_interrupt(void)
- 	else
- 		heads = 1;
- 
--	nr_sectors = (((R_TRACK - raw_cmd->cmd[TRACK]) * heads +
--		       R_HEAD - raw_cmd->cmd[HEAD]) * raw_cmd->cmd[SECT_PER_TRACK] +
--		      R_SECTOR - raw_cmd->cmd[SECTOR] + eoc) << raw_cmd->cmd[SIZECODE] >> 2;
-+	nr_sectors = (((reply_buffer[R_TRACK] - raw_cmd->cmd[TRACK]) * heads +
-+		       reply_buffer[R_HEAD] - raw_cmd->cmd[HEAD]) * raw_cmd->cmd[SECT_PER_TRACK] +
-+		      reply_buffer[R_SECTOR] - raw_cmd->cmd[SECTOR] + eoc) << raw_cmd->cmd[SIZECODE] >> 2;
- 
- 	if (nr_sectors / ssize >
- 	    DIV_ROUND_UP(in_sector_offset + current_count_sectors, ssize)) {
- 		DPRINT("long rw: %x instead of %lx\n",
- 		       nr_sectors, current_count_sectors);
--		pr_info("rs=%d s=%d\n", R_SECTOR, raw_cmd->cmd[SECTOR]);
--		pr_info("rh=%d h=%d\n", R_HEAD, raw_cmd->cmd[HEAD]);
--		pr_info("rt=%d t=%d\n", R_TRACK, raw_cmd->cmd[TRACK]);
-+		pr_info("rs=%d s=%d\n", reply_buffer[R_SECTOR],
-+			raw_cmd->cmd[SECTOR]);
-+		pr_info("rh=%d h=%d\n", reply_buffer[R_HEAD],
-+			raw_cmd->cmd[HEAD]);
-+		pr_info("rt=%d t=%d\n", reply_buffer[R_TRACK],
-+			raw_cmd->cmd[TRACK]);
- 		pr_info("heads=%d eoc=%d\n", heads, eoc);
- 		pr_info("spt=%d st=%d ss=%d\n",
- 			raw_cmd->cmd[SECT_PER_TRACK], fsector_t, ssize);
--- 
-2.9.0
-
+Yes, you're right. I'll change shmem_swapin_page as well
