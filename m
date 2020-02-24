@@ -2,130 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 683D516B4EE
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2020 00:13:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58DA216B546
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2020 00:22:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgBXXNr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Feb 2020 18:13:47 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33849 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBXXNr (ORCPT
+        id S1728581AbgBXXWN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Feb 2020 18:22:13 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34447 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgBXXWN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:13:47 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x7so11994992ljc.1;
-        Mon, 24 Feb 2020 15:13:45 -0800 (PST)
+        Mon, 24 Feb 2020 18:22:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so12010378ljc.1;
+        Mon, 24 Feb 2020 15:22:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zapvrSfkAB3Uioa0nez7vq8hKDYWAUjvXWTGHeYzWos=;
+        b=LBIgL2R1SmP7LAGLEx/TpjHkceKP+P5sl9nZPJ1hyTlDFlMVMehRZ6uaqa+TmbNivl
+         faAZ7A4q4sjwQCEyeZ9hJ/CvLphRdl5um0VN8X5bgUKsyc9F/ObUKhLmiWf5Q4tDJKzA
+         bDfgQmQtHNWU7CkdR2DYcddL8JvY18DthXp4V0ZjlqGewVd6CTgko6T9FVyF2K4aWs4L
+         xUOwjQnG7Dk8f8UNVz+n+d6LjH4R+kLPxipZum7HQwCjUAQIoHq+pp7+lByDPDinoxXv
+         ggEw+ESzTgAwIDbRlh2KpoQ+/avsXQ1LWmGn0C0+m2uT4LdPgEGuIUXtYpM+tGQ27rwi
+         Kd7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=AaFhvWM6QcL3mQdZXaP5fa+w9dR6VdggX7QVJaiOGfg=;
-        b=XCdy1mWrdfoXCyODTgRQQvJIRiHyK2VlsoWywlTdA4GS0x6RRZhCxMrZDYPcEkoyjv
-         rh+yrbcRgxO8O00pyopkooXWw5XyNqIQCEx1697ASrYNAllI0jAUi17DuKDfH9oGfz8+
-         KnhVJ1HofSgxa3AyafWfAcedu572lq5+i6GPggVZzzUsIar63o6WaX0gCWSXyw6mx2v+
-         4nT9lUyr6JH0HpZlRrXhRN092Jn1jLKI0nMAbTZBbvoHPT6PChZZWREY10q/y0Ax9Pk1
-         1I1U7NDaLnI0197omZfTGjWJrriXMC0PQTIcm65Wblp1xtasDyGmB10t7vRx2yo6HwRg
-         PMtw==
-X-Gm-Message-State: APjAAAXyvvYV0twxzPc57knHD5UBWAffwJUr6PWMG7PAuv36uHJ+2SwJ
-        skrZaryUFxTIOqK/92xj4Yr5yA1q
-X-Google-Smtp-Source: APXvYqw8aBhIjaQUGHS3jsr3/wM1BF0aXbWJ5zZi64z9LmyJJBS9fmEVryz+jGAsA3i/V1S9TrTnrg==
-X-Received: by 2002:a2e:884c:: with SMTP id z12mr32168107ljj.55.1582586024319;
-        Mon, 24 Feb 2020 15:13:44 -0800 (PST)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id x21sm5123824lff.0.2020.02.24.15.13.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 15:13:43 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
-References: <20200224212352.8640-1-w@1wt.eu> <20200224212352.8640-2-w@1wt.eu>
- <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- mQINBFsJUXwBEADDnzbOGE/X5ZdHqpK/kNmR7AY39b/rR+2Wm/VbQHV+jpGk8ZL07iOWnVe1
- ZInSp3Ze+scB4ZK+y48z0YDvKUU3L85Nb31UASB2bgWIV+8tmW4kV8a2PosqIc4wp4/Qa2A/
- Ip6q+bWurxOOjyJkfzt51p6Th4FTUsuoxINKRMjHrs/0y5oEc7Wt/1qk2ljmnSocg3fMxo8+
- y6IxmXt5tYvt+FfBqx/1XwXuOSd0WOku+/jscYmBPwyrLdk/pMSnnld6a2Fp1zxWIKz+4VJm
- QEIlCTe5SO3h5sozpXeWS916VwwCuf8oov6706yC4MlmAqsQpBdoihQEA7zgh+pk10sCvviX
- FYM4gIcoMkKRex/NSqmeh3VmvQunEv6P+hNMKnIlZ2eJGQpz/ezwqNtV/przO95FSMOQxvQY
- 11TbyNxudW4FBx6K3fzKjw5dY2PrAUGfHbpI3wtVUNxSjcE6iaJHWUA+8R6FLnTXyEObRzTS
- fAjfiqcta+iLPdGGkYtmW1muy/v0juldH9uLfD9OfYODsWia2Ve79RB9cHSgRv4nZcGhQmP2
- wFpLqskh+qlibhAAqT3RQLRsGabiTjzUkdzO1gaNlwufwqMXjZNkLYu1KpTNUegx3MNEi2p9
- CmmDxWMBSMFofgrcy8PJ0jUnn9vWmtn3gz10FgTgqC7B3UvARQARAQABtCFEZW5pcyBFZnJl
- bW92IDxlZnJlbW92QGxpbnV4LmNvbT6JAlcEEwEIAEECGwMFCQPCZwAFCwkIBwIGFQoJCAsC
- BBYCAwECHgECF4AWIQR2VAM2ApQN8ZIP5AO1IpWwM1AwHwUCW3qdrQIZAQAKCRC1IpWwM1Aw
- HwF5D/sHp+jswevGj304qvG4vNnbZDr1H8VYlsDUt+Eygwdg9eAVSVZ8yr9CAu9xONr4Ilr1
- I1vZRCutdGl5sneXr3JBOJRoyH145ExDzQtHDjqJdoRHyI/QTY2l2YPqH/QY1hsLJr/GKuRi
- oqUJQoHhdvz/NitR4DciKl5HTQPbDYOpVfl46i0CNvDUsWX7GjMwFwLD77E+wfSeOyXpFc2b
- tlC9sVUKtkug1nAONEnP41BKZwJ/2D6z5bdVeLfykOAmHoqWitCiXgRPUg4Vzc/ysgK+uKQ8
- /S1RuUA83KnXp7z2JNJ6FEcivsbTZd7Ix6XZb9CwnuwiKDzNjffv5dmiM+m5RaUmLVVNgVCW
- wKQYeTVAspfdwJ5j2gICY+UshALCfRVBWlnGH7iZOfmiErnwcDL0hLEDlajvrnzWPM9953i6
- fF3+nr7Lol/behhdY8QdLLErckZBzh+tr0RMl5XKNoB/kEQZPUHK25b140NTSeuYGVxAZg3g
- 4hobxbOGkzOtnA9gZVjEWxteLNuQ6rmxrvrQDTcLTLEjlTQvQ0uVK4ZeDxWxpECaU7T67khA
- ja2B8VusTTbvxlNYbLpGxYQmMFIUF5WBfc76ipedPYKJ+itCfZGeNWxjOzEld4/v2BTS0o02
- 0iMx7FeQdG0fSzgoIVUFj6durkgch+N5P1G9oU+H37kCDQRbCVF8ARAA3ITFo8OvvzQJT2cY
- nPR718Npm+UL6uckm0Jr0IAFdstRZ3ZLW/R9e24nfF3A8Qga3VxJdhdEOzZKBbl1nadZ9kKU
- nq87te0eBJu+EbcuMv6+njT4CBdwCzJnBZ7ApFpvM8CxIUyFAvaz4EZZxkfEpxaPAivR1Sa2
- 2x7OMWH/78laB6KsPgwxV7fir45VjQEyJZ5ac5ydG9xndFmb76upD7HhV7fnygwf/uIPOzNZ
- YVElGVnqTBqisFRWg9w3Bqvqb/W6prJsoh7F0/THzCzp6PwbAnXDedN388RIuHtXJ+wTsPA0
- oL0H4jQ+4XuAWvghD/+RXJI5wcsAHx7QkDcbTddrhhGdGcd06qbXe2hNVgdCtaoAgpCEetW8
- /a8H+lEBBD4/iD2La39sfE+dt100cKgUP9MukDvOF2fT6GimdQ8TeEd1+RjYyG9SEJpVIxj6
- H3CyGjFwtIwodfediU/ygmYfKXJIDmVpVQi598apSoWYT/ltv+NXTALjyNIVvh5cLRz8YxoF
- sFI2VpZ5PMrr1qo+DB1AbH00b0l2W7HGetSH8gcgpc7q3kCObmDSa3aTGTkawNHzbceEJrL6
- mRD6GbjU4GPD06/dTRIhQatKgE4ekv5wnxBK6v9CVKViqpn7vIxiTI9/VtTKndzdnKE6C72+
- jTwSYVa1vMxJABtOSg8AEQEAAYkCPAQYAQgAJhYhBHZUAzYClA3xkg/kA7UilbAzUDAfBQJb
- CVF8AhsMBQkDwmcAAAoJELUilbAzUDAfB8cQALnqSjpnPtFiWGfxPeq4nkfCN8QEAjb0Rg+a
- 3fy1LiquAn003DyC92qphcGkCLN75YcaGlp33M/HrjrK1cttr7biJelb5FncRSUZqbbm0Ymj
- U4AKyfNrYaPz7vHJuijRNUZR2mntwiKotgLV95yL0dPyZxvOPPnbjF0cCtHfdKhXIt7Syzjb
- M8k2fmSF0FM+89/hP11aRrs6+qMHSd/s3N3j0hR2Uxsski8q6x+LxU1aHS0FFkSl0m8SiazA
- Gd1zy4pXC2HhCHstF24Nu5iVLPRwlxFS/+o3nB1ZWTwu8I6s2ZF5TAgBfEONV5MIYH3fOb5+
- r/HYPye7puSmQ2LCXy7X5IIsnAoxSrcFYq9nGfHNcXhm5x6WjYC0Kz8l4lfwWo8PIpZ8x57v
- gTH1PI5R4WdRQijLxLCW/AaiuoEYuOLAoW481XtZb0GRRe+Tm9z/fCbkEveyPiDK7oZahBM7
- QdWEEV8mqJoOZ3xxqMlJrxKM9SDF+auB4zWGz5jGzCDAx/0qMUrVn2+v8i4oEKW6IUdV7axW
- Nk9a+EF5JSTbfv0JBYeSHK3WRklSYLdsMRhaCKhSbwo8Xgn/m6a92fKd3NnObvRe76iIEMSw
- 60iagNE6AFFzuF/GvoIHb2oDUIX4z+/D0TBWH9ADNptmuE+LZnlPUAAEzRgUFtlN5LtJP8ph
-Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
-Message-ID: <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
-Date:   Tue, 25 Feb 2020 02:13:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zapvrSfkAB3Uioa0nez7vq8hKDYWAUjvXWTGHeYzWos=;
+        b=POx4EAh/Ir1mibZFKohq8D55HPE0RABKqYXRzFYOD+qGwZLFPITuh+wMFP1cHR/wDF
+         WWADpCscaaXCThw/xGXMWoYXt9/KHeqgGcXavW7QJk92MJk8iqLaGfSsp24QGhcQ/3/I
+         zw4mvXt7uWOW3pLfW7TTBc/XvlfSUPqH+0wxP+ee9nwykykWVKF5J1Trhapqo+DG7HFf
+         06BOO/kpmaVv8LC2l+J7hpQ140BUACOkASUO5X+DDryUNhmwsMx9mVF+0s/RRQg1xph8
+         DDjx4A06+1LiESzyTmNcWUpj/s2kNKQJuRwqPW2V8c4tvUBQNAXIq2WzQ7xQQV6VcapV
+         HosQ==
+X-Gm-Message-State: APjAAAXhtVutycekfAHiEAEXNah/rdMz8WWtegOG7ru4DTgAdhRU/mlG
+        AsTCLpl4OHBGfnS46q/sM48=
+X-Google-Smtp-Source: APXvYqy2AwxPlR5v2q81yED52jU8uKleIyr/LgSvP0EERemjAGpVSBC7rLykQwNndyW1YfTzcJkBnQ==
+X-Received: by 2002:a2e:9d11:: with SMTP id t17mr32664047lji.169.1582586530637;
+        Mon, 24 Feb 2020 15:22:10 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id r10sm8154071ljk.9.2020.02.24.15.22.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 15:22:10 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Introduce NVIDIA Tegra Partition Table
+Date:   Tue, 25 Feb 2020 02:18:38 +0300
+Message-Id: <20200224231841.26550-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+Some NVIDIA Tegra devices have GPT entry at a wrong location and others may
+even not have it at all. So either a custom workaround for GPT parsing or
+TegraPT support is needed for those devices if we want to support them in
+upstream kernel. The former solution was already rejected [1], let's try
+the latter.
 
-On 2/25/20 12:53 AM, Linus Torvalds wrote:
-> So I'd like to see that second step that does the
-> 
->     -static int fdc;                 /* current fdc */
->     +static int current_fdc;
-> 
-> change.
-> 
-> We already call the global 'drive' variable 'current_drive', so it
-> really is 'fdc' that is misnamed and ambiguous because it then has two
-> different cases: the global 'fdc' and then the various shadowing local
-> 'fdc' variables (or function arguments).
-> 
-> Mind adding that too? Slightly less automatic, I agree, because then
-> you really do have to disambiguate between the "is this the shadowed
-> use of a local 'fdc'" case or the "this is the global 'fdc' use" case.
-> 
-> Can coccinelle do that?
+[1] https://patchwork.ozlabs.org/patch/1240809/
 
-Willy, if you don't want to spend your time with this code anymore I can
-prepare patсhes for the second step. I know coccinelle and could try
-to automate this transformation. At first sight your patches look
-good to me. I will answer to the top email after more accurate review.
+Big thanks to everyone who helped with figuring out the TegraPT format!
 
-Thanks,
-Denis 
+Dmitry Osipenko (3):
+  mmc: core: Add raw_boot_mult field to mmc_ext_csd
+  mmc: block: Add mmc_bdev_to_card() helper
+  partitions: Introduce NVIDIA Tegra Partition Table
+
+ arch/arm/mach-tegra/tegra.c         |  35 +++
+ block/partitions/Kconfig            |   8 +
+ block/partitions/Makefile           |   1 +
+ block/partitions/check.c            |   4 +
+ block/partitions/tegra.c            | 373 ++++++++++++++++++++++++++++
+ block/partitions/tegra.h            |  71 ++++++
+ drivers/mmc/core/block.c            |  14 ++
+ drivers/mmc/core/mmc.c              |   2 +
+ include/linux/mmc/card.h            |   4 +
+ include/soc/tegra/bct.h             |  42 ++++
+ include/soc/tegra/common.h          |   9 +
+ include/soc/tegra/partition_table.h |  18 ++
+ 12 files changed, 581 insertions(+)
+ create mode 100644 block/partitions/tegra.c
+ create mode 100644 block/partitions/tegra.h
+ create mode 100644 include/soc/tegra/bct.h
+ create mode 100644 include/soc/tegra/partition_table.h
+
+-- 
+2.24.0
+
