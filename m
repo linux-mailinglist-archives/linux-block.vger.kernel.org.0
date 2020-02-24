@@ -2,95 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A67516B0D8
-	for <lists+linux-block@lfdr.de>; Mon, 24 Feb 2020 21:18:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7779B16B2C9
+	for <lists+linux-block@lfdr.de>; Mon, 24 Feb 2020 22:40:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBXUSm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Feb 2020 15:18:42 -0500
-Received: from mail-pj1-f49.google.com ([209.85.216.49]:50675 "EHLO
-        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgBXUSm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:18:42 -0500
-Received: by mail-pj1-f49.google.com with SMTP id r67so240024pjb.0
-        for <linux-block@vger.kernel.org>; Mon, 24 Feb 2020 12:18:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AsAkVqeBlUTVNMBFWbPGk3JGWoog8P01z4Gn0jtsTzU=;
-        b=SSIU4cLlI2n2qbxmevdwvOEapG9ngx6Anv8KODNUhHrGmYkwT+Vofd9rZbxyHYkKrL
-         OxIz6NSZEnenQmkNwJTqQ7MX59IDkoyi5+gbn6dZSi/Vmqw2XCm1CT1uozT+GL7ce+3I
-         LkkDnNqFQ5GJLRTLckEy6NzC4iL9ezTOdrkohbZ8ObYNe5mKFiQ/hXG32lxMg3M7PXH6
-         RwO3R25e38NobOg9yVRKix9CgSdWvD1Sk80l+Z5DSkfFYtF1zX3wjPB0Tx2vMiP8SPnd
-         MiuDWaNOseXqsfnYBNDDkZWqHqMUP1nXomlnJbj5nzcgYwftoxxDbjvfAuOOH+hQ2PSr
-         mD4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AsAkVqeBlUTVNMBFWbPGk3JGWoog8P01z4Gn0jtsTzU=;
-        b=jzpeJvwx8nHl5o8qgMQ5VPH/4LDpq/H6R49xIqhyEwPRTM48U3lS0kBt8J/XXZxvMl
-         YaJSX+49zjc6GDq9hd+rQGPzTvwci/7ACTjiW3U+nv7tdcjQwxwwgbTVOduQn0jyxqgs
-         wuuORC2Igja5Z74A4EIl8pe+NHlUmBa8YI/4reoPwEzK3XTd/YIOIZ1HvyXZawpUse5J
-         YcGY7r9aeLf8zGI/ecxv97bKTsPpmOWqc8If76uM34ltHx5dpdhANBfrHyRmnHiEvMbi
-         TELq4jokAkOCMBeu57wcIdpbBtzL7bLs2MpKfxJdlDEIeE25wRjHcNFvmH8bewX2BFwf
-         ZhVw==
-X-Gm-Message-State: APjAAAXL/ySqNMGOVxsi5oG0CPv/wdkeRUw4/V7Rb61KG9Ao2tyRcAfs
-        S6Hl0umHb+IrNvPfBdggJj1Ehw==
-X-Google-Smtp-Source: APXvYqzMuuqbYsAPQLvRqQa13jz2PshPPsaVA7gSaadKM9nV82v1GczAEn13xMLYijD8wngok8Dx/g==
-X-Received: by 2002:a17:90b:11cd:: with SMTP id gv13mr955512pjb.94.1582575521719;
-        Mon, 24 Feb 2020 12:18:41 -0800 (PST)
-Received: from ?IPv6:2620:10d:c085:21c8::10cd? ([2620:10d:c090:400::5:9b45])
-        by smtp.gmail.com with ESMTPSA id e2sm300316pjs.25.2020.02.24.12.18.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 12:18:41 -0800 (PST)
-Subject: Re: [PATCH] compat_ioctl, cdrom: Replace .ioctl with .compat_ioctl in
- four appropriate places
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Adam Williamson <awilliam@redhat.com>,
-        Chris Murphy <bugzilla@colorremedies.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Tim Waugh <tim@cyberelk.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20200219165139.3467320-1-arnd@arndb.de>
- <yq1eeujda1d.fsf@oracle.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d9d25fda-e3c3-e6b6-0189-93fbe7c5f743@kernel.dk>
-Date:   Mon, 24 Feb 2020 13:18:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <yq1eeujda1d.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728043AbgBXVkm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Feb 2020 16:40:42 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbgBXVkl (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:40:41 -0500
+X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO4kA008691;
+        Mon, 24 Feb 2020 22:24:04 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 00/10] floppy driver cleanups (deobfuscation)
+Date:   Mon, 24 Feb 2020 22:23:42 +0100
+Message-Id: <20200224212352.8640-1-w@1wt.eu>
+X-Mailer: git-send-email 2.9.0
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/24/20 1:07 PM, Martin K. Petersen wrote:
-> 
-> Arnd,
-> 
->> Arnd Bergmann inadvertently typoed these in d320a9551e394 and
->> 64cbfa96551a; they seem to be the cause of
->> https://bugzilla.redhat.com/show_bug.cgi?id=1801353 , invalid SCSI
->> commands when udev tries to query a DVD drive.
-> 
-> Applied to 5.6/scsi-fixes. Thanks!
-> 
-> Jens, I hope that's OK? I keep getting mail about this bug.
+As indicated in commit 2e90ca6 ("floppy: check FDC index for errors
+before assigning it") there are some surprising effects in the floppy
+driver due to some macros referencing global or local variables while
+at first glance being inoffensive.
 
-Yeah that's fine, thanks for picking this up.
+This patchset aims at removing these macros and replacing all of their
+occurrences by the equivalent code. Most of the work was done under
+Coccinelle's assistance, and it was verified that the resulting binary
+code is exactly the same as the original one.
+
+The aim is not to make the driver prettier, as Linus mentioned it's
+already not pretty. It only aims at making potential bugs more visible,
+given almost all latest changes to this driver were fixes for out-of-
+bounds and similar bugs.
+
+As a side effect, some lines got longer, causing checkpatch to complain
+a bit, but I preferred to let it complain as I didn't want to break them
+apart as I'm already seeing the trap of going too far here.
+
+The patches are broken by macro (or sets of macros when relevant) so
+that each of them remains reviewable.
+
+I can possibly go a bit further in the cleanup but I haven't used
+floppies for a few years now and am not interested in doing too much
+on this driver by lack of use cases.
+
+Willy Tarreau (10):
+  floppy: cleanup: expand macro FDCS
+  floppy: cleanup: expand macro UFDCS
+  floppy: cleanup: expand macro UDP
+  floppy: cleanup: expand macro UDRS
+  floppy: cleanup: expand macro UDRWE
+  floppy: cleanup: expand macro DP
+  floppy: cleanup: expand macro DRS
+  floppy: cleanup: expand macro DRWE
+  floppy: cleanup: expand the R/W / format command macros
+  floppy: cleanup: expand the reply_buffer macros
+
+ drivers/block/floppy.c | 971 +++++++++++++++++++++++++------------------------
+ 1 file changed, 499 insertions(+), 472 deletions(-)
 
 -- 
-Jens Axboe
+2.9.0
 
