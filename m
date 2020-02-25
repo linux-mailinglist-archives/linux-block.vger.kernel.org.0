@@ -2,86 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E78716EF72
-	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2020 20:54:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCEDA16EF8D
+	for <lists+linux-block@lfdr.de>; Tue, 25 Feb 2020 21:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgBYTyJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Feb 2020 14:54:09 -0500
-Received: from mx1.emlix.com ([188.40.240.192]:54560 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBYTyJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:54:09 -0500
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id E3F1D5F9B0;
-        Tue, 25 Feb 2020 20:54:07 +0100 (CET)
-Subject: Re: [dm-devel] [PATCH] dm integrity: reinitialize __bi_remaining when
- reusing bio
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com
-References: <20200225170744.10485-1-dg@emlix.com>
- <20200225191222.GA3908@infradead.org>
-From:   =?UTF-8?Q?Daniel_Gl=c3=b6ckner?= <dg@emlix.com>
-Openpgp: preference=signencrypt
-Organization: emlix GmbH
-Message-ID: <a932a297-266e-4dee-f030-40ecbc9899ca@emlix.com>
-Date:   Tue, 25 Feb 2020 20:54:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1731487AbgBYUCA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Feb 2020 15:02:00 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:17726 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731480AbgBYUB6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:01:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582660917; x=1614196917;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=MiZmJA9pUK0ijDarkYLGiDBqwKVr4yTOHuXUxcsXrBg=;
+  b=JiJBQZ+O4SCPC85IVQKfZXX2kORvujEpbDbYEo/QBSvdXqxRmHvvsxIi
+   0dzKgDIzE2pvwUniwLAUyEgwq2Xa9qEvADy+Z9wLSGtj7TQw+mBCCjxyo
+   Wj3/F+RvwOfku66tHBw4JlJX3ODadUbxUFabUJgQu3TXskTJRXZnhm1xI
+   4=;
+IronPort-SDR: sN/t/WJn64u0lZCt/DO/e1weHM2PLgt2TP5iya85xnAuukMZpJzpojl5JPgQLB/IleWexU2A2q
+ KP+DmoyZ55sA==
+X-IronPort-AV: E=Sophos;i="5.70,485,1574121600"; 
+   d="scan'208";a="18550457"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 Feb 2020 20:01:45 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id DB45EA18EF;
+        Tue, 25 Feb 2020 20:01:42 +0000 (UTC)
+Received: from EX13D01UWA002.ant.amazon.com (10.43.160.74) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 25 Feb 2020 20:01:41 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13d01UWA002.ant.amazon.com (10.43.160.74) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 25 Feb 2020 20:01:41 +0000
+Received: from localhost (10.2.75.237) by mail-relay.amazon.com
+ (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Tue, 25 Feb 2020 20:01:41 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, <Chaitanya.Kulkarni@wdc.com>, <mst@redhat.com>,
+        <jejb@linux.ibm.com>, <hch@lst.de>,
+        Balbir Singh <sblbir@amazon.com>
+Subject: [PATCH v2 0/5] Add support for block disk resize notification
+Date:   Tue, 25 Feb 2020 20:01:24 +0000
+Message-ID: <20200225200129.6687-1-sblbir@amazon.com>
+X-Mailer: git-send-email 2.16.6
 MIME-Version: 1.0
-In-Reply-To: <20200225191222.GA3908@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Christoph,
+Allow block/genhd to notify user space about disk size changes using a
+new helper set_capacity_revalidate_and_notify(), which is a wrapper
+on top of set_capacity(). set_capacity_revalidate_and_notify() will only notify
+iff the current capacity or the target capacity is not zero and the
+capacity really changes.
 
-Am 02/25/20 um 20:12 schrieb Christoph Hellwig:
-> On Tue, Feb 25, 2020 at 06:07:44PM +0100, Daniel Glöckner wrote:
->> In cases where dec_in_flight has to requeue the integrity_bio_wait work
->> to transfer the rest of the data, the __bi_remaining field of the bio
->> might already have been decremented to zero. Reusing the bio without
->> reinitializing that counter to 1 can then result in integrity_end_io
->> being called too early when the BIO_CHAIN flag is set, f.ex. due to
->> blk_queue_split. In our case this triggered the BUG() in
->> blk_mq_end_request when the hardware signalled completion of the bio
->> after integrity_end_io had modified it.
->>
->> Signed-off-by: Daniel Glöckner <dg@emlix.com>
-> 
-> Drivers have no business poking into these internals.  If a bio is
-> reused the caller needs to use bio_reset instead.
+Background:
 
-bio_reset will reset too many fields. As you can see in the context of
-the diff, dm-integrity expects f.ex. the values modified by bio_advance
-to stay intact and the transfer should of course use the same disk and
-operation.
+As a part of a patch to allow sending the RESIZE event on disk capacity
+change, Christoph (hch@lst.de) requested that the patch be made generic
+and the hacks for virtio block and xen block devices be removed and
+merged via a generic helper.
 
-How about doing the atomic_set in bio_remaining_done (in block/bio.c)
-where the BIO_CHAIN flag is cleared once __bi_remaining hits zero?
-Or is requeuing a bio without bio_reset really a no-go? In that case a
-one-liner won't do...
+This series consists of 5 changes. The first one adds the basic
+support for changing the size and notifying. The follow up patches
+are per block subsystem changes. Other block drivers can add their
+changes as necessary on top of this series. Since not all devices
+are resizable, the default was to add a new API and let users
+slowly convert over as needed.
 
-Best regards,
+Testing:
+1. I did some basic testing with an NVME device, by resizing it in
+the backend and ensured that udevd received the event.
 
-  Daniel
+
+Changelog v2:
+- Rename disk_set_capacity to set_capacity_revalidate_and_notify
+- set_capacity_revalidate_and_notify can call revalidate disk
+  if needed, a new bool parameter is passed (suggested by Bob Liu)
+
+Balbir Singh (5):
+  block/genhd: Notify udev about capacity change
+  drivers/block/virtio_blk.c: Convert to use
+    set_capacity_revalidate_and_notify
+  drivers/block/xen-blkfront.c: Convert to use
+    set_capacity_revalidate_and_notify
+  drivers/nvme/host/core.c: Convert to use
+    set_capacity_revalidate_and_notify
+  drivers/scsi/sd.c: Convert to use set_capacity_revalidate_and_notify
+
+ block/genhd.c                | 24 ++++++++++++++++++++++++
+ drivers/block/virtio_blk.c   |  5 +----
+ drivers/block/xen-blkfront.c |  6 +-----
+ drivers/nvme/host/core.c     |  2 +-
+ drivers/scsi/sd.c            |  3 ++-
+ include/linux/genhd.h        |  2 ++
+ 6 files changed, 31 insertions(+), 11 deletions(-)
 
 -- 
-Besuchen Sie uns auf der Embedded World 2020 in Nürnberg!
--> Halle 4, Stand 368
+2.16.6
 
-Dipl.-Math. Daniel Glöckner, emlix GmbH, http://www.emlix.com
-Fon +49 551 30664-0, Fax +49 551 30664-11,
-Gothaer Platz 3, 37083 Göttingen, Germany
-Sitz der Gesellschaft: Göttingen, Amtsgericht Göttingen HR B 3160
-Geschäftsführung: Heike Jordan, Dr. Uwe Kracke
-Ust-IdNr.: DE 205 198 055
-
-emlix - your embedded linux partner
