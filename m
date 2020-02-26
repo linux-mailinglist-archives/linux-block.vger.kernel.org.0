@@ -2,58 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE9AB17071B
-	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2020 19:08:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E5F1707D5
+	for <lists+linux-block@lfdr.de>; Wed, 26 Feb 2020 19:41:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgBZSI1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Feb 2020 13:08:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        id S1726998AbgBZSlg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Feb 2020 13:41:36 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31600 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbgBZSI0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:08:26 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5461724650;
-        Wed, 26 Feb 2020 18:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582740506;
-        bh=CyH5Cj+lK4LdkjdulLh4uDHWRzDbMUJnvuyfXtec9n8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Btec+EwUVo3ENmRKI0X1EQ/SGCjz3U1LEZloDDFUBSvhCa+rrgMjmO18+ACW6z72i
-         0MoiRId+OmwaKCyNdHQaR/XAzM6f9pmh5xGcjAyMl+1dSukyebOJT4N2TJwIo2u0vJ
-         6KU836rtZ7hXF7FXExozxTrHrVlqDbVxZBDjqJcA=
-Date:   Thu, 27 Feb 2020 03:08:19 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Balbir Singh <sblbir@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, axboe@kernel.dk,
-        Chaitanya.Kulkarni@wdc.com, mst@redhat.com, jejb@linux.ibm.com,
-        hch@lst.de
-Subject: Re: [PATCH v2 4/5] drivers/nvme/host/core.c: Convert to use
- set_capacity_revalidate_and_notify
-Message-ID: <20200226180819.GA23813@redsun51.ssa.fujisawa.hgst.com>
-References: <20200225200129.6687-1-sblbir@amazon.com>
- <20200225200129.6687-5-sblbir@amazon.com>
+        id S1726878AbgBZSlg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:41:36 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01QIfUxf002268;
+        Wed, 26 Feb 2020 19:41:30 +0100
+Date:   Wed, 26 Feb 2020 19:41:30 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
+Message-ID: <20200226184130.GA2265@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <0f5effb1-b228-dd00-05bc-de5801ce4626@linux.com>
+ <CAHk-=whd_Wpi1-TGcooUTE+z-Z-f32n2vFQANszvAou_Fopvzw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225200129.6687-5-sblbir@amazon.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHk-=whd_Wpi1-TGcooUTE+z-Z-f32n2vFQANszvAou_Fopvzw@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 08:01:28PM +0000, Balbir Singh wrote:
-> block/genhd provides set_capacity_revalidate_and_notify() for
-> sending RESIZE notifications via uevents. This notification is
-> newly added to NVME devices
+On Wed, Feb 26, 2020 at 09:49:05AM -0800, Linus Torvalds wrote:
+> On Wed, Feb 26, 2020 at 6:57 AM Denis Efremov <efremov@linux.com> wrote:
+> >
+> > If Linus has no objections (regarding his review) I would prefer to
+> > accept 1-10 patches rather to resend them again. They seems complete
+> > to me as the first step.
 > 
-> Signed-off-by: Balbir Singh <sblbir@amazon.com>
+> I have no objections, and the patches 11-16 seem to have addressed all
+> my "I wish.." concerns too (except for the "we should rewrite or
+> sunset the driver entirely").
 
-Patch looks fine. Please change the commit subject prefix to just "nvme:"
-to match the local style and for length constraints (the committer may
-do this if they want).
+Sorry if I broke your dream :-)
 
-Acked-by: Keith Busch <kbusch@kernel.org>
+> Looks fine to me.
+
+Thanks!
+
+Willy
