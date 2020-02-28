@@ -2,24 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5AC2174210
-	for <lists+linux-block@lfdr.de>; Fri, 28 Feb 2020 23:38:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A83174219
+	for <lists+linux-block@lfdr.de>; Fri, 28 Feb 2020 23:40:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgB1Wi6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Feb 2020 17:38:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36288 "EHLO mx2.suse.de"
+        id S1726589AbgB1Wkp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Feb 2020 17:40:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37148 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgB1Wi6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:38:58 -0500
+        id S1726151AbgB1Wkp (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:40:45 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2E503ABF4;
-        Fri, 28 Feb 2020 22:38:55 +0000 (UTC)
-Subject: Re: [PATCH 3/6] block: remove redundant setting of QUEUE_FLAG_DYING
+        by mx2.suse.de (Postfix) with ESMTP id C2276ABF4;
+        Fri, 28 Feb 2020 22:40:42 +0000 (UTC)
+Subject: Re: [PATCH 5/6] block: remove unneeded argument from
+ blk_alloc_flush_queue
 To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>, axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org
 References: <20200228150518.10496-1-guoqing.jiang@cloud.ionos.com>
- <20200228150518.10496-4-guoqing.jiang@cloud.ionos.com>
+ <20200228150518.10496-6-guoqing.jiang@cloud.ionos.com>
 From:   Nikolay Borisov <nborisov@suse.com>
 Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
  xsFNBFiKBz4BEADNHZmqwhuN6EAzXj9SpPpH/nSSP8YgfwoOqwrP+JR4pIqRK0AWWeWCSwmZ
@@ -63,12 +64,12 @@ Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
  KIuxEcV8wcVjr+Wr9zRl06waOCkgrQbTPp631hToxo+4rA1jiQF2M80HAet65ytBVR2pFGZF
  zGYYLqiG+mpUZ+FPjxk9kpkRYz61mTLSY7tuFljExfJWMGfgSg1OxfLV631jV1TcdUnx+h3l
  Sqs2vMhAVt14zT8mpIuu2VNxcontxgVr1kzYA/tQg32fVRbGr449j1gw57BV9i0vww==
-Message-ID: <91bb5b27-5ab4-53a2-22a8-41aebb799e44@suse.com>
-Date:   Sat, 29 Feb 2020 00:38:53 +0200
+Message-ID: <3c2c56af-4714-cccc-33ab-74c3e848cdcd@suse.com>
+Date:   Sat, 29 Feb 2020 00:40:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200228150518.10496-4-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20200228150518.10496-6-guoqing.jiang@cloud.ionos.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -80,27 +81,10 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 
 On 28.02.20 г. 17:05 ч., Guoqing Jiang wrote:
-> Previously, blk_cleanup_queue has called blk_set_queue_dying to set the
-> flag, no need to do it again.
+> Remove 'q' from arguments since it is not used anymore after
+> commit 7e992f847a08e ("block: remove non mq parts from the
+> flush code").
 > 
 > Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> ---
->  block/blk-core.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 6d36c2ad40ba..883ffda216e4 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -346,7 +346,6 @@ void blk_cleanup_queue(struct request_queue *q)
->  
->  	blk_queue_flag_set(QUEUE_FLAG_NOMERGES, q);
->  	blk_queue_flag_set(QUEUE_FLAG_NOXMERGES, q);
-> -	blk_queue_flag_set(QUEUE_FLAG_DYING, q);
->  
->  	/*
->  	 * Drain all requests queued before DYING marking. Set DEAD flag to
-> 
-
 
 Reviewed-by: Nikolay Borisov <nborisov@suse.com>
