@@ -2,97 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E09F1788FB
-	for <lists+linux-block@lfdr.de>; Wed,  4 Mar 2020 04:12:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9261817893F
+	for <lists+linux-block@lfdr.de>; Wed,  4 Mar 2020 04:47:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbgCDDM3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Mar 2020 22:12:29 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38104 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387609AbgCDDM2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Mar 2020 22:12:28 -0500
-X-UUID: 826440239e364b029ea484cf06901dcf-20200304
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=7FGKC2CL96iktvyoBP2vbwLVT6EXR3CbHjrpB2EcLgw=;
-        b=mzDV54eHbuWv4VhGtBiswDYgZSb8SEZVa6dtiWBj3/ddQrO+9b06Dm0Qe+3Y6d6Hto4hHPV9vDTm/Pnol/wpCpFqO39KiA/pvFNc9nhr8CKBl2st8ikQSSBoA5AbTE53zvR+mzGuJqk9QiKCma7db6IWmx2ZB+5wpJ3QazydLA8=;
-X-UUID: 826440239e364b029ea484cf06901dcf-20200304
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1444323461; Wed, 04 Mar 2020 11:12:20 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 11:11:18 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Mar 2020 11:09:47 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <ulf.hansson@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kuohong.wang@mediatek.com>, <stanley.chu@mediatek.com>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Subject: [RESEND PATCH v1 3/3] block: set partition read/write policy according to write-protection status
-Date:   Wed, 4 Mar 2020 11:12:17 +0800
-Message-ID: <1583291537-15053-4-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1583291537-15053-1-git-send-email-light.hsieh@mediatek.com>
-References: <1583291537-15053-1-git-send-email-light.hsieh@mediatek.com>
+        id S2387566AbgCDDrA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Mar 2020 22:47:00 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387469AbgCDDrA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 3 Mar 2020 22:47:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583293619;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ldW0Bt53Z7jSSRCB6WQDAvf5XFQIl+N3b5ldTZ1uj50=;
+        b=Ll+QguwZJG7Winuiq4CwwFlsojH2gzBPho8XtF07eMVr9uJmAFQGZfn5MSNWjXYjnmL+e8
+        cCKStgEIaSR5/WFVXWtAHdAwTc/Gwy009pAyr2mKLaXg8pLwEM1YZVXMcCmTZvz7qufbiI
+        +L6uFNBr4FdlfJkOINQpjiyEY0hnKvQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-BS6UuV6wNmSt7-y5ltrwow-1; Tue, 03 Mar 2020 22:46:55 -0500
+X-MC-Unique: BS6UuV6wNmSt7-y5ltrwow-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 878F31088388;
+        Wed,  4 Mar 2020 03:46:54 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-24.pek2.redhat.com [10.72.8.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25A8B5C1D4;
+        Wed,  4 Mar 2020 03:46:48 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 11:46:44 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: Re: commit 01e99aeca397 causes longer runtime of block/004
+Message-ID: <20200304034644.GA23012@ming.t460p>
+References: <20200304023842.gu37d4mzfbseiscw@shindev.dhcp.fujisawa.hgst.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304023842.gu37d4mzfbseiscw@shindev.dhcp.fujisawa.hgst.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KRm9yIHN0b3Jh
-Z2UgZGV2aWNlIHdpdGggd3JpdGUtcHJvdGVjdGlvbiBzdXBwb3J0LCBlLmcuIGVNTUMsIHJlZ2lz
-dGVyDQpjaGVja19kaXNrX3JhbmdlX3dwKCkgaW4gc3RydWN0IGJsb2NrX2RldmljZV9vcGVyYXRp
-b25zIGZvciBjaGVja2luZw0Kd3JpdGUtcHJvdGVjdGlvbiBzdGF0dXMuIFdoZW4gY3JlYXRpbmcg
-YmxvY2sgZGV2aWNlIGZvciBhIHBhcnRpdGlvbiwgc2V0DQpyZWFkL3dyaXRlIHBvbGljeSBhY2Nv
-cmRpbmcgdG8gcmVzdWx0IG9mIGNoZWNrX2Rpc2tfcmFuZ2Vfd3AoKSBvcGVyYXRpb24NCihpZiBy
-ZWdpc3RlcmVkKS4NCg0KV2l0aG91dCB0aGlzIHBhdGNoLCBybyBhdHRyaWJ1dGUgaXMgbm90IHNl
-dCBmb3IgY3JlYXRlZCBibG9jayBkZXZpY2Ugb2YNCndyaXRlLXByb3RlY3RlZCBwYXJ0aXRpb24u
-IFVzZXIgcGVyZm9ybSBhc3luY2hyb25vdXMgYnVmZmVyZWQgd3JpdGUgdG8NCnN1Y2ggcGFydGl0
-aW9uIHdvbid0IGdldCBpbW1lZGlhdGUgZXJyb3IgYW5kIHRoZXJlZm9yZSBoZSB3b24ndCBiZSBh
-d2FyZWQNCnRoYXQgd3JpdGUgaXMgbm90IGFjdHVhbGx5IHBlcmZvcm1lZC4NCldpdGggdGhpcyBw
-YXRjaCwgcm8gYXR0cmlidXRlIGlzIHNldCBmb3IgY3JlYXRlZCBibG9jayBkZXZpY2Ugb2YNCndy
-aXRlLXByb3RlY3RlZCBwYXJ0aXRpb24uIFVzZXIgcGVyZm9ybSBhc3luY2hyb25vdXMgYnVmZmVy
-ZWQgd3JpdGUgdG8NCnN1Y2ggcGFydGl0aW9uIHdpbGwgZ2V0IGltbWVkaWF0ZSBlcnJvciBhbmQg
-dGhlcmVmb3JlIGhlIHdpbGwgYmUgYXdhcmVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBMaWdodCBIc2ll
-aCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KLS0tDQogYmxvY2svcGFydGl0aW9uLWdlbmVy
-aWMuYyB8IDEwICsrKysrKysrKysNCiBkcml2ZXJzL21tYy9jb3JlL2Jsb2NrLmMgIHwgIDEgKw0K
-IGluY2x1ZGUvbGludXgvYmxrZGV2LmggICAgfCAgMSArDQogMyBmaWxlcyBjaGFuZ2VkLCAxMiBp
-bnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9ibG9jay9wYXJ0aXRpb24tZ2VuZXJpYy5jIGIv
-YmxvY2svcGFydGl0aW9uLWdlbmVyaWMuYw0KaW5kZXggNTY0ZmFlNy4uNjkwODhlOCAxMDA2NDQN
-Ci0tLSBhL2Jsb2NrL3BhcnRpdGlvbi1nZW5lcmljLmMNCisrKyBiL2Jsb2NrL3BhcnRpdGlvbi1n
-ZW5lcmljLmMNCkBAIC0zOTQsNiArMzk0LDE2IEBAIHN0cnVjdCBoZF9zdHJ1Y3QgKmFkZF9wYXJ0
-aXRpb24oc3RydWN0IGdlbmRpc2sgKmRpc2ssIGludCBwYXJ0bm8sDQogCQlnb3RvIG91dF9mcmVl
-X2luZm87DQogCXBkZXYtPmRldnQgPSBkZXZ0Ow0KIA0KKwlpZiAoIXAtPnBvbGljeSkgew0KKwkJ
-aWYgKGRpc2stPmZvcHMtPmNoZWNrX2Rpc2tfcmFuZ2Vfd3ApIHsNCisJCQllcnIgPSBkaXNrLT5m
-b3BzLT5jaGVja19kaXNrX3JhbmdlX3dwKGRpc2ssIHN0YXJ0LCBsZW4pOw0KKwkJCWlmIChlcnIg
-PiAwKQ0KKwkJCQlwLT5wb2xpY3kgPSAxOw0KKwkJCWVsc2UgaWYgKGVyciAhPSAwKQ0KKwkJCQln
-b3RvIG91dF9mcmVlX2luZm87DQorCQl9DQorCX0NCisNCiAJLyogZGVsYXkgdWV2ZW50IHVudGls
-ICdob2xkZXJzJyBzdWJkaXIgaXMgY3JlYXRlZCAqLw0KIAlkZXZfc2V0X3VldmVudF9zdXBwcmVz
-cyhwZGV2LCAxKTsNCiAJZXJyID0gZGV2aWNlX2FkZChwZGV2KTsNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL21tYy9jb3JlL2Jsb2NrLmMgYi9kcml2ZXJzL21tYy9jb3JlL2Jsb2NrLmMNCmluZGV4IGVl
-ODVhYmYuLmFmODEzMTEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21tYy9jb3JlL2Jsb2NrLmMNCisr
-KyBiL2RyaXZlcnMvbW1jL2NvcmUvYmxvY2suYw0KQEAgLTEwNDcsNiArMTA0Nyw3IEBAIHN0YXRp
-YyBpbnQgbW1jX2Jsa19jb21wYXRfaW9jdGwoc3RydWN0IGJsb2NrX2RldmljZSAqYmRldiwgZm1v
-ZGVfdCBtb2RlLA0KICNpZmRlZiBDT05GSUdfQ09NUEFUDQogCS5jb21wYXRfaW9jdGwJCT0gbW1j
-X2Jsa19jb21wYXRfaW9jdGwsDQogI2VuZGlmDQorCS5jaGVja19kaXNrX3JhbmdlX3dwCT0gbW1j
-X2Jsa19jaGVja19kaXNrX3JhbmdlX3dwLA0KIH07DQogDQogc3RhdGljIGludCBtbWNfYmxrX3Bh
-cnRfc3dpdGNoX3ByZShzdHJ1Y3QgbW1jX2NhcmQgKmNhcmQsDQpkaWZmIC0tZ2l0IGEvaW5jbHVk
-ZS9saW51eC9ibGtkZXYuaCBiL2luY2x1ZGUvbGludXgvYmxrZGV2LmgNCmluZGV4IDA1M2VhNGIu
-Ljc4MTQyOTAgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2Jsa2Rldi5oDQorKysgYi9pbmNs
-dWRlL2xpbnV4L2Jsa2Rldi5oDQpAQCAtMTcwNyw2ICsxNzA3LDcgQEAgc3RydWN0IGJsb2NrX2Rl
-dmljZV9vcGVyYXRpb25zIHsNCiAJdm9pZCAoKnN3YXBfc2xvdF9mcmVlX25vdGlmeSkgKHN0cnVj
-dCBibG9ja19kZXZpY2UgKiwgdW5zaWduZWQgbG9uZyk7DQogCWludCAoKnJlcG9ydF96b25lcyko
-c3RydWN0IGdlbmRpc2sgKiwgc2VjdG9yX3Qgc2VjdG9yLA0KIAkJCXVuc2lnbmVkIGludCBucl96
-b25lcywgcmVwb3J0X3pvbmVzX2NiIGNiLCB2b2lkICpkYXRhKTsNCisJaW50ICgqY2hlY2tfZGlz
-a19yYW5nZV93cCkoc3RydWN0IGdlbmRpc2sgKmQsIHNlY3Rvcl90IHMsIHNlY3Rvcl90IGwpOw0K
-IAlzdHJ1Y3QgbW9kdWxlICpvd25lcjsNCiAJY29uc3Qgc3RydWN0IHByX29wcyAqcHJfb3BzOw0K
-IH07DQotLSANCjEuOC4xLjEuZGlydHkNCg==
+On Wed, Mar 04, 2020 at 02:38:43AM +0000, Shinichiro Kawasaki wrote:
+> I noticed that blktests block/004 takes longer runtime with 5.6-rc4 than
+> 5.6-rc3, and found that the commit 01e99aeca397 ("blk-mq: insert passthrough
+> request into hctx->dispatch directly") triggers it.
+> 
+> The longer runtime was observed with dm-linear device which maps SATA SMR HDD
+> connected via AHCI. It was not observed with dm-linear on SAS/SATA SMR HDDs
+> connected via SAS-HBA. Not observed with dm-linear on non-SMR HDDs either.
+> 
+> Before the commit, block/004 took around 130 seconds. After the commit, it takes
+> around 300 seconds. I need to dig in further details to understand why the
+> commit makes the test case longer.
+> 
+> The test case block/004 does "flush intensive workload". Is this longer runtime
+> expected?
+
+The following patch might address this issue:
+
+https://lore.kernel.org/linux-block/20200207190416.99928-1-sqazi@google.com/#t
+
+Please test and provide us the result.
+
+thanks,
+Ming
 
