@@ -2,101 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D4A1798BE
-	for <lists+linux-block@lfdr.de>; Wed,  4 Mar 2020 20:15:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F8311798F6
+	for <lists+linux-block@lfdr.de>; Wed,  4 Mar 2020 20:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCDTPt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Mar 2020 14:15:49 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37471 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDTPt (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Mar 2020 14:15:49 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m9so2799886qke.4;
-        Wed, 04 Mar 2020 11:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CM8uVr3cNngvJH4mHpoVLPbq5DQiVP5OFQRsZpnfBBI=;
-        b=mnIXyYIL60fmWyADaOSwkQuZbSlplpHEr+9OJLVCfSl7lYh3zYU6A2azJ19HS2XTAP
-         KC/H3zWC1ltQdGoJiEXwz2pTIRUBX5khgZUuu5U2fZVhJX0dVHA0iBxnZG5xAHBs3CBM
-         i0yCFjVuT/1lFbZwNdjxCdZUX9SkyUg2IqalprLtMpWLZZl83BHx18K2jIiTe980Ybbk
-         M2/OCJmC/7e6Ff28NUOecYcHWtusyHBq3d/W52Hz7AyXh3R8ZNPaEk/85cBRkwjRe8/H
-         +kcW8PwLQa/cmTm/QzE4AqyztGG59nYolFHMUqYAI0GGHqwL8OBeh/DscM6SvPUAxsjV
-         hfgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=CM8uVr3cNngvJH4mHpoVLPbq5DQiVP5OFQRsZpnfBBI=;
-        b=UCFC0uRiuYs9BrsFaibDvuxAFHFPvNSoSrMkqAsknuYGuIJGjx/udBD6b/mChn9Maq
-         1G4xfecQi2eTSj249LjtuxoSHyCYRC/WKR13VMaR9Gx4YZCWjMZazqpzaeeQ8thQHMaj
-         ZygexFGSUjCJsw1oZ6+WDiVnsx2SzwvbIS4qpEu335tWka/TBitmEqZ0iUKMi7/L7E2c
-         OTmKAB3Frb8SjA0j5V/7SxX9+Ly/NOYTndTwtBHhQ1mKBJD7ZibzRqWYS0s++Xu38Mto
-         86lHfXy0rxRHWZdWMyECUoC3nLpRtrXNvYwA63RMmerk/2oe4bYYU2xHQcqu4qtXvoOs
-         saaw==
-X-Gm-Message-State: ANhLgQ2e+ipJvEKN0cRFCWxjkvXJ1SNyl5geU2LCCpGNu03pUyemRH1n
-        1q6gcQT0E3WCmr1qO1rB/mY=
-X-Google-Smtp-Source: ADFU+vtGrX7rGWbtT/3WZ8i0RsVqBiawbO0h6f1Eze5r+mgwZLf9LRDfYSvdod/8QqP8pPrDLozJcw==
-X-Received: by 2002:ae9:e892:: with SMTP id a140mr1505046qkg.274.1583349346911;
-        Wed, 04 Mar 2020 11:15:46 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::1:16fa])
-        by smtp.gmail.com with ESMTPSA id y62sm14293209qka.19.2020.03.04.11.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 11:15:46 -0800 (PST)
-Date:   Wed, 4 Mar 2020 14:15:44 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yufen Yu <yuyufen@huawei.com>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jack@suse.cz, bvanassche@acm.org
-Subject: Re: [PATCH v2 3/7] bdi: protect device lifetime with RCU
-Message-ID: <20200304191544.GO189690@mtj.thefacebook.com>
-References: <20200226111851.55348-1-yuyufen@huawei.com>
- <20200226111851.55348-4-yuyufen@huawei.com>
- <20200304170543.GJ189690@mtj.thefacebook.com>
- <20200304172221.GA1864270@kroah.com>
- <20200304185056.GM189690@mtj.thefacebook.com>
- <20200304191026.GC74069@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304191026.GC74069@mit.edu>
+        id S1727137AbgCDT0L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Mar 2020 14:26:11 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45034 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDT0L (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Mar 2020 14:26:11 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024JOgJ0069936;
+        Wed, 4 Mar 2020 19:26:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=RVwMPoBytgJqzvT5Zwwfx1pDAOri+D3vJZqoRxlhfz4=;
+ b=P+C2a0D1aH+Lot/o+i66MqgkOSPyazmJ4SyIhxCO1QyPVxUM7pvVSTsT5+5E3ecHrJZ+
+ sVhpbbHCbnHA/Ns7OcKdsCJ89vdESPYP4KA5Wr/oHasyHNyLWvBoqjJhJi/w6ifRtuAO
+ JmejqWyWD6TuvfpU3VoYOwZStkkwq6/z4bmlRCdOq8rXs1buRvEOLkbXSWM0YmKmjf4L
+ q7vHCL+ZXLSEJBA1FldrA1Pu5z3/RQUHN+J+3LboFqipaAIIIgpDyBBsK+Obe2tkkqO2
+ CwPHd2XCx70CeffoPaQ9mxtGeFCscGsWliE5ZcI649M4P1H5d5C9zXycP5sWzS069+n/ /g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yffwr0ens-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 19:26:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024JNJJf107698;
+        Wed, 4 Mar 2020 19:26:08 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2yg1rrys8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 19:26:08 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 024JQ5UG016484;
+        Wed, 4 Mar 2020 19:26:06 GMT
+Received: from localhost.localdomain (/10.211.9.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Mar 2020 11:26:05 -0800
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] null_blk: describe the usage of fault injection param
+Date:   Wed,  4 Mar 2020 11:16:44 -0800
+Message-Id: <20200304191644.25220-1-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=1 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=1
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003040127
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+As null_blk is a very good start point to test block layer, this patch adds
+description and comments to 'timeout' and 'requeue' to explain how to use
+fault injection with null_blk.
 
-On Wed, Mar 04, 2020 at 02:10:26PM -0500, Theodore Y. Ts'o wrote:
-> On Wed, Mar 04, 2020 at 01:50:56PM -0500, Tejun Heo wrote:
-> > Lifetime rules in block layer are kinda nebulous. Some of it comes
-> > from the fact that some objects are reused. Instead of the usual,
-> > create-use-release, they get repurposed to be associated with
-> > something else. When looking at such an object from some paths, we
-> > don't necessarily have ownership of all of the members.
-> 
-> I wonder if the current rules should be better documented, and that
-> perhaps we should revisit some of them so we can tighten them down?
+The nvme has similar with nvme_core.fail_request in the form of comment.
 
-Oh yeah, that'd be nice for sure. We've been papering over stuff
-constantly for probably over a decade now. It'd be really nice if we
-could clean the house and have sane nominal lifetime rules for block
-objects.
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+---
+ drivers/block/null_blk_main.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> For things that are likely to be long-lived, such as anything
-> corresponding to a bdi or block device, perhaps it would be better if
-> the lifetime rules can be made tighter?  The cost of needing to
-> release and reallocate longer lived objects is going to be negligible,
-> and benefits of improving code readability, reliability, and
-> robuestness might be well worth it.
-
-I full-heartedly agree. It's just a lot of historical accumulation and
-not a lot of manpower directed at cleaning it up.
-
-Thanks.
-
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 133060431dbd..1ee5aaacdb0f 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -96,11 +96,17 @@ module_param_named(home_node, g_home_node, int, 0444);
+ MODULE_PARM_DESC(home_node, "Home node for the device");
+ 
+ #ifdef CONFIG_BLK_DEV_NULL_BLK_FAULT_INJECTION
++/*
++ * For more details about fault injection, please refer to
++ * Documentation/fault-injection/fault-injection.rst.
++ */
+ static char g_timeout_str[80];
+ module_param_string(timeout, g_timeout_str, sizeof(g_timeout_str), 0444);
++MODULE_PARM_DESC(timeout, "Fault injection. timeout=<interval>,<probability>,<space>,<times>");
+ 
+ static char g_requeue_str[80];
+ module_param_string(requeue, g_requeue_str, sizeof(g_requeue_str), 0444);
++MODULE_PARM_DESC(requeue, "Fault injection. requeue=<interval>,<probability>,<space>,<times>");
+ #endif
+ 
+ static int g_queue_mode = NULL_Q_MQ;
 -- 
-tejun
+2.17.1
+
