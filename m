@@ -2,205 +2,138 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A38117A557
-	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 13:35:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD49E17A582
+	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 13:44:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgCEMfO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Mar 2020 07:35:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEMfN (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:35:13 -0500
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC4732072A;
-        Thu,  5 Mar 2020 12:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583411712;
-        bh=YYyo1EzoHeoXh6f+bt6ZQlnhTcHUsLiRhq2DN+gwLo8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xWOvsyCePK4OFDuaIO3GE/vj8Lw2rXXEhIzmNq4MVmhVo4yfzTskYCP3wsYxU3mJd
-         4nK2d3+VyxACB+hQFuIxtEauPBZU1ZbZqsaJuUSo0NS3JvOB/ZRqChRUg9osryx3Fo
-         Kc3am4Zte4RyqEGp2mcE9vceT6PRmHgE6ybN98so=
-Date:   Thu, 5 Mar 2020 14:35:09 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
-Subject: Re: [PATCH v9 10/25] RDMA/rtrs: server: main functionality
-Message-ID: <20200305123509.GF184088@unreal>
-References: <20200221104721.350-1-jinpuwang@gmail.com>
- <20200221104721.350-11-jinpuwang@gmail.com>
- <20200303113740.GM121803@unreal>
- <CAMGffEmEeK37QCr8uiABjOrC-48nETTv0fxHWE0S0s=j6bPbGQ@mail.gmail.com>
- <20200303165906.GO121803@unreal>
- <CAMGffEk9LSgVQtzmBHiFYdnqgcQPXk_TV5W8pKyU5fy=ap0dTg@mail.gmail.com>
- <20200305080019.GB184088@unreal>
- <CAHg0Huyc=pn1=WSKGLjm+c8AcchyQ8q7JS-0ToQyiBRgpGG=jA@mail.gmail.com>
- <20200305121628.GD184088@unreal>
- <CAMGffEmQSwY8a4XJHAoyrPjb-1O1qvBkjd_OD7BPMFwss__jzQ@mail.gmail.com>
+        id S1726436AbgCEMnQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Mar 2020 07:43:16 -0500
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:37547 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEMnQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Mar 2020 07:43:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1583412195;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wATOkHyHfw1nttogMmLbBkJtCs3d5j9hHSTAkJY4KmE=;
+  b=BRR/oVK+Ltl2W4wq7qyebZWggBTMUx92tLo6DwpaRDe8a7dpSZmP6xwN
+   VRdv6L+m8+7o+qt7yhzQ7hVkyD/QVDtsDWpVhVvh+8qBe3Ew9RNBkckrX
+   eYGhfpaBePvoVJP+JcgX+b9D+FBlYyjqVruA/aM1oNmK9spWAjv8JTfbl
+   c=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: iR1cwtc6wIxZHy2095D3SobXiBpJi1pHjnR4cTvwIX4HwAo3C1DNnED/QdKE4qoxNmS2nAl6jV
+ dbJIfWoZdXEkP183BBYzQ6TbB8GAIJFJsQHT5i05dmAWRfPp9TMq78jYy6zAhB5tY8PZ+Q7C35
+ eA/Mk5kAW7Vl1HUChfFa3m08+pqPatmh5F6H00J2FJ3RrXlA6MT4yoduIrrON+HcCXhgi/Wx1X
+ VozdPrV+m5W8VHG95mKIH53r6u455YK/zwGOBAEcLqVjoFxNkKJ+9EpJ1DfbZb+f6uwBMlnkjs
+ NjI=
+X-SBRS: 2.7
+X-MesageID: 13885325
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,518,1574139600"; 
+   d="scan'208";a="13885325"
+Date:   Thu, 5 Mar 2020 13:42:55 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2] xen/blkfront: fix ring info addressing
+Message-ID: <20200305124255.GW24458@Air-de-Roger.citrite.net>
+References: <20200305114044.20235-1-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <CAMGffEmQSwY8a4XJHAoyrPjb-1O1qvBkjd_OD7BPMFwss__jzQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305114044.20235-1-jgross@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 01:28:39PM +0100, Jinpu Wang wrote:
-> On Thu, Mar 5, 2020 at 1:16 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Thu, Mar 05, 2020 at 01:01:08PM +0100, Danil Kipnis wrote:
-> > > On Thu, 5 Mar 2020, 09:00 Leon Romanovsky, <leon@kernel.org> wrote:
-> > >
-> > > > On Wed, Mar 04, 2020 at 12:03:32PM +0100, Jinpu Wang wrote:
-> > > > > On Tue, Mar 3, 2020 at 5:59 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > > >
-> > > > > > On Tue, Mar 03, 2020 at 05:41:27PM +0100, Jinpu Wang wrote:
-> > > > > > > On Tue, Mar 3, 2020 at 12:37 PM Leon Romanovsky <leon@kernel.org>
-> > > > wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Feb 21, 2020 at 11:47:06AM +0100, Jack Wang wrote:
-> > > > > > > > > From: Jack Wang <jinpu.wang@cloud.ionos.com>
-> > > > > > > > >
-> > > > > > > > > This is main functionality of rtrs-server module, which accepts
-> > > > > > > > > set of RDMA connections (so called rtrs session),
-> > > > creates/destroys
-> > > > > > > > > sysfs entries associated with rtrs session and notifies upper
-> > > > layer
-> > > > > > > > > (user of RTRS API) about RDMA requests or link events.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-> > > > > > > > > Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/infiniband/ulp/rtrs/rtrs-srv.c | 2164
-> > > > ++++++++++++++++++++++++
-> > > > > > > > >  1 file changed, 2164 insertions(+)
-> > > > > > > > >  create mode 100644 drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > > > b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > > > > > > > > new file mode 100644
-> > > > > > > > > index 000000000000..e60ee6dd675d
-> > > > > > > > > --- /dev/null
-> > > > > > > > > +++ b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > > > > > > > > @@ -0,0 +1,2164 @@
-> > > > > > > > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > > > > > > > +/*
-> > > > > > > > > + * RDMA Transport Layer
-> > > > > > > > > + *
-> > > > > > > > > + * Copyright (c) 2014 - 2018 ProfitBricks GmbH. All rights
-> > > > reserved.
-> > > > > > > > > + * Copyright (c) 2018 - 2019 1&1 IONOS Cloud GmbH. All rights
-> > > > reserved.
-> > > > > > > > > + * Copyright (c) 2019 - 2020 1&1 IONOS SE. All rights reserved.
-> > > > > > > > > + */
-> > > > > > > > > +
-> > > > > > > > > +#undef pr_fmt
-> > > > > > > > > +#define pr_fmt(fmt) KBUILD_MODNAME " L" __stringify(__LINE__)
-> > > > ": " fmt
-> > > > > > > > > +
-> > > > > > > > > +#include <linux/module.h>
-> > > > > > > > > +#include <linux/mempool.h>
-> > > > > > > > > +
-> > > > > > > > > +#include "rtrs-srv.h"
-> > > > > > > > > +#include "rtrs-log.h"
-> > > > > > > > > +
-> > > > > > > > > +MODULE_DESCRIPTION("RDMA Transport Server");
-> > > > > > > > > +MODULE_LICENSE("GPL");
-> > > > > > > > > +
-> > > > > > > > > +/* Must be power of 2, see mask from mr->page_size in
-> > > > ib_sg_to_pages() */
-> > > > > > > > > +#define DEFAULT_MAX_CHUNK_SIZE (128 << 10)
-> > > > > > > > > +#define DEFAULT_SESS_QUEUE_DEPTH 512
-> > > > > > > > > +#define MAX_HDR_SIZE PAGE_SIZE
-> > > > > > > > > +#define MAX_SG_COUNT ((MAX_HDR_SIZE - sizeof(struct
-> > > > rtrs_msg_rdma_read)) \
-> > > > > > > > > +                   / sizeof(struct rtrs_sg_desc))
-> > > > > > > > > +
-> > > > > > > > > +/* We guarantee to serve 10 paths at least */
-> > > > > > > > > +#define CHUNK_POOL_SZ 10
-> > > > > > > > > +
-> > > > > > > > > +static struct rtrs_rdma_dev_pd dev_pd;
-> > > > > > > > > +static mempool_t *chunk_pool;
-> > > > > > > > > +struct class *rtrs_dev_class;
-> > > > > > > > > +
-> > > > > > > > > +static int __read_mostly max_chunk_size =
-> > > > DEFAULT_MAX_CHUNK_SIZE;
-> > > > > > > > > +static int __read_mostly sess_queue_depth =
-> > > > DEFAULT_SESS_QUEUE_DEPTH;
-> > > > > > > > > +
-> > > > > > > > > +static bool always_invalidate = true;
-> > > > > > > > > +module_param(always_invalidate, bool, 0444);
-> > > > > > > > > +MODULE_PARM_DESC(always_invalidate,
-> > > > > > > > > +              "Invalidate memory registration for contiguous
-> > > > memory regions before accessing.");
-> > > > > > > > > +
-> > > > > > > > > +module_param_named(max_chunk_size, max_chunk_size, int, 0444);
-> > > > > > > > > +MODULE_PARM_DESC(max_chunk_size,
-> > > > > > > > > +              "Max size for each IO request, when change the
-> > > > unit is in byte (default: "
-> > > > > > > > > +              __stringify(DEFAULT_MAX_CHUNK_SIZE) "KB)");
-> > > > > > > > > +
-> > > > > > > > > +module_param_named(sess_queue_depth, sess_queue_depth, int,
-> > > > 0444);
-> > > > > > > > > +MODULE_PARM_DESC(sess_queue_depth,
-> > > > > > > > > +              "Number of buffers for pending I/O requests to
-> > > > allocate per session. Maximum: "
-> > > > > > > > > +              __stringify(MAX_SESS_QUEUE_DEPTH) " (default: "
-> > > > > > > > > +              __stringify(DEFAULT_SESS_QUEUE_DEPTH) ")");
-> > > > > > > >
-> > > > > > > > We don't like module parameters in the RDMA.
-> > > > > > > Hi Leon,
-> > > > > > >
-> > > > > > > These paramters are affecting resouce usage/performance, I think
-> > > > would
-> > > > > > > be good to have them as module parameters,
-> > > > > > > so admin could choose based their needs.
-> > > > > >
-> > > > > > It is premature optimization before second user comes, also it is
-> > > > > > based on the assumption that everyone uses modules, which is not true.
-> > > > > The idea to have module parameters is to cover more use cases, IMHO.
-> > > > >
-> > > > > Even you builtin the module to the kernel, you can still change the
-> > > > > module parameters
-> > > > > by passing the "moduls_name.paramters" in kernel command line, eg:
-> > > > > kvm.nx_huge_pages=true
-> > > >
-> > > > I know about that, but it doesn't make them helpful.
-> > > >
-> > > > Thanks
-> > > >
-> > > Hi Leon,
-> > >
-> > > Queue_depth and max_chunksize parameters control the tradeoff between
-> > > throuput performance and memory consumption. We do use them to set
-> > > different values for storages equipped with SSDs (fast) and on storages
-> > > equipped with HDDs (slow). The last parameter always_invaldate enforces the
-> > > invalidation of an rdma buffer before its hand over to the block layer. We
-> > > set it to no in our datacenters, since they are closed and malicious
-> > > clients are not a threat in our scenario. In general case it defaults to
-> > > yes, as requested by Jason. Our admins need to have control over those
-> > > control knobs somehow... We could make sysfs entries out of them or
-> > > something, but would it really make sense?
-> >
-> > blk_queue_nonrot() inside your code?
-> It's exported function, and also used by other drivers like
-> md/dm/target core, right?
+On Thu, Mar 05, 2020 at 12:40:44PM +0100, Juergen Gross wrote:
+> Commit 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to
+> actual use case") made struct blkfront_ring_info size dynamic. This is
+> fine when running with only one queue, but with multiple queues the
+> addressing of the single queues has to be adapted as the structs are
+> allocated in an array.
+> 
+> Fixes: 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to actual use case")
+> Reported-by: Sander Eikelenboom <linux@eikelenboom.it>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+> V2:
+> - get rid of rinfo_ptr() helper
+> - use proper parenthesis in for_each_rinfo()
+> - rename rinfo parameter of for_each_rinfo()
+> ---
+>  drivers/block/xen-blkfront.c | 79 +++++++++++++++++++++++---------------------
+>  1 file changed, 42 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+> index e2ad6bba2281..8e844da826db 100644
+> --- a/drivers/block/xen-blkfront.c
+> +++ b/drivers/block/xen-blkfront.c
+> @@ -213,6 +213,7 @@ struct blkfront_info
+>  	struct blk_mq_tag_set tag_set;
+>  	struct blkfront_ring_info *rinfo;
+>  	unsigned int nr_rings;
+> +	unsigned int rinfo_size;
+>  	/* Save uncomplete reqs and bios for migration. */
+>  	struct list_head requests;
+>  	struct bio_list bio_list;
+> @@ -259,6 +260,18 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
+>  static void blkfront_gather_backend_features(struct blkfront_info *info);
+>  static int negotiate_mq(struct blkfront_info *info);
+>  
+> +#define for_each_rinfo(info, ptr, idx)				\
+> +	for ((ptr) = (info)->rinfo, (idx) = 0;			\
+> +	     (idx) < (info)->nr_rings;				\
+> +	     (idx)++, (ptr) = (void *)(ptr) + (info)->rinfo_size)
+> +
+> +static struct blkfront_ring_info *get_rinfo(struct blkfront_info *info,
 
-I have no clue.
+I still think inline should be added here, but I don't have such a
+strong opinion to block the patch on it.
 
-Thanks
+Also, info should be constified AFAICT.
 
->
-> Thanks
+With at least info constified:
+
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+
+Can you queue this through the Xen tree?
+
+Thanks, Roger.
