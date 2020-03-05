@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAD3F17A49C
-	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 12:53:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2148717A49D
+	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 12:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgCELxB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Mar 2020 06:53:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51168 "EHLO mx2.suse.de"
+        id S1726990AbgCELxC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Mar 2020 06:53:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51158 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgCELxB (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S1726979AbgCELxB (ORCPT <rfc822;linux-block@vger.kernel.org>);
         Thu, 5 Mar 2020 06:53:01 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 50CCFAFA0;
+        by mx2.suse.de (Postfix) with ESMTP id 50A1FAF82;
         Thu,  5 Mar 2020 11:52:59 +0000 (UTC)
 From:   Hannes Reinecke <hare@suse.de>
 To:     Omar Sandoval <osandov@osandov.com>
 Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         James Smart <james.smart@broadcom.com>,
         linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>, Hannes Reinecke <hare@suse.com>
-Subject: [PATCH 1/3] nvme: enable ANA support
-Date:   Thu,  5 Mar 2020 12:52:37 +0100
-Message-Id: <20200305115239.29794-2-hare@suse.de>
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 2/3] nvme/033: add test for ANA state transition
+Date:   Thu,  5 Mar 2020 12:52:38 +0100
+Message-Id: <20200305115239.29794-3-hare@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20200305115239.29794-1-hare@suse.de>
 References: <20200305115239.29794-1-hare@suse.de>
@@ -32,136 +32,213 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add ANA support functions and update _create_nvmet_ns() to
-accept an additional ANA grpid parameter.
+Add a test to check ANA state transitions.
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
 ---
- tests/nvme/rc | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 69 insertions(+), 3 deletions(-)
+ tests/nvme/033     | 139 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/033.out |  18 +++++++
+ tests/nvme/rc      |  16 ++++++
+ 3 files changed, 173 insertions(+)
+ create mode 100644 tests/nvme/033
+ create mode 100644 tests/nvme/033.out
 
+diff --git a/tests/nvme/033 b/tests/nvme/033
+new file mode 100644
+index 0000000..44182fc
+--- /dev/null
++++ b/tests/nvme/033
+@@ -0,0 +1,139 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++# Regression test for ANA base support
++#
++# Copyright (C) 2018 Hannes Reinecke, SUSE Linux GmbH
++#
++
++. tests/nvme/rc
++
++DESCRIPTION="test ANA optimized/transitioning/inaccessible support"
++QUICK=1
++
++switch_nvmet_anagroup() {
++	local port1="$1"
++	local port2="$2"
++	local mode="$3"
++
++	echo "ANA state ${mode}"
++
++	if [ "${mode}" = "change" ] ; then
++		_set_nvmet_anagroup_state "${port1}" "1" "change"
++		_set_nvmet_anagroup_state "${port1}" "2" "change"
++		_set_nvmet_anagroup_state "${port2}" "1" "change"
++		_set_nvmet_anagroup_state "${port2}" "2" "change"
++	elif [ "${mode}" = "failover" ] ; then
++		_set_nvmet_anagroup_state "${port1}" "1" "inaccessible"
++		_set_nvmet_anagroup_state "${port1}" "2" "optimized"
++		_set_nvmet_anagroup_state "${port2}" "1" "optimized"
++		_set_nvmet_anagroup_state "${port2}" "2" "inaccessible"
++	else
++		_set_nvmet_anagroup_state "${port1}" "1" "optimized"
++		_set_nvmet_anagroup_state "${port1}" "2" "inaccessible"
++		_set_nvmet_anagroup_state "${port2}" "1" "inaccessible"
++		_set_nvmet_anagroup_state "${port2}" "2" "optimized"
++	fi
++}
++
++requires() {
++	_have_program nvme && _have_modules nvme-loop && \
++		_have_configfs && _have_fio
++}
++
++test() {
++	local mount_dir="/mnt/blktests"
++	local subsys="blktests-subsystem-1"
++	local port1
++	local port2
++	local loop_dev1
++	local loop_dev2
++	local nvmedev
++
++	echo "Running ${TEST_NAME}"
++
++	modprobe nvmet
++	modprobe nvme-loop
++
++	mkdir -p "${mount_dir}" > /dev/null 2>&1
++
++	port1="$(_create_nvmet_port "loop")"
++	ag1="$(_create_nvmet_anagroup "${port1}")"
++
++	port2="$(_create_nvmet_port "loop")"
++	ag2="$(_create_nvmet_anagroup "${port2}")"
++
++	truncate -s 1G "$TMPDIR/img1"
++
++	loop_dev1="$(losetup -f --show "$TMPDIR/img1")"
++
++	_create_nvmet_subsystem "${subsys}" "${loop_dev1}" \
++		"91fdba0d-f87b-4c25-b80f-db7be1418b9e" "1"
++
++	truncate -s 1G "$TMPDIR/img2"
++
++	loop_dev2="$(losetup -f --show "$TMPDIR/img2")"
++
++	_create_nvmet_ns "${subsys}" "2" "${loop_dev2}" \
++		"9aed0138-bfd9-46f5-92ac-24c70377fd49" "2"
++
++	_add_nvmet_subsys_to_port "${port1}" "${subsys}"
++	_add_nvmet_subsys_to_port "${port2}" "${subsys}"
++
++	switch_nvmet_anagroup "${port1}" "${port2}" failback
++
++	nvme connect -t loop -a "${port1}" -n "${subsys}"
++	nvme connect -t loop -a "${port2}" -n "${subsys}"
++
++	sleep 1
++
++	_display_ana_state "${subsys}"
++
++	nvmedev="$(_find_nvme_ns 91fdba0d-f87b-4c25-b80f-db7be1418b9e)"
++
++	mkfs.xfs -f /dev/"${nvmedev}" > /dev/null 2>&1
++
++	mount /dev/"${nvmedev}" "${mount_dir}"
++
++	_run_fio_rand_io --size=32m --directory="${mount_dir}" --runtime=20s --time_based &
++	trap "kill $!" EXIT
++
++	sleep 10
++
++	switch_nvmet_anagroup "${port1}" "${port2}" "change"
++
++	# Insert a delay to allow the AEN to be processed
++	sleep 1
++
++	_display_ana_state "${subsys}"
++
++	sleep 6
++
++	switch_nvmet_anagroup "${port1}" "${port2}" "failover"
++
++	# Insert a delay to allow the AEN to be processed
++	sleep 1
++
++	_display_ana_state "${subsys}"
++
++	wait
++	trap - EXIT
++
++	umount "${mount_dir}" > /dev/null 2>&1
++
++	nvme disconnect -n "${subsys}"
++
++	_remove_nvmet_subsystem_from_port "${port1}" "${subsys}"
++	_remove_nvmet_subsystem_from_port "${port2}" "${subsys}"
++	_remove_nvmet_ns "${subsys}" "2"
++	_remove_nvmet_subsystem "${subsys}"
++	_remove_nvmet_anagroup "${port1}" "${ag1}"
++	_remove_nvmet_port "${port1}"
++	_remove_nvmet_anagroup "${port2}" "${ag2}"
++	_remove_nvmet_port "${port2}"
++	losetup -d "${loop_dev2}"
++	rm "$TMPDIR/img2"
++	losetup -d "${loop_dev1}"
++	rm "$TMPDIR/img1"
++
++	echo "Test complete"
++}
+diff --git a/tests/nvme/033.out b/tests/nvme/033.out
+new file mode 100644
+index 0000000..782656f
+--- /dev/null
++++ b/tests/nvme/033.out
+@@ -0,0 +1,18 @@
++Running nvme/033
++ANA state failback
++1: grpid 1 state optimized
++1: grpid 2 state inaccessible
++2: grpid 1 state inaccessible
++2: grpid 2 state optimized
++ANA state change
++1: grpid 1 state change
++1: grpid 2 state change
++2: grpid 1 state change
++2: grpid 2 state change
++ANA state failover
++1: grpid 1 state inaccessible
++1: grpid 2 state optimized
++2: grpid 1 state optimized
++2: grpid 2 state inaccessible
++NQN:blktests-subsystem-1 disconnected 2 controller(s)
++Test complete
 diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 40f0413..72e33c1 100644
+index 72e33c1..1787725 100644
 --- a/tests/nvme/rc
 +++ b/tests/nvme/rc
-@@ -14,7 +14,7 @@ group_device_requires() {
- 	_test_dev_is_nvme
+@@ -246,6 +246,22 @@ _find_nvme_loop_dev() {
+ 	done
  }
  
--NVMET_CFS="/sys/kernel/config/nvmet/"
-+NVMET_CFS="/sys/kernel/config/nvmet"
- 
- _test_dev_is_nvme() {
- 	if ! readlink -f "$TEST_DEV_SYSFS/device" | grep -q nvme; then
-@@ -90,6 +90,7 @@ _create_nvmet_port() {
- 
- 	mkdir "${NVMET_CFS}/ports/${port}"
- 	echo "${trtype}" > "${NVMET_CFS}/ports/${port}/addr_trtype"
-+	echo "${port}" > "${NVMET_CFS}/ports/${port}/addr_traddr"
- 
- 	echo "${port}"
- }
-@@ -99,6 +100,62 @@ _remove_nvmet_port() {
- 	rmdir "${NVMET_CFS}/ports/${port}"
- }
- 
-+_create_nvmet_anagroup() {
-+	local port="$1"
-+	local port_cfs="${NVMET_CFS}/ports/${port}"
-+	local grpid
++_find_nvme_ns() {
++	local uuid=$1
++	local dev
++	local hidden
 +
-+	for ((grpid = 1; ; grpid++)); do
-+		if [[ ! -e "${port_cfs}/ana_groups/${grpid}" ]]; then
++	for dev in /sys/block/nvme*; do
++		hidden="$(cat "${dev}/hidden")"
++		[[ "$hidden" -eq 1 ]] && continue
++		u="$(cat "${dev}/uuid")"
++		if [[ "$uuid" = "$u" ]] ; then
++			echo "$(basename "${dev}")"
 +			break
-+		fi
-+	done
-+
-+	mkdir "${port_cfs}/ana_groups/${grpid}"
-+
-+	echo "${grpid}"
++                fi
++        done
 +}
 +
-+_remove_nvmet_anagroup() {
-+	local port="$1"
-+	local grpid="$2"
-+	local ana_cfs="${NVMET_CFS}/ports/${port}/ana_groups/${grpid}"
-+
-+	rmdir "${ana_cfs}"
-+}
-+
-+_set_nvmet_anagroup_state() {
-+	local port="$1"
-+	local grpid="$2"
-+	local state="$3"
-+	local ana_cfs="${NVMET_CFS}/ports/${port}/ana_groups/${grpid}"
-+
-+	echo "${state}" > "${ana_cfs}/ana_state"
-+}
-+
-+_display_ana_state() {
-+	local nvmet_subsystem="$1"
-+	local grpid state cntlid
-+
-+	for nvme in /sys/class/nvme/* ; do
-+		[ -f ${nvme}/subsysnqn ] || continue
-+		subsys="$(cat "${nvme}/subsysnqn")"
-+		if [ "${subsys}" != "${nvmet_subsystem}" ] ; then
-+			continue
-+		fi
-+		cntlid="$(cat "${nvme}/cntlid")"
-+		for c in ${nvme}/nvme* ; do
-+			if [ ! -d ${c} ] ; then
-+				echo "${cntlid}: ANA disabled"
-+				continue
-+			fi
-+			grpid="$(cat "${c}/ana_grpid")"
-+			state="$(cat "${c}/ana_state")"
-+			echo "${cntlid}: grpid ${grpid} state ${state}"
-+		done
-+	done
-+}
-+
- _create_nvmet_ns() {
- 	local nvmet_subsystem="$1"
- 	local nsid="$2"
-@@ -106,14 +163,22 @@ _create_nvmet_ns() {
- 	local uuid="00000000-0000-0000-0000-000000000000"
- 	local subsys_path="${NVMET_CFS}/subsystems/${nvmet_subsystem}"
- 	local ns_path="${subsys_path}/namespaces/${nsid}"
-+	local ana_grpid
- 
--	if [[ $# -eq 4 ]]; then
-+	if [[ $# -ge 4 ]]; then
- 		uuid="$4"
- 	fi
- 
-+	if [[ $# -eq 5 ]]; then
-+		ana_grpid="$5"
-+	fi
-+
- 	mkdir "${ns_path}"
- 	printf "%s" "${blkdev}" > "${ns_path}/device_path"
- 	printf "%s" "${uuid}" > "${ns_path}/device_uuid"
-+	if [ -n "${ana_grpid}" ] ; then
-+		printf "%s" "${ana_grpid}" > "${ns_path}/ana_grpid"
-+	fi
- 	printf 1 > "${ns_path}/enable"
- }
- 
-@@ -121,11 +186,12 @@ _create_nvmet_subsystem() {
- 	local nvmet_subsystem="$1"
- 	local blkdev="$2"
- 	local uuid=$3
-+	local ana_grpid=$4
- 	local cfs_path="${NVMET_CFS}/subsystems/${nvmet_subsystem}"
- 
- 	mkdir -p "${cfs_path}"
- 	echo 1 > "${cfs_path}/attr_allow_any_host"
--	_create_nvmet_ns "${nvmet_subsystem}" "1" "${blkdev}" "${uuid}"
-+	_create_nvmet_ns "${nvmet_subsystem}" "1" "${blkdev}" "${uuid}" "${ana_grpid}"
- }
- 
- _remove_nvmet_ns() {
+ _filter_discovery() {
+ 	sed -n -r -e "s/Generation counter [0-9]+/Generation counter X/" \
+ 		  -e '/Discovery Log Number|Log Entry|trtype|subnqn/p'
 -- 
 2.13.7
 
