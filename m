@@ -2,222 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D3AC17AC48
-	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 18:19:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96BFE17AFE1
+	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 21:43:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCERTe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Mar 2020 12:19:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgCERPF (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:05 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B1D20848;
-        Thu,  5 Mar 2020 17:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428505;
-        bh=qByTAWT7bl0J6/edNlwDbsUX9/OFfv2Y7B+vvlVndss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peK9GphUCu2SQ/UQ7KxrI0TzzZ+fOUDZkDE4y/ZTCs1vm3twfI4FnK0XwUaoEgVp9
-         lUCvmvmwus/hVMmVz6JdA+DVzs5VJ+fIkFCVl7XqgXvYMNjpXGtSx+KHAo/JGu9jtC
-         TBDwUhpZd58zET3m9Qy0CJq9oXadYr42uwvprioQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Ewan D . Milne" <emilne@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/58] blk-mq: insert passthrough request into hctx->dispatch directly
-Date:   Thu,  5 Mar 2020 12:13:56 -0500
-Message-Id: <20200305171420.29595-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
-References: <20200305171420.29595-1-sashal@kernel.org>
+        id S1726173AbgCEUnJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Mar 2020 15:43:09 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33316 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgCEUnJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Mar 2020 15:43:09 -0500
+Received: by mail-io1-f66.google.com with SMTP id r15so8012612iog.0
+        for <linux-block@vger.kernel.org>; Thu, 05 Mar 2020 12:43:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K+E8Uy+fBw/gh0nu1wLPFsLlAAWTt9S6/ny9LuQwDCk=;
+        b=QO00FYAP80gFlnAl/2izdrLs57u2D9HT6jeMy2jT8IJZ00MvsCRpYMrR8GU7doHvUI
+         6eTb+gVBX2QOOZOZE6/JRJOsscpRzWVzHoz5rbfegXEmZFRBLrs535y23DRBwzYpzKRs
+         yYISl+wAUCrtJHIv1OArKmUbI6XKyFB0hK4WqTeLu5SAdChBAk4eLwCN5E9Hq/1B96SE
+         aX4nzpp1eL0MeuF3Xxlufcvnn2Cz+opeQ61syEiQ9bsHv0LcNsJjSniFOxUF+kiarlpH
+         dp6RgdLzUypkBgWAfDoqyehybF1hN2UowVmdvdwQdP9/1lqSk2YqiAaOecvpB7MqHSYQ
+         5oig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K+E8Uy+fBw/gh0nu1wLPFsLlAAWTt9S6/ny9LuQwDCk=;
+        b=GV0kKEZASAv3GSxR8QAE58oPPBNYU4ReJ6O3XPZoR4KiLahAxCvrZhrEaP+wnf8ivY
+         RYWUX9F85fuWMre7aN26/43dROGUhhG0X47ee8h0nEjbfFXMI5+zMPXOkoXL8xflvQeG
+         9ncN2ArGH1V10tN0EMKGHK9KNebICRrk0CuPhxyoFXUDpuLYhSlA5D6jdJK59LNom7Rt
+         DYEHYZxxGrEQGySFrLYPwry1V6x/7Gr6z2GV9v6BEVj6gpzIJKR2xf2wH8wAncJg4DBC
+         AvBb2y7Ckmr+zGvtuJDmPjyzWDUVa0+2ixTKK8NCNQwbd05kOrIY1dGohFvCvMZMHvdd
+         T6ww==
+X-Gm-Message-State: ANhLgQ2cOu0QazqTOHl4ySthfIOAhJzDeGS1hKf5EJ7luhecmzInju7/
+        JgEbIJXsbqvLRvUPrXURzCO0rQ==
+X-Google-Smtp-Source: ADFU+vsg6Vx5j+mQUD7KDzZWDaDV9fBiG168AJM8hU2Ibf4OZYImC2B1YX0K/3FJt5xcZ/NuarDTEg==
+X-Received: by 2002:a6b:7f01:: with SMTP id l1mr208223ioq.146.1583440986476;
+        Thu, 05 Mar 2020 12:43:06 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id g3sm1074323ilb.53.2020.03.05.12.43.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 12:43:05 -0800 (PST)
+Subject: Re: [PATCH v2] blktrace: fix dereference after null check
+To:     Cengiz Can <cengiz@kernel.wtf>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200304105818.11781-1-cengiz@kernel.wtf>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e6fe9883-2f51-a249-c5d2-ce11f6b449da@kernel.dk>
+Date:   Thu, 5 Mar 2020 13:43:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304105818.11781-1-cengiz@kernel.wtf>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+On 3/4/20 3:58 AM, Cengiz Can wrote:
+> There was a recent change in blktrace.c that added a RCU protection to
+> `q->blk_trace` in order to fix a use-after-free issue during access.
+> 
+> However the change missed an edge case that can lead to dereferencing of
+> `bt` pointer even when it's NULL:
+> 
+> Coverity static analyzer marked this as a FORWARD_NULL issue with CID
+> 1460458.
+> 
+> ```
+> /kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
+> 1898            ret = 0;
+> 1899            if (bt == NULL)
+> 1900                    ret = blk_trace_setup_queue(q, bdev);
+> 1901
+> 1902            if (ret == 0) {
+> 1903                    if (attr == &dev_attr_act_mask)
+>>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
+>>>>     Dereferencing null pointer "bt".
+> 1904                            bt->act_mask = value;
+> 1905                    else if (attr == &dev_attr_pid)
+> 1906                            bt->pid = value;
+> 1907                    else if (attr == &dev_attr_start_lba)
+> 1908                            bt->start_lba = value;
+> 1909                    else if (attr == &dev_attr_end_lba)
+> ```
+> 
+> Added a reassignment with RCU annotation to fix the issue.
 
-[ Upstream commit 01e99aeca3979600302913cef3f89076786f32c8 ]
+Applied, thanks.
 
-For some reason, device may be in one situation which can't handle
-FS request, so STS_RESOURCE is always returned and the FS request
-will be added to hctx->dispatch. However passthrough request may
-be required at that time for fixing the problem. If passthrough
-request is added to scheduler queue, there isn't any chance for
-blk-mq to dispatch it given we prioritize requests in hctx->dispatch.
-Then the FS IO request may never be completed, and IO hang is caused.
-
-So passthrough request has to be added to hctx->dispatch directly
-for fixing the IO hang.
-
-Fix this issue by inserting passthrough request into hctx->dispatch
-directly together withing adding FS request to the tail of
-hctx->dispatch in blk_mq_dispatch_rq_list(). Actually we add FS request
-to tail of hctx->dispatch at default, see blk_mq_request_bypass_insert().
-
-Then it becomes consistent with original legacy IO request
-path, in which passthrough request is always added to q->queue_head.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-flush.c    |  2 +-
- block/blk-mq-sched.c | 22 +++++++++++++++-------
- block/blk-mq.c       | 18 +++++++++++-------
- block/blk-mq.h       |  3 ++-
- 4 files changed, 29 insertions(+), 16 deletions(-)
-
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index b1f0a1ac505c9..5aa6fada22598 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -399,7 +399,7 @@ void blk_insert_flush(struct request *rq)
- 	 */
- 	if ((policy & REQ_FSEQ_DATA) &&
- 	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
--		blk_mq_request_bypass_insert(rq, false);
-+		blk_mq_request_bypass_insert(rq, false, false);
- 		return;
- 	}
- 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index ca22afd47b3dc..856356b1619e8 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -361,13 +361,19 @@ static bool blk_mq_sched_bypass_insert(struct blk_mq_hw_ctx *hctx,
- 				       bool has_sched,
- 				       struct request *rq)
- {
--	/* dispatch flush rq directly */
--	if (rq->rq_flags & RQF_FLUSH_SEQ) {
--		spin_lock(&hctx->lock);
--		list_add(&rq->queuelist, &hctx->dispatch);
--		spin_unlock(&hctx->lock);
-+	/*
-+	 * dispatch flush and passthrough rq directly
-+	 *
-+	 * passthrough request has to be added to hctx->dispatch directly.
-+	 * For some reason, device may be in one situation which can't
-+	 * handle FS request, so STS_RESOURCE is always returned and the
-+	 * FS request will be added to hctx->dispatch. However passthrough
-+	 * request may be required at that time for fixing the problem. If
-+	 * passthrough request is added to scheduler queue, there isn't any
-+	 * chance to dispatch it given we prioritize requests in hctx->dispatch.
-+	 */
-+	if ((rq->rq_flags & RQF_FLUSH_SEQ) || blk_rq_is_passthrough(rq))
- 		return true;
--	}
- 
- 	if (has_sched)
- 		rq->rq_flags |= RQF_SORTED;
-@@ -391,8 +397,10 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 
- 	WARN_ON(e && (rq->tag != -1));
- 
--	if (blk_mq_sched_bypass_insert(hctx, !!e, rq))
-+	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
-+		blk_mq_request_bypass_insert(rq, at_head, false);
- 		goto run;
-+	}
- 
- 	if (e && e->type->ops.insert_requests) {
- 		LIST_HEAD(list);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ec791156e9ccd..3c1abab1fdf52 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -761,7 +761,7 @@ static void blk_mq_requeue_work(struct work_struct *work)
- 		 * merge.
- 		 */
- 		if (rq->rq_flags & RQF_DONTPREP)
--			blk_mq_request_bypass_insert(rq, false);
-+			blk_mq_request_bypass_insert(rq, false, false);
- 		else
- 			blk_mq_sched_insert_request(rq, true, false, false);
- 	}
-@@ -1313,7 +1313,7 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 			q->mq_ops->commit_rqs(hctx);
- 
- 		spin_lock(&hctx->lock);
--		list_splice_init(list, &hctx->dispatch);
-+		list_splice_tail_init(list, &hctx->dispatch);
- 		spin_unlock(&hctx->lock);
- 
- 		/*
-@@ -1668,12 +1668,16 @@ void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
-  * Should only be used carefully, when the caller knows we want to
-  * bypass a potential IO scheduler on the target device.
-  */
--void blk_mq_request_bypass_insert(struct request *rq, bool run_queue)
-+void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
-+				  bool run_queue)
- {
- 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
- 
- 	spin_lock(&hctx->lock);
--	list_add_tail(&rq->queuelist, &hctx->dispatch);
-+	if (at_head)
-+		list_add(&rq->queuelist, &hctx->dispatch);
-+	else
-+		list_add_tail(&rq->queuelist, &hctx->dispatch);
- 	spin_unlock(&hctx->lock);
- 
- 	if (run_queue)
-@@ -1863,7 +1867,7 @@ static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 	if (bypass_insert)
- 		return BLK_STS_RESOURCE;
- 
--	blk_mq_request_bypass_insert(rq, run_queue);
-+	blk_mq_request_bypass_insert(rq, false, run_queue);
- 	return BLK_STS_OK;
- }
- 
-@@ -1879,7 +1883,7 @@ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 
- 	ret = __blk_mq_try_issue_directly(hctx, rq, cookie, false, true);
- 	if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE)
--		blk_mq_request_bypass_insert(rq, true);
-+		blk_mq_request_bypass_insert(rq, false, true);
- 	else if (ret != BLK_STS_OK)
- 		blk_mq_end_request(rq, ret);
- 
-@@ -1913,7 +1917,7 @@ void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
- 		if (ret != BLK_STS_OK) {
- 			if (ret == BLK_STS_RESOURCE ||
- 					ret == BLK_STS_DEV_RESOURCE) {
--				blk_mq_request_bypass_insert(rq,
-+				blk_mq_request_bypass_insert(rq, false,
- 							list_empty(list));
- 				break;
- 			}
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 32c62c64e6c2b..f2075978db500 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -66,7 +66,8 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-  */
- void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 				bool at_head);
--void blk_mq_request_bypass_insert(struct request *rq, bool run_queue);
-+void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
-+				  bool run_queue);
- void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
- 				struct list_head *list);
- 
 -- 
-2.20.1
+Jens Axboe
 
