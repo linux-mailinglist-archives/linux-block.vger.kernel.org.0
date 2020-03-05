@@ -2,250 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BA7117A49E
-	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 12:53:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FECA17A4B5
+	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 12:59:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCELxC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Mar 2020 06:53:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51160 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgCELxC (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:53:02 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 500F8AF00;
-        Thu,  5 Mar 2020 11:52:59 +0000 (UTC)
-From:   Hannes Reinecke <hare@suse.de>
-To:     Omar Sandoval <osandov@osandov.com>
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 3/3] tests/nvme/034: Add a test for the fcloop driver
-Date:   Thu,  5 Mar 2020 12:52:39 +0100
-Message-Id: <20200305115239.29794-4-hare@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20200305115239.29794-1-hare@suse.de>
-References: <20200305115239.29794-1-hare@suse.de>
+        id S1727407AbgCEL7E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Mar 2020 06:59:04 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11151 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726990AbgCEL7E (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:59:04 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CE80E29236B20E110CB8;
+        Thu,  5 Mar 2020 19:58:59 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Mar 2020 19:58:52 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <hare@suse.de>, <don.brace@microsemi.com>,
+        <sumit.saxena@broadcom.com>, <hch@infradead.org>,
+        <kashyap.desai@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>
+CC:     <chenxiang66@hisilicon.com>, <linux-block@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH RFC v6 00/10] blk-mq/scsi: Provide hostwide shared tags for SCSI HBAs
+Date:   Thu, 5 Mar 2020 19:54:30 +0800
+Message-ID: <1583409280-158604-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add a test for the in-kernel fcloop driver. Despite being a loop
-driver it still requires an actual FC card to run this test.
+Hi all,
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
----
- common/fcloop      |  58 +++++++++++++++++++++++++
- tests/nvme/034     | 122 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/034.out |   3 ++
- 3 files changed, 183 insertions(+)
- create mode 100644 common/fcloop
- create mode 100644 tests/nvme/034
- create mode 100644 tests/nvme/034.out
+Here is v6 of the patchset.
 
-diff --git a/common/fcloop b/common/fcloop
-new file mode 100644
-index 0000000..b9a1ce7
---- /dev/null
-+++ b/common/fcloop
-@@ -0,0 +1,58 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+#
-+# fcloop helper functions.
-+
-+. common/shellcheck
-+
-+_nvme_fcloop_add_rport() {
-+	local local_wwnn="$1"
-+	local local_wwpn="$2"
-+	local remote_wwnn="$3"
-+	local remote_wwpn="$4"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${remote_wwnn},wwpn=${remote_wwpn},lpwwnn=${local_wwnn},lpwwpn=${local_wwpn},roles=0x60" > ${loopctl}/add_remote_port
-+}
-+
-+_nvme_fcloop_del_rport() {
-+	local local_wwnn="$1"
-+	local local_wwpn="$2"
-+	local remote_wwnn="$3"
-+	local remote_wwpn="$4"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${remote_wwnn},wwpn=${remote_wwpn}" > ${loopctl}/del_remote_port
-+}
-+
-+_nvme_fcloop_add_lport() {
-+	local wwnn="$1"
-+	local wwpn="$2"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${wwnn},wwpn=${wwpn}" > ${loopctl}/add_local_port
-+}
-+
-+_nvme_fcloop_del_lport() {
-+	local wwnn="$1"
-+	local wwpn="$2"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${wwnn},wwpn=${wwpn}" > ${loopctl}/del_local_port
-+}
-+
-+_nvme_fcloop_add_tport() {
-+	local wwnn="$1"
-+	local wwpn="$2"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${wwnn},wwpn=${wwpn}" > ${loopctl}/add_target_port
-+}
-+
-+_nvme_fcloop_del_tport() {
-+	local wwnn="$1"
-+	local wwpn="$2"
-+	local loopctl=/sys/class/fcloop/ctl
-+
-+	echo "wwnn=${wwnn},wwpn=${wwpn}" > ${loopctl}/del_target_port
-+}
-diff --git a/tests/nvme/034 b/tests/nvme/034
-new file mode 100644
-index 0000000..1a197f2
---- /dev/null
-+++ b/tests/nvme/034
-@@ -0,0 +1,122 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+# Copyright (C) 2018 Johannes Thumshirn, Hannes Reinecke, SUSE Linux GmbH
-+#
-+# Reproducer for nvme-fcloop
-+#
-+
-+. tests/nvme/rc
-+. common/fcloop
-+
-+DESCRIPTION="create nvme-fcloop with two ports and connect/disconnect"
-+
-+requires() {
-+	_have_program nvme && \
-+		_have_modules loop nvme-fcloop nvmet nvmet-fc && \
-+		_have_configfs
-+}
-+
-+test() {
-+	local subsys="blktests-subsystem-1"
-+	local remote_wwnn1="0x100140111111dbcc"
-+	local remote_wwpn1="0x200140111111dbcc"
-+	local remote_wwnn2="0x100140111111dbcd"
-+	local remote_wwpn2="0x200140111111dbcd"
-+	local host_wwnn1="0x100140111111dac8"
-+	local host_wwpn1="0x200140111111dac8"
-+	local host_wwnn2="0x100140111111dac9"
-+	local host_wwpn2="0x200140111111dac9"
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	modprobe nvmet-fc
-+	modprobe nvme-fcloop
-+
-+	_nvme_fcloop_add_tport ${remote_wwnn1} ${remote_wwpn1}
-+	_nvme_fcloop_add_tport ${remote_wwnn2} ${remote_wwpn2}
-+
-+	_nvme_fcloop_add_lport ${host_wwnn1} ${host_wwpn1}
-+	_nvme_fcloop_add_lport ${host_wwnn2} ${host_wwpn2}
-+
-+	_nvme_fcloop_add_rport ${host_wwnn1} ${host_wwpn1} \
-+		${remote_wwnn1} ${remote_wwpn1}
-+	_nvme_fcloop_add_rport ${host_wwnn2} ${host_wwpn2} \
-+		${remote_wwnn2} ${remote_wwpn2}
-+
-+	local port1
-+	port1=$(_create_nvmet_port "fc")
-+	ag1="$(_create_nvmet_anagroup "${port1}")"
-+
-+	local port2
-+	port2=$(_create_nvmet_port "fc")
-+	ag2="$(_create_nvmet_anagroup "${port2}")"
-+
-+	local remote_traddr1
-+	remote_traddr1=$(printf "nn-%s:pn-%s" "${remote_wwnn1}" "${remote_wwpn1}")
-+	echo fc > /sys/kernel/config/nvmet/ports/${port1}/addr_adrfam
-+	echo "${remote_traddr1}" > /sys/kernel/config/nvmet/ports/${port1}/addr_traddr
-+
-+	local remote_traddr2
-+	remote_traddr2=$(printf "nn-%s:pn-%s" "${remote_wwnn2}" "${remote_wwpn2}")
-+	echo fc > /sys/kernel/config/nvmet/ports/${port2}/addr_adrfam
-+	echo "${remote_traddr2}" > /sys/kernel/config/nvmet/ports/${port2}/addr_traddr
-+
-+	truncate -s 1G "$TMPDIR/img"
-+
-+	local loop_dev
-+	loop_dev="$(losetup -f --show "$TMPDIR/img")"
-+
-+	_create_nvmet_subsystem "${subsys}" "${loop_dev}" \
-+		"91fdba0d-f87b-4c25-b80f-db7be1418b9e" "1"
-+	_add_nvmet_subsys_to_port "${port1}" "${subsys}"
-+	_add_nvmet_subsys_to_port "${port2}" "${subsys}"
-+
-+	_set_nvmet_anagroup_state "${port2}" "1" "inaccessible"
-+	_set_nvmet_anagroup_state "${port2}" "2" "optimized"
-+
-+	local host_traddr1
-+	host_traddr1=$(printf "nn-%s:pn-%s" "${host_wwnn1}" "${host_wwpn1}")
-+
-+	nvme connect -t fc -a "${remote_traddr1}"  -w "${host_traddr1}" \
-+		-n "${subsys}"
-+
-+	local host_traddr2
-+	host_traddr2=$(printf "nn-%s:pn-%s" "${host_wwnn2}" "${host_wwpn2}")
-+
-+	nvme connect -t fc -a "${remote_traddr2}"  -w "${host_traddr2}" \
-+		-n "${subsys}"
-+
-+	nvmedev="$(_find_nvme_ns 91fdba0d-f87b-4c25-b80f-db7be1418b9e)"
-+
-+	# Allow I/O to settle
-+	udevadm settle
-+
-+	nvme disconnect -n "${subsys}"
-+
-+	_remove_nvmet_subsystem_from_port "${port1}" "${subsys}"
-+	_remove_nvmet_subsystem_from_port "${port2}" "${subsys}"
-+	_remove_nvmet_subsystem "${subsys}"
-+	_remove_nvmet_anagroup "${port1}" "${ag1}"
-+	_remove_nvmet_port "${port1}"
-+	_remove_nvmet_anagroup "${port2}" "${ag2}"
-+	_remove_nvmet_port "${port2}"
-+
-+	losetup -d "$loop_dev"
-+	rm "$TMPDIR/img"
-+
-+	# Fixme: need to wait for RCU grace period
-+	sleep 5
-+
-+	_nvme_fcloop_del_rport "${host_wwnn1}" "${host_wwpn1}" \
-+		"${remote_wwnn1}" "${remote_wwpn1}"
-+	_nvme_fcloop_del_rport "${host_wwnn2}" "${host_wwpn2}" \
-+		"${remote_wwnn2}" "${remote_wwpn2}"
-+
-+	_nvme_fcloop_del_tport "${remote_wwnn1}" "${remote_wwpn1}"
-+	_nvme_fcloop_del_tport "${remote_wwnn2}" "${remote_wwpn2}"
-+
-+	_nvme_fcloop_del_lport "${host_wwnn1}" "${host_wwpn1}"
-+	_nvme_fcloop_del_lport "${host_wwnn2}" "${host_wwpn2}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/034.out b/tests/nvme/034.out
-new file mode 100644
-index 0000000..832d645
---- /dev/null
-+++ b/tests/nvme/034.out
-@@ -0,0 +1,3 @@
-+Running nvme/034
-+NQN:blktests-subsystem-1 disconnected 2 controller(s)
-+Test complete
+In this version of the series, we keep the shared sbitmap for driver tags,
+but omit the shared scheduler tags for now - I did not think that this was
+an essential feature and the premise was somewhat in doubt.
+
+Comments welcome, thanks!
+
+A copy of the patches can be found here:
+https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-rfc-v6-upstream
+
+Differences to v5:
+- For now, drop the shared scheduler tags
+- Fix megaraid SAS queue selection and rebase
+- Omit minor unused arguments patch, which has now been merged
+- Add separate patch to introduce sbitmap pointer
+- Fixed hctx_tags_bitmap_show() for shared sbitmap
+- Various tidying
+
+Differences to v4:
+- Rework scheduler tag allocations
+- Revert back to the original implementation from John
+
+Differences to v3:
+- Include reviews from Ming Lei
+
+Differences to v2:
+- Drop embedded tag bitmaps
+- Do not share scheduling tags
+- Add patches for hpsa and smartpqi
+
+Differences to v1:
+- Use a shared sbitmap, and not a separate shared tags (a big change!)
+	- Drop request.shared_tag
+- Add RB tags
+
+Hannes Reinecke (5):
+  blk-mq: rename blk_mq_update_tag_set_depth()
+  scsi: Add template flag 'host_tagset'
+  megaraid_sas: switch fusion adapters to MQ
+  smartpqi: enable host tagset
+  hpsa: enable host_tagset and switch to MQ
+
+John Garry (4):
+  blk-mq: Use pointers for blk_mq_tags bitmap tags
+  blk-mq: Facilitate a shared sbitmap per tagset
+  blk-mq: Add support in hctx_tags_bitmap_show() for a shared sbitmap
+  scsi: hisi_sas: Switch v3 hw to MQ
+
+Ming Lei (1):
+  blk-mq: rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
+
+ block/bfq-iosched.c                         |  4 +-
+ block/blk-mq-debugfs.c                      | 65 ++++++++++++--
+ block/blk-mq-tag.c                          | 97 ++++++++++++++-------
+ block/blk-mq-tag.h                          | 21 +++--
+ block/blk-mq.c                              | 60 +++++++++----
+ block/blk-mq.h                              |  5 ++
+ block/kyber-iosched.c                       |  4 +-
+ drivers/scsi/hisi_sas/hisi_sas.h            |  3 +-
+ drivers/scsi/hisi_sas/hisi_sas_main.c       | 36 ++++----
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c      | 87 ++++++++----------
+ drivers/scsi/hpsa.c                         | 44 ++--------
+ drivers/scsi/hpsa.h                         |  1 -
+ drivers/scsi/megaraid/megaraid_sas.h        |  1 -
+ drivers/scsi/megaraid/megaraid_sas_base.c   | 59 ++++---------
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 24 ++---
+ drivers/scsi/scsi_lib.c                     |  2 +
+ drivers/scsi/smartpqi/smartpqi_init.c       | 38 +++++---
+ include/linux/blk-mq.h                      |  5 +-
+ include/scsi/scsi_host.h                    |  3 +
+ 19 files changed, 325 insertions(+), 234 deletions(-)
+
 -- 
-2.13.7
+2.17.1
 
