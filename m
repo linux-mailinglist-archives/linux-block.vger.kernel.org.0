@@ -2,179 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 305FA17B03C
-	for <lists+linux-block@lfdr.de>; Thu,  5 Mar 2020 22:04:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA76F17B439
+	for <lists+linux-block@lfdr.de>; Fri,  6 Mar 2020 03:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgCEVES (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Mar 2020 16:04:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42698 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgCEVES (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:04:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 016C9ACC6;
-        Thu,  5 Mar 2020 21:04:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id EFAF41E0FC2; Thu,  5 Mar 2020 22:04:14 +0100 (CET)
-Date:   Thu, 5 Mar 2020 22:04:14 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH] loop: avoid EAGAIN, if offset or block_size are changed
-Message-ID: <20200305210414.GA1678@quack2.suse.cz>
-References: <20190518004751.18962-1-jaegeuk@kernel.org>
+        id S1726271AbgCFCNA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Mar 2020 21:13:00 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35032 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgCFCNA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Mar 2020 21:13:00 -0500
+Received: by mail-lj1-f194.google.com with SMTP id a12so536375ljj.2;
+        Thu, 05 Mar 2020 18:12:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilcZWM8ZZGGzsQ121o7bnqr5ZHvlnSG+PwQOyk4WfUQ=;
+        b=FVA0lJJ/UVF87q0yNXAwBPx7jptqSU9gtmbRoB5DMSCQJxG95cN8UOHHOFYIrq+Hsa
+         z+X21Kzc/TtOQ873XNcm+O2OiGL0zIs06DHI5QHhmNcjdleNedFV6ShzXQXlSP8VCFOL
+         5CsiXHwdRoLu9OyR/jOyx0qr91JzZdzk6iOhBO78Wit9khoT5CuSttz6gpvRuhplCVsW
+         KWG+V5fXhr+FTiDbRh+9fyIQJdR9n8J2Z+OF41+djKK/vW/0JH3jJuVhZrTgJmkatBBM
+         LCNtN1s2b7bihRe/3railPiE/SSjtvcanGL6mTup07OsHuS8MglrykTNjASoFNTZFWaw
+         6wUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilcZWM8ZZGGzsQ121o7bnqr5ZHvlnSG+PwQOyk4WfUQ=;
+        b=cvz8Lq/On2ybym2zML9hLejc1GD5lE4Dyh1+QRW5l/QZdUxc2m45IPjwIBe6uth7HR
+         5AvUi4cVRlJ33dkjugrMC75UTZZIxCplOXX5clysAPgeOn4TA7GusvCI5qZidjxwUzua
+         mY+hTFcTCcuu5Nfys+ar/YnRGkbu0mIOHTkfaw+9f3kHt7G6zaxi2uFHJ3FvNt7miAgU
+         ElnMfpN6Yh9S0oIman5a+tkTJLECyg5AaKi4IVcO9e7hxMJS8FNIAeQGHJd2tUayPzJE
+         5lSooNF/nhScyk7JyPsfPZkqrTuOoAtIIWjNkZdxV/nX6s7wMM/zOw4PTGjm7FrkGbn4
+         VQWw==
+X-Gm-Message-State: ANhLgQ1CMJgJwJJHrjW1OHrvecxSYUN7VMq6v84UhEusizXi+4ObEzyP
+        Ba7LYHCq5uDc9/2Om4+a2xY=
+X-Google-Smtp-Source: ADFU+vv89YsCSaHQES0hVkhZSZpx4D34syPpnu8JAalG97eto293yF2eAhv2e8yyVsHVRwybCLMlnQ==
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr601458lji.181.1583460778246;
+        Thu, 05 Mar 2020 18:12:58 -0800 (PST)
+Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.gmail.com with ESMTPSA id l11sm10592772lfg.87.2020.03.05.18.12.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 18:12:57 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] Introduce NVIDIA Tegra Partition Tablex
+Date:   Fri,  6 Mar 2020 05:12:12 +0300
+Message-Id: <20200306021220.22097-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190518004751.18962-1-jaegeuk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri 17-05-19 17:47:51, Jaegeuk Kim wrote:
-> This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
-> to drop stale pages resulting in wrong data access.
-> 
-> Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+Some NVIDIA Tegra devices have GPT entry at a wrong location and others may
+even not have it at all. So either a custom workaround for GPT parsing or
+TegraPT support is needed for those devices if we want to support them in
+upstream kernel. The former solution was already rejected [1], let's try
+the latter.
 
-...
+[1] https://patchwork.ozlabs.org/patch/1240809/
 
-> ---
->  drivers/block/loop.c | 44 +++++++++++++++++---------------------------
->  1 file changed, 17 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 102d79575895..7c7d2d9c47d0 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -1212,6 +1212,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->  	kuid_t uid = current_uid();
->  	struct block_device *bdev;
->  	bool partscan = false;
-> +	bool drop_caches = false;
->  
->  	err = mutex_lock_killable(&loop_ctl_mutex);
->  	if (err)
-> @@ -1232,10 +1233,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->  	}
->  
->  	if (lo->lo_offset != info->lo_offset ||
-> -	    lo->lo_sizelimit != info->lo_sizelimit) {
-> -		sync_blockdev(lo->lo_device);
-> -		kill_bdev(lo->lo_device);
-> -	}
-> +	    lo->lo_sizelimit != info->lo_sizelimit)
-> +		drop_caches = true;
+Big thanks to everyone who helped with figuring out the TegraPT format!
 
-I don't think this solution of moving buffer cache invalidation after loop
-device is updated is really correct.
+Changelog:
 
-If there's any dirty data in the buffer cache, god knows where it ends
-up being written after the loop device is reconfigured. Think e.g. of a
-file offset being changed. It may not be even possible to write it if say
-block size increased and we have now improperly sized buffers in the buffer
-cache...
+v2: - Addressed v1 review comments from Stephen Warren by using BIT for
+      locating BCT position in IRAM.
 
-Frankly, I have rather limited sympathy to someone trying to reconfigure a
-loop device while it is in use. Is there any sane usecase? I'd be inclined
-to just use a similar trick as we did with LOOP_SET_FD and allow these
-changes only if the caller has the loop device open exclusively or we are
-able to upgrade to exclusive open. As otherwise say mounted filesystem on
-top of loop device being reconfigured is very likely to be in serious
-trouble (e.g. it's impossible to fully invalidate buffer cache in that
-case).
+    - Added more validations to the TegraPT parser: partition type is
+      verified, eMMC instance ID is verified.
 
-But that's probably somewhat tangential to the problem you have. For your
-case I don't really see a race-free way to invalidate buffer cache and
-update loop configuration - the best I can see is to flush & invalidate
-the cache, freeze the bdev so that new data cannot be read into the
-buffer cache, check the cache is still empty - if yes, go ahead. If not,
-unfreeze and try again...
+    - TegraPT parser now doesn't touch any devices other than eMMC.
 
-								Honza
+    - EKS (encrypted keys) partition is blacklisted now.
 
->  	/* I/O need to be drained during transfer transition */
->  	blk_mq_freeze_queue(lo->lo_queue);
-> @@ -1265,14 +1264,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->  
->  	if (lo->lo_offset != info->lo_offset ||
->  	    lo->lo_sizelimit != info->lo_sizelimit) {
-> -		/* kill_bdev should have truncated all the pages */
-> -		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
-> -			err = -EAGAIN;
-> -			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
-> -				__func__, lo->lo_number, lo->lo_file_name,
-> -				lo->lo_device->bd_inode->i_mapping->nrpages);
-> -			goto out_unfreeze;
-> -		}
->  		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
->  			err = -EFBIG;
->  			goto out_unfreeze;
-> @@ -1317,6 +1308,12 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->  		bdev = lo->lo_device;
->  		partscan = true;
->  	}
-> +
-> +	/* truncate stale pages cached by previous operations */
-> +	if (!err && drop_caches) {
-> +		sync_blockdev(lo->lo_device);
-> +		kill_bdev(lo->lo_device);
-> +	}
->  out_unlock:
->  	mutex_unlock(&loop_ctl_mutex);
->  	if (partscan)
-> @@ -1498,6 +1495,7 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
->  
->  static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
->  {
-> +	bool drop_caches = false;
->  	int err = 0;
->  
->  	if (lo->lo_state != Lo_bound)
-> @@ -1506,23 +1504,10 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
->  	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
->  		return -EINVAL;
->  
-> -	if (lo->lo_queue->limits.logical_block_size != arg) {
-> -		sync_blockdev(lo->lo_device);
-> -		kill_bdev(lo->lo_device);
-> -	}
-> +	if (lo->lo_queue->limits.logical_block_size != arg)
-> +		drop_caches = true;
->  
->  	blk_mq_freeze_queue(lo->lo_queue);
-> -
-> -	/* kill_bdev should have truncated all the pages */
-> -	if (lo->lo_queue->limits.logical_block_size != arg &&
-> -			lo->lo_device->bd_inode->i_mapping->nrpages) {
-> -		err = -EAGAIN;
-> -		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
-> -			__func__, lo->lo_number, lo->lo_file_name,
-> -			lo->lo_device->bd_inode->i_mapping->nrpages);
-> -		goto out_unfreeze;
-> -	}
-> -
->  	blk_queue_logical_block_size(lo->lo_queue, arg);
->  	blk_queue_physical_block_size(lo->lo_queue, arg);
->  	blk_queue_io_min(lo->lo_queue, arg);
-> @@ -1530,6 +1515,11 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
->  out_unfreeze:
->  	blk_mq_unfreeze_queue(lo->lo_queue);
->  
-> +	/* truncate stale pages cached by previous operations */
-> +	if (drop_caches) {
-> +		sync_blockdev(lo->lo_device);
-> +		kill_bdev(lo->lo_device);
-> +	}
->  	return err;
->  }
->  
+    - Implemented eMMC boot partitions scanning. These new patches are
+      added in a result:
+
+        mmc: block: Add mmc_bdev_to_part_type() helper
+        mmc: block: Add mmc_bdev_to_area_type() helper
+        mmc: block: Add MMC_QUIRK_RESCAN_MAIN_BLKDEV
+        mmc: block: Enable partition-table scanning for boot partitions
+        partitions/tegra: Implement eMMC boot partitions scanning
+
+Dmitry Osipenko (8):
+  mmc: core: Add raw_boot_mult field to mmc_ext_csd
+  mmc: block: Add mmc_bdev_to_card() helper
+  partitions: Introduce NVIDIA Tegra Partition Table
+  mmc: block: Add mmc_bdev_to_part_type() helper
+  mmc: block: Add mmc_bdev_to_area_type() helper
+  mmc: block: Add MMC_QUIRK_RESCAN_MAIN_BLKDEV
+  mmc: block: Enable partition-table scanning for boot partitions
+  partitions/tegra: Implement eMMC boot partitions scanning
+
+ arch/arm/mach-tegra/tegra.c   |  54 +++
+ block/partitions/Kconfig      |   9 +
+ block/partitions/Makefile     |   1 +
+ block/partitions/check.c      |   4 +
+ block/partitions/tegra.c      | 608 ++++++++++++++++++++++++++++++++++
+ block/partitions/tegra.h      |  83 +++++
+ drivers/mmc/core/block.c      |  85 ++++-
+ drivers/mmc/core/mmc.c        |   2 +
+ include/linux/mmc/blkdev.h    |  15 +
+ include/linux/mmc/card.h      |   2 +
+ include/soc/tegra/bootdata.h  |  46 +++
+ include/soc/tegra/common.h    |   9 +
+ include/soc/tegra/partition.h |  18 +
+ 13 files changed, 934 insertions(+), 2 deletions(-)
+ create mode 100644 block/partitions/tegra.c
+ create mode 100644 block/partitions/tegra.h
+ create mode 100644 include/linux/mmc/blkdev.h
+ create mode 100644 include/soc/tegra/bootdata.h
+ create mode 100644 include/soc/tegra/partition.h
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
