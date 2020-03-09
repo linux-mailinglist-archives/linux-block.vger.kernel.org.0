@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF3AA17EB5E
-	for <lists+linux-block@lfdr.de>; Mon,  9 Mar 2020 22:42:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA7917EB5F
+	for <lists+linux-block@lfdr.de>; Mon,  9 Mar 2020 22:42:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgCIVmQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Mar 2020 17:42:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38972 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgCIVmQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Mar 2020 17:42:16 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m13so13796524edb.6
-        for <linux-block@vger.kernel.org>; Mon, 09 Mar 2020 14:42:13 -0700 (PDT)
+        id S1727095AbgCIVmR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Mar 2020 17:42:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34419 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbgCIVmR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Mar 2020 17:42:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id c21so13821883edt.1
+        for <linux-block@vger.kernel.org>; Mon, 09 Mar 2020 14:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PNMYVTyVQxW/Xuk8DRsaSA6RKwc3tmfh5S/KRiKryIA=;
-        b=D+8Qg09R6q/LhGmAOM4zf9Y3K44eHoBziCMZYu1GSWkjDOj5OmSSRBt8lUB8cxKoSp
-         p9rqKqr1hr5qWPClRqnGr5Jx2BsbeOol6HmLUOQ2CmJ7SnO7/sTQr5BFmzsO7k2qX32f
-         A73gj+jc/X6kGrknM9Tx87tMJ2R0PQcRw9/a2MkWMzj0Q+tx8jkaK5A6WAGQK+qrYDqV
-         AsC5OtUVDdn8UuerqUAjawfmEyhsYXpyp4YzJGNBfbSBwvq9MTPBaiEFOdKRsWbJTe2n
-         uh5TO0H5OKK4wX5b2FS/nkxMinsCZYDvmOVnz8wkeWb4MTqgcFWFHIyK1YXqlQescNZy
-         Hxkg==
+        bh=WPN6D+ixHFS4V2sd3bb6fpXub9mV2zJVFHpgTOskRBg=;
+        b=Ua/AV2PwvKgWUM34wUoJYavx3VXuZxZmRSQ3UfUc1eMaiBCApznJvYfZLOqYQOwNyY
+         SSs4NzBJqPSGf6yn/DajptwYYU7awTuE2IK09h2U2xU9ZzacgCSeWH2vJ0qasr9KJ7wK
+         KpqsRM+7OkOHUxRauGt0x8d8wlfVrpxdCSKw+hms6RutrYJca1qTD09TIPbGTr99ZyJa
+         n9JfuY8GFA3953N2Zd9WAvtHUfyyAJT/bLA+dXzXNtEzuXfe3LFtdztzQNKMoUAKIFtx
+         Mzy0bBI09AcK2JrigAoNeEVvWtU4cPeemMptIVNSRRfMDLBeQXTNcUl8BE65bvOmFxVW
+         F3LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PNMYVTyVQxW/Xuk8DRsaSA6RKwc3tmfh5S/KRiKryIA=;
-        b=snSKaqNtQ3E3kuIsJMi8HrHA+tx6SGSwHOfOGlge/5YImt9VM1raOUkFnTscn3Del+
-         65ejTKD0vf+bpcwlRVMA0FIndBNDKO4I/eY4eVLuDEBINW+ybbFAkwK2nNPPxKA/HO2z
-         yCaFH8mAS6lt4/t6IFt7bzGVF2++LQLCygNnrjKY9ePIewPLU6mEZ8/1oWVJNOMTylbh
-         difCXyq9Y7rTa95EG4brhtDy9nU3TxvofgnqKibmKV0DmC7502XUxuaRAQwXb/sCzmZY
-         AM5fALSGxz3LIEZJ0emfXNpqFWU4rPYF5Nhe0KITkWLzQhbufojOLVskXB4oiUduK3vK
-         /dsA==
-X-Gm-Message-State: ANhLgQ3G8e+bvLeWRJFmfHf7i24e0NDqpkMcE6q/f5vmMado5197MZ6D
-        wnKcDZo3HpPPQbQEqov9o7JyXg==
-X-Google-Smtp-Source: ADFU+vs+W7pZMjFzMel2GprIKeFPCgFc9jO5HuA1EMgaCxEEel27cVLYITIDH9A3GUYr+jXe9XYQAg==
-X-Received: by 2002:a50:9fe2:: with SMTP id c89mr19428710edf.371.1583790133184;
-        Mon, 09 Mar 2020 14:42:13 -0700 (PDT)
+        bh=WPN6D+ixHFS4V2sd3bb6fpXub9mV2zJVFHpgTOskRBg=;
+        b=D4gkSQBsw3oiVsV//LvcRMc+osLgh6uBKUCxoIKDEUdbTVcnWjVjlIsVq/U0BdbCdU
+         iI331N/xKsj84jqJWOuxjXIEYnmkdC3OdzkKrGuOOdIFN95cWNtyV6e+cqg7QEVKisMa
+         wNGZoaxeIzonw8/NUuI9UJ+4xqc0sOjPWM1rPLjWfEe7KbgbiqWnJPCt0/mHhl7yiMeT
+         0esfshyW/4Wlv5y0qV1+4dnvMofv4ZSlA5bmd5mEtj3Pf2ErUHLuS2rXEtjJ6RnLLB0p
+         pe1CnbkQtq+QL91p+e4t3NTLXvbhjfNwx2hnVmUWWZNyYAHHvYl6eTWaeSPK8mL1JUPf
+         2KJQ==
+X-Gm-Message-State: ANhLgQ1VlX/nAQlGvL/EDOukgfFADU7o7VAG8YMe0JTJ1zuX5V0aDKiX
+        04nvOCkYz2/nN7mUin7phL+juQ==
+X-Google-Smtp-Source: ADFU+vvtUoGn7yo/CVcin+6Ctu5uQRqaamKvendYKhUo+S37zAMeEibevK68oclcqYySFRzhbYj1JA==
+X-Received: by 2002:a17:906:5901:: with SMTP id h1mr16863342ejq.108.1583790134313;
+        Mon, 09 Mar 2020 14:42:14 -0700 (PDT)
 Received: from nb01257.fritz.box ([2001:16b8:4824:700:55b0:6e1e:26ab:27a5])
-        by smtp.gmail.com with ESMTPSA id g6sm3828488edm.29.2020.03.09.14.42.11
+        by smtp.gmail.com with ESMTPSA id g6sm3828488edm.29.2020.03.09.14.42.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:42:12 -0700 (PDT)
+        Mon, 09 Mar 2020 14:42:13 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH V2 3/6] block: remove redundant setting of QUEUE_FLAG_DYING
-Date:   Mon,  9 Mar 2020 22:41:35 +0100
-Message-Id: <20200309214138.30770-4-guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH V2 4/6] block: cleanup for _blk/blk_rq_prep_clone
+Date:   Mon,  9 Mar 2020 22:41:36 +0100
+Message-Id: <20200309214138.30770-5-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309214138.30770-1-guoqing.jiang@cloud.ionos.com>
 References: <20200309214138.30770-1-guoqing.jiang@cloud.ionos.com>
@@ -58,29 +58,72 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Previously, blk_cleanup_queue has called blk_set_queue_dying to set the
-flag, no need to do it again.
+Both cmd and sense had been moved to scsi_request, so remove
+the related comments to avoid confusion.
 
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+And as Bart suggested, move _blk_rq_prep_clone into the only
+caller (blk_rq_prep_clone).
+
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- block/blk-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ block/blk-core.c | 30 ++++++++++--------------------
+ 1 file changed, 10 insertions(+), 20 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 6d36c2ad40ba..883ffda216e4 100644
+index 883ffda216e4..4433f5276250 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -346,7 +346,6 @@ void blk_cleanup_queue(struct request_queue *q)
+@@ -1581,23 +1581,6 @@ void blk_rq_unprep_clone(struct request *rq)
+ }
+ EXPORT_SYMBOL_GPL(blk_rq_unprep_clone);
  
- 	blk_queue_flag_set(QUEUE_FLAG_NOMERGES, q);
- 	blk_queue_flag_set(QUEUE_FLAG_NOXMERGES, q);
--	blk_queue_flag_set(QUEUE_FLAG_DYING, q);
+-/*
+- * Copy attributes of the original request to the clone request.
+- * The actual data parts (e.g. ->cmd, ->sense) are not copied.
+- */
+-static void __blk_rq_prep_clone(struct request *dst, struct request *src)
+-{
+-	dst->__sector = blk_rq_pos(src);
+-	dst->__data_len = blk_rq_bytes(src);
+-	if (src->rq_flags & RQF_SPECIAL_PAYLOAD) {
+-		dst->rq_flags |= RQF_SPECIAL_PAYLOAD;
+-		dst->special_vec = src->special_vec;
+-	}
+-	dst->nr_phys_segments = src->nr_phys_segments;
+-	dst->ioprio = src->ioprio;
+-	dst->extra_len = src->extra_len;
+-}
+-
+ /**
+  * blk_rq_prep_clone - Helper function to setup clone request
+  * @rq: the request to be setup
+@@ -1610,8 +1593,6 @@ static void __blk_rq_prep_clone(struct request *dst, struct request *src)
+  *
+  * Description:
+  *     Clones bios in @rq_src to @rq, and copies attributes of @rq_src to @rq.
+- *     The actual data parts of @rq_src (e.g. ->cmd, ->sense)
+- *     are not copied, and copying such parts is the caller's responsibility.
+  *     Also, pages which the original bios are pointing to are not copied
+  *     and the cloned bios just point same pages.
+  *     So cloned bios must be completed before original bios, which means
+@@ -1642,7 +1623,16 @@ int blk_rq_prep_clone(struct request *rq, struct request *rq_src,
+ 			rq->bio = rq->biotail = bio;
+ 	}
  
- 	/*
- 	 * Drain all requests queued before DYING marking. Set DEAD flag to
+-	__blk_rq_prep_clone(rq, rq_src);
++	/* Copy attributes of the original request to the clone request. */
++	rq->__sector = blk_rq_pos(rq_src);
++	rq->__data_len = blk_rq_bytes(rq_src);
++	if (rq_src->rq_flags & RQF_SPECIAL_PAYLOAD) {
++		rq->rq_flags |= RQF_SPECIAL_PAYLOAD;
++		rq->special_vec = rq_src->special_vec;
++	}
++	rq->nr_phys_segments = rq_src->nr_phys_segments;
++	rq->ioprio = rq_src->ioprio;
++	rq->extra_len = rq_src->extra_len;
+ 
+ 	return 0;
+ 
 -- 
 2.17.1
 
