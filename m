@@ -2,98 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB2A17FAA7
-	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 14:07:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B640217FC19
+	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 14:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgCJNHL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Mar 2020 09:07:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55817 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730920AbgCJNHL (ORCPT
+        id S1731386AbgCJNSn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Mar 2020 09:18:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33865 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731315AbgCJNKT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 6so1316605wmi.5
-        for <linux-block@vger.kernel.org>; Tue, 10 Mar 2020 06:07:09 -0700 (PDT)
+        Tue, 10 Mar 2020 09:10:19 -0400
+Received: by mail-io1-f66.google.com with SMTP id h131so11973145iof.1
+        for <linux-block@vger.kernel.org>; Tue, 10 Mar 2020 06:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PP63n4exnMNKX7lpvmvyJwMQWnXIxOlpOmy5QQY9xLA=;
-        b=MFD38q7BzBjfElXqAV7xBgBy4BXd4rBDKr7W+kAopPCUZCNA/zrSAWTJTKbG+oxOPr
-         AmfDSgyk63mq6fscWU8aPQOChW8ehrZdp1sE5NpXlcEV4hUUgdkkGaG8I2hP3td7kksZ
-         zie2znp15Ow4/+KpsIM28rxV5SVJyLX9y4cH2W2iIMBZpg7SsmWGQdU085OXLbZwyws4
-         eUCwyhhgiT+fpl/lnKbL0axo6NoVsJgrexFSl1X/1mmSXIG+72e8bOG63QW/a+/RuntM
-         hveu9qnbXmI6vIJYuZJSpplVYSeQKraoaKTtH2s2pEEFgQd66L8m2f2iOa4PkmZNzI5N
-         8kHA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UUrMv36zRnXkHf6Asqo5OYZ49ZjO94p/ePSfPLoDD+0=;
+        b=y9KsGApxeWW4bXMF/eML312C8m5yz0+k9k/rMVZdh2TJp5z2v0/zHiEph3X+d5m1Vl
+         OrKzvyCQWZo/hAA8y+7zjn+n3NhEr3t0CKtBR9Hy8Kz4XxpzkpBoBzpGENnqpGkAX38Y
+         aEffyNzpTIqhVjnS5AoPZHtFVrDhd3XehfGlqQSSTKy7P6HI5O3rFk65klnLRaLij8Av
+         154wdDsHVmhct6MDBmK/xIVdXL7MuZuYoLEr8tfMtOcl0not2SApfHE7b/hxhlCnLSL6
+         xmxZrYDQg7yYdpxJwDIft/k0QB4N2PwZlbP/zVLGAtF4zgSGpcxZ1WEmwCqwwQey7Bfe
+         gkcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PP63n4exnMNKX7lpvmvyJwMQWnXIxOlpOmy5QQY9xLA=;
-        b=NO5DsmFt3TvJghlrt4FlQ8yZ4Bn8+UD/oNzVBEd+x5sIYOLJcxfGzGOT2XJgIXuUwl
-         FTvZwla6tFPhupv9ebWyn6280GwvLnK4s3badsMqQikNXWdXFb2rTFY+35LDvAChTuBx
-         Np3kkRoa2+hDlfaRO0Cmxz4B5gKKYfqjFkGATaQY5NxBoq1+SGOYR5Ks+FB+AXg1gDI8
-         jsnUKDjdGi7Hx2z7NRH3tZrL+JrjvjUrRcWxIGwvXmgUiEBb/mTtH37sQdM9oCNVDfNq
-         Od0IOEVDafP5tOvPN2m1QCi+8QlNIQ14F7AQ4NQFhWvziIQ+0ylPVWZLCR9N75aW840E
-         pf8Q==
-X-Gm-Message-State: ANhLgQ1oMhkg/AYOb3CvatdUCwjFZfMiPJQToyuZB+VLMR0TO7P8BLKT
-        qCK9WQFgIu0r3xaSGF+CCzVC1g==
-X-Google-Smtp-Source: ADFU+vtEsPNZPcMrSWBibyD6jxev3SWQJHDu3DoFC+EAYrSBKkEFpF1BuZh38BFU06MmgQFunOgrFQ==
-X-Received: by 2002:a1c:4642:: with SMTP id t63mr2084570wma.164.1583845628929;
-        Tue, 10 Mar 2020 06:07:08 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id w22sm4129323wmk.34.2020.03.10.06.07.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 06:07:07 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de
-Cc:     bvanassche@acm.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH] loop: Only freeze block queue when needed.
-Date:   Tue, 10 Mar 2020 14:06:54 +0100
-Message-Id: <20200310130654.92205-1-maco@android.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        bh=UUrMv36zRnXkHf6Asqo5OYZ49ZjO94p/ePSfPLoDD+0=;
+        b=CcEP/qtzblqFtflgx+zoXK4XL36yFg3O7XJSiiQ9TmHEl+uaSObY94EFzpS4nHD9ZD
+         ZyEHOEYmYl+yb70+P8bY5ITwA+CcMlhD4f2nkf8t4dPyn+y43QUSOU/0kwF/7zeGGBW3
+         7HdkfCju+s8njtr8+ZwHqB8zcXui4eHV5YEY08nvq2S6uTBW/vf5snuIETlT4FJodYAp
+         y7k//yUXRNzPw084NM+snQYyhvWOzLZoO9ovhyf35jvCMUazsjv0jmWVG0WiwZo7enRK
+         ef7Rb8fTmjDRBmQwAx7r4EFIRBhls1fl/s2x+DaL+vzivUKu8M8CIAeNaxVsap8L/h8M
+         y0zg==
+X-Gm-Message-State: ANhLgQ1RcKHkoiEU+0A+qK23uQ/C5+nFSHs+xG9cb8Ge5NbOwtN70SOE
+        8I7ohVxO5sv3ArsXzVCTF7KnXQ==
+X-Google-Smtp-Source: ADFU+vsXmw4yjiLjFO+x46Yj/AB/A5j+a7XfI5z4kZBPNozeTU0zocrBCi23jRfaMwTr0+0NPAcWjw==
+X-Received: by 2002:a5d:9f13:: with SMTP id q19mr17173953iot.69.1583845818301;
+        Tue, 10 Mar 2020 06:10:18 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w22sm396739ili.71.2020.03.10.06.10.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 06:10:17 -0700 (PDT)
+Subject: Re: [PATCH v4 0/8] Improve changing the number of hardware queues
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20200310042623.20779-1-bvanassche@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <eadcc805-a159-2c64-c50b-7563cc8fc592@kernel.dk>
+Date:   Tue, 10 Mar 2020 07:10:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310042623.20779-1-bvanassche@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-__loop_update_dio() can be called as a part of loop_set_fd(), when the
-block queue is not yet up and running; avoid freezing the block queue in
-that case, since that is an expensive operation.
+On 3/9/20 10:26 PM, Bart Van Assche wrote:
+> Hi Jens,
+> 
+> These patches are what I came up with while analyzing syzbot and blktests
+> complaints related to dynamically changing the number of hardware queues.
+> Please consider these patches for the upstream kernel.
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Applied for 5.7, thanks Bart.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..c1c844ad6b1a 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -214,7 +214,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
- 	 * LO_FLAGS_READ_ONLY, both are set from kernel, and losetup
- 	 * will get updated by ioctl(LOOP_GET_STATUS)
- 	 */
--	blk_mq_freeze_queue(lo->lo_queue);
-+	if (lo->lo_state == Lo_bound)
-+		blk_mq_freeze_queue(lo->lo_queue);
- 	lo->use_dio = use_dio;
- 	if (use_dio) {
- 		blk_queue_flag_clear(QUEUE_FLAG_NOMERGES, lo->lo_queue);
-@@ -223,7 +224,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
- 		blk_queue_flag_set(QUEUE_FLAG_NOMERGES, lo->lo_queue);
- 		lo->lo_flags &= ~LO_FLAGS_DIRECT_IO;
- 	}
--	blk_mq_unfreeze_queue(lo->lo_queue);
-+	if (lo->lo_state == Lo_bound)
-+		blk_mq_unfreeze_queue(lo->lo_queue);
- }
- 
- static int
 -- 
-2.25.1.481.gfbce0eb801-goog
+Jens Axboe
 
