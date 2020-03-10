@@ -2,94 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 363FE180361
-	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B0721803BF
+	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:42:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCJQbR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Mar 2020 12:31:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11219 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727464AbgCJQbQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:31:16 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C9E836DEA0F079C9BFAD;
-        Wed, 11 Mar 2020 00:30:38 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 00:30:32 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <hare@suse.de>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hch@infradead.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC v2 24/24] scsi: hisi_sas: Use libsas slow task SCSI command
-Date:   Wed, 11 Mar 2020 00:25:50 +0800
-Message-ID: <1583857550-12049-25-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+        id S1726497AbgCJQmc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Mar 2020 12:42:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53386 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgCJQmc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:42:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OD+nprfZaFcbxeG2a36sbeRwNh3eux46qu3CwbbPO8U=; b=r/icAaHdh7hJTNlYV4K6ua85UV
+        zKOM+Hg/UnCozR3fliYS+ntqvzcA72vxzsYG1kRT9eIdtpVMqvZrCeZAW7sRsOOagdJhe8beI95S9
+        voGuiWK3X8nDO9xvmL5hcsE/LG2WaLT9/aqHP17BK32nqU4uXbAMX1yW1kHaqR3PclFjRyKCB/fzo
+        99xcCk477K0YNml20BgXo38WTe1tsJ6Cs06j0AMPnXeSucf9Su/UA4GTXZ+TPiYRBrPtI/36lQ0b7
+        pjnZj/swKU+2gc/ivOHkSfBmnGfvSUGNO6QzGxHPWtPu/8x5FZ4Tn4Xzwec1227b33A2W49Bv473y
+        JTBALVIQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBhxd-0004Em-KL; Tue, 10 Mar 2020 16:42:29 +0000
+Date:   Tue, 10 Mar 2020 09:42:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Keith Busch <kbusch@kernel.org>,
+        "linux-scsi @ vger . kernel . org" <linux-scsi@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 00/11] Introduce Zone Append for writing to zoned block
+ devices
+Message-ID: <20200310164229.GA15878@infradead.org>
+References: <20200310094653.33257-1-johannes.thumshirn@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310094653.33257-1-johannes.thumshirn@wdc.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that a SCSI command can be allocated for a libsas slow tasks, make the
-task prep code use it.
+On Tue, Mar 10, 2020 at 06:46:42PM +0900, Johannes Thumshirn wrote:
+> For null_blk the emulation is way simpler, as null_blk's zoned block
+> device emulation support already caches the write pointer position, so we
+> only need to report the position back to the upper layers. Additional
+> caching is not needed here.
+> 
+> Testing has been conducted by translating RWF_APPEND DIOs into
+> REQ_OP_ZONE_APPEND commands in the block device's direct I/O function and
+> injecting errors by bypassing the block layer interface and directly
+> writing to the disc via the SCSI generic interface.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 5 ++++-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 5 +++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index c7951ac8b075..61039f3608c8 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -476,8 +476,10 @@ static int hisi_sas_task_prep(struct sas_task *task,
- 			} else {
- 				scsi_cmnd = task->uldd_task;
- 			}
-+		} else if (task->slow_task) {
-+			scsi_cmnd = task->slow_task->scmd;
- 		}
--		rc  = hisi_sas_slot_index_alloc(hisi_hba, scsi_cmnd);
-+		rc = hisi_sas_slot_index_alloc(hisi_hba, scsi_cmnd);
- 	}
- 	if (rc < 0)
- 		goto err_out_dif_dma_unmap;
-@@ -2650,6 +2652,7 @@ int hisi_sas_probe(struct platform_device *pdev,
- 	} else {
- 		shost->can_queue = HISI_SAS_UNRESERVED_IPTT;
- 		shost->cmd_per_lun = HISI_SAS_UNRESERVED_IPTT;
-+		shost->nr_reserved_cmds = HISI_SAS_RESERVED_IPTT;
- 	}
- 
- 	sha->sas_ha_name = DRV_NAME;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index a2debe0c8185..44530f8c0319 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3237,8 +3237,9 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	shost->max_lun = ~0;
- 	shost->max_channel = 1;
- 	shost->max_cmd_len = 16;
--	shost->can_queue = HISI_SAS_UNRESERVED_IPTT;
--	shost->cmd_per_lun = HISI_SAS_UNRESERVED_IPTT;
-+	shost->can_queue = HISI_SAS_MAX_COMMANDS;
-+	shost->cmd_per_lun = HISI_SAS_MAX_COMMANDS;
-+	shost->nr_reserved_cmds = HISI_SAS_RESERVED_IPTT;
- 
- 	sha->sas_ha_name = DRV_NAME;
- 	sha->dev = dev;
--- 
-2.17.1
-
+We really need a user of this to be useful upstream.  Didn't you plan
+to look into converting zonefs/iomap to use it?  Without that it is
+at best a RFC.  Even better would be converting zonefs and the f2fs
+zoned code so that can get rid of the old per-zone serialization in
+the I/O scheduler entirely.
