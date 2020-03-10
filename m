@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E763A180388
-	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:32:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 630CE180378
+	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:31:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgCJQb5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Mar 2020 12:31:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35668 "EHLO huawei.com"
+        id S1726633AbgCJQbl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Mar 2020 12:31:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35778 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727075AbgCJQao (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:30:44 -0400
+        id S1727092AbgCJQap (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:30:45 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EE4AD346438384E4A2EA;
-        Wed, 11 Mar 2020 00:30:33 +0800 (CST)
+        by Forcepoint Email with ESMTP id 00CF6BD5A10424B2E4AA;
+        Wed, 11 Mar 2020 00:30:34 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 00:30:24 +0800
+ 14.3.487.0; Wed, 11 Mar 2020 00:30:25 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>, <hare@suse.de>,
@@ -26,9 +26,9 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
         Hannes Reinecke <hare@suse.com>
-Subject: [PATCH RFC v2 03/24] blk-mq: Implement blk_mq_rq_is_reserved()
-Date:   Wed, 11 Mar 2020 00:25:29 +0800
-Message-ID: <1583857550-12049-4-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC v2 04/24] scsi: Add scsi_{get, put}_reserved_cmd()
+Date:   Wed, 11 Mar 2020 00:25:30 +0800
+Message-ID: <1583857550-12049-5-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
 References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
@@ -43,51 +43,70 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Hannes Reinecke <hare@suse.com>
 
-Add function to check if a blk-mq request is from the reserved pool
+Implement a function to allocate a SCSI command from the reserved
+tag pool using the host-wide reserved command queue.
 
 Signed-off-by: Hannes Reinecke <hare@suse.com>
 ---
- block/blk-mq.c         | 13 +++++++++++++
- include/linux/blk-mq.h |  2 ++
- 2 files changed, 15 insertions(+)
+ drivers/scsi/scsi_lib.c  | 30 ++++++++++++++++++++++++++++++
+ include/scsi/scsi_cmnd.h |  3 +++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index d92088dec6c3..603c60a1956c 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -269,6 +269,19 @@ static inline bool blk_mq_need_time_stamp(struct request *rq)
- 	return (rq->rq_flags & (RQF_IO_STAT | RQF_STATS)) || rq->q->elevator;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index e809b0e30a11..af4f56cd0093 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1927,6 +1927,36 @@ void scsi_mq_destroy_tags(struct Scsi_Host *shost)
+ 	blk_mq_free_tag_set(&shost->tag_set);
  }
  
-+/**
-+ * blk_mq_rq_is_reserved - Check if a request has a reserved tag
-+ *
-+ * @rq: Request to check
-+ */
-+bool blk_mq_rq_is_reserved(struct request *rq)
++struct scsi_cmnd *scsi_get_reserved_cmd(struct Scsi_Host *shost)
 +{
-+	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
++	struct scsi_cmnd *scmd;
++	struct request *rq;
 +
-+	return blk_mq_tag_is_reserved(hctx->tags, rq->tag);
++	if (WARN_ON(!shost->reserved_cmd_q))
++		return NULL;
++
++	rq = blk_mq_alloc_request(shost->reserved_cmd_q,
++				  REQ_OP_DRV_OUT | REQ_NOWAIT,
++				  BLK_MQ_REQ_RESERVED);
++	if (IS_ERR(rq))
++		return NULL;
++	WARN_ON(rq->tag == -1);
++	scmd = blk_mq_rq_to_pdu(rq);
++	scmd->request = rq;
++
++	return scmd;
 +}
-+EXPORT_SYMBOL_GPL(blk_mq_rq_is_reserved);
++EXPORT_SYMBOL_GPL(scsi_get_reserved_cmd);
 +
- static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 		unsigned int tag, unsigned int op, u64 alloc_time_ns)
- {
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 11cfd6470b1a..8bdc35ac4a63 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -548,6 +548,8 @@ static inline void *blk_mq_rq_to_pdu(struct request *rq)
- 	return rq + 1;
++void scsi_put_reserved_cmd(struct scsi_cmnd *scmd)
++{
++	struct request *rq = blk_mq_rq_from_pdu(scmd);
++
++	if (blk_mq_rq_is_reserved(rq))
++		blk_mq_free_request(rq);
++}
++EXPORT_SYMBOL_GPL(scsi_put_reserved_cmd);
++
+ /**
+  * scsi_device_from_queue - return sdev associated with a request_queue
+  * @q: The request queue to return the sdev from
+diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+index a2849bb9cd19..82a4499539b3 100644
+--- a/include/scsi/scsi_cmnd.h
++++ b/include/scsi/scsi_cmnd.h
+@@ -159,6 +159,9 @@ static inline struct scsi_driver *scsi_cmd_to_driver(struct scsi_cmnd *cmd)
+ 	return *(struct scsi_driver **)cmd->request->rq_disk->private_data;
  }
  
-+bool blk_mq_rq_is_reserved(struct request *rq);
++struct scsi_cmnd *scsi_get_reserved_cmd(struct Scsi_Host *shost);
++void scsi_put_reserved_cmd(struct scsi_cmnd *);
 +
- #define queue_for_each_hw_ctx(q, hctx, i)				\
- 	for ((i) = 0; (i) < (q)->nr_hw_queues &&			\
- 	     ({ hctx = (q)->queue_hw_ctx[i]; 1; }); (i)++)
+ extern void scsi_put_command(struct scsi_cmnd *);
+ extern void scsi_finish_command(struct scsi_cmnd *cmd);
+ 
 -- 
 2.17.1
 
