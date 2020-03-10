@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FE94180383
-	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9D4618037F
+	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:31:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgCJQak (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Mar 2020 12:30:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35482 "EHLO huawei.com"
+        id S1727590AbgCJQbs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Mar 2020 12:31:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35780 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726703AbgCJQaj (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:30:39 -0400
+        id S1727097AbgCJQap (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:30:45 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B99CE405C853ED6677D0;
-        Wed, 11 Mar 2020 00:30:33 +0800 (CST)
+        by Forcepoint Email with ESMTP id 079F44E3E4A0CD650864;
+        Wed, 11 Mar 2020 00:30:34 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
  14.3.487.0; Wed, 11 Mar 2020 00:30:24 +0800
@@ -26,9 +26,9 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
         Hannes Reinecke <hare@suse.com>
-Subject: [PATCH RFC v2 01/24] scsi: add 'nr_reserved_cmds' field to the SCSI host template
-Date:   Wed, 11 Mar 2020 00:25:27 +0800
-Message-ID: <1583857550-12049-2-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved commands
+Date:   Wed, 11 Mar 2020 00:25:28 +0800
+Message-ID: <1583857550-12049-3-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
 References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
@@ -43,45 +43,65 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Hannes Reinecke <hare@suse.com>
 
-Add a new field 'nr_reserved_cmds' to the SCSI host template to
-instruct the block layer to set aside a tag space for reserved
-commands.
+Allocate a separate 'reserved_cmd_q' for sending reserved commands.
 
 Signed-off-by: Hannes Reinecke <hare@suse.com>
 ---
- drivers/scsi/scsi_lib.c  | 1 +
- include/scsi/scsi_host.h | 6 ++++++
- 2 files changed, 7 insertions(+)
+ drivers/scsi/scsi_lib.c  | 17 ++++++++++++++++-
+ include/scsi/scsi_host.h |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 610ee41fa54c..2967325df7a0 100644
+index 2967325df7a0..e809b0e30a11 100644
 --- a/drivers/scsi/scsi_lib.c
 +++ b/drivers/scsi/scsi_lib.c
-@@ -1896,6 +1896,7 @@ int scsi_mq_setup_tags(struct Scsi_Host *shost)
- 		shost->tag_set.ops = &scsi_mq_ops_no_commit;
- 	shost->tag_set.nr_hw_queues = shost->nr_hw_queues ? : 1;
- 	shost->tag_set.queue_depth = shost->can_queue;
-+	shost->tag_set.reserved_tags = shost->nr_reserved_cmds;
- 	shost->tag_set.cmd_size = cmd_size;
- 	shost->tag_set.numa_node = NUMA_NO_NODE;
- 	shost->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
+@@ -1881,6 +1881,7 @@ struct request_queue *scsi_mq_alloc_queue(struct scsi_device *sdev)
+ int scsi_mq_setup_tags(struct Scsi_Host *shost)
+ {
+ 	unsigned int cmd_size, sgl_size;
++	int ret;
+ 
+ 	sgl_size = max_t(unsigned int, sizeof(struct scatterlist),
+ 				scsi_mq_inline_sgl_size(shost));
+@@ -1904,11 +1905,25 @@ int scsi_mq_setup_tags(struct Scsi_Host *shost)
+ 		BLK_ALLOC_POLICY_TO_MQ_FLAG(shost->hostt->tag_alloc_policy);
+ 	shost->tag_set.driver_data = shost;
+ 
+-	return blk_mq_alloc_tag_set(&shost->tag_set);
++	ret = blk_mq_alloc_tag_set(&shost->tag_set);
++	if (ret)
++		return ret;
++
++	if (shost->nr_reserved_cmds) {
++		shost->reserved_cmd_q = blk_mq_init_queue(&shost->tag_set);
++		if (IS_ERR(shost->reserved_cmd_q)) {
++			blk_mq_free_tag_set(&shost->tag_set);
++			ret = PTR_ERR(shost->reserved_cmd_q);
++			shost->reserved_cmd_q = NULL;
++		}
++	}
++	return ret;
+ }
+ 
+ void scsi_mq_destroy_tags(struct Scsi_Host *shost)
+ {
++	if (shost->reserved_cmd_q)
++		blk_cleanup_queue(shost->reserved_cmd_q);
+ 	blk_mq_free_tag_set(&shost->tag_set);
+ }
+ 
 diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-index f577647bf5f2..3f860c8ad623 100644
+index 3f860c8ad623..2258a4f7b4d8 100644
 --- a/include/scsi/scsi_host.h
 +++ b/include/scsi/scsi_host.h
-@@ -599,6 +599,12 @@ struct Scsi_Host {
- 	 * is nr_hw_queues * can_queue.
+@@ -604,6 +604,7 @@ struct Scsi_Host {
+ 	 * Number of reserved commands, if any.
  	 */
- 	unsigned nr_hw_queues;
-+
-+	/*
-+	 * Number of reserved commands, if any.
-+	 */
-+	unsigned nr_reserved_cmds;
-+
+ 	unsigned nr_reserved_cmds;
++	struct request_queue *reserved_cmd_q;
+ 
  	unsigned active_mode:2;
  	unsigned unchecked_isa_dma:1;
- 
 -- 
 2.17.1
 
