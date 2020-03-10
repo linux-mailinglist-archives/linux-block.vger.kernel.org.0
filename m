@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E261E18037B
-	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 363FE180361
+	for <lists+linux-block@lfdr.de>; Tue, 10 Mar 2020 17:31:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgCJQbs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Mar 2020 12:31:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11207 "EHLO huawei.com"
+        id S1727061AbgCJQbR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Mar 2020 12:31:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11219 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727250AbgCJQbo (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:31:44 -0400
+        id S1727464AbgCJQbQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:31:16 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6938612D4A4279D1EED7;
+        by Forcepoint Email with ESMTP id C9E836DEA0F079C9BFAD;
         Wed, 11 Mar 2020 00:30:38 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 00:30:31 +0800
+ 14.3.487.0; Wed, 11 Mar 2020 00:30:32 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>, <hare@suse.de>,
@@ -26,9 +26,9 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC v2 23/24] scsi: libsas: aic94xx: hisi_sas: mvsas: pm8001: Allocate Scsi_cmd for slow task
-Date:   Wed, 11 Mar 2020 00:25:49 +0800
-Message-ID: <1583857550-12049-24-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC v2 24/24] scsi: hisi_sas: Use libsas slow task SCSI command
+Date:   Wed, 11 Mar 2020 00:25:50 +0800
+Message-ID: <1583857550-12049-25-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
 References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
@@ -41,254 +41,55 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allocate a Scsi_cmd for SAS slow tasks, so they can be accounted for in
-the blk-mq layer.
+Now that a SCSI command can be allocated for a libsas slow tasks, make the
+task prep code use it.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c |  8 +++---
- drivers/scsi/libsas/sas_expander.c    |  3 ++-
- drivers/scsi/libsas/sas_init.c        | 36 +++++++++++++++++++++------
- drivers/scsi/mvsas/mv_sas.c           |  2 +-
- drivers/scsi/pm8001/pm8001_hwi.c      |  4 +--
- drivers/scsi/pm8001/pm8001_sas.c      |  4 +--
- drivers/scsi/pm8001/pm80xx_hwi.c      |  4 +--
- include/scsi/libsas.h                 |  4 ++-
- 8 files changed, 46 insertions(+), 19 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 5 ++++-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 5 +++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 9a6deb21fe4d..c7951ac8b075 100644
+index c7951ac8b075..61039f3608c8 100644
 --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
 +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1182,12 +1182,13 @@ static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
- {
- 	struct hisi_sas_device *sas_dev = device->lldd_dev;
- 	struct hisi_hba *hisi_hba = sas_dev->hisi_hba;
-+	struct sas_ha_struct *sha = &hisi_hba->sha;
- 	struct device *dev = hisi_hba->dev;
- 	struct sas_task *task;
- 	int res, retry;
- 
- 	for (retry = 0; retry < TASK_RETRY; retry++) {
--		task = sas_alloc_slow_task(GFP_KERNEL);
-+		task = sas_alloc_slow_task(GFP_KERNEL, sha);
- 		if (!task)
- 			return -ENOMEM;
- 
-@@ -2022,9 +2023,10 @@ _hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
- 			      struct domain_device *device, int abort_flag,
- 			      int tag, struct hisi_sas_dq *dq)
- {
--	struct sas_task *task;
- 	struct hisi_sas_device *sas_dev = device->lldd_dev;
-+	struct sas_ha_struct *sha = &hisi_hba->sha;
- 	struct device *dev = hisi_hba->dev;
-+	struct sas_task *task;
- 	int res;
- 
- 	/*
-@@ -2036,7 +2038,7 @@ _hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
- 	if (!hisi_hba->hw->prep_abort)
- 		return TMF_RESP_FUNC_FAILED;
- 
--	task = sas_alloc_slow_task(GFP_KERNEL);
-+	task = sas_alloc_slow_task(GFP_KERNEL, sha);
- 	if (!task)
- 		return -ENOMEM;
- 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index ab671cdd4cfb..24626acc6a11 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -56,6 +56,7 @@ static int smp_execute_task_sg(struct domain_device *dev,
- {
- 	int res, retry;
- 	struct sas_task *task = NULL;
-+	struct sas_ha_struct *sha = dev->port->ha;
- 	struct sas_internal *i =
- 		to_sas_internal(dev->port->ha->core.shost->transportt);
- 
-@@ -66,7 +67,7 @@ static int smp_execute_task_sg(struct domain_device *dev,
- 			break;
+@@ -476,8 +476,10 @@ static int hisi_sas_task_prep(struct sas_task *task,
+ 			} else {
+ 				scsi_cmnd = task->uldd_task;
+ 			}
++		} else if (task->slow_task) {
++			scsi_cmnd = task->slow_task->scmd;
  		}
- 
--		task = sas_alloc_slow_task(GFP_KERNEL);
-+		task = sas_alloc_slow_task(GFP_KERNEL, sha);
- 		if (!task) {
- 			res = -ENOMEM;
- 			break;
-diff --git a/drivers/scsi/libsas/sas_init.c b/drivers/scsi/libsas/sas_init.c
-index 21c43b18d5d5..493caaf50a12 100644
---- a/drivers/scsi/libsas/sas_init.c
-+++ b/drivers/scsi/libsas/sas_init.c
-@@ -14,6 +14,7 @@
- #include <scsi/sas_ata.h>
- #include <scsi/scsi_host.h>
- #include <scsi/scsi_device.h>
-+#include <scsi/scsi_tcq.h>
- #include <scsi/scsi_transport.h>
- #include <scsi/scsi_transport_sas.h>
- 
-@@ -37,16 +38,23 @@ struct sas_task *sas_alloc_task(gfp_t flags)
- }
- EXPORT_SYMBOL_GPL(sas_alloc_task);
- 
--struct sas_task *sas_alloc_slow_task(gfp_t flags)
-+struct sas_task *sas_alloc_slow_task(gfp_t flags, struct sas_ha_struct *sha)
- {
- 	struct sas_task *task = sas_alloc_task(flags);
--	struct sas_task_slow *slow = kmalloc(sizeof(*slow), flags);
-+	struct Scsi_Host *shost = sha->core.shost;
-+	struct sas_task_slow *slow;
- 
--	if (!task || !slow) {
--		if (task)
--			kmem_cache_free(sas_task_cache, task);
--		kfree(slow);
-+	if (!task)
- 		return NULL;
-+
-+	slow = kzalloc(sizeof(*slow), flags);
-+	if (!slow)
-+		goto out_err_slow;
-+
-+	if (shost->reserved_cmd_q) {
-+		slow->scmd = scsi_get_reserved_cmd(shost);
-+		if (!slow->scmd)
-+			goto out_err_scmd;
+-		rc  = hisi_sas_slot_index_alloc(hisi_hba, scsi_cmnd);
++		rc = hisi_sas_slot_index_alloc(hisi_hba, scsi_cmnd);
+ 	}
+ 	if (rc < 0)
+ 		goto err_out_dif_dma_unmap;
+@@ -2650,6 +2652,7 @@ int hisi_sas_probe(struct platform_device *pdev,
+ 	} else {
+ 		shost->can_queue = HISI_SAS_UNRESERVED_IPTT;
+ 		shost->cmd_per_lun = HISI_SAS_UNRESERVED_IPTT;
++		shost->nr_reserved_cmds = HISI_SAS_RESERVED_IPTT;
  	}
  
- 	task->slow_task = slow;
-@@ -55,13 +63,27 @@ struct sas_task *sas_alloc_slow_task(gfp_t flags)
- 	init_completion(&slow->completion);
+ 	sha->sas_ha_name = DRV_NAME;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index a2debe0c8185..44530f8c0319 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3237,8 +3237,9 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	shost->max_lun = ~0;
+ 	shost->max_channel = 1;
+ 	shost->max_cmd_len = 16;
+-	shost->can_queue = HISI_SAS_UNRESERVED_IPTT;
+-	shost->cmd_per_lun = HISI_SAS_UNRESERVED_IPTT;
++	shost->can_queue = HISI_SAS_MAX_COMMANDS;
++	shost->cmd_per_lun = HISI_SAS_MAX_COMMANDS;
++	shost->nr_reserved_cmds = HISI_SAS_RESERVED_IPTT;
  
- 	return task;
-+
-+out_err_scmd:
-+	kfree(slow);
-+out_err_slow:
-+	kmem_cache_free(sas_task_cache, task);
-+	return NULL;
- }
- EXPORT_SYMBOL_GPL(sas_alloc_slow_task);
- 
- void sas_free_task(struct sas_task *task)
- {
- 	if (task) {
--		kfree(task->slow_task);
-+		/*
-+		 * It could be good to just introduce separate sas_free_slow_task() to
-+		 * avoid the following in the fastpath.
-+		 */
-+		if (task->slow_task) {
-+			if (task->slow_task->scmd)
-+				scsi_put_reserved_cmd(task->slow_task->scmd);
-+			kfree(task->slow_task);
-+		}
- 		kmem_cache_free(sas_task_cache, task);
- 	}
- }
-diff --git a/drivers/scsi/mvsas/mv_sas.c b/drivers/scsi/mvsas/mv_sas.c
-index a920eced92ec..2ef37d634c22 100644
---- a/drivers/scsi/mvsas/mv_sas.c
-+++ b/drivers/scsi/mvsas/mv_sas.c
-@@ -1283,7 +1283,7 @@ static int mvs_exec_internal_tmf_task(struct domain_device *dev,
- 	struct sas_task *task = NULL;
- 
- 	for (retry = 0; retry < 3; retry++) {
--		task = sas_alloc_slow_task(GFP_KERNEL);
-+		task = sas_alloc_slow_task(GFP_KERNEL, dev->port->ha);
- 		if (!task)
- 			return -ENOMEM;
- 
-diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-index 2328ff1349ac..e9d759f64b3b 100644
---- a/drivers/scsi/pm8001/pm8001_hwi.c
-+++ b/drivers/scsi/pm8001/pm8001_hwi.c
-@@ -1743,7 +1743,7 @@ static void pm8001_send_abort_all(struct pm8001_hba_info *pm8001_ha,
- 		return;
- 	}
- 
--	task = sas_alloc_slow_task(GFP_ATOMIC);
-+	task = sas_alloc_slow_task(GFP_ATOMIC, pm8001_ha->sas);
- 
- 	if (!task) {
- 		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("cannot "
-@@ -1789,7 +1789,7 @@ static void pm8001_send_read_log(struct pm8001_hba_info *pm8001_ha,
- 	struct inbound_queue_table *circularQ;
- 	u32 opc = OPC_INB_SATA_HOST_OPSTART;
- 
--	task = sas_alloc_slow_task(GFP_ATOMIC);
-+	task = sas_alloc_slow_task(GFP_ATOMIC, pm8001_ha->sas);
- 
- 	if (!task) {
- 		PM8001_FAIL_DBG(pm8001_ha,
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index b7cbc312843e..ac41a907447d 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -718,7 +718,7 @@ static int pm8001_exec_internal_tmf_task(struct domain_device *dev,
- 	DECLARE_COMPLETION_ONSTACK(completion_setstate);
- 
- 	for (retry = 0; retry < 3; retry++) {
--		task = sas_alloc_slow_task(GFP_KERNEL);
-+		task = sas_alloc_slow_task(GFP_KERNEL, pm8001_ha->sas);
- 		if (!task)
- 			return -ENOMEM;
- 
-@@ -805,7 +805,7 @@ pm8001_exec_internal_task_abort(struct pm8001_hba_info *pm8001_ha,
- 	struct sas_task *task = NULL;
- 
- 	for (retry = 0; retry < 3; retry++) {
--		task = sas_alloc_slow_task(GFP_KERNEL);
-+		task = sas_alloc_slow_task(GFP_KERNEL, pm8001_ha->sas);
- 		if (!task)
- 			return -ENOMEM;
- 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index d1d95f1a2c6a..e09e8d54f4f1 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -1625,7 +1625,7 @@ static void pm80xx_send_abort_all(struct pm8001_hba_info *pm8001_ha,
- 		return;
- 	}
- 
--	task = sas_alloc_slow_task(GFP_ATOMIC);
-+	task = sas_alloc_slow_task(GFP_ATOMIC, pm8001_ha->sas);
- 
- 	if (!task) {
- 		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("cannot "
-@@ -1676,7 +1676,7 @@ static void pm80xx_send_read_log(struct pm8001_hba_info *pm8001_ha,
- 	struct inbound_queue_table *circularQ;
- 	u32 opc = OPC_INB_SATA_HOST_OPSTART;
- 
--	task = sas_alloc_slow_task(GFP_ATOMIC);
-+	task = sas_alloc_slow_task(GFP_ATOMIC, pm8001_ha->sas);
- 
- 	if (!task) {
- 		PM8001_FAIL_DBG(pm8001_ha,
-diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
-index 4e2d61e8fb1e..25c0f0b94d27 100644
---- a/include/scsi/libsas.h
-+++ b/include/scsi/libsas.h
-@@ -608,6 +608,7 @@ struct sas_task_slow {
- 	struct timer_list     timer;
- 	struct completion     completion;
- 	struct sas_task       *task;
-+	struct scsi_cmnd      *scmd;
- };
- 
- #define SAS_TASK_STATE_PENDING      1
-@@ -617,7 +618,8 @@ struct sas_task_slow {
- #define SAS_TASK_AT_INITIATOR       16
- 
- extern struct sas_task *sas_alloc_task(gfp_t flags);
--extern struct sas_task *sas_alloc_slow_task(gfp_t flags);
-+extern struct sas_task *sas_alloc_slow_task(gfp_t flags,
-+					    struct sas_ha_struct *sha);
- extern void sas_free_task(struct sas_task *task);
- 
- struct sas_domain_function_template {
+ 	sha->sas_ha_name = DRV_NAME;
+ 	sha->dev = dev;
 -- 
 2.17.1
 
