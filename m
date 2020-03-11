@@ -2,106 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DD5181D7D
-	for <lists+linux-block@lfdr.de>; Wed, 11 Mar 2020 17:13:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A63A8181ED9
+	for <lists+linux-block@lfdr.de>; Wed, 11 Mar 2020 18:12:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbgCKQN0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Mar 2020 12:13:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37782 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730248AbgCKQNZ (ORCPT
+        id S1730100AbgCKRMq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Mar 2020 13:12:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34729 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCKRMq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:13:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a141so2794295wme.2
-        for <linux-block@vger.kernel.org>; Wed, 11 Mar 2020 09:13:23 -0700 (PDT)
+        Wed, 11 Mar 2020 13:12:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 23so1702116pfj.1
+        for <linux-block@vger.kernel.org>; Wed, 11 Mar 2020 10:12:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I3kVX6++L7kNCPOrYtHpas6ehZhq6nwdW2vZ3hL5it4=;
-        b=B8ipCE+6QkSWWTG+L84+Yqpt3OvqzkyF+JD3sYvqXEGIgHaaVTM1Eua1drz9fIGPr+
-         z1ngIjh/htbPBUF7MacH82Gqv+XDMTOhI3JSCZHrFblbL5dapGth3jysP1OndAPq3xcF
-         I1bhP4pw6SIwTUSDeLtpO4RixRhAZCbJ0n7vq0upwLrAA1AQOt+E+tUWgKrIg0UWJrQ5
-         3JeRXGhKt4MJ4JKUWIR8k3U4i938DDfGrNRW1sx8Tks53PAGNP3PEPgmnNU9ffLRas+y
-         UbZ6rQWaVOgbD5/4Oewyw478Q990HXPFlJaHxsulYHJkPCA6bnXxNG4VsDCbOw1jxs59
-         zQ2w==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=E/8OQuFVZxcjbDpvxUk6wctPDniQjuAev9hAYntisr0=;
+        b=rtMEH17iAGj2LhP70bnxmEhNgL6qenlH1qP3oZ+UEkCc7JzysULUlLTqp6Hs3++9ms
+         AT52hNRGxRyV8Egq00g3IVKHmoxm6GXO9izZ2p7HaeQG8jMoI4lrdcMw0CAE1eT3ZqRW
+         wTUWK3BxoVJG+C5Wtl8MxE/PDpYL1wiiKD5i2KVUR0koB6/HR/EDMAAx70GaYfxVYy9w
+         T5ug1H+1wEWtM1kryD5FEjneB7bC1yJ+tHfnpep6vPPpGtnOVQomtGq922RwBWb3qMlN
+         Yhtu02AoLfMS2mo2B5vz7VWh/hu2nobM7wcsCZeEbyQnW9X2Cm6+L+yl0JfGct7uh/U+
+         H79A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=I3kVX6++L7kNCPOrYtHpas6ehZhq6nwdW2vZ3hL5it4=;
-        b=Xa2zoInL5oGaPo8IWXHj1hPKI7dyryBpRJYQa/XUP6rIUbR/+/Nhq6SZXf31D2r2rX
-         0k8mAnDlXB1s4z+15+fPQo4QuqBwE/y83hH9lLrweqsW1OAYJEFRpwO8AbK7kI27HsJf
-         8dvI5Os32ojp8qasDMP4ty9g3V5HOMrLBJ/+Ph1ItrBFkvF9lrHySlKcQqSZx0IP+p7M
-         Ab5TYIx+dIOze+TuYFUHad22rc9koJmKm2B1ZD8sfQRfmd0LEQMgi8CEvel5cXLJnZgv
-         cve6IMBlQ/DzPW9cLp4IVqNyUvsFVmdqJgkQGQEqePfOUnawW1gIa3Bk8iI3CyBmCgiO
-         O6sg==
-X-Gm-Message-State: ANhLgQ1EVbj9lUe6lwGtD8I1J2Kxf0DX/aVi/nvUQLLtjPjzYJ7jmd51
-        2UzZsfDvqa1SlR5veedemnNbxHgIuow=
-X-Google-Smtp-Source: ADFU+vuBFTsiSi2bo+ig0p9N51VSTkp196wL0slmxG7E5TQFb051rum8rRnMBBaBrdg/h0AgnSRGUg==
-X-Received: by 2002:a05:600c:278a:: with SMTP id l10mr4228930wma.45.1583943202306;
-        Wed, 11 Mar 2020 09:13:22 -0700 (PDT)
-Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4963:f600:4938:8f65:9543:5ec9])
-        by smtp.gmail.com with ESMTPSA id v13sm2739332wru.47.2020.03.11.09.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 09:13:21 -0700 (PDT)
-From:   Jack Wang <jinpu.wang@cloud.ionos.com>
-To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
-        pankaj.gupta@cloud.ionos.com
-Subject: [PATCH v10 26/26] MAINTAINERS: Add maintainers for RNBD/RTRS modules
-Date:   Wed, 11 Mar 2020 17:12:40 +0100
-Message-Id: <20200311161240.30190-27-jinpu.wang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
-References: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=E/8OQuFVZxcjbDpvxUk6wctPDniQjuAev9hAYntisr0=;
+        b=UtbD4BxhUQLB6J63WFZZOQgyZACNqj2UaRboeDXmLpDyA6fh4JYItm+NQ63iE/EnmC
+         WKs7jALY/2OxJIGb8oTwMlAjTw8jPw4L7zbW5xqXKOZpZueio/eGSZIGGHcuhkpFLODW
+         Y61RfHEOx4rldzTuzdle88pV4SAzbXNZ03KoAZbSJmnwstEubbbgfzRPATW666nTMGgx
+         PJSrCdiy+L9LpnIJB99dyJ/PPJqFTbYWmlIcnrInJJGKW0CbDs+Nu9UDC4fRM1o3LdAR
+         CGxeXrF0NqV+J/QIgs7HWf33abeP7bEmCWV+Gce3fclUKCPiHXlHnAcMglh9NOTa2ikp
+         GHQQ==
+X-Gm-Message-State: ANhLgQ2DJB8ZUL8T+G6OCee6BqNQh7BlysxF8Cw19opO6rQhO4UMaKdL
+        8/4ccEI3YdWbzv9l9DOXfCpmfWGQzAbAY9LVVas=
+X-Google-Smtp-Source: ADFU+vvqEKEUoq6x9t4ii/pi1hr/MKspUszl85LGK73l12DVid+up6Jy1Rq3dXMRGSWmM3I14Nj8Y0a7CG5uyO6AVTw=
+X-Received: by 2002:a62:1b12:: with SMTP id b18mr3859545pfb.258.1583946762950;
+ Wed, 11 Mar 2020 10:12:42 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a17:90a:cd02:0:0:0:0 with HTTP; Wed, 11 Mar 2020 10:12:40
+ -0700 (PDT)
+Reply-To: robertandersonhappy1@gmail.com
+From:   robert <tochiuju010@gmail.com>
+Date:   Wed, 11 Mar 2020 10:12:40 -0700
+Message-ID: <CA+CavFL_K9sQmAUqsA62y7O3JtyPDeMtdsD5XERmHrZDuqoPDQ@mail.gmail.com>
+Subject: good
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Danil and I will maintain RNBD/RTRS modules.
-
-Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..f65067d4a34e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14286,6 +14286,13 @@ F:	arch/riscv/
- K:	riscv
- N:	riscv
- 
-+RNBD BLOCK DRIVERS
-+M:	Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+M:	Jack Wang <jinpu.wang@cloud.ionos.com>
-+L:	linux-block@vger.kernel.org
-+S:	Maintained
-+F:	drivers/block/rnbd/
-+
- ROCCAT DRIVERS
- M:	Stefan Achatz <erazor_de@users.sourceforge.net>
- W:	http://sourceforge.net/projects/roccat/
-@@ -14427,6 +14434,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jes/linux.git rtl8xxxu-deve
- S:	Maintained
- F:	drivers/net/wireless/realtek/rtl8xxxu/
- 
-+RTRS TRANSPORT DRIVERS
-+M:	Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+M:	Jack Wang <jinpu.wang@cloud.ionos.com>
-+L:	linux-rdma@vger.kernel.org
-+S:	Maintained
-+F:	drivers/infiniband/ulp/rtrs/
-+
- RXRPC SOCKETS (AF_RXRPC)
- M:	David Howells <dhowells@redhat.com>
- L:	linux-afs@lists.infradead.org
--- 
-2.17.1
-
+KiDQktC90LjQvNCw0L3QuNC1OiDQsdC10L3QtdGE0LjRhtC40LDRgCAqDQoNCiog0KHQvtC+0LHR
+idC40YLQtSwg0YfRgtC+INC80Ysg0L/QvtC70YPRh9C40LvQuCDRg9GC0LLQtdGA0LbQtNC10L3Q
+vdGL0Lkg0YTQsNC50Lsg0L7Qv9C70LDRgtGLINC+0YIgRkVERVJBTA0K0JzQmNCd0JjQodCi0JXQ
+oNCh0KLQktCeINCk0JjQndCQ0J3QodCe0JIg0YHQvtCy0LzQtdGB0YLQvdC+INGBINCc0LXQttC0
+0YPQvdCw0YDQvtC00L3Ri9C8INCy0LDQu9GO0YLQvdGL0Lwg0YTQvtC90LTQvtC8ICjQnNCS0KQp
+DQrQutC+0LzQv9C10L3RgdCw0YbQuNGPINC20LXRgNGC0LLQsNC8INC80L7RiNC10L3QvdC40YfQ
+tdGB0YLQstCwINC4INCy0LDRiCDQsNC00YDQtdGBINGN0LvQtdC60YLRgNC+0L3QvdC+0Lkg0L/Q
+vtGH0YLRiyDQstGF0L7QtNC40YIg0LIg0YHQv9C40YHQvtC6DQrQttC10YDRgtCy0YsuICoNCg0K
+KiDQryDQv9C40YjRgywg0YfRgtC+0LHRiyDRgdC+0L7QsdGJ0LjRgtGMINCy0LDQvCwg0YfRgtC+
+INC80Ysg0LHRg9C00LXQvCDQvtGC0L/RgNCw0LLQu9GP0YLRjCDQstCw0LwgJCA1MDAwLjAwVVNE
+DQrQtdC20LXQtNC90LXQstC90L4g0YENCtC90LDRiCDQvtGE0LjRgSDQt9C00LXRgdGMLCDRgtCw
+0Log0LrQsNC6INC80Ysg0L/QvtC70YPRh9C40LvQuCDQvNCw0L3QtNCw0YIg0L3QsCDQv9C10YDQ
+tdC00LDRh9GDINCy0LDRiNC10LPQviDQv9C+0LvQvdC+0LPQvg0K0LrQvtC80L/QtdC90YHQsNGG
+0LjQvtC90L3Ri9C5INC/0LvQsNGC0LXQtiDQsiDRgNCw0LfQvNC10YDQtSA4MDAgMDAwINC00L7Q
+u9C70LDRgNC+0LIg0KHQqNCQINCc0LXQttC00YPQvdCw0YDQvtC00L3Ri9C8DQrQstCw0LvRjtGC
+0L3Ri9C8INGE0L7QvdC00L7QvA0KKNCc0JLQpCkg0Lgg0KTQtdC00LXRgNCw0LvRjNC90L7QtSDQ
+vNC40L3QuNGB0YLQtdGA0YHRgtCy0L4g0YTQuNC90LDQvdGB0L7Qsi4g0JLQsNGIINC70LjRh9C9
+0YvQuSDQuNC00LXQvdGC0LjRhNC40LrQsNGG0LjQvtC90L3Ri9C5INC90L7QvNC10YANCtC/0YDQ
+tdC00L7RgdGC0LDQstC70LXQvdC+INC60L7QvNCw0L3QtNC+0LkgSS5NLkYgQ1BQMDkyMFRHLiAq
+DQoNCiog0JLQvtGCINC40L3RhNC+0YDQvNCw0YbQuNGPINC+0LEg0L7Qv9C70LDRgtC1LCDQutC+
+0YLQvtGA0YPRjiDQvNGLINCx0YPQtNC10Lwg0LjRgdC/0L7Qu9GM0LfQvtCy0LDRgtGMINC00LvR
+jyDQv9C10YDQtdGB0YvQu9C60Lgg0LLQsNGI0LXQs9C+DQrQtdC20LXQtNC90LXQstC90YvQuSDQ
+v9C10YDQtdCy0L7QtC4gKg0KDQoqINCY0LzRjyDQvtGC0L/RgNCw0LLQuNGC0LXQu9GPOiDQodC4
+0L3RgtC40Y8g0JjQtNC10L0gKg0KKiDQktC+0L/RgNC+0YE6INCe0L/Qu9Cw0YLQsCAqDQoqINCe
+0YLQstC10YI6INCU0LAgKg0KKiDQodGD0LzQvNCwOiA1IDAwMCwwMCDQtNC+0LvQu9Cw0YDQvtCy
+INCh0KjQkCAqDQoqINCT0L7RgNC+0LQ6INCb0L7QvNC1ICoNCiog0KHRgtGA0LDQvdCwOiDQotC+
+0LPQviAqDQoNCiog0J/QoNCY0JzQldCn0JDQndCY0JU6IE1UQ04g0LHRg9C00LXRgiDQvtGC0L/R
+gNCw0LLQu9C10L0g0LLQsNC8INC/0L7RgdC70LUg0LLQsNGI0LXQs9C+INC+0YLQstC10YLQsCDQ
+uCDQv9C+0LTRgtCy0LXRgNC20LTQtdC90LjRjw0K0JjQvdGE0L7RgNC80LDRhtC40Y8g0L4g0LLQ
+sNGI0LXQvCDQv9C+0LvRg9GH0LDRgtC10LvQtSwg0YfRgtC+0LHRiyDQuNC30LHQtdC20LDRgtGM
+INC90LXQv9GA0LDQstC40LvRjNC90L7QuSDQv9C10YDQtdC00LDRh9C4LiAqDQoNCiog0JzRiyDQ
+ttC00LXQvCDQstCw0YjQtdCz0L4g0YHRgNC+0YfQvdC+0LPQviDQvtGC0LLQtdGC0LAg0L/QviDR
+jdGC0L7QvNGDINCw0LTRgNC10YHRgw0KKG1pc3NjeW50aGlhZWRlbjU2QGdtYWlsLmNvbSA8bWlz
+c2N5bnRoaWFlZGVuNTZAZ21haWwuY29tPiksINGH0YLQvtCx0Ysg0L/QvtC30LLQvtC70LjRgtGM
+INC90LDQvA0K0L/RgNC+0LTQvtC70LbQuNGC0Ywg0L7Qv9C70LDRgtGDLiAqDQoNCirQmNGB0LrR
+gNC10L3QvdC1INCy0LDRiCwqDQoNCirQoNGD0LrQvtCy0L7QtNC40YLQtdC70Ywg0YTQuNC70LjQ
+sNC70LA6Kg0KKiDQnNC40YHRgSDQodC40L3RgtC40Y8g0JjQtNC10L0gKg0KKiBWbmltYW5peWU6
+IGJlbmVmaXRzaWFyICoNCg0KKiBTb29ic2hjaGl0ZSwgY2h0byBteSBwb2x1Y2hpbGkgdXR2ZXJ6
+aGRlbm55eSBmYXlsIG9wbGF0eSBvdCBGRURFUkFMDQpNSU5JU1RFUlNUVk8gRklOQU5TT1Ygc292
+bWVzdG5vIHMgTWV6aGR1bmFyb2RueW0gdmFseXV0bnltIGZvbmRvbSAoTVZGKQ0Ka29tcGVuc2F0
+c2l5YSB6aGVydHZhbSBtb3NoZW5uaWNoZXN0dmEgaSB2YXNoIGFkcmVzIGVsZWt0cm9ubm95IHBv
+Y2h0eQ0Kdmtob2RpdCB2IHNwaXNvaw0KemhlcnR2eS4gKg0KDQoqIFlBIHBpc2h1LCBjaHRvYnkg
+c29vYnNoY2hpdCcgdmFtLCBjaHRvIG15IGJ1ZGVtIG90cHJhdmx5YXQnIHZhbSAkDQo1MDAwLjAw
+VVNEIHllemhlZG5ldm5vIHMNCm5hc2ggb2ZpcyB6ZGVzJywgdGFrIGthayBteSBwb2x1Y2hpbGkg
+bWFuZGF0IG5hIHBlcmVkYWNodSB2YXNoZWdvIHBvbG5vZ28NCmtvbXBlbnNhdHNpb25ueXkgcGxh
+dGV6aCB2IHJhem1lcmUgODAwIDAwMCBkb2xsYXJvdiBTU0hBDQpNZXpoZHVuYXJvZG55bSB2YWx5
+dXRueW0gZm9uZG9tDQooTVZGKSBpIEZlZGVyYWwnbm95ZSBtaW5pc3RlcnN0dm8gZmluYW5zb3Yu
+IFZhc2ggbGljaG55eQ0KaWRlbnRpZmlrYXRzaW9ubnl5IG5vbWVyDQpwcmVkb3N0YXZsZW5vIGtv
+bWFuZG95IEkuTS5GIENQUDA5MjBURy4gKg0KDQoqIFZvdCBpbmZvcm1hdHNpeWEgb2Igb3BsYXRl
+LCBrb3RvcnV5dSBteSBidWRlbSBpc3BvbCd6b3ZhdCcgZGx5YQ0KcGVyZXN5bGtpIHZhc2hlZ28N
+CnllemhlZG5ldm55eSBwZXJldm9kLiAqDQoNCiogSW15YSBvdHByYXZpdGVseWE6IFNpbnRpeWEg
+SWRlbiAqDQoqIFZvcHJvczogT3BsYXRhICoNCiogT3R2ZXQ6IERhICoNCiogU3VtbWE6IDUgMDAw
+LDAwIGRvbGxhcm92IFNTSEEgKg0KKiBHb3JvZDogTG9tZSAqDQoqIFN0cmFuYTogVG9nbyAqDQoN
+CiogUFJJTUVDSEFOSVllOiBNVENOIGJ1ZGV0IG90cHJhdmxlbiB2YW0gcG9zbGUgdmFzaGVnbyBv
+dHZldGEgaSBwb2R0dmVyemhkZW5peWENCkluZm9ybWF0c2l5YSBvIHZhc2hlbSBwb2x1Y2hhdGVs
+ZSwgY2h0b2J5IGl6YmV6aGF0JyBuZXByYXZpbCdub3kgcGVyZWRhY2hpLiAqDQoNCiogTXkgemhk
+ZW0gdmFzaGVnbyBzcm9jaG5vZ28gb3R2ZXRhIHBvIGV0b211IGFkcmVzdQ0KKG1pc3NjeW50aGlh
+ZWRlbjU2QGdtYWlsLmNvbSA8bWlzc2N5bnRoaWFlZGVuNTZAZ21haWwuY29tPiksIGNodG9ieQ0K
+cG96dm9saXQnIG5hbQ0KcHJvZG9semhpdCcgb3BsYXR1LiAqDQoNCipJc2tyZW5uZSB2YXNoLCoN
+Cg0KKlJ1a292b2RpdGVsJyBmaWxpYWxhOioNCiogTWlzcyBTaW50aXlhIElkZW4gKg0KQWZmaWNo
+ZXIgcGx1cw0KRW52b3llciBkZXMgY29tbWVudGFpcmVzDQpIaXN0b3JpcXVlDQpFbnJlZ2lzdHLD
+qQ0KQ29tbXVuYXV0w6kNCg==
