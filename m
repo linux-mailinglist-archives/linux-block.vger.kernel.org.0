@@ -2,90 +2,206 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC19118217C
-	for <lists+linux-block@lfdr.de>; Wed, 11 Mar 2020 20:03:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9B418260F
+	for <lists+linux-block@lfdr.de>; Thu, 12 Mar 2020 00:57:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbgCKTDP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Mar 2020 15:03:15 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41608 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbgCKTDP (ORCPT
+        id S1731507AbgCKX47 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Mar 2020 19:56:59 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:44669 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731399AbgCKX47 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:03:15 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l21so2408799qtr.8
-        for <linux-block@vger.kernel.org>; Wed, 11 Mar 2020 12:03:15 -0700 (PDT)
+        Wed, 11 Mar 2020 19:56:59 -0400
+Received: by mail-pl1-f202.google.com with SMTP id c7so2230754plr.11
+        for <linux-block@vger.kernel.org>; Wed, 11 Mar 2020 16:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vPEXaVzZ83ctsAcbnGyir6CbgBRHZk7g043rsBdHS7A=;
-        b=UT46SWQURx3Jox3NieovHdHKn1S/dJt42j0ej3amOv24/IYkMP4E7ImEe8LHZL8ib3
-         qgukaPorVF+fAF3Eh/1eWul7pf5fDMb1fMY74r0N2nSLBeWGD+YeYbkvy1swMmh5cYPu
-         zvhSzSEbXaOTIv4C+QvGsD8/+4DBnoweKHDAEEMktY3mk8kNgPdoZZCPMbWuXuhaoZWX
-         t60cICXzvoz4xFAfHwFrBFTYV27+fxJ5WjzO9RzjrFeUXyfO6B0hdQV2C5877snrwuqH
-         cN00+ygB1DN5YsHND14hOWG31WlD4svEEFV55ixVmhjpniVRPb9Fae2lNVQZ6N1jY2Lq
-         ZOjg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=AZPvh30KFy43kEyQxHv/V8BBQfdFAAHiyFrKXoYvQuk=;
+        b=qQKGWHsUgueSRuYYMEeO9BJHhAqNhnEDm4a4u2vIWrV7QPwxnMvqGBbrOV1hFNvnFi
+         Wv4JNNWBAZQMPQVwJQgHqNRIwVYd1TTCgkwSpP54uV3FgDlV1+mvI+NOWGkhv3nyLG0v
+         LfVITDV/O88Vbx+AiFKkLTL9x5GLbwiKpgWh0f+JDOQDjwq6fSqFbqVqpNBIbNu1+zqi
+         ujvkyMhj4Y1zwsxrql4z1biEcYbJKEFsTtRQDjtunklUG28jYob32PKKJsDeLKXxVye4
+         vGrUCKd64tFQYO13tF7S67Gze+k4+C86w4F1UhTuWs5vnGRS566m/hilIdx7gvEHK6T6
+         1//A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vPEXaVzZ83ctsAcbnGyir6CbgBRHZk7g043rsBdHS7A=;
-        b=HKZgEBjggDZNfV6+IINeyWChcJ4ZQbQ23G3/Tg+AKIpDlVbnqJ5gcgDG/HReLj88xS
-         5ETyJUu8jYaPBQjpfbBPI0+OHTo5SsW4ajE858QGCd5OModdSFjHbOjd6fm6AVwfdvW2
-         W+ZE001eQXwtLhtkwqookqsHvvnv/b0QREy4nnwRrUvYxokoRkX2nmLvl3suUKG5hkFq
-         v8CZwmbb2qbT+IoEas4oDuFRwWxiiUpJFeNJLXlPlLF8IjrfSm/GsRlUzLpYf3qfSFju
-         zw12jF2VC9jhIhIHGQe/FC+zpJgJKh/ZPGKGLASaGh+GuSb1zGZQ/ZR9/b9btbi7bdBn
-         4U8A==
-X-Gm-Message-State: ANhLgQ0TDyR6YaxsE1JqbvSHs/4U/OE6HJVIgbeCfkqBWCCGfg7aWDCR
-        8bcTkfmJ3EPUA9leZZx4s+X9RQ==
-X-Google-Smtp-Source: ADFU+vu5sssFtROMrydzHyogrnks202IHFdOtGSlESGnx7j483omqNKOGCOJiKW9YhoVfjVOy9zT8g==
-X-Received: by 2002:ac8:5448:: with SMTP id d8mr3912011qtq.205.1583953394809;
-        Wed, 11 Mar 2020 12:03:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id w2sm26029985qto.73.2020.03.11.12.03.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 12:03:14 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jC6dN-0001Ox-Ur; Wed, 11 Mar 2020 16:03:13 -0300
-Date:   Wed, 11 Mar 2020 16:03:13 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        danil.kipnis@cloud.ionos.com, rpenyaev@suse.de,
-        pankaj.gupta@cloud.ionos.com
-Subject: Re: [PATCH v10 13/26] RDMA/rtrs: include client and server modules
- into kernel compilation
-Message-ID: <20200311190313.GI31668@ziepe.ca>
-References: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
- <20200311161240.30190-14-jinpu.wang@cloud.ionos.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311161240.30190-14-jinpu.wang@cloud.ionos.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=AZPvh30KFy43kEyQxHv/V8BBQfdFAAHiyFrKXoYvQuk=;
+        b=pfIm/EXZkWEWP0B+BEoVCH/MMST9kYYq6ad+EpQmrybsohmu1Cn/mwGqSbAXcWX/19
+         IDtLqfvzKZh24oSZZywbshqkY8vfo2YoAN6xi7GF7Rt4qkks7YuCq297SyD1AYIJtT1m
+         kTDs+ivNLDLSaU+d5MbGhsMdVwzKZZMIKznekGJvlr1T3PeAwPtTXZDLU/J+R3WMJUSF
+         vVqVVhBZkcBcpnJAPyGgd0rIgScE3kZe/Ek+6/4iSZAvfEpKZrnQARhWsf4XrBEkHZ21
+         0r4z5SJo7R0EdDvDGczXmToPacoN6NtZ3EgOMMA5J1/YQtZJX7iEgKOiCTVryWqov0mR
+         9TzA==
+X-Gm-Message-State: ANhLgQ2WU0n7t+BRWAHGyAfc1TCyk+7tkbkSEO1RPAAiC1ehvFeYuEwO
+        pd3Wb0TfQYId+6LfF7cXHj0/DF/nLFVQ6ngE
+X-Google-Smtp-Source: ADFU+vsGYMhXTgL/gZ5yx4VyViO6yE42G1cxQ//ozErPQaXqA7QqLze49WYhyRqfOIKsiOTk+DtFaoj77v0RiABu
+X-Received: by 2002:a63:6b8a:: with SMTP id g132mr4899758pgc.359.1583971017911;
+ Wed, 11 Mar 2020 16:56:57 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 16:56:53 -0700
+Message-Id: <20200311235653.141701-1-rammuthiah@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH] Inline contents of BLK_MQ_VIRTIO config
+From:   Ram Muthiah <rammuthiah@google.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Ram Muthiah <rammuthiah@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 05:12:27PM +0100, Jack Wang wrote:
-> Add rtrs Makefile, Kconfig and also corresponding lines into upper
-> layer infiniband/ulp files.
-> 
-> Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-> Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> ---
->  drivers/infiniband/Kconfig           |  1 +
->  drivers/infiniband/ulp/Makefile      |  1 +
->  drivers/infiniband/ulp/rtrs/Kconfig  | 27 +++++++++++++++++++++++++++
->  drivers/infiniband/ulp/rtrs/Makefile | 15 +++++++++++++++
->  4 files changed, 44 insertions(+)
->  create mode 100644 drivers/infiniband/ulp/rtrs/Kconfig
->  create mode 100644 drivers/infiniband/ulp/rtrs/Makefile
+The config contains one symbol and is a dep of only two configs.
+Inlined this symbol so that it's built in by the two configs
+which need it and deleted the config.
 
-How is this using ib_devices without having a struct ib_client ?
+Signed-off-by: Ram Muthiah <rammuthiah@google.com>
+---
+ block/Kconfig                 |  5 ----
+ block/Makefile                |  1 -
+ block/blk-mq-virtio.c         | 46 -----------------------------------
+ include/linux/blk-mq-virtio.h | 43 +++++++++++++++++++++++++++++---
+ 4 files changed, 39 insertions(+), 56 deletions(-)
+ delete mode 100644 block/blk-mq-virtio.c
 
-Jason
+diff --git a/block/Kconfig b/block/Kconfig
+index 3bc76bb113a0..953744daff7c 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -203,11 +203,6 @@ config BLK_MQ_PCI
+ 	depends on BLOCK && PCI
+ 	default y
+ 
+-config BLK_MQ_VIRTIO
+-	bool
+-	depends on BLOCK && VIRTIO
+-	default y
+-
+ config BLK_MQ_RDMA
+ 	bool
+ 	depends on BLOCK && INFINIBAND
+diff --git a/block/Makefile b/block/Makefile
+index 1a43750f4b01..709695f54150 100644
+--- a/block/Makefile
++++ b/block/Makefile
+@@ -29,7 +29,6 @@ obj-$(CONFIG_BLK_CMDLINE_PARSER)	+= cmdline-parser.o
+ obj-$(CONFIG_BLK_DEV_INTEGRITY) += bio-integrity.o blk-integrity.o
+ obj-$(CONFIG_BLK_DEV_INTEGRITY_T10)	+= t10-pi.o
+ obj-$(CONFIG_BLK_MQ_PCI)	+= blk-mq-pci.o
+-obj-$(CONFIG_BLK_MQ_VIRTIO)	+= blk-mq-virtio.o
+ obj-$(CONFIG_BLK_MQ_RDMA)	+= blk-mq-rdma.o
+ obj-$(CONFIG_BLK_DEV_ZONED)	+= blk-zoned.o
+ obj-$(CONFIG_BLK_WBT)		+= blk-wbt.o
+diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
+deleted file mode 100644
+index 488341628256..000000000000
+--- a/block/blk-mq-virtio.c
++++ /dev/null
+@@ -1,46 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2016 Christoph Hellwig.
+- */
+-#include <linux/device.h>
+-#include <linux/blk-mq.h>
+-#include <linux/blk-mq-virtio.h>
+-#include <linux/virtio_config.h>
+-#include <linux/module.h>
+-#include "blk-mq.h"
+-
+-/**
+- * blk_mq_virtio_map_queues - provide a default queue mapping for virtio device
+- * @qmap:	CPU to hardware queue map.
+- * @vdev:	virtio device to provide a mapping for.
+- * @first_vec:	first interrupt vectors to use for queues (usually 0)
+- *
+- * This function assumes the virtio device @vdev has at least as many available
+- * interrupt vetors as @set has queues.  It will then queuery the vector
+- * corresponding to each queue for it's affinity mask and built queue mapping
+- * that maps a queue to the CPUs that have irq affinity for the corresponding
+- * vector.
+- */
+-int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
+-		struct virtio_device *vdev, int first_vec)
+-{
+-	const struct cpumask *mask;
+-	unsigned int queue, cpu;
+-
+-	if (!vdev->config->get_vq_affinity)
+-		goto fallback;
+-
+-	for (queue = 0; queue < qmap->nr_queues; queue++) {
+-		mask = vdev->config->get_vq_affinity(vdev, first_vec + queue);
+-		if (!mask)
+-			goto fallback;
+-
+-		for_each_cpu(cpu, mask)
+-			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+-	}
+-
+-	return 0;
+-fallback:
+-	return blk_mq_map_queues(qmap);
+-}
+-EXPORT_SYMBOL_GPL(blk_mq_virtio_map_queues);
+diff --git a/include/linux/blk-mq-virtio.h b/include/linux/blk-mq-virtio.h
+index 687ae287e1dc..b3ddb8b6da76 100644
+--- a/include/linux/blk-mq-virtio.h
++++ b/include/linux/blk-mq-virtio.h
+@@ -1,11 +1,46 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2016 Christoph Hellwig.
++ */
+ #ifndef _LINUX_BLK_MQ_VIRTIO_H
+ #define _LINUX_BLK_MQ_VIRTIO_H
+ 
+-struct blk_mq_queue_map;
+-struct virtio_device;
++#include <linux/blk-mq.h>
++#include <linux/virtio_config.h>
+ 
+-int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
+-		struct virtio_device *vdev, int first_vec);
++/**
++ * blk_mq_virtio_map_queues - provide a default queue mapping for virtio device
++ * @qmap:	CPU to hardware queue map.
++ * @vdev:	virtio device to provide a mapping for.
++ * @first_vec:	first interrupt vectors to use for queues (usually 0)
++ *
++ * This function assumes the virtio device @vdev has at least as many available
++ * interrupt vetors as @set has queues.  It will then queuery the vector
++ * corresponding to each queue for it's affinity mask and built queue mapping
++ * that maps a queue to the CPUs that have irq affinity for the corresponding
++ * vector.
++ */
++static inline int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
++		struct virtio_device *vdev, int first_vec)
++{
++	const struct cpumask *mask;
++	unsigned int queue, cpu;
++
++	if (!vdev->config->get_vq_affinity)
++		goto fallback;
++
++	for (queue = 0; queue < qmap->nr_queues; queue++) {
++		mask = vdev->config->get_vq_affinity(vdev, first_vec + queue);
++		if (!mask)
++			goto fallback;
++
++		for_each_cpu(cpu, mask)
++			qmap->mq_map[cpu] = qmap->queue_offset + queue;
++	}
++
++	return 0;
++fallback:
++	return blk_mq_map_queues(qmap);
++}
+ 
+ #endif /* _LINUX_BLK_MQ_VIRTIO_H */
+-- 
+2.25.1.481.gfbce0eb801-goog
+
