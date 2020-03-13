@@ -2,40 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E67E184088
-	for <lists+linux-block@lfdr.de>; Fri, 13 Mar 2020 06:30:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C348184083
+	for <lists+linux-block@lfdr.de>; Fri, 13 Mar 2020 06:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgCMFal (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Mar 2020 01:30:41 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:46768 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgCMFal (ORCPT
+        id S1726328AbgCMFaY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Mar 2020 01:30:24 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:65343 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgCMFaX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Mar 2020 01:30:41 -0400
+        Fri, 13 Mar 2020 01:30:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584077441; x=1615613441;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=REy7LBkdQ5MCy84KosSuZWNgbDSwbuHXvkOMZFApZ0g=;
-  b=QiGYZ6WDYUTQ3B/GACRkWiFFU4Bh/Qo7Gn32oKWVlJ1m6qoVZtXvCNkj
-   afyyF0Gv+UGa7KoJl3KUNaZNDBm0kZSWdeThlWIQ4La+Tl6SNZJl+b3tq
-   ReTs89h65xAWhcGaFu+uGoNWHGDojYKrs0k10xCK2LmBAZLXX9Al3u0xG
-   4=;
-IronPort-SDR: BBxpNHEOWW1ENqqjyI1ueSy8wEtQCRVJhTMUDArhWjlmVcbDR3lUllZ4prigMjSQ6ncpcVpQDH
- I5KYk9VOYoPg==
+  t=1584077423; x=1615613423;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=88Zx2T7WCBJVENwjrv8btKUmZjU2WnlNsWj7L+qkaVc=;
+  b=Co3158PT34Ol4s7cWJ5JA5Zp5T1Uw31COR1ePlC5Xik48a1jUcaDAxYV
+   PHu13qu7Xy3jpMdcLwT+RrGjciY16+jxrbr/Kx62elEqT3dFiu7WKMxuA
+   cA5UlLv8TyIYg7hL+A9yQH352JaxQWHSJqo+CIf2pSRt7LRkW9dwZ2zXB
+   U=;
+IronPort-SDR: g32NOkjyZPrHE+l6ytQQqlK1Lm2zjoAu14ly/4ojSH4IYga6i3V+2BWs5y6AZoe7rXTxYAuHjX
+ lzVS0Wubks4A==
 X-IronPort-AV: E=Sophos;i="5.70,547,1574121600"; 
-   d="scan'208";a="21324131"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 13 Mar 2020 05:30:20 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 8CE8CA2E2C;
+   d="scan'208";a="32358031"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 13 Mar 2020 05:30:21 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 07FF8A28FA;
         Fri, 13 Mar 2020 05:30:18 +0000 (UTC)
-Received: from EX13D01UWA002.ant.amazon.com (10.43.160.74) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+Received: from EX13D01UWA004.ant.amazon.com (10.43.160.99) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
  id 15.0.1367.3; Fri, 13 Mar 2020 05:30:18 +0000
 Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13d01UWA002.ant.amazon.com (10.43.160.74) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 05:30:17 +0000
+ EX13d01UWA004.ant.amazon.com (10.43.160.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 13 Mar 2020 05:30:18 +0000
 Received: from localhost (10.2.75.237) by mail-relay.amazon.com
  (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
  Transport; Fri, 13 Mar 2020 05:30:18 +0000
@@ -43,11 +44,14 @@ From:   Balbir Singh <sblbir@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-nvme@lists.infradead.org>
 CC:     <axboe@kernel.dk>, <Chaitanya.Kulkarni@wdc.com>, <hch@lst.de>,
-        "Balbir Singh" <sblbir@amazon.com>
-Subject: [PATCH v3 0/5] Add support for block disk resize notification
-Date:   Fri, 13 Mar 2020 05:30:04 +0000
-Message-ID: <20200313053009.19866-1-sblbir@amazon.com>
+        "Balbir Singh" <sblbir@amazon.com>,
+        Someswarudu Sangaraju <ssomesh@amazon.com>
+Subject: [PATCH v3 1/5] block/genhd: Notify udev about capacity change
+Date:   Fri, 13 Mar 2020 05:30:05 +0000
+Message-ID: <20200313053009.19866-2-sblbir@amazon.com>
 X-Mailer: git-send-email 2.16.6
+In-Reply-To: <20200313053009.19866-1-sblbir@amazon.com>
+References: <20200313053009.19866-1-sblbir@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
@@ -55,54 +59,69 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow block/genhd to notify user space about disk size changes using a
-new helper set_capacity_revalidate_and_notify(), which is a wrapper
-on top of set_capacity(). set_capacity_revalidate_and_notify() will only notify
-iff the current capacity or the target capacity is not zero and the
-capacity really changes.
+Allow block/genhd to notify user space (via udev) about disk size changes
+using a new helper set_capacity_revalidate_and_notify(), which is a wrapper
+on top of set_capacity(). set_capacity_revalidate_and_notify() will only
+notify via udev if the current capacity or the target capacity is not zero
+and iff the capacity changes.
 
-Background:
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Someswarudu Sangaraju <ssomesh@amazon.com>
+Signed-off-by: Balbir Singh <sblbir@amazon.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+---
+ block/genhd.c         | 24 ++++++++++++++++++++++++
+ include/linux/genhd.h |  2 ++
+ 2 files changed, 26 insertions(+)
 
-As a part of a patch to allow sending the RESIZE event on disk capacity
-change, Christoph (hch@lst.de) requested that the patch be made generic
-and the hacks for virtio block and xen block devices be removed and
-merged via a generic helper.
-
-This series consists of 5 changes. The first one adds the basic
-support for changing the size and notifying. The follow up patches
-are per block subsystem changes. Other block drivers can add their
-changes as necessary on top of this series. Since not all devices
-are resizable, the default was to add a new API and let users
-slowly convert over as needed.
-
-Testing:
-1. I did some basic testing with an NVME device, by resizing it in
-the backend and ensured that udevd received the event.
-
-
-Changelog v3:
-- Repost after rebasing
-- Trim details of the subsystem/files in the subject
-Changelog v2:
-- Rename disk_set_capacity to set_capacity_revalidate_and_notify
-- set_capacity_revalidate_and_notify can call revalidate disk
-  if needed, a new bool parameter is passed (suggested by Bob Liu)
-
-Balbir Singh (5):
-  block/genhd: Notify udev about capacity change
-  virtio_blk.c: Convert to use set_capacity_revalidate_and_notify
-  xen-blkfront.c: Convert to use set_capacity_revalidate_and_notify
-  nvme: Convert to use set_capacity_revalidate_and_notify
-  scsi: Convert to use set_capacity_revalidate_and_notify
-
- block/genhd.c                | 24 ++++++++++++++++++++++++
- drivers/block/virtio_blk.c   |  5 +----
- drivers/block/xen-blkfront.c |  6 +-----
- drivers/nvme/host/core.c     |  2 +-
- drivers/scsi/sd.c            |  3 ++-
- include/linux/genhd.h        |  2 ++
- 6 files changed, 31 insertions(+), 11 deletions(-)
-
+diff --git a/block/genhd.c b/block/genhd.c
+index ff6268970ddc..6a60131baffa 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -46,6 +46,30 @@ static void disk_add_events(struct gendisk *disk);
+ static void disk_del_events(struct gendisk *disk);
+ static void disk_release_events(struct gendisk *disk);
+ 
++/*
++ * Set disk capacity and notify if the size is not currently
++ * zero and will not be set to zero
++ */
++void set_capacity_revalidate_and_notify(struct gendisk *disk, sector_t size,
++					bool revalidate)
++{
++	sector_t capacity = get_capacity(disk);
++
++	set_capacity(disk, size);
++
++	if (revalidate)
++		revalidate_disk(disk);
++
++	if (capacity != size && capacity != 0 && size != 0) {
++		char *envp[] = { "RESIZE=1", NULL };
++
++		kobject_uevent_env(&disk_to_dev(disk)->kobj, KOBJ_CHANGE, envp);
++	}
++}
++
++EXPORT_SYMBOL_GPL(set_capacity_revalidate_and_notify);
++
++
+ void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
+ {
+ 	if (queue_is_mq(q))
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 6fbe58538ad6..f77f5095f20b 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -461,6 +461,8 @@ static inline int get_disk_ro(struct gendisk *disk)
+ extern void disk_block_events(struct gendisk *disk);
+ extern void disk_unblock_events(struct gendisk *disk);
+ extern void disk_flush_events(struct gendisk *disk, unsigned int mask);
++extern void set_capacity_revalidate_and_notify(struct gendisk *disk,
++			sector_t size, bool revalidate);
+ extern unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask);
+ 
+ /* drivers/char/random.c */
 -- 
 2.16.6
 
