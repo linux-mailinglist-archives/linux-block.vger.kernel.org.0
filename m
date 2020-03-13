@@ -2,105 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D41E0183F22
-	for <lists+linux-block@lfdr.de>; Fri, 13 Mar 2020 03:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E67E184088
+	for <lists+linux-block@lfdr.de>; Fri, 13 Mar 2020 06:30:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgCMCcN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 12 Mar 2020 22:32:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39572 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726114AbgCMCcN (ORCPT
+        id S1726492AbgCMFal (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Mar 2020 01:30:41 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:46768 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgCMFal (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:32:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584066732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jy7ru2lhZyV4XD4AwVfLYwfxqoUBvsmiFz87nnoF0Og=;
-        b=fwYqiEf5eQQINrt/q22IODmKN8HbPf3zsZHqOWM+xfPbSF2ATeqx12139GeYjLy+xefmmr
-        S6QPrM/6Hlrg9NVThx8yasLrIjST40rFjOiawN77hiqa+82BP58GtgR46qTCQ8xXyrJyNp
-        NF+zG/4LOguPi2vGrNmbZ94jILvAq1w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-W7_0KUXdOiWOMh2L-3ygpA-1; Thu, 12 Mar 2020 22:32:07 -0400
-X-MC-Unique: W7_0KUXdOiWOMh2L-3ygpA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C62113F8;
-        Fri, 13 Mar 2020 02:32:07 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-37.pek2.redhat.com [10.72.8.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6175F909FB;
-        Fri, 13 Mar 2020 02:32:01 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 10:31:56 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Feng Li <lifeng1519@gmail.com>
-Cc:     linux-block@vger.kernel.org
-Subject: Re: [Question] IO is split by block layer when size is larger than 4k
-Message-ID: <20200313023156.GB27275@ming.t460p>
-References: <CAEK8JBBSqiXPY8FhrQ7XqdQ38L9zQepYrZkjoF+r4euTeqfGQQ@mail.gmail.com>
- <20200312123415.GA7660@ming.t460p>
- <CAEK8JBAiBwghR5hXiDPETx=EGNi=OTQQz7DOaSXd=96QkUWTGg@mail.gmail.com>
+        Fri, 13 Mar 2020 01:30:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1584077441; x=1615613441;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=REy7LBkdQ5MCy84KosSuZWNgbDSwbuHXvkOMZFApZ0g=;
+  b=QiGYZ6WDYUTQ3B/GACRkWiFFU4Bh/Qo7Gn32oKWVlJ1m6qoVZtXvCNkj
+   afyyF0Gv+UGa7KoJl3KUNaZNDBm0kZSWdeThlWIQ4La+Tl6SNZJl+b3tq
+   ReTs89h65xAWhcGaFu+uGoNWHGDojYKrs0k10xCK2LmBAZLXX9Al3u0xG
+   4=;
+IronPort-SDR: BBxpNHEOWW1ENqqjyI1ueSy8wEtQCRVJhTMUDArhWjlmVcbDR3lUllZ4prigMjSQ6ncpcVpQDH
+ I5KYk9VOYoPg==
+X-IronPort-AV: E=Sophos;i="5.70,547,1574121600"; 
+   d="scan'208";a="21324131"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 13 Mar 2020 05:30:20 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 8CE8CA2E2C;
+        Fri, 13 Mar 2020 05:30:18 +0000 (UTC)
+Received: from EX13D01UWA002.ant.amazon.com (10.43.160.74) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 13 Mar 2020 05:30:18 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13d01UWA002.ant.amazon.com (10.43.160.74) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 13 Mar 2020 05:30:17 +0000
+Received: from localhost (10.2.75.237) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Fri, 13 Mar 2020 05:30:18 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, <Chaitanya.Kulkarni@wdc.com>, <hch@lst.de>,
+        "Balbir Singh" <sblbir@amazon.com>
+Subject: [PATCH v3 0/5] Add support for block disk resize notification
+Date:   Fri, 13 Mar 2020 05:30:04 +0000
+Message-ID: <20200313053009.19866-1-sblbir@amazon.com>
+X-Mailer: git-send-email 2.16.6
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEK8JBAiBwghR5hXiDPETx=EGNi=OTQQz7DOaSXd=96QkUWTGg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:21:11PM +0800, Feng Li wrote:
-> Hi Ming,
-> Thanks.
-> I have tested kernel '5.4.0-rc6+', which includes 07173c3ec276.
-> But the virtio is still be filled with single page by page.
+Allow block/genhd to notify user space about disk size changes using a
+new helper set_capacity_revalidate_and_notify(), which is a wrapper
+on top of set_capacity(). set_capacity_revalidate_and_notify() will only notify
+iff the current capacity or the target capacity is not zero and the
+capacity really changes.
 
-Hello,
+Background:
 
-Could you share your test script?
+As a part of a patch to allow sending the RESIZE event on disk capacity
+change, Christoph (hch@lst.de) requested that the patch be made generic
+and the hacks for virtio block and xen block devices be removed and
+merged via a generic helper.
 
-BTW, it depends if fs layer passes contiguous pages to block layer.
+This series consists of 5 changes. The first one adds the basic
+support for changing the size and notifying. The follow up patches
+are per block subsystem changes. Other block drivers can add their
+changes as necessary on top of this series. Since not all devices
+are resizable, the default was to add a new API and let users
+slowly convert over as needed.
 
-You can dump each bvec of the bio, and see if they are contiguous
-physically.
+Testing:
+1. I did some basic testing with an NVME device, by resizing it in
+the backend and ensured that udevd received the event.
 
-Thanks,
-Ming
 
->=20
-> Ming Lei <ming.lei@redhat.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=8812=E6=97=
-=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=888:34=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Thu, Mar 12, 2020 at 07:13:28PM +0800, Feng Li wrote:
-> > > Hi experts,
-> > >
-> > > May I ask a question about block layer?
-> > > When running fio in guest os, I find a 256k IO is split into the pa=
-ge
-> > > by page in bio, saved in bvecs.
-> > > And virtio-blk just put the bio_vec one by one in the available
-> > > descriptor table.
-> > >
-> > > So if my backend device does not support iovector
-> > > opertion(preadv/pwritev), then IO is issued to a low layer page by
-> > > page.
-> > > My question is: why doesn't the bio save multi-pages in one bio_vec=
-?
-> >
-> > We start multipage bvec since v5.1, especially since 07173c3ec276
-> > ("block: enable multipage bvecs").
-> >
-> > Thanks,
-> > Ming
-> >
->=20
+Changelog v3:
+- Repost after rebasing
+- Trim details of the subsystem/files in the subject
+Changelog v2:
+- Rename disk_set_capacity to set_capacity_revalidate_and_notify
+- set_capacity_revalidate_and_notify can call revalidate disk
+  if needed, a new bool parameter is passed (suggested by Bob Liu)
 
---=20
-Ming
+Balbir Singh (5):
+  block/genhd: Notify udev about capacity change
+  virtio_blk.c: Convert to use set_capacity_revalidate_and_notify
+  xen-blkfront.c: Convert to use set_capacity_revalidate_and_notify
+  nvme: Convert to use set_capacity_revalidate_and_notify
+  scsi: Convert to use set_capacity_revalidate_and_notify
+
+ block/genhd.c                | 24 ++++++++++++++++++++++++
+ drivers/block/virtio_blk.c   |  5 +----
+ drivers/block/xen-blkfront.c |  6 +-----
+ drivers/nvme/host/core.c     |  2 +-
+ drivers/scsi/sd.c            |  3 ++-
+ include/linux/genhd.h        |  2 ++
+ 6 files changed, 31 insertions(+), 11 deletions(-)
+
+-- 
+2.16.6
 
