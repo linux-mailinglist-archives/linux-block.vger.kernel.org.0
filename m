@@ -2,142 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F348718687D
-	for <lists+linux-block@lfdr.de>; Mon, 16 Mar 2020 11:02:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E596186959
+	for <lists+linux-block@lfdr.de>; Mon, 16 Mar 2020 11:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgCPKCK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Mar 2020 06:02:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45016 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730534AbgCPKCJ (ORCPT
+        id S1730679AbgCPKrQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Mar 2020 06:47:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46645 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730478AbgCPKrQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:02:09 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d9so7762499plo.11;
-        Mon, 16 Mar 2020 03:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=zVsXEMQ2cvDxi1JSi+7AbphOA0QjROre8VLRlUq3vMI=;
-        b=gJ0wj7QE4LJ/lVMZEDr7b6mqq5iHAVeEw621yxmOe5eoW5GOKHH6hEO/5GH3Zc9ptd
-         p5G7l1lmL7KQed6+O0bxjMYWd/4Pi2LZQXD13nrJMcruN6CaXSPfYh93f16O5YVX13F5
-         95tCItZ5ZT7afSEMUDzpb1VwidhfVQW9sD3ViCD9G99pDFTigo5yehXgJyN7Z7jjW5cq
-         8AL7fT4TeWYsYPYpxc4M7xzVt90edBEyTssMbLeTrZXiuLx4KbZMCCR29m84CqXptPqO
-         4eUJH7W2F1YXX6ADHjipzc6a6KLFil1xyX+yDMtEvPrygtb3u8Q+d/0L6sJb3p9MQN0a
-         nT5g==
+        Mon, 16 Mar 2020 06:47:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w16so4121113wrv.13;
+        Mon, 16 Mar 2020 03:47:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=zVsXEMQ2cvDxi1JSi+7AbphOA0QjROre8VLRlUq3vMI=;
-        b=gpSkQZfnuo8V3totvwcWULIsa7a861gG2bwA2uL+zGQOHLFw7+rcZ9jNIy13XtPsus
-         HOBL5luhccs65BEKk6fhE87rEPGN94M1iZWiVEsEl86eCATmD5tyHMckwpDvjpkxFd/M
-         FfnEcAaeqr3ZGk72JsU51pA+u4Jz+XDuYWoO7Cn9dUBU3sHzGnaiZzQ1aoPOo7ALdbkr
-         1MbToat8zTj47hrrNqATGHs8bjF55M/VQ1wHXRe2Bu1doXTsRqdCa1TM5cXLx/T5eC6M
-         6AknjtXacN/4wveAHVeAAp0UaQzpOIiskcdoDNRpNC/gpJqR5khHMjC+vD2YokxrAO9n
-         4nfw==
-X-Gm-Message-State: ANhLgQ2BPP5b3AGsZQrHIgXxr/rFG7LOVYYbh2EZ/4JfkROqEOmynk6E
-        +7jJek+vqpxT/lQiTx3BHFg=
-X-Google-Smtp-Source: ADFU+vuwddfeOJxssCBTiAilwq4VXdcEO12xHfGzz1b4kKNTo02ClU1t1DL+tBP+ytkEmiiBga1oAQ==
-X-Received: by 2002:a17:902:740b:: with SMTP id g11mr12870239pll.166.1584352929118;
-        Mon, 16 Mar 2020 03:02:09 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 136sm63970411pgh.26.2020.03.16.03.02.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 16 Mar 2020 03:02:08 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     axboe@kernel.dk, paolo.valente@linaro.org, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com
-Cc:     ming.lei@redhat.com, arnd@arndb.de, linus.walleij@linaro.org,
-        baolin.wang7@gmail.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH 8/8] mmc: host: sdhci-sprd: Add MMC packed request support
-Date:   Mon, 16 Mar 2020 18:01:25 +0800
-Message-Id: <060083eadc085cc93149475f3259cf2eb9d81d83.1584350380.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1584350380.git.baolin.wang7@gmail.com>
-References: <cover.1584350380.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1584350380.git.baolin.wang7@gmail.com>
-References: <cover.1584350380.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:reply-to:from:subject:to:cc:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=vibrpsfD5nBtWhWdlH3ux6m1+gQfms/bPDCbvYSFzpo=;
+        b=edUqCDWd5hANKotdVUU0tGSWv+oTEeXqrS8e1dZf78UMP6YSX+Qrc92jmvxYMq7BCF
+         kWmeUKT4LENlzODB+Kzs66GS1vWpNByu4/fkdovwBQr1RQoNY8UVGNSgVDDr3cJ+ajXt
+         AYWD2/bEQo8Pw+sMEHUf3+v0VbIqnUB6RdoNhuYId3GDlzcKUIXMOaGCN2D8jtgf9+rL
+         kT16hcuaf8qW9hxQO8Aya89Z4RKwoNLIt+a0BM6/9l+Id9jOqJVLgpbDiHxlniGEhvK6
+         SBjZouuAEFUFM7r3krUs06SYcSsWXSz3ODb1molnNFCJr/1CuAn2OuHhy2FXn7K5IfTI
+         pktA==
+X-Gm-Message-State: ANhLgQ3t0EM6VxbSRReJoxkVEYkkd7rleeXSQJ+5YDtkzTWO8skk8Bv4
+        JeZKAatCaWeHyWqBshE4PdVHceXY
+X-Google-Smtp-Source: ADFU+vtfqmhyM8ZGOur535mw2J65SLHFV+3Dyr1SkDMRkjVA7DD0D2EXtkp/u/lK5t9hze4MfQnGzQ==
+X-Received: by 2002:a5d:5586:: with SMTP id i6mr35833352wrv.338.1584355634281;
+        Mon, 16 Mar 2020 03:47:14 -0700 (PDT)
+Received: from [10.10.2.174] (winnie.ispras.ru. [83.149.199.91])
+        by smtp.gmail.com with ESMTPSA id f11sm5988514wrq.88.2020.03.16.03.47.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 03:47:13 -0700 (PDT)
+Reply-To: efremov@linux.com
+From:   Denis Efremov <efremov@linux.com>
+Subject: [GIT PULL] Floppy cleanups for next
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Willy Tarreau <w@1wt.eu>
+Message-ID: <57ce0ee0-839c-a889-0bc0-ec46985e76d3@linux.com>
+Date:   Mon, 16 Mar 2020 13:47:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Enable the ADMA3 transfer mode as well as adding packed operations
-to support MMC packed requests to improve IO performance.
+Hi Jens,
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/mmc/host/sdhci-sprd.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+The following changes since commit 5d50c8f405bf91d9d9a48628fde0f2f4ff069d7b:
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 49afe1c..daa38ed 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -390,6 +390,12 @@ static void sdhci_sprd_request_done(struct sdhci_host *host,
- 	 mmc_request_done(host->mmc, mrq);
- }
- 
-+static void sdhci_sprd_packed_request_done(struct sdhci_host *host,
-+					   struct mmc_packed_request *prq)
-+{
-+	mmc_hsq_finalize_packed_request(host->mmc, prq);
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -404,6 +410,7 @@ static void sdhci_sprd_request_done(struct sdhci_host *host,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- 	.get_ro = sdhci_sprd_get_ro,
- 	.request_done = sdhci_sprd_request_done,
-+	.packed_request_done = sdhci_sprd_packed_request_done,
- };
- 
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -546,10 +553,18 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
- 		  SDHCI_QUIRK_MISSING_CAPS,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
- 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
--		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+		   SDHCI_QUIRK2_USE_ADMA3_SUPPORT,
- 	.ops = &sdhci_sprd_ops,
- };
- 
-+static const struct hsq_packed_ops packed_ops = {
-+	.packed_algo = mmc_hsq_packed_algo_rw,
-+	.prepare_hardware = sdhci_prepare_packed,
-+	.unprepare_hardware = sdhci_unprepare_packed,
-+	.packed_request = sdhci_packed_request,
-+};
-+
- static int sdhci_sprd_probe(struct platform_device *pdev)
- {
- 	struct sdhci_host *host;
-@@ -676,7 +691,18 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 		goto err_cleanup_host;
- 	}
- 
--	ret = mmc_hsq_init(hsq, host->mmc, NULL, 0);
-+	/*
-+	 * If the host controller can support ADMA3 mode, we can enable the
-+	 * packed request mode to improve the read/write performance.
-+	 *
-+	 * Considering the maximum ADMA3 entries (default is 16) and the request
-+	 * latency, we set the default maximum packed requests number is 8.
-+	 */
-+	if (host->flags & SDHCI_USE_ADMA3)
-+		ret = mmc_hsq_init(hsq, host->mmc, &packed_ops,
-+				   SDHCI_MAX_ADMA3_ENTRIES / 2);
-+	else
-+		ret = mmc_hsq_init(hsq, host->mmc, NULL, 0);
- 	if (ret)
- 		goto err_cleanup_host;
- 
--- 
-1.9.1
+  Merge branch 'for-5.7/io_uring' into for-next (2020-03-14 17:20:45 -0600)
 
+are available in the Git repository at:
+
+  https://github.com/evdenis/linux-floppy tags/floppy-for-5.7
+
+Please pull
+
+----------------------------------------------------------------
+Floppy patches for 5.7
+
+Cleanups from Willy Tarreau:
+  - expansion of macros referencing global or local variables with
+    equivalent code
+  - removal of incomplete support for second FDC from ARM code
+  - renaming the "fdc" global variable to "current_fdc" to differ
+    between global and local context
+
+Changes were compile tested on arm, x86 arches. Changes introduce
+no binary difference on x86 arch (before and after the patches).
+On arm, incomplete support for second FDC removed. This set of
+patches with commit 2e90ca68 ("floppy: check FDC index for errors
+before assigning it") was tested with syzkaller and simple
+write/read/format tests for no new issues.
+
+Signed-off-by: Denis Efremov <efremov@linux.com>
+
+----------------------------------------------------------------
+Willy Tarreau (16):
+      floppy: cleanup: expand macro FDCS
+      floppy: cleanup: expand macro UFDCS
+      floppy: cleanup: expand macro UDP
+      floppy: cleanup: expand macro UDRS
+      floppy: cleanup: expand macro UDRWE
+      floppy: cleanup: expand macro DP
+      floppy: cleanup: expand macro DRS
+      floppy: cleanup: expand macro DRWE
+      floppy: cleanup: expand the R/W / format command macros
+      floppy: cleanup: expand the reply_buffer macros
+      floppy: remove dead code for drives scanning on ARM
+      floppy: remove incomplete support for second FDC from ARM code
+      floppy: prepare ARM code to simplify base address separation
+      floppy: introduce new functions fdc_inb() and fdc_outb()
+      floppy: separate the FDC's base address from its registers
+      floppy: rename the global "fdc" variable to "current_fdc"
+
+ arch/arm/include/asm/floppy.h |   88 +----
+ drivers/block/floppy.c        | 1093 +++++++++++++++++++++++++++++++----------------------------
+ include/uapi/linux/fdreg.h    |   18 +-
+ 3 files changed, 586 insertions(+), 613 deletions(-)
