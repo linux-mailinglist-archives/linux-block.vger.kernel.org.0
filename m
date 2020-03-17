@@ -2,113 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 950DB187E42
-	for <lists+linux-block@lfdr.de>; Tue, 17 Mar 2020 11:27:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C40A8188346
+	for <lists+linux-block@lfdr.de>; Tue, 17 Mar 2020 13:11:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725794AbgCQK1L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Mar 2020 06:27:11 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48211 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbgCQK1L (ORCPT
+        id S1726918AbgCQMLb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Mar 2020 08:11:31 -0400
+Received: from sonic316-53.consmr.mail.ne1.yahoo.com ([66.163.187.179]:34520
+        "EHLO sonic316-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726579AbgCQMLa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:27:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584440829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l7TwxBhJbK/6t1z07IsEb2SVAvOI34lv7qpUcHPUU9I=;
-        b=W8PgzCddL/FOGXzZpPjJbXcK0YNx8VUEntFhUqTIiOiCSrNDnqSU+7hGo0EQDzbaakZsYC
-        VMKrlde5Fp7bVQQlaUxav96SbvPUuaQmunBzMqzZSjGuYgN6TKVJ5dCU/c3gKBytwksWdf
-        jChS6YLWTwGXsnpiD535PVDcX3umNPY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-4mIfnvJVMMuVXr6SwNLg_w-1; Tue, 17 Mar 2020 06:26:55 -0400
-X-MC-Unique: 4mIfnvJVMMuVXr6SwNLg_w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 159121804578;
-        Tue, 17 Mar 2020 10:26:54 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6248E8B74D;
-        Tue, 17 Mar 2020 10:26:48 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 18:26:43 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Feng Li <lifeng1519@gmail.com>
-Cc:     Ming Lei <tom.leiming@gmail.com>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: [Question] IO is split by block layer when size is larger than 4k
-Message-ID: <20200317102643.GA8721@ming.t460p>
-References: <CAEK8JBBSqiXPY8FhrQ7XqdQ38L9zQepYrZkjoF+r4euTeqfGQQ@mail.gmail.com>
- <20200312123415.GA7660@ming.t460p>
- <CAEK8JBAiBwghR5hXiDPETx=EGNi=OTQQz7DOaSXd=96QkUWTGg@mail.gmail.com>
- <20200313023156.GB27275@ming.t460p>
- <CAEK8JBCHKbBoXutE5rtxA+kUeoCZB2o=Lsjf9WbYZ+sLayNymA@mail.gmail.com>
- <CACVXFVPJcO41a-dinfEhLKnJ6P=6sMXyg7SZcXPtqHcyqRPUUA@mail.gmail.com>
- <CAEK8JBCKH8-tiUj1W6CB_wAx2xF4osDLXG3GNzuAySrgsqp=yQ@mail.gmail.com>
+        Tue, 17 Mar 2020 08:11:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584447089; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=KCMlqjzzwS7inRC819loJS79mPsbkcFh304PAb108zZwC6pa8gLSwkQOksaUWCmP+DDcCZXF52527CmULpQ7BdSVkRvhUJMiVtnhmbC6psyu1gxYdCDQpVpfDeKnOh3/XDytGvhawq4PyZIBVX+wEvjRMk/56f1N94IPcKrSBIpS/0DLdnRtxGHw/FNjso/PBdeRhWRS9sQgDrVl5+tEASVIwm8jp8JWC8ugClr7LMOO3LOjAmg2UFQb2Sahl+KPsuJY7O8AhrKSA4JwwX0GH6Gk6PktJfj5KQ3w1pf43N7SjCqaVRWwwnWe8Z7v8Sw0RjsIoITDOH3HO6mtQxOXFw==
+X-YMail-OSG: nwaTrt4VM1lDCPW_4pvlmdHAB4HAd8ObDxV2jblZS5yJaml5hQx8to41jpdTr.o
+ 6JoVPGukrqUvVKYJ6gZYVzuWzDI52hq6Rw5fdAZ_zBaw9aFChlLxFmd4omp.bcI2uxUdM.BDzeeN
+ Y_hvEBIpkCPoCAm66xPD5jIBbZ0cj1xcDHRWJMhmt9MqOg27xEYgrfkdayuDTydo1p_1KfrBOEw3
+ Cs5s1LGFDulJy2mMdarisTNG79jsqOxAN9t.nKTAkBRFiLCEOWQu2ZsECPjSbs9vvbocqSMdfwK8
+ zkGSsD4wlCb8YiptM2I8udid3A4XpHHFbO6bqpfFSvKVY4J_FUMqZdiPniOBuzEGY.p6tuzAEmQR
+ 9whpr9f7kh9EQfFTTD.9l3nbDMjfplK_aik6oYKaNchOx1SygPXhjMKQnKk.AZOH2VlFT5_cMKpH
+ Dr12NC9pKhCSOY0Ly4w.jvNAVjZYC9q1hO1G3Lmbn2.z8DfYfFOop5oZaBOJ7P6M4_dHZEOgoLrb
+ baIsLMPAgID1yYPnNkmAy6SujtaA2q5SGYm3Aoq8Khb4HipsTrzoPuSzUM_Wy4Vk.J5_ecFkZSnx
+ UDV4uwrsNL5hjpS9Dvk9hbcI2BhQ3RQs4HRNwUq24mvpmJL8onC2W2oH5Ib2HPgWr6tPEV18EN96
+ qTLFCoQxRD9cTOmSa9MHPICEbt.yISk4YVtxOgNlrRkViPOTulYpjDRM2JJVxLoTyQi1crZiDmAl
+ ID0CbX4UbJJfxm0_3guinQWPXF_UqJX39mZR5vhgcfW7aTzAFlQmuRx9XC4BFQMK6TBTJY7gH7.J
+ 79IJZ6JEm59ol7a6IDE.BOSkOBqtlvGzjLxCGhM6RTOfPqgcwze140Faq4fLNyXu77Xmnt9VCelv
+ SbKazh3MHBrHO0fxT229tWoiEh2jWvgpBWPbPZL6ghCPspCfA90g63dMDidVXeTzVaON4txUHYI2
+ rkwxE_Txwv0_WBvC.201Tn3rq_6ht1MOCUqhgjg6odqY_9ghnh0j9mggywGBwXwKhqyNzjuK7N2R
+ qL6gBFODLt5qfK0Sc7fN435k_R_bti4D3Jt8bPzQEirIxTOPPx_XYvrR0cCvNDS3BRJ4Mq0r7ZGc
+ qxsq0_qftRTdi6jr4Um_ci22FuoesgE9L_A45Is5kpevTQ1GwtAeGpH.ytMrONuERJ70lGsBPpPg
+ MtW8WIXf.aSrdetjLNQ6a6uOvAFdrPqvaqXXCB46LMU.BUe6QcaF8d7YgtDunEtzlzaG68UP5cS.
+ sVt0O8vZoU.FuxFxrK3VYR4OAARNv9Z9Mf0ggKFFAJY7wvSQKRVsZKWfBpRYK7REKQ5tNpALOFNu
+ iNovnZRT4ecFBHoBIRBLkfKml6oyci_bdmw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:11:29 +0000
+Date:   Tue, 17 Mar 2020 12:09:27 +0000 (UTC)
+From:   Stephen Li <stenn6@gabg.net>
+Reply-To: stephli947701@gmail.com
+Message-ID: <1348826789.1834294.1584446967790@mail.yahoo.com>
+Subject: REF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEK8JBCKH8-tiUj1W6CB_wAx2xF4osDLXG3GNzuAySrgsqp=yQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1348826789.1834294.1584446967790.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 04:19:44PM +0800, Feng Li wrote:
-> Thanks.
-> Sometimes when I observe multipage bvec on 5.3.7-301.fc31.x86_64.
-> This log is from Qemu virtio-blk.
-> 
-> ========= size: 262144, iovcnt: 2
->       0: size: 229376 addr: 0x7fff6a7c8000
->       1: size: 32768 addr: 0x7fff64c00000
-> ========= size: 262144, iovcnt: 2
->       0: size: 229376 addr: 0x7fff6a7c8000
->       1: size: 32768 addr: 0x7fff64c00000
-
-Then it is working.
-
-> 
-> I also tested on 5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64.
-> And observe 64 iovcnt.
-> ========= size: 262144, iovcnt: 64
->       0: size: 4096 addr: 0x7fffb5ece000
->       1: size: 4096 addr: 0x7fffb5ecd000
-> ...
->       63: size: 4096 addr: 0x7fff8baec000
-> 
-> So I think this is a common issue of the upstream kernel, from 5.3 to 5.6.
-
-As I mentioned before, it is because the pages aren't contiguous
-physically.
-
-If you enable hugepage, you will see lot of pages in one single bvec.
-
-> 
-> BTW, I have used your script on 5.3.7-301.fc31.x86_64, it works well.
-> However, when updating to kernel 5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64.
-> It complains:
-> 
-> root@192.168.19.239 16:57:23 ~ $ ./bvec_avg_pages.py
-> In file included from /virtual/main.c:2:
-> In file included from
-> /lib/modules/5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64/build/include/uapi/linux/ptrace.h:142:
-> In file included from
-> /lib/modules/5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64/build/arch/x86/include/asm/ptrace.h:5:
-> /lib/modules/5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64/build/arch/x86/include/asm/segment.h:266:2:
-> error: expected '(' after 'asm'
->         alternative_io ("lsl %[seg],%[p]",
-
-It can be workaround by commenting the following line in 
-/lib/modules/5.6.0-0.rc6.git0.1.vanilla.knurd.1.fc31.x86_64/build/include/generated/autoconf.h:
-
-#define CONFIG_CC_HAS_ASM_INLINE 1
 
 
-Thanks, 
-Ming
-
+Greetings,
+I was searching through a local business directory when I found your
+profile. I am Soliciting On-Behalf of my private client who is
+interested in having a serious business investment in your country. If
+you have a valid business, investment or project he can invest
+back to me for more details. Your swift response is highly needed.
+Sincerely
+Stephen Li
+Please response back to me with is my private email below for more details
+stephli947701@gmail.com
