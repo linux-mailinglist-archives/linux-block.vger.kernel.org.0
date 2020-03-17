@@ -2,62 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C40A8188346
-	for <lists+linux-block@lfdr.de>; Tue, 17 Mar 2020 13:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93BB818846E
+	for <lists+linux-block@lfdr.de>; Tue, 17 Mar 2020 13:42:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCQMLb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Mar 2020 08:11:31 -0400
-Received: from sonic316-53.consmr.mail.ne1.yahoo.com ([66.163.187.179]:34520
-        "EHLO sonic316-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgCQMLa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:11:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584447089; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=KCMlqjzzwS7inRC819loJS79mPsbkcFh304PAb108zZwC6pa8gLSwkQOksaUWCmP+DDcCZXF52527CmULpQ7BdSVkRvhUJMiVtnhmbC6psyu1gxYdCDQpVpfDeKnOh3/XDytGvhawq4PyZIBVX+wEvjRMk/56f1N94IPcKrSBIpS/0DLdnRtxGHw/FNjso/PBdeRhWRS9sQgDrVl5+tEASVIwm8jp8JWC8ugClr7LMOO3LOjAmg2UFQb2Sahl+KPsuJY7O8AhrKSA4JwwX0GH6Gk6PktJfj5KQ3w1pf43N7SjCqaVRWwwnWe8Z7v8Sw0RjsIoITDOH3HO6mtQxOXFw==
-X-YMail-OSG: nwaTrt4VM1lDCPW_4pvlmdHAB4HAd8ObDxV2jblZS5yJaml5hQx8to41jpdTr.o
- 6JoVPGukrqUvVKYJ6gZYVzuWzDI52hq6Rw5fdAZ_zBaw9aFChlLxFmd4omp.bcI2uxUdM.BDzeeN
- Y_hvEBIpkCPoCAm66xPD5jIBbZ0cj1xcDHRWJMhmt9MqOg27xEYgrfkdayuDTydo1p_1KfrBOEw3
- Cs5s1LGFDulJy2mMdarisTNG79jsqOxAN9t.nKTAkBRFiLCEOWQu2ZsECPjSbs9vvbocqSMdfwK8
- zkGSsD4wlCb8YiptM2I8udid3A4XpHHFbO6bqpfFSvKVY4J_FUMqZdiPniOBuzEGY.p6tuzAEmQR
- 9whpr9f7kh9EQfFTTD.9l3nbDMjfplK_aik6oYKaNchOx1SygPXhjMKQnKk.AZOH2VlFT5_cMKpH
- Dr12NC9pKhCSOY0Ly4w.jvNAVjZYC9q1hO1G3Lmbn2.z8DfYfFOop5oZaBOJ7P6M4_dHZEOgoLrb
- baIsLMPAgID1yYPnNkmAy6SujtaA2q5SGYm3Aoq8Khb4HipsTrzoPuSzUM_Wy4Vk.J5_ecFkZSnx
- UDV4uwrsNL5hjpS9Dvk9hbcI2BhQ3RQs4HRNwUq24mvpmJL8onC2W2oH5Ib2HPgWr6tPEV18EN96
- qTLFCoQxRD9cTOmSa9MHPICEbt.yISk4YVtxOgNlrRkViPOTulYpjDRM2JJVxLoTyQi1crZiDmAl
- ID0CbX4UbJJfxm0_3guinQWPXF_UqJX39mZR5vhgcfW7aTzAFlQmuRx9XC4BFQMK6TBTJY7gH7.J
- 79IJZ6JEm59ol7a6IDE.BOSkOBqtlvGzjLxCGhM6RTOfPqgcwze140Faq4fLNyXu77Xmnt9VCelv
- SbKazh3MHBrHO0fxT229tWoiEh2jWvgpBWPbPZL6ghCPspCfA90g63dMDidVXeTzVaON4txUHYI2
- rkwxE_Txwv0_WBvC.201Tn3rq_6ht1MOCUqhgjg6odqY_9ghnh0j9mggywGBwXwKhqyNzjuK7N2R
- qL6gBFODLt5qfK0Sc7fN435k_R_bti4D3Jt8bPzQEirIxTOPPx_XYvrR0cCvNDS3BRJ4Mq0r7ZGc
- qxsq0_qftRTdi6jr4Um_ci22FuoesgE9L_A45Is5kpevTQ1GwtAeGpH.ytMrONuERJ70lGsBPpPg
- MtW8WIXf.aSrdetjLNQ6a6uOvAFdrPqvaqXXCB46LMU.BUe6QcaF8d7YgtDunEtzlzaG68UP5cS.
- sVt0O8vZoU.FuxFxrK3VYR4OAARNv9Z9Mf0ggKFFAJY7wvSQKRVsZKWfBpRYK7REKQ5tNpALOFNu
- iNovnZRT4ecFBHoBIRBLkfKml6oyci_bdmw--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:11:29 +0000
-Date:   Tue, 17 Mar 2020 12:09:27 +0000 (UTC)
-From:   Stephen Li <stenn6@gabg.net>
-Reply-To: stephli947701@gmail.com
-Message-ID: <1348826789.1834294.1584446967790@mail.yahoo.com>
-Subject: REF
+        id S1726605AbgCQMmt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Mar 2020 08:42:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:59628 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCQMmt (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:42:49 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BBA8C68CEC; Tue, 17 Mar 2020 13:42:44 +0100 (CET)
+Date:   Tue, 17 Mar 2020 13:42:44 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     Christoph Hellwig <hch@lst.de>, jack@suse.cz,
+        Jens Axboe <axboe@kernel.dk>, viro@zeniv.linux.org.uk,
+        bvanassche@acm.org, keith.busch@intel.com, tglx@linutronix.de,
+        mwilck@suse.com, yuyufen@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: disk revalidation updates and OOM
+Message-ID: <20200317124244.GA12316@lst.de>
+References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com> <20200310074018.GB26381@lst.de> <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com> <20200310162647.GA6361@lst.de> <f48683d9-7854-ba5f-da3a-7ef987a539b8@windriver.com> <20200311155458.GA24376@lst.de> <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com> <20200316113746.GA15930@lst.de> <4215351e-89ac-4969-1d52-e2ff5c064d7d@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1348826789.1834294.1584446967790.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4215351e-89ac-4969-1d52-e2ff5c064d7d@windriver.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 04:50:11PM +0800, He Zhe wrote:
+> >> With my build fix applied, the issue is triggered since 142fe8f.
+> >> And I can see the endless loop of invalidate and revalidate...
+> > Thanks.  Can you test the patch below that restores the previous
+> > rather odd behavior of not clearing the capacity to 0 if partition
+> > scanning is not enabled?
+> 
+> This fixes the issue. I also validated it on v5.6-rc6.
+
+Can you check this slight variant that only skips the capacity
+change for removable devices given that IIRC you reported the problem
+with a legacy ide-cd device?
 
 
-Greetings,
-I was searching through a local business directory when I found your
-profile. I am Soliciting On-Behalf of my private client who is
-interested in having a serious business investment in your country. If
-you have a valid business, investment or project he can invest
-back to me for more details. Your swift response is highly needed.
-Sincerely
-Stephen Li
-Please response back to me with is my private email below for more details
-stephli947701@gmail.com
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cd..3212ac85d493 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1520,10 +1520,14 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (invalidate)
+-		set_capacity(disk, 0);
+-	else if (disk->fops->revalidate_disk)
+-		disk->fops->revalidate_disk(disk);
++	if (invalidate) {
++		if (!(disk->flags & GENHD_FL_REMOVABLE) ||
++		    disk_part_scan_enabled(disk))
++			set_capacity(disk, 0);
++	} else {
++		if (disk->fops->revalidate_disk)
++			disk->fops->revalidate_disk(disk);
++	}
+ 
+ 	check_disk_size_change(disk, bdev, !invalidate);
+ 
