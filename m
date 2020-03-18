@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04DDB18A5B7
-	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 22:03:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28FDB18A565
+	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 22:01:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgCRVDZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Mar 2020 17:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        id S1728591AbgCRVBQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Mar 2020 17:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgCRUzi (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:38 -0400
+        id S1727983AbgCRU4T (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8C1208FE;
-        Wed, 18 Mar 2020 20:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561D420B1F;
+        Wed, 18 Mar 2020 20:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564937;
-        bh=/oFbRhzX1PU/IalooWt4ApsEVuoQyc21nlRUzz8UngA=;
+        s=default; t=1584564979;
+        bh=42J0861Sc9p/xPMPpZePXMkomnaCTvjQRTecYhjzpUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o6lnyre0w2UUUrxIaOltqrdzpQpupj1FoTmsOdx8vMhZrqbAfDTMpxH9Taf9iOWod
-         lMgw6ScySFbGLwBylL29z3dybKz1AGF/DfZIqRDFJ1ns8q8uL6RQAwes5KzHuaz8KF
-         BvCRC5irEPjf30U9pZ7NorCjIVF+a34HiEcDm1OA=
+        b=ycejR//NFAk/yqrhHfNbUyjL5gaXotJAFo45Hsss3odDq4bz3aO5KkpUa+Cx3DkLf
+         gMSsTCPgpFNE8wtBO7E0tb5N6mVbnoKxQ8ZkxtVB7cY3L68eiMhoF0zfapLYlrO+Y5
+         HzNcogGlNekaKFnZtaVaIEyUgdO0c8K3qgSypVOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
@@ -31,12 +31,12 @@ Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>,
         virtualization@lists.linux-foundation.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/37] virtio-blk: fix hw_queue stopped on arbitrary error
-Date:   Wed, 18 Mar 2020 16:54:55 -0400
-Message-Id: <20200318205509.17053-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/28] virtio-blk: fix hw_queue stopped on arbitrary error
+Date:   Wed, 18 Mar 2020 16:55:47 -0400
+Message-Id: <20200318205555.17447-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
-References: <20200318205509.17053-1-sashal@kernel.org>
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,7 +74,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index dd64f586679e1..728c9a9609f0c 100644
+index 8767401f75e04..19d226ff15ef8 100644
 --- a/drivers/block/virtio_blk.c
 +++ b/drivers/block/virtio_blk.c
 @@ -271,10 +271,12 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
@@ -91,7 +91,7 @@ index dd64f586679e1..728c9a9609f0c 100644
 -		/* Out of mem doesn't actually happen, since we fall back
 -		 * to direct descriptors */
  		if (err == -ENOMEM || err == -ENOSPC)
- 			return BLK_STS_DEV_RESOURCE;
+ 			return BLK_STS_RESOURCE;
  		return BLK_STS_IOERR;
 -- 
 2.20.1
