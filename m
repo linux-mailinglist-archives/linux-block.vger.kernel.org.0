@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86AB018A53D
-	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 22:00:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EBE418A647
+	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 22:07:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgCRU7z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Mar 2020 16:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57894 "EHLO mail.kernel.org"
+        id S1727817AbgCRUy1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Mar 2020 16:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbgCRU4m (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:42 -0400
+        id S1727800AbgCRUyZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BD421707;
-        Wed, 18 Mar 2020 20:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA81820B1F;
+        Wed, 18 Mar 2020 20:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565001;
-        bh=oY0SUiEeXSxBkyGUXp0/nvA1R5EflvNU30qHwxT+EX0=;
+        s=default; t=1584564864;
+        bh=5f7NQkaEyeXGMmbAHbJt3GLRihTNK3xlTNMGjXXud98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKaW29Cl6wLJK+RXjhAqvvpsYsQNWM4L6DraYK9u7vR7/RU3rAm9IOLXeX35zx9li
-         M3vqIy9mIpE2oFw+2xHvWhE6Lp9r74Ub8Ape0YI/pvQYnN5AAGuMtv4Yz0kKHxssyf
-         sdN/pF7OHoYXOWLkUAeLecLCdfbe8OE3Gqkg1ci4=
+        b=T+pDgNb6QJ+vOBXPbSY4RJWyklteeLa64n0GKnlBgk+fiScpTlDaq4X9poYn4O0RT
+         Paw8vQpRrSiorZVcRoFV/qlk6nuwlugELfuzTD9b/jEkUi+v5gxYHeUQ97sYJHd6rQ
+         oQneoVPsWtQpDZladUgMdyCfzKcBFGIbh7SS9Ljw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
@@ -31,12 +31,12 @@ Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>,
         virtualization@lists.linux-foundation.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/15] virtio-blk: fix hw_queue stopped on arbitrary error
-Date:   Wed, 18 Mar 2020 16:56:24 -0400
-Message-Id: <20200318205629.17750-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 37/73] virtio-blk: fix hw_queue stopped on arbitrary error
+Date:   Wed, 18 Mar 2020 16:53:01 -0400
+Message-Id: <20200318205337.16279-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
-References: <20200318205629.17750-1-sashal@kernel.org>
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,11 +74,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 44ef1d66caa68..f287eec36b282 100644
+index 7ffd719d89def..c2ed3e9128e3a 100644
 --- a/drivers/block/virtio_blk.c
 +++ b/drivers/block/virtio_blk.c
-@@ -215,10 +215,12 @@ static int virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	err = __virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
+@@ -339,10 +339,12 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		err = virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
  	if (err) {
  		virtqueue_kick(vblk->vqs[qid].vq);
 -		blk_mq_stop_hw_queue(hctx);
@@ -91,8 +91,8 @@ index 44ef1d66caa68..f287eec36b282 100644
 -		/* Out of mem doesn't actually happen, since we fall back
 -		 * to direct descriptors */
  		if (err == -ENOMEM || err == -ENOSPC)
- 			return BLK_MQ_RQ_QUEUE_BUSY;
- 		return BLK_MQ_RQ_QUEUE_ERROR;
+ 			return BLK_STS_DEV_RESOURCE;
+ 		return BLK_STS_IOERR;
 -- 
 2.20.1
 
