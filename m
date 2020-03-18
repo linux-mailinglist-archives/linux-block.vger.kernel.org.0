@@ -2,153 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A7E189A03
-	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 11:55:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEDA0189A3D
+	for <lists+linux-block@lfdr.de>; Wed, 18 Mar 2020 12:07:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCRKzO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Mar 2020 06:55:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33611 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgCRKzO (ORCPT
+        id S1726733AbgCRLHi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Mar 2020 07:07:38 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:31289 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbgCRLHh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:55:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so29710520wrd.0
-        for <linux-block@vger.kernel.org>; Wed, 18 Mar 2020 03:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5uNbTrGtkzfD5hFJe/LQk7sXA0d54ynuEUZ1151Ru/0=;
-        b=fsL2pmewC3L5NgSvdBQBCfTTEk42o5B1A56GE/xf4JyHIyY0aEn2afZXKRzOxwQ0Vw
-         Tl9HgVJL6aPrkxCzribUFNGZAMnJOhb1o3KjVob687WEr4Si569AT8ohYcEXqyG4TtQD
-         CacZ23EAO8N8RzNNv1EdyZy60/GA5DQbdpUoLyo5JhWGdkpsqdELcA+f5RRB2s61oV/D
-         eA2tybeu5D+edrEJdpGUrRS2Hu12jOPesmySrQnI4TuccT8RpiCq8uxz3QPHicMuxxFX
-         a8LpkKB2gJDo0fui+u/b/M5ZrHhOj27u98D1pxFINhhYWzU3Q/9l9IqqpmIb1lv0gQwu
-         trUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5uNbTrGtkzfD5hFJe/LQk7sXA0d54ynuEUZ1151Ru/0=;
-        b=t2A7CSiuP/3lIL+xezaFG3ADTkoBOvyWP7LCUHMdfLuT+eY80BqWJZaFhBS0uC1uXf
-         d2fWO/S+LRSDfBjGX8TwHGvoKGM2v7rhwv2J7OQluye1QYHRe+Wbj26qXxkdMvd/CDin
-         uYWKj3I1x/OD4VNWcATT8lNpp2PFe5AYeIoHoNzMy8OXgCgtFI/SwBtfDLJtq5+2xyTO
-         fI4Z7MRp+rE2C4CkydOZmMXfNUdujrHFy0i5xobSC9nX4BKoUmaLZ7MxZS4CxFHeZwXO
-         ZjejA7LFVEfRYQ448nO3R1ZIHsNY7JtYVw1Xzur8SebhoydJ0+JMI6MiL2WYBAaNnkqS
-         6WnA==
-X-Gm-Message-State: ANhLgQ15b9cOGNgKYv6qgncEgWQYpnlebOasmT1UpwuCN/iX4ROFnAmY
-        zp/7/fKSjYnP1xEZJfTpl6ea5iKsyrw19Q==
-X-Google-Smtp-Source: ADFU+vvNfjuhU4TzZzybTyYMRz5Ab0f5gKJezkyOcqD+WhPYpc47RFFPCRWi5jZ9lichKadQjRhdoA==
-X-Received: by 2002:adf:a49b:: with SMTP id g27mr4905863wrb.113.1584528911241;
-        Wed, 18 Mar 2020 03:55:11 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:4870:6500:9021:4ceb:9602:c3c9? ([2001:16b8:4870:6500:9021:4ceb:9602:c3c9])
-        by smtp.gmail.com with ESMTPSA id x206sm3096468wmg.17.2020.03.18.03.55.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 03:55:10 -0700 (PDT)
-Subject: Re: [PATCH V2] block: Prevent hung_check firing during long sync IO
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Salman Qazi <sqazi@google.com>,
+        Wed, 18 Mar 2020 07:07:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584529656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3kPEH+tInwqphKZ57t+2OCT6TWMP2t0j1ltyfG+wEr8=;
+        b=daOqYi3o36tX/Rq6R66n5xvnQODZq+PRpKJkDDmZjGTT+FYwzbk3Jwd/Ro2zJ+G3BljCuf
+        mrnl2a0ONdsaFa3JPyu+he2rdcHoQ/FlV1c0QiNMVVaR3QfVjg4gZU86qLYriKH+V1ovxb
+        TIJtctEYnF3zN2pqEvCWZQdfJZCrAIM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-IwzhO1SOPyCfK4c45xTKMw-1; Wed, 18 Mar 2020 07:07:33 -0400
+X-MC-Unique: IwzhO1SOPyCfK4c45xTKMw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA3A8108BC2E;
+        Wed, 18 Mar 2020 11:07:31 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-30.pek2.redhat.com [10.72.8.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3FEA196AE;
+        Wed, 18 Mar 2020 11:07:20 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 19:07:11 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Salman Qazi <sqazi@google.com>,
         Jesse Barnes <jsbarnes@google.com>,
         Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH V2] block: Prevent hung_check firing during long sync IO
+Message-ID: <20200318110711.GA1920@ming.t460p>
 References: <20200318034336.6212-1-ming.lei@redhat.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <3f8eb43f-4ad7-11f1-380c-c11969fe19ad@cloud.ionos.com>
-Date:   Wed, 18 Mar 2020 11:55:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <3f8eb43f-4ad7-11f1-380c-c11969fe19ad@cloud.ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318034336.6212-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f8eb43f-4ad7-11f1-380c-c11969fe19ad@cloud.ionos.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Ming,
-
-On 3/18/20 4:43 AM, Ming Lei wrote:
-> submit_bio_wait() can be called from ioctl(BLKSECDISCARD), which
-> may take long time to complete, as Salman mentioned, 4K BLKSECDISCARD
-> takes up to 100 second on some devices. Also any block I/O operation
-> that occurs after the BLKSECDISCARD is submitted will also potentially
-> be affected by the hung task timeouts.
+On Wed, Mar 18, 2020 at 11:55:09AM +0100, Guoqing Jiang wrote:
+> Hi Ming,
 > 
-> Another report is that task hang can be observed when running mkfs
-> over raid10 which takes a small max discard sectors limit because
-> of chunk size.
-
-Could you point the link about the raid10 task hang? And we have observed
-task hang with raid5, not sure it is related or not.
-
-Our set up is md/raid5 -> 100+ LVs (fs is created on top of one LV), run heavy
-IOs on LVs and dbench on the LV with fs, then dbench hangs with 'D' state.
-
+> On 3/18/20 4:43 AM, Ming Lei wrote:
+> > submit_bio_wait() can be called from ioctl(BLKSECDISCARD), which
+> > may take long time to complete, as Salman mentioned, 4K BLKSECDISCARD
+> > takes up to 100 second on some devices. Also any block I/O operation
+> > that occurs after the BLKSECDISCARD is submitted will also potentially
+> > be affected by the hung task timeouts.
+> > 
+> > Another report is that task hang can be observed when running mkfs
+> > over raid10 which takes a small max discard sectors limit because
+> > of chunk size.
 > 
-> So prevent hung_check from firing by taking same approach used
-> in blk_execute_rq(), and the wake-up interval is set as half the
-> hung_check timer period, which keeps overhead low enough.
+> Could you point the link about the raid10 task hang? And we have observed
+> task hang with raid5, not sure it is related or not.
 > 
-> Cc: Salman Qazi <sqazi@google.com>
-> Cc: Jesse Barnes <jsbarnes@google.com>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Link: https://lkml.org/lkml/2020/2/12/1193
-> Reported-by: Salman Qazi <sqazi@google.com>
-> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
-> Reviewed-by: Salman Qazi <sqazi@google.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
-> V2:
-> 	- fix checkpatch warning
-> 	- add reviewed-by
-> 	- add comment log for covering one recent report on task hung on
-> 	  raid10
-> 
->   block/bio.c | 12 +++++++++++-
->   1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index 94d697217887..0985f3422556 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -17,6 +17,7 @@
->   #include <linux/cgroup.h>
->   #include <linux/blk-cgroup.h>
->   #include <linux/highmem.h>
-> +#include <linux/sched/sysctl.h>
->   
->   #include <trace/events/block.h>
->   #include "blk.h"
-> @@ -1019,12 +1020,21 @@ static void submit_bio_wait_endio(struct bio *bio)
->   int submit_bio_wait(struct bio *bio)
->   {
->   	DECLARE_COMPLETION_ONSTACK_MAP(done, bio->bi_disk->lockdep_map);
-> +	unsigned long hang_check;
->   
->   	bio->bi_private = &done;
->   	bio->bi_end_io = submit_bio_wait_endio;
->   	bio->bi_opf |= REQ_SYNC;
->   	submit_bio(bio);
-> -	wait_for_completion_io(&done);
-> +
-> +	/* Prevent hang_check timer from firing at us during very long I/O */
-> +	hang_check = sysctl_hung_task_timeout_secs;
-> +	if (hang_check)
-> +		while (!wait_for_completion_io_timeout(&done,
-> +					hang_check * (HZ/2)))
-> +			;
-> +	else
-> +		wait_for_completion_io(&done);
->   
->   	return blk_status_to_errno(bio->bi_status);
->   }
-> 
+> Our set up is md/raid5 -> 100+ LVs (fs is created on top of one LV), run heavy
+> IOs on LVs and dbench on the LV with fs, then dbench hangs with 'D' state.
 
-I hope the change could resolve our issue as well.
+Red Hat Bugzilla 1813383.
 
-Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
 Thanks,
-Guoqing
+Ming
+
