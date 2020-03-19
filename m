@@ -2,70 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 347D318B67A
-	for <lists+linux-block@lfdr.de>; Thu, 19 Mar 2020 14:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3226318B9CE
+	for <lists+linux-block@lfdr.de>; Thu, 19 Mar 2020 15:55:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgCSN1W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Mar 2020 09:27:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36344 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730883AbgCSN1U (ORCPT
+        id S1727032AbgCSOzf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Mar 2020 10:55:35 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43460 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgCSOze (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584624440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r2w2/6ACcfMX5JG5bZCNs7r8k97CeG70/2Lis7zPsEQ=;
-        b=bt1M/sl5SW/s6/CJ2v3uQkbgZKsNjZWXNNJYIDWtd5xGcNSyYXNDjcd2DkasOnn3SjHkIw
-        fxIVW98ivJJi4l2TUZKg/7/CxJGsrbbn05sa1+kvijKsBL5kb4450sYvqIcWxg0simHvB0
-        ZmyI/ZMlOXsdnlvSTQtuw2B14DAsVGo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-mMGMFlC1Mz2N2aKEDdPxAg-1; Thu, 19 Mar 2020 09:27:14 -0400
-X-MC-Unique: mMGMFlC1Mz2N2aKEDdPxAg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FB3E1857C01;
-        Thu, 19 Mar 2020 13:27:13 +0000 (UTC)
-Received: from localhost (ovpn-113-148.ams2.redhat.com [10.36.113.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 565FB100164D;
-        Thu, 19 Mar 2020 13:27:10 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefan Metzmacher <metze@samba.org>
-Subject: [PATCH liburing 2/2] spec: add ./configure --libdevdir= for development package files
-Date:   Thu, 19 Mar 2020 13:26:58 +0000
-Message-Id: <20200319132658.8552-3-stefanha@redhat.com>
-In-Reply-To: <20200319132658.8552-1-stefanha@redhat.com>
+        Thu, 19 Mar 2020 10:55:34 -0400
+Received: by mail-io1-f66.google.com with SMTP id n21so2507450ioo.10
+        for <linux-block@vger.kernel.org>; Thu, 19 Mar 2020 07:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C4+olscRmDkJUGGrKZilEsCLLFWydM2Fth0GPit+sPo=;
+        b=EGZIBubHHk8d4a4F2EFuhXDJ/3/kxTbYtwhsoIVT9DEkvcYU5yPx2yHMMRAneZyym8
+         llxAJv/otFMZd2sV257rwYflgbrh108TwHHsqTZsNNNAuoexY+l8HHZrU5RxBP08+ra5
+         eTzD8V6EUzNhGCflmOPej6PZQNQJvOhldq7o7vEDjbbHvfTVUi/gLEC7fE9o2xq8Fucl
+         ilycZqAADxijBJ/DdCE6pq6EOBrBuGrHB2NUGTFVzkW/tHPw80ZAXCpDo3T8Hi7GEWWP
+         9ybEhpJUGTLSNb3aveIvousWYnq4TJs5UA38qox9cbnOJ/uEXKDOgWkJ+iLAJu2R3CY1
+         yaLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C4+olscRmDkJUGGrKZilEsCLLFWydM2Fth0GPit+sPo=;
+        b=a9JbHDXNrGSY3MOY4ajIzsm9gKtGk3udf9mgFp8MwymQ4OmDjPjF89szPiGFeWY3VL
+         qx3EVqrYtuIglfHm6LfHlmqtbf6xzwJ/tBCaOKoQBFjk7S86XklsYB73KH6y+TWwFe4A
+         nxDOMMoXFSzHNy0X0ixui4kGSQN+V7CyGeh/EINmBWlPTCQIeFVduSlbru4K1lif8TPV
+         IkP0u6n0z6TFhubGTwo8bONl+AN6ntvAMfFMiAB9QEembNUuecOK2/IE5UfoWwMJb38b
+         wnakENLkGEM2ytxvrxcGg5okiDk3LQT45m9RRbzIy8+bPj1935cAmVyWjiVaZN60SnGt
+         BvAw==
+X-Gm-Message-State: ANhLgQ2bl1UQViK4NBYYDn1lpd2LsZRY1h1hlcyvcWAH04f9+du0cp11
+        p2dHXDY+49pOtE04Ms8OKAJx3wuDUpeJeQ==
+X-Google-Smtp-Source: ADFU+vsQeduYgUa5hb7MMXlj7yglSJhOT0mtW+hAnGdqEV0gOlRd4Jj5P7VO6TchZcsfrJvzMr3nBg==
+X-Received: by 2002:a02:7:: with SMTP id 7mr3649460jaa.130.1584629732028;
+        Thu, 19 Mar 2020 07:55:32 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p14sm825223ios.38.2020.03.19.07.55.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 07:55:31 -0700 (PDT)
+Subject: Re: [PATCH liburing 0/2] spec: RPM spec file changes for liburing-0.5
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     linux-block@vger.kernel.org
 References: <20200319132658.8552-1-stefanha@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fce4f581-cef2-5eed-9833-f9865d84039c@kernel.dk>
+Date:   Thu, 19 Mar 2020 08:55:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200319132658.8552-1-stefanha@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-VGhlIGRldmVsb3BtZW50IHBhY2thZ2UgZmlsZXMgKC0tbGliZGV2ZGlyPSkgaGF2ZSBiZWVuIHNl
-cGFyYXRlZCBmcm9tCnRoZSBsaWJyYXJ5IHJ1bnRpbWUgcGFja2FnZSBmaWxlcyAoLS1saWJkaXI9
-KS4gIE1ha2Ugc3VyZSB0byBzZXQKLS1saWJkZXZkaXI9IHNvIHg4Nl82NCBGZWRvcmEgUlBNcyBh
-cmUgYnVpbHQgZm9yIC91c3IvbGliNjQgaW5zdGVhZCBvZgovdXNyL2xpYi4KCkNjOiBTdGVmYW4g
-TWV0em1hY2hlciA8bWV0emVAc2FtYmEub3JnPgpGaXhlczogM2U2M2FmNGYyNTJlMWRmYzJjYjcz
-Njg2M2Q4ZGI0YTM4MjFmNDhlNAogICAgICAgKCJGaXggbGlidXJpbmcuc28gc3ltbGluayBzb3Vy
-Y2UgaWYgbGliZGlyICE9IGxpYmRldmRpciIpClNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBIYWpub2N6
-aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4KLS0tCiBsaWJ1cmluZy5zcGVjIHwgMiArLQogMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvbGli
-dXJpbmcuc3BlYyBiL2xpYnVyaW5nLnNwZWMKaW5kZXggOTg3OTQ2ZC4uMTY2NWM3YyAxMDA2NDQK
-LS0tIGEvbGlidXJpbmcuc3BlYworKysgYi9saWJ1cmluZy5zcGVjCkBAIC0yNiw3ICsyNiw3IEBA
-IGZvciB0aGUgTGludXgtbmF0aXZlIGlvX3VyaW5nLgogCiAlYnVpbGQKICVzZXRfYnVpbGRfZmxh
-Z3MKLS4vY29uZmlndXJlIC0tcHJlZml4PSV7X3ByZWZpeH0gLS1saWJkaXI9LyV7X2xpYmRpcn0g
-LS1tYW5kaXI9JXtfbWFuZGlyfSAtLWluY2x1ZGVkaXI9JXtfaW5jbHVkZWRpcn0KKy4vY29uZmln
-dXJlIC0tcHJlZml4PSV7X3ByZWZpeH0gLS1saWJkaXI9LyV7X2xpYmRpcn0gLS1saWJkZXZkaXI9
-LyV7X2xpYmRpcn0gLS1tYW5kaXI9JXtfbWFuZGlyfSAtLWluY2x1ZGVkaXI9JXtfaW5jbHVkZWRp
-cn0KIAogJW1ha2VfYnVpbGQKIAotLSAKMi4yNC4xCgo=
+On 3/19/20 7:26 AM, Stefan Hajnoczi wrote:
+> These patches fix issues with the liburing-0.5 RPM spec file.  I encountered
+> them when packaging it for Fedora.
+> 
+> Stefan Hajnoczi (2):
+>   spec: use "or" instead of "/" in License line
+>   spec: add ./configure --libdevdir= for development package files
+> 
+>  liburing.spec | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Thanks, applied.
+
+BTW, we have io-uring@vger.kernel.org, that's probably a better list to use
+going forward.
+
+-- 
+Jens Axboe
 
