@@ -2,106 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 865BC18CDC5
-	for <lists+linux-block@lfdr.de>; Fri, 20 Mar 2020 13:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D9A718D8CB
+	for <lists+linux-block@lfdr.de>; Fri, 20 Mar 2020 21:04:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCTMRp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 20 Mar 2020 08:17:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36029 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCTMRo (ORCPT
+        id S1726843AbgCTUEb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 20 Mar 2020 16:04:31 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45994 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgCTUEb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:17:44 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 31so1173753wrs.3
-        for <linux-block@vger.kernel.org>; Fri, 20 Mar 2020 05:17:41 -0700 (PDT)
+        Fri, 20 Mar 2020 16:04:31 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j10so3831415pfi.12
+        for <linux-block@vger.kernel.org>; Fri, 20 Mar 2020 13:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Nv6Nv+6LJBnq5DZKchYhL0m3LA+Tdn3F16jhKKXecEw=;
-        b=Mv6lV69/HzDcrtQzHRO16E3I9XP32B1cCujWesi6N2q4oDmZd48HiqUSEu3jI/ZLy0
-         GJYW2/v8nCRjVttHdXZUdYzx2+JJScGHCQ8/uZQQI6qQrb531shZvYpbkLpbUHQYAwP7
-         NmPHNFx/15c45oHcKL8qUbIOjcnYiwIYnLWe5HVelM895rLvQzU3vYiSFb0O/Q8Drjda
-         AOjO6sbThXWo85I5n9Fauo6zKYBoG8KnoaYVdh4pzcm0sADeyGQVr5EjvivX5qAVWdmp
-         ZSxbOLUBxRt7nQHo/xY4T+HHLe64lhoptvn1gsJ/9Xdj/Zv37Juj7xikKdIB+aq+DbjS
-         b8Pw==
+        d=osandov-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2PfZNQdcCrRJCc1NY91xXMxcopNTo0ey1k+HCFLVmzQ=;
+        b=fsv3bV6xwQ874+HoQtH0zyCeZVfCh/Eht3xha5muEabKqzYFeGskhS4FEUM2UIsfgY
+         Ty3mI23odoRpKXsXU3ZZ3ovfPtw8GwKYa6sHBx/l1nvtBfAZcGTQhekyvhWReYs9OkME
+         N+78gbOyk7y0IOTXxdpzcN1cBDTB5+GzoviZNFBNxrKn8GgZUEPIJtH44LJ2Y8+SqlMR
+         Idp7yVv2oWBuT/tKY6JxNKfF6Iojn1l0fGB3PSHcquTjjK5hmfUDQDoslh6vPusYAbqz
+         +AO30ORl2/3vniacfERa6zr4PfdNE0AQxZC2mXraIlwZqDSk1LF5j00E4ePL/RqEPDyb
+         BKEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Nv6Nv+6LJBnq5DZKchYhL0m3LA+Tdn3F16jhKKXecEw=;
-        b=K/kmuZvN7PHJFdvzXpBZWQs+//obsCzm17fv0zSlT7Id1cJ9+t617HJpyItc8zmdN9
-         W78RVoYDRFCfCSKPdZWHJlV9z+yCf2bi3PLsWECW0jK5ftyWGLBrN381E0m/UEz9QecW
-         4p2ywrAzh6xtVp5RNML1ptRpvcFuItryhMzuxWi4BgYscxqaKHta6jjFOao5TfHciMSt
-         tzfU3mV/0UFlKWTFou2qYX+Em/NChYQ3nWVLVSzghTFbcmaIvu5fZ3OxegfEx3yB7Yb0
-         QBBT30aJnTxSRY3MRF9ju9qYsLYF70d5/aHIOrlv4+gV1X6yWCVx/9QhM0AhsgyPjo7f
-         63mA==
-X-Gm-Message-State: ANhLgQ1QiQN2cILzNdX7YUVOKi+N54MnNbUWhrsp8FXUjtDF0GqbEwHc
-        NoWusBgWxb1LmD0CcJAMtw5DP3fBQxk=
-X-Google-Smtp-Source: ADFU+vs8A8qMkFr+lNLox6jkgMkXOhVEFI/rz47VpAGKJiDi2bpBTpA5OdLchMJ866tsx6VlH08Y8g==
-X-Received: by 2002:a5d:4d07:: with SMTP id z7mr10388762wrt.89.1584706660967;
-        Fri, 20 Mar 2020 05:17:40 -0700 (PDT)
-Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4927:3900:64cf:432e:192d:75a2])
-        by smtp.gmail.com with ESMTPSA id j39sm8593662wre.11.2020.03.20.05.17.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2PfZNQdcCrRJCc1NY91xXMxcopNTo0ey1k+HCFLVmzQ=;
+        b=CMYp8efaB2ek8saXxr5ryLQnMz8IkxfS3XxXNehGM0SeMtqE3m7nw0z+EgqYlkxY/X
+         2u0W4s32boUC7KsqF7sZt0MB1/cYBoVdNfHXuEXMd+azT063DVPQa+Wh20viVBLZdhup
+         Wf0b4iE7nVddrtXTZldPZjG5P4lnfIvxdsJJBik1/cFL34iCZenOZTYq2poeyz6BLs7j
+         du3FbBWPtyVkW0rTAGP3uvvCSAJ90ghMeUs9BkLtSgPgMZRqs5lu666/KmdH3Q5DMLY3
+         gqnBCbA9/UfsDseO+GqQyfSz9A7i6D1JoRR8PN/hdvVyLFYde4d/YHHIYTn6ec0lDia/
+         nNdw==
+X-Gm-Message-State: ANhLgQ0QgL+pGQSekwAysFvAWSr3oS8JLFlFvRgdH3jq+jHDBa74oQKP
+        wNLNapyw8jTc1qi7FVZ1dunVcQ==
+X-Google-Smtp-Source: ADFU+vtzOn3uSW+IHv+wVFpw8FfrlZyOsl5h/uQoMrFO0GjTD/YWjtp8xc0AyVvOEuPioVCWdcgLHQ==
+X-Received: by 2002:a63:e70d:: with SMTP id b13mr10236950pgi.8.1584734668314;
+        Fri, 20 Mar 2020 13:04:28 -0700 (PDT)
+Received: from vader ([2620:10d:c090:400::5:c783])
+        by smtp.gmail.com with ESMTPSA id o15sm10387pjp.41.2020.03.20.13.04.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 05:17:40 -0700 (PDT)
-From:   Jack Wang <jinpu.wang@cloud.ionos.com>
-To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
-        pankaj.gupta@cloud.ionos.com
-Subject: [PATCH v11 26/26] MAINTAINERS: Add maintainers for RNBD/RTRS modules
-Date:   Fri, 20 Mar 2020 13:16:57 +0100
-Message-Id: <20200320121657.1165-27-jinpu.wang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
-References: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
+        Fri, 20 Mar 2020 13:04:27 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 13:04:26 -0700
+From:   Omar Sandoval <osandov@osandov.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: Re: [PATCH blktests v2 1/4] Make _exit_null_blk remove all null_blk
+ device instances
+Message-ID: <20200320200426.GB32817@vader>
+References: <20200315221320.613-1-bvanassche@acm.org>
+ <20200315221320.613-2-bvanassche@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315221320.613-2-bvanassche@acm.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Danil and I will maintain RNBD/RTRS modules.
+On Sun, Mar 15, 2020 at 03:13:17PM -0700, Bart Van Assche wrote:
+> Instead of making every test remove null_blk device instances before calling
+> _exit_null_blk(), move the null_blk device instance removal code into
+> _exit_null_blk().
+> 
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  common/null_blk | 12 ++++++++----
+>  tests/block/022 |  3 ---
+>  tests/block/029 |  1 -
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/common/null_blk b/common/null_blk
+> index 2e300c20bbc7..6a5f99aaae9d 100644
+> --- a/common/null_blk
+> +++ b/common/null_blk
+> @@ -8,11 +8,14 @@ _have_null_blk() {
+>  	_have_modules null_blk
+>  }
+>  
+> +_remove_null_blk_devices() {
+> +	local d
+> +
+> +	for d in /sys/kernel/config/nullb/*; do [ -d "$d" ] && rmdir "$d"; done
 
-Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I'd prefer to keep the deletion code using find from _init_null_blk.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc1d18cb5d18..9aa45cf61088 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14284,6 +14284,13 @@ F:	arch/riscv/
- K:	riscv
- N:	riscv
- 
-+RNBD BLOCK DRIVERS
-+M:	Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+M:	Jack Wang <jinpu.wang@cloud.ionos.com>
-+L:	linux-block@vger.kernel.org
-+S:	Maintained
-+F:	drivers/block/rnbd/
-+
- ROCCAT DRIVERS
- M:	Stefan Achatz <erazor_de@users.sourceforge.net>
- W:	http://sourceforge.net/projects/roccat/
-@@ -14425,6 +14432,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jes/linux.git rtl8xxxu-deve
- S:	Maintained
- F:	drivers/net/wireless/realtek/rtl8xxxu/
- 
-+RTRS TRANSPORT DRIVERS
-+M:	Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+M:	Jack Wang <jinpu.wang@cloud.ionos.com>
-+L:	linux-rdma@vger.kernel.org
-+S:	Maintained
-+F:	drivers/infiniband/ulp/rtrs/
-+
- RXRPC SOCKETS (AF_RXRPC)
- M:	David Howells <dhowells@redhat.com>
- L:	linux-afs@lists.infradead.org
--- 
-2.17.1
+> +}
+> +
+>  _init_null_blk() {
+> -	if [[ -d /sys/kernel/config/nullb ]]; then
+> -		find /sys/kernel/config/nullb -mindepth 1 -maxdepth 1 \
+> -		     -type d -delete
+> -	fi
+> +	_remove_null_blk_devices
+>  
+>  	local zoned=""
+>  	if (( RUN_FOR_ZONED )); then zoned="zoned=1"; fi
+> @@ -27,5 +30,6 @@ _init_null_blk() {
+>  
+>  _exit_null_blk() {
+>  	udevadm settle
+> +	_remove_null_blk_devices
 
+This needs to happen before the udevadm settle.
