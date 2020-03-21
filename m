@@ -2,88 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B7218E3B5
-	for <lists+linux-block@lfdr.de>; Sat, 21 Mar 2020 19:38:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B8C18E3E3
+	for <lists+linux-block@lfdr.de>; Sat, 21 Mar 2020 20:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbgCUSip (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 21 Mar 2020 14:38:45 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:34170 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgCUSio (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:38:44 -0400
-Received: by mail-pl1-f176.google.com with SMTP id a23so3984982plm.1
-        for <linux-block@vger.kernel.org>; Sat, 21 Mar 2020 11:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=kiDy+sX8D3WKSgmbEaOZpU5jKw6XVf3S6CVgbq1TQvk=;
-        b=KVifl0TTwUFDk5NDyj/CtXAIg/K5b9Rt3gIitTNwi9Nd2YXTp8DlNMWAHCSoTeJDmu
-         yV/VI4TLg/EdRFvGvG4b/0SVFn9cLnqTamcAxhnypJvBy2XQ5qFXLhEXGNFX+UnRsti2
-         vaquqGE4F46AXhOn/y7EmspGTCVZv4JKW3qAspG3BESvw+LviCAXc8I9QrNE+R9cwqug
-         ENRGoWYR1njxja9xZ/5RYmMCPs7Wx3d/xuPBisMTnIWhD3Y6j5RXXsi1LEx+P+THXkVR
-         MhaNAcfJ/yOWwCJYsUzBVbrpaW7zXnZLhxYCurwsjYfXaQ6WIyyB9jEQbrDcFRpKaFY9
-         pXGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=kiDy+sX8D3WKSgmbEaOZpU5jKw6XVf3S6CVgbq1TQvk=;
-        b=ipRp7bvtGwJ45F+yd7Lmh7qy/rTpSqBMI5jC7/CZzKtjBq+rUpsoP9O6uyoD7fO7m1
-         vr5a25SSFiDGrQDjiIlHGDQQYANYlQdzuGf9ITRhMUaEO6X1GykZMR5HOSvuBxhfWwRG
-         qHA5oqYwu+476shLZK3WeL4/9UmzlW3lCH8AABaSq6P/NM1DQH5Y9/ZZizneQqDcuMxW
-         7GS7oiZVqybuj+T5skdITqQjiwuRKujNvFEh6TMmzNBfS2XcQvvGVywrAvKM+05kXVhx
-         V/m9GbCZXv9ICMU2lapfFlENdlidYo5Gwimn87Qr5hE32uQKYc2gabe85E3TxIBCBQGt
-         jv7A==
-X-Gm-Message-State: ANhLgQ1I4cp847Z7HXccPYxDOD4w1VEY/yOgy6oCuFfT5fKc8GJO3PV1
-        AMb/cZ0mKZeSmJjP4tdwPxPxyQ8FK7SDoA==
-X-Google-Smtp-Source: ADFU+vt38EJ/Y1ZGCJPwmU9118OEVbjEuEkDUUcNRybZK5ZwDfS7Kbv31KxVZv07L2JYgTp/WdVQRw==
-X-Received: by 2002:a17:902:ba08:: with SMTP id j8mr4324414pls.70.1584815922371;
-        Sat, 21 Mar 2020 11:38:42 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i20sm1152658pfd.89.2020.03.21.11.38.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Mar 2020 11:38:41 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] Block fixes for 5.6-rc
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Message-ID: <9b5bff9b-0999-26c5-9ecb-3aacbe115bce@kernel.dk>
-Date:   Sat, 21 Mar 2020 12:38:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727948AbgCUTPI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 21 Mar 2020 15:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727533AbgCUTPH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:15:07 -0400
+Subject: Re: [GIT PULL] Block fixes for 5.6-rc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584818107;
+        bh=3BsIBDElFqEKB5VGnhYDvC+pfPhT6OvdWqocjfrEkeI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=zoz7TL96m2ZD1IGxWHvG4shfNpwNlaKfQe7lxCZVhV+aTDxA1IO6yeE1ayN1gK0uf
+         JF1uexK7fRgqyxYYUeTWZwIOX9lXtu/MgA0Tmw7WSj8H0WJS/Ixjao3PlCtKYQQt4y
+         A7KGRL0ZPaC7EaBpQTqzVXlNGUBcVlQsvifBDQ2I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <9b5bff9b-0999-26c5-9ecb-3aacbe115bce@kernel.dk>
+References: <9b5bff9b-0999-26c5-9ecb-3aacbe115bce@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <9b5bff9b-0999-26c5-9ecb-3aacbe115bce@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ tags/block-5.6-20200320
+X-PR-Tracked-Commit-Id: 83166ac82b53655b63d3a59f6fe44f20511e96f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b74b991fb8b9d642b8fea20d6245c6e19125a305
+Message-Id: <158481810730.2095.4096805249565402821.pr-tracker-bot@kernel.org>
+Date:   Sat, 21 Mar 2020 19:15:07 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Sat, 21 Mar 2020 12:38:40 -0600:
 
-Just two NVMe fabrics fixes that should go into 5.6. Please pull!
+> git://git.kernel.dk/linux-block.git tags/block-5.6-20200320
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b74b991fb8b9d642b8fea20d6245c6e19125a305
 
-  git://git.kernel.dk/linux-block.git tags/block-5.6-20200320
-
-
-----------------------------------------------------------------
-Jens Axboe (1):
-      Merge branch 'nvme-5.6-rc6' of git://git.infradead.org/nvme into block-5.6
-
-Prabhath Sajeepa (1):
-      nvme-rdma: Avoid double freeing of async event data
-
-Sagi Grimberg (1):
-      nvmet-tcp: set MSG_MORE only if we actually have more to send
-
- drivers/nvme/host/rdma.c  |  8 +++++---
- drivers/nvme/target/tcp.c | 12 +++++++++---
- 2 files changed, 14 insertions(+), 6 deletions(-)
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
