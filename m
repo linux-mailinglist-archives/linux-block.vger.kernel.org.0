@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CED4418DF3B
-	for <lists+linux-block@lfdr.de>; Sat, 21 Mar 2020 10:45:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC4018DF3D
+	for <lists+linux-block@lfdr.de>; Sat, 21 Mar 2020 10:45:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgCUJpQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 21 Mar 2020 05:45:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46975 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbgCUJpP (ORCPT
+        id S1728422AbgCUJpS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 21 Mar 2020 05:45:18 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:50545 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728382AbgCUJpS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:45:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so6896121wru.13
-        for <linux-block@vger.kernel.org>; Sat, 21 Mar 2020 02:45:14 -0700 (PDT)
+        Sat, 21 Mar 2020 05:45:18 -0400
+Received: by mail-wm1-f53.google.com with SMTP id d198so3188891wmd.0
+        for <linux-block@vger.kernel.org>; Sat, 21 Mar 2020 02:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3aRXmKaWpCikyhPB1r1OmE2K1u3/BRFi1kHB95qxuFw=;
-        b=g0wF+ou+Z581+cBmPEU9Ede5RC7dNifbbFNqvzLutBgtLAn120kUaMH0t4rxT+JlH4
-         Mn5DNctfVE8t7kUofJeoSEOlHwMPXgyE/bb36JYczb2ot/a5MmIk1EYpkCa7wHjaHmYF
-         DutIkIG2KE7GqcdZfou7rHwDDJouipWqQP4BNLdoA17IK5NxsFaudtxDUgXdfaNnVzUD
-         OLRV6jOj9B6USC7AWKqnBQQDwoL+bTGXklYXJkqC8JVh/0+NDTjXpvSotK4Z02cqIqhE
-         FDm8fEyv1A0lnRbI/pSBaUlLnd+iyciDalVskfkqUK2I2WK95UIwAw3hXJ1lcIdQzSuM
-         OV4w==
+        bh=CI7HoertAKDvDZptslfp0+rHp2j/ODCsoGqu9t32OVA=;
+        b=xIzznXjBpVqlsSgITTHirE1Sy4Fs9Eq0jjeti/9RQ34hINQMBNDK45QbyL71xMp1Ga
+         UdQJfcu3yepa89j8aNhVmA/ptVz0hvsnsEGrSx0LeM0tqygBQOcefDXfkCwFTIPyuIq6
+         1J5OoJIF2Em+DVvFEDxdDMPbJvAYcYylVLqqo+QyHKQ1qcjfW4KpIeY+qsippp4ia7jN
+         HQHq+uviEZynA1ENrrotZ0+cD6kCTNrK1hfVZecnnd0yXnlbdxfzVhbmxXtUIPSLCxma
+         7utrhXJ70hzBOWNmvB0JF2mR1Daro2EzT3y2esVTTPLC/3idnISqZHMjTtVkhGNx7P1I
+         Dhtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3aRXmKaWpCikyhPB1r1OmE2K1u3/BRFi1kHB95qxuFw=;
-        b=GfLf5TJzlnt2XM5B4Z1pYpEcL0dMtvKUdPPECzx7FUBAJ2sdU5r834HV2xjMePoGkl
-         aUCF9N29fbV+HT+I3TJh6SOTNocP1rYkjv0jDHkA/lqTEcPGuxboArrMDsTsMIF1L/de
-         UsU/RDvllmnykkP2kV7LtK6/vF7FbZ0V2tec7rK7G2NgTsTnbBxLt/CX3ywI0Unxqkzb
-         NCGzoJWAtxVhmvT7Eoua8D476TfbIrz4Ax7/COgtq4tszrlWAWgAYCLZjgXZ9BwkQY8k
-         +jlSUoPEMJ/fHyYup6RrJbTw0zDj2px4BtRfKxQryAmj4UQRIYKWGhMzVOq8bZwQ4zTs
-         xDIA==
-X-Gm-Message-State: ANhLgQ3hodm663y+6V+Cqc+ckk8+slZk+X9UnnPTpb5RFXT6jeG/g640
-        tWQnggBUcq/iXau3X8LwZC40dw==
-X-Google-Smtp-Source: ADFU+vt6T6nUeI6bl3t9eRMr9wGqBkGoytGMG7fogvZ6K4Vx2wN+9uT8zFhopeIu3DiGK0gsaJu5Nw==
-X-Received: by 2002:a5d:5106:: with SMTP id s6mr15497200wrt.24.1584783913506;
-        Sat, 21 Mar 2020 02:45:13 -0700 (PDT)
+        bh=CI7HoertAKDvDZptslfp0+rHp2j/ODCsoGqu9t32OVA=;
+        b=NKpNtqREL5/vhSq45HhlpFCV6TWh4N/i1Ozi7oEO25p7QYyNTC/S1WsQmoUF48qodY
+         dlkPCrSApQtxbWtH//GHBZTabhIDeZOrSm9EieG1dDXy2Zv5MSPgSnP5FjfzmalIC78u
+         IAF3HkDKKJXK00LyLfMhNHDGyxyf877hfgCRIbQTSzqZFy889UruVDz91fICHiSIjbiw
+         fCvSRIP/3u/+HnHTm1IhDWSmnOyCQtVRv073/6oCo5TF3Cyqw62QolSXqkgpjDNeqjYh
+         JMGvtj2O8DP6KmiQ6IkuGiOtwTCA5wi+yT4YWN/7QpRvrgeJTupVrplekEuQfLn87s3/
+         o51A==
+X-Gm-Message-State: ANhLgQ0FlDzgbz/kxsmWIt6iaHHlG1kAUNcpRx3Rp6JL48yex/xwtvIk
+        z57aKxNcJd6+yEp3Q9yJpth19w==
+X-Google-Smtp-Source: ADFU+vv6bvYY4jRRrfXkVi6gsEcDn8amDvUoHr2R0oWUCp2iV/CPK3ppMwEW4FRSSww4KLKpWABAnQ==
+X-Received: by 2002:a1c:f607:: with SMTP id w7mr911618wmc.162.1584783914934;
+        Sat, 21 Mar 2020 02:45:14 -0700 (PDT)
 Received: from localhost.localdomain ([84.33.129.193])
-        by smtp.gmail.com with ESMTPSA id z203sm5396378wmg.12.2020.03.21.02.45.11
+        by smtp.gmail.com with ESMTPSA id z203sm5396378wmg.12.2020.03.21.02.45.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Mar 2020 02:45:12 -0700 (PDT)
+        Sat, 21 Mar 2020 02:45:14 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         rasibley@redhat.com, vkabatov@redhat.com, xzhou@redhat.com,
         jstancek@redhat.com, Paolo Valente <paolo.valente@linaro.org>,
         cki-project@redhat.com
-Subject: [PATCH BUGFIX 1/4] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Sat, 21 Mar 2020 10:45:18 +0100
-Message-Id: <20200321094521.85986-2-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX 2/4] block, bfq: turn put_queue into release_process_ref in __bfq_bic_change_cgroup
+Date:   Sat, 21 Mar 2020 10:45:19 +0100
+Message-Id: <20200321094521.85986-3-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200321094521.85986-1-paolo.valente@linaro.org>
 References: <20200321094521.85986-1-paolo.valente@linaro.org>
@@ -65,64 +65,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
+A bfq_put_queue() may be invoked in __bfq_bic_change_cgroup(). The
+goal of this put is to release a process reference to a bfq_queue. But
+process-reference releases may trigger also some extra operation, and,
+to this goal, are handled through bfq_release_process_ref(). So, turn
+the invocation of bfq_put_queue() into an invocation of
+bfq_release_process_ref().
 
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
-
-Reported-by: cki-project@redhat.com
 Tested-by: cki-project@redhat.com
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ block/bfq-cgroup.c  | 5 +----
+ block/bfq-iosched.c | 2 --
+ block/bfq-iosched.h | 1 +
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index f0ff6654af28..9d963ed518d1 100644
+index 9d963ed518d1..72c6151ace96 100644
 --- a/block/bfq-cgroup.c
 +++ b/block/bfq-cgroup.c
-@@ -642,6 +642,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	struct bfq_entity *entity = &bfqq->entity;
+@@ -714,10 +714,7 @@ static struct bfq_group *__bfq_bic_change_cgroup(struct bfq_data *bfqd,
  
-+	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
-+	 */
-+	bfqq->ref++;
-+
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -652,12 +658,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
+ 		if (entity->sched_data != &bfqg->sched_data) {
+ 			bic_set_bfqq(bic, NULL, 0);
+-			bfq_log_bfqq(bfqd, async_bfqq,
+-				     "bic_change_group: %p %d",
+-				     async_bfqq, async_bfqq->ref);
+-			bfq_put_queue(async_bfqq);
++			bfq_release_process_ref(bfqd, async_bfqq);
+ 		}
+ 	}
  
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st_or_in_serv)
-@@ -677,7 +677,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 8c436abfaf14..d9c1899cf05b 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2716,8 +2716,6 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
+ 	}
  }
+ 
+-
+-static
+ void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	/*
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index d1233af9c684..cd224aaf9f52 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -955,6 +955,7 @@ void bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		     bool compensate, enum bfqq_expiration reason);
+ void bfq_put_queue(struct bfq_queue *bfqq);
+ void bfq_end_wr_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
++void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+ void bfq_schedule_dispatch(struct bfq_data *bfqd);
+ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
  
 -- 
 2.20.1
