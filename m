@@ -2,29 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A548C18F5AC
-	for <lists+linux-block@lfdr.de>; Mon, 23 Mar 2020 14:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 924E818F5AF
+	for <lists+linux-block@lfdr.de>; Mon, 23 Mar 2020 14:26:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgCWNZz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Mar 2020 09:25:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54434 "EHLO huawei.com"
+        id S1728370AbgCWN0G (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Mar 2020 09:26:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54440 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728357AbgCWNZz (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:25:55 -0400
+        id S1728344AbgCWN0G (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:26:06 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B4029A47651200E38BB5;
+        by Forcepoint Email with ESMTP id AF0DCD6CE5994E5528E7;
         Mon, 23 Mar 2020 21:25:32 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
  (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
- 21:25:27 +0800
+ 21:25:28 +0800
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
 CC:     <tj@kernel.org>, <jack@suse.cz>, <bvanassche@acm.org>,
         <tytso@mit.edu>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 0/4] bdi: fix use-after-free for bdi device
-Date:   Mon, 23 Mar 2020 21:22:50 +0800
-Message-ID: <20200323132254.47157-1-yuyufen@huawei.com>
+Subject: [PATCH v3 2/4] bdi: add new bdi_get_dev_name()
+Date:   Mon, 23 Mar 2020 21:22:52 +0800
+Message-ID: <20200323132254.47157-3-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200323132254.47157-1-yuyufen@huawei.com>
+References: <20200323132254.47157-1-yuyufen@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.124.28]
@@ -34,49 +36,49 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi, all 
+We add this new function to copy device name into buffer.
+This is prepare for following patch.
 
-We have reported a use-after-free crash for bdi device in __blkg_prfill_rwstat().
-The bug is caused by printing device kobj->name while the device and kobj->name
-has been freed by bdi_unregister().
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+---
+ include/linux/backing-dev.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-In fact, commit 68f23b8906 "memcg: fix a crash in wb_workfn when a device disappears"
-has tried to address the issue, but the code is till somewhat racy after that commit.
-
-In this patchset, we try to protect bdi->dev with spinlock, and copy device name
-into buffer, avoiding use-after-free. 
-
-V2:
-  https://www.spinics.net/lists/linux-fsdevel/msg163206.html
-  Rry to protect device lifetime with RCU.
-
-V1:
-  https://www.spinics.net/lists/linux-block/msg49693.html
-  Add a new spinlock and copy kobj->name into caller buffer.
-  Or using synchronize_rcu() to wait until reader complete.
-
-Yufen Yu (4):
-  bdi: use bdi_dev_name() to get device name
-  bdi: add new bdi_get_dev_name()
-  bdi: replace bdi_dev_name() with bdi_get_dev_name()
-  bdi: protect bdi->dev with spinlock
-
- block/bfq-iosched.c              |  6 +++--
- block/blk-cgroup-rwstat.c        |  6 +++--
- block/blk-cgroup.c               | 19 +++++-----------
- block/blk-iocost.c               | 14 +++++++-----
- block/blk-iolatency.c            |  5 +++--
- block/blk-throttle.c             |  6 +++--
- fs/ceph/debugfs.c                |  2 +-
- fs/fs-writeback.c                |  4 +++-
- include/linux/backing-dev-defs.h |  1 +
- include/linux/backing-dev.h      | 23 +++++++++++++++++++
- include/linux/blk-cgroup.h       |  1 -
- include/trace/events/wbt.h       |  8 +++----
- include/trace/events/writeback.h | 38 ++++++++++++++------------------
- mm/backing-dev.c                 |  9 ++++++--
- 14 files changed, 85 insertions(+), 57 deletions(-)
-
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index f88197c1ffc2..82d2401fec37 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -19,6 +19,8 @@
+ #include <linux/backing-dev-defs.h>
+ #include <linux/slab.h>
+ 
++#define BDI_DEV_NAME_LEN	32
++
+ static inline struct backing_dev_info *bdi_get(struct backing_dev_info *bdi)
+ {
+ 	kref_get(&bdi->refcnt);
+@@ -514,4 +516,21 @@ static inline const char *bdi_dev_name(struct backing_dev_info *bdi)
+ 	return dev_name(bdi->dev);
+ }
+ 
++/**
++ * bdi_get_dev_name - copy bdi device name into buffer
++ * @bdi: target bdi
++ * @dname: Where to copy the device name to
++ * @len: size of destination buffer
++ */
++static inline char *bdi_get_dev_name(struct backing_dev_info *bdi,
++			char *dname, int len)
++{
++	if (!bdi || !bdi->dev) {
++		strlcpy(dname, bdi_unknown_name, len);
++		return NULL;
++	}
++
++	strlcpy(dname, dev_name(bdi->dev), len);
++	return dname;
++}
+ #endif	/* _LINUX_BACKING_DEV_H */
 -- 
 2.17.2
 
