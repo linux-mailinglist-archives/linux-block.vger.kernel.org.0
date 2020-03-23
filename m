@@ -2,58 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5746D18F3A5
-	for <lists+linux-block@lfdr.de>; Mon, 23 Mar 2020 12:29:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A548C18F5AC
+	for <lists+linux-block@lfdr.de>; Mon, 23 Mar 2020 14:25:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgCWL3L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Mar 2020 07:29:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50218 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbgCWL3L (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:29:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E9708AD88;
-        Mon, 23 Mar 2020 11:29:09 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 12:29:09 +0100
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH blktests v3 4/4] Add a test that triggers the
- blk_mq_realloc_hw_ctxs() error path
-Message-ID: <20200323112909.wrbnlvdioe37mni7@beryllium.lan>
-References: <20200320222413.24386-1-bvanassche@acm.org>
- <20200320222413.24386-5-bvanassche@acm.org>
+        id S1728381AbgCWNZz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Mar 2020 09:25:55 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54434 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728357AbgCWNZz (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:25:55 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B4029A47651200E38BB5;
+        Mon, 23 Mar 2020 21:25:32 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 21:25:27 +0800
+From:   Yufen Yu <yuyufen@huawei.com>
+To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC:     <tj@kernel.org>, <jack@suse.cz>, <bvanassche@acm.org>,
+        <tytso@mit.edu>, <gregkh@linuxfoundation.org>
+Subject: [PATCH v3 0/4] bdi: fix use-after-free for bdi device
+Date:   Mon, 23 Mar 2020 21:22:50 +0800
+Message-ID: <20200323132254.47157-1-yuyufen@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320222413.24386-5-bvanassche@acm.org>
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Bart,
+Hi, all 
 
-On Fri, Mar 20, 2020 at 03:24:13PM -0700, Bart Van Assche wrote:
-> Add a test that triggers the code touched by commit d0930bb8f46b ("blk-mq:
-> Fix a recently introduced regression in blk_mq_realloc_hw_ctxs()"). This
-> test only runs if a recently added fault injection feature is available,
-> namely commit 596444e75705 ("null_blk: Add support for init_hctx() fault
-> injection").
+We have reported a use-after-free crash for bdi device in __blkg_prfill_rwstat().
+The bug is caused by printing device kobj->name while the device and kobj->name
+has been freed by bdi_unregister().
 
-[...]
+In fact, commit 68f23b8906 "memcg: fix a crash in wb_workfn when a device disappears"
+has tried to address the issue, but the code is till somewhat racy after that commit.
 
-> +test() {
-> +	local i sq=/sys/kernel/config/nullb/nullb0/submit_queues
-> +
-> +	: "${TIMEOUT:=30}"
-> +	if ! _init_null_blk nr_devices=0 queue_mode=2 "init_hctx=$(nproc),100,0,0"; then
+In this patchset, we try to protect bdi->dev with spinlock, and copy device name
+into buffer, avoiding use-after-free. 
 
-Doesn't make the $(nproc) the test subtil depending on the execution
-environment?
+V2:
+  https://www.spinics.net/lists/linux-fsdevel/msg163206.html
+  Rry to protect device lifetime with RCU.
 
-Thanks,
-Daniel
+V1:
+  https://www.spinics.net/lists/linux-block/msg49693.html
+  Add a new spinlock and copy kobj->name into caller buffer.
+  Or using synchronize_rcu() to wait until reader complete.
+
+Yufen Yu (4):
+  bdi: use bdi_dev_name() to get device name
+  bdi: add new bdi_get_dev_name()
+  bdi: replace bdi_dev_name() with bdi_get_dev_name()
+  bdi: protect bdi->dev with spinlock
+
+ block/bfq-iosched.c              |  6 +++--
+ block/blk-cgroup-rwstat.c        |  6 +++--
+ block/blk-cgroup.c               | 19 +++++-----------
+ block/blk-iocost.c               | 14 +++++++-----
+ block/blk-iolatency.c            |  5 +++--
+ block/blk-throttle.c             |  6 +++--
+ fs/ceph/debugfs.c                |  2 +-
+ fs/fs-writeback.c                |  4 +++-
+ include/linux/backing-dev-defs.h |  1 +
+ include/linux/backing-dev.h      | 23 +++++++++++++++++++
+ include/linux/blk-cgroup.h       |  1 -
+ include/trace/events/wbt.h       |  8 +++----
+ include/trace/events/writeback.h | 38 ++++++++++++++------------------
+ mm/backing-dev.c                 |  9 ++++++--
+ 14 files changed, 85 insertions(+), 57 deletions(-)
+
+-- 
+2.17.2
+
