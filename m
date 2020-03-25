@@ -2,446 +2,144 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C65A1926B7
-	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 12:06:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B34321926FE
+	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 12:22:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCYLGQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Mar 2020 07:06:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCYLGQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:06:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=uERmO8yYGTQ+JS1lkRQH5yYDtjFwmBCMnVE7mgY4RZM=; b=tzItUC0jRvv0WWxwbZ5kn+GwUX
-        hf5h8gkZFPF8HKGQbvMlwmPzsm6g4dDegTy45ltWL+wyzDiTRq1683485gTXoCnM2xCH8i/orLwjC
-        Y08sMvys+86lNocyvrtONaf+r0euPYweQ4eXTsE9SJjBD+nmMhFuR4oQ6SgyEhG9mma2KV4DVGnJ3
-        TQlaaakqY9QVB7ppO4ue7QT6n+Ko1dF7KXWfg95RQk5rEwhPUg1V6lVi5bwK4NsH1havT4yiUdHff
-        khUXKpRzhxTv4RItrjOQbXbAfGVUmuXB+WJzyeWPfXtd26j/dm6ry7TGEoUbrLCxYJD3Ajun6YlFE
-        CZdlb/aA==;
-Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH3rT-0003AH-33; Wed, 25 Mar 2020 11:06:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] block: move the part_stat* helpers from genhd.h to a new header
-Date:   Wed, 25 Mar 2020 12:03:38 +0100
-Message-Id: <20200325110338.1029232-9-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200325110338.1029232-1-hch@lst.de>
-References: <20200325110338.1029232-1-hch@lst.de>
+        id S1727082AbgCYLWc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Mar 2020 07:22:32 -0400
+Received: from mail-eopbgr130100.outbound.protection.outlook.com ([40.107.13.100]:40099
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726907AbgCYLWb (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 25 Mar 2020 07:22:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M7BYoPJMQUJMX1y1HUKMNVj1PwG7M3DU1eoUoz+r32L6QrVzOtzG5cQyFHjMieWXy9UEopTEoNjFs39DSV7/EgUHTA/yQ/nVUyJ9U+/4HIRz1bFgLAICYCCE17G9nemcsBiugZqXzSAA4LbWMnoS39uKeze8pPkCpR0ZAAl145kvwulC0JWz2R6tVIlIQAC+bgKUR9JfKdI6wKeUlk00uI3bfJ7pHL4BbqirsaE079PWURM9tbMKOFGd+MFv3zZ+V2bYo3/BC3D4jXW5G7SRsUhjAHcKOIvuB6tBv0gFc585xZp2ZX77iqabxHP6kBNDYhrqcXi5bHGUjRH2MXitjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mAlhFVNxKwfPwyBRDLdlaO0pKz1aMQ4CGcpFFAXpIvQ=;
+ b=XmWHQcjE2TFghExaqlKgTfxbDRAki5dN250BeOo46ua0/NQHvP/Qx8AZPCzTUH+5yRg9RZLUS1h6aZKi4uHESRoXeOZu1AC2eVtZHyPlDd2P0nM6G0hqOwPUNqaBr0f9AFj6hMusdsDFpcIRf3xTBVNZsgcFwyA6K0f+ROmRm0HCD+Eu8M+7jdX3HTeFJKREmw+deibwySpZpPcM5KnvEMscfxUfC0WFj0QWz9qGA5MNvrJRZdjD76vV7iTUAFqQg/cJmeAogM6at2EFxdFTdKjH0tCkd6d5s8yGSoX9IAawMiG8Hz3NqE5WPZnBWY96OoDFmx82b9ZX/yW62lE+XQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mAlhFVNxKwfPwyBRDLdlaO0pKz1aMQ4CGcpFFAXpIvQ=;
+ b=xdu79fd0bev1DBgcE4E52eQ1hMaeZnp0q2JtrBBAqdWKKy1FNgNfDbfSPcbUkDBmoDn1e206AyQkshU6n13otV49VDNF6nxs3fEc49bJv4I+WQzAWlMlFVIjsMFAJeCgdy6qNVxdD9SDlxn7QYCkJyRfwr8iQW260XBup7kLHYs=
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (10.167.127.12) by
+ HE1PR0702MB3596.eurprd07.prod.outlook.com (52.133.6.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.9; Wed, 25 Mar 2020 11:22:26 +0000
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87%5]) with mapi id 15.20.2856.017; Wed, 25 Mar 2020
+ 11:22:26 +0000
+From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "snitzer@redhat.com" <snitzer@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "osandov@fb.com" <osandov@fb.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "mpatocka@redhat.com" <mpatocka@redhat.com>
+Subject: Re: 4.19 LTS high /proc/diskstats io_ticks
+Thread-Topic: 4.19 LTS high /proc/diskstats io_ticks
+Thread-Index: AQHWAoyFep1pzs45BEyxl7dts+ZHIKhZFVEAgAAU54A=
+Date:   Wed, 25 Mar 2020 11:22:26 +0000
+Message-ID: <8b876ed9753478764bf5ea74d00b3d54c381b9f2.camel@nokia.com>
+References: <564f7f3718cdc85f841d27a358a43aee4ca239d6.camel@nokia.com>
+         <20200325100736.GA3083079@kroah.com>
+In-Reply-To: <20200325100736.GA3083079@kroah.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tommi.t.rantala@nokia.com; 
+x-originating-ip: [131.228.2.15]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7aa42ba9-b73d-42f2-9f06-08d7d0aecc45
+x-ms-traffictypediagnostic: HE1PR0702MB3596:
+x-microsoft-antispam-prvs: <HE1PR0702MB35965B81AD42A8736D0634BDB4CE0@HE1PR0702MB3596.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(6512007)(36756003)(5660300002)(76116006)(2906002)(66446008)(66476007)(64756008)(66556008)(66946007)(966005)(86362001)(6486002)(478600001)(81166006)(81156014)(8676002)(8936002)(6916009)(316002)(2616005)(71200400001)(4326008)(186003)(26005)(54906003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3596;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IoXZq0o7PqdtvPD1SPceP14vhTUmF54GfzvZYJUEBm3IFIlnnMpAkF+ypHx2dw8wFo0ComB6hJH7YVPvf2qBfkz1T88aKeQqrRC93qdNvXa+eikQC1Yh/7OVdVNVJ/3BNk5J/cTXnMlcPC91rP2ckYjytHXyHmBr5XXg4XudFdLajsJWYqhUGC+TCDp8SK3AoLCwWWVBsw2+bYhk0y7w1oDPHYDYXB8DDMqNDhxQn0Jo/IDT9cSZQ41TqaRfXG4LPJHVNRoUh/z3I5D81kNIV4mEvswHsBmkI5ggvScKj7fI/Mkwa40fc90lnMoKi/ANaLH3fcXG5gA3pihgEGjV/J/RB69nlxBetVTW0gahQnvPL7VYELydRgcAHgtsaE5h9j/xStLLS4RMdiXRI/SqYB+3LjcJAg5skfTup0ogZ5TIxMKYvLPgYLhcBoHseJAshMrT84ZEZ/ArqAjIWp4YZfqv09Muc2gDSKMuQMKynbgwwNvGbvuNzoh0w23ucCYJj7zN1JtHjvi867xAsszWxw==
+x-ms-exchange-antispam-messagedata: ozrz3q3xSnILLbXWQsb5J7cd3UvTTwYXBQ/Qv3oaboL5jlGIeSLxAD5vOq0CV5AJfypgZrkS6rhygBvVeh5vdvr3MUUnQJ9a2Fl1QRwUyJcOUsm3h/WweIe7RwfgIlS4uhudgzoZUpVutsR9rczkQw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B6CBD5F35D7EFA40A635B176921F0026@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa42ba9-b73d-42f2-9f06-08d7d0aecc45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 11:22:26.5316
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jm57LF8wTK3lHC0epqvcNPncQdIk1mbgT7G6UV24a8kg7apvYqTSHhU92ijnnmXx6JzahMtb1MXhKW0zClrJT4kwXIKnbNN06rjkxSSBti4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3596
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-These macros are just used by a few files.  Move them out of genhd.h,
-which is included everywhere into a new standalone header.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk.h                        |   1 +
- drivers/block/drbd/drbd_receiver.c |   1 +
- drivers/block/drbd/drbd_worker.c   |   1 +
- drivers/block/zram/zram_drv.c      |   1 +
- drivers/md/dm.c                    |   1 +
- drivers/md/md.c                    |   1 +
- drivers/nvme/target/admin-cmd.c    |   1 +
- fs/ext4/super.c                    |   2 +-
- fs/ext4/sysfs.c                    |   1 +
- fs/f2fs/f2fs.h                     |   1 +
- fs/f2fs/super.c                    |   1 +
- include/linux/genhd.h              | 111 ---------------------------
- include/linux/part_stat.h          | 118 +++++++++++++++++++++++++++++
- 13 files changed, 129 insertions(+), 112 deletions(-)
- create mode 100644 include/linux/part_stat.h
-
-diff --git a/block/blk.h b/block/blk.h
-index 224340be4c7a..c95adf72846a 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/idr.h>
- #include <linux/blk-mq.h>
-+#include <linux/part_stat.h>
- #include <xen/xen.h>
- #include "blk-mq.h"
- #include "blk-mq-sched.h"
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 79e216446030..c15e7083b13a 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -33,6 +33,7 @@
- #include <linux/random.h>
- #include <linux/string.h>
- #include <linux/scatterlist.h>
-+#include <linux/part_stat.h>
- #include "drbd_int.h"
- #include "drbd_protocol.h"
- #include "drbd_req.h"
-diff --git a/drivers/block/drbd/drbd_worker.c b/drivers/block/drbd/drbd_worker.c
-index b7f605c6e231..0dc019da1f8d 100644
---- a/drivers/block/drbd/drbd_worker.c
-+++ b/drivers/block/drbd/drbd_worker.c
-@@ -22,6 +22,7 @@
- #include <linux/random.h>
- #include <linux/string.h>
- #include <linux/scatterlist.h>
-+#include <linux/part_stat.h>
- 
- #include "drbd_int.h"
- #include "drbd_protocol.h"
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 1bdb5793842b..76e75097e9ab 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -33,6 +33,7 @@
- #include <linux/sysfs.h>
- #include <linux/debugfs.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/part_stat.h>
- 
- #include "zram_drv.h"
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 0413018c8305..0d881cfa160b 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -25,6 +25,7 @@
- #include <linux/wait.h>
- #include <linux/pr.h>
- #include <linux/refcount.h>
-+#include <linux/part_stat.h>
- 
- #define DM_MSG_PREFIX "core"
- 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 1c7193715f07..f6cf3b53f6c1 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -61,6 +61,7 @@
- #include <linux/raid/detect.h>
- #include <linux/slab.h>
- #include <linux/percpu-refcount.h>
-+#include <linux/part_stat.h>
- 
- #include <trace/events/block.h>
- #include "md.h"
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 72a7e41f3018..cca759c918a4 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -6,6 +6,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- #include <linux/module.h>
- #include <linux/rculist.h>
-+#include <linux/part_stat.h>
- 
- #include <generated/utsrelease.h>
- #include <asm/unaligned.h>
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 4cbd1cc34dfa..c8dff4c68141 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -43,7 +43,7 @@
- #include <linux/uaccess.h>
- #include <linux/iversion.h>
- #include <linux/unicode.h>
--
-+#include <linux/part_stat.h>
- #include <linux/kthread.h>
- #include <linux/freezer.h>
- 
-diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
-index d218ebdafa4a..04bfaf63752c 100644
---- a/fs/ext4/sysfs.c
-+++ b/fs/ext4/sysfs.c
-@@ -13,6 +13,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/proc_fs.h>
-+#include <linux/part_stat.h>
- 
- #include "ext4.h"
- #include "ext4_jbd2.h"
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5355be6b6755..088c3e7a1080 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -22,6 +22,7 @@
- #include <linux/bio.h>
- #include <linux/blkdev.h>
- #include <linux/quotaops.h>
-+#include <linux/part_stat.h>
- #include <crypto/hash.h>
- 
- #include <linux/fscrypt.h>
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 65a7a432dfee..d398b2d90c6c 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -24,6 +24,7 @@
- #include <linux/sysfs.h>
- #include <linux/quota.h>
- #include <linux/unicode.h>
-+#include <linux/part_stat.h>
- 
- #include "f2fs.h"
- #include "node.h"
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 8156cb35ff1f..f4d6cc29ddcc 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -299,117 +299,6 @@ extern void disk_part_iter_init(struct disk_part_iter *piter,
- extern struct hd_struct *disk_part_iter_next(struct disk_part_iter *piter);
- extern void disk_part_iter_exit(struct disk_part_iter *piter);
- 
--/*
-- * Macros to operate on percpu disk statistics:
-- *
-- * {disk|part|all}_stat_{add|sub|inc|dec}() modify the stat counters
-- * and should be called between disk_stat_lock() and
-- * disk_stat_unlock().
-- *
-- * part_stat_read() can be called at any time.
-- *
-- * part_stat_{add|set_all}() and {init|free}_part_stats are for
-- * internal use only.
-- */
--#ifdef	CONFIG_SMP
--#define part_stat_lock()	({ rcu_read_lock(); get_cpu(); })
--#define part_stat_unlock()	do { put_cpu(); rcu_read_unlock(); } while (0)
--
--#define part_stat_get_cpu(part, field, cpu)					\
--	(per_cpu_ptr((part)->dkstats, (cpu))->field)
--
--#define part_stat_get(part, field)					\
--	part_stat_get_cpu(part, field, smp_processor_id())
--
--#define part_stat_read(part, field)					\
--({									\
--	typeof((part)->dkstats->field) res = 0;				\
--	unsigned int _cpu;						\
--	for_each_possible_cpu(_cpu)					\
--		res += per_cpu_ptr((part)->dkstats, _cpu)->field;	\
--	res;								\
--})
--
--static inline void part_stat_set_all(struct hd_struct *part, int value)
--{
--	int i;
--
--	for_each_possible_cpu(i)
--		memset(per_cpu_ptr(part->dkstats, i), value,
--				sizeof(struct disk_stats));
--}
--
--static inline int init_part_stats(struct hd_struct *part)
--{
--	part->dkstats = alloc_percpu(struct disk_stats);
--	if (!part->dkstats)
--		return 0;
--	return 1;
--}
--
--static inline void free_part_stats(struct hd_struct *part)
--{
--	free_percpu(part->dkstats);
--}
--
--#else /* !CONFIG_SMP */
--#define part_stat_lock()	({ rcu_read_lock(); 0; })
--#define part_stat_unlock()	rcu_read_unlock()
--
--#define part_stat_get(part, field)		((part)->dkstats.field)
--#define part_stat_get_cpu(part, field, cpu)	part_stat_get(part, field)
--#define part_stat_read(part, field)		part_stat_get(part, field)
--
--static inline void part_stat_set_all(struct hd_struct *part, int value)
--{
--	memset(&part->dkstats, value, sizeof(struct disk_stats));
--}
--
--static inline int init_part_stats(struct hd_struct *part)
--{
--	return 1;
--}
--
--static inline void free_part_stats(struct hd_struct *part)
--{
--}
--
--#endif /* CONFIG_SMP */
--
--#define part_stat_read_msecs(part, which)				\
--	div_u64(part_stat_read(part, nsecs[which]), NSEC_PER_MSEC)
--
--#define part_stat_read_accum(part, field)				\
--	(part_stat_read(part, field[STAT_READ]) +			\
--	 part_stat_read(part, field[STAT_WRITE]) +			\
--	 part_stat_read(part, field[STAT_DISCARD]))
--
--#define __part_stat_add(part, field, addnd)				\
--	(part_stat_get(part, field) += (addnd))
--
--#define part_stat_add(part, field, addnd)	do {			\
--	__part_stat_add((part), field, addnd);				\
--	if ((part)->partno)						\
--		__part_stat_add(&part_to_disk((part))->part0,		\
--				field, addnd);				\
--} while (0)
--
--#define part_stat_dec(gendiskp, field)					\
--	part_stat_add(gendiskp, field, -1)
--#define part_stat_inc(gendiskp, field)					\
--	part_stat_add(gendiskp, field, 1)
--#define part_stat_sub(gendiskp, field, subnd)				\
--	part_stat_add(gendiskp, field, -subnd)
--
--#define part_stat_local_dec(gendiskp, field)				\
--	local_dec(&(part_stat_get(gendiskp, field)))
--#define part_stat_local_inc(gendiskp, field)				\
--	local_inc(&(part_stat_get(gendiskp, field)))
--#define part_stat_local_read(gendiskp, field)				\
--	local_read(&(part_stat_get(gendiskp, field)))
--#define part_stat_local_read_cpu(gendiskp, field, cpu)			\
--	local_read(&(part_stat_get_cpu(gendiskp, field, cpu)))
--
- /* block/genhd.c */
- extern void device_add_disk(struct device *parent, struct gendisk *disk,
- 			    const struct attribute_group **groups);
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-new file mode 100644
-index 000000000000..23226d8d063f
---- /dev/null
-+++ b/include/linux/part_stat.h
-@@ -0,0 +1,118 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PART_STAT_H
-+#define _LINUX_PART_STAT_H
-+
-+#include <linux/genhd.h>
-+
-+/*
-+ * Macros to operate on percpu disk statistics:
-+ *
-+ * {disk|part|all}_stat_{add|sub|inc|dec}() modify the stat counters
-+ * and should be called between disk_stat_lock() and
-+ * disk_stat_unlock().
-+ *
-+ * part_stat_read() can be called at any time.
-+ *
-+ * part_stat_{add|set_all}() and {init|free}_part_stats are for
-+ * internal use only.
-+ */
-+#ifdef	CONFIG_SMP
-+#define part_stat_lock()	({ rcu_read_lock(); get_cpu(); })
-+#define part_stat_unlock()	do { put_cpu(); rcu_read_unlock(); } while (0)
-+
-+#define part_stat_get_cpu(part, field, cpu)				\
-+	(per_cpu_ptr((part)->dkstats, (cpu))->field)
-+
-+#define part_stat_get(part, field)					\
-+	part_stat_get_cpu(part, field, smp_processor_id())
-+
-+#define part_stat_read(part, field)					\
-+({									\
-+	typeof((part)->dkstats->field) res = 0;				\
-+	unsigned int _cpu;						\
-+	for_each_possible_cpu(_cpu)					\
-+		res += per_cpu_ptr((part)->dkstats, _cpu)->field;	\
-+	res;								\
-+})
-+
-+static inline void part_stat_set_all(struct hd_struct *part, int value)
-+{
-+	int i;
-+
-+	for_each_possible_cpu(i)
-+		memset(per_cpu_ptr(part->dkstats, i), value,
-+				sizeof(struct disk_stats));
-+}
-+
-+static inline int init_part_stats(struct hd_struct *part)
-+{
-+	part->dkstats = alloc_percpu(struct disk_stats);
-+	if (!part->dkstats)
-+		return 0;
-+	return 1;
-+}
-+
-+static inline void free_part_stats(struct hd_struct *part)
-+{
-+	free_percpu(part->dkstats);
-+}
-+
-+#else /* !CONFIG_SMP */
-+#define part_stat_lock()	({ rcu_read_lock(); 0; })
-+#define part_stat_unlock()	rcu_read_unlock()
-+
-+#define part_stat_get(part, field)		((part)->dkstats.field)
-+#define part_stat_get_cpu(part, field, cpu)	part_stat_get(part, field)
-+#define part_stat_read(part, field)		part_stat_get(part, field)
-+
-+static inline void part_stat_set_all(struct hd_struct *part, int value)
-+{
-+	memset(&part->dkstats, value, sizeof(struct disk_stats));
-+}
-+
-+static inline int init_part_stats(struct hd_struct *part)
-+{
-+	return 1;
-+}
-+
-+static inline void free_part_stats(struct hd_struct *part)
-+{
-+}
-+
-+#endif /* CONFIG_SMP */
-+
-+#define part_stat_read_msecs(part, which)				\
-+	div_u64(part_stat_read(part, nsecs[which]), NSEC_PER_MSEC)
-+
-+#define part_stat_read_accum(part, field)				\
-+	(part_stat_read(part, field[STAT_READ]) +			\
-+	 part_stat_read(part, field[STAT_WRITE]) +			\
-+	 part_stat_read(part, field[STAT_DISCARD]))
-+
-+#define __part_stat_add(part, field, addnd)				\
-+	(part_stat_get(part, field) += (addnd))
-+
-+#define part_stat_add(part, field, addnd)	do {			\
-+	__part_stat_add((part), field, addnd);				\
-+	if ((part)->partno)						\
-+		__part_stat_add(&part_to_disk((part))->part0,		\
-+				field, addnd);				\
-+} while (0)
-+
-+#define part_stat_dec(gendiskp, field)					\
-+	part_stat_add(gendiskp, field, -1)
-+#define part_stat_inc(gendiskp, field)					\
-+	part_stat_add(gendiskp, field, 1)
-+#define part_stat_sub(gendiskp, field, subnd)				\
-+	part_stat_add(gendiskp, field, -subnd)
-+
-+#define part_stat_local_dec(gendiskp, field)				\
-+	local_dec(&(part_stat_get(gendiskp, field)))
-+#define part_stat_local_inc(gendiskp, field)				\
-+	local_inc(&(part_stat_get(gendiskp, field)))
-+#define part_stat_local_read(gendiskp, field)				\
-+	local_read(&(part_stat_get(gendiskp, field)))
-+#define part_stat_local_read_cpu(gendiskp, field, cpu)			\
-+	local_read(&(part_stat_get_cpu(gendiskp, field, cpu)))
-+
-+#endif /* _LINUX_PART_STAT_H */
--- 
-2.25.1
-
+T24gV2VkLCAyMDIwLTAzLTI1IGF0IDExOjA3ICswMTAwLCBHcmVnIEtIIHdyb3RlOg0KPiBPbiBX
+ZWQsIE1hciAyNSwgMjAyMCBhdCAxMDowMjo0MUFNICswMDAwLCBSYW50YWxhLCBUb21taSBULiAo
+Tm9raWEgLQ0KPiBGSS9Fc3Bvbykgd3JvdGU6DQo+ID4gDQo+ID4gT3RoZXIgcGVvcGxlIGFyZSBh
+cHBhcmVudGx5IHNlZWluZyB0aGlzIHRvbyB3aXRoIDQuMTk6DQo+ID4gaHR0cHM6Ly9rdWR6aWEu
+ZXUvYi8yMDE5LzA5L2lvc3RhdC14LTEtcmVwb3J0aW5nLTEwMC11dGlsaXphdGlvbi1vZi1uZWFy
+bHktaWRsZS1udm1lLWRyaXZlcy8NCj4gPiANCj4gPiANCj4gPiBJIGFsc28gc2VlIHRoaXMgb25s
+eSBpbiA0LjE5LnkgYW5kIGJpc2VjdGVkIHRvIHRoaXMgKGJhc2VkIG9uIHRoZSBGaXhlcw0KPiA+
+IHRhZywgdGhpcyBzaG91bGQgaGF2ZSBiZWVuIHRha2VuIHRvIDQuMTQgdG9vLi4uKToNCj4gPiAN
+Cj4gPiBjb21taXQgNjEzMTgzN2IxZGU2NjExNjQ1OWVmNDQxM2UyNmZkYmM3MGQwNjZkYw0KPiA+
+IEF1dGhvcjogT21hciBTYW5kb3ZhbCA8b3NhbmRvdkBmYi5jb20+DQo+ID4gRGF0ZTogICBUaHUg
+QXByIDI2IDAwOjIxOjU4IDIwMTggLTA3MDANCj4gPiANCj4gPiAgIGJsay1tcTogY291bnQgYWxs
+b2NhdGVkIGJ1dCBub3Qgc3RhcnRlZCByZXF1ZXN0cyBpbiBpb3N0YXRzIGluZmxpZ2h0DQo+ID4g
+DQo+ID4gICBJbiB0aGUgbGVnYWN5IGJsb2NrIGNhc2UsIHdlIGluY3JlbWVudCB0aGUgY291bnRl
+ciByaWdodCBhZnRlciB3ZQ0KPiA+ICAgYWxsb2NhdGUgdGhlIHJlcXVlc3QsIG5vdCB3aGVuIHRo
+ZSBkcml2ZXIgaGFuZGxlcyBpdC4gSW4gYm90aCB0aGUNCj4gPiBsZWdhY3kNCj4gPiAgIGFuZCBi
+bGstbXEgY2FzZXMsIHBhcnRfaW5jX2luX2ZsaWdodCgpIGlzIGNhbGxlZCBmcm9tDQo+ID4gICBi
+bGtfYWNjb3VudF9pb19zdGFydCgpIHJpZ2h0IGFmdGVyIHdlJ3ZlIGFsbG9jYXRlZCB0aGUgcmVx
+dWVzdC4gYmxrLW1xDQo+ID4gICBvbmx5IGNvbnNpZGVycyByZXF1ZXN0cyBzdGFydGVkIHJlcXVl
+c3RzIGFzIGluZmxpZ2h0LCBidXQgdGhpcyBpcw0KPiA+ICAgaW5jb25zaXN0ZW50IHdpdGggdGhl
+IGxlZ2FjeSBkZWZpbml0aW9uIGFuZCB0aGUgaW50ZW50aW9uIGluIHRoZSBjb2RlLg0KPiA+ICAg
+VGhpcyByZW1vdmVzIHRoZSBzdGFydGVkIGNvbmRpdGlvbiBhbmQgaW5zdGVhZCBjb3VudHMgYWxs
+IGFsbG9jYXRlZA0KPiA+ICAgcmVxdWVzdHMuDQo+ID4gDQo+ID4gICBGaXhlczogZjI5OWI3Yzdh
+OWRlICgiYmxrLW1xOiBwcm92aWRlIGludGVybmFsIGluLWZsaWdodCB2YXJpYW50IikNCj4gPiAg
+IFNpZ25lZC1vZmYtYnk6IE9tYXIgU2FuZG92YWwgPG9zYW5kb3ZAZmIuY29tPg0KPiA+ICAgU2ln
+bmVkLW9mZi1ieTogSmVucyBBeGJvZSA8YXhib2VAa2VybmVsLmRrPg0KPiA+IA0KPiA+IA0KPiA+
+IA0KPiA+IElmIEkgZ2V0IGl0IHJpZ2h0LCB3aGVuIHRoZSBkaXNrIGlzIGlkbGUsIGFuZCBzb21l
+IHJlcXVlc3QgaXMgYWxsb2NhdGVkLA0KPiA+IHBhcnRfcm91bmRfc3RhdHMoKSB3aXRoIHRoaXMg
+Y29tbWl0IHdpbGwgbm93IGFkZCBhbGwgdGlja3MgYmV0d2Vlbg0KPiA+IHByZXZpb3VzIEkvTyBh
+bmQgY3VycmVudCB0aW1lIChub3cgLSBwYXJ0LT5zdGFtcCkgdG8gaW9fdGlja3MuDQo+ID4gDQo+
+ID4gQmVmb3JlIHRoZSBjb21taXQsIHBhcnRfcm91bmRfc3RhdHMoKSB3b3VsZCBvbmx5IHVwZGF0
+ZSBwYXJ0LT5zdGFtcCB3aGVuDQo+ID4gY2FsbGVkIGFmdGVyIHJlcXVlc3QgYWxsb2NhdGlvbi4N
+Cj4gDQo+IFNvIHRoaXMgaXMgYSAiZmFsc2UiIHJlcG9ydGluZz8gIHRoZXJlJ3MgcmVhbGx5IG5v
+IGxvYWQ/DQoNCkNvcnJlY3QuDQoNCj4gPiBBbnkgdGhvdWdodHMgaG93IHRvIGJlc3QgZml4IHRo
+aXMgaW4gNC4xOT8NCj4gPiBJIHNlZSB0aGUgaW9fdGlja3MgYWNjb3VudGluZyBoYXMgYmVlbiBy
+ZXdvcmtlZCBpbiA1LjAsIGRvIHdlIG5lZWQgdG8NCj4gPiBiYWNrcG9ydCB0aG9zZSB0byA0LjE5
+LCBvciBhbnkgaWxsIGVmZmVjdHMgaWYgdGhpcyBjb21taXQgaXMgcmV2ZXJ0ZWQgaW4NCj4gPiA0
+LjE5Pw0KPiANCj4gRG8geW91IHNlZSB0aGlzIGlzc3VlIGluIDUuND8gIFdoYXQncyBrZWVwaW5n
+IHlvdSBmcm9tIG1vdmluZyB0byA1LjQueT8NCg0KWWVzIGl0J3MgZml4ZWQgaW4gNS4wIGFuZCBs
+YXRlci4NCkZpeGluZyBpdCBpbiA0LjE5Lnggd291bGQgYmVuZWZpdCBkZWJpYW4gc3RhYmxlIHVz
+ZXJzIHRvby4gOi0pDQpCVFcgaXMgdGhlIEVPTCBmb3IgNC4xOSBzdGlsbCBlbmQgb2YgMjAyMD8N
+Cg0KPiBBbmQgaWYgdGhpcyBpc24ndCBhIHJlYWwgaXNzdWUsIGlzIHRoYXQgYSBwcm9ibGVtIHRv
+bz8NCj4gDQo+IEFzIHlvdSBjYW4gdGVzdCB0aGlzLCBpZiB5b3UgaGF2ZSBhIHNldCBvZiBwYXRj
+aGVzIGJhY2twb3J0ZWQgdGhhdCBjb3VsZA0KPiByZXNvbHZlIGl0LCBjYW4geW91IHNlbmQgdGhl
+bSB0byB1cz8NCg0KQmFzZWQgb24gcXVpY2sgbG9va3MgaXQncyBzb2x2ZWQgYnkgdGhpcywgSSds
+bCBuZWVkIHRvIGNoZWNrIGlmIGl0J3MgZW5vdWdoDQp0byBmaXggaXQ6DQoNCmNvbW1pdCA1YjE4
+YjVhNzM3NjAwZmQyMGJhMjA0NWYzMjBkNTkyNmViYmYzNDFhDQpBdXRob3I6IE1pa3VsYXMgUGF0
+b2NrYSA8bXBhdG9ja2FAcmVkaGF0LmNvbT4NCkRhdGU6ICAgVGh1IERlYyA2IDExOjQxOjE5IDIw
+MTggLTA1MDANCg0KICAgIGJsb2NrOiBkZWxldGUgcGFydF9yb3VuZF9zdGF0cyBhbmQgc3dpdGNo
+IHRvIGxlc3MgcHJlY2lzZSBjb3VudGluZw0KDQoNCg0KDQo+IA0KPiB0aGFua3MsDQo+IA0KPiBn
+cmVnIGstaA0KDQo=
