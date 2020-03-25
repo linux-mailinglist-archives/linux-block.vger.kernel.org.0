@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B7CB192894
-	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 13:40:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B183B192890
+	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 13:40:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgCYMkW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Mar 2020 08:40:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12129 "EHLO huawei.com"
+        id S1727316AbgCYMkN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Mar 2020 08:40:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12132 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727298AbgCYMkV (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:40:21 -0400
+        id S1727280AbgCYMkM (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:40:12 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 72D5AFED297F7C42EFE7;
+        by Forcepoint Email with ESMTP id 83AF2CCC9D1FB7B3DC50;
         Wed, 25 Mar 2020 20:40:09 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
  (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
- 20:40:06 +0800
+ 20:40:07 +0800
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
 CC:     <tj@kernel.org>, <jack@suse.cz>, <bvanassche@acm.org>,
         <tytso@mit.edu>, <gregkh@linuxfoundation.org>, <hch@infradead.org>
-Subject: [PATCH v4 2/6] bdi: protect bdi->dev with spinlock
-Date:   Wed, 25 Mar 2020 20:38:39 +0800
-Message-ID: <20200325123843.47452-3-yuyufen@huawei.com>
+Subject: [PATCH v4 3/6] bfq: fix potential kernel crash when print error info
+Date:   Wed, 25 Mar 2020 20:38:40 +0800
+Message-ID: <20200325123843.47452-4-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200325123843.47452-1-yuyufen@huawei.com>
 References: <20200325123843.47452-1-yuyufen@huawei.com>
@@ -36,121 +36,40 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We have reported a kernel crash in __blkg_prfill_rwstat() for
-use-after-free the bdi->dev. It tries to get the device name by
-'bdi->dev', while the device and kobj->name has been freed by
-bdi_unregister().
-
-In fact, similar bug have been reported in wb_workfn when
-bdi_unregister(). To fix it, commit 68f23b89067f ("memcg: fix a
-crash in wb_workfn when a device disappears") has created bdi_dev_name()
-to handle bdi->dev beening NULL. But, bdi->dev can be freed after
-bdi_dev_name() return successly, which can cause use-after-free for
-dev or kobj->name.
-
-In this patch, we try to protect the 'bdi->dev' with spinlock to
-avoid the race. A new helper function bdi_get_dev_name() is defined.
-Then, the caller can get device name with this helper safely.
-
-This patch is prepare for following patch to fix use-after-free bug.
+Replace bdi_dev_name() with bdi_get_dev_name(). Then, we can fix
+potential use-after-free or NULL pointer reference for bdi->dev
+when bdi unregister.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- include/linux/backing-dev-defs.h |  1 +
- include/linux/backing-dev.h      | 28 ++++++++++++++++++++++++++++
- mm/backing-dev.c                 |  9 +++++++--
- 3 files changed, 36 insertions(+), 2 deletions(-)
+ block/bfq-iosched.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005a..c98dac4a7953 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -227,6 +227,7 @@ struct backing_dev_info {
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *debug_dir;
- #endif
-+	spinlock_t lock;		/* protects dev */
- };
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 94261b7d7181..a8a67a95006e 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -4971,6 +4971,7 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
+ 	struct task_struct *tsk = current;
+ 	int ioprio_class;
+ 	struct bfq_data *bfqd = bfqq->bfqd;
++	char dname[BDI_DEV_NAME_LEN];
  
- enum {
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index f88197c1ffc2..010d80956442 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -19,6 +19,8 @@
- #include <linux/backing-dev-defs.h>
- #include <linux/slab.h>
- 
-+#define BDI_DEV_NAME_LEN	32
-+
- static inline struct backing_dev_info *bdi_get(struct backing_dev_info *bdi)
- {
- 	kref_get(&bdi->refcnt);
-@@ -514,4 +516,30 @@ static inline const char *bdi_dev_name(struct backing_dev_info *bdi)
- 	return dev_name(bdi->dev);
- }
- 
-+/**
-+ * bdi_get_dev_name - copy bdi device name into buffer
-+ * @bdi: target bdi
-+ * @dname: Where to copy the device name to
-+ * @len: size of destination buffer
-+ */
-+static inline char *bdi_get_dev_name(struct backing_dev_info *bdi,
-+			char *dname, int len)
-+{
-+	if (!bdi)
-+		goto unknown;
-+
-+	spin_lock_irq(&bdi->lock);
-+	if (!bdi->dev) {
-+		spin_unlock_irq(&bdi->lock);
-+		goto unknown;
-+	}
-+
-+	strlcpy(dname, dev_name(bdi->dev), len);
-+	spin_unlock_irq(&bdi->lock);
-+	return dname;
-+
-+unknown:
-+	strlcpy(dname, bdi_unknown_name, len);
-+	return NULL;
-+}
- #endif	/* _LINUX_BACKING_DEV_H */
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 62f05f605fb5..aa9ba7dcc2d9 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -859,6 +859,7 @@ static int bdi_init(struct backing_dev_info *bdi)
- 	INIT_LIST_HEAD(&bdi->bdi_list);
- 	INIT_LIST_HEAD(&bdi->wb_list);
- 	init_waitqueue_head(&bdi->wb_waitq);
-+	spin_lock_init(&bdi->lock);
- 
- 	ret = cgwb_bdi_init(bdi);
- 
-@@ -1007,15 +1008,19 @@ static void bdi_remove_from_list(struct backing_dev_info *bdi)
- 
- void bdi_unregister(struct backing_dev_info *bdi)
- {
-+	struct device *dev = bdi->dev;
-+
- 	/* make sure nobody finds us on the bdi_list anymore */
- 	bdi_remove_from_list(bdi);
- 	wb_shutdown(&bdi->wb);
- 	cgwb_bdi_unregister(bdi);
- 
--	if (bdi->dev) {
-+	if (dev) {
- 		bdi_debug_unregister(bdi);
--		device_unregister(bdi->dev);
-+		spin_lock_irq(&bdi->lock);
- 		bdi->dev = NULL;
-+		spin_unlock_irq(&bdi->lock);
-+		device_unregister(dev);
- 	}
- 
- 	if (bdi->owner) {
+ 	if (!bfqd)
+ 		return;
+@@ -4978,9 +4979,9 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
+ 	ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
+ 	switch (ioprio_class) {
+ 	default:
+-		pr_err("bdi %s: bfq: bad prio class %d\n",
+-				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
+-				ioprio_class);
++		bdi_get_dev_name(bfqq->bfqd->queue->backing_dev_info, dname,
++				BDI_DEV_NAME_LEN);
++		pr_err("bdi %s: bfq: bad prio class %d\n", dname, ioprio_class);
+ 		/* fall through */
+ 	case IOPRIO_CLASS_NONE:
+ 		/*
 -- 
 2.17.2
 
