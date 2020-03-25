@@ -2,143 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D95A7192931
-	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 14:07:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9913B192AD8
+	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 15:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCYNHN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Mar 2020 09:07:13 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38526 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727452AbgCYNHM (ORCPT
+        id S1727601AbgCYOMk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Mar 2020 10:12:40 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35865 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727521AbgCYOMk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:07:12 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 5A3242E15E0;
-        Wed, 25 Mar 2020 16:07:09 +0300 (MSK)
-Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id TAJ5DXKdPW-78D4Dagk;
-        Wed, 25 Mar 2020 16:07:09 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1585141629; bh=ybaDEAArqwziUQoA9o9Ff35aWMFz8no2o0b8HSSN56E=;
-        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=iZCKC2wEPnzVMpLw+9xocptjvtdBr4ZfgteD+kbaLP80QhdfLnnztAnXRXjSm9RXb
-         Cg7CMQB2DweUn9mGuFfJXQRMYE7NFOjBXZ7/qhP6j4/yrKrCQNfGEkMqKSLJ9zVKeq
-         dWgiCWn4UhkU4y4sLtSbKwQf16ncAw7vnqTR8HjA=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8204::1:e])
-        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id DXfNTlVL5P-78b4c7Se;
-        Wed, 25 Mar 2020 16:07:08 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH v4 3/3] block/diskstats: replace time_in_queue with sum of
- request times
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>
-Date:   Wed, 25 Mar 2020 16:07:08 +0300
-Message-ID: <158514162821.7009.15679343074448512619.stgit@buzz>
-In-Reply-To: <158514148436.7009.1234367408038809210.stgit@buzz>
-References: <158514148436.7009.1234367408038809210.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 25 Mar 2020 10:12:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m33so2231269qtb.3;
+        Wed, 25 Mar 2020 07:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=N7nQ4ebz3lUmPEZItWMKhCh2iPFhfdeLlfUD+yoZmZE=;
+        b=FXRWZ4idTS/9SmW/h6ukMHo4O1sk+A7oUGDB5LsZQ8TKlldyn0o8yk88kVp2+kcSJC
+         lvfqLWPwknKK0boCQXOXvGH17M9KbmCpw+qMPU/AXfi4lJQSylRdzjjv1OKBrKM03K3L
+         8LGV2prz6EVm47zu9u+8bJ7y/P8CJulaulx5BkB7mfTRcwa0cGi4R1/7u49roDrt2BU/
+         VdLxEKJhSbSnALe6Vr1yEJRTQLxGWRICUVQOOfkQLA5ahpQka7smhjhAmLiB+I70lyZV
+         Fob0h/ZhNg+DZx+y0rC801gEIeQArWhhCPUrPRd5QTlXXyfMhQYoi+AByvtSvPuVBd0B
+         7eOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=N7nQ4ebz3lUmPEZItWMKhCh2iPFhfdeLlfUD+yoZmZE=;
+        b=Khpea25LXugMQf7iWs582/WM4q5DtDxRakM4rlNY4DNC9pLtzRCmeNyWwY9Rwbbvax
+         c2ylOra5M5Yws7qVu6ZUm3cyMXQubmZfZUBgdr+LyiIVBas5i87lOcBBSabyLMChAcIO
+         zkw/J/31dCs5NgnhstGgLKPu2IgZuYCPu6f3oMPpOwylfjGeSzd2yXtiDDV0bQobQzxJ
+         sPLUUSCGC1+BJxWGxKxjb4dzXt4+3NCGOjLdUpWVo7AX1E533UpXV9UszEFNhKNMWboa
+         SUHgT6T+67Ci1lG8xHkQ02ktROXkoHw+DGd7BvIvrCI7x/r8RvgjhjdH48hQ3SlDDSKH
+         4fTw==
+X-Gm-Message-State: ANhLgQ1X8A9iHGbCGPkQ6rWCJv09aDT2swyi0KkUa7RFlnuesiMy9aT3
+        pxx1tX7qT3SVpB0p4rclfz29BLKOFd0=
+X-Google-Smtp-Source: ADFU+vviwj5kbNzPI4MpcV6D+abNsFlE2SyiEgoJJw/slckG95vaO1pSwoQcUzPy2GwpsjzhItDUEw==
+X-Received: by 2002:ac8:2911:: with SMTP id y17mr3065339qty.73.1585145558617;
+        Wed, 25 Mar 2020 07:12:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::d8d4])
+        by smtp.gmail.com with ESMTPSA id e130sm15532213qkb.72.2020.03.25.07.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 07:12:37 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 10:12:36 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Weiping Zhang <zwp10758@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [RFC 0/3] blkcg: add blk-iotrack
+Message-ID: <20200325141236.GJ162390@mtj.duckdns.org>
+References: <cover.1584728740.git.zhangweiping@didiglobal.com>
+ <20200324182725.GG162390@mtj.duckdns.org>
+ <CAA70yB7a7VjgPLObe-rzfV0dLAumeUVy0Dps+dY5r-Guq2Susg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA70yB7a7VjgPLObe-rzfV0dLAumeUVy0Dps+dY5r-Guq2Susg@mail.gmail.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Column "time_in_queue" in diskstats is supposed to show total waiting time
-of all requests. I.e. value should be equal to the sum of times from other
-columns. But this is not true, because column "time_in_queue" is counted
-separately in jiffies rather than in nanoseconds as other times.
+On Wed, Mar 25, 2020 at 08:49:24PM +0800, Weiping Zhang wrote:
+> For this patchset, iotrack can work well, I'm using it to monitor
+> block cgroup for
+> selecting a proper io isolation policy.
 
-This patch removes redundant counter for "time_in_queue" and shows total
-time of read, write, discard and flush requests.
+Yeah, I get that but monitoring needs tend to diverge quite a bit
+depending on the use cases making detailed monitoring often need fair
+bit of flexibility, so I'm a bit skeptical about adding a fixed
+controller for that. I think a better approach may be implementing
+features which can make dynamic monitoring whether that's through bpf,
+drgn or plain tracepoints easier and more efficient.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- block/bio.c           |    1 -
- block/blk-core.c      |    1 -
- block/genhd.c         |   13 ++++++++++---
- include/linux/genhd.h |    1 -
- 4 files changed, 10 insertions(+), 6 deletions(-)
+Thanks.
 
-diff --git a/block/bio.c b/block/bio.c
-index 68f65ef2ceba..bc9152977bf0 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1811,7 +1811,6 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
- 
- 	update_io_ticks(part, now, true);
- 	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
--	part_stat_add(part, time_in_queue, duration);
- 	part_dec_in_flight(q, part, op_is_write(req_op));
- 
- 	part_stat_unlock();
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 4401b30a1751..eaf6cb3887e6 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1340,7 +1340,6 @@ void blk_account_io_done(struct request *req, u64 now)
- 		update_io_ticks(part, jiffies, true);
- 		part_stat_inc(part, ios[sgrp]);
- 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
--		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
- 		part_dec_in_flight(req->q, part, rq_data_dir(req));
- 
- 		hd_struct_put(part);
-diff --git a/block/genhd.c b/block/genhd.c
-index 9eb981f7e5a4..792356e922a1 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -110,7 +110,6 @@ static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
- 		}
- 
- 		stat->io_ticks += ptr->io_ticks;
--		stat->time_in_queue += ptr->time_in_queue;
- 	}
- }
- #else /* CONFIG_SMP */
-@@ -1265,7 +1264,11 @@ ssize_t part_stat_show(struct device *dev,
- 		(unsigned int)div_u64(stat.nsecs[STAT_WRITE], NSEC_PER_MSEC),
- 		inflight,
- 		jiffies_to_msecs(stat.io_ticks),
--		jiffies_to_msecs(stat.time_in_queue),
-+		(unsigned int)div_u64(stat.nsecs[STAT_READ] +
-+				      stat.nsecs[STAT_WRITE] +
-+				      stat.nsecs[STAT_DISCARD] +
-+				      stat.nsecs[STAT_FLUSH],
-+						NSEC_PER_MSEC),
- 		stat.ios[STAT_DISCARD],
- 		stat.merges[STAT_DISCARD],
- 		(unsigned long long)stat.sectors[STAT_DISCARD],
-@@ -1559,7 +1562,11 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- 							NSEC_PER_MSEC),
- 			   inflight,
- 			   jiffies_to_msecs(stat.io_ticks),
--			   jiffies_to_msecs(stat.time_in_queue),
-+			   (unsigned int)div_u64(stat.nsecs[STAT_READ] +
-+						 stat.nsecs[STAT_WRITE] +
-+						 stat.nsecs[STAT_DISCARD] +
-+						 stat.nsecs[STAT_FLUSH],
-+							NSEC_PER_MSEC),
- 			   stat.ios[STAT_DISCARD],
- 			   stat.merges[STAT_DISCARD],
- 			   stat.sectors[STAT_DISCARD],
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index b0c588d1aa29..790fdc3e0b3d 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -46,7 +46,6 @@ struct disk_stats {
- 	unsigned long ios[NR_STAT_GROUPS];
- 	unsigned long merges[NR_STAT_GROUPS];
- 	unsigned long io_ticks;
--	unsigned long time_in_queue;
- 	local_t in_flight[2];
- };
- 
-
+-- 
+tejun
