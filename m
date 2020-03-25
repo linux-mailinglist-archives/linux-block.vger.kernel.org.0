@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E53AF1926AC
-	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 12:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C4F1926AE
+	for <lists+linux-block@lfdr.de>; Wed, 25 Mar 2020 12:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgCYLGB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Mar 2020 07:06:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57828 "EHLO
+        id S1727566AbgCYLGE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Mar 2020 07:06:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57838 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCYLGA (ORCPT
+        with ESMTP id S1727380AbgCYLGD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:06:00 -0400
+        Wed, 25 Mar 2020 07:06:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=AK5e+mU1Ma2q6vCv2R327p1MJXsygIrqf2AYyif01k4=; b=U26RUwOipgBrUqQ6+2xbGUDZOq
-        +TAgBFv/rd2/g8MmeEIO9jeilZmAQNMDFYqZGZJLGDPm5ICRxpFGXUDa3PuYGodek3ti7aPSPX5q5
-        Q/zZU/vfip5UeG+Y18CQsSUyvuDakzlnb53VUvd8zVgBLsklQUeEK5VC69u4xxcoOZjLCfl4nQLF8
-        INyLCfQUrjoZoXFIY0MWnufSietNGKQt9ygjOCaGf5bczwsfLl0OHGRCjon3m3gJgLI7g8THYrwOx
-        MhVhwRAtABxDkV5UQS1nP5JNlGaZAjxi0L2N1ENVPKVeGLJjSUgTHPCHkfhZtcUsfie5tCu3LzKSG
-        yjmDijlQ==;
+        bh=EkHoDcsZdb3+NNm3P9VHHz4Mkfwg7iMQl/Gfq2O/6E8=; b=RJMjuKIC6trIUEu4k4lHbz+/Sz
+        k9XRJZ0N+obCxSWid13xOFLXsvdxjW75eV2dE2SnwVr67Ha5kxuWHeUQAkP/JBvRy/vFK4L9B2w9u
+        nukmi3Kyx/dcr5uLyH24nirR9mCCds8VyM2wxzlaPyuyV6c225Icm55ubqFk18gBMsCo3cvSKqRyp
+        aOvcqoJSQ9k99SKulqNB8hG7/Xe4uc193FHk5PKcNuVA73zYxkUIOU8w22yiN5zaG/ZDZzj83EKKP
+        sKod/6fyQme78Qzyviovb+eq1oDkcfE8Pru30KHHCvhlpFMjw7heXq6KVk3Q8YNi5VI4W9woPbsA3
+        VuF7hlDg==;
 Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH3rE-0001uO-4R; Wed, 25 Mar 2020 11:06:00 +0000
+        id 1jH3rG-0001vA-Pm; Wed, 25 Mar 2020 11:06:03 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] block: unexport disk_get_part
-Date:   Wed, 25 Mar 2020 12:03:33 +0100
-Message-Id: <20200325110338.1029232-4-hch@lst.de>
+Subject: [PATCH 4/8] block: unexport disk_map_sector_rcu
+Date:   Wed, 25 Mar 2020 12:03:34 +0100
+Message-Id: <20200325110338.1029232-5-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200325110338.1029232-1-hch@lst.de>
 References: <20200325110338.1029232-1-hch@lst.de>
@@ -42,7 +42,7 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-disk_get_part is not used by any modular code.
+disk_map_sector_rcu is not used by any modular code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
@@ -50,17 +50,17 @@ Signed-off-by: Christoph Hellwig <hch@lst.de>
  1 file changed, 1 deletion(-)
 
 diff --git a/block/genhd.c b/block/genhd.c
-index e8978df06f35..48ed042d7f26 100644
+index 48ed042d7f26..144cb50e8eb3 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
-@@ -190,7 +190,6 @@ struct hd_struct *disk_get_part(struct gendisk *disk, int partno)
- 
- 	return part;
+@@ -345,7 +345,6 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
+ 	}
+ 	return &disk->part0;
  }
--EXPORT_SYMBOL_GPL(disk_get_part);
+-EXPORT_SYMBOL_GPL(disk_map_sector_rcu);
  
- /**
-  * disk_part_iter_init - initialize partition iterator
+ /*
+  * Can be deleted altogether. Later.
 -- 
 2.25.1
 
