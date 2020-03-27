@@ -2,162 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F16E8195165
-	for <lists+linux-block@lfdr.de>; Fri, 27 Mar 2020 07:39:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78514195299
+	for <lists+linux-block@lfdr.de>; Fri, 27 Mar 2020 09:09:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbgC0Gj3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Mar 2020 02:39:29 -0400
-Received: from mx1.didichuxing.com ([111.202.154.82]:11845 "HELO
-        bsf01.didichuxing.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S1725857AbgC0Gj3 (ORCPT
+        id S1726027AbgC0IJa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Mar 2020 04:09:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53358 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgC0IJa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Mar 2020 02:39:29 -0400
-X-ASG-Debug-ID: 1585290540-0e40885744166670001-Cu09wu
-Received: from mail.didiglobal.com (localhost [172.20.36.245]) by bsf01.didichuxing.com with ESMTP id ObSmeLcoFmwchqea; Fri, 27 Mar 2020 14:29:00 +0800 (CST)
-X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
-Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
- (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 27 Mar
- 2020 14:29:00 +0800
-Date:   Fri, 27 Mar 2020 14:28:59 +0800
-From:   Weiping Zhang <zhangweiping@didiglobal.com>
-To:     <axboe@kernel.dk>, <tj@kernel.org>
-CC:     <linux-block@vger.kernel.org>, <cgroups@vger.kernel.org>
-Subject: [RFC PATCH v2 2/3] bio: track timestamp of submitting bio the disk
- driver
-Message-ID: <20200327062859.GA12588@192.168.3.9>
-X-ASG-Orig-Subj: [RFC PATCH v2 2/3] bio: track timestamp of submitting bio the disk
- driver
-Mail-Followup-To: axboe@kernel.dk, tj@kernel.org,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+        Fri, 27 Mar 2020 04:09:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=7MkLh/AtsQmeJb55SUB0j8W/OcCYSrvtyMoSbjPhfsI=; b=I7nf3SxzztuN9ahCeBG1PEEDjJ
+        xKen67JCfXq3e7EyY8dwPCMyQZAI3Qxu5MmTThGOhl8FXMk7SulJXIPGwbgpqvXJ0EzQLFxG0SVzE
+        OUloYGfio6rvtc3gBcmjmkfdG9BkLWdN13qfyXRDh4vGddQd/JXuQEVyX2wukmA7tJW7C77YFVcej
+        xD5oqXR8Vn0E5GWmwF+jMdVFBlgXIIxsJCV2pEs/wOEq5X+rNfbyN53EfLlDfsHAy7ohfwSTCyt25
+        wIG4IAylCgfyQDV/qcc0dAOJ5Q2VVIXPhfU4qgLRe+nkWnI1ruEzevILysPpyfW4ctmtG8YZbjdrM
+        45LUckCA==;
+Received: from 213-225-10-87.nat.highway.a1.net ([213.225.10.87] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHk3V-0006hL-VC; Fri, 27 Mar 2020 08:09:30 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] block: move the ->devnode callback to struct block_device_operations
+Date:   Fri, 27 Mar 2020 09:07:17 +0100
+Message-Id: <20200327080717.1574048-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Originating-IP: [172.22.50.20]
-X-ClientProxiedBy: BJEXCAS06.didichuxing.com (172.20.36.207) To
- BJSGEXMBX03.didichuxing.com (172.20.15.133)
-X-Barracuda-Connect: localhost[172.20.36.245]
-X-Barracuda-Start-Time: 1585290540
-X-Barracuda-URL: https://bsf01.didichuxing.com:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at didichuxing.com
-X-Barracuda-Scan-Msg-Size: 3150
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0002 1.0000 -2.0194
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.80822
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Change-Id: Ibb9caf20616f83e111113ab5c824c05930c0e523
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
----
- block/blk-mq.c             |  3 +++
- include/linux/blk-cgroup.h |  6 ++++++
- include/linux/blk_types.h  | 29 +++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
+There really isn't any good reason to stash a method directly into
+struct gendisk.  Move it together with the other block device
+operations.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 5b2e6550e0b6..53db008ac8d0 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -652,6 +652,7 @@ EXPORT_SYMBOL(blk_mq_complete_request);
- void blk_mq_start_request(struct request *rq)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/genhd.c           |  4 ++--
+ drivers/block/pktcdvd.c | 12 ++++++------
+ include/linux/blkdev.h  |  1 +
+ include/linux/genhd.h   |  1 -
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/block/genhd.c b/block/genhd.c
+index 6323cc789efa..14cf395a1479 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1497,8 +1497,8 @@ static char *block_devnode(struct device *dev, umode_t *mode,
  {
- 	struct request_queue *q = rq->q;
-+	struct bio *bio;
+ 	struct gendisk *disk = dev_to_disk(dev);
  
- 	trace_block_rq_issue(q, rq);
- 
-@@ -660,6 +661,8 @@ void blk_mq_start_request(struct request *rq)
- 		rq->stats_sectors = blk_rq_sectors(rq);
- 		rq->rq_flags |= RQF_STATS;
- 		rq_qos_issue(q, rq);
-+		__rq_for_each_bio(bio, rq)
-+			blkcg_bio_start_init(bio);
- 	}
- 
- 	WARN_ON_ONCE(blk_mq_rq_state(rq) != MQ_RQ_IDLE);
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index e4a6949fd171..9720f04a9523 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -579,6 +579,11 @@ static inline void blkcg_bio_issue_init(struct bio *bio)
- 	bio_issue_init(&bio->bi_issue, bio_sectors(bio));
+-	if (disk->devnode)
+-		return disk->devnode(disk, mode);
++	if (disk->fops->devnode)
++		return disk->fops->devnode(disk, mode);
+ 	return NULL;
  }
  
-+static inline void blkcg_bio_start_init(struct bio *bio)
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 5f970a7d32c0..0d286a87e647 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2679,6 +2679,11 @@ static unsigned int pkt_check_events(struct gendisk *disk,
+ 	return attached_disk->fops->check_events(attached_disk, clearing);
+ }
+ 
++static char *pkt_devnode(struct gendisk *disk, umode_t *mode)
 +{
-+	bio_start_init(&bio->bi_start);
++	return kasprintf(GFP_KERNEL, "pktcdvd/%s", disk->disk_name);
 +}
 +
- static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 					 struct bio *bio)
- {
-@@ -738,6 +743,7 @@ static inline void blkg_get(struct blkcg_gq *blkg) { }
- static inline void blkg_put(struct blkcg_gq *blkg) { }
- 
- static inline bool blkcg_punt_bio_submit(struct bio *bio) { return false; }
-++static inline void blkcg_bio_start_init(struct bio *bio) { }
- static inline void blkcg_bio_issue_init(struct bio *bio) { }
- static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 					 struct bio *bio) { return true; }
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index fea81e3775c4..b19d7f44c6e7 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -109,10 +109,38 @@ static inline bool blk_path_error(blk_status_t error)
- /* Reserved bit for blk-throtl */
- #define BIO_ISSUE_THROTL_SKIP_LATENCY (1ULL << 63)
- 
-+/* submit bio to block layer */
- struct bio_issue {
- 	u64 value;
+ static const struct block_device_operations pktcdvd_ops = {
+ 	.owner =		THIS_MODULE,
+ 	.open =			pkt_open,
+@@ -2686,13 +2691,9 @@ static const struct block_device_operations pktcdvd_ops = {
+ 	.ioctl =		pkt_ioctl,
+ 	.compat_ioctl =		blkdev_compat_ptr_ioctl,
+ 	.check_events =		pkt_check_events,
++	.devnode =		pkt_devnode,
  };
  
-+/*
-+ * submit bio to the disk driver layer
-+ *
-+ * 63:51	reserved
-+ * 50:0		bits: start time of bio
-+ *
-+ * same bitmask as bi_issue
-+ */
-+struct bio_start {
-+	u64 value;
-+};
-+
-+static inline u64 __bio_start_time(u64 time)
-+{
-+	return time & BIO_ISSUE_TIME_MASK;
-+}
-+
-+static inline u64 bio_start_time(struct bio_start *start)
-+{
-+	return __bio_start_time(start->value);
-+}
-+
-+static inline void bio_start_init(struct bio_start *start)
-+{
-+	start->value = ktime_get_ns() & BIO_ISSUE_TIME_MASK;
-+}
-+
- static inline u64 __bio_issue_time(u64 time)
- {
- 	return time & BIO_ISSUE_TIME_MASK;
-@@ -178,6 +206,7 @@ struct bio {
- 	 */
- 	struct blkcg_gq		*bi_blkg;
- 	struct bio_issue	bi_issue;
-+	struct bio_start	bi_start;
- #ifdef CONFIG_BLK_CGROUP_IOCOST
- 	u64			bi_iocost_cost;
- #endif
+-static char *pktcdvd_devnode(struct gendisk *gd, umode_t *mode)
+-{
+-	return kasprintf(GFP_KERNEL, "pktcdvd/%s", gd->disk_name);
+-}
+-
+ /*
+  * Set up mapping from pktcdvd device to CD-ROM device.
+  */
+@@ -2748,7 +2749,6 @@ static int pkt_setup_dev(dev_t dev, dev_t* pkt_dev)
+ 	disk->fops = &pktcdvd_ops;
+ 	disk->flags = GENHD_FL_REMOVABLE;
+ 	strcpy(disk->disk_name, pd->name);
+-	disk->devnode = pktcdvd_devnode;
+ 	disk->private_data = pd;
+ 	disk->queue = blk_alloc_queue(GFP_KERNEL);
+ 	if (!disk->queue)
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 53a1325efbc3..e8defd718d62 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1697,6 +1697,7 @@ struct block_device_operations {
+ 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+ 	int (*report_zones)(struct gendisk *, sector_t sector,
+ 			unsigned int nr_zones, report_zones_cb cb, void *data);
++	char *(*devnode)(struct gendisk *disk, umode_t *mode);
+ 	struct module *owner;
+ 	const struct pr_ops *pr_ops;
+ };
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 927eed0be179..85b9e253cd39 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -191,7 +191,6 @@ struct gendisk {
+                                          * disks that can't be partitioned. */
+ 
+ 	char disk_name[DISK_NAME_LEN];	/* name of major driver */
+-	char *(*devnode)(struct gendisk *gd, umode_t *mode);
+ 
+ 	unsigned short events;		/* supported events */
+ 	unsigned short event_flags;	/* flags related to event processing */
 -- 
-2.18.1
+2.25.1
 
