@@ -2,48 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F53119685A
-	for <lists+linux-block@lfdr.de>; Sat, 28 Mar 2020 19:22:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E45CA19685C
+	for <lists+linux-block@lfdr.de>; Sat, 28 Mar 2020 19:23:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgC1SW6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 28 Mar 2020 14:22:58 -0400
-Received: from mail-pf1-f178.google.com ([209.85.210.178]:47014 "EHLO
-        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgC1SW6 (ORCPT
+        id S1725807AbgC1SXB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 28 Mar 2020 14:23:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37031 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC1SXB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 28 Mar 2020 14:22:58 -0400
-Received: by mail-pf1-f178.google.com with SMTP id q3so6260099pff.13
+        Sat, 28 Mar 2020 14:23:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a32so6398279pga.4
         for <linux-block@vger.kernel.org>; Sat, 28 Mar 2020 11:22:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RDFjenPnsAxFbB5ndvEVdorIwnWpF1fdqXVp8/5nTOA=;
-        b=HyGpcKhKXHx5XsG/hK+xCwM3KZ5hSV4axWpFuEj18+V/Su1PI9Fw9raPQaXaUiK2nA
-         8uj4spjFTcreQVm8vOquyW9RlI79aMhEotRVTbdSOWVHXqKareCAPJAMS6aqc70n1eZf
-         VSTrrdJKs/dsRNr1Wl4TOw5rLz2EyM3S0pc+M2lVab04OukROhhoQFjhBT1sLqttNgG0
-         p13WeaXb56E3QzkUt3V9JYWIyC9rv4b5aRgV77rD7EJ20fWCjH3bKcEKdQKLcasiDHnJ
-         /OAstu3N11hJysEKfDSxy+L4nDv61hBWcVR1gITd30oF7WjmdYPVZa5KKPDo0ntYrsCa
-         IaFQ==
-X-Gm-Message-State: ANhLgQ2ExfTUQ2pC7pFRDiYp42fGiBsY0t65tqixUvHwld+Y72O35ldR
-        HkWMIg2XIUN5h9HCwkYEwyg=
-X-Google-Smtp-Source: ADFU+vsqQejfSDdP6meEsBqprL4kKees68dq7B9VUoqT9zea7Utfjj+qgPfJQHKgROnC3b5U2Jqoow==
-X-Received: by 2002:a65:5a87:: with SMTP id c7mr5218928pgt.237.1585419777098;
-        Sat, 28 Mar 2020 11:22:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KDjQeevQOInHdNkxmzxDHiEtpmAei2DG8ChF+Sw5kqI=;
+        b=LbyFSbXj2WOWem8mI7+ndA3nWlKsGkKOKQ13lWXpaFWsgly6IJsRfcS3X5xszwaOPc
+         Qm36vXCC5aibKwH98P/LXtE0MGG+QNIuOcupRTXqB1wgLe+giyomR3c+pXFuViKtd1Zf
+         IM04UM9ZnxUpnkKOSq7TJkgLtqm6xuRD6GXCNYlOeeWd+EXIqEVEOWL4WFndh+irfdqU
+         5OS6UjEQ3OcxcSmGLQI0eAZxaS1aM182TNkACHUGW7BapWcNtG/LEjp/CSrCCei7gkZN
+         TNvzzv7Q17F5pFGK6WOjnQjpYnV7SzNa5KFixAlEpnilj112763EOvUPy634ER3srXJP
+         E+tQ==
+X-Gm-Message-State: ANhLgQ2LrMeujvyHvh6pXFyoER1bgrlbiz7iGAduFcuHzTEM2kkQmb7X
+        jY5SEZSj0g3LxWAlfEjrwoM=
+X-Google-Smtp-Source: ADFU+vsPorw4Oxlni7LYED9b/pcEujCKD55brsvX+0nBj+CkdI1QV7+WOs3XHD4+YPIawF/dgqlazg==
+X-Received: by 2002:a63:d943:: with SMTP id e3mr5191620pgj.434.1585419778245;
+        Sat, 28 Mar 2020 11:22:58 -0700 (PDT)
 Received: from asus.hsd1.ca.comcast.net ([2601:647:4000:d7:597d:a863:13de:4665])
-        by smtp.gmail.com with ESMTPSA id e126sm6659179pfa.122.2020.03.28.11.22.55
+        by smtp.gmail.com with ESMTPSA id e126sm6659179pfa.122.2020.03.28.11.22.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 11:22:56 -0700 (PDT)
+        Sat, 28 Mar 2020 11:22:57 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Omar Sandoval <osandov@fb.com>
 Cc:     linux-block@vger.kernel.org,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Daniel Wagner <dwagner@suse.de>,
         Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH blktests v4 0/4] Test the blk_mq_realloc_hw_ctxs() error path
-Date:   Sat, 28 Mar 2020 11:22:47 -0700
-Message-Id: <20200328182251.19945-1-bvanassche@acm.org>
+Subject: [PATCH blktests v4 1/4] Make _exit_null_blk remove all null_blk device instances
+Date:   Sat, 28 Mar 2020 11:22:48 -0700
+Message-Id: <20200328182251.19945-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200328182251.19945-1-bvanassche@acm.org>
+References: <20200328182251.19945-1-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -51,38 +53,71 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Omar,
+Instead of making every test remove null_blk device instances before calling
+_exit_null_blk(), move the null_blk device instance removal code into
+_exit_null_blk().
 
-Please consider this patch series for the official blktests repository.
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ common/null_blk | 7 ++++++-
+ tests/block/022 | 3 ---
+ tests/block/029 | 1 -
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-Thanks,
-
-Bart.
-
-Changes compared to v3:
-- Addressed Daniel Wagner's review comments.
-
-Changes compared to v2:
-- Addressed Omar's review comments.
-
-Changes between v1 and v2:
-- Added three patches that refactor null_blk loading, unloading and
-  configuration (Chaitanya).
-
-Bart Van Assche (4):
-  Make _exit_null_blk remove all null_blk device instances
-  Use _{init,exit}_null_blk instead of open-coding these functions
-  Introduce the function _configure_null_blk()
-  Add a test that triggers the blk_mq_realloc_hw_ctxs() error path
-
- common/multipath-over-rdma | 29 ++++++---------------
- common/null_blk            | 21 ++++++++++++++-
- tests/block/022            |  3 ---
- tests/block/029            | 17 ++-----------
- tests/block/030            | 52 ++++++++++++++++++++++++++++++++++++++
- tests/block/030.out        |  1 +
- tests/nvmeof-mp/rc         |  2 +-
- 7 files changed, 84 insertions(+), 41 deletions(-)
- create mode 100755 tests/block/030
- create mode 100644 tests/block/030.out
-
+diff --git a/common/null_blk b/common/null_blk
+index 2e300c20bbc7..a4140e365955 100644
+--- a/common/null_blk
++++ b/common/null_blk
+@@ -8,11 +8,15 @@ _have_null_blk() {
+ 	_have_modules null_blk
+ }
+ 
+-_init_null_blk() {
++_remove_null_blk_devices() {
+ 	if [[ -d /sys/kernel/config/nullb ]]; then
+ 		find /sys/kernel/config/nullb -mindepth 1 -maxdepth 1 \
+ 		     -type d -delete
+ 	fi
++}
++
++_init_null_blk() {
++	_remove_null_blk_devices
+ 
+ 	local zoned=""
+ 	if (( RUN_FOR_ZONED )); then zoned="zoned=1"; fi
+@@ -26,6 +30,7 @@ _init_null_blk() {
+ }
+ 
+ _exit_null_blk() {
++	_remove_null_blk_devices
+ 	udevadm settle
+ 	modprobe -r null_blk
+ }
+diff --git a/tests/block/022 b/tests/block/022
+index 1404aacef295..b2c53e266d81 100755
+--- a/tests/block/022
++++ b/tests/block/022
+@@ -50,9 +50,6 @@ test() {
+ 		wait $pid1
+ 	} 2>/dev/null
+ 
+-	rmdir /sys/kernel/config/nullb/1
+-	rmdir /sys/kernel/config/nullb/0
+-
+ 	_exit_null_blk
+ 	echo "Test complete"
+ }
+diff --git a/tests/block/029 b/tests/block/029
+index d298bac8db5c..0d521edb0cf6 100755
+--- a/tests/block/029
++++ b/tests/block/029
+@@ -58,7 +58,6 @@ test() {
+ 	else
+ 		echo "Skipping test because $sq cannot be modified" >>"$FULL"
+ 	fi
+-	rmdir /sys/kernel/config/nullb/nullb0
+ 	_exit_null_blk
+ 	echo Passed
+ }
