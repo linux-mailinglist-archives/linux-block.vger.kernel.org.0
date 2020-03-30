@@ -2,61 +2,180 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD95E197D90
-	for <lists+linux-block@lfdr.de>; Mon, 30 Mar 2020 15:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 815A5197F05
+	for <lists+linux-block@lfdr.de>; Mon, 30 Mar 2020 16:50:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgC3Nx0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Mar 2020 09:53:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgC3Nx0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:53:26 -0400
-Received: from C02WT3WMHTD6 (unknown [8.36.226.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53AFA206CC;
-        Mon, 30 Mar 2020 13:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585576405;
-        bh=9fj94aO+4iZ5CJVZaUxcTEXkFO9lNUuFcHzpzx0huIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vUJuqJD9rP+HVMcF2vqQ/l2b7bWGsDibN/cJ6LOXo70nGdl2Sv2L3HajIyzdCENtf
-         UBeBcJxxwtOxqAmQFfarvAsuPG6VLuLcMaNZRSZjOrU0BffsCnKwbsfYUWxGcgK4Ld
-         poJII5poqzXZhxe3nQoK0eTu9BIUcPCC0yvN0cyc=
-Date:   Mon, 30 Mar 2020 07:53:23 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Tokunori Ikegami <ikegami.t@gmail.com>
-Cc:     Ming Lei <tom.leiming@gmail.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [PATCH] block, nvme: Increase max segments parameter setting
- value
-Message-ID: <20200330135323.GA32604@C02WT3WMHTD6>
-References: <BYAPR04MB4965BAF4C0300E1206B049A586F00@BYAPR04MB4965.namprd04.prod.outlook.com>
- <cff52955-e55c-068a-44a6-8ed4edc0696f@gmail.com>
- <20200324000237.GB15091@redsun51.ssa.fujisawa.hgst.com>
- <6b73db44-ca3f-4285-0c91-dc1b1a5ca9f1@gmail.com>
- <dc3a3e88-f062-b7df-dd18-18fb76e68e0c@gmail.com>
- <20200327181825.GA8356@redsun51.ssa.fujisawa.hgst.com>
- <CACVXFVM=rT=86JrmAkySTg=gknfFL8Q1NU0uXWzoDMKMyL_mow@mail.gmail.com>
- <a0e7a985-a726-8e16-d29c-eb38a919e18e@gmail.com>
- <CACVXFVMsPstD2ZLnozC8-RsaJ7EMZK9+d47Q+1Z0coFOw3vMhg@mail.gmail.com>
- <cc1534d1-34f6-ffdb-27bd-73590ab30437@gmail.com>
+        id S1727973AbgC3OuX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Mar 2020 10:50:23 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34908 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgC3Ott (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:49:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c12so3979739plz.2
+        for <linux-block@vger.kernel.org>; Mon, 30 Mar 2020 07:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
+        b=BI2bXz9JW0Ja3fmTC65vw+5yLxMHKax69XlM02QwBhthxk9ja8mnYC9qep7ffRQon5
+         9GpkYJeJDkAUXFRUfBvrqYVeqpKygk9VElxZDgpdD3oEtfeMhJHZqqyL3gvel4R3CR9E
+         C2n+feDGjeSD9ogfLWGTZZCf7TuF1UcFkTzGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
+        b=G/N7/CdGyX+n0o+tG/5ClqqYgxAYMcBrgTfGvjVx/jtzX1RW+vhNHUT0dhnjpqwhww
+         ZkyPsZ+FNiOCTku3/VojTsHI52ePqgS9veCUKsCrGKOcgZ+7u6/9jwNcYbkt6/7Xa3j3
+         7NLOS07eOtIcRlaobRT736nwH38cz8QsOg9YFmztlLw1rFTpkYZP63CC6pxGn1akh+iW
+         VNN+oDT/pNXr5PQBYXG3YTDwVj/bY3WPgzthWl7g1Mj5Lld1I3lqktgb8OtXzceqN6BC
+         C4iKns3aaAg3sYm86Mx8c9UZ2AX/+/yc2UVoZXCVUPDk/oJBMMz+suC5Pee8Acp4VImS
+         dQ8Q==
+X-Gm-Message-State: ANhLgQ1N5knqtyosPyHa44LRc6l0QYnaFCAosF/s7dctwS0Qhr3xurB4
+        w4r1KFvY/V9bBJxfXZt+1NnU1g==
+X-Google-Smtp-Source: ADFU+vtXgURST9UkxUGS9nBDGF1TSE53YJGFU75fkGqIG44/V0AceUy6aiiUTYuxOtuZm2nXC/glsg==
+X-Received: by 2002:a17:90b:d91:: with SMTP id bg17mr16307893pjb.70.1585579786967;
+        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id y198sm1460972pfg.123.2020.03.30.07.49.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-block@vger.kernel.org, groeck@chromium.org,
+        paolo.valente@linaro.org, linux-scsi@vger.kernel.org,
+        sqazi@google.com, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] blk-mq: Fix two causes of IO stalls found in reboot testing
+Date:   Mon, 30 Mar 2020 07:49:04 -0700
+Message-Id: <20200330144907.13011-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc1534d1-34f6-ffdb-27bd-73590ab30437@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:15:41PM +0900, Tokunori Ikegami wrote:
-> But there is a case that the command data length is limited by 512KB.
-> I am not sure about this condition so needed more investigation.
+While doing reboot testing, I found that occasionally my device would
+trigger the hung task detector.  Many tasks were stuck waiting for the
+a blkdev mutex, but at least one task in the system was always sitting
+waiting for IO to complete (and holding the blkdev mutex).  One
+example of a task that was just waiting for its IO to complete on one
+reboot:
 
-Your memory is too fragmented. You need more physically contiguous
-memory or you'll hit the segment limit before you hit the length
-limit. Try allocating huge pages.
+ udevd           D    0  2177    306 0x00400209
+ Call trace:
+  __switch_to+0x15c/0x17c
+  __schedule+0x6e0/0x928
+  schedule+0x8c/0xbc
+  schedule_timeout+0x9c/0xfc
+  io_schedule_timeout+0x24/0x48
+  do_wait_for_common+0xd0/0x160
+  wait_for_completion_io_timeout+0x54/0x74
+  blk_execute_rq+0x9c/0xd8
+  __scsi_execute+0x104/0x198
+  scsi_test_unit_ready+0xa0/0x154
+  sd_check_events+0xb4/0x164
+  disk_check_events+0x58/0x154
+  disk_clear_events+0x74/0x110
+  check_disk_change+0x28/0x6c
+  sd_open+0x5c/0x130
+  __blkdev_get+0x20c/0x3d4
+  blkdev_get+0x74/0x170
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
+
+I've reproduced this on two systems: one boots from an internal UFS
+disk and one from eMMC.  Each has a card reader attached via USB with
+an SD card plugged in.  On the USB-attached SD card is a disk with 12
+partitions (a Chrome OS test image), if it matters.  The system
+doesn't do much with the USB disk other than probe it (it's plugged in
+my system to help me recover).
+
+From digging, I believe that there are two separate but related
+issues.  Both issues relate to the SCSI code saying that there is no
+budget.  In one case it seems clear that the blk-mq code should have
+restarted itself.  In another case it seems that we have to make the
+SCSI code kick the queues.
+
+I have done testing with only one or the other of the two patches in
+this series and found that I could still encounter hung tasks if only
+one of the two patches was applied.  This deserves a bit of
+explanation.  To me, it's fairly obvious that the blk-mq wouldn't fix
+the problems talked about in the scsi patch.  However, it's less
+obvious why the scsi patch doesn't fix the problems in
+blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+(problems become much more rare), but I did manage to get a single
+trace where the "kick" scheduled by the scsi fix happened really
+quickly.  The scheduled kick then ran and found nothing to do.  This
+happened in parallel to a task running in blk_mq_dispatch_rq_list()
+which hadn't gotten around to splicing the list back into
+hctx->dispatch.  This is why we need both fixes or a heavier hammer
+where we always kick whenever two threads request budget at the same
+time.
+
+Most of my testing has been atop Chrome OS 5.4's kernel tree which
+currently has v5.4.27 merged in.  The Chrome OS 5.4 tree also has a
+patch by Salman Qazi, namely ("block: Limit number of items taken from
+the I/O scheduler in one go").  Reverting that patch didn't make the
+hung tasks go away, so I kept it in for most of my testing.
+
+I have also done some testing on mainline Linux (git describe says I'm
+on v5.6-rc7-227-gf3e69428b5e2) even without Salman's patch.  I found
+that I could reproduce the problems there and that traces looked about
+the same as I saw on the downstream branch.  These patches were also
+confirmed to fix the problems on mainline.
+
+Chrome OS is currently setup to use the BFQ scheduler and I found that
+I couldn't reproduce the problems without BFQ.  It's possible that
+other schedulers simply never trip the code sequences I ran into or
+it's possible that the timing was simply different.  One important
+note is that to reproduce the problems the I/O scheduler must have
+returned "true" for has_work() but then dispatch_request() returns
+NULL.  In any case the problems I found do seem to be real problems
+and theoretically should be possible with other schedulers.
+
+I'll insert my usual caveat that I'm sending patches to code that I
+know very little about.  If I'm making a total bozo patch here, please
+help me figure out how I should fix the problems I found in a better
+way.
+
+If you want to see a total ridiculous amount of chatter where I
+stumbled around a whole bunch trying to figure out what was wrong and
+how to fix it, feel free to read <https://crbug.com/1061950>.  I
+promise it will make your eyes glaze over right away if this cover
+letter didn't already do that.
+
+I don't know if these fixes represent a regression of some sort or are
+new.  As per above I could only reproduce with BFQ enabled which makes
+it nearly impossible to go too far back with this.  I haven't listed
+any "Fixes" tags here, but if someone felt it was appropriate to
+backport this to some stable trees that seems like it'd be nice.
+Presumably at least 5.4 stable would make sense.
+
+Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+bunch of time helping me trawl through some of this code and reviewing
+early versions of this patch.
+
+
+Douglas Anderson (2):
+  blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+  scsi: core: Fix stall if two threads request budget at the same time
+
+ block/blk-mq.c             | 11 ++++++++---
+ drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
+ drivers/scsi/scsi_scan.c   |  1 +
+ include/scsi/scsi_device.h |  2 ++
+ 4 files changed, 35 insertions(+), 6 deletions(-)
+
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
