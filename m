@@ -2,56 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 815A5197F05
-	for <lists+linux-block@lfdr.de>; Mon, 30 Mar 2020 16:50:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 042AE197EF7
+	for <lists+linux-block@lfdr.de>; Mon, 30 Mar 2020 16:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgC3OuX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Mar 2020 10:50:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34908 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgC3Ott (ORCPT
+        id S1728705AbgC3Otw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Mar 2020 10:49:52 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36062 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgC3Otu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:49:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c12so3979739plz.2
-        for <linux-block@vger.kernel.org>; Mon, 30 Mar 2020 07:49:47 -0700 (PDT)
+        Mon, 30 Mar 2020 10:49:50 -0400
+Received: by mail-pj1-f66.google.com with SMTP id nu11so7429034pjb.1
+        for <linux-block@vger.kernel.org>; Mon, 30 Mar 2020 07:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
-        b=BI2bXz9JW0Ja3fmTC65vw+5yLxMHKax69XlM02QwBhthxk9ja8mnYC9qep7ffRQon5
-         9GpkYJeJDkAUXFRUfBvrqYVeqpKygk9VElxZDgpdD3oEtfeMhJHZqqyL3gvel4R3CR9E
-         C2n+feDGjeSD9ogfLWGTZZCf7TuF1UcFkTzGQ=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EuYDssEB7evYPsaury7cjtqe0bY7Z307ltbStlf8RcQ=;
+        b=UBWR7VA4YVLrQ4url646yT9vaphZOdutTIcpjIf1GGc5cotZ+uLa+tx6myCbsioNFX
+         sYlHMeHc7+D13OD7Mj6fe2dZeZWYErqeEBHVOGbey2hnrkH2b9scF5mD0xZZX4I1HTx9
+         gnHhtytjx3/ylt0WG5LnhKfBzOMRRjqSBwvm0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wxokKJDNKMFQP8TduvPKlZRyw/xvX4p8PZKE/poLUcs=;
-        b=G/N7/CdGyX+n0o+tG/5ClqqYgxAYMcBrgTfGvjVx/jtzX1RW+vhNHUT0dhnjpqwhww
-         ZkyPsZ+FNiOCTku3/VojTsHI52ePqgS9veCUKsCrGKOcgZ+7u6/9jwNcYbkt6/7Xa3j3
-         7NLOS07eOtIcRlaobRT736nwH38cz8QsOg9YFmztlLw1rFTpkYZP63CC6pxGn1akh+iW
-         VNN+oDT/pNXr5PQBYXG3YTDwVj/bY3WPgzthWl7g1Mj5Lld1I3lqktgb8OtXzceqN6BC
-         C4iKns3aaAg3sYm86Mx8c9UZ2AX/+/yc2UVoZXCVUPDk/oJBMMz+suC5Pee8Acp4VImS
-         dQ8Q==
-X-Gm-Message-State: ANhLgQ1N5knqtyosPyHa44LRc6l0QYnaFCAosF/s7dctwS0Qhr3xurB4
-        w4r1KFvY/V9bBJxfXZt+1NnU1g==
-X-Google-Smtp-Source: ADFU+vtXgURST9UkxUGS9nBDGF1TSE53YJGFU75fkGqIG44/V0AceUy6aiiUTYuxOtuZm2nXC/glsg==
-X-Received: by 2002:a17:90b:d91:: with SMTP id bg17mr16307893pjb.70.1585579786967;
-        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EuYDssEB7evYPsaury7cjtqe0bY7Z307ltbStlf8RcQ=;
+        b=dF7Cw71anMkr4f1QKlasmFI2QWtkji9z2Ic9xdO1VL2aGjQm9bkAg6fF2umZ0PLHxq
+         Lrr86WdwxIPrE9ArC9sg/gozCmys312fIYtCWqVJ2M+hLjwZ9c/grJK61r3heR0fxhJp
+         mYOiiKhoS3K5om4JV5ACc5zSGSwHWGrdmppOz86DRFCGoGs5iJK7o+UB9QTx5+MfXf40
+         BVcUyQADJBYkQ03QncKR0AQdR5UYq8g7yMbx/w0WgbAWG3l0WlmRE4tyADTbTn8tR+nF
+         K5TkOKAHCniSXOM++tG0Txk3Nc7C91JZQd9OAIHvNlA0hC+45vHL/pq970kO6Z9UzkKz
+         fe6A==
+X-Gm-Message-State: ANhLgQ3CIGER4VHXEJdcIO4HRywHLwMMDbEKS0UgZO9wgzKZHWpcD+TZ
+        MjjC2T28sst9UkcC2KDP2o73tA==
+X-Google-Smtp-Source: ADFU+vtMF+C5nJkLwJJYZ4lY+Y0gDiTaA2EAiSmNSROpCrQpUyOrjK9YEVRtmJDI6+R7RJoZyMiZtQ==
+X-Received: by 2002:a17:90a:b391:: with SMTP id e17mr16921059pjr.55.1585579788020;
+        Mon, 30 Mar 2020 07:49:48 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id y198sm1460972pfg.123.2020.03.30.07.49.45
+        by smtp.gmail.com with ESMTPSA id y198sm1460972pfg.123.2020.03.30.07.49.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:49:46 -0700 (PDT)
+        Mon, 30 Mar 2020 07:49:47 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-block@vger.kernel.org, groeck@chromium.org,
         paolo.valente@linaro.org, linux-scsi@vger.kernel.org,
         sqazi@google.com, Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] blk-mq: Fix two causes of IO stalls found in reboot testing
-Date:   Mon, 30 Mar 2020 07:49:04 -0700
-Message-Id: <20200330144907.13011-1-dianders@chromium.org>
+Subject: [PATCH 1/2] blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+Date:   Mon, 30 Mar 2020 07:49:05 -0700
+Message-Id: <20200330074856.1.I1f95c459e51962b8d2c83e869913b6befda2255c@changeid>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+In-Reply-To: <20200330144907.13011-1-dianders@chromium.org>
+References: <20200330144907.13011-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -59,123 +61,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-While doing reboot testing, I found that occasionally my device would
-trigger the hung task detector.  Many tasks were stuck waiting for the
-a blkdev mutex, but at least one task in the system was always sitting
-waiting for IO to complete (and holding the blkdev mutex).  One
-example of a task that was just waiting for its IO to complete on one
-reboot:
+In blk_mq_dispatch_rq_list(), if blk_mq_sched_needs_restart() returns
+true and the driver returns BLK_STS_RESOURCE then we'll kick the
+queue.  However, there's another case where we might need to kick it.
+If we were unable to get budget we can be in much the same state as
+when the driver returns BLK_STS_RESOURCE, so we should treat it the
+same.
 
- udevd           D    0  2177    306 0x00400209
- Call trace:
-  __switch_to+0x15c/0x17c
-  __schedule+0x6e0/0x928
-  schedule+0x8c/0xbc
-  schedule_timeout+0x9c/0xfc
-  io_schedule_timeout+0x24/0x48
-  do_wait_for_common+0xd0/0x160
-  wait_for_completion_io_timeout+0x54/0x74
-  blk_execute_rq+0x9c/0xd8
-  __scsi_execute+0x104/0x198
-  scsi_test_unit_ready+0xa0/0x154
-  sd_check_events+0xb4/0x164
-  disk_check_events+0x58/0x154
-  disk_clear_events+0x74/0x110
-  check_disk_change+0x28/0x6c
-  sd_open+0x5c/0x130
-  __blkdev_get+0x20c/0x3d4
-  blkdev_get+0x74/0x170
-  blkdev_open+0x94/0xa8
-  do_dentry_open+0x268/0x3a0
-  vfs_open+0x34/0x40
-  path_openat+0x39c/0xdf4
-  do_filp_open+0x90/0x10c
-  do_sys_open+0x150/0x3c8
-  ...
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-I've reproduced this on two systems: one boots from an internal UFS
-disk and one from eMMC.  Each has a card reader attached via USB with
-an SD card plugged in.  On the USB-attached SD card is a disk with 12
-partitions (a Chrome OS test image), if it matters.  The system
-doesn't do much with the USB disk other than probe it (it's plugged in
-my system to help me recover).
+ block/blk-mq.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-From digging, I believe that there are two separate but related
-issues.  Both issues relate to the SCSI code saying that there is no
-budget.  In one case it seems clear that the blk-mq code should have
-restarted itself.  In another case it seems that we have to make the
-SCSI code kick the queues.
-
-I have done testing with only one or the other of the two patches in
-this series and found that I could still encounter hung tasks if only
-one of the two patches was applied.  This deserves a bit of
-explanation.  To me, it's fairly obvious that the blk-mq wouldn't fix
-the problems talked about in the scsi patch.  However, it's less
-obvious why the scsi patch doesn't fix the problems in
-blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
-(problems become much more rare), but I did manage to get a single
-trace where the "kick" scheduled by the scsi fix happened really
-quickly.  The scheduled kick then ran and found nothing to do.  This
-happened in parallel to a task running in blk_mq_dispatch_rq_list()
-which hadn't gotten around to splicing the list back into
-hctx->dispatch.  This is why we need both fixes or a heavier hammer
-where we always kick whenever two threads request budget at the same
-time.
-
-Most of my testing has been atop Chrome OS 5.4's kernel tree which
-currently has v5.4.27 merged in.  The Chrome OS 5.4 tree also has a
-patch by Salman Qazi, namely ("block: Limit number of items taken from
-the I/O scheduler in one go").  Reverting that patch didn't make the
-hung tasks go away, so I kept it in for most of my testing.
-
-I have also done some testing on mainline Linux (git describe says I'm
-on v5.6-rc7-227-gf3e69428b5e2) even without Salman's patch.  I found
-that I could reproduce the problems there and that traces looked about
-the same as I saw on the downstream branch.  These patches were also
-confirmed to fix the problems on mainline.
-
-Chrome OS is currently setup to use the BFQ scheduler and I found that
-I couldn't reproduce the problems without BFQ.  It's possible that
-other schedulers simply never trip the code sequences I ran into or
-it's possible that the timing was simply different.  One important
-note is that to reproduce the problems the I/O scheduler must have
-returned "true" for has_work() but then dispatch_request() returns
-NULL.  In any case the problems I found do seem to be real problems
-and theoretically should be possible with other schedulers.
-
-I'll insert my usual caveat that I'm sending patches to code that I
-know very little about.  If I'm making a total bozo patch here, please
-help me figure out how I should fix the problems I found in a better
-way.
-
-If you want to see a total ridiculous amount of chatter where I
-stumbled around a whole bunch trying to figure out what was wrong and
-how to fix it, feel free to read <https://crbug.com/1061950>.  I
-promise it will make your eyes glaze over right away if this cover
-letter didn't already do that.
-
-I don't know if these fixes represent a regression of some sort or are
-new.  As per above I could only reproduce with BFQ enabled which makes
-it nearly impossible to go too far back with this.  I haven't listed
-any "Fixes" tags here, but if someone felt it was appropriate to
-backport this to some stable trees that seems like it'd be nice.
-Presumably at least 5.4 stable would make sense.
-
-Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
-bunch of time helping me trawl through some of this code and reviewing
-early versions of this patch.
-
-
-Douglas Anderson (2):
-  blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
-  scsi: core: Fix stall if two threads request budget at the same time
-
- block/blk-mq.c             | 11 ++++++++---
- drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
- drivers/scsi/scsi_scan.c   |  1 +
- include/scsi/scsi_device.h |  2 ++
- 4 files changed, 35 insertions(+), 6 deletions(-)
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d92088dec6c3..2cd8d2b49ff4 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1189,6 +1189,7 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 	bool no_tag = false;
+ 	int errors, queued;
+ 	blk_status_t ret = BLK_STS_OK;
++	bool no_budget_avail = false;
+ 
+ 	if (list_empty(list))
+ 		return false;
+@@ -1205,8 +1206,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 		rq = list_first_entry(list, struct request, queuelist);
+ 
+ 		hctx = rq->mq_hctx;
+-		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
++		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
++			no_budget_avail = true;
+ 			break;
++		}
+ 
+ 		if (!blk_mq_get_driver_tag(rq)) {
+ 			/*
+@@ -1311,13 +1314,15 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 		 *
+ 		 * If driver returns BLK_STS_RESOURCE and SCHED_RESTART
+ 		 * bit is set, run queue after a delay to avoid IO stalls
+-		 * that could otherwise occur if the queue is idle.
++		 * that could otherwise occur if the queue is idle.  We'll do
++		 * similar if we couldn't get budget and SCHED_RESTART is set.
+ 		 */
+ 		needs_restart = blk_mq_sched_needs_restart(hctx);
+ 		if (!needs_restart ||
+ 		    (no_tag && list_empty_careful(&hctx->dispatch_wait.entry)))
+ 			blk_mq_run_hw_queue(hctx, true);
+-		else if (needs_restart && (ret == BLK_STS_RESOURCE))
++		else if (needs_restart && (ret == BLK_STS_RESOURCE ||
++					   no_budget_avail))
+ 			blk_mq_delay_run_hw_queue(hctx, BLK_MQ_RESOURCE_DELAY);
+ 
+ 		blk_mq_update_dispatch_busy(hctx, true);
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
