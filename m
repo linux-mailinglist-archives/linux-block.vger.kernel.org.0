@@ -2,25 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9FF6199277
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A4F199298
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgCaJli (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 05:41:38 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34093 "EHLO 1wt.eu"
+        id S1730378AbgCaJnH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 05:43:07 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34177 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730455AbgCaJlh (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:41:37 -0400
+        id S1730273AbgCaJnH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:43:07 -0400
 Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f7c6024531;
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f76u024532;
         Tue, 31 Mar 2020 11:41:07 +0200
 From:   Willy Tarreau <w@1wt.eu>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 22/23] floppy: cleanup: do not iterate on current_fdc in DMA grab/release functions
-Date:   Tue, 31 Mar 2020 11:40:53 +0200
-Message-Id: <20200331094054.24441-23-w@1wt.eu>
+Subject: [PATCH 23/23] floppy: cleanup: add a few comments about expectations in certain functions
+Date:   Tue, 31 Mar 2020 11:40:54 +0200
+Message-Id: <20200331094054.24441-24-w@1wt.eu>
 X-Mailer: git-send-email 2.9.0
 In-Reply-To: <20200331094054.24441-1-w@1wt.eu>
 References: <20200331094054.24441-1-w@1wt.eu>
@@ -29,100 +29,71 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Both floppy_grab_irq_and_dma() and floppy_release_irq_and_dma() used to
-iterate on the global variable while setting up or freeing resources.
-Now that they exclusively rely on functions which take the fdc as an
-argument, so let's not touch the global one anymore.
+The locking in the driver is far from being obvious, with unlocking
+automatically happening at end of operations scheduled by interrupt,
+especially for the error paths where one does not necessarily expect
+that such an interrupt may be triggered. Let's add a few comments
+about what to expect at certain places to avoid misdetecting bugs
+which are not.
 
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
- drivers/block/floppy.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ drivers/block/floppy.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 8850baa3372a..77bb9a5fcd33 100644
+index 77bb9a5fcd33..07218f8b17f9 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -4854,6 +4854,8 @@ static void floppy_release_regions(int fdc)
+@@ -1791,7 +1791,9 @@ static void reset_interrupt(void)
  
- static int floppy_grab_irq_and_dma(void)
+ /*
+  * reset is done by pulling bit 2 of DOR low for a while (old FDCs),
+- * or by setting the self clearing bit 7 of STATUS (newer FDCs)
++ * or by setting the self clearing bit 7 of STATUS (newer FDCs).
++ * This WILL trigger an interrupt, causing the handlers in the current
++ * cont's ->redo() to be called via reset_interrupt().
+  */
+ static void reset_fdc(void)
  {
-+	int fdc;
-+
- 	if (atomic_inc_return(&usage_count) > 1)
- 		return 0;
+@@ -2003,6 +2005,9 @@ static const struct cont_t intr_cont = {
+ 	.done		= (done_f)empty
+ };
  
-@@ -4881,24 +4883,24 @@ static int floppy_grab_irq_and_dma(void)
- 		}
- 	}
- 
--	for (current_fdc = 0; current_fdc < N_FDC; current_fdc++) {
--		if (fdc_state[current_fdc].address != -1) {
--			if (floppy_request_regions(current_fdc))
-+	for (fdc = 0; fdc < N_FDC; fdc++) {
-+		if (fdc_state[fdc].address != -1) {
-+			if (floppy_request_regions(fdc))
- 				goto cleanup;
- 		}
- 	}
--	for (current_fdc = 0; current_fdc < N_FDC; current_fdc++) {
--		if (fdc_state[current_fdc].address != -1) {
--			reset_fdc_info(current_fdc, 1);
--			fdc_outb(fdc_state[current_fdc].dor, current_fdc, FD_DOR);
-+	for (fdc = 0; fdc < N_FDC; fdc++) {
-+		if (fdc_state[fdc].address != -1) {
-+			reset_fdc_info(fdc, 1);
-+			fdc_outb(fdc_state[fdc].dor, fdc, FD_DOR);
- 		}
- 	}
--	current_fdc = 0;
-+
- 	set_dor(0, ~0, 8);	/* avoid immediate interrupt */
- 
--	for (current_fdc = 0; current_fdc < N_FDC; current_fdc++)
--		if (fdc_state[current_fdc].address != -1)
--			fdc_outb(fdc_state[current_fdc].dor, current_fdc, FD_DOR);
-+	for (fdc = 0; fdc < N_FDC; fdc++)
-+		if (fdc_state[fdc].address != -1)
-+			fdc_outb(fdc_state[fdc].dor, fdc, FD_DOR);
- 	/*
- 	 * The driver will try and free resources and relies on us
- 	 * to know if they were allocated or not.
-@@ -4909,15 +4911,16 @@ static int floppy_grab_irq_and_dma(void)
- cleanup:
- 	fd_free_irq();
- 	fd_free_dma();
--	while (--current_fdc >= 0)
--		floppy_release_regions(current_fdc);
-+	while (--fdc >= 0)
-+		floppy_release_regions(fdc);
-+	current_fdc = 0;
- 	atomic_dec(&usage_count);
- 	return -1;
++/* schedules handler, waiting for completion. May be interrupted, will then
++ * return -EINTR, in which case the driver will automatically be unlocked.
++ */
+ static int wait_til_done(void (*handler)(void), bool interruptible)
+ {
+ 	int ret;
+@@ -2842,6 +2847,9 @@ static int set_next_request(void)
+ 	return current_req != NULL;
  }
  
- static void floppy_release_irq_and_dma(void)
++/* Starts or continues processing request. Will automatically unlock the
++ * driver at end of request.
++ */
+ static void redo_fd_request(void)
  {
--	int old_fdc;
-+	int fdc;
- #ifndef __sparc__
  	int drive;
- #endif
-@@ -4958,11 +4961,9 @@ static void floppy_release_irq_and_dma(void)
- 		pr_info("auxiliary floppy timer still active\n");
- 	if (work_pending(&floppy_work))
- 		pr_info("work still pending\n");
--	old_fdc = current_fdc;
--	for (current_fdc = 0; current_fdc < N_FDC; current_fdc++)
--		if (fdc_state[current_fdc].address != -1)
--			floppy_release_regions(current_fdc);
--	current_fdc = old_fdc;
-+	for (fdc = 0; fdc < N_FDC; fdc++)
-+		if (fdc_state[fdc].address != -1)
-+			floppy_release_regions(fdc);
- }
+@@ -2916,6 +2924,7 @@ static const struct cont_t rw_cont = {
+ 	.done		= request_done
+ };
  
- #ifdef MODULE
++/* schedule the request and automatically unlock the driver on completion */
+ static void process_fd_request(void)
+ {
+ 	cont = &rw_cont;
+@@ -3005,6 +3014,9 @@ static int user_reset_fdc(int drive, int arg, bool interruptible)
+ 	if (arg == FD_RESET_ALWAYS)
+ 		fdc_state[current_fdc].reset = 1;
+ 	if (fdc_state[current_fdc].reset) {
++		/* note: reset_fdc will take care of unlocking the driver
++		 * on completion.
++		 */
+ 		cont = &reset_cont;
+ 		ret = wait_til_done(reset_fdc, interruptible);
+ 		if (ret == -EINTR)
 -- 
 2.20.1
 
