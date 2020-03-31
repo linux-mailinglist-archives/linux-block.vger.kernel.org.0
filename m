@@ -2,72 +2,198 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B2319910B
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:16:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5291C199210
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbgCaJQq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 05:16:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59586 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731927AbgCaJQp (ORCPT
+        id S1730920AbgCaJXP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 05:23:15 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37189 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730883AbgCaJXP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=dAEAaiyYMafUZFXucEHFMwj9eNivSkJsj+WW8FmIfy0=; b=WDE48/qkkHgSzTYDWPtabW2BIr
-        QId90vMWhyZ52q84KyJn1KuMAWJMJlgbm9nleLyenJATRTgWQTOPXCI2lrEmA2Wc2PzCqdHsyPsHF
-        ePZB7DcFSeEIbLRsUZXU44hSzXY2ouUh4MfwnTFG+rD36iMKNqL87gb71OGczLhq6a2iXvtvIx73o
-        6hFwaOmKiJUoC05xpHEjbJOS1LOYg9GJgw3jHCZtoBL2PxnZ5qFF2c6TVZHtHPQ6Y+P3nHrg51PK4
-        PNCU65ImZZS0Qn4A+1QdIlrBcyfwqAmQssODULy2UAERzJcY7UeOiGlKlFn5lhnBDrtrL+7RiGPqV
-        dekOQ0Tg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJD0m-0004fI-3F; Tue, 31 Mar 2020 09:16:44 +0000
-Date:   Tue, 31 Mar 2020 02:16:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Weiping Zhang <zwp10758@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/3] bio: track timestamp of submitting bio the
- disk driver
-Message-ID: <20200331091644.GB12040@infradead.org>
-References: <20200327062859.GA12588@192.168.3.9>
- <20200331082505.GA14655@infradead.org>
- <CAA70yB5cWESKW600Lwoi8toPaiDtOVH53P8GSou6uukmX5mvgQ@mail.gmail.com>
+        Tue, 31 Mar 2020 05:23:15 -0400
+Received: by mail-il1-f195.google.com with SMTP id a6so18733100ilr.4
+        for <linux-block@vger.kernel.org>; Tue, 31 Mar 2020 02:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xMKrxTqmA4TIgiRiGbI08pf4Uf7w5UYJg1vK2q1M7KM=;
+        b=SJQlURFjp+nE6c3sftlMWUTb9afVFkxLgvVQkSr7f02p7DL6EJIFxUaFRVtfUllPPI
+         8/gl6Irw6J8OENf/viifdIUg9ZLeCBhA9TuG3YOKlXG6ORBjYOELAUzYZCCr6+bINTT0
+         TISdeILyuR8ihLDJDsDyppfm0x0p4TnJ2P3Y2KLXXaHFia2TS7tfX4vH7xg8miaWLJkv
+         9jP+lmZcY96jEIz0cxZJ5mde6+1LuMTH5BZXnQMKn+CtwS1b6DL78gTf1jCaoX164NIX
+         zVvhLdAD3oW9r9T4UoCBiU1jonBxJeJxcVC2DRrFQyd6/04gQjv7hmN5oiKyj41+usU2
+         1yZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xMKrxTqmA4TIgiRiGbI08pf4Uf7w5UYJg1vK2q1M7KM=;
+        b=oJnzlgLK1XAFlX8yuveyomg6Gdb1JOJtpc4CQyqd5A3Ol3vTmqEdglEpbYB2ORHn3R
+         eGJy2QVWFO/FyBd0PrAsC8Ae14ZjqWcU6pT4FOYZLdlTrjup0IyjtFF08ksu6fVw+52M
+         grcX0BGQNz1fcf+D7t1ks5TeGq1ZlqSGdmcPXJuBOc9ONICnK3iH7/iYTK1rpGmRbdRi
+         DyqMlWMHk5UTbHuFD8aevDzmY+conqhYDo4jfOcQBDsbseLpdSPuk5sYl1oElcGTkBAE
+         BoRT8YRefU6Go3FmnX74v7JDzFbA33pype8YOeKQiUuxH7DZRg01uvEXnSlrcJtllZS8
+         JlMQ==
+X-Gm-Message-State: ANhLgQ3Xx+fO9t/lmJK0fw3011V6BoPuPBgVJHiuJx0J1BqGrZQFnG4z
+        5gOGV3gsl0+9uTNTHfeSa0DIBF5huuOzyJmCs7cjUQ==
+X-Google-Smtp-Source: ADFU+vuO8ajXQCMTWxpmGRjSItjIdQPahaER/2osrhijUEnTNwBYrIoftbPbfmIwmFjLYycctz4zh7pXqaQY05NE0cM=
+X-Received: by 2002:a92:ba01:: with SMTP id o1mr15047023ili.217.1585646593722;
+ Tue, 31 Mar 2020 02:23:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA70yB5cWESKW600Lwoi8toPaiDtOVH53P8GSou6uukmX5mvgQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
+ <20200320121657.1165-19-jinpu.wang@cloud.ionos.com> <198cd2da-cbf8-17b0-3ee5-5dec366a43e2@acm.org>
+In-Reply-To: <198cd2da-cbf8-17b0-3ee5-5dec366a43e2@acm.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 31 Mar 2020 11:23:02 +0200
+Message-ID: <CAMGffEk1WA114u4KR8_UAUoUvpafshZkhxEYuxg6UcQpZid0qQ@mail.gmail.com>
+Subject: Re: [PATCH v11 18/26] block/rnbd: client: main functionality
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 04:45:33PM +0800, Weiping Zhang wrote:
-> Christoph Hellwig <hch@infradead.org> 于2020年3月31日周二 下午4:25写道：
-> >
-> > On Fri, Mar 27, 2020 at 02:28:59PM +0800, Weiping Zhang wrote:
-> > > Change-Id: Ibb9caf20616f83e111113ab5c824c05930c0e523
-> > > Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-> >
-> > This needs a commit description and loose the weird change id.
-> >
-> OK, I rewirte commit description, it record the timestamp of issue bio
-> to the disk driver,
-> then we can get the delta time in rq_qos_done_bio. It's same as the D2C time
-> of blktrace.
-> > I also think oyu need to fins a way to not bloat the bio even more,
-> > cgroup is a really bad offender for bio size.
-> struct request {
->     u64 io_start_time_ns;
-> also record this timestamp, I'll check if we can use it.
+On Sat, Mar 28, 2020 at 5:45 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2020-03-20 05:16, Jack Wang wrote:
+> > +static void rnbd_clt_put_dev(struct rnbd_clt_dev *dev)
+> > +{
+> > +     might_sleep();
+> > +
+> > +     if (refcount_dec_and_test(&dev->refcount)) {
+> > +             mutex_lock(&ida_lock);
+> > +             ida_simple_remove(&index_ida, dev->clt_device_id);
+> > +             mutex_unlock(&ida_lock);
+> > +             kfree(dev->hw_queues);
+> > +             rnbd_clt_put_sess(dev->sess);
+> > +             mutex_destroy(&dev->lock);
+> > +             kfree(dev);
+> > +     }
+> > +}
+>
+> Please use the coding style that is used elsewhere in the kernel, namely
+> return early to keep the indentation level low.
+Ok, will fix the coding style.
+>
+> > +enum {
+> > +     RNBD_DELAY_10ms   = 10,
+> > +     RNBD_DELAY_IFBUSY = -1,
+> > +};
+>
+> How about removing the RNBD_DELAY_10ms constant and using 10/*ms*/ instead?
+Sounds good.
+>
+> > +enum {
+> > +     NO_WAIT = 0,
+> > +     WAIT    = 1
+> > +};
+> > +
+> > +static int send_usr_msg(struct rtrs_clt *rtrs, int dir,
+> > +                     struct rnbd_iu *iu, struct kvec *vec, size_t nr,
+> > +                     size_t len, struct scatterlist *sg, unsigned int sg_len,
+> > +                     void (*conf)(struct work_struct *work),
+> > +                     int *errno, bool wait)
+>
+> Are the NO_WAIT and WAIT perhaps values that are passed as the last
+> argument to send_usr_msg()? If so, please use a proper enumeration type
+> instead of 'bool'.
+You're right, seems better to just remove the enum, "bool wait" is
+self-explained.
+>
+> > +static int rnbd_client_getgeo(struct block_device *block_device,
+> > +                            struct hd_geometry *geo)
+> > +{
+> > +     u64 size;
+> > +     struct rnbd_clt_dev *dev;
+> > +
+> > +     dev = block_device->bd_disk->private_data;
+> > +     size = dev->size * (dev->logical_block_size / SECTOR_SIZE);
+> > +     geo->cylinders  = (size & ~0x3f) >> 6;  /* size/64 */
+> > +     geo->heads      = 4;
+> > +     geo->sectors    = 16;
+> > +     geo->start      = 0;
+> > +
+> > +     return 0;
+> > +}
+>
+> Is the "& ~0x3f" in the above function perhaps superfluous?
+yes, will remove.
+>
+> > +static void rnbd_clt_dev_kick_mq_queue(struct rnbd_clt_dev *dev,
+> > +                                     struct blk_mq_hw_ctx *hctx,
+> > +                                     int delay)
+> > +{
+> > +     struct rnbd_queue *q = hctx->driver_data;
+> > +
+> > +     if (delay != RNBD_DELAY_IFBUSY)
+> > +             blk_mq_delay_run_hw_queue(hctx, delay);
+> > +     else if (unlikely(!rnbd_clt_dev_add_to_requeue(dev, q)))
+> > +             /*
+> > +              * If session is not busy we have to restart
+> > +              * the queue ourselves.
+> > +              */
+> > +             blk_mq_delay_run_hw_queue(hctx, RNBD_DELAY_10ms);
+> > +}
+>
+> I think the above code will be easier to read if RNBD_DELAY_10ms is
+> changed into 10/*ms*/.
+ok
 
-But except for a few exceptions bios are never issued directly to the
-driver, requests are.  And the few exception (rsxx, umem) probably should
-be rewritten to use requests.  And with generic_{start,end}_io_acct we
-already have helpers to track bio based stats, which we should not
-duplicate just for cgroups.
+>
+> > +static blk_status_t rnbd_queue_rq(struct blk_mq_hw_ctx *hctx,
+> > +                                const struct blk_mq_queue_data *bd)
+> > +{
+> > +     struct request *rq = bd->rq;
+> > +     struct rnbd_clt_dev *dev = rq->rq_disk->private_data;
+> > +     struct rnbd_iu *iu = blk_mq_rq_to_pdu(rq);
+> > +     int err;
+> > +
+> > +     if (unlikely(dev->dev_state != DEV_STATE_MAPPED))
+> > +             return BLK_STS_IOERR;
+> > +
+> > +     iu->permit = rnbd_get_permit(dev->sess, RTRS_IO_CON,
+> > +                                   RTRS_PERMIT_NOWAIT);
+> > +     if (unlikely(!iu->permit)) {
+> > +             rnbd_clt_dev_kick_mq_queue(dev, hctx, RNBD_DELAY_IFBUSY);
+> > +             return BLK_STS_RESOURCE;
+> > +     }
+> > +
+> > +     blk_mq_start_request(rq);
+> > +     err = rnbd_client_xfer_request(dev, rq, iu);
+> > +     if (likely(err == 0))
+> > +             return BLK_STS_OK;
+> > +     if (unlikely(err == -EAGAIN || err == -ENOMEM)) {
+> > +             rnbd_clt_dev_kick_mq_queue(dev, hctx, RNBD_DELAY_10ms);
+> > +             rnbd_put_permit(dev->sess, iu->permit);
+> > +             return BLK_STS_RESOURCE;
+> > +     }
+> > +
+> > +     rnbd_put_permit(dev->sess, iu->permit);
+> > +     return BLK_STS_IOERR;
+> > +}
+>
+> Would it be possible to use the .get_budget / .put_budget callbacks for
+> obtaining / releasing a "permit" object? I'm asking this because it was
+> really tricky to get the .get_budget / .put_budget calls right in the
+> block layer core. See also commit 0bca799b9280 ("blk-mq: order getting
+> budget and driver tag") # v4.17.
+
+Will check if we can use .get_budget/put_budget call back.
+>
+> Thanks,
+>
+> Bart.
+Thanks Bart
