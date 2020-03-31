@@ -2,99 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 351C61999E1
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 17:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B3BC199A29
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 17:47:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgCaPhd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 11:37:33 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34262 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPhd (ORCPT
+        id S1730617AbgCaPry (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 11:47:54 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40985 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgCaPry (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:37:33 -0400
-Received: by mail-pj1-f65.google.com with SMTP id q16so1086662pje.1
-        for <linux-block@vger.kernel.org>; Tue, 31 Mar 2020 08:37:33 -0700 (PDT)
+        Tue, 31 Mar 2020 11:47:54 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i3so18680835qtv.8;
+        Tue, 31 Mar 2020 08:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=AIJaewX8GfCCNVseZs66fzOQB91yKeoYu4/Ep9E7PaI=;
-        b=fqwdL2HD2ynty7HmKt6Q3mkGsMmztvgSpfY+9rj4EbEx5K0xOstNlgD4sRPPsBmYMI
-         jQKKxax+vROKD5bu9sAeDbd9SnI7PNjoRkgpU/kSRQuKYZd8CQBxMtAaiZNtx7e/g7sO
-         iHIIBtHxmfl30ClUbVBx1Y11p+y3Z/x4wE8aieLplXMtvHRD9c20+cjdpKQCWiWRi31Q
-         KTeLk20vCrEMcjKJDzFmHUdJ+R6nAIX7QapbnZBjHaJKOR046qwZhnawaCHRCOdZ1cqU
-         97oNBCqUPnWr/nEaSvkYVfZJNoQPAJZj+eZtxhSqHnOTQO2xa+1prgPegntk7xFihScP
-         VC5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=S+cb3bISW4bZmT92F1j7Pnq/uvLuSPQAD/l0XluG3es=;
+        b=CZ/zV+JpODQPLEkTvr5bV1RtBpJRe9fHt7rTi1ZlaBgKVi9+wGb7JWDMSyVv0LFEsD
+         o7PNPQNrt5OdGEe2WyyKKey7Y+vGvDbN3ZH4ABhpa4VnHcXwOIxT7GUBNx/KZLCkmWEk
+         lrVuQgPUpgsHRfGXRvtQO3g0TW5D0OAiH81tJGPLzmcM0WGR4NBc/+UWiH2Z1VKmj6Gp
+         mUinuOWxNArJRaIiJVjAmIbvhJuf9+2XxQZh8Bx8SBloKhJWEPzEszXl58bmi8CifTLw
+         nT3J0bmpXMxgKhC6fTOKnt6huiA+8g/NT10Ysn2FSkTRzgZBVwIgHoorZyCh5XjndMoQ
+         EmHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=AIJaewX8GfCCNVseZs66fzOQB91yKeoYu4/Ep9E7PaI=;
-        b=poZlfSiLT8MmoJgMRqp3utf2CjW9gi8k6gbKs69nQgty8qryWyR5psjdBfYummnp6h
-         haKk9ay92F0Z4CzRzmKlLiBfsK43bO5++nc//FUYK8PQqgtCszwm9UgjL9TXydKFEAPx
-         X+L5tvVZqZEY86kIu83Mspji/38d3e34pyzW/4oLimNQy/EYbCwLT0BJf3hqms3QR212
-         X1Z4lh1kDtqqUSk0wQUs64BmzafiHZkmBFQzb/JUogPqqLasr1y9KkwDVGnwCvK05bX6
-         ezlQN8lTohT8+Vp+HRBDuzi4fKTwPXb80z/Gqdyouzikm96ohtJVJfKMi06zIEU+vYfV
-         yIcg==
-X-Gm-Message-State: AGi0Pua58BuXmnYHAB5OHItKYPq5ZukPt281AxwXXKk5FtfvntP9Zrb1
-        cintbFRhiuVzEQleUcdIIto=
-X-Google-Smtp-Source: APiQypKjy8p0X5p701s5Kmd7nfiCE0gP6442ZhQ46+pvCrU9CIXn/YOOhpfWscoL/0CTifCg23RbAQ==
-X-Received: by 2002:a17:90a:218e:: with SMTP id q14mr4578731pjc.37.1585669052603;
-        Tue, 31 Mar 2020 08:37:32 -0700 (PDT)
-Received: from ?IPv6:240b:10:2720:5510:a182:288:3ffa:432a? ([240b:10:2720:5510:a182:288:3ffa:432a])
-        by smtp.gmail.com with ESMTPSA id x4sm12683810pfi.202.2020.03.31.08.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 08:37:32 -0700 (PDT)
-Subject: Re: [PATCH] block, nvme: Increase max segments parameter setting
- value
-To:     Joshi <joshiiitr@gmail.com>
-Cc:     Ming Lei <tom.leiming@gmail.com>, Keith Busch <kbusch@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-References: <20200323182324.3243-1-ikegami.t@gmail.com>
- <BYAPR04MB4965BAF4C0300E1206B049A586F00@BYAPR04MB4965.namprd04.prod.outlook.com>
- <cff52955-e55c-068a-44a6-8ed4edc0696f@gmail.com>
- <20200324000237.GB15091@redsun51.ssa.fujisawa.hgst.com>
- <6b73db44-ca3f-4285-0c91-dc1b1a5ca9f1@gmail.com>
- <dc3a3e88-f062-b7df-dd18-18fb76e68e0c@gmail.com>
- <20200327181825.GA8356@redsun51.ssa.fujisawa.hgst.com>
- <CACVXFVM=rT=86JrmAkySTg=gknfFL8Q1NU0uXWzoDMKMyL_mow@mail.gmail.com>
- <a0e7a985-a726-8e16-d29c-eb38a919e18e@gmail.com>
- <CACVXFVMsPstD2ZLnozC8-RsaJ7EMZK9+d47Q+1Z0coFOw3vMhg@mail.gmail.com>
- <cc1534d1-34f6-ffdb-27bd-73590ab30437@gmail.com>
- <CA+1E3rJV2-qig0mj9s1rVZo-iScXiPqiuLF+EDszET6vtounTw@mail.gmail.com>
-From:   Tokunori Ikegami <ikegami.t@gmail.com>
-Message-ID: <b93e02fe-ce91-a2ee-2373-cc6bf8366da0@gmail.com>
-Date:   Wed, 1 Apr 2020 00:37:28 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=S+cb3bISW4bZmT92F1j7Pnq/uvLuSPQAD/l0XluG3es=;
+        b=bnvLL4zLzmTWj2wEelTUM0jQvjTMNWA3KKP5sI+4aXODXwLJuTL6Zhrt2qRVuzn22n
+         ypxeVzoNkadvzPlGnmpBV9cKlsL6uYj0/T0cL0JS6UnZTNm2W9zlU/cQ+D1BnzNx9v3j
+         UMuAGJUZsS5EL6KxvGtDhhLpzSMrpgjgvwhGtErTDlJzlKK7lv+oIOULX7lY61OHS5w/
+         TYmS4W9+gf3icDJotsm/2GBJFwOChyM2x3/zX78m63YC9/cvt/ZOa36mZLl1IGotGmll
+         fVe2PGjWDNbXBCXtMxPmR0uHECjdEVwtkPkRFS8Pd0j3C2VlxXjmij/Mun1fuQvrVIkH
+         F6tA==
+X-Gm-Message-State: ANhLgQ35zGSctUMPYbdCBLvHGBrPnZphncq883aFlI509lOO+8RoYpDq
+        Ol1d8NSN28dL5IqQgmIYyYcTbrTAf7o9xOM44jY=
+X-Google-Smtp-Source: ADFU+vueFmwtyA1v+7pm/DjQa8uSCIHLcdiNP3fePAGUXFX+W1vqv3fkaAD0xsN2YQXUI2KJCFntt5b47zvPrwXIakg=
+X-Received: by 2002:ac8:18c3:: with SMTP id o3mr5923041qtk.49.1585669672947;
+ Tue, 31 Mar 2020 08:47:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+1E3rJV2-qig0mj9s1rVZo-iScXiPqiuLF+EDszET6vtounTw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1580786525.git.zhangweiping@didiglobal.com>
+ <20200204154200.GA5831@redsun51.ssa.fujisawa.hgst.com> <CAA70yB5qAj8YnNiPVD5zmPrrTr0A0F3v2cC6t2S1Fb0kiECLfw@mail.gmail.com>
+ <CAA70yB62_6JD_8dJTGPjnjJfyJSa1xqiCVwwNYtsTCUXQR5uCA@mail.gmail.com> <20200331143635.GS162390@mtj.duckdns.org>
+In-Reply-To: <20200331143635.GS162390@mtj.duckdns.org>
+From:   Weiping Zhang <zwp10758@gmail.com>
+Date:   Tue, 31 Mar 2020 23:47:41 +0800
+Message-ID: <CAA70yB51=VQrL+2wC+DL8cYmGVACb2_w5UHc4XFn7MgZjUJaeg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Add support Weighted Round Robin for blkcg and nvme
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Nadolski, Edmund" <edmund.nadolski@intel.com>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
-
-On 2020/03/31 23:13, Joshi wrote:
-> Hi Ikegami,
+Tejun Heo <tj@kernel.org> =E4=BA=8E2020=E5=B9=B43=E6=9C=8831=E6=97=A5=E5=91=
+=A8=E4=BA=8C =E4=B8=8B=E5=8D=8810:36=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Are you actually able to bump up the max segments with the original patch?
-No as you mentioned currently it is limited by NVME_MAX_SEGS.
-On the older kernel version it was not limited by the value but limited 
-by USHRT_MAX.
-So it was able to change the limit by the patch.
+> Hello, Weiping.
+>
+> On Tue, Mar 31, 2020 at 02:17:06PM +0800, Weiping Zhang wrote:
+> > Recently I do some cgroup io weight testing,
+> > https://github.com/dublio/iotrack/wiki/cgroup-io-weight-test
+> > I think a proper io weight policy
+> > should consider high weight cgroup's iops, latency and also take whole
+> > disk's throughput
+> > into account, that is to say, the policy should do more carfully trade
+> > off between cgroup's
+> > IO performance and whole disk's throughput. I know one policy cannot
+> > do all things perfectly,
+> > but from the test result nvme-wrr can work well.
+>
+> That's w/o iocost QoS targets configured, right? iocost should be able to
+> achieve similar results as wrr with QoS configured.
+>
+Yes, I have not set Qos target.
+> > From the following test result, nvme-wrr work well for both cgroup's
+> > latency, iops, and whole
+> > disk's throughput.
+>
+> As I wrote before, the issues I see with wrr are the followings.
+>
+> * Hardware dependent. Some will work ok or even fantastic. Many others wi=
+ll do
+>   horribly.
+>
+> * Lack of configuration granularity. We can't configure it granular enoug=
+h to
+>   serve hierarchical configuration.
+>
+> * Likely not a huge problem with the deep QD of nvmes but lack of queue d=
+epth
+>   control can lead to loss of latency control and thus loss of protection=
+ for
+>   low concurrency workloads when pitched against workloads which can satu=
+rate
+>   QD.
+>
+> All that said, given the feature is available, I don't see any reason to =
+not
+> allow to use it, but I don't think it fits the cgroup interface model giv=
+en the
+> hardware dependency and coarse granularity. For these cases, I think the =
+right
+> thing to do is using cgroups to provide tagging information - ie. build a
+> dedicated interface which takes cgroup fd or ino as the tag and associate
+> configurations that way. There already are other use cases which use cgro=
+up this
+> way (e.g. perf).
+>
+Do you means drop the "io.wrr" or "blkio.wrr" in cgroup, and use a
+dedicated interface
+like /dev/xxx or /proc/xxx?
 
-As Keith-san also mentioned currently it is limited by the 4MB and 127 
-segments as you mentioned by the NVMe PCIe driver.
-So I will do abandon the patch to increase max segments.
+I see the perf code:
+struct fd f =3D fdget(fd)
+struct cgroup_subsys_state *css =3D
+css_tryget_online_from_dir(f.file->f_path.dentry,
+        &perf_event_cgrp_subsys);
 
-Regards,
-Ikegami
+Looks can be applied to block cgroup in same way.
 
+Thanks your help.
