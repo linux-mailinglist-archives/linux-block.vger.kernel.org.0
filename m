@@ -2,154 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97AEB199243
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:29:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D134D199289
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgCaJ35 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 05:29:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39223 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbgCaJ35 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:29:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id c16so6552500iod.6
-        for <linux-block@vger.kernel.org>; Tue, 31 Mar 2020 02:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e9TC9Dvq+NxHGmVjcxml98fEBNVdqGYWIzldJgXCRdc=;
-        b=L4AdER7p0yZLutfy4JSvfuKwUGwUmZY2JV3er/hjSVcru+yO8m3Egcr096hguEw12Q
-         kG15HJ6d7JqhzwOT0tw9DIIxCvpEixVwn39C6k1HAEHhp8mFv7YN4eFVcemYszFPOUpU
-         0rWazWw5V3HmcarKda3nQN6I4XsioPeTiqg57pMMIAcFwnWSfcOHOBqy3ZytnVWE678H
-         nFeH2A0KlPu7tzGNqIkVftUouawcRYHYxkWsBXOWXqU97hqUZ+hjlT5IZhxvEqlNIKZ7
-         b6jCOfNNnknKTfNXNUAlTT7a5oH9CMUi9pem8iaFF2MLcog5D5nVH68T2Jz7sTNqfM5G
-         djfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e9TC9Dvq+NxHGmVjcxml98fEBNVdqGYWIzldJgXCRdc=;
-        b=Tq7CbfnDLfQrXrL8VnD7GtXEiYR8ynOzH4N4Q7GBzNbPNUBnrXt6MRrCDineTsnAMI
-         4vZVzlL6D6F3Xfx7JfXsIVC3S6c5zX89i/WwA/66K+BJ9P3sdFXsmdKRWW2U0Tka/chH
-         8ELXLZH1qKuMbj+vGKSdR0GphPtwYsXbdFFJZE2792fWvl1Nhbym6JboeD8e3vPM67WY
-         jZ9QPSunFQS+BoGc95I+dn2qf3aQFiQd8gVJ4WNm6P2A4iWB4HfrYO9DR/ZJri+QJ+fe
-         4xVEGfqc5WAdqW0UlLxkoddh50B31jmnicSHkFIa5abLujQ8dlgIjp4RiXLpAFGfJ0T6
-         VYyQ==
-X-Gm-Message-State: ANhLgQ3RyEukIMa/VEncjMR3rJ9oOvJqdUzT7sOjSdPCAHG1NFdCZPES
-        BJmLo2xIdL0ER9QPiuEyfaMtsUMhwyCElnOvjPnjlA==
-X-Google-Smtp-Source: ADFU+vtWWlZdtpSbBkN5OF1s68dy0E68ycIqrABToueXo4BBTpuuADtHMSmrlQ5bG4CgB6gHmAHmcls73EBg9Oeub2A=
-X-Received: by 2002:a6b:b24d:: with SMTP id b74mr14544159iof.49.1585646996530;
- Tue, 31 Mar 2020 02:29:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
- <20200320121657.1165-22-jinpu.wang@cloud.ionos.com> <ba7c258f-a169-f2d5-3d62-62a7d09908a4@acm.org>
-In-Reply-To: <ba7c258f-a169-f2d5-3d62-62a7d09908a4@acm.org>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 31 Mar 2020 11:29:45 +0200
-Message-ID: <CAMGffE=4LNom-aWJhogqjgD+mHPp1_B9g=rEzHzdr=x9Zy6vAw@mail.gmail.com>
-Subject: Re: [PATCH v11 21/26] block/rnbd: server: main functionality
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1730324AbgCaJmX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 05:42:23 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34154 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730217AbgCaJmX (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:42:23 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f2nl024507;
+        Tue, 31 Mar 2020 11:41:02 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>, Ian Molton <spyro@f2s.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>, x86@kernel.org
+Subject: [PATCH 00/23] Floppy driver cleanups
+Date:   Tue, 31 Mar 2020 11:40:31 +0200
+Message-Id: <20200331094054.24441-1-w@1wt.eu>
+X-Mailer: git-send-email 2.9.0
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 6:41 PM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 2020-03-20 05:16, Jack Wang wrote:
-> > +static int __read_mostly port_nr = RTRS_PORT;
->
-> Would uint16_t be sufficient for this kernel module parameter?
-yes, u16 is enough.
->
-> Is this kernel module parameter used anywhere in the hot path? If not,
-> should __read_mostly perhaps be left out?
-not in hot path, __read_mostly can be removed.
->
-> > +module_param_named(port_nr, port_nr, int, 0444);
-> > +MODULE_PARM_DESC(port_nr,
-> > +              "The port number server is listening on (default: "
->                                 ^^^
->                                 the?
-right!
-> > +              __stringify(RTRS_PORT)")");
-> > +
-> > +#define DEFAULT_DEV_SEARCH_PATH "/"
->
-> > +static void destroy_device(struct rnbd_srv_dev *dev)
-> > +{
-> > +     WARN(!list_empty(&dev->sess_dev_list),
-> > +          "Device %s is being destroyed but still in use!\n",
-> > +          dev->id);
->
-> Has it been considered to change WARN() into WARN_ONCE()?
-ok.
->
-> > +static int rnbd_srv_rdma_ev(struct rtrs_srv *rtrs, void *priv,
-> > +                          struct rtrs_srv_op *id, int dir,
-> > +                          void *data, size_t datalen, const void *usr,
-> > +                          size_t usrlen)
-> > +{
-> > +     struct rnbd_srv_session *srv_sess = priv;
-> > +     const struct rnbd_msg_hdr *hdr = usr;
-> > +     int ret = 0;
-> > +     u16 type;
-> > +
-> > +     if (WARN_ON(!srv_sess))
-> > +             return -ENODEV;
->
-> Same question here: how about using WARN_ON_ONCE() instead of WARN_ON()?
-ok.
->
-> > +static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
-> > +                                  const char *dev_name)
-> > +{
-> > +     char *full_path;
-> > +     char *a, *b;
-> > +
-> > +     full_path = kmalloc(PATH_MAX, GFP_KERNEL);
-> > +     if (!full_path)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     /*
-> > +      * Replace %SESSNAME% with a real session name in order to
-> > +      * create device namespace.
-> > +      */
-> > +     a = strnstr(dev_search_path, "%SESSNAME%", sizeof(dev_search_path));
-> > +     if (a) {
-> > +             int len = a - dev_search_path;
-> > +
-> > +             len = snprintf(full_path, PATH_MAX, "%.*s/%s/%s", len,
-> > +                            dev_search_path, srv_sess->sessname, dev_name);
-> > +             if (len >= PATH_MAX) {
-> > +                     pr_err("Tooooo looong path: %s, %s, %s\n",
-> > +                            dev_search_path, srv_sess->sessname, dev_name);
-> > +                     kfree(full_path);
-> > +                     return ERR_PTR(-EINVAL);
-> > +             }
-> > +     } else {
-> > +             snprintf(full_path, PATH_MAX, "%s/%s",
-> > +                      dev_search_path, dev_name);
-> > +     }
->
-> Has it been considered to use kasprintf() instead of kmalloc() + snprintf()?
-will convert to kasprintf.
->
-> Otherwise this patch looks fine to me.
->
-> Thanks,
->
-> Bart.
-Thanks Bart!
+This series applies a second batch of cleanups to the floppy driver and
+its multiple arch-specific parts. Here the focus was on getting rid of
+hard-coded registers and flags values to switch to their symbolic
+definitions instead, and on making use of the global current_fdc variable
+much more explicit throughout the code to reduce the risk of accidental
+misuse as was the case with the most recently fixed bug.
+
+Note that this code base is very old and the purpose is not to rewrite
+nor reorganize the driver at all, but instead to make certain things
+more obvious while keeping changes reviewable. It does not even address
+style issues that make checkpatch continue to complain a little bit (15
+total warnings which were already there and don't seem worth addressing
+without more careful testing). Some comments were added to document a
+few non-obvious assumptions though.
+
+This series was rediffed against today's master (458ef2a25e0c) which
+contains the first series. The changes were tested on x86 with real
+hardware, and was build-tested on ARM.
+
+Willy Tarreau (23):
+  floppy: split the base port from the register in I/O accesses
+  floppy: add references to 82077's extra registers
+  floppy: use symbolic register names in the m68k port
+  floppy: use symbolic register names in the parisc port
+  floppy: use symbolic register names in the powerpc port
+  floppy: use symbolic register names in the sparc32 port
+  floppy: use symbolic register names in the sparc64 port
+  floppy: use symbolic register names in the x86 port
+  floppy: cleanup: make twaddle() not rely on current_{fdc,drive}
+    anymore
+  floppy: cleanup: make reset_fdc_info() not rely on current_fdc anymore
+  floppy: cleanup: make show_floppy() not rely on current_fdc anymore
+  floppy: cleanup: make wait_til_ready() not rely on current_fdc anymore
+  floppy: cleanup: make output_byte() not rely on current_fdc anymore
+  floppy: cleanup: make result() not rely on current_fdc anymore
+  floppy: cleanup: make need_more_output() not rely on current_fdc
+    anymore
+  floppy: cleanup: make perpendicular_mode() not rely on current_fdc
+    anymore
+  floppy: cleanup: make fdc_configure() not rely on current_fdc anymore
+  floppy: cleanup: make fdc_specify() not rely on current_{fdc,drive}
+    anymore
+  floppy: cleanup: make check_wp() not rely on current_{fdc,drive}
+    anymore
+  floppy: cleanup: make next_valid_format() not rely on current_drive
+    anymore
+  floppy: cleanup: make get_fdc_version() not rely on current_fdc
+    anymore
+  floppy: cleanup: do not iterate on current_fdc in DMA grab/release
+    functions
+  floppy: cleanup: add a few comments about expectations in certain
+    functions
+
+ arch/alpha/include/asm/floppy.h             |   4 +-
+ arch/arm/include/asm/floppy.h               |   8 +-
+ arch/m68k/include/asm/floppy.h              |  27 +-
+ arch/mips/include/asm/mach-generic/floppy.h |   8 +-
+ arch/mips/include/asm/mach-jazz/floppy.h    |   8 +-
+ arch/parisc/include/asm/floppy.h            |  19 +-
+ arch/powerpc/include/asm/floppy.h           |  19 +-
+ arch/sparc/include/asm/floppy_32.h          |  50 +--
+ arch/sparc/include/asm/floppy_64.h          |  59 ++--
+ arch/x86/include/asm/floppy.h               |  19 +-
+ drivers/block/floppy.c                      | 330 ++++++++++----------
+ include/uapi/linux/fdreg.h                  |  16 +-
+ 12 files changed, 299 insertions(+), 268 deletions(-)
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Ian Molton <spyro@f2s.com>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: x86@kernel.org
+-- 
+2.20.1
+
