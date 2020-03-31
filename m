@@ -2,25 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9020C19929D
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B09A19927A
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgCaJn3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 05:43:29 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34183 "EHLO 1wt.eu"
+        id S1730397AbgCaJlv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 05:41:51 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34104 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730224AbgCaJn3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:43:29 -0400
+        id S1730375AbgCaJlv (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:41:51 -0400
 Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f6pf024520;
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f6h4024521;
         Tue, 31 Mar 2020 11:41:06 +0200
 From:   Willy Tarreau <w@1wt.eu>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 13/23] floppy: cleanup: make output_byte() not rely on current_fdc anymore
-Date:   Tue, 31 Mar 2020 11:40:44 +0200
-Message-Id: <20200331094054.24441-14-w@1wt.eu>
+Subject: [PATCH 14/23] floppy: cleanup: make result() not rely on current_fdc anymore
+Date:   Tue, 31 Mar 2020 11:40:45 +0200
+Message-Id: <20200331094054.24441-15-w@1wt.eu>
 X-Mailer: git-send-email 2.9.0
 In-Reply-To: <20200331094054.24441-1-w@1wt.eu>
 References: <20200331094054.24441-1-w@1wt.eu>
@@ -32,193 +32,136 @@ X-Mailing-List: linux-block@vger.kernel.org
 Now the fdc is passed in argument so that the function does not
 use current_fdc anymore.
 
+It's worth noting that there's still a single reply_buffer[] which
+will store the result for the current fdc. It may or may not make
+sense to implement one buffer per fdc in the future.
+
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
- drivers/block/floppy.c | 64 +++++++++++++++++++++---------------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
+ drivers/block/floppy.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 5dfddd4726fb..81fd06eaea7d 100644
+index 81fd06eaea7d..4aaf84217b53 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -1128,26 +1128,26 @@ static int wait_til_ready(int fdc)
+@@ -1153,13 +1153,13 @@ static int output_byte(int fdc, char byte)
  }
  
- /* sends a command byte to the fdc */
--static int output_byte(char byte)
-+static int output_byte(int fdc, char byte)
+ /* gets the response from the fdc */
+-static int result(void)
++static int result(int fdc)
  {
--	int status = wait_til_ready(current_fdc);
-+	int status = wait_til_ready(fdc);
+ 	int i;
+ 	int status = 0;
  
- 	if (status < 0)
- 		return -1;
- 
- 	if (is_ready_state(status)) {
--		fdc_outb(byte, current_fdc, FD_DATA);
-+		fdc_outb(byte, fdc, FD_DATA);
- 		output_log[output_log_pos].data = byte;
- 		output_log[output_log_pos].status = status;
- 		output_log[output_log_pos].jiffies = jiffies;
- 		output_log_pos = (output_log_pos + 1) % OLOGSIZE;
- 		return 0;
+ 	for (i = 0; i < MAX_REPLIES; i++) {
+-		status = wait_til_ready(current_fdc);
++		status = wait_til_ready(fdc);
+ 		if (status < 0)
+ 			break;
+ 		status &= STATUS_DIR | STATUS_READY | STATUS_BUSY | STATUS_DMA;
+@@ -1169,16 +1169,16 @@ static int result(void)
+ 			return i;
+ 		}
+ 		if (status == (STATUS_DIR | STATUS_READY | STATUS_BUSY))
+-			reply_buffer[i] = fdc_inb(current_fdc, FD_DATA);
++			reply_buffer[i] = fdc_inb(fdc, FD_DATA);
+ 		else
+ 			break;
+ 	}
+ 	if (initialized) {
+ 		DPRINT("get result error. Fdc=%d Last status=%x Read bytes=%d\n",
+-		       current_fdc, status, i);
+-		show_floppy(current_fdc);
++		       fdc, status, i);
++		show_floppy(fdc);
  	}
 -	fdc_state[current_fdc].reset = 1;
 +	fdc_state[fdc].reset = 1;
- 	if (initialized) {
- 		DPRINT("Unable to send byte %x to FDC. Fdc=%x Status=%x\n",
--		       byte, current_fdc, status);
--		show_floppy(current_fdc);
-+		       byte, fdc, status);
-+		show_floppy(fdc);
- 	}
  	return -1;
  }
-@@ -1229,8 +1229,8 @@ static void perpendicular_mode(void)
- 	if (fdc_state[current_fdc].perp_mode == perp_mode)
- 		return;
- 	if (fdc_state[current_fdc].version >= FDC_82077_ORIG) {
--		output_byte(FD_PERPENDICULAR);
--		output_byte(perp_mode);
-+		output_byte(current_fdc, FD_PERPENDICULAR);
-+		output_byte(current_fdc, perp_mode);
- 		fdc_state[current_fdc].perp_mode = perp_mode;
- 	} else if (perp_mode) {
- 		DPRINT("perpendicular mode not supported by this FDC.\n");
-@@ -1243,12 +1243,12 @@ static int no_fifo;
- static int fdc_configure(void)
- {
- 	/* Turn on FIFO */
--	output_byte(FD_CONFIGURE);
-+	output_byte(current_fdc, FD_CONFIGURE);
- 	if (need_more_output() != MORE_OUTPUT)
- 		return 0;
--	output_byte(0);
--	output_byte(0x10 | (no_fifo & 0x20) | (fifo_depth & 0xf));
--	output_byte(0);		/* pre-compensation from track
-+	output_byte(current_fdc, 0);
-+	output_byte(current_fdc, 0x10 | (no_fifo & 0x20) | (fifo_depth & 0xf));
-+	output_byte(current_fdc, 0);		/* pre-compensation from track
- 				   0 upwards */
- 	return 1;
+ 
+@@ -1194,7 +1194,7 @@ static int need_more_output(void)
+ 	if (is_ready_state(status))
+ 		return MORE_OUTPUT;
+ 
+-	return result();
++	return result(current_fdc);
  }
-@@ -1301,10 +1301,10 @@ static void fdc_specify(void)
- 		if (fdc_state[current_fdc].version >= FDC_82078) {
- 			/* chose the default rate table, not the one
- 			 * where 1 = 2 Mbps */
--			output_byte(FD_DRIVESPEC);
-+			output_byte(current_fdc, FD_DRIVESPEC);
- 			if (need_more_output() == MORE_OUTPUT) {
--				output_byte(UNIT(current_drive));
--				output_byte(0xc0);
-+				output_byte(current_fdc, UNIT(current_drive));
-+				output_byte(current_fdc, 0xc0);
- 			}
- 		}
- 		break;
-@@ -1349,9 +1349,9 @@ static void fdc_specify(void)
- 	if (fdc_state[current_fdc].spec1 != spec1 ||
- 	    fdc_state[current_fdc].spec2 != spec2) {
- 		/* Go ahead and set spec1 and spec2 */
--		output_byte(FD_SPECIFY);
--		output_byte(fdc_state[current_fdc].spec1 = spec1);
--		output_byte(fdc_state[current_fdc].spec2 = spec2);
-+		output_byte(current_fdc, FD_SPECIFY);
-+		output_byte(current_fdc, fdc_state[current_fdc].spec1 = spec1);
-+		output_byte(current_fdc, fdc_state[current_fdc].spec2 = spec2);
+ 
+ /* Set perpendicular mode as required, based on data rate, if supported.
+@@ -1524,7 +1524,7 @@ static void setup_rw_floppy(void)
  	}
- }				/* fdc_specify */
  
-@@ -1513,7 +1513,7 @@ static void setup_rw_floppy(void)
- 
- 	r = 0;
- 	for (i = 0; i < raw_cmd->cmd_count; i++)
--		r |= output_byte(raw_cmd->cmd[i]);
-+		r |= output_byte(current_fdc, raw_cmd->cmd[i]);
- 
- 	debugt(__func__, "rw_command");
- 
-@@ -1566,8 +1566,8 @@ static void check_wp(void)
- {
- 	if (test_bit(FD_VERIFY_BIT, &drive_state[current_drive].flags)) {
+ 	if (!(flags & FD_RAW_INTR)) {
+-		inr = result();
++		inr = result(current_fdc);
+ 		cont->interrupt();
+ 	} else if (flags & FD_RAW_NEED_DISK)
+ 		fd_watchdog();
+@@ -1568,7 +1568,7 @@ static void check_wp(void)
  					/* check write protection */
--		output_byte(FD_GETSTATUS);
--		output_byte(UNIT(current_drive));
-+		output_byte(current_fdc, FD_GETSTATUS);
-+		output_byte(current_fdc, UNIT(current_drive));
- 		if (result() != 1) {
+ 		output_byte(current_fdc, FD_GETSTATUS);
+ 		output_byte(current_fdc, UNIT(current_drive));
+-		if (result() != 1) {
++		if (result(current_fdc) != 1) {
  			fdc_state[current_fdc].reset = 1;
  			return;
-@@ -1639,9 +1639,9 @@ static void seek_floppy(void)
- 	}
+ 		}
+@@ -1742,14 +1742,14 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
  
- 	do_floppy = seek_interrupt;
--	output_byte(FD_SEEK);
--	output_byte(UNIT(current_drive));
--	if (output_byte(track) < 0) {
-+	output_byte(current_fdc, FD_SEEK);
-+	output_byte(current_fdc, UNIT(current_drive));
-+	if (output_byte(current_fdc, track) < 0) {
- 		reset_fdc();
- 		return;
- 	}
-@@ -1748,7 +1748,7 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
+ 	do_print = !handler && print_unex && initialized;
+ 
+-	inr = result();
++	inr = result(current_fdc);
+ 	if (do_print)
+ 		print_result("unexpected interrupt", inr);
  	if (inr == 0) {
  		int max_sensei = 4;
  		do {
--			output_byte(FD_SENSEI);
-+			output_byte(current_fdc, FD_SENSEI);
- 			inr = result();
+ 			output_byte(current_fdc, FD_SENSEI);
+-			inr = result();
++			inr = result(current_fdc);
  			if (do_print)
  				print_result("sensei", inr);
-@@ -1771,8 +1771,8 @@ static void recalibrate_floppy(void)
+ 			max_sensei--;
+@@ -1782,7 +1782,7 @@ static void recalibrate_floppy(void)
+ static void reset_interrupt(void)
  {
  	debugt(__func__, "");
- 	do_floppy = recal_interrupt;
--	output_byte(FD_RECALIBRATE);
--	if (output_byte(UNIT(current_drive)) < 0)
-+	output_byte(current_fdc, FD_RECALIBRATE);
-+	if (output_byte(current_fdc, UNIT(current_drive)) < 0)
- 		reset_fdc();
- }
- 
-@@ -4302,7 +4302,7 @@ static char __init get_fdc_version(void)
- {
- 	int r;
- 
--	output_byte(FD_DUMPREGS);	/* 82072 and better know DUMPREGS */
-+	output_byte(current_fdc, FD_DUMPREGS);	/* 82072 and better know DUMPREGS */
+-	result();		/* get the status ready for set_fdc */
++	result(current_fdc);		/* get the status ready for set_fdc */
+ 	if (fdc_state[current_fdc].reset) {
+ 		pr_info("reset set in interrupt, calling %ps\n", cont->error);
+ 		cont->error();	/* a reset just after a reset. BAD! */
+@@ -4305,7 +4305,7 @@ static char __init get_fdc_version(void)
+ 	output_byte(current_fdc, FD_DUMPREGS);	/* 82072 and better know DUMPREGS */
  	if (fdc_state[current_fdc].reset)
  		return FDC_NONE;
- 	r = result();
-@@ -4323,15 +4323,15 @@ static char __init get_fdc_version(void)
- 		return FDC_82072;	/* 82072 doesn't know CONFIGURE */
+-	r = result();
++	r = result(current_fdc);
+ 	if (r <= 0x00)
+ 		return FDC_NONE;	/* No FDC present ??? */
+ 	if ((r == 1) && (reply_buffer[0] == 0x80)) {
+@@ -4332,7 +4332,7 @@ static char __init get_fdc_version(void)
  	}
  
--	output_byte(FD_PERPENDICULAR);
-+	output_byte(current_fdc, FD_PERPENDICULAR);
- 	if (need_more_output() == MORE_OUTPUT) {
--		output_byte(0);
-+		output_byte(current_fdc, 0);
- 	} else {
- 		pr_info("FDC %d is an 82072A\n", current_fdc);
- 		return FDC_82072A;	/* 82072A as found on Sparcs. */
- 	}
- 
--	output_byte(FD_UNLOCK);
-+	output_byte(current_fdc, FD_UNLOCK);
- 	r = result();
+ 	output_byte(current_fdc, FD_UNLOCK);
+-	r = result();
++	r = result(current_fdc);
  	if ((r == 1) && (reply_buffer[0] == 0x80)) {
  		pr_info("FDC %d is a pre-1991 82077\n", current_fdc);
-@@ -4343,7 +4343,7 @@ static char __init get_fdc_version(void)
- 			current_fdc, r);
+ 		return FDC_82077_ORIG;	/* Pre-1991 82077, doesn't know
+@@ -4344,7 +4344,7 @@ static char __init get_fdc_version(void)
  		return FDC_UNKNOWN;
  	}
--	output_byte(FD_PARTID);
-+	output_byte(current_fdc, FD_PARTID);
- 	r = result();
+ 	output_byte(current_fdc, FD_PARTID);
+-	r = result();
++	r = result(current_fdc);
  	if (r != 1) {
  		pr_info("FDC %d init: PARTID: unexpected return of %d bytes.\n",
+ 			current_fdc, r);
 -- 
 2.20.1
 
