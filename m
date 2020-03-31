@@ -2,25 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58591199274
-	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:41:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96F34199296
+	for <lists+linux-block@lfdr.de>; Tue, 31 Mar 2020 11:43:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbgCaJlh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Mar 2020 05:41:37 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34092 "EHLO 1wt.eu"
+        id S1730338AbgCaJnD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Mar 2020 05:43:03 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34174 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730182AbgCaJlh (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:41:37 -0400
+        id S1730273AbgCaJnD (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:43:03 -0400
 Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f5TW024518;
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f576024519;
         Tue, 31 Mar 2020 11:41:05 +0200
 From:   Willy Tarreau <w@1wt.eu>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 11/23] floppy: cleanup: make show_floppy() not rely on current_fdc anymore
-Date:   Tue, 31 Mar 2020 11:40:42 +0200
-Message-Id: <20200331094054.24441-12-w@1wt.eu>
+Subject: [PATCH 12/23] floppy: cleanup: make wait_til_ready() not rely on current_fdc anymore
+Date:   Tue, 31 Mar 2020 11:40:43 +0200
+Message-Id: <20200331094054.24441-13-w@1wt.eu>
 X-Mailer: git-send-email 2.9.0
 In-Reply-To: <20200331094054.24441-1-w@1wt.eu>
 References: <20200331094054.24441-1-w@1wt.eu>
@@ -34,76 +34,69 @@ use current_fdc anymore.
 
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
- drivers/block/floppy.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/block/floppy.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 6c98f8d169a9..dd739594fce7 100644
+index dd739594fce7..5dfddd4726fb 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -1104,7 +1104,7 @@ static void setup_DMA(void)
- #endif
- }
- 
--static void show_floppy(void);
-+static void show_floppy(int fdc);
+@@ -1107,30 +1107,30 @@ static void setup_DMA(void)
+ static void show_floppy(int fdc);
  
  /* waits until the fdc becomes ready */
- static int wait_til_ready(void)
-@@ -1121,7 +1121,7 @@ static int wait_til_ready(void)
- 	}
- 	if (initialized) {
- 		DPRINT("Getstatus times out (%x) on fdc %d\n", status, current_fdc);
--		show_floppy();
-+		show_floppy(current_fdc);
- 	}
- 	fdc_state[current_fdc].reset = 1;
- 	return -1;
-@@ -1147,7 +1147,7 @@ static int output_byte(char byte)
- 	if (initialized) {
- 		DPRINT("Unable to send byte %x to FDC. Fdc=%x Status=%x\n",
- 		       byte, current_fdc, status);
--		show_floppy();
-+		show_floppy(current_fdc);
- 	}
- 	return -1;
- }
-@@ -1176,7 +1176,7 @@ static int result(void)
- 	if (initialized) {
- 		DPRINT("get result error. Fdc=%d Last status=%x Read bytes=%d\n",
- 		       current_fdc, status, i);
--		show_floppy();
-+		show_floppy(current_fdc);
- 	}
- 	fdc_state[current_fdc].reset = 1;
- 	return -1;
-@@ -1819,7 +1819,7 @@ static void reset_fdc(void)
- 	}
- }
- 
--static void show_floppy(void)
-+static void show_floppy(int fdc)
+-static int wait_til_ready(void)
++static int wait_til_ready(int fdc)
  {
- 	int i;
+ 	int status;
+ 	int counter;
  
-@@ -1842,7 +1842,7 @@ static void show_floppy(void)
- 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE, 16, 1,
- 		       reply_buffer, resultsize, true);
+-	if (fdc_state[current_fdc].reset)
++	if (fdc_state[fdc].reset)
+ 		return -1;
+ 	for (counter = 0; counter < 10000; counter++) {
+-		status = fdc_inb(current_fdc, FD_STATUS);
++		status = fdc_inb(fdc, FD_STATUS);
+ 		if (status & STATUS_READY)
+ 			return status;
+ 	}
+ 	if (initialized) {
+-		DPRINT("Getstatus times out (%x) on fdc %d\n", status, current_fdc);
+-		show_floppy(current_fdc);
++		DPRINT("Getstatus times out (%x) on fdc %d\n", status, fdc);
++		show_floppy(fdc);
+ 	}
+-	fdc_state[current_fdc].reset = 1;
++	fdc_state[fdc].reset = 1;
+ 	return -1;
+ }
  
--	pr_info("status=%x\n", fdc_inb(current_fdc, FD_STATUS));
-+	pr_info("status=%x\n", fdc_inb(fdc, FD_STATUS));
- 	pr_info("fdc_busy=%lu\n", fdc_busy);
- 	if (do_floppy)
- 		pr_info("do_floppy=%ps\n", do_floppy);
-@@ -1868,7 +1868,7 @@ static void floppy_shutdown(struct work_struct *arg)
- 	unsigned long flags;
+ /* sends a command byte to the fdc */
+ static int output_byte(char byte)
+ {
+-	int status = wait_til_ready();
++	int status = wait_til_ready(current_fdc);
  
- 	if (initialized)
--		show_floppy();
-+		show_floppy(current_fdc);
- 	cancel_activity();
+ 	if (status < 0)
+ 		return -1;
+@@ -1159,7 +1159,7 @@ static int result(void)
+ 	int status = 0;
  
- 	flags = claim_dma_lock();
+ 	for (i = 0; i < MAX_REPLIES; i++) {
+-		status = wait_til_ready();
++		status = wait_til_ready(current_fdc);
+ 		if (status < 0)
+ 			break;
+ 		status &= STATUS_DIR | STATUS_READY | STATUS_BUSY | STATUS_DMA;
+@@ -1186,7 +1186,7 @@ static int result(void)
+ /* does the fdc need more output? */
+ static int need_more_output(void)
+ {
+-	int status = wait_til_ready();
++	int status = wait_til_ready(current_fdc);
+ 
+ 	if (status < 0)
+ 		return -1;
 -- 
 2.20.1
 
