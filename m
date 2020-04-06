@@ -2,139 +2,203 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E6841A01B0
-	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 01:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 005881A0125
+	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 00:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgDFX1t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Apr 2020 19:27:49 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:22140 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgDFX1t (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Apr 2020 19:27:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586215680; x=1617751680;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T6B0KRksz6wzCzwe9Wvyr0N38QBFJ/8WLPl6ULPGYDk=;
-  b=dUfRmFnmdJHHjJwhGyxaqi2aEdwg+D5VrvDC0h0MgGLXR887C79pmdaZ
-   zVOV0i1Gv5Gsv+6PiURBx858uUwkyimz9Tq/koTV6iu9F5dFu9kBEgqzn
-   vvlnmVs5lE2H7d+9JEvNKAUhgy9JZstcUUr1BhEgVJs+34RivKqKztDLs
-   g5/f3a84hw3HS3lENLHyy0wcrNUqB+xheWtMtPacenJlHqN0BDdU1/wZa
-   lMzto6I3uMSEGoEvIxDqcFCeU2bX+t9CxCgqcjdrn68gd3MT7rxYFBhNh
-   CgVDMOTQ/Pl5MHLZX3MlmWaWPTnVpg3iyb7S5n0EQanQeYgiMXGIgOxct
-   w==;
-IronPort-SDR: YwEI1Qmk3S5atj5l+tNety5elpsFVSLdGoKFMku2mk4Zij/AalgAG7SJLMvT0CUEKrSEzkuQMu
- lxqTG6WWtA9I77TGes83KxMqd7oFOFhtwqj1Zl8ud9uG0wwpbga88xUOJ2JxdUH7S35Bw+3HwH
- HpLWsYUTg5IwNkgd3oBBrI83LahIEC744zaKy1zIObldfJByjROlWsGCp2971xS+wc1TxzXgMl
- XzX16LHVWF8X58SEYuyBZ9ee4ZuKmoCJgCeK//puJakKHu0mD/NFjtPkPgPpk59+u0BPCr7jMX
- KRQ=
-X-IronPort-AV: E=Sophos;i="5.72,352,1580745600"; 
-   d="scan'208";a="237046206"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Apr 2020 07:28:00 +0800
-IronPort-SDR: lryLi9YkBAUlRe+UlgWj4GyH6rlS/EZyItLjoy6Ia58ZVW845066NJ6PX8+zPrwlBrGuU3tYZ4
- iDu/O/zQ2hSZhPJmuBk9nnSQyC3XHttRqnKu0mZEC/et4v77So7HEEISQWnZxh2H+ybuMicK9Z
- 7l5L+rti4ck/30PrD1qGfgS9bnsbshwahpKMOcVnVAPHYhAdKTAgL21tdjkrXhhRHeu8jnwx7Y
- TOKrppcFYDv8VXGFd8Z2ZKABj2mEjYyYV5O+QKQkEIlpsVJaSjAGz7B5CsF9/pwwk4Ph2zUzVF
- 8FIDgXujSJvad3zsphXJNYGd
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 16:18:31 -0700
-IronPort-SDR: zsfvPgAH22D/zOLZDxRMJwvf8+xDVfhFSOxiSJSBmwM9FWha7GKPUG600Dbc+zesHMzjb25f1y
- 4oQX5vSjvjNM3NxrOrAfSWIMOIYauztAaSu468MUHwJvXcd+18Qu1SuYUnYDaOEaU5FFjczICX
- aqQmHZNYBxPHy6fbEMkKEQprAKl70RBrMxaTbTmbQ4cSaImtqj3AjX+4gRTnMWNqhAmzofftHe
- msnMKMXLUXeh8VqwYXJdyhSCQs1nUPzS7raBAIOSNz0+IYTceb24//JFOoBsxhMGO6IEnLEH2o
- dME=
-WDCIronportException: Internal
-Received: from ioprio.labspan.wdc.com (HELO ioprio.sc.wdc.com) ([10.6.139.89])
-  by uls-op-cesaip01.wdc.com with ESMTP; 06 Apr 2020 16:27:48 -0700
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     hch@lst.de, martin.petersen@oracle.com
-Cc:     darrick.wong@oracle.com, axboe@kernel.dk, tytso@mit.edu,
-        adilger.kernel@dilger.ca, ming.lei@redhat.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, chaitanya.kulkarni@wdc.com,
-        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
-        hare@suse.com, tj@kernel.org, hannes@cmpxchg.org,
-        khlebnikov@yandex-team.ru, ajay.joshi@wdc.com, bvanassche@acm.org,
-        arnd@arndb.de, houtao1@huawei.com, asml.silence@gmail.com,
-        ktkhai@virtuozzo.com, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH V2 4/4] ext4: Notify block device about alloc-assigned blk
-Date:   Mon,  6 Apr 2020 15:21:48 -0700
-Message-Id: <20200406222148.28365-5-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200406222148.28365-1-chaitanya.kulkarni@wdc.com>
-References: <20200406222148.28365-1-chaitanya.kulkarni@wdc.com>
+        id S1726699AbgDFW1T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Apr 2020 18:27:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30653 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726443AbgDFW0p (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Apr 2020 18:26:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586212003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s9Mom4OhtTxtDHxzUnnXxvRU3zaONixqwgs5hBxczCA=;
+        b=ZLhRDPi6DCuspOdTX5mc3IhUvq4GWT9Bhqr2+bFFroBzDPuh8EPB2Fybpm8QdaXKUcSRxj
+        2VWRYSZtgfDJiBCvdUrglRh+vkwtvIbpjT52lldUh1lY5yAMupjfkcU6YcKlcm7JlRltrV
+        57rmfiZgpRIXHlJzGJPM+iCFfQ6C5lc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-483-MkS66CifNzG9y7VGQg4Blw-1; Mon, 06 Apr 2020 18:26:42 -0400
+X-MC-Unique: MkS66CifNzG9y7VGQg4Blw-1
+Received: by mail-wr1-f70.google.com with SMTP id i18so636108wrx.17
+        for <linux-block@vger.kernel.org>; Mon, 06 Apr 2020 15:26:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s9Mom4OhtTxtDHxzUnnXxvRU3zaONixqwgs5hBxczCA=;
+        b=Usf9E/jM18RDtINEZVaUm60yD963RluQVseWmBeGMWD3WCH4NEnbDse8aiKCzgbYWB
+         rjTPfomb+1yJ0BG2VRfKqdCBjIISuEfrWGorXGguK8Tfqqr0v7tucfg/s2Y7oNBUgqL5
+         wLacTRmLof9/Rf9g5iQJw3TntTUZCX/6RH3gNwPtWjTOOhRhG1Ks2brVvE7iVLKNVdse
+         CGaMM4eC5rr5FLnra7l11kaKjV+0SPGPqfxu4ob3zCtMMSvDFcbsq3wzEvWiE4IZTnDg
+         N257EbLgZ8huTnqDbo4B25ohQRmmjxKdfGP+u1vRLvGgdQ+lDDpzFva5PIAAf987ZbEp
+         54NA==
+X-Gm-Message-State: AGi0PubMiUFhufL1ryZ1ncdMUijNqxpX4RzxGLOdPBo+cHTqpSTUnW05
+        mvAqCD/HOC0qqQdWpFVAbiqnRoYKt0DpXwPMkfRZeDuybOadyKMvve+Nf+t1g7JeemNQDyc3+rh
+        c1ePec8q8iD3bB36L95So95I=
+X-Received: by 2002:a5d:408d:: with SMTP id o13mr1409541wrp.44.1586212000374;
+        Mon, 06 Apr 2020 15:26:40 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ9TIOPrZln7Dp9cFFX+GV/laFU25qBcjAlf6lj1tZRPAwrGhLxEH2VY7+TxaoX9BK+UkoLTw==
+X-Received: by 2002:a5d:408d:: with SMTP id o13mr1409523wrp.44.1586212000086;
+        Mon, 06 Apr 2020 15:26:40 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id u17sm31760120wra.63.2020.04.06.15.26.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 15:26:39 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 18:26:38 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH v6 05/12] virtio: stop using legacy struct vring in kernel
+Message-ID: <20200406222507.281867-6-mst@redhat.com>
+References: <20200406222507.281867-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406222507.281867-1-mst@redhat.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
+struct vring (in the uapi directory) and supporting APIs are kept
+around to solely avoid breaking old userspace builds.
+It's not actually part of the UAPI - it was kept in the UAPI
+header by mistake, and using it in kernel isn't necessary
+and prevents us from making changes safely.
+In particular, the APIs actually assume the legacy layout.
 
-Call sb_issue_allocate() after extent range was allocated on user
-request. Hopeful, this helps block device to maintain its internals in
-the best way, if this is appliable.
+Add an internal kernel-only struct vring and
+switch everyone to use that.
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- fs/ext4/ext4.h    |  2 ++
- fs/ext4/extents.c | 12 +++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/block/virtio_blk.c       |  1 +
+ include/linux/virtio.h           |  1 -
+ include/linux/virtio_ring.h      | 10 ++++++++++
+ include/linux/vringh.h           |  1 +
+ include/uapi/linux/virtio_ring.h | 26 ++++++++++++++++----------
+ 5 files changed, 28 insertions(+), 11 deletions(-)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 61b37a052052..0d0fa9904147 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -622,6 +622,8 @@ enum {
- 	 * allows jbd2 to avoid submitting data before commit. */
- #define EXT4_GET_BLOCKS_IO_SUBMIT		0x0400
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 0736248999b0..dd5732dc4b07 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -15,6 +15,7 @@
+ #include <linux/blk-mq.h>
+ #include <linux/blk-mq-virtio.h>
+ #include <linux/numa.h>
++#include <uapi/linux/virtio_ring.h>
  
-+#define EXT4_GET_BLOCKS_SUBMIT_ALLOC		0x0800
+ #define PART_BITS 4
+ #define VQ_NAME_LEN 16
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index 15f906e4a748..a493eac08393 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -9,7 +9,6 @@
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/gfp.h>
+-#include <linux/vringh.h>
+ 
+ /**
+  * virtqueue - a queue to register buffers for sending or receiving.
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index 3dc70adfe5f5..11680e74761a 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -60,6 +60,16 @@ static inline void virtio_store_mb(bool weak_barriers,
+ struct virtio_device;
+ struct virtqueue;
+ 
++struct vring {
++	unsigned int num;
++
++	struct vring_desc *desc;
++
++	struct vring_avail *avail;
++
++	struct vring_used *used;
++};
 +
  /*
-  * The bit position of these flags must not overlap with any of the
-  * EXT4_GET_BLOCKS_*.  They are used by ext4_find_extent(),
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 954013d6076b..37a60e190349 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4449,6 +4449,14 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
- 		ar.len = allocated;
+  * Creates a virtqueue and allocates the descriptor ring.  If
+  * may_reduce_num is set, then this may allocate a smaller ring than
+diff --git a/include/linux/vringh.h b/include/linux/vringh.h
+index 9e2763d7c159..d71b3710f58e 100644
+--- a/include/linux/vringh.h
++++ b/include/linux/vringh.h
+@@ -11,6 +11,7 @@
+ #ifndef _LINUX_VRINGH_H
+ #define _LINUX_VRINGH_H
+ #include <uapi/linux/virtio_ring.h>
++#include <linux/virtio_ring.h>
+ #include <linux/virtio_byteorder.h>
+ #include <linux/uio.h>
+ #include <linux/slab.h>
+diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+index 9223c3a5c46a..8961a4adda5c 100644
+--- a/include/uapi/linux/virtio_ring.h
++++ b/include/uapi/linux/virtio_ring.h
+@@ -118,16 +118,6 @@ struct vring_used {
+ 	struct vring_used_elem ring[];
+ };
  
- got_allocated_blocks:
-+	if ((flags & EXT4_GET_BLOCKS_SUBMIT_ALLOC) &&
-+			inode->i_fop->fallocate) {
-+		err = sb_issue_allocate(inode->i_sb, newblock,
-+				EXT4_C2B(sbi, allocated_clusters), GFP_NOFS);
-+		if (err)
-+			goto free_on_err;
-+	}
+-struct vring {
+-	unsigned int num;
+-
+-	struct vring_desc *desc;
+-
+-	struct vring_avail *avail;
+-
+-	struct vring_used *used;
+-};
+-
+ /* Alignment requirements for vring elements.
+  * When using pre-virtio 1.0 layout, these fall out naturally.
+  */
+@@ -166,6 +156,21 @@ struct vring {
+ #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
+ #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(vr)->num])
+ 
++#ifndef __KERNEL__
++/*
++ * The following definitions have been put in the UAPI header by mistake. We
++ * keep them around to avoid breaking old userspace builds.
++ */
++struct vring {
++	unsigned int num;
 +
- 	/* try to insert new extent into found leaf and return */
- 	ext4_ext_store_pblock(&newex, newblock + offset);
- 	newex.ee_len = cpu_to_le16(ar.len);
-@@ -4466,6 +4474,7 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
- 		err = ext4_ext_insert_extent(handle, inode, &path,
- 					     &newex, flags);
++	struct vring_desc *desc;
++
++	struct vring_avail *avail;
++
++	struct vring_used *used;
++};
++
+ static inline void vring_init(struct vring *vr, unsigned int num, void *p,
+ 			      unsigned long align)
+ {
+@@ -182,6 +187,7 @@ static inline unsigned vring_size(unsigned int num, unsigned long align)
+ 		 + align - 1) & ~(align - 1))
+ 		+ sizeof(__virtio16) * 3 + sizeof(struct vring_used_elem) * num;
+ }
++#endif
  
-+free_on_err:
- 	if (err && free_on_err) {
- 		int fb_flags = flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE ?
- 			EXT4_FREE_BLOCKS_NO_QUOT_UPDATE : 0;
-@@ -4733,7 +4742,8 @@ static long ext4_zero_range(struct file *file, loff_t offset,
- 			goto out_mutex;
- 	}
- 
--	flags = EXT4_GET_BLOCKS_CREATE_UNWRIT_EXT;
-+	flags = EXT4_GET_BLOCKS_CREATE_UNWRIT_EXT |
-+		EXT4_GET_BLOCKS_SUBMIT_ALLOC;
- 	if (mode & FALLOC_FL_KEEP_SIZE)
- 		flags |= EXT4_GET_BLOCKS_KEEP_SIZE;
+ #endif /* VIRTIO_RING_NO_LEGACY */
  
 -- 
-2.22.0
+MST
 
