@@ -2,116 +2,173 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 653361A00D5
-	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 00:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F06C1A01A8
+	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 01:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgDFWPV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Apr 2020 18:15:21 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58694 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDFWOw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Apr 2020 18:14:52 -0400
-Received: from dede-linux.corp.microsoft.com (unknown [131.107.147.242])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 888A02074CC0;
-        Mon,  6 Apr 2020 15:14:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 888A02074CC0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1586211289;
-        bh=FoQEwrrWn/d3Fno/jqMS38zWmUVRke4mJOAaLbjRrY8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rJpLQqlXYpAXiC15Sc4sYsTFcq+6wjfhJMC9QzVZo/CWRu+oyqKpP1lmIQQJmVmSQ
-         OyBWGc3g4ZLv/tGoWuyER6aewY28SWInUOQ9IGU17wQT+0WywgwiwE/JEDa6KC9936
-         v3Jo5YR6RJ6Os21bUNfawwgu9d57oMuaA0hyrsFs=
-From:   deven.desai@linux.microsoft.com
-To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 12/12] cleanup: uapi/linux/audit.h
-Date:   Mon,  6 Apr 2020 15:14:39 -0700
-Message-Id: <20200406221439.1469862-13-deven.desai@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
-References: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
+        id S1726303AbgDFX1I (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Apr 2020 19:27:08 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:11119 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgDFX1I (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Apr 2020 19:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1586215628; x=1617751628;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=X5Of+XNOiIABD5PHJhySeNSquylLNwYKPMHbC9s8oio=;
+  b=L4yf5hYttTNiAxxWzwsEXYfhr3xA5x3JF8a0Ir3k9ivQ7SA6IXF1DTq+
+   sXTLQxDXZaC0480kkXZt4nqz5NfkxD1iNu9A0tSqK++emVhtrqQN+eTdD
+   TAiQQgxufPvFB19hSmwVXRHWOsVkL7mv6upl7SoEf/mOhF5hVK6XXe/9V
+   JXI5GMMDkgI+nuRbQzzmRFpERggCF6eLkDhabXHUJFNWu7Csf84IMEYPx
+   RyrhxCCngipZKxyPYT200xCaY28UNKUklROG+LajLKmGCuvSBGxupYjx/
+   Tg6wIH5tRVOHUCHDDEUmvML72W9GJ4ThNS0syIbXgokf4lcllHo2CPEta
+   w==;
+IronPort-SDR: tj4qoymIBBq5d+oFKQmrh/xtEnw1SFHnMFHKeUYfiH/lp61vnT03EfTKiWkT84MvddaqMcLbD2
+ 0cv7TwEH8bG3zAA0oHD5O72cuoI4K50BC2St+SmZogEyccGK2ZjyZxUC6jDMFUuWHhsG6TkdAc
+ p7tDSss0bZgDaAZQ25Urk5xMdFZjd4Ip62b9xm2HDTLvKYQl+6Bxk/vCVcNt47vaZuGfKsBmZd
+ PJeXdjXth/HJUFSwj1AdAtbs4NXx4vN83G0+416kmDmEOyy73pBLGY8G9s8lQ5YR4pma5ac58C
+ lbU=
+X-IronPort-AV: E=Sophos;i="5.72,352,1580745600"; 
+   d="scan'208";a="136175313"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Apr 2020 07:27:08 +0800
+IronPort-SDR: TOdEYF0yJHJ7VDVlafhr2PV9YRRC6vsJVo7xnYQgNOdxRLcBNjf1mrQz0JXNez6eU5CXDqT68d
+ nEk1PEcA0gDQc0/0mT0yKsPbgCzX0ePO90YlADTmXBqFgVmpb9sneBtb5DR+f60xyZOSg9r7Mw
+ aHgK1yf6c/UGYtliZqyxBEuKWUtMSO3W1pt4NCxtypDjbEZsu6u4e5hGfZplHmHmJxE/cJ+YTA
+ OpE34y2tigY7Fr1HyOorDmKftqgOx8aFf5I8xiIshM+sDqy7MCFMcNnQgjtFWmsyYAs/qp+XIV
+ AWDSkUjZhZ657p7FQV3pL1tS
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 16:17:50 -0700
+IronPort-SDR: vrJU7kzzj1UEUyxdi9Iw6zGX1leY374TAplZqDUH+i50LaUR6LiNMl7C6Aj7/l7wvWx9xYtw6Y
+ omZd7E2//9ve2EU7lNX/R00vkIV0Vlh2iE/VHqEcmMd+zBYzHoPmk58scLmk+g82Bogth/rEgF
+ 9POgOL2O1P1aoeDGN7GV50LkCe1dHARnhtRJm6xBMPK17j3s433I+HglH8GBDRVsXdowQ/KIv8
+ h6gDv07udQiN26GqfFBbi1FPo9uRDgGdUsj7MsRTbnceIfj1QvrZ0ych4y6zIloJtUChF4NVh3
+ 2dg=
+WDCIronportException: Internal
+Received: from ioprio.labspan.wdc.com (HELO ioprio.sc.wdc.com) ([10.6.139.89])
+  by uls-op-cesaip01.wdc.com with ESMTP; 06 Apr 2020 16:27:07 -0700
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     hch@lst.de, martin.petersen@oracle.com
+Cc:     darrick.wong@oracle.com, axboe@kernel.dk, tytso@mit.edu,
+        adilger.kernel@dilger.ca, ming.lei@redhat.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, chaitanya.kulkarni@wdc.com,
+        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
+        hare@suse.com, tj@kernel.org, hannes@cmpxchg.org,
+        khlebnikov@yandex-team.ru, ajay.joshi@wdc.com, bvanassche@acm.org,
+        arnd@arndb.de, houtao1@huawei.com, asml.silence@gmail.com,
+        ktkhai@virtuozzo.com, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH V2 0/4] block: Add support for REQ_OP_ALLOCATE
+Date:   Mon,  6 Apr 2020 15:21:44 -0700
+Message-Id: <20200406222148.28365-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Deven Bowers <deven.desai@linux.microsoft.com>
+Hi,
 
-Remove trailing whitespaces and align the integrity #defines in
-linux/uapi/audit.h
+This patch-series is based on the original RFC patch series:-
+https://www.spinics.net/lists/linux-block/msg47933.html.
 
-Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
----
- include/uapi/linux/audit.h | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+I've designed a rough testcase based on the information present
+in the mailing list archive for original RFC, it may need
+some corrections from the author.
 
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index 4e0122a0ed0c..d642ade068b5 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -48,7 +48,7 @@
-  * 2500 - 2999 future user space (maybe integrity labels and related events)
-  *
-  * Messages from 1000-1199 are bi-directional. 1200-1299 & 2100 - 2999 are
-- * exclusively user space. 1300-2099 is kernel --> user space 
-+ * exclusively user space. 1300-2099 is kernel --> user space
-  * communication.
-  */
- #define AUDIT_GET		1000	/* Get status */
-@@ -78,7 +78,7 @@
- #define AUDIT_LAST_USER_MSG	1199
- #define AUDIT_FIRST_USER_MSG2	2100	/* More user space messages */
- #define AUDIT_LAST_USER_MSG2	2999
-- 
-+
- #define AUDIT_DAEMON_START      1200    /* Daemon startup record */
- #define AUDIT_DAEMON_END        1201    /* Daemon normal stop record */
- #define AUDIT_DAEMON_ABORT      1202    /* Daemon error stop record */
-@@ -139,20 +139,20 @@
- #define AUDIT_MAC_CALIPSO_ADD	1418	/* NetLabel: add CALIPSO DOI entry */
- #define AUDIT_MAC_CALIPSO_DEL	1419	/* NetLabel: del CALIPSO DOI entry */
- 
--#define AUDIT_FIRST_KERN_ANOM_MSG   1700
--#define AUDIT_LAST_KERN_ANOM_MSG    1799
--#define AUDIT_ANOM_PROMISCUOUS      1700 /* Device changed promiscuous mode */
--#define AUDIT_ANOM_ABEND            1701 /* Process ended abnormally */
--#define AUDIT_ANOM_LINK		    1702 /* Suspicious use of file links */
--#define AUDIT_ANOM_CREAT	    1703 /* Suspicious file creation */
--#define AUDIT_INTEGRITY_DATA	    1800 /* Data integrity verification */
--#define AUDIT_INTEGRITY_METADATA    1801 /* Metadata integrity verification */
--#define AUDIT_INTEGRITY_STATUS	    1802 /* Integrity enable status */
--#define AUDIT_INTEGRITY_HASH	    1803 /* Integrity HASH type */
--#define AUDIT_INTEGRITY_PCR	    1804 /* PCR invalidation msgs */
--#define AUDIT_INTEGRITY_RULE	    1805 /* policy rule */
--#define AUDIT_INTEGRITY_EVM_XATTR   1806 /* New EVM-covered xattr */
--#define AUDIT_INTEGRITY_POLICY_RULE 1807 /* IMA policy rules */
-+#define AUDIT_FIRST_KERN_ANOM_MSG	1700
-+#define AUDIT_LAST_KERN_ANOM_MSG	1799
-+#define AUDIT_ANOM_PROMISCUOUS		1700 /* Device changed promiscuous mode */
-+#define AUDIT_ANOM_ABEND		1701 /* Process ended abnormally */
-+#define AUDIT_ANOM_LINK			1702 /* Suspicious use of file links */
-+#define AUDIT_ANOM_CREAT		1703 /* Suspicious file creation */
-+#define AUDIT_INTEGRITY_DATA		1800 /* Data integrity verification */
-+#define AUDIT_INTEGRITY_METADATA	1801 /* Metadata integrity verification */
-+#define AUDIT_INTEGRITY_STATUS		1802 /* Integrity enable status */
-+#define AUDIT_INTEGRITY_HASH		1803 /* Integrity HASH type */
-+#define AUDIT_INTEGRITY_PCR		1804 /* PCR invalidation msgs */
-+#define AUDIT_INTEGRITY_RULE		1805 /* policy rule */
-+#define AUDIT_INTEGRITY_EVM_XATTR	1806 /* New EVM-covered xattr */
-+#define AUDIT_INTEGRITY_POLICY_RULE	1807 /* IMA policy rules */
- #define AUDIT_INTEGRITY_POLICY_LOAD	1808 /* IPE Policy Load */
- #define AUDIT_INTEGRITY_POLICY_ACTIVATE	1809 /* IPE Policy Activation */
- #define AUDIT_INTEGRITY_EVENT		1810 /* IPE Evaluation Event */
+If anyone is interested, test results are at the end of this patch.
+
+Following is the original cover-letter :-
+
+Information about continuous extent placement may be useful
+for some block devices. Say, distributed network filesystems,
+which provide block device interface, may use this information
+for better blocks placement over the nodes in their cluster,
+and for better performance. Block devices, which map a file
+on another filesystem (loop), may request the same length extent
+on underlining filesystem for less fragmentation and for batching
+allocation requests. Also, hypervisors like QEMU may use this
+information for optimization of cluster allocations.
+
+This patchset introduces REQ_OP_ALLOCATE, which is going
+to be used for forwarding user's fallocate(0) requests into
+block device internals. It rather similar to existing
+REQ_OP_DISCARD, REQ_OP_WRITE_ZEROES, etc. The corresponding
+exported primitive is called blkdev_issue_allocate().
+See [1/3] for the details.
+
+Patch [2/3] teaches loop driver to handle REQ_OP_ALLOCATE
+requests by calling fallocate(0).
+
+Patch [3/3] makes ext4 to notify a block device about fallocate(0).
+
+Here is a simple test I did:
+https://gist.github.com/tkhai/5b788651cdb74c1dbff3500745878856
+
+I attached a file on ext4 to loop. Then, created ext4 partition
+on loop device and started the test in the partition. Direct-io
+is enabled on loop.
+
+The test fallocates 4G file and writes from some offset with
+given step, then it chooses another offset and repeats. After
+the test all the blocks in the file become written.
+
+The results shows that batching extents-assigning requests improves
+the performance:
+
+Before patchset: real ~ 1min 27sec
+After patchset:  real ~ 1min 16sec (18% better)
+
+Ordinary fallocate() before writes improves the performance
+by batching the requests. These results just show, the same
+is in case of forwarding extents information to underlining
+filesystem.
+
+Regards,
+Chaitanya
+
+Changes from V1:-
+
+1. Adjust series from using assign range or ASSIGN_RANGE to allocate or
+   ALLOCATE. (Martin)
+2. Add SECT_FROM_SB_BLK() and NSECTS_FROM_SB_NBLK() macros since it
+   avoids weired line breaking and duplication of the code for
+   sb_issue_discard(), sb_issue_zeroout() and sb_issue_allocate().
+   Should there be a prep patch for this ?
+
+Changes from RFC:-
+
+1. Add missing plumbing for REQ_OP_ASSIGN_RANGE similar to write-zeores.
+2. Add a prep patch to create a helper to submit payloadless bios.
+3. Design a testcases around the description present in the
+   cover-letter.
+
+Chaitanya Kulkarni (1):
+  block: create payloadless issue bio helper
+
+Kirill Tkhai (3):
+  block: Add support for REQ_OP_ALLOCATE
+  loop: Forward REQ_OP_ALLOCATE into fallocate(0)
+  ext4: Notify block device about alloc-assigned blk
+
+ block/blk-core.c          |   5 ++
+ block/blk-lib.c           | 115 +++++++++++++++++++++++++++++++-------
+ block/blk-merge.c         |  21 +++++++
+ block/blk-settings.c      |  19 +++++++
+ block/blk-zoned.c         |   1 +
+ block/bounce.c            |   1 +
+ drivers/block/loop.c      |   5 ++
+ fs/ext4/ext4.h            |   2 +
+ fs/ext4/extents.c         |  12 +++-
+ include/linux/bio.h       |   9 ++-
+ include/linux/blk_types.h |   2 +
+ include/linux/blkdev.h    |  55 ++++++++++++++----
+ 12 files changed, 210 insertions(+), 37 deletions(-)
+
 -- 
-2.26.0
+2.22.0
 
