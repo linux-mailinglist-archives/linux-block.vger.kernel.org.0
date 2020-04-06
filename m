@@ -2,144 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 092FC19F208
-	for <lists+linux-block@lfdr.de>; Mon,  6 Apr 2020 11:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E6619F21F
+	for <lists+linux-block@lfdr.de>; Mon,  6 Apr 2020 11:11:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDFJFl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Apr 2020 05:05:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33358 "EHLO mx2.suse.de"
+        id S1726663AbgDFJLH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Mon, 6 Apr 2020 05:11:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36872 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbgDFJFk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:05:40 -0400
+        id S1726689AbgDFJLH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:11:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 732E3AB5F;
-        Mon,  6 Apr 2020 09:05:37 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Garry <john.garry@huawei.com>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ming.lei@redhat.com, bvanassche@acm.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- mQINBE6KyREBEACwRN6XKClPtxPiABx5GW+Yr1snfhjzExxkTYaINHsWHlsLg13kiemsS6o7
- qrc+XP8FmhcnCOts9e2jxZxtmpB652lxRB9jZE40mcSLvYLM7S6aH0WXKn8bOqpqOGJiY2bc
- 6qz6rJuqkOx3YNuUgiAxjuoYauEl8dg4bzex3KGkGRuxzRlC8APjHlwmsr+ETxOLBfUoRNuE
- b4nUtaseMPkNDwM4L9+n9cxpGbdwX0XwKFhlQMbG3rWA3YqQYWj1erKIPpgpfM64hwsdk9zZ
- QO1krgfULH4poPQFpl2+yVeEMXtsSou915jn/51rBelXeLq+cjuK5+B/JZUXPnNDoxOG3j3V
- VSZxkxLJ8RO1YamqZZbVP6jhDQ/bLcAI3EfjVbxhw9KWrh8MxTcmyJPn3QMMEp3wpVX9nSOQ
- tzG72Up/Py67VQe0x8fqmu7R4MmddSbyqgHrab/Nu+ak6g2RRn3QHXAQ7PQUq55BDtj85hd9
- W2iBiROhkZ/R+Q14cJkWhzaThN1sZ1zsfBNW0Im8OVn/J8bQUaS0a/NhpXJWv6J1ttkX3S0c
- QUratRfX4D1viAwNgoS0Joq7xIQD+CfJTax7pPn9rT////hSqJYUoMXkEz5IcO+hptCH1HF3
- qz77aA5njEBQrDRlslUBkCZ5P+QvZgJDy0C3xRGdg6ZVXEXJOQARAQABtCpIYW5uZXMgUmVp
- bmVja2UgKFN1U0UgTGFicykgPGhhcmVAc3VzZS5kZT6JAkEEEwECACsCGwMFCRLMAwAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheABQJOisquAhkBAAoJEGz4yi9OyKjPOHoQAJLeLvr6JNHx
- GPcHXaJLHQiinz2QP0/wtsT8+hE26dLzxb7hgxLafj9XlAXOG3FhGd+ySlQ5wSbbjdxNjgsq
- FIjqQ88/Lk1NfnqG5aUTPmhEF+PzkPogEV7Pm5Q17ap22VK623MPaltEba+ly6/pGOODbKBH
- ak3gqa7Gro5YCQzNU0QVtMpWyeGF7xQK76DY/atvAtuVPBJHER+RPIF7iv5J3/GFIfdrM+wS
- BubFVDOibgM7UBnpa7aohZ9RgPkzJpzECsbmbttxYaiv8+EOwark4VjvOne8dRaj50qeyJH6
- HLpBXZDJH5ZcYJPMgunghSqghgfuUsd5fHmjFr3hDb5EoqAfgiRMSDom7wLZ9TGtT6viDldv
- hfWaIOD5UhpNYxfNgH6Y102gtMmN4o2P6g3UbZK1diH13s9DA5vI2mO2krGz2c5BOBmcctE5
- iS+JWiCizOqia5Op+B/tUNye/YIXSC4oMR++Fgt30OEafB8twxydMAE3HmY+foawCpGq06yM
- vAguLzvm7f6wAPesDAO9vxRNC5y7JeN4Kytl561ciTICmBR80Pdgs/Obj2DwM6dvHquQbQrU
- Op4XtD3eGUW4qgD99DrMXqCcSXX/uay9kOG+fQBfK39jkPKZEuEV2QdpE4Pry36SUGfohSNq
- xXW+bMc6P+irTT39VWFUJMcSuQINBE6KyREBEACvEJggkGC42huFAqJcOcLqnjK83t4TVwEn
- JRisbY/VdeZIHTGtcGLqsALDzk+bEAcZapguzfp7cySzvuR6Hyq7hKEjEHAZmI/3IDc9nbdh
- EgdCiFatah0XZ/p4vp7KAelYqbv8YF/ORLylAdLh9rzLR6yHFqVaR4WL4pl4kEWwFhNSHLxe
- 55G56/dxBuoj4RrFoX3ynerXfbp4dH2KArPc0NfoamqebuGNfEQmDbtnCGE5zKcR0zvmXsRp
- qU7+caufueZyLwjTU+y5p34U4PlOO2Q7/bdaPEdXfpgvSpWk1o3H36LvkPV/PGGDCLzaNn04
- BdiiiPEHwoIjCXOAcR+4+eqM4TSwVpTn6SNgbHLjAhCwCDyggK+3qEGJph+WNtNU7uFfscSP
- k4jqlxc8P+hn9IqaMWaeX9nBEaiKffR7OKjMdtFFnBRSXiW/kOKuuRdeDjL5gWJjY+IpdafP
- KhjvUFtfSwGdrDUh3SvB5knSixE3qbxbhbNxmqDVzyzMwunFANujyyVizS31DnWC6tKzANkC
- k15CyeFC6sFFu+WpRxvC6fzQTLI5CRGAB6FAxz8Hu5rpNNZHsbYs9Vfr/BJuSUfRI/12eOCL
- IvxRPpmMOlcI4WDW3EDkzqNAXn5Onx/b0rFGFpM4GmSPriEJdBb4M4pSD6fN6Y/Jrng/Bdwk
- SQARAQABiQIlBBgBAgAPBQJOiskRAhsMBQkSzAMAAAoJEGz4yi9OyKjPgEwQAIP/gy/Xqc1q
- OpzfFScswk3CEoZWSqHxn/fZasa4IzkwhTUmukuIvRew+BzwvrTxhHcz9qQ8hX7iDPTZBcUt
- ovWPxz+3XfbGqE+q0JunlIsP4N+K/I10nyoGdoFpMFMfDnAiMUiUatHRf9Wsif/nT6oRiPNJ
- T0EbbeSyIYe+ZOMFfZBVGPqBCbe8YMI+JiZeez8L9JtegxQ6O3EMQ//1eoPJ5mv5lWXLFQfx
- f4rAcKseM8DE6xs1+1AIsSIG6H+EE3tVm+GdCkBaVAZo2VMVapx9k8RMSlW7vlGEQsHtI0FT
- c1XNOCGjaP4ITYUiOpfkh+N0nUZVRTxWnJqVPGZ2Nt7xCk7eoJWTSMWmodFlsKSgfblXVfdM
- 9qoNScM3u0b9iYYuw/ijZ7VtYXFuQdh0XMM/V6zFrLnnhNmg0pnK6hO1LUgZlrxHwLZk5X8F
- uD/0MCbPmsYUMHPuJd5dSLUFTlejVXIbKTSAMd0tDSP5Ms8Ds84z5eHreiy1ijatqRFWFJRp
- ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
- PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
-Date:   Mon, 6 Apr 2020 11:05:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mx2.suse.de (Postfix) with ESMTP id B8358AC40;
+        Mon,  6 Apr 2020 09:11:03 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [RFC 3/3] block: avoid deferral of blk_release_queue() work
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+        <20200402000002.7442-4-mcgrof@kernel.org>
+        <774a33e8-43ba-143f-f6fd-9cb0ae0862ac@acm.org>
+        <87o8saj62m.fsf@suse.de>
+Date:   Mon, 06 Apr 2020 11:11:01 +0200
+In-Reply-To: <87o8saj62m.fsf@suse.de> (Nicolai Stange's message of "Thu, 02
+        Apr 2020 16:49:37 +0200")
+Message-ID: <87eet1j7x6.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200311062228.GA13522@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/11/20 7:22 AM, Christoph Hellwig wrote:
-> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>> From: Hannes Reinecke <hare@suse.com>
->>>>
->>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>
->>> Why?  Reserved command specifically are not in any way tied to queues.
->>> .
->>>
->>
->> So the v1 series used a combination of the sdev queue and the per-host
->> reserved_cmd_q. Back then you questioned using the sdev queue for virtio
->> scsi, and the unconfirmed conclusion was to use a common per-host q. This is
->> the best link I can find now:
->>
->> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
-> 
-> That was just a question on why virtio uses the per-device tags, which
-> didn't look like it made any sense.  What I'm worried about here is
-> mixing up the concept of reserved tags in the tagset, and queues to use
-> them.  Note that we already have the scsi_get_host_dev to allocate
-> a scsi_device and thus a request_queue for the host itself.  That seems
-> like the better interface to use a tag for a host wide command vs
-> introducing a parallel path.
-> 
-Thinking about it some more, I don't think that scsi_get_host_dev() is
-the best way of handling it.
-Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
-which will then show up via eg 'lsscsi'.
-This would be okay if 'this_id' would have been defined by the driver;
-sadly, most drivers which are affected here do set 'this_id' to -1.
-So we wouldn't have a nice target ID to allocate the device from, let
-alone the problem that we would have to emulate a complete scsi device
-with all required minimal command support etc.
-And I'm not quite sure how well that would play with the exising SCSI
-host template; the device we'll be allocating would have basically
-nothing in common with the 'normal' SCSI devices.
+Nicolai Stange <nstange@suse.de> writes:
 
-What we could do, though, is to try it the other way round:
-Lift the request queue from scsi_get_host_dev() into the scsi host
-itself, so that scsi_get_host_dev() can use that queue, but we also
-would be able to use it without a SCSI device attached.
+> Bart Van Assche <bvanassche@acm.org> writes:
+>
+>> The description of this patch mentions a single blk_release_queue() call
+>> that happened in the past from a context from which sleeping is not
+>> allowed and from which sleeping is allowed today. Have all other
+>> blk_release_queue() / blk_put_queue() calls been verified to see whether
+>> none of these happens from a context from which sleeping is not allowed?
+>
+> I've just done this today and found the following potentially
+> problematic call paths to blk_put_queue().
+>
+> 1.) mem_cgroup_throttle_swaprate() takes a spinlock and
+>     calls blkcg_schedule_throttle()->blk_put_queue().
+>
+>     Also note that AFAICS mem_cgroup_try_charge_delay() can be called
+>     with GFP_ATOMIC.
+>
+> 2.) scsi_unblock_requests() gets called from a lot of drivers and
+>     invoke blk_put_queue() through
+>     scsi_unblock_requests() -> scsi_run_host_queues() ->
+>     scsi_starved_list_run() -> blk_put_queue().
+>
+>     Most call sites are fine, the ones which are not are:
+>     a.) pmcraid_complete_ioa_reset(). This gets assigned
+>         to struct pmcraid_cmd's ->cmd_done and later invoked
+>         under a spinlock.
+>
+>     b.) qla82xx_fw_dump() and qla8044_fw_dump().
+>         These can potentially block w/o this patch already,
+>         because both invoke qla2x00_wait_for_chip_reset().
+>
+> 	However, they can get called from IRQ context. For example,
+>         qla82xx_intr_handler(), qla82xx_msix_default() and
+>         qla82xx_poll() call qla2x00_async_event(), which calls
+>         ->fw_dump().
+>
+> 	The aforementioned functions can also reach ->fw_dump() through
+>         qla24xx_process_response_queue()->qlt_handle_abts_recv()->qlt_response_pkt_all_vps()
+>         ->qlt_response_pkt()->qlt_handle_abts_completion()->qlt_chk_unresolv_exchg()
+>         -> ->fw_dump().
+>
+> 	But I'd consider this a problem with the driver -- either
+> 	->fw_dump() can sleep and must not be called from IRQ context
+>         or they must not invoke qla2x00_wait_for_hba_ready().
+>
+>
+> (I can share the full analysis, but it's lengthy and contains nothing
+>  interesting except for what is listed above).
+>
+>
+> One final note though: If I'm not mistaken, then the final
+> blk_put_queue() can in principle block even today, simply by virtue of
+> the kernfs operations invoked through
+> kobject_put()->kobject_release()->kobject_cleanup()->kobject_del()
+> ->sysfs_remove_dir()->kernfs_remove()->mutex_lock()?\
 
-Cheers,
+That's wrong, I missed kobject_del() invocation issued from
+blk_unregister_queue(). Thus, blk_put_queue() in its current
+implementation won't ever block.
 
-Hannes
+Thanks,
+
+Nicolai
+
 -- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
