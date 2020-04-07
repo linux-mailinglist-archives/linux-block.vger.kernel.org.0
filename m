@@ -2,64 +2,148 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BC1A1A0D73
-	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 14:20:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A33591A0ECA
+	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 16:00:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgDGMUf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Apr 2020 08:20:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41106 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgDGMUf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Apr 2020 08:20:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m13so1651177pgd.8
-        for <linux-block@vger.kernel.org>; Tue, 07 Apr 2020 05:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=pmMlVtmr8pABLSUIVQXp10k/JaxSqjP9wTV0TTwQIlZcUf0j/WrPY9fTuOjYs/qSOU
-         0EQhUdRapS47cWCOHGXapdXoM8O7/tKlHw1QqsEHB4XKdXJTQ/0hsO9KcipuT3YDNQ1l
-         e7AOK/FL7sJQl06uTPHDkLi8ZMYX6m5EdBEgXjW/jdetjS36KuAQPz2nF+7C2pEWhlW0
-         2UT9Tj1mYFlASesL7b02YKRn7FM1zM9B9upxmtqjVXMdQaRJE+n6XxJm0g7DhJUvWiXi
-         fXHMCSwTji3ovlCZk4o9Vot4CuJN2nDfuSqpIWKnaLLPLMZF/Vz9z3caJjvOGqDzIvfS
-         uMNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=fFdc4QaLe1r6vL2fU2ja4tsgZ2FWi4jfRMV78Eroao8W7IiShA7PZv4i7nV87gss+U
-         dEZTPSigRiZVSwvN+XyknvY2KJzubYBL/bDt7cgIfUNRH8kCbUBgQleJ1MQm57zKpeMn
-         UgJKoYSGsQ9gAzKQRG4RARmjpeiP9/mSr38id0nuob2g+Wl9UnsVhaUOkfddXmcVmQx2
-         0pV6NjR1Z6XkeC/QY39VRPpNO/IU+glW8c2KBrySb7BHkmQG62BiLKAco38itKxmrHp4
-         /M9lvYgDoNrk6zhM12gepe7sLaMYIBHQbTXQDKIVygDF+95a/GlkggbXn6zoyXZZT37z
-         3U0g==
-X-Gm-Message-State: AGi0Puba+oAzBzMUs2HgDq0l/U7O1DoNCjVMeYgPMx9yh3q8f2hywBT4
-        JbXi9PTtRwD9cHblGHnbfgI/Ki7tLIkjdnSqZsk=
-X-Google-Smtp-Source: APiQypJADlNNOMac/OlGCtbGDd5SScl5iC3P6Oss2yjpHQgatobfPJFwVKPiDXJVQd6NQQ57kglhd+Xp/ftJUoiCUtc=
-X-Received: by 2002:a63:2d6:: with SMTP id 205mr1858763pgc.257.1586262033681;
- Tue, 07 Apr 2020 05:20:33 -0700 (PDT)
+        id S1728812AbgDGOAR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Apr 2020 10:00:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40192 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728596AbgDGOAR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:00:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E3B4AADCD;
+        Tue,  7 Apr 2020 14:00:13 +0000 (UTC)
+Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
+ commands
+To:     John Garry <john.garry@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        ming.lei@redhat.com, bvanassche@acm.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        Hannes Reinecke <hare@suse.com>
+References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+ <1583857550-12049-3-git-send-email-john.garry@huawei.com>
+ <20200310183243.GA14549@infradead.org>
+ <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
+ <20200311062228.GA13522@infradead.org>
+ <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
+ <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
+Date:   Tue, 7 Apr 2020 16:00:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Received: by 2002:a17:90a:fa88:0:0:0:0 with HTTP; Tue, 7 Apr 2020 05:20:33
- -0700 (PDT)
-Reply-To: lorir8611@gmail.com
-From:   Mrs Lori Robinson <rlori4435@gmail.com>
-Date:   Tue, 7 Apr 2020 05:20:33 -0700
-Message-ID: <CAH4TQ7cdQ_Rj5pHwQ8jBA2W1LOBqDy5Th3Nn6XHzcj8UUZeDPA@mail.gmail.com>
-Subject: May peace of our almighty god be unto you Greeting .my name is Mrs.
- Lori Robinson ,69 yers old from Netherlands a widow reside in Ouagadougou
- Burkine Faso, please, i do not have formal relationship with you but because
- of my present predicament and circumstances i am made to contact you.i have
- been suffering from cancer and have a short life to leave.i have made up my
- mind to donate my late husband inheritance of 8.5million usd to the less
- privileged and Orphanage,please help me to fulfill my last wish,please
- contact me here. donate 70% to Orphans while 30% is for you. Please contact
- me in my personal I wait to hear from you Sister . Lori Robinson
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 4/7/20 1:54 PM, John Garry wrote:
+> On 06/04/2020 10:05, Hannes Reinecke wrote:
+>> On 3/11/20 7:22 AM, Christoph Hellwig wrote:
+>>> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
+>>>> On 10/03/2020 18:32, Christoph Hellwig wrote:
+>>>>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
+>>>>>> From: Hannes Reinecke <hare@suse.com>
+>>>>>>
+>>>>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
+>>>>>
+>>>>> Why?  Reserved command specifically are not in any way tied to queues.
+>>>>> .
+>>>>>
+>>>>
+>>>> So the v1 series used a combination of the sdev queue and the per-host
+>>>> reserved_cmd_q. Back then you questioned using the sdev queue for 
+>>>> virtio
+>>>> scsi, and the unconfirmed conclusion was to use a common per-host q. 
+>>>> This is
+>>>> the best link I can find now:
+>>>>
+>>>> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
+>>>
+>>> That was just a question on why virtio uses the per-device tags, which
+>>> didn't look like it made any sense.  What I'm worried about here is
+>>> mixing up the concept of reserved tags in the tagset, and queues to use
+>>> them.  Note that we already have the scsi_get_host_dev to allocate
+>>> a scsi_device and thus a request_queue for the host itself.  That seems
+>>> like the better interface to use a tag for a host wide command vs
+>>> introducing a parallel path.
+>>>
+>> Thinking about it some more, I don't think that scsi_get_host_dev() is
+>> the best way of handling it.
+>> Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
+>> which will then show up via eg 'lsscsi'.
+> 
+> are you sure? Doesn't this function just allocate the sdev, but do 
+> nothing with it, like probing it?
+> 
+> I bludgeoned it in here for PoC:
+> 
+> https://github.com/hisilicon/kernel-dev/commit/ef0ae8540811e32776f64a5b42bd76cbed17ba47 
+> 
+> 
+> And then still:
+> 
+> john@ubuntu:~$ lsscsi
+> [0:0:0:0] disk SEAGATE  ST2000NM0045  N004  /dev/sda
+> [0:0:1:0] disk SEAGATE  ST2000NM0045  N004  /dev/sdb
+> [0:0:2:0] disk ATASAMSUNG HM320JI  0_01  /dev/sdc
+> [0:0:3:0] disk SEAGATE  ST1000NM0023  0006  /dev/sdd
+> [0:0:4:0] enclosu HUAWEIExpander 12Gx16  128-
+> john@ubuntu:~$
+> 
+> Some proper plumbing would be needed, though.
+> 
+>> This would be okay if 'this_id' would have been defined by the driver;
+>> sadly, most drivers which are affected here do set 'this_id' to -1.
+>> So we wouldn't have a nice target ID to allocate the device from, let
+>> alone the problem that we would have to emulate a complete scsi device
+>> with all required minimal command support etc.
+>> And I'm not quite sure how well that would play with the exising SCSI
+>> host template; the device we'll be allocating would have basically
+>> nothing in common with the 'normal' SCSI devices.
+>>
+>> What we could do, though, is to try it the other way round:
+>> Lift the request queue from scsi_get_host_dev() into the scsi host
+>> itself, so that scsi_get_host_dev() can use that queue, but we also
+>> would be able to use it without a SCSI device attached.
+> 
+> wouldn't that limit 1x scsi device per host, not that I know if any more 
+> would ever be required? But it does still seem better to use the request 
+> queue in the scsi device.
+> 
+My concern is this:
 
+struct scsi_device *scsi_get_host_dev(struct Scsi_Host *shost)
+{
+	[ .. ]
+	starget = scsi_alloc_target(&shost->shost_gendev, 0, shost->this_id);
+	[ .. ]
+
+and we have typically:
+
+drivers/scsi/hisi_sas/hisi_sas_v3_hw.c: .this_id                = -1,
+
+It's _very_ uncommon to have a negative number as the SCSI target 
+device; in fact, it _is_ an unsigned int already.
+
+But alright, I'll give it a go; let's see what I'll end up with.
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
