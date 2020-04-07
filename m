@@ -2,89 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09CB01A0506
-	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 04:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B64A1A064E
+	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 07:12:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDGCrL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Apr 2020 22:47:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726312AbgDGCrL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:47:11 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D3634CBD79F8FD698109;
-        Tue,  7 Apr 2020 10:47:04 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.66) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 7 Apr 2020
- 10:47:03 +0800
-Subject: Re: [RFC 0/3] block: address blktrace use-after-free
-To:     Ming Lei <ming.lei@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-CC:     <axboe@kernel.dk>, <viro@zeniv.linux.org.uk>,
-        <gregkh@linuxfoundation.org>, <rostedt@goodmis.org>,
-        <mingo@redhat.com>, <jack@suse.cz>, <nstange@suse.de>,
-        <mhocko@suse.com>, <linux-block@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402000002.7442-1-mcgrof@kernel.org>
- <20200403081929.GC6887@ming.t460p>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <0e753195-72fb-ce83-16a1-176f2c3cea6a@huawei.com>
-Date:   Tue, 7 Apr 2020 10:47:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726873AbgDGFM5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Apr 2020 01:12:57 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:44490 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgDGFMm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Apr 2020 01:12:42 -0400
+Received: by mail-ua1-f68.google.com with SMTP id r47so828896uad.11
+        for <linux-block@vger.kernel.org>; Mon, 06 Apr 2020 22:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=m9m/DCsFRus/zRmIuphflM5sHyenmkMN/TOEnECOGthbLJHVg8u2+iqtFZpNbyb2/k
+         2tLF//qwyXGtNVJKRleGUy+KbEtVjN+06Aw6FbGL98d5M/QEqB9c9SHaIsBPFlQYoUCh
+         Lj+P9EPUGdvyQRip4KeH3oSvDVhqDTV0IJcbcI66BzYP/b9Y/1y4LF++1q0teLhPl3GM
+         v15gBTxOBB8qvH4CNaCnwdm2sugBL+St8qIlm7SqBWweWj6hdsos1F0mjeWO8qJt64R9
+         xl3tya8AfljNAFdSOkZ4tC7INitomO8JQPFHHcp+JAODUsaup01At9KIYDntXEoTQZb0
+         DmdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=nnIRsYNhLYhdcgwsHNJbdKXokqbXT4l60JQ2AoR/+p+Pf9veEHywUkYsJuhpmx4VA6
+         /8TBiAK0hqIiYLuq0qgDxsauQbQmZlTfPiN93js5yX+x4A8VWC9pcmBMVkfgGHcEcLx8
+         NIxWioypcYr1Vh9//wN/2tJyjE6xkaUnlhj9hOPAyjCuSlrY5ivUaWUb0ylFv/NKnwLr
+         AxfF2Hk4lfDv2+UW46y/28vSb7skPc6G6XGUWVo2YtCbXYLBy/6CvuYw2UYXwcvIPzL9
+         8AghnLKfz6OaRUtLwFuR4+mjyEO1S8GQCeAXa6fgmP4D+bcFNsdPB08TG8bZRA/WNGMF
+         iiWw==
+X-Gm-Message-State: AGi0Puayc+KvTSYTTz7dtgznJifQsJYxqSjZSNuFoWH63tJLMHTY5ybo
+        JQm2e0hcFKIukUhfdjq41sxeEPUWD1TpowiMRf0=
+X-Google-Smtp-Source: APiQypIYXniGQUHEpASwiGNjKth4Cu9ElCz4yjrJ2uXbYBYunhfz0887D/TRydUbTstl7MwaeVftG8QxF1P80ST3qos=
+X-Received: by 2002:ab0:a9:: with SMTP id 38mr504317uaj.61.1586236361040; Mon,
+ 06 Apr 2020 22:12:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200403081929.GC6887@ming.t460p>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.220.66]
-X-CFilter-Loop: Reflected
+Received: by 2002:ab0:4929:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:12:40 -0700 (PDT)
+From:   SANDRA DEWI <dewisandra154@gmail.com>
+Date:   Tue, 7 Apr 2020 05:12:40 +0000
+Message-ID: <CABRVPWys0xe4CWBkaU0ZXQW+4d=tjDOjyo8cKohc5-VFkWPkcA@mail.gmail.com>
+Subject: whether this is your correct email address or not
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2020/4/3 16:19, Ming Lei wrote:
+Dear ,Pastor
 
-> BTW, Yu Kuai posted one patch for this issue, looks that approach
-> is simpler:
-> 
-> https://lore.kernel.org/linux-block/20200324132315.22133-1-yukuai3@huawei.com/
-> 
-> 
 
-I think the issue might not be fixed with the patch seires.
 
-At first, I think there are two key points for the issure:
-1. The final release of queue is delayed in a workqueue
-2. The creation of 'q->debugfs_dir' might failed(only if 1 exist)
-And if we can fix any of the above problem, the UAF issue will be fixed.
-(BTW, I did not come up with a good idea for problem 1, and my approach
-is for problem 2.)
+I have a client who is an oil business man and he made a fixed deposit
+of $26 million USD in my bank, where I am the director of the branch,
+My client died with his entire family in Jordanian
 
-The third patch "block: avoid deferral of blk_release_queue() work" is
-not enough to fix problem 1:
-a. if CONFIG_DEBUG_KOBJECT_RELEASE is enable:
-static void kobject_release(struct kref *kref)
-{
-         struct kobject *kobj = container_of(kref, struct kobject, kref);
-#ifdef CONFIG_DEBUG_KOBJECT_RELEASE
-         unsigned long delay = HZ + HZ * (get_random_int() & 0x3);
-         pr_info("kobject: '%s' (%p): %s, parent %p (delayed %ld)\n",
-                 ©®kobject_name(kobj), kobj, __func__, kobj->parent, delay);
-         INIT_DELAYED_WORK(&kobj->release, kobject_delayed_cleanup);
+50% of the fund will be for the church  for the work of God,the
+balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
+50% for me
 
-         schedule_delayed_work(&kobj->release, delay);
-#else
-         kobject_cleanup(kobj);
-#endif
-}
-b. when 'kobject_put' is called from blk_cleanup_queue, can we make sure
-it is the last reference?
+intervention in the Syrian Civil War 2014 leaving behind no next of
+kin. I Propose to present you as next of kin to claim the funds, if
+interested reply me for full details and how we are to
 
-Futhermore, I do understand the second patch fix the UAF problem by
-using 'q->debugfs_dir' instead of 'q->blk_trace->dir', but the problem 2
-still exist and need to be fixed.
 
-Thanks!
-Yu Kuai
 
+proceed to close this deal.
+
+
+
+
+Mrs. Sandra Dewi
+
+
+
+Email  mrsdewi@gmx.com
