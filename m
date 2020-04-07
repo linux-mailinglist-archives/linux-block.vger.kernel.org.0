@@ -2,115 +2,195 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F63E1A1769
-	for <lists+linux-block@lfdr.de>; Tue,  7 Apr 2020 23:32:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B960F1A17A1
+	for <lists+linux-block@lfdr.de>; Wed,  8 Apr 2020 00:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDGVcO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Apr 2020 17:32:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726395AbgDGVcO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:32:14 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037L4hap104014;
-        Tue, 7 Apr 2020 17:31:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082hh5qp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 17:31:59 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037LRsL0015276;
-        Tue, 7 Apr 2020 17:31:59 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082hh5qng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 17:31:59 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037LUbr1023206;
-        Tue, 7 Apr 2020 21:31:57 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 306hv69vxa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 21:31:57 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037LVuCl12845986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 21:31:56 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7712B2066;
-        Tue,  7 Apr 2020 21:31:56 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66031B2068;
-        Tue,  7 Apr 2020 21:31:55 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.65.198.190])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 21:31:55 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     deven.desai@linux.microsoft.com
-Cc:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, tyhicks@linux.microsoft.com,
-        pasha.tatashin@soleen.com, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, nramas@linux.microsoft.com,
-        mdsakib@linux.microsoft.com, linux-kernel@vger.kernel.org
-References: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <c1466cc8-8a08-708a-4629-234485bb833e@linux.vnet.ibm.com>
-Date:   Tue, 7 Apr 2020 17:31:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726437AbgDGWA7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Apr 2020 18:00:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35431 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgDGWAk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Apr 2020 18:00:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k5so2379992pga.2
+        for <linux-block@vger.kernel.org>; Tue, 07 Apr 2020 15:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jpNJpmcn9slEnZtBgivr73JFy34TD3yg5C1acar0nZ4=;
+        b=aITWEoJJfQ3jKQgs7ROVoGeH2uoAC6Q95O4OdAhjezlEeGOsA1Xrm/OCleFpB0lOH9
+         zaN3FF5IOEcOLrO+6zPZEw/sKrDs85fMtfCTWhbezhbbSFpq+mSO/TEnSGh0AVfvx1ZR
+         t5GFFLPjIj05ft6NmhhdlkT1DB2ldJdt67Row=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jpNJpmcn9slEnZtBgivr73JFy34TD3yg5C1acar0nZ4=;
+        b=W1+wzU4YQGrYdf6WkCea68XuIC/InFsl85HUcn4yg0C8LyqDgMdZd4IAldbDCkYDbL
+         sjjBkjhtWHISHsEZpuEzxjDLkJJgVnW4M7g+2CRcxhA6UY0eofJpArTKH7HOSa8M1BFA
+         kxep7ao8v3qRrpTNOxTs7Ps0Bmv2WO9jK3DZGjCU6pBeSe/hy61jfa9JlHnXzejofMde
+         xUHQdfzDnp8xdaBXlUwNBx5LI9r+JYBOUDTqMbvr2KV/kTQz4qMmZOrrMEY3gXWa7nk/
+         /ka9z2aF9y0koiiqG7G7tLtQoWmpEQYwvzMR2aVcQaj2oGwjkY6z6z59PKfj/SsHzw/J
+         KXOg==
+X-Gm-Message-State: AGi0Pua+/+oIndENXTYGjsywu8GePLVeqdUt2orJq35qzh+5fFjKW4Qz
+        P/C+WeTZn5xdBHC11y59d2v6ww==
+X-Google-Smtp-Source: APiQypLUz8cv+cP6JPuNOByi+ZY6olk4OHvHzLe34PCtkuPfVqLLP3zObmpQRJ5LNEqRAvTlMSY1Gw==
+X-Received: by 2002:a63:296:: with SMTP id 144mr4020243pgc.110.1586296838147;
+        Tue, 07 Apr 2020 15:00:38 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id g3sm880112pgd.64.2020.04.07.15.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 15:00:37 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-scsi@vger.kernel.org,
+        sqazi@google.com, Gwendal Grignou <gwendal@chromium.org>,
+        groeck@chromium.org, linux-block@vger.kernel.org,
+        paolo.valente@linaro.org, Douglas Anderson <dianders@chromium.org>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] blk-mq: Fix two causes of IO stalls found in reboot testing
+Date:   Tue,  7 Apr 2020 15:00:01 -0700
+Message-Id: <20200407220005.119540-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-In-Reply-To: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_09:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 clxscore=1011 malwarescore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=1 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070166
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+While doing reboot testing, I found that occasionally my device would
+trigger the hung task detector.  Many tasks were stuck waiting for the
+a blkdev mutex, but at least one task in the system was always sitting
+waiting for IO to complete (and holding the blkdev mutex).  One
+example of a task that was just waiting for its IO to complete on one
+reboot:
 
-On 4/6/20 6:14 PM, deven.desai@linux.microsoft.com wrote:
-> From: Deven Bowers <deven.desai@linux.microsoft.com>
->
-> Changelog:
-> ------------------------------------
->
-> v1: Introduced
->
-> v2:
->    Split the second patch of the previous series into two.
->    Minor corrections in the cover-letter and documentation
->    comments regarding CAP_MAC_ADMIN checks in IPE.
->
-> Overview:
-> ------------------------------------
-> IPE is a Linux Security Module, which allows for a configurable
-> policy to enforce integrity requirements on the whole system. It
-> attempts to solve the issue of Code Integrity: that any code being
-> executed (or files being read), are identical to the version that
-> was built by a trusted source.
+ udevd           D    0  2177    306 0x00400209
+ Call trace:
+  __switch_to+0x15c/0x17c
+  __schedule+0x6e0/0x928
+  schedule+0x8c/0xbc
+  schedule_timeout+0x9c/0xfc
+  io_schedule_timeout+0x24/0x48
+  do_wait_for_common+0xd0/0x160
+  wait_for_completion_io_timeout+0x54/0x74
+  blk_execute_rq+0x9c/0xd8
+  __scsi_execute+0x104/0x198
+  scsi_test_unit_ready+0xa0/0x154
+  sd_check_events+0xb4/0x164
+  disk_check_events+0x58/0x154
+  disk_clear_events+0x74/0x110
+  check_disk_change+0x28/0x6c
+  sd_open+0x5c/0x130
+  __blkdev_get+0x20c/0x3d4
+  blkdev_get+0x74/0x170
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
 
-Can you please clarify the "motivation" for this patch set more clearly? 
-It seems to define a policy layer on top of dm-verity, which may be 
-compiled into the kernel. In the motivation, can you please also make it 
-explicit why existing mechanisms cannot be extended to achieve your purpose?
+I've reproduced this on two systems: one boots from an internal UFS
+disk and one from eMMC.  Each has a card reader attached via USB with
+an SD card plugged in.  On the USB-attached SD card is a disk with 12
+partitions (a Chrome OS test image), if it matters.  The system
+doesn't do much with the USB disk other than probe it (it's plugged in
+my system to help me recover).
 
-Also, AFIK, the changelog should be moved to the end of the patch 
-description.
+From digging, I believe that there are two separate but related
+issues.  Both issues relate to the SCSI code saying that there is no
+budget.
 
-Thanks & Regards,
+I have done testing with only one or the other of the two patches in
+this series and found that I could still encounter hung tasks if only
+one of the two patches was applied.  This deserves a bit of
+explanation.  To me, it's fairly obvious that the first fix wouldn't
+fix the problems talked about in the second patch.  However, it's less
+obvious why the second patch doesn't fix the problems in
+blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+(problems become much more rare), but I did manage to get a single
+trace where the "kick" scheduled by the second patch happened really
+quickly.  The scheduled kick then ran and found nothing to do.  This
+happened in parallel to a task running in blk_mq_dispatch_rq_list()
+which hadn't gotten around to splicing the list back into
+hctx->dispatch.  This is why we need both fixes.
 
-     - Nayna
+Most of my testing has been atop Chrome OS 5.4's kernel tree which
+currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
+patch by Salman Qazi, namely ("block: Limit number of items taken from
+the I/O scheduler in one go").  Reverting that patch didn't make the
+hung tasks go away, so I kept it in for most of my testing.
+
+I have also done some testing on mainline Linux (most on what git
+describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
+patch.  I found that I could reproduce the problems there and that
+traces looked about the same as I saw on the downstream branch.  These
+patches were also confirmed to fix the problems on mainline.
+
+Chrome OS is currently setup to use the BFQ scheduler and I found that
+I couldn't reproduce the problems without BFQ.  As discussed in the
+second patch this is believed to be because BFQ sometimes returns
+"true" from has_work() but then NULL from dispatch_request().
+
+I'll insert my usual caveat that I'm sending patches to code that I
+know very little about.  If I'm making a total bozo patch here, please
+help me figure out how I should fix the problems I found in a better
+way.
+
+If you want to see a total ridiculous amount of chatter where I
+stumbled around a whole bunch trying to figure out what was wrong and
+how to fix it, feel free to read <https://crbug.com/1061950>.  I
+promise it will make your eyes glaze over right away if this cover
+letter didn't already do that.  Specifically comment 79 in that bug
+includes a link to my ugly prototype of making BFQ's has_work() more
+exact (I only managed it by actually defining _both_ an exact and
+inexact function to avoid circular locking problems when it was called
+directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
+thoughts about alternatives considered.
+
+I don't know if these fixes represent a regression of some sort or are
+new.  As per above I could only reproduce with BFQ enabled which makes
+it nearly impossible to go too far back with this.  I haven't listed
+any "Fixes" tags here, but if someone felt it was appropriate to
+backport this to some stable trees that seems like it'd be nice.
+Presumably at least 5.4 stable would make sense.
+
+Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+bunch of time helping me trawl through some of this code and reviewing
+early versions of this patch.
+
+Changes in v3:
+- Note why blk_mq_dispatch_rq_list() change is needed.
+- ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
+- Always kick when putting the budget.
+- Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+- Totally rewrote commit message.
+- ("Revert "scsi: core: run queue...") new for v3.
+
+Changes in v2:
+- Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+
+Douglas Anderson (4):
+  blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+  blk-mq: Add blk_mq_delay_run_hw_queues() API call
+  blk-mq: Rerun dispatching in the case of budget contention
+  Revert "scsi: core: run queue if SCSI device queue isn't ready and
+    queue is idle"
+
+ block/blk-mq.c          | 30 +++++++++++++++++++++++++++---
+ block/blk-mq.h          | 14 +++++++++++++-
+ drivers/scsi/scsi_lib.c |  7 +------
+ include/linux/blk-mq.h  |  1 +
+ 4 files changed, 42 insertions(+), 10 deletions(-)
+
+-- 
+2.26.0.292.g33ef6b2f38-goog
 
