@@ -2,123 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D40E1A24E6
-	for <lists+linux-block@lfdr.de>; Wed,  8 Apr 2020 17:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC1D61A264C
+	for <lists+linux-block@lfdr.de>; Wed,  8 Apr 2020 17:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgDHPWt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Apr 2020 11:22:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39143 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729540AbgDHPWs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Apr 2020 11:22:48 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jMCXM-0001BO-Rr; Wed, 08 Apr 2020 15:22:44 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 8/8] loopfs: only show devices in their correct instance
-Date:   Wed,  8 Apr 2020 17:21:51 +0200
-Message-Id: <20200408152151.5780-9-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200408152151.5780-1-christian.brauner@ubuntu.com>
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+        id S1729261AbgDHPvB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Apr 2020 11:51:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42912 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729176AbgDHPvB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Apr 2020 11:51:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3TVQ8OuCOqm5u7QKIVuMFaQ6Kl80j1kU+GJpUrmQSYw=; b=O+Ik7Sos0/y1kNJXRJYyD5cPo+
+        6WG1mou84xehUfjuoD5fzcKyA/u+8mXpUE9wexoieq3Wt9jOuO/HL4cjfme196967buYKUzc6RDJs
+        tKQL5SrY8H9ldiaaVYCtau9JggCoTXAtPgevVW85dc5rn+Hvn2JLCfLg1RCKcIQKs7WDn/6UdJugC
+        67rfoRMoD7sf8Yc4Hjft6u4jozi5LVARVfa0sUxWxB5VmD6way6TIsB41ZKfrvxF+xp80dezYUV1z
+        IpH0BPWoMA1ZFgKvIH9iBLlSqBbSiVFXChh6aQFj1Tyay5eC9KLdVuhcEivLDR5slcZy1S4yPT8wY
+        EOy5T/VA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMCyi-00030t-Ef; Wed, 08 Apr 2020 15:51:00 +0000
+Date:   Wed, 8 Apr 2020 08:51:00 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Keith Busch <kbusch@kernel.org>,
+        "linux-scsi @ vger . kernel . org" <linux-scsi@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-fsdevel @ vger . kernel . org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v4 02/10] block: Introduce REQ_OP_ZONE_APPEND
+Message-ID: <20200408155100.GA29029@infradead.org>
+References: <20200403101250.33245-1-johannes.thumshirn@wdc.com>
+ <20200403101250.33245-3-johannes.thumshirn@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403101250.33245-3-johannes.thumshirn@wdc.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since loopfs devices belong to a loopfs instance they have no business
-polluting the host's devtmpfs mount and should not propagate out of the
-namespace they belong to.
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- drivers/base/devtmpfs.c | 4 ++--
- drivers/block/loop.c    | 4 +++-
- include/linux/device.h  | 3 +++
- 3 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index c9017e0584c0..77371ceb88fa 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -111,7 +111,7 @@ int devtmpfs_create_node(struct device *dev)
- 	const char *tmp = NULL;
- 	struct req req;
- 
--	if (!thread)
-+	if (!thread || dev->no_devnode)
- 		return 0;
- 
- 	req.mode = 0;
-@@ -138,7 +138,7 @@ int devtmpfs_delete_node(struct device *dev)
- 	const char *tmp = NULL;
- 	struct req req;
- 
--	if (!thread)
-+	if (!thread || dev->no_devnode)
- 		return 0;
- 
- 	req.name = device_get_devnode(dev, NULL, NULL, NULL, &tmp);
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 7a14fd3e4329..df75ca4ac040 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2155,8 +2155,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
- 	disk->queue		= lo->lo_queue;
- 	sprintf(disk->disk_name, "loop%d", i);
- #ifdef CONFIG_BLK_DEV_LOOPFS
--	if (loopfs_i_sb(inode))
-+	if (loopfs_i_sb(inode)) {
- 		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
-+		disk_to_dev(disk)->no_devnode = true;
-+	}
- #endif
- 
- 	add_disk(disk);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index fa04dfd22bbc..9fa438e3e4ca 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -525,6 +525,8 @@ struct dev_links_info {
-  *		  sync_state() callback.
-  * @dma_coherent: this particular device is dma coherent, even if the
-  *		architecture supports non-coherent devices.
-+ * @no_devnode: whether device nodes associated with this device are kept out
-+ *		of devtmpfs (e.g. due to separate filesystem)
-  *
-  * At the lowest level, every device in a Linux system is represented by an
-  * instance of struct device. The device structure contains the information
-@@ -625,6 +627,7 @@ struct device {
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
- 	bool			dma_coherent:1;
- #endif
-+	bool			no_devnode:1;
- };
- 
- static inline struct device *kobj_to_dev(struct kobject *kobj)
--- 
-2.26.0
-
+Another nitpick - op is only used once in __bio_iov_iter_get_pages,
+we can just call bio_op there directly.
