@@ -2,80 +2,199 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF7811A2456
-	for <lists+linux-block@lfdr.de>; Wed,  8 Apr 2020 16:50:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 753721A24B3
+	for <lists+linux-block@lfdr.de>; Wed,  8 Apr 2020 17:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgDHOuC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Apr 2020 10:50:02 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40233 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgDHOuC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Apr 2020 10:50:02 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so2571801plk.7
-        for <linux-block@vger.kernel.org>; Wed, 08 Apr 2020 07:50:01 -0700 (PDT)
+        id S1728647AbgDHPMK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Apr 2020 11:12:10 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33583 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgDHPMK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Apr 2020 11:12:10 -0400
+Received: by mail-il1-f195.google.com with SMTP id k29so7038542ilg.0
+        for <linux-block@vger.kernel.org>; Wed, 08 Apr 2020 08:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I8FzH7EebZtU80iu8VKOhofG02voMqpeLU7mMA/1duw=;
-        b=K46bTvroOv0b5L2EiCyrJPdIos+MKgPHL/VqLYrdtCQSNgcnLYRNJmrLU3UrZSBPb/
-         zQGA+h9UFp4oKK3OBipnhxnix9RrOyoaJD4iFvltAz67T8HEQoMrxDXo0GamnvwBdsyM
-         LQP2fZUxR3BV7EkxFbo1LQbP40qKCHspkcJLnC2uo7Yu+P4u3+J1OrO3qSNaSkuyqaEc
-         zXkGcJ2a8Uc9+P8n5Lqs291INdThk0a/PvMF/sktuMhmdZgjEqWovor5cQjVPsTui1nv
-         H8FrFi/+A3CRKM3oCDLaqPNKUuRxx7lVmowZSDhR6Pz7fi4ltPxnxpClknR1ThbRSgnw
-         AZDQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SssEa34uyWGuXvyMVdQpqUpofdA5aXmoGGscUTPybO4=;
+        b=LkpfPCBMz5VnGfzoWxExmYIpo0+FnFFGjJY1msnRJtTohUxZbu0BG52EXxkq6IBeuf
+         ZZf+IObj/jLDbnZGwYQ7xiOI2IQsIBVjrZVTvh/8oz1mUI1bTJudCZFtMzBs/e2VQke+
+         10kX6P7ZJlrLlWCp+Ri1Ros9d0kublJPJe4K4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=I8FzH7EebZtU80iu8VKOhofG02voMqpeLU7mMA/1duw=;
-        b=j0XMK9iJgCDoltzQ2HZYolvULrfYyJaloMuVK9dNN2+K1o5hMARnWSKblWIPcvl8V9
-         W0WdfWi86M1lIz/lX39JKQZNjm8/C4meM0QKr8YZyiou/aogBzgrvamu/9ptnCw5bYN7
-         EeP9gtweE4FWsSaJUoux+CLGyRu8lC9AFcRJAWIlry86RAZUdGJtlUCOeCsRaDNm9MzU
-         QuiCQjmWPCQ4DM13U/Ht1aobnROdLEwf44K9mUCGOG3vV1Xe5LpyOlZ9vynGsj+/LYV0
-         4lmCTD5T6U0bErSxZPwpe7ofA4seteOmO5GW95efE/Lc1XuNyhd3q8j9cLS1haJ0H8po
-         Dykw==
-X-Gm-Message-State: AGi0PubEWPnQc68SjcfD7q+1MKmpembjr6PP8WwUpn8JpFKIXxfKMxYf
-        qUaR2wFOO23JwN88b99U++e+zBqs3JPdlw==
-X-Google-Smtp-Source: APiQypLx/xljiVY4tkyNO5Z6jOqqaJGZZ9DaV7MRYO/RbCEZlAbtLkD3YztpKMrblyNBSsvzCICYsg==
-X-Received: by 2002:a17:902:8c94:: with SMTP id t20mr48219plo.336.1586356917092;
-        Wed, 08 Apr 2020 07:41:57 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:4466:6b33:f85b:7770? ([2605:e000:100e:8c61:4466:6b33:f85b:7770])
-        by smtp.gmail.com with ESMTPSA id x188sm15772384pgb.76.2020.04.08.07.41.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 07:41:56 -0700 (PDT)
-Subject: Re: [GIT PULL] nvme fixes for 5.7
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     kbusch@kernel.org, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
-References: <20200408062131.GA212017@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <795e9c03-4213-8d98-3d18-791c3a97efe3@kernel.dk>
-Date:   Wed, 8 Apr 2020 07:41:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=SssEa34uyWGuXvyMVdQpqUpofdA5aXmoGGscUTPybO4=;
+        b=UNYCy/0dOS6MKFXzXLdWUGPL385ETd2djLV+b3AczfrVxTbXs17yM2gQ0SIMeN/z3R
+         8CwzcW4G1oKMuxeb2AOEPpnZt5l/n0DpDww1IaxKFuvyfXfGH9rxnodQRN6NkaQm68J4
+         igdG/fEOYJlre7LlrpDtyJzJM+AWpO/gbGG+ev/M3XWiT2FEV7W1G4odO9EIDY9MsG1f
+         4Dn2vzx3VK9lfAcHaDH3poKcOuCDBuOREbcAVVJKwhESFIDccJrLHQSfvL9cwcE8Wvho
+         5qnGgo0Kij80Ln1+O2gtBoy9B3VwnjexxD6Z28FdEcepdY0V2AJuFj07Ys9jO97Zp2BY
+         aymQ==
+X-Gm-Message-State: AGi0Pub1PAZDx8qlu9qnjnOw+w+VTS8DWAwgHRrQ8+CA9VF6fLjYLYGU
+        VHYX8ysu/r6Pebe8Y7btPYzYAyk5bdvvYg==
+X-Google-Smtp-Source: APiQypJ/jLI3GuzCIUnaE0J6LM/OrpH9vqwGhYBMjKYfjXiXGgMJd8Y15SYRX2g99IdcymrlbrcVqw==
+X-Received: by 2002:a63:d143:: with SMTP id c3mr7174945pgj.171.1586358270481;
+        Wed, 08 Apr 2020 08:04:30 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id d85sm1468083pfd.157.2020.04.08.08.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 08:04:30 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     paolo.valente@linaro.org, groeck@chromium.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, sqazi@google.com,
+        Douglas Anderson <dianders@chromium.org>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] blk-mq: Fix two causes of IO stalls found in reboot testing
+Date:   Wed,  8 Apr 2020 08:03:58 -0700
+Message-Id: <20200408150402.21208-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-In-Reply-To: <20200408062131.GA212017@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/7/20 11:21 PM, Christoph Hellwig wrote:
-> The following changes since commit 458ef2a25e0cbdc216012aa2b9cf549d64133b08:
-> 
->   Merge tag 'x86-timers-2020-03-30' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2020-03-30 19:55:39 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.infradead.org/nvme.git nvme-5.7
+While doing reboot testing, I found that occasionally my device would
+trigger the hung task detector.  Many tasks were stuck waiting for the
+a blkdev mutex, but at least one task in the system was always sitting
+waiting for IO to complete (and holding the blkdev mutex).  One
+example of a task that was just waiting for its IO to complete on one
+reboot:
 
-Pulled, thanks.
+ udevd           D    0  2177    306 0x00400209
+ Call trace:
+  __switch_to+0x15c/0x17c
+  __schedule+0x6e0/0x928
+  schedule+0x8c/0xbc
+  schedule_timeout+0x9c/0xfc
+  io_schedule_timeout+0x24/0x48
+  do_wait_for_common+0xd0/0x160
+  wait_for_completion_io_timeout+0x54/0x74
+  blk_execute_rq+0x9c/0xd8
+  __scsi_execute+0x104/0x198
+  scsi_test_unit_ready+0xa0/0x154
+  sd_check_events+0xb4/0x164
+  disk_check_events+0x58/0x154
+  disk_clear_events+0x74/0x110
+  check_disk_change+0x28/0x6c
+  sd_open+0x5c/0x130
+  __blkdev_get+0x20c/0x3d4
+  blkdev_get+0x74/0x170
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
+
+I've reproduced this on two systems: one boots from an internal UFS
+disk and one from eMMC.  Each has a card reader attached via USB with
+an SD card plugged in.  On the USB-attached SD card is a disk with 12
+partitions (a Chrome OS test image), if it matters.  The system
+doesn't do much with the USB disk other than probe it (it's plugged in
+my system to help me recover).
+
+From digging, I believe that there are two separate but related
+issues.  Both issues relate to the SCSI code saying that there is no
+budget.
+
+I have done testing with only one or the other of the two patches in
+this series and found that I could still encounter hung tasks if only
+one of the two patches was applied.  This deserves a bit of
+explanation.  To me, it's fairly obvious that the first fix wouldn't
+fix the problems talked about in the second patch.  However, it's less
+obvious why the second patch doesn't fix the problems in
+blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+(problems become much more rare), but I did manage to get a single
+trace where the "kick" scheduled by the second patch happened really
+quickly.  The scheduled kick then ran and found nothing to do.  This
+happened in parallel to a task running in blk_mq_dispatch_rq_list()
+which hadn't gotten around to splicing the list back into
+hctx->dispatch.  This is why we need both fixes.
+
+Most of my testing has been atop Chrome OS 5.4's kernel tree which
+currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
+patch by Salman Qazi, namely ("block: Limit number of items taken from
+the I/O scheduler in one go").  Reverting that patch didn't make the
+hung tasks go away, so I kept it in for most of my testing.
+
+I have also done some testing on mainline Linux (most on what git
+describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
+patch.  I found that I could reproduce the problems there and that
+traces looked about the same as I saw on the downstream branch.  These
+patches were also confirmed to fix the problems on mainline.
+
+Chrome OS is currently setup to use the BFQ scheduler and I found that
+I couldn't reproduce the problems without BFQ.  As discussed in the
+second patch this is believed to be because BFQ sometimes returns
+"true" from has_work() but then NULL from dispatch_request().
+
+I'll insert my usual caveat that I'm sending patches to code that I
+know very little about.  If I'm making a total bozo patch here, please
+help me figure out how I should fix the problems I found in a better
+way.
+
+If you want to see a total ridiculous amount of chatter where I
+stumbled around a whole bunch trying to figure out what was wrong and
+how to fix it, feel free to read <https://crbug.com/1061950>.  I
+promise it will make your eyes glaze over right away if this cover
+letter didn't already do that.  Specifically comment 79 in that bug
+includes a link to my ugly prototype of making BFQ's has_work() more
+exact (I only managed it by actually defining _both_ an exact and
+inexact function to avoid circular locking problems when it was called
+directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
+thoughts about alternatives considered.
+
+I don't know if these fixes represent a regression of some sort or are
+new.  As per above I could only reproduce with BFQ enabled which makes
+it nearly impossible to go too far back with this.  I haven't listed
+any "Fixes" tags here, but if someone felt it was appropriate to
+backport this to some stable trees that seems like it'd be nice.
+Presumably at least 5.4 stable would make sense.
+
+Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+bunch of time helping me trawl through some of this code and reviewing
+early versions of this patch.
+
+Changes in v4:
+- Only kick in blk_mq_do_dispatch_ctx() / blk_mq_do_dispatch_sched().
+
+Changes in v3:
+- Note why blk_mq_dispatch_rq_list() change is needed.
+- ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
+- Always kick when putting the budget.
+- Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+- Totally rewrote commit message.
+- ("Revert "scsi: core: run queue...") new for v3.
+
+Changes in v2:
+- Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+
+Douglas Anderson (4):
+  blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+  blk-mq: Add blk_mq_delay_run_hw_queues() API call
+  blk-mq: Rerun dispatching in the case of budget contention
+  Revert "scsi: core: run queue if SCSI device queue isn't ready and
+    queue is idle"
+
+ block/blk-mq-sched.c    | 18 ++++++++++++++++++
+ block/blk-mq.c          | 30 +++++++++++++++++++++++++++---
+ drivers/scsi/scsi_lib.c |  7 +------
+ include/linux/blk-mq.h  |  1 +
+ 4 files changed, 47 insertions(+), 9 deletions(-)
 
 -- 
-Jens Axboe
+2.26.0.292.g33ef6b2f38-goog
 
