@@ -2,189 +2,165 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A0D1A3C15
-	for <lists+linux-block@lfdr.de>; Thu,  9 Apr 2020 23:45:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E69A1A3CE4
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 01:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgDIVpt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Apr 2020 17:45:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35821 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbgDIVpk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Apr 2020 17:45:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a13so150286pfa.2;
-        Thu, 09 Apr 2020 14:45:40 -0700 (PDT)
+        id S1727069AbgDIXdb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Apr 2020 19:33:31 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]:38370 "EHLO
+        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgDIXdb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Apr 2020 19:33:31 -0400
+Received: by mail-qk1-f180.google.com with SMTP id h14so614484qke.5
+        for <linux-block@vger.kernel.org>; Thu, 09 Apr 2020 16:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=wgkRZRi8nt7Sf7G72jvNnmXYWgvPJ9i4m7QAjv8A1Q4=;
+        b=eLkZUa7uSnG9us9m8iieDngtLxC+HG8pwltFYbdcs1NrzCJ1z3j+wxkNs3NqTPdiFP
+         MB5ptKIKgNVb9MAykm/y4xfy/zxJ6uC9yZIRf4ym7kjk420gx5der2gbEGnkHcTlAfW5
+         VFONC2kJFuzKqfWOxd3DsyyC9ADMR0PVZafQqj5DMAUNJomT2s8FjsnRTwDf8cjlEMCw
+         MjQv/woOdikoiIjG4NfBeicUqRY6QOBFzYkE3f/h58uQT+yc6yzDQ8MJVQUwS02YaFsM
+         LRDjjuAaYaaKPTWVlyERWBcaSg/wwEhfLVTeAk2WriI0eqtNkz+EZjrL2Q3cU9MaVTEV
+         2CaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RyMpnPWw/Y2hF5e4RISVaGw9GiKX0YRBleN8UhVQook=;
-        b=YJ+nz4rMd3JuBzciDjM9mfLQMlgLNeYgMX7/uFZ3GzJq5A2n3WlXILUDSNG4Vk+E/J
-         JWvCwx5+10EriDpGb+dicExUAI/8RMyHE8xstMEEyApntAl3s6Wp0ysS3Eg2DOEP6YFg
-         gLYjFuL+yD1xHqQadgaNKaqIAmq+wkkGmzm8qNlv5c7pzPVAALquucHfRiyrAA9tcFvw
-         JDOY6JCiRpaNBdXu9ftm24HIDisyMxQOS7opV7CaHCfBGYNHqanUZ5pi1HZmxu3bO0a7
-         JqJDWRGQhZyZdJYRuypclhg5eUEzs8CsL4W3Ad9h7vyF9+m1wVtakhGoxz0/HI74HWht
-         tD0w==
-X-Gm-Message-State: AGi0PubpGSACpfuBaKveVabGZwI2fxmDz0SPYL2IrJdxWPIph822IUvH
-        m7+oGTsjhy8OsQ8nztDVTMk=
-X-Google-Smtp-Source: APiQypL2c8CK9HLPDrIBFDxSQIJ2+qEM1rtn9Tgz5zxuYIUXNV4bsvZbJNQbtegiTbkBK3QjOXl2Dw==
-X-Received: by 2002:a63:d512:: with SMTP id c18mr1420081pgg.347.1586468740119;
-        Thu, 09 Apr 2020 14:45:40 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w134sm65241pfd.41.2020.04.09.14.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 14:45:37 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7115241DAB; Thu,  9 Apr 2020 21:45:32 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: [RFC v2 5/5] block: revert back to synchronous request_queue removal
-Date:   Thu,  9 Apr 2020 21:45:30 +0000
-Message-Id: <20200409214530.2413-6-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200409214530.2413-1-mcgrof@kernel.org>
-References: <20200409214530.2413-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=wgkRZRi8nt7Sf7G72jvNnmXYWgvPJ9i4m7QAjv8A1Q4=;
+        b=igooI/B8tqmOT7l0434X96oWK1/A8BiNfrFvv4uOAlEz73qsN7YLCyMFE8IpsAttVk
+         +0S23RT6DPwmx06nIIweZ6l8NjEBzKtMGQzGs1jsVAEVfh33N0Ok20e34C1k/XTjb6PF
+         Tyebbfy9aAHqOpfvJCGkxfz/Isln7kdkQsva5c1oq6BRPYk2+YPlYXDKtEfMh5gs8kJW
+         sZJV4FX4GCG6YNbKcNq+jxVFBst0a3K49XhUa/4AyYRsqgfLrSn/LhP7CWhWKNH9E1pS
+         xHKdBew6NJbv1VeO9FHNV8TraGlWNef8OFaDNGnSxnZ4WLt6h+LBKxK972DDNrlDtY1p
+         H6fw==
+X-Gm-Message-State: AGi0PuYlw6tpbNnd3AP3tImikwNnYYAgCPou2iLEgNrJ96RDjTj/KVPQ
+        0FWuXEBbPUNI5UXgd6v5AE+Fdw==
+X-Google-Smtp-Source: APiQypIzSPzGROYB8GlTbojz86NPjyo4ppagaRVsPbtzp2x4iX5szJMdNvssk3f7fl49ywb/72hn2A==
+X-Received: by 2002:a37:b93:: with SMTP id 141mr1489123qkl.192.1586475208596;
+        Thu, 09 Apr 2020 16:33:28 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id o16sm281681qki.110.2020.04.09.16.33.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 16:33:28 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: s390 boot woe due to "block: fix busy device checking in
+ blk_drop_partitions"
+Message-Id: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
+Date:   Thu, 9 Apr 2020 19:33:25 -0400
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
-v4.12 moved the work behind blk_release_queue() into a workqueue after a
-splat floated around which indicated some work on blk_release_queue()
-could sleep in blk_exit_rl(). This splat would be possible when a driver
-called blk_put_queue() or blk_cleanup_queue() (which calls blk_put_queue()
-as its final call) from an atomic context.
+Reverted the linux-next commit on today=E2=80=99s tree,
 
-blk_put_queue() puts decrements the refcount for the request_queue
-kobject, and upon reaching 0 blk_release_queue() is called. Although
-blk_exit_rl() is now removed through commit db6d9952356 ("block: remove
-request_list code"), we reserve the right to be able to sleep within
-blk_release_queue() context. There should be little reason to
-defer removal from atomic context these days, as you can always just
-increase your block device's reference count even in atomic context and
-leave the removal for the request_queue to the upper layers later.
-However if you really need to defer removal of the request_queue, you can
-set the queue flag QUEUE_FLAG_DEFER_REMOVAL now.
+d3ef5536274f (=E2=80=9Cblock: fix busy device checking in =
+blk_drop_partitions=E2=80=9D)
 
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/blk-sysfs.c      | 40 ++++++++++++++++++++++++++++++++--------
- include/linux/blkdev.h |  3 +++
- 2 files changed, 35 insertions(+), 8 deletions(-)
+makes IBM partition to be recognized again on s390 rootfs,
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 20f20b0fa0b9..2ae8c39c88ef 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -860,10 +860,9 @@ static void blk_exit_queue(struct request_queue *q)
- 	bdi_put(q->backing_dev_info);
- }
- 
--
- /**
-- * __blk_release_queue - release a request queue
-- * @work: pointer to the release_work member of the request queue to be released
-+ * blk_release_queue_sync- release a request queue
-+ * @q: pointer to the request queue to be released
-  *
-  * Description:
-  *     This function is called when a block device is being unregistered. The
-@@ -872,11 +871,27 @@ static void blk_exit_queue(struct request_queue *q)
-  *     the reference counter of the request queue. Once the reference counter
-  *     of the request queue reaches zero, blk_release_queue is called to release
-  *     all allocated resources of the request queue.
-+ *
-+ *     There are two approaches to releasing the request queue, by default
-+ *     we reserve the right to sleep on release and so release is synchronous.
-+ *     If you know the path under which blk_cleanup_queue() or your last
-+ *     blk_put_queue() is called can be called in atomic context you want to
-+ *     ensure to defer the removal by setting the QUEUE_FLAG_DEFER_REMOVAL
-+ *     flag as follows upon initialization:
-+ *
-+ *     blk_queue_flag_set(QUEUE_FLAG_DEFER_REMOVAL, q)
-+ *
-+ *     Note that deferring removal may have implications for userspace. An
-+ *     example is if you are using an ioctl to allow removal of a block device,
-+ *     and the kernel returns immediately even though the device may only
-+ *     disappear after the full removal is completed.
-+ *
-+ *     You should also be able to work around this by just increasing the
-+ *     refcount for the block device instead during your atomic operation,
-+ *     and so QUEUE_FLAG_DEFER_REMOVAL should almost never be required.
-  */
--static void __blk_release_queue(struct work_struct *work)
-+static void blk_release_queue_sync(struct request_queue *q)
- {
--	struct request_queue *q = container_of(work, typeof(*q), release_work);
--
- 	if (test_bit(QUEUE_FLAG_POLL_STATS, &q->queue_flags))
- 		blk_stat_remove_callback(q, q->poll_cb);
- 	blk_stat_free_callback(q->poll_cb);
-@@ -905,13 +920,22 @@ static void __blk_release_queue(struct work_struct *work)
- 	call_rcu(&q->rcu_head, blk_free_queue_rcu);
- }
- 
-+void __blk_release_queue(struct work_struct *work)
-+{
-+	struct request_queue *q = container_of(work, typeof(*q), release_work);
-+
-+	blk_release_queue_sync(q);
-+}
-+
- static void blk_release_queue(struct kobject *kobj)
- {
- 	struct request_queue *q =
- 		container_of(kobj, struct request_queue, kobj);
- 
--	INIT_WORK(&q->release_work, __blk_release_queue);
--	schedule_work(&q->release_work);
-+	if (blk_queue_defer_removal(q))
-+		schedule_work(&q->release_work);
-+	else
-+		blk_release_queue_sync(q);
- }
- 
- static const struct sysfs_ops queue_sysfs_ops = {
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 8b1cab52cef9..46fee1ef92e3 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -614,6 +614,7 @@ struct request_queue {
- #define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
- #define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
- #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
-+#define QUEUE_FLAG_DEFER_REMOVAL 28	/* defer queue removal */
- 
- #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
- 				 (1 << QUEUE_FLAG_SAME_COMP))
-@@ -648,6 +649,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
- #else
- #define blk_queue_rq_alloc_time(q)	false
- #endif
-+#define blk_queue_defer_removal(q) \
-+	test_bit(QUEUE_FLAG_DEFER_REMOVAL, &(q)->queue_flags)
- 
- #define blk_noretry_request(rq) \
- 	((rq)->cmd_flags & (REQ_FAILFAST_DEV|REQ_FAILFAST_TRANSPORT| \
--- 
-2.25.1
+01: [   83.443963]  dasda:VOL1/  0X0121: dasda1                          =
+      =20
+01: [   85.124667] qeth 0.0.8000 enc8000: renamed from eth0              =
+      =20
+01: [   85.731860] dasd-eckd 0.0.0120: DASD with 4 KB/block, 72122400 KB =
+total s
+01: ize, 48 KB/track, compatible disk layout                             =
+      =20
+01: [   86.076722]  dasdb:VOL1/  0X0120: dasdb1 dasdb2
+
+Otherwise, it is DOA,
+
+00:          Starting Show Plymouth Boot Screen...                       =
+      =20
+00: [   37.202263] qeth 0.0.8000: portname is deprecated and is ignored  =
+      =20
+00: [   37.677993] qdio: 0.0.8002 OSA on SC 4 using AI:1 QEBSM:0 PRI:1 =
+TDD:1 SIG
+00: A:RW A                                                               =
+      =20
+00: [   37.770970] qeth 0.0.8000: MAC address 02:de:ad:be:ef:87 =
+successfully reg
+00: istered                                                              =
+      =20
+00: [   37.771547] qeth 0.0.8000: Device is a Virtual NIC QDIO card =
+(level: V642
+00: )                                                                    =
+      =20
+00: [   37.771547] with link type Virt.NIC QDIO.                         =
+      =20
+00: [   38.036231] ccw_init (415) used greatest stack depth: 56496 bytes =
+left  =20
+00:          Starting dracut initqueue hook...                           =
+      =20
+00: [   39.176304] dasd-eckd 0.0.0120: A channel path to the device has =
+become o
+00: perational                                                           =
+      =20
+00: [   39.453273] dasd-eckd 0.0.0120: New DASD 3390/0E (CU 3990/01) =
+with 100170
+00:  cylinders, 15 heads, 224 sectors                                    =
+      =20
+00: [   39.655564] dasd-eckd 0.0.0121: A channel path to the device has =
+become o
+00: perational                                                           =
+      =20
+00: [   39.722706] dasd-eckd 0.0.0121: New DASD 3390/0E (CU 3990/01) =
+with 100170
+00:  cylinders, 15 heads, 224 sectors                                    =
+      =20
+01: [   41.133963] dasd-eckd 0.0.0121: DASD with 4 KB/block, 72122400 KB =
+total s
+01: ize, 48 KB/track, compatible disk layout                             =
+      =20
+01: [   41.145510] dasd-eckd 0.0.0120: DASD with 4 KB/block, 72122400 KB =
+total s
+01: ize, 48 KB/track, compatible disk layout                             =
+      =20
+01: [   41.609625] qeth 0.0.8000 enc8000: renamed from eth0 =20
+01: [   41.609625] qeth 0.0.8000 enc8000: renamed from eth0              =
+      =20
+01: Warning: /dev/mapper/rhel_ibm--z--135-root does not exist            =
+      =20
+01: Warning: /dev/rhel_ibm-z-135/root does not exist                     =
+      =20
+01: Warning: /dev/rhel_ibm-z-135/swap does not exist                     =
+      =20
+01:                                                                      =
+      =20
+01: Generating "/run/initramfs/rdsosreport.txt"                          =
+      =20
+01:                                                                      =
+      =20
+01:                                                                      =
+      =20
+01: Entering emergency mode. Exit the shell to continue.                 =
+      =20
+01: Type "journalctl" to view system logs.                               =
+      =20
+01: You might want to save "/run/initramfs/rdsosreport.txt" to a USB =
+stick or /b
+01: oot                                                                  =
+      =20
+01: after mounting them and attach it to a bug report.                   =
+      =20
+01:                                                                      =
+      =20
+01:                                                                      =
+      =20
+00: dracut:/#=20
 
