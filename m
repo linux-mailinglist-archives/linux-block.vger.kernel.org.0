@@ -2,118 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6568F1A4515
-	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 12:19:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D81201A4634
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 14:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgDJKTR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Apr 2020 06:19:17 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34485 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgDJKTR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:19:17 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 03AAJ96S014696;
-        Fri, 10 Apr 2020 12:19:09 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 27/23] floppy: cleanup: make set_fdc() always set current_drive and current_fd
-Date:   Fri, 10 Apr 2020 12:19:04 +0200
-Message-Id: <20200410101904.14652-3-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <20200410101904.14652-1-w@1wt.eu>
-References: <20200331094054.24441-23-w@1wt.eu>
- <20200410101904.14652-1-w@1wt.eu>
+        id S1726654AbgDJMUV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Apr 2020 08:20:21 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40384 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDJMUV (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 10 Apr 2020 08:20:21 -0400
+Received: by mail-qk1-f196.google.com with SMTP id z15so1879837qki.7
+        for <linux-block@vger.kernel.org>; Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=TqW0DwOwY4ZE4ujuXB+j46RD9fAxlH6saUZWhwloMR+92dlljvV53EXaZSVkYQRkKt
+         RXMfV9++lq3AGwz7gkpUfax15VQm/u2byD4ddmdfGRByv/J9bgLbyPODdRvITXymQ5z0
+         j9caCAIeja1c4XlXw2n43Us7FncnisZKjmQv4SwxgKd2vlqTGbSmoMy9V9UV88U2OYRJ
+         RXe0qhBOU/m3U2QVvlwNj+mFMnZ8ZYIfQ0VckcTsWfeJC4FANa3/k95pdYOQuobUKIyw
+         E9guFRZg4UF9wxfnmAEKgSpJSB4Oh5qJmDYnYAhs4FECpA1QBiX735CyjjLFRyjq51Q3
+         lQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=Eul5+XoMEgxz04mIRm15bGIKAWsoe6PX9LIC675hg9cqVuvPtNIlx9Lh44ZI7jyqWb
+         dz2V6kvUPigpLcndyR4v+HNsTs8JC6N9OG3CLOEXTv/mq/oMws7Vz279pBJbIVlmDzH6
+         yVMjWEQVJZ/ZGscOXPtP4N/BLbs6ezsN5pHSS+9wYdhRq73cwUrgW9zVVEFWF4F/rAXP
+         O6qTnfDL7rh89as3FrTGKdqgSLR/c7AgIPAc0ESdzq7Z5DmtsWvmvTP9Y0//tIaIzlp5
+         dQusx6Fjt/4ud/DKxBbXzTyjRz+SI6n6WDOdes7T+E/rNbIDmre0J02pRa6h+lUw/jnI
+         7YXw==
+X-Gm-Message-State: AGi0PualRVsUcUGj0SJ07H29gFK/Vw0tC0fCxkjC/PQTckPvT9q1l+5s
+        BDBJck8vm+U4Vxfxgk021p8frw==
+X-Google-Smtp-Source: APiQypJFXmrYehKyrmHS6x/fCnBdKOhdEzQUjMHenMUEYSOOd7PHRRzV9grmABzvA/R5mqzhwY+Bsg==
+X-Received: by 2002:a05:620a:782:: with SMTP id 2mr562538qka.444.1586521219343;
+        Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u13sm1425748qku.92.2020.04.10.05.20.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Apr 2020 05:20:18 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: s390 boot woe due to "block: fix busy device checking in
+ blk_drop_partitions"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200410054544.GA17923@lst.de>
+Date:   Fri, 10 Apr 2020 08:20:17 -0400
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5CC1C981-47F1-4C4D-A4D7-B6411D716A2F@lca.pw>
+References: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
+ <20200410054544.GA17923@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When called with a negative drive value, set_fdc() would stick to the
-current fdc (which was assumed to reflect the current_drive's FDC). We
-do not need this anymore as the last call place with a negative value
-was just addressed. Let's make this function always set both current_fdc
-and current_drive so that there's no more ambiguity. A few comments
-stating this were added to a few non-obvious places.
 
-Signed-off-by: Willy Tarreau <w@1wt.eu>
----
- drivers/block/floppy.c | 43 ++++++++++++++++++++++++++++--------------
- 1 file changed, 29 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 20646d4c5437..2817170dd403 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -851,31 +851,42 @@ static void reset_fdc_info(int fdc, int mode)
- 			drive_state[drive].track = NEED_2_RECAL;
- }
- 
--/* selects the fdc and drive, and enables the fdc's input/dma. */
-+/*
-+ * selects the fdc and drive, and enables the fdc's input/dma.
-+ * Both current_drive and current_fdc are changed to match the new drive.
-+ */
- static void set_fdc(int drive)
- {
--	unsigned int new_fdc = current_fdc;
-+	unsigned int fdc;
- 
--	if (drive >= 0 && drive < N_DRIVE) {
--		new_fdc = FDC(drive);
--		current_drive = drive;
-+	if (drive < 0 || drive >= N_DRIVE) {
-+		pr_info("bad drive value %d\n", drive);
-+		return;
- 	}
--	if (new_fdc >= N_FDC) {
-+
-+	fdc = FDC(drive);
-+	if (fdc >= N_FDC) {
- 		pr_info("bad fdc value\n");
- 		return;
- 	}
--	current_fdc = new_fdc;
--	set_dor(current_fdc, ~0, 8);
-+
-+	set_dor(fdc, ~0, 8);
- #if N_FDC > 1
--	set_dor(1 - current_fdc, ~8, 0);
-+	set_dor(1 - fdc, ~8, 0);
- #endif
--	if (fdc_state[current_fdc].rawcmd == 2)
--		reset_fdc_info(current_fdc, 1);
--	if (fdc_inb(current_fdc, FD_STATUS) != STATUS_READY)
--		fdc_state[current_fdc].reset = 1;
-+	if (fdc_state[fdc].rawcmd == 2)
-+		reset_fdc_info(fdc, 1);
-+	if (fdc_inb(fdc, FD_STATUS) != STATUS_READY)
-+		fdc_state[fdc].reset = 1;
-+
-+	current_drive = drive;
-+	current_fdc = fdc;
- }
- 
--/* locks the driver */
-+/*
-+ * locks the driver.
-+ * Both current_drive and current_fdc are changed to match the new drive.
-+ */
- static int lock_fdc(int drive)
- {
- 	if (WARN(atomic_read(&usage_count) == 0,
-@@ -3000,6 +3011,10 @@ static const struct cont_t reset_cont = {
- 	.done		= generic_done
- };
- 
-+/*
-+ * Resets the FDC connected to drive <drive>.
-+ * Both current_drive and current_fdc are changed to match the new drive.
-+ */
- static int user_reset_fdc(int drive, int arg, bool interruptible)
- {
- 	int ret;
--- 
-2.20.1
+> On Apr 10, 2020, at 1:45 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> Please try this patch:
+
+It works fine.
+
+>=20
+> ---
+> =46rom f42fb98cc627f9b960fd5b9a3a229da5c5dcf54a Mon Sep 17 00:00:00 =
+2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Fri, 10 Apr 2020 07:14:13 +0200
+> Subject: block: fix busy device checking in blk_drop_partitions again
+>=20
+> The previous fix had an off by one in the bd_openers checking, =
+counting
+> the callers blkdev_get.
+>=20
+> Fixes: d3ef5536274f ("block: fix busy device checking in =
+blk_drop_partitions")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+> block/partitions/core.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/block/partitions/core.c b/block/partitions/core.c
+> index 1a0a829d8416..bc1ded1331b1 100644
+> --- a/block/partitions/core.c
+> +++ b/block/partitions/core.c
+> @@ -496,7 +496,7 @@ int blk_drop_partitions(struct gendisk *disk, =
+struct block_device *bdev)
+>=20
+> 	if (!disk_part_scan_enabled(disk))
+> 		return 0;
+> -	if (bdev->bd_part_count || bdev->bd_openers)
+> +	if (bdev->bd_part_count || bdev->bd_openers > 1)
+> 		return -EBUSY;
+> 	res =3D invalidate_partition(disk, 0);
+> 	if (res)
+> --=20
+> 2.25.1
+>=20
 
