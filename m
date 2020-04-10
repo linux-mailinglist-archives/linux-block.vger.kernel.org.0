@@ -2,121 +2,141 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C91D1A3E9F
-	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 05:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA1071A4191
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 06:16:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDJDM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Apr 2020 23:12:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33436 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgDJDM0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Apr 2020 23:12:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d17so456751pgo.0;
-        Thu, 09 Apr 2020 20:12:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=riLsCQbI8rWtquYxJsTgKqCXsr91BsaOod5Gd8OL/tY=;
-        b=AcVxCVhitGWT7cX7BC3gMTShdwHIFV5P+Jx8Q5h0Qp1kliooiSyQCNr7uE1nIizppC
-         Ygj1Z9CPNTWP6FI8YeNQuRpDxHP/njrgWzKvlbCMHc57JRKWkxXkzC2fCU5HB4cMOHE6
-         xGN7Vh0vo/wqar3SN9oZWL/4/do0C5gaDGNoC2v1LYcw4UpMGCh3LIGmJ6x2csMBGNaW
-         S4ZJ6/pXzdtXtHzMMe53u3r7zNqzEY5KZCl9H8bF7eDLVpMksP78VAvMt9AcFnjbGGSm
-         DK9S0SXDZ3pVSKop/meYukydamHAk85gb7sUu3rxj9wJt6Ce6dJboGs87OKLwtz7cVzc
-         GmSA==
-X-Gm-Message-State: AGi0PuZ04j8Zq0FJwDUzdvmoav665rDlAIxlQBerp0iCZVMRnPLl9r/m
-        /N7W7InMeWO1x7sL4i+9lrg=
-X-Google-Smtp-Source: APiQypJB9TbTwNuE4JRdnVGrOnnBOWWgxmCc4vJV5SidGuVHW3ci9n/1oxuQj7yHNMWcyR+ZersXAg==
-X-Received: by 2002:a65:5a4f:: with SMTP id z15mr2583848pgs.103.1586488344310;
-        Thu, 09 Apr 2020 20:12:24 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:ed4e:1b14:7fc4:cd73? ([2601:647:4000:d7:ed4e:1b14:7fc4:cd73])
-        by smtp.gmail.com with ESMTPSA id q6sm461549pja.34.2020.04.09.20.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 20:12:23 -0700 (PDT)
-Subject: Re: [RFC v2 5/5] block: revert back to synchronous request_queue
- removal
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        id S1726682AbgDJECw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Apr 2020 00:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726892AbgDJDq4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:46:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6520A20936;
+        Fri, 10 Apr 2020 03:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586490416;
+        bh=YE7qF5ymZ6drq8K0sUSY9ANzzcy+WdJFJc1P19o1qX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gKBJznsrNfBgkLDWRYkE3LMAgcXwhdNUxGhUPNf17uV/RT487+vIhI+K989Shmkxq
+         NIlHohk32VwL5nQxjo8cq6RqIMF+SM0ukGXCPi8eLmgVbV/GoTGH2vW32EaEU6hBLJ
+         bNuXLy1QfIEC4BYunFuRLqcgyfCoB75KRVAU4KGo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
         Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200409214530.2413-1-mcgrof@kernel.org>
- <20200409214530.2413-6-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <161e938d-929b-1fdb-ba77-56b839c14b5b@acm.org>
-Date:   Thu, 9 Apr 2020 20:12:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 17/68] null_blk: Fix the null_add_dev() error path
+Date:   Thu,  9 Apr 2020 23:45:42 -0400
+Message-Id: <20200410034634.7731-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
+References: <20200410034634.7731-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200409214530.2413-6-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2020-04-09 14:45, Luis Chamberlain wrote:
-> blk_put_queue() puts decrements the refcount for the request_queue
-                  ^^^^
-        can this word be left out?
+From: Bart Van Assche <bvanassche@acm.org>
 
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 8b1cab52cef9..46fee1ef92e3 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -614,6 +614,7 @@ struct request_queue {
->  #define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
->  #define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
->  #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
-> +#define QUEUE_FLAG_DEFER_REMOVAL 28	/* defer queue removal */
->  
->  #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
->  				 (1 << QUEUE_FLAG_SAME_COMP))
-> @@ -648,6 +649,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
->  #else
->  #define blk_queue_rq_alloc_time(q)	false
->  #endif
-> +#define blk_queue_defer_removal(q) \
-> +	test_bit(QUEUE_FLAG_DEFER_REMOVAL, &(q)->queue_flags)
+[ Upstream commit 2004bfdef945fe55196db6b9cdf321fbc75bb0de ]
 
-Since blk_queue_defer_removal() has no callers the code that depends on
-QUEUE_FLAG_DEFER_REMOVAL to be set will be subject to bitrot. It would
-make me happy if the QUEUE_FLAG_DEFER_REMOVAL flag and the code that
-depends on that flag would be removed.
+If null_add_dev() fails, clear dev->nullb.
 
-Please add a might_sleep() call in blk_put_queue() since with this patch
-applied it is no longer allowed to call blk_put_queue() from atomic context.
+This patch fixes the following KASAN complaint:
 
-Thanks,
+BUG: KASAN: use-after-free in nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+Read of size 8 at addr ffff88803280fc30 by task check/8409
 
-Bart.
+Call Trace:
+ dump_stack+0xa5/0xe6
+ print_address_description.constprop.0+0x26/0x260
+ __kasan_report.cold+0x7b/0x99
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7ff370926317
+Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff2dd2da48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff370926317
+RDX: 0000000000000002 RSI: 0000559437ef23f0 RDI: 0000000000000001
+RBP: 0000559437ef23f0 R08: 000000000000000a R09: 0000000000000001
+R10: 0000559436703471 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007ff370a006a0 R14: 00007ff370a014a0 R15: 00007ff370a008a0
+
+Allocated by task 8409:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_kmalloc+0xd/0x10
+ kmem_cache_alloc_node_trace+0x129/0x4c0
+ null_add_dev+0x24a/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8409:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x112/0x160
+ kasan_slab_free+0x12/0x20
+ kfree+0xdf/0x250
+ null_add_dev+0xaf3/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 2984c8684f96 ("nullb: factor disk parameters")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/null_blk_main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 133060431dbdb..8ada43b3eca13 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1788,6 +1788,7 @@ static int null_add_dev(struct nullb_device *dev)
+ 	cleanup_queues(nullb);
+ out_free_nullb:
+ 	kfree(nullb);
++	dev->nullb = NULL;
+ out:
+ 	return rv;
+ }
+-- 
+2.20.1
+
