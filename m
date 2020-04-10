@@ -2,35 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DF71A3F89
-	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 05:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 037D61A407F
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 05:57:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgDJDti (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Apr 2020 23:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        id S1728550AbgDJD4C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Apr 2020 23:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgDJDtg (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:36 -0400
+        id S1728652AbgDJDtr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A2CF2137B;
-        Fri, 10 Apr 2020 03:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59D2A20B1F;
+        Fri, 10 Apr 2020 03:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490576;
-        bh=HeFoJtQMHA3FTTcjMfTXMgiQSyrQtjY1Nu2+TAJH6kg=;
+        s=default; t=1586490587;
+        bh=MDjQnBTuj10hq8TT9O84r+Mc5y0Rp29mQWABAjHG7nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTTy5YoJ5A6V1JGZI9bwSVxjfyA/hT+1IVH6dWPVF3654oBPjIh8h7PvWlwrT4Xfq
-         wxdulwjQF+GPbvGbeTLLloOahNVGImKEQ0aKe6czOqFcyZ/ibWdk64I2ZygCjw3vGX
-         mS/ZfMCaAd4kMIW9cKYGggOXuDvtZny/KL/a4/j4=
+        b=kBvgMQSH2+W1ChuC+QIigd79K9f75zAv5ibcG5Fv46LlZjheymAjLFatb8xP67RWT
+         AJMjSrLzHhBzc6BJvENf1j28IZgg+2pqt7HE62FZe4yLKU8wYCDZvhER4XlkVmhA8p
+         cXzpwVU6H3F1Bo+QYFsD4pJ+YO4u9N5A2QDUchwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/46] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Thu,  9 Apr 2020 23:48:45 -0400
-Message-Id: <20200410034909.8922-22-sashal@kernel.org>
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/46] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Date:   Thu,  9 Apr 2020 23:48:55 -0400
+Message-Id: <20200410034909.8922-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -43,70 +49,57 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
+[ Upstream commit 6e66b49392419f3fe134e1be583323ef75da1e4b ]
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
+blk_mq_map_queues() and multiple .map_queues() implementations expect that
+set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
+queues. Hence set .nr_queues before calling these functions. This patch
+fixes the following kernel warning:
 
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
+WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
+Call Trace:
+ blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
+ blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
+ blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x361/0x430 kernel/kthread.c:255
 
-Reported-by: cki-project@redhat.com
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
+Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ block/blk-mq.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 86cd718e0380b..5611769e15690 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -625,6 +625,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 3c1abab1fdf52..a8c1a45cedde0 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3007,6 +3007,14 @@ static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+ 
+ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
  {
- 	struct bfq_entity *entity = &bfqq->entity;
- 
 +	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
++	 * blk_mq_map_queues() and multiple .map_queues() implementations
++	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
++	 * number of hardware queues.
 +	 */
-+	bfqq->ref++;
++	if (set->nr_maps == 1)
++		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
 +
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -635,12 +641,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
- 
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st)
-@@ -660,7 +660,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
- }
+ 	if (set->ops->map_queues && !is_kdump_kernel()) {
+ 		int i;
  
 -- 
 2.20.1
