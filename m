@@ -2,25 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 892AE1A4519
-	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 12:19:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6568F1A4515
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 12:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDJKTY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Apr 2020 06:19:24 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34489 "EHLO 1wt.eu"
+        id S1725990AbgDJKTR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Apr 2020 06:19:17 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34485 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgDJKTY (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:19:24 -0400
+        id S1725912AbgDJKTR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 10 Apr 2020 06:19:17 -0400
 Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 03AAJ90a014695;
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 03AAJ96S014696;
         Fri, 10 Apr 2020 12:19:09 +0200
 From:   Willy Tarreau <w@1wt.eu>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 26/23] floppy: cleanup: get rid of current_reqD in favor of current_drive
-Date:   Fri, 10 Apr 2020 12:19:03 +0200
-Message-Id: <20200410101904.14652-2-w@1wt.eu>
+Subject: [PATCH 27/23] floppy: cleanup: make set_fdc() always set current_drive and current_fd
+Date:   Fri, 10 Apr 2020 12:19:04 +0200
+Message-Id: <20200410101904.14652-3-w@1wt.eu>
 X-Mailer: git-send-email 2.9.0
 In-Reply-To: <20200410101904.14652-1-w@1wt.eu>
 References: <20200331094054.24441-23-w@1wt.eu>
@@ -30,54 +30,90 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This macro equals -1 and is used as an alternative for current_drive when
-calling reschedule_timeout(), which in turn needs to remap it. This only
-adds obfuscation, let's simply use current_drive.
+When called with a negative drive value, set_fdc() would stick to the
+current fdc (which was assumed to reflect the current_drive's FDC). We
+do not need this anymore as the last call place with a negative value
+was just addressed. Let's make this function always set both current_fdc
+and current_drive so that there's no more ambiguity. A few comments
+stating this were added to a few non-obvious places.
 
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
- drivers/block/floppy.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/block/floppy.c | 43 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index b102f55dfa5d..20646d4c5437 100644
+index 20646d4c5437..2817170dd403 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -668,16 +668,12 @@ static struct output_log {
+@@ -851,31 +851,42 @@ static void reset_fdc_info(int fdc, int mode)
+ 			drive_state[drive].track = NEED_2_RECAL;
+ }
  
- static int output_log_pos;
- 
--#define current_reqD -1
- #define MAXTIMEOUT -2
- 
- static void __reschedule_timeout(int drive, const char *message)
+-/* selects the fdc and drive, and enables the fdc's input/dma. */
++/*
++ * selects the fdc and drive, and enables the fdc's input/dma.
++ * Both current_drive and current_fdc are changed to match the new drive.
++ */
+ static void set_fdc(int drive)
  {
- 	unsigned long delay;
+-	unsigned int new_fdc = current_fdc;
++	unsigned int fdc;
  
--	if (drive == current_reqD)
--		drive = current_drive;
--
- 	if (drive < 0 || drive >= N_DRIVE) {
- 		delay = 20UL * HZ;
- 		drive = 0;
-@@ -1960,7 +1956,7 @@ static void floppy_ready(void)
- 
- static void floppy_start(void)
- {
--	reschedule_timeout(current_reqD, "floppy start");
-+	reschedule_timeout(current_drive, "floppy start");
- 
- 	scandrives();
- 	debug_dcl(drive_params[current_drive].flags,
-@@ -2874,7 +2870,7 @@ static void redo_fd_request(void)
+-	if (drive >= 0 && drive < N_DRIVE) {
+-		new_fdc = FDC(drive);
+-		current_drive = drive;
++	if (drive < 0 || drive >= N_DRIVE) {
++		pr_info("bad drive value %d\n", drive);
++		return;
  	}
- 	drive = (long)current_req->rq_disk->private_data;
- 	set_fdc(drive);
--	reschedule_timeout(current_reqD, "redo fd request");
-+	reschedule_timeout(current_drive, "redo fd request");
+-	if (new_fdc >= N_FDC) {
++
++	fdc = FDC(drive);
++	if (fdc >= N_FDC) {
+ 		pr_info("bad fdc value\n");
+ 		return;
+ 	}
+-	current_fdc = new_fdc;
+-	set_dor(current_fdc, ~0, 8);
++
++	set_dor(fdc, ~0, 8);
+ #if N_FDC > 1
+-	set_dor(1 - current_fdc, ~8, 0);
++	set_dor(1 - fdc, ~8, 0);
+ #endif
+-	if (fdc_state[current_fdc].rawcmd == 2)
+-		reset_fdc_info(current_fdc, 1);
+-	if (fdc_inb(current_fdc, FD_STATUS) != STATUS_READY)
+-		fdc_state[current_fdc].reset = 1;
++	if (fdc_state[fdc].rawcmd == 2)
++		reset_fdc_info(fdc, 1);
++	if (fdc_inb(fdc, FD_STATUS) != STATUS_READY)
++		fdc_state[fdc].reset = 1;
++
++	current_drive = drive;
++	current_fdc = fdc;
+ }
  
- 	set_floppy(drive);
- 	raw_cmd = &default_raw_cmd;
+-/* locks the driver */
++/*
++ * locks the driver.
++ * Both current_drive and current_fdc are changed to match the new drive.
++ */
+ static int lock_fdc(int drive)
+ {
+ 	if (WARN(atomic_read(&usage_count) == 0,
+@@ -3000,6 +3011,10 @@ static const struct cont_t reset_cont = {
+ 	.done		= generic_done
+ };
+ 
++/*
++ * Resets the FDC connected to drive <drive>.
++ * Both current_drive and current_fdc are changed to match the new drive.
++ */
+ static int user_reset_fdc(int drive, int arg, bool interruptible)
+ {
+ 	int ret;
 -- 
 2.20.1
 
