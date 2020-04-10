@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1678D1A3F9F
-	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 05:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9C151A403D
+	for <lists+linux-block@lfdr.de>; Fri, 10 Apr 2020 05:56:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgDJDuU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Apr 2020 23:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        id S1728995AbgDJDyI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Apr 2020 23:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbgDJDuQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:16 -0400
+        id S1728910AbgDJDua (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3555920CC7;
-        Fri, 10 Apr 2020 03:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49480206C0;
+        Fri, 10 Apr 2020 03:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490617;
-        bh=0dCjT5nFRePwKB1f0perCjVU+KxOZ4mV+cUHzcKpO9Q=;
+        s=default; t=1586490630;
+        bh=nVtLNzcB5rwLaJSW7grsfccpshBFrNYp6ZC60q4Kl0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTyXsYGDyeVxrAr2cMvuBOWp7p1QoJBLqXJ1kPxCabr7SojOd/OpimnRSlR2/0Exm
-         DmV9cxmtSlTiQs8PSUQS81TRRicQuUTHIU7yJ8tn3bqHqeUbShmfBqmQRCEMi9buAP
-         Tsjq1xgv8SbDXO5jmUADQGLMIDtbZFe3ZnjTe5Mg=
+        b=Aqtjfz199jwGgCPmY3bbEdk7G7RwsSjOW67cEI5J2mJx8QBkzcdfteYd9jYkVMT00
+         0rPxwce+N33PuUsJa5jaPN1dnHJKQ5XE3PlNnVd+pI7ztp7kVKz0fnkljOiujgNTT9
+         BVRoO9548lLGhGfFzwM7eeWUJsaTupqRuLxJnA90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Bob Liu <bob.liu@oracle.com>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/32] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
-Date:   Thu,  9 Apr 2020 23:49:42 -0400
-Message-Id: <20200410035005.9371-9-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/32] block: Fix use-after-free issue accessing struct io_cq
+Date:   Thu,  9 Apr 2020 23:49:54 -0400
+Message-Id: <20200410035005.9371-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -44,46 +44,113 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
+[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
 
-Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
-size based on read-ahead setting") removes unneeded split of read requests.
+There is a potential race between ioc_release_fn() and
+ioc_clear_queue() as shown below, due to which below kernel
+crash is observed. It also can result into use-after-free
+issue.
 
-Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
-limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
-Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
+context#1:				context#2:
+ioc_release_fn()			__ioc_clear_queue() gets the same icq
+->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
+->ioc_destroy_icq(icq);
+  ->list_del_init(&icq->q_node);
+  ->call_rcu(&icq->__rcu_head,
+  	icq_free_icq_rcu);
+->spin_unlock(&ioc->lock);
+					->ioc_destroy_icq(icq);
+					  ->hlist_del_init(&icq->ioc_node);
+					  This results into below crash as this memory
+					  is now used by icq->__rcu_head in context#1.
+					  There is a chance that icq could be free'd
+					  as well.
 
-This patch updates io_pages after merging limits in disk_stack_limits().
+22150.386550:   <6> Unable to handle kernel write to read-only memory
+at virtual address ffffffaa8d31ca50
+...
+Call trace:
+22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
+22150.611202:   <2>  ioc_clear_queue+0xac/0x148
+22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
+22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
+22150.623465:   <2>  scsi_forget_host+0x2c/0x78
+22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
+22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
+22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
+22150.639665:   <2>  device_release_driver_internal+0x198/0x250
+22150.644897:   <2>  device_release_driver+0x24/0x30
+22150.649176:   <2>  bus_remove_device+0xec/0x140
+22150.653204:   <2>  device_del+0x270/0x460
+22150.656712:   <2>  usb_disable_device+0x120/0x390
+22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
+22150.664684:   <2>  hub_event+0xd70/0x17e8
+22150.668197:   <2>  process_one_work+0x210/0x480
+22150.672222:   <2>  worker_thread+0x32c/0x4c8
 
-Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
-the same problem for device-mapper devices, this one fixes MD RAIDs.
+Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
+indicate this icq is once marked as destroyed. Also, ensure
+__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
+that icq doesn't get free'd up while it is still using it.
 
-Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-settings.c | 3 +++
- 1 file changed, 3 insertions(+)
+ block/blk-ioc.c           | 7 +++++++
+ include/linux/iocontext.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index be9b39caadbd2..01093b8f3e624 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -717,6 +717,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
- 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
- 		       top, bottom);
- 	}
-+
-+	t->backing_dev_info->io_pages =
-+		t->limits.max_sectors >> (PAGE_SHIFT - 9);
+diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+index 01580f88fcb39..4c810969c3e2f 100644
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -87,6 +87,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
+ 	 * making it impossible to determine icq_cache.  Record it in @icq.
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
++	icq->flags |= ICQ_DESTROYED;
+ 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
  }
- EXPORT_SYMBOL(disk_stack_limits);
  
+@@ -230,15 +231,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
+ {
+ 	unsigned long flags;
+ 
++	rcu_read_lock();
+ 	while (!list_empty(icq_list)) {
+ 		struct io_cq *icq = list_entry(icq_list->next,
+ 					       struct io_cq, q_node);
+ 		struct io_context *ioc = icq->ioc;
+ 
+ 		spin_lock_irqsave(&ioc->lock, flags);
++		if (icq->flags & ICQ_DESTROYED) {
++			spin_unlock_irqrestore(&ioc->lock, flags);
++			continue;
++		}
+ 		ioc_destroy_icq(icq);
+ 		spin_unlock_irqrestore(&ioc->lock, flags);
+ 	}
++	rcu_read_unlock();
+ }
+ 
+ /**
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index dba15ca8e60bc..1dcd9198beb7f 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -8,6 +8,7 @@
+ 
+ enum {
+ 	ICQ_EXITED		= 1 << 2,
++	ICQ_DESTROYED		= 1 << 3,
+ };
+ 
+ /*
 -- 
 2.20.1
 
