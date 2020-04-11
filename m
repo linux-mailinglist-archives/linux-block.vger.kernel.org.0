@@ -2,101 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 634BF1A5281
-	for <lists+linux-block@lfdr.de>; Sat, 11 Apr 2020 16:31:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8681A5919
+	for <lists+linux-block@lfdr.de>; Sun, 12 Apr 2020 01:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgDKObV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 11 Apr 2020 10:31:21 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45244 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgDKObV (ORCPT
+        id S1728473AbgDKXej (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 11 Apr 2020 19:34:39 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34368 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729152AbgDKXJQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 11 Apr 2020 10:31:21 -0400
-Received: by mail-vs1-f65.google.com with SMTP id j65so2904066vsd.12
-        for <linux-block@vger.kernel.org>; Sat, 11 Apr 2020 07:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=9ZXgjDb+KwiiQSp/A/i2RANwYZsGpovkCsRU6ThyQ8Q=;
-        b=CjUCGvi2lmFaBvef8N0enUVUFPemvp6bJ8KbZCjEz2b7JCrwRdBwfxZqtE/z3dfozK
-         XgRGGbKOm5k53qHGnAT5VJXuReWAiBfAprrvrr1T7O3HIu1JZznETPsaAyeJvniLd0Mn
-         Jec9azyyBvSSOMt7hYlKdihsBNE1Umh+VOoVtN/QFapqmMH5jZqhTO71/zEoLjl9BKtc
-         mMP3iOtdSIAQzxN5b2NSnB8JczlzT9DpwDSRGwIy8CUXvB0ay8bQSqz2E3cVkFHCJclP
-         7VqHxyPNPb5xGNistcfn/BPRvtdsGsn+VNYcTMaP7DiRg4hhTNZaPOZh/CnohD/cleCP
-         yBwg==
+        Sat, 11 Apr 2020 19:09:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l19so758498pgk.1;
+        Sat, 11 Apr 2020 16:09:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=9ZXgjDb+KwiiQSp/A/i2RANwYZsGpovkCsRU6ThyQ8Q=;
-        b=YxXBpAJy0rKWGEQUjhCsyH151VIvetulVr7lH71rOhFISvPW3XMbhUKUBkHisvU71K
-         fvRrdT6xwapyqDjOD3lvD2UXVUQ5nWQJsOwSWlGi4D13/9n/wXvogII9ZS0H+X8CzdeC
-         a/YZRzWFkpFglkGH0ruVNZdldR1rj10ubxefd7FyyQYvpCIR9mm032eVi/ofQhif9tqA
-         mBtIBi8nNGj4t/DPgr6eCJec9KSUixxuKmmiKRgxAcR+a3ZdyOhSuVmJMZimsxulISCr
-         FMLiv/9pkm2c1gHMS/JuGDMFKGOD2OJUJOkI503ikEnFG2icm1VZIwMxaQeMMeCORCXO
-         pgBw==
-X-Gm-Message-State: AGi0PuYlM1CRo0Ledo8OfknCwuGz9/Ypmk9Y1h369kgmqKw7myo+86Fb
-        NCJgdhl1ZWupbAqTrp2uknJtv4BJj+zkPKI9VwaSYoss
-X-Google-Smtp-Source: APiQypIzpIvli3B9uzFh5dHe6yo4BbVIbd9vLN451E9tTCxWFX0iKDN8NXub/fd6BsABL3JMQK54ApZ+5H9U+e1icHY=
-X-Received: by 2002:a67:885:: with SMTP id 127mr5065899vsi.119.1586615480565;
- Sat, 11 Apr 2020 07:31:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bNOnt21gdCdQqFujqIQgsVXINX2TimtwaZJBJWFvobE=;
+        b=oCYiPdkZ4fSH8S5oZyZ/Yfu0CbzGRouI7xBUkZ7934Q1MxPjzDQ8NMcquVDXOmetDW
+         mgWwQoY6QtoIgQ541CboVVZzxnnUb2/x3feEsjF+aqMm441EeuLI1w3adidIRt2BgVx/
+         o1ZFz2xEWmxLv1JJegCWcm+0Ee6PKskQiHFEv0bErn1SDzU7fCJHDQV8LSZhYkImrWyZ
+         YnKgN3KW8BN+4BcxWnX8JrfZo6AlnUkg1i8RSvdqAn9TGF8GDif63GMzxnEwCbd8qXok
+         7ddRvQNoly4pKYcEOTWPXfvyVBO+vWcfbKtS9T63CC0M6r5lJDhwhY0xr8+cN/R0k/bP
+         T5gQ==
+X-Gm-Message-State: AGi0PuYu7veqKVjlCtD9rGIs98N+YZNcmxzYZUz3dVhJamQbyx/b3L7V
+        iMHL93FBescK9+/n4XGEQU4=
+X-Google-Smtp-Source: APiQypIz9tuo6Y03zFp20Egc2qgoiCJuV8aoNvO22l1h4rt+ybn5/wyg/QTeabc+t/nfuHkqdHyW7Q==
+X-Received: by 2002:aa7:83c5:: with SMTP id j5mr11676782pfn.100.1586646555117;
+        Sat, 11 Apr 2020 16:09:15 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:c9fa:49a8:1701:9c75? ([2601:647:4000:d7:c9fa:49a8:1701:9c75])
+        by smtp.gmail.com with ESMTPSA id u44sm4679954pgn.81.2020.04.11.16.09.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 16:09:14 -0700 (PDT)
+Subject: Re: [RFC v2 2/5] blktrace: fix debugfs use after free
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+References: <20200409214530.2413-1-mcgrof@kernel.org>
+ <20200409214530.2413-3-mcgrof@kernel.org>
+ <88f94070-cd34-7435-9175-e0518a7d7db8@acm.org>
+ <20200410195805.GM11244@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <0837b27e-e07b-b61c-5842-00cdf78873ca@acm.org>
+Date:   Sat, 11 Apr 2020 16:09:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Received: by 2002:a67:ce95:0:0:0:0:0 with HTTP; Sat, 11 Apr 2020 07:31:20
- -0700 (PDT)
-From:   Daegyu Han <hdg9400@gmail.com>
-Date:   Sat, 11 Apr 2020 23:31:20 +0900
-Message-ID: <CAARcW+piE++DqhZQGEPEpQHCvCFFWC6m7hoZN=4x9tNThf0QrQ@mail.gmail.com>
-Subject: Block request size is limited to readahead size when doing buffered
- read to nvme over fabric target(remote nvme)
-To:     linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200410195805.GM11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all, I wonder why the block layer generates requests that are
-limited to readahead size when doing buffered read to nvmeof target
-ssd.
+On 2020-04-10 12:58, Luis Chamberlain wrote:
+> On Thu, Apr 09, 2020 at 07:52:59PM -0700, Bart Van Assche wrote:
+>> On 2020-04-09 14:45, Luis Chamberlain wrote:
+>>> +void blk_q_debugfs_register(struct request_queue *q)
+>>> +{
+>>> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+>>> +					    blk_debugfs_root);
+>>> +}
+>>> +
+>>> +void blk_q_debugfs_unregister(struct request_queue *q)
+>>> +{
+>>> +	debugfs_remove_recursive(q->debugfs_dir);
+>>> +	q->debugfs_dir = NULL;
+>>> +}
+>>
+>> There are no other functions in the block layer that start with the
+>> prefix blk_q_. How about changing that prefix into blk_?
+> 
+> I the first patch already introduced blk_debugfs_register(), so I have
+> now changed the above to:
+> 
+> blk_debugfs_common_register()
+> blk_debugfs_common_unregister()
+> 
+> Let me know if something else is preferred.
 
-I don't know=C2=A0it is okay to ask questions this mailing list.
-I'm sorry if these personal questions were banned.
+I just realized that the "q" in "blk_q_" probably refers to the word
+"queue"? How about renaming these funtions into
+blk_queue_debugfs_register/unregister()?
 
-To describe in detail the environment I experimented with, it is as follows=
-.
+Thanks,
 
-I used a Samsung nvme 970 ssd for storage and a Mellanox connectx-4
-Infiniband for the network.
-My server OS is kernel version 4.20.
-I did buffered IO by using C language read() API and trace using blktrace.
-NVMeoF ssd was formated as ext4.
-
-C read API test
-- I saw that the initiator sends requests to the target only as large
-as the readahead(default: 128KB). After that, I changed the size of
-the readahead through sysfs and the size of the request changed.
-- In Direct IO, a request size set to a buffer (char array[]) size
-created at the my user level program.
-
-FIO test
-- In the case fo buffered io, the request size changed according to
-the block size. I think because I set the block size to 4K.
--=C2=A0Similarly, in the case of Direct IO, the request was made according
-to the block size.
-
-To sum up, more requests were completed in Buffered IO using C read
-API than local IO to nvme ssd.
-From what I have measured, I think that nvmeof in buffered io is worse
-than local performance due to requests split by readahead size.
-I tried to analyze the blk-mq and nvme code, but these layers are too
-broad and difficult to understand.
-
-Why is the request size set to readhead size when buffered IO is
-performed from target nvmeof using C read API?
-I want to know the reason and which code makes the block request.
-
-I had my trace logs. If you want to see logs, I will attach my logs.
-
-Thank you.
+Bart.
