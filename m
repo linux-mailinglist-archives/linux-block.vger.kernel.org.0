@@ -2,212 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9DC41A97D8
-	for <lists+linux-block@lfdr.de>; Wed, 15 Apr 2020 11:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC3AC1A984D
+	for <lists+linux-block@lfdr.de>; Wed, 15 Apr 2020 11:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408240AbgDOJGR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Apr 2020 05:06:17 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:19515 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393880AbgDOJGJ (ORCPT
+        id S2408388AbgDOJTD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Apr 2020 05:19:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28020 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2895271AbgDOJSy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:06:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586941568; x=1618477568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DntH3FOL+F2qJ4JB8bNfeHvJeRnIrbJq4X8RpN63JaA=;
-  b=fJ0B2pANzlSl0VBrWupGdOmva4z4MMx1j9WLLYI4ZzvzJ2uswJ1Wl0Gx
-   8Ooxc48WFdHDGZE+5IMY5RuqwANcpHqYEToqqDeHtg5o/LriK9cXBx8mN
-   93HQ1td/nUWUA+LmBF9rxvdOzRTixhGsXdL+mhaW1LmfkckG6ZdVCegII
-   p+48iW74DAEACMMnYXkqPhdtC7oZDNjil7WBcZkgqE7QIUeZnvIS147/a
-   +uP3tXdsmOdWZ22vVSUES/xBTr1vtD0OFq5Gya2H/sXa6nqTpF//4Kb+t
-   ccvLNzw66krod8/EuRWcJ7WkYwUOZZGXAAEkoq/G7Ept1afwuD8by3/E+
-   A==;
-IronPort-SDR: mRqp9F8CN+TLjwY52VfuZqc3vxnZ0pCnZySf7JCNjrZSRL7SiPIteA/lhFeyALGNLBid6hyVfJ
- sfVTeaFK67Y/jD3TFjDNl3uhm45QODaau7eeg/dQ47CB2NPbF/qWgCbZW7Qe/oIkDptNx1PkpU
- 2tlmzwvgEa8qccX+WDZB903KG3P9vg7YAaG3xx5DjvPY1AJujgvtQgEj2jhdUuEKMdBBqx71FE
- w5faa5L2wX4wl3OUUcAiwAO3D79AHp8jfGxD6EgEu0RmKN1dVQsucOh7bN7EFjmqFOjcW5JtK/
- e9E=
-X-IronPort-AV: E=Sophos;i="5.72,386,1580745600"; 
-   d="scan'208";a="136803003"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Apr 2020 17:05:42 +0800
-IronPort-SDR: Wy5oZ7G809To6Zq5kAITRnlSIqD4HksBFE5FIivXLK/u6/AUUrkyzS0MSGO90NQ6T6P4q++gk7
- iriZqjqXiW8zkJxKlkCM+ebXXEWVnG42/WErfpCkXe/wbe1cTEnJ7/JFQLlab3EFD2GSnQeiFe
- ClNHShrkiuITbvWY8iNhdE4/gAURlSRF0hVnpH/BCHDXl7UHDrvDt68PIhggDaMFv8trRnrB76
- wx3L4nirHTrtLWE7VvwxUGkCWX6WsagCTCzvdCge0ovJLco3SZD4Dp/F67/rjH0uqBn9DLJrET
- lpeBCiUPDaOMW09kbDTTM9MF
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 01:56:44 -0700
-IronPort-SDR: dKC1E9AeVkx+muIlHXeFzjxxjuxcWeA+EC5/LsL0rUxOlaPuV09fr9UynNxAPRrWJAJZ9jqo91
- k0PiJ1Fm2nOAcn3XGVTL5SyRHrPUMeq90nx14ewx7oMQPz5AV9mH+nb+qnomacEXrmQ4ep5EKb
- Aw8Y2yG7/IQwN5d6yj8kicVHi2P8B44r/yl3vJws2TEHERx2k77cCAc2mPdSVwhS9V5SSpfMjr
- haPoeyiQqo181Q6b09LTpV1994VC7+ES84sYiw5LaaVkCSPWjv691nR4Tl76Ek5zNtYhAWnUXE
- mtY=
-WDCIronportException: Internal
-Received: from unknown (HELO redsun60.ssa.fujisawa.hgst.com) ([10.149.66.36])
-  by uls-op-cesaip01.wdc.com with ESMTP; 15 Apr 2020 02:05:41 -0700
-From:   Johannes Thumshirn <johannes.thumshirn@wdc.com>
+        Wed, 15 Apr 2020 05:18:54 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F93cVm015730
+        for <linux-block@vger.kernel.org>; Wed, 15 Apr 2020 05:18:53 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnnfemgh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-block@vger.kernel.org>; Wed, 15 Apr 2020 05:18:53 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-block@vger.kernel.org> from <sth@linux.ibm.com>;
+        Wed, 15 Apr 2020 10:18:23 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Apr 2020 10:18:20 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F9IkxA46530632
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 09:18:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78C8811C066;
+        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2377E11C052;
+        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
+Received: from linux.fritz.box (unknown [9.145.153.254])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
+Subject: Re: [PATCH 1/1] s390: Cleanup removed IOSCHED_DEADLINE
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Keith Busch <kbusch@kernel.org>,
-        "linux-scsi @ vger . kernel . org" <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-fsdevel @ vger . kernel . org" <linux-fsdevel@vger.kernel.org>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v6 11/11] zonefs: use REQ_OP_ZONE_APPEND for sync DIO
-Date:   Wed, 15 Apr 2020 18:05:13 +0900
-Message-Id: <20200415090513.5133-12-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200415090513.5133-1-johannes.thumshirn@wdc.com>
-References: <20200415090513.5133-1-johannes.thumshirn@wdc.com>
+Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com
+References: <20200406074118.86849-1-sth@linux.ibm.com>
+ <20200406074118.86849-2-sth@linux.ibm.com>
+ <0efad2a5-90f5-8ccf-169e-9715a64a4bb0@kernel.dk>
+ <c7ac9c3c-3a1f-3ce3-acbd-422bc4206288@linux.ibm.com>
+ <4a51ce19-7827-5ee6-8b06-5b814bdf503a@kernel.dk>
+From:   Stefan Haberland <sth@linux.ibm.com>
+Autocrypt: addr=sth@linux.ibm.com; keydata=
+ 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
+ cH4TNHyhiR0KAbxE8qKx3Jc=
+Date:   Wed, 15 Apr 2020 11:18:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a51ce19-7827-5ee6-8b06-5b814bdf503a@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20041509-0008-0000-0000-00000371081B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041509-0009-0000-0000-00004A92BB54
+Message-Id: <57392f59-725d-654e-81dd-532c19b7702f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150066
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Synchronous direct I/O to a sequential write only zone can be issued using
-the new REQ_OP_ZONE_APPEND request operation. As dispatching multiple
-BIOs can potentially result in reordering, we cannot support asynchronous
-IO via this interface.
+Am 07.04.20 um 21:24 schrieb Jens Axboe:
+> On 4/7/20 3:01 AM, Stefan Haberland wrote:
+>> Am 06.04.20 um 17:32 schrieb Jens Axboe:
+>>> On 4/6/20 1:41 AM, Stefan Haberland wrote:
+>>>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>>>>
+>>>> CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
+>>>> remove legacy IO schedulers").
+>>> Isn't this a leftover thing from when dasd selected deadline
+>>> internally? I don't think we need this anymore, just kill the
+>>> select completely.
+>>>
+>> Basically yes.
+>> We still have the recommendation to use deadline and there are some udev
+>> rules in place which select it.
+>> So I thought it might be a good idea to keep the line. But I am also
+>> fine to drop it completely if you prefer this.
+> I don't feel super strongly about it, but at the same time I don't
+> think there's a reason for it. Besides, I think everyone has deadline
+> enabled. So I guess we should just kill it.
+>
 
-We also can only dispatch up to queue_max_zone_append_sectors() via the
-new zone-append method and have to return a short write back to user-space
-in case an IO larger than queue_max_zone_append_sectors() has been issued.
+OK, thanks for your opinion. I will remove the line and come up with a
+different patch.
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- fs/zonefs/super.c | 80 ++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 72 insertions(+), 8 deletions(-)
-
-diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
-index 3ce9829a6936..0bf7009f50a2 100644
---- a/fs/zonefs/super.c
-+++ b/fs/zonefs/super.c
-@@ -20,6 +20,7 @@
- #include <linux/mman.h>
- #include <linux/sched/mm.h>
- #include <linux/crc32.h>
-+#include <linux/task_io_accounting_ops.h>
- 
- #include "zonefs.h"
- 
-@@ -596,6 +597,61 @@ static const struct iomap_dio_ops zonefs_write_dio_ops = {
- 	.end_io			= zonefs_file_write_dio_end_io,
- };
- 
-+static ssize_t zonefs_file_dio_append(struct kiocb *iocb, struct iov_iter *from)
-+{
-+	struct inode *inode = file_inode(iocb->ki_filp);
-+	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-+	struct block_device *bdev = inode->i_sb->s_bdev;
-+	unsigned int max;
-+	struct bio *bio;
-+	ssize_t size;
-+	int nr_pages;
-+	ssize_t ret;
-+
-+	nr_pages = iov_iter_npages(from, BIO_MAX_PAGES);
-+	if (!nr_pages)
-+		return 0;
-+
-+	max = queue_max_zone_append_sectors(bdev_get_queue(bdev));
-+	max = ALIGN_DOWN(max << SECTOR_SHIFT, inode->i_sb->s_blocksize);
-+	iov_iter_truncate(from, max);
-+
-+	bio = bio_alloc_bioset(GFP_NOFS, nr_pages, &fs_bio_set);
-+	if (!bio)
-+		return -ENOMEM;
-+
-+	bio_set_dev(bio, bdev);
-+	bio->bi_iter.bi_sector = zi->i_zsector;
-+	bio->bi_write_hint = iocb->ki_hint;
-+	bio->bi_ioprio = iocb->ki_ioprio;
-+	bio->bi_opf = REQ_OP_ZONE_APPEND | REQ_SYNC | REQ_IDLE;
-+	if (iocb->ki_flags & IOCB_DSYNC)
-+		bio->bi_opf |= REQ_FUA;
-+
-+	ret = bio_iov_iter_get_pages(bio, from);
-+	if (unlikely(ret)) {
-+		bio_io_error(bio);
-+		return ret;
-+	}
-+	size = bio->bi_iter.bi_size;
-+	task_io_account_write(ret);
-+
-+	if (iocb->ki_flags & IOCB_HIPRI)
-+		bio_set_polled(bio, iocb);
-+
-+	ret = submit_bio_wait(bio);
-+
-+	bio_put(bio);
-+
-+	zonefs_file_write_dio_end_io(iocb, size, ret, 0);
-+	if (ret >= 0) {
-+		iocb->ki_pos += size;
-+		return size;
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * Handle direct writes. For sequential zone files, this is the only possible
-  * write path. For these files, check that the user is issuing writes
-@@ -611,6 +667,8 @@ static ssize_t zonefs_file_dio_write(struct kiocb *iocb, struct iov_iter *from)
- 	struct inode *inode = file_inode(iocb->ki_filp);
- 	struct zonefs_inode_info *zi = ZONEFS_I(inode);
- 	struct super_block *sb = inode->i_sb;
-+	bool sync = is_sync_kiocb(iocb);
-+	bool append = false;
- 	size_t count;
- 	ssize_t ret;
- 
-@@ -619,7 +677,7 @@ static ssize_t zonefs_file_dio_write(struct kiocb *iocb, struct iov_iter *from)
- 	 * as this can cause write reordering (e.g. the first aio gets EAGAIN
- 	 * on the inode lock but the second goes through but is now unaligned).
- 	 */
--	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ && !is_sync_kiocb(iocb) &&
-+	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ && !sync &&
- 	    (iocb->ki_flags & IOCB_NOWAIT))
- 		return -EOPNOTSUPP;
- 
-@@ -643,16 +701,22 @@ static ssize_t zonefs_file_dio_write(struct kiocb *iocb, struct iov_iter *from)
- 	}
- 
- 	/* Enforce sequential writes (append only) in sequential zones */
--	mutex_lock(&zi->i_truncate_mutex);
--	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ && iocb->ki_pos != zi->i_wpoffset) {
-+	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ) {
-+		mutex_lock(&zi->i_truncate_mutex);
-+		if (iocb->ki_pos != zi->i_wpoffset) {
-+			mutex_unlock(&zi->i_truncate_mutex);
-+			ret = -EINVAL;
-+			goto inode_unlock;
-+		}
- 		mutex_unlock(&zi->i_truncate_mutex);
--		ret = -EINVAL;
--		goto inode_unlock;
-+		append = sync;
- 	}
--	mutex_unlock(&zi->i_truncate_mutex);
- 
--	ret = iomap_dio_rw(iocb, from, &zonefs_iomap_ops,
--			   &zonefs_write_dio_ops, is_sync_kiocb(iocb));
-+	if (append)
-+		ret = zonefs_file_dio_append(iocb, from);
-+	else
-+		ret = iomap_dio_rw(iocb, from, &zonefs_iomap_ops,
-+				   &zonefs_write_dio_ops, sync);
- 	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ &&
- 	    (ret > 0 || ret == -EIOCBQUEUED)) {
- 		if (ret > 0)
--- 
-2.24.1
 
