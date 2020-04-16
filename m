@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F2A1ACE21
-	for <lists+linux-block@lfdr.de>; Thu, 16 Apr 2020 18:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F741ACE1B
+	for <lists+linux-block@lfdr.de>; Thu, 16 Apr 2020 18:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389565AbgDPQz3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Apr 2020 12:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        id S2387760AbgDPQzR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Apr 2020 12:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732738AbgDPQzN (ORCPT
+        by vger.kernel.org with ESMTP id S1732912AbgDPQzO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:55:13 -0400
+        Thu, 16 Apr 2020 12:55:14 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612B9C061A0C;
-        Thu, 16 Apr 2020 09:55:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB318C061A0C;
+        Thu, 16 Apr 2020 09:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=KoJmgqHpmX6zU7KpciYmluiSy+75nxEhElP5EeA6Vu4=; b=cxq2jD2Yinw6l0Z2djBRqMtrMe
-        heDCobTYc+L4izORZGT1OboHgGPPbbaLygtuYgR1elo5rJeb0fLD0qsk6EBfSQh6i61GgV8wWck5Z
-        Dp+b1p1yt0bNEGEL+85mc99I7lRX3XPtpmFqTirg4RxEb3QsrY7TmtEUcXFr4dVjpQts7RM24xmAE
-        b+5FURFVIqTAVduwNHxs7VsbiCPuB8OYTEwO3QP+eXN6xCmtJ1ArL0bRhUBwN+KDruUEn+aqi+GBz
-        2M71wzewyuY3IJFUDbE/CXJeJE8oXW0X40K2Pdj2Lbp91fm6C1QMaSforYHdNwj7YLlCK4wN+bNsl
-        tCexGoig==;
+        bh=MaJ8cbIF05R65GgF6it7FdrfP3dwxxXDqItQO95YJTU=; b=L8FlcY6tf6g3ibHnA2U+CfXpXc
+        laC5jN2/ahLl/dz8SoUjdmtK5wNSgg7XA7gC1nv9Ik79gJw878qaipx/E3qW3gO+evY9hVL+0cir6
+        bSqQHbCi2q202EMZFI7UVHtCTlkoMBPiXucROnKR/75xKLqe7TwQhQ8zDSrxtvW/3DPzAf+zZhOsO
+        KLi1brpvtPTc4tSdpwsL1jnFFKlxg7jRf2f86k5yFT5RjeZpwOGRoJqJcFu4ErimeYsxiQT4cbp3O
+        8OCSnr0GCgQZHyvkPAZyEs4qaJIzT+9F1GAmTT2ly3+cYEU2A8pCTp8sLoqVGI40PhXF0pVe4H6im
+        18rrolxg==;
 Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP7nA-0003A1-1v; Thu, 16 Apr 2020 16:55:08 +0000
+        id 1jP7nC-0003jl-F3; Thu, 16 Apr 2020 16:55:10 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk
 Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
         bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] bdi: unexport bdi_register_va
-Date:   Thu, 16 Apr 2020 18:54:50 +0200
-Message-Id: <20200416165453.1080463-6-hch@lst.de>
+Subject: [PATCH 6/8] bdi: remove bdi_register_owner
+Date:   Thu, 16 Apr 2020 18:54:51 +0200
+Message-Id: <20200416165453.1080463-7-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200416165453.1080463-1-hch@lst.de>
 References: <20200416165453.1080463-1-hch@lst.de>
@@ -47,27 +47,81 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bdi_register_va is only used by fs/super.c, which can't be modular.
+Split out a new bdi_set_owner helper to set the owner, and move the policy
+for creating the bdi name back into genhd.c, where it belongs.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Jan Kara <jack@suse.cz>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/backing-dev.c | 1 -
- 1 file changed, 1 deletion(-)
+ block/genhd.c               |  8 +++++---
+ include/linux/backing-dev.h |  2 +-
+ mm/backing-dev.c            | 12 ++----------
+ 3 files changed, 8 insertions(+), 14 deletions(-)
 
+diff --git a/block/genhd.c b/block/genhd.c
+index 06b642b23a07..7d10cfc38c70 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -840,13 +840,15 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
+ 		disk->flags |= GENHD_FL_SUPPRESS_PARTITION_INFO;
+ 		disk->flags |= GENHD_FL_NO_PART_SCAN;
+ 	} else {
++		struct backing_dev_info *bdi = disk->queue->backing_dev_info;
++		struct device *dev = disk_to_dev(disk);
+ 		int ret;
+ 
+ 		/* Register BDI before referencing it from bdev */
+-		disk_to_dev(disk)->devt = devt;
+-		ret = bdi_register_owner(disk->queue->backing_dev_info,
+-						disk_to_dev(disk));
++		dev->devt = devt;
++		ret = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
+ 		WARN_ON(ret);
++		bdi_set_owner(bdi, dev);
+ 		blk_register_region(disk_devt(disk), disk->minors, NULL,
+ 				    exact_match, exact_lock, disk);
+ 	}
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index c9ad5c3b7b4b..4098ed6ba6b4 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -33,7 +33,7 @@ int bdi_register(struct backing_dev_info *bdi, const char *fmt, ...);
+ __printf(2, 0)
+ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt,
+ 		    va_list args);
+-int bdi_register_owner(struct backing_dev_info *bdi, struct device *owner);
++void bdi_set_owner(struct backing_dev_info *bdi, struct device *owner);
+ void bdi_unregister(struct backing_dev_info *bdi);
+ 
+ struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id);
 diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index efc5b83acd2d..eb6b51e49d11 100644
+index eb6b51e49d11..bb993f99d424 100644
 --- a/mm/backing-dev.c
 +++ b/mm/backing-dev.c
-@@ -964,7 +964,6 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
- 	trace_writeback_bdi_register(bdi);
- 	return 0;
+@@ -977,20 +977,12 @@ int bdi_register(struct backing_dev_info *bdi, const char *fmt, ...)
  }
--EXPORT_SYMBOL(bdi_register_va);
+ EXPORT_SYMBOL(bdi_register);
  
- int bdi_register(struct backing_dev_info *bdi, const char *fmt, ...)
+-int bdi_register_owner(struct backing_dev_info *bdi, struct device *owner)
++void bdi_set_owner(struct backing_dev_info *bdi, struct device *owner)
  {
+-	int rc;
+-
+-	rc = bdi_register(bdi, "%u:%u", MAJOR(owner->devt), MINOR(owner->devt));
+-	if (rc)
+-		return rc;
+-	/* Leaking owner reference... */
+-	WARN_ON(bdi->owner);
++	WARN_ON_ONCE(bdi->owner);
+ 	bdi->owner = owner;
+ 	get_device(owner);
+-	return 0;
+ }
+-EXPORT_SYMBOL(bdi_register_owner);
+ 
+ /*
+  * Remove bdi from bdi_list, and ensure that it is no longer visible
 -- 
 2.25.1
 
