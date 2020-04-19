@@ -2,40 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D52101AFDA9
-	for <lists+linux-block@lfdr.de>; Sun, 19 Apr 2020 21:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 546B41AFDC5
+	for <lists+linux-block@lfdr.de>; Sun, 19 Apr 2020 21:48:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgDSTpx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 19 Apr 2020 15:45:53 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50993 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgDSTpw (ORCPT
+        id S1726287AbgDSTsD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 19 Apr 2020 15:48:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38492 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDSTsD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:45:52 -0400
-Received: by mail-pj1-f68.google.com with SMTP id t9so1475946pjw.0;
-        Sun, 19 Apr 2020 12:45:52 -0700 (PDT)
+        Sun, 19 Apr 2020 15:48:03 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w3so3132142plz.5;
+        Sun, 19 Apr 2020 12:48:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JI0MWD+QJRNLm9H/ySGaj7rD32bWrmPpBuBR7vXM0po=;
-        b=FSJ85UrLjGmYQeyidAk9RbNmDPLXhoqbhpyk9DXkl8GmFnUNmj6xK9avazoX7e+v2a
-         yubrmnSJcrelYPc79zjTQnVncHM8t9RnTAcFcLnmBXNDTK5srsNIouENQhvr6qzX6DtS
-         mrO+foTLSt0khki2wpQsT4J1B9cgafDpTodUZePybyYZHO3aHc1HbREzoXsYTXMN2/+U
-         HNhM1sN7aDHazQ+GfLsFwVwzfC5g7Shj/cxZRnlgvJ8wAwgVYhSk8JDAske7GsuM3bgO
-         i4rG34RlZKPB4djq8QpVVh35J9lOyRXh7B/EVLhXtOMlGeYICVE6kr+9ZeGwpq9QaAgb
-         hgLA==
-X-Gm-Message-State: AGi0PubTppbpnuwqowBk7Hh7pCAZaZyBJg8BE0ax5eG9NyRi4WMjBBUA
-        J7FpEAurtWDS8qSWwoXhS6A=
-X-Google-Smtp-Source: APiQypI5CAO7B1a2nLDOtdLnxkI6y2BKcHcPj3NYYswPtP9sWC/TtH2DZACqpYblnpzrNGt00D3cQA==
-X-Received: by 2002:a17:90a:b10f:: with SMTP id z15mr15705940pjq.188.1587325551767;
-        Sun, 19 Apr 2020 12:45:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XVDLAqmmcNsGZA6DvUaFp5wX8Hdu6VgQb85DAfNU9EE=;
+        b=lOCiewXaWuIhT+rg/o8v4JApXcvRnpksTRE3Kw0vfKHLXwuVhzBcNzR0kqbhOw+Vng
+         m14i67jOVvuRQr8Qn6Ms3K5d3wlRRAy4nhpO4k5asso7oy2GebtvyAW09GOuzYkr6n0u
+         4pU48d6aomWuZRpuoQrLQWeHAvTX5zkNDMKFAO2N7TCTsebzfJY8EA7Ft5SEz2kag3vU
+         BoVprPad7P7/XohUYkrjCARlfVkQIsqwuNR6M79D8dRXw6WeI0Lo0VpncHQCn1nSUUPk
+         vAFN1KuY+1BBElsrFSfEtyYUFphI1g5kN9Z1e3YhwP1gT31Fpf/I5dJue7No/vDXfR3b
+         ocPQ==
+X-Gm-Message-State: AGi0PubDEqkzp2mGj+eA4IrYARxi670rslD65IhlNBmHg0WAIP+BToF9
+        38L40J7qAG95ZxGTVw7OZWQ=
+X-Google-Smtp-Source: APiQypL/oNNU12e6hvfturuFLEKJm2Tcw6XS1ihtc1V9GAkRooHVTN400PWDSxk8Iks2Ql8Gg519ag==
+X-Received: by 2002:a17:90a:bf8c:: with SMTP id d12mr17598558pjs.11.1587325682585;
+        Sun, 19 Apr 2020 12:48:02 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 1sm4588pff.151.2020.04.19.12.45.42
+        by smtp.gmail.com with ESMTPSA id z190sm23620136pgz.73.2020.04.19.12.48.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 12:45:43 -0700 (PDT)
+        Sun, 19 Apr 2020 12:48:01 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1D0CD42309; Sun, 19 Apr 2020 19:45:39 +0000 (UTC)
+        id F000E403EA; Sun, 19 Apr 2020 19:48:00 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 19:48:00 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -43,44 +44,23 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         akpm@linux-foundation.org
 Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 10/10] block: put_device() if device_add() fails
-Date:   Sun, 19 Apr 2020 19:45:29 +0000
-Message-Id: <20200419194529.4872-11-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] block: fix blktrace debugfs use after free
+Message-ID: <20200419194800.GF11244@42.do-not-panic.com>
 References: <20200419194529.4872-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Through code inspection I've found that we don't put_device() if
-device_add() fails, and this must be done to decrement its refcount.
+I forgot to mention that I've dropped Reviewed-by tags to patches
+I have changed considerably like patch 3/10 which actually fixes
+the race. So if you had provided a review before, a new review
+would be appreciated.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/genhd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 06b642b23a07..c52095a74792 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -721,8 +721,10 @@ static void register_disk(struct device *parent, struct gendisk *disk,
- 		WARN_ON(ddev->groups);
- 		ddev->groups = groups;
- 	}
--	if (device_add(ddev))
-+	if (device_add(ddev)) {
-+		put_device(ddev);
- 		return;
-+	}
- 	if (!sysfs_deprecated) {
- 		err = sysfs_create_link(block_depr, &ddev->kobj,
- 					kobject_name(&ddev->kobj));
--- 
-2.25.1
-
+  Luis
