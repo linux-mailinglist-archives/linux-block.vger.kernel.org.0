@@ -2,189 +2,144 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 302031B11A8
-	for <lists+linux-block@lfdr.de>; Mon, 20 Apr 2020 18:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7067B1B1204
+	for <lists+linux-block@lfdr.de>; Mon, 20 Apr 2020 18:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgDTQg0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Apr 2020 12:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
+        id S1726534AbgDTQnF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Apr 2020 12:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726482AbgDTQgZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726325AbgDTQnE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:36:25 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F02C025491
-        for <linux-block@vger.kernel.org>; Mon, 20 Apr 2020 09:36:24 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id b18so10473714ilf.2
-        for <linux-block@vger.kernel.org>; Mon, 20 Apr 2020 09:36:24 -0700 (PDT)
+        Mon, 20 Apr 2020 12:43:04 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388C7C061A0C
+        for <linux-block@vger.kernel.org>; Mon, 20 Apr 2020 09:43:04 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id f7so614322vkl.6
+        for <linux-block@vger.kernel.org>; Mon, 20 Apr 2020 09:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
-        b=VHLDWqIoEkcCixWyPK//br6mkLWACHyOLTnwLSW/hdEJbBu9OFINE2gwgj/AM6Dfk2
-         zsrqUkeJ7zeFiQco3kYWvIe3ppxTjKTba9QKxzfesh3GyJaPQfep3iKZxs8vRFTcU+7O
-         scdKaqHOw/cJ43JNuFWjxqQ5niVFhQXknBt+70QNJ2W4VCekk32r3MKToU+2FFdhlPTN
-         73u/W5b0Muf813GvMGSm1S2tE+PpueqXvMMY+MhUY5e7WQOO99LfzINdMgKxuUk/POA6
-         BfpQupW8cu/TEThz3BTGcbaWfGtKR6agESCM/O3F+LRPaLuvS1mU7lCie/jLdnlncvyY
-         C+0A==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5wfQZpU1iI1W+9vUazFL8ggsPgPoMXhj1yc+iZAGVvU=;
+        b=W/+0d9rwb/nWJkvnAmRWlU6TQZcm39G3hJCW0eq+m8LkMuHRjF/LuQ0FrI01XDpGsR
+         q8vpSxItKzuEVk/3dJdfK8awZDCrXHT1C9MYqAcoJUrpdAyNUqut4npO8hJImjb/bfNv
+         Q4TEPuPqY//QFKOAIP6124jXGPGAqMBMer3ec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
-        b=kZhkTQJuETPOiDzrwRB/d71rim4Q9is6YCfP91Ex6hFjHbe3+H850RshkrZ5cSOera
-         K7JQJtgVMMj9qLBZTYMXLzYNJjBpG1VeamBzqunr8crdvwGj3WtVCRb0PeUwgCKboSj0
-         T3Zvm4HhKfXd0XdF6vI9ZMKBN92MZZ5syycMuYtf81yPRO73U6bo7Pub81SMbolvMb/K
-         ORcJt5Pful09WlMA14a8sMHpRbh5ydFe3AM48NcJEWzYGZFnJoPXcIxgEqzRqbiRqXuV
-         Kjnhlm26riAqHiPYDLsmHGlV4s7diddfjAciKv0HA0KzrkCJT+swREWY1dk6eZuycx0i
-         nDgw==
-X-Gm-Message-State: AGi0PuaCsMcUu64zjURjKd0dQyQHp+uW0l+DXucsOPtyRK2hnhAHBMvs
-        D9k3YFk2VsxCRTrKT3iIpuviLQ==
-X-Google-Smtp-Source: APiQypJWxZK3Z97CRGtXAd/5AvKBg6SWr+l25Skb33HnkR4R+0ebhHdkEhSj8wdnSlQaZ24bKOuu5Q==
-X-Received: by 2002:a92:ba51:: with SMTP id o78mr16831897ili.290.1587400583686;
-        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f1sm423114iog.46.2020.04.20.09.36.22
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5wfQZpU1iI1W+9vUazFL8ggsPgPoMXhj1yc+iZAGVvU=;
+        b=I3/vysOsMaSX5p+LcWq2RjBVw9tmx620/bUXCqtGFvd8rI6BGlXaPogkayAa52rFng
+         4N0E+kXxoeI0SYMsDbyfkw6qhvJgXmlLrMHG7g4H1Tnx1TAgxLt+lCa/fUF6o0yipd+T
+         lBta1x4MSAUS0bIGw7UBQHa088zrId4or2mcvV3P4UUzN0H4YT586tTsAdM/QO3YFbV1
+         TwnpvSSAaQH0eJvoqNbhSCM50M5ZUeUnEJKCfBav+y6K7jBqYOPN4BeaW9d/FQ2JIGtl
+         K+CY3j/qWzQux/AUnHd6wZnRRHwJosBS/6PbIAXP4jfCcy+9CKhip419xn9GKEtjkDSz
+         23sw==
+X-Gm-Message-State: AGi0PuZvLVML4XD62l5gRmTfq1xcxt7SvQpP27/ts2PHp/qu6XGvkwPk
+        x5LAKT/O17LTUyHExR0Y/SmV8jE3/0g=
+X-Google-Smtp-Source: APiQypKijb97z/uOVrAWcbjdXwl71ojrcYSCw8vhVWsgMOuzqYJyWhvPrQKuAGdYUX9plTl5JgvE4A==
+X-Received: by 2002:a1f:3210:: with SMTP id y16mr11847573vky.89.1587400982752;
+        Mon, 20 Apr 2020 09:43:02 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id o130sm341280vke.28.2020.04.20.09.43.01
+        for <linux-block@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
-Subject: Re: [PATCH v5 0/4] blk-mq: Fix two causes of IO stalls found in
- reboot testing
-To:     Douglas Anderson <dianders@chromium.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        sqazi@google.com, groeck@chromium.org,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        paolo.valente@linaro.org,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-References: <20200420162454.48679-1-dianders@chromium.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3f9a5e9d-4485-aa46-be31-f561ba5363c8@kernel.dk>
-Date:   Mon, 20 Apr 2020 10:36:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 09:43:01 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id r7so6452236vso.2
+        for <linux-block@vger.kernel.org>; Mon, 20 Apr 2020 09:43:01 -0700 (PDT)
+X-Received: by 2002:a67:c40c:: with SMTP id c12mr2547643vsk.106.1587400980801;
+ Mon, 20 Apr 2020 09:43:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420162454.48679-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
+ <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org> <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
+ <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org> <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
+In-Reply-To: <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 Apr 2020 09:42:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
+Message-ID: <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
+ in one go
+To:     Salman Qazi <sqazi@google.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/20/20 10:24 AM, Douglas Anderson wrote:
-> While doing reboot testing, I found that occasionally my device would
-> trigger the hung task detector.  Many tasks were stuck waiting for the
-> a blkdev mutex, but at least one task in the system was always sitting
-> waiting for IO to complete (and holding the blkdev mutex).  One
-> example of a task that was just waiting for its IO to complete on one
-> reboot:
-> 
->  udevd           D    0  2177    306 0x00400209
->  Call trace:
->   __switch_to+0x15c/0x17c
->   __schedule+0x6e0/0x928
->   schedule+0x8c/0xbc
->   schedule_timeout+0x9c/0xfc
->   io_schedule_timeout+0x24/0x48
->   do_wait_for_common+0xd0/0x160
->   wait_for_completion_io_timeout+0x54/0x74
->   blk_execute_rq+0x9c/0xd8
->   __scsi_execute+0x104/0x198
->   scsi_test_unit_ready+0xa0/0x154
->   sd_check_events+0xb4/0x164
->   disk_check_events+0x58/0x154
->   disk_clear_events+0x74/0x110
->   check_disk_change+0x28/0x6c
->   sd_open+0x5c/0x130
->   __blkdev_get+0x20c/0x3d4
->   blkdev_get+0x74/0x170
->   blkdev_open+0x94/0xa8
->   do_dentry_open+0x268/0x3a0
->   vfs_open+0x34/0x40
->   path_openat+0x39c/0xdf4
->   do_filp_open+0x90/0x10c
->   do_sys_open+0x150/0x3c8
->   ...
-> 
-> I've reproduced this on two systems: one boots from an internal UFS
-> disk and one from eMMC.  Each has a card reader attached via USB with
-> an SD card plugged in.  On the USB-attached SD card is a disk with 12
-> partitions (a Chrome OS test image), if it matters.  The system
-> doesn't do much with the USB disk other than probe it (it's plugged in
-> my system to help me recover).
-> 
-> From digging, I believe that there are two separate but related
-> issues.  Both issues relate to the SCSI code saying that there is no
-> budget.
-> 
-> I have done testing with only one or the other of the two patches in
-> this series and found that I could still encounter hung tasks if only
-> one of the two patches was applied.  This deserves a bit of
-> explanation.  To me, it's fairly obvious that the first fix wouldn't
-> fix the problems talked about in the second patch.  However, it's less
-> obvious why the second patch doesn't fix the problems in
-> blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
-> (problems become much more rare), but I did manage to get a single
-> trace where the "kick" scheduled by the second patch happened really
-> quickly.  The scheduled kick then ran and found nothing to do.  This
-> happened in parallel to a task running in blk_mq_dispatch_rq_list()
-> which hadn't gotten around to splicing the list back into
-> hctx->dispatch.  This is why we need both fixes.
-> 
-> Most of my testing has been atop Chrome OS 5.4's kernel tree which
-> currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
-> patch by Salman Qazi, namely ("block: Limit number of items taken from
-> the I/O scheduler in one go").  Reverting that patch didn't make the
-> hung tasks go away, so I kept it in for most of my testing.
-> 
-> I have also done some testing on mainline Linux (most on what git
-> describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
-> patch.  I found that I could reproduce the problems there and that
-> traces looked about the same as I saw on the downstream branch.  These
-> patches were also confirmed to fix the problems on mainline.
-> 
-> Chrome OS is currently setup to use the BFQ scheduler and I found that
-> I couldn't reproduce the problems without BFQ.  As discussed in the
-> second patch this is believed to be because BFQ sometimes returns
-> "true" from has_work() but then NULL from dispatch_request().
-> 
-> I'll insert my usual caveat that I'm sending patches to code that I
-> know very little about.  If I'm making a total bozo patch here, please
-> help me figure out how I should fix the problems I found in a better
-> way.
-> 
-> If you want to see a total ridiculous amount of chatter where I
-> stumbled around a whole bunch trying to figure out what was wrong and
-> how to fix it, feel free to read <https://crbug.com/1061950>.  I
-> promise it will make your eyes glaze over right away if this cover
-> letter didn't already do that.  Specifically comment 79 in that bug
-> includes a link to my ugly prototype of making BFQ's has_work() more
-> exact (I only managed it by actually defining _both_ an exact and
-> inexact function to avoid circular locking problems when it was called
-> directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
-> thoughts about alternatives considered.
-> 
-> I don't know if these fixes represent a regression of some sort or are
-> new.  As per above I could only reproduce with BFQ enabled which makes
-> it nearly impossible to go too far back with this.  I haven't listed
-> any "Fixes" tags here, but if someone felt it was appropriate to
-> backport this to some stable trees that seems like it'd be nice.
-> Presumably at least 5.4 stable would make sense.
-> 
-> Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
-> bunch of time helping me trawl through some of this code and reviewing
-> early versions of this patch.
+Hi,
 
-Applied, thanks.
+On Fri, Feb 7, 2020 at 12:38 PM Salman Qazi <sqazi@google.com> wrote:
+>
+> On Fri, Feb 7, 2020 at 12:19 PM Bart Van Assche <bvanassche@acm.org> wrote:
+> >
+> > On 2/7/20 10:45 AM, Salman Qazi wrote:
+> > > If I were to write this as a for-loop, it will look like this:
+> > >
+> > > for (i = 0; i == 0 || (run_again && i < 2); i++) {
+> > > /* another level of 8 character wide indentation */
+> > >      run_again = false;
+> > >     /* a bunch of code that possibly sets run_again to true
+> > > }
+> > >
+> > > if (run_again)
+> > >      blk_mq_run_hw_queue(hctx, true);
+> >
+> > That's not what I meant. What I meant is a loop that iterates at most
+> > two times and also to break out of the loop if run_again == false.
+> >
+>
+> I picked the most compact variant to demonstrate the problem.  Adding
+> breaks isn't
+> really helping the readability.
+>
+> for (i = 0; i < 2; i++) {
+>   run_again = false;
+> /* bunch of code that possibly sets it to true */
+> ...
+>  if (!run_again)
+>     break;
+> }
+> if (run_again)
+>     blk_mq_run_hw_queue(hctx, true);
+>
+> When I read this, I initially assume that the loop in general runs
+> twice and that this is the common case.  It has the
+> same problem with conveying intent.  Perhaps, more importantly, the
+> point of using programming constructs is to shorten and simplify the
+> code.
+> There are still two if-statements in addition to the loop. We haven't
+> gained much by introducing the loop.
+>
+> > BTW, I share your concern about the additional indentation by eight
+> > positions. How about avoiding deeper indentation by introducing a new
+> > function?
+>
+> If there was a benefit to introducing the loop, this would be a good
+> call.  But the way I see it, the introduction of another
+> function is yet another way in which the introduction of the loop
+> makes the code less readable.
+>
+> This is not a hill I want to die on.  If the maintainer agrees with
+> you on this point, I will use a loop.
 
--- 
-Jens Axboe
+I haven't done a massive amount of analysis of this patch, but since I
+noticed it while debugging my own block series I've been keeping track
+of it.  Is there any status update here?  We've been carrying this
+"FROMLIST" in our Chrome OS trees for a little while, but that's not a
+state we want to be in long-term.  If it needs to spin before landing
+upstream we should get the spin out and land it.  If it's OK as-is
+then it'd be nice to see it in mainline.
 
+From the above I guess Salman was waiting for Jens to weigh in with an
+opinion on the prefered bike shed color?
+
+-Doug
