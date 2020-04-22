@@ -2,133 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF471B47D7
-	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 16:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA141B484A
+	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 17:11:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgDVOzX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Apr 2020 10:55:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49646 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgDVOzT (ORCPT
+        id S1726385AbgDVPLA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Apr 2020 11:11:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46664 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDVPK7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:55:19 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jRGmR-0006CM-Oh; Wed, 22 Apr 2020 14:55:15 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: [PATCH v2 7/7] loopfs: only show devices in their correct instance
-Date:   Wed, 22 Apr 2020 16:54:37 +0200
-Message-Id: <20200422145437.176057-8-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200422145437.176057-1-christian.brauner@ubuntu.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
+        Wed, 22 Apr 2020 11:10:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 145so1210961pfw.13;
+        Wed, 22 Apr 2020 08:10:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BpWmzLO4boJS/3NuyjpxKLUJHU99G06c2WaRP9JRw3U=;
+        b=pv1y3mvya9UT5qCckTHElRSTa/3ZxMp6OvEOz4YukVN8LvMBgBXvcqPjZt80R9hBCY
+         KXopewmlKcgaz0/g59tHdTDQkbDfj8OfOcEQx4EFqEhwRjczzxc61FlQOjbnayBuV1cG
+         vix3qtLpuZ+5GoPPA5lUewe8HqbredHNugBr9F1DmLEWdxHnVGiiSDsOAVMnOglmVnUF
+         uXMqLAZRQqjfoW/F0Sp1/znTg8iOr2NMKUOLZ0SxGRRge/1SJFQ7gyjUruZikZ4O+AHq
+         Lgrod/f/JCrk2nHfP8+nV7n0zZcouVPeM9sAyOXhTXcv+fTACimpOA5KcsiqgzOZnx1k
+         iCGQ==
+X-Gm-Message-State: AGi0PuYrCiFJ7VvyVE4R/Gq3jd7rSVDzCDE6bEBRtSbsQj6ZvXTAzFis
+        BnT7QIEHmuAWgopa7vnWMjg=
+X-Google-Smtp-Source: APiQypKxUUHnj/wIbVHs6Yr09dany3cagZOY3KdJIbbj3FYX6ZdtyChy0un+L44MwTvT/APFqhlYaw==
+X-Received: by 2002:a65:4548:: with SMTP id x8mr26677950pgr.223.1587568258821;
+        Wed, 22 Apr 2020 08:10:58 -0700 (PDT)
+Received: from [100.124.11.187] ([104.129.198.222])
+        by smtp.gmail.com with ESMTPSA id w9sm5990767pff.101.2020.04.22.08.10.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 08:10:58 -0700 (PDT)
+Subject: Re: [PATCH 4/4] loop: Add LOOP_SET_FD_AND_STATUS ioctl.
+To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk, hch@lst.de,
+        ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maco@google.com, Chaitanya.Kulkarni@wdc.com
+References: <20200420080409.111693-1-maco@android.com>
+ <20200420080409.111693-5-maco@android.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <9eaa4dc8-cd8f-a4e9-e83d-f49f8b00ec0e@acm.org>
+Date:   Wed, 22 Apr 2020 08:10:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200420080409.111693-5-maco@android.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since loopfs devices belong to a loopfs instance they have no business
-polluting the host's devtmpfs mount and should not propagate out of the
-namespace they belong to.
+On 4/20/20 1:04 AM, Martijn Coenen wrote:
+> diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
+> index 080a8df134ef..fcc9a693b588 100644
+> --- a/include/uapi/linux/loop.h
+> +++ b/include/uapi/linux/loop.h
+> @@ -60,6 +60,11 @@ struct loop_info64 {
+>   	__u64		   lo_init[2];
+>   };
+>   
+> +struct loop_fd_and_status {
+> +	struct loop_info64	info;
+> +	__u32			fd;
+> +};
+> +
+>   /*
+>    * Loop filter types
+>    */
+> @@ -90,6 +95,7 @@ struct loop_info64 {
+>   #define LOOP_SET_CAPACITY	0x4C07
+>   #define LOOP_SET_DIRECT_IO	0x4C08
+>   #define LOOP_SET_BLOCK_SIZE	0x4C09
+> +#define LOOP_SET_FD_AND_STATUS	0x4C0A
+>   
+>   /* /dev/loop-control interface */
+>   #define LOOP_CTL_ADD		0x4C80
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-unchanged
----
- drivers/base/devtmpfs.c | 4 ++--
- drivers/block/loop.c    | 4 +++-
- include/linux/device.h  | 3 +++
- 3 files changed, 8 insertions(+), 3 deletions(-)
+Should linux-api be Cc'ed for this patch or the entire patch series? 
+ From https://www.kernel.org/doc/man-pages/linux-api-ml.html: "Among 
+other things, a primary goal of the list is to help answer the question: 
+How do we even know when an interface has been added or changed?".
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index c9017e0584c0..77371ceb88fa 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -111,7 +111,7 @@ int devtmpfs_create_node(struct device *dev)
- 	const char *tmp = NULL;
- 	struct req req;
- 
--	if (!thread)
-+	if (!thread || dev->no_devnode)
- 		return 0;
- 
- 	req.mode = 0;
-@@ -138,7 +138,7 @@ int devtmpfs_delete_node(struct device *dev)
- 	const char *tmp = NULL;
- 	struct req req;
- 
--	if (!thread)
-+	if (!thread || dev->no_devnode)
- 		return 0;
- 
- 	req.name = device_get_devnode(dev, NULL, NULL, NULL, &tmp);
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 2dc53bad4b48..5548151b9f11 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2213,8 +2213,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
- 	disk->queue		= lo->lo_queue;
- 	sprintf(disk->disk_name, "loop%d", i);
- #ifdef CONFIG_BLK_DEV_LOOPFS
--	if (loopfs_i_sb(inode))
-+	if (loopfs_i_sb(inode)) {
- 		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
-+		disk_to_dev(disk)->no_devnode = true;
-+	}
- #endif
- 
- 	add_disk(disk);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index ac8e37cd716a..c69ef1c5a0ef 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -523,6 +523,8 @@ struct dev_links_info {
-  *		  sync_state() callback.
-  * @dma_coherent: this particular device is dma coherent, even if the
-  *		architecture supports non-coherent devices.
-+ * @no_devnode: whether device nodes associated with this device are kept out
-+ *		of devtmpfs (e.g. due to separate filesystem)
-  *
-  * At the lowest level, every device in a Linux system is represented by an
-  * instance of struct device. The device structure contains the information
-@@ -622,6 +624,7 @@ struct device {
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
- 	bool			dma_coherent:1;
- #endif
-+	bool			no_devnode:1;
- };
- 
- static inline struct device *kobj_to_dev(struct kobject *kobj)
--- 
-2.26.1
+Thanks,
+
+Bart.
+
 
