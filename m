@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9F261B392E
-	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 09:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6F41B3930
+	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 09:40:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgDVHjL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Apr 2020 03:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
+        id S1726626AbgDVHjx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Apr 2020 03:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726077AbgDVHjK (ORCPT
+        by vger.kernel.org with ESMTP id S1726454AbgDVHjL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:39:10 -0400
+        Wed, 22 Apr 2020 03:39:11 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442ADC03C1A7;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B3EC03C1A6;
         Wed, 22 Apr 2020 00:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=vXsb2L81VYge+RDUvb4eLGTxpLRW7iFlEkDQ2VQetHw=; b=KSDsogL+yl2sBfCcotk1n10lgY
-        ZxLAVTkFoWdbB9CAd9bTfpLQ9t66t4DOzODAlfKle/kvgMTGS7OhHS5qT3MUTR3s1vvYa0yhV9IGx
-        CUXvI3PSeSBo7+z63Eu6pr/QwY2YBwLVrO9JqanK2e+3DT2Ql5z1Cp/l/n5BtbJT2wfa77eAZrN3k
-        lLpORMhOn8EI9TvmabqgLHRdXwbYg1YNY9OQF9iTp02+wCSGtNWjZdpr9Q3xtBKLpX6Ik1ThdrX+Q
-        o4d4EnfZVJoN822KrMzJEJO6iNZjyFjBELD8XwDeGJGV0s0p51UCwvrrOUWiYK7Mt8EXRq9gkjzk0
-        Eu0m/lLg==;
+        bh=3CgD7kZnnRJOUkHr7KSc3PD86gWCDQYdVaJYSXm6ZGo=; b=DypqFdLcVGl3eXDOt2DtTrk5+8
+        h27qkI0VYxePsTGEjpHJG0YNs+y+IGs9B2Q5hqvrH2WJeXViQ/C7MfFHmvDjNvtQf62MTjKm/4V/d
+        IFPPiD7Gr609bJefa7baZSucc+RhzTJN6NhCf3LFlZpwiBfHm61u+v2odUlY7dtuYxOnCGRNFQz+C
+        c01cvmY+XdoCW5g5yEtHfEJ4dbR7DdT4h9lpo8uLVs7ECObGiyM6jHm8NhiA8VVpMZ6bgAPMhzr6O
+        1VGj7sT217K074lvQhs+7vaZe60wdL4XpfouSUlQtxG7R0Qs5Kya18DxnZSuctF6cNTKcacKrr2WV
+        sPrY48YQ==;
 Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR9yG-00009Z-QW; Wed, 22 Apr 2020 07:39:01 +0000
+        id 1jR9yJ-0000AS-7q; Wed, 22 Apr 2020 07:39:03 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk
 Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
         bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
         gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] bdi: use bdi_dev_name() to get device name
-Date:   Wed, 22 Apr 2020 09:38:45 +0200
-Message-Id: <20200422073851.303714-4-hch@lst.de>
+Subject: [PATCH 4/9] bdi: add a ->dev_name field to struct backing_dev_info
+Date:   Wed, 22 Apr 2020 09:38:46 +0200
+Message-Id: <20200422073851.303714-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200422073851.303714-1-hch@lst.de>
 References: <20200422073851.303714-1-hch@lst.de>
@@ -48,102 +48,52 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+Cache a copy of the name for the life time of the backing_dev_info
+structure so that we can reference it even after unregistering.
 
-Use the common interface bdi_dev_name() to get device name.
-
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
+Reported-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/bfq-iosched.c        | 5 +++--
- block/blk-cgroup.c         | 2 +-
- fs/ceph/debugfs.c          | 2 +-
- include/trace/events/wbt.h | 8 ++++----
- 4 files changed, 9 insertions(+), 8 deletions(-)
+ include/linux/backing-dev-defs.h | 1 +
+ mm/backing-dev.c                 | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 78ba57efd16b..4d4fe44a9eea 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4976,8 +4976,9 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
- 	ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
- 	switch (ioprio_class) {
- 	default:
--		dev_err(bfqq->bfqd->queue->backing_dev_info->dev,
--			"bfq: bad prio class %d\n", ioprio_class);
-+		pr_err("bdi %s: bfq: bad prio class %d\n",
-+				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
-+				ioprio_class);
- 		/* fall through */
- 	case IOPRIO_CLASS_NONE:
- 		/*
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index c5dc833212e1..930212c1a512 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -496,7 +496,7 @@ const char *blkg_dev_name(struct blkcg_gq *blkg)
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 4fc87dee005a..2849bdbb3acb 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -220,6 +220,7 @@ struct backing_dev_info {
+ 	wait_queue_head_t wb_waitq;
+ 
+ 	struct device *dev;
++	char dev_name[64];
+ 	struct device *owner;
+ 
+ 	struct timer_list laptop_mode_wb_timer;
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index c2c44c89ee5d..efc5b83acd2d 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -938,7 +938,8 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
+ 	if (bdi->dev)	/* The driver needs to use separate queues per device */
+ 		return 0;
+ 
+-	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
++	vsnprintf(bdi->dev_name, sizeof(bdi->dev_name), fmt, args);
++	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
+ 	if (IS_ERR(dev))
+ 		return PTR_ERR(dev);
+ 
+@@ -1047,7 +1048,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
  {
- 	/* some drivers (floppy) instantiate a queue w/o disk registered */
- 	if (blkg->q->backing_dev_info->dev)
--		return dev_name(blkg->q->backing_dev_info->dev);
-+		return bdi_dev_name(blkg->q->backing_dev_info);
- 	return NULL;
+ 	if (!bdi || !bdi->dev)
+ 		return bdi_unknown_name;
+-	return dev_name(bdi->dev);
++	return bdi->dev_name;
  }
+ EXPORT_SYMBOL_GPL(bdi_dev_name);
  
-diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-index 481ac97b4d25..dcaed75de9e6 100644
---- a/fs/ceph/debugfs.c
-+++ b/fs/ceph/debugfs.c
-@@ -271,7 +271,7 @@ void ceph_fs_debugfs_init(struct ceph_fs_client *fsc)
- 				    &congestion_kb_fops);
- 
- 	snprintf(name, sizeof(name), "../../bdi/%s",
--		 dev_name(fsc->sb->s_bdi->dev));
-+		 bdi_dev_name(fsc->sb->s_bdi));
- 	fsc->debugfs_bdi =
- 		debugfs_create_symlink("bdi",
- 				       fsc->client->debugfs_dir,
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index 784814160197..9c66e59d859c 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,7 @@ TRACE_EVENT(wbt_stat,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
-@@ -68,7 +68,7 @@ TRACE_EVENT(wbt_lat,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
-@@ -105,7 +105,7 @@ TRACE_EVENT(wbt_step,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
-@@ -141,7 +141,7 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
 -- 
 2.26.1
 
