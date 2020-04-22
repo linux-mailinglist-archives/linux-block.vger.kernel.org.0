@@ -2,87 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D78191B3908
-	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 09:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96C5B1B391A
+	for <lists+linux-block@lfdr.de>; Wed, 22 Apr 2020 09:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbgDVHev (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Apr 2020 03:34:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43031 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgDVHev (ORCPT
+        id S1726424AbgDVHjF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Apr 2020 03:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725786AbgDVHjF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:34:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v63so640460pfb.10;
-        Wed, 22 Apr 2020 00:34:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xv3CClgNM59iAjDs4jAyjCmiyK+zMtMkYtDjchx4A/4=;
-        b=dDk/SQA0IzXPjgeu0yIb59yzu/kuKns0rKQq87n8XIcrAxHumqcENxj2+eAuhKxk0F
-         40kJJi6H0DZqd+/XcpiIfK/Me0m2Jg1sgIfBZvN3paYjvzankAcdd0fU/tBoChoXVfz0
-         CZ9UAwJB5OpgSp5qpOxqbSPkO/ddOAOcfl1Jn/cqE8SKOVABaHIIUM5GFthJGqGu/uIr
-         eNfapxl8h67kdmsfrly9dbu52f4+309RhXfGrczpIpybsKKTDiBseDH3yERmAKah5AVL
-         e7f0bV8HOPu9GfgbOXFJ57el2+gDCMJhZVUxwoDVoWO08grmVYKQiW28lRsTVz9zw9sI
-         Jezg==
-X-Gm-Message-State: AGi0PuZ1hUFIINEytbqdOfWCFYu7fwRBmqjSEYHwAC8v8uytqioCF9Fr
-        LocQD90YJ41IktoIBMcOzNA=
-X-Google-Smtp-Source: APiQypIMihueeTQ943/uTYtrvog7ersMvpf7K7XYY8myv59EdZuGEtFE1ttqG91Zu2F3zNVNy168tQ==
-X-Received: by 2002:a62:1bd0:: with SMTP id b199mr25631509pfb.283.1587540890239;
-        Wed, 22 Apr 2020 00:34:50 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a13sm4534042pjq.0.2020.04.22.00.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:34:49 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 64CC1402A1; Wed, 22 Apr 2020 07:34:48 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 07:34:48 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
-        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
-        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
-        yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200422073448.GR11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200420201615.GC302402@kroah.com>
- <20200420204156.GO11244@42.do-not-panic.com>
- <20200422072942.GD19116@infradead.org>
+        Wed, 22 Apr 2020 03:39:05 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315F3C03C1A6;
+        Wed, 22 Apr 2020 00:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=trQjdomDCRV6qbx8X9q1OiMo2aPdhpEIEG3jZKBOoBY=; b=kOT+qjx/YFh+D0W1Zu25o8e2aX
+        U39FdtwMEYNhBL5rC0jMMnWEJR1OIKYeQJrrhafa0Tij+5T12DbJHH5SrWdDZ58nWxQ1+pkrlD8nr
+        rTWnD2dvlrXgKXsc6XdirWsJ3MBWxAozRWVFt43otaTYAxhHNujjZlH7VkpwBse1BNwASERP8Y8wX
+        GKyV9/9PigkW8fBeW8LmBg1BAO3LWmDy6j5pvpYUQ6GLRe5WFgs1TuHBwdrTOCF4dC6oehCxaMpPF
+        SyJfnW5y9Gur+gEmejbiTq1BaoLbqQEepN28CGhFW1n57gp2aXgiIivWlxsX6PNBdBVVs5ZezHgvp
+        vht3xbpg==;
+Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR9y9-00008K-IQ; Wed, 22 Apr 2020 07:38:53 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: bdi: fix use-after-free for dev_name(bdi->dev) v3
+Date:   Wed, 22 Apr 2020 09:38:42 +0200
+Message-Id: <20200422073851.303714-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422072942.GD19116@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:29:42AM -0700, Christoph Hellwig wrote:
-> On Mon, Apr 20, 2020 at 08:41:56PM +0000, Luis Chamberlain wrote:
-> > Its already there. And yes, after my changes it is technically possible
-> > to just re-use it directly. But this is complicated by a few things. One
-> > is that at this point in time, asynchronous request_queue removal is
-> > still possible, and so a race was exposed where a requeust_queue may be
-> > lingering but its old device is gone. That race is fixed by reverting us
-> > back to synchronous request_queue removal, therefore ensuring that the
-> > debugfs dir exists so long as the device does.
-> > 
-> > I can remove the debugfs_lookup() *after* we revert to synchronous
-> > request_queue removal, or we just re-order the patches so that the
-> > revert happens first. That should simplify this patch.
-> 
-> Yes, please move the synchronous removal first instead of working around
-> the current problems.
+Hi all,
 
-Sounds good. At first it was questionable, now its understood we need it.
+the first three patches are my take on the proposal from Yufen Yu
+to fix the use after free of the device name of the bdi device.
 
-  Luis
+The rest is vaguely related cleanups.
+
+Changes since v2:
+ - switch vboxsf to a shorter bdi name
+
+Changes since v1:
+ - use a static dev_name buffer inside struct backing_dev_info
