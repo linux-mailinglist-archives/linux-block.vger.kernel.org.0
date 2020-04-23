@@ -2,135 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C535A1B51FA
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 03:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF1ED1B522A
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 03:55:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDWBh5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Apr 2020 21:37:57 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:53220 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgDWBh5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:37:57 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 44E5B9D0; Wed, 22 Apr 2020 20:37:54 -0500 (CDT)
-Date:   Wed, 22 Apr 2020 20:37:54 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 7/7] loopfs: only show devices in their correct
- instance
-Message-ID: <20200423013754.GC2982@mail.hallyn.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-8-christian.brauner@ubuntu.com>
+        id S1726421AbgDWBzS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Apr 2020 21:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgDWBzR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:55:17 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B596C03C1AD
+        for <linux-block@vger.kernel.org>; Wed, 22 Apr 2020 18:55:17 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id r25so3847459oij.4
+        for <linux-block@vger.kernel.org>; Wed, 22 Apr 2020 18:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=jFk2Hkh3P8KM4AitD1nLcIT/J3fPwUzk0okqwA0Yesc=;
+        b=WM2ymaVCqX+0EiMxwIW9cKbsxIzBpf/O5cHQbj68m7cvJLLRCDsdowgguOPqk35GYR
+         PaBVNPbcF6UvKgsn4fMOjDo7aQE97Awuh/DjY6gKAzP3ibjP1DCs2htMdM8zD+Pp8ZLI
+         z6etobtBl9rfv70TLkhGmII/pgvdhYeMT+m6P3VeReUgz0Yfec9V52KgTChG3F6s4DJd
+         YmyWHs5PN/NvglDFS3Fm0og3B9vnlKeIHTKXOJwWteJz94OtRzZZBUc0ON4PZQH1/zuB
+         c/vRwE/vpIliYy1CpnkdSGqBs/9AXMmMi/oQ2y5HSxAmngt4tr0J2Hcx9z982YRF4Owx
+         Ettg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=jFk2Hkh3P8KM4AitD1nLcIT/J3fPwUzk0okqwA0Yesc=;
+        b=C/jPA8K8ksOy3Nzmi5KU9rwDxYynEC6wW0prZ+SgdeVAsxvVo+8jfuAl2ez+qUK1Y8
+         OIp7F6fSy1QjZtS0rRq+i1lnESLdLBWdXjCcb/j3IvjasWckQQYX7LrlNrsAoQDpCNXb
+         x3DXCrWUhMJs+9+wPFGOnStevZTsOS8TsHPdMTBnDkJhXZtfJkO3Brs2kggZ3/P2iiiu
+         lpxrIN/VMMA+4QlN4WwU3Oz05C7inWmy9BwliFR8fs4o4Tj6OxTqizVKbsh2hqP/WAWG
+         USKLBsaQK/YUQ0JwEyNDZ+FAgdIoERwpCQ0KU+RUl9yfkR+OrxQ1ABz7F9R9W3Fs8pMi
+         RA2g==
+X-Gm-Message-State: AGi0PuZr5FXYzo9O8q0zDGTj6Z/QaD9mPGSdg3x282hK+YQNG7JfZ7pg
+        bpf2yJz60FSBogJQppEm7HGmlewfO2LiQiXE8XQ=
+X-Google-Smtp-Source: APiQypL/Hrhf0RDYF+Hw5/EyWl1dL43whOUVWtGHHaQH2IV+Fgz+50mVKkH/toyMMPKPUjlKzjgMmjbW0mNz/qZDo/g=
+X-Received: by 2002:aca:3889:: with SMTP id f131mr1360978oia.154.1587606916779;
+ Wed, 22 Apr 2020 18:55:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-8-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:ac9:3a2a:0:0:0:0:0 with HTTP; Wed, 22 Apr 2020 18:55:16
+ -0700 (PDT)
+Reply-To: lawyerjeannoel22@gmail.com
+From:   lawyer jean <rokishia.made@gmail.com>
+Date:   Thu, 23 Apr 2020 01:55:16 +0000
+Message-ID: <CAKmRV4WrtMjTmqqfQn6dTGMZqmKG7C5OwwscXJxHOsgmYe8yNg@mail.gmail.com>
+Subject: Please you don't keep me waiting
+To:     rokishia.made@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:37PM +0200, Christian Brauner wrote:
-> Since loopfs devices belong to a loopfs instance they have no business
-> polluting the host's devtmpfs mount and should not propagate out of the
-> namespace they belong to.
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-
-> ---
-> /* v2 */
-> unchanged
-> ---
->  drivers/base/devtmpfs.c | 4 ++--
->  drivers/block/loop.c    | 4 +++-
->  include/linux/device.h  | 3 +++
->  3 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-> index c9017e0584c0..77371ceb88fa 100644
-> --- a/drivers/base/devtmpfs.c
-> +++ b/drivers/base/devtmpfs.c
-> @@ -111,7 +111,7 @@ int devtmpfs_create_node(struct device *dev)
->  	const char *tmp = NULL;
->  	struct req req;
->  
-> -	if (!thread)
-> +	if (!thread || dev->no_devnode)
->  		return 0;
->  
->  	req.mode = 0;
-> @@ -138,7 +138,7 @@ int devtmpfs_delete_node(struct device *dev)
->  	const char *tmp = NULL;
->  	struct req req;
->  
-> -	if (!thread)
-> +	if (!thread || dev->no_devnode)
->  		return 0;
->  
->  	req.name = device_get_devnode(dev, NULL, NULL, NULL, &tmp);
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 2dc53bad4b48..5548151b9f11 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -2213,8 +2213,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
->  	disk->queue		= lo->lo_queue;
->  	sprintf(disk->disk_name, "loop%d", i);
->  #ifdef CONFIG_BLK_DEV_LOOPFS
-> -	if (loopfs_i_sb(inode))
-> +	if (loopfs_i_sb(inode)) {
->  		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
-> +		disk_to_dev(disk)->no_devnode = true;
-> +	}
->  #endif
->  
->  	add_disk(disk);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index ac8e37cd716a..c69ef1c5a0ef 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -523,6 +523,8 @@ struct dev_links_info {
->   *		  sync_state() callback.
->   * @dma_coherent: this particular device is dma coherent, even if the
->   *		architecture supports non-coherent devices.
-> + * @no_devnode: whether device nodes associated with this device are kept out
-> + *		of devtmpfs (e.g. due to separate filesystem)
->   *
->   * At the lowest level, every device in a Linux system is represented by an
->   * instance of struct device. The device structure contains the information
-> @@ -622,6 +624,7 @@ struct device {
->      defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
->  	bool			dma_coherent:1;
->  #endif
-> +	bool			no_devnode:1;
->  };
->  
->  static inline struct device *kobj_to_dev(struct kobject *kobj)
-> -- 
-> 2.26.1
+Hello Dear Friend,
+I am delighted to get across to you for a confidential private
+business investment proposal worth of (US$13.5 million dollars) in
+which your partnership and trust are highly required.
+For more details and the procedure, kindly provide me with your
+the following information and contact me in my email
