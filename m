@@ -2,85 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 393711B5D67
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 16:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C5591B5E43
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 16:49:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgDWONp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 10:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726450AbgDWONo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:13:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E20C08E934;
-        Thu, 23 Apr 2020 07:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=F6RH6jVuqtLpOUJiHYNSU4twCT8kCbptB6JR+OvixTE=; b=swS5ZZWPVv2ZNdoDtEloS7FPCQ
-        9VkH59EYRVFIGHIQ09n/4DelunQqbADmE9Evrr/bW9PmjLiilFLbtcfkK7SlwD1TNafToBkXgOj05
-        IRTrRzfdX1SfmG7lnggi89FfUNGkWhiBdYTuBTi0rYtmeXBHsS6zpMdgCi+qzCXZjNNv9n4pXcR/8
-        l4vlwVRO7bAa2EKKMjjzCQPliiKoZivwbxj//NA3ToOeg8WNIqwi9m0E0pyv7peSyw5kM0s3Pz9nn
-        pzCP9kKWcCGw/lOQsT4dl49x6yAAwbnlgvfdIlBaA1CcWthIuB0nNxkXspepp69INe8Yrv3AaR68K
-        wsmwjKVA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRcbi-0002wR-FU; Thu, 23 Apr 2020 14:13:38 +0000
-Date:   Thu, 23 Apr 2020 07:13:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200423141338.GA29646@infradead.org>
-References: <20200423123717.139141-1-stefanha@redhat.com>
+        id S1728731AbgDWOtH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 10:49:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58852 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728397AbgDWOtG (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:49:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3A8A9ABB2;
+        Thu, 23 Apr 2020 14:49:03 +0000 (UTC)
+Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
+ commands
+To:     John Garry <john.garry@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        ming.lei@redhat.com, bvanassche@acm.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        Hannes Reinecke <hare@suse.com>
+References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+ <1583857550-12049-3-git-send-email-john.garry@huawei.com>
+ <20200310183243.GA14549@infradead.org>
+ <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
+ <20200311062228.GA13522@infradead.org>
+ <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
+ <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
+ <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
+ <20200407163033.GA26568@infradead.org>
+ <ae3b498b-aea8-dc09-53b8-9e160effc681@huawei.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <a0316b0b-a24c-7d0c-df17-0573593e2a11@suse.de>
+Date:   Thu, 23 Apr 2020 16:49:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423123717.139141-1-stefanha@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <ae3b498b-aea8-dc09-53b8-9e160effc681@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 01:37:17PM +0100, Stefan Hajnoczi wrote:
-> A virtio_blk block device can still be referenced after hot unplug by
-> userspace processes that hold the file descriptor.  In this case
-> virtblk_getgeo() can be invoked after virtblk_remove() was called.  For
-> example, a program that has /dev/vdb open can call ioctl(HDIO_GETGEO)
-> after hot unplug.
+On 4/23/20 4:13 PM, John Garry wrote:
+> On 07/04/2020 17:30, Christoph Hellwig wrote:
+>> On Tue, Apr 07, 2020 at 04:00:10PM +0200, Hannes Reinecke wrote:
+>>> My concern is this:
+>>>
+>>> struct scsi_device *scsi_get_host_dev(struct Scsi_Host *shost)
+>>> {
+>>>     [ .. ]
+>>>     starget = scsi_alloc_target(&shost->shost_gendev, 0, 
+>>> shost->this_id);
+>>>     [ .. ]
+>>>
+>>> and we have typically:
+>>>
+>>> drivers/scsi/hisi_sas/hisi_sas_v3_hw.c: .this_id                = -1,
+>>>
+>>> It's _very_ uncommon to have a negative number as the SCSI target 
+>>> device; in
+>>> fact, it _is_ an unsigned int already.
+>>>
+>>> But alright, I'll give it a go; let's see what I'll end up with.
+>>
+>> But this shouldn't be exposed anywhere.  And I prefer that over having
+>> magic requests/scsi_cmnd that do not have a valid ->device pointer.
+>> .
+>>
 > 
-> Fix this by clearing vblk->disk->private_data and checking that the
-> virtio_blk driver instance is still around in virtblk_getgeo().
+> (just looking at this again)
 > 
-> Note that the virtblk_getgeo() function itself is guaranteed to remain
-> in memory after hot unplug because the virtio_blk module refcount is
-> still held while a block device reference exists.
+> Hi Christoph,
 > 
-> Originally-by: Lance Digby <ldigby@redhat.com>
-> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> ---
->  drivers/block/virtio_blk.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> So how would this look added in scsi_lib.c:
 > 
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 93468b7c6701..b50cdf37a6f7 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -300,6 +300,10 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
->  {
->  	struct virtio_blk *vblk = bd->bd_disk->private_data;
->  
-> +	/* Driver instance has been removed */
-> +	if (!vblk)
-> +		return -ENOTTY;
+> struct scsi_cmnd *scsi_get_reserved_cmd(struct Scsi_Host *shost)
+> {
+>      struct scsi_cmnd *scmd;
+>      struct request *rq;
+>      struct scsi_device *sdev = scsi_get_host_dev(shost);
+> 
+>      if (!sdev)
+>          return NULL;
+> 
+>      rq = blk_mq_alloc_request(sdev->request_queue,
+>                    REQ_OP_DRV_OUT | REQ_NOWAIT,
+>                    BLK_MQ_REQ_RESERVED);
+>      if (IS_ERR(rq)) // fix tidy-up
+>          return NULL;
+>      WARN_ON(rq->tag == -1);
+>      scmd = blk_mq_rq_to_pdu(rq);
+>      scmd->request = rq;
+>      scmd->device = sdev;
+> 
+>      return scmd;
+> }
+> EXPORT_SYMBOL_GPL(scsi_get_reserved_cmd);
+> 
+> void scsi_put_reserved_cmd(struct scsi_cmnd *scmd)
+> {
+>      struct request *rq = blk_mq_rq_from_pdu(scmd);
+> 
+>      if (blk_mq_rq_is_reserved(rq)) {
+>          struct scsi_device *sdev = scmd->device;
+>          blk_mq_free_request(rq);
+>          scsi_free_host_dev(sdev);
+>      }
+> }
+> EXPORT_SYMBOL_GPL(scsi_put_reserved_cmd);
+> 
+> Not sure if we want a static scsi_device per host, or alloc and free 
+> dynamically.
+> 
+> (@Hannes, I also have some proper patches for libsas if you want to add it)
+> 
+Hold your horses.
+I'm currently preparing a patchset implementing things by improving the 
+current scsi_get_host_dev() etc.
 
-If this ever hits you have a nasty race condition and this is not
-going to fix it, as it could be removed just after this check as well.
+RFC should be ready by the end of the week.
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
