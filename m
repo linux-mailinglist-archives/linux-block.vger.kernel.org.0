@@ -2,115 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA6C1B5BC1
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 14:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705A91B5BC2
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 14:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDWMvE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 08:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726444AbgDWMvD (ORCPT
+        id S1728385AbgDWMv0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 08:51:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52757 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726444AbgDWMv0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:51:03 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8024AC08E934
-        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 05:51:03 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id pg17so4570788ejb.9
-        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 05:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=otG8WudmBqdTXAwxcGmA1vSeBuT4lPZM5/UGJ3Apt3U=;
-        b=CHX1bw8RO2fkK1iFGM1HZx4KIWe8xi3kb+iQyr485p0WR8RUXowwSxN0Qac8tguHXG
-         WjiHxPfo8PxAHmQXic6QL63eFuTbLMFYk57ERcxeFjxtwiuHJ5ZjgBWtkQ+2kYH9MgWv
-         8fG+0eN4EA9FrtfAK01BDzY2Hwco2hVlS2NqYAw9Nf9CB00UIUwiTMDcH2jDoqFPPPiB
-         f/psdQmzxc2RI2Q6uQGj9QCf9Sj0k2x7mFsoNPM3jQEHvx6lSWsvv5VQE5+w7wiR9a+x
-         B+5BqokbozLKJuZzlHD7VQQbSvpMhrWiN1agCHMwoTWuSChWH7SaluHvqMX1u23MErMW
-         qXGA==
+        Thu, 23 Apr 2020 08:51:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587646284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oFynhrdn2AeeDCMTi/GbcSIhzhXYtqVnBO1H8k4rM8s=;
+        b=F9htQ05nXy2kV/9bra2esbF+0idxxQGa6/ghPa53rw0b4snroPZldv5GifmTDk2voFjX+v
+        3W+VoOEq4t3t+0ouOghLU+MdjtJ6JQywex+dWmAJoMcZ3k5/guXsFz4F5gTXt7hXRnzEht
+        0ET/T8qmTDf3NgmaJ1Ol7euvOOU5xOg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-aC8K-M7NMy6aG0FUusb2sw-1; Thu, 23 Apr 2020 08:51:23 -0400
+X-MC-Unique: aC8K-M7NMy6aG0FUusb2sw-1
+Received: by mail-wr1-f69.google.com with SMTP id y10so2802200wrn.5
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 05:51:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=otG8WudmBqdTXAwxcGmA1vSeBuT4lPZM5/UGJ3Apt3U=;
-        b=qZFPx9qoJz4Y0fi62zWDJglAJmzbfHIYjsMKcV6So49kHpkx7s5FMY2llVjYvuUiS+
-         NTTVzmyDwzl8ze3LljhBld9rCxOuUQ/3Gd0yLab6Cf1XnjExPzsCsPfCy71MUog6Y9Wa
-         u+OMo7aw516noCQrw2ZYfuKOZ0/i2Fi17NzZvaOk6B5ev4iBiABYKa/zlwIXZ8UO1udS
-         uXcA6MZ0KqmO83UR17rUBMiWgkOB6ccF7/2y5PlBew099DwUQMycpdycZhp3/JobQLKb
-         mSwAWYwDz2s6pgzdUBXn5qT4BkLZ4OzY5AzZjoUxv8qZNUIYkHK2FXSF2nlmBka1tiNR
-         CQcQ==
-X-Gm-Message-State: AGi0PuZUUENwjNJPCp4lW8pIJkvx3OxwppZvJ8r+km1lMlvszmIEVF5X
-        AYobJbVLEvc2VjbLXhxiXLuZk0CN3Mz+q4xSGNI=
-X-Google-Smtp-Source: APiQypIp/8iuo0IRYEzpBAdG5aQt4fEyYN1v2+t+8U2NWbdGc8pwzqjr+laGu7NlRIBq+cwTp34lncMrnWSR4+wnj/8=
-X-Received: by 2002:a17:906:28d7:: with SMTP id p23mr2341908ejd.305.1587646261940;
- Thu, 23 Apr 2020 05:51:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oFynhrdn2AeeDCMTi/GbcSIhzhXYtqVnBO1H8k4rM8s=;
+        b=K0ibI6d2jKFlKQ/iYHzjaRYQC27u0rOcNbp0T8UW/QWnITZ4O1fqIuiC7xlbgH7OHN
+         7dpF6Fc1Tosbc+0ULYMe18eeHYsWzfjF0mHw938kyMAfXeGVZ2rv14M9T3U18MFcdDvq
+         Bxht0m1YpxX3xAzT+1Oy0ljVXKK+2eXKDU8ehHRjOfU0P6xsql7N75o++hd4rEoTWqRo
+         DuLTg0OJ5BN5LVqM0avNeQDLc04ZlxasfqGFnB09kjvc5juJVDf6P2r1lW1UVk62XIgi
+         Gzdd8iOptxFCJu1dfGr7BFI03OB74w/8d+KRk+dtX6nOysS5uq2XTOGNiA7ljK24e5wf
+         GmSg==
+X-Gm-Message-State: AGi0PuZeCd4xhuD89cr/s176jDzd+ylZ5miKyS0XxQR1l8x2zgPamXE0
+        /0Yv/W4O+LWSCacvvGr8AQRD0kK2CS9uhhfl8H25kRCAuEpA0qAeiNlX2Keg7fW8Expel3FoLWL
+        otB7wFoOPp7RbIxz7zpY4G3E=
+X-Received: by 2002:adf:f34f:: with SMTP id e15mr4890720wrp.275.1587646282059;
+        Thu, 23 Apr 2020 05:51:22 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI/kzDW73KAZYZbxhnpJuArcvjawCoIOFrcjvuGR9Ia4oEPXtyQVUt1e61nouVHczLBSQLGAg==
+X-Received: by 2002:adf:f34f:: with SMTP id e15mr4890704wrp.275.1587646281858;
+        Thu, 23 Apr 2020 05:51:21 -0700 (PDT)
+Received: from redhat.com (bzq-109-65-97-189.red.bezeqint.net. [109.65.97.189])
+        by smtp.gmail.com with ESMTPSA id l4sm3745135wrv.60.2020.04.23.05.51.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 05:51:21 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 08:51:19 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: Re: [PATCH] virtio-blk: handle block_device_operations callbacks
+ after hot unplug
+Message-ID: <20200423084914-mutt-send-email-mst@kernel.org>
+References: <20200423123717.139141-1-stefanha@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:ab4:8a89:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 05:51:01
- -0700 (PDT)
-Reply-To: kamaraalima287@gmail.com
-From:   karbiru <karbiruahmed60@gmail.com>
-Date:   Thu, 23 Apr 2020 05:51:01 -0700
-Message-ID: <CAOmUQf3HuiNWsLdss0f5X4mwd7chxKzambE3N6jB=Ft1Ki8t-w@mail.gmail.com>
-Subject: Hello my dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423123717.139141-1-stefanha@redhat.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello my dear,
+On Thu, Apr 23, 2020 at 01:37:17PM +0100, Stefan Hajnoczi wrote:
+> A virtio_blk block device can still be referenced after hot unplug by
+> userspace processes that hold the file descriptor.  In this case
+> virtblk_getgeo() can be invoked after virtblk_remove() was called.  For
+> example, a program that has /dev/vdb open can call ioctl(HDIO_GETGEO)
+> after hot unplug.
+> 
+> Fix this by clearing vblk->disk->private_data and checking that the
+> virtio_blk driver instance is still around in virtblk_getgeo().
+> 
+> Note that the virtblk_getgeo() function itself is guaranteed to remain
+> in memory after hot unplug because the virtio_blk module refcount is
+> still held while a block device reference exists.
+> 
+> Originally-by: Lance Digby <ldigby@redhat.com>
+> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> ---
+>  drivers/block/virtio_blk.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 93468b7c6701..b50cdf37a6f7 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -300,6 +300,10 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+>  {
+>  	struct virtio_blk *vblk = bd->bd_disk->private_data;
+>  
+> +	/* Driver instance has been removed */
+> +	if (!vblk)
+> +		return -ENOTTY;
+> +
+>  	/* see if the host passed in geometry config */
+>  	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
+>  		virtio_cread(vblk->vdev, struct virtio_blk_config,
 
-Could you help me to receive an inheritance fund at the rate of
-$4,900,000.00USD (Four Million Nine hundred thousand US Dollars)?
+Just so I understand, what serializes this access?
+See below for what looks like a race condition ...
 
-Into your bank account in your country or elsewhere.
+> @@ -835,6 +839,7 @@ static void virtblk_remove(struct virtio_device *vdev)
+>  	vdev->config->reset(vdev);
+>  
+>  	refc = kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
 
-A fund has been overdue for International transfer in one of the account
-held in our Banque Commerciale du Burkina BCB. In our research we found out
-that the original owner of this fund died in a fatal gassy car-accident
-that killed both him and his only son whom was supposed to be a beneficiary
-next of kin to his father=E2=80=99s asset. This accident happened on his wa=
-y back
-to one of his factory in suburb Ouagadougou, Burkina Faso.
+So what if private_data is tested at this time ...
 
-The owner of this fund is a citizen of South Korea, he own about 2
-companies here in Burkina Faso 1 textile meal Plant, and another cement
-manufacturing factory, all of this generated him a lot of money here in
-Africa.
+> +	vblk->disk->private_data = NULL;
+>  	put_disk(vblk->disk);
+>  	vdev->config->del_vqs(vdev);
+>  	kfree(vblk->vqs);
 
-In the light of the above, I am reaching you with this notification to
-revert back to me so we can discuss on the successful manners to remits
-this fund into your bank account in your country.
+... and then used at this time?
 
-This fund is overdue for transfer or withdrawal to be made, but nobody has
-been coming for this fund hence the owner of fund is dead and the supposed
-beneficiary Next of Kin which is his only son dead too. No information
-pertaining the deposit of this fund has passed to anybody or organization.
-And my position in the bank cannot allow me to lay claim on this fund
-because the owner is a foreigner and we the citizen of Burkina Faso are not
-permitted to interfere in any foreign affairs.
-
-If you are interested to receive this fund under my guidelines I am able to
-give you all information=E2=80=99s and the password to pass through our ban=
-k
-examination for approval to transfer fund to your bank.
-
-Just reply me and give me your full names and telephone
-number=E2=80=99s=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=
-=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=
-=A6=E2=80=A6=E2=80=A6
-
-We shall talk about the percentage sharing of fund between both of us, in
-return e-mail, more details and information shall be released to you
-immediately you indicate your interest.
-
-Reply me at: kamaraalima287@gmail.com. or call me at +226 65227686
-
-Waiting very urgent to discuss with you.
+What prevents this?
 
 
-Mr Alima Kamara
-Retail & Wealth Management
-Banque Commerciale du Burkina BCB
+> -- 
+> 2.25.1
+> 
+
