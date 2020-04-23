@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2EE1B5547
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 09:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B30F61B55AE
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 09:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgDWHPC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 03:15:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:56373 "EHLO verein.lst.de"
+        id S1726887AbgDWHac (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 03:30:32 -0400
+Received: from verein.lst.de ([213.95.11.211]:56456 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWHPC (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:15:02 -0400
+        id S1725562AbgDWHaa (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:30:30 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6C23268BEB; Thu, 23 Apr 2020 09:14:59 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 09:14:58 +0200
+        id D1EC768BEB; Thu, 23 Apr 2020 09:30:26 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 09:30:26 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Ming Lei <ming.lei@redhat.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
@@ -22,30 +22,110 @@ Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Christoph Hellwig <hch@lst.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH V7 1/9] blk-mq: mark blk_mq_get_driver_tag as static
-Message-ID: <20200423071458.GA10951@lst.de>
-References: <20200418030925.31996-1-ming.lei@redhat.com> <20200418030925.31996-2-ming.lei@redhat.com>
+Subject: Re: [PATCH V7 2/9] blk-mq: assign rq->tag in blk_mq_get_driver_tag
+Message-ID: <20200423073026.GB10951@lst.de>
+References: <20200418030925.31996-1-ming.lei@redhat.com> <20200418030925.31996-3-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418030925.31996-2-ming.lei@redhat.com>
+In-Reply-To: <20200418030925.31996-3-ming.lei@redhat.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:09:17AM +0800, Ming Lei wrote:
-> Now all callers of blk_mq_get_driver_tag are in blk-mq.c, so mark
-> it as static.
+On Sat, Apr 18, 2020 at 11:09:18AM +0800, Ming Lei wrote:
+> Especially for none elevator, rq->tag is assigned after the request is
+> allocated, so there isn't any way to figure out if one request is in
+> being dispatched. Also the code path wrt. driver tag becomes a bit
+> difference between none and io scheduler.
 > 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: John Garry <john.garry@huawei.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> When one hctx becomes inactive, we have to prevent any request from
+> being dispatched to LLD. And get driver tag provides one perfect chance
+> to do that. Meantime we can drain any such requests by checking if
+> rq->tag is assigned.
+> 
+> So only assign rq->tag until blk_mq_get_driver_tag() is called.
+> 
+> This way also simplifies code of dealing with driver tag a lot.
 
-Looks good,
+I really like this, but I find blk_mq_get_driver_tag really convoluted
+after this patch, mostly due to the excessive use of gotos, but also
+because it mixed tag >= 0 and tag == -1 checks, which should mean the
+same as -1 is the only negative value assigned (which btw really should
+grow a BLK_MQ_NO_TAG name in another patch).  I think something like
+this folded into your patch would be a nice improvement and also fit
+in with the changes later in the series:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 05fe2eb615a9..fb7b35941e6c 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1021,40 +1021,41 @@ static inline unsigned int queued_to_index(unsigned int queued)
+ 	return min(BLK_MQ_MAX_DISPATCH_ORDER - 1, ilog2(queued) + 1);
+ }
+ 
+-static bool blk_mq_get_driver_tag(struct request *rq)
++static bool __blk_mq_get_driver_tag(struct request *rq)
+ {
+ 	struct blk_mq_alloc_data data = {
+-		.q = rq->q,
+-		.hctx = rq->mq_hctx,
+-		.flags = BLK_MQ_REQ_NOWAIT,
+-		.cmd_flags = rq->cmd_flags,
++		.q		= rq->q,
++		.hctx		= rq->mq_hctx,
++		.flags		= BLK_MQ_REQ_NOWAIT,
++		.cmd_flags	= rq->cmd_flags,
+ 	};
+-	bool shared;
+-
+-	if (rq->tag >= 0)
+-		goto allocated;
+ 
+-	if (!data.hctx->sched_tags) {
++	if (data.hctx->sched_tags) {
++		if (blk_mq_tag_is_reserved(data.hctx->sched_tags,
++				rq->internal_tag))
++			data.flags |= BLK_MQ_REQ_RESERVED;
++		rq->tag = blk_mq_get_tag(&data);
++	} else {
+ 		rq->tag = rq->internal_tag;
+-		goto set_rq;
+ 	}
+ 
+-	if (blk_mq_tag_is_reserved(data.hctx->sched_tags, rq->internal_tag))
+-		data.flags |= BLK_MQ_REQ_RESERVED;
+-
+-	rq->tag = blk_mq_get_tag(&data);
++	if (rq->tag == -1)
++		return false;
+ 
+-set_rq:
+-	shared = blk_mq_tag_busy(data.hctx);
+-	if (rq->tag >= 0) {
+-		if (shared) {
+-			rq->rq_flags |= RQF_MQ_INFLIGHT;
+-			atomic_inc(&data.hctx->nr_active);
+-		}
+-		data.hctx->tags->rqs[rq->tag] = rq;
++	if (blk_mq_tag_busy(data.hctx)) {
++		rq->rq_flags |= RQF_MQ_INFLIGHT;
++		atomic_inc(&data.hctx->nr_active);
+ 	}
+-allocated:
+-	return rq->tag != -1;
++	data.hctx->tags->rqs[rq->tag] = rq;
++	return true;
++}
++
++
++static bool blk_mq_get_driver_tag(struct request *rq)
++{
++	if (rq->tag == -1)
++		return __blk_mq_get_driver_tag(rq);
++	return true;
+ }
+ 
+ static int blk_mq_dispatch_wake(wait_queue_entry_t *wait, unsigned mode,
