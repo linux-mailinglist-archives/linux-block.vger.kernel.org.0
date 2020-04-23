@@ -2,84 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBDB71B5B92
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 14:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DA6C1B5BC1
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 14:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgDWMh3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 08:37:29 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60628 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726840AbgDWMh3 (ORCPT
+        id S1728348AbgDWMvE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 08:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726444AbgDWMvD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587645447;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+XlBFNq2TljiIz7UMQVRidAnnXkCvE8Tn9pzuRMdxJE=;
-        b=KGETPAGZxzZWjKfc9ds35wzFNfCghTI9gsRYfEmHKVPhA8jEOfZz7uHGjxusjElANNaswf
-        3c3QNiFUvHjai6xTFBzDYL1btpbFd5sN+V57r+j+rRo8+udZHW7We48yKnC9xgEWjhnOm4
-        QiS0ZzdwwcshliVDScCzf1Er38c56+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-RqunHNMFNlqYJD41EtgEXw-1; Thu, 23 Apr 2020 08:37:26 -0400
-X-MC-Unique: RqunHNMFNlqYJD41EtgEXw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F0F61800D51;
-        Thu, 23 Apr 2020 12:37:25 +0000 (UTC)
-Received: from localhost (ovpn-114-230.ams2.redhat.com [10.36.114.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA8B5D70A;
-        Thu, 23 Apr 2020 12:37:18 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     virtualization@lists.linux-foundation.org
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: [PATCH] virtio-blk: handle block_device_operations callbacks after hot unplug
-Date:   Thu, 23 Apr 2020 13:37:17 +0100
-Message-Id: <20200423123717.139141-1-stefanha@redhat.com>
+        Thu, 23 Apr 2020 08:51:03 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8024AC08E934
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 05:51:03 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id pg17so4570788ejb.9
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 05:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=otG8WudmBqdTXAwxcGmA1vSeBuT4lPZM5/UGJ3Apt3U=;
+        b=CHX1bw8RO2fkK1iFGM1HZx4KIWe8xi3kb+iQyr485p0WR8RUXowwSxN0Qac8tguHXG
+         WjiHxPfo8PxAHmQXic6QL63eFuTbLMFYk57ERcxeFjxtwiuHJ5ZjgBWtkQ+2kYH9MgWv
+         8fG+0eN4EA9FrtfAK01BDzY2Hwco2hVlS2NqYAw9Nf9CB00UIUwiTMDcH2jDoqFPPPiB
+         f/psdQmzxc2RI2Q6uQGj9QCf9Sj0k2x7mFsoNPM3jQEHvx6lSWsvv5VQE5+w7wiR9a+x
+         B+5BqokbozLKJuZzlHD7VQQbSvpMhrWiN1agCHMwoTWuSChWH7SaluHvqMX1u23MErMW
+         qXGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=otG8WudmBqdTXAwxcGmA1vSeBuT4lPZM5/UGJ3Apt3U=;
+        b=qZFPx9qoJz4Y0fi62zWDJglAJmzbfHIYjsMKcV6So49kHpkx7s5FMY2llVjYvuUiS+
+         NTTVzmyDwzl8ze3LljhBld9rCxOuUQ/3Gd0yLab6Cf1XnjExPzsCsPfCy71MUog6Y9Wa
+         u+OMo7aw516noCQrw2ZYfuKOZ0/i2Fi17NzZvaOk6B5ev4iBiABYKa/zlwIXZ8UO1udS
+         uXcA6MZ0KqmO83UR17rUBMiWgkOB6ccF7/2y5PlBew099DwUQMycpdycZhp3/JobQLKb
+         mSwAWYwDz2s6pgzdUBXn5qT4BkLZ4OzY5AzZjoUxv8qZNUIYkHK2FXSF2nlmBka1tiNR
+         CQcQ==
+X-Gm-Message-State: AGi0PuZUUENwjNJPCp4lW8pIJkvx3OxwppZvJ8r+km1lMlvszmIEVF5X
+        AYobJbVLEvc2VjbLXhxiXLuZk0CN3Mz+q4xSGNI=
+X-Google-Smtp-Source: APiQypIp/8iuo0IRYEzpBAdG5aQt4fEyYN1v2+t+8U2NWbdGc8pwzqjr+laGu7NlRIBq+cwTp34lncMrnWSR4+wnj/8=
+X-Received: by 2002:a17:906:28d7:: with SMTP id p23mr2341908ejd.305.1587646261940;
+ Thu, 23 Apr 2020 05:51:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Received: by 2002:ab4:8a89:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 05:51:01
+ -0700 (PDT)
+Reply-To: kamaraalima287@gmail.com
+From:   karbiru <karbiruahmed60@gmail.com>
+Date:   Thu, 23 Apr 2020 05:51:01 -0700
+Message-ID: <CAOmUQf3HuiNWsLdss0f5X4mwd7chxKzambE3N6jB=Ft1Ki8t-w@mail.gmail.com>
+Subject: Hello my dear,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-QSB2aXJ0aW9fYmxrIGJsb2NrIGRldmljZSBjYW4gc3RpbGwgYmUgcmVmZXJlbmNlZCBhZnRlciBo
-b3QgdW5wbHVnIGJ5CnVzZXJzcGFjZSBwcm9jZXNzZXMgdGhhdCBob2xkIHRoZSBmaWxlIGRlc2Ny
-aXB0b3IuICBJbiB0aGlzIGNhc2UKdmlydGJsa19nZXRnZW8oKSBjYW4gYmUgaW52b2tlZCBhZnRl
-ciB2aXJ0YmxrX3JlbW92ZSgpIHdhcyBjYWxsZWQuICBGb3IKZXhhbXBsZSwgYSBwcm9ncmFtIHRo
-YXQgaGFzIC9kZXYvdmRiIG9wZW4gY2FuIGNhbGwgaW9jdGwoSERJT19HRVRHRU8pCmFmdGVyIGhv
-dCB1bnBsdWcuCgpGaXggdGhpcyBieSBjbGVhcmluZyB2YmxrLT5kaXNrLT5wcml2YXRlX2RhdGEg
-YW5kIGNoZWNraW5nIHRoYXQgdGhlCnZpcnRpb19ibGsgZHJpdmVyIGluc3RhbmNlIGlzIHN0aWxs
-IGFyb3VuZCBpbiB2aXJ0YmxrX2dldGdlbygpLgoKTm90ZSB0aGF0IHRoZSB2aXJ0YmxrX2dldGdl
-bygpIGZ1bmN0aW9uIGl0c2VsZiBpcyBndWFyYW50ZWVkIHRvIHJlbWFpbgppbiBtZW1vcnkgYWZ0
-ZXIgaG90IHVucGx1ZyBiZWNhdXNlIHRoZSB2aXJ0aW9fYmxrIG1vZHVsZSByZWZjb3VudCBpcwpz
-dGlsbCBoZWxkIHdoaWxlIGEgYmxvY2sgZGV2aWNlIHJlZmVyZW5jZSBleGlzdHMuCgpPcmlnaW5h
-bGx5LWJ5OiBMYW5jZSBEaWdieSA8bGRpZ2J5QHJlZGhhdC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0
-ZWZhbiBIYWpub2N6aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2Jsb2NrL3Zp
-cnRpb19ibGsuYyB8IDUgKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyBiL2RyaXZlcnMvYmxvY2svdmly
-dGlvX2Jsay5jCmluZGV4IDkzNDY4YjdjNjcwMS4uYjUwY2RmMzdhNmY3IDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYworKysgYi9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsu
-YwpAQCAtMzAwLDYgKzMwMCwxMCBAQCBzdGF0aWMgaW50IHZpcnRibGtfZ2V0Z2VvKHN0cnVjdCBi
-bG9ja19kZXZpY2UgKmJkLCBzdHJ1Y3QgaGRfZ2VvbWV0cnkgKmdlbykKIHsKIAlzdHJ1Y3Qgdmly
-dGlvX2JsayAqdmJsayA9IGJkLT5iZF9kaXNrLT5wcml2YXRlX2RhdGE7CiAKKwkvKiBEcml2ZXIg
-aW5zdGFuY2UgaGFzIGJlZW4gcmVtb3ZlZCAqLworCWlmICghdmJsaykKKwkJcmV0dXJuIC1FTk9U
-VFk7CisKIAkvKiBzZWUgaWYgdGhlIGhvc3QgcGFzc2VkIGluIGdlb21ldHJ5IGNvbmZpZyAqLwog
-CWlmICh2aXJ0aW9faGFzX2ZlYXR1cmUodmJsay0+dmRldiwgVklSVElPX0JMS19GX0dFT01FVFJZ
-KSkgewogCQl2aXJ0aW9fY3JlYWQodmJsay0+dmRldiwgc3RydWN0IHZpcnRpb19ibGtfY29uZmln
-LApAQCAtODM1LDYgKzgzOSw3IEBAIHN0YXRpYyB2b2lkIHZpcnRibGtfcmVtb3ZlKHN0cnVjdCB2
-aXJ0aW9fZGV2aWNlICp2ZGV2KQogCXZkZXYtPmNvbmZpZy0+cmVzZXQodmRldik7CiAKIAlyZWZj
-ID0ga3JlZl9yZWFkKCZkaXNrX3RvX2Rldih2YmxrLT5kaXNrKS0+a29iai5rcmVmKTsKKwl2Ymxr
-LT5kaXNrLT5wcml2YXRlX2RhdGEgPSBOVUxMOwogCXB1dF9kaXNrKHZibGstPmRpc2spOwogCXZk
-ZXYtPmNvbmZpZy0+ZGVsX3Zxcyh2ZGV2KTsKIAlrZnJlZSh2YmxrLT52cXMpOwotLSAKMi4yNS4x
-Cgo=
+Hello my dear,
 
+Could you help me to receive an inheritance fund at the rate of
+$4,900,000.00USD (Four Million Nine hundred thousand US Dollars)?
+
+Into your bank account in your country or elsewhere.
+
+A fund has been overdue for International transfer in one of the account
+held in our Banque Commerciale du Burkina BCB. In our research we found out
+that the original owner of this fund died in a fatal gassy car-accident
+that killed both him and his only son whom was supposed to be a beneficiary
+next of kin to his father=E2=80=99s asset. This accident happened on his wa=
+y back
+to one of his factory in suburb Ouagadougou, Burkina Faso.
+
+The owner of this fund is a citizen of South Korea, he own about 2
+companies here in Burkina Faso 1 textile meal Plant, and another cement
+manufacturing factory, all of this generated him a lot of money here in
+Africa.
+
+In the light of the above, I am reaching you with this notification to
+revert back to me so we can discuss on the successful manners to remits
+this fund into your bank account in your country.
+
+This fund is overdue for transfer or withdrawal to be made, but nobody has
+been coming for this fund hence the owner of fund is dead and the supposed
+beneficiary Next of Kin which is his only son dead too. No information
+pertaining the deposit of this fund has passed to anybody or organization.
+And my position in the bank cannot allow me to lay claim on this fund
+because the owner is a foreigner and we the citizen of Burkina Faso are not
+permitted to interfere in any foreign affairs.
+
+If you are interested to receive this fund under my guidelines I am able to
+give you all information=E2=80=99s and the password to pass through our ban=
+k
+examination for approval to transfer fund to your bank.
+
+Just reply me and give me your full names and telephone
+number=E2=80=99s=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=
+=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=
+=A6=E2=80=A6=E2=80=A6
+
+We shall talk about the percentage sharing of fund between both of us, in
+return e-mail, more details and information shall be released to you
+immediately you indicate your interest.
+
+Reply me at: kamaraalima287@gmail.com. or call me at +226 65227686
+
+Waiting very urgent to discuss with you.
+
+
+Mr Alima Kamara
+Retail & Wealth Management
+Banque Commerciale du Burkina BCB
