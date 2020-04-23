@@ -2,92 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B2281B63B1
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 20:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFDB1B6542
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 22:14:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgDWS1p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 14:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52816 "EHLO
+        id S1726102AbgDWUN6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 16:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730279AbgDWS0v (ORCPT
+        with ESMTP id S1726071AbgDWUN5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:26:51 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34027C09B04A
-        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k6so7528340iob.3
-        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+        Thu, 23 Apr 2020 16:13:57 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C228C09B043
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 13:13:57 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id m18so8378089otq.9
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 13:13:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
-         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
-         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
-         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
-         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
-         vLew==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c2rUn6OEE/SyUFvNfSs4xf0M3jM82iEbBd70o6oUd2c=;
+        b=uAeBnTv9ZhEDHEM0R2gYPziVyPUzWcc2FZmKHluszWUeQZ+mlcnJNqx+toFeod+rG2
+         5CtqzTIfz4EdeBuiId/090yid1X5A7Wl4mg8teizN+JkxYqU446/EKbttIrGvbCXSLY4
+         tH4L7LN6h0n0BjbA9qqt2ovfOmTZDTphMD5L7tzI1e1nqOT7l1c2ZP4jBOKHerk8o+2u
+         7Wcz5PX5oyRcYAec+aWyToiXprU9h0QgmqHWNfVR00m4ilAJ7k574PeLLCBKbD6wtKJ3
+         Spw5vgab2z50d/5me4yy3csoIGoeL7v0BZdJIhy3gXOsc842o2ssePflinAKaP6Acq4y
+         7kCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=Rz3Ov17tbu5dy9BpE7vxIRuJmprzafZmwhULFrCMT+rks4eOaF9l7IF4iCb7DQI2jD
-         IB64Aq7Id7oHnBp/pAntJfKn4+NeHNGXhuOm33W5xhHoROC6UYu8Z7XjjYkpU7YNpRnz
-         3/zkiG02L64CTRTNDKwORg+s0xRn0J2X/XpU4Z1EKYJzPXRk9W+rbLVTkd7jnCMdQzbQ
-         T6IalpWpcBiA/VNmoTDv+L0AAU+IL+4WszxTVzq58GoeO8oSbT7u22TTvP1XCAxJzSV7
-         TRdrtuo+84EMmMC/A5LjzSzspm1WbxaU9OU0KThmfIngRopTmrc7T15HiCkOrVOOvsuW
-         gXAQ==
-X-Gm-Message-State: AGi0PuYW8hZ4N5dl6sZaEbuAmt0LqBt6m14WTHF1zdIroE4hhkiOpb9L
-        BT5qgeCcrQgpRLOnw0ujiVYY7chyh48sFnOlzA==
-X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
-X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
- Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c2rUn6OEE/SyUFvNfSs4xf0M3jM82iEbBd70o6oUd2c=;
+        b=eN3OfGXqMUwmv1YzeFC6PdbTWcNBSXEAu3q21wTmA6HUne+fn/7NgEpqoJ5z1rSPl7
+         N63l5QV7oTg/84aruWlhcfITR5Uncy/828BhyF5R4nqY2IK/lOmTqsk/+tT3egB+gDSa
+         FnPSv8MwdPDf+YK2pXcN7JGyiHg1PIT2kA4bkLToo3cxFJz/pf/zDNuAaVUVQCpRilMF
+         q+cP+EeKv4dZwKnGeAV2ZqY4FIaExeOp5Xkxrf2VsIn0M1lOV9bfLYIojbtM/TfcGM14
+         gB5URAQah9rbg4Sdaa65BGXIU+6tauTmM92j1ZvA0qXL1QplBOZznUJC/xedF4wl/FV+
+         0lFA==
+X-Gm-Message-State: AGi0PuYOnwBzMKh/zVkswtrb0uVYmyDKK16xLS2Anb4M2h9lXH8nPoli
+        Exxg+rJNGsmQb2DaAky70LnuLbfm1X0rFrnwmF0N4A==
+X-Google-Smtp-Source: APiQypJ5t6fji8Z2rpOwfgYmXZuKaiHhYHNgNK+IwyP9bjp4jWKiR46a48ICy6o3dAe/KAxDyKi5qjmcOvKfU/4ihq0=
+X-Received: by 2002:a05:6830:23b5:: with SMTP id m21mr5146009ots.63.1587672836590;
+ Thu, 23 Apr 2020 13:13:56 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:26:49 +0200
-Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
-Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
- amount of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
+References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
+ <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org> <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
+ <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org> <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
+ <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
+In-Reply-To: <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Thu, 23 Apr 2020 13:13:45 -0700
+Message-ID: <CAJmaN=m4sPCUjS1oy3yOavjN2wcwhMWvZE9sVehySuhibTmABQ@mail.gmail.com>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
+ in one go
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Salman Qazi <sqazi@google.com>, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+Jens, Bart, Ming, any update here?  Or is this already applied (I didn't check)?
+
+Thanks,
+Jesse
+
+
+On Mon, Apr 20, 2020 at 9:43 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, Feb 7, 2020 at 12:38 PM Salman Qazi <sqazi@google.com> wrote:
+> >
+> > On Fri, Feb 7, 2020 at 12:19 PM Bart Van Assche <bvanassche@acm.org> wrote:
+> > >
+> > > On 2/7/20 10:45 AM, Salman Qazi wrote:
+> > > > If I were to write this as a for-loop, it will look like this:
+> > > >
+> > > > for (i = 0; i == 0 || (run_again && i < 2); i++) {
+> > > > /* another level of 8 character wide indentation */
+> > > >      run_again = false;
+> > > >     /* a bunch of code that possibly sets run_again to true
+> > > > }
+> > > >
+> > > > if (run_again)
+> > > >      blk_mq_run_hw_queue(hctx, true);
+> > >
+> > > That's not what I meant. What I meant is a loop that iterates at most
+> > > two times and also to break out of the loop if run_again == false.
+> > >
+> >
+> > I picked the most compact variant to demonstrate the problem.  Adding
+> > breaks isn't
+> > really helping the readability.
+> >
+> > for (i = 0; i < 2; i++) {
+> >   run_again = false;
+> > /* bunch of code that possibly sets it to true */
+> > ...
+> >  if (!run_again)
+> >     break;
+> > }
+> > if (run_again)
+> >     blk_mq_run_hw_queue(hctx, true);
+> >
+> > When I read this, I initially assume that the loop in general runs
+> > twice and that this is the common case.  It has the
+> > same problem with conveying intent.  Perhaps, more importantly, the
+> > point of using programming constructs is to shorten and simplify the
+> > code.
+> > There are still two if-statements in addition to the loop. We haven't
+> > gained much by introducing the loop.
+> >
+> > > BTW, I share your concern about the additional indentation by eight
+> > > positions. How about avoiding deeper indentation by introducing a new
+> > > function?
+> >
+> > If there was a benefit to introducing the loop, this would be a good
+> > call.  But the way I see it, the introduction of another
+> > function is yet another way in which the introduction of the loop
+> > makes the code less readable.
+> >
+> > This is not a hill I want to die on.  If the maintainer agrees with
+> > you on this point, I will use a loop.
+>
+> I haven't done a massive amount of analysis of this patch, but since I
+> noticed it while debugging my own block series I've been keeping track
+> of it.  Is there any status update here?  We've been carrying this
+> "FROMLIST" in our Chrome OS trees for a little while, but that's not a
+> state we want to be in long-term.  If it needs to spin before landing
+> upstream we should get the spin out and land it.  If it's OK as-is
+> then it'd be nice to see it in mainline.
+>
+> From the above I guess Salman was waiting for Jens to weigh in with an
+> opinion on the prefered bike shed color?
+>
+> -Doug
