@@ -2,191 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1C61B60FE
-	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 18:32:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B2281B63B1
+	for <lists+linux-block@lfdr.de>; Thu, 23 Apr 2020 20:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgDWQcj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Apr 2020 12:32:39 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2091 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729423AbgDWQcj (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:32:39 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 751AA79CD0BB64364E6E;
-        Thu, 23 Apr 2020 17:32:35 +0100 (IST)
-Received: from [127.0.0.1] (10.47.5.255) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 23 Apr
- 2020 17:32:33 +0100
-Subject: Re: [PATCH RFC v6 08/10] megaraid_sas: switch fusion adapters to MQ
-From:   John Garry <john.garry@huawei.com>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>, <axboe@kernel.dk>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hare@suse.de>,
-        <don.brace@microsemi.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>, <hch@infradead.org>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>
-CC:     <chenxiang66@hisilicon.com>, <linux-block@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583409280-158604-1-git-send-email-john.garry@huawei.com>
- <1583409280-158604-9-git-send-email-john.garry@huawei.com>
- <a1f0399e2e85b2244a9ae40e4a2f1089@mail.gmail.com>
- <f839f040-8bf4-cf83-7670-dfc208b77326@huawei.com>
- <7cac3eb9fd79b5b988e25da542305b35@mail.gmail.com>
- <40faaef8-8bfc-639f-747f-cacd4e61464f@huawei.com>
- <7b8c79b0453722023c6c7d53cd24441d@mail.gmail.com>
- <b759a8ed-09ba-bfe8-8916-c05ab9671cbf@huawei.com>
- <260c5decdb38db9f74994988ce7fcaf1@mail.gmail.com>
- <380d3bf2-67ee-a09a-3098-51b24b98f912@huawei.com>
-Message-ID: <e0c5a076-9fe5-4401-fd41-97f457888ad3@huawei.com>
-Date:   Thu, 23 Apr 2020 17:31:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1730281AbgDWS1p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Apr 2020 14:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730279AbgDWS0v (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 23 Apr 2020 14:26:51 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34027C09B04A
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k6so7528340iob.3
+        for <linux-block@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
+         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
+         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
+         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
+         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
+         vLew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=Rz3Ov17tbu5dy9BpE7vxIRuJmprzafZmwhULFrCMT+rks4eOaF9l7IF4iCb7DQI2jD
+         IB64Aq7Id7oHnBp/pAntJfKn4+NeHNGXhuOm33W5xhHoROC6UYu8Z7XjjYkpU7YNpRnz
+         3/zkiG02L64CTRTNDKwORg+s0xRn0J2X/XpU4Z1EKYJzPXRk9W+rbLVTkd7jnCMdQzbQ
+         T6IalpWpcBiA/VNmoTDv+L0AAU+IL+4WszxTVzq58GoeO8oSbT7u22TTvP1XCAxJzSV7
+         TRdrtuo+84EMmMC/A5LjzSzspm1WbxaU9OU0KThmfIngRopTmrc7T15HiCkOrVOOvsuW
+         gXAQ==
+X-Gm-Message-State: AGi0PuYW8hZ4N5dl6sZaEbuAmt0LqBt6m14WTHF1zdIroE4hhkiOpb9L
+        BT5qgeCcrQgpRLOnw0ujiVYY7chyh48sFnOlzA==
+X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
+X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
+ Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <380d3bf2-67ee-a09a-3098-51b24b98f912@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.5.255]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
+ -0700 (PDT)
+Reply-To: boa.benin107@yahoo.com
+From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
+Date:   Thu, 23 Apr 2020 20:26:49 +0200
+Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
+Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
+ amount of $12.800.000,00 Million USD,approved this morning by IMF.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> 
->>> So I tested this on hisi_sas with x12 SAS SSDs, and performance with 
->>> "mq-
->>> deadline" is comparable with "none" @ ~ 2M IOPs. But after a while
->>> performance drops alot, to maybe 700K IOPS. Do you have a similar
->>> experience?
->>
->> I am using mq-deadline only for HDD. I have not tried on SSD since it 
->> is not
->> useful scheduler for SSDs.
->>
-> 
-> I ask as I only have SAS SSDs to test.
-> 
->> I noticed that when I used mq-deadline, performance drop starts if I have
->> more number of drives.
->> I am running <fio> script which has 64 Drives, 64 thread and all 
->> treads are
->> bound to local numa node which has 36 logical cores.
->> I noticed that lock contention is in " dd_dispatch_request". I am not 
->> sure
->> why there is a no penalty of same lock in nr_hw_queue  = 1 mode.
-> 
-> So this could be just pre-existing issue of exposing multiple queues for 
-> SCSI HBAs combined with mq-deadline iosched. I mean, that's really the 
-> only significant change in this series, apart from the shared sbitmap, 
-> and, at this point, I don't think that is the issue.
-
-As an experiment, I modified hisi_sas mainline driver to expose hw 
-queues and manage tags itself, and I see the same issue I mentioned:
-
-Jobs: 12 (f=12): [R(12)] [14.8% done] [7592MB/0KB/0KB /s] [1943K/0/0 
-iops] [eta
-Jobs: 12 (f=12): [R(12)] [16.4% done] [7949MB/0KB/0KB /s] [2035K/0/0 
-iops] [eta
-Jobs: 12 (f=12): [R(12)] [18.0% done] [7940MB/0KB/0KB /s] [2033K/0/0 
-iops] [eta
-Jobs: 12 (f=12): [R(12)] [19.7% done] [7984MB/0KB/0KB /s] [2044K/0/0 
-iops] [eta
-Jobs: 12 (f=12): [R(12)] [21.3% done] [7984MB/0KB/0KB /s] [2044K/0/0 
-iops] [eta
-Jobs: 12 (f=12): [R(12)] [23.0% done] [2964MB/0KB/0KB /s] [759K/0/0 
-iops] [eta 0
-Jobs: 12 (f=12): [R(12)] [24.6% done] [2417MB/0KB/0KB /s] [619K/0/0 
-iops] [eta 0
-Jobs: 12 (f=12): [R(12)] [26.2% done] [2909MB/0KB/0KB /s] [745K/0/0 
-iops] [eta 0
-Jobs: 12 (f=12): [R(12)] [27.9% done] [2366MB/0KB/0KB /s] [606K/0/0 
-iops] [eta 0
-
-The odd time I see "sched: RT throttling activated" around the time the 
-throughput falls. I think issue is the per-queue threaded irq threaded 
-handlers consuming too many cycles. With "none" io scheduler, IOPS is 
-flat at around 2M.
-
-> 
->>
->> static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
->> {
->>          struct deadline_data *dd = hctx->queue->elevator->elevator_data;
->>          struct request *rq;
->>
->>          spin_lock(&dd->lock);
-> 
-> So if multiple hctx's are accessing this lock, then much contention 
-> possible.
-> 
->>          rq = __dd_dispatch_request(dd);
->>          spin_unlock(&dd->lock);
->>
->>          return rq;
->> }
->>
->> Here is perf report -
->>
->> -    1.04%     0.99%  kworker/18:1H+k  [kernel.vmlinux]  [k]
->> native_queued_spin_lock_slowpath
->>       0.99% ret_from_fork
->>      -   kthread
->>        - worker_thread
->>           - 0.98% process_one_work
->>              - 0.98% __blk_mq_run_hw_queue
->>                 - blk_mq_sched_dispatch_requests
->>                    - 0.98% blk_mq_do_dispatch_sched
->>                       - 0.97% dd_dispatch_request
->>                          + 0.97% queued_spin_lock_slowpath
->> +    1.04%     0.00%  kworker/18:1H+k  [kernel.vmlinux]  [k]
->> queued_spin_lock_slowpath
->> +    1.03%     0.95%  kworker/19:1H-k  [kernel.vmlinux]  [k]
->> native_queued_spin_lock_slowpath
->> +    1.03%     0.00%  kworker/19:1H-k  [kernel.vmlinux]  [k]
->> queued_spin_lock_slowpath
->> +    1.02%     0.97%  kworker/20:1H+k  [kernel.vmlinux]  [k]
->> native_queued_spin_lock_slowpath
->> +    1.02%     0.00%  kworker/20:1H+k  [kernel.vmlinux]  [k]
->> queued_spin_lock_slowpath
->> +    1.01%     0.96%  kworker/21:1H+k  [kernel.vmlinux]  [k]
->> native_queued_spin_lock_slowpath
->>
-> 
-> I'll try to capture a perf report and compare to mine.
-
-Mine is spending a huge amount of time (circa 33% on a cpu servicing 
-completion irqs) in mod_delayed_work_on():
-
---79.89%--sas_scsi_task_done |
-    |--76.72%--scsi_mq_done
-    |    |
-    |     --76.53%--blk_mq_complete_request
-    |    |
-    |    |--74.81%--scsi_softirq_done
-    |    |    |
-    |    |     --73.91%--scsi_finish_command
-    |    |    |
-    |    |    |--72.11%--scsi_io_completion
-    |    |    |    |
-    |    |    |     --71.89%--scsi_end_request
-    |    |    |    |
-    |    |    |    |--40.82%--blk_mq_run_hw_queues
-    |    |    |    |    |
-    |    |    |    |    |--35.86%--blk_mq_run_hw_queue
-    |    |    |    |    |    |
-    |    |    |    |    |     --33.59%--__blk_mq_delay_run_hw_queue
-    |    |    |    |    |    |
-    |    |    |    |    |     --33.38%--kblockd_mod_delayed_work_on
-    |    |    |    |    |          |
-    |    |    |    |    |                --33.31%--mod_delayed_work_on
-
-hmmmm...
-
-Thanks,
-John
+Attn Dear.
+Contact Bank of Africa-Benin to receive your payment funds transfer amount =
+of
+$12.800.000,00 Million USD,approved this morning by IMF.
+Happy to inform you, we have finally deposited your payment funds
+$12.8 million us dollars with the Paying Bank of Africa-Benin
+to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
+Contact the bank immediately you receive this email now.
+Director Bank of Africa-Benin: Dr. Festus Obiara
+Email id:  boa.benin107@yahoo.com
+Tel/mobile, (229) 62819378
+BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
+Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
+Phone:(229) 62819378.
+2020 GROUPE BANK OF AFRICA
+Be advised to re-confirm your bank details to this bank as listed.
+Your account Holder's name----------------
+Bank Name----------------------------------------------------------
+Bank address----------------------------------------------
+Account Numbers---------------------------------------
+Rounting-----------------------------------------------------------------
+Your direct Phone Numbers----------------------------------------------
+Note,I have paid the deposit and insurance fees for you
+But the only money you are to send to this bank is $150.00 us dollars
+Been for the wire transfer fees of your funds
+Contact Him now to receive your transfer deposited this morning
+I wait for your reply upon confirmation
+Mrs. Angella Michelle
+Editor, Zenith Bank- Companies Benin
+mrsa9389@gmail.com
