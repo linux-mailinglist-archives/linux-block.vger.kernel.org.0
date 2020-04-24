@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEFCC1B73E9
-	for <lists+linux-block@lfdr.de>; Fri, 24 Apr 2020 14:23:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE6811B74EF
+	for <lists+linux-block@lfdr.de>; Fri, 24 Apr 2020 14:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgDXMXT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Apr 2020 08:23:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53026 "EHLO mail.kernel.org"
+        id S1728212AbgDXM3n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Apr 2020 08:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbgDXMXT (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:19 -0400
+        id S1728184AbgDXMXw (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA1C21569;
-        Fri, 24 Apr 2020 12:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF712168B;
+        Fri, 24 Apr 2020 12:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730998;
-        bh=AiHOas8FpZ+35GyVOzSMP/dUHuS5mXTYhtblJ3qlYeA=;
+        s=default; t=1587731032;
+        bh=FNO5HnRA8S9+d8oyUQAZzI9nV37VP+FJrNUT5nn94nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ipv/rp2N8Rp3Uq+pwD/I//v2eejjgONxhjiBq94EzBmN7IeNO233gSRjigbrz4JUZ
-         hzmXDlZaeOx85kjU2LeGk/r2udy8FKMOW7msLj8OWGzbt0UkBjA9B/+AFUoQXwszNj
-         llm09J5qumtsT9uuTVANIXPM3zIBkbaeu2Cjw3mM=
+        b=KTG41VHIpNJ0mBIKdiKWfQO8oZJBGRxzZCh2uFeUt5XdjsgGIeZEO3trEtm8rpHIX
+         3OF0lW8ypUOd/ok+Z1a7rTIkgkzxsbAoJSc2XotRE312rUYHjowQhMn1hwa4UAvGjb
+         QrkkuIN3xyOCsnj+nvIKEalGcugaIi3A/bTqANzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     John Garry <john.garry@huawei.com>, Ming Lei <ming.lei@redhat.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 36/38] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when no budget
-Date:   Fri, 24 Apr 2020 08:22:34 -0400
-Message-Id: <20200424122237.9831-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 25/26] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when no budget
+Date:   Fri, 24 Apr 2020 08:23:22 -0400
+Message-Id: <20200424122323.10194-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
-References: <20200424122237.9831-1-sashal@kernel.org>
+In-Reply-To: <20200424122323.10194-1-sashal@kernel.org>
+References: <20200424122323.10194-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +62,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 37ff8dfb8ab9f..2c3a1b2e07537 100644
+index a8c1a45cedde0..757c0fd9f0cc2 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -1205,8 +1205,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+@@ -1232,8 +1232,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
  		rq = list_first_entry(list, struct request, queuelist);
  
  		hctx = rq->mq_hctx;
