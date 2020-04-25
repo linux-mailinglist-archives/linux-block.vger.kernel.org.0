@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EB01B8800
-	for <lists+linux-block@lfdr.de>; Sat, 25 Apr 2020 19:09:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01FEB1B8801
+	for <lists+linux-block@lfdr.de>; Sat, 25 Apr 2020 19:09:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgDYRJy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 25 Apr 2020 13:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
+        id S1726177AbgDYRJ4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 25 Apr 2020 13:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726177AbgDYRJy (ORCPT
+        by vger.kernel.org with ESMTP id S1726157AbgDYRJ4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:09:54 -0400
+        Sat, 25 Apr 2020 13:09:56 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248B5C09B04D
-        for <linux-block@vger.kernel.org>; Sat, 25 Apr 2020 10:09:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8826CC09B04D
+        for <linux-block@vger.kernel.org>; Sat, 25 Apr 2020 10:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=UtWavAobnnQnQUbQorSVYwQDQWRO1X5A24RowNDNgVU=; b=UAocA4us/+SCctnHokskbrVws0
-        pizveHsEQPHp5vH1TkmW6Ahcy9adGvUpy4nkZaXT0NzWSVgo3M+Q6Mfn+mriqddFSwXWIoHu3hO2M
-        qfS//JAaxPeCgY+znK6zCnFOh1R0OnO8baim7Ai7ljUz6o5vWDJLzEQRWjUx0SHTkuE6Q6VSXoHyS
-        /2JpPloqqDMHAdDKvaMyw5Wzh5KSmZ88gnyFTZgLB7IuMkSU25EU4f9SvUdtwW9fOF1pa91LWlHdB
-        rhacG0cmB0VBKONLN9WZOpThQWcC8STA5CO5gtczocIE7wJuNEbeX0uU739lxFehp/pHhRON2K+ra
-        qh1kQzEw==;
+        bh=AQPXtODk+6L4IXNtysoa6Tt8f3llRP0MPsnKdnvBIuY=; b=uT9rBLS5yKGaIRL0wJM+pi7fHF
+        O7kfT5h8eE8SoiZ0As9LhLrP361SKRxtdooiv0rLWAgG0VvgBjR8n4/NrnMjXT7Tf6efy9huxCAbh
+        DulWPXnTCTt6SxT1AedeY2SThbo14E3lDDDe6jwAEbw/WKZr3pMQxl7woGX34FCzmglzKinVO/pzX
+        HWNyvxoVEbk+fi0JN7d0Dz8L87t6kc7W4UNaBFc1RnT7MHPq/hvdYYdeTvfThfruo1XEsfpSDJf8D
+        56bzHlJ9N6A6PA1wo+phohinlwrtBTcq6npn/NWTD76Ry/RCvH6jrpllsL9EO87bWLegda64omDVl
+        yFuJMDKQ==;
 Received: from [2001:4bb8:193:f203:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSOJN-0001j3-M0; Sat, 25 Apr 2020 17:09:54 +0000
+        id 1jSOJQ-0001jX-2s; Sat, 25 Apr 2020 17:09:56 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 03/11] block: replace BIO_QUEUE_ENTERED with BIO_CGROUP_ACCT
-Date:   Sat, 25 Apr 2020 19:09:36 +0200
-Message-Id: <20200425170944.968861-4-hch@lst.de>
+Subject: [PATCH 04/11] block: add a bio_queue_enter helper
+Date:   Sat, 25 Apr 2020 19:09:37 +0200
+Message-Id: <20200425170944.968861-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200425170944.968861-1-hch@lst.de>
 References: <20200425170944.968861-1-hch@lst.de>
@@ -45,73 +45,105 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-BIO_QUEUE_ENTERED is only used for cgroup accounting now, so rename
-the flag and move setting it into the cgroup code.
+Add a little helper that passes the right nowait flag to blk_queue_enter
+based on the bio flag, and terminates the bio with the right error code
+if entering the queue fails.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-merge.c          | 10 ----------
- include/linux/blk-cgroup.h | 10 ++++++----
- include/linux/blk_types.h  |  2 +-
- 3 files changed, 7 insertions(+), 15 deletions(-)
+ block/blk-core.c | 50 +++++++++++++++++++++++-------------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index c49eb3bdd0be8..a04e991b5ded9 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -336,16 +336,6 @@ void __blk_queue_split(struct request_queue *q, struct bio **bio,
- 		/* there isn't chance to merge the splitted bio */
- 		split->bi_opf |= REQ_NOMERGE;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 81a291085c6ca..7f11560bfddbb 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -440,6 +440,23 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
+ 	}
+ }
  
--		/*
--		 * Since we're recursing into make_request here, ensure
--		 * that we mark this bio as already having entered the queue.
--		 * If not, and the queue is going away, we can get stuck
--		 * forever on waiting for the queue reference to drop. But
--		 * that will never happen, as we're already holding a
--		 * reference to it.
--		 */
--		bio_set_flag(*bio, BIO_QUEUE_ENTERED);
++static inline int bio_queue_enter(struct bio *bio)
++{
++	struct request_queue *q = bio->bi_disk->queue;
++	bool nowait = bio->bi_opf & REQ_NOWAIT;
++	int ret;
++
++	ret = blk_queue_enter(q, nowait ? BLK_MQ_REQ_NOWAIT : 0);
++	if (unlikely(ret)) {
++		if (nowait && !blk_queue_dying(q))
++			bio_wouldblock_error(bio);
++		else
++			bio_io_error(bio);
++	}
++
++	return ret;
++}
++
+ void blk_queue_exit(struct request_queue *q)
+ {
+ 	percpu_ref_put(&q->q_usage_counter);
+@@ -1049,10 +1066,8 @@ blk_qc_t generic_make_request(struct bio *bio)
+ 	current->bio_list = bio_list_on_stack;
+ 	do {
+ 		struct request_queue *q = bio->bi_disk->queue;
+-		blk_mq_req_flags_t flags = bio->bi_opf & REQ_NOWAIT ?
+-			BLK_MQ_REQ_NOWAIT : 0;
+ 
+-		if (likely(blk_queue_enter(q, flags) == 0)) {
++		if (likely(bio_queue_enter(bio) == 0)) {
+ 			struct bio_list lower, same;
+ 
+ 			/* Create a fresh bio_list for all subordinate requests */
+@@ -1079,12 +1094,6 @@ blk_qc_t generic_make_request(struct bio *bio)
+ 			bio_list_merge(&bio_list_on_stack[0], &lower);
+ 			bio_list_merge(&bio_list_on_stack[0], &same);
+ 			bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
+-		} else {
+-			if (unlikely(!blk_queue_dying(q) &&
+-					(bio->bi_opf & REQ_NOWAIT)))
+-				bio_wouldblock_error(bio);
+-			else
+-				bio_io_error(bio);
+ 		}
+ 		bio = bio_list_pop(&bio_list_on_stack[0]);
+ 	} while (bio);
+@@ -1106,30 +1115,19 @@ EXPORT_SYMBOL(generic_make_request);
+ blk_qc_t direct_make_request(struct bio *bio)
+ {
+ 	struct request_queue *q = bio->bi_disk->queue;
+-	bool nowait = bio->bi_opf & REQ_NOWAIT;
+ 	blk_qc_t ret;
+ 
+-	if (WARN_ON_ONCE(q->make_request_fn))
+-		goto io_error;
+-	if (!generic_make_request_checks(bio))
++	if (WARN_ON_ONCE(q->make_request_fn)) {
++		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
 -
- 		bio_chain(split, *bio);
- 		trace_block_split(q, split, (*bio)->bi_iter.bi_sector);
- 		generic_make_request(*bio);
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index 35f8ffe92b702..4deb8bb7b6afa 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -607,12 +607,14 @@ static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 		u64_stats_update_begin(&bis->sync);
+-	if (unlikely(blk_queue_enter(q, nowait ? BLK_MQ_REQ_NOWAIT : 0))) {
+-		if (nowait && !blk_queue_dying(q))
+-			goto would_block;
+-		goto io_error;
+ 	}
+-
++	if (!generic_make_request_checks(bio))
++		return BLK_QC_T_NONE;
++	if (unlikely(bio_queue_enter(bio)))
++		return BLK_QC_T_NONE;
+ 	ret = blk_mq_make_request(q, bio);
+ 	blk_queue_exit(q);
+ 	return ret;
+-
+-would_block:
+-	bio_wouldblock_error(bio);
+-	return BLK_QC_T_NONE;
+-io_error:
+-	bio_io_error(bio);
+-	return BLK_QC_T_NONE;
+ }
+ EXPORT_SYMBOL_GPL(direct_make_request);
  
- 		/*
--		 * If the bio is flagged with BIO_QUEUE_ENTERED it means this
--		 * is a split bio and we would have already accounted for the
--		 * size of the bio.
-+		 * If the bio is flagged with BIO_CGROUP_ACCT it means this is a
-+		 * split bio and we would have already accounted for the size of
-+		 * the bio.
- 		 */
--		if (!bio_flagged(bio, BIO_QUEUE_ENTERED))
-+		if (!bio_flagged(bio, BIO_CGROUP_ACCT)) {
-+			bio_set_flag(bio, BIO_CGROUP_ACCT);
- 			bis->cur.bytes[rwd] += bio->bi_iter.bi_size;
-+		}
- 		bis->cur.ios[rwd]++;
- 
- 		u64_stats_update_end(&bis->sync);
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 31eb92876be7c..431e59d05550f 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -220,7 +220,7 @@ enum {
- 				 * throttling rules. Don't do it again. */
- 	BIO_TRACE_COMPLETION,	/* bio_endio() should trace the final completion
- 				 * of this bio. */
--	BIO_QUEUE_ENTERED,	/* can use blk_queue_enter_live() */
-+	BIO_CGROUP_ACCT,		/* has been accounted to a cgroup */
- 	BIO_TRACKED,		/* set if bio goes through the rq_qos path */
- 	BIO_FLAG_LAST
- };
 -- 
 2.26.1
 
