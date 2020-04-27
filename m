@@ -2,84 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4EF71B98CC
-	for <lists+linux-block@lfdr.de>; Mon, 27 Apr 2020 09:42:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 896341B98E7
+	for <lists+linux-block@lfdr.de>; Mon, 27 Apr 2020 09:43:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgD0HmN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Apr 2020 03:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55162 "EHLO
+        id S1726661AbgD0Hmi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Apr 2020 03:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgD0HmN (ORCPT
+        with ESMTP id S1726656AbgD0Hmg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:42:13 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C41C061A10
-        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 00:42:13 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id l19so16475126lje.10
-        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 00:42:12 -0700 (PDT)
+        Mon, 27 Apr 2020 03:42:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0AAC061A0F
+        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 00:42:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j1so19298466wrt.1
+        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 00:42:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0ehox1gX7hX0ggxAjlHGH9e/EgYEXyAff8qtxqRj38E=;
-        b=dBGgQhGDOqyw7ZfK7WrM5BhDrademhFoJloRMzO9PYcWFnW2Gu7dItBRntMIfCTbzi
-         V9I4E+zLq5XxgA4GReqU23XKoUe4WUAnkhSg41RhlPWYc54h7FCLnUZDd752xEGBvfhu
-         eRerSeC8dJZaiBVBUsTP6qd4fJmhbDOtH3KgcpH0ghdNA1SUU+Jvv8rywvDDcHPt0wAn
-         AWK03yRby4J8TRCIUkV83VHB2mK5CC2uSYSgIqdME8KwVn5o0ySuBiM8MzhkHVt1HPYq
-         zE6KkDjHoozJmnXu0j3Yr1eJ8OETPS8McgtOFyz2j3B5UstMng1houybZQQEtbnS77br
-         V/3g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QtLRp+85jR+Nf/i2z1v6PWdUdTEfUVlr69TtjOuDJWU=;
+        b=NVGg/5IpqqSuA3/KLPa6EraIviZXG/1nXUO03Xa+MNt9p/3k+8qY7/5r1QzcEXQlOa
+         7IhRQbgS9KS540eO0D9w/u1YJUnj1MPnjCzaJVlVt8W9lp6paNgQgGROxmqdWTIF54T+
+         QU1nSMXXIpoXoPV0CD6foZ9sDkgl8EN80/a7u1tMN3UX13wP5DdJ0VKQQMOnFChFspx2
+         ZVmUs6txG+4E6dyf6hcG0GYPC/Uhf7u5RQW+inpQJym7IyEDquxq9v4D5EZE+2mpTA2+
+         f9V4rsuNC8SXHXfNd55ceNl0xTwfVsHDBymrS6Vmv9Dn90ZOmddzryikHmjK3TL9YBBB
+         D6Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0ehox1gX7hX0ggxAjlHGH9e/EgYEXyAff8qtxqRj38E=;
-        b=QGZ256/VSkQ15Vb05yuANAlHAda/oVamO5GLurCEbMuPQG0yTHQTupyyTodGudjaUF
-         yuzAtUckdNV+w2Iw06dKCzeUu1+vC4BriUqIdSbDdZg/XCw6YN3vAAT70LcX/ZFAYVOI
-         ikavOoM26x6ooMxHceAzygxczrNE570tAjouCC179KdssvH36RBO5DsIuxotNUppLMZJ
-         JReA4i1ITtL53oVDst7FhnA3IhVeCvMuVSseAYewgXM5W7+0jU7bHipsTt/i0hltSBiY
-         XAtnwgtDuKThylBD6deL9SZ0SCCTCL/OOHI56feXLhdiCXi8fZwoJvxfPF1wkGKM5aN7
-         3Hug==
-X-Gm-Message-State: AGi0PuadzZuKpUMIrilhmV7Xhd0MubWb+ydzvOR+KuPIrGOSY9g2XvWy
-        cKxnxomISdNPuRZbSEFwXhaqZM1188CPU4iX7GKhGA==
-X-Google-Smtp-Source: APiQypLWDocP+ioptzSAmG+w1P2rb9ZNZ9N/t8QaMahiaDxyOL9SjMrefaRbpVk2W79vbXv+V3OR8ReSkL1xxUKDWVE=
-X-Received: by 2002:a2e:864f:: with SMTP id i15mr7593765ljj.179.1587973331290;
- Mon, 27 Apr 2020 00:42:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420080409.111693-1-maco@android.com> <20200420080409.111693-5-maco@android.com>
- <9eaa4dc8-cd8f-a4e9-e83d-f49f8b00ec0e@acm.org>
-In-Reply-To: <9eaa4dc8-cd8f-a4e9-e83d-f49f8b00ec0e@acm.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QtLRp+85jR+Nf/i2z1v6PWdUdTEfUVlr69TtjOuDJWU=;
+        b=U1hxJTxgBbJ+evAiTjB45dujVpAVWyE85yxI2MPPEFWwoFGd4TkklahqMUV2G8k0Wr
+         BX2I/MzAhZdOGQ0HtmjV0kQ0wFXLdJG+/k+dr8ari49d5vx9lnEr6NejxpYnrCo1uTHJ
+         0QdQIJE/4T8iHUpEdn0kY6tJnKGMkyBk7pX3r+cGJR7oJfr8139xOgcEI5C831HzSVNx
+         ZAR3WFZz1V4ZS/RyBA3v9kc+ENN1TxMgDlpt9NyEVfOoVdmp/NidfG6pUZTO3Npx1gSI
+         Aa+if6YZwB8aj/GLhAhztHD5QbeogJFUJJYKCRLE2Kbin0shDQP2TJz8OnT+wgLTba45
+         2rBQ==
+X-Gm-Message-State: AGi0PuaYqytRWYNYMruz1bm9GJk9+GnyenPtfAkuus+LPh4s8HJ+jJPe
+        MKEkqpIomqOBw4Ur4sJ+zDrBxA==
+X-Google-Smtp-Source: APiQypJfbNuVlkn/65gvpBXpn90vfdq2r2PK0vtNZowSpjzmBU7pOrB82bLFg3r36ntfCnFmsBYjWw==
+X-Received: by 2002:adf:a74b:: with SMTP id e11mr24056320wrd.99.1587973353543;
+        Mon, 27 Apr 2020 00:42:33 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id x132sm15091658wmg.33.2020.04.27.00.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 00:42:32 -0700 (PDT)
 From:   Martijn Coenen <maco@android.com>
-Date:   Mon, 27 Apr 2020 09:42:00 +0200
-Message-ID: <CAB0TPYELcpqcTB1Gc4-qszs2v4ywx+b0ejBkdSoikUXo9VMoQg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] loop: Add LOOP_SET_FD_AND_STATUS ioctl.
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
+        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
+Subject: [PATCH v3 0/9] Add a new LOOP_SET_FD_AND_STATUS ioctl
+Date:   Mon, 27 Apr 2020 09:42:13 +0200
+Message-Id: <20200427074222.65369-1-maco@android.com>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 5:10 PM Bart Van Assche <bvanassche@acm.org> wrote:
-> Should linux-api be Cc'ed for this patch or the entire patch series?
->  From https://www.kernel.org/doc/man-pages/linux-api-ml.html: "Among
-> other things, a primary goal of the list is to help answer the question:
-> How do we even know when an interface has been added or changed?".
+This series introduces a new ioctl that makes it possible to atomically
+configure a loop device. Previously, if you wanted to set parameters
+such as the offset on a loop device, this required calling LOOP_SET_FD
+to set the backing file, and then LOOP_SET_STATUS to set the offset.
+However, in between these two calls, the loop device is available and
+would accept requests, which is generally not desirable.
 
-Thanks for the suggestion, will add linux-api in the next series.
+There are also performance benefits with combining these two ioctls into
+one, which are described in more detail in the last change in the
+series.
 
-Martijn
+Note that this series depends on
+"loop: Call loop_config_discard() only after new config is applied."
+[0], which I sent as a separate patch as it fixes an unrelated bug.
 
->
-> Thanks,
->
-> Bart.
->
->
+[0]: https://lkml.org/lkml/2020/3/31/755
+
+---
+v3:
+  - Addressed review comments from Christoph Hellwig:
+    -- Factored out loop_validate_size()
+    -- Split up the largish first patch in a few smaller ones
+    -- Use set_capacity_revalidate_and_notify()
+  - Fixed a variable wrongly using size_t instead of loff_t
+v2:
+  - Addressed review comments from Bart van Assche:
+    -- Use SECTOR_SHIFT constant
+    -- Renamed loop_set_from_status() to loop_set_status_from_info()
+    -- Added kerneldoc for loop_set_status_from_info()
+    -- Removed dots in patch subject lines
+  - Addressed review comments from Christoph Hellwig:
+    -- Added missing padding in struct loop_fd_and_status
+    -- Cleaned up some __user pointer handling in lo_ioctl
+    -- Pass in a stack-initialized loop_info64 for the legacy
+       LOOP_SET_FD case
+
+
+Martijn Coenen (9):
+  loop: Factor out loop size validation
+  loop: Factor out setting loop device size
+  loop: Switch to set_capacity_revalidate_and_notify()
+  loop: Refactor loop_set_status() size calculation
+  loop: Remove figure_loop_size()
+  loop: Factor out configuring loop from status
+  loop: Move loop_set_status_from_info() and friends up
+  loop: Rework lo_ioctl() __user argument casting
+  loop: Add LOOP_SET_FD_AND_STATUS ioctl
+
+ drivers/block/loop.c      | 337 +++++++++++++++++++++++---------------
+ include/uapi/linux/loop.h |   7 +
+ 2 files changed, 208 insertions(+), 136 deletions(-)
+
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
