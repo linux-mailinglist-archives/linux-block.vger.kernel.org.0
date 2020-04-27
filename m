@@ -2,138 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C5D1BA063
-	for <lists+linux-block@lfdr.de>; Mon, 27 Apr 2020 11:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 082AA1BA19A
+	for <lists+linux-block@lfdr.de>; Mon, 27 Apr 2020 12:45:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgD0Jus (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Apr 2020 05:50:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46542 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgD0Jus (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:50:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9A11FABC2;
-        Mon, 27 Apr 2020 09:50:45 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 64CBB1E129C; Mon, 27 Apr 2020 11:50:45 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 11:50:45 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tim Waugh <tim@cyberelk.net>,
-        Borislav Petkov <bp@alien8.de>, Jan Kara <jack@suse.com>,
-        linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Subject: Re: [PATCH 6/7] isofs: stop using ioctl_by_bdev
-Message-ID: <20200427095045.GA15107@quack2.suse.cz>
-References: <20200425075706.721917-1-hch@lst.de>
- <20200425075706.721917-7-hch@lst.de>
+        id S1726831AbgD0KpJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Apr 2020 06:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726769AbgD0KpJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:45:09 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0395CC061BD3
+        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 03:45:08 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id s30so13815833qth.2
+        for <linux-block@vger.kernel.org>; Mon, 27 Apr 2020 03:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Y9qeYS77awcXKXnbUv+cj5nzUb83V6esqPketlEQr3o=;
+        b=lVM+RTSRfPGctviWmlCEChX9422I2fbAnfTctO6bNf7jU2d63Wx/2kjfduJ9k0oyaN
+         cmTlpEK++9lxMnX+bdEhfOOV2eU9unDnzX6QfE5WaSBt4vVjNOEvDdUzEXm04tdUvmYk
+         F6XEfOfdIEgI8nDY0u6a44P3+YeXfKMEemu/UkS0OmoKCC7p0rx851sRfr4/vpSl/v/K
+         7vTYwQc0GieuqO3azfCuqtiLJmPb3FlabDvDaiDYxiTdtlqqVp+DqEorccz1oM2vMLL3
+         9d8F/8Gqkth+xup4JBUoOZX7b/v8rN00mpMbGnccyvuwcaeMUdcYx4LQpJNLVw8XWkky
+         4jtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Y9qeYS77awcXKXnbUv+cj5nzUb83V6esqPketlEQr3o=;
+        b=FOw6fBr/vJH5ctxxJOQIbos09q3rJplxerfSPlSlHo3zIPGiQXnG86DuiFYjHIraMX
+         4kAD9YK0krKbeEX5ruHnRJgH94dYkayUqK2Dy9kj9RLmQnUUGB9EvvEqkCzBbTn4pMuL
+         x4dPqQPLDN6aEsmkyFHR3VG763YM6Hj531iinEPHigBBjRqVal1Y8IQH1R7eFkTrotio
+         nOo/iO1D6t67s6r0+t38hT4RQUCW5tbY1y0YZVj6ifw7mZBWOxqFhjN9yZgAj5+7cn53
+         RgZ+BF1+soCOhAyTIDs4NXK7/8epLuFkJt6ayuQ1tV2fUapbI8ddGpC9Vf2NewD8j+oO
+         40dA==
+X-Gm-Message-State: AGi0PubfIuNW5xKHYW/3MCFGh+tg12+vkJA/RrUOqKYqE9ki32kUbDYn
+        qFaRYnUkcL3BFr0LzvkiwSt8kv0BWaWNZXzqEbU=
+X-Google-Smtp-Source: APiQypItIhf8p/VOpdbcvOwKYrkYLs/3XjYErUjg7t2bbrSU0Z4fAEb/801eNVxF+Yx6m3vxDEgpEESKoDMSGMlLBFI=
+X-Received: by 2002:ac8:5304:: with SMTP id t4mr22104431qtn.250.1587984308165;
+ Mon, 27 Apr 2020 03:45:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425075706.721917-7-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:ac8:6f7c:0:0:0:0:0 with HTTP; Mon, 27 Apr 2020 03:45:07
+ -0700 (PDT)
+Reply-To: mrsannabruun111@gmail.com
+From:   "Mrs. Anna H. Bruun" <dr.dimmichael11@gmail.com>
+Date:   Mon, 27 Apr 2020 10:45:07 +0000
+Message-ID: <CAMFub-s6LxRDitCE+i90Z39aSWVQqw+H1QGdoFE7fsrTGgJ6ng@mail.gmail.com>
+Subject: GOOD DAY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat 25-04-20 09:57:05, Christoph Hellwig wrote:
-> Instead just call the CDROM layer functionality directly, and turn the
-> hot mess in isofs_get_last_session into remotely readable code.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Hello Dear,
 
-Looks good to me. You can add:
+Am Mrs. Anna H. Bruun I know that this message will be a surprise to
+you. Firstly, I am married to Mr. Patrick Bruun, A gold merchant who
+owns a small gold mine in Burkina Faso; He died of Cardiovascular
+Disease in mid-March 2011. During his lifetime, he deposited the sum
+of Eight million, Five hundred thousand Euros. in a bank in
+Ouagadougou the capital city of Burkina Faso in West Africa. The
+deposited money was from the sale of the shares, death benefits
+payment and entitlements of my deceased husband by his company.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+I am sending this message to you praying that it will reach you in
+good health since I am not in good health condition in which I sleep
+every night without knowing if I may be alive to see the next day. I
+am suffering from long time cancer and presently I am partially
+suffering from a stroke illness which has become almost impossible for
+me to move around. I need your urgent answer to know if you will be
+able to execute this project, and I will give you more information on
+how the fund will be transferred to your bank account.
 
-								Honza
-
-> ---
->  fs/isofs/inode.c | 54 +++++++++++++++++++++++-------------------------
->  1 file changed, 26 insertions(+), 28 deletions(-)
-> 
-> diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
-> index 62c0462dc89f3..276107cdaaf13 100644
-> --- a/fs/isofs/inode.c
-> +++ b/fs/isofs/inode.c
-> @@ -544,43 +544,41 @@ static int isofs_show_options(struct seq_file *m, struct dentry *root)
->  
->  static unsigned int isofs_get_last_session(struct super_block *sb, s32 session)
->  {
-> -	struct cdrom_multisession ms_info;
-> -	unsigned int vol_desc_start;
-> -	struct block_device *bdev = sb->s_bdev;
-> -	int i;
-> +	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
-> +	unsigned int vol_desc_start = 0;
->  
-> -	vol_desc_start=0;
-> -	ms_info.addr_format=CDROM_LBA;
->  	if (session > 0) {
-> -		struct cdrom_tocentry Te;
-> -		Te.cdte_track=session;
-> -		Te.cdte_format=CDROM_LBA;
-> -		i = ioctl_by_bdev(bdev, CDROMREADTOCENTRY, (unsigned long) &Te);
-> -		if (!i) {
-> +		struct cdrom_tocentry te;
-> +
-> +		if (!cdi)
-> +			return 0;
-> +
-> +		te.cdte_track = session;
-> +		te.cdte_format = CDROM_LBA;
-> +		if (cdrom_read_tocentry(cdi, &te) == 0) {
->  			printk(KERN_DEBUG "ISOFS: Session %d start %d type %d\n",
-> -				session, Te.cdte_addr.lba,
-> -				Te.cdte_ctrl&CDROM_DATA_TRACK);
-> -			if ((Te.cdte_ctrl&CDROM_DATA_TRACK) == 4)
-> -				return Te.cdte_addr.lba;
-> +				session, te.cdte_addr.lba,
-> +				te.cdte_ctrl & CDROM_DATA_TRACK);
-> +			if ((te.cdte_ctrl & CDROM_DATA_TRACK) == 4)
-> +				return te.cdte_addr.lba;
->  		}
->  
->  		printk(KERN_ERR "ISOFS: Invalid session number or type of track\n");
->  	}
-> -	i = ioctl_by_bdev(bdev, CDROMMULTISESSION, (unsigned long) &ms_info);
-> -	if (session > 0)
-> -		printk(KERN_ERR "ISOFS: Invalid session number\n");
-> -#if 0
-> -	printk(KERN_DEBUG "isofs.inode: CDROMMULTISESSION: rc=%d\n",i);
-> -	if (i==0) {
-> -		printk(KERN_DEBUG "isofs.inode: XA disk: %s\n",ms_info.xa_flag?"yes":"no");
-> -		printk(KERN_DEBUG "isofs.inode: vol_desc_start = %d\n", ms_info.addr.lba);
-> -	}
-> -#endif
-> -	if (i==0)
-> +
-> +	if (cdi) {
-> +		struct cdrom_multisession ms_info;
-> +
-> +		ms_info.addr_format = CDROM_LBA;
-> +		if (cdrom_multisession(cdi, &ms_info) == 0) {
->  #if WE_OBEY_THE_WRITTEN_STANDARDS
-> -		if (ms_info.xa_flag) /* necessary for a valid ms_info.addr */
-> +			/* necessary for a valid ms_info.addr */
-> +			if (ms_info.xa_flag)
->  #endif
-> -			vol_desc_start=ms_info.addr.lba;
-> +				vol_desc_start = ms_info.addr.lba;
-> +		}
-> +	}
-> +
->  	return vol_desc_start;
->  }
->  
-> -- 
-> 2.26.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks
+Mrs. Anna H.
