@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBD521BD683
-	for <lists+linux-block@lfdr.de>; Wed, 29 Apr 2020 09:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E69FB1BD681
+	for <lists+linux-block@lfdr.de>; Wed, 29 Apr 2020 09:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgD2HtG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Apr 2020 03:49:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44991 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgD2Hsv (ORCPT
+        id S1726450AbgD2HtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Apr 2020 03:49:03 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51808 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgD2Hsw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:48:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l20so634049pgb.11;
-        Wed, 29 Apr 2020 00:48:51 -0700 (PDT)
+        Wed, 29 Apr 2020 03:48:52 -0400
+Received: by mail-pj1-f66.google.com with SMTP id mq3so445699pjb.1;
+        Wed, 29 Apr 2020 00:48:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ui7sUU2uXAen4F2aKDMyOb2hT6OZZtUnvlr6nEnP7hs=;
-        b=t3LSKuOxGx0rorUKdS9445LKoJ+XTAYmYIiYCU4a8wQq6t7xQBay0HCgYDaE5QI1Wx
-         sPY1Pgq7BrUp/cs8+7Q0BOzTLFgn5hXTCetwNrq+7YGTlDl/dOXUKE+F69rc6FbECUU3
-         Kl/HfesZpShdKEMuMG/F8Fo9IjLYbPHTJ9/RNXo+ejeFMslZgglN1g38CD3EUJlzVKjk
-         Y4ZAf0PDv7mON8Oucs7JA37ZUUtY330pO4cFfYVwNBt/wDWR4MDrCRTDL71XJplCoqlr
-         fPAwk1Vklh6KB53czkhIzUDJROLZv+Y49mhZrgtkKUb09JbMGr6xizjUfIq2oAq/+wW0
-         KK6A==
-X-Gm-Message-State: AGi0PuYH86v/2vh559fq848fjwvKxe1tg6YB2HFpZpJIKMiAt8V5uS2q
-        9rmXK/hxXF+kBSaUKcpczhDxZNnuLqw=
-X-Google-Smtp-Source: APiQypIfqaJr6+tIpo4jSEWkvkcczNT6n+p/Gx6tidb1YRtSesFynHFWG42Edj+HXFJvdK0Y7GLNUQ==
-X-Received: by 2002:aa7:9d84:: with SMTP id f4mr29376008pfq.290.1588146530685;
-        Wed, 29 Apr 2020 00:48:50 -0700 (PDT)
+        bh=VDQ/Gc2nfAeUdmOXsjIl0MCMGYVLmlhEqi8QvquPVhg=;
+        b=GRWYdJovFC9mWIKlxZ69GUyN3SOdqT2dX/kXeHcDehyXfYieHu4FDDSLLRpWEWwVph
+         4wvs3+HpMi+rx5gVm2/gLO+dKNucHEM3LFd6hb1ifJ7fdOPlOZAP0u0iDhN1MWUbo5Po
+         G3R1u/JHMhPAmhw31QqGL/ObMhvZ7kzrT8y+BVW5s/7mEL2tCYoieS1BCKsmAdOFATKA
+         guKmhJx71LdZh/qciH7PNy8uEtjhzEQZeG5cLr0lBzfGs7uZKGX6kOhad/+LawPMAmFk
+         P4ErxtnH7hKa5NHfRy25slYOdUbtzkAguw2Rp6xMj8tCokzKwG8sgpnKUexDAUSqHSdZ
+         m6cg==
+X-Gm-Message-State: AGi0PuYdw8oyYHPDjEjI7yHseuPrHKGhtkWZzYVYSdGWN4Q50O+HO3ci
+        DgY7/wWibXQ9d0367ZgvzQM=
+X-Google-Smtp-Source: APiQypIKe06GYGkAL2vjcb0FV8IUNXJ8b1rsMrUfS2jLt7un504Y1YfAV7CyBe/kWaCiITjg2Eceyw==
+X-Received: by 2002:a17:90a:e2d0:: with SMTP id fr16mr1667544pjb.146.1588146531502;
+        Wed, 29 Apr 2020 00:48:51 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a12sm427432pfr.28.2020.04.29.00.48.46
+        by smtp.gmail.com with ESMTPSA id c59sm4089722pje.10.2020.04.29.00.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:48:47 -0700 (PDT)
+        Wed, 29 Apr 2020 00:48:49 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BCA8441C23; Wed, 29 Apr 2020 07:48:45 +0000 (UTC)
+        id C8FDC41C6A; Wed, 29 Apr 2020 07:48:45 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, bvanassche@acm.org, ming.lei@redhat.com
 Cc:     yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v1 3/6] block: move disk invalidation from del_gendisk() into a helper
-Date:   Wed, 29 Apr 2020 07:48:41 +0000
-Message-Id: <20200429074844.6241-4-mcgrof@kernel.org>
+Subject: [RFC v1 4/6] block: move disk unregistration work from del_gendisk() to a helper
+Date:   Wed, 29 Apr 2020 07:48:42 +0000
+Message-Id: <20200429074844.6241-5-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200429074844.6241-1-mcgrof@kernel.org>
 References: <20200429074844.6241-1-mcgrof@kernel.org>
@@ -53,133 +53,85 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the disk / partition invalidation into a helper. This will make
-reading del_gendisk easier to read, in preparation for adding support
-to add error handling later on register_disk() and to later share more
-code with del_gendisk.
+There is quite a bit of code on del_gendisk() which relates to
+unregistering the disk, using register_disk() as an counter.
+Move all this code into a helper instead of re-writing our own,
+which we'll need later to handle errors on add_disk().
 
-This change has no functional changes.
+I note that register_disk() links the bdi at the end, but since
+del_gendisk() deals with this before queue de-registration we'll
+take a hint that's the right order that this should be done, and
+we shouldn't instead strictly unwind register_disk() exactly.
+
+We'll instead keep whatever lessons have been learned from
+del_gendisk().
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- block/genhd.c | 85 +++++++++++++++++++++++++++------------------------
- 1 file changed, 45 insertions(+), 40 deletions(-)
+ block/genhd.c | 41 ++++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
 diff --git a/block/genhd.c b/block/genhd.c
-index 091208f5f27b..b4d75a15fd31 100644
+index b4d75a15fd31..ed2a0eaa4e7b 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
-@@ -718,6 +718,50 @@ static void disk_announce(struct gendisk *disk)
- 	disk_part_iter_exit(&piter);
+@@ -762,6 +762,28 @@ static void disk_invalidate(struct gendisk *disk)
+ 	up_write(&disk->lookup_sem);
  }
  
-+static void invalidate_partition(struct gendisk *disk, int partno)
++static void unregister_disk(struct gendisk *disk)
 +{
-+	struct block_device *bdev;
-+
-+	bdev = bdget_disk(disk, partno);
-+	if (!bdev)
-+		return;
-+
-+	fsync_bdev(bdev);
-+	__invalidate_device(bdev, true);
-+
 +	/*
-+	 * Unhash the bdev inode for this device so that it gets evicted as soon
-+	 * as last inode reference is dropped.
++	 * Remove gendisk pointer from idr so that it cannot be looked up
++	 * while RCU period before freeing gendisk is running to prevent
++	 * use-after-free issues. Note that the device number stays
++	 * "in-use" until we really free the gendisk.
 +	 */
-+	remove_inode_hash(bdev->bd_inode);
-+	bdput(bdev);
-+}
++	blk_invalidate_devt(disk_devt(disk));
 +
-+static void disk_invalidate(struct gendisk *disk)
-+{
-+	struct disk_part_iter piter;
-+	struct hd_struct *part;
++	kobject_put(disk->part0.holder_dir);
++	kobject_put(disk->slave_dir);
 +
-+	/*
-+	 * Block lookups of the disk until all bdevs are unhashed and the
-+	 * disk is marked as dead (GENHD_FL_UP cleared).
-+	 */
-+	down_write(&disk->lookup_sem);
-+	/* invalidate stuff */
-+	disk_part_iter_init(&piter, disk,
-+			     DISK_PITER_INCL_EMPTY | DISK_PITER_REVERSE);
-+	while ((part = disk_part_iter_next(&piter))) {
-+		invalidate_partition(disk, part->partno);
-+		delete_partition(disk, part);
-+	}
-+	disk_part_iter_exit(&piter);
++	part_stat_set_all(&disk->part0, 0);
++	disk->part0.stamp = 0;
++	if (!sysfs_deprecated)
++		sysfs_remove_link(block_depr, dev_name(disk_to_dev(disk)));
 +
-+	invalidate_partition(disk, 0);
-+	set_capacity(disk, 0);
-+	disk->flags &= ~GENHD_FL_UP;
-+	up_write(&disk->lookup_sem);
++	pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
++	device_del(disk_to_dev(disk));
 +}
 +
  static void register_disk(struct device *parent, struct gendisk *disk,
  			  const struct attribute_group **groups)
  {
-@@ -886,25 +930,6 @@ void device_add_disk_no_queue_reg(struct device *parent, struct gendisk *disk)
- }
- EXPORT_SYMBOL(device_add_disk_no_queue_reg);
+@@ -972,25 +994,10 @@ void del_gendisk(struct gendisk *disk)
+ 		WARN_ON(1);
+ 	}
  
--static void invalidate_partition(struct gendisk *disk, int partno)
--{
--	struct block_device *bdev;
--
--	bdev = bdget_disk(disk, partno);
--	if (!bdev)
--		return;
--
--	fsync_bdev(bdev);
--	__invalidate_device(bdev, true);
--
--	/*
--	 * Unhash the bdev inode for this device so that it gets evicted as soon
--	 * as last inode reference is dropped.
--	 */
--	remove_inode_hash(bdev->bd_inode);
--	bdput(bdev);
--}
--
- /**
-  * del_gendisk - remove the gendisk
-  * @disk: the struct gendisk to remove
-@@ -926,32 +951,12 @@ static void invalidate_partition(struct gendisk *disk, int partno)
-  */
- void del_gendisk(struct gendisk *disk)
- {
--	struct disk_part_iter piter;
--	struct hd_struct *part;
--
- 	might_sleep();
- 
- 	blk_integrity_del(disk);
- 	disk_del_events(disk);
- 
--	/*
--	 * Block lookups of the disk until all bdevs are unhashed and the
--	 * disk is marked as dead (GENHD_FL_UP cleared).
--	 */
--	down_write(&disk->lookup_sem);
--	/* invalidate stuff */
--	disk_part_iter_init(&piter, disk,
--			     DISK_PITER_INCL_EMPTY | DISK_PITER_REVERSE);
--	while ((part = disk_part_iter_next(&piter))) {
--		invalidate_partition(disk, part->partno);
--		delete_partition(disk, part);
--	}
--	disk_part_iter_exit(&piter);
--
--	invalidate_partition(disk, 0);
--	set_capacity(disk, 0);
--	disk->flags &= ~GENHD_FL_UP;
--	up_write(&disk->lookup_sem);
-+	disk_invalidate(disk);
- 
++	unregister_disk(disk);
++
  	if (!(disk->flags & GENHD_FL_HIDDEN))
- 		sysfs_remove_link(&disk_to_dev(disk)->kobj, "bdi");
+ 		blk_unregister_region(disk_devt(disk), disk->minors);
+-	/*
+-	 * Remove gendisk pointer from idr so that it cannot be looked up
+-	 * while RCU period before freeing gendisk is running to prevent
+-	 * use-after-free issues. Note that the device number stays
+-	 * "in-use" until we really free the gendisk.
+-	 */
+-	blk_invalidate_devt(disk_devt(disk));
+-
+-	kobject_put(disk->part0.holder_dir);
+-	kobject_put(disk->slave_dir);
+-
+-	part_stat_set_all(&disk->part0, 0);
+-	disk->part0.stamp = 0;
+-	if (!sysfs_deprecated)
+-		sysfs_remove_link(block_depr, dev_name(disk_to_dev(disk)));
+-	pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
+-	device_del(disk_to_dev(disk));
+ }
+ EXPORT_SYMBOL(del_gendisk);
+ 
 -- 
 2.25.1
 
