@@ -2,139 +2,130 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5691C151E
-	for <lists+linux-block@lfdr.de>; Fri,  1 May 2020 15:46:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4542B1C17A6
+	for <lists+linux-block@lfdr.de>; Fri,  1 May 2020 16:24:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgEANqC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 1 May 2020 09:46:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34617 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731899AbgEANpQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 1 May 2020 09:45:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f11so2677317ljp.1;
-        Fri, 01 May 2020 06:45:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=B1dBZygdOuEOVVgRDxzrxsbu/gYOSkCw10Yi3BStOb4=;
-        b=nhF7S23Y/ZJo0T5XTS8G/hjloPB2T52myLZuRnIGr+uVidboPKqGYmLGRMYw3yTeX4
-         D8MbshqU3fKZEFG3qXOuFzZcMeUbZWkQkwOhYAnS8Y6YTjTkRhFTIH8LsNCLf+djiI3C
-         rXHo3jiJvCVPkk6TXbHgjCiK+5ZjlfEYeB8oRNjXXr9mz0i4487FxLcneML0ZkvIEgsH
-         fPdy9V/37jDYvFPEXQeU5NFxyFh4kLl7RXRDYfoo+y7FFGLSN0kmF9sWlWdx1hubjVwQ
-         m1j9RQHkHND1WsPaaCJIxMJVBaUBMYNivSl4KfmChn26+9Zmim48dxkwkQXLm+/UOpPr
-         rxvQ==
-X-Gm-Message-State: AGi0PubTuHdHGkr/U55JgAy0DSnQLP84qRm4AWyRSZ4pzttsw7sfYZuK
-        uliy3LhSFmhf6s1cVJWA13X4Ars1zHg=
-X-Google-Smtp-Source: APiQypInacq2l4k+DFDSlOyzVO50Ra94dXuWronVpuTuWv/pg1lpXsHb9rnMxjf94v3FqxocLu8ipQ==
-X-Received: by 2002:a2e:731a:: with SMTP id o26mr2570638ljc.189.1588340714141;
-        Fri, 01 May 2020 06:45:14 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:45:13 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
+        id S1729044AbgEAOYr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 1 May 2020 10:24:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43036 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgEAOYq (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 1 May 2020 10:24:46 -0400
+IronPort-SDR: V0n0bkQ1pxcIrZQcRRHbTV2fqsEVXnWPfc9do4hgCaYzOvbJw52u0/kxhycZSUfGlzr27eBIu5
+ unCOx5U/g4wQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 07:24:42 -0700
+IronPort-SDR: zOaNdYO11+XZQaCIl1GflqhMCiQai0K1aX+aTLO1ivf5/8ehhE9ShWesKeZl2CNILjpT78v943
+ LF6kbCbSCeGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
+   d="scan'208";a="283189248"
+Received: from shatao-mobl.ccr.corp.intel.com (HELO [10.249.174.63]) ([10.249.174.63])
+  by fmsmga004.fm.intel.com with ESMTP; 01 May 2020 07:24:38 -0700
+Subject: Re: [PATCH v13 23/25] block/rnbd: include client and server modules
+ into kernel compilation
+To:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+        kbuild-all@lists.01.org, Jens Axboe <axboe@kernel.dk>,
         Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 4/4] floppy: suppress UBSAN warning in setup_rw_floppy()
-Date:   Fri,  1 May 2020 16:44:16 +0300
-Message-Id: <20200501134416.72248-5-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
-References: <20200501134416.72248-1-efremov@linux.com>
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jinpu Wang <jinpu.wang@cloud.ionos.com>
+References: <20200427141020.655-24-danil.kipnis@cloud.ionos.com>
+ <202004292210.aw7c2Yi3%lkp@intel.com>
+ <CAHg0HuzGwonGEbRyN03RZ7TiD4NdFWmr+YR7u9EG4VHyTT7V4w@mail.gmail.com>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <7faf09fa-f38d-f54f-bd28-b4c26c936846@intel.com>
+Date:   Fri, 1 May 2020 22:24:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHg0HuzGwonGEbRyN03RZ7TiD4NdFWmr+YR7u9EG4VHyTT7V4w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
-index 16 is out of range for type 'unsigned char [16]'
-Call Trace:
-...
- setup_rw_floppy+0x5c3/0x7f0
- floppy_ready+0x2be/0x13b0
- process_one_work+0x2c1/0x5d0
- worker_thread+0x56/0x5e0
- kthread+0x122/0x170
- ret_from_fork+0x35/0x40
 
-From include/uapi/linux/fd.h:
-struct floppy_raw_cmd {
-	...
-	unsigned char cmd_count;
-	unsigned char cmd[16];
-	unsigned char reply_count;
-	unsigned char reply[16];
-	...
-}
 
-This out-of-bounds access is intentional. The command in struct
-floppy_raw_cmd may take up the space initially intended for the reply
-and the reply count. It is needed for long 82078 commands such as
-RESTORE, which takes 17 command bytes. Initial cmd size is not enough
-and since struct setup_rw_floppy is a part of uapi we check that
-cmd_count is in [0:16+1+16] in raw_cmd_copyin().
+On 4/30/2020 4:48 PM, Danil Kipnis wrote:
+> On Wed, Apr 29, 2020 at 5:01 PM kbuild test robot <lkp@intel.com> wrote:
+>> Hi Danil,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on block/for-next]
+>> [also build test ERROR on driver-core/driver-core-testing rdma/for-next linus/master v5.7-rc3 next-20200428]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help
+>> improve the system. BTW, we also suggest to use '--base' option to specify the
+>> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Danil-Kipnis/RTRS-former-IBTRS-RDMA-Transport-Library-and-RNBD-former-IBNBD-RDMA-Network-Block-Device/20200428-080733
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+>> config: i386-allyesconfig (attached as .config)
+>> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+>> reproduce:
+>>          # save the attached .config to linux build tree
+>>          make ARCH=i386
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>     In file included from drivers/block/rnbd/rnbd-clt.c:19:0:
+>>>> drivers/block/rnbd/rnbd-clt.h:19:10: fatal error: rtrs.h: No such file or directory
+>>      #include "rtrs.h"
+>>               ^~~~~~~~
+>>     compilation terminated.
+>> --
+>>     In file included from drivers/block/rnbd/rnbd-srv.c:15:0:
+>>>> drivers/block/rnbd/rnbd-srv.h:16:10: fatal error: rtrs.h: No such file or directory
+>>      #include "rtrs.h"
+>>               ^~~~~~~~
+>>     compilation terminated.
+>>
+>> vim +19 drivers/block/rnbd/rnbd-clt.h
+>>
+>> 9e3ecd2f9c364e6 Jack Wang 2020-04-27  18
+>> 9e3ecd2f9c364e6 Jack Wang 2020-04-27 @19  #include "rtrs.h"
+>> 9e3ecd2f9c364e6 Jack Wang 2020-04-27  20  #include "rnbd-proto.h"
+>> 9e3ecd2f9c364e6 Jack Wang 2020-04-27  21  #include "rnbd-log.h"
+>> 9e3ecd2f9c364e6 Jack Wang 2020-04-27  22
+>>
+>> :::::: The code at line 19 was first introduced by commit
+>> :::::: 9e3ecd2f9c364e67eaa3ad19424b0d7ad6daacaa block/rnbd: client: private header with client structs and functions
+>>
+>> :::::: TO: Jack Wang <jinpu.wang@cloud.ionos.com>
+>> :::::: CC: 0day robot <lkp@intel.com>
+>>
+>> ---
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> Dear kbuild test robot, dear All,
+>
+> the mentioned branch with the attached config compiles without errors
+> on my machine. Does anybody knows how to reproduce this include file
+> not found error or why does it come up in the kbuild test compilation?
 
-The patch adds union with original cmd,reply_count,reply fields and
-fullcmd field of equivalent size. The cmd accesses are turned to
-fullcmd where appropriate to suppress UBSAN warning.
+Hi Danil,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/block/floppy.c  |  4 ++--
- include/uapi/linux/fd.h | 11 ++++++++---
- 2 files changed, 10 insertions(+), 5 deletions(-)
+The branch was generated by the bot, it may applied to a wrong base 
+tree, could you take a look?
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 9e098d53b046..064c1acb9f00 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -1070,7 +1070,7 @@ static void setup_DMA(void)
- 	if (raw_cmd->length == 0) {
- 		print_hex_dump(KERN_INFO, "zero dma transfer size: ",
- 			       DUMP_PREFIX_NONE, 16, 1,
--			       raw_cmd->cmd, raw_cmd->cmd_count, false);
-+			       raw_cmd->fullcmd, raw_cmd->cmd_count, false);
- 		cont->done(0);
- 		fdc_state[current_fdc].reset = 1;
- 		return;
-@@ -1515,7 +1515,7 @@ static void setup_rw_floppy(void)
- 
- 	r = 0;
- 	for (i = 0; i < raw_cmd->cmd_count; i++)
--		r |= output_byte(current_fdc, raw_cmd->cmd[i]);
-+		r |= output_byte(current_fdc, raw_cmd->fullcmd[i]);
- 
- 	debugt(__func__, "rw_command");
- 
-diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
-index 2e9c2c1c18e6..8b80c63b971c 100644
---- a/include/uapi/linux/fd.h
-+++ b/include/uapi/linux/fd.h
-@@ -371,9 +371,14 @@ struct floppy_raw_cmd {
- 	 */
- 
- 	unsigned char cmd_count;
--	unsigned char cmd[FD_RAW_CMD_SIZE];
--	unsigned char reply_count;
--	unsigned char reply[FD_RAW_REPLY_SIZE];
-+	union {
-+		struct {
-+			unsigned char cmd[FD_RAW_CMD_SIZE];
-+			unsigned char reply_count;
-+			unsigned char reply[FD_RAW_REPLY_SIZE];
-+		};
-+		unsigned char fullcmd[FD_RAW_CMD_FULLSIZE];
-+	};
- 	int track;
- 	int resultcode;
- 
--- 
-2.25.3
+url:    https://github.com/0day-ci/linux/commits/Danil-Kipnis/RTRS-former-IBTRS-RDMA-Transport-Library-and-RNBD-former-IBNBD-RDMA-Network-Block-Device/20200428-080733
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
 
+
+Best Regards,
+Rong Chen
