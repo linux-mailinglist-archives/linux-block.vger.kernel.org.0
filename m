@@ -2,128 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F4C1C2919
-	for <lists+linux-block@lfdr.de>; Sun,  3 May 2020 01:56:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 922D11C2956
+	for <lists+linux-block@lfdr.de>; Sun,  3 May 2020 03:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgEBX4V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 2 May 2020 19:56:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21723 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725798AbgEBX4V (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 2 May 2020 19:56:21 -0400
+        id S1726686AbgECBoK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 2 May 2020 21:44:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32677 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726684AbgECBoK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 2 May 2020 21:44:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588463780;
+        s=mimecast20190719; t=1588470248;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=z0E6FjJfym2wxaJpRjfmaRhSzHJS6rkCL0z9quTLXr8=;
-        b=Uu/7IO1w1/iREB3kH7EOb9g4ifwdQ/d857XFqBxGnE7qUf3gMazpGctYIklODsubazfbga
-        727WYYCn9dzcAp2b0oXd4oqQIQR1wNwD7i0nOVYTPCXs/eyy7Lhu8xLvXzv+YhL5KKJUQC
-        GTnU0xfEGq9ZsjCchJKu84tah+5TgHA=
+        bh=GDdv1M7hX8nZEdrcY713baUdG44eVKvPf/toFMXtYiQ=;
+        b=EgfSnaGNuvnauxqNRalNtsjQYtVjYml610zjL6JhooLfg1S/W/VlcRHXX8jafpq0n/D44Q
+        MkZPKlnyq0465JDmVvZOFZ2JvqMnasW9pFTdXsUKvweaRVBmdmVpXbg+/oqRXvT2heaom5
+        dQGvcziyYR80pSAquPXPE+ncbO6UV/s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-PtN0QPOxPUaHQGX8xSkxSw-1; Sat, 02 May 2020 19:56:18 -0400
-X-MC-Unique: PtN0QPOxPUaHQGX8xSkxSw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-123-cB7eZPHaNHm9pz6liCeauQ-1; Sat, 02 May 2020 21:43:57 -0400
+X-MC-Unique: cB7eZPHaNHm9pz6liCeauQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8462B1005510;
-        Sat,  2 May 2020 23:56:16 +0000 (UTC)
-Received: from localhost (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB6A260612;
-        Sat,  2 May 2020 23:56:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC0FE80B70B;
+        Sun,  3 May 2020 01:43:55 +0000 (UTC)
+Received: from T590 (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 53EEE2B4DF;
+        Sun,  3 May 2020 01:43:48 +0000 (UTC)
+Date:   Sun, 3 May 2020 09:43:43 +0800
 From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH V9 11/11] block: deactivate hctx when the hctx is actually inactive
-Date:   Sun,  3 May 2020 07:54:54 +0800
-Message-Id: <20200502235454.1118520-12-ming.lei@redhat.com>
-In-Reply-To: <20200502235454.1118520-1-ming.lei@redhat.com>
-References: <20200502235454.1118520-1-ming.lei@redhat.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Salman Qazi <sqazi@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] block: add blk_default_io_timeout() for avoiding
+ task hung in sync IO
+Message-ID: <20200503014343.GA1120601@T590>
+References: <20200428074657.645441-1-ming.lei@redhat.com>
+ <20200428074657.645441-2-ming.lei@redhat.com>
+ <7e339c3d-8600-4a9b-99bf-24afb023c4dd@acm.org>
+ <20200429011728.GA671522@T590>
+ <61520b08-326d-036b-e69d-08e2cad4d3c8@acm.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61520b08-326d-036b-e69d-08e2cad4d3c8@acm.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Run queue on dead CPU still may be triggered in some corner case,
-such as one request is requeued after CPU hotplug is handled.
+On Wed, Apr 29, 2020 at 08:08:03PM -0700, Bart Van Assche wrote:
+> On 2020-04-28 18:17, Ming Lei wrote:
+> > On Tue, Apr 28, 2020 at 07:19:33AM -0700, Bart Van Assche wrote:
+> >> On 2020-04-28 00:46, Ming Lei wrote:
+> >>> +/*
+> >>> + * Used in sync IO for avoiding to triger task hung warning, which may
+> >>> + * cause system panic or reboot.
+> >>> + */
+> >>> +static inline unsigned long blk_default_io_timeout(void)
+> >>> +{
+> >>> +	return sysctl_hung_task_timeout_secs * (HZ / 2);
+> >>> +}
+> >>> +
+> >>>  #endif
+> >>
+> >> This function is only used inside the block layer. Has it been
+> >> considered to move this function from the public block layer API into a
+> >> private header file, e.g. block/blk.h?
+> > 
+> > Please look at the commit log or the 2nd patch, and the helper will be
+> > used in 2nd patch in dio code.
+> 
+> Has it been considered to use the expression
+> "sysctl_hung_task_timeout_secs * (HZ / 2)" directly instead of wrapping
+> that expression in a function? I think using the expression directly may
+> be more clear. Additionally, it is slightly confusing that the function
+> name starts with "blk_" but that nothing in the implementation of that
+> function is specific to the block layer.
 
-So handle this corner case during run queue.
+Fine, will do it in V2.
 
-Cc: John Garry <john.garry@huawei.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-mq.c | 30 ++++++++++--------------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 3b777d9fd4ee..12dee4ecd5cc 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -43,6 +43,8 @@
- static void blk_mq_poll_stats_start(struct request_queue *q);
- static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
-=20
-+static void blk_mq_hctx_deactivate(struct blk_mq_hw_ctx *hctx);
-+
- static int blk_mq_poll_stats_bkt(const struct request *rq)
- {
- 	int ddir, sectors, bucket;
-@@ -1373,28 +1375,16 @@ static void __blk_mq_run_hw_queue(struct blk_mq_h=
-w_ctx *hctx)
- 	int srcu_idx;
-=20
- 	/*
--	 * We should be running this queue from one of the CPUs that
--	 * are mapped to it.
--	 *
--	 * There are at least two related races now between setting
--	 * hctx->next_cpu from blk_mq_hctx_next_cpu() and running
--	 * __blk_mq_run_hw_queue():
--	 *
--	 * - hctx->next_cpu is found offline in blk_mq_hctx_next_cpu(),
--	 *   but later it becomes online, then this warning is harmless
--	 *   at all
--	 *
--	 * - hctx->next_cpu is found online in blk_mq_hctx_next_cpu(),
--	 *   but later it becomes offline, then the warning can't be
--	 *   triggered, and we depend on blk-mq timeout handler to
--	 *   handle dispatched requests to this hctx
-+	 * BLK_MQ_S_INACTIVE may not deal with some requeue corner case:
-+	 * one request is requeued after cpu unplug is handled, so check
-+	 * if the hctx is actually inactive. If yes, deactive it and
-+	 * re-submit all requests in the queue.
- 	 */
- 	if (!cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) &&
--		cpu_online(hctx->next_cpu)) {
--		printk(KERN_WARNING "run queue from wrong CPU %d, hctx %s\n",
--			raw_smp_processor_id(),
--			cpumask_empty(hctx->cpumask) ? "inactive": "active");
--		dump_stack();
-+	    cpumask_next_and(-1, hctx->cpumask, cpu_online_mask) >=3D
-+	    nr_cpu_ids) {
-+		blk_mq_hctx_deactivate(hctx);
-+		return;
- 	}
-=20
- 	/*
---=20
-2.25.2
+thanks,
+Ming
 
