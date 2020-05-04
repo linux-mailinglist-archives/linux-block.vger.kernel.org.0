@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE921C3A99
-	for <lists+linux-block@lfdr.de>; Mon,  4 May 2020 14:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3321E1C3A8C
+	for <lists+linux-block@lfdr.de>; Mon,  4 May 2020 14:57:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgEDM5H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 4 May 2020 08:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37626 "EHLO
+        id S1728834AbgEDM5I (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 4 May 2020 08:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728486AbgEDM5G (ORCPT
+        by vger.kernel.org with ESMTP id S1728486AbgEDM5I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 4 May 2020 08:57:06 -0400
+        Mon, 4 May 2020 08:57:08 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210E0C061A0E;
-        Mon,  4 May 2020 05:57:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF50C061A0E;
+        Mon,  4 May 2020 05:57:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=TFhZTuXqrlTXZkKudHg7N5kGfcvlCXKdzBW+G66MxYI=; b=WNBi/SpFXGuOAEFUfDk9kAwukT
-        P9ob/xYY4E7l1PyaRLcG0k5EyozDAbB/r250frOrk/npYeVbudFanLtlDx6igky0ISeA0w2wtY6lp
-        Jds4BbAdEAWruii2FGMUb35ueDifl9bTtdu+sRjPlbq+UM6vDynhi/mmZfvX3TkR3ox6SLTyqVkpw
-        CWTPtKClw4JL+8mTIV35FUj0jBXtS49pcwZBCxcFKhyC23eeFEsJmfGa3aeNekDWMhvQN5odhEtT7
-        lFnubr+AlU9Af8NPZdsPKVHO2AHQGQTzkTODl0yJnH/CCrAYrul/cBoEXOUJn9mLtrjQ8TWCmOAE8
-        TX5pdglQ==;
+        bh=mBogiaGNd7hpK9ySfHk4hpJAoc3m1AY7I5tkiLAKSeA=; b=dV311TUEjeB2ewB34emO5tYUQa
+        4o7n7A1WMZW/i4f+r/lAe46nIYKYjfpm3/VKyw6HkX49Fj5uxwIJuOFVtSionfTgY1TohaPg3qIag
+        QhdGWukRAdRDbdF03syoXcyN+zT5m/2AWPJ1hw4PhnVgHCBaRbhfoBNXHZw6d7o/4+mjwFO8ontr1
+        QfFfKXseE1ljqpVi3UEOrAvlhqaEhjASSrCuO4ZVPsl/6VIq73cAGwYunC4OuBgVYt9UGUMZFNqwa
+        zV6GTZGT60jgw6FChHNUnhPPo/co0FpZTh8J2jrdt8SQQypmOnF5egYZtf4cakbnu8+VirRdZx4yd
+        6FbGSSdw==;
 Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVaeV-0007WJ-My; Mon, 04 May 2020 12:56:56 +0000
+        id 1jVaeY-0007Ys-LZ; Mon, 04 May 2020 12:56:59 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk
 Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
         bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
         gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] bdi: add a ->dev_name field to struct backing_dev_info
-Date:   Mon,  4 May 2020 14:47:56 +0200
-Message-Id: <20200504124801.2832087-5-hch@lst.de>
+Subject: [PATCH 5/9] driver core: remove device_create_vargs
+Date:   Mon,  4 May 2020 14:47:57 +0200
+Message-Id: <20200504124801.2832087-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504124801.2832087-1-hch@lst.de>
 References: <20200504124801.2832087-1-hch@lst.de>
@@ -48,54 +48,87 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Cache a copy of the name for the life time of the backing_dev_info
-structure so that we can reference it even after unregistering.
+All external users of device_create_vargs are gone, so remove it and
+open code it in the only caller.
 
-Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
-Reported-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- include/linux/backing-dev-defs.h | 1 +
- mm/backing-dev.c                 | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/base/core.c    | 37 ++-----------------------------------
+ include/linux/device.h |  4 ----
+ 2 files changed, 2 insertions(+), 39 deletions(-)
 
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005ab..2849bdbb3acbe 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -220,6 +220,7 @@ struct backing_dev_info {
- 	wait_queue_head_t wb_waitq;
- 
- 	struct device *dev;
-+	char dev_name[64];
- 	struct device *owner;
- 
- 	struct timer_list laptop_mode_wb_timer;
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index c2c44c89ee5d7..efc5b83acd2df 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -938,7 +938,8 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
- 	if (bdi->dev)	/* The driver needs to use separate queues per device */
- 		return 0;
- 
--	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
-+	vsnprintf(bdi->dev_name, sizeof(bdi->dev_name), fmt, args);
-+	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
- 	if (IS_ERR(dev))
- 		return PTR_ERR(dev);
- 
-@@ -1047,7 +1048,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
- {
- 	if (!bdi || !bdi->dev)
- 		return bdi_unknown_name;
--	return dev_name(bdi->dev);
-+	return bdi->dev_name;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 139cdf7e73271..fb8ae248e5aa8 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3188,40 +3188,6 @@ device_create_groups_vargs(struct class *class, struct device *parent,
+ 	return ERR_PTR(retval);
  }
- EXPORT_SYMBOL_GPL(bdi_dev_name);
  
+-/**
+- * device_create_vargs - creates a device and registers it with sysfs
+- * @class: pointer to the struct class that this device should be registered to
+- * @parent: pointer to the parent struct device of this new device, if any
+- * @devt: the dev_t for the char device to be added
+- * @drvdata: the data to be added to the device for callbacks
+- * @fmt: string for the device's name
+- * @args: va_list for the device's name
+- *
+- * This function can be used by char device classes.  A struct device
+- * will be created in sysfs, registered to the specified class.
+- *
+- * A "dev" file will be created, showing the dev_t for the device, if
+- * the dev_t is not 0,0.
+- * If a pointer to a parent struct device is passed in, the newly created
+- * struct device will be a child of that device in sysfs.
+- * The pointer to the struct device will be returned from the call.
+- * Any further sysfs files that might be required can be created using this
+- * pointer.
+- *
+- * Returns &struct device pointer on success, or ERR_PTR() on error.
+- *
+- * Note: the struct class passed to this function must have previously
+- * been created with a call to class_create().
+- */
+-struct device *device_create_vargs(struct class *class, struct device *parent,
+-				   dev_t devt, void *drvdata, const char *fmt,
+-				   va_list args)
+-{
+-	return device_create_groups_vargs(class, parent, devt, drvdata, NULL,
+-					  fmt, args);
+-}
+-EXPORT_SYMBOL_GPL(device_create_vargs);
+-
+ /**
+  * device_create - creates a device and registers it with sysfs
+  * @class: pointer to the struct class that this device should be registered to
+@@ -3253,7 +3219,8 @@ struct device *device_create(struct class *class, struct device *parent,
+ 	struct device *dev;
+ 
+ 	va_start(vargs, fmt);
+-	dev = device_create_vargs(class, parent, devt, drvdata, fmt, vargs);
++	dev = device_create_groups_vargs(class, parent, devt, drvdata, NULL,
++					  fmt, vargs);
+ 	va_end(vargs);
+ 	return dev;
+ }
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ac8e37cd716a3..15460a5ac024a 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -884,10 +884,6 @@ extern bool device_is_bound(struct device *dev);
+ /*
+  * Easy functions for dynamically creating devices on the fly
+  */
+-extern __printf(5, 0)
+-struct device *device_create_vargs(struct class *cls, struct device *parent,
+-				   dev_t devt, void *drvdata,
+-				   const char *fmt, va_list vargs);
+ extern __printf(5, 6)
+ struct device *device_create(struct class *cls, struct device *parent,
+ 			     dev_t devt, void *drvdata,
 -- 
 2.26.2
 
