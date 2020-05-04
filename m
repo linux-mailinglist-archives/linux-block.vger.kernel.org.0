@@ -2,41 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 089D51C3B3C
-	for <lists+linux-block@lfdr.de>; Mon,  4 May 2020 15:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 770641C3B47
+	for <lists+linux-block@lfdr.de>; Mon,  4 May 2020 15:30:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgEDN3g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 4 May 2020 09:29:36 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:45964 "EHLO
+        id S1728055AbgEDNa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 4 May 2020 09:30:56 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:47022 "EHLO
         forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgEDN3g (ORCPT
+        by vger.kernel.org with ESMTP id S1726404AbgEDNa4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 4 May 2020 09:29:36 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 88FDA2E146B;
-        Mon,  4 May 2020 16:29:33 +0300 (MSK)
-Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id I1XY7HP5b5-TXXG417C;
-        Mon, 04 May 2020 16:29:33 +0300
+        Mon, 4 May 2020 09:30:56 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 5C7352E1460;
+        Mon,  4 May 2020 16:30:53 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id p37YMl27Y5-UqbWRbWb;
+        Mon, 04 May 2020 16:30:53 +0300
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588598973; bh=C/AXuDO5e4aQmVSLTTHoTqT3ftuz0AKcd7baVzpRAuM=;
+        t=1588599053; bh=Spta+i/oO8BEvGD3BvlYBGUTfw/bm1sIiGx2AOg3kHw=;
         h=Message-ID:References:Date:To:From:Subject:In-Reply-To;
-        b=V4banS6tP1Dp2BHTnVDf9p6HMz5T9bT13R8OqDBAg4D0DZhisl/m0tb3VOMEJEIDS
-         pE2Pg1If2f1uwV5kRlookI0D8mywgM6Au/3ArC50MpHOfXEb49G2XcEfnifR7dBx3d
-         YDc5zLnWKSnplB2Fd9+8sjb2pcgR50kc9dlWSnyo=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+        b=wbZzOWD0J1vut19Iy8vO2yMXcjAexNO0wnK6JSkxfdqMgkmuxWsuRrt4q+oe4tTBF
+         sacTDHlJSNqEj9NBtCtARAnk1kxnK/4g4YED+IrJxbnAQnVGMeSRSGIbiZa9P5UWfj
+         LTRfvy42yQsKrBnDVNWiiDbAHzMOb920G2agr5TA=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
 Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:409::1:8])
-        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id vrQGc0NzBw-TWYeoIkx;
-        Mon, 04 May 2020 16:29:32 +0300
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id lOjei5J8xC-UqWWBwFp;
+        Mon, 04 May 2020 16:30:52 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
-Subject: [PATCH 2/4] block/part_stat: use __this_cpu_add() instead of access
- by smp_processor_id()
+Subject: [PATCH 3/4] block/part_stat: account merge of two requests
 From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         Jens Axboe <axboe@kernel.dk>
-Date:   Mon, 04 May 2020 16:29:32 +0300
-Message-ID: <158859897252.19836.5614675872684760741.stgit@buzz>
+Date:   Mon, 04 May 2020 16:30:52 +0300
+Message-ID: <158859904278.19926.1357797452754171976.stgit@buzz>
 In-Reply-To: <158859896942.19836.15240144203131230746.stgit@buzz>
 References: <158859896942.19836.15240144203131230746.stgit@buzz>
 User-Agent: StGit/0.22-32-g6a05
@@ -48,46 +47,50 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Most architectures have fast path to access percpu for current cpu.
-Required preempt_disable() is provided by part_stat_lock().
+Also rename blk_account_io_merge() into blk_account_io_merge_request() to
+distinguish it from merging request and bio.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- include/linux/part_stat.h |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ block/blk-merge.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index 755a01f0fd61..a0ddeff3798e 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -36,6 +36,9 @@
- 	res;								\
- })
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index a04e991b5ded..37bced39bae8 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -662,20 +662,23 @@ void blk_rq_set_mixed_merge(struct request *rq)
+ 	rq->rq_flags |= RQF_MIXED_MERGE;
+ }
  
-+#define __part_stat_add(part, field, addnd)				\
-+	__this_cpu_add((part)->dkstats->field, addnd)
-+
- static inline void part_stat_set_all(struct hd_struct *part, int value)
+-static void blk_account_io_merge(struct request *req)
++static void blk_account_io_merge_request(struct request *req)
  {
- 	int i;
-@@ -64,6 +67,9 @@ static inline void free_part_stats(struct hd_struct *part)
- #define part_stat_get_cpu(part, field, cpu)	part_stat_get(part, field)
- #define part_stat_read(part, field)		part_stat_get(part, field)
+ 	if (blk_do_io_stat(req)) {
++		const int sgrp = op_stat_group(req_op(req));
+ 		struct hd_struct *part;
  
-+#define __part_stat_add(part, field, addnd)				\
-+	(part_stat_get(part, field) += (addnd))
+ 		part_stat_lock();
+ 		part = req->part;
+ 
++		part_stat_inc(part, merges[sgrp]);
+ 		part_dec_in_flight(req->q, part, rq_data_dir(req));
+ 
+ 		hd_struct_put(part);
+ 		part_stat_unlock();
+ 	}
+ }
 +
- static inline void part_stat_set_all(struct hd_struct *part, int value)
- {
- 	memset(&part->dkstats, value, sizeof(struct disk_stats));
-@@ -85,9 +91,6 @@ static inline void free_part_stats(struct hd_struct *part)
- 	 part_stat_read(part, field[STAT_WRITE]) +			\
- 	 part_stat_read(part, field[STAT_DISCARD]))
+ /*
+  * Two cases of handling DISCARD merge:
+  * If max_discard_segments > 1, the driver takes every bio
+@@ -787,7 +790,7 @@ static struct request *attempt_merge(struct request_queue *q,
+ 	/*
+ 	 * 'next' is going away, so update stats accordingly
+ 	 */
+-	blk_account_io_merge(next);
++	blk_account_io_merge_request(next);
  
--#define __part_stat_add(part, field, addnd)				\
--	(part_stat_get(part, field) += (addnd))
--
- #define part_stat_add(part, field, addnd)	do {			\
- 	__part_stat_add((part), field, addnd);				\
- 	if ((part)->partno)						\
+ 	/*
+ 	 * ownership of bio passed from next to req, return 'next' for
 
