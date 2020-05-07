@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D9991C83FE
-	for <lists+linux-block@lfdr.de>; Thu,  7 May 2020 09:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82CF11C83F8
+	for <lists+linux-block@lfdr.de>; Thu,  7 May 2020 09:56:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgEGH4i (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 May 2020 03:56:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52452 "EHLO huawei.com"
+        id S1726908AbgEGH40 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 May 2020 03:56:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43190 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725845AbgEGHz5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 7 May 2020 03:55:57 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5797745993D5BE47473A;
-        Thu,  7 May 2020 15:55:53 +0800 (CST)
+        id S1726618AbgEGH4B (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 7 May 2020 03:56:01 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6EC65A859BAE067234FF;
+        Thu,  7 May 2020 15:55:58 +0800 (CST)
 Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
  14.3.487.0; Thu, 7 May 2020 15:55:47 +0800
@@ -32,9 +32,9 @@ To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         linux-raid <linux-raid@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 03/10] block: add sectors_to_npage()/npage_to_sectors() helpers
-Date:   Thu, 7 May 2020 15:50:53 +0800
-Message-ID: <20200507075100.1779-4-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 04/10] zram: abolish macro SECTORS_PER_PAGE_SHIFT
+Date:   Thu, 7 May 2020 15:50:54 +0800
+Message-ID: <20200507075100.1779-5-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
 In-Reply-To: <20200507075100.1779-1-thunder.leizhen@huawei.com>
 References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
@@ -48,28 +48,50 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Provide the conversion of "number of sectors"/"sector number" and
-"number of pages"/"page number".
+The name of SECTORS_PER_PAGE_SHIFT is quite hard to read. So use
+sectors_to_npage() to replace ">> SECTORS_PER_PAGE_SHIFT"
 
 Suggested-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- include/linux/blkdev.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/block/zram/zram_drv.c | 4 ++--
+ drivers/block/zram/zram_drv.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 934f31fc15cd..5d8daaffc38b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -910,6 +910,8 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
- #define SECTOR_SIZE		(1 << SECTOR_SHIFT)
- #endif
- #define PAGE_SECTORS		(PAGE_SIZE / SECTOR_SIZE)
-+#define sectors_to_npage(nr)	((nr) / PAGE_SECTORS)
-+#define npage_to_sectors(nr)	((nr) * PAGE_SECTORS)
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index e2fbf7a847e7..918b77f9bce4 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1549,7 +1549,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
  
- /*
-  * blk_rq_pos()			: the current sector
+-	index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
++	index = sectors_to_npage(bio->bi_iter.bi_sector);
+ 	offset = (bio->bi_iter.bi_sector &
+ 		  (PAGE_SECTORS - 1)) << SECTOR_SHIFT;
+ 
+@@ -1644,7 +1644,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
+ 		goto out;
+ 	}
+ 
+-	index = sector >> SECTORS_PER_PAGE_SHIFT;
++	index = sectors_to_npage(sector);
+ 	offset = (sector & (PAGE_SECTORS - 1)) << SECTOR_SHIFT;
+ 
+ 	bv.bv_page = page;
+diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
+index 10fdf413dd6e..12309175d55e 100644
+--- a/drivers/block/zram/zram_drv.h
++++ b/drivers/block/zram/zram_drv.h
+@@ -21,7 +21,6 @@
+ 
+ #include "zcomp.h"
+ 
+-#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+ #define ZRAM_LOGICAL_BLOCK_SHIFT 12
+ #define ZRAM_LOGICAL_BLOCK_SIZE	(1 << ZRAM_LOGICAL_BLOCK_SHIFT)
+ #define ZRAM_SECTOR_PER_LOGICAL_BLOCK	\
 -- 
 2.26.0.106.g9fadedd
 
