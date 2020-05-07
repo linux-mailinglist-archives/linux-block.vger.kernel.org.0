@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54FD1C9422
-	for <lists+linux-block@lfdr.de>; Thu,  7 May 2020 17:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 895501C9433
+	for <lists+linux-block@lfdr.de>; Thu,  7 May 2020 17:12:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgEGPMR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 May 2020 11:12:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56228 "EHLO mx2.suse.de"
+        id S1726074AbgEGPMw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 May 2020 11:12:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56754 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgEGPMR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 7 May 2020 11:12:17 -0400
+        id S1727103AbgEGPMw (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 7 May 2020 11:12:52 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A8D3BAF83;
-        Thu,  7 May 2020 15:12:18 +0000 (UTC)
-Subject: Re: [PATCH v6 4/5] block: rename __blk_mq_alloc_rq_map
+        by mx2.suse.de (Postfix) with ESMTP id AF091AB99;
+        Thu,  7 May 2020 15:12:53 +0000 (UTC)
+Subject: Re: [PATCH v6 5/5] block: rename blk_mq_alloc_rq_maps
 To:     axboe@kernel.dk, tom.leiming@gmail.com, bvanassche@acm.org,
         hch@infradead.org, linux-block@vger.kernel.org
 References: <cover.1588856361.git.zhangweiping@didiglobal.com>
- <61e07b3980c19287e4a1d12b8e2a3b26e262ea0b.1588856361.git.zhangweiping@didiglobal.com>
+ <db1712c57633b1cf63bc704a3c47456a0dda5ed8.1588856361.git.zhangweiping@didiglobal.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <9daee91c-29b5-769c-38ca-d9941608f968@suse.de>
-Date:   Thu, 7 May 2020 17:12:14 +0200
+Message-ID: <3a7a582f-8cfc-75f4-6073-d5fcf811192f@suse.de>
+Date:   Thu, 7 May 2020 17:12:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <61e07b3980c19287e4a1d12b8e2a3b26e262ea0b.1588856361.git.zhangweiping@didiglobal.com>
+In-Reply-To: <db1712c57633b1cf63bc704a3c47456a0dda5ed8.1588856361.git.zhangweiping@didiglobal.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -36,48 +36,39 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 5/7/20 3:04 PM, Weiping Zhang wrote:
-> rename __blk_mq_alloc_rq_map to __blk_mq_alloc_map_and_request,
-> actually it alloc both map and request, make function name
-> align with function.
+> rename blk_mq_alloc_rq_maps to blk_mq_alloc_map_and_requests,
+> this function allocs both map and request, make function name align
+> with funtion.
 > 
 > Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
 > ---
->   block/blk-mq.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+>   block/blk-mq.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index c6ba94cba17d..0a4f7fdd2248 100644
+> index 0a4f7fdd2248..649a8abdd742 100644
 > --- a/block/blk-mq.c
 > +++ b/block/blk-mq.c
-> @@ -2473,7 +2473,8 @@ static void blk_mq_init_cpu_queues(struct request_queue *q,
->   	}
->   }
->   
-> -static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
-> +static bool __blk_mq_alloc_map_and_request(struct blk_mq_tag_set *set,
-> +					int hctx_idx)
+> @@ -3006,7 +3006,7 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+>    * may reduce the depth asked for, if memory is tight. set->queue_depth
+>    * will be updated to reflect the allocated depth.
+>    */
+> -static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+> +static int blk_mq_alloc_map_and_requests(struct blk_mq_tag_set *set)
 >   {
->   	int ret = 0;
+>   	unsigned int depth;
+>   	int err;
+> @@ -3166,7 +3166,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
+>   	if (ret)
+>   		goto out_free_mq_map;
 >   
-> @@ -2532,7 +2533,7 @@ static void blk_mq_map_swqueue(struct request_queue *q)
->   			hctx_idx = set->map[j].mq_map[i];
->   			/* unmapped hw queue can be remapped after CPU topo changed */
->   			if (!set->tags[hctx_idx] &&
-> -			    !__blk_mq_alloc_rq_map(set, hctx_idx)) {
-> +			    !__blk_mq_alloc_map_and_request(set, hctx_idx)) {
->   				/*
->   				 * If tags initialization fail for some hctx,
->   				 * that hctx won't be brought online.  In this
-> @@ -2988,7 +2989,7 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
->   	int i;
+> -	ret = blk_mq_alloc_rq_maps(set);
+> +	ret = blk_mq_alloc_map_and_requests(set);
+>   	if (ret)
+>   		goto out_free_mq_map;
 >   
->   	for (i = 0; i < set->nr_hw_queues; i++)
-> -		if (!__blk_mq_alloc_rq_map(set, i))
-> +		if (!__blk_mq_alloc_map_and_request(set, i))
->   			goto out_unwind;
->   
->   	return 0;
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
