@@ -2,108 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F161CA5EA
-	for <lists+linux-block@lfdr.de>; Fri,  8 May 2020 10:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF1521CA7EA
+	for <lists+linux-block@lfdr.de>; Fri,  8 May 2020 12:08:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgEHISl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 May 2020 04:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgEHISl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 May 2020 04:18:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC6BC05BD43;
-        Fri,  8 May 2020 01:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PThi5otuSmIv87sVwtTG8nfMFGAV/tBkGdHRgwma/LQ=; b=kjfsQYGail38WC8kyZ+p6PMRp9
-        JNo3u24zU9ARRWd5LlGzFEa6bMcRSYaEVj3lPkoMwgcH7Xv2VlXF720v5QrVmMNl6x2EgFWgD9pkP
-        jxr1/BxgnffJmhLLtLafFZx+jCzPR2mYfujXM5tZ2ti/yD/8vDHqYd6IzhamGmfnoSpod9RgWrIMe
-        w4NCjKSljGsgpY5BO6q9Cp1fpnL+Y1GjOsdwckOUBKn3eI5EojEGORDDhc9TfEd4X/faJsktBN3f1
-        Burhw+zkUsx5kS6nj48Ek01HgZ8KOL6jZLrTdny16q2E6lYC2wI5VNtRmKDw4FAs1tx9GsZ4GApU/
-        EvRyBdRA==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWyDQ-0004XT-R9; Fri, 08 May 2020 08:18:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] hfs: stop using ioctl_by_bdev
-Date:   Fri,  8 May 2020 10:18:28 +0200
-Message-Id: <20200508081828.590158-2-hch@lst.de>
+        id S1726618AbgEHKID (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 May 2020 06:08:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20904 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgEHKIC (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 8 May 2020 06:08:02 -0400
+IronPort-SDR: cNVJRZPmFMuVVZJ+EHXILCmSTsuP/kffJTLr0n4cup9dfYQIneewmAVDr9wtFQ3rPZcg2//SK8
+ NaN6ofo1t12w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 03:08:02 -0700
+IronPort-SDR: szn0S+lD3rZBPGA0jbATvx3XslYZfw4CfP2d3IeZmP+GB89A6OLMLSnOT/St9H8Y6AOabeBI4v
+ CLO793phILGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
+   d="scan'208";a="250352587"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 08 May 2020 03:08:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7EDA7124; Fri,  8 May 2020 13:07:59 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v2] zcomp: Use ARRAY_SIZE() for backends list
+Date:   Fri,  8 May 2020 13:07:58 +0300
+Message-Id: <20200508100758.51644-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508081828.590158-1-hch@lst.de>
-References: <20200508081828.590158-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead just call the CDROM layer functionality directly.
+Instead of keeping NULL terminated array switch to use ARRAY_SIZE()
+which helps to further clean up.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
 ---
- fs/hfs/mdb.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+v2: added Ack (Minchan), resent with new people in Cc list (Minchan)
+ drivers/block/zram/zcomp.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/hfs/mdb.c b/fs/hfs/mdb.c
-index 460281b1299eb..cdf0edeeb2781 100644
---- a/fs/hfs/mdb.c
-+++ b/fs/hfs/mdb.c
-@@ -32,29 +32,35 @@
- static int hfs_get_last_session(struct super_block *sb,
- 				sector_t *start, sector_t *size)
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 1a8564a79d8dc..e78e7a2ccfd58 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -29,7 +29,6 @@ static const char * const backends[] = {
+ #if IS_ENABLED(CONFIG_CRYPTO_ZSTD)
+ 	"zstd",
+ #endif
+-	NULL
+ };
+ 
+ static void zcomp_strm_free(struct zcomp_strm *zstrm)
+@@ -67,7 +66,7 @@ bool zcomp_available_algorithm(const char *comp)
  {
--	struct cdrom_multisession ms_info;
--	struct cdrom_tocentry te;
--	int res;
-+	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
+ 	int i;
  
- 	/* default values */
- 	*start = 0;
- 	*size = i_size_read(sb->s_bdev->bd_inode) >> 9;
+-	i = __sysfs_match_string(backends, -1, comp);
++	i = sysfs_match_string(backends, comp);
+ 	if (i >= 0)
+ 		return true;
  
- 	if (HFS_SB(sb)->session >= 0) {
-+		struct cdrom_tocentry te;
-+	
-+		if (!cdi)
-+			return -EINVAL;
-+
- 		te.cdte_track = HFS_SB(sb)->session;
- 		te.cdte_format = CDROM_LBA;
--		res = ioctl_by_bdev(sb->s_bdev, CDROMREADTOCENTRY, (unsigned long)&te);
--		if (!res && (te.cdte_ctrl & CDROM_DATA_TRACK) == 4) {
--			*start = (sector_t)te.cdte_addr.lba << 2;
--			return 0;
-+		if (cdrom_read_tocentry(cdi, &te) ||
-+		    (te.cdte_ctrl & CDROM_DATA_TRACK) != 4) {
-+			pr_err("invalid session number or type of track\n");
-+			return -EINVAL;
- 		}
--		pr_err("invalid session number or type of track\n");
--		return -EINVAL;
-+
-+		*start = (sector_t)te.cdte_addr.lba << 2;
-+	} else if (cdi) {
-+		struct cdrom_multisession ms_info;
-+
-+		ms_info.addr_format = CDROM_LBA;
-+		if (cdrom_multisession(cdi, &ms_info) == 0 && ms_info.xa_flag)
-+			*start = (sector_t)ms_info.addr.lba << 2;
- 	}
--	ms_info.addr_format = CDROM_LBA;
--	res = ioctl_by_bdev(sb->s_bdev, CDROMMULTISESSION, (unsigned long)&ms_info);
--	if (!res && ms_info.xa_flag)
--		*start = (sector_t)ms_info.addr.lba << 2;
-+
- 	return 0;
- }
+@@ -86,9 +85,9 @@ ssize_t zcomp_available_show(const char *comp, char *buf)
+ {
+ 	bool known_algorithm = false;
+ 	ssize_t sz = 0;
+-	int i = 0;
++	int i;
  
+-	for (; backends[i]; i++) {
++	for (i = 0; i < ARRAY_SIZE(backends); i++) {
+ 		if (!strcmp(comp, backends[i])) {
+ 			known_algorithm = true;
+ 			sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
 -- 
 2.26.2
 
