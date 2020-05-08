@@ -2,121 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B546C1CA5EC
-	for <lists+linux-block@lfdr.de>; Fri,  8 May 2020 10:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBC741CA5E8
+	for <lists+linux-block@lfdr.de>; Fri,  8 May 2020 10:18:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgEHISq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 May 2020 04:18:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54496 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726797AbgEHISq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 May 2020 04:18:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588925925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HANsaHy1dU2Rb19yMO1lq4mAO9YTPKvRylOPeyN4Yj0=;
-        b=W7aT43h39n00CMRUhB2IMbX4w8q4meleorse2QNOWFjAE/Ftk+O1G0OEiZyJCNQSRC5BQn
-        MXIAEiinGo8pi2JotA2QEcjvqtZ3CNG7rVHg0HEYsMVY7/yCD7qRRmIHMbn1lIX4b4RKYH
-        JoYweIUHzIwcSDVRYm0NptHi34QYou4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-2kv-ly3vORq6mnEsmyAAfA-1; Fri, 08 May 2020 04:18:39 -0400
-X-MC-Unique: 2kv-ly3vORq6mnEsmyAAfA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47FFA107ACF3;
-        Fri,  8 May 2020 08:18:38 +0000 (UTC)
-Received: from localhost (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B88A6F428;
-        Fri,  8 May 2020 08:18:34 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Yufen Yu <yuyufen@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Hou Tao <houtao1@huawei.com>
-Subject: [PATCH V3 4/4] block: don't hold part0's refcount in IO path
-Date:   Fri,  8 May 2020 16:17:58 +0800
-Message-Id: <20200508081758.1380673-5-ming.lei@redhat.com>
-In-Reply-To: <20200508081758.1380673-1-ming.lei@redhat.com>
-References: <20200508081758.1380673-1-ming.lei@redhat.com>
+        id S1726926AbgEHISj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 May 2020 04:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgEHISi (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 May 2020 04:18:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2D9C05BD43;
+        Fri,  8 May 2020 01:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=SCz/5fDbFeJge8pf2aofQUU4MkhPjaxjTbfpUInCcrg=; b=oH1sj15jPtuTgELMSO49xRyHG6
+        Xz4T+yiM5JRheAq/G+39CcheBu0WmMHjwx6XysEsSHevttX6rly7elXR8/vfx1GspChmzwdHbr417
+        /qrLsJvBG+yVXB8HlbGrjUAxHpXu7MVBFulDUPgtHHc/82I8Hr5pnujeLyLgPhw4jzOBeyy5L5iWQ
+        NtT6PuSVvI/8UkX3X/7mJGUFy+iuAMvXyL3qzCWTZAlzKFBAPfEqMeAnGHINtB+Yn47PxMpt8ftJB
+        Y1h7kIeqztwvKIc6qKG9wJrPe/cpY5Z5rJxoY8skYYlPaBpJRpkAzc76i82X3BMWc7e5HFkgZS4Ao
+        7zgNe0xQ==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWyDN-0004OE-VL; Fri, 08 May 2020 08:18:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [RESEND] last missing patch in the cdrom ioctl_by_bdev removal series
+Date:   Fri,  8 May 2020 10:18:27 +0200
+Message-Id: <20200508081828.590158-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-gendisk can't be gone when there is IO activity, so not hold
-part0's refcount in IO path.
+Hi Jens,
 
-Cc: Yufen Yu <yuyufen@huawei.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk.h   | 13 ++++++-------
- block/genhd.c |  4 ++--
- 2 files changed, 8 insertions(+), 9 deletions(-)
+can you pick up this patch, which is the last missing one in converting
+file systems away from using ioctl_by_bdev for CDROM information access?
 
-diff --git a/block/blk.h b/block/blk.h
-index 133fb0b99759..8efd1ca5c975 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -376,19 +376,18 @@ int bdev_resize_partition(struct block_device *bdev, int partno,
- int disk_expand_part_tbl(struct gendisk *disk, int target);
- int hd_ref_init(struct hd_struct *part);
- 
--static inline void hd_struct_get(struct hd_struct *part)
--{
--	percpu_ref_get(&part->ref);
--}
--
-+/* no need to get/put refcount of part0 */
- static inline int hd_struct_try_get(struct hd_struct *part)
- {
--	return percpu_ref_tryget_live(&part->ref);
-+	if (part->partno)
-+		return percpu_ref_tryget_live(&part->ref);
-+	return 1;
- }
- 
- static inline void hd_struct_put(struct hd_struct *part)
- {
--	percpu_ref_put(&part->ref);
-+	if (part->partno)
-+		percpu_ref_put(&part->ref);
- }
- 
- static inline void hd_free_part(struct hd_struct *part)
-diff --git a/block/genhd.c b/block/genhd.c
-index bf8cbb033d64..d97b95d1a2fd 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -345,7 +345,8 @@ static inline int sector_in_part(struct hd_struct *part, sector_t sector)
-  *
-  * CONTEXT:
-  * RCU read locked.  The returned partition pointer is always valid
-- * because its refcount is grabbed.
-+ * because its refcount is grabbed except for part0, which lifetime
-+ * is same with the disk.
-  *
-  * RETURNS:
-  * Found partition on success, part0 is returned if no partition matches
-@@ -378,7 +379,6 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
- 			return part;
- 		}
- 	}
--	hd_struct_get(&disk->part0);
- 	return &disk->part0;
- }
- 
--- 
-2.25.2
 
