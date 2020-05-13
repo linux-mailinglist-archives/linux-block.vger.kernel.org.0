@@ -2,115 +2,167 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE3D01D208C
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 23:00:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A98001D2123
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 23:36:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgEMVAv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 17:00:51 -0400
-Received: from smtprelay0154.hostedemail.com ([216.40.44.154]:51208 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725977AbgEMVAu (ORCPT
+        id S1729351AbgEMVg2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 17:36:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24628 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728881AbgEMVg1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 17:00:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id CA6F0182CED34;
-        Wed, 13 May 2020 21:00:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:960:966:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2194:2196:2199:2200:2393:2559:2562:2828:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3871:3874:4250:4321:4385:5007:6742:6743:10004:10400:10848:11026:11232:11473:11658:11914:12043:12296:12297:12438:12555:12740:12760:12895:12986:13069:13311:13357:13439:14096:14097:14659:14721:21080:21627:21987:30012:30054:30059:30062:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: mist41_5dde648048f06
-X-Filterd-Recvd-Size: 3554
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 13 May 2020 21:00:44 +0000 (UTC)
-Message-ID: <0ee5acfaca4cf32d4efad162046b858981a4dae3.camel@perches.com>
-Subject: Re: [PATCH 20/33] ipv4: add ip_sock_set_recverr
-From:   Joe Perches <joe@perches.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Date:   Wed, 13 May 2020 14:00:43 -0700
-In-Reply-To: <20200513062649.2100053-21-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
-         <20200513062649.2100053-21-hch@lst.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 13 May 2020 17:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589405785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gqP9xceFfGr6E31NbDIRKR1rrE+rKNw+E/rKI7/zCA0=;
+        b=EFmi0rK6sSzi+6XqmaK8WQjIRL3p0YtvwROi7nJD7H6V9pBmf590t+2VHW6PiPx2K37Uf/
+        ttcSyOp/N4KCsEd8Q9S3MEmSmLkWiOu9yfzMC4NTrrYx6gc93ZLc6L8diLPea4YiXcx3xA
+        5emLM1s/mA8Fc2x2+vSoxjbwec0aAFs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-vIRIL_2aN4SMpz39N0gwaQ-1; Wed, 13 May 2020 17:36:24 -0400
+X-MC-Unique: vIRIL_2aN4SMpz39N0gwaQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 660E5801503;
+        Wed, 13 May 2020 21:36:23 +0000 (UTC)
+Received: from sulaco.redhat.com (unknown [10.3.128.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9BC7E5D9E5;
+        Wed, 13 May 2020 21:36:22 +0000 (UTC)
+From:   Tony Asleson <tasleson@redhat.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [RFC PATCH v2 0/7] Add persistent durable identifier to storage log messages
+Date:   Wed, 13 May 2020 16:36:14 -0500
+Message-Id: <20200513213621.470411-1-tasleson@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 2020-05-13 at 08:26 +0200, Christoph Hellwig wrote:
-> Add a helper to directly set the IP_RECVERR sockopt from kernel space
-> without going through a fake uaccess.
+Today users have no easy way to correlate kernel log messages for storage
+devices across reboots, device dynamic add/remove, or when the device is
+physically or logically moved from from system to system.  This is due
+to the existing log IDs which identify how the device is attached and not
+a unique ID of what is attached.  Additionally, even when the attachment
+hasn't changed, it's not always obvious which messages belong to the
+device as the different areas in the storage stack use different
+identifiers, eg. (sda, sata1.00, sd 0:0:0:0).
 
-This seems used only with true as the second arg.
-Is there reason to have that argument at all?
+This change addresses this by adding a unique ID to each log
+message.  It couples the existing structured key/value logging capability
+and VPD 0x83 device identification.
 
-> diff --git a/include/net/ip.h b/include/net/ip.h
-[]
-> @@ -767,5 +767,6 @@ static inline bool inetdev_valid_mtu(unsigned int mtu)
->  
->  void ip_sock_set_tos(struct sock *sk, int val);
->  void ip_sock_set_freebind(struct sock *sk, bool val);
-> +void ip_sock_set_recverr(struct sock *sk, bool val);
->  
->  #endif	/* _IP_H */
-> diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-> index 0c40887a817f8..9abecc3195520 100644
-> --- a/net/ipv4/ip_sockglue.c
-> +++ b/net/ipv4/ip_sockglue.c
-> @@ -589,6 +589,16 @@ void ip_sock_set_freebind(struct sock *sk, bool val)
->  }
->  EXPORT_SYMBOL(ip_sock_set_freebind);
->  
-> +void ip_sock_set_recverr(struct sock *sk, bool val)
-> +{
-> +	lock_sock(sk);
-> +	inet_sk(sk)->recverr = val;
-> +	if (!val)
-> +		skb_queue_purge(&sk->sk_error_queue);
-> +	release_sock(sk);
-> +}
-> +EXPORT_SYMBOL(ip_sock_set_recverr);
-> +
->  /*
->   *	Socket option code for IP. This is the end of the line after any
->   *	TCP,UDP etc options on an IP socket.
-> diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-> index 562ea36c96b0f..1b87b8a9ff725 100644
-> --- a/net/rxrpc/local_object.c
-> +++ b/net/rxrpc/local_object.c
-> @@ -171,13 +171,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
->  		/* Fall through */
->  	case AF_INET:
->  		/* we want to receive ICMP errors */
-> -		opt = 1;
-> -		ret = kernel_setsockopt(local->socket, SOL_IP, IP_RECVERR,
-> -					(char *) &opt, sizeof(opt));
-> -		if (ret < 0) {
-> -			_debug("setsockopt failed");
-> -			goto error;
-> -		}
-> +		ip_sock_set_recverr(local->socket->sk, true);
->  
->  		/* we want to set the don't fragment bit */
->  		opt = IP_PMTUDISC_DO;
+
+An example of logs filtered for a specific device utilizing this patch
+series.
+
+$ journalctl -b  _KERNEL_DURABLE_NAME="`cat /sys/block/sdb/device/wwid`"
+| cut -c 25- | fmt -t
+9-08-22 13:21:35 CDT, end at Wed 2020-05-13 15:40:26 CDT. --
+l: scsi 1:0:0:0: Attached scsi generic sg1 type 0
+l: sd 1:0:0:0: [sdb] 209715200 512-byte logical blocks: (107 GB/100 GiB)
+l: sd 1:0:0:0: [sdb] Write Protect is off
+l: sd 1:0:0:0: [sdb] Mode Sense: 00 3a 00 00
+l: sd 1:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't
+   support DPO or FUA
+l: sd 1:0:0:0: [sdb] Attached SCSI disk
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x800000 SErr 0x800000
+   action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/20:b8:10:27:00/00:00:00:00:00/40 tag 23
+            ncq dma 16384 in res 40/00:00:00:4f:c2/00:00:00:00:00/00
+            Emask 0x4 (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: [sdb] tag#23 FAILED Result: hostbyte=DID_OK
+            driverbyte=DRIVER_SENSE cmd_age=30s
+l: sd 1:0:0:0: [sdb] tag#23 Sense Key : Illegal Request [current]
+l: sd 1:0:0:0: [sdb] tag#23 Add. Sense: Unaligned write command
+l: sd 1:0:0:0: [sdb] tag#23 CDB: Read(10) 28 00 00 00 27 10 00 00 20 00
+l: block sdb: blk_update_request: I/O error, dev sdb, sector 10000 op
+            0x0:(READ) flags 0x80700 phys_seg 4 prio class 0
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x2 SErr 0x2 action
+            0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:08:10:27:00/00:00:00:00:00/40 tag 1 ncq
+            dma 4096 in res 40/00:ff:00:00:00/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x800000 SErr 0x800000
+            action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:b8:10:27:00/00:00:00:00:00/40 tag 23 ncq
+            dma 4096 in res 40/00:00:00:4f:c2/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: NCQ disabled due to excessive errors
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x4000 SErr 0x4000
+            action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:70:10:27:00/00:00:00:00:00/40 tag 14 ncq
+            dma 4096 in res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: device reported invalid CHS sector 0
+
+This change is incomplete.  With the plethora of different logging
+techniques utilized in the kernel it will take some coordinated effort
+and additional changes.  I tried a few different approaches, to cover
+as much as I could without resorting to changing every print statement
+in all the storage layers, but maybe there is a better,
+more elegant approach?
+
+I believe having this functionality is very useful and important for
+system configurations of all sizes.  I mentioned this change briefly in:
+https://lore.kernel.org/lkml/30f29fe6-8445-0016-8cdc-3ef99d43fbf5@redhat.com/
+
+Questions
+1. Where is the best place to put the durable_name callback function?
+2. What is best "KEY" value?
+
+
+v2:
+- Incorporated changes suggested by James Bottomley
+- Removed string function which removed leading/trailing/duplicate adjacent
+  spaces from generated id, value matches /sys/block/<device>/device/wwid
+- Remove xfs patch, limiting changes to lower block layers
+- Moved callback from struct device_type to struct device.  Struct device_type
+  is typically static const and with a number of different areas using shared
+  implementation of genhd unable to modify for each of the different areas.
+
+Tony Asleson (7):
+  struct device: Add function callback durable_name
+  create_syslog_header: Add durable name
+  print_req_error: Use dev_printk
+  buffer_io_error: Use dev_printk
+  ata_dev_printk: Use dev_printk
+  scsi: Add durable_name for dev_printk
+  nvme: Add durable name for dev_printk
+
+ block/blk-core.c           |  5 ++++-
+ drivers/ata/libata-core.c  | 10 +++++++---
+ drivers/base/core.c        | 29 +++++++++++++++++++++++++++++
+ drivers/nvme/host/core.c   | 18 ++++++++++++++++++
+ drivers/scsi/scsi_lib.c    | 14 ++++++++++++++
+ drivers/scsi/scsi_sysfs.c  | 23 +++++++++++++++++++++++
+ drivers/scsi/sd.c          |  2 ++
+ fs/buffer.c                | 10 ++++++++--
+ include/linux/device.h     |  4 ++++
+ include/scsi/scsi_device.h |  3 +++
+ 10 files changed, 112 insertions(+), 6 deletions(-)
+
+
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
+-- 
+2.25.4
 
