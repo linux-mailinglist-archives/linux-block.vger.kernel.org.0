@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10B481D05A1
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 05:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FD041D05A4
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 05:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgEMDtT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 May 2020 23:49:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36085 "EHLO
+        id S1728680AbgEMDtZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 May 2020 23:49:25 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33573 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728669AbgEMDtT (ORCPT
+        by vger.kernel.org with ESMTP id S1726550AbgEMDtZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 May 2020 23:49:19 -0400
+        Tue, 12 May 2020 23:49:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589341758;
+        s=mimecast20190719; t=1589341764;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YFwNFbvN8lXiw5io30W1wc29b7T/2QA1xOMLcFcuIUc=;
-        b=g7+WeNImJz7eghFb38HlxkhgQ0PKQJ6yNDvubCAwvqWi4bfJGOsGDEVX5IJxtR0E0OVhSP
-        Z3wcJcR3qsUOSEiCXQwshCXY+tOrYbPm/edJXrA2eOlSjgoY2wisjiTjt9kCvTYvdtTdTo
-        KXzno+i+iG6XCqoXp3+unK9h37Fv7mo=
+        bh=I/R2lR/AT07am7BztQhuIhR00xaUfYSL/TEZVE3OysM=;
+        b=gHvcOs5pBzGBHaRWGtjnKaAFdCG+KnYWnCigwPFexhIYCvwSDD2+CxF7Qfrubbe+VsrWnA
+        SlZB4VtW7pL7et+OSqqdl3Mtj/fX8mNsZuwrBvRHKcOAkczyIGWNgzD8o7F9TMS+fEMwmg
+        I4ufGTkhPqxhUPoDrSh6gYOIKEOivv0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-0AjD-BFxPK2C3Agk4poDGg-1; Tue, 12 May 2020 23:49:16 -0400
-X-MC-Unique: 0AjD-BFxPK2C3Agk4poDGg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-164-U-_4LdnvPiWdP2ymD8UUbQ-1; Tue, 12 May 2020 23:49:22 -0400
+X-MC-Unique: U-_4LdnvPiWdP2ymD8UUbQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8DE1107ACCA;
-        Wed, 13 May 2020 03:49:14 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1A93461;
+        Wed, 13 May 2020 03:49:20 +0000 (UTC)
 Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AE716A960;
-        Wed, 13 May 2020 03:49:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76CC25D9E5;
+        Wed, 13 May 2020 03:49:17 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
@@ -42,93 +42,84 @@ Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
         Hannes Reinecke <hare@suse.com>,
         Christoph Hellwig <hch@lst.de>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH V11 09/12] blk-mq: add blk_mq_hctx_handle_dead_cpu for handling cpu dead
-Date:   Wed, 13 May 2020 11:48:00 +0800
-Message-Id: <20200513034803.1844579-10-ming.lei@redhat.com>
+Subject: [PATCH V11 10/12] block: add request allocation flag of BLK_MQ_REQ_FORCE
+Date:   Wed, 13 May 2020 11:48:01 +0800
+Message-Id: <20200513034803.1844579-11-ming.lei@redhat.com>
 In-Reply-To: <20200513034803.1844579-1-ming.lei@redhat.com>
 References: <20200513034803.1844579-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add helper of blk_mq_hctx_handle_dead_cpu for handling cpu dead,
-and prepare for handling inactive hctx.
+When one hctx becomes inactive, there may be requests allocated from
+this hctx, we can't queue them to the inactive hctx, one approach is
+to re-submit them via one active hctx.
 
-No functional change.
+However, the request queue may have been started to freeze, and allocating
+request becomes not possible. Add flag of BLK_MQ_REQ_FORCE to allow block
+layer to allocate request in this case becasue the queue won't be frozen
+completely before all requests allocated from inactive hctx are completed.
+
+The similar approach has been applied in commit 8dc765d438f1 ("SCSI: fix queue
+cleanup race before queue initialization is done").
+
+This way can help on other request dependency case too, such as, storage
+device side has some problem, and IO request can't be queued to device
+successfully, and passthrough request is required to fix the device problem.
+If queue freeze just comes before allocating passthrough request, hang will be
+triggered in queue freeze process, IO process and context for allocating
+passthrough request forever. See commit 01e99aeca397 ("blk-mq: insert passthrough
+request into hctx->dispatch directly") for background of this kind of issue.
 
 Cc: John Garry <john.garry@huawei.com>
 Cc: Bart Van Assche <bvanassche@acm.org>
 Cc: Hannes Reinecke <hare@suse.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ block/blk-core.c       | 5 +++++
+ include/linux/blk-mq.h | 7 +++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 171bbf2fbc56..7c640482fb24 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2402,22 +2402,13 @@ static int blk_mq_hctx_notify_online(unsigned int cpu, struct hlist_node *node)
- 	return 0;
- }
+diff --git a/block/blk-core.c b/block/blk-core.c
+index ffb1579fd4da..82be15c1fde4 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -430,6 +430,11 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
+ 		if (success)
+ 			return 0;
  
--/*
-- * 'cpu' is going away. splice any existing rq_list entries from this
-- * software queue to the hw queue dispatch list, and ensure that it
-- * gets run.
-- */
--static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
-+static void blk_mq_hctx_handle_dead_cpu(struct blk_mq_hw_ctx *hctx,
-+		unsigned int cpu)
- {
--	struct blk_mq_hw_ctx *hctx = hlist_entry_safe(node,
--			struct blk_mq_hw_ctx, cpuhp_dead);
- 	struct blk_mq_ctx *ctx;
- 	LIST_HEAD(tmp);
- 	enum hctx_type type;
- 
--	if (!cpumask_test_cpu(cpu, hctx->cpumask))
--		return 0;
--
- 	ctx = __blk_mq_get_ctx(hctx->queue, cpu);
- 	type = hctx->type;
- 
-@@ -2429,13 +2420,27 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
- 	spin_unlock(&ctx->lock);
- 
- 	if (list_empty(&tmp))
--		return 0;
-+		return;
- 
- 	spin_lock(&hctx->lock);
- 	list_splice_tail_init(&tmp, &hctx->dispatch);
- 	spin_unlock(&hctx->lock);
- 
- 	blk_mq_run_hw_queue(hctx, true);
-+}
++		if (flags & BLK_MQ_REQ_FORCE) {
++			percpu_ref_get(&q->q_usage_counter);
++			return 0;
++		}
 +
-+/*
-+ * 'cpu' is going away. splice any existing rq_list entries from this
-+ * software queue to the hw queue dispatch list, and ensure that it
-+ * gets run.
-+ */
-+static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct blk_mq_hw_ctx *hctx = hlist_entry_safe(node,
-+			struct blk_mq_hw_ctx, cpuhp_dead);
-+
-+	if (cpumask_test_cpu(cpu, hctx->cpumask))
-+		blk_mq_hctx_handle_dead_cpu(hctx, cpu);
- 	return 0;
- }
+ 		if (flags & BLK_MQ_REQ_NOWAIT)
+ 			return -EBUSY;
  
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index c2ea0a6e5b56..7d7aa5305a67 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -448,6 +448,13 @@ enum {
+ 	BLK_MQ_REQ_INTERNAL	= (__force blk_mq_req_flags_t)(1 << 2),
+ 	/* set RQF_PREEMPT */
+ 	BLK_MQ_REQ_PREEMPT	= (__force blk_mq_req_flags_t)(1 << 3),
++
++	/*
++	 * force to allocate request and caller has to make sure queue
++	 * won't be frozen completely during allocation, and this flag
++	 * is only applied after queue freeze is started
++	 */
++	BLK_MQ_REQ_FORCE	= (__force blk_mq_req_flags_t)(1 << 4),
+ };
+ 
+ struct request *blk_mq_alloc_request(struct request_queue *q, unsigned int op,
 -- 
 2.25.2
 
