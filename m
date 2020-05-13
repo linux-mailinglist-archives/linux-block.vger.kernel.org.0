@@ -2,127 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F011D05A7
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 05:49:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9827A1D07AE
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 08:33:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgEMDtk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 May 2020 23:49:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49071 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728692AbgEMDtj (ORCPT
+        id S1730002AbgEMG2V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 02:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729992AbgEMG2T (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 May 2020 23:49:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589341778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pEMInoM2lu0EeNIl5HpQaYfK+bDyEr3VKJtd1ijPTP8=;
-        b=Bo2Qw9pLj2wvxgof11LXqlS3l/5M260n5jQjaM2FJJPgfl6GWx3SHfarjZqjRqDN/NhV4Z
-        XxlfBk8yoQI1qldMCBd81Nr6OfN3LwT/588xwzv9u1SezpZGnqzIyXAdK0hJHKaGfbZQfm
-        TZwk9FKcp1JRAr+TZRtk63HxED6pLTc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-iQdk0fS1NUapLCFcSGDE2Q-1; Tue, 12 May 2020 23:49:34 -0400
-X-MC-Unique: iQdk0fS1NUapLCFcSGDE2Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DC80800687;
-        Wed, 13 May 2020 03:49:33 +0000 (UTC)
-Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A5463A0;
-        Wed, 13 May 2020 03:49:29 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH V11 12/12] block: deactivate hctx when the hctx is actually inactive
-Date:   Wed, 13 May 2020 11:48:03 +0800
-Message-Id: <20200513034803.1844579-13-ming.lei@redhat.com>
-In-Reply-To: <20200513034803.1844579-1-ming.lei@redhat.com>
-References: <20200513034803.1844579-1-ming.lei@redhat.com>
+        Wed, 13 May 2020 02:28:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89577C061A0E;
+        Tue, 12 May 2020 23:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=AG2RtlJ7y9O44y7CM+5Y55kgsqMdi5zmGGc+3SDRxq8=; b=WCEMuVgh4ZCeigkMFy94+mId1g
+        gh0Igbk9vi9s0Nf0anxjWE8uw6ABaQK+5+LaKpNFUHA+zf0D919KpO4aJY2VWo7p1QEdzsWYbfYE1
+        ONYsiXd9fdvHslF9UXMZqp6QUOnmxAYZwP2dn34xAmDZzON/e8nSVNnr721D+sw/O5rHr7UcsK6mO
+        HSxECWTkiypKRzFQFHzArwuIE38ZopK9LEyh7+kEKbL+4aJLTGj2I5cW3gZ22+vmtXtEY9Pl73HhN
+        vcT29xWjHPMXK5XFCdsQA+ZaH+xRK6mUJGYid122hF4Ce47/IUMWYtLRChUrGSjyNKanSSQmBUX9v
+        ypmYTpGg==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYkqx-0003lt-48; Wed, 13 May 2020 06:26:51 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: remove kernel_setsockopt and kernel_getsockopt
+Date:   Wed, 13 May 2020 08:26:15 +0200
+Message-Id: <20200513062649.2100053-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Run queue on dead CPU still may be triggered in some corner case,
-such as one request is requeued after CPU hotplug is handled.
+Hi Dave,
 
-So handle this corner case during run queue.
+this series removes the kernel_setsockopt and kernel_getsockopt
+functions, and instead switches their users to small functions that
+implement setting (or in one case getting) a sockopt directly using
+a normal kernel function call with type safety and all the other
+benefits of not having a function call.
 
-Cc: John Garry <john.garry@huawei.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-mq.c | 30 ++++++++++--------------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
+In some cases these functions seem pretty heavy handed as they do
+a lock_sock even for just setting a single variable, but this mirrors
+the real setsockopt implementation - counter to that a few kernel
+drivers just set the fields directly already.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c9a3e48a1ebc..0f1afa2ab5e3 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -43,6 +43,8 @@
- static void blk_mq_poll_stats_start(struct request_queue *q);
- static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
- 
-+static void blk_mq_hctx_deactivate(struct blk_mq_hw_ctx *hctx);
-+
- static int blk_mq_poll_stats_bkt(const struct request *rq)
- {
- 	int ddir, sectors, bucket;
-@@ -1400,28 +1402,16 @@ static void __blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx)
- 	int srcu_idx;
- 
- 	/*
--	 * We should be running this queue from one of the CPUs that
--	 * are mapped to it.
--	 *
--	 * There are at least two related races now between setting
--	 * hctx->next_cpu from blk_mq_hctx_next_cpu() and running
--	 * __blk_mq_run_hw_queue():
--	 *
--	 * - hctx->next_cpu is found offline in blk_mq_hctx_next_cpu(),
--	 *   but later it becomes online, then this warning is harmless
--	 *   at all
--	 *
--	 * - hctx->next_cpu is found online in blk_mq_hctx_next_cpu(),
--	 *   but later it becomes offline, then the warning can't be
--	 *   triggered, and we depend on blk-mq timeout handler to
--	 *   handle dispatched requests to this hctx
-+	 * BLK_MQ_S_INACTIVE may not deal with some requeue corner case:
-+	 * one request is requeued after cpu unplug is handled, so check
-+	 * if the hctx is actually inactive. If yes, deactive it and
-+	 * re-submit all requests in the queue.
- 	 */
- 	if (!cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) &&
--		cpu_online(hctx->next_cpu)) {
--		printk(KERN_WARNING "run queue from wrong CPU %d, hctx %s\n",
--			raw_smp_processor_id(),
--			cpumask_empty(hctx->cpumask) ? "inactive": "active");
--		dump_stack();
-+	    cpumask_next_and(-1, hctx->cpumask, cpu_online_mask) >=
-+	    nr_cpu_ids) {
-+		blk_mq_hctx_deactivate(hctx);
-+		return;
- 	}
- 
- 	/*
--- 
-2.25.2
+Nevertheless the diffstat looks quite promising:
 
+ 42 files changed, 721 insertions(+), 799 deletions(-)
