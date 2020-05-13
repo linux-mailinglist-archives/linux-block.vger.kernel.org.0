@@ -2,130 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B5171D0854
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 08:34:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32F6E1D08BE
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 08:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgEMG3p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 02:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732175AbgEMG3F (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 02:29:05 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3618AC061A0C;
-        Tue, 12 May 2020 23:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=sYCeJWkvwiDcLO4azUz4Lghn771ZTzcCvIj3ODxfKA4=; b=L0xgcDwWBew/hUDnMRVxjAFIu0
-        nr3l2q6XF2Vl5FSu5iuND7L/B2s0+8lrY924YcHINLJjs2142Hvi/lu17oLe8a5J7XrMXSQn1vZ+s
-        KBdAEHb6c/nnwY5To5NpuwJe8USThbqwt/dx1BNtU4i0rsfEG1zyWAvoQtPe4Fn6tBCQ6dafGi6ti
-        sSF+YmLo/T0y5dtSly4MHmSA1G3UtgRy+xGkAB7nKDU2CUQp6V12yTilYZ/C2KcbvR3q/BB0ButgR
-        Tw5mexnLFPfVVKybEa3N1yFk0d6sUieQD9fw+qvEadIByagJTSJpz2Mw0hAKD9fkVdDYSQR4fa2Q+
-        MTpTE7mQ==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYksb-0005Jo-4P; Wed, 13 May 2020 06:28:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 33/33] net: remove kernel_getsockopt
-Date:   Wed, 13 May 2020 08:26:48 +0200
-Message-Id: <20200513062649.2100053-34-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
+        id S1729557AbgEMGgA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 02:36:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43396 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbgEMGgA (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 13 May 2020 02:36:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3C8E8AB5C;
+        Wed, 13 May 2020 06:36:01 +0000 (UTC)
+Subject: Re: [PATCH V11 06/12] blk-mq: prepare for draining IO when hctx's all
+ CPUs are offline
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200513034803.1844579-1-ming.lei@redhat.com>
+ <20200513034803.1844579-7-ming.lei@redhat.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <3994d91e-9f17-8c8f-eb6b-6ad22db44cf9@suse.de>
+Date:   Wed, 13 May 2020 08:35:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200513034803.1844579-7-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-No users left.
+On 5/13/20 5:47 AM, Ming Lei wrote:
+> Most of blk-mq drivers depend on managed IRQ's auto-affinity to setup
+> up queue mapping. Thomas mentioned the following point[1]:
+> 
+> "
+>   That was the constraint of managed interrupts from the very beginning:
+> 
+>    The driver/subsystem has to quiesce the interrupt line and the associated
+>    queue _before_ it gets shutdown in CPU unplug and not fiddle with it
+>    until it's restarted by the core when the CPU is plugged in again.
+> "
+> 
+> However, current blk-mq implementation doesn't quiesce hw queue before
+> the last CPU in the hctx is shutdown. Even worse, CPUHP_BLK_MQ_DEAD is
+> one cpuhp state handled after the CPU is down, so there isn't any chance
+> to quiesce hctx for blk-mq wrt. CPU hotplug.
+> 
+> Add new cpuhp state of CPUHP_AP_BLK_MQ_ONLINE for blk-mq to stop queues
+> and wait for completion of in-flight requests.
+> 
+> We will stop hw queue and wait for completion of in-flight requests
+> when one hctx is becoming dead in the following patch. This way may
+> cause dead-lock for some stacking blk-mq drivers, such as dm-rq and
+> loop.
+> 
+> Add blk-mq flag of BLK_MQ_F_NO_MANAGED_IRQ and mark it for dm-rq and
+> loop, so we needn't to wait for completion of in-flight requests from
+> dm-rq & loop, then the potential dead-lock can be avoided.
+> 
+> [1] https://lore.kernel.org/linux-block/alpine.DEB.2.21.1904051331270.1802@nanos.tec.linutronix.de/
+> 
+> Cc: John Garry <john.garry@huawei.com>
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Cc: Hannes Reinecke <hare@suse.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>   block/blk-mq-debugfs.c     |  1 +
+>   block/blk-mq.c             | 19 +++++++++++++++++++
+>   drivers/block/loop.c       |  2 +-
+>   drivers/md/dm-rq.c         |  2 +-
+>   include/linux/blk-mq.h     |  4 ++++
+>   include/linux/cpuhotplug.h |  1 +
+>   6 files changed, 27 insertions(+), 2 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/net.h |  2 --
- net/socket.c        | 34 ----------------------------------
- 2 files changed, 36 deletions(-)
+Cheers,
 
-diff --git a/include/linux/net.h b/include/linux/net.h
-index ece7513326293..e10f378194a59 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
- 		   int flags);
- int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
- int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
--int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
--		      int *optlen);
- int kernel_sendpage(struct socket *sock, struct page *page, int offset,
- 		    size_t size, int flags);
- int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
-diff --git a/net/socket.c b/net/socket.c
-index f37c3ef508691..49000f0d87f71 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3715,40 +3715,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
- }
- EXPORT_SYMBOL(kernel_getpeername);
- 
--/**
-- *	kernel_getsockopt - get a socket option (kernel space)
-- *	@sock: socket
-- *	@level: API level (SOL_SOCKET, ...)
-- *	@optname: option tag
-- *	@optval: option value
-- *	@optlen: option length
-- *
-- *	Assigns the option length to @optlen.
-- *	Returns 0 or an error.
-- */
--
--int kernel_getsockopt(struct socket *sock, int level, int optname,
--			char *optval, int *optlen)
--{
--	mm_segment_t oldfs = get_fs();
--	char __user *uoptval;
--	int __user *uoptlen;
--	int err;
--
--	uoptval = (char __user __force *) optval;
--	uoptlen = (int __user __force *) optlen;
--
--	set_fs(KERNEL_DS);
--	if (level == SOL_SOCKET)
--		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
--	else
--		err = sock->ops->getsockopt(sock, level, optname, uoptval,
--					    uoptlen);
--	set_fs(oldfs);
--	return err;
--}
--EXPORT_SYMBOL(kernel_getsockopt);
--
- /**
-  *	kernel_sendpage - send a &page through a socket (kernel space)
-  *	@sock: socket
+Hannes
 -- 
-2.26.2
-
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
