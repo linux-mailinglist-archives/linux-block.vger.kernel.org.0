@@ -2,43 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C9B61D2129
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 23:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A441D212D
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 23:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgEMVgb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 17:36:31 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25374 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729391AbgEMVga (ORCPT
+        id S1729514AbgEMVgg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 17:36:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34828 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729482AbgEMVgf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 17:36:30 -0400
+        Wed, 13 May 2020 17:36:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589405789;
+        s=mimecast20190719; t=1589405795;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ByWLLIXWrua1rpkn2+ZI8vQo5UqpQKFPic9yOTP0TPg=;
-        b=OpynUdj/Ra1f96HZ6//h+ZRrt3rXpr0faiJUfIyCWnq5801JRVpWdVJ3UKsBs6ozMVPWAQ
-        CvN/HBOj8QfeVnuwRWcCQJYCA/QmNH5DCMETOxsx8Vs0Zyob/GlkM2GeZL5NKvg98XUGWM
-        b0/HpTCPs2rUpqSHyxYQokwdJZP4Ng0=
+        bh=Y2+b6an8Oose37xQfoDtn8tXCYrO95yhISh4EW9FuGk=;
+        b=ZbLy3mLc/81HimcH/37KqgVyAH5vex9dpfrGFw9KRuxANhtc04NJyYdGaSUjbCCTjxulKW
+        uX1/mnVvrVWtLHASlSZ/5/OrE+EU93hBgT0sYv0XGFHDlSl9dms8Kr0MN2W6SjyoaUmpJk
+        P3XeBjiaiMrgQPsZelFsO7oWfCPiCIk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-cmAgnwGmMLCKn-2sKAAKaQ-1; Wed, 13 May 2020 17:36:28 -0400
-X-MC-Unique: cmAgnwGmMLCKn-2sKAAKaQ-1
+ us-mta-254-sDeRDpkvPQaAWoakivOJ6A-1; Wed, 13 May 2020 17:36:29 -0400
+X-MC-Unique: sDeRDpkvPQaAWoakivOJ6A-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83A6A1B18BC3;
-        Wed, 13 May 2020 21:36:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80BC5100CCC2;
+        Wed, 13 May 2020 21:36:28 +0000 (UTC)
 Received: from sulaco.redhat.com (unknown [10.3.128.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF3785D9E5;
-        Wed, 13 May 2020 21:36:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D66A95D99A;
+        Wed, 13 May 2020 21:36:27 +0000 (UTC)
 From:   Tony Asleson <tasleson@redhat.com>
 To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [RFC PATCH v2 4/7] buffer_io_error: Use dev_printk
-Date:   Wed, 13 May 2020 16:36:18 -0500
-Message-Id: <20200513213621.470411-5-tasleson@redhat.com>
+Subject: [RFC PATCH v2 5/7] ata_dev_printk: Use dev_printk
+Date:   Wed, 13 May 2020 16:36:19 -0500
+Message-Id: <20200513213621.470411-6-tasleson@redhat.com>
 In-Reply-To: <20200513213621.470411-1-tasleson@redhat.com>
 References: <20200513213621.470411-1-tasleson@redhat.com>
 MIME-Version: 1.0
@@ -49,34 +49,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Utilize the dev_printk function which will add structured data
+to the log message.
+
 Signed-off-by: Tony Asleson <tasleson@redhat.com>
 ---
- fs/buffer.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/ata/libata-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b8d28370cfd7..e144f5bccd2f 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -133,10 +133,16 @@ __clear_page_buffers(struct page *page)
- 
- static void buffer_io_error(struct buffer_head *bh, char *msg)
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 42c8728f6117..16978d615a17 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -7301,6 +7301,7 @@ EXPORT_SYMBOL(ata_link_printk);
+ void ata_dev_printk(const struct ata_device *dev, const char *level,
+ 		    const char *fmt, ...)
  {
--	if (!test_bit(BH_Quiet, &bh->b_state))
--		printk_ratelimited(KERN_ERR
-+	if (!test_bit(BH_Quiet, &bh->b_state)) {
-+		struct device *gendev;
-+
-+		gendev = (bh->b_bdev->bd_disk) ?
-+			disk_to_dev(bh->b_bdev->bd_disk) : NULL;
-+
-+		dev_err_ratelimited(gendev,
- 			"Buffer I/O error on dev %pg, logical block %llu%s\n",
- 			bh->b_bdev, (unsigned long long)bh->b_blocknr, msg);
-+	}
- }
++	const struct device *gendev;
+ 	struct va_format vaf;
+ 	va_list args;
  
- /*
+@@ -7309,9 +7310,12 @@ void ata_dev_printk(const struct ata_device *dev, const char *level,
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
+ 
+-	printk("%sata%u.%02u: %pV",
+-	       level, dev->link->ap->print_id, dev->link->pmp + dev->devno,
+-	       &vaf);
++	gendev = (dev->sdev) ? &dev->sdev->sdev_gendev : &dev->tdev;
++
++	dev_printk(level, gendev, "ata%u.%02u: %pV",
++			dev->link->ap->print_id,
++			dev->link->pmp + dev->devno,
++			&vaf);
+ 
+ 	va_end(args);
+ }
 -- 
 2.25.4
 
