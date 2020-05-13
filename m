@@ -2,52 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 854C41D225D
-	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 00:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 547D61D2265
+	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 00:55:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbgEMWtg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 18:49:36 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:40306 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730841AbgEMWtf (ORCPT
+        id S1731593AbgEMWy7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 18:54:59 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:40719 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731276AbgEMWy7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 18:49:35 -0400
-Received: by mail-wm1-f52.google.com with SMTP id u16so30325484wmc.5
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 15:49:33 -0700 (PDT)
+        Wed, 13 May 2020 18:54:59 -0400
+Received: by mail-wr1-f41.google.com with SMTP id e16so1472193wra.7
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 15:54:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=CGWNczDzWASYqHeai2C3XuuNyNm4LXIFq4GBZebb2sHcFOlCkmxUgarHoZA7ov5Bpz
-         xeqrjKnCt2ceuKqgfl9fPUJBANBPQarhsxSZwW+q/01PAcLbSOCldVQwGveBmiI1bJTo
-         z56ObNoqn/wYGyOvOsIPTLPM2mm6Hhk1hrH0IDWV4R5OebtFpy0z2aKykMOOB3raz+rU
-         FxsPUM3G/qLEjPy+e7OHKImjfl7VZlRSCuJTru8d5d4aoANNz69MB53RYFH1oUB/oHma
-         AGeCS+0+w8qQHQTy1gQ6VUsvvB2HkBV0GTmaLK2KvM9VHDbboUguvgGgj2nNPIQ04gxd
-         +isQ==
-X-Gm-Message-State: AOAM5306Z61Kw8zHkZqaOGrYlXzAd5UzAW9JJYM86O7MZ/XbdMmGX4V1
-        Hk4wCdu7tFlnaolSVU7g6Hc=
-X-Google-Smtp-Source: ABdhPJx/5URexesizIhH1C1w0AI7Ij7sdXgSG9A/JwPqVYI85U/Zsi9nAza0sPv5rKoOyIwYqgfXvw==
-X-Received: by 2002:a1c:a947:: with SMTP id s68mr10541102wme.25.1589410172614;
-        Wed, 13 May 2020 15:49:32 -0700 (PDT)
+        b=SAeDYdzVe59UwJZ8f46mi9QAGf+85KPhdItREGlFCSWVH+G+gpB+KYXGKeBdmP7xsv
+         ZPGHUX5UVG0xomdYfuEixuQDMnGpe46yS3gRtH+tdRlt5EDhbcmP8JsXZiMatcTNutNg
+         ixyPxTeMZSI3zX0h6VwW9KyKJd8KAKRroXej4lM9HofVXH+HH+m32WFaUwXLEWKCt3N1
+         9mTESf3orcabDVut/sHqmwvQ31r1uIN6x4K9AcTiWQ4+kZsyjEQCAeDA+eZ4jD+24MQR
+         7DUih/VgQ2/48jnBaqUBy7v9TfD5bVspPesUiSRWSFGS/oz2nz3uamVohAHaD5E81ryZ
+         tSDA==
+X-Gm-Message-State: AOAM5338DAxc0Z0FMP5bDYu2kb9RMMp7206qjcz1doFrOsFmTQWMeDf0
+        xHU56i1KNP+g6DSg9k/tBMc=
+X-Google-Smtp-Source: ABdhPJz/Kja4i82XcTEne1G7rgJ+25OhXTDegQjmf/k86lwM9s88fW7SQsLZBQvz2mS5zac5XzOEeA==
+X-Received: by 2002:adf:e408:: with SMTP id g8mr1890521wrm.363.1589410497441;
+        Wed, 13 May 2020 15:54:57 -0700 (PDT)
 Received: from ?IPv6:2601:647:4802:9070:59e0:deac:a73c:5d11? ([2601:647:4802:9070:59e0:deac:a73c:5d11])
-        by smtp.gmail.com with ESMTPSA id p4sm1447312wrq.31.2020.05.13.15.49.30
+        by smtp.gmail.com with ESMTPSA id v2sm1360232wrn.21.2020.05.13.15.54.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 15:49:32 -0700 (PDT)
-Subject: Re: [PATCH 2/9] blk-mq: pass hctx to blk_mq_dispatch_rq_list
+        Wed, 13 May 2020 15:54:56 -0700 (PDT)
+Subject: Re: [PATCH 4/9] blk-mq: move getting driver tag and bugget into one
+ helper
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
         Christoph Hellwig <hch@infradead.org>
 References: <20200513095443.2038859-1-ming.lei@redhat.com>
- <20200513095443.2038859-3-ming.lei@redhat.com>
+ <20200513095443.2038859-5-ming.lei@redhat.com>
 From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <c941fd73-5a9d-fcce-f636-d4c71cdabd97@grimberg.me>
-Date:   Wed, 13 May 2020 15:49:28 -0700
+Message-ID: <e586eb81-fe98-8753-2175-66609243306a@grimberg.me>
+Date:   Wed, 13 May 2020 15:54:53 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200513095443.2038859-3-ming.lei@redhat.com>
+In-Reply-To: <20200513095443.2038859-5-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
