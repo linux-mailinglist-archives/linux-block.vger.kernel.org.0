@@ -2,130 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 367AB1D0BE7
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 11:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D859F1D0E27
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 11:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgEMJWW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 05:22:22 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2203 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726492AbgEMJWV (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 05:22:21 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 51264219B84C37D45BE6;
-        Wed, 13 May 2020 10:22:20 +0100 (IST)
-Received: from [127.0.0.1] (10.210.165.35) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 13 May
- 2020 10:22:18 +0100
-Subject: Re: [PATCH V11 11/12] blk-mq: re-submit IO in case that hctx is
- inactive
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200513034803.1844579-1-ming.lei@redhat.com>
- <20200513034803.1844579-12-ming.lei@redhat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <657924a4-ec2b-059a-f65d-8eb126d1272b@huawei.com>
-Date:   Wed, 13 May 2020 10:21:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S2387870AbgEMJ6Q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 05:58:16 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54007 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388197AbgEMJzC (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589363700;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UiOxyCO+fStdyJ2z3c3E3S+Yhrqvcy+kh/+3mB7Jm0c=;
+        b=HgCQ5yIIsjlvEstmNwrRvxG5flLbvO9TNtvMZ8shJgNi62rN0U81/fn3agkvPxjPjPUdTF
+        29PIXWjWeQBY9d9ApyqtNelS6BvEUehHIp+FOxmvVQJgeAB0IEyUoGIWMjUuIzJQyzvLy0
+        w2pJvVK0yP8Mg8D40TAd9FJS6Dk3C88=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-z2urFnIHN-GWNIK1LnWOVQ-1; Wed, 13 May 2020 05:54:57 -0400
+X-MC-Unique: z2urFnIHN-GWNIK1LnWOVQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 284761005510;
+        Wed, 13 May 2020 09:54:56 +0000 (UTC)
+Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C05BA1002395;
+        Wed, 13 May 2020 09:54:52 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH 0/9] blk-mq: support batching dispatch from scheduler
+Date:   Wed, 13 May 2020 17:54:34 +0800
+Message-Id: <20200513095443.2038859-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513034803.1844579-12-ming.lei@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.165.35]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 13/05/2020 04:48, Ming Lei wrote:
-> +static void blk_mq_resubmit_rq(struct request *rq)
-> +{
-> +	struct request *nrq;
-> +	unsigned int flags = 0;
-> +	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
-> +	struct blk_mq_tags *tags = rq->q->elevator ? hctx->sched_tags :
-> +		hctx->tags;
-> +	bool reserved = blk_mq_tag_is_reserved(tags, rq->internal_tag);
-> +
-> +	if (rq->rq_flags & RQF_PREEMPT)
-> +		flags |= BLK_MQ_REQ_PREEMPT;
-> +	if (reserved)
-> +		flags |= BLK_MQ_REQ_RESERVED;
-> +	/*
-> +	 * Queue freezing might be in-progress, and wait freeze can't be
-> +	 * done now because we have request not completed yet, so mark this
-> +	 * allocation as BLK_MQ_REQ_FORCE for avoiding this allocation &
-> +	 * freeze hung forever.
-> +	 */
-> +	flags |= BLK_MQ_REQ_FORCE;
-> +
+Hi Guys,
 
-So setting this flag triggers this WARN:
+More and more drivers want to get batching requests queued from
+block layer, such as mmc[1], and tcp based storage drivers[2]. Also
+current in-tree users have virtio-scsi, virtio-blk and nvme.
 
-[  101.308666] Modules linked in:
-[  101.311710] CPU: 23 PID: 1491 Comm: bash Not tainted 
-5.7.0-rc2-00106-g63430d85fea8 #337
-[  101.319698] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon 
-D05 IT21 Nemo 2.0 RC0 04/18/2018
-[  101.328816] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  101.333593] pc : blk_get_request+0xa4/0xac
-[  101.337676] lr : blk_get_request+0xa4/0xac
-[  101.341758] sp : ffff800021773aa0
-[  101.345059] x29: ffff800021773aa0 x28: 0000000000000004
-[  101.350357] x27: 0000000000000004 x26: 0000000000000004
-[  101.355655] x25: 0000000000000000 x24: ffff800010414b20
-[  101.360953] x23: 0000000000000008 x22: ffff001fb0ecf900
-[  101.366251] x21: ffff001fb0a42f40 x20: 0000000000004000
-[  101.371549] x19: 0000000000000010 x18: 0000000000000000
-[  101.376846] x17: 0000000000000000 x16: 0000000000000000
-[  101.382144] x15: 0000000000000000 x14: 0000000000000000
-[  101.387441] x13: 0000000000000000 x12: 0000000000000000
-[  101.392739] x11: 000000000000064f x10: 0000000000000008
-[  101.398036] x9 : ffff8000118f1c28 x8 : 2074736575716572
-[  101.403334] x7 : 5f7465675f6b6c62 x6 : ffff041febee21d0
-[  101.408632] x5 : 0000000000000000 x4 : 0000000000000000
-[  101.413930] x3 : 0000000000000000 x2 : ffff041febee9080
-[  101.419229] x1 : 0000000100000000 x0 : 000000000000001a
-[  101.424527] Call trace:
-[  101.426961]  blk_get_request+0xa4/0xac
-[  101.430698]  blk_mq_hctx_deactivate+0x270/0x3e4
-[  101.435215]  blk_mq_hctx_notify_dead+0x198/0x1b4
-[  101.439821]  cpuhp_invoke_callback+0x170/0x1e0
-[  101.444253]  _cpu_down+0x100/0x238
-[  101.447642]  cpu_down+0x40/0x68
-[  101.450770]  cpu_device_down+0x14/0x1c
-[  101.454508]  cpu_subsys_offline+0xc/0x14
-[  101.458417]  device_offline+0x98/0xc4
-[  101.462065]  online_store+0x3c/0x88
-[  101.465541]  dev_attr_store+0x14/0x24
-[  101.469192]  sysfs_kf_write+0x44/0x4c
-[  101.472840]  kernfs_fop_write+0xfc/0x208
-[  101.476751]  __vfs_write+0x18/0x3c
-[  101.480140]  vfs_write+0xb4/0x1b8
-[  101.483442]  ksys_write+0x4c/0xac
-[  101.486743]  __arm64_sys_write+0x1c/0x24
-[  101.490654]  el0_svc_common.constprop.3+0xb8/0x170
-[  101.495431]  do_el0_svc+0x70/0x88
-[  101.498734]  el0_sync_handler+0xf0/0x12c
-[  101.502643]  el0_sync+0x140/0x180
-[  101.505944] ---[ end trace 137fed615521bd97 ]--
+For none, we already support batching dispatch.
 
-(the series tests ok, apart from that)
+But for io scheduler, every time we just take one request from scheduler
+and pass the single request to blk_mq_dispatch_rq_list(). This way makes
+batching dispatch not possible when io scheduler is applied. One reason
+is that we don't want to hurt sequential IO performance, becasue IO
+merge chance is reduced if more requests are dequeued from scheduler
+queue.
 
-Thanks,
-John
+Tries to start the support by dequeuing more requests from scheduler
+if budget is enough and device isn't busy.
 
-> +	/* avoid allocation failure by clearing NOWAIT */
-> +	nrq = blk_get_request(rq->q, rq->cmd_flags & ~REQ_NOWAIT, flags);
-> +	if (!nrq)
-> +		return;
+Simple fio test over virtio-scsi shows IO can get improved by 5~10%.
+
+Patches can be found from the following tree too:
+
+	https://github.com/ming1/linux/commits/v5.7-rc-blk-mq-batching-submission
+
+Patch 1 ~ 7 are improvement and cleanup, which can't applied without
+supporting batching dispatch.
+
+Patch 8 ~ 9 starts to support batching dispatch from scheduler.
+
+
+Please review and comment!
+
+
+[1] https://lore.kernel.org/linux-block/20200512075501.GF1531898@T590/#r
+[2] https://lore.kernel.org/linux-block/fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me/
+
+
+Ming Lei (9):
+  blk-mq: pass request queue into get/put budget callback
+  blk-mq: pass hctx to blk_mq_dispatch_rq_list
+  blk-mq: don't predicate last flag in blk_mq_dispatch_rq_list
+  blk-mq: move getting driver tag and bugget into one helper
+  blk-mq: move .queue_rq code into one helper
+  blk-mq: move code for handling partial dispatch into one helper
+  blk-mq: remove dead check from blk_mq_dispatch_rq_list
+  blk-mq: pass obtained budget count to blk_mq_dispatch_rq_list
+  blk-mq: support batching dispatch in case of io scheduler
+
+ block/blk-mq-sched.c    |  96 ++++++++++++++--
+ block/blk-mq.c          | 248 +++++++++++++++++++++-------------------
+ block/blk-mq.h          |  15 +--
+ drivers/scsi/scsi_lib.c |   8 +-
+ include/linux/blk-mq.h  |   4 +-
+ 5 files changed, 226 insertions(+), 145 deletions(-)
+
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Baolin Wang <baolin.wang7@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+
+-- 
+2.25.2
+
