@@ -2,62 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A79C31D15E7
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 15:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 824D51D15E0
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 15:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388028AbgEMNjc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 09:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
+        id S2388192AbgEMNiz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 09:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388325AbgEMNi7 (ORCPT
+        with ESMTP id S2388183AbgEMNiy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 09:38:59 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BBDC061A0E
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id m12so21680217wmc.0
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
+        Wed, 13 May 2020 09:38:54 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C684C061A0C
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:53 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d207so8962471wmd.0
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
-        b=bMtNP9htiHa4g6CO0FhlyLgjdmVg2uoH/JS6A+XeeQjNSsWHJ8U8m0wdZGnw1Y+0aL
-         kW8OYvE+eNBeWbbm/5Gab5wkT1yO1e6mIJUToNMcIPXRt7iTR0/vCIetz/nAJn27FLLz
-         jhPPpIRzrjCO7NAduITv9ZIwigQhrw9Qrd7XSq6ZHbMgGPCG8DIfXLK4Mz26e6UyQIsC
-         kFE/QS0MJpOZwOAHP/JmflUOLkHqqpPF2Ucefo9KzZkVgBFzOPS1UsPF3YxZe44yFlfI
-         eGemUuSFNmHex8uVKB8LTn1f6/I4kJhidJrkgjKQ+bDuFwMnHX66Mv8lS/yNh7KxVHHy
-         5Qiw==
+        bh=E0D6BkdLn12sF+QPBQ9DDFZok3hDXQNtAmE1mTHFkes=;
+        b=Kg9qJJ1o9t8EF/BBzAGeSYZEi/IVzeB/gtMvBV3ykUZcYKhBQJTacySLMWhotnuumL
+         kaa1fEmfVhNVHZToCs0GVKJcFAJduQJBeWBU/PAINkcgzkZT8S/JJGcY/ts+BR9gkdt0
+         J+Ioo5EnFFigVarmb50yOe1/CFOfStep9MaGkmB30NcEplHVv9abRmrLG9xyYkwp+phD
+         4HkQID2tLdB3roHkDx4GCPiax4+Jbqk4rotVnmP9kNVcnMqVQrH/3E3meAnsVpLEC0zV
+         HRnuVBnp6u9L+4CEgqTr6FyzQ/LG0oocgDekKw+2cFwClUBjLoLk5sbBsUQ59MFkV+lc
+         HIjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
-        b=g2LETOytIrcKylW+6J9D8NgmlCDUXN3OXsfSjtePcA7fXlp0CDpeyKnrTAh8ottgD/
-         h9L6Kab6upPAkm/JZC3dy/KfyFFitrHDJ/0mW0+OOKwQIy7msK1q55GYEZuYYgCqS/GO
-         8TunBVtNan4lS0KPVygf8/GiarQJ1lCZzRWY3nhclNDjAJqjsog/ae2vE8SdzAVfQN6y
-         B9FURi9qS2PaxPs85rbkGhlzIx3pVbjovmU5MgOTiJ2/ncL08r+xZjtARkUMz76iPU1P
-         YDkF9ck+j4pqNZBBr1baitOkvRn2Dqk8QlgEGUN6zphMi/Y0ZpXTtEwrn+gave08gm8E
-         KLPg==
-X-Gm-Message-State: AGi0PuYB4zFP0ht83srE6THaDqvtt3CBpmhE2OExWh+e//hCQQqdGi1r
-        Nj7Rvbo4bl0S7KC7dJhpYx9TqA==
-X-Google-Smtp-Source: APiQypIjxnkrTUJVBpGMV8YOgo+iI7d5niRSc7PWL+lVfFV/KjhGlb+A6PRiT5dOGTNyca62+5s28w==
-X-Received: by 2002:a1c:3581:: with SMTP id c123mr32473872wma.150.1589377130947;
-        Wed, 13 May 2020 06:38:50 -0700 (PDT)
+        bh=E0D6BkdLn12sF+QPBQ9DDFZok3hDXQNtAmE1mTHFkes=;
+        b=BjyMIlqTVPCaJ9Qqerw1iN5WOp0Aon5+9aSVZ9AZQW2oTrMckFKgPdGrhrjiQ+mwzS
+         9q1+p1fie/7hTw98C73d0qu0a2bybw4PDk+/pujnV4cPCC7O3rA4DLBcAr5nHu80jVKw
+         nnUpCXkmQQtQsqlUhAmwLezPen/ixWIHDFzaXOMVDbtmF/N36l775OQPUyuIDWS1mJak
+         8Sw0mwmE6/ultIEohOITeVsELKgVeY6poNCNRp0B6yhlG2MXLcHYkf5zKTGtBkoQR+5x
+         w3Ay8B6OjXSkjsIRckaqU24AE+wxFiXiEXG9l+QwPUrs6YOMQLBnsrmF1Jh5v6UFPA3Q
+         OIfQ==
+X-Gm-Message-State: AGi0PuaCo0jZDtJjds3ZOpv2nGRjZuRKJKTsV2P5jEP9T04q7W+YOC5b
+        lKBDKN/13oO6pmKHhi6XuVOkhw==
+X-Google-Smtp-Source: APiQypL2vNZ1Uo3ORB7H30R0+fCegEqQ56XS8YTx7EIhM/40krnBpL7pemSe51y129kmdwDXRg33MQ==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr29616989wml.117.1589377132142;
+        Wed, 13 May 2020 06:38:52 -0700 (PDT)
 Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.49
+        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:38:50 -0700 (PDT)
+        Wed, 13 May 2020 06:38:51 -0700 (PDT)
 From:   Martijn Coenen <maco@android.com>
 To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
 Cc:     narayan@google.com, zezeozue@google.com, maco@google.com,
         kernel-team@android.com, bvanassche@acm.org,
         Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martijn Coenen <maco@android.com>, Bob Liu <bob.liu@oracle.com>
-Subject: [PATCH v5 01/11] loop: Call loop_config_discard() only after new config is applied
-Date:   Wed, 13 May 2020 15:38:35 +0200
-Message-Id: <20200513133845.244903-2-maco@android.com>
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH v5 02/11] loop: Remove sector_t truncation checks
+Date:   Wed, 13 May 2020 15:38:36 +0200
+Message-Id: <20200513133845.244903-3-maco@android.com>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 In-Reply-To: <20200513133845.244903-1-maco@android.com>
 References: <20200513133845.244903-1-maco@android.com>
@@ -68,42 +68,79 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-loop_set_status() calls loop_config_discard() to configure discard for
-the loop device; however, the discard configuration depends on whether
-the loop device uses encryption, and when we call it the encryption
-configuration has not been updated yet. Move the call down so we apply
-the correct discard configuration based on the new configuration.
+sector_t is now always u64, so we don't need to check for truncation.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martijn Coenen <maco@android.com>
 ---
- drivers/block/loop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/loop.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e..f1754262fc94 100644
+index f1754262fc94..00de7fec0ed5 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -1334,8 +1334,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		}
- 	}
+@@ -228,24 +228,20 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
+ 		blk_mq_unfreeze_queue(lo->lo_queue);
+ }
  
--	loop_config_discard(lo);
--
- 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
- 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
- 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
-@@ -1359,6 +1357,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		lo->lo_key_owner = uid;
- 	}
+-static int
++static void
+ figure_loop_size(struct loop_device *lo, loff_t offset, loff_t sizelimit)
+ {
+ 	loff_t size = get_size(offset, sizelimit, lo->lo_backing_file);
+-	sector_t x = (sector_t)size;
+ 	struct block_device *bdev = lo->lo_device;
  
-+	loop_config_discard(lo);
+-	if (unlikely((loff_t)x != size))
+-		return -EFBIG;
+ 	if (lo->lo_offset != offset)
+ 		lo->lo_offset = offset;
+ 	if (lo->lo_sizelimit != sizelimit)
+ 		lo->lo_sizelimit = sizelimit;
+-	set_capacity(lo->lo_disk, x);
++	set_capacity(lo->lo_disk, size);
+ 	bd_set_size(bdev, (loff_t)get_capacity(bdev->bd_disk) << 9);
+ 	/* let user-space know about the new size */
+ 	kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
+-	return 0;
+ }
+ 
+ static inline int
+@@ -1003,10 +999,8 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 	    !file->f_op->write_iter)
+ 		lo_flags |= LO_FLAGS_READ_ONLY;
+ 
+-	error = -EFBIG;
+ 	size = get_loop_size(lo, file);
+-	if ((loff_t)(sector_t)size != size)
+-		goto out_unlock;
 +
- 	/* update dio if lo_offset or transfer is changed */
- 	__loop_update_dio(lo, lo->use_dio);
+ 	error = loop_prepare_queue(lo);
+ 	if (error)
+ 		goto out_unlock;
+@@ -1328,10 +1322,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 				lo->lo_device->bd_inode->i_mapping->nrpages);
+ 			goto out_unfreeze;
+ 		}
+-		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+-			err = -EFBIG;
+-			goto out_unfreeze;
+-		}
++		figure_loop_size(lo, info->lo_offset, info->lo_sizelimit);
+ 	}
  
+ 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
+@@ -1534,7 +1525,9 @@ static int loop_set_capacity(struct loop_device *lo)
+ 	if (unlikely(lo->lo_state != Lo_bound))
+ 		return -ENXIO;
+ 
+-	return figure_loop_size(lo, lo->lo_offset, lo->lo_sizelimit);
++	figure_loop_size(lo, lo->lo_offset, lo->lo_sizelimit);
++
++	return 0;
+ }
+ 
+ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
 -- 
 2.26.2.645.ge9eca65c58-goog
 
