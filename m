@@ -2,63 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A839F1D15CA
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 15:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A79C31D15E7
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 15:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbgEMNiv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 09:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        id S2388028AbgEMNjc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 09:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387466AbgEMNiv (ORCPT
+        with ESMTP id S2388325AbgEMNi7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 09:38:51 -0400
+        Wed, 13 May 2020 09:38:59 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3E3C061A0E
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id n5so13638631wmd.0
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BBDC061A0E
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id m12so21680217wmc.0
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rXE9rpaAYNGyo7kteRNEK9nsX6cJ1gYcNqMSG8WX6wk=;
-        b=MgDrbim7CM6R4xeK9W2/yzVHdlKQ7By1fayAYg4Tjplyzij/l1w8ycXfzuD4XMQoof
-         HrSYwZuMYFJKYqwyyicQ4PAf6cBCnjAhxsZnmdRF5Hs5oJrbjQAk7zFWpQh0PdOmP1D9
-         EpOo9dVIxxwsH7HHdQZzPBdM/UY7bsdp/4olyHwKRLvaqclpB/nECbIU2mjGLk6E9M9R
-         mRDTVWlbIvbA5F/4rYksuGF9E2xdO1ro+PlRmYxqI4RS1G0lIZNXueTpIOf1bVA+qeLG
-         hugL5nFaWk8Ru09h22hDnfKoJ8L3tHKIh3QmH4Ssp8vS33HXgemEp2Mi3DT7KR9yNDI5
-         q7XQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
+        b=bMtNP9htiHa4g6CO0FhlyLgjdmVg2uoH/JS6A+XeeQjNSsWHJ8U8m0wdZGnw1Y+0aL
+         kW8OYvE+eNBeWbbm/5Gab5wkT1yO1e6mIJUToNMcIPXRt7iTR0/vCIetz/nAJn27FLLz
+         jhPPpIRzrjCO7NAduITv9ZIwigQhrw9Qrd7XSq6ZHbMgGPCG8DIfXLK4Mz26e6UyQIsC
+         kFE/QS0MJpOZwOAHP/JmflUOLkHqqpPF2Ucefo9KzZkVgBFzOPS1UsPF3YxZe44yFlfI
+         eGemUuSFNmHex8uVKB8LTn1f6/I4kJhidJrkgjKQ+bDuFwMnHX66Mv8lS/yNh7KxVHHy
+         5Qiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rXE9rpaAYNGyo7kteRNEK9nsX6cJ1gYcNqMSG8WX6wk=;
-        b=NpQ4oMYHkVNUNiXBgenmeyt170zfBLy8fhNmuUH9zrUs54C81G3Bfdrk2fC1sb3vvi
-         kohV2ykN25Ar9ldl8hQ/d3BUKCFeZ+SQGWpHcK2Ug5gmrryt/v9X0mVvADJkSTwj6BAh
-         9HHmDSZ4Q8Qvhsnj10jkSXnP4SQW4F7djVS2ng95b1I8OeF/7BAAv6TsmQyWtCxULFPD
-         KopKQBp7wuLCpC/DaVEKveXZ2IOsrLGTnmPvE3gF3t5wmm/IDy2GuIVnahoSuo9kyRg+
-         Dlckaf32WoEbuIbG6kDB3mhuEK7abKlVb6wGcXeAkV+7bGibqTSo/6hX27pCUbhd0NJv
-         Tgmw==
-X-Gm-Message-State: AGi0PuYRSJfQms0hCc6miwI83kzoDCvecpaFZiYqH/Rhx5pYrRgT3fyk
-        dfOAuZtsAavgYd0kDTE4tUEyAA==
-X-Google-Smtp-Source: APiQypIbO66csc21lLUPivkOBEyTcbRhAnbBF6C69jLHsEKF5KxepmAyLp8gysIsaU4ePUQVLJ1JDg==
-X-Received: by 2002:a7b:cb53:: with SMTP id v19mr41936201wmj.166.1589377129846;
-        Wed, 13 May 2020 06:38:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
+        b=g2LETOytIrcKylW+6J9D8NgmlCDUXN3OXsfSjtePcA7fXlp0CDpeyKnrTAh8ottgD/
+         h9L6Kab6upPAkm/JZC3dy/KfyFFitrHDJ/0mW0+OOKwQIy7msK1q55GYEZuYYgCqS/GO
+         8TunBVtNan4lS0KPVygf8/GiarQJ1lCZzRWY3nhclNDjAJqjsog/ae2vE8SdzAVfQN6y
+         B9FURi9qS2PaxPs85rbkGhlzIx3pVbjovmU5MgOTiJ2/ncL08r+xZjtARkUMz76iPU1P
+         YDkF9ck+j4pqNZBBr1baitOkvRn2Dqk8QlgEGUN6zphMi/Y0ZpXTtEwrn+gave08gm8E
+         KLPg==
+X-Gm-Message-State: AGi0PuYB4zFP0ht83srE6THaDqvtt3CBpmhE2OExWh+e//hCQQqdGi1r
+        Nj7Rvbo4bl0S7KC7dJhpYx9TqA==
+X-Google-Smtp-Source: APiQypIjxnkrTUJVBpGMV8YOgo+iI7d5niRSc7PWL+lVfFV/KjhGlb+A6PRiT5dOGTNyca62+5s28w==
+X-Received: by 2002:a1c:3581:: with SMTP id c123mr32473872wma.150.1589377130947;
+        Wed, 13 May 2020 06:38:50 -0700 (PDT)
 Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.48
+        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:38:49 -0700 (PDT)
+        Wed, 13 May 2020 06:38:50 -0700 (PDT)
 From:   Martijn Coenen <maco@android.com>
 To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
 Cc:     narayan@google.com, zezeozue@google.com, maco@google.com,
         kernel-team@android.com, bvanassche@acm.org,
         Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH v5 00/11] Add a new LOOP_CONFIGURE ioctl
-Date:   Wed, 13 May 2020 15:38:34 +0200
-Message-Id: <20200513133845.244903-1-maco@android.com>
+        Martijn Coenen <maco@android.com>, Bob Liu <bob.liu@oracle.com>
+Subject: [PATCH v5 01/11] loop: Call loop_config_discard() only after new config is applied
+Date:   Wed, 13 May 2020 15:38:35 +0200
+Message-Id: <20200513133845.244903-2-maco@android.com>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+In-Reply-To: <20200513133845.244903-1-maco@android.com>
+References: <20200513133845.244903-1-maco@android.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -66,70 +68,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This series introduces a new ioctl that makes it possible to atomically
-configure a loop device. Previously, if you wanted to set parameters
-such as the offset on a loop device, this required calling LOOP_SET_FD
-to set the backing file, and then LOOP_SET_STATUS to set the offset.
-However, in between these two calls, the loop device is available and
-would accept requests, which is generally not desirable. Similar issues
-exist around setting the block size (LOOP_SET_BLOCK_SIZE) and requesting
-direct I/O mode (LOOP_SET_DIRECT_IO).
+loop_set_status() calls loop_config_discard() to configure discard for
+the loop device; however, the discard configuration depends on whether
+the loop device uses encryption, and when we call it the encryption
+configuration has not been updated yet. Move the call down so we apply
+the correct discard configuration based on the new configuration.
 
-There are also performance benefits with combining these ioctls into
-one, which are described in more detail in the last change in the
-series.
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martijn Coenen <maco@android.com>
 ---
-v5:
-  - Added "loop: Call loop_config_discard() ..." as a first patch to
-    this series, as the rest of the refactoring done depends on it.
-  - Removed sector_t truncation checks, as suggested by Ming Lei.
+ drivers/block/loop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v4:
-  - Addressed review comments from Christoph Hellwig:
-    -- Minor code cleanups
-    -- Clarified what lo_flags LOOP_SET_STATUS can set and clear, and
-       made that more explicit in the code (see [10/11])
-    -- LOOP_CONFIGURE can now also be used to configure the block size
-       and to explicitly request Direct I/O and read-only mode.
-    -- Explicitly reject lo_flags we don't know about in LOOP_CONFIGURE
-    -- Renamed LOOP_SET_FD_AND_STATUS to LOOP_CONFIGURE, since the ioctl
-       can now do things LOOP_SET_STATUS couldn't do.
-v3:
-  - Addressed review comments from Christoph Hellwig:
-    -- Factored out loop_validate_size()
-    -- Split up the largish first patch in a few smaller ones
-    -- Use set_capacity_revalidate_and_notify()
-  - Fixed a variable wrongly using size_t instead of loff_t
-v2:
-  - Addressed review comments from Bart van Assche:
-    -- Use SECTOR_SHIFT constant
-    -- Renamed loop_set_from_status() to loop_set_status_from_info()
-    -- Added kerneldoc for loop_set_status_from_info()
-    -- Removed dots in patch subject lines
-  - Addressed review comments from Christoph Hellwig:
-    -- Added missing padding in struct loop_fd_and_status
-    -- Cleaned up some __user pointer handling in lo_ioctl
-    -- Pass in a stack-initialized loop_info64 for the legacy
-       LOOP_SET_FD case
-
-Martijn Coenen (11):
-  loop: Call loop_config_discard() only after new config is applied
-  loop: Remove sector_t truncation checks
-  loop: Factor out setting loop device size
-  loop: Switch to set_capacity_revalidate_and_notify()
-  loop: Refactor loop_set_status() size calculation
-  loop: Remove figure_loop_size()
-  loop: Factor out configuring loop from status
-  loop: Move loop_set_status_from_info() and friends up
-  loop: Rework lo_ioctl() __user argument casting
-  loop: Clean up LOOP_SET_STATUS lo_flags handling
-  loop: Add LOOP_CONFIGURE ioctl
-
- drivers/block/loop.c      | 381 ++++++++++++++++++++++----------------
- include/uapi/linux/loop.h |  31 +++-
- 2 files changed, 255 insertions(+), 157 deletions(-)
-
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index da693e6a834e..f1754262fc94 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1334,8 +1334,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		}
+ 	}
+ 
+-	loop_config_discard(lo);
+-
+ 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
+ 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
+ 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
+@@ -1359,6 +1357,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		lo->lo_key_owner = uid;
+ 	}
+ 
++	loop_config_discard(lo);
++
+ 	/* update dio if lo_offset or transfer is changed */
+ 	__loop_update_dio(lo, lo->use_dio);
+ 
 -- 
 2.26.2.645.ge9eca65c58-goog
 
