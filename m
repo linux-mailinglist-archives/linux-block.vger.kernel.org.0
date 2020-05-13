@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D262B1D0DC1
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 11:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E671D0DC4
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 11:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388280AbgEMJzh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 05:55:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40367 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732931AbgEMJzg (ORCPT
+        id S1733242AbgEMJzm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 05:55:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29415 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732890AbgEMJzl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:36 -0400
+        Wed, 13 May 2020 05:55:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589363735;
+        s=mimecast20190719; t=1589363739;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3+MUoZzwMp13HCBwCfJu9RTOqS7FEeQK4jsKE3Q2QLs=;
-        b=CPATM2G6ZGI0iOIjr52ZcmTRddGB1DK4as7BYYFmBCwbeH66QBIp0eFVAYI32VVqxz+hnC
-        142HZuqeWQl9djkeC97ekvyprcN0GB75HAD7gZe8gRnGE6UMgKSe+ABEG1SUlwhuLj8K/X
-        wN85Rfv/3Y+e/ymnlUmla9EpDQXPq4A=
+        bh=n6OU/DkDD48PDBgW4Zv7e/nWJ7EMYcyhuxVdos3tCxc=;
+        b=CHrNRL+H5yW5SXXfgOG9PAN9OwEHIkKxXSVtomPL7aXfHp7i2R+B3SPh/VHpwsHEAs4iEG
+        0VlbBG4UgkyYjpH089g8sKeWVlgTjs6SAdTJIk/yF7+aaH6HdT+WkE6bAOOnEfYfNxschg
+        p6rZAvRsi+/arVSJssZv2XjxFN5xRnA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-QLcLi5pFO0ioiMQU_MjnxQ-1; Wed, 13 May 2020 05:55:33 -0400
-X-MC-Unique: QLcLi5pFO0ioiMQU_MjnxQ-1
+ us-mta-335-nvykJyroMZGTYNKgTqHxOw-1; Wed, 13 May 2020 05:55:37 -0400
+X-MC-Unique: nvykJyroMZGTYNKgTqHxOw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F5EF8015CE;
-        Wed, 13 May 2020 09:55:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DAA418B6423;
+        Wed, 13 May 2020 09:55:36 +0000 (UTC)
 Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8222E60C84;
-        Wed, 13 May 2020 09:55:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7094E60C84;
+        Wed, 13 May 2020 09:55:35 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
         Sagi Grimberg <sagi@grimberg.me>,
         Baolin Wang <baolin.wang7@gmail.com>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH 7/9] blk-mq: remove dead check from blk_mq_dispatch_rq_list
-Date:   Wed, 13 May 2020 17:54:41 +0800
-Message-Id: <20200513095443.2038859-8-ming.lei@redhat.com>
+Subject: [PATCH 8/9] blk-mq: pass obtained budget count to blk_mq_dispatch_rq_list
+Date:   Wed, 13 May 2020 17:54:42 +0800
+Message-Id: <20200513095443.2038859-9-ming.lei@redhat.com>
 In-Reply-To: <20200513095443.2038859-1-ming.lei@redhat.com>
 References: <20200513095443.2038859-1-ming.lei@redhat.com>
 MIME-Version: 1.0
@@ -53,41 +53,133 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE is returned from
-.queue_rq, the 'list' variable always holds this rq which isn't
-queued to LLD successfully.
+Pass obtained budget count to blk_mq_dispatch_rq_list(), and prepare
+for supporting fully batching submission.
 
-So blk_mq_dispatch_rq_list() always returns false from the branch
-of '!list_empty(list)'.
-
-No functional change.
+With the obtained budget count, it is easier to put extra budgets
+in case of .queue_rq failure.
 
 Cc: Sagi Grimberg <sagi@grimberg.me>
 Cc: Baolin Wang <baolin.wang7@gmail.com>
 Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq.c | 7 -------
- 1 file changed, 7 deletions(-)
+ block/blk-mq-sched.c |  8 ++++----
+ block/blk-mq.c       | 18 ++++++++++++++----
+ block/blk-mq.h       |  3 ++-
+ 3 files changed, 20 insertions(+), 9 deletions(-)
 
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 632c6f8b63f7..78fc8d80caaf 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -130,7 +130,7 @@ static int blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 * in blk_mq_dispatch_rq_list().
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+-	} while (blk_mq_dispatch_rq_list(rq->mq_hctx, &rq_list, true));
++	} while (blk_mq_dispatch_rq_list(rq->mq_hctx, &rq_list, true, 1));
+ 
+ 	return ret;
+ }
+@@ -198,7 +198,7 @@ static int blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 		/* round robin for fair dispatch */
+ 		ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
+ 
+-	} while (blk_mq_dispatch_rq_list(rq->mq_hctx, &rq_list, true));
++	} while (blk_mq_dispatch_rq_list(rq->mq_hctx, &rq_list, true, 1));
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
+ 	return ret;
+@@ -238,7 +238,7 @@ static int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	 */
+ 	if (!list_empty(&rq_list)) {
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+-		if (blk_mq_dispatch_rq_list(hctx, &rq_list, false)) {
++		if (blk_mq_dispatch_rq_list(hctx, &rq_list, false, 0)) {
+ 			if (has_sched_dispatch)
+ 				ret = blk_mq_do_dispatch_sched(hctx);
+ 			else
+@@ -251,7 +251,7 @@ static int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 		ret = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+-		blk_mq_dispatch_rq_list(hctx, &rq_list, false);
++		blk_mq_dispatch_rq_list(hctx, &rq_list, false, 0);
+ 	}
+ 
+ 	return ret;
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 86beb8c66868..3e3fbb13f3b9 100644
+index 3e3fbb13f3b9..bfdfdd61e663 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -1366,13 +1366,6 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+@@ -1212,7 +1212,8 @@ static enum prep_dispatch blk_mq_prep_dispatch_rq(struct request *rq,
+ 		 */
+ 		if (!blk_mq_mark_tag_wait(hctx, rq)) {
+ 			/* budget is always obtained before getting tag */
+-			blk_mq_put_dispatch_budget(rq->q);
++			if (ask_budget)
++				blk_mq_put_dispatch_budget(rq->q);
+ 			return PREP_DISPATCH_NO_TAG;
+ 		}
+ 	}
+@@ -1233,12 +1234,17 @@ static blk_status_t blk_mq_dispatch_rq(struct request *rq, bool is_last)
+ 
+ static void blk_mq_handle_partial_dispatch(struct blk_mq_hw_ctx *hctx,
+ 		struct list_head *list, enum prep_dispatch prep,
+-		blk_status_t ret, bool queued)
++		blk_status_t ret, bool queued, unsigned budgets)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	bool needs_restart;
+ 	bool no_tag = false;
+ 	bool no_budget_avail = false;
++	unsigned i = 0;
++
++	/* release got budgets */
++	while (i++ < budgets)
++		blk_mq_put_dispatch_budget(hctx->queue);
+ 
+ 	/*
+ 	 * For non-shared tags, the RESTART check
+@@ -1298,9 +1304,11 @@ static void blk_mq_handle_partial_dispatch(struct blk_mq_hw_ctx *hctx,
+ 
+ /*
+  * Returns true if we did some work AND can potentially do more.
++ *
++ * @budgets is only valid iff @got_budget is true.
+  */
+ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+-			     bool got_budget)
++			     bool got_budget, unsigned int budgets)
+ {
+ 	enum prep_dispatch prep;
+ 	struct request *rq;
+@@ -1360,7 +1368,9 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+ 	 * that is where we will continue on next queue run.
+ 	 */
+ 	if (!list_empty(list)) {
+-		blk_mq_handle_partial_dispatch(hctx, list, prep, ret, !!queued);
++		blk_mq_handle_partial_dispatch(hctx, list, prep, ret,
++				!!queued,
++				got_budget ? budgets - queued : 0);
+ 		blk_mq_update_dispatch_busy(hctx, true);
+ 		return false;
  	} else
- 		blk_mq_update_dispatch_busy(hctx, false);
- 
--	/*
--	 * If the host/device is unable to accept more work, inform the
--	 * caller of that.
--	 */
--	if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE)
--		return false;
--
- 	return (queued + errors) != 0;
- }
- 
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index 9c0e93d4fe38..a37f8f673a19 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -40,7 +40,8 @@ struct blk_mq_ctx {
+ void blk_mq_exit_queue(struct request_queue *q);
+ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr);
+ void blk_mq_wake_waiters(struct request_queue *q);
+-bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *, bool);
++bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *,
++		bool, unsigned int);
+ void blk_mq_add_to_requeue_list(struct request *rq, bool at_head,
+ 				bool kick_requeue_list);
+ void blk_mq_flush_busy_ctxs(struct blk_mq_hw_ctx *hctx, struct list_head *list);
 -- 
 2.25.2
 
