@@ -2,116 +2,204 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E21B1D132D
-	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 14:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0E81D13A0
+	for <lists+linux-block@lfdr.de>; Wed, 13 May 2020 14:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgEMMvs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 08:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
+        id S1732910AbgEMM5d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 08:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731782AbgEMMvr (ORCPT
+        with ESMTP id S1733236AbgEMM45 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 08:51:47 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642A5C061A0F
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 05:51:46 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f189so11446620qkd.5
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 05:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I21hL7AkwUgdNPUI4l7KTQwvXQoa/NOyWUo4IiS5Zaw=;
-        b=m6ad7mNkFXWQP2LAar13cizth8P3iKliOem15ctBmD+RRB5NWWGZ4hVFaLb43OUHF4
-         dEfbKyHnbdTPvph0NO3q6QQG3feEsDR1NN/aDJiylAVOx6elqA7EySRBy4zgPJs7Fz0/
-         Wh3NuXdccvtT3AKlZIUnJi/oe7DjFVTOpq20lvPm5ktnPdoP012Lk/9j/pUDGJCnQSsG
-         TmFagaUtz3vbm20kiJmFo0AhIIm3asYdCe/QXnsQdcQLCh91UXycsxj5M4FwgjK5Th4v
-         OuuA5GD8cz9mUhRoZ9e54BvWpbbFTnY1KxAJWQ9Fh7pEfNmqL/JrbXuEeLjTtGaJiHKf
-         PtmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I21hL7AkwUgdNPUI4l7KTQwvXQoa/NOyWUo4IiS5Zaw=;
-        b=bybWBuvDlk5nJWBXtsUPhJ/DVo34CYt8Kb21vSTgoCYINdyhrOc4KqBp8FtbPgcGQd
-         PwVBYleAK8pFcmI0XPTG10v143zIjfA4TXO6h2u3lypO4DvZoECppmbopfFe+r8PsvOm
-         yQz5tnk406/xVb8tLBfnV4ZvE8TVfbhohu75Dmi0VSUOUc17ZJWAbhSAnGe2MAV2wAs5
-         4xTHuFCufAS5/BCPfEviTo1To7eanSOUREKgXT6YREUkiM3tnuYX5Q+1A+VOvzD/DSAF
-         jr/y6ZVmRP4HzrE7YvsfMw9YnTwN5w61ZglYJblDqqee+zwC2FIYldOShvcDrAYlYr3H
-         k4kg==
-X-Gm-Message-State: AGi0PuZYK/DxJM1KVoGZqwQBhgr7RdYWkN3Y+MpGUpTS9XdrlUO1vzhg
-        Oq6kIKM08a0F7dz+dTM74hKAgg==
-X-Google-Smtp-Source: APiQypKy6izjhUbivG+/I6PWV8eR0peu4dabx2HIoItXGvYLmzKEIJJmSlJIMmuJWfJIdDxUx9gC8w==
-X-Received: by 2002:a37:61d8:: with SMTP id v207mr26564281qkb.146.1589374305465;
-        Wed, 13 May 2020 05:51:45 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id t67sm13779002qka.17.2020.05.13.05.51.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 05:51:44 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYqrQ-0008K6-D9; Wed, 13 May 2020 09:51:44 -0300
-Date:   Wed, 13 May 2020 09:51:44 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 11/33] tcp: tcp_sock_set_nodelay
-Message-ID: <20200513125144.GC29989@ziepe.ca>
-References: <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-12-hch@lst.de>
+        Wed, 13 May 2020 08:56:57 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95543C061A0C
+        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 05:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=36hC+XsCrJG5g4MetqPJ7t76uhWRnLxfqwQ7lASG+Ic=; b=WrSm9Kb9K85zk8TJ0w1m0GEkcc
+        y/qGaa50jVx9xR/KOyZG4H0VnhiXPMahX7hme2Ebmv6Pg7dhe/qQE9/mAngbp6cGLI1tmFVHKxBm0
+        WMitcRUrbC8E3OmfomfvFonyJPt2D+uaSQ5uyItuZSc5XHg2oJl9WxSpENv4v6gIn9IiV05Hjd1/K
+        Wehkz06szx1VXuiId0BDUzCs/oKjE7IhE6HwyKiz+b+HKZIHHKxIGxlDYouztReka25JJAFG8+53A
+        rmWohazzLY4leZuIh24HmmWlhrql2aCNHDqWQ43Vf+d4pf/jMreaOm9oJ/+zgXgErr2635aB6yLrV
+        iFfBduEA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYqwS-0002Bi-Ql; Wed, 13 May 2020 12:56:56 +0000
+Date:   Wed, 13 May 2020 05:56:56 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 6/9] blk-mq: move code for handling partial dispatch into
+ one helper
+Message-ID: <20200513125656.GF23958@infradead.org>
+References: <20200513095443.2038859-1-ming.lei@redhat.com>
+ <20200513095443.2038859-7-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513062649.2100053-12-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513095443.2038859-7-ming.lei@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 13, 2020 at 08:26:26AM +0200, Christoph Hellwig wrote:
-> Add a helper to directly set the TCP_NODELAY sockopt from kernel space
-> without going through a fake uaccess.  Cleanup the callers to avoid
-> pointless wrappers now that this is a simple function call.
+On Wed, May 13, 2020 at 05:54:40PM +0800, Ming Lei wrote:
+> Move code for handling partial dispatch into one helper, so that
+> blk_mq_dispatch_rq_list gets a bit simpified, and easier to read.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/drbd/drbd_int.h             |  7 ----
->  drivers/block/drbd/drbd_main.c            |  2 +-
->  drivers/block/drbd/drbd_receiver.c        |  4 +--
->  drivers/infiniband/sw/siw/siw_cm.c        | 24 +++-----------
->  drivers/nvme/host/tcp.c                   |  9 +-----
->  drivers/nvme/target/tcp.c                 | 12 ++-----
->  drivers/target/iscsi/iscsi_target_login.c | 15 ++-------
->  fs/cifs/connect.c                         | 10 ++----
->  fs/dlm/lowcomms.c                         |  8 ++---
->  fs/ocfs2/cluster/tcp.c                    | 20 ++----------
->  include/linux/tcp.h                       |  1 +
->  net/ceph/messenger.c                      | 11 ++-----
->  net/ipv4/tcp.c                            | 39 +++++++++++++++--------
->  net/rds/tcp.c                             | 11 +------
->  net/rds/tcp.h                             |  1 -
->  net/rds/tcp_listen.c                      |  2 +-
->  16 files changed, 49 insertions(+), 127 deletions(-)
+> No functional change.
 
-No problem with the siw change
+The concept looks good, but some of the logic is very convoluted.
+What do you think of something like this on top:
 
-Acked-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Jason
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 86beb8c668689..8c9a6a886919c 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1236,24 +1236,11 @@ static void blk_mq_handle_partial_dispatch(struct blk_mq_hw_ctx *hctx,
+ 		blk_status_t ret, bool queued)
+ {
+ 	struct request_queue *q = hctx->queue;
+-	bool needs_restart;
+-	bool no_tag = false;
+ 	bool no_budget_avail = false;
+ 
+ 	/*
+-	 * For non-shared tags, the RESTART check
+-	 * will suffice.
+-	 */
+-	if (prep == PREP_DISPATCH_NO_TAG &&
+-			(hctx->flags & BLK_MQ_F_TAG_SHARED))
+-		no_tag = true;
+-	if (prep == PREP_DISPATCH_NO_BUDGET)
+-		no_budget_avail = true;
+-
+-	/*
+-	 * If we didn't flush the entire list, we could have told
+-	 * the driver there was more coming, but that turned out to
+-	 * be a lie.
++	 * Commit the current batch.  There are more waiting requests, but we
++	 * can't guarantee that we'll handle them ASAP.
+ 	 */
+ 	if (q->mq_ops->commit_rqs && queued)
+ 		q->mq_ops->commit_rqs(hctx);
+@@ -1263,36 +1250,52 @@ static void blk_mq_handle_partial_dispatch(struct blk_mq_hw_ctx *hctx,
+ 	spin_unlock(&hctx->lock);
+ 
+ 	/*
+-	 * If SCHED_RESTART was set by the caller of this function and
+-	 * it is no longer set that means that it was cleared by another
+-	 * thread and hence that a queue rerun is needed.
++	 * If SCHED_RESTART was set by the caller and it is no longer set, it
++	 * must have been cleared by another thread and hence a queue rerun is
++	 * needed.
+ 	 *
+-	 * If 'no_tag' is set, that means that we failed getting
+-	 * a driver tag with an I/O scheduler attached. If our dispatch
++	 * If blk_mq_prep_dispatch_rq returned PREP_DISPATCH_NO_TAG, we failed
++	 * to get a driver tag with an I/O scheduler attached. If our dispatch
+ 	 * waitqueue is no longer active, ensure that we run the queue
+ 	 * AFTER adding our entries back to the list.
++	 * If no I/O scheduler has been configured it is possible that the
++	 * hardware queue got stopped and restarted before requests were pushed
++	 * back onto the dispatch list.  Rerun the queue to avoid starvation.
+ 	 *
+-	 * If no I/O scheduler has been configured it is possible that
+-	 * the hardware queue got stopped and restarted before requests
+-	 * were pushed back onto the dispatch list. Rerun the queue to
+-	 * avoid starvation. Notes:
+-	 * - blk_mq_run_hw_queue() checks whether or not a queue has
+-	 *   been stopped before rerunning a queue.
+-	 * - Some but not all block drivers stop a queue before
+-	 *   returning BLK_STS_RESOURCE. Two exceptions are scsi-mq
+-	 *   and dm-rq.
++	 * Notes:
++	 *   - blk_mq_run_hw_queue() checks whether or not a queue has been
++	 *     stopped before rerunning a queue.
++	 *   - Some but not all block drivers stop a queue before returning
++	 *     BLK_STS_RESOURCE. Two exceptions are scsi-mq and dm-rq.
+ 	 *
+-	 * If driver returns BLK_STS_RESOURCE and SCHED_RESTART
+-	 * bit is set, run queue after a delay to avoid IO stalls
+-	 * that could otherwise occur if the queue is idle.  We'll do
+-	 * similar if we couldn't get budget and SCHED_RESTART is set.
++	 * If driver returns BLK_STS_RESOURCE and the SCHED_RESTART bit is set,
++	 * run queue after a delay to avoid IO stalls that could otherwise occur
++	 * if the queue is idle.  We'll do similar if we couldn't get budget and
++	 * SCHED_RESTART is set.
+ 	 */
+-	needs_restart = blk_mq_sched_needs_restart(hctx);
+-	if (!needs_restart ||
+-	    (no_tag && list_empty_careful(&hctx->dispatch_wait.entry)))
++	switch (prep) {
++	case PREP_DISPATCH_NO_TAG:
++		if ((hctx->flags & BLK_MQ_F_TAG_SHARED) &&
++		    list_empty_careful(&hctx->dispatch_wait.entry)) {
++		    	blk_mq_run_hw_queue(hctx, true);
++			return;
++		}
++		/*
++		 * For non-shared tags, the RESTART check will suffice.
++		 */
++		break;
++	case PREP_DISPATCH_OK:
++		if (ret == BLK_STS_RESOURCE)
++			no_budget_avail = true;
++		break;
++	case PREP_DISPATCH_NO_BUDGET:
++		no_budget_avail = true;
++		break;
++	}
++
++	if (!blk_mq_sched_needs_restart(hctx))
+ 		blk_mq_run_hw_queue(hctx, true);
+-	else if (needs_restart && (ret == BLK_STS_RESOURCE ||
+-				   no_budget_avail))
++	else if (no_budget_avail)
+ 		blk_mq_delay_run_hw_queue(hctx, BLK_MQ_RESOURCE_DELAY);
+ }
+ 
+@@ -1336,8 +1339,6 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+ 			 * accept.
+ 			 */
+ 			blk_mq_handle_zone_resource(rq, &zone_list);
+-			if (list_empty(list))
+-				break;
+ 			continue;
+ 		}
+ 
+@@ -1350,9 +1351,6 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+ 		queued++;
+ 	} while (!list_empty(list));
+ 
+-	if (!list_empty(&zone_list))
+-		list_splice_tail_init(&zone_list, list);
+-
+ 	hctx->dispatched[queued_to_index(queued)]++;
+ 
+ 	/*
+@@ -1360,11 +1358,13 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+ 	 * that is where we will continue on next queue run.
+ 	 */
+ 	if (!list_empty(list)) {
+-		blk_mq_handle_partial_dispatch(hctx, list, prep, ret, !!queued);
++		list_splice_tail_init(&zone_list, list);
++		blk_mq_handle_partial_dispatch(hctx, list, prep, ret, queued);
+ 		blk_mq_update_dispatch_busy(hctx, true);
+ 		return false;
+-	} else
+-		blk_mq_update_dispatch_busy(hctx, false);
++	}
++
++	blk_mq_update_dispatch_busy(hctx, false);
+ 
+ 	/*
+ 	 * If the host/device is unable to accept more work, inform the
+
