@@ -2,281 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2721C1D23E7
-	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 02:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA2651D2403
+	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 02:40:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387408AbgENAiF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 20:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733306AbgENAh5 (ORCPT
+        id S1733170AbgENAk2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 20:40:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28081 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732970AbgENAk2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 20:37:57 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD83AC05BD18
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 17:37:54 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id s65so1663077qtd.21
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 17:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=jSH7/AmnzXrjgmk8lWSfcMe95UKbUVGwx5FdmlnTcp0=;
-        b=CorCHbEFaLqJG2qA/D/PokRtWRhWo+coWB8NaWQJ1bAWjoLm06zA7m0y8Cp1XLhRc0
-         NVeVqomTQam+/sFarFFPZPG+qA16/UD2UGQKxxEQEdEOp0ErWKBYBVHIwZNDIwfwuqyG
-         HCEcc82IWPZbfHFjRPiknYcPI3MYB8q7DmdmFRwtjZHS/yI7WZ2z5lH0lvGLqHuqnWmN
-         PYTQXyDIlNRLyHQylhNGvgbUwfJ/MamBjWALFb16uCgHjaHcs/GFWnN3PHHhkSinzjfy
-         fPqqnrCrpG3t612wNzZQCRasSBR79DD1Chv/QGZLXTfs8NjGl4rbcyNj1qJyQv6t/BJD
-         Gm9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=jSH7/AmnzXrjgmk8lWSfcMe95UKbUVGwx5FdmlnTcp0=;
-        b=DYcAQOOlCSvK/HxPAnkdQ40KUmZeJ4TvF44MIhOdFeLP+U3WNWvRJPfQ2M/GgUw2Rh
-         61p8JslKps6H6I49/1E+UwAD6L0wPk1HM++Q6KByzvlALXfQEiNgAH9u9ioyeuI6CB1L
-         w1H1TNjgbay88B/bemApj7snlOX+YZ5z39bu5iM0BXgVBYomjnbJy69j7c3Xzlowh8e2
-         GD3eVHfpSL//oqyZ7L3IrCdiqxco28A3YHVliykwTbw+2r20JWKjHXzplxFP2uWWcOK+
-         NuYHB0NkOi6A7qUuSm9n0GIVAtdvA8FOaT5knvGsYNv0r1LvHHCiLYMEH89mOyuxfJyL
-         7moQ==
-X-Gm-Message-State: AOAM530qAjre5QBHeXPRc4osksAB23WgKOsb9OhZgbVacF9jGaFtkJEU
-        yVWxfclAe3NKTpmEJk1tE931PJ5/DLgxSSnD4ytrhhPYcywwKv1OK05cYc6bROkqyTQmOMbwuqE
-        6QAv+7qF/dFNshZaH+/3GjRxFvAr9VDqQ3bggQ0Aj2BHifbb/+Z67K6tTxM9ZdJpJLvcM
-X-Google-Smtp-Source: ABdhPJwBh/wsrSWYEhc6NNS3EHG+XSrYPjs2uFKQe/vehOe++1uwzxxsIf9e+FGuRNVP5YpF4CANHGHKo0g=
-X-Received: by 2002:ad4:4b6b:: with SMTP id m11mr2296448qvx.130.1589416673786;
- Wed, 13 May 2020 17:37:53 -0700 (PDT)
-Date:   Thu, 14 May 2020 00:37:27 +0000
-In-Reply-To: <20200514003727.69001-1-satyat@google.com>
-Message-Id: <20200514003727.69001-13-satyat@google.com>
-Mime-Version: 1.0
-References: <20200514003727.69001-1-satyat@google.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH v13 12/12] ext4: add inline encryption support
-From:   Satya Tangirala <satyat@google.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org
-Cc:     Barani Muthukumaran <bmuthuku@qti.qualcomm.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        Kim Boojin <boojin.kim@samsung.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 May 2020 20:40:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589416826;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rVQTgpgPdk29UNIpQa8a+u3KQ3nyPdkOh2jfhRTBF6g=;
+        b=aWlsIHxQ7u7D6OKiyhPN/uXFNXv/FzqXtWlpIem68ILCUArITZc/xqkm8GBwbKvFqiTveS
+        ipgMWHpGc7V0dsAvxhozrAScqf9FhvTib71wbuoe5FNojOBfOdtbklMebyUEMaulVnpxdE
+        5GA3G+BqD9dOX5C0mVPYjXCgP7yctGA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-KKVuixf8PByiCQgl3ppEeg-1; Wed, 13 May 2020 20:40:22 -0400
+X-MC-Unique: KKVuixf8PByiCQgl3ppEeg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6C391005512;
+        Thu, 14 May 2020 00:40:20 +0000 (UTC)
+Received: from T590 (ovpn-12-94.pek2.redhat.com [10.72.12.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2442C5C1D6;
+        Thu, 14 May 2020 00:40:13 +0000 (UTC)
+Date:   Thu, 14 May 2020 08:40:09 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH V11 11/12] blk-mq: re-submit IO in case that hctx is
+ inactive
+Message-ID: <20200514004004.GC2073570@T590>
+References: <20200513034803.1844579-1-ming.lei@redhat.com>
+ <20200513034803.1844579-12-ming.lei@redhat.com>
+ <20200513122147.GF6297@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513122147.GF6297@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Wed, May 13, 2020 at 02:21:47PM +0200, Christoph Hellwig wrote:
+> Use of the BLK_MQ_REQ_FORCE is pretty bogus here..
+> 
+> > +	if (rq->rq_flags & RQF_PREEMPT)
+> > +		flags |= BLK_MQ_REQ_PREEMPT;
+> > +	if (reserved)
+> > +		flags |= BLK_MQ_REQ_RESERVED;
+> > +	/*
+> > +	 * Queue freezing might be in-progress, and wait freeze can't be
+> > +	 * done now because we have request not completed yet, so mark this
+> > +	 * allocation as BLK_MQ_REQ_FORCE for avoiding this allocation &
+> > +	 * freeze hung forever.
+> > +	 */
+> > +	flags |= BLK_MQ_REQ_FORCE;
+> > +
+> > +	/* avoid allocation failure by clearing NOWAIT */
+> > +	nrq = blk_get_request(rq->q, rq->cmd_flags & ~REQ_NOWAIT, flags);
+> > +	if (!nrq)
+> > +		return;
+> 
+> blk_get_request returns an ERR_PTR.
+> 
+> But I'd rather avoid the magic new BLK_MQ_REQ_FORCE hack when we can
+> just open code it and document what is going on:
 
-Wire up ext4 to support inline encryption via the helper functions which
-fs/crypto/ now provides.  This includes:
+BLK_MQ_REQ_FORCE is actually not a hack, there are other use cases
+which need that too, see commit log of patch 10/12.
 
-- Adding a mount option 'inlinecrypt' which enables inline encryption
-  on encrypted files where it can be used.
+> 
+> static struct blk_mq_tags *blk_mq_rq_tags(struct request *rq)
+> {
+> 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
+> 
+> 	if (rq->q->elevator)
+> 		return hctx->sched_tags;
+> 	return hctx->tags;
+> }
+> 
+> static void blk_mq_resubmit_rq(struct request *rq)
+> {
+> 	struct blk_mq_alloc_data alloc_data = {
+> 		.cmd_flags	= rq->cmd_flags & ~REQ_NOWAIT;
+> 	};
+> 	struct request *nrq;
+> 
+> 	if (rq->rq_flags & RQF_PREEMPT)
+> 		alloc_data.flags |= BLK_MQ_REQ_PREEMPT;
+> 	if (blk_mq_tag_is_reserved(blk_mq_rq_tags(rq), rq->internal_tag))
+> 		alloc_data.flags |= BLK_MQ_REQ_RESERVED;
+> 
+> 	/*
+> 	 * We must still be able to finish a resubmission due to a hotplug
+> 	 * even even if a queue freeze is in progress.
+> 	 */
+> 	percpu_ref_get(&q->q_usage_counter);
+> 	nrq = blk_mq_get_request(rq->q, NULL, &alloc_data);
+> 	blk_queue_exit(q);
 
-- Setting the bio_crypt_ctx on bios that will be submitted to an
-  inline-encrypted file.
+This way works too.
 
-  Note: submit_bh_wbc() in fs/buffer.c also needed to be patched for
-  this part, since ext4 sometimes uses ll_rw_block() on file data.
+> 
+> 	if (!nrq)
+> 		return; // XXX: warn?
 
-- Not adding logically discontiguous data to bios that will be submitted
-  to an inline-encrypted file.
+It isn't possible because we clears NO_WAIT flag.
 
-- Not doing filesystem-layer crypto on inline-encrypted files.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Co-developed-by: Satya Tangirala <satyat@google.com>
-Signed-off-by: Satya Tangirala <satyat@google.com>
----
- Documentation/admin-guide/ext4.rst |  6 ++++++
- fs/buffer.c                        |  7 ++++---
- fs/ext4/inode.c                    |  4 ++--
- fs/ext4/page-io.c                  |  6 ++++--
- fs/ext4/readpage.c                 | 11 ++++++++---
- fs/ext4/super.c                    |  9 +++++++++
- 6 files changed, 33 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
-index 9443fcef18760..ed997e3766781 100644
---- a/Documentation/admin-guide/ext4.rst
-+++ b/Documentation/admin-guide/ext4.rst
-@@ -395,6 +395,12 @@ When mounting an ext4 filesystem, the following option are accepted:
-         Documentation/filesystems/dax.txt.  Note that this option is
-         incompatible with data=journal.
- 
-+  inlinecrypt
-+        Encrypt/decrypt the contents of encrypted files using the blk-crypto
-+        framework rather than filesystem-layer encryption. This allows the use
-+        of inline encryption hardware. The on-disk format is unaffected. For
-+        more details, see Documentation/block/inline-encryption.rst.
-+
- Data Mode
- =========
- There are 3 different data modes:
-diff --git a/fs/buffer.c b/fs/buffer.c
-index a60f60396cfa0..33827a55b5952 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -328,9 +328,8 @@ static void decrypt_bh(struct work_struct *work)
- static void end_buffer_async_read_io(struct buffer_head *bh, int uptodate)
- {
- 	/* Decrypt if needed */
--	if (uptodate && IS_ENABLED(CONFIG_FS_ENCRYPTION) &&
--	    IS_ENCRYPTED(bh->b_page->mapping->host) &&
--	    S_ISREG(bh->b_page->mapping->host->i_mode)) {
-+	if (uptodate &&
-+	    fscrypt_inode_uses_fs_layer_crypto(bh->b_page->mapping->host)) {
- 		struct decrypt_bh_ctx *ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
- 
- 		if (ctx) {
-@@ -3047,6 +3046,8 @@ static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
- 	 */
- 	bio = bio_alloc(GFP_NOIO, 1);
- 
-+	fscrypt_set_bio_crypt_ctx_bh(bio, bh, GFP_NOIO);
-+
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
- 	bio->bi_write_hint = write_hint;
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 2a4aae6acdcb9..ac20b65766ece 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1088,7 +1088,7 @@ static int ext4_block_write_begin(struct page *page, loff_t pos, unsigned len,
- 	}
- 	if (unlikely(err)) {
- 		page_zero_new_buffers(page, from, to);
--	} else if (IS_ENCRYPTED(inode) && S_ISREG(inode->i_mode)) {
-+	} else if (fscrypt_inode_uses_fs_layer_crypto(inode)) {
- 		for (i = 0; i < nr_wait; i++) {
- 			int err2;
- 
-@@ -3738,7 +3738,7 @@ static int __ext4_block_zero_page_range(handle_t *handle,
- 		/* Uhhuh. Read error. Complain and punt. */
- 		if (!buffer_uptodate(bh))
- 			goto unlock;
--		if (S_ISREG(inode->i_mode) && IS_ENCRYPTED(inode)) {
-+		if (fscrypt_inode_uses_fs_layer_crypto(inode)) {
- 			/* We expect the key to be set. */
- 			BUG_ON(!fscrypt_has_encryption_key(inode));
- 			err = fscrypt_decrypt_pagecache_blocks(page, blocksize,
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index de6fe969f7737..defd2e10dfd10 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -402,6 +402,7 @@ static void io_submit_init_bio(struct ext4_io_submit *io,
- 	 * __GFP_DIRECT_RECLAIM is set, see comments for bio_alloc_bioset().
- 	 */
- 	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-+	fscrypt_set_bio_crypt_ctx_bh(bio, bh, GFP_NOIO);
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
- 	bio->bi_end_io = ext4_end_bio;
-@@ -418,7 +419,8 @@ static void io_submit_add_bh(struct ext4_io_submit *io,
- {
- 	int ret;
- 
--	if (io->io_bio && bh->b_blocknr != io->io_next_block) {
-+	if (io->io_bio && (bh->b_blocknr != io->io_next_block ||
-+			   !fscrypt_mergeable_bio_bh(io->io_bio, bh))) {
- submit_and_retry:
- 		ext4_io_submit(io);
- 	}
-@@ -506,7 +508,7 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
- 	 * (e.g. holes) to be unnecessarily encrypted, but this is rare and
- 	 * can't happen in the common case of blocksize == PAGE_SIZE.
- 	 */
--	if (IS_ENCRYPTED(inode) && S_ISREG(inode->i_mode) && nr_to_submit) {
-+	if (fscrypt_inode_uses_fs_layer_crypto(inode) && nr_to_submit) {
- 		gfp_t gfp_flags = GFP_NOFS;
- 		unsigned int enc_bytes = round_up(len, i_blocksize(inode));
- 
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index c1769afbf7995..68eac0aeffad3 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -195,7 +195,7 @@ static void ext4_set_bio_post_read_ctx(struct bio *bio,
- {
- 	unsigned int post_read_steps = 0;
- 
--	if (IS_ENCRYPTED(inode) && S_ISREG(inode->i_mode))
-+	if (fscrypt_inode_uses_fs_layer_crypto(inode))
- 		post_read_steps |= 1 << STEP_DECRYPT;
- 
- 	if (ext4_need_verity(inode, first_idx))
-@@ -232,6 +232,7 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 	const unsigned blkbits = inode->i_blkbits;
- 	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
- 	const unsigned blocksize = 1 << blkbits;
-+	sector_t next_block;
- 	sector_t block_in_file;
- 	sector_t last_block;
- 	sector_t last_block_in_file;
-@@ -264,7 +265,8 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 		if (page_has_buffers(page))
- 			goto confused;
- 
--		block_in_file = (sector_t)page->index << (PAGE_SHIFT - blkbits);
-+		block_in_file = next_block =
-+			(sector_t)page->index << (PAGE_SHIFT - blkbits);
- 		last_block = block_in_file + nr_pages * blocks_per_page;
- 		last_block_in_file = (ext4_readpage_limit(inode) +
- 				      blocksize - 1) >> blkbits;
-@@ -364,7 +366,8 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 		 * This page will go to BIO.  Do we need to send this
- 		 * BIO off first?
- 		 */
--		if (bio && (last_block_in_bio != blocks[0] - 1)) {
-+		if (bio && (last_block_in_bio != blocks[0] - 1 ||
-+			    !fscrypt_mergeable_bio(bio, inode, next_block))) {
- 		submit_and_realloc:
- 			submit_bio(bio);
- 			bio = NULL;
-@@ -376,6 +379,8 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 			 */
- 			bio = bio_alloc(GFP_KERNEL,
- 				min_t(int, nr_pages, BIO_MAX_PAGES));
-+			fscrypt_set_bio_crypt_ctx(bio, inode, next_block,
-+						  GFP_KERNEL);
- 			ext4_set_bio_post_read_ctx(bio, inode, page->index);
- 			bio_set_dev(bio, bdev);
- 			bio->bi_iter.bi_sector = blocks[0] << (blkbits - 9);
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index bf5fcb477f667..fb4a293cac0c3 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1509,6 +1509,7 @@ enum {
- 	Opt_journal_path, Opt_journal_checksum, Opt_journal_async_commit,
- 	Opt_abort, Opt_data_journal, Opt_data_ordered, Opt_data_writeback,
- 	Opt_data_err_abort, Opt_data_err_ignore, Opt_test_dummy_encryption,
-+	Opt_inlinecrypt,
- 	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
- 	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
- 	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
-@@ -1606,6 +1607,7 @@ static const match_table_t tokens = {
- 	{Opt_noinit_itable, "noinit_itable"},
- 	{Opt_max_dir_size_kb, "max_dir_size_kb=%u"},
- 	{Opt_test_dummy_encryption, "test_dummy_encryption"},
-+	{Opt_inlinecrypt, "inlinecrypt"},
- 	{Opt_nombcache, "nombcache"},
- 	{Opt_nombcache, "no_mbcache"},	/* for backward compatibility */
- 	{Opt_removed, "check=none"},	/* mount option from ext2/3 */
-@@ -1893,6 +1895,13 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
- 	case Opt_nolazytime:
- 		sb->s_flags &= ~SB_LAZYTIME;
- 		return 1;
-+	case Opt_inlinecrypt:
-+#ifdef CONFIG_FS_ENCRYPTION_INLINE_CRYPT
-+		sb->s_flags |= SB_INLINECRYPT;
-+#else
-+		ext4_msg(sb, KERN_ERR, "inline encryption not supported");
-+#endif
-+		return 1;
- 	}
- 
- 	for (m = ext4_mount_opts; m->token != Opt_err; m++)
--- 
-2.26.2.645.ge9eca65c58-goog
+Thanks, 
+Ming
 
