@@ -2,59 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF9811D22FA
-	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 01:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4CDE1D23AE
+	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 02:34:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbgEMXYv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 May 2020 19:24:51 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:38372 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732374AbgEMXYu (ORCPT
+        id S1733130AbgENAd7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 May 2020 20:33:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30621 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732844AbgENAd7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 May 2020 19:24:50 -0400
-Received: by mail-wm1-f54.google.com with SMTP id g12so30400281wmh.3
-        for <linux-block@vger.kernel.org>; Wed, 13 May 2020 16:24:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=dnw+eOO9krUbxVKPSPtp0kxzIsSiBA3RLA5zi/EKdJGxk30aVpOEJrHHFy/y+kkl3N
-         o195ubR9DhAK7IF50C8/abLP6o7KmFFRkb3aBsUWeJDEMj6dvOG65cZlVMSQTZs+uJVK
-         pL/N0mGyfjne7qe0qNiTKlX1e+2Ag07bRZ5bm7mHy28T25cbIlsulQOQnZCsEZj6XFf2
-         ZwYSlxIZEPAj3ibuGSE3WWZFjXt8IZiw6Lk+6Fa6wLYYA6iXO978NXQgPCAzKQuukcgb
-         WJQns7De1DMW0+x7TRUfGyoHnrTfzqgg1z0Hh4fUzRnflSO7Yj/4PufZCp5dK2uVi/oB
-         wTaQ==
-X-Gm-Message-State: AGi0PuaVnenmMaGFLH3Vu2ck9AmGjQWw9FAlWguZddXw0VVCefM15Gps
-        7eJJcdWZLoTt3n5bkO6jpGCa0Gv1
-X-Google-Smtp-Source: APiQypJOU1buJx3IswvXNlosWlp79Xr+5m9OgwXhAzOzawKA7i3m/0CM5znJMgKLIlnPk9K5v1Q90A==
-X-Received: by 2002:a1c:f416:: with SMTP id z22mr45568456wma.32.1589412287846;
-        Wed, 13 May 2020 16:24:47 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:59e0:deac:a73c:5d11? ([2601:647:4802:9070:59e0:deac:a73c:5d11])
-        by smtp.gmail.com with ESMTPSA id v20sm1587520wrd.9.2020.05.13.16.24.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 16:24:47 -0700 (PDT)
-Subject: Re: [PATCH 7/9] blk-mq: remove dead check from
- blk_mq_dispatch_rq_list
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20200513095443.2038859-1-ming.lei@redhat.com>
- <20200513095443.2038859-8-ming.lei@redhat.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <95f72935-4cf0-86c0-edbd-21be120c36a8@grimberg.me>
-Date:   Wed, 13 May 2020 16:24:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Wed, 13 May 2020 20:33:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589416438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lEfeJQVnh83lgWxO0Khzps4UYnwxzvvtaf6sh4pyaX4=;
+        b=gvdZjSvQbpWI5kz90RdxN7cPw/Z02TtgX1fyfOekh5sShbtBZvqb862fzP73Wqb9s4wfii
+        YXhTAKGE3reAnihzVpQKcBGvdPojzrem2/lz6+qzWXmxf8Brqh/Hl7J/eL1jgf94H06dNp
+        hdGnJQpCWF6+36OGYOZYX5F+E9elVJk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-qdrIUAt6MvCMzn1p745weQ-1; Wed, 13 May 2020 20:33:56 -0400
+X-MC-Unique: qdrIUAt6MvCMzn1p745weQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3C2BEC1B0;
+        Thu, 14 May 2020 00:33:54 +0000 (UTC)
+Received: from T590 (ovpn-12-94.pek2.redhat.com [10.72.12.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C9E360C05;
+        Thu, 14 May 2020 00:33:46 +0000 (UTC)
+Date:   Thu, 14 May 2020 08:33:40 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH V11 06/12] blk-mq: prepare for draining IO when hctx's
+ all CPUs are offline
+Message-ID: <20200514003340.GA2073570@T590>
+References: <20200513034803.1844579-1-ming.lei@redhat.com>
+ <20200513034803.1844579-7-ming.lei@redhat.com>
+ <20200513115832.GB6297@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200513095443.2038859-8-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513115832.GB6297@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Wed, May 13, 2020 at 01:58:32PM +0200, Christoph Hellwig wrote:
+> I think the flag should be inverted, indicated managed irqs if set.
+> And we should fine a a way to automatically set it from the managed
+> IRQ blk_mq_*_map_queues helpers instead of leaving the decisions to
+
+blk_mq_*_map_queues doesn't tell us if managed IRQ is used, only the
+driver knows that.
+
+> the driver author that is most likely going to get it wrong, especially
+> for SCSI, where the actual driver can't even get at the current flag.
+> 
+
+BLK_MQ_F_NO_MANAGED_IRQ is just for avoiding deadlock in draining IO
+during cpu hotplug. So far, only stacking blk-mq drivers need this flag.
+
+That is why the flag is named as NO_MANAGED_IRQ, or we may add flag of
+BLK_MQ_F_STACKING for this purpose too.
+
+thanks,
+Ming
+
