@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B143F1D3C49
-	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 21:15:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 922C61D3BF3
+	for <lists+linux-block@lfdr.de>; Thu, 14 May 2020 21:06:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgENSwc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 May 2020 14:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
+        id S1728845AbgENSxt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 May 2020 14:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbgENSwb (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:31 -0400
+        id S1728827AbgENSxs (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A506B20727;
-        Thu, 14 May 2020 18:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839112065F;
+        Thu, 14 May 2020 18:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482350;
-        bh=ZeaT1UWrh+ajkitvCxbSYqAIcX3Pf1/t8+3JjVNaooo=;
+        s=default; t=1589482427;
+        bh=NZ38gG2rEr4Lc9nqow215WBLGqNmvsK8K3BGjkBweYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1nZEFq75p9yo4Yurv4HWpOxpCDzJm/WQeq8ZcnkewcpX0RJ1CyUbagIIS/JXXY2Xz
-         FCbgdEiUvGGFcjFWbiX4ywHKk8knpv7DABh2kUYz24plvq7fxRoY/2CjJTc83G+3k8
-         RkKsYPYrSFad4aje3pzs0k7oNQ7ssGkK+ooxLt78=
+        b=vyDgNxwvO7ljWO6q6ElmB6/1nPgcmp8t7V5GN8+0eVtuJT/OZ3QWw2nNEouiDMnrR
+         crDi6ZLbGJ/DLKkk3nL2g3NxVEtpaGYuLqs4eBhiFpZDcqz2jzztmemdXGQs7kD0q+
+         02LjekpFyi+B7b8cO86lVUR1+aGCiN5P3UgPx1Ao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
@@ -32,12 +32,12 @@ Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         virtualization@lists.linux-foundation.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 32/62] virtio-blk: handle block_device_operations callbacks after hot unplug
-Date:   Thu, 14 May 2020 14:51:17 -0400
-Message-Id: <20200514185147.19716-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 29/49] virtio-blk: handle block_device_operations callbacks after hot unplug
+Date:   Thu, 14 May 2020 14:52:50 -0400
+Message-Id: <20200514185311.20294-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
-References: <20200514185147.19716-1-sashal@kernel.org>
+In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
+References: <20200514185311.20294-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -102,10 +102,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 78 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 0736248999b0d..d52f33881ab6e 100644
+index a55383b139df9..0cf2fe2902307 100644
 --- a/drivers/block/virtio_blk.c
 +++ b/drivers/block/virtio_blk.c
-@@ -32,6 +32,15 @@ struct virtio_blk_vq {
+@@ -33,6 +33,15 @@ struct virtio_blk_vq {
  } ____cacheline_aligned_in_smp;
  
  struct virtio_blk {
@@ -121,7 +121,7 @@ index 0736248999b0d..d52f33881ab6e 100644
  	struct virtio_device *vdev;
  
  	/* The disk structure for the kernel. */
-@@ -43,6 +52,13 @@ struct virtio_blk {
+@@ -44,6 +53,13 @@ struct virtio_blk {
  	/* Process context for config space updates */
  	struct work_struct config_work;
  
@@ -135,7 +135,7 @@ index 0736248999b0d..d52f33881ab6e 100644
  	/* What host tells us, plus 2 for header & tailer. */
  	unsigned int sg_elems;
  
-@@ -294,10 +310,55 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
+@@ -388,10 +404,55 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
  	return err;
  }
  
@@ -191,7 +191,7 @@ index 0736248999b0d..d52f33881ab6e 100644
  
  	/* see if the host passed in geometry config */
  	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
-@@ -313,11 +374,15 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+@@ -407,12 +468,16 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
  		geo->sectors = 1 << 5;
  		geo->cylinders = get_capacity(bd->bd_disk) >> 11;
  	}
@@ -202,13 +202,14 @@ index 0736248999b0d..d52f33881ab6e 100644
  }
  
  static const struct block_device_operations virtblk_fops = {
+ 	.ioctl  = virtblk_ioctl,
  	.owner  = THIS_MODULE,
 +	.open = virtblk_open,
 +	.release = virtblk_release,
  	.getgeo = virtblk_getgeo,
  };
  
-@@ -657,6 +722,10 @@ static int virtblk_probe(struct virtio_device *vdev)
+@@ -767,6 +832,10 @@ static int virtblk_probe(struct virtio_device *vdev)
  		goto out_free_index;
  	}
  
@@ -219,7 +220,7 @@ index 0736248999b0d..d52f33881ab6e 100644
  	vblk->vdev = vdev;
  	vblk->sg_elems = sg_elems;
  
-@@ -822,8 +891,6 @@ static int virtblk_probe(struct virtio_device *vdev)
+@@ -932,8 +1001,6 @@ static int virtblk_probe(struct virtio_device *vdev)
  static void virtblk_remove(struct virtio_device *vdev)
  {
  	struct virtio_blk *vblk = vdev->priv;
@@ -228,7 +229,7 @@ index 0736248999b0d..d52f33881ab6e 100644
  
  	/* Make sure no work handler is accessing the device. */
  	flush_work(&vblk->config_work);
-@@ -833,18 +900,21 @@ static void virtblk_remove(struct virtio_device *vdev)
+@@ -943,18 +1010,21 @@ static void virtblk_remove(struct virtio_device *vdev)
  
  	blk_mq_free_tag_set(&vblk->tag_set);
  
