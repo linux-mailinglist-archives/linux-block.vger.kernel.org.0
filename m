@@ -2,54 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A08E1D5E30
-	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 05:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20371D5E4B
+	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 05:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgEPDUX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 May 2020 23:20:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45015 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbgEPDUI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 May 2020 23:20:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b8so1686318plm.11;
-        Fri, 15 May 2020 20:20:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WSjrRs+0uw9ZlSZjuW3x7w+Qi8+kmil3SD7+oVGrims=;
-        b=PXMBp90YZy9hdyqb7OsyGKERnhgpdRQoYUvE48W4O8IpBtwxGIpvUJL3qob1aOMsF8
-         o6d3SNnNuQn87JBdgxkkr1uuqY1XU9/p/MEUrzNhsOO+MaAjG5DF3shvrfNDdB2U+KYY
-         O/QQt5acOVM4k3Bq4b+ZHAcHqXjFyMmGhfExfzyhIv0iHtJ8bk6XWEHhG7e/ZkD/i1XM
-         BJryuh/VrtesvePhID/O0OfgrIKi37MToRxsnEgcuNIIl+Pj3SUi8aBVKS6NfW7kq1BD
-         ydHTbvf1zfN2PF3VJXE5VR7tZA8ar6uK2n45Y2DsTWiiNXjW5gftMq51N5BgFqpyTkyj
-         uMdw==
-X-Gm-Message-State: AOAM531BhGzdYnkcMMGrozQkUA5dULCDX9jXat6VariDsYBYOzWnzZhK
-        odnx1Jwzf3lsEJUY2ijwwPw=
-X-Google-Smtp-Source: ABdhPJzX3emfY2u5XlGWmWnMHz1FoWzaUTuwWxyn8o3ueiTdT13lL7oD1fI78RNo5dxjkInTLInT+A==
-X-Received: by 2002:a17:90a:1912:: with SMTP id 18mr6556766pjg.115.1589599207438;
-        Fri, 15 May 2020 20:20:07 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t22sm2578636pjs.1.2020.05.15.20.20.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 20:20:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E0FF742309; Sat, 16 May 2020 03:19:59 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v5 7/7] loop: be paranoid on exit and prevent new additions / removals
-Date:   Sat, 16 May 2020 03:19:56 +0000
-Message-Id: <20200516031956.2605-8-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200516031956.2605-1-mcgrof@kernel.org>
-References: <20200516031956.2605-1-mcgrof@kernel.org>
+        id S1726541AbgEPDyz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 May 2020 23:54:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40668 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgEPDyz (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 15 May 2020 23:54:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3032CAC91;
+        Sat, 16 May 2020 03:54:56 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-block@vger.kernel.org, damien.lemoal@wdc.com, hare@suse.com,
+        hch@lst.de, axboe@kernel.dk
+Cc:     linux-bcache@vger.kernel.org, kbusch@kernel.org,
+        Coly Li <colyli@suse.de>
+Subject: [RFC PATCH v2 0/4] block layer change necessary for bcache zoned device support
+Date:   Sat, 16 May 2020 11:54:30 +0800
+Message-Id: <20200516035434.82809-1-colyli@suse.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -57,37 +31,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Be pedantic on removal as well and hold the mutex.
-This should prevent uses of addition while we exit.
+Hi folks,
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Recently I am working on supprt bcache to be created on zoned devices
+e.g. host managed SMR hard drives, then frequent random READ I/Os on
+these SMR drives can be accelerated.
+
+To make the bcache code work correctly, there are some small but maybe
+important changes of block layer code are necessary.
+
+Thanks for the review comments from Keith Busch, I fix the typo and post
+the v2 series for your review and comments.
+
+Thank you all in advance.
+
+Coly Li 
 ---
- drivers/block/loop.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 14372df0f354..54fbcbd930de 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2333,6 +2333,8 @@ static void __exit loop_exit(void)
- 
- 	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
- 
-+	mutex_lock(&loop_ctl_mutex);
-+
- 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
- 	idr_destroy(&loop_index_idr);
- 
-@@ -2340,6 +2342,8 @@ static void __exit loop_exit(void)
- 	unregister_blkdev(LOOP_MAJOR, "loop");
- 
- 	misc_deregister(&loop_misc);
-+
-+	mutex_unlock(&loop_ctl_mutex);
- }
- 
- module_init(loop_init);
+Coly Li (4):
+  block: change REQ_OP_ZONE_RESET from 6 to 13
+  block: block: change REQ_OP_ZONE_RESET_ALL from 8 to 15
+  block: remove queue_is_mq restriction from blk_revalidate_disk_zones()
+  block: set bi_size to REQ_OP_ZONE_RESET bio
+
+ block/blk-zoned.c         | 6 ++++--
+ include/linux/blk_types.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
 -- 
-2.26.2
+2.25.0
 
