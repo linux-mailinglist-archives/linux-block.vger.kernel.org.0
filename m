@@ -2,129 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9878E1D6229
-	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 17:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBF4E1D625C
+	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 17:41:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgEPPhC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 May 2020 11:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45182 "EHLO
+        id S1727003AbgEPPlD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 May 2020 11:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgEPPhB (ORCPT
+        with ESMTP id S1726986AbgEPPlD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 May 2020 11:37:01 -0400
+        Sat, 16 May 2020 11:41:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E25CC061A0C;
-        Sat, 16 May 2020 08:37:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CCE6C061A0C
+        for <linux-block@vger.kernel.org>; Sat, 16 May 2020 08:41:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TG5YZgmRlXVS7HvhJz7DOFxKZzjqL5DT1HxTsi4ato4=; b=RnggIlJMvxkkVJkInT4pqpaVSA
-        SmN+fQmJr6rXEhoA27zDDtoVe3MfLbqyOGnjbFroFdUEa2bz7T8LXqJhdZ04Kn8zUaw7zqnqucvEE
-        jylJg+5o3OTrPcU/9WnNB5DHJG6s2r/4zP/X7rBAVxQdC6M19CKb7CjJPN7ckvsf+3VEUSWXTjPOs
-        h4KyUBqEslvU/z84GxRvc0uH9xKOs7/moDDDKZUR3/JC6le8XeM7SlwM6eCF1D2ew/AfzjZ81WeGR
-        TID2vSDI6gItLhZe+n8N/K+Igbx6wbsz1MCCu7X4o5NOmt5PKestOUG7qfbgkfaJZ9h4Kw4hb2rBr
-        xNF175SA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZyrs-000842-U1; Sat, 16 May 2020 15:36:52 +0000
-Date:   Sat, 16 May 2020 08:36:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'David Howells' <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-Subject: Re: [Ocfs2-devel] [PATCH 27/33] sctp: export sctp_setsockopt_bindx
-Message-ID: <20200516153652.GM16070@bombadil.infradead.org>
-References: <20200514062820.GC8564@lst.de>
- <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-28-hch@lst.de>
- <20200513180058.GB2491@localhost.localdomain>
- <129070.1589556002@warthog.procyon.org.uk>
- <05d946ae948946158dbfcbc07939b799@AcuMS.aculab.com>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=8VYDef1yaLwa5PidqvCtcX67waE0+z7sXbn+57oBtyE=; b=p87GCtIaVg1NspvVcmwYpcyKYx
+        sRPi1HU2PGhRzfxdG5p/SH2vhceJCI8b8weC8JTC8BCtixCreCZZkJxWyzmNtGUQ35SmyedyNlDc/
+        m76T4mpINXkIxS67HFOsNj3NUrRdVFLkcCF/wc7dJ2nFwR+9Sakq4JvLdvUeuoi+zfApzqh3yqchH
+        APDCpT57/ELPf0Idfa9yUz/umw7RJ/L2v8lQZ7U0IPh+qoGPaB9ukLbvx7K2y5S3q3WmQtNxlG/bw
+        YiAhiSw+e3qLuu9PTrmiNjara4q0lcRKJUqDOXUJMB0O48O6paZL1zf7FpHQB9hpwgVJ1AT2Xko13
+        bGI83YJw==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZyvt-00035K-IP; Sat, 16 May 2020 15:41:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] blk-mq: remove the bio argument to ->prepare_request
+Date:   Sat, 16 May 2020 17:40:59 +0200
+Message-Id: <20200516154059.328211-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05d946ae948946158dbfcbc07939b799@AcuMS.aculab.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:11:40PM +0000, David Laight wrote:
-> From: David Howells
-> > Sent: 15 May 2020 16:20
-> > Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> > > > The advantage on using kernel_setsockopt here is that sctp module will
-> > > > only be loaded if dlm actually creates a SCTP socket.  With this
-> > > > change, sctp will be loaded on setups that may not be actually using
-> > > > it. It's a quite big module and might expose the system.
-> > >
-> > > True.  Not that the intent is to kill kernel space callers of setsockopt,
-> > > as I plan to remove the set_fs address space override used for it.
-> > 
-> > For getsockopt, does it make sense to have the core kernel load optval/optlen
-> > into a buffer before calling the protocol driver?  Then the driver need not
-> > see the userspace pointer at all.
-> > 
-> > Similar could be done for setsockopt - allocate a buffer of the size requested
-> > by the user inside the kernel and pass it into the driver, then copy the data
-> > back afterwards.
-> 
-> Yes, it also simplifies all the compat code.
-> And there is a BPF test in setsockopt that also wants to
-> pass on a kernel buffer.
-> 
-> I'm willing to sit and write the patch.
-> Quoting from a post I made later on Friday.
-> 
-> Basically:
-> 
-> This patch sequence (to be written) does the following:
-> 
-> Patch 1: Change __sys_setsockopt() to allocate a kernel buffer,
->          copy the data into it then call set_fs(KERNEL_DS).
->          An on-stack buffer (say 64 bytes) will be used for
->          small transfers.
-> 
-> Patch 2: The same for __sys_getsockopt().
-> 
-> Patch 3: Compat setsockopt.
-> 
-> Patch 4: Compat getsockopt.
-> 
-> Patch 5: Remove the user copies from the global socket options code.
-> 
-> Patches 6 to n-1; Remove the user copies from the per-protocol code.
-> 
-> Patch n: Remove the set_fs(KERNEL_DS) from the entry points.
-> 
-> This should be bisectable.
+None of the I/O schedulers actually needs it.
 
-I appreciate your dedication to not publishing the source code to
-your kernel module, but Christoph's patch series is actually better.
-It's typesafe rather than passing void pointers around.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/bfq-iosched.c      | 2 +-
+ block/blk-mq.c           | 2 +-
+ block/kyber-iosched.c    | 2 +-
+ block/mq-deadline.c      | 2 +-
+ include/linux/elevator.h | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 3d411716d7ee4..50c8f034c01c5 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -6073,7 +6073,7 @@ static struct bfq_queue *bfq_get_bfqq_handle_split(struct bfq_data *bfqd,
+  * comments on bfq_init_rq for the reason behind this delayed
+  * preparation.
+  */
+-static void bfq_prepare_request(struct request *rq, struct bio *bio)
++static void bfq_prepare_request(struct request *rq)
+ {
+ 	/*
+ 	 * Regardless of whether we have an icq attached, we have to
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 6f0279a7b59aa..60adad51ad816 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -387,7 +387,7 @@ static struct request *blk_mq_get_request(struct request_queue *q,
+ 			if (e->type->icq_cache)
+ 				blk_mq_sched_assign_ioc(rq);
+ 
+-			e->type->ops.prepare_request(rq, bio);
++			e->type->ops.prepare_request(rq);
+ 			rq->rq_flags |= RQF_ELVPRIV;
+ 		}
+ 	}
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 34dcea0ef6377..a38c5ab103d12 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -579,7 +579,7 @@ static bool kyber_bio_merge(struct blk_mq_hw_ctx *hctx, struct bio *bio,
+ 	return merged;
+ }
+ 
+-static void kyber_prepare_request(struct request *rq, struct bio *bio)
++static void kyber_prepare_request(struct request *rq)
+ {
+ 	rq_set_domain_token(rq, -1);
+ }
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index b490f47fd553c..b57470e154c8f 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -541,7 +541,7 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+  * Nothing to do here. This is defined only to ensure that .finish_request
+  * method is called upon request completion.
+  */
+-static void dd_prepare_request(struct request *rq, struct bio *bio)
++static void dd_prepare_request(struct request *rq)
+ {
+ }
+ 
+diff --git a/include/linux/elevator.h b/include/linux/elevator.h
+index 901bda352dcb7..bacc40a0bdf39 100644
+--- a/include/linux/elevator.h
++++ b/include/linux/elevator.h
+@@ -39,7 +39,7 @@ struct elevator_mq_ops {
+ 	void (*request_merged)(struct request_queue *, struct request *, enum elv_merge);
+ 	void (*requests_merged)(struct request_queue *, struct request *, struct request *);
+ 	void (*limit_depth)(unsigned int, struct blk_mq_alloc_data *);
+-	void (*prepare_request)(struct request *, struct bio *bio);
++	void (*prepare_request)(struct request *);
+ 	void (*finish_request)(struct request *);
+ 	void (*insert_requests)(struct blk_mq_hw_ctx *, struct list_head *, bool);
+ 	struct request *(*dispatch_request)(struct blk_mq_hw_ctx *);
+-- 
+2.26.2
+
