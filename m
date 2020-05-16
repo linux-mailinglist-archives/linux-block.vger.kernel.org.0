@@ -2,64 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EED261D6145
-	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 15:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02EF61D6188
+	for <lists+linux-block@lfdr.de>; Sat, 16 May 2020 16:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgEPNZk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 May 2020 09:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726302AbgEPNZk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 May 2020 09:25:40 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982B5C061A0C
-        for <linux-block@vger.kernel.org>; Sat, 16 May 2020 06:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=cBvcrhcHFAjklTbDfnqUpat87EkDNZ+5qGzYA+vntis=; b=sa6Dpxcz15Gty74rOZd2NCOMv1
-        u59rrv/b+pLCNsGCfsD9GhJKPhkDJvfXDUshwIF25R9mQ9UOB3BgMRpXQWnATvGSAghNKjax1l7ok
-        GjzRdxPVkhkaX8h39eL3jKWU9Rqhq7J6P87xBKd2YajnhV2wDix8KuFiARY1LzZt2KPs6M/vUw2G2
-        WJY8yeVSI1FeSKYqkaeKNKQL9nPKxEoHaMBLAJS+TU5G3fqiG08N+6cjMCvWhW6asFslBjCc0+Q9t
-        MLTRPq+WMn9i2Ciw9wHnzjCzNMBX1a8O+nK9/eZ0SC08wluaxHDi+fR43R16t1T5eJzJtL6SrhNf/
-        CNk3o9fg==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZwop-0003CY-IM; Sat, 16 May 2020 13:25:35 +0000
-Date:   Sat, 16 May 2020 15:25:32 +0200
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jens Axboe <axboe@fb.com>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Subject: [GIT PULL] nvme fix for 5.7
-Message-ID: <20200516132532.GA244143@infradead.org>
+        id S1726298AbgEPOKT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 May 2020 10:10:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgEPOKT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 May 2020 10:10:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9D1CAACB1;
+        Sat, 16 May 2020 14:10:20 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-bcache@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
+Subject: [PATCH 0/3] bcache-tools: suport zoned device as making backing evice
+Date:   Sat, 16 May 2020 22:09:37 +0800
+Message-Id: <20200516140940.101190-1-colyli@suse.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The following changes since commit 59c7c3caaaf8750df4ec3255082f15eb4e371514:
+Hi folks,
 
-  nvme: fix possible hang when ns scanning fails during error recovery (2020-05-09 16:07:58 -0600)
+This series is for bcache-tools to support making zoned device as
+bcache backing device.
 
-are available in the Git repository at:
+There are two major ideas to support zoned device as bcache backing
+device,
+- The super block data_offset should be aligned to zone size. By default
+  the data_offset is set to 1 zone size for zoned backing device.
+- Writeback mode is not supported yet. If the cache mode is explicitly
+  set to writeback, print message to terminal to inform users that the
+  cache mode is converted to wrightthough.
 
-  git://git.infradead.org/nvme.git nvme-5.7
+After the data_offset and cache mode is set properly, the rested stuffs
+for zoned device support are from bcache driver in Linux kernel.
 
-for you to fetch changes up to b69e2ef24b7b4867f80f47e2781e95d0bacd15cb:
+Thanks for your review in advance.
 
-  nvme-pci: dma read memory barrier for completions (2020-05-12 18:02:24 +0200)
+Coly Li
+---
 
-----------------------------------------------------------------
-Keith Busch (1):
-      nvme-pci: dma read memory barrier for completions
+Coly Li (3):
+  bcache-tools: set zoned size aligned data_offset on backing device for
+    zoned devive
+  bcache-tools: add is_zoned_device()
+  bcache-tools: convert writeback to writethrough mode for zoned backing
+    device
 
- drivers/nvme/host/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ Makefile |  4 +--
+ make.c   | 20 +++++++++++-
+ zoned.c  | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ zoned.h  | 14 +++++++++
+ 4 files changed, 129 insertions(+), 3 deletions(-)
+ create mode 100644 zoned.c
+ create mode 100644 zoned.h
+
+-- 
+2.25.0
+
