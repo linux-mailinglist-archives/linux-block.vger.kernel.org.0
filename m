@@ -2,56 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C71331D76E4
-	for <lists+linux-block@lfdr.de>; Mon, 18 May 2020 13:25:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7BD71D7738
+	for <lists+linux-block@lfdr.de>; Mon, 18 May 2020 13:34:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgERLZC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 May 2020 07:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgERLZC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 May 2020 07:25:02 -0400
-X-Greylist: delayed 1254 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 May 2020 04:25:01 PDT
-Received: from vps.dvp24.com (unknown [IPv6:2a02:348:36:5b8c::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBBEC061A0C;
-        Mon, 18 May 2020 04:25:01 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=dvp24.com)
-        by vps.dvp24.com with esmtpa (Exim 4.77)
-        (envelope-from <abhay@dvp24.com>)
-        id 1jadYi-0006sv-08; Mon, 18 May 2020 13:03:48 +0200
+        id S1727006AbgERLej (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 May 2020 07:34:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51082 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726526AbgERLej (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 18 May 2020 07:34:39 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D496DEC4CE1912E258A9;
+        Mon, 18 May 2020 19:34:34 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.100) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 18 May 2020
+ 19:34:28 +0800
+Subject: Re: [PATCH] blkcg: Fix memory leak in blkg_conf_prep()
+To:     Markus Elfring <Markus.Elfring@web.de>, <cgroups@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Feilong Lin" <linfeilong@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>
+References: <4c670a6c-98c3-2b14-7438-09199506d92f@web.de>
+From:   Wu Bo <wubo40@huawei.com>
+Message-ID: <5cfba9c1-675d-d4e8-65bf-746712ae32e5@huawei.com>
+Date:   Mon, 18 May 2020 19:34:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <4c670a6c-98c3-2b14-7438-09199506d92f@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Date:   Mon, 18 May 2020 12:03:47 +0100
-From:   pedro hills <abhay@dvp24.com>
-To:     undisclosed-recipients:;
-Subject: (DONATION) $2 Million Has Been Donated
-Reply-To: <pedrohills@outlook.es>
-Mail-Reply-To: <pedrohills@outlook.es>
-Message-ID: <48fae56db7d72b6c8944f63bdd887348@dvp24.com>
-X-Sender: abhay@dvp24.com
-User-Agent: Roundcube Webmail/0.7.1
+X-Originating-IP: [10.166.215.100]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 2020/5/15 23:08, Markus Elfring wrote:
+> …
+>> new_blkg = blkg_alloc(pos, q, GFP_KERNEL);
+> …
+> 
+> I suggest to omit the source code quotation from the change description.
+> 
+> 
+>> if calling blkg_lookup_check() failed, at the IS_ERR block,
+>> the new_blkg should be free before goto lable fail_unlock
+>> in blkg_conf_prep() function.
+> 
+> How do you think about a wording variant like the following?
+> 
+>    If a call of the function “blkg_lookup_check” failed,
+>    release the previously allocated block group before jumping
+>    to the target “fail_unlock” in the implementation of
+>    the function “blkg_conf_prep”.
+> 
+
+Thanks for your suggestion. omit the source code quotation from the 
+description is more friendly. I will modify the description in V2 patch.
+
+Thanks,
+Wu Bo
+
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> 
+> Regards,
+> Markus
+> 
 
 
--- 
-$2 Million Has Been Donated To You,By PEDRO this is Real For More Info
-  Contact PEDRO immediately for your clame This Email:
-  pedrohills@outlook.es
-
-  Contact phone number +34632232897
-  Send Your Response To: pedrohills@outlook.es
-
-  2 Millionen US-Dollar wurden an Sie gespendet. Von PEDRO ist dies für
-weitere Informationen real
-  Wenden Sie sich umgehend an PEDRO. Diese E-Mail:
-  pedrohills@outlook.es
-
-  Kontakttelefonnummer +34632232897
-  Senden Sie Ihre Antwort an: pedrohills@outlook.es
