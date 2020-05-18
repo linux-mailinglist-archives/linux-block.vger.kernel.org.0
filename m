@@ -2,77 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 286271D7569
-	for <lists+linux-block@lfdr.de>; Mon, 18 May 2020 12:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C71331D76E4
+	for <lists+linux-block@lfdr.de>; Mon, 18 May 2020 13:25:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgERKnI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 May 2020 06:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
+        id S1727911AbgERLZC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 May 2020 07:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERKnH (ORCPT
+        with ESMTP id S1726339AbgERLZC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 May 2020 06:43:07 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0271C061A0C
-        for <linux-block@vger.kernel.org>; Mon, 18 May 2020 03:43:07 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jadEV-0007Op-JQ; Mon, 18 May 2020 12:42:55 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id F1236100606; Mon, 18 May 2020 12:42:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
-In-Reply-To: <20200518093155.GB35380@T590>
-Date:   Mon, 18 May 2020 12:42:54 +0200
-Message-ID: <87imgty15d.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 07:25:02 -0400
+X-Greylist: delayed 1254 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 May 2020 04:25:01 PDT
+Received: from vps.dvp24.com (unknown [IPv6:2a02:348:36:5b8c::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBBEC061A0C;
+        Mon, 18 May 2020 04:25:01 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=dvp24.com)
+        by vps.dvp24.com with esmtpa (Exim 4.77)
+        (envelope-from <abhay@dvp24.com>)
+        id 1jadYi-0006sv-08; Mon, 18 May 2020 13:03:48 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 18 May 2020 12:03:47 +0100
+From:   pedro hills <abhay@dvp24.com>
+To:     undisclosed-recipients:;
+Subject: (DONATION) $2 Million Has Been Donated
+Reply-To: <pedrohills@outlook.es>
+Mail-Reply-To: <pedrohills@outlook.es>
+Message-ID: <48fae56db7d72b6c8944f63bdd887348@dvp24.com>
+X-Sender: abhay@dvp24.com
+User-Agent: Roundcube Webmail/0.7.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Mon, May 18, 2020 at 10:32:22AM +0200, Thomas Gleixner wrote:
->> Christoph Hellwig <hch@lst.de> writes:
->> Is this absolutely necessary to be a smp function call? That's going to
->
-> I think it is.
->
-> Request is bound to the allocation CPU and the hw queue(hctx) which is
-> mapped from the allocation CPU.
->
-> If request is allocated from one cpu which is going to offline, we can't
-> handle that easily.
 
-That's a pretty handwavy explanation and does not give any reason why
-this needs to be a smp function call and cannot be solved otherwise,
-e.g. by delegating this to a work queue.
 
->> be problematic vs. RT. Same applies to the explicit preempt_disable() in
->> patch 7.
->
-> I think it is true and the reason is same too, but the period is quite short,
-> and it is just taken for iterating several bitmaps for finding one free bit.
+-- 
+$2 Million Has Been Donated To You,By PEDRO this is Real For More Info
+  Contact PEDRO immediately for your clame This Email:
+  pedrohills@outlook.es
 
-And takes spinlocks along the way.... See:
+  Contact phone number +34632232897
+  Send Your Response To: pedrohills@outlook.es
 
-  https://www.kernel.org/doc/html/latest/locking/locktypes.html
+  2 Millionen US-Dollar wurden an Sie gespendet. Von PEDRO ist dies für
+weitere Informationen real
+  Wenden Sie sich umgehend an PEDRO. Diese E-Mail:
+  pedrohills@outlook.es
 
-for a full explanation why this can't work on RT. And that's the same
-reason why the smp function call will fall apart on a RT enabled kernel.
-
-Thanks,
-
-        tglx
-
+  Kontakttelefonnummer +34632232897
+  Senden Sie Ihre Antwort an: pedrohills@outlook.es
