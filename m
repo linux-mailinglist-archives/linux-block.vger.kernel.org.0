@@ -2,24 +2,24 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09D631DA3D9
-	for <lists+linux-block@lfdr.de>; Tue, 19 May 2020 23:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4E11DA409
+	for <lists+linux-block@lfdr.de>; Tue, 19 May 2020 23:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgESVqr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 May 2020 17:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
+        id S1728625AbgESVsI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 May 2020 17:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgESVqr (ORCPT
+        with ESMTP id S1728566AbgESVsI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:47 -0400
+        Tue, 19 May 2020 17:48:08 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50AADC08C5C0;
-        Tue, 19 May 2020 14:46:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A1EC08C5C0;
+        Tue, 19 May 2020 14:48:08 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA3s-0002cK-Vy; Tue, 19 May 2020 23:46:09 +0200
+        id 1jbA5H-0002w4-Gd; Tue, 19 May 2020 23:47:35 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -29,11 +29,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>, Phillip Susi <psusi@ubuntu.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-block@vger.kernel.org
-Subject: [PATCH v1 04/25] block: nr_sects_write(): Disable preemption on seqcount write
-Date:   Tue, 19 May 2020 23:45:26 +0200
-Message-Id: <20200519214547.352050-5-a.darwish@linutronix.de>
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: [PATCH v1 21/25] iocost: Use sequence counter with associated spinlock
+Date:   Tue, 19 May 2020 23:45:43 +0200
+Message-Id: <20200519214547.352050-22-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -47,40 +46,54 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-For optimized block readers not holding a mutex, the "number of sectors"
-64-bit value is protected from tearing on 32-bit architectures by a
-sequence counter.
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-Disable preemption before entering that sequence counter's write side
-critical section. Otherwise, the read side can preempt the write side
-section and spin for the entire scheduler tick. If the reader belongs to
-a real-time scheduling class, it can spin forever and the kernel will
-livelock.
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
-Fixes: c83f6bf98dc1 ("block: add partition resize function to blkpg ioctl")
-Cc: <stable@vger.kernel.org>
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
+
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- block/blk.h | 2 ++
- 1 file changed, 2 insertions(+)
+ block/blk-iocost.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk.h b/block/blk.h
-index 0a94ec68af32..151f86932547 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -470,9 +470,11 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
- static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 7c1fe605d0d6..8029a9e8fa55 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -405,7 +405,7 @@ struct ioc {
+ 	enum ioc_running		running;
+ 	atomic64_t			vtime_rate;
+ 
+-	seqcount_t			period_seqcount;
++	seqcount_spinlock_t		period_seqcount;
+ 	u32				period_at;	/* wallclock starttime */
+ 	u64				period_at_vtime; /* vtime starttime */
+ 
+@@ -872,7 +872,6 @@ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
+ 
+ static void ioc_start_period(struct ioc *ioc, struct ioc_now *now)
  {
- #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
-+	preempt_disable();
- 	write_seqcount_begin(&part->nr_sects_seq);
- 	part->nr_sects = size;
- 	write_seqcount_end(&part->nr_sects_seq);
-+	preempt_enable();
- #elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPTION)
- 	preempt_disable();
- 	part->nr_sects = size;
+-	lockdep_assert_held(&ioc->lock);
+ 	WARN_ON_ONCE(ioc->running != IOC_RUNNING);
+ 
+ 	write_seqcount_begin(&ioc->period_seqcount);
+@@ -1958,7 +1957,7 @@ static int blk_iocost_init(struct request_queue *q)
+ 
+ 	ioc->running = IOC_IDLE;
+ 	atomic64_set(&ioc->vtime_rate, VTIME_PER_USEC);
+-	seqcount_init(&ioc->period_seqcount);
++	seqcount_spinlock_init(&ioc->period_seqcount, &ioc->lock);
+ 	ioc->period_at = ktime_to_us(ktime_get());
+ 	atomic64_set(&ioc->cur_period, 0);
+ 	atomic_set(&ioc->hweight_gen, 0);
 -- 
 2.20.1
 
