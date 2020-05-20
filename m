@@ -2,80 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B7651DBA3F
-	for <lists+linux-block@lfdr.de>; Wed, 20 May 2020 18:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55D081DBAAA
+	for <lists+linux-block@lfdr.de>; Wed, 20 May 2020 19:06:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgETQwt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 May 2020 12:52:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40313 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETQwt (ORCPT
+        id S1726729AbgETRGk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 May 2020 13:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETRGk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 May 2020 12:52:49 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x2so1833444pfx.7
-        for <linux-block@vger.kernel.org>; Wed, 20 May 2020 09:52:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mHy6dzJShAsBSfKMCNdl4v0+6ff2utTjPCI7FIyPRMo=;
-        b=hxUDAylDobBGUjhI71zf1SJpqQCIMX9XsAXlbdw2GXIx+piz2PdleQFjpQ0wlMwb+w
-         2IFO+AIYMsqq6WHDJ/wB2equPVegdzguRcATv8goIq3ITXhWqenf3pXMOnOLiRgfHf6n
-         G86U0ouEOiSbTz7PvkcxYbtSUYPrKoWlNDG+RgprcJSWfGu96BhJMGrSdakCN9Z3LbZc
-         g05YeQp/xwFrkmqJ64z2yMkN0kzhUUu1VfoHH4WP+5XLPEnW6CXU5lyTsq0ifusukISX
-         K1cX/eZzx6F2cKQOsgtbS3t7+aKqSBac8ptsM1WqOGUqpFgTgz9ibkCo3IebixbHZlm6
-         9BRw==
-X-Gm-Message-State: AOAM531Ek0Jmt2GRLVZXexBSEZOU12pWUdK3JxtPzGOg+Mc6PwJ/hoF+
-        HOFtTzEeHuNbHP0IyxGM/3Y=
-X-Google-Smtp-Source: ABdhPJxuCgEiF8HNagLjtK2xau+9+AR1f4KMZeh9d4wSMZhcOT+16DqEnPCcU48FhsHMcah4gKZ6aQ==
-X-Received: by 2002:a05:6a00:1494:: with SMTP id v20mr5293792pfu.150.1589993567717;
-        Wed, 20 May 2020 09:52:47 -0700 (PDT)
-Received: from localhost.localdomain ([2601:647:4000:d7:c031:e55:f9a8:4282])
-        by smtp.gmail.com with ESMTPSA id w199sm2563885pfc.68.2020.05.20.09.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:52:47 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Omar Sandoval <osandov@fb.com>
-Cc:     linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH blktests] Restore support for running tests without prior test results
-Date:   Wed, 20 May 2020 09:52:41 -0700
-Message-Id: <20200520165241.24798-1-bvanassche@acm.org>
+        Wed, 20 May 2020 13:06:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0771C061A0E
+        for <linux-block@vger.kernel.org>; Wed, 20 May 2020 10:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=W4qyqt6NRD0yqV2kO85IHgwKzbmizLQPIUHsrnxgQfg=; b=m58tSGxAMILgFs0pqW6MUhW7OZ
+        Nu6xQZ179Q55LNShYUUCla6ubAwwPq7fmFSnBZ4rZObsXfQ0M53BUYTVwMf0pqAxgk4AOKnxehmz4
+        weOS/t8FqCjkztm4SGguZ3094TsPU29k3DTx/31TYqLqXM5sJepzEOZLBb9ZLxEgOTU/PsYpk6Rge
+        dgPIR3kzPP3wM5ToTD1F6ArjsH4emoVs90h5WMAy+0zz6G7G6J50EO7fXZih0Uw4j8fozU3xHgLtR
+        5tqaBGZtVc9wIxWlxNhF+0cX5aljDdF6EAw7+DFdxmNfWHja9L07IuMbxrgijPC8/sv7uNI7cCKjx
+        w3wLwKng==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbSAv-000367-DC; Wed, 20 May 2020 17:06:37 +0000
+From:   Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: blk-mq: improvement CPU hotplug (simplified version) v3
+Date:   Wed, 20 May 2020 19:06:29 +0200
+Message-Id: <20200520170635.2094101-1-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+o:      Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch fixes the following runtime error:
+Hi all,
 
-./check: line 245: LAST_TEST_RUN: unbound variable
+this series ensures I/O is quiesced before a cpu and thus the managed
+interrupt handler is shut down.
 
-Fixes: 203b5723a28e ("Show last run for skipped tests")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- check | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This patchset tries to address the issue by the following approach:
 
-diff --git a/check b/check
-index 0a4e539a5cd9..5151d01995ac 100755
---- a/check
-+++ b/check
-@@ -240,9 +240,15 @@ _output_last_test_run() {
- }
- 
- _output_test_run() {
-+	local param_count
- 	if [[ -t 1 ]]; then
- 		# Move the cursor back up to the status.
--		tput cuu $((${#LAST_TEST_RUN[@]} + 1))
-+		if [ -n "${LAST_TEST_RUN+set}" ]; then
-+			param_count=${#LAST_TEST_RUN[@]}
-+		else
-+			param_count=0
-+		fi
-+		tput cuu $((param_count + 1))
- 	fi
- 
- 	local status=${TEST_RUN["status"]}
+ - before the last cpu in hctx->cpumask is going to offline, mark this
+   hctx as inactive
+
+ - disable preempt during allocating tag for request, and after tag is
+   allocated, check if this hctx is inactive. If yes, give up the
+   allocation and try remote allocation from online CPUs
+
+ - before hctx becomes inactive, drain all allocated requests on this
+   hctx
+
+The guts of the changes are from Ming Lei, I just did a bunch of prep
+cleanups so that they can fit in more nicely.  The series also depends
+on my "avoid a few q_usage_counter roundtrips v3" series.
+
+Thanks John Garry for running lots of tests on arm64 with this previous
+version patches and co-working on investigating all kinds of issues.
+
+A git tree is available here:
+
+    git://git.infradead.org/users/hch/block.git blk-mq-hotplug.2
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/blk-mq-hotplug.2
+
+Changes for v3:
+  - don't disable preemption and use smp calls
+
