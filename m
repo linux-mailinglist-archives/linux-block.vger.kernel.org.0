@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8935D1DE2B8
-	for <lists+linux-block@lfdr.de>; Fri, 22 May 2020 11:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36ECD1DE2C1
+	for <lists+linux-block@lfdr.de>; Fri, 22 May 2020 11:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgEVJNo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 May 2020 05:13:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47426 "EHLO mx2.suse.de"
+        id S1729589AbgEVJRS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 May 2020 05:17:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50558 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgEVJNo (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 May 2020 05:13:44 -0400
+        id S1728068AbgEVJRR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 22 May 2020 05:17:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72535B2038;
-        Fri, 22 May 2020 09:13:45 +0000 (UTC)
-Subject: Re: [PATCH 2/6] blk-mq: simplify the blk_mq_get_request calling
- convention
+        by mx2.suse.de (Postfix) with ESMTP id 9E09BB204D;
+        Fri, 22 May 2020 09:17:18 +0000 (UTC)
+Subject: Re: [PATCH 4/6] blk-mq: open code __blk_mq_alloc_request in
+ blk_mq_alloc_request_hctx
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
         Bart Van Assche <bvanassche@acm.org>,
         Hannes Reinecke <hare@suse.com>,
         Thomas Gleixner <tglx@linutronix.de>
 References: <20200520170635.2094101-1-hch@lst.de>
- <20200520170635.2094101-3-hch@lst.de>
+ <20200520170635.2094101-5-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <6d356a18-a104-323b-34c0-ed69929fa986@suse.de>
-Date:   Fri, 22 May 2020 11:13:41 +0200
+Message-ID: <737b4159-7059-2b85-e870-d2c9a763d452@suse.de>
+Date:   Fri, 22 May 2020 11:17:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200520170635.2094101-3-hch@lst.de>
+In-Reply-To: <20200520170635.2094101-5-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -40,18 +40,119 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 5/20/20 7:06 PM, Christoph Hellwig wrote:
-> The bio argument is entirely unused, and the request_queue can be passed
-> through the alloc_data, given that it needs to be filled out for the
-> low-level tag allocation anyway.  Also rename the function to
-> __blk_mq_alloc_request as the switch between get and alloc in the call
-> chains is rather confusing.
+> blk_mq_alloc_request_hctx is only used for NVMeoF connect commands, so
+> tailor it to the specific requirements, and don't both the general
+
+bother?
+
+> fast path code with its special twinkles.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   block/blk-mq.c | 36 ++++++++++++++++++++++--------------
->   1 file changed, 22 insertions(+), 14 deletions(-)
+>   block/blk-mq.c | 44 +++++++++++++++++++++++---------------------
+>   1 file changed, 23 insertions(+), 21 deletions(-)
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 1ffbc5d9e7cfe..42aee2978464b 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -351,21 +351,13 @@ static struct request *__blk_mq_alloc_request(struct blk_mq_alloc_data *data)
+>   {
+>   	struct request_queue *q = data->q;
+>   	struct elevator_queue *e = q->elevator;
+> -	unsigned int tag;
+> -	bool clear_ctx_on_error = false;
+>   	u64 alloc_time_ns = 0;
+> +	unsigned int tag;
+>   
+>   	/* alloc_time includes depth and tag waits */
+>   	if (blk_queue_rq_alloc_time(q))
+>   		alloc_time_ns = ktime_get_ns();
+>   
+> -	if (likely(!data->ctx)) {
+> -		data->ctx = blk_mq_get_ctx(q);
+> -		clear_ctx_on_error = true;
+> -	}
+> -	if (likely(!data->hctx))
+> -		data->hctx = blk_mq_map_queue(q, data->cmd_flags,
+> -						data->ctx);
+>   	if (data->cmd_flags & REQ_NOWAIT)
+>   		data->flags |= BLK_MQ_REQ_NOWAIT;
+>   
+> @@ -381,17 +373,16 @@ static struct request *__blk_mq_alloc_request(struct blk_mq_alloc_data *data)
+>   		    e->type->ops.limit_depth &&
+>   		    !(data->flags & BLK_MQ_REQ_RESERVED))
+>   			e->type->ops.limit_depth(data->cmd_flags, data);
+> -	} else {
+> -		blk_mq_tag_busy(data->hctx);
+>   	}
+>   
+> +	data->ctx = blk_mq_get_ctx(q);
+> +	data->hctx = blk_mq_map_queue(q, data->cmd_flags, data->ctx);
+> +	if (!(data->flags & BLK_MQ_REQ_INTERNAL))
+> +		blk_mq_tag_busy(data->hctx);
+> +
+>   	tag = blk_mq_get_tag(data);
+> -	if (tag == BLK_MQ_TAG_FAIL) {
+> -		if (clear_ctx_on_error)
+> -			data->ctx = NULL;
+> +	if (tag == BLK_MQ_TAG_FAIL)
+>   		return NULL;
+> -	}
+> -
+>   	return blk_mq_rq_ctx_init(data, tag, alloc_time_ns);
+>   }
+>   
+> @@ -431,17 +422,22 @@ struct request *blk_mq_alloc_request_hctx(struct request_queue *q,
+>   		.flags		= flags,
+>   		.cmd_flags	= op,
+>   	};
+> -	struct request *rq;
+> +	u64 alloc_time_ns = 0;
+>   	unsigned int cpu;
+> +	unsigned int tag;
+>   	int ret;
+>   
+> +	/* alloc_time includes depth and tag waits */
+> +	if (blk_queue_rq_alloc_time(q))
+> +		alloc_time_ns = ktime_get_ns();
+> +
+>   	/*
+>   	 * If the tag allocator sleeps we could get an allocation for a
+>   	 * different hardware context.  No need to complicate the low level
+>   	 * allocator for this for the rare use case of a command tied to
+>   	 * a specific queue.
+>   	 */
+> -	if (WARN_ON_ONCE(!(flags & BLK_MQ_REQ_NOWAIT)))
+> +	if (WARN_ON_ONCE(!(flags & (BLK_MQ_REQ_NOWAIT | BLK_MQ_REQ_RESERVED))))
+>   		return ERR_PTR(-EINVAL);
+>   
+>   	if (hctx_idx >= q->nr_hw_queues)
+> @@ -462,11 +458,17 @@ struct request *blk_mq_alloc_request_hctx(struct request_queue *q,
+>   	cpu = cpumask_first_and(data.hctx->cpumask, cpu_online_mask);
+>   	data.ctx = __blk_mq_get_ctx(q, cpu);
+>   
+> +	if (q->elevator)
+> +		data.flags |= BLK_MQ_REQ_INTERNAL;
+> +	else
+> +		blk_mq_tag_busy(data.hctx);
+> +
+>   	ret = -EWOULDBLOCK;
+> -	rq = __blk_mq_alloc_request(&data);
+> -	if (!rq)
+> +	tag = blk_mq_get_tag(&data);
+> +	if (tag == BLK_MQ_TAG_FAIL)
+>   		goto out_queue_exit;
+> -	return rq;
+> +	return blk_mq_rq_ctx_init(&data, tag, alloc_time_ns);
+> +
+>   out_queue_exit:
+>   	blk_queue_exit(q);
+>   	return ERR_PTR(ret);
+> 
+Other than that:
+
+Reviewed-by: Hannes Reinecke <hare@suse.de
 
 Cheers,
 
