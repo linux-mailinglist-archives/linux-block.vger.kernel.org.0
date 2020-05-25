@@ -2,81 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F7B1E00AA
-	for <lists+linux-block@lfdr.de>; Sun, 24 May 2020 18:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 457331E0439
+	for <lists+linux-block@lfdr.de>; Mon, 25 May 2020 02:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgEXQoW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 May 2020 12:44:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
+        id S2388411AbgEYAyO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 24 May 2020 20:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgEXQoU (ORCPT
+        with ESMTP id S2388014AbgEYAyO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 May 2020 12:44:20 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B107EC061A0E
-        for <linux-block@vger.kernel.org>; Sun, 24 May 2020 09:44:19 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id c75so7681698pga.3
-        for <linux-block@vger.kernel.org>; Sun, 24 May 2020 09:44:19 -0700 (PDT)
+        Sun, 24 May 2020 20:54:14 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18744C05BD43
+        for <linux-block@vger.kernel.org>; Sun, 24 May 2020 17:54:14 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id z9so9958404oid.2
+        for <linux-block@vger.kernel.org>; Sun, 24 May 2020 17:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P07jNVug+guoc45rIbpWbEU3M5+cKVFLecgNbhSQG+k=;
-        b=io57zyljez92lXPJk3vdqKPgqSMKidnBUnshqQzXWVfdMLSnMN4ncxj5FXVt38mRUS
-         78sjGtVI8BVkd93ywJu272PQWMrNhkc8rN7wc3MIk8PalcnlNWx/NIhIr1rYeX6Uyshu
-         apemMmrd8sIH7VeQx/SADuIFUiM1geZA5kKCRecz+3YDYXd5BGUHU21MSTPzEdRt93eD
-         OYIW4Db9mt2vmF3VD6ZAcusf6gLJtfx95KbvzrUz1s2Kv2XmIcsS6UrloIitadfK9E0I
-         6aXGZ8qYz6bRhZOE3r9+Wm4DqXPmhbQbYrasNG8EQtXNknrybL1VJhZyEy353QCTiDFw
-         JSiA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=LWyVBkwqIlgjtk92jvu6kp6Zi5zcp1h1Xn/pfsMWHjs=;
+        b=JFcdsp4Jr/Ja9YbwnsfQRYg4Un+mLFbkvGaDDnsjmWxc5ZynZRJLis9jJjyUCMfR6J
+         DDMTjss0k6WgSc/45CzuQOwX2i1ow6Ttj1ApvMsWPYxA5HGJH4NyeFNMeyjtsAoXEmgK
+         MNXcjeFHblhnxaEevOOoR06gSh7LL9otL9ycXOSrUIORckDwWPgCJ7sVilF+Qg2x+ZHv
+         EsY9fA4nKfvIT/ovABDmtGoVonx6P/pHUO40iUS228KSpcH2CRnsvmz//HyMiwUU7aLM
+         Ngud5dGJhAX5ijELB/6Wehm2PEjlk7XH+L7eJzwFDgWrQEPHYV9nUjwaSBmT+Awz0pH1
+         j9uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P07jNVug+guoc45rIbpWbEU3M5+cKVFLecgNbhSQG+k=;
-        b=mW4z09Co3b3Fcha78J0jNzstpCLmIyvBYmSwhEFypFWdPLG3A5r6iqmp/FntI41sI/
-         YW7eR2dbUGKIJGYFfI9WFMGQQ0by9VW3/FqBYXybI2GHNX1bc26T4L2DbbhSL6OOCmLc
-         TE4FfL9mwIUWsbmZ8sgPft3Ow2lfGLoOQWViHpNC1aB0WxJskx4sNsNGUc1Pk+w62KF/
-         r6C/geBNFO31LX6ZX9/jMEcb4hugUM8y+2WDrz5Lwv2r0G2h2/bYWAGartoxBdCfQiY1
-         aiBdwfsSoG7Q3ALS+13gcPIt162pPd4ZjSw3jfIgfmVxqGZZ9vloadji+ar4CGfdpJFI
-         skdA==
-X-Gm-Message-State: AOAM532BkX0WerfEEGrofFmPLA4Y1J8EfDR2O09uhXENjqRgSwRiL3nj
-        43yXPLLbn4getyV8JA9L2wDFVg==
-X-Google-Smtp-Source: ABdhPJx0YpgjyeRPkAeGqtyKmO+YkPOhyf7xDYJjjrxeEpAVaraZ68Yj2I56dIVK9WlV+GF4gdFOQg==
-X-Received: by 2002:a65:4c8a:: with SMTP id m10mr5165221pgt.138.1590338659249;
-        Sun, 24 May 2020 09:44:19 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:8568:4ec4:ebd3:32d1? ([2605:e000:100e:8c61:8568:4ec4:ebd3:32d1])
-        by smtp.gmail.com with ESMTPSA id j186sm10832729pfb.220.2020.05.24.09.44.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2020 09:44:18 -0700 (PDT)
-Subject: Re: [PATCH][next] loop: remove redundant assignment to variable error
-To:     Colin King <colin.king@canonical.com>, linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200524161043.20292-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9042a7ea-2d2b-9cb9-226b-266c35036701@kernel.dk>
-Date:   Sun, 24 May 2020 10:44:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=LWyVBkwqIlgjtk92jvu6kp6Zi5zcp1h1Xn/pfsMWHjs=;
+        b=j03OppmHGaXCcOYBXAGnkw2oXEJ+MJmsWlnx9EuJ+CivAXyKitGCctGGPcmaO9VuCT
+         CqstenB9c3CxhynjAx4wTWbRpdyul0t6aEeqHk0o3PA9Erc7ym8Zaxy+3A4IvKEiHvDM
+         WhAxEbsoWBPnXuOL46Ox3XbsV4OYclnYqKSjuQxGaSY3e+4w+88OdFGExuU3wrbbujDt
+         Xw8SBg0aolUIe1FACk252nJXuv9CD+tfaDBoNY44eMyXyb5CP0AHBuZf70cWdepHVdEU
+         INnSfeBGtIliUo/yF5LrWkEmyFFz6GE/AtFNUDQwlVWSpiKAOTv0XH1g+PwlPV6eXUCB
+         ctyA==
+X-Gm-Message-State: AOAM531ioOE6tAUygZw2QtJEViklq5psjxgraJYuypCOroCJS3ceSdlH
+        KQdv/M/qsqQ/WPoFv81qhAV3+KJb9QkW0zYEpu4=
+X-Google-Smtp-Source: ABdhPJybkotbBKx0P8hpINRyQ5ad+lDUWWIdCdjTBWL/7sKyA2Ym/PhrNRoG66noWcUcirhIcArf1sHKktqujWu0MA4=
+X-Received: by 2002:aca:df06:: with SMTP id w6mr9686235oig.39.1590368053159;
+ Sun, 24 May 2020 17:54:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200524161043.20292-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a9d:24c9:0:0:0:0:0 with HTTP; Sun, 24 May 2020 17:54:12
+ -0700 (PDT)
+Reply-To: afringawa@gmail.com
+From:   Afrin Gawa <yarindaibrahiim@gmail.com>
+Date:   Mon, 25 May 2020 00:54:12 +0000
+Message-ID: <CAOzf0q-BcMuUcP5EkT3nvK2T2V=Az4Ez7ov63xfUTAZ_ytRGVg@mail.gmail.com>
+Subject: With due respect.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/24/20 10:10 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable error is being assigned a value that is never
-> read so the assignment is redundant and can be removed.
+Greetings,
 
-Plus, by definition, we already know that error is zero at the
-time of assignment.
+I know that this mail will come to you as a surprise as we have never
+met before, but need not to worry as I am contacting you independently
+of my investigation and no one is informed of this communication. I
+need your urgent assistance in transferring the sum of $11,300,000.00
+USD immediately to your private account.The money has been here in our
+Bank lying dormant for years now without anybody coming for the claim
+of it.
 
--- 
-Jens Axboe
+I want to release the money to you as the relative to our deceased
+customer (the account owner) who died a long with his supposed NEXT OF
+KIN since 16th October 2005. The Banking laws here does not allow such
+money to stay more than 15 years, because the money will be recalled
+to the Bank treasury account as unclaimed fund.
 
+By indicating your interest I will send you the full details on how
+the business will be executed.
+
+Please respond urgently and delete if you are not interested.
+
+Best Regards,
+Mr. Afrin Gawa
