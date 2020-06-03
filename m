@@ -2,101 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA8C41ED141
-	for <lists+linux-block@lfdr.de>; Wed,  3 Jun 2020 15:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB2451ED270
+	for <lists+linux-block@lfdr.de>; Wed,  3 Jun 2020 16:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgFCNtB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Jun 2020 09:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
+        id S1726300AbgFCOuJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Jun 2020 10:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgFCNsw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Jun 2020 09:48:52 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1105C08C5C5
-        for <linux-block@vger.kernel.org>; Wed,  3 Jun 2020 06:48:49 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id e125so1378304lfd.1
-        for <linux-block@vger.kernel.org>; Wed, 03 Jun 2020 06:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
-        b=LImzFWfFZ5MGhzJT1qzCsgEXVo7xW37sUIdrDLCKiXHQE0/Tq0rYX6Af/ld5dvlhmE
-         opFt8B8vUrhAfyxGIRs7eIQZmnu+cHCt7Dz4gEu/fnBWHDlMa8iVHDbM7XgqJUtNcgor
-         I4Oj1yGJ3ygOniFn6Dr+FHDS5BV48N/ldz+eBwWbR5/ADnYCL6KuztRZu9mrKJOxMODU
-         fmVICwwGmTYXXsgICTxE6unupuMdGq6+YZvkWKysZVLYK3Wwxrg7U2ecMo3WGycHWcU1
-         w35jxyjuynpm30G3kj/I18A4vO2Y2WN0kfTajUkGc1Xe9t84eQuWhnB4AGlAS8dbrawc
-         iC3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
-        b=EaJ9o85Mh7QPmD+v2GGm6NaXqv5XnUnjEh0UZ35o1P9hHgii32tY8ad0G9AVGoeHvA
-         HBAAjFx94gwH3bqvhuCtHvohMrXQPrstD+HMATfGAPLokLD2B6yXQ1QZmvc8x6QVElh4
-         CoBdckMKJKYkFyUWYYLQouJE/KoXsT2p0KJlFJ6psolr6BEUVcSOumqeAvrD1m9VAbP4
-         vkOdXfCdn5ruLs+UjL6lX0g3/+gnIXqi6vUW2R8hZDcFbHvrSb/0eJzMk6m7LLnAuj/5
-         oey6YRBWzM7/dRNR5DCmTwNX4/cdjMoX837wDLSZ1Z+oVsS6EkmeMae1GDFE6vwCG5Ey
-         LeGQ==
-X-Gm-Message-State: AOAM5302jsyVUGYXgZ9VHXQpRn8Wh2vp76O/VpfA9h0lDYBpKJt9Uynb
-        4cIV7aZGOEbQMeDUm1drF7butXtlo3c2GLpNsvzlcGZTNJ4=
-X-Google-Smtp-Source: ABdhPJzc66PsPJ7uf2JiXrqj7zfh07Ra5BpBms0TPKeexmxkWkfXYY+ch/Os+E85wJbdOE6Lm+0ANdybV/7KRG4HAcU=
-X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr2566308lfd.29.1591192127287;
- Wed, 03 Jun 2020 06:48:47 -0700 (PDT)
+        with ESMTP id S1726229AbgFCOuE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Jun 2020 10:50:04 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C5C8C08C5C0;
+        Wed,  3 Jun 2020 07:50:04 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jgUiE-0001uB-Jj; Wed, 03 Jun 2020 16:49:50 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
+        linux-block@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 0/6] seqlock: seqcount_t call sites bugfixes
+Date:   Wed,  3 Jun 2020 16:49:43 +0200
+Message-Id: <20200603144949.1122421-1-a.darwish@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Reply-To: susanjones.wife@gmail.com
-Received: by 2002:a19:a405:0:0:0:0:0 with HTTP; Wed, 3 Jun 2020 06:48:46 -0700 (PDT)
-From:   "Mrs.Susan Jones" <joneswife.susan@gmail.com>
-Date:   Wed, 3 Jun 2020 14:48:46 +0100
-X-Google-Sender-Auth: aH2vam-ZraP3yG1gz3ryctMgTE4
-Message-ID: <CALBhdBfusXWup1N4iFuTS3D1AZxWbZbTDS_qa-wA3FkbkE7MrQ@mail.gmail.com>
-Subject: HELLO: I AM MRS SUSAN JONES
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-OUR GOLDEN OPPORTUNITY
+Hi,
 
-Hello Dear Friend,
+Since patch #7 and #8 from the series:
 
-Complement of the day, i hope you are doing great today. However, I am
-Mrs.Susan Jones, an auditor with one of the new generation banks here
-in Burkina Faso.
+   [PATCH v1 00/25] seqlock: Extend seqcount API with associated locks
+   https://lore.kernel.org/lkml/20200519214547.352050-1-a.darwish@linutronix.de
 
-I am writing you this letter based on the latest development at my
-Department. i discovered some abandoned huge amount of money, Ten
-Million, Five hundred thousand  United States Dollars.($10.500.000).
-Now I am only contacting you as a foreigner because this money cannot
-be approved to a local bank account here, but can only be approved to
-any foreign account and foreign beneficiary because the money is in US
-dollars
+are now pending on the lockdep/x86 IRQ state tracking patch series:
 
-This will be  a legitimate transaction once you accept to build trust
-with me and follow simple instruction doing the transfer process,
-until the total sum transfer out of the bank here to your own bank
-account any where in the world, and I agreed to share the total money
-50/50 with you once you successful confirmed it in your bank account.
-But any expenses doing the transfer process will be deduct from the
-amount before sharing, If you are interested to work with me and
-provide a good receiving bank account, get back to me as soon as
-possible with the following details below.
+   [PATCH 00/14] x86/entry: disallow #DB more and x86/entry lockdep/nmi
+   https://lkml.kernel.org/r/20200529212728.795169701@infradead.org
 
-Your full name
-Your Profession
-Your direct mobile phone number
-Your Scanned International passport or any of your identity
+   [PATCH v3 0/5] lockdep: Change IRQ state tracking to use per-cpu variables
+   https://lkml.kernel.org/r/20200529213550.683440625@infradead.org
 
-NOTE: PLEASE IT YOU ARE NOT INTERESTED DON'T BORDER TO RESPOND BACK TO
-AVOID TIME WASTED.
+This is a repost only of the seqcount_t call sites bugfixes that were on
+top of the seqlock patch series.
 
-As soon as I receive these data's, I will forward to you the
-application form which you will send to the bank for the claim and
-transfer of the fund into your bank account as the  new beneficial.
+These fixes are independent, and can thus be merged on their own. I'm
+reposting them now so they can at least hit -rc2 or -rc3.
 
-I am waiting to hear from you soon
+Changelog-v2:
 
-Yours
-Mrs.Susan Jones
+  - patch #1: Add a missing up_read() on netdev_get_name() error path
+              exit. Thanks to Dan/kbuild-bot report.
+
+  - patch #4: new patch, invalid preemptible context found by the new
+              lockdep checks added in the seqlock series + kbuild-bot.
+
+Thanks,
+
+8<--------------
+
+Ahmed S. Darwish (6):
+  net: core: device_rename: Use rwsem instead of a seqcount
+  net: phy: fixed_phy: Remove unused seqcount
+  u64_stats: Document writer non-preemptibility requirement
+  net: mdiobus: Disable preemption upon u64_stats update
+  block: nr_sects_write(): Disable preemption on seqcount write
+  dma-buf: Remove custom seqcount lockdep class key
+
+ block/blk.h                    |  2 ++
+ drivers/dma-buf/dma-resv.c     |  9 +------
+ drivers/net/phy/fixed_phy.c    | 26 ++++++++------------
+ drivers/net/phy/mdio_bus.c     |  2 ++
+ include/linux/dma-resv.h       |  2 --
+ include/linux/u64_stats_sync.h | 43 ++++++++++++++++++----------------
+ net/core/dev.c                 | 40 ++++++++++++++-----------------
+ 7 files changed, 56 insertions(+), 68 deletions(-)
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+--
+2.20.1
