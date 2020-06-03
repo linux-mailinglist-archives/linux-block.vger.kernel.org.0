@@ -2,125 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CD3C1ED0FA
-	for <lists+linux-block@lfdr.de>; Wed,  3 Jun 2020 15:36:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8C41ED141
+	for <lists+linux-block@lfdr.de>; Wed,  3 Jun 2020 15:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgFCNgX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Jun 2020 09:36:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60912 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725810AbgFCNgX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Jun 2020 09:36:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591191382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oo6s/JO+X2E+cKvgOaAKL4AKc/FphCKKwEj9u5En6xc=;
-        b=ey2wXXFHhfcMZ5wK0eoXbq/8pyrkipxOcQafS091mforKw2VHNy1UbJJf3icRjqvcDLVfn
-        v00m9DzuRTmAZoP/LguIOof+hqBoQs1cudM2BEKMYVA6XiWik31hClVnfPETbMQf5R3SI2
-        VDjEk7R/eGibvwycsh8MVS4fc87VRX4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-_oEJK1HqOgumsuebyKMnVA-1; Wed, 03 Jun 2020 09:36:20 -0400
-X-MC-Unique: _oEJK1HqOgumsuebyKMnVA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09D8080058E;
-        Wed,  3 Jun 2020 13:36:19 +0000 (UTC)
-Received: from T590 (ovpn-12-82.pek2.redhat.com [10.72.12.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B649E7F0BE;
-        Wed,  3 Jun 2020 13:36:12 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 21:36:08 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PATCH] blk-mq: don't fail driver tag allocation because of
- inactive hctx
-Message-ID: <20200603133608.GA2149752@T590>
-References: <20200603105128.2147139-1-ming.lei@redhat.com>
- <20200603115347.GA8653@lst.de>
+        id S1725882AbgFCNtB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Jun 2020 09:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgFCNsw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Jun 2020 09:48:52 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1105C08C5C5
+        for <linux-block@vger.kernel.org>; Wed,  3 Jun 2020 06:48:49 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id e125so1378304lfd.1
+        for <linux-block@vger.kernel.org>; Wed, 03 Jun 2020 06:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
+        b=LImzFWfFZ5MGhzJT1qzCsgEXVo7xW37sUIdrDLCKiXHQE0/Tq0rYX6Af/ld5dvlhmE
+         opFt8B8vUrhAfyxGIRs7eIQZmnu+cHCt7Dz4gEu/fnBWHDlMa8iVHDbM7XgqJUtNcgor
+         I4Oj1yGJ3ygOniFn6Dr+FHDS5BV48N/ldz+eBwWbR5/ADnYCL6KuztRZu9mrKJOxMODU
+         fmVICwwGmTYXXsgICTxE6unupuMdGq6+YZvkWKysZVLYK3Wwxrg7U2ecMo3WGycHWcU1
+         w35jxyjuynpm30G3kj/I18A4vO2Y2WN0kfTajUkGc1Xe9t84eQuWhnB4AGlAS8dbrawc
+         iC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
+        b=EaJ9o85Mh7QPmD+v2GGm6NaXqv5XnUnjEh0UZ35o1P9hHgii32tY8ad0G9AVGoeHvA
+         HBAAjFx94gwH3bqvhuCtHvohMrXQPrstD+HMATfGAPLokLD2B6yXQ1QZmvc8x6QVElh4
+         CoBdckMKJKYkFyUWYYLQouJE/KoXsT2p0KJlFJ6psolr6BEUVcSOumqeAvrD1m9VAbP4
+         vkOdXfCdn5ruLs+UjL6lX0g3/+gnIXqi6vUW2R8hZDcFbHvrSb/0eJzMk6m7LLnAuj/5
+         oey6YRBWzM7/dRNR5DCmTwNX4/cdjMoX837wDLSZ1Z+oVsS6EkmeMae1GDFE6vwCG5Ey
+         LeGQ==
+X-Gm-Message-State: AOAM5302jsyVUGYXgZ9VHXQpRn8Wh2vp76O/VpfA9h0lDYBpKJt9Uynb
+        4cIV7aZGOEbQMeDUm1drF7butXtlo3c2GLpNsvzlcGZTNJ4=
+X-Google-Smtp-Source: ABdhPJzc66PsPJ7uf2JiXrqj7zfh07Ra5BpBms0TPKeexmxkWkfXYY+ch/Os+E85wJbdOE6Lm+0ANdybV/7KRG4HAcU=
+X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr2566308lfd.29.1591192127287;
+ Wed, 03 Jun 2020 06:48:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603115347.GA8653@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Reply-To: susanjones.wife@gmail.com
+Received: by 2002:a19:a405:0:0:0:0:0 with HTTP; Wed, 3 Jun 2020 06:48:46 -0700 (PDT)
+From:   "Mrs.Susan Jones" <joneswife.susan@gmail.com>
+Date:   Wed, 3 Jun 2020 14:48:46 +0100
+X-Google-Sender-Auth: aH2vam-ZraP3yG1gz3ryctMgTE4
+Message-ID: <CALBhdBfusXWup1N4iFuTS3D1AZxWbZbTDS_qa-wA3FkbkE7MrQ@mail.gmail.com>
+Subject: HELLO: I AM MRS SUSAN JONES
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:53:47PM +0200, Christoph Hellwig wrote:
-> On Wed, Jun 03, 2020 at 06:51:27PM +0800, Ming Lei wrote:
-> > Commit bf0beec0607d ("blk-mq: drain I/O when all CPUs in a hctx are offline")
-> > prevents new request from being allocated on hctx which is going to be inactive,
-> > meantime drains all in-queue requests.
-> > 
-> > We needn't to prevent driver tag from being allocated during cpu hotplug, more
-> > importantly we have to provide driver tag for requests, so that the cpu hotplug
-> > handling can move on. blk_mq_get_tag() is shared for allocating both internal
-> > tag and drive tag, so driver tag allocation may fail because the hctx is
-> > marked as inactive.
-> > 
-> > Fix the issue by moving BLK_MQ_S_INACTIVE check to __blk_mq_alloc_request().
-> 
-> This looks correct, but a little ugly.  How about we resurrect my
-> patch to split off blk_mq_get_driver_tag entirely?  Quick untested rebase
+-- 
+OUR GOLDEN OPPORTUNITY
 
-OK, I am fine.
+Hello Dear Friend,
 
-> below, still needs a better changelog and fixes tg:
-> 
-> ---
-> From e432011e2eb5ac7bd1046bbf936645e9f7b74e64 Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Sat, 16 May 2020 08:03:48 +0200
-> Subject: blk-mq: split out a __blk_mq_get_driver_tag helper
-> 
-> Allocation of the driver tag in the case of using a scheduler shares very
-> little code with the "normal" tag allocation.  Split out a new helper to
-> streamline this path, and untangle it from the complex normal tag
-> allocation.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  block/blk-mq-tag.c | 27 +++++++++++++++++++++++++++
->  block/blk-mq-tag.h |  8 ++++++++
->  block/blk-mq.c     | 29 -----------------------------
->  block/blk-mq.h     |  1 -
->  4 files changed, 35 insertions(+), 30 deletions(-)
-> 
-> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-> index 96a39d0724a29..cded7fdcad8ef 100644
-> --- a/block/blk-mq-tag.c
-> +++ b/block/blk-mq-tag.c
-> @@ -191,6 +191,33 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
->  	return tag + tag_offset;
->  }
->  
-> +bool __blk_mq_get_driver_tag(struct request *rq)
-> +{
-> +	struct sbitmap_queue *bt = &rq->mq_hctx->tags->bitmap_tags;
-> +	unsigned int tag_offset = rq->mq_hctx->tags->nr_reserved_tags;
-> +	bool shared = blk_mq_tag_busy(rq->mq_hctx);
+Complement of the day, i hope you are doing great today. However, I am
+Mrs.Susan Jones, an auditor with one of the new generation banks here
+in Burkina Faso.
 
-Not necessary to add 'shared' which is just used once.
+I am writing you this letter based on the latest development at my
+Department. i discovered some abandoned huge amount of money, Ten
+Million, Five hundred thousand  United States Dollars.($10.500.000).
+Now I am only contacting you as a foreigner because this money cannot
+be approved to a local bank account here, but can only be approved to
+any foreign account and foreign beneficiary because the money is in US
+dollars
 
-> +	int tag;
-> +
-> +	if (blk_mq_tag_is_reserved(rq->mq_hctx->sched_tags, rq->internal_tag)) {
-> +		bt = &rq->mq_hctx->tags->breserved_tags;
+This will be  a legitimate transaction once you accept to build trust
+with me and follow simple instruction doing the transfer process,
+until the total sum transfer out of the bank here to your own bank
+account any where in the world, and I agreed to share the total money
+50/50 with you once you successful confirmed it in your bank account.
+But any expenses doing the transfer process will be deduct from the
+amount before sharing, If you are interested to work with me and
+provide a good receiving bank account, get back to me as soon as
+possible with the following details below.
 
-Too many rq->mq_hctx->tags, you can add one local variable to store it.
+Your full name
+Your Profession
+Your direct mobile phone number
+Your Scanned International passport or any of your identity
 
-Otherwise, looks fine:
+NOTE: PLEASE IT YOU ARE NOT INTERESTED DON'T BORDER TO RESPOND BACK TO
+AVOID TIME WASTED.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+As soon as I receive these data's, I will forward to you the
+application form which you will send to the bank for the claim and
+transfer of the fund into your bank account as the  new beneficial.
 
-Thanks, 
-Ming
+I am waiting to hear from you soon
 
+Yours
+Mrs.Susan Jones
