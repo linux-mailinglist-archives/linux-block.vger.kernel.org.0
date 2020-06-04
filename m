@@ -2,111 +2,200 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 499F61EEBE8
-	for <lists+linux-block@lfdr.de>; Thu,  4 Jun 2020 22:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AB7E1EEBFA
+	for <lists+linux-block@lfdr.de>; Thu,  4 Jun 2020 22:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgFDUZc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Jun 2020 16:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
+        id S1726026AbgFDU2J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Jun 2020 16:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbgFDUZ3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Jun 2020 16:25:29 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D733C08C5C5
-        for <linux-block@vger.kernel.org>; Thu,  4 Jun 2020 13:25:29 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id k11so7513258ejr.9
-        for <linux-block@vger.kernel.org>; Thu, 04 Jun 2020 13:25:29 -0700 (PDT)
+        with ESMTP id S1729211AbgFDU2G (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Jun 2020 16:28:06 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B81AC08C5C0
+        for <linux-block@vger.kernel.org>; Thu,  4 Jun 2020 13:28:05 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c21so4420708lfb.3
+        for <linux-block@vger.kernel.org>; Thu, 04 Jun 2020 13:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wp1xYo6k4Ed0Q77xnwXh8flp1gyMGXgNyJfMwsgW+Kg=;
-        b=evhiSuNKpPTp+xlYhHPUN38Ox9A/NzzEV4h1KCTaNexej2sn7dmxexT5wPV6QE9RGz
-         8s+clTM3p1CcSW8UaFOs+qvckgUkMZCWKQTkyDHU6S/fz724e8Vq0r4vnPsuXTIqOTMo
-         ImpLlbekhGKaz1aCRFpAKp2RoYziWLrVBv+kPju1pOuBuubQ+yvuGmBZxTi0FgAL/xGs
-         bstbfB866bgWjvF5BP1/Gb+lQVOxGlNCNdLiVkaiEjXFC1758lqtSdf2UsrBgT3xnK84
-         kIqKVoUgb2UoS9fHTo26sqjDx8ivjPSW9RvxOOS99pfOPNahG8izNyr51/w+pRl6e4bJ
-         3R5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SUlN5bkNLigLKYj+PyfvU+NHmN4RjIO9qQK2YaEiF4k=;
+        b=U7FDnfUQMkTS2UBdObQPw8kAdBOj63IRY7UqTCrvRK+nv/Y26elgqkrtYDSNpcXa1r
+         tajkwHBErGmtCquTlUkdSsFw5C5h/NSzs/ok3cAaE7gl9YjpABXHEz9mwpWxPMCHDc4F
+         //x7dWIOM7oFvhgTKYaJ64qsDHl36RCln/nICnf3CcJX1G69GJbKnN0MB5vaNnLJ1NGW
+         jgGeYT24ffjPsJ/CAYzMQlal2fvvgXWAepjQhlPRMIeCOt5mZRekQTaYUPwJwG7HUv/6
+         wTQcOi7l6r0cTNiUo5YjZGvlAt4C/Cm9BL1D7N2PcA0oJnookiVFfX8A6leayFzr4h6q
+         jotQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wp1xYo6k4Ed0Q77xnwXh8flp1gyMGXgNyJfMwsgW+Kg=;
-        b=DqEsGcQVUuRaQ0TSZ/3bkLTkqjZOBs3vJAxQ86549TvTDUkEBHEY+5G6exEMNpg077
-         tfzuP3u7GUC4BFGA3zuKj0Y1Ys6qxXtUSgl5yozpdH46St+r7PkHQxO7mVHzWSBg2RqE
-         8mEGlZZoAeSSBxDDHvAfxt3OHXXA5lk7LVlqT449wp2O97mjgr6bicV2pnMnLtjpep3N
-         p+xDdUFzXnIWQ0uNrNsPU9nCc+I442o9BQEfWQY+Wn5zw26CE+Dl2CuFcRe56vBdaGbQ
-         /CxU7UaukIcQNKxh3j0uWD3e/kFkh7PpcmMD5XgfnPR/7+nUAKOn0vCeo3rrXm9iHObb
-         V9oQ==
-X-Gm-Message-State: AOAM531hwccVHPPt9KgU0dAoVFX0Zb31cnGsbPgiBmGqAH55wju3z6PS
-        XB20ffqKIzxOAcFenJkCIVNuzQ==
-X-Google-Smtp-Source: ABdhPJy0rnfMZ1ArAXpFdTF1Mqx8GK4Oc26nrumSGoUgDRR2u9udOp68JVQC+ShGFy3J/lNOJiw52w==
-X-Received: by 2002:a17:906:3844:: with SMTP id w4mr5771829ejc.313.1591302327676;
-        Thu, 04 Jun 2020 13:25:27 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id gx8sm2792246ejb.86.2020.06.04.13.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:25:26 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, naresh.kamboju@linaro.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH] loop: Fix wrong masking of status flags
-Date:   Thu,  4 Jun 2020 22:25:20 +0200
-Message-Id: <20200604202520.66459-1-maco@android.com>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SUlN5bkNLigLKYj+PyfvU+NHmN4RjIO9qQK2YaEiF4k=;
+        b=CgvSJRBnKcCxqt7pOUAwmIYf5z6f2SvxjFxfwUNFwTIYSU+pC0j/cwJwmTCJIriNEi
+         8OEwsFtSKVSdxt++hzqF4tYQ8HzWkArPUv+J38Ekw30+W4iz9GFteOQ+lZYcxMz3Sb0I
+         6adMCfwZDGEVLLxmldx2PpP3w+BNFkSvvwwcO6jVHTI/gyAYAeCWXgobAGK7j4Hm7gy4
+         EecAa20uLay8n/RI3pHVIOj74EEOgQ84LOZs78Sa3oOvuuiOwIeZSyTP1rvwHY8tIwiS
+         jkvR7O/0IpnuueTn+CLg+5nV9oC5nZZsptUXpTXrHysWSpVdVtJa7ppSv3zoz33CNGRs
+         Pqeg==
+X-Gm-Message-State: AOAM531sz8ERuzzN+niIQIwQ0LrXUqAWLucrX5p7yZkIYqnRGrf8tdxi
+        P1yUH+rNIQ8K4727f2rfabAfcw+R9ZvTK0nZcFAYKw==
+X-Google-Smtp-Source: ABdhPJyGBVZ+RRlArnfbW+60ID7ThNvRFDyFrL/dUrsNwa6xz4sYN3EoEg9IxkfqYX9DClCMRkMrVhxBBK8XVQSPukw=
+X-Received: by 2002:a19:356:: with SMTP id 83mr3454672lfd.179.1591302483876;
+ Thu, 04 Jun 2020 13:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
+ <CA+G9fYuUvjDeLXVm2ax_5UF=OJeH7fog0U7GG2vEUXg-HXWRqg@mail.gmail.com> <CAB0TPYGo5ePYrah3Wgv_M1fx91+niRe12YaBBXGfs5b87Fjtrg@mail.gmail.com>
+In-Reply-To: <CAB0TPYGo5ePYrah3Wgv_M1fx91+niRe12YaBBXGfs5b87Fjtrg@mail.gmail.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Thu, 4 Jun 2020 22:27:52 +0200
+Message-ID: <CAB0TPYEx4Z8do3qL1KVpnGGnorTLGqKtrwi1uQgxQ6Xw3JqiYw@mail.gmail.com>
+Subject: Re: LTP: syscalls: regression on mainline - ioctl_loop01 mknod07 setns01
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        chrubis <chrubis@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Jan Stancek <jstancek@redhat.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In faf1d25440d6, loop_set_status() now assigns lo_status directly from
-the passed in lo_flags, but then fixes it up by masking out flags that
-can't be set by LOOP_SET_STATUS; unfortunately the mask was negated.
+Hi Naresh,
 
-Re-ran all ltp ioctl_loop tests, and they all passed.
+I just sent a patch and cc'd you. I verified all the loop tests pass
+again with that patch.
 
-Pass run of the previously failing one:
+Thanks,
+Martijn
 
-tst_test.c:1247: INFO: Timeout per run is 0h 05m 00s
-tst_device.c:88: INFO: Found free device 0 '/dev/loop0'
-ioctl_loop01.c:49: PASS: /sys/block/loop0/loop/partscan = 0
-ioctl_loop01.c:50: PASS: /sys/block/loop0/loop/autoclear = 0
-ioctl_loop01.c:51: PASS: /sys/block/loop0/loop/backing_file =
-'/tmp/ZRJ6H4/test.img'
-ioctl_loop01.c:65: PASS: get expected lo_flag 12
-ioctl_loop01.c:67: PASS: /sys/block/loop0/loop/partscan = 1
-ioctl_loop01.c:68: PASS: /sys/block/loop0/loop/autoclear = 1
-ioctl_loop01.c:77: PASS: access /dev/loop0p1 succeeds
-ioctl_loop01.c:83: PASS: access /sys/block/loop0/loop0p1 succeeds
 
-Summary:
-passed   8
-failed   0
-skipped  0
-warnings 0
-
-Fixes: faf1d25440d6 ("loop: Clean up LOOP_SET_STATUS lo_flags handling")
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 4212288ab157..ad63e4247868 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1390,7 +1390,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		goto out_unfreeze;
- 
- 	/* Mask out flags that can't be set using LOOP_SET_STATUS. */
--	lo->lo_flags &= ~LOOP_SET_STATUS_SETTABLE_FLAGS;
-+	lo->lo_flags &= LOOP_SET_STATUS_SETTABLE_FLAGS;
- 	/* For those flags, use the previous values instead */
- 	lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
- 	/* For flags that can't be cleared, use previous values too */
--- 
-2.27.0.278.ge193c7cf3a9-goog
-
+On Thu, Jun 4, 2020 at 9:10 PM Martijn Coenen <maco@android.com> wrote:
+>
+> Hi Naresh,
+>
+> I suspect the loop failures are due to
+> faf1d25440d6ad06d509dada4b6fe62fea844370 ("loop: Clean up
+> LOOP_SET_STATUS lo_flags handling"), I will investigate and get back
+> to you.
+>
+> Thanks,
+> Martijn
+>
+> On Thu, Jun 4, 2020 at 7:19 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > + linux-block@vger.kernel.org
+> >
+> > On Thu, 4 Jun 2020 at 22:47, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Following three test cases reported as regression on Linux mainline kernel
+> > > on x86_64, arm64, arm and i386
+> > >
+> > >   ltp-syscalls-tests:
+> > >     * ioctl_loop01
+> > >     * mknod07
+> > >     * setns01
+> > >
+> > > git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > > git branch: master
+> > > GOOD:
+> > >   git commit: b23c4771ff62de8ca9b5e4a2d64491b2fb6f8f69
+> > >   git describe: v5.7-1230-gb23c4771ff62
+> > > BAD:
+> > >   git commit: 1ee08de1e234d95b5b4f866878b72fceb5372904
+> > >   git describe: v5.7-3523-g1ee08de1e234
+> > >
+> > > kernel-config: https://builds.tuxbuild.com/U3bU0dMA62OVHb4DvZIVuw/kernel.config
+> > >
+> > > We are investigating these failures.
+> > >
+> > > tst_test.c:906: CONF: btrfs driver not available
+> > > tst_test.c:1246: INFO: Timeout per run is 0h 15m 00s
+> > > tst_device.c:88: INFO: Found free device 1 '/dev/loop1'
+> > > ioctl_loop01.c:49: PASS: /sys/block/loop1/loop/partscan = 0
+> > > [ 1073.639677] loop_set_status: loop1 () has still dirty pages (nrpages=1)
+> > > ioctl_loop01.c:50: PASS: /sys/block/loop1/loop/autoclear = 0
+> > > ioctl_loop01.c:51: PASS: /sys/block/loop1/loop/backing_file =
+> > > '/scratch/ltp-mnIdulzriQ/9cPtLQ/test.img'
+> > > ioctl_loop01.c:63: FAIL: expect 12 but got 17
+> > > ioctl_loop01.c:67: FAIL: /sys/block/loop1/loop/partscan != 1 got 0
+> > > ioctl_loop01.c:68: FAIL: /sys/block/loop1/loop/autoclear != 1 got 0
+> > > ioctl_loop01.c:79: FAIL: access /dev/loop1p1 fails
+> > > [ 1073.679678] loop_set_status: loop1 () has still dirty pages (nrpages=1)
+> > > ioctl_loop01.c:85: FAIL: access /sys/block/loop1/loop1p1 fails
+> > >
+> > > HINT: You _MAY_ be missing kernel fixes, see:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=10c70d95c0f2
+> > >
+> > > mke2fs 1.43.8 (1-Jan-2018)
+> > > [ 1264.711379] EXT4-fs (loop0): mounting ext2 file system using the
+> > > ext4 subsystem
+> > > [ 1264.716642] EXT4-fs (loop0): mounted filesystem without journal. Opts: (null)
+> > > mknod07     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
+> > > mknod07     0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
+> > > mknod07     1  TPASS  :  mknod failed as expected:
+> > > TEST_ERRNO=EACCES(13): Permission denied
+> > > mknod07     2  TPASS  :  mknod failed as expected:
+> > > TEST_ERRNO=EACCES(13): Permission denied
+> > > mknod07     3  TFAIL  :  mknod07.c:155: mknod succeeded unexpectedly
+> > > mknod07     4  TPASS  :  mknod failed as expected:
+> > > TEST_ERRNO=EPERM(1): Operation not permitted
+> > > mknod07     5  TPASS  :  mknod failed as expected:
+> > > TEST_ERRNO=EROFS(30): Read-only file system
+> > > mknod07     6  TPASS  :  mknod failed as expected:
+> > > TEST_ERRNO=ELOOP(40): Too many levels of symbolic links
+> > >
+> > >
+> > > setns01     0  TINFO  :  ns_name=ipc, ns_fds[0]=6, ns_types[0]=0x8000000
+> > > setns01     0  TINFO  :  ns_name=mnt, ns_fds[1]=7, ns_types[1]=0x20000
+> > > setns01     0  TINFO  :  ns_name=net, ns_fds[2]=8, ns_types[2]=0x40000000
+> > > setns01     0  TINFO  :  ns_name=pid, ns_fds[3]=9, ns_types[3]=0x20000000
+> > > setns01     0  TINFO  :  ns_name=uts, ns_fds[4]=10, ns_types[4]=0x4000000
+> > > setns01     0  TINFO  :  setns(-1, 0x8000000)
+> > > setns01     1  TPASS  :  invalid fd exp_errno=9
+> > > setns01     0  TINFO  :  setns(-1, 0x20000)
+> > > setns01     2  TPASS  :  invalid fd exp_errno=9
+> > > setns01     0  TINFO  :  setns(-1, 0x40000000)
+> > > setns01     3  TPASS  :  invalid fd exp_errno=9
+> > > setns01     0  TINFO  :  setns(-1, 0x20000000)
+> > > setns01     4  TPASS  :  invalid fd exp_errno=9
+> > > setns01     0  TINFO  :  setns(-1, 0x4000000)
+> > > setns01     5  TPASS  :  invalid fd exp_errno=9
+> > > setns01     0  TINFO  :  setns(11, 0x8000000)
+> > > setns01     6  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> > > errno=EBADF(9): Bad file descriptor
+> > > setns01     0  TINFO  :  setns(11, 0x20000)
+> > > setns01     7  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> > > errno=EBADF(9): Bad file descriptor
+> > > setns01     0  TINFO  :  setns(11, 0x40000000)
+> > > setns01     8  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> > > errno=EBADF(9): Bad file descriptor
+> > > setns01     0  TINFO  :  setns(11, 0x20000000)
+> > > setns01     9  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> > > errno=EBADF(9): Bad file descriptor
+> > > setns01     0  TINFO  :  setns(11, 0x4000000)
+> > > setns01    10  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> > > errno=EBADF(9): Bad file descriptor
+> > >
+> > > Full test log link,
+> > > https://lkft.validation.linaro.org/scheduler/job/1467931#L8047
+> > >
+> > > test results comparison shows this test case started failing from June-2-2020
+> > > https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/ioctl_loop01/history/
+> > >
+> > > https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/setns01/history/
+> > >
+> > > https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/mknod07/history/
+> > >
+> > >
+> > > --
+> > > Linaro LKFT
+> > > https://lkft.linaro.org
