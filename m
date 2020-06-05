@@ -2,370 +2,194 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A5E21EFAE1
-	for <lists+linux-block@lfdr.de>; Fri,  5 Jun 2020 16:21:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F341EFB85
+	for <lists+linux-block@lfdr.de>; Fri,  5 Jun 2020 16:37:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgFEOVq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Jun 2020 10:21:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43496 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728273AbgFEOVp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:21:45 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C42337A00F821C728404;
-        Fri,  5 Jun 2020 22:21:40 +0800 (CST)
-Received: from [10.133.219.224] (10.133.219.224) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 5 Jun 2020 22:21:32 +0800
-Subject: Re: [RFC PATCH] blk-mq: provide more tags for woken-up process when
- tag allocation is busy
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
-        <linux-block@vger.kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        John Garry <john.garry@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200603073931.94435-1-houtao1@huawei.com>
- <20200604100121.GA2234582@T590>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <7430b61f-f4a5-4582-e91c-1d46e43a3a64@huawei.com>
-Date:   Fri, 5 Jun 2020 22:21:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1727114AbgFEOhN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Jun 2020 10:37:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55328 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727113AbgFEOhN (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:37:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 794F2AFDB;
+        Fri,  5 Jun 2020 14:37:14 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 8AD4D1E1281; Fri,  5 Jun 2020 16:37:10 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 16:37:10 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH v3] block: Fix use-after-free in blkdev_get()
+Message-ID: <20200605143710.GA13248@quack2.suse.cz>
+References: <20200605104558.16686-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200604100121.GA2234582@T590>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605104558.16686-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Ming,
-
-On 2020/6/4 18:01, Ming Lei wrote:
-> Hi Hou Tao,
+On Fri 05-06-20 18:45:58, Jason Yan wrote:
+> In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+> there is some errors in __blkdev_get(), the bdput() is called which
+> means we have released the refcount of the bdev (actually the refcount of
+> the bdev inode). This means we cannot access bdev after that point. But
+> accually bdev is still accessed in blkdev_get() after calling
+> __blkdev_get(). This may leads to use-after-free if the refcount is the
+> last one we released in __blkdev_get(). Let's take a look at the
+> following scenerio:
 > 
-> On Wed, Jun 03, 2020 at 03:39:31PM +0800, Hou Tao wrote:
->> When there are many free-bit waiters, current batch wakeup method will
->> wake up at most wake_batch processes when wake_batch bits are freed.
->> The perfect result is each process will get a free bit, however the
->> real result is that a waken-up process may being unable to get
->> a free bit and will call io_schedule() multiple times. That's because
->> other processes (e.g. wake-up before) in the same wake-up batch
->> may have already allocated multiple free bits.
->>
->> And the race leads to two problems. The first one is the unnecessary
->> context switch, because multiple processes are waken up and then
->> go to sleep afterwards. And the second one is the performance
->> degradation when there is spatial locality between requests from
->> one process (e.g. split IO for HDD), because one process can not
->> allocated requests continuously for the split IOs, and
->> the sequential IOs will be dispatched separatedly.
+>   CPU0            CPU1                    CPU2
+> blkdev_open     blkdev_open           Remove disk
+>                   bd_acquire
+> 		  blkdev_get
+> 		    __blkdev_get      del_gendisk
+> 					bdev_unhash_inode
+>   bd_acquire          bdev_get_gendisk
+>     bd_forget           failed because of unhashed
+> 	  bdput
+> 	              bdput (the last one)
+> 		        bdev_evict_inode
 > 
-> I guess this way is a bit worse for HDD since sequential IO may be
-> interrupted by other context.
-Yes.
-
->>
->> To fix the problem, we mimic the way how SQ handles this situation:
+> 	  	    access bdev => use after free
 > 
-> Do you mean the SQ way is the congestion control code in __get_request()?
-> If not, could you provide more background of SQ's way for this issue?
-> Cause it isn't easy for me to associate your approach with SQ's code.
+> [  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+> [  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+> [  459.352347]
+> [  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+> [  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> [  459.354947] Call Trace:
+> [  459.355337]  dump_stack+0x111/0x19e
+> [  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+> [  459.356523]  print_address_description+0x60/0x223
+> [  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+> [  459.357887]  kasan_report.cold+0xae/0x2d8
+> [  459.358503]  __lock_acquire+0x24c1/0x31b0
+> [  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+> [  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+> [  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+> [  459.361123]  ? finish_task_switch+0x125/0x600
+> [  459.361812]  ? finish_task_switch+0xee/0x600
+> [  459.362471]  ? mark_held_locks+0xf0/0xf0
+> [  459.363108]  ? __schedule+0x96f/0x21d0
+> [  459.363716]  lock_acquire+0x111/0x320
+> [  459.364285]  ? blkdev_get+0xce/0xbe0
+> [  459.364846]  ? blkdev_get+0xce/0xbe0
+> [  459.365390]  __mutex_lock+0xf9/0x12a0
+> [  459.365948]  ? blkdev_get+0xce/0xbe0
+> [  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+> [  459.367130]  ? blkdev_get+0xce/0xbe0
+> [  459.367678]  ? destroy_inode+0xbc/0x110
+> [  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+> [  459.368867]  ? __blkdev_get+0x3e6/0x1280
+> [  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+> [  459.370114]  ? blkdev_get+0xce/0xbe0
+> [  459.370656]  blkdev_get+0xce/0xbe0
+> [  459.371178]  ? find_held_lock+0x2c/0x110
+> [  459.371774]  ? __blkdev_get+0x1280/0x1280
+> [  459.372383]  ? lock_downgrade+0x680/0x680
+> [  459.373002]  ? lock_acquire+0x111/0x320
+> [  459.373587]  ? bd_acquire+0x21/0x2c0
+> [  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+> [  459.374780]  blkdev_open+0x202/0x290
+> [  459.375325]  do_dentry_open+0x49e/0x1050
+> [  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+> [  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+> [  459.377192]  ? inode_permission+0xbe/0x3a0
+> [  459.377818]  path_openat+0x148c/0x3f50
+> [  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+> [  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+> [  459.380489]  ? __lock_is_held+0xad/0x140
+> [  459.381093]  do_filp_open+0x1a1/0x280
+> [  459.381654]  ? may_open_dev+0xf0/0xf0
+> [  459.382214]  ? find_held_lock+0x2c/0x110
+> [  459.382816]  ? lock_downgrade+0x680/0x680
+> [  459.383425]  ? __lock_is_held+0xad/0x140
+> [  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+> [  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+> [  459.385280]  ? __alloc_fd+0x448/0x560
+> [  459.385841]  do_sys_open+0x3c3/0x500
+> [  459.386386]  ? filp_open+0x70/0x70
+> [  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> [  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+> [  459.388342]  ? do_syscall_64+0x1a/0x520
+> [  459.388930]  do_syscall_64+0xc3/0x520
+> [  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  459.390248] RIP: 0033:0x416211
+> [  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+> 04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+>    05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+>       01
+> [  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+> [  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+> [  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+> [  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+> [  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+> [  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+> [  459.400168]
+> [  459.400430] Allocated by task 20132:
+> [  459.401038]  kasan_kmalloc+0xbf/0xe0
+> [  459.401652]  kmem_cache_alloc+0xd5/0x280
+> [  459.402330]  bdev_alloc_inode+0x18/0x40
+> [  459.402970]  alloc_inode+0x5f/0x180
+> [  459.403510]  iget5_locked+0x57/0xd0
+> [  459.404095]  bdget+0x94/0x4e0
+> [  459.404607]  bd_acquire+0xfa/0x2c0
+> [  459.405113]  blkdev_open+0x110/0x290
+> [  459.405702]  do_dentry_open+0x49e/0x1050
+> [  459.406340]  path_openat+0x148c/0x3f50
+> [  459.406926]  do_filp_open+0x1a1/0x280
+> [  459.407471]  do_sys_open+0x3c3/0x500
+> [  459.408010]  do_syscall_64+0xc3/0x520
+> [  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  459.409415]
+> [  459.409679] Freed by task 1262:
+> [  459.410212]  __kasan_slab_free+0x129/0x170
+> [  459.410919]  kmem_cache_free+0xb2/0x2a0
+> [  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+> [  459.412318]  __do_softirq+0x225/0x8ac
 > 
-The congestion control is accomplished by both __get_request() and __freed_request().
-In __get_request(), the max available requests is  nr_requests * 1.5 when
-there are multiple threads try to allocate requests, and in __free_requests()
-it only start to wake up waiter when the busy requests is less than nr_requests,
-so half of nr_request is free when the waiter is woken-up.
-
-The approach in the patch is buggy, because it doesn't check whether
-the number of busy bits is greater than the number of to-be-stashed
-bits. So we just add an atomic (bit_busy) in struct sbitmap to track
-the number of busy bits and use the number to decide whether
-we should wake one process or not:
-
-+#define SBQ_WS_ACTIVE_MIN 4
-+
-+/* return true when fallback to batched wake-up is needed */
-+static bool sbitmap_do_stash_and_wakeup(struct sbitmap_queue *sbq)
-+{
-+       bool fall_back = false;
-+       int ws_active;
-+       struct sbq_wait_state *ws;
-+       int max_busy;
-+       int bit_busy;
-+       int wake_seq;
-+       int old;
-+
-+       ws_active = atomic_read(&sbq->ws_active);
-+       if (!ws_active)
-+               goto done;
-+
-+       if (ws_active < SBQ_WS_ACTIVE_MIN) {
-+               fall_back = true;
-+               goto done;
-+       }
-+
-+       /* stash and make sure free bits >= depth / 4 */
-+       max_busy = max_t(int, sbq->sb.depth * 3 / 4, 1);
-+       bit_busy = atomic_read(&sbq->bit_busy);
-+       if (bit_busy > max_busy)
-+               goto done;
-+
-+retry:
-+       ws = sbq_wake_ptr(sbq);
-+       if (!ws)
-+               goto done;
-+
-+       wake_seq = atomic_read(&ws->wake_seq);
-+       old = atomic_cmpxchg(&ws->wake_seq, wake_seq, wake_seq + 1);
-+       if (old == wake_seq) {
-+               sbq_index_atomic_inc(&sbq->wake_index);
-+               wake_up(&ws->wait);
-+               goto done;
-+       }
-+
-+done:
-+       return fall_back;
-+}
-+
- static bool __sbq_wake_up(struct sbitmap_queue *sbq)
- {
-        struct sbq_wait_state *ws;
-        unsigned int wake_batch;
-        int wait_cnt;
-
-+       if (sbq->flags & SBQ_FLAG_BATCH_BIT_ALLOC) {
-+               if (!sbitmap_do_stash_and_wakeup(sbq))
-+                       return false;
-+       }
-+
-        ws = sbq_wake_ptr(sbq);
-        if (!ws)
-                return false;
-
->> 1) stash a bulk of free bits
->> 2) wake up a process when a new bit is freed
->> 3) woken-up process consumes the stashed free bits
->> 4) when stashed free bits are exhausted, goto step 1)
->>>> Because the tag allocation path or io submit path is much faster than
->> the tag free path, so when the race for free tags is intensive,
+> Fix this by delaying bdput() to the end of blkdev_get() which means we
+> have finished accessing bdev.
 > 
-> Indeed, I guess you mean bio_endio is slow.
-> 
-Yes, thanks for the correction.
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
->> we can ensure:
->> 1) only few processes will be waken up and will exhaust the stashed
->>    free bits quickly.
->> 2) these processes will be able to allocate multiple requests
->>    continuously.
->>
->> An alternative fix is to dynamically adjust the number of woken-up
->> process according to the number of waiters and busy bits, instead of
->> using wake_batch each time in __sbq_wake_up(). However it will need
->> to record the number of busy bits all the time, so use the
->> stash-wake-use method instead.
->>
->> The following is the result of a simple fio test:
->>
->> 1. fio (random read, 1MB, libaio, iodepth=1024)
->>
->> (1) 4TB HDD (max_sectors_kb=256)
->>
->> IOPS (bs=1MB)
->> jobs | 4.18-sq  | 5.6.15 | 5.6.15-patched |
->> 1    | 120      | 120    | 119
->> 24   | 120      | 105    | 121
->> 48   | 122      | 102    | 121
->> 72   | 120      | 100    | 119
->>
->> context switch per second
->> jobs | 4.18-sq  | 5.6.15 | 5.6.15-patched |
->> 1    | 1058     | 1162   | 1188
->> 24   | 1047     | 1715   | 1105
->> 48   | 1109     | 1967   | 1105
->> 72   | 1084     | 1908   | 1106
->>
->> (2) 1.8TB SSD (set max_sectors_kb=256)
->>
->> IOPS (bs=1MB)
->> jobs | 4.18-sq  | 5.6.15 | 5.6.15-patched |
->> 1    | 1077     | 1075   | 1076
->> 24   | 1079     | 1075   | 1076
->> 48   | 1077     | 1076   | 1076
->> 72   | 1077     | 1076   | 1077
->>
->> context switch per second
->> jobs | 4.18-sq  | 5.6.15 | 5.6.15-patched |
->> 1    | 1833     | 5123   | 5264
->> 24   | 2143     | 15238  | 3859
->> 48   | 2182     | 19015  | 3617
->> 72   | 2268     | 19050  | 3662
->>
->> (3) 1.5TB nvme (set max_sectors_kb=256)
->>
->> 4 read queue, 72 CPU
->>
->> IOPS (bs=1MB)
->> jobs | 5.6.15 | 5.6.15-patched |
->> 1    | 3018   | 3018
->> 18   | 3015   | 3016
->> 36   | 3001   | 3005
->> 54   | 2993   | 2997
->> 72   | 2984   | 2990
->>
->> context switch per second
->> jobs | 5.6.15 | 5.6.15-patched |
->> 1    | 6292   | 6469
->> 18   | 19428  | 4253
->> 36   | 21290  | 3928
->> 54   | 23060  | 3957
->> 72   | 24221  | 4054
->>
->> Signed-off-by: Hou Tao <houtao1@huawei.com>
->> ---
->> Hi,
->>
->> We found the problems (excessive context switch and few performance
->> degradation) during the performance comparison between blk-sq (4.18)
->> and blk-mq (5.16) on HDD, but we can not find a better way to fix it.
->>
->> It seems that in order to implement batched request allocation for
->> single process, we need to use an atomic variable to track
->> the number of busy bits. It's suitable for HDD or SDD, because the
->> IO latency is greater than 1ms, but no sure whether or not it's OK
->> for NVMe device.
->
-> Do you have benchmark on NVMe/SSD with 4k BS?
-> 
-The following is the randread test on SSD and NVMe.
+Thanks for the patch! It looks good to me. Just one nit below:
 
-1. fio randread 4KB
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index 47860e589388..d7b74e44ad5a 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -1566,7 +1566,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+>  	if (!for_part) {
+>  		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+>  		if (ret != 0) {
+> -			bdput(bdev);
+>  			return ret;
+>  		}
 
-(1) SSD 1.8TB (nr_tags=1024, nr_requests=256)
+No need for braces here after you remove bdput(). With this fixed, feel
+free to add:
 
-It seems that when there is no race for tag allocation, the performance is the same,
-but when there are intensive race for tag allocation, the performance gain is huge.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-total iodepth=256, so when jobs=2, iodepth=256/2=128
+								Honza
 
-jobs | 5.6   | 5.6 patched
-1    | 193k  | 192k
-2    | 197k  | 196k
-4    | 198k  | 198k
-8    | 197k  | 197k
-16   | 197k  | 198k
-32   | 198k  | 198k
-64   | 195k  | 195k
-128  | 193k  | 192k
-256  | 198k  | 198k
-
-total iodepth=512
-
-jobs | 5.6   | 5.6 patched
-1    | 193k  | 194k
-2    | 197k  | 196k
-4    | 198k  | 197k
-8    | 197k  | 219k
-16   | 197k  | 394k
-32   | 198k  | 395k
-64   | 196k  | 592k
-128  | 199k  | 591k
-256  | 196k  | 591k
-512  | 198k  | 591k
-
-total iodepth=1024
-
-jobs | 5.6   | 5.6 patched
-1    | 195k  | 192k
-2    | 196k  | 197k
-4    | 197k  | 197k
-8    | 198k  | 197k
-16   | 197k  | 198k
-32   | 197k  | 243k
-64   | 197k  | 393k
-128  | 197k  | 986k
-256  | 200k  | 976k
-512  | 203k  | 984k
-1024 | 202k  | 354k
-
-(2) NVMe 1.5TB (nr_tags=1023)
-
-It seems there is no performance impact on NVMe device, but the
-the number of context switch will be reduced.
-
-total iodepth=256, so when jobs=2, iodepth=256/2=128
-
-jobs | 5.6   | 5.6 patched
-1    | 398k  | 394k
-4    | 774k  | 775k
-16   | 774k  | 774k
-64   | 774k  | 775k
-256  | 778k  | 784k
-
-total iodepth=1024
-
-jobs | 5.6   | 5.6 patched
-1    | 406k  | 405k
-4    | 774k  | 773k
-16   | 774k  | 774k
-64   | 777k  | 773k
-256  | 783k  | 783k
-1024 | 764k  | 755k
-
-total iodepth=2048
-
-jobs | 5.6   | 5.6 patched
-1    | 369k  | 377k
-4    | 774k  | 774k
-16   | 774k  | 774k
-64   | 767k  | 773k
-256  | 784k  | 781k
-1024 | 741k  | 1416k
-2048 | 754k  | 753k
-
-Regards,
-Tao
-
->>
->> Suggestions and comments are welcome.
->>
->> Regards,
->> Tao
->> ---
->>  block/blk-mq-tag.c      |  4 ++++
->>  include/linux/sbitmap.h |  7 ++++++
->>  lib/sbitmap.c           | 49 +++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 60 insertions(+)
->>
->> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
->> index 586c9d6e904a..fd601fa6c684 100644
->> --- a/block/blk-mq-tag.c
->> +++ b/block/blk-mq-tag.c
->> @@ -180,6 +180,10 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
->>  	sbitmap_finish_wait(bt, ws, &wait);
->>  
->>  found_tag:
->> +	if (READ_ONCE(bt->stash_ready) &&
->> +	    !atomic_dec_if_positive(&bt->stashed_bits))
->> +		WRITE_ONCE(bt->stash_ready, false);
->> +
-> 
-> Is it doable to move the above code into sbitmap_queue_do_stash_and_wake_up(),
-> after wake_up(&ws->wait)?
-> 
-> Or at least it should be done for successful allocation after context
-> switch?
-> 
-> 
-> Thanks, 
-> Ming
-> 
-> .
-> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
