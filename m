@@ -2,110 +2,229 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E90FD1F3133
-	for <lists+linux-block@lfdr.de>; Tue,  9 Jun 2020 03:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9866A1F321F
+	for <lists+linux-block@lfdr.de>; Tue,  9 Jun 2020 03:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgFIBHC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 Jun 2020 21:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgFHXHF (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:05 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D0F62089D;
-        Mon,  8 Jun 2020 23:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657625;
-        bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pc1+/Q9FKAGVZ85Rh1do+eVuQUk0X3EifDv3hkq+8TgwJKUZwlAa1Idg6pwFz5YCO
-         xWoLYi6WLoxtvfyZJ96vfaGDtL471eO5N++p3t0rHHdFvoa0DgSKjGK41eXrYRVJCs
-         1+iKFTTds88VqGsHIKqNtyc0v+1YT415lVUs21sQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 045/274] block: reset mapping if failed to update hardware queue count
-Date:   Mon,  8 Jun 2020 19:02:18 -0400
-Message-Id: <20200608230607.3361041-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        id S1727047AbgFIB5Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 Jun 2020 21:57:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbgFIB5Y (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:57:24 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 50E58489A72CEE3843A3;
+        Tue,  9 Jun 2020 09:57:22 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 9 Jun 2020
+ 09:57:15 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v5] block: Fix use-after-free in blkdev_get()
+Date:   Tue, 9 Jun 2020 10:24:53 +0800
+Message-ID: <20200609022453.6190-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+acctually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This results in use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
-[ Upstream commit aa880ad690ab6d4c53934af85fb5a43e69ecb0f5 ]
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
 
-When we increase hardware queue count, blk_mq_update_queue_map will
-reset the mapping between cpu and hardware queue base on the hardware
-queue count(set->nr_hw_queues). The mapping cannot be reset if it
-encounters error in blk_mq_realloc_hw_ctxs, but the fallback flow will
-continue using it, then blk_mq_map_swqueue will touch a invalid memory,
-because the mapping points to a wrong hctx.
+	  	    access bdev => use after free
 
-blktest block/030:
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
 
-null_blk: module loaded
-Increasing nr_hw_queues to 8 fails, fallback to 1
-==================================================================
-BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x2f2/0x830
-Read of size 8 at addr 0000000000000128 by task nproc/8541
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
 
-CPU: 5 PID: 8541 Comm: nproc Not tainted 5.7.0-rc4-dbg+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
-Call Trace:
-dump_stack+0xa5/0xe6
-__kasan_report.cold+0x65/0xbb
-kasan_report+0x45/0x60
-check_memory_region+0x15e/0x1c0
-__kasan_check_read+0x15/0x20
-blk_mq_map_swqueue+0x2f2/0x830
-__blk_mq_update_nr_hw_queues+0x3df/0x690
-blk_mq_update_nr_hw_queues+0x32/0x50
-nullb_device_submit_queues_store+0xde/0x160 [null_blk]
-configfs_write_file+0x1c4/0x250 [configfs]
-__vfs_write+0x4c/0x90
-vfs_write+0x14b/0x2d0
-ksys_write+0xdd/0x180
-__x64_sys_write+0x47/0x50
-do_syscall_64+0x6f/0x310
-entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Tested-by: Bart van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e525fd89d380 ("block: make blkdev_get/put() handle exclusive access")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-mq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ v5: Add fixes tag and Reviewed-by tag from Christoph.
+ v4: Remove uneeded braces and add Reviewed-by tag from Jan Kara.
+ v3: Add bdput() when __blkdev_get() calling itself failed.
+ v2: Add Reported-by tag and cc linux-block mailing list
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b1772de26a74..98a702761e2c 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3353,8 +3353,8 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ fs/block_dev.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 47860e589388..08c87db3a92b 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1565,10 +1565,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	 */
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+-		if (ret != 0) {
+-			bdput(bdev);
++		if (ret != 0)
+ 			return ret;
+-		}
+ 	}
  
- 	prev_nr_hw_queues = set->nr_hw_queues;
- 	set->nr_hw_queues = nr_hw_queues;
--	blk_mq_update_queue_map(set);
- fallback:
-+	blk_mq_update_queue_map(set);
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
- 		blk_mq_realloc_hw_ctxs(set, q);
- 		if (q->nr_hw_queues != set->nr_hw_queues) {
+  restart:
+@@ -1637,8 +1635,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1688,7 +1688,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
+ 
+ 	return ret;
+ }
+@@ -1755,6 +1754,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
+ 
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
 -- 
-2.25.1
+2.21.3
 
