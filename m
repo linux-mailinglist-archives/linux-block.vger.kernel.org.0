@@ -2,185 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE521F5A9C
-	for <lists+linux-block@lfdr.de>; Wed, 10 Jun 2020 19:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F360C1F5AA7
+	for <lists+linux-block@lfdr.de>; Wed, 10 Jun 2020 19:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgFJRdj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Jun 2020 13:33:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5816 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726965AbgFJRdi (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:33:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E823267E54BE6431EE5A;
-        Thu, 11 Jun 2020 01:33:31 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 11 Jun 2020 01:33:21 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
-        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hare@suse.com>,
-        <hch@lst.de>, <shivasharan.srikanteshwara@broadcom.com>
-CC:     <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        <megaraidlinux.pdl@broadcom.com>, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH RFC v7 12/12] hpsa: enable host_tagset and switch to MQ
-Date:   Thu, 11 Jun 2020 01:29:19 +0800
-Message-ID: <1591810159-240929-13-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
-References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+        id S1727121AbgFJRdu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Jun 2020 13:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgFJRdu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 10 Jun 2020 13:33:50 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62228C03E96B;
+        Wed, 10 Jun 2020 10:33:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z9so3502402ljh.13;
+        Wed, 10 Jun 2020 10:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PsWz3Kzzab46qx3onkQFKgH83NJFRs0Wzw42VhTXFgQ=;
+        b=rbro13WWD8hxWSxH64bIu9g0y+p9UijRN1aCyeHu94o6qRvVVp+f+RgnUS+S4/tmz+
+         5qEFC0QaFZlLVS9ihygGymaUpUOwRGJX5noGlZFToJv+Stqvz0T8kMt5a4K23X1cI8qY
+         80JREjPMkpL5jQ2Xi25TvD/r60++vJKjsjebxNfdWed/XGSdqUTt8wUygh9hZAfOfh/h
+         3IKO8nbIWzpp1uijno1iCHmiZLZleQUwBOPMMf0RpkgXgBvQVoPjoI8OcC0PL3PdYWYc
+         frPUQ4AETdzZmSAUO6XP4cof6yFhAHYQC+Pgo634BB9gRv4XAidKPx5+ahKhLD7KNnY9
+         ZxWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PsWz3Kzzab46qx3onkQFKgH83NJFRs0Wzw42VhTXFgQ=;
+        b=KhgvfIuB6mJu+47gE5VrrPLUhBrWLG+iBtq3wWVt89BKS5kYvdlSPq2p9WTy/Ix8HC
+         lLtf1FiWMwhLCwpugz2xKp0Z1CmHlCWYrV2iP/aSxFP4Vikt0dkwh49DlcDBIqby6Hjz
+         +qLEj36ZgGcgvCercPoGGIx5qWEqElL9FywIvaWgYnXKpQqqs/ojp3k8u4pqPe9Tf3AS
+         2YJKSDg6s00dz+U+wpuArBDcfQCwYWN6M0+eRq6bQ/D+dSQCYo/a5LoKcBR8P5EaxF6u
+         m1KLuwDAQrqnRbxYK2wUG0Vvm28ItoGEYSjIbqKFFOpkxYhRXAgHCYDTe2dK1k29AhUN
+         3x0g==
+X-Gm-Message-State: AOAM530D7T1m36OVSjs4iHhT06ES+DNYcfCioau+4rN800mxM2Q3q984
+        WUdWuiAPlizSqTcXOKj3cZZ5sDE9LB+fb4o1n0b+95SYUdo=
+X-Google-Smtp-Source: ABdhPJzGNXDX3o1AcABLRVRmoybCavPSQ9yrAf2np88UTcWSvE/lhONOdQYhxC8zwSobesUTHpqf4WTEOsvu0o15j3o=
+X-Received: by 2002:a2e:8e94:: with SMTP id z20mr2114433ljk.21.1591810427683;
+ Wed, 10 Jun 2020 10:33:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+References: <fb0340aaf273be84e915214a3d8bae4ac85d7c0b.camel@ew.tq-group.com> <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
+From:   Roger Heflin <rogerheflin@gmail.com>
+Date:   Wed, 10 Jun 2020 12:33:36 -0500
+Message-ID: <CAAMCDef2g8t5u1GuVH7p4bM1C7UMsC=fV4RKGU9jSG1rScPc9g@mail.gmail.com>
+Subject: Re: Consistent block device references for root= cmdline
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+No idea if this would still work, but back before label/uuid and lvm
+in initird I had a staticly linked "C" program that ran inside initrd,
+it searched for likely places a boot device could be (mounted them and
+looked for a file to confirm it was the right device, then unmounted
+it), and when it found the right one, it then echo's is major/minor
+numbers into /proc/sys/kernel/real-root-dev and that is used for root=
+without it being on the command line.  Assuming you could get
+something similar started by sytemd and/or udev inside the initrd it
+might still work.
 
-The smart array HBAs can steer interrupt completion, so this
-patch switches the implementation to use multiqueue and enables
-'host_tagset' as the HBA has a shared host-wide tagset.
-
-Signed-off-by: Hannes Reinecke <hare@suse.de>
----
- drivers/scsi/hpsa.c | 44 +++++++-------------------------------------
- drivers/scsi/hpsa.h |  1 -
- 2 files changed, 7 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 1e9302e99d05..f807f9bdae85 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -980,6 +980,7 @@ static struct scsi_host_template hpsa_driver_template = {
- 	.shost_attrs = hpsa_shost_attrs,
- 	.max_sectors = 2048,
- 	.no_write_same = 1,
-+	.host_tagset = 1,
- };
- 
- static inline u32 next_command(struct ctlr_info *h, u8 q)
-@@ -1144,12 +1145,14 @@ static void dial_up_lockup_detection_on_fw_flash_complete(struct ctlr_info *h,
- static void __enqueue_cmd_and_start_io(struct ctlr_info *h,
- 	struct CommandList *c, int reply_queue)
- {
-+	u32 blk_tag = blk_mq_unique_tag(c->scsi_cmd->request);
-+
- 	dial_down_lockup_detection_during_fw_flash(h, c);
- 	atomic_inc(&h->commands_outstanding);
- 	if (c->device)
- 		atomic_inc(&c->device->commands_outstanding);
- 
--	reply_queue = h->reply_map[raw_smp_processor_id()];
-+	reply_queue = blk_mq_unique_tag_to_hwq(blk_tag);
- 	switch (c->cmd_type) {
- 	case CMD_IOACCEL1:
- 		set_ioaccel1_performant_mode(h, c, reply_queue);
-@@ -5653,8 +5656,6 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
- 	/* Get the ptr to our adapter structure out of cmd->host. */
- 	h = sdev_to_hba(cmd->device);
- 
--	BUG_ON(cmd->request->tag < 0);
--
- 	dev = cmd->device->hostdata;
- 	if (!dev) {
- 		cmd->result = DID_NO_CONNECT << 16;
-@@ -5830,7 +5831,7 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
- 	sh->hostdata[0] = (unsigned long) h;
- 	sh->irq = pci_irq_vector(h->pdev, 0);
- 	sh->unique_id = sh->irq;
--
-+	sh->nr_hw_queues = h->msix_vectors > 0 ? h->msix_vectors : 1;
- 	h->scsi_host = sh;
- 	return 0;
- }
-@@ -5856,7 +5857,8 @@ static int hpsa_scsi_add_host(struct ctlr_info *h)
-  */
- static int hpsa_get_cmd_index(struct scsi_cmnd *scmd)
- {
--	int idx = scmd->request->tag;
-+	u32 blk_tag = blk_mq_unique_tag(scmd->request);
-+	int idx = blk_mq_unique_tag_to_tag(blk_tag);
- 
- 	if (idx < 0)
- 		return idx;
-@@ -7456,26 +7458,6 @@ static void hpsa_disable_interrupt_mode(struct ctlr_info *h)
- 	h->msix_vectors = 0;
- }
- 
--static void hpsa_setup_reply_map(struct ctlr_info *h)
--{
--	const struct cpumask *mask;
--	unsigned int queue, cpu;
--
--	for (queue = 0; queue < h->msix_vectors; queue++) {
--		mask = pci_irq_get_affinity(h->pdev, queue);
--		if (!mask)
--			goto fallback;
--
--		for_each_cpu(cpu, mask)
--			h->reply_map[cpu] = queue;
--	}
--	return;
--
--fallback:
--	for_each_possible_cpu(cpu)
--		h->reply_map[cpu] = 0;
--}
--
- /* If MSI/MSI-X is supported by the kernel we will try to enable it on
-  * controllers that are capable. If not, we use legacy INTx mode.
-  */
-@@ -7872,9 +7854,6 @@ static int hpsa_pci_init(struct ctlr_info *h)
- 	if (err)
- 		goto clean1;
- 
--	/* setup mapping between CPU and reply queue */
--	hpsa_setup_reply_map(h);
--
- 	err = hpsa_pci_find_memory_BAR(h->pdev, &h->paddr);
- 	if (err)
- 		goto clean2;	/* intmode+region, pci */
-@@ -8613,7 +8592,6 @@ static struct workqueue_struct *hpsa_create_controller_wq(struct ctlr_info *h,
- 
- static void hpda_free_ctlr_info(struct ctlr_info *h)
- {
--	kfree(h->reply_map);
- 	kfree(h);
- }
- 
-@@ -8622,14 +8600,6 @@ static struct ctlr_info *hpda_alloc_ctlr_info(void)
- 	struct ctlr_info *h;
- 
- 	h = kzalloc(sizeof(*h), GFP_KERNEL);
--	if (!h)
--		return NULL;
--
--	h->reply_map = kcalloc(nr_cpu_ids, sizeof(*h->reply_map), GFP_KERNEL);
--	if (!h->reply_map) {
--		kfree(h);
--		return NULL;
--	}
- 	return h;
- }
- 
-diff --git a/drivers/scsi/hpsa.h b/drivers/scsi/hpsa.h
-index f8c88fc7b80a..ea4a609e3eb7 100644
---- a/drivers/scsi/hpsa.h
-+++ b/drivers/scsi/hpsa.h
-@@ -161,7 +161,6 @@ struct bmic_controller_parameters {
- #pragma pack()
- 
- struct ctlr_info {
--	unsigned int *reply_map;
- 	int	ctlr;
- 	char	devname[8];
- 	char    *product_name;
--- 
-2.26.2
-
+On Wed, Jun 10, 2020 at 11:51 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 10 Jun 2020 at 15:15, Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> >
+> > Hello all,
+> >
+> > there have been numerous attempts to make the numbering of mmcblk
+> > devices consistent, mostly by using aliases from the DTS ([1], [2],
+> > [3]), but all have been (rightfully) rejected. Unless I have overlooked
+> > a more recent development, no attempts for a different solution were
+> > made.
+>
+> According to aliases attempts, I think those have failed, mainly
+> because of two reasons.
+>
+> 1. Arguments stating that LABELs/UUIDs are variable alternatives. This
+> isn't the case, which I think was also concluded from the several
+> earlier discussions.
+> 2. Patches that tried adding support for mmc aliases, were not
+> correctly coded. More precisely, what needs to be addressed is that
+> the mmc core also preserves the same ids to be set for the host class
+> as the block device, mmc[n] must correspond to mmcblk[n].
+>
+> >
+> > As far as I can tell, the core of the issue seems to be the following:
+> >
+> > The existing solutions like LABELs and UUIDs are viable alternatives in
+> > many cases, but in particular on embedded systems, this is not quite
+> > sufficient: In addition to the problem that more knowledge about the
+> > system to boot is required in the bootloader, this approach fails
+> > completely when the same firmware image exists on multiple devices, for
+> > example on an eMMC and an SD card - not an entirely uncommon situation
+> > during the development of embedded systems.
+> >
+> > With udev, I can refer to a specific partition using a path like
+> > /dev/disk/by-path/platform-2194000.usdhc-part2. In [4] it was proposed
+> > to add a way to refer to a device path/phandle from the kernel command
+> > line. Has there been any progress on this proposal?
+>
+> Lots of time during the years I have been approached, both publicly
+> and offlist, about whether it would be possible to add support for
+> "consistent" mmcblk devices. To me, I am fine with the aliases
+> approach, as long as it gets implemented correctly.
+>
+> >
+> > Kind regards,
+> > Matthias
+> >
+> >
+> > [1] https://patchwork.kernel.org/patch/8685711/
+> > [2] https://lore.kernel.org/patchwork/cover/674381/
+> > [3] https://www.spinics.net/lists/linux-mmc/msg26586.html
+> > [4] https://www.spinics.net/lists/linux-mmc/msg26708.html
+> >
+>
+> Kind regards
+> Uffe
