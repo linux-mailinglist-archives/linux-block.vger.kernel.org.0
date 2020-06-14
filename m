@@ -2,41 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D7F1F880C
-	for <lists+linux-block@lfdr.de>; Sun, 14 Jun 2020 11:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4E251F89B3
+	for <lists+linux-block@lfdr.de>; Sun, 14 Jun 2020 18:53:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgFNJXj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 14 Jun 2020 05:23:39 -0400
-Received: from dns.tdjhs.tyc.edu.tw ([163.30.27.129]:47489 "EHLO
-        host.tdjhs.tyc.edu.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNJXj (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 14 Jun 2020 05:23:39 -0400
-X-Greylist: delayed 7493 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jun 2020 05:23:39 EDT
-Received: from www.tdjhs.tyc.edu.tw (localhost.tdjhs.tyc.edu.tw [127.0.0.1])
-        by host.tdjhs.tyc.edu.tw (8.14.5/8.14.5) with ESMTP id 05DKxkPg024411;
-        Sun, 14 Jun 2020 04:59:47 +0800 (CST)
-        (envelope-from ldhlupz@gmail.com)
-From:   "L.D Holt" <ldhlupz@gmail.com>
-Reply-To: ldhlupz@gmail.com
-Subject: Re: Lucrative Proposal.
-Date:   Sun, 14 Jun 2020 04:59:46 +0800
-Message-Id: <20200613205831.M17989@gmail.com>
-X-Mailer: OpenWebMail 2.53 
-X-OriginatingIP: 212.103.50.217 (whitedove)
+        id S1726978AbgFNQxl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 14 Jun 2020 12:53:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46904 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbgFNQxl (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 14 Jun 2020 12:53:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D4B1FAD88;
+        Sun, 14 Jun 2020 16:53:43 +0000 (UTC)
+From:   colyli@suse.de
+To:     axboe@kernel.dk
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
+        Coly Li <colyli@suse.de>
+Subject: [PATCH 0/4] bcache: more fixes for v5.8-rc1
+Date:   Mon, 15 Jun 2020 00:53:29 +0800
+Message-Id: <20200614165333.124999-1-colyli@suse.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset=utf-8
-To:     undisclosed-recipients:;
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+From: Coly Li <colyli@suse.de>
 
-Good day.I am a banker and I have a lucrative business proposal of mutual 
-benefit. Please contact me on my email: ldhlupz@gmail.com
+Hi Jens,
 
-Sincerely,
-L.D Holt.
+Here are more following up fixes for bcache v5.8-rc1.
+
+The two patches from me are minor clean up. Rested two patches
+are important.
+
+- Mauricio Faria de Oliveira contributes a fix for a potential
+  kernel panic when users configures improper block size value
+  to bcache backing device. This problem should be fixed as soon
+  as possible IMHO.
+- Zhiqiang Liu contributes a fix for a potential deadlock (even quite
+  hard to trigger), which I want to have it as soon as possible.
+
+Please take these patches for v5.8-rc1, or -rc2 if it is late for -rc1.
+
+Thanks you in advance.
+
+Coly Li
+---
+
+Coly Li (2):
+  bcache: use delayed kworker fo asynchronous devices registration
+  bcache: pr_info() format clean up in bcache_device_init()
+
+Mauricio Faria de Oliveira (1):
+  bcache: check and adjust logical block size for backing devices
+
+Zhiqiang Liu (1):
+  bcache: fix potential deadlock problem in btree_gc_coalesce
+
+ drivers/md/bcache/btree.c |  8 ++++++--
+ drivers/md/bcache/super.c | 35 ++++++++++++++++++++++++++---------
+ 2 files changed, 32 insertions(+), 11 deletions(-)
+
+-- 
+2.25.0
+
