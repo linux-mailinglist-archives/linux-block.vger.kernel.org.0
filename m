@@ -2,74 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86E251FB8E2
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jun 2020 18:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C0C1FBAEA
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jun 2020 18:15:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbgFPP7O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 16 Jun 2020 11:59:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34072 "EHLO
+        id S1729815AbgFPQP1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 16 Jun 2020 12:15:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47938 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731485AbgFPP7N (ORCPT
+        with ESMTP id S1731515AbgFPPlr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:59:13 -0400
+        Tue, 16 Jun 2020 11:41:47 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GFpOlF114954;
-        Tue, 16 Jun 2020 15:59:04 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GFbS2b087032;
+        Tue, 16 Jun 2020 15:41:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
  from : message-id : references : date : in-reply-to : mime-version :
  content-type; s=corp-2020-01-29;
- bh=GAmgeSG8/BtZuwbDR2PlP3ksAuRRmqymC2N1cO2MVn8=;
- b=PC/PqDNoCmpY/GhYBuwjnPAXyzPdsvP8Sgd4X2a5jUZ33zz/qH4yARx+tVP7QnkEGK39
- 8YjFrnEx34d+WvkdlJ4vw7O5U189HI8D2c4kB38BS+K4F8zSCi5IEaBbicDVo9NhfTXN
- kK7hq4uur3hafIkwv5rCqMa1aVsLhbWv45W6F2GpXvugmMYu637SANCkLzz5IiBQexRO
- MlRe4AprZVeKQQNf2ZrfXJhy9n0xUj3UzflggWFBDys0O5iqHbQoKl8wv5monOzzrL9p
- +PSco9smmsFbFWfbXy/iWt8c/juKqK3uSZs/yP6Vf/GsH3VsoV4FEQNA7r99yFG+hGuZ /g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31p6e5yp6d-1
+ bh=x71oBn1m/tF2XvIfsUgElKRHW9e1eYOow3P3SFBORSg=;
+ b=WGIapUiBpCyxlkBoDlt61JxsZxduNAh7fVJidJtdsvoZ3HdFLhPvHzSoSOc6TmmCUCN+
+ buOgpTw4hgWXgcEO/X6M1SmsNObrbyYDZ+lMRghnYxieHUkZKczO396NYsUANV5M/4+w
+ dbWg71YvdDStIX+3FcEuekdlTm0dua7Mi+GYZ3K5QQEozwAxXZ1LEt/qB3OFtVJ+J/Ci
+ eZOop1VVqk3GvcWAbaxASUgn0n4iGGbkDps1kBGM14D3sIudk1BULhTUmsAWWCxYS+IA
+ fMQ5h7s2/cXUwmtvsFpqENb9KNSa7enjvI4OF37M5UrhAN3ajM7bLKiq7dEIkhOmt6LC 3A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31p6e5yjjf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jun 2020 15:59:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GFr4PH019972;
-        Tue, 16 Jun 2020 15:59:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 31p6dh00pv-1
+        Tue, 16 Jun 2020 15:41:26 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GFd6ch046602;
+        Tue, 16 Jun 2020 15:41:25 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31p6s7d9b1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 15:59:03 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05GFx1AT030995;
-        Tue, 16 Jun 2020 15:59:02 GMT
+        Tue, 16 Jun 2020 15:41:25 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05GFfO13030328;
+        Tue, 16 Jun 2020 15:41:24 GMT
 Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jun 2020 08:59:01 -0700
+        with ESMTP ; Tue, 16 Jun 2020 08:41:24 -0700
 To:     Keith Busch <keith.busch@wdc.com>
 Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Matias =?utf-8?Q?Bj=C3=B8rling?= <matias.bjorling@wdc.com>,
         Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Niklas Cassel <niklas.cassel@wdc.com>
-Subject: Re: [PATCH 3/5] nvme: implement I/O Command Sets Command Set support
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 1/5] block: add capacity field to zone descriptors
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle
-Message-ID: <yq1ftavm29u.fsf@ca-mkp.ca.oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1sgevm31m.fsf@ca-mkp.ca.oracle.com>
 References: <20200615233424.13458-1-keith.busch@wdc.com>
-        <20200615233424.13458-4-keith.busch@wdc.com>
-Date:   Tue, 16 Jun 2020 11:58:59 -0400
-In-Reply-To: <20200615233424.13458-4-keith.busch@wdc.com> (Keith Busch's
-        message of "Tue, 16 Jun 2020 08:34:22 +0900")
+        <20200615233424.13458-2-keith.busch@wdc.com>
+Date:   Tue, 16 Jun 2020 11:41:21 -0400
+In-Reply-To: <20200615233424.13458-2-keith.busch@wdc.com> (Keith Busch's
+        message of "Tue, 16 Jun 2020 08:34:20 +0900")
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 bulkscore=0
- phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ suspectscore=1 mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160112
+ definitions=main-2006160110
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
  mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
  suspectscore=1 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
  cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006160112
+ engine=8.12.0-2004280000 definitions=main-2006160110
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
@@ -78,31 +77,17 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Keith,
 
-> @@ -1113,8 +1126,9 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
->  	status = nvme_submit_sync_cmd(ctrl->admin_q, &c, data,
->  				      NVME_IDENTIFY_DATA_SIZE);
->  	if (status) {
-> -		dev_warn(ctrl->device,
-> -			"Identify Descriptors failed (%d)\n", status);
-> +		if (ctrl->vs >= NVME_VS(1, 3, 0))
-> +			dev_warn(ctrl->device,
-> +				"Identify Descriptors failed (%d)\n", status);
-
-Not a biggie but maybe this should be a separate patch?
-
-> @@ -1808,7 +1828,8 @@ static bool nvme_ns_ids_equal(struct nvme_ns_ids *a, struct nvme_ns_ids *b)
->  {
->  	return uuid_equal(&a->uuid, &b->uuid) &&
->  		memcmp(&a->nguid, &b->nguid, sizeof(a->nguid)) == 0 &&
-> -		memcmp(&a->eui64, &b->eui64, sizeof(a->eui64)) == 0;
-> +		memcmp(&a->eui64, &b->eui64, sizeof(a->eui64)) == 0 &&
-> +		a->csi == b->csi;
->  }
-
-No objection to defensive programming. But wouldn't this be a broken
-device?
-
-Otherwise LGTM.
+> In the zoned storage model, the sectors within a zone are typically
+> all writeable. With the introduction of the Zoned Namespace (ZNS)
+> Command Set in the NVM Express organization, the model was extended to
+> have a specific writeable capacity.
+>
+> Extend the zone descriptor data structure with a zone capacity field to
+> indicate to the user how many sectors in a zone are writeable.
+>
+> Introduce backward compatibility in the zone report ioctl by extending
+> the zone report header data structure with a flags field to indicate if
+> the capacity field is available.
 
 Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 
