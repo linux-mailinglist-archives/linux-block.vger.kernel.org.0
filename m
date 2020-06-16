@@ -2,124 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60EF31FADCA
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jun 2020 12:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5BD1FADFC
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jun 2020 12:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgFPKVR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 16 Jun 2020 06:21:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41704 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPKVQ (ORCPT
+        id S1728014AbgFPK0m (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 16 Jun 2020 06:26:42 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10852 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFPK0E (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:21:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GAILsT154365;
-        Tue, 16 Jun 2020 10:20:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=j5kegrmGeTDSB0ig2F5qX6z4umw1vzMFuB/NKoAL+6c=;
- b=RuElR14UanHGq5GunllI0MWA4B7q6RgiHOJOW3YtQWOASZbTsfDa/oOdMoZIw0kjutoI
- QDhuv5rQiSpn1uqvmndFDFXQInxWZ+orRLp7ZUCnMIUXBiYJ+8o9/TP7i29o/LatvYas
- DjASjtipSEKsA8361yrxMDLKeII7jhCwJCWm+9t5R3sHeVpYh9NUym/VVkpRrSTPmQP6
- NXhZrfZGleZ4vaBbWsdvK15yNCEgnv9hCOo4t1CSLiwz1iaLaHXP5v2f2PU4pBC1HclN
- BZcbrNVrDmqWXNQLIUNxsUQ5/lb5NI2KwY+2mJA2PZRztiKnIt583eDx/m2r2T9b0Ca6 Ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31p6s25w66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jun 2020 10:20:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GADS4S196050;
-        Tue, 16 Jun 2020 10:20:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31p6dcvwxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 10:20:58 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05GAKuxB004012;
-        Tue, 16 Jun 2020 10:20:56 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jun 2020 03:20:55 -0700
-Date:   Tue, 16 Jun 2020 13:20:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
-        Hulk Robot <hulkci@huawei.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v6] block: Fix use-after-free in blkdev_get()
-Message-ID: <20200616102048.GL4282@kadam>
-References: <20200616034002.2473743-1-yanaijie@huawei.com>
+        Tue, 16 Jun 2020 06:26:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592303164; x=1623839164;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k2wrTtH2GzrGLfrzfk/gBGspC7SuqBmLlC4focXFTlU=;
+  b=VeuX1aA6acfxIQLGbEK8xzyv+NRsOQS2d1NOuQ2NBq9tYzknqkCWwIVI
+   E7uoP6jNIlphyQ1UeEZMnV6IxId3S+9M6XhYkZqrtrPlpTs0qmjIAev2L
+   kMfFRmwd9pKAuLUx7djCW8GoVARIBm59ZtPQMIKJDsdbNSBVk168iYxED
+   Qdzb9sUWY85yeSllfbD7EwO5tWDaABASzE0pBcoe4tZKZVVF2dd3kBlLW
+   NcS2pmuQyt12Uy2bO/3NGEYJjcK8mFsAYZKApiszJkfnedxyj66xs2R9Y
+   izFxU4fQBGagxSyXUmWkb9K+c1flOpaozMToY9iTJWeK8gJh/fpMqYz3R
+   Q==;
+IronPort-SDR: 13BdIXn7vmaUhGM174zGQSQFW6eUnoeeeErBspWBe2gtUtDc1xCBpR+kPUjKjlU6EM75KK9JF0
+ gSwTFuN20qiRYMGCYsO0znjljW2xjdAu8QY+6wPsWqHdTUk3bXLGMLGyqadfdail9ZXuwtUzXd
+ 9IRb16O/EugXeKaFyTweL6ycuw41GBic0UgFDJKIZoMdJya16eUN1DS+CA8pzPpRy7fZHu2mnf
+ JivKHBCfwfanx6MtcE6bUwzNTac2FLZ6WxGXA62eJM2W1W+vnEhek8As1WCn0/LvnpJ5lxfa0r
+ l+g=
+X-IronPort-AV: E=Sophos;i="5.73,518,1583164800"; 
+   d="scan'208";a="140383059"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Jun 2020 18:26:00 +0800
+IronPort-SDR: PxLLMabxEv4N8OiX/TbggrrnRjM5Wni06yrJ7Pp7wcCKrGDT7xnm40Ws0uFobNV2JSUCrqSq6a
+ TSexQfN+SyIbwsWkXN+oPNeG5VIeV0R8w=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 03:15:15 -0700
+IronPort-SDR: Ds8ZpyQ1PDwkBGREw3CK27qrIdNAtRYofgjQkj3QsRgzQ3Byrn7Pe1AbLOoVBnTiJLKfPrmEOs
+ Y8Sji87WubWw==
+WDCIronportException: Internal
+Received: from 31yhj72.ad.shared (HELO localhost.hgst.com) ([10.86.58.100])
+  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jun 2020 03:25:55 -0700
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Niklas Cassel <niklas.cassel@wdc.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: [PATCH 0/2] Export max open zones and max active zones to sysfs
+Date:   Tue, 16 Jun 2020 12:25:44 +0200
+Message-Id: <20200616102546.491961-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616034002.2473743-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=2
- mlxlogscore=999 mlxscore=0 phishscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160076
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- clxscore=1015 mlxscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
- malwarescore=0 suspectscore=2 spamscore=0 cotscore=-2147483648 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006160077
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:40:02AM +0800, Jason Yan wrote:
->
-> Fixes: e525fd89d380 ("block: make blkdev_get/put() handle exclusive access")
+Export max open zones and max active zones to sysfs.
 
-I still don't understand how this is the correct fixes tag...  :/
+This patch series depends on the Zoned Namespace Command Set series:
+https://lore.kernel.org/linux-nvme/20200615233424.13458-1-keith.busch@wdc.com/
 
-git show e525fd89d380:fs/block_dev.c | cat -n
-  1208  int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
-  1209  {
-  1210          struct block_device *whole = NULL;
-  1211          int res;
-  1212  
-  1213          WARN_ON_ONCE((mode & FMODE_EXCL) && !holder);
-  1214  
-  1215          if ((mode & FMODE_EXCL) && holder) {
-  1216                  whole = bd_start_claiming(bdev, holder);
-  1217                  if (IS_ERR(whole)) {
-  1218                          bdput(bdev);
-  1219                          return PTR_ERR(whole);
-  1220                  }
-  1221          }
-  1222  
-  1223          res = __blkdev_get(bdev, mode, 0);
-  1224  
-  1225          if (whole) {
-  1226                  if (res == 0)
-                            ^^^^^^^^
 
-  1227                          bd_finish_claiming(bdev, whole, holder);
-  1228                  else
-  1229                          bd_abort_claiming(whole, holder);
-                                                  ^^^^^^^^^^^^^
-If __blkdev_get() then this doesn't dereference "bdev" so it's not a
-use after free bug.
+All zoned block devices in the kernel utilize the "zoned block device
+support" (CONFIG_BLK_DEV_ZONED).
 
-  1230          }
-  1231  
-  1232          return res;
-  1233  }
+The Zoned Namespace Command Set Specification defines two different
+resource limits: Max Open Resources and Max Active Resources.
 
-So far as I can see the Fixes tag should be what I said earlier.
+The ZAC and ZBC standards define a MAXIMUM NUMBER OF OPEN SEQUENTIAL WRITE
+REQUIRED ZONES field.
 
-Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
 
-Otherwise the patch looks good to me.
+Since the ZNS Max Open Resources field has the same purpose as the ZAC/ZBC
+field, (the ZNS field is 0's based, the ZAC/ZBC field isn't), create a
+common "max_open_zones" definition in the sysfs documentation, and export
+both the ZNS field and the ZAC/ZBC field according to this new common
+definition.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+The ZNS Max Active Resources field does not have an equivalent field in
+ZAC/ZBC, however, since both ZAC/ZBC and ZNS utilize the "zoned block
+device support" in the kernel, create a "max_active_zones" definition in
+the sysfs documentation, similar to "max_open_zones", and export it
+according to this new definition. For ZAC/ZBC devices, this field will be
+exported as 0, meaning "no limit".
 
-regards,
-dan carpenter
+
+Niklas Cassel (2):
+  block: add max_open_zones to blk-sysfs
+  block: add max_active_zones to blk-sysfs
+
+ Documentation/block/queue-sysfs.rst | 14 ++++++++++
+ block/blk-sysfs.c                   | 27 +++++++++++++++++++
+ drivers/nvme/host/zns.c             |  2 ++
+ drivers/scsi/sd_zbc.c               |  5 ++++
+ include/linux/blkdev.h              | 40 +++++++++++++++++++++++++++++
+ 5 files changed, 88 insertions(+)
+
+-- 
+2.26.2
+
