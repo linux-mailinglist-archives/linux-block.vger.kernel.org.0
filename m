@@ -2,276 +2,223 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A39F1FC659
-	for <lists+linux-block@lfdr.de>; Wed, 17 Jun 2020 08:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0E5B1FC673
+	for <lists+linux-block@lfdr.de>; Wed, 17 Jun 2020 08:54:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgFQGsY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 02:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgFQGsX (ORCPT
+        id S1725979AbgFQGyd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 02:54:33 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:26844 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgFQGyd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:48:23 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0137BC06174E
-        for <linux-block@vger.kernel.org>; Tue, 16 Jun 2020 23:48:23 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id t6so767944otk.9
-        for <linux-block@vger.kernel.org>; Tue, 16 Jun 2020 23:48:22 -0700 (PDT)
+        Wed, 17 Jun 2020 02:54:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592376872; x=1623912872;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=XIqut5heZevk6Dg7Q61DXeD0Jr0FS7FB9wAIsvXqB6I=;
+  b=KLp3za05EPJvzoMKcPo8bPqlj2im26xS7Hsm9uctETA/l0KmFwwv1bzo
+   IKXcf1iXaqrKtLa8SIWPmTMaKz6KW/iQ04EMGjBA4iFp2evn51Qtt9pHe
+   lkWpGh/G8jW5VY0Te7QJgXTmI6abYZUXkwYkK5H3/Rm7CAOLcsah+wyMM
+   oP/OcGJaH3SIRRJpJDNTdVaEdohtJ9rXgsM+wZ24MiNXbFS9wsGJGkoeK
+   Lf2TWWsEE8pXa2qKDy/k+sIXjbn4yxcJ+41oEFUcCAGcUVbRYy1a54Wxb
+   gy4YUJO1auaS+vPKM1SQrn2dGROD1PDexHnbjCmfqXyyliSqlDhljBVxg
+   g==;
+IronPort-SDR: IoHUxdRuYsfhkrwsjs4a5qpUUumwkwIzOPwId3EjujUTa98+sWNxJogX5UmNMGoDQdqb5XkbzH
+ g6FKgm8+yExYYQgw+61WlRC+H/9pXXpkCykYpwUP+jfCsRIYXyfBU+8AU3GVkL1i91Sy6o9gHQ
+ qSglN1GipGgvzm34PbrL7qRnlnAIFObhaj+BRGnNcfpdup/qiAYPwMvqByOzCtWzq266Js2AOh
+ z5fkbghkPeQHSyj21j/PdBNTgPIFN4AQp4aNwzHLhyvmJdCCoRqJbGw0WcTgEFoq4qIGBeJb6J
+ lyo=
+X-IronPort-AV: E=Sophos;i="5.73,521,1583164800"; 
+   d="scan'208";a="144516732"
+Received: from mail-cys01nam02lp2052.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.52])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jun 2020 14:54:31 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DYPY3zzIEWfUxx/yGti4nk6zCHwGyMTtdaPCmSZrUoQUhPuQwuhPb1t3AkEgvQthdC+zTFzkB1zGvijGPi8BOciNpabc5rXcCA21VkDJu1DMvdahC5oLHocA2j+RT9mQouNyoqNExmwYQL0PL7+/+5GIafQgmMVnDTsLFJOAZVa770yS+9AxIU0iKaDag4Qp/iZgwjz5awNoeqqmabQXT+lRnjF2+nVilHL7k9gLNa+Vc3XDLZOGU+3I/L5eL9Rf//EDERAIDw3zS2Uj8b7ktK9h95+37PgtOc3GnEdz8lOWkKcO9rdDMS0qIMQmbp0SkzttZcrzVf4JAU+0bMyw0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XIqut5heZevk6Dg7Q61DXeD0Jr0FS7FB9wAIsvXqB6I=;
+ b=dVrAMzpWOV7jIHygfabISPdm6uhMKjd00B4l8+cU5nZQRgwLFT5fkuOaBpzueQPpIKHt2S98+YRn0HgWPhLd1p+5NCQ6Mj8WwqLwEtV8wUzi9qA7y6OAXI6sjFfxkvw6Tapwnh9DONOcJWRMen8Sj6eRUlRNv9ATA8pfRG0gPjblHhlCa9c0FXb4pDHqg2nIXEvm/jYN6TFTSkbdHFdeFLcyjMFpueRHPT4kIrpu46oRw+Nhf5JDoZkhKVFbJG+0/3XoW3nnYPm9fQ9WsVTCatpc+F2/10akkVewtB/vqGH3tpDBJ4z27G5j3qrj//2iajmLGCLHnhVwB6aJvJuD6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eUDSD6z6rPH0CReES0Wf0V4zppIWRjMIWkdDaKPcoe4=;
-        b=oBAB7SlLC6G9XCadbh6agjeaubv5miRZ4A7qOr7fJzW+IGL0agM1hSLaEXMm0fwq+P
-         czHMu4iQNOIGOKb5Ng34Xn6o+qYHhGTs40WKCBORE+6bWQL5Mr9JT1CyFpt3fDj2wC/H
-         OM2U84GCRsQZz99YUyFO5O7Hy1Q2BGYfjW0/xZBqHxQ94rQKGILDgKaMhjUSgrUrNhFP
-         ClqY505KCO5/fOQwvPzQKyyWhWWjGFhp/nflqlU93p2GlZ96+vfhUy1+A5aLjAvB252t
-         +pX54qga2hHsGUc3HycYEej26ZjKS6w6Y8snR7f0llU4/ReY7VajuuIrfN37gffCx8lh
-         bWzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eUDSD6z6rPH0CReES0Wf0V4zppIWRjMIWkdDaKPcoe4=;
-        b=V49KG3G4cT5vW/23XxUrACoqHin8ZjZXb21t1W27O70TJxKZBh40JZkOH1QJt4PEyr
-         +0vvQ1agW4b1f9SKwchx8k4Omq0C4whsdic2fdBOZvx4bBM1hVAKOqkr6D861UJbHcaq
-         exNWhov4BQzHIu8zKMvnwGL4UaC7w/yeYBSO3KXptUjueec7r1HGfGUNyjy+AUQ6vVCV
-         d6z30FShKqR1ojRR5yLvFwzE59Clvg9DcuC0dBgoRFwP1iQVCdfFyE+VSwCV9bq9GIGz
-         BeXlQ3TR9lGcy+ifOX4LX4FiMOSzxWqBujIPkZlpWgxdcjN3eFgupbbQERTJXQuQRrAL
-         5m9g==
-X-Gm-Message-State: AOAM532LEVM1En85p9IOZya0nGbo05NklQskuqqIIl5FNoEg0T31VufN
-        aGpV5AD/bqDvrAQtNLB2pIUzrw==
-X-Google-Smtp-Source: ABdhPJzhXNxnWAfZ5ITiZG0bsUWWR1kLvJdkRGUYGyKerqr8WAdOj3reUJLA8mUAtlbam1MOx/CdpA==
-X-Received: by 2002:a05:6830:1e61:: with SMTP id m1mr5299019otr.42.1592376502256;
-        Tue, 16 Jun 2020 23:48:22 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g2sm4722635otq.9.2020.06.16.23.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 23:48:21 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 23:48:19 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Andy Gross <agross@kernel.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Barani Muthukumaran <bmuthuku@qti.qualcomm.com>,
-        Can Guo <cang@codeaurora.org>,
-        Elliot Berman <eberman@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Satya Tangirala <satyat@google.com>
-Subject: Re: [RFC PATCH v4 1/4] firmware: qcom_scm: Add support for
- programming inline crypto keys
-Message-ID: <20200617064819.GF11847@yoga>
-References: <20200501045111.665881-1-ebiggers@kernel.org>
- <20200501045111.665881-2-ebiggers@kernel.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XIqut5heZevk6Dg7Q61DXeD0Jr0FS7FB9wAIsvXqB6I=;
+ b=rFwW6c/8Wugbg7Kfr1btVvCXyVfQZqbnwv3nq0wMAaLfuM8qPAbtqJVESqTaAK/ZX3QPjDxIPHeOvNVvgwzJW2ToQ07As6LPxeZMvhSd+zWZdvTyLsx5If3Ssn27u3zLsY2FDNrSAkYzhnJwxbBUw2xPy1+IKpk+lf2eblocUWs=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR04MB0968.namprd04.prod.outlook.com (2603:10b6:910:51::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Wed, 17 Jun
+ 2020 06:54:29 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
+ 06:54:29 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     =?iso-8859-1?Q?Javier_Gonz=E1lez?= <javier@javigon.com>
+CC:     Jens Axboe <axboe@kernel.dk>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <Keith.Busch@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Keith Busch <kbusch@kernel.org>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Christoph Hellwig <hch@lst.de>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>
+Subject: Re: [PATCH 5/5] nvme: support for zoned namespaces
+Thread-Topic: [PATCH 5/5] nvme: support for zoned namespaces
+Thread-Index: AQHWQ22ncHPAnMo9ZkarXHo4UNlnAg==
+Date:   Wed, 17 Jun 2020 06:54:29 +0000
+Message-ID: <CY4PR04MB3751808DFE9AF00EF172DFCCE79A0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200616122448.4e3slfghv4cojafq@mpHalley.local>
+ <CY4PR04MB3751CC8FE4BDFC256F9E9CD1E79D0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200616141620.omqf64up523of35t@MacBook-Pro.localdomain>
+ <CY4PR04MB37512BCDD74996057697F5CAE79D0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200616150217.inezhntsehtcbjsw@MacBook-Pro.localdomain>
+ <20200616154812.GA521206@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200616155526.wxjoufhhxkwet5ya@MacBook-Pro.localdomain>
+ <20200616160712.GB521206@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200616161354.q3p2vy2go6tszs67@mpHalley.localdomain>
+ <CY4PR04MB37518F1A34F92049EE8FAF94E79A0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200617061814.7syifpwn5sqg5a4w@mpHalley.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: javigon.com; dkim=none (message not signed)
+ header.d=none;javigon.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e16e900b-2d81-4913-26c0-08d8128b4866
+x-ms-traffictypediagnostic: CY4PR04MB0968:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR04MB0968E3171600091DA74C26CFE79A0@CY4PR04MB0968.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mkAM3Eet+I0lRGb/N2JSAEhRg+qYQq1ekLYpZtW/kjqtbR704JecihPfbO/oPG7tYKPDaS4aWZ3/MmoCimUX6KVrq4/sfn9NFz9GjZlDEWpz3aTB3khgVnz3I20H+MUzU77AuDPOfoFQ9qkJnUmaaCekiD8GjIm5rtPU/dx80NIOv7IVnNyjNVXWm9o2q2634Mdm8+iP1hwCknPwE8FIEoy1rRsj4ZtNxDrsNlQLQ8H4QlgbXAPpAtP0LW+jTZa6ScEizux368MwGO4ZxZKTcR6Or8QN9PtXesGnViSA+OXkFKPo70D6GE8rIKKrRUJgjrcuEfAxKYfu2hdGormajfBToB84wHB6DnzGcKtcLMhf9/hbkG/VHDZLmh6eG2jgv0RfijwlFFU9IxfC6oI0tA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(5660300002)(64756008)(6916009)(186003)(66476007)(76116006)(8936002)(66946007)(66556008)(54906003)(8676002)(26005)(66446008)(66574015)(4326008)(33656002)(316002)(966005)(91956017)(478600001)(2906002)(71200400001)(9686003)(7696005)(52536014)(86362001)(83380400001)(6506007)(53546011)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: /VW4wuxyl/EZvZvkhJegTBPcdiqHxlYUDHTI/lRbuCExcMjSMMdlBecITyDzHNQlO6QASArZ+3ZdE1fL1n/3ce2wBg5d3rR+SNAhjACdUKuhNL/U8Ckh7NHeGNGQIrI4BKV5OM0wsUiMPwRtssci22huf3lvRlUCuIrY5/7HhN+6xSJBpnL8MhBLtuRXVqAWT/59XXQ+dV6uhc0xG4pYPEvJG3vjNSBWsaHkqbPQ0C0W+3lBGmyl4XfTsOTXRWUoM75cPqnS7HOm7E2SmRn+vnOxg3nHZ7D6JbypEiC64qx2HJXSZFdgE4+54VpYxAlHC7fdiLTiKMWgQjZFtv4bPoJAaDPDdQWedcSkecp0L3oT/Jb9//hwaCx3ZBH/s+NNv27lpO6Hh9KwSu6PWGrHRn+wkxuKjizwYjgewHnngeyTgui223Qx4LCWdU0spE2FUrHwc1Ae6jatUXAPFuotc5ly6Sjpwmi2M8cVlAyJRZgSROKQ8z0a2B7MX3gfzmKY
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501045111.665881-2-ebiggers@kernel.org>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e16e900b-2d81-4913-26c0-08d8128b4866
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 06:54:29.6423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /300dF3PdUWHE6xA2b4UK0PAeo6YJHbINJpWk8Gjfy2kJGx6HSm3nPSJ+BXPmE9wqeK0rVKgqNaWnJCdAPwHsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0968
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu 30 Apr 21:51 PDT 2020, Eric Biggers wrote:
-
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Add support for the Inline Crypto Engine (ICE) key programming interface
-> that's needed for the ufs-qcom driver to use inline encryption on
-> Snapdragon SoCs.  This interface consists of two SCM calls: one to
-> program a key into a keyslot, and one to invalidate a keyslot.
-> 
-> Although the UFS specification defines a standard way to do this, on
-> these SoCs the Linux kernel isn't permitted to access the needed crypto
-> configuration registers directly; these SCM calls must be used instead.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/firmware/qcom_scm.c | 101 ++++++++++++++++++++++++++++++++++++
->  drivers/firmware/qcom_scm.h |   4 ++
->  include/linux/qcom_scm.h    |  19 +++++++
->  3 files changed, 124 insertions(+)
-> 
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 059bb0fbae9e5b..646f9613393612 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -926,6 +926,107 @@ int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
->  }
->  EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
->  
-> +/**
-> + * qcom_scm_ice_available() - Is the ICE key programming interface available?
-> + *
-> + * Return: true iff the SCM calls wrapped by qcom_scm_ice_invalidate_key() and
-> + *	   qcom_scm_ice_set_key() are available.
-> + */
-> +bool qcom_scm_ice_available(void)
-> +{
-> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_ES,
-> +					    QCOM_SCM_ES_INVALIDATE_ICE_KEY) &&
-> +		__qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_ES,
-> +					     QCOM_SCM_ES_CONFIG_SET_ICE_KEY);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ice_available);
-> +
-> +/**
-> + * qcom_scm_ice_invalidate_key() - Invalidate an inline encryption key
-> + * @index: the keyslot to invalidate
-> + *
-> + * The UFSHCI standard defines a standard way to do this, but it doesn't work on
-> + * these SoCs; only this SCM call does.
-> + *
-> + * Return: 0 on success; -errno on failure.
-> + */
-> +int qcom_scm_ice_invalidate_key(u32 index)
-> +{
-> +	struct qcom_scm_desc desc = {
-> +		.svc = QCOM_SCM_SVC_ES,
-> +		.cmd = QCOM_SCM_ES_INVALIDATE_ICE_KEY,
-> +		.arginfo = QCOM_SCM_ARGS(1),
-> +		.args[0] = index,
-> +		.owner = ARM_SMCCC_OWNER_SIP,
-> +	};
-> +
-> +	return qcom_scm_call(__scm->dev, &desc, NULL);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ice_invalidate_key);
-> +
-> +/**
-> + * qcom_scm_ice_set_key() - Set an inline encryption key
-> + * @index: the keyslot into which to set the key
-> + * @key: the key to program
-> + * @key_size: the size of the key in bytes
-> + * @cipher: the encryption algorithm the key is for
-> + * @data_unit_size: the encryption data unit size, i.e. the size of each
-> + *		    individual plaintext and ciphertext.  Given in 512-byte
-> + *		    units, e.g. 1 = 512 bytes, 8 = 4096 bytes, etc.
-> + *
-> + * Program a key into a keyslot of Qualcomm ICE (Inline Crypto Engine), where it
-> + * can then be used to encrypt/decrypt UFS I/O requests inline.
-> + *
-> + * The UFSHCI standard defines a standard way to do this, but it doesn't work on
-> + * these SoCs; only this SCM call does.
-> + *
-> + * Return: 0 on success; -errno on failure.
-> + */
-> +int qcom_scm_ice_set_key(u32 index, const u8 *key, u32 key_size,
-> +			 enum qcom_scm_ice_cipher cipher, u32 data_unit_size)
-> +{
-> +	struct qcom_scm_desc desc = {
-> +		.svc = QCOM_SCM_SVC_ES,
-> +		.cmd = QCOM_SCM_ES_CONFIG_SET_ICE_KEY,
-> +		.arginfo = QCOM_SCM_ARGS(5, QCOM_SCM_VAL, QCOM_SCM_RW,
-> +					 QCOM_SCM_VAL, QCOM_SCM_VAL,
-> +					 QCOM_SCM_VAL),
-> +		.args[0] = index,
-> +		.args[2] = key_size,
-> +		.args[3] = cipher,
-> +		.args[4] = data_unit_size,
-> +		.owner = ARM_SMCCC_OWNER_SIP,
-> +	};
-> +	void *keybuf;
-> +	dma_addr_t key_phys;
-> +	int ret;
-> +
-> +	/*
-> +	 * 'key' may point to vmalloc()'ed memory, but we need to pass a
-> +	 * physical address that's been properly flushed.  The sanctioned way to
-> +	 * do this is by using the DMA API.  But as is best practice for crypto
-> +	 * keys, we also must wipe the key after use.  This makes kmemdup() +
-> +	 * dma_map_single() not clearly correct, since the DMA API can use
-> +	 * bounce buffers.  Instead, just use dma_alloc_coherent().  Programming
-> +	 * keys is normally rare and thus not performance-critical.
-> +	 */
-> +
-> +	keybuf = dma_alloc_coherent(__scm->dev, key_size, &key_phys,
-> +				    GFP_KERNEL);
-> +	if (!keybuf)
-> +		return -ENOMEM;
-> +	memcpy(keybuf, key, key_size);
-> +	desc.args[1] = key_phys;
-> +
-> +	ret = qcom_scm_call(__scm->dev, &desc, NULL);
-> +
-> +	memzero_explicit(keybuf, key_size);
-> +
-> +	dma_free_coherent(__scm->dev, key_size, keybuf, key_phys);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ice_set_key);
-> +
->  /**
->   * qcom_scm_hdcp_available() - Check if secure environment supports HDCP.
->   *
-> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-> index d9ed670da222c8..38ea614d29fea2 100644
-> --- a/drivers/firmware/qcom_scm.h
-> +++ b/drivers/firmware/qcom_scm.h
-> @@ -103,6 +103,10 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
->  #define QCOM_SCM_OCMEM_LOCK_CMD		0x01
->  #define QCOM_SCM_OCMEM_UNLOCK_CMD	0x02
->  
-> +#define QCOM_SCM_SVC_ES			0x10	/* Enterprise Security */
-> +#define QCOM_SCM_ES_INVALIDATE_ICE_KEY	0x03
-> +#define QCOM_SCM_ES_CONFIG_SET_ICE_KEY	0x04
-> +
->  #define QCOM_SCM_SVC_HDCP		0x11
->  #define QCOM_SCM_HDCP_INVOKE		0x01
->  
-> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-> index 3d6a2469776153..2e1193a3fb5f06 100644
-> --- a/include/linux/qcom_scm.h
-> +++ b/include/linux/qcom_scm.h
-> @@ -44,6 +44,13 @@ enum qcom_scm_sec_dev_id {
->  	QCOM_SCM_ICE_DEV_ID     = 20,
->  };
->  
-> +enum qcom_scm_ice_cipher {
-> +	QCOM_SCM_ICE_CIPHER_AES_128_XTS = 0,
-> +	QCOM_SCM_ICE_CIPHER_AES_128_CBC = 1,
-> +	QCOM_SCM_ICE_CIPHER_AES_256_XTS = 3,
-> +	QCOM_SCM_ICE_CIPHER_AES_256_CBC = 4,
-> +};
-> +
->  #define QCOM_SCM_VMID_HLOS       0x3
->  #define QCOM_SCM_VMID_MSS_MSA    0xF
->  #define QCOM_SCM_VMID_WLAN       0x18
-> @@ -88,6 +95,12 @@ extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
->  extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
->  				 u32 size);
->  
-> +extern bool qcom_scm_ice_available(void);
-> +extern int qcom_scm_ice_invalidate_key(u32 index);
-> +extern int qcom_scm_ice_set_key(u32 index, const u8 *key, u32 key_size,
-> +				enum qcom_scm_ice_cipher cipher,
-> +				u32 data_unit_size);
-> +
->  extern bool qcom_scm_hdcp_available(void);
->  extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
->  			     u32 *resp);
-> @@ -138,6 +151,12 @@ static inline int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
->  static inline int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id,
->  		u32 offset, u32 size) { return -ENODEV; }
->  
-> +static inline bool qcom_scm_ice_available(void) { return false; }
-> +static inline int qcom_scm_ice_invalidate_key(u32 index) { return -ENODEV; }
-> +static inline int qcom_scm_ice_set_key(u32 index, const u8 *key, u32 key_size,
-> +				       enum qcom_scm_ice_cipher cipher,
-> +				       u32 data_unit_size) { return -ENODEV; }
-> +
->  static inline bool qcom_scm_hdcp_available(void) { return false; }
->  static inline int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
->  		u32 *resp) { return -ENODEV; }
-> -- 
-> 2.26.2
-> 
+On 2020/06/17 15:18, Javier Gonz=E1lez wrote:=0A=
+> On 17.06.2020 00:38, Damien Le Moal wrote:=0A=
+>> On 2020/06/17 1:13, Javier Gonz=E1lez wrote:=0A=
+>>> On 16.06.2020 09:07, Keith Busch wrote:=0A=
+>>>> On Tue, Jun 16, 2020 at 05:55:26PM +0200, Javier Gonz=E1lez wrote:=0A=
+>>>>> On 16.06.2020 08:48, Keith Busch wrote:=0A=
+>>>>>> On Tue, Jun 16, 2020 at 05:02:17PM +0200, Javier Gonz=E1lez wrote:=
+=0A=
+>>>>>>> This depends very much on how the FS / application is managing=0A=
+>>>>>>> stripping. At the moment our main use case is enabling user-space=
+=0A=
+>>>>>>> applications submitting I/Os to raw ZNS devices through the kernel.=
+=0A=
+>>>>>>>=0A=
+>>>>>>> Can we enable this use case to start with?=0A=
+>>>>>>=0A=
+>>>>>> I think this already provides that. You can set the nsid value to=0A=
+>>>>>> whatever you want in the passthrough interface, so a namespace block=
+=0A=
+>>>>>> device is not required to issue I/O to a ZNS namespace from user spa=
+ce.=0A=
+>>>>>=0A=
+>>>>> Mmmmm. Problem now is that the check on the nvme driver prevents the =
+ZNS=0A=
+>>>>> namespace from being initialized. Am I missing something?=0A=
+>>>>=0A=
+>>>> Hm, okay, it may not work for you. We need the driver to create at lea=
+st=0A=
+>>>> one namespace so that we have tags and request_queue. If you have that=
+,=0A=
+>>>> you can issue IO to any other attached namespace through the passthrou=
+gh=0A=
+>>>> interface, but we can't assume there is an available namespace.=0A=
+>>>=0A=
+>>> That makes sense for now.=0A=
+>>>=0A=
+>>> The next step for us is to enable a passthrough on uring, making sure=
+=0A=
+>>> that I/Os do not split.=0A=
+>>=0A=
+>> Passthrough as in "application issues directly NVMe commands" like for S=
+G_IO=0A=
+>> with SCSI ? Or do you mean raw block device file accesses by the applica=
+tion,=0A=
+>> meaning that the IO goes through the block IO stack as opposed to direct=
+ly going=0A=
+>> to the driver ?=0A=
+>>=0A=
+>> For the latter case, I do not think it is possible to guarantee that an =
+IO will=0A=
+>> not get split unless we are talking about single page IOs (e.g. 4K on X8=
+6). See=0A=
+>> a somewhat similar request here and comments about it.=0A=
+>>=0A=
+>> https://www.spinics.net/lists/linux-block/msg55079.html=0A=
+> =0A=
+> At the moment we are doing the former, but it looks like a hack to me to=
+=0A=
+> go directly to the NVMe driver.=0A=
+=0A=
+That is what the nvme driver ioctl() is for no ? An application can send an=
+ NVMe=0A=
+command directly to the driver with it. That is not a hack, but the regular=
+ way=0A=
+of doing passthrough for NVMe, isn't it ?=0A=
+=0A=
+> I was thinking that we could enable the second path by making use of=0A=
+> chunk_sectors and limit the I/O size just as the append_max_io_size=0A=
+> does. Is this the complete wrong way of looking at it?=0A=
+=0A=
+The block layer cannot limit the size of a passthrough command since the co=
+mmand=0A=
+is protocol specific and the block layer is a protocol independent interfac=
+e.=0A=
+SCSI SG does not split passthrough requests, it cannot. For passthrough=0A=
+commands, the command buffer can be dma-mapped or it cannot. If mapping=0A=
+succeeds, the command is issued. If it cannot, the command is failed. At le=
+ast,=0A=
+that is my understanding of how the stack is working.=0A=
+=0A=
+> =0A=
+> Thanks,=0A=
+> Javier=0A=
+> =0A=
+> _______________________________________________=0A=
+> linux-nvme mailing list=0A=
+> linux-nvme@lists.infradead.org=0A=
+> http://lists.infradead.org/mailman/listinfo/linux-nvme=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
