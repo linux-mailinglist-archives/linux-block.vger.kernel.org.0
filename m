@@ -2,104 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDC9D1FDFD6
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 03:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AA5B1FE187
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 03:55:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgFRBno (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 21:43:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgFRBnm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:43:42 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92D2C06174E;
-        Wed, 17 Jun 2020 18:43:41 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id j19so4243037ilk.9;
-        Wed, 17 Jun 2020 18:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/NV0zNhM4fAGBEvR6pS4jubz62WIXqxLs8Qbcn4M8G8=;
-        b=dDcozoF3gjERlnIYD/aopfiDz8+Xk7wB85tQ+JG+fS/wcxWZRWOO9ndR3j6DlLjase
-         pakWhsVPQ1s1RE4tdxVgckkmbgQQmy7KzyUVIgo8XiewLQf5iDAQQHzmV55SqyA3ni0l
-         UhO1lJ4tnxN9yr+l1R5SlEBFs6N7bGO1IezGVFxCOKnzKhYGlAd0C60gF1lzq5zPgtZ5
-         9JgAPTH5CwMDcYYdYBRFRY59OOo2Ufb2xXI6CZ33SNJk34h80UPpZg/jdNoIWaOmSADF
-         HprtPmsk/lgc7E5A+WM5WfU02YavO+ic/3qkx+0n65e7+GL5yWyxbhFZWUcj97Z490uK
-         AJxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/NV0zNhM4fAGBEvR6pS4jubz62WIXqxLs8Qbcn4M8G8=;
-        b=rIZaeZTMyB+E9IELLbPTjBPoCCaBgD3xQt1ws8BU4h9XstxN3oZN8RRILpTQ4uXQmv
-         cXVnyuNmNjOsK9YJzEz/33jmCbeqZXOHypH4Zqr6izzZXuj0AtnuKmdNXfuxHbYRF2H6
-         j3eoZTp+6Rsa/iTM6VuJPmhM7cbez1oFBZ4FsG0xI2WpGUSKFKpMt26GsmJ8YRhiRgd1
-         JF7A9z+tUxOQaJ3YJusjuZmowsqkbr8kNn6dsC8UdxUiCTTeFRnXDw3bL3VRTJNzZAJz
-         Qd2ngfmMwYX6ZcerUAuNG5bGYZn83XSt4PEPFvemdEu48FNflsj37H2WGLfe+nnZT5Mk
-         QtOg==
-X-Gm-Message-State: AOAM532Bac1QzSwCth3YFWtbUrdp2SmwUmrp6GQ3dBHgcArhsOSGaf50
-        lIOM/P6Ix+OA6HFX3w6m06pzkFXlG1Jfpy7sikM=
-X-Google-Smtp-Source: ABdhPJy/FeQxzQszfiH33uOWaccj4JEo3pvq0ekiMOC1+TiGVdTADnFmscwMk0igU9qcjJHn9X3GpIIhMlgC28sEOaI=
-X-Received: by 2002:a05:6e02:542:: with SMTP id i2mr1867971ils.203.1592444621188;
- Wed, 17 Jun 2020 18:43:41 -0700 (PDT)
+        id S1731499AbgFRBzb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 21:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732877AbgFRBza (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:55:30 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A04E020885;
+        Thu, 18 Jun 2020 01:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592445329;
+        bh=1ScLl72dTUy1xO1N3hqLzko5uMVB8SvU4OZlUhmacZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pPBFdMlPaxfzjddnYEX7IbDQVQjcfAuygE8jT8mszavxjeFfEcXTbAij0JNV04jM6
+         AJbl1Y86dmYeBT0iqQRQ6hMe0X/s7LPn/YXT48X8wodrRS8JweacVwS2BKE5vLPyFp
+         ZsPw9fXiD00utZfVAbm46vv9/8ghCcquLKiqR8bw=
+Date:   Wed, 17 Jun 2020 18:55:26 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Heiner Litz <hlitz@ucsc.edu>
+Cc:     Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <Keith.Busch@wdc.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Judy Brock <judy.brock@samsung.com>
+Subject: Re: [PATCH 5/5] nvme: support for zoned namespaces
+Message-ID: <20200618015526.GA1138429@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200616104142.zxw25txhsg2eyhsb@mpHalley.local>
+ <20200617074328.GA13474@lst.de>
+ <20200617144230.ojzk4f5gcwqonzrf@mpHalley.localdomain>
+ <f1bc34e0-c059-6127-d69f-e31c91ce6a9f@lightnvm.io>
+ <20200617182841.jnbxgshi7bawfzls@mpHalley.localdomain>
+ <MN2PR04MB62236DC26A04A65A242A80D2F19A0@MN2PR04MB6223.namprd04.prod.outlook.com>
+ <20200617190901.zpss2lsh6qsu5zuf@mpHalley.local>
+ <1ab101ef-7b74-060f-c2bc-d4c36dec91f0@lightnvm.io>
+ <20200617194013.3wlz2ajnb6iopd4k@mpHalley.local>
+ <CAJbgVnVo53vLYHRixfQmukqFKKgzP5iPDwz87yanqKvSsYBvCg@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz> <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
- <20200617135758.GA548179@chrisdown.name> <20200617141155.GQ9499@dhcp22.suse.cz>
- <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
- <20200617160624.GS9499@dhcp22.suse.cz> <CA+G9fYtCXrVGVtRTwxiqgfFNDDf_H4aNH=VpWLhsV4n_mCTLGg@mail.gmail.com>
- <20200617210935.GA578452@chrisdown.name>
-In-Reply-To: <20200617210935.GA578452@chrisdown.name>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 18 Jun 2020 09:43:05 +0800
-Message-ID: <CALOAHbBp7Ytd-Hta9NH-_HJtVTAsR5Pw2RYrVScp7PPezCEv2w@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJbgVnVo53vLYHRixfQmukqFKKgzP5iPDwz87yanqKvSsYBvCg@mail.gmail.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 5:09 AM Chris Down <chris@chrisdown.name> wrote:
->
-> Naresh Kamboju writes:
-> >After this patch applied the reported issue got fixed.
->
-> Great! Thank you Naresh and Michal for helping to get to the bottom of this :-)
->
-> I'll send out a new version tomorrow with the fixes applied and both of you
-> credited in the changelog for the detection and fix.
+On Wed, Jun 17, 2020 at 04:44:23PM -0700, Heiner Litz wrote:
+> Mandating zone-sized writes would address all problems with ease and
+> reduce request rate and overheads in the kernel.
 
-As we have already found that the usage around memory.{emin, elow} has
-many limitations, I think memory.{emin, elow} should be used for
-memcg-tree internally only, that means they can only be used to
-calculate the protection of a memcg in a specified memcg-tree but
-should not be exposed to other MM parts.
-
--- 
-Thanks
-Yafang
+Yikes, no. Typical zone sizes are much to large for that to be
+reasonable.
