@@ -2,55 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC4371FE88C
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 04:49:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 561291FE972
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 05:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387876AbgFRCte (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 22:49:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41977 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728779AbgFRCtc (ORCPT
+        id S1726959AbgFRDdy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 23:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgFRDdw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 22:49:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592448570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nnbk1M+xPuRM6Vq4295m9irTxwaPM4/Pj1yhlQHwijA=;
-        b=EgHjDZXk6C0TurrHOGVPoBebMY6vytz5y9Zqx0+Y5SNTD0rvlCE0G3ZybzDY3cSl/wXTYE
-        itc1fkr1B0NVd4Rtyqf4B21GlotVwrFSi18rUqOy/W0VYFuer1acsPVr08RShFz/1a61y2
-        WrjWoBAIg8+4nkob8h5FEfPjios12uM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-W4hLRoaXPzq9EntaBpnQGw-1; Wed, 17 Jun 2020 22:49:27 -0400
-X-MC-Unique: W4hLRoaXPzq9EntaBpnQGw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1A701005512;
-        Thu, 18 Jun 2020 02:49:26 +0000 (UTC)
-Received: from T590 (ovpn-13-98.pek2.redhat.com [10.72.13.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B34979301;
-        Thu, 18 Jun 2020 02:49:20 +0000 (UTC)
-Date:   Thu, 18 Jun 2020 10:49:16 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     axboe@kernel.dk, bvanassche@acm.org, tom.leiming@gmail.com,
-        linux-block@vger.kernel.org
+        Wed, 17 Jun 2020 23:33:52 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71478C06174E
+        for <linux-block@vger.kernel.org>; Wed, 17 Jun 2020 20:33:51 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e9so2268619pgo.9
+        for <linux-block@vger.kernel.org>; Wed, 17 Jun 2020 20:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=YI0XDThQLjY0fVNpKgQ3MeXpOKf8gaSWnYmh99xLNBE=;
+        b=vP6EfkCDhhWop/JpcOXXWWLlub2BF5emVrDXrqGw2F6Vo1agBQfH40xXxrbEy16EGA
+         GGzLAN9NHFZq//ZoH9oNfbbvpgmLhZheSO6pRWIqEsMrW98v7+34NzUVI+cm5B/v5XJE
+         aHTkMDjh4D0vjK+boSTFJ13R9RR36fNxEwgOs8pUH27uBz2+Hj8D6kvh7OrVpQVUqGOi
+         9YiarRpMHtmA1dM+M74MrhaT04LSi/B98glYopEeJXlDvpTHLat1o4o2dEvwIdo0RpC9
+         02qY1V769VjnXoZQx/7zjTTvLg531EBf4nYLEyce1WzDqHA2FK7i+KTwcLCYadelEdSP
+         ktpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YI0XDThQLjY0fVNpKgQ3MeXpOKf8gaSWnYmh99xLNBE=;
+        b=pTQlz/1kZZQJ0Qzpo6tsrWjCcIXN0itpOkY9QjWSA3OPpCk6iBn4ouHG13rAmr3aug
+         Vn05OUCKukhMSQb/4+Z/FNVSHgtdb2aNBAMZ6i68cQ+QHrvmeWCtVwYVIk0N4gEqfe/Q
+         WH2goEne9r+XTPnquAcwMEN5AB8MVRDqsqG3JxcUZ+qkj+zsPJiDTYXdVQy8LClXgXff
+         cpR0zhZoRtCTwxYRTJehJbJruvPTe+tDLUhC4RZCQLXzcD7crE4gyLOw1VEG8zfWyP1R
+         wEy/Mm+EsIC4tdZKMdW0amZRAnYsnliKMsZ+MeKAnP5+kkVxKNrlM3JDt3rapjYPfgaT
+         jCWw==
+X-Gm-Message-State: AOAM531oOQbX6KJQ5VsxQXb3Ko+/+qUaEIwMK7TQcAOmFH6SsAZLcN6J
+        oMP37B1WjbMr+oqDcdsO3xW82t2lf9b66w==
+X-Google-Smtp-Source: ABdhPJxdD7i83tBvhq7Gfd1jRNleuRFXOPFP682ON6f9q8TUg1Z0Iy8Us19dvoM+EYZ//ZBfsH8lpA==
+X-Received: by 2002:a62:38c9:: with SMTP id f192mr1815399pfa.17.1592451230595;
+        Wed, 17 Jun 2020 20:33:50 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id g29sm1168811pfr.47.2020.06.17.20.33.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 20:33:49 -0700 (PDT)
 Subject: Re: [PATCH] block: update hctx map when use multiple maps
-Message-ID: <20200618024916.GB142660@T590>
+To:     bvanassche@acm.org, tom.leiming@gmail.com,
+        linux-block@vger.kernel.org
 References: <20200617061830.GA15100@192.168.3.9>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ec866287-a10b-be70-9c68-fbe50444cf94@kernel.dk>
+Date:   Wed, 17 Jun 2020 21:33:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20200617061830.GA15100@192.168.3.9>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 02:18:37PM +0800, Weiping Zhang wrote:
+On 6/17/20 12:18 AM, Weiping Zhang wrote:
 > There is an issue when tune the number for read and write queues,
 > if the total queue count was not changed. The hctx->type cannot
 > be updated, since __blk_mq_update_nr_hw_queues will return directly
@@ -74,33 +92,9 @@ On Wed, Jun 17, 2020 at 02:18:37PM +0800, Weiping Zhang wrote:
 >      48 default
 > 
 > The driver's hardware queue mapping is not same as block layer.
-> 
-> Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-> ---
->  block/blk-mq.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 4f57d27bfa73..a9aa6d1e44cf 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -3479,7 +3479,9 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
->  
->  	if (set->nr_maps == 1 && nr_hw_queues > nr_cpu_ids)
->  		nr_hw_queues = nr_cpu_ids;
-> -	if (nr_hw_queues < 1 || nr_hw_queues == set->nr_hw_queues)
-> +	if (nr_hw_queues < 1)
-> +		return;
-> +	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
->  		return;
->  
->  	list_for_each_entry(q, &set->tag_list, tag_set_list)
-> -- 
-> 2.18.2
-> 
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Applied, thanks.
 
 -- 
-Ming
+Jens Axboe
 
