@@ -2,96 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 807E31FE9DC
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 06:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 753B11FE9E5
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 06:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgFREUd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Jun 2020 00:20:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38312 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725889AbgFREUc (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Jun 2020 00:20:32 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A8AC1B93092C9B07A690;
-        Thu, 18 Jun 2020 12:20:30 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 18 Jun 2020
- 12:20:23 +0800
-From:   Zheng Bin <zhengbin13@huawei.com>
-To:     <hch@infradead.org>, <axboe@kernel.dk>, <bvanassche@acm.org>,
-        <jaegeuk@kernel.org>, <viro@zeniv.linux.org.uk>,
-        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
-CC:     <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-        <zhengbin13@huawei.com>
-Subject: [PATCH v3 2/2] block: make function 'kill_bdev' static
-Date:   Thu, 18 Jun 2020 12:21:38 +0800
-Message-ID: <20200618042138.2094266-3-zhengbin13@huawei.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200618042138.2094266-1-zhengbin13@huawei.com>
-References: <20200618042138.2094266-1-zhengbin13@huawei.com>
+        id S1725889AbgFREYQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Jun 2020 00:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgFREYP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 18 Jun 2020 00:24:15 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C13AC06174E
+        for <linux-block@vger.kernel.org>; Wed, 17 Jun 2020 21:24:15 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id c194so3899223oig.5
+        for <linux-block@vger.kernel.org>; Wed, 17 Jun 2020 21:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ucsc.edu; s=ucsc-google-2018;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cOsrVVpLSM50tEJi2S8kutSfV6ieFvtbO8gT5T6dr88=;
+        b=hm5PPa7t61uEa4ETyg7rmAQTRPGK9AdbEETgiEil+YMBlym65FfHyT2Gwzv2cUwpWf
+         9oPcKTOew1zP9ZLah/CCYWWHxzYJnvzJVP1mtZmorqhFhsCuc1Pa8prBGAzV1Bn9cSj6
+         zc2XF7IwvN31Ao4wwOZDNTCM4c7l9qS2YkmuYIhh2DkkgshL43beCK3AQtjBEMgYh2Ur
+         WCoBVqBm/dIuCwDoBbpwEB4TJ0UAJogQCSZ0GuF0QJoqjfq1YtbIDtAfnkK5PzEqUSuk
+         nDZM6rAIAf+SPM8XLFH/8O1gIoB9XHhxShlwyemp5Ncr0RsUY1n1HUKvkqqnDrtnuWQF
+         f2YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cOsrVVpLSM50tEJi2S8kutSfV6ieFvtbO8gT5T6dr88=;
+        b=apdCDTwi0rmqMU74HySNLY4spUoQpdC5VYZqwPDJ8AB6mx0ugnxCSYsFJ8+M8EtJLj
+         xQynWp3ei0linC6PN9gXrn3ahrG4Ax68gItV8Jc/QLgsq4r7ZGjq2sOOBC92oGoAz4wb
+         sw6cOnU2vNSg8dD73NNueBcHfAlqd0v0pHjAlcq8iU5dHg+HmL1BOxa/Wbf33Mkc2ZHq
+         XAyCaoz289Fldu3QC2AyEFKFHJIVM9tW8jfIyn5Bl7mSwRiTmp5symF7fT7JzKiZcEm8
+         d5WSaFB+Vr+cSvP7EK3dG5MOLUlT3BfHXF76t5DtmPXL8vVPZDbqHJ/LobpVAThiTIXE
+         Cvfg==
+X-Gm-Message-State: AOAM530CEYO7cDdSh7S5F6Va2wCShpQ3Pk+7EAi3dX3JupxRAyEwtX2T
+        DMrSSfyACmQ4uX6hPAND2dXIc9OOvSsDv5oemDyPXwD4
+X-Google-Smtp-Source: ABdhPJyAROsCPZIxK2iGphL388L2akjXMocUivha9hTp78r5rL5IsXCma76dskLFmk8HFP/iOJIbQd+pbJ62FWZcuCc=
+X-Received: by 2002:aca:d15:: with SMTP id 21mr1467624oin.41.1592454254725;
+ Wed, 17 Jun 2020 21:24:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+References: <20200616104142.zxw25txhsg2eyhsb@mpHalley.local>
+ <20200617074328.GA13474@lst.de> <20200617144230.ojzk4f5gcwqonzrf@mpHalley.localdomain>
+ <f1bc34e0-c059-6127-d69f-e31c91ce6a9f@lightnvm.io> <20200617182841.jnbxgshi7bawfzls@mpHalley.localdomain>
+ <MN2PR04MB62236DC26A04A65A242A80D2F19A0@MN2PR04MB6223.namprd04.prod.outlook.com>
+ <20200617190901.zpss2lsh6qsu5zuf@mpHalley.local> <1ab101ef-7b74-060f-c2bc-d4c36dec91f0@lightnvm.io>
+ <20200617194013.3wlz2ajnb6iopd4k@mpHalley.local> <CAJbgVnVo53vLYHRixfQmukqFKKgzP5iPDwz87yanqKvSsYBvCg@mail.gmail.com>
+ <20200618015526.GA1138429@dhcp-10-100-145-180.wdl.wdc.com>
+In-Reply-To: <20200618015526.GA1138429@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Heiner Litz <hlitz@ucsc.edu>
+Date:   Wed, 17 Jun 2020 21:24:03 -0700
+Message-ID: <CAJbgVnVKqDobpX8iwqRVeDqvmfdEd-uRzNFC2z5U03X9E3Pi_w@mail.gmail.com>
+Subject: Re: [PATCH 5/5] nvme: support for zoned namespaces
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>,
+        =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <Keith.Busch@wdc.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Judy Brock <judy.brock@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-kill_bdev does not have any external user, so make it static.
+What is the purpose of making zones larger than the erase block size
+of flash? And why are large writes fundamentally unreasonable?
 
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
- fs/block_dev.c     | 5 ++---
- include/linux/fs.h | 2 --
- 2 files changed, 2 insertions(+), 5 deletions(-)
+I don't see why it should be a fundamental problem for e.g. RocksDB to
+issue single zone-sized writes (whatever the zone size is because
+RocksDB needs to cope with it). The write buffer exists as a level in
+DRAM anyways and increasing write latency will not matter either.
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 47860e589388..0137ed31d58d 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -75,7 +75,7 @@ static void bdev_write_inode(struct block_device *bdev)
- }
-
- /* Kill _all_ buffers and pagecache , dirty or not.. */
--void kill_bdev(struct block_device *bdev)
-+static void kill_bdev(struct block_device *bdev)
- {
- 	struct address_space *mapping = bdev->bd_inode->i_mapping;
-
-@@ -84,8 +84,7 @@ void kill_bdev(struct block_device *bdev)
-
- 	invalidate_bh_lrus();
- 	truncate_inode_pages(mapping, 0);
--}	
--EXPORT_SYMBOL(kill_bdev);
-+}
-
- /* Invalidate clean unused buffers and pagecache. */
- void invalidate_bdev(struct block_device *bdev)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2e675c075694..f5bb1efc0c45 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2609,7 +2609,6 @@ extern void bdput(struct block_device *);
- extern void invalidate_bdev(struct block_device *);
- extern void iterate_bdevs(void (*)(struct block_device *, void *), void *);
- extern int sync_blockdev(struct block_device *bdev);
--extern void kill_bdev(struct block_device *);
- extern struct super_block *freeze_bdev(struct block_device *);
- extern void emergency_thaw_all(void);
- extern void emergency_thaw_bdev(struct super_block *sb);
-@@ -2625,7 +2624,6 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
- #else
- static inline void bd_forget(struct inode *inode) {}
- static inline int sync_blockdev(struct block_device *bdev) { return 0; }
--static inline void kill_bdev(struct block_device *bdev) {}
- static inline void invalidate_bdev(struct block_device *bdev) {}
-
- static inline struct super_block *freeze_bdev(struct block_device *sb)
---
-2.25.4
-
+On Wed, Jun 17, 2020 at 6:55 PM Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Wed, Jun 17, 2020 at 04:44:23PM -0700, Heiner Litz wrote:
+> > Mandating zone-sized writes would address all problems with ease and
+> > reduce request rate and overheads in the kernel.
+>
+> Yikes, no. Typical zone sizes are much to large for that to be
+> reasonable.
