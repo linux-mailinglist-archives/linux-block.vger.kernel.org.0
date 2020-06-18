@@ -2,130 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0A561FE2DD
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 04:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E291FE3D8
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 04:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbgFRBW4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 21:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbgFRBWz (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6CE920776;
-        Thu, 18 Jun 2020 01:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443374;
-        bh=qTWmazd1cOLZUfZ9ZCBTIUIDeXLRIdZfMiaWkCA5CoI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfPOjJDJpdav11YouwtBWSl3hI8a6p36jN4CHk6Po3qmUo3PMP03dOt3ICgdOQgWD
-         OkLDKP7YCs8XylpIWe31LRzHTlxsVUS8jGn7lM5zMGI4KDZ2OLiZLXEzKvTKTr6l96
-         UFokmpgGMzdQfouWzZ8qu7zPa61KffYDDESro7G4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 027/172] ps3disk: use the default segment boundary
-Date:   Wed, 17 Jun 2020 21:19:53 -0400
-Message-Id: <20200618012218.607130-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+        id S1733168AbgFRCNg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 22:13:36 -0400
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:44331 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730435AbgFRCNa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jun 2020 22:13:30 -0400
+Received: by mail-pg1-f169.google.com with SMTP id r18so2184927pgk.11;
+        Wed, 17 Jun 2020 19:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aK/bYSH5F+ZeVvJdD/Zz3xXS5MT4DFtVf+PE4xuGbAk=;
+        b=nIdhj4s3UtS3Duo02FCJwuU/IVu3hoWIfYyUk06jKdfWvWIZCmFp9At90K8zDUwyVK
+         8EeAAVJOtDKwlWvMAiEAJRlJD7j7/vTFnVNM1TWh5kCHD23NN0R04qyd5jkrxo0GL0HT
+         GG1JmaTFnPHQamq+01PuSufv5yF8VVw7xzw/jX9yTxhHrzpvG/vB5CWf1IsoUXxe+Rac
+         GnAmGILq1n0Yh00Vcn3POosv3Wi0MekLWPykTU90RDlPJFAQcHo3Isj7hoRjgoAnLn11
+         xHfImWnWohuWVCcQ/BxPi1fRl2cyfsTUZHa5UhTO7RB+KKtj9ZmfU+fmd2ESprsclFl3
+         F5oA==
+X-Gm-Message-State: AOAM533MhlzrMTgdWUm3nfudvQ63STk1sBZ2GnXGg+BCLWl2RX8Zkba/
+        r4tnlpHMQI+uYsXHfiZ3JIK1tIpS
+X-Google-Smtp-Source: ABdhPJx6tEFWGkRuFu+gbdkcW3sm63w9UV1aCKHGgu+5Z4NXdljZLjFWm/M28K/tmiVmJpWaxYbleA==
+X-Received: by 2002:a65:6089:: with SMTP id t9mr1536586pgu.236.1592446409387;
+        Wed, 17 Jun 2020 19:13:29 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id n69sm1058936pfd.171.2020.06.17.19.13.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 19:13:28 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] block: make function 'kill_bdev' static
+To:     Zheng Bin <zhengbin13@huawei.com>, hch@infradead.org,
+        axboe@kernel.dk, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     houtao1@huawei.com, yi.zhang@huawei.com
+References: <20200530114032.125678-1-zhengbin13@huawei.com>
+ <20200530114032.125678-3-zhengbin13@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <807a9f7f-ea96-793b-2eca-a99bfe52dc5e@acm.org>
+Date:   Wed, 17 Jun 2020 19:13:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200530114032.125678-3-zhengbin13@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
+On 2020-05-30 04:40, Zheng Bin wrote:
+> kill_bdev does not have any external user, so make it static.
 
-[ Upstream commit 720bc316690bd27dea9d71510b50f0cd698ffc32 ]
-
-Since commit dcebd755926b ("block: use bio_for_each_bvec() to compute
-multi-page bvec count"), the kernel will bug_on on the PS3 because
-bio_split() is called with sectors == 0:
-
-  kernel BUG at block/bio.c:1853!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  BE PAGE_SIZE=4K MMU=Hash PREEMPT SMP NR_CPUS=8 NUMA PS3
-  Modules linked in: firewire_sbp2 rtc_ps3(+) soundcore ps3_gelic(+) \
-  ps3rom(+) firewire_core ps3vram(+) usb_common crc_itu_t
-  CPU: 0 PID: 97 Comm: blkid Not tainted 5.3.0-rc4 #1
-  NIP:  c00000000027d0d0 LR: c00000000027d0b0 CTR: 0000000000000000
-  REGS: c00000000135ae90 TRAP: 0700   Not tainted  (5.3.0-rc4)
-  MSR:  8000000000028032 <SF,EE,IR,DR,RI>  CR: 44008240  XER: 20000000
-  IRQMASK: 0
-  GPR00: c000000000289368 c00000000135b120 c00000000084a500 c000000004ff8300
-  GPR04: 0000000000000c00 c000000004c905e0 c000000004c905e0 000000000000ffff
-  GPR08: 0000000000000000 0000000000000001 0000000000000000 000000000000ffff
-  GPR12: 0000000000000000 c0000000008ef000 000000000000003e 0000000000080001
-  GPR16: 0000000000000100 000000000000ffff 0000000000000000 0000000000000004
-  GPR20: c00000000062fd7e 0000000000000001 000000000000ffff 0000000000000080
-  GPR24: c000000000781788 c00000000135b350 0000000000000080 c000000004c905e0
-  GPR28: c00000000135b348 c000000004ff8300 0000000000000000 c000000004c90000
-  NIP [c00000000027d0d0] .bio_split+0x28/0xac
-  LR [c00000000027d0b0] .bio_split+0x8/0xac
-  Call Trace:
-  [c00000000135b120] [c00000000027d130] .bio_split+0x88/0xac (unreliable)
-  [c00000000135b1b0] [c000000000289368] .__blk_queue_split+0x11c/0x53c
-  [c00000000135b2d0] [c00000000028f614] .blk_mq_make_request+0x80/0x7d4
-  [c00000000135b3d0] [c000000000283a8c] .generic_make_request+0x118/0x294
-  [c00000000135b4b0] [c000000000283d34] .submit_bio+0x12c/0x174
-  [c00000000135b580] [c000000000205a44] .mpage_bio_submit+0x3c/0x4c
-  [c00000000135b600] [c000000000206184] .mpage_readpages+0xa4/0x184
-  [c00000000135b750] [c0000000001ff8fc] .blkdev_readpages+0x24/0x38
-  [c00000000135b7c0] [c0000000001589f0] .read_pages+0x6c/0x1a8
-  [c00000000135b8b0] [c000000000158c74] .__do_page_cache_readahead+0x118/0x184
-  [c00000000135b9b0] [c0000000001591a8] .force_page_cache_readahead+0xe4/0xe8
-  [c00000000135ba50] [c00000000014fc24] .generic_file_read_iter+0x1d8/0x830
-  [c00000000135bb50] [c0000000001ffadc] .blkdev_read_iter+0x40/0x5c
-  [c00000000135bbc0] [c0000000001b9e00] .new_sync_read+0x144/0x1a0
-  [c00000000135bcd0] [c0000000001bc454] .vfs_read+0xa0/0x124
-  [c00000000135bd70] [c0000000001bc7a4] .ksys_read+0x70/0xd8
-  [c00000000135be20] [c00000000000a524] system_call+0x5c/0x70
-  Instruction dump:
-  7fe3fb78 482e30dc 7c0802a6 482e3085 7c9e2378 f821ff71 7ca42b78 7d3e00d0
-  7c7d1b78 79290fe0 7cc53378 69290001 <0b090000> 81230028 7bca0020 7929ba62
-  [ end trace 313fec760f30aa1f ]---
-
-The problem originates from setting the segment boundary of the
-request queue to -1UL. This makes get_max_segment_size() return zero
-when offset is zero, whatever the max segment size. The test with
-BLK_SEG_BOUNDARY_MASK fails and 'mask - (mask & offset) + 1' overflows
-to zero in the return statement.
-
-Not setting the segment boundary and using the default
-value (BLK_SEG_BOUNDARY_MASK) fixes the problem.
-
-Signed-off-by: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/060a416c43138f45105c0540eff1a45539f7e2fc.1589049250.git.geoff@infradead.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/ps3disk.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
-index afe1508d82c6..bd1c66f5631a 100644
---- a/drivers/block/ps3disk.c
-+++ b/drivers/block/ps3disk.c
-@@ -466,7 +466,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
- 	queue->queuedata = dev;
- 
- 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
--	blk_queue_segment_boundary(queue, -1UL);
- 	blk_queue_dma_alignment(queue, dev->blk_size-1);
- 	blk_queue_logical_block_size(queue, dev->blk_size);
- 
--- 
-2.25.1
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
