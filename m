@@ -2,103 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC99F1FE625
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 04:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E411FE7A5
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 04:43:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFRCbg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 22:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgFRBP1 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58DAB21BE5;
-        Thu, 18 Jun 2020 01:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442927;
-        bh=FHvIHZBvsYki0huCJSRxURfvcYjTpSIGvmOyauW/84w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=efbA0itkZ7lLQJgF1Ah81aWgyL6mikWKxgQ05DFTLafMepOChgkxde3eLBLxONFni
-         LJIFwzA7KnuGudlEHLktQl4xFlbggZ7Je/6SyWsfYpx5qWmjpwkl37MYFvMvc5o1Pl
-         3YvGJVf6Vv2/eXtNZrbjKxYURZTcFWr52RG7DgeY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 341/388] blktrace: fix endianness for blk_log_remap()
-Date:   Wed, 17 Jun 2020 21:07:18 -0400
-Message-Id: <20200618010805.600873-341-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        id S1728754AbgFRBLh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 21:11:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34400 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728745AbgFRBLg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:36 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9F108A16537DADB85284;
+        Thu, 18 Jun 2020 09:11:32 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.138) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 18 Jun 2020
+ 09:11:26 +0800
+Subject: Re: [PATCH v2 0/2] loop: replace kill_bdev with invalidate_bdev
+To:     <hch@infradead.org>, <axboe@kernel.dk>, <bvanassche@acm.org>,
+        <jaegeuk@kernel.org>, <viro@zeniv.linux.org.uk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     <houtao1@huawei.com>, <yi.zhang@huawei.com>
+References: <20200530114032.125678-1-zhengbin13@huawei.com>
+ <0857bafa-f7ba-dea9-3d5c-7889646b5a37@huawei.com>
+From:   "Zhengbin (OSKernel)" <zhengbin13@huawei.com>
+Message-ID: <99403447-5460-c143-fd87-425b54d409ef@huawei.com>
+Date:   Thu, 18 Jun 2020 09:11:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <0857bafa-f7ba-dea9-3d5c-7889646b5a37@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.166.215.138]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+ping
 
-[ Upstream commit 5aec598c456fe3c1b71a1202cbb42bdc2a643277 ]
-
-The function blk_log_remap() can be simplified by removing the
-call to get_pdu_remap() that copies the values into extra variable to
-print the data, which also fixes the endiannness warning reported by
-sparse.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/blktrace.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index cba2093edee2..35610a4be4a9 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1260,17 +1260,6 @@ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
- 	return be64_to_cpu(*val);
- }
- 
--static void get_pdu_remap(const struct trace_entry *ent,
--			  struct blk_io_trace_remap *r, bool has_cg)
--{
--	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
--	__u64 sector_from = __r->sector_from;
--
--	r->device_from = be32_to_cpu(__r->device_from);
--	r->device_to   = be32_to_cpu(__r->device_to);
--	r->sector_from = be64_to_cpu(sector_from);
--}
--
- typedef void (blk_log_action_t) (struct trace_iterator *iter, const char *act,
- 	bool has_cg);
- 
-@@ -1410,13 +1399,13 @@ static void blk_log_with_error(struct trace_seq *s,
- 
- static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	struct blk_io_trace_remap r = { .device_from = 0, };
-+	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
- 
--	get_pdu_remap(ent, &r, has_cg);
- 	trace_seq_printf(s, "%llu + %u <- (%d,%d) %llu\n",
- 			 t_sector(ent), t_sec(ent),
--			 MAJOR(r.device_from), MINOR(r.device_from),
--			 (unsigned long long)r.sector_from);
-+			 MAJOR(be32_to_cpu(__r->device_from)),
-+			 MINOR(be32_to_cpu(__r->device_from)),
-+			 be64_to_cpu(__r->sector_from));
- }
- 
- static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
--- 
-2.25.1
+On 2020/6/8 10:39, Zhengbin (OSKernel) wrote:
+> ping
+>
+> On 2020/5/30 19:40, Zheng Bin wrote:
+>> v1->v2: modify comment, and make function 'kill_bdev' static
+>>
+>> Zheng Bin (2):
+>>    loop: replace kill_bdev with invalidate_bdev
+>>    block: make function 'kill_bdev' static
+>>
+>>   drivers/block/loop.c | 8 ++++----
+>>   fs/block_dev.c       | 5 ++---
+>>   include/linux/fs.h   | 2 --
+>>   3 files changed, 6 insertions(+), 9 deletions(-)
+>>
+>> -- 
+>> 2.21.3
+>>
+>>
+>> .
+>>
 
