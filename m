@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 494181FE019
-	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 03:46:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E57AF1FDF26
+	for <lists+linux-block@lfdr.de>; Thu, 18 Jun 2020 03:39:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgFRBpb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Jun 2020 21:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
+        id S1731013AbgFRBaT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Jun 2020 21:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731522AbgFRB2l (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:41 -0400
+        id S1732488AbgFRBaT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCBA22211;
-        Thu, 18 Jun 2020 01:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4005C207E8;
+        Thu, 18 Jun 2020 01:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443719;
-        bh=im6bElMOlrwGpOGUYq8BYaVx3csYodwl7xVYlmQ1f1Y=;
+        s=default; t=1592443818;
+        bh=XW4YMqzdu7MMmljPmA8IcaO8/WjKcSZmPg76Reym4oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aleF9j9oPKy35L5eS6/wXJRTO34+CnbN74lAE6gjmlMbCRqpjpKknMfrjLQXwGHun
-         1DdyLUTAoczy4x1brvxN/QMFNe/gv2JRqBQWAjo3k8m8Yevds+y4eHdEwLp7ounz1F
-         9pfdx/cpZirJW/8x6RpA4non0nv8jRNAuKesJS2o=
+        b=lQAL4RzWBx0mz4Rx+Ae8XG9968vR9xVJE7LkZ7dxvkYISM9z5NfqJXjsD+7g5PpB9
+         i9nUGEWLmSW3PPx/FtcotIRjEuX/b6gdcvyL6GtAlYE6kapGDHnpbHJ1Fqy6JnYq14
+         z9JL3CKRAm1P0bl2/4+KF6vy/5eX1QtN60uaPY30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
@@ -30,12 +30,12 @@ Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/80] ps3disk: use the default segment boundary
-Date:   Wed, 17 Jun 2020 21:27:15 -0400
-Message-Id: <20200618012819.609778-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/60] ps3disk: use the default segment boundary
+Date:   Wed, 17 Jun 2020 21:29:14 -0400
+Message-Id: <20200618013004.610532-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -115,7 +115,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 deletion(-)
 
 diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
-index 76f33c84ce3d..7ec5e8f0cbe5 100644
+index c120d70d3fb3..fc7a20286090 100644
 --- a/drivers/block/ps3disk.c
 +++ b/drivers/block/ps3disk.c
 @@ -464,7 +464,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
