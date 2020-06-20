@@ -2,52 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF39E2020EA
-	for <lists+linux-block@lfdr.de>; Sat, 20 Jun 2020 05:34:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 034AE2020F3
+	for <lists+linux-block@lfdr.de>; Sat, 20 Jun 2020 05:34:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732702AbgFTDdl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 19 Jun 2020 23:33:41 -0400
+        id S1732807AbgFTDdv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 19 Jun 2020 23:33:51 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732894AbgFTDa3 (ORCPT
+        with ESMTP id S1732809AbgFTDaW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 19 Jun 2020 23:30:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44152C0619C3
-        for <linux-block@vger.kernel.org>; Fri, 19 Jun 2020 20:30:21 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so4793246pld.13
-        for <linux-block@vger.kernel.org>; Fri, 19 Jun 2020 20:30:21 -0700 (PDT)
+        Fri, 19 Jun 2020 23:30:22 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34FA1C06179B
+        for <linux-block@vger.kernel.org>; Fri, 19 Jun 2020 20:30:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ne5so4984472pjb.5
+        for <linux-block@vger.kernel.org>; Fri, 19 Jun 2020 20:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KtJf1eB0YMlrdncO0Lr6J725DqMYoYaHrhw5Cgkkruw=;
-        b=gTDQzS0R9OidQMG5e9+VmFfSSG04SBfqJ4unRxfvhHa8h+BRhqOurGCqtRjRXbtwmM
-         6qHaq3suirfdF4p2vTK9nVPvab/ze983kHVbVbdpqZ9jzfmQ209tdPY06qFcE4o+7kX3
-         tZECKumwZls9OBAgYV/KhQ2bgAnw8dWiC5t0A=
+        bh=HyXcsVKIRYzWpBmnwJPGbhkvsengpFrT3ttylCxecK0=;
+        b=Q7HTsK0JxwrRCE5gTrXMH6V7ktrH1FZWG28aENBbrpLCN5a5y1aJfpu+bsrRkW2sQp
+         XhIJBGzuj1m86ch3OFQC2s0hXCylfLeJio9eW92zTzdHrrDStDztJUVyjkmLUN+wvcb0
+         z3o/S8+1+G6wnqNAtk+SU1tTedQuZprUxGPmQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KtJf1eB0YMlrdncO0Lr6J725DqMYoYaHrhw5Cgkkruw=;
-        b=Pey64lQpRkN/+4ekOGRSwJQ5Hk0qHXs6MML1dkpCiznd62gQ5PuCo+xpCrntEl4Adr
-         7AumRrze6fE4H9DZ0oUttT/RLMtHAfpsADrPdOn61FGdyIbU63ghUSWrl56N7cAhXLNq
-         w/nvb76jzVrLHfsN8/1D1fMSUuSrZo3EU/hucN/yI1qAi1xbXBwMZj9yz7xcfRqUG9hq
-         Pr7iWeNcBn7kpZFZTIq9MLur6VcJcTjrPPrfwshl8Kf9tL0OUYhfyw/Fza1jNh75zlf7
-         8VGxaHNb1SXN0UXTJujqPZQoHcic84xDTo7pvp2QL1yngpELVyhVAeF67q886I0aZhGA
-         fg4Q==
-X-Gm-Message-State: AOAM533NVq2lDVFNiIDLBa53+USGWRbzsyH1wgzmRCtecj7pq/SxpnAE
-        uFm0GybXB08ID0wA3CSBj93O7A==
-X-Google-Smtp-Source: ABdhPJwKgmzNQXi/vbnAMFC7g+mel4lUeVcAQfzdBe9z4BUHWp/ZcsnxA9mdYSIljSqJHt1Xu1z0+Q==
-X-Received: by 2002:a17:902:760c:: with SMTP id k12mr806735pll.129.1592623820805;
-        Fri, 19 Jun 2020 20:30:20 -0700 (PDT)
+        bh=HyXcsVKIRYzWpBmnwJPGbhkvsengpFrT3ttylCxecK0=;
+        b=IP/mkQa85vfqt8lPHWZoftjWZWLvUza1FL0HzUn+5bI+2jdVsUy0cUd0OrHW5pyANB
+         TUZQl6gkWsGym2ws8Yq26AcNQE/haH1DmLZzBeyZxkowrrkK46Ns+ie/iyONSqTL97tR
+         4hDznpe0JU6seI6ltdAJ/C03CkldrYTpAfR467fHlc6015cKe+uBMlWsCtaxAAIxZaXC
+         RP0ifGl0Uvsdf8kwQZIM7TZBzg5YI09feE5Lgl3KmBXBYacfwWru6JE/GWoVdv8LuWE7
+         9M+hDXktUnC0HlPFAtpded7uUvX/h+ZzSuprN+u1sUHp1543v3k89JuxIkrN2H0TGuC1
+         FdNg==
+X-Gm-Message-State: AOAM532EJTOiy6Mtt+Ur/Qw+KLvCvQwKeMxoB8a1hNWdXH7HmMoaMNoB
+        4K9toa8wAj48oaXyNNAmFKPKew==
+X-Google-Smtp-Source: ABdhPJxp162ffek9CJ+S9rRNhylZslyYHlf/m2Wtuw5WxNWPTSz41VLYVJnSPeycc1PuPsAzofcIoQ==
+X-Received: by 2002:a17:90a:d305:: with SMTP id p5mr6252229pju.44.1592623818774;
+        Fri, 19 Jun 2020 20:30:18 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 137sm6119819pgg.72.2020.06.19.20.30.16
+        by smtp.gmail.com with ESMTPSA id g9sm7101346pfm.151.2020.06.19.20.30.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 19 Jun 2020 20:30:17 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Alexander Potapenko <glider@google.com>,
@@ -59,9 +60,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH v2 02/16] x86/mm/numa: Remove uninitialized_var() usage
-Date:   Fri, 19 Jun 2020 20:29:53 -0700
-Message-Id: <20200620033007.1444705-3-keescook@chromium.org>
+Subject: [PATCH v2 03/16] drbd: Remove uninitialized_var() usage
+Date:   Fri, 19 Jun 2020 20:29:54 -0700
+Message-Id: <20200620033007.1444705-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200620033007.1444705-1-keescook@chromium.org>
 References: <20200620033007.1444705-1-keescook@chromium.org>
@@ -76,79 +77,33 @@ Using uninitialized_var() is dangerous as it papers over real bugs[1]
 (or can in the future), and suppresses unrelated compiler warnings (e.g.
 "unused variable"). If the compiler thinks it is uninitialized, either
 simply initialize the variable or make compiler changes. As a precursor
-to removing[2] this[3] macro[4], refactor code to avoid its need.
-
-The original reason for its use here was to work around the #ifdef
-being the only place the variable was used. This is better expressed
-using IS_ENABLED() and a new code block where the variable can be used
-unconditionally.
+to removing[2] this[3] macro[4], just initialize this variable to NULL.
 
 [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
 [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
 [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
 [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
 
-Fixes: 1e01979c8f50 ("x86, numa: Implement pfn -> nid mapping granularity check")
+Fixes: a29728463b25 ("drbd: Backport the "events2" command")
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/mm/numa.c                | 18 +++++++++---------
- include/linux/page-flags-layout.h |  4 +++-
- 2 files changed, 12 insertions(+), 10 deletions(-)
+ drivers/block/drbd/drbd_state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 8ee952038c80..b05f45e5e8e2 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -543,7 +543,6 @@ static void __init numa_clear_kernel_node_hotplug(void)
+diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
+index eeaa3b49b264..0067d328f0b5 100644
+--- a/drivers/block/drbd/drbd_state.c
++++ b/drivers/block/drbd/drbd_state.c
+@@ -1604,7 +1604,7 @@ static void broadcast_state_change(struct drbd_state_change *state_change)
+ 	unsigned int n_device, n_connection, n_peer_device, n_peer_devices;
+ 	void (*last_func)(struct sk_buff *, unsigned int, void *,
+ 			  enum drbd_notification_type) = NULL;
+-	void *uninitialized_var(last_arg);
++	void *last_arg = NULL;
  
- static int __init numa_register_memblks(struct numa_meminfo *mi)
- {
--	unsigned long uninitialized_var(pfn_align);
- 	int i, nid;
- 
- 	/* Account for nodes with cpus and no memory */
-@@ -571,15 +570,16 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
- 	 * If sections array is gonna be used for pfn -> nid mapping, check
- 	 * whether its granularity is fine enough.
- 	 */
--#ifdef NODE_NOT_IN_PAGE_FLAGS
--	pfn_align = node_map_pfn_alignment();
--	if (pfn_align && pfn_align < PAGES_PER_SECTION) {
--		printk(KERN_WARNING "Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
--		       PFN_PHYS(pfn_align) >> 20,
--		       PFN_PHYS(PAGES_PER_SECTION) >> 20);
--		return -EINVAL;
-+	if (IS_ENABLED(NODE_NOT_IN_PAGE_FLAGS)) {
-+		unsigned long pfn_align = node_map_pfn_alignment();
-+
-+		if (pfn_align && pfn_align < PAGES_PER_SECTION) {
-+			pr_warn("Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
-+				PFN_PHYS(pfn_align) >> 20,
-+				PFN_PHYS(PAGES_PER_SECTION) >> 20);
-+			return -EINVAL;
-+		}
- 	}
--#endif
- 	if (!numa_meminfo_cover_memory(mi))
- 		return -EINVAL;
- 
-diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
-index 71283739ffd2..e200eef6a7fd 100644
---- a/include/linux/page-flags-layout.h
-+++ b/include/linux/page-flags-layout.h
-@@ -98,9 +98,11 @@
- /*
-  * We are going to use the flags for the page to node mapping if its in
-  * there.  This includes the case where there is no node, so it is implicit.
-+ * Note that this #define MUST have a value so that it can be tested with
-+ * the IS_ENABLED() macro.
-  */
- #if !(NODES_WIDTH > 0 || NODES_SHIFT == 0)
--#define NODE_NOT_IN_PAGE_FLAGS
-+#define NODE_NOT_IN_PAGE_FLAGS 1
- #endif
- 
- #if defined(CONFIG_NUMA_BALANCING) && LAST_CPUPID_WIDTH == 0
+ #define HAS_CHANGED(state) ((state)[OLD] != (state)[NEW])
+ #define FINAL_STATE_CHANGE(type) \
 -- 
 2.25.1
 
