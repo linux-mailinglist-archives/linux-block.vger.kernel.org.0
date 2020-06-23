@@ -2,176 +2,133 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C6E205873
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3572A20599C
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbgFWRX0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 13:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgFWRXZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:23:25 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E135C061755
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 10:23:24 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id fc4so10052165qvb.1
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 10:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gw8psqz+LsdrQykbanEcSIZrUl30WUVM4eD6OVwcjMI=;
-        b=DAKuPd7qO7XZ8um/Zh8jdfigims3lKCWHHkVOvR8gOxvCwuxxhM4+CgFwTEwzxhXMS
-         dH+ugBNS8/MTeDx/VaPb1fSwN3CyWlGQpnAfaDGVEWTIH53ooIwS3Nv3+dxcRPBO9kHZ
-         vpDX+YAQMZ6ZBuDEUNzMknpmNe9X4qE219JmF6a78vNVp5LVn22wBwhH92TmrwNQCMF4
-         FWfYZ6K+UBR89Y+1AhBFYG3JOdYLiEIWbWeciM5OYSICF08QeL8kEaxJcf8MxO6JpKP+
-         XYFiWVjMNQYJ5V4aJOPpZyaPKvjaNsvd6vAZNbwMAaS9+cIIfxtRRd8RDyOT/UWjzzu+
-         a96Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gw8psqz+LsdrQykbanEcSIZrUl30WUVM4eD6OVwcjMI=;
-        b=niR+ZwboddOC/a9fNhb6krPW8UlrDqQsrkB7sS0+b8kFgYHFnh+s/YsXkQ4RuYQ04v
-         1TtgsnfSgEnYuqiNdmYH51EzHl4jAwCF8v0qfpeOQenuX4h4vopFPM27uR4oaW/U45AG
-         zdqUYYUtKY8x2dhiYD4PjCXRBj+9RpthnxPEKU2AxLbiUdMwEwL20mKHoleFC6b8FhM1
-         og4/9HpK8BDipFGFw1tLYb62e9/N9DR/iPgTwLPlcIEGlYaKx9PgskWxf2WicW/yWkHw
-         jnYVb9evPNQXMG7491dHhgafetgCocF+FJDBwXMNM2XVeK2aDiSxRjH5pqd44Ta584Jd
-         RYOA==
-X-Gm-Message-State: AOAM531eqSujR93WTFg9LuAW+hKrvtCPZY7fDEReJcLml7/Lt7jHK5IV
-        Zg60fQUAKU6g2L+znHP6/gna9Q==
-X-Google-Smtp-Source: ABdhPJzTDOZeKHcl2foVCoytl0us5md/Z1N3AYXOx/ECHpEq5TE1o7N9efFhag5/TNMwYua5UWRxlg==
-X-Received: by 2002:ad4:49aa:: with SMTP id u10mr28418798qvx.162.1592933003146;
-        Tue, 23 Jun 2020 10:23:23 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id m26sm1280405qtm.73.2020.06.23.10.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 10:23:22 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jnmdl-00Cxwy-Ih; Tue, 23 Jun 2020 14:23:21 -0300
-Date:   Tue, 23 Jun 2020 14:23:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jinpu Wang <jinpu.wang@cloud.ionos.com>, dledford@redhat.com,
-        kernel test robot <rong.a.chen@intel.com>
-Subject: Re: [PATCH] Delay the initialization of rnbd_server module to
- late_initcall level
-Message-ID: <20200623172321.GC6578@ziepe.ca>
-References: <20200617182046.GI6578@ziepe.ca>
- <20200617190756.GA2721989@unreal>
- <20200617192642.GL6578@ziepe.ca>
- <CAJpMwygeJ7uaNUKxhsF-bx=ufchkx7M6G0E237=-0C7GwJ3yog@mail.gmail.com>
- <CAJpMwyjJSu4exkTAoFLhY-ubzNQLp6nWqq83k6vWn1Uw3eaK_Q@mail.gmail.com>
- <CAJpMwygqz20=H7ovSL0nSWLbVpMv-KLOgYO=nRCLv==OC8sgHw@mail.gmail.com>
- <20200623121721.GZ6578@ziepe.ca>
- <CAJpMwyj_Fa6AhYXcGh4kS79Vd2Dy3N7B5-9XhKHn4qWDo-HVjw@mail.gmail.com>
- <20200623142400.GB6578@ziepe.ca>
- <CAJpMwygDGpzmhzeYcy=14sBneSriBcRT6B2sO1rubkQLRKnOjA@mail.gmail.com>
+        id S1733292AbgFWRmm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 13:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387423AbgFWRfz (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDA620780;
+        Tue, 23 Jun 2020 17:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592933754;
+        bh=l/Fx7AtissAOI7sKQ4NNbynURHbMMk6kMVPfC3gUQEM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2V8flgVaurnW99fxuk21cfIsW1wYFgZLYbtFwLuU1sR29SrDdQ2OXbMckJBgZ07t5
+         9lqFyPyIYswdMJqug/ekA3X8RmrBa7K6JI7FGteeE2hd46f2iMSXoLD9ed7XgtmsCs
+         LIZXGE6B8SLgyV4kQBY9/ILQy7q0dxkL408NOKIU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 25/28] blktrace: break out of blktrace setup on concurrent calls
+Date:   Tue, 23 Jun 2020 13:35:20 -0400
+Message-Id: <20200623173523.1355411-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
+References: <20200623173523.1355411-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJpMwygDGpzmhzeYcy=14sBneSriBcRT6B2sO1rubkQLRKnOjA@mail.gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 05:05:51PM +0530, Haris Iqbal wrote:
-> On Tue, Jun 23, 2020 at 7:54 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Tue, Jun 23, 2020 at 07:15:03PM +0530, Haris Iqbal wrote:
-> > > On Tue, Jun 23, 2020 at 5:47 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > >
-> > > > On Tue, Jun 23, 2020 at 03:20:27PM +0530, Haris Iqbal wrote:
-> > > > > Hi Jason and Leon,
-> > > > >
-> > > > > Did you get a chance to look into my previous email?
-> > > >
-> > > > Was there a question?
-> > >
-> > > Multiple actually :)
-> > >
-> > > >
-> > > > Jason
-> > >
-> > > In response to your emails,
-> > >
-> > > > Somehow nvme-rdma works:
-> > >
-> > > I think that's because the callchain during the nvme_rdma_init_module
-> > > initialization stops at "nvmf_register_transport()". Here only the
-> > > "struct nvmf_transport_ops nvme_rdma_transport" is registered, which
-> > > contains the function "nvme_rdma_create_ctrl()". I tested this in my
-> > > local setup and during kernel boot, that's the extent of the
-> > > callchain.
-> > > The ".create_ctrl"; which now points to "nvme_rdma_create_ctrl()" is
-> > > called later from "nvmf_dev_write()". I am not sure when this is
-> > > called, probably when the "discover" happens from the client side or
-> > > during the server config.
-> > >
-> > > It seems that the "rdma_bind_addr()" is called by the nvme rdma
-> > > module; but during the following events
-> > > 1) When a discover happens from the client side. Call trace for that looks like,
-> > > [ 1098.409398] nvmf_dev_write
-> > > [ 1098.409403] nvmf_create_ctrl
-> > > [ 1098.414568] nvme_rdma_create_ctrl
-> > > [ 1098.415009] nvme_rdma_setup_ctrl
-> > > [ 1098.415010] nvme_rdma_configure_admin_queue
-> > > [ 1098.415010] nvme_rdma_alloc_queue
-> > > [ 1098.415032] rdma_resolve_addr
-> > > [ 1098.415032] cma_bind_addr
-> > > [ 1098.415033] rdma_bind_addr
-> > >
-> > > 2) When a connect happens from the client side. Call trace is the same
-> > > as above, plus "nvme_rdma_alloc_queue()" is called n number of times;
-> > > n being the number of IO queues being created.
-> > >
-> > > On the server side, when an nvmf port is enabled, that also triggers a
-> > > call to "rdma_bind_addr()", but that is not from the nvme rdma module.
-> > > may be nvme target rdma? (not sure).
-> > >
-> > > Does this make sense or am I missing something here?
-> >
-> > It make sense, delaying creating and CM ID's until user space starts
-> > will solve this init time problme
-> 
-> Right, and the patch is trying to achieve the delay by changing the
-> init level to "late_initcall()"
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-It should not be done with initcall levels
+[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
 
-> > Right rdma_create_id() must precede anything that has problems, and it
-> > should not be done from module_init.
-> 
-> I understand this, but I am not sure why that is; as in why it should
-> not be done from module_init?
+We use one blktrace per request_queue, that means one per the entire
+disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
+or just two calls on /dev/vda.
 
-Because that is how our module ordering scheme works
+We check for concurrent setup only at the very end of the blktrace setup though.
 
-> > It is not OK to create RDMA CM IDs outside
-> > a client - CM IDs are supposed to be cleaned up when the client is
-> > removed.
-> >
-> > Similarly they are supposed to be created from the client attachment.
-> 
-> This again is a little confusing to me, since what I've observed in
-> nvmt is, when a server port is created, the "rdma_bind_addr()"
-> function is called.
-> And this goes well with the server/target and client/initiator model,
-> where the server has to get ready and start listening before a client
-> can initiate a connection.
-> What am I missing here?
+If we try to run two concurrent blktraces on the same block device the
+second one will fail, and the first one seems to go on. However when
+one tries to kill the first one one will see things like this:
 
-client means a struct ib_client
+The kernel will show these:
 
-Jason
+```
+debugfs: File 'dropped' in directory 'nvme1n1' already present!
+debugfs: File 'msg' in directory 'nvme1n1' already present!
+debugfs: File 'trace0' in directory 'nvme1n1' already present!
+``
 
-> 
-> >
-> > Jason
-> 
+And userspace just sees this error message for the second call:
+
+```
+blktrace /dev/nvme1n1
+BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
+```
+
+The first userspace process #1 will also claim that the files
+were taken underneath their nose as well. The files are taken
+away form the first process given that when the second blktrace
+fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
+This means that even if go-happy process #1 is waiting for blktrace
+data, we *have* been asked to take teardown the blktrace.
+
+This can easily be reproduced with break-blktrace [0] run_0005.sh test.
+
+Just break out early if we know we're already going to fail, this will
+prevent trying to create the files all over again, which we know still
+exist.
+
+[0] https://github.com/mcgrof/break-blktrace
+
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/blktrace.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index ca39dc3230cb3..3a89aeb73d690 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -3,6 +3,9 @@
+  * Copyright (C) 2006 Jens Axboe <axboe@kernel.dk>
+  *
+  */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/blkdev.h>
+ #include <linux/blktrace_api.h>
+@@ -494,6 +497,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	 */
+ 	strreplace(buts->name, '/', '_');
+ 
++	/*
++	 * bdev can be NULL, as with scsi-generic, this is a helpful as
++	 * we can be.
++	 */
++	if (q->blk_trace) {
++		pr_warn("Concurrent blktraces are not allowed on %s\n",
++			buts->name);
++		return -EBUSY;
++	}
++
+ 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+ 	if (!bt)
+ 		return -ENOMEM;
+-- 
+2.25.1
+
