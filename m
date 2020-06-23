@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D619205918
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B702058FC
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:37:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbgFWRg7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 13:36:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
+        id S2387743AbgFWRhI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 13:37:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387698AbgFWRg6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:58 -0400
+        id S2387740AbgFWRhH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:37:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EF1520774;
-        Tue, 23 Jun 2020 17:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F77E20706;
+        Tue, 23 Jun 2020 17:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933817;
-        bh=mtEzBYW7ovbuj3VT+6NLFy9+/Vj5amjNWGdz/r63+SA=;
+        s=default; t=1592933826;
+        bh=pF3pWv/GOcDxOoaEshP3nh+jd3va/7b8gr2M0p5wcCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2uIGaV/jqJKHcsmbU1ZcsLmSVwVme5VUebZTNSXAdtq1H7G9FSaqi0ylrh/ma4en
-         Vv76xnV4HiKoZa2BDin9tGyuzEuxa8i4ZcW5XJCa71zBbAQc8383GZK0m4PizYLWNq
-         EEmiO27SNMDZ6oBe7W5HKu6gBbSdRmANm95TzNyQ=
+        b=yU+ZncpjrKRCNfILpNzw+Fe6/Yp0Elzd74GXV1aGshpF05xSuALgzghPk8b9mj/ko
+         wQnaGO3X+BgJpDbN6+q1hkYcnLC4uIfCqbTCFwWVuq9/pCLDQwbPVBQhuVwFTZA0EB
+         crZMliUgX3J10p2x8Qn5gtA/8FD67AUAO5kaE618=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
         Bart Van Assche <bvanassche@acm.org>,
         Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/6] blktrace: break out of blktrace setup on concurrent calls
-Date:   Tue, 23 Jun 2020 13:36:49 -0400
-Message-Id: <20200623173649.1356142-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 6/6] blktrace: break out of blktrace setup on concurrent calls
+Date:   Tue, 23 Jun 2020 13:36:58 -0400
+Message-Id: <20200623173658.1356241-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173649.1356142-1-sashal@kernel.org>
-References: <20200623173649.1356142-1-sashal@kernel.org>
+In-Reply-To: <20200623173658.1356241-1-sashal@kernel.org>
+References: <20200623173658.1356241-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -99,7 +99,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 13 insertions(+)
 
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a60c09e0bda87..52389be36f00f 100644
+index 6d3b432a748a6..88eb9261c7b5c 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
 @@ -15,6 +15,9 @@
@@ -112,7 +112,7 @@ index a60c09e0bda87..52389be36f00f 100644
  #include <linux/kernel.h>
  #include <linux/blkdev.h>
  #include <linux/blktrace_api.h>
-@@ -504,6 +507,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+@@ -481,6 +484,16 @@ int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
  	 */
  	strreplace(buts->name, '/', '_');
  
