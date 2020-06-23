@@ -2,105 +2,150 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4125B205063
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 13:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91FF820509A
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 13:26:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732493AbgFWLQO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 07:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732456AbgFWLQO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:16:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F16C061796
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 04:16:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g21so2809725wmg.0
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 04:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=hDK0sPJnOOZEmlDdrbrrHW5q5UYpaIkT1BKJvtzvTjIUv3D6h4uUobDU7w+c3BB99R
-         vsA6wkXoJqt1kmfX/O2VxGcLnJuiWukPzhUsjh8nXZSpMzla7ETMjshfZ3rerojjvgT6
-         VTy6X/vgN6orOIizWJEBIl+Q4t3p8hbAbznifoNYyeYLOikSTGgwwaer0T6sOXia/Etw
-         JAtdekG8bf7AcB+xJICRs6xwxRY7Gow5hoeqv/SulUwG6zgmu8BQLyf03Ott8JZDzUZF
-         L9YcC5nTYUEHEDGotDeNDDcTharaRStn05SqTgo7ENcw/ctZ4spxjMHa79zJeDugrHqy
-         oqUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=Rcsk7Wz7iRuuW2OUGXnqUpWgNf5tcHRVml76wZP8oUdwjIhtXZKeo1AeqkLmEL3tO8
-         mGx4BgaFwDlQTyNjg4atfGd3HtGmDQp4uRglHr/xN0edcwtmfQB2myEhK2cj+RtXN+Ci
-         okT19bEOADmPeuFY8/jWYyKp7kLosWIDMWN3iv/MBVZE8fbukEYv49omOFFaoo7I8yuG
-         vFGVTABH8bHT5N0GskiZJuiQLHK5/KLhSQlStu9yEWFBPpb6dcMIbHZePT68PLumuZQM
-         goKdHxKZdoYvyameWZBtppd3juBD6Y6g0tDBoB830aLzROVSeFkCzVw3VZy/LWAZJRzT
-         s/Gw==
-X-Gm-Message-State: AOAM532GTZhFeEMblJ3kB0VyzkNzTAzra5SrCC9rx3vg/iDWEzRFCr+w
-        Ihc0gLOlm3NKbNDMZSFku37xrOUU4TLG5p7gq8Y=
-X-Google-Smtp-Source: ABdhPJwH3m+TLJI1awOuzFhsii8HN6vfpTgeDHFgHiVHBmh+6+HejdRWsuyXO9mWTwd5UAXhw7iiBeVgVmRuNo8dfEc=
-X-Received: by 2002:a1c:de05:: with SMTP id v5mr4253681wmg.56.1592910972436;
- Tue, 23 Jun 2020 04:16:12 -0700 (PDT)
+        id S1732371AbgFWL0o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 07:26:44 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2357 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732189AbgFWL0o (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:26:44 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 037EB93EE60454849E83;
+        Tue, 23 Jun 2020 12:26:43 +0100 (IST)
+Received: from [127.0.0.1] (10.47.2.88) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 23 Jun
+ 2020 12:26:41 +0100
+Subject: Re: [PATCH RFC v7 02/12] blk-mq: rename blk_mq_update_tag_set_depth()
+From:   John Garry <john.garry@huawei.com>
+To:     Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>
+CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <bvanassche@acm.org>, <hare@suse.com>, <hch@lst.de>,
+        <shivasharan.srikanteshwara@broadcom.com>,
+        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
+        <megaraidlinux.pdl@broadcom.com>
+References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+ <1591810159-240929-3-git-send-email-john.garry@huawei.com>
+ <20200611025759.GA453671@T590>
+ <6ef76cdf-2fb3-0ce8-5b5a-0d7af0145901@huawei.com>
+Message-ID: <8ef58912-d480-a7e1-f04c-da9bd85ea0ae@huawei.com>
+Date:   Tue, 23 Jun 2020 12:25:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:16:11
- -0700 (PDT)
-Reply-To: sarahkoffi389@yahoo.co.jp
-From:   Sarah Koffi <paulwiliam782@gmail.com>
-Date:   Tue, 23 Jun 2020 12:16:11 +0100
-Message-ID: <CAHqcnY116USNSghJh93uuVHviw=mkwa0qLD7qnjwh-ZKmn8ukA@mail.gmail.com>
-Subject: Greetings From Mrs. Sarah Koffi
-To:     sarahkoffi389@yahoo.co.jp
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6ef76cdf-2fb3-0ce8-5b5a-0d7af0145901@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.2.88]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings From Mrs. Sarah Koffi
+On 11/06/2020 09:26, John Garry wrote:
+> On 11/06/2020 03:57, Ming Lei wrote:
+>> On Thu, Jun 11, 2020 at 01:29:09AM +0800, John Garry wrote:
+>>> From: Hannes Reinecke <hare@suse.de>
+>>>
+>>> The function does not set the depth, but rather transitions from
+>>> shared to non-shared queues and vice versa.
+>>> So rename it to blk_mq_update_tag_set_shared() to better reflect
+>>> its purpose.
+>>
+>> It is fine to rename it for me, however:
+>>
+>> This patch claims to rename blk_mq_update_tag_set_shared(), but also
+>> change blk_mq_init_bitmap_tags's signature.
+> 
+> I was going to update the commit message here, but forgot again...
+> 
+>>
+>> So suggest to split this patch into two or add comment log on changing
+>> blk_mq_init_bitmap_tags().
+> 
+> I think I'll just split into 2x commits.
 
-I'm contacting you based on your good profiles I read and for a good
-reasons, I am in search of a property to buy in your country as I
-intended to come over to your
-country for investment, Though I have not meet with you before but I
-believe that one has to risk confiding in someone to succeed sometimes
-in life.
+Hi Hannes,
 
-My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
-Federal Government of Sudan and he has a personal Oil firm in Bentiu
-Oil zone town and Upper
-Nile city. What I have experience physically, I don't wish to
-experience it again in my life due to the recent civil Ethnic war
-cause by our President Mr. Salva Kiir
-and the rebel leader Mr Riek Machar, I have been Under United Nation
-refuge camp in chad to save my life and that of my little daughter.
+Do you have any issue with splitting the undocumented changes into 
+another patch as so:
 
-Though, I do not know how you will feel to my proposal, but the truth
-is that I sneaked into Chad our neighboring country where I am living
-now as a refugee.
-I escaped with my little daughter when the rebels bust into our house
-and killed my husband as one of the big oil dealers in the country,
-ever since then, I have being on the run.
+-------------------->8---------------------
 
-I left my country and move to Chad our neighboring country with the
-little ceasefire we had, due to the face to face peace meeting accord
-coordinated by the US Secretary of State, Mr John Kerry and United
-Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
-and the rebel leader Mr Riek Machar to stop this war.
+ From db3f8ec1295efbf53273ffc137d348857cbd411e Mon Sep 17 00:00:00 2001
+From: Hannes Reinecke <hare@suse.de>
+Date: Tue, 23 Jun 2020 12:07:33 +0100
+Subject: [PATCH] blk-mq: Free tags in blk_mq_init_tags() upon error
 
-I want to solicit for your partnership with trust to invest the $8
-million dollars deposited by my late husband in Bank because my life
-is no longer safe in our country, since the rebels are looking for the
-families of all the oil business men in the country to kill, saying
-that they are they one that is milking the country dry.
+Since the tags are allocated in blk_mq_init_tags() it's better practice
+to free in that same function upon error, rather than a callee which is 
+to init the bitmap tags - blk_mq_init_tags().
 
-I will offer you 20% of the total fund for your help while I will
-partner with you for the investment in your country.
-If I get your reply.
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+[jpg: split from an earlier patch with a new commit message, minor mod 
+to return NULL directly for error]
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-I will wait to hear from you so as to give you details.With love from
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 1085dc9848f3..b8972014cd90 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -487,24 +487,22 @@ static int bt_alloc(struct sbitmap_queue *bt, 
+unsigned int depth,
+  				       node);
+  }
 
- i need you to contact me here sarahkoffi389@yahoo.co.jp
+-static struct blk_mq_tags *blk_mq_init_bitmap_tags(struct blk_mq_tags 
+*tags,
+-						   int node, int alloc_policy)
++static int blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
++				   int node, int alloc_policy)
+  {
+  	unsigned int depth = tags->nr_tags - tags->nr_reserved_tags;
+  	bool round_robin = alloc_policy == BLK_TAG_ALLOC_RR;
 
-Mrs. Sarah Koffi
+  	if (bt_alloc(&tags->bitmap_tags, depth, round_robin, node))
+-		goto free_tags;
++		return -ENOMEM;
+  	if (bt_alloc(&tags->breserved_tags, tags->nr_reserved_tags, round_robin,
+  		     node))
+  		goto free_bitmap_tags;
+
+-	return tags;
++	return 0;
+  free_bitmap_tags:
+  	sbitmap_queue_free(&tags->bitmap_tags);
+-free_tags:
+-	kfree(tags);
+-	return NULL;
++	return -ENOMEM;
+  }
+
+  struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+@@ -525,7 +523,11 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int 
+total_tags,
+  	tags->nr_tags = total_tags;
+  	tags->nr_reserved_tags = reserved_tags;
+
+-	return blk_mq_init_bitmap_tags(tags, node, alloc_policy);
++	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
++		kfree(tags);
++		return NULL;
++	}
++	return tags;
+  }
+
+  void blk_mq_free_tags(struct blk_mq_tags *tags)
+
+--------------------8<---------------------
+
+Thanks
