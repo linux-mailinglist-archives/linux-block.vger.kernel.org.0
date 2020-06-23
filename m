@@ -2,228 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31B92204E72
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 11:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4125B205063
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 13:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732040AbgFWJuk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 05:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
+        id S1732493AbgFWLQO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 07:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731996AbgFWJuk (ORCPT
+        with ESMTP id S1732456AbgFWLQO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:50:40 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9740CC061755
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 02:50:39 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w6so9641031ejq.6
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 02:50:39 -0700 (PDT)
+        Tue, 23 Jun 2020 07:16:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F16C061796
+        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 04:16:13 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g21so2809725wmg.0
+        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 04:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=43Y6xmU50+sLAZ5J3fXA3wX4xl6aKaZmykjUjo6gTJ8=;
-        b=Klb9LvBrigVP6aasMs5mt8cmbwfEC0k02WDSzPJoiGht73X1SX4aq9sBSMTa7nYkL3
-         PRKOkLTjuT1IXzffTYvBBlnH7j/vZ31zG+AzA16iuFe/Z0yhEf9NW4sTXVvQ2JPtwDkU
-         Or0NcMin9HpWulHQgMzU/arC6UzsbzAqM0FVCoVvEAkdOL6uNYXwO/tnLem0T3c/5irh
-         3ldgD/BAMajEscbHFTXNEl8nL3g8gC/Veu6apemx5uQDFScBIDSXbiUowplelXt54LH2
-         OiU9tezBXQr+9JpRvPYYchK03bwCURFndjbHXYBJuPrtnhj9KwYUr14aM88309M6irEA
-         KNZQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=hDK0sPJnOOZEmlDdrbrrHW5q5UYpaIkT1BKJvtzvTjIUv3D6h4uUobDU7w+c3BB99R
+         vsA6wkXoJqt1kmfX/O2VxGcLnJuiWukPzhUsjh8nXZSpMzla7ETMjshfZ3rerojjvgT6
+         VTy6X/vgN6orOIizWJEBIl+Q4t3p8hbAbznifoNYyeYLOikSTGgwwaer0T6sOXia/Etw
+         JAtdekG8bf7AcB+xJICRs6xwxRY7Gow5hoeqv/SulUwG6zgmu8BQLyf03Ott8JZDzUZF
+         L9YcC5nTYUEHEDGotDeNDDcTharaRStn05SqTgo7ENcw/ctZ4spxjMHa79zJeDugrHqy
+         oqUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=43Y6xmU50+sLAZ5J3fXA3wX4xl6aKaZmykjUjo6gTJ8=;
-        b=ltZRGHBd1z0VFoMRpsPld1P3/RWFXF3b8l4LlNQEJ69wRRNfrjPZYf2WvEdr8J6TY2
-         3IYm5Xwv7DQ0FUB3X3kUmfDY8HnBM1LXgGLSgjB8CMqLbH11K+As73/e9lXtUt3cN/sy
-         be+Mn/ijfg3pundTNZixiMK9RoakhQlWC96maMOUX2DTpbcd2oz2A3w0NXhai0TOsPoi
-         wbmgD5+kHuE6qgBnfY+t+zHOuLkf1HLZi2mMKm9VslO/AtLr+tsRb4DgPkWp7aI0MioJ
-         NPf+boMIWWjPKwgS/+8P46QVS9/vQjj6jYR7auUqv7x1pro+Tj24fPJ2wZtBm2QRVXcw
-         svng==
-X-Gm-Message-State: AOAM531P6xXrMV4bACSByKFDd6iYVa1nFQ/z3cbseahGC/BL4NvVt03A
-        asrQE4UwSLhTyG7wFHB4y2xYBaGZXMqg0zPWmrr07A==
-X-Google-Smtp-Source: ABdhPJwz4oxeIjD4nOxCeZeBUDGwCkRfA2lwNAC6RaO25FamkK8rqDrozotUdVWyRFiFKXU7TYjbau9Gjm9UOo1vrwU=
-X-Received: by 2002:a17:906:1682:: with SMTP id s2mr10650062ejd.532.1592905838199;
- Tue, 23 Jun 2020 02:50:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=Rcsk7Wz7iRuuW2OUGXnqUpWgNf5tcHRVml76wZP8oUdwjIhtXZKeo1AeqkLmEL3tO8
+         mGx4BgaFwDlQTyNjg4atfGd3HtGmDQp4uRglHr/xN0edcwtmfQB2myEhK2cj+RtXN+Ci
+         okT19bEOADmPeuFY8/jWYyKp7kLosWIDMWN3iv/MBVZE8fbukEYv49omOFFaoo7I8yuG
+         vFGVTABH8bHT5N0GskiZJuiQLHK5/KLhSQlStu9yEWFBPpb6dcMIbHZePT68PLumuZQM
+         goKdHxKZdoYvyameWZBtppd3juBD6Y6g0tDBoB830aLzROVSeFkCzVw3VZy/LWAZJRzT
+         s/Gw==
+X-Gm-Message-State: AOAM532GTZhFeEMblJ3kB0VyzkNzTAzra5SrCC9rx3vg/iDWEzRFCr+w
+        Ihc0gLOlm3NKbNDMZSFku37xrOUU4TLG5p7gq8Y=
+X-Google-Smtp-Source: ABdhPJwH3m+TLJI1awOuzFhsii8HN6vfpTgeDHFgHiVHBmh+6+HejdRWsuyXO9mWTwd5UAXhw7iiBeVgVmRuNo8dfEc=
+X-Received: by 2002:a1c:de05:: with SMTP id v5mr4253681wmg.56.1592910972436;
+ Tue, 23 Jun 2020 04:16:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200617103732.10356-1-haris.iqbal@cloud.ionos.com>
- <20200617112811.GL2383158@unreal> <20200617182046.GI6578@ziepe.ca>
- <20200617190756.GA2721989@unreal> <20200617192642.GL6578@ziepe.ca>
- <CAJpMwygeJ7uaNUKxhsF-bx=ufchkx7M6G0E237=-0C7GwJ3yog@mail.gmail.com> <CAJpMwyjJSu4exkTAoFLhY-ubzNQLp6nWqq83k6vWn1Uw3eaK_Q@mail.gmail.com>
-In-Reply-To: <CAJpMwyjJSu4exkTAoFLhY-ubzNQLp6nWqq83k6vWn1Uw3eaK_Q@mail.gmail.com>
-From:   Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Date:   Tue, 23 Jun 2020 15:20:27 +0530
-Message-ID: <CAJpMwygqz20=H7ovSL0nSWLbVpMv-KLOgYO=nRCLv==OC8sgHw@mail.gmail.com>
-Subject: Re: [PATCH] Delay the initialization of rnbd_server module to
- late_initcall level
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jinpu Wang <jinpu.wang@cloud.ionos.com>, dledford@redhat.com,
-        kernel test robot <rong.a.chen@intel.com>
+Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:16:11
+ -0700 (PDT)
+Reply-To: sarahkoffi389@yahoo.co.jp
+From:   Sarah Koffi <paulwiliam782@gmail.com>
+Date:   Tue, 23 Jun 2020 12:16:11 +0100
+Message-ID: <CAHqcnY116USNSghJh93uuVHviw=mkwa0qLD7qnjwh-ZKmn8ukA@mail.gmail.com>
+Subject: Greetings From Mrs. Sarah Koffi
+To:     sarahkoffi389@yahoo.co.jp
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jason and Leon,
+Greetings From Mrs. Sarah Koffi
 
-Did you get a chance to look into my previous email?
+I'm contacting you based on your good profiles I read and for a good
+reasons, I am in search of a property to buy in your country as I
+intended to come over to your
+country for investment, Though I have not meet with you before but I
+believe that one has to risk confiding in someone to succeed sometimes
+in life.
 
-On Thu, Jun 18, 2020 at 2:44 PM Haris Iqbal <haris.iqbal@cloud.ionos.com> wrote:
->
-> It seems that the "rdma_bind_addr()" is called by the nvme rdma
-> module; but during the following events
-> 1) When a discover happens from the client side. Call trace for that looks like,
-> [ 1098.409398] nvmf_dev_write
-> [ 1098.409403] nvmf_create_ctrl
-> [ 1098.414568] nvme_rdma_create_ctrl
-> [ 1098.415009] nvme_rdma_setup_ctrl
-> [ 1098.415010] nvme_rdma_configure_admin_queue
-> [ 1098.415010] nvme_rdma_alloc_queue
->                              -->(rdma_create_id)
-> [ 1098.415032] rdma_resolve_addr
-> [ 1098.415032] cma_bind_addr
-> [ 1098.415033] rdma_bind_addr
->
-> 2) When a connect happens from the client side. Call trace is the same
-> as above, plus "nvme_rdma_alloc_queue()" is called n number of times;
-> n being the number of IO queues being created.
->
->
-> On the server side, when an nvmf port is enabled, that also triggers a
-> call to "rdma_bind_addr()", but that is not from the nvme rdma module.
-> may be nvme target rdma? (not sure).
->
-> On Thu, Jun 18, 2020 at 7:15 AM Haris Iqbal <haris.iqbal@cloud.ionos.com> wrote:
-> >
-> > (Apologies for multiple emails. Was having trouble with an extension,
-> > cause of which emails did not get delivered to the mailing list.
-> > Resolved now.)
-> >
-> > > Somehow nvme-rdma works:
-> >
-> > I think that's because the callchain during the nvme_rdma_init_module
-> > initialization stops at "nvmf_register_transport()". Here only the
-> > "struct nvmf_transport_ops nvme_rdma_transport" is registered, which
-> > contains the function "nvme_rdma_create_ctrl()". I tested this in my
-> > local setup and during kernel boot, that's the extent of the
-> > callchain.
-> > The ".create_ctrl"; which now points to "nvme_rdma_create_ctrl()" is
-> > called later from "nvmf_dev_write()". I am not sure when this is
-> > called, probably when the "discover" happens from the client side or
-> > during the server config. I am trying to test this to confirm, will
-> > send more details once I am done.
-> > Am I missing something here?
-> >
-> >
-> > > If the rdma_create_id() is not on a callchain from module_init then you don't have a problem.
-> >
-> > I am a little confused. I thought the problem occurs from a call to
-> > either "rdma_resolve_addr()" which calls "rdma_bind_addr()",
-> > or a direct call to "rdma_bind_addr()" as in rtrs case.
-> > In both the cases, a call to "rdma_create_id()" is needed before this.
-> >
-> >
-> > > Similarly they are supposed to be created from the client attachment.
-> > I am a beginner in terms of concepts here. Did you mean when a client
-> > tries to establish the first connection to an rdma server?
-> >
-> >
-> > On Thu, Jun 18, 2020 at 12:56 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Wed, Jun 17, 2020 at 10:07:56PM +0300, Leon Romanovsky wrote:
-> > > > On Wed, Jun 17, 2020 at 03:20:46PM -0300, Jason Gunthorpe wrote:
-> > > > > On Wed, Jun 17, 2020 at 02:28:11PM +0300, Leon Romanovsky wrote:
-> > > > > > On Wed, Jun 17, 2020 at 04:07:32PM +0530, haris.iqbal@cloud.ionos.com wrote:
-> > > > > > > From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-> > > > > > >
-> > > > > > > Fixes: 2de6c8de192b ("block/rnbd: server: main functionality")
-> > > > > > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > > > > > Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-> > > > > > >
-> > > > > > > The rnbd_server module's communication manager initialization depends on the
-> > > > > > > registration of the "network namespace subsystem" of the RDMA CM agent module.
-> > > > > > > As such, when the kernel is configured to load the rnbd_server and the RDMA
-> > > > > > > cma module during initialization; and if the rnbd_server module is initialized
-> > > > > > > before RDMA cma module, a null ptr dereference occurs during the RDMA bind
-> > > > > > > operation.
-> > > > > > > This patch delays the initialization of the rnbd_server module to the
-> > > > > > > late_initcall level, since RDMA cma module uses module_init which puts it into
-> > > > > > > the device_initcall level.
-> > > > > > >  drivers/block/rnbd/rnbd-srv.c | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-> > > > > > > index 86e61523907b..213df05e5994 100644
-> > > > > > > +++ b/drivers/block/rnbd/rnbd-srv.c
-> > > > > > > @@ -840,5 +840,5 @@ static void __exit rnbd_srv_cleanup_module(void)
-> > > > > > >         rnbd_srv_destroy_sysfs_files();
-> > > > > > >  }
-> > > > > > >
-> > > > > > > -module_init(rnbd_srv_init_module);
-> > > > > > > +late_initcall(rnbd_srv_init_module);
-> > > > > >
-> > > > > > I don't think that this is correct change. Somehow nvme-rdma works:
-> > > > > > module_init(nvme_rdma_init_module);
-> > > > > > -> nvme_rdma_init_module
-> > > > > >  -> nvmf_register_transport(&nvme_rdma_transport);
-> > > > > >   -> nvme_rdma_create_ctrl
-> > > > > >    -> nvme_rdma_setup_ctrl
-> > > > > >     -> nvme_rdma_configure_admin_queue
-> > > > > >      -> nvme_rdma_alloc_queue
-> > > > > >       -> rdma_create_id
-> > > > >
-> > > > > If it does work, it is by luck.
-> > > >
-> > > > I didn't check every ULP, but it seems that all ULPs use the same
-> > > > module_init.
-> > > >
-> > > > >
-> > > > > Keep in mind all this only matters for kernels without modules.
-> > > >
-> > > > Can it be related to the fact that other ULPs call to ib_register_client()
-> > > > before calling to rdma-cm? RNBD does not have such call.
-> > >
-> > > If the rdma_create_id() is not on a callchain from module_init then
-> > > you don't have a problem.
-> > >
-> > > nvme has a bug here, IIRC. It is not OK to create RDMA CM IDs outside
-> > > a client - CM IDs are supposed to be cleaned up when the client is
-> > > removed.
-> > >
-> > > Similarly they are supposed to be created from the client attachment.
-> > >
-> > > Though listening CM IDs unbound to any device may change that
-> > > slightly, I think it is probably best practice to create the listening
-> > > ID only if a client is bound.
-> > >
-> > > Most probably that is the best way to fix rnbd
-> > >
-> > > > I'm not proposing this, but just loudly wondering, do we really need rdma-cm
-> > > > as a separate module? Can we bring it to be part of ib_core?
-> > >
-> > > No idea.. It doesn't help this situation at least
-> > >
-> > > Jason
-> >
-> >
-> >
-> > --
-> >
-> > Regards
-> > -Haris
->
->
->
-> --
->
-> Regards
-> -Haris
+My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
+Federal Government of Sudan and he has a personal Oil firm in Bentiu
+Oil zone town and Upper
+Nile city. What I have experience physically, I don't wish to
+experience it again in my life due to the recent civil Ethnic war
+cause by our President Mr. Salva Kiir
+and the rebel leader Mr Riek Machar, I have been Under United Nation
+refuge camp in chad to save my life and that of my little daughter.
 
+Though, I do not know how you will feel to my proposal, but the truth
+is that I sneaked into Chad our neighboring country where I am living
+now as a refugee.
+I escaped with my little daughter when the rebels bust into our house
+and killed my husband as one of the big oil dealers in the country,
+ever since then, I have being on the run.
 
+I left my country and move to Chad our neighboring country with the
+little ceasefire we had, due to the face to face peace meeting accord
+coordinated by the US Secretary of State, Mr John Kerry and United
+Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
+and the rebel leader Mr Riek Machar to stop this war.
 
--- 
+I want to solicit for your partnership with trust to invest the $8
+million dollars deposited by my late husband in Bank because my life
+is no longer safe in our country, since the rebels are looking for the
+families of all the oil business men in the country to kill, saying
+that they are they one that is milking the country dry.
 
-Regards
--Haris
+I will offer you 20% of the total fund for your help while I will
+partner with you for the investment in your country.
+If I get your reply.
+
+I will wait to hear from you so as to give you details.With love from
+
+ i need you to contact me here sarahkoffi389@yahoo.co.jp
+
+Mrs. Sarah Koffi
