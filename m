@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3D7A20592A
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:38:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D619205918
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 19:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387847AbgFWRib (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 13:38:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34270 "EHLO mail.kernel.org"
+        id S2387707AbgFWRg7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 13:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387653AbgFWRgs (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:48 -0400
+        id S2387698AbgFWRg6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A8E20706;
-        Tue, 23 Jun 2020 17:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF1520774;
+        Tue, 23 Jun 2020 17:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933807;
-        bh=tNQ5/g0hGBvD2t9G9NPiam5thrxzFaMNuLWo9eawRTM=;
+        s=default; t=1592933817;
+        bh=mtEzBYW7ovbuj3VT+6NLFy9+/Vj5amjNWGdz/r63+SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pn7JJlycZn1ipPg6WBJObybUIU/2K05m2sCs6IcJpZ0tF8bMJ0OJA7iwAJoTLBzaL
-         x9KmcEfO6QzOnLFHgtVtruSfCvG1j8juvxdV/0qUq09Fyv8cRmr4s4XmNSZ8Rd+v/P
-         hoyTT+zFq6JY5ONqRv1dBBiik8Y9wlkN12SbGR28=
+        b=R2uIGaV/jqJKHcsmbU1ZcsLmSVwVme5VUebZTNSXAdtq1H7G9FSaqi0ylrh/ma4en
+         Vv76xnV4HiKoZa2BDin9tGyuzEuxa8i4ZcW5XJCa71zBbAQc8383GZK0m4PizYLWNq
+         EEmiO27SNMDZ6oBe7W5HKu6gBbSdRmANm95TzNyQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
         Bart Van Assche <bvanassche@acm.org>,
         Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/15] blktrace: break out of blktrace setup on concurrent calls
-Date:   Tue, 23 Jun 2020 13:36:29 -0400
-Message-Id: <20200623173630.1355971-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 6/6] blktrace: break out of blktrace setup on concurrent calls
+Date:   Tue, 23 Jun 2020 13:36:49 -0400
+Message-Id: <20200623173649.1356142-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
-References: <20200623173630.1355971-1-sashal@kernel.org>
+In-Reply-To: <20200623173649.1356142-1-sashal@kernel.org>
+References: <20200623173649.1356142-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -99,11 +99,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 13 insertions(+)
 
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 6cea8bbca03cb..c774b0ad0525b 100644
+index a60c09e0bda87..52389be36f00f 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
-@@ -3,6 +3,9 @@
-  * Copyright (C) 2006 Jens Axboe <axboe@kernel.dk>
+@@ -15,6 +15,9 @@
+  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   *
   */
 +
@@ -112,7 +112,7 @@ index 6cea8bbca03cb..c774b0ad0525b 100644
  #include <linux/kernel.h>
  #include <linux/blkdev.h>
  #include <linux/blktrace_api.h>
-@@ -495,6 +498,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+@@ -504,6 +507,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
  	 */
  	strreplace(buts->name, '/', '_');
  
