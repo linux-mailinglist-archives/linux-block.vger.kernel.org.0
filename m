@@ -2,144 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73FA6205AAA
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 20:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82367205B9E
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 21:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbgFWS3v (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 14:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387554AbgFWS3t (ORCPT
+        id S2387465AbgFWTR5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 15:17:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23413 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733220AbgFWTR5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:29:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374AEC061797
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 11:29:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so1837895pju.3
-        for <linux-block@vger.kernel.org>; Tue, 23 Jun 2020 11:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JXkDSAr5/uPdypFT+vPhb9QM0XECCw1QogkIjza9trI=;
-        b=VRPOqKgXBbe1omCau4oEOar/p3bhX1hnmkDK5oo6kzWoboZd6SthW3HQ/fnF48E5Ad
-         TFy6wVC1Zt0tVzcHOtTOw47hdeOauaMgmaZ6zltDMfNdLob+S/bzF8RmsABX4aqnrS72
-         FqSw42FCWi78K/1FW37NBnAtRs40JSIujuQZ/C35kNhgObkKHAK+mu644bPs+DnywUvm
-         fYYXdKXmrR/Epl78LsQPaZhh4kpgqCqvEbEKQBq3LNEoOjFO3Gb/VXUTw5HcjdoODVkn
-         jAQBGKwdodjJ4m51Dq2h17KJmJpx4MvyUs2jS+Pi8XwYstLDwRvgem5B+kNI/TaA60cZ
-         bdTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JXkDSAr5/uPdypFT+vPhb9QM0XECCw1QogkIjza9trI=;
-        b=T2weBdhJuQ62uWu7Z2Bbw2K8GB7GxZcfvTOoY+JZ23QEFS/IGtQkzzMHAjwxnnYcFV
-         gEfIL3L1GgsnGT0pSMVu1FuFP8XgplHhEP8yRZUPJeP5vdjbv7aQ8JdctCmvUy095if2
-         grEoew8M5Aym1thjcYTQZEW2b5TDR7qUZ1Jt7jEDfTZyQicvVHwD48t9WnTKUs4MURgD
-         MVGCZVWP1dt69xVnlSUZZcMItf+MCIH1bpYiDPq70L0pLCLtTUUVC+L6S+sczRRlyx6s
-         C8IYBdnONrNV74w7r58nh0jTiCEiHWHV+KOuc7hiyvsPmse8hqd46sh9QQcRwzZ7cjIC
-         t3Dg==
-X-Gm-Message-State: AOAM531/+OysCTz4bWRJc0riXL7fz/x7sDPmfGNNtnGs3ln/UB4KDeEg
-        6Vh2qa57crfE26mfM4C+sEE+Y4tIwvGijAoSBnAOaA==
-X-Google-Smtp-Source: ABdhPJwFYRuJg9EUbjSytVc+yfQjuDOMjwE4SVCIBy3rni20OvAXlm0XdI+2Z8txK6JARtyDXhDgAzhgcWbhIpdXKAY=
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr24842368plm.179.1592936988375;
- Tue, 23 Jun 2020 11:29:48 -0700 (PDT)
+        Tue, 23 Jun 2020 15:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592939874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+P9zuie6AFghJynlgBPJee7CZBCUK+HjLwj4LjvUfdA=;
+        b=NtD2PWwexaPULR1rZ9drxkpy0nmhAzK3GGA7PWb7VSlL5uUpmhqwkDywXEdtGKbxhOnLLq
+        iOsDgGAj5GNfIMH91dejfjAU2IvjE4yjl/HOmy2vTguE+c0lAGs5xpebMdc22c/h1K7fOI
+        5/vRmYhc9JTrX3D3/6idVWcfIrJACGg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-SRktsXZjOoGgfa2J1jEq8g-1; Tue, 23 Jun 2020 15:17:53 -0400
+X-MC-Unique: SRktsXZjOoGgfa2J1jEq8g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD14D8031C2;
+        Tue, 23 Jun 2020 19:17:51 +0000 (UTC)
+Received: from sulaco.redhat.com (unknown [10.3.128.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E869C71699;
+        Tue, 23 Jun 2020 19:17:50 +0000 (UTC)
+From:   Tony Asleson <tasleson@redhat.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [RFC PATCH v3 0/8] Add persistent durable identifier to storage log messages
+Date:   Tue, 23 Jun 2020 14:17:41 -0500
+Message-Id: <20200623191749.115200-1-tasleson@redhat.com>
 MIME-Version: 1.0
-References: <20200620033007.1444705-1-keescook@chromium.org>
- <20200620033007.1444705-5-keescook@chromium.org> <CAKwvOdmsXuqx-3Rt_KNFq4psAeFjG2-7qQaqkJ7dDqqmscUFNw@mail.gmail.com>
- <202006221403.EEAD37E94B@keescook>
-In-Reply-To: <202006221403.EEAD37E94B@keescook>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Jun 2020 11:29:38 -0700
-Message-ID: <CAKwvOdmr0dmC7UtL9Qcgm9Ue_Q2mhKzYiHcXpaB=LpMKpYeYqA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/16] b43: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 2:04 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 22, 2020 at 10:04:18AM -0700, Nick Desaulniers wrote:
-> > On Fri, Jun 19, 2020 at 8:30 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > > (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> > > "unused variable"). If the compiler thinks it is uninitialized, either
-> > > simply initialize the variable or make compiler changes. As a precursor
-> > > to removing[2] this[3] macro[4], just initialize this variable to NULL.
-> > > No later NULL deref is possible due to the early returns outside of the
-> > > (phy->rev >= 7 && phy->rev < 19) case, which explicitly tests for NULL.
-> > >
-> > > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> > >
-> > > Fixes: 58619b14d106 ("b43: move under broadcom vendor directory")
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > I see three total uses of uninitialized_var() in this file, do we want
-> > to eliminate all of them?
->
-> This is the only one that needed an explicit initialization -- all the
-> others are handled in the treewide patch. I *could* split it out here,
-> but I found it easier to keep the "no op" changes together in the
-> treewide patch.
+Today users have no easy way to correlate kernel log messages for storage
+devices across reboots, device dynamic add/remove, or when the device is
+physically or logically moved from from system to system.  This is due
+to the existing log IDs which identify how the device is attached and not
+a unique ID of what is attached.  Additionally, even when the attachment
+hasn't changed, it's not always obvious which messages belong to the
+device as the different areas in the storage stack use different
+identifiers, eg. (sda, sata1.00, sd 0:0:0:0).
 
-Ah, got it.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
-> -Kees
->
-> >
-> > > ---
-> > >  drivers/net/wireless/broadcom/b43/phy_n.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > index c33b4235839d..46db91846007 100644
-> > > --- a/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> > >         u32 rfpwr_offset;
-> > >         u8 pga_gain, pad_gain;
-> > >         int i;
-> > > -       const s16 *uninitialized_var(rf_pwr_offset_table);
-> > > +       const s16 *rf_pwr_offset_table = NULL;
-> > >
-> > >         table = b43_nphy_get_tx_gain_table(dev);
-> > >         if (!table)
-> > > --
-> >
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
-> --
-> Kees Cook
+This change addresses this by adding a unique ID to each log
+message.  It couples the existing structured key/value logging capability
+and VPD 0x83 device identification.
 
 
+An example of logs filtered for a specific device utilizing this patch
+series.
 
+$ journalctl -b  _KERNEL_DURABLE_NAME="`cat /sys/block/sdb/device/wwid`"
+| cut -c 25- | fmt -t
+9-08-22 13:21:35 CDT, end at Wed 2020-05-13 15:40:26 CDT. --
+l: scsi 1:0:0:0: Attached scsi generic sg1 type 0
+l: sd 1:0:0:0: [sdb] 209715200 512-byte logical blocks: (107 GB/100 GiB)
+l: sd 1:0:0:0: [sdb] Write Protect is off
+l: sd 1:0:0:0: [sdb] Mode Sense: 00 3a 00 00
+l: sd 1:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't
+   support DPO or FUA
+l: sd 1:0:0:0: [sdb] Attached SCSI disk
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x800000 SErr 0x800000
+   action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/20:b8:10:27:00/00:00:00:00:00/40 tag 23
+            ncq dma 16384 in res 40/00:00:00:4f:c2/00:00:00:00:00/00
+            Emask 0x4 (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: [sdb] tag#23 FAILED Result: hostbyte=DID_OK
+            driverbyte=DRIVER_SENSE cmd_age=30s
+l: sd 1:0:0:0: [sdb] tag#23 Sense Key : Illegal Request [current]
+l: sd 1:0:0:0: [sdb] tag#23 Add. Sense: Unaligned write command
+l: sd 1:0:0:0: [sdb] tag#23 CDB: Read(10) 28 00 00 00 27 10 00 00 20 00
+l: block sdb: blk_update_request: I/O error, dev sdb, sector 10000 op
+            0x0:(READ) flags 0x80700 phys_seg 4 prio class 0
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x2 SErr 0x2 action
+            0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:08:10:27:00/00:00:00:00:00/40 tag 1 ncq
+            dma 4096 in res 40/00:ff:00:00:00/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x800000 SErr 0x800000
+            action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:b8:10:27:00/00:00:00:00:00/40 tag 23 ncq
+            dma 4096 in res 40/00:00:00:4f:c2/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: NCQ disabled due to excessive errors
+l: sd 1:0:0:0: ata2.00: exception Emask 0x0 SAct 0x4000 SErr 0x4000
+            action 0x6 frozen
+l: sd 1:0:0:0: ata2.00: failed command: READ FPDMA QUEUED
+l: sd 1:0:0:0: ata2.00: cmd 60/08:70:10:27:00/00:00:00:00:00/40 tag 14 ncq
+            dma 4096 in res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4
+            (timeout)
+l: sd 1:0:0:0: ata2.00: status: { DRDY }
+l: sd 1:0:0:0: ata2.00: configured for UDMA/100
+l: sd 1:0:0:0: ata2.00: device reported invalid CHS sector 0
+
+This change is incomplete.  With the plethora of different logging
+techniques utilized in the kernel it will take some coordinated effort
+and additional changes.  I tried a few different approaches, to cover
+as much as I could without resorting to changing every print statement
+in all the storage layers, but maybe there is a better,
+more elegant approach?
+
+I believe having this functionality is very useful and important for
+system configurations of all sizes.  I mentioned this change briefly in:
+https://lore.kernel.org/lkml/30f29fe6-8445-0016-8cdc-3ef99d43fbf5@redhat.com/
+
+Questions
+1. Where is the best place to put the durable_name callback function?
+2. What is best "KEY" value?
+3. Should we re-work the message contents themselves to remove any redundant
+   information that is included when using dev_printk? ref. 
+   https://lore.kernel.org/linux-scsi/e12aeb9e-fe5d-5b5e-d190-401997cecc34@redhat.com/#t
+
+
+v2:
+- Incorporated changes suggested by James Bottomley
+- Removed string function which removed leading/trailing/duplicate adjacent
+  spaces from generated id, value matches /sys/block/<device>/device/wwid
+- Remove xfs patch, limiting changes to lower block layers
+- Moved callback from struct device_type to struct device.  Struct device_type
+  is typically static const and with a number of different areas using shared
+  implementation of genhd unable to modify for each of the different areas.
+
+v3:
+- Increase the size of the buffers for NVMe id generation and
+  dev_vprintk_emit
+
+Tony Asleson (8):
+  struct device: Add function callback durable_name
+  create_syslog_header: Add durable name
+  print_req_error: Use dev_printk
+  buffer_io_error: Use dev_printk
+  ata_dev_printk: Use dev_printk
+  scsi: Add durable_name for dev_printk
+  nvme: Add durable name for dev_printk
+  dev_vprintk_emit: Increase hdr size
+
+ block/blk-core.c           |  5 ++++-
+ drivers/ata/libata-core.c  | 10 +++++++---
+ drivers/base/core.c        | 31 ++++++++++++++++++++++++++++++-
+ drivers/nvme/host/core.c   | 18 ++++++++++++++++++
+ drivers/scsi/scsi_lib.c    | 14 ++++++++++++++
+ drivers/scsi/scsi_sysfs.c  | 23 +++++++++++++++++++++++
+ drivers/scsi/sd.c          |  2 ++
+ fs/buffer.c                | 10 ++++++++--
+ include/linux/device.h     |  4 ++++
+ include/scsi/scsi_device.h |  3 +++
+ 10 files changed, 113 insertions(+), 7 deletions(-)
+
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.4
+
