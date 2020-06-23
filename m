@@ -2,43 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9095205B9B
-	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 21:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29317205B9F
+	for <lists+linux-block@lfdr.de>; Tue, 23 Jun 2020 21:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387427AbgFWTR4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Jun 2020 15:17:56 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58516 "EHLO
+        id S2387476AbgFWTR6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Jun 2020 15:17:58 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49588 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733308AbgFWTR4 (ORCPT
+        by vger.kernel.org with ESMTP id S2387445AbgFWTR5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:17:56 -0400
+        Tue, 23 Jun 2020 15:17:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592939875;
+        s=mimecast20190719; t=1592939876;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MVXzDZJGgBD4xUv6v9WDwHRdtXXOvQAzISrUuLR4fHM=;
-        b=DcUaJKNQ+C06tR0om72J57qC9nPRjNDaGd+Bkn2v+Ms5PQqYr9jpZIcUpsF9dRoxst3nL8
-        p2BP0jrglanrChBF26lPmML1fIuhLBOSQSeFuv4h1LGYM/hkgiiqJ6otoK5GDL3lDXAK26
-        L6Dsl3oSKoOwuO85FGn0hbjwRDzyTsQ=
+        bh=teVdl2eFjdKcaYL+t6xs5Kr2mkipcHIOT1fEkc9mcw0=;
+        b=BQtTdg6UWkRemRfGkVUbi+PGAE9WkSnx4cRzMEPoBV7wfqrqLyjDwOWbi1QOKf513IZ2Gh
+        xDznNs/gO4rtxHY6v/Fnp/zVglx2jO1riKHnodG/rsq7UYJo6L+DBtbE7tImH0xqxayS69
+        mKSG1yAsUJqFPBIqSDYkr84NVO7bVz8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-l_94cfbbOquXuITPxu4PpA-1; Tue, 23 Jun 2020 15:17:54 -0400
-X-MC-Unique: l_94cfbbOquXuITPxu4PpA-1
+ us-mta-431-lH1bMT6rNEuJaJaI1CGXjA-1; Tue, 23 Jun 2020 15:17:55 -0400
+X-MC-Unique: lH1bMT6rNEuJaJaI1CGXjA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D000801503;
-        Tue, 23 Jun 2020 19:17:53 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27BE48031C2;
+        Tue, 23 Jun 2020 19:17:54 +0000 (UTC)
 Received: from sulaco.redhat.com (unknown [10.3.128.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C59E7168D;
-        Tue, 23 Jun 2020 19:17:52 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D7E671694;
+        Tue, 23 Jun 2020 19:17:53 +0000 (UTC)
 From:   Tony Asleson <tasleson@redhat.com>
 To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [RFC PATCH v3 1/8] struct device: Add function callback durable_name
-Date:   Tue, 23 Jun 2020 14:17:42 -0500
-Message-Id: <20200623191749.115200-2-tasleson@redhat.com>
+Subject: [RFC PATCH v3 2/8] create_syslog_header: Add durable name
+Date:   Tue, 23 Jun 2020 14:17:43 -0500
+Message-Id: <20200623191749.115200-3-tasleson@redhat.com>
 In-Reply-To: <20200623191749.115200-1-tasleson@redhat.com>
 References: <20200623191749.115200-1-tasleson@redhat.com>
 MIME-Version: 1.0
@@ -49,74 +49,37 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Function callback and function to be used to write a persistent
-durable name to the supplied character buffer.  This will be used to add
-structured key-value data to log messages for hardware related errors
-which allows end users to correlate message and specific hardware.
+This gets us a persistent durable name for code that logs messages in the
+block layer that have the appropriate callbacks setup for durable name.
 
 Signed-off-by: Tony Asleson <tasleson@redhat.com>
 ---
- drivers/base/core.c    | 24 ++++++++++++++++++++++++
- include/linux/device.h |  4 ++++
- 2 files changed, 28 insertions(+)
+ drivers/base/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 0cad34f1eede..511b7d2fc916 100644
+index 511b7d2fc916..964690572a89 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -2304,6 +2304,30 @@ int dev_set_name(struct device *dev, const char *fmt, ...)
- }
- EXPORT_SYMBOL_GPL(dev_set_name);
- 
-+/**
-+ * dev_durable_name - Write "DURABLE_NAME"=<durable name> in buffer
-+ * @dev: device
-+ * @buffer: character buffer to write results
-+ * @len: length of buffer
-+ * @return: Number of bytes written to buffer
-+ */
-+int dev_durable_name(const struct device *dev, char *buffer, size_t len)
-+{
-+	int tmp, dlen;
-+
-+	if (dev && dev->durable_name) {
-+		tmp = snprintf(buffer, len, "DURABLE_NAME=");
-+		if (tmp < len) {
-+			dlen = dev->durable_name(dev, buffer + tmp,
-+							len - tmp);
-+			if (dlen > 0 && ((dlen + tmp) < len))
-+				return dlen + tmp;
-+		}
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(dev_durable_name);
-+
- /**
-  * device_to_dev_kobj - select a /sys/dev/ directory for the device
-  * @dev: device
-diff --git a/include/linux/device.h b/include/linux/device.h
-index ac8e37cd716a..281755404c21 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -613,6 +613,8 @@ struct device {
- 	struct iommu_group	*iommu_group;
- 	struct dev_iommu	*iommu;
- 
-+	int (*durable_name)(const struct device *dev, char *buff, size_t len);
-+
- 	bool			offline_disabled:1;
- 	bool			offline:1;
- 	bool			of_node_reused:1;
-@@ -654,6 +656,8 @@ static inline const char *dev_name(const struct device *dev)
- extern __printf(2, 3)
- int dev_set_name(struct device *dev, const char *name, ...);
- 
-+int dev_durable_name(const struct device *d, char *buffer, size_t len);
-+
- #ifdef CONFIG_NUMA
- static inline int dev_to_node(struct device *dev)
+@@ -3754,6 +3754,7 @@ create_syslog_header(const struct device *dev, char *hdr, size_t hdrlen)
  {
+ 	const char *subsys;
+ 	size_t pos = 0;
++	int dlen;
+ 
+ 	if (dev->class)
+ 		subsys = dev->class->name;
+@@ -3796,6 +3797,10 @@ create_syslog_header(const struct device *dev, char *hdr, size_t hdrlen)
+ 				"DEVICE=+%s:%s", subsys, dev_name(dev));
+ 	}
+ 
++	dlen = dev_durable_name(dev, hdr + (pos + 1), hdrlen - (pos + 1));
++	if (dlen)
++		pos += dlen + 1;
++
+ 	if (pos >= hdrlen)
+ 		goto overflow;
+ 
 -- 
 2.25.4
 
