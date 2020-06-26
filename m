@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B09620ADC2
-	for <lists+linux-block@lfdr.de>; Fri, 26 Jun 2020 10:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5704D20ADB9
+	for <lists+linux-block@lfdr.de>; Fri, 26 Jun 2020 10:02:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgFZICn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 26 Jun 2020 04:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
+        id S1729014AbgFZICX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 26 Jun 2020 04:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgFZICT (ORCPT
+        with ESMTP id S1728991AbgFZICU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:02:19 -0400
+        Fri, 26 Jun 2020 04:02:20 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4256FC08C5C1;
-        Fri, 26 Jun 2020 01:02:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7184CC08C5DB;
+        Fri, 26 Jun 2020 01:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=sFxMoqE2sgnbFCbegAWrrjwEvJ1szu0FusAr7R3A7+U=; b=Pj2a3nKjCPDnhBKe1cprUXuAso
-        rogZ01V9oli2s1pfDjkyyLLz4sr1K6k0CLSJ4x0Mc+mRR0YwB7WNTQxfiAItS/waTrwk+2iGVDsq8
-        h/v/413uGqkSZlwp7VXdbkYhq8MNU5Sas9fxRYBclVi1F+YIIiyZor9go4vMJL10d3m5jbTAKc90Z
-        n9ZmibmqV0c5MKeb6bLb3+w7+srfhGXqweRkd+fNx0EPQLO9ATBzyUupvAzF7beFYWF9yTm5HeRiK
-        tURVS4oiN6YsDT89gS/3QsVgT4lZP8kh0GVfBPvsdknuQHh0e0b6egpkogFSqZl5/v5XWBOeE2cO7
-        VquVCCaA==;
+        bh=VUTyrs7EBN/PE5iFqQDA52UEXg/oSXucsE4GbfE4658=; b=ZIgk6vukccFW6Vyo8Z8cULVTQy
+        tb5sp/ROJU/u6OwDBCxg4nS2+1bQsg4sYf2BdCoZ+XEURqny+C63v4t31CbIJiawonhcpQ5X+tP8Z
+        Wo1qgTgGSoUB4ONNk8WedM95EQYLkSLyO/hmQ2PuODUMo41PlckifS3jT2Yuw9bmR39OLEFgyBNft
+        +ZEZceL+XT9ra949xi3l8JY47WaBIXlwnCGP0DW0+looYoyyCcAcpigXB+t4Pw04zL28RQoa0FeMf
+        xZK7aPwQCQcDzWeUj+D4RdLBWIVr1Ed5Q1wuSsOa53zpoloGYP/aQk+7BpWP+4FLJ4YluQazVDAo3
+        ySxa7tMw==;
 Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jojJC-0007UN-PI; Fri, 26 Jun 2020 08:02:02 +0000
+        id 1jojJD-0007UT-V9; Fri, 26 Jun 2020 08:02:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] block: simplify set_init_blocksize
-Date:   Fri, 26 Jun 2020 10:01:54 +0200
-Message-Id: <20200626080158.1998621-4-hch@lst.de>
+Subject: [PATCH 4/7] block: remove the bd_block_size field from struct block_device
+Date:   Fri, 26 Jun 2020 10:01:55 +0200
+Message-Id: <20200626080158.1998621-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200626080158.1998621-1-hch@lst.de>
 References: <20200626080158.1998621-1-hch@lst.de>
@@ -45,33 +45,77 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The loop to increase the initial block size doesn't really make any
-sense, as the AND operation won't match for powers of two if it didn't
-for the initial block size.
+We can trivially calculate the block size from the inodes i_blkbits
+variable.  Use that instead of keeping two redundant copies of the
+information in slightly different formats.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/block_dev.c | 6 ------
- 1 file changed, 6 deletions(-)
+ fs/block_dev.c            | 9 ++-------
+ include/linux/blk_types.h | 1 -
+ include/linux/blkdev.h    | 2 +-
+ 3 files changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 0e0d43dc27d331..8b7a9c76d33edf 100644
+index 8b7a9c76d33edf..06d31e459048ad 100644
 --- a/fs/block_dev.c
 +++ b/fs/block_dev.c
-@@ -106,13 +106,7 @@ EXPORT_SYMBOL(invalidate_bdev);
+@@ -105,10 +105,7 @@ EXPORT_SYMBOL(invalidate_bdev);
+ 
  static void set_init_blocksize(struct block_device *bdev)
  {
- 	unsigned bsize = bdev_logical_block_size(bdev);
--	loff_t size = i_size_read(bdev->bd_inode);
- 
--	while (bsize < PAGE_SIZE) {
--		if (size & bsize)
--			break;
--		bsize <<= 1;
--	}
- 	bdev->bd_block_size = bsize;
- 	bdev->bd_inode->i_blkbits = blksize_bits(bsize);
+-	unsigned bsize = bdev_logical_block_size(bdev);
+-
+-	bdev->bd_block_size = bsize;
+-	bdev->bd_inode->i_blkbits = blksize_bits(bsize);
++	bdev->bd_inode->i_blkbits = blksize_bits(bdev_logical_block_size(bdev));
  }
+ 
+ int set_blocksize(struct block_device *bdev, int size)
+@@ -122,9 +119,8 @@ int set_blocksize(struct block_device *bdev, int size)
+ 		return -EINVAL;
+ 
+ 	/* Don't change the size if it is same as current */
+-	if (bdev->bd_block_size != size) {
++	if (bdev->bd_inode->i_blkbits != blksize_bits(size)) {
+ 		sync_blockdev(bdev);
+-		bdev->bd_block_size = size;
+ 		bdev->bd_inode->i_blkbits = blksize_bits(size);
+ 		kill_bdev(bdev);
+ 	}
+@@ -889,7 +885,6 @@ struct block_device *bdget(dev_t dev)
+ 		bdev->bd_contains = NULL;
+ 		bdev->bd_super = NULL;
+ 		bdev->bd_inode = inode;
+-		bdev->bd_block_size = i_blocksize(inode);
+ 		bdev->bd_part_count = 0;
+ 		bdev->bd_invalidated = 0;
+ 		inode->i_mode = S_IFBLK;
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index a602132cbe32c2..b01cd19bbe8a6e 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -33,7 +33,6 @@ struct block_device {
+ 	struct list_head	bd_holder_disks;
+ #endif
+ 	struct block_device *	bd_contains;
+-	unsigned		bd_block_size;
+ 	u8			bd_partno;
+ 	struct hd_struct *	bd_part;
+ 	/* number of times partitions within this device have been opened. */
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 15497782c17656..752a4b771e2f2f 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1548,7 +1548,7 @@ static inline unsigned int blksize_bits(unsigned int size)
+ 
+ static inline unsigned int block_size(struct block_device *bdev)
+ {
+-	return bdev->bd_block_size;
++	return 1 << bdev->bd_inode->i_blkbits;
+ }
+ 
+ int kblockd_schedule_work(struct work_struct *work);
 -- 
 2.26.2
 
