@@ -2,68 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1606520D673
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:05:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A73CD20D6D4
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:06:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbgF2TUS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732105AbgF2TUR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:20:17 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 033B82559A;
-        Mon, 29 Jun 2020 16:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593449521;
-        bh=lAWJH6y2JHj7l3WROnIUTbAtWV6gbRyKvK+nJkOMGac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oR2Fa16jrQK3sMyMD5a6gGmQM7P77YD+h8hX8rj3ASdSIYAXXX02sL3PQmhSOOM0N
-         D6G2X8WiBIyh7uOl2qxS5BAWBdAhdiw2UQzz+zVfObp3FFeTajZ589ADx9CXvZnhLd
-         PcsBL9h1xaeN/tSw7v8b84c2PWQKyXxjfrn11Gug=
-Date:   Mon, 29 Jun 2020 09:51:59 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-block@vger.kernel.org
-Cc:     Satya Tangirala <satyat@google.com>
+        id S1727984AbgF2TYW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 15:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732364AbgF2TYU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:24:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5D9C061755
+        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 12:24:20 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e18so8752068pgn.7
+        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 12:24:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cq4UBXrTLYgIRJ0xWriZuGDCaPMlM6gW39AR31lPx+0=;
+        b=qN783EXLt/MMGHppJnWa45eRyBY90VpDa/sxDCh6Qfyln2FvfhLb/Aii/lkheS+wBO
+         Dqci6cjnv9nhRE6bbGvMjC/GbYZAh0TgxX6Du8RfFaAVuv/Eaw01dKrfhsHKw2+SwIRi
+         6Iwyw0N0mHdxoithK1HCM5sR4N7Q79cYXxEyudbdtFj2cy/0CUcTS2JEcPccJlfrnbgl
+         qmgxFlxnMTpLWR/bM+h9VPtP/5jNSNyKpKciRwsfA3XghNHjx42xVgzxO2tAMig9gpqK
+         BqFKBtse+wms9cd4bzXq2GrIexpBGRv1Vq1cXyNmVkupKdt7P92Iaa8UgybvflDuXaR/
+         mzsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cq4UBXrTLYgIRJ0xWriZuGDCaPMlM6gW39AR31lPx+0=;
+        b=mgSwkBhWe7DDStjVzn6t28qfBz6P/Aamd3abYh1kYKvdtBRfHdxxTJiljvGqCK2c7M
+         xzT9kAAnKjufUMXEC1nURuLWVZcZpfvNg9dN2/OZIz6QJMn08vx55aSwNTqLvA8ZoQOJ
+         7EIIKCpBBPv/5x8Fvi0ZdH7Bf1IeuOiwc5rM8Tjm4LLW2P/7bnmlbC4VsUfVZls3/sUA
+         CizrUEfFpDJMxNmUFhtWCB3C2m97QmxjrzaSe9nIZQ1qv/AC9+S+PQ3ImBtj2Zn4P4TV
+         qjEDWU2u1sa8hS/blyZLjYd7vz73EN6R31ErI4yX6kgPma7h/Sb7hx7oOSiRqmOVKqef
+         Ek6A==
+X-Gm-Message-State: AOAM5311rk0OUg47gH+4r3+B7XmDDQwNrqtlHxUwiXOlrHnOVin26azW
+        tzR4OiC0+7pK/PLPWPE1zQzt9w==
+X-Google-Smtp-Source: ABdhPJx4OJYni9g/6pDj1+j2oU99gNHg3yf+BPH8XUo8SFw9ku6pHRQv5hCjMHYThvJhpTZtsYU14A==
+X-Received: by 2002:aa7:8298:: with SMTP id s24mr16435624pfm.21.1593458659993;
+        Mon, 29 Jun 2020 12:24:19 -0700 (PDT)
+Received: from [192.168.86.197] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
+        by smtp.gmail.com with ESMTPSA id mw5sm307050pjb.27.2020.06.29.12.24.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 12:24:19 -0700 (PDT)
 Subject: Re: [PATCH] block/keyslot-manager: use kvfree_sensitive()
-Message-ID: <20200629165159.GB20492@sol.localdomain>
+To:     Eric Biggers <ebiggers@kernel.org>, linux-block@vger.kernel.org
+Cc:     Satya Tangirala <satyat@google.com>
 References: <20200616155654.191263-1-ebiggers@kernel.org>
+ <20200629165159.GB20492@sol.localdomain>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bf08a91c-bd40-fd1d-3d03-c2ba822df1c2@kernel.dk>
+Date:   Mon, 29 Jun 2020 13:24:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616155654.191263-1-ebiggers@kernel.org>
+In-Reply-To: <20200629165159.GB20492@sol.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:56:54AM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On 6/29/20 10:51 AM, Eric Biggers wrote:
+> On Tue, Jun 16, 2020 at 08:56:54AM -0700, Eric Biggers wrote:
+>> From: Eric Biggers <ebiggers@google.com>
+>>
+>> Make blk_ksm_destroy() use the kvfree_sensitive() function (which was
+>> introduced in v5.8-rc1) instead of open-coding it.
+>>
+>> Signed-off-by: Eric Biggers <ebiggers@google.com>
+>> ---
+>>  block/keyslot-manager.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
+>> index c2ef41b3147b..35abcb1ec051 100644
+>> --- a/block/keyslot-manager.c
+>> +++ b/block/keyslot-manager.c
+>> @@ -374,8 +374,7 @@ void blk_ksm_destroy(struct blk_keyslot_manager *ksm)
+>>  	if (!ksm)
+>>  		return;
+>>  	kvfree(ksm->slot_hashtable);
+>> -	memzero_explicit(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
+>> -	kvfree(ksm->slots);
+>> +	kvfree_sensitive(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
+>>  	memzero_explicit(ksm, sizeof(*ksm));
+>>  }
+>>  EXPORT_SYMBOL_GPL(blk_ksm_destroy);
+>> -- 
 > 
-> Make blk_ksm_destroy() use the kvfree_sensitive() function (which was
-> introduced in v5.8-rc1) instead of open-coding it.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  block/keyslot-manager.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
-> index c2ef41b3147b..35abcb1ec051 100644
-> --- a/block/keyslot-manager.c
-> +++ b/block/keyslot-manager.c
-> @@ -374,8 +374,7 @@ void blk_ksm_destroy(struct blk_keyslot_manager *ksm)
->  	if (!ksm)
->  		return;
->  	kvfree(ksm->slot_hashtable);
-> -	memzero_explicit(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
-> -	kvfree(ksm->slots);
-> +	kvfree_sensitive(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
->  	memzero_explicit(ksm, sizeof(*ksm));
->  }
->  EXPORT_SYMBOL_GPL(blk_ksm_destroy);
-> -- 
+> Ping?
 
-Ping?
+Applied, thanks.
+
+-- 
+Jens Axboe
+
