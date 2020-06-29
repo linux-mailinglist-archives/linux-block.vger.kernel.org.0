@@ -2,169 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD7E320D0AB
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 20:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC21E20D305
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 21:11:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgF2SfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 14:35:05 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:63879 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgF2SfE (ORCPT
+        id S1728949AbgF2SzC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 14:55:02 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:57271 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729909AbgF2SzA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:04 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629183500epoutp019cd5e9722d9f13413ad7550562fd1840~dF4RrRwRS1319913199epoutp012
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 18:35:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629183500epoutp019cd5e9722d9f13413ad7550562fd1840~dF4RrRwRS1319913199epoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593455700;
-        bh=GOb5F6IEPqqUzppfmpm5q/EtUDLSZpl8Hl/nDzpT/II=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=s2IxXCxlP0DxRQWjQCAElJjGgGLZwVziDdmjh6WwL1NUfVg7PtLaxqxPj1yS/b9Jq
-         6K3jcZ/sVaZ4EPg5JmlFC/cvjxywO9MEnxDx/ErMuDRGPqlEnZc2N1z8LPV9jaQMkq
-         //6kLW40RNAyxr4Aewxvu0iXbnU0qA2JxQ4N7SZk=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200629183459epcas5p3e5d54b1bd9edce6f19f739b187e730bb~dF4Q0gKG30377803778epcas5p3y;
-        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DB.07.09703.3543AFE5; Tue, 30 Jun 2020 03:34:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200629183459epcas5p464fdcdf272ea360bcd50901ccc79ca6e~dF4QV4RQj0162001620epcas5p4P;
-        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200629183459epsmtrp29abb784126e5b438d6071a9f61937274~dF4QU9PJ80229002290epsmtrp2j;
-        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
-X-AuditID: b6c32a4a-4b5ff700000025e7-6e-5efa34533fce
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A1.55.08303.3543AFE5; Tue, 30 Jun 2020 03:34:59 +0900 (KST)
-Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200629183456epsmtip268cd4e9ea0911be74ab0ec579850ff0c~dF4OJ4uE21597515975epsmtip2a;
-        Mon, 29 Jun 2020 18:34:56 +0000 (GMT)
-Date:   Tue, 30 Jun 2020 00:02:02 +0530
-From:   Kanchan Joshi <joshi.k@samsung.com>
+        Mon, 29 Jun 2020 14:55:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593456903; x=1624992903;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=6acM9xpylVregUcLgxo03dakaGiRmdfj2Enb6u/SGeg=;
+  b=oqFsggA7OYmZMKwKCE+4AYmwPJy4kxfnUJ4Q2SpiH5fysAcRMmdYfdEI
+   cLwrkdVO1HLxfIdwN0EMY1Uw7fIrQPr4vCBH66Cta1M4b2akaxRkasEZk
+   qhhaLxmj/oBKQlAZKLYpM4XYG9++1aOTizqXb1dhbk/OMkrBpA8EwZYUU
+   MHwOASBEHteOTXcuJjYg16hM3vbJRrSFCMeGqTEM/BdyeHXl7h+7AE4TS
+   mxiwza+97lCMZF2emwrA/WSWsNZ7IpX8sQdvjrzZoefAuvdz2l+E+AkC3
+   hOsgQpRG9fL6VXOFEud9bUaJcP3bV6yrBuqvxDGXOfGE7iH6kAZsq3eq1
+   A==;
+IronPort-SDR: GDQ0hGp9tiI2h++dOOJgSgoVgQqLWu/kYSG4AcnI5b005EY5W42uwA8Hqh/VGOY5T+fs+qTPti
+ RBqStqPRbHy2PeLd5mQSM/Bw/7IkiO+gVNq/esHG+VzFsJtOSltyIQmJtvdHQix+rSiGggxafv
+ Pbe7LtQstA0/1BTZyH15pLnO1sjZoO76Z71gsQd6qfycDj+nlmUAu/Qj1HjftyisHGFm29ESob
+ WsESOmnalN+iyUK8jw7alHjTIE/SMBR6reveQLbiVXLw48BaPDjrobLIyh/GpUAfs4TqnZwJMS
+ ifw=
+X-IronPort-AV: E=Sophos;i="5.75,294,1589212800"; 
+   d="scan'208";a="244187532"
+Received: from mail-dm6nam10lp2100.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.100])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 17:04:11 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nB7tC2X6IRg2ddPHEnU/LsswHobDiCoA6IX7zWEw+enOi0spsoWqxs5wHUXV6zIXS/8fSKpc2Uqq2+25PkaFIDTV9wX49FfwHz9+vWyHP43+jlSzsUxaBWNPFZ/Ly2p3pwFWwU7mO78ZNfD87WHJn0JciaQqM3tiqgY8ka2PCPBxGMlSoBRinDgNnA8yUkPjQmBsO1OWlA45adFH9VeC4A5g7r/3VjABngkRacMFEfYHOmUumVDtxdKmHI9EWJKrpuJiShwCE+4LwFYICfXG64UnJBeJweS8H9J4Yhs6Ipu0bcKjX04SZl890AS/mzbSMgWqU3fGk7ja3ODjkxuJYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RKwWAB1xpnyns5hqFEw0Cvuv8gNmxEIPpG5h/5HhQj8=;
+ b=dwtq1wS3rvfGK3WNDnAOU93Nfba05Wa4lnPSd1+3GpVEQNpJWLm4zok8zhHlnCe6MK/FjeodmWZ2foXaP/gZk9E6WYpnl8lW1h0mJ/L/5IdPHr1hNMxBP0cH6o7pz30MtfVP5tuN1rTXz0HvDcuyjL8LJdgqA/43NLEG/6O6F4kNTcfnLnoNLz2GY2+alPv9YStUGx94jNsdYmAhgiY+Tg3n8Qdt66kZG4njFNAGAdl78TJUwc9MGOIewlvPy5fZUZ79H3Jn3N2j+Z1gy5iK0mtOBeuoJPniSYv1sqarmuLYraskEKCmDxRBZ1x+0KX9YHObfzcOc4Tuh3CGucl8Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RKwWAB1xpnyns5hqFEw0Cvuv8gNmxEIPpG5h/5HhQj8=;
+ b=eXQNbYTaiWAMql+dAJS8qQnBMv9eMDRpU55QdlAVaJMuXTRQOx6YhqFwMG+YnJWQZppSBcRZSAjl150uABtEzC+ji7veyrhdfXGgYNo0XlyBgIZxB7WjQveCCCg3ZxZ1fnkQSjdFhBxC+MqjyP+w+gXcrvOWWSq7ZLPC2FEvp+0=
+Received: from BYAPR04MB5112.namprd04.prod.outlook.com (2603:10b6:a03:45::10)
+ by BYAPR04MB5783.namprd04.prod.outlook.com (2603:10b6:a03:112::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Mon, 29 Jun
+ 2020 09:03:58 +0000
+Received: from BYAPR04MB5112.namprd04.prod.outlook.com
+ ([fe80::a442:4836:baba:c84b]) by BYAPR04MB5112.namprd04.prod.outlook.com
+ ([fe80::a442:4836:baba:c84b%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
+ 09:03:58 +0000
+From:   Niklas Cassel <Niklas.Cassel@wdc.com>
 To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        "asml.silence@gmail.com" <asml.silence@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "mb@lightnvm.io" <mb@lightnvm.io>,
+CC:     Matias Bjorling <Matias.Bjorling@wdc.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "kbusch@kernel.org" <kbusch@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
-        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
-        "javier.gonz@samsung.com" <javier.gonz@samsung.com>,
-        Arnav Dawn <a.dawn@samsung.com>
-Subject: Re: [PATCH v2 1/2] fs,block: Introduce RWF_ZONE_APPEND and handling
- in direct IO path
-Message-ID: <20200629183202.GA24003@test-zns>
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH 1/2] block: add zone_desc_ext_bytes to sysfs
+Thread-Topic: [PATCH 1/2] block: add zone_desc_ext_bytes to sysfs
+Thread-Index: AQHWTaAfatwqFYUzT0SXO2cOAFMc8qjvTS8A
+Date:   Mon, 29 Jun 2020 09:03:58 +0000
+Message-ID: <20200629090356.GA521026@localhost.localdomain>
+References: <20200628230102.26990-1-matias.bjorling@wdc.com>
+ <20200628230102.26990-2-matias.bjorling@wdc.com>
+ <CY4PR04MB375197387D94CE4E60E836F4E76E0@CY4PR04MB3751.namprd04.prod.outlook.com>
+In-Reply-To: <CY4PR04MB375197387D94CE4E60E836F4E76E0@CY4PR04MB3751.namprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: wdc.com; dkim=none (message not signed)
+ header.d=none;wdc.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [85.224.200.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8169bcc9-24b6-45e1-2e48-08d81c0b5c11
+x-ms-traffictypediagnostic: BYAPR04MB5783:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB5783462B45B1E98F6B5A56FFF26E0@BYAPR04MB5783.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nUjTuhIBw5LP0lK7w8Wgi0HTq6JB25hlERwsW94KJcOzwih5SKejS7kOM5NgAKZyUkGbPp5zly73XZaE+fmAimA/pfjyEKf1xZxf/PxBOaALIruxrGDzJoypAKKcp4EAcWECbILXWoQHxPNaB1elz0cQOYnZG4/iYH05eyynEwDsF6dE1XVGU3KEQPGbC6e0GCk/pt6LuF1cqwXTht24XUM9VOm7WGsH2Hfzg1KiQtKUcF+mg8hy/ICcxFJ1cweFpRQzr9nFgU2b/a5sUBnfk5HMwPZ9235yxFVrAEkaW59fcW3DEqq0EUTiclksx2MqI59mx0whUyOGcf8XNuF0V/5okdrMh3o3gJZADJcGCI8JNlp7CbRGQ04UfJ8WGlM0xWfL4ZiyG/BKBsgWPUIprw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB5112.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(478600001)(2906002)(186003)(6486002)(8936002)(86362001)(6636002)(1076003)(6512007)(8676002)(71200400001)(66574015)(66446008)(64756008)(66556008)(66476007)(33656002)(66946007)(6862004)(4326008)(54906003)(76116006)(83380400001)(316002)(53546011)(966005)(91956017)(26005)(6506007)(5660300002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: PpGST/+wBAz/IWWYrNEU9BADbDQ1L4nXvWpWpW/uZPD8+r9KemI3kdBhzGCdZhhrSpDqfP/IDM0CYT3qrqqY2ke8qWUHzFzMYCJLLYRkKzGo03/c4GUa3bIcCX7yyj/kIOqWzL69i1wMu6c1pGcvVXqs5NgrXVpUwW7JcvJUTsMSbgQf/B8RcNogxOB5dnT0aFrDHtaYee/HCBT8WrqZVPx8HVdcHSpzRtlrPMsUZWwKmaKbp6G8BrxtJnncZNXm+kHnlfy79v1342H9uG3CbIefmpDZdYcAhp6Y2OotzytLHrDQZVMSzdh/Vb0qt3tEgJq3/U7UphSumkx6VCkYv6EaQbmoVtEn46cW/Ljt23CKWHa9Trf1L0ZiaxnyZ7xkduHjDe6rZ8GxsnKFXRqPmSQj5bwLKURFf3Be73Jl+6BXwXPjU+5+oWQzrIPLR7V0qSIBqsRMl5jq7NSiPMx6f3/CFFHtb4DS0Od2287CbU1jmW4J2m6AOrh/pMDmZweq
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <16E428DEE464C14EBD113635E6B45B7C@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CY4PR04MB37511FB1D3B3491A2CED5470E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmum6wya84g20vVC1+b3vEYjFn1TZG
-        i9V3+9ksuv5tYbFobf/GZHF6wiImi3et51gsHt/5zG4xZVoTo8XeW9oWe/aeZLG4vGsOm8WK
-        7UdYLLb9ns9s8frHSTaL83+PszoIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
-        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV8ah8xuYC+YJVqxceo+xgXEXXxcjJ4eEgInE
-        wqurmLsYuTiEBHYzSjxesJcFwvnEKLF54QVWCOczo0Tnne0sMC3fH74Es4UEdjFKfN7OAVH0
-        jFHi2L5XrCAJFgFViWW/O9i6GDk42AQ0JS5MLgUJiwhoSSzb9w5sKLPAZ1aJ1jvrwWqEBRIk
-        1n72BKnhFdCVmP20iQXCFpQ4OfMJmM0pECvx+NBuMFtUQFniwLbjTCBzJARucEhMn70N6jgX
-        ibN/HkHZwhKvjm9hh7ClJD6/28sGYRdL/LpzlBmiuYNR4nrDTKgGe4mLe/4ygdjMAhkSC6Zc
-        hLL5JHp/P2ECOVRCgFeio00IolxR4t6kp6wQtrjEwxlLoGwPiWP7+9kgAbSESeLK9KIJjHKz
-        kPwzC8kGCNtKovNDE+ssoA3MAtISy/9xQJiaEut36S9gZF3FKJlaUJybnlpsWmCUl1quV5yY
-        W1yal66XnJ+7iRGc6rS8djA+fPBB7xAjEwfjIUYJDmYlEd7TBr/ihHhTEiurUovy44tKc1KL
-        DzFKc7AoifMq/TgTJySQnliSmp2aWpBaBJNl4uCUamBauZNXf6/s58OZcRmpPrzCgi+uvght
-        WJd37p6TBtOZ3aYvGb68yzLe6L//XHmI1eu/PRrHDAsy1LWDPV46vDMS6DvAkLAwf17c1rN3
-        Jnw/4mBZHWk+4UH65leh/9sPP7r/PFf+84U1EWG2V7VPKP/W3vTwQ+keJcFtO3bn/jOwmm6X
-        I7vplNdtiek+S6q8nRef5jgVVzGjm+nkGbPj6jrLxbVnqt/nXH/vYkbQa5FNN/f5vFthECC6
-        +vu6iGjNwgTezGNPb6wtnd75m5Ox1P1zmahCk83jW/aHGPItmEs3q6eslWXxM9vDvVJPrTU0
-        rtXitqPNXvHNAR9u+xQlSz6KiDG9Vejkxfuqp3xZcL4SS3FGoqEWc1FxIgCanNv45AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvG6wya84g7fX2S1+b3vEYjFn1TZG
-        i9V3+9ksuv5tYbFobf/GZHF6wiImi3et51gsHt/5zG4xZVoTo8XeW9oWe/aeZLG4vGsOm8WK
-        7UdYLLb9ns9s8frHSTaL83+PszoIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
-        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV0bz5EbGggt8FRdmvWNpYGzj6WLk5JAQMJH4
-        /vAlSxcjF4eQwA5GiUWv5rNAJMQlmq/9YIewhSVW/nvODlH0hFHizJKTTCAJFgFViWW/O9i6
-        GDk42AQ0JS5MLgUJiwhoSSzb944VpJ5Z4CerxKUfGxhBaoQFEiTWfvYEqeEV0JWY/bQJavES
-        JomLH+6zQSQEJU7OfAJ2BLOAmcS8zQ+ZQXqZBaQllv/jAAlzCsRKPD60G6xEVEBZ4sC240wT
-        GAVnIemehaR7FkL3AkbmVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwfGnpbWDcc+q
-        D3qHGJk4GA8xSnAwK4nwnjb4FSfEm5JYWZValB9fVJqTWnyIUZqDRUmc9+ushXFCAumJJanZ
-        qakFqUUwWSYOTqkGJjbJG7cM+jIOWtrnMTw7aMCbOivG5RObtItF8CZDLhMFj05fsWXO6xfM
-        cpBYExTwRjrh0fc0V2eWNQmhlQ55DEUrb64Qm/7wX2arFneq88TLr5dyy6pX+DtPm8u2/Upc
-        3P8mmxypK/8kijslOfcEP/LhibU1WMQh076vxLMhefqTlIuZBqJzM1uaNFtz4w0etOWULJX3
-        sW7YWanv/vgGr9vO3YX+xSucqv5PzXr05UMtJ0eEwt7QHaK79gud2arydN5spp/3JXfw96R9
-        rjrBofVQ6rXEmXO8+RUzFarjygV/Km0WTReYcSJHrifUy5BPRHi6QaTX+uqau027lbQXcfld
-        le9fqCv2O+LEbSWW4oxEQy3mouJEAFK+Z2ouAwAA
-X-CMS-MailID: 20200629183459epcas5p464fdcdf272ea360bcd50901ccc79ca6e
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85
-References: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
-        <CGME20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85@epcas5p2.samsung.com>
-        <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
-        <CY4PR04MB37511FB1D3B3491A2CED5470E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB5112.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8169bcc9-24b6-45e1-2e48-08d81c0b5c11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 09:03:58.6103
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W3OzWRj0BZ2GupmMs1QpEm3RvQQi2ooNGFhVCW2hSZjCQSe8IGR/4UEnJNCFlT5kZEve/UrIoGpIFX7vXSeuoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5783
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On Mon, Jun 29, 2020 at 12:52:46AM +0000, Damien Le Moal wrote:
+> On 2020/06/29 8:01, Matias Bjorling wrote:
+> > The NVMe Zoned Namespace Command Set adds support for associating
+> > data to a zone through the Zone Descriptor Extension feature.
+> >=20
+> > The Zone Descriptor Extension size is fixed to a multiple of 64
+> > bytes. A value of zero communicates the feature is not available.
+> > A value larger than zero communites the feature is available, and
+> > the specified Zone Descriptor Extension size in bytes.
+> >=20
+> > The Zone Descriptor Extension feature is only available in the
+> > NVMe Zoned Namespaces Command Set. Devices that supports ZAC/ZBC
+> > therefore reports this value as zero, where as the NVMe device
+> > driver reports the Zone Descriptor Extension size from the
+> > specific device.
+> >=20
+> > Signed-off-by: Matias Bj=F8rling <matias.bjorling@wdc.com>
+> > ---
+> >  Documentation/block/queue-sysfs.rst |  6 ++++++
+> >  block/blk-sysfs.c                   | 15 ++++++++++++++-
+> >  drivers/nvme/host/zns.c             |  1 +
+> >  drivers/scsi/sd_zbc.c               |  1 +
+> >  include/linux/blkdev.h              | 22 ++++++++++++++++++++++
+> >  5 files changed, 44 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/=
+queue-sysfs.rst
+> > index f261a5c84170..c4fa195c87b4 100644
 
-On Fri, Jun 26, 2020 at 02:50:20AM +0000, Damien Le Moal wrote:
->On 2020/06/26 2:18, Kanchan Joshi wrote:
->> Introduce RWF_ZONE_APPEND flag to represent zone-append. User-space
->> sends this with write. Add IOCB_ZONE_APPEND which is set in
->> kiocb->ki_flags on receiving RWF_ZONE_APPEND.
->> Make direct IO submission path use IOCB_ZONE_APPEND to send bio with
->> append op. Direct IO completion returns zone-relative offset, in sector
->> unit, to upper layer using kiocb->ki_complete interface.
->> Report error if zone-append is requested on regular file or on sync
->> kiocb (i.e. one without ki_complete).
->>
->> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
->> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
->> Signed-off-by: Arnav Dawn <a.dawn@samsung.com>
->> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
->> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
->> ---
->>  fs/block_dev.c          | 28 ++++++++++++++++++++++++----
->>  include/linux/fs.h      |  9 +++++++++
->>  include/uapi/linux/fs.h |  5 ++++-
->>  3 files changed, 37 insertions(+), 5 deletions(-)
->>
->> diff --git a/fs/block_dev.c b/fs/block_dev.c
->> index 47860e5..5180268 100644
->> --- a/fs/block_dev.c
->> +++ b/fs/block_dev.c
->> @@ -185,6 +185,10 @@ static unsigned int dio_bio_write_op(struct kiocb *iocb)
->>  	/* avoid the need for a I/O completion work item */
->>  	if (iocb->ki_flags & IOCB_DSYNC)
->>  		op |= REQ_FUA;
->> +
->> +	if (iocb->ki_flags & IOCB_ZONE_APPEND)
->> +		op |= REQ_OP_ZONE_APPEND;
->
->This is wrong. REQ_OP_WRITE is already set in the declaration of "op". How can
->this work ?
-REQ_OP_ZONE_APPEND will override the REQ_WRITE op, while previously set op
-flags (REQ_FUA etc.) will be retained. But yes, this can be made to look
-cleaner.
-V3 will include the other changes you pointed out. Thanks for the review.
+(snip)
+
+> >  static struct queue_sysfs_entry queue_nomerges_entry =3D {
+> >  	.attr =3D {.name =3D "nomerges", .mode =3D 0644 },
+> >  	.show =3D queue_nomerges_show,
+> > @@ -787,6 +798,7 @@ static struct attribute *queue_attrs[] =3D {
+> >  	&queue_nr_zones_entry.attr,
+> >  	&queue_max_open_zones_entry.attr,
+> >  	&queue_max_active_zones_entry.attr,
+>=20
+> Which tree is this patch based on ? Not I have seen any patch introducing=
+ max
+> active zones.
+
+The cover letter forgot to mention this patch series' dependencies.
+I assume that it is based on the following patch series:
+https://lore.kernel.org/linux-block/20200622162530.1287650-1-kbusch@kernel.=
+org/
+https://lore.kernel.org/linux-block/20200616102546.491961-1-niklas.cassel@w=
+dc.com/
 
 
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_
-Content-Type: text/plain; charset="utf-8"
-
-
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_--
+Kind regards,
+Niklas=
