@@ -2,77 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3371F20D7CC
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A609820DB68
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgF2Tcv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733239AbgF2Tcp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:32:45 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD113C0307B2
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 08:56:46 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x8so6366406plm.10
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 08:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=th0U890eQq2i+YMi4c6QMAAurVM5oWeXTtf5cZ9rQXA=;
-        b=t5TIYhxWZIXkB15IUg2fUHlEAAK49VtzU+8Q1W/RFLQKkyOVpVEzwDSirqYdcHbj5q
-         c2/QcfF8VtZSYmoZGudp0miae6icFhQ2Sq2L7dVtIrB86oJ1QRPWc89Gq6z9+82Hx4jM
-         uTDRu3DnjuacBtK94ixz5Ai0lv8M9DypctzFefX5wiDShfU7RnMoD2UqnNyx9DpGhu9n
-         AoB5/fJqR9mUCN72sBhFDTxU79p97IjCXajbtmWe5M8QycvGtb8OfBGzCaF2i4s3CtJk
-         ozlKiyFsrUn7EhdkqgpHsuHr/tfsMlmhcYWeghZxteGO30KZmRlPaTYgoadsbxWC9N3M
-         3Aqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=th0U890eQq2i+YMi4c6QMAAurVM5oWeXTtf5cZ9rQXA=;
-        b=XE1hVJfdu7En9sve0RgZa6l7AwLPH4JfQ87CRLHGV0aYaccyFOT7CGnDk59OS3+QYc
-         kt+jmohrPdIFiZ/y73Q02PQz8ILkqoNjiNJfMWFCNwl6ZAp4edN7wodJBptwg8VqStEc
-         jdJFaGL1BbpWV421EqvkH9rZvVi7yBgGtiCL677ZkoewX3XJhf1hoecsmhlt5tMzfchW
-         tTYbeag0y12azQOc3KRpJ0LCN/HrSsVkke2CWPYB/hMpXlxwIH31XaRIhdEa3GgcMhzU
-         NSdJO1l1AxICFVyQHUep7LGAsAc88UDZgL/PnEINL6cKvTPskYPsST9Eg1pFTa5mwbZb
-         KVUw==
-X-Gm-Message-State: AOAM531iM+SF8gHfj+/cBWG7G/j/24s8OUmvgd9xYv7sALjUmrobf/Mz
-        7sIn6gGpVlFTDDkV7/zi3EH3kFdU7uB4fQ==
-X-Google-Smtp-Source: ABdhPJwFUZ35sgPDvE+DjzvrFGAt9OdiHF5XNMbsO1S/wsdpFMhf2+SGerMFfuer3SUub4IsUJzeNw==
-X-Received: by 2002:a17:902:d392:: with SMTP id e18mr2520358pld.139.1593446206013;
-        Mon, 29 Jun 2020 08:56:46 -0700 (PDT)
-Received: from [192.168.86.197] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id 4sm201315pgk.68.2020.06.29.08.56.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 08:56:45 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: remove the BLK_MQ_REQ_INTERNAL flag
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org
-References: <20200629150834.2699386-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <82ebdc59-adc9-5afb-d70f-baec5c14a7e3@kernel.dk>
-Date:   Mon, 29 Jun 2020 09:56:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2388774AbgF2UGL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 16:06:11 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2408 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388556AbgF2UGK (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:06:10 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id E79B67DFD74948BB7481;
+        Mon, 29 Jun 2020 17:19:59 +0100 (IST)
+Received: from [127.0.0.1] (10.210.170.8) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 29 Jun
+ 2020 17:19:58 +0100
+Subject: Re: [PATCH RFC v7 02/12] blk-mq: rename blk_mq_update_tag_set_depth()
+To:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
+CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>, <bvanassche@acm.org>,
+        <hare@suse.com>, <hch@lst.de>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>
+References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+ <1591810159-240929-3-git-send-email-john.garry@huawei.com>
+ <20200611025759.GA453671@T590>
+ <6ef76cdf-2fb3-0ce8-5b5a-0d7af0145901@huawei.com>
+ <8ef58912-d480-a7e1-f04c-da9bd85ea0ae@huawei.com>
+ <eaf188d5-dac0-da44-1c83-31ff2860d8fa@suse.de>
+ <e42da0e714c808c80e9a055f3f065e44@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <634f1564-6404-a5b9-0b27-b96b7df8df12@huawei.com>
+Date:   Mon, 29 Jun 2020 17:18:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20200629150834.2699386-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <e42da0e714c808c80e9a055f3f065e44@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.170.8]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/29/20 9:08 AM, Christoph Hellwig wrote:
-> Just check for a non-NULL elevator directly to make the code more clear.
+On 24/06/2020 09:13, Kashyap Desai wrote:
+>>> Hi Hannes,
+>>>
+>>> Do you have any issue with splitting the undocumented changes into
+>>> another patch as so:
+>>>
+>> No, that's perfectly fine.
+>>
+>> Kashyap, I've also attached an updated patch for the elevator_count patch;
+>> if
+>> you agree John can include it in the next version.
 
-Applied, thanks.
+ok, but I need to check it myself.
 
--- 
-Jens Axboe
+> Hannes - Patch looks good.   Header does not include problem statement. How
+> about adding below in header ?
+> 
+> High CPU utilization on "native_queued_spin_lock_slowpath" due to lock
+> contention is possible in mq-deadline and bfq io scheduler when nr_hw_queues
+> is more than one.
+> It is because kblockd work queue can submit IO from all online CPUs (through
+> blk_mq_run_hw_queues) even though only one hctx has pending commands.
+> Elevator callback "has_work" for mq-deadline and bfq scheduler consider
+> pending work if there are any IOs on request queue and it does not account
+> hctx context.
+> 
+> I have not seen performance drop after this patch, but I will continue
+> further testing.
+> 
+> John - One more thing, I am working on megaraid_sas driver to provide both
+> host_tagset = 1 and 0 option through module parameter.
+
+I was hoping that we wouldn't have this, and have host_tagset = 1 
+always. Or maybe host_tagset = 1 by default, and allow module param to 
+set = 0. Your choice, though.
+
+Thanks,
+John
 
