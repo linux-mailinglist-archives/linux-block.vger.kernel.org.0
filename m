@@ -2,57 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E838420D252
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 20:51:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B9AE20D24B
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 20:51:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgF2Ss3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 14:48:29 -0400
+        id S1728637AbgF2SsO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 14:48:14 -0400
 Received: from esa5.hgst.iphmx.com ([216.71.153.144]:56654 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbgF2SsJ (ORCPT
+        with ESMTP id S1728836AbgF2SsL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:48:09 -0400
+        Mon, 29 Jun 2020 14:48:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593456490; x=1624992490;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nYDJ1cP4EzpASFxLCTYltAbGnjUpG/8agq++iCkHRAM=;
-  b=r0CWMCvgzJsIok45i5hf9mm7skTQZdET7G+e5vz2y99RU3COC7keJGMs
-   y5VPLB+/n2gLkzajjZ7hxIfKsK+EU6/5zW8/padC5vfRaAbXorm3tiaR4
-   5MM3tb1FYJC8AOT5CpEZAIT6EDRGIROd55sKRaPZJ63RC6YmBnIiFZ9E2
-   nwZH/cEh4+rtJOlCnAVp6Nqvrsc6GOjuaw0YuAEp2dr7csQfkfh3xirz1
-   iXUY+iTq9e5rdyDI3/GPYgLhzk6WuMKKqblxmgRokh/MQrrayfXcdFuuF
-   zryR00LDKPXFuxcBmtBYg6f+d78chunCTuD4f+2ahGN7bP9XMHRBmj4DF
-   Q==;
-IronPort-SDR: fYz2RSLLk9TMnElVTSB0PT5nXydgh1tmv4bvk6hLaU0kr2Gus5M33Y/xii4Hq7ZOlusyqcDubQ
- 4sqY4A/qtiks1UWcd/HCGwWh1t+Lw2avmodO/MdyjsUH6Ik3tP7cLdzMyOCn0ZEOD8facG7/MD
- 6OWmV8tA78NfpdxGSwTsOscU6VRezVUrg68alxf7J8nlsll63YvfIo4to8u6/U58uazVUcsypX
- /vx8qe5dEJnYP2mBwwaYUXh5AznJ9BYR3+NO8E0Zy239OO0G0jaRba4t39foCjkZmhIMG6cH4C
- 4WM=
+  t=1593456492; x=1624992492;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jfZ8Q7wIT62fV8sPtp8AoAx2hC0xeCtCKF3MCygoTso=;
+  b=qmv0QtuT4OAu4bqK3UDTlOEQqzt/iTMOUE0jjrK6y9EyusQikkOOnADx
+   1vhlmiFB49UR7SNK3DBzfqeuqdaK8jaiRuV7vEOWn5LzX7QfLSkyQMYbL
+   +DlDmzuSiU1owvru8NTyeUBS5xPZgGnDVBwEvRcwPY4Aamzf83II1GRFk
+   mEgHpMJXSUTzXzs0B93UkRlG/7VBzTbP7HFdDpI8OOCd0OFZntHdPLmmN
+   hCRCbu5ua13TDOXspp16F5C7cL5wI8XxMn+BPbEwQZVV2G/CyE8wUJgH7
+   vJ9dUA9dsCxyungqtMYWrt1PCDLsHHIsEvFuv5y93/7QZ2sdwyu2s18lj
+   g==;
+IronPort-SDR: 6bTWd3/pVM/H5YesMMjz/MvIQzwyQ2siUMsj0Jxx7q/0d2JfHz1xkGcMd1W7pd5EWGB5Q575Ve
+ TQU+lRz9Elwg1MENGjLU2ZT298r81+9c3E7mZKA3AojT2IdOJuXfhJsDxonx08/7hfFUY2FEw0
+ rHkmKzq1lD3QcSASj57im3u/Ieqg4xpM3/QHbm2ya7M4NSxzKFAyNpRrJLDlKSfur9j/ggFv9P
+ 1s0NPvK9V1WqrEO1mGKF0bszuy7owuTK7hgCAiHJ4ZEbNsQyrNeSgK3aCg/JON0+3+JvBw9ba5
+ 5Pk=
 X-IronPort-AV: E=Sophos;i="5.75,294,1589212800"; 
-   d="scan'208";a="141379664"
+   d="scan'208";a="141379668"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 16:26:27 +0800
-IronPort-SDR: 4oBsa3tYUpuN45YL0bdqmH4zGCxBfZu43JYViUy0sEw2Nd3AQkjt4KDziwiIJh/c0FWVgiIGRg
- OyUOm4o7ojk6bObKpgdhQxj+S1ruw/PCQ=
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 16:26:28 +0800
+IronPort-SDR: /vdz54D/SZcs3J8O/vdVG1cAguXOmpuKvgZjyZbDvRocLm3+uGuDQYXoy1UQtNGQjivKVFmVNo
+ BXh7sER/4A4YzEP28VJ5olT4sbeeDHQ3w=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 01:14:46 -0700
-IronPort-SDR: k8SVoU3toZdHMM2lP8ruIyDTWk+77jJH6TsJHewl2RU+dYpiK5YGtvJu/6H5/4hatmKnV12TGZ
- l+hUIULYGWEg==
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 01:14:48 -0700
+IronPort-SDR: jE7mzBFrSWZmfUmjCK4uIuDmnOlCllvcmAyfVFMSUxycX+4lRormUAUqGyGGInUtuu9gYnAmdz
+ IdGkkfJ6wmFA==
 WDCIronportException: Internal
 Received: from unknown (HELO redsun60.ssa.fujisawa.hgst.com) ([10.149.66.36])
-  by uls-op-cesaip02.wdc.com with ESMTP; 29 Jun 2020 01:26:25 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 Jun 2020 01:26:26 -0700
 From:   Johannes Thumshirn <johannes.thumshirn@wdc.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Tejun Heo <tj@kernel.org>,
         "linux-block @ vger . kernel . org" <linux-block@vger.kernel.org>,
         paolo.valente@linaro.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v3 0/2] block: drive-by cleanups for block cgroup
-Date:   Mon, 29 Jun 2020 17:26:20 +0900
-Message-Id: <20200629082622.37611-1-johannes.thumshirn@wdc.com>
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3 1/2] block: remove blk_queue_root_blkg
+Date:   Mon, 29 Jun 2020 17:26:21 +0900
+Message-Id: <20200629082622.37611-2-johannes.thumshirn@wdc.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629082622.37611-1-johannes.thumshirn@wdc.com>
+References: <20200629082622.37611-1-johannes.thumshirn@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -60,29 +63,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-While reviewing Christoph's bio cleanup series, I noticed
-blkcg_bio_issue_check() is way too big for an inline function. When I moved it
-into block/blk-cgroup.c I noticed two other functions which only have one or
-no callers at all, so I cleaned them up as well.
+blk_queue_root_blkg() has no callers, remove it.
 
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/blk-cgroup.h | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-Changes to v2:
-- Re-based 
-- Removed patch concerning blkcg_bio_issue_check, Christoph has a better one
-
-Changes to v1:
-- Re-based onto for-5.8/block with Christoph's patches
-- Removed white-space to not hurt Christoph's feelings
-- Added Reviewed-bys
-
-Johannes Thumshirn (2):
-  block: remove blk_queue_root_blkg
-  block: open-code blkg_path in it's sole caller
-
- block/bfq-cgroup.c         |  3 ++-
- include/linux/blk-cgroup.h | 27 ---------------------------
- 2 files changed, 2 insertions(+), 28 deletions(-)
-
+diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+index a57ebe2f00ab..6aa633cedfb0 100644
+--- a/include/linux/blk-cgroup.h
++++ b/include/linux/blk-cgroup.h
+@@ -364,17 +364,6 @@ static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg,
+ 	return __blkg_lookup(blkcg, q, false);
+ }
+ 
+-/**
+- * blk_queue_root_blkg - return blkg for the (blkcg_root, @q) pair
+- * @q: request_queue of interest
+- *
+- * Lookup blkg for @q at the root level. See also blkg_lookup().
+- */
+-static inline struct blkcg_gq *blk_queue_root_blkg(struct request_queue *q)
+-{
+-	return q->root_blkg;
+-}
+-
+ /**
+  * blkg_to_pdata - get policy private data
+  * @blkg: blkg of interest
+@@ -732,8 +721,6 @@ static inline bool blk_cgroup_congested(void) { return false; }
+ static inline void blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay) { }
+ 
+ static inline struct blkcg_gq *blkg_lookup(struct blkcg *blkcg, void *key) { return NULL; }
+-static inline struct blkcg_gq *blk_queue_root_blkg(struct request_queue *q)
+-{ return NULL; }
+ static inline int blkcg_init_queue(struct request_queue *q) { return 0; }
+ static inline void blkcg_exit_queue(struct request_queue *q) { }
+ static inline int blkcg_policy_register(struct blkcg_policy *pol) { return 0; }
 -- 
 2.26.2
 
