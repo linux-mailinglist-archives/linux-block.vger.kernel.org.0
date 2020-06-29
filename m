@@ -2,246 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05D9B20D8DF
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90DD820DD40
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 23:50:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387566AbgF2TmU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387425AbgF2TmT (ORCPT
+        id S1726830AbgF2Sjb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 14:39:31 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:42842 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgF2Sj3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:42:19 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813C0C03E97B
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 12:42:19 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id dm19so7723516edb.13
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 12:42:19 -0700 (PDT)
+        Mon, 29 Jun 2020 14:39:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593455969; x=1624991969;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=ufvHmkBs8pz3Y1gQXakeSKcUD8FsxafBA+OmlJ1FVSA=;
+  b=e4PqTWd42D2kF40u4d3gvGvQJqYQRuHFlbz1Aud/hh0IEMzkKZy16YUZ
+   sC1aHu1Ddw31jlqKMqkINb0ymp21jqoU2hF0G3VOU7rKcBNRs46yXfS9P
+   J/8MVvuLQLrq91CLwY7GvN5T/qKqqI18O/xWBbk7bBMrAyXvrVLOb2L+5
+   z9T3MWun5Fj4rL8oNgLFRbJyvHEg2TI00Wo8ALXimc/bmxlfLWVGMvBCi
+   xInK2MRqVrZffSGSQziT8B2QfQCrGmgcRlxv5YR1AtbZudrq7At4mFOZu
+   /BrEil2Tyqevzwnzc9PkecbnFLc+zcPyxg+6sw+qi9cZgJW2by09cQ9Ef
+   A==;
+IronPort-SDR: guItr0tdOhbzWYn71HMAJknGWcKdvKyoGK/n8E16jMllqaFsQracCFdv14OOAMQ1vPYS94Y9sC
+ GQ5fimlQmJfOnWHrjvzBQ/4+uJovWQlUddvwdPf9KPEv4VqdqiZnlmUGR8ndY8OXvYoikvkYuO
+ c0TLT366VEqfivsfZoaie7jIXSnTfxlKnKsEerEpS83n0OgN4hb3ywOUz/GoUeopMYQwOlECv0
+ yDbD+yEVPXHjkH3t3DbpwKPl058OqGe+3LyZ9Vj0+doZYewNJYF9hbKt34YRBMNizmk6rWXXUM
+ piI=
+X-IronPort-AV: E=Sophos;i="5.75,294,1589212800"; 
+   d="scan'208";a="142522030"
+Received: from mail-bn8nam12lp2170.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.170])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 16:05:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zn13cswQXXj32QyuVDIB/R661MGyfjco8G+cH7+1ShEnrVzFT5K6M1gO1Any/RYbzRAnqWbEx0PGYiO3zWxY1gzfHHEWB4/Cu+JGZvZGuSCacyhLCjgnTU8UC9DbhqnluwMjQ9mSABXrFVyxIQkUIb8IyGu9E7a209FSC+Z7pKVvvtIV/ouqab1pIw3pUVeNemwekGL6R7kT53wBAoTryow8i3ABAgPOgFsO7kywuQr6OPoodrOklr3nSv65kAt6JybraplomeoNBINMpbv3I5SRXMgZ4R5uOiqm0l6+Jr4bz89FdidgLMOogpTP0PJehG/kaqTs0cc8X1MfT/FV7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nl+5qs5ibMTApcnlXmtwu8TEgRz1VAIl5aDiKXv764k=;
+ b=n0+7BO9EDsWOoI+TzR+NNwA1eBMH9Tqu3rzpsaf4FUzSUudK9RMhXKrArWTWmICtxYjpEZEPuoAmGgbjzsHTeXvcMm/FR6qgn22TcNBqtusFIzBgtjSJvUH+LnZxVoNIEsYScBv4eRU6EFAN1BrbGXYAuQjZIib8wFbHQkGtwFBxy++CUInn+FaMN1rphIdMm+xY4YKmFxRcuz3uIF1ZknCtRjTrYUx9TpYdlE59c7dYvEwT/z7OskA3kh+HIpj9x+MSA9vT+LLG+KPgUBN44e3K4CpFFG46rtdFrnaFIy606nt4FjmQXUJmwrTtNwyNiBGvnURHUsfhYnztudErHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qPRWIOr57ZYTUxHr8TbMRvU0I6oEVGESocMJLPUw7ak=;
-        b=IWRI9ZZWLmSqGaFLlS/Q6+qqYEFfzGMcZO3qmaAQ222cW5zAaZhN5PnKbKVGkZFa9P
-         1aJerDy40vcxH8EXTXo/GOJj58Rru+hjCZrXQVluj99YOX1GJPZkpk9DjI6INTAuhVsb
-         D6AWuWbM4FmHFpre6LyWjdPXgbAI12W25S66rAFqRfrJEiv0IwdqrG1ar8NQVW3XUKqs
-         oEV36lnW27cU1eFXGVDPYNS1uEOX+5khJ6iktErth6Ud4c3dYDclRZS9upgG4nYCde2E
-         kwP+AA0xNE2iAO3zu/Ah5/tr6V7SEIB3G+SOw4DaRZIwUEsGb+7O7daxFKwPsZ2PBrDN
-         cYRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qPRWIOr57ZYTUxHr8TbMRvU0I6oEVGESocMJLPUw7ak=;
-        b=BpAm8exg7E5Zf7BLO/pPygKtWxBatl+HCO8KJgP86eYlaAttXFoWRtM4ylN0awNXB7
-         eOwpVujzfEw+kD3IaNCfuj9BDOSrIx0ruAS3c5oHuRbnewPIYoWeRQ1GhgwwW4HU2w7U
-         FAuaj0zJ1GezWJShyOv6X0naPyr0AEkDvO27QPjAUpdUNKi2vol2rrpvNlGf/3dkaxjc
-         pa0rvJndb5oJ968Ww9Nf3xbmpe2TDFgdVLaIHIZNZiBl6CrHm5SQOHOCWhLq7zUc/XNC
-         +folduicwspMqRrUn2/JmbH9Nrc1gOjGV0H4/9W4bg4Tsm9ZeLr9vQ5QazH4j4J/QAHp
-         Korg==
-X-Gm-Message-State: AOAM5311FCKEwAgwCA3eRTjoEcjFH78oNqsSIr7qJ2xS/oqbsuZYgDIQ
-        QQ9W6ONCYtX5TRyUaq11fEf73Q==
-X-Google-Smtp-Source: ABdhPJyGAI3oTGH5RV/GlMVT+ru8LjoquevNNsqLlOGBediZBG3+4tQ6abxqVDJntY6y9wJG9eSZ2Q==
-X-Received: by 2002:aa7:da8d:: with SMTP id q13mr15080761eds.339.1593459738252;
-        Mon, 29 Jun 2020 12:42:18 -0700 (PDT)
-Received: from localhost (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
-        by smtp.gmail.com with ESMTPSA id c4sm371603ejb.17.2020.06.29.12.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:42:17 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:42:16 +0200
-From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
-To:     Niklas Cassel <niklas.cassel@wdc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] block: add max_active_zones to blk-sysfs
-Message-ID: <20200629194216.iykvd74rw6d7vqpl@MacBook-Pro.localdomain>
-References: <20200616102546.491961-1-niklas.cassel@wdc.com>
- <20200616102546.491961-3-niklas.cassel@wdc.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nl+5qs5ibMTApcnlXmtwu8TEgRz1VAIl5aDiKXv764k=;
+ b=R5pP28WSu3Hf+ZzHWmiytT6mcZPAP2qXojql9icbibwY9c+p6yIndcSrWRaqNGTNx83XPqDBAiGpI1myPk+2xm/MdFlCm2pR3MIfMd8CNodKxipkmqSx6yZ86rmkR7CgDZgqZcokkK1lUjjr+KS+3HX+Z6LG/0EJh7mOiI9NTss=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a5::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 08:05:07 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 08:05:07 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Tejun Heo <tj@kernel.org>
+CC:     Dennis Zhou <dennis@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: drive-by blk-cgroup cleanups
+Thread-Topic: drive-by blk-cgroup cleanups
+Thread-Index: AQHWTFVNUm1R45WD7UqFEU0lzIn8zQ==
+Date:   Mon, 29 Jun 2020 08:05:07 +0000
+Message-ID: <SN4PR0401MB3598A198ACA6126D96E949B59B6E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200627073159.2447325-1-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1515:bd01:5d2:80d1:159b:260e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8b954eda-16d9-4b32-f514-08d81c032314
+x-ms-traffictypediagnostic: SN6PR04MB4543:
+x-microsoft-antispam-prvs: <SN6PR04MB4543D6D08D25104EB56280919B6E0@SN6PR04MB4543.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:983;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xBtHp69HFt5t5P6wMyVoqOCIxVMhWHBWlj3FNyIjXtM9up73OGB1Nzzt/RNwFcp2wcNaHjuCieX/7s1cRNYVUVzZsntlNyQsAOckauH5mfTNpJiYFVyfFa4u8z4R4AqcN/+ALBxCSNYV2gtQ4sQDoTJcmlk4MtmRGnQqHwPam9NxTOTdCw/+MgJX4/R+DaozX2W+qRAKu8XB+CzdMo28jmcWmxpRsIF4wkCp6gq9kcpuZBEfWmyLMLpTl5N338SpbqYKTNSB2vh5h/g8vIYb352/u34ojKnuBrr7ybDYL6oqt5n/CHhyrk9UZmdUr7ukK3nFTaConMRq3CtQ5hlwPvl5xHXdxOQ/1bXZGJQXfwWTIixl+bUF2KpmKrxZeNYiYGdssOzpgEo2NQcnGy0eKw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(3480700007)(186003)(966005)(71200400001)(66476007)(7416002)(66946007)(91956017)(110136005)(76116006)(83380400001)(66446008)(64756008)(66556008)(8676002)(52536014)(478600001)(5660300002)(316002)(86362001)(33656002)(55016002)(4326008)(2906002)(8936002)(7696005)(54906003)(53546011)(6506007)(9686003)(4744005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 7KYnjZLq0IBsQAXlYk9BeKhOMIXLCbQ0GDojzQ3lz+2jAP2pYMGoUzpyVn+kDub8BVWvzK/rlTR4BK4r485v8Lm9MrnewmgaZisBdWVhKjWvAtUzvYno5bsIaVkYYgzgfMcLdTc9u1IoZjFQm4Z9BlAnMBGyp2A37iCCgplShNQJ/3wSyXDnIXNb/IjJPdibs1KbHPqSA+VhmzOV1smDAWQl9q2bW9FM8j2aGQWSrQfqPa6G9SJdunMpQufBi6rmSWV9FRhvdVvJHUsSZUQyHw/V6DZ4KT/QN2Ysv3e0eYeYBadnR7RzhwTHhMQ1n8MMCAsgwBzB2cvh3/+4eodFk1rSZ6F/awI78G2f4Hg8EESFOCHUiXn/kMR0XKUKV3G/Xxbdq/CNau5IZdVA61wLlwvndL3mskVyEQu/hZCvTR8lWqW4kfA9GWbofQD+MjDeg6TP88RZfEcfuZam2dhc/HONk7uKgHxUC1rsuHmKdwV3B805iPkPMTXilAxhG9NeZcLVAn9rkjQ2Fh/ealCg2NHiQSp3q4qdLx8hEZZBBhw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616102546.491961-3-niklas.cassel@wdc.com>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b954eda-16d9-4b32-f514-08d81c032314
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 08:05:07.0401
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qxsMyNQWQSSYwSeXGlGvUOzxeP4WOaoaSIWIDpwwMmIZm0QbPEkvYRt/dNwOy8lydGK1JcSaBJCIMGYl12vhjt+ngJ0Rct7V9CruZQWIVpQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4543
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 16.06.2020 12:25, Niklas Cassel wrote:
->Add a new max_active zones definition in the sysfs documentation.
->This definition will be common for all devices utilizing the zoned block
->device support in the kernel.
->
->Export max_active_zones according to this new definition for NVMe Zoned
->Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
->the kernel), and ZBC SCSI devices.
->
->Add the new max_active_zones struct member to the request_queue, rather
->than as a queue limit, since this property cannot be split across stacking
->drivers.
->
->For SCSI devices, even though max active zones is not part of the ZBC/ZAC
->spec, export max_active_zones as 0, signifying "no limit".
->
->Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
->---
-> Documentation/block/queue-sysfs.rst |  7 +++++++
-> block/blk-sysfs.c                   | 14 +++++++++++++-
-> drivers/nvme/host/zns.c             |  1 +
-> drivers/scsi/sd_zbc.c               |  1 +
-> include/linux/blkdev.h              | 20 ++++++++++++++++++++
-> 5 files changed, 42 insertions(+), 1 deletion(-)
->
->diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
->index f01cf8530ae4..f261a5c84170 100644
->--- a/Documentation/block/queue-sysfs.rst
->+++ b/Documentation/block/queue-sysfs.rst
->@@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
-> data that will be submitted by the block layer core to the associated
-> block driver.
->
->+max_active_zones (RO)
->+---------------------
->+For zoned block devices (zoned attribute indicating "host-managed" or
->+"host-aware"), the sum of zones belonging to any of the zone states:
->+EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.
->+If this value is 0, there is no limit.
->+
-> max_open_zones (RO)
-> -------------------
-> For zoned block devices (zoned attribute indicating "host-managed" or
->diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
->index fa42961e9678..624bb4d85fc7 100644
->--- a/block/blk-sysfs.c
->+++ b/block/blk-sysfs.c
->@@ -310,6 +310,11 @@ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
-> 	return queue_var_show(queue_max_open_zones(q), page);
-> }
->
->+static ssize_t queue_max_active_zones_show(struct request_queue *q, char *page)
->+{
->+	return queue_var_show(queue_max_active_zones(q), page);
->+}
->+
-> static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
-> {
-> 	return queue_var_show((blk_queue_nomerges(q) << 1) |
->@@ -677,6 +682,11 @@ static struct queue_sysfs_entry queue_max_open_zones_entry = {
-> 	.show = queue_max_open_zones_show,
-> };
->
->+static struct queue_sysfs_entry queue_max_active_zones_entry = {
->+	.attr = {.name = "max_active_zones", .mode = 0444 },
->+	.show = queue_max_active_zones_show,
->+};
->+
-> static struct queue_sysfs_entry queue_nomerges_entry = {
-> 	.attr = {.name = "nomerges", .mode = 0644 },
-> 	.show = queue_nomerges_show,
->@@ -776,6 +786,7 @@ static struct attribute *queue_attrs[] = {
-> 	&queue_zoned_entry.attr,
-> 	&queue_nr_zones_entry.attr,
-> 	&queue_max_open_zones_entry.attr,
->+	&queue_max_active_zones_entry.attr,
-> 	&queue_nomerges_entry.attr,
-> 	&queue_rq_affinity_entry.attr,
-> 	&queue_iostats_entry.attr,
->@@ -803,7 +814,8 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
-> 		(!q->mq_ops || !q->mq_ops->timeout))
-> 			return 0;
->
->-	if (attr == &queue_max_open_zones_entry.attr &&
->+	if ((attr == &queue_max_open_zones_entry.attr ||
->+	     attr == &queue_max_active_zones_entry.attr) &&
-> 	    !blk_queue_is_zoned(q))
-> 		return 0;
->
->diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
->index af156529f3b6..502070763266 100644
->--- a/drivers/nvme/host/zns.c
->+++ b/drivers/nvme/host/zns.c
->@@ -83,6 +83,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
-> 	q->limits.zoned = BLK_ZONED_HM;
-> 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
-> 	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);
->+	blk_queue_max_active_zones(q, le32_to_cpu(id->mar) + 1);
-> free_data:
-> 	kfree(id);
-> 	return status;
->diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
->index aa3564139b40..d8b2c49d645b 100644
->--- a/drivers/scsi/sd_zbc.c
->+++ b/drivers/scsi/sd_zbc.c
->@@ -721,6 +721,7 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
-> 		blk_queue_max_open_zones(q, 0);
-> 	else
-> 		blk_queue_max_open_zones(q, sdkp->zones_max_open);
->+	blk_queue_max_active_zones(q, 0);
-> 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
->
-> 	/* READ16/WRITE16 is mandatory for ZBC disks */
->diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->index 2f332f00501d..3776140f8f20 100644
->--- a/include/linux/blkdev.h
->+++ b/include/linux/blkdev.h
->@@ -521,6 +521,7 @@ struct request_queue {
-> 	unsigned long		*conv_zones_bitmap;
-> 	unsigned long		*seq_zones_wlock;
-> 	unsigned int		max_open_zones;
->+	unsigned int		max_active_zones;
-> #endif /* CONFIG_BLK_DEV_ZONED */
->
-> 	/*
->@@ -741,6 +742,17 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
-> {
-> 	return q->max_open_zones;
-> }
->+
->+static inline void blk_queue_max_active_zones(struct request_queue *q,
->+		unsigned int max_active_zones)
->+{
->+	q->max_active_zones = max_active_zones;
->+}
->+
->+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
->+{
->+	return q->max_active_zones;
->+}
-> #else /* CONFIG_BLK_DEV_ZONED */
-> static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
-> {
->@@ -764,6 +776,14 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
-> {
-> 	return 0;
-> }
->+static inline void blk_queue_max_active_zones(struct request_queue *q,
->+		unsigned int max_active_zones)
->+{
->+}
->+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
->+{
->+	return 0;
->+}
-> #endif /* CONFIG_BLK_DEV_ZONED */
->
-> static inline bool rq_is_sync(struct request *rq)
->-- 
->2.26.2
->
->
->_______________________________________________
->linux-nvme mailing list
->linux-nvme@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-nvme
-
-Looks good to me
-
-Reviewed-by: Javier González <javier@javigon.com>
+On 27/06/2020 09:33, Christoph Hellwig wrote:=0A=
+> Hi all,=0A=
+> =0A=
+> while looking into another "project" I ended up wading through the=0A=
+> blkcq code for research and found a bunch of lose ends.  So here is=0A=
+> a bunch of drive-by cleanups for the code.=0A=
+> =0A=
+> Diffstat:=0A=
+>  block/bio.c                |  143 +----------------------------------=0A=
+>  block/blk-cgroup.c         |  182 +++++++++++++++++++++++++++++++++++++-=
+-------=0A=
+>  block/blk-core.c           |    7 +=0A=
+>  block/blk-throttle.c       |   10 +-=0A=
+>  block/blk.h                |    2 =0A=
+>  drivers/md/dm.c            |    5 -=0A=
+>  include/linux/bio.h        |    9 --=0A=
+>  include/linux/blk-cgroup.h |  101 ------------------------=0A=
+>  kernel/cgroup/rstat.c      |    1 =0A=
+>  mm/page_io.c               |   17 ++++=0A=
+>  10 files changed, 192 insertions(+), 285 deletions(-)=0A=
+> =0A=
+=0A=
+Btw what ever happened to https://lore.kernel.org/r/20200430150356.35691-1-=
+johannes.thumshirn@wdc.com?=0A=
