@@ -2,79 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D829820D8EF
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C91420D68D
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:05:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbgF2Tm5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387805AbgF2Tmo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:42:44 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1AAC02A57A
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 06:45:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id u9so3510456pls.13
-        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 06:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9b0a0nIVXTUMafJGH2SwkMYNhfwopZmHugiUDzkOFMo=;
-        b=b2d/wZMZ3aA9ZfZ0KpqzjWKIRIngidL362tJYG3Eq+HqvC2881PoG0AEA6Qxz8Ax3O
-         d54v4x4QO+3JdgAD3uF00qWHLyxlN/IGsVcPh904ZetuRN6uc/THf9pTyhWwgG/rB+hU
-         0pf3nd9LPLrvMlWOkp5BJz8RZ3Tv1cQ2xKB423RbMNTnMxZWHyUaHA9aQpKgbWnqBTTX
-         y30Izqu9fdHtkUNCNqiKbSNpGYQDYYlKU7lEeiBML7vA3rd/7dP6vb1A6BCOmbHRrGO9
-         B+tvXaRXjXsdNJ5adn85cwjX1gHg4DlRqffBby3VUho6AcECLdY3qorT+ovYHY/bsUiv
-         vyIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9b0a0nIVXTUMafJGH2SwkMYNhfwopZmHugiUDzkOFMo=;
-        b=t8gpau7Fekdu2SzXiNEsz8yVgiD+YqkOtE6vbHd97IBx/l/0m91JwpnyX9am94iWrV
-         Rf+zr8fTttLJPvoOZiHI969+62AdOdrN9Izgc/KPZIImBALLq7IXV+88InYti4JJynX+
-         kGk25gcOoseWsaooLVJRiw8GpUjUj0OE0n4xHMhBhqD077q/5BiImp7tDmYzuOsy6Q4N
-         foyiahNGRNwMX64GRy/k3voI2b/k0XPKnN02y3Asu0Eosz84Cris550qfXMM09S3b95u
-         fB37rhNtlXCdWCcZL9j/JHxNJc1RSBOB/dxMXdeg0JQIfybBJ4b5qRBFVY6qqCKnH6Ps
-         aAmg==
-X-Gm-Message-State: AOAM5312hWEcpwDs6Wjh0dIJqhFZ6qIiRtT88jYds389yoOLyvV74+DO
-        klUrhEqCcnSUW3TAz+0moSTG6Q==
-X-Google-Smtp-Source: ABdhPJwqa7ghc99O/rdAJtO45DaUfONRsw5xzh7zjG9pliTlplqkbHzp8h43Iasr23b0enTiUHdOjg==
-X-Received: by 2002:a17:902:c142:: with SMTP id 2mr13948469plj.222.1593438329229;
-        Mon, 29 Jun 2020 06:45:29 -0700 (PDT)
-Received: from [192.168.86.197] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id n62sm66095pjb.42.2020.06.29.06.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 06:45:28 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq-debugfs: update blk_queue_flag_name[] accordingly
- for new flags
-To:     Hou Tao <houtao1@huawei.com>, linux-block@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-References: <20200427133445.26215-1-houtao1@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <63977630-6715-ffe4-6fec-0941275c1900@kernel.dk>
-Date:   Mon, 29 Jun 2020 07:45:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1732154AbgF2TVN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 15:21:13 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2407 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732153AbgF2TVL (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:21:11 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 0F2D671B550EB6D0FDA0;
+        Mon, 29 Jun 2020 16:34:19 +0100 (IST)
+Received: from [127.0.0.1] (10.210.170.8) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 29 Jun
+ 2020 16:34:17 +0100
+Subject: About sbitmap_bitmap_show() and cleared bits (was Re: [PATCH RFC v7
+ 07/12] blk-mq: Add support in hctx_tags_bitmap_show() for a shared sbitmap)
+To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC:     Hannes Reinecke <hare@suse.de>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hare@suse.com>,
+        <hch@lst.de>, <shivasharan.srikanteshwara@broadcom.com>,
+        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
+        <chenxiang66@hisilicon.com>, <megaraidlinux.pdl@broadcom.com>
+References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+ <1591810159-240929-8-git-send-email-john.garry@huawei.com>
+ <9f4741c5-d117-d764-cf3a-a57192a788c3@suse.de>
+ <aad6efa3-2d7f-ca68-d239-44ea187c8017@huawei.com>
+ <7ed6ccf1-6ad9-1df7-f55d-4ed6cac1e08d@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <8ffd5c22-f644-3436-0a9f-2e08c220525e@huawei.com>
+Date:   Mon, 29 Jun 2020 16:32:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20200427133445.26215-1-houtao1@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7ed6ccf1-6ad9-1df7-f55d-4ed6cac1e08d@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.170.8]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/27/20 7:34 AM, Hou Tao wrote:
-> Else there may be magic numbers in /sys/kernel/debug/block/*/state.
+Hi all,
 
-Applied, thanks.
+I noticed that sbitmap_bitmap_show() only shows set bits and does not 
+consider cleared bits. Is that the proper thing to do?
 
--- 
-Jens Axboe
+I ask, as from trying to support sbitmap_bitmap_show() for hostwide 
+shared tags feature, we currently use blk_mq_queue_tag_busy_iter() to 
+find active requests (and associated tags/bits) for a particular hctx. 
+So, AFAICT, would give a change in behavior for sbitmap_bitmap_show(), 
+in that it would effectively show set and not cleared bits.
 
+Any thoughts on this?
+
+Thanks!
