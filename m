@@ -2,95 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A609820DB68
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:15:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1606520D673
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:05:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388774AbgF2UGL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 16:06:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2408 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388556AbgF2UGK (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:06:10 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id E79B67DFD74948BB7481;
-        Mon, 29 Jun 2020 17:19:59 +0100 (IST)
-Received: from [127.0.0.1] (10.210.170.8) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 29 Jun
- 2020 17:19:58 +0100
-Subject: Re: [PATCH RFC v7 02/12] blk-mq: rename blk_mq_update_tag_set_depth()
-To:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>, <bvanassche@acm.org>,
-        <hare@suse.com>, <hch@lst.de>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>,
-        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>
-References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
- <1591810159-240929-3-git-send-email-john.garry@huawei.com>
- <20200611025759.GA453671@T590>
- <6ef76cdf-2fb3-0ce8-5b5a-0d7af0145901@huawei.com>
- <8ef58912-d480-a7e1-f04c-da9bd85ea0ae@huawei.com>
- <eaf188d5-dac0-da44-1c83-31ff2860d8fa@suse.de>
- <e42da0e714c808c80e9a055f3f065e44@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <634f1564-6404-a5b9-0b27-b96b7df8df12@huawei.com>
-Date:   Mon, 29 Jun 2020 17:18:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1732115AbgF2TUS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 15:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732105AbgF2TUR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:20:17 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033B82559A;
+        Mon, 29 Jun 2020 16:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593449521;
+        bh=lAWJH6y2JHj7l3WROnIUTbAtWV6gbRyKvK+nJkOMGac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oR2Fa16jrQK3sMyMD5a6gGmQM7P77YD+h8hX8rj3ASdSIYAXXX02sL3PQmhSOOM0N
+         D6G2X8WiBIyh7uOl2qxS5BAWBdAhdiw2UQzz+zVfObp3FFeTajZ589ADx9CXvZnhLd
+         PcsBL9h1xaeN/tSw7v8b84c2PWQKyXxjfrn11Gug=
+Date:   Mon, 29 Jun 2020 09:51:59 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org
+Cc:     Satya Tangirala <satyat@google.com>
+Subject: Re: [PATCH] block/keyslot-manager: use kvfree_sensitive()
+Message-ID: <20200629165159.GB20492@sol.localdomain>
+References: <20200616155654.191263-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e42da0e714c808c80e9a055f3f065e44@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.8]
-X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616155654.191263-1-ebiggers@kernel.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 24/06/2020 09:13, Kashyap Desai wrote:
->>> Hi Hannes,
->>>
->>> Do you have any issue with splitting the undocumented changes into
->>> another patch as so:
->>>
->> No, that's perfectly fine.
->>
->> Kashyap, I've also attached an updated patch for the elevator_count patch;
->> if
->> you agree John can include it in the next version.
-
-ok, but I need to check it myself.
-
-> Hannes - Patch looks good.   Header does not include problem statement. How
-> about adding below in header ?
+On Tue, Jun 16, 2020 at 08:56:54AM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> High CPU utilization on "native_queued_spin_lock_slowpath" due to lock
-> contention is possible in mq-deadline and bfq io scheduler when nr_hw_queues
-> is more than one.
-> It is because kblockd work queue can submit IO from all online CPUs (through
-> blk_mq_run_hw_queues) even though only one hctx has pending commands.
-> Elevator callback "has_work" for mq-deadline and bfq scheduler consider
-> pending work if there are any IOs on request queue and it does not account
-> hctx context.
+> Make blk_ksm_destroy() use the kvfree_sensitive() function (which was
+> introduced in v5.8-rc1) instead of open-coding it.
 > 
-> I have not seen performance drop after this patch, but I will continue
-> further testing.
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  block/keyslot-manager.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> John - One more thing, I am working on megaraid_sas driver to provide both
-> host_tagset = 1 and 0 option through module parameter.
+> diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
+> index c2ef41b3147b..35abcb1ec051 100644
+> --- a/block/keyslot-manager.c
+> +++ b/block/keyslot-manager.c
+> @@ -374,8 +374,7 @@ void blk_ksm_destroy(struct blk_keyslot_manager *ksm)
+>  	if (!ksm)
+>  		return;
+>  	kvfree(ksm->slot_hashtable);
+> -	memzero_explicit(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
+> -	kvfree(ksm->slots);
+> +	kvfree_sensitive(ksm->slots, sizeof(ksm->slots[0]) * ksm->num_slots);
+>  	memzero_explicit(ksm, sizeof(*ksm));
+>  }
+>  EXPORT_SYMBOL_GPL(blk_ksm_destroy);
+> -- 
 
-I was hoping that we wouldn't have this, and have host_tagset = 1 
-always. Or maybe host_tagset = 1 by default, and allow module param to 
-set = 0. Your choice, though.
-
-Thanks,
-John
-
+Ping?
