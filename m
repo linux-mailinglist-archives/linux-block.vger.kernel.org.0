@@ -2,40 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88F0720D445
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 21:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF9620D44A
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 21:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgF2TGt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:06:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        id S1730545AbgF2TGz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 15:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730423AbgF2TGr (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:47 -0400
+        id S1730498AbgF2TGt (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:49 -0400
 Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CFF520663;
-        Mon, 29 Jun 2020 19:06:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D853206E2;
+        Mon, 29 Jun 2020 19:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593457607;
-        bh=57mXR1511O5ZaPDbRegI3KrLNELD4N3Pw07SdU9f8Jw=;
+        s=default; t=1593457608;
+        bh=bU4UPg9ZXn991s7Tmq1JeQL2lH9esGDbJfRvDxOVQqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HnhObOTJJhbl1rKszpjF/NTN7pi/+wYTmca0j4EL7HdEwu9lJDYW3Btf68NveM2MQ
-         +ggwmtyIXLoGoNvWBL0USwuHooOZ86cqGuRuvlZH0GY0eYDyXRROIIPmkPS1PRZPG8
-         FJrmG8F3mmw31wgsQj6R8tUvXa86uJI2m8HcAdRQ=
+        b=l2MsGl5Ul+1VwW/wvXRcnEf8oI7FCtcCChdZ07+gbk+WzPpWn399ct6994TXyGH4m
+         s1kNagTriDv53DBaD4WAtlQR2vOp7t74nHaegWflomNmUgOk6HYWwYrOloVaQ+3zeL
+         nqm92E/kUdB49f/wd/EO9H9klakdPOoBbHArqvYY=
 From:   Keith Busch <kbusch@kernel.org>
 To:     linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me,
         linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, Aravind Ramesh <aravind.ramesh@wdc.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>,
-        Daniel Wagner <dwagner@suse.de>,
+Cc:     axboe@kernel.dk, Niklas Cassel <niklas.cassel@wdc.com>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCHv4 2/5] null_blk: introduce zone capacity for zoned device
-Date:   Mon, 29 Jun 2020 12:06:38 -0700
-Message-Id: <20200629190641.1986462-3-kbusch@kernel.org>
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCHv4 3/5] nvme: implement I/O Command Sets Command Set support
+Date:   Mon, 29 Jun 2020 12:06:39 -0700
+Message-Id: <20200629190641.1986462-4-kbusch@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200629190641.1986462-1-kbusch@kernel.org>
 References: <20200629190641.1986462-1-kbusch@kernel.org>
@@ -47,135 +46,251 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Aravind Ramesh <aravind.ramesh@wdc.com>
+From: Niklas Cassel <niklas.cassel@wdc.com>
 
-Allow emulation of a zoned device with a per zone capacity smaller than
-the zone size as as defined in the Zoned Namespace (ZNS) Command Set
-specification. The zone capacity defaults to the zone size if not
-specified and must be smaller than the zone size otherwise.
+Implements support for the I/O Command Sets command set. The command set
+introduces a method to enumerate multiple command sets per namespace. If
+the command set is exposed, this method for enumeration will be used
+instead of the traditional method that uses the CC.CSS register command
+set register for command set identification.
 
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Matias Bjørling <matias.bjorling@wdc.com>
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
+For namespaces where the Command Set Identifier is not supported or
+recognized, the specific namespace will not be created.
+
+Reviewed-by: Javier González <javier.gonz@samsung.com>
 Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Aravind Ramesh <aravind.ramesh@wdc.com>
+Reviewed-by: Matias Bjørling <matias.bjorling@wdc.com>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 ---
- drivers/block/null_blk.h       |  1 +
- drivers/block/null_blk_main.c  | 10 +++++++++-
- drivers/block/null_blk_zoned.c | 16 ++++++++++++++--
- 3 files changed, 24 insertions(+), 3 deletions(-)
+ drivers/nvme/host/core.c | 53 ++++++++++++++++++++++++++++++++--------
+ drivers/nvme/host/nvme.h |  1 +
+ include/linux/nvme.h     | 19 ++++++++++++--
+ 3 files changed, 61 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h
-index 81b311c9d781..daed4a9c3436 100644
---- a/drivers/block/null_blk.h
-+++ b/drivers/block/null_blk.h
-@@ -49,6 +49,7 @@ struct nullb_device {
- 	unsigned long completion_nsec; /* time in ns to complete a request */
- 	unsigned long cache_size; /* disk cache size in MB */
- 	unsigned long zone_size; /* zone size in MB if device is zoned */
-+	unsigned long zone_capacity; /* zone capacity in MB if device is zoned */
- 	unsigned int zone_nr_conv; /* number of conventional zones */
- 	unsigned int submit_queues; /* number of submission queues */
- 	unsigned int home_node; /* home node for the device */
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 82259242b9b5..96d1adf6b818 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -200,6 +200,10 @@ static unsigned long g_zone_size = 256;
- module_param_named(zone_size, g_zone_size, ulong, S_IRUGO);
- MODULE_PARM_DESC(zone_size, "Zone size in MB when block device is zoned. Must be power-of-two: Default: 256");
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 701763910e48..b7d12eb42fd8 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1056,8 +1056,13 @@ static int nvme_identify_ctrl(struct nvme_ctrl *dev, struct nvme_id_ctrl **id)
+ 	return error;
+ }
  
-+static unsigned long g_zone_capacity;
-+module_param_named(zone_capacity, g_zone_capacity, ulong, 0444);
-+MODULE_PARM_DESC(zone_capacity, "Zone capacity in MB when block device is zoned. Can be less than or equal to zone size. Default: Zone size");
++static bool nvme_multi_css(struct nvme_ctrl *ctrl)
++{
++	return (ctrl->ctrl_config & NVME_CC_CSS_MASK) == NVME_CC_CSS_CSI;
++}
 +
- static unsigned int g_zone_nr_conv;
- module_param_named(zone_nr_conv, g_zone_nr_conv, uint, 0444);
- MODULE_PARM_DESC(zone_nr_conv, "Number of conventional zones when block device is zoned. Default: 0");
-@@ -341,6 +345,7 @@ NULLB_DEVICE_ATTR(mbps, uint, NULL);
- NULLB_DEVICE_ATTR(cache_size, ulong, NULL);
- NULLB_DEVICE_ATTR(zoned, bool, NULL);
- NULLB_DEVICE_ATTR(zone_size, ulong, NULL);
-+NULLB_DEVICE_ATTR(zone_capacity, ulong, NULL);
- NULLB_DEVICE_ATTR(zone_nr_conv, uint, NULL);
- 
- static ssize_t nullb_device_power_show(struct config_item *item, char *page)
-@@ -457,6 +462,7 @@ static struct configfs_attribute *nullb_device_attrs[] = {
- 	&nullb_device_attr_badblocks,
- 	&nullb_device_attr_zoned,
- 	&nullb_device_attr_zone_size,
-+	&nullb_device_attr_zone_capacity,
- 	&nullb_device_attr_zone_nr_conv,
- 	NULL,
- };
-@@ -510,7 +516,8 @@ nullb_group_drop_item(struct config_group *group, struct config_item *item)
- 
- static ssize_t memb_group_features_show(struct config_item *item, char *page)
+ static int nvme_process_ns_desc(struct nvme_ctrl *ctrl, struct nvme_ns_ids *ids,
+-		struct nvme_ns_id_desc *cur)
++		struct nvme_ns_id_desc *cur, bool *csi_seen)
  {
--	return snprintf(page, PAGE_SIZE, "memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_nr_conv\n");
-+	return snprintf(page, PAGE_SIZE,
-+			"memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_capacity,zone_nr_conv\n");
- }
+ 	const char *warn_str = "ctrl returned bogus length:";
+ 	void *data = cur;
+@@ -1087,6 +1092,15 @@ static int nvme_process_ns_desc(struct nvme_ctrl *ctrl, struct nvme_ns_ids *ids,
+ 		}
+ 		uuid_copy(&ids->uuid, data + sizeof(*cur));
+ 		return NVME_NIDT_UUID_LEN;
++	case NVME_NIDT_CSI:
++		if (cur->nidl != NVME_NIDT_CSI_LEN) {
++			dev_warn(ctrl->device, "%s %d for NVME_NIDT_CSI\n",
++				 warn_str, cur->nidl);
++			return -1;
++		}
++		memcpy(&ids->csi, data + sizeof(*cur), NVME_NIDT_CSI_LEN);
++		*csi_seen = true;
++		return NVME_NIDT_CSI_LEN;
+ 	default:
+ 		/* Skip unknown types */
+ 		return cur->nidl;
+@@ -1097,10 +1111,9 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
+ 		struct nvme_ns_ids *ids)
+ {
+ 	struct nvme_command c = { };
+-	int status;
++	bool csi_seen = false;
++	int status, pos, len;
+ 	void *data;
+-	int pos;
+-	int len;
  
- CONFIGFS_ATTR_RO(memb_group_, features);
-@@ -571,6 +578,7 @@ static struct nullb_device *null_alloc_dev(void)
- 	dev->use_per_node_hctx = g_use_per_node_hctx;
- 	dev->zoned = g_zoned;
- 	dev->zone_size = g_zone_size;
-+	dev->zone_capacity = g_zone_capacity;
- 	dev->zone_nr_conv = g_zone_nr_conv;
- 	return dev;
- }
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index 624aac09b005..3d25c9ad2383 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -28,6 +28,15 @@ int null_init_zoned_dev(struct nullb_device *dev, struct request_queue *q)
- 		return -EINVAL;
+ 	c.identify.opcode = nvme_admin_identify;
+ 	c.identify.nsid = cpu_to_le32(nsid);
+@@ -1125,7 +1138,7 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
+ 		  * device just because of a temporal retry-able error (such
+ 		  * as path of transport errors).
+ 		  */
+-		if (status > 0 && (status & NVME_SC_DNR))
++		if (status > 0 && (status & NVME_SC_DNR) && !nvme_multi_css(ctrl))
+ 			status = 0;
+ 		goto free_data;
  	}
+@@ -1136,12 +1149,19 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
+ 		if (cur->nidl == 0)
+ 			break;
  
-+	if (!dev->zone_capacity)
-+		dev->zone_capacity = dev->zone_size;
+-		len = nvme_process_ns_desc(ctrl, ids, cur);
++		len = nvme_process_ns_desc(ctrl, ids, cur, &csi_seen);
+ 		if (len < 0)
+-			goto free_data;
++			break;
+ 
+ 		len += sizeof(*cur);
+ 	}
 +
-+	if (dev->zone_capacity > dev->zone_size) {
-+		pr_err("null_blk: zone capacity (%lu MB) larger than zone size (%lu MB)\n",
-+					dev->zone_capacity, dev->zone_size);
-+		return -EINVAL;
++	if (nvme_multi_css(ctrl) && !csi_seen) {
++		dev_warn(ctrl->device, "Command set not reported for nsid:%d\n",
++			 nsid);
++		status = -EINVAL;
 +	}
 +
- 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
- 	dev->nr_zones = dev_size >>
- 				(SECTOR_SHIFT + ilog2(dev->zone_size_sects));
-@@ -60,7 +69,7 @@ int null_init_zoned_dev(struct nullb_device *dev, struct request_queue *q)
+ free_data:
+ 	kfree(data);
+ 	return status;
+@@ -1798,7 +1818,7 @@ static int nvme_report_ns_ids(struct nvme_ctrl *ctrl, unsigned int nsid,
+ 		memcpy(ids->eui64, id->eui64, sizeof(id->eui64));
+ 	if (ctrl->vs >= NVME_VS(1, 2, 0))
+ 		memcpy(ids->nguid, id->nguid, sizeof(id->nguid));
+-	if (ctrl->vs >= NVME_VS(1, 3, 0))
++	if (ctrl->vs >= NVME_VS(1, 3, 0) || nvme_multi_css(ctrl))
+ 		return nvme_identify_ns_descs(ctrl, nsid, ids);
+ 	return 0;
+ }
+@@ -1814,7 +1834,8 @@ static bool nvme_ns_ids_equal(struct nvme_ns_ids *a, struct nvme_ns_ids *b)
+ {
+ 	return uuid_equal(&a->uuid, &b->uuid) &&
+ 		memcmp(&a->nguid, &b->nguid, sizeof(a->nguid)) == 0 &&
+-		memcmp(&a->eui64, &b->eui64, sizeof(a->eui64)) == 0;
++		memcmp(&a->eui64, &b->eui64, sizeof(a->eui64)) == 0 &&
++		a->csi == b->csi;
+ }
  
- 		zone->start = zone->wp = sector;
- 		zone->len = dev->zone_size_sects;
--		zone->capacity = zone->len;
-+		zone->capacity = dev->zone_capacity << ZONE_SIZE_SHIFT;
- 		zone->type = BLK_ZONE_TYPE_SEQWRITE_REQ;
- 		zone->cond = BLK_ZONE_COND_EMPTY;
+ static int nvme_setup_streams_ns(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+@@ -1936,6 +1957,15 @@ static int __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 	if (ns->lba_shift == 0)
+ 		ns->lba_shift = 9;
  
-@@ -187,6 +196,9 @@ static blk_status_t null_zone_write(struct nullb_cmd *cmd, sector_t sector,
- 			return BLK_STS_IOERR;
- 		}
- 
-+		if (zone->wp + nr_sectors > zone->start + zone->capacity)
-+			return BLK_STS_IOERR;
++	switch (ns->head->ids.csi) {
++	case NVME_CSI_NVM:
++		break;
++	default:
++		dev_warn(ctrl->device, "unknown csi:%d ns:%d\n",
++			ns->head->ids.csi, ns->head->ns_id);
++		return -ENODEV;
++	}
 +
- 		if (zone->cond != BLK_ZONE_COND_EXP_OPEN)
- 			zone->cond = BLK_ZONE_COND_IMP_OPEN;
+ 	if ((ctrl->quirks & NVME_QUIRK_STRIPE_SIZE) &&
+ 	    is_power_of_2(ctrl->max_hw_sectors))
+ 		iob = ctrl->max_hw_sectors;
+@@ -2269,7 +2299,10 @@ int nvme_enable_ctrl(struct nvme_ctrl *ctrl)
  
-@@ -195,7 +207,7 @@ static blk_status_t null_zone_write(struct nullb_cmd *cmd, sector_t sector,
- 			return ret;
+ 	ctrl->page_size = 1 << page_shift;
  
- 		zone->wp += nr_sectors;
--		if (zone->wp == zone->start + zone->len)
-+		if (zone->wp == zone->start + zone->capacity)
- 			zone->cond = BLK_ZONE_COND_FULL;
- 		return BLK_STS_OK;
- 	default:
+-	ctrl->ctrl_config = NVME_CC_CSS_NVM;
++	if (NVME_CAP_CSS(ctrl->cap) & NVME_CAP_CSS_CSI)
++		ctrl->ctrl_config = NVME_CC_CSS_CSI;
++	else
++		ctrl->ctrl_config = NVME_CC_CSS_NVM;
+ 	ctrl->ctrl_config |= (page_shift - 12) << NVME_CC_MPS_SHIFT;
+ 	ctrl->ctrl_config |= NVME_CC_AMS_RR | NVME_CC_SHN_NONE;
+ 	ctrl->ctrl_config |= NVME_CC_IOSQES | NVME_CC_IOCQES;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 919ebaf3fdef..4aa321b16eaa 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -339,6 +339,7 @@ struct nvme_ns_ids {
+ 	u8	eui64[8];
+ 	u8	nguid[16];
+ 	uuid_t	uuid;
++	u8	csi;
+ };
+ 
+ /*
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 5ce51ab4c50e..81ffe5247505 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -132,6 +132,7 @@ enum {
+ #define NVME_CAP_TIMEOUT(cap)	(((cap) >> 24) & 0xff)
+ #define NVME_CAP_STRIDE(cap)	(((cap) >> 32) & 0xf)
+ #define NVME_CAP_NSSRC(cap)	(((cap) >> 36) & 0x1)
++#define NVME_CAP_CSS(cap)	(((cap) >> 37) & 0xff)
+ #define NVME_CAP_MPSMIN(cap)	(((cap) >> 48) & 0xf)
+ #define NVME_CAP_MPSMAX(cap)	(((cap) >> 52) & 0xf)
+ 
+@@ -162,7 +163,6 @@ enum {
+ 
+ enum {
+ 	NVME_CC_ENABLE		= 1 << 0,
+-	NVME_CC_CSS_NVM		= 0 << 4,
+ 	NVME_CC_EN_SHIFT	= 0,
+ 	NVME_CC_CSS_SHIFT	= 4,
+ 	NVME_CC_MPS_SHIFT	= 7,
+@@ -170,6 +170,9 @@ enum {
+ 	NVME_CC_SHN_SHIFT	= 14,
+ 	NVME_CC_IOSQES_SHIFT	= 16,
+ 	NVME_CC_IOCQES_SHIFT	= 20,
++	NVME_CC_CSS_NVM		= 0 << NVME_CC_CSS_SHIFT,
++	NVME_CC_CSS_CSI		= 6 << NVME_CC_CSS_SHIFT,
++	NVME_CC_CSS_MASK	= 7 << NVME_CC_CSS_SHIFT,
+ 	NVME_CC_AMS_RR		= 0 << NVME_CC_AMS_SHIFT,
+ 	NVME_CC_AMS_WRRU	= 1 << NVME_CC_AMS_SHIFT,
+ 	NVME_CC_AMS_VS		= 7 << NVME_CC_AMS_SHIFT,
+@@ -179,6 +182,8 @@ enum {
+ 	NVME_CC_SHN_MASK	= 3 << NVME_CC_SHN_SHIFT,
+ 	NVME_CC_IOSQES		= NVME_NVM_IOSQES << NVME_CC_IOSQES_SHIFT,
+ 	NVME_CC_IOCQES		= NVME_NVM_IOCQES << NVME_CC_IOCQES_SHIFT,
++	NVME_CAP_CSS_NVM	= 1 << 0,
++	NVME_CAP_CSS_CSI	= 1 << 6,
+ 	NVME_CSTS_RDY		= 1 << 0,
+ 	NVME_CSTS_CFS		= 1 << 1,
+ 	NVME_CSTS_NSSRO		= 1 << 4,
+@@ -374,6 +379,8 @@ enum {
+ 	NVME_ID_CNS_CTRL		= 0x01,
+ 	NVME_ID_CNS_NS_ACTIVE_LIST	= 0x02,
+ 	NVME_ID_CNS_NS_DESC_LIST	= 0x03,
++	NVME_ID_CNS_CS_NS		= 0x05,
++	NVME_ID_CNS_CS_CTRL		= 0x06,
+ 	NVME_ID_CNS_NS_PRESENT_LIST	= 0x10,
+ 	NVME_ID_CNS_NS_PRESENT		= 0x11,
+ 	NVME_ID_CNS_CTRL_NS_LIST	= 0x12,
+@@ -383,6 +390,10 @@ enum {
+ 	NVME_ID_CNS_UUID_LIST		= 0x17,
+ };
+ 
++enum {
++	NVME_CSI_NVM			= 0,
++};
++
+ enum {
+ 	NVME_DIR_IDENTIFY		= 0x00,
+ 	NVME_DIR_STREAMS		= 0x01,
+@@ -435,11 +446,13 @@ struct nvme_ns_id_desc {
+ #define NVME_NIDT_EUI64_LEN	8
+ #define NVME_NIDT_NGUID_LEN	16
+ #define NVME_NIDT_UUID_LEN	16
++#define NVME_NIDT_CSI_LEN	1
+ 
+ enum {
+ 	NVME_NIDT_EUI64		= 0x01,
+ 	NVME_NIDT_NGUID		= 0x02,
+ 	NVME_NIDT_UUID		= 0x03,
++	NVME_NIDT_CSI		= 0x04,
+ };
+ 
+ struct nvme_smart_log {
+@@ -972,7 +985,9 @@ struct nvme_identify {
+ 	__u8			cns;
+ 	__u8			rsvd3;
+ 	__le16			ctrlid;
+-	__u32			rsvd11[5];
++	__u8			rsvd11[3];
++	__u8			csi;
++	__u32			rsvd12[4];
+ };
+ 
+ #define NVME_IDENTIFY_DATA_SIZE 4096
 -- 
 2.24.1
 
