@@ -2,67 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C91420D68D
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:05:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB4E20D7C7
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jun 2020 22:08:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732154AbgF2TVN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Jun 2020 15:21:13 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2407 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732153AbgF2TVL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:21:11 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 0F2D671B550EB6D0FDA0;
-        Mon, 29 Jun 2020 16:34:19 +0100 (IST)
-Received: from [127.0.0.1] (10.210.170.8) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 29 Jun
- 2020 16:34:17 +0100
-Subject: About sbitmap_bitmap_show() and cleared bits (was Re: [PATCH RFC v7
- 07/12] blk-mq: Add support in hctx_tags_bitmap_show() for a shared sbitmap)
-To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-CC:     Hannes Reinecke <hare@suse.de>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
-        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hare@suse.com>,
-        <hch@lst.de>, <shivasharan.srikanteshwara@broadcom.com>,
-        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
-        <chenxiang66@hisilicon.com>, <megaraidlinux.pdl@broadcom.com>
-References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
- <1591810159-240929-8-git-send-email-john.garry@huawei.com>
- <9f4741c5-d117-d764-cf3a-a57192a788c3@suse.de>
- <aad6efa3-2d7f-ca68-d239-44ea187c8017@huawei.com>
- <7ed6ccf1-6ad9-1df7-f55d-4ed6cac1e08d@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8ffd5c22-f644-3436-0a9f-2e08c220525e@huawei.com>
-Date:   Mon, 29 Jun 2020 16:32:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1733240AbgF2Tcp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Jun 2020 15:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733218AbgF2Tcm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:32:42 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2F9C0307B1
+        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 08:56:35 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id y18so7263764plr.4
+        for <linux-block@vger.kernel.org>; Mon, 29 Jun 2020 08:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wC1a43zyQWPn3gtOzkZQyfjyAzgJ9BNHPEib+IMkUGo=;
+        b=1Xvx7tjwTuUejF4o4SEoq5uUDybyR1kygg+u2TRdUzd7spsD2fxdq8bRvGRLUCJsjX
+         N/B6zDTTfsosZAJTBlU9qU1PoqPKBXoJu/c83Gpc2/pGNT6osM/MNYH4MIzUeeMZQe5v
+         j52f5Te72U73zuu393oF17l1y7aOQ7I59nFpdB166eAfSucg7dd26V3chci724yug5wx
+         4edL30JJ00Myif8s4MxW2e2Gp96gqD7pMj1eCLp+qqzAUX5bujDftVI2VrJcA0mGQguD
+         xpt4z/37BZ8pTe3tqpZmdC+sxrkd1SWhH/1tsE2RObkRWJQjOKJL7r/x3eZuOGSzn6W4
+         8drw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wC1a43zyQWPn3gtOzkZQyfjyAzgJ9BNHPEib+IMkUGo=;
+        b=qNOnjX8FDTS8DLEj3QSnfEk6Zv8jpJyIYuu7Pb1z59l50obRFC0CXXKg/hIGx4aTbz
+         x02STO/TMCDyYr7+laGh5cmk1y52hcmBfGLWn899anCv7lW5zc3NymJKaTIjTrh193JQ
+         Z+n49bs2r2ldOKL81l7/duyWOL0j+ciaF+VUNvZd+9FxMzolSUh8IzLQWi+y4ezb5Hpl
+         T8rk4f+kQdGVuM441Eaju3LUS2Yir324Hx0l7pFQ0Qw5GKQwU2tqeIEr/HwTcEK21Bxn
+         orDws+4+q0nphXIGPMTqObm3yY96c7/+1hOmYV8c7hUB/ZrDozfG2e9cl5xlEIpKqhPC
+         MxRA==
+X-Gm-Message-State: AOAM5334E7UV3qgxnUM6897Wv4dwkFmDExZUCYlAz1y4EhdfNPJ7aCte
+        IePuoj3ysJ6zDSYlr31xliorGsoHiZXYug==
+X-Google-Smtp-Source: ABdhPJxfnTUlSmBWTEBKPOpJODSJXEQC+hzSZzjlubf8wneZJTQb+4RlrbRCJi1W/QdCHlxTybGp7g==
+X-Received: by 2002:a17:902:a611:: with SMTP id u17mr14094683plq.263.1593446195096;
+        Mon, 29 Jun 2020 08:56:35 -0700 (PDT)
+Received: from [192.168.86.197] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
+        by smtp.gmail.com with ESMTPSA id 4sm201021pgk.68.2020.06.29.08.56.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 08:56:34 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: put driver tag when this request is completed
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20200629094759.2002708-1-ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5107209f-2e5e-86fb-d5e7-db15df18085c@kernel.dk>
+Date:   Mon, 29 Jun 2020 09:56:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <7ed6ccf1-6ad9-1df7-f55d-4ed6cac1e08d@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200629094759.2002708-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.8]
-X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all,
+On 6/29/20 3:47 AM, Ming Lei wrote:
+> It is natural to release driver tag when this request is completed by
+> LLD or device since its purpose is for LLD use.
+> 
+> One big benefit is that the released tag can be re-used quicker since
+> bio_endio() may take too long.
+> 
+> Meantime we don't need to release driver tag for flush request.
 
-I noticed that sbitmap_bitmap_show() only shows set bits and does not 
-consider cleared bits. Is that the proper thing to do?
+Applied, thanks.
 
-I ask, as from trying to support sbitmap_bitmap_show() for hostwide 
-shared tags feature, we currently use blk_mq_queue_tag_busy_iter() to 
-find active requests (and associated tags/bits) for a particular hctx. 
-So, AFAICT, would give a change in behavior for sbitmap_bitmap_show(), 
-in that it would effectively show set and not cleared bits.
+-- 
+Jens Axboe
 
-Any thoughts on this?
-
-Thanks!
