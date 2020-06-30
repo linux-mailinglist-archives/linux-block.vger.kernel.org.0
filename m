@@ -2,221 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E5820F6B2
-	for <lists+linux-block@lfdr.de>; Tue, 30 Jun 2020 16:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E65F820F7B2
+	for <lists+linux-block@lfdr.de>; Tue, 30 Jun 2020 16:56:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgF3OGD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Jun 2020 10:06:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29497 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727796AbgF3OGC (ORCPT
+        id S2389151AbgF3Ozx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Jun 2020 10:55:53 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35362 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgF3Ozw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593525960;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7rby9+YHyerEnVYuURkUovDKko0Gh77p1am4KIwtiPY=;
-        b=iXeuJkmmoFTNT5yX65Y4jKWTgBOgKMmRcvVogTsD1xWh5GwOlYRR/EXC7qaNMhFFI8bOJj
-        0tn64DeJ36BRRtWeA5VlhZ0OqH/Rvq5DbMBY+laR1hjvXFckPpvLAzVIBgY9I17Ceblu+T
-        DqLTqaxdSO/QG9So7IVdjRlH94IQL2A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-b9akNzg8OxqYbv59WrtoDA-1; Tue, 30 Jun 2020 10:05:58 -0400
-X-MC-Unique: b9akNzg8OxqYbv59WrtoDA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D0BA8031FC;
-        Tue, 30 Jun 2020 14:04:26 +0000 (UTC)
-Received: from localhost (ovpn-13-98.pek2.redhat.com [10.72.13.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E35CD5BAC8;
-        Tue, 30 Jun 2020 14:04:21 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH V3 3/3] blk-mq: centralise related handling into blk_mq_get_driver_tag
-Date:   Tue, 30 Jun 2020 22:03:57 +0800
-Message-Id: <20200630140357.2251174-4-ming.lei@redhat.com>
-In-Reply-To: <20200630140357.2251174-1-ming.lei@redhat.com>
-References: <20200630140357.2251174-1-ming.lei@redhat.com>
+        Tue, 30 Jun 2020 10:55:52 -0400
+Received: by mail-pj1-f68.google.com with SMTP id i4so9585806pjd.0;
+        Tue, 30 Jun 2020 07:55:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uyxc4QXJcSN7l9qnz3IOT4YXnu7cODBB3+hPaz6rN24=;
+        b=ZxSMcMusA7XoIQnQ2/1F5glT/pUoe3AAmlPAkB+73cDE+p6L13ZWFwNJjqX5+vjPtr
+         s1rkRNUszQZ1yp/CuMVLSLYofyYxLNv4iEUjJ/okmalfKWY3cTe4Nxv4KTw9HJDAhcjW
+         YPPJ33qZIEGqLOmPlbDmrPONzxKLdwgYjC29gpTbUcAjtP2H1MAQwsCRHFhJ45HVckvU
+         anPfRZNIukDV55bjTPhsev6T8/fSnp/9sb+zOOTcejzXLu0sNr+fF6qGtn6nZsZoRbms
+         j49CQp1zBRim/UVMOMZ4vR2lEgk4HLnBRM1HEDk8OX3XH8OmDCLDik8LaQapK31LMatR
+         9qzg==
+X-Gm-Message-State: AOAM5300v2e2SqWiNLsNOGVKEqHCrAinlIqBCYfSnG9au/LEE7rhZQU8
+        nbx6oRezRVxTa81XVXBdYbg=
+X-Google-Smtp-Source: ABdhPJxqGwn0YkwFn3wRfqKT8oyGlwNCMH/JmeZBhK+KTeMMSZkRCBcxay3604dW4Qc9NDT/p3e8Rg==
+X-Received: by 2002:a17:90a:ad8e:: with SMTP id s14mr23603161pjq.36.1593528951976;
+        Tue, 30 Jun 2020 07:55:51 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id z9sm2525690pjr.39.2020.06.30.07.55.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 07:55:51 -0700 (PDT)
+Subject: Re: About sbitmap_bitmap_show() and cleared bits (was Re: [PATCH RFC
+ v7 07/12] blk-mq: Add support in hctx_tags_bitmap_show() for a shared
+ sbitmap)
+To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org
+Cc:     Hannes Reinecke <hare@suse.de>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, don.brace@microsemi.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        ming.lei@redhat.com, hare@suse.com, hch@lst.de,
+        shivasharan.srikanteshwara@broadcom.com,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        chenxiang66@hisilicon.com, megaraidlinux.pdl@broadcom.com
+References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+ <1591810159-240929-8-git-send-email-john.garry@huawei.com>
+ <9f4741c5-d117-d764-cf3a-a57192a788c3@suse.de>
+ <aad6efa3-2d7f-ca68-d239-44ea187c8017@huawei.com>
+ <7ed6ccf1-6ad9-1df7-f55d-4ed6cac1e08d@suse.de>
+ <8ffd5c22-f644-3436-0a9f-2e08c220525e@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <8dfd5434-674a-5df6-114b-59cfed22588d@acm.org>
+Date:   Tue, 30 Jun 2020 07:55:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <8ffd5c22-f644-3436-0a9f-2e08c220525e@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move .nr_active update and request assignment into blk_mq_get_driver_tag(),
-all are good to do during getting driver tag.
+On 2020-06-29 08:32, John Garry wrote:
+> I noticed that sbitmap_bitmap_show() only shows set bits and does not
+> consider cleared bits. Is that the proper thing to do?
+> 
+> I ask, as from trying to support sbitmap_bitmap_show() for hostwide
+> shared tags feature, we currently use blk_mq_queue_tag_busy_iter() to
+> find active requests (and associated tags/bits) for a particular hctx.
+> So, AFAICT, would give a change in behavior for sbitmap_bitmap_show(),
+> in that it would effectively show set and not cleared bits.
+> 
+> Any thoughts on this?
 
-Meantime blk-flush related code is simplified and flush request needn't
-to update the request table manually any more.
+Probably this is something that got overlooked when the cleared bits
+were introduced? See e.g. 8c2def893afc ("sbitmap: fix
+sbitmap_for_each_set()").
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-flush.c  | 17 ++++++-----------
- block/blk-mq-tag.h | 12 ------------
- block/blk-mq.c     | 30 ++++++++++++++----------------
- block/blk.h        |  5 -----
- 4 files changed, 20 insertions(+), 44 deletions(-)
-
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index 21108a550fbf..e756db088d84 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -236,12 +236,10 @@ static void flush_end_io(struct request *flush_rq, blk_status_t error)
- 		error = fq->rq_status;
- 
- 	hctx = flush_rq->mq_hctx;
--	if (!q->elevator) {
--		blk_mq_tag_set_rq(hctx, flush_rq->tag, fq->orig_rq);
--		flush_rq->tag = -1;
--	} else {
--		flush_rq->internal_tag = -1;
--	}
-+	if (!q->elevator)
-+		flush_rq->tag = BLK_MQ_NO_TAG;
-+	else
-+		flush_rq->internal_tag = BLK_MQ_NO_TAG;
- 
- 	running = &fq->flush_queue[fq->flush_running_idx];
- 	BUG_ON(fq->flush_pending_idx == fq->flush_running_idx);
-@@ -315,13 +313,10 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
- 	flush_rq->mq_ctx = first_rq->mq_ctx;
- 	flush_rq->mq_hctx = first_rq->mq_hctx;
- 
--	if (!q->elevator) {
--		fq->orig_rq = first_rq;
-+	if (!q->elevator)
- 		flush_rq->tag = first_rq->tag;
--		blk_mq_tag_set_rq(flush_rq->mq_hctx, first_rq->tag, flush_rq);
--	} else {
-+	else
- 		flush_rq->internal_tag = first_rq->internal_tag;
--	}
- 
- 	flush_rq->cmd_flags = REQ_OP_FLUSH | REQ_PREFLUSH;
- 	flush_rq->cmd_flags |= (flags & REQ_DRV) | (flags & REQ_FAILFAST_MASK);
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 3945c7f5b944..b1acac518c4e 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -101,18 +101,6 @@ static inline bool hctx_may_queue(struct blk_mq_hw_ctx *hctx,
- 	return atomic_read(&hctx->nr_active) < depth;
- }
- 
--/*
-- * This helper should only be used for flush request to share tag
-- * with the request cloned from, and both the two requests can't be
-- * in flight at the same time. The caller has to make sure the tag
-- * can't be freed.
-- */
--static inline void blk_mq_tag_set_rq(struct blk_mq_hw_ctx *hctx,
--		unsigned int tag, struct request *rq)
--{
--	hctx->tags->rqs[tag] = rq;
--}
--
- static inline bool blk_mq_tag_is_reserved(struct blk_mq_tags *tags,
- 					  unsigned int tag)
- {
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e7a2d2d44b51..a20647139c95 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -277,26 +277,20 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- {
- 	struct blk_mq_tags *tags = blk_mq_tags_from_data(data);
- 	struct request *rq = tags->static_rqs[tag];
--	req_flags_t rq_flags = 0;
- 
- 	if (data->q->elevator) {
- 		rq->tag = BLK_MQ_NO_TAG;
- 		rq->internal_tag = tag;
- 	} else {
--		if (data->hctx->flags & BLK_MQ_F_TAG_SHARED) {
--			rq_flags = RQF_MQ_INFLIGHT;
--			atomic_inc(&data->hctx->nr_active);
--		}
- 		rq->tag = tag;
- 		rq->internal_tag = BLK_MQ_NO_TAG;
--		data->hctx->tags->rqs[rq->tag] = rq;
- 	}
- 
- 	/* csd/requeue_work/fifo_time is initialized before use */
- 	rq->q = data->q;
- 	rq->mq_ctx = data->ctx;
- 	rq->mq_hctx = data->hctx;
--	rq->rq_flags = rq_flags;
-+	rq->rq_flags = 0;
- 	rq->cmd_flags = data->cmd_flags;
- 	if (data->flags & BLK_MQ_REQ_PREEMPT)
- 		rq->rq_flags |= RQF_PREEMPT;
-@@ -1127,9 +1121,10 @@ static bool __blk_mq_get_driver_tag(struct request *rq)
- {
- 	struct sbitmap_queue *bt = &rq->mq_hctx->tags->bitmap_tags;
- 	unsigned int tag_offset = rq->mq_hctx->tags->nr_reserved_tags;
--	bool shared = blk_mq_tag_busy(rq->mq_hctx);
- 	int tag;
- 
-+	blk_mq_tag_busy(rq->mq_hctx);
-+
- 	if (blk_mq_tag_is_reserved(rq->mq_hctx->sched_tags, rq->internal_tag)) {
- 		bt = &rq->mq_hctx->tags->breserved_tags;
- 		tag_offset = 0;
-@@ -1142,19 +1137,22 @@ static bool __blk_mq_get_driver_tag(struct request *rq)
- 		return false;
- 
- 	rq->tag = tag + tag_offset;
--	if (shared) {
--		rq->rq_flags |= RQF_MQ_INFLIGHT;
--		atomic_inc(&rq->mq_hctx->nr_active);
--	}
--	rq->mq_hctx->tags->rqs[rq->tag] = rq;
- 	return true;
- }
- 
- static bool blk_mq_get_driver_tag(struct request *rq)
- {
--	if (rq->tag != BLK_MQ_NO_TAG)
--		return true;
--	return __blk_mq_get_driver_tag(rq);
-+	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
-+
-+	if (rq->tag == BLK_MQ_NO_TAG && !__blk_mq_get_driver_tag(rq))
-+		return false;
-+
-+	if (hctx->flags & BLK_MQ_F_TAG_SHARED) {
-+		rq->rq_flags |= RQF_MQ_INFLIGHT;
-+		atomic_inc(&hctx->nr_active);
-+	}
-+	hctx->tags->rqs[rq->tag] = rq;
-+	return true;
- }
- 
- static int blk_mq_dispatch_wake(wait_queue_entry_t *wait, unsigned mode,
-diff --git a/block/blk.h b/block/blk.h
-index 41a50880c94e..0184a31fe4df 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -25,11 +25,6 @@ struct blk_flush_queue {
- 	struct list_head	flush_data_in_flight;
- 	struct request		*flush_rq;
- 
--	/*
--	 * flush_rq shares tag with this rq, both can't be active
--	 * at the same time
--	 */
--	struct request		*orig_rq;
- 	struct lock_class_key	key;
- 	spinlock_t		mq_flush_lock;
- };
--- 
-2.25.2
+Bart.
 
