@@ -2,104 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17AB920F6AC
-	for <lists+linux-block@lfdr.de>; Tue, 30 Jun 2020 16:03:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A53820F6B3
+	for <lists+linux-block@lfdr.de>; Tue, 30 Jun 2020 16:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388245AbgF3ODE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Jun 2020 10:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgF3ODD (ORCPT
+        id S1728343AbgF3OGG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Jun 2020 10:06:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50184 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727796AbgF3OGG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:03:03 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87526C061755
-        for <linux-block@vger.kernel.org>; Tue, 30 Jun 2020 07:03:03 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id i4so9523414pjd.0
-        for <linux-block@vger.kernel.org>; Tue, 30 Jun 2020 07:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BEfZkeUSkOMlr5ICokEqJ2PIKF3eWMH3bVbkXAU2YC4=;
-        b=yInapZvVO2E0MIx5Esj0QuCd+w5slp7G6BxcyeFFH0I+zISUzFk9pYhkGp1VvfHf/g
-         0zEJck/3N2TUVBOZvPpyE6B2robv2Pf7NjfcC+T4eYVgSgLxcXCtTLIG9f+Kz5U0VAKH
-         w2fNTacbqtUmbNZ4h9bbCYoCq7mEWeZjlFXv0SBmjc0hGJUY1sjxk+t1r92lnjHxh9y4
-         Qt/j7Db0Nl8Sg9NNKOXTt251iyJJRKgd43JKYqfGPfIXAnxXYxmg9OS3nuduECCh2kqC
-         2bjKgWmvnaqaL7W7eU5PURB7vpvdXsVmn9BWqBGm3eK1GL2sYN3evxpA1YAXFHequmkI
-         Q6yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BEfZkeUSkOMlr5ICokEqJ2PIKF3eWMH3bVbkXAU2YC4=;
-        b=teMnjuDkLdhvYu2bydSoxhznM1MOYhrbe5SQ9q19wBmBJj+G+90AHQ82zjJ9KFvSif
-         BPdnwplYyu45uft0nSLMmsx82Oc6Q2v6ZQwPThBNsdH1HTV5iipHO6WlBjDa1Y1/UVhb
-         6CWVwPMuTcbv5CVej/N/BfHKUi0XkmGfL3z/GIUJIPB+wu9VQjaAZL2No8vpRjCDq4NJ
-         W7jZfKUfnjlyBmrOGuf3jBwIviXFWYyGne8++9sm9HmFHOFFcbgIuAlIxH7ljkIiQFrh
-         TmEaBsc6lvzqanmwYjpbmxaDGGaagumdu1NX+6WSMVLYqek7LtFJ7IsQYX290al3d8Vb
-         GHxg==
-X-Gm-Message-State: AOAM531nWJs8lMHK3YKfHZN2tNptpP5W/s08CygupyjrP+8XTRIgjGhm
-        71MfZwT5jVsdQCH/wc3FM1yddQ3rUjlJFA==
-X-Google-Smtp-Source: ABdhPJytDKzhZEmBf3wKd0ZvwqfsfHgqb5dba88qxR4mfvUzJJZ0n5s/I+xhTZYgNP5BvWm/RSNVrQ==
-X-Received: by 2002:a17:90a:2d7:: with SMTP id d23mr1492555pjd.57.1593525782872;
-        Tue, 30 Jun 2020 07:03:02 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:4113:50ea:3eb3:a39b? ([2605:e000:100e:8c61:4113:50ea:3eb3:a39b])
-        by smtp.gmail.com with ESMTPSA id t1sm2974128pgq.66.2020.06.30.07.03.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 07:03:02 -0700 (PDT)
-Subject: Re: [PATCH V7 0/6] blk-mq: support batching dispatch from scheduler
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Baolin Wang <baolin.wang7@gmail.com>,
+        Tue, 30 Jun 2020 10:06:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593525965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lnRRuli2c/6CcTb+I8aj/A1f/tKEw3CM/UGazu1DzkA=;
+        b=c++jsfkkGZMwpuDdbBDiqVrh0Fy8EFEa8TCnI529vfbPtaTeLjK2slViqmxGwYwvX6Z5jr
+        L77Lr+iyVxOHKN+XpMDnHo5LZlZBzqO7lQ2Fe4MAdN9LjfIVt/j4ramKyiE4Ccw5bTIJv8
+        rviR24P67A8mTyz2xFeVrGIFxwKD+/g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-IREeywvaPzSFDCmTBft3jQ-1; Tue, 30 Jun 2020 10:05:58 -0400
+X-MC-Unique: IREeywvaPzSFDCmTBft3jQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A841775E87;
+        Tue, 30 Jun 2020 14:04:06 +0000 (UTC)
+Received: from localhost (ovpn-13-98.pek2.redhat.com [10.72.13.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E22BB2B472;
+        Tue, 30 Jun 2020 14:04:02 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
         Christoph Hellwig <hch@infradead.org>
-References: <20200630102501.2238972-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6dc23dec-aad3-b2a3-3e11-71c186ddbc0b@kernel.dk>
-Date:   Tue, 30 Jun 2020 08:03:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Subject: [PATCH V3 0/3] blk-mq: driver tag related cleanup
+Date:   Tue, 30 Jun 2020 22:03:54 +0800
+Message-Id: <20200630140357.2251174-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630102501.2238972-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/30/20 4:24 AM, Ming Lei wrote:
-> Hi Jens,
-> 
-> More and more drivers want to get batching requests queued from
-> block layer, such as mmc[1], and tcp based storage drivers[2]. Also
-> current in-tree users have virtio-scsi, virtio-blk and nvme.
-> 
-> For none, we already support batching dispatch.
-> 
-> But for io scheduler, every time we just take one request from scheduler
-> and pass the single request to blk_mq_dispatch_rq_list(). This way makes
-> batching dispatch not possible when io scheduler is applied. One reason
-> is that we don't want to hurt sequential IO performance, becasue IO
-> merge chance is reduced if more requests are dequeued from scheduler
-> queue.
-> 
-> Tries to start the support by dequeuing more requests from scheduler
-> if budget is enough and device isn't busy.
-> 
-> Simple fio test over virtio-scsi shows IO can get improved by 5~10%.
-> 
-> Baolin has tested previous versions and found performance on MMC can be improved.
-> 
-> Patch 1 ~ 4 are improvement and cleanup, which can't applied without
-> supporting batching dispatch.
-> 
-> Patch 5 ~ 6 starts to support batching dispatch from scheduler.
+Hi Jens,
 
-Thanks Ming, applied for 5.9.
+The 1st & 2nd patch moves get/put driver tag helpers into blk-mq.c, and
+the 3rd patch centralise related handling into blk_mq_get_driver_tag,
+so both flush & blk-mq code get simplified.
 
+V3:
+	- rebase on latest for-5.9/block, only 3/3 is changed.
+
+V2:
+	- add reviewed-by tag
+	- don't put blk_mq_tag_busy() into blk_mq_get_driver_tag
+	- use BLK_MQ_NO_TAG in blk-flush.c
+
+Ming Lei (3):
+  blk-mq: move blk_mq_get_driver_tag into blk-mq.c
+  blk-mq: move blk_mq_put_driver_tag() into blk-mq.c
+  blk-mq: centralise related handling into blk_mq_get_driver_tag
+
+ block/blk-flush.c  | 17 +++++-------
+ block/blk-mq-tag.c | 58 ----------------------------------------
+ block/blk-mq-tag.h | 41 +++++++++++++++++-----------
+ block/blk-mq.c     | 66 +++++++++++++++++++++++++++++++++++++++++-----
+ block/blk-mq.h     | 20 --------------
+ block/blk.h        |  5 ----
+ 6 files changed, 91 insertions(+), 116 deletions(-)
+
+Cc: Christoph Hellwig <hch@infradead.org>
 -- 
-Jens Axboe
+2.25.2
 
