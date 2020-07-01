@@ -2,67 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21FFF2105E8
-	for <lists+linux-block@lfdr.de>; Wed,  1 Jul 2020 10:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED0B4210781
+	for <lists+linux-block@lfdr.de>; Wed,  1 Jul 2020 11:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgGAIKS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jul 2020 04:10:18 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:50572 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728188AbgGAIKR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:10:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=hongnan.li@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0U1G8MLP_1593590997;
-Received: from AliYun.localdomain(mailfrom:hongnan.li@linux.alibaba.com fp:SMTPD_---0U1G8MLP_1593590997)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Jul 2020 16:10:15 +0800
-From:   Hongnan Li <hongnan.li@linux.alibaba.com>
-To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, Hongnan Li <hongnan.li@linux.alibaba.com>
-Subject: [PATCH v2] blk-iolatency: postpone ktime_get() execution until blk_iolatency_enabled() return true
-Date:   Wed,  1 Jul 2020 16:09:38 +0800
-Message-Id: <1593590978-23382-1-git-send-email-hongnan.li@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1728848AbgGAJG3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Jul 2020 05:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgGAJG2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jul 2020 05:06:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B283C061755;
+        Wed,  1 Jul 2020 02:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=kVtz6vlqJaw/bVcdduLYH4iE1TfD3bHAdPcoJqUty3c=; b=fqj9Bq+LPiX5Cw82+DKENOtZGq
+        aBH2pV9JriMzRvy5+0j64xrRmqbi06FwHdCyyH3uCDubulK1NERetFJK1xFzKQY+iXQVy5XGPU+xl
+        /8+zjmJSUzyKDSohp1PbTPulp7b3LNcKbeAeTRiFa5ER5du9CjNnVFmk1/cLC4YQcwJeNFeAu/B/t
+        7LQYhpHNJ89uXgEEGIP8Kl/6Q59oBdTnE2iI0XlR6ib/eAbUM2WK68TsWfzhy2JvgP5NrxmDNwUdK
+        2kLdrPLtmrx4+deQuyG8ej+JvRoHTRyPjJ4ocq2XFWOIjBChE8rflkGjPJ8f2cJsvLg9xAC3ZO5Oq
+        zQLc42fA==;
+Received: from [2001:4bb8:184:76e3:ea38:596b:3e9e:422a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqYhD-0000hE-MD; Wed, 01 Jul 2020 09:06:24 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Tejun Heo <tj@kernel.org>, dm-devel@redhat.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: remove dead bdi congestion leftovers
+Date:   Wed,  1 Jul 2020 11:06:18 +0200
+Message-Id: <20200701090622.3354860-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ktime_to_ns(ktime_get()) which is expensive do not need to be executed if
-blk_iolatency_enabled() return false in blkcg_iolatency_done_bio().
-Postponing ktime_to_ns(ktime_get()) execution can reduce CPU usage
-when blk_iolatency was disabled.
+Hi Jens,
 
----
-V2:
-  1.Fix compile warnings.
+we have a lot of bdi congestion related code that is left around without
+any use.  This series removes it in preparation of sorting out the bdi
+lifetime rules properly.
 
-Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
----
- block/blk-iolatency.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index c128d50..f90429c 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -591,7 +591,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	struct rq_wait *rqw;
- 	struct iolatency_grp *iolat;
- 	u64 window_start;
--	u64 now = ktime_to_ns(ktime_get());
-+	u64 now;
- 	bool issue_as_root = bio_issue_as_root_blkg(bio);
- 	bool enabled = false;
- 	int inflight = 0;
-@@ -608,6 +608,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!enabled)
- 		return;
- 
-+	now = ktime_to_ns(ktime_get());
- 	while (blkg && blkg->parent) {
- 		iolat = blkg_to_lat(blkg);
- 		if (!iolat) {
--- 
-1.8.3.1
-
+Diffstat:
+ block/blk-cgroup.c               |   19 ----
+ drivers/block/drbd/drbd_main.c   |   59 --------------
+ drivers/block/drbd/drbd_proc.c   |    1 
+ drivers/md/bcache/request.c      |   43 ----------
+ drivers/md/bcache/super.c        |    1 
+ drivers/md/dm-cache-target.c     |   19 ----
+ drivers/md/dm-clone-target.c     |   15 ---
+ drivers/md/dm-era-target.c       |   15 ---
+ drivers/md/dm-raid.c             |   12 --
+ drivers/md/dm-table.c            |   37 ---------
+ drivers/md/dm-thin.c             |   16 ---
+ drivers/md/dm.c                  |   33 --------
+ drivers/md/dm.h                  |    1 
+ drivers/md/md-linear.c           |   24 -----
+ drivers/md/md-multipath.c        |   23 -----
+ drivers/md/md.c                  |   23 -----
+ drivers/md/md.h                  |    4 
+ drivers/md/raid0.c               |   16 ---
+ drivers/md/raid1.c               |   31 -------
+ drivers/md/raid10.c              |   26 ------
+ drivers/md/raid5.c               |   25 ------
+ fs/btrfs/disk-io.c               |   23 -----
+ include/linux/backing-dev-defs.h |   43 ----------
+ include/linux/backing-dev.h      |   22 -----
+ include/linux/blk-cgroup.h       |    6 -
+ include/linux/device-mapper.h    |   11 --
+ mm/backing-dev.c                 |  157 +++------------------------------------
+ 27 files changed, 20 insertions(+), 685 deletions(-)
