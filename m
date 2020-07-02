@@ -2,91 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0092127BA
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jul 2020 17:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02F021283A
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jul 2020 17:42:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgGBPXi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jul 2020 11:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbgGBPXh (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:23:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF68208B6;
-        Thu,  2 Jul 2020 15:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593703417;
-        bh=WNTkJbutilXS82yRZLpy+ORdJKpcXG8AaT4h8ivgBxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IO27kxXbo/P4rRR6VADu+Ya64vT44dzJWzB4oWNekCyIHo6tVM1IRX18CYnuiL3oO
-         J51pEoHytJXAHtFcGivkDIcOSMQIyRBhLDJpGqz0G+dxGiDEHsDrokKHQq4xAzyNIT
-         w08ZbGp/qLFQHQQU0YajAR7ZinMTdyeksf2VLOM8=
-Date:   Thu, 2 Jul 2020 16:23:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mm@kvack.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2 08/16] spi: davinci: Remove uninitialized_var() usage
-Message-ID: <20200702152335.GJ4483@sirena.org.uk>
-References: <20200620033007.1444705-1-keescook@chromium.org>
- <20200620033007.1444705-9-keescook@chromium.org>
- <20200701203920.GC3776@sirena.org.uk>
- <202007020819.318824DA@keescook>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GlnCQLZWzqLRJED8"
-Content-Disposition: inline
-In-Reply-To: <202007020819.318824DA@keescook>
-X-Cookie: I'm rated PG-34!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728754AbgGBPme (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jul 2020 11:42:34 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:49562 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgGBPmJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jul 2020 11:42:09 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200702154206epoutp0270d717cf158dc162396a471c49a5a429~d_dLEooS41594515945epoutp02P
+        for <linux-block@vger.kernel.org>; Thu,  2 Jul 2020 15:42:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200702154206epoutp0270d717cf158dc162396a471c49a5a429~d_dLEooS41594515945epoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593704526;
+        bh=hysM3c4xp8mz2RoHJXjNUcMrUuaAnVpURb0TToaAgcg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=T+sAuD3lgv9FTnfubK66Ip5wYe4fDi1Bo9Cs6gOY8M4X++maQYnZoK4ITD7aXEgEC
+         dEfHG2SerCXKPLtsFYyLoi0pd4hlQmb/N65OW5OEgTZhQBjFtSQ+U5Khu49Wcd1iKW
+         tJp4yVDRhLolQDzzRH7XF0pSfwQ28yezrX4NFdoQ=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200702154206epcas5p16cf30866565a800b0b47ddddd035ac44~d_dKdLsG52199921999epcas5p1u;
+        Thu,  2 Jul 2020 15:42:06 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.93.09475.D400EFE5; Fri,  3 Jul 2020 00:42:06 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702154204epcas5p15106774a3d556b77050710722da89922~d_dJR0RxH0362503625epcas5p12;
+        Thu,  2 Jul 2020 15:42:04 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702154204epsmtrp28b3a1b4bd241cf66c1da132bc730a710~d_dJQ7Fn91523715237epsmtrp2G;
+        Thu,  2 Jul 2020 15:42:04 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-0f-5efe004da22b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        02.3A.08382.C400EFE5; Fri,  3 Jul 2020 00:42:04 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702154203epsmtip14afc6ea65b1b130ba47eeba550dbd81a~d_dHyOAFO2839128391epsmtip1o;
+        Thu,  2 Jul 2020 15:42:03 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, kbusch@kernel.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, Damien.LeMoal@wdc.com,
+        Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH 0/2] fix/extend zone-append in block-layer
+Date:   Thu,  2 Jul 2020 21:08:48 +0530
+Message-Id: <1593704330-11540-1-git-send-email-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCmuq4fw784g6NtjBa/p09htVh9t5/N
+        orX9G5PFytVHmSyO/n/LZjHp0DVGi723tC0u75rDZnFlyiJmB06Py2dLPTat6mTz2H2zgc2j
+        b8sqRo/Pm+Q82g90MwWwRXHZpKTmZJalFunbJXBlvL1kWXCWpWLC6uesDYyPmLsYOTkkBEwk
+        9u3qAbOFBHYzSjz+w9/FyAVkf2KUePh1OVTiG6NE35EqmIbLn6azQhTtZZTYtLuPCcL5zCix
+        +vYnoA4ODjYBTYkLk0tBGkQE1CT2LvrEBlLDLNDOKPHtcBcbSEJYwEriT287mM0ioCqx7fke
+        FhCbV8BZYtXyRywQ2+Qkbp7rZAZplhA4xC6xbNU5VoiEi8ThR/1QPwhLvDq+hR3ClpL4/G4v
+        G4RdLPHrzlGo5g5GiesNM6Gm2ktc3POXCeRSZqBL1+/SBwkzC/BJ9P5+AhaWEOCV6GgTgqhW
+        lLg36SnUWnGJhzOWQNkeEm9ufmcFKRcSiJVYdcZ5AqPMLISZCxgZVzFKphYU56anFpsWGOel
+        lusVJ+YWl+al6yXn525iBEe9lvcOxkcPPugdYmTiYDzEKMHBrCTCe9rgV5wQb0piZVVqUX58
+        UWlOavEhRmkOFiVxXqUfZ+KEBNITS1KzU1MLUotgskwcnFINTObtDiqbf93SE2G1mrnYV8bJ
+        Q/RyZP+uLTlM/zJTTxcXCIgsWrpvVcU0s90TVKs9+vdH5bQfPywYIflNcxpXQWvGRzdb3ZfH
+        so+4T16w02ylTHC0usXFlD3Js3ltalMcNTf9UzwSr7ljUzTLx2Uivx6H7BafzHTJ2Wbb1a8z
+        r86IsvKP1UnfuyRm2p/45+vNo2e5uQXfyrM/wPJSxCOnKvr5XaaQe4qisSt+6vscS8qv4Ndb
+        5Z5v3ORWICVoFr5tg+zsRyIJEqePPjPd6bJX2fqHydYwIYvAvXJZ8lveftTJr+9jUuQ1bi55
+        d23R/Y3a8x+nLF+pMdNWI0pucv9EHQ1Hq8U7BaXLt7PGPtyoxFKckWioxVxUnAgABli55WkD
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmluLIzCtJLcpLzFFi42LZdlhJTteH4V+cwbFXuha/p09htVh9t5/N
+        orX9G5PFytVHmSyO/n/LZjHp0DVGi723tC0u75rDZnFlyiJmB06Py2dLPTat6mTz2H2zgc2j
+        b8sqRo/Pm+Q82g90MwWwRXHZpKTmZJalFunbJXBlvL1kWXCWpWLC6uesDYyPmLsYOTkkBEwk
+        Ln+aztrFyMUhJLCbUWLX26NQCXGJ5ms/2CFsYYmV/56zQxR9ZJTo3vabpYuRg4NNQFPiwuRS
+        kBoRAQ2JFZ+XMYHUMAv0Mkp8/zuFESQhLGAl8ae3nQ3EZhFQldj2fA8LiM0r4CyxavkjFogF
+        chI3z3UyT2DkWcDIsIpRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzi8tDR3MG5f9UHv
+        ECMTB+MhRgkOZiUR3tMGv+KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ894oXBgnJJCeWJKanZpa
+        kFoEk2Xi4JRqYGqN2H9Fv8NCZ5PsfME0Np7XbcxBcSrCW/QyJJYlPirtSYsqrQy3nS8p2nB8
+        ceapNYcE5Qp231K/9m/57c+bGZ9WHyufLR3N7ObDs/CbUm+9ucnWzKmLS2pM7vYVm/K1XX6f
+        /FLno9CX67ur1rGoOPV0Hzu0ybb9ouuS7u8XImoXd57yKrRRY1P4LzDHOXdP4dF5f0tLshYf
+        DXvQ+0TD+9vqdM9zWY7Fq8Q+OeklmS5oVe3bPPdk0NS0N2tuRihalX19Eyly+bndLV0WUbML
+        1QwVT1VKK4L+xHVu3nR3R9jclcmilXP8Z2SU2habONu124m3GHirr1y70WuRnsQ143uhV0Vt
+        b6+RSggJXB2nxFKckWioxVxUnAgA3oMPsZ4CAAA=
+X-CMS-MailID: 20200702154204epcas5p15106774a3d556b77050710722da89922
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200702154204epcas5p15106774a3d556b77050710722da89922
+References: <CGME20200702154204epcas5p15106774a3d556b77050710722da89922@epcas5p1.samsung.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+First patch is about returning failure (rather than success) when
+max_append_sectors is 0. This prevents bio_iov_iter_get_pages() from
+getting into an endless loop.
 
---GlnCQLZWzqLRJED8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Second patch enables issuing zone-append with iov_iter of bvec type.
+It adds a helper which is similar to __bio_iov_bvec_add_pages() but
+takes zone-append limits into account.
 
-On Thu, Jul 02, 2020 at 08:21:40AM -0700, Kees Cook wrote:
-> On Wed, Jul 01, 2020 at 09:39:20PM +0100, Mark Brown wrote:
+Kanchan Joshi (2):
+  block: fix error code for zone-append
+  block: enable zone-append for iov_iter of bvec type
 
-> > Please copy maintainers on patches :(
+ block/bio.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
-> Hi! Sorry about that; the CC list was giant, so I had opted for using
-> subsystem mailing lists where possible.
+-- 
+2.7.4
 
-If you're going to err in a direction there I'd err in the direction of
-CCing the people not the list - I only saw this since I was looking for
-something else, I don't normally see stuff in the mailing list folder.
-
---GlnCQLZWzqLRJED8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl79+/YACgkQJNaLcl1U
-h9Djdwf9FVJo+4ywgEFtzDJmcKhgfjUWwqu3KS6uuCh0kB55Sw1SQjJSSXpOVAxD
-c1THQwWtp3yoK50+wen7yecLtGzYsGfOc1qPCbtoHXUb4vt9F+2dUN3fYKlp5OkY
-ptmLndV7KSAVJLXgCq3TadMYTowK69OXYgiVLB63DplYlmYfBulsIp0tstfTNxTd
-/9OTPNQwCTG4HFHZcCOoKL62qCNCSgYJEamVHX8CAIYb1B9JHmPQQg5lm9xja8Do
-f9XUirVfGI8NG4jqh51RT140BT7QOzzj5jZIV5wOf+fFu6SAD35MvR+YlABDxfNx
-sED17NzL1wIx4PO0x1a//RB9L31ujg==
-=X/3I
------END PGP SIGNATURE-----
-
---GlnCQLZWzqLRJED8--
