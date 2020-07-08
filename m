@@ -2,73 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D759D218635
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 13:33:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F21B82187E7
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 14:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgGHLdK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 07:33:10 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2440 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728742AbgGHLdK (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:33:10 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id E091CFBE4E751B066A8A;
-        Wed,  8 Jul 2020 12:33:08 +0100 (IST)
-Received: from [127.0.0.1] (10.210.171.111) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 8 Jul 2020
- 12:33:07 +0100
-Subject: Re: [PATCH RFC v7 10/12] megaraid_sas: switch fusion adapters to MQ
-To:     Kashyap Desai <kashyap.desai@broadcom.com>, <axboe@kernel.dk>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <don.brace@microsemi.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hare@suse.com>,
-        <hch@lst.de>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>
-CC:     <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
-References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
- <1591810159-240929-11-git-send-email-john.garry@huawei.com>
- <d55972999b9370f947c20537e41b49bf@mail.gmail.com>
- <e61593f8-5ee7-5763-9d02-d0ea13aeb49f@huawei.com>
- <92ba1829c9e822e4239a7cdfd94acbce@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5cac073f-d930-3074-49a8-515dcd0d80d6@huawei.com>
-Date:   Wed, 8 Jul 2020 12:31:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1729069AbgGHMpE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 08:45:04 -0400
+Received: from casper.infradead.org ([90.155.50.34]:34092 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbgGHMpE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 08:45:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=iIrUNIZ1TvkRMtCfNO8fsXHL6aBOpwrsvSgJNfYzcrQ=; b=jh/luEoktv4g70nSBL4er/hYuZ
+        utfCfy2saLEAxFyxTIc9K8Wkvcdo/Eiq6JnBBJu0vHaZHL7WII0HsgDI+g9v8pAlT/nEhWmUm1Gt+
+        LzFMXPl/9fETVNb3orDJ061cp+FBEZrjW1c0rQc/VIn1/iaYoOIpkgjREQaRruDz9MO1DSDClcBkE
+        kIuEDsC02WSRaCnnzPiNpJBeRuwxsjSu0NGYtRxWZ56KiLCvcdx9Wd0qCE/7D8AXRMckkK44vJCD6
+        q9ITdWBP6tumqiCor2JtqRE/C/vLD89XS6BNnTJuQ2tykWUeBrtpydu7YorxlJVkA9KxLelXNoqu2
+        RUJbDicQ==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jt9B8-0001oQ-Ap; Wed, 08 Jul 2020 12:28:00 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: remove leftovers of the old ->media_changed method
+Date:   Wed,  8 Jul 2020 14:25:40 +0200
+Message-Id: <20200708122546.214579-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <92ba1829c9e822e4239a7cdfd94acbce@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.171.111]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 06/07/2020 20:19, Kashyap Desai wrote:
->>> My understanding is
->>> - This RFC + patch set from above link is required for it. I could not
->>> see above series is committed.
->> It is committed and part of 5.8-rc1
->>
->> The latest rc should have some scheduler fixes also.
->>
->> I also note that there has been much churn on blk-mq tag code lately, and
->> something may be broken, so I plan to verify latest rc myself soon.
-> Thanks. I will try merging 5.8-rc1 and RFC and see how CPU hot plug works.
-> 
+Hi Jens,
 
-JFYI, I tested 5.8-rc4 for scheduler=none and =mq-deadline (no fully 
-tested), and it looks ok
+this series converts md as the last user of the ->media_changed method
+over to the modern replacement, and then cleans up a few lose ends in
+the area.
 
-john
-
+Diffstat:
+ Documentation/cdrom/cdrom-standard.rst |   18 +-----------------
+ Documentation/filesystems/locking.rst  |    4 +---
+ arch/xtensa/platforms/iss/simdisk.c    |    2 --
+ block/genhd.c                          |    7 +------
+ drivers/cdrom/cdrom.c                  |   28 +++++-----------------------
+ drivers/md/md.c                        |   19 ++++++++-----------
+ drivers/mmc/core/block.c               |    3 ---
+ fs/block_dev.c                         |   30 +++++++-----------------------
+ fs/isofs/inode.c                       |    3 ---
+ include/linux/blkdev.h                 |    2 --
+ include/linux/cdrom.h                  |    2 --
+ 11 files changed, 23 insertions(+), 95 deletions(-)
