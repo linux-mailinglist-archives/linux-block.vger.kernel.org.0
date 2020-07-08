@@ -2,74 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8443A218AB3
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 17:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FA882189CC
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 16:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgGHPEZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 11:04:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40036 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729022AbgGHPEY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 11:04:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594220663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cCfFQ9unhV8AALYAbnlDEYp86FEPgYE4PEBMEl3tJ+k=;
-        b=CG4COg6xclwjEypPnhQtXV6DUNMAczbN/JgdbKn8fC7f6HCvgw8b8O0IOIKZV/+RNDcggb
-        sRhQtnvWezBfEZYeZeljLHpPTjVJhcDGhfUNHXWsJWdSCZFdeq7kEUSuEIFf1anZ97CwKR
-        m43qinSj3RxIaW8/PSWCZ50I8nUig0g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-_cOtDcHDMqSgQS042k_P3g-1; Wed, 08 Jul 2020 11:04:20 -0400
-X-MC-Unique: _cOtDcHDMqSgQS042k_P3g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47FA510506EE;
-        Wed,  8 Jul 2020 15:04:18 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC18910013D7;
-        Wed,  8 Jul 2020 15:04:14 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 10:02:54 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        dm-devel@redhat.com, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dennis Zhou <dennis@kernel.org>
-Subject: Re: [PATCH 01/14] dm: use bio_uninit instead of bio_disassociate_blkg
-Message-ID: <20200708140254.GA7539@redhat.com>
-References: <20200627073159.2447325-1-hch@lst.de>
- <20200627073159.2447325-2-hch@lst.de>
+        id S1729482AbgGHOGq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 10:06:46 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2443 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729468AbgGHOGq (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:06:46 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id BD8F47FBA4FCE7FBE20F;
+        Wed,  8 Jul 2020 15:06:44 +0100 (IST)
+Received: from [127.0.0.1] (10.210.171.111) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 8 Jul 2020
+ 15:06:44 +0100
+Subject: Re: [PATCH V2] blk-mq: streamline handling of q->mq_ops->queue_rq
+ result
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20200701135857.2445459-1-ming.lei@redhat.com>
+ <20200708122749.GA3340386@T590>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <90d57d37-6da9-cae4-55b0-264c3dd885b0@huawei.com>
+Date:   Wed, 8 Jul 2020 15:05:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627073159.2447325-2-hch@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200708122749.GA3340386@T590>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.171.111]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Jun 27 2020 at  3:31am -0400,
-Christoph Hellwig <hch@lst.de> wrote:
+On 08/07/2020 13:27, Ming Lei wrote:
+> k;
+> -		} else if (ret == BLK_STS_ZONE_RESOURCE) {
+> +		case BLK_STS_RESOURCE:
+> +		case BLK_STS_DEV_RESOURCE:
+> +			blk_mq_handle_dev_resource(rq, list);
+> +			goto out;
+> +		case BLK_STS_ZONE_RESOURCE:
+>   			/*
+>   			 * Move the request to zone_list and keep going through
+>   			 * the dispatch list to find more requests the drive can
 
-> bio_uninit is the proper API to clean up a BIO that has been allocated
-> on stack or inside a structure that doesn't come from the BIO allocator.
-> Switch dm to use that instead of bio_disassociate_blkg, which really is
-> an implementation detail.  Note that the bio_uninit calls are also moved
-> to the two callers of __send_empty_flush, so that they better pair with
-> the bio_init calls used to initialize them.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+question not on this patch specifically: is this supposed to be 
+"driver", and not "drive"? "driver" is mentioned earlier in the function
 
-I've picked this up as a fix for 5.8
-
-Thanks,
-Mike
+>   			 * accept.
+>   			 */
+>   			blk_mq_handle_zone_resource(rq, &zone_list);
+> -			if (list_empty(list))
+> -				break;
+> -			continue;
+> -		}
+> -
 
