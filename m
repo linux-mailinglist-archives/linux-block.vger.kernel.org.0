@@ -2,88 +2,161 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B62FD218BCD
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 17:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D78B218C84
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 18:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbgGHPlr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 11:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730547AbgGHPlq (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FEF0206DF;
-        Wed,  8 Jul 2020 15:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222906;
-        bh=NAbFpu8g4lg42BP7xntLAmpxriEiKBROrvqWTxwFY6U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNLoHk+UHNX1HlHFbbfNlS3CtVB3fafeJLF7qRvnzmO0mwwb9aq7c58yvKInynKG2
-         Fsj/1EQv2E9XqcA3pxIn9Q9//Jvi7wr/8J2vF8+vhT9wxquPVNxr8cuTze5G6KAolZ
-         /MCHu6MmZUZWNr91B9D2QwcBUNS1RfseSEZSnE/w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Tao <houtao1@huawei.com>, Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/16] blk-mq-debugfs: update blk_queue_flag_name[] accordingly for new flags
-Date:   Wed,  8 Jul 2020 11:41:27 -0400
-Message-Id: <20200708154135.3199907-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708154135.3199907-1-sashal@kernel.org>
-References: <20200708154135.3199907-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1730260AbgGHQIQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 12:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730093AbgGHQIQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 12:08:16 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435A4C08C5C1
+        for <linux-block@vger.kernel.org>; Wed,  8 Jul 2020 09:08:16 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a1so51138348ejg.12
+        for <linux-block@vger.kernel.org>; Wed, 08 Jul 2020 09:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=HqpBY7r7cMmdxSomsxil1bu4vGv+J4OJWZNNfUv/dZM=;
+        b=TsT/rSU0rnR5xGbl/M/14iPag3TvmnldihTNk7Rpc2tIBuwM43sdJZ88gwylItA8dw
+         /LLoBTgoMlE+BsqiKmvh+AI0PumbsszW+VZ9ulB7aPx6Psu5d6WMhG5N6pxxZ6ovCTnH
+         gjoyIJ437nkHN8N2u6yxBGsHzFdWPsMRNJek0HPE07ZtzHWYEDKQmYO3OGVavyM/QT7d
+         C72+HVsc59mvH5AOpq1JAH0Gi5IQ64VxOEze5O8GWkXkrohOcVXhZ0WJb7X7OFcOzK+b
+         XyuDNiMz+T1LPbEw2AltMBvRMQBrMRfg5deI9GOpksLfLBTdwXZ5ZF6Wtneai1XkZVuA
+         CPtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=HqpBY7r7cMmdxSomsxil1bu4vGv+J4OJWZNNfUv/dZM=;
+        b=sl5cnHS9PfEjSRwILHTq+EVe2VAdwjdNcajw5O564gcWOJAQYjmaCbkOk4t4ZeUfEt
+         0hEtr8VVFW27x/m+L1RI43onpGl3pvjGz0xHkpPjVrub6nhu0vZ9hazx9RJfbncn7rR+
+         cMHtWcDA8/FlDcOOfdnohmK3oLS465k4/p1sHjQrjh2gDGEytsmK2YIA4drlEc1qkapd
+         cZs0YEQ7U3IH37NKmytGT87gQOumBUSdFknCUi9VVl2uTemhu6cxCZpIh9ycikpxg8mV
+         hU9gJsV57V+j45+8pjripkxmj/OnDJgLdD45hhIDaCZmCE8prFnTY7clnvPVHC/iLM56
+         atbw==
+X-Gm-Message-State: AOAM533hEGBU1OkMZxWASu0VW5dPoDmbCEk3aS2V2zR2Tn3cBJP8gFf5
+        xf+GGtEqnnROCGObSXOw9aeXIw==
+X-Google-Smtp-Source: ABdhPJzFmbEoWRJtTJrtEq1GYcXtnsEsi025KjmbmGjkw8A5ckMUVYg/t+96wXuRw5d3teUIwmknUg==
+X-Received: by 2002:a17:906:7855:: with SMTP id p21mr41176812ejm.492.1594224494867;
+        Wed, 08 Jul 2020 09:08:14 -0700 (PDT)
+Received: from [192.168.2.16] (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
+        by smtp.gmail.com with ESMTPSA id b98sm8352edf.24.2020.07.08.09.08.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 09:08:13 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Date:   Wed, 8 Jul 2020 18:08:12 +0200
+Message-Id: <36C0AD99-0D75-40D4-B704-507A222AEB81@javigon.com>
+References: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, damien.lemoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+In-Reply-To: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit bfe373f608cf81b7626dfeb904001b0e867c5110 ]
+> On 8 Jul 2020, at 17.06, Jens Axboe <axboe@kernel.dk> wrote:
+>=20
+> =EF=BB=BFOn 7/8/20 9:02 AM, Matthew Wilcox wrote:
+>>> On Wed, Jul 08, 2020 at 08:59:50AM -0600, Jens Axboe wrote:
+>>> On 7/8/20 8:58 AM, Matthew Wilcox wrote:
+>>>> On Wed, Jul 08, 2020 at 08:54:07AM -0600, Jens Axboe wrote:
+>>>>> On 7/8/20 6:58 AM, Kanchan Joshi wrote:
+>>>>>>>> +#define IOCB_NO_CMPL        (15 << 28)
+>>>>>>>>=20
+>>>>>>>> struct kiocb {
+>>>>>>>> [...]
+>>>>>>>> -    void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
+>>>>>>>> +    loff_t __user *ki_uposp;
+>>>>>>>> -    int            ki_flags;
+>>>>>>>> +    unsigned int        ki_flags;
+>>>>>>>>=20
+>>>>>>>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
+>>>>>>>> +static ki_cmpl * const ki_cmpls[15];
+>>>>>>>>=20
+>>>>>>>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
+>>>>>>>> +{
+>>>>>>>> +    unsigned int id =3D iocb->ki_flags >> 28;
+>>>>>>>> +
+>>>>>>>> +    if (id < 15)
+>>>>>>>> +        ki_cmpls[id](iocb, ret, ret2);
+>>>>>>>> +}
+>>>>>>>>=20
+>>>>>>>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
+>>>>>>>> +{
+>>>>>>>> +    for (i =3D 0; i < 15; i++) {
+>>>>>>>> +        if (ki_cmpls[id])
+>>>>>>>> +            continue;
+>>>>>>>> +        ki_cmpls[id] =3D cb;
+>>>>>>>> +        return id;
+>>>>>>>> +    }
+>>>>>>>> +    WARN();
+>>>>>>>> +    return -1;
+>>>>>>>> +}
+>>>>>>>=20
+>>>>>>> That could work, we don't really have a lot of different completion
+>>>>>>> types in the kernel.
+>>>>>>=20
+>>>>>> Thanks, this looks sorted.
+>>>>>=20
+>>>>> Not really, someone still needs to do that work. I took a quick look, a=
+nd
+>>>>> most of it looks straight forward. The only potential complication is
+>>>>> ocfs2, which does a swap of the completion for the kiocb. That would j=
+ust
+>>>>> turn into an upper flag swap. And potential sync kiocb with NULL
+>>>>> ki_complete. The latter should be fine, I think we just need to reserv=
+e
+>>>>> completion nr 0 for being that.
+>>>>=20
+>>>> I was reserving completion 15 for that ;-)
+>>>>=20
+>>>> +#define IOCB_NO_CMPL        (15 << 28)
+>>>> ...
+>>>> +    if (id < 15)
+>>>> +        ki_cmpls[id](iocb, ret, ret2);
+>>>>=20
+>>>> Saves us one pointer in the array ...
+>>>=20
+>>> That works. Are you going to turn this into an actual series of patches,=
 
-Else there may be magic numbers in /sys/kernel/debug/block/*/state.
+>>> adding the functionality and converting users?
+>>=20
+>> I was under the impression Kanchan was going to do that, but I can run it=
 
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-mq-debugfs.c | 3 +++
- include/linux/blkdev.h | 1 +
- 2 files changed, 4 insertions(+)
+>> off quickly ...
+>=20
+> I just wanted to get clarification there, because to me it sounded like
+> you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
+> consider that a prerequisite for the append series as far as io_uring is
+> concerned, hence _someone_ needs to actually do it ;-)
+>=20
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index b3f2ba483992d..121f4c1e0697b 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -125,6 +125,9 @@ static const char *const blk_queue_flag_name[] = {
- 	QUEUE_FLAG_NAME(REGISTERED),
- 	QUEUE_FLAG_NAME(SCSI_PASSTHROUGH),
- 	QUEUE_FLAG_NAME(QUIESCED),
-+	QUEUE_FLAG_NAME(PCI_P2PDMA),
-+	QUEUE_FLAG_NAME(ZONE_RESETALL),
-+	QUEUE_FLAG_NAME(RQ_ALLOC_TIME),
- };
- #undef QUEUE_FLAG_NAME
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index bff1def62eed9..d5338b9ee5502 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -592,6 +592,7 @@ struct request_queue {
- 	u64			write_hints[BLK_MAX_WRITE_HINTS];
- };
- 
-+/* Keep blk_queue_flag_name[] in sync with the definitions below */
- #define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
- #define QUEUE_FLAG_DYING	1	/* queue being torn down */
- #define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
--- 
-2.25.1
+I believe Kanchan meant that now the trade-off we were asking to clear out i=
+s sorted.=20
 
+We will send a new version shortly for the current functionality - we can se=
+e what we are missing on when the uring interface is clear.=20
+
+We really want this to be stable as a lot of other things are depending on t=
+his (e.g., fio patches)
+
+Javier=
