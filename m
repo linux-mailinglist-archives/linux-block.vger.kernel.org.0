@@ -2,113 +2,193 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71EE9218810
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 14:53:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24E8C218953
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 15:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgGHMxb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 08:53:31 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:44005 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbgGHMxa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 08:53:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594212809; x=1625748809;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=+BpIEyPRfmyrOA6/E9ebK68b7ZlVFhqWJ1s5onMDm+E=;
-  b=pUcEgQnib5jO4UkzDWSp+c1eOBk+pNBlfYlaKCWzzpNIUlIb3vc7hVpn
-   0l80v5V7C2RdEzJogkZ/ZhRVapBC0ok1rChG62FB9k2YKc13fcdQhHSsX
-   O023/CYkARI1k3/wyLqEJb2OZ12VdMWziiQ84Qd1PsQUryjAmo/SBem2X
-   nHVY/2VND91hMv8TzskxUc4PxaUrGS2pYsZKsaSHNTsFNIk0ezk60Vcrv
-   MtKfrNHpj8sEdUD5hQIbtbs+5LzOyWZP13sY631ntwJtMdb3fpNgx60oI
-   z8mX/Qy6g+DRZUvRJFgziKJwHR+bArr4bqCpyUphIsYYsWYEaDv6Wzhf2
-   A==;
-IronPort-SDR: 3roDovc7Dx+zOqfleh5krAIKwUXbyh8vnIvccWPITMvo+9ZVZ7WkDqNelr+6fhfUGZ7gV+GPKh
- UFGJFPKZaNUCHKU4Ws2c7k06KVW9KdABNDtO1bDZYI5j7xgi0eD4Jzpr7dYub8B0BpS4SsiLfc
- tx6Gcld5WrG5mVuED8Tfhr+Lmzw72lJnV1YAUndLbpG13yyv6TddHMAR4JGvx2/CRXr04+T4uG
- afZ15Gqf/lsY8AtWwvDU4sRD68QpxJU6JTlRfXLZp6QoRYy4iBTx6euputmBjy9pdS2TcGKODD
- Dgc=
-X-IronPort-AV: E=Sophos;i="5.75,327,1589212800"; 
-   d="scan'208";a="141918009"
-Received: from mail-bn8nam12lp2172.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.172])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Jul 2020 20:53:28 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hk1rzDvdIj6KA9HJIFJ17+RL/5qVsmHI0AmYIUTQFi34zxVEvMrbLPSYHdDsNi0mobCiAUNN2TVOheciSk7+7b2718cOOpJb3lUw1FACRGJWemARsEUtv/J5W4g/AKwLS+S1oh1rMFycqGrURId/0+81VMH9kFvQaF2MABvrUG8KnzXMhBJ+ch425tJIoJSjv/Q+P8WCmXPKcn11moQHmD+8gi0LSGwlVwhVPtgqycGGjOoeaPghrsIWujVnkzalV4hOB9x4kQ1NRc2ft5IWO5MgrF+KJaFws/gYk3iEBINbxquJ1tcZtGAzNwriL/v6R5dIUFXMKnoyALKNpRIgHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+BpIEyPRfmyrOA6/E9ebK68b7ZlVFhqWJ1s5onMDm+E=;
- b=jiNb1QY2hCtbeeM9yT+OMbY0vGz7gBihDbtWDnrbZEVbV4aVKbyYGhfwCIHxwtiNr5kW/59HGkeGuuILr0OpWZIwy2EXN19q8aDvlKI5Bp/6iIAV6g/GPoDLnjbpVmQ60vctMMuL+92TDjs+zePHwT86Nu9znSPMp4d0DhaBXJRvjai2IOhykeBxAe5uYokxgj+4sjuPAjqua6N7SD0Ao27BkzHSHH5g50CxHdVFPxLHyICFFki79s85dXCt5lIteLKA+FGHyfyGyh3XB3yq5yuKucvCVIP+FrIXEQddiJGH8VK2DkGsHZdv6VMAGgxqMIpI1aUYnXIALtwWgVHB3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+BpIEyPRfmyrOA6/E9ebK68b7ZlVFhqWJ1s5onMDm+E=;
- b=XQf9vtK/36xNOYAhSuc9vUN+UhYYRFkmdUdEjfcSMi/lIWgnw/zNXtGMC3W9Jk6qgtUpzOckHvBPbSaEMp1nMMsL5Vq/vMh+j8SZ7Yhv5JZxyU7WRaESqgUnPJwyEf0Tlu6gm6vDvbcsKC6/pfO3cvcpekQbJZFPT+r/sv5nEHM=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4784.namprd04.prod.outlook.com
- (2603:10b6:805:ad::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Wed, 8 Jul
- 2020 12:53:26 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3153.031; Wed, 8 Jul 2020
- 12:53:26 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>
-Subject: Re: [PATCH V2] blk-mq: streamline handling of q->mq_ops->queue_rq
- result
-Thread-Topic: [PATCH V2] blk-mq: streamline handling of q->mq_ops->queue_rq
- result
-Thread-Index: AQHWT6/PEqZpUhXEo0yHHoBVF2I1eQ==
-Date:   Wed, 8 Jul 2020 12:53:26 +0000
-Message-ID: <SN4PR0401MB3598E57128E7EE2E9ADF271D9B670@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200701135857.2445459-1-ming.lei@redhat.com>
- <20200708122749.GA3340386@T590>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b5994273-aec7-447d-060c-08d8233de813
-x-ms-traffictypediagnostic: SN6PR04MB4784:
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-x-microsoft-antispam-prvs: <SN6PR04MB4784FBE90B607AC6DC9009099B670@SN6PR04MB4784.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nnmd1sEriog008/ZoMH7HMklCbXBZuiGIHD3zqY4Tc/rIt6gFf+j3SHRvznUjasaxmSOXJER1Gk0ULjtjAGssfqdw2FDserBqvBJ1eT9zKZJx/BQr4pE2Ppb5tl7iCeYmN17jQXJKvH1a3MUnjBjleWT2NHbDC90slS0Q+vJuAB153m0AWuUcQJNYiKLcM+qr97aqBzKvbEMRzRyZ2Y3i9FQ7rsFCwaWd9Y2oNtTqYev24lSPLPnhcDGEJB8KGA5YS+1lbDxwSoBYoNmprPjeb6F+9eDSj1RqEpMNKXnNzS9biLybGHZOZdid9MJdy2UNNBrG3Y8expUvTd9Oj0Kkw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(558084003)(4326008)(2906002)(8936002)(8676002)(9686003)(55016002)(7696005)(33656002)(4270600006)(86362001)(26005)(186003)(6506007)(110136005)(478600001)(64756008)(54906003)(66446008)(71200400001)(52536014)(66946007)(66476007)(66556008)(316002)(91956017)(5660300002)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xDRUqc4LZQrPIZtwhJK7QfrJ+8EGtuz+qsAZ9+noFpwnhM8LvumtsQCh9sU0YlKa8vZuq5as+TgOVhrFNl7oPg7VLE9Lslyjvv2HsEFa2bgqk4Oiztykncr+lfy75IuL5n76l4c64piIM+xsuUSrfQHE0zOFurW+uStN0HcLFwzoMUqLjC3I16sovupsRebIizaB1fgKK2XBqM6+nFHcVmjoZR5GTeswFtF/mfGp6tX4KgAgWfZ2WRHmnNZKuhJZzZN8gUrlIGYpdBC80Xpa2BemOxs3VV3KCZVP5fA12Ck3lyBse0lbDEz9NRX1MmmC3wm1AET1mKUBD42CD1UlVsc+NmyHcqELn9cC6IT2ggTtCQ3cNl9QRb+5NHsNdVc4JHR4o8n3CX1O0FPzYQS6RBykAAJ1V8GN7ZcI9R6T3FoUM8O5db4MM2C+6yOCqHwdaacITz0tOIENc+gmWgedbwtJiaLyU9+Pzb2VPNvsOF4/18ebzQdmEN6fiDyLxiGI
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1729819AbgGHNkI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 09:40:08 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:42544 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729741AbgGHNkH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 09:40:07 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200708134004epoutp024774ef6a0e0f3d6e8bfe92af1318456d~fyqVY3Aw53171331713epoutp02P
+        for <linux-block@vger.kernel.org>; Wed,  8 Jul 2020 13:40:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200708134004epoutp024774ef6a0e0f3d6e8bfe92af1318456d~fyqVY3Aw53171331713epoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594215604;
+        bh=8olNTXPEO9AiHbyDOEdhyHG15yYRp1t1bGMsJZeRYXo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LVS9aFnDk0/1nT634YDsgL7rYhv3gcPCC9DLgYgSRN/UE3JdGFFMeHTV5aozWT35t
+         bPv55ZiGNZieWLvvbR+zDM+HQ0+XrB+BKj8CRObGYtdurqgjDxDthZszjsbqyiAMw9
+         dNzVQYrpdePcHrsUwr96nCDOjCoyFyLzUbal1g7M=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200708134003epcas5p3b8d4642c76d4a9e1a0be1a799bedadbc~fyqUpO3BM3071330713epcas5p3G;
+        Wed,  8 Jul 2020 13:40:03 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2E.72.09475.3BCC50F5; Wed,  8 Jul 2020 22:40:03 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200708130103epcas5p3d4d6a9a340f405e2a955e25018ee3556~fyIRMr2S42478724787epcas5p3s;
+        Wed,  8 Jul 2020 13:01:03 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200708130103epsmtrp270b27ef57ecfe75ed707c6eca2d72753~fyIRLoUAN0037100371epsmtrp25;
+        Wed,  8 Jul 2020 13:01:03 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-5d-5f05ccb34d82
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        23.6C.08303.F83C50F5; Wed,  8 Jul 2020 22:01:03 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200708130101epsmtip241d423671fe7c7d46015b34ba48814a3~fyIOx-zaa1837818378epsmtip2g;
+        Wed,  8 Jul 2020 13:01:00 +0000 (GMT)
+Date:   Wed, 8 Jul 2020 18:28:05 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Matthew Wilcox <willy@infradead.org>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200708125805.GA16495@test-zns>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5994273-aec7-447d-060c-08d8233de813
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 12:53:26.5609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EN5GW728oVMD8Gyi40YAyJDT++hjfUkTWDI18FCrVP1RYuufJMeaasCqwJ9vqPDzPKbBedz9Px9cic/Gho/GPBJoVN6bwhAjWJ+9HE6fF04=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4784
+In-Reply-To: <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLKsWRmVeSWpSXmKPExsWy7bCmlu7mM6zxBhuXalvMWbWN0WL13X42
+        i65/W1gsWtu/MVmcnrCIyeJd6zkWi8d3PrNbTJnWxGix95a2xZ69J1ksLu+aw2axYvsRFott
+        v+czW7z+cZLN4vzf46wWv3/MYXMQ8Ng56y67x+YVWh6Xz5Z6bPo0id2j++oPRo++LasYPT5v
+        kvNoP9DN5LHpyVumAM4oLpuU1JzMstQifbsErozrc26wFswXrZjS9JGlgbFVsIuRk0NCwERi
+        4Z4XLCC2kMBuRomFOwu7GLmA7E+MEk/adrBBOJ8ZJb5M+MQC07Fo0w1miMQuRom9tyeyQjjP
+        GCV+b2wFq2IRUJHYsHotexcjBwebgKbEhcmlIGERAQWJnt8rwaYyC2xklri59BtYvbCAo8Tn
+        nScZQep5BXQl3p4qAQnzCghKnJz5BKyEU8BW4smrq4wgtqiAssSBbceZIA56wCGxscMApFVC
+        wEWib4IORFhY4tXxLewQtpTE53d72SDsYolfd46C3S8h0MEocb1hJtRj9hIX9/wFm8kskCGx
+        Y+scqGZZiamn1kHF+SR6fz+B2ssrsWMejK0ocW/SU1YIW1zi4YwlULaHxIVbx9kh4fOPWWLl
+        lEusExjlZyH5bRaSfRC2lUTnhybWWUD/MAtISyz/xwFhakqs36W/gJF1FaNkakFxbnpqsWmB
+        cV5quV5xYm5xaV66XnJ+7iZGcArU8t7B+OjBB71DjEwcjIcYJTiYlUR4DRRZ44V4UxIrq1KL
+        8uOLSnNSiw8xSnOwKInzKv04EyckkJ5YkpqdmlqQWgSTZeLglGpgao8wWM/8uPLt0V47sWMV
+        Qhl/rpz8feV3cdm9ew0cL+JWFCQ+e7ltSXaqT5H3T86LW/e0CBbtzc6ZEp2TuL6xxM9H6LzV
+        jvVsT7K+PFbfzfs77MT/r8emtVdIrVBY/mBX9bUKVtGsyY9sA4N4Pxd8z/s5Mf7Gn++lv/Jv
+        nl5x5+KZ8AdCn1c4Mbgu57zkpM37TtjWKdb29+r0h7FX+rRYvdpi72xYIRLMHyDuEa4u9NHy
+        YsJKa7GpMhfSnvB0vLq7+8rlHB1LqfOJ1iwsE8RU7mqFG6XPK6kIXFAnOSWUV+6Y3xHV4+5r
+        3+aXZ8UrpHxdYjnD6u1CP5nDIhnzqyeE3y6790zbzKjynWDnlndrlViKMxINtZiLihMB1E5i
+        +PADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvG7/YdZ4g/lXlCzmrNrGaLH6bj+b
+        Rde/LSwWre3fmCxOT1jEZPGu9RyLxeM7n9ktpkxrYrTYe0vbYs/ekywWl3fNYbNYsf0Ii8W2
+        3/OZLV7/OMlmcf7vcVaL3z/msDkIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
+        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV0b7xOlMBReFKuZdvszUwHiRr4uRk0NCwERi
+        0aYbzF2MXBxCAjsYJQ7vbGCCSIhLNF/7wQ5hC0us/PecHaLoCaPE+yd3mUESLAIqEhtWrwVK
+        cHCwCWhKXJhcChIWEVCQ6Pm9kg2knllgK7PE14Oz2UASwgKOEp93nmQEqecV0JV4e6oEYuY/
+        ZolZf7eALeMVEJQ4OfMJC4jNLGAmMW/zQ2aQemYBaYnl/zhAwpwCthJPXl1lBLFFBZQlDmw7
+        zjSBUXAWku5ZSLpnIXQvYGRexSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHH9aWjsY
+        96z6oHeIkYmD8RCjBAezkgivgSJrvBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHer7MWxgkJpCeW
+        pGanphakFsFkmTg4pRqY+KqKZfdM2KjitqXh4Z0D4tEPG5aqnfshnDl540qvozfWWv5eq5d3
+        wLHAcaJKsJD8xvpcM+eLmdMqJyxZVfztb9+5gOKvxwM2puT0LnDfw3Woc/elReFrftjw2f2Z
+        /9n4dERSdKpOetodd4638hfETqxivC8b2mgVHlLUt0+/4qKA/KMZKs9fn7v0wVf31X6/rwXn
+        KyQ8KoOvqP6zXSJus+dnyh2Tz7ULXGa0N1c+N5nJfnVXy3kxYf3fTrOl/F7xmTAa7XhwJWBd
+        r3/6HfVLyxxF+zMPxpQuP3Rtrf1UI9EXv+clhGt7h/0q3ZLLYq6sYXHW/r+YbbHee17xiwmL
+        23NERT/cmOl16N6ZjTMYlFiKMxINtZiLihMB9zl9Yy4DAAA=
+X-CMS-MailID: 20200708130103epcas5p3d4d6a9a340f405e2a955e25018ee3556
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e
+References: <20200706141002.GZ25523@casper.infradead.org>
+        <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
+        <20200706143208.GA25523@casper.infradead.org>
+        <20200707151105.GA23395@test-zns>
+        <20200707155237.GM25523@casper.infradead.org>
+        <20200707202342.GA28364@test-zns>
+        <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
+        <20200707221812.GN25523@casper.infradead.org>
+        <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
+        <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good to me,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On Tue, Jul 07, 2020 at 04:37:55PM -0600, Jens Axboe wrote:
+>On 7/7/20 4:18 PM, Matthew Wilcox wrote:
+>> On Tue, Jul 07, 2020 at 02:40:06PM -0600, Jens Axboe wrote:
+>>>>> so we have another 24 bytes before io_kiocb takes up another cacheline.
+>>>>> If that's a serious problem, I have an idea about how to shrink struct
+>>>>> kiocb by 8 bytes so struct io_rw would have space to store another
+>>>>> pointer.
+>>>> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
+>>>> it must be placed within io_rw - I'll come to know once I get to
+>>>> implement this. Please share the idea you have, it can come handy.
+>>>
+>>> Except it doesn't, I'm not interested in adding per-request type fields
+>>> to the generic part of it. Before we know it, we'll blow past the next
+>>> cacheline.
+>>>
+>>> If we can find space in the kiocb, that'd be much better. Note that once
+>>> the async buffered bits go in for 5.9, then there's no longer a 4-byte
+>>> hole in struct kiocb.
+>>
+>> Well, poot, I was planning on using that.  OK, how about this:
+>
+>Figured you might have had your sights set on that one, which is why I
+>wanted to bring it up upfront :-)
+>
+>> +#define IOCB_NO_CMPL		(15 << 28)
+>>
+>>  struct kiocb {
+>> [...]
+>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
+>> +	loff_t __user *ki_uposp;
+>> -	int			ki_flags;
+>> +	unsigned int		ki_flags;
+>>
+>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
+>> +static ki_cmpl * const ki_cmpls[15];
+>>
+>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
+>> +{
+>> +	unsigned int id = iocb->ki_flags >> 28;
+>> +
+>> +	if (id < 15)
+>> +		ki_cmpls[id](iocb, ret, ret2);
+>> +}
+>>
+>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
+>> +{
+>> +	for (i = 0; i < 15; i++) {
+>> +		if (ki_cmpls[id])
+>> +			continue;
+>> +		ki_cmpls[id] = cb;
+>> +		return id;
+>> +	}
+>> +	WARN();
+>> +	return -1;
+>> +}
+>
+>That could work, we don't really have a lot of different completion
+>types in the kernel.
+
+Thanks, this looks sorted.
+The last thing is about the flag used to trigger this processing. 
+Will it be fine to intoduce new flag (RWF_APPEND2 or RWF_APPEND_OFFSET)
+instead of using RWF_APPEND? 
+
+New flag will do what RWF_APPEND does and will also return the 
+written-location (and therefore expects pointer setup in application).
+
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_
+Content-Type: text/plain; charset="utf-8"
+
+
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_--
