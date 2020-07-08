@@ -2,193 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E8C218953
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 15:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A5D2188A8
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 15:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgGHNkI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 09:40:08 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:42544 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729741AbgGHNkH (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 09:40:07 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200708134004epoutp024774ef6a0e0f3d6e8bfe92af1318456d~fyqVY3Aw53171331713epoutp02P
-        for <linux-block@vger.kernel.org>; Wed,  8 Jul 2020 13:40:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200708134004epoutp024774ef6a0e0f3d6e8bfe92af1318456d~fyqVY3Aw53171331713epoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594215604;
-        bh=8olNTXPEO9AiHbyDOEdhyHG15yYRp1t1bGMsJZeRYXo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LVS9aFnDk0/1nT634YDsgL7rYhv3gcPCC9DLgYgSRN/UE3JdGFFMeHTV5aozWT35t
-         bPv55ZiGNZieWLvvbR+zDM+HQ0+XrB+BKj8CRObGYtdurqgjDxDthZszjsbqyiAMw9
-         dNzVQYrpdePcHrsUwr96nCDOjCoyFyLzUbal1g7M=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200708134003epcas5p3b8d4642c76d4a9e1a0be1a799bedadbc~fyqUpO3BM3071330713epcas5p3G;
-        Wed,  8 Jul 2020 13:40:03 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2E.72.09475.3BCC50F5; Wed,  8 Jul 2020 22:40:03 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200708130103epcas5p3d4d6a9a340f405e2a955e25018ee3556~fyIRMr2S42478724787epcas5p3s;
-        Wed,  8 Jul 2020 13:01:03 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200708130103epsmtrp270b27ef57ecfe75ed707c6eca2d72753~fyIRLoUAN0037100371epsmtrp25;
-        Wed,  8 Jul 2020 13:01:03 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-5d-5f05ccb34d82
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        23.6C.08303.F83C50F5; Wed,  8 Jul 2020 22:01:03 +0900 (KST)
-Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200708130101epsmtip241d423671fe7c7d46015b34ba48814a3~fyIOx-zaa1837818378epsmtip2g;
-        Wed,  8 Jul 2020 13:01:00 +0000 (GMT)
-Date:   Wed, 8 Jul 2020 18:28:05 +0530
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Matthew Wilcox <willy@infradead.org>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Message-ID: <20200708125805.GA16495@test-zns>
+        id S1729113AbgGHNOZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 09:14:25 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44327 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729342AbgGHNOZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:14:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594214063;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=EPlubzdeO1N8nnamED7jRgJlXhz9Zxm09E8mHQcV5LY=;
+        b=Re3meZPkF7kDQlK9KwgL1axR79Kivl6cEh9Dpg1/rY3OO5Zf+767k2lvKNa3aInWN9vdh0
+        c+lO/eP6WbEv9+SWSM7Hpc3tES28oa7YsnTbPVsSzdfZ3tX4Abwd3GHR7GE4RhbrKN7ZLU
+        WPINxYPKRPAOITAXQR44PB/vLuLxHAU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-5dGBQHyYMWSAXXme704YwQ-1; Wed, 08 Jul 2020 09:14:19 -0400
+X-MC-Unique: 5dGBQHyYMWSAXXme704YwQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7388E1005510;
+        Wed,  8 Jul 2020 13:14:18 +0000 (UTC)
+Received: from localhost (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74B23797FE;
+        Wed,  8 Jul 2020 13:14:14 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] scsi: core: run queue in case of IO queueing failure
+Date:   Wed,  8 Jul 2020 21:14:05 +0800
+Message-Id: <20200708131405.3346107-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLKsWRmVeSWpSXmKPExsWy7bCmlu7mM6zxBhuXalvMWbWN0WL13X42
-        i65/W1gsWtu/MVmcnrCIyeJd6zkWi8d3PrNbTJnWxGix95a2xZ69J1ksLu+aw2axYvsRFott
-        v+czW7z+cZLN4vzf46wWv3/MYXMQ8Ng56y67x+YVWh6Xz5Z6bPo0id2j++oPRo++LasYPT5v
-        kvNoP9DN5LHpyVumAM4oLpuU1JzMstQifbsErozrc26wFswXrZjS9JGlgbFVsIuRk0NCwERi
-        4Z4XLCC2kMBuRomFOwu7GLmA7E+MEk/adrBBOJ8ZJb5M+MQC07Fo0w1miMQuRom9tyeyQjjP
-        GCV+b2wFq2IRUJHYsHotexcjBwebgKbEhcmlIGERAQWJnt8rwaYyC2xklri59BtYvbCAo8Tn
-        nScZQep5BXQl3p4qAQnzCghKnJz5BKyEU8BW4smrq4wgtqiAssSBbceZIA56wCGxscMApFVC
-        wEWib4IORFhY4tXxLewQtpTE53d72SDsYolfd46C3S8h0MEocb1hJtRj9hIX9/wFm8kskCGx
-        Y+scqGZZiamn1kHF+SR6fz+B2ssrsWMejK0ocW/SU1YIW1zi4YwlULaHxIVbx9kh4fOPWWLl
-        lEusExjlZyH5bRaSfRC2lUTnhybWWUD/MAtISyz/xwFhakqs36W/gJF1FaNkakFxbnpqsWmB
-        cV5quV5xYm5xaV66XnJ+7iZGcArU8t7B+OjBB71DjEwcjIcYJTiYlUR4DRRZ44V4UxIrq1KL
-        8uOLSnNSiw8xSnOwKInzKv04EyckkJ5YkpqdmlqQWgSTZeLglGpgao8wWM/8uPLt0V47sWMV
-        Qhl/rpz8feV3cdm9ew0cL+JWFCQ+e7ltSXaqT5H3T86LW/e0CBbtzc6ZEp2TuL6xxM9H6LzV
-        jvVsT7K+PFbfzfs77MT/r8emtVdIrVBY/mBX9bUKVtGsyY9sA4N4Pxd8z/s5Mf7Gn++lv/Jv
-        nl5x5+KZ8AdCn1c4Mbgu57zkpM37TtjWKdb29+r0h7FX+rRYvdpi72xYIRLMHyDuEa4u9NHy
-        YsJKa7GpMhfSnvB0vLq7+8rlHB1LqfOJ1iwsE8RU7mqFG6XPK6kIXFAnOSWUV+6Y3xHV4+5r
-        3+aXZ8UrpHxdYjnD6u1CP5nDIhnzqyeE3y6790zbzKjynWDnlndrlViKMxINtZiLihMB1E5i
-        +PADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvG7/YdZ4g/lXlCzmrNrGaLH6bj+b
-        Rde/LSwWre3fmCxOT1jEZPGu9RyLxeM7n9ktpkxrYrTYe0vbYs/ekywWl3fNYbNYsf0Ii8W2
-        3/OZLV7/OMlmcf7vcVaL3z/msDkIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
-        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV0b7xOlMBReFKuZdvszUwHiRr4uRk0NCwERi
-        0aYbzF2MXBxCAjsYJQ7vbGCCSIhLNF/7wQ5hC0us/PecHaLoCaPE+yd3mUESLAIqEhtWrwVK
-        cHCwCWhKXJhcChIWEVCQ6Pm9kg2knllgK7PE14Oz2UASwgKOEp93nmQEqecV0JV4e6oEYuY/
-        ZolZf7eALeMVEJQ4OfMJC4jNLGAmMW/zQ2aQemYBaYnl/zhAwpwCthJPXl1lBLFFBZQlDmw7
-        zjSBUXAWku5ZSLpnIXQvYGRexSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHH9aWjsY
-        96z6oHeIkYmD8RCjBAezkgivgSJrvBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHer7MWxgkJpCeW
-        pGanphakFsFkmTg4pRqY+KqKZfdM2KjitqXh4Z0D4tEPG5aqnfshnDl540qvozfWWv5eq5d3
-        wLHAcaJKsJD8xvpcM+eLmdMqJyxZVfztb9+5gOKvxwM2puT0LnDfw3Woc/elReFrftjw2f2Z
-        /9n4dERSdKpOetodd4638hfETqxivC8b2mgVHlLUt0+/4qKA/KMZKs9fn7v0wVf31X6/rwXn
-        KyQ8KoOvqP6zXSJus+dnyh2Tz7ULXGa0N1c+N5nJfnVXy3kxYf3fTrOl/F7xmTAa7XhwJWBd
-        r3/6HfVLyxxF+zMPxpQuP3Rtrf1UI9EXv+clhGt7h/0q3ZLLYq6sYXHW/r+YbbHee17xiwmL
-        23NERT/cmOl16N6ZjTMYlFiKMxINtZiLihMB9zl9Yy4DAAA=
-X-CMS-MailID: 20200708130103epcas5p3d4d6a9a340f405e2a955e25018ee3556
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e
-References: <20200706141002.GZ25523@casper.infradead.org>
-        <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
-        <20200706143208.GA25523@casper.infradead.org>
-        <20200707151105.GA23395@test-zns>
-        <20200707155237.GM25523@casper.infradead.org>
-        <20200707202342.GA28364@test-zns>
-        <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
-        <20200707221812.GN25523@casper.infradead.org>
-        <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
-        <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+IO requests may be held in scheduler queue because of resource contention.
+However, not like normal completion, when queueing request failed, we don't
+ask block layer to queue these requests, so IO hang[1] is caused.
 
-On Tue, Jul 07, 2020 at 04:37:55PM -0600, Jens Axboe wrote:
->On 7/7/20 4:18 PM, Matthew Wilcox wrote:
->> On Tue, Jul 07, 2020 at 02:40:06PM -0600, Jens Axboe wrote:
->>>>> so we have another 24 bytes before io_kiocb takes up another cacheline.
->>>>> If that's a serious problem, I have an idea about how to shrink struct
->>>>> kiocb by 8 bytes so struct io_rw would have space to store another
->>>>> pointer.
->>>> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
->>>> it must be placed within io_rw - I'll come to know once I get to
->>>> implement this. Please share the idea you have, it can come handy.
->>>
->>> Except it doesn't, I'm not interested in adding per-request type fields
->>> to the generic part of it. Before we know it, we'll blow past the next
->>> cacheline.
->>>
->>> If we can find space in the kiocb, that'd be much better. Note that once
->>> the async buffered bits go in for 5.9, then there's no longer a 4-byte
->>> hole in struct kiocb.
->>
->> Well, poot, I was planning on using that.  OK, how about this:
->
->Figured you might have had your sights set on that one, which is why I
->wanted to bring it up upfront :-)
->
->> +#define IOCB_NO_CMPL		(15 << 28)
->>
->>  struct kiocb {
->> [...]
->> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
->> +	loff_t __user *ki_uposp;
->> -	int			ki_flags;
->> +	unsigned int		ki_flags;
->>
->> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
->> +static ki_cmpl * const ki_cmpls[15];
->>
->> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
->> +{
->> +	unsigned int id = iocb->ki_flags >> 28;
->> +
->> +	if (id < 15)
->> +		ki_cmpls[id](iocb, ret, ret2);
->> +}
->>
->> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
->> +{
->> +	for (i = 0; i < 15; i++) {
->> +		if (ki_cmpls[id])
->> +			continue;
->> +		ki_cmpls[id] = cb;
->> +		return id;
->> +	}
->> +	WARN();
->> +	return -1;
->> +}
->
->That could work, we don't really have a lot of different completion
->types in the kernel.
+Fix this issue by run queue when IO request failure happens.
 
-Thanks, this looks sorted.
-The last thing is about the flag used to trigger this processing. 
-Will it be fine to intoduce new flag (RWF_APPEND2 or RWF_APPEND_OFFSET)
-instead of using RWF_APPEND? 
+[1] IO hang log by running heavy IO with removing scsi device
 
-New flag will do what RWF_APPEND does and will also return the 
-written-location (and therefore expects pointer setup in application).
+[   39.054963] scsi 13:0:0:0: rejecting I/O to dead device
+[   39.058700] scsi 13:0:0:0: rejecting I/O to dead device
+[   39.087855] sd 13:0:0:1: [sdd] Synchronizing SCSI cache
+[   39.088909] scsi 13:0:0:1: rejecting I/O to dead device
+[   39.095351] scsi 13:0:0:1: rejecting I/O to dead device
+[   39.096962] scsi 13:0:0:1: rejecting I/O to dead device
+[  247.021859] INFO: task scsi-stress-rem:813 blocked for more than 122 seconds.
+[  247.023258]       Not tainted 5.8.0-rc2 #8
+[  247.024069] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  247.025331] scsi-stress-rem D    0   813    802 0x00004000
+[  247.025334] Call Trace:
+[  247.025354]  __schedule+0x504/0x55f
+[  247.027987]  schedule+0x72/0xa8
+[  247.027991]  blk_mq_freeze_queue_wait+0x63/0x8c
+[  247.027994]  ? do_wait_intr_irq+0x7a/0x7a
+[  247.027996]  blk_cleanup_queue+0x4b/0xc9
+[  247.028000]  __scsi_remove_device+0xf6/0x14e
+[  247.028002]  scsi_remove_device+0x21/0x2b
+[  247.029037]  sdev_store_delete+0x58/0x7c
+[  247.029041]  kernfs_fop_write+0x10d/0x14f
+[  247.031281]  vfs_write+0xa2/0xdf
+[  247.032670]  ksys_write+0x6b/0xb3
+[  247.032673]  do_syscall_64+0x56/0x82
+[  247.034053]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  247.034059] RIP: 0033:0x7f69f39e9008
+[  247.036330] Code: Bad RIP value.
+[  247.036331] RSP: 002b:00007ffdd8116498 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  247.037613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f69f39e9008
+[  247.039714] RDX: 0000000000000002 RSI: 000055cde92a0ab0 RDI: 0000000000000001
+[  247.039715] RBP: 000055cde92a0ab0 R08: 000000000000000a R09: 00007f69f3a79e80
+[  247.039716] R10: 000000000000000a R11: 0000000000000246 R12: 00007f69f3abb780
+[  247.039717] R13: 0000000000000002 R14: 00007f69f3ab6740 R15: 0000000000000002
 
-------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_
-Content-Type: text/plain; charset="utf-8"
+Cc: linux-block@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/scsi/scsi_lib.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 534b85e87c80..4d7fab9e8af9 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1694,6 +1694,16 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		 */
+ 		if (req->rq_flags & RQF_DONTPREP)
+ 			scsi_mq_uninit_cmd(cmd);
++
++		/*
++		 * Requests may be held in block layer queue because of
++		 * resource contention. We usually run queue in normal
++		 * completion for queuing these requests again. Block layer
++		 * will finish this failed request simply, run queue in case
++		 * of IO queueing failure so that requests can get chance to
++		 * be finished.
++		 */
++		scsi_run_queue(q);
+ 		break;
+ 	}
+ 	return ret;
+-- 
+2.25.2
 
-------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_e89f5_--
