@@ -2,88 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E52D219313
-	for <lists+linux-block@lfdr.de>; Thu,  9 Jul 2020 00:05:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E86421931A
+	for <lists+linux-block@lfdr.de>; Thu,  9 Jul 2020 00:07:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgGHWFO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 18:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHWFO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 18:05:14 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5AAC061A0B
-        for <linux-block@vger.kernel.org>; Wed,  8 Jul 2020 15:05:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e18so3520pgn.7
-        for <linux-block@vger.kernel.org>; Wed, 08 Jul 2020 15:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+dcCNqQfq+GGAohNtidK8fXg4IXlIGhMyJSsVaTzSEs=;
-        b=cA4YQx3Rn8eiqk3/8gIv7ncFqDvo8b7/cSPqTqO/3LjHL7OD4jzPvfAVBQqnpGSSnu
-         pMYbR3xRaqFiewOn4R3TagBRds+YO3pNSr0Bq7cINyagQa/ooYDqEeRWor2rxUUwheaE
-         zXhcRCd0tv4tHXlyJUVRZPnYJO5UmYni6lq6E0BQkqSX2QSga3nZ7l051/KFhulKCCeI
-         gkfyYVVENxPoHxYDyKS9S9EN2FI4pEgel0mYRQdAwHfo9o3E/cuRByiMwq6DtxWouhAB
-         /W7inoLrLw7i9cZL3Li9JR1HrP8/Pi4R5fGIMNLDvepPTkGuS3hMiVlquF0FyZ8ZBaoZ
-         qmhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+dcCNqQfq+GGAohNtidK8fXg4IXlIGhMyJSsVaTzSEs=;
-        b=E5Dfh8ogdEaISufoG9HaIJzgSGM7wCc5ot+fBsWJz6L6Y21e0kpqtSF1kTUtOa7T1w
-         54vvoGLfg7qoX94F6+WuZIxP++R5Bj55RExGeVXKgg0011Ip6b3SV4I2pR8gG23o/19d
-         O182rTcnfAcDbRZCe38ShgdYEUH2xlvFHS40MmLvITtjSblWvFl+mCQZCvAsE3q/PVPu
-         XtK0b60iXo78Cwql5DlCStGUOmQtnwiKQAmvlybpFSiuIiYSyXEWUX00zjxu+IkGHHyA
-         b4NOejWo/icK7nvUAgMVGqLr9nDLC5k70jJL6uxnZtFyE7oavkGEyD4T2XiNpudI+ecq
-         unuw==
-X-Gm-Message-State: AOAM532WeP8lbMlqCJRKrJOdcJhiC6XwJuFOcIRRsUyc379QbJXHNLiP
-        DZtnLRhp21/A4NPABCdBRc5hl4rp4/7jyQ==
-X-Google-Smtp-Source: ABdhPJwq2FrJusKcVu0CTqXdMyXWPktvhfZEKZqaCWf8X0JAsEVQ/2PgHlIxreFDJxSZwqjk6iHCMw==
-X-Received: by 2002:a62:17d8:: with SMTP id 207mr52098025pfx.44.1594245913425;
-        Wed, 08 Jul 2020 15:05:13 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id o42sm483035pje.10.2020.07.08.15.05.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 15:05:12 -0700 (PDT)
-Subject: Re: [PATCH V2] blk-mq: streamline handling of q->mq_ops->queue_rq
- result
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
-References: <20200701135857.2445459-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f4163e85-5b23-fadd-bfbf-8c33106cdacf@kernel.dk>
-Date:   Wed, 8 Jul 2020 16:05:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726106AbgGHWHO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 18:07:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50121 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725903AbgGHWHO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 18:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594246033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=02z8p0fSkRkHwTNhR8eTO/BfPTfN/4Ugd2vD3aI9kV4=;
+        b=buWruZczz3vkMNu1rInqV6FCD0f+KByMiiVhDLserjxeZ13y5m8NQhDCMEhzItgVDqSDXr
+        TGvbcN1X89tFgl3rY9fTJhzgks2erj9Se20ikUSuF/Nml9eopLo5seAQEkM4pv28NRp+tL
+        bjMmpeu3SyANrbOfvFW784nL1sgeaAw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-mHjTdVaDNkCjwtrHODlUIA-1; Wed, 08 Jul 2020 18:07:11 -0400
+X-MC-Unique: mHjTdVaDNkCjwtrHODlUIA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 666DB1084;
+        Wed,  8 Jul 2020 22:07:10 +0000 (UTC)
+Received: from T590 (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 254037981E;
+        Wed,  8 Jul 2020 22:06:59 +0000 (UTC)
+Date:   Thu, 9 Jul 2020 06:06:55 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] blk-mq: centralise related handling into
+ blk_mq_get_driver_tag
+Message-ID: <20200708220655.GB3348426@T590>
+References: <20200706144111.3260859-1-ming.lei@redhat.com>
+ <841c8170-f082-814a-70cc-b0e3e8b5be54@huawei.com>
+ <20200707071652.GA3269442@T590>
+ <ad3e6c97-dae9-7e21-30ba-33c06e1fe7b7@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701135857.2445459-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad3e6c97-dae9-7e21-30ba-33c06e1fe7b7@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/1/20 7:58 AM, Ming Lei wrote:
-> Current handling of q->mq_ops->queue_rq result is a bit ugly:
+On Wed, Jul 08, 2020 at 03:07:05PM +0100, John Garry wrote:
+> On 07/07/2020 08:16, Ming Lei wrote:
+> > On Tue, Jul 07, 2020 at 07:37:41AM +0100, John Garry wrote:
+> > > On 06/07/2020 15:41, Ming Lei wrote:
+> > > > -	hctx = flush_rq->mq_hctx;
+> > > >    	if (!q->elevator) {
+> > > 
+> > > Is there a specific reason we do:
+> > > 
+> > > if (!a)
+> > > 	do x
+> > > else
+> > > 	do y
+> > > 
+> > > as opposed to:
+> > > 
+> > > if (a)
+> > > 	do y
+> > > else
+> > > 	do x
+> > > 
+> > > Do people find this easier to read or more obvious? Just wondering.
+> > 
+> > If you like the style, please go ahead to switch to this way.
+> > 
 > 
-> - two branches which needs to 'continue' have to check if the
-> dispatch local list is empty, otherwise one bad request may
-> be retrieved via 'rq = list_first_entry(list, struct request, queuelist);'
-> 
-> - the branch of 'if (unlikely(ret != BLK_STS_OK))' isn't easy
-> to follow, since it is actually one error branch.
-> 
-> Streamline this handling, so the code becomes more readable, meantime
-> potential kernel oops can be avoided in case that the last request in
-> local dispatch list is failed.
+> Maybe I will, but I'll try to hunt down more cases first.
 
-Applied, thanks.
+You are reviewing existed context code instead of this patch!!!
 
--- 
-Jens Axboe
+One more time, please focus on change added by this patch.
+
+Thanks,
+Ming
 
