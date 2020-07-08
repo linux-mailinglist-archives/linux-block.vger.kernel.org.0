@@ -2,71 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 296F52187D5
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 14:41:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56B28218742
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jul 2020 14:28:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgGHMl6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jul 2020 08:41:58 -0400
-Received: from casper.infradead.org ([90.155.50.34]:34022 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbgGHMl4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 08:41:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=nCaWLKXo+tr/eEJ5CbH+6GpvCXBBLXFgjESqdoFH3tI=; b=FvJ4nHy+63Lc4RMGwVlRUdox0d
-        YlekPZD8LYJe6Ih1OUzKrwioMvc3EBCIRgNTcqa7IBUnQUxmixBadyYV3MJwlxKaEWGbjq9K5JIpJ
-        nHNMpxfjQR8plBv7w/Q67/CQHvXJymxziz8U7zPSFZJWTl63xZuUJ4T5GKBAJsZKu8+xIxeDLAeiM
-        nnTUTCmVCyN9S7dq6I0h21Zr7dNkYdOQrVH+ccE5g8ilRES6fBmYUanRATFx9vXncd5Jc2sayMrQ9
-        TmdVl2fuFZWOoc5onK3a+p9qpGIm2C6yxeKF3kx6q+3GM/Ls+geotoOKf6nPC84Iub1YwTEqZ8tcJ
-        Pf15sI7w==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jt9OU-0002XX-Mu; Wed, 08 Jul 2020 12:41:48 +0000
-From:   Christoph Hellwig <hch@lst.de>
+        id S1728965AbgGHM2F (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jul 2020 08:28:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728897AbgGHM2E (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jul 2020 08:28:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594211283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rfvluvNjseWs4DrHeUjkWwMv6bKVX/UGmIQ1X8AbaqY=;
+        b=J1qeKRYz+ORgqibijUCUBcFCTNsnz29kf2lIdrgBYOIwHGGj4WfTK7jriASu43cW6tx1gQ
+        hOs5ynHbvTcewGG/2sYBB7bgvkmmuuqTe1E3P6y6Mt3EEGvUo8cUoX9CCCwmNWVN0y73Sa
+        bnHdRmdqmjnKREYNJ6QHZ8YQJ03UKVs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-H3RLhDKUMRO3f0d9R7OJjg-1; Wed, 08 Jul 2020 08:28:01 -0400
+X-MC-Unique: H3RLhDKUMRO3f0d9R7OJjg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6A3C107ACF2;
+        Wed,  8 Jul 2020 12:28:00 +0000 (UTC)
+Received: from T590 (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9ED0173FC0;
+        Wed,  8 Jul 2020 12:27:53 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 20:27:49 +0800
+From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 6/6] mmc: remove the call to check_disk_change
-Date:   Wed,  8 Jul 2020 14:25:46 +0200
-Message-Id: <20200708122546.214579-7-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708122546.214579-1-hch@lst.de>
-References: <20200708122546.214579-1-hch@lst.de>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2] blk-mq: streamline handling of q->mq_ops->queue_rq
+ result
+Message-ID: <20200708122749.GA3340386@T590>
+References: <20200701135857.2445459-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701135857.2445459-1-ming.lei@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The mmc driver doesn't support event notifications, which means
-that check_disk_change is a no-op.
+On Wed, Jul 01, 2020 at 09:58:57PM +0800, Ming Lei wrote:
+> Current handling of q->mq_ops->queue_rq result is a bit ugly:
+> 
+> - two branches which needs to 'continue' have to check if the
+> dispatch local list is empty, otherwise one bad request may
+> be retrieved via 'rq = list_first_entry(list, struct request, queuelist);'
+> 
+> - the branch of 'if (unlikely(ret != BLK_STS_OK))' isn't easy
+> to follow, since it is actually one error branch.
+> 
+> Streamline this handling, so the code becomes more readable, meantime
+> potential kernel oops can be avoided in case that the last request in
+> local dispatch list is failed.
+> 
+> Fixes: fc17b6534eb8 ("blk-mq: switch ->queue_rq return value to blk_status_t")
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+> V2:
+> 	- change 'if else' to switch as suggested by Christoph
+> 
+>  block/blk-mq.c | 24 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 65e0846fd065..cc85775fc372 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1407,30 +1407,28 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+>  		if (nr_budgets)
+>  			nr_budgets--;
+>  		ret = q->mq_ops->queue_rq(hctx, &bd);
+> -		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
+> -			blk_mq_handle_dev_resource(rq, list);
+> +		switch (ret) {
+> +		case BLK_STS_OK:
+> +			queued++;
+>  			break;
+> -		} else if (ret == BLK_STS_ZONE_RESOURCE) {
+> +		case BLK_STS_RESOURCE:
+> +		case BLK_STS_DEV_RESOURCE:
+> +			blk_mq_handle_dev_resource(rq, list);
+> +			goto out;
+> +		case BLK_STS_ZONE_RESOURCE:
+>  			/*
+>  			 * Move the request to zone_list and keep going through
+>  			 * the dispatch list to find more requests the drive can
+>  			 * accept.
+>  			 */
+>  			blk_mq_handle_zone_resource(rq, &zone_list);
+> -			if (list_empty(list))
+> -				break;
+> -			continue;
+> -		}
+> -
+> -		if (unlikely(ret != BLK_STS_OK)) {
+> +			break;
+> +		default:
+>  			errors++;
+>  			blk_mq_end_request(rq, BLK_STS_IOERR);
+> -			continue;
+>  		}
+> -
+> -		queued++;
+>  	} while (!list_empty(list));
+> -
+> +out:
+>  	if (!list_empty(&zone_list))
+>  		list_splice_tail_init(&zone_list, list);
+>  
+> -- 
+> 2.25.2
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/mmc/core/block.c | 3 ---
- 1 file changed, 3 deletions(-)
+Hello,
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index 4791c82f8f7c78..fa313b63413547 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -312,10 +312,7 @@ static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
- 
- 	mutex_lock(&block_mutex);
- 	if (md) {
--		if (md->usage == 2)
--			check_disk_change(bdev);
- 		ret = 0;
--
- 		if ((mode & FMODE_WRITE) && md->read_only) {
- 			mmc_blk_put(md);
- 			ret = -EROFS;
+Ping...
+
 -- 
-2.26.2
+Ming
 
