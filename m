@@ -2,57 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5A2721D3A5
-	for <lists+linux-block@lfdr.de>; Mon, 13 Jul 2020 12:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B6521D49C
+	for <lists+linux-block@lfdr.de>; Mon, 13 Jul 2020 13:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgGMKSp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 13 Jul 2020 06:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729492AbgGMKSo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:18:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EFF1C061755;
-        Mon, 13 Jul 2020 03:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0o9oacOGT+yOP9IRqdUPc2s8dF57vl7CrgaxsIQm6kY=; b=WuQ0kxda7+r8HBqZI0FTm2qhm+
-        5A9vgpkAf8rH1wmYr9cGGMxCB9LiUQKW0DN9hpk5Oh4UK/n9SNW5Wulb0Pt0qfbYfyeBv7Za3kMMm
-        hPYnPgMcWIVNDuCYT443bmjIgq8Ca3Rgo55/ecfAP9NTnGSoG/65q+OjIfCA4bvkRurASiiBCjs4F
-        Z1aw3KpdXkUMypAla0yUfu60Y20JM4i36X5ivA4NLys3HN2y/+F18dk31OdpI1A2fSJet0cEQ4XXS
-        TUenmlDt7ff0mPmWSDxtFbrzMxjay79EfqNOcFxVm4NO3MI+hKwsLn2HoaeqnCKgudpp1fV/A1BAk
-        UjLSA/Bw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juvXg-0000B0-6d; Mon, 13 Jul 2020 10:18:36 +0000
-Date:   Mon, 13 Jul 2020 11:18:36 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     syzbot <syzbot+4c50ac32e5b10e4133e1@syzkaller.appspotmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, axboe@kernel.dk,
-        bpf@vger.kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING in submit_bio_checks
-Message-ID: <20200713101836.GA536@infradead.org>
-References: <00000000000029663005aa23cff4@google.com>
+        id S1729252AbgGMLPI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 13 Jul 2020 07:15:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48144 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728950AbgGMLPI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:15:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2DBA1B1A4;
+        Mon, 13 Jul 2020 11:15:09 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-bcache@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Ken Raeburn <raeburn@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH v2 1/2] bcache: avoid nr_stripes overflow in bcache_device_init()
+Date:   Mon, 13 Jul 2020 19:15:00 +0800
+Message-Id: <20200713111501.19061-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000029663005aa23cff4@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:34:19PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
+For some block devices which large capacity (e.g. 8TB) but small io_opt
+size (e.g. 8 sectors), in bcache_device_init() the stripes number calcu-
+lated by,
+	DIV_ROUND_UP_ULL(sectors, d->stripe_size);
+might be overflow to the unsigned int bcache_device->nr_stripes.
 
-This is not a crash, but a WARN_ONCE.  A pre-existing one that just
-slightly changed the printed message recently.
+This patch uses the uint64_t variable to store DIV_ROUND_UP_ULL()
+and after the value is checked to be available in unsigned int range,
+sets it to bache_device->nr_stripes. Then the overflow is avoided.
+
+Reported-by: Ken Raeburn <raeburn@redhat.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
+Cc: stable@vger.kernel.org
+---
+Changelog:
+v2: Improve overflow fix on 32bit machine, suggested by Jens and Ken.
+v1: initial version.
+
+ drivers/md/bcache/super.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index a239fcaec70b..7615be9d4498 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -886,19 +886,19 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
+ 	struct request_queue *q;
+ 	const size_t max_stripes = min_t(size_t, INT_MAX,
+ 					 SIZE_MAX / sizeof(atomic_t));
+-	size_t n;
++	uint64_t n;
+ 	int idx;
+ 
+ 	if (!d->stripe_size)
+ 		d->stripe_size = 1 << 31;
+ 
+-	d->nr_stripes = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
+-
+-	if (!d->nr_stripes || d->nr_stripes > max_stripes) {
+-		pr_err("nr_stripes too large or invalid: %u (start sector beyond end of disk?)\n",
+-			(unsigned int)d->nr_stripes);
++	n = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
++	if (!n || n > max_stripes) {
++		pr_err("nr_stripes too large or invalid: %llu (start sector beyond end of disk?)\n",
++			n);
+ 		return -ENOMEM;
+ 	}
++	d->nr_stripes = n;
+ 
+ 	n = d->nr_stripes * sizeof(atomic_t);
+ 	d->stripe_sectors_dirty = kvzalloc(n, GFP_KERNEL);
+-- 
+2.26.2
+
