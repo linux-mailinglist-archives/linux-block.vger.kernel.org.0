@@ -2,103 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F8921D642
-	for <lists+linux-block@lfdr.de>; Mon, 13 Jul 2020 14:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685E521DB69
+	for <lists+linux-block@lfdr.de>; Mon, 13 Jul 2020 18:16:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgGMMpC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 13 Jul 2020 08:45:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36604 "EHLO mx2.suse.de"
+        id S1729782AbgGMQQQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 13 Jul 2020 12:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGMMpC (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:45:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BBE12ABF4;
-        Mon, 13 Jul 2020 12:45:02 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-bcache@vger.kernel.org, hch@lst.de
-Cc:     Coly Li <colyli@suse.de>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Vlastimil Babka <vbabka@suse.com>, stable@vger.kernel.org
-Subject: [PATCH v2] nvme-tcp: don't use sendpage for pages not taking reference counter
-Date:   Mon, 13 Jul 2020 20:44:44 +0800
-Message-Id: <20200713124444.19640-1-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
+        id S1729644AbgGMQQQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:16:16 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B304620773;
+        Mon, 13 Jul 2020 16:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594656976;
+        bh=viaWXYM+Hs+AEgp6HyUr4ayigk0ciBjuIkl+U4M6f14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s3bpwgfdoyqBtvh7sbQq/zZG4qK0G98JmqWEADCQBOiodMVRITO0V7ERDvTR7fZad
+         MMG7/bMEeQAQlhST0UqZrhqtF4uFHtq1NEgNHQIb21qIkICpYBBW3evZWakmoWa3sS
+         vjCLjBeh31uGK/Y6COna+guDJQT7ANGqoEJ3Zh8c=
+Date:   Mon, 13 Jul 2020 09:16:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     syzbot <syzbot+4c50ac32e5b10e4133e1@syzkaller.appspotmail.com>,
+        andriin@fb.com, ast@kernel.org, axboe@kernel.dk,
+        bpf@vger.kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: WARNING in submit_bio_checks
+Message-ID: <20200713161614.GC1696@sol.localdomain>
+References: <00000000000029663005aa23cff4@google.com>
+ <20200713101836.GA536@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713101836.GA536@infradead.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently nvme_tcp_try_send_data() doesn't use kernel_sendpage() to
-send slab pages. But for pages allocated by __get_free_pages() without
-__GFP_COMP, which also have refcount as 0, they are still sent by
-kernel_sendpage() to remote end, this is problematic.
+On Mon, Jul 13, 2020 at 11:18:36AM +0100, Christoph Hellwig wrote:
+> On Fri, Jul 10, 2020 at 10:34:19PM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> 
+> This is not a crash, but a WARN_ONCE.  A pre-existing one that just
+> slightly changed the printed message recently.
+> 
 
-When bcache uses a remote NVMe SSD via nvme-over-tcp as its cache
-device, writing meta data e.g. cache_set->disk_buckets to remote SSD may
-trigger a kernel panic due to the above problem. Bcause the meta data
-pages for cache_set->disk_buckets are allocated by __get_free_pages()
-without __GFP_COMP.
+It doesn't really matter.  WARN is for indicating kernel bugs only.
+A user-triggable WARN is a bug.  Either the bug that makes the WARN
+reachable needs to be fixed, or if the WARN is legitimately user-reachable
+it needs to be removed or replaced with a proper ratelimited log message.
 
-This problem should be fixed both in upper layer driver (bcache) and
-nvme-over-tcp code. This patch fixes the nvme-over-tcp code by checking
-whether the page refcount is 0, if yes then don't use kernel_sendpage()
-and call sock_no_sendpage() to send the page into network stack.
+This one looks legitimately user-reachable, so we could do:
 
-The code comments in this patch is copied and modified from drbd where
-the similar problem already gets solved by Philipp Reisner. This is the
-best code comment including my own version.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Jan Kara <jack@suse.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Vlastimil Babka <vbabka@suse.com>
-Cc: stable@vger.kernel.org
----
-Changelog:
-v2: fix typo in patch subject.
-v1: the initial version.
- drivers/nvme/host/tcp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 79ef2b8e2b3c..faa71db7522a 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -887,8 +887,17 @@ static int nvme_tcp_try_send_data(struct nvme_tcp_request *req)
- 		else
- 			flags |= MSG_MORE | MSG_SENDPAGE_NOTLAST;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index d9d632639bd1..354c51ad5c81 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -854,8 +854,8 @@ static inline bool bio_check_ro(struct bio *bio, struct hd_struct *part)
+ 		if (op_is_flush(bio->bi_opf) && !bio_sectors(bio))
+ 			return false;
  
--		/* can't zcopy slab pages */
--		if (unlikely(PageSlab(page))) {
-+		/*
-+		 * e.g. XFS meta- & log-data is in slab pages, or bcache meta
-+		 * data pages, or other high order pages allocated by
-+		 * __get_free_pages() without __GFP_COMP, which have a page_count
-+		 * of 0 and/or have PageSlab() set. We cannot use send_page for
-+		 * those, as that does get_page(); put_page(); and would cause
-+		 * either a VM_BUG directly, or __page_cache_release a page that
-+		 * would actually still be referenced by someone, leading to some
-+		 * obscure delayed Oops somewhere else.
-+		 */
-+		if (unlikely(PageSlab(page) || page_count(page) < 1)) {
- 			ret = sock_no_sendpage(queue->sock, page, offset, len,
- 					flags);
- 		} else {
--- 
-2.26.2
+-		WARN_ONCE(1,
+-		       "Trying to write to read-only block-device %s (partno %d)\n",
++		pr_warn_ratelimited(
++		       "block: trying to write to read-only block-device %s (partno %d)\n",
+ 			bio_devname(bio, b), part->partno);
+ 		/* Older lvm-tools actually trigger this */
+ 		return false;
 
+
+We could also show current->comm and current->pid if they would be useful here.
+
+And yes, this is preexisting which is why syzbot has reported this before
+(https://syzkaller.appspot.com/bug?id=79eda145ab047a0dc7d03ca5fcb1cf12206eb481).
+Just no one has bothered to fix it yet.
+
+- Eric
