@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FBA021F24D
-	for <lists+linux-block@lfdr.de>; Tue, 14 Jul 2020 15:19:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D1EB21F2A4
+	for <lists+linux-block@lfdr.de>; Tue, 14 Jul 2020 15:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgGNNSa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Jul 2020 09:18:30 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2476 "EHLO huawei.com"
+        id S1725883AbgGNNdY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Jul 2020 09:33:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2477 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726823AbgGNNSa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:18:30 -0400
+        id S1725981AbgGNNdY (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:33:24 -0400
 Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 71E29A971B2DBEB6B293;
-        Tue, 14 Jul 2020 14:18:28 +0100 (IST)
+        by Forcepoint Email with ESMTP id 61A9BBDFDA1D910F0BEF;
+        Tue, 14 Jul 2020 14:33:22 +0100 (IST)
 Received: from [127.0.0.1] (10.47.10.169) by lhreml724-chm.china.huawei.com
  (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 14 Jul
- 2020 14:18:26 +0100
+ 2020 14:33:20 +0100
 Subject: Re: [PATCH RFC v7 11/12] smartpqi: enable host tagset
 From:   John Garry <john.garry@huawei.com>
 To:     <don.brace@microsemi.com>, <hare@suse.com>
@@ -31,15 +31,16 @@ CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <megaraidlinux.pdl@broadcom.com>, Hannes Reinecke <hare@suse.de>
 References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
  <1591810159-240929-12-git-send-email-john.garry@huawei.com>
-Message-ID: <a8afea5c-97f2-ac84-f4b5-155963bebb2c@huawei.com>
-Date:   Tue, 14 Jul 2020 14:16:40 +0100
+ <a8afea5c-97f2-ac84-f4b5-155963bebb2c@huawei.com>
+Message-ID: <786e0b9d-ab42-aaf6-f552-072010892778@huawei.com>
+Date:   Tue, 14 Jul 2020 14:31:34 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <1591810159-240929-12-git-send-email-john.garry@huawei.com>
+In-Reply-To: <a8afea5c-97f2-ac84-f4b5-155963bebb2c@huawei.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.47.10.169]
 X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
  lhreml724-chm.china.huawei.com (10.201.108.75)
@@ -49,49 +50,49 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Hannes,
+On 14/07/2020 14:16, John Garry wrote:
+> Hi Hannes,
+> 
+>>   static struct pqi_io_request *pqi_alloc_io_request(
+>> -    struct pqi_ctrl_info *ctrl_info)
+>> +    struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd)
+>>   {
+>>       struct pqi_io_request *io_request;
+>> +    unsigned int limit = PQI_RESERVED_IO_SLOTS;
+>>       u16 i = ctrl_info->next_io_request_slot;    /* benignly racy */
+>> -    while (1) {
+>> +    if (scmd) {
+>> +        u32 blk_tag = blk_mq_unique_tag(scmd->request);
+>> +
+>> +        i = blk_mq_unique_tag_to_tag(blk_tag) + limit;
+>>           io_request = &ctrl_info->io_request_pool[i];
+> 
+> This looks ok
+> 
+>> -        if (atomic_inc_return(&io_request->refcount) == 1)
+>> -            break;
+>> -        atomic_dec(&io_request->refcount);
+>> -        i = (i + 1) % ctrl_info->max_io_slots;
+>> +        if (WARN_ON(atomic_inc_return(&io_request->refcount) > 1)) {
+>> +            atomic_dec(&io_request->refcount);
+>> +            return NULL;
+>> +        }
+>> +    } else {
+>> +        while (1) {
+>> +            io_request = &ctrl_info->io_request_pool[i];
+>> +            if (atomic_inc_return(&io_request->refcount) == 1)
+>> +                break;
+>> +            atomic_dec(&io_request->refcount);
+>> +            i = (i + 1) % limit;
+> 
+> To me, the range we use here looks incorrect. I would assume we should 
+> restrict range to [max_io_slots - PQI_RESERVED_IO_SLOTS, max_io_slots).
+> 
 
->   static struct pqi_io_request *pqi_alloc_io_request(
-> -	struct pqi_ctrl_info *ctrl_info)
-> +	struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd)
->   {
->   	struct pqi_io_request *io_request;
-> +	unsigned int limit = PQI_RESERVED_IO_SLOTS;
->   	u16 i = ctrl_info->next_io_request_slot;	/* benignly racy */
->   
-> -	while (1) {
-> +	if (scmd) {
-> +		u32 blk_tag = blk_mq_unique_tag(scmd->request);
-> +
-> +		i = blk_mq_unique_tag_to_tag(blk_tag) + limit;
->   		io_request = &ctrl_info->io_request_pool[i];
+Sorry, I missed that you use i = blk_mq_unique_tag_to_tag(blk_tag) + 
+limit for regular command.
 
-This looks ok
+But we still set next_io_request_slot for regular command and maybe then 
+read and use it for reserved command.
 
-> -		if (atomic_inc_return(&io_request->refcount) == 1)
-> -			break;
-> -		atomic_dec(&io_request->refcount);
-> -		i = (i + 1) % ctrl_info->max_io_slots;
-> +		if (WARN_ON(atomic_inc_return(&io_request->refcount) > 1)) {
-> +			atomic_dec(&io_request->refcount);
-> +			return NULL;
-> +		}
-> +	} else {
-> +		while (1) {
-> +			io_request = &ctrl_info->io_request_pool[i];
-> +			if (atomic_inc_return(&io_request->refcount) == 1)
-> +				break;
-> +			atomic_dec(&io_request->refcount);
-> +			i = (i + 1) % limit;
-
-To me, the range we use here looks incorrect. I would assume we should 
-restrict range to [max_io_slots - PQI_RESERVED_IO_SLOTS, max_io_slots).
-
-But then your reserved commands support would solve that.
-
-> +		}
->   	}
->   
-
-Thanks,
-John
+Thanks
