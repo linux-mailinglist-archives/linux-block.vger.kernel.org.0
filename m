@@ -2,77 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCA82211B1
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jul 2020 17:51:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 895AC2211CD
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jul 2020 18:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgGOPuv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jul 2020 11:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
+        id S1726386AbgGOP7u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jul 2020 11:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgGOPuv (ORCPT
+        with ESMTP id S1725835AbgGOP7s (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:50:51 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C37BBC061755
-        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 08:50:50 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id b25so2069477qto.2
-        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 08:50:50 -0700 (PDT)
+        Wed, 15 Jul 2020 11:59:48 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C34A8C061755
+        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 08:59:48 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id i18so2400416ilk.10
+        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 08:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=seas-upenn-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :to;
-        bh=br4dNMr1BfeckqthKTUuXQUh0U9JhhSK+KDy6h7SFt8=;
-        b=CiWkOA92iOlSxEKxxYGTq1DY6iAzCOf71aC51LEbdm79guZozMC9Cuenxm++CyGphJ
-         VaCEPdRQra8NdjQ91QIcFFBY1bHDtlS81mrKHAo1cZGQd8u43SugAzdOO55LaiYvBFVZ
-         4qWotY0+5j8BSgGbDUMxLiG6XaOvKc7QE63mUggfr8bkDw8zxzGA8B+BGxP906yutR0y
-         LNGrmyzXS9pAyWAPLELRjRhsITP3YtGehdI+l8DVK4Y9DXFYWhiozkCcOfOMDvgrzlxK
-         o0q2gefrT16ptxQgHi2rx9vFV0D2BkXL8rdN27vsf2PurlYIB9TS8/MLwBzk0NR7MzO9
-         Yvkw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=M6/N0Qn1n5qzNowRg6oLqQeni7+/TuEUR/sgLZKpfHk=;
+        b=WREJSjZwfybflKUK/XeTqV8B7qAt/y2yO7JkqmvJ480gBO3onVbnfzDS7t+h4sehar
+         jR371V8d/dL8SZHQBiQbAMUPOT2bbk4z9NRSoaz4E8KqwmEvGTx8vXVbszKuK6E13lWl
+         MClj4NngyCiqm17u1lslEf0ygUaRhtwHtV9a/uXDQig0T//qcab4QGjuYIZK46BFeX1i
+         dYhdbldw7FhcO8b+f3g9QmpZm7Jvcw7AtHlaQ8m+iqzIC9Gntw60XsmbNJHaXzC0/uLN
+         11PM7UYUZTbqc5i8Epq8zQSFpMbrjFuOqvdxNMTfa7NWliE6tz7rcK1YYuirEQE7bzTq
+         U4zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:to;
-        bh=br4dNMr1BfeckqthKTUuXQUh0U9JhhSK+KDy6h7SFt8=;
-        b=HBdZavCT4zKf9JAa2R1wmQzR1QzPq+TNKRKCrPaxfzVG4mvYDUM2c5BoVxdicdhPsZ
-         05s0ILKdHJv60PfOMjwwi6HTF8OqppOrhGPRmLXcCws3aDZvIJ9vcB70g7zLEIh3aWHU
-         V8OzN3oUVrQ9By8oRQc95ZeGHrxMb+yl2u0PF8OgtGJj6yky5bak5LKlL1k3z00bjBd2
-         QuNeRnGxTItEEd/JSfJXiCHCJ61cQ6QpqSBXjZkazoyTLz3qn2z5Nf6uz9f6DAEGp21q
-         RUZrdeWZhEnbalHSC5Hw84oUj/aA+HA3VgONilUBNQsMkxo1koG4H1y3Oe5RGakYVm5p
-         UToQ==
-X-Gm-Message-State: AOAM531aKPqLa4NVcjY8H8LpyveojKVgPJ2L4iy7Pw9Wd0FFXupjjPJa
-        zQ1gpJRt2jAMjEU3T/EMNEIrNg==
-X-Google-Smtp-Source: ABdhPJxq4PE6FT0NlCMxmJyniDV9V4j6/G7aCgY6zqYO+GUkGnW8qYwZuW22CLCPzeE/v4Jx1kqyag==
-X-Received: by 2002:ac8:87d:: with SMTP id x58mr440306qth.28.1594828249646;
-        Wed, 15 Jul 2020 08:50:49 -0700 (PDT)
-Received: from tsukihi.fios-router.home (pool-98-114-65-2.phlapa.fios.verizon.net. [98.114.65.2])
-        by smtp.gmail.com with ESMTPSA id m20sm2681644qkk.104.2020.07.15.08.50.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 08:50:49 -0700 (PDT)
-From:   Ziyang Li <liby99@seas.upenn.edu>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3645.0.6.2.4\))
-Subject: Possible bug in block/bounce.c
-Message-Id: <1CEFBFC5-7B0D-4F92-BE37-013CFDEC9F5B@seas.upenn.edu>
-Date:   Wed, 15 Jul 2020 11:50:46 -0400
-To:     axboe@kernel.dk, linux-block@vger.kernel.org
-X-Mailer: Apple Mail (2.3645.0.6.2.4)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M6/N0Qn1n5qzNowRg6oLqQeni7+/TuEUR/sgLZKpfHk=;
+        b=iEX9JxLLyVY8swQk+tbE4SC8Oa2fTo+sJjTfcuofmFQLa4Ysw8xiD09JvAHU4GfsGM
+         B5mkJcJLMbQK1tq4IoAFwaY2QZ66P9k6zcuWA1jD1/ZVKSG5MRuYER3/Zyg4omFY/6ZJ
+         c40ELqAiLAdSBYeAMAd45QH6Yiuye/gPUpe9OmPcqAHI06gIL4BQKFiTVuPTW6OCaXxx
+         nZ4xy3hqL1CPnXnDee19k8Xhu5d47Lrp3WiqBVMPrHLawt7/m9igJEOVaZBpbhVZJiUE
+         MqLoiKnimr9Swz1jqZ8Zw4f6rD7qg9QtGA4o8MhRnEqcj37/uaA2LW8+tjMVxN6nry2x
+         uwaw==
+X-Gm-Message-State: AOAM532g68tznFytX3L/HcpC8WV2b+46tR4Ihhot2T0+L3BjoFDVsKKU
+        eqHq1ly6LAruojmsHXEtIXmeILZ5HIXnzQ==
+X-Google-Smtp-Source: ABdhPJylwvOxmUjJkc6XlSm9bwpOoaDysTI3/F/Ul+S6yeicW1+fE6eSMlteVWEQEYa3aNgKUPOyUA==
+X-Received: by 2002:a05:6e02:dc4:: with SMTP id l4mr203168ilj.134.1594828787909;
+        Wed, 15 Jul 2020 08:59:47 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t7sm1310637iol.2.2020.07.15.08.59.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 08:59:47 -0700 (PDT)
+Subject: Re: Possible bug in block/bounce.c
+To:     Ziyang Li <liby99@seas.upenn.edu>, linux-block@vger.kernel.org
+References: <1CEFBFC5-7B0D-4F92-BE37-013CFDEC9F5B@seas.upenn.edu>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f46b7cd7-c6c9-e73c-b6f1-348f7df2279c@kernel.dk>
+Date:   Wed, 15 Jul 2020 09:59:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1CEFBFC5-7B0D-4F92-BE37-013CFDEC9F5B@seas.upenn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all:
+On 7/15/20 9:50 AM, Ziyang Li wrote:
+> Hi all:
+> 
+> I hope this is the right place to ask about a potential bug in
+> bounce.c. So on line 329 we assign the result of `mempool_alloc` to
+> `to->bv_page` but we never check if `to->bv_page` is a valid pointer,
+> also given that this variable is dereferenced in inc_zone_page_state.
+> I wonder if we should add something like `if (to->bv_page == null)`
+> here?
+> 
+> 329: to->bv_page = mempool_alloc(pool, q->bounce_gfp);
+> 330: inc_zone_page_state(to->bv_page, NR_BOUNCE);
 
-I hope this is the right place to ask about a potential bug in bounce.c. =
-So on line 329 we assign the result of `mempool_alloc` to `to->bv_page` =
-but we never check if `to->bv_page` is a valid pointer, also given that =
-this variable is dereferenced in inc_zone_page_state. I wonder if we =
-should add something like `if (to->bv_page =3D=3D null)` here?
+bounce_gfp must have __GFP_WAIT set, which guarantees that
+mempool_alloc() will always (eventually) return an allocation
+successfully.
 
-329: to->bv_page =3D mempool_alloc(pool, q->bounce_gfp);
-330: inc_zone_page_state(to->bv_page, NR_BOUNCE);
+-- 
+Jens Axboe
 
-Best,
-Ziyang=
