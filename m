@@ -2,118 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00961220F61
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jul 2020 16:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC0C220FC3
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jul 2020 16:46:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgGOObG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jul 2020 10:31:06 -0400
-Received: from [195.135.220.15] ([195.135.220.15]:60118 "EHLO mx2.suse.de"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbgGOObG (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:31:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 51DF1AEFC;
-        Wed, 15 Jul 2020 14:31:07 +0000 (UTC)
-From:   colyli@suse.de
-To:     linux-bcache@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
-Subject: [PATCH v3 16/16] bcache: avoid extra memory consumption in struct bbio for large bucket size
-Date:   Wed, 15 Jul 2020 22:30:15 +0800
-Message-Id: <20200715143015.14957-17-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200715143015.14957-1-colyli@suse.de>
-References: <20200715143015.14957-1-colyli@suse.de>
+        id S1728881AbgGOOqx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jul 2020 10:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728767AbgGOOqw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:46:52 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F7EC061755
+        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 07:46:52 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id k6so2187009ili.6
+        for <linux-block@vger.kernel.org>; Wed, 15 Jul 2020 07:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F4RPWWzGL3R/GCn0bvbwjBdbK6S6cE2QN9yjE6Xn0cU=;
+        b=0u2Kc4BbWmwqMLQKEJHRDpBEJQpzqwYbPJxfunBxjCbM9XoXIJdh4ic5sLff+bM3HS
+         UVxabkw47fb1BNRMp+j3OBgdFXAZKAiJWSmwGGcMv6s9XbdCdZtxIR+Lp2hMbwpbd1RP
+         0Wzw70fTs9QvLPAL8nuBWNGO9v5wIWi2t5mct1IkS/k8x4Rdx1J5jKNaZt1fhKj6qwcB
+         FnFD2kanifPSCY5VGAb+fNiHM+yrXN9ZMsYflEtECyqB263KwRGlR6qy2JbBRRNLaHW+
+         BoPMFk5DuXaHL7N2cVYtmq5x1fW+tNwEjXz1G/IjNwFO/hNuUjn3jXRJRw96iiurE/VT
+         fTlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F4RPWWzGL3R/GCn0bvbwjBdbK6S6cE2QN9yjE6Xn0cU=;
+        b=Tyl7Stzm4eFQfVRdoBhBHaPx7eXL4TXOnkD60pqJGBs1tcV5cM25IQlQPFx/WG6Mpa
+         DAczeN3vNbTa7lqZmt1wroDSHVvfLUb3Q3sBrzAqIOzxySiOIOZgoN6L8g7ACDepygsF
+         CGu/yFKqdA6F2XEC7ZpZYndmCHtWfpqA0qBwo4QZhAMkiREKD5lEeTg3KuzOds19rT27
+         RIq/6Sj7wuQDdnsbjZxLKZuRTjAQ9BYrkD2sBv+Nanr24ox4IJcS0z62h9BymSV/brmv
+         jpiTlhntthoWCybikJImosNyini8xz425Vy8ZOYhA4KtEbCBehEDE1Rq6ghorQ3S2g+s
+         I2mg==
+X-Gm-Message-State: AOAM533nXynir439LnJFxQOYkBWSi5xEUYAx4GV7xeJ7s3X8gWsZ2evS
+        zdNJKiAtGR7LMS33acjFA8KfEQ==
+X-Google-Smtp-Source: ABdhPJxrHJBSTzgZh/+7MHQ8okNVpQMZE1Sc68iJMdEjxrNZwXRKvb3UvJu7xbyC0ol40FSQSY7guA==
+X-Received: by 2002:a05:6e02:606:: with SMTP id t6mr9861925ils.181.1594824411871;
+        Wed, 15 Jul 2020 07:46:51 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u15sm1249813iog.18.2020.07.15.07.46.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 07:46:51 -0700 (PDT)
+Subject: Re: [PATCH 1/2] s390/dasd: fix inability to use DASD with DIAG driver
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com
+References: <20200714200327.40927-1-sth@linux.ibm.com>
+ <20200714200327.40927-2-sth@linux.ibm.com>
+ <c368fa07-4a7d-3eae-6143-a2db298c204e@kernel.dk>
+ <20200715064854.GA5409@infradead.org>
+ <88f32826-4bd2-27c1-c9e0-204aa556b0a6@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <85ea2f21-64e3-aae6-b069-013bb929045a@kernel.dk>
+Date:   Wed, 15 Jul 2020 08:46:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <88f32826-4bd2-27c1-c9e0-204aa556b0a6@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+On 7/15/20 7:32 AM, Stefan Haberland wrote:
+> Am 15.07.20 um 08:48 schrieb Christoph Hellwig:
+>> On Tue, Jul 14, 2020 at 02:12:27PM -0600, Jens Axboe wrote:
+>>> Just curious, any reason this isn't just using bio_alloc()?
+>> The dasd_diag_bio doesn't seem to have anything to do with the
+>> block layer struct bio..
+> 
+> exactly, that's a struct dasd_diag_bio.
 
-Bcache uses struct bbio to do I/Os for meta data pages like uuids,
-disk_buckets, prio_buckets, and btree nodes.
+Duh, guess I should have looked a bit more closely...
 
-Example writing a btree node onto cache device, the process is,
-- Allocate a struct bbio from mempool c->bio_meta.
-- Inside struct bbio embedded a struct bio, initialize bi_inline_vecs
-  for this embedded bio.
-- Call bch_bio_map() to map each meta data page to each bv from the
-  inlined  bi_io_vec table.
-- Call bch_submit_bbio() to submit the bio into underlying block layer.
-- When the I/O completed, only release the struct bbio, don't touch the
-  reference counter of the meta data pages.
-
-The struct bbio is defined as,
-738 struct bbio {
-739     unsigned int            submit_time_us;
-	[snipped]
-748     struct bio              bio;
-749 };
-
-Because struct bio is embedded at the end of struct bbio, therefore the
-actual size of struct bbio is sizeof(struct bio) + size of the embedded
-bio->bi_inline_vecs.
-
-Now all the meta data bucket size are limited to meta_bucket_pages(), if
-the bucket size is large than meta_bucket_pages()*PAGE_SECTORS, rested
-space in the bucket is unused. Therefore the most used space in meta
-bucket is (1<<MAX_ORDER) pages, or (1<<CONFIG_FORCE_MAX_ZONEORDER) if it
-is configured.
-
-Therefore for large bucket size, it is unnecessary to calculate the
-allocation size of mempool c->bio_meta as,
-	mempool_init_kmalloc_pool(&c->bio_meta, 2,
-			sizeof(struct bbio) +
-			sizeof(struct bio_vec) * bucket_pages(c))
-It is too large, neither the Linux buddy allocator cannot allocate so
-much continuous pages, nor the extra allocated pages are wasted.
-
-This patch replace bucket_pages() to meta_bucket_pages() in two places,
-- In bch_cache_set_alloc(), when initialize mempool c->bio_meta, uses
-  sizeof(struct bbio) + sizeof(struct bio_vec) * bucket_pages(c) to set
-  the allocating object size.
-- In bch_bbio_alloc(), when calling bio_init() to set inline bvec talbe
-  bi_inline_bvecs, uses meta_bucket_pages() to indicate number of the
-  inline bio vencs number.
-
-Now the maximum size of embedded bio inside struct bbio exactly matches
-the limit of meta_bucket_pages(), no extra page wasted.
-
-Signed-off-by: Coly Li <colyli@suse.de>
----
- drivers/md/bcache/io.c    | 2 +-
- drivers/md/bcache/super.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/md/bcache/io.c b/drivers/md/bcache/io.c
-index b25ee33b0d0b..a14a445618b4 100644
---- a/drivers/md/bcache/io.c
-+++ b/drivers/md/bcache/io.c
-@@ -26,7 +26,7 @@ struct bio *bch_bbio_alloc(struct cache_set *c)
- 	struct bbio *b = mempool_alloc(&c->bio_meta, GFP_NOIO);
- 	struct bio *bio = &b->bio;
- 
--	bio_init(bio, bio->bi_inline_vecs, bucket_pages(c));
-+	bio_init(bio, bio->bi_inline_vecs, meta_bucket_pages(&c->sb));
- 
- 	return bio;
- }
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 90494c7dead8..cade3f09661d 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1920,7 +1920,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
- 
- 	if (mempool_init_kmalloc_pool(&c->bio_meta, 2,
- 			sizeof(struct bbio) +
--			sizeof(struct bio_vec) * bucket_pages(c)))
-+			sizeof(struct bio_vec) * meta_bucket_pages(&c->sb)))
- 		goto err;
- 
- 	if (mempool_init_kmalloc_pool(&c->fill_iter, 1, iter_size))
 -- 
-2.26.2
+Jens Axboe
 
