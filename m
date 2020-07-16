@@ -2,97 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B16622204C
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jul 2020 12:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C3C2225A7
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jul 2020 16:33:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgGPKJm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jul 2020 06:09:42 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:13542 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgGPKJl (ORCPT
+        id S1728257AbgGPOdP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jul 2020 10:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGPOdP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:09:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594894181; x=1626430181;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZIi359ebW7uPGrJ68pzzl8ui7Nlsr3y11fUvBks/AeA=;
-  b=KXZy++VzZQvRBP4a9XKsuN70aB/4RopyCq+KuWquZcVEOHEnswdBcD3S
-   novYkbZDgNQsPoHPjtmyk5b/Wp/iQhP9WEBt3NhK+MGBjsz6ZNWOvLo2w
-   G44BFZ22H419rgZ/GtoKe7v2fDhfEAkqqu43VQiUHE7O7sN+uhGjbO5rM
-   8mkBH/INe5ZGdltyxrVTGHtKhhahcxbecEkRp+9eBf1YdeOw4cE+CRbHG
-   QO53VT5tC3Zt5BEGDHm+MPEdFOaHXu1Vy66LATVasTErQLZ/4UGoBPEYi
-   NsoY1huziKkzd+B+nkngltf/h3V6KpiRcsTeXIMPZCAZJGXC8E5gGq4jY
-   w==;
-IronPort-SDR: yv7l+827DTK8WBdt5tIH0XHyqDylQK+HLSmfrjucTUwaya1CRjA156DU472OpXls1iPK+9ygbJ
- 0VGlJxS2AhiztKiD3L7ICM9V9jrBbWVkGBlJDGcL3BBzyFjyft40JkunTmu8UXTijWt6tDTTbq
- +yT22E8tLf0LDiC38oSTGN1pElZGNkEy9gVTeOLqKQxkKRAmubeXHDWNqnySzSxS8BynUbLrfN
- EhI+1bZp57+axWCKTtKa/NUhXkJu6xjWamuBKSDhbZYzapmkJicIRdFuD6Cg4ns/TcveCSfa13
- r0c=
-X-IronPort-AV: E=Sophos;i="5.75,358,1589212800"; 
-   d="scan'208";a="251863386"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Jul 2020 18:09:41 +0800
-IronPort-SDR: E+VMSafaz05neEepYDM9/wYO6++sx2qkQbBlYl5N5rHJR/B0zfIg9WVYg9bFTDFacx+9Bx/Tkl
- QRfGAVURNsQSxacAAg/IXLmSaAabjXn4I=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 02:57:32 -0700
-IronPort-SDR: JMpE1XygSjEUDv+E9rCs63wsgce2Tu8SlDVU1mS1l4LMQ0U05jfvAT4QaBOajMJRv8kp9YhyOj
- KCJvaCXmXR0A==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun60.ssa.fujisawa.hgst.com) ([10.149.66.36])
-  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 03:09:41 -0700
-From:   Johannes Thumshirn <johannes.thumshirn@wdc.com>
+        Thu, 16 Jul 2020 10:33:15 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB176C061755
+        for <linux-block@vger.kernel.org>; Thu, 16 Jul 2020 07:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=niz8BZ3+orX2F8Zgd7PShUBTkfMRHT9kOHEGtsE5E/A=; b=TarVFLIQBuGpO1Uyf0zbX7Wod5
+        hqYaPMJs6cqBqLHgT3AaAuNFx2kXwgsN0Kwq8ai9g+daJHY+8uDfbRa+uDL6uJ9YEBput95IFDpC/
+        r4lMopnR1lrSHDmrx5F02kGbzfzp2zkevXnYDKDEl3cc5vtEaYn9s1pMKwQiIAtGvpZPLbx+KpWds
+        qImX2+2qTMmIcLD7+i/FMDllSnGudgCZMRasrrwQnev69ZVM7NmV9w/+EmxmZWs4EU4K/73Xdl17e
+        n6yhyT1j00cdJnJypDtcovGInn5jBCVL446mw/u5IdI8Z10VNb6jSB3hZHDHThegB5yt+t1DZM5RN
+        0EX3nPog==;
+Received: from [2001:4bb8:105:4a81:1bd9:4dba:216e:37b8] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jw4wi-0000Bv-2G; Thu, 16 Jul 2020 14:33:12 +0000
+From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH] block: align max append sectors to physical block size
-Date:   Thu, 16 Jul 2020 19:09:33 +0900
-Message-Id: <20200716100933.3132-1-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.26.2
+Cc:     Tejun Heo <tj@kernel.org>, linux-block@vger.kernel.org
+Subject: simplify block device claiming (resend)
+Date:   Thu, 16 Jul 2020 16:33:06 +0200
+Message-Id: <20200716143310.473136-1-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Max append sectors needs to be aligned to physical block size, otherwise
-we can end up in a situation where it's off by 1-3 sectors which would
-cause short writes with asynchronous zone append submissions from an FS.
+Hi Jens,
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- block/blk-settings.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+this series simplifies how we claim block devices for exclusive opens.
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 9a2c23cd9700..d75c4cc34a7a 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -231,6 +231,7 @@ EXPORT_SYMBOL(blk_queue_max_write_zeroes_sectors);
- void blk_queue_max_zone_append_sectors(struct request_queue *q,
- 		unsigned int max_zone_append_sectors)
- {
-+	unsigned int phys = queue_physical_block_size(q);
- 	unsigned int max_sectors;
- 
- 	if (WARN_ON(!blk_queue_is_zoned(q)))
-@@ -246,6 +247,13 @@ void blk_queue_max_zone_append_sectors(struct request_queue *q,
- 	 */
- 	WARN_ON(!max_sectors);
- 
-+	/*
-+	 * Max append sectors needs to be aligned to physical block size,
-+	 * otherwise we can end up in a situation where it's off by 1-3 sectors
-+	 * which would cause short writes with asynchronous zone append
-+	 * submissions from an FS.
-+	 */
-+	max_sectors = ALIGN_DOWN(max_sectors << 9, phys) >> 9;
- 	q->limits.max_zone_append_sectors = max_sectors;
- }
- EXPORT_SYMBOL_GPL(blk_queue_max_zone_append_sectors);
--- 
-2.26.2
-
+Diffstat:
+ drivers/block/loop.c   |    7 -
+ fs/block_dev.c         |  231 ++++++++++++++++---------------------------------
+ include/linux/blkdev.h |    3 
+ 3 files changed, 81 insertions(+), 160 deletions(-)
