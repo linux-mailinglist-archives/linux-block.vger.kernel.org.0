@@ -2,385 +2,693 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D9722456B
-	for <lists+linux-block@lfdr.de>; Fri, 17 Jul 2020 22:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B28602246CC
+	for <lists+linux-block@lfdr.de>; Sat, 18 Jul 2020 01:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgGQUx1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Jul 2020 16:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgGQUx1 (ORCPT
+        id S1727983AbgGQXJt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Jul 2020 19:09:49 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51004 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgGQXJs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:53:27 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB16C0619D2
-        for <linux-block@vger.kernel.org>; Fri, 17 Jul 2020 13:53:26 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id e13so10013777qkg.5
-        for <linux-block@vger.kernel.org>; Fri, 17 Jul 2020 13:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=UNtkkPoCJUt87PCugNPU0gfxkzQuJHMVJsQC+uRJpP0=;
-        b=GwAXl+CdqqbjJ09athoiVNfYyzSxJECfb21r9NRepv3ah78mpPjuxKq3zU9sRg2B1D
-         /T4gK8H/u9pnL4WTgUoiRhNvoVMW54lx53SdloqezuIJUpXs/gl4v1eKP/GrMV1d+04w
-         mOvQDhCZxKQu5KQOYePaFTOhS2nLgIMF2DNffPtNsvp2jlnVMat7PO8jQ8yC9idPznWs
-         P5Q8+Yu84Cz7fEaxS9Bf5EautL5cobOs+GjJA3I9T47AchbFCRsNwuXf6N5BTTRlrWSm
-         LMqDten/yDYxnfaj21gqo5ZeKmO7UwXbkuvumr8vGX1bMtiWnXxydsVUUcmzaFaCjICF
-         bzzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UNtkkPoCJUt87PCugNPU0gfxkzQuJHMVJsQC+uRJpP0=;
-        b=J6Ks9v7XdM7ZVOzi1raDP/hqMSvLlFDRH5VlwVWQyPrpOtDHNYZ674H6/55QQLbc0l
-         MAXZMYEG1tFZahTX6Xo6CSKeO1f+J8H7EmY5yvIrHEmDft2zYxwVZnPpg4JOfSJadygL
-         r/n4TOaVx0JxopaHUp+5y0XYcf/fzVfbmdts09IfKSEEGCvLOub5UwRTeaCDR+ogXJ6y
-         6+CalmubzBgoFovfEwHP1Qjgdz4t3et4fwJwixJMT69U1zmLwRPn2/3pJPU5PssrwlS/
-         dgC3Vy0VuUMKtOV+nKxr8arpzjvSLNOrRVFSsZ/dQpDwae+CaeGNP0qzvFm8phBlqiLI
-         WePA==
-X-Gm-Message-State: AOAM533ffTP+VmmP1UVaUwf5Z5WvmAzc94/eO61dA1VNW4QoLVBskxpU
-        5bHO7xgVNUMeCGFzj4n20KCH3g==
-X-Google-Smtp-Source: ABdhPJyRWb5gghiGIVjheXkck+VZFgE0sTiQFgeiscWtv+AXDiGp1Dv7fHghZ+SDhbqnkkPn/yGanQ==
-X-Received: by 2002:a37:674d:: with SMTP id b74mr2903161qkc.84.1595019205957;
-        Fri, 17 Jul 2020 13:53:25 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id d14sm10576733qkl.9.2020.07.17.13.53.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 13:53:25 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] loop: scale loop device by introducing per device lock
-Date:   Fri, 17 Jul 2020 16:53:22 -0400
-Message-Id: <20200717205322.127694-2-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717205322.127694-1-pasha.tatashin@soleen.com>
-References: <20200717205322.127694-1-pasha.tatashin@soleen.com>
+        Fri, 17 Jul 2020 19:09:48 -0400
+Received: from dede-linux-virt.corp.microsoft.com (unknown [131.107.160.54])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2CF8120B4909;
+        Fri, 17 Jul 2020 16:09:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CF8120B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595027386;
+        bh=2DqG+xaZLvs+UX007Q/NtfEny19uUluWemRBiZGgIB4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Joj6bMVYlT96myjqBT5IKhehkaAAXmnwmcQUZMqEcj3EUZ8DYCELw7UC1bLFa2qgv
+         vnCJu7d8O07r2tszoVnXk5FDFdttBIBOtMKCTDjQgaxZi09pilNVDBGGDavbMJhLCk
+         gMKwQmSyMKK+NW93aPkiwImhXSe4qxQWEChvBAe0=
+From:   Deven Bowers <deven.desai@linux.microsoft.com>
+To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
+        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
+        viro@zeniv.linux.org.uk, paul@paul-moore.com, eparis@redhat.com,
+        jannh@google.com, dm-devel@redhat.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-audit@redhat.com
+Cc:     tyhicks@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, sashal@kernel.org,
+        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
+        nramas@linux.microsoft.com, pasha.tatshin@soleen.com
+Subject: [RFC PATCH v4 00/12] Integrity Policy Enforcement LSM (IPE)
+Date:   Fri, 17 Jul 2020 16:09:29 -0700
+Message-Id: <20200717230941.1190744-1-deven.desai@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently, loop device has only one global lock:
-loop_ctl_mutex.
+Overview:
+------------------------------------
 
-This becomes hot in scenarios where many loop devices are used.
+IPE is a Linux Security Module which allows for a configurable
+policy to enforce integrity requirements on the whole system. It
+attempts to solve the issue of Code Integrity: that any code being
+executed (or files being read), are identical to the version that
+was built by a trusted source.
 
-Scale it by introducing per-device lock: lo_mutex that proctests
-field in struct loop_device. Keep loop_ctl_mutex to protect global
-data such as loop_index_idr, loop_lookup, loop_add.
+The type of system for which IPE is designed for use is an embedded device
+with a specific purpose (e.g. network firewall device in a data center),
+where all software and configuration is built and provisioned by the owner.
 
-Lock ordering: loop_ctl_mutex > lo_mutex.
+Specifically, a system which leverages IPE is not intended for general
+purpose computing and does not utilize any software or configuration
+built by a third party. An ideal system to leverage IPE has both mutable
+and immutable components, however, all binary executable code is immutable.
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- drivers/block/loop.c | 86 ++++++++++++++++++++++++--------------------
- drivers/block/loop.h |  1 +
- 2 files changed, 48 insertions(+), 39 deletions(-)
+The scope of IPE is constrained to the OS. It is assumed that platform
+firmware verifies the the kernel and optionally the root filesystem (e.g.
+via U-Boot verified boot). IPE then utilizes LSM hooks to enforce a
+flexible, kernel-resident integrity verification policy.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 475e1a738560..056af3bca6c2 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -706,7 +706,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	int		error;
- 	bool		partscan;
- 
--	error = mutex_lock_killable(&loop_ctl_mutex);
-+	error = mutex_lock_killable(&lo->lo_mutex);
- 	if (error)
- 		return error;
- 	error = -ENXIO;
-@@ -745,9 +745,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	loop_update_dio(lo);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	/*
--	 * We must drop file reference outside of loop_ctl_mutex as dropping
-+	 * We must drop file reference outside of lo_mutex as dropping
- 	 * the file ref can take bd_mutex which creates circular locking
- 	 * dependency.
- 	 */
-@@ -757,7 +757,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	return 0;
- 
- out_err:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (file)
- 		fput(file);
- 	return error;
-@@ -1096,7 +1096,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 		}
- 	}
- 
--	error = mutex_lock_killable(&loop_ctl_mutex);
-+	error = mutex_lock_killable(&lo->lo_mutex);
- 	if (error)
- 		goto out_bdev;
- 
-@@ -1176,7 +1176,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
- 	 */
- 	bdgrab(bdev);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
- 	if (claimed_bdev)
-@@ -1184,7 +1184,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	return 0;
- 
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- out_bdev:
- 	if (claimed_bdev)
- 		bd_abort_claiming(bdev, claimed_bdev, loop_configure);
-@@ -1205,7 +1205,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	bool partscan = false;
- 	int lo_number;
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
- 		err = -ENXIO;
- 		goto out_unlock;
-@@ -1259,7 +1259,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	lo_number = lo->lo_number;
- 	loop_unprepare_queue(lo);
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan) {
- 		/*
- 		 * bd_mutex has been held already in release path, so don't
-@@ -1290,18 +1290,18 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	 * protects us from all the other places trying to change the 'lo'
- 	 * device.
- 	 */
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	lo->lo_flags = 0;
- 	if (!part_shift)
- 		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	lo->lo_state = Lo_unbound;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 
- 	/*
--	 * Need not hold loop_ctl_mutex to fput backing file.
--	 * Calling fput holding loop_ctl_mutex triggers a circular
-+	 * Need not hold lo_mutex to fput backing file.
-+	 * Calling fput holding lo_mutex triggers a circular
- 	 * lock dependency possibility warning as fput can take
--	 * bd_mutex which is usually taken before loop_ctl_mutex.
-+	 * bd_mutex which is usually taken before lo_mutex.
- 	 */
- 	if (filp)
- 		fput(filp);
-@@ -1312,11 +1312,11 @@ static int loop_clr_fd(struct loop_device *lo)
- {
- 	int err;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	if (lo->lo_state != Lo_bound) {
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return -ENXIO;
- 	}
- 	/*
-@@ -1331,11 +1331,11 @@ static int loop_clr_fd(struct loop_device *lo)
- 	 */
- 	if (atomic_read(&lo->lo_refcnt) > 1) {
- 		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return 0;
- 	}
- 	lo->lo_state = Lo_rundown;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 
- 	return __loop_clr_fd(lo, false);
- }
-@@ -1350,7 +1350,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	bool partscan = false;
- 	bool size_changed = false;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	if (lo->lo_encrypt_key_size &&
-@@ -1417,7 +1417,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		partscan = true;
- 	}
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
- 
-@@ -1431,11 +1431,11 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 	struct kstat stat;
- 	int ret;
- 
--	ret = mutex_lock_killable(&loop_ctl_mutex);
-+	ret = mutex_lock_killable(&lo->lo_mutex);
- 	if (ret)
- 		return ret;
- 	if (lo->lo_state != Lo_bound) {
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return -ENXIO;
- 	}
- 
-@@ -1454,10 +1454,10 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 		       lo->lo_encrypt_key_size);
- 	}
- 
--	/* Drop loop_ctl_mutex while we call into the filesystem. */
-+	/* Drop lo_mutex while we call into the filesystem. */
- 	path = lo->lo_backing_file->f_path;
- 	path_get(&path);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	ret = vfs_getattr(&path, &stat, STATX_INO, AT_STATX_SYNC_AS_STAT);
- 	if (!ret) {
- 		info->lo_device = huge_encode_dev(stat.dev);
-@@ -1643,7 +1643,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- {
- 	int err;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	switch (cmd) {
-@@ -1659,7 +1659,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- 	default:
- 		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
- 	}
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	return err;
- }
- 
-@@ -1890,22 +1890,23 @@ static int lo_open(struct block_device *bdev, fmode_t mode)
- 		return err;
- 	lo = bdev->bd_disk->private_data;
- 	if (!lo) {
--		err = -ENXIO;
--		goto out;
-+		mutex_unlock(&loop_ctl_mutex);
-+		return -ENXIO;
- 	}
--
--	atomic_inc(&lo->lo_refcnt);
--out:
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	mutex_unlock(&loop_ctl_mutex);
--	return err;
-+	if (err)
-+		return err;
-+	atomic_inc(&lo->lo_refcnt);
-+	mutex_unlock(&lo->lo_mutex);
-+	return 0;
- }
- 
- static void lo_release(struct gendisk *disk, fmode_t mode)
- {
--	struct loop_device *lo;
-+	struct loop_device *lo = disk->private_data;
- 
--	mutex_lock(&loop_ctl_mutex);
--	lo = disk->private_data;
-+	mutex_lock(&lo->lo_mutex);
- 	if (atomic_dec_return(&lo->lo_refcnt))
- 		goto out_unlock;
- 
-@@ -1913,7 +1914,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 		if (lo->lo_state != Lo_bound)
- 			goto out_unlock;
- 		lo->lo_state = Lo_rundown;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		/*
- 		 * In autoclear mode, stop the loop thread
- 		 * and remove configuration after last close.
-@@ -1930,7 +1931,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 	}
- 
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- }
- 
- static const struct block_device_operations lo_fops = {
-@@ -1969,10 +1970,10 @@ static int unregister_transfer_cb(int id, void *ptr, void *data)
- 	struct loop_device *lo = ptr;
- 	struct loop_func_table *xfer = data;
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	if (lo->lo_encryption == xfer)
- 		loop_release_xfer(lo);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	return 0;
- }
- 
-@@ -2157,6 +2158,7 @@ static int loop_add(struct loop_device **l, int i)
- 		disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	disk->flags |= GENHD_FL_EXT_DEVT;
- 	atomic_set(&lo->lo_refcnt, 0);
-+	mutex_init(&lo->lo_mutex);
- 	lo->lo_number		= i;
- 	spin_lock_init(&lo->lo_lock);
- 	disk->major		= LOOP_MAJOR;
-@@ -2272,15 +2274,21 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
- 		ret = loop_lookup(&lo, parm);
- 		if (ret < 0)
- 			break;
-+		ret = mutex_lock_killable(&lo->lo_mutex);
-+		if (ret)
-+			break;
- 		if (lo->lo_state != Lo_unbound) {
- 			ret = -EBUSY;
-+			mutex_unlock(&lo->lo_mutex);
- 			break;
- 		}
- 		if (atomic_read(&lo->lo_refcnt) > 0) {
- 			ret = -EBUSY;
-+			mutex_unlock(&lo->lo_mutex);
- 			break;
- 		}
- 		lo->lo_disk->private_data = NULL;
-+		mutex_unlock(&lo->lo_mutex);
- 		idr_remove(&loop_index_idr, lo->lo_number);
- 		loop_remove(lo);
- 		break;
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..a3c04f310672 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -62,6 +62,7 @@ struct loop_device {
- 	struct request_queue	*lo_queue;
- 	struct blk_mq_tag_set	tag_set;
- 	struct gendisk		*lo_disk;
-+	struct mutex		lo_mutex;
- };
- 
- struct loop_cmd {
+IPE differs from other LSMs which provide integrity checking (for instance,
+IMA), as it has no dependency on the filesystem metadata itself. The
+attributes that IPE checks are deterministic properties that exist solely
+in the kernel. Additionally, IPE provides no additional mechanisms of
+verifying these files (e.g. IMA Signatures) - all of the attributes of
+verifying files are existing features within the kernel, such as dm-verity
+or fsverity.
+
+IPE provides a policy that allows owners of the system to easily specify
+integrity requirements and uses dm-verity signatures to simplify the
+authentication of allowed objects like authorized code and data.
+
+IPE supports two modes, permissive (similar to SELinux's permissive mode)
+and enforce. Permissive mode performs the same checks, and logs policy
+violations as enforce mode, but will not enforce the policy. This allows
+users to test policies before enforcing them.
+
+The default mode is enforce, and can be changed via the kernel commandline
+parameter `ipe.enforce=(0|1)`, or the securityfs node
+`/sys/kernel/security/ipe/enforce`. The ability to switch modes can be
+compiled out of the LSM via setting the config
+CONFIG_SECURITY_IPE_PERMISSIVE_SWITCH to N.
+
+IPE additionally supports success auditing. When enabled, all events
+that pass IPE policy and are not blocked will emit an audit event. This
+is disabled by default, and can be enabled via the kernel commandline
+`ipe.success_audit=(0|1)` or the securityfs node
+`/sys/kernel/security/ipe/success_audit`.
+
+Policies can be staged at runtime through securityfs and activated through
+sysfs. Please see the Deploying Policies section of this cover letter for
+more information.
+
+The IPE LSM is compiled under CONFIG_SECURITY_IPE.
+
+Policy:
+------------------------------------
+
+IPE policy is designed to be both forward compatible and backwards
+compatible. There is one required line, at the top of the policy,
+indicating the policy name, and the policy version, for instance:
+
+  policy_name="Ex Policy" policy_version=0.0.0
+
+The policy version indicates the current version of the policy (NOT the
+policy syntax version). This is used to prevent roll-back of policy to
+potentially insecure previous versions of the policy.
+
+The next portion of IPE policy, are rules. Rules are formed by key=value
+pairs, known as properties. IPE rules require two properties: "action",
+which determines what IPE does when it encounters a match against the
+policy, and "op", which determines when that rule should be evaluated.
+Thus, a minimal rule is:
+
+  op=EXECUTE action=ALLOW
+
+This example will allow any execution. Additional properties are used to
+restrict attributes about the files being evaluated. These properties are
+intended to be deterministic attributes that are resident in the kernel.
+Available properties for IPE described in the properties section of this
+cover-letter, the repository available in Appendix A, and the kernel
+documentation page.
+
+Order does not matter for the rule's properties - they can be listed in
+any order, however it is encouraged to have the "op" property be first,
+and the "action" property be last, for readability.
+
+Additionally, rules are evaluated top-to-bottom. As a result, any
+revocation rules, or denies should be placed early in the file to ensure
+that these rules are evaluated before a rule with "action=ALLOW" is hit.
+
+Any unknown syntax in IPE policy will result in a fatal error to parse
+the policy. User mode can interrogate the kernel to understand what
+properties and the associated versions through the securityfs node,
+$securityfs/ipe/property_config, which will return a string of form:
+
+  key1=version1
+  key2=version2
+  .
+  .
+  .
+  keyN=versionN
+
+User-mode should correlate these versions with the supported values
+identified in the documentation to determine whether a policy should
+be accepted by the system.
+
+Additionally, a DEFAULT operation must be set for all understood
+operations within IPE. For policies to remain completely forwards
+compatible, it is recommended that users add a "DEFAULT action=ALLOW"
+and override the defaults on a per-operation basis.
+
+For more information about the policy syntax, please see Appendix A or
+the kernel documentation page.
+
+Early Usermode Protection:
+--------------------------
+
+IPE can be provided with a policy at startup to load and enforce.
+This is intended to be a minimal policy to get the system to a state
+where userland is setup and ready to receive commands, at which
+point a policy can be deployed via securityfs. This "boot policy" can be
+specified via the config, SECURITY_IPE_BOOT_POLICY, which accepts a path
+to a plain-text version of the IPE policy to apply. This policy will be
+compiled into the kernel. If not specified, IPE will be disabled until a
+policy is deployed and activated through the method above.
+
+Policy Examples:
+------------------------------------
+
+Allow all:
+
+  policy_name="Allow All" policy_version=0.0.0
+  DEFAULT action=ALLOW
+
+Allow only initial superblock:
+
+  policy_name="Allow All Initial SB" policy_version=0.0.0
+  DEFAULT action=DENY
+
+  op=EXECUTE boot_verified=TRUE action=ALLOW
+
+Allow any signed dm-verity volume and the initial superblock:
+
+  policy_name="AllowSignedAndInitial" policy_version=0.0.0
+  DEFAULT action=DENY
+
+  op=EXECUTE boot_verified=TRUE action=ALLOW
+  op=EXECUTE dmverity_signature=TRUE action=ALLOW
+
+Prohibit execution from a specific dm-verity volume:
+
+  policy_name="AllowSignedAndInitial" policy_version=0.0.0
+  DEFAULT action=DENY
+
+  op=EXECUTE dmverity_roothash=401fcec5944823ae12f62726e8184407a5fa9599783f030dec146938 action=DENY
+  op=EXECUTE boot_verified=TRUE action=ALLOW
+  op=EXECUTE dmverity_signature=TRUE action=ALLOW
+
+Allow only a specific dm-verity volume:
+
+  policy_name="AllowSignedAndInitial" policy_version=0.0.0
+  DEFAULT action=DENY
+
+  op=EXECUTE dmverity_roothash=401fcec5944823ae12f62726e8184407a5fa9599783f030dec146938 action=ALLOW
+
+Deploying Policies:
+-------------------
+
+Deploying policies is simple. First sign a plain text policy, with a
+certificate that is present in the SYSTEM_TRUSTED_KEYRING of your test
+machine. Through openssl, the signing can be done via:
+
+  openssl smime -sign -in "$MY_POLICY" -signer "$MY_CERTIFICATE" \
+    -inkey "$MY_PRIVATE_KEY" -binary -outform der -noattr -nodetach \
+    -out "$MY_POLICY.p7s"
+
+Then, simply cat the file into the IPE's "new_policy" securityfs node:
+
+  cat "$MY_POLICY.p7s" > /sys/kernel/security/ipe/new_policy
+
+The policy should now be present under the policies/ subdirectory, under
+its "policy_name" attribute.
+
+The policy is now present in the kernel and can be marked as active,
+via the sysctl "ipe.active_policy":
+
+  echo -n 1 > "/sys/kernel/security/ipe/$MY_POLICY_NAME/active"
+
+This will now mark the policy as active and the system will be enforcing
+$MY_POLICY_NAME. At any point the policy can be updated on the provision
+that the policy version to be deployed is greater than or equal to the
+running version (to prevent roll-back attacks). This update can be done
+by redirecting the file into the policy's "raw" node, under the policies
+subdirectory:
+
+  cat "$MY_UPDATED_POLICY.p7s" > \
+    "/sys/kernel/security/ipe/policies/$MY_POLICY_NAME/raw"
+
+Additionally, policies can be deleted via the "del_policy" securityfs
+node. Simply write the name of the policy to be deleted to that node:
+
+  echo -n 1 >
+    "/sys/kernel/security/ipe/policies/$MY_POLICY_NAME/delete"
+
+There are two requirements to delete policies:
+
+1. The policy being deleted must not be the active policy.
+2. The policy being deleted must not be the boot policy.
+
+It's important to know above that the "echo" command will add a newline
+to the end of the input, and this will be considered as part of the
+filename. You can remove the newline via the -n parameter.
+
+NOTE: If a MAC LSM is enabled, the securityfs commands will require
+CAP_MAC_ADMIN. This is due to sysfs supporting fine-grained MAC
+attributes, while securityfs at the current moment does not.
+
+Properties:
+------------------------------------
+
+This initial patchset introducing IPE adds three properties:
+'boot_verified', 'dmverity_signature' and 'dmverity_roothash'.
+
+boot_verified (CONFIG_IPE_BOOT_PROP):
+  This property can be utilized for authorization of the first
+  super-block that is mounted on the system, where IPE attempts
+  to evaluate a file. Typically this is used for systems with
+  an initramfs or other initial disk, where this is unmounted before
+  the system becomes available, and is not covered by any other property.
+  The format of this property is:
+
+    boot_verified=(TRUE|FALSE)
+
+  WARNING: This property will trust any disk where the first IPE
+  evaluation occurs. If you do not have a startup disk that is
+  unpacked and unmounted (like initramfs), then it will automatically
+  trust the root filesystem and potentially overauthorize the entire
+  disk.
+
+dmverity_roothash (CONFIG_IPE_DM_VERITY_ROOTHASH):
+  This property can be utilized for authorization or revocation of
+  specific dmverity volumes, identified via root hash. It has a
+  dependency on the DM_VERITY module. The format of this property is:
+
+    dmverity_roothash=<HashHexDigest>
+
+dmverity_signature (CONFIG_IPE_DM_VERITY_SIGNATURE):
+  This property can be utilized for authorization of all dm-verity
+  volumes that have a signed roothash that chains to the system
+  trusted keyring. It has a dependency on the
+  DM_VERITY_VERIFY_ROOTHASH_SIG config. The format of this property is:
+
+    dmverity_signature=(TRUE|FALSE)
+
+Testing:
+------------------------------------
+
+A test suite is available (Appendix B) for ease of use. For manual
+instructions:
+
+Enable IPE through the following Kconfigs:
+
+  CONFIG_SECURITY_IPE=y
+  CONFIG_SECURITY_IPE_BOOT_POLICY="../AllowAllInitialSB.pol"
+  CONFIG_SECURITY_IPE_PERMISSIVE_SWITCH=y
+  CONFIG_IPE_BOOT_PROP=y
+  CONFIG_IPE_DM_VERITY_ROOTHASH=y
+  CONFIG_IPE_DM_VERITY_SIGNATURE=y
+  CONFIG_DM_VERITY=y
+  CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG=y
+  CONFIG_SYSTEM_TRUSTED_KEYRING=y
+  CONFIG_SYSTEM_TRUSTED_KEYS="/path/to/my/cert/list.pem"
+
+Start a test system, that boots directly from the filesystem, without
+an initrd. I recommend testing in permissive mode until all tests
+pass, then switch to enforce to ensure behavior remains identical.
+
+boot_verified:
+
+  If booted correctly, the filesystem mounted on / should be marked as
+  boot_verified. Verify by turning on success auditing (sysctl
+  ipe.success_audit=1), and run a binary. In the audit output,
+  `prop_boot_verified` should be `TRUE`.
+
+  To test denials, mount a temporary filesystem (mount -t tmpfs -o
+  size=4M tmp tmp), and copy a binary (e.g. ls) to this new
+  filesystem. Disable success auditing and attempt to run the file.
+  The file should have an audit event, but be allowed to execute in
+  permissive mode, and prop_boot_verified should be FALSE.
+
+dmverity_roothash:
+
+  First, you must create a dm-verity volume. This can be done through
+  squashfs-tools and veritysetup (provided by cryptsetup).
+
+  Creating a squashfs volume:
+
+    mksquashfs /path/to/directory/with/executable /path/to/output.squashfs
+
+  Format the volume for use with dm-verity & save the root hash:
+
+    output_rh=$(veritysetup format output.squashfs output.hashtree | \
+      tee verity_out.txt | awk "/Root hash/" | \
+      sed -E "s/Root hash:\s+//g")
+
+    echo -n $output_rh > output.roothash
+
+  Create a two policies, filling in the appropriate fields below:
+
+    Policy 1:
+
+      policy_name="roothash-denial" policy_version=0.0.0
+      DEFAULT action=ALLOW
+      op=EXECUTE dmverity_roothash=$output_rh action=DENY
+
+    Policy 2:
+
+      policy_name="roothash-allow" policy_version=0.0.0
+      DEFAULT action=ALLOW
+      DEFAULT op=EXECUTE action=DENY
+
+      op=EXECUTE boot_verified=TRUE action=ALLOW
+      op=EXECUTE dmverity_roothash=$output_rh action=ALLOW
+
+  Deploy each policy, then mark the first, "roothash-denial" as active,
+  per the "Deploying Policies" section of this cover letter. Mount the
+  dm-verity volume:
+
+    veritysetup open output.squashfs output.hashtree unverified \
+      `cat output.roothash`
+
+    mount /dev/mapper/unverified /my/mount/point
+
+  Attempt to execute a binary in the mount point, and it should emit an
+  audit event for a match against the rule:
+  
+    op=EXECUTE dmverity_roothash=$output_rh action=DENY
+
+  To test the second policy, perform the same steps, but this time, enable
+  success auditing before running the executable. The success audit event
+  should be a match against this rule:
+
+    op=EXECUTE dmverity_roothash=$output_rh action=ALLOW
+
+dmverity_signature:
+
+  Follow the setup steps for dmverity_roothash. Sign the roothash via:
+
+    openssl smime -sign -in "output.roothash" -signer "$MY_CERTIFICATE" \
+      -inkey "$MY_PRIVATE_KEY" -binary -outform der -noattr \
+      -out "output.p7s"
+
+    Create a policy:
+
+      policy_name="verified" policy_version=0.0.0
+      DEFAULT action=DENY
+
+      op=EXECUTE boot_verified=TRUE action=ALLOW
+      op=EXECUTE dmverity_verified=TRUE action=ALLOW
+
+  Deploy the policy, and mark as active, per the "Deploying Policies"
+  section of this cover letter. Mount the dm-verity volume with
+  verification:
+
+    veritysetup open output.squashfs output.hashtree unverified \
+      `cat output.roothash` --root-hash-signature=output.p7s
+
+    mount /dev/mapper/unverified /my/mount/point
+
+  NOTE: The --root-hash-signature option was introduced in veritysetup
+  2.3.0
+
+  Turn on success auditing and attempt to execute a binary in the mount
+  point, and it should emit an audit event for a match against the rule:
+
+    op=EXECUTE dmverity_verified=TRUE action=ALLOW
+
+  To test denials, mount the dm-verity volume the same way as the
+  "dmverity_roothash" section, and attempt to execute a binary. Failure
+  should occur.
+
+Documentation:
+------------------------------------
+
+Full documentation is available on github in IPE's master repository
+(Appendix A). This is intended to be an exhaustive source of documentation
+around IPE.
+
+Additionally, there is higher level documentation in the admin-guide.
+
+Technical diagrams are available here:
+
+  http://microsoft.github.io/ipe/technical/diagrams/
+
+Known Gaps:
+------------------------------------
+
+IPE has two known gaps:
+
+1. IPE cannot verify the integrity of anonymous executable memory, such as
+  the trampolines created by gcc closures and libffi, or JIT'd code.
+  Unfortunately, as this is dynamically generated code, there is no way for
+  IPE to detect that this code has not been tampered with in transition
+  from where it was built, to where it is running. As a result, IPE is
+  incapable of tackling this problem for dynamically generated code.
+  However, there is a patch series being prepared that addresses this
+  problem for libffi and gcc closures by implemeting a safer kernel
+  trampoline API. 
+
+2. IPE cannot verify the integrity of interpreted languages' programs when
+  these scripts invoked via `<interpreter> <file>`. This is because the way
+  interpreters execute these files, the scripts themselves are not
+  evaluated as executable code through one of IPE's hooks. Interpreters
+  can be enlightened to the usage of IPE by trying to mmap a file into
+  executable memory (+X), after opening the file and responding to the
+  error code appropriately. This also applies to included files, or high
+  value files, such as configuration files of critical system components.
+  This specific gap is planned on being addressed within IPE. For more
+  information on how we plan to address this gap, please see the Future
+  Development section, below.
+
+Future Development:
+------------------------------------
+
+Support for filtering signatures by specific certificates. In this case,
+our "dmverity_signature" (or a separate property) can be set to a
+specific certificate declared in IPE's policy, allowing for more
+controlled use-cases determine by a user's PKI structure.
+
+Support for integrity verification for general file reads. This addresses
+the script interpreter issue indicated in the "Known Gaps" section, as
+these script files are typically opened with O_RDONLY. We are evaluating
+whether to do this by comparing the original userland filepath passed into
+the open syscall, thereby allowing existing callers to take advantage
+without any code changes; the alternate design is to extend the new
+openat2(2) syscall, with an new flag, tentatively called "O_VERIFY". While
+the second option requires a code change for all the interpreters,
+frameworks and languages that wish to leverage it, it is a wholly cleaner
+implementation in the kernel. For interpreters specifically, the O_MAYEXEC
+patch series published by Mickaël Salaün[1] is a similar implementation
+to the O_VERIFY idea described above.
+
+Onboarding IPE's test suite to KernelCI. Currently we are developing a
+test suite in the same vein as SELinux's test suite. Once development
+of the test suite is complete, and provided IPE is accepted, we intend
+to onboard this test suite onto KernelCI.
+
+Hardened resistance against roll-back attacks. Currently there exists a
+window of opportunity between user-mode setup and the user-policy being
+deployed, where a prior user-policy can be loaded, that is potentially
+insecure. However, with a kernel update, you can revise the boot policy's
+version to be the same version as the latest policy, closing this window.
+In the future, I would like to close this window of opportunity without
+a kernel update, using some persistent storage mechanism.
+
+Open Issues:
+------------
+
+For linux-audit/integrity folks:
+1. Introduction of new audit definitions in the kernel integrity range - is
+  this preferred, as opposed to reusing definitions with existing IMA
+  definitions?
+
+TODOs:
+------
+
+linux-audit changes to support the new audit events.
+
+
+Appendix:
+------------------------------------
+
+A. IPE Github Repository: https://github.com/microsoft/ipe
+   Hosted Documentation: https://microsoft.github.io/ipe
+B. IPE Users' Guide: Documentation/admin-guide/LSM/ipe.rst
+C. IPE Test Suite: *TBA* (under development)
+
+References:
+------------------------------------
+
+1. https://lore.kernel.org/linux-integrity/20200505153156.925111-1-mic@digikod.net/
+
+Changelog:
+------------------------------------
+
+v1: Introduced
+
+v2:
+  Split the second patch of the previous series into two.
+  Minor corrections in the cover-letter and documentation
+  comments regarding CAP_MAC_ADMIN checks in IPE.
+
+v3:
+  Address various comments by Jann Horn. Highlights:
+    Switch various audit allocators to GFP_KERNEL.
+    Utilize rcu_access_pointer() in various locations.
+    Strip out the caching system for properties
+    Strip comments from headers
+    Move functions around in patches
+    Remove kernel command line parameters
+    Reconcile the race condition on the delete node for policy by
+      expanding the policy critical section.
+
+  Address a few comments by Jonathan Corbet around the documentation
+    pages for IPE.
+
+  Fix an issue with the initialization of IPE policy with a "-0"
+    version, caused by not initializing the hlist entries before
+    freeing.
+
+v4:
+  Address a concern around IPE's behavior with unknown syntax.
+    Specifically, make any unknown syntax a fatal error instead of a
+    warning, as suggested by Mickaël Salaün.
+  Introduce a new securityfs node, $securityfs/ipe/property_config,
+    which provides a listing of what properties are enabled by the
+    kernel and their versions. This allows usermode to predict what
+    policies should be allowed.
+  Strip some comments from c files that I missed.
+  Clarify some documentation comments around 'boot_verified'.
+    While this currently does not functionally change the property
+    itself, the distinction is important when IPE can enforce verified
+    reads. Additionally, 'KERNEL_READ' was omitted from the documentation.
+    This has been corrected.
+  Change SecurityFS and SHA1 to a reverse dependency.
+  Update the cover-letter with the updated behavior of unknown syntax.
+  Remove all sysctls, making an equivalent function in securityfs.
+  Rework the active/delete mechanism to be a node under the policy in
+    $securityfs/ipe/policies.
+  The kernel command line parameters ipe.enforce and ipe.success_audit
+    have returned as this functionality is no longer exposed through
+    sysfs.
+
+Deven Bowers (12):
+  scripts: add ipe tooling to generate boot policy
+  security: add ipe lsm evaluation loop and audit system
+  security: add ipe lsm policy parser and policy loading
+  ipe: add property for trust of boot volume
+  fs: add security blob and hooks for block_device
+  dm-verity: move signature check after tree validation
+  dm-verity: add bdev_setsecurity hook for dm-verity signature
+  ipe: add property for signed dmverity volumes
+  dm-verity: add bdev_setsecurity hook for root-hash
+  ipe: add property for dmverity roothash
+  documentation: add ipe documentation
+  cleanup: uapi/linux/audit.h
+
+ Documentation/admin-guide/LSM/index.rst      |    1 +
+ Documentation/admin-guide/LSM/ipe.rst        |  472 +++++++
+ MAINTAINERS                                  |    8 +
+ drivers/md/dm-verity-target.c                |   50 +-
+ drivers/md/dm-verity-verify-sig.c            |  147 +-
+ drivers/md/dm-verity-verify-sig.h            |   20 +-
+ drivers/md/dm-verity.h                       |    2 +-
+ fs/block_dev.c                               |    8 +
+ include/linux/device-mapper.h                |    3 +
+ include/linux/fs.h                           |    1 +
+ include/linux/lsm_hook_defs.h                |    5 +
+ include/linux/lsm_hooks.h                    |   11 +
+ include/linux/security.h                     |   22 +
+ include/uapi/linux/audit.h                   |   36 +-
+ scripts/Makefile                             |    1 +
+ scripts/ipe/Makefile                         |    2 +
+ scripts/ipe/polgen/.gitignore                |    1 +
+ scripts/ipe/polgen/Makefile                  |    7 +
+ scripts/ipe/polgen/polgen.c                  |  136 ++
+ security/Kconfig                             |   12 +-
+ security/Makefile                            |    2 +
+ security/ipe/.gitignore                      |    2 +
+ security/ipe/Kconfig                         |   47 +
+ security/ipe/Makefile                        |   33 +
+ security/ipe/ipe-audit.c                     |  316 +++++
+ security/ipe/ipe-audit.h                     |   26 +
+ security/ipe/ipe-blobs.c                     |   91 ++
+ security/ipe/ipe-blobs.h                     |   18 +
+ security/ipe/ipe-engine.c                    |  221 +++
+ security/ipe/ipe-engine.h                    |   49 +
+ security/ipe/ipe-hooks.c                     |  169 +++
+ security/ipe/ipe-hooks.h                     |   70 +
+ security/ipe/ipe-parse.c                     |  890 ++++++++++++
+ security/ipe/ipe-parse.h                     |   17 +
+ security/ipe/ipe-pin.c                       |   93 ++
+ security/ipe/ipe-pin.h                       |   36 +
+ security/ipe/ipe-policy.c                    |  148 ++
+ security/ipe/ipe-policy.h                    |   69 +
+ security/ipe/ipe-prop-internal.h             |   49 +
+ security/ipe/ipe-property.c                  |  142 ++
+ security/ipe/ipe-property.h                  |  100 ++
+ security/ipe/ipe-secfs.c                     | 1316 ++++++++++++++++++
+ security/ipe/ipe-secfs.h                     |   16 +
+ security/ipe/ipe.c                           |  116 ++
+ security/ipe/ipe.h                           |   22 +
+ security/ipe/properties/Kconfig              |   36 +
+ security/ipe/properties/Makefile             |   13 +
+ security/ipe/properties/boot-verified.c      |   82 ++
+ security/ipe/properties/dmverity-roothash.c  |  153 ++
+ security/ipe/properties/dmverity-signature.c |   82 ++
+ security/ipe/properties/prop-entry.h         |   38 +
+ security/ipe/utility.h                       |   32 +
+ security/security.c                          |   61 +
+ 53 files changed, 5406 insertions(+), 94 deletions(-)
+ create mode 100644 Documentation/admin-guide/LSM/ipe.rst
+ create mode 100644 scripts/ipe/Makefile
+ create mode 100644 scripts/ipe/polgen/.gitignore
+ create mode 100644 scripts/ipe/polgen/Makefile
+ create mode 100644 scripts/ipe/polgen/polgen.c
+ create mode 100644 security/ipe/.gitignore
+ create mode 100644 security/ipe/Kconfig
+ create mode 100644 security/ipe/Makefile
+ create mode 100644 security/ipe/ipe-audit.c
+ create mode 100644 security/ipe/ipe-audit.h
+ create mode 100644 security/ipe/ipe-blobs.c
+ create mode 100644 security/ipe/ipe-blobs.h
+ create mode 100644 security/ipe/ipe-engine.c
+ create mode 100644 security/ipe/ipe-engine.h
+ create mode 100644 security/ipe/ipe-hooks.c
+ create mode 100644 security/ipe/ipe-hooks.h
+ create mode 100644 security/ipe/ipe-parse.c
+ create mode 100644 security/ipe/ipe-parse.h
+ create mode 100644 security/ipe/ipe-pin.c
+ create mode 100644 security/ipe/ipe-pin.h
+ create mode 100644 security/ipe/ipe-policy.c
+ create mode 100644 security/ipe/ipe-policy.h
+ create mode 100644 security/ipe/ipe-prop-internal.h
+ create mode 100644 security/ipe/ipe-property.c
+ create mode 100644 security/ipe/ipe-property.h
+ create mode 100644 security/ipe/ipe-secfs.c
+ create mode 100644 security/ipe/ipe-secfs.h
+ create mode 100644 security/ipe/ipe.c
+ create mode 100644 security/ipe/ipe.h
+ create mode 100644 security/ipe/properties/Kconfig
+ create mode 100644 security/ipe/properties/Makefile
+ create mode 100644 security/ipe/properties/boot-verified.c
+ create mode 100644 security/ipe/properties/dmverity-roothash.c
+ create mode 100644 security/ipe/properties/dmverity-signature.c
+ create mode 100644 security/ipe/properties/prop-entry.h
+ create mode 100644 security/ipe/utility.h
+
 -- 
-2.25.1
-
+2.27.0
