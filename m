@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47220225768
+	by mail.lfdr.de (Postfix) with ESMTP id B3FB2225769
 	for <lists+linux-block@lfdr.de>; Mon, 20 Jul 2020 08:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgGTGM4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Jul 2020 02:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
+        id S1726890AbgGTGM6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Jul 2020 02:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgGTGM4 (ORCPT
+        with ESMTP id S1726854AbgGTGM5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:12:56 -0400
+        Mon, 20 Jul 2020 02:12:57 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC47C0619D4
-        for <linux-block@vger.kernel.org>; Sun, 19 Jul 2020 23:12:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9152CC0619D2
+        for <linux-block@vger.kernel.org>; Sun, 19 Jul 2020 23:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=F0w4gm+r/ZCjW2UZaGj48qh6lACFSmhuiNmBnlVqUUw=; b=gNyTj+y2AeJKACkPqR7hSsEn9k
-        zf3tBGLvzP/J9+qAiXqvr2qY5pW4q6epcBe32qyKVwk6ldmf8xATLfvZPFDsp6GN28f8eZP0ImiAW
-        9lskuAOXb45pJZWTrPtYlxCLUD9kT35ugMMxKCpNEYDTrJW4jPagAQVXs7t0k9/FE4ass0Mr7k7um
-        G0+wRpKEXYpRR3G4Uhwvd8Og+DltTSvBkstEbohunpkKcqyo+5KY8biaUfIyj6FidR8Ewd4FiWW33
-        fqjXwCicTCAb8BYkI+SH3E+brQGMVpfsinZO73cjZ//8pzqzkN1mLV/Oh2nB3X+AY3pupW740CL9E
-        E7qkT4Nw==;
+        bh=8daV8r/qFxWDHpdjOBYXBjl9K8YuFUivqt0kDie5aX4=; b=iW8rqW1RT/Z9zgoLcZzBnY59zM
+        YN5kpZ8KFASM1guz3D/nJFSpW4Dapr1pIo7jIlIpFR6qo60+D9UbjVyBF1UersTl+LcU4zGUhjY3U
+        xPwb5ifntZhte2og2+hffvaIFRfmMG6rwr9I9SoQGkhlqX8jlhZU9wi+fTTIrffe1buM2J2p0TkJ4
+        ZErJTKPcS/CXOxzNAViJ95VeEIswS8+wo5SNrx5H5wzwnR4yG+WQWXleIToY1hFfomSZDuY6sKJOI
+        sWKy1sTuzkoerXatO2mGcE7SiImQ8QIrBcUBCbavV3BfEyk4ulyZ9t2zoN0pBS8qHy6ye3w14nEM5
+        lfjNmP2A==;
 Received: from [2001:4bb8:105:4a81:b96b:120c:c0c5:74fd] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxP2j-0006g6-1O; Mon, 20 Jul 2020 06:12:53 +0000
+        id 1jxP2k-0006gG-Ik; Mon, 20 Jul 2020 06:12:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk
 Cc:     Damien.LeMoal@wdc.com, linux-block@vger.kernel.org,
         dm-devel@redhat.com
-Subject: [PATCH 1/3] block: inherit the zoned characteristics in blk_stack_limits
-Date:   Mon, 20 Jul 2020 08:12:49 +0200
-Message-Id: <20200720061251.652457-2-hch@lst.de>
+Subject: [PATCH 2/3] block: remove bdev_stack_limits
+Date:   Mon, 20 Jul 2020 08:12:50 +0200
+Message-Id: <20200720061251.652457-3-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720061251.652457-1-hch@lst.de>
 References: <20200720061251.652457-1-hch@lst.de>
@@ -46,88 +46,87 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Lift the code from device mapper into blk_stack_limits to inherity
-the stacking limitations.  This ensures we do the right thing for
-all stacked zoned block devices.
+This function is just a tiny wrapper around blk_stack_limit and has
+two callers.  Simplify the stack a bit by open coding it in the two
+callers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-settings.c   |  1 +
- drivers/md/dm-table.c  | 19 -------------------
- include/linux/blkdev.h |  9 ++++++---
- 3 files changed, 7 insertions(+), 22 deletions(-)
+ block/blk-settings.c   | 25 ++-----------------------
+ drivers/md/dm-table.c  |  3 ++-
+ include/linux/blkdev.h |  2 --
+ 3 files changed, 4 insertions(+), 26 deletions(-)
 
 diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 9a2c23cd970073..9cddbd73647405 100644
+index 9cddbd73647405..8c63af7726850c 100644
 --- a/block/blk-settings.c
 +++ b/block/blk-settings.c
-@@ -609,6 +609,7 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 		t->chunk_sectors = min_not_zero(t->chunk_sectors,
- 						b->chunk_sectors);
- 
-+	t->zoned = max(t->zoned, b->zoned);
- 	return ret;
+@@ -614,28 +614,6 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
  }
  EXPORT_SYMBOL(blk_stack_limits);
+ 
+-/**
+- * bdev_stack_limits - adjust queue limits for stacked drivers
+- * @t:	the stacking driver limits (top device)
+- * @bdev:  the component block_device (bottom)
+- * @start:  first data sector within component device
+- *
+- * Description:
+- *    Merges queue limits for a top device and a block_device.  Returns
+- *    0 if alignment didn't change.  Returns -1 if adding the bottom
+- *    device caused misalignment.
+- */
+-int bdev_stack_limits(struct queue_limits *t, struct block_device *bdev,
+-		      sector_t start)
+-{
+-	struct request_queue *bq = bdev_get_queue(bdev);
+-
+-	start += get_start_sect(bdev);
+-
+-	return blk_stack_limits(t, &bq->limits, start);
+-}
+-EXPORT_SYMBOL(bdev_stack_limits);
+-
+ /**
+  * disk_stack_limits - adjust queue limits for stacked drivers
+  * @disk:  MD/DM gendisk (top)
+@@ -651,7 +629,8 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ {
+ 	struct request_queue *t = disk->queue;
+ 
+-	if (bdev_stack_limits(&t->limits, bdev, offset >> 9) < 0) {
++	if (blk_stack_limits(&t->limits, &bdev_get_queue(bdev)->limits,
++			get_start_sect(bdev) + (offset >> 9)) < 0) {
+ 		char top[BDEVNAME_SIZE], bottom[BDEVNAME_SIZE];
+ 
+ 		disk_name(disk, 0, top);
 diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 0ea5b7367179ff..ec5364133cef7f 100644
+index ec5364133cef7f..aac4c31cfc8498 100644
 --- a/drivers/md/dm-table.c
 +++ b/drivers/md/dm-table.c
-@@ -467,9 +467,6 @@ static int dm_set_device_limits(struct dm_target *ti, struct dm_dev *dev,
- 		       q->limits.logical_block_size,
- 		       q->limits.alignment_offset,
- 		       (unsigned long long) start << SECTOR_SHIFT);
--
--	limits->zoned = blk_queue_zoned_model(q);
--
- 	return 0;
- }
- 
-@@ -1528,22 +1525,6 @@ int dm_calculate_queue_limits(struct dm_table *table,
- 			       dm_device_name(table->md),
- 			       (unsigned long long) ti->begin,
- 			       (unsigned long long) ti->len);
--
--		/*
--		 * FIXME: this should likely be moved to blk_stack_limits(), would
--		 * also eliminate limits->zoned stacking hack in dm_set_device_limits()
--		 */
--		if (limits->zoned == BLK_ZONED_NONE && ti_limits.zoned != BLK_ZONED_NONE) {
--			/*
--			 * By default, the stacked limits zoned model is set to
--			 * BLK_ZONED_NONE in blk_set_stacking_limits(). Update
--			 * this model using the first target model reported
--			 * that is not BLK_ZONED_NONE. This will be either the
--			 * first target device zoned model or the model reported
--			 * by the target .io_hints.
--			 */
--			limits->zoned = ti_limits.zoned;
--		}
+@@ -458,7 +458,8 @@ static int dm_set_device_limits(struct dm_target *ti, struct dm_dev *dev,
+ 		return 0;
  	}
  
- 	/*
+-	if (bdev_stack_limits(limits, bdev, start) < 0)
++	if (blk_stack_limits(limits, &q->limits,
++			get_start_sect(bdev) + start) < 0)
+ 		DMWARN("%s: adding target device %s caused an alignment inconsistency: "
+ 		       "physical_block_size=%u, logical_block_size=%u, "
+ 		       "alignment_offset=%u, start=%llu",
 diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 06995b96e94679..67b9ccc1da3560 100644
+index 67b9ccc1da3560..247b0e0a2901f0 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
-@@ -306,11 +306,14 @@ enum blk_queue_state {
- 
- /*
-  * Zoned block device models (zoned limit).
-+ *
-+ * Note: This needs to be ordered from the least to the most severe
-+ * restrictions for the inheritance in blk_stack_limits() to work.
-  */
- enum blk_zoned_model {
--	BLK_ZONED_NONE,	/* Regular block device */
--	BLK_ZONED_HA,	/* Host-aware zoned block device */
--	BLK_ZONED_HM,	/* Host-managed zoned block device */
-+	BLK_ZONED_NONE = 0,	/* Regular block device */
-+	BLK_ZONED_HA,		/* Host-aware zoned block device */
-+	BLK_ZONED_HM,		/* Host-managed zoned block device */
- };
- 
- struct queue_limits {
+@@ -1106,8 +1106,6 @@ extern void blk_set_default_limits(struct queue_limits *lim);
+ extern void blk_set_stacking_limits(struct queue_limits *lim);
+ extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+ 			    sector_t offset);
+-extern int bdev_stack_limits(struct queue_limits *t, struct block_device *bdev,
+-			    sector_t offset);
+ extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ 			      sector_t offset);
+ extern void blk_queue_stack_limits(struct request_queue *t, struct request_queue *b);
 -- 
 2.27.0
 
