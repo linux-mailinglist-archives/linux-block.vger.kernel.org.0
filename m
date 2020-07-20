@@ -2,131 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D99622576A
-	for <lists+linux-block@lfdr.de>; Mon, 20 Jul 2020 08:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCCA52257F9
+	for <lists+linux-block@lfdr.de>; Mon, 20 Jul 2020 08:45:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGTGM7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Jul 2020 02:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgGTGM7 (ORCPT
+        id S1725845AbgGTGp2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Jul 2020 02:45:28 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:3869 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGTGp2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:12:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD3BC0619D2
-        for <linux-block@vger.kernel.org>; Sun, 19 Jul 2020 23:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=6wS8AG/dT4atadMMMMGDnuFn9Z9C/x/k+18Du5ci1CE=; b=D7k9LYQDumBiBrMRL1NiBUGTi4
-        yAJWZlPnyaAeNEzZQKLWMEVLLVjkenW+/agpMZtUPXH4yZy3NZ6XZO5FLm8biTIirM/b7z/fw19tg
-        w2tZ/sOZjL5cAQazdVSyovX3ZLIMP1TV2cbBhrR3JG7iXLrxffhplAgSCGTwY9oggfV1cntSCdc1D
-        cROT9mbd8/axNQYQ0AQsebI8ZCpQclc7mvin4yJk2VPtBINLFn9gXp98k9kxKYNIR/lgusQp/+PBd
-        fA6AM2AkEKYdNQoIDNAECZRV8mUh7r1wCeGXOd8KW8GcRFhRvE7c4n+GsaLlcG9iNgQyr7wxXgHTk
-        FspYrfkg==;
-Received: from [2001:4bb8:105:4a81:b96b:120c:c0c5:74fd] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxP2m-0006gd-GA; Mon, 20 Jul 2020 06:12:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     Damien.LeMoal@wdc.com, linux-block@vger.kernel.org,
-        dm-devel@redhat.com
-Subject: [PATCH 3/3] block: remove blk_queue_stack_limits
-Date:   Mon, 20 Jul 2020 08:12:51 +0200
-Message-Id: <20200720061251.652457-4-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720061251.652457-1-hch@lst.de>
+        Mon, 20 Jul 2020 02:45:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595227537; x=1626763537;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=vi03ikakhELEhgcrLmdQjTWlKQaj1/HX1zvWYMQKgkw=;
+  b=lArOBtJM0J7/aj1+TOhF4d4BWunEYGrNXlPgNcHA4lEN8lZmFuPodwM3
+   g/FAWKFC9cIGbIz5Q5XjogwVSZNsOJfILhov9PTE6nbUANuLUEoDwpcqr
+   wcNXXDZRi4E5Cvsyu79fmP4ej9ZpGKy+6Uz5b0VmRBEbKO8PT6eV5oabl
+   JmP3GTgsMuJUQNaNIWlJyRuDrCTnBmWoyGzYaHVPrAQJRp62uADbNsDqn
+   ufJL5ltRE8gVq0StjcKvheGzcMjGq6dpU7P7s3pbBD1rlQFY2nb3QtDo8
+   VbhiQkeBLKK6uAmtensc8w8ZSlgGuPIbO4OdufFli3lOZk/N0w4JfX4Wt
+   g==;
+IronPort-SDR: XZFb0YYshGCcl3Qb6k47eCmhMKbGrqnQYmTrpqc89Cj6uOX1LXAnO89Gc730eltIpMovJn5gNJ
+ hEOkW9Q7Lh0D2757Soba4E0NCfnfhau27sIL+wfN+zO00sHY1OamaDF9sN4lx/f6xjxSulmEgz
+ UAUFwvqRemUNghOB12+M92qTN/BesCtJ4JrlqkFhOfAMSuf5DZEKQPAC0u/kQc2yY1jfL8frXp
+ ohvsuisFtoJII3OGeT4D2Xl6kRioQRYaItH+8whHgEN33WwotRGnHGalfFwvlYiUxZa57KyaNk
+ C9o=
+X-IronPort-AV: E=Sophos;i="5.75,374,1589212800"; 
+   d="scan'208";a="245927121"
+Received: from mail-dm6nam11lp2177.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.177])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Jul 2020 14:45:36 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c5deHCaI4Ia/NbsRsCaE/FOUzAM9hZ20VktTWCGScNB1XNCR2cmOAYld8wXu4uDKv/ZWG9/b2+MGfCcs+RTysoMgfZI0cGw/mKiNKDRuyvknVzgMvBKbmsZ7OoAyhtm4hAPeIKblXpXfqQw7X/YUM0AOgg1s5qlYiXu9sB5dbA2tv9zJZkYIElHxiHL/YPsnvRfBT6K4Xv/65QdRGiPTz4d0JHGI1mMn1vfhT30gsTmgAbEOXkmqsZ5xk4y229IJC2cYn0VYyibkxKLXqUUTmMtIovLti7gDRwMIK9VfSwoNnSBe0m9rOkgUxRwhFXx1NxAnK0whkyGIZ1buzckL/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JUyTYusNZA8mNf9Pgv0fLlclPQbXJeFf4DOdeE18CjM=;
+ b=afVY4m0HWsQvgIfNVDWPP6KmCPRyLXCS33VoptUdLs3TZwutNYQTBpJQ8hguPl2gegREKv8ry5msZ6k4PAclDNcyJ9+Wa3x1qgdPw+qRtEuosb9FtxRGFGR6x2yCDycZl20uG2UxFOQ743r0MiBTraCUaFHD11+/vVwff35v+XzM9PokFw1T1MxRa8wiciI9rfDqGL/PdQSX84KzeWJLZmfKBWmK117hryXSz2z5abV6YzniUhMtbAam9wCZ0abgNZfQG8SF9it++mdmUpAuHODAubeRGXUX8V6IJQtCQsLnlIxsaN+5Wa6TThoSK6toOIUOsnZrRkiW27BJkSBIZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JUyTYusNZA8mNf9Pgv0fLlclPQbXJeFf4DOdeE18CjM=;
+ b=LBgf6NDj4vxAF+AKjgf1sy9Hh0gdiP6NPv2yl+SneBOSHEx2Yhbk5VoJUoQ+VtKdX0lbQakcyTnh2vxRwVeypoifTI8fMuzWmuCvN/GE64wktyyN6TWqqJsycJ8frhq8SorrYYL6mYlKAma4Ne0VEP7U0Ea2wDr6UpyB+Jvhhpo=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4688.namprd04.prod.outlook.com
+ (2603:10b6:805:ab::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Mon, 20 Jul
+ 2020 06:45:24 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 06:45:24 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>
+Subject: Re: [PATCH 1/3] block: inherit the zoned characteristics in
+ blk_stack_limits
+Thread-Topic: [PATCH 1/3] block: inherit the zoned characteristics in
+ blk_stack_limits
+Thread-Index: AQHWXlzTaXAJlznby0qGepPx4bGhoQ==
+Date:   Mon, 20 Jul 2020 06:45:24 +0000
+Message-ID: <SN4PR0401MB35983F8986A949FCEB79A3829B7B0@SN4PR0401MB3598.namprd04.prod.outlook.com>
 References: <20200720061251.652457-1-hch@lst.de>
+ <20200720061251.652457-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8791f423-e514-49ee-3b36-08d82c787afe
+x-ms-traffictypediagnostic: SN6PR04MB4688:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR04MB4688858CD766868232465B229B7B0@SN6PR04MB4688.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gEYEcGcAuMQfRDQF3WmXNSXfkIfJF9dw3FUXLY6pScGIHl95UD3dl3XnTZCyyICkOGVrVB3p2H+kRTFkBDKA0i+1OcUqvB/HtLUvF/FrRyuxDj2CokTZatbjpgLdCmP1qyd/43YHEkQBfo8DElnNLt8VNQIrD8bGgsdZZ8qHTXE7WFmVU2KshcwgpEkQ8npvTjzgJyBz25HnS2JFbn4Y/jSuLT3QRxyM1tQ6IouRTn8KSdoV02G6K5qaZIIy0iv+OYv/m4OwabGVs9n+atxDb47kYSN6Uoni+AE/ikyaJ2b1zYwRa7qljt/eX5HksdOis12pJfhmbxLfqmc6DXc2AA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(55016002)(9686003)(7696005)(4744005)(83380400001)(52536014)(2906002)(478600001)(8676002)(33656002)(91956017)(71200400001)(110136005)(54906003)(316002)(5660300002)(86362001)(8936002)(66946007)(66476007)(66446008)(53546011)(6506007)(76116006)(4326008)(26005)(186003)(66556008)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: oGXxLKMsZEQVk1EQWWYMBnZhnXzlEG4A9/YXEEtefrXnzyK3/XWtCN5yvEDrocGGUr9tehDBzrvzczilKRYYfU//k6DkQno3snqAQQDdoG0ZlMjFePOV35qpigdpqJMRxbjnZ0DVMtsjQA/Ox04LW5Rvee658D19TWh0JP5g1g9ObVCFWReW0P8NCuCqe+A/BlzU9ZDiGpKUdzOMv05rnIu+9cFenWxDmvtpJQ8QS9ZVItrRbgEWY4XPcs3LWih4F+wkc9BZivakJnTqIfr2hXTPLma/OlsMol7UJ7+AljJlwPzAQ879ALH1Qfn+4OoFmJhJJy8Q+jVkZcsExyT5hRpal8oI5/R9Vo+Ix0JtJurv1iQ4soMI7LJxkc4mrgtW8mOjf42gQN/5P77u6WPqGh6RGXvoYA3C7LI+iLpXwF/aeJtqxz8ODk7ZI1F375RyA3/ukJ6Ij7yqgsAxJrjCIoc3+bSLb7UUN/M1OQjUs8VUmfNVCHRnWJvT3/Kejgqf
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8791f423-e514-49ee-3b36-08d82c787afe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 06:45:24.2705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hbv6FPzo9+LWIRaepatEZF7y8bEK22IXguDSqKOrqGuBTC2GWcKENmax7mLKBQbfIcIxaxR9fHrB0V0UwKE0pzLNKx/e/4M5ZZvhIQm/rKU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4688
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This function is just a tiny wrapper around blk_stack_limits.  Open code
-it int the two callers.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-settings.c         | 11 -----------
- drivers/block/drbd/drbd_nl.c |  4 ++--
- drivers/nvme/host/core.c     |  3 ++-
- include/linux/blkdev.h       |  1 -
- 4 files changed, 4 insertions(+), 15 deletions(-)
-
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 8c63af7726850c..76a7e03bcd6cac 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -455,17 +455,6 @@ void blk_queue_io_opt(struct request_queue *q, unsigned int opt)
- }
- EXPORT_SYMBOL(blk_queue_io_opt);
- 
--/**
-- * blk_queue_stack_limits - inherit underlying queue limits for stacked drivers
-- * @t:	the stacking driver (top)
-- * @b:  the underlying device (bottom)
-- **/
--void blk_queue_stack_limits(struct request_queue *t, struct request_queue *b)
--{
--	blk_stack_limits(&t->limits, &b->limits, 0);
--}
--EXPORT_SYMBOL(blk_queue_stack_limits);
--
- /**
-  * blk_stack_limits - adjust queue_limits for stacked devices
-  * @t:	the stacking driver limits (top device)
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index da4a3ebe04efa5..d0d9a549b58388 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1250,7 +1250,7 @@ static void fixup_discard_if_not_supported(struct request_queue *q)
- 
- static void fixup_write_zeroes(struct drbd_device *device, struct request_queue *q)
- {
--	/* Fixup max_write_zeroes_sectors after blk_queue_stack_limits():
-+	/* Fixup max_write_zeroes_sectors after blk_stack_limits():
- 	 * if we can handle "zeroes" efficiently on the protocol,
- 	 * we want to do that, even if our backend does not announce
- 	 * max_write_zeroes_sectors itself. */
-@@ -1361,7 +1361,7 @@ static void drbd_setup_queue_param(struct drbd_device *device, struct drbd_backi
- 	decide_on_write_same_support(device, q, b, o, disable_write_same);
- 
- 	if (b) {
--		blk_queue_stack_limits(q, b);
-+		blk_stack_limits(&q->limits, &b->limits, 0);
- 
- 		if (q->backing_dev_info->ra_pages !=
- 		    b->backing_dev_info->ra_pages) {
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5192a024dc1b9c..45c4c408649080 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1973,7 +1973,8 @@ static int __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- #ifdef CONFIG_NVME_MULTIPATH
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
--		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
-+		blk_stack_limits(&ns->head->disk->queue->limits,
-+				 &ns->queue->limits, 0);
- 		revalidate_disk(ns->head->disk);
- 	}
- #endif
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 247b0e0a2901f0..484cd3c8447452 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1108,7 +1108,6 @@ extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 			    sector_t offset);
- extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
- 			      sector_t offset);
--extern void blk_queue_stack_limits(struct request_queue *t, struct request_queue *b);
- extern void blk_queue_update_dma_pad(struct request_queue *, unsigned int);
- extern void blk_queue_segment_boundary(struct request_queue *, unsigned long);
- extern void blk_queue_virt_boundary(struct request_queue *, unsigned long);
--- 
-2.27.0
-
+On 20/07/2020 08:13, Christoph Hellwig wrote:=0A=
+>  /*=0A=
+>   * Zoned block device models (zoned limit).=0A=
+> + *=0A=
+> + * Note: This needs to be ordered from the least to the most severe=0A=
+> + * restrictions for the inheritance in blk_stack_limits() to work.=0A=
+>   */=0A=
+>  enum blk_zoned_model {=0A=
+> -	BLK_ZONED_NONE,	/* Regular block device */=0A=
+> -	BLK_ZONED_HA,	/* Host-aware zoned block device */=0A=
+> -	BLK_ZONED_HM,	/* Host-managed zoned block device */=0A=
+> +	BLK_ZONED_NONE =3D 0,	/* Regular block device */=0A=
+=0A=
+The initialization to 0 for the first value is not needed.=0A=
+=0A=
+Apart from that,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
