@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A049228345
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jul 2020 17:13:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 156EC228353
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jul 2020 17:14:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGUPNT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jul 2020 11:13:19 -0400
-Received: from verein.lst.de ([213.95.11.211]:52598 "EHLO verein.lst.de"
+        id S1729931AbgGUPOk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jul 2020 11:14:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:52627 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgGUPNT (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:13:19 -0400
+        id S1728089AbgGUPOk (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:14:40 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1B92268AFE; Tue, 21 Jul 2020 17:13:14 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 17:13:13 +0200
+        id 9AD7268B05; Tue, 21 Jul 2020 17:14:37 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 17:14:37 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Maxim Levitsky <mlevitsk@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
@@ -44,40 +44,55 @@ Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         Alex Dubov <oakad@yahoo.com>
-Subject: Re: [PATCH 01/10] block: introduce blk_is_valid_logical_block_size
-Message-ID: <20200721151313.GA10620@lst.de>
-References: <20200721105239.8270-1-mlevitsk@redhat.com> <20200721105239.8270-2-mlevitsk@redhat.com>
+Subject: Re: [PATCH 02/10] block: virtio-blk: check logical block size
+Message-ID: <20200721151437.GB10620@lst.de>
+References: <20200721105239.8270-1-mlevitsk@redhat.com> <20200721105239.8270-3-mlevitsk@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721105239.8270-2-mlevitsk@redhat.com>
+In-Reply-To: <20200721105239.8270-3-mlevitsk@redhat.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> +/**
-> + * blk_check_logical_block_size - check if logical block size is supported
-> + * by the kernel
-> + * @size:  the logical block size, in bytes
-> + *
-> + * Description:
-> + *   This function checks if the block layers supports given block size
-> + **/
-> +bool blk_is_valid_logical_block_size(unsigned int size)
-> +{
-> +	return size >= SECTOR_SIZE && size <= PAGE_SIZE && !is_power_of_2(size);
+On Tue, Jul 21, 2020 at 01:52:31PM +0300, Maxim Levitsky wrote:
+> Linux kernel only supports logical block sizes which are power of two,
+> at least 512 bytes and no more that PAGE_SIZE.
+> 
+> Check this instead of crashing later on.
+> 
+> Note that there is no need to check physical block size since it is
+> only a hint, and virtio-blk already only supports power of two values.
+> 
+> Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  drivers/block/virtio_blk.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 980df853ee497..b5ee87cba00ed 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -809,10 +809,18 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
+>  				   struct virtio_blk_config, blk_size,
+>  				   &blk_size);
+> -	if (!err)
+> +	if (!err) {
+> +		if (!blk_is_valid_logical_block_size(blk_size)) {
+> +			dev_err(&vdev->dev,
+> +				"%s failure: invalid logical block size %d\n",
+> +				__func__, blk_size);
+> +			err = -EINVAL;
+> +			goto out_cleanup_queue;
+> +		}
+>  		blk_queue_logical_block_size(q, blk_size);
 
-Shouldn't this be a ... && is_power_of_2(size)?
-
->  	if (q->limits.io_min < q->limits.physical_block_size)
->  		q->limits.io_min = q->limits.physical_block_size;
-> +
->  }
-
-This adds a pointless empty line.
-
-> +extern bool blk_is_valid_logical_block_size(unsigned int size);
-
-No need for externs on function declarations.
+Hmm, I wonder if we should simply add the check and warning to
+blk_queue_logical_block_size and add an error in that case.  Then
+drivers only have to check the error return, which might add a lot
+less boiler plate code.
