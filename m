@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4509922939F
-	for <lists+linux-block@lfdr.de>; Wed, 22 Jul 2020 10:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA472293A1
+	for <lists+linux-block@lfdr.de>; Wed, 22 Jul 2020 10:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGVIfB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Jul 2020 04:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        id S1729133AbgGVIfI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Jul 2020 04:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGVIfB (ORCPT
+        with ESMTP id S1726632AbgGVIfI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:35:01 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B419C0619DC;
-        Wed, 22 Jul 2020 01:35:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e8so814387pgc.5;
-        Wed, 22 Jul 2020 01:35:01 -0700 (PDT)
+        Wed, 22 Jul 2020 04:35:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E956BC0619DC;
+        Wed, 22 Jul 2020 01:35:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t6so605277plo.3;
+        Wed, 22 Jul 2020 01:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=S5B0GVk1sEbUASjT4+xgZWsr7v8I6T3nqfWa5obXE9M=;
-        b=qzz9d3FLgW9eDvZozb1+QqmuacZbBMJUtVOb+ZnFDUVbj1aiDYQ2dEqp01X8FR0x76
-         uc7DYiPf58TvPP7LrFQc3XLcknbdMhMl4WvUEvji8G3t1NAF2S/m6zkZuJH7YYxIL16/
-         68SxxElSMctAqhqfcZ7y7OJCyE6g/LEWwAaI/Fixg7By1/6KGSCulpVDtMRdi1uWgvKG
-         isZb2a61iGeqsPvijKksv4uOf4lqnbUNEEx/2xony4xlHPYKVsnijadpTKAIaMxG2AZJ
-         SZg2yYbeels9SzuzOS7HTlEa6qeoGIgSoE9iJKsB6YoN8igRyZOG+r32j3vJTnE9fzRl
-         xXOA==
+        bh=28LVHZQ5kNi3X4WVWRNBhsyjK8e2AXuHyTrkUX2gYzI=;
+        b=GmynCEVDYL8vUdF/dEi+NEtI+iKXNlgK/RQ7XrkC2bdnEwCeiQfM1MQxJyBxznCxdP
+         kmxk4C66hNqBKB2QUc1skHhm0mSkkVJ/LRRTFxUfyzsd8PXE3ddJtkc7VEk1yxt8G/SS
+         hMX+b0zA3PVxDyNytY3xg9t2INZFXrYXhQWH7nWt3WWjjmRPcwAx+frJioOPSFP1aLJ+
+         LC46zqpag99ScnDKs+RI6xPDmy25JXWhh+xOlQ/Fg0c1KwuP7O/PJgEYXV9XgjoET6UL
+         tljtmCnUcXhtWWu/8iHiwKn6W0INYH2kTKw82cxg79tJYMfI1Ct0MhyoducO00LIDmH4
+         LOrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=S5B0GVk1sEbUASjT4+xgZWsr7v8I6T3nqfWa5obXE9M=;
-        b=E6z7Wsglg7JqCw4WDcLya8DJvG1+iXHMz4ibb3W3W8df6uQkLyqpqKgzkwmu65Gk4z
-         cu69AsN9Lr4CMBNa4z4vUrraDDXlEOA94SajHYOKzGj/IrYJDKVxJqxBf4FI4bRz9VBM
-         RZRRZSszmLhgRcG5jqLQD/y39BJhb/S6iHMkVrgmInfG2WVVGNrxOcgx/wUOHQ84iyKd
-         1D8kqGxNvxUuRTyrGqzF0m8zuFKFxx2Y9FSM0ZJ1ZGaVlsmG6R6z0p+71t0k2/W1/EMe
-         MIGWzbsScNxs1s2g67FS/w4JN28GONpxCCl2hgLVCcvhPXMipFQ+URfiXGUEnhbyEU4O
-         PJEw==
-X-Gm-Message-State: AOAM532M+OmqcRDfbYQwDLMrQccu1JC/MilVd29R/T10DFs/0ubci7qK
-        RQsiRNRD6s+yVK97yapWDNg=
-X-Google-Smtp-Source: ABdhPJxW1giZd/2EieXhbK29tsVlNOYQs2kZciw/ydObd4eRPAb2i+Inq0D8ck6rN2S6QrVIV3yPIQ==
-X-Received: by 2002:a62:7845:: with SMTP id t66mr27743156pfc.5.1595406900728;
-        Wed, 22 Jul 2020 01:35:00 -0700 (PDT)
+        bh=28LVHZQ5kNi3X4WVWRNBhsyjK8e2AXuHyTrkUX2gYzI=;
+        b=SGaqe7orSQtpa2xUCCogZVHzIQS8hZowf2v/+xU9bu3hmO4BJtB6XRmt7XosXPQSA+
+         lbt6AnjXeVtryyyTkAft4KWWyDMOPA7lR3SQDi0pqtynRFH4CcyuO9EhgP9nt4ltTAiZ
+         DEbz3l/CGVO0HGCc95xauuzqrBT9gZHpuJxlpbawheppSGdtXMkZKG2ZnJqDHwkX/AbI
+         7h9rtthg4i8B25ReegbChy3Dx3Qxz5CjmL91KNo5CMbMWRQcO1yABKreTcJlLKjHL8K4
+         HufnHfBvQIXjMhOzlVA4W4zxLVEIkux7gWB3IohvexYHGoQegvThlbYq9HEk210O1xBw
+         HEDg==
+X-Gm-Message-State: AOAM530ZqnAq3o5IiBHSNw2YRHkcnJRlrItZx1nNrDaVktfOL239q9+k
+        XVI44xIQSE0D0+dXcSYF6J1PNzn3JoHmkg==
+X-Google-Smtp-Source: ABdhPJwbgrO0RP+E/o1QaKac8oSWHOrV2QrpXZWoauBIG5d+sFnfguSNdUB9tr89uey4iD3pQ1ow3w==
+X-Received: by 2002:a17:902:a5c5:: with SMTP id t5mr25735544plq.47.1595406907398;
+        Wed, 22 Jul 2020 01:35:07 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id g13sm5777319pje.29.2020.07.22.01.34.56
+        by smtp.gmail.com with ESMTPSA id g13sm5777319pje.29.2020.07.22.01.35.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 01:35:00 -0700 (PDT)
+        Wed, 22 Jul 2020 01:35:06 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,12 +61,13 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v3 0/3] block: use generic power management
-Date:   Wed, 22 Jul 2020 14:03:32 +0530
-Message-Id: <20200722083335.50068-1-vaibhavgupta40@gmail.com>
+Subject: [PATCH v3 1/3] mtip32xx: use generic power management
+Date:   Wed, 22 Jul 2020 14:03:33 +0530
+Message-Id: <20200722083335.50068-2-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <ea5881cdfd4d612193feed646ce89f253a36db69.camel@wdc.com>
+In-Reply-To: <20200722083335.50068-1-vaibhavgupta40@gmail.com>
 References: <ea5881cdfd4d612193feed646ce89f253a36db69.camel@wdc.com>
+ <20200722083335.50068-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -74,40 +75,133 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Linux Kernel Mentee: Remove Legacy Power Management.
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-The purpose of this patch series is to upgrade power management in block
-drivers. This has been done by upgrading .suspend() and .resume() callbacks.
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-The upgrade makes sure that the involvement of PCI Core does not change the
-order of operations executed in a driver. Thus, does not change its behavior.
-
-In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
-helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
-pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
-their job.
-
-The conversion requires the removal of those function calls, change the
-callbacks' definition accordingly and make use of dev_pm_ops structure.
-
-All patches are compile-tested only.
-
-Test tools:
-    - Compiler: gcc (GCC) 10.1.0
-    - allmodconfig build: make -j$(nproc) W=1 all
-
-v3: v2 needed some changes in commit messages.
-
-Vaibhav Gupta (3):
-  mtip32xx: use generic power management
-  rsxx: use generic power management
-  skd: use generic power management
-
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
  drivers/block/mtip32xx/mtip32xx.c | 54 +++++++------------------------
- drivers/block/rsxx/core.c         |  9 ++++--
- drivers/block/skd_main.c          | 30 +++++------------
- 3 files changed, 27 insertions(+), 66 deletions(-)
+ 1 file changed, 12 insertions(+), 42 deletions(-)
 
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index f6bafa9a68b9..7d1280952b35 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -4246,14 +4246,13 @@ static void mtip_pci_remove(struct pci_dev *pdev)
+  *	0  Success
+  *	<0 Error
+  */
+-static int mtip_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
++static int __maybe_unused mtip_pci_suspend(struct device *dev)
+ {
+ 	int rv = 0;
+-	struct driver_data *dd = pci_get_drvdata(pdev);
++	struct driver_data *dd = dev_get_drvdata(dev);
+ 
+ 	if (!dd) {
+-		dev_err(&pdev->dev,
+-			"Driver private datastructure is NULL\n");
++		dev_err(dev, "Driver private datastructure is NULL\n");
+ 		return -EFAULT;
+ 	}
+ 
+@@ -4261,21 +4260,8 @@ static int mtip_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
+ 
+ 	/* Disable ports & interrupts then send standby immediate */
+ 	rv = mtip_block_suspend(dd);
+-	if (rv < 0) {
+-		dev_err(&pdev->dev,
+-			"Failed to suspend controller\n");
+-		return rv;
+-	}
+-
+-	/*
+-	 * Save the pci config space to pdev structure &
+-	 * disable the device
+-	 */
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
+-
+-	/* Move to Low power state*/
+-	pci_set_power_state(pdev, PCI_D3hot);
++	if (rv < 0)
++		dev_err(dev, "Failed to suspend controller\n");
+ 
+ 	return rv;
+ }
+@@ -4287,42 +4273,25 @@ static int mtip_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
+  *      0  Success
+  *      <0 Error
+  */
+-static int mtip_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused mtip_pci_resume(struct device *dev)
+ {
+ 	int rv = 0;
+ 	struct driver_data *dd;
+ 
+-	dd = pci_get_drvdata(pdev);
++	dd = dev_get_drvdata(dev);
+ 	if (!dd) {
+-		dev_err(&pdev->dev,
+-			"Driver private datastructure is NULL\n");
++		dev_err(dev, "Driver private datastructure is NULL\n");
+ 		return -EFAULT;
+ 	}
+ 
+-	/* Move the device to active State */
+-	pci_set_power_state(pdev, PCI_D0);
+-
+-	/* Restore PCI configuration space */
+-	pci_restore_state(pdev);
+-
+-	/* Enable the PCI device*/
+-	rv = pcim_enable_device(pdev);
+-	if (rv < 0) {
+-		dev_err(&pdev->dev,
+-			"Failed to enable card during resume\n");
+-		goto err;
+-	}
+-	pci_set_master(pdev);
+-
+ 	/*
+ 	 * Calls hbaReset, initPort, & startPort function
+ 	 * then enables interrupts
+ 	 */
+ 	rv = mtip_block_resume(dd);
+ 	if (rv < 0)
+-		dev_err(&pdev->dev, "Unable to resume\n");
++		dev_err(dev, "Unable to resume\n");
+ 
+-err:
+ 	clear_bit(MTIP_DDF_RESUME_BIT, &dd->dd_flag);
+ 
+ 	return rv;
+@@ -4353,14 +4322,15 @@ static const struct pci_device_id mtip_pci_tbl[] = {
+ 	{ 0 }
+ };
+ 
++static SIMPLE_DEV_PM_OPS(mtip_pci_pm_ops, mtip_pci_suspend, mtip_pci_resume);
++
+ /* Structure that describes the PCI driver functions. */
+ static struct pci_driver mtip_pci_driver = {
+ 	.name			= MTIP_DRV_NAME,
+ 	.id_table		= mtip_pci_tbl,
+ 	.probe			= mtip_pci_probe,
+ 	.remove			= mtip_pci_remove,
+-	.suspend		= mtip_pci_suspend,
+-	.resume			= mtip_pci_resume,
++	.driver.pm		= &mtip_pci_pm_ops,
+ 	.shutdown		= mtip_pci_shutdown,
+ };
+ 
 -- 
 2.27.0
 
