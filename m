@@ -2,351 +2,153 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1675122BF3E
-	for <lists+linux-block@lfdr.de>; Fri, 24 Jul 2020 09:34:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A45A922C13F
+	for <lists+linux-block@lfdr.de>; Fri, 24 Jul 2020 10:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgGXHeO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Jul 2020 03:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgGXHdw (ORCPT
+        id S1726784AbgGXIur (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Jul 2020 04:50:47 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37951 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgGXIur (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:33:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C09C0619E4;
-        Fri, 24 Jul 2020 00:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=PUvPGMWnRdKo1i7fPR0B32QodnstGhqM7aWSC48rmWA=; b=vAXAnDThmBqiL4hyyuTGJrqR16
-        g6Il95NI98TyeGhBBvlIjnqDjdDI0jcOuBxTGFuy7/uoUqSt10Tt+zo28uPwV+uTfQfsftJ0c6ruS
-        PJhk5lAtV7D0FKhnj/lMwanQdpMHx0p8IR1O3rZawloBPRJyfWSG/fu20UNcfTlOdUQFlVHHpE/eZ
-        sLzEE0NtelSKXoFoArP2r4TP5cfJdO3HeOUAkea6vXmfGutU/wZqRMgJnlp4/4FltoPJLfZMhj9J2
-        vEvf4/PuVNLOchowYv9Rt5Ac/YgJZaRoe0yTQIKmQD6oZBNXIOA9KqHK00Q1QEuiITqoxk25mbvUt
-        cdPrIuug==;
-Received: from [2001:4bb8:18c:2acc:8dfe:be3c:592c:efc5] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jysDD-0006Gv-K6; Fri, 24 Jul 2020 07:33:48 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: [PATCH 14/14] bdi: replace BDI_CAP_NO_{WRITEBACK,ACCT_DIRTY} with a single flag
-Date:   Fri, 24 Jul 2020 09:33:13 +0200
-Message-Id: <20200724073313.138789-15-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724073313.138789-1-hch@lst.de>
-References: <20200724073313.138789-1-hch@lst.de>
+        Fri, 24 Jul 2020 04:50:47 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200724085045euoutp016f889708791521fee3ff00743df78168~kpCS6bdrp0186301863euoutp01-
+        for <linux-block@vger.kernel.org>; Fri, 24 Jul 2020 08:50:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200724085045euoutp016f889708791521fee3ff00743df78168~kpCS6bdrp0186301863euoutp01-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595580645;
+        bh=JCaoIX/Ct2B1o6jzU1B+BPTjqPyceMizPHeHhqEvRPE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=pEPpJweyxPgLATd6DIxnWKM8jX2UaNeqEbCbCsdSPoGOkrjfqC/SHXZPtaXmHUyxD
+         Jt8Q1AWmAaphCNJM+TDc5T2gfvCgUWUNfJc5lKv0PluJGU9GUBhQhJtaksx1Z9bZdY
+         xxQSXibHXh+7AYrN092gSdJdIlVeKjQMqiHLJTEg=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200724085045eucas1p2ffef272f435a518fa4d1cf773626ab4e~kpCSsGiBA2974529745eucas1p2_;
+        Fri, 24 Jul 2020 08:50:45 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 76.EF.06456.5E0AA1F5; Fri, 24
+        Jul 2020 09:50:45 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200724085044eucas1p2bae591d154a38a8283ef0d55a48be7bf~kpCR7SUDN3011730117eucas1p23;
+        Fri, 24 Jul 2020 08:50:44 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200724085044eusmtrp1371cb979181545dde0a463205d4d0273~kpCR6oqbU1666716667eusmtrp1D;
+        Fri, 24 Jul 2020 08:50:44 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-e0-5f1aa0e5731a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C2.30.06017.4E0AA1F5; Fri, 24
+        Jul 2020 09:50:44 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200724085044eusmtip1375ed4e8129771eaa312921c96d036e4~kpCRj2LN92939429394eusmtip16;
+        Fri, 24 Jul 2020 08:50:44 +0000 (GMT)
+Subject: Re: [RFC PATCH v3 5/8] ata_dev_printk: Use dev_printk
+To:     tasleson@redhat.com, Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <800d28d5-2432-f591-f942-df63aa37086c@samsung.com>
+Date:   Fri, 24 Jul 2020 10:50:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <84fec7af-3f51-c956-d2ca-41581e0f3cbb@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsWy7djPc7pPF0jFG2w7LWqx+m4/m0Xz4vVs
+        FntvaVsc2/GIyaL7+g42i4v3brI7sHlcPlvqsX/uGnaP9/uusnl83iQXwBLFZZOSmpNZllqk
+        b5fAlTHn4nWmgh08FR/WrWVqYOzn6mLk5JAQMJE4cukvWxcjF4eQwApGiYurzkA5Xxglbs3p
+        ZYJwPjNK7PnUygrTcmPHb6iq5YwSbY82QFW9ZZT4tG4zkMPBISxgJ7H4ZyGIKSJgKvH1sgZI
+        CbNAN6PEvav9YIPYBKwkJravYgSxeYHKF25axARiswioSqx59xSsRlQgQuLTg8OsEDWCEidn
+        PmEBmckJVL9sfjlImFlAXOLWk/lMELa8xPa3c5hBdkkILGKXmP3oNAvE0S4S06eeZYSwhSVe
+        Hd/CDmHLSJye3MMC0bCOUeJvxwuo7u2MEssn/2ODqLKWuHPuFxvIZmYBTYn1u/Qhwo4Sd4+8
+        AztIQoBP4sZbQYgj+CQmbZvODBHmlehoE4KoVpPYsGwDG8zarp0rmScwKs1C8tksJO/MQvLO
+        LIS9CxhZVjGKp5YW56anFhvmpZbrFSfmFpfmpesl5+duYgSmmtP/jn/awfj1UtIhRgEORiUe
+        Xok6yXgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2KU5mBREuc1XvQyVkgg
+        PbEkNTs1tSC1CCbLxMEp1cDIdMj5WeExNr7kp9lFTe/Ftk9Unl52uqnzusj+U3zXTm01Wz7P
+        qPHFM47KeUxLN/7Z8txFt2V6ptn8i5/3ZB43Wxi3/djaNSxZ6aKv1zRuuxC36sKhK2VuuzL5
+        ahn1Sp+Jm6pfyWc8VOS1tMPa8vgySd1pq7vTUvdrB4r2fwjh11todv3UDsM5SizFGYmGWsxF
+        xYkAZs098zEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xu7pPFkjFGzQdkrdYfbefzaJ58Xo2
+        i723tC2O7XjEZNF9fQebxcV7N9kd2Dwuny312D93DbvH+31X2Tw+b5ILYInSsynKLy1JVcjI
+        Ly6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy5hz8TpTwQ6eig/r1jI1
+        MPZzdTFyckgImEjc2PGbDcQWEljKKPHkH3sXIwdQXEbi+PoyiBJhiT/XuoBKuIBKXjNKbNmw
+        kwWkRljATmLxz0IQU0TAVOLrZQ2QEmaBbkaJf00/2CHqj7FIPPpznBVkEJuAlcTE9lWMIDYv
+        UO/CTYuYQGwWAVWJNe+egtWICkRIHN4xC6pGUOLkzCdguziB6pfNLwcJMwuoS/yZd4kZwhaX
+        uPVkPhOELS+x/e0c5gmMQrOQdM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn
+        525iBMbVtmM/t+xg7HoXfIhRgINRiYdXok4yXog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWp
+        RfnxRaU5qcWHGE2BfpvILCWanA+M+bySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2amp
+        BalFMH1MHJxSDYxZr5aovfG9M+n6H6aTTu99nl9mncvgcUnQoea1LFuuioPtqS3hzW/fMTgE
+        BnAs/C1rNe/ZyRSjWEnehCOMs077ZsS+SQptPqTinB2+bcGD0+fyns3iqPvY+6r+vMtmo1Px
+        Glzme69pnluvHSrN8ODmQf8FKY/Yvc7ETVbZLLJHoaLjbo/fvnlKLMUZiYZazEXFiQDLsSXe
+        wQIAAA==
+X-CMS-MailID: 20200724085044eucas1p2bae591d154a38a8283ef0d55a48be7bf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200624103532eucas1p2c0988207e4dfc2f992d309b75deac3ee
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200624103532eucas1p2c0988207e4dfc2f992d309b75deac3ee
+References: <20200623191749.115200-1-tasleson@redhat.com>
+        <20200623191749.115200-6-tasleson@redhat.com>
+        <CGME20200624103532eucas1p2c0988207e4dfc2f992d309b75deac3ee@eucas1p2.samsung.com>
+        <d817c9dd-6852-9233-5f61-1c0bc0f65ca4@samsung.com>
+        <7ed08b94-755f-baab-0555-b4e454405729@redhat.com>
+        <cfff719b-dc12-a06a-d0ee-4165323171de@samsung.com>
+        <20200714081750.GB862637@kroah.com>
+        <dff66d00-e6c3-f9ef-3057-27c60e0bfc11@samsung.com>
+        <20200717100610.GA2667456@kroah.com>
+        <e6517dd6-b6b6-ead3-2e60-03832e0c43bf@samsung.com>
+        <84fec7af-3f51-c956-d2ca-41581e0f3cbb@redhat.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace the two negative flags that are always used together with a
-single positive flag that indicates the writeback capability instead
-of two related non-capabilities.  Also remove the pointless wrappers
-to just check the flag.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/9p/vfs_file.c            |  2 +-
- fs/fs-writeback.c           |  7 +++---
- include/linux/backing-dev.h | 48 ++++++++-----------------------------
- mm/backing-dev.c            |  6 ++---
- mm/filemap.c                |  4 ++--
- mm/memcontrol.c             |  2 +-
- mm/memory-failure.c         |  2 +-
- mm/migrate.c                |  2 +-
- mm/mmap.c                   |  2 +-
- mm/page-writeback.c         | 12 +++++-----
- 10 files changed, 29 insertions(+), 58 deletions(-)
+On 7/17/20 9:47 PM, Tony Asleson wrote:
+> On 7/17/20 5:27 AM, Bartlomiej Zolnierkiewicz wrote:
+>>
+>> On 7/17/20 12:06 PM, Greg Kroah-Hartman wrote:
+>>
+>>> Just use the device name and don't worry about it, I doubt anyone will
+>>> notice, unless the name is _really_ different.
+>>
+>> Well, Geert has noticed and complained pretty quickly:
+>>
+>> https://lore.kernel.org/linux-ide/alpine.DEB.2.21.2003241414490.21582@ramsan.of.borg/
+>>
+>> Anyway, I don't insist that hard on keeping the old names and
+>> I won't be the one handling potential bug-reports.. (added Jens to Cc:).
+> 
+> I would think having sysfs use one naming convention and the logging
+> using another would be confusing for users, but apparently they've
+> managed this long with that.
+> 
+> 
+> It appears changes are being rejected because of logging content
+> differences, implying we shouldn't be changing printk usage to dev_printk.
+> 
+> Should I re-work my changes to support dev_printk path in addition to
+> utilizing printk_emit functionality so that we can avoid user space
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 92cd1d80218d70..5479d894a10696 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -625,7 +625,7 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 
- 	inode = file_inode(vma->vm_file);
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index a605c3dddabc76..e62e48fecff4f9 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2318,7 +2318,7 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 
- 			wb = locked_inode_to_wb_and_lock_list(inode);
- 
--			WARN(bdi_cap_writeback_dirty(wb->bdi) &&
-+			WARN((wb->bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 			     !test_bit(WB_registered, &wb->state),
- 			     "bdi-%s not registered\n", bdi_dev_name(wb->bdi));
- 
-@@ -2343,7 +2343,8 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 			 * to make sure background write-back happens
- 			 * later.
- 			 */
--			if (bdi_cap_writeback_dirty(wb->bdi) && wakeup_bdi)
-+			if (wakeup_bdi &&
-+			    (wb->bdi->capabilities & BDI_CAP_WRITEBACK))
- 				wb_wakeup_delayed(wb);
- 			return;
- 		}
-@@ -2578,7 +2579,7 @@ int write_inode_now(struct inode *inode, int sync)
- 		.range_end = LLONG_MAX,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index b217344a2c63be..44df4fcef65c1e 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -110,27 +110,14 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
- /*
-  * Flags in backing_dev_info::capability
-  *
-- * The first three flags control whether dirty pages will contribute to the
-- * VM's accounting and whether writepages() should be called for dirty pages
-- * (something that would not, for example, be appropriate for ramfs)
-- *
-- * WARNING: these flags are closely related and should not normally be
-- * used separately.  The BDI_CAP_NO_ACCT_AND_WRITEBACK combines these
-- * three flags into a single convenience macro.
-- *
-- * BDI_CAP_NO_ACCT_DIRTY:  Dirty pages shouldn't contribute to accounting
-- * BDI_CAP_NO_WRITEBACK:   Don't write pages back
-- * BDI_CAP_WRITEBACK_ACCT: Automatically account writeback pages
-- * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
-+ * BDI_CAP_WRITEBACK:		Supports dirty page writeback, and dirty pages
-+ *				should contribute to accounting
-+ * BDI_CAP_WRITEBACK_ACCT:	Automatically account writeback pages
-+ * BDI_CAP_STRICTLIMIT:		Keep number of dirty pages below bdi threshold
-  */
--#define BDI_CAP_NO_ACCT_DIRTY	0x00000001
--#define BDI_CAP_NO_WRITEBACK	0x00000002
--#define BDI_CAP_WRITEBACK_ACCT	0x00000004
--#define BDI_CAP_STRICTLIMIT	0x00000010
--#define BDI_CAP_CGROUP_WRITEBACK 0x00000020
--
--#define BDI_CAP_NO_ACCT_AND_WRITEBACK \
--	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY)
-+#define BDI_CAP_WRITEBACK		(1 << 0)
-+#define BDI_CAP_WRITEBACK_ACCT		(1 << 1)
-+#define BDI_CAP_STRICTLIMIT		(1 << 2)
- 
- extern struct backing_dev_info noop_backing_dev_info;
- 
-@@ -169,24 +156,9 @@ static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
- long congestion_wait(int sync, long timeout);
- long wait_iff_congested(int sync, long timeout);
- 
--static inline bool bdi_cap_writeback_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_WRITEBACK);
--}
--
--static inline bool bdi_cap_account_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_ACCT_DIRTY);
--}
--
--static inline bool mapping_cap_writeback_dirty(struct address_space *mapping)
--{
--	return bdi_cap_writeback_dirty(inode_to_bdi(mapping->host));
--}
--
--static inline bool mapping_cap_account_dirty(struct address_space *mapping)
-+static inline bool mapping_can_writeback(struct address_space *mapping)
- {
--	return bdi_cap_account_dirty(inode_to_bdi(mapping->host));
-+	return inode_to_bdi(mapping->host)->capabilities & BDI_CAP_WRITEBACK;
- }
- 
- static inline int bdi_sched_wait(void *word)
-@@ -223,7 +195,7 @@ static inline bool inode_cgwb_enabled(struct inode *inode)
- 
- 	return cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
- 		cgroup_subsys_on_dfl(io_cgrp_subsys) &&
--		bdi_cap_account_dirty(bdi) &&
-+		(bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 		(inode->i_sb->s_iflags & SB_I_CGROUPWB);
- }
- 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 5f5958e1d39060..01bd0a4f16096a 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -14,9 +14,7 @@
- #include <linux/device.h>
- #include <trace/events/writeback.h>
- 
--struct backing_dev_info noop_backing_dev_info = {
--	.capabilities	= BDI_CAP_NO_ACCT_AND_WRITEBACK,
--};
-+struct backing_dev_info noop_backing_dev_info;
- EXPORT_SYMBOL_GPL(noop_backing_dev_info);
- 
- static struct class *bdi_class;
-@@ -744,7 +742,7 @@ struct backing_dev_info *bdi_alloc(int node_id)
- 		kfree(bdi);
- 		return NULL;
- 	}
--	bdi->capabilities = BDI_CAP_WRITEBACK_ACCT;
-+	bdi->capabilities = BDI_CAP_WRITEBACK | BDI_CAP_WRITEBACK_ACCT;
- 	bdi->ra_pages = VM_READAHEAD_PAGES;
- 	return bdi;
- }
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 385759c4ce4be6..89ebadcfecf8e5 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -413,7 +413,7 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
- 		.range_end = end,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(mapping) ||
-+	if (!mapping_can_writeback(mapping) ||
- 	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
- 
-@@ -1634,7 +1634,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
- no_page:
- 	if (!page && (fgp_flags & FGP_CREAT)) {
- 		int err;
--		if ((fgp_flags & FGP_WRITE) && mapping_cap_account_dirty(mapping))
-+		if ((fgp_flags & FGP_WRITE) && mapping_can_writeback(mapping))
- 			gfp_mask |= __GFP_WRITE;
- 		if (fgp_flags & FGP_NOFS)
- 			gfp_mask &= ~__GFP_FS;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 19622328e4b5ac..cb2f1840481f57 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5419,7 +5419,7 @@ static int mem_cgroup_move_account(struct page *page,
- 		if (PageDirty(page)) {
- 			struct address_space *mapping = page_mapping(page);
- 
--			if (mapping_cap_account_dirty(mapping)) {
-+			if (mapping_can_writeback(mapping)) {
- 				__mod_lruvec_state(from_vec, NR_FILE_DIRTY,
- 						   -nr_pages);
- 				__mod_lruvec_state(to_vec, NR_FILE_DIRTY,
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 47b8ccb1fb9b85..012e0d315b1f90 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1006,7 +1006,7 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
- 	 */
- 	mapping = page_mapping(hpage);
- 	if (!(flags & MF_MUST_KILL) && !PageDirty(hpage) && mapping &&
--	    mapping_cap_writeback_dirty(mapping)) {
-+	    mapping_can_writeback(mapping)) {
- 		if (page_mkclean(hpage)) {
- 			SetPageDirty(hpage);
- 		} else {
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 40cd7016ae6fc6..7e2cafa06428f3 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -503,7 +503,7 @@ int migrate_page_move_mapping(struct address_space *mapping,
- 			__dec_lruvec_state(old_lruvec, NR_SHMEM);
- 			__inc_lruvec_state(new_lruvec, NR_SHMEM);
- 		}
--		if (dirty && mapping_cap_account_dirty(mapping)) {
-+		if (dirty && mapping_can_writeback(mapping)) {
- 			__dec_node_state(oldzone->zone_pgdat, NR_FILE_DIRTY);
- 			__dec_zone_state(oldzone, NR_ZONE_WRITE_PENDING);
- 			__inc_node_state(newzone->zone_pgdat, NR_FILE_DIRTY);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 59a4682ebf3fae..3efb7ae6447fd9 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1665,7 +1665,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
- 
- 	/* Can the mapping track the dirty pages? */
- 	return vma->vm_file && vma->vm_file->f_mapping &&
--		mapping_cap_account_dirty(vma->vm_file->f_mapping);
-+		mapping_can_writeback(vma->vm_file->f_mapping);
- }
- 
- /*
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 44c4a588f48df5..ad288f1b3052fe 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1882,7 +1882,7 @@ void balance_dirty_pages_ratelimited(struct address_space *mapping)
- 	int ratelimit;
- 	int *p;
- 
--	if (!bdi_cap_account_dirty(bdi))
-+	if (!(bdi->capabilities & BDI_CAP_WRITEBACK))
- 		return;
- 
- 	if (inode_cgwb_enabled(inode))
-@@ -2425,7 +2425,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- 
- 	trace_writeback_dirty_page(page, mapping);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct bdi_writeback *wb;
- 
- 		inode_attach_wb(inode, page);
-@@ -2452,7 +2452,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- void account_page_cleaned(struct page *page, struct address_space *mapping,
- 			  struct bdi_writeback *wb)
- {
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		dec_lruvec_page_state(page, NR_FILE_DIRTY);
- 		dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
- 		dec_wb_stat(wb, WB_RECLAIMABLE);
-@@ -2515,7 +2515,7 @@ void account_page_redirty(struct page *page)
- {
- 	struct address_space *mapping = page->mapping;
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2627,7 +2627,7 @@ void __cancel_dirty_page(struct page *page)
- {
- 	struct address_space *mapping = page_mapping(page);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2667,7 +2667,7 @@ int clear_page_dirty_for_io(struct page *page)
- 
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
--- 
-2.27.0
+Unfortunately this won't fix the issue for Hannes' patchset.
 
+> visible log changes?  I don't see a way to make the transition from
+> printk to dev_printk without having user visible changes to message content.
+The usage of sysfs symlinks for fixing the naming issue turned out
+to not be (easily) possible so we should consider other options (or
+just go forward with the original dev_printk() conversion)..
+
+Jens?
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
