@@ -2,133 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D3A722CB11
-	for <lists+linux-block@lfdr.de>; Fri, 24 Jul 2020 18:29:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0EB122CB6C
+	for <lists+linux-block@lfdr.de>; Fri, 24 Jul 2020 18:48:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgGXQ3X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Jul 2020 12:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgGXQ3W (ORCPT
+        id S1726397AbgGXQso (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Jul 2020 12:48:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60208 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGXQsn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:29:22 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3F6C0619E4
-        for <linux-block@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id s26so5446746pfm.4
-        for <linux-block@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
-        b=AiM7BvGhGZq+8CYp8kZrjTGkqBuGSOVx6gcS2ZoV6niiBFHjxOg990QxEbHLjMtigv
-         rkvJauw/Nl3yhgdh3yh3/cQAnPJiwRmEprDaz+FVWchlY0XqPjysldBf7LV7iodBdHsg
-         899CD4i/WKRLcxWHL2qBJPQckfv3u7k8PdGNBc5u9vYaxF2nX4a0GJZ0t2UsIEZTpo6J
-         LSaij/Yuh1Dejhu73ovuUR07/jtKpWqsPIuesjS1PnD7zc9xpDNs1ajo4VYGKaFSYPEp
-         4k9hgoXmZx02QlUnefhSTGyaDFr/jP9Yjztbzg3eY6wwKKTEEk/uuvzIim3EIQCSWKme
-         optQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
-        b=igknzEvJ9QmJ0notrhopVsF/ZPjzQjAcpH33+JrH2aAE8UPUoGnyS/0l3ZAVt/YrKc
-         hiMCNaLkHVJw5vF3Tvhaw9bhussCvFe3DaXA65/rjm2K51B43DpyOePd1g8dnKmqNFZr
-         KMpgFXCjTdbWCoCb3amNMWoxCxf+CMC6+oc0/gMRzP9TD0f6uJHqWtq27A0lrNwu2CCg
-         fwnneHmE5/ww2EnvOLCFjAN9xHRyWx8j1hO0RB8WyXl6Xb+jodF7oF3N8rEk6co4tB66
-         NkajPwsLfD+/2PkWORJcenTIW8v3M8cxCKW7ZGlHdwglQ8n9nL6hrb8cr1d/s/GI14p+
-         aisg==
-X-Gm-Message-State: AOAM531J4t/NeEKAnFeqz/t45Gg9EbAy6Hq1JP5dDI51249vZWJaytxN
-        1njrv0QkZqyLo6eYG6FIDgTLgw==
-X-Google-Smtp-Source: ABdhPJwiUQeYSR905NX4BkAH3K9ZeZTdo2ytHvuhOnPUvAeq9vMBPv48vFJy3B/CVUpeaPlmxlgHwA==
-X-Received: by 2002:a63:338c:: with SMTP id z134mr9031841pgz.245.1595608162016;
-        Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id e15sm6659144pgt.17.2020.07.24.09.29.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 09:29:21 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org
-Cc:     willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
- <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
-Date:   Fri, 24 Jul 2020 10:29:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jul 2020 12:48:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGVt58099130;
+        Fri, 24 Jul 2020 16:48:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=8jDaDjjGEgb8b9pwjImoVbxzSY6YeuKGwEYJvT3kk2E=;
+ b=AKpxBSKNRh87CQZDrJNEbCCT6i9qgnywvTgsfUnJk95f3Tv9SLyDBc4N1xRmkCrPwWYW
+ PLaK3WWEKdUh/yOPWZj/ynioQKSaDVDNDFwsd5hLjU2HtxibMy2PfH5Msik0DyoO17hx
+ s5jBJxP6kAc4KrRodAG2ktd4meuBtDOOA7gtS5cEsJRgIb2c2adDSsyGwrKF6kh2ft0r
+ R7SApzdJokb70fN0ts+69qexwYs4O0iiVUvlMa5oOdtjoGzucHC1LC7LmaygMAbClac5
+ KYszH6wm/CfT0z16AOl+PitTYuwVZCcSXuIqkQt3tRD6rIreKzDGmvzIGNzyZ/W/oysO VQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32bs1n04ar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 16:48:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGWTHT159479;
+        Fri, 24 Jul 2020 16:48:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32fsr7m7cu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 16:48:40 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OGmdMd012483;
+        Fri, 24 Jul 2020 16:48:39 GMT
+Received: from rsrivast-us.us.oracle.com (/10.211.44.96)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 16:48:39 +0000
+From:   Ritika Srivastava <ritika.srivastava@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, ritika.srivastava@oracle.com
+Subject: [PATCH 1/1] block: return BLK_STS_NOTSUPP if operation is not supported
+Date:   Fri, 24 Jul 2020 09:33:22 -0700
+Message-Id: <1595608402-16457-1-git-send-email-ritika.srivastava@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
+ bulkscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240128
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/24/20 9:49 AM, Kanchan Joshi wrote:
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 7809ab2..6510cf5 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
->  	cqe = io_get_cqring(ctx);
->  	if (likely(cqe)) {
->  		WRITE_ONCE(cqe->user_data, req->user_data);
-> -		WRITE_ONCE(cqe->res, res);
-> -		WRITE_ONCE(cqe->flags, cflags);
-> +		if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
-> +			if (likely(res > 0))
-> +				WRITE_ONCE(cqe->res64, req->rw.append_offset);
-> +			else
-> +				WRITE_ONCE(cqe->res64, res);
-> +		} else {
-> +			WRITE_ONCE(cqe->res, res);
-> +			WRITE_ONCE(cqe->flags, cflags);
-> +		}
+If WRITE_ZERO/WRITE_SAME operation is not supported by the storage,
+blk_cloned_rq_check_limits() will return -EIO which will cause
+device-mapper to fail the paths.
 
-This would be nice to keep out of the fast path, if possible.
+Instead, if the queue limit is set to 0, return BLK_STS_NOTSUPP.
+BLK_STS_NOTSUPP will be ignored by device-mapper and will not fail the
+paths.
 
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> index 92c2269..2580d93 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -156,8 +156,13 @@ enum {
->   */
->  struct io_uring_cqe {
->  	__u64	user_data;	/* sqe->data submission passed back */
-> -	__s32	res;		/* result code for this event */
-> -	__u32	flags;
-> +	union {
-> +		struct {
-> +			__s32	res;	/* result code for this event */
-> +			__u32	flags;
-> +		};
-> +		__s64	res64;	/* appending offset for zone append */
-> +	};
->  };
+Suggested-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ritika Srivastava <ritika.srivastava@oracle.com>
+---
+ block/blk-core.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Is this a compatible change, both for now but also going forward? You
-could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
-Layout would also be different between big and little endian, so not
-even that easy to set aside a flag for this. But even if that was done,
-we'd still have this weird API where liburing or the app would need to
-distinguish this cqe from all others based on... the user_data? Hence
-liburing can't do it, only the app would be able to.
-
-Just seems like a hack to me.
-
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 9bfaee0..173bb04 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1223,10 +1223,13 @@ blk_qc_t submit_bio(struct bio *bio)
+ static int blk_cloned_rq_check_limits(struct request_queue *q,
+ 				      struct request *rq)
+ {
+-	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
++	unsigned int queue_max_sector = blk_queue_get_max_sectors(q, req_op(rq));
++
++	if (blk_rq_sectors(rq) > queue_max_sector) {
+ 		printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
+-			__func__, blk_rq_sectors(rq),
+-			blk_queue_get_max_sectors(q, req_op(rq)));
++			__func__, blk_rq_sectors(rq), queue_max_sector);
++		if (queue_max_sector == 0)
++			return -EOPNOTSUPP;
+ 		return -EIO;
+ 	}
+ 
+@@ -1253,7 +1256,11 @@ static int blk_cloned_rq_check_limits(struct request_queue *q,
+  */
+ blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *rq)
+ {
+-	if (blk_cloned_rq_check_limits(q, rq))
++	int cloned_limit_check = blk_cloned_rq_check_limits(q, rq);
++
++	if (cloned_limit_check == -EOPNOTSUPP)
++		return BLK_STS_NOTSUPP;
++	else if (cloned_limit_check)
+ 		return BLK_STS_IOERR;
+ 
+ 	if (rq->rq_disk &&
 -- 
-Jens Axboe
+1.8.3.1
 
