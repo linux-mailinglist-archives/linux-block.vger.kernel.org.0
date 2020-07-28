@@ -2,88 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6605230862
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jul 2020 13:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FA662308E1
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jul 2020 13:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgG1LIO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 Jul 2020 07:08:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37366 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbgG1LIO (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:08:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 12E7CAC82;
-        Tue, 28 Jul 2020 11:08:24 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [RFC] block: Allocate only 1 tag set for a kdump kernel
-Date:   Tue, 28 Jul 2020 13:08:09 +0200
-Message-Id: <20200728110809.19228-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.27.0
+        id S1729162AbgG1LiR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 Jul 2020 07:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgG1LiQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:38:16 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1272C0619D4
+        for <linux-block@vger.kernel.org>; Tue, 28 Jul 2020 04:38:15 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r4so14993101wrx.9
+        for <linux-block@vger.kernel.org>; Tue, 28 Jul 2020 04:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=z88eUg589kIPbwfcJkBbHKFa4QR0wOZWGk2diK1jFPM=;
+        b=b8/14qSmtpua6DExDbiZQujm3FVCJQWOEnGYc8m39CT4QhCFHb7H/8m/Mr+GJhki5y
+         D26KeL8e5wwIhpqswED7Iyj8LNXjLx29RYfhZ1pPRjvkmM3zHNDeTF1tCFcQE9cmRh/R
+         raunFxUrBwUmVbHiIcNmDsAsXlg0feXUzfnq5cUO9m3PCR65DPFX0ENqSsff92XlzdML
+         2lZ1DHEdMBJRJ7G/JmLQNbN9a0xCfCCdIavasCRbfc1GMLbxrWB9YQiD4Jx827i+wgQH
+         uvPy2fXgy98qEeiaY5zYJY4YAm1gQLhdwyYSQS3qfKNnqXIVHUgDrgxJy+XFocnlCNnt
+         WweQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=z88eUg589kIPbwfcJkBbHKFa4QR0wOZWGk2diK1jFPM=;
+        b=bLrVqsY4brHTVBeun0M214Noh8wk8NUGW12YU5uCf425oSy7nAQmIBgVYbfG79bLCp
+         5r7/AhTvJ5e2YpasfiPgpbwcnsqcK2EEZGxZWN8WjSaG+brD2wXVp9ilPZr//b7kjdSW
+         QdESrvBsLvU2KhMynl2BRZ7F3RHANceofUR2Xr1VKQMt7GXx4Io4zk5uOWC2W5ymyZba
+         0aQmRauzFq9qtmx1R7cHadoGu4zKgY/v9SCHUBO1ImLTZQc1R0Soe8+Wawa+IaWFeCrL
+         ao8+6E/lgt8b6VcDogszODY+Px574qzqDEGv+ukEp5dZmwiuNj9hEU0+s3rkQmF7U6gb
+         zJWA==
+X-Gm-Message-State: AOAM533LGS3LQKtvfD6hum96exuRa1Zs20mNdKnBi0OOF9bd4LnEFP+P
+        O83r5grO79O43zab7HUiTKd3t/1RG4DRrdH78NQ=
+X-Google-Smtp-Source: ABdhPJxf3Z6j28ZJZ91yE+38HygJgiTtZMyB/VSeYng0agg0J+nv4s0qzz48SwEN7D8BizofBLS128ELYqeZWTC2zc4=
+X-Received: by 2002:a5d:5746:: with SMTP id q6mr24649773wrw.59.1595936294234;
+ Tue, 28 Jul 2020 04:38:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a5d:65cb:0:0:0:0:0 with HTTP; Tue, 28 Jul 2020 04:38:13
+ -0700 (PDT)
+From:   Rashid Al-Wahaibi <pdlarsen550@gmail.com>
+Date:   Tue, 28 Jul 2020 12:38:13 +0100
+Message-ID: <CAE00X2F5SUiQf0qCZYq3Yx353S0Esu1hA3RH4THqOM0WZMKHFQ@mail.gmail.com>
+Subject: Your Partnership
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Do not update nr_hw_queues again after setting it to 1 for a kdump
-kernel. This avoids allocating a tag set of size nr_cpu_ids and but
-then just using one tag set.
-
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
-Hi,
-
-I stumbled across this and didn't make sense to me that we might
-allocated more tag sets than we potently use. But maybe I am
-not seeing the obvious thing.
-
-Only compiled tested.
-
-Thanks,
-Daniel
-
- block/blk-mq.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4f57d27bfa73..e32cb0217135 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3291,13 +3291,14 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 		set->nr_hw_queues = 1;
- 		set->nr_maps = 1;
- 		set->queue_depth = min(64U, set->queue_depth);
-+	} else {
-+		/*
-+		 * There is no use for more h/w queues than cpus
-+		 * if we just have a single map
-+		 */
-+		if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
-+			set->nr_hw_queues = nr_cpu_ids;
- 	}
--	/*
--	 * There is no use for more h/w queues than cpus if we just have
--	 * a single map
--	 */
--	if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
--		set->nr_hw_queues = nr_cpu_ids;
- 
- 	if (blk_mq_realloc_tag_set_tags(set, 0, set->nr_hw_queues) < 0)
- 		return -ENOMEM;
-@@ -3309,7 +3310,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 						  GFP_KERNEL, set->numa_node);
- 		if (!set->map[i].mq_map)
- 			goto out_free_mq_map;
--		set->map[i].nr_queues = is_kdump_kernel() ? 1 : set->nr_hw_queues;
-+		set->map[i].nr_queues = set->nr_hw_queues;
- 	}
- 
- 	ret = blk_mq_update_queue_map(set);
 -- 
-2.16.4
+Good day,
+My name is Rashid Al-Wahaibi, I am from Oman but base here in the UK
+and a Managing Partner of BP Partnership Ltd, a Financial Consultancy
+Firm with office in the United Kingdom. I am contacting you based on
+the request of Ms Rosmah Mansor Najib Razak, wife of Najib Razak, the
+immediate past Malaysian Prime Minister.
 
+I found your profile satisfying and decided to contact you based on Ms
+Rosmah Mansor Najib Razak desire to invest in any viable project in
+your region.
+
+I need you to guide me on the type of investment that will be of best
+interest and provide good return on investment in your country and
+also act as her investment manager. She is ready to invest $25m to
+$50m USD
+
+I will explain further detail of this business proposal when you reply
+to this email indicating your interest.
+
+
+Regards,
+
+Rashid Al-Wahaibi,
+Bp Partnership Ltd
+60 Raglan Road
+Reigate, ENG RH2 0HN,
+United Kingdom
