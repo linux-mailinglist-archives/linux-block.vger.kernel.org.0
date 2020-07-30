@@ -2,71 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 785FA2333AC
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jul 2020 15:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D82233410
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jul 2020 16:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgG3N6w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 30 Jul 2020 09:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
+        id S1729273AbgG3OOH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 30 Jul 2020 10:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729389AbgG3N6q (ORCPT
+        with ESMTP id S1729252AbgG3OOH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:58:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E69C061574
-        for <linux-block@vger.kernel.org>; Thu, 30 Jul 2020 06:58:45 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id j187so25576686qke.11
-        for <linux-block@vger.kernel.org>; Thu, 30 Jul 2020 06:58:45 -0700 (PDT)
+        Thu, 30 Jul 2020 10:14:07 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D3EC061574;
+        Thu, 30 Jul 2020 07:14:07 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id l13so6192880qvt.10;
+        Thu, 30 Jul 2020 07:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=QcYaplpioI9MLsAnqd4iIIXoRVUu0Gh7RceGnF833lA=;
-        b=N4Z4RakBM2wV4gC7nQk0xwWWVeN3klc8op0Mk2CW0asWsybhcYjcqG9tXF5CAp34+C
-         /48qr3maDPv/t630d0nk8A9IC9nLLSt3V9v/4EwGV7gmnDsCOjHc4+wE6u+uH7D42skO
-         JViIBTEm+Kn39mD4B4EE60RBY8x1IhEU/ALZ4XHQpuLrT58O4vSu9i000u87K9I7xafn
-         6Nm7wuoCSz7ugstbB8mXdHoesEC21V5gMIJfqBtpjIQfTucJ8Q0mY+wh8227ElItbQ1+
-         UYObLJKFLeQw0iFto8QqK9nwOrdMAPSDoJE7eCmJu0RaBTjqB/0Mvi2KeHL8Cat3pgA/
-         Q1QA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1GfYkK7/x88dPSta57qjc35WTcVURqTk5ykRw4B7tRs=;
+        b=aqLfRSJIgUYu9JS6xR32xAwjDb6+rBkvWTHYyoxS9ZpZ4SUlL+SYdcII49Ip9Yf7CA
+         pllE5GHAS2zM91bOva74Ab+ZDJB8OfysW7TfskidPcAAxo5kccxxhhPyY9PV5UUxLNn1
+         9NKNfg3tD3sKoIseu4rgSnxW+cjrrNGrW7QJUkU/zovJ2fgxO1ehXqFOYbzD3tlzurB1
+         l6JbmmOC7IP8EyR/6wYIzcoD+w59RDR6kX2RhGfZSmf+uTA+FWBuCvBFVwX2NnUj8Rcm
+         s8BWWezcZOwmTemeQeQZ8txA8rpg7Bz4VJE94DL08BC9Dl666N3K9F/SOTG+b16x4nP+
+         IQTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=QcYaplpioI9MLsAnqd4iIIXoRVUu0Gh7RceGnF833lA=;
-        b=q7G/c0Hx8+EfPYDnZzZwMznOvN83PIj+t3kDfcq2O2yd1/S2zpPCRmrl/Fu49Q3dMM
-         qN0Sc1utVBmsYZmWrG84ZMuizRyUqp2XEVX8B3XPAFKO3OtM6huBWP7INiBgUmIzHgcr
-         jRT03BgcKN2m4Y6lP7I0WvrNJkcjgo2nl4cdu24I1EK1JxZ2UPHqi+IE4rlxBd3iKFHD
-         Ku1y58ahC9SUDk0YmkLmlfeaOKhTsKayGiAa7jlRPO/9uDkekDNMOEB5cwbgD4ajzfTv
-         jqbu9ra9bJjZGy2GPwfR5v0t3oa6TwYDeogE1r7gFElibNk7kydCYK8uvmYC+VrO+rMe
-         Klxw==
-X-Gm-Message-State: AOAM5339c9cNVuLKg9qVrMG2HrEvsNT8SXKb2A5wc1Qk+JdT9THwQRVN
-        Y5D/AB/OmM6d6L7BdbN/BmcdyDvIYxjm69QaVG8=
-X-Google-Smtp-Source: ABdhPJxXRtIkxPR5QyGlU6RL+jTImtmyLwSd5A22K8DCRm4H/4H0zglJszZ1qXhvAGqYCVC8G0WMAskSvM4A8JHJWDw=
-X-Received: by 2002:a37:e315:: with SMTP id y21mr4173746qki.129.1596117525129;
- Thu, 30 Jul 2020 06:58:45 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=1GfYkK7/x88dPSta57qjc35WTcVURqTk5ykRw4B7tRs=;
+        b=VdumjmViXBCSRo/lW5K9yKcSh0U6YgRI1veyR8YzFQlRaiVAnlxNqy5fyLfXW1vdw1
+         unhryVYUFn6/Maxm1WFcOlMTCI88j8qgz5ydPnPguJsgZhoynx+1WAPfC2ReLTw2O6mn
+         gs4ZWvmTbv/Oq46xcYch16T44HEefawWAaExweJn4s0BTzZDr/KAg8jLR+Se3Ir8YCjp
+         ycTb83brToL0PyiOIYrbagJ1pi8VuA9ct3n2dAbEPvJVY86zQLlLqPPjJN2UpXP1f/Lm
+         Gp4pFIyKKK0yWEV7+j9wZi67ORpRo3lOZ9EHqm52C4QPvsay2yskE9jAmploPRZSuM9I
+         zrag==
+X-Gm-Message-State: AOAM5324YuNMF65BcTG7e90mBBJPBSIIU/VhOfuXhQpT3/Yt9gBiO9H8
+        0Y5mnUxn7mQc5MYWq6lG/xCF1t7Nw9I=
+X-Google-Smtp-Source: ABdhPJza5cdd/JllkSeePgWZUtYrkYwWysIydxYTzkhTwHxYPW3DDxz4idf7kabQyApRfR97v++kBg==
+X-Received: by 2002:a0c:fde4:: with SMTP id m4mr2979870qvu.97.1596118446244;
+        Thu, 30 Jul 2020 07:14:06 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:115b])
+        by smtp.gmail.com with ESMTPSA id h144sm4091990qke.83.2020.07.30.07.14.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 07:14:05 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 10:14:04 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iocost: Fix check condition of iocg abs_vdebt
+Message-ID: <20200730141404.GA4601@mtj.duckdns.org>
+References: <20200730090321.38781-1-zhouchengming@bytedance.com>
 MIME-Version: 1.0
-Received: by 2002:aed:24ba:0:0:0:0:0 with HTTP; Thu, 30 Jul 2020 06:58:44
- -0700 (PDT)
-Reply-To: godardchambers1@yandex.com
-From:   "Luis F. Godard" <veronicadeerow@gmail.com>
-Date:   Thu, 30 Jul 2020 15:58:44 +0200
-Message-ID: <CAOXWAkNbNaLQRf3=+tJ-wVuQxCuLfwS+PkyxihhBK01tbCStbA@mail.gmail.com>
-Subject: =?UTF-8?B?SmUgdG8gbmFsw6loYXbDoSB6cHLDoXZhLA==?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730090321.38781-1-zhouchengming@bytedance.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-SmUgdG8gbmFsw6loYXbDoSB6cHLDoXZhLA0KDQpKYWsgb2JlY27Emz8gRG91ZsOhbSwgxb5lIHNl
-IHRhdG8genByw6F2YSBzIHbDoW1pIGRvYsWZZSBzZXRrw6F2w6EuDQpOZXphcG9tZcWIdGUgcHJv
-c8OtbSB0dXRvIHpwcsOhdnUgbmEgcm96ZMOtbCBvZCBkxZnDrXbEm2rFocOtY2gsIHByb3Rvxb5l
-IHbDocWhDQpkxJtkaWNrw70gZm9uZCB2ZSB2w73FoWkgOSwyIG1pbGlvbnUgVVNEIG55bsOtIG9k
-aGFsdWplIHZhxaFpIG9rYW3Fvml0b3UNCnBveml0aXZuw60gb2Rwb3bEm8SPLiBWeXrDvXbDoW0g
-dsOhcyB2xaFhaywgYWJ5c3RlIGxhc2thdsSbIHDFmWVkYWxpIHN2w6kgY2Vsw6kNCmptw6lubzog
-WmVtxJs6IEFkcmVzYTogUG92b2zDoW7DrTogUm9kaW5uw70gc3RhdjogUG9obGF2w606IFbEm2s6
-IFNvdWtyb23DqQ0KxI3DrXNsbzoga29uZcSNbsSbLCBQbGF0bsOhIGtvcGllIGlkZW50aXR5Og0K
-DQpTIMO6Y3RvdSBWw6HFoS4NCkJhcnJpc3RlciBMdWlzIEZlcm7DoW5kZXogR29kYXJkIChFc3Ep
-DQo=
+Hello,
+
+On Thu, Jul 30, 2020 at 05:03:21PM +0800, Chengming Zhou wrote:
+> We shouldn't skip iocg when its abs_vdebt is not zero.
+> 
+> Fixes: 0b80f9866e6b ("iocost: protect iocg->abs_vdebt with
+> iocg->waitq.lock")
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+
+  Acked-by: Tejun Heo <tj@kernel.org>
+
+Thanks.
+
+-- 
+tejun
