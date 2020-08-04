@@ -2,95 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0497B23B7A3
-	for <lists+linux-block@lfdr.de>; Tue,  4 Aug 2020 11:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D7623B7B2
+	for <lists+linux-block@lfdr.de>; Tue,  4 Aug 2020 11:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgHDJZJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Aug 2020 05:25:09 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:39028 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgHDJZJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Aug 2020 05:25:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596533110; x=1628069110;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=j2qZXIaDd5zM+xru6KZPV4orJE0o/HlpK2J1NxMtGOw=;
-  b=mdatIUpX8J9PCZLcmPicjwJR0OFmeqz7jojf5ob+/Rf5/dqI2pjTaBFY
-   nTtwNq1449SxtFsHnZx41CVMhCgb47CHe2MQOMJ9m8yue1UW7Wte9EEjy
-   F6vrtHKixmpOkG1lQSyQta+VXBoBPxHxI+VCoTn5W6LvkjFPJvXK3iMDZ
-   +vsC0l8zOZNIa6cC0fBqNOrTB5UP0ptXiPyhGj8CF2WGvzf5VvW2BIukW
-   p87WOt/6BU+QSppNXE3CNQoKOLm+wSFsnLrjovR/1yw67fncgaJr9nmrD
-   hTY3n7Rleo/ObPKt7qIGcc2r6NHIbnEFGBytrMZJUHfaGI3LEJTvT+486
-   w==;
-IronPort-SDR: hPXIGYfznK26euuxb/ROnjRKsrW7a2vf6bMFt3OPh0hWFXhNf6hDCE4YPktrZ8GEbAtJ34ddoh
- wfpckCeIAe6afnJIuvU2+A+Re/sxRzqRGl+JYV0BkIaAVc3O99S8XVomZeinjwJZzjWcBImzH9
- AtkJgbkeQOPNkt58zhzriSBiyhLIbKXqA3d0lRSZrk4ZqnAHbF/+DCnJaFHj3lZC87zSz24g1Q
- pvmBK+VW3Dh/KHiVFPgtwQSvFZ83yriEVrUKyGpb0dLpAgn7RuNqrLDp37Rmdkdz+a56KgORSB
- HRM=
-X-IronPort-AV: E=Sophos;i="5.75,433,1589212800"; 
-   d="scan'208";a="247193504"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 17:25:10 +0800
-IronPort-SDR: 7or6tZHG3cdxlwdWlaeazxQgGFw9GoItKdsf1wDfoHoQE1VvWQAkeZudUH6bP7thopcQ3CqTga
- YQSJaOCAbBCA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 02:13:09 -0700
-IronPort-SDR: msS9q4U6bq36kCs3sF3lj5wiBOYViz9U57vE+kNCqdCFGhItj7eeuMuVhcwyx6+llRjUPrEr/V
- xapHunlDYeow==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun60.ssa.fujisawa.hgst.com) ([10.149.66.36])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Aug 2020 02:25:08 -0700
-From:   Johannes Thumshirn <johannes.thumshirn@wdc.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH] dm: don't call report zones for more than the user requested
-Date:   Tue,  4 Aug 2020 18:25:01 +0900
-Message-Id: <20200804092501.7938-1-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.26.2
+        id S1725921AbgHDJ3x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Aug 2020 05:29:53 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2564 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725832AbgHDJ3w (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 4 Aug 2020 05:29:52 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 1112C3719F5ED8C1DEA8;
+        Tue,  4 Aug 2020 10:29:51 +0100 (IST)
+Received: from [127.0.0.1] (10.47.11.189) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 4 Aug 2020
+ 10:29:49 +0100
+Subject: Re: [PATCH RFC v7 12/12] hpsa: enable host_tagset and switch to MQ
+To:     <Don.Brace@microchip.com>, <hare@suse.de>,
+        <don.brace@microsemi.com>
+CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <kashyap.desai@broadcom.com>,
+        <sumit.saxena@broadcom.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <hare@suse.com>, <hch@lst.de>,
+        <shivasharan.srikanteshwara@broadcom.com>,
+        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
+        <megaraidlinux.pdl@broadcom.com>
+References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
+ <1591810159-240929-13-git-send-email-john.garry@huawei.com>
+ <939891db-a584-1ff7-d6a0-3857e4257d3e@huawei.com>
+ <3b3ead84-5d2f-dcf2-33d5-6aa12d5d9f7e@suse.de>
+ <4319615a-220b-3629-3bf4-1e7fd2d27b92@huawei.com>
+ <SN6PR11MB28489516D2F4E7631A921BD9E14D0@SN6PR11MB2848.namprd11.prod.outlook.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ccc119c8-4774-2603-fb79-e8c31a1476c6@huawei.com>
+Date:   Tue, 4 Aug 2020 10:27:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR11MB28489516D2F4E7631A921BD9E14D0@SN6PR11MB2848.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.11.189]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Don't call report zones for more zones than the user actually requested,
-otherwise this can lead to out-of-bounds accesses in the callback
-functions.
+On 03/08/2020 21:39, Don.Brace@microchip.com wrote:
 
-Such a situation can happen if the target's ->report_zones() callback
-function returns 0 because we've reached the end of the target and then
-restart the report zones on the second target.
+Hi Don,
 
-We're again calling into ->report_zones() and ultimately into the user
-supplied callback function but when we're not subtracting the number of
-zones already processed this may lead to out-of-bounds accesses in the
-user callbacks.
+>>> at should be good to test with for now.
+> clonedhttps://github.com/hisilicon/kernel-dev
+> 	branch origin/private-topic-blk-mq-shared-tags-rfc-v7
+> 
+> The driver did not load, so I cherry-picked from
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/hare/scsi-devel.git
+> 	branch origin/reserved-tags.v6
+> 
+> the following patches:
+> 6a9d1a96ea41 hpsa: move hpsa_hba_inquiry after scsi_add_host()
+> eeb5cd1fca58 hpsa: use reserved commands
+> 7df7d8382902 hpsa: use scsi_host_busy_iter() to traverse outstanding commands
+> 485881d6d8dc hpsa: drop refcount field from CommandList
+> c4980ad5e5cb scsi: implement reserved command handling
+> 34d03fa945c0 scsi: add scsi_{get,put}_internal_cmd() helper
+> 4556e50450c8 block: add flag for internal commands
+> 138125f74b25 scsi: hpsa: Lift {BIG_,}IOCTL_Command_struct copy{in,out} into hpsa_ioctl()
+> cb17c1b69b17 scsi: hpsa: Don't bother with vmalloc for BIG_IOCTL_Command_struct
+> 10100ffd5f65 scsi: hpsa: Get rid of compat_alloc_user_space()
+> 06b43f968db5 scsi: hpsa: hpsa_ioctl(): Tidy up a bit
+> 
+> The driver loads and I ran some mke2fs, mount/umount tests,
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- drivers/md/dm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ok, great
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 5b9de2f71bb0..88b391ff9bea 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -504,7 +504,8 @@ static int dm_blk_report_zones(struct gendisk *disk, sector_t sector,
- 		}
- 
- 		args.tgt = tgt;
--		ret = tgt->type->report_zones(tgt, &args, nr_zones);
-+		ret = tgt->type->report_zones(tgt, &args,
-+					      nr_zones - args.zone_idx);
- 		if (ret < 0)
- 			goto out;
- 	} while (args.zone_idx < nr_zones &&
--- 
-2.26.2
+> but I am getting an extra devices in the list which does not
+> seem to be coming from hpsa driver.
+> 
+> I have not yet had time to diagnose this issue.
+> 
+> lsscsi
+> [1:0:0:0]    disk    ASMT     2105             0     /dev/sdi
+> [14:0:-1:0]  type??? nullnull nullnullnullnull null  -
+> [14:0:0:0]   storage HP       H240             7.19  -
+> [14:0:1:0]   disk    ATA      MB002000GWFGH    HPG0  /dev/sda
+> [14:0:2:0]   disk    ATA      MB002000GWFGH    HPG0  /dev/sdb
+> [14:0:3:0]   disk    HP       EF0450FARMV      HPD5  /dev/sdc
+> [14:0:4:0]   disk    ATA      MB002000GWFGH    HPG0  /dev/sdd
+> [14:0:5:0]   disk    ATA      MB002000GWFGH    HPG0  /dev/sde
+> [14:0:6:0]   disk    HP       EF0450FARMV      HPD5  /dev/sdf
+> [14:0:7:0]   disk    ATA      VB0250EAVER      HPG7  /dev/sdg
+> [14:0:8:0]   disk    ATA      MB0500GCEHF      HPGC  /dev/sdh
+> [14:0:9:0]   enclosu HP       H240             7.19  -
+> [15:0:-1:0]  type??? nullnull nullnullnullnull null  -
+> [15:0:0:0]   storage HP       P440             7.19  -
+> [15:1:0:0]   disk    HP       LOGICAL VOLUME   7.19  /dev/sdj
+> [15:1:0:1]   disk    HP       LOGICAL VOLUME   7.19  /dev/sdk
+> [15:1:0:2]   disk    HP       LOGICAL VOLUME   7.19  /dev/sdl
+> [15:1:0:3]   disk    HP       LOGICAL VOLUME   7.19  /dev/sdm
+> [16:0:-1:0]  type??? nullnull nullnullnullnull null  -
+> [16:0:0:0]   storage HP       P441             7.19  -
+> 
+> 
 
+I assume that you are missing some other patches from that branch, like 
+these:
+
+77dcb92c31ae scsi: revamp host device handling
+6e9884aefe66 scsi: Use dummy inquiry data for the host device
+a381637f8a6e scsi: use real inquiry data when initialising devices
+
+@Hannes, Any plans to get this series going again?
+
+Thanks,
+John
