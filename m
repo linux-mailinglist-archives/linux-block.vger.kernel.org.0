@@ -2,103 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0D923B7A8
-	for <lists+linux-block@lfdr.de>; Tue,  4 Aug 2020 11:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40D6823B89E
+	for <lists+linux-block@lfdr.de>; Tue,  4 Aug 2020 12:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgHDJ16 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Aug 2020 05:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgHDJ16 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Aug 2020 05:27:58 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B459AC06174A
-        for <linux-block@vger.kernel.org>; Tue,  4 Aug 2020 02:27:57 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id x69so37806140qkb.1
-        for <linux-block@vger.kernel.org>; Tue, 04 Aug 2020 02:27:57 -0700 (PDT)
+        id S1726104AbgHDKRR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Aug 2020 06:17:17 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:34152 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgHDKRQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Aug 2020 06:17:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596536250; x=1628072250;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=F0A/iC8jwEWHi/mOltmeYWNLa9SlJhb6sQPP4YQ+btY=;
+  b=Jf44Ldk9M9QgGOwWAEh9KVNNEt1wX38p1BwR1yWXRedhEeMlb5jNhASy
+   4SMzANiuCZ8iSEvbOnNHIiQIb3m7KNiCKRCVfT3oTIK7ATHxRC29BDxjU
+   5/uWKJgyIyDuNouW/PhurvmcpWF5Bgfu2g3tGGmrqTQG2GiO9WzO7ZdDv
+   NsRoHjh7Z+DUHN3rVRsMqRB3DtbwU5jJ2bpqLWsszFJlWkrP41HWkjE6i
+   dM2duiqzQRCzzjBdEsuwFNYXEMvmRmJC1J/W+kOnGEIBk2xkxNuNjXQRd
+   pOwROPsaILuE2dBswOAX+JgYBKLdoWEtAtR+lgHw6sCvvINcNgx80NhuU
+   g==;
+IronPort-SDR: 9qST+b6EWv8iNFXlx9Ls7MGYT2Obbf1xw5WNznja83BNpR9oLwrSmMtw38+EeYEa4PIyhOCcBz
+ abY16zQDKvbryZy13KbGzDnM6KJNHejcIRNRTT7mNRnU3yzPA69J3jQ/415JF/pjoygSxDp9ru
+ /QH6P+/jczzBiaYL3lgLF5GhOBQJ3+7G82QfmZHLFxQDNRMT+cf0PYKU1LHW3/JGFiIJsh4W07
+ nI7TCVun0+fsDGL0ajKEvgHpGn8x/idtjoqdoAbTPFo+V1ByGR/Or9fRsBx3PK8BvKCrSVnqjd
+ csE=
+X-IronPort-AV: E=Sophos;i="5.75,433,1589212800"; 
+   d="scan'208";a="247197328"
+Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 18:17:29 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NrzpDPelyjdVS6+7WdYsGL7ExJ33kE5DAQt13iNXc5lC2Wj/SDNkwLwqQbiy9vek+5sdpUXkZF4T/4WOEtb4iJbOoTTyYiQRDQALyIKBbgVoP72DLufm+njdZyaJJHtMdQZmucQLA6baeKoWOlpG0rZoPbMrmrvIPvUdpX3Lz2Ytmss77FXDL/Sa+tE0d7iHP0qZ04q6FTctsHKaE2X9cEklY44t/vQsIjtHwkFKZGIi70t59f9NoX6bqvTGtk3TuBNWIUnvzLVwUIcf3z0JP5lhzyXoOUy7CHaAwUkmYhXgwTKOtDdfiKynD4TifrxifNQ7p9r5fIEem5hV17G11w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=83LbDRfO41twgBpf+0AeAIp+AZKVauRmRI0oSU2V9EU=;
+ b=T+ql4vodQauPKgz1Vivw2p6pE+2gp44GKSRos28La0EIps6NpD5nQ7rwbbSjJjxtQVA4jbxA+G1GHn+e4WJfemil53UaC0elwZ0a6jNvZSgfmiIAlmk0bXHTPCQyP3bWipTdWOrXYmlhQ15iXnsZd1G/6V1Jl3VC2xv1LNVZ6wyQ9gsm2rhRERT9j7TVdC5km1wE/cbYWdfdRDvSZ3jsHJyT6mEPMcQ8mQw/XrylzirBWLxxQMv3i2bdDfGh4F215zDR4wMqREMAbfMPJsf5zoERTbV4cEfe/ASeEwjv07ngCJo586Eh7bfzrRkF+/X2Dw/ppURZfZq0zDhXUUkF+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=cPlNNpjyiTBikq1bl8KaReTGTuo/mBW8l6LZ+Qu9Pms=;
-        b=VZOV890DtOTCchaixXqCraKQuyAwJ3kbbD1EEpSRVy/D1rUmLZy/yb2lothc+1HD6f
-         ra5X5ZcQ28d97t6UY5t9m58S6yyRk/O39YZwR9pDcYySxXtATVFp4sPAJSHkHlgTJe3N
-         e1iAwaGzM07iJWlLpiFvJzSWlWCfg+IBYsD8A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=cPlNNpjyiTBikq1bl8KaReTGTuo/mBW8l6LZ+Qu9Pms=;
-        b=sjF01RpIIpih1MvnBT6h9R3aJSE+dMkCR+eo5kM5SKJ3PO518U3+ZP5FndZi0SaVCr
-         frh3jZlgR/SobzR/WXNJTaQHUkzjSpLZXfXessIzR/WnSGKCzDh3mGAn/MdkYOk2houm
-         TQi5zxym3S0sPCRsy1IZYGztp5DKIsm7uggzmCnWqdU6bYcFbUv7b02wxlHEY8ii8kLf
-         Ctm+VvURF/ruONL+gVJzh+Ke9KD32T1KPGxEaUIRoYmaCopnqA9lRGzLT5l4yx5NINYO
-         S02bm84Ww6GlWvph3bxBePI1weGvTeKZ6+9BEZeA+Fy/uqfiniUNA1Vso6wIJ/IMSYm6
-         eFTg==
-X-Gm-Message-State: AOAM53006MIGRdXMbxXD4JAATritkbSpXYyDMoD4x4jHldEWBOdaRskw
-        swnfRAjgo5XZap8d+mUTnqBF0oLZOPP0nSagVrDsTQ==
-X-Google-Smtp-Source: ABdhPJzUiPNNhJ5LRPS0CJFuFwW6tIIfKOEJ9HeIXF8yVrxHPDEOGsdU+NUbZIvHd2oAxyM/p63UaK56GVNru9v6gKs=
-X-Received: by 2002:a05:620a:9c6:: with SMTP id y6mr19113266qky.27.1596533276677;
- Tue, 04 Aug 2020 02:27:56 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20200722080409.GB912316@T590> <fe7a7acf-d62b-d541-4203-29c1d0403c2a@huawei.com>
- <20200723140758.GA957464@T590> <f4a896a3-756e-68bb-7700-cab1e5523c81@huawei.com>
- <20200724024704.GB957464@T590> <6531e06c-9ce2-73e6-46fc-8e97400f07b2@huawei.com>
- <20200728084511.GA1326626@T590> <965cf22eea98c00618570da8424d0d94@mail.gmail.com>
- <20200729153648.GA1698748@T590> <7f94eaf2318cc26ceb64bde88d59d5e2@mail.gmail.com>
- <20200804083625.GA1958244@T590>
-In-Reply-To: <20200804083625.GA1958244@T590>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=83LbDRfO41twgBpf+0AeAIp+AZKVauRmRI0oSU2V9EU=;
+ b=tdFd463UFYCkLoq2bmdaxhovd4KZ4hesg8m81qN5eCV/rxKT/xDl/8u7+3ej2s+kFCZl1Ef2gmUZR41TZ6tJPtDjRNPg/betfJSTjVoZzpQlqr8VdTof27x++excQ/tIXf5xrJfFoQlxnD/8DK9Edfo63EmykhNdVkFUd6x3fZk=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR0401MB3585.namprd04.prod.outlook.com (2603:10b6:910:8a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Tue, 4 Aug
+ 2020 10:17:14 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2%12]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
+ 10:17:14 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+CC:     "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH] dm: don't call report zones for more than the user
+ requested
+Thread-Topic: [PATCH] dm: don't call report zones for more than the user
+ requested
+Thread-Index: AQHWakEnDK0PwnclYUCJoRsBiHaPCQ==
+Date:   Tue, 4 Aug 2020 10:17:14 +0000
+Message-ID: <CY4PR04MB3751EB538B7F29FBDBB4EBA4E74A0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200804092501.7938-1-johannes.thumshirn@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: wdc.com; dkim=none (message not signed)
+ header.d=none;wdc.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 18aea11c-18fd-4ad2-f1a7-08d8385f8f10
+x-ms-traffictypediagnostic: CY4PR0401MB3585:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR0401MB3585A8C16D4AD92E8970B9E9E74A0@CY4PR0401MB3585.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: d9LsQY01wMG3gtJ+gfhBjSOrhP0XnO95aNjTvHYYhAqPuL70sQwOW0Hcb1CKox6KYddlWv44E+83i9D0aioL5uZwHLKtOrkNGRu+3GVQeKQZqzypPQ+HSkxbEmaBC04Ptm0YCW4lABCkCIfVof3+Scc5aXNy9QQutfjRzdnFiEi3vu2Yh3nX1a2Ztmy0bAUNwxl2Ve2WbJMJl3mljA7pn1ZJOoqNu1qbgZWSFb5SlWFkyZXmJ6PR7KGu6+qqpL0252BlkIpn51gnRrEoiwd98vt+O9fXSXo4sUfEucmVt4SI2ovB/NNjzArkmTKAEmZ6/r52xkdJatDAzUekmYWhLg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(64756008)(66946007)(66476007)(316002)(110136005)(76116006)(186003)(71200400001)(8936002)(4326008)(91956017)(66556008)(66446008)(8676002)(54906003)(53546011)(26005)(6506007)(5660300002)(55016002)(83380400001)(33656002)(2906002)(86362001)(478600001)(9686003)(52536014)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: M2eydkx7QvLXrRGvVop0u20FEC5S6OQ1Mh+wWcE4Qa9UixUS9eOxYhoHqFhpLuUQfwkr+pLvJU5xYaZ1sm69rOdgrTUdqHur+U628B1dBBf2ezEjFCrn+pBW2yRaFgAtgpJ2sOsd1hce1ZYfHwFB3Bzb5Ez6vqUYObFq0OcUQHrOewFMPVG7vLWzIEOZrEbdfancpbVQlIoVq2t1JywZqymGe+g8Heis01q7jfMy74nNMOUNZKlXpS75+VxiicMeA1I0w1fc9Bna0+y2zs27it2iZkXoYWmAJ1isrFRjkNxAFrm4UORyAXaoW1tJzoPEKEEHITMi8Zg5c7AOXmgrcnfPHybeeeyewxZdiZQ9gjEfFfBESGUVi7J7WE06grYECaqwWMNCtLd2X8LvFPGuCKvA7rqg/lo9COZY9QdqQzhxK+0xCtjCg6Z0yoNf4beEuSUqtMrpTlUHM8gArgTWwbNsIr6eP2q/9BSV3OkGosgkeG7B6i//7KyND2JhY+5TOOC3+IPszpKWLwAaTVkCmIIo8jdkn5L2czcVBijeAXScAXwnC5wImJzHNY3uVwnKT2M3v2x/UcSHcrt1CItTLD5FSZjDrWuHA3lLnNg8wR+GWXS/CRlgYPPNigzDLaJAs07HtY+py94B+kgqLlvZew==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJmEWWiA+zHQjWZm0OGQGb5QSh7zQFGdip8AjEYQFIAWf0H4wE/+OJyAP0zBfADIyO/DQIQ6BN/Af8DR5wB98/f/wIl0wtMp31jMFA=
-Date:   Tue, 4 Aug 2020 14:57:52 +0530
-Message-ID: <afe5eb1be7f416a48d7b5d473f3053d0@mail.gmail.com>
-Subject: RE: [PATCH RFC v7 10/12] megaraid_sas: switch fusion adapters to MQ
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        don.brace@microsemi.com, Sumit Saxena <sumit.saxena@broadcom.com>,
-        bvanassche@acm.org, hare@suse.com, hch@lst.de,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18aea11c-18fd-4ad2-f1a7-08d8385f8f10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 10:17:14.5336
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AJZf8nyrDKOchwhErRoigfF/ANFgmHVZHCMsm9VZyZ4fA34rZCvFcEwJTyjvl7Zew06jtJUHGofQJHCGQWBRhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0401MB3585
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> >
-> > > However, it looks a bit
-> > > complicated, and I was thinking if one simpler approach can be
-> > > figured
-> > out.
-> >
-> > I was thinking your original approach is simple, but if you think some
-> > other simple approach I can test as part of these series.
-> > BTW, I am still not getting why you think your original approach is
-> > not good design.
->
-> It is still not straightforward enough or simple enough for proving its
-> correctness, even though the implementation isn't complicated.
-
-Ming -
-
-I noted your comments.
-
-I have completed testing and this particular latest performance issue on
-Volume is outstanding.
-Currently it is 20-25% performance drop in IOPs and we want that to be
-closed before shared host tag is enabled for <megaraid_sas> driver.
-Just for my understanding - What will be the next steps on this ?
-
-I can validate any new approach/patch for this issue.
-
-Kashyap
-
->
-> >
-> > >
-> > > >
+On 2020/08/04 18:25, Johannes Thumshirn wrote:=0A=
+> Don't call report zones for more zones than the user actually requested,=
+=0A=
+> otherwise this can lead to out-of-bounds accesses in the callback=0A=
+> functions.=0A=
+> =0A=
+> Such a situation can happen if the target's ->report_zones() callback=0A=
+> function returns 0 because we've reached the end of the target and then=
+=0A=
+> restart the report zones on the second target.=0A=
+> =0A=
+> We're again calling into ->report_zones() and ultimately into the user=0A=
+> supplied callback function but when we're not subtracting the number of=
+=0A=
+> zones already processed this may lead to out-of-bounds accesses in the=0A=
+> user callbacks.=0A=
+> =0A=
+> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+> ---=0A=
+>  drivers/md/dm.c | 3 ++-=0A=
+>  1 file changed, 2 insertions(+), 1 deletion(-)=0A=
+> =0A=
+> diff --git a/drivers/md/dm.c b/drivers/md/dm.c=0A=
+> index 5b9de2f71bb0..88b391ff9bea 100644=0A=
+> --- a/drivers/md/dm.c=0A=
+> +++ b/drivers/md/dm.c=0A=
+> @@ -504,7 +504,8 @@ static int dm_blk_report_zones(struct gendisk *disk, =
+sector_t sector,=0A=
+>  		}=0A=
+>  =0A=
+>  		args.tgt =3D tgt;=0A=
+> -		ret =3D tgt->type->report_zones(tgt, &args, nr_zones);=0A=
+> +		ret =3D tgt->type->report_zones(tgt, &args,=0A=
+> +					      nr_zones - args.zone_idx);=0A=
+>  		if (ret < 0)=0A=
+>  			goto out;=0A=
+>  	} while (args.zone_idx < nr_zones &&=0A=
+> =0A=
+=0A=
+Looks good. I think this needs a Cc: stable.=0A=
+=0A=
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
