@@ -2,309 +2,182 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D1323C72A
-	for <lists+linux-block@lfdr.de>; Wed,  5 Aug 2020 09:50:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE0C23C7F6
+	for <lists+linux-block@lfdr.de>; Wed,  5 Aug 2020 10:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgHEHuX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Aug 2020 03:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHEHuW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Aug 2020 03:50:22 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDABDC061756
-        for <linux-block@vger.kernel.org>; Wed,  5 Aug 2020 00:50:21 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a14so14830308edx.7
-        for <linux-block@vger.kernel.org>; Wed, 05 Aug 2020 00:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NVITyii4Ab7WJF/rdLuyAWw283bhgzvOCo7RFQUaeJw=;
-        b=FI16XBZCR7RCOfvsPM/3klRLozq0Sasoj9vpyzCdk81V+/OU2jygebMXREPOjG/rAU
-         8NZhaSguRjjRCY/2gRl5t0D7ra8B8VZkgOI3jkf7mFnuKwve5QUDe48/9Z476OYop82F
-         EdNh/wTQy+TS2kgfb4IHyNxGsZYznWDP9R3ltZOo9cDMr1EZHxZQhDkDysl+CG7SocOJ
-         9au+IrLrV8fdm58wXJ/3zWSgYlwQ1l3at09n5n7kChhMd4TVjFGZJ1q+7Qfhr+pdhFiM
-         SEq1IvvAdc/WN31F5CnVN4HNIkxtLm2ZkED6xKdky+adyjtFvz6YqWJ/SaK67cLi7sbo
-         X7Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NVITyii4Ab7WJF/rdLuyAWw283bhgzvOCo7RFQUaeJw=;
-        b=AUnkPiVq9y3NHrjWLRgUw/nBckVSve4V+MJ71FHskcqiNGTNjelqPrp6CMn6ZJprzT
-         vpNnl3+i/lIkkP8HEHQ5BX/xAu7Lbi33hKAWpzHIzwgDELXahlow0L9Ukqpcek8ObbeK
-         yrBSknM8u2MwxUgDjAkovl08gtGybN5Nrd3NpJg8Xrn/cJtnrNb8sGanA9wot4/FCsbP
-         78pEfn92o+zLrb29uTCDbKtXAfx9WP7IWy7zh8BC0vLp6g2lbIlMK8rQK5G8/uGIthEK
-         /6lI+DSsmSD6OrQoO42oE1bXnWbV6eDMzAj6r5+rT30LrXUy93440dJNtlg56agbGNS1
-         Au+w==
-X-Gm-Message-State: AOAM532Pqg97l3CCSTzAM+vMuY8ecVMYbNEOJetGrLGfvSxRwAEO/kiH
-        ikbDA6Zey6ShS9NhJmPJiZYUhqQKJa0ASz1Flm6s2A==
-X-Google-Smtp-Source: ABdhPJz1vltRdOznKcBehMxM83JIxpUmVSeVzBg0Gs191MjPLV9pmVhDUk5VKV3M/SllnemqQ5Dg3kmyjLpcOJU5JfI=
-X-Received: by 2002:a05:6402:1cb3:: with SMTP id cz19mr1542759edb.299.1596613820365;
- Wed, 05 Aug 2020 00:50:20 -0700 (PDT)
+        id S1725809AbgHEIlC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Aug 2020 04:41:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20698 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728094AbgHEIk7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Aug 2020 04:40:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596616857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vCqdC0QayVIHiEIjRosykAcabVSJOwH5cXt4Ri7q9RA=;
+        b=YpfDa2hQ+5zfc8qcE5yHRIOyPrUS97cj+JxuqFIfblUzMEo1jZRhjEJASo6hHxVcc/4dqK
+        QmXOkZwiesartzHFsOSBfvJ7T1aG11ME3e57tbJRlQe/QFUKlb/y3+5wb/Dlx579BwIFo6
+        LlUC8aVN3+g0GvDlgkcj+TskFd7WJq4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-18-JLox6VvKNkWfmobMcNlDaQ-1; Wed, 05 Aug 2020 04:40:52 -0400
+X-MC-Unique: JLox6VvKNkWfmobMcNlDaQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 943A8106B243;
+        Wed,  5 Aug 2020 08:40:50 +0000 (UTC)
+Received: from T590 (ovpn-13-169.pek2.redhat.com [10.72.13.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C82655DA6A;
+        Wed,  5 Aug 2020 08:40:37 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 16:40:31 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>
+Cc:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        don.brace@microsemi.com, Sumit Saxena <sumit.saxena@broadcom.com>,
+        bvanassche@acm.org, hare@suse.com, hch@lst.de,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
+Subject: Re: [PATCH RFC v7 10/12] megaraid_sas: switch fusion adapters to MQ
+Message-ID: <20200805084031.GA1995289@T590>
+References: <20200723140758.GA957464@T590>
+ <f4a896a3-756e-68bb-7700-cab1e5523c81@huawei.com>
+ <20200724024704.GB957464@T590>
+ <6531e06c-9ce2-73e6-46fc-8e97400f07b2@huawei.com>
+ <20200728084511.GA1326626@T590>
+ <965cf22eea98c00618570da8424d0d94@mail.gmail.com>
+ <20200729153648.GA1698748@T590>
+ <7f94eaf2318cc26ceb64bde88d59d5e2@mail.gmail.com>
+ <20200804083625.GA1958244@T590>
+ <afe5eb1be7f416a48d7b5d473f3053d0@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200623172321.GC6578@ziepe.ca> <20200804133759.377950-1-haris.iqbal@cloud.ionos.com>
- <20200805055712.GE4432@unreal>
-In-Reply-To: <20200805055712.GE4432@unreal>
-From:   Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Date:   Wed, 5 Aug 2020 13:20:09 +0530
-Message-ID: <CAJpMwygZym8sSiDUdEW3PQTmwsfNdO5bQG7_LWtKmE-tY_mrmg@mail.gmail.com>
-Subject: Re: [PATCH v2] RDMA/rtrs-srv: Incorporate ib_register_client into
- rtrs server init
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        linux-rdma@vger.kernel.org, linux-block@vger.kernel.org,
-        dledford@redhat.com, Jason Gunthorpe <jgg@ziepe.ca>,
-        kernel test robot <rong.a.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afe5eb1be7f416a48d7b5d473f3053d0@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 11:27 AM Leon Romanovsky <leon@kernel.org> wrote:
->
-> On Tue, Aug 04, 2020 at 07:07:58PM +0530, Md Haris Iqbal wrote:
-> > The rnbd_server module's communication manager (cm) initialization depends
-> > on the registration of the "network namespace subsystem" of the RDMA CM
-> > agent module. As such, when the kernel is configured to load the
-> > rnbd_server and the RDMA cma module during initialization; and if the
-> > rnbd_server module is initialized before RDMA cma module, a null ptr
-> > dereference occurs during the RDMA bind operation.
+On Tue, Aug 04, 2020 at 02:57:52PM +0530, Kashyap Desai wrote:
+> > >
+> > > > However, it looks a bit
+> > > > complicated, and I was thinking if one simpler approach can be
+> > > > figured
+> > > out.
+> > >
+> > > I was thinking your original approach is simple, but if you think some
+> > > other simple approach I can test as part of these series.
+> > > BTW, I am still not getting why you think your original approach is
+> > > not good design.
 > >
-> > Call trace below,
-> >
-> > [    1.904782] Call Trace:
-> > [    1.904782]  ? xas_load+0xd/0x80
-> > [    1.904782]  xa_load+0x47/0x80
-> > [    1.904782]  cma_ps_find+0x44/0x70
-> > [    1.904782]  rdma_bind_addr+0x782/0x8b0
-> > [    1.904782]  ? get_random_bytes+0x35/0x40
-> > [    1.904782]  rtrs_srv_cm_init+0x50/0x80
-> > [    1.904782]  rtrs_srv_open+0x102/0x180
-> > [    1.904782]  ? rnbd_client_init+0x6e/0x6e
-> > [    1.904782]  rnbd_srv_init_module+0x34/0x84
-> > [    1.904782]  ? rnbd_client_init+0x6e/0x6e
-> > [    1.904782]  do_one_initcall+0x4a/0x200
-> > [    1.904782]  kernel_init_freeable+0x1f1/0x26e
-> > [    1.904782]  ? rest_init+0xb0/0xb0
-> > [    1.904782]  kernel_init+0xe/0x100
-> > [    1.904782]  ret_from_fork+0x22/0x30
-> > [    1.904782] Modules linked in:
-> > [    1.904782] CR2: 0000000000000015
-> > [    1.904782] ---[ end trace c42df88d6c7b0a48 ]---
-> >
-> > All this happens cause the cm init is in the call chain of the module init,
-> > which is not a preferred practice.
-> >
-> > So remove the call to rdma_create_id() from the module init call chain.
-> > Instead register rtrs-srv as an ib client, which makes sure that the
-> > rdma_create_id() is called only when an ib device is added.
-> >
-> > Fixes: 9cb837480424 ("RDMA/rtrs: server: main functionality")
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-> > ---
-> >  drivers/infiniband/ulp/rtrs/rtrs-srv.c | 77 +++++++++++++++++++++++++-
-> >  drivers/infiniband/ulp/rtrs/rtrs-srv.h |  7 +++
-> >  2 files changed, 81 insertions(+), 3 deletions(-)
->
-> Please don't send vX patches as reply-to in "git send-email" command.
->
-> >
-> > diff --git a/drivers/infiniband/ulp/rtrs/rtrs-srv.c b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > index 0d9241f5d9e6..916f99464d09 100644
-> > --- a/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > +++ b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-> > @@ -16,6 +16,7 @@
-> >  #include "rtrs-srv.h"
-> >  #include "rtrs-log.h"
-> >  #include <rdma/ib_cm.h>
-> > +#include <rdma/ib_verbs.h>
-> >
-> >  MODULE_DESCRIPTION("RDMA Transport Server");
-> >  MODULE_LICENSE("GPL");
-> > @@ -31,6 +32,7 @@ MODULE_LICENSE("GPL");
-> >  static struct rtrs_rdma_dev_pd dev_pd;
-> >  static mempool_t *chunk_pool;
-> >  struct class *rtrs_dev_class;
-> > +static struct rtrs_srv_ib_ctx ib_ctx;
-> >
-> >  static int __read_mostly max_chunk_size = DEFAULT_MAX_CHUNK_SIZE;
-> >  static int __read_mostly sess_queue_depth = DEFAULT_SESS_QUEUE_DEPTH;
-> > @@ -2033,6 +2035,62 @@ static void free_srv_ctx(struct rtrs_srv_ctx *ctx)
-> >       kfree(ctx);
-> >  }
-> >
-> > +static int rtrs_srv_add_one(struct ib_device *device)
-> > +{
-> > +     struct rtrs_srv_ctx *ctx;
-> > +     int ret;
-> > +
-> > +     /*
-> > +      * Keep a track on the number of ib devices added
-> > +      */
-> > +     ib_ctx.ib_dev_count++;
-> > +
-> > +     if (!ib_ctx.rdma_init) {
-> > +             /*
-> > +              * Since our CM IDs are NOT bound to any ib device we will create them
-> > +              * only once
-> > +              */
-> > +             ctx = ib_ctx.srv_ctx;
-> > +             ret = rtrs_srv_rdma_init(ctx, ib_ctx.port);
-> > +             if (ret) {
-> > +                     /*
-> > +                      * We errored out here.
-> > +                      * According to the ib code, if we encounter an error here then the
-> > +                      * error code is ignored, and no more calls to our ops are made.
-> > +                      */
-> > +                     pr_err("Failed to initialize RDMA connection");
-> > +                     return ret;
-> > +             }
-> > +             ib_ctx.rdma_init = true;
->
-> This rdma_init == false is equal to ib_ctx.ib_dev_count == 0 and the
-> logic can be simplified.
+> > It is still not straightforward enough or simple enough for proving its
+> > correctness, even though the implementation isn't complicated.
+> 
+> Ming -
+> 
+> I noted your comments.
+> 
+> I have completed testing and this particular latest performance issue on
+> Volume is outstanding.
+> Currently it is 20-25% performance drop in IOPs and we want that to be
+> closed before shared host tag is enabled for <megaraid_sas> driver.
+> Just for my understanding - What will be the next steps on this ?
+> 
+> I can validate any new approach/patch for this issue.
+> 
 
-Yes, this was the first logic in my head. But I have few thoughts,
-The below suggestions uses "ib_ctx.ib_dev_count" as a marker for
-successful execution of rtrs_srv_rdma_init() and not really an IB
-device count. Meaning if we have multiple calls to add, due to
-multiple devices, our count would stay 1. And while removal we might
-end up calling rdma_destroy_id() on our first remove call even though
-another device is still remaining.
+Hello,
 
-If we increment "ib_ctx.ib_dev_count" every time add is called, even
-before we call rtrs_srv_rdma_init() and irrespective of whether
-rtrs_srv_rdma_init() succeeds or not, then we are keeping a count of
-IB devices added. However, when remove is called, we now know the
-number of devices added, but not whether rtrs_srv_rdma_init() was
-successful or not. We may end up calling rdma_destroy_id() on NULL
-cm_ids
+What do you think of the following patch?
 
-Does this make sense or am I missing something?
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index c866a4f33871..49f0fc5c7a63 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -552,8 +552,24 @@ static void scsi_run_queue_async(struct scsi_device *sdev)
+ 	if (scsi_target(sdev)->single_lun ||
+ 	    !list_empty(&sdev->host->starved_list))
+ 		kblockd_schedule_work(&sdev->requeue_work);
+-	else
+-		blk_mq_run_hw_queues(sdev->request_queue, true);
++	else {
++		/*
++		 * smp_mb() implied in either rq->end_io or blk_mq_free_request
++		 * is for ordering writing .device_busy in scsi_device_unbusy()
++		 * and reading sdev->restarts.
++		 */
++		int old = atomic_read(&sdev->restarts);
++
++		if (old) {
++			blk_mq_run_hw_queues(sdev->request_queue, true);
++
++			/*
++			 * ->restarts has to be kept as non-zero if there is
++			 *  new budget contention comes.
++			 */
++			atomic_cmpxchg(&sdev->restarts, old, 0);
++		}
++	}
+ }
+ 
+ /* Returns false when no more bytes to process, true if there are more */
+@@ -1612,8 +1628,34 @@ static void scsi_mq_put_budget(struct request_queue *q)
+ static bool scsi_mq_get_budget(struct request_queue *q)
+ {
+ 	struct scsi_device *sdev = q->queuedata;
++	int ret = scsi_dev_queue_ready(q, sdev);
+ 
+-	return scsi_dev_queue_ready(q, sdev);
++	if (ret)
++		return true;
++
++	/*
++	 * If all in-flight requests originated from this LUN are completed
++	 * before setting .restarts, sdev->device_busy will be observed as
++	 * zero, then blk_mq_delay_run_hw_queue() will dispatch this request
++	 * soon. Otherwise, completion of one of these request will observe
++	 * the .restarts flag, and the request queue will be run for handling
++	 * this request, see scsi_end_request().
++	 */
++	atomic_inc(&sdev->restarts);
++
++	/*
++	 * Order writing .restarts and reading .device_busy, and make sure
++	 * .restarts is visible to scsi_end_request(). Its pair is implied by
++	 * __blk_mq_end_request() in scsi_end_request() for ordering
++	 * writing .device_busy in scsi_device_unbusy() and reading .restarts.
++	 *
++	 */
++	smp_mb__after_atomic();
++
++	if (unlikely(atomic_read(&sdev->device_busy) == 0 &&
++				!scsi_device_blocked(sdev)))
++		blk_mq_delay_run_hw_queues(sdev->request_queue, SCSI_QUEUE_DELAY);
++	return false;
+ }
+ 
+ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index bc5909033d13..1a5c9a3df6d6 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -109,6 +109,7 @@ struct scsi_device {
+ 	atomic_t device_busy;		/* commands actually active on LLDD */
+ 	atomic_t device_blocked;	/* Device returned QUEUE_FULL. */
+ 
++	atomic_t restarts;
+ 	spinlock_t list_lock;
+ 	struct list_head starved_entry;
+ 	unsigned short queue_depth;	/* How deep of a queue we want */
 
+Thanks, 
+Ming
 
->
-> if (ib_ctx.ib_dev_count)
->         return 0;
->
-> ctx = ib_ctx.srv_ctx;
-> ret = rtrs_srv_rdma_init(ctx, ib_ctx.port);
-> if (ret)
->         return ret;
-> ib_ctx.ib_dev_count++;
-> return 0;
->
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void rtrs_srv_remove_one(struct ib_device *device, void *client_data)
-> > +{
-> > +     struct rtrs_srv_ctx *ctx;
-> > +
-> > +     ib_ctx.ib_dev_count--;
-> > +
-> > +     if (!ib_ctx.ib_dev_count && ib_ctx.rdma_init) {
->
-> It is not kernel coding style.
-> if (ib_ctx.ib_dev_count)
->         return;
->
-> ctx = ib_ctx.srv_ctx;
-> rdma_destroy_id(ctx->cm_id_ip);
-> rdma_destroy_id(ctx->cm_id_ib);
->
-> Thanks
->
-> > +             /*
-> > +              * Since our CM IDs are NOT bound to any ib device we will remove them
-> > +              * only once, when the last device is removed
-> > +              */
-> > +             ctx = ib_ctx.srv_ctx;
-> > +             rdma_destroy_id(ctx->cm_id_ip);
-> > +             rdma_destroy_id(ctx->cm_id_ib);
-> > +             ib_ctx.rdma_init = false;
-> > +     }
-> > +}
-> > +
-> > +static struct ib_client rtrs_srv_client = {
-> > +     .name   = "rtrs_server",
-> > +     .add    = rtrs_srv_add_one,
-> > +     .remove = rtrs_srv_remove_one
-> > +};
-> > +
-> >  /**
-> >   * rtrs_srv_open() - open RTRS server context
-> >   * @ops:             callback functions
-> > @@ -2051,12 +2109,26 @@ struct rtrs_srv_ctx *rtrs_srv_open(struct rtrs_srv_ops *ops, u16 port)
-> >       if (!ctx)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > -     err = rtrs_srv_rdma_init(ctx, port);
-> > +     ib_ctx = (struct rtrs_srv_ib_ctx) {
-> > +             .srv_ctx        = ctx,
-> > +             .port           = port,
-> > +     };
-> > +
-> > +     err = ib_register_client(&rtrs_srv_client);
-> >       if (err) {
-> >               free_srv_ctx(ctx);
-> >               return ERR_PTR(err);
-> >       }
-> >
-> > +     /*
-> > +      * Since ib_register_client does not propagate the device add error
-> > +      * we check if the RDMA connection init was successful or not
-> > +      */
-> > +     if (!ib_ctx.rdma_init) {
-> > +             free_srv_ctx(ctx);
-> > +             return NULL;
-> > +     }
-> > +
-> >       return ctx;
-> >  }
-> >  EXPORT_SYMBOL(rtrs_srv_open);
-> > @@ -2090,8 +2162,7 @@ static void close_ctx(struct rtrs_srv_ctx *ctx)
-> >   */
-> >  void rtrs_srv_close(struct rtrs_srv_ctx *ctx)
-> >  {
-> > -     rdma_destroy_id(ctx->cm_id_ip);
-> > -     rdma_destroy_id(ctx->cm_id_ib);
-> > +     ib_unregister_client(&rtrs_srv_client);
-> >       close_ctx(ctx);
-> >       free_srv_ctx(ctx);
-> >  }
-> > diff --git a/drivers/infiniband/ulp/rtrs/rtrs-srv.h b/drivers/infiniband/ulp/rtrs/rtrs-srv.h
-> > index dc95b0932f0d..6e9d9000cd8d 100644
-> > --- a/drivers/infiniband/ulp/rtrs/rtrs-srv.h
-> > +++ b/drivers/infiniband/ulp/rtrs/rtrs-srv.h
-> > @@ -118,6 +118,13 @@ struct rtrs_srv_ctx {
-> >       struct list_head srv_list;
-> >  };
-> >
-> > +struct rtrs_srv_ib_ctx {
-> > +     struct rtrs_srv_ctx     *srv_ctx;
-> > +     u16                     port;
-> > +     int                     ib_dev_count;
-> > +     bool                    rdma_init;
-> > +};
-> > +
-> >  extern struct class *rtrs_dev_class;
-> >
-> >  void close_sess(struct rtrs_srv_sess *sess);
-> > --
-> > 2.25.1
-> >
-
-
-
--- 
-
-Regards
--Haris
