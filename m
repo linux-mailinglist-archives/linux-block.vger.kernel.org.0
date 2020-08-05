@@ -2,52 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6492523CF46
-	for <lists+linux-block@lfdr.de>; Wed,  5 Aug 2020 21:18:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE0623CF23
+	for <lists+linux-block@lfdr.de>; Wed,  5 Aug 2020 21:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHETSq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Aug 2020 15:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgHETQx (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:16:53 -0400
-Subject: Re: [GIT PULL] Post block bits for 5.9-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596652778;
-        bh=jN2oaK8WMD/CxEkns5jra1h6Q5u+MBtY+Rc9xzFAVUE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=dUjnVSQaDFVppHlT+atV2lQ+/KDZhjSKES831UJFwucE6dZOvIluZkYhbqL2QYKzU
-         lPU+bSya5tigdBx/eAQm0aylFi5gM+1U7tcEmjYJiI6hiqppqeHkqgyALEdNCZ58gP
-         xsYxbZhdLcGMmKPJJnlJKtqfx8p17wyoD3zOYak8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <f165cbc1-d122-d668-4192-80dc8e8fd7cf@kernel.dk>
-References: <f165cbc1-d122-d668-4192-80dc8e8fd7cf@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f165cbc1-d122-d668-4192-80dc8e8fd7cf@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.9/block-merge-20200804
-X-PR-Tracked-Commit-Id: 1a1206dc4cf02cee4b5cbce583ee4c22368b4c28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 060a72a268577cf27733d9e8eb03b3ca427f45e6
-Message-Id: <159665277827.15741.18193245558663755417.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 Aug 2020 18:39:38 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        id S1728916AbgHETOm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Aug 2020 15:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728281AbgHETMl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Aug 2020 15:12:41 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44ADAC061290
+        for <linux-block@vger.kernel.org>; Wed,  5 Aug 2020 12:10:56 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mw10so1224885pjb.2
+        for <linux-block@vger.kernel.org>; Wed, 05 Aug 2020 12:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/BPxTQP7JYvXtVQk0ki81teqlb2JaRXEp1ARBXZnsKo=;
+        b=BZyj8tQZ0jh5Oos+bACAQdHzM8BctEVB1nm/RUpKxUQ6Pi6G9SvTFeD7fBZ/X6lfVI
+         FkEJ/WjkqHZlKv6fs1JF+djzVBcU9No5gkz3vxU0yeAYZg6d4i9kwLBmPh3V4BN9RclB
+         zTSxsjl5UmQZ3wGmv+ar3sNRei7z2zx0aTBPLAJrM8lq2oHQ27xaltidycvB+G9bYUaR
+         iPPkoe5114KZNWhvTOaH3rhFgeMCltmUtlYFwAd/c5ctZi1gdsQ0E0v/X7k+i7g+xyTm
+         JUxqfiNWjVM174YYeHWS7YFZ5kytejVTaFOyGZHdu4NYhmfkoZnYnf3xaO34Fv5Opblj
+         Nqmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/BPxTQP7JYvXtVQk0ki81teqlb2JaRXEp1ARBXZnsKo=;
+        b=JNm2u5ET1xamdcyer6PWv7KtBp7UMktUvzEzvuUGe4RSTyYUMRweYjTF0PZzlGFD0s
+         zQ/NdflUTuQbxApmm9zNWgs2w3d+hfRMp4YZxKWl7KU5AkV9B6A6OvV8mG0hfHFNOgnT
+         0TiQX740H9es+B1OeER6yldAPVNdH8r3eGkLDhmRw7mN9mpqc2k66XgJR7mag0X3mIw4
+         i6JHnAtHR2LOhOxGjD+9a4rTIzxysNHAewKcSSHI/qNdY61hh2ln5ZbwnJdH9QZoG/zU
+         /O6sC1acnG18Qd2Hy35IW2gnd/hVI1VC7D49m7cd+WtZFNX59L0qALwVZaK+uce8zycW
+         UXiQ==
+X-Gm-Message-State: AOAM532GVxfcco45kuJ+kIc+Bm8Id/VJ6jph6/lCiWEuZhj7lNjUnz/C
+        y2EX+hmmJ4Ak9qA+A4MiJ1ClGQ==
+X-Google-Smtp-Source: ABdhPJxBxqd+46Ue4ysKapAHTBKv3UWlsAyzGfbE/liq0Ut6moG79tcjnHZxH6I+Zn1xfkVM57hEQA==
+X-Received: by 2002:a17:90a:77ca:: with SMTP id e10mr4434931pjs.150.1596654655824;
+        Wed, 05 Aug 2020 12:10:55 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s125sm5061242pfc.63.2020.08.05.12.10.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 12:10:55 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: Fix use-after-free in io_sq_wq_submit_work()
+To:     Guoyu Huang <hgy5945@gmail.com>, viro@zeniv.linux.org.uk
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200805034042.GA29805@ubuntu>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f4e1b9ee-1b13-9862-8df8-cdad62821715@kernel.dk>
+Date:   Wed, 5 Aug 2020 13:10:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200805034042.GA29805@ubuntu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Tue, 4 Aug 2020 10:28:19 -0600:
+On 8/4/20 9:40 PM, Guoyu Huang wrote:
+> when ctx->sqo_mm is zero, io_sq_wq_submit_work() frees 'req'
+> without deleting it from 'task_list'. After that, 'req' is
+> accessed in io_ring_ctx_wait_and_kill() which lead to
+> a use-after-free.
 
-> git://git.kernel.dk/linux-block.git tags/for-5.9/block-merge-20200804
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/060a72a268577cf27733d9e8eb03b3ca427f45e6
-
-Thank you!
+This looks like an old one, that affects 5.4 only. I've massaged
+it to apply on top of another fix, will ask to get it queued up for
+stable. Thanks!
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Jens Axboe
+
