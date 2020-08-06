@@ -2,93 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D1423DBE6
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 18:37:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFF7923DE49
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgHFQhB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 12:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
+        id S1729108AbgHFRYD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbgHFQfo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 12:35:44 -0400
+        with ESMTP id S1729952AbgHFREz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:04:55 -0400
 Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC16C002143
-        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 09:26:19 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id b22so17460608oic.8
-        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 09:26:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776CDC061A32
+        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 05:31:50 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id z22so12101430oid.1
+        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 05:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:references:in-reply-to:mime-version:thread-index:date
          :message-id:subject:to:cc;
-        bh=pxu3Wm2r5flCQF4ajF0ZQOQr9hhuPoaoinV7EW0aq9E=;
-        b=GTjj+zFzoQZmBwTymYpv21TWX3X1mPMVhYZYpml3lzqF66dRI9FLoY4OyWywaV9lrk
-         UYCjrudBk2SHIj92TS/Pk2H1caFBjfXCyzrlt1iA5shtbtylSfRorxusYKmCUfleHSxp
-         3fYqJu+Lxe5Jv1d4ipoi91YDs9ffcPHNNEtko=
+        bh=XJnGQ196bV3DG6WDX/7IGBMLELLOJ3Q8bWtsboroDLM=;
+        b=YLgp5kIilD8pmbKmsXH5m0rEms+wZ1NVhPWBe0FRs+ttAxnxM5JoQOCHiANs468qcm
+         jfbC/889zty4oq7MPZr+4fHEGWcvHeBIa9BsYZZT+b/BS553QJI0pWCrSDax/AjFjj03
+         gaVGQ9z417Sdn0qEiVTPYl4GQEl7zx9puTSo4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:references:in-reply-to:mime-version
          :thread-index:date:message-id:subject:to:cc;
-        bh=pxu3Wm2r5flCQF4ajF0ZQOQr9hhuPoaoinV7EW0aq9E=;
-        b=es4zuih67ghZIjsHmaAbU7cMM8nY62LpXYyHIlAlwHeH8FPZPM11HNOwKSs4W2KdGm
-         XGvvQdobKwBG+o1jcQPo2NXfgKsbigerhR9BwBJudWjUGYGRmwb1qDhggQdP1E67qdJa
-         PqTyE0sySEldZQcNQqUsPiB5h4gSxS109ZLG9glqNMCzC2tvtJIHjtOQzHnQ+xQNtOl8
-         Ky9jgUki4CXwhmGcR2IehbJIQsBFpWlfxcPSTW/2WBTJrf9wKyn970gzlHzkDLGAKikH
-         f8BRNflGjuLeYSnZ5mUVbPjr4YKLJCJvkaC/QCMmXRU0qD5f4bnmsFLXfe9iAI2OEnnj
-         +8xQ==
-X-Gm-Message-State: AOAM531XofKn3b50KdAegUdFMGUQ0NSSftTKsJm9iDRWfIf+kz5swA5S
-        e/v7lqX6ctWvgJIqYeM71xJC9QRF+AHz5NhkfQn4yZn7Hfg=
-X-Google-Smtp-Source: ABdhPJzsu4+74unJwtfEF/ze3oQ7KrBdkPFX6BkXCd5uVPO+3TnTHDiRsh1vvpROH4ElAbCB7gVogQKaHJuNG8ljioY=
-X-Received: by 2002:aca:b988:: with SMTP id j130mr2741951oif.87.1596731178760;
- Thu, 06 Aug 2020 09:26:18 -0700 (PDT)
+        bh=XJnGQ196bV3DG6WDX/7IGBMLELLOJ3Q8bWtsboroDLM=;
+        b=TOlA+MdsFb1zWEUxYaD9G6u90JKqtLoNjq5u5SXJivKQ23ZgDGQ6vPtmidIbmIgR6N
+         gLJAplxI3/QqFtsyP4lLd8uph4OztPqmcTImldKiuxUsVQAooEEoU7Ll8go7Km9EYRLd
+         +9ULjAg/5bdtviqENIuCMiUdFQnZ+ea6EeLB9dS3iWPfm2K/ovQ04bSH0PrDvfPFQhgs
+         f5am99kzkQWbw1PJdECs59jgPrMS6w4yRNgvxQtKhbTI/YO1x+niHJt7pq1XKS4fBV30
+         DgyuCUDOkb5reNFPnGBlVsgLKhQBbWnPiohrmpQZeyrfHWifbgMiAw+TJXkyaCjQ0zof
+         1Jig==
+X-Gm-Message-State: AOAM5301WO8huO/hQXiYqzNZhLxOcEKbwP/jBNn8ngagyEVFdxatFrvl
+        upSRKlV6F3h6P7+SHpaHtbNVbKnceAscdeXXRtx/Ug==
+X-Google-Smtp-Source: ABdhPJyH0/q1DwYdc78RBBSRXWb6p1cc7lF7eGuIw9zH5oLQ1X8ics0oScK4fD/ivmpcD0ouBnMbGpckr8zlxuFR/7w=
+X-Received: by 2002:aca:b988:: with SMTP id j130mr1723105oif.87.1596717108513;
+ Thu, 06 Aug 2020 05:31:48 -0700 (PDT)
 From:   Muneendra Kumar M <muneendra.kumar@broadcom.com>
 References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
- <1596507196-27417-17-git-send-email-muneendra.kumar@broadcom.com>
- <61d2fd75-84ea-798b-aee9-b07957ac8f1b@suse.de> <08b9825b-6abb-c077-ac0d-bd63f10f2ac2@broadcom.com>
- <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com> <227c5ba1-8a9c-3ec9-5a0f-662a4736c66f@redhat.com>
-In-Reply-To: <227c5ba1-8a9c-3ec9-5a0f-662a4736c66f@redhat.com>
+ <1596507196-27417-2-git-send-email-muneendra.kumar@broadcom.com>
+ <20200804113130.qfi5agzilso3mlbp@beryllium.lan> <20200804142123.GA4819@mtj.thefacebook.com>
+ <b35e0e83-eb6c-4282-5142-22d9a996d260@broadcom.com> <CACVXFVPVM-xU0d2nETztPrS_EpacMy8A4x8FbShhLYt2iV_ouw@mail.gmail.com>
+ <227c7f27-c6c7-5db1-59ac-2dd428f5a42a@suse.de> <20200805143913.GC4819@mtj.thefacebook.com>
+ <c40bc34840566366177a84b0d8b7ae90@mail.gmail.com> <CACVXFVOYc9KAaLsQ1kPa_bW_MsUgcxhqec45f24pB62=r-KXPg@mail.gmail.com>
+In-Reply-To: <CACVXFVOYc9KAaLsQ1kPa_bW_MsUgcxhqec45f24pB62=r-KXPg@mail.gmail.com>
 MIME-Version: 1.0
 X-Mailer: Microsoft Outlook 15.0
-thread-index: AQIDyhmBPqdmqCKUdNTZliBUbPkt/AI5BKetAom9APICL6c0jAMHD3TmAjtZC5OobtwMkA==
-Date:   Thu, 6 Aug 2020 21:56:16 +0530
-Message-ID: <b3350b999d5500ddef49a25aafee2ea6@mail.gmail.com>
-Subject: RE: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
-To:     Paolo Bonzini <pbonzini@redhat.com>,
+thread-index: AQIDyhmBPqdmqCKUdNTZliBUbPkt/AIVs741AOV8stoBvB2xRwGs7Aj/AfU+Z6cCXn8lCgHQWH25AVoqZXEB1thjAKhSey1A
+Date:   Thu, 6 Aug 2020 18:01:45 +0530
+Message-ID: <52249efd20f42271ef31767e84ac9b8c@mail.gmail.com>
+Subject: RE: [RFC 01/16] blkcg:Introduce blkio.app_identifier knob to blkio controller
+To:     Ming Lei <tom.leiming@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.de>,
         James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     emilne@redhat.com, mkumar@redhat.com,
-        Gaurav Srivastava <gaurav.srivastava@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Ming Lei <tom.leiming@gmail.com>, Tejun Heo <tj@kernel.org>
+        Daniel Wagner <dwagner@suse.de>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ewan Milne <emilne@redhat.com>, mkumar@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Paolo,
-
->3.As part of this interface user/deamon will provide the details of VM such
-> as UUID,PID on VM creation to the transport .
->The VM process, or the container process, is likely to be unprivileged and
->cannot obtain the permissions needed to do this; therefore, you need to
->cope with the situation where there is no PID yet in the cgroup, because
->the tool >that created the VM or container might be initializing the
->cgroup, but it might not have started the VM yet.  In that case there would
->be no PID.
-
-Agreed.A
-small doubt. If the VM is started (running)then we can have the PID and   we
-can use the  PID?
-
->Would it be possible to pass a file descriptor for the cgroup directory in
->sysfs, instead of the PID?
-Yes we can do that.
->Also what would the kernel API look like for this?  Would it have to be
->driver-specific?
-
-The API should be generic and it should not be driver-specific.
-
+Hi Ming Lei,
+Thanks for the input.
+We will consider the points which you and Tejun has suggested .
 
 Regards,
 Muneendra.
+
+-----Original Message-----
+From: Ming Lei [mailto:tom.leiming@gmail.com]
+Sent: Thursday, August 6, 2020 7:52 AM
+To: Muneendra Kumar M <muneendra.kumar@broadcom.com>
+Cc: Tejun Heo <tj@kernel.org>; Hannes Reinecke <hare@suse.de>; James Smart
+<james.smart@broadcom.com>; Daniel Wagner <dwagner@suse.de>; linux-block
+<linux-block@vger.kernel.org>; Linux SCSI List <linux-scsi@vger.kernel.org>;
+Paolo Bonzini <pbonzini@redhat.com>; Ewan Milne <emilne@redhat.com>;
+mkumar@redhat.com
+Subject: Re: [RFC 01/16] blkcg:Introduce blkio.app_identifier knob to blkio
+controller
+
+On Thu, Aug 6, 2020 at 1:15 AM Muneendra Kumar M
+<muneendra.kumar@broadcom.com> wrote:
+>
+> Hi Tejun,
+> Our main requirement is to track the bio requests coming from
+> different VM /container applications  at the blk device
+> layer(fc,scsi,nvme).
+> By the time IO request comes to the blk device layer, the context of
+> the application is lost and we can't track whose IO this belongs.
+>
+> In our approach we used the block cgroup to achieve this requirement.
+> Since Requests also have access to the block cgroup via
+> bio->bi_blkg->blkcg, and from there we can get the VM UUID.
+> Therefore we added the VM UUID(app_identifier) to struct blkcg and
+> define the accessors in blkcg_files and blkcg_legacy_files.
+>
+> Could you please let me know is there any another way where we can get
+> the VM UUID info with the help of blkcg.
+
+As Tejun suggested, the mapping between bio->bi_blkg->blkcg and the unique
+ID could be built in usage scope, such as fabric infrastructure, something
+like xarray/hash may help to do that without much difficulty.
+
+Thanks,
+Ming
