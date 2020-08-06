@@ -2,76 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 046B223DD2A
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:05:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD30723DE52
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgHFREI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 13:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728976AbgHFRC7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:02:59 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8562C0A54D6;
-        Thu,  6 Aug 2020 07:30:34 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id l13so16110201qvt.10;
-        Thu, 06 Aug 2020 07:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LteJlP8Yogs33/2uiEGaGLM6yuhYrOVPJn4ZtRs/VAY=;
-        b=l4QJ+RmI532zvjM5xWTnembw7sAHBExPkpfcibAnwteNcSCn8+o18CA9tyM5SyqYkA
-         D97lt1UEgCP9gZdJXb2toIh0k08nTp/MnQaFMgSGtYZswjn+WmHuGLHGAhC2Yl7qHV04
-         LAmBgQ2DkLermDebM23pPpfr5S1akiR3cXZkt8rXS3KBiXuaP0XgawjaNbkGjXW16m+T
-         kuART3o962Obu0Ct/gZXgqiZRFAJ9+3S/0zrtuI69BtPIYug4kUCT8aqhGMpgt1QFM21
-         j4j2DPyhulDwUy6r+hjcPf8hfRJyMXbviv21mXo+3jNhf/U6xWMbcAg0rF3vXfNRZDRV
-         w8HQ==
+        id S1728808AbgHFRYj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:24:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45612 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729841AbgHFREF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:04:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596733444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7qKFUHSsfOckbuEfcX39ZxDjhilcGHcHy9F4F6zJkzI=;
+        b=W2DkH10RyRXmgg7Sb5eAHA+wnJ+9HT0Rpjw9TSCADPOZUmE/Pa0GD7bRzRVG7VosVmMqA4
+        +oh0CkjQkBOxFqMob5+PYY1dSAhZoyPLzSaWmHRxdPBmPOWuiUeuhphag2F92pmMZpli8y
+        AJ21tsoqTSrss4YQhE5ugPnpPASZFs0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-yKHNiuKBMSeKpyFHzKtUSg-1; Thu, 06 Aug 2020 10:32:54 -0400
+X-MC-Unique: yKHNiuKBMSeKpyFHzKtUSg-1
+Received: by mail-wm1-f72.google.com with SMTP id g72so3698203wme.4
+        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 07:32:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=LteJlP8Yogs33/2uiEGaGLM6yuhYrOVPJn4ZtRs/VAY=;
-        b=Ta7koeESmBKRGwK5/to5c5U/g4tmrX5aXGo+iXW5zGw3/su7thV8eFukte8aMJZw3J
-         RzoAVsvXyRXY1vvyUdobI42YWuAUsVAF+2b1iyQlNb57Q4TtS6IAkSubddH1KFOsF2sC
-         7QTr9CY2/bnygbGzJhuFBme4b9qpnAaDcimjQ8fTh7zmAAT29rKeWBnLojBybREmWq+j
-         9OYIUafiCavNHOETCvqnvAI6GqLaZaBUki1C/LgdnTWQ7AHnmYaLoiSz8sjEPkdcbRfR
-         PBVqsuSJmYBkg4Kh1H3X6QixMJzXLRDsSx3pwL/E2pwr1EFnAL3tDEQ/BWqw3oELTkiQ
-         XXxQ==
-X-Gm-Message-State: AOAM532J4JBomgOvGk6aUfuUxdXv1FBAL7Map0ievROXZM3QMQWF3wu9
-        zIJ/7TaHg/HX4PxcrdAuoNk=
-X-Google-Smtp-Source: ABdhPJzrGitPt/+PJNzfdf75KAeaNk02QZK65suKLVFW1doQ5rA2JRXtSiisTRDFeqFIES3zdcmGzg==
-X-Received: by 2002:a0c:ea45:: with SMTP id u5mr9023965qvp.191.1596724233309;
-        Thu, 06 Aug 2020 07:30:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2e8b])
-        by smtp.gmail.com with ESMTPSA id m26sm5292746qtc.83.2020.08.06.07.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:30:32 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 10:30:30 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blkcg: add plugging support for punt bio
-Message-ID: <20200806143030.GB4520@mtj.thefacebook.com>
-References: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7qKFUHSsfOckbuEfcX39ZxDjhilcGHcHy9F4F6zJkzI=;
+        b=tgPiQfcV/kcpF38IqY4Oc7RJLJuQ+DuINzIO7A/AYzYhRWS2KaHsUDYborSzRnXvrd
+         pHrRQxbhZQkYUaa/mU3w/gccB51e790n4BY52sxr+/2N5N0eJPAXRWdoTojMMH+YVHbY
+         bhg5/ZQeCzSP8ZiSvYX+9B7PXqLzZtA9jxL5Y0oLbVl1uz8rgBX9ejPguF0ZZmlJNQxC
+         QtNUpA2dULREyYFzEeRCAqQ/m/cNZCflDGpZd5J7zx3gOdMRPxfqu7Jn2RucvMHBdwwW
+         QK223v5xmtWBVU85s/Ja93YAaQp3RkvdIKLZYYy7N4quVsh23qsvhKin+NLb0u2cLVUL
+         gWpg==
+X-Gm-Message-State: AOAM531HqwsJgTylmeT/KHG5TfWexyv5EeeFKnOiklvv1734PJyzGqCD
+        wwQ2yFYLnNWvkFEbch6ny40KzQ+drQ/y8vnNeio8nEwZJto2Smy+Ab4r3RQFUpVi9/dJMB73Lk5
+        lWPKWBDmD6FVYzSyb+OOC7TA=
+X-Received: by 2002:a1c:ed15:: with SMTP id l21mr7896407wmh.37.1596724372834;
+        Thu, 06 Aug 2020 07:32:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyWx4MVPYaeGnZL6EeXHk2gJPIjnNWzSre55OUOWTug9CIFO+ByMhVAxH//yvWgSm2IOf2nZw==
+X-Received: by 2002:a1c:ed15:: with SMTP id l21mr7896330wmh.37.1596724371700;
+        Thu, 06 Aug 2020 07:32:51 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7841:78cc:18c6:1e20? ([2001:b07:6468:f312:7841:78cc:18c6:1e20])
+        by smtp.gmail.com with ESMTPSA id s205sm7033405wme.7.2020.08.06.07.32.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 07:32:48 -0700 (PDT)
+Subject: Re: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
+To:     Muneendra Kumar M <muneendra.kumar@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc:     emilne@redhat.com, mkumar@redhat.com,
+        Gaurav Srivastava <gaurav.srivastava@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Ming Lei <tom.leiming@gmail.com>, Tejun Heo <tj@kernel.org>
+References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
+ <1596507196-27417-17-git-send-email-muneendra.kumar@broadcom.com>
+ <61d2fd75-84ea-798b-aee9-b07957ac8f1b@suse.de>
+ <08b9825b-6abb-c077-ac0d-bd63f10f2ac2@broadcom.com>
+ <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <227c5ba1-8a9c-3ec9-5a0f-662a4736c66f@redhat.com>
+Date:   Thu, 6 Aug 2020 16:32:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
+In-Reply-To: <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 09:54:42AM -0400, Xianting Tian wrote:
-> Try to merge continuous bio to current task's plug fisrt.
-> 
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
+On 06/08/20 14:34, Muneendra Kumar M wrote:
+> 3)	As part of this interface user/deamon will provide the details of VM such
+> as UUID,PID on VM creation to the transport .
 
-Acked-by: Tejun Heo <tj@kernel.org>
+The VM process, or the container process, is likely to be unprivileged
+and cannot obtain the permissions needed to do this; therefore, you need
+to cope with the situation where there is no PID yet in the cgroup,
+because the tool that created the VM or container might be initializing
+the cgroup, but it might not have started the VM yet.  In that case
+there would be no PID.
 
-Thanks!
+Would it be possible to pass a file descriptor for the cgroup directory
+in sysfs, instead of the PID?
 
--- 
-tejun
+Also what would the kernel API look like for this?  Would it have to be
+driver-specific?
+
+Paolo
+
+> 4)	With VM PID information we need to find the associated blkcg and needs to
+> update the UUID info in blkio_cg_ priv_data.
+> 5)	Once we update the blkio_cg_ priv_data with vmid all the io’s issued from
+> VM will have the UUID info as part of blkcg.
+
