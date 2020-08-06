@@ -2,53 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE58E23DCB2
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 18:55:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E83523DC40
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 18:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgHFQz1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 12:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
+        id S1729445AbgHFQri (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 12:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729823AbgHFQzI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 12:55:08 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE10C0A8899;
-        Thu,  6 Aug 2020 07:48:07 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l6so45138519qkc.6;
-        Thu, 06 Aug 2020 07:48:07 -0700 (PDT)
+        with ESMTP id S1729199AbgHFQpH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 12:45:07 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B59C0A891E;
+        Thu,  6 Aug 2020 07:59:04 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m7so13032505qki.12;
+        Thu, 06 Aug 2020 07:59:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=a1xsocRfe6PaWiMuQJu8Lspo4Zh0b85wGXl3XYk8ufs=;
-        b=DMKMT69gRdPULPdCvILu5fKZXK70+z1rgY5ogLdV8VbwGZtnQc8y9cLFan536wfABn
-         DVfDajuB5mXiiAWsvUqlFOQOOO2Qi6SUNGw18/LK7MVJUFjEBIMaxafZZ0sdzknW4xIK
-         pVMGYG0AHuOuOrxCVK2p3JDBg/5z8+RniT8feKgFdZjPiJjl3RkisvxN7YgXaw0naN9n
-         CetqkUtsJOy25/c33/B58UYx4OKSL0nfVRYYW42XMfpAmU0xnXvW+/TpYZsCagafQ9fp
-         PzoMofciAzX6FGzTkgVgsoJeNJyAPJjKQXIO4E1nDKCseuKZoKxXXmgv8iVWc7uHFent
-         ZOsQ==
+         :content-disposition:in-reply-to;
+        bh=OSIY4n9u4BA5DfE/QAbCFqX+1EU+SI7GkcMuyxTZUpU=;
+        b=qa+mG5KAISvLjomDAKx88uAnxDoBFnbPxWwt9sd16Ldnnf6NTA1X3pvAvqEycm2tgQ
+         2cFSQMDtKgZAuL6yM3MIdZ0ubvZdW6ZgQNmUReKHCM8Cgv2MKbKjSIKQSQ4jY9z/vgb2
+         W2nJAZ2rxSQx6/LZK+dKNI93ySEpowgHAGES2gqjwj+m+5lkXDl73LIyakfKmHf2bcC9
+         d5dpy49e3iXW77FOzS7mB9EfgH6lM5xeOLZZMPq7K+m+VAdVXkY7vbp2P9bx+d++W4jh
+         zUwUt5y/ghIMOlAvVgloP6Fa9zkp2WUuPRlvNYgVw05rLzviLodo260ujKPixtFYCWJQ
+         LMaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=a1xsocRfe6PaWiMuQJu8Lspo4Zh0b85wGXl3XYk8ufs=;
-        b=aTHyqXKUlz1qMSulCcfGVDg2rrgFx1ULJ1/ibSuy7opyIGLf+JkBAJRaFz0WchT3U0
-         9zjeUFXV67b5LucvgDgXJ4lOu42jVAPGjCEOi7dxS1VK8gRAXREfrOMPFaP4ArrzMrNz
-         34ERq5hKqupVTYncjH178p5SJ3PlUa4FfvgTLmJMGLposlZBBXRhecf2bd0tpb5+b461
-         Fn3/xBjYOPQNk8Lz3z/qEUZjE/LOuGZb11cu9TjPSNFQK5n9GDn2797Gh2DS8zWeSqlB
-         V8qnDmEPw2XgOgJTPRmCEYAqozI2YQvJDnbXPvrfFYy8arFEwkFDTxDMIhD5FYNEMP2L
-         81aA==
-X-Gm-Message-State: AOAM531puOaS6GooklbSR5mas+1sy16CFTfbIyGEBxJRzNvHVSxl5PMC
-        vVydTUQ9E20b6xzg0i9jO7Y=
-X-Google-Smtp-Source: ABdhPJzqxqP829yKSm2tdy3vJHzQovc/SVxhj1gDbLQ+qgZ78ZCFwI2dV72KHT0S/yb9vOyw37Et5g==
-X-Received: by 2002:a37:9d53:: with SMTP id g80mr8575302qke.17.1596725286673;
-        Thu, 06 Aug 2020 07:48:06 -0700 (PDT)
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=OSIY4n9u4BA5DfE/QAbCFqX+1EU+SI7GkcMuyxTZUpU=;
+        b=FGB54Ad9ETP8dFgbcqqiMcTdgyijDgLZf+zHTJlfa0p8iqeTs3olfyif4H/5V5tt0W
+         CI/n29FD+lQD8ZF9zPqqA7fYZRM05F9IOb2KhpujIBnbejfibw1924Y0Y3KFIBpDqc+c
+         06tJZHb4PIZEgKva1Q7RCib3DKvf6rzYBvGEzOTdR+ncviJfLVYHZyXaxWAt97UMsNA3
+         UG23BA2HcKt+toKBWO4PlIKyydbn75JDYlINNRiXF29/TBvFiajRd124puKM5CwsXGEK
+         W6mkWG3vqZsMqSRzKwpfeIdT+f/eh7Mx92iqLGzFl62pOXISHPQQWw68hirUY76uWmhM
+         xPZw==
+X-Gm-Message-State: AOAM532wrD6w6gsPPaouBjqJMMf+0vOkt4kjcQ/fCvAg4NoPJ4uHpwD3
+        qS1P5jN9p8yzc7RIQHn3wB4=
+X-Google-Smtp-Source: ABdhPJzNW7cq60K1xZdQjUVIROpt6yNINVyPlzyHKbZ1Y+qKLiht41rtiLk/a+t5Dxaz6J59NYSs0w==
+X-Received: by 2002:a37:9e09:: with SMTP id h9mr8738357qke.361.1596725943107;
+        Thu, 06 Aug 2020 07:59:03 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:2e8b])
-        by smtp.gmail.com with ESMTPSA id r188sm4380302qkb.122.2020.08.06.07.48.05
+        by smtp.gmail.com with ESMTPSA id i7sm4193602qkb.131.2020.08.06.07.59.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:48:05 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 10:48:04 -0400
+        Thu, 06 Aug 2020 07:59:02 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 10:59:01 -0400
 From:   Tejun Heo <tj@kernel.org>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Muneendra Kumar M <muneendra.kumar@broadcom.com>,
@@ -59,7 +58,7 @@ Cc:     Muneendra Kumar M <muneendra.kumar@broadcom.com>,
         James Smart <jsmart2021@gmail.com>,
         Ming Lei <tom.leiming@gmail.com>
 Subject: Re: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
-Message-ID: <20200806144804.GD4520@mtj.thefacebook.com>
+Message-ID: <20200806145901.GE4520@mtj.thefacebook.com>
 References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
  <1596507196-27417-17-git-send-email-muneendra.kumar@broadcom.com>
  <61d2fd75-84ea-798b-aee9-b07957ac8f1b@suse.de>
@@ -67,29 +66,30 @@ References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
  <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
  <20200806144135.GC4520@mtj.thefacebook.com>
  <96930d0f-cb4d-94f4-9cbb-c82d2f0c3840@redhat.com>
+ <20200806144804.GD4520@mtj.thefacebook.com>
+ <b7fb1e9a-49c4-f639-475a-791a195be46b@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <96930d0f-cb4d-94f4-9cbb-c82d2f0c3840@redhat.com>
+In-Reply-To: <b7fb1e9a-49c4-f639-475a-791a195be46b@redhat.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 04:46:45PM +0200, Paolo Bonzini wrote:
-> On 06/08/20 16:41, Tejun Heo wrote:
-> >> 1)	blkcg will have a new field to store driver specific information as
-> >> "blkio_cg_ priv_data"(in the current patch it is app_identifier) as Tejun
-> >> said he doesn’t mind cgroup data structs carrying extra bits for stuff.
-> > 
-> > I'd make it something more specific - lpfc_app_id or something along that
-> > line.
-> 
-> Note that there will be support in other drivers in all likelihood.
+Hello, Paolo.
 
-Yeah, make it specific to the scope, whatever that may be. Just avoid names
-like priv which doesn't indicate anything about the scope or usage.
+On Thu, Aug 06, 2020 at 04:54:21PM +0200, Paolo Bonzini wrote:
+> If I understand correctly, your only objection is that you'd rather not
+> have it specified with a file under /sys/kernel/cgroup, and instead you
+> would prefer to have it implemented as a ioctl for a magic file
+> somewhere else in sysfs?  I don't think there is any precedent for this,
+> and I'm not even sure where that sysfs file would be.
+
+It just doesn't fit in the cgroupfs. I don't know where it should go for
+this specific case. That's for you guys to figure out. There are multiple
+precedences - e.g. how perf or bpf hooks into cgroup and others that I can't
+remember off the top of my head.
 
 Thanks.
 
