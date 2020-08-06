@@ -2,129 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2876F23DD26
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:04:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E7123DE25
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgHFREF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 13:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
+        id S1729967AbgHFRPC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgHFRC7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:02:59 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBB4C034607
-        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 05:34:42 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id q9so20348217oth.5
-        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 05:34:42 -0700 (PDT)
+        with ESMTP id S1729994AbgHFRFf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:05:35 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16681C034622
+        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 06:30:23 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o5so8717181pgb.2
+        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 06:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DQzpnS8fr6jm2iRUKTT+8uPER0rWAMgK1qYP0hO2mN8=;
-        b=dW8PU+sMZlFCQuye9xK/etp27hrc0yDNj1O/ibFjFd0u91P8MsMMs1wSYbUrwyAP2D
-         pwe1nCpAHeVLOkg+ls7rg2iQStVrgE5cX0R05E42xPEZ580r3kOxBi2xUJfqxMZaCNqg
-         4xMjk70WinlhmepCCePSxNp766We+DQyLO0Zg=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=etlr2pAwqifxloZFaoi/LuDdf2axD/mLzq9HJ5tYhoY=;
+        b=VjidcVnuYLVBIh0MoujQmGLzohzZtYhYjmmvWBMtFzBlBIC7rLQHsZlPRuKxecmme1
+         MNnY6rzLh0AZBBK2J26c/7HjYB6pSVWe6uCUzVVzMQjHUDbSFCdcYxMoa30K6gZjCLJq
+         N2z6oZ0xoQACLYjgUrWHsm1CzyTBenzDEj9ceAcC2AHI7ola856eMdC//2LWHcm87o9q
+         +xe8GmSwh91FqSxH0bCzBuB6lKfAsyFD3WnJVOyszn0qkVuqIyqr7A/Z5RZRIGPUFZRU
+         6idzUagup96uSjkwJX3s1//oo4YyyplTLaM1PwZbWBRqPIYkwTj9xPktSw2LRxRoRfLj
+         bT2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DQzpnS8fr6jm2iRUKTT+8uPER0rWAMgK1qYP0hO2mN8=;
-        b=Gg6G5kBf9a6VQByR7f/LM+P+Xhwsbw33uPUhaYNjCTmPCL//XGhh05XBxLdyf6gk2N
-         80mQcRTRQq7gamOZiJBnU6ZOI+/UbfWX6MZuYzXMK6sM1Q/C4IMvwWjl9SMzxKvX9DtN
-         h7GzBMH7Wp0mIfuKagaMDGKKe/OcYUpPwhw7TJAEzJkyWz7fiQqfGik/9pD7qKX/oP3B
-         O4fq8jyNRlIhhApDGRH1zvkjl4OqRq/HwzQETRjWuj5rDoFkYUhjiMX+IMCxu3eMmHUj
-         DHV1i8d28bEEhdyu56mCdXu2Vhxm2bkkxPb7FH6B1aTOoEB/OCDhv/kyszgWI0Br8Wn9
-         UnIQ==
-X-Gm-Message-State: AOAM533KP5Hw+EGUCJpoiWpUoks/dqmWe3r0Nq5mPNeLYxX6WBCL0Oey
-        Cg2qcm8PHzklKwAnMbdMdwWINHXnCzbcHIG2OiTuwg==
-X-Google-Smtp-Source: ABdhPJwp+H41ENza8xFswVq6f+iz+1qozZ8ksWJ66+CB+SLCktL6wADXXlTKvVI0+u8Nft5hLxnaiVYRwju+2IseuAs=
-X-Received: by 2002:a05:6830:1e71:: with SMTP id m17mr7323482otr.188.1596717279387;
- Thu, 06 Aug 2020 05:34:39 -0700 (PDT)
-From:   Muneendra Kumar M <muneendra.kumar@broadcom.com>
-References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
- <1596507196-27417-17-git-send-email-muneendra.kumar@broadcom.com>
- <61d2fd75-84ea-798b-aee9-b07957ac8f1b@suse.de> <08b9825b-6abb-c077-ac0d-bd63f10f2ac2@broadcom.com>
-In-Reply-To: <08b9825b-6abb-c077-ac0d-bd63f10f2ac2@broadcom.com>
+        bh=etlr2pAwqifxloZFaoi/LuDdf2axD/mLzq9HJ5tYhoY=;
+        b=GWthRc+IKSB4ONMF+3s0D17q1EwI/xepYYNXag5VmTTQmBooLhoqzsjKKeYsSYR/Tb
+         r7nRRSvCO+7RtYQ5NITSXOOAjJJkhlJqu+5vmmr/QdBiJkKUbIJbjA2KxeZt51sewamG
+         2KJMbvhXzt5YdJRPc+8C6SngjkkwhM+Ll/xJSWSqw21sIxjnHFCLf8NddNuu8RBKl13K
+         MC38oITh/G6AL3oYNwqHd6v5nbCkqw7uzpBPEEtb74aaR/wL8+Xj8JY6FtZHAMiUfvby
+         yTnVo3vdN7dMq7Y81+DtfKJ4W2L8qQZUg/AOulxzoKI3RamlTmY0+zX1ysD7SADpbzlS
+         Chgg==
+X-Gm-Message-State: AOAM532RE8+EqvriHRkqoXZPtXH6pxauiUJDWGu/Hd+2Nf+fPuPNdGlb
+        xbB1jpgRViHzl7APWWk/ZuhFwsIaPds=
+X-Google-Smtp-Source: ABdhPJzWeSTGoVe9NvljgqV7Dprzr+BwtUgNmywsHV9rsRqp8nDtL6i5BRfmtPiI8JD3Z5cpaohNEw==
+X-Received: by 2002:aa7:960f:: with SMTP id q15mr8780018pfg.79.1596720619130;
+        Thu, 06 Aug 2020 06:30:19 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id ml18sm7006244pjb.43.2020.08.06.06.30.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 06:30:18 -0700 (PDT)
+Subject: Re: [PATCH V2 0/2] Two patches for rnbd
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com
+Cc:     linux-block@vger.kernel.org
+References: <20200730091358.9481-1-guoqing.jiang@cloud.ionos.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <92b8c91d-1bfa-e06e-0346-26398e265a52@kernel.dk>
+Date:   Thu, 6 Aug 2020 07:30:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-thread-index: AQIDyhmBPqdmqCKUdNTZliBUbPkt/AI5BKetAom9APICL6c0jKiYs6nw
-Date:   Thu, 6 Aug 2020 18:04:36 +0530
-Message-ID: <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
-Subject: RE: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
-To:     James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     pbonzini@redhat.com, emilne@redhat.com, mkumar@redhat.com,
-        Gaurav Srivastava <gaurav.srivastava@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Ming Lei <tom.leiming@gmail.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200730091358.9481-1-guoqing.jiang@cloud.ionos.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi James,
+On 7/30/20 3:13 AM, Guoqing Jiang wrote:
+> V2:
+> * add Acked-by tag from Danil and Jack.
+> 
+> Hi Jens,
+> 
+> Could you take a look at this patchset?
+> 
+> Thanks,
+> Guoqing
+> 
+> Guoqing Jiang (2):
+>   rnbd: remove rnbd_dev_submit_io
+>   rnbd: no need to set bi_end_io in rnbd_bio_map_kern
+> 
+>  drivers/block/rnbd/rnbd-srv-dev.c | 37 +++----------------------------
+>  drivers/block/rnbd/rnbd-srv-dev.h | 19 +++++-----------
+>  drivers/block/rnbd/rnbd-srv.c     | 32 ++++++++++++++++++--------
+>  3 files changed, 31 insertions(+), 57 deletions(-)
 
-As Tejun and Ming is suggesting to have interface close to the usage as
-fabric infrasture I was thinking of this approach from the inputs provided
-by you in the below mail.
-Please provide your inputs on this approach.
+Applied, thanks.
 
-1)	blkcg will have a new field to store driver specific information as
-"blkio_cg_ priv_data"(in the current patch it is app_identifier) as Tejun
-said he doesn=E2=80=99t mind cgroup data structs carrying extra bits for st=
-uff.
-2)	scsi transport will provide a new interface(sysfs) as register_vm_fabric
-3)	As part of this interface user/deamon will provide the details of VM suc=
-h
-as UUID,PID on VM creation to the transport .
-4)	With VM PID information we need to find the associated blkcg and needs t=
-o
-update the UUID info in blkio_cg_ priv_data.
-5)	Once we update the blkio_cg_ priv_data with vmid all the io=E2=80=99s is=
-sued from
-VM will have the UUID info as part of blkcg.
+-- 
+Jens Axboe
 
-With this  we can also address the concerns raised by Tejun and the
-existing lpfc patches still holds good.
-
-Regards,
-Muneendra.
-
------Original Message-----
-From: James Smart [mailto:james.smart@broadcom.com]
-Sent: Thursday, August 6, 2020 5:08 AM
-To: Hannes Reinecke <hare@suse.de>; Muneendra
-<muneendra.kumar@broadcom.com>; linux-block@vger.kernel.org;
-linux-scsi@vger.kernel.org
-Cc: pbonzini@redhat.com; emilne@redhat.com; mkumar@redhat.com; Gaurav
-Srivastava <gaurav.srivastava@broadcom.com>; James Smart
-<jsmart2021@gmail.com>
-Subject: Re: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
-
-
-That's actually what's supposed to be happening. fastpath uses the uuid to
-look up a vmid tag. If no vmid tag, kick off the fabric traffic that will
-get one but don't wait for it to complete. Any io issued while that process
-is occurring will be not be vmid tagged.    I'll circle back on lpfc to mak=
-e
-sure this is happening.
-
-In the mean time - the most important patch to review is the cgroup patch -
-patch1.
-
-If we wanted to speed the driver's io path up, one thing to consider is
-adding a driver-settable value on the blkcg structure.  Once the fabric
-traffic obtained the vmid, the driver would set the blkcg structure with th=
-e
-value.  In this scenario though, as the vmid is destroyed as of link down,
-the driver needs a way, independent of an io, to reach into the blkcg struc=
-t
-to clear the vmid value.  We also need to be sure the blkcg struct won't be
-on top of a multipath device or something such that the blkcg struct may be
-referenced by a different scsi host - I assume we're good in that area.
-
--- james
