@@ -2,85 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9767D23DF07
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4352B23DF6F
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:47:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgHFRgY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 13:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgHFRfY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:35:24 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9CBC008696
-        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 08:16:37 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id x6so11713898pgx.12
-        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 08:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lkmeDFCb+vAIp5A4XwAMAJW588/NOgnU33kU5Ds2q8U=;
-        b=wi4dRPNxYEFgOvGpsjjRxtDn2I9IamqHuFJzrb9/BuBRChg/enUxUB6jKiVJyf6FSn
-         OEQMb2RXR2Ht+C6Ju/CpXw+3C8IXjLBhGdgnDRc+0mD42UF2fgmfGBI+NDEQDfVS+FPg
-         8Yte0Alz1AaaMd1lh6L2ptLcnhrBzWalCQR42JDJeAyQD1H9NJDT0b18q5zQqirTk5sw
-         MQTa65RVxamAwTEOlvLR1qATaDfFMPrdnpkmrZ75l2JmkJ2Zy9MPxE1hZyGlCwG5lUWc
-         dMIBO4mmLkijKg2CX5kvhARvLNuj4R+a6FF2AhYbKN6g85KDBnPw2HmOoO1VsmzJJPBe
-         6lpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lkmeDFCb+vAIp5A4XwAMAJW588/NOgnU33kU5Ds2q8U=;
-        b=DXtAJi3ykNhMFC5yJlf7OF0d8SGenocnjpnvku0BnlhV0DilrEfV7ObvT/Y7Ta+U8k
-         j2tTLcVp8jeDKgz1nNMhnFQaUEHMU76RwMnins+bjhS8stdTAmUrcoYsQ3dZRi7Ae5Uz
-         ZAUN2VvWDsYMnKs8gaNHMF96xM7w1ovE1kNZSk3BMheTQWNaxQGtlhWLUp/SGC4qRncK
-         8YObFe1iz5Evwwlf6STRPgDDkPZYaYUFejDvA9qpqtk1UehJFy1k1C2k9O6aM5iFMce9
-         wgmd+2pvAAzVXW2FgI2+NoGCQGou0oQj3GsL44HAeMnP43W2K5IhqrE4tSc+TTNeq9cB
-         2KnQ==
-X-Gm-Message-State: AOAM533YVE2Z7r/XoQlFQ2n0GtGX6cXCb1Ldb5cG8kXjXmq1qwlePpC+
-        0B8PgUR+T7ciDzLEjtFTHmhUwQ==
-X-Google-Smtp-Source: ABdhPJw12jZ3DwVtFWJem2DsB0Vuvxs5W1jsJdh1xkbPJ6eXu/HRB7XOi58ujieN7nBfCOicKddtyw==
-X-Received: by 2002:a63:fd41:: with SMTP id m1mr1061769pgj.12.1596726996234;
-        Thu, 06 Aug 2020 08:16:36 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b15sm7241610pjo.48.2020.08.06.08.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 08:16:35 -0700 (PDT)
-Subject: Re: [PATCH] blkcg: add plugging support for punt bio
-To:     Xianting Tian <xianting_tian@126.com>, tj@kernel.org
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8f84e1fe-9fa5-b7e7-1f2f-b0c4a40614e2@kernel.dk>
-Date:   Thu, 6 Aug 2020 09:16:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729028AbgHFRrj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:47:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25053 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727081AbgHFRrh (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:47:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596736055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=+6FzmLvlaKV/NtfInk3NuAoke2rpjP5o1HfYuy15BlY=;
+        b=TYLdMSTNuk+vI5yMsahqs5YDPF+HNjUq06fsQQuA0x/6YnQov0ematY9tp3eer64/4NZbF
+        mTZwiNJLU3e3HvEsLTrXtlAsJArj0wHyCe495eQ+5dMQNrLDXL6PYaMqvPT842goTvsa91
+        LZquBkRrLw+UjgNJzWR93/RM7B5inBo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-qUlxRwU6MZKhuMvPMbot_A-1; Thu, 06 Aug 2020 13:47:34 -0400
+X-MC-Unique: qUlxRwU6MZKhuMvPMbot_A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 718601902EAB
+        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 17:47:33 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A51F19D7E
+        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 17:47:33 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 642591809547
+        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 17:47:33 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 13:47:33 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     linux-block@vger.kernel.org
+Message-ID: <1929570063.6965184.1596736053281.JavaMail.zimbra@redhat.com>
+In-Reply-To: <94883604.6936811.1596720770623.JavaMail.zimbra@redhat.com>
+Subject: [bug] mkfs.ext[23] hangs on loop device (aarch64, 5.8+)
 MIME-Version: 1.0
-In-Reply-To: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.208.12, 10.4.195.11]
+Thread-Topic: mkfs.ext[23] hangs on loop device (aarch64, 5.8+)
+Thread-Index: vAzUT3U3p2m0D9LErJy2kxg88GiTfw==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/6/20 7:54 AM, Xianting Tian wrote:
-> Try to merge continuous bio to current task's plug fisrt.
+Hi,
 
-The patch looks fine to me, but I'd really like to see a bit more
-changelog here. The commit message should explain why the change
-is made, rather it's a very brief explanation of what it does.
+I'm seeing sporadic mkfs.ext[23] hangs on loop device while running various
+LTP tests. It seems to hang indefinitely once in bad state:
+  0 D root       29782   29761  0  80   0 -  1006 rq_qos 15:09 ?        00:00:00             mkfs.ext3 /dev/loop0
 
-If the bio list is contiguous, then we do the plugging to improve
-merging at the lower level. You probably ran into a case where
-you saw sub-optimal merging? And now the performance is better
-with the patch? How much?
+[19809.932566] mkfs.ext3       D    0 29782  29761 0x00000000 
+[19809.934000] Call trace: 
+[19809.934624]  __switch_to+0xfc/0x150 
+[19809.935533]  __schedule+0x364/0x828 
+[19809.936432]  schedule+0x58/0xe0 
+[19809.937261]  io_schedule+0x24/0xc0 
+[19809.938144]  rq_qos_wait+0xe4/0x150 
+[19809.939044]  wbt_wait+0x98/0xd8 
+[19809.939864]  __rq_qos_throttle+0x38/0x50 
+[19809.940847]  blk_mq_submit_bio+0x108/0x620 
+[19809.941890]  submit_bio_noacct+0x358/0x3d8 
+[19809.942909]  submit_bio+0x40/0x1a8 
+[19809.943770]  submit_bh_wbc+0x16c/0x1e8 
+[19809.944701]  __block_write_full_page+0x238/0x5c8 
+[19809.945862]  block_write_full_page+0x124/0x138 
+[19809.947000]  blkdev_writepage+0x24/0x30 
+[19809.948031]  __writepage+0x28/0xc8 
+[19809.948905]  write_cache_pages+0x1ac/0x410 
+[19809.949988]  generic_writepages+0x4c/0x88 
+[19809.950947]  blkdev_writepages+0x18/0x28 
+[19809.951934]  do_writepages+0x40/0xe8 
+[19809.952856]  __filemap_fdatawrite_range+0xe0/0x150 
+[19809.954066]  file_write_and_wait_range+0x9c/0x108 
+[19809.955266]  blkdev_fsync+0x24/0x50 
+[19809.956170]  vfs_fsync_range+0x3c/0x88 
+[19809.957126]  do_fsync+0x44/0x90 
+[19809.957925]  __arm64_sys_fsync+0x20/0x30 
+[19809.958961]  el0_svc_common.constprop.0+0x7c/0x188 
+[19809.960242]  do_el0_svc+0x2c/0x98 
+[19809.961028]  el0_sync_handler+0x84/0x110 
+[19809.962003]  el0_sync+0x15c/0x180 
 
+It started happening in recent weeks and appears to be aarch64 exclusive so far.
 
--- 
-Jens Axboe
+Affected kernels are at least:
+  v5.8-475-g382625d0d432
+  v5.8-607-gcdc8fcb49905
+  v5.8-rc2-87-g6b7b181b67aa
+  v5.8-rc2-105-g492d76b21566
+
+6b7b181b67aa is the oldest commit I could reproduce it with, but my current
+reproducer (running LTP fgetxattr01 in loop for 30 minutes) doesn't look very
+reliable for bisect. 
+
+Does this ring any bells?
+
+Thanks,
+Jan
 
