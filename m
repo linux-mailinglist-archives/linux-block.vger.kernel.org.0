@@ -2,94 +2,189 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E7123DE25
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6016423DE5E
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:25:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgHFRPC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 13:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbgHFRFf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:05:35 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16681C034622
-        for <linux-block@vger.kernel.org>; Thu,  6 Aug 2020 06:30:23 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o5so8717181pgb.2
-        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 06:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=etlr2pAwqifxloZFaoi/LuDdf2axD/mLzq9HJ5tYhoY=;
-        b=VjidcVnuYLVBIh0MoujQmGLzohzZtYhYjmmvWBMtFzBlBIC7rLQHsZlPRuKxecmme1
-         MNnY6rzLh0AZBBK2J26c/7HjYB6pSVWe6uCUzVVzMQjHUDbSFCdcYxMoa30K6gZjCLJq
-         N2z6oZ0xoQACLYjgUrWHsm1CzyTBenzDEj9ceAcC2AHI7ola856eMdC//2LWHcm87o9q
-         +xe8GmSwh91FqSxH0bCzBuB6lKfAsyFD3WnJVOyszn0qkVuqIyqr7A/Z5RZRIGPUFZRU
-         6idzUagup96uSjkwJX3s1//oo4YyyplTLaM1PwZbWBRqPIYkwTj9xPktSw2LRxRoRfLj
-         bT2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=etlr2pAwqifxloZFaoi/LuDdf2axD/mLzq9HJ5tYhoY=;
-        b=GWthRc+IKSB4ONMF+3s0D17q1EwI/xepYYNXag5VmTTQmBooLhoqzsjKKeYsSYR/Tb
-         r7nRRSvCO+7RtYQ5NITSXOOAjJJkhlJqu+5vmmr/QdBiJkKUbIJbjA2KxeZt51sewamG
-         2KJMbvhXzt5YdJRPc+8C6SngjkkwhM+Ll/xJSWSqw21sIxjnHFCLf8NddNuu8RBKl13K
-         MC38oITh/G6AL3oYNwqHd6v5nbCkqw7uzpBPEEtb74aaR/wL8+Xj8JY6FtZHAMiUfvby
-         yTnVo3vdN7dMq7Y81+DtfKJ4W2L8qQZUg/AOulxzoKI3RamlTmY0+zX1ysD7SADpbzlS
-         Chgg==
-X-Gm-Message-State: AOAM532RE8+EqvriHRkqoXZPtXH6pxauiUJDWGu/Hd+2Nf+fPuPNdGlb
-        xbB1jpgRViHzl7APWWk/ZuhFwsIaPds=
-X-Google-Smtp-Source: ABdhPJzWeSTGoVe9NvljgqV7Dprzr+BwtUgNmywsHV9rsRqp8nDtL6i5BRfmtPiI8JD3Z5cpaohNEw==
-X-Received: by 2002:aa7:960f:: with SMTP id q15mr8780018pfg.79.1596720619130;
-        Thu, 06 Aug 2020 06:30:19 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id ml18sm7006244pjb.43.2020.08.06.06.30.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 06:30:18 -0700 (PDT)
-Subject: Re: [PATCH V2 0/2] Two patches for rnbd
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com
-Cc:     linux-block@vger.kernel.org
-References: <20200730091358.9481-1-guoqing.jiang@cloud.ionos.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <92b8c91d-1bfa-e06e-0346-26398e265a52@kernel.dk>
-Date:   Thu, 6 Aug 2020 07:30:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729765AbgHFRZF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:25:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24680 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729515AbgHFRDG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:03:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596733383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cl9dqFTVPcEMBvYqHZhhtle9pFIJZ5lHoW6WicsKYD8=;
+        b=IP9i2SsspnwXZiey9T+grffERhww5sPdh5lgyAxAt7/h8bFPrELlGXMUM3nZpwEzLhlx+v
+        nlHkTxtZCYEBXayHDnIw/J/xcVdPdL51hbCeEByNVDwsQolB1qwLc+5akPdP3FRpleV0eL
+        A1m+Woi9gtd+dkG/rF1VkvSflPNzXJ8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-jL2iVwcbM8qIB6ugPhwK4A-1; Thu, 06 Aug 2020 09:38:37 -0400
+X-MC-Unique: jL2iVwcbM8qIB6ugPhwK4A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A6A5800470;
+        Thu,  6 Aug 2020 13:38:35 +0000 (UTC)
+Received: from T590 (ovpn-13-169.pek2.redhat.com [10.72.13.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C3DB5F1EF;
+        Thu,  6 Aug 2020 13:38:23 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 21:38:19 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>
+Cc:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        don.brace@microsemi.com, Sumit Saxena <sumit.saxena@broadcom.com>,
+        bvanassche@acm.org, hare@suse.com, hch@lst.de,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
+Subject: Re: [PATCH RFC v7 10/12] megaraid_sas: switch fusion adapters to MQ
+Message-ID: <20200806133819.GA2046861@T590>
+References: <20200724024704.GB957464@T590>
+ <6531e06c-9ce2-73e6-46fc-8e97400f07b2@huawei.com>
+ <20200728084511.GA1326626@T590>
+ <965cf22eea98c00618570da8424d0d94@mail.gmail.com>
+ <20200729153648.GA1698748@T590>
+ <7f94eaf2318cc26ceb64bde88d59d5e2@mail.gmail.com>
+ <20200804083625.GA1958244@T590>
+ <afe5eb1be7f416a48d7b5d473f3053d0@mail.gmail.com>
+ <20200805084031.GA1995289@T590>
+ <5adffdf805179428bdd0dd6c293a4f7d@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730091358.9481-1-guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5adffdf805179428bdd0dd6c293a4f7d@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/30/20 3:13 AM, Guoqing Jiang wrote:
-> V2:
-> * add Acked-by tag from Danil and Jack.
+On Thu, Aug 06, 2020 at 03:55:50PM +0530, Kashyap Desai wrote:
+> > > Ming -
+> > >
+> > > I noted your comments.
+> > >
+> > > I have completed testing and this particular latest performance issue
+> > > on Volume is outstanding.
+> > > Currently it is 20-25% performance drop in IOPs and we want that to be
+> > > closed before shared host tag is enabled for <megaraid_sas> driver.
+> > > Just for my understanding - What will be the next steps on this ?
+> > >
+> > > I can validate any new approach/patch for this issue.
+> > >
+> >
+> > Hello,
+> >
+> > What do you think of the following patch?
 > 
-> Hi Jens,
+> I tested this patch. I still see IO hang.
 > 
-> Could you take a look at this patchset?
+> >
+> > diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c index
+> > c866a4f33871..49f0fc5c7a63 100644
+> > --- a/drivers/scsi/scsi_lib.c
+> > +++ b/drivers/scsi/scsi_lib.c
+> > @@ -552,8 +552,24 @@ static void scsi_run_queue_async(struct scsi_device
+> > *sdev)
+> >  	if (scsi_target(sdev)->single_lun ||
+> >  	    !list_empty(&sdev->host->starved_list))
+> >  		kblockd_schedule_work(&sdev->requeue_work);
+> > -	else
+> > -		blk_mq_run_hw_queues(sdev->request_queue, true);
+> > +	else {
+> > +		/*
+> > +		 * smp_mb() implied in either rq->end_io or
+> > blk_mq_free_request
+> > +		 * is for ordering writing .device_busy in
+> scsi_device_unbusy()
+> > +		 * and reading sdev->restarts.
+> > +		 */
+> > +		int old = atomic_read(&sdev->restarts);
+> > +
+> > +		if (old) {
+> > +			blk_mq_run_hw_queues(sdev->request_queue, true);
+> > +
+> > +			/*
+> > +			 * ->restarts has to be kept as non-zero if there
+> is
+> > +			 *  new budget contention comes.
+> > +			 */
+> > +			atomic_cmpxchg(&sdev->restarts, old, 0);
+> > +		}
+> > +	}
+> >  }
+> >
+> >  /* Returns false when no more bytes to process, true if there are more
+> */
+> > @@ -1612,8 +1628,34 @@ static void scsi_mq_put_budget(struct
+> > request_queue *q)  static bool scsi_mq_get_budget(struct request_queue
+> *q)
+> > {
+> >  	struct scsi_device *sdev = q->queuedata;
+> > +	int ret = scsi_dev_queue_ready(q, sdev);
+> >
+> > -	return scsi_dev_queue_ready(q, sdev);
+> > +	if (ret)
+> > +		return true;
+> > +
+> > +	/*
+> > +	 * If all in-flight requests originated from this LUN are
+> completed
+> > +	 * before setting .restarts, sdev->device_busy will be observed as
+> > +	 * zero, then blk_mq_delay_run_hw_queue() will dispatch this
+> request
+> > +	 * soon. Otherwise, completion of one of these request will
+> observe
+> > +	 * the .restarts flag, and the request queue will be run for
+> handling
+> > +	 * this request, see scsi_end_request().
+> > +	 */
+> > +	atomic_inc(&sdev->restarts);
+> > +
+> > +	/*
+> > +	 * Order writing .restarts and reading .device_busy, and make sure
+> > +	 * .restarts is visible to scsi_end_request(). Its pair is implied
+> by
+> > +	 * __blk_mq_end_request() in scsi_end_request() for ordering
+> > +	 * writing .device_busy in scsi_device_unbusy() and reading
+> .restarts.
+> > +	 *
+> > +	 */
+> > +	smp_mb__after_atomic();
+> > +
+> > +	if (unlikely(atomic_read(&sdev->device_busy) == 0 &&
+> > +				!scsi_device_blocked(sdev)))
+> > +		blk_mq_delay_run_hw_queues(sdev->request_queue,
+> > SCSI_QUEUE_DELAY);
 > 
-> Thanks,
-> Guoqing
+> Hi Ming -
 > 
-> Guoqing Jiang (2):
->   rnbd: remove rnbd_dev_submit_io
->   rnbd: no need to set bi_end_io in rnbd_bio_map_kern
-> 
->  drivers/block/rnbd/rnbd-srv-dev.c | 37 +++----------------------------
->  drivers/block/rnbd/rnbd-srv-dev.h | 19 +++++-----------
->  drivers/block/rnbd/rnbd-srv.c     | 32 ++++++++++++++++++--------
->  3 files changed, 31 insertions(+), 57 deletions(-)
+> There is still some race which is not handled.  Take a case of IO is not
+> able to get budget and it has already marked <restarts> flag.
+> <restarts> flag will be seen non-zero in completion path and completion
+> path will attempt h/w queue run. (But this particular IO is still not in
+> s/w queue.).
+> Attempt of running h/w queue from completion path will not flush any IO
+> since there is no IO in s/w queue.
 
-Applied, thanks.
+Then where is the IO to be submitted in case of running out of budget?
 
--- 
-Jens Axboe
+Any IO request which is going to be added to hctx->dispatch, the queue will be
+re-run via blk-mq core.
+
+Any IO request being issued directly when running out of budget will be
+insert to hctx->dispatch or sw/scheduler queue, will be run in the
+submission path.
+
+
+Thanks, 
+Ming
 
