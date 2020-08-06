@@ -2,46 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D655323E1E9
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 21:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58C2B23E1EB
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 21:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgHFTPa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 15:15:30 -0400
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:56294 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgHFTP3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 15:15:29 -0400
-Received: by mail-pj1-f45.google.com with SMTP id 2so7345462pjx.5
-        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 12:15:29 -0700 (PDT)
+        id S1726942AbgHFTPb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 15:15:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41872 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFTPb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 15:15:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f10so3336803plj.8
+        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 12:15:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E6rPl/XQAx312kYBDl1D3OvoqQvb50hFc5fzpRw9mLU=;
-        b=q7B4WtcvktJNIa/jg2UDGIhj927G+KxzpXIYCFgPkiIGpDYbWTmKJ/H05Sw9HuSFMB
-         4BKENulcX94r99lkAa+q32MKKbPofBd7NXwgtavFAB9GPlwGHoErX3+KO5gMIjg5MHx5
-         uWFHor8mAOTy/KkRoZ33hcSyGfo0+0Y5ldBc78ml4ztaZrOTvG+o4LHes4Oql4APPnyG
-         5CvE2emeRUkYECEaUAPUdOOMgDOmZjFhF6JduN2mBv4hkpsU3cDkme3/zkjFUtZE8AtG
-         DAD7AE2Q+8rMTLJ37vLnR0fngnUZG5EKx1kItHMDczrrjD4q2qMtlglTzWSy5j39HgHE
-         U1zg==
-X-Gm-Message-State: AOAM532RBwhk35grI2uIjWtTawpXYT76nL/zxbbudh6e830WnJ/Tyw3W
-        J4ijS7cf0AW9X6rfNV+7dsc=
-X-Google-Smtp-Source: ABdhPJxx1Gzq5Y58oYCHXns8Ubqh9zuEiQhgOOdlCkCivBLSnydc7oGr6mq1NZ0HRu6qeIiNAx7Pvw==
-X-Received: by 2002:a17:90b:4d0d:: with SMTP id mw13mr10252988pjb.159.1596741328976;
-        Thu, 06 Aug 2020 12:15:28 -0700 (PDT)
+        bh=mQg0QW5Ii5wVrkyjrYOAVjHAU5a8a/Cp+IYFCQV4S8g=;
+        b=NOw2kvtY9xcXu7y4PJ5MEVq7iebFbYbpQuEJY2IOCgJ+TV27Nn9NWYBiXfeZ3kdzG3
+         DDv23+Y15lgBQ729B3gxR9b8TiihuOa89ouCRc/wEBsrzEiZGRTpPJVa4TlqftuVNMTw
+         dG23Du0VP6vjC/GmkNDq08oQHjdQbviMCy66OESKv8V6DmvbCNxzg7H0ov57buTtBp/a
+         dJ67NSxpEkG0zRUB2ozQ8x0ObuaH06gpDkecRmZ2ALmfCrlGVDbbaCJIaQ4zmiz2AOzd
+         1JOKTCHCKMpkRn7pNRpzmpDis9n/ADSLACk8edulgTGYszTP/0ZnHaK3lB69fleVtXhi
+         H0FA==
+X-Gm-Message-State: AOAM530biaLSOO2UYLJf9XTyxX2RLvKjWSayV2w1Rtl8vQxtLLOuqxmj
+        Ji+YRUOVBYoeYVisEy6an1Q=
+X-Google-Smtp-Source: ABdhPJxpKsWTAykfSJ0wzqMbrpgSPDXpwHBHIA/FIMsyOECQU+LDMn/kUKmdUMP/fDjvNhnD6Ap8RQ==
+X-Received: by 2002:a17:90a:fca:: with SMTP id 68mr9362904pjz.12.1596741330403;
+        Thu, 06 Aug 2020 12:15:30 -0700 (PDT)
 Received: from localhost.localdomain ([2601:647:4802:9070:d88d:857c:b14c:519a])
-        by smtp.gmail.com with ESMTPSA id q16sm9784014pfg.153.2020.08.06.12.15.27
+        by smtp.gmail.com with ESMTPSA id q16sm9784014pfg.153.2020.08.06.12.15.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 12:15:28 -0700 (PDT)
+        Thu, 06 Aug 2020 12:15:29 -0700 (PDT)
 From:   Sagi Grimberg <sagi@grimberg.me>
 To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
         Omar Sandoval <osandov@osandov.com>
 Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
         Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH v2 5/7] nvme: support nvme-tcp when runinng tests
-Date:   Thu,  6 Aug 2020 12:15:16 -0700
-Message-Id: <20200806191518.593880-6-sagi@grimberg.me>
+Subject: [PATCH v2 6/7] common/multipath-over-rdma: don't retry module unload
+Date:   Thu,  6 Aug 2020 12:15:17 -0700
+Message-Id: <20200806191518.593880-7-sagi@grimberg.me>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200806191518.593880-1-sagi@grimberg.me>
 References: <20200806191518.593880-1-sagi@grimberg.me>
@@ -52,28 +52,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-run with: nvme_trtype=tcp ./check test/nvme
+There is no need to retry module unload for rdma_rxe
+and siw. This also creates a dependency on
+tests/nvmeof/rc which prevents it from using in
+other test subsystems.
 
 Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- tests/nvme/rc | 4 ++++
- 1 file changed, 4 insertions(+)
+ common/multipath-over-rdma | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index a2cb0c0add93..69ab7d2f3964 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -21,6 +21,10 @@ _nvme_requires() {
- 	pci)
- 		_have_modules nvme nvme-core
- 		;;
-+	tcp)
-+		_have_modules nvmet nvme-core nvme-tcp nvmet-tcp
-+		_have_configfs
-+		;;
- 	*)
- 		SKIP_REASON="unsupported nvme_trtype=${nvme_trtype}"
+diff --git a/common/multipath-over-rdma b/common/multipath-over-rdma
+index 676d2837fb06..e54b2a96153c 100644
+--- a/common/multipath-over-rdma
++++ b/common/multipath-over-rdma
+@@ -457,7 +457,7 @@ stop_soft_rdma() {
+ 				fi
+ 			done
+ 	)
+-	if ! unload_module rdma_rxe 10; then
++	if ! modprobe -r rdma_rxe; then
+ 		echo "Unloading rdma_rxe failed"
  		return 1
+ 	fi
+@@ -469,7 +469,7 @@ stop_soft_rdma() {
+ 					echo "Failed to unbind the siw driver from ${i%_siw}"
+ 			done
+ 	)
+-	if ! unload_module siw 10; then
++	if ! modprobe -r siw; then
+ 		echo "Unloading siw failed"
+ 		return 1
+ 	fi
 -- 
 2.25.1
 
