@@ -2,98 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B8F923DE99
-	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5949C23DE23
+	for <lists+linux-block@lfdr.de>; Thu,  6 Aug 2020 19:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgHFR1V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Aug 2020 13:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729547AbgHFRBd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Aug 2020 13:01:33 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 261C5C0A888E;
-        Thu,  6 Aug 2020 07:41:39 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l64so38319254qkb.8;
-        Thu, 06 Aug 2020 07:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+JOavwuu2af6Eh0MFH0vO7WhBEI3v+aXxyBlp4DnUwo=;
-        b=in0QYmMWivT+TgpmxfP9EOitkGBUTODZQATNpwhGG4ifZpOUcaESDr6A+rH/1QzzwS
-         Ikqq8LC3/LG0mgkiG0pPe7R9xt0zAOGQpp+txt+VT16mZXyGVk1H+DE1pj2P4743umYh
-         KeRxJi4q30q20bpr1fWvn4ZFhmf1qks87ZJnaF0L7GPmW8hSkTcuTnenvbdSRdqcacas
-         cEdW4/oj656K4z6Zfkh2zYwulgPuM5+onO9Nk5kr6QWmFIdIOKDB6v/0oTHGuFMilmsS
-         eLLLNfuz0Cu+5ZCzIglQc/PXlnQjGJ53caoAcydM1r/q1W7uOmNO92EnvZvQVgsmHemM
-         22gA==
+        id S1730388AbgHFRP3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Aug 2020 13:15:29 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34200 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729896AbgHFRPL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:15:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596734110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0c1/Bp7ocDdt7QI3/o/M8hE809LAqDVMjlZbaureeIM=;
+        b=MUxt2KmEqXpvd6ncfRMp2Kv1m9LTf/JkaBfZZW37HhPy8CwDHOhk2zSVFWSgYiVwU19e5B
+        OY+jMlkA0u2jiDbi42sMvybXSFop1ttGV5yiRWAhAm+OMTZy6LN5mePrmiJmaO+UI3v9+K
+        VSiDsNDaqZRms1W3F5v6blbGVBEi19Q=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-OR31QS8OMVSaJ1Xyn0I3rA-1; Thu, 06 Aug 2020 10:46:48 -0400
+X-MC-Unique: OR31QS8OMVSaJ1Xyn0I3rA-1
+Received: by mail-wr1-f70.google.com with SMTP id b13so12174082wrq.19
+        for <linux-block@vger.kernel.org>; Thu, 06 Aug 2020 07:46:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=+JOavwuu2af6Eh0MFH0vO7WhBEI3v+aXxyBlp4DnUwo=;
-        b=UkOFVcDWsIvhff51mn2MR7jr1Ftx0kRZDCpdAdrhuTjucXdKosLMxXM8aLazT1gdQs
-         ma5tT7F0poZODRJo4Xbh2lr0vXGL/WeiJT6PG0/ETkTAUyL6tw3pe2JxcpX5pPQnUFMJ
-         1H3cP4EAaQKPmMx+LCUnVr+OihtrzJ6IJPhuD/k0hexM45TVZYHg8L+quz3KNbhVZJ8+
-         g9M3Llor7j+vKFSpbtY0hL+r/ZEcK+oDMvZ0dRLpMToCyLh8xkC5qJn9nltiWKQsSu7p
-         fG8d6do44YPv7+MB0K5R2JQl+izSCBAsfjtk4DWKVe1HXd/9+ye3cg9rCxXrIn0i/Q4c
-         gq5g==
-X-Gm-Message-State: AOAM5313+HZfhglDUw6VOVdKaRF1tlVnXvZsqP10SxtrrlSJ85Fx1eI1
-        h91FmzuhHEjqXYFapDpCeR4=
-X-Google-Smtp-Source: ABdhPJzDB6bJdLBN/WCp6ELbFInICLymDe2gzcRSha7BfKUQ/cSXwh1jexiUQjiELqjeywwQn4kWGg==
-X-Received: by 2002:a05:620a:b8d:: with SMTP id k13mr9094494qkh.450.1596724897903;
-        Thu, 06 Aug 2020 07:41:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2e8b])
-        by smtp.gmail.com with ESMTPSA id r6sm4821874qtu.93.2020.08.06.07.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:41:36 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 10:41:35 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Muneendra Kumar M <muneendra.kumar@broadcom.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0c1/Bp7ocDdt7QI3/o/M8hE809LAqDVMjlZbaureeIM=;
+        b=kmmUCeBFHfysaaT4ULyixtX09f+oRaHhw3HcUu+nW4ChMI1dqoOcK0JU0wSMXy+EWs
+         MWCuRB4L1OrF+SZSQt9UhT5vyknqGzqMuBCsHBm7QCfiLNEYEPXCBLL6kmk/TEVnSPCu
+         E+IHgw8KQaTKDoDH6amS05YshVonz+0vJ0eUxIs5omniUV9Qt2y0AX9nwTm62bU7nqzk
+         xb/rSJqJZNZsarOKpCNreS9txympiGXdg3gequhUnvMHs8/CkZ4P7lmNeDj49/MF48j0
+         f9jAeaV7Wzj0DDLVIFh02plSteL9zTLtVbZ2jbNal+2S/rsboNAIlPgyOdPVSku1C9AI
+         MydA==
+X-Gm-Message-State: AOAM531PgEWfvNdtqD/g0ShJfYqC+ySKUL8Bh8yky8G3Sq9yrbkmBRZr
+        cX9jGM4h5qOGfZjAla0llcnr2gT3Ztc8O4jAebnWOIRA/ZFOoN8YUgzOfo9TPcU89h22XMHh/b+
+        XNppEDTvJBrrB32UI0MfSquA=
+X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr8442423wmk.153.1596725207728;
+        Thu, 06 Aug 2020 07:46:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJylL3roPS5v+IqXA0mUMSU8r5ytNbRCIB5DavoUedvjg0VapQysCXkty8XEJjSczhb154Tyvg==
+X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr8442408wmk.153.1596725207529;
+        Thu, 06 Aug 2020 07:46:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7841:78cc:18c6:1e20? ([2001:b07:6468:f312:7841:78cc:18c6:1e20])
+        by smtp.gmail.com with ESMTPSA id a22sm6461054wmb.4.2020.08.06.07.46.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 07:46:47 -0700 (PDT)
+Subject: Re: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
+To:     Tejun Heo <tj@kernel.org>,
+        Muneendra Kumar M <muneendra.kumar@broadcom.com>
 Cc:     James Smart <james.smart@broadcom.com>,
         Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, pbonzini@redhat.com, emilne@redhat.com,
-        mkumar@redhat.com,
+        linux-scsi@vger.kernel.org, emilne@redhat.com, mkumar@redhat.com,
         Gaurav Srivastava <gaurav.srivastava@broadcom.com>,
         James Smart <jsmart2021@gmail.com>,
         Ming Lei <tom.leiming@gmail.com>
-Subject: Re: [RFC 16/16] lpfc: vmid: Introducing vmid in io path.
-Message-ID: <20200806144135.GC4520@mtj.thefacebook.com>
 References: <1596507196-27417-1-git-send-email-muneendra.kumar@broadcom.com>
  <1596507196-27417-17-git-send-email-muneendra.kumar@broadcom.com>
  <61d2fd75-84ea-798b-aee9-b07957ac8f1b@suse.de>
  <08b9825b-6abb-c077-ac0d-bd63f10f2ac2@broadcom.com>
  <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
+ <20200806144135.GC4520@mtj.thefacebook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <96930d0f-cb4d-94f4-9cbb-c82d2f0c3840@redhat.com>
+Date:   Thu, 6 Aug 2020 16:46:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200806144135.GC4520@mtj.thefacebook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aa595605c2f776148e03a8e5dd69168a@mail.gmail.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+On 06/08/20 16:41, Tejun Heo wrote:
+>> 1)	blkcg will have a new field to store driver specific information as
+>> "blkio_cg_ priv_data"(in the current patch it is app_identifier) as Tejun
+>> said he doesn’t mind cgroup data structs carrying extra bits for stuff.
+> 
+> I'd make it something more specific - lpfc_app_id or something along that
+> line.
 
-On Thu, Aug 06, 2020 at 06:04:36PM +0530, Muneendra Kumar M wrote:
-> 1)	blkcg will have a new field to store driver specific information as
-> "blkio_cg_ priv_data"(in the current patch it is app_identifier) as Tejun
-> said he doesn’t mind cgroup data structs carrying extra bits for stuff.
+Note that there will be support in other drivers in all likelihood.
 
-I'd make it something more specific - lpfc_app_id or something along that
-line.
+Paolo
 
-> 2)	scsi transport will provide a new interface(sysfs) as register_vm_fabric
-> 3)	As part of this interface user/deamon will provide the details of VM such
-> as UUID,PID on VM creation to the transport .
-> 4)	With VM PID information we need to find the associated blkcg and needs to
-> update the UUID info in blkio_cg_ priv_data.
-
-You can pass in cgroup ID or open fd to uniquely identify a cgroup.
-
-Thanks.
-
--- 
-tejun
