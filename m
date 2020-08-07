@@ -2,116 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCCA723EA70
-	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 11:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AD2C23EAFB
+	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 11:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHGJf7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Aug 2020 05:35:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgHGJf7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:35:59 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8CA099167016936A645B;
-        Fri,  7 Aug 2020 17:35:56 +0800 (CST)
-Received: from [10.169.42.93] (10.169.42.93) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 7 Aug 2020
- 17:35:55 +0800
-Subject: Re: [PATCH v5 1/2] blk-mq: add tagset quiesce interface
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-        <paulmck@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, <linux-nvme@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, Ming Lin <mlin@kernel.org>
-References: <20200728071859.GA21629@lst.de> <20200728091633.GB1326626@T590>
- <b1e7c2c5-dad5-778c-f397-6530766a0150@grimberg.me>
- <20200728135436.GP9247@paulmck-ThinkPad-P72>
- <d1ba2009-130a-d423-1389-c7af72e25a6a@grimberg.me>
- <20200729003124.GT9247@paulmck-ThinkPad-P72>
- <07c90cf1-bb6f-a343-b0bf-4c91b9acb431@grimberg.me>
- <20200729005942.GA2729664@dhcp-10-100-145-180.wdl.wdc.com>
- <2f17c8ed-99f6-c71c-edd1-fd96481f432c@grimberg.me>
- <31a9ba72-1322-4b7c-fb73-db0cb52989da@huawei.com>
- <20200807092457.GA2112310@T590>
-From:   Chao Leng <lengchao@huawei.com>
-Message-ID: <e6b4032e-a5c6-0038-33b8-04a15ae75a0e@huawei.com>
-Date:   Fri, 7 Aug 2020 17:35:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728262AbgHGJwr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Aug 2020 05:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728092AbgHGJwq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Aug 2020 05:52:46 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B9EC061575
+        for <linux-block@vger.kernel.org>; Fri,  7 Aug 2020 02:52:46 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id z17so1279283ill.6
+        for <linux-block@vger.kernel.org>; Fri, 07 Aug 2020 02:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=78hNQqwMLyQS0JX7l1AdXA1n8GOpUVOxy7AZFzaMTEo=;
+        b=CWfuevzFiFI/Tzqggup6Xt/ZoszUnpK2BDPSGjqIU8Jo5UWwkL93tDDaiHEU3BxbSw
+         fjJL12zgtCjasizdGDoNLvM4KabSelqj1Hy5ejClondDv9+H9cv3YymjQxSZpo+sh6s8
+         3KKuayXGAeMAcfOnp8RBlZkOEv2Qz/Tohzpl+uFAzt1u4JjIaZz4LiPuCxSe+OtDmJPB
+         TqCrEJpXeldzW/3SkSjDr8EI+M9Avm/pRmdCyVK1Ryt8j6giVoL18sXMW7MVNB7FALdY
+         dF6bcczMhnnPUfsKFEMWVwUNNshhEKCP09LLBymhDk149vcBoQD7QP08VTJ6b1FJ0ugk
+         vCsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=78hNQqwMLyQS0JX7l1AdXA1n8GOpUVOxy7AZFzaMTEo=;
+        b=HfICrZ3LjlwNR0+L+XtJzVYGQ+pru/302NoGPmB6YTwvzJu2WLfKPTyOIwqnYYRHYO
+         hM4Jvs7Kd5DePDEZGgfujVo9o5tkFEsTKikIH1Uo+7Nv59vMXT0dqqU/cfi0iw/G2MEw
+         oD78h9LWmU8Ff3MP6FpiN2NCYPVQgUBCYRMIweaODH1YPAdqNi/xcVpNBdMojzIYBPHq
+         7BpJ8zFMF+BXlYFfxSvPnUu+y5T6igC1JAZ3sSPFCt6uMUlZFBuHWFJ8VrK2GXrK1xRd
+         yVUY+HZzwY7/nG0C0SzQwEKnw6ma2MOJ50dk7vtU+8G+3ToToHkd2g17fkZykZoAe/oU
+         usgw==
+X-Gm-Message-State: AOAM532XdE4utKLdn0EFofd0OjYXaK7OkdEuNHdGpl45jvDxMQMB7Brt
+        QgqTWr5hCtykD1amwSqLCe7/nnQGmYu3dTMfLOE=
+X-Google-Smtp-Source: ABdhPJxJgmg8qjTN+hVHPB2L5uKF5pHfVKXyqCYwdQo1UJqotLUkELoPcfXvThBJhgIeL9dLUXi6Yaq5+FZLZe4T2hA=
+X-Received: by 2002:a92:8556:: with SMTP id f83mr318748ilh.135.1596793965192;
+ Fri, 07 Aug 2020 02:52:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200807092457.GA2112310@T590>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.169.42.93]
-X-CFilter-Loop: Reflected
+Received: by 2002:a92:4b0d:0:0:0:0:0 with HTTP; Fri, 7 Aug 2020 02:52:44 -0700 (PDT)
+Reply-To: suleman1945mohammed@gmail.com
+From:   "Mr.Suleman Mohammed" <kkakakk66@gmail.com>
+Date:   Fri, 7 Aug 2020 02:52:44 -0700
+Message-ID: <CAJHOYrAQ_g+YxRfK5gT1H1r_+B4SO4XW63YXoxS=ZVYd_e6C0w@mail.gmail.com>
+Subject: I am Mr.Suleman Mohammed
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+--=20
+
+Hello Dear,
+
+I am Mr.Suleman Mohammed and I work with UNITED BANK OF AFRICA. Please
+Can you use ATM Visa card to withdraw money at ATM cash machine in
+your country? I want to transfer money to you from my country; it=E2=80=99s
+part of money taken by some old politician that was forced out of
+power.
+
+I will change the account details to yours, and apply for a visa card
+with your details in our bank, they will send the visa card to you and
+you will be withdrawing money with it and always send my own
+percentage of the money, and the money we are talking about is
+$6.5Million us dollars.
+
+Whatever amount you withdraw daily, you will send 50% to me and you
+will take 50%, the visa card and the bank account will be on your
+name, I will be waiting for your information as soon as possible.
+Your name.......................... .................
+
+Age........................... ......................
+
+Sex........................... ......................
+
+Country....................... ......................
+
+Occupation.................... ......................
+
+Phone number........................ ................
 
 
-On 2020/8/7 17:24, Ming Lei wrote:
-> On Fri, Aug 07, 2020 at 05:04:38PM +0800, Chao Leng wrote:
->>
->>
->> On 2020/7/29 12:39, Sagi Grimberg wrote:
->>>
->>>>>>> Dynamically allocating each one is possible but not very scalable.
->>>>>>>
->>>>>>> The question is if there is some way, we can do this with on-stack
->>>>>>> or a single on-heap rcu_head or equivalent that can achieve the same
->>>>>>> effect.
->>>>>>
->>>>>> If the hctx structures are guaranteed to stay put, you could count
->>>>>> them and then do a single allocation of an array of rcu_head structures
->>>>>> (or some larger structure containing an rcu_head structure, if needed).
->>>>>> You could then sequence through this array, consuming one rcu_head per
->>>>>> hctx as you processed it.  Once all the callbacks had been invoked,
->>>>>> it would be safe to free the array.
->>>>>>
->>>>>> Sounds too simple, though.  So what am I missing?
->>>>>
->>>>> We don't want higher-order allocations...
->>>>
->>>> So:
->>>>
->>>>     (1) We don't want to embed the struct in the hctx because we allocate
->>>>     so many of them that this is non-negligable to add for something we
->>>>     typically never use.
->>>>
->>>>     (2) We don't want to allocate dynamically because it's potentially
->>>>     huge.
->>>>
->>>> As long as we're using srcu for blocking hctx's, I think it's "pick your
->>>> poison".
->>>>
->>>> Alternatively, Ming's percpu_ref patch(*) may be worth a look.
->>>>
->>>>    * https://www.spinics.net/lists/linux-block/msg56976.html1
->>> I'm not opposed to having this. Will require some more testing
->>> as this affects pretty much every driver out there..
->>>
->>> If we are going with a lightweight percpu_ref, can we just do
->>> it also for non-blocking hctx and have a single code-path?
->>> .
->> I tried to optimize the patch，support for non blocking queue and
->> blocking queue.
->> See next email.
-> 
-> Please see the following thread:
-> 
-> https://lore.kernel.org/linux-block/05f75e89-b6f7-de49-eb9f-a08aa4e0ba4f@kernel.dk/
-> 
-> Both Keith and Jens didn't think it is a good idea.
-If we can support nonblocking queue and blocking queue simplely, this may be a good choice.
-Please review the patch first.
-> 
-> 
-> 
-> Thanks,
-> Ming
-> 
-> .
-> 
+Best Regards.
+
+Mr.Suleman Mohammed
+
+MAIL.....suleman1945mohammed@ gmail.com
