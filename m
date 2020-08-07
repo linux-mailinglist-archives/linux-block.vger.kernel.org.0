@@ -2,63 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAEDE23F39B
-	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 22:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C19B23F3E1
+	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 22:40:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgHGUMB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Aug 2020 16:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgHGUMB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Aug 2020 16:12:01 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEBE2C061756
-        for <linux-block@vger.kernel.org>; Fri,  7 Aug 2020 13:12:00 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v9so3474962ljk.6
-        for <linux-block@vger.kernel.org>; Fri, 07 Aug 2020 13:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xkIYoRLWBrMd2qKy9T6QTqGHxJXs4ojV9w6Sr9SIdls=;
-        b=F3oALBgLBhkNeiPWw4Et15B0KG6WttPjhjHuoIEUEN8JYnquQvaV75fjubAdYmQZCx
-         zG/8u4nwGW1hqaUqn4Hs7W3Xh3y98MhB0esgXH4Xdi8dZ86rI+tDbuvNPMngw+eELdLf
-         HaS6/NT2YsluMT8b0KmM/ig9xv6DWWzbClDLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xkIYoRLWBrMd2qKy9T6QTqGHxJXs4ojV9w6Sr9SIdls=;
-        b=MEdIpJGjhSrhre3hdGyPRnWQDsCzjLoz2Oq2qI7JRvJZuvlR+4m7IFmMllbNQpWQLz
-         lZ5KModUZaI9k9RtDh4UdjhIh4hJ3STp0KCm7BYitqKalON2uaTCqhA/GCCQFAHZYowk
-         IRhZWo/NSoKv6W7k6e0DenSctsO55dXceCAX/bDN7QSHRWXlj95t86dOo9YJEPBnV03a
-         5OPDq6ZM5bsGA/HlXy1hH0McyI6cNB8dU13yhX9K6m+R8633ZnsUMMjdMgBh0Gg0n7mk
-         Opv0o5EtXVDduLB2kx450ks/wwcFtyZLIc619ZjhAJXrKXzTZn9m3DCqRu/fsGQQrWsW
-         YKyw==
-X-Gm-Message-State: AOAM532wl8MZOz8s6TGSw6W55POsU58rkPtFEys0JqezXzBFlEdTe5Hx
-        wRTrppL/WjAP0C3jTzUOCL6JXQQknrx6TA==
-X-Google-Smtp-Source: ABdhPJwrIigFvJ+NeWT1sfqCK0DVkjO9tt5GT+nz99aKt6gdYIeQ3RfOB/KvPzkcR3Lf9ztSDj67yQ==
-X-Received: by 2002:a2e:8215:: with SMTP id w21mr6934865ljg.43.1596831117663;
-        Fri, 07 Aug 2020 13:11:57 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 1sm4208457ljr.6.2020.08.07.13.11.55
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 13:11:55 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id t23so3488607ljc.3
-        for <linux-block@vger.kernel.org>; Fri, 07 Aug 2020 13:11:55 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr6135959ljk.421.1596831114811;
- Fri, 07 Aug 2020 13:11:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200807160327.GA977@redhat.com>
-In-Reply-To: <20200807160327.GA977@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Aug 2020 13:11:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiC=g-0yZW6QrEXRH53bUVAwEFgYxd05qgOnDLJYdzzcA@mail.gmail.com>
-Message-ID: <CAHk-=wiC=g-0yZW6QrEXRH53bUVAwEFgYxd05qgOnDLJYdzzcA@mail.gmail.com>
+        id S1726918AbgHGUkH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Aug 2020 16:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgHGUkG (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:40:06 -0400
 Subject: Re: [git pull] device mapper changes for 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596832806;
+        bh=ehxZzctGhxbUoWwPkR60ec2uLkv3qH2o5s9Q8qXx0o8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=GH3nZ0Uiv2pUer1w/ANI+94Vx+xST6w1FO3ji45rhspBHRPSPBMHC8/pqEQiH2/rX
+         nGvXo6SkAH3fmaC2nkYL8ayl3srTyrq/esnTdgXWjymm+Sd+mYouCm27F0sXCk8dby
+         g+7yeOxKWxphAf73ypZrH/E+l1Iw8GG5hrVem9Vk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200807160327.GA977@redhat.com>
+References: <20200807160327.GA977@redhat.com>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200807160327.GA977@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.9/dm-changes
+X-PR-Tracked-Commit-Id: a9cb9f4148ef6bb8fabbdaa85c42b2171fbd5a0d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2f12d44085dabf5fa5779ff0bb0aaa1b2cc768cb
+Message-Id: <159683280645.2860.3665375467005569936.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Aug 2020 20:40:06 +0000
 To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-block <linux-block@vger.kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
         Alasdair G Kergon <agk@redhat.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Ignat Korchagin <ignat@cloudflare.com>,
@@ -68,31 +43,20 @@ Cc:     dm-devel@redhat.com, linux-block <linux-block@vger.kernel.org>,
         Mikulas Patocka <mpatocka@redhat.com>,
         Ming Lei <ming.lei@redhat.com>,
         yangerkun <yangerkun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 9:03 AM Mike Snitzer <snitzer@redhat.com> wrote:
->
-> - DM crypt improvement to optionally avoid async processing via
->   workqueues for reads and/or writes -- via "no_read_workqueue" and
->   "no_write_workqueue" features.  This more direct IO processing
->   improves latency and throughput with faster storage.  Avoiding
->   workqueue IO submission for writes (DM_CRYPT_NO_WRITE_WORKQUEUE) is
->   a requirement for adding zoned block device support to DM crypt.
+The pull request you sent on Fri, 7 Aug 2020 12:03:27 -0400:
 
-Is there a reason the async workqueue isn't removed entirely if it's not a win?
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.9/dm-changes
 
-Or at least made to not be the default.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2f12d44085dabf5fa5779ff0bb0aaa1b2cc768cb
 
-Now it seems to be just optionally disabled, which seems the wrong way
-around to me.
+Thank you!
 
-I do not believe async crypto has ever worked or been worth it.
-Off-loaded crypto in the IO path, yes. Async using a workqueue? Naah.
-
-Or do I misunderstand?
-
-               Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
