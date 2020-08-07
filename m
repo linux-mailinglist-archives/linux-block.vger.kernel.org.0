@@ -2,56 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFCF923EFB4
-	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 16:59:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E7423F008
+	for <lists+linux-block@lfdr.de>; Fri,  7 Aug 2020 17:31:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgHGO7c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Aug 2020 10:59:32 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:58763 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726066AbgHGO7c (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Aug 2020 10:59:32 -0400
-Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Fri, 7 Aug 2020 23:56:47 +0900
-Reply-To: <williiamrichard2999@yahoo.com>
-From:   "williams richard" <richardwilliamsrichard355@gmail.com>
-Subject: INVESTMENT PARTNER
-Date:   Fri, 7 Aug 2020 07:56:55 -0700
+        id S1725934AbgHGPbj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Aug 2020 11:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgHGPbj (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Aug 2020 11:31:39 -0400
+X-Greylist: delayed 115149 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 07 Aug 2020 08:31:38 PDT
+Received: from gardel.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45292C061756;
+        Fri,  7 Aug 2020 08:31:38 -0700 (PDT)
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 07D48E806C9;
+        Fri,  7 Aug 2020 17:31:35 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 75A67160D5D; Fri,  7 Aug 2020 17:31:34 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 17:31:34 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Subject: Re: [PATCH] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+Message-ID: <20200807153134.GA222272@gardel-login>
+References: <20200806073221.GA219724@gardel-login>
+ <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <WIN-DAONO245HJF8sRn00ad91b8@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 07 Aug 2020 14:56:47.0881 (UTC) FILETIME=[F97B4F90:01D66CCA]
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Sir/Madam
+On Fr, 07.08.20 10:53, Martijn Coenen (maco@android.com) wrote:
 
+> Hi Lennart,
+>
+> Thanks again for the patch, I tested it and it looks good to me. I'll
+> also add a test case to LTP for this. Two minor nits on the patch:
+>
+> On Thu, Aug 6, 2020 at 9:32 AM Lennart Poettering <mzxreary@0pointer.de> wrote:
+> > Let's correct that and propagate the flag in LOOP_SETSTATUS too.
+>
+> Think you meant LOOP_CONFIGURE.
 
-I work as an agent to some Investors. Do you need a business loan or
-funds for a business idea or want to expand but need huge funding? We
-are expanding our investment presence by granting debt loan to fund
-viable and lucrative projects. If you have any project that needs
-funding, kindly revert to me with your business plan and if we find
-your business to be worthy of investment, you will be promptly
-contacted and both parties will meet face to face and have a
-round-table meeting together.
+True!
 
-Good documentation will be carried out between you and the Investor
-before putting down his funds.
+> Also, could you add a "Fixes" tag, like:
+>
+> Fixes: 3448914e8cc5("loop: Add LOOP_CONFIGURE ioctl")
 
-Regards
+Thanks for the review. I'll fix this up and send a v2. Are you OK with
+me adding your Ack to the patch? And also should this geta cc for
+stable?
 
+Thanks,
 
+Lennart
 
-williams richard 
-
-via  williiamrichard2999@yahoo.com
+--
+Lennart Poettering, Berlin
