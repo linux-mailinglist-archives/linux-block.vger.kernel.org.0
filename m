@@ -2,167 +2,267 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6898423F888
-	for <lists+linux-block@lfdr.de>; Sat,  8 Aug 2020 21:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B72C123FBCA
+	for <lists+linux-block@lfdr.de>; Sun,  9 Aug 2020 01:51:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHHTF1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 8 Aug 2020 15:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHHTF0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 8 Aug 2020 15:05:26 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEB3C061756
-        for <linux-block@vger.kernel.org>; Sat,  8 Aug 2020 12:05:26 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id s23so3833639qtq.12
-        for <linux-block@vger.kernel.org>; Sat, 08 Aug 2020 12:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=yL2/UZwpI1fKUgMiVTUcG0n2gTeUCe4ep7Qh3IOPQe4=;
-        b=W7+tfcNTadux9ZruydDOwvn25cK3jUiSZFc16ccW/MZfXQpxkZu851dMozMIgBCpXo
-         SmNST2s9nIRlDyg7rGsxUPTOfuPq2hE2FLOc0fQsRwH9eHM67asHmjHVQ0T9eap+rZ33
-         w/F/xIOUjLN1FFkegvRY5W5xjA2N/wZWaQt5E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=yL2/UZwpI1fKUgMiVTUcG0n2gTeUCe4ep7Qh3IOPQe4=;
-        b=k3+yVFpVbLpfzp6brliYU8GCYn2zUMIvQTeEO/V3IyCHAHZ/R5faYzN+RpW2McxRqU
-         4zTe3UG6LLCvIa0oG6PW8RVfnECX/GDYwztQCQcLrlyYt42G9TLQZ9Mp5hz1DXTIXy0q
-         79VXt0qrkv9/+eRX6ZD/UTHfyC1ptSScS3z/7o1usutCW0Hm8LWap3Tg7qbTdnBPWerr
-         xiDUCG5z/ccJRp2aOzfVPNezXCp+uUPtpK/D64vOYuPBlOcPiE94A50Et+zOad3IQD/b
-         7O6T8f5uq8u+HUlIVdZIuuqwVN7swGckmfktYsPcntLPHRSeBrhe7TaVX875i5bIP56O
-         LArA==
-X-Gm-Message-State: AOAM532h82QnYGUCkF+Hgq+2cJ6wg86g6Mx2g+c8+mnT+s4GXNHUvbso
-        lIZxA/Q2FJSEMoCTMBbGy8P+mWrw32eUB8cFFo/Tqg==
-X-Google-Smtp-Source: ABdhPJxSDSvoxmQ/18LDhxUUacOJwztXKNmzsKQZ9/amd5uvd5KoQ8N7La375Ji8nJ7hS9NO5RxU4crYPZSEmZV/AoU=
-X-Received: by 2002:ac8:faf:: with SMTP id b44mr20343687qtk.190.1596913524420;
- Sat, 08 Aug 2020 12:05:24 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20200728084511.GA1326626@T590> <965cf22eea98c00618570da8424d0d94@mail.gmail.com>
- <20200729153648.GA1698748@T590> <7f94eaf2318cc26ceb64bde88d59d5e2@mail.gmail.com>
- <20200804083625.GA1958244@T590> <afe5eb1be7f416a48d7b5d473f3053d0@mail.gmail.com>
- <20200805084031.GA1995289@T590> <5adffdf805179428bdd0dd6c293a4f7d@mail.gmail.com>
- <20200806133819.GA2046861@T590> <f1ac35dfca34193e6c9bcedbc11911d2@mail.gmail.com>
- <20200806152939.GA2062348@T590>
-In-Reply-To: <20200806152939.GA2062348@T590>
+        id S1727855AbgHHXvP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 8 Aug 2020 19:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726629AbgHHXgH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA49206C3;
+        Sat,  8 Aug 2020 23:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596929765;
+        bh=t+bVXdylCAu4wQqJWJCqmHF6xJlMqanJBJbTaWFvrIs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NBlfImxbBhEfTur7DnV8n48wwuYvMm47QZlAiWL7BtxEw4VKQAOGh2frwwrV4ON9E
+         wALOcDUrVqlZ/r7TT7ETS9FaObuSxy8nauF+0xx8yAq0j4OPxk6rdWux3wVV9pfxkl
+         HjRFYsDuVQy4qqKRJmNou5UT2AnOQMHtcelvahJI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        yu kuai <yukuai3@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 17/72] blktrace: fix debugfs use after free
+Date:   Sat,  8 Aug 2020 19:34:46 -0400
+Message-Id: <20200808233542.3617339-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
+References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQMjI78N3hI4nYPl7m+8RPNdz72u+AIQ6BN/Af8DR5wB98/f/wIl0wtMAyOnIMMBUiS2bQGsIvrnAdpdHIkCtpqGHQEvo/4KpfSfM2A=
-Date:   Sun, 9 Aug 2020 00:35:21 +0530
-Message-ID: <3f35b0f67c73c8c4996fdad80eb6d963@mail.gmail.com>
-Subject: RE: [PATCH RFC v7 10/12] megaraid_sas: switch fusion adapters to MQ
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        don.brace@microsemi.com, Sumit Saxena <sumit.saxena@broadcom.com>,
-        bvanassche@acm.org, hare@suse.com, hch@lst.de,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> On Thu, Aug 06, 2020 at 08:07:38PM +0530, Kashyap Desai wrote:
-> > > > Hi Ming -
-> > > >
-> > > > There is still some race which is not handled.  Take a case of IO
-> > > > is not able to get budget and it has already marked <restarts>
-flag.
-> > > > <restarts> flag will be seen non-zero in completion path and
-> > > > completion path will attempt h/w queue run. (But this particular
-> > > > IO is still not in s/w queue.).
-> > > > Attempt of running h/w queue from completion path will not flush
-> > > > any IO since there is no IO in s/w queue.
-> > >
-> > > Then where is the IO to be submitted in case of running out of
-budget?
-> >
-> > Typical race in your latest patch is - (Lets consider command A,B and
-> > C) Command A did not receive budget. Command B completed  (which was
-> > already
->
-> Command A doesn't get budget, and A is still in sw/scheduler queue
-because
-> we try to acquire budget before dequeuing request from sw/scheduler
-queue,
-> see __blk_mq_do_dispatch_sched() and blk_mq_do_dispatch_ctx().
->
-> Not consider direct issue, because the hw queue will be run explicitly
-when
-> not getting budget, see __blk_mq_try_issue_directly.
->
-> Not consider command A being added to hctx->dispatch too, because blk-mq
-> will re-run the queue, see blk_mq_dispatch_rq_list().
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-Ming -
+[ Upstream commit bad8e64fb19d3a0de5e564d9a7271c31bd684369 ]
 
-After going through your comment (I noted your comment and thanks for
-correcting my understanding.) and block layer code, I realize that it is a
-different race condition. My previous explanation was not accurate.
-I debug further and figure out what is actually happening - Consider below
-scenario/sequence -
+On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+merged on v4.12 Omar fixed the original blktrace code for request-based
+drivers (multiqueue). This however left in place a possible crash, if you
+happen to abuse blktrace while racing to remove / add a device.
 
-Thread -1 - Detected budget contention. Set restarts = 1.
-Thread -2 - old restarts = 1. start hw queue.
-Thread -3 - old restarts = 1. start hw queue.
-Thread -2 - move restarts = 0.
-In my testing, I noticed that both thread-2 and thread-3 started h/w queue
-but there was no work for them to do. It is possible because some other
-context of h/w queue run might have done that job.
-It means, IO of thread-1 is already posted.
-Thread -4 - Detected budget contention. Set restart = 1 (because thread-2
-has move restarts=0).
-Thread -3 - move restarts = 0 (because this thread see old value = 1 but
-that is actually updated one more time by thread-4 and theread-4 actually
-wanted to run h/w queues). IO of Thread-4 will not be scheduled.
+We used to use asynchronous removal of the request_queue, and with that
+the issue was easier to reproduce. Now that we have reverted to
+synchronous removal of the request_queue, the issue is still possible to
+reproduce, its however just a bit more difficult.
 
-We have to make sure that completion IO path do atomic_cmpxchng of
-restarts flag before running the h/w queue.  Below code change - (main fix
-is sequence of atomic_cmpxchg and blk_mq_run_hw_queues) fix the issue.
+We essentially run two instances of break-blktrace which add/remove
+a loop device, and setup a blktrace and just never tear the blktrace
+down. We do this twice in parallel. This is easily reproduced with the
+script run_0004.sh from break-blktrace [0].
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -594,8 +594,27 @@ static bool scsi_end_request(struct request *req,
-blk_status_t error,
-        if (scsi_target(sdev)->single_lun ||
-            !list_empty(&sdev->host->starved_list))
-                kblockd_schedule_work(&sdev->requeue_work);
--       else
--               blk_mq_run_hw_queues(q, true);
-+       else {
-+               /*
-+                * smp_mb() implied in either rq->end_io or
-blk_mq_free_request
-+                * is for ordering writing .device_busy in
-scsi_device_unbusy()
-+                * and reading sdev->restarts.
-+                */
-+               int old = atomic_read(&sdev->restarts);
-+
-+               if (old) {
-+                       /*
-+                        * ->restarts has to be kept as non-zero if there
-is
-+                        *  new budget contention comes.
-+                        */
-+                       atomic_cmpxchg(&sdev->restarts, old, 0);
-+
-+                       /* run the queue after restarts flag is updated
-+                        * to avoid race condition with .get_budget
-+                        */
-+                       blk_mq_run_hw_queues(sdev->request_queue, true);
-+               }
-+       }
+We can end up with two types of panics each reflecting where we
+race, one a failed blktrace setup:
 
-        percpu_ref_put(&q->q_usage_counter);
-        return false;
+[  252.426751] debugfs: Directory 'loop0' with parent 'block' already present!
+[  252.432265] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  252.436592] #PF: supervisor write access in kernel mode
+[  252.439822] #PF: error_code(0x0002) - not-present page
+[  252.442967] PGD 0 P4D 0
+[  252.444656] Oops: 0002 [#1] SMP NOPTI
+[  252.446972] CPU: 10 PID: 1153 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  252.452673] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  252.456343] RIP: 0010:down_write+0x15/0x40
+[  252.458146] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  252.463638] RSP: 0018:ffffa626415abcc8 EFLAGS: 00010246
+[  252.464950] RAX: 0000000000000000 RBX: ffff958c25f0f5c0 RCX: ffffff8100000000
+[  252.466727] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  252.468482] RBP: 00000000000000a0 R08: 0000000000000000 R09: 0000000000000001
+[  252.470014] R10: 0000000000000000 R11: ffff958d1f9227ff R12: 0000000000000000
+[  252.471473] R13: ffff958c25ea5380 R14: ffffffff8cce15f1 R15: 00000000000000a0
+[  252.473346] FS:  00007f2e69dee540(0000) GS:ffff958c2fc80000(0000) knlGS:0000000000000000
+[  252.475225] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  252.476267] CR2: 00000000000000a0 CR3: 0000000427d10004 CR4: 0000000000360ee0
+[  252.477526] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  252.478776] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  252.479866] Call Trace:
+[  252.480322]  simple_recursive_removal+0x4e/0x2e0
+[  252.481078]  ? debugfs_remove+0x60/0x60
+[  252.481725]  ? relay_destroy_buf+0x77/0xb0
+[  252.482662]  debugfs_remove+0x40/0x60
+[  252.483518]  blk_remove_buf_file_callback+0x5/0x10
+[  252.484328]  relay_close_buf+0x2e/0x60
+[  252.484930]  relay_open+0x1ce/0x2c0
+[  252.485520]  do_blk_trace_setup+0x14f/0x2b0
+[  252.486187]  __blk_trace_setup+0x54/0xb0
+[  252.486803]  blk_trace_ioctl+0x90/0x140
+[  252.487423]  ? do_sys_openat2+0x1ab/0x2d0
+[  252.488053]  blkdev_ioctl+0x4d/0x260
+[  252.488636]  block_ioctl+0x39/0x40
+[  252.489139]  ksys_ioctl+0x87/0xc0
+[  252.489675]  __x64_sys_ioctl+0x16/0x20
+[  252.490380]  do_syscall_64+0x52/0x180
+[  252.491032]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Kashyap
+And the other on the device removal:
+
+[  128.528940] debugfs: Directory 'loop0' with parent 'block' already present!
+[  128.615325] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  128.619537] #PF: supervisor write access in kernel mode
+[  128.622700] #PF: error_code(0x0002) - not-present page
+[  128.625842] PGD 0 P4D 0
+[  128.627585] Oops: 0002 [#1] SMP NOPTI
+[  128.629871] CPU: 12 PID: 544 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  128.635595] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  128.640471] RIP: 0010:down_write+0x15/0x40
+[  128.643041] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  128.650180] RSP: 0018:ffffa9c3c05ebd78 EFLAGS: 00010246
+[  128.651820] RAX: 0000000000000000 RBX: ffff8ae9a6370240 RCX: ffffff8100000000
+[  128.653942] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  128.655720] RBP: 00000000000000a0 R08: 0000000000000002 R09: ffff8ae9afd2d3d0
+[  128.657400] R10: 0000000000000056 R11: 0000000000000000 R12: 0000000000000000
+[  128.659099] R13: 0000000000000000 R14: 0000000000000003 R15: 00000000000000a0
+[  128.660500] FS:  00007febfd995540(0000) GS:ffff8ae9afd00000(0000) knlGS:0000000000000000
+[  128.662204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  128.663426] CR2: 00000000000000a0 CR3: 0000000420042003 CR4: 0000000000360ee0
+[  128.664776] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  128.666022] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  128.667282] Call Trace:
+[  128.667801]  simple_recursive_removal+0x4e/0x2e0
+[  128.668663]  ? debugfs_remove+0x60/0x60
+[  128.669368]  debugfs_remove+0x40/0x60
+[  128.669985]  blk_trace_free+0xd/0x50
+[  128.670593]  __blk_trace_remove+0x27/0x40
+[  128.671274]  blk_trace_shutdown+0x30/0x40
+[  128.671935]  blk_release_queue+0x95/0xf0
+[  128.672589]  kobject_put+0xa5/0x1b0
+[  128.673188]  disk_release+0xa2/0xc0
+[  128.673786]  device_release+0x28/0x80
+[  128.674376]  kobject_put+0xa5/0x1b0
+[  128.674915]  loop_remove+0x39/0x50 [loop]
+[  128.675511]  loop_control_ioctl+0x113/0x130 [loop]
+[  128.676199]  ksys_ioctl+0x87/0xc0
+[  128.676708]  __x64_sys_ioctl+0x16/0x20
+[  128.677274]  do_syscall_64+0x52/0x180
+[  128.677823]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The common theme here is:
+
+debugfs: Directory 'loop0' with parent 'block' already present
+
+This crash happens because of how blktrace uses the debugfs directory
+where it places its files. Upon init we always create the same directory
+which would be needed by blktrace but we only do this for make_request
+drivers (multiqueue) block drivers. When you race a removal of these
+devices with a blktrace setup you end up in a situation where the
+make_request recursive debugfs removal will sweep away the blktrace
+files and then later blktrace will also try to remove individual
+dentries which are already NULL. The inverse is also possible and hence
+the two types of use after frees.
+
+We don't create the block debugfs directory on init for these types of
+block devices:
+
+  * request-based block driver block devices
+  * every possible partition
+  * scsi-generic
+
+And so, this race should in theory only be possible with make_request
+drivers.
+
+We can fix the UAF by simply re-using the debugfs directory for
+make_request drivers (multiqueue) and only creating the ephemeral
+directory for the other type of block devices. The new clarifications
+on relying on the q->blk_trace_mutex *and* also checking for q->blk_trace
+*prior* to processing a blktrace ensures the debugfs directories are
+only created if no possible directory name clashes are possible.
+
+This goes tested with:
+
+  o nvme partitions
+  o ISCSI with tgt, and blktracing against scsi-generic with:
+    o block
+    o tape
+    o cdrom
+    o media changer
+  o blktests
+
+This patch is part of the work which disputes the severity of
+CVE-2019-19770 which shows this issue is not a core debugfs issue, but
+a misuse of debugfs within blktace.
+
+Fixes: 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/blktrace.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 5ef0484513ecb..588e8e3960197 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -522,10 +522,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	if (!bt->msg_data)
+ 		goto err;
+ 
+-	ret = -ENOENT;
+-
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
++#ifdef CONFIG_BLK_DEBUG_FS
++	/*
++	 * When tracing whole make_request drivers (multiqueue) block devices,
++	 * reuse the existing debugfs directory created by the block layer on
++	 * init. For request-based block devices, all partitions block devices,
++	 * and scsi-generic block devices we create a temporary new debugfs
++	 * directory that will be removed once the trace ends.
++	 */
++	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
++		dir = q->debugfs_dir;
++	else
++#endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+ 
+ 	bt->dev = dev;
+@@ -563,8 +571,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 
+ 	ret = 0;
+ err:
+-	if (dir && !bt->dir)
+-		dput(dir);
+ 	if (ret)
+ 		blk_trace_free(bt);
+ 	return ret;
+-- 
+2.25.1
+
