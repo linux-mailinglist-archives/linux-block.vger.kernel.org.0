@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 429CA241069
-	for <lists+linux-block@lfdr.de>; Mon, 10 Aug 2020 21:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58C5A240FDE
+	for <lists+linux-block@lfdr.de>; Mon, 10 Aug 2020 21:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgHJT3e (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Aug 2020 15:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
+        id S1729454AbgHJTMB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Aug 2020 15:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgHJTKk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:40 -0400
+        id S1729445AbgHJTMA (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71ABE207FF;
-        Mon, 10 Aug 2020 19:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A5E2224D;
+        Mon, 10 Aug 2020 19:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086637;
-        bh=UnMzxSx1bFTza18KxTSF0DkGaDImt48XwHIJpKEOgLk=;
+        s=default; t=1597086719;
+        bh=drg9k6fAr4o4ZaB/KVXQaJmhieDdCk/mTFHnx7qh7P0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLK7MvFVrBEjbi1Oa+ogKOS5xUANGJx3hywgW+isCo+eZyzWzK2YJUT1udMLT0Ai7
-         HaEAAIHz8vxLOAQAjCbIe2sIQBkgozSHoRmOPPPtCyeiKm7VQQJH1dObSuQkrkjRHQ
-         M9INbNY5GCimkI2uBIwSO5Ca6qjEebDUi7mnTBo4=
+        b=buUv8LReKXK+Q2Fn5CTpgzb91SFTBEANiRprUOofiZMehJb4EOXMkMB7XDZGGiDSK
+         lGs0pB5tqRVtpflhMs5MP9ReCbyRBLhs2fJ4ZtuehN3bV95VLYxNh6PRrfwHXvizu3
+         b8sqTWt8XU0pC/vsU3rQU9MG9QooVF/+X7g6KmZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 06/60] loop: be paranoid on exit and prevent new additions / removals
-Date:   Mon, 10 Aug 2020 15:09:34 -0400
-Message-Id: <20200810191028.3793884-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 04/45] loop: be paranoid on exit and prevent new additions / removals
+Date:   Mon, 10 Aug 2020 15:11:12 -0400
+Message-Id: <20200810191153.3794446-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
-References: <20200810191028.3793884-1-sashal@kernel.org>
+In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
+References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 418bb4621255a..6b36fc2f4edc7 100644
+index 565e35e69f249..bddbbf5b3dda2 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -2333,6 +2333,8 @@ static void __exit loop_exit(void)
+@@ -2325,6 +2325,8 @@ static void __exit loop_exit(void)
  
  	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
  
@@ -73,7 +73,7 @@ index 418bb4621255a..6b36fc2f4edc7 100644
  	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
  	idr_destroy(&loop_index_idr);
  
-@@ -2340,6 +2342,8 @@ static void __exit loop_exit(void)
+@@ -2332,6 +2334,8 @@ static void __exit loop_exit(void)
  	unregister_blkdev(LOOP_MAJOR, "loop");
  
  	misc_deregister(&loop_misc);
