@@ -2,45 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA76F242E74
-	for <lists+linux-block@lfdr.de>; Wed, 12 Aug 2020 20:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A1A9243009
+	for <lists+linux-block@lfdr.de>; Wed, 12 Aug 2020 22:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHLSRN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Aug 2020 14:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgHLSRM (ORCPT
+        id S1726573AbgHLU2j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Aug 2020 16:28:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52481 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726512AbgHLU2i (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:17:12 -0400
-Received: from sym2.noone.org (sym2.noone.org [IPv6:2a01:4f8:120:4161::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A3DC061383;
-        Wed, 12 Aug 2020 11:17:11 -0700 (PDT)
-Received: by sym2.noone.org (Postfix, from userid 1002)
-        id 4BRdFt05J0zvjdp; Wed, 12 Aug 2020 20:17:05 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 20:17:05 +0200
-From:   Tobias Klauser <tklauser@distanz.ch>
-To:     Leah Rumancik <leah.rumancik@gmail.com>
-Cc:     bpf@vger.kernel.org, linux-block@vger.kernel.org,
-        orbekk@google.com, harshads@google.com, jasiu@google.com,
-        saranyamohan@google.com, tytso@google.com, bvanassche@google.com
-Subject: Re: [RFC PATCH 4/4] bpf: add BPF_PROG_TYPE_LSM to bpftool name array
-Message-ID: <20200812181705.hadjvarvjxwj36ai@distanz.ch>
-References: <20200812163305.545447-1-leah.rumancik@gmail.com>
- <20200812163305.545447-5-leah.rumancik@gmail.com>
+        Wed, 12 Aug 2020 16:28:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597264117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eJXYJZa0+jqjrR60z7t4R8Jwh4xDRotz1b/w46Emeyo=;
+        b=H8nCnKk2J7JNesKrVW3iMTLN4ZXF1IArnYVrBDD00u8AAGBszCZ0Wgt/GzLT5uGkgxGmVF
+        AJWRkLATGILQCUi6GJoz7uDYwqYtwz95UEPJA5EOoucc0Ds6hhaIC9ICWVoaNFsNIOQjEd
+        vRlzHaM5oEspqVKeqAfn582yMd1GKvQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-554-N0dpFdX3Mkyf7NnFyJr_XA-1; Wed, 12 Aug 2020 16:28:33 -0400
+X-MC-Unique: N0dpFdX3Mkyf7NnFyJr_XA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 427A181CAFA;
+        Wed, 12 Aug 2020 20:28:32 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD15519D71;
+        Wed, 12 Aug 2020 20:28:30 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 16:28:30 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Chao Leng <lengchao@huawei.com>, axboe@fb.com, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        kbusch@kernel.org
+Subject: Re: [PATCH 2/3] nvme-core: delete the dependency on blk status
+Message-ID: <20200812202829.GA586@redhat.com>
+References: <20200812081844.22224-1-lengchao@huawei.com>
+ <20200812151035.GB29544@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812163305.545447-5-leah.rumancik@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200812151035.GB29544@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2020-08-12 at 18:33:05 +0200, Leah Rumancik <leah.rumancik@gmail.com> wrote:
-> Update prog_type_name[] to include missing entry for BPF_PROG_TYPE_LSM
+On Wed, Aug 12 2020 at 11:10am -0400,
+Christoph Hellwig <hch@lst.de> wrote:
 
-FWIW, this was already fixed in bpf-next by commit 9a97c9d2af5c ("tools,
-bpftool: Add LSM type to array of prog names"), the definition of
-prog_type_name also moved to tools/bpf/bpftool/prog.c from
-tools/bpf/bpftool/main.h
+> On Wed, Aug 12, 2020 at 04:18:44PM +0800, Chao Leng wrote:
+> > nvme should not depend on blk status, just need check nvme status.
+> > Just need do translating nvme status to blk status for returning error.
+> 
+> While this doesn't look wrong it also doesn't save us a single
+> instruction and actually adds more lines of code.  Do you have a good
+> reason for this change?
+
+It certainly saves nvme_error_status(nvme_req(req)->status if
+nvme_req_needs_retry().
+
