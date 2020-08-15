@@ -2,290 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F07245463
-	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 00:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 336A92454F0
+	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 01:31:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHOWXv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Aug 2020 18:23:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37954 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgHOWXr (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:23:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D4614B1D3;
-        Sat, 15 Aug 2020 12:48:37 +0000 (UTC)
-From:   colyli@suse.de
-To:     linux-bcache@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
-Subject: [PATCH v1 14/14] bcache: move struct cache_sb out of uapi bcache.h
-Date:   Sat, 15 Aug 2020 20:47:43 +0800
-Message-Id: <20200815124743.115270-15-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200815124743.115270-1-colyli@suse.de>
-References: <20200815124743.115270-1-colyli@suse.de>
+        id S1728749AbgHOXbP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 15 Aug 2020 19:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgHOXbN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sat, 15 Aug 2020 19:31:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4D7C061786
+        for <linux-block@vger.kernel.org>; Sat, 15 Aug 2020 16:31:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t11so5740764plr.5
+        for <linux-block@vger.kernel.org>; Sat, 15 Aug 2020 16:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=MuXdqbuT0/oHj9rROzOQW88XnOHaz9N7lrCK4rwe864=;
+        b=NjxXGo+iXgkT6q9mybLjY3NGxeRkS9R2O4+nbFCiFOGwWUo8WzCur26CTx1CAT0faS
+         xv8yIoDR75V7jL3OHb72LCFA6yOpHrWpc47UhfqNh8tycEK+cXw3U9gXh8XklWinqgy0
+         ujQYpAEuIbzi3jvtMW4AIAeOtpzH3JhnohoCXfCEwrI2jBKg7l2vKqNwHYmLs6FLFPAC
+         A3WCWqdnBCTG04Z6Fv3M/0029eMFTVUg371D6EwolKRhsRZTZGpv7oIEr2O309k+HTpU
+         fb9n7EGdy+lop/wzw0ojrPur0qJkIeSAYTLQUSC2RkwbIOcAQNJq+6jbTe7n1mez72bJ
+         DSGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=MuXdqbuT0/oHj9rROzOQW88XnOHaz9N7lrCK4rwe864=;
+        b=uaH8rnd0Td8I4OV6BgQeM0sO0FukGmGxgdC9nviJgLymjroLijp1DFibEoOG6wA6ex
+         nKFJRh425Ag+1GwTTfeuWB7sVMA0zsPRwXLiKW1u8F4H0R10PCZ6fFstU8iGYZr7ILK1
+         J1+/Qv01lO3A8GOp+saGWBZeFJOqG+HayciVz75xlmmh6xEZOQcg/8ThljO6ZQFsTJOY
+         7ZsPpGeFpgx+1aKhMBlDB9Kjx7bAHyik0XK0ru76g3PrvGeF2xEpZ9kGnuVNBVEwns6K
+         10PK+tQ6MlBFItyObeOV9ZzE4wZVYljamQgjVe1HUbtpkAZvXl+/y+lbEVbJeONi4E5i
+         L3EA==
+X-Gm-Message-State: AOAM532TOh9V2w9hIczbEQqbAVPdnTaTVNElUkudZ+gUwqmbbwbOwFrI
+        mOJke/FvsKVTeRw3l6nyPwmIPVVG8Y0bDw==
+X-Google-Smtp-Source: ABdhPJwtPkohLiHisPK6gGtbaOQHR9onYKv0JTBElldv7rGbtxGZUvR3YtqaBvKR68+qVBjOFREpPQ==
+X-Received: by 2002:a17:902:6f01:: with SMTP id w1mr6519938plk.49.1597534270490;
+        Sat, 15 Aug 2020 16:31:10 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:6299:2df1:e468:6351? ([2605:e000:100e:8c61:6299:2df1:e468:6351])
+        by smtp.gmail.com with ESMTPSA id u21sm11946051pjn.27.2020.08.15.16.31.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Aug 2020 16:31:09 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Final block fixes for 5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Message-ID: <fcaf3dc8-5065-30ff-f831-17db615c162d@kernel.dk>
+Date:   Sat, 15 Aug 2020 16:31:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+Hi Linus,
 
-struct cache_sb does not exactly map to cache_sb_disk, it is only for
-in-memory super block and dosn't belong to uapi bcache.h.
+A few fixes on the block side of things:
 
-This patch moves the struct cache_sb definition and other depending
-macros and inline routines from include/uapi/linux/bcache.h to
-drivers/md/bcache/bcache.h, this is the proper location to have them.
+- Discard granularity fix (Coly)
 
-Signed-off-by: Coly Li <colyli@suse.de>
----
- drivers/md/bcache/bcache.h  | 99 +++++++++++++++++++++++++++++++++++++
- include/uapi/linux/bcache.h | 98 ------------------------------------
- 2 files changed, 99 insertions(+), 98 deletions(-)
+- rnbd cleanups (Guoqing)
 
-diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-index 1d57f48307e6..b755bf7832ac 100644
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -279,6 +279,82 @@ struct bcache_device {
- 		     unsigned int cmd, unsigned long arg);
- };
- 
-+/*
-+ * This is for in-memory bcache super block.
-+ * NOTE: cache_sb is NOT exactly mapping to cache_sb_disk, the member
-+ *       size, ordering and even whole struct size may be different
-+ *       from cache_sb_disk.
-+ */
-+struct cache_sb {
-+	__u64			offset;	/* sector where this sb was written */
-+	__u64			version;
-+
-+	__u8			magic[16];
-+
-+	__u8			uuid[16];
-+	union {
-+		__u8		set_uuid[16];
-+		__u64		set_magic;
-+	};
-+	__u8			label[SB_LABEL_SIZE];
-+
-+	__u64			flags;
-+	__u64			seq;
-+
-+	__u64			feature_compat;
-+	__u64			feature_incompat;
-+	__u64			feature_ro_compat;
-+
-+	union {
-+	struct {
-+		/* Cache devices */
-+		__u64		nbuckets;	/* device size */
-+
-+		__u16		block_size;	/* sectors */
-+		__u16		nr_in_set;
-+		__u16		nr_this_dev;
-+		__u32		bucket_size;	/* sectors */
-+	};
-+	struct {
-+		/* Backing devices */
-+		__u64		data_offset;
-+
-+		/*
-+		 * block_size from the cache device section is still used by
-+		 * backing devices, so don't add anything here until we fix
-+		 * things to not need it for backing devices anymore
-+		 */
-+	};
-+	};
-+
-+	__u32			last_mount;	/* time overflow in y2106 */
-+
-+	__u16			first_bucket;
-+	union {
-+		__u16		njournal_buckets;
-+		__u16		keys;
-+	};
-+	__u64			d[SB_JOURNAL_BUCKETS];	/* journal buckets */
-+};
-+
-+BITMASK(CACHE_SYNC,			struct cache_sb, flags, 0, 1);
-+BITMASK(CACHE_DISCARD,			struct cache_sb, flags, 1, 1);
-+BITMASK(CACHE_REPLACEMENT,		struct cache_sb, flags, 2, 3);
-+#define CACHE_REPLACEMENT_LRU		0U
-+#define CACHE_REPLACEMENT_FIFO		1U
-+#define CACHE_REPLACEMENT_RANDOM	2U
-+
-+BITMASK(BDEV_CACHE_MODE,		struct cache_sb, flags, 0, 4);
-+#define CACHE_MODE_WRITETHROUGH		0U
-+#define CACHE_MODE_WRITEBACK		1U
-+#define CACHE_MODE_WRITEAROUND		2U
-+#define CACHE_MODE_NONE			3U
-+BITMASK(BDEV_STATE,			struct cache_sb, flags, 61, 2);
-+#define BDEV_STATE_NONE			0U
-+#define BDEV_STATE_CLEAN		1U
-+#define BDEV_STATE_DIRTY		2U
-+#define BDEV_STATE_STALE		3U
-+
- struct io {
- 	/* Used to track sequential IO so it can be skipped */
- 	struct hlist_node	hash;
-@@ -840,6 +916,13 @@ static inline bool ptr_available(struct cache_set *c, const struct bkey *k,
- 	return (PTR_DEV(k, i) < MAX_CACHES_PER_SET) && PTR_CACHE(c, k, i);
- }
- 
-+static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
-+{
-+	return sb->version == BCACHE_SB_VERSION_BDEV
-+		|| sb->version == BCACHE_SB_VERSION_BDEV_WITH_OFFSET
-+		|| sb->version == BCACHE_SB_VERSION_BDEV_WITH_FEATURES;
-+}
-+
- /* Btree key macros */
- 
- /*
-@@ -958,6 +1041,22 @@ static inline void wait_for_kthread_stop(void)
- 	}
- }
- 
-+/* generate magic number */
-+static inline __u64 jset_magic(struct cache_sb *sb)
-+{
-+	return sb->set_magic ^ JSET_MAGIC;
-+}
-+
-+static inline __u64 pset_magic(struct cache_sb *sb)
-+{
-+	return sb->set_magic ^ PSET_MAGIC;
-+}
-+
-+static inline __u64 bset_magic(struct cache_sb *sb)
-+{
-+	return sb->set_magic ^ BSET_MAGIC;
-+}
-+
- /* Forward declarations */
- 
- void bch_count_backing_io_errors(struct cached_dev *dc, struct bio *bio);
-diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
-index 52e8bcb33981..18166a3d8503 100644
---- a/include/uapi/linux/bcache.h
-+++ b/include/uapi/linux/bcache.h
-@@ -216,89 +216,6 @@ struct cache_sb_disk {
- 	__le16			bucket_size_hi;
- };
- 
--/*
-- * This is for in-memory bcache super block.
-- * NOTE: cache_sb is NOT exactly mapping to cache_sb_disk, the member
-- *       size, ordering and even whole struct size may be different
-- *       from cache_sb_disk.
-- */
--struct cache_sb {
--	__u64			offset;	/* sector where this sb was written */
--	__u64			version;
--
--	__u8			magic[16];
--
--	__u8			uuid[16];
--	union {
--		__u8		set_uuid[16];
--		__u64		set_magic;
--	};
--	__u8			label[SB_LABEL_SIZE];
--
--	__u64			flags;
--	__u64			seq;
--
--	__u64			feature_compat;
--	__u64			feature_incompat;
--	__u64			feature_ro_compat;
--
--	union {
--	struct {
--		/* Cache devices */
--		__u64		nbuckets;	/* device size */
--
--		__u16		block_size;	/* sectors */
--		__u16		nr_in_set;
--		__u16		nr_this_dev;
--		__u32		bucket_size;	/* sectors */
--	};
--	struct {
--		/* Backing devices */
--		__u64		data_offset;
--
--		/*
--		 * block_size from the cache device section is still used by
--		 * backing devices, so don't add anything here until we fix
--		 * things to not need it for backing devices anymore
--		 */
--	};
--	};
--
--	__u32			last_mount;	/* time overflow in y2106 */
--
--	__u16			first_bucket;
--	union {
--		__u16		njournal_buckets;
--		__u16		keys;
--	};
--	__u64			d[SB_JOURNAL_BUCKETS];	/* journal buckets */
--};
--
--static inline _Bool SB_IS_BDEV(const struct cache_sb *sb)
--{
--	return sb->version == BCACHE_SB_VERSION_BDEV
--		|| sb->version == BCACHE_SB_VERSION_BDEV_WITH_OFFSET
--		|| sb->version == BCACHE_SB_VERSION_BDEV_WITH_FEATURES;
--}
--
--BITMASK(CACHE_SYNC,			struct cache_sb, flags, 0, 1);
--BITMASK(CACHE_DISCARD,			struct cache_sb, flags, 1, 1);
--BITMASK(CACHE_REPLACEMENT,		struct cache_sb, flags, 2, 3);
--#define CACHE_REPLACEMENT_LRU		0U
--#define CACHE_REPLACEMENT_FIFO		1U
--#define CACHE_REPLACEMENT_RANDOM	2U
--
--BITMASK(BDEV_CACHE_MODE,		struct cache_sb, flags, 0, 4);
--#define CACHE_MODE_WRITETHROUGH		0U
--#define CACHE_MODE_WRITEBACK		1U
--#define CACHE_MODE_WRITEAROUND		2U
--#define CACHE_MODE_NONE			3U
--BITMASK(BDEV_STATE,			struct cache_sb, flags, 61, 2);
--#define BDEV_STATE_NONE			0U
--#define BDEV_STATE_CLEAN		1U
--#define BDEV_STATE_DIRTY		2U
--#define BDEV_STATE_STALE		3U
--
- /*
-  * Magic numbers
-  *
-@@ -310,21 +227,6 @@ BITMASK(BDEV_STATE,			struct cache_sb, flags, 61, 2);
- #define PSET_MAGIC			0x6750e15f87337f91ULL
- #define BSET_MAGIC			0x90135c78b99e07f5ULL
- 
--static inline __u64 jset_magic(struct cache_sb *sb)
--{
--	return sb->set_magic ^ JSET_MAGIC;
--}
--
--static inline __u64 pset_magic(struct cache_sb *sb)
--{
--	return sb->set_magic ^ PSET_MAGIC;
--}
--
--static inline __u64 bset_magic(struct cache_sb *sb)
--{
--	return sb->set_magic ^ BSET_MAGIC;
--}
--
- /*
-  * Journal
-  *
+- md error handling fix (Dan)
+
+- md sysfs fix (Junxiao)
+
+- Fix flush request accounting, which caused an IO slowdown for some
+  configurations (Ming)
+
+- Properly propagate loop flag for partition scanning (Lennart)
+
+Please pull!
+
+
+The following changes since commit fffe3ae0ee84e25d2befe2ae59bc32aa2b6bc77b:
+
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2020-08-05 13:28:50 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.9-2020-08-14
+
+for you to fetch changes up to c1e2b8422bf946c80e832cee22b3399634f87a2c:
+
+  block: fix double account of flush request's driver tag (2020-08-11 13:53:32 -0600)
+
+----------------------------------------------------------------
+block-5.9-2020-08-14
+
+----------------------------------------------------------------
+Coly Li (1):
+      block: check queue's limits.discard_granularity in __blkdev_issue_discard()
+
+Dan Carpenter (1):
+      md-cluster: Fix potential error pointer dereference in resize_bitmaps()
+
+Guoqing Jiang (2):
+      rnbd: remove rnbd_dev_submit_io
+      rnbd: no need to set bi_end_io in rnbd_bio_map_kern
+
+Jens Axboe (1):
+      Merge branch 'md-next' of https://git.kernel.org/.../song/md into block-5.9
+
+Junxiao Bi (1):
+      md: get sysfs entry after redundancy attr group create
+
+Lennart Poettering (1):
+      loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+
+Ming Lei (1):
+      block: fix double account of flush request's driver tag
+
+ block/blk-flush.c                 | 11 +++++++++--
+ block/blk-lib.c                   |  9 +++++++++
+ drivers/block/loop.c              |  2 ++
+ drivers/block/rnbd/rnbd-srv-dev.c | 37 +++----------------------------------
+ drivers/block/rnbd/rnbd-srv-dev.h | 19 +++++--------------
+ drivers/block/rnbd/rnbd-srv.c     | 32 +++++++++++++++++++++++---------
+ drivers/md/md-cluster.c           |  1 +
+ drivers/md/md.c                   | 17 ++++++++++-------
+ 8 files changed, 62 insertions(+), 66 deletions(-)
+
 -- 
-2.26.2
+Jens Axboe
 
