@@ -2,31 +2,26 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6958B245428
-	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 00:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33756245459
+	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 00:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgHOWNo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Aug 2020 18:13:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36276 "EHLO mx2.suse.de"
+        id S1728974AbgHOWXw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 15 Aug 2020 18:23:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37952 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbgHOWNo (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:13:44 -0400
+        id S1728994AbgHOWXv (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:23:51 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EBD8AB1BE;
-        Sat, 15 Aug 2020 12:43:32 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 5CF6EACB5;
+        Sat, 15 Aug 2020 12:48:13 +0000 (UTC)
 From:   colyli@suse.de
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH v4 3/3] drbd: code cleanup by using sendpage_ok() to check page for kernel_sendpage()
-Date:   Sat, 15 Aug 2020 20:42:54 +0800
-Message-Id: <20200815124254.115076-3-colyli@suse.de>
+To:     linux-bcache@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
+Subject: [PATCH 00/14] bcache: remove multiple caches code framework
+Date:   Sat, 15 Aug 2020 20:47:29 +0800
+Message-Id: <20200815124743.115270-1-colyli@suse.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200815124254.115076-1-colyli@suse.de>
-References: <20200815124254.115076-1-colyli@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
@@ -36,43 +31,71 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Coly Li <colyli@suse.de>
 
-In _drbd_send_page() a page is checked by following code before sending
-it by kernel_sendpage(),
-        (page_count(page) < 1) || PageSlab(page)
-If the check is true, this page won't be send by kernel_sendpage() and
-handled by sock_no_sendpage().
+The multiple caches code framework in bcache is to store multiple
+copies of the cached data among multiple caches of the cache set.
+Current code framework just does simple data write to each cache without
+any extra condition handling (e.g. device failure, slow devices). This
+code framework is not and will never be completed. Considering people
+may use md raid1 for same similar data duplication purpose, the multiple
+caches framework is useless dead code indeed.
 
-This kind of check is exactly what macro sendpage_ok() does, which is
-introduced into include/linux/net.h to solve a similar send page issue
-in nvme-tcp code.
+Due to the multiple caches code framework, bcache has two data structure
+struct cache and struct cache_set to manage the cache device. Indeed
+since bcache was merged into mainline kernel in Linux v3.10, a cache set
+only has one cache, the unnecessary two level abstraction makes extra
+effort to maintain redundant information between struct cache and struct
+cache set, for examaple the in-memmory super block struct cache_sb.
 
-This patch uses macro sendpage_ok() to replace the open coded checks to
-page type and refcount in _drbd_send_page(), as a code cleanup.
+This is the first wave effort to remove multiple caches framework and
+make the code and data structure relation to be more clear. This series
+explicitly make each cache set only have single cache, and remove the
+embedded partial super block in struct cache_set and directly reference
+cache's in-memory super block, finally move struct cache_sb from
+include/uapi/linux/bcache.h to drivers/md/bcache/bcache.h since it isn't
+part of uapi anymore.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
----
-Changelog:
-v3, introduce a more common sendpage_ok()
-v2, fix typo in patch subject
-v1, the initial version.
- drivers/block/drbd/drbd_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The patch set is just compiling passed, I post this series early for
+your review and comments. More fixes after testing will follow up soon.
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index cb687ccdbd96..55dc0c91781e 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -1553,7 +1553,7 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
- 	 * put_page(); and would cause either a VM_BUG directly, or
- 	 * __page_cache_release a page that would actually still be referenced
- 	 * by someone, leading to some obscure delayed Oops somewhere else. */
--	if (drbd_disable_sendpage || (page_count(page) < 1) || PageSlab(page))
-+	if (drbd_disable_sendpage || !sendpage_ok(page))
- 		return _drbd_no_send_page(peer_device, page, offset, size, msg_flags);
- 
- 	msg_flags |= MSG_NOSIGNAL;
+Thanks in advance.
+
+Coly Li
+----
+
+Coly Li (14):
+  bcache: remove 'int n' from parameter list of bch_bucket_alloc_set()
+  bcache: explicitly make cache_set only have single cache
+  bcache: remove for_each_cache()
+  bcache: add set_uuid in struct cache_set
+  bcache: only use block_bytes() on struct cache
+  bcache: remove useless alloc_bucket_pages()
+  bcache: remove useless bucket_pages()
+  bcache: only use bucket_bytes() on struct cache
+  bcache: avoid data copy between cache_set->sb and cache->sb
+  bcache: don't check seq numbers in register_cache_set()
+  bcache: remove can_attach_cache()
+  bcache: check and set sync status on cache's in-memory super block
+  bcache: remove embedded struct cache_sb from struct cache_set
+  bcache: move struct cache_sb out of uapi bcache.h
+
+ drivers/md/bcache/alloc.c     |  60 ++++-----
+ drivers/md/bcache/bcache.h    | 128 +++++++++++++++---
+ drivers/md/bcache/btree.c     | 144 ++++++++++----------
+ drivers/md/bcache/btree.h     |   2 +-
+ drivers/md/bcache/debug.c     |  10 +-
+ drivers/md/bcache/extents.c   |   6 +-
+ drivers/md/bcache/features.c  |   4 +-
+ drivers/md/bcache/io.c        |   2 +-
+ drivers/md/bcache/journal.c   | 246 ++++++++++++++++------------------
+ drivers/md/bcache/movinggc.c  |  58 ++++----
+ drivers/md/bcache/request.c   |   6 +-
+ drivers/md/bcache/super.c     | 225 +++++++++++--------------------
+ drivers/md/bcache/sysfs.c     |  10 +-
+ drivers/md/bcache/writeback.c |   2 +-
+ include/trace/events/bcache.h |   4 +-
+ include/uapi/linux/bcache.h   |  98 --------------
+ 16 files changed, 445 insertions(+), 560 deletions(-)
+
 -- 
 2.26.2
 
