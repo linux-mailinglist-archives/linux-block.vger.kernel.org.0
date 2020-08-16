@@ -2,33 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF062459F3
-	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 00:50:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3C5245A16
+	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 01:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgHPWuX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 16 Aug 2020 18:50:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36892 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbgHPWuW (ORCPT
+        id S1726127AbgHPXkw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 16 Aug 2020 19:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgHPXkw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 16 Aug 2020 18:50:22 -0400
-Received: from [IPv6:2804:431:c7f5:9f4e:1121:8b00:83b2:86f4] (unknown [IPv6:2804:431:c7f5:9f4e:1121:8b00:83b2:86f4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 911EA2753ED;
-        Sun, 16 Aug 2020 23:50:19 +0100 (BST)
+        Sun, 16 Aug 2020 19:40:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38DFC061786;
+        Sun, 16 Aug 2020 16:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=E093XKq91oPFn1xbWF3HTVXXCCZ141wxPnL00SPkX/g=; b=t9jp2mfC1gcp3mNP95khCZXBcb
+        Xvh1aF1hgRTdwt6odUtkgV7qmJLduQjOOVJu/YInP6ZcsPzlvfC+m0NJOIk4wwCozJntsdJEWQfwl
+        tjMC7S7reQSBIWdvpmMhVLlKu9OfW5Bp67tWfOX8nmZ24rICCtj5aabFRg5925apIbUjILZ2908X1
+        NIZI0wWeJ9rdxctrWq9hfjFwFIZ91+uRzTpGEMjyA2IsDiX0ryGksOdZ3b11x5iC0aAyUdVo0WPDs
+        csH7wv3EBWwrnFD9FrHz9leQXvbhusL7eKcS/F++PIJGm+sLOy50BkMeb9KTWlSHsTneVqqIR6i6f
+        jLoXk/4Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7SBA-0001iN-G7; Sun, 16 Aug 2020 23:35:09 +0000
 Subject: Re: [PATCH] block: blk-mq.c: fix @at_head kernel-doc warning
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
 References: <20200816222519.313-1-rdunlap@infradead.org>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <ce836be4-a430-eec3-9268-a9ad080122e7@collabora.com>
-Date:   Sun, 16 Aug 2020 19:50:14 -0300
+ <ce836be4-a430-eec3-9268-a9ad080122e7@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <edbe148b-d916-2325-790a-075f700a8115@infradead.org>
+Date:   Sun, 16 Aug 2020 16:35:05 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200816222519.313-1-rdunlap@infradead.org>
+In-Reply-To: <ce836be4-a430-eec3-9268-a9ad080122e7@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -37,26 +49,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Randy,
-
-On 8/16/20 7:25 PM, Randy Dunlap wrote:
-> Fix a new kernel-doc warning in block/blk-mq.c:
+On 8/16/20 3:50 PM, André Almeida wrote:
+> Hi Randy,
 > 
-> ../block/blk-mq.c:1844: warning: Function parameter or member 'at_head' not described in 'blk_mq_request_bypass_insert'
+> On 8/16/20 7:25 PM, Randy Dunlap wrote:
+>> Fix a new kernel-doc warning in block/blk-mq.c:
+>>
+>> ../block/blk-mq.c:1844: warning: Function parameter or member 'at_head' not described in 'blk_mq_request_bypass_insert'
+>>
+>> Fixes: 105663f73e71 ("blk-mq: Document functions for sending request")
 > 
-> Fixes: 105663f73e71 ("blk-mq: Document functions for sending request")
+> By the time commit 105663f73e71 ("blk-mq: Document functions for sending
+> request") was merged, the parameter @at_head didn't exist[1].
+> 
+> The commit that inserted this warning is 01e99aeca397 ("blk-mq: insert
+> passthrough request into hctx->dispatch directly"), that added @at_head
+> without updating the documentation.
+> 
+> Thanks,
+> 	André
 
-By the time commit 105663f73e71 ("blk-mq: Document functions for sending
-request") was merged, the parameter @at_head didn't exist[1].
+Hi André,
 
-The commit that inserted this warning is 01e99aeca397 ("blk-mq: insert
-passthrough request into hctx->dispatch directly"), that added @at_head
-without updating the documentation.
+Sorry, I'll correct that.
 
-Thanks,
-	André
+thanks.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/block/blk-mq.c?id=105663f73e71b5e79ecf472c0499c9acde654b28#n1673
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/block/blk-mq.c?id=105663f73e71b5e79ecf472c0499c9acde654b28#n1673
 
+
+-- 
+~Randy
 
