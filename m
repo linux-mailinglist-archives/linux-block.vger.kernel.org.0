@@ -2,97 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E1C32457E9
-	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 16:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 382D62458E2
+	for <lists+linux-block@lfdr.de>; Sun, 16 Aug 2020 19:55:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgHPO2j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 16 Aug 2020 10:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
+        id S1729128AbgHPRzW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 16 Aug 2020 13:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729427AbgHPO23 (ORCPT
+        with ESMTP id S1726855AbgHPRzV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 16 Aug 2020 10:28:29 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1063C06138A
-        for <linux-block@vger.kernel.org>; Sun, 16 Aug 2020 07:28:28 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id f7so12424679wrw.1
-        for <linux-block@vger.kernel.org>; Sun, 16 Aug 2020 07:28:28 -0700 (PDT)
+        Sun, 16 Aug 2020 13:55:21 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F0AC061786;
+        Sun, 16 Aug 2020 10:55:21 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t13so12560922ile.9;
+        Sun, 16 Aug 2020 10:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
-        b=WydAeewQhr1r/XNZpFH3zIH+szhFi1y3aL3E9C0t+/P/o9UraiFWbofR/CQ6sPEcpC
-         KyCeW8UEKHrP3ODzHNzRF0fXKVacBOmuLb8NECLyUFXYtyIqVUeYoDGst/1ZZTlDrSFg
-         UqSpOJ6dtUV1psB5nDXdq7xdyi/8gRNM1VbIFNZJZ/Jq19E7MYwhVDZIDPjgPqAXZhyn
-         GqeGT1PbpkDjLV3sLnwpKnct94lXuL+96hZmSmobGb3Qy2pozBmBDF2Jj9UT2J2RyTFf
-         8zkXh3Q26txE+QPN4s7K+eUJ2QneFKWjK5m2vP3HOTwJU8+CUBzlx8CYcMp2boJXkNFa
-         Q36Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AiCG/uAK0dtENCt/PueZkz6eV6g5vA/PPqkue6QuGWc=;
+        b=I61qtUMSC2HknCJQ8BnSlGPAk0WckimWiJAmc4vXKKQzxH9BEIsAhWEsTKYCph4lr5
+         zKLQwUFtah4H8ruIP6TbMazrqzSXXglI+NvJiH9AoTcjE1d70tjVN0mGNRIr2XuelmIe
+         jjOwjREGzAcDQ2h9u3mKWRdeN72cO2EtrYUxYrYsHhJ5RDm1NYT6NfYDu4KV7rNcWduL
+         zHKS0XfdXfyLfzrOjHDULxRLhsz8I0MhwBhUgzby41g+6trfGaRKXI+MYpn5NkF7XgvC
+         ilpb+Ivei2c6W4F0grs6mW2aGUlHzxXJ4keQdL2hIxk7xT+DsihZL0e0IIDS1nBz0X6+
+         Q2ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
-        b=VANuqZt9LcGFj5lZMrIkcyqZ+JDhJKKf+Wi5ypSbop+JcfrAzieV3T95eETs6iJfzd
-         QB64ngS96T19vS6/VPLKGTd/7jyYRZVDmogQAcRLpfwy30MIjkyrWu/csbsT5gA1G34G
-         LwTh0Yvk4yNGY20U/C/227OL/j8/BaRFKakkFLA/Kyo/RYrIXciOa+MXr900s8b6CGsL
-         FaduM+Qk/ClrEzREWXBlKGqVD1AOpDo00oClYpQKwvi4bUtl/Tfe/GF1p/CVB0nBg2lV
-         UrdGrQuuJW6VA/hB4G+IAk77cv6WC0i5MhxIf6NJwU1mvisw7tzHjIn+soobWRsobGwI
-         bOGg==
-X-Gm-Message-State: AOAM532dn/tqvJXWN0wL83DKQTobV+G2TmJE82Aa3RqI4leiGWexHrlr
-        Mm2XfXXkvaqtERYODFwtY+bDbDQsKvUO0GLSMrA=
-X-Google-Smtp-Source: ABdhPJwBhDgN8zDFv7Vp+6FwrySrd7+zBZF+4bgjNBXNpkwqG/RDbCaE/Q6+6wMIFZa1PWMJ+xJlLCn7iN4TuC23ED4=
-X-Received: by 2002:adf:97dc:: with SMTP id t28mr10205969wrb.291.1597588104107;
- Sun, 16 Aug 2020 07:28:24 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AiCG/uAK0dtENCt/PueZkz6eV6g5vA/PPqkue6QuGWc=;
+        b=B1XDQM8ljx+zBLIOzOM+TMI1gNL/OU/XztqEBbRTIQ0B9WLJoea9YJrFGVBIwJaEJK
+         g8cjrvX/RR64VjRrwUHfDdlsmyMjVep+VBfnVEN0ll/oxK0vX99lsFJDy7GMpY6W2C95
+         HFE1kr1ymY/QfEUSrQhvmhG8EjHTnJrTxefNz39p76GqBzPxphKWo/wklxnNRlvTZaZS
+         4lHaHSrYOmzbN0wOMP5aHZcy87OLdN4iy0NeN5Fo02GwXrjH4oekHJD8zdAsEwABkXgy
+         F1vdeifTHIBwopKonv7Nm60gdXKznWsuSgURr8Jj//lVYU0P7FuMHQGklyCgoNt4aCKp
+         X9JA==
+X-Gm-Message-State: AOAM532wPGrmLDsaWrfwia9RsVi5hPp+8l0nk7So20if5CcU5yIaRfnT
+        r2p0/92CmIzQ81VJaDKoznXzKKmOZcuk8TV8OtM=
+X-Google-Smtp-Source: ABdhPJxSfbQX1hDpkJkRit7p7VGjkXenq2dg0JNjY9g09NZghabgSAKJkr9JDtBOuaL+IgFlYgX60tqH7vqMFJoSaYI=
+X-Received: by 2002:a92:d786:: with SMTP id d6mr10604101iln.144.1597600520704;
+ Sun, 16 Aug 2020 10:55:20 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a5d:6cd3:0:0:0:0:0 with HTTP; Sun, 16 Aug 2020 07:28:23
- -0700 (PDT)
-Reply-To: sctnld11170@tlen.pl
-From:   "Mr. Scott Donald" <confianzayrentabilidad@gmail.com>
-Date:   Sun, 16 Aug 2020 07:28:23 -0700
-Message-ID: <CANrrfX4FE9qQHVqDqDeDgrqidfa8Ug7YqLDZJ5dm2fb1ExQM=w@mail.gmail.com>
-Subject: Hello, Please
-To:     undisclosed-recipients:;
+References: <20200816071518.6964-1-colyli@suse.de>
+In-Reply-To: <20200816071518.6964-1-colyli@suse.de>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sun, 16 Aug 2020 10:55:09 -0700
+Message-ID: <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in include/linux/net.h
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jan Kara <jack@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---=20
-Dear Friend,
+On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
+>
+> The original problem was from nvme-over-tcp code, who mistakenly uses
+> kernel_sendpage() to send pages allocated by __get_free_pages() without
+> __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+> tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+> from a corrupted kernel heap, because these pages are incorrectly freed
+> in network stack as page_count 0 pages.
+>
+> This patch introduces a helper sendpage_ok(), it returns true if the
+> checking page,
+> - is not slab page: PageSlab(page) is false.
+> - has page refcount: page_count(page) is not zero
+>
+> All drivers who want to send page to remote end by kernel_sendpage()
+> may use this helper to check whether the page is OK. If the helper does
+> not return true, the driver should try other non sendpage method (e.g.
+> sock_no_sendpage()) to handle the page.
 
-I'm Mr. Scott Donald a Successful businessMan dealing with
-Exportation, I got your mail contact through search to let you know my
-intension and my Ugly Situation Am a dying Man here in Los Angeles
-California Hospital Bed in (USA), I Lost my Wife and my only Daughter
-for Covid-19 and I also have a problem in my Health and I can die
-anytime I Know,
+Can we leave this helper to mm subsystem?
 
-I have a project that I am about to hand over to you. and I already
-instructed the Bankia S.A. Madrid, Spain(BSA) to transfer my fund sum
-of =C2=A33,7M GBP. Equivalent to =E2=82=AC4,077,033.91 EUR, to you as to en=
-able you
-to give 50% of this fund to Charitable Home in your State and take 50%
-don't think otherwise and why would anybody send someone you barely
-know to help you deliver a message, help me do this for the happiness
-of my soul and for God to mercy me and my Family and give Us a good
-place.
+I know it is for sendpage, but its implementation is all about some
+mm details and its two callers do not belong to net subsystem either.
 
-please, do as I said there was someone from your State that I deeply
-love so very very much and I miss her so badly I have no means to
-reach any Charitable Home there. that is why I go for a personal
-search of the Country and State and I got your mail contact through
-search to let you know my Bitterness and please, help me is getting
-Dark I ask my Doctor to help me keep you notice failure for me to
-reach you in person Your urgent Response, here is my Doctor Whats-app
-Number for urgent notice +13019692737
+Think this in another way: who would fix it if it is buggy? I bet mm people
+should. ;)
 
-Hope To Hear From You. I'm sending this email to you for the second
-time yet no response from you.
-
-My Regards.
-
-Mr. Scott Donald
-CEO
+Thanks.
