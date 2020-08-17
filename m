@@ -2,50 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2298624642E
-	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 12:14:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6CBB246434
+	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 12:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgHQKOp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Aug 2020 06:14:45 -0400
-Received: from verein.lst.de ([213.95.11.211]:56127 "EHLO verein.lst.de"
+        id S1726683AbgHQKPn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Aug 2020 06:15:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:56133 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgHQKOo (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:14:44 -0400
+        id S1726265AbgHQKPm (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:15:42 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id B16CE68B02; Mon, 17 Aug 2020 12:14:41 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 12:14:41 +0200
+        id 15E8468B02; Mon, 17 Aug 2020 12:15:40 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 12:15:39 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Ming Lei <ming.lei@redhat.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH V3 3/3] block: rename blk_discard_mergable as
- blk_discard_support_multi_range
-Message-ID: <20200817101441.GA25336@lst.de>
-References: <20200817095241.2494763-1-ming.lei@redhat.com> <20200817095241.2494763-4-ming.lei@redhat.com>
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        David Jeffery <djeffery@redhat.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH RESEND] blk-mq: order adding requests to hctx->dispatch
+ and checking SCHED_RESTART
+Message-ID: <20200817101539.GB25336@lst.de>
+References: <20200817100115.2495988-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817095241.2494763-4-ming.lei@redhat.com>
+In-Reply-To: <20200817100115.2495988-1-ming.lei@redhat.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:52:41PM +0800, Ming Lei wrote:
-> Name of blk_discard_mergable() is very confusing, and this function
-> actually means if the queue supports multi_range discard. Also there
-> are two kinds of discard merge:
+On Mon, Aug 17, 2020 at 06:01:15PM +0800, Ming Lei wrote:
+> SCHED_RESTART code path is relied to re-run queue for dispatch requests
+> in hctx->dispatch. Meantime the SCHED_RSTART flag is checked when adding
+> requests to hctx->dispatch.
 > 
-> 1) multi range discard, bios in one request won't have to be contiguous,
-> and actually each bio is thought as one range
+> memory barriers have to be used for ordering the following two pair of OPs:
 > 
-> 2) single range discard, all bios in one request have to be contiguous
-> just like normal RW request's merge
+> 1) adding requests to hctx->dispatch and checking SCHED_RESTART in
+> blk_mq_dispatch_rq_list()
 > 
-> Rename blk_discard_mergable() for not confusing people, and avoiding
-> to introduce bugs in future.
+> 2) clearing SCHED_RESTART and checking if there is request in hctx->dispatch
+> in blk_mq_sched_restart().
+> 
+> Without the added memory barrier, either:
+> 
+> 1) blk_mq_sched_restart() may miss requests added to hctx->dispatch meantime
+> blk_mq_dispatch_rq_list() observes SCHED_RESTART, and not run queue in
+> dispatch side
+> 
+> or
+> 
+> 2) blk_mq_dispatch_rq_list still sees SCHED_RESTART, and not run queue
+> in dispatch side, meantime checking if there is request in
+> hctx->dispatch from blk_mq_sched_restart() is missed.
+> 
+> IO hang in ltp/fs_fill test is reported by kernel test robot:
+> 
+> 	https://lkml.org/lkml/2020/7/26/77
+> 
+> Turns out it is caused by the above out-of-order OPs. And the IO hang
+> can't be observed any more after applying this patch.
+> 
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: David Jeffery <djeffery@redhat.com>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
 
-I agree the current name is not good, but I find the new one pretty
-clumsy too.  Not sure the rename is worth it, but also no strict NAK
-from me.
+Can you add a Fixes: tag so that the commit gets backported?
+
+Otherwise looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
