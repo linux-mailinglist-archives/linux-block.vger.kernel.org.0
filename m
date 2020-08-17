@@ -2,151 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8C424722E
-	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 20:40:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB20B24749F
+	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 21:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbgHQSkB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Aug 2020 14:40:01 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:30193 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730440AbgHQSjz (ORCPT
+        id S2389537AbgHQTMd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Aug 2020 15:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbgHQTM0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:39:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1597689594; x=1629225594;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Pvqc+CJNHuba1gf0FOgtvg6MnKztUfvxSZ5CLZ2bpXg=;
-  b=rtoZvBEL5tWnFW9KMpQqfecI09FT97o4wTAHjglHmY/Qx5zu65I5ihR6
-   19ILTbyqUro8KJBOysqWq9ZhgvnISVADHobNWCaKJ4Dla09ceKecEVUsv
-   7Sf08SzzZfxE4M7GAiZTy/RenicPTfVOd4C7X4OEqAOPNRiskSt16yi0h
-   hAqjQmISJwsEG8fnml3dSessvk5UCjpOEjxJXYAd1R0Lp+ULeRGCGOrtU
-   CSLdifUeQ2Sn21nhzau+UpzXHCRref9OOmmbh0pQZv8VFutUQstrzKUCQ
-   bS+AHB5pQKZ3nibKniRVLF2Dr6AzKoX7doJAlyWmd6XmJG7yU3SYbL4dM
-   A==;
-IronPort-SDR: wgdTG4YXiz4eVzDdugxSUzGQhGo1g2olw3LjvEpf3x6lbjgn6X/wdNfOEdVmR7WvI+we3XTMCJ
- N9h/f5igkgJtEEotu84e5BtD/Jsod9LPFVFrInEsUOMQPr/ZJcG4SAlq2UQO/lHO1uJeaxHrCN
- D4CG//G/Oquzi6vMj0KuyFIVYjt3Zdt14X/lsagL+jicWEc80S5Rx/kraEBDGkBk36bPveEsP4
- uTF/CRcWwzbuWRCIX73P30MX6QTzUfNeEub+UDeGIpMYPw8Yk5rscM52vIbl1BtSTudsAbYsvX
- Yss=
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="92072295"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Aug 2020 11:39:53 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 17 Aug 2020 11:39:10 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Mon, 17 Aug 2020 11:39:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ks9x2/8IR2vEE3GqyP4TKJZO3O7ENX92tCQMCME1n6CDqIDUfxnDSNpBm02ZCnKpeA+YsZ8vJbVi1lp6UxDl0kJk2TthXaqP4o3V6iFkMvvkOWxqvhYAylgq6Ix8FDkyVCRgYkUADpcAqeS/+Dn8p0oSmebnq+X6eAzjtjBZXL2N8c0ZgA8OlGOVsEaLrFJ4YMOR8vlYxOvz6yQmhuXdGJjGxsxvk21rl6PcP+YS/hTlD0nhSBrrmcHRvLW6clBskrUuT6myICo37wFmDuIx8rAGi50NcCFEA4XVCxkApgOO8N6XGS27pyRXhQmJEcXBZehZlYxGdzagpdbHqKLfOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pvqc+CJNHuba1gf0FOgtvg6MnKztUfvxSZ5CLZ2bpXg=;
- b=HkupVWKqQdgx03NAR+SJew0pLf+91Q8TAu+i8NmqINbtcyYinIBexNI13oe0iHGiFFjpsgqCLQBkAIhCm6LPXKSFkQowDoXBhWIN2X5pfWsHYijsRBCgHt6eyIXvnL4nd90+BGqdn0Xjj8HQseMt8LULcWtz2lDh+QtfybWau/k4S0TkWqAfvjxDO8U5C5rFRIuZOechzhnizfPgbogbcEKPzwXUDPmRHcbFWlDw93rtePrjykscGl/HHlrdfeXpwwGetD9is8kBqyTAwiJD/MuVq5G2PwvSkICn2bqliZqZnT/bcL29WqtpPBgZxlfUjD6jF6MnolqNpCPOmD+zxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Mon, 17 Aug 2020 15:12:26 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C642FC061389;
+        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q14so15501476ilj.8;
+        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pvqc+CJNHuba1gf0FOgtvg6MnKztUfvxSZ5CLZ2bpXg=;
- b=XHKo9bCnX2riDpaAU9Jn2ZtgXk6tTxBOhfuRr8NJ7YzCr0ri8KRMcfv8HqpyC3p6m1VfkqI+I1CqkTZCrCJIvMXJtmKK3lPRLZQ+ptE+51pSSH/RRnVdrM8N6mJGiT+mMcI2tYYlDZjVh+cZxjyKv2k2hCSwyHNKt44Twj4YheM=
-Received: from SN6PR11MB2848.namprd11.prod.outlook.com (2603:10b6:805:5d::20)
- by SN6PR11MB3183.namprd11.prod.outlook.com (2603:10b6:805:b9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Mon, 17 Aug
- 2020 18:39:50 +0000
-Received: from SN6PR11MB2848.namprd11.prod.outlook.com
- ([fe80::91b:b9d9:867e:c00f]) by SN6PR11MB2848.namprd11.prod.outlook.com
- ([fe80::91b:b9d9:867e:c00f%5]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
- 18:39:50 +0000
-From:   <Don.Brace@microchip.com>
-To:     <john.garry@huawei.com>, <hare@suse.de>, <don.brace@microsemi.com>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <kashyap.desai@broadcom.com>,
-        <sumit.saxena@broadcom.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <hare@suse.com>, <hch@lst.de>,
-        <shivasharan.srikanteshwara@broadcom.com>,
-        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        <megaraidlinux.pdl@broadcom.com>
-Subject: RE: [PATCH RFC v7 12/12] hpsa: enable host_tagset and switch to MQ
-Thread-Topic: [PATCH RFC v7 12/12] hpsa: enable host_tagset and switch to MQ
-Thread-Index: AQHWP01RAs2BRuCN0k+i3rLwgMsJTKkG5J+AgAABKwCAAAMVAIAgQ/rQgADXkYCAAGEqcIABUPKAgA7GHXCAA927gIAAsjMQ
-Date:   Mon, 17 Aug 2020 18:39:50 +0000
-Message-ID: <SN6PR11MB28485C73403978121C2EF9B8E15F0@SN6PR11MB2848.namprd11.prod.outlook.com>
-References: <1591810159-240929-1-git-send-email-john.garry@huawei.com>
- <1591810159-240929-13-git-send-email-john.garry@huawei.com>
- <939891db-a584-1ff7-d6a0-3857e4257d3e@huawei.com>
- <3b3ead84-5d2f-dcf2-33d5-6aa12d5d9f7e@suse.de>
- <4319615a-220b-3629-3bf4-1e7fd2d27b92@huawei.com>
- <SN6PR11MB28489516D2F4E7631A921BD9E14D0@SN6PR11MB2848.namprd11.prod.outlook.com>
- <ccc119c8-4774-2603-fb79-e8c31a1476c6@huawei.com>
- <SN6PR11MB2848F0DD0CB3357541DBDAA9E14A0@SN6PR11MB2848.namprd11.prod.outlook.com>
- <013d4ba6-9173-e791-8e36-8393bde73588@huawei.com>
- <SN6PR11MB2848E10B3322C7186B82F1BCE1400@SN6PR11MB2848.namprd11.prod.outlook.com>
- <6c5c4da7-9fd3-82b0-681f-c113e7fe85b8@huawei.com>
-In-Reply-To: <6c5c4da7-9fd3-82b0-681f-c113e7fe85b8@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [76.30.208.15]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 19e27066-910c-40d2-6c3a-08d842dceca1
-x-ms-traffictypediagnostic: SN6PR11MB3183:
-x-microsoft-antispam-prvs: <SN6PR11MB31839A84C9E161F3627F761FE15F0@SN6PR11MB3183.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rEYTwQuGk6FBnE9QJ86HpsldFL202mfADQiWTnB3RqPgU94ozrC/ze4WK/0x8PFt3VTyggYaH35fG55qOEC8krhrloShv2br/5rTU6U/6+xQZsr2WeIo/FI4HQmtM2FUFcogZ5gzTkBbptKRs1TPkojrkSO6vrnFjlPvb5v0O5c/sX760WHjbaqQo3StbzmbvqoM730u7vUVlST0Y8IboWjLq0x02ZIC5Lj6YRwyP40jONDhIZx27cXh/M5fLqVwoSCYFzx3xHyjLUTXOScOvK5+elAUUsXHH3I5y8RSR8OimKumR5txfvVsu6yQwRkamk/FB5miRx6xncNLPKTXGQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2848.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(376002)(346002)(396003)(366004)(7696005)(52536014)(478600001)(6506007)(4326008)(33656002)(110136005)(54906003)(86362001)(2906002)(66946007)(55016002)(66556008)(66476007)(7416002)(71200400001)(26005)(66446008)(64756008)(76116006)(5660300002)(316002)(8936002)(9686003)(186003)(8676002)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KC64sl31EKVwmdaoR+htLgHi2tB1P6O/2M4Oyc2wg87kXSkZpNEdujOPDFeVUz33dVB0QadoUEx/p4awDVmcpRMuXHRiZUNirn5JPs33WKowZGXebH0/RNJmOg3YmWaJ5AQYv+mwzVKYbUe/PCuPgDApzGgIywfxw2m6DRNEe2vexpqyc470XiIuyU2WzTeO4Dk888xiLPbPtrCvn6MjJNCUhyrsTjjtXAm7WbKggW3v7vXYM8IcMdTSwX0q/HZIr+aSvj0qa7oyohS8ZTpAkuz6833ZPDkNWSfn94APsYlMWJy6SS9ZIy1Uj5Tkdlhi4FnGSCkUhgMyX8TpUCUgLuZBL9KlwP/vFa0DqJwMmvd71k6F9GI8dmhx5a8dBnDFTgIxwBp8cwJmmQSPpuOH8Sj2WuDQ71IV5bJ6l1Kq2Wr8K0UgK0GzkvXqDTe3Lj3c8wE2OvibqE/zc0FwLl8+4ZmXjVgGtCvgvyi5DvjeurWS3gWwGjz1mr9l5y8M70xbsUNPzoHnkvrW/SoKL+PXdZYh3DuLXxqGbVRgenm86+pUM0DdhIZbLkPeg7NHG5lNLvE4OV/bcb/QGaKbgat5piQtO3OZ/MzgWNkMeDB6nnKhrH7SlJIvJnhmhAUEH3NSPGpvLJqhbePC4WXfAPxwjQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
+        b=GvMzuAxS6elmKSXxwtmwDg4ZABKQ94RBoIywyhmFuxzOvYj70kocfV6jjnvsD6xJUG
+         TDoxSm0valHIzQ+TX5vr9M31BeFGUFSufYX4P6oEOMp0EM+3WgULq2SPTUHCgsOIRxuI
+         fDyMPGMz+v+4byLbGWFj/UVM5255nK7fua7CeNib7oKaPFCl1EXmMDRODEX3VnP75fLd
+         grnlAHLzvu/8yvLB6wGOmLG/dhoY8pJbKuZoJFz1OrzTsTTMBng+mF7Yb3wcndmk68im
+         uw4FgY0JdtfocFKOeNcsRmidTCINPH/bEXdOXIZv0ihpFzBXEJoD1Qtei9Vvrm3Cod6j
+         Eglg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
+        b=VWAHb/g8D5UURwdhTs2KJ3iPt66p3RPHgiSwFuTRl6+q2LEhQVFLlqk1wuR66+8KpB
+         06KL1LRdLwwxwbyLcS8Ou/j4EhmIhrpPt6Qj+dgkNbhT05jBfmtgUqowKE05yA0CgLU1
+         UCA/QDq9ATyXYc/pL1wtA/58rqkilEA+iXOg6BJSk90xA9TS7ljmD44O+2twcekHMG/7
+         iMw4sjqJZx/IhPeWhXKdZrtwMg11nG/VliCxHK22Q3tyYSyiEj5DjVfIQZj5emz1VrEh
+         0Ru2u3M1v1Okae6XLll76NauQa0BlEjMfKiaf4rgBAjakw9WVBrrNoWP9EN88TRC+wYz
+         2FuQ==
+X-Gm-Message-State: AOAM532D8bjdrDJMSznm/TotFkZy+GZH+iJo0LZaFO2okhm+PrnkbpHB
+        YbwIYpQCjFEp8/zW6DfiDf1JiehC0Ps7T5Fv80c=
+X-Google-Smtp-Source: ABdhPJzXgU+DNHNKO8z9tSqkcxA+YPlJ5aCtnpEUqz2sSEapV34xuQepCaVuriNJ1z06vI0ZEuk2ZLoKyfGEp42KQIo=
+X-Received: by 2002:a05:6e02:5c7:: with SMTP id l7mr15394166ils.268.1597691543350;
+ Mon, 17 Aug 2020 12:12:23 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2848.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19e27066-910c-40d2-6c3a-08d842dceca1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 18:39:50.1556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: voxQrwDyAP5hiNYjL5x2lAVIsXOyZq18Grh1w8WJWo9qpDaV2fgr+/f+VsjUoE8bXny1gFId3SKw7yLrohnqnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3183
+References: <20200816071518.6964-1-colyli@suse.de> <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+ <20200817054538.GA11705@lst.de>
+In-Reply-To: <20200817054538.GA11705@lst.de>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 17 Aug 2020 12:12:12 -0700
+Message-ID: <CAM_iQpWnzm=cQZvZMcjKXez1L55tSVfWyadP3d0CUaT=D4nOhw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in include/linux/net.h
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-U3ViamVjdDogUmU6IFtQQVRDSCBSRkMgdjcgMTIvMTJdIGhwc2E6IGVuYWJsZSBob3N0X3RhZ3Nl
-dCBhbmQgc3dpdGNoIHRvIE1RDQoNCj4gV2UgYXJlIGFsc28gcmVjb25zaWRlcmluZyBjaGFuZ2lu
-ZyBzbWFydHBxaSBvdmVyIHRvIHVzZSBob3N0IHRhZ3MgYnV0IGluIHNvbWUgcHJlbGltaW5hcnkg
-cGVyZm9ybWFuY2UgdGVzdHMsIEkgZm91bmQgYSBwZXJmb3JtYW5jZSByZWdyZXNzaW9uLg0KPiBO
-b3RlOiBJIG9ubHkgdXNlZCB5b3VyIFY3IHBhdGNoZXMgZm9yIHNtYXJ0cHFpLg0KPiAgICAgICAg
-SSBoYXZlIG5vdCBoYWQgdGltZSB0byBkZXRlcm1pbmUgd2hhdCBpcyBjYXVzaW5nIHRoaXMsIGJ1
-dCB3YW50ZWQgdG8gbWFrZSBub3RlIG9mIHRoaXMuDQoNCj4+VGhhbmtzLiBQbGVhc2Ugbm90ZSB0
-aGF0IHdlIGhhdmUgYmVlbiBsb29raW5nIGF0IG1hbnkgPj5wZXJmb3JtYW5jZXMgaW1wcm92ZW1l
-bnRzIHNpbmNlIHY3LCBhbmQgdGhlc2Ugd2lsbCBiZSA+PmluY2x1ZGVkIGluIHY4LCBzbyBtYXli
-ZSBJIGNhbiBzdGlsbCBpbmNsdWRlIHNtYXJ0cHFpIGluID4+dGhlIHY4IHNlcmllcyBhbmQgeW91
-IGNhbiByZXRlc3QgaWYgeW91IHdhbnQuDQoNClN1cmUsDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2hl
-cw0KRG9uDQoNCj4NCj4gRm9yIGhwc2E6DQo+DQo+IFdpdGggYWxsIG9mIHRoZSBwYXRjaGVzIG5v
-dGVkIGFib3ZlLA0KPiBUZXN0ZWQtYnk6IERvbiBCcmFjZTxkb24uYnJhY2VAbWljcm9zZW1pLmNv
-bT4NCj4NCj4gRm9yIGhwc2Egc3BlY2lmaWMgcGF0Y2hlczoNCj4gUmV2aWV3ZWQtYnk6IERvbiBC
-cmFjZTxkb24uYnJhY2VAbWljcm9zZW1pLmNvbT4NCg0KVGhhbmtzLiBQbGVhc2UgYWxzbyBub3Rl
-IHRoYXQgSSB3YW50IHRvIGRyb3AgdGhlIFJGQyB0YWcgZm9yIHY4IHNlcmllcywgc28gSSB3aWxs
-IGp1c3QgaGF2ZSB0byBub3RlIHRoYXQgd2Ugc3RpbGwgZGVwZW5kIG9uIEhhbm5lcycgd29yayBm
-b3IgaHBzYS4gV2UgY291bGQgYWxzbyBjaGFuZ2UgdGhlIHBhdGNoLCBidXQgbGV0J3Mgc2VlIGhv
-dyB3ZSBnby4NCg0KQ2hlZXJzLA0KSm9obg0KDQo=
+On Sun, Aug 16, 2020 at 10:45 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Sun, Aug 16, 2020 at 10:55:09AM -0700, Cong Wang wrote:
+> > On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
+> > >
+> > > The original problem was from nvme-over-tcp code, who mistakenly uses
+> > > kernel_sendpage() to send pages allocated by __get_free_pages() without
+> > > __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+> > > tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+> > > from a corrupted kernel heap, because these pages are incorrectly freed
+> > > in network stack as page_count 0 pages.
+> > >
+> > > This patch introduces a helper sendpage_ok(), it returns true if the
+> > > checking page,
+> > > - is not slab page: PageSlab(page) is false.
+> > > - has page refcount: page_count(page) is not zero
+> > >
+> > > All drivers who want to send page to remote end by kernel_sendpage()
+> > > may use this helper to check whether the page is OK. If the helper does
+> > > not return true, the driver should try other non sendpage method (e.g.
+> > > sock_no_sendpage()) to handle the page.
+> >
+> > Can we leave this helper to mm subsystem?
+> >
+> > I know it is for sendpage, but its implementation is all about some
+> > mm details and its two callers do not belong to net subsystem either.
+> >
+> > Think this in another way: who would fix it if it is buggy? I bet mm people
+> > should. ;)
+>
+> No.  This is all about a really unusual imitation in sendpage, which
+
+So netdev people will have to understand and support PageSlab() or
+page_count()?
+
+If it is unusual even for mm people, how could netdev people suppose
+to understand this unusual mm bug? At least not any better.
+
+> is pretty much unexpected.  In fact the best thing would be to make
+> sock_sendpage do the right thing and call sock_no_sendpage based
+> on this condition, so that driver writers don't have to worry at all.
+
+Agreed, but kernel_sendpage() still relies on mm to provide a helper
+to make the decision and ensure this helper is always up-to-date.
+
+In short, it is all about ownership.
+
+Thanks.
