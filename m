@@ -2,102 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82F18245B55
-	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 06:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4360245C13
+	for <lists+linux-block@lfdr.de>; Mon, 17 Aug 2020 07:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgHQEJx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Aug 2020 00:09:53 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:50067 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726581AbgHQEJm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Aug 2020 00:09:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5xKxWv_1597637375;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U5xKxWv_1597637375)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 17 Aug 2020 12:09:35 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     axboe@kernel.dk
-Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang@linux.alibaba.com,
-        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 5/5] block: Remove __blk_mq_sched_bio_merge() helper
-Date:   Mon, 17 Aug 2020 12:09:19 +0800
-Message-Id: <4ad0888df567a8bd75676b618ad87147c634d7b0.1597637287.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
-References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
-References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
+        id S1726689AbgHQFpm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Aug 2020 01:45:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:55031 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgHQFpm (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:45:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 69E1767357; Mon, 17 Aug 2020 07:45:38 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 07:45:38 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jan Kara <jack@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
+Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in
+ include/linux/net.h
+Message-ID: <20200817054538.GA11705@lst.de>
+References: <20200816071518.6964-1-colyli@suse.de> <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The blk_mq_sched_bio_merge() just wrap the __blk_mq_sched_bio_merge(), and
-no other places will use __blk_mq_sched_bio_merge(). Thus we can combine
-these 2 similar functions into one function.
+On Sun, Aug 16, 2020 at 10:55:09AM -0700, Cong Wang wrote:
+> On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
+> >
+> > The original problem was from nvme-over-tcp code, who mistakenly uses
+> > kernel_sendpage() to send pages allocated by __get_free_pages() without
+> > __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+> > tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+> > from a corrupted kernel heap, because these pages are incorrectly freed
+> > in network stack as page_count 0 pages.
+> >
+> > This patch introduces a helper sendpage_ok(), it returns true if the
+> > checking page,
+> > - is not slab page: PageSlab(page) is false.
+> > - has page refcount: page_count(page) is not zero
+> >
+> > All drivers who want to send page to remote end by kernel_sendpage()
+> > may use this helper to check whether the page is OK. If the helper does
+> > not return true, the driver should try other non sendpage method (e.g.
+> > sock_no_sendpage()) to handle the page.
+> 
+> Can we leave this helper to mm subsystem?
+> 
+> I know it is for sendpage, but its implementation is all about some
+> mm details and its two callers do not belong to net subsystem either.
+> 
+> Think this in another way: who would fix it if it is buggy? I bet mm people
+> should. ;)
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- block/blk-mq-sched.c |  5 ++++-
- block/blk-mq-sched.h | 13 ++-----------
- 2 files changed, 6 insertions(+), 12 deletions(-)
-
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 1cc7919..ba34460 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -408,7 +408,7 @@ bool blk_mq_bio_list_merge(struct request_queue *q, struct list_head *list,
- }
- EXPORT_SYMBOL_GPL(blk_mq_bio_list_merge);
- 
--bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
-+bool blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs)
- {
- 	struct elevator_queue *e = q->elevator;
-@@ -417,6 +417,9 @@ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 	bool ret = false;
- 	enum hctx_type type;
- 
-+	if (blk_queue_nomerges(q) || !bio_mergeable(bio))
-+		return false;
-+
- 	if (e && e->type->ops.bio_merge)
- 		return e->type->ops.bio_merge(hctx, bio, nr_segs);
- 
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 126021f..65151de 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -13,8 +13,6 @@ void blk_mq_sched_free_hctx_data(struct request_queue *q,
- void blk_mq_sched_request_inserted(struct request *rq);
- bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs, struct request **merged_request);
--bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
--		unsigned int nr_segs);
- bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq);
- void blk_mq_sched_mark_restart_hctx(struct blk_mq_hw_ctx *hctx);
- void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx);
-@@ -31,15 +29,8 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e);
- void blk_mq_sched_free_requests(struct request_queue *q);
- 
--static inline bool
--blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
--		unsigned int nr_segs)
--{
--	if (blk_queue_nomerges(q) || !bio_mergeable(bio))
--		return false;
--
--	return __blk_mq_sched_bio_merge(q, bio, nr_segs);
--}
-+bool blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
-+			    unsigned int nr_segs);
- 
- static inline bool
- blk_mq_sched_allow_merge(struct request_queue *q, struct request *rq,
--- 
-1.8.3.1
-
+No.  This is all about a really unusual imitation in sendpage, which
+is pretty much unexpected.  In fact the best thing would be to make
+sock_sendpage do the right thing and call sock_no_sendpage based
+on this condition, so that driver writers don't have to worry at all.
