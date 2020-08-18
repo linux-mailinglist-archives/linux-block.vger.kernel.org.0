@@ -2,110 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 145E3247E02
-	for <lists+linux-block@lfdr.de>; Tue, 18 Aug 2020 07:45:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E3F2247E5C
+	for <lists+linux-block@lfdr.de>; Tue, 18 Aug 2020 08:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHRFpm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Aug 2020 01:45:42 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:59763 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726593AbgHRFpm (ORCPT
+        id S1726353AbgHRGTR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Aug 2020 02:19:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55851 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgHRGTQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Aug 2020 01:45:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U66qVV-_1597729539;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U66qVV-_1597729539)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Aug 2020 13:45:39 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     axboe@kernel.dk
-Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang@linux.alibaba.com,
-        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] block: Remove blk_mq_attempt_merge() function
-Date:   Tue, 18 Aug 2020 13:45:30 +0800
-Message-Id: <5fa8de665d398cf49fd7c70fb427bb066556c764.1597727255.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
-References: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
-References: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
+        Tue, 18 Aug 2020 02:19:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597731554;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/VEmycD9ZVYDedbBhweOxYQh/jRe9COYJffBIue5qWk=;
+        b=IXVh+DJMqwtH82SFcSo94Wl+sPfSWFpJQrU+2e8r51gBVxAzAmAaqFd0GmqfuWA51wCyWN
+        zZbD+dZI0pqbQajiSuWqZs9jWvfnw0zBKaatqbnB6QlxTFoXnnfO1VL/fbCk8w90s20xEl
+        EHPFMG28Gxl9FpqX5KGQwTQ7LKHz0Xc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-XVFfAjWkNdSMXyXcUR7maA-1; Tue, 18 Aug 2020 02:19:09 -0400
+X-MC-Unique: XVFfAjWkNdSMXyXcUR7maA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD973801AE6
+        for <linux-block@vger.kernel.org>; Tue, 18 Aug 2020 06:19:08 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B71855D9D2
+        for <linux-block@vger.kernel.org>; Tue, 18 Aug 2020 06:19:08 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id ABFAE4EE1C;
+        Tue, 18 Aug 2020 06:19:08 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 02:19:08 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org
+Message-ID: <1382840777.8967687.1597731548544.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200818022905.GB2507595@T590>
+References: <94883604.6936811.1596720770623.JavaMail.zimbra@redhat.com> <1929570063.6965184.1596736053281.JavaMail.zimbra@redhat.com> <20200818022905.GB2507595@T590>
+Subject: Re: [bug] mkfs.ext[23] hangs on loop device (aarch64, 5.8+)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.208.12, 10.4.195.14]
+Thread-Topic: mkfs.ext[23] hangs on loop device (aarch64, 5.8+)
+Thread-Index: Jl48YJuhCHipj59WvXfhgmpRaHsfww==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The small blk_mq_attempt_merge() function is only called by
-__blk_mq_sched_bio_merge(), just open code it.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- block/blk-mq-sched.c | 44 ++++++++++++++++----------------------------
- 1 file changed, 16 insertions(+), 28 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 5e63ede..397029d 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -382,28 +382,6 @@ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_try_merge);
- 
--/*
-- * Reverse check our software queue for entries that we could potentially
-- * merge with. Currently includes a hand-wavy stop count of 8, to not spend
-- * too much time checking for merges.
-- */
--static bool blk_mq_attempt_merge(struct request_queue *q,
--				 struct blk_mq_hw_ctx *hctx,
--				 struct blk_mq_ctx *ctx, struct bio *bio,
--				 unsigned int nr_segs)
--{
--	enum hctx_type type = hctx->type;
--
--	lockdep_assert_held(&ctx->lock);
--
--	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
--		ctx->rq_merged++;
--		return true;
--	}
--
--	return false;
--}
--
- bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs)
- {
-@@ -417,14 +395,24 @@ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 		return e->type->ops.bio_merge(hctx, bio, nr_segs);
- 
- 	type = hctx->type;
--	if ((hctx->flags & BLK_MQ_F_SHOULD_MERGE) &&
--			!list_empty_careful(&ctx->rq_lists[type])) {
--		/* default per sw-queue merge */
--		spin_lock(&ctx->lock);
--		ret = blk_mq_attempt_merge(q, hctx, ctx, bio, nr_segs);
--		spin_unlock(&ctx->lock);
-+	if (!(hctx->flags & BLK_MQ_F_SHOULD_MERGE) ||
-+	    list_empty_careful(&ctx->rq_lists[type]))
-+		return false;
-+
-+	/* default per sw-queue merge */
-+	spin_lock(&ctx->lock);
-+	/*
-+	 * Reverse check our software queue for entries that we could
-+	 * potentially merge with. Currently includes a hand-wavy stop
-+	 * count of 8, to not spend too much time checking for merges.
-+	 */
-+	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
-+		ctx->rq_merged++;
-+		ret = true;
- 	}
- 
-+	spin_unlock(&ctx->lock);
-+
- 	return ret;
- }
- 
--- 
-1.8.3.1
+----- Original Message -----
+> I saw this kind io hang in ltp/fs_fill test reliably and the loop is
+> over image in tmpfs:
+> 
+> https://lkml.org/lkml/2020/7/26/77
+> 
+> And I have verified that the following patch can fix the issue:
+> 
+> https://lore.kernel.org/linux-block/bc5fa941-3b7c-f28e-dd46-1a1d6e5c40a8@kernel.dk/T/#t
+
+Thanks, I'll test your patch with my setup.
+
+In my case, I traced requests going up to blk_mq_sched_insert_requests(),
+but they never made it to loop driver code (loop_queue_rq / lo_complete_rq),
+so I assumed they are getting lost somewhere in mq scheduling.
+
+After hang, there were always several requests stuck "inflight":
+# cat /sys/kernel/debug/block/loop0/rqos/wbt/inflight
+0: inflight 41
+1: inflight 0
+2: inflight 0
+
+With some additional traces I could see requests being at dispatch list
+and state == 0, which appears to fit description of problem you've seen:
+
+  blk_mq_sched_insert_requests: blk_mq_sched_insert_requests hctx: ffff000168598000, ctx: fffffdffbff16dc0
+  wbt_wait: wbt_wait rqos: ffff00016a5e1358, rqw: ffff00016a5e1388, bio: ffff0000da6bbd00, inflight: 41
+  <wbt_wait goes to sleep>
+
+crash> bio.bi_disk ffff0000da6bbd00
+  bi_disk = 0xffff000168599800
+crash> gendisk.disk_name 0xffff000168599800
+  disk_name = "loop0\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000" 
+
+crash> blk_mq_hw_ctx.queue 0xffff000168598000
+  queue = 0xffff000117c06800
+crash> request_queue.rq_qos 0xffff000117c06800
+  rq_qos = 0xffff00016a5e1358
+
+crash> blk_mq_hw_ctx.state 0xffff000168598000
+    state = 0
+crash> list blk_mq_hw_ctx.dispatch -h 0xffff000168598000 | wc -l
+42
+
+Regards,
+Jan
 
