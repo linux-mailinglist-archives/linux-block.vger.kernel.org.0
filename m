@@ -2,157 +2,130 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4449A24A302
-	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:27:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DB2224A40B
+	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 18:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgHSP07 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Aug 2020 11:26:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9851 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbgHSPZQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:25:16 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 97823174EF24E6297F9B;
-        Wed, 19 Aug 2020 23:25:03 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 19 Aug 2020 23:24:54 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
-        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <dgilbert@interlog.com>,
-        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
-CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
-        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH v8 18/18] smartpqi: enable host tagset
-Date:   Wed, 19 Aug 2020 23:20:36 +0800
-Message-ID: <1597850436-116171-19-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
-References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+        id S1726632AbgHSQYt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Aug 2020 12:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgHSQY3 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 19 Aug 2020 12:24:29 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E4EC061757;
+        Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id l84so21487263oig.10;
+        Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HU4eQwextT3u0Vy8pHWyNShnAd/EOsS2z1U17KkaX1w=;
+        b=Do1SU13c8m0ev7rC+aSlATz3YC7HLEYtrWvOJM3hlYx5tibAn4nY6QBTQ6sL63+y1B
+         MMICOhoWO2QuUo7XJXcNmi2U+jZFkCQmxwKcysxTB45P8s8hyGWMfAV/b9TWZwGMUstf
+         eQNrTEk4Md6ORX7QTkn+vE+7QuV40o6StptyB5lbRYfwqel6HisdptT26ZHXxM5fvMgf
+         Hrtd8Cg5JcovJzKRBu4i1OQaNFicedwyX0Gjkgy9VMM/toVIToznUVdAB9xldZ2UK6eB
+         IrMKr2f8qBsOPZBeTcYzlGRInoJUjiFOhM2YCLXROPBSSoWa8KVaeHXHoJOeD+LqB0Ea
+         LpeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HU4eQwextT3u0Vy8pHWyNShnAd/EOsS2z1U17KkaX1w=;
+        b=Vk673JvG3FZvcqkET+q2dOfCV7tl0Vmnb6uqn32Q7mfoynIxDQNrotRIuB0iFOuvz8
+         jTAA9q6UJqA7DhTejMSPx1WPwIOmhuPBLBSuFg8qVQK6Q/DcVN7M7ko9EYt8ZgOBws/X
+         Tbfzp+8kSW1sQVPxjNGd//eItr5KpGE1TXdF7ueZDCxU7JlEK6KOXeDKf4Athd/slow/
+         v4We4EgpiD5V2xfmMq1dXwtIp/PxjikTt1tHqyZSXftELbBzWOGQPi7qjIE1YAB/uYWJ
+         L7ErTqeucMhRgMF6rQ3/LkYoKJ9g/bNU0A+CFMfPOIYYy9w+Xg3cjd/GWCx04ezJdG3D
+         CK8Q==
+X-Gm-Message-State: AOAM531ricpAw54r+NTkoo/oWSgaetltSXb+f/QRh6z0UGGi9WG3cQjF
+        08xyzVxR3jmJ2kS7BEFWG01hSrDzKtbN8nPUfjA=
+X-Google-Smtp-Source: ABdhPJzpfHTlGoLujvQ5GY5n5H9BSvs/wYOUntKm/P0xrLOUSJQWGq951RNy2Mt1jRO58Yz8dbZ6uoLPp4/f2bRhLs0=
+X-Received: by 2002:a05:6808:4c5:: with SMTP id a5mr3863067oie.175.1597854268104;
+ Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com> <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+ <1597849185.3875.7.camel@HansenPartnership.com>
+In-Reply-To: <1597849185.3875.7.camel@HansenPartnership.com>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Wed, 19 Aug 2020 21:54:16 +0530
+Message-ID: <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
+        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+> [...]
+> > > Since both threads seem to have petered out, let me suggest in
+> > > kernel.h:
+> > >
+> > > #define cast_out(ptr, container, member) \
+> > >     container_of(ptr, typeof(*container), member)
+> > >
+> > > It does what you want, the argument order is the same as
+> > > container_of with the only difference being you name the containing
+> > > structure instead of having to specify its type.
+> >
+> > Not to incessantly bike shed on the naming, but I don't like
+> > cast_out, it's not very descriptive. And it has connotations of
+> > getting rid of something, which isn't really true.
+>
+> Um, I thought it was exactly descriptive: you're casting to the outer
+> container.  I thought about following the C++ dynamic casting style, so
+> out_cast(), but that seemed a bit pejorative.  What about outer_cast()?
+>
+> > FWIW, I like the from_ part of the original naming, as it has some
+> > clues as to what is being done here. Why not just from_container()?
+> > That should immediately tell people what it does without having to
+> > look up the implementation, even before this becomes a part of the
+> > accepted coding norm.
+>
+> I'm not opposed to container_from() but it seems a little less
+> descriptive than outer_cast() but I don't really care.  I always have
+> to look up container_of() when I'm using it so this would just be
+> another macro of that type ...
+>
 
-Enable host tagset for smartpqi; with this we can use the request
-tag to look command from the pool avoiding the list iteration in
-the hot path.
+ So far we have a few which have been suggested as replacement
+for from_tasklet()
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-[jpg: Mod ctrl_info->next_io_request_slot calc]
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/smartpqi/smartpqi_init.c | 45 ++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 14 deletions(-)
+- out_cast() or outer_cast()
+- from_member().
+- container_from() or from_container()
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index bd38c8cea56e..870ed1400a9e 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -575,22 +575,33 @@ static inline void pqi_reinit_io_request(struct pqi_io_request *io_request)
- }
- 
- static struct pqi_io_request *pqi_alloc_io_request(
--	struct pqi_ctrl_info *ctrl_info)
-+	struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd)
- {
- 	struct pqi_io_request *io_request;
--	u16 i = ctrl_info->next_io_request_slot;	/* benignly racy */
-+	unsigned int limit = PQI_RESERVED_IO_SLOTS;
-+	u16 i;
- 
--	while (1) {
-+	if (scmd) {
-+		u32 blk_tag = blk_mq_unique_tag(scmd->request);
-+
-+		i = blk_mq_unique_tag_to_tag(blk_tag) + limit;
- 		io_request = &ctrl_info->io_request_pool[i];
--		if (atomic_inc_return(&io_request->refcount) == 1)
--			break;
--		atomic_dec(&io_request->refcount);
--		i = (i + 1) % ctrl_info->max_io_slots;
-+		if (WARN_ON(atomic_inc_return(&io_request->refcount) > 1)) {
-+			atomic_dec(&io_request->refcount);
-+			return NULL;
-+		}
-+	} else {
-+		i = ctrl_info->next_io_request_slot;	/* benignly racy */
-+		while (1) {
-+			io_request = &ctrl_info->io_request_pool[i];
-+			if (atomic_inc_return(&io_request->refcount) == 1)
-+				break;
-+			atomic_dec(&io_request->refcount);
-+			i = (i + 1) % limit;
-+		}
-+		ctrl_info->next_io_request_slot = (i + 1) % limit;
- 	}
- 
--	/* benignly racy */
--	ctrl_info->next_io_request_slot = (i + 1) % ctrl_info->max_io_slots;
--
- 	pqi_reinit_io_request(io_request);
- 
- 	return io_request;
-@@ -4075,7 +4086,7 @@ static int pqi_submit_raid_request_synchronous(struct pqi_ctrl_info *ctrl_info,
- 
- 	atomic_inc(&ctrl_info->sync_cmds_outstanding);
- 
--	io_request = pqi_alloc_io_request(ctrl_info);
-+	io_request = pqi_alloc_io_request(ctrl_info, NULL);
- 
- 	put_unaligned_le16(io_request->index,
- 		&(((struct pqi_raid_path_request *)request)->request_id));
-@@ -5032,7 +5043,9 @@ static inline int pqi_raid_submit_scsi_cmd(struct pqi_ctrl_info *ctrl_info,
- {
- 	struct pqi_io_request *io_request;
- 
--	io_request = pqi_alloc_io_request(ctrl_info);
-+	io_request = pqi_alloc_io_request(ctrl_info, scmd);
-+	if (!io_request)
-+		return SCSI_MLQUEUE_HOST_BUSY;
- 
- 	return pqi_raid_submit_scsi_cmd_with_io_request(ctrl_info, io_request,
- 		device, scmd, queue_group);
-@@ -5230,7 +5243,10 @@ static int pqi_aio_submit_io(struct pqi_ctrl_info *ctrl_info,
- 	struct pqi_io_request *io_request;
- 	struct pqi_aio_path_request *request;
- 
--	io_request = pqi_alloc_io_request(ctrl_info);
-+	io_request = pqi_alloc_io_request(ctrl_info, scmd);
-+	if (!io_request)
-+		return SCSI_MLQUEUE_HOST_BUSY;
-+
- 	io_request->io_complete_callback = pqi_aio_io_complete;
- 	io_request->scmd = scmd;
- 	io_request->raid_bypass = raid_bypass;
-@@ -5657,7 +5673,7 @@ static int pqi_lun_reset(struct pqi_ctrl_info *ctrl_info,
- 	DECLARE_COMPLETION_ONSTACK(wait);
- 	struct pqi_task_management_request *request;
- 
--	io_request = pqi_alloc_io_request(ctrl_info);
-+	io_request = pqi_alloc_io_request(ctrl_info, NULL);
- 	io_request->io_complete_callback = pqi_lun_reset_complete;
- 	io_request->context = &wait;
- 
-@@ -6504,6 +6520,7 @@ static struct scsi_host_template pqi_driver_template = {
- 	.map_queues = pqi_map_queues,
- 	.sdev_attrs = pqi_sdev_attrs,
- 	.shost_attrs = pqi_shost_attrs,
-+	.host_tagset = 1,
- };
- 
- static int pqi_register_scsi(struct pqi_ctrl_info *ctrl_info)
+from_container() sounds fine, would trimming it a bit work? like from_cont().
+
 -- 
-2.26.2
-
+       - Allen
