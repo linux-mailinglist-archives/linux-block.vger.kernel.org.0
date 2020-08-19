@@ -2,98 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F9C24A29A
-	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F61524A2F2
+	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHSPQk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Aug 2020 11:16:40 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38532 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728611AbgHSPQk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:16:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597850198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dtDVWY8XOKhIQ4U3Ma2pRAa4BiO6PQTODa+d3hIB028=;
-        b=eTUoQYU4w0PqxebyjdZzMRKFNsm+RFbo0GeMURwvXAX8SLNNBx34cLHnUuJP5UccO80DYJ
-        2oKwt13HCLT6oHOlBsyPybW4VkRuRE7nQtXra84l+6VSJ76iwMRRlq+uccdGnrsfOfAnNf
-        RsJQbV3xqe6QN/TEh/OD9oqwRHxO1U8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-515--sbZrEW0OP6v7eM-itDyxQ-1; Wed, 19 Aug 2020 11:16:36 -0400
-X-MC-Unique: -sbZrEW0OP6v7eM-itDyxQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04D061DDFB;
-        Wed, 19 Aug 2020 15:16:35 +0000 (UTC)
-Received: from dhcp-12-105.nay.redhat.com (dhcp-12-105.nay.redhat.com [10.66.12.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29E837E304;
-        Wed, 19 Aug 2020 15:16:32 +0000 (UTC)
-From:   Yi Zhang <yi.zhang@redhat.com>
-To:     linux-block@vger.kernel.org
-Cc:     sagi@grimberg.me, osandov@osandov.com, bvanassche@acm.org
-Subject: [PATCH blktests] common/multipath-over-rdma: fix warning ignored null byte in input
-Date:   Wed, 19 Aug 2020 23:16:01 +0800
-Message-Id: <20200819151601.18526-1-yi.zhang@redhat.com>
+        id S1728725AbgHSPZS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Aug 2020 11:25:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38870 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728212AbgHSPZJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:25:09 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 88887990BD3CA5378D3B;
+        Wed, 19 Aug 2020 23:24:58 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 19 Aug 2020 23:24:47 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <dgilbert@interlog.com>,
+        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
+CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for SCSI HBAs
+Date:   Wed, 19 Aug 2020 23:20:18 +0800
+Message-ID: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-[blktests]# nvme_trtype=rdma ./check nvme/004
-nvme/004 (test nvme and nvmet UUID NS descriptors)
-    runtime  1.238s  ...
-nvme/004 (test nvme and nvmet UUID NS descriptors)           [failed]ignored null byte in input
-    runtime  1.238s  ...  1.237s 410: warning: command substitution: ignored null byte in input
-    --- tests/nvme/004.out	2020-08-18 08:11:08.496809985 -0400
-    +++ /root/blktests/results/nodev/nvme/004.out.bad	2020-08-19 10:43:02.193885685 -0400
-    @@ -1,4 +1,5 @@
-     Running nvme/004
-    +common/multipath-over-rdma: line 409: warning: command substitution: ignored null byte in input
-     91fdba0d-f87b-4c25-b80f-db7be1418b9e
-     uuid.91fdba0d-f87b-4c25-b80f-db7be1418b9e
-     NQN:blktests-subsystem-1 disconnected 1 controller(s)
+Hi all,
 
-manually to reproduce:
-Update one network interface with 15 chars:
-[blktests]# ip a s enp0s29u1u7u3c2
-5: enp0s29u1u7u3c2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
-    link/ether f0:d4:e2:e6:e1:e3 brd ff:ff:ff:ff:ff:ff
-[blktests]# modprobe rdma_rxe
-[blktests]# echo enp0s29u1u7u3c2 >/sys/module/rdma_rxe/parameters/add
-[blktests]# cat /sys/class/infiniband/rxe0/parent
-enp0s29u1u7u3c2[blktests]# f="/sys/class/infiniband/rxe0/parent"
-[blktests]# echo $(<"$f")
--bash: warning: command substitution: ignored null byte in input
-enp0s29u1u7u3c2
-[blktests]# echo $(tr -d '\0' <"$f")
-enp0s29u1u7u3c2
+Here is v8 of the patchset.
 
-Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
----
- common/multipath-over-rdma | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In this version of the series, we keep the shared sbitmap for driver tags,
+and introduce changes to fix up the tag budgeting across request queues.
+We also have a change to count requests per-hctx for when an elevator is
+enabled, as an optimisation. I also dropped the debugfs changes - more on
+that below.
 
-diff --git a/common/multipath-over-rdma b/common/multipath-over-rdma
-index 355b169..86e7d86 100644
---- a/common/multipath-over-rdma
-+++ b/common/multipath-over-rdma
-@@ -406,7 +406,7 @@ has_rdma_rxe() {
- 	local f
- 
- 	for f in /sys/class/infiniband/*/parent; do
--		if [ -e "$f" ] && [ "$(<"$f")" = "$1" ]; then
-+		if [ -e "$f" ] && [ "$(tr -d '\0' <"$f")" = "$1" ]; then
- 			return 0
- 		fi
- 	done
+Some performance figures:
+
+Using 12x SAS SSDs on hisi_sas v3 hw. mq-deadline results are included,
+but it is not always an appropriate scheduler to use.
+
+Tag depth 		4000 (default)			260**
+
+Baseline (v5.9-rc1):
+none sched:		2094K IOPS			513K
+mq-deadline sched:	2145K IOPS			1336K
+
+Final, host_tagset=0 in LLDD *, ***:
+none sched:		2120K IOPS			550K
+mq-deadline sched:	2121K IOPS			1309K
+
+Final ***:
+none sched:		2132K IOPS			1185			
+mq-deadline sched:	2145K IOPS			2097	
+
+* this is relevant as this is the performance in supporting but not
+  enabling the feature
+** depth=260 is relevant as some point where we are regularly waiting for
+   tags to be available. Figures were are a bit unstable here.
+*** Included "[PATCH V4] scsi: core: only re-run queue in
+    scsi_end_request() if device queue is busy"
+
+A copy of the patches can be found here:
+https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-v8
+
+The hpsa patch depends on:
+https://lore.kernel.org/linux-scsi/20200430131904.5847-1-hare@suse.de/
+
+And the smartpqi patch is not to be accepted.
+
+Comments (and testing) welcome, thanks!
+
+Differences to v7:
+- Add null_blk and scsi_debug support
+- Drop debugfs tags patch - it's too difficult to be the same between
+hostwide and non-hostwide, as discussed:
+https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#mb3eb462d8be40273718505989abd12f8228c15fd
+And from commit 6bf0eb550452 ("sbitmap: Consider cleared bits in
+sbitmap_bitmap_show()"), I guess not many used this anyway...
+- Add elevator per-hctx request count for optimisation
+- Break up "blk-mq: rename blk_mq_update_tag_set_depth()" into 2x patches
+- Pass flags for avoid per-hq queue tags init/free for hostwide tags
+- Add Don's reviewed-tag and tested-by tags to appropiate patches
+	- (@Don, please let me know if issue with how I did this)
+- Add "scsi: core: Show nr_hw_queues in sysfs"
+- Rework megaraid SAS patch to have module param (Kashyap)
+- rebase
+
+V7 is here for more info:
+https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#t
+
+Hannes Reinecke (5):
+  blk-mq: Rename blk_mq_update_tag_set_depth()
+  blk-mq: Free tags in blk_mq_init_tags() upon error
+  scsi: Add host and host template flag 'host_tagset'
+  hpsa: enable host_tagset and switch to MQ
+  smartpqi: enable host tagset
+
+John Garry (10):
+  blk-mq: Pass flags for tag init/free
+  blk-mq: Use pointers for blk_mq_tags bitmap tags
+  blk-mq: Facilitate a shared sbitmap per tagset
+  blk-mq: Relocate hctx_may_queue()
+  blk-mq: Record nr_active_requests per queue for when using shared
+    sbitmap
+  blk-mq: Record active_queues_shared_sbitmap per tag_set for when using
+    shared sbitmap
+  null_blk: Support shared tag bitmap
+  scsi: core: Show nr_hw_queues in sysfs
+  scsi: hisi_sas: Switch v3 hw to MQ
+  scsi: scsi_debug: Support host tagset
+
+Kashyap Desai (2):
+  blk-mq, elevator: Count requests per hctx to improve performance
+  scsi: megaraid_sas: Added support for shared host tagset for
+    cpuhotplug
+
+Ming Lei (1):
+  blk-mq: Rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
+
+ block/bfq-iosched.c                         |   9 +-
+ block/blk-core.c                            |   2 +
+ block/blk-mq-debugfs.c                      |  10 +-
+ block/blk-mq-sched.c                        |  13 +-
+ block/blk-mq-tag.c                          | 149 ++++++++++++++------
+ block/blk-mq-tag.h                          |  56 +++-----
+ block/blk-mq.c                              |  81 +++++++----
+ block/blk-mq.h                              |  76 +++++++++-
+ block/kyber-iosched.c                       |   4 +-
+ block/mq-deadline.c                         |   6 +
+ drivers/block/null_blk_main.c               |   6 +
+ drivers/block/rnbd/rnbd-clt.c               |   2 +-
+ drivers/scsi/hisi_sas/hisi_sas.h            |   3 +-
+ drivers/scsi/hisi_sas/hisi_sas_main.c       |  36 ++---
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c      |  87 +++++-------
+ drivers/scsi/hosts.c                        |   1 +
+ drivers/scsi/hpsa.c                         |  44 +-----
+ drivers/scsi/hpsa.h                         |   1 -
+ drivers/scsi/megaraid/megaraid_sas_base.c   |  39 +++++
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |  29 ++--
+ drivers/scsi/scsi_debug.c                   |  28 ++--
+ drivers/scsi/scsi_lib.c                     |   2 +
+ drivers/scsi/scsi_sysfs.c                   |  11 ++
+ drivers/scsi/smartpqi/smartpqi_init.c       |  45 ++++--
+ include/linux/blk-mq.h                      |  13 +-
+ include/linux/blkdev.h                      |   3 +
+ include/scsi/scsi_host.h                    |   9 +-
+ 27 files changed, 484 insertions(+), 281 deletions(-)
+
 -- 
-2.21.0
+2.26.2
 
