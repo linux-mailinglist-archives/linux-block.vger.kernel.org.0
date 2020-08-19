@@ -2,17 +2,17 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D4AE24A2FB
-	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E777524A2FF
+	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:27:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgHSP0a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Aug 2020 11:26:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39652 "EHLO huawei.com"
+        id S1728767AbgHSP0p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Aug 2020 11:26:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38868 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728735AbgHSPZW (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:25:22 -0400
+        id S1726747AbgHSP0m (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:26:42 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D749C98872B15E6472CE;
+        by Forcepoint Email with ESMTP id 73BF6DEDDFE7CC69C53B;
         Wed, 19 Aug 2020 23:24:58 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -28,9 +28,9 @@ CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
         <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
         <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v8 02/18] blk-mq: Rename blk_mq_update_tag_set_depth()
-Date:   Wed, 19 Aug 2020 23:20:20 +0800
-Message-ID: <1597850436-116171-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v8 03/18] blk-mq: Free tags in blk_mq_init_tags() upon error
+Date:   Wed, 19 Aug 2020 23:20:21 +0800
+Message-ID: <1597850436-116171-4-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
 References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
@@ -45,52 +45,64 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Hannes Reinecke <hare@suse.de>
 
-The function does not set the depth, but rather transitions from
-shared to non-shared queues and vice versa.
-
-So rename it to blk_mq_update_tag_set_shared() to better reflect
-its purpose.
+Since the tags are allocated in blk_mq_init_tags(), it's better practice
+to free in that same function upon error, rather than a callee which is to
+init the bitmap tags (blk_mq_init_tags()).
 
 Signed-off-by: Hannes Reinecke <hare@suse.de>
-[jpg: take out some unrelated changes in blk_mq_init_bitmap_tags()]
+[jpg: Split from an earlier patch with a new commit message]
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- block/blk-mq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ block/blk-mq-tag.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8f95cc443527..50de9eb60466 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2880,8 +2880,8 @@ static void queue_set_hctx_shared(struct request_queue *q, bool shared)
- 	}
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 32d82e23b095..c2c9f369d777 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -429,24 +429,22 @@ static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
+ 				       node);
  }
  
--static void blk_mq_update_tag_set_depth(struct blk_mq_tag_set *set,
--					bool shared)
-+static void blk_mq_update_tag_set_shared(struct blk_mq_tag_set *set,
-+					 bool shared)
+-static struct blk_mq_tags *blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
+-						   int node, int alloc_policy)
++static int blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
++				   int node, int alloc_policy)
  {
- 	struct request_queue *q;
+ 	unsigned int depth = tags->nr_tags - tags->nr_reserved_tags;
+ 	bool round_robin = alloc_policy == BLK_TAG_ALLOC_RR;
  
-@@ -2904,7 +2904,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
- 		/* just transitioned to unshared */
- 		set->flags &= ~BLK_MQ_F_TAG_QUEUE_SHARED;
- 		/* update existing queue */
--		blk_mq_update_tag_set_depth(set, false);
-+		blk_mq_update_tag_set_shared(set, false);
- 	}
- 	mutex_unlock(&set->tag_list_lock);
- 	INIT_LIST_HEAD(&q->tag_set_list);
-@@ -2922,7 +2922,7 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
- 	    !(set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)) {
- 		set->flags |= BLK_MQ_F_TAG_QUEUE_SHARED;
- 		/* update existing queue */
--		blk_mq_update_tag_set_depth(set, true);
-+		blk_mq_update_tag_set_shared(set, true);
- 	}
- 	if (set->flags & BLK_MQ_F_TAG_QUEUE_SHARED)
- 		queue_set_hctx_shared(q, true);
+ 	if (bt_alloc(&tags->bitmap_tags, depth, round_robin, node))
+-		goto free_tags;
++		return -ENOMEM;
+ 	if (bt_alloc(&tags->breserved_tags, tags->nr_reserved_tags, round_robin,
+ 		     node))
+ 		goto free_bitmap_tags;
+ 
+-	return tags;
++	return 0;
+ free_bitmap_tags:
+ 	sbitmap_queue_free(&tags->bitmap_tags);
+-free_tags:
+-	kfree(tags);
+-	return NULL;
++	return -ENOMEM;
+ }
+ 
+ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+@@ -467,7 +465,11 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+ 	tags->nr_tags = total_tags;
+ 	tags->nr_reserved_tags = reserved_tags;
+ 
+-	return blk_mq_init_bitmap_tags(tags, node, alloc_policy);
++	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
++		kfree(tags);
++		return NULL;
++	}
++	return tags;
+ }
+ 
+ void blk_mq_free_tags(struct blk_mq_tags *tags)
 -- 
 2.26.2
 
