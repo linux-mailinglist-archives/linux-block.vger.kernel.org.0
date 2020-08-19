@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65A0024A2CE
-	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685D324A2F0
+	for <lists+linux-block@lfdr.de>; Wed, 19 Aug 2020 17:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHSPZG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Aug 2020 11:25:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9781 "EHLO huawei.com"
+        id S1728681AbgHSPZO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Aug 2020 11:25:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9782 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbgHSPZG (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:25:06 -0400
+        id S1728312AbgHSPZI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:25:08 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6DC731556ACDD80C64D7;
+        by Forcepoint Email with ESMTP id 76875C8A035CB46D41DC;
         Wed, 19 Aug 2020 23:25:03 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 19 Aug 2020 23:24:52 +0800
+ 14.3.487.0; Wed, 19 Aug 2020 23:24:53 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
@@ -28,9 +28,9 @@ CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
         <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
         <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v8 15/18] scsi: scsi_debug: Support host tagset
-Date:   Wed, 19 Aug 2020 23:20:33 +0800
-Message-ID: <1597850436-116171-16-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v8 16/18] hpsa: enable host_tagset and switch to MQ
+Date:   Wed, 19 Aug 2020 23:20:34 +0800
+Message-ID: <1597850436-116171-17-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
 References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
@@ -43,77 +43,148 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When host_max_queue is set (> 0), set the Scsi_Host.host_tagset such that
-blk-mq will use a hostwide tagset over all SCSI host submission queues.
+From: Hannes Reinecke <hare@suse.de>
 
-This means that we may expose all submission queues and always use the hwq
-chosen by blk-mq.
+The smart array HBAs can steer interrupt completion, so this
+patch switches the implementation to use multiqueue and enables
+'host_tagset' as the HBA has a shared host-wide tagset.
 
-And since if sdebug_host_max_queue is set, sdebug_max_queue is fixed to the
-same value, we can simplify how sdebug_driver_template.can_queue is set.
-
+Reviewed-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/scsi_debug.c | 28 ++++++++++------------------
- 1 file changed, 10 insertions(+), 18 deletions(-)
+ drivers/scsi/hpsa.c | 44 +++++++-------------------------------------
+ drivers/scsi/hpsa.h |  1 -
+ 2 files changed, 7 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 064ed680c053..4238baa2b34b 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -4698,19 +4698,14 @@ static int resp_rwp_zone(struct scsi_cmnd *scp, struct sdebug_dev_info *devip)
- static struct sdebug_queue *get_queue(struct scsi_cmnd *cmnd)
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 91794a50b31f..eaddcd3e9caf 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -984,6 +984,7 @@ static struct scsi_host_template hpsa_driver_template = {
+ 	.shost_attrs = hpsa_shost_attrs,
+ 	.max_sectors = 2048,
+ 	.no_write_same = 1,
++	.host_tagset = 1,
+ };
+ 
+ static inline u32 next_command(struct ctlr_info *h, u8 q)
+@@ -1148,12 +1149,14 @@ static void dial_up_lockup_detection_on_fw_flash_complete(struct ctlr_info *h,
+ static void __enqueue_cmd_and_start_io(struct ctlr_info *h,
+ 	struct CommandList *c, int reply_queue)
  {
- 	u16 hwq;
-+	u32 tag = blk_mq_unique_tag(cmnd->request);
++	u32 blk_tag = blk_mq_unique_tag(c->scsi_cmd->request);
++
+ 	dial_down_lockup_detection_during_fw_flash(h, c);
+ 	atomic_inc(&h->commands_outstanding);
+ 	if (c->device)
+ 		atomic_inc(&c->device->commands_outstanding);
  
--	if (sdebug_host_max_queue) {
--		/* Provide a simple method to choose the hwq */
--		hwq = smp_processor_id() % submit_queues;
--	} else {
--		u32 tag = blk_mq_unique_tag(cmnd->request);
-+	hwq = blk_mq_unique_tag_to_hwq(tag);
+-	reply_queue = h->reply_map[raw_smp_processor_id()];
++	reply_queue = blk_mq_unique_tag_to_hwq(blk_tag);
+ 	switch (c->cmd_type) {
+ 	case CMD_IOACCEL1:
+ 		set_ioaccel1_performant_mode(h, c, reply_queue);
+@@ -5676,8 +5679,6 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	/* Get the ptr to our adapter structure out of cmd->host. */
+ 	h = sdev_to_hba(cmd->device);
  
--		hwq = blk_mq_unique_tag_to_hwq(tag);
-+	pr_debug("tag=%#x, hwq=%d\n", tag, hwq);
-+	if (WARN_ON_ONCE(hwq >= submit_queues))
-+		hwq = 0;
+-	BUG_ON(cmd->request->tag < 0);
+-
+ 	dev = cmd->device->hostdata;
+ 	if (!dev) {
+ 		cmd->result = DID_NO_CONNECT << 16;
+@@ -5853,7 +5854,7 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
+ 	sh->hostdata[0] = (unsigned long) h;
+ 	sh->irq = pci_irq_vector(h->pdev, 0);
+ 	sh->unique_id = sh->irq;
+-
++	sh->nr_hw_queues = h->msix_vectors > 0 ? h->msix_vectors : 1;
+ 	h->scsi_host = sh;
+ 	return 0;
+ }
+@@ -5879,7 +5880,8 @@ static int hpsa_scsi_add_host(struct ctlr_info *h)
+  */
+ static int hpsa_get_cmd_index(struct scsi_cmnd *scmd)
+ {
+-	int idx = scmd->request->tag;
++	u32 blk_tag = blk_mq_unique_tag(scmd->request);
++	int idx = blk_mq_unique_tag_to_tag(blk_tag);
  
--		pr_debug("tag=%#x, hwq=%d\n", tag, hwq);
--		if (WARN_ON_ONCE(hwq >= submit_queues))
--			hwq = 0;
--	}
- 	return sdebug_q_arr + hwq;
+ 	if (idx < 0)
+ 		return idx;
+@@ -7456,26 +7458,6 @@ static void hpsa_disable_interrupt_mode(struct ctlr_info *h)
+ 	h->msix_vectors = 0;
  }
  
-@@ -7347,10 +7342,7 @@ static int sdebug_driver_probe(struct device *dev)
+-static void hpsa_setup_reply_map(struct ctlr_info *h)
+-{
+-	const struct cpumask *mask;
+-	unsigned int queue, cpu;
+-
+-	for (queue = 0; queue < h->msix_vectors; queue++) {
+-		mask = pci_irq_get_affinity(h->pdev, queue);
+-		if (!mask)
+-			goto fallback;
+-
+-		for_each_cpu(cpu, mask)
+-			h->reply_map[cpu] = queue;
+-	}
+-	return;
+-
+-fallback:
+-	for_each_possible_cpu(cpu)
+-		h->reply_map[cpu] = 0;
+-}
+-
+ /* If MSI/MSI-X is supported by the kernel we will try to enable it on
+  * controllers that are capable. If not, we use legacy INTx mode.
+  */
+@@ -7872,9 +7854,6 @@ static int hpsa_pci_init(struct ctlr_info *h)
+ 	if (err)
+ 		goto clean1;
  
- 	sdbg_host = to_sdebug_host(dev);
+-	/* setup mapping between CPU and reply queue */
+-	hpsa_setup_reply_map(h);
+-
+ 	err = hpsa_pci_find_memory_BAR(h->pdev, &h->paddr);
+ 	if (err)
+ 		goto clean2;	/* intmode+region, pci */
+@@ -8613,7 +8592,6 @@ static struct workqueue_struct *hpsa_create_controller_wq(struct ctlr_info *h,
  
--	if (sdebug_host_max_queue)
--		sdebug_driver_template.can_queue = sdebug_host_max_queue;
--	else
--		sdebug_driver_template.can_queue = sdebug_max_queue;
-+	sdebug_driver_template.can_queue = sdebug_max_queue;
- 	if (!sdebug_clustering)
- 		sdebug_driver_template.dma_boundary = PAGE_SIZE - 1;
+ static void hpda_free_ctlr_info(struct ctlr_info *h)
+ {
+-	kfree(h->reply_map);
+ 	kfree(h);
+ }
  
-@@ -7367,11 +7359,11 @@ static int sdebug_driver_probe(struct device *dev)
- 	}
- 	/*
- 	 * Decide whether to tell scsi subsystem that we want mq. The
--	 * following should give the same answer for each host. If the host
--	 * has a limit of hostwide max commands, then do not set.
-+	 * following should give the same answer for each host.
- 	 */
--	if (!sdebug_host_max_queue)
--		hpnt->nr_hw_queues = submit_queues;
-+	hpnt->nr_hw_queues = submit_queues;
-+	if (sdebug_host_max_queue)
-+		hpnt->host_tagset = 1;
+@@ -8622,14 +8600,6 @@ static struct ctlr_info *hpda_alloc_ctlr_info(void)
+ 	struct ctlr_info *h;
  
- 	sdbg_host->shost = hpnt;
- 	*((struct sdebug_host_info **)hpnt->hostdata) = sdbg_host;
+ 	h = kzalloc(sizeof(*h), GFP_KERNEL);
+-	if (!h)
+-		return NULL;
+-
+-	h->reply_map = kcalloc(nr_cpu_ids, sizeof(*h->reply_map), GFP_KERNEL);
+-	if (!h->reply_map) {
+-		kfree(h);
+-		return NULL;
+-	}
+ 	return h;
+ }
+ 
+diff --git a/drivers/scsi/hpsa.h b/drivers/scsi/hpsa.h
+index 6b87d9815b35..9c6a161f2367 100644
+--- a/drivers/scsi/hpsa.h
++++ b/drivers/scsi/hpsa.h
+@@ -161,7 +161,6 @@ struct bmic_controller_parameters {
+ #pragma pack()
+ 
+ struct ctlr_info {
+-	unsigned int *reply_map;
+ 	int	ctlr;
+ 	char	devname[8];
+ 	char    *product_name;
 -- 
 2.26.2
 
