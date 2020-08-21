@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28B1424DC5B
-	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 19:00:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C793224DE3F
+	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 19:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgHUQ7z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Aug 2020 12:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        id S1727031AbgHUR2M (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Aug 2020 13:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgHUQS4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:18:56 -0400
+        id S1727017AbgHUQOr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D80B22CA1;
-        Fri, 21 Aug 2020 16:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D907622B4E;
+        Fri, 21 Aug 2020 16:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026699;
-        bh=tVS2ZQ+Ws0jCOq4RwVouKorzH4DD8uDRN4VgE2azIpw=;
+        s=default; t=1598026482;
+        bh=su/76TCn6qViBS0aWPpZVwiMsbp5KTmEEehwTuWj/IU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWSHaJnI9rOpVejrWmnHBggsik+R1eSmzi0syZhYa1vxR5KynjQrb8ZRcqvauozVr
-         YwI4wDKraMxOvpJ5TN8r83WM/9YDLO3p93ZvqvTcFtRHT9GJW0jf1BkjhPD0PHShuw
-         Etu3a+1oM7aYOzjvUaIj3uc8+cpImph3zjdI+fPQ=
+        b=KhAJ+h1pzHdT2CPaiuJfuOaC8O563nLfJXBFwtDt2up38ZuQaa01U9B6RcbzP7+zh
+         dQz9H0KtCL+qwX6mzQ+RPy5e7YJBBjvcXtNXEAO192GJHyyzNzq4KRUZB0/TAsuWLy
+         LKbQUC+Ef2ktam3NMH363b0jZNdS2atG4qYD3HlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Luis Chamberlain <mcgrof@kernel.org>,
@@ -30,12 +30,12 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/38] blktrace: ensure our debugfs dir exists
-Date:   Fri, 21 Aug 2020 12:17:38 -0400
-Message-Id: <20200821161807.348600-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 15/62] blktrace: ensure our debugfs dir exists
+Date:   Fri, 21 Aug 2020 12:13:36 -0400
+Message-Id: <20200821161423.347071-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
-References: <20200821161807.348600-1-sashal@kernel.org>
+In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
+References: <20200821161423.347071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -81,12 +81,12 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 12 insertions(+)
 
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 7a4ca2deb39bc..1442f6152abc2 100644
+index 588e8e3960197..1bd6563939e59 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
-@@ -529,6 +529,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	if (!dir)
- 		goto err;
+@@ -536,6 +536,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ #endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
  
 +	/*
 +	 * As blktrace relies on debugfs for its interface the debugfs directory
