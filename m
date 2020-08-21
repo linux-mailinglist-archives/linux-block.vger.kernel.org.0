@@ -2,126 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6D3624D0E1
-	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 10:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADA7224D100
+	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 10:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgHUIyJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Aug 2020 04:54:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55564 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726243AbgHUIyG (ORCPT
+        id S1726664AbgHUI5L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Aug 2020 04:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgHUI47 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:54:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L8X7fK072907;
-        Fri, 21 Aug 2020 04:54:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=tMpNeTWf65DjC70rS5HyK/935zN2nZFWJAbrMtoWLWM=;
- b=ROGpziHzLer7q4RxRNMlsIh02QHcsuW4nx++4W55MlAtDvOnm/34MSU8qEoaLAzmD+7w
- nqAjYrE1XeOtfd8QRjezVGQfBhj6Sd0bbGl7Bo751retTKKsInVQwOhtx9QscBOoaYne
- 0rY8IHweV1QP7Mo0k7L/MZMzooxmsfqVyBdJlWGwGRiln6UxMRjbz/neUvPF6qZ3bEOw
- b+HXkegr5fRrIG5z2nG0fwUTDXaduQntoBkSWO+/FFsYVwv1fk59mY/82uYE/hUk4ag0
- j93qu64MIdTR5+BTPYz1fVQ4QxOhjkqoIS3wfbfGLBovyc+ehlsOaclW4gqGgD8noq7L ng== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33257sshsd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 04:54:02 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L8q58q025176;
-        Fri, 21 Aug 2020 08:54:00 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 330tbvtupg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 08:54:00 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L8rwYK65405230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 08:53:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16D634C044;
-        Fri, 21 Aug 2020 08:53:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93CF64C040;
-        Fri, 21 Aug 2020 08:53:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.217])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 08:53:56 +0000 (GMT)
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-To:     Christoph Hellwig <hch@infradead.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        linux-block@vger.kernel.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200821060710.GC31091@infradead.org>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 21 Aug 2020 14:23:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 21 Aug 2020 04:56:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACA4C061387;
+        Fri, 21 Aug 2020 01:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=EVl8E61DXgRR1ZNIk2YxGikvQ2O1Ac8Y751dPUZf5kA=; b=Mahqk11P0dtVI6WvpVZ3wbPfd6
+        TOLmouapre5P0kVTzEU3HqwZFByZlxCfsG6R4LCAQEde65aGjIHnOELkSeXiwBiVLsCgnaiFc5MSt
+        bvGYyrZ9NusMwXnv+hlzhDJ+I4OVdlWF/WhR7di5/YwH+8C/4tFLNJRZdH9NKDu3+jfaCADVNAeGN
+        ktm0Qw0jD8zXP93Qm5deyNsGMKjxkuKyjwIUIvulughoawMKj7P036hpaE1C8BhnQ1KNpjW7ltyqz
+        UB5eZs1ummTyPWBBdfzQmKKtQe7CWVkU7RMOrEnMA4elIOFazI/1fyVNV75dx+bpdv3LTg5BtDuoO
+        VVT7V/RQ==;
+Received: from [2001:4bb8:198:f3b2:a2b:85ba:fb78:c253] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k92qE-0007el-7k; Fri, 21 Aug 2020 08:56:07 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: fix block device size update serialization
+Date:   Fri, 21 Aug 2020 10:55:58 +0200
+Message-Id: <20200821085600.2395666-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200821060710.GC31091@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200821085356.93CF64C040@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_06:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=840 suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0
- spamscore=0 clxscore=1011 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210079
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Jens,
 
+this series fixes how we update i_size for the block device inodes (and
+thus the block device).  Different helpers use two different locks
+(bd_mutex and i_rwsem) to protect the update, and it appears device
+mapper uses yet another internal lock.  A lot of the drivers do the
+update handcrafted in often crufty ways.  And in addition to that mess
+it turns out that the "main" lock, bd_mutex is pretty dead lock prone
+vs other spots in the block layer that acquire it during revalidation
+operations, as reported by Xianting.
 
-On 8/21/20 11:37 AM, Christoph Hellwig wrote:
-> On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
->> From: Ritesh Harjani <riteshh@linux.ibm.com>
->>
->> __bio_try_merge_page() may return same_page = 1 and merged = 0.
->> This could happen when bio->bi_iter.bi_size + len > UINT_MAX.
->> Handle this case in iomap_add_to_ioend() by incrementing write_count.
->> This scenario mostly happens where we have too much dirty data accumulated.
->>
->> w/o the patch we hit below kernel warning,
-> 
-> I think this is better fixed in the block layer rather than working
-> around the problem in the callers.  Something like this:
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index c63ba04bd62967..ef321cd1072e4e 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -879,8 +879,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
->   		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
->   
->   		if (page_is_mergeable(bv, page, len, off, same_page)) {
-> -			if (bio->bi_iter.bi_size > UINT_MAX - len)
-> +			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-> +				*same_page = false;
->   				return false;
-> +			}
->   			bv->bv_len += len;
->   			bio->bi_iter.bi_size += len;
->   			return true;
-> 
-
-Ya, we had think of that. But what we then thought was, maybe the
-API does return the right thing. Meaning, what API says is, same_page is
-true, but the page couldn't be merged hence it returned ret = false.
-With that thought, we fixed this in the caller.
-
-But agree with you that with ret = false, there is no meaning of
-same_page being true. Ok, so let linux-block comment on whether
-above also looks good. If yes, I can spin out an official patch with
-all details.
-
--ritesh
+Fix all that by adding a dedicated spinlock just for the size updates.
