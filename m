@@ -2,57 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64DCB24E214
-	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 22:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D098B24E249
+	for <lists+linux-block@lfdr.de>; Fri, 21 Aug 2020 22:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgHUUXb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Aug 2020 16:23:31 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36707 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgHUUXb (ORCPT
+        id S1725831AbgHUUv1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Aug 2020 16:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgHUUvZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:23:31 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y6so1390373plt.3
-        for <linux-block@vger.kernel.org>; Fri, 21 Aug 2020 13:23:30 -0700 (PDT)
+        Fri, 21 Aug 2020 16:51:25 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110ADC061573
+        for <linux-block@vger.kernel.org>; Fri, 21 Aug 2020 13:51:25 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 77so2514725ilc.5
+        for <linux-block@vger.kernel.org>; Fri, 21 Aug 2020 13:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=vxXe+aAQ2LX4X7MMumyucucau5qpBLeA49z8U/uUCLg=;
+        b=n5wCqOmUaN3PvlmbrEaOV79NVdJBfd2z8NIUKAtxC4PMEhIsI6XFONaydl0RMWjb/O
+         I1K8gKccm2BuqsEUtzrDm3JyjNFWGX/w3RK/56dXeIV45pWp64Y2s92PISOEfkQ7VtCz
+         k1Te2zSOCXXFNgA99AFiTCH2/kLWLxD8F+n6Q6Jy8iSmCfXCSbxeYoWpFufwT+3Sr8cL
+         a2FWaOddnaT8VHtxWWm12PLi/618ZwRpwKad7KYLiNs1TEDRRzSQtV/ARbpE+2WIgywC
+         e/WIugvZMGyS4O2X4ql6Ho1HhVY5RwdHyVMqZFkKe+yoVv/JJvUJw8u+7nzfAdnoip7+
+         eItw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2gfWQvCm4JA4u/Phnm0jHU35F/XAL1Zg/HIvrShCJXg=;
-        b=D6KBIrJDYccJMBeTk7P0IVgqRbQHlAHlWcmwKKhzltI5W4M4TvAIt4KTAoBpCHut3s
-         ltZIn0hPvZu9Tn7z0TqqhI2YRNK7e3I6kvJVzeYTVvDCPU5KeSGxPb2Kdp/wHAjFnavc
-         PAhVVYAx79oThCvQEUWnRfX5WTKR6bbD+rDpgBJp8mqKiwNuCdEWnQmDhIS4OV3tonuC
-         WrfgCeiFQurcToDmqt15vFFIrFvsdmi8k6PuZppZZNzfDMWft14MFKNUZYt9PBGcns2h
-         9wKaNuRBF+o89yiqtYWZUzUG9TbWHjXCkEoG0QgFtA1dqUsKxoXkbaMjngGDJKcDO7kd
-         2yEA==
-X-Gm-Message-State: AOAM530wx/pvWlI7c1sIQJWG37YxkDZD4+tTb0XJ5aqq30dw5mrf3ZRT
-        3R3pNzAsdDT1kRF+TYW1KQI=
-X-Google-Smtp-Source: ABdhPJyINuNiQe0BP36p529nR8soirHltcatsfn2ZNpAGrkwXR7VyCszxt64JLsmkDSTDtnIPLOIvQ==
-X-Received: by 2002:a17:902:8ec8:: with SMTP id x8mr3701224plo.217.1598041410258;
-        Fri, 21 Aug 2020 13:23:30 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:95a5:8a0f:6e94:b712? ([2601:647:4802:9070:95a5:8a0f:6e94:b712])
-        by smtp.gmail.com with ESMTPSA id b22sm3418646pfb.52.2020.08.21.13.23.28
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=vxXe+aAQ2LX4X7MMumyucucau5qpBLeA49z8U/uUCLg=;
+        b=m3mt+hX9mj0+21iEFmaQFMCJqkCVygrZJcJM6fxo3uAENpYmcsZP1lGZnyDHP0976f
+         CFOV6T3Xc8kd1/MiGrR1KZWxLYmknvBnLWmFwV+6z3NDqjgMawZVc1b2m49eGKkKwTfG
+         X/I1No9D8E1ZVmoCxmdNzzvb4l7x/M47jQgTp2mvCYRxOtoKY7lkujNVEp/F4SixJKBV
+         bPm00YKgAuSds5Zt8DJEGS/1/5rdbpkKYNVJ1Onui+dEhjNzBW6yqNO2h8swdTY3+2r5
+         dd1xAZvKO0Qg0hHUbm2Q43xZ11P2F91jR3cmnENphOD1PXnhjdgZXOslJ4pskGQJrphT
+         DvAA==
+X-Gm-Message-State: AOAM5331dLElLsIgXGA2bS8Sk2BAYESOEKJoGA84y87gwNTQBpnFdGeT
+        wejZNCpDTl0ZyPedmk8w9lH1xV05Q1Nlz4Mp
+X-Google-Smtp-Source: ABdhPJxnKCSMlNdz4raIJDtmiqWrpjKOkKM1AZrS+KFzFJK61YHhcT94FZusRWowiT1jyYb+d9eO1g==
+X-Received: by 2002:a92:c80f:: with SMTP id v15mr4128944iln.112.1598043083767;
+        Fri, 21 Aug 2020 13:51:23 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 13sm1861923ilj.49.2020.08.21.13.51.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 13:23:29 -0700 (PDT)
-Subject: Re: [PATCH 1/3] nvme-core: improve avoiding false remove namespace
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@fb.com, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Chao Leng <lengchao@huawei.com>,
-        kbusch@kernel.org
-References: <20200820035357.1634-1-lengchao@huawei.com>
- <ead8ccd0-d89d-b47e-0a6f-22c976a3b3a6@grimberg.me>
- <20200820082918.GA12926@lst.de>
- <0630bc93-539d-df78-c1e8-ec136cb7dd36@grimberg.me>
- <20200821062538.GD28559@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <75b49877-7740-3bd7-2ae9-385c310d7498@grimberg.me>
-Date:   Fri, 21 Aug 2020 13:23:28 -0700
+        Fri, 21 Aug 2020 13:51:23 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 5.9-rc2
+Message-ID: <2e213354-a1f8-cdb6-0f3c-24473a2a2ef8@kernel.dk>
+Date:   Fri, 21 Aug 2020 14:51:22 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200821062538.GD28559@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
@@ -60,61 +65,176 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Linus,
 
->>> So the one thing I'm not even sure about is if just ignoring the
->>> errors was a good idea to start with.  They obviously are if we just
->>> did a rescan and did run into an error while rescanning a namespace
->>> that didn't change.  But what if it actually did change?
->>
->> Right, we don't know, so if we failed without DNR, we assume that
->> we will retry again and ignore the error. The assumption is that
->> we will retry when we will reconnect as we don't have a retry mechanism
->> for these requests.
-> 
-> Yes.  And I think for anything related to namespace (re-)scanning
-> we can actually trivially build a sane retry mechanism.  That is give
-> up on the current scan_work, and just rescan one after a short wait.
+Some general fixes, and a bit of late stragglers that missed -rc1 and
+really should have been there. Nothing major, though. In detail:
 
-There is no point in doing that if we are disconnected and will in
-the future reconnect, which will trigger a scan that can actually
-work.
+- NVMe pull request from Sagi:
+	- nvme completion rework from Christoph and Chao that mostly
+	  came from a bit of divergence of how we classify errors related
+	  to pathing/retry etc.
+	- nvmet passthru fixes from Chaitanya
+	- minor nvmet fixes from Amit and I
+	- mpath round-robin path selection fix from Martin
+	- ignore noiob for zoned devices from Keith
+	- minor nvme-fc fix from Tianjia"
 
->>> So I think a logic like in this patch kinda makes sense, but I think
->>> we also need to retry and scan again on these kinds of errors.
->>
->> So you are OK with keeping nvme_submit_sync_cmd returning -ENODEV for
->> cancelled requests and have the scan flow assume that these are
->> cancelled requests?
-> 
-> How does nvme_submit_sync_cmd return -ENODEV?  As far as I can tell
-> -ENODEV is our special escape for expected-ish errors in namespace
-> scanning.
+- Deprecate /dev/raw*, we've been using O_DIRECT on the block device
+  for almost two decades at this point (Christoph).
 
-One of these escapes I guess :)
+- BFQ cgroup leak fix (Dmitry)
 
->> At the very least we need a good comment to say what is going on there.
-> 
-> Absolutely.
-> 
->>
->>    Btw,
->>> did you ever actually see -ENOMEM in practice?  With the small
->>> allocations that we do it really should not happen normally, so
->>> special casing for it always felt a little strange.
->>
->> Never seen it, it's there just because we have allocations in the path.
->>
->>> FYI, I've started rebasing various bits of work I've done to start
->>> untangling the mess.  Here is my current WIP, which in this form
->>> is completely untested:
->>>
->>> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/nvme-scanning-cleanup
->>
->> This does not yet contain sorting out what is discussed here correct?
-> 
-> No, but all the infrastructure needed to implement my above idead.  Most
-> importanty the crazy revalidate callchains are pretty much gone and we're
-> down to just a few functions with reasonable call chains.
+- Block layer MAINTAINERS addition (Geert)
 
-OK, that makes sense. I'm still not convinced the retry makes sense
-though...
+- Cleanup rpm_status non-enum status (Geert)
+
+- Fix null_blk FUA checking (Hou)
+
+- get_max_io_size() size fix (Keith)
+
+- Fix block page_is_mergeable() for compound pages (Matthew)
+
+- Discard granularity fixes (Ming)
+
+- IO scheduler ordering fix (Ming)
+
+- Misc fixes
+
+Please pull!
+
+
+
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.9-2020-08-21
+
+for you to fetch changes up to 2113d4f63da33fb960c4e276101a06c1a06c6e5e:
+
+  virtio-blk: Use kobj_to_dev() instead of container_of() (2020-08-21 08:44:51 -0600)
+
+----------------------------------------------------------------
+block-5.9-2020-08-21
+
+----------------------------------------------------------------
+Amit Engel (1):
+      nvmet: Disable keep-alive timer when kato is cleared to 0h
+
+Chaitanya Kulkarni (3):
+      nvmet: add ns tear down label for pt-cmd handling
+      nvmet: fix oops in pt cmd execution
+      nvmet: call blk_mq_free_request() directly
+
+Chao Leng (1):
+      nvme: redirect commands on dying queue
+
+Christoph Hellwig (5):
+      raw: deprecate the raw driver
+      nvme-pci: fix PRP pool size
+      nvme: rename and document nvme_end_request
+      nvme: refactor command completion
+      nvme: just check the status code type in nvme_is_path_error
+
+Dmitry Monakhov (1):
+      bfq: fix blkio cgroup leakage v4
+
+Geert Uytterhoeven (2):
+      MAINTAINERS: Add missing header files to BLOCK LAYER section
+      block: Make request_queue.rpm_status an enum
+
+Hou Pu (1):
+      null_blk: fix passing of REQ_FUA flag in null_handle_rq
+
+Jens Axboe (1):
+      Merge branch 'nvme-5.9-rc' of git://git.infradead.org/nvme into block-5.9
+
+John Garry (1):
+      nvme-pci: Use u32 for nvme_dev.q_depth and nvme_queue.q_depth
+
+Keith Busch (2):
+      block: fix get_max_io_size()
+      nvme: skip noiob for zoned devices
+
+Logan Gunthorpe (2):
+      nvmet-passthru: Reject commands with non-sgl flags set
+      nvme: Use spin_lock_irq() when taking the ctrl->lock
+
+Martin Wilck (2):
+      nvme: multipath: round-robin: fix single non-optimized path case
+      nvme: multipath: round-robin: eliminate "fallback" variable
+
+Matthew Wilcox (Oracle) (1):
+      block: Fix page_is_mergeable() for compound pages
+
+Miaohe Lin (1):
+      block: Convert to use the preferred fallthrough macro
+
+Ming Lei (5):
+      blk-mq: order adding requests to hctx->dispatch and checking SCHED_RESTART
+      block: loop: set discard granularity and alignment for block device backed loop
+      block: respect queue limit of max discard segment
+      block: virtio_blk: fix handling single range discard request
+      blk-mq: insert request not through ->queue_rq into sw/scheduler queue
+
+Nathan Chancellor (1):
+      block/rnbd: Ensure err is always initialized in process_rdma
+
+Randy Dunlap (1):
+      block: blk-mq.c: fix @at_head kernel-doc warning
+
+Sagi Grimberg (1):
+      nvmet: fix a memory leak
+
+Tian Tao (1):
+      virtio-blk: Use kobj_to_dev() instead of container_of()
+
+Tianjia Zhang (1):
+      nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+
+Xu Wang (1):
+      bsg-lib: convert comma to semicolon
+
+Yufen Yu (1):
+      blkcg: fix memleak for iolatency
+
+ .../fault-injection/nvme-fault-injection.rst       |  2 +-
+ MAINTAINERS                                        |  1 +
+ block/badblocks.c                                  |  2 +-
+ block/bfq-cgroup.c                                 |  2 +-
+ block/bfq-iosched.c                                |  4 +-
+ block/bfq-iosched.h                                |  1 -
+ block/bfq-wf2q.c                                   | 12 +--
+ block/bio.c                                        | 10 +--
+ block/blk-cgroup.c                                 |  8 +-
+ block/blk-merge.c                                  | 13 +++-
+ block/blk-mq-sched.c                               |  9 +++
+ block/blk-mq.c                                     | 13 +++-
+ block/blk-wbt.c                                    |  2 +-
+ block/bsg-lib.c                                    |  2 +-
+ block/ioprio.c                                     |  2 +-
+ drivers/block/loop.c                               | 33 +++++----
+ drivers/block/null_blk_main.c                      |  2 +-
+ drivers/block/rnbd/rnbd-srv.c                      |  3 +-
+ drivers/block/virtio_blk.c                         | 33 ++++++---
+ drivers/char/raw.c                                 |  5 ++
+ drivers/nvme/host/core.c                           | 86 ++++++++++++++--------
+ drivers/nvme/host/fc.c                             |  6 +-
+ drivers/nvme/host/multipath.c                      | 69 +++++++----------
+ drivers/nvme/host/nvme.h                           | 31 +++++++-
+ drivers/nvme/host/pci.c                            | 17 +++--
+ drivers/nvme/host/rdma.c                           |  2 +-
+ drivers/nvme/host/tcp.c                            |  4 +-
+ drivers/nvme/target/configfs.c                     |  1 +
+ drivers/nvme/target/core.c                         |  6 ++
+ drivers/nvme/target/loop.c                         |  2 +-
+ drivers/nvme/target/passthru.c                     | 25 +++++--
+ include/linux/blkdev.h                             |  3 +-
+ 32 files changed, 251 insertions(+), 160 deletions(-)
+
+-- 
+Jens Axboe
+
