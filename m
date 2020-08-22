@@ -2,145 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C01C124E3F9
-	for <lists+linux-block@lfdr.de>; Sat, 22 Aug 2020 01:40:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F5C224E524
+	for <lists+linux-block@lfdr.de>; Sat, 22 Aug 2020 06:22:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHUXko (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Aug 2020 19:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgHUXkn (ORCPT
+        id S1726090AbgHVEVQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 22 Aug 2020 00:21:16 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14458 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgHVEVG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Aug 2020 19:40:43 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 870D7C061573
-        for <linux-block@vger.kernel.org>; Fri, 21 Aug 2020 16:40:43 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h4so3370510ioe.5
-        for <linux-block@vger.kernel.org>; Fri, 21 Aug 2020 16:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jZGHtjpWYce+ezqQE68OaR3BETimF95K9n9GicBk70o=;
-        b=V0ycwNCUbDoI0XkJVOma+ry1DiXtOSZv5pzijskD9RjMk1k/FP5sqBdswteuMRyc6i
-         t7/OD9JSdD9QXeJHGfdTEyc+xKtM6QP9zlzQbxKrj9J52o/ZHsRBeXfEUs4/6k6ZcCUT
-         4IebD3aMD9W4dY+rJ/iNHv4PjmdTEAltr3Q4/X38hhRQBVe79JGjiRQemHsYBM3ZAfNO
-         U1Z+PvSJRwO1MNruP07M3DSjQ2Or40WjTGp4PJ/jKx6obcecS86LOdp6ApMOaByPEoCq
-         InKTPhI2feNf6MkLB9A8xDrUqXidfKY4Cju22yzXmQWp+XrVdaAOG8C3P1mBwXFMBtLG
-         QRqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jZGHtjpWYce+ezqQE68OaR3BETimF95K9n9GicBk70o=;
-        b=o9WPdewedCr155JOMSImr8KE+gTI7Xh5frHeFcRkXcFGaUuR7IykleOMgXr9d2it4V
-         XqtFvuioeMfilUFRcUkBN9J/GMQBrWoriGUq8myKkcFRiKjAPY0w0Bc2B6wAA4VfGV4P
-         teMt1w/xt56JgWHk5CajEjEKhPTVZMZPlcGcdCL4eKFbBY1zW7mg3JTYb80b0M5UGtpI
-         LcR86Upra50p3hB1SzJUCUJXkgNJfkyBLuhzsCKNstBbMEqoJvrBVPloJwJ+SqyAvIij
-         2u2YsCTicEzeRuLNwMY8LY8OUGyCuNjHGYJy0FefLeFNQbTGiYH3/P7DA2sPKTUmFP5l
-         Mrww==
-X-Gm-Message-State: AOAM533eBrMWT1WQHKXPsnNPGAq/IRQsXefYqNMmwHofkWKUt5XLLCU5
-        UvSpDvaN1eBMMywkrJsB4Ve/yZzXOymcv5Qh
-X-Google-Smtp-Source: ABdhPJyciv2SMBU+9IoUvHo1P7bN4w7G4BzbCjUj/JdjB5nnmW0n7KOHBF7P3VU9D1mVS1ytyJKCAg==
-X-Received: by 2002:a05:6638:594:: with SMTP id a20mr4635918jar.127.1598053242277;
-        Fri, 21 Aug 2020 16:40:42 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f6sm2042182ioo.32.2020.08.21.16.40.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 16:40:41 -0700 (PDT)
-Subject: Re: [GIT PULL] Block fixes for 5.9-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <2e213354-a1f8-cdb6-0f3c-24473a2a2ef8@kernel.dk>
- <CAHk-=wiFwUUEpCQ2FDWxBFb3XSxu=+yODHGfLPncvTQa9BeP9w@mail.gmail.com>
- <22fc2c2f-1ab9-6c57-df94-4768a64644e9@kernel.dk>
- <CAHk-=wg=CkBbPHVOjoaFWoACzm+7jWhBBzwmsw7y0EYcmseh0Q@mail.gmail.com>
- <7a221d34-6651-ba92-f074-c785fab70460@kernel.dk>
- <CAHk-=wgw1GQ3FOcLUgj1ZDG2RaACZFuC0CB9MHSTaFSVEdEPdg@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fab39809-e477-f64e-6454-a29b4d016ba1@kernel.dk>
-Date:   Fri, 21 Aug 2020 17:40:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 22 Aug 2020 00:21:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f409cbd0000>; Fri, 21 Aug 2020 21:19:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 21 Aug 2020 21:21:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 21 Aug 2020 21:21:06 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 22 Aug
+ 2020 04:21:05 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 22 Aug 2020 04:21:05 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.94.162]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f409d310002>; Fri, 21 Aug 2020 21:21:05 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <ceph-devel@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/5] bio: Direct IO: convert to pin_user_pages_fast()
+Date:   Fri, 21 Aug 2020 21:20:54 -0700
+Message-ID: <20200822042059.1805541-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgw1GQ3FOcLUgj1ZDG2RaACZFuC0CB9MHSTaFSVEdEPdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598069950; bh=iXBAhlDsGHGJ0BL2z0xZCdQ0KPj09q9n3S14YFuk7Lw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=CR22qrcQtjZToR+Y4AXxJBXCfRczkFv9gLGIEHhDFMLUu4lf6rgLvtPhciCvG0fvf
+         8JMCctIFdDTWGAzXzUKbKnyYt6PwVt10412J6p/kV+Y0t4d87XeRWNvV7rAJ2JgP31
+         d/5x/ygntRNdZv7aMmnGbKeHHcc0OCfwjSwvgZMX+1lVs78tO1hDzy8fykG7Hz3ok1
+         mw6vWF1LW8LjO7d+e41OQ4iw21XaLGKwEc023ZXuR+EN1hRFez1kp1TmDXy5s91Yv8
+         Yy8oSMjNVP/9FDFofUWl7D5rayjXLwB32kN+Y8cF+l0u4qTOBIqNxYvbqe1Xo9DjGq
+         kGQPDLQF/puTQ==
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/21/20 5:29 PM, Linus Torvalds wrote:
-> On Fri, Aug 21, 2020 at 4:01 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> The tree is totally warning clean right now on build, but that's usually
->> not the case, and missing a single warning isn't that hard.
-> 
-> Actually, my tree is generally entirely warning-free and has been for
-> years, because I absolutely hate warnings.
-> 
-> You're not the only person I haven't pulled from because I saw a
-> single warning. This is the second one just this release window.  I'm
-> not singling you out. A warning to me is simply a hard "No".
-> 
-> Because I know very well that if there is even a single warning,
-> people will then ignore the other warnings.
-> 
-> So there is no such thing as a harmless warning - it doesn't matter
-> _what_ it warns about, it's a bad thing, because even one bogus
-> warning will then mean that people ignore warnings that _aren't_
-> bogus, and it goes all downhill from there.
+Hi,
 
-We're in violent agreement on this part. None of the projects I maintain
-throw any warnings, exactly for the same reason. My test box is using
-gcc-10 and it definitely hasn't been "clean for years". It is now, and
-has been for probably a release or two. The warnings do condition you to
-ignore new warnings, which is of course a sad outcome that shouldn't
-happen. I don't think anyone sane would disagree on that.
+This converts the Direct IO block/bio layer over to use FOLL_PIN pages
+(those acquired via pin_user_pages*()). This effectively converts
+several file systems (ext4, for example) that use the common Direct IO
+routines. See "Remaining work", below for a bit more detail there.
 
-> So the reason I notice is exactly because I keep my build tree 100%
-> clean. I do allmodconfig builds that are entirely clean, and I check
-> it after each and every pull I do, and each patch series I apply.
-> Mistakes can happen, but I try _very_ hard to keep my tree clean.
-> 
-> Now, that said, I'll miss warnings too, because I don't do
-> cross-builds for other architectures, and I really only do a couple of
-> fairly basic configurations.
-> 
-> But perhaps more importantly - I don't build with a lot of different
-> compilers. I do in fact test two different compilers (both gcc and
-> clang), but I use two different configurations, so it's not really
-> overlapping testing, it's more that these days I make sure the clang
-> build is warning free at least for the core kernel too.
-> 
-> So "warning free" is always relative to some compiler base (and some
-> config base). But the baseline should absolutely be "zero warnings".
-> 
-> Generally, new warnings in my tree is because of a compiler upgrade or
-> similar congifuration issues.
-> 
-> And it's sadly the "different compilers" thing that then means that
-> *my* clean tree might not then necessarily be clean for others. It's
-> also why I can't just enable "-Werror" to make it harder to miss.
-> 
-> But I've been tempted. Many times. There's been a couple of times I've
-> added that "-Werror" to the Makefile, only to never commit it.
-> 
-> But if you have warnings that you see due to different compilers or
-> configurations, holler. We'll get them fixed.
+Quite a few approaches have been considered over the years. This one is
+inspired by Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. After working through how bio submission and completion works, I
+became convinced that this is the simplest and cleanest approach to
+conversion.
 
-I obviously don't disagree with any of this, it'd be hard to, and it
-wasn't really what any of my replies were about. It was about how this
-was dealt with. But I won't keep beating the dead horse.
+Not content to let well enough alone, I then continued on to the
+unthinkable: adding a new flag to struct bio, whose "short int" flags
+field was full, thuse triggering an expansion of the field from 16, to
+32 bits. This allows for a nice assertion in bio_release_pages(), that
+the bio page release mechanism matches the page acquisition mechanism.
+This is especially welcome for a change that affects a lot of callers
+and could really make a mess if there is a bug somewhere.
 
-As I said, I'll rebase the branch, and in fact I already did. I likely
-won't be able to get it out before after -rc2, which is pretty sad since
-there's an nvme regression in there that would have been nice to have.
-There's an off chance that I'll send it out tomorrow, depends on timing.
+I'm unable to spot any performance implications, either theoretically or
+via (rather light) performance testing, from enlarging bio.bi_flags, but
+I suspect that there are maybe still valid reasons for having such a
+tiny bio.bi_flags field. I just have no idea what they are. (Hardware
+that knows the size of a bio? No, because there would be obvious
+build-time assertions, and comments about such a constraint.) Anyway, I
+can drop that patch if it seems like too much cost for too little
+benefit.
 
--- 
-Jens Axboe
+And finally, as long as we're all staring at the iter_iov code, I'm
+including a nice easy ceph patch, that removes one more caller of
+iter_iov_get_pages().
+
+Design notes =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+This whole approach depends on certain concepts:
+
+1) Each struct bio instance must not mix different types of pages:
+FOLL_PIN and non-FOLL_PIN pages. (By FOLL_PIN I'm referring to pages
+that were acquired and pinned via pin_user_page*() routines.)
+Fortunately, this is already an enforced constraint for bio's, as
+evidenced by the existence and use of BIO_NO_PAGE_REF.
+
+2) Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. Accordingly, this series implements the following pseudocode:
+
+Direct IO behavior:
+
+    ITER_IOVEC:
+        pin_user_pages_fast();
+        break;
+
+    ITER_KVEC:    // already elevated page refcount, leave alone
+    ITER_BVEC:    // already elevated page refcount, leave alone
+    ITER_PIPE:    // just, no :)
+    ITER_DISCARD: // discard
+        return -EFAULT or -ENVALID;
+
+...which works for callers that already have sorted out which case they
+are in. Such as, Direct IO in the block/bio layers.
+
+Now, this does leave ITER_KVEC and ITER_BVEC unconverted, but on the
+other hand, it's not clear that these are actually affected in the real
+world, by the get_user_pages()+filesystem interaction problems of [2].
+If it turns out to matter, then those can be handled too, but it's just
+more refactoring and surgery to do so.
+
+Testing
+=3D=3D=3D=3D=3D=3D=3D
+
+Performance: no obvious regressions from running fio (direct=3D1: Direct
+IO) on both SSD and NVMe drives.
+
+Functionality: selected non-destructive bare metal xfstests on xfs,
+ext4, btrfs, orangefs filesystems, plus LTP tests.
+
+Note that I have only a single x86 64-bit test machine, though.
+
+Remaining work
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Non-converted call sites for iter_iov_get_pages*() at the
+moment include: net, crypto, cifs, ceph, vhost, fuse, nfs/direct,
+vhost/scsi.
+
+About-to-be-converted sites (in a subsequent patch) are: Direct IO for
+filesystems that use the generic read/write functions.
+
+[1] https://lore.kernel.org/kvm/20190724061750.GA19397@infradead.org/
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+
+John Hubbard (5):
+  iov_iter: introduce iov_iter_pin_user_pages*() routines
+  mm/gup: introduce pin_user_page()
+  bio: convert get_user_pages_fast() --> pin_user_pages_fast()
+  bio: introduce BIO_FOLL_PIN flag
+  fs/ceph: use pipe_get_pages_alloc() for pipe
+
+ block/bio.c               | 29 +++++++------
+ block/blk-map.c           |  7 +--
+ fs/ceph/file.c            |  3 +-
+ fs/direct-io.c            | 30 ++++++-------
+ fs/iomap/direct-io.c      |  2 +-
+ include/linux/blk_types.h |  5 ++-
+ include/linux/mm.h        |  2 +
+ include/linux/uio.h       |  9 +++-
+ lib/iov_iter.c            | 91 +++++++++++++++++++++++++++++++++++++--
+ mm/gup.c                  | 30 +++++++++++++
+ 10 files changed, 169 insertions(+), 39 deletions(-)
+
+--=20
+2.28.0
 
