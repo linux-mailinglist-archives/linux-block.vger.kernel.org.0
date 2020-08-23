@@ -2,49 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E4624EC57
-	for <lists+linux-block@lfdr.de>; Sun, 23 Aug 2020 11:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32DF824EC66
+	for <lists+linux-block@lfdr.de>; Sun, 23 Aug 2020 11:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHWJJU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 23 Aug 2020 05:09:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:51686 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgHWJJT (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:09:19 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9836468AFE; Sun, 23 Aug 2020 11:09:15 +0200 (CEST)
-Date:   Sun, 23 Aug 2020 11:09:15 +0200
+        id S1726730AbgHWJLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 23 Aug 2020 05:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgHWJLA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:11:00 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11941C061575;
+        Sun, 23 Aug 2020 02:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=No1/zNvYiAlQJ+2VM2KxEVKX9my3nDvRhpc7oRbGQdM=; b=j1K8V7plEOJeLPtvyxOs4Di0MB
+        K/7b31MHvupcxYapWHKr1a0hx0nGDI6xZzN3XPcorEnvGv+Zd2hvS+dCLU05yaqKrDDzeFTm/4DtO
+        upJ2qqAS7pLLSDzPsXlNqdj7D7Pc2xnMJCelkfwXxsJS21cH28KDhnBzkZGZGSwUwyHELrP7eZ6KM
+        XOhkPG5Ftewq53mD+aBu0fTnMQD92wLWJFth+fzWO/WjGpN2OvwA8bBehgXFghsezlndydOr9WziI
+        0j7oIrogrtZKa145H/tfv5KlcfSijH1M0kuxuZKyAyvozqf7s3ukgjpNbDng+n1qyEzvWz+45tV7+
+        Ot/nIsDQ==;
+Received: from 171.168.43.195.cust.ip.kpnqwest.it ([195.43.168.171] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9m1U-0003KT-Cw; Sun, 23 Aug 2020 09:10:44 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     =?utf-8?B?55Sw?= <xianting_tian@126.com>
-Cc:     Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Justin Sanders <justin@coraid.com>,
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
         Josef Bacik <josef@toxicpanda.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
         Stefan Haberland <sth@linux.ibm.com>,
         Jan Hoeppner <hoeppner@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nbd@other.debian.org" <nbd@other.debian.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH 2/2] block: fix locking for struct block_device size
- updates
-Message-ID: <20200823090915.GA2764@lst.de>
-References: <20200821085600.2395666-1-hch@lst.de> <20200821085600.2395666-3-hch@lst.de> <4df016bc-570c-d166-47dd-36a9f21fad13@suse.de> <133efc8b.1649.17410784734.Coremail.xianting_tian@126.com>
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: fix block device size update serialization v2
+Date:   Sun, 23 Aug 2020 11:10:40 +0200
+Message-Id: <20200823091043.2600261-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <133efc8b.1649.17410784734.Coremail.xianting_tian@126.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 06:02:32PM +0800, 田 wrote:
-> thanks Hellwig for your kindly reply and your fix and add report by me :)
+Hi Jens,
 
-I found an issue with the patch, and will send a new version in a bit.
-If this works for your reproducer, can you add a Tested-by: tag?
+this series fixes how we update i_size for the block device inodes (and
+thus the block device).  Different helpers use two different locks
+(bd_mutex and i_rwsem) to protect the update, and it appears device
+mapper uses yet another internal lock.  A lot of the drivers do the
+update handcrafted in often crufty ways.  And in addition to that mess
+it turns out that the "main" lock, bd_mutex is pretty dead lock prone
+vs other spots in the block layer that acquire it during revalidation
+operations, as reported by Xianting.
+
+Fix all that by adding a dedicated spinlock just for the size updates.
+
+Changes since v1:
+ - don't call __invalidate_device under the new spinlock
+ - don't call into the file system code from the nvme removal code
