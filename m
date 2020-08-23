@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7835324EC63
-	for <lists+linux-block@lfdr.de>; Sun, 23 Aug 2020 11:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9283B24EC5C
+	for <lists+linux-block@lfdr.de>; Sun, 23 Aug 2020 11:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHWJLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 23 Aug 2020 05:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
+        id S1726037AbgHWJLB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 23 Aug 2020 05:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHWJLA (ORCPT
+        with ESMTP id S1725905AbgHWJK7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:11:00 -0400
+        Sun, 23 Aug 2020 05:10:59 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188D2C061755;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E3DC061573;
         Sun, 23 Aug 2020 02:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=cLc8UFh8Zn6w+mLuoS0pkRz+kyaYfh0fJF4FT3u1x/M=; b=Jd2+lONkz5bk6PvfkHn1D/V7qV
-        Vlyk1nLSCtExUzPZkfp3rBQN8FGPdpX+Dc8Qh9vAHJn5B58Ga8x8AMMYpOa3TvzdEmVEKcpxoTHnu
-        MLLmvRK0jttZWXRBgkaA3irYPQfnRLZ6GcYL/CMHRdfkorYw/m1RKbBo5/+kTHdV59RaC8Pd8wTOi
-        jo7G3URqxr5MEa/A0sGGBefAFTMrljyB2t0TGRiRnHxFeLadzpsnYn1IXU+AOep6iankq8A3pFaMm
-        RP63WcgsCe3jtesgABCd8bNh/Yzk6NUjfZAB48atObBn68zJElrVuLfF5/tyY05ixQmv5umrKt3+i
-        5yixz6Aw==;
+        bh=WHEcibrKl8+wKi1ybgFSp3MWjJrWDe8r3xn83RKWybI=; b=XYgGjibGrOrNXNu5NInJV3tM1l
+        GDXIb/vauCjirhxRO8Zvz8tD07xErusBxgqcAP5Hzv+I00VB7hXtfvazberNfBbHsBVTOQjE0vx/Y
+        9OZcOlpRByyxkCHw+UZRosOTY3VNQERAs42aUzMkT0slrWk0/ZlQnY8c/7IVliKP10nim5ITF5FEB
+        Cu1p+RgLamVHFfHEddz8gODhrAS1oLFoOJWaiM7D6ktW2wutM5AJ3c8+D78jAI92Yj1MrmbB/Vell
+        ctX6XRtN9y8czd+yQ9eBhGQiy305avdCNs0wMA9B4WEY6ngVue+pcbFZ0q5f4BzBts9j2+2aRM8WD
+        KrZ6nvPw==;
 Received: from 171.168.43.195.cust.ip.kpnqwest.it ([195.43.168.171] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9m1V-0003Kk-Dx; Sun, 23 Aug 2020 09:10:47 +0000
+        id 1k9m1Z-0003L8-Bx; Sun, 23 Aug 2020 09:10:49 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Justin Sanders <justin@coraid.com>,
@@ -37,11 +37,10 @@ Cc:     Justin Sanders <justin@coraid.com>,
         Stefan Haberland <sth@linux.ibm.com>,
         Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 1/3] block: replace bd_set_size with bd_set_nr_sectors
-Date:   Sun, 23 Aug 2020 11:10:41 +0200
-Message-Id: <20200823091043.2600261-2-hch@lst.de>
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: [PATCH 2/3] block: fix locking for struct block_device size updates
+Date:   Sun, 23 Aug 2020 11:10:42 +0200
+Message-Id: <20200823091043.2600261-3-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200823091043.2600261-1-hch@lst.de>
 References: <20200823091043.2600261-1-hch@lst.de>
@@ -53,154 +52,200 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace bd_set_size with a version that takes the number of sectors
-instead, as that fits most of the current and future callers much better.
+Two different callers use two different mutexes for updating the
+block device size, which obviously doesn't help to actually protect
+against concurrent updates from the different callers.  In addition
+one of the locks, bd_mutex is rather prone to deadlocks with other
+parts of the block stack that use it for high level synchronization.
 
+Switch to using a new spinlock protecting just the size updates, as
+that is all we need, and make sure everyone does the update through
+the proper helper.
+
+This fixes a bug reported with the nvme revalidating disks during a
+hot removal operation, which can currently deadlock on bd_mutex.
+
+Reported-by: Xianting Tian <xianting_tian@126.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/block/loop.c     |  4 ++--
- drivers/block/nbd.c      |  7 ++++---
- drivers/block/pktcdvd.c  |  2 +-
- drivers/nvme/host/nvme.h |  2 +-
- fs/block_dev.c           | 10 +++++-----
- include/linux/genhd.h    |  2 +-
- 6 files changed, 14 insertions(+), 13 deletions(-)
+ block/partitions/core.c         |  4 ++--
+ drivers/block/aoe/aoecmd.c      |  4 +---
+ drivers/md/dm.c                 | 15 ++-------------
+ drivers/s390/block/dasd_ioctl.c |  9 ++-------
+ fs/block_dev.c                  | 25 ++++++++++++++-----------
+ include/linux/blk_types.h       |  1 +
+ 6 files changed, 22 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 2f137d6ce169d5..7069899a94903e 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -253,7 +253,7 @@ static void loop_set_size(struct loop_device *lo, loff_t size)
- {
- 	struct block_device *bdev = lo->lo_device;
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index e62a98a8eeb750..328a2cb7875ba1 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -585,8 +585,8 @@ int bdev_resize_partition(struct block_device *bdev, int partno,
+ 	if (partition_overlaps(bdev->bd_disk, start, length, partno))
+ 		goto out_unlock;
  
--	bd_set_size(bdev, size << SECTOR_SHIFT);
-+	bd_set_nr_sectors(bdev, size);
+-	part_nr_sects_write(part, (sector_t)length);
+-	i_size_write(bdevp->bd_inode, length << SECTOR_SHIFT);
++	part_nr_sects_write(part, length);
++	bd_set_nr_sectors(bdevp, length);
  
- 	set_capacity_revalidate_and_notify(lo->lo_disk, size, false);
+ 	ret = 0;
+ out_unlock:
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index 3cf9bc5d8d9599..6ad73fe730bede 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -900,9 +900,7 @@ aoecmd_sleepwork(struct work_struct *work)
+ 		ssize = get_capacity(d->gd);
+ 		bd = bdget_disk(d->gd, 0);
+ 		if (bd) {
+-			inode_lock(bd->bd_inode);
+-			i_size_write(bd->bd_inode, (loff_t)ssize<<9);
+-			inode_unlock(bd->bd_inode);
++			bd_set_nr_sectors(bd, ssize);
+ 			bdput(bd);
+ 		}
+ 		spin_lock_irq(&d->lock);
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 32fa6499739fb9..6b21e5104e3e08 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -2097,18 +2097,6 @@ static void event_callback(void *context)
+ 	dm_issue_global_event();
  }
-@@ -1248,7 +1248,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	set_capacity(lo->lo_disk, 0);
- 	loop_sysfs_exit(lo);
- 	if (bdev) {
--		bd_set_size(bdev, 0);
-+		bd_set_nr_sectors(bdev, 0);
- 		/* let user-space know about this change */
- 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
- 	}
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 3ff4054d6834d2..f07243335472a4 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -300,6 +300,7 @@ static void nbd_size_update(struct nbd_device *nbd)
- {
- 	struct nbd_config *config = nbd->config;
- 	struct block_device *bdev = bdget_disk(nbd->disk, 0);
-+	sector_t nr_sectors = config->bytesize >> 9;
  
- 	if (config->flags & NBD_FLAG_SEND_TRIM) {
- 		nbd->disk->queue->limits.discard_granularity = config->blksize;
-@@ -308,10 +309,10 @@ static void nbd_size_update(struct nbd_device *nbd)
- 	}
- 	blk_queue_logical_block_size(nbd->disk->queue, config->blksize);
- 	blk_queue_physical_block_size(nbd->disk->queue, config->blksize);
--	set_capacity(nbd->disk, config->bytesize >> 9);
-+	set_capacity(nbd->disk, nr_sectors);
- 	if (bdev) {
- 		if (bdev->bd_disk) {
--			bd_set_size(bdev, config->bytesize);
-+			bd_set_nr_sectors(bdev, nr_sectors);
- 			set_blocksize(bdev, config->blksize);
- 		} else
- 			bdev->bd_invalidated = 1;
-@@ -1138,7 +1139,7 @@ static void nbd_bdev_reset(struct block_device *bdev)
- {
- 	if (bdev->bd_openers > 1)
- 		return;
--	bd_set_size(bdev, 0);
+-/*
+- * Protected by md->suspend_lock obtained by dm_swap_table().
+- */
+-static void __set_size(struct mapped_device *md, sector_t size)
+-{
+-	lockdep_assert_held(&md->suspend_lock);
+-
+-	set_capacity(md->disk, size);
+-
+-	i_size_write(md->bdev->bd_inode, (loff_t)size << SECTOR_SHIFT);
+-}
+-
+ /*
+  * Returns old map, which caller must destroy.
+  */
+@@ -2131,7 +2119,8 @@ static struct dm_table *__bind(struct mapped_device *md, struct dm_table *t,
+ 	if (size != dm_get_size(md))
+ 		memset(&md->geometry, 0, sizeof(md->geometry));
+ 
+-	__set_size(md, size);
++	set_capacity(md->disk, size);
++	bd_set_nr_sectors(md->bdev, size);
+ 
+ 	dm_table_event_callback(t, event_callback, md);
+ 
+diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+index 777734d1b4e58c..faaf5596e31c12 100644
+--- a/drivers/s390/block/dasd_ioctl.c
++++ b/drivers/s390/block/dasd_ioctl.c
+@@ -55,10 +55,7 @@ dasd_ioctl_enable(struct block_device *bdev)
+ 
+ 	dasd_enable_device(base);
+ 	/* Formatting the dasd device can change the capacity. */
+-	mutex_lock(&bdev->bd_mutex);
+-	i_size_write(bdev->bd_inode,
+-		     (loff_t)get_capacity(base->block->gdp) << 9);
+-	mutex_unlock(&bdev->bd_mutex);
++	bd_set_nr_sectors(bdev, get_capacity(base->block->gdp));
+ 	dasd_put_device(base);
+ 	return 0;
+ }
+@@ -91,9 +88,7 @@ dasd_ioctl_disable(struct block_device *bdev)
+ 	 * Set i_size to zero, since read, write, etc. check against this
+ 	 * value.
+ 	 */
+-	mutex_lock(&bdev->bd_mutex);
+-	i_size_write(bdev->bd_inode, 0);
+-	mutex_unlock(&bdev->bd_mutex);
 +	bd_set_nr_sectors(bdev, 0);
- }
- 
- static void nbd_parse_flags(struct nbd_device *nbd)
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 4becc1efe775fc..015fe128fa8a35 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2192,7 +2192,7 @@ static int pkt_open_dev(struct pktcdvd_device *pd, fmode_t write)
- 
- 	set_capacity(pd->disk, lba << 2);
- 	set_capacity(pd->bdev->bd_disk, lba << 2);
--	bd_set_size(pd->bdev, (loff_t)lba << 11);
-+	bd_set_nr_sectors(pd->bdev, lba << 2);
- 
- 	q = bdev_get_queue(pd->bdev);
- 	if (write) {
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index ebb8c3ed388554..ae5cad5a08f411 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -664,7 +664,7 @@ static inline void nvme_mpath_update_disk_size(struct gendisk *disk)
- 	struct block_device *bdev = bdget_disk(disk, 0);
- 
- 	if (bdev) {
--		bd_set_size(bdev, get_capacity(disk) << SECTOR_SHIFT);
-+		bd_set_nr_sectors(bdev, get_capacity(disk));
- 		bdput(bdev);
- 	}
+ 	dasd_put_device(base);
+ 	return 0;
  }
 diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 8ae833e004439b..f52597172c8b79 100644
+index f52597172c8b79..08158bb2e76c85 100644
 --- a/fs/block_dev.c
 +++ b/fs/block_dev.c
-@@ -1371,13 +1371,13 @@ int check_disk_change(struct block_device *bdev)
+@@ -876,6 +876,7 @@ struct block_device *bdget(dev_t dev)
+ 	bdev = &BDEV_I(inode)->bdev;
  
- EXPORT_SYMBOL(check_disk_change);
- 
--void bd_set_size(struct block_device *bdev, loff_t size)
-+void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
+ 	if (inode->i_state & I_NEW) {
++		spin_lock_init(&bdev->bd_size_lock);
+ 		bdev->bd_contains = NULL;
+ 		bdev->bd_super = NULL;
+ 		bdev->bd_inode = inode;
+@@ -1290,6 +1291,7 @@ static void check_disk_size_change(struct gendisk *disk,
  {
- 	inode_lock(bdev->bd_inode);
--	i_size_write(bdev->bd_inode, size);
-+	i_size_write(bdev->bd_inode, (loff_t)sectors << SECTOR_SHIFT);
- 	inode_unlock(bdev->bd_inode);
- }
--EXPORT_SYMBOL(bd_set_size);
-+EXPORT_SYMBOL(bd_set_nr_sectors);
+ 	loff_t disk_size, bdev_size;
  
- static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part);
- 
-@@ -1514,7 +1514,7 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, void *holder,
- 			}
- 
- 			if (!ret) {
--				bd_set_size(bdev,(loff_t)get_capacity(disk)<<9);
-+				bd_set_nr_sectors(bdev, get_capacity(disk));
- 				set_init_blocksize(bdev);
- 			}
- 
-@@ -1542,7 +1542,7 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, void *holder,
- 				ret = -ENXIO;
- 				goto out_clear;
- 			}
--			bd_set_size(bdev, (loff_t)bdev->bd_part->nr_sects << 9);
-+			bd_set_nr_sectors(bdev, bdev->bd_part->nr_sects);
- 			set_init_blocksize(bdev);
++	spin_lock(&bdev->bd_size_lock);
+ 	disk_size = (loff_t)get_capacity(disk) << 9;
+ 	bdev_size = i_size_read(bdev->bd_inode);
+ 	if (disk_size != bdev_size) {
+@@ -1299,11 +1301,15 @@ static void check_disk_size_change(struct gendisk *disk,
+ 			       disk->disk_name, bdev_size, disk_size);
  		}
+ 		i_size_write(bdev->bd_inode, disk_size);
+-		if (bdev_size > disk_size && __invalidate_device(bdev, false))
++	}
++	bdev->bd_invalidated = 0;
++	spin_unlock(&bdev->bd_size_lock);
++
++	if (bdev_size > disk_size) {
++		if (__invalidate_device(bdev, false))
+ 			pr_warn("VFS: busy inodes on resized disk %s\n",
+ 				disk->disk_name);
+ 	}
+-	bdev->bd_invalidated = 0;
+ }
  
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 4ab853461dff25..39025dc0397c04 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -375,7 +375,7 @@ void unregister_blkdev(unsigned int major, const char *name);
- int revalidate_disk(struct gendisk *disk);
- int check_disk_change(struct block_device *bdev);
- int __invalidate_device(struct block_device *bdev, bool kill_dirty);
--void bd_set_size(struct block_device *bdev, loff_t size);
-+void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors);
+ /**
+@@ -1328,13 +1334,10 @@ int revalidate_disk(struct gendisk *disk)
+ 	if (!(disk->flags & GENHD_FL_HIDDEN)) {
+ 		struct block_device *bdev = bdget_disk(disk, 0);
  
- /* for drivers/char/raw.c: */
- int blkdev_ioctl(struct block_device *, fmode_t, unsigned, unsigned long);
+-		if (!bdev)
+-			return ret;
+-
+-		mutex_lock(&bdev->bd_mutex);
+-		check_disk_size_change(disk, bdev, ret == 0);
+-		mutex_unlock(&bdev->bd_mutex);
+-		bdput(bdev);
++		if (bdev) {
++			check_disk_size_change(disk, bdev, ret == 0);
++			bdput(bdev);
++		}
+ 	}
+ 	return ret;
+ }
+@@ -1373,9 +1376,9 @@ EXPORT_SYMBOL(check_disk_change);
+ 
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
+ {
+-	inode_lock(bdev->bd_inode);
++	spin_lock(&bdev->bd_size_lock);
+ 	i_size_write(bdev->bd_inode, (loff_t)sectors << SECTOR_SHIFT);
+-	inode_unlock(bdev->bd_inode);
++	spin_unlock(&bdev->bd_size_lock);
+ }
+ EXPORT_SYMBOL(bd_set_nr_sectors);
+ 
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 4ecf4fed171f0d..5accc2549d2259 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -38,6 +38,7 @@ struct block_device {
+ 	/* number of times partitions within this device have been opened. */
+ 	unsigned		bd_part_count;
+ 	int			bd_invalidated;
++	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
+ 	struct gendisk *	bd_disk;
+ 	struct backing_dev_info *bd_bdi;
+ 
 -- 
 2.28.0
 
