@@ -2,98 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B518925001A
-	for <lists+linux-block@lfdr.de>; Mon, 24 Aug 2020 16:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A3F22500E3
+	for <lists+linux-block@lfdr.de>; Mon, 24 Aug 2020 17:23:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHXOrw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Aug 2020 10:47:52 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:37163 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726037AbgHXOrv (ORCPT
+        id S1727930AbgHXPXq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Aug 2020 11:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727836AbgHXPR4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:47:51 -0400
-Received: (qmail 331659 invoked by uid 1000); 24 Aug 2020 10:47:50 -0400
-Date:   Mon, 24 Aug 2020 10:47:50 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        stable <stable@vger.kernel.org>, Can Guo <cang@codeaurora.org>
-Subject: Re: [PATCH] block: Fix a race in the runtime power management code
-Message-ID: <20200824144750.GC329866@rowland.harvard.edu>
-References: <20200824030607.19357-1-bvanassche@acm.org>
+        Mon, 24 Aug 2020 11:17:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DFEC061799;
+        Mon, 24 Aug 2020 08:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=vg63jAHJfG2SzXwAA4F8u4EABDJK8kFbtsgiuvgE/iE=; b=O4ub1tEVsA9kU09ZzyqjnYqLiE
+        qd3Ogz447N5q6xe5QqJS6PetMeBFjPO8xP+KShjzwd1fzVYDV5AxzmXJ2pZNJbaMyNX8vto74+uEK
+        cf0Fy7D0KkJe38ALG6R99zIFxNQHnKdG1FCEXgGVfyoKHrHt/oBmeVmO5rmIFU1WDzmck7Qzjz7ZB
+        hLDNe1ccAKsDBIq3z5d08YmyqEnWEC7g+OhGVVrKgshg9aSK0pVTV+OrnwCM7ssLztd7swOuJ/3HT
+        Rgx+o/1FRjyEKjjwSGvGeEvWOt8uyfl3atffNAhwVuMon7a8+hOuLJBonyWCRmc/BdzF7+QOwogOm
+        Hg7OajcA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAEDW-0004CN-5w; Mon, 24 Aug 2020 15:17:02 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] iomap/fs/block patches for 5.11
+Date:   Mon, 24 Aug 2020 16:16:49 +0100
+Message-Id: <20200824151700.16097-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824030607.19357-1-bvanassche@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 08:06:07PM -0700, Bart Van Assche wrote:
-> With the current implementation the following race can happen:
-> * blk_pre_runtime_suspend() calls blk_freeze_queue_start() and
->   blk_mq_unfreeze_queue().
-> * blk_queue_enter() calls blk_queue_pm_only() and that function returns
->   true.
-> * blk_queue_enter() calls blk_pm_request_resume() and that function does
->   not call pm_request_resume() because the queue runtime status is
->   RPM_ACTIVE.
-> * blk_pre_runtime_suspend() changes the queue status into RPM_SUSPENDING.
-> 
-> Fix this race by changing the queue runtime status into RPM_SUSPENDING
-> before switching q_usage_counter to atomic mode.
-> 
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Stanley Chu <stanley.chu@mediatek.com>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: stable <stable@vger.kernel.org>
-> Fixes: 986d413b7c15 ("blk-mq: Enable support for runtime power management")
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->  block/blk-pm.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/block/blk-pm.c b/block/blk-pm.c
-> index b85234d758f7..17bd020268d4 100644
-> --- a/block/blk-pm.c
-> +++ b/block/blk-pm.c
-> @@ -67,6 +67,10 @@ int blk_pre_runtime_suspend(struct request_queue *q)
->  
->  	WARN_ON_ONCE(q->rpm_status != RPM_ACTIVE);
->  
-> +	spin_lock_irq(&q->queue_lock);
-> +	q->rpm_status = RPM_SUSPENDING;
-> +	spin_unlock_irq(&q->queue_lock);
-> +
->  	/*
->  	 * Increase the pm_only counter before checking whether any
->  	 * non-PM blk_queue_enter() calls are in progress to avoid that any
-> @@ -89,15 +93,14 @@ int blk_pre_runtime_suspend(struct request_queue *q)
->  	/* Switch q_usage_counter back to per-cpu mode. */
->  	blk_mq_unfreeze_queue(q);
->  
-> -	spin_lock_irq(&q->queue_lock);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		spin_lock_irq(&q->queue_lock);
-> +		q->rpm_status = RPM_ACTIVE;
->  		pm_runtime_mark_last_busy(q->dev);
-> -	else
-> -		q->rpm_status = RPM_SUSPENDING;
-> -	spin_unlock_irq(&q->queue_lock);
-> +		spin_unlock_irq(&q->queue_lock);
->  
-> -	if (ret)
->  		blk_clear_pm_only(q);
-> +	}
->  
->  	return ret;
->  }
+As promised earlier [1], here are the patches which I would like to
+merge into 5.11 to support THPs.  They depend on that earlier series.
+If there's anything in here that you'd like to see pulled out and added
+to that earlier series, let me know.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+There are a couple of pieces in here which aren't exactly part of
+iomap, but I think make sense to take through the iomap tree.
+
+[1] https://lore.kernel.org/linux-fsdevel/20200824145511.10500-1-willy@infradead.org/
+
+Matthew Wilcox (Oracle) (11):
+  fs: Make page_mkwrite_check_truncate thp-aware
+  mm: Support THPs in zero_user_segments
+  mm: Zero the head page, not the tail page
+  block: Add bio_for_each_thp_segment_all
+  iomap: Support THPs in iomap_adjust_read_range
+  iomap: Support THPs in invalidatepage
+  iomap: Support THPs in read paths
+  iomap: Change iomap_write_begin calling convention
+  iomap: Support THPs in write paths
+  iomap: Inline data shouldn't see THPs
+  iomap: Handle tail pages in iomap_page_mkwrite
+
+ fs/iomap/buffered-io.c  | 178 ++++++++++++++++++++++++----------------
+ include/linux/bio.h     |  13 +++
+ include/linux/bvec.h    |  27 ++++++
+ include/linux/highmem.h |  15 +++-
+ include/linux/pagemap.h |  10 +--
+ mm/highmem.c            |  62 +++++++++++++-
+ mm/shmem.c              |   7 ++
+ mm/truncate.c           |   7 ++
+ 8 files changed, 236 insertions(+), 83 deletions(-)
+
+-- 
+2.28.0
+
