@@ -2,124 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A52F5252866
-	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 09:26:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11D132528B2
+	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 09:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHZH0A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Aug 2020 03:26:00 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3073 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgHZHZ7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:25:59 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id C36BB5EAC1850D2691ED;
-        Wed, 26 Aug 2020 15:25:57 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 26 Aug 2020 15:25:57 +0800
-Received: from [10.169.42.93] (10.169.42.93) by dggema772-chm.china.huawei.com
- (10.1.198.214) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Wed, 26
- Aug 2020 15:25:56 +0800
-Subject: Re: [PATCH] blk-mq: implement queue quiesce via percpu_ref for
- BLK_MQ_F_BLOCKING
-To:     Sagi Grimberg <sagi@grimberg.me>, Ming Lei <ming.lei@redhat.com>
-CC:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        "Josh Triplett" <josh@joshtriplett.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200820030248.2809559-1-ming.lei@redhat.com>
- <856f6108-2227-67e8-e913-fdef296a2d26@grimberg.me>
- <20200822133954.GC3189453@T590>
- <619a8d4f-267f-5e21-09bd-16b45af69480@grimberg.me>
- <20200824104052.GA3210443@T590>
- <44160549-0273-b8e6-1599-d54ce84eb47f@grimberg.me>
- <20200825023212.GA3233087@T590>
- <a7b87988-4757-b718-511e-3fdf122325c9@grimberg.me>
- <399888c3-71e6-625e-3b0d-025ccbad4fd1@huawei.com>
- <6cef7a24-f19c-a39a-abd8-2f0ea50fb7a2@grimberg.me>
-From:   Chao Leng <lengchao@huawei.com>
-Message-ID: <255fa307-f2e8-4eab-bdbf-8b697b215663@huawei.com>
-Date:   Wed, 26 Aug 2020 15:25:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726442AbgHZHzQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 26 Aug 2020 03:55:16 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:38647 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgHZHzP (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:55:15 -0400
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 07Q63jcv060453;
+        Wed, 26 Aug 2020 14:03:45 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX08-IDC.srv.huawei-3com.com ([10.8.0.71])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07Q62tCU058786
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 14:02:56 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
+ DAG2EX08-IDC.srv.huawei-3com.com (10.8.0.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Aug 2020 14:02:58 +0800
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
+ by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
+ mapi id 15.01.1713.004; Wed, 26 Aug 2020 14:02:58 +0800
+From:   Tianxianting <tian.xianting@h3c.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+Thread-Topic: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+Thread-Index: AQHWe06EoNdwEm3z5kubymyHs5tnf6lJRjMAgACeIyA=
+Date:   Wed, 26 Aug 2020 06:02:57 +0000
+Message-ID: <3321aa16ad214cb1a0a5cda1309f0e45@h3c.com>
+References: <20200826020651.9856-1-tian.xianting@h3c.com>
+ <20200826042918.GA116347@T590>
+In-Reply-To: <20200826042918.GA116347@T590>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.99.141.128]
+x-sender-location: DAG2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <6cef7a24-f19c-a39a-abd8-2f0ea50fb7a2@grimberg.me>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.169.42.93]
-X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07Q62tCU058786
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Ming Lei
+Thanks for your quick comment.
+As the function request_to_qc_t() in 'include/linux/blk-mq.h ' used the magic '-1',
+Seems it is hard to replace it with BLK_MQ_NO_TAG :(
+
+-----Original Message-----
+From: Ming Lei [mailto:ming.lei@redhat.com] 
+Sent: Wednesday, August 26, 2020 12:29 PM
+To: tianxianting (RD) <tian.xianting@h3c.com>
+Cc: axboe@kernel.dk; linux-block@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+
+On Wed, Aug 26, 2020 at 10:06:51AM +0800, Xianting Tian wrote:
+> Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
+> And move the definition of BLK_MQ_NO_TAG from 'block/blk-mq-tag.h'
+> to 'include/linux/blk-mq.h'
+
+All three symbols are supposed for block core internal code only, so looks you shouldn't move them to public header.
 
 
-On 2020/8/26 1:38, Sagi Grimberg wrote:
-> 
->>>>> Good, but I'd also won't want to get this without making sure the async
->>>>> quiesce works well on large number of namespaces (the reason why this
->>>>> is proposed in the first place). Not sure who is planning to do that...
->>>>
->>>> That can be added when async quiesce is done.
->>>
->>> Chao, are you looking into that? I'd really hate to find out we have an
->>> issue there post conversion...
->>
->> Now we config CONFIG_TREE_SRCU, the size of TREE_SRCU is too big. I
->> really appreciate the work of Ming.
->>
->> I review the patch, I think the patch may work well now, but do extra
->> works for exception scenario. Percpu_ref is not disigned for
->> serialization which read low cost. If we replace SRCU with percpu_ref,
->> the benefit is save memory for blocking queue, the price is limit future
->> changes or do more extra works.
->>
->> I do not think replace SRCU with percpu_ref is a good idea, because it's
->> hard to predict how much we'll lose.
-> 
-> Not sure I understand your point, can you clarify what is the poor
-> design of percpu_ref and for which use-case?
-> .
-1.percpu_ref need introduce fail status for hctc_lock to avoid possible
-long waits for synchronization, need do some extra work for failed hctx_lock .
-Just like this which in the patch:
-@@ -2057,11 +2051,14 @@ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
-  		struct request *rq, blk_qc_t *cookie)
-  {
-  	blk_status_t ret;
--	int srcu_idx;
-
-  	might_sleep_if(hctx->flags & BLK_MQ_F_BLOCKING);
-
--	hctx_lock(hctx, &srcu_idx);
-+	/* Insert request to queue in case of being quiesced */
-+	if (!hctx_lock(hctx)) {
-+		blk_mq_sched_insert_request(rq, false, false, false);
-+		return;
-+	}
-
-Now is simple, the code can work well. If the logic gets complicated,
-it's probably hard to handle.
-For example: for some unkown reason, if we may introduce some mechanism(such
-as check other flag or state) for dispatch or issue requests, we may need do
-more extra works in the branch of failed hctx_lock. perhaps more seriously,
-it may hard to be handled in this branch. If we need do like this
-in __blk_mq_try_issue_directly.
-	if (blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)) {
-		run_queue = false;
-		bypass_insert = false;
-		goto insert;
-+	} else if (blk_queue_xxx(q)) {
-+		/*do some other things*/
-+       }
-Of course, there's a good chance it won't happen.
-
+Thanks,
+Ming
 
