@@ -2,87 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F737252FE9
-	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 15:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13F572530AE
+	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 15:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbgHZN34 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Aug 2020 09:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbgHZN3q (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:29:46 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A1CC061756
-        for <linux-block@vger.kernel.org>; Wed, 26 Aug 2020 06:29:45 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id h4so2096935ioe.5
-        for <linux-block@vger.kernel.org>; Wed, 26 Aug 2020 06:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KWDRtfDgOmjmVc54FsnEiVUILusjEvmBBK9m1LuosGE=;
-        b=C81DA6k6wvDiW6w5quzdFAwrF1V0JA/I/jNzibknzyF2y/nipAIBai1lhKDX4pFbpK
-         IpdhPaX8b+eZKf1SSW/jKumV7MmL+GO5p+qXZK0ZyCPULi3gZVa7JrtLkiCTmI0/hxyf
-         x/dxBMvUM87vTYQbW1qO25yp3OkVMTEkoqwB3lB+FQHRSkAzZRhvvHgpycwHHph53dBD
-         Zbvlq61l6SYQWG9ck7GLYIVG4rDG8C3+RocGqVO7r/Pd5MSUmESMeNKY3ajYrphdGpnO
-         tWIf9J1FWtlTY9SY7RR0trZXf1NF5bncrruslMYsh1HKdB63orhDgcpn6i7wKhejmUPA
-         0Lhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KWDRtfDgOmjmVc54FsnEiVUILusjEvmBBK9m1LuosGE=;
-        b=TSXRG0k5V53ijwKwgrktrxPIuSmLbKpcB6E4VZRY3v4RkQ60goHphN2KnPJs6QH17o
-         wtXPEoA/WRowzYA+8P+ll31+UV2vkU5xB7gvXMxFmdwFdLP2gvPrAL38TNEl8nnlpQx0
-         dKhRsVfg/f9XgaiAIE/+zS/QyqhD2gaz8WQSCDdOMvZDlxA830aANsWJEB/zAQD9olX+
-         0XzcEggODegSFYn7ALl3vhB10i2lQoEc7f5JwKPuUHOqVZtHa7mnpauMtqSHdSDy3tKv
-         GytVl5jVSIet7D03pJUe3zn0IannZ8uCmSrq+iTSVnDfkcaH3hJSv/90RDjeIgYCpCPp
-         Ataw==
-X-Gm-Message-State: AOAM533MPEmnBxm2O7VqpEdVb9x5OWMHcg6o72HYpDEeBJuiS1jtQIgr
-        zawOL3rYuUCNQQgcKyioVRPhRQ==
-X-Google-Smtp-Source: ABdhPJxsUaliUkHsd4TBHflAs63JPsL27kYy11Yz5vbcV8DQ0IqO42oCh2rpo1cPfC0kI03MlK6chw==
-X-Received: by 2002:a02:9149:: with SMTP id b9mr14778841jag.50.1598448584770;
-        Wed, 26 Aug 2020 06:29:44 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d19sm471491iod.38.2020.08.26.06.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 06:29:44 -0700 (PDT)
-Subject: Re: [PATCH] rnbd: Fix an error code in process_rdma()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200826113242.GC393664@mwanda>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <172d1b3a-58e6-1a50-2b6a-1e797135d5af@kernel.dk>
-Date:   Wed, 26 Aug 2020 07:29:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200826113242.GC393664@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1730590AbgHZNzL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Aug 2020 09:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730383AbgHZNxz (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:53:55 -0400
+Received: from localhost (unknown [70.37.104.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3B022B43;
+        Wed, 26 Aug 2020 13:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598450034;
+        bh=LBQCui/CC2CnVxkz3uprAHZKHFvXAyeXS2ZI6SOp2LI=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=xzhr/5c5S2ZFveFO82S+ikbBleBK+nWoJ/lab7JAroLK0z4r5/CABKpeX0BPw/3X3
+         E9uL2c1iKyUjIPOpqnorjze22j9wzmqdNc6I3x1kNvVE2Rm6Pzm4ms0MOaHyGwLMoD
+         Vkl+grhf1tDPyesWZqtZc+75OmT8YN2fzXdB0PuE=
+Date:   Wed, 26 Aug 2020 13:53:53 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Christoph Hellwig <hch@lst.de>
+Cc:     David Jeffery <djeffery@redhat.com>
+Cc:     <stable@vger.kernel.org>
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH RESEND] blk-mq: order adding requests to hctx->dispatch and checking SCHED_RESTART
+In-Reply-To: <20200817100115.2495988-1-ming.lei@redhat.com>
+References: <20200817100115.2495988-1-ming.lei@redhat.com>
+Message-Id: <20200826135354.3A3B022B43@mail.kernel.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/26/20 5:32 AM, Dan Carpenter wrote:
-> The error code is uninitialized on this error path.
+Hi
 
-The fix is in Linus's tree:
+[This is an automated email]
 
-commit 17bc10300c69bd51b82983cdadafa0a7791f074e
-Author: Nathan Chancellor <natechancellor@gmail.com>
-Date:   Mon Aug 17 23:49:25 2020 -0700
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-    block/rnbd: Ensure err is always initialized in process_rdma
+The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193, v4.9.232, v4.4.232.
 
+v5.8.2: Build OK!
+v5.7.16: Build OK!
+v5.4.59: Build OK!
+v4.19.140: Build OK!
+v4.14.193: Failed to apply! Possible dependencies:
+    1f460b63d4b3 ("blk-mq: don't restart queue when .get_budget returns BLK_STS_RESOURCE")
+    358a3a6bccb7 ("blk-mq: don't handle TAG_SHARED in restart")
+    97889f9ac24f ("blk-mq: remove synchronize_rcu() from blk_mq_del_queue_tag_set()")
+    b347689ffbca ("blk-mq-sched: improve dispatching from sw queue")
+    caf8eb0d604a ("blk-mq-sched: move actual dispatching into one helper")
+    de1482974080 ("blk-mq: introduce .get_budget and .put_budget in blk_mq_ops")
+
+v4.9.232: Failed to apply! Possible dependencies:
+    8e8320c9315c ("blk-mq: fix performance regression with shared tags")
+    97889f9ac24f ("blk-mq: remove synchronize_rcu() from blk_mq_del_queue_tag_set()")
+    bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
+    cf43e6be865a ("block: add scalable completion tracking of requests")
+    e806402130c9 ("block: split out request-only flags into a new namespace")
+    f1ba82616c33 ("blk-mq: pass bio to blk_mq_sched_get_rq_priv")
+
+v4.4.232: Failed to apply! Possible dependencies:
+    511cbce2ff8b ("irq_poll: make blk-iopoll available outside the block layer")
+    6f3b0e8bcf3c ("blk-mq: add a flags parameter to blk_mq_alloc_request")
+    88459642cba4 ("blk-mq: abstract tag allocation out into sbitmap library")
+    8e8320c9315c ("blk-mq: fix performance regression with shared tags")
+    9467f85960a3 ("blk-mq/cpu-notif: Convert to new hotplug state machine")
+    97889f9ac24f ("blk-mq: remove synchronize_rcu() from blk_mq_del_queue_tag_set()")
+    9e0e252a048b ("badblocks: Add core badblock management code")
+    bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
+    cf43e6be865a ("block: add scalable completion tracking of requests")
+    e57690fe009b ("blk-mq: don't overwrite rq->mq_ctx")
+    f1ba82616c33 ("blk-mq: pass bio to blk_mq_sched_get_rq_priv")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
 
 -- 
-Jens Axboe
-
+Thanks
+Sasha
