@@ -2,137 +2,191 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD09A2528A7
-	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 09:51:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 224E5252911
+	for <lists+linux-block@lfdr.de>; Wed, 26 Aug 2020 10:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgHZHva (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Aug 2020 03:51:30 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3074 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726016AbgHZHv3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:51:29 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id CD272D5685962F19D9EB;
-        Wed, 26 Aug 2020 15:51:26 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 26 Aug 2020 15:51:26 +0800
-Received: from [10.169.42.93] (10.169.42.93) by dggema772-chm.china.huawei.com
- (10.1.198.214) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Wed, 26
- Aug 2020 15:51:26 +0800
-Subject: Re: [PATCH V2 1/2] blk-mq: serialize queue quiesce and unquiesce by
- mutex
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-References: <20200825141734.115879-1-ming.lei@redhat.com>
- <20200825141734.115879-2-ming.lei@redhat.com>
-From:   Chao Leng <lengchao@huawei.com>
-Message-ID: <751a63a2-9185-ba27-e84a-91b7cdd33ee7@huawei.com>
-Date:   Wed, 26 Aug 2020 15:51:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726851AbgHZISw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Aug 2020 04:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgHZISu (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:18:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23DE520678;
+        Wed, 26 Aug 2020 08:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598429929;
+        bh=+vJV+mRF0Lzjjr3fr3A1d25Ht5edbPCfJqUZ9mJTuZc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GEU0Xm/bx8cP15xViHXthdwpTyen+TUGLxiTYu1aQr59txHczphF0iSJ6zUYeHWWX
+         KeG6A4r//Wu1oZzMeekzFUdHP4041f9NyizugHYCE97ojW+tbEj5IjPyO+fOYOD9T4
+         Wjw7xvPDwkn7MCG9zkXnTpGNV75HhW6BJRy8Z9QE=
+Date:   Wed, 26 Aug 2020 10:19:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 01/19] char_dev: replace cdev_map with an xarray
+Message-ID: <20200826081905.GB1796103@kroah.com>
+References: <20200826062446.31860-1-hch@lst.de>
+ <20200826062446.31860-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200825141734.115879-2-ming.lei@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.169.42.93]
-X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826062446.31860-2-hch@lst.de>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It doesn't matter. Because the reentry of quiesce&unquiesce queue is not
-safe, must be avoided by other mechanism. otherwise, exceptions may
-occur. Introduce mq_quiesce_lock looks saving possible synchronization
-waits, but it should not happen. If really happen, we need fix it.
+On Wed, Aug 26, 2020 at 08:24:28AM +0200, Christoph Hellwig wrote:
+> None of the complicated overlapping regions bits of the kobj_map are
+> required for the character device lookup, so just a trivial xarray
+> instead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-On 2020/8/25 22:17, Ming Lei wrote:
-> Add .mq_quiesce_mutext to request queue, so that queue quiesce and
-> unquiesce can be serialized. Meantime we can avoid unnecessary
-> synchronize_rcu() in case that queue has been quiesced already.
-> 
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-> Cc: Chao Leng <lengchao@huawei.com>
+Really?  This is ok to use and just as fast?  If so, wonderful, it would
+be great to clean up kobj_map users.
+
+But I don't think you got all of the needed bits here:
+
 > ---
->   block/blk-core.c       |  2 ++
->   block/blk-mq.c         | 11 +++++++++++
->   include/linux/blkdev.h |  2 ++
->   3 files changed, 15 insertions(+)
+>  fs/char_dev.c | 94 +++++++++++++++++++++++++--------------------------
+>  fs/dcache.c   |  1 -
+>  fs/internal.h |  5 ---
+>  3 files changed, 46 insertions(+), 54 deletions(-)
 > 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index d9d632639bd1..ffc57df70064 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -561,6 +561,8 @@ struct request_queue *blk_alloc_queue(int node_id)
->   	init_waitqueue_head(&q->mq_freeze_wq);
->   	mutex_init(&q->mq_freeze_lock);
->   
-> +	mutex_init(&q->mq_quiesce_lock);
+> diff --git a/fs/char_dev.c b/fs/char_dev.c
+> index ba0ded7842a779..6c4d6c4938f14b 100644
+> --- a/fs/char_dev.c
+> +++ b/fs/char_dev.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/seq_file.h>
+>  
+>  #include <linux/kobject.h>
+> -#include <linux/kobj_map.h>
+>  #include <linux/cdev.h>
+>  #include <linux/mutex.h>
+>  #include <linux/backing-dev.h>
+> @@ -25,8 +24,7 @@
+>  
+>  #include "internal.h"
+>  
+> -static struct kobj_map *cdev_map;
+> -
+> +static DEFINE_XARRAY(cdev_map);
+>  static DEFINE_MUTEX(chrdevs_lock);
+>  
+>  #define CHRDEV_MAJOR_HASH_SIZE 255
+> @@ -367,6 +365,29 @@ void cdev_put(struct cdev *p)
+>  	}
+>  }
+>  
+> +static struct cdev *cdev_lookup(dev_t dev)
+> +{
+> +	struct cdev *cdev;
 > +
->   	/*
->   	 * Init percpu_ref in atomic mode so that it's faster to shutdown.
->   	 * See blk_register_queue() for details.
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index b3d2785eefe9..817e016ef886 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -224,6 +224,11 @@ void blk_mq_quiesce_queue(struct request_queue *q)
->   	unsigned int i;
->   	bool rcu = false;
->   
-> +	mutex_lock(&q->mq_quiesce_lock);
+> +retry:
+> +	mutex_lock(&chrdevs_lock);
+> +	cdev = xa_load(&cdev_map, dev);
+> +	if (!cdev) {
+> +		mutex_unlock(&chrdevs_lock);
 > +
-> +	if (blk_queue_quiesced(q))
-> +		goto exit;
+> +		if (request_module("char-major-%d-%d",
+> +				   MAJOR(dev), MINOR(dev)) > 0)
+> +			/* Make old-style 2.4 aliases work */
+> +			request_module("char-major-%d", MAJOR(dev));
+> +		goto retry;
+> +	}
 > +
->   	blk_mq_quiesce_queue_nowait(q);
->   
->   	queue_for_each_hw_ctx(q, hctx, i) {
-> @@ -234,6 +239,8 @@ void blk_mq_quiesce_queue(struct request_queue *q)
->   	}
->   	if (rcu)
->   		synchronize_rcu();
-> + exit:
-> +	mutex_unlock(&q->mq_quiesce_lock);
->   }
->   EXPORT_SYMBOL_GPL(blk_mq_quiesce_queue);
->   
-> @@ -246,10 +253,14 @@ EXPORT_SYMBOL_GPL(blk_mq_quiesce_queue);
->    */
->   void blk_mq_unquiesce_queue(struct request_queue *q)
->   {
-> +	mutex_lock(&q->mq_quiesce_lock);
+> +	if (!cdev_get(cdev))
+> +		cdev = NULL;
+> +	mutex_unlock(&chrdevs_lock);
+> +	return cdev;
+> +}
 > +
->   	blk_queue_flag_clear(QUEUE_FLAG_QUIESCED, q);
->   
->   	/* dispatch requests which are inserted during quiescing */
->   	blk_mq_run_hw_queues(q, true);
-> +
-> +	mutex_unlock(&q->mq_quiesce_lock);
->   }
->   EXPORT_SYMBOL_GPL(blk_mq_unquiesce_queue);
->   
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index d8dba550ecac..5ed03066b33e 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -569,6 +569,8 @@ struct request_queue {
->   	 */
->   	struct mutex		mq_freeze_lock;
->   
-> +	struct mutex		mq_quiesce_lock;
-> +
->   	struct blk_mq_tag_set	*tag_set;
->   	struct list_head	tag_set_list;
->   	struct bio_set		bio_split;
-> 
+>  /*
+>   * Called every time a character special file is opened
+>   */
+> @@ -380,13 +401,10 @@ static int chrdev_open(struct inode *inode, struct file *filp)
+>  	spin_lock(&cdev_lock);
+>  	p = inode->i_cdev;
+>  	if (!p) {
+> -		struct kobject *kobj;
+> -		int idx;
+>  		spin_unlock(&cdev_lock);
+> -		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
+> -		if (!kobj)
+> +		new = cdev_lookup(inode->i_rdev);
+> +		if (!new)
+>  			return -ENXIO;
+> -		new = container_of(kobj, struct cdev, kobj);
+>  		spin_lock(&cdev_lock);
+>  		/* Check i_cdev again in case somebody beat us to it while
+>  		   we dropped the lock. */
+> @@ -454,18 +472,6 @@ const struct file_operations def_chr_fops = {
+>  	.llseek = noop_llseek,
+>  };
+>  
+> -static struct kobject *exact_match(dev_t dev, int *part, void *data)
+> -{
+> -	struct cdev *p = data;
+> -	return &p->kobj;
+> -}
+> -
+> -static int exact_lock(dev_t dev, void *data)
+> -{
+> -	struct cdev *p = data;
+> -	return cdev_get(p) ? 0 : -1;
+> -}
+> -
+>  /**
+>   * cdev_add() - add a char device to the system
+>   * @p: the cdev structure for the device
+> @@ -478,7 +484,7 @@ static int exact_lock(dev_t dev, void *data)
+>   */
+>  int cdev_add(struct cdev *p, dev_t dev, unsigned count)
+>  {
+> -	int error;
+> +	int error, i;
+>  
+>  	p->dev = dev;
+>  	p->count = count;
+> @@ -486,14 +492,22 @@ int cdev_add(struct cdev *p, dev_t dev, unsigned count)
+>  	if (WARN_ON(dev == WHITEOUT_DEV))
+>  		return -EBUSY;
+>  
+> -	error = kobj_map(cdev_map, dev, count, NULL,
+> -			 exact_match, exact_lock, p);
+> -	if (error)
+> -		return error;
+> +	mutex_lock(&chrdevs_lock);
+> +	for (i = 0; i < count; i++) {
+> +		error = xa_insert(&cdev_map, dev + i, p, GFP_KERNEL);
+> +		if (error)
+> +			goto out_unwind;
+> +	}
+> +	mutex_unlock(&chrdevs_lock);
+>  
+>  	kobject_get(p->kobj.parent);
+
+Can't you drop this kobject_get() too?
+
+And also the "struct kobj" in struct cdev can be gone as well, as the
+kobj_map was the only "real" user of this structure.  I know some
+drivers liked to touch that field as well, but it never actually did
+anything for them, so it was pointless, but it will take some 'make
+allmodconfig' builds to flush them out.
+
+thanks,
+
+greg k-h
