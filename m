@@ -2,14 +2,14 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A79254F49
-	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 21:50:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A9DF254F32
+	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 21:49:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgH0TtU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Aug 2020 15:49:20 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54830 "EHLO
+        id S1727993AbgH0TtV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Aug 2020 15:49:21 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:54828 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgH0TtT (ORCPT
+        with ESMTP id S1727945AbgH0TtT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 27 Aug 2020 15:49:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -18,20 +18,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TkVopvHv5LAYAxNxYaHAAyEr54uZWHdpNC4+1QmgoMQ=; b=hSuGMfQ57klMFTRuxdvAeVDkuN
-        eQDx0hMaKMjwQB+p6jJbfoGxDYRY1IIwifA0tx3dC2la+3BqfkYJVGkSvWcqwMLqOj8OvFwgac3M8
-        V3yMPLha4Hqc9TPZjF8XTOIf/hL+1dZRDwuOlZFvr5e8kUv3+0UvlMnSJm8RTw8G/i+9jShQa2++M
-        utvDfxuNgP8MZ8yCEW8JRLwUnYiG5vt3x6frTZfrWA3BVKNsLW5BOlJ3wTPPU/I5/sUQZWZqi2ySx
-        nMySv9Y6tykB9xEELh07Gt9qOBVIaZiTN7jS7yCui4ATOXWxdXsw6Nc5kLGYT68oL1idLe2vjdwG2
-        UasyRvOg==;
+        bh=DAoZkGvyGri4FBXCJJ5289SPw0iwUdUnfJWjhiDDY2s=; b=GTatHXPthkBUKXWmo7elYdeWBJ
+        6WNOdAcf7gSxIpytWrdZxGKjd9PQwleelsvuI29S4rK/aR8xDJwPyE6SmkCnqyG3ZPG9P7ragNK6T
+        eQ+vZcMhCcY6dUkGIdktqDm2tRV16HwyLQWyAzAi5sUsq8a7lcf2SfTxqU9VsVAlicuxXBX8vSlVp
+        F+tAvQBPcYjSy3q+LtdQdKniZE8DlxPlVfgrxBVcgDYjd3n/FVOgniytxqPaMogzC3xMdk8+gUH6E
+        SRdTX/DD//bFYM2X0aYxRsEqi//JVGCuYeiY52GPpZ+FBqjloZM4NJUDM2RUIRLUBKQwHcUnkqssW
+        9YScfu2A==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNtd-0000Cf-OE; Thu, 27 Aug 2020 13:49:18 -0600
+        id 1kBNtd-0000Ce-Nz; Thu, 27 Aug 2020 13:49:18 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNta-0001cK-Po; Thu, 27 Aug 2020 13:49:14 -0600
+        id 1kBNta-0001cN-U9; Thu, 27 Aug 2020 13:49:15 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
@@ -39,8 +39,8 @@ Cc:     Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Aug 2020 13:49:11 -0600
-Message-Id: <20200827194912.6135-11-logang@deltatee.com>
+Date:   Thu, 27 Aug 2020 13:49:12 -0600
+Message-Id: <20200827194912.6135-12-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200827194912.6135-1-logang@deltatee.com>
 References: <20200827194912.6135-1-logang@deltatee.com>
@@ -54,7 +54,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         MYRULES_NO_TEXT,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.2
-Subject: [PATCH blktests 10/11] nvme/037: Add test which loops passthru connect and disconnect
+Subject: [PATCH blktests 11/11] nvme/038: Test removal of un-enabled subsystem and ports
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -62,69 +62,71 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Similar to test nvme/031 except for passthru controllers.
+Test that we can remove a subsystem that has not been enabled by
+passthru or any ns. Do the same for ports while we are at it.
 
-Note: it's normal to get I/O errors in this test as
-when the controller disconnects it races with the partition
-table read.
+This was an issue in the original passthru patches and is
+not commonly tested. So this test will ensure we don't regress this.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/nvme/037     | 36 ++++++++++++++++++++++++++++++++++++
- tests/nvme/037.out |  2 ++
- 2 files changed, 38 insertions(+)
- create mode 100755 tests/nvme/037
- create mode 100644 tests/nvme/037.out
+ tests/nvme/038     | 38 ++++++++++++++++++++++++++++++++++++++
+ tests/nvme/038.out |  2 ++
+ 2 files changed, 40 insertions(+)
+ create mode 100755 tests/nvme/038
+ create mode 100644 tests/nvme/038.out
 
-diff --git a/tests/nvme/037 b/tests/nvme/037
+diff --git a/tests/nvme/038 b/tests/nvme/038
 new file mode 100755
-index 000000000000..dce25b9f63cf
+index 000000000000..29827f324155
 --- /dev/null
-+++ b/tests/nvme/037
-@@ -0,0 +1,36 @@
++++ b/tests/nvme/038
+@@ -0,0 +1,38 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
 +# Copyright (C) 2019 Logan Gunthorpe
 +# Copyright (C) 2019 Eideticom Communications Inc.
-+
++#
++# Test that we can remove a subsystem that has not been enabled by
++# passthru or any ns. Do the same for ports while we are at it.
++#
++# This was an issue in the original passthru patches and is
++# not commonly tested. So this test will ensure we don't regress this.
++#
 +. tests/nvme/rc
 +
-+DESCRIPTION="test deletion of NVMeOF passthru controllers immediately after setup"
++DESCRIPTION="test deletion of NVMeOF subsystem without enabling"
++QUICK=1
 +
 +requires() {
 +	_have_program nvme &&
 +	_have_modules nvme-loop nvmet &&
-+	_have_configfs &&
-+	_have_kernel_option NVME_TARGET_PASSTHRU
++	_have_configfs
 +}
 +
-+test_device() {
-+	local subsys="blktests-subsystem-"
-+	local iterations=10
-+	local ctrldev
++test() {
++	local subsys_path="${NVMET_CFS}/subsystems/blktests-subsystem-1"
 +	local port
 +
 +	echo "Running ${TEST_NAME}"
 +
 +	_setup_nvmet
 +
-+	for ((i = 0; i < iterations; i++)); do
-+		port=$(_nvmet_passthru_target_setup "${subsys}$i")
-+		_nvmet_passthru_target_connect "${subsys}$i" > /dev/null
++	mkdir -p "${subsys_path}"
++	rmdir "${subsys_path}"
 +
-+		_nvmet_passthru_target_disconnect "${subsys}$i"
-+		_nvmet_passthru_target_cleanup "$port" "${subsys}$i"
-+	done
++	port=$(_create_nvmet_port loop)
++	_remove_nvmet_port "${port}"
 +
 +	echo "Test complete"
 +}
-diff --git a/tests/nvme/037.out b/tests/nvme/037.out
+diff --git a/tests/nvme/038.out b/tests/nvme/038.out
 new file mode 100644
-index 000000000000..eaf903d0520e
+index 000000000000..06bc98022c33
 --- /dev/null
-+++ b/tests/nvme/037.out
++++ b/tests/nvme/038.out
 @@ -0,0 +1,2 @@
-+Running nvme/037
++Running nvme/038
 +Test complete
 -- 
 2.20.1
