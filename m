@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCAA9254F33
-	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 21:49:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69A79254F49
+	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 21:50:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgH0TtX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Aug 2020 15:49:23 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54848 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgH0TtU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
+        id S1727979AbgH0TtU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 27 Aug 2020 15:49:20 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:54830 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbgH0TtT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:49:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4YzG1tladZhrJ+ZejWw8s1C+BM1kGqknUOb0kMn5jOI=; b=HvWWPkIs7uoNZsJ34kILAgLHPy
-        IkqsHWpRbb6KeUIEzxmHeItnxxDoF3EMBG+V755G1cIcE/zdh30xJFK7/qQcMOTlA2a7h3fpdwlbu
-        WZP7e6avsKDOaW77eIXK1QVMjkqnn2b2DuyKCbwB2HIoHlLygIJAqXohvHPREbtSlxFagwi7i61sY
-        uNFsuzFDojb6mS1r6/WtTsmEoguftnpP4EZyM+h9J6dgWv0xWs2JxdbJeiDLkqMwNbmm6Jry1kUvV
-        g5l1mXDsIsN08mjhYR+dDrc2InlzwJflPAm7VpJc/6nZCkFDt1jhQRmP+bGNakYwh02Lq4FDGwQ5U
-        bZJrJfHw==;
+        bh=TkVopvHv5LAYAxNxYaHAAyEr54uZWHdpNC4+1QmgoMQ=; b=hSuGMfQ57klMFTRuxdvAeVDkuN
+        eQDx0hMaKMjwQB+p6jJbfoGxDYRY1IIwifA0tx3dC2la+3BqfkYJVGkSvWcqwMLqOj8OvFwgac3M8
+        V3yMPLha4Hqc9TPZjF8XTOIf/hL+1dZRDwuOlZFvr5e8kUv3+0UvlMnSJm8RTw8G/i+9jShQa2++M
+        utvDfxuNgP8MZ8yCEW8JRLwUnYiG5vt3x6frTZfrWA3BVKNsLW5BOlJ3wTPPU/I5/sUQZWZqi2ySx
+        nMySv9Y6tykB9xEELh07Gt9qOBVIaZiTN7jS7yCui4ATOXWxdXsw6Nc5kLGYT68oL1idLe2vjdwG2
+        UasyRvOg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNte-0000Cd-MR; Thu, 27 Aug 2020 13:49:19 -0600
+        id 1kBNtd-0000Cf-OE; Thu, 27 Aug 2020 13:49:18 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNta-0001cH-LU; Thu, 27 Aug 2020 13:49:14 -0600
+        id 1kBNta-0001cK-Po; Thu, 27 Aug 2020 13:49:14 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
@@ -39,8 +39,8 @@ Cc:     Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Aug 2020 13:49:10 -0600
-Message-Id: <20200827194912.6135-10-logang@deltatee.com>
+Date:   Thu, 27 Aug 2020 13:49:11 -0600
+Message-Id: <20200827194912.6135-11-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200827194912.6135-1-logang@deltatee.com>
 References: <20200827194912.6135-1-logang@deltatee.com>
@@ -54,7 +54,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         MYRULES_NO_TEXT,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.2
-Subject: [PATCH blktests 09/11] nvme/036: Add test for testing reset command on nvme-passthru
+Subject: [PATCH blktests 10/11] nvme/037: Add test which loops passthru connect and disconnect
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-block-owner@vger.kernel.org
@@ -62,22 +62,26 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Similar to test 022 but for passthru controllers.
+Similar to test nvme/031 except for passthru controllers.
+
+Note: it's normal to get I/O errors in this test as
+when the controller disconnects it races with the partition
+table read.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/nvme/036     | 39 +++++++++++++++++++++++++++++++++++++++
- tests/nvme/036.out |  2 ++
- 2 files changed, 41 insertions(+)
- create mode 100755 tests/nvme/036
- create mode 100644 tests/nvme/036.out
+ tests/nvme/037     | 36 ++++++++++++++++++++++++++++++++++++
+ tests/nvme/037.out |  2 ++
+ 2 files changed, 38 insertions(+)
+ create mode 100755 tests/nvme/037
+ create mode 100644 tests/nvme/037.out
 
-diff --git a/tests/nvme/036 b/tests/nvme/036
+diff --git a/tests/nvme/037 b/tests/nvme/037
 new file mode 100755
-index 000000000000..133aba6425a5
+index 000000000000..dce25b9f63cf
 --- /dev/null
-+++ b/tests/nvme/036
-@@ -0,0 +1,39 @@
++++ b/tests/nvme/037
+@@ -0,0 +1,36 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-3.0+
 +# Copyright (C) 2019 Logan Gunthorpe
@@ -85,8 +89,7 @@ index 000000000000..133aba6425a5
 +
 +. tests/nvme/rc
 +
-+DESCRIPTION="test NVMe reset command on an NVMeOF target with a passthru controller"
-+QUICK=1
++DESCRIPTION="test deletion of NVMeOF passthru controllers immediately after setup"
 +
 +requires() {
 +	_have_program nvme &&
@@ -96,34 +99,32 @@ index 000000000000..133aba6425a5
 +}
 +
 +test_device() {
-+	local subsys="blktests-subsystem-1"
++	local subsys="blktests-subsystem-"
++	local iterations=10
 +	local ctrldev
 +	local port
 +
 +	echo "Running ${TEST_NAME}"
 +
 +	_setup_nvmet
-+	port=$(_nvmet_passthru_target_setup "$subsys")
-+	_nvmet_passthru_target_connect "$subsys" > /dev/null
 +
-+	ctrldev=$(_find_nvme_loop_dev "$subsys")
++	for ((i = 0; i < iterations; i++)); do
++		port=$(_nvmet_passthru_target_setup "${subsys}$i")
++		_nvmet_passthru_target_connect "${subsys}$i" > /dev/null
 +
-+	if ! nvme reset "/dev/${ctrldev}" >> "$FULL" 2>&1; then
-+		echo "ERROR: reset failed"
-+	fi
-+
-+	_nvmet_passthru_target_disconnect "$subsys"
-+	_nvmet_passthru_target_cleanup "$port" "$subsys"
++		_nvmet_passthru_target_disconnect "${subsys}$i"
++		_nvmet_passthru_target_cleanup "$port" "${subsys}$i"
++	done
 +
 +	echo "Test complete"
 +}
-diff --git a/tests/nvme/036.out b/tests/nvme/036.out
+diff --git a/tests/nvme/037.out b/tests/nvme/037.out
 new file mode 100644
-index 000000000000..58676b1c69f8
+index 000000000000..eaf903d0520e
 --- /dev/null
-+++ b/tests/nvme/036.out
++++ b/tests/nvme/037.out
 @@ -0,0 +1,2 @@
-+Running nvme/036
++Running nvme/037
 +Test complete
 -- 
 2.20.1
