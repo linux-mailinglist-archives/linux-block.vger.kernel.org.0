@@ -2,132 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A9DF254F32
-	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 21:49:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F83255007
+	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 22:29:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH0TtV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Aug 2020 15:49:21 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54828 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgH0TtT (ORCPT
+        id S1726876AbgH0U3y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Aug 2020 16:29:54 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54143 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726147AbgH0U3y (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:49:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DAoZkGvyGri4FBXCJJ5289SPw0iwUdUnfJWjhiDDY2s=; b=GTatHXPthkBUKXWmo7elYdeWBJ
-        6WNOdAcf7gSxIpytWrdZxGKjd9PQwleelsvuI29S4rK/aR8xDJwPyE6SmkCnqyG3ZPG9P7ragNK6T
-        eQ+vZcMhCcY6dUkGIdktqDm2tRV16HwyLQWyAzAi5sUsq8a7lcf2SfTxqU9VsVAlicuxXBX8vSlVp
-        F+tAvQBPcYjSy3q+LtdQdKniZE8DlxPlVfgrxBVcgDYjd3n/FVOgniytxqPaMogzC3xMdk8+gUH6E
-        SRdTX/DD//bFYM2X0aYxRsEqi//JVGCuYeiY52GPpZ+FBqjloZM4NJUDM2RUIRLUBKQwHcUnkqssW
-        9YScfu2A==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNtd-0000Ce-Nz; Thu, 27 Aug 2020 13:49:18 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNta-0001cN-U9; Thu, 27 Aug 2020 13:49:15 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Aug 2020 13:49:12 -0600
-Message-Id: <20200827194912.6135-12-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200827194912.6135-1-logang@deltatee.com>
-References: <20200827194912.6135-1-logang@deltatee.com>
+        Thu, 27 Aug 2020 16:29:54 -0400
+Received: (qmail 450277 invoked by uid 1000); 27 Aug 2020 16:29:52 -0400
+Date:   Thu, 27 Aug 2020 16:29:52 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel@puri.sm
+Subject: Re: [PATCH] block: Fix bug in runtime-resume handling
+Message-ID: <20200827202952.GA449067@rowland.harvard.edu>
+References: <d3b6f7b8-5345-1ae1-4f79-5dde226e74f1@puri.sm>
+ <20200809152643.GA277165@rowland.harvard.edu>
+ <60150284-be13-d373-5448-651b72a7c4c9@puri.sm>
+ <20200810141343.GA299045@rowland.harvard.edu>
+ <6f0c530f-4309-ab1e-393b-83bf8367f59e@puri.sm>
+ <20200823145733.GC303967@rowland.harvard.edu>
+ <3e5a465e-8fe0-b379-a80e-23e2f588c71a@acm.org>
+ <20200824201343.GA344424@rowland.harvard.edu>
+ <5152a510-bebf-bf33-f6b3-4549e50386ab@puri.sm>
+ <4c636f2d-af7f-bbde-a864-dbeb67c590ec@puri.sm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, osandov@osandov.com, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.2
-Subject: [PATCH blktests 11/11] nvme/038: Test removal of un-enabled subsystem and ports
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c636f2d-af7f-bbde-a864-dbeb67c590ec@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Test that we can remove a subsystem that has not been enabled by
-passthru or any ns. Do the same for ports while we are at it.
+On Thu, Aug 27, 2020 at 07:42:43PM +0200, Martin Kepplinger wrote:
+> On 26.08.20 09:48, Martin Kepplinger wrote:
+> > On 24.08.20 22:13, Alan Stern wrote:
 
-This was an issue in the original passthru patches and is
-not commonly tested. So this test will ensure we don't regress this.
+> >> Martin:
+> >>
+> >> (I forgot to ask this question several weeks ago, while you were running 
+> >> your tests.  Better ask it now before I forget again...)
+> >>
+> >> I suspect the old runtime-PM code in the block layer would have worked 
+> >> okay in your SD cardreader test if the BLK_MQ_REQ_PREEMPT flag had not 
+> >> been set.  Do you know why the flag was set, or what line of code caused 
+> >> it to be set?
+> > 
+> > Correct. if not set, I could handle all I need in the scsi error path.
+> 
+> this thread becomes a bit confusing. I thought about REQ_FAILFAST_DEV
+> but you're talking about something different.
+> 
+> the only place I see BLK_MQ_REQ_PREEMPT getting passed on is in
+> __scsi_execute() which is the case when mounting/unmounting. At least
+> that about the only place I can find.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- tests/nvme/038     | 38 ++++++++++++++++++++++++++++++++++++++
- tests/nvme/038.out |  2 ++
- 2 files changed, 40 insertions(+)
- create mode 100755 tests/nvme/038
- create mode 100644 tests/nvme/038.out
+Ah yes, I see what you mean.
 
-diff --git a/tests/nvme/038 b/tests/nvme/038
-new file mode 100755
-index 000000000000..29827f324155
---- /dev/null
-+++ b/tests/nvme/038
-@@ -0,0 +1,38 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2019 Logan Gunthorpe
-+# Copyright (C) 2019 Eideticom Communications Inc.
-+#
-+# Test that we can remove a subsystem that has not been enabled by
-+# passthru or any ns. Do the same for ports while we are at it.
-+#
-+# This was an issue in the original passthru patches and is
-+# not commonly tested. So this test will ensure we don't regress this.
-+#
-+. tests/nvme/rc
-+
-+DESCRIPTION="test deletion of NVMeOF subsystem without enabling"
-+QUICK=1
-+
-+requires() {
-+	_have_program nvme &&
-+	_have_modules nvme-loop nvmet &&
-+	_have_configfs
-+}
-+
-+test() {
-+	local subsys_path="${NVMET_CFS}/subsystems/blktests-subsystem-1"
-+	local port
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	_setup_nvmet
-+
-+	mkdir -p "${subsys_path}"
-+	rmdir "${subsys_path}"
-+
-+	port=$(_create_nvmet_port loop)
-+	_remove_nvmet_port "${port}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/038.out b/tests/nvme/038.out
-new file mode 100644
-index 000000000000..06bc98022c33
---- /dev/null
-+++ b/tests/nvme/038.out
-@@ -0,0 +1,2 @@
-+Running nvme/038
-+Test complete
--- 
-2.20.1
+> I remember *only* your block pm fix would let me mount/unmount, but not
+> use files yet (REQ_FAILFAST_DEV and so on).
+> 
+> When I revert your fix and remove BLK_MQ_REQ_PREEMPT from being passed
+> on to blk_get_request() in __scsi_execute(), that line gets executed
+> exactly once during startup and I'm missing the /dev/sda device from the
+> cardreader then.
+> 
+> Is this what you're asking?
 
+Not quite sure, but it doesn't matter.  Removing BLK_MQ_REQ_PREEMPT in 
+__scsi_execute() is probably not a safe thing to do.
+
+Instead, look at sd_resume().  That routine calls __scsi_execute() 
+indirectly through sd_start_stop_device(), and the only reason it does 
+this is because the sdkp->device->manage_start_stop flag is set.  You 
+ought to be able to clear this flag in sysfs, by writing to 
+/sys/block/sda/device/scsi_disk/*/manage_start_stop.  If you do this 
+before allowing the card reader to go into runtime suspend, does it then 
+resume okay?
+
+(Yes, I know you still won't be able to read it because of the FAILFAST 
+flag.  I just want to know if the runtime resume actually takes place.)
+
+Alan Stern
