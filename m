@@ -2,72 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B86F2546E1
-	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 16:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAFD0254798
+	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 16:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgH0Oav (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Aug 2020 10:30:51 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58787 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727885AbgH0Oaq (ORCPT
+        id S1728020AbgH0Ovr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Aug 2020 10:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbgH0Ovq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:30:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R551e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U7.leK6_1598538641;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U7.leK6_1598538641)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 27 Aug 2020 22:30:41 +0800
-Date:   Thu, 27 Aug 2020 22:30:41 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
+        Thu, 27 Aug 2020 10:51:46 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02ACC061264;
+        Thu, 27 Aug 2020 07:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=CXo1VsNJMnumrlPogWjBzw/zPcnBvymTjxJVEjV9DV8=; b=zJeJtPAjIfwokijM3k3lS2EFrm
+        p9b5Je7DxKqNlk4czOD+QNZUCgF5kKnpUWj0iQiV8X9efsyedLsuRlOLEEIxaRVC3qtB1UZU8eTIo
+        f5FTAHewB3b+83F7e2HolU51i5Hxr25cV7RlGmTPHLJQwLbjOxid5eDC51q5OOmzIrUFiChw+gBl3
+        riyvif8xmDNzt3vRE2YCjf8JJJ51SPyNvpVmOx0TZIVr7JemYwDbUiDS8fCgJfWKa97RtmQtzhius
+        3YQ2HkBL3/4rWTd6I55RDITc7Y2/JJdWKJ4B+7sYH7q56rXJGcqQb7ZHnP1P9Df9IO54dLGAYRJOR
+        v3JnR6og==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBJFf-0007Dp-1X; Thu, 27 Aug 2020 14:51:43 +0000
+Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
+ for zoned devices
+To:     Niklas Cassel <niklas.cassel@wdc.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     damien.lemoal@wdc.com, johannes.thumshirn@wdc.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] block: Add a new helper to attempt to merge a bio
-Message-ID: <20200827143041.GA122928@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
- <7749d6068b9e5404ef59bacfcb278d604f84af75.1597727255.git.baolin.wang@linux.alibaba.com>
- <20200827094415.GA16058@lst.de>
+References: <20200827135018.63644-1-niklas.cassel@wdc.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6d9fb163-f9d9-1f2d-d88c-db9d3a6185b4@infradead.org>
+Date:   Thu, 27 Aug 2020 07:51:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827094415.GA16058@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200827135018.63644-1-niklas.cassel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:44:15AM +0200, Christoph Hellwig wrote:
-> On Tue, Aug 18, 2020 at 01:45:29PM +0800, Baolin Wang wrote:
-> > Meanwhile move the blk_mq_bio_list_merge() into blk-merge.c and
-> > rename it as a generic name.
+On 8/27/20 6:50 AM, Niklas Cassel wrote:
+> Add support for user space to set a max open zone and a max active zone
+> limit via configfs. By default, the default values are 0 == no limit.
+
+Hi,
+
+How does a user find out about how to use/set these limits?
+
+
+> Call the block layer API functions used for exposing the configured
+> limits to sysfs.
 > 
-> That should probably a separate patch.
-
-Sure.
-
+> Add accounting in null_blk_zoned so that these new limits are respected.
+> Performing an operating that would exceed these limits results in a
+> standard I/O error.
 > 
-> > +		if (blk_attempt_bio_merge(q, rq, bio, nr_segs, false) == BIO_MERGE_OK)
-> > +			return true;
+> A max open zone limit exists in the ZBC standard.
+> While null_blk_zoned is used to test the Zoned Block Device model in
+> Linux, when it comes to differences between ZBC and ZNS, null_blk_zoned
+> mostly follows ZBC.
 > 
-> This adds an overly long line.
-
-The checkpatch.pl has increased the default limit to 100 characters, so
-I did not get a long line warning. Anyway I will change a new line if
-you concern about this.
-
-> > -		if (merged)
-> > +		switch (blk_attempt_bio_merge(q, rq, bio, nr_segs, true)) {
-> > +		default:
-> > +		case BIO_MERGE_NONE:
-> > +			continue;
-> > +		case BIO_MERGE_OK:
-> >  			return true;
-> > +		case BIO_MERGE_FAILED:
-> > +			return false;
-> > +		}
+> Therefore, implement the manage open zone resources function from ZBC,
+> but additionally add support for max active zones.
+> This enables user space not only to test against a device with an open
+> zone limit, but also to test against a device with an active zone limit.
 > 
-> I don't think we need a default statement here as we handle all
-> possible values of the enum.
+> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+> ---
+> Changes since v1:
+> -Fixed review comments by Damien Le Moal.
+> 
+>  drivers/block/null_blk.h       |   5 +
+>  drivers/block/null_blk_main.c  |  16 +-
+>  drivers/block/null_blk_zoned.c | 319 +++++++++++++++++++++++++++------
+>  3 files changed, 282 insertions(+), 58 deletions(-)
 
-OK. Will remove it in next version. Thanks.
+thanks.
+-- 
+~Randy
+
