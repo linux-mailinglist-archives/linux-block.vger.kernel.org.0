@@ -2,265 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA40C2547F7
-	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 16:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C38625478C
+	for <lists+linux-block@lfdr.de>; Thu, 27 Aug 2020 16:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgH0Miv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Aug 2020 08:38:51 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:55151 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgH0M0v (ORCPT
+        id S1727864AbgH0OvY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Aug 2020 10:51:24 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62448 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbgH0N2S (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:26:51 -0400
-IronPort-SDR: lZrENF98HkO7lgSHgxOU5bs67FNWYT7XnUvz3YZceUd4qL2JR/nzW4uNCwFGXhkJucsie98nas
- MIsnFROOBQkpZhkE2zF7OGixRrhAbLJYSY/QivAy7nDjFfGp5GJzxvOobhNccESst9i4/oV+wf
- +AKaDupO8kyjPqZBm6aTt3DKu0o/pbbqiYjuz4A52LufKMX/5KgYxtcbcc/fgO8vgvlernCTzu
- 4R1fpodiBl9GUJDYGp7uMBvgd0+f/DLNWXYhgked/oht7xWR6HW1L/ZzTOzo6UthfG9ZK9SHav
- 0dw=
-X-IronPort-AV: E=Sophos;i="5.76,359,1592899200"; 
-   d="scan'208";a="52331554"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 27 Aug 2020 04:06:45 -0800
-IronPort-SDR: 8VB2H+hJ/+U8lqR67sLBmUJ/+z+Qwbylgkedv2al+v2XOSu4h0w3bSdbrI+bmPeAij+7jQD9wS
- t5TMIn4sN+UQeIV3QTfw/Em+JiccVrtY03SP4XN0FyIe492zKnsl7okA7FoiD25gwQOiBekLQ0
- Xrgbfu9hu4OXhQRVWZlPAhwOFTvX+HFd0s4SzU8fHFF076Dy5pkpU/diaQENp2de/p/PfvFkPe
- wxhgLwyZvAzEGDHmM070yIQo1HZ5H9SlFkXNwTHsmUSjwVs4IBBScgqmZ8z695HKTlf3+zdFkb
- 72o=
-Subject: Re: PROBLEM: Long Workqueue delays V2
-From:   Jim Baxter <jim_baxter@mentor.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-block@vger.kernel.org>
-References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
- <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
-CC:     <linux-usb@vger.kernel.org>,
-        "Frkuska, Joshua" <Joshua_Frkuska@mentor.com>,
-        "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
-        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>,
-        "Craske, Mark" <Mark_Craske@mentor.com>,
-        "Brown, Michael" <michael_brown@mentor.com>
-Message-ID: <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
-Date:   Thu, 27 Aug 2020 13:06:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 09:28:18 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07RDRrPG009820;
+        Thu, 27 Aug 2020 22:27:53 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
+ Thu, 27 Aug 2020 22:27:53 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07RDRqQU009816
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 27 Aug 2020 22:27:53 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] block: allow for_each_bvec to support zero len bvec
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20200810031915.2209658-1-ming.lei@redhat.com>
+ <db57f8ca-b3c3-76ec-1e49-d8f8161ba78d@i-love.sakura.ne.jp>
+ <20200810162331.GA2215158@T590>
+ <4ec1b96f-b23c-6f9c-2dc1-8c3d47689a77@i-love.sakura.ne.jp>
+Message-ID: <cf26a57e-01f4-32a9-0b2c-9102bffe76b2@i-love.sakura.ne.jp>
+Date:   Thu, 27 Aug 2020 22:27:47 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
+In-Reply-To: <4ec1b96f-b23c-6f9c-2dc1-8c3d47689a77@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Has anyone any ideas of how to investigate this delay further?
+Jens or Al, will you pick up
+"[PATCH V2] block: allow for_each_bvec to support zero len bvec"
+( https://lkml.kernel.org/r/20200817100055.2495905-1-ming.lei@redhat.com )
+which needs be backported to 5.5+ kernels in order to avoid DoS attack
+by a local unprivileged user.
 
-Comparing the perf output for unplugging the USB stick and using umount
-which does not cause these delays in other workqueues the main difference
-is that the problem case is executing the code in invalidate_mapping_pages()
-and a large part of that arch_local_irq_restore() which is part of
-releasing a lock, I would usually expect that requesting a lock would be
-where delays may occur.
+David, is the patch show below (which should be backported to 5.5+ kernels)
+correct? Is splice_from_pipe_next() the better location to check?
+Are there other consumers which needs to do the same thing?
 
-	--94.90%--invalidate_partition
-	   __invalidate_device
-	   |          
-	   |--64.55%--invalidate_bdev
-	   |  |          
-	   |   --64.13%--invalidate_mapping_pages
-	   |     |          
-	   |     |--24.09%--invalidate_inode_page
-	   |     |   |          
-	   |     |   --23.44%--remove_mapping
-	   |     |     |          
-	   |     |      --23.20%--__remove_mapping
-	   |     |        |          
-	   |     |         --21.90%--arch_local_irq_restore
-	   |     |          
-	   |     |--22.44%--arch_local_irq_enable
+From 60c3e828f9d8279752865d80411c9b19dbe5c35c Mon Sep 17 00:00:00 2001
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date: Thu, 27 Aug 2020 22:17:02 +0900
+Subject: [PATCH] splice: fix premature end of input detection
 
-Best regards,
-Jim
+splice() from pipe should return 0 when there is no pipe writer. However,
+since commit a194dfe6e6f6f720 ("pipe: Rearrange sequence in pipe_write()
+to preallocate slot") started inserting empty pages, splice() from pipe
+also returns 0 when all ready buffers are empty pages. Since such behavior
+might confuse splice() users, let's fix it by waiting for non-empty pages
+before building the vector.
 
--------- Original Message --------
-Subject: Re: PROBLEM: Long Workqueue delays V2
-From: Jim Baxter <jim_baxter@mentor.com>
-To: 
-Date: Wed Aug 19 2020 14:12:24 GMT+0100 (British Summer Time)
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Fixes: a194dfe6e6f6f720 ("pipe: Rearrange sequence in pipe_write() to preallocate slot")
+Cc: stable@vger.kernel.org # 5.5+
+---
+ fs/splice.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> Added linux-block List which may also be relevant to this issue.
-> 
-> -------- Original Message --------
-> Subject: PROBLEM: Long Workqueue delays V2
-> From: Jim Baxter <jim_baxter@mentor.com>
-> To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-> CC: "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>, "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
-> Date: Tue, 18 Aug 2020 12:58:13 +0100
-> 
->> I am asking this question again to include the fs-devel list.
->>
->>
->> We have issues with the workqueue of the kernel overloading the CPU 0 
->> when we we disconnect a USB stick.
->>
->> This results in other items on the shared workqueue being delayed by
->> around 6.5 seconds with a default kernel configuration and 2.3 seconds
->> on a config tailored for our RCar embedded platform.
->>
->>
->>
->> We first noticed this issue on custom hardware and we have recreated it
->> on an RCar Starter Kit using a test module [1] to replicate the
->> behaviour, the test module outputs any delays of greater then 9ms.
->>
->> To run the test we have a 4GB random file on a USB stick and perform
->> the following test.
->> The stick is mounted as R/O and we are copying data from the stick:
->>
->> - Mount the stick.
->> mount -o ro,remount /dev/sda1
->>
->> - Load the Module:
->> # taskset -c 0 modprobe latency-mon
->>
->> - Copy large amount of data from the stick:
->> # dd if=/run/media/sda1/sample.txt of=/dev/zero
->> [ 1437.517603] DELAY: 10
->> 8388607+1 records in
->> 8388607+1 records out
->>
->>
->> - Disconnect the USB stick:
->> [ 1551.796792] usb 2-1: USB disconnect, device number 2
->> [ 1558.625517] DELAY: 6782
->>
->>
->> The Delay output 6782 is in milliseconds.
->>
->>
->>
->> Using umount stops the issue occurring but is unfortunately not guaranteed
->> in our particular system.
->>
->>
->> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
->> 98% of the CPU.
->>
->> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
->> and there is no particular workqueue function being executed a lot more then the 
->> others for the kworker/0:1+usb thread.
->>
->>
->> Using perf I identified the hub_events workqueue was spending a lot of time in
->> invalidate_partition(), I have included a cut down the captured data from perf in
->> [2] which shows the additional functions where the kworker spends most of its time.
->>
->>
->> I am aware there will be delays on the shared workqueue, are the delays
->> we are seeing considered normal?
->>
->>
->> Is there any way to mitigate or identify where the delay is?
->> I am unsure if this is a memory or filesystem subsystem issue.
->>
->>
->> Thank you for you help.
->>
->> Thanks,
->> Jim Baxter
->>
->> [1] Test Module:
->> // SPDX-License-Identifier: GPL-2.0
->> /*
->>  * Simple WQ latency monitoring
->>  *
->>  * Copyright (C) 2020 Advanced Driver Information Technology.
->>  */
->>
->> #include <linux/init.h>
->> #include <linux/ktime.h>
->> #include <linux/module.h>
->>
->> #define PERIOD_MS 100
->>
->> static struct delayed_work wq;
->> static u64 us_save;
->>
->> static void wq_cb(struct work_struct *work)
->> {
->> 	u64 us = ktime_to_us(ktime_get());
->> 	u64 us_diff = us - us_save;
->> 	u64 us_print = 0;
->>
->> 	if (!us_save)
->> 		goto skip_print;
->>
->>
->> 	us_print = us_diff / 1000 - PERIOD_MS;
->> 	if (us_print > 9)
->> 		pr_crit("DELAY: %lld\n", us_print);
->>
->> skip_print:
->> 	us_save = us;
->> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->> }
->>
->> static int latency_mon_init(void)
->> {
->> 	us_save = 0;
->> 	INIT_DELAYED_WORK(&wq, wq_cb);
->> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->>
->> 	return 0;
->> }
->>
->> static void latency_mon_exit(void)
->> {
->> 	cancel_delayed_work_sync(&wq);
->> 	pr_info("%s\n", __func__);
->> }
->>
->> module_init(latency_mon_init);
->> module_exit(latency_mon_exit);
->> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
->> MODULE_LICENSE("GPL");
->>
->>
->> [2] perf trace:
->>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
->>     |
->>     ---ret_from_fork
->>        kthread
->>        worker_thread
->>        |          
->>         --95.15%--process_one_work
->> 		  |          
->> 		   --94.99%--hub_event
->> 			 |          
->> 			  --94.99%--usb_disconnect
->> 			  <snip>
->> 				|  
->> 				--94.90%--invalidate_partition
->> 				   __invalidate_device
->> 				   |          
->> 				   |--64.55%--invalidate_bdev
->> 				   |  |          
->> 				   |   --64.13%--invalidate_mapping_pages
->> 				   |     |          
->> 				   |     |--24.09%--invalidate_inode_page
->> 				   |     |   |          
->> 				   |     |   --23.44%--remove_mapping
->> 				   |     |     |          
->> 				   |     |      --23.20%--__remove_mapping
->> 				   |     |        |          
->> 				   |     |         --21.90%--arch_local_irq_restore
->> 				   |     |          
->> 				   |     |--22.44%--arch_local_irq_enable
->> 				   |          
->> 					--30.35%--shrink_dcache_sb 
->> 					<snip>
->> 					  |      
->> 					  --30.17%--truncate_inode_pages_range
->>
+diff --git a/fs/splice.c b/fs/splice.c
+index d7c8a7c4db07..52daa5fea879 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -724,6 +724,19 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 		tail = pipe->tail;
+ 		mask = pipe->ring_size - 1;
+ 
++		/* dismiss the empty buffers */
++		while (!pipe_empty(head, tail)) {
++			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
++
++			if (likely(buf->len))
++				break;
++			pipe_buf_release(pipe, buf);
++			pipe->tail = ++tail;
++		}
++		/* wait again if all buffers were empty */
++		if (unlikely(pipe_empty(head, tail)))
++			continue;
++
+ 		/* build the vector */
+ 		left = sd.total_len;
+ 		for (n = 0; !pipe_empty(head, tail) && left && n < nbufs; tail++, n++) {
+-- 
+2.18.4
+
