@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3127D256C44
-	for <lists+linux-block@lfdr.de>; Sun, 30 Aug 2020 08:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D985256C30
+	for <lists+linux-block@lfdr.de>; Sun, 30 Aug 2020 08:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgH3G0b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 30 Aug 2020 02:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        id S1728707AbgH3G0c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 30 Aug 2020 02:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgH3GZE (ORCPT
+        with ESMTP id S1726512AbgH3GZE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Sun, 30 Aug 2020 02:25:04 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09318C06123F;
-        Sat, 29 Aug 2020 23:25:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567BEC061236;
+        Sat, 29 Aug 2020 23:25:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=z8bYioKTAu+DXMBCJGN6zlrMSBVFyPMVFFEmATTqveo=; b=nYPNx+tPNNm9zijkazoAdLuRMV
-        qCtAySZZw8dJNhsulDQwANuZHFuRvk0B3wqqFSNrZ8WW4zCkkXH4cvGKTC7svvW9/V9EUZ5sbSPc8
-        13RVWLV9k9omYWiR4bQtvJfNQ28H5ia+TgzoBYpPhhZZpKS4jnpFv1hF5y1zeMtxuAAEzx6WRt7dZ
-        /FZMhShUrZU9VUfPzDYDiwJlyPP2d2da2c/m4htd+VNBWdjfF6ZbEak0fWbGwN5n8Z7BxLuBx8oDx
-        Vz1p+hxOq7HeD6aNNhv5X9zhBvGSmjLG1bxdjXQIU2ms9/fBOQeyPTWzQxkIbUwG+25g+fy4zC6Xd
-        hY6IDfvQ==;
+        bh=c08ZBBf2Ljp4vy8bDSx+N2cDnE5BI6ajAcLFHwYPExE=; b=q3FCUuh4TR1KTsEUR4o8GwJd8M
+        L+HJ+VKN6SVmABkj+AnVyFDrcmQBMqt4xJTjU7FZjgue0RPrdgD9Wy+HdTCKvM8+jfJtVruZgFSaU
+        94OjIwiKYHxYW+ScdQuK9JF747Y6SzSdzSz4Jl9ZxLXSjrg9Z1esAHgY51U7JnAcMKf0p9MLdWTQa
+        eg4JMXvOBjainKOUfD6CHTT6YTHL2YWcQtnIj1Jw1PLkIYFjMSgbrpMEQt/Hqsaz80nSGH9Dbo1R6
+        kTcvwXXliCLNF2aTdQGa7iLs0UgNn7WlLQTTxyHZ6pvjwD17TK3BOBuaVX4zJhwOtJxu+yNDa1TM4
+        tdoW8s+Q==;
 Received: from [2001:4bb8:18c:45ba:9892:9e86:5202:32f0] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCGlt-0002Nm-G0; Sun, 30 Aug 2020 06:24:57 +0000
+        id 1kCGlu-0002O2-Ho; Sun, 30 Aug 2020 06:24:58 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -38,9 +38,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 11/19] loop: use __register_blkdev to allocate devices on demand
-Date:   Sun, 30 Aug 2020 08:24:37 +0200
-Message-Id: <20200830062445.1199128-12-hch@lst.de>
+Subject: [PATCH 12/19] md: use __register_blkdev to allocate devices on demand
+Date:   Sun, 30 Aug 2020 08:24:38 +0200
+Message-Id: <20200830062445.1199128-13-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200830062445.1199128-1-hch@lst.de>
 References: <20200830062445.1199128-1-hch@lst.de>
@@ -56,79 +56,72 @@ Use the simpler mechanism attached to major_name to allocate a brd device
 when a currently unregistered minor is accessed.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Song Liu <song@kernel.org>
 ---
- drivers/block/loop.c | 30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ drivers/md/md.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 5a991510136225..7c944a425f718f 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2234,24 +2234,18 @@ static int loop_lookup(struct loop_device **l, int i)
- 	return ret;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 60727820702300..3c4ef862ac5fb0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -5766,11 +5766,12 @@ static int md_alloc(dev_t dev, char *name)
+ 	return error;
  }
  
--static struct kobject *loop_probe(dev_t dev, int *part, void *data)
-+static void loop_probe(dev_t dev)
+-static struct kobject *md_probe(dev_t dev, int *part, void *data)
++static void md_probe(dev_t dev)
  {
-+	int idx = MINOR(dev) >> part_shift;
- 	struct loop_device *lo;
--	struct kobject *kobj;
--	int err;
-+
-+	if (max_loop && idx >= max_loop)
++	if (MAJOR(dev) == MD_MAJOR && MINOR(dev) >= 512)
 +		return;
- 
- 	mutex_lock(&loop_ctl_mutex);
--	err = loop_lookup(&lo, MINOR(dev) >> part_shift);
--	if (err < 0)
--		err = loop_add(&lo, MINOR(dev) >> part_shift);
--	if (err < 0)
--		kobj = NULL;
--	else
--		kobj = get_disk_and_module(lo->lo_disk);
-+	if (loop_lookup(&lo, idx) < 0)
-+		loop_add(&lo, idx);
- 	mutex_unlock(&loop_ctl_mutex);
--
--	*part = 0;
--	return kobj;
+ 	if (create_on_open)
+ 		md_alloc(dev, NULL);
+-	return NULL;
  }
  
- static long loop_control_ioctl(struct file *file, unsigned int cmd,
-@@ -2371,14 +2365,11 @@ static int __init loop_init(void)
- 		goto err_out;
+ static int add_named_array(const char *val, const struct kernel_param *kp)
+@@ -6536,7 +6537,7 @@ static void autorun_devices(int part)
+ 			break;
+ 		}
  
+-		md_probe(dev, NULL, NULL);
++		md_probe(dev);
+ 		mddev = mddev_find(dev);
+ 		if (!mddev || !mddev->gendisk) {
+ 			if (mddev)
+@@ -9548,18 +9549,15 @@ static int __init md_init(void)
+ 	if (!md_misc_wq)
+ 		goto err_rdev_misc_wq;
  
--	if (register_blkdev(LOOP_MAJOR, "loop")) {
-+	if (__register_blkdev(LOOP_MAJOR, "loop", loop_probe)) {
- 		err = -EIO;
- 		goto misc_out;
- 	}
+-	if ((ret = register_blkdev(MD_MAJOR, "md")) < 0)
++	ret = __register_blkdev(MD_MAJOR, "md", md_probe);
++	if (ret < 0)
+ 		goto err_md;
  
--	blk_register_region(MKDEV(LOOP_MAJOR, 0), range,
--				  THIS_MODULE, loop_probe, NULL, NULL);
+-	if ((ret = register_blkdev(0, "mdp")) < 0)
++	ret = __register_blkdev(0, "mdp", md_probe);
++	if (ret < 0)
+ 		goto err_mdp;
+ 	mdp_major = ret;
+ 
+-	blk_register_region(MKDEV(MD_MAJOR, 0), 512, THIS_MODULE,
+-			    md_probe, NULL, NULL);
+-	blk_register_region(MKDEV(mdp_major, 0), 1UL<<MINORBITS, THIS_MODULE,
+-			    md_probe, NULL, NULL);
 -
- 	/* pre-create number of devices given by config or max_loop */
- 	mutex_lock(&loop_ctl_mutex);
- 	for (i = 0; i < nr; i++)
-@@ -2404,16 +2395,11 @@ static int loop_exit_cb(int id, void *ptr, void *data)
+ 	register_reboot_notifier(&md_notifier);
+ 	raid_table_header = register_sysctl_table(raid_root_table);
  
- static void __exit loop_exit(void)
- {
--	unsigned long range;
+@@ -9826,9 +9824,6 @@ static __exit void md_exit(void)
+ 	struct list_head *tmp;
+ 	int delay = 1;
+ 
+-	blk_unregister_region(MKDEV(MD_MAJOR,0), 512);
+-	blk_unregister_region(MKDEV(mdp_major,0), 1U << MINORBITS);
 -
--	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
--
- 	mutex_lock(&loop_ctl_mutex);
- 
- 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
- 	idr_destroy(&loop_index_idr);
- 
--	blk_unregister_region(MKDEV(LOOP_MAJOR, 0), range);
- 	unregister_blkdev(LOOP_MAJOR, "loop");
- 
- 	misc_deregister(&loop_misc);
+ 	unregister_blkdev(MD_MAJOR,"md");
+ 	unregister_blkdev(mdp_major, "mdp");
+ 	unregister_reboot_notifier(&md_notifier);
 -- 
 2.28.0
 
