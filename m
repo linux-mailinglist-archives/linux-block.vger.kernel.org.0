@@ -2,77 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57225256B01
-	for <lists+linux-block@lfdr.de>; Sun, 30 Aug 2020 03:06:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3CA5256C0C
+	for <lists+linux-block@lfdr.de>; Sun, 30 Aug 2020 08:25:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgH3BG2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 29 Aug 2020 21:06:28 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45867 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728580AbgH3BG1 (ORCPT
+        id S1726540AbgH3GZM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 30 Aug 2020 02:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgH3GZA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 29 Aug 2020 21:06:27 -0400
-Received: (qmail 508788 invoked by uid 1000); 29 Aug 2020 21:06:26 -0400
-Date:   Sat, 29 Aug 2020 21:06:26 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel@puri.sm
-Subject: Re: [PATCH] block: Fix bug in runtime-resume handling
-Message-ID: <20200830010626.GA507988@rowland.harvard.edu>
-References: <3e5a465e-8fe0-b379-a80e-23e2f588c71a@acm.org>
- <20200824201343.GA344424@rowland.harvard.edu>
- <5152a510-bebf-bf33-f6b3-4549e50386ab@puri.sm>
- <4c636f2d-af7f-bbde-a864-dbeb67c590ec@puri.sm>
- <20200827202952.GA449067@rowland.harvard.edu>
- <478fdc57-f51e-f480-6fde-f34596394624@puri.sm>
- <20200829152635.GA498519@rowland.harvard.edu>
- <6d22ec22-a0c7-6a9d-439e-38ef87b0207c@puri.sm>
- <20200829185653.GB501978@rowland.harvard.edu>
- <eb208ee3-b94b-c020-990f-c7151ecaae03@acm.org>
+        Sun, 30 Aug 2020 02:25:00 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CAAC06123C;
+        Sat, 29 Aug 2020 23:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=M8NGywF+zE3/DWly96sK3ZsPyCZ2PLaa+20n24HbM5w=; b=pQ6BXHuhUiXptBbNhhajHLmx2j
+        rHMW1iV1DIOaQecBNTKGUFrEu0njZSCCsOOLXdQe2IRyq1eXKAXkzd8LkXVouP2Nlf8wDiW8G5c7r
+        NoOEVX+xXo25toy4lSfOxoPPe+dwyNzMf4QhYdJH+q+VK8r4hvFnu734Kr//3fGLwKySvgqkPVN8V
+        JcrBq/EAVSVhwDB4XT9Zao7yBIAIQMOKS0reHVbB6Cn2ldrASCi02oAxcpyAmqg5XKSNdaTtVWvVg
+        GKh4XLzxpj8zf7VEo7AP1Z7T1SDnAncTot6eFVrNZAbdHj9MZnOhTo3dzSpLbadcQ5dnok2Oo6TF1
+        6hs6GCDg==;
+Received: from [2001:4bb8:18c:45ba:9892:9e86:5202:32f0] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCGlh-0002MA-Rm; Sun, 30 Aug 2020 06:24:46 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: simplify gendisk lookup and remove struct block_device aliases v2
+Date:   Sun, 30 Aug 2020 08:24:26 +0200
+Message-Id: <20200830062445.1199128-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb208ee3-b94b-c020-990f-c7151ecaae03@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 05:38:50PM -0700, Bart Van Assche wrote:
-> On 2020-08-29 11:56, Alan Stern wrote:
-> > A third possibility is the approach I outlined before, adding a 
-> > BLK_MQ_REQ_PM flag.  But to avoid the deadlock you pointed out, I would 
-> > make blk_queue_enter smarter about whether to postpone a request.  The 
-> > logic would go like this:
-> > 
-> > 	If !blk_queue_pm_only:
-> > 		Allow
-> > 	If !BLK_MQ_REQ_PREEMPT:
-> > 		Postpone
-> > 	If q->rpm_status is RPM_ACTIVE:
-> > 		Allow
-> > 	If !BLK_MQ_REQ_PM:
-> > 		Postpone
-> > 	If q->rpm_status is RPM_SUSPENDED:
-> > 		Postpone
-> > 	Else:
-> > 		Allow
-> > 
-> > The assumption here is that the PREEMPT flag is set whenever the PM flag 
-> > is.
-> 
-> Hi Alan,
-> 
-> Although interesting, these solutions sound like workarounds to me. How
-> about fixing the root cause by modifying the SCSI DV implementation such
-> that it doesn't use scsi_device_quiesce() anymore()? That change would
-> allow to remove BLK_MQ_REQ_PREEMPT / RQF_PREEMPT from the block layer and
-> move these flags into the SCSI and IDE code.
+Hi all,
 
-That's a perfectly reasonable approach, but I have no idea how to do it.
-Any suggestions?
+this series removes the annoying struct block_device aliases, which can
+happen for a bunch of old floppy drivers (and z2ram).  In that case
+multiple struct block device instances for different dev_t's can point
+to the same gendisk, without being partitions.  The cause for that
+is the probe/get callback registered through blk_register_regions.
 
-Alan Stern
+This series removes blk_register_region entirely, splitting it it into
+a simple xarray lookup of registered gendisks, and a probe callback
+stored in the major_names array that can be used for modprobe overrides
+or creating devices on demands when no gendisk is found.  The old
+remapping is gone entirely, and instead the 4 remaining drivers just
+register a gendisk for each operating mode.  In case of the two drivers
+that have lots of aliases that is done on-demand using the new probe
+callback, while for the other two I simply register all at probe time
+to keep things simple.
+
+Note that the m68k drivers are compile tested only.
+
+Changes since v1:
+ - add back a missing kobject_put in the cdev code
+ - improve the xarray delete loops
+
+Diffstat:
+ b/block/genhd.c           |  183 +++++++--------
+ b/drivers/base/Makefile   |    2 
+ b/drivers/block/amiflop.c |   98 ++++----
+ b/drivers/block/ataflop.c |  135 +++++++----
+ b/drivers/block/brd.c     |   39 ---
+ b/drivers/block/floppy.c  |  154 ++++++++----
+ b/drivers/block/loop.c    |   30 --
+ b/drivers/block/swim.c    |   17 -
+ b/drivers/block/z2ram.c   |  547 ++++++++++++++++++++++------------------------
+ b/drivers/ide/ide-probe.c |   66 -----
+ b/drivers/ide/ide-tape.c  |    2 
+ b/drivers/md/md.c         |   21 -
+ b/drivers/scsi/sd.c       |   19 -
+ b/fs/char_dev.c           |   94 +++----
+ b/fs/dcache.c             |    1 
+ b/fs/internal.h           |    5 
+ b/include/linux/genhd.h   |   12 -
+ b/include/linux/ide.h     |    3 
+ drivers/base/map.c        |  154 ------------
+ include/linux/kobj_map.h  |   20 -
+ 20 files changed, 686 insertions(+), 916 deletions(-)
