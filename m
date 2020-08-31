@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F5C5257D8D
-	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 17:38:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C31E257CAA
+	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 17:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgHaPaW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Aug 2020 11:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
+        id S1728813AbgHaPbK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Aug 2020 11:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728584AbgHaPaV (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:21 -0400
+        id S1728795AbgHaPbG (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7E920767;
-        Mon, 31 Aug 2020 15:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6B972151B;
+        Mon, 31 Aug 2020 15:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887820;
-        bh=ht+MpGssPKdJ6E3rsvdmycBCNz+RMWwRINpMqFlTCqE=;
+        s=default; t=1598887865;
+        bh=jgGMZKTpMuWZUCumUs3Zf/xRhs6V9jg+7yCewR8BJWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AP7mPhhIXZomj4o2XoZnzCtfT9p7rI3/XsbrLq4uRX2koZd2g6tmndwdD17I4amDm
-         r7DiKc8GM6BVTEa6SN9P9tvgxcoxPzfkn8Jv65muM0505aw+oeawBfBrLghgjqiTLs
-         GV2M1zDmJXoiE9i3nslbAFVYbjn5Jski6rNMo4RE=
+        b=VTb4HRMkVv/CU5czHugWpdQuA/skqeWA+EXheRWa2I20FqzUO6nepn2QaHnVg14Ng
+         XpMukZkPpbFAnSl7uK9CXD0xqCez0te2vSAY9Y8H/2/4NSt8WHz9GhShp3q3xwDmC7
+         qKHcoXcDbZ0BFk7B3sXCpiNMIC7YO9AeQ9bf/R4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hou Pu <houpu@bytedance.com>, Josef Bacik <josef@toxicpanda.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.8 31/42] nbd: restore default timeout when setting it to zero
-Date:   Mon, 31 Aug 2020 11:29:23 -0400
-Message-Id: <20200831152934.1023912-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 16/23] nbd: restore default timeout when setting it to zero
+Date:   Mon, 31 Aug 2020 11:30:32 -0400
+Message-Id: <20200831153039.1024302-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
-References: <20200831152934.1023912-1-sashal@kernel.org>
+In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
+References: <20200831153039.1024302-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index ce7e9f223b20b..bc9dc1f847e19 100644
+index 7b61d53ba050e..7c577cabb9c3b 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -1360,6 +1360,8 @@ static void nbd_set_cmd_timeout(struct nbd_device *nbd, u64 timeout)
+@@ -1349,6 +1349,8 @@ static void nbd_set_cmd_timeout(struct nbd_device *nbd, u64 timeout)
  	nbd->tag_set.timeout = timeout * HZ;
  	if (timeout)
  		blk_queue_rq_timeout(nbd->disk->queue, timeout * HZ);
