@@ -2,105 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B58A25809A
-	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 20:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E90D258064
+	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 20:10:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgHaSR7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Aug 2020 14:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53354 "EHLO
+        id S1728341AbgHaSKO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Aug 2020 14:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgHaSR7 (ORCPT
+        with ESMTP id S1728203AbgHaSKN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:17:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32E9C061573
-        for <linux-block@vger.kernel.org>; Mon, 31 Aug 2020 11:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Q3fAY6+YGidtxRBrrZsqjprNhmHfs9Hw56KK0thIerI=; b=gWHfM64wVy/CGjQA9+pKcKrbjE
-        W1VH+Z4uk5Paorv8lRE5LA+FZT93ayO2k7nGFZWcnVRzJh2VDo88JuZa9d0qAdUyoNDtkmeGadaiC
-        KR0ZfE9LsjiwVU3IjpRfQBe7uWeA+HLphDPItv1FjnFHRNELrq3Ykp6flu+qxd2ZnCrSh8/RIg9L9
-        VLymyTvb7SHwl8YkLOp41U5zi/RuILdqXNqUzI+5sRzcsPAvCL7v85j9J6443ugjdsMg/pYVCTNSf
-        1C1hx8L3Pku0+zlwAftpwhsqlneBwUtoLUDG3ZSxs3rQ3cHo9YU06qHeou5mDridyOyC6HLf5R8wi
-        yBGueCRw==;
-Received: from [2001:4bb8:18c:45ba:9892:9e86:5202:32f0] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCoNR-0002i5-FN; Mon, 31 Aug 2020 18:17:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 7/7] block: remove the unused q argument to part_in_flight and part_in_flight_rw
-Date:   Mon, 31 Aug 2020 20:02:39 +0200
-Message-Id: <20200831180239.2372776-8-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200831180239.2372776-1-hch@lst.de>
-References: <20200831180239.2372776-1-hch@lst.de>
+        Mon, 31 Aug 2020 14:10:13 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB8FC061573
+        for <linux-block@vger.kernel.org>; Mon, 31 Aug 2020 11:10:13 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t4so1998537iln.1
+        for <linux-block@vger.kernel.org>; Mon, 31 Aug 2020 11:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uRRvPiCxTh0cQCTrfg3Fth4VL9KJPMgKRrLomhiuBtI=;
+        b=N/ZgTaitrtvhgydpuVRs73cHccBD3HThC2WI/5nr2T927O5UHXvvjnmXJuwqM7RGTS
+         m/BWRm4qzmumdQrOkQiEDp9xoLS0KiZXIoNDdO138faEHaa4XRMg6onfj/kEbcuJoWF/
+         nldbEn2OCx+Sdg02Yr9dPjBuYR9lFx5Sy/pRuwHXHOReulRus9UYJ2MncvEjrFTl2YX6
+         MXM4OnbdQMzqopaIjg6gyMzUPD3shWut7xfKs2/eri6IxdLXJ+TXinfy89VQeSRW4EPF
+         FV/yybijFfhePzVomwxlK/sSRtOr2pZsJXPZUbWYVGxGP8+Z3comZb1i7XeVPDq5XAtl
+         3jcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uRRvPiCxTh0cQCTrfg3Fth4VL9KJPMgKRrLomhiuBtI=;
+        b=RK8FXGeMOzekphe07DgXo8dGgJFr/brNdtzbS+gaofC07rYONl/bdf6bRkew1W1xk3
+         ZIsKZYoRV0qiWtjQAdMm7Fg3lZqD5S4ubRjpFR050j+IPpImR4Y6hLqHxVnHvs9m1L2d
+         v+UoEAZBQykyapZ/POvvDeXQBf2CMzf9k31opk9y47a1LUVmBybb/okZXY7dfD9QvgYZ
+         wNXuUDLSd5UuQOlaWEQU3D1bZrJwA8F1rUEZc/G4zN35j0Jrf67pdi6KJOVbuOi8jghY
+         tD50rALCxXNG3KV7HRWRuaK+m7CgStlWbGJOzaw3scwcA2G7tA+GtS9bB9rsE/dxnFOJ
+         c6ew==
+X-Gm-Message-State: AOAM533XY+aFneYAndAnTPJizE4kNtDeET2ez7Y05MC8fJWpxZHtTEqc
+        4Wx2t2PrwglqyfPXwyYDh5sOd8TGgWDViSkS
+X-Google-Smtp-Source: ABdhPJzULLJhGAC9dl6A/WqaG3mzSJWdotfNL3j3qEtXe+9GsyH2uhTDrxRkxEVNIq3a9z0msOy73A==
+X-Received: by 2002:a92:6612:: with SMTP id a18mr2171116ilc.94.1598897412724;
+        Mon, 31 Aug 2020 11:10:12 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id q87sm5040851ili.8.2020.08.31.11.10.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 11:10:12 -0700 (PDT)
+Subject: Re: [PATCH] block: ensure bdi->io_pages is always initialized
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <346e5bf5-b08e-84e8-7b0e-c6cb0c814f96@kernel.dk>
+ <878sdu66sa.fsf@mail.parknet.co.jp>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8eb3881a-8ebd-fecb-d88b-3e1d77bc952f@kernel.dk>
+Date:   Mon, 31 Aug 2020 12:10:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <878sdu66sa.fsf@mail.parknet.co.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/genhd.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+On 8/31/20 11:53 AM, OGAWA Hirofumi wrote:
+> Jens Axboe <axboe@kernel.dk> writes:
+> 
+>> If a driver leaves the limit settings as the defaults, then we don't
+>> initialize bdi->io_pages. This means that file systems may need to
+>> work around bdi->io_pages == 0, which is somewhat messy.
+>>
+>> Initialize the default value just like we do for ->ra_pages.
+>>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> When queued to submit, please let us know to drop fatfs workaround
+> "fat-avoid-oops-when-bdi-io_pages==0.patch" in akpm series.
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 2055b5bf637a80..5fc6d82e6c68c4 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -110,8 +110,7 @@ static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
- 	}
- }
- 
--static unsigned int part_in_flight(struct request_queue *q,
--		struct hd_struct *part)
-+static unsigned int part_in_flight(struct hd_struct *part)
- {
- 	unsigned int inflight = 0;
- 	int cpu;
-@@ -126,8 +125,7 @@ static unsigned int part_in_flight(struct request_queue *q,
- 	return inflight;
- }
- 
--static void part_in_flight_rw(struct request_queue *q, struct hd_struct *part,
--		unsigned int inflight[2])
-+static void part_in_flight_rw(struct hd_struct *part, unsigned int inflight[2])
- {
- 	int cpu;
- 
-@@ -1301,7 +1299,7 @@ ssize_t part_stat_show(struct device *dev,
- 	if (queue_is_mq(q))
- 		inflight = blk_mq_in_flight(q, p);
- 	else
--		inflight = part_in_flight(q, p);
-+		inflight = part_in_flight(p);
- 
- 	return sprintf(buf,
- 		"%8lu %8lu %8llu %8u "
-@@ -1343,7 +1341,7 @@ ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
- 	if (queue_is_mq(q))
- 		blk_mq_in_flight_rw(q, p, inflight);
- 	else
--		part_in_flight_rw(q, p, inflight);
-+		part_in_flight_rw(p, inflight);
- 
- 	return sprintf(buf, "%8u %8u\n", inflight[0], inflight[1]);
- }
-@@ -1623,7 +1621,7 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- 		if (queue_is_mq(gp->queue))
- 			inflight = blk_mq_in_flight(gp->queue, hd);
- 		else
--			inflight = part_in_flight(gp->queue, hd);
-+			inflight = part_in_flight(hd);
- 
- 		seq_printf(seqf, "%4d %7d %s "
- 			   "%lu %lu %lu %u "
+Will do - planning on submitting it for 5.9, so probably end this
+week.
+
 -- 
-2.28.0
+Jens Axboe
 
