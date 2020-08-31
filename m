@@ -2,417 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 973DA257424
-	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 09:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47EB325747D
+	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 09:48:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHaHOx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Aug 2020 03:14:53 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9943 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgHaHOs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:14:48 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4ca3590000>; Mon, 31 Aug 2020 00:14:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 31 Aug 2020 00:14:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 31 Aug 2020 00:14:47 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
- 2020 07:14:46 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 31 Aug 2020 07:14:46 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.61.194]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4ca3650002>; Mon, 31 Aug 2020 00:14:46 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v3 3/3] bio: convert get_user_pages_fast() --> pin_user_pages_fast()
-Date:   Mon, 31 Aug 2020 00:14:39 -0700
-Message-ID: <20200831071439.1014766-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200831071439.1014766-1-jhubbard@nvidia.com>
-References: <20200831071439.1014766-1-jhubbard@nvidia.com>
+        id S1725954AbgHaHsr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Aug 2020 03:48:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35688 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaHsr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:48:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4F1C0AD6B;
+        Mon, 31 Aug 2020 07:49:20 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5C1F71E12CF; Mon, 31 Aug 2020 09:48:45 +0200 (CEST)
+Date:   Mon, 31 Aug 2020 09:48:45 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        yebin <yebin10@huawei.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH RFC 2/2] block: Do not discard buffers under a mounted
+ filesystem
+Message-ID: <20200831074845.GA23389@quack2.suse.cz>
+References: <20200825120554.13070-1-jack@suse.cz>
+ <20200825120554.13070-3-jack@suse.cz>
+ <20200825121616.GA10294@infradead.org>
+ <F9505A56-F07B-4308-BE42-F75ED76B4E3C@dilger.ca>
+ <20200829064041.GA23205@infradead.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598858073; bh=Mgmhx7MxlormERSy5m5hA+CT8AL2TlMSJ/1FsF2TodE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=biJEmAt8Fu1372bMrTva0n0kV/jdU2U+h6V3BFWjbxkkXC3u0EhOS9Cs7IqImnOyp
-         RyiXOdB2mjs8+MKyD70Q7RTjgysLpH0T6ePrXVhb+ijWxcJG9drwtSD7rIbQ5A4FLP
-         ivcLNunNfh10/Oez+AU8BEVv1kIBOv8FKZwv3/4Pv9IvkQvZKuC3HwiD/TTg2KxTyp
-         64PGWqnU/PG4L3niPjVPNzmR1pw+6k6/z9ay8M+qZG+sV2+SJOYpwjjuDH6VjbKbRE
-         08/AJHB/QfakVELyqZJrnC5vfw75HR2jEgY8uR7HdZ2DabIMTnpuoQ5w6Qb7Q97Zvg
-         /J5Z/YHhe05Pw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829064041.GA23205@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Change generic block/bio Direct IO routines, to acquire FOLL_PIN user
-pages via the recently added routines:
+On Sat 29-08-20 07:40:41, Christoph Hellwig wrote:
+> On Fri, Aug 28, 2020 at 02:21:29AM -0600, Andreas Dilger wrote:
+> > On Aug 25, 2020, at 6:16 AM, Christoph Hellwig <hch@infradead.org> wrote:
+> > > 
+> > > On Tue, Aug 25, 2020 at 02:05:54PM +0200, Jan Kara wrote:
+> > >> Discarding blocks and buffers under a mounted filesystem is hardly
+> > >> anything admin wants to do. Usually it will confuse the filesystem and
+> > >> sometimes the loss of buffer_head state (including b_private field) can
+> > >> even cause crashes like:
+> > > 
+> > > Doesn't work if the file system uses multiple devices.
+> > 
+> > It's not _worse_ than the current situation of allowing the complete
+> > destruction of the mounted filesystem.  It doesn't fix the problem
+> > for XFS with realtime devices, or ext4 with a separate journal device,
+> > but it fixes the problem for a majority of users with a single device
+> > filesystem.
+> > 
+> > While BLKFLSBUF causing a crash is annoying, BLKDISCARD/BLKSECDISCARD
+> > under a mounted filesystem is definitely dangerous and wrong.
 
-    iov_iter_pin_pages()
-    iov_iter_pin_pages_alloc()
-    pin_page()
+Actually BLKFLSBUF won't cause a crash. That's using invalidate_bdev() -
+i.e., page-reclaim style of eviction and that's fine with the filesystems.
 
-This effectively converts several file systems (ext4, for example) that
-use the common Direct IO routines.
+> > What about checking for O_EXCL on the device, indicating that it is
+> > currently in use by some higher level?
+> 
+> That actually seems like a much better idea.
 
-Change the corresponding page release calls from put_page() to
-unpin_user_page().
+OK, I'll rework the patch.
 
-Change bio_release_pages() to handle FOLL_PIN pages. In fact, after this
-patch, that is the *only* type of pages that bio_release_pages()
-handles.
+								Honza
 
-Design notes
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Quite a few approaches have been considered over the years. This one is
-inspired by Christoph Hellwig's July, 2019 observation that there are
-only 5 ITER_ types, and we can simplify handling of them for Direct IO
-[1]. Accordingly, this patch implements the following pseudocode:
-
-Direct IO behavior:
-
-    ITER_IOVEC:
-        pin_user_pages_fast();
-        break;
-
-    ITER_PIPE:
-        for each page:
-             pin_page();
-        break;
-
-    ITER_KVEC:    // already elevated page refcount, leave alone
-    ITER_BVEC:    // already elevated page refcount, leave alone
-    ITER_DISCARD: // discard
-        return -EFAULT or -ENVALID;
-
-...which works for callers that already have sorted out which case they
-are in. Such as, Direct IO in the block/bio layers.
-
-Note that this does leave ITER_KVEC and ITER_BVEC unconverted, for now.
-
-Page acquisition: The iov_iter_get_pages*() routines above are at just
-the right level in the call stack: the callers already know which system
-to use, and so it's a small change to just drop in the replacement
-routines. And it's a fan-in/fan-out point: block/bio call sites for
-Direct IO funnel their page acquisitions through the
-iov_iter_get_pages*() routines, and there are many other callers of
-those. And we can't convert all of the callers at once--too many
-subsystems are involved, and it would be a too large and too risky
-patch.
-
-Page release: there are already separate release routines: put_page()
-vs. unpin_user_page(), so it's already done there.
-
-[1] https://lore.kernel.org/kvm/20190724061750.GA19397@infradead.org/
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- block/bio.c          | 24 ++++++++++++------------
- block/blk-map.c      |  6 +++---
- fs/direct-io.c       | 28 ++++++++++++++--------------
- fs/iomap/direct-io.c |  2 +-
- 4 files changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index a9931f23d933..76c5843f6050 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -955,7 +955,7 @@ void bio_release_pages(struct bio *bio, bool mark_dirty=
-)
- 	bio_for_each_segment_all(bvec, bio, iter_all) {
- 		if (mark_dirty && !PageCompound(bvec->bv_page))
- 			set_page_dirty_lock(bvec->bv_page);
--		put_page(bvec->bv_page);
-+		unpin_user_page(bvec->bv_page);
- 	}
- }
- EXPORT_SYMBOL_GPL(bio_release_pages);
-@@ -986,9 +986,9 @@ static int __bio_iov_bvec_add_pages(struct bio *bio, st=
-ruct iov_iter *iter)
-  * @iter: iov iterator describing the region to be mapped
-  *
-  * Pins pages from *iter and appends them to @bio's bvec array. The
-- * pages will have to be released using put_page() when done.
-- * For multi-segment *iter, this function only adds pages from the
-- * next non-empty segment of the iov iterator.
-+ * pages will have to be released using put_page() or unpin_user_page() wh=
-en
-+ * done. For multi-segment *iter, this function only adds pages from the n=
-ext
-+ * non-empty segment of the iov iterator.
-  */
- static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter=
-)
- {
-@@ -1009,7 +1009,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, =
-struct iov_iter *iter)
- 	BUILD_BUG_ON(PAGE_PTRS_PER_BVEC < 2);
- 	pages +=3D entries_left * (PAGE_PTRS_PER_BVEC - 1);
-=20
--	size =3D iov_iter_get_pages(iter, pages, LONG_MAX, nr_pages, &offset);
-+	size =3D iov_iter_pin_pages(iter, pages, LONG_MAX, nr_pages, &offset);
- 	if (unlikely(size <=3D 0))
- 		return size ? size : -EFAULT;
-=20
-@@ -1020,7 +1020,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, =
-struct iov_iter *iter)
-=20
- 		if (__bio_try_merge_page(bio, page, len, offset, &same_page)) {
- 			if (same_page)
--				put_page(page);
-+				unpin_user_page(page);
- 		} else {
- 			if (WARN_ON_ONCE(bio_full(bio, len)))
-                                 return -EINVAL;
-@@ -1056,7 +1056,7 @@ static int __bio_iov_append_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- 	BUILD_BUG_ON(PAGE_PTRS_PER_BVEC < 2);
- 	pages +=3D entries_left * (PAGE_PTRS_PER_BVEC - 1);
-=20
--	size =3D iov_iter_get_pages(iter, pages, LONG_MAX, nr_pages, &offset);
-+	size =3D iov_iter_pin_pages(iter, pages, LONG_MAX, nr_pages, &offset);
- 	if (unlikely(size <=3D 0))
- 		return size ? size : -EFAULT;
-=20
-@@ -1069,7 +1069,7 @@ static int __bio_iov_append_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- 				max_append_sectors, &same_page) !=3D len)
- 			return -EINVAL;
- 		if (same_page)
--			put_page(page);
-+			unpin_user_page(page);
- 		offset =3D 0;
- 	}
-=20
-@@ -1113,8 +1113,8 @@ int bio_iov_iter_get_pages(struct bio *bio, struct io=
-v_iter *iter)
- 		} else {
- 			if (is_bvec)
- 				ret =3D __bio_iov_bvec_add_pages(bio, iter);
--			else
--				ret =3D __bio_iov_iter_get_pages(bio, iter);
-+		else
-+			ret =3D __bio_iov_iter_get_pages(bio, iter);
- 		}
- 	} while (!ret && iov_iter_count(iter) && !bio_full(bio, 0));
-=20
-@@ -1326,8 +1326,8 @@ void bio_set_pages_dirty(struct bio *bio)
-  * the BIO and re-dirty the pages in process context.
-  *
-  * It is expected that bio_check_pages_dirty() will wholly own the BIO fro=
-m
-- * here on.  It will run one put_page() against each page and will run one
-- * bio_put() against the BIO.
-+ * here on. It will run one unpin_user_page() against each page, and will =
-run
-+ * one bio_put() against the BIO.
-  */
-=20
- static void bio_dirty_fn(struct work_struct *work);
-diff --git a/block/blk-map.c b/block/blk-map.c
-index 6e804892d5ec..2057a8e5b4bc 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -275,7 +275,7 @@ static struct bio *bio_map_user_iov(struct request_queu=
-e *q,
- 		size_t offs, added =3D 0;
- 		int npages;
-=20
--		bytes =3D iov_iter_get_pages_alloc(iter, &pages, LONG_MAX, &offs);
-+		bytes =3D iov_iter_pin_pages_alloc(iter, &pages, LONG_MAX, &offs);
- 		if (unlikely(bytes <=3D 0)) {
- 			ret =3D bytes ? bytes : -EFAULT;
- 			goto out_unmap;
-@@ -298,7 +298,7 @@ static struct bio *bio_map_user_iov(struct request_queu=
-e *q,
- 				if (!bio_add_hw_page(q, bio, page, n, offs,
- 						     max_sectors, &same_page)) {
- 					if (same_page)
--						put_page(page);
-+						unpin_user_page(page);
- 					break;
- 				}
-=20
-@@ -312,7 +312,7 @@ static struct bio *bio_map_user_iov(struct request_queu=
-e *q,
- 		 * release the pages we didn't map into the bio, if any
- 		 */
- 		while (j < npages)
--			put_page(pages[j++]);
-+			unpin_user_page(pages[j++]);
- 		kvfree(pages);
- 		/* couldn't stuff something into bio? */
- 		if (bytes)
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 183299892465..5130ba32ae91 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -170,7 +170,7 @@ static inline int dio_refill_pages(struct dio *dio, str=
-uct dio_submit *sdio)
- {
- 	ssize_t ret;
-=20
--	ret =3D iov_iter_get_pages(sdio->iter, dio->pages, LONG_MAX, DIO_PAGES,
-+	ret =3D iov_iter_pin_pages(sdio->iter, dio->pages, LONG_MAX, DIO_PAGES,
- 				&sdio->from);
-=20
- 	if (ret < 0 && sdio->blocks_available && (dio->op =3D=3D REQ_OP_WRITE)) {
-@@ -182,7 +182,7 @@ static inline int dio_refill_pages(struct dio *dio, str=
-uct dio_submit *sdio)
- 		 */
- 		if (dio->page_errors =3D=3D 0)
- 			dio->page_errors =3D ret;
--		get_page(page);
-+		pin_page(page);
- 		dio->pages[0] =3D page;
- 		sdio->head =3D 0;
- 		sdio->tail =3D 1;
-@@ -472,7 +472,7 @@ static inline void dio_bio_submit(struct dio *dio, stru=
-ct dio_submit *sdio)
- static inline void dio_cleanup(struct dio *dio, struct dio_submit *sdio)
- {
- 	while (sdio->head < sdio->tail)
--		put_page(dio->pages[sdio->head++]);
-+		unpin_user_page(dio->pages[sdio->head++]);
- }
-=20
- /*
-@@ -739,7 +739,7 @@ static inline int dio_bio_add_page(struct dio_submit *s=
-dio)
- 		 */
- 		if ((sdio->cur_page_len + sdio->cur_page_offset) =3D=3D PAGE_SIZE)
- 			sdio->pages_in_io--;
--		get_page(sdio->cur_page);
-+		pin_page(sdio->cur_page);
- 		sdio->final_block_in_bio =3D sdio->cur_page_block +
- 			(sdio->cur_page_len >> sdio->blkbits);
- 		ret =3D 0;
-@@ -853,13 +853,13 @@ submit_page_section(struct dio *dio, struct dio_submi=
-t *sdio, struct page *page,
- 	 */
- 	if (sdio->cur_page) {
- 		ret =3D dio_send_cur_page(dio, sdio, map_bh);
--		put_page(sdio->cur_page);
-+		unpin_user_page(sdio->cur_page);
- 		sdio->cur_page =3D NULL;
- 		if (ret)
- 			return ret;
- 	}
-=20
--	get_page(page);		/* It is in dio */
-+	pin_page(page);		/* It is in dio */
- 	sdio->cur_page =3D page;
- 	sdio->cur_page_offset =3D offset;
- 	sdio->cur_page_len =3D len;
-@@ -874,7 +874,7 @@ submit_page_section(struct dio *dio, struct dio_submit =
-*sdio, struct page *page,
- 		ret =3D dio_send_cur_page(dio, sdio, map_bh);
- 		if (sdio->bio)
- 			dio_bio_submit(dio, sdio);
--		put_page(sdio->cur_page);
-+		unpin_user_page(sdio->cur_page);
- 		sdio->cur_page =3D NULL;
- 	}
- 	return ret;
-@@ -974,7 +974,7 @@ static int do_direct_IO(struct dio *dio, struct dio_sub=
-mit *sdio,
-=20
- 				ret =3D get_more_blocks(dio, sdio, map_bh);
- 				if (ret) {
--					put_page(page);
-+					unpin_user_page(page);
- 					goto out;
- 				}
- 				if (!buffer_mapped(map_bh))
-@@ -1019,7 +1019,7 @@ static int do_direct_IO(struct dio *dio, struct dio_s=
-ubmit *sdio,
-=20
- 				/* AKPM: eargh, -ENOTBLK is a hack */
- 				if (dio->op =3D=3D REQ_OP_WRITE) {
--					put_page(page);
-+					unpin_user_page(page);
- 					return -ENOTBLK;
- 				}
-=20
-@@ -1032,7 +1032,7 @@ static int do_direct_IO(struct dio *dio, struct dio_s=
-ubmit *sdio,
- 				if (sdio->block_in_file >=3D
- 						i_size_aligned >> blkbits) {
- 					/* We hit eof */
--					put_page(page);
-+					unpin_user_page(page);
- 					goto out;
- 				}
- 				zero_user(page, from, 1 << blkbits);
-@@ -1072,7 +1072,7 @@ static int do_direct_IO(struct dio *dio, struct dio_s=
-ubmit *sdio,
- 						  sdio->next_block_for_io,
- 						  map_bh);
- 			if (ret) {
--				put_page(page);
-+				unpin_user_page(page);
- 				goto out;
- 			}
- 			sdio->next_block_for_io +=3D this_chunk_blocks;
-@@ -1087,8 +1087,8 @@ static int do_direct_IO(struct dio *dio, struct dio_s=
-ubmit *sdio,
- 				break;
- 		}
-=20
--		/* Drop the ref which was taken in get_user_pages() */
--		put_page(page);
-+		/* Drop the ref which was taken in pin_user_pages() */
-+		unpin_user_page(page);
- 	}
- out:
- 	return ret;
-@@ -1327,7 +1327,7 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inod=
-e *inode,
- 		ret2 =3D dio_send_cur_page(dio, &sdio, &map_bh);
- 		if (retval =3D=3D 0)
- 			retval =3D ret2;
--		put_page(sdio.cur_page);
-+		unpin_user_page(sdio.cur_page);
- 		sdio.cur_page =3D NULL;
- 	}
- 	if (sdio.bio)
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index c1aafb2ab990..ea29f0892a8c 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -194,7 +194,7 @@ iomap_dio_zero(struct iomap_dio *dio, struct iomap *iom=
-ap, loff_t pos,
- 	bio->bi_private =3D dio;
- 	bio->bi_end_io =3D iomap_dio_bio_end_io;
-=20
--	get_page(page);
-+	pin_page(page);
- 	__bio_add_page(bio, page, len, 0);
- 	bio_set_op_attrs(bio, REQ_OP_WRITE, flags);
- 	iomap_dio_submit_bio(dio, iomap, bio, pos);
---=20
-2.28.0
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
