@@ -2,93 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E90D258064
-	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 20:10:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C6882580E8
+	for <lists+linux-block@lfdr.de>; Mon, 31 Aug 2020 20:21:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgHaSKO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Aug 2020 14:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbgHaSKN (ORCPT
+        id S1729853AbgHaSUx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Aug 2020 14:20:53 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:34002 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729814AbgHaSUw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:10:13 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB8FC061573
-        for <linux-block@vger.kernel.org>; Mon, 31 Aug 2020 11:10:13 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t4so1998537iln.1
-        for <linux-block@vger.kernel.org>; Mon, 31 Aug 2020 11:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uRRvPiCxTh0cQCTrfg3Fth4VL9KJPMgKRrLomhiuBtI=;
-        b=N/ZgTaitrtvhgydpuVRs73cHccBD3HThC2WI/5nr2T927O5UHXvvjnmXJuwqM7RGTS
-         m/BWRm4qzmumdQrOkQiEDp9xoLS0KiZXIoNDdO138faEHaa4XRMg6onfj/kEbcuJoWF/
-         nldbEn2OCx+Sdg02Yr9dPjBuYR9lFx5Sy/pRuwHXHOReulRus9UYJ2MncvEjrFTl2YX6
-         MXM4OnbdQMzqopaIjg6gyMzUPD3shWut7xfKs2/eri6IxdLXJ+TXinfy89VQeSRW4EPF
-         FV/yybijFfhePzVomwxlK/sSRtOr2pZsJXPZUbWYVGxGP8+Z3comZb1i7XeVPDq5XAtl
-         3jcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uRRvPiCxTh0cQCTrfg3Fth4VL9KJPMgKRrLomhiuBtI=;
-        b=RK8FXGeMOzekphe07DgXo8dGgJFr/brNdtzbS+gaofC07rYONl/bdf6bRkew1W1xk3
-         ZIsKZYoRV0qiWtjQAdMm7Fg3lZqD5S4ubRjpFR050j+IPpImR4Y6hLqHxVnHvs9m1L2d
-         v+UoEAZBQykyapZ/POvvDeXQBf2CMzf9k31opk9y47a1LUVmBybb/okZXY7dfD9QvgYZ
-         wNXuUDLSd5UuQOlaWEQU3D1bZrJwA8F1rUEZc/G4zN35j0Jrf67pdi6KJOVbuOi8jghY
-         tD50rALCxXNG3KV7HRWRuaK+m7CgStlWbGJOzaw3scwcA2G7tA+GtS9bB9rsE/dxnFOJ
-         c6ew==
-X-Gm-Message-State: AOAM533XY+aFneYAndAnTPJizE4kNtDeET2ez7Y05MC8fJWpxZHtTEqc
-        4Wx2t2PrwglqyfPXwyYDh5sOd8TGgWDViSkS
-X-Google-Smtp-Source: ABdhPJzULLJhGAC9dl6A/WqaG3mzSJWdotfNL3j3qEtXe+9GsyH2uhTDrxRkxEVNIq3a9z0msOy73A==
-X-Received: by 2002:a92:6612:: with SMTP id a18mr2171116ilc.94.1598897412724;
-        Mon, 31 Aug 2020 11:10:12 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q87sm5040851ili.8.2020.08.31.11.10.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 11:10:12 -0700 (PDT)
-Subject: Re: [PATCH] block: ensure bdi->io_pages is always initialized
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+        Mon, 31 Aug 2020 14:20:52 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 34F5A1B44DF;
+        Tue,  1 Sep 2020 03:20:51 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07VIKndZ367490
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 1 Sep 2020 03:20:51 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07VIKnbs3471994
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 1 Sep 2020 03:20:49 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 07VIKnLJ3471993;
+        Tue, 1 Sep 2020 03:20:49 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] block: ensure bdi->io_pages is always initialized
 References: <346e5bf5-b08e-84e8-7b0e-c6cb0c814f96@kernel.dk>
- <878sdu66sa.fsf@mail.parknet.co.jp>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8eb3881a-8ebd-fecb-d88b-3e1d77bc952f@kernel.dk>
-Date:   Mon, 31 Aug 2020 12:10:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        <878sdu66sa.fsf@mail.parknet.co.jp>
+        <8eb3881a-8ebd-fecb-d88b-3e1d77bc952f@kernel.dk>
+Date:   Tue, 01 Sep 2020 03:20:49 +0900
+In-Reply-To: <8eb3881a-8ebd-fecb-d88b-3e1d77bc952f@kernel.dk> (Jens Axboe's
+        message of "Mon, 31 Aug 2020 12:10:11 -0600")
+Message-ID: <874koi65j2.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <878sdu66sa.fsf@mail.parknet.co.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/31/20 11:53 AM, OGAWA Hirofumi wrote:
-> Jens Axboe <axboe@kernel.dk> writes:
-> 
->> If a driver leaves the limit settings as the defaults, then we don't
->> initialize bdi->io_pages. This means that file systems may need to
->> work around bdi->io_pages == 0, which is somewhat messy.
->>
->> Initialize the default value just like we do for ->ra_pages.
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-> When queued to submit, please let us know to drop fatfs workaround
-> "fat-avoid-oops-when-bdi-io_pages==0.patch" in akpm series.
+Jens Axboe <axboe@kernel.dk> writes:
 
-Will do - planning on submitting it for 5.9, so probably end this
-week.
+> On 8/31/20 11:53 AM, OGAWA Hirofumi wrote:
+>> Jens Axboe <axboe@kernel.dk> writes:
+>> 
+>>> If a driver leaves the limit settings as the defaults, then we don't
+>>> initialize bdi->io_pages. This means that file systems may need to
+>>> work around bdi->io_pages == 0, which is somewhat messy.
+>>>
+>>> Initialize the default value just like we do for ->ra_pages.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Reported-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> 
+>> When queued to submit, please let us know to drop fatfs workaround
+>> "fat-avoid-oops-when-bdi-io_pages==0.patch" in akpm series.
+>
+> Will do - planning on submitting it for 5.9, so probably end this
+> week.
 
+OK. Andrew, please drop fat-avoid-oops-when-bdi-io_pages==0.patch.
+
+Thanks.
 -- 
-Jens Axboe
-
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
