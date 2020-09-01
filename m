@@ -2,104 +2,223 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4894258F73
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 15:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 258C4258FF0
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 16:12:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgIANsy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 09:48:54 -0400
-Received: from mx2.veeam.com ([12.182.39.6]:40438 "EHLO mx2.veeam.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgIANbI (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:31:08 -0400
-Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 1A91341364;
-        Tue,  1 Sep 2020 09:30:18 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
-        t=1598967018; bh=umHfvOL0J1ZkxkzjujOKSRjD07bmjbQWixfcQCpw0uI=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To:From;
-        b=UgcD+WupLi7EW3I9d/5JdtcO3zzYeAgEio3FVeuj2Xsy58gMNQRGq2C/0g1Fl7sz6
-         yV0tX8ohZs6DqYVLjwth3GJ9i6RTpYyZkcy5FtyBPcHRo5TRXrzCoKyFWWsQRFv0hU
-         9ZHXkSqf0HzwAOVHLLyEC+QkxsD2lX5SLAArkE58=
-Received: from veeam.com (172.24.14.5) by prgmbx01.amust.local (172.24.0.171)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.595.3; Tue, 1 Sep 2020
- 15:30:15 +0200
-Date:   Tue, 1 Sep 2020 16:29:57 +0300
-From:   Sergei Shtepa <sergei.shtepa@veeam.com>
-To:     Jens Axboe <axboe@kernel.dk>
-CC:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
-        "koct9i@gmail.com" <koct9i@gmail.com>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "steve@sk2.org" <steve@sk2.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 0/1] block io layer filters api
-Message-ID: <20200901132957.GA18251@veeam.com>
-References: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
- <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
+        id S1727902AbgIANPT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 09:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgIANFr (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 09:05:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE6EC061244;
+        Tue,  1 Sep 2020 06:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3snyZCqcx6nfDLLd1J100WLPuaRed18WUzYLSt3TcWw=; b=hbrvoG+vks0CAtQ3N78qWmX5eX
+        /NQfB0lIwhTw+JIeEG3UTUpEED73WYlkgwy+xZx68o+RkOBAMNP+7v0DFBexLsFKpbTNNJqIkP6Sd
+        H6pciRK1QoYcmLs5njnhEbPp+JKo6UVT0Z2NUYWZ0NZMse5fdbv3S2XuHDf10GHYZZybDqcLfFk/m
+        6Ff6CFmabe6TrkJZ8Igy1YjbGZv8aeXp4VPkCG8+XCmqKf9ApGKGXpb6Ta7X8f9XykbBpBWgS6fzO
+        /NVVDgQQqK3n9YAn9yxLyPSnjhSjdboM3fBHH/AaYwQ2ZCYOiPObZHa/hk33V3BnzVpg0bhQsq0h8
+        +f07oIzA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD5yX-0000KA-In; Tue, 01 Sep 2020 13:05:25 +0000
+Date:   Tue, 1 Sep 2020 14:05:25 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] block: Add bio_for_each_thp_segment_all
+Message-ID: <20200901130525.GK14765@casper.infradead.org>
+References: <20200824151700.16097-1-willy@infradead.org>
+ <20200824151700.16097-5-willy@infradead.org>
+ <20200827084431.GA15909@infradead.org>
+ <20200831194837.GJ14765@casper.infradead.org>
+ <20200901053426.GB24560@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
-X-Originating-IP: [172.24.14.5]
-X-ClientProxiedBy: prgmbx02.amust.local (172.24.0.172) To prgmbx01.amust.local
- (172.24.0.171)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29C604D26B63716B
-X-Veeam-MMEX: True
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx2.veeam.com [172.18.16.6]); Tue, 01 Sep 2020 09:30:18 -0400 (EDT)
-X-Veeam-MailScanner-Information: Please contact email@veeam.com if you have any problems
-X-Spam-Status: No
+In-Reply-To: <20200901053426.GB24560@infradead.org>
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The 08/28/2020 16:54, Jens Axboe wrote:
-> On 8/27/20 1:13 PM, Sergei Shtepa wrote:
-> > Hello everyone! Requesting for your comments and suggestions.
+On Tue, Sep 01, 2020 at 06:34:26AM +0100, Christoph Hellwig wrote:
+> On Mon, Aug 31, 2020 at 08:48:37PM +0100, Matthew Wilcox wrote:
+> > static void iomap_read_end_io(struct bio *bio)
+> > {
+> >         int i, error = blk_status_to_errno(bio->bi_status);
 > > 
-> > We propose new kernel API that should be beneficial for out-of-tree
-> > kernel modules of multiple backup vendors: block layer filter API.
+> >         for (i = 0; i < bio->bi_vcnt; i++) {
+> >                 struct bio_vec *bvec = &bio->bi_io_vec[i];
 > 
-> That's just a non-starter, I'm afraid. We generally don't carry
-> infrastructure in the kernel for out-of-tree modules, that includes
-> even exports of existing code.
+> This should probably use bio_for_each_bvec_all instead of directly
+> poking into the bio.  I'd also be tempted to move the loop body into
+> a separate helper, but that's just a slight stylistic preference.
+
+Ah, got it.
+
+> >                 size_t offset = bvec->bv_offset;
+> >                 size_t length = bvec->bv_len;
+> >                 struct page *page = bvec->bv_page;
+> > 
+> >                 while (length > 0) { 
+> >                         size_t count = thp_size(page) - offset;
+> >                         
+> >                         if (count > length)
+> >                                 count = length;
+> >                         iomap_read_page_end_io(page, offset, count, error);
+> >                         page += (offset + count) / PAGE_SIZE;
 > 
-> If there's a strong use case *in* the kernel, then such functionality
-> could be entertained.
+> Shouldn't the page_size here be thp_size?
+
+No.  Let's suppose we have a 20kB I/O which starts on a page boundary and
+the first page is order-2.  To get from the first head page to the second
+page, we need to add 4, which is 16kB / 4kB, not 16kB / 16kB.
+
+> > Maybe I'm missing something important here, but it's significantly
+> > simpler code -- iomap_read_end_io() goes down from 816 bytes to 560 bytes
+> > (256 bytes less!) iomap_read_page_end_io is inlined into it both before
+> > and after.
 > 
-> -- 
-> Jens Axboe
->
+> Yes, that's exactly why I think avoiding bio_for_each_segment_all is
+> a good idea in general.
 
-To be honest, we've always dreamed to include our out-of-tree module into
-the kernel itself - so if you're open to that, that is great news indeed!
+I took out all the attempts to cope with insane bv_offset to compare like
+with like and I got the bio_for_each_thp_segment_all() version down to
+656 bytes:
 
-We've spent some time before responding to estimate how long it will take
-us to update the current source code to meet coding requirements.
-It looks like we will need 2-4 months of development and QC, and possibly
-much more to work on your feedback thereafter.
-This is much work, but we are fully committed to this if you are willing
-to include this module into the kernel.
+@@ -166,21 +166,15 @@ static inline void bvec_thp_advance(const struct bio_vec *
+bvec,
+                                struct bvec_iter_all *iter_all)
+ {
+        struct bio_vec *bv = &iter_all->bv;
+-       unsigned int page_size;
+ 
+        if (iter_all->done) {
+                bv->bv_page += thp_nr_pages(bv->bv_page);
+-               page_size = thp_size(bv->bv_page);
+                bv->bv_offset = 0;
+        } else {
+-               bv->bv_page = thp_head(bvec->bv_page +
+-                               (bvec->bv_offset >> PAGE_SHIFT));
+-               page_size = thp_size(bv->bv_page);
+-               bv->bv_offset = bvec->bv_offset -
+-                               (bv->bv_page - bvec->bv_page) * PAGE_SIZE;
+-               BUG_ON(bv->bv_offset >= page_size);
++               bv->bv_page = bvec->bv_page;
++               bv->bv_offset = bvec->bv_offset;
+        }
+-       bv->bv_len = min(page_size - bv->bv_offset,
++       bv->bv_len = min_t(unsigned int, thp_size(bv->bv_page) - bv->bv_offset,
+                         bvec->bv_len - iter_all->done);
+        iter_all->done += bv->bv_len;
 
-However, the same time requirement also presents a big immediate problem -
-as until this is done, over a hundred thousands of Linux users will not be
-able to protect their servers running the impacted kernels
-(our backup agent is free).
-They will be forced to stop using the new version of the kernel
-(or take a risk of data loss).
+> And yes, eventually bv_page and bv_offset should be replaced with a
+> 
+> 	phys_addr_t		bv_phys;
+> 
+> and life would become simpler in many places (and the bvec would
+> shrink for most common setups as well).
 
-Given that, is there any chance that you accept the proposed patch now, to
-restore the ability to protect their Linux machines - and buy us time to 
-deliver the compliant module for inclusion into the kernel?
+I'd very much like to see that.  It causes quite considerable pain for
+our virtualisation people that we need a struct page.  They'd like the
+hypervisor to not have struct pages for the guest's memory, but if they
+don't have them, they can't do I/O to them.  Perhaps I'll try getting
+one of them to work on this.
 
--- 
-Sergei Shtepa
-Veeam Software developer.
+I'm not entirely sure the bvec would shrink.  On 64-bit systems, it's
+currently 8 bytes for the struct page, 4 bytes for the len and 4 bytes
+for the offset.  Sure, we can get rid of the offset, but the compiler
+will just pad the struct from 12 bytes back to 16.  On 32-bit systems
+with 32-bit phys_addr_t, we go from 12 bytes down to 8, but most 32-bit
+systems have a 64-bit phys_addr_t these days, don't they?
+
+> For now I'd end up with something like:
+> 
+> static void iomap_read_end_bvec(struct page *page, size_t offset,
+> 		size_t length, int error)
+> {
+> 	while (length > 0) {
+> 		size_t page_size = thp_size(page);
+> 		size_t count = min(page_size - offset, length);
+> 
+> 		iomap_read_page_end_io(page, offset, count, error);
+> 
+> 		page += (offset + count) / page_size;
+> 		length -= count;
+> 		offset = 0;
+> 	}
+> }
+> 
+> static void iomap_read_end_io(struct bio *bio)
+> {
+> 	int i, error = blk_status_to_errno(bio->bi_status);
+> 	struct bio_vec *bvec;
+> 
+> 	bio_for_each_bvec_all(bvec, bio, i)
+> 		iomap_read_end_bvec(bvec->bv_page, bvec->bv_offset,
+> 				    bvec->bv_len, error;
+>         bio_put(bio);
+> }
+> 
+> and maybe even merge iomap_read_page_end_io into iomap_read_end_bvec.
+
+The lines start to get a bit long.  Here's what I currently have on
+the write side:
+
+@@ -1104,6 +1117,20 @@ iomap_finish_page_writeback(struct inode *inode, struct p
+age *page,
+                end_page_writeback(page);
+ }
+ 
++static void iomap_finish_bvec_write(struct inode *inode, struct page *page,
++               size_t offset, size_t length, int error)
++{
++       while (length > 0) {
++               size_t count = min(thp_size(page) - offset, length);
++
++               iomap_finish_page_writeback(inode, page, error, count);
++
++               page += (offset + count) / PAGE_SIZE;
++               offset = 0;
++               length -= count;
++       }
++}
++
+ /*
+  * We're now finished for good with this ioend structure.  Update the page
+  * state, release holds on bios, and finally free up memory.  Do not use the
+@@ -1121,7 +1148,7 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
+ 
+        for (bio = &ioend->io_inline_bio; bio; bio = next) {
+                struct bio_vec *bv;
+-               struct bvec_iter_all iter_all;
++               int i;
+ 
+                /*
+                 * For the last bio, bi_private points to the ioend, so we
+@@ -1133,9 +1160,9 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
+                        next = bio->bi_private;
+ 
+                /* walk each page on bio, ending page IO on them */
+-               bio_for_each_thp_segment_all(bv, bio, iter_all)
+-                       iomap_finish_page_writeback(inode, bv->bv_page, error,
+-                                       bv->bv_len);
++               bio_for_each_bvec_all(bv, bio, i)
++                       iomap_finish_bvec_writeback(inode, bv->bv_page,
++                                       bv->bv_offset, bv->bv_len, error);
+                bio_put(bio);
+        }
+        /* The ioend has been freed by bio_put() */
+
+That's a bit more boilerplate than I'd like, but if bio_vec is going to
+lose its bv_page then I don't see a better way.  Unless we come up with
+a different page/offset/length struct that bio_vecs are decomposed into.
+
