@@ -2,187 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 576B4259E8F
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 20:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A124259F99
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 22:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbgIASyc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 14:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57640 "EHLO
+        id S1728015AbgIAUCF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 16:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731934AbgIASyZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 14:54:25 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651CEC061244;
-        Tue,  1 Sep 2020 11:54:25 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id v69so1995109qkb.7;
-        Tue, 01 Sep 2020 11:54:25 -0700 (PDT)
+        with ESMTP id S1732069AbgIAUCD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 16:02:03 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A6FC061245
+        for <linux-block@vger.kernel.org>; Tue,  1 Sep 2020 13:02:02 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s2so1145178pjr.4
+        for <linux-block@vger.kernel.org>; Tue, 01 Sep 2020 13:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cm+df0jFPyE1zTjCqgFLh2q6gImstDntHA7G0hKbn1c=;
-        b=XajDkh8P9KQTJXpi9a5vP6TJ7CkEhXM4INtbnSsTamKj77lttU5yXy9F/WfSWTKkxK
-         TH5ddWvVKmWD8wKvRAttyvS3Hgh7AoiRULzZSGWVQvleLF5fH4ms+fK/evyW3FMFqfl4
-         B4z5fZo3UOC08McpaqbKgKFmzLEPi7zu/4gvz4qaHXJQPqK/4QI++6MWT5BGL/paChPI
-         wY+8Puhdm0BglBfCawCT0Do8mk4x0L1pmSSWJcKpPNEBEOuofB3vh6hoyFBMc0Qe3B2c
-         Fm+FWJOo51I2OrqxBjvSla140/ntPH3CsqqFeutrsnj4zy+W5HEkgRYSlMFTxOeFMvqE
-         1A+A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0TFvfjapBtpOjCK3cnf0JVXwOOm9nRjQC9YR5LerqTw=;
+        b=KZizb+DdvnIhtxo9NJ/Mj4uCuEuWwUiJI2z2QI8dHInz2CbTiSw03qvl8d7N0gM/VK
+         lZouzCV/sW+xZ0kBkq0kvenYq2rqkgf1HiE1wQoFV5I9UkGWHNHNImzOgvpN51xuPvyW
+         Q8LffDrfTl4v2t9wFOHvUHZPDnurDYyg2OkTAdWlbQTTjQVdENs5I+//6wTXWNIMPGmk
+         PUAUi+KsPluN8g1Gb6uzv0uQJEgtnyeqwNPb4nIOFIp9HTanGC1w2ooJx5O2WatjtOFh
+         s+BwRafjpzAi3X+pEXXgTO+TY6Dd1ORudlPnSa6MtteW2sdiz706begthdfAItvuS9PT
+         evbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=cm+df0jFPyE1zTjCqgFLh2q6gImstDntHA7G0hKbn1c=;
-        b=tPdi3q/3Vg/+xxW+CEJ/4qotvu+adlPZaPr2IA1olq86BIWDiJxEjp4ER4zcXXs8En
-         hREwp6VIEpKnOanVDPmG09PufQD0DN1YXKKW8GON6PFpnaajPm+brDcUY2roqlkuhBc7
-         7549HzUPsfElUNheIEuWPCL0LqEuYzcqgE1/DHhkNImipe/esxczHVak7XsUeLTBsX0h
-         XPrnav+b7jzVql1xJXH9PE4nfCaTagY3bT2KAdafYdmJyMdnmZHfneWwmcK7xO6zyZrk
-         i3lPHnda9RfNh9CdIPflDksCNqEgKvJCX/GgPGHwiAVLMnfuHz0fgIQYlG4hfvoY2j4l
-         G5kQ==
-X-Gm-Message-State: AOAM530gtNKi0VtUDaFekRpwhf139BGAdDpVi11bCcjPFCa1IVZVVbZB
-        CBnoWbPaTtX4QCfeeMu05twagEXtXD2LAg==
-X-Google-Smtp-Source: ABdhPJyC1zrmWahk0Un9SvEpY6Bbw4MwTkW6QE19cV+1OyUU/CrIaLlLAJ85naK2tPp7q0zf9GIF9g==
-X-Received: by 2002:a37:4c15:: with SMTP id z21mr3170782qka.334.1598986464504;
-        Tue, 01 Sep 2020 11:54:24 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id p68sm2697824qka.78.2020.09.01.11.54.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:54:24 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 27/27] blk-iocost: update iocost_monitor.py
-Date:   Tue,  1 Sep 2020 14:52:57 -0400
-Message-Id: <20200901185257.645114-28-tj@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
-References: <20200901185257.645114-1-tj@kernel.org>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0TFvfjapBtpOjCK3cnf0JVXwOOm9nRjQC9YR5LerqTw=;
+        b=RhTQfPLrhsSh9tt6sgigblLKxSe2ZaQ2L2hPuD9KU3yvqp5ID00T/JoAZmLSa6tMTJ
+         qqjkH2HqcAod4+fABK6IDd+2u/2vvq0d5sdeNgztFso/FtnDgvlQnAUvKF8/5eRsswc3
+         NZS39h1+rEU3doZadZbaEktaRS8bYtvh36NIYqTgTPtGz7ppWfTP2JGHXxNGiKqU8ExR
+         y1eZazBX+29eLOHFEW9UMXDnqPEHqSw1RWMR7A6Q7mk8+28QpTu7TsMNzYWOOPnLf/Sg
+         f6qdSD/gpLU44DIyk/pRK/fHUsRZ6YwMAHk7frF8UjDp+xPSEl69CcfeUlPGxUZ0riMJ
+         MwVQ==
+X-Gm-Message-State: AOAM533jA/Bjpvsf9nSJN8j277ENUxxqlyfDmKmle168y4mjsb9yJUFm
+        URgO3VXSXM8kdyIFYQ2v/C75zLhfcV53OuZO
+X-Google-Smtp-Source: ABdhPJw4z0MtzIa/uyRVdxpAtHcbKBFq10NoDMe7R9TwBTG7E94El7Zku9kR9xW9ZZcV0wpl5FfwpA==
+X-Received: by 2002:a17:902:6a8b:: with SMTP id n11mr2849235plk.75.1598990522125;
+        Tue, 01 Sep 2020 13:02:02 -0700 (PDT)
+Received: from [192.168.1.187] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x188sm2851565pfb.37.2020.09.01.13.02.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 13:02:01 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
+ io_sq_wq_submit_work()
+From:   Jens Axboe <axboe@kernel.dk>
+To:     yinxin_1989 <yinxin_1989@aliyun.com>,
+        viro <viro@zeniv.linux.org.uk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
+ <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
+ <67f27d17-81fa-43a8-baa9-429b1ccd65d0.yinxin_1989@aliyun.com>
+ <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
+Message-ID: <98f2cbbf-4f6f-501b-2f4e-1b8b803ce6a6@kernel.dk>
+Date:   Tue, 1 Sep 2020 14:01:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-iocost went through significant internal changes. Update iocost_monitor.py
-accordingly.
+On 9/1/20 8:52 AM, Jens Axboe wrote:
+> On 8/31/20 10:59 PM, yinxin_1989 wrote:
+>>
+>>> On 8/31/20 7:54 PM, Xin Yin wrote:
+>>>> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
+>>>> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
+>>>> when io_ring-wq get a req form async_list, which may not have been
+>>>> added to task_list. Then try to delete the req from task_list will caused
+>>>> a "NULL pointer dereference".
+>>>
+>>> Hmm, do you have a reproducer for this?
+>>
+>> I update code to linux5.4.y , and I can reproduce this issue on an arm
+>> board and my x86 pc by fio tools.
+> 
+> Right, I figured this was 5.4 stable, as that's the only version that
+> has this patch.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- tools/cgroup/iocost_monitor.py | 54 ++++++++++++----------------------
- 1 file changed, 19 insertions(+), 35 deletions(-)
+I took a closer look, and I think your patch can basically be boiled down
+to this single hunk. If you agree, can you resend your patch with the
+description based on that, then I'll get it queued up for 5.4-stable.
+Thanks!
 
-diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
-index f4699f9b46ba..c4ff907c078b 100644
---- a/tools/cgroup/iocost_monitor.py
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -45,8 +45,7 @@ args = parser.parse_args()
-     err('The kernel does not have iocost enabled')
- 
- IOC_RUNNING     = prog['IOC_RUNNING'].value_()
--NR_USAGE_SLOTS  = prog['NR_USAGE_SLOTS'].value_()
--HWEIGHT_WHOLE   = prog['HWEIGHT_WHOLE'].value_()
-+WEIGHT_ONE      = prog['WEIGHT_ONE'].value_()
- VTIME_PER_SEC   = prog['VTIME_PER_SEC'].value_()
- VTIME_PER_USEC  = prog['VTIME_PER_USEC'].value_()
- AUTOP_SSD_FAST  = prog['AUTOP_SSD_FAST'].value_()
-@@ -100,7 +99,7 @@ autop_names = {
-         self.period_ms = ioc.period_us.value_() / 1_000
-         self.period_at = ioc.period_at.value_() / 1_000_000
-         self.vperiod_at = ioc.period_at_vtime.value_() / VTIME_PER_SEC
--        self.vrate_pct = ioc.vtime_rate.counter.value_() * 100 / VTIME_PER_USEC
-+        self.vrate_pct = ioc.vtime_base_rate.value_() * 100 / VTIME_PER_USEC
-         self.busy_level = ioc.busy_level.value_()
-         self.autop_idx = ioc.autop_idx.value_()
-         self.user_cost_model = ioc.user_cost_model.value_()
-@@ -136,7 +135,7 @@ autop_names = {
- 
-     def table_header_str(self):
-         return f'{"":25} active {"weight":>9} {"hweight%":>13} {"inflt%":>6} ' \
--               f'{"dbt":>3} {"delay":>6} {"usages%"}'
-+               f'{"debt":>7} {"delay":>7} {"usage%"}'
- 
- class IocgStat:
-     def __init__(self, iocg):
-@@ -144,11 +143,11 @@ autop_names = {
-         blkg = iocg.pd.blkg
- 
-         self.is_active = not list_empty(iocg.active_list.address_of_())
--        self.weight = iocg.weight.value_()
--        self.active = iocg.active.value_()
--        self.inuse = iocg.inuse.value_()
--        self.hwa_pct = iocg.hweight_active.value_() * 100 / HWEIGHT_WHOLE
--        self.hwi_pct = iocg.hweight_inuse.value_() * 100 / HWEIGHT_WHOLE
-+        self.weight = iocg.weight.value_() / WEIGHT_ONE
-+        self.active = iocg.active.value_() / WEIGHT_ONE
-+        self.inuse = iocg.inuse.value_() / WEIGHT_ONE
-+        self.hwa_pct = iocg.hweight_active.value_() * 100 / WEIGHT_ONE
-+        self.hwi_pct = iocg.hweight_inuse.value_() * 100 / WEIGHT_ONE
-         self.address = iocg.value_()
- 
-         vdone = iocg.done_vtime.counter.value_()
-@@ -160,23 +159,13 @@ autop_names = {
-         else:
-             self.inflight_pct = 0
- 
--        # vdebt used to be an atomic64_t and is now u64, support both
--        try:
--            self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
--        except:
--            self.debt_ms = iocg.abs_vdebt.value_() / VTIME_PER_USEC / 1000
--
--        self.use_delay = blkg.use_delay.counter.value_()
--        self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
--
--        usage_idx = iocg.usage_idx.value_()
--        self.usages = []
--        self.usage = 0
--        for i in range(NR_USAGE_SLOTS):
--            usage = iocg.usages[(usage_idx + 1 + i) % NR_USAGE_SLOTS].value_()
--            upct = usage * 100 / HWEIGHT_WHOLE
--            self.usages.append(upct)
--            self.usage = max(self.usage, upct)
-+        self.usage = (100 * iocg.usage_delta_us.value_() /
-+                      ioc.period_us.value_()) if self.active else 0
-+        self.debt_ms = iocg.abs_vdebt.value_() / VTIME_PER_USEC / 1000
-+        if blkg.use_delay.counter.value_() != 0:
-+            self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
-+        else:
-+            self.delay_ms = 0
- 
-     def dict(self, now, path):
-         out = { 'cgroup'                : path,
-@@ -189,25 +178,20 @@ autop_names = {
-                 'hweight_inuse_pct'     : self.hwi_pct,
-                 'inflight_pct'          : self.inflight_pct,
-                 'debt_ms'               : self.debt_ms,
--                'use_delay'             : self.use_delay,
-                 'delay_ms'              : self.delay_ms,
-                 'usage_pct'             : self.usage,
-                 'address'               : self.address }
--        for i in range(len(self.usages)):
--            out[f'usage_pct_{i}'] = str(self.usages[i])
-         return out
- 
-     def table_row_str(self, path):
-         out = f'{path[-28:]:28} ' \
-               f'{"*" if self.is_active else " "} ' \
--              f'{self.inuse:5}/{self.active:5} ' \
-+              f'{round(self.inuse):5}/{round(self.active):5} ' \
-               f'{self.hwi_pct:6.2f}/{self.hwa_pct:6.2f} ' \
-               f'{self.inflight_pct:6.2f} ' \
--              f'{min(math.ceil(self.debt_ms), 999):3} ' \
--              f'{min(self.use_delay, 99):2}*'\
--              f'{min(math.ceil(self.delay_ms), 999):03} '
--        for u in self.usages:
--            out += f'{min(round(u), 999):03d}:'
-+              f'{self.debt_ms:7.2f} ' \
-+              f'{self.delay_ms:7.2f} '\
-+              f'{min(self.usage, 999):6.2f}'
-         out = out.rstrip(':')
-         return out
- 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index fada14ee1cdc..cbbcd85780c4 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2378,6 +2378,16 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
+ 		list_del_init(&req->list);
+ 		ret = false;
+ 	}
++
++	if (ret) {
++		struct io_ring_ctx *ctx = req->ctx;
++		unsigned long flags;
++
++		spin_lock_irqsave(&ctx->task_lock, flags);
++		list_add(&req->task_list, &ctx->task_list);
++		req->work_task = NULL;
++		spin_unlock_irqrestore(&ctx->task_lock, flags);
++	}
+ 	spin_unlock(&list->lock);
+ 	return ret;
+ }
+
 -- 
-2.26.2
+Jens Axboe
 
