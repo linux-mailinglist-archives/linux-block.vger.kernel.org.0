@@ -2,87 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 380C5258893
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 08:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F9D4258970
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 09:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgIAGyl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 02:54:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60748 "EHLO mx2.suse.de"
+        id S1727046AbgIAHlq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 03:41:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:52257 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgIAGyl (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:54:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7F7CEB5EB;
-        Tue,  1 Sep 2020 06:54:39 +0000 (UTC)
-Subject: Re: [PATCH V4] scsi: core: only re-run queue in scsi_end_request() if
- device queue is busy
-To:     Ming Lei <ming.lei@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     "Ewan D . Milne" <emilne@redhat.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>, linux-block@vger.kernel.org
-References: <20200817100840.2496976-1-ming.lei@redhat.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <d6f37b50-decd-f0c9-2b72-7a00e7ead774@suse.de>
-Date:   Tue, 1 Sep 2020 08:54:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726006AbgIAHlq (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:41:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CB8ED68B05; Tue,  1 Sep 2020 09:41:43 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 09:41:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, hch@lst.de,
+        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Some clean-ups for bio merge
+Message-ID: <20200901074143.GA30547@lst.de>
+References: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817100840.2496976-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/17/20 12:08 PM, Ming Lei wrote:
-> Now the request queue is run in scsi_end_request() unconditionally if both
-> target queue and host queue is ready. We should have re-run request queue
-> only after this device queue becomes busy for restarting this LUN only.
-> 
-> Recently Long Li reported that cost of run queue may be very heavy in
-> case of high queue depth. So improve this situation by only running
-> the request queue when this LUN is busy.
-> 
-> Cc: Ewan D. Milne <emilne@redhat.com>
-> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-> Cc: Hannes Reinecke <hare@suse.de>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Long Li <longli@microsoft.com>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: linux-block@vger.kernel.org
-> Reported-by: Long Li <longli@microsoft.com>
-> Tested-by: Kashyap Desai <kashyap.desai@broadcom.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
-> V4:
-> 	- fix one race reported by Kashyap, and simplify the implementation
-> 	a bit; also pass Kashyap's both function and performance test
-> V3:
-> 	- add one smp_mb() in scsi_mq_get_budget() and comment
-> 
-> V2:
-> 	- commit log change, no any code change
-> 	- add reported-by tag
-> 
->   drivers/scsi/scsi_lib.c    | 51 +++++++++++++++++++++++++++++++++++---
->   include/scsi/scsi_device.h |  1 +
->   2 files changed, 49 insertions(+), 3 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Looks good,
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Reviewed-by: Christoph Hellwig <hch@lst.de>
