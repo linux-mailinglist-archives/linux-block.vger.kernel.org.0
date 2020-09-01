@@ -2,81 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B1D25976E
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 18:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7243825965C
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 18:01:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgIAQOM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 12:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
+        id S1726091AbgIAQB0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 12:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731206AbgIAPf3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 11:35:29 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB6AC061244;
-        Tue,  1 Sep 2020 08:35:28 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id o64so1326813qkb.10;
-        Tue, 01 Sep 2020 08:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pt5riNry0LXCdMMDirjaAvuNNxR72mnnngurjuADZZo=;
-        b=OQ9fWUenknF9Q+nAncqv3JwfcFuORp9ef2xNGcB2GbZd1SeyaJtCYvuGT2hsWlAqmb
-         2I0s+TbyT6aN/1H4W+LX4oqLaVm6fElKHZ/3RF0MRHeObQD8S8UAoPjsVUtEEe5BkQR9
-         j9xZG86MQ+b0n/bT4QWLiPPRIgt8kmhTbMRfb3XMfXPZ/CmsIE/vn6bDdS+gdhi35OcD
-         lTeZOalVPTuJZ2AvYShSeC/yD05B0RzZ+mJYR+QE8NhqK9W3+n15AoeUfcIWNMHL4Hd2
-         CaZOr5GWGQqNEQqPsGiBjEhwGAEHbj0SXnIOpu8e0eq06KzxcjiB1IRFSu3dq9M0/O+u
-         xU0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pt5riNry0LXCdMMDirjaAvuNNxR72mnnngurjuADZZo=;
-        b=MuoRdiBO7SaD3Dwy3odEkcuGwZidu2+z1GOZk9K0ch0sduMrf1F82RkwTUr2SABZuv
-         FelD1QfJdfbKWe0NPyO9e//v2CbR3BINik3mYGBUYbH4T/BYhFNL/6ULj9ZOO04lS0VN
-         4EojvyEEtMZoQUARJzQVnXyZoizRzFiHhV1M8mDQAKotGWacEPWhGvXq8FKEn3F/Zhyn
-         lXpTqYRhClK3wa3ej5TmBkIzQPlAD9hF3kQRpy9mPAeHbHwdFUK3G313dE3yHR4hzUX+
-         tyuuixEMoWU8YaDdu8MA2vw1msYENq+iPcZgp7woEGcpcTnie+csSIKekIOjw6FFQ6kY
-         ZLug==
-X-Gm-Message-State: AOAM533UmtX2JN136EBDBrunHzPVUKnc3BY+VeCR1CtG0SCu7+0LnagO
-        Z6m+Lo0h9/m5zqePhoytuDk=
-X-Google-Smtp-Source: ABdhPJxNPwyKBVSlUPOK2GEeBXN58bPo+Amwwb+B5yOvnjOXV0smnRsYTwJzbLJWIhWk8Ju0NzLxtA==
-X-Received: by 2002:a05:620a:b1a:: with SMTP id t26mr2437752qkg.353.1598974527257;
-        Tue, 01 Sep 2020 08:35:27 -0700 (PDT)
-Received: from leah-Ubuntu ([2601:4c3:200:c230:dd5a:a6db:5e16:1fed])
-        by smtp.gmail.com with ESMTPSA id f7sm1971818qkj.32.2020.09.01.08.35.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 01 Sep 2020 08:35:26 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 11:35:25 -0400
-From:   Leah Rumancik <leah.rumancik@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     bpf@vger.kernel.org, linux-block@vger.kernel.org,
-        orbekk@google.com, harshads@google.com, jasiu@google.com,
-        saranyamohan@google.com, tytso@google.com, bvanassche@google.com
-Subject: Re: [RFC PATCH 3/4] bpf: add eBPF IO filter documentation
-Message-ID: <20200901153524.GB5599@leah-Ubuntu>
-References: <20200812163305.545447-1-leah.rumancik@gmail.com>
- <20200812163305.545447-4-leah.rumancik@gmail.com>
- <20200812115011.337c0099@lwn.net>
+        with ESMTP id S1731158AbgIAP6D (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 11:58:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A3DC061244;
+        Tue,  1 Sep 2020 08:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=M79so1AwUwPIRouROFaNCg3KdKArTwMSMNd8wl3xC9I=; b=Fo1o7u6IVr6vurOMarEGQIw99y
+        WHqyrdok/75XjmzAvs98wm2mZXYI8eGfVJCJLikO8fuOJu/9j6XvoFdlr1RTa038r8DDcHMqAU7lY
+        mmSZLC/smn0SnolNwwxdyrpDJlJoZhG0K7MVmnl8ewTBrEYNYAPRaMnE4rjqCK7VlkM7JqAlUWyDU
+        YkH9TJZ6yJEEibyeqV37+FBh0RkQQ6BwwzwRxyMvkU7/sD29/P1lImVmElLT8cbRAFklBxMxACP/P
+        9Ptq9IU2Xfcl9fIpw/yp4N3MdH0FKE600v4IAuPUo366M4kD36FMV0WaYWth1qfPOYnF35tgpEEiP
+        sE6GqZdg==;
+Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8fN-0004OS-MU; Tue, 01 Sep 2020 15:57:50 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        nbd@other.debian.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: remove revalidate_disk()
+Date:   Tue,  1 Sep 2020 17:57:39 +0200
+Message-Id: <20200901155748.2884-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812115011.337c0099@lwn.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 11:50:11AM -0600, Jonathan Corbet wrote:
-> Please wrap your text to a reasonable column width just like with any
-> other kernel file.
-> 
-> Thanks,
-> 
-> jon
+Hi Jens,
 
-Will do.
+this series removes the revalidate_disk() function, which has been a
+really odd duck in the last years.  The prime reason why most people
+use it is because it propagates a size change from the gendisk to
+the block_device structure.  But it also calls into the rather ill
+defined ->revalidate_disk method which is rather useless for the
+callers.  So this adds a new helper to just propagate the size, and
+cleans up all kinds of mess around this area.  Follow on patches
+will eventuall kill of ->revalidate_disk entirely, but ther are a lot
+more patches needed for that.
 
-Thanks,
-Leah
+Diffstat:
+ Documentation/filesystems/locking.rst |    3 --
+ block/genhd.c                         |    9 ++----
+ drivers/block/nbd.c                   |    8 ++---
+ drivers/block/rbd.c                   |    2 -
+ drivers/block/rnbd/rnbd-clt.c         |   10 +------
+ drivers/block/virtio_blk.c            |    2 -
+ drivers/block/zram/zram_drv.c         |    4 +-
+ drivers/md/dm-raid.c                  |    2 -
+ drivers/md/md-cluster.c               |    6 ++--
+ drivers/md/md-linear.c                |    2 -
+ drivers/md/md.c                       |   10 +++----
+ drivers/md/md.h                       |    2 -
+ drivers/nvdimm/blk.c                  |    3 --
+ drivers/nvdimm/btt.c                  |    3 --
+ drivers/nvdimm/bus.c                  |    9 ++----
+ drivers/nvdimm/nd.h                   |    2 -
+ drivers/nvdimm/pmem.c                 |    3 --
+ drivers/nvme/host/core.c              |   16 +++++++----
+ drivers/scsi/sd.c                     |    6 ++--
+ fs/block_dev.c                        |   46 ++++++++++++++++------------------
+ include/linux/blk_types.h             |    4 ++
+ include/linux/genhd.h                 |    6 ++--
+ 22 files changed, 74 insertions(+), 84 deletions(-)
