@@ -2,56 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC5A22596FA
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 18:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5908D2598CD
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 18:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgIAQJO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 12:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
+        id S1727950AbgIAQdV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 12:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731703AbgIAQJL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 12:09:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F36C061244;
-        Tue,  1 Sep 2020 09:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oBkq3glCAHtvOG8UIAGHt/0r5y1zdNiyvtDIVrqUvHM=; b=Z6sUr62WUfxGIitZ30fveIfF6A
-        sXIe5ryrpygTcH3h/5Hsf2cIPUx68XYgdr1wFENvDfHzFtag1rQ0MY/9ppQfHdCl8y/BnIDYcp5wI
-        RBC6+NlQ5XYuEQVFUoGTXVDfdA2zGcLyuEZs5S5Y3wWjtH1ONvJtNJcVwH3XQrX22wULSvWOcg/HB
-        chXB6vq1s8wF5ObT20ymr0uIGz5ZWmNYQSDj3SD50dKASxH6mw0ml+hP3OLN1pTxK1EIy1rIek2rp
-        Lu6zdD0DyOOZ9FBHCWKbrKagsxKLP/8ttJeZFgWGI5Iv23cfUhpYZGlSHi/dIDrVGtSKFUIzujpGX
-        bkWsYFYA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD8qH-0005hT-H0; Tue, 01 Sep 2020 16:09:05 +0000
-Date:   Tue, 1 Sep 2020 17:09:05 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: Fix potential page reference leak in
- __bio_iov_iter_get_pages()
-Message-ID: <20200901160905.GA21372@infradead.org>
-References: <20200901120006.9545-1-linmiaohe@huawei.com>
+        with ESMTP id S1727088AbgIAQdU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 12:33:20 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD4CC061244;
+        Tue,  1 Sep 2020 09:33:20 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id n10so1377056qtv.3;
+        Tue, 01 Sep 2020 09:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cIUoMuZZf7xPrNK13nZN7HOLndqPL9CGuSdDJ9qLAL0=;
+        b=aHksMkaY0bfOLF4YGWrHpJunXP8ChLZqgymqufhPvjvUlQMBW+zYWk4HxMHMvTG2Rx
+         UinjHNyRwK31e5yWlwoPGYLT/1yuO+qMQjHps7S9YWwDHQUDJcVwdBM+lBHx4xU1uzbs
+         z0fgBbnUSPd77zq5xVu+vbI9/yIOMilrS+lW8k84TM4dnJOEgPCqN2FxXviCdaupWjXF
+         qonvFkgIeq7nhCi+YAZCX89WdgNecvKbGcJE3871lgze99Ekqh4qpZKk4YGe5b/AUfqV
+         xhqnSIebVFcwK4Yl7Gsab/RLVgKfOO3dpN/5ycNXwMwHQ2lFEYMYFzUI7By8pGc5758g
+         SYCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cIUoMuZZf7xPrNK13nZN7HOLndqPL9CGuSdDJ9qLAL0=;
+        b=FpS42IHBW/JwHK0hHum+e7Oj1Z/0bsA9eSRI1E4fOhtFm7ptblXdre6jCKh1ziSDbx
+         eU0fqhOWhFRlb/DwX8J8iXKbMSJnXtcuaMAZ6BIANgRST1MX5O6IFFNhNBOXIObKOlHT
+         b7GwNOwbpkuFnazr2uUJCxoSIpuD6rGM+kLqFeAVtBN5EU+YLC5hayklpHfo+r3YEwOK
+         nA5ZSd5bVIAmpp1+IepDPro7IiDOnElgubVwB2zD1G2X3tYer/D7OIMMyChTrorJ2tUZ
+         JUk14T1cAVJ5sn2nGXaxYKjX0lb0Bgp5ftEfeS/0UMfV4ScsEXF+cL6G77bHeJaRG4Hc
+         VI8A==
+X-Gm-Message-State: AOAM531AIxEqguTI6clXOyKHqIhuYaNQT5Au+Txvwbhbo7MNDuS3Mf4b
+        8QGLE38E5WQXoT5n2kGzABpxASk5/AoYvSIM
+X-Google-Smtp-Source: ABdhPJx6dbnFLhZ7MDuFHhM38QkXMiYpll2mngkNeR4LtTxRQ3E4kuhKYb8BAh+NsaRxPUBfrfk9DA==
+X-Received: by 2002:ac8:140b:: with SMTP id k11mr2652883qtj.287.1598977999442;
+        Tue, 01 Sep 2020 09:33:19 -0700 (PDT)
+Received: from leah-Ubuntu ([2601:4c3:200:c230:4970:3d06:3c98:c0eb])
+        by smtp.gmail.com with ESMTPSA id t140sm2180065qke.125.2020.09.01.09.33.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Sep 2020 09:33:19 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 12:33:16 -0400
+From:   Leah Rumancik <leah.rumancik@gmail.com>
+To:     Martin KaFai Lau <kafai@fb.com>
+Cc:     bpf@vger.kernel.org, linux-block@vger.kernel.org,
+        orbekk@google.com, harshads@google.com, jasiu@google.com,
+        saranyamohan@google.com, tytso@google.com, bvanassche@google.com
+Subject: Re: [RFC PATCH 2/4] bpf: add protect_gpt sample program
+Message-ID: <20200901163315.GC5599@leah-Ubuntu>
+References: <20200812163305.545447-1-leah.rumancik@gmail.com>
+ <20200812163305.545447-3-leah.rumancik@gmail.com>
+ <20200813225858.xuy7lbz3kaehvtgq@kafai-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901120006.9545-1-linmiaohe@huawei.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200813225858.xuy7lbz3kaehvtgq@kafai-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 08:00:06AM -0400, Miaohe Lin wrote:
-> When bio is full, __bio_iov_iter_get_pages() would return error directly
-> while left page reference still held in pages. Release these references.
-> Also advance the iov_iter according to what we have done successfully.
+On Thu, Aug 13, 2020 at 03:58:58PM -0700, Martin KaFai Lau wrote:
+> Please add new tests to tools/testing/selftests/bpf/.
 > 
-> Fixes: 576ed9135489 ("block: use bio_add_page in bio_iov_iter_get_pages")
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> Also use skeleton.  Check how tools/testing/selftests/bpf/prog_tests/sk_lookup.c
+> use test_sk_lookup__open_and_load() from #include "test_sk_lookup.skel.h".
+> Its bpf prog is in tools/testing/selftests/bpf/progs/test_sk_lookup.c.
 
-The WARN_ON means something is fundamentally wrong here.  I think a few
-leaked pages are the least of our problems in this case.
+I'll add this in the next version.
+
+Thanks,
+Leah
