@@ -2,82 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16EF7258DD8
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 14:04:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4894258F73
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 15:50:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgIAMEK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 08:04:10 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728036AbgIAMBp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:01:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8EF14AABD7F2EA51D1C1;
-        Tue,  1 Sep 2020 20:01:27 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 20:01:17 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] block: Fix potential page reference leak in __bio_iov_iter_get_pages()
-Date:   Tue, 1 Sep 2020 08:00:06 -0400
-Message-ID: <20200901120006.9545-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        id S1728286AbgIANsy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 09:48:54 -0400
+Received: from mx2.veeam.com ([12.182.39.6]:40438 "EHLO mx2.veeam.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727906AbgIANbI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:31:08 -0400
+Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx2.veeam.com (Postfix) with ESMTPS id 1A91341364;
+        Tue,  1 Sep 2020 09:30:18 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
+        t=1598967018; bh=umHfvOL0J1ZkxkzjujOKSRjD07bmjbQWixfcQCpw0uI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To:From;
+        b=UgcD+WupLi7EW3I9d/5JdtcO3zzYeAgEio3FVeuj2Xsy58gMNQRGq2C/0g1Fl7sz6
+         yV0tX8ohZs6DqYVLjwth3GJ9i6RTpYyZkcy5FtyBPcHRo5TRXrzCoKyFWWsQRFv0hU
+         9ZHXkSqf0HzwAOVHLLyEC+QkxsD2lX5SLAArkE58=
+Received: from veeam.com (172.24.14.5) by prgmbx01.amust.local (172.24.0.171)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.595.3; Tue, 1 Sep 2020
+ 15:30:15 +0200
+Date:   Tue, 1 Sep 2020 16:29:57 +0300
+From:   Sergei Shtepa <sergei.shtepa@veeam.com>
+To:     Jens Axboe <axboe@kernel.dk>
+CC:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "koct9i@gmail.com" <koct9i@gmail.com>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "steve@sk2.org" <steve@sk2.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 0/1] block io layer filters api
+Message-ID: <20200901132957.GA18251@veeam.com>
+References: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
+ <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
+X-Originating-IP: [172.24.14.5]
+X-ClientProxiedBy: prgmbx02.amust.local (172.24.0.172) To prgmbx01.amust.local
+ (172.24.0.171)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29C604D26B63716B
+X-Veeam-MMEX: True
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx2.veeam.com [172.18.16.6]); Tue, 01 Sep 2020 09:30:18 -0400 (EDT)
+X-Veeam-MailScanner-Information: Please contact email@veeam.com if you have any problems
+X-Spam-Status: No
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When bio is full, __bio_iov_iter_get_pages() would return error directly
-while left page reference still held in pages. Release these references.
-Also advance the iov_iter according to what we have done successfully.
+The 08/28/2020 16:54, Jens Axboe wrote:
+> On 8/27/20 1:13 PM, Sergei Shtepa wrote:
+> > Hello everyone! Requesting for your comments and suggestions.
+> > 
+> > We propose new kernel API that should be beneficial for out-of-tree
+> > kernel modules of multiple backup vendors: block layer filter API.
+> 
+> That's just a non-starter, I'm afraid. We generally don't carry
+> infrastructure in the kernel for out-of-tree modules, that includes
+> even exports of existing code.
+> 
+> If there's a strong use case *in* the kernel, then such functionality
+> could be entertained.
+> 
+> -- 
+> Jens Axboe
+>
 
-Fixes: 576ed9135489 ("block: use bio_add_page in bio_iov_iter_get_pages")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- block/bio.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+To be honest, we've always dreamed to include our out-of-tree module into
+the kernel itself - so if you're open to that, that is great news indeed!
 
-diff --git a/block/bio.c b/block/bio.c
-index a9931f23d933..e113073958cb 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1023,7 +1023,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 				put_page(page);
- 		} else {
- 			if (WARN_ON_ONCE(bio_full(bio, len)))
--                                return -EINVAL;
-+				goto put_pages;
- 			__bio_add_page(bio, page, len, offset);
- 		}
- 		offset = 0;
-@@ -1031,6 +1031,19 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 
- 	iov_iter_advance(iter, size);
- 	return 0;
-+
-+put_pages:
-+	/* Advance iov_iter to what we have done yet. */
-+	iov_iter_advance(iter, size - left);
-+	/* Put the page references still held by pages. */
-+	for (; left > 0; left -= len, i++) {
-+		struct page *page = pages[i];
-+
-+		len = min_t(size_t, PAGE_SIZE - offset, left);
-+		put_page(page);
-+		offset = 0;
-+	}
-+	return -EINVAL;
- }
- 
- static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
+We've spent some time before responding to estimate how long it will take
+us to update the current source code to meet coding requirements.
+It looks like we will need 2-4 months of development and QC, and possibly
+much more to work on your feedback thereafter.
+This is much work, but we are fully committed to this if you are willing
+to include this module into the kernel.
+
+However, the same time requirement also presents a big immediate problem -
+as until this is done, over a hundred thousands of Linux users will not be
+able to protect their servers running the impacted kernels
+(our backup agent is free).
+They will be forced to stop using the new version of the kernel
+(or take a risk of data loss).
+
+Given that, is there any chance that you accept the proposed patch now, to
+restore the ability to protect their Linux machines - and buy us time to 
+deliver the compliant module for inclusion into the kernel?
+
 -- 
-2.19.1
-
+Sergei Shtepa
+Veeam Software developer.
