@@ -2,148 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA7D2591A7
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 16:54:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D024B259169
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 16:50:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgIAOyH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 10:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
+        id S1728689AbgIAOud (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 10:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728637AbgIAOtv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 10:49:51 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD56C061246
-        for <linux-block@vger.kernel.org>; Tue,  1 Sep 2020 07:49:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id a8so651668plm.2
-        for <linux-block@vger.kernel.org>; Tue, 01 Sep 2020 07:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bv5b6EVobqUNVIF87/DhH+cY3Q1HWbgPFf0dl3Olwio=;
-        b=CMipeE03VR2QYd8nNYYHCTHPEJ1IdeFQMtTtnIpV/ee4MfCFYBft28C9Z4GIQo5zBV
-         QK2gfzj3Lpql1P1iBv4jZiYTXLyHgovXgqQQLVy76+locmo3vFm7G8IW78U6hSLjWo7C
-         TmvExCXdwMAaqW+bR3RRmdaQKZIoFbMkIauAd4Zew6KCdayaeAjIDHW6XrU23yriK2g2
-         5Q89cEUh6IL2lzZJX+Qf7KP7yzHzSFg6msQOEJiQKJLe5dli7EmEZ2MIJzwXeCgPjFMv
-         f5rmHep1MxFV7CqvQH9xpVPyf7UJMS2PB90qgeGaBr0u7DCp24xr/+nuCabqF2zMIkui
-         Rk1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bv5b6EVobqUNVIF87/DhH+cY3Q1HWbgPFf0dl3Olwio=;
-        b=d6LHe+5jPh1FRwWXUyAniBTenRYliYGAWDXcDvEX8tHNmuZnBlQhezdhgPMbS/A2Th
-         N8dhsMN9rV4jTajrPZQ40M5bQg372wJaSQ+ogYBKzLmX1Elaug8IO5GMv4u2Go0bul43
-         w/ArEvfR4IuwVHlesKNBerpeOcjl/Zj1+/ct7X7CWj+x0wrs/q1KgghzXH42u+omOuOm
-         qnCrXE7nLGOlKq4AsgBKmifh7Bx7pJny4sAy0tnStmkc9DQiP6iHoDYtEE2Sh6oHgr/r
-         DJ7+8d5qCZa7vGaWnkNqMMr6F5xb9zxP+CR67kqgWa6Wd3HfKNj0WWhv4T8qDRq3ijWo
-         Pcxg==
-X-Gm-Message-State: AOAM533Ps9yJkNt4FgWJl0I7P9eEaqi5m9MvDObnCTnhmkBte4Vngt/7
-        WW49kPCoam9gajzW1aDgaDrKDZZ8iy6gMSBn
-X-Google-Smtp-Source: ABdhPJwJT6OaFInhGXji8NM/sg0H1Gpqx+OhIP3Jac20+0b+pSpDpPp7UHpR6y/5tKsCNyF4pj13sg==
-X-Received: by 2002:a17:90a:c086:: with SMTP id o6mr1911513pjs.224.1598971789688;
-        Tue, 01 Sep 2020 07:49:49 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id s67sm2304633pfs.117.2020.09.01.07.49.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 07:49:49 -0700 (PDT)
-Subject: Re: [PATCH 0/1] block io layer filters api
-To:     Sergei Shtepa <sergei.shtepa@veeam.com>
-Cc:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
-        "koct9i@gmail.com" <koct9i@gmail.com>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "steve@sk2.org" <steve@sk2.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
- <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
- <20200901132957.GA18251@veeam.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <722e85ac-f494-2cb3-4caf-d903d79a5645@kernel.dk>
-Date:   Tue, 1 Sep 2020 08:49:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S1728681AbgIAOu2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 10:50:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7277CC061244;
+        Tue,  1 Sep 2020 07:50:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3Rt/RZHQFZtQJpY49CCYUhZi6SfUgNAgVHQnBlTr1a8=; b=p0kE1kiXY5lbGjtOOeelZHKPdk
+        7iMPjVGysg30dWVyHTYa/7qTF85jbeQApGpvwh9vLRAeSov9Kkw9pyOYtg6MLHPei5ysnPcg/D0wP
+        OVFO7sIcqeFGxFQF+OWY+FNImcPS1QlADW1bKTujj68AEqLLCmI22G2oHbx/iSdPe6dZJqZ0ndze2
+        wdSk3Lg3vBJLzB0pSQXyzKM7zWDzdte/mlFQmSFd1sb7kZifW1JTL+PcnrV+c878uuvpb5Zz2eth7
+        EZ58fYYp9C0RNZ+YM3mPSztxfw3WkMAdW64l27FlJElaZ++LGU7SJUCyKFQ5EOgkvEaxpEY4s7y+c
+        juZfy6Iw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD7c9-0006mc-FV; Tue, 01 Sep 2020 14:50:25 +0000
+Date:   Tue, 1 Sep 2020 15:50:25 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] block: Add bio_for_each_thp_segment_all
+Message-ID: <20200901145025.GA23220@infradead.org>
+References: <20200824151700.16097-1-willy@infradead.org>
+ <20200824151700.16097-5-willy@infradead.org>
+ <20200827084431.GA15909@infradead.org>
+ <20200831194837.GJ14765@casper.infradead.org>
+ <20200901053426.GB24560@infradead.org>
+ <20200901130525.GK14765@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200901132957.GA18251@veeam.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901130525.GK14765@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/1/20 7:29 AM, Sergei Shtepa wrote:
-> The 08/28/2020 16:54, Jens Axboe wrote:
->> On 8/27/20 1:13 PM, Sergei Shtepa wrote:
->>> Hello everyone! Requesting for your comments and suggestions.
->>>
->>> We propose new kernel API that should be beneficial for out-of-tree
->>> kernel modules of multiple backup vendors: block layer filter API.
->>
->> That's just a non-starter, I'm afraid. We generally don't carry
->> infrastructure in the kernel for out-of-tree modules, that includes
->> even exports of existing code.
->>
->> If there's a strong use case *in* the kernel, then such functionality
->> could be entertained.
->>
->> -- 
->> Jens Axboe
->>
+On Tue, Sep 01, 2020 at 02:05:25PM +0100, Matthew Wilcox wrote:
+> > >                 struct page *page = bvec->bv_page;
+> > > 
+> > >                 while (length > 0) { 
+> > >                         size_t count = thp_size(page) - offset;
+> > >                         
+> > >                         if (count > length)
+> > >                                 count = length;
+> > >                         iomap_read_page_end_io(page, offset, count, error);
+> > >                         page += (offset + count) / PAGE_SIZE;
+> > 
+> > Shouldn't the page_size here be thp_size?
 > 
-> To be honest, we've always dreamed to include our out-of-tree module
-> into the kernel itself - so if you're open to that, that is great news
-> indeed!
+> No.  Let's suppose we have a 20kB I/O which starts on a page boundary and
+> the first page is order-2.  To get from the first head page to the second
+> page, we need to add 4, which is 16kB / 4kB, not 16kB / 16kB.
 
-We're always open to that, provided that a promise is made to maintain
-the in-kernel version. Sometimes we see submissions that end up being an
-over-the-wall kind of dump, and then the vendor only maintains their own
-out-of-tree version after the fact and point customers at that one too.
-For those cases we don't want the driver, as it just becomes a
-maintenance hassle for us.
+True.
 
-So if you are serious about this, it's important to set and manage
-internal expectations on how the driver is developed and maintained
-going forward. The upstream driver *must* be the canonical version, and
-if you want and need to have versions for older kernels available, then
-it should be based on backports of the current in-tree driver.
+> I'm not entirely sure the bvec would shrink.  On 64-bit systems, it's
+> currently 8 bytes for the struct page, 4 bytes for the len and 4 bytes
+> for the offset.  Sure, we can get rid of the offset, but the compiler
+> will just pad the struct from 12 bytes back to 16.  On 32-bit systems
+> with 32-bit phys_addr_t, we go from 12 bytes down to 8, but most 32-bit
+> systems have a 64-bit phys_addr_t these days, don't they?
 
-> We've spent some time before responding to estimate how long it will
-> take us to update the current source code to meet coding requirements.
-> It looks like we will need 2-4 months of development and QC, and
-> possibly much more to work on your feedback thereafter. This is much
-> work, but we are fully committed to this if you are willing to include
-> this module into the kernel.
+Actually on those system that still are 32-bit because they are so
+tiny I'd very much still expect a 32-bit phys_addr_t.  E.g. arm
+without LPAE or 32-bit RISC-V.
 
-Honestly I don't think that is that much work, and I wouldn't personally
-be too worried about that being succesful. Complications are generally
-mostly around APIs, since an in-tree driver might need to change how you
-communicate with the driver. So yes, it'll be some work, but the
-important part is how we treat the maintenance of it after all that is
-said and done.
+But yeah, point taken on the alignment for the 64-bit ones.
 
-> However, the same time requirement also presents a big immediate
-> problem - as until this is done, over a hundred thousands of Linux
-> users will not be able to protect their servers running the impacted
-> kernels (our backup agent is free). They will be forced to stop using
-> the new version of the kernel (or take a risk of data loss).
+> That's a bit more boilerplate than I'd like, but if bio_vec is going to
+> lose its bv_page then I don't see a better way.  Unless we come up with
+> a different page/offset/length struct that bio_vecs are decomposed into.
 
-You have plenty of time to get this done before it becomes a problem.
-It's not like the current patches are going to -stable.
-
-> Given that, is there any chance that you accept the proposed patch
-> now, to restore the ability to protect their Linux machines - and buy
-> us time to deliver the compliant module for inclusion into the kernel?
-
-I'm afraid not, we simply cannot allow exposing internals like that for
-a use case that isn't currently covered by existing in-tree drivers.
-
--- 
-Jens Axboe
-
+I'm not sure it is going to lose bv_page any time soon.  I'd sure like
+to, but least time something like that came up Linus wasn't entirely
+in favor.  Things might have changed now, though and I think it is about
+time to give it another try.
