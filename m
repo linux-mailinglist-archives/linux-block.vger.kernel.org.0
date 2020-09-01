@@ -2,79 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78B2F259273
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 17:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BECD5259632
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 18:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgIAPMg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Sep 2020 11:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51454 "EHLO
+        id S1731874AbgIAP75 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 11:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728184AbgIAPMc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 11:12:32 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B232C061244
-        for <linux-block@vger.kernel.org>; Tue,  1 Sep 2020 08:12:32 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id f18so944736pfa.10
-        for <linux-block@vger.kernel.org>; Tue, 01 Sep 2020 08:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Cmf60kaJnLulg3nAlNSWgeIZ5TjNS3h/lBYUaqJ+ijw=;
-        b=PUXtWENMVYij/8AtBgV+4W8+/5W2969p/IUR9ILXAOvur9w1a9yuX66ytR5HfSHRK6
-         oQ/1dTamqXUwKXceOL61TXZOEDAJkX5GKHRlXFT8UaZpx/efMtEN1OoIZXvxL6Z2Nwg2
-         F8zV9kv3m1pvIAjpn2xBBBo6B6HFD+oPoGGAH7zjOv77GFwpyZiln1nf49PHwFKLobQj
-         oCWw/WruUY28QerNJaSGhVMg5/EKPSrJpdgxfjuSMnPIrGXFghAWZY3MC/4/rTFDZ+mV
-         bTafXLOggtmKtV/UTSs16opGn6lAsTUtooyMvLlpp4v6RE8kb1Vee8Y53s4HzK1yN225
-         geSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cmf60kaJnLulg3nAlNSWgeIZ5TjNS3h/lBYUaqJ+ijw=;
-        b=nNPNNMOCSJVyup/3ySQAGnrAkPHItxlczT/2bWXUo6plapTjPmgHAWvMt+twgRBwb8
-         iA6AESmpnEVRIzoW91NvEIH8pAhuDrWY9BnmwKCzhjkIf7b0zhpxB6UproGXCzzcGh4E
-         jpIGeN6UkCBRSCtprd+mGY0UDuB3OcKm9OhcQxmVZzvoLDzT4tskTwlzKbs2GbQoLpu6
-         ulU4UqL1rok9Ol9eoHomd+hvoYii6GwmsAjcPX94d/VRq39OhPNsJpCqgIEQ6TtrI8wy
-         BLEprltlyxfsJf1fx6dHqLL8nRtpoKx45NX0liKQ9YVhLwUz8bM0IVwsEtOd/GuUw+xC
-         V75w==
-X-Gm-Message-State: AOAM531FsBbT1NAI63ZI+8QU0+C3TScfA1V93+X87MXH8qLJrlGPAGu8
-        3+G//pFSfZF6685HSkKdkgwM9NLZ1mHEShof
-X-Google-Smtp-Source: ABdhPJwaSfX8F6fx/bDTrbxrhtb+/nRpHK/9BtWiLlneV1Q6RJn7SVQ/xhXxCBgUasXWdaV9UjS3PQ==
-X-Received: by 2002:aa7:9d8b:: with SMTP id f11mr2266050pfq.5.1598973148416;
-        Tue, 01 Sep 2020 08:12:28 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id p24sm1835504pju.57.2020.09.01.08.12.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 08:12:27 -0700 (PDT)
-Subject: Re: misc cleanups
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org
-References: <20200831180239.2372776-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4c0c026a-7363-0b90-3da2-4b06712fcae8@kernel.dk>
-Date:   Tue, 1 Sep 2020 09:12:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S1731796AbgIAP6G (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 11:58:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC2AC061247;
+        Tue,  1 Sep 2020 08:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=JssZ/9cfFlKY9nXiXN1eWHNYfq2IqPkVO48PJ0G1HVM=; b=TsLN4Ki5H6wDqMT7EkDDmICR5s
+        2ikY9tR6e67GKJEqjuS9L66bSUIo+pu5PYEAc9ljO3uyf6oMcNiepE5rzwUxhjE+/vnTmCPgENmda
+        C0OeAfERJgyA7K8KeFysVlBHyF0BPeIG7el80V9O61CNCYuSKhfujxSQgjXJOjMOSEy03HwmPQuPh
+        RJCdiSoEUrRAJIJ7z0BaLS8JSw/BmFlWFm/qiMtciExAsNyJHCr7Vvb8RIEQV1UW0Wnk6ZMFBndz3
+        +EuD/g9pjFt/AGKn2OUIwLAq2rE5vGf6lWordEqx3jg+9VI6y7EPXjBeepMY6Nus8DQ6cZOSE4OGn
+        R3KU2Xqg==;
+Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8fR-0004Op-3n; Tue, 01 Sep 2020 15:57:53 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        nbd@other.debian.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 2/9] block: don't clear bd_invalidated in check_disk_size_change
+Date:   Tue,  1 Sep 2020 17:57:41 +0200
+Message-Id: <20200901155748.2884-3-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901155748.2884-1-hch@lst.de>
+References: <20200901155748.2884-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200831180239.2372776-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/31/20 12:02 PM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series has a bunch of misc cleanups that didn't fit any other
-> series.
+bd_invalidated is set by check_disk_change or in add_disk to initiate a
+partition scan.  Move it from check_disk_size_change which is called
+from both revalidate_disk() and bdev_disk_changed() to only the latter,
+as that is what is called from the block device open code (and nbd) to
+deal with the bd_invalidated event.  revalidate_disk() on the other hand
+is mostly used to propagate a size update from the gendisk to the block
+device, which is entirely unrelated.
 
-Looks good to me, applied.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/block_dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 08158bb2e76c85..2760292045c082 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1302,7 +1302,6 @@ static void check_disk_size_change(struct gendisk *disk,
+ 		}
+ 		i_size_write(bdev->bd_inode, disk_size);
+ 	}
+-	bdev->bd_invalidated = 0;
+ 	spin_unlock(&bdev->bd_size_lock);
+ 
+ 	if (bdev_size > disk_size) {
+@@ -1391,6 +1390,8 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
+ 
+ 	lockdep_assert_held(&bdev->bd_mutex);
+ 
++	bdev->bd_invalidated = 0;
++
+ rescan:
+ 	ret = blk_drop_partitions(bdev);
+ 	if (ret)
 -- 
-Jens Axboe
+2.28.0
 
