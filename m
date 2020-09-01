@@ -2,99 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F570258FC7
-	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 16:05:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4846125908C
+	for <lists+linux-block@lfdr.de>; Tue,  1 Sep 2020 16:34:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgIAOE4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Tue, 1 Sep 2020 10:04:56 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:1764 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgIAOEt (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:04:49 -0400
-Received: from DAG2EX10-IDC.srv.huawei-3com.com ([10.8.0.73])
-        by h3cspam02-ex.h3c.com with ESMTPS id 081E3IK3046769
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Sep 2020 22:03:19 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 1 Sep 2020 22:03:22 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.1713.004; Tue, 1 Sep 2020 22:03:22 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Topic: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Index: AQHWfD0K8koEXAvdJUKfqbC/GaNLZ6lT1/Nw
-Date:   Tue, 1 Sep 2020 14:03:22 +0000
-Message-ID: <465ec9bf9b7b45fb98d7f21498328300@h3c.com>
-References: <20200827063417.35851-1-tian.xianting@h3c.com>
-In-Reply-To: <20200827063417.35851-1-tian.xianting@h3c.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728378AbgIAOen (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Sep 2020 10:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbgIAOeb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Sep 2020 10:34:31 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BE5C061244
+        for <linux-block@vger.kernel.org>; Tue,  1 Sep 2020 07:34:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o16so718910pjr.2
+        for <linux-block@vger.kernel.org>; Tue, 01 Sep 2020 07:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8crO/qCE2Vg3wDVX8UnZ4mszl4wwUVBfaRRSh4XlV3g=;
+        b=pGRMGCSDPqovSipZaI/dr2u38ZbCslbnTnCcpaY7TInbZ4vO8wLl8Ppzch1bQY5ESG
+         a+S3pCtYM66fwsBLM8bfLxPlYp4GM2MzuEPY+lX6ng83uiJXzC3+cDmqfudUaWrFKXn2
+         caWGcQNEF3EZwuyV3ZzebnHnm3g35cDueWDrEIqsSOJnXwL2IQTl0S70qaJG/Vvbg+R/
+         QUAA0v8hnXjah/+eExBgjgg7zTloxU9uo81Oip3BTwYkg4Vr4dYq8o0psndyYU00/zwT
+         2ChcPWN7UhxYHAsIcZ8FYwAShRWGDiEUdD3LWubhzvcDFFFte9e1u5IKjg0o3oCoCr1U
+         RkUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8crO/qCE2Vg3wDVX8UnZ4mszl4wwUVBfaRRSh4XlV3g=;
+        b=P4bCx5A3FmId8gAyBLsQqKgcGJcED9epkI1dlhwX6vvW9YaFrOC1wp3PHIm1AUQCHa
+         b6oSIGOLsJM1A649mszbqZMjhKIDrLX22CuCUbpYgjFaqWwI+/UqRRzklry8bJEMmclA
+         7SjBeNWpXJWcIggG7dDuMz7hZwXvUHS2mtJNwLHfrmH/zet4PobJmQ1hYr9ik/Jv1qmq
+         3gYqJJh41oqoNHMIynaulK+PZlEN43XGnL1eNO6kboU9k38kvNDYJby2N6KDqmYNg5VI
+         2JQeCLW62SFdxFQ+RbeSMm/POcYSv0DpkuD/B1wtHUoGT5HZrCYLRocEPOyy/Onnq7tk
+         yxmg==
+X-Gm-Message-State: AOAM530+eqk8xpn46QwJhhmFBS/xCojV1wA1l8zppDIdvjhXDGlMnhVz
+        pchuopIF8RQLfad1R1IQJowLm0S1FzUN5Y/z
+X-Google-Smtp-Source: ABdhPJyUzQnxqWKUuP0CAaMM4Rdzh0qFC6IpUQjeO5jga5Ut7sXfvS9wXP27xAFCM+d/Q4n+i4SwcQ==
+X-Received: by 2002:a17:902:aa04:: with SMTP id be4mr1701737plb.294.1598970869912;
+        Tue, 01 Sep 2020 07:34:29 -0700 (PDT)
+Received: from [192.168.1.187] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id b20sm2390515pfb.198.2020.09.01.07.34.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 07:34:29 -0700 (PDT)
+Subject: Re: [PATCH V2] block: release disk reference in hd_struct_free_work
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20200901100738.317061-1-ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <23652c78-5d7e-2d5b-ca3a-f0064ffb1a78@kernel.dk>
+Date:   Tue, 1 Sep 2020 08:34:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 081E3IK3046769
+In-Reply-To: <20200901100738.317061-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens
-Could I get the feedback from you whether this patch can be applied? 
-Thanks a lot.
+On 9/1/20 4:07 AM, Ming Lei wrote:
+> Commit e8c7d14ac6c3 ("block: revert back to synchronous request_queue removal")
+> stops to release request queue from wq context because that commit
+> supposed all blk_put_queue() is called in context which is allowed
+> to sleep. However, this assumption isn't true because we release disk's
+> reference in partition's percpu_ref's ->release() which doesn't allow
+> to sleep, because the ->release() is run via call_rcu().
+> 
+> Fixes this issue by moving put disk reference into hd_struct_free_work()
 
------Original Message-----
-From: tianxianting (RD) 
-Sent: Thursday, August 27, 2020 2:34 PM
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; tianxianting (RD) <tian.xianting@h3c.com>
-Subject: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
+Applied, thanks Ming.
 
-Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
-
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- block/blk-core.c     | 4 ++--
- block/blk-mq-sched.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c index d9d632639..c7eaf7504 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -116,8 +116,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
- 	rq->__sector = (sector_t) -1;
- 	INIT_HLIST_NODE(&rq->hash);
- 	RB_CLEAR_NODE(&rq->rb_node);
--	rq->tag = -1;
--	rq->internal_tag = -1;
-+	rq->tag = BLK_MQ_NO_TAG;
-+	rq->internal_tag = BLK_MQ_NO_TAG;
- 	rq->start_time_ns = ktime_get_ns();
- 	rq->part = NULL;
- 	refcount_set(&rq->ref, 1);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c index a19cdf159..439481f59 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -522,7 +522,7 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 		goto run;
- 	}
- 
--	WARN_ON(e && (rq->tag != -1));
-+	WARN_ON(e && (rq->tag != BLK_MQ_NO_TAG));
- 
- 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
- 		/*
---
-2.17.1
+-- 
+Jens Axboe
 
