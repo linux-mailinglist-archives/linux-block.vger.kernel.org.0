@@ -2,126 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2BD725AA0F
-	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 13:11:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF42525AB18
+	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 14:27:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgIBLL2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Sep 2020 07:11:28 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54864 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgIBLL0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 07:11:26 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 082B9xWe021165;
-        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
- Wed, 02 Sep 2020 20:09:59 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 082B9tPc021145
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: [PATCH] tipc: fix shutdown() of connectionless socket
-To:     syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>
-References: <0000000000003feb9805a9c77128@google.com>
-Cc:     syzkaller-bugs@googlegroups.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <1eb799fb-c6e0-3eb5-f6fe-718cd2f62e92@I-love.SAKURA.ne.jp>
-Date:   Wed, 2 Sep 2020 20:09:54 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726686AbgIBM1E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Sep 2020 08:27:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22435 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726377AbgIBM1C (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 08:27:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599049620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9eHg4n9Mrbjk8IN5UH1B1k5VMpWNZ5atFdJ2hB4iC3M=;
+        b=ZUSeBv5pxkMXTL6dm16i4B/2+ffbHNcXg1sy0OkOjxh+yB0Z7CUE1HuWblf5dhQMw8PR3/
+        2gYBqLhwT95SYhjXC1xrlIO+XKzQVZ0BU/Oltfj7DmcJwc2pMQzm9+HkpL49pPm9hCHYjw
+        +u+dIDkN9/VOIqgQ6nIVbZyWZX2VSFw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-puG_S4o8M2q_OG0lkFs1QQ-1; Wed, 02 Sep 2020 08:26:57 -0400
+X-MC-Unique: puG_S4o8M2q_OG0lkFs1QQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37AE41888A3E;
+        Wed,  2 Sep 2020 12:26:55 +0000 (UTC)
+Received: from localhost (ovpn-12-189.pek2.redhat.com [10.72.12.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 65D7665F5E;
+        Wed,  2 Sep 2020 12:26:51 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Tejun Heo <tj@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH V2 0/2] percpu_ref & block: reduce memory footprint of percpu_ref in fast path
+Date:   Wed,  2 Sep 2020 20:26:41 +0800
+Message-Id: <20200902122643.634143-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000003feb9805a9c77128@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-syzbot is reporting hung task at nbd_ioctl() [1], for there are two
-problems regarding TIPC's connectionless socket's shutdown() operation.
-I found C reproducer for this problem (shown below) from "no output from
-test machine (2)" report.
+Hi,
 
-----------
+The 1st patch removes memory footprint of percpu_ref in fast path
+from 7 words to 2 words, since it is often used in fast path and
+embedded in user struct.
 
-int main(int argc, char *argv[])
-{
-        const int fd = open("/dev/nbd0", 3);
-        ioctl(fd, NBD_SET_SOCK, socket(PF_TIPC, SOCK_DGRAM, 0));
-        ioctl(fd, NBD_DO_IT, 0);
-        return 0;
-}
-----------
+The 2nd patch moves .q_usage_counter to 1st cacheline of
+'request_queue'.
 
-One problem is that wait_for_completion() from flush_workqueue() from
-nbd_start_device_ioctl() from nbd_ioctl() cannot be completed when
-nbd_start_device_ioctl() received a signal at wait_event_interruptible(),
-for tipc_shutdown() from kernel_sock_shutdown(SHUT_RDWR) from
-nbd_mark_nsock_dead() from sock_shutdown() from nbd_start_device_ioctl()
-is failing to wake up a WQ thread sleeping at wait_woken() from
-tipc_wait_for_rcvmsg() from sock_recvmsg() from sock_xmit() from
-nbd_read_stat() from recv_work() scheduled by nbd_start_device() from
-nbd_start_device_ioctl(). Fix this problem by always invoking
-sk->sk_state_change() (like inet_shutdown() does) when tipc_shutdown() is
-called.
+Simple test on null_blk shows ~2% IOPS boost on one 16cores(two threads
+per core) machine, dual socket/numa.
 
-The other problem is that tipc_wait_for_rcvmsg() cannot return when
-tipc_shutdown() is called, for tipc_shutdown() sets sk->sk_shutdown to
-SEND_SHUTDOWN (despite "how" is SHUT_RDWR) while tipc_wait_for_rcvmsg()
-needs sk->sk_shutdown set to RCV_SHUTDOWN or SHUTDOWN_MASK. Fix this
-problem by setting sk->sk_shutdown to SHUTDOWN_MASK (like inet_shutdown()
-does) when the socket is connectionless.
+V2:
+	- pass 'gfp' to kzalloc() for fixing block/027 failure reported by
+	kernel test robot
+	- protect percpu_ref_is_zero() with destroying percpu-refcount by
+	spin lock  
 
-[1] https://syzkaller.appspot.com/bug?id=3fe51d307c1f0a845485cf1798aa059d12bf18b2
+Ming Lei (2):
+  percpu_ref: reduce memory footprint of percpu_ref in fast path
+  block: move 'q_usage_counter' into front of 'request_queue'
 
-Reported-by: syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- net/tipc/socket.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/infiniband/sw/rdmavt/mr.c |   2 +-
+ include/linux/blkdev.h            |   3 +-
+ include/linux/percpu-refcount.h   |  45 ++++-------
+ lib/percpu-refcount.c             | 128 ++++++++++++++++++++++--------
+ 4 files changed, 115 insertions(+), 63 deletions(-)
 
-diff --git a/net/tipc/socket.c b/net/tipc/socket.c
-index 2679e97e0389..ebd280e767bd 100644
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -2771,18 +2771,21 @@ static int tipc_shutdown(struct socket *sock, int how)
- 
- 	trace_tipc_sk_shutdown(sk, NULL, TIPC_DUMP_ALL, " ");
- 	__tipc_shutdown(sock, TIPC_CONN_SHUTDOWN);
--	sk->sk_shutdown = SEND_SHUTDOWN;
-+	if (tipc_sk_type_connectionless(sk))
-+		sk->sk_shutdown = SHUTDOWN_MASK;
-+	else
-+		sk->sk_shutdown = SEND_SHUTDOWN;
- 
- 	if (sk->sk_state == TIPC_DISCONNECTING) {
- 		/* Discard any unreceived messages */
- 		__skb_queue_purge(&sk->sk_receive_queue);
- 
--		/* Wake up anyone sleeping in poll */
--		sk->sk_state_change(sk);
- 		res = 0;
- 	} else {
- 		res = -ENOTCONN;
- 	}
-+	/* Wake up anyone sleeping in poll. */
-+	sk->sk_state_change(sk);
- 
- 	release_sock(sk);
- 	return res;
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Bart Van Assche <bvanassche@acm.org>
 -- 
-2.18.4
-
+2.25.2
 
