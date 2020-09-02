@@ -2,67 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F8C25ADDF
-	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 16:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBAF525ADE1
+	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 16:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgIBODT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Sep 2020 10:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
+        id S1727075AbgIBOtZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Sep 2020 10:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgIBOCd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 10:02:33 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E90C061244
-        for <linux-block@vger.kernel.org>; Wed,  2 Sep 2020 07:02:33 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h4so5862739ioe.5
-        for <linux-block@vger.kernel.org>; Wed, 02 Sep 2020 07:02:33 -0700 (PDT)
+        with ESMTP id S1726936AbgIBODD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 10:03:03 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6A6C061246
+        for <linux-block@vger.kernel.org>; Wed,  2 Sep 2020 07:02:51 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id d190so5878409iof.3
+        for <linux-block@vger.kernel.org>; Wed, 02 Sep 2020 07:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lDkSul+1X+RjRffnEyrjfRLNLhJmksxTsX1AB+/HFZE=;
-        b=DGna4WEYAKm+GxbC4EXVOI19nH3MAqxS8oOklLe6cjf0oCUQy3fZdZnuRNDEm2ryHs
-         4H5pMhYr4q+E31tMFwXx3mGgCMp5FeiLWVzU4oGfFUdZeAxsZ/yAv2H8hd4Q7MlOv9Ir
-         9sVmDlzAp9L7waqE7Mjll9U7E3m7VvNDmcbHGSdv5UBvLlBOUpccX9IobYDxb36t0oBS
-         7/2qcWRfI/DMC3rMFxRfBSQl3yUkMyar18BijK6EWrxdNKnPHtEIdnOZSidxFJyUDn5n
-         gYbGtwYZSogDRv8CnOeKbnuxJy63+EHDxcoUBqqjeQRLKAdASi+x8Uj9+vOj3bHj6bgx
-         qQgg==
+        bh=Ku7e+DesYlsL/c7k5HJw65rc3jrpfmGqzPu51jyJxJY=;
+        b=DEE5OKKGh1r8VHsSbRDOHXyr0EY/JZmo9R9NjqSjJKawRaCP4hU7gd7TYcJP/9YZM7
+         f9ePonEEbp/l91A6T4zFQxTQLDeZxmy0LMYDoRrMahsz8WSo30cFpFYAnwscMWxFdIlp
+         oD8CXLDbgxFmE3UimYbtHYWaCjvm1HLjDP1Jf/oc196Q0dgg3xrDzjQ3BN32QyrfzGEu
+         BAA+ZfhsIf58ZQsISLcJD7bVqjEF28U7NRblbSxZYn9AOlHAjsBMyhDBaU/uxguqX2OT
+         X2fZVbjEQa6505uyiqaXXm9chdV79wx7RHjRntV/V2w1d3oytjJ926JWuLbQ8ZonRWBw
+         7Msg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lDkSul+1X+RjRffnEyrjfRLNLhJmksxTsX1AB+/HFZE=;
-        b=arUOuU+tOoqoG1NeNkvtMpJ2+G9gBV0m4UNuGXWdFrCYioTfsjjSCcdorUIM0z37OR
-         e3UeUSeIoUbnyMv+qU2jO+xXjKcGqH1Mdp206YWJgkToqb1aE/MzM/VAr5S88jfNkCsV
-         f/cncujLpQbUILvlpQNy6v6qUI8QqJJF9vYwdQSsz5qnlDn3nA/Li2DTOhszEhq8cekv
-         8JMPYojrmB/8xGcko/u4RFlCRPzwO/ujF+qn5odn2ersvPmct8x4pwUHJR4/grojRTNy
-         2MlXrktwNgn6g55pthepucP9vr+rtBIpZN3GDNDx6NyvRJxMVBDx88t0SKgpC5YIcoWJ
-         trPQ==
-X-Gm-Message-State: AOAM531MvZGjLaU+tjceQLu7p8K+q+5clT5XjA9YLqu97CNSKHwOnXa7
-        5MZSTUYrc0EoK/pRvbcIW3HHPQ==
-X-Google-Smtp-Source: ABdhPJz2H+GfqNyAOWulkP0kGwX7sZTZpsFflW3DrLwTCen2K0siMO2BGfAyARHIbAQRCHZrx3Ln3A==
-X-Received: by 2002:a6b:5804:: with SMTP id m4mr3053243iob.14.1599055352059;
-        Wed, 02 Sep 2020 07:02:32 -0700 (PDT)
+        bh=Ku7e+DesYlsL/c7k5HJw65rc3jrpfmGqzPu51jyJxJY=;
+        b=sK3S21U/lA/ebGcwNlWGj8FiZTMPUm0QtY5ecmq6DBWgA75SDkToUIwuQz5FazzsCe
+         hQPCZY7Xc9IrWL6X0oA9jjsLf+2CLtauKq8a+V8tIAFQgRpQHlkZGdU0S12T9ncWVEoB
+         Xwf1iWhzddW5tzDYnJ0SubhBjexqzgfYskl819B70JfZFTKV5bZx7Rn4WoEGX0YOr+2U
+         bHJE7Wy1X2rHxnIgzABPHY32imVXqDlnaKskYFfzIVOkITfy+VI88jWFs1LxL/i03q0y
+         UvsR0yfNMNYUN6hYRK2o1dQRZ0J//mWVnMePDh0uBAI7ZZPgMxpuRAeImqavtZwjDYNZ
+         fI7g==
+X-Gm-Message-State: AOAM5330DNdD3HLKDD4Cp8ShnWOo3uqmf1Y48RmXyEaNORmo9d1K7XXv
+        fQABpj1UrUhIdQBj7FMND83+SQ==
+X-Google-Smtp-Source: ABdhPJxFrZXWesZv0xLmVsuUB1MDZ450c11yMQmgXL3dPEcVh+WgJjGeEIGPOaG+O49/dxLkaoYMdQ==
+X-Received: by 2002:a05:6602:2043:: with SMTP id z3mr3472576iod.93.1599055371125;
+        Wed, 02 Sep 2020 07:02:51 -0700 (PDT)
 Received: from [192.168.1.57] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z10sm2037885ioi.13.2020.09.02.07.02.30
+        by smtp.gmail.com with ESMTPSA id s10sm616030ilo.53.2020.09.02.07.02.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 07:02:31 -0700 (PDT)
-Subject: Re: [PATCH V2 0/2] percpu_ref & block: reduce memory footprint of
- percpu_ref in fast path
-To:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Tejun Heo <tj@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20200902122643.634143-1-ming.lei@redhat.com>
+        Wed, 02 Sep 2020 07:02:50 -0700 (PDT)
+Subject: Re: remove revalidate_disk()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        nbd@other.debian.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200901155748.2884-1-hch@lst.de>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4ce7b53b-2c42-3814-fa0a-5324aca6aae0@kernel.dk>
-Date:   Wed, 2 Sep 2020 08:02:30 -0600
+Message-ID: <78d5ab8a-4387-7bfb-6e25-07fd6c1ddc10@kernel.dk>
+Date:   Wed, 2 Sep 2020 08:02:49 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200902122643.634143-1-ming.lei@redhat.com>
+In-Reply-To: <20200901155748.2884-1-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,28 +75,18 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/2/20 6:26 AM, Ming Lei wrote:
-> Hi,
+On 9/1/20 9:57 AM, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> The 1st patch removes memory footprint of percpu_ref in fast path
-> from 7 words to 2 words, since it is often used in fast path and
-> embedded in user struct.
-> 
-> The 2nd patch moves .q_usage_counter to 1st cacheline of
-> 'request_queue'.
-> 
-> Simple test on null_blk shows ~2% IOPS boost on one 16cores(two threads
-> per core) machine, dual socket/numa.
-> 
-> V2:
-> 	- pass 'gfp' to kzalloc() for fixing block/027 failure reported by
-> 	kernel test robot
-> 	- protect percpu_ref_is_zero() with destroying percpu-refcount by
-> 	spin lock  
-> 
-> Ming Lei (2):
->   percpu_ref: reduce memory footprint of percpu_ref in fast path
->   block: move 'q_usage_counter' into front of 'request_queue'
+> this series removes the revalidate_disk() function, which has been a
+> really odd duck in the last years.  The prime reason why most people
+> use it is because it propagates a size change from the gendisk to
+> the block_device structure.  But it also calls into the rather ill
+> defined ->revalidate_disk method which is rather useless for the
+> callers.  So this adds a new helper to just propagate the size, and
+> cleans up all kinds of mess around this area.  Follow on patches
+> will eventuall kill of ->revalidate_disk entirely, but ther are a lot
+> more patches needed for that.
 
 Applied, thanks.
 
