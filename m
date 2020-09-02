@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6CD25ACD1
-	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 16:20:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBFE125ACAF
+	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 16:17:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgIBOSq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Sep 2020 10:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38200 "EHLO
+        id S1728013AbgIBONl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Sep 2020 10:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgIBONl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 10:13:41 -0400
+        with ESMTP id S1727986AbgIBONL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 10:13:11 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49748C061260;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA39C061258;
         Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=CokwUhLtLY+HJBUS4+kWwYLSBZUJwKz5SbJHqq17dNs=; b=SW4/1Cus8zucI7mRVW3pLPOZeM
-        OA6Jf0mCg1e5zkZ41HHf9dYC6fdERqMp5FaNIe2Fa7R4lcDIeI4f+T7VSEbl9lxGkkMyYoTCnmLZH
-        PWvpJQNYle1aRTDKNa+DdqCN3ukHeyrO62x6TBozywantj7TW96MeBfF3/dKy4GDSfcKes9K/99Qq
-        NwIt+E5VEk91o2H4+Fh3ohx9Md6zRjAY5hsA4PYWFaNOw8QLoVkGXStd50ILFYlOQANnyrSnKWwRn
-        dYK8nXKAN6Qr0hRmTwk0bgphSVxhazcj11VZ6DY8nNpdiC4KIkKT+hZXk3eIigLa6amEDVxpnXp9N
-        /JpNKqzw==;
+        bh=F3ySvW+0LV/eEp4ukNxLWcqNSpE01eTInOOTJQ8Lr18=; b=G7X44HiRcM/JgcWlZooMaP4koW
+        rcfEa3NDJkcDkQKo8ORctDDkXQ5IseKhAws17oXMoud7xM2TlcsfR/GqWZvJ75mlyalzSDqid/81C
+        PAMCykjZi+PpLdP2yzYKuVt9+tFvVmIEZtbSe1zF2Yhr87Bnn0ktPOM2Q6AsFj/MDh07bvgDsHP9E
+        oZh/erionLIYWEtxl7f/8F700PmHfi6W6QYGTGNoRy4a/2gsckqgfiWOBqXX3g9wTDAgGG0T59Pea
+        7zGDP0q4DYNPXWRB+c5iVq2k3wL7Ys8qFaGX0hz/qWZrpj8Oz5/qWXDh/YKV78xpBK26bi+limiW5
+        xnQ16DeQ==;
 Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTUv-0005d1-Hs; Wed, 02 Sep 2020 14:12:25 +0000
+        id 1kDTV4-0005eB-Gm; Wed, 02 Sep 2020 14:12:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
@@ -41,9 +41,9 @@ Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
         linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 04/19] floppy: use bdev_check_media_change
-Date:   Wed,  2 Sep 2020 16:12:03 +0200
-Message-Id: <20200902141218.212614-5-hch@lst.de>
+Subject: [PATCH 11/19] gdrom: use bdev_check_media_change
+Date:   Wed,  2 Sep 2020 16:12:10 +0200
+Message-Id: <20200902141218.212614-12-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902141218.212614-1-hch@lst.de>
 References: <20200902141218.212614-1-hch@lst.de>
@@ -55,57 +55,27 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Switch to use bdev_check_media_change instead of check_disk_change and
-call floppy_revalidate manually.  Given that floppy_revalidate only
-deals with media change events, the extra call into ->revalidate_disk
-from bdev_disk_changed is not required either, so stop wiring up the
-method.
+The GD-ROM driver does not have a ->revalidate_disk method, so it can
+just use bdev_check_media_change without any additional changes.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/floppy.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/cdrom/gdrom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index a563b023458a8b..7df79ae6b0a1e1 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -561,6 +561,7 @@ static void floppy_release_irq_and_dma(void);
-  * output_byte is automatically disabled when reset is set.
-  */
- static void reset_fdc(void);
-+static int floppy_revalidate(struct gendisk *disk);
+diff --git a/drivers/cdrom/gdrom.c b/drivers/cdrom/gdrom.c
+index 09b0cd292720fa..9874fc1c815b53 100644
+--- a/drivers/cdrom/gdrom.c
++++ b/drivers/cdrom/gdrom.c
+@@ -479,7 +479,7 @@ static int gdrom_bdops_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	int ret;
  
- /*
-  * These are global variables, as that's the easiest way to give
-@@ -3275,7 +3276,8 @@ static int invalidate_drive(struct block_device *bdev)
- 	/* invalidate the buffer track to force a reread */
- 	set_bit((long)bdev->bd_disk->private_data, &fake_change);
- 	process_fd_request();
 -	check_disk_change(bdev);
-+	if (bdev_check_media_change(bdev))
-+		floppy_revalidate(bdev->bd_disk);
- 	return 0;
- }
++	bdev_check_media_change(bdev);
  
-@@ -4123,7 +4125,8 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
- 			drive_state[drive].last_checked = 0;
- 			clear_bit(FD_OPEN_SHOULD_FAIL_BIT,
- 				  &drive_state[drive].flags);
--			check_disk_change(bdev);
-+			if (bdev_check_media_change(bdev))
-+				floppy_revalidate(bdev->bd_disk);
- 			if (test_bit(FD_DISK_CHANGED_BIT, &drive_state[drive].flags))
- 				goto out;
- 			if (test_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags))
-@@ -4291,7 +4294,6 @@ static const struct block_device_operations floppy_fops = {
- 	.ioctl			= fd_ioctl,
- 	.getgeo			= fd_getgeo,
- 	.check_events		= floppy_check_events,
--	.revalidate_disk	= floppy_revalidate,
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl		= fd_compat_ioctl,
- #endif
+ 	mutex_lock(&gdrom_mutex);
+ 	ret = cdrom_open(gd.cd_info, bdev, mode);
 -- 
 2.28.0
 
