@@ -2,196 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE9525AD9D
-	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 16:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD5B25AE90
+	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 17:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgIBOkt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Sep 2020 10:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgIBONl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 10:13:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D082C06125E;
-        Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=s3JUZA1FtjTiqtgMGHDLmiQxYMnM63DlyIQ2tpQALUI=; b=Ny3p7wlwFy0wP4sf+hF5EVB2Lh
-        YO7A8mKgrJj2mwOaaVLcOAng30rxxwPQzGxnkFxqbeBkqELDupdq1CTAmmgrTEEA+8pbXRdZGR8FU
-        ob3xxQh/ov/JgKEOJ4gpqc6w94Jg6FnXLLZRWESj2o6T+SxU40AwIUU0APyI895U2kjqoUlCaX7EC
-        agS1nWtjptWx5OQtQ+WfCnQTImB6Qck7pRcFjzgCMkt4F21sUM1CuxxwcC0L7oS/0QpgwIAg3G/Zq
-        UhRZu7rj15jFBLrcVefahoM/8IXk5+jxtutPIkHljxBCtyl2P8qdKD3uyuewbg3P1k3geKVpoOjZh
-        b65a2RWA==;
-Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTV9-0005fV-Jn; Wed, 02 Sep 2020 14:12:39 +0000
+        id S1727954AbgIBPPX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Sep 2020 11:15:23 -0400
+Received: from verein.lst.de ([213.95.11.211]:60870 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbgIBPLt (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:11:49 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4285B68B05; Wed,  2 Sep 2020 17:11:44 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 17:11:44 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 14/19] ide-gd: stop using the disk events mechanism
-Date:   Wed,  2 Sep 2020 16:12:13 +0200
-Message-Id: <20200902141218.212614-15-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902141218.212614-1-hch@lst.de>
-References: <20200902141218.212614-1-hch@lst.de>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-raid@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Song Liu <song@kernel.org>, dm-devel@redhat.com,
+        linux-mtd@lists.infradead.org, cgroups@vger.kernel.org,
+        drbd-dev@tron.linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, martin.petersen@oracle.com
+Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
+ block layer
+Message-ID: <20200902151144.GA1738@lst.de>
+References: <20200726150333.305527-1-hch@lst.de> <20200726150333.305527-7-hch@lst.de> <20200826220737.GA25613@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826220737.GA25613@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ide-gd is only using the disk events mechanism to be able to force an
-invalidation and partition scan on opening removable media.  Just open
-code the logic without invoving the block layer.
+On Wed, Aug 26, 2020 at 06:07:38PM -0400, Mike Snitzer wrote:
+> On Sun, Jul 26 2020 at 11:03am -0400,
+> Christoph Hellwig <hch@lst.de> wrote:
+> 
+> > Drivers shouldn't really mess with the readahead size, as that is a VM
+> > concept.  Instead set it based on the optimal I/O size by lifting the
+> > algorithm from the md driver when registering the disk.  Also set
+> > bdi->io_pages there as well by applying the same scheme based on
+> > max_sectors.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  block/blk-settings.c         |  5 ++---
+> >  block/blk-sysfs.c            |  1 -
+> >  block/genhd.c                | 13 +++++++++++--
+> >  drivers/block/aoe/aoeblk.c   |  2 --
+> >  drivers/block/drbd/drbd_nl.c | 12 +-----------
+> >  drivers/md/bcache/super.c    |  4 ----
+> >  drivers/md/dm-table.c        |  3 ---
+> >  drivers/md/raid0.c           | 16 ----------------
+> >  drivers/md/raid10.c          | 24 +-----------------------
+> >  drivers/md/raid5.c           | 13 +------------
+> >  10 files changed, 16 insertions(+), 77 deletions(-)
+> 
+> 
+> In general these changes need a solid audit relative to stacking
+> drivers.  That is, the limits stacking methods (blk_stack_limits)
+> vs lower level allocation methods (__device_add_disk).
+> 
+> You optimized for lowlevel __device_add_disk establishing the bdi's
+> ra_pages and io_pages.  That is at the beginning of disk allocation,
+> well before any build up of stacking driver's queue_io_opt() -- which
+> was previously done in disk_stack_limits or driver specific methods
+> (e.g. dm_table_set_restrictions) that are called _after_ all the limits
+> stacking occurs.
+> 
+> By inverting the setting of the bdi's ra_pages and io_pages to be done
+> so early in __device_add_disk it'll break properly setting these values
+> for at least DM afaict.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/ide/ide-disk.c   |  5 +----
- drivers/ide/ide-floppy.c |  2 --
- drivers/ide/ide-gd.c     | 48 +++++-----------------------------------
- include/linux/ide.h      |  2 --
- 4 files changed, 7 insertions(+), 50 deletions(-)
+ra_pages never got inherited by stacking drivers, check it by modifying
+it on an underlying device and then creating a trivial dm or md one.
+And I think that is a good thing - in general we shouldn't really mess
+with this thing from drivers if we can avoid it.  I've kept the legacy
+aoe and md parity raid cases, out of which the first looks pretty weird
+and the md one at least remotely sensible.
 
-diff --git a/drivers/ide/ide-disk.c b/drivers/ide/ide-disk.c
-index 1d3407d7e095fa..34b9441084f84f 100644
---- a/drivers/ide/ide-disk.c
-+++ b/drivers/ide/ide-disk.c
-@@ -739,12 +739,9 @@ static void ide_disk_setup(ide_drive_t *drive)
- 	set_wcache(drive, 1);
- 
- 	if ((drive->dev_flags & IDE_DFLAG_LBA) == 0 &&
--	    (drive->head == 0 || drive->head > 16)) {
-+	    (drive->head == 0 || drive->head > 16))
- 		printk(KERN_ERR "%s: invalid geometry: %d physical heads?\n",
- 			drive->name, drive->head);
--		drive->dev_flags &= ~IDE_DFLAG_ATTACH;
--	} else
--		drive->dev_flags |= IDE_DFLAG_ATTACH;
- }
- 
- static void ide_disk_flush(ide_drive_t *drive)
-diff --git a/drivers/ide/ide-floppy.c b/drivers/ide/ide-floppy.c
-index af7503b47dbe32..f5a2870aaf54bb 100644
---- a/drivers/ide/ide-floppy.c
-+++ b/drivers/ide/ide-floppy.c
-@@ -516,8 +516,6 @@ static void ide_floppy_setup(ide_drive_t *drive)
- 	(void) ide_floppy_get_capacity(drive);
- 
- 	ide_proc_register_driver(drive, floppy->driver);
--
--	drive->dev_flags |= IDE_DFLAG_ATTACH;
- }
- 
- static void ide_floppy_flush(ide_drive_t *drive)
-diff --git a/drivers/ide/ide-gd.c b/drivers/ide/ide-gd.c
-index 05c26986637ba3..661e2aa9c96784 100644
---- a/drivers/ide/ide-gd.c
-+++ b/drivers/ide/ide-gd.c
-@@ -225,8 +225,12 @@ static int ide_gd_open(struct block_device *bdev, fmode_t mode)
- 		 * and the door_lock is irrelevant at this point.
- 		 */
- 		drive->disk_ops->set_doorlock(drive, disk, 1);
--		drive->dev_flags |= IDE_DFLAG_MEDIA_CHANGED;
--		check_disk_change(bdev);
-+		if (__invalidate_device(bdev, true))
-+			pr_warn("VFS: busy inodes on changed media %s\n",
-+				bdev->bd_disk->disk_name);
-+		drive->disk_ops->get_capacity(drive);
-+		set_capacity(disk, ide_gd_capacity(drive));
-+		set_bit(BDEV_NEED_PART_SCAN, &bdev->bd_flags);
- 	} else if (drive->dev_flags & IDE_DFLAG_FORMAT_IN_PROGRESS) {
- 		ret = -EBUSY;
- 		goto out_put_idkp;
-@@ -284,32 +288,6 @@ static int ide_gd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
- 	return 0;
- }
- 
--static unsigned int ide_gd_check_events(struct gendisk *disk,
--					unsigned int clearing)
--{
--	struct ide_disk_obj *idkp = ide_drv_g(disk, ide_disk_obj);
--	ide_drive_t *drive = idkp->drive;
--	bool ret;
--
--	/* do not scan partitions twice if this is a removable device */
--	if (drive->dev_flags & IDE_DFLAG_ATTACH) {
--		drive->dev_flags &= ~IDE_DFLAG_ATTACH;
--		return 0;
--	}
--
--	/*
--	 * The following is used to force revalidation on the first open on
--	 * removeable devices, and never gets reported to userland as
--	 * DISK_EVENT_FLAG_UEVENT isn't set in genhd->event_flags.
--	 * This is intended as removable ide disk can't really detect
--	 * MEDIA_CHANGE events.
--	 */
--	ret = drive->dev_flags & IDE_DFLAG_MEDIA_CHANGED;
--	drive->dev_flags &= ~IDE_DFLAG_MEDIA_CHANGED;
--
--	return ret ? DISK_EVENT_MEDIA_CHANGE : 0;
--}
--
- static void ide_gd_unlock_native_capacity(struct gendisk *disk)
- {
- 	struct ide_disk_obj *idkp = ide_drv_g(disk, ide_disk_obj);
-@@ -320,18 +298,6 @@ static void ide_gd_unlock_native_capacity(struct gendisk *disk)
- 		disk_ops->unlock_native_capacity(drive);
- }
- 
--static int ide_gd_revalidate_disk(struct gendisk *disk)
--{
--	struct ide_disk_obj *idkp = ide_drv_g(disk, ide_disk_obj);
--	ide_drive_t *drive = idkp->drive;
--
--	if (ide_gd_check_events(disk, 0))
--		drive->disk_ops->get_capacity(drive);
--
--	set_capacity(disk, ide_gd_capacity(drive));
--	return 0;
--}
--
- static int ide_gd_ioctl(struct block_device *bdev, fmode_t mode,
- 			     unsigned int cmd, unsigned long arg)
- {
-@@ -364,9 +330,7 @@ static const struct block_device_operations ide_gd_ops = {
- 	.compat_ioctl		= ide_gd_compat_ioctl,
- #endif
- 	.getgeo			= ide_gd_getgeo,
--	.check_events		= ide_gd_check_events,
- 	.unlock_native_capacity	= ide_gd_unlock_native_capacity,
--	.revalidate_disk	= ide_gd_revalidate_disk
- };
- 
- static int ide_gd_probe(ide_drive_t *drive)
-diff --git a/include/linux/ide.h b/include/linux/ide.h
-index a254841bd3156d..62653769509f89 100644
---- a/include/linux/ide.h
-+++ b/include/linux/ide.h
-@@ -490,8 +490,6 @@ enum {
- 	IDE_DFLAG_NOPROBE		= BIT(9),
- 	/* need to do check_media_change() */
- 	IDE_DFLAG_REMOVABLE		= BIT(10),
--	/* needed for removable devices */
--	IDE_DFLAG_ATTACH		= BIT(11),
- 	IDE_DFLAG_FORCED_GEOM		= BIT(12),
- 	/* disallow setting unmask bit */
- 	IDE_DFLAG_NO_UNMASK		= BIT(13),
--- 
-2.28.0
-
+->io_pages is still inherited in disk_stack_limits, just like before
+so no change either.
