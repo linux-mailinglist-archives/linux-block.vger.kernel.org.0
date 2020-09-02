@@ -2,75 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CD125A8A4
-	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 11:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2BD725AA0F
+	for <lists+linux-block@lfdr.de>; Wed,  2 Sep 2020 13:11:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgIBJcb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Sep 2020 05:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgIBJc3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 05:32:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DF3C061244;
-        Wed,  2 Sep 2020 02:32:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id np15so1945805pjb.0;
-        Wed, 02 Sep 2020 02:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=AP4GIrttqKmha4FiSPfcLXZSRJr3ax9khNPBb2oxr68=;
-        b=h2CCmqA07O1bHhaypQFI/bi3tYl8u6LMvY0m54AwPEes2ctdO65tDrLeQlhN1j4LmR
-         IOzVn5xWKBkJ7bOrM08d4OMUpNHw0ijDaD0lcPy//8zMz4W77lXziuydkpSbw/P1cEKt
-         v57JlEnnnTBtfCxf6mz+oDE3NXMG6TiBUNqnlZ1k6GRs7zLow9zYisZtGp5GnMVRJqCY
-         vKpsAbSoV9d+WudDmeQ7gURL/L2f6q6+QG8PlfBkC8MMH+RoyIA6pinBHArCJEOMRWan
-         ACCzR+GkH6fpzoruxSCPICxuQsF+71uYlqABO0iuTvNE8/nTRF04PWamASd9zS/c7x2O
-         kHGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AP4GIrttqKmha4FiSPfcLXZSRJr3ax9khNPBb2oxr68=;
-        b=flI8rouXEgZ9yZ7kJzVr8AerjxUhzplD9XzNh7wk8N8s11xMfLNV9KlsJU38GqFOgL
-         XYpvO/kpPryPWuREWZjPgt663BhU1NxpgAvq5LXz08jWOPgS4B38hGvpqDBP/W7wzEw7
-         zuIEsLPvo/9Gm3bN1YF3Rz4nKcr9yhb28GLPsv/YgJbQC9HEWe+crev7DZ77xyoVA0L7
-         OABc5vPFqNmWDM+WRffmGioDCltO7plWVFy8DaJttn+Ns+11Fco++m+3JbeGMFEF1lmB
-         BVdAMLDRiF1fbpQib6jbqs+JiRMPfRiudoRYe1qmSsVN5pkg9aqB8Rvggw7aY872HPGz
-         s2aw==
-X-Gm-Message-State: AOAM532Lc91DM+Dgh3CEfyJGWs/BBPl/KdZgaa3wpe1sNydEteUbJscP
-        Zn1D79B7KFY+ynXkEc3SmA==
-X-Google-Smtp-Source: ABdhPJyr/vwCvmpj2Bwem63GrX5mcZpO2zT8XXJ/L2HDIQKGBLAyn+mkTc0SO49lssi3A5M9Ih5ZrQ==
-X-Received: by 2002:a17:90b:209:: with SMTP id fy9mr1480221pjb.189.1599039148994;
-        Wed, 02 Sep 2020 02:32:28 -0700 (PDT)
-Received: from localhost.localdomain ([161.117.80.159])
-        by smtp.gmail.com with ESMTPSA id m25sm4859286pfa.32.2020.09.02.02.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 02:32:28 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     hdanton@sina.com, axboe@kernel.dk, hch@lst.de, jack@suse.cz,
-        johannes.thumshirn@wdc.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in bdev_del_partition
-Date:   Wed,  2 Sep 2020 05:31:43 -0400
-Message-Id: <20200902093143.610218-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <000000000000520ffc05ae2f4fee@google.com>
-References: <000000000000520ffc05ae2f4fee@google.com>
+        id S1726323AbgIBLL2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Sep 2020 07:11:28 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54864 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgIBLL0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Sep 2020 07:11:26 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 082B9xWe021165;
+        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
+ Wed, 02 Sep 2020 20:09:59 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 082B9tPc021145
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: [PATCH] tipc: fix shutdown() of connectionless socket
+To:     syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>
+References: <0000000000003feb9805a9c77128@google.com>
+Cc:     syzkaller-bugs@googlegroups.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <1eb799fb-c6e0-3eb5-f6fe-718cd2f62e92@I-love.SAKURA.ne.jp>
+Date:   Wed, 2 Sep 2020 20:09:54 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0000000000003feb9805a9c77128@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all,
+syzbot is reporting hung task at nbd_ioctl() [1], for there are two
+problems regarding TIPC's connectionless socket's shutdown() operation.
+I found C reproducer for this problem (shown below) from "no output from
+test machine (2)" report.
 
-I have sent a patch which reverts cddae808aeb7 ("block: pass a
-hd_struct to delete_partition") to syzbot, and it is now pending for
-testing:
+----------
 
-Link: https://groups.google.com/g/syzkaller-bugs/c/fnk0t9aqhDw/m/FO46-S8XAgAJ
+int main(int argc, char *argv[])
+{
+        const int fd = open("/dev/nbd0", 3);
+        ioctl(fd, NBD_SET_SOCK, socket(PF_TIPC, SOCK_DGRAM, 0));
+        ioctl(fd, NBD_DO_IT, 0);
+        return 0;
+}
+----------
 
-Thank you,
-Peilin Ye
+One problem is that wait_for_completion() from flush_workqueue() from
+nbd_start_device_ioctl() from nbd_ioctl() cannot be completed when
+nbd_start_device_ioctl() received a signal at wait_event_interruptible(),
+for tipc_shutdown() from kernel_sock_shutdown(SHUT_RDWR) from
+nbd_mark_nsock_dead() from sock_shutdown() from nbd_start_device_ioctl()
+is failing to wake up a WQ thread sleeping at wait_woken() from
+tipc_wait_for_rcvmsg() from sock_recvmsg() from sock_xmit() from
+nbd_read_stat() from recv_work() scheduled by nbd_start_device() from
+nbd_start_device_ioctl(). Fix this problem by always invoking
+sk->sk_state_change() (like inet_shutdown() does) when tipc_shutdown() is
+called.
+
+The other problem is that tipc_wait_for_rcvmsg() cannot return when
+tipc_shutdown() is called, for tipc_shutdown() sets sk->sk_shutdown to
+SEND_SHUTDOWN (despite "how" is SHUT_RDWR) while tipc_wait_for_rcvmsg()
+needs sk->sk_shutdown set to RCV_SHUTDOWN or SHUTDOWN_MASK. Fix this
+problem by setting sk->sk_shutdown to SHUTDOWN_MASK (like inet_shutdown()
+does) when the socket is connectionless.
+
+[1] https://syzkaller.appspot.com/bug?id=3fe51d307c1f0a845485cf1798aa059d12bf18b2
+
+Reported-by: syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ net/tipc/socket.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index 2679e97e0389..ebd280e767bd 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -2771,18 +2771,21 @@ static int tipc_shutdown(struct socket *sock, int how)
+ 
+ 	trace_tipc_sk_shutdown(sk, NULL, TIPC_DUMP_ALL, " ");
+ 	__tipc_shutdown(sock, TIPC_CONN_SHUTDOWN);
+-	sk->sk_shutdown = SEND_SHUTDOWN;
++	if (tipc_sk_type_connectionless(sk))
++		sk->sk_shutdown = SHUTDOWN_MASK;
++	else
++		sk->sk_shutdown = SEND_SHUTDOWN;
+ 
+ 	if (sk->sk_state == TIPC_DISCONNECTING) {
+ 		/* Discard any unreceived messages */
+ 		__skb_queue_purge(&sk->sk_receive_queue);
+ 
+-		/* Wake up anyone sleeping in poll */
+-		sk->sk_state_change(sk);
+ 		res = 0;
+ 	} else {
+ 		res = -ENOTCONN;
+ 	}
++	/* Wake up anyone sleeping in poll. */
++	sk->sk_state_change(sk);
+ 
+ 	release_sock(sk);
+ 	return res;
+-- 
+2.18.4
+
+
