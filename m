@@ -2,33 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F2925BC90
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C91725BCCA
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgICIMQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 04:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgICIB6 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 04:01:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F43EC061244;
-        Thu,  3 Sep 2020 01:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=utr2fVaqks1LYg8cxkK4a0BOVoxb7nDvwnnsshMYI24=; b=O4wNVEIme7CtD8I493kK31zTNu
-        1J6RiTiZ55jryj0U3nyE2M5qJqVY6U5vO+c7g2yqEV6b+IMYZ056tClDk62B91ugh9XTKsBaMmffR
-        DkcHwKZiUxt5yA6o8aYZlq5AImyMNemXywyimkBM/x9frSNWSBXaj7PGBKbFeK2M21EFqaNy2BVql
-        9g3VuElG8rhiAx/rylV7rQXGVe6O5EHeRltgS2DEor3ucdlpgPKsWANiHp616vRm4RSElrnlaHJgI
-        oNRtU4FmUPetJL4ptw9JVw+ppd52eKIXuIu2DgnpG8H1GJ5VZPkz+ZWE5XsUz+e/JbbCkPvfhqLkh
-        KXgqM+nQ==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDkBq-0006fM-De; Thu, 03 Sep 2020 08:01:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
+        id S1728754AbgICIOq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 04:14:46 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:43735 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728522AbgICIOl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:14:41 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1kDkOD-001H42-Ry; Thu, 03 Sep 2020 10:14:37 +0200
+Received: from p57bd95bc.dip0.t-ipconnect.de ([87.189.149.188] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1kDkOD-000NUw-Kf; Thu, 03 Sep 2020 10:14:37 +0200
+Subject: Re: [PATCH 16/19] ataflop: use a separate gendisk for each media
+ format
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Denis Efremov <efremov@linux.com>,
@@ -39,347 +37,81 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 19/19] block: switch gendisk lookup to a simple xarray
-Date:   Thu,  3 Sep 2020 10:01:19 +0200
-Message-Id: <20200903080119.441674-20-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903080119.441674-1-hch@lst.de>
 References: <20200903080119.441674-1-hch@lst.de>
+ <20200903080119.441674-17-hch@lst.de>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <e4ae0e80-dc96-7f57-58b1-03b83d117933@physik.fu-berlin.de>
+Date:   Thu, 3 Sep 2020 10:14:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200903080119.441674-17-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.149.188
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that bdev_map is only used for finding gendisks, we can use
-a simple xarray instead of the regions tracking structure for it.
+Hi Christoph!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- block/genhd.c         | 208 ++++++++----------------------------------
- include/linux/genhd.h |   7 --
- 2 files changed, 37 insertions(+), 178 deletions(-)
+On 9/3/20 10:01 AM, Christoph Hellwig wrote:
+> The Atari floppy driver usually autodetects the media when used with the
+> ormal /dev/fd? devices, which also are the only nodes created by udev.
+  ^^^^
+  typo?
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 3abd764443a6af..6e0789a158f579 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -27,15 +27,7 @@
- 
- static struct kobject *block_depr;
- 
--struct bdev_map {
--	struct bdev_map *next;
--	dev_t dev;
--	unsigned long range;
--	struct module *owner;
--	struct kobject *(*probe)(dev_t, int *, void *);
--	int (*lock)(dev_t, void *);
--	void *data;
--} *bdev_map[255];
-+static DEFINE_XARRAY(bdev_map);
- static DEFINE_MUTEX(bdev_map_lock);
- 
- /* for extended dynamic devt allocation, currently only one major is used */
-@@ -646,85 +638,26 @@ static char *bdevt_str(dev_t devt, char *buf)
- 	return buf;
- }
- 
--/*
-- * Register device numbers dev..(dev+range-1)
-- * range must be nonzero
-- * The hash chain is sorted on range, so that subranges can override.
-- */
--void blk_register_region(dev_t devt, unsigned long range, struct module *module,
--			 struct kobject *(*probe)(dev_t, int *, void *),
--			 int (*lock)(dev_t, void *), void *data)
--{
--	unsigned n = MAJOR(devt + range - 1) - MAJOR(devt) + 1;
--	unsigned index = MAJOR(devt);
--	unsigned i;
--	struct bdev_map *p;
--
--	n = min(n, 255u);
--	p = kmalloc_array(n, sizeof(struct bdev_map), GFP_KERNEL);
--	if (p == NULL)
--		return;
--
--	for (i = 0; i < n; i++, p++) {
--		p->owner = module;
--		p->probe = probe;
--		p->lock = lock;
--		p->dev = devt;
--		p->range = range;
--		p->data = data;
--	}
-+static void blk_register_region(struct gendisk *disk)
-+{
-+	int i;
- 
- 	mutex_lock(&bdev_map_lock);
--	for (i = 0, p -= n; i < n; i++, p++, index++) {
--		struct bdev_map **s = &bdev_map[index % 255];
--		while (*s && (*s)->range < range)
--			s = &(*s)->next;
--		p->next = *s;
--		*s = p;
-+	for (i = 0; i < disk->minors; i++) {
-+		if (xa_insert(&bdev_map, disk_devt(disk) + i, disk, GFP_KERNEL))
-+			WARN_ON_ONCE(1);
- 	}
- 	mutex_unlock(&bdev_map_lock);
- }
--EXPORT_SYMBOL(blk_register_region);
- 
--void blk_unregister_region(dev_t devt, unsigned long range)
-+static void blk_unregister_region(struct gendisk *disk)
- {
--	unsigned n = MAJOR(devt + range - 1) - MAJOR(devt) + 1;
--	unsigned index = MAJOR(devt);
--	unsigned i;
--	struct bdev_map *found = NULL;
-+	int i;
- 
- 	mutex_lock(&bdev_map_lock);
--	for (i = 0; i < min(n, 255u); i++, index++) {
--		struct bdev_map **s;
--		for (s = &bdev_map[index % 255]; *s; s = &(*s)->next) {
--			struct bdev_map *p = *s;
--			if (p->dev == devt && p->range == range) {
--				*s = p->next;
--				if (!found)
--					found = p;
--				break;
--			}
--		}
--	}
-+	for (i = 0; i < disk->minors; i++)
-+		xa_erase(&bdev_map, disk_devt(disk) + i);
- 	mutex_unlock(&bdev_map_lock);
--	kfree(found);
--}
--EXPORT_SYMBOL(blk_unregister_region);
--
--static struct kobject *exact_match(dev_t devt, int *partno, void *data)
--{
--	struct gendisk *p = data;
--
--	return &disk_to_dev(p)->kobj;
--}
--
--static int exact_lock(dev_t devt, void *data)
--{
--	struct gendisk *p = data;
--
--	if (!get_disk_and_module(p))
--		return -1;
--	return 0;
- }
- 
- static void register_disk(struct device *parent, struct gendisk *disk,
-@@ -875,8 +808,7 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 		ret = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
- 		WARN_ON(ret);
- 		bdi_set_owner(bdi, dev);
--		blk_register_region(disk_devt(disk), disk->minors, NULL,
--				    exact_match, exact_lock, disk);
-+		blk_register_region(disk);
- 	}
- 	register_disk(parent, disk, groups);
- 	if (register_queue)
-@@ -989,7 +921,7 @@ void del_gendisk(struct gendisk *disk)
- 	blk_unregister_queue(disk);
- 	
- 	if (!(disk->flags & GENHD_FL_HIDDEN))
--		blk_unregister_region(disk_devt(disk), disk->minors);
-+		blk_unregister_region(disk);
- 	/*
- 	 * Remove gendisk pointer from idr so that it cannot be looked up
- 	 * while RCU period before freeing gendisk is running to prevent
-@@ -1055,54 +987,22 @@ static void request_gendisk_module(dev_t devt)
- 		request_module("block-major-%d", MAJOR(devt));
- }
- 
--static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
-+static bool get_disk_and_module(struct gendisk *disk)
- {
--	struct kobject *kobj;
--	struct bdev_map *p;
--	unsigned long best = ~0UL;
--
--retry:
--	mutex_lock(&bdev_map_lock);
--	for (p = bdev_map[MAJOR(dev) % 255]; p; p = p->next) {
--		struct kobject *(*probe)(dev_t, int *, void *);
--		struct module *owner;
--		void *data;
--
--		if (p->dev > dev || p->dev + p->range - 1 < dev)
--			continue;
--		if (p->range - 1 >= best)
--			break;
--		if (!try_module_get(p->owner))
--			continue;
--		owner = p->owner;
--		data = p->data;
--		probe = p->probe;
--		best = p->range - 1;
--		*partno = dev - p->dev;
--
--		if (!probe) {
--			mutex_unlock(&bdev_map_lock);
--			module_put(owner);
--			request_gendisk_module(dev);
--			goto retry;
--		}
-+	struct module *owner;
- 
--		if (p->lock && p->lock(dev, data) < 0) {
--			module_put(owner);
--			continue;
--		}
--		mutex_unlock(&bdev_map_lock);
--		kobj = probe(dev, partno, data);
--		/* Currently ->owner protects _only_ ->probe() itself. */
-+	if (!disk->fops)
-+		return false;
-+	owner = disk->fops->owner;
-+	if (owner && !try_module_get(owner))
-+		return false;
-+	if (!kobject_get_unless_zero(&disk_to_dev(disk)->kobj)) {
- 		module_put(owner);
--		if (kobj)
--			return dev_to_disk(kobj_to_dev(kobj));
--		goto retry;
-+		return false;
- 	}
--	mutex_unlock(&bdev_map_lock);
--	return NULL;
--}
-+	return true;
- 
-+}
- 
- /**
-  * get_gendisk - get partitioning information for a given device
-@@ -1121,7 +1021,19 @@ struct gendisk *get_gendisk(dev_t devt, int *partno)
- 	might_sleep();
- 
- 	if (MAJOR(devt) != BLOCK_EXT_MAJOR) {
--		disk = lookup_gendisk(devt, partno);
-+		mutex_lock(&bdev_map_lock);
-+		disk = xa_load(&bdev_map, devt);
-+		if (!disk) {
-+			mutex_unlock(&bdev_map_lock);
-+			request_gendisk_module(devt);
-+			mutex_lock(&bdev_map_lock);
-+			disk = xa_load(&bdev_map, devt);
-+		}
-+		if (disk && !get_disk_and_module(disk))
-+			disk = NULL;
-+		if (disk)
-+			*partno = devt - disk_devt(disk);
-+		mutex_unlock(&bdev_map_lock);
- 	} else {
- 		struct hd_struct *part;
- 
-@@ -1325,21 +1237,6 @@ static const struct seq_operations partitions_op = {
- };
- #endif
- 
--static void bdev_map_init(void)
--{
--	struct bdev_map *base;
--	int i;
--
--	base = kzalloc(sizeof(*base), GFP_KERNEL);
--	if (!base)
--		panic("cannot allocate bdev_map");
--
--	base->dev = 1;
--	base->range = ~0 ;
--	for (i = 0; i < 255; i++)
--		bdev_map[i] = base;
--}
--
- static int __init genhd_device_init(void)
- {
- 	int error;
-@@ -1348,7 +1245,6 @@ static int __init genhd_device_init(void)
- 	error = class_register(&block_class);
- 	if (unlikely(error))
- 		return error;
--	bdev_map_init();
- 	blk_dev_init();
- 
- 	register_blkdev(BLOCK_EXT_MAJOR, "blkext");
-@@ -1897,35 +1793,6 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
- }
- EXPORT_SYMBOL(__alloc_disk_node);
- 
--/**
-- * get_disk_and_module - increments the gendisk and gendisk fops module refcount
-- * @disk: the struct gendisk to increment the refcount for
-- *
-- * This increments the refcount for the struct gendisk, and the gendisk's
-- * fops module owner.
-- *
-- * Context: Any context.
-- */
--struct kobject *get_disk_and_module(struct gendisk *disk)
--{
--	struct module *owner;
--	struct kobject *kobj;
--
--	if (!disk->fops)
--		return NULL;
--	owner = disk->fops->owner;
--	if (owner && !try_module_get(owner))
--		return NULL;
--	kobj = kobject_get_unless_zero(&disk_to_dev(disk)->kobj);
--	if (kobj == NULL) {
--		module_put(owner);
--		return NULL;
--	}
--	return kobj;
--
--}
--EXPORT_SYMBOL(get_disk_and_module);
--
- /**
-  * put_disk - decrements the gendisk refcount
-  * @disk: the struct gendisk to decrement the refcount for
-@@ -1962,7 +1829,6 @@ void put_disk_and_module(struct gendisk *disk)
- 		module_put(owner);
- 	}
- }
--EXPORT_SYMBOL(put_disk_and_module);
- 
- static void set_disk_ro_uevent(struct gendisk *gd, int ro)
- {
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index a808afe80a4fec..eac6b31534dea2 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -339,15 +339,8 @@ int blk_add_partitions(struct gendisk *disk, struct block_device *bdev);
- int blk_drop_partitions(struct block_device *bdev);
- 
- extern struct gendisk *__alloc_disk_node(int minors, int node_id);
--extern struct kobject *get_disk_and_module(struct gendisk *disk);
- extern void put_disk(struct gendisk *disk);
- extern void put_disk_and_module(struct gendisk *disk);
--extern void blk_register_region(dev_t devt, unsigned long range,
--			struct module *module,
--			struct kobject *(*probe)(dev_t, int *, void *),
--			int (*lock)(dev_t, void *),
--			void *data);
--extern void blk_unregister_region(dev_t devt, unsigned long range);
- 
- #define alloc_disk_node(minors, node_id)				\
- ({									\
+Adrian
+
 -- 
-2.28.0
-
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
