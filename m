@@ -2,90 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CF1325BB8F
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 09:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE2FE25BD02
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:17:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgICHYK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 03:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55188 "EHLO
+        id S1727908AbgICIBf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 04:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgICHYH (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 03:24:07 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67745C061244;
-        Thu,  3 Sep 2020 00:24:06 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id o20so1556383pfp.11;
-        Thu, 03 Sep 2020 00:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xtCcxTYMpjBSX+MDnv73jbCTU3aLiCTczQOMAgWGsmE=;
-        b=iTf3qyc48zHHpG2gTxA5HZEc9keVFMo5eH2gF9icUZl1zSpN2ZTRZV7PdUEezjnT+z
-         vgTRUTJMcL+QztuWJ60M2bIKT0GQck0D80pD55uvOdS8CC1BzIT5aP8yV1P8WLGq4dDZ
-         wkROWgJorCnGpD2Y42FVo58Ps1IRNoYoJZLamkFOIjEcnNbS8FnTgPGupe8whjX4a2Ba
-         cii6fWuw5dwmJaRww2XPTT/dCca6jlzVY5Jy3bnizPr9oLXMO2TUTpK8Wcud/0RL4xg9
-         5TVVL70AU0WIF9/HGAF6rADMUjm0lCQSRUvw6gUjAMgDPzzKS11/ot+klu9fnxBBaaap
-         UA1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xtCcxTYMpjBSX+MDnv73jbCTU3aLiCTczQOMAgWGsmE=;
-        b=a2Y9l5QS88dQgJ33+ETEi2V/Bg7uknUHoHjBcncyEx6+H6iAq+ysSzBOjCjzDRmzR9
-         OoLeWKE9zka7LtYpWmEPVF89mVtxoEuAjPSh8xg9mmWhV8qCuQdLHcuB+5H5zhnPomAW
-         cIVqIhWfQBzpvskP4teJ5BuusfhIF2qOGDTG5TZkjptcuBkfdqvl8N5ID5FoGLaYwaj3
-         41unv63cwS6thNlr6U8+1Y50WBpL+yVn80QLZKJ6IVxo+z9PPof8W52qfqbkeQkYmOyH
-         DlLJCAcGRoLMPuXxWjcH5oUh9LAsNwpMcdO8K/ixaJVM7L7RReh5QU4VcI/06xfvOI0t
-         2nrQ==
-X-Gm-Message-State: AOAM532BXiXZEvK+WwOWV5qkmVU2Q9xEStnB2/J5U/nI/H25zjSnH9e1
-        eC8MAnC/75Jmizkgsc2KCQ==
-X-Google-Smtp-Source: ABdhPJxyg4RbEhd2Qj9AvXQ7rOsm/jCPegx9vLDmxy5uCZWZR1WITO7Q4SBRzQ9uR8r8nG70ko7icQ==
-X-Received: by 2002:a05:6a00:23c5:: with SMTP id g5mr2554151pfc.160.1599117845943;
-        Thu, 03 Sep 2020 00:24:05 -0700 (PDT)
-Received: from PWN ([161.117.80.159])
-        by smtp.gmail.com with ESMTPSA id 1sm1841092pfe.70.2020.09.03.00.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 00:24:05 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 03:23:57 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Hillf Danton <hdanton@sina.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Jan Kara <jack@suse.cz>, Ming Lei <ming.lei@redhat.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-block@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] block: Fix use-after-free in
- bdev_del_partition()
-Message-ID: <20200903072357.GA623968@PWN>
-References: <000000000000520ffc05ae2f4fee@google.com>
- <20200903065534.623691-1-yepeilin.cs@gmail.com>
- <20200903065950.GA19012@lst.de>
+        with ESMTP id S1727065AbgICIBc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 04:01:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2A3C061244;
+        Thu,  3 Sep 2020 01:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=cU305cxFBo6tm5/dcumAYM77XH5iQN9l01UIc+MQ8ms=; b=wWWW6aYY0aagDmpZ1bPiSvTpQw
+        hJm4tzGwj6/QUrIm6ZDBPRuSbs+oSQf3GZeEe/T3oMzvl2i2cvcS8HU0gIeJExqwloJMuvqD+tyUm
+        /5CWj/mQRXnLWL5bbRHRR7Gi9/gFtwkcOHZ3GHFxXuEpkeqayyIaBuePt7xW9LIgNzgw5Nins47i/
+        BsLowowCTOTKIIDe5AHHnQPXyuGTLG+TkeO/7krX6/GSvGxLHKw2GijdhXLkTHKMxfpZWQrLqDvzM
+        osFtIVQYGnxEdZK6JbWvEPOOyuMeoSfkEwcWm+DIPXHs7xcLJi5qnAJIEjerenE5BSTQzTmGTqMiy
+        bNvKvSow==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDkBL-0006Zq-V2; Thu, 03 Sep 2020 08:01:20 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: simplify gendisk lookup and remove struct block_device aliases v3
+Date:   Thu,  3 Sep 2020 10:01:00 +0200
+Message-Id: <20200903080119.441674-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903065950.GA19012@lst.de>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 08:59:50AM +0200, Christoph Hellwig wrote:
-> On Thu, Sep 03, 2020 at 02:55:34AM -0400, Peilin Ye wrote:
-> > In bdev_del_partition(), `part` is being looked up outside the critical
-> > section. This is causing bdev_del_partition() to delete the same partition
-> > more than once. Fix it by reverting commit cddae808aeb7.
-> 
-> We've already fix the problem properly:
-> 
-> https://git.kernel.dk/cgit/linux-block/commit/?h=block-5.9&id=08fc1ab6d748ab1a690fd483f41e2938984ce353
+Hi all,
 
-Ah, I searched linux-kernel but didn't see your patch, sorry about
-that. I should have searched linux-block too.
+this series removes the annoying struct block_device aliases, which can
+happen for a bunch of old floppy drivers (and z2ram).  In that case
+multiple struct block device instances for different dev_t's can point
+to the same gendisk, without being partitions.  The cause for that
+is the probe/get callback registered through blk_register_regions.
 
-Thank you,
-Peilin
+This series removes blk_register_region entirely, splitting it it into
+a simple xarray lookup of registered gendisks, and a probe callback
+stored in the major_names array that can be used for modprobe overrides
+or creating devices on demands when no gendisk is found.  The old
+remapping is gone entirely, and instead the 4 remaining drivers just
+register a gendisk for each operating mode.  In case of the two drivers
+that have lots of aliases that is done on-demand using the new probe
+callback, while for the other two I simply register all at probe time
+to keep things simple.
+
+Note that the m68k drivers are compile tested only.
+
+Changes since v2:
+ - fix a wrong variable passed to ERR_PTR in the floppy driver
+ - slightly adjust the del_gendisk cleanups to prepare for the next
+   series touching this area
+
+Changes since v1:
+ - add back a missing kobject_put in the cdev code
+ - improve the xarray delete loops
+
+Diffstat:
+ b/block/genhd.c           |  183 +++++++--------
+ b/drivers/base/Makefile   |    2 
+ b/drivers/block/amiflop.c |   98 ++++----
+ b/drivers/block/ataflop.c |  135 +++++++----
+ b/drivers/block/brd.c     |   39 ---
+ b/drivers/block/floppy.c  |  154 ++++++++----
+ b/drivers/block/loop.c    |   30 --
+ b/drivers/block/swim.c    |   17 -
+ b/drivers/block/z2ram.c   |  547 ++++++++++++++++++++++------------------------
+ b/drivers/ide/ide-probe.c |   66 -----
+ b/drivers/ide/ide-tape.c  |    2 
+ b/drivers/md/md.c         |   21 -
+ b/drivers/scsi/sd.c       |   19 -
+ b/fs/char_dev.c           |   94 +++----
+ b/fs/dcache.c             |    1 
+ b/fs/internal.h           |    5 
+ b/include/linux/genhd.h   |   12 -
+ b/include/linux/ide.h     |    3 
+ drivers/base/map.c        |  154 ------------
+ include/linux/kobj_map.h  |   20 -
+ 20 files changed, 686 insertions(+), 916 deletions(-)
