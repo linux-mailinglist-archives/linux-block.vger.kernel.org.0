@@ -2,104 +2,188 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 258AA25BADB
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 08:07:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57A3A25BB44
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 08:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgICGHN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 02:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
+        id S1725943AbgICG4K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 02:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgICGHI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 02:07:08 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F13C061247
-        for <linux-block@vger.kernel.org>; Wed,  2 Sep 2020 23:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ztx2v6g6TfTPwG8fGwX4pVZiRfgOtSqWCsAXvkNBs2A=; b=az6KM5UMQre99chWET8yWtA4Vv
-        pXmz62XQ6Hh5CNMoXoeVYgZziuUTWuGOQ9wSmDJmX81H07spv6DrpJIedHbQaN5as9rZMWBQMUx2g
-        EoTCRv54cBeO+XePvn/CDIxyuObrTC7F1cAAuGpvihqlDIzGRMnC/IzB8yKuQTrl/Vry0uW4zL7tn
-        uUgEUQqDwn+FG/pJD9dVjHCKZMDj+ZQ3DfORPqiEQAlGb2mfMPMkFJaqDyEtBvtewHERBUknuKkiX
-        21pZun8mIntvto5E49L2ziK2Ld9IXT+FXXuykCozeOCfWop027MLFLOaZHgi6NDWxxENl5vdEOySk
-        7zitGf7w==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDiOo-0000Tg-4I; Thu, 03 Sep 2020 06:07:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
+        with ESMTP id S1725919AbgICG4J (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 02:56:09 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A99CC061244;
+        Wed,  2 Sep 2020 23:56:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w186so1336263pgb.8;
+        Wed, 02 Sep 2020 23:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BazpodqJMZjq/eA7w6VjwOg3Rb3D/eai25A9EwRjKAA=;
+        b=RUtoHt8/HuakKOk2y6NI2NmVOS0rjT4SDK3/UaSe6mBmZ2WSNiCSgppYYyauBfOtHp
+         /rdy94+tG9N3pzZZgrK9B7Ae4S/G+9EC5Xaieit4DjXYXgIpKVDwWG+i4izuEFvoNpcA
+         bEktwfuyUYhB+l7tsyCl4uG8ETTpJrrQUNdhkAOzQRuBxJ5Rgb00u6cY3p94hEv1FnzE
+         HsMk05hvNIr2fprZTCupcmVHlt9WBXqVKGY/KjNEAMdORpDQwfMW6PTS9UI9gwc6d9cy
+         KV9I/KhfGAXhO6lslnCurtvNtLUBaD+MqUmeZt9+PH8qr50SDe7GnGQ/roG8viILQ9T2
+         OM9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BazpodqJMZjq/eA7w6VjwOg3Rb3D/eai25A9EwRjKAA=;
+        b=H/tvvuNmYCUBBx2AfravEodnX/Zx1/6loU6vGtx8d4HtGRBm4hundROxEZUEdsrWdz
+         JpGsjM5jwMdieEX5uXhVrz20id75VFVA0y5yXIBpCqKIRGcjqmh3TEvwVtFpGZHrG+qX
+         MU1r8m9Zm3NacvywDPvpUPjqcUX6TWWjAsGL+0MO58WsD6n1KmtqsmCXtV+wLVeIzRh2
+         Cj652Rpj0Id3TYhsv/ECYzDy9pkGy0j29l1SHl7dshlviZDCOewWMM/h9dzrvUwoM1g1
+         trq1h2FMr1B/DDaxCPE7zP7PjmW1+hmYWy1ls9KJZzCddOF4V2V7VoYBuk24QRMTCdm6
+         TN5A==
+X-Gm-Message-State: AOAM532J1t+N8PYAgTBUj65Vyd65VD2TpSYl78dT4pE5LSbI8vAZrcDe
+        wLr4maAhaKJ373qAekHl8w==
+X-Google-Smtp-Source: ABdhPJwplfAe7Ql+adziTtMZVSHuhYR4WRwzSItQaBNYaPg/b7Sjqa2WrSjMOt7icwjmsUkLEvBGqQ==
+X-Received: by 2002:a65:690f:: with SMTP id s15mr1758695pgq.124.1599116167775;
+        Wed, 02 Sep 2020 23:56:07 -0700 (PDT)
+Received: from localhost.localdomain ([161.117.80.159])
+        by smtp.gmail.com with ESMTPSA id x3sm1820456pfo.95.2020.09.02.23.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 23:56:07 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 2/2] block: make QUEUE_SYSFS_BIT_FNS more useful
-Date:   Thu,  3 Sep 2020 08:07:01 +0200
-Message-Id: <20200903060701.229481-3-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903060701.229481-1-hch@lst.de>
-References: <20200903060701.229481-1-hch@lst.de>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>, Hillf Danton <hdanton@sina.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Jan Kara <jack@suse.cz>, Ming Lei <ming.lei@redhat.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-block@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH] block: Fix use-after-free in bdev_del_partition()
+Date:   Thu,  3 Sep 2020 02:55:34 -0400
+Message-Id: <20200903065534.623691-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <000000000000520ffc05ae2f4fee@google.com>
+References: <000000000000520ffc05ae2f4fee@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Switch to the naming used by the other entries so that we can use the
-QUEUE_RW_ENTRY helper.
+In bdev_del_partition(), `part` is being looked up outside the critical
+section. This is causing bdev_del_partition() to delete the same partition
+more than once. Fix it by reverting commit cddae808aeb7.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: cddae808aeb7 ("block: pass a hd_struct to delete_partition")
+Reported-and-tested-by: syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Cc: Hillf Danton <hdanton@sina.com>
+Link: https://syzkaller.appspot.com/bug?id=09fc5ec437ea150f28e8a19f5011c08ee73381af
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 ---
- block/blk-sysfs.c | 24 +++++-------------------
- 1 file changed, 5 insertions(+), 19 deletions(-)
+ block/blk.h             |  2 +-
+ block/genhd.c           |  2 +-
+ block/partitions/core.c | 22 ++++++++++++++--------
+ 3 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 9df877d3dae28b..81722cdcf0cb21 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -260,14 +260,14 @@ static ssize_t queue_max_hw_sectors_show(struct request_queue *q, char *page)
+diff --git a/block/blk.h b/block/blk.h
+index 49e2928a1632..f5a46d0020fb 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -350,7 +350,7 @@ char *disk_name(struct gendisk *hd, int partno, char *buf);
+ #define ADDPART_FLAG_NONE	0
+ #define ADDPART_FLAG_RAID	1
+ #define ADDPART_FLAG_WHOLEDISK	2
+-void delete_partition(struct gendisk *disk, struct hd_struct *part);
++void delete_partition(struct gendisk *disk, int partno);
+ int bdev_add_partition(struct block_device *bdev, int partno,
+ 		sector_t start, sector_t length);
+ int bdev_del_partition(struct block_device *bdev, int partno);
+diff --git a/block/genhd.c b/block/genhd.c
+index 99c64641c314..40abc70b92ab 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -913,7 +913,7 @@ void del_gendisk(struct gendisk *disk)
+ 			     DISK_PITER_INCL_EMPTY | DISK_PITER_REVERSE);
+ 	while ((part = disk_part_iter_next(&piter))) {
+ 		invalidate_partition(disk, part->partno);
+-		delete_partition(disk, part);
++		delete_partition(disk, part->partno);
+ 	}
+ 	disk_part_iter_exit(&piter);
  
- #define QUEUE_SYSFS_BIT_FNS(name, flag, neg)				\
- static ssize_t								\
--queue_show_##name(struct request_queue *q, char *page)			\
-+queue_##name##_show(struct request_queue *q, char *page)		\
- {									\
- 	int bit;							\
- 	bit = test_bit(QUEUE_FLAG_##flag, &q->queue_flags);		\
- 	return queue_var_show(neg ? !bit : bit, page);			\
- }									\
- static ssize_t								\
--queue_store_##name(struct request_queue *q, const char *page, size_t count) \
-+queue_##name##_store(struct request_queue *q, const char *page, size_t count) \
- {									\
- 	unsigned long val;						\
- 	ssize_t ret;							\
-@@ -610,23 +610,9 @@ static struct queue_sysfs_entry queue_hw_sector_size_entry = {
- 	.show = queue_logical_block_size_show,
- };
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index e62a98a8eeb7..1fe1fe593423 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -310,17 +310,25 @@ int hd_ref_init(struct hd_struct *part)
+  * Must be called either with bd_mutex held, before a disk can be opened or
+  * after all disk users are gone.
+  */
+-void delete_partition(struct gendisk *disk, struct hd_struct *part)
++void delete_partition(struct gendisk *disk, int partno)
+ {
+ 	struct disk_part_tbl *ptbl =
+ 		rcu_dereference_protected(disk->part_tbl, 1);
++	struct hd_struct *part;
++
++	if (partno >= ptbl->len)
++		return;
++
++	part = rcu_dereference_protected(ptbl->part[partno], 1);
++	if (!part)
++		return;
  
--static struct queue_sysfs_entry queue_nonrot_entry = {
--	.attr = {.name = "rotational", .mode = 0644 },
--	.show = queue_show_nonrot,
--	.store = queue_store_nonrot,
--};
--
--static struct queue_sysfs_entry queue_iostats_entry = {
--	.attr = {.name = "iostats", .mode = 0644 },
--	.show = queue_show_iostats,
--	.store = queue_store_iostats,
--};
--
--static struct queue_sysfs_entry queue_random_entry = {
--	.attr = {.name = "add_random", .mode = 0644 },
--	.show = queue_show_random,
--	.store = queue_store_random,
--};
-+QUEUE_RW_ENTRY(queue_nonrot, "rotational");
-+QUEUE_RW_ENTRY(queue_iostats, "iostats");
-+QUEUE_RW_ENTRY(queue_random, "add_random");
+ 	/*
+ 	 * ->part_tbl is referenced in this part's release handler, so
+ 	 *  we have to hold the disk device
+ 	 */
+ 	get_device(disk_to_dev(part_to_disk(part)));
+-	rcu_assign_pointer(ptbl->part[part->partno], NULL);
++	rcu_assign_pointer(ptbl->part[partno], NULL);
+ 	kobject_put(part->holder_dir);
+ 	device_del(part_to_dev(part));
  
- static struct attribute *queue_attrs[] = {
- 	&queue_requests_entry.attr,
+@@ -531,10 +539,10 @@ int bdev_del_partition(struct block_device *bdev, int partno)
+ 	if (!part)
+ 		return -ENXIO;
+ 
+-	ret = -ENOMEM;
+ 	bdevp = bdget(part_devt(part));
++	disk_put_part(part);
+ 	if (!bdevp)
+-		goto out_put_part;
++		return -ENOMEM;
+ 
+ 	mutex_lock(&bdevp->bd_mutex);
+ 
+@@ -546,15 +554,13 @@ int bdev_del_partition(struct block_device *bdev, int partno)
+ 	invalidate_bdev(bdevp);
+ 
+ 	mutex_lock_nested(&bdev->bd_mutex, 1);
+-	delete_partition(bdev->bd_disk, part);
++	delete_partition(bdev->bd_disk, partno);
+ 	mutex_unlock(&bdev->bd_mutex);
+ 
+ 	ret = 0;
+ out_unlock:
+ 	mutex_unlock(&bdevp->bd_mutex);
+ 	bdput(bdevp);
+-out_put_part:
+-	disk_put_part(part);
+ 	return ret;
+ }
+ 
+@@ -627,7 +633,7 @@ int blk_drop_partitions(struct block_device *bdev)
+ 
+ 	disk_part_iter_init(&piter, bdev->bd_disk, DISK_PITER_INCL_EMPTY);
+ 	while ((part = disk_part_iter_next(&piter)))
+-		delete_partition(bdev->bd_disk, part);
++		delete_partition(bdev->bd_disk, part->partno);
+ 	disk_part_iter_exit(&piter);
+ 
+ 	return 0;
 -- 
-2.28.0
+2.25.1
 
