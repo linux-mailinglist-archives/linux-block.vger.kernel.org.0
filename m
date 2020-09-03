@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A22225BA3E
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 07:44:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8962825BA3C
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 07:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgICFlN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 01:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
+        id S1727950AbgICFlM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 01:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgICFlJ (ORCPT
+        with ESMTP id S1725984AbgICFlJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 01:41:09 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33960C061245;
-        Wed,  2 Sep 2020 22:41:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C067FC061244;
+        Wed,  2 Sep 2020 22:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=riJwVtK2AUEGowy/fSK/NSeugqK+94BEz4FUf/LJHss=; b=iOs4ePOHKq0RO554D6Q23NPYpM
-        kwtgxb2xzQYHh8cHDRvtLLOM4dAD3ho9sU4MR7rhGZel6Ko+UkaQDih11UE6vIpvieSjfgzD8+vDy
-        Ud7bzdIESe2a4ikxe4yX3drmeTge4pTq9s7qQd4BflpUDgFbaPzO7azWHCe9tJ7JdZRa2KydRDCTo
-        n/Z2QEqHQvIShl/ZNKqz4ZnSGv6LMmCSsxRqP5bp2GtG5+ocEaPhCOc/HHhvfjKCF4DJrf+wPenIH
-        LqwkQ0ylE5E5LkLlLH3rcuAFho96CiQyaoF5EYlJ09nND9cB7hjOLK+Kctrawd838Szt9G0g6IuFt
-        MUFZHS2g==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=DmDdOH2GuMXK9+IF4MdnFjGWJaJyD3Fj7/WXKJYHW9U=; b=vb9/O451zA77olU1cVJYN2ZSTO
+        2Zi9qkdCcM11VPBQSa0DuIemmhHGqyBGFvr/7cV952tgFjK+BJSSS/BejgM+h1OCLziqHFb09TNFq
+        JH0eIlO4Hic4v8gIAPeme397lsJTTbGC0+eMwHsMGK2NiPa8cHzsh7KyzmYTzkhYnhivyjUx1VZTM
+        DQlsrwznsCxQVugj0bXBMI88ybgjkfq/v50PWHu3STIGvr/Yxze9dbtV88UhgbzomVmvpaWQiONJT
+        veFJDAdAaRZ6O4VfVBHWrHU6RJunJOVm9B7BO70FHnPK7UFAAwJr1Vc+pZADrKGyhnpe0kfQvxid7
+        RpbdcSAg==;
 Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDhzd-0007OB-Dx; Thu, 03 Sep 2020 05:41:05 +0000
+        id 1kDhze-0007OE-HE; Thu, 03 Sep 2020 05:41:06 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
@@ -35,10 +35,12 @@ Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
         target-devel@vger.kernel.org
-Subject: clean up is partition checks
-Date:   Thu,  3 Sep 2020 07:40:55 +0200
-Message-Id: <20200903054104.228829-1-hch@lst.de>
+Subject: [PATCH 1/9] Documentation/hdio: fix up obscure bd_contains references
+Date:   Thu,  3 Sep 2020 07:40:56 +0200
+Message-Id: <20200903054104.228829-2-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903054104.228829-1-hch@lst.de>
+References: <20200903054104.228829-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -47,30 +49,126 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+bd_contains is an implementation detail and should not be mentioned in
+a userspace API documentation.
 
-this series add a new helepr to check if a struct block_device represents
-a parition, and removes most direct access to ->bd_contained from
-drivers.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ Documentation/userspace-api/ioctl/hdio.rst | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Diffstat:
- Documentation/userspace-api/ioctl/hdio.rst |   24 ++++++++++++------------
- block/blk-lib.c                            |    2 +-
- block/genhd.c                              |    2 +-
- block/ioctl.c                              |    4 ++--
- block/scsi_ioctl.c                         |    2 +-
- drivers/block/drbd/drbd_main.c             |    2 --
- drivers/block/drbd/drbd_receiver.c         |    2 +-
- drivers/block/drbd/drbd_worker.c           |    2 +-
- drivers/ide/ide-ioctls.c                   |    4 ++--
- drivers/md/dm-table.c                      |    2 +-
- drivers/md/md.c                            |    9 ++++-----
- drivers/md/md.h                            |    2 +-
- drivers/mmc/core/block.c                   |    2 +-
- drivers/s390/block/dasd_ioctl.c            |    8 ++++----
- drivers/target/target_core_iblock.c        |    5 ++---
- fs/nfsd/blocklayout.c                      |    4 ++--
- include/linux/blkdev.h                     |    9 +++++++--
- kernel/trace/blktrace.c                    |    2 +-
- lib/vsprintf.c                             |    4 ++--
- 19 files changed, 46 insertions(+), 45 deletions(-)
+diff --git a/Documentation/userspace-api/ioctl/hdio.rst b/Documentation/userspace-api/ioctl/hdio.rst
+index e822e3dff1769b..817371bf94e948 100644
+--- a/Documentation/userspace-api/ioctl/hdio.rst
++++ b/Documentation/userspace-api/ioctl/hdio.rst
+@@ -181,7 +181,7 @@ HDIO_SET_UNMASKINTR
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY	Controller busy
+@@ -231,7 +231,7 @@ HDIO_SET_MULTCOUNT
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range supported by disk.
+ 	  - EBUSY	Controller busy or blockmode already set.
+@@ -295,7 +295,7 @@ HDIO_GET_IDENTITY
+ 		the ATA specification.
+ 
+ 	error returns:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - ENOMSG	IDENTIFY DEVICE information not available
+ 
+ 	notes:
+@@ -355,7 +355,7 @@ HDIO_SET_KEEPSETTINGS
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY		Controller busy
+@@ -1055,7 +1055,7 @@ HDIO_SET_32BIT
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 3]
+ 	  - EBUSY	Controller busy
+@@ -1085,7 +1085,7 @@ HDIO_SET_NOWERR
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY		Controller busy
+@@ -1113,7 +1113,7 @@ HDIO_SET_DMA
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY	Controller busy
+@@ -1141,7 +1141,7 @@ HDIO_SET_PIO_MODE
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 255]
+ 	  - EBUSY	Controller busy
+@@ -1237,7 +1237,7 @@ HDIO_SET_WCACHE
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY	Controller busy
+@@ -1265,7 +1265,7 @@ HDIO_SET_ACOUSTIC
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 254]
+ 	  - EBUSY	Controller busy
+@@ -1305,7 +1305,7 @@ HDIO_SET_ADDRESS
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 2]
+ 	  - EBUSY		Controller busy
+@@ -1331,7 +1331,7 @@ HDIO_SET_IDE_SCSI
+ 
+ 
+ 	error return:
+-	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
++	  - EINVAL	Called on a partition instead of the whole disk device
+ 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
+ 	  - EINVAL	value out of range [0 1]
+ 	  - EBUSY	Controller busy
+-- 
+2.28.0
+
