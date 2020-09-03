@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B90625BC0F
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 771B025BCB6
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgICIBu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 04:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60962 "EHLO
+        id S1728193AbgICIOb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 04:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgICIBm (ORCPT
+        with ESMTP id S1728297AbgICIBm (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 04:01:42 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0353C061246;
-        Thu,  3 Sep 2020 01:01:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77536C061247;
+        Thu,  3 Sep 2020 01:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=zPuO1RiCFtAaXcTW9QuEi3RCIZQfS8nNc4ZkqYoXzUI=; b=OybH/lrHyX1+dbtv0WrEcWc+aG
-        1MuvfFAfkttbX55tfceZuqfYNAgxJHcF8TDSuW8YUgn7dEIhh2pGsEKLooh4MPTIPaXltHv5C0dQE
-        c7nLX7zVV4Q3F95j4/6o2F4HkO69gRucFgTJI+TTyX6oKi9mkBhESW2QetbFJ1y0wA2/x75KSzc2/
-        b0cnGhbUlTSj6Wo/J19DkRbLKPvrLwQJZKnv6Cagm3yuzK4U31H71SeK7OWgPQvvMHYrPpSg/cU3m
-        zhgQIoIEoB7rqCjkBV90bSQlKfJYySXeIAargCkRp/XchTvhTM8x9djb/KQiZEyFUdFc93HvFft3D
-        dagEO6Rg==;
+        bh=aXzX3WXObjugRRtp+aQv86YqJNCjDSFsRhe0aTup0rE=; b=rvKTOycGFXit4oKx8Aleh/WZbC
+        OGOAuRF3S7d77shXkMOhQBUcWPdvZ5z3Yg/nfUKzF1YTSDjBGr8VefXDzng5PDBtOOVeydmFh8aHO
+        rfxToJ3hZCdKZNobkRcA1H/bGJBURBX2B2D+IK+bxEBLNlKGaxcVxQ2mvEX5IZOsNArRC2MlpO3rB
+        wt9QIinoO9qzctt9sTX3KbNiFXWzh8UuzPT81r15DqFTrIbZAayV9+kikAiNWpjVS3qa1x6u7H22R
+        CfyxMlkiVvHkM2Ct/tglcjzUhS8fZfd34NhiBhzlYH7IsOmTs+VOor4x0qYjGfdoxaKVk5MeCPIyF
+        dx1rNiag==;
 Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDkBa-0006bs-VH; Thu, 03 Sep 2020 08:01:35 +0000
+        id 1kDkBc-0006c6-Gq; Thu, 03 Sep 2020 08:01:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,9 +39,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 10/19] brd: use __register_blkdev to allocate devices on demand
-Date:   Thu,  3 Sep 2020 10:01:10 +0200
-Message-Id: <20200903080119.441674-11-hch@lst.de>
+Subject: [PATCH 11/19] loop: use __register_blkdev to allocate devices on demand
+Date:   Thu,  3 Sep 2020 10:01:11 +0200
+Message-Id: <20200903080119.441674-12-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903080119.441674-1-hch@lst.de>
 References: <20200903080119.441674-1-hch@lst.de>
@@ -58,110 +58,78 @@ when a currently unregistered minor is accessed.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/brd.c | 39 +++++++++++----------------------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+ drivers/block/loop.c | 30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 2723a70eb85593..c8ac36351115ef 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -427,14 +427,15 @@ static void brd_free(struct brd_device *brd)
- 	kfree(brd);
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index cb1191d6e945f2..15b5a0ea7cc4a9 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2234,24 +2234,18 @@ static int loop_lookup(struct loop_device **l, int i)
+ 	return ret;
  }
  
--static struct brd_device *brd_init_one(int i, bool *new)
-+static void brd_probe(dev_t dev)
+-static struct kobject *loop_probe(dev_t dev, int *part, void *data)
++static void loop_probe(dev_t dev)
  {
- 	struct brd_device *brd;
-+	int i = MINOR(dev) / max_part;
- 
--	*new = false;
-+	mutex_lock(&brd_devices_mutex);
- 	list_for_each_entry(brd, &brd_devices, brd_list) {
- 		if (brd->brd_number == i)
--			goto out;
-+			goto out_unlock;
- 	}
- 
- 	brd = brd_alloc(i);
-@@ -443,9 +444,9 @@ static struct brd_device *brd_init_one(int i, bool *new)
- 		add_disk(brd->brd_disk);
- 		list_add_tail(&brd->brd_list, &brd_devices);
- 	}
--	*new = true;
--out:
--	return brd;
-+
-+out_unlock:
-+	mutex_unlock(&brd_devices_mutex);
- }
- 
- static void brd_del_one(struct brd_device *brd)
-@@ -455,23 +456,6 @@ static void brd_del_one(struct brd_device *brd)
- 	brd_free(brd);
- }
- 
--static struct kobject *brd_probe(dev_t dev, int *part, void *data)
--{
--	struct brd_device *brd;
++	int idx = MINOR(dev) >> part_shift;
+ 	struct loop_device *lo;
 -	struct kobject *kobj;
--	bool new;
+-	int err;
++
++	if (max_loop && idx >= max_loop)
++		return;
+ 
+ 	mutex_lock(&loop_ctl_mutex);
+-	err = loop_lookup(&lo, MINOR(dev) >> part_shift);
+-	if (err < 0)
+-		err = loop_add(&lo, MINOR(dev) >> part_shift);
+-	if (err < 0)
+-		kobj = NULL;
+-	else
+-		kobj = get_disk_and_module(lo->lo_disk);
++	if (loop_lookup(&lo, idx) < 0)
++		loop_add(&lo, idx);
+ 	mutex_unlock(&loop_ctl_mutex);
 -
--	mutex_lock(&brd_devices_mutex);
--	brd = brd_init_one(MINOR(dev) / max_part, &new);
--	kobj = brd ? get_disk_and_module(brd->brd_disk) : NULL;
--	mutex_unlock(&brd_devices_mutex);
--
--	if (new)
--		*part = 0;
--
+-	*part = 0;
 -	return kobj;
--}
+ }
+ 
+ static long loop_control_ioctl(struct file *file, unsigned int cmd,
+@@ -2371,14 +2365,11 @@ static int __init loop_init(void)
+ 		goto err_out;
+ 
+ 
+-	if (register_blkdev(LOOP_MAJOR, "loop")) {
++	if (__register_blkdev(LOOP_MAJOR, "loop", loop_probe)) {
+ 		err = -EIO;
+ 		goto misc_out;
+ 	}
+ 
+-	blk_register_region(MKDEV(LOOP_MAJOR, 0), range,
+-				  THIS_MODULE, loop_probe, NULL, NULL);
 -
- static inline void brd_check_and_reset_par(void)
+ 	/* pre-create number of devices given by config or max_loop */
+ 	mutex_lock(&loop_ctl_mutex);
+ 	for (i = 0; i < nr; i++)
+@@ -2404,16 +2395,11 @@ static int loop_exit_cb(int id, void *ptr, void *data)
+ 
+ static void __exit loop_exit(void)
  {
- 	if (unlikely(!max_part))
-@@ -511,11 +495,12 @@ static int __init brd_init(void)
- 	 *	dynamically.
- 	 */
- 
--	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
-+	if (__register_blkdev(RAMDISK_MAJOR, "ramdisk", brd_probe))
- 		return -EIO;
- 
- 	brd_check_and_reset_par();
- 
-+	mutex_lock(&brd_devices_mutex);
- 	for (i = 0; i < rd_nr; i++) {
- 		brd = brd_alloc(i);
- 		if (!brd)
-@@ -533,9 +518,7 @@ static int __init brd_init(void)
- 		brd->brd_disk->queue = brd->brd_queue;
- 		add_disk(brd->brd_disk);
- 	}
+-	unsigned long range;
 -
--	blk_register_region(MKDEV(RAMDISK_MAJOR, 0), 1UL << MINORBITS,
--				  THIS_MODULE, brd_probe, NULL, NULL);
-+	mutex_unlock(&brd_devices_mutex);
+-	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
+-
+ 	mutex_lock(&loop_ctl_mutex);
  
- 	pr_info("brd: module loaded\n");
- 	return 0;
-@@ -545,6 +528,7 @@ static int __init brd_init(void)
- 		list_del(&brd->brd_list);
- 		brd_free(brd);
- 	}
-+	mutex_unlock(&brd_devices_mutex);
- 	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
+ 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
+ 	idr_destroy(&loop_index_idr);
  
- 	pr_info("brd: module NOT loaded !!!\n");
-@@ -558,7 +542,6 @@ static void __exit brd_exit(void)
- 	list_for_each_entry_safe(brd, next, &brd_devices, brd_list)
- 		brd_del_one(brd);
+-	blk_unregister_region(MKDEV(LOOP_MAJOR, 0), range);
+ 	unregister_blkdev(LOOP_MAJOR, "loop");
  
--	blk_unregister_region(MKDEV(RAMDISK_MAJOR, 0), 1UL << MINORBITS);
- 	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
- 
- 	pr_info("brd: module unloaded\n");
+ 	misc_deregister(&loop_misc);
 -- 
 2.28.0
 
