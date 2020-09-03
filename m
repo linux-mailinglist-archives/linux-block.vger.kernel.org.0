@@ -2,116 +2,304 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C91725BCCA
-	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C832625BD10
+	for <lists+linux-block@lfdr.de>; Thu,  3 Sep 2020 10:20:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgICIOq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Sep 2020 04:14:46 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:43735 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728522AbgICIOl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:14:41 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1kDkOD-001H42-Ry; Thu, 03 Sep 2020 10:14:37 +0200
-Received: from p57bd95bc.dip0.t-ipconnect.de ([87.189.149.188] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1kDkOD-000NUw-Kf; Thu, 03 Sep 2020 10:14:37 +0200
-Subject: Re: [PATCH 16/19] ataflop: use a separate gendisk for each media
- format
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-References: <20200903080119.441674-1-hch@lst.de>
- <20200903080119.441674-17-hch@lst.de>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <e4ae0e80-dc96-7f57-58b1-03b83d117933@physik.fu-berlin.de>
-Date:   Thu, 3 Sep 2020 10:14:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728141AbgICIUR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Sep 2020 04:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgICIUM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Sep 2020 04:20:12 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BD7C061246
+        for <linux-block@vger.kernel.org>; Thu,  3 Sep 2020 01:20:12 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id n12so586533vkk.11
+        for <linux-block@vger.kernel.org>; Thu, 03 Sep 2020 01:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kIOKgbobCAauivLjjD3+5H4D5uI6eOXaqQyNwWMzaro=;
+        b=RoUq46ulZfpZ3paDBrOfHAcAMJ15GQITaSjDmtoXsPqSrrimdeqw0GpvJFItoGcvFb
+         DN3wSTWA+C16s3z582YgsfunvLAxRZDsTr7GOPi0wCItVvqXppqiaopIUqFT+5bXl9sd
+         NkA+MMJ3XTJ1YlmzoiZSSsVTJtcYmB/DDfVyCaACd0470zyZM8lVLen6FBuOPvoqkM18
+         oTXDKFLQokjO0x7S4utPI6uaxClWtFTXDqZKKH6MGw4UoXBCv/Vmgt7u9DnMt43MZ7vb
+         tDE1ikGwPpETwpaBATLHw5RLqWeWExa5U8OQfv9hnryx1WaZHqTAbZRRoASZUwwFq8hy
+         InLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kIOKgbobCAauivLjjD3+5H4D5uI6eOXaqQyNwWMzaro=;
+        b=d2y4NbMKOSDKaT8mEw35EvKBB3IfrXQSBeL7atD0o6eX3SaassLF7Kf5bXfAGivNPb
+         DFGMeCYuDppFt8oUf5sSbWjjEwErs9Hj+UNuAqLhasiuAEA2FS2rjD+v3HeBjs4TjFDb
+         oBrMjjcDydVVcfYLyq3TBr3TXlaqtSLomUR7LuahpYqhvOBcMmJ5nS6HcbpFwnb4CeP3
+         yRQVof54S+zrbbOWQrPLXpBw9WUL8EMpm24UtHAAfaz3bFL2gfH0w/pqSaeOtXef9DzA
+         UZuM0MAJ7TzebP93/tY8e12Pn0UTZ5kgpWlP7dxf01tfvKeRkXXbpTAAOWrMutrQ4TPS
+         CW/A==
+X-Gm-Message-State: AOAM532w6zi640QCTWRRzyZ3De7u7K9SA7u8cYsj28eJBUrlQ/Eh+vJB
+        vZ4jiru5A2LspXMSx7xK6WZ1mDQ0jr/ppR0O9gA06w==
+X-Google-Smtp-Source: ABdhPJygatPCTgngzA8BfCoD0l3nfEZ9seGBOFA3kGWjYO2vX4zcfDvdTtVrBTHFloSlsoY7V3JH6u4jQTlBSAJOSyQ=
+X-Received: by 2002:a1f:e443:: with SMTP id b64mr859520vkh.17.1599121210936;
+ Thu, 03 Sep 2020 01:20:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903080119.441674-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.149.188
+References: <20200903054104.228829-1-hch@lst.de> <20200903054104.228829-3-hch@lst.de>
+In-Reply-To: <20200903054104.228829-3-hch@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 3 Sep 2020 10:19:34 +0200
+Message-ID: <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
+Subject: Re: [PATCH 2/9] block: add a bdev_is_partition helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        drbd-dev@lists.linbit.com, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-s390@vger.kernel.org,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        target-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Christoph!
+On Thu, 3 Sep 2020 at 07:42, Christoph Hellwig <hch@lst.de> wrote:
+>
+> Add a littler helper to make the somewhat arcane bd_contains checks a
+> little more obvious.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-On 9/3/20 10:01 AM, Christoph Hellwig wrote:
-> The Atari floppy driver usually autodetects the media when used with the
-> ormal /dev/fd? devices, which also are the only nodes created by udev.
-  ^^^^
-  typo?
+Not sure why we have both "bd_contains" and "bd_partno", nevertheless,
+feel free to add:
 
-Adrian
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Kind regards
+Uffe
+
+> ---
+>  block/blk-lib.c                 | 2 +-
+>  block/ioctl.c                   | 4 ++--
+>  block/scsi_ioctl.c              | 2 +-
+>  drivers/ide/ide-ioctls.c        | 4 ++--
+>  drivers/md/dm-table.c           | 2 +-
+>  drivers/mmc/core/block.c        | 2 +-
+>  drivers/s390/block/dasd_ioctl.c | 8 ++++----
+>  fs/nfsd/blocklayout.c           | 4 ++--
+>  include/linux/blkdev.h          | 9 +++++++--
+>  kernel/trace/blktrace.c         | 2 +-
+>  10 files changed, 22 insertions(+), 17 deletions(-)
+>
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 0d1811e57ac704..e90614fd8d6a42 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -64,7 +64,7 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+>                 return -EINVAL;
+>
+>         /* In case the discard request is in a partition */
+> -       if (bdev->bd_partno)
+> +       if (bdev_is_partition(bdev))
+>                 part_offset = bdev->bd_part->start_sect;
+>
+>         while (nr_sects) {
+> diff --git a/block/ioctl.c b/block/ioctl.c
+> index bdb3bbb253d9f8..e4af3df9d28a68 100644
+> --- a/block/ioctl.c
+> +++ b/block/ioctl.c
+> @@ -23,7 +23,7 @@ static int blkpg_do_ioctl(struct block_device *bdev,
+>                 return -EACCES;
+>         if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
+>                 return -EFAULT;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return -EINVAL;
+>
+>         if (p.pno <= 0)
+> @@ -94,7 +94,7 @@ static int blkdev_reread_part(struct block_device *bdev)
+>  {
+>         int ret;
+>
+> -       if (!disk_part_scan_enabled(bdev->bd_disk) || bdev != bdev->bd_contains)
+> +       if (!disk_part_scan_enabled(bdev->bd_disk) || bdev_is_partition(bdev))
+>                 return -EINVAL;
+>         if (!capable(CAP_SYS_ADMIN))
+>                 return -EACCES;
+> diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
+> index ef722f04f88a93..3bb4571385ce21 100644
+> --- a/block/scsi_ioctl.c
+> +++ b/block/scsi_ioctl.c
+> @@ -854,7 +854,7 @@ EXPORT_SYMBOL(scsi_cmd_ioctl);
+>
+>  int scsi_verify_blk_ioctl(struct block_device *bd, unsigned int cmd)
+>  {
+> -       if (bd && bd == bd->bd_contains)
+> +       if (bd && !bdev_is_partition(bd))
+>                 return 0;
+>
+>         if (capable(CAP_SYS_RAWIO))
+> diff --git a/drivers/ide/ide-ioctls.c b/drivers/ide/ide-ioctls.c
+> index 09491098047bff..58994da10c0664 100644
+> --- a/drivers/ide/ide-ioctls.c
+> +++ b/drivers/ide/ide-ioctls.c
+> @@ -49,7 +49,7 @@ int ide_setting_ioctl(ide_drive_t *drive, struct block_device *bdev,
+>         return err >= 0 ? put_user_long(err, arg) : err;
+>
+>  set_val:
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 err = -EINVAL;
+>         else {
+>                 if (!capable(CAP_SYS_ADMIN))
+> @@ -257,7 +257,7 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+>         switch (cmd) {
+>         case HDIO_OBSOLETE_IDENTITY:
+>         case HDIO_GET_IDENTITY:
+> -               if (bdev != bdev->bd_contains)
+> +               if (bdev_is_partition(bdev))
+>                         return -EINVAL;
+>                 return ide_get_identity_ioctl(drive, cmd, argp);
+>         case HDIO_GET_NICE:
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 5edc3079e7c199..af156256e511ff 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -903,7 +903,7 @@ static int device_is_rq_stackable(struct dm_target *ti, struct dm_dev *dev,
+>         struct request_queue *q = bdev_get_queue(bdev);
+>
+>         /* request-based cannot stack on partitions! */
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return false;
+>
+>         return queue_is_mq(q);
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index fa313b63413547..8d3df0be0355ce 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -723,7 +723,7 @@ static int mmc_blk_check_blkdev(struct block_device *bdev)
+>          * whole block device, not on a partition.  This prevents overspray
+>          * between sibling partitions.
+>          */
+> -       if ((!capable(CAP_SYS_RAWIO)) || (bdev != bdev->bd_contains))
+> +       if (!capable(CAP_SYS_RAWIO) || bdev_is_partition(bdev))
+>                 return -EPERM;
+>         return 0;
+>  }
+> diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+> index faaf5596e31c12..cb6427fb9f3d16 100644
+> --- a/drivers/s390/block/dasd_ioctl.c
+> +++ b/drivers/s390/block/dasd_ioctl.c
+> @@ -277,7 +277,7 @@ dasd_ioctl_format(struct block_device *bdev, void __user *argp)
+>                 dasd_put_device(base);
+>                 return -EFAULT;
+>         }
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and cannot be formatted\n",
+>                         dev_name(&base->cdev->dev));
+>                 dasd_put_device(base);
+> @@ -304,7 +304,7 @@ static int dasd_ioctl_check_format(struct block_device *bdev, void __user *argp)
+>         base = dasd_device_from_gendisk(bdev->bd_disk);
+>         if (!base)
+>                 return -ENODEV;
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and cannot be checked\n",
+>                         dev_name(&base->cdev->dev));
+>                 rc = -EINVAL;
+> @@ -362,7 +362,7 @@ static int dasd_ioctl_release_space(struct block_device *bdev, void __user *argp
+>                 rc = -EROFS;
+>                 goto out_err;
+>         }
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and tracks cannot be released\n",
+>                         dev_name(&base->cdev->dev));
+>                 rc = -EINVAL;
+> @@ -540,7 +540,7 @@ dasd_ioctl_set_ro(struct block_device *bdev, void __user *argp)
+>
+>         if (!capable(CAP_SYS_ADMIN))
+>                 return -EACCES;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 // ro setting is not allowed for partitions
+>                 return -EINVAL;
+>         if (get_user(intval, (int __user *)argp))
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index 311e5ce80cfc27..a07c39c94bbd03 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -170,7 +170,7 @@ nfsd4_block_proc_getdeviceinfo(struct super_block *sb,
+>                 struct nfs4_client *clp,
+>                 struct nfsd4_getdeviceinfo *gdp)
+>  {
+> -       if (sb->s_bdev != sb->s_bdev->bd_contains)
+> +       if (bdev_is_partition(sb->s_bdev))
+>                 return nfserr_inval;
+>         return nfserrno(nfsd4_block_get_device_info_simple(sb, gdp));
+>  }
+> @@ -382,7 +382,7 @@ nfsd4_scsi_proc_getdeviceinfo(struct super_block *sb,
+>                 struct nfs4_client *clp,
+>                 struct nfsd4_getdeviceinfo *gdp)
+>  {
+> -       if (sb->s_bdev != sb->s_bdev->bd_contains)
+> +       if (bdev_is_partition(sb->s_bdev))
+>                 return nfserr_inval;
+>         return nfserrno(nfsd4_block_get_device_info_scsi(sb, clp, gdp));
+>  }
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 7575fa0aae6e5c..0006a78ebc5dde 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1341,6 +1341,11 @@ static inline int sb_issue_zeroout(struct super_block *sb, sector_t block,
+>
+>  extern int blk_verify_command(unsigned char *cmd, fmode_t mode);
+>
+> +static inline bool bdev_is_partition(struct block_device *bdev)
+> +{
+> +       return bdev->bd_partno;
+> +}
+> +
+>  enum blk_default_limits {
+>         BLK_MAX_SEGMENTS        = 128,
+>         BLK_SAFE_MAX_SECTORS    = 255,
+> @@ -1457,7 +1462,7 @@ static inline int bdev_alignment_offset(struct block_device *bdev)
+>
+>         if (q->limits.misaligned)
+>                 return -1;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return queue_limit_alignment_offset(&q->limits,
+>                                 bdev->bd_part->start_sect);
+>         return q->limits.alignment_offset;
+> @@ -1498,7 +1503,7 @@ static inline int bdev_discard_alignment(struct block_device *bdev)
+>  {
+>         struct request_queue *q = bdev_get_queue(bdev);
+>
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return queue_limit_discard_alignment(&q->limits,
+>                                 bdev->bd_part->start_sect);
+>         return q->limits.discard_alignment;
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 4b3a42fc3b24f1..157758a88773b9 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -527,7 +527,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>          * and scsi-generic block devices we create a temporary new debugfs
+>          * directory that will be removed once the trace ends.
+>          */
+> -       if (bdev && bdev == bdev->bd_contains)
+> +       if (bdev && !bdev_is_partition(bdev))
+>                 dir = q->debugfs_dir;
+>         else
+>                 bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> --
+> 2.28.0
+>
