@@ -2,115 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA1025D45D
-	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 11:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4B9B25D468
+	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 11:16:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgIDJML (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Sep 2020 05:12:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2752 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729712AbgIDJMJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:12:09 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 3FDB791929569A201FCF;
-        Fri,  4 Sep 2020 10:12:07 +0100 (IST)
-Received: from [127.0.0.1] (10.47.1.112) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 4 Sep 2020
- 10:12:05 +0100
-Subject: Re: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for
- SCSI HBAs
-To:     Jens Axboe <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
-        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <dgilbert@interlog.com>,
-        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
-CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
-        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>
-References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
- <df6a3bd3-a89e-5f2f-ece1-a12ada02b521@kernel.dk>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <379ef8a4-5042-926a-b8a0-2d0a684a0e01@huawei.com>
-Date:   Fri, 4 Sep 2020 10:09:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <df6a3bd3-a89e-5f2f-ece1-a12ada02b521@kernel.dk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.1.112]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        id S1729991AbgIDJP6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Sep 2020 05:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729978AbgIDJPz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Sep 2020 05:15:55 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495F3C061244;
+        Fri,  4 Sep 2020 02:15:53 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a15so7582779ejf.11;
+        Fri, 04 Sep 2020 02:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dxahPGX4Bh5058cW7YZytcQVfwGeo/dvZ/Z3buLNEgI=;
+        b=c161BctUHHXMJf3NH9GGNQWWIJqv5AUGjNOAu6Bx3o5Jlya5vcy/+7WBNuTs/5F6og
+         ljDRVUZEp9f5/lht+DCfor9uGYCQkRc2TyWFIJFCcfFAhv53T6ub3oComBOw0VRdlI1E
+         WVwsomS11BpBOc1jopv8knoO6LlwUjwWZPTBkX2fhvH+shITt1v9JzrVx5C9etCniet/
+         lMkSEJNrMD+q8V9ulQBi5dZmWEvk6U82BoJ+F7XP8OYJHkkkMx2mQKozu3sKTQCCpSx2
+         9EoEURQz+ZOqqwApbhk5GLMOx03wrxIDuyJqPPX7hFX42eyLhQI/26M5IWSZz0m8qPM7
+         5W5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dxahPGX4Bh5058cW7YZytcQVfwGeo/dvZ/Z3buLNEgI=;
+        b=VqrWevh1TLRcPc341yg/JnSL4n1aGQ39XMS+eca4ZONmXBLHUkGVWLT4fNgmlin++g
+         djlu9ev2zFgg7IpnUt4bJglT8pgvTLoapV8M1suF0fNs4vQboCsCoZSNYJuw+YfgSrvK
+         PkjNTPWbPOOfjBskZQDZfN4vaN74XvOZUchXXjo6C6Vgv7PZW2kq6f0M691QGFah83tr
+         at+Xg1NoIc5Jibv4rFtmzC9aSNg+eA34uXn3X5UjlnD4AYDRY8Dq79NSvMrNSx2dSwe2
+         XVicIry+Y4ADTqVbnN4W9PQTevmlZ/O64jEUQbyplKfi+TFnYCDH1tLhuIQT1J1EFYWQ
+         QaZg==
+X-Gm-Message-State: AOAM532DEai+j4YaNPa/T0BFb8wdMFnKLZqBOvGU6icvHRi6O875aoWe
+        DY8G2CbgJQOMdTIEPcfSwzE9qmnoZIELgA==
+X-Google-Smtp-Source: ABdhPJyNi9OTyZw2VFnPvA+QkvNgnAyrYB3D2Nhm8U0fXkMq+OXyT4UGUEy5kcRB5mjWXCO41/uYlw==
+X-Received: by 2002:a17:906:33ca:: with SMTP id w10mr6841091eja.438.1599210949388;
+        Fri, 04 Sep 2020 02:15:49 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:598:b904:9293:1d41:83f0:a723:a7e3])
+        by smtp.gmail.com with ESMTPSA id a26sm5562066ejk.66.2020.09.04.02.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 02:15:48 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     beanhuo@micron.com
+Subject: [PATCH 0/2] use generic_file_buffered_read()
+Date:   Fri,  4 Sep 2020 11:13:39 +0200
+Message-Id: <20200904091341.28756-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 03/09/2020 22:23, Jens Axboe wrote:
-> On 8/19/20 9:20 AM, John Garry wrote:
->> Hi all,
->>
->> Here is v8 of the patchset.
->>
->> In this version of the series, we keep the shared sbitmap for driver tags,
->> and introduce changes to fix up the tag budgeting across request queues.
->> We also have a change to count requests per-hctx for when an elevator is
->> enabled, as an optimisation. I also dropped the debugfs changes - more on
->> that below.
->>
->> Some performance figures:
->>
->> Using 12x SAS SSDs on hisi_sas v3 hw. mq-deadline results are included,
->> but it is not always an appropriate scheduler to use.
->>
->> Tag depth 		4000 (default)			260**
->>
->> Baseline (v5.9-rc1):
->> none sched:		2094K IOPS			513K
->> mq-deadline sched:	2145K IOPS			1336K
->>
->> Final, host_tagset=0 in LLDD *, ***:
->> none sched:		2120K IOPS			550K
->> mq-deadline sched:	2121K IOPS			1309K
->>
->> Final ***:
->> none sched:		2132K IOPS			1185			
->> mq-deadline sched:	2145K IOPS			2097	
->>
->> * this is relevant as this is the performance in supporting but not
->>    enabling the feature
->> ** depth=260 is relevant as some point where we are regularly waiting for
->>     tags to be available. Figures were are a bit unstable here.
->> *** Included "[PATCH V4] scsi: core: only re-run queue in
->>      scsi_end_request() if device queue is busy"
->>
->> A copy of the patches can be found here:
->> https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-v8
->>
->> The hpsa patch depends on:
->> https://lore.kernel.org/linux-scsi/20200430131904.5847-1-hare@suse.de/
->>
->> And the smartpqi patch is not to be accepted.
->>
->> Comments (and testing) welcome, thanks!
-> 
-> I applied 1-11, leaving the SCSI core bits and drivers to Martin. I can
-> also carry them, just let me know.
-> 
+From: Bean Huo <beanhuo@micron.com>
 
-Great, thanks!
 
-So the SCSI parts depend on the block parts for building, so I guess it 
-makes sense if you could carry them also.
+Bean Huo (2):
+  block: use generic_file_buffered_read()
+  fs: isofs: use generic_file_buffered_read()
 
-hpsa and smartpqi patches are pending for now, but the rest could be 
-picked up. Martin/James may want more review of the SCSI core bits, though.
+ drivers/block/sunvdc.c | 6 +++---
+ fs/isofs/compress.c    | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks again,
-John
-
+-- 
+2.17.1
 
