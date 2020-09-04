@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C0C225D63D
-	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 943A925D65D
+	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:34:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgIDKas (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Sep 2020 06:30:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48002 "EHLO mx2.suse.de"
+        id S1730208AbgIDKey (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Sep 2020 06:34:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48288 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730161AbgIDKaJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:30:09 -0400
+        id S1730106AbgIDKbV (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:31:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CE966B802;
-        Fri,  4 Sep 2020 10:30:08 +0000 (UTC)
-Subject: Re: [PATCH 18/19] z2ram: use separate gendisk for the different modes
+        by mx2.suse.de (Postfix) with ESMTP id 01B79AF6D;
+        Fri,  4 Sep 2020 10:30:35 +0000 (UTC)
+Subject: Re: [PATCH 19/19] block: switch gendisk lookup to a simple xarray
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -28,14 +28,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
 References: <20200903080119.441674-1-hch@lst.de>
- <20200903080119.441674-19-hch@lst.de>
+ <20200903080119.441674-20-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <c4d3abbf-ee71-d07b-58b2-72340a777b35@suse.de>
-Date:   Fri, 4 Sep 2020 12:30:06 +0200
+Message-ID: <3dae7f00-58bc-c857-7c90-08ec336783c9@suse.de>
+Date:   Fri, 4 Sep 2020 12:30:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200903080119.441674-19-hch@lst.de>
+In-Reply-To: <20200903080119.441674-20-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -45,15 +45,15 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/3/20 10:01 AM, Christoph Hellwig wrote:
-> Use separate gendisks (which share a tag_set) for the different operating
-> modes instead of redirecting the gendisk lookup using a probe callback.
-> This avoids potential problems with aliased block_device instances and
-> will eventually allow for removing the blk_register_region framework.
+> Now that bdev_map is only used for finding gendisks, we can use
+> a simple xarray instead of the regions tracking structure for it.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->   drivers/block/z2ram.c | 100 ++++++++++++++++++++++++------------------
->   1 file changed, 58 insertions(+), 42 deletions(-)
+>   block/genhd.c         | 208 ++++++++----------------------------------
+>   include/linux/genhd.h |   7 --
+>   2 files changed, 37 insertions(+), 178 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
