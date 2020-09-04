@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFBBD25D5F7
-	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C71D25D61D
+	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgIDKWs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Sep 2020 06:22:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38222 "EHLO mx2.suse.de"
+        id S1730180AbgIDKZ5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Sep 2020 06:25:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39028 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgIDKWr (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:22:47 -0400
+        id S1729995AbgIDKXh (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:23:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A3BB0AEC4;
-        Fri,  4 Sep 2020 10:22:46 +0000 (UTC)
-Subject: Re: [PATCH 09/19] sd: use __register_blkdev to avoid a modprobe for
- an unregistered dev_t
+        by mx2.suse.de (Postfix) with ESMTP id A8544B7E3;
+        Fri,  4 Sep 2020 10:23:36 +0000 (UTC)
+Subject: Re: [PATCH 10/19] brd: use __register_blkdev to allocate devices on
+ demand
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -29,14 +29,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
 References: <20200903080119.441674-1-hch@lst.de>
- <20200903080119.441674-10-hch@lst.de>
+ <20200903080119.441674-11-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <37e98474-0a73-0952-201d-850461bd9f6c@suse.de>
-Date:   Fri, 4 Sep 2020 12:22:43 +0200
+Message-ID: <7a14a59e-9ff2-73e3-6fb6-b19e1d472699@suse.de>
+Date:   Fri, 4 Sep 2020 12:23:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200903080119.441674-10-hch@lst.de>
+In-Reply-To: <20200903080119.441674-11-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -46,16 +46,14 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/3/20 10:01 AM, Christoph Hellwig wrote:
-> Switch from using blk_register_region to the probe callback passed to
-> __register_blkdev to disable the request_module call for an unclaimed
-> dev_t in the SD majors.
+> Use the simpler mechanism attached to major_name to allocate a brd device
+> when a currently unregistered minor is accessed.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   drivers/scsi/sd.c | 19 +++++--------------
->   1 file changed, 5 insertions(+), 14 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+>   drivers/block/brd.c | 39 +++++++++++----------------------------
+>   1 file changed, 11 insertions(+), 28 deletions(-)
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
 
