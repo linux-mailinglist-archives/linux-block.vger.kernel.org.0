@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5695725D638
-	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0C225D63D
+	for <lists+linux-block@lfdr.de>; Fri,  4 Sep 2020 12:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgIDK3u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Sep 2020 06:29:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47530 "EHLO mx2.suse.de"
+        id S1728588AbgIDKas (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Sep 2020 06:30:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48002 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbgIDK3k (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:29:40 -0400
+        id S1730161AbgIDKaJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:30:09 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B59A0B7F8;
-        Fri,  4 Sep 2020 10:29:39 +0000 (UTC)
-Subject: Re: [PATCH 17/19] z2ram: reindent
+        by mx2.suse.de (Postfix) with ESMTP id CE966B802;
+        Fri,  4 Sep 2020 10:30:08 +0000 (UTC)
+Subject: Re: [PATCH 18/19] z2ram: use separate gendisk for the different modes
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -28,14 +28,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
 References: <20200903080119.441674-1-hch@lst.de>
- <20200903080119.441674-18-hch@lst.de>
+ <20200903080119.441674-19-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <f1408b96-863e-0ca2-13a5-2e1d9c85546d@suse.de>
-Date:   Fri, 4 Sep 2020 12:29:37 +0200
+Message-ID: <c4d3abbf-ee71-d07b-58b2-72340a777b35@suse.de>
+Date:   Fri, 4 Sep 2020 12:30:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200903080119.441674-18-hch@lst.de>
+In-Reply-To: <20200903080119.441674-19-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -45,13 +45,15 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/3/20 10:01 AM, Christoph Hellwig wrote:
-> reindent the driver using Lident as the code style was far away from
-> normal Linux code.
+> Use separate gendisks (which share a tag_set) for the different operating
+> modes instead of redirecting the gendisk lookup using a probe callback.
+> This avoids potential problems with aliased block_device instances and
+> will eventually allow for removing the blk_register_region framework.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   drivers/block/z2ram.c | 493 ++++++++++++++++++++----------------------
->   1 file changed, 236 insertions(+), 257 deletions(-)
+>   drivers/block/z2ram.c | 100 ++++++++++++++++++++++++------------------
+>   1 file changed, 58 insertions(+), 42 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
