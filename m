@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93D77261DF6
-	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42777261E2C
+	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:48:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732403AbgIHToW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Sep 2020 15:44:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53124 "EHLO
+        id S1732165AbgIHTpy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Sep 2020 15:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbgIHPvm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Sep 2020 11:51:42 -0400
+        with ESMTP id S1730786AbgIHPuw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Sep 2020 11:50:52 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304B6C0A3BEA;
-        Tue,  8 Sep 2020 07:55:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6FCC0A3BF0;
+        Tue,  8 Sep 2020 07:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=AIbdaWqDOZXyI97EfNIUO6cOxzS/iRi/fiJ/sz/ZAL8=; b=GIpniUBInLXgvz98qrm3XEFBUU
-        jI7kZn/WrtbX4474Skgn5Iwip5HLeqPsKx5DEn4psj2SQF9WbRQFr6hKKl3VF9Ii5a+mcgkre1Sza
-        LvVllN82PZVtFinvq56fIrZ+RrfX3jfJo2TnUV32FrYcLzR4jFJCrT6NEMboJtHMh3kzEw0gcMwMo
-        kjJpuGwfTeKms3eK/8v1oiodNb55XfT3nmCYDptXrSPYQqqabbpKVI0KcHMhN7OEQmG5UydppiZWH
-        7B0QIIZZTgk9Gy3y1V11t3QVuwPYZecByMco+KFniEh8KoEeAjHYCnn8GTwF55IekYLSdRaFbpzFI
-        XKaiiNDg==;
+        bh=e8UHu128BOucpF3Nt3G76NBwCQdX+XymqNnsSMwHxZQ=; b=ULEEX4pqiG0rpUIcfCQiiH99la
+        0zqHLiRmorEWRz3YaTpL5W/sFi0/Zv9L1qH5VnRIzVggbwz+MIu2EJywgEE4vOmpkf3VgvA9A6uTF
+        BGbhuaQVQ45BvFItW8hPcDX9RBUx2lonpU781IaOo/EeON4VIX1JEIi2CA7BKPMisiR/HD7j87J5e
+        X2vB8KoUkr8T43SpK5vCMoBk4fXayWzO/7Et49o9ZYAR92y0YOVyXkkhUTa3u8NXgUosSEgmfOb6y
+        IS72enXK/zrLXMeQw/9wEM8iCmsLQGXMzx4fRNbc9V2lfNmtq6ApMFTs6cT1b4ocoyQ2/kfkO7EPt
+        67W1vvkw==;
 Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf0u-0002xt-QY; Tue, 08 Sep 2020 14:54:30 +0000
+        id 1kFf14-0002yj-Ly; Tue, 08 Sep 2020 14:54:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
@@ -42,9 +42,9 @@ Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
         linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-fsdevel@vger.kernel.org,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 08/19] xsysace: use bdev_check_media_change
-Date:   Tue,  8 Sep 2020 16:53:36 +0200
-Message-Id: <20200908145347.2992670-9-hch@lst.de>
+Subject: [PATCH 12/19] ide-cd: use bdev_check_media_changed
+Date:   Tue,  8 Sep 2020 16:53:40 +0200
+Message-Id: <20200908145347.2992670-13-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
 References: <20200908145347.2992670-1-hch@lst.de>
@@ -56,40 +56,48 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Switch to use bdev_check_media_change instead of check_disk_change and
-call ace_revalidate_disk manually.  Given that ace_revalidate_disk only
-deals with media change events, the extra call into ->revalidate_disk
-from bdev_disk_changed is not required either, so stop wiring up the
-method.
+Switch to use bdev_check_media_changed instead of check_disk_change and
+call idecd_revalidate_disk manually.  Given that idecd_revalidate_disk
+only re-reads the TOC, and we already do the same at probe time, the
+extra call into ->revalidate_disk from bdev_disk_changed is not required
+either, so stop wiring up the method.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- drivers/block/xsysace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/ide/ide-cd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-index 5d8e0ab3f054f5..eefe542f2d9fff 100644
---- a/drivers/block/xsysace.c
-+++ b/drivers/block/xsysace.c
-@@ -922,7 +922,8 @@ static int ace_open(struct block_device *bdev, fmode_t mode)
- 	ace->users++;
- 	spin_unlock_irqrestore(&ace->lock, flags);
+diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c
+index 212bb2d8bf346a..6a38cbc80aea0d 100644
+--- a/drivers/ide/ide-cd.c
++++ b/drivers/ide/ide-cd.c
+@@ -56,6 +56,7 @@ static DEFINE_MUTEX(ide_cd_mutex);
+ static DEFINE_MUTEX(idecd_ref_mutex);
+ 
+ static void ide_cd_release(struct device *);
++static int idecd_revalidate_disk(struct gendisk *disk);
+ 
+ static struct cdrom_info *ide_cd_get(struct gendisk *disk)
+ {
+@@ -1611,7 +1612,8 @@ static int idecd_open(struct block_device *bdev, fmode_t mode)
+ 	struct cdrom_info *info;
+ 	int rc = -ENXIO;
  
 -	check_disk_change(bdev);
 +	if (bdev_check_media_change(bdev))
-+		ace_revalidate_disk(bdev->bd_disk);
- 	mutex_unlock(&xsysace_mutex);
++		idecd_revalidate_disk(bdev->bd_disk);
  
- 	return 0;
-@@ -966,7 +967,6 @@ static const struct block_device_operations ace_fops = {
- 	.open = ace_open,
- 	.release = ace_release,
- 	.check_events = ace_check_events,
--	.revalidate_disk = ace_revalidate_disk,
- 	.getgeo = ace_getgeo,
+ 	mutex_lock(&ide_cd_mutex);
+ 	info = ide_cd_get(bdev->bd_disk);
+@@ -1770,7 +1772,6 @@ static const struct block_device_operations idecd_ops = {
+ 	.compat_ioctl		= IS_ENABLED(CONFIG_COMPAT) ?
+ 				  idecd_compat_ioctl : NULL,
+ 	.check_events		= idecd_check_events,
+-	.revalidate_disk	= idecd_revalidate_disk
  };
  
+ /* module options */
 -- 
 2.28.0
 
