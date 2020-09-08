@@ -2,180 +2,194 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D44B5261C03
-	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FA4D261DB6
+	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgIHTNS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Sep 2020 15:13:18 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30197 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731556AbgIHTNI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599592387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bcfVJwdzfFexrOio9oZWYIWlgfNjTYXVJ1Kpad3V6TU=;
-        b=QR8WQn/LMH01bzwJehakkMmmovhbWdrQT69APr6kuTfYi6eEKn6TPw8pScdHIIgYbLx/6f
-        3HWRGowuutFZbdaY/RAKimSVMdE3c1k9Bl8FRUlh0+nIyWGBOYBHK4Dvynd9dROTGgk95b
-        0kAqHX1zt3cnX6FwMzz6rHHULNEVYUg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-rGDQmpUoP5q9r1Va7zZsig-1; Tue, 08 Sep 2020 15:13:05 -0400
-X-MC-Unique: rGDQmpUoP5q9r1Va7zZsig-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5AE018BA283;
-        Tue,  8 Sep 2020 19:13:03 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-112-153.rdu2.redhat.com [10.10.112.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23F3B1002D49;
-        Tue,  8 Sep 2020 19:13:03 +0000 (UTC)
-Subject: Re: panic happened on 5.8.6-rc2-650d8f2
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Jianlin Shi <jishi@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>
-References: <CABE0yyhP+MSNM4-GJ7hDN+kNMg=LWrg9eze5zFt3S6jCN9P7_Q@mail.gmail.com>
- <CABE0yyj4YBD+DQumY6a3uvahfqY+4D4AAUs2Ja3+JGMfxPQxfQ@mail.gmail.com>
- <7fe5bdcc-b366-2139-01f3-da613323eaba@kernel.dk>
- <D322EAC5-3C07-4752-A171-3FF74A766F5C@linaro.org>
-From:   Rachel Sibley <rasibley@redhat.com>
-Message-ID: <02908944-62fe-0f1a-0dc1-d8c11c43742d@redhat.com>
-Date:   Tue, 8 Sep 2020 15:13:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1731951AbgIHTlW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Sep 2020 15:41:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47746 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730922AbgIHPxm (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:53:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E8123AEAC;
+        Tue,  8 Sep 2020 12:46:45 +0000 (UTC)
+Subject: Re: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for
+ SCSI HBAs
+To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        don.brace@microsemi.com, kashyap.desai@broadcom.com,
+        ming.lei@redhat.com, bvanassche@acm.org, dgilbert@interlog.com,
+        paolo.valente@linaro.org, hch@lst.de
+Cc:     sumit.saxena@broadcom.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        esc.storagedev@microsemi.com, megaraidlinux.pdl@broadcom.com,
+        chenxiang66@hisilicon.com, luojiaxing@huawei.com
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <cef0e816-1b30-dd62-0f39-2842df766298@suse.de>
+Date:   Tue, 8 Sep 2020 14:46:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <D322EAC5-3C07-4752-A171-3FF74A766F5C@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On 9/7/20 3:05 AM, Paolo Valente wrote:
-> Hi Jianlin,
-> given the stack trace and the goal of commit
-> 2de791ab4918969d8108f15238a701968375f235 ("bfq: fix blkio cgroup
-> leakage v4"), this failure might be related to that commit.  Could you
-> please try reverting that commit and report back?
-
-Hi Paolo/Jianlin,
-
-I cloned the original job and was unable to reproduce the panic, I also don't see it
-for any previous or succeeding pipeline for stable tree. I setup a check to automatically
-tag the related pipeline in case we're able to reproduce it. We can also work on testing
-with the patch reverted, if we see it again we'll follow up in this thread.
-
-Thank you,
-Rachel
-
+On 8/19/20 5:20 PM, John Garry wrote:
+> Hi all,
 > 
-> Thanks,
-> Paolo
+> Here is v8 of the patchset.
 > 
->> Il giorno 7 set 2020, alle ore 04:02, Jens Axboe <axboe@kernel.dk> ha scritto:
->>
->> CC Paolo
->>
->>
->> On 9/6/20 6:36 PM, Jianlin Shi wrote:
->>> Hi,
->>>
->>> panic happened when we run jobs on 5.8.6-rc2-650d8f2:
->>> https://beaker.engineering.redhat.com/recipes/8756377#task115008997
->>>
->>> and the core trace is as follows, have you ever seen this before?
->>>
->>> [ 7522.385926] BUG: kernel NULL pointer dereference, address: 0000000000000000
->>> [ 7522.393694] #PF: supervisor read access in kernel mode
->>> [ 7522.399425] #PF: error_code(0x0000) - not-present page
->>> [ 7522.405154] PGD 0 P4D 0
->>> [ 7522.407977] Oops: 0000 [#1] SMP PTI
->>> [ 7522.411866] CPU: 14 PID: 668 Comm: kworker/14:1H Kdump: loaded
->>> Tainted: G             L    5.8.6-rc2-650d8f2.cki #1
->>> [ 7522.423510] Hardware name: Dell Inc. PowerEdge R630/0CNCJW, BIOS
->>> 1.2.10 03/09/2015
->>> [ 7522.431959] Workqueue: kblockd blk_mq_run_work_fn
->>> [ 7522.437206] RIP: 0010:__list_del_entry_valid+0x2d/0x4c
->>> [ 7522.442936] Code: 4c 8b 47 08 48 b8 00 01 00 00 00 00 ad de 48 39
->>> c2 0f 84 71 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c0 0f 84 91
->>> 00 00 00 <49> 8b 30 48 39 fe 0f 85 71 00 00 00 48 8b 52 08 48 39 f2 0f
->>> 85 56
->>> [ 7522.463891] RSP: 0018:ffffa5b9009dfcd8 EFLAGS: 00010017
->>> [ 7522.469719] RAX: dead000000000122 RBX: ffff8b458d4c9950 RCX:
->>> 0000000000000000
->>> [ 7522.477680] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
->>> ffff8b448a753938
->>> [ 7522.485640] RBP: ffff8b448a753898 R08: 0000000000000000 R09:
->>> ffff8b45bb6bb32c
->>> [ 7522.493600] R10: 0000000000000018 R11: 0000000000000018 R12:
->>> ffff8b448a753810
->>> [ 7522.501560] R13: ffff8b44993e2800 R14: 0000000000000000 R15:
->>> ffff8b458d07c900
->>> [ 7522.509520] FS:  0000000000000000(0000) GS:ffff8b45bfd80000(0000)
->>> knlGS:0000000000000000
->>> [ 7522.518548] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [ 7522.524957] CR2: 0000000000000000 CR3: 0000000875570005 CR4:
->>> 00000000001606e0
->>> [ 7522.532917] Call Trace:
->>> [ 7522.535647]  bfq_idle_extract+0x52/0xb0
->>> [ 7522.539926]  bfq_put_idle_entity+0x12/0x60
->>> [ 7522.544494]  bfq_bfqq_served+0xb0/0x190
->>> [ 7522.548770]  bfq_dispatch_request+0x2c2/0x1070
->>> [ 7522.553727]  blk_mq_do_dispatch_sched+0xa4/0x140
->>> [ 7522.558879]  ? newidle_balance+0x1c0/0x390
->>> [ 7522.563446]  __blk_mq_sched_dispatch_requests+0x159/0x160
->>> [ 7522.569467]  blk_mq_sched_dispatch_requests+0x30/0x60
->>> [ 7522.575102]  __blk_mq_run_hw_queue+0x49/0x110
->>> [ 7522.579962]  process_one_work+0x1b4/0x370
->>> [ 7522.584434]  worker_thread+0x53/0x3e0
->>> [ 7522.588517]  ? process_one_work+0x370/0x370
->>> [ 7522.593180]  kthread+0x119/0x140
->>> [ 7522.596779]  ? __kthread_bind_mask+0x60/0x60
->>> [ 7522.601541]  ret_from_fork+0x22/0x30
->>> [ 7522.605528] Modules linked in: scsi_transport_iscsi crypto_user
->>> can_bcm pptp gre l2tp_ip6 l2tp_ip l2tp_core ip6_udp_tunnel udp_tunnel
->>> rfcomm can_raw hidp bnep nfc af_key mpls_router ip_tunnel
->>> vsock_loopback vmw_vsock_virtio_transport_common
->>> vmw_vsock_vmci_transport vsock vmw_vmci kcm ieee802154_socket
->>> ieee802154 bluetooth ecdh_generic ecc fcrypt pcbc rxrpc pppoe pppox
->>> smc ib_core atm can mlx4_en mlx4_core n_gsm pps_ldisc slcan
->>> ppp_synctty n_hdlc mkiss ax25 ppp_async ppp_generic slip slhc nls_utf8
->>> isofs minix binfmt_misc nfsv3 nfs_acl rds brd exfat vfat fat loop sctp
->>> tun xt_multiport xt_nat xt_addrtype xt_mark xt_conntrack xt_MASQUERADE
->>> nft_counter xt_comment nft_compat nft_chain_nat nf_nat nf_conntrack
->>> nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink overlay fuse
->>> rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace fscache
->>> rfkill intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal
->>> intel_powerclamp coretemp iTCO_wdt intel_pmc_bxt iTCO_vendor_support
->>> sunrpc dcdbas
->>> [ 7522.605556]  kvm_intel kvm irqbypass rapl intel_cstate
->>> intel_uncore pcspkr ipmi_ssif lpc_ich mei_me mei igb dca ipmi_si
->>> ipmi_devintf ipmi_msghandler acpi_power_meter ip_tables xfs mgag200
->>> lpfc drm_vram_helper drm_kms_helper cec nvmet_fc drm_ttm_helper nvmet
->>> ttm crct10dif_pclmul nvme_fc crc32_pclmul crc32c_intel nvme_fabrics
->>> drm ghash_clmulni_intel i2c_algo_bit nvme_core megaraid_sas
->>> scsi_transport_fc wmi [last unloaded: dummy]
->>> [ 7522.744918] CR2: 0000000000000000
->>> [ 7522.748613] ---[ end trace ed34032a61d7e2a6 ]---
->>>
->>> Thanks & Best Regards,
->>>
->>> Jianlin Shi
->>>
->>
->>
->> -- 
->> Jens Axboe
->>
+> In this version of the series, we keep the shared sbitmap for driver tags,
+> and introduce changes to fix up the tag budgeting across request queues.
+> We also have a change to count requests per-hctx for when an elevator is
+> enabled, as an optimisation. I also dropped the debugfs changes - more on
+> that below.
 > 
+> Some performance figures:
+> 
+> Using 12x SAS SSDs on hisi_sas v3 hw. mq-deadline results are included,
+> but it is not always an appropriate scheduler to use.
+> 
+> Tag depth 		4000 (default)			260**
+> 
+> Baseline (v5.9-rc1):
+> none sched:		2094K IOPS			513K
+> mq-deadline sched:	2145K IOPS			1336K
+> 
+> Final, host_tagset=0 in LLDD *, ***:
+> none sched:		2120K IOPS			550K
+> mq-deadline sched:	2121K IOPS			1309K
+> 
+> Final ***:
+> none sched:		2132K IOPS			1185			
+> mq-deadline sched:	2145K IOPS			2097	
+> 
+> * this is relevant as this is the performance in supporting but not
+>   enabling the feature
+> ** depth=260 is relevant as some point where we are regularly waiting for
+>    tags to be available. Figures were are a bit unstable here.
+> *** Included "[PATCH V4] scsi: core: only re-run queue in
+>     scsi_end_request() if device queue is busy"
+> 
+> A copy of the patches can be found here:
+> https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-v8
+> 
+> The hpsa patch depends on:
+> https://lore.kernel.org/linux-scsi/20200430131904.5847-1-hare@suse.de/
+> 
+> And the smartpqi patch is not to be accepted.
+> 
+> Comments (and testing) welcome, thanks!
+> 
+> Differences to v7:
+> - Add null_blk and scsi_debug support
+> - Drop debugfs tags patch - it's too difficult to be the same between
+> hostwide and non-hostwide, as discussed:
+> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#mb3eb462d8be40273718505989abd12f8228c15fd
+> And from commit 6bf0eb550452 ("sbitmap: Consider cleared bits in
+> sbitmap_bitmap_show()"), I guess not many used this anyway...
+> - Add elevator per-hctx request count for optimisation
+> - Break up "blk-mq: rename blk_mq_update_tag_set_depth()" into 2x patches
+> - Pass flags for avoid per-hq queue tags init/free for hostwide tags
+> - Add Don's reviewed-tag and tested-by tags to appropiate patches
+> 	- (@Don, please let me know if issue with how I did this)
+> - Add "scsi: core: Show nr_hw_queues in sysfs"
+> - Rework megaraid SAS patch to have module param (Kashyap)
+> - rebase
+> 
+> V7 is here for more info:
+> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#t
+> 
+> Hannes Reinecke (5):
+>   blk-mq: Rename blk_mq_update_tag_set_depth()
+>   blk-mq: Free tags in blk_mq_init_tags() upon error
+>   scsi: Add host and host template flag 'host_tagset'
+>   hpsa: enable host_tagset and switch to MQ
+>   smartpqi: enable host tagset
+> 
+> John Garry (10):
+>   blk-mq: Pass flags for tag init/free
+>   blk-mq: Use pointers for blk_mq_tags bitmap tags
+>   blk-mq: Facilitate a shared sbitmap per tagset
+>   blk-mq: Relocate hctx_may_queue()
+>   blk-mq: Record nr_active_requests per queue for when using shared
+>     sbitmap
+>   blk-mq: Record active_queues_shared_sbitmap per tag_set for when using
+>     shared sbitmap
+>   null_blk: Support shared tag bitmap
+>   scsi: core: Show nr_hw_queues in sysfs
+>   scsi: hisi_sas: Switch v3 hw to MQ
+>   scsi: scsi_debug: Support host tagset
+> 
+> Kashyap Desai (2):
+>   blk-mq, elevator: Count requests per hctx to improve performance
+>   scsi: megaraid_sas: Added support for shared host tagset for
+>     cpuhotplug
+> 
+> Ming Lei (1):
+>   blk-mq: Rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
+> 
+Now that Jens merged the block bits in his tree, wouldn't it be better
+to re-send the SCSI bits only, thereby avoiding a potential merge error
+later on?
 
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
