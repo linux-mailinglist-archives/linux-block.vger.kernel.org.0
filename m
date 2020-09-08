@@ -2,145 +2,263 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD994261E06
-	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DEBD261D7B
+	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 21:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731791AbgIHTpM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Sep 2020 15:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730776AbgIHPvm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Sep 2020 11:51:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB37C0A3BF7;
-        Tue,  8 Sep 2020 07:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=fs8KDvUlBtih+JNIUNQobEQslvMWHTx5fiB3hsIGlEU=; b=fToRuRTLBzkwhKm/TBMIAObCfx
-        47SjRyodcVFkso9Pdp1Z4yO8OZ3afLCOAU2HivmVTsp3tP1Bs88OMnOZB7haSutu6gHet6t4VM3wp
-        yw1Wa+3VlMgjCzG1XqrEZAep3+D15GDpvLTW/mHCdv6Urlj/XZbc1Mi4vvIbLWP2FZPmjUyJsZ1Vv
-        yi0qc4NmeefS23wziWDUVQUXwMIwfzTbyLWpaBN3N8hJtzG+iTWHHG4AwwJjrYLudG25EJeXDoso9
-        RVK0YroYrfuP2PbYDLdLaevlsiDgFf5Jm5RM70YkGXbQXegJusJEa/ZMQ6NYGQUa1p9Yi1HBUDqt/
-        tlSbZePw==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf1I-00030J-0O; Tue, 08 Sep 2020 14:54:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 18/19] sr: simplify sr_block_revalidate_disk
-Date:   Tue,  8 Sep 2020 16:53:46 +0200
-Message-Id: <20200908145347.2992670-19-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
-References: <20200908145347.2992670-1-hch@lst.de>
+        id S1731359AbgIHThu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Sep 2020 15:37:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48792 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730849AbgIHPzp (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:55:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E7EC8B603;
+        Tue,  8 Sep 2020 15:54:18 +0000 (UTC)
+Subject: Re: PROBLEM: Long Workqueue delays V2
+To:     Jim Baxter <jim_baxter@mentor.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org,
+        "Frkuska, Joshua" <Joshua_Frkuska@mentor.com>,
+        "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
+        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>,
+        "Craske, Mark" <Mark_Craske@mentor.com>,
+        "Brown, Michael" <michael_brown@mentor.com>
+References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+ <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
+ <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <335b22f6-e579-5ff1-5353-7ab14ca43662@suse.cz>
+Date:   Tue, 8 Sep 2020 17:54:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Both callers have a valid CD struture available, so rely on that instead
-of getting another reference.  Also move the function to avoid a forward
-declaration.
+On 8/27/20 2:06 PM, Jim Baxter wrote:
+> Has anyone any ideas of how to investigate this delay further?
+> 
+> Comparing the perf output for unplugging the USB stick and using umount
+> which does not cause these delays in other workqueues the main difference
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- drivers/scsi/sr.c | 36 +++++++++++++-----------------------
- 1 file changed, 13 insertions(+), 23 deletions(-)
+I don't have that much insight in this, but isn't it that in case of umount, the
+exactly same work is done in the umount process context and not workqueues? So
+it might take the same time and cpu, stress the same paths, but as it's
+attributed to the process, there are no workqueue delays reported? Or does your
+measurements suggest otherwise?
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 34be94b62523fa..2b43c0f97442d4 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -86,7 +86,6 @@ static int sr_remove(struct device *);
- static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
- static int sr_done(struct scsi_cmnd *);
- static int sr_runtime_suspend(struct device *dev);
--static int sr_block_revalidate_disk(struct gendisk *disk);
- 
- static const struct dev_pm_ops sr_pm_ops = {
- 	.runtime_suspend	= sr_runtime_suspend,
-@@ -518,6 +517,17 @@ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt)
- 	return ret;
- }
- 
-+static void sr_revalidate_disk(struct scsi_cd *cd)
-+{
-+	struct scsi_sense_hdr sshdr;
-+
-+	/* if the unit is not ready, nothing more to do */
-+	if (scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr))
-+		return;
-+	sr_cd_check(&cd->cdi);
-+	get_sectorsize(cd);
-+}
-+
- static int sr_block_open(struct block_device *bdev, fmode_t mode)
- {
- 	struct scsi_cd *cd;
-@@ -531,7 +541,7 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
- 	sdev = cd->device;
- 	scsi_autopm_get_device(sdev);
- 	if (bdev_check_media_change(bdev))
--		sr_block_revalidate_disk(bdev->bd_disk);
-+		sr_revalidate_disk(cd);
- 
- 	mutex_lock(&cd->lock);
- 	ret = cdrom_open(&cd->cdi, bdev, mode);
-@@ -660,26 +670,6 @@ static unsigned int sr_block_check_events(struct gendisk *disk,
- 	return ret;
- }
- 
--static int sr_block_revalidate_disk(struct gendisk *disk)
--{
--	struct scsi_sense_hdr sshdr;
--	struct scsi_cd *cd;
--
--	cd = scsi_cd_get(disk);
--	if (!cd)
--		return -ENXIO;
--
--	/* if the unit is not ready, nothing more to do */
--	if (scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr))
--		goto out;
--
--	sr_cd_check(&cd->cdi);
--	get_sectorsize(cd);
--out:
--	scsi_cd_put(cd);
--	return 0;
--}
--
- static const struct block_device_operations sr_bdops =
- {
- 	.owner		= THIS_MODULE,
-@@ -803,7 +793,7 @@ static int sr_probe(struct device *dev)
- 
- 	dev_set_drvdata(dev, cd);
- 	disk->flags |= GENHD_FL_REMOVABLE;
--	sr_block_revalidate_disk(disk);
-+	sr_revalidate_disk(cd);
- 	device_add_disk(&sdev->sdev_gendev, disk, NULL);
- 
- 	sdev_printk(KERN_DEBUG, sdev,
--- 
-2.28.0
+> is that the problem case is executing the code in invalidate_mapping_pages()
+> and a large part of that arch_local_irq_restore() which is part of
+> releasing a lock, I would usually expect that requesting a lock would be
+> where delays may occur.
+> 
+> 	--94.90%--invalidate_partition
+> 	   __invalidate_device
+> 	   |          
+> 	   |--64.55%--invalidate_bdev
+> 	   |  |          
+> 	   |   --64.13%--invalidate_mapping_pages
+> 	   |     |          
+> 	   |     |--24.09%--invalidate_inode_page
+> 	   |     |   |          
+> 	   |     |   --23.44%--remove_mapping
+> 	   |     |     |          
+> 	   |     |      --23.20%--__remove_mapping
+> 	   |     |        |          
+> 	   |     |         --21.90%--arch_local_irq_restore
+> 	   |     |          
+> 	   |     |--22.44%--arch_local_irq_enable
+> 
+> Best regards,
+> Jim
+> 
+> -------- Original Message --------
+> Subject: Re: PROBLEM: Long Workqueue delays V2
+> From: Jim Baxter <jim_baxter@mentor.com>
+> To: 
+> Date: Wed Aug 19 2020 14:12:24 GMT+0100 (British Summer Time)
+> 
+>> Added linux-block List which may also be relevant to this issue.
+>> 
+>> -------- Original Message --------
+>> Subject: PROBLEM: Long Workqueue delays V2
+>> From: Jim Baxter <jim_baxter@mentor.com>
+>> To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+>> CC: "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>, "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+>> Date: Tue, 18 Aug 2020 12:58:13 +0100
+>> 
+>>> I am asking this question again to include the fs-devel list.
+>>>
+>>>
+>>> We have issues with the workqueue of the kernel overloading the CPU 0 
+>>> when we we disconnect a USB stick.
+>>>
+>>> This results in other items on the shared workqueue being delayed by
+>>> around 6.5 seconds with a default kernel configuration and 2.3 seconds
+>>> on a config tailored for our RCar embedded platform.
+>>>
+>>>
+>>>
+>>> We first noticed this issue on custom hardware and we have recreated it
+>>> on an RCar Starter Kit using a test module [1] to replicate the
+>>> behaviour, the test module outputs any delays of greater then 9ms.
+>>>
+>>> To run the test we have a 4GB random file on a USB stick and perform
+>>> the following test.
+>>> The stick is mounted as R/O and we are copying data from the stick:
+>>>
+>>> - Mount the stick.
+>>> mount -o ro,remount /dev/sda1
+>>>
+>>> - Load the Module:
+>>> # taskset -c 0 modprobe latency-mon
+>>>
+>>> - Copy large amount of data from the stick:
+>>> # dd if=/run/media/sda1/sample.txt of=/dev/zero
+>>> [ 1437.517603] DELAY: 10
+>>> 8388607+1 records in
+>>> 8388607+1 records out
+>>>
+>>>
+>>> - Disconnect the USB stick:
+>>> [ 1551.796792] usb 2-1: USB disconnect, device number 2
+>>> [ 1558.625517] DELAY: 6782
+>>>
+>>>
+>>> The Delay output 6782 is in milliseconds.
+>>>
+>>>
+>>>
+>>> Using umount stops the issue occurring but is unfortunately not guaranteed
+>>> in our particular system.
+>>>
+>>>
+>>> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
+>>> 98% of the CPU.
+>>>
+>>> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
+>>> and there is no particular workqueue function being executed a lot more then the 
+>>> others for the kworker/0:1+usb thread.
+>>>
+>>>
+>>> Using perf I identified the hub_events workqueue was spending a lot of time in
+>>> invalidate_partition(), I have included a cut down the captured data from perf in
+>>> [2] which shows the additional functions where the kworker spends most of its time.
+>>>
+>>>
+>>> I am aware there will be delays on the shared workqueue, are the delays
+>>> we are seeing considered normal?
+>>>
+>>>
+>>> Is there any way to mitigate or identify where the delay is?
+>>> I am unsure if this is a memory or filesystem subsystem issue.
+>>>
+>>>
+>>> Thank you for you help.
+>>>
+>>> Thanks,
+>>> Jim Baxter
+>>>
+>>> [1] Test Module:
+>>> // SPDX-License-Identifier: GPL-2.0
+>>> /*
+>>>  * Simple WQ latency monitoring
+>>>  *
+>>>  * Copyright (C) 2020 Advanced Driver Information Technology.
+>>>  */
+>>>
+>>> #include <linux/init.h>
+>>> #include <linux/ktime.h>
+>>> #include <linux/module.h>
+>>>
+>>> #define PERIOD_MS 100
+>>>
+>>> static struct delayed_work wq;
+>>> static u64 us_save;
+>>>
+>>> static void wq_cb(struct work_struct *work)
+>>> {
+>>> 	u64 us = ktime_to_us(ktime_get());
+>>> 	u64 us_diff = us - us_save;
+>>> 	u64 us_print = 0;
+>>>
+>>> 	if (!us_save)
+>>> 		goto skip_print;
+>>>
+>>>
+>>> 	us_print = us_diff / 1000 - PERIOD_MS;
+>>> 	if (us_print > 9)
+>>> 		pr_crit("DELAY: %lld\n", us_print);
+>>>
+>>> skip_print:
+>>> 	us_save = us;
+>>> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+>>> }
+>>>
+>>> static int latency_mon_init(void)
+>>> {
+>>> 	us_save = 0;
+>>> 	INIT_DELAYED_WORK(&wq, wq_cb);
+>>> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+>>>
+>>> 	return 0;
+>>> }
+>>>
+>>> static void latency_mon_exit(void)
+>>> {
+>>> 	cancel_delayed_work_sync(&wq);
+>>> 	pr_info("%s\n", __func__);
+>>> }
+>>>
+>>> module_init(latency_mon_init);
+>>> module_exit(latency_mon_exit);
+>>> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
+>>> MODULE_LICENSE("GPL");
+>>>
+>>>
+>>> [2] perf trace:
+>>>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
+>>>     |
+>>>     ---ret_from_fork
+>>>        kthread
+>>>        worker_thread
+>>>        |          
+>>>         --95.15%--process_one_work
+>>> 		  |          
+>>> 		   --94.99%--hub_event
+>>> 			 |          
+>>> 			  --94.99%--usb_disconnect
+>>> 			  <snip>
+>>> 				|  
+>>> 				--94.90%--invalidate_partition
+>>> 				   __invalidate_device
+>>> 				   |          
+>>> 				   |--64.55%--invalidate_bdev
+>>> 				   |  |          
+>>> 				   |   --64.13%--invalidate_mapping_pages
+>>> 				   |     |          
+>>> 				   |     |--24.09%--invalidate_inode_page
+>>> 				   |     |   |          
+>>> 				   |     |   --23.44%--remove_mapping
+>>> 				   |     |     |          
+>>> 				   |     |      --23.20%--__remove_mapping
+>>> 				   |     |        |          
+>>> 				   |     |         --21.90%--arch_local_irq_restore
+>>> 				   |     |          
+>>> 				   |     |--22.44%--arch_local_irq_enable
+>>> 				   |          
+>>> 					--30.35%--shrink_dcache_sb 
+>>> 					<snip>
+>>> 					  |      
+>>> 					  --30.17%--truncate_inode_pages_range
+>>>
+> 
 
