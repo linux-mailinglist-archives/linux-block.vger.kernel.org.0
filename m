@@ -2,124 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A68242610B9
-	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 13:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F2E2613D2
+	for <lists+linux-block@lfdr.de>; Tue,  8 Sep 2020 17:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgIHLew (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Sep 2020 07:34:52 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:65181 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbgIHLbl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Sep 2020 07:31:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599564700; x=1631100700;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=KZG/NuTelMriNRCqCes2IB90su2FrgrXyTjZrBRfP3Y=;
-  b=TYIo6hANQmJaar2q5obLEaq5zN2AaGgbJvDStc084eykF7w2q/lx0PFl
-   lnhkUJy90/8YcBNBMGCeZ+VtrXoOZ4G2gS03EtS0OGbagwdOXSO6kpFGS
-   tTB7zvRk90xBqqIfM7t/FbrAjp1lyfkpHFTG5IB/z735T7UjYkjjd1WVv
-   PrlTbORt+f14r3rVY81vj8Q/DczQlRhoq6nSXPtCJlR8YmfkxD1BLe42i
-   nm94NxXq2JEz20ywbhM9wDbRltnqe2K5latkJZrC56M93NFue/G0XySs/
-   xTFASa/piQXUcbvbLoCdbHCoHi4Q7vjop3dM7oEmVcIzdCfJPMBMVGgy8
-   A==;
-IronPort-SDR: KtpqL0bsZV/25F2/bI0OVMHvTgkyGqj5X7aimNdrBkFZZMIdQ9eIoY08MYTGTaXnSyZIud9iEL
- YZewnfhU41FhHBO8HUh7FDIQq4TxiDHAOqOIy2hQk2CtPWpyEnGbN9Qgj32+dvzs+GarywdgBj
- ZCf8qPOKkpe+aBe8KNStYrOh0+UgJDBhp9S/XdJ556pAhkV1r3eEZ7bOS6O6SS5LqGH8ML5kF2
- b4ReUiDCW4fLvnkKwfeqHq03x32m9H8nFICOoH1Gi/L1EdqbN/1/fG5dKyRTb5dqonxWcbg3yO
- nQM=
-X-IronPort-AV: E=Sophos;i="5.76,405,1592841600"; 
-   d="scan'208";a="146741364"
-Received: from mail-bn8nam11lp2172.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.172])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Sep 2020 19:31:29 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fj5etH2+HSWx5HQ4oBMY7elYbEOiPylqWuSI0MZcR49s6JBAwnko3IxTLC+7/vax3z/5WGJvtQnOd3T2Yhkt3h+oDKXkxP5d6wKZwI7U8npsP2e5+/I/TopVl6ot42hou5H/gom2ds//AGrblZNsPUIJj3dPAVTsrq1b2mpfHMS7/L4Eka4wU54Yf3ZzO1tNa94//RtkB2YbkPD0io5Jp+Tst51Hysz/XiRio04ykDBIUOc2jiwqcEtvPKsv1t7wOxauu8JDN4uiiLFy//ZzyOCK8nHMEdY1BoNXaJRVVH3ca9S+K1t5inzHX2v/O6hMhSoUP0XyzlNUQAuwV9mzNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KZG/NuTelMriNRCqCes2IB90su2FrgrXyTjZrBRfP3Y=;
- b=aLCotMbEqZch4ht+D9JtGe4yqFGiSQtSVv+EebtvuHyleXj/M4IGzZvH1ncnFsrsOPdM3McukkVGPcD6We7oVM3GYoP3/STazno06LHSPnPBO+ZMqV9KQicSi4eY/zuycCekeYSaFm7eTjPoft1lz5dIpPP7eVKPl8tgY2U62ANqkCKnf0Lc4teDxzS/JdFP8z/bMRr1DL34Oo68ggYaZO50aoPOBT0i1OtdePlSn3chS47Aqb6STyztV5PyXqc/vBkXyxsecYuTt+nUyXZqXWOlyP5njDnv5swN+EnfNKEnFqkK4jsqxEa1BE3XpgnOmZTLJoy4699LOovruoEmeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KZG/NuTelMriNRCqCes2IB90su2FrgrXyTjZrBRfP3Y=;
- b=K375qOZkcO6PPZumoV2S6OXi1sCv8T62bz1tE71Xno9YEQu9yuoe0n9+Au0GiF0A9BHRVBqqlMlXT4eGhq1024Ujogn/NZUKzUHRUfedO51n2JP1WoEoj3qDfgtqLqnL7s8AS5gPPO0YBKTT8urqxseLX1O87TN75oFnpCgfd0c=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4462.namprd04.prod.outlook.com
- (2603:10b6:805:ab::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Tue, 8 Sep
- 2020 11:31:28 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 11:31:27 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-CC:     Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chao Leng <lengchao@huawei.com>
-Subject: Re: [PATCH V3 1/4] blk-mq: serialize queue quiesce and unquiesce by
- mutex
-Thread-Topic: [PATCH V3 1/4] blk-mq: serialize queue quiesce and unquiesce by
- mutex
-Thread-Index: AQHWhbhN6y5xdbwP+E+IyHoHo5kJrw==
-Date:   Tue, 8 Sep 2020 11:31:27 +0000
-Message-ID: <SN4PR0401MB3598BEE7FCB019E3157338749B290@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200908081538.1434936-1-ming.lei@redhat.com>
- <20200908081538.1434936-2-ming.lei@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [62.216.205.181]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d9a17753-beb3-4fc2-4735-08d853eab9e4
-x-ms-traffictypediagnostic: SN6PR04MB4462:
-x-microsoft-antispam-prvs: <SN6PR04MB4462EB943DCFAA782EC0C8A19B290@SN6PR04MB4462.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VUtnWtyCEr0CuJPKIXSmp6NMGUrwmkE905Hgh6jhRx0tTBHVfL3OM6bpwXgASoLeVNKMwSLFdPhG/4cOhGaxIca4/5Jcdpa2Tu/T+2Boa6y3XrNZDksIlYqoZ7mQE4j/pTA2DV4+LK0eUJAotjQ+QnlDpLJi+rf/RZrFOvr1aHZmAA4q55SOZKAfcg4IOVfsU+0Mspmp96CJIOPN6aQguIY8MHIdtBOPNzxCijFSmu9/yGzaZA/dNXmZTifTInHsKOK8qP29SVq1pIEfk40rrX4p/jZ2vyOq9dBE/NGprdRMdVfQeEqVTx893B7rXhEorrGIXRqhOSrkWLYXx15vJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(66556008)(52536014)(66946007)(64756008)(91956017)(66446008)(66476007)(8676002)(2906002)(71200400001)(86362001)(186003)(76116006)(55016002)(54906003)(558084003)(8936002)(7696005)(33656002)(110136005)(9686003)(26005)(4326008)(5660300002)(6506007)(478600001)(316002)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 8UIrj+cVLaRNbnaU1fKx6PI1YG8glVq05TBMypo1IHvC8rUO79Mqooo94vueqhKTIZOU/o1Ju3NXJBEcukQM7RIWbnOJIcODGCeL5SkIB1GcaTF+gFNc6CVUZjFOktUJJueiVDJz/80itipBZl8Yw9E9F0jCIqXmZ6pOtVm0rCewdEdYe71ZmJKUKr/LUGbIR5h5ChT/2T2OUK5+GSrnfKgjSF7t1G6MJ/fS7bcbFJny6R4kh0dnA+RCHfkp+tks+yOxM9qqNHcq6Ktg5HfjkwJtfTOUhT0MLtfiG9TDsrk8qTFEK5jHJD0uP5annVTiwMN3zgFEleDK/UGbHdEvp7Vlo++ffwlf9X4cnuSLB8BVLL1fI4nTtkgCUaYkoXh0jQCqTq3aSYtPfibXxe0xo9HqpcTAuI+jIDNK6b/QrK0gatRaNrLKKXWvfaaKnLp49RQRlu8YHkZnkXfwqQnsYkYCAK9BmXFNe1YF2Gu3qdvMiLyAfso/hlG/mwobjBhJiUi9n2k9UJ2SHcfeazj7QftEL6+tsQk61G8kRsuGM1K+BkeXRxyRsoiq5U/QPj7D/FAq3NbaTj75zF9BLOZtlVyWHORAy+tQssbdoJEn34Dc1xahvwQejKtGRkPks5CONq2gajnXtWROrDIfu702MA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730863AbgIHPvy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Sep 2020 11:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730779AbgIHPux (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Sep 2020 11:50:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CF8C0A3BF2;
+        Tue,  8 Sep 2020 07:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=+zVHcucQifdjecrPBhxjClZkm2NjkT/RLZsD1fxF4P4=; b=ko5s17TLYKi28rzQRAAoq31zQ/
+        sfC2GOdl69IRxmLKZcQsa/k8a0GXiZ+umVW//0HgO5Fgv7b8S76wsrPhdwLL7Q4R1Xt2g0uB5iddx
+        l8OX+RO3CUFt6vACrGggetnHxpCNWp/RirodlGWGie0rjYr7aThkH4wHBbrXc8w4onm4vTbqciTqe
+        VJVnW+pXbo4wFQHSkUyCHgnbNDUtMRNfDJNinXDaGeW2X5VxRJAeQywpHRa/2Iot7BXopGkS2qY7/
+        AcJtui0CXtCixYCs94tac4VyaoOkq2lZhIP4OMyv9OqI4ny6ad+vb4CrcFqGt15GhiiRsHBuJ+CFU
+        ZGcTfpkw==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf1A-0002zJ-TG; Tue, 08 Sep 2020 14:54:45 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 15/19] md: use bdev_check_media_change
+Date:   Tue,  8 Sep 2020 16:53:43 +0200
+Message-Id: <20200908145347.2992670-16-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9a17753-beb3-4fc2-4735-08d853eab9e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 11:31:27.7574
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1p+sfMNFcvKfExawYM3WCC0EaJ4vxSJIi1A1n15biR5Tb0jVVkslsQoMNYKVwAFZwJOTjMUf/VCvNlLw72SqLaIDBMewEBwN68ewoqosWGw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4462
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 08/09/2020 10:16, Ming Lei wrote:=0A=
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>=0A=
-[...]=0A=
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>=0A=
-=0A=
-Double S-o-b=0A=
-=0A=
-Otherwise looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
-=0A=
+The md driver does not have a ->revalidate_disk method, so it can just
+use bdev_check_media_change without any additional changes.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/md/md.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9562ef598ae1f4..27ed61197014ef 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7848,7 +7848,7 @@ static int md_open(struct block_device *bdev, fmode_t mode)
+ 	atomic_inc(&mddev->openers);
+ 	mutex_unlock(&mddev->open_mutex);
+ 
+-	check_disk_change(bdev);
++	bdev_check_media_change(bdev);
+  out:
+ 	if (err)
+ 		mddev_put(mddev);
+-- 
+2.28.0
+
