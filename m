@@ -2,164 +2,149 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA3D263A32
-	for <lists+linux-block@lfdr.de>; Thu, 10 Sep 2020 04:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BF93263A93
+	for <lists+linux-block@lfdr.de>; Thu, 10 Sep 2020 04:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgIJCWw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Sep 2020 22:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
+        id S1730083AbgIJCfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Sep 2020 22:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730522AbgIJCUo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Sep 2020 22:20:44 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99322C061795
-        for <linux-block@vger.kernel.org>; Wed,  9 Sep 2020 19:20:33 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so159419plb.12
-        for <linux-block@vger.kernel.org>; Wed, 09 Sep 2020 19:20:33 -0700 (PDT)
+        with ESMTP id S1730644AbgIJCcb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Sep 2020 22:32:31 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4CCC0617BD
+        for <linux-block@vger.kernel.org>; Wed,  9 Sep 2020 16:44:29 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id k74so3707324ybf.23
+        for <linux-block@vger.kernel.org>; Wed, 09 Sep 2020 16:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=uZtoOwKYtsNFinbEP17eK0TcjEDx3wgWg9ndpqP7KNU=;
-        b=Pnkoe39bqJabvoo0ojb/o9LLCXqc1onnL4qfdvXXN0/K1OsPwsfjivIL5vQDSGnSrO
-         P02SnjA3159MaHvxZZyNdFWY7b1mM6uIi36g9edeoXtUuCLd+dgBXfGzsranod+EIBa0
-         VxqS4ufxRWaw3081ZcwaJlD3y/1v1FQYUgplOEG32nGnC6Su8JtNasPueRFL04Jb+lj3
-         7myYYhWKpL18SADIJBZC7AmqWix9Ra0eHkwop0I4f7GQwzvqdJmvuRVGN20z8yIojo7+
-         5kHqFbb/NJDrB0pGfLOHKBrU3vbgmq3fAXpX5U/IQLoAm5m8g+qGnAmLjQzsJ2u1sw3J
-         A7JQ==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=DHwWEFMQdmnuxNjm/Olb1jwBcPoSrUeSsheT6vgRQVs=;
+        b=NrRNO8Kqhm8eWcB+S17v1Q00oGlXJn0iJO0P2uWSg61PSn6lS0EjyAli4TQ77ChGla
+         6OeFSiAxeQvP9mD/gk2ASnnz37VgtAtjgKbNOft6v5q+p2EOZPI0bRdCM/3IAhzXhy5r
+         piKVJsdISgay54uz00OQk9Pq7T58lzuibbBOUOwv5Nxr7DEjxg3BiY1sQi4fnqPv2VAP
+         CawTLii12bD9YWr8gPd9A2aim7tRpbuyr/Cwevg9r9qMUetz8GHqtTyJNTFnnICnwq9/
+         pZKbkso9nobiOYKK5CRTrnSSb9qNAVFOKLrCONsJrWvPA6/H7My9pqLFzJQdpIIp0f18
+         7AzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uZtoOwKYtsNFinbEP17eK0TcjEDx3wgWg9ndpqP7KNU=;
-        b=h04qCoDgKgebxpBY8FlX0TRSi86fq6v2AEMuBD9ZTbGPay2VYc3cA82C8fG6ToLt4X
-         jjgIqNKgpuyXxTwIHGbIP8EgW7J6+woJJS+w4wkjZ8linDKMAhIBlCYZgjlMsWJDyqv0
-         PzzR8PZ3OYbZgZWLDWNUxH+Z0X9XkSdM9wQg5H3R2uQXC7o1SOXzYbTDrtXaJ0IBfd5d
-         HkXs790FKS+0hGaTYibmkjjZxCTvA/FI2mCHTz9Czyv37ofqJTmKpmX0m5UcNzCsLnLf
-         AmpwjKNQglgTNV/TWpdNGEbpS9xxJI9m2QM9+Si4RJELoqE1JdH/cYwrzoYyx04JBJQ4
-         +1lQ==
-X-Gm-Message-State: AOAM533jxEQ3oaMvjjGGanQ90X4mxC+4yvCY03DpAwp5c0tiCvVCkC7T
-        EQldU+ZdwfohyolH/dt4+G27vw==
-X-Google-Smtp-Source: ABdhPJw1VwIuxeCYOYqJLuox6GtHjWg3dPNyTtj4gQflfBSTKC8v0l+FkgTB0W5JxGpfQ6GPlMFn6Q==
-X-Received: by 2002:a17:902:c253:: with SMTP id 19mr3444489plg.65.1599704433135;
-        Wed, 09 Sep 2020 19:20:33 -0700 (PDT)
-Received: from libai.bytedance.net ([61.120.150.71])
-        by smtp.gmail.com with ESMTPSA id o1sm3781664pfg.83.2020.09.09.19.20.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 19:20:32 -0700 (PDT)
-From:   zhenwei pi <pizhenwei@bytedance.com>
-To:     axboe@kernel.dk
-Cc:     pizhenwei@bytedance.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] block: add io_error stat for block device
-Date:   Thu, 10 Sep 2020 10:20:26 +0800
-Message-Id: <20200910022026.632617-1-pizhenwei@bytedance.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=DHwWEFMQdmnuxNjm/Olb1jwBcPoSrUeSsheT6vgRQVs=;
+        b=ZKgorStE5oTJl69kQC+Bi14Dxki4DIMNK5TCICtidmqjIbWO3Ly8jShikRVpf/r1K0
+         QHj+geHEmczIw3iXO6YJI+uoL5I8QkBkLYBmc9TBjqXObmHBmXP5eF9C4+X050CDqUC9
+         PREq1997GuvPxybdw9cqBLzSOTQMECcBshexmxMbcB5Lt+vWq6gE+hsszoZPKL2JKKr1
+         9XDZjE6NTJX+2PuFsuH8ZynthYzCfA373SrfKwz344Gwikfck6pIcLZLRE1FHrcA1jE8
+         2HwyUJAlY5fDfTlxoGy/LjAEkbkOb5yJgVJekn/269+XpFw6lZMnX38abrrRl3fgCCHs
+         +AJw==
+X-Gm-Message-State: AOAM530Ra0vG/dL72e1rqycDeFBJExvj6eI/llO3f9Ta8YaoRJnmINfa
+        NYM7UuIquwho9YGqam3Cpv3sv8Kby0Kbhcecw6oatHZtvTx/RXVfQdWy5ng1LL23Q0FB3YhuX0z
+        eSOhW2zpFcV1RNuWjomMOg/kt05ztw83BD2asi3SkH+ZfrggbVX94n0zYg5OB4DnlKk5V
+X-Google-Smtp-Source: ABdhPJy+RSLuoVD0yGW7ois0IJb5w2X4VoW/pKKhpkdaqpbInVRXxyUdRDsnmKS+pqa57cpiNKv0/QxF4z0=
+X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:2d8e])
+ (user=satyat job=sendgmr) by 2002:a25:81cb:: with SMTP id n11mr9544225ybm.490.1599695068787;
+ Wed, 09 Sep 2020 16:44:28 -0700 (PDT)
+Date:   Wed,  9 Sep 2020 23:44:19 +0000
+Message-Id: <20200909234422.76194-1-satyat@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH 0/3] add support for inline encryption to device mapper
+From:   Satya Tangirala <satyat@google.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dm-devel@redhat.com
+Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Satya Tangirala <satyat@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently if hitting block req error, block layer only prints error
-log with a rate limitation. Then agent has to parse kernel log to
-record what happens.
+This patch series adds support for inline encryption to the device mapper.
 
-In this patch, add read/write/discard/flush stat counter to record
-io errors.
+Patch 1 introduces the "passthrough" keyslot manager.
 
-Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
----
- block/blk-core.c          | 14 +++++++++++---
- block/genhd.c             | 19 +++++++++++++++++++
- include/linux/part_stat.h |  1 +
- 3 files changed, 31 insertions(+), 3 deletions(-)
+The regular keyslot manager is designed for inline encryption hardware that
+have only a small fixed number of keyslots. A DM device itself does not
+actually have only a small fixed number of keyslots - it doesn't actually
+have any keyslots in the first place, and programming an encryption context
+into a DM device doesn't make much semantic sense. It is possible for a DM
+device to set up a keyslot manager with some "sufficiently large" number of
+keyslots in its request queue, so that upper layers can use the inline
+encryption capabilities of the DM device's underlying devices, but the
+memory being allocated for the DM device's keyslots is a waste since they
+won't actually be used by the DM device.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 10c08ac50697..8f1424835700 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1558,9 +1558,17 @@ bool blk_update_request(struct request *req, blk_status_t error,
- 		req->q->integrity.profile->complete_fn(req, nr_bytes);
- #endif
- 
--	if (unlikely(error && !blk_rq_is_passthrough(req) &&
--		     !(req->rq_flags & RQF_QUIET)))
--		print_req_error(req, error, __func__);
-+	if (unlikely(error && !blk_rq_is_passthrough(req))) {
-+		if (op_is_flush(req_op(req)))
-+			part_stat_inc(&req->rq_disk->part0,
-+				io_errors[STAT_FLUSH]);
-+		else
-+			part_stat_inc(&req->rq_disk->part0,
-+				io_errors[op_stat_group(req_op(req))]);
-+
-+		if (!(req->rq_flags & RQF_QUIET))
-+			print_req_error(req, error, __func__);
-+	}
- 
- 	blk_account_io_completion(req, nr_bytes);
- 
-diff --git a/block/genhd.c b/block/genhd.c
-index 99c64641c314..852035095485 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -104,6 +104,7 @@ static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
- 			stat->sectors[group] += ptr->sectors[group];
- 			stat->ios[group] += ptr->ios[group];
- 			stat->merges[group] += ptr->merges[group];
-+			stat->io_errors[group] += ptr->io_errors[group];
- 		}
- 
- 		stat->io_ticks += ptr->io_ticks;
-@@ -1374,6 +1375,22 @@ static ssize_t disk_discard_alignment_show(struct device *dev,
- 	return sprintf(buf, "%d\n", queue_discard_alignment(disk->queue));
- }
- 
-+static ssize_t io_error_show(struct device *dev,
-+		      struct device_attribute *attr, char *buf)
-+{
-+	struct hd_struct *p = dev_to_part(dev);
-+	struct disk_stats stat;
-+
-+	part_stat_read_all(p, &stat);
-+
-+	return sprintf(buf,
-+		"%8lu %8lu %8lu %8lu\n",
-+		stat.io_errors[STAT_READ],
-+		stat.io_errors[STAT_WRITE],
-+		stat.io_errors[STAT_DISCARD],
-+		stat.io_errors[STAT_FLUSH]);
-+}
-+
- static DEVICE_ATTR(range, 0444, disk_range_show, NULL);
- static DEVICE_ATTR(ext_range, 0444, disk_ext_range_show, NULL);
- static DEVICE_ATTR(removable, 0444, disk_removable_show, NULL);
-@@ -1386,6 +1403,7 @@ static DEVICE_ATTR(capability, 0444, disk_capability_show, NULL);
- static DEVICE_ATTR(stat, 0444, part_stat_show, NULL);
- static DEVICE_ATTR(inflight, 0444, part_inflight_show, NULL);
- static DEVICE_ATTR(badblocks, 0644, disk_badblocks_show, disk_badblocks_store);
-+static DEVICE_ATTR(io_error, 0444, io_error_show, NULL);
- 
- #ifdef CONFIG_FAIL_MAKE_REQUEST
- ssize_t part_fail_show(struct device *dev,
-@@ -1437,6 +1455,7 @@ static struct attribute *disk_attrs[] = {
- #ifdef CONFIG_FAIL_IO_TIMEOUT
- 	&dev_attr_fail_timeout.attr,
- #endif
-+	&dev_attr_io_error.attr,
- 	NULL
- };
- 
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index 24125778ef3e..4fe3836d2308 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -9,6 +9,7 @@ struct disk_stats {
- 	unsigned long sectors[NR_STAT_GROUPS];
- 	unsigned long ios[NR_STAT_GROUPS];
- 	unsigned long merges[NR_STAT_GROUPS];
-+	unsigned long io_errors[NR_STAT_GROUPS];
- 	unsigned long io_ticks;
- 	local_t in_flight[2];
- };
+The passthrough keyslot manager solves this issue - when the block layer
+sees that a request queue has a passthrough keyslot manager, it doesn't
+attempt to program any encryption context into the keyslot manager. The
+passthrough keyslot manager only allows the device to expose its inline
+encryption capabilities, and a way for upper layers to evict keys if
+necessary.
+
+There also exist inline encryption hardware that can handle encryption
+contexts directly, and allow users to pass them a data request along with
+the encryption context (as opposed to inline encryption hardware that
+require users to first program a keyslot with an encryption context, and
+then require the users to pass the keyslot index with the data request).
+Such devices can also make use of the passthrough keyslot manager.
+
+Patch 2 introduces the changes for inline encryption support for the device
+mapper. A DM device only exposes the intersection of the crypto
+capabilities of its underlying devices. This is so that in case a bio with
+an encryption context is eventually mapped to an underlying device that
+doesn't support that encryption context, the blk-crypto-fallback's cipher
+tfms are allocated ahead of time by the call to blk_crypto_start_using_key.
+
+Each DM target can now also specify that it "may_passthrough_inline_crypto"
+to opt-in to supporting passing through the underlying inline encryption
+capabilities.  This flag is needed because it doesn't make much semantic
+sense for certain targets like dm-crypt to expose the underlying inline
+encryption capabilities to the upper layers. Again, the DM exposes inline
+encryption capabilities of the underlying devices only if all of them
+opt-in to passing through inline encryption support.
+
+This patch doesn't handle the possibility that the crypto capabilities of a
+DM device may change at runtime after the initial table is loaded. While it
+may be possible to handle the case with (possibly quite) some effort, the
+use case might be unlikely enough in practice that it doesn't matter right
+now. This patch also only exposes the intersection of the underlying
+device's capabilities, which has the effect of causing en/decryption of a
+bio to fall back to the kernel crypto API (if the fallback is enabled)
+whenever any of the underlying devices doesn't support the encryption
+context of the bio - it might be possible to make the bio only fall back to
+the kernel crypto API if the bio's target underlying device doesn't support
+the bio's encryption context, but again, the use case may be uncommon
+enough in the first place not to warrant worrying about it right now.
+
+Patch 3 makes some DM targets opt-in to passing through inline encryption
+support. It does not (yet) try to enable this option with dm-raid, since
+users can "hot add" disks to a raid device, which makes this not completely
+straightforward (we'll need to ensure that any "hot added" disks must have
+a superset of the inline encryption capabilities of the rest of the disks
+in the raid device, due to the way Patch 2 of this series works).
+
+Eric Biggers (2):
+  dm: add support for passing through inline crypto support
+  dm: enable may_passthrough_inline_crypto on some targets
+
+Satya Tangirala (1):
+  block: keyslot-manager: Introduce passthrough keyslot manager
+
+ block/blk-crypto.c              |  1 +
+ block/keyslot-manager.c         | 75 +++++++++++++++++++++++++++
+ drivers/md/dm-core.h            |  4 ++
+ drivers/md/dm-flakey.c          |  1 +
+ drivers/md/dm-linear.c          |  1 +
+ drivers/md/dm-table.c           | 52 +++++++++++++++++++
+ drivers/md/dm-zero.c            |  1 +
+ drivers/md/dm.c                 | 92 ++++++++++++++++++++++++++++++++-
+ include/linux/device-mapper.h   |  6 +++
+ include/linux/keyslot-manager.h |  9 ++++
+ 10 files changed, 241 insertions(+), 1 deletion(-)
+
 -- 
-2.11.0
+2.28.0.618.gf4bc123cb7-goog
 
