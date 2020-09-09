@@ -2,96 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F87626284F
-	for <lists+linux-block@lfdr.de>; Wed,  9 Sep 2020 09:18:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4948A26286E
+	for <lists+linux-block@lfdr.de>; Wed,  9 Sep 2020 09:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgIIHSr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Sep 2020 03:18:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40598 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729135AbgIIHSp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:18:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599635923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8kHLShDIjtW+nOie5lwVauvpaW35ekCPOUCvTdPotmg=;
-        b=bf/yfZM6NDPiar3UcMy36StZGiXT7Q1+CHXsOuIIQTZlT8WpgRzpEFc2KVj6vk7i9BjfG4
-        o/FAymVM6Xtlf1oCHuYWvHCivC4xFPdqEMcloBWROJoPeiLubjRHhI6H4W0BJ/P+0mMj9J
-        GfdGlkvKqbHA15eKrV5GL3qXyd8obmg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-eHeI1RO6Ov2mrQOsZapeZA-1; Wed, 09 Sep 2020 03:18:42 -0400
-X-MC-Unique: eHeI1RO6Ov2mrQOsZapeZA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B057D10055B6;
-        Wed,  9 Sep 2020 07:18:40 +0000 (UTC)
-Received: from localhost (ovpn-12-76.pek2.redhat.com [10.72.12.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0C425C1C4;
-        Wed,  9 Sep 2020 07:18:39 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH V4 3/3] block: move 'q_usage_counter' into front of 'request_queue'
-Date:   Wed,  9 Sep 2020 15:18:13 +0800
-Message-Id: <20200909071813.1580038-4-ming.lei@redhat.com>
-In-Reply-To: <20200909071813.1580038-1-ming.lei@redhat.com>
-References: <20200909071813.1580038-1-ming.lei@redhat.com>
+        id S1728207AbgIIHVd convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 9 Sep 2020 03:21:33 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728584AbgIIHVc (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:21:32 -0400
+Received: from dggeme701-chm.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id E3AFDEFBD496FBEB8A4A;
+        Wed,  9 Sep 2020 15:21:29 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme701-chm.china.huawei.com (10.1.199.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 9 Sep 2020 15:21:29 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Wed, 9 Sep 2020 15:21:29 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "hare@suse.de" <hare@suse.de>
+Subject: Re: [PATCH] block: Fix potential page reference leak in
+ __bio_iov_append_get_pages()
+Thread-Topic: [PATCH] block: Fix potential page reference leak in
+ __bio_iov_append_get_pages()
+Thread-Index: AdaGeYbS4+128GBUdUCUDmTThZkpcw==
+Date:   Wed, 9 Sep 2020 07:21:29 +0000
+Message-ID: <022b3453c5bf4bbf9fcee79770e0389a@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.178.74]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-CFilter-Loop: Reflected
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The field of 'q_usage_counter' is always fetched in fast path of every
-block driver, and move it into front of 'request_queue', so it can be
-fetched into 1st cacheline of 'request_queue' instance.
+Johannes Thumshirn <Johannes.Thumshirn@wdc.com> wrote:
+>On 05/09/2020 11:41, Miaohe Lin wrote:
+>> When bio_add_hw_page() failed, we left page reference still held in pages.
+>
+>I'd add "from iov_iter_get_pages()" to the above sentence.
+>
 
-Tested-by: Veronika Kabatova <vkabatov@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- include/linux/blkdev.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sounds good. Will add it in v2.
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 7d82959e7b86..7b1e53084799 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -397,6 +397,8 @@ struct request_queue {
- 	struct request		*last_merge;
- 	struct elevator_queue	*elevator;
- 
-+	struct percpu_ref	q_usage_counter;
-+
- 	struct blk_queue_stats	*stats;
- 	struct rq_qos		*rq_qos;
- 
-@@ -569,7 +571,6 @@ struct request_queue {
- 	 * percpu_ref_kill() and percpu_ref_reinit().
- 	 */
- 	struct mutex		mq_freeze_lock;
--	struct percpu_ref	q_usage_counter;
- 
- 	struct blk_mq_tag_set	*tag_set;
- 	struct list_head	tag_set_list;
--- 
-2.25.2
+>Otherwise
+>Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+
+Many Thanks for review.
 
