@@ -2,162 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D301264EF1
-	for <lists+linux-block@lfdr.de>; Thu, 10 Sep 2020 21:30:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9212651B7
+	for <lists+linux-block@lfdr.de>; Thu, 10 Sep 2020 23:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgIJTaY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Sep 2020 15:30:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56988 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgIJT3z (ORCPT
+        id S1727861AbgIJU7t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Sep 2020 16:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731127AbgIJOsn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:29:55 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AJO3dK188331;
-        Thu, 10 Sep 2020 19:29:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=K1QbJiCJUXRd9frfClKInO01DMENCng/7fwYBJX5YFs=;
- b=uFfkhAqVPRENf+NiejhgWgzXkL1Q8U43X7C9HcdYGLRTOg+YrW2PlHMntAyYgpveFup5
- YRJjfYDwPYQF2lscT9/0ZgGZa0+TxfZD+ypbRxbexhsD/a+izRCElYD6O4jDNt8tZHFc
- YDDhoyy8V2HOCfu03aMaDDO6q/z4mWMjL2QcqaMTiiUW2c59w+6aueuqVusjPpYDm2X6
- GnTIzqTEvHTtwMlisLFM/fnoLyAZqSH+1Mz7J3DJSG4qgQo7VEMI8Y5NwCn2x3S2Y8pe
- K4cA09Wv9kLN0K5BpBOt0/y0VyR+wcGZKH9UriNuySY5GvQ3G0deW8+EURqlZr6n7Ryu aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 33c3ana368-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 19:29:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AJP9oH135955;
-        Thu, 10 Sep 2020 19:29:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33cmkajt7a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 19:29:50 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08AJTnSN018042;
-        Thu, 10 Sep 2020 19:29:49 GMT
-Received: from [10.191.236.131] (/10.191.236.131)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Sep 2020 12:29:48 -0700
-Subject: Re: Revert "dm: always call blk_queue_split() in dm_process_bio()"
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        RAMANAN_GOVINDARAJAN <ramanan.govindarajan@oracle.com>,
-        Somu Krishnasamy <somasundaram.krishnasamy@oracle.com>
-References: <529c2394-1b58-b9d8-d462-1f3de1b78ac8@oracle.com>
- <20200910142438.GA21919@redhat.com>
-From:   Vijayendra Suman <vijayendra.suman@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <5261af10-bf5c-f768-dbeb-2e784a5823f9@oracle.com>
-Date:   Fri, 11 Sep 2020 00:59:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 10 Sep 2020 10:48:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5F6C06179A;
+        Thu, 10 Sep 2020 07:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=G/ynTjiiaQImGikICL0Gi3SQqZvoYMtx3vuRG4L2Av0=; b=qOtT7aIVEPRamwsXqaXgrJlja8
+        q2wS41r86uBmexZ/oqJQzqwyKpAFJXnGBEmvOQk5iJqrYtbDECr3uG2rXmaqm0KlEWHXxZo2RHcQy
+        0ryEeRmnT6dbxMtwimADAon7dOEyWt5hJQSsPWE6p/JAwPBc8YUj6xx4fCFPJeHAAdBN+sM5S9MTg
+        FowMF/Yyd3yg13KFYySdeZtHRrjTC7AE6aXk69XxPAfc8CnAwaBcAaGX3hEcgxs0NxH9mubGzqUma
+        0rP4/e+qVoXjVmX1AxpSX++MdR/eFn4iF7Y/DBtWhBj3C+HnendB6PWzU0TdPvPX5Jy2Fu7b2tnFc
+        EAdhi49A==;
+Received: from [2001:4bb8:184:af1:3ecc:ac5b:136f:434a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGNsH-0006vT-Ul; Thu, 10 Sep 2020 14:48:34 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: bdi cleanups v4
+Date:   Thu, 10 Sep 2020 16:48:20 +0200
+Message-Id: <20200910144833.742260-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200910142438.GA21919@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100177
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Mike,
+Hi Jens,
 
-I checked with upstream, performance measurement is similar and shows 
-performance improvement when 120c9257f5f19e5d1e87efcbb5531b7cd81b7d74 is 
-reverted.
+this series contains a bunch of different BDI cleanups.  The biggest item
+is to isolate block drivers from the BDI in preparation of changing the
+lifetime of the block device BDI in a follow up series.
 
-On 9/10/2020 7:54 PM, Mike Snitzer wrote:
-> [cc'ing dm-devel and linux-block because this is upstream concern too]
->
-> On Wed, Sep 09 2020 at  1:00pm -0400,
-> Vijayendra Suman <vijayendra.suman@oracle.com> wrote:
->
->>     Hello Mike,
->>
->>     While Running pgbench tool with  5.4.17 kernel build
->>
->>     Following performance degrade is found out
->>
->>     buffer read/write metric : -17.2%
->>     cache read/write metric : -18.7%
->>     disk read/write metric : -19%
->>
->>     buffer
->>     number of transactions actually processed: 840972
->>     latency average = 24.013 ms
->>     tps = 4664.153934 (including connections establishing)
->>     tps = 4664.421492 (excluding connections establishing)
->>
->>     cache
->>     number of transactions actually processed: 551345
->>     latency average = 36.949 ms
->>     tps = 3031.223905 (including connections establishing)
->>     tps = 3031.402581 (excluding connections establishing)
->>
->>     After revert of Commit
->>     2892100bc85ae446088cebe0c00ba9b194c0ac9d ( Revert "dm: always call
->>     blk_queue_split() in dm_process_bio()")
-> I assume 2892100bc85ae446088cebe0c00ba9b194c0ac9d is 5.4-stable's
-> backport of upstream commit 120c9257f5f19e5d1e87efcbb5531b7cd81b7d74 ?
-Yes
->>     Performance is Counter measurement
->>
->>     buffer ->
->>     number of transactions actually processed: 1135735
->>     latency average = 17.799 ms
->>     tps = 6292.586749 (including connections establishing)
->>     tps = 6292.875089 (excluding connections establishing)
->>
->>     cache ->
->>     number of transactions actually processed: 648177
->>     latency average = 31.217 ms
->>     tps = 3587.755975 (including connections establishing)
->>     tps = 3587.966359 (excluding connections establishing)
->>
->>     Following is your commit
->>
->>     diff --git a/drivers/md/dm.c b/drivers/md/dm.c
->>     index cf71a2277d60..1e6e0c970e19 100644
->>     --- a/drivers/md/dm.c
->>     +++ b/drivers/md/dm.c
->>     @@ -1760,8 +1760,9 @@ static blk_qc_t dm_process_bio(struct mapped_device
->>     *md,
->>              * won't be imposed.
->>              */
->>             if (current->bio_list) {
->>     -               blk_queue_split(md->queue, &bio);
->>     -               if (!is_abnormal_io(bio))
->>     +               if (is_abnormal_io(bio))
->>     +                       blk_queue_split(md->queue, &bio);
->>     +               else
->>                             dm_queue_split(md, ti, &bio);
->>             }
->>
->>     Could you have a look if it is safe to revert this commit.
-> No, it really isn't a good idea given what was documented in the commit
-> header for commit 120c9257f5f19e5d1e87efcbb5531b7cd81b7d74 -- the
-> excessive splitting is not conducive to performance either.
->
-> So I think we need to identify _why_ reverting this commit is causing
-> such a performance improvement.  Why is calling blk_queue_split() before
-> dm_queue_split() benefiting your pgbench workload?
-Let me know if you want to check some patch.
->
-> Thanks,
-> Mike
->
+
+Changes since v3:
+ - rebased on the lasted block tree, which has some of the prep
+   changes merged
+ - extend the ->ra_pages changes to ->io_pages
+ - move initializing ->ra_pages and ->io_pages for block devices to
+   blk_register_queue
+
+Changes since v2:
+ - fix a rw_page return value check
+ - fix up various changelogs
+
+Changes since v1:
+ - rebased to the for-5.9/block-merge branch
+ - explicitly set the readahead to 0 for ubifs, vboxsf and mtd
+ - split the zram block_device operations
+ - let rw_page users fall back to bios in swap_readpage
+
+
+Diffstat:
+ block/blk-core.c              |    3 -
+ block/blk-integrity.c         |    4 +-
+ block/blk-mq-debugfs.c        |    1 
+ block/blk-settings.c          |    5 +-
+ block/blk-sysfs.c             |    4 +-
+ block/genhd.c                 |   13 +++++--
+ drivers/block/aoe/aoeblk.c    |    2 -
+ drivers/block/brd.c           |    1 
+ drivers/block/drbd/drbd_nl.c  |   18 ---------
+ drivers/block/drbd/drbd_req.c |    4 --
+ drivers/block/rbd.c           |    2 -
+ drivers/block/zram/zram_drv.c |   19 +++++++---
+ drivers/md/bcache/super.c     |    4 --
+ drivers/md/dm-table.c         |    9 +---
+ drivers/md/raid0.c            |   16 --------
+ drivers/md/raid10.c           |   46 ++++++++----------------
+ drivers/md/raid5.c            |   31 +++++++---------
+ drivers/mmc/core/queue.c      |    3 -
+ drivers/mtd/mtdcore.c         |    2 +
+ drivers/nvdimm/btt.c          |    2 -
+ drivers/nvdimm/pmem.c         |    1 
+ drivers/nvme/host/core.c      |    3 -
+ drivers/nvme/host/multipath.c |   10 +----
+ drivers/scsi/iscsi_tcp.c      |    4 +-
+ fs/9p/vfs_file.c              |    2 -
+ fs/9p/vfs_super.c             |    6 ++-
+ fs/afs/super.c                |    1 
+ fs/btrfs/disk-io.c            |    2 -
+ fs/fs-writeback.c             |    7 ++-
+ fs/fuse/inode.c               |    4 +-
+ fs/namei.c                    |    4 +-
+ fs/nfs/super.c                |    9 ----
+ fs/super.c                    |    2 +
+ fs/ubifs/super.c              |    2 +
+ fs/vboxsf/super.c             |    2 +
+ include/linux/backing-dev.h   |   78 +++++++-----------------------------------
+ include/linux/blkdev.h        |    3 +
+ include/linux/drbd.h          |    1 
+ include/linux/fs.h            |    2 -
+ mm/backing-dev.c              |   13 +++----
+ mm/filemap.c                  |    4 +-
+ mm/memcontrol.c               |    2 -
+ mm/memory-failure.c           |    2 -
+ mm/migrate.c                  |    2 -
+ mm/mmap.c                     |    2 -
+ mm/page-writeback.c           |   18 ++++-----
+ mm/page_io.c                  |   18 +++++----
+ mm/swapfile.c                 |    4 +-
+ 48 files changed, 144 insertions(+), 253 deletions(-)
