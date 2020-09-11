@@ -2,67 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 349592665BA
-	for <lists+linux-block@lfdr.de>; Fri, 11 Sep 2020 19:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5461C266692
+	for <lists+linux-block@lfdr.de>; Fri, 11 Sep 2020 19:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbgIKRMA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Sep 2020 13:12:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgIKRLB (ORCPT
+        id S1726353AbgIKR3z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Sep 2020 13:29:55 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56255 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgIKR3w (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Sep 2020 13:11:01 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754DBC061573
-        for <linux-block@vger.kernel.org>; Fri, 11 Sep 2020 10:11:01 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id y13so11841849iow.4
-        for <linux-block@vger.kernel.org>; Fri, 11 Sep 2020 10:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PjaHcTfFjzbLCw68IPxqcyo+o8vTrqFIU4LrLdQ6i4E=;
-        b=dtr8rc1TFTdhuQX1JX6cpdjp7g5dPXot326EizN5cMg4FGGWCBF3SujtkOjH2g9AU8
-         VYooSex5NOHLaQmydJQvGP2ciPTbamrxy8e63sgmRcld3qe9CBysCiE7nkIJAWTrWWzD
-         5cPZyRl9Z1CgPdcCfFgCs0umR5vPyTmNsQ7ARuMaYYHRDmzXZ+nTUkdmdtXeWtLd5x6F
-         HZeOjxlKX3IAgX2SHg4n37ycDB7odU4BCn88ZKZVTPuVXZ6SEHZ4H2WFRV979A/Iqjwg
-         f8eUotxsYrCJSPi9GeB9lCE1tcTM+Wow6b+ZMYQyvCDgYzOgnphaaEjqYJOXrGsWBVEa
-         ZVMw==
+        Fri, 11 Sep 2020 13:29:52 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q4so2036803pjh.5
+        for <linux-block@vger.kernel.org>; Fri, 11 Sep 2020 10:29:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PjaHcTfFjzbLCw68IPxqcyo+o8vTrqFIU4LrLdQ6i4E=;
-        b=aE3oqCzjB0VEHbjK72q/pBvCYfuk7LyqBEoF43rqnLZc1Iuo8ML4+szsmkW3/0H47u
-         354lp1xQhbEYQvavOq92zVy845TNZOPrXiITRHWAOtOsU6FXkDosKsPUHFciUGJjZvZF
-         a1WjgHmW/VEgpJBIo5mtFe9uf0Yfei8gfiJcrTgNLwFHDILIYTZd7RsqWmnf7QCn53r9
-         0fbHF5ntthTq/+4EOMvdQHBu58Ilv+HXMd2D3cG3GLIj1FiPxDsPzUcNxncHn5Ykj0eq
-         YhlWokbsogWEjZElUwbMahg0VJRAK2/D3J3RwYsyA3i3FdW77iL3E7rjba52I2gvFMc+
-         geOQ==
-X-Gm-Message-State: AOAM531Nd1hNy8Q02iXDDlquA7+oukkZq4L+um8pnTeFiy/HyOPuEG70
-        97WONi5Y7B+pMaAr+TiMyc73pQ==
-X-Google-Smtp-Source: ABdhPJya9L0YSSJEFVGJqL4QEUVLucOzZ18qlV1aPXjITgOpcqQR+btExvD6D25jNhpGgt8ZHCc9mw==
-X-Received: by 2002:a02:8805:: with SMTP id r5mr2931118jai.52.1599844260029;
-        Fri, 11 Sep 2020 10:11:00 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id l14sm1509002ili.84.2020.09.11.10.10.58
+        bh=aVIVVhDyL7377dgQv2tmJZmOuhn7zWUqlZOPCZ0N11E=;
+        b=mfpINU2GT/oZqp6iH9sGHS7sqqp1caawuj1xZOKYeazKOn3AA/4ItscUnEJVM7bfSW
+         WbkjOiw7vZZOPedIW27NqNnc6um75mGaj4v8svMmKrZIFuTy/KrSxPxZpSi+WviPO/3R
+         +nw0YIuUv6i1tDDfavMdiXz03kDuo56qYXRiAU0XpR2pkdbpP0zurJ+DHZh/RNvh4QtJ
+         s1XtW/g+dvizuwsQHfOIdMx/xq9FS/0Jf/HCVZeCcot+WVOUoNfN1R9LhAcWYkgAekJf
+         SsJNQRG8e37IYWbNez1jLZGxzdbVojVIHnLzHohV1Jyj/y7VywsGzzXZzHuD9bM+aXi5
+         8acA==
+X-Gm-Message-State: AOAM531WNIWJ7u2hFM9hriff3dWnnGYZFFZTlymV/Gy4nFujpDLograh
+        yyNrqvqlCpmrHs6K0TaXFVo=
+X-Google-Smtp-Source: ABdhPJwWN/oRHNqzQ0rgktkhGO08Iw+dD3PrZwS1Pd5SiSZWRW3eZo0ECqvuX1mm8NGMcsiUbugesQ==
+X-Received: by 2002:a17:90a:7481:: with SMTP id p1mr3114935pjk.33.1599845391149;
+        Fri, 11 Sep 2020 10:29:51 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:4428:73d8:a159:7fcc? ([2601:647:4802:9070:4428:73d8:a159:7fcc])
+        by smtp.gmail.com with ESMTPSA id gj16sm2408568pjb.13.2020.09.11.10.29.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 10:10:59 -0700 (PDT)
-Subject: Re: [PATCH block/for-next] blk-iocost: fix divide-by-zero in
- transfer_surpluses()
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org
-References: <20200911170746.GG4295@mtj.thefacebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ff46ca79-433e-3279-a8eb-35156639be7b@kernel.dk>
-Date:   Fri, 11 Sep 2020 11:10:58 -0600
+        Fri, 11 Sep 2020 10:29:50 -0700 (PDT)
+Subject: Re: [PATCH V5 0/4] blk-mq: implement queue quiesce via percpu_ref for
+ BLK_MQ_F_BLOCKING
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Chao Leng <lengchao@huawei.com>
+References: <20200911024117.62480-1-ming.lei@redhat.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <4fb604fd-c081-5eb1-cb3a-860746b6952a@grimberg.me>
+Date:   Fri, 11 Sep 2020 10:29:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200911170746.GG4295@mtj.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200911024117.62480-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
@@ -70,14 +60,23 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/11/20 11:07 AM, Tejun Heo wrote:
-> Conceptually, root_iocg->hweight_donating must be less than WEIGHT_ONE but
-> all hweight calculations round up and thus it may end up >= WEIGHT_ONE
-> triggering divide-by-zero and other issues. Bound the value to avoid
-> surprises.
 
-Applied, thanks.
+> Hi Jens,
+> 
+> The 1st patch add .mq_quiesce_mutex for serializing quiesce/unquiesce,
+> and prepares for replacing srcu with percpu_ref.
+> 
+> The 2nd patch replaces srcu with percpu_ref.
+> 
+> The 3rd patch adds tagset quiesce interface.
+> 
+> The 4th patch applies tagset quiesce interface for NVMe subsystem.
 
--- 
-Jens Axboe
+Tested some reset storms and target restarts during traffic with
+nvme-tcp.
 
+Seems that no apparent breakage.
+
+So:
+
+Tested-by: Sagi Grimberg <sagi@grimberg.me>
