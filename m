@@ -2,52 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2742669B7
-	for <lists+linux-block@lfdr.de>; Fri, 11 Sep 2020 22:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C2FE266A22
+	for <lists+linux-block@lfdr.de>; Fri, 11 Sep 2020 23:37:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725849AbgIKUpa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Sep 2020 16:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgIKUpX (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Sep 2020 16:45:23 -0400
-Subject: Re: [GIT PULL] Block fixes for 5.9-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599857122;
-        bh=ovvdiB2z/y63fvnbSeW9SrOJqlDhDdnsl+bZo9gwl3o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sc+w1fpgPE2QjGESX9Peq1ow4yZSfHKRPkxDI+a8Xlx7w0sNzAvlMtVxh5B/5V5YA
-         f/ukp8QQnol9bIE8LpiuobP87+nt1plEvC8F654eZKlAIoPOXX/5wLwXGKDgERAxyU
-         uXT2Fxqn6P751XksSs0jO1aP5rWErvd0UHAdmF6E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <21cdf16d-2303-2eb7-c79b-21f75a268c43@kernel.dk>
-References: <21cdf16d-2303-2eb7-c79b-21f75a268c43@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <21cdf16d-2303-2eb7-c79b-21f75a268c43@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.9-2020-09-11
-X-PR-Tracked-Commit-Id: fd04358e0196fe3b7b44c69b755c7fc329360829
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7b8731d9589d569912d6418213890963f1b32e40
-Message-Id: <159985712253.5364.12049631536411232400.pr-tracker-bot@kernel.org>
-Date:   Fri, 11 Sep 2020 20:45:22 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        id S1725873AbgIKVhr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Sep 2020 17:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgIKVhp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 11 Sep 2020 17:37:45 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C47C061573
+        for <linux-block@vger.kernel.org>; Fri, 11 Sep 2020 14:37:45 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x123so8309177pfc.7
+        for <linux-block@vger.kernel.org>; Fri, 11 Sep 2020 14:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r51LP7m4rUbCgwSAKD5/YKIVFU6XhFovTY9ZXd0poEc=;
+        b=iQs9Uo+P1Ikbj8cd9+UMIByGSZfY8FQ0QJZuAvFAdnVHZ6S2VEdIoRsEIeZscDM65u
+         cWa15KtHgLUK7U5stSucP7JiIXMjHWYPHfo1lR8hWVJ6/aQDJ53YEPQAPszjOOWTRjue
+         vYQLm2F2LBglhQqI8jxfy1gGKHwsSFZ7y65MlIi8/JmKo8VTKRcAR9Kj2KpT/CNnGIGk
+         OFrCKVVNRZsg/vFOn/0zcxK4VHq9TRs9RcC2NNXZtADTW2Qczo1PjFs2GK7jHsfPo3Ht
+         rcDRXeblqKoihzU2qqNlKZvOML2ysrpjVU7kPz6TaPT9j0S3gaRJg4Ff7Hk9n/X+ed2D
+         5kbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r51LP7m4rUbCgwSAKD5/YKIVFU6XhFovTY9ZXd0poEc=;
+        b=gNbO3td78MzZSCS7YFL+6E5bjiK75Pgbn4sYIoWMwsnf7Ni7K5LTLElvQ0as8DaVHV
+         qwbEfMu8aKbQ3crjUzRvweeXLCNouxrnU5QncNo6opsG0sRbvC71fG5PgXVZHSbfK7hG
+         CONDwvXIfkI1LM9p2fhRFcakmAjCE9VIkoPL0UR4ljrOGPsrtCkRHC/GS61U4fHTfJnD
+         Dvc1oyJNihDHYxVVa8uaylZdbNATZBboZgKK/EQqf0zQydeCAUpC6KytoQXU0u4TbN1/
+         QSlJazx+A6gZClJj4nad/PvLFsfXWt41YnU0gHinCuLSAmWWdhE4v3ehL8axp7lW04I2
+         wxKA==
+X-Gm-Message-State: AOAM531MpWwCLAFRtT+6ttEyjyp+ADyA6jYi8+N3ejVzbYt0reBzzMz8
+        34cv2kTcqddu95pKj0BPCam3Mg==
+X-Google-Smtp-Source: ABdhPJxriWuG9UsTdeDt1QvD0oSEycaGqMo0AChaG8ybqdM56zVilrT2CJ0yt8sas2+GjdFcpoUfHA==
+X-Received: by 2002:a63:cd4f:: with SMTP id a15mr3175439pgj.416.1599860265219;
+        Fri, 11 Sep 2020 14:37:45 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id m188sm3275508pfd.56.2020.09.11.14.37.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 14:37:44 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] block: improve iostat for md/bcache partitions
+To:     Song Liu <songliubraving@fb.com>, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org
+Cc:     colyli@suse.de, kernel-team@fb.com, song@kernel.org,
+        hch@infradead.org
+References: <20200831222725.3860186-1-songliubraving@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0665df03-41a8-fb06-71d2-a487c31ad610@kernel.dk>
+Date:   Fri, 11 Sep 2020 15:37:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200831222725.3860186-1-songliubraving@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 11 Sep 2020 10:10:12 -0600:
+On 8/31/20 4:27 PM, Song Liu wrote:
+> Currently, devices like md, bcache uses disk_[start|end]_io_acct to report
+> iostat. These functions couldn't get proper iostat for partitions on these
+> devices.
+> 
+> This set resolves this issue by introducing part_[begin|end]_io_acct, and
+> using them in md and bcache code.
 
-> git://git.kernel.dk/linux-block.git tags/block-5.9-2020-09-11
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7b8731d9589d569912d6418213890963f1b32e40
-
-Thank you!
+Applied, thanks.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Jens Axboe
+
