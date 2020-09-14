@@ -2,113 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98ABD26858B
-	for <lists+linux-block@lfdr.de>; Mon, 14 Sep 2020 09:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24B532685AB
+	for <lists+linux-block@lfdr.de>; Mon, 14 Sep 2020 09:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgINHM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Sep 2020 03:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgINHM0 (ORCPT
+        id S1725951AbgINHWH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Sep 2020 03:22:07 -0400
+Received: from mail-m1271.qiye.163.com ([115.236.127.1]:26868 "EHLO
+        mail-m1271.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgINHWG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Sep 2020 03:12:26 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B107CC06174A
-        for <linux-block@vger.kernel.org>; Mon, 14 Sep 2020 00:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=K79C0CiheKGwIMpu0QJgj+n0u2GZXYgAhnx3d4vFpJA=; b=v5g7YFP0eDRSJOIo1je0KN4m7M
-        Fcv/Eo83/+mZ+kZBoqgZxVpFavODO8Gq5x5RdK6hqMV1gNDmOeuQyTWovRNRmf1SQKOs1fqpRst/2
-        PBw4YzgF67T6gmZpNY/oiVUXnX9gGgS8rqqAUpuEXTzKjIIlqrMHRiz+PstaXlGsq3UprQIDIjTFo
-        uiSjA6eTq+PNcnPngqlUKt29NaJ0XwPpw0Bm8O29Aal3jVYOYyb+i7rU88A4fBCuKysKRw50sfgHJ
-        HswycW1/NKgpHOf6kxxK/I3ozi9Kff9zMSA6MvZPXSAu1nCgFUjic2ImhV7wboeWhQUmUmbjdii+s
-        rf+XYTig==;
-Received: from 089144214092.atnat0023.highway.a1.net ([89.144.214.92] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kHif1-0006vE-Aj; Mon, 14 Sep 2020 07:12:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Tim Waugh <tim@cyberelk.net>
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 3/3] block: remove the revalidate_disk method
-Date:   Mon, 14 Sep 2020 09:03:37 +0200
-Message-Id: <20200914070337.1578317-4-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200914070337.1578317-1-hch@lst.de>
-References: <20200914070337.1578317-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 14 Sep 2020 03:22:06 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.125])
+        by mail-m1271.qiye.163.com (Hmail) with ESMTPA id C338D5822EA;
+        Mon, 14 Sep 2020 15:21:54 +0800 (CST)
+From:   Yang Yang <yang.yang@vivo.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     onlyfever@icloud.com, yang.yang@vivo.com
+Subject: [PATCH] blk-mq: fix hang issue in blk_queue_enter()
+Date:   Mon, 14 Sep 2020 00:19:03 -0700
+Message-Id: <20200914071903.65704-1-yang.yang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZSU1JSB1OSU9MT0gdVkpNS0tLTUNKSk9CQ0lVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NhQ6Exw5OT8qTxBDCB44Ng9J
+        AQ9PCxpVSlVKTUtLS01DSkpOSE5JVTMWGhIXVQIaFRxVAhoVHDsNEg0UVRgUFkVZV1kSC1lBWUpO
+        TFVLVUhKVUpJTllXWQgBWUFJQ05MNwY+
+X-HM-Tid: 0a748b7dd9c798b6kuuuc338d5822ea
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-No implementations left.
+There is a race between blk_queue_enter() and block layer's runtime
+suspend.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+ CPU0                                CPU1
+ ---------------------------------   -------------------------------
+ blk_pre_runtime_suspend(q) {        blk_queue_enter() {
+   /* q->rpm_status=RPM_ACTIVE */
+   blk_set_pm_only(q)
+   /* q->pm_only=1 */
+   blk_freeze_queue_start(q)
+   blk_mq_unfreeze_queue(q)
+                                       if (percpu_ref_tryget_live()) {
+                                         /* pm=0 && q->pm_only=1 */
+                                         if (pm || !blk_queue_pm_only(q)) {
+                                         } else {
+                                           percpu_ref_put()
+                                         }
+                                       }
+                                       wait_event(q->mq_freeze_wq,
+                                         (!q->mq_freeze_depth &&
+                                         /* q->rpm_status=RPM_ACTIVE
+                                            q->pm_only=1 */
+                                         (pm || (blk_pm_request_resume(q),
+                                          !blk_queue_pm_only(q)))) ||
+                                          blk_queue_dying(q))
+                                     }
+   spin_lock_irq(&q->queue_lock)
+   q->rpm_status = RPM_SUSPENDING
+   spin_unlock_irq(&q->queue_lock)
+ }
+
+At this point blk_pm_request_resume() missed the chance to resume the
+queue, so blk_queue_enter() may wait here forever.
+The solution is to wake up the mq_freeze_wq after runtime suspend
+completed, make blk_pm_request_resume() reexamine the q->rpm_status flag.
+
+Signed-off-by: Yang Yang <yang.yang@vivo.com>
 ---
- Documentation/filesystems/locking.rst |  2 --
- fs/block_dev.c                        | 12 ++++--------
- include/linux/blkdev.h                |  1 -
- 3 files changed, 4 insertions(+), 11 deletions(-)
+ block/blk-pm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index c0f2c7586531b0..28f611cad54f61 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -468,7 +468,6 @@ prototypes::
- 	int (*direct_access) (struct block_device *, sector_t, void **,
- 				unsigned long *);
- 	void (*unlock_native_capacity) (struct gendisk *);
--	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
- 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+diff --git a/block/blk-pm.c b/block/blk-pm.c
+index b85234d758f7..dec7d0aef606 100644
+--- a/block/blk-pm.c
++++ b/block/blk-pm.c
+@@ -132,6 +132,8 @@ void blk_post_runtime_suspend(struct request_queue *q, int err)
  
-@@ -483,7 +482,6 @@ ioctl:			no
- compat_ioctl:		no
- direct_access:		no
- unlock_native_capacity:	no
--revalidate_disk:	no
- getgeo:			no
- swap_slot_free_notify:	no	(see below)
- ======================= ===================
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 0b34955b9e360f..2e70585be7171b 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1400,14 +1400,10 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 	 * below to get the sane behavior for most device while not breaking
- 	 * userspace for this particular setup.
- 	 */
--	if (invalidate) {
--		if (disk_part_scan_enabled(disk) ||
--		    !(disk->flags & GENHD_FL_REMOVABLE))
--			set_capacity(disk, 0);
--	} else {
--		if (disk->fops->revalidate_disk)
--			disk->fops->revalidate_disk(disk);
--	}
-+	if (invalidate &&
-+	    (disk_part_scan_enabled(disk) ||
-+	     !(disk->flags & GENHD_FL_REMOVABLE)))
-+		set_capacity(disk, 0);
+ 	if (err)
+ 		blk_clear_pm_only(q);
++	else
++		wake_up_all(&q->mq_freeze_wq);
+ }
+ EXPORT_SYMBOL(blk_post_runtime_suspend);
  
- 	check_disk_size_change(disk, bdev, !invalidate);
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5bd96fbab9b4c8..3d18bfbdb69b07 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1837,7 +1837,6 @@ struct block_device_operations {
- 	unsigned int (*check_events) (struct gendisk *disk,
- 				      unsigned int clearing);
- 	void (*unlock_native_capacity) (struct gendisk *);
--	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
- 	/* this callback is with swap_lock and sometimes page table lock held */
- 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
 -- 
-2.28.0
+2.17.1
 
