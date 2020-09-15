@@ -2,207 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B356F269FD5
-	for <lists+linux-block@lfdr.de>; Tue, 15 Sep 2020 09:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1F826A05A
+	for <lists+linux-block@lfdr.de>; Tue, 15 Sep 2020 10:04:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgIOHd7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Sep 2020 03:33:59 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:12674 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgIOHdz (ORCPT
+        id S1726241AbgIOIED (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Sep 2020 04:04:03 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30876 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726130AbgIOICU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Sep 2020 03:33:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1600155235; x=1631691235;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=z3tdZv2HdAJTutU9+KdZfpGJxtZq1aztwB81CJn6IeM=;
-  b=Wn/uPuYtF7d8SG2tVs/6tx/7iG1dLe7+5WTPro6txHqViCqpgxrgp83h
-   uPvPa1o39gNwvrv4gaUENCkkquUjqFHZkZmSuJdOdlpc4Pth8HehfpNta
-   qkDPefUCT4qVm2Nz/NGFPrxI7FE8Kdd5JF30EyQijbRYd0/h6uA3rRMED
-   WKgdWRV6ydnKTGT559ii5NrQLq+quiKOYV28FdY+p4LtNxU4+wgu65v6B
-   4dlD6txAVJLn/ipCt1c1ggKwDp/xalZecLZH87Sg4+f5obb6evcJt8g2J
-   BPwQbNMqTnd3FvyktoYHjrqafQlTpUpsjfiUPI+896TGUIj+QYN+Au23m
-   g==;
-IronPort-SDR: rpRCmpb07t8M8EnNnvbmTFtwYWYlNrf+x0L91A5Oq8pYRdshfQEc7q0aW0WcInnokV/gq44Qxi
- WsEWRZ7XlipRMCVxte4yxFt77Sq1jnRg+h5m2iPeJvCpycXE6xiDR8wsR/Mne2rgv9TOclUInw
- huBILlWzBByjh/HuooQq6uMfw5ChbqVO2u9PDYXREHAoKTNAZAM1F/qi7/8OnqZCX4vbc/rdUP
- jaasKatQbPdzPY/0j6o9DZCyQLqlRvnrtYpJR022PHWYhirHzWzyrcZOco0G9HpKinUypkVgP7
- 4c4=
-X-IronPort-AV: E=Sophos;i="5.76,429,1592841600"; 
-   d="scan'208";a="147405121"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Sep 2020 15:33:55 +0800
-IronPort-SDR: 0FAnXRuqajsTWL0I4vR6fimjCJ17n96hzdnrq4bb1HfDLBjzTxcD6d34WGWBLElb2BVdbck5YA
- NHqTGPe9ejlA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 00:21:05 -0700
-IronPort-SDR: xoj4a8N0O4zFK2mqvo0pbKTkvZsCCs5PZHkKO/10cRWvswoDRR/Ie/Aixb8p6y/6Q/p2QDOtgo
- SFmfBBryflgA==
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Sep 2020 00:33:53 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Borislav Petkov <bp@suse.de>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v3 2/2] scsi: Fix ZBC disk initialization
-Date:   Tue, 15 Sep 2020 16:33:47 +0900
-Message-Id: <20200915073347.832424-3-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200915073347.832424-1-damien.lemoal@wdc.com>
-References: <20200915073347.832424-1-damien.lemoal@wdc.com>
+        Tue, 15 Sep 2020 04:02:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600156938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tgMlHOtCfobSMbGUVwljq5spZjPjpVuWZP2ZtQzu3xY=;
+        b=FmmpPPfkKUu6rm2em5YLItKNXwJqGkGWx8cXMRKBpr/0sqFNPRc43Lw6pOWot21XdVNYRC
+        m0IkFKJTIYK1CuW5Ea74n+9krsD9QvfV7GQ2v4ps+KYotU3k3EFRsY0g17KYtX6WmFakVR
+        EbynU4YeWxXRpf+ZODBJ0omuUwbkkHY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432--WMaA6mEPpeq-7QWajZx5A-1; Tue, 15 Sep 2020 04:02:15 -0400
+X-MC-Unique: -WMaA6mEPpeq-7QWajZx5A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83E4D802B67;
+        Tue, 15 Sep 2020 08:02:14 +0000 (UTC)
+Received: from T590 (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EF275DE1B;
+        Tue, 15 Sep 2020 08:01:59 +0000 (UTC)
+Date:   Tue, 15 Sep 2020 16:01:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        Vijayendra Suman <vijayendra.suman@oracle.com>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 1/3] block: fix blk_rq_get_max_sectors() to flow more
+ carefully
+Message-ID: <20200915080154.GB761522@T590>
+References: <20200911215338.44805-1-snitzer@redhat.com>
+ <20200911215338.44805-2-snitzer@redhat.com>
+ <CY4PR04MB375160D4EFBA9BE0957AC7EDE7230@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200914150352.GC14410@redhat.com>
+ <CY4PR04MB37510A739D28F993250E2B66E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <CY4PR04MB3751822DB93B9E155A0BE462E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB3751822DB93B9E155A0BE462E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make sure to call sd_zbc_init_disk() when the sdkp->zoned field is
-known, that is, once sd_read_block_characteristics() is executed in
-sd_revalidate_disk(), so that host-aware disks also get initialized.
-To do so, move sd_zbc_init_disk() call in sd_zbc_revalidate_zones() and
-make sure to execute it for all zoned disks, including for host-aware
-disks used as regular disks as these disk zoned model may be changed
-back to BLK_ZONED_HA when partitions are deleted.
+On Tue, Sep 15, 2020 at 04:21:54AM +0000, Damien Le Moal wrote:
+> On 2020/09/15 10:10, Damien Le Moal wrote:
+> > On 2020/09/15 0:04, Mike Snitzer wrote:
+> >> On Sun, Sep 13 2020 at  8:46pm -0400,
+> >> Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+> >>
+> >>> On 2020/09/12 6:53, Mike Snitzer wrote:
+> >>>> blk_queue_get_max_sectors() has been trained for REQ_OP_WRITE_SAME and
+> >>>> REQ_OP_WRITE_ZEROES yet blk_rq_get_max_sectors() didn't call it for
+> >>>> those operations.
+> >>>>
+> >>>> Also, there is no need to avoid blk_max_size_offset() if
+> >>>> 'chunk_sectors' isn't set because it falls back to 'max_sectors'.
+> >>>>
+> >>>> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> >>>> ---
+> >>>>  include/linux/blkdev.h | 19 +++++++++++++------
+> >>>>  1 file changed, 13 insertions(+), 6 deletions(-)
+> >>>>
+> >>>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> >>>> index bb5636cc17b9..453a3d735d66 100644
+> >>>> --- a/include/linux/blkdev.h
+> >>>> +++ b/include/linux/blkdev.h
+> >>>> @@ -1070,17 +1070,24 @@ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
+> >>>>  						  sector_t offset)
+> >>>>  {
+> >>>>  	struct request_queue *q = rq->q;
+> >>>> +	int op;
+> >>>> +	unsigned int max_sectors;
+> >>>>  
+> >>>>  	if (blk_rq_is_passthrough(rq))
+> >>>>  		return q->limits.max_hw_sectors;
+> >>>>  
+> >>>> -	if (!q->limits.chunk_sectors ||
+> >>>> -	    req_op(rq) == REQ_OP_DISCARD ||
+> >>>> -	    req_op(rq) == REQ_OP_SECURE_ERASE)
+> >>>> -		return blk_queue_get_max_sectors(q, req_op(rq));
+> >>>> +	op = req_op(rq);
+> >>>> +	max_sectors = blk_queue_get_max_sectors(q, op);
+> >>>>  
+> >>>> -	return min(blk_max_size_offset(q, offset),
+> >>>> -			blk_queue_get_max_sectors(q, req_op(rq)));
+> >>>> +	switch (op) {
+> >>>> +	case REQ_OP_DISCARD:
+> >>>> +	case REQ_OP_SECURE_ERASE:
+> >>>> +	case REQ_OP_WRITE_SAME:
+> >>>> +	case REQ_OP_WRITE_ZEROES:
+> >>>> +		return max_sectors;
+> >>>> +	}
+> >>>
+> >>> Doesn't this break md devices ? (I think does use chunk_sectors for stride size,
+> >>> no ?)
+> >>>
+> >>> As mentioned in my reply to Ming's email, this will allow these commands to
+> >>> potentially cross over zone boundaries on zoned block devices, which would be an
+> >>> immediate command failure.
+> >>
+> >> Depending on the implementation it is beneficial to get a large
+> >> discard (one not constrained by chunk_sectors, e.g. dm-stripe.c's
+> >> optimization for handling large discards and issuing N discards, one per
+> >> stripe).  Same could apply for other commands.
+> >>
+> >> Like all devices, zoned devices should impose command specific limits in
+> >> the queue_limits (and not lean on chunk_sectors to do a
+> >> one-size-fits-all).
+> > 
+> > Yes, understood. But I think that  in the case of md, chunk_sectors is used to
+> > indicate the boundary between drives for a raid volume. So it does indeed make
+> > sense to limit the IO size on submission since otherwise, the md driver itself
+> > would have to split that bio again anyway.
+> > 
+> >> But that aside, yes I agree I didn't pay close enough attention to the
+> >> implications of deferring the splitting of these commands until they
+> >> were issued to underlying storage.  This chunk_sectors early splitting
+> >> override is a bit of a mess... not quite following the logic given we
+> >> were supposed to be waiting to split bios as late as possible.
+> > 
+> > My view is that the multipage bvec (BIOs almost as large as we want) and late
+> > splitting is beneficial to get larger effective BIO sent to the device as having
+> > more pages on hand allows bigger segments in the bio instead of always having at
+> > most PAGE_SIZE per segment. The effect of this is very visible with blktrace. A
+> > lot of requests end up being much larger than the device max_segments * page_size.
+> > 
+> > However, if there is already a known limit on the BIO size when the BIO is being
+> > built, it does not make much sense to try to grow a bio beyond that limit since
+> > it will have to be split by the driver anyway. chunk_sectors is one such limit
+> > used for md (I think) to indicate boundaries between drives of a raid volume.
+> > And we reuse it (abuse it ?) for zoned block devices to ensure that any command
+> > does not cross over zone boundaries since that triggers errors for writes within
+> > sequential zones or read/write crossing over zones of different types
+> > (conventional->sequential zone boundary).
+> > 
+> > I may not have the entire picture correctly here, but so far, this is my
+> > understanding.
+> 
+> And I was wrong :) In light of Ming's comment + a little code refresher reading,
+> indeed, chunk_sectors will split BIOs so that *requests* do not exceed that
+> limit, but the initial BIO submission may be much larger regardless of
+> chunk_sectors.
+> 
+> Ming, I think the point here is that building a large BIO first and splitting it
+> later (as opposed to limiting the bio size by stopping bio_add_page()) is more
+> efficient as there is only one bio submit instead of many, right ?
 
-Reported-by: Borislav Petkov <bp@alien8.de>
-Fixes: 5795eb443060 ("scsi: sd_zbc: emulate ZONE_APPEND commands")
-Cc: <stable@vger.kernel.org> # v5.8+
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Tested-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- drivers/scsi/sd.c     |  4 ---
- drivers/scsi/sd.h     |  6 -----
- drivers/scsi/sd_zbc.c | 60 +++++++++++++++++++++++++------------------
- 3 files changed, 35 insertions(+), 35 deletions(-)
+Yeah, this way allows generic_make_request(submit_bio_noacct) to handle arbitrarily
+sized bios, so bio_add_page() becomes more efficiently and simplified a lot, and
+stacking driver is simplified too, such as the original q->merge_bvec_fn() is killed.
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 06286b6aeaec..16503e22691e 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3410,10 +3410,6 @@ static int sd_probe(struct device *dev)
- 	sdkp->first_scan = 1;
- 	sdkp->max_medium_access_timeouts = SD_MAX_MEDIUM_TIMEOUTS;
- 
--	error = sd_zbc_init_disk(sdkp);
--	if (error)
--		goto out_free_index;
--
- 	sd_revalidate_disk(gd);
- 
- 	gd->flags = GENHD_FL_EXT_DEVT;
-diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
-index 7251434100e6..a3aad608bc38 100644
---- a/drivers/scsi/sd.h
-+++ b/drivers/scsi/sd.h
-@@ -215,7 +215,6 @@ static inline int sd_is_zoned(struct scsi_disk *sdkp)
- 
- #ifdef CONFIG_BLK_DEV_ZONED
- 
--int sd_zbc_init_disk(struct scsi_disk *sdkp);
- void sd_zbc_release_disk(struct scsi_disk *sdkp);
- int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buffer);
- int sd_zbc_revalidate_zones(struct scsi_disk *sdkp);
-@@ -231,11 +230,6 @@ blk_status_t sd_zbc_prepare_zone_append(struct scsi_cmnd *cmd, sector_t *lba,
- 
- #else /* CONFIG_BLK_DEV_ZONED */
- 
--static inline int sd_zbc_init_disk(struct scsi_disk *sdkp)
--{
--	return 0;
--}
--
- static inline void sd_zbc_release_disk(struct scsi_disk *sdkp) {}
- 
- static inline int sd_zbc_read_zones(struct scsi_disk *sdkp,
-diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
-index a739456dea02..cf07b7f93579 100644
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -651,6 +651,28 @@ static void sd_zbc_print_zones(struct scsi_disk *sdkp)
- 			  sdkp->zone_blocks);
- }
- 
-+static int sd_zbc_init_disk(struct scsi_disk *sdkp)
-+{
-+	sdkp->zones_wp_offset = NULL;
-+	spin_lock_init(&sdkp->zones_wp_offset_lock);
-+	sdkp->rev_wp_offset = NULL;
-+	mutex_init(&sdkp->rev_mutex);
-+	INIT_WORK(&sdkp->zone_wp_offset_work, sd_zbc_update_wp_offset_workfn);
-+	sdkp->zone_wp_update_buf = kzalloc(SD_BUF_SIZE, GFP_KERNEL);
-+	if (!sdkp->zone_wp_update_buf)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+void sd_zbc_release_disk(struct scsi_disk *sdkp)
-+{
-+	kvfree(sdkp->zones_wp_offset);
-+	sdkp->zones_wp_offset = NULL;
-+	kfree(sdkp->zone_wp_update_buf);
-+	sdkp->zone_wp_update_buf = NULL;
-+}
-+
- static void sd_zbc_revalidate_zones_cb(struct gendisk *disk)
- {
- 	struct scsi_disk *sdkp = scsi_disk(disk);
-@@ -667,6 +689,19 @@ int sd_zbc_revalidate_zones(struct scsi_disk *sdkp)
- 	u32 max_append;
- 	int ret = 0;
- 
-+	/*
-+	 * For all zoned disks, initialize zone append emulation data if not
-+	 * already done. This is necessary also for host-aware disks used as
-+	 * regular disks due to the presence of partitions as these partitions
-+	 * may be deleted and the disk zoned model changed back from
-+	 * BLK_ZONED_NONE to BLK_ZONED_HA.
-+	 */
-+	if (sd_is_zoned(sdkp) && !sdkp->zone_wp_update_buf) {
-+		ret = sd_zbc_init_disk(sdkp);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * There is nothing to do for regular disks, including host-aware disks
- 	 * that have partitions.
-@@ -768,28 +803,3 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
- 
- 	return ret;
- }
--
--int sd_zbc_init_disk(struct scsi_disk *sdkp)
--{
--	if (!sd_is_zoned(sdkp))
--		return 0;
--
--	sdkp->zones_wp_offset = NULL;
--	spin_lock_init(&sdkp->zones_wp_offset_lock);
--	sdkp->rev_wp_offset = NULL;
--	mutex_init(&sdkp->rev_mutex);
--	INIT_WORK(&sdkp->zone_wp_offset_work, sd_zbc_update_wp_offset_workfn);
--	sdkp->zone_wp_update_buf = kzalloc(SD_BUF_SIZE, GFP_KERNEL);
--	if (!sdkp->zone_wp_update_buf)
--		return -ENOMEM;
--
--	return 0;
--}
--
--void sd_zbc_release_disk(struct scsi_disk *sdkp)
--{
--	kvfree(sdkp->zones_wp_offset);
--	sdkp->zones_wp_offset = NULL;
--	kfree(sdkp->zone_wp_update_buf);
--	sdkp->zone_wp_update_buf = NULL;
--}
--- 
-2.26.2
+On the other hand, the cost of bio splitting is added.
+
+Especially for stacking driver, there may be two times of bio splitting,
+one is in stacking driver, another is in underlying device driver.
+
+Fortunately underlying queue's limits are propagated to stacking queue, so in theory
+the bio splitting in stacking driver's ->submit_bio is enough most of times.
+
+
+
+Thanks,
+Ming
 
