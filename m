@@ -2,181 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD1F826A05A
-	for <lists+linux-block@lfdr.de>; Tue, 15 Sep 2020 10:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AF5E26A0AA
+	for <lists+linux-block@lfdr.de>; Tue, 15 Sep 2020 10:23:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgIOIED (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Sep 2020 04:04:03 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30876 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726130AbgIOICU (ORCPT
+        id S1726322AbgIOIXq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Sep 2020 04:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgIOIQ3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Sep 2020 04:02:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600156938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tgMlHOtCfobSMbGUVwljq5spZjPjpVuWZP2ZtQzu3xY=;
-        b=FmmpPPfkKUu6rm2em5YLItKNXwJqGkGWx8cXMRKBpr/0sqFNPRc43Lw6pOWot21XdVNYRC
-        m0IkFKJTIYK1CuW5Ea74n+9krsD9QvfV7GQ2v4ps+KYotU3k3EFRsY0g17KYtX6WmFakVR
-        EbynU4YeWxXRpf+ZODBJ0omuUwbkkHY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432--WMaA6mEPpeq-7QWajZx5A-1; Tue, 15 Sep 2020 04:02:15 -0400
-X-MC-Unique: -WMaA6mEPpeq-7QWajZx5A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83E4D802B67;
-        Tue, 15 Sep 2020 08:02:14 +0000 (UTC)
-Received: from T590 (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EF275DE1B;
-        Tue, 15 Sep 2020 08:01:59 +0000 (UTC)
-Date:   Tue, 15 Sep 2020 16:01:54 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        Vijayendra Suman <vijayendra.suman@oracle.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 1/3] block: fix blk_rq_get_max_sectors() to flow more
- carefully
-Message-ID: <20200915080154.GB761522@T590>
-References: <20200911215338.44805-1-snitzer@redhat.com>
- <20200911215338.44805-2-snitzer@redhat.com>
- <CY4PR04MB375160D4EFBA9BE0957AC7EDE7230@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200914150352.GC14410@redhat.com>
- <CY4PR04MB37510A739D28F993250E2B66E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
- <CY4PR04MB3751822DB93B9E155A0BE462E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
+        Tue, 15 Sep 2020 04:16:29 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661D9C06178A
+        for <linux-block@vger.kernel.org>; Tue, 15 Sep 2020 01:16:05 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id g29so1601768pgl.2
+        for <linux-block@vger.kernel.org>; Tue, 15 Sep 2020 01:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CCyQLZIomtOO1i6n72+em9VVg13AQuPSjMf53LDYaqM=;
+        b=auIoq9oCUFxSo4pwN0sve/6Y70uneeWypGCBG5hiKQEvrs5xsnPny5hFer4eYtvobB
+         i1e8/4/NUocwRqRvZU4d3158MMYfZg9uMyBexYuihdiruBMYNWdXKwXZmAO2N378J80N
+         eqkHCtMx81ILLcpD+YrJBxPJuBdMEMfiKoVJ9PCflvPIRPoKR3aLmjbC9JpchjGEgL+2
+         OAAG2s6uGACAX/l/xxBhnVkglCSTQNyHNAdoPoaq3u4mqUNcVpJM4OnR+IYbo/Jgnt2E
+         jYrW4IZZm931VWbRzDf+K2XYOH9XodrcyeKISXf5fabViRfS4vXU4n23bTlmOwPIyfCG
+         FM/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CCyQLZIomtOO1i6n72+em9VVg13AQuPSjMf53LDYaqM=;
+        b=Vm4GirSkbJwzgnEZ8XAHKiMVRt4x/HA7fhkPeT6wFgHsUTso11RyN1tr+Ma8yLuEGu
+         6DCqhMnHwtlDTQMIQNGEs4dL5v8CL5WSM7n4Ro2szUqpo2eHi5gzG5aBj61YVb7RIqEm
+         iB8YnuKfg6h8LW+pZEcwR1CZ5muME04ryZhfmB1pTptpqolmg7SJWh5tyZq2Fp4BVs+c
+         +LfOwfi1BFHUOcl64+S05jZr5ffjt1qPiL601wDhZiOckZlWn7uZrr9039lukEL6PFte
+         6IpmD1yRp099c6y5DUrE/UGOPmUizMj0R85Dl0BuQG3f9B4qCHNzJs7ybMgSum/o9t03
+         CxTA==
+X-Gm-Message-State: AOAM530oKPIR6XW+gLvatWjIvEn1Q0Iq8XuKmy1TR5FhpK41QTcgZQDP
+        Rgsp8qKYkYeFB2uPFUnrvvL3XQ==
+X-Google-Smtp-Source: ABdhPJz/sjjpFc3hiXj9N7JffKpq8GhR5gx1bxMX6eM7XMcT5j1DHbJd+okuEH1Z85Q1f72+EGOhYg==
+X-Received: by 2002:aa7:8249:0:b029:142:2501:39dd with SMTP id e9-20020aa782490000b0290142250139ddmr827130pfn.44.1600157764267;
+        Tue, 15 Sep 2020 01:16:04 -0700 (PDT)
+Received: from localhost.bytedance.net ([103.136.221.71])
+        by smtp.gmail.com with ESMTPSA id x19sm10539429pge.22.2020.09.15.01.16.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Sep 2020 01:16:03 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH 0/3] io_uring: Fix async workqueue is not canceled on some corner case
+Date:   Tue, 15 Sep 2020 16:15:48 +0800
+Message-Id: <20200915081551.12140-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR04MB3751822DB93B9E155A0BE462E7200@CY4PR04MB3751.namprd04.prod.outlook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-block-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 04:21:54AM +0000, Damien Le Moal wrote:
-> On 2020/09/15 10:10, Damien Le Moal wrote:
-> > On 2020/09/15 0:04, Mike Snitzer wrote:
-> >> On Sun, Sep 13 2020 at  8:46pm -0400,
-> >> Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
-> >>
-> >>> On 2020/09/12 6:53, Mike Snitzer wrote:
-> >>>> blk_queue_get_max_sectors() has been trained for REQ_OP_WRITE_SAME and
-> >>>> REQ_OP_WRITE_ZEROES yet blk_rq_get_max_sectors() didn't call it for
-> >>>> those operations.
-> >>>>
-> >>>> Also, there is no need to avoid blk_max_size_offset() if
-> >>>> 'chunk_sectors' isn't set because it falls back to 'max_sectors'.
-> >>>>
-> >>>> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-> >>>> ---
-> >>>>  include/linux/blkdev.h | 19 +++++++++++++------
-> >>>>  1 file changed, 13 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> >>>> index bb5636cc17b9..453a3d735d66 100644
-> >>>> --- a/include/linux/blkdev.h
-> >>>> +++ b/include/linux/blkdev.h
-> >>>> @@ -1070,17 +1070,24 @@ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
-> >>>>  						  sector_t offset)
-> >>>>  {
-> >>>>  	struct request_queue *q = rq->q;
-> >>>> +	int op;
-> >>>> +	unsigned int max_sectors;
-> >>>>  
-> >>>>  	if (blk_rq_is_passthrough(rq))
-> >>>>  		return q->limits.max_hw_sectors;
-> >>>>  
-> >>>> -	if (!q->limits.chunk_sectors ||
-> >>>> -	    req_op(rq) == REQ_OP_DISCARD ||
-> >>>> -	    req_op(rq) == REQ_OP_SECURE_ERASE)
-> >>>> -		return blk_queue_get_max_sectors(q, req_op(rq));
-> >>>> +	op = req_op(rq);
-> >>>> +	max_sectors = blk_queue_get_max_sectors(q, op);
-> >>>>  
-> >>>> -	return min(blk_max_size_offset(q, offset),
-> >>>> -			blk_queue_get_max_sectors(q, req_op(rq)));
-> >>>> +	switch (op) {
-> >>>> +	case REQ_OP_DISCARD:
-> >>>> +	case REQ_OP_SECURE_ERASE:
-> >>>> +	case REQ_OP_WRITE_SAME:
-> >>>> +	case REQ_OP_WRITE_ZEROES:
-> >>>> +		return max_sectors;
-> >>>> +	}
-> >>>
-> >>> Doesn't this break md devices ? (I think does use chunk_sectors for stride size,
-> >>> no ?)
-> >>>
-> >>> As mentioned in my reply to Ming's email, this will allow these commands to
-> >>> potentially cross over zone boundaries on zoned block devices, which would be an
-> >>> immediate command failure.
-> >>
-> >> Depending on the implementation it is beneficial to get a large
-> >> discard (one not constrained by chunk_sectors, e.g. dm-stripe.c's
-> >> optimization for handling large discards and issuing N discards, one per
-> >> stripe).  Same could apply for other commands.
-> >>
-> >> Like all devices, zoned devices should impose command specific limits in
-> >> the queue_limits (and not lean on chunk_sectors to do a
-> >> one-size-fits-all).
-> > 
-> > Yes, understood. But I think that  in the case of md, chunk_sectors is used to
-> > indicate the boundary between drives for a raid volume. So it does indeed make
-> > sense to limit the IO size on submission since otherwise, the md driver itself
-> > would have to split that bio again anyway.
-> > 
-> >> But that aside, yes I agree I didn't pay close enough attention to the
-> >> implications of deferring the splitting of these commands until they
-> >> were issued to underlying storage.  This chunk_sectors early splitting
-> >> override is a bit of a mess... not quite following the logic given we
-> >> were supposed to be waiting to split bios as late as possible.
-> > 
-> > My view is that the multipage bvec (BIOs almost as large as we want) and late
-> > splitting is beneficial to get larger effective BIO sent to the device as having
-> > more pages on hand allows bigger segments in the bio instead of always having at
-> > most PAGE_SIZE per segment. The effect of this is very visible with blktrace. A
-> > lot of requests end up being much larger than the device max_segments * page_size.
-> > 
-> > However, if there is already a known limit on the BIO size when the BIO is being
-> > built, it does not make much sense to try to grow a bio beyond that limit since
-> > it will have to be split by the driver anyway. chunk_sectors is one such limit
-> > used for md (I think) to indicate boundaries between drives of a raid volume.
-> > And we reuse it (abuse it ?) for zoned block devices to ensure that any command
-> > does not cross over zone boundaries since that triggers errors for writes within
-> > sequential zones or read/write crossing over zones of different types
-> > (conventional->sequential zone boundary).
-> > 
-> > I may not have the entire picture correctly here, but so far, this is my
-> > understanding.
-> 
-> And I was wrong :) In light of Ming's comment + a little code refresher reading,
-> indeed, chunk_sectors will split BIOs so that *requests* do not exceed that
-> limit, but the initial BIO submission may be much larger regardless of
-> chunk_sectors.
-> 
-> Ming, I think the point here is that building a large BIO first and splitting it
-> later (as opposed to limiting the bio size by stopping bio_add_page()) is more
-> efficient as there is only one bio submit instead of many, right ?
+We should make sure that async workqueue is canceled on exit, but on
+some corner case, we found that the async workqueue is not canceled
+on exit in the linux-5.4. So we started an in-depth investigation.
+Fortunately, we finally found the problem. The commit:
 
-Yeah, this way allows generic_make_request(submit_bio_noacct) to handle arbitrarily
-sized bios, so bio_add_page() becomes more efficiently and simplified a lot, and
-stacking driver is simplified too, such as the original q->merge_bvec_fn() is killed.
+  1c4404efcf2c ("io_uring: make sure async workqueue is canceled on exit")
 
-On the other hand, the cost of bio splitting is added.
+did not completely solve this problem. This patch series to solve this
+problem completely. And there's no upstream variant of this commit, so
+this patch series is just fix the linux-5.4.y stable branch.
 
-Especially for stacking driver, there may be two times of bio splitting,
-one is in stacking driver, another is in underlying device driver.
+Muchun Song (2):
+  io_uring: Fix missing smp_mb() in io_cancel_async_work()
+  io_uring: Fix remove irrelevant req from the task_list
 
-Fortunately underlying queue's limits are propagated to stacking queue, so in theory
-the bio splitting in stacking driver's ->submit_bio is enough most of times.
+Yinyin Zhu (1):
+  io_uring: Fix resource leaking when kill the process
 
+ fs/io_uring.c | 45 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
 
-
-Thanks,
-Ming
+-- 
+2.11.0
 
