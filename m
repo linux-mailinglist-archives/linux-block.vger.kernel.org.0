@@ -2,83 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6062A26E2E5
-	for <lists+linux-block@lfdr.de>; Thu, 17 Sep 2020 19:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 451F926E346
+	for <lists+linux-block@lfdr.de>; Thu, 17 Sep 2020 20:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgIQRuv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Sep 2020 13:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        id S1726411AbgIQSJk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Sep 2020 14:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgIQRus (ORCPT
+        with ESMTP id S1726481AbgIQRa6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Sep 2020 13:50:48 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6784EC06174A
-        for <linux-block@vger.kernel.org>; Thu, 17 Sep 2020 10:50:30 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id m12so2747415otr.0
-        for <linux-block@vger.kernel.org>; Thu, 17 Sep 2020 10:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VxNOaXEECYIPiRMfEtgGM6J1GaNFcdRWrXQNfSu136U=;
-        b=qSY5F6BDO89WMA1sSn7TKzY4HEDf4VLctTXFU6b+T/WBItGXomuSgN+7+NMY5BhScG
-         ip0r54waBP9e1I7OQGS2akynGeo4RhDqTdMS8Vk1TUN2HwSBISGr8mApFjtpPwA/IVrh
-         //msBJVf0pH4LGY0Lkl0ZLuKCN4Tyyw917nmch5DdE23duXnAfZT7QyqV765S9dYX/dm
-         ooFMWohAP2+hij2S/DoUoZ47GKbmQyrBV8/TaWUcSe+u2Jkdo5tDjbLBhAPUSRsyquOT
-         nNSnCrr3VxOskVGOOk1KqCeMY1+x9E6QJMID6jfYDyAYJOz3UKbFKdcp04M9jRaph4gy
-         w0uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VxNOaXEECYIPiRMfEtgGM6J1GaNFcdRWrXQNfSu136U=;
-        b=GzHnx+wtzZ4Chx/Q20jGYVvSNw/XEjhPjLN6PKrcwyyWEut6bvVGB3gurW6ThyI/mR
-         lOt0y7jbjGPJMvXBCoUzY2aqrpCnaH/Ce8RIoFVVpoFrlxecW/fRAMWjIgs75QjF6pL5
-         WuxX3RUfRPGTKTF09ac4IOJIoRjHcKZJX9vrogIUjSZIfgfp27/AKfT0Mh/zSI8v71pK
-         b7pZQoJ1h3dOvWDb45gqD6soaiVIJMK0f5p8LGEs2B+epQ/IjL57SMs16DZOYzd5x6OD
-         Sj8erHMD6nfvgje7csmzvy123L6Dnz8MRYD71PLhOx3B6oBzRv5aptUnYzWTMh/QYoZE
-         AmCA==
-X-Gm-Message-State: AOAM532DOqjuixD5W6V7to3KgdBftQCwe5axWxzNC0jMIHCP5Fl1GkEw
-        dSoENnks8cEnZ5is5pDuN6oHeVrQYEQB2Q==
-X-Google-Smtp-Source: ABdhPJzwaXf26BDvAr9jXYMUUqbBTXgS9OmYfDxadvq7iqdRZ8UO9UrLPu3sOlKvXnAJJwXdfBaGhg==
-X-Received: by 2002:a9d:5509:: with SMTP id l9mr22106336oth.154.1600365029636;
-        Thu, 17 Sep 2020 10:50:29 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h28sm356619ote.28.2020.09.17.10.50.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2020 10:50:29 -0700 (PDT)
-Subject: Re: [GIT PULL] nvme fixes for 5.9
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
-References: <20200917173654.GA3311729@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e2954fdd-c161-5a5b-def5-f93dcbcefcc0@kernel.dk>
-Date:   Thu, 17 Sep 2020 11:50:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 17 Sep 2020 13:30:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE849C06174A;
+        Thu, 17 Sep 2020 10:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=Vy+i14rdw+4hEhmBKTGutehzr8kV3l2y359HNYmPy6s=; b=Gm/aiQSY8U+jiHppzEQUoEzwep
+        cqGvY+jq384xbJGVBnfbwko8D5JZ0BGFns3s46sJKWmlyvr6Rprp6SB2EJM4tA5ZWwGgXjtq63029
+        6fca9dZX058BRWvIB7FVHM7gYriRdj93U6YriX8r4ysa1mBIe4YAaix4s1MqxQOLS42Oh2oGaQFEH
+        l/uG3rNoPBAWon9nPGtcQpTAFKhd3wMIPRsfkZGuARLiy2dYO81b/IGG1NmtVn1x1xE8tIT2y9NUm
+        dqXKBMMk9FcsMdibx/rdw78P0a5PJ/TlNM8r+Vr1v1L7claUCM+evzRzabhvPxLbjhmoPgUKFwgyF
+        nVKxc99Q==;
+Received: from 089144214092.atnat0023.highway.a1.net ([89.144.214.92] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kIxhM-0002QQ-Le; Thu, 17 Sep 2020 17:27:56 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-ide@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH 13/14] PM: mm: cleanup swsusp_swap_check
+Date:   Thu, 17 Sep 2020 18:57:19 +0200
+Message-Id: <20200917165720.3285256-14-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200917165720.3285256-1-hch@lst.de>
+References: <20200917165720.3285256-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200917173654.GA3311729@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/17/20 11:36 AM, Christoph Hellwig wrote:
-> The following changes since commit 709192d531e5b0a91f20aa14abfe2fc27ddd47af:
-> 
->   s390/dasd: Fix zero write for FBA devices (2020-09-14 19:40:21 -0600)
-> 
-> are available in the Git repository at:
-> 
->   git://git.infradead.org/nvme.git tags/nvme-5.9-2020-09-17
+Use blkdev_get_by_dev instead of bdget + blkdev_get.
 
-Pulled, thanks.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ kernel/power/swap.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
+diff --git a/kernel/power/swap.c b/kernel/power/swap.c
+index 9d3ffbfe08dbf6..71385bedcc3a49 100644
+--- a/kernel/power/swap.c
++++ b/kernel/power/swap.c
+@@ -343,12 +343,10 @@ static int swsusp_swap_check(void)
+ 		return res;
+ 	root_swap = res;
+ 
+-	hib_resume_bdev = bdget(swsusp_resume_device);
+-	if (!hib_resume_bdev)
+-		return -ENOMEM;
+-	res = blkdev_get(hib_resume_bdev, FMODE_WRITE, NULL);
+-	if (res)
+-		return res;
++	hib_resume_bdev = blkdev_get_by_dev(swsusp_resume_device, FMODE_WRITE,
++			NULL);
++	if (IS_ERR(hib_resume_bdev))
++		return PTR_ERR(hib_resume_bdev);
+ 
+ 	res = set_blocksize(hib_resume_bdev, PAGE_SIZE);
+ 	if (res < 0)
 -- 
-Jens Axboe
+2.28.0
 
