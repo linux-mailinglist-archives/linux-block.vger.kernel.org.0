@@ -2,149 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F37326FED0
-	for <lists+linux-block@lfdr.de>; Fri, 18 Sep 2020 15:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B9E26FEFA
+	for <lists+linux-block@lfdr.de>; Fri, 18 Sep 2020 15:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgIRNjA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Sep 2020 09:39:00 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:5923 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgIRNix (ORCPT
+        id S1726699AbgIRNoX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Sep 2020 09:44:23 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:5308 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgIRNoV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Sep 2020 09:38:53 -0400
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Sep 2020 09:38:53 EDT
+        Fri, 18 Sep 2020 09:44:21 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Sep 2020 09:44:17 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1600436333; x=1631972333;
+  t=1600436660; x=1631972660;
   h=from:to:cc:subject:date:message-id:references:
    content-transfer-encoding:mime-version;
-  bh=zX3b7iCZ8eISx1t3rMPplzVA7DEuIwyrXJ9cQ90GCIE=;
-  b=Bj0QkYnF3XA4mGqvY/VnllPYXR7YnzTT316ajjRZmO03siDd1ByaeGT7
-   pGi18AWUawuVlMJSyyTNflPGC+43nxAPHV+P5Xts4RBGDLU/dm5jYgwoz
-   WHGMxbocz+fvvjN6SlHeFCBAxWWdgnoIhhjWNRZ90jG7MTHWEEK/GdYGX
-   2vVAm0rImFhpEzshXZQWtpeayoTU6Efk4OER/LuuIllJLXl/tG1XyUygV
-   NcI8DRDdgGRkDsRUSiJF7HWn5hJsmQF34N0ORKe201j2LTSnhM2RAUxfT
-   uhGU8/gmIaMrprKxhq+AL0dY1KRIyweh4hdqDGjY4lIulEUlvHG10O5SP
+  bh=3fxeMydRj5LITwpOTJ8/5qGWnkDlQFvKc/JWPdaDvPg=;
+  b=knz3cvFZmu6aWoNx7lAksSxiCckqB28xQnxk+03HHiVndotMc2HP6KDB
+   L1ZWAJZOTYqk2PVmrTorPQ9/vFiCYcbAKu1vt/8iBiaZk8Hpl1z7qZY66
+   CxaCx65gKdHdIaTiENy6aMpypF93Hzypb129npz5CyZud/HoFgdtBXHzs
+   YfTgO0xNpKTl7RYqEXyF7UC6KORe9D2BUWI7dpLnB3E2A6vkrWDeiHITT
+   J97gVW3TqRjT79hPFPdk1kGLnAbMRPGgaqIYcVq1XJ0m+b7K6O2tLyFRN
+   JvLVNGxK9qfkUel1CqvT+P1i3bxIgN8b5o7sy1L9V0PtUDMUTDB0RUFDR
    Q==;
-IronPort-SDR: hQCg8ydzN9Ns/MTLRLRusEYMWWvyOsAgHiZ63qWrgINW/cm8kS73L7q+0IcYu2lIwLNCWx/uIS
- 9k+Ke88RK3rKg4t7DtPhO40HR6aX75cgm1QCuO76MC8Xagypvl8Bph7k8iJKemfvszVGAMujxj
- Toa0n3uc9a6W0BGrAvMW5z/yLGcEVcgOXBKiSsr3aWilgRBE0hsZVtL8Nq0kdoHP1dyKvOMDbA
- 1EdJxIFxYK1bzd8VaMf3FUIP5g4htjZKqW6DR6k9z3kOd6KdUF+UQYbRSm7uMuePHxj7cnSI3e
- WO8=
+IronPort-SDR: CPLMGknDk2ZgueAKF8+r7NJjRrHOsMekEBPp4J/ivWXsRpgzeWBwzpohEgC2YUnvo1QxaIoRDR
+ AJNJY9J8UD4tqRTJH49nQx65Qe6gGNRaDrbSW2MW4h1YoKeSiGbCkjoKEoY6psHL7D2UgFTIjS
+ pzmy/0f1jpIzkBRaOJ27hPSoaqc4RXXCQTDqIZhTAY+isqw+VbJN4OG1hGKRMcymITix8hG17n
+ ulMGOmqFK9d961odT2W55IvxcEAXN0ZX3qXKXIiRyLGlp9jsxNApIKJIHaAXb6nfKZtZ/x08dG
+ c78=
 X-IronPort-AV: E=Sophos;i="5.77,274,1596470400"; 
-   d="scan'208";a="148958725"
-Received: from mail-dm6nam10lp2103.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.103])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Sep 2020 21:31:45 +0800
+   d="scan'208";a="257396423"
+Received: from mail-bl2nam02lp2059.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.59])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Sep 2020 21:37:07 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BBxHN1vu1usB8tWvW5HSMpN/ZVm54LQEEgv7UDaXlumXBxpfy4coTvkB+ZLmONCaifk0AX9HunsvfjfJXVHq9xO1AoZtnAUdYj7PHlWJ1/cgxQ9kLsjwNxOBks0GCxjTiXi3U/NO8cSkMl7eXZjk/rF9Lvj7txZC0BHB15mBLLc9+zCJJ3lgnNAa3knVpqYcJ3xMyCLA2y49hl300Bhd1q9KOJrGO0nQkRB2fXGTFEXzq2bzclo7gie8jJnMaoqE9q6KGDOkli077978rM2/MpIYGQ9jKPtqy0arXu2OYMNe4wIc0d7vdiykHOt6lczRsjy7ebPVnxaaOqmZZw4i6w==
+ b=iLygZ3AenipCl8s0sqzldZbz19KiqKMdsmpj+wu9yzA3XdkHF4kdg0VImaygY89jRn182FQlARrs61ma8dOO6qoEmXGzTpoUu+U8s4NBeaP2WdDmZ6Q7ONm7tFJv2Q0P7BEVpRl0MLsHR8FvBmC3ljfpJZhVcMsO8CERC0Jn8GDrKI1uOwcDKfQomWIV317IL9AsvCzbjvTkWfZpFyTcANlD9w9fP2tZ8xKdePUoXqZ/d6qFDF+vSlbbfVlyKTGGKpOfgIFAMw2rv0yImQkyOHlHiYRXO4eGwgxxJSeB0NvwNyZLspttLZWNBwLBnP2bNDzGr9S2RkDgSwrzGS1h3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IdFH/5ixCZAsVOSbY5leC//retFE+u+8sFYZiHn65Os=;
- b=Xoo6M6HhOzFgn0UjSonIpCZjJRYx3Fz/trNTHE8pDlvuK/PJHwe/fA2a1Zs9V4jIqbjqPnjxCtR/qZDVk5Sj/IAIFsTUVJvqZEhxq+nQfh9spbZRoqPQzB8i8VJ4tLjh1qn+IttktrFuvDsVv64VC0+KeVsQL0ngaJiNmLzUko3F+drTM34Tec6ZOcKj2sAWKFIWD2ynt0n6I4mpLyQvG1jM9geqLpwj+47GACmb/VNLoBe+2l/XHoGOkxTRtCJvPYEfIuBWZv2y3hz/wJJrB+LhFkZjlteSYNg1WMRkwiQWw6PVKQlw6J5r1gBqV+cgss54J6j8lb/RlAas6NHe3Q==
+ bh=3fxeMydRj5LITwpOTJ8/5qGWnkDlQFvKc/JWPdaDvPg=;
+ b=TXeSn6r2MjGNBlh4C8XMQ/U3HnMqb61iZIq6LH1YOYF20DVnCWeJ4jr+V7jE2/CBC9C7rJCIg16zpuX8ZjyXPAiV6QoXBMwrj2q6w2uewAuwudGgqMMxqQJ3q7kZajMOoIH2ckfVHde+wPN2npjxIuNFuEkhtJNCPogKnShNLFP5NX/ZKb7CNnKa5U5US41CiUowavm5vsLYTv+hSf6XIA5sr00pMHnWgbkEmWLi6DI81XXXBtfd00KY0C243Ewz2cAdOheyRF0RLshNfMe5r/AlcR2JlV01soARfpLkA/vnfbQPr9xlc52z8H31CqB3IB/bcEpwHXu9Kcb7oS3JTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
  header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IdFH/5ixCZAsVOSbY5leC//retFE+u+8sFYZiHn65Os=;
- b=BVNBjgW2m0hsRUaxEaSKRRpz6lreFqG3swBJcEgPblLqH0i+RuDjxrAwDucFYrYOHQUSpHH25u7b/U3qhD5gXIZfqdekqZioZ7+NbrRfpNRjQgK12Z7sx3qOEnMXGzM25ecyY2nivUv+QJ2NAk+iKyVp0m2I4WpQZvzQ8o9+nYw=
+ bh=3fxeMydRj5LITwpOTJ8/5qGWnkDlQFvKc/JWPdaDvPg=;
+ b=qKi5FalZqOEFK4w7rb6IGXToAGpRjdZVDXpyEI/VKxNnbdE6py64DiRwMegLmbFr7vmaaiyV0ymMyPOdUs43z6p5lIx6vfCFM0qEnzcjrNxq4x30HVAqCCesK8zvyOUMYGHsQATJV91a1L3Q+nIFotJ7Vap9rYUGwgIAGyr/0Xw=
 Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB3805.namprd04.prod.outlook.com
- (2603:10b6:805:4d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.14; Fri, 18 Sep
- 2020 13:31:44 +0000
+ (2603:10b6:803:47::21) by SN6PR04MB5325.namprd04.prod.outlook.com
+ (2603:10b6:805:fb::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.13; Fri, 18 Sep
+ 2020 13:37:05 +0000
 Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
  ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
  ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3370.019; Fri, 18 Sep 2020
- 13:31:44 +0000
+ 13:37:05 +0000
 From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Keith Busch <kbusch@kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>, "hch@lst.de" <hch@lst.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+To:     Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Subject: Re: [PATCHv3 1/4] block: add zone specific block statuses
-Thread-Topic: [PATCHv3 1/4] block: add zone specific block statuses
-Thread-Index: AQHWjUjpcQ/OOMMUgU+KxaV/geAZWA==
-Date:   Fri, 18 Sep 2020 13:31:44 +0000
-Message-ID: <SN4PR0401MB35983DBC8B0B97A4083CDF8B9B3F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200917231841.4029747-1-kbusch@kernel.org>
- <20200917231841.4029747-2-kbusch@kernel.org>
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH 2/9] compat.h: fix a spelling error in <linux/compat.h>
+Thread-Topic: [PATCH 2/9] compat.h: fix a spelling error in <linux/compat.h>
+Thread-Index: AQHWjbn0TGOYh/gcrkCo+5T+LyMUNA==
+Date:   Fri, 18 Sep 2020 13:37:05 +0000
+Message-ID: <SN4PR0401MB3598AEEC9EC17DC78DABE66E9B3F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200918124533.3487701-1-hch@lst.de>
+ <20200918124533.3487701-3-hch@lst.de>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
 x-originating-ip: [2001:a62:1460:3d01:8d9e:cb93:a2df:3de3]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7ae99d93-7f2e-4c2b-10d5-08d85bd72f77
-x-ms-traffictypediagnostic: SN6PR04MB3805:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB38055D1BB6821D70403B5D9D9B3F0@SN6PR04MB3805.namprd04.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: a7055d35-151c-42c1-a3ca-08d85bd7eee4
+x-ms-traffictypediagnostic: SN6PR04MB5325:
+x-microsoft-antispam-prvs: <SN6PR04MB532504408AA7CB391A1C35979B3F0@SN6PR04MB5325.namprd04.prod.outlook.com>
 wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Sl28JKC1AsRS6fDnDRf+MiYopHoLd5QVojKA3UCiBOVAgK3+sozexbUB40mbH7oBio17tO02/Uq71f+IdgpRNL/I3mtZW7M5781nDSB+BSzdQKQDvF9JRKQWrukAjJcI3c75rq5JTPORk5wXsmMKPn1dUvIIkrMEIbFGlHWnloxmypB4MYuaS0ZpLMVJNAL8vK4IPSbf6gE3J9LSsdXRnUsRnHWLHCgLGonAzRqTA73n3AZ908Kjjx8UMS1BbwJRnWRLpY4IM4XbVMbOumHVYnsQXqtlaKuTrUhtqBExuNycvPdb2twBU8gg9l9rpmy83NbDqSXqHI40ocDqij6dVA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(83380400001)(8676002)(91956017)(52536014)(2906002)(53546011)(86362001)(7696005)(55016002)(6506007)(9686003)(54906003)(110136005)(5660300002)(4326008)(478600001)(76116006)(66476007)(316002)(8936002)(66556008)(186003)(66446008)(71200400001)(66946007)(64756008)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 7pC2mL2S3nZqbxSf+dIHfwTJan9CGG3m7JnAfwT7bVZVdA67/OP852kOc7Vb5Xttdjy7WrBvJzc+gwPPWAaxQKfv/UdbmciKgqfyhR3cBjAmqN6AI7InzmlxQ9+JNLRuT498WVrHVh8GHU6h66Twdh66pfUrusw7DWKteQEsslzn6E/FImNFNybNYHQTHFrlMZ5npneLQLx+vmard6mF6VYxZmHFLNIuK5oeJe/NeR90yveaQVCYpVVVIW8fyEjkZjMez85Ys8lVpAp4ExJsA/zkcM+sjOmb7+HjrXxW4LsvIsZTz92Pr/sd3XeVtWoOta9oqoThvfDDbOCtxZiKT2bwvth9UFeIPHTl/jqLgzskOas1hqjQ6appHAkMIOOtwc26DSoLmeyqM4XD8yP6ocn0yMnZEYFx9It0HM10P5Ec79eFyXdwPHh6IYQTj7zA88wM4IWmZYFVMhfVROvQBwr8sOcaoYYCYS8zRRCkNcKPCKrJIrvY4Ly7D42w1BT0tAnpHbqRjcIsFMddYOdJi/o6IPUqHAYbYXosvAwJxdTc47PWrNTJxesHLSxWJQm4IzKU6hysPa31/3VhV0qE4RpWu6WFDfifKtQawXNKHFN32KSL2IH0g3zbb/BTq0bzYD3N3vHSp95U/E5SaaMH/jvpXBv/p0ShuiK6ct4MwnhuPGWg00ygzHCJXVKkKtbViIl0TSIVGPK203AKZu3bYQ==
+x-microsoft-antispam-message-info: sW7O8iy/is8rzBYp3C+pEE1DT1YuUxj4GKzMvIgRa08BemS+/vQ/dkkQQPFinWi+mjyAZsK+AobvbKF9ksjI2uX1omQbzprpH5xOd3aZ1MCuVO9OI0cX+G6t9FKWCutM30I+/6QXVvIXgHS9ETzoG9TlNAb0zJdITBSoC4lvJKUFz0bc5NClo1SdmHZ7IWS6rB2U7f9se7TkrcCtwS/YTMN8u5aZKyJM2x5A77wB4OxVR1Lar7IAiexdUTvgOC0ve+LlMkQe7GlI7wnFLvi7lN2BxVwtzYNngGl0eo8gN4sbvdoKanTc1WCbYiooE8Ag
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(396003)(376002)(136003)(39860400002)(52536014)(8936002)(110136005)(54906003)(91956017)(66946007)(76116006)(8676002)(316002)(66556008)(64756008)(66446008)(66476007)(9686003)(5660300002)(55016002)(186003)(86362001)(7696005)(33656002)(4326008)(71200400001)(2906002)(7416002)(558084003)(478600001)(53546011)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: +4s7mIR9sli1EuC4tBkNBWdTq8BmORqoiZ9VRJdHaRNDvJ71NGpgl3/MABc7lWzZO1Xj9EJyZtQoMTX4VADCXg294C8mGwQHnLdnZu/bhxORLzBInmdOCsaL8aX6QLX0azcjcZj14APp+ORMrtsjpmAu4cw+wunmpPRrLH39BtypYte/df48R8ssiYg/djEiTi9IuF70jvoqxu96Xzk3ay7eZF76Agw0pmNyu6V5p39iICfBUQZCEJAasDUxhMC6tUbm9th7wG0nnG0AuU9kEd3TlNSO9RqET/lNaLYpf7cr94Jco27qpMvDDgwxYxp69hrTAl3uqECd/Q3og++YuAOG6Lzq1JMaeXJEU4MdLG5PpmzsXYMemy/bEeDi8bb6NpvSiX9RHcKMRFa/guA205H3HlF6BT3B5fNozrf/Pm4f3rSR+/c0Zys7ystZKXvLz+IP0kjcOCIE1ELGmIa1jqHPezFV/lyYPG7Ij3ssjYTj88stWATwkm23OJnBIKe/6klzb2SpfL3DekexxrOmHyquT1djWn/GhQyb6WotrfD0cO2Rxf+j8TPhiKyE98d5RiSPJkNJsJFK2CwphDZuU5mughX6alHxpgB9DnIEEULOXMkqEae8mFpoFEIoiNDXweHH6OsyIE3vONoRCnEBupVnBDkunxZQ7HpS0NOiibNcz2pOJ64eJPpdpVY23Yk5uyr0BotCoisyWaFiuJq1yA==
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae99d93-7f2e-4c2b-10d5-08d85bd72f77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2020 13:31:44.3994
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7055d35-151c-42c1-a3ca-08d85bd7eee4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2020 13:37:05.5213
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3bP9YKWMndfrhoMn0k/oyS5iOB2JveLhCT2ZQ9HkpNrw/SD08xXAF0bC8/VYhgEaEUJVvhVmdfrLTzIjlQsy9o+L2BtPpZEL4ME7O+gSKK0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3805
+X-MS-Exchange-CrossTenant-userprincipalname: 5Txd1p36uuGkQs9WEN/G0+DUIyGNPxaMxNayRc9hOeqSRFG9dtxxpSZX+AJhfrs74ZJ2tBecEIIGTxwIgPLEubl21SzBOHz0tbKUc7oAkd8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5325
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 18/09/2020 01:18, Keith Busch wrote:=0A=
-> diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/qu=
-eue-sysfs.rst=0A=
-> index f261a5c84170..2638d3446b79 100644=0A=
-> --- a/Documentation/block/queue-sysfs.rst=0A=
-> +++ b/Documentation/block/queue-sysfs.rst=0A=
-> @@ -124,6 +124,10 @@ For zoned block devices (zoned attribute indicating =
-"host-managed" or=0A=
->  EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.=0A=
->  If this value is 0, there is no limit.=0A=
->  =0A=
-> +If the host attempts to exceed this limit, the driver should report this=
- error=0A=
-> +with BLK_STS_ZONE_ACTIVE_RESOURCE, which user space may see as the EOVER=
-FLOW=0A=
-> +errno.=0A=
-> +=0A=
->  max_open_zones (RO)=0A=
->  -------------------=0A=
->  For zoned block devices (zoned attribute indicating "host-managed" or=0A=
-> @@ -131,6 +135,10 @@ For zoned block devices (zoned attribute indicating =
-"host-managed" or=0A=
->  EXPLICIT OPEN or IMPLICIT OPEN, is limited by this value.=0A=
->  If this value is 0, there is no limit.=0A=
->  =0A=
-> +If the host attempts to exceed this limit, the driver should report this=
- error=0A=
-> +with BLK_STS_ZONE_OPEN_RESOURCE, which user space may see as the ETOOMAN=
-YREFS=0A=
-> +errno.=0A=
-=0A=
-Don't we also need to update some man pages in section 2?=0A=
-=0A=
-Code wise,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On 18/09/2020 14:48, Christoph Hellwig wrote:=0A=
+> We only have not compat_sys_readv64v2 syscall, only a=0A=
+We have no?=0A=
