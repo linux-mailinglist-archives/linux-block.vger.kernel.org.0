@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A79D92721A4
-	for <lists+linux-block@lfdr.de>; Mon, 21 Sep 2020 12:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD2F2721A7
+	for <lists+linux-block@lfdr.de>; Mon, 21 Sep 2020 12:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgIUK5n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Sep 2020 06:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
+        id S1726402AbgIUK5s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Sep 2020 06:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbgIUK5m (ORCPT
+        with ESMTP id S1726782AbgIUK5r (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Sep 2020 06:57:42 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20A4C0613CF
-        for <linux-block@vger.kernel.org>; Mon, 21 Sep 2020 03:57:42 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id v14so6935321pjd.4
-        for <linux-block@vger.kernel.org>; Mon, 21 Sep 2020 03:57:42 -0700 (PDT)
+        Mon, 21 Sep 2020 06:57:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB8AC061755
+        for <linux-block@vger.kernel.org>; Mon, 21 Sep 2020 03:57:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o25so3751599pgm.0
+        for <linux-block@vger.kernel.org>; Mon, 21 Sep 2020 03:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VV3gcZz9qKuPs84N2Es2cgBs4xeGVyPPTTCXAIYm92E=;
-        b=p/tFl1wJaUv7yfJ87eFifY1+yrVg2gZlLqsFiDG8DDpzFiW7e5fqWgNZlNl3B9JKIR
-         oSMzggHh8atAmbdRDvqqO7FnjHHYui8oVKoVxSucemnbfibay6KrSxnVDU2EkXkEGW4Y
-         erB3UWjtDfpzD9Zz+IWCIiEcguahPxD/h//nZbQraP7eAkSJhlh/HM7FeSs/xERHv7eP
-         lf2YZ1droNtH2qzvC0cIp0RrH0F1T1HRcuZ+slaTToT5BSNnJXJl4/qPv7EH1fB9oS9t
-         5wdtn8yUNFLmP7oeD+MQqdMPjVxBb4fShfseXwiekAyu8vGHXU3aNAdY+c1xKiJIk61o
-         NssA==
+        bh=h/xfvcdsom/q5CUNFRcCmgVmkzsyJDy2Xd2OuyVyhn8=;
+        b=uqDVLCYQdF1Ohh6ZxVL4Mu7FFkm44LXZf6/pkHn6s6e2ym9Li56WYMHqTel7GwRF0B
+         zgFyXa2swPoJOeFy30PK+tG741ycyZ/nwWVzLDFfwj0m119f08t5xXyxqZTf7Wwu5u+y
+         lenY0/uPwqWOYpUigNwuLtglCwjhUOe6GGr/1r2KEo6rr5Bg4ECnfE2WoEOaaoOrflIi
+         BpbdYfOq6/WXXwLEtHiawcH66+iEPIwiUOd9YvS5WVF6UEUjWNq0Ww1Y7bjnOpak49Lc
+         GL0Eb5aaU+ImmSN2V5VHrZ07K+JFo1JSfz+nDh74x1y2z2Ry3BT2SpXVxSY2jDW3EEM5
+         0C3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VV3gcZz9qKuPs84N2Es2cgBs4xeGVyPPTTCXAIYm92E=;
-        b=drTjQKwLYCs7lML683PZksHNwExdNSuGI+ZVBlKFPZfbjIcIFOT35mujqovzRgeCoz
-         PuG2qL0WBjaeFzPDR5Kyxdm8Qof4dC9dd3EYvKB/cEOMsBcgMiuWlV8Qs7kaPFaJanJX
-         yomqrCzMLbKGt2eN9YCmjSSoKGxm4lsPuUPUaI6SMzEGCkfgueI6B5tx03p084oBX8lI
-         WgU2GL2018VTVUkAY+MONMLTTGEOkJM/Wgy4yEOMUgHci6MNqFZMVldIZTcYrsX348MP
-         49AVUdOIsgcus5+9M/A2Le3UIpXoaQIi9bGnoIRxsrFMEfCCnYbBBtueygX98pH6a8g+
-         heZA==
-X-Gm-Message-State: AOAM532D9VhNtdEOcosmdLomSG4my5nbnF+wZFQkBxmEkdhLUJxYZoMA
-        VTzGOsP7lesC4cX4AtZoCe1zmA==
-X-Google-Smtp-Source: ABdhPJzDa8+tXiz85jqOT8FmjdYgP5pxuExLAwtOnDXeUK1RcH7HAQy0YNMXUInmpRpdmhT+wvTQbA==
-X-Received: by 2002:a17:90b:8a:: with SMTP id bb10mr24508143pjb.108.1600685862352;
-        Mon, 21 Sep 2020 03:57:42 -0700 (PDT)
+        bh=h/xfvcdsom/q5CUNFRcCmgVmkzsyJDy2Xd2OuyVyhn8=;
+        b=bdWsbWJDYoaxNwwBWyIimyMaSLJ81qNlMp4ZSNEaj+I9TxF8b8MLM0TFu3WMmXUgyM
+         9IB3WtApud66JSjllegbkFOpJiAv5c0q3ephjpkkmNWyi3ho228OsVC+2z8skQkqIunA
+         mcapmQnQRinU6/usDYi36P7Y+9Lu5dlqpKsdFZIB8amTz+x03mAwudTP+c7Ex2NpUHaV
+         HtyC4cu5OcF3OkYQ9EZFZvuUZ2zV/pAdZH8FnWymFsL+BgwecD/rkxsgkFc4JhN4wzb4
+         P3aEeDlqivX4Cpan0vP0LQHwT2oIYPHFHSBhoAUEoQcq9I7VFSdfU9iGb0xKsYYKQ6ks
+         h40Q==
+X-Gm-Message-State: AOAM531vhhc4Y3F/ZIiqjtl2/qkZz6pdq1jLVp/XkDo8lEiAEJ/lMpuh
+        Oi0aShuVkc5tCBKYte3S1w6Bvg==
+X-Google-Smtp-Source: ABdhPJwk3qxw881cWJf/l4dmF0k0V+qLlV4v6C5M4UEKY+xiqhQbULAd/YIQrRtCDUEyIfyq8hJDeA==
+X-Received: by 2002:a17:902:ba98:b029:d1:e598:3ff2 with SMTP id k24-20020a170902ba98b02900d1e5983ff2mr26553974pls.44.1600685866739;
+        Mon, 21 Sep 2020 03:57:46 -0700 (PDT)
 Received: from box.bytedance.net ([61.120.150.73])
-        by smtp.gmail.com with ESMTPSA id x62sm2792533pfx.20.2020.09.21.03.57.39
+        by smtp.gmail.com with ESMTPSA id x62sm2792533pfx.20.2020.09.21.03.57.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2020 03:57:41 -0700 (PDT)
+        Mon, 21 Sep 2020 03:57:46 -0700 (PDT)
 From:   Hou Pu <houpu@bytedance.com>
 To:     josef@toxicpanda.com, axboe@kernel.dk
 Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
         nbd@other.debian.org, Hou Pu <houpu@bytedance.com>
-Subject: [PATCH 2/3] nbd: unify behavior in timeout no matter how many sockets is configured
-Date:   Mon, 21 Sep 2020 18:57:17 +0800
-Message-Id: <20200921105718.29006-3-houpu@bytedance.com>
+Subject: [PATCH 3/3] nbd: introduce a client flag to do zero timeout handling
+Date:   Mon, 21 Sep 2020 18:57:18 +0800
+Message-Id: <20200921105718.29006-4-houpu@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200921105718.29006-1-houpu@bytedance.com>
 References: <20200921105718.29006-1-houpu@bytedance.com>
@@ -64,45 +64,100 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When an nbd device is configured with multiple sockets, the request
-is requeued to an active socket in xmit_timeout, the original socket
-is closed if not.
+Introduce a dedicated client flag NBD_RT_WAIT_ON_TIMEOUT to reset
+timer in nbd_xmit_timer instead of depending on tag_set.timeout == 0.
+So that the timeout value could be configured by the user to
+whatever they like instead of the default 30s. A smaller timeout
+value allow us to detect if a new socket is reconfigured in a
+shorter time. Thus the io could be requeued more quickly.
 
-Some time, the backend nbd server hang, thus all sockets will be
-dropped and the nbd device is not usable. It would be better to have an
-option to wait for more time (just reset timer in nbd_xmit_timeout).
-Like what we do if we only have one socket. This patch allows it.
+The tag_set.timeout == 0 setting still works like before.
 
 Signed-off-by: Hou Pu <houpu@bytedance.com>
 ---
- drivers/block/nbd.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/block/nbd.c      | 25 ++++++++++++++++++++++++-
+ include/uapi/linux/nbd.h |  4 ++++
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 538e9dcf5bf2..4c0bbb981cbc 100644
+index 4c0bbb981cbc..1d7a9de7bdcc 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -400,8 +400,7 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+@@ -80,6 +80,7 @@ struct link_dead_args {
+ #define NBD_RT_BOUND			5
+ #define NBD_RT_DESTROY_ON_DISCONNECT	6
+ #define NBD_RT_DISCONNECT_ON_CLOSE	7
++#define NBD_RT_WAIT_ON_TIMEOUT		8
+ 
+ #define NBD_DESTROY_ON_DISCONNECT	0
+ #define NBD_DISCONNECT_REQUESTED	1
+@@ -378,6 +379,16 @@ static u32 req_to_nbd_cmd_type(struct request *req)
+ 	}
+ }
+ 
++static inline bool wait_on_timeout(struct nbd_device *nbd,
++				   struct nbd_config *config)
++{
++	if (test_bit(NBD_RT_WAIT_ON_TIMEOUT, &config->runtime_flags) ||
++	    nbd->tag_set.timeout == 0)
++		return true;
++	else
++		return false;
++}
++
+ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+ 						 bool reserved)
+ {
+@@ -400,7 +411,7 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
  	    nbd->tag_set.timeout)
  		goto error_out;
  
--	if (config->num_connections > 1 ||
--	    (config->num_connections == 1 && nbd->tag_set.timeout)) {
-+	if (nbd->tag_set.timeout) {
+-	if (nbd->tag_set.timeout) {
++	if (!wait_on_timeout(nbd, config)) {
  		dev_err_ratelimited(nbd_to_dev(nbd),
  				    "Connection timed out, retrying (%d/%d alive)\n",
  				    atomic_read(&config->live_connections),
-@@ -432,9 +431,7 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 			nbd_config_put(nbd);
- 			return BLK_EH_DONE;
+@@ -1953,6 +1964,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 			set_bit(NBD_RT_DISCONNECT_ON_CLOSE,
+ 				&config->runtime_flags);
  		}
--	}
--
--	if (!nbd->tag_set.timeout) {
-+	} else {
- 		/*
- 		 * Userspace sets timeout=0 to disable socket disconnection,
- 		 * so just warn and reset the timer.
++		if (flags & NBD_CFLAG_WAIT_ON_TIMEOUT) {
++			set_bit(NBD_RT_WAIT_ON_TIMEOUT,
++				&config->runtime_flags);
++		}
+ 	}
+ 
+ 	if (info->attrs[NBD_ATTR_SOCKETS]) {
+@@ -2136,6 +2151,14 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
+ 			clear_bit(NBD_RT_DISCONNECT_ON_CLOSE,
+ 					&config->runtime_flags);
+ 		}
++		if (flags & NBD_CFLAG_WAIT_ON_TIMEOUT) {
++			set_bit(NBD_RT_WAIT_ON_TIMEOUT,
++				&config->runtime_flags);
++		} else {
++			clear_bit(NBD_RT_WAIT_ON_TIMEOUT,
++				  &config->runtime_flags);
++		}
++
+ 	}
+ 
+ 	if (info->attrs[NBD_ATTR_SOCKETS]) {
+diff --git a/include/uapi/linux/nbd.h b/include/uapi/linux/nbd.h
+index 20d6cc91435d..cc3abfb92de5 100644
+--- a/include/uapi/linux/nbd.h
++++ b/include/uapi/linux/nbd.h
+@@ -56,6 +56,10 @@ enum {
+ #define NBD_CFLAG_DISCONNECT_ON_CLOSE (1 << 1) /* disconnect the nbd device on
+ 						*  close by last opener.
+ 						*/
++#define NBD_CFLAG_WAIT_ON_TIMEOUT (1 << 2) /* do not fallback to other sockets
++					    * in io timeout, instead just reset
++					    * timer and wait.
++					    */
+ 
+ /* userspace doesn't need the nbd_device structure */
+ 
 -- 
 2.11.0
 
