@@ -2,91 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4F42742C1
-	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 15:17:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA554274406
+	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 16:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgIVNRT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Sep 2020 09:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgIVNRT (ORCPT
+        id S1726494AbgIVOTT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Sep 2020 10:19:19 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:29546 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgIVOTT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Sep 2020 09:17:19 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154D8C061755
-        for <linux-block@vger.kernel.org>; Tue, 22 Sep 2020 06:17:19 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id db4so9471220qvb.4
-        for <linux-block@vger.kernel.org>; Tue, 22 Sep 2020 06:17:19 -0700 (PDT)
+        Tue, 22 Sep 2020 10:19:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y7hBRDL7D6Os8jd/ujBfUgL9LgsIqC36Ea7y4QNnNwA=;
-        b=yy2bl6Hywwn6atQQyV2G+5KhajzE8adC57JKYyO5qlSR6pM4IYuB6FZgr2Ll4TJsc2
-         W0IPwRUfm18BUiFxMnTFwVqlAIbQNnsYVndZDjuF/qzpIkNARg/hFwRvEW4xHWSAi058
-         hWFfJwDgGgLG+OgdXgib5RqvCUseRQ1wZFD7ZdXE7i3TcvZMVRIBF/zqQbwZS6I4aua4
-         3wILroqhMyw8qSTVsuCJcKBYAdMZQLWgksgRCimFzC7XavG72jEKYh+laBjdkBEh7YrQ
-         Oq3GuCIj2vHWE59D1ZdZn5dzWhZ0pOl42QuDbJqKrVuFn5riMVzt016oIyUFLSJApNHT
-         yTXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y7hBRDL7D6Os8jd/ujBfUgL9LgsIqC36Ea7y4QNnNwA=;
-        b=ZREcIzZ8YKIevquv2+zG24bHgiXKkX/f6HESUdcRMNPoF4SWwLDxNkUgm/UYBot8ek
-         wIf2WhoANLJM2yYWZp6DrruoKJfApkQ0UY9DgDTLRCTQdp1a57xJEFVgqxLgL13VFkeR
-         RlN9WERGCtFfzRKUKqFcjYrKQCZoTG4IBOjnOdRUVnjZaYCudWAp0PkFFAsCoPKLc6NL
-         LA+HFo9yR7pAYP6/iw7f9Je0i4yPfEfDo8Vne8uI9acX0Wop8Pif2g+EPwGOVE2kBCyv
-         R+gSGVHDYJR6rNxbFkHpvywOUNjPQ9Xm0IUdTO5hWSmZr16JYYizsfoGbZQmlOG4TpYV
-         QwTg==
-X-Gm-Message-State: AOAM531jZqaaR3dgGCLjbxauf9n64uvXQzVPu+ea7pMeJHDMysPVr8PD
-        Du/BHJaCMvGer7MY0PxcGUvlXg==
-X-Google-Smtp-Source: ABdhPJwZakf/ID6zTVvXKm89xV38c1oiFCba0j711DtvgOMif1ocu0KVL2Pz9lwN8fy6w9TlPobDsQ==
-X-Received: by 2002:a0c:a95e:: with SMTP id z30mr5836737qva.58.1600780638198;
-        Tue, 22 Sep 2020 06:17:18 -0700 (PDT)
-Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id f76sm11133910qke.19.2020.09.22.06.17.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2020 06:17:17 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] nbd: introduce a client flag to do zero timeout
- handling
-To:     Hou Pu <houpu@bytedance.com>, axboe@kernel.dk
-Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
-        nbd@other.debian.org
-References: <20200922033457.46227-1-houpu@bytedance.com>
- <20200922033457.46227-3-houpu@bytedance.com>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <4a81b066-86d2-8532-f540-31ef9830e26b@toxicpanda.com>
-Date:   Tue, 22 Sep 2020 09:17:16 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.2
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1600784358; x=1632320358;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OBQsZyJBuiCetLUlZLSO8CKNXhhvxT++kw73YrVj7g0=;
+  b=ZMLFvINUchbBnXVz1uNieZXbyHKlYC4jFKfaLbBq8yRvlC0vBvgGgSR/
+   ZKwHvblAfKCDb89UvIq4ViU4iFL9SEF1S6BMQiMqs3yW90rnZMXNWFR5H
+   Xhp/jL6IPUHYM7OUSLnn8Ft3+Ex/ieN+v7AjD7F00qPbvTmpLwL0nQ7pQ
+   k=;
+X-IronPort-AV: E=Sophos;i="5.77,291,1596499200"; 
+   d="scan'208";a="70117511"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Sep 2020 14:16:13 +0000
+Received: from EX13D31EUA004.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id DB8BCA215B;
+        Tue, 22 Sep 2020 14:16:12 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.137) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 22 Sep 2020 14:16:06 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <konrad.wilk@oracle.com>, <roger.pau@citrix.com>, <jgross@suse.com>
+CC:     SeongJae Park <sjpark@amazon.de>, <axboe@kernel.dk>,
+        <aliguori@amazon.com>, <amit@kernel.org>, <mheyne@amazon.de>,
+        <pdurrant@amazon.co.uk>, <linux-block@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/3] xen-blk(back|front): Let users disable persistent grants
+Date:   Tue, 22 Sep 2020 16:15:46 +0200
+Message-ID: <20200922141549.26154-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200922033457.46227-3-houpu@bytedance.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.137]
+X-ClientProxiedBy: EX13D12UWC001.ant.amazon.com (10.43.162.78) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/21/20 11:34 PM, Hou Pu wrote:
-> Introduce a dedicated client flag NBD_RT_WAIT_ON_TIMEOUT to reset
-> timer in nbd_xmit_timer instead of depending on tag_set.timeout == 0.
-> So that the timeout value could be configured by the user to
-> whatever they like instead of the default 30s. A smaller timeout
-> value allow us to detect if a new socket is reconfigured in a
-> shorter time. Thus the io could be requeued more quickly.
-> 
-> In multiple sockets configuration, the user could also disable
-> dropping the socket in timeout by setting this flag.
-> 
-> The tag_set.timeout == 0 setting still works like before.
-> 
-> Signed-off-by: Hou Pu <houpu@bytedance.com>
+From: SeongJae Park <sjpark@amazon.de>
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Persistent grants feature provides high scalability.  On some small
+systems, however, it could incur data copy overheads[1] and thus it is
+required to be disabled.  But, there is no option to disable it.  For
+the reason, this commit adds module parameters for disabling of the
+feature.
 
-Thanks,
+[1] https://wiki.xen.org/wiki/Xen_4.3_Block_Protocol_Scalability
 
-Josef
+Baseline and Complete Git Trees
+===============================
+
+The patches are based on the v5.9-rc6.  You can also clone the complete
+git tree:
+
+    $ git clone git://github.com/sjp38/linux -b pgrants_disable_v3
+
+The web is also available:
+https://github.com/sjp38/linux/tree/pgrants_disable_v3
+
+Patch History
+=============
+
+Changes from v2
+(https://lore.kernel.org/linux-block/20200922105209.5284-1-sjpark@amazon.com/)
+- Avoid race conditions (Roger Pau Monné)
+
+Changes from v1
+(https://lore.kernel.org/linux-block/20200922070125.27251-1-sjpark@amazon.com/)
+- use 'bool' parameter type (Jürgen Groß)
+- Let blkfront can also disable the feature from its side
+  (Roger Pau Monné)
+- Avoid unnecessary xenbus_printf (Roger Pau Monné)
+- Update frontend parameter doc
+
+
+SeongJae Park (3):
+  xen-blkback: add a parameter for disabling of persistent grants
+  xen-blkfront: add a parameter for disabling of persistent grants
+  xen-blkfront: Apply changed parameter name to the document
+
+ .../ABI/testing/sysfs-driver-xen-blkback      |  9 ++++++++
+ .../ABI/testing/sysfs-driver-xen-blkfront     | 11 +++++++++-
+ drivers/block/xen-blkback/xenbus.c            | 22 ++++++++++++++-----
+ drivers/block/xen-blkfront.c                  | 20 ++++++++++++-----
+ 4 files changed, 50 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
