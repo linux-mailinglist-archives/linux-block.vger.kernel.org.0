@@ -2,76 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4812273781
-	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 02:32:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 137A12737AA
+	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 02:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgIVAc5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Sep 2020 20:32:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
+        id S1728701AbgIVAtM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Sep 2020 20:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgIVAc5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Sep 2020 20:32:57 -0400
+        id S1728497AbgIVAtM (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 21 Sep 2020 20:49:12 -0400
 Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B1D23A7B;
-        Tue, 22 Sep 2020 00:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B64BD23A61;
+        Tue, 22 Sep 2020 00:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600734776;
-        bh=9iQKPi8cJPw5SWvxhZZXch+CZaHdW8ZYJYD9q25fmC0=;
+        s=default; t=1600735751;
+        bh=Bm28/D0KyWoChkiZqtfuQGAXW2tkHfhCWau4UGSFpTA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hk2sRmBVXZ3CSthmSRgdy4u7KSXNJmYwYghxEa/WNY8kRfR8ItEgFa9g0/6FbFu+H
-         DwNpHqilQpl/bidklMqrcKRtZF4c2n+AmrHSZjF90kI+m3NZqsxBPQgTNgM1ou/UnB
-         nOpII9gaXN/AmRuaNJ2K4yWleJ6EL3veq8Sjo+PQ=
-Date:   Mon, 21 Sep 2020 17:32:55 -0700
+        b=DgbQa1a5vEKJkEvTCKylzsNtWfPYSQs8nT7iQWmcRiIvEBQ30PELF6SeQU6b9/lVx
+         UPCmnVKV94vC6v+awa1Z+PLphLwvdnSgJEgJiJlEqa1MrPlSByRxT7HKfPkei/5bCS
+         Rg0sl5C5YZL8di/L7RXUEBit2xt+fNJC5aX3tIWA=
+Date:   Mon, 21 Sep 2020 17:49:10 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     Satya Tangirala <satyat@google.com>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         dm-devel@redhat.com, Jens Axboe <axboe@kernel.dk>,
         Alasdair Kergon <agk@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH 2/3] dm: add support for passing through inline crypto
- support
-Message-ID: <20200922003255.GC32959@sol.localdomain>
+Subject: Re: [PATCH 3/3] dm: enable may_passthrough_inline_crypto on some
+ targets
+Message-ID: <20200922004910.GD32959@sol.localdomain>
 References: <20200909234422.76194-1-satyat@google.com>
- <20200909234422.76194-3-satyat@google.com>
+ <20200909234422.76194-4-satyat@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909234422.76194-3-satyat@google.com>
+In-Reply-To: <20200909234422.76194-4-satyat@google.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:44:21PM +0000, Satya Tangirala wrote:
+On Wed, Sep 09, 2020 at 11:44:22PM +0000, Satya Tangirala wrote:
 > From: Eric Biggers <ebiggers@google.com>
 > 
-> Update the device-mapper core to support exposing the inline crypto
-> support of the underlying device(s) through the device-mapper device.
+> dm-linear and dm-flakey obviously can pass through inline crypto support.
 > 
-> This works by creating a "passthrough keyslot manager" for the dm
-> device, which declares support for encryption settings which all
-> underlying devices support.  When a supported setting is used, the bio
-> cloning code handles cloning the crypto context to the bios for all the
-> underlying devices.  When an unsupported setting is used, the blk-crypto
-> fallback is used as usual.
-> 
-> Crypto support on each underlying device is ignored unless the
-> corresponding dm target opts into exposing it.  This is needed because
-> for inline crypto to semantically operate on the original bio, the data
-> must not be transformed by the dm target.  Thus, targets like dm-linear
-> can expose crypto support of the underlying device, but targets like
-> dm-crypt can't.  (dm-crypt could use inline crypto itself, though.)
-> 
-> When a key is evicted from the dm device, it is evicted from all
-> underlying devices.
+> dm-zero should declare that it passes through inline crypto support, since
+> any reads from dm-zero should return zeroes, and blk-crypto should not
+> attempt to decrypt data returned from dm-zero.
 > 
 > Signed-off-by: Eric Biggers <ebiggers@google.com>
 > Co-developed-by: Satya Tangirala <satyat@google.com>
 > Signed-off-by: Satya Tangirala <satyat@google.com>
+> ---
+>  drivers/md/dm-flakey.c | 1 +
+>  drivers/md/dm-linear.c | 1 +
+>  drivers/md/dm-zero.c   | 1 +
+>  3 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+> index a2cc9e45cbba..655286dacc35 100644
+> --- a/drivers/md/dm-flakey.c
+> +++ b/drivers/md/dm-flakey.c
+> @@ -253,6 +253,7 @@ static int flakey_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  	ti->num_discard_bios = 1;
+>  	ti->per_io_data_size = sizeof(struct per_bio_data);
+>  	ti->private = fc;
+> +	ti->may_passthrough_inline_crypto = true;
+>  	return 0;
+>  
+>  bad:
+> diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
+> index e1db43446327..6d81878e2ca8 100644
+> --- a/drivers/md/dm-linear.c
+> +++ b/drivers/md/dm-linear.c
+> @@ -62,6 +62,7 @@ static int linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  	ti->num_secure_erase_bios = 1;
+>  	ti->num_write_same_bios = 1;
+>  	ti->num_write_zeroes_bios = 1;
+> +	ti->may_passthrough_inline_crypto = true;
+>  	ti->private = lc;
+>  	return 0;
+>  
+> diff --git a/drivers/md/dm-zero.c b/drivers/md/dm-zero.c
+> index b65ca8dcfbdc..07e02f3a9cd1 100644
+> --- a/drivers/md/dm-zero.c
+> +++ b/drivers/md/dm-zero.c
+> @@ -26,6 +26,7 @@ static int zero_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  	 * Silently drop discards, avoiding -EOPNOTSUPP.
+>  	 */
+>  	ti->num_discard_bios = 1;
+> +	ti->may_passthrough_inline_crypto = true;
+>  
+>  	return 0;
+>  }
 
-Looks good as far as Satya's changes from my original patch are concerned.
+Isn't it wrong to set may_passthrough_inline_crypto on dm-zero?  First, there's
+no actual underlying device associated with dm-zero, so the idea of dm-zero
+"passing through" anything is strange.
 
-Can the device-mapper maintainers take a look at this?
+Second, inline encryption is supposed to semantically operate on the original
+bio.  I.e. if someone reads some data from dm-zero and they use a bio_crypt_ctx
+that indicates the data should be decrypted, then I'd expect that either the bio
+would fail, *or* it would return back data which is equal to the decryption of
+the all-zeroes ciphertexts.
+
+may_passthrough_inline_crypto=false would give that behavior.  Whereas with
+may_passthrough_inline_crypto=true, the bio's encryption context may just be
+ignored and reads will return all zeroes.
+
+Of course, setting an encryption context for I/O to/from dm-zero isn't really
+something that people would do anyway...  But it seems we shouldn't bother
+setting may_passthrough_inline_crypto on it when it seems wrong.
 
 - Eric
