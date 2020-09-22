@@ -2,59 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E030274929
-	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 21:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14821274928
+	for <lists+linux-block@lfdr.de>; Tue, 22 Sep 2020 21:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgIVTbC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Sep 2020 15:31:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35134 "EHLO
+        id S1726589AbgIVTan (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Sep 2020 15:30:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34886 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgIVTbC (ORCPT
+        with ESMTP id S1726448AbgIVTan (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Sep 2020 15:31:02 -0400
+        Tue, 22 Sep 2020 15:30:43 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08MJTDw5037166;
-        Tue, 22 Sep 2020 19:30:56 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08MJTLAh037210;
+        Tue, 22 Sep 2020 19:30:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
  from : message-id : references : date : in-reply-to : mime-version :
  content-type; s=corp-2020-01-29;
- bh=lo0N7QaLiuq42DK3xUcu48IdgiLxDW2es6QF0rpgapg=;
- b=ZVGQbq6HISC2w0mjC3mcfLJRzW7899qRrcCw8miS6a9q1ZhYVPLuGCXCpXX+eXC5nmyP
- ME6NLuAt8B9B4egX+dUvgfK9xtIH1lxDVtKHwhw/QIqp8FQ/dNuYvNafv78VizAro0NI
- G0PXe7a+EyWVc6+MhDXTQc0oeXWyZC1TFiyu0hb0Sz2jkZ7xRKGZXkX8wE5V0Keq4+5/
- pFS7AOQQoqQ/nZF710vXnVCVEO/I4WFlYddL8UrmmR/oCMDpVKmEioow8VtZyEd2t7SO
- y7g+LUYg19Ks6Ew2NfmNvWlnGV+0zR7GceQd8X6aERqAKo43Lpa6oHZZG3oObIHE+nac 5w== 
+ bh=Hu9Gzbb5ENODYaMqbCOGcOYHiVcqPmnDxe8ZihVzAzE=;
+ b=vuiZ0qMHRdJVlEYEY21x8n7vbHaSX5yDImuVNlT831MwjKrLdzZF/MLiqRxpk4ZSJbXA
+ gZey8R/F1+isWHvffVfQrWjtzldKb3HhP5vSkgSZNCDbDvaUdAfMAzFJ0INbpe0aD+5n
+ avelCw2ThToeouRrsSTdBiwPPBRpLzFxZS7qt/a0rMTjSvaEW+Cr5S5wa5eI8nzHvhCd
+ ooTpzvgfD06GmODpqNvZNBXPJ3s7X8n6649Kf4uVWGl9zMcMUmfi8Kmcihews8fSKILM
+ dRaJ8bMkfdAG9pszBzNDGxRdtXbVS/RpeHaHwcoG+bNoh6LEpS+R7njm8tUJVRZ4HgBo rg== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33q5rgd3x4-1
+        by aserp2120.oracle.com with ESMTP id 33q5rgd3wa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Sep 2020 19:30:56 +0000
+        Tue, 22 Sep 2020 19:30:38 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08MJPQ2t154830;
-        Tue, 22 Sep 2020 19:28:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 33nuwyvk7t-1
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08MJPPm7154691;
+        Tue, 22 Sep 2020 19:30:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 33nuwyvnbg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Sep 2020 19:28:55 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08MJSscg019845;
-        Tue, 22 Sep 2020 19:28:55 GMT
+        Tue, 22 Sep 2020 19:30:38 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08MJUanE025084;
+        Tue, 22 Sep 2020 19:30:37 GMT
 Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Sep 2020 12:28:53 -0700
+        with ESMTP ; Tue, 22 Sep 2020 12:30:36 -0700
 To:     Mike Snitzer <snitzer@redhat.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
         Vijayendra Suman <vijayendra.suman@oracle.com>,
         dm-devel@redhat.com, linux-block@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] block: use lcm_not_zero() when stacking
- chunk_sectors
+Subject: Re: [PATCH v3 4/6] block: allow 'chunk_sectors' to be non-power-of-2
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
 Organization: Oracle Corporation
-Message-ID: <yq13639r4po.fsf@ca-mkp.ca.oracle.com>
+Message-ID: <yq1wo0lpq2d.fsf@ca-mkp.ca.oracle.com>
 References: <20200922023251.47712-1-snitzer@redhat.com>
-        <20200922023251.47712-4-snitzer@redhat.com>
-Date:   Tue, 22 Sep 2020 15:28:51 -0400
-In-Reply-To: <20200922023251.47712-4-snitzer@redhat.com> (Mike Snitzer's
-        message of "Mon, 21 Sep 2020 22:32:48 -0400")
+        <20200922023251.47712-5-snitzer@redhat.com>
+Date:   Tue, 22 Sep 2020 15:30:34 -0400
+In-Reply-To: <20200922023251.47712-5-snitzer@redhat.com> (Mike Snitzer's
+        message of "Mon, 21 Sep 2020 22:32:49 -0400")
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9752 signatures=668679
@@ -64,7 +63,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 ml
  definitions=main-2009220151
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9752 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 impostorscore=0
- clxscore=1015 suspectscore=1 phishscore=0 malwarescore=0
+ clxscore=1011 suspectscore=1 phishscore=0 malwarescore=0
  priorityscore=1501 mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009220151
@@ -75,16 +74,16 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Mike,
 
-> Like 'io_opt', blk_stack_limits() should stack 'chunk_sectors' using
-> lcm_not_zero() rather than min_not_zero() -- otherwise the final
-> 'chunk_sectors' could result in sub-optimal alignment of IO to
-> component devices in the IO stack.
+> It is possible, albeit more unlikely, for a block device to have a non
+> power-of-2 for chunk_sectors (e.g. 10+2 RAID6 with 128K chunk_sectors,
+> which results in a full-stripe size of 1280K. This causes the RAID6's
+> io_opt to be advertised as 1280K, and a stacked device _could_ then be
+> made to use a blocksize, aka chunk_sectors, that matches non
+> power-of-2 io_opt of underlying RAID6 -- resulting in stacked device's
+> chunk_sectors being a non power-of-2).
 >
-> Also, if 'chunk_sectors' isn't a multiple of 'physical_block_size'
-> then it is a bug in the driver and the device should be flagged as
-> 'misaligned'.
-
-Looks good.
+> Update blk_queue_chunk_sectors() and blk_max_size_offset() to
+> accommodate drivers that need a non power-of-2 chunk_sectors.
 
 Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 
