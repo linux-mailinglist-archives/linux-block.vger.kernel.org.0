@@ -2,153 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B1A2750D4
-	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:06:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EC7275144
+	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgIWGGq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Sep 2020 02:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgIWGGM (ORCPT
+        id S1726614AbgIWGTJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Sep 2020 02:19:09 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:29590 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgIWGTI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Sep 2020 02:06:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34D4C0613D5;
-        Tue, 22 Sep 2020 23:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=7X3/qUs2y75UUlnvdA2vy1FAPs/IUNMhWXsjmEB0AzE=; b=NIVOg9nkNP5R1AAXNIhM3YSXPM
-        qQhZDIsOgqRm8F5L3u8NN/+6vxw3vIyqPjouVmp/wB6q7DNB/Mr8240Po/ZZvVU1mexPSNxxRUWjH
-        ej15n9SxAKbmH+ewPeHB+B+fb+RgnttC95+9As75yawZIbjWNYflc0RQhEs6ynljtaBOCt6848rAc
-        3L4YG9CH6YdVJyf05/7o01+jdSXZWswvcEmEY71kAqtOpHNN698eeRE2lonXxdD3cfU06s7h0bUKC
-        NCXb1r7MyzYJg/RzXohD63kQclT/Rqz0zknvzeGy+Z7SKuS8sh/zsZdStqWQAafANb22dniPP9/20
-        sV56yCuw==;
-Received: from p4fdb0c34.dip0.t-ipconnect.de ([79.219.12.52] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kKxuj-0003Uu-Tz; Wed, 23 Sep 2020 06:06:02 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH 9/9] security/keys: remove compat_keyctl_instantiate_key_iov
-Date:   Wed, 23 Sep 2020 08:05:47 +0200
-Message-Id: <20200923060547.16903-10-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200923060547.16903-1-hch@lst.de>
-References: <20200923060547.16903-1-hch@lst.de>
+        Wed, 23 Sep 2020 02:19:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1600841948; x=1632377948;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Hhec5BYj6RypLE3xumu+lmtnfCoV4fVGGtCtUQZxGR8=;
+  b=VX4KjO5xJieye25DVIy7qsz2paeLPPUy/yRG+QSA32dXGQPIXYS5IAd4
+   oCiZMqZy4I//cwPwQCoWGcP/0tRYEWXyLgz8CUzE7vTAzONY1Tlqe/U28
+   ub7XMvGJvwFUgDRTA6EEeNgGGT+/fEW45kDs0Kqr9aPrUPfrd8Xjedi3/
+   I=;
+X-IronPort-AV: E=Sophos;i="5.77,293,1596499200"; 
+   d="scan'208";a="57152334"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 23 Sep 2020 06:19:06 +0000
+Received: from EX13D31EUA004.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 1BB94A1C8B;
+        Wed, 23 Sep 2020 06:19:03 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.162.85) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 23 Sep 2020 06:18:57 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <konrad.wilk@oracle.com>, <roger.pau@citrix.com>, <jgross@suse.com>
+CC:     SeongJae Park <sjpark@amazon.de>, <axboe@kernel.dk>,
+        <aliguori@amazon.com>, <amit@kernel.org>, <mheyne@amazon.de>,
+        <pdurrant@amazon.co.uk>, <linux-block@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/3] xen-blk(back|front): Let users disable persistent grants
+Date:   Wed, 23 Sep 2020 08:18:38 +0200
+Message-ID: <20200923061841.20531-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Originating-IP: [10.43.162.85]
+X-ClientProxiedBy: EX13D10UWB001.ant.amazon.com (10.43.161.111) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that import_iovec handles compat iovecs, the native version of
-keyctl_instantiate_key_iov can be used for the compat case as well.
+From: SeongJae Park <sjpark@amazon.de>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- security/keys/compat.c   | 36 ++----------------------------------
- security/keys/internal.h |  5 -----
- security/keys/keyctl.c   |  2 +-
- 3 files changed, 3 insertions(+), 40 deletions(-)
+Persistent grants feature provides high scalability.  On some small
+systems, however, it could incur data copy overheads[1] and thus it is
+required to be disabled.  But, there is no option to disable it.  For
+the reason, this commit adds module parameters for disabling of the
+feature.
 
-diff --git a/security/keys/compat.c b/security/keys/compat.c
-index 7ae531db031cf8..1545efdca56227 100644
---- a/security/keys/compat.c
-+++ b/security/keys/compat.c
-@@ -11,38 +11,6 @@
- #include <linux/slab.h>
- #include "internal.h"
- 
--/*
-- * Instantiate a key with the specified compatibility multipart payload and
-- * link the key into the destination keyring if one is given.
-- *
-- * The caller must have the appropriate instantiation permit set for this to
-- * work (see keyctl_assume_authority).  No other permissions are required.
-- *
-- * If successful, 0 will be returned.
-- */
--static long compat_keyctl_instantiate_key_iov(
--	key_serial_t id,
--	const struct compat_iovec __user *_payload_iov,
--	unsigned ioc,
--	key_serial_t ringid)
--{
--	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
--	struct iov_iter from;
--	long ret;
--
--	if (!_payload_iov)
--		ioc = 0;
--
--	ret = import_iovec(WRITE, (const struct iovec __user *)_payload_iov,
--			   ioc, ARRAY_SIZE(iovstack), &iov, &from);
--	if (ret < 0)
--		return ret;
--
--	ret = keyctl_instantiate_key_common(id, &from, ringid);
--	kfree(iov);
--	return ret;
--}
--
- /*
-  * The key control system call, 32-bit compatibility version for 64-bit archs
-  */
-@@ -113,8 +81,8 @@ COMPAT_SYSCALL_DEFINE5(keyctl, u32, option,
- 		return keyctl_reject_key(arg2, arg3, arg4, arg5);
- 
- 	case KEYCTL_INSTANTIATE_IOV:
--		return compat_keyctl_instantiate_key_iov(
--			arg2, compat_ptr(arg3), arg4, arg5);
-+		return keyctl_instantiate_key_iov(arg2, compat_ptr(arg3), arg4,
-+						  arg5);
- 
- 	case KEYCTL_INVALIDATE:
- 		return keyctl_invalidate_key(arg2);
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 338a526cbfa516..9b9cf3b6fcbb4d 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -262,11 +262,6 @@ extern long keyctl_instantiate_key_iov(key_serial_t,
- 				       const struct iovec __user *,
- 				       unsigned, key_serial_t);
- extern long keyctl_invalidate_key(key_serial_t);
--
--struct iov_iter;
--extern long keyctl_instantiate_key_common(key_serial_t,
--					  struct iov_iter *,
--					  key_serial_t);
- extern long keyctl_restrict_keyring(key_serial_t id,
- 				    const char __user *_type,
- 				    const char __user *_restriction);
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 9febd37a168fd0..e26bbccda7ccee 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -1164,7 +1164,7 @@ static int keyctl_change_reqkey_auth(struct key *key)
-  *
-  * If successful, 0 will be returned.
-  */
--long keyctl_instantiate_key_common(key_serial_t id,
-+static long keyctl_instantiate_key_common(key_serial_t id,
- 				   struct iov_iter *from,
- 				   key_serial_t ringid)
- {
+[1] https://wiki.xen.org/wiki/Xen_4.3_Block_Protocol_Scalability
+
+Baseline and Complete Git Trees
+===============================
+
+The patches are based on the v5.9-rc6.  You can also clone the complete
+git tree:
+
+    $ git clone git://github.com/sjp38/linux -b pgrants_disable_v4
+
+The web is also available:
+https://github.com/sjp38/linux/tree/pgrants_disable_v4
+
+Patch History
+=============
+
+Changes from v3
+(https://lore.kernel.org/xen-devel/20200922141549.26154-2-sjpark@amazon.com/)
+- Remove unnecessary ternary operation (Jürgen Groß)
+- Add 'Reviewed-by: Juergen Gross <jgross@suse.com>' and
+  'Acked-by: Roger Pau Monné <roger.pau@citrix.com>'
+
+Changes from v2
+(https://lore.kernel.org/linux-block/20200922105209.5284-1-sjpark@amazon.com/)
+- Avoid a race condition (Roger Pau Monné)
+
+Because the option value is written twice, there could be a race if the
+user change the value meanwhile.  This version fixes the problem by
+reading the value once when each (front|back)end is created.
+
+Changes from v1
+(https://lore.kernel.org/linux-block/20200922070125.27251-1-sjpark@amazon.com/)
+- use 'bool' parameter type (Jürgen Groß)
+- Let blkfront can also disable the feature from its side
+  (Roger Pau Monné)
+- Avoid unnecessary xenbus_printf (Roger Pau Monné)
+- Update frontend parameter doc
+
+
+SeongJae Park (3):
+  xen-blkback: add a parameter for disabling of persistent grants
+  xen-blkfront: add a parameter for disabling of persistent grants
+  xen-blkfront: Apply changed parameter name to the document
+
+ .../ABI/testing/sysfs-driver-xen-blkback      |  9 ++++++++
+ .../ABI/testing/sysfs-driver-xen-blkfront     | 11 +++++++++-
+ drivers/block/xen-blkback/xenbus.c            | 22 ++++++++++++++-----
+ drivers/block/xen-blkfront.c                  | 20 ++++++++++++-----
+ 4 files changed, 50 insertions(+), 12 deletions(-)
+
 -- 
-2.28.0
+2.17.1
 
