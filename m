@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 098A92751D3
-	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E090B2751E1
+	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:50:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgIWGrp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Sep 2020 02:47:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51536 "EHLO mx2.suse.de"
+        id S1726550AbgIWGur (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Sep 2020 02:50:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53276 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgIWGrp (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Sep 2020 02:47:45 -0400
+        id S1726448AbgIWGur (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Sep 2020 02:50:47 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A857FAB0E;
-        Wed, 23 Sep 2020 06:48:20 +0000 (UTC)
-Subject: Re: [PATCH V3 for 5.11 11/12] scsi: make sure sdev->queue_depth is <=
- shost->can_queue
+        by mx2.suse.de (Postfix) with ESMTP id 65EB7AB0E;
+        Wed, 23 Sep 2020 06:51:22 +0000 (UTC)
+Subject: Re: [PATCH V3 for 5.11 12/12] scsi: replace sdev->device_busy with
+ sbitmap
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         linux-block@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
@@ -26,14 +26,14 @@ Cc:     Omar Sandoval <osandov@fb.com>,
         Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
         "Ewan D . Milne" <emilne@redhat.com>
 References: <20200923013339.1621784-1-ming.lei@redhat.com>
- <20200923013339.1621784-12-ming.lei@redhat.com>
+ <20200923013339.1621784-13-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <8efef2bb-377a-9a3c-2261-d41dc0e9bdf8@suse.de>
-Date:   Wed, 23 Sep 2020 08:47:41 +0200
+Message-ID: <268a0b78-744a-a144-080f-d69e8144719b@suse.de>
+Date:   Wed, 23 Sep 2020 08:50:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200923013339.1621784-12-ming.lei@redhat.com>
+In-Reply-To: <20200923013339.1621784-13-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -42,8 +42,39 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/23/20 3:33 AM, Ming Lei wrote:
-> Obviously scsi device's queue depth can't be > host's can_queue,
-> so make it explicitely in scsi_change_queue_depth().
+> scsi requires one global atomic variable to track queue depth for each LUN/
+> request queue, meantime blk-mq tracks queue depth for each hctx. This SCSI's
+> requirement can't be implemented in blk-mq easily, cause it is a bigger &
+> harder problem to spread the device or request queue's depth among all hw
+> queues.
+> 
+> The current approach by using atomic variable can't scale well when there
+> is lots of CPU cores and the disk is very fast and IO are submitted to this
+> device concurrently. It has been observed that IOPS is affected a lot by
+> tracking queue depth via sdev->device_busy in IO path.
+> 
+> So replace the atomic variable sdev->device_busy with sbitmap for
+> tracking scsi device queue depth.
+> 
+> It is observed that IOPS is improved ~30% by this patchset in the
+> following test:
+> 
+> 1) test machine(32 logical CPU cores)
+> 	Thread(s) per core:  2
+> 	Core(s) per socket:  8
+> 	Socket(s):           2
+> 	NUMA node(s):        2
+> 	Model name:          Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz
+> 
+> 2) setup scsi_debug:
+> modprobe scsi_debug virtual_gb=128 max_luns=1 submit_queues=32 delay=0 max_queue=256
+> 
+> 3) fio script:
+> fio --rw=randread --size=128G --direct=1 --ioengine=libaio --iodepth=2048 \
+> 	--numjobs=32 --bs=4k --group_reporting=1 --group_reporting=1 --runtime=60 \
+> 	--loops=10000 --name=job1 --filename=/dev/sdN
+> 
+> [1] https://lore.kernel.org/linux-block/20200119071432.18558-6-ming.lei@redhat.com/
 > 
 > Cc: Omar Sandoval <osandov@fb.com>
 > Cc: Kashyap Desai <kashyap.desai@broadcom.com>
@@ -52,23 +83,17 @@ On 9/23/20 3:33 AM, Ming Lei wrote:
 > Cc: Hannes Reinecke <hare@suse.de>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->   drivers/scsi/scsi.c | 2 ++
->   1 file changed, 2 insertions(+)
+>   drivers/scsi/scsi.c        |  2 ++
+>   drivers/scsi/scsi_lib.c    | 33 +++++++++++++++------------------
+>   drivers/scsi/scsi_priv.h   |  1 +
+>   drivers/scsi/scsi_scan.c   | 22 ++++++++++++++++++++--
+>   drivers/scsi/scsi_sysfs.c  |  2 ++
+>   include/scsi/scsi_device.h |  5 +++--
+>   6 files changed, 43 insertions(+), 22 deletions(-)
 > 
-> diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
-> index 24619c3bebd5..cc6ff1ae8c16 100644
-> --- a/drivers/scsi/scsi.c
-> +++ b/drivers/scsi/scsi.c
-> @@ -223,6 +223,8 @@ void scsi_finish_command(struct scsi_cmnd *cmd)
->    */
->   int scsi_change_queue_depth(struct scsi_device *sdev, int depth)
->   {
-> +	depth = min_t(int, depth, sdev->host->can_queue);
-> +
->   	if (depth > 0) {
->   		sdev->queue_depth = depth;
->   		wmb();
-> 
+Ah. Now it makes sense why 'no budget' has been set to -1.
+Ok.
+
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
