@@ -2,78 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BEA2275B2B
-	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 17:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6269E275BA7
+	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 17:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgIWPHS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Sep 2020 11:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgIWPHS (ORCPT
+        id S1726862AbgIWPWn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Sep 2020 11:22:43 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:34512 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgIWPWm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Sep 2020 11:07:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB88C0613CE
-        for <linux-block@vger.kernel.org>; Wed, 23 Sep 2020 08:07:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=8zKWAu6CeIU1WKwzKJ5UfrcUnrlilisubLtZJL3ffbM=; b=ZqGSfaKmNXmvV6IBNa1OCDmRoe
-        17FBbVMlZYf3p8n+gidx8853yRXvVOvpDvzx/gPY2gcM1yDPy6g9a2DfLc5i3FFBZLbHvWU/C1bl3
-        Z0Er+dbpAaybv69L9c+JOlTgItMdZcW0kI7dExymJsIprNDRl5nBSYyBAXM+aAxcUgAxX4MfN8iRz
-        hzf5RGO7siElHRLURIxKsit9PA9bAoKCmxrWuFR7wt7hdSUrONkly0kHkjtGzRGI63DaSus2/LbLy
-        J1+pYN+4L6miqlZrfgggL3+KD5giKwONjLNsE+WTIHslnceEKHOyIyhSCo36BdBlO/2GxDRrdIcpY
-        JiTrLuoA==;
-Received: from p4fdb0c34.dip0.t-ipconnect.de ([79.219.12.52] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kL6MU-0005dg-1B; Wed, 23 Sep 2020 15:07:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     mhartmay@linux.ibm.com, linux-block@vger.kernel.org
-Subject: [PATCH] block: fix bmd->is_null_mapped initialization
-Date:   Wed, 23 Sep 2020 17:07:13 +0200
-Message-Id: <20200923150713.416286-1-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
+        Wed, 23 Sep 2020 11:22:42 -0400
+X-Greylist: delayed 713 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Sep 2020 11:22:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1600874558;
+        s=strato-dkim-0002; d=reintjes.nrw;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=R7hI6d/NmZuNcg1vUXN4expafaD5dS9k1NOlJgVsfQ0=;
+        b=mKq3yxzIBoK6eXKDjSaCRr3BwBIqpDKeJr75f5YQmPBPRRn9qdkRISKeudlw+eJUaN
+        i9j0YoD7Nd07ieGLh8UqSmYZ1Ccml4PGsZ2Mglopdz9Hz5rLCJkN670J1l7AKyk9w16x
+        a5x5cVcgZWQk6FXpa0G8mlW7WSJEKPFpozzrnE9Mqlay09jPyJDrOXyUKIYtt6nlhpnO
+        Iws66XTKRoaWIH3voDt0xHa2loKeKKkr2KuI9gRfjll43rW7LApn0Q1chdN5eLyO3daW
+        Z1KVrRhdU65Y8/6yfAJtnadI1+vhAkdCKhH0qGquacG5znElBXtRT3qPa76R5ygpIUbq
+        FhJQ==
+X-RZG-AUTH: ":IGUXYVP6Ne1lB7nQNv+YSUx4qaxF0YAcTeeZr8criwvl+4OoAsy1YB7b8FzONHo5ckdw3KGGkZZ/Zu8="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.0.198]
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id Y04b60w8NFAYy22
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 23 Sep 2020 17:10:34 +0200 (CEST)
+Subject: Re: [PATCH 00/14] drop double zeroing
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
+        Yossi Leybovich <sleybo@amazon.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        rds-devel@oss.oracle.com
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+ <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+From:   Rolf Reintjes <lists2.rolf@reintjes.nrw>
+Message-ID: <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
+Date:   Wed, 23 Sep 2020 17:10:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bmd is allocated using kmalloc in bio_alloc_map_data, so make sure
-is_null_mapped is properly initialized to false for the !null_mapped
-case.
+Hello Mark,
 
-Fixes: f3256075ba49 ("block: remove the BIO_NULL_MAPPED flag")
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-map.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On 21.09.20 18:58, Mark Brown wrote:
+> On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
+>> sg_init_table zeroes its first argument, so the allocation of that argument
+>> doesn't have to.
+> 
+> Applied to
+> 
+>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+> 
+> Thanks!
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index be118926ccf4e3..21630dccac628c 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -148,6 +148,7 @@ static int bio_copy_user_iov(struct request *rq, struct rq_map_data *map_data,
- 	 * shortlived one.
- 	 */
- 	bmd->is_our_pages = !map_data;
-+	bmd->is_null_mapped = (map_data && map_data->null_mapped);
- 
- 	nr_pages = DIV_ROUND_UP(offset + len, PAGE_SIZE);
- 	if (nr_pages > BIO_MAX_PAGES)
-@@ -218,8 +219,6 @@ static int bio_copy_user_iov(struct request *rq, struct rq_map_data *map_data,
- 	}
- 
- 	bio->bi_private = bmd;
--	if (map_data && map_data->null_mapped)
--		bmd->is_null_mapped = true;
- 
- 	bounce_bio = bio;
- 	ret = blk_rq_append_bio(rq, &bounce_bio);
--- 
-2.28.0
+I do not understand which of the 14 patches you applied. Your mail 
+responds to the 00/14 mail.
+
+Rolf
+
+> 
+> [1/1] spi/topcliff-pch: drop double zeroing
+>        commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
 
