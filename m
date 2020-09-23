@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F812751D1
-	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:47:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 098A92751D3
+	for <lists+linux-block@lfdr.de>; Wed, 23 Sep 2020 08:47:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgIWGrQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Sep 2020 02:47:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51084 "EHLO mx2.suse.de"
+        id S1726641AbgIWGrp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Sep 2020 02:47:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51536 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgIWGrP (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Sep 2020 02:47:15 -0400
+        id S1726179AbgIWGrp (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Sep 2020 02:47:45 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 719C7AA55;
-        Wed, 23 Sep 2020 06:47:51 +0000 (UTC)
-Subject: Re: [PATCH V3 for 5.11 10/12] scsi: add scsi_device_busy() to read
- sdev->device_busy
+        by mx2.suse.de (Postfix) with ESMTP id A857FAB0E;
+        Wed, 23 Sep 2020 06:48:20 +0000 (UTC)
+Subject: Re: [PATCH V3 for 5.11 11/12] scsi: make sure sdev->queue_depth is <=
+ shost->can_queue
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         linux-block@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
@@ -26,14 +26,14 @@ Cc:     Omar Sandoval <osandov@fb.com>,
         Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
         "Ewan D . Milne" <emilne@redhat.com>
 References: <20200923013339.1621784-1-ming.lei@redhat.com>
- <20200923013339.1621784-11-ming.lei@redhat.com>
+ <20200923013339.1621784-12-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <143713f7-f6bf-5f36-4c4b-2051554a0465@suse.de>
-Date:   Wed, 23 Sep 2020 08:47:10 +0200
+Message-ID: <8efef2bb-377a-9a3c-2261-d41dc0e9bdf8@suse.de>
+Date:   Wed, 23 Sep 2020 08:47:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200923013339.1621784-11-ming.lei@redhat.com>
+In-Reply-To: <20200923013339.1621784-12-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -42,8 +42,8 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/23/20 3:33 AM, Ming Lei wrote:
-> Add scsi_device_busy() for drivers, so that we can prepare for tracking
-> device queue depth via sbitmap_queue.
+> Obviously scsi device's queue depth can't be > host's can_queue,
+> so make it explicitely in scsi_change_queue_depth().
 > 
 > Cc: Omar Sandoval <osandov@fb.com>
 > Cc: Kashyap Desai <kashyap.desai@broadcom.com>
@@ -52,14 +52,24 @@ On 9/23/20 3:33 AM, Ming Lei wrote:
 > Cc: Hannes Reinecke <hare@suse.de>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->   drivers/message/fusion/mptsas.c      | 2 +-
->   drivers/scsi/mpt3sas/mpt3sas_scsih.c | 2 +-
->   drivers/scsi/scsi_lib.c              | 4 ++--
->   drivers/scsi/scsi_sysfs.c            | 2 +-
->   drivers/scsi/sg.c                    | 2 +-
->   include/scsi/scsi_device.h           | 5 +++++
->   6 files changed, 11 insertions(+), 6 deletions(-)
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
+>   drivers/scsi/scsi.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
+> index 24619c3bebd5..cc6ff1ae8c16 100644
+> --- a/drivers/scsi/scsi.c
+> +++ b/drivers/scsi/scsi.c
+> @@ -223,6 +223,8 @@ void scsi_finish_command(struct scsi_cmnd *cmd)
+>    */
+>   int scsi_change_queue_depth(struct scsi_device *sdev, int depth)
+>   {
+> +	depth = min_t(int, depth, sdev->host->can_queue);
+> +
+>   	if (depth > 0) {
+>   		sdev->queue_depth = depth;
+>   		wmb();
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
 
