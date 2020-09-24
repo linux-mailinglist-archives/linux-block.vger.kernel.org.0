@@ -2,89 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 143AE27799C
-	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 21:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE1E277A40
+	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 22:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgIXTo6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 24 Sep 2020 15:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgIXTo6 (ORCPT
+        id S1726559AbgIXU34 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 24 Sep 2020 16:29:56 -0400
+Received: from [125.140.134.231] ([125.140.134.231]:59260 "EHLO
+        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726281AbgIXU34 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 24 Sep 2020 15:44:58 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C67C0613D6
-        for <linux-block@vger.kernel.org>; Thu, 24 Sep 2020 12:44:57 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id m34so315153pgl.9
-        for <linux-block@vger.kernel.org>; Thu, 24 Sep 2020 12:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ADwlTn9rnJzlHv/xfLefERCgTh/zOY3+dj+IP5LMhIo=;
-        b=L2Wx7FlLw8QHVp62Ne3mt4GV7+MUCO/WLUazgDqXAmYbUX1Et5GwKUZRbOhKWcg1pJ
-         h3F8YG2QH8T53HlhbxkOnKDq7rYr7VYQSpBZ/SrGKbAAN0q9gjlZztvIvkLYWYD2H5p5
-         D5jWhUDJxNaNV9x10hDsgdYsv3+GqUJuih92RXGRYnyEyog4jlWpFA8o+B+sqtqEeysu
-         zXsVFR5QGsEI7lJZ39JHqx1JjZyubGP7QEwNsybW+JHQWulohPcvjDgNlPxNi7sQOhp+
-         YLXR3ph4QhgGStegDp9ue2849D7tWES5wOYPeY73GujeWcYMaP3DsMTgcgakPfQ8C4Iw
-         pmzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ADwlTn9rnJzlHv/xfLefERCgTh/zOY3+dj+IP5LMhIo=;
-        b=b+5gXG2+B5BNa0KuLcXEkFyhcqSyQ7l3XVdsFfM1qrZ1Qxm5125VFtfcnhu96fY/OM
-         3m1JUj6IJx1lydoOscQgRxxWSajFOyj2bMn01drELhphT66CAL6J94TIZj5OTcVDU4FD
-         lty+VFtHD14ZKWOGxvBxC1VdwuziCNWWf7lcmkGz9DWOBj//rddiYzxEjcpoivvhjFmr
-         o+hfrqd3szPeLbf6gNss7bfzgC5IrWd6VV3kF38wgSLFa3bUyHUWiqbV3j4h+sJoK6Hc
-         fEg6ZdKlg2mDyW+NfyMlJj/60y/Ep78tEXp3oLIi2/q57ZsAdjajXo6anKxLdpfWUpVI
-         LESQ==
-X-Gm-Message-State: AOAM531eczZCvZVBoShuDhlqe2vDdi17ZIAdBlxknABnHx2mEy2Yecw3
-        6gI6ueUzYq8GQtHz3rAmbbct8A==
-X-Google-Smtp-Source: ABdhPJyn7jUbiC3AGiO/dBfKmKGpcA3VV/JE4LzjEmCUjGJIbrcL8/kmgANM72e+JonEfnG9EJ77rg==
-X-Received: by 2002:a17:902:854b:b029:d1:cbf4:bb43 with SMTP id d11-20020a170902854bb02900d1cbf4bb43mr778274plo.13.1600976697336;
-        Thu, 24 Sep 2020 12:44:57 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21d6::1911? ([2620:10d:c090:400::5:d63d])
-        by smtp.gmail.com with ESMTPSA id u10sm267612pfn.122.2020.09.24.12.44.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Sep 2020 12:44:56 -0700 (PDT)
-Subject: Re: bdi cleanups v7
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Coly Li <colyli@suse.de>, Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Justin Sanders <justin@coraid.com>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, cgroups@vger.kernel.org
-References: <20200924065140.726436-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a9235ba9-95a0-4251-ee7d-e4012775346e@kernel.dk>
-Date:   Thu, 24 Sep 2020 13:44:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 24 Sep 2020 16:29:56 -0400
+Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
+         Fri, 25 Sep 2020 05:26:34 +0900
+Reply-To: <samthong5555@yahoo.com>
+From:   "SAM THONG" <samthong5555@gmail.com>
+Subject: Business Acquisition 1
+Date:   Thu, 24 Sep 2020 13:26:34 -0700
 MIME-Version: 1.0
-In-Reply-To: <20200924065140.726436-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <WIN-DAONO245HJFc4tf00e70a05@WIN-DAONO245HJF>
+X-OriginalArrivalTime: 24 Sep 2020 20:26:34.0476 (UTC) FILETIME=[FF0A1AC0:01D692B0]
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/24/20 12:51 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series contains a bunch of different BDI cleanups.  The biggest item
-> is to isolate block drivers from the BDI in preparation of changing the
-> lifetime of the block device BDI in a follow up series.
 
-Applied, thanks.
 
--- 
-Jens Axboe
+Dear sir
+
+Our underwriter company is seeking the attention of genuine and reliable persons, companies
+
+who are indeed in need of funds as investment capital or business expansion in form of a
+
+direct loan to partner with us and benefit in our new Loan and Project funding programs.
+
+
+
+We offer flexible loans and funding for various projects at very affordable low interest
+
+rate of 3% annually for a period of 1-15 years on Non collateral loan/funding . We offer
+
+loan/funding from a minimum of Euro ? / USD$ 1 Million to Euro ? / USD$ 1 Billion. Max,
+
+depending on the nature of business/project.
+
+We are currently funding for:-
+
+
+
+* Starting up a Franchise
+
+* Business Acquisition
+
+* Business Expansion
+
+* Commercial Real Estate purchase
+
+* Consultancy and Contract Execution, Marine , ETC.
+
+
+
+Kindly get in touch for further details and procedure. samthong5555@yahoo.com 
+
+
+
+Respectfully,
+
+
+SAM THONG
+
+
+
+
+
+
+
+	
+
+
 
