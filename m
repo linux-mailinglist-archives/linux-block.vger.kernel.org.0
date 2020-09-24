@@ -2,356 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 358B4276988
-	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 08:52:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7330276A79
+	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 09:17:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgIXGwm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 24 Sep 2020 02:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43512 "EHLO
+        id S1727095AbgIXHR1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 24 Sep 2020 03:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgIXGwK (ORCPT
+        with ESMTP id S1727094AbgIXHR0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 24 Sep 2020 02:52:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9D6C0613DC;
-        Wed, 23 Sep 2020 23:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=MY4XScv0SUe+8z8haC+/G063lSniL07sW1RR2khIdts=; b=bFWX5KW1+dmQG/JunZeGU8Et2A
-        pzex90SSQYMWEuC3tqMSjNa31gCsympmamtumAZ18hUZC9v7YTDYDh6KBYa85B0Abx+5KjwuXh9SP
-        n1omaYjMYLVna7FpV6ybuPLXe7EhKb5mB+k9NCgLob/hVTjnclgCnXmNAM4VoIqCdVZFLvOQ/GzuP
-        UQTRjz5tvyhIJj1JmVvnnFHxZKCJlp28/6/xnnjX37A48+cAbw/anB+B3mK/WRnO0Qt6L9uGX/KVv
-        6o15Y8Xw7m7SCCM3nGv2gAnRzkqio1zuXWxDoaVRdEWn2dxwLfGrRdmxoOSHLLlEViNv11v+/15Xf
-        gXeQiZfw==;
-Received: from p4fdb0c34.dip0.t-ipconnect.de ([79.219.12.52] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kLL6k-0001Bw-79; Thu, 24 Sep 2020 06:51:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Coly Li <colyli@suse.de>, Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Justin Sanders <justin@coraid.com>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        Jan Kara <jack@suse.cz>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 13/13] bdi: replace BDI_CAP_NO_{WRITEBACK,ACCT_DIRTY} with a single flag
-Date:   Thu, 24 Sep 2020 08:51:40 +0200
-Message-Id: <20200924065140.726436-14-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200924065140.726436-1-hch@lst.de>
-References: <20200924065140.726436-1-hch@lst.de>
+        Thu, 24 Sep 2020 03:17:26 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED54C0613D3
+        for <linux-block@vger.kernel.org>; Thu, 24 Sep 2020 00:17:26 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m15so1189156pls.8
+        for <linux-block@vger.kernel.org>; Thu, 24 Sep 2020 00:17:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CFgKLZ7Chsmv5ba86marh1hlJNBQ4kPm3t3GCKLPml0=;
+        b=tnzOUnibaVnZjz/w0brUvBmsEmOq/BGhQqgrZjaQ0SwTgQHhjOQV2zIsY8oXJ3Sgk6
+         NSlYAUzZLabEJE7iFo8sov1kyce5oWbMnmYNSiAe4vbYtv9mYlsQQ4ZqsTM5aEBONFWp
+         rnnHeagk+Zm0UBuzUW2dDmKaTKkEL8Iwltn+0i3z9Cs/9cHaBYgMBF9iE2qPI786WCrF
+         RveXqYdIA0h3WnLTrcFZbgNWNjbBISbVlDkbozW3dh7oQRrH9EFhg1yCRcT2IzS3qgce
+         gDIkHwgMur4TcZ7DU4NS45kHswIKrYiRU1rjqAND05NDiZlTbohex6UejvKBcV9kZAmI
+         JuRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CFgKLZ7Chsmv5ba86marh1hlJNBQ4kPm3t3GCKLPml0=;
+        b=pCbm+oQdXQBYvSlIFjRMoOA3+pxsEBAOE2DQMjKrzszvVLyEohqYyuza5/JyRTOR+/
+         D7lUGM2f07quC3dvNgDeMrqlQLcDIhkmOr2TfoMsJVUdVwqpgHytS3HWNIJhTdvSMFAG
+         Almlyg7x2RIbqr5scdX3osCRHXQ6LB9bQW5/oaeDblJANs+5588RB/CIARef0JT9yLwC
+         MZnIbi8BsP2ARc+biNfsEYnGnObqPYm1CQN1pEqG/aEy63LBEUPlFoJ0GNbh6F0QL3tl
+         voqwRQbeyai03pFIWTsIPa3XiNXTCdvtK/eZulPuRuGaN7s3Rt5UOrqe4y2KDKTFRUyU
+         bn+Q==
+X-Gm-Message-State: AOAM5308nwvL9jr+TNC0FbNO+BqdN1Yj3Z28FS5unUs/sgMvWtq2XNWm
+        QGNeBfwG9vcrfWQQBqmogm+yUw==
+X-Google-Smtp-Source: ABdhPJxQiQR+5YMuZzB7wYPdkRNQV4iS231LLBb539HsxqXhmnu9M/EZBMrF5eFgYRnlpfZ3ffkakg==
+X-Received: by 2002:a17:902:d68c:b029:d2:23a6:f6d7 with SMTP id v12-20020a170902d68cb02900d223a6f6d7mr3360335ply.45.1600931846100;
+        Thu, 24 Sep 2020 00:17:26 -0700 (PDT)
+Received: from google.com (124.190.199.35.bc.googleusercontent.com. [35.199.190.124])
+        by smtp.gmail.com with ESMTPSA id q193sm1724860pfq.127.2020.09.24.00.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2020 00:17:25 -0700 (PDT)
+Date:   Thu, 24 Sep 2020 07:17:21 +0000
+From:   Satya Tangirala <satyat@google.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH 2/3] dm: add support for passing through inline crypto
+ support
+Message-ID: <20200924071721.GA1883346@google.com>
+References: <20200909234422.76194-1-satyat@google.com>
+ <20200909234422.76194-3-satyat@google.com>
+ <20200922003255.GC32959@sol.localdomain>
+ <20200924011438.GD10500@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200924011438.GD10500@redhat.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace the two negative flags that are always used together with a
-single positive flag that indicates the writeback capability instead
-of two related non-capabilities.  Also remove the pointless wrappers
-to just check the flag.
+On Wed, Sep 23, 2020 at 09:14:39PM -0400, Mike Snitzer wrote:
+> On Mon, Sep 21 2020 at  8:32pm -0400,
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > On Wed, Sep 09, 2020 at 11:44:21PM +0000, Satya Tangirala wrote:
+> > > From: Eric Biggers <ebiggers@google.com>
+> > > 
+> > > Update the device-mapper core to support exposing the inline crypto
+> > > support of the underlying device(s) through the device-mapper device.
+> > > 
+> > > This works by creating a "passthrough keyslot manager" for the dm
+> > > device, which declares support for encryption settings which all
+> > > underlying devices support.  When a supported setting is used, the bio
+> > > cloning code handles cloning the crypto context to the bios for all the
+> > > underlying devices.  When an unsupported setting is used, the blk-crypto
+> > > fallback is used as usual.
+> > > 
+> > > Crypto support on each underlying device is ignored unless the
+> > > corresponding dm target opts into exposing it.  This is needed because
+> > > for inline crypto to semantically operate on the original bio, the data
+> > > must not be transformed by the dm target.  Thus, targets like dm-linear
+> > > can expose crypto support of the underlying device, but targets like
+> > > dm-crypt can't.  (dm-crypt could use inline crypto itself, though.)
+> > > 
+> > > When a key is evicted from the dm device, it is evicted from all
+> > > underlying devices.
+> > > 
+> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > Co-developed-by: Satya Tangirala <satyat@google.com>
+> > > Signed-off-by: Satya Tangirala <satyat@google.com>
+> > 
+> > Looks good as far as Satya's changes from my original patch are concerned.
+> > 
+> > Can the device-mapper maintainers take a look at this?
+> 
+> In general it looks like these changes were implemented very carefully
+> and are reasonable if we _really_ want to enable passing through inline
+> crypto.
+> 
+> I do have concerns about the inability to handle changes at runtime (due
+> to a table reload that introduces new devices without the encryption
+> settings the existing devices in the table are using).  But the fallback
+> mechanism saves it from being a complete non-starter.
+Unfortunately, the fallback doesn't completely handle that situation
+right now. The DM device could be suspended while an upper layer like
+fscrypt is doing something like "checking if encryption algorithm 'A'
+is supported by the DM device". It's possible that fscrypt thinks
+the DM device supports 'A' even though the DM device is suspended, and
+the table is about to be reloaded to introduce a new device that doesn't
+support 'A'. Before the DM device is resumed with the new table, fscrypt
+might send a bio that uses encryption algorithm 'A' without initializing
+the blk-crypto-fallback ciphers for 'A', because it believes that the DM
+device supports 'A'. When the bio gets processed by the DM (or when
+blk-crypto does its checks to decide whether to use the fallback on that
+bio), the bio will fail because the fallback ciphers aren't initialized.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- fs/9p/vfs_file.c            |  2 +-
- fs/fs-writeback.c           |  7 +++---
- include/linux/backing-dev.h | 48 ++++++++-----------------------------
- mm/backing-dev.c            |  6 ++---
- mm/filemap.c                |  4 ++--
- mm/memcontrol.c             |  2 +-
- mm/memory-failure.c         |  2 +-
- mm/migrate.c                |  2 +-
- mm/mmap.c                   |  2 +-
- mm/page-writeback.c         | 12 +++++-----
- 10 files changed, 29 insertions(+), 58 deletions(-)
+Off the top of my head, one thing we could do is to always allocate the
+fallback ciphers when the device mapper is the target device for the bio
+(by maybe adding a "encryption_capabilities_may_change_at_runtime" flag
+to struct blk_keyslot_manager that the DM will set to true, and that
+the block layer will check for and decide to appropriately allocate
+the fallback ciphers), although this does waste memory on systems
+where we know the DM device tables will never change....
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 3576123d82990e..6ecf863bfa2f4b 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -625,7 +625,7 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 
- 	inode = file_inode(vma->vm_file);
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 149227160ff0b0..d4f84a2fe0878e 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2321,7 +2321,7 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 
- 			wb = locked_inode_to_wb_and_lock_list(inode);
- 
--			WARN(bdi_cap_writeback_dirty(wb->bdi) &&
-+			WARN((wb->bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 			     !test_bit(WB_registered, &wb->state),
- 			     "bdi-%s not registered\n", bdi_dev_name(wb->bdi));
- 
-@@ -2346,7 +2346,8 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 			 * to make sure background write-back happens
- 			 * later.
- 			 */
--			if (bdi_cap_writeback_dirty(wb->bdi) && wakeup_bdi)
-+			if (wakeup_bdi &&
-+			    (wb->bdi->capabilities & BDI_CAP_WRITEBACK))
- 				wb_wakeup_delayed(wb);
- 			return;
- 		}
-@@ -2581,7 +2582,7 @@ int write_inode_now(struct inode *inode, int sync)
- 		.range_end = LLONG_MAX,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index b217344a2c63be..44df4fcef65c1e 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -110,27 +110,14 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
- /*
-  * Flags in backing_dev_info::capability
-  *
-- * The first three flags control whether dirty pages will contribute to the
-- * VM's accounting and whether writepages() should be called for dirty pages
-- * (something that would not, for example, be appropriate for ramfs)
-- *
-- * WARNING: these flags are closely related and should not normally be
-- * used separately.  The BDI_CAP_NO_ACCT_AND_WRITEBACK combines these
-- * three flags into a single convenience macro.
-- *
-- * BDI_CAP_NO_ACCT_DIRTY:  Dirty pages shouldn't contribute to accounting
-- * BDI_CAP_NO_WRITEBACK:   Don't write pages back
-- * BDI_CAP_WRITEBACK_ACCT: Automatically account writeback pages
-- * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
-+ * BDI_CAP_WRITEBACK:		Supports dirty page writeback, and dirty pages
-+ *				should contribute to accounting
-+ * BDI_CAP_WRITEBACK_ACCT:	Automatically account writeback pages
-+ * BDI_CAP_STRICTLIMIT:		Keep number of dirty pages below bdi threshold
-  */
--#define BDI_CAP_NO_ACCT_DIRTY	0x00000001
--#define BDI_CAP_NO_WRITEBACK	0x00000002
--#define BDI_CAP_WRITEBACK_ACCT	0x00000004
--#define BDI_CAP_STRICTLIMIT	0x00000010
--#define BDI_CAP_CGROUP_WRITEBACK 0x00000020
--
--#define BDI_CAP_NO_ACCT_AND_WRITEBACK \
--	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY)
-+#define BDI_CAP_WRITEBACK		(1 << 0)
-+#define BDI_CAP_WRITEBACK_ACCT		(1 << 1)
-+#define BDI_CAP_STRICTLIMIT		(1 << 2)
- 
- extern struct backing_dev_info noop_backing_dev_info;
- 
-@@ -169,24 +156,9 @@ static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
- long congestion_wait(int sync, long timeout);
- long wait_iff_congested(int sync, long timeout);
- 
--static inline bool bdi_cap_writeback_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_WRITEBACK);
--}
--
--static inline bool bdi_cap_account_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_ACCT_DIRTY);
--}
--
--static inline bool mapping_cap_writeback_dirty(struct address_space *mapping)
--{
--	return bdi_cap_writeback_dirty(inode_to_bdi(mapping->host));
--}
--
--static inline bool mapping_cap_account_dirty(struct address_space *mapping)
-+static inline bool mapping_can_writeback(struct address_space *mapping)
- {
--	return bdi_cap_account_dirty(inode_to_bdi(mapping->host));
-+	return inode_to_bdi(mapping->host)->capabilities & BDI_CAP_WRITEBACK;
- }
- 
- static inline int bdi_sched_wait(void *word)
-@@ -223,7 +195,7 @@ static inline bool inode_cgwb_enabled(struct inode *inode)
- 
- 	return cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
- 		cgroup_subsys_on_dfl(io_cgrp_subsys) &&
--		bdi_cap_account_dirty(bdi) &&
-+		(bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 		(inode->i_sb->s_iflags & SB_I_CGROUPWB);
- }
- 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index df18f0088dd3f5..408d5051d05b3d 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -14,9 +14,7 @@
- #include <linux/device.h>
- #include <trace/events/writeback.h>
- 
--struct backing_dev_info noop_backing_dev_info = {
--	.capabilities	= BDI_CAP_NO_ACCT_AND_WRITEBACK,
--};
-+struct backing_dev_info noop_backing_dev_info;
- EXPORT_SYMBOL_GPL(noop_backing_dev_info);
- 
- static struct class *bdi_class;
-@@ -745,7 +743,7 @@ struct backing_dev_info *bdi_alloc(int node_id)
- 		kfree(bdi);
- 		return NULL;
- 	}
--	bdi->capabilities = BDI_CAP_WRITEBACK_ACCT;
-+	bdi->capabilities = BDI_CAP_WRITEBACK | BDI_CAP_WRITEBACK_ACCT;
- 	bdi->ra_pages = VM_READAHEAD_PAGES;
- 	bdi->io_pages = VM_READAHEAD_PAGES;
- 	return bdi;
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 1aaea26556cc7e..6c2a0139e22fa3 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -414,7 +414,7 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
- 		.range_end = end,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(mapping) ||
-+	if (!mapping_can_writeback(mapping) ||
- 	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
- 
-@@ -1702,7 +1702,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
- no_page:
- 	if (!page && (fgp_flags & FGP_CREAT)) {
- 		int err;
--		if ((fgp_flags & FGP_WRITE) && mapping_cap_account_dirty(mapping))
-+		if ((fgp_flags & FGP_WRITE) && mapping_can_writeback(mapping))
- 			gfp_mask |= __GFP_WRITE;
- 		if (fgp_flags & FGP_NOFS)
- 			gfp_mask &= ~__GFP_FS;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b807952b4d431b..d2352f76d6519f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5643,7 +5643,7 @@ static int mem_cgroup_move_account(struct page *page,
- 		if (PageDirty(page)) {
- 			struct address_space *mapping = page_mapping(page);
- 
--			if (mapping_cap_account_dirty(mapping)) {
-+			if (mapping_can_writeback(mapping)) {
- 				__mod_lruvec_state(from_vec, NR_FILE_DIRTY,
- 						   -nr_pages);
- 				__mod_lruvec_state(to_vec, NR_FILE_DIRTY,
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index f1aa6433f40416..a1e73943445e77 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1006,7 +1006,7 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
- 	 */
- 	mapping = page_mapping(hpage);
- 	if (!(flags & MF_MUST_KILL) && !PageDirty(hpage) && mapping &&
--	    mapping_cap_writeback_dirty(mapping)) {
-+	    mapping_can_writeback(mapping)) {
- 		if (page_mkclean(hpage)) {
- 			SetPageDirty(hpage);
- 		} else {
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 34a842a8eb6a7b..9d2f42a3a16294 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -503,7 +503,7 @@ int migrate_page_move_mapping(struct address_space *mapping,
- 			__dec_lruvec_state(old_lruvec, NR_SHMEM);
- 			__inc_lruvec_state(new_lruvec, NR_SHMEM);
- 		}
--		if (dirty && mapping_cap_account_dirty(mapping)) {
-+		if (dirty && mapping_can_writeback(mapping)) {
- 			__dec_node_state(oldzone->zone_pgdat, NR_FILE_DIRTY);
- 			__dec_zone_state(oldzone, NR_ZONE_WRITE_PENDING);
- 			__inc_node_state(newzone->zone_pgdat, NR_FILE_DIRTY);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 40248d84ad5fbd..1fc0e92be4ba9b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1666,7 +1666,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
- 
- 	/* Can the mapping track the dirty pages? */
- 	return vma->vm_file && vma->vm_file->f_mapping &&
--		mapping_cap_account_dirty(vma->vm_file->f_mapping);
-+		mapping_can_writeback(vma->vm_file->f_mapping);
- }
- 
- /*
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 0139f9622a92da..358d6f28c627b7 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1882,7 +1882,7 @@ void balance_dirty_pages_ratelimited(struct address_space *mapping)
- 	int ratelimit;
- 	int *p;
- 
--	if (!bdi_cap_account_dirty(bdi))
-+	if (!(bdi->capabilities & BDI_CAP_WRITEBACK))
- 		return;
- 
- 	if (inode_cgwb_enabled(inode))
-@@ -2423,7 +2423,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- 
- 	trace_writeback_dirty_page(page, mapping);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct bdi_writeback *wb;
- 
- 		inode_attach_wb(inode, page);
-@@ -2450,7 +2450,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- void account_page_cleaned(struct page *page, struct address_space *mapping,
- 			  struct bdi_writeback *wb)
- {
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		dec_lruvec_page_state(page, NR_FILE_DIRTY);
- 		dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
- 		dec_wb_stat(wb, WB_RECLAIMABLE);
-@@ -2513,7 +2513,7 @@ void account_page_redirty(struct page *page)
- {
- 	struct address_space *mapping = page->mapping;
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2625,7 +2625,7 @@ void __cancel_dirty_page(struct page *page)
- {
- 	struct address_space *mapping = page_mapping(page);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2665,7 +2665,7 @@ int clear_page_dirty_for_io(struct page *page)
- 
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
--- 
-2.28.0
-
+This patch also doesn't handle the case when the encryption capabilities
+of the new table are a superset of the old capabilities.  Currently, a
+DM device's capabilities can only shrink after the device is initially
+created. They can never "expand" to make use of capabilities that might
+be added due to introduction of new devices via table reloads.  I might
+be forgetting something I thought of before, but looking at it again
+now, I don't immediately see anything wrong with expanding the
+advertised capabilities on table reload....I'll look carefully into that
+again.
+> 
+> Can you help me better understand the expected consumer of this code?
+> If you have something _real_ please be explicit.  It makes justifying
+> supporting niche code like this more tolerable.
+So the motivation for this code was that Android currently uses a device
+mapper target on top of a phone's disk for user data. On many phones,
+that disk has inline encryption support, and it'd be great to be able to
+make use of that. The DM device configuration isn't changed at runtime.
+> 
+> Thanks,
+> Mike
+> 
