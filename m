@@ -2,89 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE1E277A40
-	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 22:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A06277ACA
+	for <lists+linux-block@lfdr.de>; Thu, 24 Sep 2020 22:53:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgIXU34 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 24 Sep 2020 16:29:56 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:59260 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726281AbgIXU34 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 24 Sep 2020 16:29:56 -0400
-Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Fri, 25 Sep 2020 05:26:34 +0900
-Reply-To: <samthong5555@yahoo.com>
-From:   "SAM THONG" <samthong5555@gmail.com>
-Subject: Business Acquisition 1
-Date:   Thu, 24 Sep 2020 13:26:34 -0700
+        id S1726316AbgIXUxi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 24 Sep 2020 16:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725208AbgIXUxf (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 24 Sep 2020 16:53:35 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 063112399A;
+        Thu, 24 Sep 2020 20:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600980815;
+        bh=5VtJpDdYtCwZlRfMorsUAUPg+YDyujpIPaxXRnHMyk0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=daxcQ/vGVx9MCUGijrm4hmX+iKBonjPY15FIt/uGOh1wm90jRQKKGJYiyFx3dyuMM
+         4VooFuArvyGQFZm7MOndPrZi+x9DBAJlvd8EkcmIA/kDqzv+BUqLMt/D1ho9hJZlq3
+         HkM3V3ooptvquX+48unEw3k1OuJtcy40JnTu8Io8=
+From:   Keith Busch <kbusch@kernel.org>
+To:     axboe@kernel.dk
+Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org, hch@lst.de,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv4 0/3] zoned block device specific errors
+Date:   Thu, 24 Sep 2020 13:53:27 -0700
+Message-Id: <20200924205330.4043232-1-kbusch@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <WIN-DAONO245HJFc4tf00e70a05@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 24 Sep 2020 20:26:34.0476 (UTC) FILETIME=[FF0A1AC0:01D692B0]
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Zone block devices may have some limits that require special handling.
+This series provides a way for drivers to notify of these conditions.
 
+v3 -> v4:
 
-Dear sir
+Added reviews/acks/sobs
 
-Our underwriter company is seeking the attention of genuine and reliable persons, companies
+Dropped unintended patch
 
-who are indeed in need of funds as investment capital or business expansion in form of a
+Damien Le Moal (1):
+  scsi: handle zone resources errors
 
-direct loan to partner with us and benefit in our new Loan and Project funding programs.
+Keith Busch (2):
+  block: add zone specific block statuses
+  nvme: translate zone resource errors
 
+ Documentation/block/queue-sysfs.rst |  8 ++++++++
+ block/blk-core.c                    |  4 ++++
+ drivers/nvme/host/core.c            |  4 ++++
+ drivers/scsi/scsi_lib.c             |  9 +++++++++
+ include/linux/blk_types.h           | 18 ++++++++++++++++++
+ 5 files changed, 43 insertions(+)
 
-
-We offer flexible loans and funding for various projects at very affordable low interest
-
-rate of 3% annually for a period of 1-15 years on Non collateral loan/funding . We offer
-
-loan/funding from a minimum of Euro ? / USD$ 1 Million to Euro ? / USD$ 1 Billion. Max,
-
-depending on the nature of business/project.
-
-We are currently funding for:-
-
-
-
-* Starting up a Franchise
-
-* Business Acquisition
-
-* Business Expansion
-
-* Commercial Real Estate purchase
-
-* Consultancy and Contract Execution, Marine , ETC.
-
-
-
-Kindly get in touch for further details and procedure. samthong5555@yahoo.com 
-
-
-
-Respectfully,
-
-
-SAM THONG
-
-
-
-
-
-
-
-	
-
-
+-- 
+2.24.1
 
