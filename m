@@ -2,86 +2,204 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DBF0278DD5
-	for <lists+linux-block@lfdr.de>; Fri, 25 Sep 2020 18:15:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA18278DFD
+	for <lists+linux-block@lfdr.de>; Fri, 25 Sep 2020 18:19:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgIYQPP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Sep 2020 12:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgIYQPP (ORCPT
+        id S1729476AbgIYQTk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Sep 2020 12:19:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44984 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729374AbgIYQTj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Sep 2020 12:15:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDFEC0613CE;
-        Fri, 25 Sep 2020 09:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ksfrL9PUo8uW/j8LPVqdwsfYx8+SSBCrVtr6+p+r9KQ=; b=SgK+9JZNLAPx2gh+FchgvYcJnh
-        5IFktPQWzPjSWeFrOn/PKUGdFpr1nEa3x7/cq6qHgX6YizKcwjEt2FxQo2xy966enzwuDjL0gfiNL
-        g31+MOemaBM8uhwxFYO1hAA2P6/EvigC5CFwSSKU/xnBmUx29dCvMHYQh2mfyXGVGfOeEEfrlxdu7
-        yFuxnjgAISiwg0tciqg5YMvN9cBmTA6DDH/HKKhobkoD/DsxJl4fxMRDrf/gQdvieHeU8m1jbb0J6
-        Vin3XmdmQz6FAcFaHeEQHgTWSV2zJLAS3ZWaSeXrFxogLp4RZrkDRGmwX38nNOWe7od3F1Lsx5Eor
-        8aJUTC9g==;
-Received: from [213.208.157.35] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kLqNI-00040Z-1x; Fri, 25 Sep 2020 16:15:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Minho Ban <mhban@samsung.com>
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] PM/hibernate: remove the bogus call to get_gendisk in software_resume
-Date:   Fri, 25 Sep 2020 18:14:47 +0200
-Message-Id: <20200925161447.1486883-3-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200925161447.1486883-1-hch@lst.de>
-References: <20200925161447.1486883-1-hch@lst.de>
+        Fri, 25 Sep 2020 12:19:39 -0400
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601050777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CZzTv3hBY/mUlwQevJcuf6ALk7r9I6yfAL5YgetwTXE=;
+        b=EHSk8VfZlnUH+4kmlcdpLibi3yEbwohYl4/Bsf+GGwNhWrxxsJzVGLuabkwDRWylbCTwJu
+        zo4tusmV+ozw4W1UmOa/f4aDzxZl15B5pshRbhAyvCC4oYRbmbN2dU36WPTpvTGA50Ey7c
+        EuFBInjwF6y40zsznyvUKitYNjNTrWg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-ITFCUEKKPZ6J5olKVgEi9g-1; Fri, 25 Sep 2020 12:19:32 -0400
+X-MC-Unique: ITFCUEKKPZ6J5olKVgEi9g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37A3010BBECF;
+        Fri, 25 Sep 2020 16:19:31 +0000 (UTC)
+Received: from sulaco.redhat.com (unknown [10.10.110.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E3035D9DC;
+        Fri, 25 Sep 2020 16:19:30 +0000 (UTC)
+From:   Tony Asleson <tasleson@redhat.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org
+Subject: [v5 00/12] Add persistent durable identifier to storage log messages
+Date:   Fri, 25 Sep 2020 11:19:17 -0500
+Message-Id: <20200925161929.1136806-1-tasleson@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-get_gendisk grabs a reference on the disk and file operation, so this
-code will leak both of them while having absolutely no use for the
-gendisk itself.
+Today users have no easy way to correlate kernel log messages for storage
+devices across reboots, device dynamic add/remove, or when the device is
+physically or logically moved from from system to system.  This is due
+to the existing log IDs which identify how the device is attached and not
+a unique ID of what is attached.  Additionally, even when the attachment
+hasn't changed, it's not always obvious which messages belong to the
+device as the different areas in the storage stack use different
+identifiers, eg. (sda, sata1.00, sd 0:0:0:0).
 
-This effectively reverts commit 2df83fa4bce421f
-("PM / Hibernate: Use get_gendisk to verify partition if resume_file is integer format")
+This change addresses this by adding a unique ID to each log
+message.  It couples the existing structured key/value logging capability
+and VPD 0x83 device identification.  The structured key/value data is not
+visible in normal viewing and is not seen in the dmesg output or journal
+output unless you go looking for it by dumping the output as JSON.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- kernel/power/hibernate.c | 11 -----------
- 1 file changed, 11 deletions(-)
+Some examples of logs filtered for a specific device utilizing this patch
+series.
 
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index e7aa57fb2fdc33..7d0b99d2e69631 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -948,17 +948,6 @@ static int software_resume(void)
- 
- 	/* Check if the device is there */
- 	swsusp_resume_device = name_to_dev_t(resume_file);
--
--	/*
--	 * name_to_dev_t is ineffective to verify parition if resume_file is in
--	 * integer format. (e.g. major:minor)
--	 */
--	if (isdigit(resume_file[0]) && resume_wait) {
--		int partno;
--		while (!get_gendisk(swsusp_resume_device, &partno))
--			msleep(10);
--	}
--
- 	if (!swsusp_resume_device) {
- 		/*
- 		 * Some device discovery might still be in progress; we need
+$ journalctl -b  _KERNEL_DURABLE_NAME="`cat /sys/block/sdb/device/wwid`" 
+| cut -c 25- | fmt -t
+l: scsi 1:0:0:0: Attached scsi generic sg1 type 0
+l: sd 1:0:0:0: [sdb] 209715200 512-byte logical blocks: (107 GB/100 GiB)
+l: sd 1:0:0:0: [sdb] Write Protect is off
+l: sd 1:0:0:0: [sdb] Mode Sense: 00 3a 00 00
+l: sd 1:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't
+   support DPO or FUA
+l: sd 1:0:0:0: [sdb] Attached SCSI disk
+l: ata2.00: exception Emask 0x0 SAct 0x8 SErr 0x8 action 0x6 frozen
+l: ata2.00: failed command: READ FPDMA QUEUED
+l: ata2.00: cmd 60/01:18:10:27:00/00:00:00:00:00/40 tag 3 ncq dma 512
+            in res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
+l: ata2.00: status: { DRDY }
+l: ata2.00: configured for UDMA/100
+l: ata2.00: device reported invalid CHS sector 0
+l: ata2.00: exception Emask 0x0 SAct 0x4000 SErr 0x4000 action 0x6 frozen
+l: ata2.00: failed command: READ FPDMA QUEUED
+l: ata2.00: cmd 60/01:70:10:27:00/00:00:00:00:00/40 tag 14 ncq dma 512
+            in res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
+l: ata2.00: status: { DRDY }
+l: ata2.00: configured for UDMA/100
+l: ata2.00: device reported invalid CHS sector 0
+l: ata2.00: exception Emask 0x0 SAct 0x80000000 SErr 0x80000000 action
+            0x6 frozen
+l: ata2.00: failed command: READ FPDMA QUEUED
+l: ata2.00: cmd 60/01:f8:10:27:00/00:00:00:00:00/40 tag 31 ncq dma 512
+            in res 40/00:ff:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
+l: ata2.00: status: { DRDY }
+l: ata2.00: configured for UDMA/100
+l: ata2.00: NCQ disabled due to excessive errors
+l: ata2.00: exception Emask 0x0 SAct 0x40000 SErr 0x40000 action 0x6
+            frozen
+l: ata2.00: failed command: READ FPDMA QUEUED
+l: ata2.00: cmd 60/01:90:10:27:00/00:00:00:00:00/40 tag 18 ncq dma 512
+            in res 40/00:01:00:00:00/00:00:00:00:00/00 Emask 0x4 (timeout)
+l: ata2.00: status: { DRDY }
+l: ata2.00: configured for UDMA/100
+
+$ journalctl -b  _KERNEL_DURABLE_NAME="`cat /sys/block/nvme0n1/wwid`" 
+| cut -c 25- | fmt -t
+l: blk_update_request: critical medium error, dev nvme0n1, sector 10000
+   op 0x0:(READ) flags 0x80700 phys_seg 4 prio class 0
+l: blk_update_request: critical medium error, dev nvme0n1, sector 10000
+   op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+l: Buffer I/O error on dev nvme0n1, logical block 1250, async page read
+
+$ journalctl -b  _KERNEL_DURABLE_NAME="`cat /sys/block/sdc/device/wwid`"
+| cut -c 25- | fmt -t
+l: sd 8:0:0:0: Power-on or device reset occurred
+l: sd 8:0:0:0: [sdc] 16777216 512-byte logical blocks: (8.59 GB/8.00 GiB)
+l: sd 8:0:0:0: Attached scsi generic sg2 type 0
+l: sd 8:0:0:0: [sdc] Write Protect is off
+l: sd 8:0:0:0: [sdc] Mode Sense: 63 00 00 08
+l: sd 8:0:0:0: [sdc] Write cache: enabled, read cache: enabled, doesn't
+   support DPO or FUA
+l: sd 8:0:0:0: [sdc] Attached SCSI disk
+l: sd 8:0:0:0: [sdc] tag#255 FAILED Result: hostbyte=DID_OK
+   driverbyte=DRIVER_SENSE cmd_age=0s
+l: sd 8:0:0:0: [sdc] tag#255 Sense Key : Medium Error [current]
+l: sd 8:0:0:0: [sdc] tag#255 Add. Sense: Unrecovered read error
+l: sd 8:0:0:0: [sdc] tag#255 CDB: Read(10) 28 00 00 00 27 10 00 00 01 00
+l: blk_update_request: critical medium error, dev sdc, sector 10000 op
+   0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+
+There should be no changes to the log message content with this patch series.
+I ran release kernel and this patch series and did a compare while forcing the
+kernel through the same errors paths to verify.
+
+The first 6 commits in the patch series utilize changes needed for dev_printk
+code path.  The last 6 commits in the patch add the needed changes to utilize
+durable_name_printk.  The function durable_name_printk is nothing more than
+a printk that adds structured key/value durable name to unmodified printk
+output.  I structured it this way so only a subset of the patch series could
+be theoretically applied if we cannot get agreement on complete patch series.
+
+v2:
+- Incorporated changes suggested by James Bottomley
+- Removed string function which removed leading/trailing/duplicate adjacent
+  spaces from generated id, value matches /sys/block/<device>/device/wwid
+- Remove xfs patch, limiting changes to lower block layers
+- Moved callback from struct device_type to struct device.  Struct device_type
+  is typically static const and with a number of different areas using shared
+  implementation of genhd unable to modify for each of the different areas.
+
+v3:
+- Increase the size of the buffers for NVMe id generation and
+  dev_vprintk_emit
+  
+v4:
+- Back out dev_printk for those locations that weren't using it before, so that
+  we don't change the content of the user visible log message by using a
+  function durable_name_printk.
+- Remove RFC from patch series.
+
+v5:
+- Reduced stack usage for nvme wwid
+- Make function ata_scsi_durable_name static, found by kernel test robot
+- Incorporated suggested changes from Andy Shevchenko and Sergei Shtylyov
+  * Remove unneeded line spacing
+  * Correct spelling
+  * Remove unneeded () in conditional operator
+  * Re-worked expressions to follow common kernel patterns, added
+    function dev_to_scsi_device
+- Re-based for v5.8 branch
+
+Tony Asleson (12):
+  struct device: Add function callback durable_name
+  create_syslog_header: Add durable name
+  dev_vprintk_emit: Increase hdr size
+  scsi: Add durable_name for dev_printk
+  nvme: Add durable name for dev_printk
+  libata: Add ata_scsi_durable_name
+  libata: Make ata_scsi_durable_name static
+  Add durable_name_printk
+  libata: use durable_name_printk
+  Add durable_name_printk_ratelimited
+  print_req_error: Use durable_name_printk_ratelimited
+  buffer_io_error: Use durable_name_printk_ratelimited
+
+ block/blk-core.c           |  5 ++++-
+ drivers/ata/libata-core.c  | 17 +++++++-------
+ drivers/ata/libata-scsi.c  | 18 ++++++++++++---
+ drivers/base/core.c        | 46 +++++++++++++++++++++++++++++++++++++-
+ drivers/nvme/host/core.c   | 18 +++++++++++++++
+ drivers/scsi/scsi_lib.c    |  9 ++++++++
+ drivers/scsi/scsi_sysfs.c  | 35 +++++++++++++++++++++++------
+ drivers/scsi/sd.c          |  2 ++
+ fs/buffer.c                | 15 +++++++++----
+ include/linux/dev_printk.h | 14 ++++++++++++
+ include/linux/device.h     |  4 ++++
+ include/scsi/scsi_device.h |  3 +++
+ 12 files changed, 162 insertions(+), 24 deletions(-)
+
+
+base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
 -- 
-2.28.0
+2.26.2
 
