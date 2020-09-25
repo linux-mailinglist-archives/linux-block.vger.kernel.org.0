@@ -2,44 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08163278E15
-	for <lists+linux-block@lfdr.de>; Fri, 25 Sep 2020 18:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BA6D278E0F
+	for <lists+linux-block@lfdr.de>; Fri, 25 Sep 2020 18:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgIYQTu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Sep 2020 12:19:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23752 "EHLO
+        id S1729534AbgIYQTt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Sep 2020 12:19:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33792 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729531AbgIYQTr (ORCPT
+        by vger.kernel.org with ESMTP id S1729535AbgIYQTs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Sep 2020 12:19:47 -0400
+        Fri, 25 Sep 2020 12:19:48 -0400
 Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601050786;
+        s=mimecast20190719; t=1601050787;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=36St5Oeqqpx9UTR9cd+r4hzn7jyQrQgdXE6WFtjZ9NY=;
-        b=d8DpOf+wxiLFIzDok497bSG+hr17mrL4ah26onXo/cxMbdmvLAxi5nTih/Hynm3wMMV4g3
-        QSuop1zg5H8PuCn0xxC43YpQY/NlJ4+HQpMbZFSxa2rQRGogkQL+sYdR3zP+5qCFS/Bhr1
-        ULoP+vo+P+8czWbsygfBwJzpw6E4Edg=
+        bh=josTUHWqNyzesA2exKGBBZWjajhUHsqLRfrpS+k19OQ=;
+        b=WfS2ojw6JESgTsa2y87aPwxj0OJJiSxQlMqu0u9/4JQDIzTj54E1h4R7Co4n5c9xcY8rT8
+        1kqZE04HJUyWDI84uzpDQoKJBgei3GGjw/3skwKF9q3yB4tYFvn8buyVhElOQ+1WNHt8KW
+        iiKkJSr/F9QBHsQLbSFAWjzHfyZ661E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-505-zhfDJ7mRODmiJN2qUJywsg-1; Fri, 25 Sep 2020 12:19:44 -0400
-X-MC-Unique: zhfDJ7mRODmiJN2qUJywsg-1
+ us-mta-432-IyxQ6YfPNM-NvfhphXgtww-1; Fri, 25 Sep 2020 12:19:45 -0400
+X-MC-Unique: IyxQ6YfPNM-NvfhphXgtww-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5153810BBECD;
-        Fri, 25 Sep 2020 16:19:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 723AB8712FD;
+        Fri, 25 Sep 2020 16:19:44 +0000 (UTC)
 Received: from sulaco.redhat.com (unknown [10.10.110.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 833095D9DC;
-        Fri, 25 Sep 2020 16:19:42 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3D385D9DC;
+        Fri, 25 Sep 2020 16:19:43 +0000 (UTC)
 From:   Tony Asleson <tasleson@redhat.com>
 To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         linux-ide@vger.kernel.org
-Subject: [v5 11/12] print_req_error: Use durable_name_printk_ratelimited
-Date:   Fri, 25 Sep 2020 11:19:28 -0500
-Message-Id: <20200925161929.1136806-12-tasleson@redhat.com>
+Subject: [v5 12/12] buffer_io_error: Use durable_name_printk_ratelimited
+Date:   Fri, 25 Sep 2020 11:19:29 -0500
+Message-Id: <20200925161929.1136806-13-tasleson@redhat.com>
 In-Reply-To: <20200925161929.1136806-1-tasleson@redhat.com>
 References: <20200925161929.1136806-1-tasleson@redhat.com>
 MIME-Version: 1.0
@@ -54,30 +54,35 @@ durable name to log entry.
 
 Signed-off-by: Tony Asleson <tasleson@redhat.com>
 ---
- block/blk-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/buffer.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 03252af8c82c..59e0ff583eb6 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -218,12 +218,15 @@ EXPORT_SYMBOL_GPL(blk_status_to_errno);
- static void print_req_error(struct request *req, blk_status_t status,
- 		const char *caller)
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 64fe82ec65ff..5c4e5b4c82dd 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -125,10 +125,17 @@ EXPORT_SYMBOL(__wait_on_buffer);
+ 
+ static void buffer_io_error(struct buffer_head *bh, char *msg)
  {
-+	struct device *dev;
- 	int idx = (__force int)status;
- 
- 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(blk_errors)))
- 		return;
- 
--	printk_ratelimited(KERN_ERR
-+	dev = req->rq_disk ? disk_to_dev(req->rq_disk) : NULL;
+-	if (!test_bit(BH_Quiet, &bh->b_state))
+-		printk_ratelimited(KERN_ERR
+-			"Buffer I/O error on dev %pg, logical block %llu%s\n",
+-			bh->b_bdev, (unsigned long long)bh->b_blocknr, msg);
++	struct device *gendev;
 +
-+	durable_name_printk_ratelimited(KERN_ERR, dev,
- 		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
- 		"phys_seg %u prio class %u\n",
- 		caller, blk_errors[idx].name,
++	if (test_bit(BH_Quiet, &bh->b_state))
++		return;
++
++	gendev = bh->b_bdev->bd_disk ?
++		disk_to_dev(bh->b_bdev->bd_disk) : NULL;
++
++	durable_name_printk_ratelimited(KERN_ERR, gendev,
++		"Buffer I/O error on dev %pg, logical block %llu%s\n",
++		bh->b_bdev, (unsigned long long)bh->b_blocknr, msg);
+ }
+ 
+ /*
 -- 
 2.26.2
 
