@@ -2,187 +2,194 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6411927A279
-	for <lists+linux-block@lfdr.de>; Sun, 27 Sep 2020 21:09:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F47427A311
+	for <lists+linux-block@lfdr.de>; Sun, 27 Sep 2020 21:56:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgI0TJw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 27 Sep 2020 15:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgI0TJw (ORCPT
+        id S1726751AbgI0T4G (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Sep 2020 15:56:06 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10039
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726369AbgI0TzS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 27 Sep 2020 15:09:52 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682E5C0613CE;
-        Sun, 27 Sep 2020 12:09:52 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id v14so2325033pjd.4;
-        Sun, 27 Sep 2020 12:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LBMpruBnsZIrufCFvRBcjt88XqIw96hv7Z8FwDsXdYE=;
-        b=L9QSfTkXJfKU5esFr3pkDpIEuB8FI+9UsnkEO7B6scwSbAyycoyGyUrUEofbWHg11U
-         dLRx0VZuJ1w7DNaVj7I/xOg2BoTt1WQHFsb9UXK7qGtztg77b5lWFKJIz7FzyxisDrXH
-         oPRqvWV6TNe3Zcoq2aHYpMXIO3V8eTJ+JVfQsd96mFup2LxHFt3s1ZwVmQsVTEaFjRjW
-         V3+OpMZrrCC9K7fRb1q6muwFBykIXpT0afCBT2OlQoNuv/1qpBkRcCX9mgjDm+Ttabkw
-         eWKcFdbhdtUGOHiz9xhPkC98LibVE1l/hBUOh5Wa9Jjp2m+PPOr/7xFsLNwD5qUEuOli
-         jUgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=LBMpruBnsZIrufCFvRBcjt88XqIw96hv7Z8FwDsXdYE=;
-        b=E6Bx+Bx753WK+1PZmyHuT0UWgiqCtZglw4KJKbdJNlbO9L/bn/1g+9e8tQxxo294xg
-         WFPhsiYg6Vyb3H3YhyJrCQseLGRpoCXfSN3Qj/NGZQUNySPmfy0cCaYXnbRX3Lknk+ri
-         o8LpldNoUazzzMRvOxLDV8on1Er5Puq+ylxVTJThLDfGMh39LKGSec4VfJhEfnHmWA3Y
-         LKKEC1OcoyzCFWAitAHCDy/7BWfHRL1hCWUx4s/7FLDaGteV+FNGMe0UYDrqXbwPujO+
-         7XYMZKJhdgDMtm3YD//1D0iH/iOTVbCU7myG7JVDhA4WnEY8YUVOI91ML3HJwhaZSVHX
-         bByQ==
-X-Gm-Message-State: AOAM5338jiOdvNTphqCGoY/g7zz3scGYby4DTCoSGyiIMYt3iYFBAyQm
-        Y74xB2OPlC8ExLYa1jyfjQqZK6/j9H4mEg==
-X-Google-Smtp-Source: ABdhPJzPcPjy0SRh283akmvoj1pQEKRb93U8pQFOU7T5JJqg1O8s32lJzlOsuLPKilyl2VDuxScx/A==
-X-Received: by 2002:a17:90a:d246:: with SMTP id o6mr6651233pjw.211.1601233791747;
-        Sun, 27 Sep 2020 12:09:51 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
-        by smtp.gmail.com with ESMTPSA id w192sm8840301pfd.156.2020.09.27.12.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 12:09:50 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date:   Sun, 27 Sep 2020 12:09:48 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, xue.zhihong@zte.com.cn,
-        jiang.xuexin@zte.com.cn, zhanglin <zhang.lin16@zte.com.cn>
-Subject: Re: [PATCH v3] zram: add restriction on dynamic zram device creation
-Message-ID: <20200927190948.GB422329@google.com>
-References: <1600651821-46836-1-git-send-email-wang.yi59@zte.com.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1600651821-46836-1-git-send-email-wang.yi59@zte.com.cn>
+        Sun, 27 Sep 2020 15:55:18 -0400
+X-IronPort-AV: E=Sophos;i="5.77,311,1596492000"; 
+   d="scan'208";a="360169486"
+Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 27 Sep 2020 21:55:11 +0200
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     linux-iio@vger.kernel.org
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-janitors@vger.kernel.org,
+        David Lechner <david@lechnology.com>,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-crypto@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org
+Subject: [PATCH 00/18] use semicolons rather than commas to separate statements
+Date:   Sun, 27 Sep 2020 21:12:10 +0200
+Message-Id: <1601233948-11629-1-git-send-email-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 09:30:21AM +0800, Yi Wang wrote:
-> From: zhanglin <zhang.lin16@zte.com.cn>
-> 
-> Add max_num_devices to limit dynamic zram device creation to prevent
->  potential OOM
-> 
-> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
->  v1->v2:
->  change hard-coded initial max_num_devices into configurable way.
->  v2->v3:
->  Move inc/dec num_devices logic into zram_add/zram_remove.
-> 
->  drivers/block/zram/Kconfig    |  7 +++++++
->  drivers/block/zram/zram_drv.c | 26 +++++++++++++++-----------
->  2 files changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-> index fe7a4b7d30cf..8455e5ec608b 100644
-> --- a/drivers/block/zram/Kconfig
-> +++ b/drivers/block/zram/Kconfig
-> @@ -37,3 +37,10 @@ config ZRAM_MEMORY_TRACKING
->  	  /sys/kernel/debug/zram/zramX/block_state.
->  
->  	  See Documentation/admin-guide/blockdev/zram.rst for more information.
-> +
-> +config ZRAM_DEV_MAX_COUNT
-> +	int "Max number of zram devices to be created"
-> +	depends on ZRAM
-> +	default 256
-> +	help
-> +	  This option specifies the maximum number of zram devices.
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 36d49159140f..5e8978095d68 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -43,8 +43,9 @@ static DEFINE_MUTEX(zram_index_mutex);
->  static int zram_major;
->  static const char *default_compressor = "lzo-rle";
->  
-> +static unsigned int num_devices;
->  /* Module params (documentation at end) */
-> -static unsigned int num_devices = 1;
-> +static unsigned int max_num_devices = CONFIG_ZRAM_DEV_MAX_COUNT;
->  /*
->   * Pages that compress to sizes equals or greater than this are stored
->   * uncompressed in memory.
-> @@ -1878,6 +1879,9 @@ static int zram_add(void)
->  	struct request_queue *queue;
->  	int ret, device_id;
->  
-> +	if (num_devices >= max_num_devices)
-> +		return -ENOSPC;
-> +
->  	zram = kzalloc(sizeof(struct zram), GFP_KERNEL);
->  	if (!zram)
->  		return -ENOMEM;
-> @@ -1955,6 +1959,7 @@ static int zram_add(void)
->  	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
->  
->  	zram_debugfs_register(zram);
-> +	num_devices += 1;
->  	pr_info("Added device: %s\n", zram->disk->disk_name);
->  	return device_id;
->  
-> @@ -1998,6 +2003,7 @@ static int zram_remove(struct zram *zram)
->  	blk_cleanup_queue(zram->disk->queue);
->  	put_disk(zram->disk);
->  	kfree(zram);
-> +	num_devices -= 1;
->  	return 0;
->  }
->  
-> @@ -2111,14 +2117,12 @@ static int __init zram_init(void)
->  		return -EBUSY;
->  	}
->  
-> -	while (num_devices != 0) {
-> -		mutex_lock(&zram_index_mutex);
-> -		ret = zram_add();
-> -		mutex_unlock(&zram_index_mutex);
-> -		if (ret < 0)
-> -			goto out_error;
-> -		num_devices--;
-> -	}
-> +	mutex_lock(&zram_index_mutex);
-> +	num_devices = 0;
-> +	ret = zram_add();
-> +	mutex_unlock(&zram_index_mutex);
-> +	if (ret < 0)
-> +		goto out_error;
->  
->  	return 0;
->  
-> @@ -2135,8 +2139,8 @@ static void __exit zram_exit(void)
->  module_init(zram_init);
->  module_exit(zram_exit);
->  
-> -module_param(num_devices, uint, 0);
-> -MODULE_PARM_DESC(num_devices, "Number of pre-created zram devices");
+These patches replace commas by semicolons.  This was done using the
+Coccinelle semantic patch (http://coccinelle.lip6.fr/) shown below.
 
-Why did you remove num_devices? It's orthgonal with max_num_devices.
-If we remove it, users have been used it to create pre-created zram
-device will be broken.
+This semantic patch ensures that commas inside for loop headers will not be
+transformed.  It also doesn't touch macro definitions.
 
-If user asked it more than max_num_devices, we could just return the error
-in zram_init with simple pr_err to notice configuration wrong.
+Coccinelle ensures that braces are added as needed when a single-statement
+branch turns into a multi-statement one.
 
+This semantic patch has a few false positives, for variable delcarations
+such as:
 
-> +module_param(max_num_devices, uint, 0);
-> +MODULE_PARM_DESC(max_num_devices, "Max number of zram devices to be created");
->  
->  MODULE_LICENSE("Dual BSD/GPL");
->  MODULE_AUTHOR("Nitin Gupta <ngupta@vflare.org>");
-> -- 
-> 2.17.1
+LIST_HEAD(x), *y;
 
+The semantic patch could be improved to avoid these, but for the moment
+they have been removed manually (2 occurrences).
 
+// <smpl>
+@initialize:ocaml@
+@@
+
+let infunction p =
+  (* avoid macros *)
+  (List.hd p).current_element <> "something_else"
+
+let combined p1 p2 =
+  (List.hd p1).line_end = (List.hd p2).line ||
+  (((List.hd p1).line_end < (List.hd p2).line) &&
+   ((List.hd p1).col < (List.hd p2).col))
+
+@bad@
+statement S;
+declaration d;
+position p;
+@@
+
+S@p
+d
+
+// special cases where newlines are needed (hope for no more than 5)
+@@
+expression e1,e2;
+statement S;
+position p != bad.p;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && combined p1 p2 };
+@@
+
+- e1@p1,@S@p e2@p2;
++ e1; e2;
+
+@@
+expression e1,e2;
+statement S;
+position p != bad.p;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && combined p1 p2 };
+@@
+
+- e1@p1,@S@p e2@p2;
++ e1; e2;
+
+@@
+expression e1,e2;
+statement S;
+position p != bad.p;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && combined p1 p2 };
+@@
+
+- e1@p1,@S@p e2@p2;
++ e1; e2;
+
+@@
+expression e1,e2;
+statement S;
+position p != bad.p;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && combined p1 p2 };
+@@
+
+- e1@p1,@S@p e2@p2;
++ e1; e2;
+
+@@
+expression e1,e2;
+statement S;
+position p != bad.p;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && combined p1 p2 };
+@@
+
+- e1@p1,@S@p e2@p2;
++ e1; e2;
+
+@r@
+expression e1,e2;
+statement S;
+position p != bad.p;
+@@
+
+e1 ,@S@p e2;
+
+@@
+expression e1,e2;
+position p1;
+position p2 :
+    script:ocaml(p1) { infunction p1 && not(combined p1 p2) };
+statement S;
+position r.p;
+@@
+
+e1@p1
+-,@S@p
++;
+e2@p2
+... when any
+// </smpl>
+
+---
+
+ drivers/acpi/processor_idle.c               |    4 +++-
+ drivers/ata/pata_icside.c                   |   21 +++++++++++++--------
+ drivers/base/regmap/regmap-debugfs.c        |    2 +-
+ drivers/bcma/driver_pci_host.c              |    4 ++--
+ drivers/block/drbd/drbd_receiver.c          |    6 ++++--
+ drivers/char/agp/amd-k7-agp.c               |    2 +-
+ drivers/char/agp/nvidia-agp.c               |    2 +-
+ drivers/char/agp/sworks-agp.c               |    2 +-
+ drivers/char/hw_random/iproc-rng200.c       |    8 ++++----
+ drivers/char/hw_random/mxc-rnga.c           |    6 +++---
+ drivers/char/hw_random/stm32-rng.c          |    8 ++++----
+ drivers/char/ipmi/bt-bmc.c                  |    6 +++---
+ drivers/clk/meson/meson-aoclk.c             |    2 +-
+ drivers/clk/mvebu/ap-cpu-clk.c              |    2 +-
+ drivers/clk/uniphier/clk-uniphier-cpugear.c |    2 +-
+ drivers/clk/uniphier/clk-uniphier-mux.c     |    2 +-
+ drivers/clocksource/mps2-timer.c            |    6 +++---
+ drivers/clocksource/timer-armada-370-xp.c   |    8 ++++----
+ drivers/counter/ti-eqep.c                   |    2 +-
+ drivers/crypto/amcc/crypto4xx_alg.c         |    2 +-
+ drivers/crypto/atmel-tdes.c                 |    2 +-
+ drivers/crypto/hifn_795x.c                  |    4 ++--
+ drivers/crypto/talitos.c                    |    8 ++++----
+ 23 files changed, 60 insertions(+), 51 deletions(-)
