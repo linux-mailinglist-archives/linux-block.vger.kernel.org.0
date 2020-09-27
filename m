@@ -2,95 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE7B3279EBF
-	for <lists+linux-block@lfdr.de>; Sun, 27 Sep 2020 08:27:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A870A279F25
+	for <lists+linux-block@lfdr.de>; Sun, 27 Sep 2020 09:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgI0G1f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 27 Sep 2020 02:27:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48922 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730475AbgI0G13 (ORCPT
+        id S1726382AbgI0HLL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Sep 2020 03:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbgI0HLL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 27 Sep 2020 02:27:29 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601188048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EbzAX+YvEvHOO3NGqM8YXZj1EdlAEAqHUR00Ej4MfhM=;
-        b=QCIijt2M39EfNQ5w7pqXIRvLPIHVLxaO6rtY0jLWeHL2o/vmayaRhpNIVDJnGCxWDFgFvh
-        zjKnwRknC+D8s2AZaQ8bjc+AiKxWxF0xu77onPZfZ/UTZCoFgyTSLiKgm98STlPEUzCfAV
-        G7hICstN9BcWdjdWKvf4X3TuoSZ/qn8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-A8PJ2bKXO5eN_OIZSMW1_Q-1; Sun, 27 Sep 2020 02:27:25 -0400
-X-MC-Unique: A8PJ2bKXO5eN_OIZSMW1_Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 745C91868411;
-        Sun, 27 Sep 2020 06:27:24 +0000 (UTC)
-Received: from localhost (ovpn-12-180.pek2.redhat.com [10.72.12.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C717368F;
-        Sun, 27 Sep 2020 06:27:20 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH V5 3/3] block: move 'q_usage_counter' into front of 'request_queue'
-Date:   Sun, 27 Sep 2020 14:26:54 +0800
-Message-Id: <20200927062654.2750277-4-ming.lei@redhat.com>
-In-Reply-To: <20200927062654.2750277-1-ming.lei@redhat.com>
-References: <20200927062654.2750277-1-ming.lei@redhat.com>
+        Sun, 27 Sep 2020 03:11:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BC3C0613CE
+        for <linux-block@vger.kernel.org>; Sun, 27 Sep 2020 00:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=Yma1zqRWU/jRnoUhv/8wvAHk1H6b826vCYsv5iH97ZU=; b=RvGUzFuPJC2JOhxbLjUgY0/Zyt
+        ROGphSXWHenuVOrtd6xY2CZTUYJpvXULBpj3oJaTxZKH+Prg6MPKaiZJCSkjwVWgr4YHoXgAHi4Td
+        Ga5oK81TurFSmJMyOd5ymnXlFgUSmxaRVu/XhB8+204otWdQLw0LvBEQBIgxA0jXDz4mio688Q5vs
+        N5LMqtGgbOBOMA/CO8rSWDjle/GYBbRbulbTlYz+aUdRpooQX/eA4U6VSrp+v23ZVHJqsojrt7lvw
+        VOSU0HmTu0gBJXnGxCjGTFwsDcKZBO+vvikqBA7tjYSK/60U8MrA5LwFwnORjUObWW6n9QtD921XI
+        qEix3Xhg==;
+Received: from [46.189.67.162] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kMQpw-0000VX-N0; Sun, 27 Sep 2020 07:11:09 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] mtip32xx: remove a call to fsync_bdev on removal
+Date:   Sun, 27 Sep 2020 09:11:08 +0200
+Message-Id: <20200927071108.372241-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The field of 'q_usage_counter' is always fetched in fast path of every
-block driver, and move it into front of 'request_queue', so it can be
-fetched into 1st cacheline of 'request_queue' instance.
+Syncing data on removal is not the device drivers job, and none of other
+common drivers does something like this.
 
-Tested-by: Veronika Kabatova <vkabatov@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/blkdev.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/mtip32xx/mtip32xx.c | 15 ---------------
+ drivers/block/mtip32xx/mtip32xx.h |  2 --
+ 2 files changed, 17 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index d5a3e1a4c2f7..67935b3bef6c 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -397,6 +397,8 @@ struct request_queue {
- 	struct request		*last_merge;
- 	struct elevator_queue	*elevator;
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 153e2cdecb4d40..53ac59d19ae530 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -3687,7 +3687,6 @@ static int mtip_block_initialize(struct driver_data *dd)
+ 	/* Enable the block device and add it to /dev */
+ 	device_add_disk(&dd->pdev->dev, dd->disk, NULL);
  
-+	struct percpu_ref	q_usage_counter;
-+
- 	struct blk_queue_stats	*stats;
- 	struct rq_qos		*rq_qos;
+-	dd->bdev = bdget_disk(dd->disk, 0);
+ 	/*
+ 	 * Now that the disk is active, initialize any sysfs attributes
+ 	 * managed by the protocol layer.
+@@ -3721,9 +3720,6 @@ static int mtip_block_initialize(struct driver_data *dd)
+ 	return rv;
  
-@@ -569,7 +571,6 @@ struct request_queue {
- 	 * percpu_ref_kill() and percpu_ref_reinit().
- 	 */
- 	struct mutex		mq_freeze_lock;
--	struct percpu_ref	q_usage_counter;
+ kthread_run_error:
+-	bdput(dd->bdev);
+-	dd->bdev = NULL;
+-
+ 	/* Delete our gendisk. This also removes the device from /dev */
+ 	del_gendisk(dd->disk);
  
- 	struct blk_mq_tag_set	*tag_set;
- 	struct list_head	tag_set_list;
+@@ -3804,14 +3800,6 @@ static int mtip_block_remove(struct driver_data *dd)
+ 	blk_mq_tagset_busy_iter(&dd->tags, mtip_no_dev_cleanup, dd);
+ 	blk_mq_unquiesce_queue(dd->queue);
+ 
+-	/*
+-	 * Delete our gendisk structure. This also removes the device
+-	 * from /dev
+-	 */
+-	if (dd->bdev) {
+-		bdput(dd->bdev);
+-		dd->bdev = NULL;
+-	}
+ 	if (dd->disk) {
+ 		if (test_bit(MTIP_DDF_INIT_DONE_BIT, &dd->dd_flag))
+ 			del_gendisk(dd->disk);
+@@ -4206,9 +4194,6 @@ static void mtip_pci_remove(struct pci_dev *pdev)
+ 	} while (atomic_read(&dd->irq_workers_active) != 0 &&
+ 		time_before(jiffies, to));
+ 
+-	if (!dd->sr)
+-		fsync_bdev(dd->bdev);
+-
+ 	if (atomic_read(&dd->irq_workers_active) != 0) {
+ 		dev_warn(&dd->pdev->dev,
+ 			"Completion workers still active!\n");
+diff --git a/drivers/block/mtip32xx/mtip32xx.h b/drivers/block/mtip32xx/mtip32xx.h
+index e22a7f0523bf30..88f4206310e4c8 100644
+--- a/drivers/block/mtip32xx/mtip32xx.h
++++ b/drivers/block/mtip32xx/mtip32xx.h
+@@ -463,8 +463,6 @@ struct driver_data {
+ 
+ 	int isr_binding;
+ 
+-	struct block_device *bdev;
+-
+ 	struct list_head online_list; /* linkage for online list */
+ 
+ 	struct list_head remove_list; /* linkage for removing list */
 -- 
-2.25.2
+2.28.0
 
