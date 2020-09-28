@@ -2,69 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C42527B667
-	for <lists+linux-block@lfdr.de>; Mon, 28 Sep 2020 22:35:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7CA227B6C4
+	for <lists+linux-block@lfdr.de>; Mon, 28 Sep 2020 22:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgI1Uf0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Sep 2020 16:35:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53207 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726281AbgI1UfZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Sep 2020 16:35:25 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601325324;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0pAaRMLcPsQC2zisk13ceWf79SQ4euWeqjMCzzYsmF0=;
-        b=HLzhl6Ft9hMpgJmz7oYY9zXmaFcsmTcBtcdBwCqcpm7Hlp8EeqRPi8TVz+EwrrCf6GLuOn
-        rMQ9bQOgd+aS5PYvfA1NXnDrjOMSYtd5iIkxbKgJWARI4A+ety1rHfBgIrF3RXZL9C5nrF
-        RnFpjk/kzhmGaqCo4fVzxVqwoJgp6+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-yNA4Wfm_P4y0hxZP5CDxPg-1; Mon, 28 Sep 2020 16:35:22 -0400
-X-MC-Unique: yNA4Wfm_P4y0hxZP5CDxPg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726668AbgI1U7g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Sep 2020 16:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726627AbgI1U7g (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 28 Sep 2020 16:59:36 -0400
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E57321868403;
-        Mon, 28 Sep 2020 20:35:20 +0000 (UTC)
-Received: from [10.10.110.11] (unknown [10.10.110.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ADCA5C1C4;
-        Mon, 28 Sep 2020 20:35:19 +0000 (UTC)
-Reply-To: tasleson@redhat.com
-Subject: Re: [v5 07/12] libata: Make ata_scsi_durable_name static
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org
-References: <20200925161929.1136806-1-tasleson@redhat.com>
- <20200925161929.1136806-8-tasleson@redhat.com>
- <ec0479bf-e5ac-58f1-248a-2d4c29ae3efa@gmail.com>
-From:   Tony Asleson <tasleson@redhat.com>
-Organization: Red Hat
-Message-ID: <b1e0f0a5-e8b3-1e11-26c5-d0b9e4d518d7@redhat.com>
-Date:   Mon, 28 Sep 2020 15:35:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DF42B2080A;
+        Mon, 28 Sep 2020 20:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601326776;
+        bh=ec6OoHmgvoth50UzS4i3XOLm6RLc5Pxm7GGje4jPB0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J+VdfQfMacRKngiL9dbRg51Sx3tPH8JEYO4Pf9dPr05eYVYk670xoZO7Xv8MnDkPD
+         LfDgwPSL3lc5YEHvtXVPWGI2nBdsOepIHa2GmiWtHof01cupmY3XfiVMfIJLBTT9Xd
+         IstUej1FacbbaPSLC++7W6Q1fdXjiEUf2b97wVpo=
+Date:   Mon, 28 Sep 2020 13:59:34 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Satya Tangirala <satyat@google.com>,
+        Miaohe Lin <linmiaohe@huawei.com>
+Subject: Re: [PATCH v2 0/3] block: fix up bio_crypt_ctx allocation
+Message-ID: <20200928205934.GA1340@sol.localdomain>
+References: <20200916035315.34046-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ec0479bf-e5ac-58f1-248a-2d4c29ae3efa@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200916035315.34046-1-ebiggers@kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/26/20 3:40 AM, Sergei Shtylyov wrote:
+On Tue, Sep 15, 2020 at 08:53:12PM -0700, Eric Biggers wrote:
+> This series makes allocation of encryption contexts either able to fail,
+> or explicitly require __GFP_DIRECT_RECLAIM (via WARN_ON_ONCE).
 > 
->    Why not do it in patch #6 -- when introducing the function?
+> This applies to linux-block/for-next.
+> 
+> Changed since v1 (https://lkml.kernel.org/r/20200902051511.79821-1-ebiggers@kernel.org):
+>     - Added patches 2 and 3.
+>     - Added kerneldoc for bio_crypt_clone().
+>     - Adjusted commit message.
+> 
+> Eric Biggers (3):
+>   block: make bio_crypt_clone() able to fail
+>   block: make blk_crypto_rq_bio_prep() able to fail
+>   block: warn if !__GFP_DIRECT_RECLAIM in bio_crypt_set_ctx()
 
-Re-working patch series, will do as you suggest and as outlined
-in the submitting-patches.rst referenced by James.
+Jens, any interest in applying these patches for 5.10?
 
-Thanks
-
+- Eric
