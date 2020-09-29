@@ -2,160 +2,241 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B74127CD63
-	for <lists+linux-block@lfdr.de>; Tue, 29 Sep 2020 14:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70BE027CC89
+	for <lists+linux-block@lfdr.de>; Tue, 29 Sep 2020 14:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgI2Mnr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Sep 2020 08:43:47 -0400
-Received: from mout01.posteo.de ([185.67.36.65]:48241 "EHLO mout01.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbgI2MnQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Sep 2020 08:43:16 -0400
-X-Greylist: delayed 576 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Sep 2020 08:43:14 EDT
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout01.posteo.de (Postfix) with ESMTPS id 73190160061
-        for <linux-block@vger.kernel.org>; Tue, 29 Sep 2020 14:33:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1601382814; bh=JhiafdWzbNBFiKNlwk84Fpb+ya/blUc/kQW4uR1VtEQ=;
-        h=Subject:To:Cc:From:Autocrypt:Date:From;
-        b=atzfq9JdaJe1mj+GZMTS2cyYriibkJI7Zy7/QmOPjND6cJ1Qa6EJedv/O5Tlmw/n6
-         MzBoL6v46+rlVCQyyLW0c9o6HSX5FWKgaLe5x9aN58SV2/Wljjuw6qWEp+b3fAnZcv
-         wFYc3uQmVvlBo/jMQfSyvDC9GrXkViollZ3cYuec2/XiSM7ZOobxZuKjd011cackTh
-         oj7s7lH05Xpt6XrbekuUu66ikvHCTHPmnJNW5mD1RDCStlhU2pzdJ5F41PAUwC9D8z
-         8hgcpi+dspQeF4NYfhxmwsCbVtDbebjyuuW8eoXhfsy84rV+VL0dVos0s8JCoVP6Qb
-         nQXxmsbk5+3Tw==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 4C0zMK0P69z6tm5;
-        Tue, 29 Sep 2020 14:33:32 +0200 (CEST)
-Subject: Re: [PATCH 0/9] Rework runtime suspend and SCSI domain validation
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-scsi@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
-References: <20200906012219.17893-1-bvanassche@acm.org>
- <f4ff6be8-84b6-6f08-8657-21238c99df9c@acm.org>
-From:   Martin Kepplinger <martink@posteo.de>
-Autocrypt: addr=martink@posteo.de; keydata=
- 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
-Message-ID: <bd942251-fc86-912e-24c3-8fe695812c04@posteo.de>
-Date:   Tue, 29 Sep 2020 14:33:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1733108AbgI2MhL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Sep 2020 08:37:11 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:8965 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728786AbgI2MhF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 29 Sep 2020 08:37:05 -0400
+X-IronPort-AV: E=Sophos;i="5.77,318,1596492000"; 
+   d="scan'208";a="360346486"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 14:36:52 +0200
+Date:   Tue, 29 Sep 2020 14:36:52 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Ard Biesheuvel <ardb@kernel.org>
+cc:     linux-iio@vger.kernel.org, drbd-dev@lists.linbit.com,
+        =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        David Lechner <david@lechnology.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-wireless@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        linux-amlogic@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-clk@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 00/18] use semicolons rather than commas to separate
+ statements
+In-Reply-To: <CAMj1kXGh+CzuXkAnqsoMO2A3T1p=D6uFOV347Ym5+VFn5U1gWg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2009291428020.2808@hadrien>
+References: <1601233948-11629-1-git-send-email-Julia.Lawall@inria.fr> <CAMj1kXGh+CzuXkAnqsoMO2A3T1p=D6uFOV347Ym5+VFn5U1gWg@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <f4ff6be8-84b6-6f08-8657-21238c99df9c@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 19.09.20 05:45, Bart Van Assche wrote:
-> On 2020-09-05 18:22, Bart Van Assche wrote:
->> The SCSI runtime suspend and domain validation mechanisms both use
->> scsi_device_quiesce(). scsi_device_quiesce() restricts blk_queue_enter() to
->> BLK_MQ_REQ_PREEMPT requests. There is a conflict between the requirements
->> of runtime suspend and SCSI domain validation: no requests must be sent to
->> runtime suspended devices that are in the state RPM_SUSPENDED while
->> BLK_MQ_REQ_PREEMPT requests must be processed during SCSI domain
->> validation. This conflict is resolved by reworking the SCSI domain
->> validation implementation.
->>
->> Hybernation and runtime suspend have been retested but SCSI domain
->> validation not yet.
-> 
-> Hi Martin and James,
-> 
-> Please advise how to proceed with this patch series. This patch series
-> includes an important fix for runtime power management. Unfortunately
-> the only way to fix runtime powermanagement is by reworking SPI DV and
-> I don't have access to a setup on which I can test the SPI DV changes.
-> 
-> Thanks,
-> 
-> Bart.
-> 
 
-I only have my setup: SD cardreader connected via USB. I run this series
-which fixes runtime PM in the block layer for me.
 
-Sidenote: I need the following hack for my particular device too:
-https://lore.kernel.org/linux-scsi/20200824190400.12339-1-martin.kepplinger@puri.sm/
+On Tue, 29 Sep 2020, Ard Biesheuvel wrote:
 
-I hope someone else can test the rest for us!
+> On Sun, 27 Sep 2020 at 21:56, Julia Lawall <Julia.Lawall@inria.fr> wrote:
+> >
+> > These patches replace commas by semicolons.
+>
+>
+> Why?
 
-thanks for working on this,
+Among the complete 5000 lines of changes there is one probable bug where
+an if branch ends with a comma and thus pulls the subsequent statement
+under the if branch, in contradiction to what is indicated by the
+indentation.
 
-                                martin
+The use of comma often appears to be random, with a sequence of similar
+statements where some have commas and some don't.
+
+From a self-interested point of view, commas are not good for Coccinelle,
+because multiple statements are put into one.  Any problems involving them
+are thus likely to be overlooked unless one thinks of looking for them
+explicitly.  As an example, Christophe Jaillet noticed that one sequence
+of comma assignments would be better written using swap.  If one looked
+for opportunities for using swap in the most obvious way, one wouldn't
+find it.
+
+julia
+
+
+>
+>
+> > This was done using the
+> > Coccinelle semantic patch (http://coccinelle.lip6.fr/) shown below.
+> >
+> > This semantic patch ensures that commas inside for loop headers will not be
+> > transformed.  It also doesn't touch macro definitions.
+> >
+> > Coccinelle ensures that braces are added as needed when a single-statement
+> > branch turns into a multi-statement one.
+> >
+> > This semantic patch has a few false positives, for variable delcarations
+> > such as:
+> >
+> > LIST_HEAD(x), *y;
+> >
+> > The semantic patch could be improved to avoid these, but for the moment
+> > they have been removed manually (2 occurrences).
+> >
+> > // <smpl>
+> > @initialize:ocaml@
+> > @@
+> >
+> > let infunction p =
+> >   (* avoid macros *)
+> >   (List.hd p).current_element <> "something_else"
+> >
+> > let combined p1 p2 =
+> >   (List.hd p1).line_end = (List.hd p2).line ||
+> >   (((List.hd p1).line_end < (List.hd p2).line) &&
+> >    ((List.hd p1).col < (List.hd p2).col))
+> >
+> > @bad@
+> > statement S;
+> > declaration d;
+> > position p;
+> > @@
+> >
+> > S@p
+> > d
+> >
+> > // special cases where newlines are needed (hope for no more than 5)
+> > @@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && combined p1 p2 };
+> > @@
+> >
+> > - e1@p1,@S@p e2@p2;
+> > + e1; e2;
+> >
+> > @@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && combined p1 p2 };
+> > @@
+> >
+> > - e1@p1,@S@p e2@p2;
+> > + e1; e2;
+> >
+> > @@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && combined p1 p2 };
+> > @@
+> >
+> > - e1@p1,@S@p e2@p2;
+> > + e1; e2;
+> >
+> > @@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && combined p1 p2 };
+> > @@
+> >
+> > - e1@p1,@S@p e2@p2;
+> > + e1; e2;
+> >
+> > @@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && combined p1 p2 };
+> > @@
+> >
+> > - e1@p1,@S@p e2@p2;
+> > + e1; e2;
+> >
+> > @r@
+> > expression e1,e2;
+> > statement S;
+> > position p != bad.p;
+> > @@
+> >
+> > e1 ,@S@p e2;
+> >
+> > @@
+> > expression e1,e2;
+> > position p1;
+> > position p2 :
+> >     script:ocaml(p1) { infunction p1 && not(combined p1 p2) };
+> > statement S;
+> > position r.p;
+> > @@
+> >
+> > e1@p1
+> > -,@S@p
+> > +;
+> > e2@p2
+> > ... when any
+> > // </smpl>
+> >
+> > ---
+> >
+> >  drivers/acpi/processor_idle.c               |    4 +++-
+> >  drivers/ata/pata_icside.c                   |   21 +++++++++++++--------
+> >  drivers/base/regmap/regmap-debugfs.c        |    2 +-
+> >  drivers/bcma/driver_pci_host.c              |    4 ++--
+> >  drivers/block/drbd/drbd_receiver.c          |    6 ++++--
+> >  drivers/char/agp/amd-k7-agp.c               |    2 +-
+> >  drivers/char/agp/nvidia-agp.c               |    2 +-
+> >  drivers/char/agp/sworks-agp.c               |    2 +-
+> >  drivers/char/hw_random/iproc-rng200.c       |    8 ++++----
+> >  drivers/char/hw_random/mxc-rnga.c           |    6 +++---
+> >  drivers/char/hw_random/stm32-rng.c          |    8 ++++----
+> >  drivers/char/ipmi/bt-bmc.c                  |    6 +++---
+> >  drivers/clk/meson/meson-aoclk.c             |    2 +-
+> >  drivers/clk/mvebu/ap-cpu-clk.c              |    2 +-
+> >  drivers/clk/uniphier/clk-uniphier-cpugear.c |    2 +-
+> >  drivers/clk/uniphier/clk-uniphier-mux.c     |    2 +-
+> >  drivers/clocksource/mps2-timer.c            |    6 +++---
+> >  drivers/clocksource/timer-armada-370-xp.c   |    8 ++++----
+> >  drivers/counter/ti-eqep.c                   |    2 +-
+> >  drivers/crypto/amcc/crypto4xx_alg.c         |    2 +-
+> >  drivers/crypto/atmel-tdes.c                 |    2 +-
+> >  drivers/crypto/hifn_795x.c                  |    4 ++--
+> >  drivers/crypto/talitos.c                    |    8 ++++----
+> >  23 files changed, 60 insertions(+), 51 deletions(-)
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
