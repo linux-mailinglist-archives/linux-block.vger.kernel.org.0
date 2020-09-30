@@ -2,128 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED38E27F267
-	for <lists+linux-block@lfdr.de>; Wed, 30 Sep 2020 21:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1114E27F29C
+	for <lists+linux-block@lfdr.de>; Wed, 30 Sep 2020 21:33:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgI3TOx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Sep 2020 15:14:53 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:37984 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729936AbgI3TOw (ORCPT
+        id S1726540AbgI3Tdr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Sep 2020 15:33:47 -0400
+Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:56070 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbgI3Tdr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Sep 2020 15:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UpWM+yjj8ziy97ndQzgM2ZJFF0WlYfaYMS3RABD6FHI=; b=OUtQk0w6VLrF2XMMJhvoxhd58D
-        WxJk162Ct6437Xt2MV9Vcsxa6lNuZtmreRU4E2BvOebfWncRcu2Tr9kAOCLgwFcws5mrc/bOVzDEJ
-        ZsAw9ZDMgaUiJSLihuQSS2cKlW4HTOSryFYk1dDsZ6b5ogP3ubn/BOr/t18qaknYSSfW+a7onDZ6L
-        35b4nga9qlsWzQArvALcnM3q+31UzrzH4Gx5wjboHLutCWdHzPo4IWCWylqVM/OiHyjHly1rnDAYD
-        QLfjTKal6SD3IhKQjUK4PmFPML6PnF/XRoap2lzae+heRrxp7tY28ZRjGDq9XnK+aWCUXJlLY7pE7
-        BAfuSLJw==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kNhFH-0000uy-Au; Wed, 30 Sep 2020 12:54:31 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kNhFE-00030p-Hp; Wed, 30 Sep 2020 12:54:28 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 30 Sep 2020 12:54:22 -0600
-Message-Id: <20200930185422.11494-12-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200930185422.11494-1-logang@deltatee.com>
-References: <20200930185422.11494-1-logang@deltatee.com>
+        Wed, 30 Sep 2020 15:33:47 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 97B421801EC3E;
+        Wed, 30 Sep 2020 19:33:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:966:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1540:1593:1594:1711:1730:1747:1777:1792:2196:2199:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3870:3872:3873:4321:4362:4384:4385:4395:4605:5007:6248:6742:6743:7903:10004:10400:10848:11232:11658:11914:12043:12266:12297:12438:12679:12740:12760:12895:13019:13069:13311:13357:13439:14659:14777:21080:21365:21433:21451:21627:30054:30070:30083:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:13,LUA_SUMMARY:none
+X-HE-Tag: bag86_060c7b527195
+X-Filterd-Recvd-Size: 2698
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 30 Sep 2020 19:33:41 +0000 (UTC)
+Message-ID: <db26d49401dc0bd6b9013a603a155f9827f404a4.camel@perches.com>
+Subject: Re: [PATCH 00/18] use semicolons rather than commas to separate
+ statements
+From:   Joe Perches <joe@perches.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-iio@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-acpi@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        kernel-janitors@vger.kernel.org, drbd-dev@lists.linbit.com,
+        openipmi-developer@lists.sourceforge.net,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-ide@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-wireless@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Date:   Wed, 30 Sep 2020 12:33:39 -0700
+In-Reply-To: <20200929113745.GB4799@sirena.org.uk>
+References: <1601233948-11629-1-git-send-email-Julia.Lawall@inria.fr>
+         <160132172369.55460.9237357219623604216.b4-ty@kernel.org>
+         <b1174f9be2ce65f6b5ebefcba0b48e792926abbc.camel@perches.com>
+         <20200929113745.GB4799@sirena.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, osandov@osandov.com, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.2
-Subject: [PATCH blktests v2 11/11] nvme/038: Test removal of un-enabled subsystem and ports
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Test that we can remove a subsystem that has not been enabled by
-passthru or any ns. Do the same for ports while we are at it.
+On Tue, 2020-09-29 at 12:37 +0100, Mark Brown wrote:
+> On Mon, Sep 28, 2020 at 05:45:24PM -0700, Joe Perches wrote:
+> > On Mon, 2020-09-28 at 20:35 +0100, Mark Brown wrote:
+> > > [1/1] regmap: debugfs: use semicolons rather than commas to separate statements
+> > >       commit: 7f4a122d0b50b40c64d24a5cf7aafe26dd9487ee
+> > Rather than replying to the 0/n cover letter to a patch
+> > series, can you reply to each of the specific patches in
+> > the patch series you are applying?
+> > Otherwise, it's a bit difficult to figure out which patches
+> > you are applying.
+> 
+> Feel free to submit patches to b4.
 
-This was an issue in the original passthru patches and is
-not commonly tested. So this test will ensure we don't regress this.
+Have you tried the existing option to send
+thank you's on a specific ranges of patches?
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- tests/nvme/038     | 36 ++++++++++++++++++++++++++++++++++++
- tests/nvme/038.out |  2 ++
- 2 files changed, 38 insertions(+)
- create mode 100755 tests/nvme/038
- create mode 100644 tests/nvme/038.out
+b4 ty
+~~~~~
+usage:
+  b4 ty [-h] [-g GITDIR] [-o OUTDIR] [-l] [-s SEND [SEND ...]] [-d DISCARD [DISCARD ...]] [-a] [-b BRANCH] [--since SINCE]
 
-diff --git a/tests/nvme/038 b/tests/nvme/038
-new file mode 100755
-index 000000000000..24f02d4ad4d1
---- /dev/null
-+++ b/tests/nvme/038
-@@ -0,0 +1,36 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2019 Logan Gunthorpe
-+# Copyright (C) 2019 Eideticom Communications Inc.
-+#
-+# Test that we can remove a subsystem that has not been enabled by
-+# passthru or any ns. Do the same for ports while we are at it.
-+#
-+# This was an issue in the original passthru patches and is
-+# not commonly tested. So this test will ensure we don't regress this.
-+#
-+. tests/nvme/rc
-+
-+DESCRIPTION="test deletion of NVMeOF subsystem without enabling"
-+QUICK=1
-+
-+requires() {
-+	_nvme_requires
-+}
-+
-+test() {
-+	local subsys_path="${NVMET_CFS}/subsystems/blktests-subsystem-1"
-+	local port
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	_setup_nvmet
-+
-+	mkdir -p "${subsys_path}"
-+	rmdir "${subsys_path}"
-+
-+	port=$(_create_nvmet_port loop)
-+	_remove_nvmet_port "${port}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/038.out b/tests/nvme/038.out
-new file mode 100644
-index 000000000000..06bc98022c33
---- /dev/null
-+++ b/tests/nvme/038.out
-@@ -0,0 +1,2 @@
-+Running nvme/038
-+Test complete
--- 
-2.20.1
+[]
+ -s SEND, --send SEND  Generate thankyous for specific entries from -l (e.g.: 1,3-5,7-; or "all")
+
+
 
