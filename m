@@ -2,87 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA4D281A5D
-	for <lists+linux-block@lfdr.de>; Fri,  2 Oct 2020 20:02:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E003281BCD
+	for <lists+linux-block@lfdr.de>; Fri,  2 Oct 2020 21:23:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgJBSCF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Oct 2020 14:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgJBSCF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Oct 2020 14:02:05 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFEEC0613D0
-        for <linux-block@vger.kernel.org>; Fri,  2 Oct 2020 11:02:05 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id y13so2481000iow.4
-        for <linux-block@vger.kernel.org>; Fri, 02 Oct 2020 11:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h8V5q3hBBM9ppuZeH/Xy4eNROVtwo5GE81zegwvnGnU=;
-        b=S3g768h/qg61UFIr+oXtHH+4E/6og3mNqo0DzY618HZdzG9+E+pOIMs8FY/yQSHfhC
-         8hFXjlHsMLLU8LLJKEsnvl5mBJlvgqtOp4YZu3+6XR2+e86NVI+LZw3+PgpOYCapuWwn
-         xc6ofjLibNIo5zvKW3/Lt0ryeNESWVDyJRh/icZHho7fc5/F/2hdAxxe6O4UEiZ4Y3WK
-         5dQWiO/7wFRkEektG/RXn82qMl9uXgtztS7gA5YXbAQctoNYzmR28uLqptsT/vfFir1F
-         0WmccWdhDizKGm/b54nvHbmToZbtPyotVBhe8ObcAsUDfieur9U+6eacMaTBQwTSFnUV
-         qbzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h8V5q3hBBM9ppuZeH/Xy4eNROVtwo5GE81zegwvnGnU=;
-        b=R2gEw8ulefnOIgcvDzkXliCmdAk0uNpfbsXWl8Du78trvGbL0Z50mDhbT9xfeTr0hR
-         36cbZUW/v4DeUSJkdgM8ryE8yPzvO+YbTAOzJc8qyOIYxA0WeruvNqtz02wrcqG1Qg7n
-         OtzcRElLgWtGOmP5CGc8myT7JK/RnbbeQEx7SBz5Y+Tth/L8JaXcbz9CZOpIqyWHOajd
-         Yltgt1cXgPraE4GNdpHUrotwP/gqoVonhY5O/6aaDey1v6jPy52d4t3rVueb95/350ny
-         Lr9aNZ97vq2TrkDUgHAikZLrmW1CTaJINe2lwqjSP8UtyEqjGdugjp2CpW7clIALh9ba
-         P0VQ==
-X-Gm-Message-State: AOAM533He2vqUPQjrQpUkxPxaWOSGnsbnTaYRHjZ3w27VLRRQLoz8mhq
-        z+frGbKJ/vNkARa7bYyXJHPeDw==
-X-Google-Smtp-Source: ABdhPJwavZPyjCsEMgucy9HCbyMFL6IkNC+opMYPqy3LtDW9qjuur+mPiu2YegnxGZ+dir2bwGhDBQ==
-X-Received: by 2002:a02:8b:: with SMTP id 133mr2332650jaa.46.1601661724723;
-        Fri, 02 Oct 2020 11:02:04 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s23sm994865iol.23.2020.10.02.11.02.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Oct 2020 11:02:04 -0700 (PDT)
-Subject: Re: [PATCH v4] block/scsi-ioctl: Fix kernel-infoleak in
- scsi_put_cdrom_generic_arg()
-To:     Peilin Ye <yepeilin.cs@gmail.com>,
-        syzbot <syzbot+85433a479a646a064ab3@syzkaller.appspotmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        glider@google.com, Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-block@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-kernel@vger.kernel.org
-References: <000000000000a24fa705ae29dc6c@google.com>
- <20201002142223.9482-1-yepeilin.cs@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <afa31e81-84d9-fc54-e6cf-a8301f1cf33a@kernel.dk>
-Date:   Fri, 2 Oct 2020 12:02:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2388524AbgJBTXT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Fri, 2 Oct 2020 15:23:19 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:50644 "EHLO mx.metalurgs.lv"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388584AbgJBTXQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:23:16 -0400
+X-Greylist: delayed 497 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:23:15 EDT
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id 643D16139A
+        for <linux-block@vger.kernel.org>; Fri,  2 Oct 2020 22:14:57 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id 39DBA6111E
+        for <linux-block@vger.kernel.org>; Fri,  2 Oct 2020 22:14:57 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id AEA415F3A9; Fri,  2 Oct 2020 22:14:55 +0300 (EEST)
+Received: from [100.64.1.74] (unknown [190.15.125.50])
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPA id 3EADC62AED;
+        Fri,  2 Oct 2020 22:14:48 +0300 (EEST)
 MIME-Version: 1.0
-In-Reply-To: <20201002142223.9482-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Description: Mail message body
+To:     Recipients <financialcapability6@gmail.com>
+From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
+Date:   Fri, 02 Oct 2020 16:14:41 -0300
+Reply-To: binmurrah@gmail.com
+X-SpamTest-Envelope-From: financialcapability6@gmail.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 55
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20201002191455.AEA415F3A9@mx.metalurgs.lv>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Subject: Low Rate Loan.
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20201002 notchecked
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/2/20 8:22 AM, Peilin Ye wrote:
-> scsi_put_cdrom_generic_arg() is copying uninitialized stack memory to
-> userspace, since the compiler may leave a 3-byte hole in the middle of
-> `cgc32`. Fix it by adding a padding field to `struct
-> compat_cdrom_generic_command`.
+Hello Dear,
 
-Applied, thanks.
+We are Investment Company offering Corporate and Personal
+Loan at 3% Interest Rate for a duration of 10Years.
 
--- 
-Jens Axboe
+We also pay 1% commission to brokers, who introduce project
+owners for finance or other opportunities.
 
+Please get back to me if you are interested for more
+details.
+
+Yours faithfully,
+Hashim Bin 
