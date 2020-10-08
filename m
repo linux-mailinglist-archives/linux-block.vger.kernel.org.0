@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68597287518
-	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 15:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3523D28750B
+	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 15:13:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgJHNNr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Oct 2020 09:13:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33796 "EHLO
+        id S1725871AbgJHNNo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Oct 2020 09:13:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52526 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729810AbgJHNNn (ORCPT
+        by vger.kernel.org with ESMTP id S1729799AbgJHNNn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 8 Oct 2020 09:13:43 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 098CWZao140634;
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 098D2r2V081743;
         Thu, 8 Oct 2020 09:13:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references; s=pp1;
- bh=qBz++3K/F5KsjvjI2n8k626PHO4M9VzBHZW9Axd8MjE=;
- b=gmTS6tU+FiMsf+jf+qlp77LnUO+nsFZ0PnLnnAcn3YDcS/fkicLm0oXqdUUrazP5hz1J
- uymAsufhOvwChDZZZumDSARqm168MoMVJ6PYGUHd7QqeZamL8QXibyC/WUcmLIl1mgej
- MW+Wca/aAEqsPGg4Zl7mHUgaHvSQGrLBw32H0U3mITzK5iCbRgotKkAPxCGM9avHbgv4
- SCxk9Ofh2Ag+3sr5m1gDr9AiDQwn7xujsotZLWOQgP0Zi7DJ19BMp3e91vTxitx7l4j4
- H3V3QDoltNwMB32S62G2iMlkjjK4J103PrNrJkL/9WLi7ZjCtCYwNbk8YxObS0EN42v7 GQ== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3422u09evg-1
+ bh=VDYZGDSHvYwK1QcUZpCfmNOp9FT7+7O6ELxHtBbJLCk=;
+ b=FyoOmNC9ZFkQ0q9GkBHw58CyWYa9smljr0Ama64JJmL0u1e22QUoIpQxp4vg+Z3XacqQ
+ v641mMC6oqWOC+2rJK7g7s+DgYQ+S/xu9IEWBileVvaSqgga7tLPhEg/QCkCmSHHY/cv
+ COnCts+HdPl45s0GLtqsm4A1m8eOq3uWKZUuCciGVPI4JA7Ct/C/Qeiwh9ei7j6wgmwR
+ iH2HZAyeBTSFTjPDqhoUoW7n9yNiWgxi2p/T8/2G6zCdbfngJMf//JfdN3FZarU3CS9/
+ NTuOKCGrv8w76JB95Vi7n8ShK4yyknt4gznIpJ5KcwTqTqu/3c4pp8EwAasyHOtbR6h8 SA== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3422uk9bn1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 08 Oct 2020 09:13:41 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 098DDdWW030583;
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 098DDPGx017748;
         Thu, 8 Oct 2020 13:13:39 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 33xgx82t2s-1
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 33xgx85c2u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 08 Oct 2020 13:13:39 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 098DDaCx33948128
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 098DDajA21365170
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 8 Oct 2020 13:13:36 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 907054204D;
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93EC0A4062;
         Thu,  8 Oct 2020 13:13:36 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76A7542047;
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AA93A405C;
         Thu,  8 Oct 2020 13:13:36 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
         Thu,  8 Oct 2020 13:13:36 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 22B6FE24CC; Thu,  8 Oct 2020 15:13:36 +0200 (CEST)
+        id 254EEE24CD; Thu,  8 Oct 2020 15:13:36 +0200 (CEST)
 From:   Stefan Haberland <sth@linux.ibm.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
@@ -56,144 +56,209 @@ Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH v2 02/10] s390/cio: Provide Endpoint-Security Mode per CU
-Date:   Thu,  8 Oct 2020 15:13:28 +0200
-Message-Id: <20201008131336.61100-3-sth@linux.ibm.com>
+Subject: [PATCH v2 03/10] s390/cio: Add support for FCES status notification
+Date:   Thu,  8 Oct 2020 15:13:29 +0200
+Message-Id: <20201008131336.61100-4-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201008131336.61100-1-sth@linux.ibm.com>
 References: <20201008131336.61100-1-sth@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-08_07:2020-10-08,2020-10-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 bulkscore=0 adultscore=0 impostorscore=0
- phishscore=0 suspectscore=0 lowpriorityscore=0 mlxlogscore=790 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010080094
+ definitions=2020-10-08_08:2020-10-08,2020-10-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 suspectscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010080097
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-Add an interface in the CIO layer to retrieve the information about the
-Endpoint-Security Mode (ESM) of the specified CU. The ESM values are
-defined as 0-None, 1-Authenticated or 2, 3-Encrypted.
+Fibre Channel Endpoint-Security event is received as an sei:nt0 type
+in the CIO layer. This information needs to be shared with the
+CCW device drivers using the path_events callback.
 
-Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
-[vneethv@linux.ibm.com: cleaned-up and modified description]
 Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Co-developed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
 Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-Acked-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 ---
- arch/s390/include/asm/cio.h |  1 +
- drivers/s390/cio/chsc.c     | 83 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
+ arch/s390/include/asm/ccwdev.h |  2 ++
+ drivers/s390/cio/chp.h         |  1 +
+ drivers/s390/cio/chsc.c        | 62 +++++++++++++++++++++++++++++-----
+ drivers/s390/cio/device.c      | 15 +++++++-
+ 4 files changed, 70 insertions(+), 10 deletions(-)
 
-diff --git a/arch/s390/include/asm/cio.h b/arch/s390/include/asm/cio.h
-index b5bfb3123cb1..66e06d0efb72 100644
---- a/arch/s390/include/asm/cio.h
-+++ b/arch/s390/include/asm/cio.h
-@@ -373,5 +373,6 @@ struct gen_pool *cio_gp_dma_create(struct device *dma_dev, int nr_pages);
- int chsc_sstpc(void *page, unsigned int op, u16 ctrl, u64 *clock_delta);
- int chsc_sstpi(void *page, void *result, size_t size);
- int chsc_sgib(u32 origin);
-+int chsc_scud(u16 cu, u64 *esm, u8 *esm_valid);
+diff --git a/arch/s390/include/asm/ccwdev.h b/arch/s390/include/asm/ccwdev.h
+index 3cfe1eb89838..14e1bbfd969e 100644
+--- a/arch/s390/include/asm/ccwdev.h
++++ b/arch/s390/include/asm/ccwdev.h
+@@ -104,6 +104,8 @@ struct ccw_device {
+ 					       was successfully verified. */
+ #define PE_PATHGROUP_ESTABLISHED	0x4 /* A pathgroup was reset and had
+ 					       to be established again. */
++#define PE_PATH_FCES_EVENT		0x8 /* The FCES Status of a path has
++					     * changed. */
  
- #endif
+ /*
+  * Possible CIO actions triggered by the unit check handler.
+diff --git a/drivers/s390/cio/chp.h b/drivers/s390/cio/chp.h
+index 20259f3fbf45..7ee9eba0abcb 100644
+--- a/drivers/s390/cio/chp.h
++++ b/drivers/s390/cio/chp.h
+@@ -23,6 +23,7 @@
+ #define CHP_OFFLINE 1
+ #define CHP_VARY_ON 2
+ #define CHP_VARY_OFF 3
++#define CHP_FCES_EVENT 4
+ 
+ struct chp_link {
+ 	struct chp_id chpid;
 diff --git a/drivers/s390/cio/chsc.c b/drivers/s390/cio/chsc.c
-index c314e9495c1b..513fc5748d6e 100644
+index 513fc5748d6e..04fbcfcf9e42 100644
 --- a/drivers/s390/cio/chsc.c
 +++ b/drivers/s390/cio/chsc.c
-@@ -1403,3 +1403,86 @@ int chsc_sgib(u32 origin)
- 	return ret;
+@@ -37,6 +37,9 @@ static void *sei_page;
+ static void *chsc_page;
+ static DEFINE_SPINLOCK(chsc_page_lock);
+ 
++#define SEI_VF_FLA	0xc0 /* VF flag for Full Link Address */
++#define SEI_RS_CHPID	0x4  /* 4 in RS field indicates CHPID */
++
+ /**
+  * chsc_error_from_response() - convert a chsc response to an error
+  * @response: chsc response code
+@@ -285,6 +288,15 @@ static void s390_process_res_acc(struct chp_link *link)
+ 	css_schedule_reprobe();
  }
- EXPORT_SYMBOL_GPL(chsc_sgib);
-+
-+#define SCUD_REQ_LEN	0x10 /* SCUD request block length */
-+#define SCUD_REQ_CMD	0x4b /* SCUD Command Code */
-+
-+struct chse_cudb {
-+	u16 flags:8;
-+	u16 chp_valid:8;
-+	u16 cu;
-+	u32 esm_valid:8;
-+	u32:24;
-+	u8 chpid[8];
-+	u32:32;
-+	u32:32;
-+	u8 esm[8];
-+	u32 efla[8];
-+} __packed;
-+
-+struct chsc_scud {
-+	struct chsc_header request;
-+	u16:4;
-+	u16 fmt:4;
-+	u16 cssid:8;
-+	u16 first_cu;
-+	u16:16;
-+	u16 last_cu;
-+	u32:32;
-+	struct chsc_header response;
-+	u16:4;
-+	u16 fmt_resp:4;
-+	u32:24;
-+	struct chse_cudb cudb[];
-+} __packed;
-+
-+/**
-+ * chsc_scud() - Store control-unit description.
-+ * @cu:		number of the control-unit
-+ * @esm:	8 1-byte endpoint security mode values
-+ * @esm_valid:	validity mask for @esm
-+ *
-+ * Interface to retrieve information about the endpoint security
-+ * modes for up to 8 paths of a control unit.
-+ *
-+ * Returns 0 on success.
-+ */
-+int chsc_scud(u16 cu, u64 *esm, u8 *esm_valid)
+ 
++static int process_fces_event(struct subchannel *sch, void *data)
 +{
-+	struct chsc_scud *scud = chsc_page;
-+	int ret;
-+
-+	spin_lock_irq(&chsc_page_lock);
-+	memset(chsc_page, 0, PAGE_SIZE);
-+	scud->request.length = SCUD_REQ_LEN;
-+	scud->request.code = SCUD_REQ_CMD;
-+	scud->fmt = 0;
-+	scud->cssid = 0;
-+	scud->first_cu = cu;
-+	scud->last_cu = cu;
-+
-+	ret = chsc(scud);
-+	if (!ret)
-+		ret = chsc_error_from_response(scud->response.code);
-+
-+	if (!ret && (scud->response.length <= 8 || scud->fmt_resp != 0
-+			|| !(scud->cudb[0].flags & 0x80)
-+			|| scud->cudb[0].cu != cu)) {
-+
-+		CIO_MSG_EVENT(2, "chsc: scud failed rc=%04x, L2=%04x "
-+			"FMT=%04x, cudb.flags=%02x, cudb.cu=%04x",
-+			scud->response.code, scud->response.length,
-+			scud->fmt_resp, scud->cudb[0].flags, scud->cudb[0].cu);
-+		ret = -EINVAL;
-+	}
-+
-+	if (ret)
-+		goto out;
-+
-+	memcpy(esm, scud->cudb[0].esm, sizeof(*esm));
-+	*esm_valid = scud->cudb[0].esm_valid;
-+out:
-+	spin_unlock_irq(&chsc_page_lock);
-+	return ret;
++	spin_lock_irq(sch->lock);
++	if (sch->driver && sch->driver->chp_event)
++		sch->driver->chp_event(sch, data, CHP_FCES_EVENT);
++	spin_unlock_irq(sch->lock);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(chsc_scud);
++
+ struct chsc_sei_nt0_area {
+ 	u8  flags;
+ 	u8  vf;				/* validity flags */
+@@ -362,6 +374,16 @@ static char *store_ebcdic(char *dest, const char *src, unsigned long len,
+ 	return dest + len;
+ }
+ 
++static void chsc_link_from_sei(struct chp_link *link,
++				struct chsc_sei_nt0_area *sei_area)
++{
++	if ((sei_area->vf & SEI_VF_FLA) != 0) {
++		link->fla	= sei_area->fla;
++		link->fla_mask	= ((sei_area->vf & SEI_VF_FLA) == SEI_VF_FLA) ?
++							0xffff : 0xff00;
++	}
++}
++
+ /* Format node ID and parameters for output in LIR log message. */
+ static void format_node_data(char *params, char *id, struct node_descriptor *nd)
+ {
+@@ -451,15 +473,7 @@ static void chsc_process_sei_res_acc(struct chsc_sei_nt0_area *sei_area)
+ 	}
+ 	memset(&link, 0, sizeof(struct chp_link));
+ 	link.chpid = chpid;
+-	if ((sei_area->vf & 0xc0) != 0) {
+-		link.fla = sei_area->fla;
+-		if ((sei_area->vf & 0xc0) == 0xc0)
+-			/* full link address */
+-			link.fla_mask = 0xffff;
+-		else
+-			/* link address */
+-			link.fla_mask = 0xff00;
+-	}
++	chsc_link_from_sei(&link, sei_area);
+ 	s390_process_res_acc(&link);
+ }
+ 
+@@ -568,6 +582,33 @@ static void chsc_process_sei_ap_cfg_chg(struct chsc_sei_nt0_area *sei_area)
+ 	ap_bus_cfg_chg();
+ }
+ 
++static void chsc_process_sei_fces_event(struct chsc_sei_nt0_area *sei_area)
++{
++	struct chp_link link;
++	struct chp_id chpid;
++	struct channel_path *chp;
++
++	CIO_CRW_EVENT(4,
++	"chsc: FCES status notification (rs=%02x, rs_id=%04x, FCES-status=%x)\n",
++		sei_area->rs, sei_area->rsid, sei_area->ccdf[0]);
++
++	if (sei_area->rs != SEI_RS_CHPID)
++		return;
++	chp_id_init(&chpid);
++	chpid.id = sei_area->rsid;
++
++	/* Ignore the event on unknown/invalid chp */
++	chp = chpid_to_chp(chpid);
++	if (!chp)
++		return;
++
++	memset(&link, 0, sizeof(struct chp_link));
++	link.chpid = chpid;
++	chsc_link_from_sei(&link, sei_area);
++
++	for_each_subchannel_staged(process_fces_event, NULL, &link);
++}
++
+ static void chsc_process_sei_nt2(struct chsc_sei_nt2_area *sei_area)
+ {
+ 	switch (sei_area->cc) {
+@@ -609,6 +650,9 @@ static void chsc_process_sei_nt0(struct chsc_sei_nt0_area *sei_area)
+ 	case 14: /* scm available notification */
+ 		chsc_process_sei_scm_avail(sei_area);
+ 		break;
++	case 15: /* FCES event notification */
++		chsc_process_sei_fces_event(sei_area);
++		break;
+ 	default: /* other stuff */
+ 		CIO_CRW_EVENT(2, "chsc: sei nt0 unhandled cc=%d\n",
+ 			      sei_area->cc);
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index b29fe8d50baf..aab13c78db9f 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -1170,7 +1170,8 @@ static int io_subchannel_chp_event(struct subchannel *sch,
+ 				   struct chp_link *link, int event)
+ {
+ 	struct ccw_device *cdev = sch_get_cdev(sch);
+-	int mask;
++	int mask, chpid, valid_bit;
++	int path_event[8];
+ 
+ 	mask = chp_ssd_get_mask(&sch->ssd_info, link);
+ 	if (!mask)
+@@ -1205,6 +1206,18 @@ static int io_subchannel_chp_event(struct subchannel *sch,
+ 			cdev->private->path_new_mask |= mask;
+ 		io_subchannel_verify(sch);
+ 		break;
++	case CHP_FCES_EVENT:
++		/* Forward Endpoint Security event */
++		for (chpid = 0, valid_bit = 0x80; chpid < 8; chpid++,
++				valid_bit >>= 1) {
++			if (mask & valid_bit)
++				path_event[chpid] = PE_PATH_FCES_EVENT;
++			else
++				path_event[chpid] = PE_NONE;
++		}
++		if (cdev)
++			cdev->drv->path_event(cdev, path_event);
++		break;
+ 	}
+ 	return 0;
+ }
 -- 
 2.17.1
 
