@@ -2,39 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 126E8286D81
-	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 06:18:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24F77286DCE
+	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 06:48:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgJHESr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Oct 2020 00:18:47 -0400
-Received: from 103-200-211-130.ip4.readyserver.sg ([103.200.211.130]:63055
-        "EHLO visi.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728218AbgJHESq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Oct 2020 00:18:46 -0400
-Received: from [83.232.62.227] (account robiate@visi.com HELO User)
-  by visi.com (CommuniGate Pro SMTP 6.1.9 _community_)
-  with ESMTPA id 156016; Wed, 07 Oct 2020 21:17:55 -0700
-Reply-To: <vpetrus443@gmail.com>
-From:   "Petrus Vermeulen" <info70510@gmail.com>
-Subject: Investment!
-Date:   Thu, 8 Oct 2020 06:17:53 +0200
+        id S1727854AbgJHEsH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Oct 2020 00:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgJHEsH (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 8 Oct 2020 00:48:07 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2E820789;
+        Thu,  8 Oct 2020 04:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602132485;
+        bh=l0qrHjPVsW78fE4iMqd/aK426rQMlUvVabMpWWXIv5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ABpoieSTLK2pGJRb7l8G+YYhkXZSdwzaOO/m7N+bSzrNFB4q+2EV+X0dRaOM4KHvd
+         lHvfyyomiEY6Rc4IP3GqgBefL4UfaSAJ++GoZhbeQ96L4yo/sgkCfwO/j9RRJpm5U1
+         SIK+0EYkm1skyFjC7mAvrEH0SyCMpX9GcNjisLow=
+Date:   Thu, 8 Oct 2020 06:48:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tony Asleson <tasleson@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>, pmladek@suse.com,
+        David Lehman <dlehman@redhat.com>,
+        sergey.senozhatsky@gmail.com, jbaron@akamai.com,
+        James.Bottomley@hansenpartnership.com,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        martin.petersen@oracle.com, kbusch@kernel.org, axboe@fb.com,
+        sagi@grimberg.me, akpm@linux-foundation.org, orson.zhai@unisoc.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: [v5 01/12] struct device: Add function callback durable_name
+Message-ID: <20201008044849.GA163423@kroah.com>
+References: <20200925161929.1136806-1-tasleson@redhat.com>
+ <20200925161929.1136806-2-tasleson@redhat.com>
+ <20200929175102.GA1613@infradead.org>
+ <20200929180415.GA1400445@kroah.com>
+ <20e220a6-4bde-2331-6e5e-24de39f9aa3b@redhat.com>
+ <20200930073859.GA1509708@kroah.com>
+ <c6b031b8-f617-0580-52a5-26532da4ee03@redhat.com>
+ <20201001114832.GC2368232@kroah.com>
+ <72be0597-a3e2-bf7b-90b2-799d10fdf56c@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2800.1081
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1081
-Message-ID: <auto-000000156016@visi.com>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72be0597-a3e2-bf7b-90b2-799d10fdf56c@redhat.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings,
-I want to inform you that my principal's family wishes to make huge financial investment in your home Country on areas of oil and gas, real estate, tourism and hotel,manufacturing and production company,agriculture,fishing, Mining & Trading of natural resources such as crude oil, coal, graphite, coke,refinery,energy etc.
-We needs a capable, trust worthy and understanding business partner. Highly confidential and trusted partner to manage funds in proxy Three Hundred Million US Dollars(US$300M) for investment purposes. Must be a dedicated and honest business person Please, I will provide more details about the transaction if you are Willing to handle such project and also let you know your entitlement for the solicited role I shall be expecting your quick reply. Email:
-vpetrus443@gmail.com 
-Best Regards,
-Petrus Vermeulen.
+On Wed, Oct 07, 2020 at 03:10:17PM -0500, Tony Asleson wrote:
+> On 10/1/20 6:48 AM, Greg Kroah-Hartman wrote:
+> > On Wed, Sep 30, 2020 at 09:35:52AM -0500, Tony Asleson wrote:
+> >> On 9/30/20 2:38 AM, Greg Kroah-Hartman wrote:
+> >>> On Tue, Sep 29, 2020 at 05:04:32PM -0500, Tony Asleson wrote:
+> >>>> I'm trying to figure out a way to positively identify which storage
+> >>>> device an error belongs to over time.
+> >>>
+> >>> "over time" is not the kernel's responsibility.
+> >>>
+> >>> This comes up every 5 years or so. The kernel provides you, at runtime,
+> >>> a mapping between a hardware device and a "logical" device.  It can
+> >>> provide information to userspace about this mapping, but once that
+> >>> device goes away, the kernel is free to reuse that logical device again.
+> >>>
+> >>> If you want to track what logical devices match up to what physical
+> >>> device, then do it in userspace, by parsing the log files.
+> >>
+> >> I don't understand why people think it's acceptable to ask user space to
+> >> parse text that is subject to change.
+> > 
+> > What text is changing? The format of of the prefix of dev_*() is well
+> > known and has been stable for 15+ years now, right?  What is difficult
+> > in parsing it?
+> 
+> Many of the storage layer messages are using printk, not dev_printk.
+
+Ok, then stop right there.  Fix that up.  Don't try to route around the
+standard way of displaying log messages by creating a totally different
+way of doing things.
+
+Just use the dev_*() calls, and all will be fine.  Kernel log messages
+are not "ABI" in that they have to be preserved in any specific way, so
+adding a prefix to them as dev_*() does, will be fine.
+
+thanks,
+
+greg k-h
