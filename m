@@ -2,57 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F347286D63
-	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 05:53:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 126E8286D81
+	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 06:18:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgJHDxb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Oct 2020 23:53:31 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:53763 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728082AbgJHDxa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 7 Oct 2020 23:53:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UBG9jZH_1602129161;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UBG9jZH_1602129161)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 08 Oct 2020 11:52:41 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     tj@kernel.org, axboe@kernel.dk
-Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] blk-throttle: Re-use the throtl_set_slice_end()
-Date:   Thu,  8 Oct 2020 11:52:29 +0800
-Message-Id: <f46c1c65ccf30f755df6fbfd6f2eaae9b9e6dc4b.1602128837.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1602128837.git.baolin.wang@linux.alibaba.com>
-References: <cover.1602128837.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1602128837.git.baolin.wang@linux.alibaba.com>
-References: <cover.1602128837.git.baolin.wang@linux.alibaba.com>
+        id S1728281AbgJHESr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Oct 2020 00:18:47 -0400
+Received: from 103-200-211-130.ip4.readyserver.sg ([103.200.211.130]:63055
+        "EHLO visi.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728218AbgJHESq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Oct 2020 00:18:46 -0400
+Received: from [83.232.62.227] (account robiate@visi.com HELO User)
+  by visi.com (CommuniGate Pro SMTP 6.1.9 _community_)
+  with ESMTPA id 156016; Wed, 07 Oct 2020 21:17:55 -0700
+Reply-To: <vpetrus443@gmail.com>
+From:   "Petrus Vermeulen" <info70510@gmail.com>
+Subject: Investment!
+Date:   Thu, 8 Oct 2020 06:17:53 +0200
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2800.1081
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1081
+Message-ID: <auto-000000156016@visi.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Re-use throtl_set_slice_end() to remove duplicate code.
-
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- block/blk-throttle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index fc5c14f..b771c42 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -808,7 +808,7 @@ static inline void throtl_set_slice_end(struct throtl_grp *tg, bool rw,
- static inline void throtl_extend_slice(struct throtl_grp *tg, bool rw,
- 				       unsigned long jiffy_end)
- {
--	tg->slice_end[rw] = roundup(jiffy_end, tg->td->throtl_slice);
-+	throtl_set_slice_end(tg, rw, jiffy_end);
- 	throtl_log(&tg->service_queue,
- 		   "[%c] extend slice start=%lu end=%lu jiffies=%lu",
- 		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
--- 
-1.8.3.1
-
+Greetings,
+I want to inform you that my principal's family wishes to make huge financial investment in your home Country on areas of oil and gas, real estate, tourism and hotel,manufacturing and production company,agriculture,fishing, Mining & Trading of natural resources such as crude oil, coal, graphite, coke,refinery,energy etc.
+We needs a capable, trust worthy and understanding business partner. Highly confidential and trusted partner to manage funds in proxy Three Hundred Million US Dollars(US$300M) for investment purposes. Must be a dedicated and honest business person Please, I will provide more details about the transaction if you are Willing to handle such project and also let you know your entitlement for the solicited role I shall be expecting your quick reply. Email:
+vpetrus443@gmail.com 
+Best Regards,
+Petrus Vermeulen.
