@@ -2,127 +2,140 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0243287A2D
-	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 18:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDE08287B62
+	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 20:11:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgJHQlC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Oct 2020 12:41:02 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:48832 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgJHQkg (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Oct 2020 12:40:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UpWM+yjj8ziy97ndQzgM2ZJFF0WlYfaYMS3RABD6FHI=; b=k9K0ZAQ9vDNCok9vpYAJxhT37P
-        yzreEWuuUDUvoJ42mR7dcucehon2sEsbg1taS1OcKjUEU7xIf0m9zPMwpm2qNZrtpxw1YZr7jT2rE
-        dfCEr+lbV/VCGFokf/qR2k6keWvjYeuzex56fd7vGg6AinuUJK6WYdP7TVdM68GWunj/kwD2TWKgQ
-        bTLuRY/1fAlUM5S8b+vb8YAPLyk6ctCKZFW52bNMBNhPSe1jvrVAB3KYBD0u9wcUT/YwE2VMJVGS/
-        s/sHbrRSW8hqxZdK9IiAcY9UamCuSRCxPfCtnVOvHOVZMJCRJG6uFucVGE7DR8RNlAg1Clj77IyuP
-        Q5dRoUXw==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kQYy2-0000ij-Hw; Thu, 08 Oct 2020 10:40:35 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kQYy0-0003Hm-60; Thu, 08 Oct 2020 10:40:32 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  8 Oct 2020 10:40:24 -0600
-Message-Id: <20201008164024.12546-12-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201008164024.12546-1-logang@deltatee.com>
-References: <20201008164024.12546-1-logang@deltatee.com>
+        id S1729316AbgJHSLp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Oct 2020 14:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730353AbgJHSLp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Oct 2020 14:11:45 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E817EC0613D2
+        for <linux-block@vger.kernel.org>; Thu,  8 Oct 2020 11:11:44 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id o17so1678706ioh.9
+        for <linux-block@vger.kernel.org>; Thu, 08 Oct 2020 11:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=CSoXq+8L+uC2Fsay1hVylBa3yjr5bnHuLLVYJzuZ4aI=;
+        b=pT5vKGMPtJ8Uu1GPdNg182aAorfrqDbkZNvk9nq43R+BMkMwkl8RCmSJClcMtqi1D8
+         1sLlRVSNdcKtaJBFjjabLfw/1JIGfpFfe3Y/dQ8ptZ3ONr59BWTSz++BzaoAWcNwUdzK
+         Y7THOwqhyOFuEyaTnDXUrN3zWGDUKvYtcbj9vdWSMJLlrcLad9evL4yGR/qiKWcLHPJW
+         5aaXo/0Y9jtxJjRKtwHwxGsJTXAGQ2GpD574EMRJtmFwWJedx9N1PDJE3P86Q7LFF5/L
+         2oJO7nZ1VUdnaer8JJDMixfNSrfiy6AUFTkag3CCXKS3DxHw5r/4xz2VXu0E0Ri2NLtl
+         dIQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=CSoXq+8L+uC2Fsay1hVylBa3yjr5bnHuLLVYJzuZ4aI=;
+        b=qYyTrvzxaE7UgMia2Rk7m+fHILRT7YI+ebQFRu+oALV4iVIlKJKmIek4webWmcWbyO
+         pUTN31+hOHDlJy0rF0est0ODacdn+6nZh7YFpbmlHSyfWJFE1XM3UwXeRLiJIZDMd9G1
+         qkoIN3PoLgeI0sw+u4rqKnlRgsDMfSGFnUJA6uz+l18UvoSZloIjuKMSRfGWstb5IMZK
+         GLnx1aEfv08Xhh669StwCptwJBaNHoGcEQLO7+uxNLU1j7ZRWpa5W3DolN9ZhinnUyQ7
+         a50Q2C2Sc1BUpJvcajjq6wzrgFzgEEuQ0BxqtpYF8ISmXW0hPbDcrMAyjMMCzEHm++2x
+         IIeQ==
+X-Gm-Message-State: AOAM533w0RCHYN1xeN5hUk7QhZs+Fk3IW2i06BV8lc3qTarSB/nGxb2l
+        iGcKTxqvR0CSEX65RxykQpgGwkrlIW7Zoaq03BLBVQ==
+X-Google-Smtp-Source: ABdhPJzVlut/DlArUd8JRiXjai5dHk1kcamlui+SCoUrieIyqKit4kOehyULHhdcXTviwgnXEt638LyGUxQgcYISjOA=
+X-Received: by 2002:a6b:b208:: with SMTP id b8mr6973090iof.36.1602180703879;
+ Thu, 08 Oct 2020 11:11:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, osandov@osandov.com, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.2
-Subject: [PATCH blktests v3 11/11] nvme/038: Test removal of un-enabled subsystem and ports
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 8 Oct 2020 23:41:32 +0530
+Message-ID: <CA+G9fYtwisRJtN4ht=ApeWc1jWssDok-7y2wee6Z0kzMP-atKg@mail.gmail.com>
+Subject: [ Regressions ] linux next 20201008: blk_update_request: I/O error,
+ dev sda, sector 0 op 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+To:     dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        drbd-dev@lists.linbit.com,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, linux-raid@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Test that we can remove a subsystem that has not been enabled by
-passthru or any ns. Do the same for ports while we are at it.
+There are two major regressions noticed on linux next tag 20201008.
+I will bisect this problem and get back to you.
 
-This was an issue in the original passthru patches and is
-not commonly tested. So this test will ensure we don't regress this.
+1) qemu_i386 and qemu_x86 boot failed due to mount rootfs failing [1].
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- tests/nvme/038     | 36 ++++++++++++++++++++++++++++++++++++
- tests/nvme/038.out |  2 ++
- 2 files changed, 38 insertions(+)
- create mode 100755 tests/nvme/038
- create mode 100644 tests/nvme/038.out
+        Starting Remount Root and Kernel File Systems...
+[    1.750740] ata1.00: WARNING: zero len r/w req
+[    1.751423] ata1.00: WARNING: zero len r/w req
+[    1.752361] ata1.00: WARNING: zero len r/w req
+[    1.753400] ata1.00: WARNING: zero len r/w req
+[    1.754447] ata1.00: WARNING: zero len r/w req
+[    1.755529] ata1.00: WARNING: zero len r/w req
+[    1.756630] sd 0:0:0:0: [sda] tag#0 FAILED Result:
+hostbyte=DID_ERROR driverbyte=DRIVER_OK cmd_age=0s
+[    1.758622] sd 0:0:0:0: [sda] tag#0 CDB: Synchronize Cache(10) 35
+00 00 00 00 00 00 00 00 00
+[    1.760576] blk_update_request: I/O error, dev sda, sector 0 op
+0x1:(WRITE) flags 0x800 phys_seg 1 prio class 0
+[    1.761534] Buffer I/O error on dev sda, logical block 0, lost sync
+page write
+[    1.764158] EXT4-fs (sda): I/O error while writing superblock
 
-diff --git a/tests/nvme/038 b/tests/nvme/038
-new file mode 100755
-index 000000000000..24f02d4ad4d1
---- /dev/null
-+++ b/tests/nvme/038
-@@ -0,0 +1,36 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2019 Logan Gunthorpe
-+# Copyright (C) 2019 Eideticom Communications Inc.
-+#
-+# Test that we can remove a subsystem that has not been enabled by
-+# passthru or any ns. Do the same for ports while we are at it.
-+#
-+# This was an issue in the original passthru patches and is
-+# not commonly tested. So this test will ensure we don't regress this.
-+#
-+. tests/nvme/rc
-+
-+DESCRIPTION="test deletion of NVMeOF subsystem without enabling"
-+QUICK=1
-+
-+requires() {
-+	_nvme_requires
-+}
-+
-+test() {
-+	local subsys_path="${NVMET_CFS}/subsystems/blktests-subsystem-1"
-+	local port
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	_setup_nvmet
-+
-+	mkdir -p "${subsys_path}"
-+	rmdir "${subsys_path}"
-+
-+	port=$(_create_nvmet_port loop)
-+	_remove_nvmet_port "${port}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/038.out b/tests/nvme/038.out
-new file mode 100644
-index 000000000000..06bc98022c33
---- /dev/null
-+++ b/tests/nvme/038.out
-@@ -0,0 +1,2 @@
-+Running nvme/038
-+Test complete
+
+2) the devices boot pass but mkfs failed on x86_64, i386, arm64
+Juno-r2 devices [2].
+
+mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG03ACA100_37O9KGL0F
+[   72.159789] ata3.00: WARNING: zero len r/w req
+[   72.164287] ata3.00: WARNING: zero len r/w req
+[   72.168774] ata3.00: WARNING: zero len r/w req
+[   72.168777] ata3.00: WARNING: zero len r/w req
+[   72.168779] ata3.00: WARNING: zero len r/w req
+[   72.168781] ata3.00: WARNING: zero len r/w req
+[   72.168786] sd 2:0:0:0: [sda] tag#5 FAILED Result:
+hostbyte=DID_ERROR driverbyte=DRIVER_OK cmd_age=0s
+[   72.168788] sd 2:0:0:0: [sda] tag#5 CDB: Synchronize Cache(10) 35
+00 00 00 00 00 00 00 00 00
+[   72.168791] blk_update_request: I/O error, dev sda, sector 0 op
+0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+metadata:
+  git branch: master
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git commit: e4fb79c771fbe2e6fcb3cffa87d5823a9bbf3f10
+  git describe: next-20201008
+  make_kernelversion: 5.9.0-rc8
+  kernel-config:
+https://builds.tuxbuild.com/pOW-FELX2VUycejkuyiKZg/kernel.config
+
+
+steps to reproduce:
+--------------------------
+1) qemu boot command:
+
+/usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net
+nic,model=virtio,macaddr=DE:AD:BE:EF:66:06 -net tap -m 1024 -monitor
+none -kernel bzImage --append "root=/dev/sda  rootwait
+console=ttyS0,115200" -hda
+rpb-console-image-lkft-intel-corei7-64-20200723162342-41.rootfs.ext4
+-m 4096 -smp 4 -nographic
+
+2) boot x86_64 with linux next 20201008 tag kernel and attach SDD drive.
+
+mkfs -t ext4 /dev/<drive-partition>
+
+Full log links,
+[1 ]https://lkft.validation.linaro.org/scheduler/job/1823906#L688
+[2] https://lkft.validation.linaro.org/scheduler/job/1823938#L2065
+
+
 -- 
-2.20.1
-
+Linaro LKFT
+https://lkft.linaro.org
