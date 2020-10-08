@@ -2,104 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD614287D7B
-	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 22:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C5EA287DC2
+	for <lists+linux-block@lfdr.de>; Thu,  8 Oct 2020 23:18:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgJHUuN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Oct 2020 16:50:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54898 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgJHUuN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Oct 2020 16:50:13 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098Ke1Qi152494;
-        Thu, 8 Oct 2020 20:49:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=9QPpECvTRhPLXtDdl1S5Iws60RZ3bVfVQJEgRwWMouY=;
- b=lr4ilGRc8i4R0TO1OtZi392Hm+pUvuGtxxmhrzgEfRoaOlsXeyLUhYCvgt/l16+QMpMs
- VN/RfYy8EO2s9TIJ/ReBmWxvMse5IKYtauD7DvXibtvZ2AcTs84Ix0PhBSqMt8LhvEbL
- uO5PKSlo8f+Cc4kG3VsqYzPJj952f8ql4wBsTNJHC1/ojW1Bvi5HBDlrtlhMP7EbQW8I
- sgu+R0mQ3Azm82DZ/7jFtl6KejvYGyENpIMfuORn0xrTyZ1JDBOBTWdZWLiW3++SwoYJ
- W1DeMCykAg4Lh18mPIipPbwU36nyXu/yJVZo0MGqPKYZEpsAzrsl+CCoIKQ+xnESG1ma /g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3429jur6p0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 08 Oct 2020 20:49:38 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098KjNN5132770;
-        Thu, 8 Oct 2020 20:49:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3429kk0yrj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Oct 2020 20:49:38 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 098KnL8r024666;
-        Thu, 8 Oct 2020 20:49:21 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 08 Oct 2020 13:49:20 -0700
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tony Asleson <tasleson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        pmladek@suse.com, David Lehman <dlehman@redhat.com>,
-        sergey.senozhatsky@gmail.com, jbaron@akamai.com,
-        James.Bottomley@hansenpartnership.com,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        martin.petersen@oracle.com, kbusch@kernel.org, axboe@fb.com,
-        sagi@grimberg.me, akpm@linux-foundation.org, orson.zhai@unisoc.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: [v5 01/12] struct device: Add function callback durable_name
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1tuv41m8u.fsf@ca-mkp.ca.oracle.com>
-References: <20200925161929.1136806-1-tasleson@redhat.com>
-        <20200925161929.1136806-2-tasleson@redhat.com>
-        <20200929175102.GA1613@infradead.org>
-        <20200929180415.GA1400445@kroah.com>
-        <20e220a6-4bde-2331-6e5e-24de39f9aa3b@redhat.com>
-        <20200930073859.GA1509708@kroah.com>
-        <c6b031b8-f617-0580-52a5-26532da4ee03@redhat.com>
-        <20201001114832.GC2368232@kroah.com>
-        <72be0597-a3e2-bf7b-90b2-799d10fdf56c@redhat.com>
-        <20201008044849.GA163423@kroah.com>
-Date:   Thu, 08 Oct 2020 16:49:17 -0400
-In-Reply-To: <20201008044849.GA163423@kroah.com> (Greg Kroah-Hartman's message
-        of "Thu, 8 Oct 2020 06:48:49 +0200")
+        id S1729689AbgJHVS1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Oct 2020 17:18:27 -0400
+Received: from [58.87.100.240] ([58.87.100.240]:45364 "EHLO
+        mail.hebei-kuixing.com" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726766AbgJHVS1 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 8 Oct 2020 17:18:27 -0400
+X-Greylist: delayed 668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Oct 2020 17:18:22 EDT
+Received: from localhost (unknown [127.0.0.1])
+        by mail.hebei-kuixing.com (Postfix) with ESMTP id AC1A460E64;
+        Thu,  8 Oct 2020 21:07:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at hebei-kuixing.com
+Received: from mail.hebei-kuixing.com ([127.0.0.1])
+        by localhost (mail.hebei-kuixing.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2baZvT9QzwCy; Fri,  9 Oct 2020 05:07:06 +0800 (CST)
+Received: from User (unknown [185.248.12.71])
+        by mail.hebei-kuixing.com (Postfix) with ESMTPA id 0E9CB60E6A;
+        Fri,  9 Oct 2020 05:06:50 +0800 (CST)
+Reply-To: <kim.leang2011@yahoo.com>
+From:   " Kim Leang" <sales@hebei-kuixing.com>
+Subject: Greeting!
+Date:   Fri, 9 Oct 2020 00:07:05 +0300
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=934
- spamscore=0 adultscore=0 mlxscore=0 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010080147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=929 mlxscore=0
- phishscore=0 bulkscore=0 suspectscore=1 lowpriorityscore=0 spamscore=0
- clxscore=1011 malwarescore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010080146
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-Id: <20201008210707.AC1A460E64@mail.hebei-kuixing.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Greeting!
 
-Greg,
+I am contacting you to receive and share with me an abandoned fund ( $21,537.000.00 ) left in our bank by a deceased customer. I was going through the Internet search when I found your email address. My name is Mr. Kim Leang.
 
->> > What text is changing? The format of of the prefix of dev_*() is well
->> > known and has been stable for 15+ years now, right?  What is difficult
->> > in parsing it?
->> 
->> Many of the storage layer messages are using printk, not dev_printk.
->
-> Ok, then stop right there.  Fix that up.  Don't try to route around the
-> standard way of displaying log messages by creating a totally different
-> way of doing things.
+I want to utilize this opportunity and make use of this fund if I should present your name to the bank to stand as his business associate/ trustee for the fund to be released to you via Visa card for easy withdrawals in any VISA ATM machine anywhere in the World.
 
-Couldn't agree more!
+The bank will also give you international online transfer options. With these you can transfer the funds without any risk.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Should you be interested in working with me in this project? Please reply back and let's benefit from this golden opportunity.You are my first contact. I shall wait a few days and if I do not hear from you, I shall look for another person.
+
+Thanks and have a nice day,
+Mr. Kim Leang.
