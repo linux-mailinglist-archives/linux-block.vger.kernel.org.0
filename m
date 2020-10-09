@@ -2,122 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EFA82894C7
-	for <lists+linux-block@lfdr.de>; Fri,  9 Oct 2020 21:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D7E9289A98
+	for <lists+linux-block@lfdr.de>; Fri,  9 Oct 2020 23:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391337AbgJITyr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Oct 2020 15:54:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29419 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391275AbgJITyL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 9 Oct 2020 15:54:11 -0400
-IronPort-SDR: q1PZMJUmKFKlQ0BClGvwyzOjNwzGSo5B944T29UwXjVfp2YopDniYa7pTU6UFtwNvsti9h6T08
- dfV2TT7Nz02w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9769"; a="144851137"
-X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
-   d="scan'208";a="144851137"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 12:54:10 -0700
-IronPort-SDR: LoljxrxdEbdUiebRGt6guGtjo6SPfpWGHMJuLgTgYB7BeDU8CJtiGau7DzbQyZ+Y5gpHVnCtT5
- urTwCEpflSRg==
-X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
-   d="scan'208";a="343972696"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 12:54:09 -0700
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        kexec@lists.infradead.org, linux-bcache@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-efi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-um@lists.infradead.org, linux-ntfs-dev@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-nilfs@vger.kernel.org, cluster-devel@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-cachefs@redhat.com,
-        samba-technical@lists.samba.org, intel-wired-lan@lists.osuosl.org
-Subject: [PATCH RFC PKS/PMEM 58/58] [dax|pmem]: Enable stray access protection
-Date:   Fri,  9 Oct 2020 12:50:33 -0700
-Message-Id: <20201009195033.3208459-59-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
-In-Reply-To: <20201009195033.3208459-1-ira.weiny@intel.com>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
+        id S1731589AbgJIV2Y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Oct 2020 17:28:24 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:58948 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731533AbgJIV2Y (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Oct 2020 17:28:24 -0400
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 7B3623AC855
+        for <linux-block@vger.kernel.org>; Fri,  9 Oct 2020 21:19:05 +0000 (UTC)
+X-Originating-IP: 67.5.25.97
+Received: from localhost (unknown [67.5.25.97])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 45FE1FF804;
+        Fri,  9 Oct 2020 21:18:40 +0000 (UTC)
+Date:   Fri, 9 Oct 2020 14:18:37 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH] nbd: Support Kconfig configuration of nbds_max and max_part
+Message-ID: <f0a162a4c7073e3ed47d981b86d845d3bb9aa955.1602278122.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+This allows configuring them at compile time, not just via the kernel
+command line or module parameters. This doesn't change the default
+defaults, just makes them configurable.
 
-Protecting against stray writes is particularly important for PMEM
-because, unlike writes to anonymous memory, writes to PMEM persists
-across a reboot.  Thus data corruption could result in permanent loss of
-data.
-
-While stray writes are more serious than reads, protection is also
-enabled for reads.  This helps to detect bugs in code which would
-incorrectly access device memory and prevents a more serious machine
-checks should those bug reads from a poison page.
-
-Enable stray access protection by setting the flag in pgmap which
-requests it.  There is no option presented to the user.  If Zone Device
-Access Protection not be supported this flag will have no affect.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
 ---
- drivers/dax/device.c  | 2 ++
- drivers/nvdimm/pmem.c | 2 ++
- 2 files changed, 4 insertions(+)
+I'd like to be able to simplify the kernel command line I'm currently
+using, by removing the nbd module parameters from it; this change would
+make it possible to configure them when building the kernel, instead.
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index 1e89513f3c59..e6fb35b4f0fb 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -430,6 +430,8 @@ int dev_dax_probe(struct device *dev)
- 	}
+ drivers/block/Kconfig | 28 ++++++++++++++++++++++++++++
+ drivers/block/nbd.c   | 10 ++++++----
+ 2 files changed, 34 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index ecceaaa1a66f..7df9a9609aee 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -273,6 +273,34 @@ config BLK_DEV_NBD
  
- 	dev_dax->pgmap.type = MEMORY_DEVICE_GENERIC;
-+	dev_dax->pgmap.flags |= PGMAP_PROT_ENABLED;
-+
- 	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
- 	if (IS_ERR(addr))
- 		return PTR_ERR(addr);
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index e4dc1ae990fc..9fcd8338e23f 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -426,6 +426,8 @@ static int pmem_attach_disk(struct device *dev,
- 		return -EBUSY;
- 	}
+ 	  If unsure, say N.
  
-+	pmem->pgmap.flags |= PGMAP_PROT_ENABLED;
++config BLK_DEV_NBD_DEFAULT_NBDS_MAX
++	int "Default maximum number of NBD devices"
++	depends on BLK_DEV_NBD
++	default 16
++	help
++	  The NBD driver can provide a set of unconfigured NBD devices (nbd0,
++	  nbd1, ...) by default, so that userspace can open and configure these
++	  devices via the ioctl interface. If you know that your userspace uses
++	  exclusively the new netlink interface, you can set this to 0 to
++	  reduce the amount of time needed for the NBD driver to initialize.
++	  You can also set this parameter at runtime using the nbds_max module
++	  parameter.
 +
- 	q = blk_alloc_queue(dev_to_node(dev));
- 	if (!q)
- 		return -ENOMEM;
++config BLK_DEV_NBD_DEFAULT_MAX_PART
++	int "Default maximum number of NBD device partitions"
++	depends on BLK_DEV_NBD
++	default 16
++	help
++	  Once an NBD device is set up and opened, the kernel can probe it for
++	  partitions, and set up corresponding devices for each partition
++	  (nbd0p1, nbd0p2, ...). By default, the kernel probes for up to 16
++	  partitions per device. This also adds a bit of time to NBD device
++	  initialization. You can set this to a lower number if you know you'll
++	  never use more than that many partitions on an NBD device. If you
++	  exclusively use unpartitioned NBD devices, you can set this to 0 to
++	  skip partition probing entirely.  You can also set this parameter at
++	  runtime using the max_part module parameter.
++
+ config BLK_DEV_SKD
+ 	tristate "STEC S1120 Block Driver"
+ 	depends on PCI
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index edf8b632e3d2..42851956c9ce 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -145,8 +145,8 @@ static struct dentry *nbd_dbg_dir;
+ 
+ #define NBD_DEF_BLKSIZE 1024
+ 
+-static unsigned int nbds_max = 16;
+-static int max_part = 16;
++static unsigned int nbds_max = CONFIG_BLK_DEV_NBD_DEFAULT_NBDS_MAX;
++static int max_part = CONFIG_BLK_DEV_NBD_DEFAULT_MAX_PART;
+ static int part_shift;
+ 
+ static int nbd_dev_dbg_init(struct nbd_device *nbd);
+@@ -2456,6 +2456,8 @@ MODULE_DESCRIPTION("Network Block Device");
+ MODULE_LICENSE("GPL");
+ 
+ module_param(nbds_max, int, 0444);
+-MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: 16)");
++MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: "
++	__stringify(CONFIG_BLK_DEV_NBD_DEFAULT_NBDS_MAX) ")");
+ module_param(max_part, int, 0444);
+-MODULE_PARM_DESC(max_part, "number of partitions per device (default: 16)");
++MODULE_PARM_DESC(max_part, "number of partitions per device (default: "
++	__stringify(CONFIG_BLK_DEV_NBD_DEFAULT_MAX_PART) ")");
 -- 
-2.28.0.rc0.12.gb6a658bd00c9
+2.28.0
 
