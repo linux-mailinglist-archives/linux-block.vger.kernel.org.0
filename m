@@ -2,26 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFF5A28D8AF
-	for <lists+linux-block@lfdr.de>; Wed, 14 Oct 2020 04:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 106F528D896
+	for <lists+linux-block@lfdr.de>; Wed, 14 Oct 2020 04:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgJNCso (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Oct 2020 22:48:44 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3639 "EHLO huawei.com"
+        id S1726044AbgJNClw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Oct 2020 22:41:52 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3573 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726482AbgJNCso (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Oct 2020 22:48:44 -0400
-X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Oct 2020 22:48:44 EDT
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 74FEDCFF5D098E851B28;
-        Wed, 14 Oct 2020 10:32:16 +0800 (CST)
+        id S1725899AbgJNClw (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 13 Oct 2020 22:41:52 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 797B8E6DE0D96BE69C5F;
+        Wed, 14 Oct 2020 10:41:49 +0800 (CST)
 Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 14 Oct 2020 10:32:15 +0800
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 14 Oct 2020 10:41:49 +0800
 Received: from [10.169.42.93] (10.169.42.93) by dggema772-chm.china.huawei.com
  (10.1.198.214) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Wed, 14
- Oct 2020 10:32:15 +0800
+ Oct 2020 10:41:48 +0800
 Subject: Re: [PATCH] block: re-introduce blk_mq_complete_request_sync
 To:     Ming Lei <ming.lei@redhat.com>
 CC:     Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
@@ -41,8 +40,8 @@ References: <e39b711e-ebbd-8955-ca19-07c1dad26fa2@grimberg.me>
  <a1221820-55db-e550-0a9c-684ab96608e3@huawei.com>
  <20201014020257.GB775684@T590>
 From:   Chao Leng <lengchao@huawei.com>
-Message-ID: <645a5cd7-fba5-5bf7-fe43-596fdcc61366@huawei.com>
-Date:   Wed, 14 Oct 2020 10:32:15 +0800
+Message-ID: <6a2ea98a-0ab7-32e1-a342-da0a68dd54ac@huawei.com>
+Date:   Wed, 14 Oct 2020 10:41:48 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
@@ -51,7 +50,7 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.169.42.93]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
  dggema772-chm.china.huawei.com (10.1.198.214)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -128,7 +127,8 @@ On 2020/10/14 10:02, Ming Lei wrote:
 >> }
 > 
 > Looks not necessary to do that, because admin queue is quiesced in
-> nvme_tcp_teardown_io_queues(), so it is safe to sync admin queue here too.Sync admin queue is not necessary. It should do in tear down admin queue.
+> nvme_tcp_teardown_io_queues(), so it is safe to sync admin queue here too.
+sync admin queue is not necessary. It should be done in teardown admin queue.
 And rdma do not quiesce the admin queue in tear down io queue.
 So separate nvme_sync_io_queues may be a better choice.
 > 
