@@ -2,137 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D97528D7D1
-	for <lists+linux-block@lfdr.de>; Wed, 14 Oct 2020 03:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C9228DD27
+	for <lists+linux-block@lfdr.de>; Wed, 14 Oct 2020 11:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbgJNBIh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Oct 2020 21:08:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39187 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730814AbgJNBIg (ORCPT
+        id S1728339AbgJNJWp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Oct 2020 05:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgJNJWD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Oct 2020 21:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602637714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E/69ONf8FQ290l0+b/tZ1c1YE/U0q1L4yCfmk70YYnc=;
-        b=MC3Qu85z3Yd83zZQ/GfAMIDsKIkSsTzQ7KL7mArfu9TP+GxqnAqDXCeAacAP2OtNBnbsab
-        C+DMOc19kFXks5B/nuM+O9uUfnnIEToAvmLMT0pV6ditvtLxcVGfK/U7de8npd/k6FfzPN
-        RyS/7AciOye+drN6ISMxuC+9OeSN9P4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-591-Ir_DaHO7OsmFzFbumOpCXw-1; Tue, 13 Oct 2020 21:08:30 -0400
-X-MC-Unique: Ir_DaHO7OsmFzFbumOpCXw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A715456BE8;
-        Wed, 14 Oct 2020 01:08:28 +0000 (UTC)
-Received: from T590 (ovpn-12-36.pek2.redhat.com [10.72.12.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 641D16EF7D;
-        Wed, 14 Oct 2020 01:08:17 +0000 (UTC)
-Date:   Wed, 14 Oct 2020 09:08:13 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Chao Leng <lengchao@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Yi Zhang <yi.zhang@redhat.com>, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] block: re-introduce blk_mq_complete_request_sync
-Message-ID: <20201014010813.GA775684@T590>
-References: <20201009043938.GC27356@T590>
- <1711488120.3435389.1602219830518.JavaMail.zimbra@redhat.com>
- <e39b711e-ebbd-8955-ca19-07c1dad26fa2@grimberg.me>
- <23f19725-f46b-7de7-915d-b97fd6d69cdc@redhat.com>
- <ced685bf-ad48-ac41-8089-8c5ba09abfcb@grimberg.me>
- <7a7aca6e-30f5-0754-fb7f-599699b97108@redhat.com>
- <6f2a5ae2-2e6a-0386-691c-baefeecb5478@huawei.com>
- <20201012081306.GB556731@T590>
- <5e05fc3b-ad81-aacc-1f8e-7ff0d1ad58fe@huawei.com>
- <e19073e4-06da-ce3c-519c-ece2c4d942fa@grimberg.me>
+        Wed, 14 Oct 2020 05:22:03 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF82C0A88C0
+        for <linux-block@vger.kernel.org>; Tue, 13 Oct 2020 18:19:12 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f19so958213pfj.11
+        for <linux-block@vger.kernel.org>; Tue, 13 Oct 2020 18:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QtPhvr5nJhYR8mVPaK88pwj4EUDGimveBI94+CiyEAA=;
+        b=FSV8qQvGJSUeTfNJHa4b4LHjcKlpA0qJustLR/eqxalbJCXCdneW4j7fwCoxuhQln0
+         yDti5BiglEkGggEzp+x1ktgm6wptiT3L6hn67rfhz/plhZQSB+CZ9VOdwraqcoRONUEB
+         AHA/w5S7ZJ0VGkG1q67Fo0bxsw9wmM+jdY+dPe3JyLkC4574WewHgRB9hn0IGAim7HWY
+         VcO2LNabde8NnknOgKeU6pNjz2883fOwZUe9XDJbp4e2g+d3X5JYD13gFECPs+cmWqjD
+         QP6tkoExNECJNVg3bQ2439lBgnrF/b3i8DMo5227Oejn6E5HmCdoucN8mnJTWtrf8O7+
+         6pow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QtPhvr5nJhYR8mVPaK88pwj4EUDGimveBI94+CiyEAA=;
+        b=IGsrgUhJr+L8nBVBeCLegJrJ8tFdFlrXfHouRS9qOVfGiWCs9F+5998LgPEV4Vy7Um
+         Zc0vOH6aD4yxogoFFwiPnSzDZPRStpyNsZoKX9RwNe19rd40EitGNg25GA8PcAduKfyW
+         KPsRPQxKHErOiRwR7uJ+V5Xooo5Ns0Sn8Y8kWQwvF9UzuIdppJtgNbi0hdWAtvT2/2fv
+         VULg8yYsKc6yJPAbnWNCfiESMnu9LTCWL/ON2DwBvoXJDMBWYxO3izpGpy6lVM6U0Xq5
+         hU7unue5/oFGKuVp59EKCySwbCs8Q7bKuhqAxaRJQLeD+niS8ZP/6EE8XVBJFyqlfpWt
+         hnBg==
+X-Gm-Message-State: AOAM530gblRwDA0yekpXowad0KGuZG51F2YnuGXx3bUKd119eV1D6Asm
+        AYut1HZOJ9wDRl4h9Mywodacug==
+X-Google-Smtp-Source: ABdhPJxQYNPFUFGOio85WJO3Ek8sfZH4GkHK9hs3IUbkxOetcTpsY/HaZeoEfiYv3A8Aeq3KOPqOHw==
+X-Received: by 2002:a65:6719:: with SMTP id u25mr1830586pgf.346.1602638352014;
+        Tue, 13 Oct 2020 18:19:12 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id i2sm531372pjk.12.2020.10.13.18.19.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Oct 2020 18:19:11 -0700 (PDT)
+Subject: Re: [PATCH v2 00/10] DASD FC endpoint security
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20201008131336.61100-1-sth@linux.ibm.com>
+ <20201012183550.GA12341@imap.linux.ibm.com>
+ <07b0f296-e0b2-1383-56a1-0d5411c101da@kernel.dk>
+ <b5038d44-aa46-bbde-7a9f-0de46fed516a@linux.ibm.com>
+ <17e1142c-4108-6f74-971a-dee007162786@kernel.dk>
+ <ad3caaf7-ed8e-9f21-c3a6-c385139feb7b@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6468cfad-e14c-060d-a525-00d75fe66819@kernel.dk>
+Date:   Tue, 13 Oct 2020 19:19:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e19073e4-06da-ce3c-519c-ece2c4d942fa@grimberg.me>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <ad3caaf7-ed8e-9f21-c3a6-c385139feb7b@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Oct 13, 2020 at 03:36:08PM -0700, Sagi Grimberg wrote:
+On 10/13/20 2:15 PM, Stefan Haberland wrote:
+> Am 13.10.20 um 21:40 schrieb Jens Axboe:
+>> On 10/12/20 1:50 PM, Stefan Haberland wrote:
+>>> Am 12.10.20 um 21:33 schrieb Jens Axboe:
+>>>> On 10/12/20 1:06 PM, Stefan Haberland wrote:
+>>>>> Hi Jens,
+>>>>>
+>>>>> quick ping. Are you going to apply this for 5.10?
+>>>> I actually wasn't planning on it - it arrived a bit late, and
+>>>> it seemed like one of those things that needed a bit more review
+>>>> talk before being able to be applied.
+>>>>
+>>> OK, too bad. I had hoped that this was still OK.
+>>> The patches have been tested and reviewed internally for quite a while.
+>>> Which actually was the reason for the late submission. Cornelia also
+>>> gave her RB last week.
+>> I'm not worried about the stability of it as much as whether the special
+>> feature is warranted. From the former point of view, it's probably fine
+>> to go in now.
+>>> But OK, if you think this needs some more review we will have to wait
+>>> for 5.11.
+>> I'd definitely feel more comfortable with that.
+>>
 > 
-> > > > This may just reduce the probability. The concurrency of timeout
-> > > > and teardown will cause the same request
-> > > > be treated repeatly, this is not we expected.
-> > > 
-> > > That is right, not like SCSI, NVME doesn't apply atomic request
-> > > completion, so
-> > > request may be completed/freed from both timeout & nvme_cancel_request().
-> > > 
-> > > .teardown_lock still may cover the race with Sagi's patch because
-> > > teardown
-> > > actually cancels requests in sync style.
-> > In extreme scenarios, the request may be already retry success(rq state
-> > change to inflight).
-> > Timeout processing may wrongly stop the queue and abort the request.
-> > teardown_lock serialize the process of timeout and teardown, but do not
-> > avoid the race.
-> > It might not be safe.
-> 
-> Not sure I understand the scenario you are describing.
-> 
-> what do you mean by "In extreme scenarios, the request may be already retry
-> success(rq state change to inflight)"?
-> 
-> What will retry the request? only when the host will reconnect
-> the request will be retried.
-> 
-> We can call nvme_sync_queues in the last part of the teardown, but
-> I still don't understand the race here.
+> OK, I will take care that features will be sent earlier next time.
 
-Not like SCSI, NVME doesn't complete request atomically, so double
-completion/free can be done from both timeout & nvme_cancel_request()(via teardown).
+Thanks, ideally I like to have new stuff like that in my tree (and for-next)
+for at least a week prior to the merge window opening.
 
-Given request is completed remotely or asynchronously in the two code paths,
-the teardown_lock can't protect the case.
+> So, instead could you please apply the patches for 5.11 as soon as it is
+> suitable?
 
-One solution is to apply the introduced blk_mq_complete_request_sync()
-in both two code paths.
+I will - I have it queued up, won't create anything public until we
+get past the merge window.
 
-Another candidate is to use nvme_sync_queues() before teardown, such as
-the following change:
-
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index d6a3e1487354..dc3561ca0074 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1909,6 +1909,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
- 	blk_mq_quiesce_queue(ctrl->admin_q);
- 	nvme_start_freeze(ctrl);
- 	nvme_stop_queues(ctrl);
-+	nvme_sync_queues(ctrl);
- 	nvme_tcp_stop_io_queues(ctrl);
- 	if (ctrl->tagset) {
- 		blk_mq_tagset_busy_iter(ctrl->tagset,
-@@ -2171,14 +2172,11 @@ static void nvme_tcp_complete_timed_out(struct request *rq)
- 	struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq);
- 	struct nvme_ctrl *ctrl = &req->queue->ctrl->ctrl;
- 
--	/* fence other contexts that may complete the command */
--	mutex_lock(&to_tcp_ctrl(ctrl)->teardown_lock);
- 	nvme_tcp_stop_queue(ctrl, nvme_tcp_queue_id(req->queue));
- 	if (!blk_mq_request_completed(rq)) {
- 		nvme_req(rq)->status = NVME_SC_HOST_ABORTED_CMD;
- 		blk_mq_complete_request(rq);
- 	}
--	mutex_unlock(&to_tcp_ctrl(ctrl)->teardown_lock);
- }
- 
- static enum blk_eh_timer_return
-
-
-Thanks,
-Ming
+-- 
+Jens Axboe
 
