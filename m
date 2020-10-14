@@ -2,85 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F5128E66D
-	for <lists+linux-block@lfdr.de>; Wed, 14 Oct 2020 20:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCC0F28E903
+	for <lists+linux-block@lfdr.de>; Thu, 15 Oct 2020 01:02:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgJNSbC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Oct 2020 14:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgJNSbB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Oct 2020 14:31:01 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A331C061755
-        for <linux-block@vger.kernel.org>; Wed, 14 Oct 2020 11:31:00 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id q1so385903ilt.6
-        for <linux-block@vger.kernel.org>; Wed, 14 Oct 2020 11:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FEIa6TZi1gl8k/Kuzi1wRaNTSDsRO+ZiNXMqLrHUkiE=;
-        b=A69RiEBRUcH+o8TCpYXBCPEaIqdxjeNUfUhJENQNfZCdBa5zz5i3ndOMOaowI3blkw
-         jnj3c4UW/Lr31jhQkqPWfnICQpEFynzenq1K/vQ723++EY2jnhkWkHFaIWFhh0oPfdOe
-         Zl78HStCIfz14P8UUEwCjeepPAUzo1uD2jRo3nPM7lW7I2etCQJ7fsEgYnkLtgiTHdoS
-         YZ+WEE4UBrPNZ4MHhT5r+Gajg8FJ0I/iZF8c1m9oosXztk/yoTOZm2tsOd7Rg3Cybno4
-         W9MnyprX3BJUHbGka0hlKT4AniVRySjlpCyZfOb9KVZ7vevF9TlXgkV+jT3QY0txDzOe
-         S+7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FEIa6TZi1gl8k/Kuzi1wRaNTSDsRO+ZiNXMqLrHUkiE=;
-        b=GCILjRjmg5n4sAq+birG7jbg39Diw3ekjsQ7v9Vks+wZxtSjWTvrWinZv1ViTU+mMV
-         VLeEgAdJIrFbVbJeMw6v/nmIicrCotrEkq0bE90wv9vYYYgxJHvshG60qoIFnO5bUi5P
-         zrABdprJcY1ZqFs5drDtfT6ar+56Fzt8Jg0/UlZcxYIZH9AvIhTAQ6EJLjv3R37fzSvj
-         Y/FjHnuSs8uHYLkmBjzNOZ925zvjN5+b0aP+Yg9HrMiKSqXb25WiTqEsJvEt3yFgeEvQ
-         Az+xBBExEK/DxMjew9OZaTAWSyEsdcDZGxf81uahBp+lbVsFGQpPajgFysSCwR7BNA/U
-         VAJQ==
-X-Gm-Message-State: AOAM530GjzhzHRqCo7jyDzOGxSQgnKsRCVtZcZA21qmP5aHrEeZ+c8qd
-        OWyHVTfaVeZqvEWugBHAKj6t3w==
-X-Google-Smtp-Source: ABdhPJwgMJGWkAAkyeWGAKdaXALLHhUroa5yCDNLtnJC/Ehdw7d6Ckz9M1Ty7Nl2L+Y1Ic3fPbcm3Q==
-X-Received: by 2002:a92:9183:: with SMTP id e3mr408282ill.111.1602700259884;
-        Wed, 14 Oct 2020 11:30:59 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b9sm136777ilq.51.2020.10.14.11.30.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Oct 2020 11:30:59 -0700 (PDT)
-Subject: Re: [PATCH] nbd: make the config put is called before the notifying
- the waiter
-To:     xiubli@redhat.com, josef@toxicpanda.com
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org
-References: <20201014024514.112822-1-xiubli@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <180ba921-5fb0-e360-47c9-4b26433bf5fa@kernel.dk>
-Date:   Wed, 14 Oct 2020 12:30:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201014024514.112822-1-xiubli@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1729138AbgJNXCK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Oct 2020 19:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgJNXCK (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 14 Oct 2020 19:02:10 -0400
+Subject: Re: [git pull] device mapper changes for 5.10
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602716529;
+        bh=fQ83MExNUBVx7iZYFIo32GiSVLRlsqbZPTKoOCNQVDc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=L2ltkoi5dv/y0wCB9idmZU+kZjSlzT9R3kHPJIAnX1mBbZoO8yN6BVXkfLrgAQrqs
+         qe8HP0gOEqNehGoZ8DR+mZli6FRNRIqFgFWGX6yOuOIAPrYxkPElEyXx4eABfiLo8N
+         xqGB33qULNQKO15k0MgP+KKZHA1QT5BleJ1VJNWg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20201013154000.GA53766@lobo>
+References: <20201013154000.GA53766@lobo>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20201013154000.GA53766@lobo>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.10/dm-changes
+X-PR-Tracked-Commit-Id: 681cc5e8667e8579a2da8fa4090c48a2d73fc3bb
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4815519ed0af833884ce9c288183bf1ae3cb9caa
+Message-Id: <160271652985.18101.15440005975175979893.pr-tracker-bot@kernel.org>
+Date:   Wed, 14 Oct 2020 23:02:09 +0000
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
+        Alasdair G Kergon <agk@redhat.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Qinglang Miao <miaoqinglang@huawei.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/13/20 8:45 PM, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
-> 
-> There has one race case for ceph's rbd-nbd tool. When do mapping
-> it may fail with EBUSY from ioctl(nbd, NBD_DO_IT), but actually
-> the nbd device has already unmaped.
-> 
-> It dues to if just after the wake_up(), the recv_work() is scheduled
-> out and defers calling the nbd_config_put(), though the map process
-> has exited the "nbd->recv_task" is not cleared.
+The pull request you sent on Tue, 13 Oct 2020 11:40:00 -0400:
 
-Applied, thanks.
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.10/dm-changes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4815519ed0af833884ce9c288183bf1ae3cb9caa
+
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
