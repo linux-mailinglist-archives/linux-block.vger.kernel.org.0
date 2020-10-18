@@ -2,85 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FB6B291F8B
-	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 22:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 050DF29195D
+	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 21:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgJRTSO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Oct 2020 15:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgJRTSL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:18:11 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE73222B9;
-        Sun, 18 Oct 2020 19:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048690;
-        bh=cq+HexrErJpDokrOjx21YF85E9vSbfnJd5Mi4Q7CgEM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ehTZYdBbVd5DDUAPxNUAWUkDxDhxZIRt7UCr3ONLRaA0Le8tfFhBb0EmsKZLEbAhA
-         iXCERRhTRJKMdK/rZxkZ+tjPgKzwjbVdtxxVoU8k0jiVMwQvDcEZGTj5Ddv4F3aGPQ
-         4SBR8//Xwfm6JQTY7FjtAMU38A+MDENomwF1LK3E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 002/111] block: ratelimit handle_bad_sector() message
-Date:   Sun, 18 Oct 2020 15:16:18 -0400
-Message-Id: <20201018191807.4052726-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201018191807.4052726-1-sashal@kernel.org>
-References: <20201018191807.4052726-1-sashal@kernel.org>
+        id S1726721AbgJRTQ0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 18 Oct 2020 15:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgJRTQZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:16:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA33C061755;
+        Sun, 18 Oct 2020 12:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jSZ48E7Pk5au6oJE5B/SpoPyGzHAu2LHc5e92XLrkbA=; b=iJ9Ua4Sb+7c2gBb5X093C2g3JF
+        uPXvpy94QM9OfF4QdLHnbdoyPK+foTfLSCfptUIJX1L1QmBGwqRRLC+FO4yttdeacV1S+hl8hKo0C
+        WTqtwQkEZQTbeO+X3m7Juje7eQPdNT7ZY2bxJ15gxf5bGTukHh/PFeI2Wotfd6qSzqn3KwhwiSJ8q
+        nHMmLI1n6mOTyu1OQHnDgD5bqj+pk9E7DasCqQG55sL9hd/rW8umvQBQI/4FGFQAjFO02dSWITtwv
+        yXkpHo9Iys1nXXFCivdyuKxTY6HM4UcykOYUxv1R/rziPsZPtETfWCfkBycLom8Snu0zA9/3jwQkF
+        l4f6J+YQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kUEAE-0008Qi-Sy; Sun, 18 Oct 2020 19:16:19 +0000
+Date:   Sun, 18 Oct 2020 20:16:18 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     trix@redhat.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com,
+        linux-iio@vger.kernel.org, nouveau@lists.freedesktop.org,
+        storagedev@microchip.com, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ath10k@lists.infradead.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, amd-gfx@lists.freedesktop.org,
+        linux-acpi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org, spice-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-nfc@lists.01.org, linux-pm@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-gpio@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-amlogic@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-crypto@vger.kernel.org, patches@opensource.cirrus.com,
+        bpf@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        linux-power@fi.rohmeurope.com
+Subject: Re: [Ocfs2-devel] [RFC] treewide: cleanup unreachable breaks
+Message-ID: <20201018191618.GO20115@casper.infradead.org>
+References: <20201017160928.12698-1-trix@redhat.com>
+ <20201018185943.GM20115@casper.infradead.org>
+ <45efa7780c79972eae9ca9bdeb9f7edbab4f3643.camel@HansenPartnership.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45efa7780c79972eae9ca9bdeb9f7edbab4f3643.camel@HansenPartnership.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+On Sun, Oct 18, 2020 at 12:13:35PM -0700, James Bottomley wrote:
+> On Sun, 2020-10-18 at 19:59 +0100, Matthew Wilcox wrote:
+> > On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+> > > clang has a number of useful, new warnings see
+> > > https://urldefense.com/v3/__https://clang.llvm.org/docs/DiagnosticsReference.html__;!!GqivPVa7Brio!Krxz78O3RKcB9JBMVo_F98FupVhj_jxX60ddN6tKGEbv_cnooXc1nnBmchm-e_O9ieGnyQ$ 
+> > 
+> > Please get your IT department to remove that stupidity.  If you
+> > can't, please send email from a non-Red Hat email address.
+> 
+> Actually, the problem is at Oracle's end somewhere in the ocfs2 list
+> ... if you could fix it, that would be great.  The usual real mailing
+> lists didn't get this transformation
+> 
+> https://lore.kernel.org/bpf/20201017160928.12698-1-trix@redhat.com/
+> 
+> but the ocfs2 list archive did:
+> 
+> https://oss.oracle.com/pipermail/ocfs2-devel/2020-October/015330.html
+> 
+> I bet Oracle IT has put some spam filter on the list that mangles URLs
+> this way.
 
-[ Upstream commit f4ac712e4fe009635344b9af5d890fe25fcc8c0d ]
-
-syzbot is reporting unkillable task [1], for the caller is failing to
-handle a corrupted filesystem image which attempts to access beyond
-the end of the device. While we need to fix the caller, flooding the
-console with handle_bad_sector() message is unlikely useful.
-
-[1] https://syzkaller.appspot.com/bug?id=f1f49fb971d7a3e01bd8ab8cff2ff4572ccf3092
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-core.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 10c08ac506978..0014e7caae3d2 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -803,11 +803,10 @@ static void handle_bad_sector(struct bio *bio, sector_t maxsector)
- {
- 	char b[BDEVNAME_SIZE];
- 
--	printk(KERN_INFO "attempt to access beyond end of device\n");
--	printk(KERN_INFO "%s: rw=%d, want=%Lu, limit=%Lu\n",
--			bio_devname(bio, b), bio->bi_opf,
--			(unsigned long long)bio_end_sector(bio),
--			(long long)maxsector);
-+	pr_info_ratelimited("attempt to access beyond end of device\n"
-+			    "%s: rw=%d, want=%llu, limit=%llu\n",
-+			    bio_devname(bio, b), bio->bi_opf,
-+			    bio_end_sector(bio), maxsector);
- }
- 
- #ifdef CONFIG_FAIL_MAKE_REQUEST
--- 
-2.25.1
-
+*sigh*.  I'm sure there's a way.  I've raised it with someone who should
+be able to fix it.
