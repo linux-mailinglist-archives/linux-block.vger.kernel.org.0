@@ -2,101 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E924291889
-	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 19:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B1729187F
+	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 19:13:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgJRRNu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Oct 2020 13:13:50 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:52030 "EHLO smtp.infotech.no"
+        id S1725776AbgJRRNt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 18 Oct 2020 13:13:49 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:52020 "EHLO smtp.infotech.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgJRRNu (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Oct 2020 13:13:50 -0400
+        id S1726689AbgJRRNt (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 18 Oct 2020 13:13:49 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id BF9D020424C;
-        Sun, 18 Oct 2020 19:13:47 +0200 (CEST)
+        by smtp.infotech.no (Postfix) with ESMTP id 849A220425B;
+        Sun, 18 Oct 2020 19:13:46 +0200 (CEST)
 X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
 Received: from smtp.infotech.no ([127.0.0.1])
         by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nx0fHgccNeh3; Sun, 18 Oct 2020 19:13:41 +0200 (CEST)
+        with ESMTP id P5SUJaaRNZ+X; Sun, 18 Oct 2020 19:13:43 +0200 (CEST)
 Received: from xtwo70.bingwo.ca (host-104-157-204-209.dyn.295.ca [104.157.204.209])
-        by smtp.infotech.no (Postfix) with ESMTPA id 8CC6220418E;
-        Sun, 18 Oct 2020 19:13:39 +0200 (CEST)
+        by smtp.infotech.no (Postfix) with ESMTPA id 8AB1520424C;
+        Sun, 18 Oct 2020 19:13:41 +0200 (CEST)
 From:   Douglas Gilbert <dgilbert@interlog.com>
 To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     martin.petersen@oracle.com, axboe@kernel.dk, bvanassche@acm.org,
         bostroesser@gmail.com
-Subject: [PATCH v2 0/4] scatterlist: add new capabilities
-Date:   Sun, 18 Oct 2020 13:13:32 -0400
-Message-Id: <20201018171336.63839-1-dgilbert@interlog.com>
+Subject: [PATCH v2 1/4] sgl_alloc_order: remove 4 GiB limit, sgl_free() warning
+Date:   Sun, 18 Oct 2020 13:13:33 -0400
+Message-Id: <20201018171336.63839-2-dgilbert@interlog.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201018171336.63839-1-dgilbert@interlog.com>
+References: <20201018171336.63839-1-dgilbert@interlog.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Scatter-gather lists (sgl_s) are frequently used as data carriers in
-the block layer. For example the SCSI and NVMe subsystems interchange
-data with the block layer using sgl_s. The sgl API is declared in
-<linux/scatterlist.h>
+This patch removes a check done by sgl_alloc_order() before it starts
+any allocations. The comment before the removed code says: "Check for
+integer overflow" arguably gives a false sense of security. The right
+hand side of the expression in the condition is resolved as u32 so
+cannot exceed UINT32_MAX (4 GiB) which means 'length' cannot exceed
+that amount. If that was the intention then the comment above it
+could be dropped and the condition rewritten more clearly as:
+     if (length > UINT32_MAX) <<failure path >>;
 
-The author has extended these transient sgl use cases to a store (i.e.
-a ramdisk) in the scsi_debug driver. Other new potential uses of sgl_s
-could be for caches. When this extra step is taken, the need to copy
-between sgl_s becomes apparent. The patchset adds sgl_copy_sgl() and
-two other sgl operations.
+The author's intention is to use sgl_alloc_order() to replace
+vmalloc(unsigned long) for a large allocation (debug ramdisk).
+vmalloc has no limit at 4 GiB so its seems unreasonable that:
+    sgl_alloc_order(unsigned long long length, ....)
+does. sgl_s made with sgl_alloc_order(chainable=false) have equally
+sized segments placed in a scatter gather array. That allows O(1)
+navigation around a big sgl using some simple integer maths.
 
-The existing sgl_alloc_order() function can be seen as a replacement
-for vmalloc() for large, long-term allocations.  For what seems like
-no good reason, sgl_alloc_order() currently restricts its total
-allocation to less than or equal to 4 GiB. vmalloc() has no such
-restriction.
+Having previously sent a patch to fix a memory leak in
+sg_alloc_order() take the opportunity to put a one line comment above
+sgl_free()'s declaration that it is not suitable when order > 0 . The
+mis-use of sgl_free() when order > 0 was the reason for the memory
+leak. The other users of sgl_alloc_order() in the kernel where
+checked and found to handle free-ing properly.
 
-Changes since v1 [posted 20201016]:
-  - Bodo Stroesser pointed out a problem with the nesting of
-    kmap_atomic() [called via sg_miter_next()] and kunmap_atomic()
-    calls [called via sg_miter_stop()] and proposed a solution that
-    simplifies the previous code.
+Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+---
+ include/linux/scatterlist.h | 1 +
+ lib/scatterlist.c           | 3 ---
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-  - the new implementation of the three functions has shorter periods
-    when pre-emption is disabled (but has more them). This should
-    make operations on large sgl_s more pre-emption "friendly" with
-    a relatively small performance hit.
-
-  - sgl_memset return type changed from void to size_t and is the
-    number of bytes actually (over)written. That number is needed
-    anyway internally so may as well return it as it may be useful to
-    the caller.
-
-This patchset is against lk 5.9.0
-
-Douglas Gilbert (4):
-  sgl_alloc_order: remove 4 GiB limit, sgl_free() warning
-  scatterlist: add sgl_copy_sgl() function
-  scatterlist: add sgl_compare_sgl() function
-  scatterlist: add sgl_memset()
-
- include/linux/scatterlist.h |  12 +++
- lib/scatterlist.c           | 204 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 213 insertions(+), 3 deletions(-)
-
--- 
-2.25.1
-
-
-*** BLURB HERE ***
-
-Douglas Gilbert (4):
-  sgl_alloc_order: remove 4 GiB limit, sgl_free() warning
-  scatterlist: add sgl_copy_sgl() function
-  scatterlist: add sgl_compare_sgl() function
-  scatterlist: add sgl_memset()
-
- include/linux/scatterlist.h |  12 +++
- lib/scatterlist.c           | 185 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 194 insertions(+), 3 deletions(-)
-
+diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+index 45cf7b69d852..80178afc2a4a 100644
+--- a/include/linux/scatterlist.h
++++ b/include/linux/scatterlist.h
+@@ -302,6 +302,7 @@ struct scatterlist *sgl_alloc(unsigned long long length, gfp_t gfp,
+ 			      unsigned int *nent_p);
+ void sgl_free_n_order(struct scatterlist *sgl, int nents, int order);
+ void sgl_free_order(struct scatterlist *sgl, int order);
++/* Only use sgl_free() when order is 0 */
+ void sgl_free(struct scatterlist *sgl);
+ #endif /* CONFIG_SGL_ALLOC */
+ 
+diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+index c448642e0f78..d5770e7f1030 100644
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -493,9 +493,6 @@ struct scatterlist *sgl_alloc_order(unsigned long long length,
+ 	u32 elem_len;
+ 
+ 	nent = round_up(length, PAGE_SIZE << order) >> (PAGE_SHIFT + order);
+-	/* Check for integer overflow */
+-	if (length > (nent << (PAGE_SHIFT + order)))
+-		return NULL;
+ 	nalloc = nent;
+ 	if (chainable) {
+ 		/* Check for integer overflow */
 -- 
 2.25.1
 
