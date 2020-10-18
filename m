@@ -2,38 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20EE0291DA6
-	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 21:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C41291CBE
+	for <lists+linux-block@lfdr.de>; Sun, 18 Oct 2020 21:41:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733299AbgJRTqw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Oct 2020 15:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
+        id S1730703AbgJRTYU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 18 Oct 2020 15:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbgJRTWf (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:22:35 -0400
+        id S1730445AbgJRTYT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:24:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7D8222E7;
-        Sun, 18 Oct 2020 19:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE94E2137B;
+        Sun, 18 Oct 2020 19:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048955;
-        bh=CABQCfiIlkUUv1ROXKZhVMXVjel4c7ecedP+9uIvzSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVwrnsLPIZ+H23ihLQOoSvsE+WlycDO+gLIXLtHqv5J5MtEkIuWiHaiCDiTBP1d9v
-         J0lZM5EWff8AgrL52BKcCIrnx4GNn3+ywN+XKB1K81eiAQzAJJNU5nvcNJ20LshWxA
-         Rs/FVExzKSurt+PJKQn6F34P9x+eGehtLWqpQ3bI=
+        s=default; t=1603049059;
+        bh=acmOn8DqEDhDyakHFgwde4nbqmaXmf1ElTBFFceAZyo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L04Q6Zrc5gxwjBB9N54ITtyLYbTWuJD09dnf6Z20rfv0kfWWJ6buLUvcCu8MC0IIk
+         lksPhReK3oDaXi3vwT2irbRvlcrxlTt+dI2hgcLPK6w/6JpaRRtpCG5MSoi3kvWPvT
+         LZVByhpJFKrejrlcQG8Yp/XIuR98d2iONfr4mvlo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/80] block: ratelimit handle_bad_sector() message
-Date:   Sun, 18 Oct 2020 15:21:13 -0400
-Message-Id: <20201018192231.4054535-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/56] block: ratelimit handle_bad_sector() message
+Date:   Sun, 18 Oct 2020 15:23:22 -0400
+Message-Id: <20201018192417.4055228-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201018192231.4054535-1-sashal@kernel.org>
-References: <20201018192231.4054535-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 81aafb601df06..d2213220099d3 100644
+index ce3710404544c..445b878e35194 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -743,11 +743,10 @@ static void handle_bad_sector(struct bio *bio, sector_t maxsector)
+@@ -2127,11 +2127,10 @@ static void handle_bad_sector(struct bio *bio, sector_t maxsector)
  {
  	char b[BDEVNAME_SIZE];
  
