@@ -2,121 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C9F292E03
-	for <lists+linux-block@lfdr.de>; Mon, 19 Oct 2020 21:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD2A292E54
+	for <lists+linux-block@lfdr.de>; Mon, 19 Oct 2020 21:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgJSTCv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 19 Oct 2020 15:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730464AbgJSTCv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 19 Oct 2020 15:02:51 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710A1C0613D0;
-        Mon, 19 Oct 2020 12:02:51 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id t12so1373942ilh.3;
-        Mon, 19 Oct 2020 12:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z6Qfl4RzyoYY0xyHHaaWegNhMwUCPvOxxsKja+GGhbE=;
-        b=cV0dH50VnNBVTXcBxLxMghFXtg7JtA+rxtgwFt1dzbeEykFAZUtQw9xYlC0vwf+Vt2
-         kZJ1DxdS26/tLjI4ixPg+6R2TJCmg75V071Siq0v/qkP4rzkBOicTKTbUe0aHc73uaR+
-         MCXG4cYKzWbeHaFxsAZrXoo0iuUpHzqKqg+X7QXfYrl87006QOSdHHNedxdnu/2Bw0hG
-         75+fpk+fmBCG7eRRMcqkIulR9XW42zYM4qwpJGkYfzc7By77LPS8WrpnT8WtWjznIczo
-         0imQZ6U1GbaEAO1iMHOcXmvST/VmphwVUu3E3/ammtqW2X/hWDWFqK57miVqm0X6FhYU
-         yIIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z6Qfl4RzyoYY0xyHHaaWegNhMwUCPvOxxsKja+GGhbE=;
-        b=DZT5Ug43cyVpcOiN5PLuD5G2PgcCDTAf4Bq17pzlBDdKwHS3IUYljDz6JWK0DUrmEU
-         tadPjGFZ9c3tChtN+Idt8tpcNadMoyLrxIcDov7y6L7Jeoyjg3FzsHhL7P4hqX+2nxmu
-         ZvB2RC+mGwHMrCD1T6G9uXlQ58hu+ULPMmcrIWO+KRBrBWYmZi1lLKrnTkWceWRPkuJU
-         o1N1b9ovA/d9DFS6Sj3gTmrhv36qm4+kfk+XZZ+YX0EB95vB+jFZyncgZSHMRES43Lr8
-         HHL+507NKm1g46sV33ZM/n7eMJrYUaU8Zg5rrNeh4RYYk7wCiY9/Xkrvn2bN8tsWOTMy
-         ON3w==
-X-Gm-Message-State: AOAM5320cal4S5eoFji9olFmhtIs7cfuMO0GWDdGkHqEmma2D5cm72mc
-        ezR7yUGPI4iBBeA1LpVerya50HUfGg==
-X-Google-Smtp-Source: ABdhPJyLxOJViQionbY2RerrIKWmU3A/9JjljQkcLLnr1+x76pgvUpnOiWM9TgoLpafx2IZne5gEHA==
-X-Received: by 2002:a92:aa0e:: with SMTP id j14mr1244286ili.120.1603134170696;
-        Mon, 19 Oct 2020 12:02:50 -0700 (PDT)
-Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
-        by smtp.gmail.com with ESMTPSA id q16sm580359ilj.22.2020.10.19.12.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 12:02:50 -0700 (PDT)
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH 2/2] block: Add blk_status_to_str()
-Date:   Mon, 19 Oct 2020 15:02:41 -0400
-Message-Id: <20201019190241.2910492-2-kent.overstreet@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201019190241.2910492-1-kent.overstreet@gmail.com>
-References: <20201019190241.2910492-1-kent.overstreet@gmail.com>
+        id S1731068AbgJSTTf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 19 Oct 2020 15:19:35 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:56022 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730938AbgJSTTf (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 19 Oct 2020 15:19:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 5ABDC204248;
+        Mon, 19 Oct 2020 21:19:32 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id M1MqUhragf6R; Mon, 19 Oct 2020 21:19:32 +0200 (CEST)
+Received: from xtwo70.bingwo.ca (vpn.infotech.no [82.134.31.155])
+        by smtp.infotech.no (Postfix) with ESMTPA id 0AF2520414F;
+        Mon, 19 Oct 2020 21:19:30 +0200 (CEST)
+From:   Douglas Gilbert <dgilbert@interlog.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     martin.petersen@oracle.com, axboe@kernel.dk, bvanassche@acm.org,
+        bostroesser@gmail.com
+Subject: [PATCH v3 0/4] scatterlist: add new capabilities
+Date:   Mon, 19 Oct 2020 15:19:24 -0400
+Message-Id: <20201019191928.77845-1-dgilbert@interlog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If we're going to the trouble of having these nice error strings, let's
-make them available.
+Scatter-gather lists (sgl_s) are frequently used as data carriers in
+the block layer. For example the SCSI and NVMe subsystems interchange
+data with the block layer using sgl_s. The sgl API is declared in
+<linux/scatterlist.h>
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
----
- block/blk-core.c       | 13 +++++++++----
- include/linux/blkdev.h |  1 +
- 2 files changed, 10 insertions(+), 4 deletions(-)
+The author has extended these transient sgl use cases to a store (i.e.
+a ramdisk) in the scsi_debug driver. Other new potential uses of sgl_s
+could be for caches. When this extra step is taken, the need to copy
+between sgl_s becomes apparent. The patchset adds sgl_copy_sgl() and
+two other sgl operations.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 10c08ac506..d68f24a7ee 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -213,18 +213,23 @@ int blk_status_to_errno(blk_status_t status)
- }
- EXPORT_SYMBOL_GPL(blk_status_to_errno);
- 
--static void print_req_error(struct request *req, blk_status_t status,
--		const char *caller)
-+const char *blk_status_to_str(blk_status_t status)
- {
- 	int idx = (__force int)status;
- 
- 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(blk_errors)))
--		return;
-+		return "(invalid error)";
-+	return blk_errors[idx].name;
-+}
-+EXPORT_SYMBOL_GPL(blk_status_to_str);
- 
-+static void print_req_error(struct request *req, blk_status_t status,
-+		const char *caller)
-+{
- 	printk_ratelimited(KERN_ERR
- 		"%s: %s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x "
- 		"phys_seg %u prio class %u\n",
--		caller, blk_errors[idx].name,
-+		caller, blk_status_to_str(status),
- 		req->rq_disk ? req->rq_disk->disk_name : "?",
- 		blk_rq_pos(req), req_op(req), blk_op_str(req_op(req)),
- 		req->cmd_flags & ~REQ_OP_MASK,
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 868e11face..d9e3b7b017 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -936,6 +936,7 @@ extern const char *blk_op_str(unsigned int op);
- 
- int blk_status_to_errno(blk_status_t status);
- blk_status_t errno_to_blk_status(int errno);
-+const char *blk_status_to_str(blk_status_t status);
- 
- int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin);
- 
+The existing sgl_alloc_order() function can be seen as a replacement
+for vmalloc() for large, long-term allocations.  For what seems like
+no good reason, sgl_alloc_order() currently restricts its total
+allocation to less than or equal to 4 GiB. vmalloc() has no such
+restriction.
+
+Changes since v2 [posted 20201018]:
+  - remove unneeded lines from sgl_memset() definition.
+  - change sg_zero_buffer() to call sgl_memset() as the former
+    is a subset.
+
+Changes since v1 [posted 20201016]:
+  - Bodo Stroesser pointed out a problem with the nesting of
+    kmap_atomic() [called via sg_miter_next()] and kunmap_atomic()
+    calls [called via sg_miter_stop()] and proposed a solution that
+    simplifies the previous code.
+
+  - the new implementation of the three functions has shorter periods
+    when pre-emption is disabled (but has more them). This should
+    make operations on large sgl_s more pre-emption "friendly" with
+    a relatively small performance hit.
+
+  - sgl_memset return type changed from void to size_t and is the
+    number of bytes actually (over)written. That number is needed
+    anyway internally so may as well return it as it may be useful to
+    the caller.
+
+This patchset is against lk 5.9.0
+
+Douglas Gilbert (4):
+  sgl_alloc_order: remove 4 GiB limit, sgl_free() warning
+  scatterlist: add sgl_copy_sgl() function
+  scatterlist: add sgl_compare_sgl() function
+  scatterlist: add sgl_memset()
+
+ include/linux/scatterlist.h |  12 +++
+ lib/scatterlist.c           | 186 +++++++++++++++++++++++++++++++++---
+ 2 files changed, 184 insertions(+), 14 deletions(-)
+
 -- 
-2.28.0
+2.25.1
 
