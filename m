@@ -2,88 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FE5293A14
-	for <lists+linux-block@lfdr.de>; Tue, 20 Oct 2020 13:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F7D6293CF4
+	for <lists+linux-block@lfdr.de>; Tue, 20 Oct 2020 15:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393193AbgJTLdi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Oct 2020 07:33:38 -0400
-Received: from sonic311-23.consmr.mail.ne1.yahoo.com ([66.163.188.204]:46348
-        "EHLO sonic311-23.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392304AbgJTLdi (ORCPT
+        id S2407265AbgJTNI5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Oct 2020 09:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407241AbgJTNIx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Oct 2020 07:33:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1603193617; bh=YfdJmkgyAelV91TRnp6plxiix9tzbdDcoL6irU7Kg4w=; h=Date:From:Reply-To:Subject:References:From:Subject; b=nRmxdcUDQ6C+z2V0tbNcebtzFcJfTxOi9pjMtQ5XBFdPESaqM1SkDVT84aU7jl0XOHcvCaVKzVU5rUCJzjetCP1/A0ArICMh37fLazikzP2f6p5jS81iia72CSSokhLAfkrDa11/+4Id7mU8HFi1LlN4piipuISw4qhFYqdn05DVLyUrzjySFrWPu1FuBWvztWZZLgOVlYihBC/CsfNUZMd4tXkz3tcIiaLgG/zpknXD0RD0PxXQU5LB/jiavg6/Z8gDjmtsVaOTTjE+B62iWdZF942cAaA0RetzMsZp64F1CY5u4GsZNkS1CwqvWs4jAUoGUcExnNzv/MSZqa/XeQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1603193617; bh=pp60LanEF6VuvbiIlVH3SP5+hqV1MDnoM/MmlNAivLF=; h=Date:From:Subject; b=fX6s7YSpYk6pAayoX7kNGO6lHJJC2Ju16QQqK0KEw0yMlqWrWO1LOhchtTDZO87cmf/Of8r4vKBRNqUMiYtC2o6IsXvZ1XgyxJSds3OqteCG63DgUenlbJjBPFg8OvU5v/cfrkfOysZ1YztWeU7HmKC0rREEYCmRZ6oSQrRrAqyFDSUC88pxP1iijM2eCNiKlLIcBO+3VqnT333zQit3ZTgR5fkVKK1p+LZhDgTDkWoqQIce/pB5vOQGfWd1zF+R1kmc8ON6MpFy+LIaYuuqtNPMPAnzk4XIfdI0SpTkf59ERYu7yHvQPPUTanjUXh3BARKPFgvylvTKxO1Y8V7K5w==
-X-YMail-OSG: 2_wY0eUVM1mKOgrmm2ZaVbNo.t6uQFvKTekNmyrzST4V2Tw0qvjwKe0zY9np1rL
- 6J4qs3dh9jYcqCDApYfupAnbvxYoXSbSmzTd0h8VceWwQLSz5kmI3vQcuQBecFMbOJ7kylGAZPSn
- un_88LpO4HvzqLXMg9f4uxe5OsaIG.EqfmQeJXlJ9nDBQTHMMjqJf.LdmoqdE4ZZ_Jbi1GcW62pj
- XNIi0j_MNGZIPtbcF._7XqKQVRJZRzHp3aP.Dpy56_LCXd0uqSR8SkGN9Eg7WDvBK0.YnnRmxIMJ
- hjU1joeXBTPiGZHeEoDDZxzbPpzY.KR2aLY7BP6GX.Uqlpt2VMHwbfrCuKcYp2xWy7Et1bi_fsss
- 5F8sZCGOmMIYH.PG5St3e49Olz2SL9UckqOw4VhPcfM_jT.ikeuUFySKpjkeUyvFxrWnf_YpRqxY
- 3MCQNyPtAOrHLtdh4YVe2Af1VAE4HAWAH7KFe92B7me3R37Ju4e5eQVPYzhicVr1Ign3K5kanNmG
- c3Bh9gXnulIvBS0RVAnz0TQDptUFOxsmmXsCVxnIshuFy_jzNI4PKfq_VHJ4DxkFWAhpR7hpxUFf
- Nm_eGJpPfMECKoABevEYvuSLjwPEAVo4KfvRZJg8ridmfQxiUDgZaSro5d9mCKKtZEQwZbnSYdZp
- d3XpKJ_LcGKKESa49yec7T6YJr6jHIKmFNb2udUrtGt4mzPvSnxgS7ox6IBCMzS_zshSqLHOmzz6
- sLzhJ4zUYn9Gr5Z0zi0LqHsUZ7GFVBj5CbadKQWjPWuACw5zqIjAEcfclNGeJgY5V9ecznU0FnrS
- j6.RlOk2LYtMy7Q_IzFqiZoCK7oPhV7qo1FLPey4ljD04tD.6ZDi6WXD3DNV7wZeyFltBbymYl7B
- 8gEKzCf_3XUlv8nm5MGPLkiGeIHleLD_57b_Bu8W_3ewOo8aPddph5_ScaUqTsXx3u0hEU_98KC3
- 53NNsE9vGaAFGE09fhJtVUaDLlCixPyTyURKUr7QIZ.7cCg1IEJz09FF6Db4WtQuMNTUYiec35wm
- hEI1LQV4d570MlsxQ63lxh_Q71YjvpcUjFci.aEFoUu5Iq5NgwRyqau9i5.W7Bp0MJQ5p02Rpujs
- 1WHB68B7.1_5MF8aSvjEqO9.5VHLVtn0Q5eV50dBb__sqyUpvyp25WBMrYik8B0.jbmXqy7G6_ht
- tkRpPAgcjbt1tXtRNSQOe7NvP3zhADjp_eVL1IMm2fcyf.wnUbRtfw626cBavd_bqmkNWMfHBDZJ
- LDX042HWFLNZDOP0Q_sQHf8CjVyullmEqimT0GWQ4q8Bfm30Wp8L3xyiqqc637.Zl1I4ixImDeAf
- SLf4uczA__Q53ECtkCTlLHkWD42JofLM8P5vd6sdHsYWJcaNyS9EmjgqYyc4omrho__wadAYwISn
- lP3RoE8vqV13L9klCnMiOdaXOETbjLqJgiTHwHp1Ipus.
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Tue, 20 Oct 2020 11:33:37 +0000
-Date:   Tue, 20 Oct 2020 11:33:35 +0000 (UTC)
-From:   "Mr.Mohammed Emdad" <gerasimmelkumyan9@gmail.com>
-Reply-To: mohammedemdadmohammedemdad77@gmail.com
-Message-ID: <1222225440.1441422.1603193615526@mail.yahoo.com>
-Subject: URGENT
+        Tue, 20 Oct 2020 09:08:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8AEC0613CE
+        for <linux-block@vger.kernel.org>; Tue, 20 Oct 2020 06:08:51 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j8so2146680ilk.0
+        for <linux-block@vger.kernel.org>; Tue, 20 Oct 2020 06:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vMjv69Q8ygJTDYUmtmqR5brlN9bQw64VIyI24z18jzA=;
+        b=cqQOg5TlBhSHYK8ucEO8iGioZ3ug3JvxYTXOjTVruEHdm9SvDU5nrkAwp9nMQNNSiO
+         EcwqyjcskunxgNXegcl9ilsGpyw0hpdo0FDdRoKIi+U1Q92X+dvrugsHSrDUQuM5O8NE
+         db30d7d6VKywjCwMbZQyAqPxAxPxjGSAHsAN9PBY6JVofOH281yX0TUdUceYJ5s4nyf0
+         G44npvNgm5E817+gLEokiS/RfoNI3E4xmOF9UEZooKfdhCoCBoT/RTPjSfK63YG4hpwu
+         ZuopdYqg7vHZ+TmaHzpOqEKOq8/UT/t3M2wt1Zo2m0E9mEx0IcEPq/eBQZ2hwPrhdnJT
+         +cKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vMjv69Q8ygJTDYUmtmqR5brlN9bQw64VIyI24z18jzA=;
+        b=D7GvxSu21B6SIaCZixId61AXocSyyieFZ/sRvYKF4P9U9h7Vli+wDA/+XbTpXJ8lTj
+         TPWQl1YQorYN24tC7MSW68moK0e1N6GMYeWpo+gxqzrMc5hZTB4c/aNpzjJ1PgXpnEk/
+         6ElV/B63iVRCi9SrDZAB7GTSdNp18qfH9RMgHfGhYgjjZkZC0NDtyBAz0oj9CqqyNlMH
+         njqQsdycRO1odjGG71+CqCcrAQ+Bb/a90VFiguLt+TbbXHhwx/9xU8H7MdyzY52Ha3ey
+         YHm3gqzyrN05F6o+MoSRMi0es+imXrZbMOJ4x36qfTnWYOjdE2HiZU/J5fqkaX4ReSQf
+         L1QA==
+X-Gm-Message-State: AOAM531zGPrwvbjcDrpM57606+8myvu22LSpueAIc7x2incpf+N4a9J6
+        h0oV71D8eSO8tCrm1DiLYlqfsg==
+X-Google-Smtp-Source: ABdhPJzm9BWlfeceU/Pa8coannvqHVejEwNaW+D/pLKRy4IBr4U+OwVIbd3EIC8zCU9He1KiPKZ4fw==
+X-Received: by 2002:a92:9119:: with SMTP id t25mr1811593ild.90.1603199331115;
+        Tue, 20 Oct 2020 06:08:51 -0700 (PDT)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id o19sm1767373ilt.24.2020.10.20.06.08.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2020 06:08:50 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: remove the calling of local_memory_node()
+To:     Xianting Tian <tian.xianting@h3c.com>,
+        raghavendra.kt@linux.vnet.ibm.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com
+References: <20201019082047.31113-1-tian.xianting@h3c.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1db7f790-b4df-435b-25b1-d99222ed7c50@kernel.dk>
+Date:   Tue, 20 Oct 2020 07:08:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <1222225440.1441422.1603193615526.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16868 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20201019082047.31113-1-tian.xianting@h3c.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 10/19/20 2:20 AM, Xianting Tian wrote:
+> We don't need to check whether the node is memoryless numa node before
+> calling allocator interface. SLUB(and SLAB,SLOB) relies on the page
+> allocator to pick a node. Page allocator should deal with memoryless
+> nodes just fine. It has zonelists constructed for each possible nodes.
+> And it will automatically fall back into a node which is closest to the
+> requested node. As long as __GFP_THISNODE is not enforced of course.
+> 
+> The code comments of kmem_cache_alloc_node() of SLAB also showed this:
+>  * Fallback to other node is possible if __GFP_THISNODE is not set.
+> 
+> blk-mq code doesn't set __GFP_THISNODE, so we can remove the calling
+> of local_memory_node().
 
+Applied, thanks.
 
-Dear Friend,
+-- 
+Jens Axboe
 
-
-My name is Mr.Mohammed Emdad, I am working with one of the prime bank in Bu=
-rkina Faso. Here in this bank there is existed dormant account for many yea=
-rs, which belong to one of our late foreign customer. The amount in this ac=
-count stands at $13,500,000.00 (Thirteen Million FiveHundred Thousand USA D=
-ollars).
-
-I need a foreign account where the bank will transfer this fund. I know you=
- would be surprised to read this message, especially from someone relativel=
-y unknown to you But do not worry yourself so much.This is a genuine, risk =
-free and legal business transaction. I am aware of the unsafe nature of the=
- internet, and was compelled to use this medium due to the nature of this p=
-roject.
-
-There is no risk involved; the transaction will be executed under a legitim=
-ate arrangement that will protect you from any breach of law. It is better =
-that we claim the money, than allowing the bank directors to take it, they =
-are rich already. I am not a greedy person, Let me know your mind on this a=
-nd please do treat this information highly confidential. I will review furt=
-her information=E2=80=99s / details to you as soon as i receive your positi=
-ve reply.
-
-If you are really sure of your integrity, trust worthy and confidentiality,=
- kindly get back to me urgently.
-
-Note you might receive this message in your inbox or spam or junk folder, d=
-epends on your web host or server network.
-
-Best regards,
-
-I wait for your positive response.
-
-Mr. Mohammed Emdad
