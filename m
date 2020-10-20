@@ -2,125 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 581D1293359
-	for <lists+linux-block@lfdr.de>; Tue, 20 Oct 2020 04:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8E38293545
+	for <lists+linux-block@lfdr.de>; Tue, 20 Oct 2020 08:54:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390874AbgJTCxZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Mon, 19 Oct 2020 22:53:25 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:17530 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390804AbgJTCxZ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 19 Oct 2020 22:53:25 -0400
-Received: from DAG2EX09-IDC.srv.huawei-3com.com ([10.8.0.72])
-        by h3cspam01-ex.h3c.com with ESMTPS id 09K2qjIx075291
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Oct 2020 10:52:45 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 20 Oct 2020 10:52:46 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.2106.002; Tue, 20 Oct 2020 10:52:46 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     Michal Hocko <mhocko@suse.com>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "raghavendra.kt@linux.vnet.ibm.com" 
-        <raghavendra.kt@linux.vnet.ibm.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] blk-mq: remove the calling of local_memory_node()
-Thread-Topic: [PATCH] blk-mq: remove the calling of local_memory_node()
-Thread-Index: AQHWpfIblb4hxO1wEUaIIqHsdHbO2qmeRzOAgAGEP4A=
-Date:   Tue, 20 Oct 2020 02:52:46 +0000
-Message-ID: <eadeb35dc2ea4b9c9df6b36b9e9f19e2@h3c.com>
-References: <20201019082047.31113-1-tian.xianting@h3c.com>
- <20201019114011.GE27114@dhcp22.suse.cz>
-In-Reply-To: <20201019114011.GE27114@dhcp22.suse.cz>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S2404592AbgJTGy0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Oct 2020 02:54:26 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37444 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727458AbgJTGyZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 20 Oct 2020 02:54:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UCckCtY_1603176860;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UCckCtY_1603176860)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 20 Oct 2020 14:54:20 +0800
+From:   Jeffle Xu <jefflexu@linux.alibaba.com>
+To:     snitzer@redhat.com, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        joseph.qi@linux.alibaba.com, xiaoguang.wang@linux.alibaba.com,
+        haoxu@linux.alibaba.com
+Subject: [RFC 0/3] Add support of iopoll for dm device
+Date:   Tue, 20 Oct 2020 14:54:17 +0800
+Message-Id: <20201020065420.124885-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 09K2qjIx075291
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Thanks Michal,
-Hi, raghavendra, Jens
-Could you help comment this issue? Thanks in advance.
+This patch set adds support of iopoll for dm device.
 
------Original Message-----
-From: Michal Hocko [mailto:mhocko@suse.com] 
-Sent: Monday, October 19, 2020 7:40 PM
-To: tianxianting (RD) <tian.xianting@h3c.com>
-Cc: axboe@kernel.dk; raghavendra.kt@linux.vnet.ibm.com; linux-block@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-mq: remove the calling of local_memory_node()
+This is only an RFC patch. I'm really looking forward getting your
+feedbacks on if you're interested in supporting iopoll for dm device,
+or if there's a better design to implement that.
 
-On Mon 19-10-20 16:20:47, Xianting Tian wrote:
-> We don't need to check whether the node is memoryless numa node before 
-> calling allocator interface. SLUB(and SLAB,SLOB) relies on the page 
-> allocator to pick a node. Page allocator should deal with memoryless 
-> nodes just fine. It has zonelists constructed for each possible nodes.
-> And it will automatically fall back into a node which is closest to 
-> the requested node. As long as __GFP_THISNODE is not enforced of course.
-> 
-> The code comments of kmem_cache_alloc_node() of SLAB also showed this:
->  * Fallback to other node is possible if __GFP_THISNODE is not set.
-> 
-> blk-mq code doesn't set __GFP_THISNODE, so we can remove the calling 
-> of local_memory_node().
+Thanks.
 
-yes, this is indeed the case. I cannot really judge the blg-mq code but it seems to be unnecessary. Maybe there are some subtle details not explained by bffed457160ab though.
 
-> Fixes: bffed457160ab ("blk-mq: Avoid memoryless numa node encoded in 
-> hctx numa_node")
+[Purpose]
+IO polling is an important mode of io_uring. Currently only mq devices
+support iopoll. As for dm devices, only dm-multipath is request-base,
+while others are all bio-based and have no support for iopoll.
+Supporting iopoll for dm devices can be of great meaning when the
+device seen by application is dm device such as dm-linear/dm-stripe,
+in which case iopoll is not usable for io_uring.
 
-But the existing code is not broken. It just overdoes what needs to be done. So effectively bffed457160ab was not needed. I do not think that Fixes is really necessary.
 
-> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
-> ---
->  block/blk-mq-cpumap.c | 2 +-
->  block/blk-mq.c        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c index 
-> 0157f2b34..3db84d319 100644
-> --- a/block/blk-mq-cpumap.c
-> +++ b/block/blk-mq-cpumap.c
-> @@ -89,7 +89,7 @@ int blk_mq_hw_queue_to_node(struct blk_mq_queue_map 
-> *qmap, unsigned int index)
->  
->  	for_each_possible_cpu(i) {
->  		if (index == qmap->mq_map[i])
-> -			return local_memory_node(cpu_to_node(i));
-> +			return cpu_to_node(i);
->  	}
->  
->  	return NUMA_NO_NODE;
-> diff --git a/block/blk-mq.c b/block/blk-mq.c index 
-> cdced4aca..48f8366b2 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2737,7 +2737,7 @@ static void blk_mq_init_cpu_queues(struct request_queue *q,
->  		for (j = 0; j < set->nr_maps; j++) {
->  			hctx = blk_mq_map_queue_type(q, j, i);
->  			if (nr_hw_queues > 1 && hctx->numa_node == NUMA_NO_NODE)
-> -				hctx->numa_node = local_memory_node(cpu_to_node(i));
-> +				hctx->numa_node = cpu_to_node(i);
->  		}
->  	}
->  }
-> --
-> 2.17.1
+[Design Notes]
 
---
-Michal Hocko
-SUSE Labs
+cookie
+------
+Let's start from cookie. Cookie is one important concept in iopoll. It
+is used to identify one specific request in one specific hardware queue.
+The concept of cookie is initially designed as a per-bio concept, and
+thus it doesn't work well when bio-split involved. When bio is split,
+the returned cookie is indeed the cookie of one of the split bio, and
+the following polling on this returned cookie can only guarantee the
+completion of this specific split bio, while the other split bios may
+be still uncompleted. Bio-split is also resolved for dm device, though
+in another form, in which case the original bio submitted to the dm
+device may be split into multiple bios submitted to the underlying
+devices.
+
+In previous discussion, Lei Ming has suggested that iopoll should be
+disabled for bio-split. This works for the normal bio-split (done in
+blk_mq_submit_bio->__blk_queue_split), while iopoll will never be
+usable for dm devices if this also applies for dm device.
+
+So come back to the design of the cookie for dm devices. At the very
+beginning I want to refactor the design of cookie, from 'unsigned int'
+type to the pointer type for dm device, so that cookie can point to
+something, e.g. a list containing all cookies of one original bio,
+something like this:
+
+struct dm_io { // the returned cookie points to dm_io
+	...
+	struct list_head cookies; 
+};
+
+In this design, we can fetch all cookies of one original bio, but the
+implementation can be difficult and buggy. For example, the
+'struct dm_io' structure may be already freed when the returned cookie
+is used in blk_poll(). Then what if maintain a refcount in struct dm_io
+so that 'struct dm_io' structure can not be freed until blk_poll()
+called? Then the 'struct dm_io' structure will never be freed if the
+IO polling is not used at all.
+
+So finally I gived up refactoring the design of cookie and maintain all
+cookies of one original bio. The initial design of cookie gets retained.
+The returned cookie is still the cookie of one of the split bio, and thus
+it is not used at all when polling dm devices. The polling of dm device,
+is indeed iterating and polling on all hardware queues (in polling mode)
+of all underlying target devices.
+
+This design is simple and easy to implement. But I'm not sure if the
+performance can be an issue if one dm device mapped to too many target
+devices or the dm stack depth grows.
+
+REQ_NOWAIT
+----------
+The polling bio will set REQ_NOWAIT in bio->bi_flags, and the device
+need to be capable of handling REQ_NOWAIT. Commit 021a24460dc2
+("block: add QUEUE_FLAG_NOWAIT") and commit 6abc49468eea ("dm: add
+support for REQ_NOWAIT and enable it for linear target") add this
+support for dm device, and currently only dm-linear supports that.
+
+hybrid polling
+--------------
+When execute hybrid polling, cookie is used to fetch the request,
+and check if the request has completed or not. In the design for
+dm device described above, the returned cookie is still the cookie
+of one of the split bios, and thus we have no way checking if all
+the split bios have completed or not. Thus in the current
+implementation, hybrid polling is not supported for dm device.
+
+
+[Performance]
+I test 4k-randread on a dm-linear mapped to only one nvme device.
+
+SSD: INTEL SSDPEDME800G4
+dm-linear:dmsetup create testdev --table "0 209715200 linear /dev/nvme0n1 0"
+
+fio configs:
+```
+ioengine=io_uring
+iodepth=128
+numjobs=1
+thread
+rw=randread
+direct=1
+registerfiles=1
+#hipri=1 with iopoll enabled, hipri=0 with iopoll disabled
+bs=4k
+size=100G
+runtime=60
+time_based
+group_reporting
+randrepeat=0
+
+[device]
+filename=/dev/mapper/testdev
+```
+
+The test result shows that there's ~40% performance growth when iopoll
+enabled.
+
+test | iops | bw | avg lat
+---- | ---- | ---- | ----
+iopoll-disabled | 244k | 953MiB/s  | 524us
+iopoll-enabled  | 345k | 1349MiB/s | 370us
+
+[TODO]
+The store method of "io_poll"/"io_poll_delay" has not been adapted
+for dm device.
+
+
+Jeffle Xu (3):
+  block/mq: add iterator for polling hw queues
+  block: add back ->poll_fn in request queue
+  dm: add support for IO polling
+
+ block/blk-mq.c         | 30 ++++++++++++++++++++++++------
+ drivers/md/dm-core.h   |  1 +
+ drivers/md/dm-table.c  | 30 ++++++++++++++++++++++++++++++
+ drivers/md/dm.c        | 40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/blk-mq.h |  6 ++++++
+ include/linux/blkdev.h |  3 +++
+ 6 files changed, 104 insertions(+), 6 deletions(-)
+
+-- 
+2.27.0
+
