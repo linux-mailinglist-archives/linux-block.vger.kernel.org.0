@@ -2,102 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4B1296D3F
-	for <lists+linux-block@lfdr.de>; Fri, 23 Oct 2020 13:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9194296D4E
+	for <lists+linux-block@lfdr.de>; Fri, 23 Oct 2020 13:04:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S462653AbgJWLAm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 23 Oct 2020 07:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53518 "EHLO
+        id S462703AbgJWLEE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 23 Oct 2020 07:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S462651AbgJWLAl (ORCPT
+        with ESMTP id S462548AbgJWLED (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 23 Oct 2020 07:00:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DD3C0613CE
-        for <linux-block@vger.kernel.org>; Fri, 23 Oct 2020 04:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=u+eKJ66BtwRzfpZO0koRnDJYiwMP68LngP9eep3gWf8=; b=Qn6C/eVxnjrOzLG9NQ8WpWBiCx
-        7TnNDpql5SUh0VMFXYTYkc2EoK2I+5fdHiC56T+juTeTMict1E0fjiPBKFyYI/VvXNP/ETGd0KASw
-        ui0iyfnZd6tq7uaZzQwPt5+JOCgOJYDLYTLkNbQGc2TeRHRLKCZj2xQA7CjUy3zYJXPFvoQhboqL5
-        AjgRh2d7yN/dVLMJp9gYSp1B8EiXtFWrbtGasuSd+Ry75VpvelkpYF2cxFF7Y1tCIH4SNtKON4Lyh
-        0+KpkTaselHWRBoEPUbQETcUcyU4xdc8wFuphQ58uCzymuaLhQ41UkA1nzclSQCMO6VyqkGI67gKz
-        v3LGUWyw==;
-Received: from [2001:4bb8:18c:20bd:88ad:7c9d:e85e:89ca] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kVuoI-00057p-Lg; Fri, 23 Oct 2020 11:00:39 +0000
-Date:   Fri, 23 Oct 2020 13:00:35 +0200
-From:   Christoph Hellwig <hch@infradead.org>
-To:     axboe@kernel.dk
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Subject: [GIT PULL] nvme fixes for 5.10-rc1
-Message-ID: <20201023110035.GA3504312@infradead.org>
+        Fri, 23 Oct 2020 07:04:03 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A242C0613CE;
+        Fri, 23 Oct 2020 04:04:03 -0700 (PDT)
+Date:   Fri, 23 Oct 2020 13:04:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1603451041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=j1o05ovjntirIj7cvm7bSPa5eySCqPWLuUvFBBxTkcA=;
+        b=VU/I/Bg0fjftmhfkNoiTI5iQAkWt1oroH4F41nG/CTl2uJHdNhPckdnBQqbVas1E1ON0pK
+        yWtYg+1sxh8pnuRX09q7grhMA5ExKHvEq4tUlD5e4PmTGZD8eILAiC50zsA2xoekbuC7GI
+        V7Et6fYnqpFWlxEW8NaEqob68BlhofnBfRLmNmF9Vgd4t2YrRsDVn9saDXGfeMGxf6PvL9
+        HcBqVwWt7NPl1ot8NBdkEbY9q7Ah/hgACZz+zThD4LBIcE5pNr69pdBISg+FwQp/IplXRh
+        u0UcS7rrdehouC3VUYfoOc3rjBpHD9hmVL6CFsG1G8xBvaXus7B2u+obpb2uUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1603451041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=j1o05ovjntirIj7cvm7bSPa5eySCqPWLuUvFBBxTkcA=;
+        b=UnEzQ4M/+js0ciQkn+pulvrti1+fg2aEU1ycvfsSoEgkxQxIRZJkVTxbb25CBaUFmUS6MF
+        hm4LzqNXplO2z+DQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     David Runge <dave@sleepmap.de>
+Cc:     linux-rt-users@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH RFC] blk-mq: Don't IPI requests on PREEMPT_RT
+Message-ID: <20201023110400.bx3uzsb7xy5jtsea@linutronix.de>
+References: <20201021175059.GA4989@hmbx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20201021175059.GA4989@hmbx>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The following changes since commit cb3a92da231bcf55c243d00fa619ee36281b0001:
+blk_mq_complete_request_remote() will dispatch request completion to
+another CPU via IPI if the CPU belongs to a different cache domain.
 
-  block: remove unused members for io_context (2020-10-20 07:10:14 -0600)
+This breaks on PREEMPT_RT because the IPI function will complete the
+request in IRQ context which includes acquiring spinlock_t typed locks.
+Completing the IPI request in softirq on the remote CPU is probably less
+efficient because it would require to wake ksoftirqd for this task
+(which runs at SCHED_OTHER).
 
-are available in the Git repository at:
+Ignoring the IPI request and completing the request locally is probably
+the best option. It be completed either in the IRQ-thread or at the end
+of the routine in softirq context.
 
-  git://git.infradead.org/nvme.git tags/nvme-5.10-2020-10-23
+Let blk_mq_complete_need_ipi() return that there is no need for IPI on
+PREEMPT_RT.
 
-for you to fetch changes up to f673714a1247669bc90322dfb14a5cf553833796:
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ block/blk-mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  nvme-fc: shorten reconnect delay if possible for FC (2020-10-23 12:54:45 +0200)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index e37aa31332b70..99d2fb51e0e84 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -647,7 +647,7 @@ static inline bool blk_mq_complete_need_ipi(struct request *rq)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 
+-	if (!IS_ENABLED(CONFIG_SMP) ||
++	if (!IS_ENABLED(CONFIG_SMP) || IS_ENABLED(CONFIG_PREEMPT_RT) ||
+ 	    !test_bit(QUEUE_FLAG_SAME_COMP, &rq->q->queue_flags))
+ 		return false;
+ 
+-- 
+2.28.0
 
-----------------------------------------------------------------
-nvme fixes for 5.10
-
- - rdma error handling fixes (Chao Leng)
- - fc error handling and reconnect fixes (James Smart)
- - fix the qid displace when tracing ioctl command (Keith Busch)
- - don't use BLK_MQ_REQ_NOWAIT for passthru (Chaitanya Kulkarni)
- - fix MTDT for passthru (Logan Gunthorpe)
- - blacklist Write Same on more devices (Kai-Heng Feng)
- - fix an uninitialized work struct (zhenwei pi)
-
-----------------------------------------------------------------
-Chaitanya Kulkarni (1):
-      nvmet: don't use BLK_MQ_REQ_NOWAIT for passthru
-
-Chao Leng (2):
-      nvme-rdma: fix crash when connect rejected
-      nvme-rdma: fix crash due to incorrect cqe
-
-James Smart (4):
-      nvme-fc: fix io timeout to abort I/O
-      nvme-fc: fix error loop in create_hw_io_queues
-      nvme-fc: wait for queues to freeze before calling update_hr_hw_queues
-      nvme-fc: shorten reconnect delay if possible for FC
-
-Kai-Heng Feng (1):
-      nvme-pci: disable Write Zeroes on Sandisk Skyhawk
-
-Keith Busch (1):
-      nvme: use queuedata for nvme_req_qid
-
-Logan Gunthorpe (2):
-      nvmet: limit passthru MTDS by BIO_MAX_PAGES
-      nvmet: cleanup nvmet_passthru_map_sg()
-
-zhenwei pi (1):
-      nvmet: fix uninitialized work for zero kato
-
- drivers/nvme/host/fc.c         | 138 ++++++++++++++++++++++++++++-------------
- drivers/nvme/host/nvme.h       |   2 +-
- drivers/nvme/host/pci.c        |   2 +
- drivers/nvme/host/rdma.c       |   6 +-
- drivers/nvme/target/core.c     |   3 +-
- drivers/nvme/target/passthru.c |  18 ++++--
- 6 files changed, 115 insertions(+), 54 deletions(-)
