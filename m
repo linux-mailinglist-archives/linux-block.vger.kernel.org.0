@@ -2,83 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C04EE298391
-	for <lists+linux-block@lfdr.de>; Sun, 25 Oct 2020 22:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38467298706
+	for <lists+linux-block@lfdr.de>; Mon, 26 Oct 2020 07:42:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1418774AbgJYVCf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 25 Oct 2020 17:02:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43863 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1418773AbgJYVCf (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 25 Oct 2020 17:02:35 -0400
-IronPort-SDR: I5WIFAyTJanfD9qEdc5pOSd4/XiWEpMOSRwzjiSSp5NlRSl4UtmzVZU6G+/mdmkVsO6Es0lb6Q
- r1mKI/RyCqdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9785"; a="147142913"
-X-IronPort-AV: E=Sophos;i="5.77,417,1596524400"; 
-   d="scan'208";a="147142913"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2020 14:02:33 -0700
-IronPort-SDR: RN0XNxRcJyf0TLUz/a8ep2P0eTMVfKnRodcX9kVmwaEEVydHPg6tj23MZi3fhkPTwaIDL3ISj2
- 2cDJNSnHtreA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,417,1596524400"; 
-   d="scan'208";a="303356462"
-Received: from lkp-server01.sh.intel.com (HELO cda15bb6d7bd) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Oct 2020 14:02:31 -0700
-Received: from kbuild by cda15bb6d7bd with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kWn9r-000135-4O; Sun, 25 Oct 2020 21:02:31 +0000
-Date:   Mon, 26 Oct 2020 05:02:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Satya Tangirala <satyat@google.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Cc:     kbuild-all@lists.01.org, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
-Subject: [PATCH] dm: fix err_cast.cocci warnings
-Message-ID: <20201025210226.GA56371@c4e258c4beaa>
-References: <20201015214632.41951-4-satyat@google.com>
+        id S1421682AbgJZGl6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Oct 2020 02:41:58 -0400
+Received: from mx1.didichuxing.com ([111.202.154.82]:16366 "HELO
+        bsf02.didichuxing.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1420395AbgJZGl6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 26 Oct 2020 02:41:58 -0400
+X-ASG-Debug-ID: 1603694510-0e41086da21f39e0001-Cu09wu
+Received: from mail.didiglobal.com (bogon [172.20.36.203]) by bsf02.didichuxing.com with ESMTP id tYLAp8r83KGd09hn; Mon, 26 Oct 2020 14:41:50 +0800 (CST)
+X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
+Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
+ (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 26 Oct
+ 2020 14:15:10 +0800
+Date:   Mon, 26 Oct 2020 14:15:09 +0800
+From:   Weiping Zhang <zhangweiping@didiglobal.com>
+To:     <axboe@kernel.dk>, <ming.lei@redhat.com>, <snitzer@redhat.com>,
+        <mpatocka@redhat.com>
+CC:     <linux-block@vger.kernel.org>
+Subject: [PATCH v4 0/2] fix inaccurate io_ticks
+Message-ID: <20201026061509.GA22573@192.168.3.9>
+X-ASG-Orig-Subj: [PATCH v4 0/2] fix inaccurate io_ticks
+Mail-Followup-To: axboe@kernel.dk, ming.lei@redhat.com, snitzer@redhat.com,
+        mpatocka@redhat.com, linux-block@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20201015214632.41951-4-satyat@google.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [172.22.50.20]
+X-ClientProxiedBy: BJEXCAS03.didichuxing.com (172.20.36.245) To
+ BJSGEXMBX03.didichuxing.com (172.20.15.133)
+X-Barracuda-Connect: bogon[172.20.36.203]
+X-Barracuda-Start-Time: 1603694510
+X-Barracuda-URL: https://bsf02.didichuxing.com:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at didichuxing.com
+X-Barracuda-Scan-Msg-Size: 1627
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.85498
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+Hi,
 
-drivers/md/dm.c:2204:12-19: WARNING: ERR_CAST can be used with ksm
+This patchset include two patches,
 
+01. block: fix inaccurate io_ticks
+fix the io_ticks if start a new IO and there is no inflight IO before.
+Please see the commit message of patch1 for more detail.
 
- Use ERR_CAST inlined function instead of ERR_PTR(PTR_ERR(...))
+02. blk-mq: break more earlier when interate hctx
+An optimization for blk_mq_queue_inflight and blk_mq_queue_inflight,
+these two function only want to know if there is IO inflight and do
+not care how many inflight IOs are there.
+After this patch blk_mq_queue_inflight will stop interate other hctx
+when find a inflight IO, blk_mq_part_is_in_inflight stop interate
+other setbit/hctx when find a inflight IO.
 
-Generated by: scripts/coccinelle/api/err_cast.cocci
+Changes since v3:
+ * add a parameter for blk_mq_queue_tag_busy_iter to break earlier
+   when interate hctx of a queue, since blk_mq_part_is_in_inflight
+   and blk_mq_queue_inflight do not care how many inflight IOs.
 
-CC: Satya Tangirala <satyat@google.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
+Changes since v2:
+* use blk_mq_queue_tag_busy_iter framework instead of open-code.
+* update_io_ticks before update inflight for __part_start_io_acct
 
-url:    https://github.com/0day-ci/linux/commits/Satya-Tangirala/add-support-for-inline-encryption-to-device-mapper/20201016-054900
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git for-next
+Changes since v1:
+* avoid iterate all tagset, return directly if find a set bit.
+* fix some typo in commit message
 
- dm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Weiping Zhang (2):
+  block: fix inaccurate io_ticks
+  blk-mq: break more earlier when interate hctx
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -2201,7 +2201,7 @@ static struct dm_table *__bind(struct ma
- 
- 	ksm = dm_init_inline_encryption(md, t);
- 	if (IS_ERR(ksm)) {
--		old_map = ERR_PTR(PTR_ERR(ksm));
-+		old_map = ERR_CAST(ksm);
- 		goto out;
- 	}
- 
+ block/blk-core.c       | 19 ++++++++++----
+ block/blk-mq-tag.c     | 11 ++++++--
+ block/blk-mq-tag.h     |  2 +-
+ block/blk-mq.c         | 58 +++++++++++++++++++++++++++++++++++++++---
+ block/blk-mq.h         |  1 +
+ block/blk.h            |  1 +
+ block/genhd.c          | 13 ++++++++++
+ include/linux/blk-mq.h |  1 +
+ 8 files changed, 94 insertions(+), 12 deletions(-)
+
+-- 
+2.18.4
+
