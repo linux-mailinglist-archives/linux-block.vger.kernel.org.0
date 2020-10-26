@@ -2,212 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A412E298707
-	for <lists+linux-block@lfdr.de>; Mon, 26 Oct 2020 07:42:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBC02988C3
+	for <lists+linux-block@lfdr.de>; Mon, 26 Oct 2020 09:52:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1420395AbgJZGl6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Oct 2020 02:41:58 -0400
-Received: from mx2.didiglobal.com ([111.202.154.82]:9324 "HELO
-        bsf02.didichuxing.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S1420847AbgJZGl6 (ORCPT
+        id S1771273AbgJZIwR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Oct 2020 04:52:17 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:40990 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441099AbgJZIwR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Oct 2020 02:41:58 -0400
-X-ASG-Debug-ID: 1603694510-0e41086da21f39e0004-Cu09wu
-Received: from mail.didiglobal.com (bogon [172.20.36.203]) by bsf02.didichuxing.com with ESMTP id qAA3DfzG1roLyNNB; Mon, 26 Oct 2020 14:41:51 +0800 (CST)
-X-Barracuda-Envelope-From: zhangweiping@didiglobal.com
-Received: from 192.168.3.9 (172.22.50.20) by BJSGEXMBX03.didichuxing.com
- (172.20.15.133) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 26 Oct
- 2020 14:15:57 +0800
-Date:   Mon, 26 Oct 2020 14:15:51 +0800
-From:   Weiping Zhang <zhangweiping@didiglobal.com>
-To:     <axboe@kernel.dk>, <ming.lei@redhat.com>, <snitzer@redhat.com>,
-        <mpatocka@redhat.com>
-CC:     <linux-block@vger.kernel.org>
-Subject: [PATCH v4 2/2] blk-mq: break more earlier when interate hctx
-Message-ID: <20201026061550.GA24417@192.168.3.9>
-X-ASG-Orig-Subj: [PATCH v4 2/2] blk-mq: break more earlier when interate hctx
-Mail-Followup-To: axboe@kernel.dk, ming.lei@redhat.com, snitzer@redhat.com,
-        mpatocka@redhat.com, linux-block@vger.kernel.org
+        Mon, 26 Oct 2020 04:52:17 -0400
+Received: by mail-qv1-f67.google.com with SMTP id t20so3914756qvv.8;
+        Mon, 26 Oct 2020 01:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TJ81NUuIemJAy2R0JSstUiGK8+6LXbAftpC5+8me1yM=;
+        b=Nl79HKs/B0/VVhY56WShizUovm7xkXKRiCSFO6bV7Tn0roJl41Ns1LfdX2Cea4/uqY
+         GWZ7p2n3NdpCYBIyhddQlLFnQBdQkOUFIiVFjwxrn1cZAcjxGMjKAtsA7RmRUVhRsCsR
+         bCsYGhu59F0bzIgrUTC7VG/YCwMJNX9pYTt6gezfPEeyr/wGiVQbMZaMmcM2eJpAQEqI
+         tbCGf6YS+KwysDQOhoetRvSMMotFEdweLG8RG1Gc6bucVMNl4a8akCBdmJ2XW+tD+K/6
+         D/m05xejhXv45Da52ZIw+PjYrqMMKe8XcyQZvqpqUD2WOf0cN0hAW3vOQ8aRy2GIyvPn
+         7e6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TJ81NUuIemJAy2R0JSstUiGK8+6LXbAftpC5+8me1yM=;
+        b=fNk5s95fTyLS3oaCsNt6zwUiAE9+UOSNWVeZkzPgA16DIOJbet1gH+HsK5LKRHIM8A
+         kP+gpPzX6Pf14AQhou7cc9IZxHwffilD0ef0ddzz5hoIdXmWqX0uEI7wMzZBwTxXqUwA
+         E7KasQeTouWVvCx5t1jgM/DYeVw97lsX/JBChJBEjpY9zvtKeyn0JSm/Z56yRWtX8Vo5
+         g5u6fsfTd8P5gauEP5iKAAbu5I54gc4DmzkEAgJDYt23P/sDVC7a481gwaK1PJT7C7A9
+         JFb4Qskz1OHNjXBiqHrAaLpbWoIzLHdEMGtG1Zch2JkhaX4W/2bnM2chw4vdn3c83e05
+         umyw==
+X-Gm-Message-State: AOAM530Pkh2OpRUN93vsNpaFWlszrZXK2d6fjaWf2RP7ox5v3sL3sf+F
+        YSdCyq+U1GzKOYB1BKh8LA==
+X-Google-Smtp-Source: ABdhPJyXJ7X/NnUP1OIhMYSAioiVhE5tmIEdaqJ0RTK/67sLtcw4pW0TWpDQYLR2s1+wGc3HFc4RJw==
+X-Received: by 2002:ad4:5191:: with SMTP id b17mr12807357qvp.0.1603702335629;
+        Mon, 26 Oct 2020 01:52:15 -0700 (PDT)
+Received: from presler.lan (a95-94-69-32.cpe.netcabo.pt. [95.94.69.32])
+        by smtp.gmail.com with ESMTPSA id 128sm5961352qkh.53.2020.10.26.01.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2020 01:52:15 -0700 (PDT)
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+To:     minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Rui Salvaterra <rsalvaterra@gmail.com>
+Subject: [PATCH v3] zram: break the strict dependency from lzo
+Date:   Mon, 26 Oct 2020 08:51:41 +0000
+Message-Id: <20201026085141.1179-1-rsalvaterra@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Originating-IP: [172.22.50.20]
-X-ClientProxiedBy: BJEXCAS03.didichuxing.com (172.20.36.245) To
- BJSGEXMBX03.didichuxing.com (172.20.15.133)
-X-Barracuda-Connect: bogon[172.20.36.203]
-X-Barracuda-Start-Time: 1603694511
-X-Barracuda-URL: https://bsf02.didichuxing.com:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at didichuxing.com
-X-Barracuda-Scan-Msg-Size: 5543
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -1.52
-X-Barracuda-Spam-Status: No, SCORE=-1.52 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=BSF_RULE7568M
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.85498
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.50 BSF_RULE7568M          Custom Rule 7568M
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-For blk_mq_part_is_in_inflight and blk_mq_queue_inflight they do not
-care how many inflight IOs, so they stop interate other hxtc when find
-a request meets their requirement. Some cpu cycles can be saved in such
-way.
+There's nothing special about zram and lzo. It works just fine without it, so
+as long as at least one of the other supported compression algorithms is
+selected.
 
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
 ---
- block/blk-mq-tag.c     | 11 +++++++++--
- block/blk-mq-tag.h     |  2 +-
- block/blk-mq.c         | 34 +++++++++++++++++++++++++++++-----
- include/linux/blk-mq.h |  1 +
- 4 files changed, 40 insertions(+), 8 deletions(-)
+v3: fix the default selection when lzo isn't present. Rebase against 5.10-rc1.
+v2: fix the dependency on CRYPTO.
 
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 9c92053e704d..f364682dabe1 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -401,14 +401,17 @@ EXPORT_SYMBOL(blk_mq_tagset_wait_completed_request);
-  *		reserved) where rq is a pointer to a request and hctx points
-  *		to the hardware queue associated with the request. 'reserved'
-  *		indicates whether or not @rq is a reserved request.
-- * @priv:	Will be passed as third argument to @fn.
-+ *@check_break: Pointer to the function that will callbed for earch hctx on @q.
-+ *		@check_break will break the loop for hctx when it return false,
-+ *		if you want to iterate all hctx, set it to NULL.
-+ * @priv:	Will be passed as third argument to @fn, or arg to @check_break
-  *
-  * Note: if @q->tag_set is shared with other request queues then @fn will be
-  * called for all requests on all queues that share that tag set and not only
-  * for requests associated with @q.
-  */
- void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
--		void *priv)
-+		check_break_fn *check_break, void *priv)
- {
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
-@@ -434,7 +437,11 @@ void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
- 		if (tags->nr_reserved_tags)
- 			bt_for_each(hctx, tags->breserved_tags, fn, priv, true);
- 		bt_for_each(hctx, tags->bitmap_tags, fn, priv, false);
+ drivers/block/zram/Kconfig    |  6 +++++-
+ drivers/block/zram/zcomp.c    |  2 ++
+ drivers/block/zram/zram_drv.c | 14 +++++++++++++-
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index fe7a4b7d30cf..14b2b098d662 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -2,7 +2,6 @@
+ config ZRAM
+ 	tristate "Compressed RAM block device support"
+ 	depends on BLOCK && SYSFS && ZSMALLOC && CRYPTO
+-	select CRYPTO_LZO
+ 	help
+ 	  Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
+ 	  Pages written to these disks are compressed and stored in memory
+@@ -37,3 +36,8 @@ config ZRAM_MEMORY_TRACKING
+ 	  /sys/kernel/debug/zram/zramX/block_state.
+ 
+ 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
 +
-+		if (check_break && !check_break(priv))
-+			goto out;
- 	}
-+out:
- 	blk_queue_exit(q);
- }
++config ZRAM_AUTOSEL_ALGO
++	def_bool y
++	depends on ZRAM && !(CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842 || CRYPTO_ZSTD)
++	select CRYPTO_LZO
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 33e3b76c4fa9..052aa3f65514 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -15,8 +15,10 @@
+ #include "zcomp.h"
  
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 7d3e6b333a4a..d122be9f87cb 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -42,7 +42,7 @@ extern void blk_mq_tag_resize_shared_sbitmap(struct blk_mq_tag_set *set,
+ static const char * const backends[] = {
++#if IS_ENABLED(CONFIG_CRYPTO_LZO)
+ 	"lzo",
+ 	"lzo-rle",
++#endif
+ #if IS_ENABLED(CONFIG_CRYPTO_LZ4)
+ 	"lz4",
+ #endif
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 1b697208d661..2ae09561ba79 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -42,7 +42,19 @@ static DEFINE_IDR(zram_index_idr);
+ static DEFINE_MUTEX(zram_index_mutex);
  
- extern void blk_mq_tag_wakeup_all(struct blk_mq_tags *tags, bool);
- void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
--		void *priv);
-+		check_break_fn *check_break, void *priv);
- void blk_mq_all_tag_iter(struct blk_mq_tags *tags, busy_tag_iter_fn *fn,
- 		void *priv);
- 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 126a6a6f7035..458ade751b01 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -115,7 +115,7 @@ unsigned int blk_mq_in_flight(struct request_queue *q, struct hd_struct *part)
- {
- 	struct mq_inflight mi = { .part = part };
- 
--	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, &mi);
-+	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, NULL, &mi);
- 
- 	return mi.inflight[0] + mi.inflight[1];
- }
-@@ -125,11 +125,22 @@ void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
- {
- 	struct mq_inflight mi = { .part = part };
- 
--	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, &mi);
-+	blk_mq_queue_tag_busy_iter(q, blk_mq_check_inflight, NULL, &mi);
- 	inflight[0] = mi.inflight[0];
- 	inflight[1] = mi.inflight[1];
- }
- 
-+static bool blk_mq_part_check_break(void *priv)
-+{
-+	struct mq_inflight *mi = priv;
+ static int zram_major;
+-static const char *default_compressor = "lzo-rle";
 +
-+	/* return false to stop interate other hctx */
-+	if (mi->inflight[0] || mi->inflight[1])
-+		return false;
-+
-+	return true;
-+}
-+
- static bool blk_mq_part_check_inflight(struct blk_mq_hw_ctx *hctx,
- 				  struct request *rq, void *priv,
- 				  bool reserved)
-@@ -151,7 +162,8 @@ bool blk_mq_part_is_in_flight(struct request_queue *q, struct hd_struct *part)
++static const char *default_compressor =
++#if IS_ENABLED(CONFIG_CRYPTO_LZO)
++	"lzo-rle";
++#elif IS_ENABLED(CONFIG_CRYPTO_LZ4)
++	"lz4";
++#elif IS_ENABLED(CONFIG_CRYPTO_LZ4HC)
++	"lz4hc";
++#elif IS_ENABLED(CONFIG_CRYPTO_842)
++	"842";
++#elif IS_ENABLED(CONFIG_CRYPTO_ZSTD)
++	"zstd";
++#endif
  
- 	mi.inflight[0] = mi.inflight[1] = 0;
- 
--	blk_mq_queue_tag_busy_iter(q, blk_mq_part_check_inflight, &mi);
-+	blk_mq_queue_tag_busy_iter(q, blk_mq_part_check_inflight,
-+					blk_mq_part_check_break, &mi);
- 
- 	return mi.inflight[0] + mi.inflight[1] > 0;
- }
-@@ -909,11 +921,23 @@ static bool blk_mq_rq_inflight(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	return true;
- }
- 
-+static bool blk_mq_rq_check_break(void *priv)
-+{
-+	bool *busy = priv;
-+
-+	/* return false to stop interate other hctx */
-+	if (*busy)
-+		return false;
-+
-+	return true;
-+}
-+
- bool blk_mq_queue_inflight(struct request_queue *q)
- {
- 	bool busy = false;
- 
--	blk_mq_queue_tag_busy_iter(q, blk_mq_rq_inflight, &busy);
-+	blk_mq_queue_tag_busy_iter(q, blk_mq_rq_inflight,
-+			blk_mq_rq_check_break, &busy);
- 	return busy;
- }
- EXPORT_SYMBOL_GPL(blk_mq_queue_inflight);
-@@ -1018,7 +1042,7 @@ static void blk_mq_timeout_work(struct work_struct *work)
- 	if (!percpu_ref_tryget(&q->q_usage_counter))
- 		return;
- 
--	blk_mq_queue_tag_busy_iter(q, blk_mq_check_expired, &next);
-+	blk_mq_queue_tag_busy_iter(q, blk_mq_check_expired, NULL, &next);
- 
- 	if (next != 0) {
- 		mod_timer(&q->timeout, next);
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index b23eeca4d677..efd1e8269f0b 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -280,6 +280,7 @@ struct blk_mq_queue_data {
- typedef bool (busy_iter_fn)(struct blk_mq_hw_ctx *, struct request *, void *,
- 		bool);
- typedef bool (busy_tag_iter_fn)(struct request *, void *, bool);
-+typedef bool (check_break_fn)(void *);
- 
- /**
-  * struct blk_mq_ops - Callback functions that implements block driver
+ /* Module params (documentation at end) */
+ static unsigned int num_devices = 1;
 -- 
-2.18.4
+2.28.0
 
