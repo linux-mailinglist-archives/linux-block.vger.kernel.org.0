@@ -2,84 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE20C29A11B
-	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 01:47:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77FF429A21C
+	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 02:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440756AbgJ0AeI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Oct 2020 20:34:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:44164 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436545AbgJ0Acv (ORCPT
+        id S2503718AbgJ0BSW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Oct 2020 21:18:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60926 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2411311AbgJ0BSV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Oct 2020 20:32:51 -0400
-X-Greylist: delayed 1637 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Oct 2020 20:32:46 EDT
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kXCUL-009VwG-7r; Tue, 27 Oct 2020 00:05:21 +0000
-Date:   Tue, 27 Oct 2020 00:05:21 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Kyle Huey <me@kylehuey.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Robert O'Callahan <robert@ocallahan.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [REGRESSION] mm: process_vm_readv testcase no longer works after
- compat_prcoess_vm_readv removed
-Message-ID: <20201027000521.GD3576660@ZenIV.linux.org.uk>
-References: <CAP045Aqrsb=CXHDHx4nS-pgg+MUDj14r-kN8_Jcbn-NAUziVag@mail.gmail.com>
- <70d5569e-4ad6-988a-e047-5d12d298684c@kernel.dk>
+        Mon, 26 Oct 2020 21:18:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603761500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8SrYT8zX0tHJ+L74DDGK2r1FEkedibAS0AWcoEpa4aY=;
+        b=HJra2W5UP7IGKEGxRSxYh2tBGS4yP1hqmshRLAUB3h1sE8tlyiW8U97QzMjsAjboPKiM5y
+        MlM0QZpvt+XropVcbn2ScAtHLK1qqtM2GaDX+og7DtQevBWVtTzlBak1PKIUwWebaKM7t2
+        zXT+6C0KPK2LafODqCBgq0YkHL5vjwc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-OOkJbHEYPKOO7ro1yyiCeg-1; Mon, 26 Oct 2020 21:18:16 -0400
+X-MC-Unique: OOkJbHEYPKOO7ro1yyiCeg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36CC51009E27;
+        Tue, 27 Oct 2020 01:18:14 +0000 (UTC)
+Received: from T590 (ovpn-12-132.pek2.redhat.com [10.72.12.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 246455C1BB;
+        Tue, 27 Oct 2020 01:18:05 +0000 (UTC)
+Date:   Tue, 27 Oct 2020 09:18:01 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     lining <lining2020x@163.com>
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
+        nbd@other.debian.org, yunchuan.wen@kylin-cloud.com,
+        ceph-users@ceph.io, donglifekernel@126.com
+Subject: Re: [bug report] NBD: rbd-nbd + ext4 stuck after nbd resized
+Message-ID: <20201027011801.GA1828887@T590>
+References: <AA00244F-0E5A-4E52-B358-4F36A3486EBF@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <70d5569e-4ad6-988a-e047-5d12d298684c@kernel.dk>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AA00244F-0E5A-4E52-B358-4F36A3486EBF@163.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 05:56:11PM -0600, Jens Axboe wrote:
-> On 10/26/20 4:55 PM, Kyle Huey wrote:
-> > A test program from the rr[0] test suite, vm_readv_writev[1], no
-> > longer works on 5.10-rc1 when compiled as a 32 bit binary and executed
-> > on a 64 bit kernel. The first process_vm_readv call (on line 35) now
-> > fails with EFAULT. I have bisected this to
-> > c3973b401ef2b0b8005f8074a10e96e3ea093823.
-> > 
-> > It should be fairly straightforward to extract the test case from our
-> > repository into a standalone program.
+On Wed, Oct 21, 2020 at 09:08:10AM +0800, lining wrote:
+> (Sorry for sending this mail again, this one add nbd@other.debian.org)
 > 
-> Can you check with this applied?
+> Hi kernel、ceph comunity:
 > 
-> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-> index fd12da80b6f2..05676722d9cd 100644
-> --- a/mm/process_vm_access.c
-> +++ b/mm/process_vm_access.c
-> @@ -273,7 +273,8 @@ static ssize_t process_vm_rw(pid_t pid,
->  		return rc;
->  	if (!iov_iter_count(&iter))
->  		goto free_iov_l;
-> -	iov_r = iovec_from_user(rvec, riovcnt, UIO_FASTIOV, iovstack_r, false);
-> +	iov_r = iovec_from_user(rvec, riovcnt, UIO_FASTIOV, iovstack_r,
-> +				in_compat_syscall());
+> We run into an issue that mainly related to the (kernel) nbd driver and (ceph) rbd-nbd. 
+> After some investigations, I found that the root cause of the problem seems to be related to the change in the block size of nbd.
+> 
+> I am not sure whether it is the nbd driver or rbd-nbd bug, however there is such a problem.
+> 
+> 
+> What happened：
+> It will always hang when accessing the mount point of nbd device with ext4 after nbd resized. 
+> 
+> 
+> Environment information:
+> - kernel:               v4.19.25 or master
+> - rbd-nbd(ceph):  v12.2.0 Luminous or master
+> - the fs of nbd:    ext4
 
-_ouch_
+Hello lining,
 
-There's a bug, all right, but I'm not sure that this is all there is to it.
-For now it's probably the right fix, but...  Consider the fun trying to
-use that from 32bit process to access the memory of 64bit one.  IOW, we
-might want to add an explicit flag for "force 64bit addresses/sizes
-in rvec".
+Can you reproduce this issue on v5.9 kernel?
+
+
+Thanks,
+Ming
+
