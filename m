@@ -2,72 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14D7729A7C4
-	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 10:26:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C290B29A8DD
+	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 11:07:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408265AbgJ0J0M (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Oct 2020 05:26:12 -0400
-Received: from casper.infradead.org ([90.155.50.34]:35536 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408154AbgJ0J0M (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Oct 2020 05:26:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yDef0E0ogyumLmwur5x/EcaGFcvkhEhAdEIyOx5drxw=; b=oh+afw45nKJhGAxhCkE1Io5JaB
-        bwEL31fHPHEV1IATRu9i8Brtcghq3XNFR3eGH0nlXyJeot/sQifCmu8ZOtKvNdCow9ip64Qz67PXY
-        DykwhhsrEbAQ/kNbHNe2mWcORhf3NE0DTaTUkcNOvck1CcbJOP0JViHFj0+YlwVLN5FZlhCc/lt9y
-        LPzi6GLoRz6eBLgCV+suyi+p8EBBTX005Ji4CL3DVsMyCepRe7xaWYRj0rdWzx8m4YV2qucPMaYyu
-        8L6lZA2c0NklC3PbSeUXfAUok/j8SXVIZdqrvfw5A35UlxV7NZRpVPKVYJlx1XbO2gEG3QFVuRFl9
-        0TgfBfBQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kXLF0-0005eo-8Y; Tue, 27 Oct 2020 09:26:06 +0000
-Date:   Tue, 27 Oct 2020 09:26:06 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PATCH RFC] blk-mq: Don't IPI requests on PREEMPT_RT
-Message-ID: <20201027092606.GA20805@infradead.org>
-References: <20201021175059.GA4989@hmbx>
- <20201023110400.bx3uzsb7xy5jtsea@linutronix.de>
- <20201023112130.GA23790@infradead.org>
- <20201023135219.mzzl76eqqy6tqwhe@linutronix.de>
+        id S2896914AbgJ0KC3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Oct 2020 06:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896027AbgJ0Jvm (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 27 Oct 2020 05:51:42 -0400
+Received: from mail.kernel.org (ip5f5ad5af.dynamic.kabel-deutschland.de [95.90.213.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E35D222D9;
+        Tue, 27 Oct 2020 09:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603792301;
+        bh=lFtkOa6eB5wVoP21aYD3evpLemSog4PLhpFnxfTANWw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qomxFSmJWXaiRnqz5k1F2QyT6LJc/Bz7phcLrrfYgw9Dd9TV85cho0p+S5oQhXreU
+         eZXfGcCwIiXdsbN/IsJI2WiqoolBd84mqt51qs4Ik2eS3f4IoJe+mLf2RVf8p1vWLG
+         3QhUk71s77ZyUtI/3M2OOHajkxmkhftzxUWgE6/0=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kXLdj-003FEp-7G; Tue, 27 Oct 2020 10:51:39 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        John Garry <john.garry@huawei.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 09/32] blk-mq: docs: add kernel-doc description for a new struct member
+Date:   Tue, 27 Oct 2020 10:51:13 +0100
+Message-Id: <8e513153b83eefc05e358f51f2632b592c3f6772.1603791716.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1603791716.git.mchehab+huawei@kernel.org>
+References: <cover.1603791716.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201023135219.mzzl76eqqy6tqwhe@linutronix.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Oct 23, 2020 at 03:52:19PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-10-23 12:21:30 [+0100], Christoph Hellwig wrote:
-> > > -	if (!IS_ENABLED(CONFIG_SMP) ||
-> > > +	if (!IS_ENABLED(CONFIG_SMP) || IS_ENABLED(CONFIG_PREEMPT_RT) ||
-> > >  	    !test_bit(QUEUE_FLAG_SAME_COMP, &rq->q->queue_flags))
-> > 
-> > This needs a big fat comment explaining your rationale.  And probably
-> > a separate if statement to make it obvious as well.
-> 
-> Okay.
-> How much difference does it make between completing in-softirq vs
-> in-IPI?
+As reported by kernel-doc:
+	./include/linux/blk-mq.h:267: warning: Function parameter or member 'active_queues_shared_sbitmap' not described in 'blk_mq_tag_set'
 
-For normal non-RT builds?  This introduces another context switch, which
-for the latencies we are aiming for is noticable.
+There is now a new member for struct blk_mq_tag_set. Add a
+description for it, based on the commit that introduced it.
 
-> I'm asking because acquiring a spinlock_t in an IPI shouldn't be
-> done (as per Documentation/locking/locktypes.rst). We don't have
-> anything in lockdep that will complain here on !RT and we the above we
-> avoid the case on RT.
+Fixes: f1b49fdc1c64 ("blk-mq: Record active_queues_shared_sbitmap per tag_set for when using shared sbitmap")
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ include/linux/blk-mq.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-At least for NVMe we aren't taking locks, but with the number of drivers
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index b23eeca4d677..794b2a33a2c3 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -235,6 +235,8 @@ enum hctx_type {
+  * @flags:	   Zero or more BLK_MQ_F_* flags.
+  * @driver_data:   Pointer to data owned by the block driver that created this
+  *		   tag set.
++ * @active_queues_shared_sbitmap:
++ * 		   number of active request queues per tag set.
+  * @__bitmap_tags: A shared tags sbitmap, used over all hctx's
+  * @__breserved_tags:
+  *		   A shared reserved tags sbitmap, used over all hctx's
+-- 
+2.26.2
+
