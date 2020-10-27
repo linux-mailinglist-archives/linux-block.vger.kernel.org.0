@@ -2,386 +2,201 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B5C29F07E
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F366629F45F
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 19:59:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgJ2PvA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 11:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728509AbgJ2Pu7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:50:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3B3C0613CF;
-        Thu, 29 Oct 2020 08:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=iBrwQ7u9qumc4njkhWiPx+LnMHepKgVCZBO024rsKVU=; b=a8ovsw3qEH9a1JE2dbyz8caYti
-        XhDBkiE63ZuKYUZXZB77wo6BJuHEkndi44+JMWdHQsYop8n/jNE/wsrsTlb3x7e1p2A7qHSj6WUOv
-        cmQSsRgTkw36FvlABOPWp+LZlsDHWmIcbxbmFFVEeGTeg7fhq+Z9WTPIYnaw7HW9GB6lHx45/sHXr
-        HaiSW4mrH0pCqgEAfNRUvQXM8SvqJSvMRLJK4RaoZKpEbpcjHTAQnP0t9j9qDs3f6ecH12mk2TI7C
-        84wp+P+WARddkTA3COwlZ9AszfSNliRI2an3cxPSNvlgA6YQifX4GtjLiyBqniUfq5YnE8t5Kom7V
-        zBOeCiYA==;
-Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kYA3J-0008Dj-A7; Thu, 29 Oct 2020 15:41:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 18/18] block: switch gendisk lookup to a simple xarray
-Date:   Thu, 29 Oct 2020 15:58:41 +0100
-Message-Id: <20201029145841.144173-19-hch@lst.de>
+        id S1725774AbgJ2S7K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 14:59:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50751 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgJ2S7K (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 29 Oct 2020 14:59:10 -0400
+IronPort-SDR: A2dL0L87y7GioTZ3EQFkrWGcOttqVuj92GvEQoTbBlGW3UJvK4c2yuJeaZMF6ceVmu0Q2P0rdF
+ ienZaDTFlkKw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9789"; a="156265123"
+X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
+   d="scan'208";a="156265123"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 11:59:08 -0700
+IronPort-SDR: UlQA3zdZyxoNSYp3bRltrlFfeboi2/FAVbsqctQCYfVTYTwDM60hn6iHx2lfU0rU3t6Pfe4H13
+ bLSxYRr6Tm4A==
+X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
+   d="scan'208";a="526842850"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 11:59:07 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kYD9d-001S4w-KE; Thu, 29 Oct 2020 21:00:09 +0200
+X-Original-To: andriy.shevchenko@linux.intel.com
+Received: from linux.intel.com [10.54.29.200]
+        by smile.fi.intel.com with IMAP (fetchmail-6.4.12)
+        for <andy@localhost> (single-drop); Tue, 27 Oct 2020 19:15:07 +0200 (EET)
+Received: from fmsmga008.fm.intel.com (fmsmga008.fm.intel.com [10.253.24.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 3CB9858089E
+        for <andriy.shevchenko@linux.intel.com>; Tue, 27 Oct 2020 10:11:33 -0700 (PDT)
+IronPort-SDR: 3X0lBfBaTwhsYL+1XlNjFmW11F4zyn72edL6JVuLsl6W1Y9QHgirTDl5DRZVDH/ZQZzuBb1ujP
+ JCx5RvDgKobw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,424,1596524400"; 
+   d="scan'208";a="303830364"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Oct 2020 10:11:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 900E0179; Tue, 27 Oct 2020 19:11:30 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] xsysace: use platform_get_resource() and platform_get_irq_optional()
+Date:   Tue, 27 Oct 2020 19:11:30 +0200
+Message-Id: <20201027171130.56998-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201029145841.144173-1-hch@lst.de>
-References: <20201029145841.144173-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that bdev_map is only used for finding gendisks, we can use
-a simple xarray instead of the regions tracking structure for it.
+Use platform_get_resource() to fetch the memory resource and
+platform_get_irq_optional() to get optional IRQ instead of
+open-coded variants.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+IRQ is not supposed to be changed at runtime, so there is
+no functional change in ace_fsm_yieldirq().
+
+On the other hand we now take first resources instead of last ones
+to proceed. I can't imagine how broken should be firmware to have
+a garbage in the first resource slots. But if it the case, it needs
+to be documented.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- block/genhd.c         | 208 ++++++++----------------------------------
- include/linux/genhd.h |   7 --
- 2 files changed, 37 insertions(+), 178 deletions(-)
+ drivers/block/xsysace.c | 49 ++++++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 23 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index e78c95cf3c00a9..439b444cac2038 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -27,15 +27,7 @@
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index 8d581c7536fb..eb8ef65778c3 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -443,22 +443,27 @@ static void ace_fix_driveid(u16 *id)
+ #define ACE_FSM_NUM_STATES              11
  
- static struct kobject *block_depr;
- 
--struct bdev_map {
--	struct bdev_map *next;
--	dev_t dev;
--	unsigned long range;
--	struct module *owner;
--	struct kobject *(*probe)(dev_t, int *, void *);
--	int (*lock)(dev_t, void *);
--	void *data;
--} *bdev_map[255];
-+static DEFINE_XARRAY(bdev_map);
- static DEFINE_MUTEX(bdev_map_lock);
- 
- /* for extended dynamic devt allocation, currently only one major is used */
-@@ -646,85 +638,26 @@ static char *bdevt_str(dev_t devt, char *buf)
- 	return buf;
+ /* Set flag to exit FSM loop and reschedule tasklet */
+-static inline void ace_fsm_yield(struct ace_device *ace)
++static inline void ace_fsm_yieldpoll(struct ace_device *ace)
+ {
+-	dev_dbg(ace->dev, "ace_fsm_yield()\n");
+ 	tasklet_schedule(&ace->fsm_tasklet);
+ 	ace->fsm_continue_flag = 0;
  }
  
--/*
-- * Register device numbers dev..(dev+range-1)
-- * range must be nonzero
-- * The hash chain is sorted on range, so that subranges can override.
-- */
--void blk_register_region(dev_t devt, unsigned long range, struct module *module,
--			 struct kobject *(*probe)(dev_t, int *, void *),
--			 int (*lock)(dev_t, void *), void *data)
--{
--	unsigned n = MAJOR(devt + range - 1) - MAJOR(devt) + 1;
--	unsigned index = MAJOR(devt);
--	unsigned i;
--	struct bdev_map *p;
--
--	n = min(n, 255u);
--	p = kmalloc_array(n, sizeof(struct bdev_map), GFP_KERNEL);
--	if (p == NULL)
--		return;
--
--	for (i = 0; i < n; i++, p++) {
--		p->owner = module;
--		p->probe = probe;
--		p->lock = lock;
--		p->dev = devt;
--		p->range = range;
--		p->data = data;
--	}
-+static void blk_register_region(struct gendisk *disk)
++static inline void ace_fsm_yield(struct ace_device *ace)
 +{
-+	int i;
- 
- 	mutex_lock(&bdev_map_lock);
--	for (i = 0, p -= n; i < n; i++, p++, index++) {
--		struct bdev_map **s = &bdev_map[index % 255];
--		while (*s && (*s)->range < range)
--			s = &(*s)->next;
--		p->next = *s;
--		*s = p;
-+	for (i = 0; i < disk->minors; i++) {
-+		if (xa_insert(&bdev_map, disk_devt(disk) + i, disk, GFP_KERNEL))
-+			WARN_ON_ONCE(1);
- 	}
- 	mutex_unlock(&bdev_map_lock);
- }
--EXPORT_SYMBOL(blk_register_region);
- 
--void blk_unregister_region(dev_t devt, unsigned long range)
-+static void blk_unregister_region(struct gendisk *disk)
- {
--	unsigned n = MAJOR(devt + range - 1) - MAJOR(devt) + 1;
--	unsigned index = MAJOR(devt);
--	unsigned i;
--	struct bdev_map *found = NULL;
-+	int i;
- 
- 	mutex_lock(&bdev_map_lock);
--	for (i = 0; i < min(n, 255u); i++, index++) {
--		struct bdev_map **s;
--		for (s = &bdev_map[index % 255]; *s; s = &(*s)->next) {
--			struct bdev_map *p = *s;
--			if (p->dev == devt && p->range == range) {
--				*s = p->next;
--				if (!found)
--					found = p;
--				break;
--			}
--		}
--	}
-+	for (i = 0; i < disk->minors; i++)
-+		xa_erase(&bdev_map, disk_devt(disk) + i);
- 	mutex_unlock(&bdev_map_lock);
--	kfree(found);
--}
--EXPORT_SYMBOL(blk_unregister_region);
--
--static struct kobject *exact_match(dev_t devt, int *partno, void *data)
--{
--	struct gendisk *p = data;
--
--	return &disk_to_dev(p)->kobj;
--}
--
--static int exact_lock(dev_t devt, void *data)
--{
--	struct gendisk *p = data;
--
--	if (!get_disk_and_module(p))
--		return -1;
--	return 0;
- }
- 
- static void disk_scan_partitions(struct gendisk *disk)
-@@ -870,8 +803,7 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 		ret = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
- 		WARN_ON(ret);
- 		bdi_set_owner(bdi, dev);
--		blk_register_region(disk_devt(disk), disk->minors, NULL,
--				    exact_match, exact_lock, disk);
-+		blk_register_region(disk);
- 	}
- 	register_disk(parent, disk, groups);
- 	if (register_queue)
-@@ -984,7 +916,7 @@ void del_gendisk(struct gendisk *disk)
- 	blk_unregister_queue(disk);
- 	
- 	if (!(disk->flags & GENHD_FL_HIDDEN))
--		blk_unregister_region(disk_devt(disk), disk->minors);
-+		blk_unregister_region(disk);
- 	/*
- 	 * Remove gendisk pointer from idr so that it cannot be looked up
- 	 * while RCU period before freeing gendisk is running to prevent
-@@ -1050,54 +982,22 @@ static void request_gendisk_module(dev_t devt)
- 		request_module("block-major-%d", MAJOR(devt));
- }
- 
--static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
-+static bool get_disk_and_module(struct gendisk *disk)
- {
--	struct kobject *kobj;
--	struct bdev_map *p;
--	unsigned long best = ~0UL;
--
--retry:
--	mutex_lock(&bdev_map_lock);
--	for (p = bdev_map[MAJOR(dev) % 255]; p; p = p->next) {
--		struct kobject *(*probe)(dev_t, int *, void *);
--		struct module *owner;
--		void *data;
--
--		if (p->dev > dev || p->dev + p->range - 1 < dev)
--			continue;
--		if (p->range - 1 >= best)
--			break;
--		if (!try_module_get(p->owner))
--			continue;
--		owner = p->owner;
--		data = p->data;
--		probe = p->probe;
--		best = p->range - 1;
--		*partno = dev - p->dev;
--
--		if (!probe) {
--			mutex_unlock(&bdev_map_lock);
--			module_put(owner);
--			request_gendisk_module(dev);
--			goto retry;
--		}
-+	struct module *owner;
- 
--		if (p->lock && p->lock(dev, data) < 0) {
--			module_put(owner);
--			continue;
--		}
--		mutex_unlock(&bdev_map_lock);
--		kobj = probe(dev, partno, data);
--		/* Currently ->owner protects _only_ ->probe() itself. */
-+	if (!disk->fops)
-+		return false;
-+	owner = disk->fops->owner;
-+	if (owner && !try_module_get(owner))
-+		return false;
-+	if (!kobject_get_unless_zero(&disk_to_dev(disk)->kobj)) {
- 		module_put(owner);
--		if (kobj)
--			return dev_to_disk(kobj_to_dev(kobj));
--		goto retry;
-+		return false;
- 	}
--	mutex_unlock(&bdev_map_lock);
--	return NULL;
--}
-+	return true;
- 
++	dev_dbg(ace->dev, "%s()\n", __func__);
++	ace_fsm_yieldpoll(ace);
 +}
- 
- /**
-  * get_gendisk - get partitioning information for a given device
-@@ -1116,7 +1016,19 @@ struct gendisk *get_gendisk(dev_t devt, int *partno)
- 	might_sleep();
- 
- 	if (MAJOR(devt) != BLOCK_EXT_MAJOR) {
--		disk = lookup_gendisk(devt, partno);
-+		mutex_lock(&bdev_map_lock);
-+		disk = xa_load(&bdev_map, devt);
-+		if (!disk) {
-+			mutex_unlock(&bdev_map_lock);
-+			request_gendisk_module(devt);
-+			mutex_lock(&bdev_map_lock);
-+			disk = xa_load(&bdev_map, devt);
-+		}
-+		if (disk && !get_disk_and_module(disk))
-+			disk = NULL;
-+		if (disk)
-+			*partno = devt - disk_devt(disk);
-+		mutex_unlock(&bdev_map_lock);
- 	} else {
- 		struct hd_struct *part;
- 
-@@ -1320,21 +1232,6 @@ static const struct seq_operations partitions_op = {
- };
- #endif
- 
--static void bdev_map_init(void)
--{
--	struct bdev_map *base;
--	int i;
--
--	base = kzalloc(sizeof(*base), GFP_KERNEL);
--	if (!base)
--		panic("cannot allocate bdev_map");
--
--	base->dev = 1;
--	base->range = ~0 ;
--	for (i = 0; i < 255; i++)
--		bdev_map[i] = base;
--}
--
- static int __init genhd_device_init(void)
++
+ /* Set flag to exit FSM loop and wait for IRQ to reschedule tasklet */
+ static inline void ace_fsm_yieldirq(struct ace_device *ace)
  {
- 	int error;
-@@ -1343,7 +1240,6 @@ static int __init genhd_device_init(void)
- 	error = class_register(&block_class);
- 	if (unlikely(error))
- 		return error;
--	bdev_map_init();
- 	blk_dev_init();
+ 	dev_dbg(ace->dev, "ace_fsm_yieldirq()\n");
  
- 	register_blkdev(BLOCK_EXT_MAJOR, "blkext");
-@@ -1892,35 +1788,6 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
+-	if (!ace->irq)
+-		/* No IRQ assigned, so need to poll */
+-		tasklet_schedule(&ace->fsm_tasklet);
+-	ace->fsm_continue_flag = 0;
++	if (ace->irq > 0)
++		ace->fsm_continue_flag = 0;
++	else
++		ace_fsm_yieldpoll(ace);
  }
- EXPORT_SYMBOL(__alloc_disk_node);
  
--/**
-- * get_disk_and_module - increments the gendisk and gendisk fops module refcount
-- * @disk: the struct gendisk to increment the refcount for
-- *
-- * This increments the refcount for the struct gendisk, and the gendisk's
-- * fops module owner.
-- *
-- * Context: Any context.
-- */
--struct kobject *get_disk_and_module(struct gendisk *disk)
--{
--	struct module *owner;
--	struct kobject *kobj;
--
--	if (!disk->fops)
--		return NULL;
--	owner = disk->fops->owner;
--	if (owner && !try_module_get(owner))
--		return NULL;
--	kobj = kobject_get_unless_zero(&disk_to_dev(disk)->kobj);
--	if (kobj == NULL) {
--		module_put(owner);
--		return NULL;
--	}
--	return kobj;
--
--}
--EXPORT_SYMBOL(get_disk_and_module);
--
- /**
-  * put_disk - decrements the gendisk refcount
-  * @disk: the struct gendisk to decrement the refcount for
-@@ -1957,7 +1824,6 @@ void put_disk_and_module(struct gendisk *disk)
- 		module_put(owner);
+ static bool ace_has_next_request(struct request_queue *q)
+@@ -1053,12 +1058,12 @@ static int ace_setup(struct ace_device *ace)
+ 		ACE_CTRL_DATABUFRDYIRQ | ACE_CTRL_ERRORIRQ);
+ 
+ 	/* Now we can hook up the irq handler */
+-	if (ace->irq) {
++	if (ace->irq > 0) {
+ 		rc = request_irq(ace->irq, ace_interrupt, 0, "systemace", ace);
+ 		if (rc) {
+ 			/* Failure - fall back to polled mode */
+ 			dev_err(ace->dev, "request_irq failed\n");
+-			ace->irq = 0;
++			ace->irq = rc;
+ 		}
  	}
+ 
+@@ -1110,7 +1115,7 @@ static void ace_teardown(struct ace_device *ace)
+ 
+ 	tasklet_kill(&ace->fsm_tasklet);
+ 
+-	if (ace->irq)
++	if (ace->irq > 0)
+ 		free_irq(ace->irq, ace);
+ 
+ 	iounmap(ace->baseaddr);
+@@ -1123,11 +1128,6 @@ static int ace_alloc(struct device *dev, int id, resource_size_t physaddr,
+ 	int rc;
+ 	dev_dbg(dev, "ace_alloc(%p)\n", dev);
+ 
+-	if (!physaddr) {
+-		rc = -ENODEV;
+-		goto err_noreg;
+-	}
+-
+ 	/* Allocate and initialize the ace device structure */
+ 	ace = kzalloc(sizeof(struct ace_device), GFP_KERNEL);
+ 	if (!ace) {
+@@ -1153,7 +1153,6 @@ static int ace_alloc(struct device *dev, int id, resource_size_t physaddr,
+ 	dev_set_drvdata(dev, NULL);
+ 	kfree(ace);
+ err_alloc:
+-err_noreg:
+ 	dev_err(dev, "could not initialize device, err=%i\n", rc);
+ 	return rc;
  }
--EXPORT_SYMBOL(put_disk_and_module);
+@@ -1176,10 +1175,11 @@ static void ace_free(struct device *dev)
  
- static void set_disk_ro_uevent(struct gendisk *gd, int ro)
+ static int ace_probe(struct platform_device *dev)
  {
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 14b1bc7dea21d8..77c3489991f42e 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -340,15 +340,8 @@ int blk_add_partitions(struct gendisk *disk, struct block_device *bdev);
- int blk_drop_partitions(struct block_device *bdev);
+-	resource_size_t physaddr = 0;
+ 	int bus_width = ACE_BUS_WIDTH_16; /* FIXME: should not be hard coded */
++	resource_size_t physaddr;
++	struct resource *res;
+ 	u32 id = dev->id;
+-	int irq = 0;
++	int irq;
+ 	int i;
  
- extern struct gendisk *__alloc_disk_node(int minors, int node_id);
--extern struct kobject *get_disk_and_module(struct gendisk *disk);
- extern void put_disk(struct gendisk *disk);
- extern void put_disk_and_module(struct gendisk *disk);
--extern void blk_register_region(dev_t devt, unsigned long range,
--			struct module *module,
--			struct kobject *(*probe)(dev_t, int *, void *),
--			int (*lock)(dev_t, void *),
--			void *data);
--extern void blk_unregister_region(dev_t devt, unsigned long range);
+ 	dev_dbg(&dev->dev, "ace_probe(%p)\n", dev);
+@@ -1190,12 +1190,15 @@ static int ace_probe(struct platform_device *dev)
+ 	if (of_find_property(dev->dev.of_node, "8-bit", NULL))
+ 		bus_width = ACE_BUS_WIDTH_8;
  
- #define alloc_disk_node(minors, node_id)				\
- ({									\
+-	for (i = 0; i < dev->num_resources; i++) {
+-		if (dev->resource[i].flags & IORESOURCE_MEM)
+-			physaddr = dev->resource[i].start;
+-		if (dev->resource[i].flags & IORESOURCE_IRQ)
+-			irq = dev->resource[i].start;
+-	}
++	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -EINVAL;
++
++	physaddr = res->start;
++	if (!physaddr)
++		return -ENODEV;
++
++	irq = platform_get_irq_optional(dev, 0);
+ 
+ 	/* Call the bus-independent setup code */
+ 	return ace_alloc(&dev->dev, id, physaddr, irq, bus_width);
 -- 
 2.28.0
 
