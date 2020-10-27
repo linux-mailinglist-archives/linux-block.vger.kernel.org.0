@@ -2,60 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1703329AD54
-	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 14:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CE9329BA93
+	for <lists+linux-block@lfdr.de>; Tue, 27 Oct 2020 17:13:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2900720AbgJ0NaW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Oct 2020 09:30:22 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:40172 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2900708AbgJ0NaW (ORCPT
+        id S1806762AbgJ0QHx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Oct 2020 12:07:53 -0400
+Received: from casper.infradead.org ([90.155.50.34]:47024 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1806748AbgJ0QHs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Oct 2020 09:30:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=xiaoguang.wang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0UDNQijJ_1603805411;
-Received: from localhost(mailfrom:xiaoguang.wang@linux.alibaba.com fp:SMTPD_---0UDNQijJ_1603805411)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 27 Oct 2020 21:30:18 +0800
-From:   Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, joseph.qi@linux.alibaba.com
-Subject: [RFC] blk-mq: don't plug for HIPRI IO
-Date:   Tue, 27 Oct 2020 21:29:51 +0800
-Message-Id: <20201027132951.121812-1-xiaoguang.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.14.4.44.g2045bb6
+        Tue, 27 Oct 2020 12:07:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HA4ZHwr5t1Huss17kvkjWkUe8BF7x7y1mhBWMJ9fwWk=; b=oSa7/SiGcBhIb/pUG0Zhal2LtO
+        H3knAhBbJ0uy/aKRI5bjq/YlQqpr2fNV1hRzc3Pnb4wuDyVCqq4KuAYDKbMPw9fmoqeJrqh8zV/Xg
+        mtW1ya/9yI3/+fS8AAHNpa2QYZeWr5why/1VC1z35ZISToTvwLYVky4Vp1FJ/D9B7BWBWaARJIXHt
+        KtQRxk6A13AWWKm3h16MGKQwzUzQohKv8ePfbKUy3HaL1uiQ0RaKIugZCPUJUTmnEPIkKHH2c2q/I
+        oBvqJiQZFYYQ9J974WOQa+UW7oLDUz1q12e9n0kd5SDeNRznDw/h9EztE+lcM1rEsOxIBblTXUDkr
+        y/5BcaMg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kXRVe-0005NX-9w; Tue, 27 Oct 2020 16:07:42 +0000
+Date:   Tue, 27 Oct 2020 16:07:42 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: Re: [PATCH RFC] blk-mq: Don't IPI requests on PREEMPT_RT
+Message-ID: <20201027160742.GA19073@infradead.org>
+References: <20201021175059.GA4989@hmbx>
+ <20201023110400.bx3uzsb7xy5jtsea@linutronix.de>
+ <20201023112130.GA23790@infradead.org>
+ <20201023135219.mzzl76eqqy6tqwhe@linutronix.de>
+ <20201027092606.GA20805@infradead.org>
+ <20201027101102.cvczdb3mkvtoguo5@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201027101102.cvczdb3mkvtoguo5@linutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Commit cb700eb3faa4 ("block: don't plug for aio/O_DIRECT HIPRI IO")
-only does not call blk_start_plug() or blk_finish_plug for HIPRI IO
-in __blkdev_direct_IO(), but if upper layer subsystem, such as io_uring,
-still initializes valid plug, block layer may still plug HIPRI IO.
-To disable plug for HIPRI IO completely, do it in blk_mq_plug().
+On Tue, Oct 27, 2020 at 11:11:02AM +0100, Sebastian Andrzej Siewior wrote:
+> Right. I found this David Runge's log:
 
-Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
----
- block/blk-mq.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+True, ->bi_end_io instances can do a lot of things as long as they
+are hardirq safe.
 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index a52703c..5453d14 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -272,9 +272,11 @@ static inline struct blk_plug *blk_mq_plug(struct request_queue *q,
- {
- 	/*
- 	 * For regular block devices or read operations, use the context plug
--	 * which may be NULL if blk_start_plug() was not executed.
-+	 * which may be NULL if blk_start_plug() was not executed, and don't
-+	 * plug for HIPRI/polled IO, as those should go straight to issue.
- 	 */
--	if (!blk_queue_is_zoned(q) || !op_is_write(bio_op(bio)))
-+	if (!(bio->bi_opf & REQ_HIPRI) &&
-+	    (!blk_queue_is_zoned(q) || !op_is_write(bio_op(bio))))
- 		return current->plug;
- 
- 	/* Zoned block device write operation case: do not plug the BIO */
--- 
-1.8.3.1
+And in the end the IPI case isn't the super fast path anyway, as it
+means we don't use a queue per CPU.
 
+Is there a way to raise a softirq and preferably place it on a given
+CPU without our IPI dance?  That should be a win-win situation for
+everyone.
