@@ -2,83 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A8929DA7E
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 00:24:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0326E29DDB7
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 01:40:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgJ1XM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 19:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
+        id S2388739AbgJ2AkT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 20:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729374AbgJ1XMA (ORCPT
+        with ESMTP id S1731953AbgJ2AkT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 19:12:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B4CC0613CF;
-        Wed, 28 Oct 2020 16:12:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 15so751411pgd.12;
-        Wed, 28 Oct 2020 16:12:00 -0700 (PDT)
+        Wed, 28 Oct 2020 20:40:19 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17054C0613CF
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 17:40:19 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id k27so1507964oij.11
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 17:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DiXcq/4UgFcTWCxFf97aJBO24zkVMbG42o5eatrIo3Q=;
-        b=cRv6FCoahLU0+oD7yU2JuA+YI1h1CyU8EfjqNWWE56wNz9GefGbSAMvd1uS7eYPW3i
-         SO54b32yo/8vUkJTxQhl5UlCHDtjW78gP8APDp6mlzZbH00qxaWy4JVRc4+eV48t8SJQ
-         il1yH6s6oyMGituTUtkWElCbHdsKpXKADn2vTphqBJEe6/DdnWvRyJXFvZzNC8Ak0XbF
-         9yzKlE4pk3tGmg7ADvyosowfD6b0m8AzpXT4f0vvhZqH2sBbgl2KMOO3kEAUWb9eY0tA
-         X5/lVmAdreNXqjjXU8WyjMawbbSbEMg0+K7lp/ceHu9xlyT3VQ3kL/62L9Wlu2mEQvw2
-         tdeA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6JSP+gknecdQIb43HL25pDbZr81hZ8KDnNrBmTGdQyQ=;
+        b=IZ1C3kIaYcK/G2ClwunxqGHsFv2IHhnNyr3/1dNAioeOVs7VevEtVOQCDqZHuBK5QN
+         ubeC8+K+5JYRFnK0bmP2I1Uo8RsUKENUEmcSIixhppbebvpY8iCTaUDs++CbJaJUZBgu
+         byT/X0NQ24miKZlInT/MCffbrOMl4VR2ITW6vf7srIfVd2uh8YHCeTjcAc9iu/u5aT4S
+         MoMvbJOWYhJEMCmVQnY22EEACVRtqY2yP9mELPJbkjw8J5nboE+tJIuhH7FbwwAJWHE3
+         TyOAt6jZ0LLPKJiFGaDVnOHPMPfQXAwcfj80dy9D9q5tL6Q31tWe96FfozpRAJMj/BDl
+         mObw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DiXcq/4UgFcTWCxFf97aJBO24zkVMbG42o5eatrIo3Q=;
-        b=kJ5yb4Tf/D3A2+WN6yVWOKbnxmvDLj7WHdYxShMnGmpnWdk/fJOtT3fVE8w1gkIVSl
-         2BgWazWH2vNZvyjqZkYfTgDaeA4dDgdAaNISVgTxJ8XtZ3/uikRQ+nbSy/NpRK4EK5y6
-         Rf80PEIXB+TN3ch2knsC25cYdb5BDYq03Rxhc7T+Q1kKSe7BM5pCHrwLE18sT4SSywXx
-         n3r1slxB2U8A/69gIWzg6BYkcaokM6emnjLlozGKe1L8LZ7J971yoTNZa1+yIeLV3Kq1
-         RQxIsc3UA1ebQZSbzclV5zsj7hU73QYbOzd8B4/0pWCAr2LrMCIWDumhwp0GO2xsT+a5
-         funA==
-X-Gm-Message-State: AOAM53174vocYKK4qCsGBjSVEMCwzYeOJ+6gCHxB3drji86QstTsvWil
-        9I0S8dt8YkSC+JCqkJZ9sKlKQlxBvWZvUpuWM2sBfvHqEG++
-X-Google-Smtp-Source: ABdhPJysLrUaxcDZmmczpe7hlJebW7o90Nrn8HvCw1Dg2O/UCpzArwZ1r9PWwXeQlZT2c/NGj7DymJXcciBGdlybN2Q=
-X-Received: by 2002:a17:90a:3f0f:: with SMTP id l15mr1252712pjc.190.1603926720253;
- Wed, 28 Oct 2020 16:12:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6JSP+gknecdQIb43HL25pDbZr81hZ8KDnNrBmTGdQyQ=;
+        b=fu6gjPVL9S1wRnWmc/C35klzAyeYzJUOsqvRqx8pbEXu7EBpT1sDS28xphddh1Ly0U
+         sEK1ylQVY3zyER79vSUsqGGGnSaEtMKSMeJ6o3zZ6stlOzqp9FrKBd1CjG9BLlB9S+3T
+         a5CRRsAFqjtuySY5Z0OVUbfvU47hwBXDXlt+yw6hPqKmSajYbrxEqaOwdIVwymMhsIOl
+         8n1GkuzO53EOJscQQofnaq8+7sDoPi3U2/qAxcdH/k1tNSJNKRZLkcMHu3esnWuYzJAp
+         jSmAXTm9CRhAApROn03oPYYf6jX4vGL44Ta+zollfVNg6xmx5wXHRd8x1bA5QTUjN7fL
+         qr7g==
+X-Gm-Message-State: AOAM533T6g4ZuNKASmm4bjGiG9wNi7ww5mcIJJS0s7qCBIPAfPg0nLQ+
+        8k+7lg2wsopF01H8eWVaa6f0zoTHcEbZmA==
+X-Google-Smtp-Source: ABdhPJyZSVd+JZaAYxUeIMvPGFoUD0i3wI32yHTc5e5c7SW3PYC40SS0vy9uNw2huBZNAxs4EV6Z3A==
+X-Received: by 2002:a17:90b:3842:: with SMTP id nl2mr4612274pjb.202.1603852862019;
+        Tue, 27 Oct 2020 19:41:02 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id f4sm3205726pjs.8.2020.10.27.19.41.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2020 19:41:01 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] null_blk: synchronization fix for zoned device
+To:     Kanchan Joshi <joshi.k@samsung.com>, Damien.LeMoal@wdc.com
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        stable@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, javier.gonz@samsung.com
+References: <20200928095549.184510-1-joshi.k@samsung.com>
+ <CGME20200928095914epcas5p1beae8d5a201c35b598fde8288532d58d@epcas5p1.samsung.com>
+ <20200928095549.184510-2-joshi.k@samsung.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c948100e-7e01-5f30-721a-7ed8c820a3b8@kernel.dk>
+Date:   Tue, 27 Oct 2020 20:40:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20201026085141.1179-1-rsalvaterra@gmail.com> <20201027012204.GD2412725@google.com>
- <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
- <20201028101934.GB48825@google.com> <CALjTZvaTiAS1vMyrTNvrfy7KOjemy+tW5-hbTy5SHYfsbRE=_Q@mail.gmail.com>
- <20201028182158.GA128655@google.com>
-In-Reply-To: <20201028182158.GA128655@google.com>
-From:   Rui Salvaterra <rsalvaterra@gmail.com>
-Date:   Wed, 28 Oct 2020 23:11:49 +0000
-Message-ID: <CALjTZvZQyJb=y=XyUzpefEPL-XpK0gMwMW-+0GF1EUrW8Oapzg@mail.gmail.com>
-Subject: Re: [PATCH v3] zram: break the strict dependency from lzo
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     minchan@kernel.org, ngupta@vflare.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200928095549.184510-2-joshi.k@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi, again,
+On 9/28/20 3:55 AM, Kanchan Joshi wrote:
+> Parallel write,read,zone-mgmt operations accessing/altering zone state
+> and write-pointer may get into race. Avoid the situation by using a new
+> spinlock for zoned device.
+> Concurrent zone-appends (on a zone) returning same write-pointer issue
+> is also avoided using this lock.
 
-On Wed, 28 Oct 2020 at 18:22, Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> Right, but well we also need to select ZSMALLOC and CRYPTO for
-> zram to become visible (the thing that I found out recently is
-> that you can always check the hidden/blocked items by hitting
-> 'z' in menuconfig).
+Applied, thanks.
 
-Sure, I can fix that too. Should I do it now, or wait for
-Andrew's/Minchan's feedback?
-And that 'z' key=E2=80=A6 wow. Did you read the kconfig code? I have no ide=
-a
-how you found that one out, but it sure deserves to be documented
-somewhere, it's too useful to be true.
+-- 
+Jens Axboe
 
-Thanks,
-Rui
