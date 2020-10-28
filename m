@@ -2,67 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A76C29E19B
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 03:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D5729E1C7
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 03:03:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgJ1Vsw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 17:48:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57330 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgJ1VnN (ORCPT
+        id S1727745AbgJ1Vsd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 17:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgJ1Vs0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:43:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tjSu2r9Bd9biMwop8Y+5xZtR8qA8hCA/zD7QW3Q6gMw=; b=CgD2LZ1Y5veuIIAid305ik/pa9
-        YXiupXv3xMxxpXUTfAwvU+hMTAVV2/HgYkdQbRyLz9K5Nem7UQbJmwNvO3LZbqNWk+RenntYKH0ln
-        G2f2QmL58EDN678aOzhm51beGQZBXKhme+/jAIaUz2dKbeWdkbo2zMG91Uj09Z2BpZok6/ZcJTbnG
-        rqKR4oINLS8FplmKtv/6T0j+feA87E24fqyA1taK+unANSq1wiRvkRDnQ2vrPQ6ANp1dBHptlJg0N
-        Rj67qcm6NlEFuRJZ53tI9Wzpbr8pEoYbfOtLG2FkiJ8iX89BFgWBGR2+qVyd6z6GF+04LBUDLZuNr
-        q3JRKBnQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kXiJa-0003mv-N5; Wed, 28 Oct 2020 10:04:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DCEF9300455;
-        Wed, 28 Oct 2020 11:04:20 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C57CC20B28590; Wed, 28 Oct 2020 11:04:20 +0100 (CET)
-Date:   Wed, 28 Oct 2020 11:04:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PATCH RFC] blk-mq: Don't IPI requests on PREEMPT_RT
-Message-ID: <20201028100420.GY2628@hirez.programming.kicks-ass.net>
-References: <20201021175059.GA4989@hmbx>
- <20201023110400.bx3uzsb7xy5jtsea@linutronix.de>
- <20201023112130.GA23790@infradead.org>
- <20201023135219.mzzl76eqqy6tqwhe@linutronix.de>
- <20201027092606.GA20805@infradead.org>
- <20201027101102.cvczdb3mkvtoguo5@linutronix.de>
- <20201027160742.GA19073@infradead.org>
- <87eelj1tx0.fsf@nanos.tec.linutronix.de>
- <20201027172309.GA15004@infradead.org>
+        Wed, 28 Oct 2020 17:48:26 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA72CC0613CF;
+        Wed, 28 Oct 2020 14:48:26 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id h6so614755pgk.4;
+        Wed, 28 Oct 2020 14:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+UWJOE6DxOktV3nv6ien/sKPwx9j1tIJmpm9vGaYA7I=;
+        b=lXPjFqjwhXw/iFsQFBkHZ5VUqRkmGhvwPvT0vfWZywgfcJPDsdDAFJu4C1/nWgYvvr
+         Lk1XxSGsBCBag/lTfyxa0Rb+lTsj0OtFtb+jenJSxU1zPp14RsYBF4JgXkdR0TDB+Al+
+         GtulOoehGfzcEdhM8+32GbsxedgDCcMVomSOOY63hVyMoxhuqdhZgGIZtZoh4vS5yBGt
+         dZzc3SAaoe/mvXGlBGIHenC7zmjGFJEfNQ04Ah1vqiN/OS97z5BiKGVEGjCbCu8kk9M7
+         1ibCfRNKt34YkPRuQSbWm+/sbfSl6lFnRNN1F4MjoXZhr8NLk17Pzdivn2tvcy2rNryt
+         2GyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+UWJOE6DxOktV3nv6ien/sKPwx9j1tIJmpm9vGaYA7I=;
+        b=LiyYXW7S6es2b278rODh9jPu1BNrwVdJIYN22Xyr32p2ic7IbfLxkqchTQdNLYyUO5
+         JQZNQ4tJGLdnazs7bKZpaJtn1HMn4fE1ban3yo6mm2NPkDpbM8gBUx+C/2b5CJKre43R
+         h59YHYj8EGll5cyRNoefyC823tlV8EuOqgdQqSprUC+ymoLeHej7pTnvPP1ls8wgApeE
+         ytprLrZarD2bUYK3c/aENnL7xoTla2Qj46NEtx+zSxH6pojDAWsz13sdPONBX5C7PRN5
+         mmrHRSlTphY2sCrl5ZA9WDOxfxrGHSE3sLWThpAJG35u83mQsLNIlDJ/P34X9fQO1KJQ
+         MW7A==
+X-Gm-Message-State: AOAM533/cW3YX298xCTYwBB9Tk37cU6eWsiDY+p5ZmP1R67Ybd0fP/9N
+        HysI+w40a+OEn1KsBqnSZm4Y9Zl4zbA=
+X-Google-Smtp-Source: ABdhPJyrFXfda8gm0gS90dr7Yqvdo2q9Ev0XGHc5kZ7klLeWGxN1soRQy9eJZaz5+32PLMbtqvQ6pg==
+X-Received: by 2002:a63:1c0c:: with SMTP id c12mr725902pgc.21.1603911569773;
+        Wed, 28 Oct 2020 11:59:29 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:a6ae:11ff:fe11:4b46])
+        by smtp.gmail.com with ESMTPSA id x23sm337654pfc.47.2020.10.28.11.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 11:59:28 -0700 (PDT)
+Date:   Thu, 29 Oct 2020 03:59:27 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Minchan Kim <minchan@kernel.org>,
+        Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] zram: break the strict dependency from lzo
+Message-ID: <20201028185927.GB128655@google.com>
+References: <20201028115921.848-1-rsalvaterra@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201027172309.GA15004@infradead.org>
+In-Reply-To: <20201028115921.848-1-rsalvaterra@gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 05:23:09PM +0000, Christoph Hellwig wrote:
-> Ok.  I was hoping we could hide this in core code somehow, especially
-> a peterz didn't like the use of smp_call_function_single_async in the
-> blk-mq completion code very much.
+Cc-ing Andrew
 
-It's smp_call_function_single_async() in general that I don't much like.
-But Linus seemed unconvinced, so we'll keep it for a while I suppose.
+message-id: 20201028115921.848-1-rsalvaterra@gmail.com
+
+On (20/10/28 11:59), Rui Salvaterra wrote:
+> There's nothing special about zram and lzo. It works just fine without it, so
+> as long as at least one of the other supported compression algorithms is
+> selected.
+> 
+> Suggested-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+
+Minchan, I'm fine with the change.
+
+Two things from my side:
+
+1) The commit message, probably, can be a bit more informative. Something
+like this?
+
+	ZRAM always enables CRYPTO_LZO because lzo-rle is the hardcoded
+	fallback compression algorithm, which means that on systems where
+	ZRAM always use, for instance, CRYPTO_ZSTD lzo kernel module
+	becomes unneeded. This patch removes the hardcoded lzo-lre
+	dependency, instead ZRAM picks the first supported CRYPTO
+	compression algorithm, should it be ZSTD or LZ4, etc; and only
+	forcibly enables CRYPTO_LZO (previous behaviour) if none of the
+	alternative algorithms were selected.
+
+
+2) The ZRAM_AUTOSEL_ALGO allows to deselect CRYPTO_LZO only if
+CRYPTO_LZ4/CRYPTO_LZ4HC/CRYPTO_842/CRYPTO_ZSTD are compiled in (=y).
+If any of the algorithms is selected as a module (=m) then CRYPTO_LZO
+is selected as the default algorithm. Apparently depends on !(CONFIG_FOO)
+means depends on !(CONFIG_FOO=y).
+
+It appears that the below change fixes it, but it looks a bit ugly.
+
+---
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index 141ce0ebad06..f2fd34de9200 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -15,7 +15,7 @@ config ZRAM
+ 
+ config ZRAM_AUTOSEL_ALGO
+ 	def_bool y
+-	depends on ZRAM && !(CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842 || CRYPTO_ZSTD)
++	depends on ZRAM && !(CRYPTO_LZ4=m || CRYPTO_LZ4HC=m || CRYPTO_842=m || CRYPTO_ZSTD=m || CRYPTO_LZ4=y || CRYPTO_LZ4HC=y || CRYPTO_842=y || CRYPTO_ZSTD=y)
+ 	select CRYPTO_LZO
+ 
+ config ZRAM_WRITEBACK
+---
+
+	-ss
