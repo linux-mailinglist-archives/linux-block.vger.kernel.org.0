@@ -2,87 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0D729D587
-	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:04:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C3429D7C0
+	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:28:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgJ1WEq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 18:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        id S1733098AbgJ1W0j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 18:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbgJ1WEp (ORCPT
+        with ESMTP id S1733094AbgJ1W0i (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:04:45 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB630C0613D1
-        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 15:04:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id c20so588176pfr.8
-        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 15:04:45 -0700 (PDT)
+        Wed, 28 Oct 2020 18:26:38 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E852C0613D1;
+        Wed, 28 Oct 2020 15:26:38 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id p7so1212080ioo.6;
+        Wed, 28 Oct 2020 15:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J50aqCoEMBtyZNJKdiytI/3RRo9lqaFR/Dl/dXrtNcE=;
-        b=tirtnbfWciU4QLqL6XlcPtwLdyJ2VM4KPzJ7huIKun4yjFXB/hjXolkqeWUwxmFp2P
-         FyfaEl//nYyHj2aei/Ojc+wGoxLz3U6lCRMToacGWASIvujWGc+cBujSXZ+lap415t0V
-         FKZJ48OMld27kCC34fCVYKd83cUx5HRY32X6Z5gq0DXygY4YKGCpCoMmb874piBp5nq6
-         eZisPgb6OfyRdPp1ydnvfAPi/angYx51p4ykKI+VTPhgOLXIq7jhBcjVYaSFuXXoM2FM
-         HAsRta/LxpAR/isC7RdO6pSO56srz6n4kbFKDfRxhN1DUXZldwWla2s8u5WgCoV0PO+G
-         S+IQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sjEb0zN49oaIgAufe8xKhLgOv463zV86NX/WiY9lMDg=;
+        b=ins/48je6GCuzC77llgddm1BWOhvZ6uazsomXrcWJwl9hv29UzUQLz9mXKQ1dQrzon
+         GTRPslbb9K5uBXJj2gwvYX+LIKUP+0wVC4IstAQucpRuKed0cq8EONeycmWDPlhwGB1P
+         wF5W9zuEcjT1HQf0yZ3ppS9KwE2Lm6ac7WmgjRaUw1w09VkIp7Y1g762KEenVNHlaEdY
+         IJjf21Eg70oUsTB5yUAcmGAuKzF3LthEaQOfPnivZN5Al7Ipy4sh1Mnf3QN5Et6nEHEw
+         U1+u7Xxm+QhJHx4Aof9mQRhKDsCu0wvFwqLML/DN0p20Rw7rdfe1iuITaF2mbdq1Nxqw
+         YyKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J50aqCoEMBtyZNJKdiytI/3RRo9lqaFR/Dl/dXrtNcE=;
-        b=o0yoJdPQdoFstM9T48gB6BmGMrLWlbEATH4wCUmNFmWabDobsDlKsK3ahO8uNTVOWM
-         UjjBy5wRyGQ6xDmzV9vrmN126HqWwBWbhGgV0huOZENi1N28lep457VXL6CTqJa9GiDQ
-         FME4KsstncdYbEOMoEMECApcfPUSzouLFV+S2kmm+g+u3nieOpZPCH/4PY5Va593fypt
-         VURylQfB3gWqapzO60Hu21KBrfjW6YaQ9+KwU/Ti9XCSb6cUn+BpSxTDWXr8Gfea7gao
-         Fm1w6bXPrzfm2u85RHZZ1Q6aNRHxIx88GITEfn+9HVg3AGpCCMkVFMvdxMNLUYbfUfMM
-         +xhg==
-X-Gm-Message-State: AOAM532R7ZPBQMEs0PDIlbThZUOYpfOHG861MMPalR0uYxkdxuBXRuXD
-        x7CilqXFuijWDrVAW2RYXFIeJrUM7qeClQ==
-X-Google-Smtp-Source: ABdhPJxDjFRZcRCJtqKUtYQ7ucNs8mt1Ic5OcHNVD8ftrJOhnBFViOoktkHSmb5uvU11l5TSDARcBQ==
-X-Received: by 2002:a6b:f909:: with SMTP id j9mr6391447iog.184.1603896160666;
-        Wed, 28 Oct 2020 07:42:40 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f12sm2534129iop.45.2020.10.28.07.42.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Oct 2020 07:42:40 -0700 (PDT)
-Subject: Re: [RFC] blk-mq: don't plug for HIPRI IO
-To:     Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        linux-block@vger.kernel.org
-Cc:     hch@infradead.org, joseph.qi@linux.alibaba.com
-References: <20201027132951.121812-1-xiaoguang.wang@linux.alibaba.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <80adbefe-2660-34a4-1242-c3db9cd689a6@kernel.dk>
-Date:   Wed, 28 Oct 2020 08:42:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sjEb0zN49oaIgAufe8xKhLgOv463zV86NX/WiY9lMDg=;
+        b=sgXRSDcJRqIkARJ9fWdVdop3nGZAKMGBikXV9amHGBmI81nIcm3eoXFBQdUlfTwdAA
+         +lFQ6a+LSjFlstBrAksZcBSOoN5bv0fToWwHjPX3hO0b0pASLhjbeNYtRmkDdfClLIPH
+         yJSihSD4HmTLAF7ifO7uGRD4CmDcCaSw9zxIylN98VnsERbracm6Thfpjciqi41ViZ14
+         EOmMjuS6/GsZHOjSmWpB0Vw9E9VfOA6Q3ctM+2gMyf9Lf4HPvI8I+fLORSgVPPfi1iKy
+         pDG9WiEBitBREbyBZ/lnPmhRpenPIjDsaidkFRnTEEFgneNNfI+DnQrZ0buIUd1hObdh
+         zj+g==
+X-Gm-Message-State: AOAM530J5+gFYiKomVbRPg9ihDcpgxBcqGRDFORwhwzGGBnMJ99MKDIG
+        EAiZa0MZdsS9xYiLEgu6IY0UDTVAyfk=
+X-Google-Smtp-Source: ABdhPJy/9p8gddGaTW5w39lJapijT3I+Qdeklbh+tEf1vk7pVfid4diusK/CP48SGgLCOD9c8BlcxA==
+X-Received: by 2002:a63:1d12:: with SMTP id d18mr618273pgd.314.1603909321194;
+        Wed, 28 Oct 2020 11:22:01 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:a6ae:11ff:fe11:4b46])
+        by smtp.gmail.com with ESMTPSA id b67sm276268pfa.151.2020.10.28.11.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 11:22:00 -0700 (PDT)
+Date:   Thu, 29 Oct 2020 03:21:58 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        minchan@kernel.org, ngupta@vflare.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH v3] zram: break the strict dependency from lzo
+Message-ID: <20201028182158.GA128655@google.com>
+References: <20201026085141.1179-1-rsalvaterra@gmail.com>
+ <20201027012204.GD2412725@google.com>
+ <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
+ <20201028101934.GB48825@google.com>
+ <CALjTZvaTiAS1vMyrTNvrfy7KOjemy+tW5-hbTy5SHYfsbRE=_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20201027132951.121812-1-xiaoguang.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALjTZvaTiAS1vMyrTNvrfy7KOjemy+tW5-hbTy5SHYfsbRE=_Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/27/20 7:29 AM, Xiaoguang Wang wrote:
-> Commit cb700eb3faa4 ("block: don't plug for aio/O_DIRECT HIPRI IO")
-> only does not call blk_start_plug() or blk_finish_plug for HIPRI IO
-> in __blkdev_direct_IO(), but if upper layer subsystem, such as io_uring,
-> still initializes valid plug, block layer may still plug HIPRI IO.
-> To disable plug for HIPRI IO completely, do it in blk_mq_plug().
+Hi,
 
-There's something funky going on with plugging and polled IO. I tried
-to improve the io_uring plugging, so we don't plug for polled IO (or for
-non-bdev IO in general), and it tanked performance here from ~2.5M IOPS
-to ~1.4M IOPS. Thinking I had made some sort of mistake, I just tried
-your patch alone, and I see the same performance drop.
+On (20/10/28 11:25), Rui Salvaterra wrote:
+> > diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+> > index fe7a4b7d30cf..f93eed40e155 100644
+> > --- a/drivers/block/zram/Kconfig
+> > +++ b/drivers/block/zram/Kconfig
+> > @@ -2,7 +2,7 @@
+> >  config ZRAM
+> >         tristate "Compressed RAM block device support"
+> >         depends on BLOCK && SYSFS && ZSMALLOC && CRYPTO
+> > -       select CRYPTO_LZO
+> > +       depends on (CRYPTO_LZO || CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842 || CRYPTO_ZSTD)
+> 
+> This reverses the dependency order, as now we have to select a
+> supported compression algorithm in order for zram to be visible in the
+> block device drivers list.
 
-This doesn't make a lot of sense, so some investigation is needed.
+Right, but well we also need to select ZSMALLOC and CRYPTO for
+zram to become visible (the thing that I found out recently is
+that you can always check the hidden/blocked items by hitting
+'z' in menuconfig).
 
--- 
-Jens Axboe
+> This is why I wrote the ZRAM_AUTOSEL_ALGO
+> kconfig symbol, which automatically selects lzo as a fallback. If the
+> user chooses to select another supported algorithm, he will then be
+> allowed to deselect lzo. We thus follow the principle of least
+> surprise, IMHO.
 
+OK, makes sense.
+
+	-ss
