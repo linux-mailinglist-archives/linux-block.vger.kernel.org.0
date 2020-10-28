@@ -2,167 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FE1729D64E
-	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9007829D825
+	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgJ1WNl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 18:13:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52812 "EHLO
+        id S1733134AbgJ1W36 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 18:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731112AbgJ1WNf (ORCPT
+        with ESMTP id S2387570AbgJ1W30 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:13:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C448C0613CF;
-        Wed, 28 Oct 2020 15:13:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p17so297667pli.13;
-        Wed, 28 Oct 2020 15:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eR73H0SRKjWBsnxzZwc2xaGbCZRK3e9DcEGdBKm49pA=;
-        b=H5LjzTvv/UWQRP2ccKOg+Eh/8U3L6c2MloCN9olns4O4sIVKZ/gcxk5/XDcqArXXSv
-         fFf8xRMEvN8jsKPWKqyVCDNBBbc0ZeXdz1QGO6gbfwTryjGV3GLe8Dt6/YnP7I4iQxhT
-         oFeUsNI+ajyn3a4FcnCfX6b58z+vuEDXRh0uF4STJmBO14oRyg9rPPtTL71ilRkrxLFL
-         26I9AmLYTgNll1ltPZIHOX3FKfBZuoBHK5KDbxG2h+hBVaVosYs1X5naElvLiE5vF+yZ
-         sMFXxI8HJ4vByqwiS/464BAL20Nk1lx4kIaZFuRgPq80oql7oHkmTrJx5QSvVjzPsAQf
-         dMcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eR73H0SRKjWBsnxzZwc2xaGbCZRK3e9DcEGdBKm49pA=;
-        b=MBidPlmf6pS/vy6zOdbI96/QT7FqkKpKkZtORcPFXLGrDs29E50X7EegYlqWe4vm3d
-         tCR8+wzOhcqaQ3V++TpDtjPWkfAur+dIrfSyjPo2knApulRLnu3MkbyAqNd1r58YQSYE
-         O/IsB46KYhk/bycG96C1qSxcmfg0+geptmePwh0S0y5KBbHDnsNxddpNwYqrhrGQRfCB
-         YHfq2bqFKLcSn8JXKc23B8HLg4q74cNCIAQB7laBknMquIgNxpVw4lsKIRuDMTzDfG4D
-         s4N9RwgPYsQiJhCIe2nK3v1AgzHNZsJIQMlsf+XsO1ZX3at6mOhmM2h1OMBDnGzelQEY
-         Nr3Q==
-X-Gm-Message-State: AOAM530jUbBy7mgumiZWJMRTKyX4bAXjYCcmHA9+XL/bPhKFiwPqMK4T
-        4szcL/d1/RtsJRCZGrN+INxLQaHOqHU=
-X-Google-Smtp-Source: ABdhPJxw5mo3nFBhnSgJAyjgusXDKsM/FLnQRgXobRdthsXp/eW2UdoMkxmOmyk2kZclkapxG0TaTg==
-X-Received: by 2002:a17:902:8541:b029:d5:b4f3:314e with SMTP id d1-20020a1709028541b02900d5b4f3314emr6615419plo.31.1603880377834;
-        Wed, 28 Oct 2020 03:19:37 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:a6ae:11ff:fe11:4b46])
-        by smtp.gmail.com with ESMTPSA id x9sm4767150pgr.22.2020.10.28.03.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2020 03:19:36 -0700 (PDT)
-Date:   Wed, 28 Oct 2020 19:19:34 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Rui Salvaterra <rsalvaterra@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        minchan@kernel.org, ngupta@vflare.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH v3] zram: break the strict dependency from lzo
-Message-ID: <20201028101934.GB48825@google.com>
-References: <20201026085141.1179-1-rsalvaterra@gmail.com>
- <20201027012204.GD2412725@google.com>
- <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
+        Wed, 28 Oct 2020 18:29:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9C4C0613D2;
+        Wed, 28 Oct 2020 15:29:26 -0700 (PDT)
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1603894382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CqSkQpMY6URuz0G0Q4TnfzC+8Rq7slmLYOYzQAzOWGc=;
+        b=31D5ynv45XvdzRDTEELN87qhI/8dZPSaNTNTJOCAB47le0wvb6YrGebef1K6+R/yD/U6aU
+        aZ64XufcS/VUufhS7Ix6k2Xdd/nsIwWTrOQMf1QxkAHv0VF+qOQygb1VZGNOUnEwAknB17
+        xZ2CrxmX+E4AELBSKoqbTUFaG3OuM3ZlDPxznTpQuXbTGUdIGacOtnmb13e1fJx6IBSKuC
+        OhJpbARqtRuXXBOqZjh0a2y+lpPXH6A7pPv+nNAzKUKCF7M1fewCX05oSLRGX78+aldNf2
+        /PNLIH4ZgPav3aYvutCTrNdtRazco7kK/v1SHMy7J1oywJ3q/DP6BoFlCvGTeA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1603894382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CqSkQpMY6URuz0G0Q4TnfzC+8Rq7slmLYOYzQAzOWGc=;
+        b=VzXM6tXWEg+XudQIjBFsQQy6kC9HVzTMeWbxvOMd5pYMok+TJDPH/B6ziFhpiKsdGF2Njk
+        C3Ye3gLCeVxDAXCg==
+To:     linux-block@vger.kernel.org
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 1/3] blk-mq: Don't complete on a remote CPU in force threaded mode
+Date:   Wed, 28 Oct 2020 15:12:49 +0100
+Message-Id: <20201028141251.3608598-1-bigeasy@linutronix.de>
+In-Reply-To: <20201028065616.GA24449@infradead.org>
+References: <20201028065616.GA24449@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+With force threaded interrupts enabled, raising softirq from an SMP
+function call will always result in waking the ksoftirqd thread. This is
+not optimal given that the thread runs at SCHED_OTHER priority.
 
-On (20/10/27 08:39), Rui Salvaterra wrote:
-> Personally, I always use zram with zstd, and the only lzo dependency I
-> have is zram. Disabling lzo saves me about 3 kiB in the final
-> (xz-compressed) vmlinuz image. It's not much, for sure, but when your
-> total storage is 4 MiB (and your RAM is 32 MiB), every bit counts. :)
+Completing the request in hard IRQ-context on PREEMPT_RT (which enforces
+the force threaded mode) is bad because the completion handler may
+acquire sleeping locks which violate the locking context.
 
-Can the following work then?
+Disable request completing on a remote CPU in force threaded mode.
 
-Completely untested.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ block/blk-mq.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-===8<===
-
-diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-index fe7a4b7d30cf..f93eed40e155 100644
---- a/drivers/block/zram/Kconfig
-+++ b/drivers/block/zram/Kconfig
-@@ -2,7 +2,7 @@
- config ZRAM
- 	tristate "Compressed RAM block device support"
- 	depends on BLOCK && SYSFS && ZSMALLOC && CRYPTO
--	select CRYPTO_LZO
-+	depends on (CRYPTO_LZO || CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842 || CRYPTO_ZSTD)
- 	help
- 	  Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
- 	  Pages written to these disks are compressed and stored in memory
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 33e3b76c4fa9..98c7c46c9c3a 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -15,8 +15,10 @@
- #include "zcomp.h"
- 
- static const char * const backends[] = {
-+#if IS_ENABLED(CONFIG_CRYPTO_LZO)
- 	"lzo",
- 	"lzo-rle",
-+#endif
- #if IS_ENABLED(CONFIG_CRYPTO_LZ4)
- 	"lz4",
- #endif
-@@ -202,6 +204,21 @@ void zcomp_destroy(struct zcomp *comp)
- 	kfree(comp);
- }
- 
-+const char *default_compressor(void)
-+{
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 55bcee5dc0320..421a40968c9ff 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -648,6 +648,14 @@ static inline bool blk_mq_complete_need_ipi(struct req=
+uest *rq)
+ 	if (!IS_ENABLED(CONFIG_SMP) ||
+ 	    !test_bit(QUEUE_FLAG_SAME_COMP, &rq->q->queue_flags))
+ 		return false;
 +	/*
-+	 * Pick the first available one (there should be at least one).
-+	 *
-+	 * In theory, we can drop all the ifdefs from backends[] and
-+	 * just iterate backends array doing crypto_has_comp(comp, 0, 0)
-+	 * for each entry and return the first one which is recognized by
-+	 * crypto. But crypto_has_comp() modprobes compression drivers,
-+	 * so we may endup with extra loaded drivers, when the 'default'
-+	 * compressor is not what zram is configured to use.
++	 * With force threaded interrupts enabled, raising softirq from an SMP
++	 * function call will always result in waking the ksoftirqd thread.
++	 * This is probably worse than completing the request on a different
++	 * cache domain.
 +	 */
-+	return backends[0];
-+}
-+
- /*
-  * search available compressors for requested algorithm.
-  * allocate new zcomp and initialize it. return compressing
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index 40f6420f4b2e..f104be9eae9c 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -27,6 +27,7 @@ int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node);
- ssize_t zcomp_available_show(const char *comp, char *buf);
- bool zcomp_available_algorithm(const char *comp);
- 
-+const char *default_compressor(void);
- struct zcomp *zcomp_create(const char *comp);
- void zcomp_destroy(struct zcomp *comp);
- 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 1b697208d661..f02ee050c7bf 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -42,7 +42,6 @@ static DEFINE_IDR(zram_index_idr);
- static DEFINE_MUTEX(zram_index_mutex);
- 
- static int zram_major;
--static const char *default_compressor = "lzo-rle";
- 
- /* Module params (documentation at end) */
- static unsigned int num_devices = 1;
-@@ -1960,7 +1959,9 @@ static int zram_add(void)
- 	blk_queue_flag_set(QUEUE_FLAG_STABLE_WRITES, zram->disk->queue);
- 	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
- 
--	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
-+	strlcpy(zram->compressor,
-+		default_compressor(),
-+		sizeof(zram->compressor));
- 
- 	zram_debugfs_register(zram);
- 	pr_info("Added device: %s\n", zram->disk->disk_name);
++	if (force_irqthreads)
++		return false;
+=20
+ 	/* same CPU or cache domain?  Complete locally */
+ 	if (cpu =3D=3D rq->mq_ctx->cpu ||
+--=20
+2.28.0
+
