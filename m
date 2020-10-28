@@ -2,117 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADBA729D58D
-	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:04:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C3429D806
+	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgJ1WEz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 18:04:55 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:20568 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgJ1WBo (ORCPT
+        id S1733185AbgJ1W3B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 18:29:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54622 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387470AbgJ1W2w (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:01:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1603923387; x=1635459387;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=t9BTLL/KaYlKTWTt9H9j8nSxLtfePywSdxGReXSUWXk=;
-  b=C2yEWrBpASLk4VnPSVFNZ4X6eKIGzwHE5U4an1Ds/gQ2qSG486vBPuFn
-   l9IKKMv0GcX++q5T/uf4wKpzshqlLs5zWBc58FR96FL+pWSW6Krc9GQJS
-   ech6fGkq85A4V8adBrjzbU0Np/FNts94hoVJd4LByazSqp/jyXWaOrDSt
-   A0kz84E4s17OzpsEC9kwzPZoE1xnXur3d5wrTBtFG8r9fZVP04+CS2JiP
-   wq6btIE6OZnUMTMu6EUN7CodlB7UAMQl3/EHSLl9JO4hltsMaWev2HiqX
-   HdzRrlVZE9N6kT+ff+hdF2bKALmrVygHOdSLeAwjb5ZVLcEvYW1e68tp6
-   A==;
-IronPort-SDR: rSLdlvAay43jdPx2tB14JuMFB1Erh2Nba+pcYQVL9mqpIxKkqt2BL03heipRo/pq5Kq09XKVH/
- rk3mpgjQEBggXWs4A9INzlCKBFlR1EcRt+uN01jISSMPSwGxwdGnvlrMliYKxllcJ/3frYdfAJ
- d1nhIOibry8ZC2EfOWvRbT1hR1mmHdgr5MCA1i566dajrAHkSIukxhVlXtzoEzanaY2dXny2/I
- T2hbJON3QLB227ymCLm2s5aE8mvkiEY3kKXcl0N1i0f6O/1X61IPbqzTrnbRneuIbBOwJ7x8PZ
- wn8=
-X-IronPort-AV: E=Sophos;i="5.77,425,1596470400"; 
-   d="scan'208";a="254622937"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Oct 2020 15:39:06 +0800
-IronPort-SDR: CO/Y+PBqnXeBsRbtajN9qN5D35CCkXhzIaCziM8Mxj8ON+GEIHWWKWR353VJKxcvrzYD3d7BtR
- u6DzOCp+9p2lM2i3zgbtX2eoS8lGe/NFsMS4UPurHM1/Z66vaYyb7rDv9NgSvm9lVWl40xFP9s
- mtWTG+htrTyvtfzZXpRgflrLzi3ZG0Am8bg5Umx+7I8wWOd1vtPCNUYbjTff1BYFYHfdEnwnkI
- rdWBibEePbkArlBVvV2yDgC3rl2xj4xOO8VlrOv4tjuWkH+t86hFvqqRCn3huehHOezmR104c7
- nmYPv+RhSAM5oHZAF5LGdEnf
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 00:10:51 -0700
-IronPort-SDR: 3ilwfNzJlC+b7quw8/GVFka+o07dRt2HgVGIcAmcYf6tlTaK0OJTb1PTc94Wzj7GmUFiETc8jd
- xxUvdirPD4GniobgTn6z0YvWcClcEfh1tMPT0CdGEkkxM5LERGEZGgOl/rSqm5+6jOjKDeOs1j
- 0R5qBSooSqOwoi+pI+NfQxERxF5o9EqahftQCUuVYtW8wiG2w34uJfBi4eibmFMJxZJGCXI9sC
- g3XMi2q54TinVFDHmk+XvzcTZvv/2gXi+pAwaxefaD+iF06BpMfMNb1umtabzoDSeWpstkOPlY
- dmE=
-WDCIronportException: Internal
-Received: from naota.dhcp.fujisawa.hgst.com ([10.149.52.155])
-  by uls-op-cesaip02.wdc.com with ESMTP; 28 Oct 2020 00:25:40 -0700
-From:   Naohiro Aota <naohiro.aota@wdc.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org
-Cc:     johannes.thumshirn@wdc.com, Damien.LeMoal@wdc.com,
-        Naohiro Aota <naohiro.aota@wdc.com>, stable@vger.kernel.org
-Subject: [PATCH] block: advance iov_iter on bio_add_hw_page failure
-Date:   Wed, 28 Oct 2020 16:25:36 +0900
-Message-Id: <7e91d39fccbd06efdee40ad119833dbfeafd2fb7.1603868801.git.naohiro.aota@wdc.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 28 Oct 2020 18:28:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S8PCoa106370;
+        Wed, 28 Oct 2020 08:32:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ravJk633C2uE6JSphklEGkafQyLLeeKun8Ka8Tci5S0=;
+ b=s81GeZDOEQuedA+GnZL5mXGkxmKNDW+6/GY3m2c4BwFNNaUSv/y2tOEQaDFfdcUnAcDj
+ 6sK9AmelyQW3FG5vA59GH6E8KN5gOxTbwDq9TVSxWv9BY/w2240v31rRZzFRgOMJaH8T
+ uX1M2xJgpcxIA5K5FwbL5t1U9MqRY/lho5NkezM9S0kMIC21IntFjnjOQnm0b6QK5UIH
+ corqeTvrSNfVizic8WDh1TYINofhZFaAPKoAmxzW9WrzyUz7RVZefIAKTFxLFBmfRmZ8
+ ZZHUTtJq2Cyl+leIaMyISKlwnmQwdb67NYXavGuqfifTV127Vr8AoaeUG7pYgwYocFe4 Zg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 34cc7kwyhk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 28 Oct 2020 08:32:12 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S8UTgc057226;
+        Wed, 28 Oct 2020 08:32:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 34cwunb546-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Oct 2020 08:32:12 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09S8WAh6001574;
+        Wed, 28 Oct 2020 08:32:11 GMT
+Received: from [192.168.1.102] (/39.109.231.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 28 Oct 2020 01:32:10 -0700
+Subject: Re: [PATCH RFC 2/7] block: export part_stat_read_inflight
+To:     Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
+Cc:     linux-block@vger.kernel.org
+References: <cover.1603751876.git.anand.jain@oracle.com>
+ <187d1f02f82019d48f66c97c0d1b99c9a58cd553.1603751876.git.anand.jain@oracle.com>
+ <7e98c923-d484-d05e-b5de-4eb85114ba4d@toxicpanda.com>
+From:   Anand Jain <anand.jain@oracle.com>
+Message-ID: <d9e13a30-89e6-9e78-1d65-2cef5cc76f36@oracle.com>
+Date:   Wed, 28 Oct 2020 16:32:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
+In-Reply-To: <7e98c923-d484-d05e-b5de-4eb85114ba4d@toxicpanda.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010280057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010280056
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the bio's size reaches max_append_sectors, bio_add_hw_page returns
-0 then __bio_iov_append_get_pages returns -EINVAL. This is an expected
-result of building a small enough bio not to be split in the IO path.
-However, iov_iter is not advanced in this case, causing the same pages
-are filled for the bio again and again.
+On 28/10/20 2:10 am, Josef Bacik wrote:
+> On 10/26/20 7:55 PM, Anand Jain wrote:
+>> The exported function part_in_flight() returns commands in-flight in the
+>> given block device.
+>>
+>> Cc: linux-block@vger.kernel.org
+>> Signed-off-by: Anand Jain <anand.jain@oracle.com>
+> 
+> This is much more internal to block and I'd rather not rely on it, I 
+> feel like getting the average latency is good enough.  Thanks,
+> 
 
-Fix the case by properly advancing the iov_iter for already processed
-pages.
+And also, as mentioned in the cover letter, it is hard to know the 
+relation between the number of inflight commands and its effect on avg 
+latency.
 
-Fixes: 0512a75b98f8 ("block: Introduce REQ_OP_ZONE_APPEND")
-Cc: stable@vger.kernel.org # 5.8+
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
----
- block/bio.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+So ok, we don't need this.
 
-diff --git a/block/bio.c b/block/bio.c
-index e0d41ccc4e90..2dfe40be4d6b 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1082,6 +1082,7 @@ static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
- 	ssize_t size, left;
- 	unsigned len, i;
- 	size_t offset;
-+	int ret = 0;
- 
- 	if (WARN_ON_ONCE(!max_append_sectors))
- 		return 0;
-@@ -1104,15 +1105,17 @@ static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
- 
- 		len = min_t(size_t, PAGE_SIZE - offset, left);
- 		if (bio_add_hw_page(q, bio, page, len, offset,
--				max_append_sectors, &same_page) != len)
--			return -EINVAL;
-+				max_append_sectors, &same_page) != len) {
-+			ret = -EINVAL;
-+			break;
-+		}
- 		if (same_page)
- 			put_page(page);
- 		offset = 0;
- 	}
- 
--	iov_iter_advance(iter, size);
--	return 0;
-+	iov_iter_advance(iter, size - left);
-+	return ret;
- }
- 
- /**
--- 
-2.27.0
+Thanks, Anand
+
+
+> Josef
 
