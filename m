@@ -2,96 +2,167 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C3429D806
-	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE1729D64E
+	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:14:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733185AbgJ1W3B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 18:29:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54622 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387470AbgJ1W2w (ORCPT
+        id S1730091AbgJ1WNl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 18:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731112AbgJ1WNf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:28:52 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S8PCoa106370;
-        Wed, 28 Oct 2020 08:32:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ravJk633C2uE6JSphklEGkafQyLLeeKun8Ka8Tci5S0=;
- b=s81GeZDOEQuedA+GnZL5mXGkxmKNDW+6/GY3m2c4BwFNNaUSv/y2tOEQaDFfdcUnAcDj
- 6sK9AmelyQW3FG5vA59GH6E8KN5gOxTbwDq9TVSxWv9BY/w2240v31rRZzFRgOMJaH8T
- uX1M2xJgpcxIA5K5FwbL5t1U9MqRY/lho5NkezM9S0kMIC21IntFjnjOQnm0b6QK5UIH
- corqeTvrSNfVizic8WDh1TYINofhZFaAPKoAmxzW9WrzyUz7RVZefIAKTFxLFBmfRmZ8
- ZZHUTtJq2Cyl+leIaMyISKlwnmQwdb67NYXavGuqfifTV127Vr8AoaeUG7pYgwYocFe4 Zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 34cc7kwyhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Oct 2020 08:32:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S8UTgc057226;
-        Wed, 28 Oct 2020 08:32:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 34cwunb546-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 08:32:12 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09S8WAh6001574;
-        Wed, 28 Oct 2020 08:32:11 GMT
-Received: from [192.168.1.102] (/39.109.231.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Oct 2020 01:32:10 -0700
-Subject: Re: [PATCH RFC 2/7] block: export part_stat_read_inflight
-To:     Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
-Cc:     linux-block@vger.kernel.org
-References: <cover.1603751876.git.anand.jain@oracle.com>
- <187d1f02f82019d48f66c97c0d1b99c9a58cd553.1603751876.git.anand.jain@oracle.com>
- <7e98c923-d484-d05e-b5de-4eb85114ba4d@toxicpanda.com>
-From:   Anand Jain <anand.jain@oracle.com>
-Message-ID: <d9e13a30-89e6-9e78-1d65-2cef5cc76f36@oracle.com>
-Date:   Wed, 28 Oct 2020 16:32:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Wed, 28 Oct 2020 18:13:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C448C0613CF;
+        Wed, 28 Oct 2020 15:13:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p17so297667pli.13;
+        Wed, 28 Oct 2020 15:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eR73H0SRKjWBsnxzZwc2xaGbCZRK3e9DcEGdBKm49pA=;
+        b=H5LjzTvv/UWQRP2ccKOg+Eh/8U3L6c2MloCN9olns4O4sIVKZ/gcxk5/XDcqArXXSv
+         fFf8xRMEvN8jsKPWKqyVCDNBBbc0ZeXdz1QGO6gbfwTryjGV3GLe8Dt6/YnP7I4iQxhT
+         oFeUsNI+ajyn3a4FcnCfX6b58z+vuEDXRh0uF4STJmBO14oRyg9rPPtTL71ilRkrxLFL
+         26I9AmLYTgNll1ltPZIHOX3FKfBZuoBHK5KDbxG2h+hBVaVosYs1X5naElvLiE5vF+yZ
+         sMFXxI8HJ4vByqwiS/464BAL20Nk1lx4kIaZFuRgPq80oql7oHkmTrJx5QSvVjzPsAQf
+         dMcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eR73H0SRKjWBsnxzZwc2xaGbCZRK3e9DcEGdBKm49pA=;
+        b=MBidPlmf6pS/vy6zOdbI96/QT7FqkKpKkZtORcPFXLGrDs29E50X7EegYlqWe4vm3d
+         tCR8+wzOhcqaQ3V++TpDtjPWkfAur+dIrfSyjPo2knApulRLnu3MkbyAqNd1r58YQSYE
+         O/IsB46KYhk/bycG96C1qSxcmfg0+geptmePwh0S0y5KBbHDnsNxddpNwYqrhrGQRfCB
+         YHfq2bqFKLcSn8JXKc23B8HLg4q74cNCIAQB7laBknMquIgNxpVw4lsKIRuDMTzDfG4D
+         s4N9RwgPYsQiJhCIe2nK3v1AgzHNZsJIQMlsf+XsO1ZX3at6mOhmM2h1OMBDnGzelQEY
+         Nr3Q==
+X-Gm-Message-State: AOAM530jUbBy7mgumiZWJMRTKyX4bAXjYCcmHA9+XL/bPhKFiwPqMK4T
+        4szcL/d1/RtsJRCZGrN+INxLQaHOqHU=
+X-Google-Smtp-Source: ABdhPJxw5mo3nFBhnSgJAyjgusXDKsM/FLnQRgXobRdthsXp/eW2UdoMkxmOmyk2kZclkapxG0TaTg==
+X-Received: by 2002:a17:902:8541:b029:d5:b4f3:314e with SMTP id d1-20020a1709028541b02900d5b4f3314emr6615419plo.31.1603880377834;
+        Wed, 28 Oct 2020 03:19:37 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:a6ae:11ff:fe11:4b46])
+        by smtp.gmail.com with ESMTPSA id x9sm4767150pgr.22.2020.10.28.03.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 03:19:36 -0700 (PDT)
+Date:   Wed, 28 Oct 2020 19:19:34 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        minchan@kernel.org, ngupta@vflare.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH v3] zram: break the strict dependency from lzo
+Message-ID: <20201028101934.GB48825@google.com>
+References: <20201026085141.1179-1-rsalvaterra@gmail.com>
+ <20201027012204.GD2412725@google.com>
+ <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7e98c923-d484-d05e-b5de-4eb85114ba4d@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010280057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALjTZvbf4qK6SHEe7OhkTC_o7kaY4oOKQ+kk-D2OUq_ULsYAqQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 28/10/20 2:10 am, Josef Bacik wrote:
-> On 10/26/20 7:55 PM, Anand Jain wrote:
->> The exported function part_in_flight() returns commands in-flight in the
->> given block device.
->>
->> Cc: linux-block@vger.kernel.org
->> Signed-off-by: Anand Jain <anand.jain@oracle.com>
-> 
-> This is much more internal to block and I'd rather not rely on it, I 
-> feel like getting the average latency is good enough.  Thanks,
-> 
+Hi,
 
-And also, as mentioned in the cover letter, it is hard to know the 
-relation between the number of inflight commands and its effect on avg 
-latency.
+On (20/10/27 08:39), Rui Salvaterra wrote:
+> Personally, I always use zram with zstd, and the only lzo dependency I
+> have is zram. Disabling lzo saves me about 3 kiB in the final
+> (xz-compressed) vmlinuz image. It's not much, for sure, but when your
+> total storage is 4 MiB (and your RAM is 32 MiB), every bit counts. :)
 
-So ok, we don't need this.
+Can the following work then?
 
-Thanks, Anand
+Completely untested.
 
+===8<===
 
-> Josef
-
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index fe7a4b7d30cf..f93eed40e155 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -2,7 +2,7 @@
+ config ZRAM
+ 	tristate "Compressed RAM block device support"
+ 	depends on BLOCK && SYSFS && ZSMALLOC && CRYPTO
+-	select CRYPTO_LZO
++	depends on (CRYPTO_LZO || CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842 || CRYPTO_ZSTD)
+ 	help
+ 	  Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
+ 	  Pages written to these disks are compressed and stored in memory
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 33e3b76c4fa9..98c7c46c9c3a 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -15,8 +15,10 @@
+ #include "zcomp.h"
+ 
+ static const char * const backends[] = {
++#if IS_ENABLED(CONFIG_CRYPTO_LZO)
+ 	"lzo",
+ 	"lzo-rle",
++#endif
+ #if IS_ENABLED(CONFIG_CRYPTO_LZ4)
+ 	"lz4",
+ #endif
+@@ -202,6 +204,21 @@ void zcomp_destroy(struct zcomp *comp)
+ 	kfree(comp);
+ }
+ 
++const char *default_compressor(void)
++{
++	/*
++	 * Pick the first available one (there should be at least one).
++	 *
++	 * In theory, we can drop all the ifdefs from backends[] and
++	 * just iterate backends array doing crypto_has_comp(comp, 0, 0)
++	 * for each entry and return the first one which is recognized by
++	 * crypto. But crypto_has_comp() modprobes compression drivers,
++	 * so we may endup with extra loaded drivers, when the 'default'
++	 * compressor is not what zram is configured to use.
++	 */
++	return backends[0];
++}
++
+ /*
+  * search available compressors for requested algorithm.
+  * allocate new zcomp and initialize it. return compressing
+diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
+index 40f6420f4b2e..f104be9eae9c 100644
+--- a/drivers/block/zram/zcomp.h
++++ b/drivers/block/zram/zcomp.h
+@@ -27,6 +27,7 @@ int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node);
+ ssize_t zcomp_available_show(const char *comp, char *buf);
+ bool zcomp_available_algorithm(const char *comp);
+ 
++const char *default_compressor(void);
+ struct zcomp *zcomp_create(const char *comp);
+ void zcomp_destroy(struct zcomp *comp);
+ 
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 1b697208d661..f02ee050c7bf 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -42,7 +42,6 @@ static DEFINE_IDR(zram_index_idr);
+ static DEFINE_MUTEX(zram_index_mutex);
+ 
+ static int zram_major;
+-static const char *default_compressor = "lzo-rle";
+ 
+ /* Module params (documentation at end) */
+ static unsigned int num_devices = 1;
+@@ -1960,7 +1959,9 @@ static int zram_add(void)
+ 	blk_queue_flag_set(QUEUE_FLAG_STABLE_WRITES, zram->disk->queue);
+ 	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
+ 
+-	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
++	strlcpy(zram->compressor,
++		default_compressor(),
++		sizeof(zram->compressor));
+ 
+ 	zram_debugfs_register(zram);
+ 	pr_info("Added device: %s\n", zram->disk->disk_name);
