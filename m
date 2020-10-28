@@ -2,229 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CA7629D82B
-	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:30:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B0D729D587
+	for <lists+linux-block@lfdr.de>; Wed, 28 Oct 2020 23:04:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387686AbgJ1WaS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Oct 2020 18:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        id S1729960AbgJ1WEq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Oct 2020 18:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387591AbgJ1W30 (ORCPT
+        with ESMTP id S1729953AbgJ1WEp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:29:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64850C0613D1;
-        Wed, 28 Oct 2020 15:29:26 -0700 (PDT)
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1603894383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAg1BaHG/AZLtW1SO42OcM1WhPRxIwOOiKwVxj2LdUk=;
-        b=HzvbuTuL9FAatRJUhaiCNAEO3dtoOAvRzWn4x4rKT26LYhC0Hf0WWkxJkMzvtfVy6F89AV
-        4TZ7TQLF8NaIKCe0DIWsF7hDVdS2vvfrfiFh30zCqIJcPmgbMLmM9J2fzcrnDg1KSrP3dK
-        mufhIe4B5YfkXtfLLGj0okqmABaA9xXN8ZOQfuoOks/14++y4iD1MgEAmBUfUt8HgzKWtR
-        GrwlqvPSRXpHlO94JGU3T9jw0ShlI6snMuFHoHmgNsG0v+iHNSqic2TRKz6OGLu7ter5E1
-        eS1wwwFmYIKN2b4OccwGS6852cvfIafH8K9ED+f44efuIbklvEa2EDnssyYXNw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1603894383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAg1BaHG/AZLtW1SO42OcM1WhPRxIwOOiKwVxj2LdUk=;
-        b=/7MKsyssu4XRfWBWZENu9a437cT7IlvNe45GcutcSvzWOGoZJtWwhumpkAXOBWRyQptSYq
-        HEt54fZq+3MVSCCA==
-To:     linux-block@vger.kernel.org
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/3] blk-mq: Use llist_head for blk_cpu_done
-Date:   Wed, 28 Oct 2020 15:12:51 +0100
-Message-Id: <20201028141251.3608598-3-bigeasy@linutronix.de>
-In-Reply-To: <20201028141251.3608598-1-bigeasy@linutronix.de>
-References: <20201028065616.GA24449@infradead.org>
- <20201028141251.3608598-1-bigeasy@linutronix.de>
+        Wed, 28 Oct 2020 18:04:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB630C0613D1
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 15:04:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id c20so588176pfr.8
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 15:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J50aqCoEMBtyZNJKdiytI/3RRo9lqaFR/Dl/dXrtNcE=;
+        b=tirtnbfWciU4QLqL6XlcPtwLdyJ2VM4KPzJ7huIKun4yjFXB/hjXolkqeWUwxmFp2P
+         FyfaEl//nYyHj2aei/Ojc+wGoxLz3U6lCRMToacGWASIvujWGc+cBujSXZ+lap415t0V
+         FKZJ48OMld27kCC34fCVYKd83cUx5HRY32X6Z5gq0DXygY4YKGCpCoMmb874piBp5nq6
+         eZisPgb6OfyRdPp1ydnvfAPi/angYx51p4ykKI+VTPhgOLXIq7jhBcjVYaSFuXXoM2FM
+         HAsRta/LxpAR/isC7RdO6pSO56srz6n4kbFKDfRxhN1DUXZldwWla2s8u5WgCoV0PO+G
+         S+IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J50aqCoEMBtyZNJKdiytI/3RRo9lqaFR/Dl/dXrtNcE=;
+        b=o0yoJdPQdoFstM9T48gB6BmGMrLWlbEATH4wCUmNFmWabDobsDlKsK3ahO8uNTVOWM
+         UjjBy5wRyGQ6xDmzV9vrmN126HqWwBWbhGgV0huOZENi1N28lep457VXL6CTqJa9GiDQ
+         FME4KsstncdYbEOMoEMECApcfPUSzouLFV+S2kmm+g+u3nieOpZPCH/4PY5Va593fypt
+         VURylQfB3gWqapzO60Hu21KBrfjW6YaQ9+KwU/Ti9XCSb6cUn+BpSxTDWXr8Gfea7gao
+         Fm1w6bXPrzfm2u85RHZZ1Q6aNRHxIx88GITEfn+9HVg3AGpCCMkVFMvdxMNLUYbfUfMM
+         +xhg==
+X-Gm-Message-State: AOAM532R7ZPBQMEs0PDIlbThZUOYpfOHG861MMPalR0uYxkdxuBXRuXD
+        x7CilqXFuijWDrVAW2RYXFIeJrUM7qeClQ==
+X-Google-Smtp-Source: ABdhPJxDjFRZcRCJtqKUtYQ7ucNs8mt1Ic5OcHNVD8ftrJOhnBFViOoktkHSmb5uvU11l5TSDARcBQ==
+X-Received: by 2002:a6b:f909:: with SMTP id j9mr6391447iog.184.1603896160666;
+        Wed, 28 Oct 2020 07:42:40 -0700 (PDT)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f12sm2534129iop.45.2020.10.28.07.42.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Oct 2020 07:42:40 -0700 (PDT)
+Subject: Re: [RFC] blk-mq: don't plug for HIPRI IO
+To:     Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        linux-block@vger.kernel.org
+Cc:     hch@infradead.org, joseph.qi@linux.alibaba.com
+References: <20201027132951.121812-1-xiaoguang.wang@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <80adbefe-2660-34a4-1242-c3db9cd689a6@kernel.dk>
+Date:   Wed, 28 Oct 2020 08:42:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201027132951.121812-1-xiaoguang.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With llist_head it is possible to avoid the locking (the irq-off region)
-when items are added. This makes it possible to add items on a remote
-CPU.
-llist_add() returns true if the list was previously empty. This can be
-used to invoke the SMP function call / raise sofirq only if the first
-item was added (otherwise it is already pending).
-This simplifies the code a little and reduces the IRQ-off regions. With
-this change it possible to reduce the SMP-function call a simple
-__raise_softirq_irqoff().
+On 10/27/20 7:29 AM, Xiaoguang Wang wrote:
+> Commit cb700eb3faa4 ("block: don't plug for aio/O_DIRECT HIPRI IO")
+> only does not call blk_start_plug() or blk_finish_plug for HIPRI IO
+> in __blkdev_direct_IO(), but if upper layer subsystem, such as io_uring,
+> still initializes valid plug, block layer may still plug HIPRI IO.
+> To disable plug for HIPRI IO completely, do it in blk_mq_plug().
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- block/blk-mq.c         | 78 ++++++++++++++----------------------------
- include/linux/blkdev.h |  2 +-
- 2 files changed, 26 insertions(+), 54 deletions(-)
+There's something funky going on with plugging and polled IO. I tried
+to improve the io_uring plugging, so we don't plug for polled IO (or for
+non-bdev IO in general), and it tanked performance here from ~2.5M IOPS
+to ~1.4M IOPS. Thinking I had made some sort of mistake, I just tried
+your patch alone, and I see the same performance drop.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 769d2d532a825..4f53de48e5038 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -41,7 +41,7 @@
- #include "blk-mq-sched.h"
- #include "blk-rq-qos.h"
-=20
--static DEFINE_PER_CPU(struct list_head, blk_cpu_done);
-+static DEFINE_PER_CPU(struct llist_head, blk_cpu_done);
-=20
- static void blk_mq_poll_stats_start(struct request_queue *q);
- static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
-@@ -565,68 +565,32 @@ void blk_mq_end_request(struct request *rq, blk_statu=
-s_t error)
- }
- EXPORT_SYMBOL(blk_mq_end_request);
-=20
--/*
-- * Softirq action handler - move entries to local list and loop over them
-- * while passing them to the queue registered handler.
-- */
--static __latent_entropy void blk_done_softirq(struct softirq_action *h)
-+static void blk_complete_reqs(struct llist_head *cpu_list)
- {
--	struct list_head *cpu_list, local_list;
-+	struct llist_node *entry;
-+	struct request *rq, *rq_next;
-=20
--	local_irq_disable();
--	cpu_list =3D this_cpu_ptr(&blk_cpu_done);
--	list_replace_init(cpu_list, &local_list);
--	local_irq_enable();
-+	entry =3D llist_del_all(cpu_list);
-+	entry =3D llist_reverse_order(entry);
-=20
--	while (!list_empty(&local_list)) {
--		struct request *rq;
--
--		rq =3D list_entry(local_list.next, struct request, ipi_list);
--		list_del_init(&rq->ipi_list);
-+	llist_for_each_entry_safe(rq, rq_next, entry, ipi_list)
- 		rq->q->mq_ops->complete(rq);
--	}
- }
-=20
--static void blk_mq_trigger_softirq(struct request *rq)
-+static __latent_entropy void blk_done_softirq(struct softirq_action *h)
- {
--	struct list_head *list;
--	unsigned long flags;
--
--	local_irq_save(flags);
--	list =3D this_cpu_ptr(&blk_cpu_done);
--	list_add_tail(&rq->ipi_list, list);
--
--	/*
--	 * If the list only contains our just added request, signal a raise of
--	 * the softirq.  If there are already entries there, someone already
--	 * raised the irq but it hasn't run yet.
--	 */
--	if (list->next =3D=3D &rq->ipi_list)
--		raise_softirq_irqoff(BLOCK_SOFTIRQ);
--	local_irq_restore(flags);
-+	blk_complete_reqs(this_cpu_ptr(&blk_cpu_done));
- }
-=20
- static int blk_softirq_cpu_dead(unsigned int cpu)
- {
--	/*
--	 * If a CPU goes away, splice its entries to the current CPU
--	 * and trigger a run of the softirq
--	 */
--	local_irq_disable();
--	list_splice_init(&per_cpu(blk_cpu_done, cpu),
--			 this_cpu_ptr(&blk_cpu_done));
--	raise_softirq_irqoff(BLOCK_SOFTIRQ);
--	local_irq_enable();
--
-+	blk_complete_reqs(&per_cpu(blk_cpu_done, cpu));
- 	return 0;
- }
-=20
--
- static void __blk_mq_complete_request_remote(void *data)
- {
--	struct request *rq =3D data;
--
--	blk_mq_trigger_softirq(rq);
-+	__raise_softirq_irqoff(BLOCK_SOFTIRQ);
- }
-=20
- static inline bool blk_mq_complete_need_ipi(struct request *rq)
-@@ -657,6 +621,7 @@ static inline bool blk_mq_complete_need_ipi(struct requ=
-est *rq)
-=20
- bool blk_mq_complete_request_remote(struct request *rq)
- {
-+	struct llist_head *cpu_list;
- 	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
-=20
- 	/*
-@@ -667,14 +632,21 @@ bool blk_mq_complete_request_remote(struct request *r=
-q)
- 		return false;
-=20
- 	if (blk_mq_complete_need_ipi(rq)) {
--		rq->csd.func =3D __blk_mq_complete_request_remote;
--		rq->csd.info =3D rq;
--		rq->csd.flags =3D 0;
--		smp_call_function_single_async(rq->mq_ctx->cpu, &rq->csd);
-+		unsigned int cpu;
-+
-+		cpu =3D rq->mq_ctx->cpu;
-+		cpu_list =3D &per_cpu(blk_cpu_done, cpu);
-+		if (llist_add(&rq->ipi_list, cpu_list)) {
-+			rq->csd.func =3D __blk_mq_complete_request_remote;
-+			rq->csd.flags =3D 0;
-+			smp_call_function_single_async(cpu, &rq->csd);
-+		}
- 	} else {
- 		if (rq->q->nr_hw_queues > 1)
- 			return false;
--		blk_mq_trigger_softirq(rq);
-+		cpu_list =3D this_cpu_ptr(&blk_cpu_done);
-+		if (llist_add(&rq->ipi_list, cpu_list))
-+			raise_softirq(BLOCK_SOFTIRQ);
- 	}
-=20
- 	return true;
-@@ -3905,7 +3877,7 @@ static int __init blk_mq_init(void)
- 	int i;
-=20
- 	for_each_possible_cpu(i)
--		INIT_LIST_HEAD(&per_cpu(blk_cpu_done, i));
-+		init_llist_head(&per_cpu(blk_cpu_done, i));
- 	open_softirq(BLOCK_SOFTIRQ, blk_done_softirq);
-=20
- 	cpuhp_setup_state_nocalls(CPUHP_BLOCK_SOFTIRQ_DEAD,
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 639cae2c158b5..331b2b675b417 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -156,7 +156,7 @@ struct request {
- 	 */
- 	union {
- 		struct hlist_node hash;	/* merge hash */
--		struct list_head ipi_list;
-+		struct llist_node ipi_list;
- 	};
-=20
- 	/*
---=20
-2.28.0
+This doesn't make a lot of sense, so some investigation is needed.
+
+-- 
+Jens Axboe
 
