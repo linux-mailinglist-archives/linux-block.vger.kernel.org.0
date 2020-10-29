@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5037629EF3E
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:10:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B80C29EF58
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgJ2PKB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 11:10:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43254 "EHLO
+        id S1728023AbgJ2PMM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 11:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgJ2PKB (ORCPT
+        with ESMTP id S1727865AbgJ2PMM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:10:01 -0400
+        Thu, 29 Oct 2020 11:12:12 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B53C0613D2;
-        Thu, 29 Oct 2020 08:10:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E5CC0613CF;
+        Thu, 29 Oct 2020 08:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=TnGAEpkZ/0zC8eY9jGiWDpr7H52LuhMLPz8kpv+9n58=; b=vq5w9rg0P9jXHeKT7rHZdj8ecW
-        FK13YnA7DeJdsavREXbV90tozPTHXWQmF0zHrDfppkazHXF9OTAdWgwpr4aRnemHv5omzuimHQ5CA
-        SWKcxCBLJWzZ0uQ5pZNEeyVqiN7a4AyCdeNIIN0Bw4+c8ng966O2GWF0qI9519RK2vUWVDmZ+lvXz
-        sGfzj43etJY4EkfHQj5C1me6yWc2mg5wc8XT8rpaHw6pc0VUML4h+U51h1T8fckt4hP1iANGW6E+/
-        ie2uS3xuKAOWzXCFbqV1LZQQoe/2GYQxb7DusRspAwM707m0GB5ofq1+qAUyY7Kn8PkJgIyRgvLwr
-        Lufwqbvw==;
+        bh=6AjNSG1g89/5KU9j9dvzOj/0GwTYGOzwvf7fUD+VvuI=; b=O1avkWxZFIuM353zRGQf8y/Ejg
+        CuuCV8Ox779lz0lMkNIfs68i999vSmzaWZUqhNFnkkrJ+aAqIQVxMPuuweC1OC3dkesknZLo41u7Y
+        VRlXrnD1tUV37e2uI9u9LE5/6rYTXjjNISW/OlHFbHksSu4qq0k9lLXNaji5al+q38VKQPLfEz2dk
+        /X2/xcd9CHsMuSeyh21tsC+ogj+Z6tHz18URFV4C4h5yYOfPsmv5nUeP9Hiyva2WnWV5l6wcUITNd
+        bxOWGyMa+jY0Xd7vEQ1ErBYnVRAlkdowfRSs4rC/DReRdIr9vQC9YWWmE5KfrAE5sVXp/gWQ2DP7c
+        5cLygizg==;
 Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY9Yk-0005yR-UT; Thu, 29 Oct 2020 15:09:51 +0000
+        id 1kY9au-0006BF-1B; Thu, 29 Oct 2020 15:12:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 04/18] block: rework requesting modules for unclaimed devices
-Date:   Thu, 29 Oct 2020 15:58:27 +0100
-Message-Id: <20201029145841.144173-5-hch@lst.de>
+Subject: [PATCH 05/18] block: add an optional probe callback to major_names
+Date:   Thu, 29 Oct 2020 15:58:28 +0100
+Message-Id: <20201029145841.144173-6-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201029145841.144173-1-hch@lst.de>
 References: <20201029145841.144173-1-hch@lst.de>
@@ -54,73 +54,94 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of reusing the ranges in bdev_map, add a new helper that is
-called if no ranges was found.  This is a first step to unpeel and
-eventually remove the complex ranges structure.
+Add a callback to the major_names array that allows a driver to override
+how to probe for dev_t that doesn't currently have a gendisk registered.
+This will help separating the lookup of the gendisk by dev_t vs probe
+action for a not currently registered dev_t.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/genhd.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ block/genhd.c         | 21 ++++++++++++++++++---
+ include/linux/genhd.h |  5 ++++-
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
 diff --git a/block/genhd.c b/block/genhd.c
-index 8be38725aad4e5..0e9f67e79c53fd 100644
+index 0e9f67e79c53fd..e78c95cf3c00a9 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
-@@ -1028,6 +1028,13 @@ static ssize_t disk_badblocks_store(struct device *dev,
- 	return badblocks_store(disk->bb, page, len, 0);
- }
+@@ -399,6 +399,7 @@ static struct blk_major_name {
+ 	struct blk_major_name *next;
+ 	int major;
+ 	char name[16];
++	void (*probe)(dev_t devt);
+ } *major_names[BLKDEV_MAJOR_HASH_SIZE];
+ static DEFINE_MUTEX(major_names_lock);
  
-+static void request_gendisk_module(dev_t devt)
-+{
-+	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
-+		/* Make old-style 2.4 aliases work */
-+		request_module("block-major-%d", MAJOR(devt));
-+}
-+
- static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+@@ -441,7 +442,8 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
+  * See Documentation/admin-guide/devices.txt for the list of allocated
+  * major numbers.
+  */
+-int register_blkdev(unsigned int major, const char *name)
++int __register_blkdev(unsigned int major, const char *name,
++		void (*probe)(dev_t devt))
  {
- 	struct kobject *kobj;
-@@ -1052,6 +1059,14 @@ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
- 		probe = p->probe;
- 		best = p->range - 1;
- 		*partno = dev - p->dev;
+ 	struct blk_major_name **n, *p;
+ 	int index, ret = 0;
+@@ -480,6 +482,7 @@ int register_blkdev(unsigned int major, const char *name)
+ 	}
+ 
+ 	p->major = major;
++	p->probe = probe;
+ 	strlcpy(p->name, name, sizeof(p->name));
+ 	p->next = NULL;
+ 	index = major_to_index(major);
+@@ -502,8 +505,7 @@ int register_blkdev(unsigned int major, const char *name)
+ 	mutex_unlock(&major_names_lock);
+ 	return ret;
+ }
+-
+-EXPORT_SYMBOL(register_blkdev);
++EXPORT_SYMBOL(__register_blkdev);
+ 
+ void unregister_blkdev(unsigned int major, const char *name)
+ {
+@@ -1030,6 +1032,19 @@ static ssize_t disk_badblocks_store(struct device *dev,
+ 
+ static void request_gendisk_module(dev_t devt)
+ {
++	unsigned int major = MAJOR(devt);
++	struct blk_major_name **n;
 +
-+		if (!probe) {
-+			mutex_unlock(&bdev_map_lock);
-+			module_put(owner);
-+			request_gendisk_module(dev);
-+			goto retry;
++	mutex_lock(&major_names_lock);
++	for (n = &major_names[major_to_index(major)]; *n; n = &(*n)->next) {
++		if ((*n)->major == major && (*n)->probe) {
++			(*n)->probe(devt);
++			mutex_unlock(&major_names_lock);
++			return;
 +		}
++	}
++	mutex_unlock(&major_names_lock);
 +
- 		if (p->lock && p->lock(dev, data) < 0) {
- 			module_put(owner);
- 			continue;
-@@ -1290,15 +1305,6 @@ static const struct seq_operations partitions_op = {
- };
- #endif
+ 	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
+ 		/* Make old-style 2.4 aliases work */
+ 		request_module("block-major-%d", MAJOR(devt));
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 38f23d75701379..14b1bc7dea21d8 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -368,7 +368,10 @@ extern void blk_unregister_region(dev_t devt, unsigned long range);
  
--
--static struct kobject *base_probe(dev_t devt, int *partno, void *data)
--{
--	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
--		/* Make old-style 2.4 aliases work */
--		request_module("block-major-%d", MAJOR(devt));
--	return NULL;
--}
--
- static void bdev_map_init(void)
- {
- 	struct bdev_map *base;
-@@ -1310,7 +1316,6 @@ static void bdev_map_init(void)
+ #define alloc_disk(minors) alloc_disk_node(minors, NUMA_NO_NODE)
  
- 	base->dev = 1;
- 	base->range = ~0 ;
--	base->probe = base_probe;
- 	for (i = 0; i < 255; i++)
- 		bdev_map[i] = base;
- }
+-int register_blkdev(unsigned int major, const char *name);
++int __register_blkdev(unsigned int major, const char *name,
++		void (*probe)(dev_t devt));
++#define register_blkdev(major, name) \
++	__register_blkdev(major, name, NULL)
+ void unregister_blkdev(unsigned int major, const char *name);
+ 
+ void revalidate_disk_size(struct gendisk *disk, bool verbose);
 -- 
 2.28.0
 
