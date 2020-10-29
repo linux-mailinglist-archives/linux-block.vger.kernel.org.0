@@ -2,201 +2,179 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F366629F45F
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 19:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A70A29F45A
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 19:58:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbgJ2S7K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 14:59:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:50751 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgJ2S7K (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 14:59:10 -0400
-IronPort-SDR: A2dL0L87y7GioTZ3EQFkrWGcOttqVuj92GvEQoTbBlGW3UJvK4c2yuJeaZMF6ceVmu0Q2P0rdF
- ienZaDTFlkKw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9789"; a="156265123"
-X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
-   d="scan'208";a="156265123"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 11:59:08 -0700
-IronPort-SDR: UlQA3zdZyxoNSYp3bRltrlFfeboi2/FAVbsqctQCYfVTYTwDM60hn6iHx2lfU0rU3t6Pfe4H13
- bLSxYRr6Tm4A==
-X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
-   d="scan'208";a="526842850"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 11:59:07 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1kYD9d-001S4w-KE; Thu, 29 Oct 2020 21:00:09 +0200
-X-Original-To: andriy.shevchenko@linux.intel.com
-Received: from linux.intel.com [10.54.29.200]
-        by smile.fi.intel.com with IMAP (fetchmail-6.4.12)
-        for <andy@localhost> (single-drop); Tue, 27 Oct 2020 19:15:07 +0200 (EET)
-Received: from fmsmga008.fm.intel.com (fmsmga008.fm.intel.com [10.253.24.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3CB9858089E
-        for <andriy.shevchenko@linux.intel.com>; Tue, 27 Oct 2020 10:11:33 -0700 (PDT)
-IronPort-SDR: 3X0lBfBaTwhsYL+1XlNjFmW11F4zyn72edL6JVuLsl6W1Y9QHgirTDl5DRZVDH/ZQZzuBb1ujP
- JCx5RvDgKobw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,424,1596524400"; 
-   d="scan'208";a="303830364"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Oct 2020 10:11:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 900E0179; Tue, 27 Oct 2020 19:11:30 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] xsysace: use platform_get_resource() and platform_get_irq_optional()
-Date:   Tue, 27 Oct 2020 19:11:30 +0200
-Message-Id: <20201027171130.56998-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1725747AbgJ2S6P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 14:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725910AbgJ2S6O (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 29 Oct 2020 14:58:14 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D00C0613CF
+        for <linux-block@vger.kernel.org>; Thu, 29 Oct 2020 11:58:14 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g25so3327142edm.6
+        for <linux-block@vger.kernel.org>; Thu, 29 Oct 2020 11:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=89MgGJ2eLo/poQN08E10He93oDU/x3XhdHGWGtRSdCM=;
+        b=a51t2eI/vR9CHjHzV2REhSPK/Vmz6ph8JXpIIUT+PMfFCzVwKOxNjdvXrVoVJ5jQFy
+         kAjTIud/Db1ZhetL6W/9GdYwGECn53DEr38+d4OrAFocX6jREQUKl6Hgq3bkxt6q5SFX
+         Plkdn8fSpw8Cc56XK/P3CpQSSr4EkbuQ/1ETqix4LUFQFNZdMVVqoaZa3SBU1MRKxve/
+         IOKZy2NtVqf5baAHXUCUdlwaSSGr19/yeC2R/HMsQzMdtyIrXDR9XZYk/WAG7Hmy6VVJ
+         YmPz25XOModxbznKLvbv3hVBvOQz43AD97htQ4QKY4hGjTn+3alwWGV4Yr0xFuSj2wQX
+         N4+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=89MgGJ2eLo/poQN08E10He93oDU/x3XhdHGWGtRSdCM=;
+        b=nLb+/TK8Cgwz8XsTNE68ZmaCdHD034MEabvdAQ6ckXXforcVyrqLNVfzfr5dRhMZ68
+         XX+0FX3BbcorQdOVM42rwrHvylPllHt/aBmKYRXLV1w9BN3YBXzJ2YFi3XS5oc2ggk3e
+         MSJCDR96myG8uWEIvMxcCDJOt+81nGDxfiFMhpQeZKe+OXPwPJn2voG4RKqawBdDBQ/h
+         1+NNSSPwnc+SMdy1CWJeyzfmOhlU1PRMb6UNQZYY072A/1BOtsXI0lZ4wDqKjEGaNQJt
+         briH/qGRSd9b9lkyuiW7g0hIzLrwvg7DZHM7/LUhbAenOzV9LfuwJhXpyVLi5XxSAJ7+
+         ykEQ==
+X-Gm-Message-State: AOAM532tqXTeEpbvr05iRcJZ48nOlomcO0Xe0M/DuZL7RCplnSYDOK8V
+        uydjmHrcxr5WkYw5W3woMDngkA==
+X-Google-Smtp-Source: ABdhPJzCKg8H/rV7NMAwOKOsmKObGB2b4LfWMi8r1jAoj+6+80WZx39v/Svl8CzLDRRXX6+hUcIfMg==
+X-Received: by 2002:a50:8745:: with SMTP id 5mr5391983edv.49.1603997892755;
+        Thu, 29 Oct 2020 11:58:12 -0700 (PDT)
+Received: from ch-wrk-javier.localdomain (5.186.126.247.cgn.fibianet.dk. [5.186.126.247])
+        by smtp.gmail.com with ESMTPSA id p3sm1974957edy.38.2020.10.29.11.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2020 11:58:12 -0700 (PDT)
+From:   "=?UTF-8?q?Javier=20Gonz=C3=A1lez?=" <javier@javigon.com>
+X-Google-Original-From: =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-block@vger.kernel.org, hch@lst.de, kbusch@kernel.org,
+        sagi@grimberg.me, axboe@kernel.dk, joshi.k@samsung.com,
+        k.jensen@samsung.com,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>
+Subject: [PATCH] nvme: report capacity 0 for non supported ZNS SSDs
+Date:   Thu, 29 Oct 2020 19:57:53 +0100
+Message-Id: <20201029185753.14368-1-javier.gonz@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use platform_get_resource() to fetch the memory resource and
-platform_get_irq_optional() to get optional IRQ instead of
-open-coded variants.
+Allow ZNS SSDs to be presented to the host even when they implement
+features that are not supported by the kernel zoned block device.
 
-IRQ is not supposed to be changed at runtime, so there is
-no functional change in ace_fsm_yieldirq().
+Instead of rejecting the SSD at the NVMe driver level, deal with this in
+the block layer by setting capacity to 0, as we do with other things
+such as unsupported PI configurations. This allows to use standard
+management tools such as nvme-cli to choose a different format or
+firmware slot that is compatible with the Linux zoned block device.
 
-On the other hand we now take first resources instead of last ones
-to proceed. I can't imagine how broken should be firmware to have
-a garbage in the first resource slots. But if it the case, it needs
-to be documented.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Javier González <javier.gonz@samsung.com>
 ---
- drivers/block/xsysace.c | 49 ++++++++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
+ drivers/nvme/host/core.c |  5 +++++
+ drivers/nvme/host/nvme.h |  1 +
+ drivers/nvme/host/zns.c  | 31 ++++++++++++++-----------------
+ 3 files changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-index 8d581c7536fb..eb8ef65778c3 100644
---- a/drivers/block/xsysace.c
-+++ b/drivers/block/xsysace.c
-@@ -443,22 +443,27 @@ static void ace_fix_driveid(u16 *id)
- #define ACE_FSM_NUM_STATES              11
- 
- /* Set flag to exit FSM loop and reschedule tasklet */
--static inline void ace_fsm_yield(struct ace_device *ace)
-+static inline void ace_fsm_yieldpoll(struct ace_device *ace)
- {
--	dev_dbg(ace->dev, "ace_fsm_yield()\n");
- 	tasklet_schedule(&ace->fsm_tasklet);
- 	ace->fsm_continue_flag = 0;
- }
- 
-+static inline void ace_fsm_yield(struct ace_device *ace)
-+{
-+	dev_dbg(ace->dev, "%s()\n", __func__);
-+	ace_fsm_yieldpoll(ace);
-+}
-+
- /* Set flag to exit FSM loop and wait for IRQ to reschedule tasklet */
- static inline void ace_fsm_yieldirq(struct ace_device *ace)
- {
- 	dev_dbg(ace->dev, "ace_fsm_yieldirq()\n");
- 
--	if (!ace->irq)
--		/* No IRQ assigned, so need to poll */
--		tasklet_schedule(&ace->fsm_tasklet);
--	ace->fsm_continue_flag = 0;
-+	if (ace->irq > 0)
-+		ace->fsm_continue_flag = 0;
-+	else
-+		ace_fsm_yieldpoll(ace);
- }
- 
- static bool ace_has_next_request(struct request_queue *q)
-@@ -1053,12 +1058,12 @@ static int ace_setup(struct ace_device *ace)
- 		ACE_CTRL_DATABUFRDYIRQ | ACE_CTRL_ERRORIRQ);
- 
- 	/* Now we can hook up the irq handler */
--	if (ace->irq) {
-+	if (ace->irq > 0) {
- 		rc = request_irq(ace->irq, ace_interrupt, 0, "systemace", ace);
- 		if (rc) {
- 			/* Failure - fall back to polled mode */
- 			dev_err(ace->dev, "request_irq failed\n");
--			ace->irq = 0;
-+			ace->irq = rc;
- 		}
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c190c56bf702..9ca4f0a6ff2c 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2026,6 +2026,11 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 			capacity = 0;
  	}
  
-@@ -1110,7 +1115,7 @@ static void ace_teardown(struct ace_device *ace)
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (!ns->zone_sup)
++		capacity = 0;
++#endif
++
+ 	set_capacity_revalidate_and_notify(disk, capacity, false);
  
- 	tasklet_kill(&ace->fsm_tasklet);
+ 	nvme_config_discard(disk, ns);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 87737fa32360..42cbe5bbc518 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -443,6 +443,7 @@ struct nvme_ns {
+ 	u8 pi_type;
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 	u64 zsze;
++	bool zone_sup;
+ #endif
+ 	unsigned long features;
+ 	unsigned long flags;
+diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
+index 57cfd78731fb..77a7fed508ef 100644
+--- a/drivers/nvme/host/zns.c
++++ b/drivers/nvme/host/zns.c
+@@ -44,20 +44,23 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
+ 	struct nvme_id_ns_zns *id;
+ 	int status;
  
--	if (ace->irq)
-+	if (ace->irq > 0)
- 		free_irq(ace->irq, ace);
- 
- 	iounmap(ace->baseaddr);
-@@ -1123,11 +1128,6 @@ static int ace_alloc(struct device *dev, int id, resource_size_t physaddr,
- 	int rc;
- 	dev_dbg(dev, "ace_alloc(%p)\n", dev);
- 
--	if (!physaddr) {
--		rc = -ENODEV;
--		goto err_noreg;
+-	/* Driver requires zone append support */
++	ns->zone_sup = true;
++
+ 	if (!(le32_to_cpu(log->iocs[nvme_cmd_zone_append]) &
+ 			NVME_CMD_EFFECTS_CSUPP)) {
++		ns->zone_sup = false;
+ 		dev_warn(ns->ctrl->device,
+ 			"append not supported for zoned namespace:%d\n",
+ 			ns->head->ns_id);
+-		return -EINVAL;
 -	}
 -
- 	/* Allocate and initialize the ace device structure */
- 	ace = kzalloc(sizeof(struct ace_device), GFP_KERNEL);
- 	if (!ace) {
-@@ -1153,7 +1153,6 @@ static int ace_alloc(struct device *dev, int id, resource_size_t physaddr,
- 	dev_set_drvdata(dev, NULL);
- 	kfree(ace);
- err_alloc:
--err_noreg:
- 	dev_err(dev, "could not initialize device, err=%i\n", rc);
- 	return rc;
- }
-@@ -1176,10 +1175,11 @@ static void ace_free(struct device *dev)
+-	/* Lazily query controller append limit for the first zoned namespace */
+-	if (!ns->ctrl->max_zone_append) {
+-		status = nvme_set_max_append(ns->ctrl);
+-		if (status)
+-			return status;
++	} else {
++		/* Lazily query controller append limit for the first
++		 * zoned namespace
++		 */
++		if (!ns->ctrl->max_zone_append) {
++			status = nvme_set_max_append(ns->ctrl);
++			if (status)
++				return status;
++		}
+ 	}
  
- static int ace_probe(struct platform_device *dev)
- {
--	resource_size_t physaddr = 0;
- 	int bus_width = ACE_BUS_WIDTH_16; /* FIXME: should not be hard coded */
-+	resource_size_t physaddr;
-+	struct resource *res;
- 	u32 id = dev->id;
--	int irq = 0;
-+	int irq;
- 	int i;
+ 	id = kzalloc(sizeof(*id), GFP_KERNEL);
+@@ -73,25 +76,19 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
+ 	if (status)
+ 		goto free_data;
  
- 	dev_dbg(&dev->dev, "ace_probe(%p)\n", dev);
-@@ -1190,12 +1190,15 @@ static int ace_probe(struct platform_device *dev)
- 	if (of_find_property(dev->dev.of_node, "8-bit", NULL))
- 		bus_width = ACE_BUS_WIDTH_8;
+-	/*
+-	 * We currently do not handle devices requiring any of the zoned
+-	 * operation characteristics.
+-	 */
+ 	if (id->zoc) {
++		ns->zone_sup = false;
+ 		dev_warn(ns->ctrl->device,
+ 			"zone operations:%x not supported for namespace:%u\n",
+ 			le16_to_cpu(id->zoc), ns->head->ns_id);
+-		status = -EINVAL;
+-		goto free_data;
+ 	}
  
--	for (i = 0; i < dev->num_resources; i++) {
--		if (dev->resource[i].flags & IORESOURCE_MEM)
--			physaddr = dev->resource[i].start;
--		if (dev->resource[i].flags & IORESOURCE_IRQ)
--			irq = dev->resource[i].start;
--	}
-+	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
-+
-+	physaddr = res->start;
-+	if (!physaddr)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq_optional(dev, 0);
+ 	ns->zsze = nvme_lba_to_sect(ns, le64_to_cpu(id->lbafe[lbaf].zsze));
+ 	if (!is_power_of_2(ns->zsze)) {
++		ns->zone_sup = false;
+ 		dev_warn(ns->ctrl->device,
+ 			"invalid zone size:%llu for namespace:%u\n",
+ 			ns->zsze, ns->head->ns_id);
+-		status = -EINVAL;
+-		goto free_data;
+ 	}
  
- 	/* Call the bus-independent setup code */
- 	return ace_alloc(&dev->dev, id, physaddr, irq, bus_width);
+ 	q->limits.zoned = BLK_ZONED_HM;
 -- 
-2.28.0
+2.17.1
 
