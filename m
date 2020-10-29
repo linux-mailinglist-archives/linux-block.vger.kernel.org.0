@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8226C29EF48
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F37929EF12
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:03:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgJ2PK7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 11:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
+        id S1727956AbgJ2PDZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 11:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgJ2PK7 (ORCPT
+        with ESMTP id S1727933AbgJ2PDY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:10:59 -0400
+        Thu, 29 Oct 2020 11:03:24 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFBBC0613CF;
-        Thu, 29 Oct 2020 08:01:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF6AC0613D2;
+        Thu, 29 Oct 2020 08:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=5UpmUUK4HkD04BYNwcucPUw7TY2FGi/Q9CTm0VHziQI=; b=tWqW+P040RkCrD1rrAjfY9sgJz
-        KO8cA88SpwWBoN64XQ280vwozNesIh3dcpQJpE35kJ2w27SzFJsAB+oKGDucHwW1mlIL/KXQN4E8t
-        Wf4aEjeT7KdmYarQE0o9bu7BXPVKL8zVZWtaPVcQ7G6uxaw20SPZ7ih8McI6uCnkTg0n6Yx6BMd04
-        3UFRG/Fvp0JKgNdAOIPMhF6wJNoX+XzLM46OYLJTx8S1oOIJnNepiGSXqfNUdJgXcOPFylGAlXQnH
-        TLDhpV+f/EiqEYkmK6i4VQ/atrEf0ndvU7ptSXv1mJXKZQQGHFflGrHFzE6vO2drxVUStwdqcWpRQ
-        FJKpifxA==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=4rHB9G5No3o31/gkWnrX7b9t+exlEtyB0cyyq3jRbfk=; b=dVtVbVES0FQfTKM8HBIoujCzki
+        3eZO+8iOE/zc/vP5TzodgVMe6Jq+okUCt7Pt+L6+IiMqGghtnT85+tQY+zFpAi3zSHu1+TAz+8s7V
+        Gb3CF0rgw3fMu3GxPIwOKEFfBdciUHc9W3hSpm+Jw5yt0ExNK8hAmPDiQNk7qeIlFOFIiOj8OjC4S
+        aVzrvj9SI70TUFtqq57iH8+NosGQCnmtXtc5y9KHPq4LsWCsKw1U7uvo45sDo5L9IamkZAQhgpJHg
+        qAP51Bs5Dbna7PyEPSvQB0v5ZKZwplbcXluKKAdXhZgPWEYKSIaOyOoJdi/TXB9kArwZR85zBkbem
+        Qt9Fy+FA==;
 Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY9Q6-0005M0-BQ; Thu, 29 Oct 2020 15:00:55 +0000
+        id 1kY9SF-0005Sd-FK; Thu, 29 Oct 2020 15:03:09 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,11 +39,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Schmitz <schmitzmic@gmail.com>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: simplify gendisk lookup and remove struct block_device aliases v4
-Date:   Thu, 29 Oct 2020 15:58:23 +0100
-Message-Id: <20201029145841.144173-1-hch@lst.de>
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 01/18] block: cleanup del_gendisk a bit
+Date:   Thu, 29 Oct 2020 15:58:24 +0100
+Message-Id: <20201029145841.144173-2-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201029145841.144173-1-hch@lst.de>
+References: <20201029145841.144173-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -51,38 +54,54 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all,
+Merge three hidden gendisk checks into one.
 
-this series removes the annoying struct block_device aliases, which can
-happen for a bunch of old floppy drivers (and z2ram).  In that case
-multiple struct block device instances for different dev_t's can point
-to the same gendisk, without being partitions.  The cause for that
-is the probe/get callback registered through blk_register_regions.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+---
+ block/genhd.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-This series removes blk_register_region entirely, splitting it it into
-a simple xarray lookup of registered gendisks, and a probe callback
-stored in the major_names array that can be used for modprobe overrides
-or creating devices on demands when no gendisk is found.  The old
-remapping is gone entirely, and instead the 4 remaining drivers just
-register a gendisk for each operating mode.  In case of the two drivers
-that have lots of aliases that is done on-demand using the new probe
-callback, while for the other two I simply register all at probe time
-to keep things simple.
-
-Note that the m68k drivers are compile tested only.
-
-Changes since v3:
- - keep kobj_map for char dev lookup for now, as the testbot found
-   some very strange and unexplained regressions, so I'll get back to
-   this later separately
- - fix a commit message typo
-
-Changes since v2:
- - fix a wrong variable passed to ERR_PTR in the floppy driver
- - slightly adjust the del_gendisk cleanups to prepare for the next
-   series touching this area
-
-Changes since v1:
- - add back a missing kobject_put in the cdev code
- - improve the xarray delete loops
+diff --git a/block/genhd.c b/block/genhd.c
+index 0a273211fec283..3ed591970ea640 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -892,6 +892,9 @@ void del_gendisk(struct gendisk *disk)
+ 
+ 	might_sleep();
+ 
++	if (WARN_ON_ONCE(!disk->queue))
++		return;
++
+ 	blk_integrity_del(disk);
+ 	disk_del_events(disk);
+ 
+@@ -914,20 +917,18 @@ void del_gendisk(struct gendisk *disk)
+ 	disk->flags &= ~GENHD_FL_UP;
+ 	up_write(&disk->lookup_sem);
+ 
+-	if (!(disk->flags & GENHD_FL_HIDDEN))
++	if (!(disk->flags & GENHD_FL_HIDDEN)) {
+ 		sysfs_remove_link(&disk_to_dev(disk)->kobj, "bdi");
+-	if (disk->queue) {
++
+ 		/*
+ 		 * Unregister bdi before releasing device numbers (as they can
+ 		 * get reused and we'd get clashes in sysfs).
+ 		 */
+-		if (!(disk->flags & GENHD_FL_HIDDEN))
+-			bdi_unregister(disk->queue->backing_dev_info);
+-		blk_unregister_queue(disk);
+-	} else {
+-		WARN_ON(1);
++		bdi_unregister(disk->queue->backing_dev_info);
+ 	}
+ 
++	blk_unregister_queue(disk);
++	
+ 	if (!(disk->flags & GENHD_FL_HIDDEN))
+ 		blk_unregister_region(disk_devt(disk), disk->minors);
+ 	/*
+-- 
+2.28.0
 
