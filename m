@@ -2,108 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F46229E412
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 08:30:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06F2D29E47B
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 08:40:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgJ2Hab (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 03:30:31 -0400
-Received: from m12-11.163.com ([220.181.12.11]:54485 "EHLO m12-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbgJ2H3D (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 03:29:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=qvOfV
-        N76kvCqakXlOnB+OC6oakS2ax+nlaKu5gpN3bQ=; b=SMVH32pBrfLcWweNvjMjR
-        Pu5v7RxdfYsLlte9wAcc5PxrnmKKwEWIySsmkh1CFaWB+0qknZC640szZ259aPGF
-        NXChF8gHzKpu/E6xY+KK3haXV43BV5rCqoNvMyho99xZy9t+NsuEX/tMw07/W2nh
-        rBvOGdCuvgojd/U8QeAu8g=
-Received: from [172.20.145.84] (unknown [223.112.105.132])
-        by smtp7 (Coremail) with SMTP id C8CowAAHR4NBM5pfswjLFw--.19478S2;
-        Thu, 29 Oct 2020 11:13:06 +0800 (CST)
+        id S1729750AbgJ2HiP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 03:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgJ2HYx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 29 Oct 2020 03:24:53 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FDDC0613DD
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 20:24:21 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id w21so1184283pfc.7
+        for <linux-block@vger.kernel.org>; Wed, 28 Oct 2020 20:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AY99dTIR5xArErdJb7TTxISTHPHzPEm/KGv1Gl4W14k=;
+        b=hSnSFvwkbnPSUgRhzeq/qL3lercy+HgDC6ejmSpBwXjXL5d26pbs0UaorGYhFMMZm4
+         bGpFYYMlAlN0jsNFpRZZ1p7L3kIglpJKaqZ33tbqIwztK2YV8WG+E4kTsEcnJ2Yk0jIR
+         7TXewiXPFunRSrt8CClpDImx3ZAEY/xhDiEUOI/gHyA31V4M64ShLRWuOm1uVyr9TAm1
+         yDnKvZDO6jw4Zn8LcKqA4osyaxK2X2EAQqAiMJ8zE3fTWSmgpYWU8XkgbZOhdQyTt3XV
+         IdUaVMJbJJKWxfAnUa7UiVAk5kKFEqpS59TaoHThEiCu9JQWaOY+Wv6XvOw2YJG3uhFw
+         cjWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AY99dTIR5xArErdJb7TTxISTHPHzPEm/KGv1Gl4W14k=;
+        b=YhELYYzBUfOaoasmFWod6/ckR+2vhZeyvIxV8md/WaoAlmEtXL9574GZR9HOmlusyN
+         e77XZ4LfjvKb7k7PGJAMfn3zDjb/uypph6n+7onkAifAZAbyS3Y3vNNWcRgrabhJE9Jj
+         Oo5IGIxJ6OQ27IBCpinJCwIM7PG7gTEJAiYGTIwxgmlN4vwmHpW1Yn/9BPSSUmgpLDPn
+         +LAzssDijf9b7q7B7q4et6m9aCOCFd6AITLXX7ArnQSclZ7uKuybnyE9JIThgNDk4wCj
+         Y/JUZDzl4F2Eifo+fAD3VxGijrSxpM3d6bfN7oLLfus/75h6kmNGvCfcg3BWy1HESSOW
+         ZP0Q==
+X-Gm-Message-State: AOAM5325wimikfWIb7xBzQW5iN7//f3EA7MvdJRg4vYufa9Vf/2mSYhG
+        xM19BaBoVpCV+GKt6onDYv+HQQ==
+X-Google-Smtp-Source: ABdhPJyF1jp4Kp2Ngg+sA6UXR2l2y83PMYrf1MC+Luiu64/H/MyGuP7uP5ZsaWU9RNFfzKITrirW2A==
+X-Received: by 2002:a17:90a:4b84:: with SMTP id i4mr1993234pjh.132.1603941860690;
+        Wed, 28 Oct 2020 20:24:20 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id s23sm725363pgl.47.2020.10.28.20.24.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Oct 2020 20:24:20 -0700 (PDT)
 Subject: Re: [PATCH] nbd: don't update block size after device is started
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Jan Kara <jack@suse.cz>, yanhaishuang@cmss.chinamobile.com
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, lining <lining2020x@163.com>,
+        Josef Bacik <josef@toxicpanda.com>, Jan Kara <jack@suse.cz>
 References: <20201028072434.1922108-1-ming.lei@redhat.com>
-From:   lining <lining2020x@163.com>
-Message-ID: <4145dd3d-dc1b-9833-9be6-9550eb2fcd13@163.com>
-Date:   Thu, 29 Oct 2020 11:13:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a7ce1cc0-34ab-1725-2a91-a7f3263d7401@kernel.dk>
+Date:   Wed, 28 Oct 2020 21:24:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
 In-Reply-To: <20201028072434.1922108-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: C8CowAAHR4NBM5pfswjLFw--.19478S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WF4fXryrXF47GF4kGrykZrb_yoW8Zw18pF
-        yUCayrGrW8Wa1DXa1jvr90grW5K34vk340gry7A3409r93tr9ayr4kta42qrWDtr95JFsx
-        uFsagFWIv3WxXrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jldgZUUUUU=
-X-Originating-IP: [223.112.105.132]
-X-CM-SenderInfo: polqx0bjsqjir06rljoofrz/1tbifBXMNlr6nItafQABsC
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Tested on Ubuntu 20.04.1 LTS with kernel 5.10.0-rc1+, it works fine.
-
-Tested-by: lining <lining2020x@163.com>
-
-ÔÚ 2020/10/28 15:24, Ming Lei Ð´µÀ:
+On 10/28/20 1:24 AM, Ming Lei wrote:
 > Mounted NBD device can be resized, one use case is rbd-nbd.
 > 
 > Fix the issue by setting up default block size, then not touch it
 > in nbd_size_update() any more. This kind of usage is aligned with loop
 > which has same use case too.
-> 
-> Reported-by: lining <lining2020x@163.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->   drivers/block/nbd.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 3c9485acdd81..e13ce0f75f80 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -296,7 +296,7 @@ static void nbd_size_clear(struct nbd_device *nbd)
->   	}
->   }
->   
-> -static void nbd_size_update(struct nbd_device *nbd)
-> +static void nbd_size_update(struct nbd_device *nbd, bool start)
->   {
->   	struct nbd_config *config = nbd->config;
->   	struct block_device *bdev = bdget_disk(nbd->disk, 0);
-> @@ -313,7 +313,8 @@ static void nbd_size_update(struct nbd_device *nbd)
->   	if (bdev) {
->   		if (bdev->bd_disk) {
->   			bd_set_nr_sectors(bdev, nr_sectors);
-> -			set_blocksize(bdev, config->blksize);
-> +			if (start)
-> +				set_blocksize(bdev, config->blksize);
->   		} else
->   			set_bit(GD_NEED_PART_SCAN, &nbd->disk->state);
->   		bdput(bdev);
-> @@ -328,7 +329,7 @@ static void nbd_size_set(struct nbd_device *nbd, loff_t blocksize,
->   	config->blksize = blocksize;
->   	config->bytesize = blocksize * nr_blocks;
->   	if (nbd->task_recv != NULL)
-> -		nbd_size_update(nbd);
-> +		nbd_size_update(nbd, false);
->   }
->   
->   static void nbd_complete_rq(struct request *req)
-> @@ -1308,7 +1309,7 @@ static int nbd_start_device(struct nbd_device *nbd)
->   		args->index = i;
->   		queue_work(nbd->recv_workq, &args->work);
->   	}
-> -	nbd_size_update(nbd);
-> +	nbd_size_update(nbd, true);
->   	return error;
->   }
->   
-> 
+
+Applied, thanks.
+
+-- 
+Jens Axboe
 
