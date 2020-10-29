@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDD829EFC6
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:28:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E4529EFED
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:31:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgJ2P2P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 11:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46102 "EHLO
+        id S1728352AbgJ2PbA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 11:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgJ2P2K (ORCPT
+        with ESMTP id S1728249AbgJ2Pa7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:28:10 -0400
+        Thu, 29 Oct 2020 11:30:59 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6720CC0613D5;
-        Thu, 29 Oct 2020 08:28:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687AFC0613D3;
+        Thu, 29 Oct 2020 08:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=XdMs3T/tj3CcUV6gVIdnERmCMWyMZth8MIZfXfcM3oQ=; b=bp/7NGtQoKo2c7J434jeRa/Gvc
-        +f7qGk4dcBD2lSGrzS5VHcV/Van4S8KRFOFPiTR8azxd7J2dGSZ1bFr748EyT8ouMLtJzKJL97jKK
-        iZd07i3PJLO9ZCkGX8XN/PvnEe/UYguiwWOgKF0v5OyPzJYxP3ji7dYUVvi3XZ9HW4O+1AzDCKHnv
-        YD0UR2D63XvLBvFbPUwPoMU7W9kHhzIeH+XehKSmXWESbtZ2VYdulU6kHou/Oz2yycOV3S6w9MQOm
-        KZq0zXXDEaCZmKEC2Z4l1/8L3mYEYg600KPnX98RZ4ijkDVZt2jMIgl48LpvWq9NGeQvYDbYrb2Qe
-        i8bS3j1Q==;
+        bh=gVY2C3Yr3hbZHWXTJ3PuAFR8cZ/e33HSpQGIidM7NRQ=; b=HrC9j+riyfO1S9gr/g++5iI0N3
+        74NLSLyzTtNUKZ9XF3rwp2K1v/s+fjg2qcSYjf8QOmUICfgBrPeOSA1jbxUxF7r9HJB4hbyRx7eHk
+        FojcS1VgBVwdrVokJXM0BtgkFwqQskJ3K8Dx40UqDdugqgQFIJHy1X4dw53zzQAjv29HotPTRtdHB
+        3MOvjgI/R4rDuc4u757UYn1+KcRPt8DRgowi8eh9QpLFKw9ZJA3a4+GIU3UDH6ViAVvzgnqkn6GmD
+        fohXz6rwzElTUCRi/NGIC3TGBpsu/Az9PdclZijenq0WSNuZgbFUF38rLy8pFKTK4Ov2TQ1iwWu7X
+        6bFOAwYg==;
 Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY9qC-0007Dc-9H; Thu, 29 Oct 2020 15:27:58 +0000
+        id 1kY9jQ-0006nN-Gz; Thu, 29 Oct 2020 15:20:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 12/18] ide: switch to __register_blkdev for command set probing
-Date:   Thu, 29 Oct 2020 15:58:35 +0100
-Message-Id: <20201029145841.144173-13-hch@lst.de>
+Subject: [PATCH 09/18] brd: use __register_blkdev to allocate devices on demand
+Date:   Thu, 29 Oct 2020 15:58:32 +0100
+Message-Id: <20201029145841.144173-10-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201029145841.144173-1-hch@lst.de>
 References: <20201029145841.144173-1-hch@lst.de>
@@ -54,87 +54,116 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ide is the last user of the blk_register_region framework except for the
-tracking of allocated gendisk.  Switch to __register_blkdev, even if that
-doesn't allow us to trivially find out which command set to probe for.
-That means we now always request all modules when a user tries to access
-an unclaimed ide device node, but except for a few potentially loaded
-modules for a fringe use case of a deprecated and soon to be removed
-driver that doesn't make a difference.
+Use the simpler mechanism attached to major_name to allocate a brd device
+when a currently unregistered minor is accessed.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/ide/ide-probe.c | 34 ++++++----------------------------
- 1 file changed, 6 insertions(+), 28 deletions(-)
+ drivers/block/brd.c | 39 +++++++++++----------------------------
+ 1 file changed, 11 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/ide/ide-probe.c b/drivers/ide/ide-probe.c
-index 076d34b381720f..1c1567bb519429 100644
---- a/drivers/ide/ide-probe.c
-+++ b/drivers/ide/ide-probe.c
-@@ -902,31 +902,12 @@ static int init_irq (ide_hwif_t *hwif)
- 	return 1;
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index cc49a921339f77..c43a6ab4b1f39f 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -426,14 +426,15 @@ static void brd_free(struct brd_device *brd)
+ 	kfree(brd);
  }
  
--static int ata_lock(dev_t dev, void *data)
-+static void ata_probe(dev_t dev)
+-static struct brd_device *brd_init_one(int i, bool *new)
++static void brd_probe(dev_t dev)
  {
--	/* FIXME: we want to pin hwif down */
--	return 0;
+ 	struct brd_device *brd;
++	int i = MINOR(dev) / max_part;
+ 
+-	*new = false;
++	mutex_lock(&brd_devices_mutex);
+ 	list_for_each_entry(brd, &brd_devices, brd_list) {
+ 		if (brd->brd_number == i)
+-			goto out;
++			goto out_unlock;
+ 	}
+ 
+ 	brd = brd_alloc(i);
+@@ -442,9 +443,9 @@ static struct brd_device *brd_init_one(int i, bool *new)
+ 		add_disk(brd->brd_disk);
+ 		list_add_tail(&brd->brd_list, &brd_devices);
+ 	}
+-	*new = true;
+-out:
+-	return brd;
++
++out_unlock:
++	mutex_unlock(&brd_devices_mutex);
+ }
+ 
+ static void brd_del_one(struct brd_device *brd)
+@@ -454,23 +455,6 @@ static void brd_del_one(struct brd_device *brd)
+ 	brd_free(brd);
+ }
+ 
+-static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+-{
+-	struct brd_device *brd;
+-	struct kobject *kobj;
+-	bool new;
+-
+-	mutex_lock(&brd_devices_mutex);
+-	brd = brd_init_one(MINOR(dev) / max_part, &new);
+-	kobj = brd ? get_disk_and_module(brd->brd_disk) : NULL;
+-	mutex_unlock(&brd_devices_mutex);
+-
+-	if (new)
+-		*part = 0;
+-
+-	return kobj;
 -}
 -
--static struct kobject *ata_probe(dev_t dev, int *part, void *data)
--{
--	ide_hwif_t *hwif = data;
--	int unit = *part >> PARTN_BITS;
--	ide_drive_t *drive = hwif->devices[unit];
--
--	if ((drive->dev_flags & IDE_DFLAG_PRESENT) == 0)
--		return NULL;
--
--	if (drive->media == ide_disk)
--		request_module("ide-disk");
--	if (drive->media == ide_cdrom || drive->media == ide_optical)
--		request_module("ide-cd");
--	if (drive->media == ide_tape)
--		request_module("ide-tape");
--	if (drive->media == ide_floppy)
--		request_module("ide-floppy");
--
--	return NULL;
-+	request_module("ide-disk");
-+	request_module("ide-cd");
-+	request_module("ide-tape");
-+	request_module("ide-floppy");
- }
- 
- void ide_init_disk(struct gendisk *disk, ide_drive_t *drive)
-@@ -967,7 +948,7 @@ static int hwif_init(ide_hwif_t *hwif)
- 		return 0;
- 	}
- 
--	if (register_blkdev(hwif->major, hwif->name))
-+	if (__register_blkdev(hwif->major, hwif->name, ata_probe))
- 		return 0;
- 
- 	if (!hwif->sg_max_nents)
-@@ -989,8 +970,6 @@ static int hwif_init(ide_hwif_t *hwif)
- 		goto out;
- 	}
- 
--	blk_register_region(MKDEV(hwif->major, 0), MAX_DRIVES << PARTN_BITS,
--			    THIS_MODULE, ata_probe, ata_lock, hwif);
- 	return 1;
- 
- out:
-@@ -1582,7 +1561,6 @@ static void ide_unregister(ide_hwif_t *hwif)
- 	/*
- 	 * Remove us from the kernel's knowledge
+ static inline void brd_check_and_reset_par(void)
+ {
+ 	if (unlikely(!max_part))
+@@ -510,11 +494,12 @@ static int __init brd_init(void)
+ 	 *	dynamically.
  	 */
--	blk_unregister_region(MKDEV(hwif->major, 0), MAX_DRIVES<<PARTN_BITS);
- 	kfree(hwif->sg_table);
- 	unregister_blkdev(hwif->major, hwif->name);
  
+-	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
++	if (__register_blkdev(RAMDISK_MAJOR, "ramdisk", brd_probe))
+ 		return -EIO;
+ 
+ 	brd_check_and_reset_par();
+ 
++	mutex_lock(&brd_devices_mutex);
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
+ 		if (!brd)
+@@ -532,9 +517,7 @@ static int __init brd_init(void)
+ 		brd->brd_disk->queue = brd->brd_queue;
+ 		add_disk(brd->brd_disk);
+ 	}
+-
+-	blk_register_region(MKDEV(RAMDISK_MAJOR, 0), 1UL << MINORBITS,
+-				  THIS_MODULE, brd_probe, NULL, NULL);
++	mutex_unlock(&brd_devices_mutex);
+ 
+ 	pr_info("brd: module loaded\n");
+ 	return 0;
+@@ -544,6 +527,7 @@ static int __init brd_init(void)
+ 		list_del(&brd->brd_list);
+ 		brd_free(brd);
+ 	}
++	mutex_unlock(&brd_devices_mutex);
+ 	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
+ 
+ 	pr_info("brd: module NOT loaded !!!\n");
+@@ -557,7 +541,6 @@ static void __exit brd_exit(void)
+ 	list_for_each_entry_safe(brd, next, &brd_devices, brd_list)
+ 		brd_del_one(brd);
+ 
+-	blk_unregister_region(MKDEV(RAMDISK_MAJOR, 0), 1UL << MINORBITS);
+ 	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
+ 
+ 	pr_info("brd: module unloaded\n");
 -- 
 2.28.0
 
