@@ -2,68 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2496B29EEEE
-	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 15:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8226C29EF48
+	for <lists+linux-block@lfdr.de>; Thu, 29 Oct 2020 16:11:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgJ2O5r (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Oct 2020 10:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        id S1728000AbgJ2PK7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Oct 2020 11:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgJ2O5r (ORCPT
+        with ESMTP id S1727842AbgJ2PK7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Oct 2020 10:57:47 -0400
+        Thu, 29 Oct 2020 11:10:59 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565CAC0613CF;
-        Thu, 29 Oct 2020 07:57:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFBBC0613CF;
+        Thu, 29 Oct 2020 08:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gaixN9Bvdo5h62VzxGq1fbBr5CvrRZrgy2xdLXcGzLE=; b=bTYuNixGSW2EZao7BIhpVMoBkg
-        Fnfsb0miEeUi3RCG985nAhHBTRXcZ5zUyXS69dio+GuELyGkENctUrl4Si3aPWCXxI9R681ZfZjUb
-        FfnzHqlfL6psaiXl1i+23BNkSEYxmg9iFWriVvp4QfG3iorYGmwxddxjuoFqNQg8LkBZ20KWgGzCR
-        3VPByv+8ikppMJVye3Zvksowg+Q87VfPAephQ4TPxKsSRUGsqEvKk1gLB+rt2laTKdVPwKewgXJQQ
-        YCe4CkT2Bs/wAVsrqwBh/Cz6SUFnogZTvBB+LW6NHCdfQhfTtoDN4CdsdkGj82up76AVXl5Jlzpld
-        rE/iUJJg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY9N2-00056S-3U; Thu, 29 Oct 2020 14:57:44 +0000
-Date:   Thu, 29 Oct 2020 14:57:43 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Runge <dave@sleepmap.de>, linux-rt-users@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Mike Galbraith <efault@gmx.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH 3/3] blk-mq: Use llist_head for blk_cpu_done
-Message-ID: <20201029145743.GA19379@infradead.org>
-References: <20201028065616.GA24449@infradead.org>
- <20201028141251.3608598-1-bigeasy@linutronix.de>
- <20201028141251.3608598-3-bigeasy@linutronix.de>
- <20201029131212.dsulzvsb6pahahbs@linutronix.de>
- <20201029140536.GA6376@infradead.org>
- <20201029145623.3zry7o6nh6ks5tjj@linutronix.de>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=5UpmUUK4HkD04BYNwcucPUw7TY2FGi/Q9CTm0VHziQI=; b=tWqW+P040RkCrD1rrAjfY9sgJz
+        KO8cA88SpwWBoN64XQ280vwozNesIh3dcpQJpE35kJ2w27SzFJsAB+oKGDucHwW1mlIL/KXQN4E8t
+        Wf4aEjeT7KdmYarQE0o9bu7BXPVKL8zVZWtaPVcQ7G6uxaw20SPZ7ih8McI6uCnkTg0n6Yx6BMd04
+        3UFRG/Fvp0JKgNdAOIPMhF6wJNoX+XzLM46OYLJTx8S1oOIJnNepiGSXqfNUdJgXcOPFylGAlXQnH
+        TLDhpV+f/EiqEYkmK6i4VQ/atrEf0ndvU7ptSXv1mJXKZQQGHFflGrHFzE6vO2drxVUStwdqcWpRQ
+        FJKpifxA==;
+Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kY9Q6-0005M0-BQ; Thu, 29 Oct 2020 15:00:55 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: simplify gendisk lookup and remove struct block_device aliases v4
+Date:   Thu, 29 Oct 2020 15:58:23 +0100
+Message-Id: <20201029145841.144173-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201029145623.3zry7o6nh6ks5tjj@linutronix.de>
+Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 03:56:23PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2020-10-29 14:05:36 [+0000], Christoph Hellwig wrote:
-> > Well, usb-storage obviously seems to do it, and the block layer
-> > does not prohibit it.
-> 
-> Also loop, nvme-tcp and then I stopped looking.
-> Any objections about adding local_bh_disable() around it?
+Hi all,
 
-To me it seems like the whole IPI plus potentially softirq dance is
-a little pointless when completing from process context.
+this series removes the annoying struct block_device aliases, which can
+happen for a bunch of old floppy drivers (and z2ram).  In that case
+multiple struct block device instances for different dev_t's can point
+to the same gendisk, without being partitions.  The cause for that
+is the probe/get callback registered through blk_register_regions.
 
-Sagi, any opinion on that from the nvme-tcp POV?
+This series removes blk_register_region entirely, splitting it it into
+a simple xarray lookup of registered gendisks, and a probe callback
+stored in the major_names array that can be used for modprobe overrides
+or creating devices on demands when no gendisk is found.  The old
+remapping is gone entirely, and instead the 4 remaining drivers just
+register a gendisk for each operating mode.  In case of the two drivers
+that have lots of aliases that is done on-demand using the new probe
+callback, while for the other two I simply register all at probe time
+to keep things simple.
+
+Note that the m68k drivers are compile tested only.
+
+Changes since v3:
+ - keep kobj_map for char dev lookup for now, as the testbot found
+   some very strange and unexplained regressions, so I'll get back to
+   this later separately
+ - fix a commit message typo
+
+Changes since v2:
+ - fix a wrong variable passed to ERR_PTR in the floppy driver
+ - slightly adjust the del_gendisk cleanups to prepare for the next
+   series touching this area
+
+Changes since v1:
+ - add back a missing kobject_put in the cdev code
+ - improve the xarray delete loops
+
