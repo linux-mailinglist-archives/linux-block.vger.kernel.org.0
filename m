@@ -2,81 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 996AB2A07ED
-	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 15:33:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDD422A0899
+	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 15:58:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgJ3Ods (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Oct 2020 10:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
+        id S1726881AbgJ3O6c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Oct 2020 10:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgJ3Ods (ORCPT
+        with ESMTP id S1726713AbgJ3O6b (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Oct 2020 10:33:48 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771D6C0613D4
-        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:33:46 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id z5so7746012iob.1
-        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:33:46 -0700 (PDT)
+        Fri, 30 Oct 2020 10:58:31 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5CEC0613DA
+        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:58:31 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id v4so7011980edi.0
+        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0txINu85P5EP/okxvGPBm98OdrqPqKMzQZaV43V6EUE=;
-        b=C0Q0LUTW/BwBiePFPr7nkXUetDKbWELm1AhwcxKVzqOfSfie/PTmkjtWBuxBITexE8
-         EoUi7oXJJpG88pxeaNOk2LsIMXFI+D6RM23U5FaUvO7E2IJi9Ib1gvJ7UFlhDmOJCgsB
-         Cz/WZePzeL2Iql/3O6ql1Ogiz5i/RnbcnmcV+UOmbGtXvr6yhWwW09D/OXKUo5C7ybRI
-         jab1c5vilJkJkToFmg6uNzgNQaeGl7i2AhLBzlKsVtyLxMPpKwqlh+E+F0ssmHUQq6/n
-         bhnoUnUk79hh1/XseE5qbBK5Dip93Aq/Yr5VucBlQ70LJh4NV09n/cRVoRTszvrTRFDi
-         8Upw==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=cba/prsbSBmYoHoIyJJ/4nz72WNuXyuE8Im8hHokykrknu6T+ZGQ3oNaEZCnDQMKfK
+         7InrWK9/LAehftIUxFF07tvuUQ/41xDXt8c8cRINmlHgR1biRfbdW9zZPxVC6xa8zOlP
+         K6M6oRsBtl8MN1IVNiGcNelh1LOXBPRCedQHjpXjHdhTZUoXOfQ5ssal2G05i4dOSCvv
+         FIx5VhgkFc0MSmWonLWORS6bGxkDSNKyYqWmGabj1TsHCGlpIexLxPpAsXs6aOmBy4OY
+         u1xNW9W0JHHwE2pLQBvrBX9wQMtbUIk6CF2f6hu1cvsgwIaE0/cl0h377THHVavVg8oE
+         Ypbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0txINu85P5EP/okxvGPBm98OdrqPqKMzQZaV43V6EUE=;
-        b=cqbl/K7v6PhEigxPjPkCFFEpZloeCA2Gf28NPv7gcF2EAcMHLeKfYvuHvvHUAGrSn8
-         j5aFRBAKWJMA88mBE59+ti6E2VXxds5SrEwzqcv9Iryy8RAtbZF/+IHU8et6ICiHuRe8
-         rI+GmG7fsOgngAJhDWxDb0hyxSdQpilNT0HzBWeJxBPfErP65/aapO78RxNqb27bEJAs
-         VIPdz6Ya1XlSa6U1oVKM2uvy/CHL3sK0HnQUixKrKbwe5gGRZ77JVzQx2NakvAInnOOO
-         HKM+a1BkvvR9Ok3W1DuZlO99rSI1TwBwgpXmwK2yZicXa4AGwhsGTBFCCwvXFONTraca
-         kfGg==
-X-Gm-Message-State: AOAM532bSecon7JEtHiNm1xG/XWZXKoBR82T4DnWMQCsyokxPZ9I12Pc
-        n6taEnW7Ey3RU/It662E5i0cpg==
-X-Google-Smtp-Source: ABdhPJy+YNAPePDXfkzW0N9iJHcyOGjGi2770xSo04qLMwRWr9pOUEoW63a8w2dgz0/gbZa0njoYxg==
-X-Received: by 2002:a05:6638:d0c:: with SMTP id q12mr2215828jaj.95.1604068425533;
-        Fri, 30 Oct 2020 07:33:45 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id o20sm4791759ill.59.2020.10.30.07.33.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Oct 2020 07:33:44 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: mark flush request as IDLE in flush_end_io()
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, Chao Leng <lengchao@huawei.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Yi Zhang <yi.zhang@redhat.com>
-References: <20201030024253.2025932-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <72c6af99-88cf-deea-ffbf-253fd68d4553@kernel.dk>
-Date:   Fri, 30 Oct 2020 08:33:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=AKXoqjIqw5kStLBZlFRgg0aoHCriIOoHw62u/SmkcdYd88RF4mxWnsm5SI6GDcc7D0
+         HLpiZr4y51RUZ87KZeKNujQ92CMio9vV0leCxkELI1QGyKTEfN+fGG/wa6766/cUHwv4
+         UJcyUf4347An2AKh8GRhPKkrgot5huPrC1gt6wOnKBLY6T03aEEOLTxtmn+AIuDZJL6t
+         stPsa45FtOOioFQiPmJnjPyyFrc90PUjIpwlpCi4Kxelncz2f46tTpWzelKX024ekEVl
+         LC5iZ9qNoXVWqfNWE+ppDVjVo4egmsYJM6vLSpqBZR456Pu1GB2kU5L5R1GPkRPn+zSw
+         UwXg==
+X-Gm-Message-State: AOAM533Uc/5LRSxPSxxv94yC4rjZSqYVoMsCcVycR0fkGAsJp2VChoxy
+        gjKHxwHjmmulRr6vEp28rW6o4OJjn/E4QGV5kg==
+X-Google-Smtp-Source: ABdhPJz2xsjxOvoK0J4Ck702AA6tUztWDi8Hr+jNkMDLFNqNVV9sSKYCidfmYBReGemdlea1AJeouFi1w4gUiDPqlYM=
+X-Received: by 2002:a50:9e82:: with SMTP id a2mr2760020edf.117.1604069910083;
+ Fri, 30 Oct 2020 07:58:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20201030024253.2025932-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:58:29
+ -0700 (PDT)
+Reply-To: li.anable85@gmail.com
+From:   Liliane Abel <k.griest04@gmail.com>
+Date:   Fri, 30 Oct 2020 15:58:29 +0100
+Message-ID: <CABAZL7kO5JQZMDhdiGK6i8XTXe8pbB5xWmsnDKzGXmDahQmacQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/29/20 8:42 PM, Ming Lei wrote:
-> Mark flush request as IDLE in its .end_io() for aligning to normal request since
-> flush request stays in in-flight tags in case of !elevator, so we need to change
-> its state into IDLE. Otherwise, we will hang in blk_mq_tagset_wait_completed_request()
-> during error recovery because flush request's state is kept as COMPLETE.
+Dearest
 
-Applied, thanks.
+Greeting my dear, I am Liliane Abel by name, The only daughter of late
+Mr.Benson Abel. My father is one of the top Politician in our country
+and my mother is a farmers and cocoa merchant when they were both
+alive. After the death of my mother, long ago, my father was
+controlling their business until he was poisoned by his business
+associates which he suffered and died.
 
--- 
-Jens Axboe
-
+Before the death of my father, He told me about (two million five
+hundred thousand united states dollars) which he deposited in the bank
+in Lome-Togo, It was the money he intended to transfer overseas for
+investment before he was poisoned. He also instructed me that I should
+seek for foreign partners in any country of my choice who will assist
+me transfer this money in overseas account where the money will be
+wisely invested.
+I am seeking for your kind assistance in the following ways:  (1) to
+provide a safe bank account into where the money will be transferred
+for investment. (2) To serve as a guardian of this fund since I am a
+girl of 19 years old. (3) To make arrangement for me to come over to
+your country to further my education. This is my reason for writing to
+you. Please if you are willing to assist me I will offer you 25% of
+the total money. Reply if  you are interested
+Best regards.
+Liliane Abel.
