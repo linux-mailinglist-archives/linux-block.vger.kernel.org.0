@@ -2,83 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD422A0899
-	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 15:58:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 776DE2A0C2A
+	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 18:09:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgJ3O6c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Oct 2020 10:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
+        id S1727370AbgJ3RJb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Oct 2020 13:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgJ3O6b (ORCPT
+        with ESMTP id S1726858AbgJ3RJ3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Oct 2020 10:58:31 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5CEC0613DA
-        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:58:31 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id v4so7011980edi.0
-        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 07:58:31 -0700 (PDT)
+        Fri, 30 Oct 2020 13:09:29 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA459C0613CF
+        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 10:09:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j18so5851586pfa.0
+        for <linux-block@vger.kernel.org>; Fri, 30 Oct 2020 10:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=cba/prsbSBmYoHoIyJJ/4nz72WNuXyuE8Im8hHokykrknu6T+ZGQ3oNaEZCnDQMKfK
-         7InrWK9/LAehftIUxFF07tvuUQ/41xDXt8c8cRINmlHgR1biRfbdW9zZPxVC6xa8zOlP
-         K6M6oRsBtl8MN1IVNiGcNelh1LOXBPRCedQHjpXjHdhTZUoXOfQ5ssal2G05i4dOSCvv
-         FIx5VhgkFc0MSmWonLWORS6bGxkDSNKyYqWmGabj1TsHCGlpIexLxPpAsXs6aOmBy4OY
-         u1xNW9W0JHHwE2pLQBvrBX9wQMtbUIk6CF2f6hu1cvsgwIaE0/cl0h377THHVavVg8oE
-         Ypbg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=AgVtlzWmedWRmKYcHvtggpv5NYZty6RgsZLIF5KxQ5o=;
+        b=U3mupc89MKuweL/ZUAEC8N7/MKy4i2CB8bj0GK7aboZo1HTfuyTZnyidKZEaoOSOxm
+         E1B0CZdNomb1JYJVTWfdWnN4GmlMBAaME6PfG7TMrC+5K+R8LyGE/6Rzq/rxSsi54AmC
+         o9vpv0J0AEGg/li+9yTiQ0vn4t8VJ1sINMWaUO8C7y+zLBfWXV1zifS950xg1DxjEaEr
+         RGVNHAfTgj3aMpqr0rQIwur0U8k3w/+gXkVrJd0UYxf63W/qaA9ei/ioSJmY4YAWFMbP
+         cw6akvYpYQYVVzFGPp7uOLHwtmfn+SPh6JpOeGF0pTAnLMC/dTNGUOMw6wxTDkisFSjK
+         3VhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=AKXoqjIqw5kStLBZlFRgg0aoHCriIOoHw62u/SmkcdYd88RF4mxWnsm5SI6GDcc7D0
-         HLpiZr4y51RUZ87KZeKNujQ92CMio9vV0leCxkELI1QGyKTEfN+fGG/wa6766/cUHwv4
-         UJcyUf4347An2AKh8GRhPKkrgot5huPrC1gt6wOnKBLY6T03aEEOLTxtmn+AIuDZJL6t
-         stPsa45FtOOioFQiPmJnjPyyFrc90PUjIpwlpCi4Kxelncz2f46tTpWzelKX024ekEVl
-         LC5iZ9qNoXVWqfNWE+ppDVjVo4egmsYJM6vLSpqBZR456Pu1GB2kU5L5R1GPkRPn+zSw
-         UwXg==
-X-Gm-Message-State: AOAM533Uc/5LRSxPSxxv94yC4rjZSqYVoMsCcVycR0fkGAsJp2VChoxy
-        gjKHxwHjmmulRr6vEp28rW6o4OJjn/E4QGV5kg==
-X-Google-Smtp-Source: ABdhPJz2xsjxOvoK0J4Ck702AA6tUztWDi8Hr+jNkMDLFNqNVV9sSKYCidfmYBReGemdlea1AJeouFi1w4gUiDPqlYM=
-X-Received: by 2002:a50:9e82:: with SMTP id a2mr2760020edf.117.1604069910083;
- Fri, 30 Oct 2020 07:58:30 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=AgVtlzWmedWRmKYcHvtggpv5NYZty6RgsZLIF5KxQ5o=;
+        b=Mm3TloRK+IBkJp4RIxpF3QS+uRqAf5VSKnUrs4EDf7gBxGZf+0DqF2h99mJQzv02HD
+         +GJ7ZNkxTukimjt1Wg+dzAPV4FAr0bq616GoZ2dbg7IGXhbWh9smHCpgC0tLvOqwXjr5
+         8/9G+SbTMKslRUGDUAwQX+K5AYqMbSay5rv4wWwkIOT3Utcsnv4YA0Z3VTNkj/WImIiD
+         7HC9m9IYjcQy9Rfi4VuN0GrS7quW9XzbAtkZ8DT+WWF4ueAp3MQkalnGC+cnC/G2uOpZ
+         iDBRd5LOjOs0F1Cxt69uNT7elVzhrIH3jTVhrhgCqBM+k9plNUAYktL8/V5n3I/jVQ7i
+         Ga2w==
+X-Gm-Message-State: AOAM532vT7sgcR93zlDrDQLs0lCr6ea2b/G4MbQRNv+M60QjClG8+xuh
+        BNDpWqUJI/ab+pm3A4hWVczgI9O61yK49g==
+X-Google-Smtp-Source: ABdhPJxxBRP+RqAy4yRd1kmBOjx3fkwZdCdMNMWrrQwdvvwXKBBRqj/NLuJUJ8ziuw25WFi0jYF6xQ==
+X-Received: by 2002:a63:4514:: with SMTP id s20mr2857760pga.298.1604077767853;
+        Fri, 30 Oct 2020 10:09:27 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21cf::1547? ([2620:10d:c090:400::5:15c3])
+        by smtp.gmail.com with ESMTPSA id 197sm6406178pfa.170.2020.10.30.10.09.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Oct 2020 10:09:27 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 5.10-rc
+Message-ID: <bd2659a5-5cb7-d011-b3b7-25b197982845@kernel.dk>
+Date:   Fri, 30 Oct 2020 11:09:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:58:29
- -0700 (PDT)
-Reply-To: li.anable85@gmail.com
-From:   Liliane Abel <k.griest04@gmail.com>
-Date:   Fri, 30 Oct 2020 15:58:29 +0100
-Message-ID: <CABAZL7kO5JQZMDhdiGK6i8XTXe8pbB5xWmsnDKzGXmDahQmacQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dearest
+Hi Linus,
 
-Greeting my dear, I am Liliane Abel by name, The only daughter of late
-Mr.Benson Abel. My father is one of the top Politician in our country
-and my mother is a farmers and cocoa merchant when they were both
-alive. After the death of my mother, long ago, my father was
-controlling their business until he was poisoned by his business
-associates which he suffered and died.
+Fixes that should go into this release:
 
-Before the death of my father, He told me about (two million five
-hundred thousand united states dollars) which he deposited in the bank
-in Lome-Togo, It was the money he intended to transfer overseas for
-investment before he was poisoned. He also instructed me that I should
-seek for foreign partners in any country of my choice who will assist
-me transfer this money in overseas account where the money will be
-wisely invested.
-I am seeking for your kind assistance in the following ways:  (1) to
-provide a safe bank account into where the money will be transferred
-for investment. (2) To serve as a guardian of this fund since I am a
-girl of 19 years old. (3) To make arrangement for me to come over to
-your country to further my education. This is my reason for writing to
-you. Please if you are willing to assist me I will offer you 25% of
-the total money. Reply if  you are interested
-Best regards.
-Liliane Abel.
+- null_blk zone fixes (Damien, Kanchan)
+
+- NVMe pull request from Christoph:
+	- improve zone revalidation (Keith Busch)
+	- gracefully handle zero length messages in nvme-rdma (zhenwei pi)
+	- nvme-fc error handling fixes (James Smart)
+	- nvmet tracing NULL pointer dereference fix (Chaitanya Kulkarni)"
+
+- xsysace platform fixes (Andy)
+
+- scatterlist type cleanup (David)
+
+- blk-cgroup memory fixes (Gabriel)
+
+- nbd block size update fix (Ming)
+
+- Flush completion state fix (Ming)
+
+- bio_add_hw_page() iteration fix (Naohiro)
+
+Please pull!
+
+
+The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
+
+  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.10-2020-10-30
+
+for you to fetch changes up to 65ff5cd04551daf2c11c7928e48fc3483391c900:
+
+  blk-mq: mark flush request as IDLE in flush_end_io() (2020-10-30 08:33:49 -0600)
+
+----------------------------------------------------------------
+block-5.10-2020-10-30
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      xsysace: use platform_get_resource() and platform_get_irq_optional()
+
+Chaitanya Kulkarni (1):
+      nvmet: fix a NULL pointer dereference when tracing the flush command
+
+Damien Le Moal (2):
+      null_blk: Fix zone reset all tracing
+      null_blk: Fix locking in zoned mode
+
+David Disseldorp (1):
+      lib/scatterlist: use consistent sg_copy_buffer() return type
+
+Gabriel Krisman Bertazi (2):
+      blk-cgroup: Fix memleak on error path
+      blk-cgroup: Pre-allocate tree node on blkg_conf_prep
+
+James Smart (4):
+      nvme-fc: track error_recovery while connecting
+      nvme-fc: remove err_work work item
+      nvme-fc: eliminate terminate_io use by nvme_fc_error_recovery
+      nvme-fc: remove nvme_fc_terminate_io()
+
+Jens Axboe (1):
+      Merge tag 'nvme-5.10-2020-10-29' of git://git.infradead.org/nvme into block-5.10
+
+Kanchan Joshi (1):
+      null_blk: synchronization fix for zoned device
+
+Keith Busch (1):
+      nvme: ignore zone validate errors on subsequent scans
+
+Ming Lei (2):
+      nbd: don't update block size after device is started
+      blk-mq: mark flush request as IDLE in flush_end_io()
+
+Naohiro Aota (1):
+      block: advance iov_iter on bio_add_hw_page failure
+
+zhenwei pi (1):
+      nvme-rdma: handle unexpected nvme completion data length
+
+ block/bio.c                    |  11 +-
+ block/blk-cgroup.c             |  15 ++-
+ block/blk-flush.c              |   1 +
+ drivers/block/nbd.c            |   9 +-
+ drivers/block/null_blk.h       |   2 +
+ drivers/block/null_blk_zoned.c | 123 +++++++++++++++----
+ drivers/block/xsysace.c        |  49 ++++----
+ drivers/nvme/host/core.c       |   2 +-
+ drivers/nvme/host/fc.c         | 270 +++++++++++++++++------------------------
+ drivers/nvme/host/rdma.c       |   8 ++
+ drivers/nvme/target/core.c     |   4 +-
+ drivers/nvme/target/trace.h    |  21 ++--
+ lib/scatterlist.c              |   2 +-
+ 13 files changed, 281 insertions(+), 236 deletions(-)
+
+-- 
+Jens Axboe
+
