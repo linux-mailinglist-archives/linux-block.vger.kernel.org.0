@@ -2,34 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E1472A03D9
-	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 12:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4855B2A03A5
+	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 12:05:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgJ3LQ2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Fri, 30 Oct 2020 07:16:28 -0400
-Received: from 45.173.252.243.turbolinenet.com.br ([45.173.252.243]:33200 "EHLO
-        srv01.turbolinenet.com.br" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725808AbgJ3LQ2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Oct 2020 07:16:28 -0400
-X-Greylist: delayed 7074 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 07:16:27 EDT
-Received: from [23.106.215.139]
-        by srv01.turbolinenet.com.br with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
-        (Exim 4.92.2)
-        (envelope-from <info@details.com>)
-        id 1kYQYA-0007kE-2L; Fri, 30 Oct 2020 07:18:22 -0200
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726343AbgJ3LFN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Oct 2020 07:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgJ3LFN (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 30 Oct 2020 07:05:13 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F9420724;
+        Fri, 30 Oct 2020 11:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604055912;
+        bh=HkILBJuhp20eEQXOXy7z45QV74eTNliVADEHd72LFo4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iyTS4J43yvqa2fgb21t7LJsLyNU25aSYx/CPW/AQFwRxvVg3JE5tsfHGK674rcr3O
+         zYs9gjjWlOWaxOVYQpbJEcgJasWptoYKWHc/J7h1myQF7B8Neg2kGR/UQEo9+aPHJE
+         a9xZOaFXZBLfi9YUn+htxKHvf8HploekpXXe2hmw=
+Date:   Fri, 30 Oct 2020 12:06:00 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        scsi <linux-scsi@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH 02/18] block: open code kobj_map into in block/genhd.c
+Message-ID: <20201030110600.GA2406237@kroah.com>
+References: <20201029145841.144173-1-hch@lst.de>
+ <20201029145841.144173-3-hch@lst.de>
+ <20201029192236.GA991240@kroah.com>
+ <20201029193242.GA4799@lst.de>
+ <20201030104033.GA2392682@kroah.com>
+ <CAMuHMdXuzM0Z+yXXWqw8E2u-TNaC6C7NMRMH+X8oWQGaD=jckw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Final Notice 2
-To:     Recipients <info@details.com>
-From:   info@details.com
-Date:   Fri, 30 Oct 2020 02:18:11 -0700
-Reply-To: trust101101@consultant.com
-Message-Id: <E1kYQYA-0007kE-2L@srv01.turbolinenet.com.br>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdXuzM0Z+yXXWqw8E2u-TNaC6C7NMRMH+X8oWQGaD=jckw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We are trying to reach you as regards the estate of Late George Brumley, you were made one of the beneficiaries of his estate. Do get back to me at your earliest convenience. The Trustees
+On Fri, Oct 30, 2020 at 11:49:11AM +0100, Geert Uytterhoeven wrote:
+> Hi Greg,
+> 
+> On Fri, Oct 30, 2020 at 11:40 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Thu, Oct 29, 2020 at 08:32:42PM +0100, Christoph Hellwig wrote:
+> > > On Thu, Oct 29, 2020 at 08:22:36PM +0100, Greg Kroah-Hartman wrote:
+> > > > After this, you want me to get rid of kobj_map, right?  Or you don't
+> > > > care as block doesn't use it anymore?  :)
+> > >
+> > > I have a patch to kill it, but it causes odd regressions with the
+> > > tpm driver according to the kernel test.  As I have grand plans that
+> > > build on the block ѕide of this series for 5.11, I plan to defer the
+> > > chardev side and address it for 5.12.
+> >
+> > Ok, sounds good.
+> >
+> > Wow, I just looked at the tpm code, and it is, um, "interesting" in how
+> > it thinks device lifespans work.  Nothing like having 4 different
+> > structures with different lifespans embedded within a single structure.
+> > Good thing that no one can dynamically remove a TPM device during
+> > "normal" operation.
+> 
+> /sys/.../unbind?
+
+I said "normal" operations :)
+
+Anyone who uses unbind and is suprised when things go "boom" is naive.
+
+thanks,
+
+greg k-h
