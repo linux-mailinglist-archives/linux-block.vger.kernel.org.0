@@ -2,51 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 374782A10B5
-	for <lists+linux-block@lfdr.de>; Fri, 30 Oct 2020 23:10:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 727922A1298
+	for <lists+linux-block@lfdr.de>; Sat, 31 Oct 2020 02:27:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725816AbgJ3WK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Oct 2020 18:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgJ3WKz (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Oct 2020 18:10:55 -0400
-Subject: Re: [GIT PULL] Block fixes for 5.10-rc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604095854;
-        bh=mMjYvSjQgwUDyGt0G5XhGxbHD5cVTdFORNf2t1EtD3A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DCS/txlPOdrcRYo+kWAYzRb/83y9O4+ZHflK1oc/5Ko/gpFah65NbgII6moTmpSYk
-         DRosqRY/WIi40Wef0m72LVnQwQbWUebYIrxulBIJb/0y7+rRniF3rGMqKSYd8hwhcB
-         8OoJkPgaCFycdOqit8/zJ75h/q+tUQ/mHfYJtR4c=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <bd2659a5-5cb7-d011-b3b7-25b197982845@kernel.dk>
-References: <bd2659a5-5cb7-d011-b3b7-25b197982845@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <bd2659a5-5cb7-d011-b3b7-25b197982845@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.10-2020-10-30
-X-PR-Tracked-Commit-Id: 65ff5cd04551daf2c11c7928e48fc3483391c900
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5fc6b075e165f641fbc366b58b578055762d5f8c
-Message-Id: <160409585486.7779.3257384566547955556.pr-tracker-bot@kernel.org>
-Date:   Fri, 30 Oct 2020 22:10:54 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        id S1726285AbgJaB1Q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Oct 2020 21:27:16 -0400
+Received: from 93804.cloudwaysapps.com ([178.62.255.238]:56716 "EHLO
+        93804.cloudwaysapps.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgJaB1P (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 30 Oct 2020 21:27:15 -0400
+X-Greylist: delayed 12185 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 21:27:03 EDT
+Received: from 127.0.0.1 (93804.cloudwaysapps.com [127.0.0.1])
+        by 93804.cloudwaysapps.com (Postfix) with SMTP id C0065220DE;
+        Fri, 30 Oct 2020 19:28:41 +0000 (UTC)
+Received: from [10.92.248.238] by 127.0.0.1 with ESMTP id <744952-75524> for <linux-acpi@vger.kernel.org>; Sat, 31 Oct 2020 02:20:53 +0600
+Message-ID: <dic5wasb-2c8kb$78@lu916y>
+From:   "JOHN PHIL" <gerradfinancialplanning@gmail.com>
+Reply-To: "JOHN PHIL" <gerradfinancialplanning@gmail.com>
+To:     linux-acpi@vger.kernel.org
+Subject: November Equity Investment 20-20 
+Date:   Sat, 31 Oct 20 02:20:53 GMT
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+        boundary="07B_9ED_4_"
+X-Priority: 1
+X-MSMail-Priority: High
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 30 Oct 2020 11:09:26 -0600:
 
-> git://git.kernel.dk/linux-block.git tags/block-5.10-2020-10-30
+--07B_9ED_4_
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5fc6b075e165f641fbc366b58b578055762d5f8c
+How are you doing today I have a proposal which i think may interest you a=
+nd benefit you.I will like to give you full details of this via email:  ge=
+rradfinancialplanning@gmail.com
+Thanks.
 
-Thank you!
+John PHIL
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--07B_9ED_4_--
+
