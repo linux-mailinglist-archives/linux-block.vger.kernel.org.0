@@ -2,174 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08B142A47A2
-	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:13:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C90632A4753
+	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:10:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgKCONC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Nov 2020 09:13:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
+        id S1729375AbgKCOKa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Nov 2020 09:10:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbgKCOMz (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:12:55 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A494C0617A6
-        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:12:55 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id t22so8603076plr.9
-        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:12:55 -0800 (PST)
+        with ESMTP id S1729345AbgKCOK3 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:10:29 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91575C0613D1
+        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:10:28 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id gn41so6993563ejc.4
+        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Rcumbm45p6u1vTrZX+0aLKGL8qbFyXtiTKVGd7gjPds=;
-        b=ZKS1+OPoYKvugMiYB6vxOk4KJjqAm+Zf0M4AHxLFrpAMRE0pwAXhIdcUlD3FtGbonr
-         GoHSdxXk1x+fMZGkFg0/5L5fd4Ez3GvuDINkG6Ktc+MENFdtmBN10ORYSEVWc2n2zMsG
-         Ypb/oDJRDxTLUEc0N5HPQ82k0rUlJWGKjCiMI=
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6JH066wfbr2npDz5gl/1SYKZVrWlCGM4iR0jRxp+WVw=;
+        b=YxyJVBMKQ3BTTIHH8LWuaH1mHoyk5Jj1dDaI9SW23lROVXKwAq7SGSrCWm/oH4HAXL
+         n5X5h2lrPNbrd3cdRRpMGIG0fmE/oMl31mYhigw67jZ/YuFv/Llxh9j7KxauFkyRFt6K
+         0fk6lrmHOKsskXoT6NxSFelsMwGvLqMwfzrtV+HPabl+3cz6u3eeNXz9nELFB1LOTKQc
+         EgCOZFoMum7b3GI91d0LnPrnWfgD36EyFodK0cSRx6zdXBst09+I2BWiNDLUuza6dWux
+         +rUJDDoH4ZFQ798oKm0rYXp2SNK2Vrrm+VfvCx7tZMxTfIZfsO8mAg8SSz0PaR3wEBHZ
+         WOxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Rcumbm45p6u1vTrZX+0aLKGL8qbFyXtiTKVGd7gjPds=;
-        b=E1uNlQ2wKKwZuq0jvfEG9FGnjA3W4rU7JVxuBYonLIkhLqQ+cgvj3THUXjHVnWtkl8
-         BiqAdpdgt/j8isSUUwkqpzuPt0mX4eNop9UxTbjMDg1H4b5uJS1wFDeOLv19YZMczxNq
-         VK6H1/Q9a6U3iIYXFSVT98rH753cE0Nf7GaSCkmg/MXSMlVQl8KlzQOfuPd/vh0w88bo
-         pRsH3uDcrjZcbTSLFyubfHd18m1WJnqhfXC0hkMGqf4GXOS+iKkIFfBokKuMJZgyLjJN
-         0iXL03I3FORp1G+AEBZJIwFEswOXrQI5fNzcmR4i9CxhYTSBxbQarMUQYdsCNtRvoWd6
-         hG4g==
-X-Gm-Message-State: AOAM532EyeJs/La+yTOFQkBwQdbRPoy4czbmwFfbBOMt6CmoQ4rk7kf8
-        04Y777ITfDMEbc5gTzFTSmYkaxEaXL8sTb/YsCbyjjC7uNYaRCMB7IKOBGwwiYCLbWLPkcbvUKW
-        dOpdFwdp1BB0vpwkyX1BE2T1thUmdtI9ksWgXyZWonniad6+M8MxQM+qanTqOz3mnJMLamruyvP
-        wASUiNlDSYEBAr
-X-Google-Smtp-Source: ABdhPJzY6ceXNf/hsBCYCemuSXJs5OEqW43H2snokDmZ7K965SUGQtmy3vNHtcrGfEooonX5aUs64g==
-X-Received: by 2002:a17:902:ea8c:b029:d6:e179:2097 with SMTP id x12-20020a170902ea8cb02900d6e1792097mr3390202plb.70.1604412774329;
-        Tue, 03 Nov 2020 06:12:54 -0800 (PST)
-Received: from localhost.localdomain ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id t19sm3596691pgv.37.2020.11.03.06.12.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Nov 2020 06:12:53 -0800 (PST)
-From:   Muneendra <muneendra.kumar@broadcom.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        tj@kernel.org, linux-nvme@lists.infradead.org
-Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
-        pbonzini@redhat.com, Muneendra <muneendra.kumar@broadcom.com>
-Subject: [PATCH v3 19/19] scsi: Made changes in Kconfig to select BLK_CGROUP_FC_APPID
-Date:   Tue,  3 Nov 2020 12:48:23 +0530
-Message-Id: <1604387903-20006-20-git-send-email-muneendra.kumar@broadcom.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
-References: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000085210a05b334757e"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6JH066wfbr2npDz5gl/1SYKZVrWlCGM4iR0jRxp+WVw=;
+        b=mX1qrlVg1Rbmgu+5j1CRYRZfVxlbIPI3pLs6qFZpLr/GHW9FDPSGZu4JNEXHQJs1YF
+         j2vBoseDnxPwBsCJW6O9KeHJX+vJhkvV9fiGjQeSjQCJDv5qCqdBE1+lL5jv2z/WNyCr
+         HcBSD51O49RnVWjB7v9LbfWaPtypaI5q9pfCNcbvVp0sO5E9/azw2ek/VwBxEzCbG01y
+         IldabOBXbyAT0LygI3xHiU7C+MADoe4nKa1MP22d7erThmVVlfxWCF4TUEw2JiRSpin4
+         LcIsxi9N9PdpWlKrwyvUlU6sqW64mEGn85Hy7Pj4K7Gc6NJntzKcBHWBoANdRoZTzdoE
+         GRtw==
+X-Gm-Message-State: AOAM530M38CAFoR1ZviVHiIYofBy+GSNz9OpkfOjUkVSrINw3j9InwnO
+        CfxekkdYFYGbrXfgTwRqPqizzQ==
+X-Google-Smtp-Source: ABdhPJxCo+QbcFQGkaf0UIcCeiTnf17zeNpC22eu+9Tmczhm1wKWQAhX3bN1HI/xXA2SsP+9BHxUyw==
+X-Received: by 2002:a17:906:1f92:: with SMTP id t18mr7302329ejr.539.1604412622075;
+        Tue, 03 Nov 2020 06:10:22 -0800 (PST)
+Received: from localhost (5.186.126.247.cgn.fibianet.dk. [5.186.126.247])
+        by smtp.gmail.com with ESMTPSA id n25sm10971551ejd.114.2020.11.03.06.10.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2020 06:10:20 -0800 (PST)
+Date:   Tue, 3 Nov 2020 15:10:19 +0100
+From:   Javier Gonzalez <javier@javigon.com>
+To:     "hch@lst.de" <hch@lst.de>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "joshi.k@samsung.com" <joshi.k@samsung.com>,
+        "Klaus B. Jensen" <k.jensen@samsung.com>,
+        "Niklas.Cassel@wdc.com" <Niklas.Cassel@wdc.com>
+Subject: Re: nvme: report capacity 0 for non supported ZNS SSDs
+Message-ID: <20201103141019.5eomaxs4qn4ezaeh@MacBook-Pro.localdomain>
+References: <CGME20201102161505eucas1p19415e34eb0b14c7eca5a2c648569cf1e@eucas1p1.samsung.com>
+ <0916865d50c640e3aa95dc542f3986b9@CAMSVWEXC01.scsc.local>
+ <20201102180836.GC20182@lst.de>
+ <20201102183355.GB1970293@dhcp-10-100-145-180.wdc.com>
+ <20201102185851.GA21349@lst.de>
+ <20201102212405.j43m47ewg65v4k5k@MacBook-Pro.localdomain>
+ <20201103090628.GA15656@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20201103090628.GA15656@lst.de>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---00000000000085210a05b334757e
+On 03.11.2020 10:06, hch@lst.de wrote:
+>On Mon, Nov 02, 2020 at 10:24:05PM +0100, Javier Gonzalez wrote:
+>> If I understand correctly, the model would be that a namespace will
+>> always have (i) a character device associated where I/O is always allowed
+>> through user formed commands, and if the namespace has full support in
+>> the kernel (ii) a block device where I/O is as it is today. In case of
+>> (ii) both interfaces can be used for I/O.
+>
+>Yes.
 
-Made changes in Kconfig to select BLK_CGROUP_FC_APPID under
-SCSI_FC_ATTRS
+Thanks for confirming.
 
-Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
+One question here is that we are preparing a RFC for a io_uring passthru
+using the block device. Based on this discussion, it seems to me that
+you see this more suitable through the char device.
 
----
-v3:
-New patch
----
- drivers/scsi/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Does it make sense that we post this RFC using the block device? It
+would be helpful to get early feedback before starting the char device.
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 701b61ec76ee..de142ced9e14 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -230,6 +230,7 @@ config SCSI_FC_ATTRS
- 	depends on SCSI && NET
- 	select BLK_DEV_BSGLIB
- 	select SCSI_NETLINK
-+	select BLK_CGROUP_FC_APPID
- 	help
- 	  If you wish to export transport-specific information about
- 	  each attached FiberChannel device to sysfs, say Y.
--- 
-2.26.2
+>
+>> While we work on iterations for c), do you believe it is reasonable to
+>> merge a version of the current path that follows the PI convention for
+>> unsupported command sets and features? I would assume that we will have
+>> to convert PI to this model too when it is available.
+>
+>I'm rather torn.  I think the model of the zero capacity block device
+>is a really, really bad one and we should haver never added it.  That
+>being said, for a ZNS namespace that does not support Zone Append I
+>can think of a model that actually makes sense:  expose it as a read-only
+>block device, as we can actually read from it perfectly fine, and that
+>would also allow ioctl access.
 
+This is reasonable. I can re-spin this for append to become read-only
+and then we work in parallel for the char device interface.
 
---00000000000085210a05b334757e
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-J/4V6ms/nIUi+/4vPYjckYUbRzkXm1/X0IyUfpp5cgdrFn9jBIk69fQGAUEhnVvwcXnHWotYxZFd
-Xew5Fz0CAwEAAaOCAdMwggHPMA4GA1UdDwEB/wQEAwIFoDCBngYIKwYBBQUHAQEEgZEwgY4wTQYI
-KwYBBQUHMAKGQWh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzcGVyc29uYWxz
-aWduMnNoYTJnM29jc3AuY3J0MD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5j
-b20vZ3NwZXJzb25hbHNpZ24yc2hhMmczME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsG
-AQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAA
-MEQGA1UdHwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNp
-Z24yc2hhMmczLmNybDAnBgNVHREEIDAegRxtdW5lZW5kcmEua3VtYXJAYnJvYWRjb20uY29tMBMG
-A1UdJQQMMAoGCCsGAQUFBwMEMB8GA1UdIwQYMBaAFGlygmIxZ5VEhXeRgMQENkmdewthMB0GA1Ud
-DgQWBBR6On9cEmlB2VsuST951zNMSKtFBzANBgkqhkiG9w0BAQsFAAOCAQEAOGDBLQ17Ge8BVULh
-hsKhgh5eDx0mNmRRdhvTJnxOTRX5QsOKvsJGOUbyrKjD3BTTcGmIUti9HmbqDe/3gRTbhu8LA508
-LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
-9KsxA+DECRfSGfXJJQSq6nEZUGKhz+dz5CV1s8UIZLe9HEEfyJO4eRP+Fw9X16cthAbY0kpVnAvT
-/j45FAauY/h87uphdvSb5wC9v5w4VO0JKs0yNUjyWXg/RG+6JCvcViLFLAlRCLrcRcVaQwWZQ3YB
-EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
-b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
-SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCAp6Gx/+N+7sd16Vz1RRpYnKlIcmMbW7mavgw9vZhR2QzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDExMDMxNDEyNTRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
-AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAhQWU97s65BKTSaZA
-0yBTXfD/TzTG0FuvLdjXmRPURD1EaI6vQBAcxO6yC+t/cCgYvaItT0zGCsi9BurCUrFCFHv6usuJ
-BvZ6PT61CWBFlKinZYbuGd/GUk/ZdkFcasxxPyus37+2pSppqM4hUSy3XO0teSDEvvgojqXAHEBP
-Fr9KwQTG/fxEDqp913nDNKK3V31DQ7dRX8QJLRJjm5tWYWe+4oVeolycwKcCX/uyBfINGbckx0Ql
-eDejdrJRGvjyAPejA5oxKjg4wD+Hkav97fp9jUNgSmf5AIGNGyiksAQdZcyUYvdfzKn4+Zg9SZ80
-lXgPKXo4SAggxowrLsPWhg==
---00000000000085210a05b334757e--
+I see that this does not make much sense for the other non-supported
+features in this patch (i.e., !po2 zone size and zoc). Since this is
+very much like PI today, is it OK we add these the same way (capacity 0)
+and then move to the char device when ready?
