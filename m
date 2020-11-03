@@ -2,73 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F1342A4786
-	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:12:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C6E2A4781
+	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:12:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgKCOMk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Nov 2020 09:12:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44534 "EHLO
+        id S1729603AbgKCOMe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Nov 2020 09:12:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgKCOMM (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:12:12 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12561C0613D1
-        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:12:12 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id 10so14297895pfp.5
-        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:12:12 -0800 (PST)
+        with ESMTP id S1729584AbgKCOMP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:12:15 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68641C0613D1
+        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:12:15 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id a200so14276565pfa.10
+        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:12:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DxcMPlDhxw96Oxvzrkj0nVJ3GM8HGygsg2+fu+Kfexc=;
-        b=WYg2YZcI+MsNYIYcWXA5CmhCzM9HC86BisyXCWlcCY0rbMRKP86mXnOhPWr1ZFtQKq
-         WT6RNKh14GEy2REoN9nSKyboC9JgdZqJLD+eZQkWQpJL74tX7S+jb5NcsJCeFef/yJ5l
-         RmleY+MdQaaEz8xluVxFKP1zCNHdMNhQjX98U=
+        bh=4IFaN1GPfHhJkNo+nBpVSzGkNc4x3OcTZpLmNA3S5qs=;
+        b=ZxdSCq5uyQcC8TIDdYcOKAugSEXqSCzZv+lzZwg6pMDlGk2PDYawnbPJ3piWfDjUAT
+         Y7wspf0Dxn90NFx+bHSQ5XTTbm3Tchr2ra9SUqGHVDt1HMbVso6/8XYoodI4kqqeECnV
+         e4xyCPoPFI9eEO01DkHCOOVUSwrUyNcMl0xC0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DxcMPlDhxw96Oxvzrkj0nVJ3GM8HGygsg2+fu+Kfexc=;
-        b=QX6gpM75S/qa0y/o8YjsquKzT98b7tvuZ86qRPq7gn9eBbbHT/lze134ytCJa9DRYI
-         G0a1dh+PDwvnfuKsMlO8rWO8rq5CVcO1sT53SBQDFf4ZNrY3ahAWunMHQlWSb8SzsnnU
-         +S9mBcZoBdq+LAVnafcg8GmWSN29XuF5g4j14Jlo1FMt1gpyKsDyVmnDkoGFYLmAZsp/
-         eAzGa+IIv0l2QCxS0Mm81Y5fjQ6p/qAUjkFmgPSRHqJljxrOJxbLzI5zGpaKKvQb+Q1Q
-         jFcGZnFxqif56//Tqu/Z1QufcGlqntU1WCPOxCgmCtX3UCe85goa6H8y+2Z8rLvvX7gb
-         5ooA==
-X-Gm-Message-State: AOAM530AKC1+z6BIPCisi3cOqS40E449FsTPYD7Xwo17sCN+8LAv/Rld
-        UpbkztnnF+HYkQ9tj0zdz74Tqyi3CpSvyS5+H74m907qbchRRaTD8uHjxKMrSG3gcA8ne83fgGb
-        CVxOKrhn/6q5ZtNSOIDQ1BRHq33MF06F5D+GoLue0S7+aJUbYrh7tT8eEK1QnSoEww4DRwBvD7I
-        y4nWV4liYtH6ol
-X-Google-Smtp-Source: ABdhPJxFZ5ZgvIw6G8fi8DFWscxSU5GoNnKlNZFxqFE+jF6J7Zaw2LpdLYUbG7AhbxCkB6DGs94z6Q==
-X-Received: by 2002:a17:90a:1903:: with SMTP id 3mr4185753pjg.74.1604412730982;
-        Tue, 03 Nov 2020 06:12:10 -0800 (PST)
+        bh=4IFaN1GPfHhJkNo+nBpVSzGkNc4x3OcTZpLmNA3S5qs=;
+        b=qFgWZ6tY45IP1ezGQlkQ28ObNvu3OP8jWbnZcs/KZgE+ffPja2VRrJWO7SZTn9hDAa
+         cVIn9v5dsQD/ed0S7ItP19CubK1OeZkwp1VJrp5X7Iiq6TzoaWeiGrltzdpFNFHx2rh7
+         CH8lr+qU3CP2ZL9RAoTP/jtI8QHZb5PXAt2pkGR7VzN5lD93XtC5mVq9+L5SV8jcVUM/
+         cZaQiA8h0XqBz3Y7TP6+g+fmw8gmKPHuTWClOaXmABJzKlms6UBWDPMwbzxEM74lubAt
+         g4It9AWDfNFHmALUQVUFKVi1RCETsjFkl8C37qsocwpa/9bjLN3dh1nwzsaV/hqAvIsd
+         +GMQ==
+X-Gm-Message-State: AOAM530WL2QdhKgq56Pygh2HVL45TMZGqa1GkRMzA5vbcfdxq32zocyk
+        UapriIGk9K5X3OPnqkSZucW2zs5RUTgxCYTe0bkuKF1XiDxffp7miUCuD1OG9LQOakfZBB+4fjR
+        /WdJWahCJcLazglxdml29bx6XieNszesD87l3K/MaxT350fkACDEsMBc0cQhNeGU8VY3GVXt9jJ
+        jA2kkIY7ARje2m
+X-Google-Smtp-Source: ABdhPJyvGGSExdqFXUmDGxzkMdUqiP9e3oOlKWx9YnBZAVxeYhSVmRwxKPHNb6D3uJPW+c5RtLUi9g==
+X-Received: by 2002:a17:90b:4b84:: with SMTP id lr4mr4179979pjb.153.1604412734496;
+        Tue, 03 Nov 2020 06:12:14 -0800 (PST)
 Received: from localhost.localdomain ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id t19sm3596691pgv.37.2020.11.03.06.12.07
+        by smtp.gmail.com with ESMTPSA id t19sm3596691pgv.37.2020.11.03.06.12.11
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Nov 2020 06:12:10 -0800 (PST)
+        Tue, 03 Nov 2020 06:12:13 -0800 (PST)
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         pbonzini@redhat.com,
         Gaurav Srivastava <gaurav.srivastava@broadcom.com>
-Subject: [PATCH v3 07/19] lpfc: vmid: Forward declarations for APIs
-Date:   Tue,  3 Nov 2020 12:48:11 +0530
-Message-Id: <1604387903-20006-8-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v3 08/19] lpfc: vmid: Add support for vmid in mailbox command
+Date:   Tue,  3 Nov 2020 12:48:12 +0530
+Message-Id: <1604387903-20006-9-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
 References: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000ec62d105b33472a3"
+        boundary="000000000000236ece05b33473ff"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---000000000000ec62d105b33472a3
+--000000000000236ece05b33473ff
 
 From: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 
-This patch contains the forward declarations of commonly used APIs which
-are used outside the scope of the file.
+This patch adds supporting datastructures for mailbox command which helps
+in determining if the firmware supports appid or not.
 
 Signed-off-by: Gaurav Srivastava  <gaurav.srivastava@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
@@ -80,33 +80,58 @@ No change
 v2:
 Ported the patch on top of 5.10/scsi-queue
 ---
- drivers/scsi/lpfc/lpfc_crtn.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/scsi/lpfc/lpfc_hw4.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_crtn.h b/drivers/scsi/lpfc/lpfc_crtn.h
-index 782f6f76f18a..74ca5860ca8e 100644
---- a/drivers/scsi/lpfc/lpfc_crtn.h
-+++ b/drivers/scsi/lpfc/lpfc_crtn.h
-@@ -600,3 +600,14 @@ extern int lpfc_enable_nvmet_cnt;
- extern unsigned long long lpfc_enable_nvmet[];
- extern int lpfc_no_hba_reset_cnt;
- extern unsigned long lpfc_no_hba_reset[];
-+
-+/* vmid interface */
-+int lpfc_vmid_uvem(struct lpfc_vport *vport, struct lpfc_vmid *vmid, bool ins);
-+u32 lpfc_vmid_get_cs_ctl(struct lpfc_vport *vport);
-+int lpfc_vmid_cmd(struct lpfc_vport *vport,
-+		  int cmdcode, struct lpfc_vmid *vmid);
-+int lpfc_vmid_hash_fn(char *vmid, int len);
-+struct lpfc_vmid *lpfc_get_vmid_from_hastable(struct lpfc_vport *vport,
-+					      u32 hash, u8 *buf);
-+void lpfc_vmid_vport_cleanup(struct lpfc_vport *vport);
-+int lpfc_issue_els_qfpa(struct lpfc_vport *vport);
+diff --git a/drivers/scsi/lpfc/lpfc_hw4.h b/drivers/scsi/lpfc/lpfc_hw4.h
+index 12e4e76233e6..76c072366a16 100644
+--- a/drivers/scsi/lpfc/lpfc_hw4.h
++++ b/drivers/scsi/lpfc/lpfc_hw4.h
+@@ -272,6 +272,9 @@ struct lpfc_sli4_flags {
+ #define lpfc_vfi_rsrc_rdy_MASK		0x00000001
+ #define lpfc_vfi_rsrc_rdy_WORD		word0
+ #define LPFC_VFI_RSRC_RDY		1
++#define lpfc_ftr_ashdr_SHIFT            4
++#define lpfc_ftr_ashdr_MASK             0x00000001
++#define lpfc_ftr_ashdr_WORD             word0
+ };
+ 
+ struct sli4_bls_rsp {
+@@ -2943,6 +2946,9 @@ struct lpfc_mbx_request_features {
+ #define lpfc_mbx_rq_ftr_rq_mrqp_SHIFT		16
+ #define lpfc_mbx_rq_ftr_rq_mrqp_MASK		0x00000001
+ #define lpfc_mbx_rq_ftr_rq_mrqp_WORD		word2
++#define lpfc_mbx_rq_ftr_rq_ashdr_SHIFT          17
++#define lpfc_mbx_rq_ftr_rq_ashdr_MASK           0x00000001
++#define lpfc_mbx_rq_ftr_rq_ashdr_WORD           word2
+ 	uint32_t word3;
+ #define lpfc_mbx_rq_ftr_rsp_iaab_SHIFT		0
+ #define lpfc_mbx_rq_ftr_rsp_iaab_MASK		0x00000001
+@@ -2974,6 +2980,9 @@ struct lpfc_mbx_request_features {
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_SHIFT		16
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_MASK		0x00000001
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_WORD		word3
++#define lpfc_mbx_rq_ftr_rsp_ashdr_SHIFT         17
++#define lpfc_mbx_rq_ftr_rsp_ashdr_MASK          0x00000001
++#define lpfc_mbx_rq_ftr_rsp_ashdr_WORD          word3
+ };
+ 
+ struct lpfc_mbx_supp_pages {
+@@ -4383,6 +4392,9 @@ struct wqe_common {
+ #define wqe_nvme_SHIFT        4
+ #define wqe_nvme_MASK         0x00000001
+ #define wqe_nvme_WORD         word10
++#define wqe_appid_SHIFT       5
++#define wqe_appid_MASK        0x00000001
++#define wqe_appid_WORD        word10
+ #define wqe_oas_SHIFT         6
+ #define wqe_oas_MASK          0x00000001
+ #define wqe_oas_WORD          word10
 -- 
 2.26.2
 
 
---000000000000ec62d105b33472a3
+--000000000000236ece05b33473ff
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -177,13 +202,13 @@ LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
 EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
 b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
 SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCA7MTu20ltMelfpg/LG7SPwobOSNj+jTMAhfrVqveOAKTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDExMDMxNDEyMTFaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
+BCBargduRUaRrWMqauwG5kM5f2+QSQtYjx0zYs/ateziKzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
+AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDExMDMxNDEyMTRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
 AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEASb9uvBXFE2Geyo7j
-POJZcqUVv620Q8vgQ5H3PcZnDCOIxhzW+f/ybWqN09Eq88L8EPmgjQ6XnDYtGrj0ytSC69vmS62x
-B0iS4zeU+XtfFbcnhrECFPn2D8HFFhWTckC67hYD+Z7C0qyM3fMMOuj/BsOb9pk7VeiSLVTCUgUt
-UlrSaStygDbpHAOeYrUDLZHC7Af2FxURYT9WjgViDe+1lR1rqO9mjvczE8s+3et0DL3DZAiSY80u
-eB1s4/a8wPXY2S6WGdNZTFfwXe+lvGe5b+ZLms6U16wRyHGkodqX0fFL4NuDqWBqg9XBj0sGKyo7
-NHPLzrxRd8SMWjmyor/0rQ==
---000000000000ec62d105b33472a3--
+MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAQayBhQ3d00gsfBdS
+hzzYgFtn0ddOefK/qJKTrc3r10WDeVKVqYYSZ8mBe4p6Ym0GXrPWFSTOR6MpFy3HWrLUrhcK4Ezi
+xoSQTYdJhtq9BjvM/zC0AZ/aoPIsKUg0lCfgaEJ68vbL8LUNObDgycz3jO5QuyXTWhuW3NfI67hI
++lj5voUK6CRNqzxw+LMM0FFtFr8g3Ljv+t3nmz/ednYjRC2lFdc32ujcFru7mwla+oqVgUXn9r9x
+t7AS222aXqImBhvYbA3FP4oObeNbozNJzywdDifXqRLIJHz6jHEebiQMBdZ2d6g/NzZtHrNIovJJ
+5iXXukLYe9Kim+n55UjbnQ==
+--000000000000236ece05b33473ff--
