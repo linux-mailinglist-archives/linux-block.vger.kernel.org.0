@@ -2,73 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC09E2A477F
-	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:12:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD4DC2A477B
+	for <lists+linux-block@lfdr.de>; Tue,  3 Nov 2020 15:12:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbgKCOM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Nov 2020 09:12:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44572 "EHLO
+        id S1729590AbgKCOM2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Nov 2020 09:12:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgKCOMX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:12:23 -0500
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AFC4C0613D1
-        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:12:23 -0800 (PST)
-Received: by mail-pf1-x441.google.com with SMTP id a200so14276885pfa.10
-        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:12:23 -0800 (PST)
+        with ESMTP id S1729593AbgKCOM0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Nov 2020 09:12:26 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E62AC0613D1
+        for <linux-block@vger.kernel.org>; Tue,  3 Nov 2020 06:12:26 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id f38so13790713pgm.2
+        for <linux-block@vger.kernel.org>; Tue, 03 Nov 2020 06:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VCB9VmtxwzTZ9VqtYQSp7OpCYwkJEoxxbhD56nx2cJs=;
-        b=hx5vdORsba8geePpdlMQcCJ6LVmqAo9N7gLU6W8SEINaq7Wyseo1m2FpSyWVspODmi
-         1uXj6FmQ+18yMT6UZZ3/XU59nf8nm0ZJGzRTBM9/iMBRk/L/FsfNo9FzKF75tiGOLPxi
-         qTUMlYR4J3RodzSaxlMkRWF7U8YXGcUeTTgYo=
+        bh=Pj2k1kdy9l8q2CP+Rz8hEEYj3DeWiJbIsdU6+BhtPCA=;
+        b=FFdiViI51O3xNURpCUFvUB09TeVTrUq0CPz1rQvDN/M8jLqkl68sard8pPIX42NEe4
+         dS8v8yzXvRXGAeXk3yGbI5p9YLYdz5Ru8crGopWCd/qQECGus5tArjXW5sIvuGOatOGv
+         SikAJSULMREwaCsLv11XRrBCAhAV0gzegEdrs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VCB9VmtxwzTZ9VqtYQSp7OpCYwkJEoxxbhD56nx2cJs=;
-        b=O/+nfVS4lHaqBHBhoYrkdOWtNe9RT/oaUNJiQSbxx3BZF+M8ovPZ++6dzNl8IzoY30
-         HKIkMjUX+UnzOnjqVLQEUeW9YxtQ53oIMhws6lYGvplNkqp2VLzbGwOt6pF9f4p8B5ZJ
-         0gsTdDKdkDMXAYU8PJnzyx0jUn2upMuWs/XVXI6EgTnv8dVv4wW9fy4RtfjhfcdEnuG/
-         MdZf93LfmTvBODmxSzP9lzHnYuQR2OiYTvQ4KYCffPX+AEzu2zUz5HoFnHXcmwQX+Eum
-         tuRkbEFiNbt6UbdBISAqQi+gRIrFhucRBf8TfANkLbUnUXC5yDbJW88NsVCd1HgYlMvN
-         4Huw==
-X-Gm-Message-State: AOAM532nF9HZ5NZT14+IyDYMFhxWCXI0XwZ15YW+QVGlolBfUHjuMUR6
-        kMp4jVFJUEymJDDYJOUg03aBbjI65/2eDM0MhlIpvTCjWHmrstQs7fOvmtbnNcHrX7PVjTq5ZVr
-        ejKpAzCa7ZRUwkM5swrR9n6lIcKBiRM3Uf/QJKXivufSOZfwjXx0IUyb0YpcmMsro6+UuE5l71a
-        pYXsC0U58mSli5
-X-Google-Smtp-Source: ABdhPJw2B1U/RFZzcq87v6qVJXehAK0CH5cJDhVUiYY33U11fOGhxq3sF53oY3kkvfK9NRBDKdi7qw==
-X-Received: by 2002:a62:a10a:0:b029:154:fd62:ba90 with SMTP id b10-20020a62a10a0000b0290154fd62ba90mr26231551pff.62.1604412741969;
-        Tue, 03 Nov 2020 06:12:21 -0800 (PST)
+        bh=Pj2k1kdy9l8q2CP+Rz8hEEYj3DeWiJbIsdU6+BhtPCA=;
+        b=ilQF7rYp48M/lRmONkADHAsufoJBNtyZhhzl9m6hxOa/xEEbqilCMmRNrrePFlW7Ai
+         CYE4O+bF2LKJ5mgFK0i3b5dxvvNkI7wnbTgzWKmVKA+hkg9sdKYuKXRRc4xUHefsQ9kq
+         B8nMMtrJxikDR61NEEGVweQO7EXAVHgEcOHGKXSwVK5fDS3jWjYwN4Cw/S2ipfcHaUvY
+         c5wjR8mXQs0tEhIT06/4juZMGvcY3fdB1kffzBvNafZWonoV7YpR17zr2c+sbosu8Thz
+         9D4Rp5JlsTzArZQcLsiu9SqpDwzokh3p3KngJ0dT19RdXwoUxVKyXn7YAU+syRPp311/
+         uK9w==
+X-Gm-Message-State: AOAM530LyhFeAixNfQOSJSb1oIl2J8JDmxb9eqnvuZaUuv5MhGlZj0CT
+        AudSipimZeCUDRBqwTv7JwacSopeY56b/+N1uOmu78pokFMr6laAmcAlos70XeV5w4oEAmFnb31
+        8obdF4xcln0hOSDcBHINhemwdXV0NAVTVzgWAoFqicEP0gheYbgdmNePafyOy9ScnoxSpkiJEib
+        BNWzKzA+CXhmxg
+X-Google-Smtp-Source: ABdhPJxBcRy1IzeQYF7vAdLqwng0L4j6+eT2ctGGtkf3R1v+POJ5yTh/zVMARIdFjodWccmN8ylDfw==
+X-Received: by 2002:a17:90a:62c1:: with SMTP id k1mr4154706pjs.135.1604412745513;
+        Tue, 03 Nov 2020 06:12:25 -0800 (PST)
 Received: from localhost.localdomain ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id t19sm3596691pgv.37.2020.11.03.06.12.18
+        by smtp.gmail.com with ESMTPSA id t19sm3596691pgv.37.2020.11.03.06.12.22
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Nov 2020 06:12:21 -0800 (PST)
+        Tue, 03 Nov 2020 06:12:24 -0800 (PST)
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         pbonzini@redhat.com,
         Gaurav Srivastava <gaurav.srivastava@broadcom.com>
-Subject: [PATCH v3 10/19] lpfc: vmid: vmid resource allocation
-Date:   Tue,  3 Nov 2020 12:48:14 +0530
-Message-Id: <1604387903-20006-11-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v3 11/19] lpfc: vmid: cleanup vmid resources
+Date:   Tue,  3 Nov 2020 12:48:15 +0530
+Message-Id: <1604387903-20006-12-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
 References: <1604387903-20006-1-git-send-email-muneendra.kumar@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000974cfd05b33473bf"
+        boundary="000000000000cbd72c05b334738f"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---000000000000974cfd05b33473bf
+--000000000000cbd72c05b334738f
 
 From: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 
-This patch allocates the resource for vmid and checks if the firmware
-supports the feature or not.
+The patch cleans up the vmid resources and stops the timer.
 
 Signed-off-by: Gaurav Srivastava  <gaurav.srivastava@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
@@ -80,142 +79,62 @@ No change
 v2:
 Ported the patch on top of 5.10/scsi-queue
 ---
- drivers/scsi/lpfc/lpfc_init.c | 64 +++++++++++++++++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_mbox.c |  6 ++++
- drivers/scsi/lpfc/lpfc_sli.c  |  9 +++++
- 3 files changed, 79 insertions(+)
+ drivers/scsi/lpfc/lpfc_init.c |  4 ++++
+ drivers/scsi/lpfc/lpfc_scsi.c | 21 +++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
 diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index ca25e54bb782..e32d69515586 100644
+index e32d69515586..88777875f4b8 100644
 --- a/drivers/scsi/lpfc/lpfc_init.c
 +++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -4284,6 +4284,62 @@ lpfc_get_wwpn(struct lpfc_hba *phba)
- 		return rol64(wwn, 32);
+@@ -2843,6 +2843,10 @@ lpfc_cleanup(struct lpfc_vport *vport)
+ 	if (phba->link_state > LPFC_LINK_DOWN)
+ 		lpfc_port_link_failure(vport);
+ 
++	/* cleanup vmid resources */
++	if (lpfc_is_vmid_enabled(phba))
++		lpfc_vmid_vport_cleanup(vport);
++
+ 	list_for_each_entry_safe(ndlp, next_ndlp, &vport->fc_nodes, nlp_listp) {
+ 		if (!NLP_CHK_NODE_ACT(ndlp)) {
+ 			ndlp = lpfc_enable_node(vport, ndlp,
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 5e802c8b22a9..7bc1fd69b715 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -4711,6 +4711,27 @@ lpfc_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *cmnd)
+ 	return 0;
  }
  
-+/**
-+ * lpfc_vmid_res_alloc - Allocates resources for VMID
-+ * @phba: pointer to lpfc hba data structure.
-+ * @vport: pointer to vport data structure
-+ *
-+ * This routine allocated the resources needed for the vmid.
-+ *
-+ * Return codes
-+ *	0 on Succeess
-+ *	Non-0 on Failure
++/*
++ * lpfc_vmid_vport_cleanup - cleans up the resources associated with a vports
++ * @vport: The virtual port for which this call is being executed.
 + */
-+u8
-+lpfc_vmid_res_alloc(struct lpfc_hba *phba, struct lpfc_vport *vport)
++void lpfc_vmid_vport_cleanup(struct lpfc_vport *vport)
 +{
-+	u16 i;
++	/* delete the timer */
++	if (vport->port_type == LPFC_PHYSICAL_PORT)
++		del_timer_sync(&vport->phba->inactive_vmid_poll);
 +
-+	/* vmid feature is supported only on SLI4 */
-+	if (phba->sli_rev == LPFC_SLI_REV3) {
-+		phba->cfg_vmid_app_header = 0;
-+		phba->cfg_vmid_priority_tagging = 0;
-+	}
-+
-+	/* if enabled, then allocated the resources */
-+	if (lpfc_is_vmid_enabled(phba)) {
-+		vport->vmid =
-+		    kmalloc_array(phba->cfg_max_vmid, sizeof(struct lpfc_vmid),
-+				  GFP_KERNEL);
-+		if (!vport->vmid)
-+			return 1;
-+
-+		memset(vport->vmid, 0,
-+		       phba->cfg_max_vmid * sizeof(struct lpfc_vmid));
-+
-+		rwlock_init(&vport->vmid_lock);
-+
-+		/* setting the VMID parameters for the vport */
-+		vport->vmid_priority_tagging = phba->cfg_vmid_priority_tagging;
-+		vport->vmid_inactivity_timeout =
-+		    phba->cfg_vmid_inactivity_timeout;
-+		vport->max_vmid = phba->cfg_max_vmid;
-+		vport->cur_vmid_cnt = 0;
-+
-+		for (i = 0; i < LPFC_VMID_HASH_SIZE; i++)
-+			vport->hash_table[i] = NULL;
-+
-+		vport->vmid_priority_range = bitmap_zalloc
-+			(LPFC_VMID_MAX_PRIORITY_RANGE, GFP_KERNEL);
-+
-+		if (!vport->vmid_priority_range) {
-+			kfree(vport->vmid);
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
- /**
-  * lpfc_create_port - Create an FC port
-  * @phba: pointer to lpfc hba data structure.
-@@ -4439,6 +4495,12 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
- 			vport->port_type, shost->sg_tablesize,
- 			phba->cfg_scsi_seg_cnt, phba->cfg_sg_seg_cnt);
- 
-+	/* allocate the resources for vmid */
-+	rc = lpfc_vmid_res_alloc(phba, vport);
-+
-+	if (rc)
-+		goto out;
-+
- 	/* Initialize all internally managed lists. */
- 	INIT_LIST_HEAD(&vport->fc_nodes);
- 	INIT_LIST_HEAD(&vport->rcv_buffer_list);
-@@ -4463,6 +4525,8 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
- 	return vport;
- 
- out_put_shost:
++	/* free the resources */
++	kfree(vport->qfpa_res);
++	kfree(vport->vmid_priority.vmid_range);
 +	kfree(vport->vmid);
-+	bitmap_free(vport->vmid_priority_range);
- 	scsi_host_put(shost);
- out:
- 	return NULL;
-diff --git a/drivers/scsi/lpfc/lpfc_mbox.c b/drivers/scsi/lpfc/lpfc_mbox.c
-index 3414ffcb26fe..78a9b9baecf3 100644
---- a/drivers/scsi/lpfc/lpfc_mbox.c
-+++ b/drivers/scsi/lpfc/lpfc_mbox.c
-@@ -2100,6 +2100,12 @@ lpfc_request_features(struct lpfc_hba *phba, struct lpfcMboxq *mboxq)
- 		bf_set(lpfc_mbx_rq_ftr_rq_iaab, &mboxq->u.mqe.un.req_ftrs, 0);
- 		bf_set(lpfc_mbx_rq_ftr_rq_iaar, &mboxq->u.mqe.un.req_ftrs, 0);
- 	}
 +
-+	/* Enable Application Services Header for apphedr VMID */
-+	if (phba->cfg_vmid_app_header) {
-+		bf_set(lpfc_mbx_rq_ftr_rq_ashdr, &mboxq->u.mqe.un.req_ftrs, 1);
-+		bf_set(lpfc_ftr_ashdr, &phba->sli4_hba.sli4_flags, 1);
-+	}
- 	return;
- }
++	/* reset variables */
++	vport->qfpa_res = NULL;
++	vport->vmid_priority.vmid_range = NULL;
++	vport->vmid = NULL;
++	vport->cur_vmid_cnt = 0;
++}
  
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 4cd7ded656b7..51b99b7beaf9 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -7558,6 +7558,15 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
- 		goto out_free_mbox;
- 	}
- 
-+	/* Disable vmid if app header is not supported */
-+	if (phba->cfg_vmid_app_header && !(bf_get(lpfc_mbx_rq_ftr_rsp_ashdr,
-+						  &mqe->un.req_ftrs))) {
-+		bf_set(lpfc_ftr_ashdr, &phba->sli4_hba.sli4_flags, 0);
-+		phba->cfg_vmid_app_header = 0;
-+		lpfc_printf_log(phba, KERN_DEBUG, LOG_SLI,
-+				"1242 vmid feature not supported");
-+	}
-+
- 	/*
- 	 * The port must support FCP initiator mode as this is the
- 	 * only mode running in the host.
+ /**
+  * lpfc_abort_handler - scsi_host_template eh_abort_handler entry point
 -- 
 2.26.2
 
 
---000000000000974cfd05b33473bf
+--000000000000cbd72c05b334738f
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -286,13 +205,13 @@ LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
 EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
 b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
 SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCBjf8kapPYkkIqMo5RIhOo1LOvfWG891bLTLEK44idFpDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDExMDMxNDEyMjJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
+BCC4DcAptaF909KxgauQplJDreTSIHWv8ZdS/M+uZ5jGwTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
+AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDExMDMxNDEyMjVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
 AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAmbHK5kGDpuUwnVeN
-CtfaGOfHAol8T8XloAbUM4Yur42pOHalb3LhL238Q3xa0B4wtBdo1zql557YNri4XG463AlOFM8z
-w6AWVkcV2Iu+H5h8HVK3FdhZ8j+EsaWqNYDPH1/3O6fsJxMI+u+veFl6m6Gel/NN9UPnqBGASQtw
-RTlZeluXk4u/SfI2Dxypx+vPBC01XT07JI2VLPv1vWTv5dZ3M7P4nqFMCjTiV5h7SkxcHz+5Vs6i
-Un5ULSLBo6naFebcKPU+HCqUe0Pi3uBBJ9z7rHau1VzEq3CUECgkKxvJJJ6khXdP3wcV469utehW
-biash33SjzkhMlwVHH0P9w==
---000000000000974cfd05b33473bf--
+MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAV1VHDvGG2/wztNO3
+azF2dxuYWOcrPjc+C1nWhlvqSnx2YUJFnZU1BQbv5TvGPx6LyF5//5dSkKF65aym6HGLfqEaTzhS
+6hibVQP05eIaZNGzDQYegff7gym6XFSujzWNrAoQkqV7XbmvqRkABQFdDvDzMK+NzshJHTglfhIa
+ZcjigZoSdAmUnqpNzUQugA6/027zncUdomXEBUo3iaF/OGndHDuxuCcafsOlE/6UL0StuWTGx3d0
+jtQd5OOEf3pvzALPu0FTUnHdIbW2Esec9BaBWwX8FiqZTKg3Q8hynoCiVCuMaosIDIY3ijYZUKwx
+VWV4oh3dqOkSFvl6Co0YJg==
+--000000000000cbd72c05b334738f--
