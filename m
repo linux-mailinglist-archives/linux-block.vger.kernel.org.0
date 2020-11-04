@@ -2,183 +2,236 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2735C2A6779
-	for <lists+linux-block@lfdr.de>; Wed,  4 Nov 2020 16:22:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79F182A691E
+	for <lists+linux-block@lfdr.de>; Wed,  4 Nov 2020 17:09:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbgKDPWC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Nov 2020 10:22:02 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47464 "EHLO
+        id S1725889AbgKDQJZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Nov 2020 11:09:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50799 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730754AbgKDPWB (ORCPT
+        by vger.kernel.org with ESMTP id S1726690AbgKDQJY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 4 Nov 2020 10:22:01 -0500
+        Wed, 4 Nov 2020 11:09:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604503319;
+        s=mimecast20190719; t=1604506162;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SfSzvhTtTH+9bzRDCyoDIT7iEx2M0ywu+3UJYVSiXF8=;
-        b=bFd03wGYqkCZxNId4LfOWBQU+VDR3d0yaq6iX/1zxUDlOMs7kqCJEcz18HFN+7rGULX3C0
-        fR/Y12I6NeCQ74PtwKpTlpETp1ohpIuLQElA45KpyvtChEZfiEqH3NXMFsWT2wqaw4qSju
-        uG5c2qga7VioUXSiPkTWZCzVxxYupPY=
+        bh=aE9rchY8QZAZdhIZjjPadG9vwbyU73h82vy5PC6x/sg=;
+        b=Lrx337UGVUSxtqrwx6crq6eWtYGaO8s6OFPafTwt2yHiE/oAczq7NnzizC5bVR9wKA1tOV
+        LslneAbMjScLQ8D5JzKWDIYc7gH5fFjzKlKkpkU6KrM0gp8MDhlQBLAzeykyX45miThrnt
+        ozrdm55so185uSRmIbUwJXm7Id2YsGo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-Lg02yo_zMsC-8n1SZgYKuA-1; Wed, 04 Nov 2020 10:21:56 -0500
-X-MC-Unique: Lg02yo_zMsC-8n1SZgYKuA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-343-KrSeL1oZOsK1Rvxc2wIyOw-1; Wed, 04 Nov 2020 11:09:18 -0500
+X-MC-Unique: KrSeL1oZOsK1Rvxc2wIyOw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30DB71099F69;
-        Wed,  4 Nov 2020 15:21:54 +0000 (UTC)
-Received: from ovpn-112-92.rdu2.redhat.com (ovpn-112-92.rdu2.redhat.com [10.10.112.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EAB610021AA;
-        Wed,  4 Nov 2020 15:21:48 +0000 (UTC)
-Message-ID: <d4f86cccccc3bffccc4eda39500ce1e1fee2109a.camel@redhat.com>
-Subject: Re: [PATCH v8 17/18] scsi: megaraid_sas: Added support for shared
- host tagset for cpuhotplug
-From:   Qian Cai <cai@redhat.com>
-To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        don.brace@microsemi.com, kashyap.desai@broadcom.com,
-        ming.lei@redhat.com, bvanassche@acm.org, dgilbert@interlog.com,
-        paolo.valente@linaro.org, hare@suse.de, hch@lst.de
-Cc:     sumit.saxena@broadcom.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        esc.storagedev@microsemi.com, megaraidlinux.pdl@broadcom.com,
-        chenxiang66@hisilicon.com, luojiaxing@huawei.com,
-        Hannes Reinecke <hare@suse.com>
-Date:   Wed, 04 Nov 2020 10:21:47 -0500
-In-Reply-To: <d8fd51b11d5d54e6ec7e4e9a4f7dcc83f1215cd3.camel@redhat.com>
-References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
-         <1597850436-116171-18-git-send-email-john.garry@huawei.com>
-         <fe3dff7dae4494e5a88caffbb4d877bbf472dceb.camel@redhat.com>
-         <385d5408-6ba2-6bb6-52d3-b59c9aa9c5e5@huawei.com>
-         <193a0440eed447209c48bda042f0e4db102355e7.camel@redhat.com>
-         <519e0d58-e73e-22ce-0ddb-1be71487ba6d@huawei.com>
-         <d8fd51b11d5d54e6ec7e4e9a4f7dcc83f1215cd3.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DBD610A0B84;
+        Wed,  4 Nov 2020 16:09:17 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 934E15C5FD;
+        Wed,  4 Nov 2020 16:09:13 +0000 (UTC)
+Date:   Wed, 4 Nov 2020 10:08:48 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     JeffleXu <jefflexu@linux.alibaba.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, dm-devel@redhat.com,
+        joseph.qi@linux.alibaba.com, xiaoguang.wang@linux.alibaba.com,
+        haoxu@linux.alibaba.com, io-uring@vger.kernel.org
+Subject: Re: [RFC 0/3] Add support of iopoll for dm device
+Message-ID: <20201104150847.GB32761@redhat.com>
+References: <20201020065420.124885-1-jefflexu@linux.alibaba.com>
+ <20201021203906.GA10896@redhat.com>
+ <da936cfa-93a8-d6ec-bd88-c0fad6c67c8b@linux.alibaba.com>
+ <20201026185334.GA8463@redhat.com>
+ <33c32cd1-5116-9a42-7fe2-b2a383f1c7a0@linux.alibaba.com>
+ <20201102152822.GA20466@redhat.com>
+ <f165f38a-91d1-79aa-829d-a9cc69a5eee6@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f165f38a-91d1-79aa-829d-a9cc69a5eee6@linux.alibaba.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 2020-11-03 at 08:04 -0500, Qian Cai wrote:
-> On Tue, 2020-11-03 at 10:54 +0000, John Garry wrote:
-> > I have no x86 system to test that x86 config, though. How about 
-> > v5.10-rc2 for this issue?
-> 
-> v5.10-rc2 is also broken here.
-
-John, Kashyap, any update on this? If this is going to take a while to fix it
-proper, should I send a patch to revert this or at least disable the feature by
-default for megaraid_sas in the meantime, so it no longer breaks the existing
-systems out there?
+On Wed, Nov 04 2020 at  1:47am -0500,
+JeffleXu <jefflexu@linux.alibaba.com> wrote:
 
 > 
-> [  251.941451][  T330] INFO: task systemd-udevd:551 blocked for more than 122
-> seconds.
-> [  251.949176][  T330]       Not tainted 5.10.0-rc2 #3
-> [  251.954094][  T330] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [  251.962633][  T330] task:systemd-udevd   state:D stack:27160 pid:  551
-> ppid:   506 flags:0x00000324
-> [  251.971707][  T330] Call Trace:
-> [  251.974871][  T330]  __schedule+0x71d/0x1b50
-> [  251.979155][  T330]  ? kcore_callback+0x1d/0x1d
-> [  251.983709][  T330]  schedule+0xbf/0x270
-> [  251.987640][  T330]  schedule_timeout+0x3fc/0x590
-> [  251.992370][  T330]  ? usleep_range+0x120/0x120
-> [  251.996910][  T330]  ? wait_for_completion+0x156/0x250
-> [  252.002080][  T330]  ? lock_downgrade+0x700/0x700
-> [  252.006792][  T330]  ? rcu_read_unlock+0x40/0x40
-> [  252.011435][  T330]  ? do_raw_spin_lock+0x121/0x290
-> [  252.016324][  T330]  ? lockdep_hardirqs_on_prepare+0x27c/0x3d0
-> [  252.022178][  T330]  ? _raw_spin_unlock_irq+0x1f/0x30
-> [  252.027235][  T330]  wait_for_completion+0x15e/0x250
-> [  252.032226][  T330]  ? wait_for_completion_interruptible+0x2f0/0x2f0
-> [  252.038590][  T330]  ? lockdep_hardirqs_on_prepare+0x27c/0x3d0
-> [  252.044443][  T330]  ? _raw_spin_unlock_irq+0x1f/0x30
-> [  252.049502][  T330]  __flush_work+0x42a/0x900
-> [  252.053882][  T330]  ? queue_delayed_work_on+0x90/0x90
-> [  252.059025][  T330]  ? __queue_work+0x463/0xf40
-> [  252.063583][  T330]  ? init_pwq+0x320/0x320
-> [  252.067777][  T330]  ? queue_work_on+0x5e/0x80
-> [  252.072249][  T330]  ? trace_hardirqs_on+0x1c/0x150
-> [  252.077138][  T330]  work_on_cpu+0xe7/0x130
-> [  252.081347][  T330]  ? flush_delayed_work+0xc0/0xc0
-> [  252.086231][  T330]  ? __mutex_unlock_slowpath+0xd4/0x670
-> [  252.091655][  T330]  ? work_debug_hint+0x30/0x30
-> [  252.096284][  T330]  ? pci_device_shutdown+0x80/0x80
-> [  252.101274][  T330]  ? cpumask_next_and+0x57/0x80
-> [  252.105990][  T330]  pci_device_probe+0x500/0x5c0
-> [  252.110703][  T330]  ? pci_device_remove+0x1f0/0x1f0
-> [  252.115697][  T330]  really_probe+0x207/0xad0
-> [  252.120065][  T330]  ? device_driver_attach+0x120/0x120
-> [  252.125317][  T330]  driver_probe_device+0x1f1/0x370
-> [  252.130291][  T330]  device_driver_attach+0xe5/0x120
-> [  252.135281][  T330]  __driver_attach+0xf0/0x260
-> [  252.139827][  T330]  bus_for_each_dev+0x117/0x1a0
-> [  252.144552][  T330]  ? subsys_dev_iter_exit+0x10/0x10
-> [  252.149609][  T330]  bus_add_driver+0x399/0x560
-> [  252.154166][  T330]  driver_register+0x189/0x310
-> [  252.158795][  T330]  ? 0xffffffffc05c5000
-> [  252.162838][  T330]  megasas_init+0x117/0x1000 [megaraid_sas]
-> [  252.168593][  T330]  do_one_initcall+0xf6/0x510
-> [  252.173143][  T330]  ? perf_trace_initcall_level+0x490/0x490
-> [  252.178809][  T330]  ? kasan_unpoison_shadow+0x30/0x40
-> [  252.183973][  T330]  ? __kasan_kmalloc.constprop.11+0xc1/0xd0
-> [  252.189728][  T330]  ? do_init_module+0x49/0x6c0
-> [  252.194370][  T330]  ? kmem_cache_alloc_trace+0x12e/0x2a0
-> [  252.199780][  T330]  ? kasan_unpoison_shadow+0x30/0x40
-> [  252.204942][  T330]  do_init_module+0x1ed/0x6c0
-> [  252.209479][  T330]  load_module+0x4a25/0x5cf0
-> [  252.213950][  T330]  ? layout_and_allocate+0x2770/0x2770
-> [  252.219271][  T330]  ? __vmalloc_node+0x8d/0x100
-> [  252.223913][  T330]  ? kernel_read_file+0x485/0x5a0
-> [  252.228796][  T330]  ? kernel_read_file+0x305/0x5a0
-> [  252.233696][  T330]  ? __ia32_sys_fsconfig+0x6a0/0x6a0
-> [  252.238841][  T330]  ? __do_sys_finit_module+0xff/0x180
-> [  252.244093][  T330]  __do_sys_finit_module+0xff/0x180
-> [  252.249155][  T330]  ? __do_sys_init_module+0x1d0/0x1d0
-> [  252.254403][  T330]  ? __fget_files+0x1c3/0x2e0
-> [  252.258940][  T330]  do_syscall_64+0x33/0x40
-> [  252.263234][  T330]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [  252.268984][  T330] RIP: 0033:0x7f7cf6a4878d
-> [  252.273276][  T330] Code: Unable to access opcode bytes at RIP
-> 0x7f7cf6a48763.
-> [  252.280499][  T330] RSP: 002b:00007ffcfa94b978 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000139
-> [  252.288781][  T330] RAX: ffffffffffffffda RBX: 000055e01f48b730 RCX:
-> 00007f7cf6a4878d
-> [  252.296628][  T330] RDX: 0000000000000000 RSI: 00007f7cf75ba82d RDI:
-> 0000000000000006
-> [  252.304482][  T330] RBP: 00007f7cf75ba82d R08: 0000000000000000 R09:
-> 00007ffcfa94baa0
-> [  252.312331][  T330] R10: 0000000000000006 R11: 0000000000000246 R12:
-> 0000000000000000
-> [  252.320167][  T330] R13: 000055e01f433530 R14: 0000000000020000 R15:
-> 0000000000000000
-> [  252.328052][  T330] 
-> [  252.328052][  T330] Showing all locks held in the system:
-> [  252.335722][  T330] 3 locks held by kworker/3:1/289:
-> [  252.340697][  T330]  #0: ffff8881001eb338 ((wq_completion)events){+.+.}-
-> {0:0}, at: process_one_work+0x7ec/0x1610
-> [  252.350906][  T330]  #1: ffffc90004ef7e00
-> ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: process_one_work+0x820/0x1610
-> [  252.361725][  T330]  #2: ffff88810dc600e0 (&shost->scan_mutex){+.+.}-{3:3}, 
-> at: scsi_scan_host_selected+0xde/0x260
-> [  252.372132][  T330] 1 lock held by khungtaskd/330:
-> [  252.376933][  T330]  #0: ffffffffb42d2de0 (rcu_read_lock){....}-{1:2}, at:
-> rcu_lock_acquire.constprop.52+0x0/0x30
-> [  252.387234][  T330] 1 lock held by systemd-journal/398:
-> [  252.392489][  T330] 1 lock held by systemd-udevd/551:
-> [  252.397550][  T330]  #0: ffff888109a49218 (&dev->mutex){....}-{3:3}, at:
-> device_driver_attach+0x37/0x120
-> [  252.407085][  T330] 
-> [  252.409285][  T330] =============================================
-> [  252.409285][  T330] 
+> On 11/2/20 11:28 PM, Mike Snitzer wrote:
+> >On Sun, Nov 01 2020 at 10:14pm -0500,
+> >JeffleXu <jefflexu@linux.alibaba.com> wrote:
+> >
+> >>On 10/27/20 2:53 AM, Mike Snitzer wrote:
+> >>>What you detailed there isn't properly modeling what it needs to.
+> >>>A given dm_target_io could result in quite a few bios (e.g. for
+> >>>dm-striped we clone each bio for each of N stripes).  So the fan-out,
+> >>>especially if then stacked on N layers of stacked devices, to all the
+> >>>various hctx at the lowest layers is like herding cats.
+> >>>
+> >>>But the recursion in block core's submit_bio path makes that challenging
+> >>>to say the least.  So much so that any solution related to enabling
+> >>>proper bio-based IO polling is going to need a pretty significant
+> >>>investment in fixing block core (storing __submit_bio()'s cookie during
+> >>>recursion, possibly storing to driver provided memory location,
+> >>>e.g. DM initialized bio->submit_cookie pointer to a blk_qc_t within a DM
+> >>>clone bio's per-bio-data).
+> >>>
+> >>>SO __submit_bio_noacct would become:
+> >>>
+> >>>    retp = &ret;
+> >>>    if (bio->submit_cookie)
+> >>>           retp = bio->submit_cookie;
+> >>>    *retp = __submit_bio(bio);
+> >>Sorry for the late reply. Exactly I missed this point before. IF you
+> >>have not started working on this, I'd like to try to implement this as
+> >>an RFC.
+> >I did start on this line of development but it needs quite a bit more
+> >work.  Even the pseudo code I provided above isn't useful in the context
+> >of DM clone bios that have their own per-bio-data to assist with this
+> >implementation.  Because the __submit_bio_noacct() recursive call
+> >drivers/md/dm.c:__split_and_process_bio() makes is supplying the
+> >original bio (modified to only point to remaining work).
 > 
+> Yes I noticed this recently. Since the depth-first splitting
+> introduced in commit 18a25da84354
+> 
+> ("dm: ensure bio submission follows a depth-first tree walk"), one
+> bio to dm device can be
+> 
+> split into multiple bios to this dm device.
+> 
+> ```
+> 
+> one bio to dm device (dm0) = one dm_io (to nvme0) + one bio to this
+> same dm device (dm0)
+> 
+> ```
+> 
+> 
+> In this case we need a mechanism to track all split sub-bios of the
+> very beginning original bio.
+
+Yes, splitting causes additional potential for sub-bios.  There are
+other cases that cause a 1-to-many bio generation (e.g. dm-striped) or
+splitting cases where a DM target makes use of dm_accept_partial_bio
+(e.g. dm-snapshot, dm-integrity, dm-writecache, etc).
+
+
+> I'm doubted if this should be implemented in block layer like:
+> 
+> ```
+> 
+> struct bio {
+> 
+>     ...
+> 
+>     struct list_head  cookies;
+> 
+> };
+> 
+> ```
+> 
+> After all it's only used by bio-based queue, or more specifically
+> only dm device currently.
+
+I do think this line of work really should be handled in block core
+because I cannot see any reason why MD or bcache or whatever bio-based
+device wouldn't want the ability to better support io_uring (with IO
+poll).
+
+> Another design I can come up with is to maintain a global data
+> structure for the very beginning
+> original bio. Currently the blocking point is that now one original
+> bio to the dm device (@bio of dm_submit()) can correspond to multiple
+> dm_io and thus we have nowhere to place the @cookies list.
+
+Yes, and that will always be the case.  We need the design to handle an
+arbitrary sprawl of splitting from a given bio.  The graph of bios
+resulting from that fan-out needs to be walked at various levels -- be
+it the top-level original bio's submit_bio() returned cookie or some
+intermediate point in the chain of bios.
+
+The problem is the lifetime of the data structure created for a given
+split bio versus layering boundaries (that come from block core's
+simplistic recursion via bio using submit_bio).
+
+> Now we have to maintain one data structure for every original bio,
+> something like
+> 
+> ```
+> 
+> struct dm_poll_instance {
+> 
+>     ...
+> 
+>     struct list_head cookies;
+> 
+> };
+> 
+> ```
+
+I do think we need a hybrid where at the point of recursion we're able
+to make the associated data structure available across the recursion
+boundary so that modeling the association in a chain of split bios is
+possible. (e.g. struct dm_poll_data or dm_poll_instance as you named it,
+_but_ that struct definition would live in block core, but would be part
+of per-bio-data; so 'struct blk_poll_data' is more logical name when
+elevated to block core).
+
+It _might_ be worthwhile to see if a new BIO_ flag could be added to
+allow augmenting the bio_split + bio_chain pattern to also track this
+additional case of carrying additional data per-bio while creating
+bio-chains.  I may not be clear yet, said differently: augmenting
+bio_chain to not only chain bios, but to _also_ thread/chain together
+per-bio-data that lives within those chained bios.  SO you have the
+chain of bios _and_ the chain of potentially opaque void * that happens
+to point to a list head for a list of 'struct blk_poll_data'.
+
+Does that make sense?
+
+> We can transfer this dm_poll_instance between split bios by
+> bio->bi_private, like
+> 
+> ```
+> 
+> dm_submit_bio(...) {
+> 
+>     struct dm_poll_instance *ins;
+> 
+>     if (bio->bi_private)
+> 
+>         ins = bio->bi_private;
+> 
+>     else {
+> 
+>         ins = alloc_poll_instance();
+> 
+>         bio->bi_private = ins;
+> 
+>     }
+> 
+>     ...
+> 
+> }
+> 
+> ```
+
+Sadly, we cannot (ab)use bi_private for this given its (ab)used via the
+bio_chain() interface.  It's almost like we need to add a new pointer in
+the bio that isn't left for block core to hijack.
+
+There is the well-worn pattern of saving off the original bi_private,
+hooking a new endio method and then when that endio is called restoring
+bi_private but we really want to avoid excessive indirect function calls
+for this usecase.  The entire point of implementing blk_poll support is
+for performance after all.
+
+Mike
 
