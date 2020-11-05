@@ -2,70 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B31B22A7825
-	for <lists+linux-block@lfdr.de>; Thu,  5 Nov 2020 08:42:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B1B2A7859
+	for <lists+linux-block@lfdr.de>; Thu,  5 Nov 2020 08:54:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgKEHml (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Nov 2020 02:42:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:32812 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgKEHml (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Nov 2020 02:42:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3716EAB95;
-        Thu,  5 Nov 2020 07:42:40 +0000 (UTC)
-Subject: Re: [PATCH V2] nvme: report capacity 0 for non supported ZNS SSDs
-To:     "hch@lst.de" <hch@lst.de>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        "javier@javigon.com" <javier@javigon.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "joshi.k@samsung.com" <joshi.k@samsung.com>,
-        "Klaus B. Jensen" <k.jensen@samsung.com>,
-        "Niklas.Cassel@wdc.com" <Niklas.Cassel@wdc.com>
-References: <CGME20201102161505eucas1p19415e34eb0b14c7eca5a2c648569cf1e@eucas1p1.samsung.com>
- <0916865d50c640e3aa95dc542f3986b9@CAMSVWEXC01.scsc.local>
- <20201102180836.GC20182@lst.de>
- <20201102183355.GB1970293@dhcp-10-100-145-180.wdc.com>
- <20201102185851.GA21349@lst.de>
- <23e10fd1-d20c-cf77-4dc0-dd8b0774fd7a@suse.de> <20201104142908.GA7941@lst.de>
- <01c72262-1839-05cc-ba9a-94b260511a7c@suse.de> <20201105073737.GA4747@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <6e584b6a-776f-1e3b-5716-152685a6ac5d@suse.de>
-Date:   Thu, 5 Nov 2020 08:42:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1728751AbgKEHyF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Nov 2020 02:54:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726849AbgKEHyE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Nov 2020 02:54:04 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932C2C0613CF
+        for <linux-block@vger.kernel.org>; Wed,  4 Nov 2020 23:54:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mOhOWDxrQ1uCMUW6Zl0QtcyfSeit42+ZAPakn17q4ng=; b=pD+aJ1++EsMGx16o96Y7zHt5/C
+        H4NxV8Uj0cBmLhFo2n9/lZamjmRO8udLakRtmd6g6Iuq/c2/SB89Sv+0kp+OOEiJol/mXaMCP9AwD
+        nH7pJSRGsVWlh+p3Mw5PrkSA2EhEVNLyddRgVjq1ndSZBdkVCXtSbFEj5+tC8Oo03R2Qqw+YzIlJf
+        BojrQtJFaC4yYmxIn1NosyJRwcwnDbAsgbHbxKRWNegfnnFCuh19xcE+f+wbLlDzvL1XKpqEsfFLr
+        q7kNg0mLIBjJapnJCcTjz0mR04ya0Xkhz4Edy/I5ny/ptmIVB09yaOwv68eQmRqEYjYgxM3CozEyT
+        GgXCkAQw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kaa5q-00057b-9t; Thu, 05 Nov 2020 07:54:02 +0000
+Date:   Thu, 5 Nov 2020 07:54:02 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] null_blk: Set mq device as blocking with zoned mode
+Message-ID: <20201105075402.GA19304@infradead.org>
+References: <20201105065008.401112-1-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20201105073737.GA4747@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201105065008.401112-1-damien.lemoal@wdc.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/5/20 8:37 AM, hch@lst.de wrote:
-> On Wed, Nov 04, 2020 at 03:46:02PM +0100, Hannes Reinecke wrote:
->> ... as would a bsg device which could accept said ioctl ...
-> 
-> Sure we could.  So we'd have to add more code to almost 1000 lines of
-> code in bsg that are not useful to the nvme use case to make it useful
-> for that use case.  Or we could just add about 50 lines of code to NVMe
-> to do the right thing.
-> My point wasn't so much that it'd be easier to code.
-Just wanted to point out how we've argued in the past.
+On Thu, Nov 05, 2020 at 03:50:08PM +0900, Damien Le Moal wrote:
+> Commit aa1c09cb65e2 ("null_blk: Fix locking in zoned mode") changed zone
+> locking to using the potentially sleeping wait_on_bit_io() function. A
+> zoned null_blk device must thus be marked as blocking to avoid calls to
+> queue_rq() from invalid contexts triggering might_sleep() warnings.
 
-But anyway: you are the maintainer, you get to decide.
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+That's going to have a fair amount of overhead.  Can't you change the
+locking to avoid blocking?
