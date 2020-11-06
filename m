@@ -2,150 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 786662A8946
-	for <lists+linux-block@lfdr.de>; Thu,  5 Nov 2020 22:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E88652A8BB7
+	for <lists+linux-block@lfdr.de>; Fri,  6 Nov 2020 01:59:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgKEVwb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Nov 2020 16:52:31 -0500
-Received: from smtp.infotech.no ([82.134.31.41]:34360 "EHLO smtp.infotech.no"
+        id S1731965AbgKFA7Q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Nov 2020 19:59:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732446AbgKEVwb (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Nov 2020 16:52:31 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id D23EB20425C;
-        Thu,  5 Nov 2020 22:52:29 +0100 (CET)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id erpKoSAVDvFT; Thu,  5 Nov 2020 22:52:27 +0100 (CET)
-Received: from xtwo70.bingwo.ca (host-104-157-204-209.dyn.295.ca [104.157.204.209])
-        by smtp.infotech.no (Postfix) with ESMTPA id 0132D204248;
-        Thu,  5 Nov 2020 22:52:24 +0100 (CET)
-From:   Douglas Gilbert <dgilbert@interlog.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     axboe@kernel.dk, martin.petersen@oracle.com, bostroesser@gmail.com,
-        bvanassche@acm.org, ddiss@suse.de
-Subject: [PATCH v4 4/4] scatterlist: add sgl_memset()
-Date:   Thu,  5 Nov 2020 16:52:16 -0500
-Message-Id: <20201105215216.23304-5-dgilbert@interlog.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201105215216.23304-1-dgilbert@interlog.com>
-References: <20201105215216.23304-1-dgilbert@interlog.com>
+        id S1729162AbgKFA7Q (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Nov 2020 19:59:16 -0500
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 874D020B80;
+        Fri,  6 Nov 2020 00:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604624355;
+        bh=7ZEnEByVc0R517QJnXpcoY8tP3coLZ3Q0yNiPZUgtgg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LNpnrV7M/iN+V4ujDAzN/T3tay3OStPr/YwN3bQLZEZRpTgr0YhvNN4iBgBUJLUf3
+         Eyu6tRaITH92HSP28KFJe9mve+CEskk+7qXQLpjeDebpDpVOQUSpkbvXaaONO39bxV
+         IJUM6BAFBL4N5Ww5w31SVrYbaTEzjrMQ+XrSEDIA=
+Received: by mail-lj1-f172.google.com with SMTP id v18so1721207ljc.3;
+        Thu, 05 Nov 2020 16:59:15 -0800 (PST)
+X-Gm-Message-State: AOAM5326MOuS1QQqb4Zj2wC8GUOUq9Lx7YsQGQNBHszlCCCOOEjJS3Mn
+        SXKGJl4UrcRGfajUsf4yyjWZIMcSDtiAMLstp0U=
+X-Google-Smtp-Source: ABdhPJyXOcSc3bNtfvoEDL2fsq2W1tQrSuxExDjK8UvdpyheAJjMXI2e+jMAtLr0Lt7iM9E9hRacrnZUBqM91DJOAeg=
+X-Received: by 2002:a2e:50d:: with SMTP id 13mr1899629ljf.41.1604624353730;
+ Thu, 05 Nov 2020 16:59:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201103100018.683694-1-hch@lst.de> <20201103100018.683694-6-hch@lst.de>
+In-Reply-To: <20201103100018.683694-6-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 5 Nov 2020 16:59:02 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW65Au-wJJo96KF0J3drdriCqHZ9Oa3=bfjfspV3tKByrg@mail.gmail.com>
+Message-ID: <CAPhsuW65Au-wJJo96KF0J3drdriCqHZ9Oa3=bfjfspV3tKByrg@mail.gmail.com>
+Subject: Re: [PATCH 05/10] md: implement ->set_read_only to hook into BLKROSET processing
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ilya Dryomov <idryomov@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The existing sg_zero_buffer() function is a bit restrictive. For
-example protection information (PI) blocks are usually initialized
-to 0xff bytes. As its name suggests sgl_memset() is modelled on
-memset(). One difference is the type of the val argument which is
-u8 rather than int. Plus it returns the number of bytes (over)written.
+On Tue, Nov 3, 2020 at 2:13 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Implement the ->set_read_only method instead of parsing the actual
+> ioctl command.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Change implementation of sg_zero_buffer() to call this new function.
+LGTM!
 
-Reviewed-by: Bodo Stroesser <bostroesser@gmail.com>
-Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
----
- include/linux/scatterlist.h |  3 ++
- lib/scatterlist.c           | 65 +++++++++++++++++++++++++------------
- 2 files changed, 48 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 0f6d59bf66cb..8e4c050e6237 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -339,6 +339,9 @@ bool sgl_compare_sgl_idx(struct scatterlist *x_sgl, unsigned int x_nents, off_t
- 			 struct scatterlist *y_sgl, unsigned int y_nents, off_t y_skip,
- 			 size_t n_bytes, size_t *miscompare_idx);
- 
-+size_t sgl_memset(struct scatterlist *sgl, unsigned int nents, off_t skip,
-+		  u8 val, size_t n_bytes);
-+
- /*
-  * Maximum number of entries that will be allocated in one piece, if
-  * a list larger than this is required then chaining will be utilized.
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index 9332365e7eb6..f06614a880c8 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -1038,26 +1038,7 @@ EXPORT_SYMBOL(sg_pcopy_to_buffer);
- size_t sg_zero_buffer(struct scatterlist *sgl, unsigned int nents,
- 		       size_t buflen, off_t skip)
- {
--	unsigned int offset = 0;
--	struct sg_mapping_iter miter;
--	unsigned int sg_flags = SG_MITER_ATOMIC | SG_MITER_TO_SG;
--
--	sg_miter_start(&miter, sgl, nents, sg_flags);
--
--	if (!sg_miter_skip(&miter, skip))
--		return false;
--
--	while (offset < buflen && sg_miter_next(&miter)) {
--		unsigned int len;
--
--		len = min(miter.length, buflen - offset);
--		memset(miter.addr, 0, len);
--
--		offset += len;
--	}
--
--	sg_miter_stop(&miter);
--	return offset;
-+	return sgl_memset(sgl, nents, skip, 0, buflen);
- }
- EXPORT_SYMBOL(sg_zero_buffer);
- 
-@@ -1243,3 +1224,47 @@ bool sgl_compare_sgl(struct scatterlist *x_sgl, unsigned int x_nents, off_t x_sk
- 	return sgl_compare_sgl_idx(x_sgl, x_nents, x_skip, y_sgl, y_nents, y_skip, n_bytes, NULL);
- }
- EXPORT_SYMBOL(sgl_compare_sgl);
-+
-+/**
-+ * sgl_memset - set byte 'val' up to n_bytes times on SG list
-+ * @sgl:		 The SG list
-+ * @nents:		 Number of SG entries in sgl
-+ * @skip:		 Number of bytes to skip before starting
-+ * @val:		 byte value to write to sgl
-+ * @n_bytes:		 The (maximum) number of bytes to modify
-+ *
-+ * Returns:
-+ *   The number of bytes written.
-+ *
-+ * Notes:
-+ *   Stops writing if either sgl or n_bytes is exhausted. If n_bytes is
-+ *   set SIZE_MAX then val will be written to each byte until the end
-+ *   of sgl.
-+ *
-+ *   The notes in sgl_copy_sgl() about large sgl_s _applies here as well.
-+ *
-+ **/
-+size_t sgl_memset(struct scatterlist *sgl, unsigned int nents, off_t skip,
-+		  u8 val, size_t n_bytes)
-+{
-+	size_t offset = 0;
-+	size_t len;
-+	struct sg_mapping_iter miter;
-+
-+	if (n_bytes == 0)
-+		return 0;
-+	sg_miter_start(&miter, sgl, nents, SG_MITER_ATOMIC | SG_MITER_TO_SG);
-+	if (!sg_miter_skip(&miter, skip))
-+		goto fini;
-+
-+	while ((offset < n_bytes) && sg_miter_next(&miter)) {
-+		len = min(miter.length, n_bytes - offset);
-+		memset(miter.addr, val, len);
-+		offset += len;
-+	}
-+fini:
-+	sg_miter_stop(&miter);
-+	return offset;
-+}
-+EXPORT_SYMBOL(sgl_memset);
-+
--- 
-2.25.1
-
+Acked-by: Song Liu <song@kernel.org>
