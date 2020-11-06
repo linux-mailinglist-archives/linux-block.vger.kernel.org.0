@@ -2,92 +2,170 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F6D32A998A
-	for <lists+linux-block@lfdr.de>; Fri,  6 Nov 2020 17:37:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D992A9A1F
+	for <lists+linux-block@lfdr.de>; Fri,  6 Nov 2020 18:00:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgKFQhi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 Nov 2020 11:37:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgKFQhi (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Nov 2020 11:37:38 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD89AC0613CF
-        for <linux-block@vger.kernel.org>; Fri,  6 Nov 2020 08:37:36 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id r186so1352278pgr.0
-        for <linux-block@vger.kernel.org>; Fri, 06 Nov 2020 08:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=YzV8rqDFCFdrm11VJcdiu+4uNT2gi4D9ChWF/T6uRTA=;
-        b=mnD9nhztsjPCTZsT2hc8h5WS+ivQm99TeVQ7trDteSYfxcGaX5yQtfTmm9R4qkRrXy
-         RaUWfCtIe6w22TJmggCCpeLlpxHepMH7VhDhuxZvzld/2vndsjBM/aPyQktBHqQdBqvv
-         YEC/As71wBrwClzj5SDBgfZ35YXZWPRq+yMiwznqNU2P0VKiTYYM89hg7t7HpP6P0AYK
-         aCZkCRXHbbkG82Mmpus0YQGd72nByBZIoXAivD8QjT4PQ4udXPLm8hmdtJwgde7ojL2F
-         dCsqAWH/abUsjLt+pITQn3uhvUkxAMBhAz7fFjKLCJJ4PngHi/+3TZiHu5ycQ9bRVHgI
-         5c5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YzV8rqDFCFdrm11VJcdiu+4uNT2gi4D9ChWF/T6uRTA=;
-        b=Vro/QbnTJ4d3VCIWkTEV8HmfkxAoICgpFl9F/gnZqsOMiW1Br0c9VL7ZCZ4NQjEZdr
-         Pe93V9hlilYtoVHQ3Sa/EMqNPi+F3cCSZOOZ0iKXFasVC9L1AV1213IScTrlZkb4ByiU
-         fpGtxrq7yWYCp09kXzcgC8XNcGicNRwBp67QnnQv+gBTaKVDuOl3+93Wjcjbb4nw0Ws+
-         1dliwR2TbXM5qUpCktjpq31uL8CtlMPaA/vS+ayHkWMFlFLhj8lHf8jRgE9YuJNVFdtr
-         zyTSrx3rR8bIEsQ3ntvncBCvwbSBGFn/GzTqEODoYOp3pD2mgyX0VrfYukcViLFhM7qm
-         mN4A==
-X-Gm-Message-State: AOAM531tus61TdAVHJT9IzGqjDnAIIz1cjsNS2lfdjcDIp5LogXakGkl
-        ARh0IYEqY+pXG55dcDdZ0JETN8LQFutkgQ==
-X-Google-Smtp-Source: ABdhPJxBQJk114unzKAyyhUitwi1soB0CaKljWjdJoUbZ57SGpDamYuke+6L0WnXugDEvLVGHcl75A==
-X-Received: by 2002:a63:1418:: with SMTP id u24mr2448751pgl.43.1604680656147;
-        Fri, 06 Nov 2020 08:37:36 -0800 (PST)
-Received: from [192.168.1.134] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id r8sm3320893pjz.51.2020.11.06.08.37.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Nov 2020 08:37:35 -0800 (PST)
-Subject: Re: [PATCH] null_blk: Fix scheduling in atomic with zoned mode
-To:     Damien Le Moal <damien.lemoal@wdc.com>, linux-block@vger.kernel.org
-References: <20201106110141.5887-1-damien.lemoal@wdc.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <916d292c-a33b-d58e-f9ce-eea5cfdaf928@kernel.dk>
-Date:   Fri, 6 Nov 2020 09:37:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727293AbgKFRAy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 Nov 2020 12:00:54 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:57608 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgKFRAx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Nov 2020 12:00:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=q5mN94C0GkWo+VfB8UZJYJyJ0FbV13s+5fRAPuv9Vi0=; b=q9ieAOfgH5dn9nd+5h7la82GAr
+        H6p3fUY3rpgzh4OPt3P1l1PuI9h7ecYxc7I5RndJ9a1n+B3tAZOi3clUR6aY36i+UdMJ4QIggspKI
+        6yb0s5rFl52pn/iuYtn20KNAe0dPDeUcJ8r2/dH+kZBokpsnruyp6xIniH+mT6z1cfVu4jfHwFsJC
+        Hya2i2aUU1+GBaL5H5SwAp5e2z/heNFpcz8WmQlpjcq2aUmtRexe2J/4Xs9krhy3OVkBJDAKfiql6
+        45GoV6VNGLaXjtSsULb9F/djCFEJ6Wk3aUs+czOqwLS3/XaChCuurdh1t143XkBIpFwDoxq/zLNqq
+        QaXyaDng==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1kb56Z-0002PY-5k; Fri, 06 Nov 2020 10:00:53 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1kb56U-0004sw-Eh; Fri, 06 Nov 2020 10:00:46 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri,  6 Nov 2020 10:00:24 -0700
+Message-Id: <20201106170036.18713-4-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20201106170036.18713-1-logang@deltatee.com>
+References: <20201106170036.18713-1-logang@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20201106110141.5887-1-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, dan.j.williams@intel.com, iweiny@intel.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE,MYRULES_NO_TEXT autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: [RFC PATCH 03/15] PCI/P2PDMA: Introduce pci_p2pdma_should_map_bus() and pci_p2pdma_bus_offset()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/6/20 4:01 AM, Damien Le Moal wrote:
-> Commit aa1c09cb65e2 ("null_blk: Fix locking in zoned mode") changed
-> zone locking to using the potentially sleeping wait_on_bit_io()
-> function. This is acceptable when memory backing is enabled as the
-> device queue is in that case marked as blocking, but this triggers a
-> scheduling while in atomic context with memory backing disabled.
-> 
-> Fix this by relying solely on the device zone spinlock for zone
-> information protection without temporarily releasing this lock around
-> null_process_cmd() execution in null_zone_write(). This is OK to do
-> since when memory backing is disabled, command processing does not
-> block and the memory backing lock nullb->lock is unused. This solution
-> avoids the overhead of having to mark a zoned null_blk device queue as
-> blocking when memory backing is unused.
-> 
-> This patch also adds comments to the zone locking code to explain the
-> unusual locking scheme.
+Introduce pci_p2pdma_should_map_bus() which is meant to be called by
+dma map functions to determine how to map a given p2pdma page.
 
-Applied for 5.10, though I do agree that the locking for non-memory
-backed should go. The whole point of null_blk is to be able to
-benchmark the underlying layers, and if we end up having null_blk
-be the limiting factor, then it's pointless.
+pci_p2pdma_bus_offset() is also added to allow callers to get the bus
+offset if they need to map the bus address.
 
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/p2pdma.c       | 46 ++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-p2pdma.h | 11 +++++++++
+ 2 files changed, 57 insertions(+)
+
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index ea8472278b11..9961e779f430 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -930,6 +930,52 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+ }
+ EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
+ 
++/**
++ * pci_p2pdma_bus_offset - returns the bus offset for a given page
++ * @page: page to get the offset for
++ *
++ * Must be passed a pci p2pdma page.
++ */
++u64 pci_p2pdma_bus_offset(struct page *page)
++{
++	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(page->pgmap);
++
++	WARN_ON(!is_pci_p2pdma_page(page));
++
++	return p2p_pgmap->bus_offset;
++}
++EXPORT_SYMBOL_GPL(pci_p2pdma_bus_offset);
++
++/**
++ * pci_p2pdma_should_map_bus - determine if a dma mapping should use the
++ *	bus address
++ * @dev: device doing the DMA request
++ * @pgmap: dev_pagemap structure for the mapping
++ *
++ * Returns 1 if the page should be mapped with a bus address, 0 otherwise
++ * and -1 the device should not be mapping P2PDMA pages.
++ */
++int pci_p2pdma_should_map_bus(struct device *dev, struct dev_pagemap *pgmap)
++{
++	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(pgmap);
++	struct pci_dev *client;
++
++	if (!dev_is_pci(dev))
++		return -1;
++
++	client = to_pci_dev(dev);
++
++	switch (pci_p2pdma_map_type(p2p_pgmap->provider, client)) {
++	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++		return 0;
++	case PCI_P2PDMA_MAP_BUS_ADDR:
++		return 1;
++	default:
++		return -1;
++	}
++}
++EXPORT_SYMBOL_GPL(pci_p2pdma_should_map_bus);
++
+ /**
+  * pci_p2pdma_enable_store - parse a configfs/sysfs attribute store
+  *		to enable p2pdma
+diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+index 8318a97c9c61..fc5de47eeac4 100644
+--- a/include/linux/pci-p2pdma.h
++++ b/include/linux/pci-p2pdma.h
+@@ -34,6 +34,8 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+ 		int nents, enum dma_data_direction dir, unsigned long attrs);
+ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+ 		int nents, enum dma_data_direction dir, unsigned long attrs);
++u64 pci_p2pdma_bus_offset(struct page *page);
++int pci_p2pdma_should_map_bus(struct device *dev, struct dev_pagemap *pgmap);
+ int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
+ 			    bool *use_p2pdma);
+ ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
+@@ -83,6 +85,15 @@ static inline void pci_p2pmem_free_sgl(struct pci_dev *pdev,
+ static inline void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
+ {
+ }
++static inline u64 pci_p2pdma_bus_offset(struct page *page)
++{
++	return -1;
++}
++static inline int pci_p2pdma_should_map_bus(struct device *dev,
++					    struct dev_pagemap *pgmap)
++{
++	return -1;
++}
+ static inline int pci_p2pdma_map_sg_attrs(struct device *dev,
+ 		struct scatterlist *sg, int nents, enum dma_data_direction dir,
+ 		unsigned long attrs)
 -- 
-Jens Axboe
+2.20.1
 
