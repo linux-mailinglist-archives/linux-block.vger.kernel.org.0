@@ -2,112 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFA882AB6D2
-	for <lists+linux-block@lfdr.de>; Mon,  9 Nov 2020 12:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC2D22AB8AE
+	for <lists+linux-block@lfdr.de>; Mon,  9 Nov 2020 13:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgKILaY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Nov 2020 06:30:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49942 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727077AbgKILaX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 9 Nov 2020 06:30:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604921421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qJPHU79Z9aFII+RXhVTkpUcHO9yLNqjEBCGqyvXY310=;
-        b=V995cmrSEl54zDxw55HTc5LkSVBjkP2bV0TQekN9COsw8YV5x1PRZoXTiOQWYGIU7qeB/F
-        S4Jatc89SsaTrYA2XyRpHprinR8Gwv4zs3Vt/5nvJ4nLkVnzBzM/M3xEYu8X8hmCleZFtk
-        XB3dlRLouPrOoTfOtSq1W/8EfJ7ljA0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-501-KHfrnanvPZaSES1EoJ-8cw-1; Mon, 09 Nov 2020 06:30:20 -0500
-X-MC-Unique: KHfrnanvPZaSES1EoJ-8cw-1
-Received: by mail-wm1-f72.google.com with SMTP id h2so1861174wmm.0
-        for <linux-block@vger.kernel.org>; Mon, 09 Nov 2020 03:30:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qJPHU79Z9aFII+RXhVTkpUcHO9yLNqjEBCGqyvXY310=;
-        b=YWqFrgSA0atVku9m66cIK1Dk1MZyPb8jE/0r54DybKeNmVcQi1OzYFCS1qhpr+WP16
-         d+LI+wKMzOdO9tGPizPM7LaZjm2cATUFwwrT1qsZSzQpK8VhDnWBwVqzgWkPncODbXTJ
-         Wn5UgVLfZx+QijDxyHAkmzH3P4E7FS6g2HqTNLw20Nf69WQ4rPdeEXLS3UeCX4/dVHDc
-         LiNMklq6Str+A3eUve7FvxoaxzebKde/ejyNzHXczlev6XkdoYEUfSxlf1OTyXEGYh/W
-         jyTfmg8eOBK/kN1V58UcO99iMAKWmMPyS7Xl8qbKqj1Yj3vqgrctZGT6U1IoAcJSnkv+
-         O9Xw==
-X-Gm-Message-State: AOAM533sAjRmjTZNKQeBKQlhwoHPbmUuLMZDYjvMNgkAD8rfPjFOI4CL
-        EoANfM32+1gFECbwDr3nCcuT+h0ARQAxLSy5bbKLFq5zxoC3rtrel50ophWZPwII5R3sGOWn9gq
-        Hq7VSKNMFQX5joZv9da9oza0=
-X-Received: by 2002:a05:6000:1005:: with SMTP id a5mr10320362wrx.425.1604921419108;
-        Mon, 09 Nov 2020 03:30:19 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxfMfmWa9Cv9HNLSs0dLMrckBnIhQ+LX5gsNBfqeNBoHRKN7zV/cjWgtINNh6h724r5DlDOEA==
-X-Received: by 2002:a05:6000:1005:: with SMTP id a5mr10320328wrx.425.1604921418961;
-        Mon, 09 Nov 2020 03:30:18 -0800 (PST)
-Received: from redhat.com (bzq-79-181-34-244.red.bezeqint.net. [79.181.34.244])
-        by smtp.gmail.com with ESMTPSA id 35sm10972366wro.71.2020.11.09.03.30.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 03:30:17 -0800 (PST)
-Date:   Mon, 9 Nov 2020 06:30:10 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Justin Sanders <justin@coraid.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, nbd@other.debian.org,
-        ceph-devel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 23/24] virtio-blk: remove a spurious call to
- revalidate_disk_size
-Message-ID: <20201109063004-mutt-send-email-mst@kernel.org>
-References: <20201106190337.1973127-1-hch@lst.de>
- <20201106190337.1973127-24-hch@lst.de>
+        id S1729432AbgKIMvi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Nov 2020 07:51:38 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43846 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgKIMvQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Nov 2020 07:51:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1604926276; x=1636462276;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P54iPOl5qnG2p5CzwD2BBLquaomeh0qmBKaQFP/SQRg=;
+  b=hA5I9ime1f5C7a/svYZbex0hcDRKI5xH5Kvg9FJWa+3ykYnYYrTJoasi
+   wkpojwxqdxnb9mvY9ACuZJK74ud0zzsvl0kQvaLGlH0OvT1WReiaMwCj6
+   UVYwHq4i5cCDqhVjCIutgR/p0wBhYl4Mq+mvgw/deEquR1NI65ZDp0xIO
+   h55p0+k6+iF/4cXDEaMgKW/kO+v/nNPh+7dZ/Kx6Fqr5w/R/KFO8V3WkM
+   0kxu9meDRgZ3auw0I+AYSx+w1mfUWvzrH3ZA++hO2nEd5DwCap22oUBjE
+   qYtLMveWsJBvG06tkTGiwoUxJQu2F7687oViW43JvbwvZyLzrKGrZM0PD
+   g==;
+IronPort-SDR: 4m/qGSJZnP+AAd/cWB8FIOmR+0spjftg2umWJb6/Si6vFdnMbyKl6ybR41MGceVEw69l1Uh5L+
+ 1CBMG0ZSR85X5RI5xqqUEOV8g4FfwpKhQmj5nSxW1W+Y4JyanS2KUmNh6QJkodg6+lmHw7xso+
+ yCT9+owntaepPBuVuKuFjhL6rNUrA2OJE16pLosco3H2EvdZpyBzvBrjkrqG56u7mPMEgMcFHc
+ RNhBvQBZ1WwhV7c+AUefPMGGOxJyVEqS9PQavIdwdnKC/QL/seKV11UwANFvWx9148lf9dJXcM
+ iTg=
+X-IronPort-AV: E=Sophos;i="5.77,463,1596470400"; 
+   d="scan'208";a="156668395"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Nov 2020 20:51:08 +0800
+IronPort-SDR: 6vgqxBcOb2jg4ai9U3DstTRAifUxWOEl/F1ScHVn2gRLI+3f3FAkw6IT6qC6ievn6BrXosOe9P
+ j7bxHDWXWr2Df4710MD4kjyI29h6h8q4zsUXli3CD9FlRny3NbcVfIZYtD9320ueQwqm/gT6uz
+ Vj6JctfvGjP0u3rsVkkanG1xoxG3xWoVeNOxmGTUGlNUvrS/y55YXj2YnzGI5O39Z776aVwTt4
+ ByGtX/LH8g2PhC8p/Xoqdb23SGdAdMs9TKZRLF8iJSZ8ha+lZv6DpDQf4RgQK837jqVTmAJcv1
+ fhXfHhmjQ9TbqaqvKHkp/obq
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 04:37:11 -0800
+IronPort-SDR: +7RSBrRmBmlEqniFjaOSnFtRTYj3bMhCg/rBnF/jZa/icqLuvHS/jG6+h/2J4mMtd2FfaqXT6S
+ +lJYn9mLLaEMy1XPDg4+owIP9bhfeYWau+GeYhwF1BcyjVKkB4JA3ZGcCog7SUt/ZrVewBOpzk
+ MwWx8GZe7+SnW0KyR9OSKaChvE+fydTL/qW0hPrEoOo99UYG+526Np3AGjQrnonjDe0z4s5Gec
+ VpiTrhG223DszN+t4VyieUDOPEiuNDNzsrpQTJ1mcP6y1OwLdygqLn/gsQDt/HLFLtC7mYo1su
+ 4aU=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 09 Nov 2020 04:51:08 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 0/6] null_blk fixes, improvements and cleanup
+Date:   Mon,  9 Nov 2020 21:50:59 +0900
+Message-Id: <20201109125105.551734-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201106190337.1973127-24-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 08:03:35PM +0100, Christoph Hellwig wrote:
-> revalidate_disk_size just updates the block device size from the disk
-> size.  Thus calling it from revalidate_disk_size doesn't actually do
-> anything.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Jens,
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+This series provides fixes and improvements for null_blk zoned mode.
+The first patch fixes a problem with zone size initialization when the
+device capacity is not a multiple of the zone size.
 
-> ---
->  drivers/block/virtio_blk.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 3e812b4c32e669..145606dc52db1e 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -598,7 +598,6 @@ static void virtblk_update_cache_mode(struct virtio_device *vdev)
->  	struct virtio_blk *vblk = vdev->priv;
->  
->  	blk_queue_write_cache(vblk->disk->queue, writeback, false);
-> -	revalidate_disk_size(vblk->disk, true);
->  }
->  
->  static const char *const virtblk_cache_types[] = {
-> -- 
-> 2.28.0
+The second patch improves zone locking overall, and especially the
+memory backing disabled case by introducing a spinlock array to
+implement a per zone lock in place of a global lock. With this patch,
+write performance remains mostly unchanged, but read performance with
+a multi-queue setup more than double from 1.3 MIOPS to 3.3 MIOPS (4K
+random reads to zones with fio zonemode=zbd).
+
+These 2 patches could probably go into the current cycle.
+
+The remaining 4 patches likely belong to the next cycle: patch 3
+improves zone implicit close, patch 4 is a small code cleanup in
+preparation of patch 5 which allows freeing the memory used by a zone
+when the zone is reset with memory backing enabled.
+
+The last patch is another cleanup which moves null_blk driver code into
+its own directory under drivers/block/null_blk.
+
+Comments are as always welcome.
+
+Damien Le Moal (6):
+  null_blk: Fix zone size initialization
+  null_blk: improve zone locking
+  null_blk: Improve implicit zone close
+  null_blk: cleanup discard handling
+  null_blk: discard zones on reset
+  null_blk: Move driver into its own directory
+
+ drivers/block/Makefile                        |   7 +-
+ drivers/block/null_blk/Makefile               |  11 +
+ drivers/block/{ => null_blk}/null_blk.h       |   8 +-
+ drivers/block/{ => null_blk}/null_blk_main.c  |  43 ++--
+ drivers/block/{ => null_blk}/null_blk_trace.c |   0
+ drivers/block/{ => null_blk}/null_blk_trace.h |   0
+ drivers/block/{ => null_blk}/null_blk_zoned.c | 234 ++++++++++++------
+ 7 files changed, 196 insertions(+), 107 deletions(-)
+ create mode 100644 drivers/block/null_blk/Makefile
+ rename drivers/block/{ => null_blk}/null_blk.h (95%)
+ rename drivers/block/{ => null_blk}/null_blk_main.c (98%)
+ rename drivers/block/{ => null_blk}/null_blk_trace.c (100%)
+ rename drivers/block/{ => null_blk}/null_blk_trace.h (100%)
+ rename drivers/block/{ => null_blk}/null_blk_zoned.c (78%)
+
+-- 
+2.26.2
 
