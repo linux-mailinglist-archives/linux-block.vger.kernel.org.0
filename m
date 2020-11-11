@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6433F2AF165
-	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 14:00:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 466472AF167
+	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 14:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgKKNA5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Nov 2020 08:00:57 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:32526 "EHLO
+        id S1726588AbgKKNA7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Nov 2020 08:00:59 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:32534 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgKKNA4 (ORCPT
+        with ESMTP id S1726570AbgKKNA5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Nov 2020 08:00:56 -0500
+        Wed, 11 Nov 2020 08:00:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1605099656; x=1636635656;
+  t=1605099657; x=1636635657;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=febnZMc+ZcEATUd+fQ+StiriaPbiiTsmXj9REODG4hE=;
-  b=hXh/XRHUSiA0VQ50zS8Ee/aWyjYTwmlcjBWPHxVGwym2SDzCAEi1heap
-   G9LVV2NfFG8yFy/WYsF2GumnVXqiLbiC8cMAkO0+CknQH/rv5RjwfCTgl
-   R+kwKic+k5zpVQMGKA/l9REvU/+jToyWd03RQ9sRjEBmdTT4xaYgQeLka
-   wzg6/zXiO28Yu02DiOdk76YET76KcYB0nUNZqomXUknSVcOM4aoWUKz5o
-   SQloQ1b1JTW8+r7xsPEWsSjWpJVtcay0zPWDsMSNmiYyVQu9q6jipZjSq
-   Xg5mToj1p0MQELdJij6gDCicLhCfFb1YAYytxeGSh6sy5uBxMDdiKhrg2
-   g==;
-IronPort-SDR: 3N7zaaq5JWdkoUNIQSU2fXFiXnAQZI+PUubTCsP0wJ14Afkl8FE51z3IjdOPmNlgTMmmtmk8Zc
- tVYDWAuPDcnJXwHzeRXTg9GbqFtDEBuZ2faZcHDVKtDWmcjGK/KrU2Vrc2K9KvSKv1zYlw92Pp
- bh/xpULL7j+Fz48Ja892hAZ/emX0G6bK7yRlCVThHhR/bx8ishe00c+u2hx2B3cmvj2CDAVXnJ
- Ry+N6JXBGB1AGFaJ1AIb0198kQPnMb7nPjmrlvB9ZuqYNdCZfj5AodgMPiZBUG0ZuNlSJhwRR8
- 008=
+  bh=y0W/n85ooYUiGlOlhPN+jwG9olh1vpEoNQl3W0xc0iA=;
+  b=RDl9VBB3yBCh6LCi00JfPJ20fc7SrTfn36VkUBhkabE+30KurUAHXCq0
+   oF2sC7sQ8aiFe1M5FtMudffvGp5J6ZLMQVuzTtzaoLLd1X/ctBPss+Byv
+   3BukVXe839uXgBqWE9QBv/tq2F7zoQyzLr5F8IRlFHrRcvDnkRPlwu5Rg
+   Y66q394VQOfDYKXGr+IRUR8tfd9GKVQ4X9rk0B9kJ5vE6K3IJ5p/TM/ww
+   PuQWdVx4vzhFRxTH1gUKONEGAxJlbpLhrWgvtgNocnsZUKYZl6BRynK9r
+   wVO2FDiaVlLMR/4QBbiVochNqHaJMoMdb5bBZAjZAqctVJSR+9dxoeL7o
+   Q==;
+IronPort-SDR: bra0mJxE+ox3192rCRn+vdNh3xVtxiSMGLU0Um0jAndwkeSzvYV7Osp5jQVswGyEeK5kaxBb/O
+ xyKHKNWnKMb1+N75K8HS1WVDKf423+2Hg+rjaM+kD2L9RY5PlAAZR+qepO2159TR+o3eSDhbNg
+ dwUkwN2OZKrMaKop04vhjDFNEV4gKN+AOvPaP7W7lsVlCusHJ+L7LlDErR10XTskHk6/+kQ1J2
+ PScm/mfy7ZNASVZrSQX42h4Lnrf35dgYNMz4jbwzv6LT8Jff+WYwPJ++IgEBH/NSu5/FmsykW2
+ VMo=
 X-IronPort-AV: E=Sophos;i="5.77,469,1596470400"; 
-   d="scan'208";a="152283545"
+   d="scan'208";a="152283546"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 11 Nov 2020 21:00:56 +0800
-IronPort-SDR: 2X/3HP7IiZZLgD7HnkDVw1jGYtSzIujzSme0EhLzZOKXbAIvA/o7fWHvnlnyfInfecqkw1f4G8
- sHkLos3mfcAzCcLC9fg8DSIpfcXvQ8h4NuKWv2c+o1pm1wMy7tJ3j8ehkH6kE6Qa5AcRxAiqKg
- ZR/jHC5g52AQEp7pa5sRF0wwSCUu+X6n6NldhFmGkHc5atWPx+p8WCFURGnVrxCFxGkzm4qS7Q
- QCpO/HpqWCQzTIK2tSktK4oW1blJ+IQSJxQrkqCfsSmZUUOlxQOd8YTmqlrsveIlcWGjOIuoyg
- b03NcaXcd9eYhDFx72/Zx2wS
+IronPort-SDR: TZ/C9nqtLdhc8yG4jEISrAExmieY6+kdV89PGePzcdMBsEnCkm7a7TSUUn1T4J3TzcZZCB9VX7
+ 1ny886KTYAeT2adEY+rbWc1RoMRJkRRYT+TU1DuhzGgudQ9tXxUJNwDWgKIZrtZ491vg6Yq+JT
+ pck0encuztWFIXviIaSf+K5VCiHUE/TbefQ2YFN7gpbaqJ3yC4NHrENg8rHvcGmM8CXhaKagOp
+ Il6MHxogNDstGw0kB5+PZcghrgLzdI8WAFVIXBauFxMkovBMlBee4fv9QMWbtyeJEqq9hgrVko
+ uuPjMBJdBhU/fK049mBXvdsj
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 04:45:38 -0800
-IronPort-SDR: 5d5UY53nodr3tK2Z8hP9kYZ4+UD9/G81vEw5Tt9CF5xkEDvtAWq4konzt2bPDafgVcglQMDZt5
- +Ysg8jEPNZefSvaNxWRCy3TrBlz3YBAqyR92o8CjdbuankIt1Mg7LaPnG5tSmPqLvYb+MA+2ef
- gBFmofSNy4VpLhhXCnnvtisqOutGOf1VWWfKWbpa6QJQEv8BtNLAOpC1xni65+41iikMlURUKd
- NQSyTGN3PXwDSNqvGkuYxu6p00k3GIVDBfcwcPRFF9kYqLVXCI/7mjHS30E6brg/W2pXttn9Dr
- UXo=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 04:45:39 -0800
+IronPort-SDR: U+RCYwqQU4ZGKqJfswcqrX187A+FXkY1ustA1xnDABmgeIizQSxDAXt6wbTIx6Fky++3hteVKi
+ 8zEP8+ld0Fql/SLKk+M7i6Fb2Iuz2bOY3S07IayXiC+JAgvikI1Hv+mLM5J7/nIM960RZ4L2OW
+ qZKNd3B6PMdU1nOKBMpr2nLVVJyjZfev1gBfZtd3aLD+ZlqrnFsvOsmsYQzbsLigAkrQFhIFF7
+ BFdmoMM0fsIxHVdXNl/PDpfstmqbCmzbGn4leUOa81dBFS49NEi2k0wDB8NVPYN+iNBMVTWytH
+ v9A=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Nov 2020 05:00:56 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 11 Nov 2020 05:00:57 -0800
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v3 5/9] null_blk: Improve implicit zone close
-Date:   Wed, 11 Nov 2020 22:00:45 +0900
-Message-Id: <20201111130049.967902-6-damien.lemoal@wdc.com>
+Subject: [PATCH v3 6/9] null_blk: cleanup discard handling
+Date:   Wed, 11 Nov 2020 22:00:46 +0900
+Message-Id: <20201111130049.967902-7-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20201111130049.967902-1-damien.lemoal@wdc.com>
 References: <20201111130049.967902-1-damien.lemoal@wdc.com>
@@ -63,89 +63,138 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When open zone resource management is enabled, that is, when a null_blk
-zoned device is created with zone_max_open different than 0, implicitly
-or explicitly opening a zone may require implicitly closing a zone
-that is already implicitly open. This operation is done using the
-function null_close_first_imp_zone(), which search for an implicitly
-open zone to close starting from the first sequential zone. This
-implementation is simple but may result in the same being constantly
-implicitly closed and then implicitly reopened on write, namely, the
-lowest numbered zone that is being written.
+null_handle_discard() is called from both null_handle_rq() and
+null_handle_bio(). As these functions are only passed a nullb_cmd
+structure, this forces pointer dereferences to identiify the discard
+operation code and to access the sector range to be discarded.
+Simplify all this by changing the interface of the functions
+null_handle_discard() and null_handle_memory_backed() to pass along
+the operation code, operation start sector and number of sectors. With
+this change null_handle_discard() can be called directly from
+null_handle_memory_backed().
 
-Avoid this by starting the search for an implicitly open zone starting
-from the zone following the last zone that was implicitly closed. The
-function null_close_first_imp_zone() is renamed
-null_close_imp_open_zone().
+Also add a message warning that the discard configuration attribute has
+no effect when memory backing is disabled.
+
+No functional change is introduced by this patch.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/null_blk.h       |  1 +
- drivers/block/null_blk_zoned.c | 22 +++++++++++++++++-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/block/null_blk_main.c | 43 ++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h
-index 14546ead1d66..29a8817fadfc 100644
---- a/drivers/block/null_blk.h
-+++ b/drivers/block/null_blk.h
-@@ -67,6 +67,7 @@ struct nullb_device {
- 	unsigned int nr_zones_imp_open;
- 	unsigned int nr_zones_exp_open;
- 	unsigned int nr_zones_closed;
-+	unsigned int imp_close_zone_no;
- 	struct nullb_zone *zones;
- 	sector_t zone_size_sects;
- 	bool need_zone_res_mgmt;
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index 2c746221e8e6..cd773af5f186 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -115,6 +115,7 @@ int null_init_zoned_dev(struct nullb_device *dev, struct request_queue *q)
- 		pr_info("zone_max_open limit disabled, limit >= zone count\n");
- 	}
- 	dev->need_zone_res_mgmt = dev->zone_max_active || dev->zone_max_open;
-+	dev->imp_close_zone_no = dev->zone_nr_conv;
- 
- 	for (i = 0; i <  dev->zone_nr_conv; i++) {
- 		zone = &dev->zones[i];
-@@ -275,13 +276,24 @@ static blk_status_t __null_close_zone(struct nullb_device *dev,
- 	return BLK_STS_OK;
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 4685ea401d5b..a223bee24e76 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1076,13 +1076,16 @@ static void nullb_fill_pattern(struct nullb *nullb, struct page *page,
+ 	kunmap_atomic(dst);
  }
  
--static void null_close_first_imp_zone(struct nullb_device *dev)
-+static void null_close_imp_open_zone(struct nullb_device *dev)
+-static void null_handle_discard(struct nullb *nullb, sector_t sector, size_t n)
++static blk_status_t null_handle_discard(struct nullb_device *dev,
++					sector_t sector, sector_t nr_sectors)
  {
--	unsigned int i;
-+	struct nullb_zone *zone;
-+	unsigned int zno, i;
-+
-+	zno = dev->imp_close_zone_no;
-+	if (zno >= dev->nr_zones)
-+		zno = dev->zone_nr_conv;
++	struct nullb *nullb = dev->nullb;
++	size_t n = nr_sectors << SECTOR_SHIFT;
+ 	size_t temp;
  
- 	for (i = dev->zone_nr_conv; i < dev->nr_zones; i++) {
--		if (dev->zones[i].cond == BLK_ZONE_COND_IMP_OPEN) {
--			__null_close_zone(dev, &dev->zones[i]);
-+		zone = &dev->zones[zno];
-+		zno++;
-+		if (zno >= dev->nr_zones)
-+			zno = dev->zone_nr_conv;
+ 	spin_lock_irq(&nullb->lock);
+ 	while (n > 0) {
+-		temp = min_t(size_t, n, nullb->dev->blocksize);
++		temp = min_t(size_t, n, dev->blocksize);
+ 		null_free_sector(nullb, sector, false);
+ 		if (null_cache_active(nullb))
+ 			null_free_sector(nullb, sector, true);
+@@ -1090,6 +1093,8 @@ static void null_handle_discard(struct nullb *nullb, sector_t sector, size_t n)
+ 		n -= temp;
+ 	}
+ 	spin_unlock_irq(&nullb->lock);
 +
-+		if (zone->cond == BLK_ZONE_COND_IMP_OPEN) {
-+			__null_close_zone(dev, zone);
-+			dev->imp_close_zone_no = zno;
- 			return;
- 		}
- 	}
-@@ -309,7 +321,7 @@ static blk_status_t null_check_open(struct nullb_device *dev)
++	return BLK_STS_OK;
+ }
  
- 	if (dev->nr_zones_imp_open) {
- 		if (null_check_active(dev) == BLK_STS_OK) {
--			null_close_first_imp_zone(dev);
-+			null_close_imp_open_zone(dev);
- 			return BLK_STS_OK;
- 		}
+ static int null_handle_flush(struct nullb *nullb)
+@@ -1149,17 +1154,10 @@ static int null_handle_rq(struct nullb_cmd *cmd)
+ 	struct nullb *nullb = cmd->nq->dev->nullb;
+ 	int err;
+ 	unsigned int len;
+-	sector_t sector;
++	sector_t sector = blk_rq_pos(rq);
+ 	struct req_iterator iter;
+ 	struct bio_vec bvec;
+ 
+-	sector = blk_rq_pos(rq);
+-
+-	if (req_op(rq) == REQ_OP_DISCARD) {
+-		null_handle_discard(nullb, sector, blk_rq_bytes(rq));
+-		return 0;
+-	}
+-
+ 	spin_lock_irq(&nullb->lock);
+ 	rq_for_each_segment(bvec, rq, iter) {
+ 		len = bvec.bv_len;
+@@ -1183,18 +1181,10 @@ static int null_handle_bio(struct nullb_cmd *cmd)
+ 	struct nullb *nullb = cmd->nq->dev->nullb;
+ 	int err;
+ 	unsigned int len;
+-	sector_t sector;
++	sector_t sector = bio->bi_iter.bi_sector;
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
+ 
+-	sector = bio->bi_iter.bi_sector;
+-
+-	if (bio_op(bio) == REQ_OP_DISCARD) {
+-		null_handle_discard(nullb, sector,
+-			bio_sectors(bio) << SECTOR_SHIFT);
+-		return 0;
+-	}
+-
+ 	spin_lock_irq(&nullb->lock);
+ 	bio_for_each_segment(bvec, bio, iter) {
+ 		len = bvec.bv_len;
+@@ -1263,11 +1253,16 @@ static inline blk_status_t null_handle_badblocks(struct nullb_cmd *cmd,
+ }
+ 
+ static inline blk_status_t null_handle_memory_backed(struct nullb_cmd *cmd,
+-						     enum req_opf op)
++						     enum req_opf op,
++						     sector_t sector,
++						     sector_t nr_sectors)
+ {
+ 	struct nullb_device *dev = cmd->nq->dev;
+ 	int err;
+ 
++	if (op == REQ_OP_DISCARD)
++		return null_handle_discard(dev, sector, nr_sectors);
++
+ 	if (dev->queue_mode == NULL_Q_BIO)
+ 		err = null_handle_bio(cmd);
+ 	else
+@@ -1343,7 +1338,7 @@ blk_status_t null_process_cmd(struct nullb_cmd *cmd,
  	}
+ 
+ 	if (dev->memory_backed)
+-		return null_handle_memory_backed(cmd, op);
++		return null_handle_memory_backed(cmd, op, sector, nr_sectors);
+ 
+ 	return BLK_STS_OK;
+ }
+@@ -1589,6 +1584,12 @@ static void null_config_discard(struct nullb *nullb)
+ 	if (nullb->dev->discard == false)
+ 		return;
+ 
++	if (!nullb->dev->memory_backed) {
++		nullb->dev->discard = false;
++		pr_info("discard option is ignored without memory backing\n");
++		return;
++	}
++
+ 	if (nullb->dev->zoned) {
+ 		nullb->dev->discard = false;
+ 		pr_info("discard option is ignored in zoned mode\n");
 -- 
 2.26.2
 
