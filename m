@@ -2,85 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D98F32AEB70
-	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 09:28:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1D12AEC1F
+	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 09:36:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgKKI1p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Nov 2020 03:27:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgKKI1o (ORCPT
+        id S1725916AbgKKIga (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Nov 2020 03:36:30 -0500
+Received: from mail-pj1-f44.google.com ([209.85.216.44]:37545 "EHLO
+        mail-pj1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgKKIg3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Nov 2020 03:27:44 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B544C0613D4;
-        Wed, 11 Nov 2020 00:27:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=qTvXuSKxmUERuRhycJyctBDf7GzVXaeOz2hEmG1jnCY=; b=StdRHq9eqGBzFFXpMKfN8ot2yd
-        jPC1U+22bkuUiJFL3H0mb/9/1vlelGLQvG1hCH467eSdVW15dn8Pibm3EIxJwicffJfGSFU2WZAlL
-        tM76FQA8Mhz7J0Dt012NqxGVof6CBWaiq+71e7SWBXxgz9PGD/HSjyzrq5laC3bHahSJjAdt/YgSg
-        VK5FG4/KAjlBjCF1Mxk5ErE82Aw6rkXyhTwsy/FUzDELWaBKzEkjqbZ7oRMK+Qd8mrTJBHvgsXqEQ
-        R94YnaXqfp4e3S0Qk0xduyFHl/C3X5yAr/DgMPQvmpUp8si6GBSW2z68gBmwcJiLLaIwE1WsQpe7C
-        3Of9U5JA==;
-Received: from [2001:4bb8:180:6600:bcde:334f:863c:27b8] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kclTY-0007gX-LB; Wed, 11 Nov 2020 08:27:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Justin Sanders <justin@coraid.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, nbd@other.debian.org,
-        ceph-devel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 24/24] block: unexport revalidate_disk_size
-Date:   Wed, 11 Nov 2020 09:26:58 +0100
-Message-Id: <20201111082658.3401686-25-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201111082658.3401686-1-hch@lst.de>
-References: <20201111082658.3401686-1-hch@lst.de>
+        Wed, 11 Nov 2020 03:36:29 -0500
+Received: by mail-pj1-f44.google.com with SMTP id ei22so368833pjb.2
+        for <linux-block@vger.kernel.org>; Wed, 11 Nov 2020 00:36:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z7ZIZUJlYrCIASsZIPaS/o5ulY2e3LdHJbfoMN/Tt7I=;
+        b=PpYpi7qFHAjU6VHzHsSlAbTjakfLtJFcvmJLleGHV6UE+tJ3ny8G40xwrDR+YLlmUW
+         GyRmHCOsE1yTQZAVoTN3X/Ow5tg8faCjNyCMVxEJgrdr2OtdM7fD6BT+fJ86bZhY2sXb
+         yjMui+Gbv8yVRwBiGhSlUs/FYxi1xOX6aR+KtJgDNyf6q0ghGs5wNhhtDafZQnj6pZwq
+         dDtwmBEr2tMsfnt9W7yM3I9YXLhVWAjgWFIx5SqAjNoMP6eR3Q6b4Ah98QDouFzi0aW1
+         RIKGbG38OdYzeHmttaQYiR+GiN1yMzCGLrZVAPdnHFLv7+YVPvuJ+CL34v4/FEmsdiDf
+         NV4g==
+X-Gm-Message-State: AOAM531YlyyfehEkHsrbnv1Q7DNvPge1MpTP3dn3mgxqhVTy5mkOLnai
+        Wb+o2NmsjkqLK/JHj8kDM7s=
+X-Google-Smtp-Source: ABdhPJzMgwlDSM2QG0rtgJV3wgocFi2y7labto7PdNBi9UlF9GY17s6LU1RK1oD9VwDs06fG1gXKqQ==
+X-Received: by 2002:a17:90a:11:: with SMTP id 17mr2881297pja.66.1605083788967;
+        Wed, 11 Nov 2020 00:36:28 -0800 (PST)
+Received: from ?IPv6:2601:647:4802:9070:47ee:2018:3e3c:f9be? ([2601:647:4802:9070:47ee:2018:3e3c:f9be])
+        by smtp.gmail.com with ESMTPSA id j13sm1654647pfd.97.2020.11.11.00.36.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Nov 2020 00:36:28 -0800 (PST)
+Subject: Re: [PATCH V3] nvme: enable ro namespace for ZNS without append
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Keith Busch <kbusch@kernel.org>, javier@javigon.com,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        axboe@kernel.dk, joshi.k@samsung.com, k.jensen@samsung.com,
+        Niklas.Cassel@wdc.com,
+        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier.gonz@samsung.com>
+References: <20201110210708.5912-1-javier@samsung.com>
+ <20201110220941.GA2225168@dhcp-10-100-145-180.wdc.com>
+ <87931ded-b17b-90b2-c5b2-a1a465d109cc@grimberg.me>
+ <20201111081530.GB23062@lst.de>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e8f50827-4bc9-7300-0f8b-ed0a854fb50b@grimberg.me>
+Date:   Wed, 11 Nov 2020 00:36:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20201111081530.GB23062@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-revalidate_disk_size is now only called from set_capacity_and_notify,
-so drop the export.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/block_dev.c | 1 -
- 1 file changed, 1 deletion(-)
+>>>> -	if (id->nsattr & NVME_NS_ATTR_RO)
+>>>> +	if (id->nsattr & NVME_NS_ATTR_RO || test_bit(NVME_NS_FORCE_RO, &ns->flags))
+>>>>    		set_disk_ro(disk, true);
+>>>
+>>> If the FORCE_RO flag is set, the disk is set to read-only. If that flag
+>>> is later cleared, nothing clears the disk's read-only setting.
+>>
+>> Yea, that is true also for the non-force case, but before it broke
+>> BLKROSET so I reverted that. We can use this FORCE_RO for BLKROSET as
+>> well I think...
+> 
+> Let me prioritize the hard r/o setting.  mkp actually has an older patch
+> that did just that which I'll resurrect.
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 66ebf594c97f47..d8664f5c1ff669 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1362,7 +1362,6 @@ void revalidate_disk_size(struct gendisk *disk, bool verbose)
- 		bdput(bdev);
- 	}
- }
--EXPORT_SYMBOL(revalidate_disk_size);
- 
- void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
- {
--- 
-2.28.0
-
+Sounds good.
