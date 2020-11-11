@@ -2,20 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC9A2AF2B7
-	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 14:57:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BF8E2AF2D4
+	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 15:00:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgKKN5u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Nov 2020 08:57:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35712 "EHLO mx2.suse.de"
+        id S1726923AbgKKOAJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Nov 2020 09:00:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36676 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbgKKN5r (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Nov 2020 08:57:47 -0500
+        id S1726829AbgKKN7j (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 11 Nov 2020 08:59:39 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E144AABD1;
-        Wed, 11 Nov 2020 13:57:45 +0000 (UTC)
-Subject: Re: [PATCH 13/24] dm: use set_capacity_and_notify
+        by mx2.suse.de (Postfix) with ESMTP id 8ABF3ABD6;
+        Wed, 11 Nov 2020 13:59:37 +0000 (UTC)
+Subject: Re: [PATCH 15/24] nvme: use set_capacity_and_notify in
+ nvme_set_queue_dying
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Justin Sanders <justin@coraid.com>,
         Josef Bacik <josef@toxicpanda.com>,
@@ -36,14 +37,14 @@ Cc:     Justin Sanders <justin@coraid.com>,
         linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
 References: <20201111082658.3401686-1-hch@lst.de>
- <20201111082658.3401686-14-hch@lst.de>
+ <20201111082658.3401686-16-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <1327a2b4-d912-799d-ac94-4f11bf071e15@suse.de>
-Date:   Wed, 11 Nov 2020 14:57:44 +0100
+Message-ID: <878d9852-4b8d-c5a7-36d4-0fda80fd74c4@suse.de>
+Date:   Wed, 11 Nov 2020 14:59:36 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201111082658.3401686-14-hch@lst.de>
+In-Reply-To: <20201111082658.3401686-16-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -52,13 +53,14 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 11/11/20 9:26 AM, Christoph Hellwig wrote:
-> Use set_capacity_and_notify to set the size of both the disk and block
-> device.  This also gets the uevent notifications for the resize for free.
+> Use the block layer helper to update both the disk and block device
+> sizes.  Contrary to the name no notification is sent in this case,
+> as a size 0 is special cased.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   drivers/md/dm.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+>   drivers/nvme/host/core.c | 13 +------------
+>   1 file changed, 1 insertion(+), 12 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
