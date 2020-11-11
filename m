@@ -2,188 +2,287 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C139A2AE89E
-	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 07:04:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B472AEA2A
+	for <lists+linux-block@lfdr.de>; Wed, 11 Nov 2020 08:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgKKGEr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Nov 2020 01:04:47 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:52688 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgKKGEq (ORCPT
+        id S1726104AbgKKH2c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Nov 2020 02:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgKKH20 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Nov 2020 01:04:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1605074686; x=1636610686;
-  h=from:to:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=abVaMwYm2ChxBaoIUX15KQ7XFZr3k84TuxHYqFBsWR4=;
-  b=PCsTJZcizaneySqC1LPMGs05wX5BKf1NZib4EUs20AvN6D1KbJX6nL0w
-   UHY12YzHKVeE36I/uDKMDkoGwwO6rzhCT4nlexv2ViL40Jd9zv97OdXJs
-   +LDXzpBQxvXbuDghYRV9alF9fSA4O9Wu8T/9jFHl7tphfr8TZYi2zPPmq
-   Hab0d43C2Kd24JVtrpx+wRuTq72AzP7LlNBPE1rX3ii+ULmU9sJAk0/VZ
-   srDcQ2KNkJtk7ooMvPOKu8T58+PKh/cp5O+JXcuIhwOJM3gFqWLmw+ses
-   cQLEEBD3O+LEhGvOnqwlOQ+kKs0s1/3eyKZq1m1FtOtqA/C2syO4IYvPP
-   Q==;
-IronPort-SDR: 3PbYSY0awXwEj6kdilJUe4ADaNODKqaEfhCHe+cQp0xK7F+9YuqBv4g08xWuHirS9Ih9mVFVTN
- AzRYRx0Sn5wqn8wunGn70ju3Vp2sc3XZSxL3hiH19ZX+2/xd5YlKFrPmceyTojcPzWqHnr6ivM
- 9vrFgX0SvfOupBOYhdME1lLpsksh0xaSbeMHMBruWVwx++vVFGPiTSIdUz/Ika/Y9UhUDsGUhj
- 56f1QR83/p86JOh8GiDwecNbPQIqyjYq41hxXgPUJcY9F/DUMVuTc7anR5Lxj8zSVX4Vux0nAh
- KEs=
-X-IronPort-AV: E=Sophos;i="5.77,468,1596470400"; 
-   d="scan'208";a="262364333"
-Received: from mail-bl2nam02lp2054.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.54])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Nov 2020 14:04:46 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TEChmD9o2MtPXW5uZYyqYW50rbxrdUZ9XOVvPLIgzobCdHMy/sjX3GvbYgH1ugeIFQvvRKHkFLouiMudUeKYMpOJnCypWPMvqgFvxWvCQ4xT7W5KQhl5tLuwwf3sMnkZ9o01HHGlLAsXpaCJCNMcCJ5z79mkfUEUnTa5ByWQ/3muiyTo7q7v8m/S0d+l4v8/4NVOgqVTdvuRtMBmoQKVFRC1kzipHWwJrF3L2NuaZsVmUs8Q9SYPa3dmhJjmr+ltXb7J5Gk24tq2wW7JUFZnpU0M/A3PYnOfQ/8nz4JBoYShIhg5XMZcOYHGF8OPUCWrNs3sSXgaOTwdY+LefTUzBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6VicoC4onhTDblD6tSEd82UyN5lU+FtCiEj5aq0Mqvo=;
- b=oVBnb55bp0t6PtNEa879iZhK09c9f6X/ZahlxTwbBSXmfXX4B2yKI55nuAy1DUchiGlP39JJDvpmRiEne9/alsfxtVfIE6UDs5uEXWd7fK50QhQ4XxU+n1WB4W4G/Iyyqje17eqkZ9CR/ayatKZzpTrixh94MrPgBJAUZCkP8Wu3IJFNu4pESatWHvQGiNIs4i/xoY501MF+LqBYUunHf9CG0yZPiRnwAHuNe0nZoRdtR0d7KvNRrtpXjRUdogCAB3m4j6Wc0TsjMLFwPh5UErYfJlUdVVwnhMx/g2r8Y2sBQRCLoPXjdojHA5fvHKGqGGpr+lpFa6s5Ojzv+oGXKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 11 Nov 2020 02:28:26 -0500
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCE3C0613D1
+        for <linux-block@vger.kernel.org>; Tue, 10 Nov 2020 23:28:27 -0800 (PST)
+Received: by mail-ot1-x344.google.com with SMTP id n15so1270849otl.8
+        for <linux-block@vger.kernel.org>; Tue, 10 Nov 2020 23:28:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6VicoC4onhTDblD6tSEd82UyN5lU+FtCiEj5aq0Mqvo=;
- b=kmH8fLcqRxfaImScrhDQI9CLKpzzg5UT0RsdK/dhtSg/sIr+pjo8STPCXXeYI+x/bRIQIxzjNuPYdSgxwbO77/prd3Bu1AJpuL86owI5ezvCRBEagPbbgU+QPjDsaNv3h8I5E+KNaxm2jU00uem4kP+nLSGIQd4I6hX/yAqN5l4=
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com (2603:10b6:208:1ca::23)
- by MN2PR04MB6352.namprd04.prod.outlook.com (2603:10b6:208:1ab::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19; Wed, 11 Nov
- 2020 06:04:44 +0000
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::4c3e:2b29:1dc5:1a85]) by BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::4c3e:2b29:1dc5:1a85%7]) with mapi id 15.20.3499.032; Wed, 11 Nov 2020
- 06:04:44 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v2 0/9] null_blk fixes, improvements and cleanup
-Thread-Topic: [PATCH v2 0/9] null_blk fixes, improvements and cleanup
-Thread-Index: AQHWt+ngKFKt0vfBY0GegdojxIqEaw==
-Date:   Wed, 11 Nov 2020 06:04:44 +0000
-Message-ID: <BL0PR04MB6514A5FA5CF8BED9AF4EB1F7E7E80@BL0PR04MB6514.namprd04.prod.outlook.com>
-References: <20201111051648.635300-1-damien.lemoal@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2400:2411:43c0:6000:c005:87c5:ced7:ce31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 368b305d-5ed9-402a-ccd6-08d88607afdd
-x-ms-traffictypediagnostic: MN2PR04MB6352:
-x-microsoft-antispam-prvs: <MN2PR04MB6352818D5A8DFC0F4B725E95E7E80@MN2PR04MB6352.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:51;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b4twt4nre7pAImGwFRPVIgB5wRrvp27JsY30qg1xiIjxPsZTqIANReL3l2ZM8cq7VN43eGhau5cSrzistCuEHewEgkL5p79KFOEZKoTdYzLPuu13ApMEDd3t0IxYFeC69Q4ZMrw5Bny19v7qT7TvEVXTrohWsGSGSE8CI894JH5vUaCpL4Ng244QaZwkCrgYyhtHP6y9i0oMfzxbtJuBlwRqHVVYJxIq2ijQ14Lm4iBFgbaDEBJbiDvcBAcrNEJsyHXqWblKfXw9bd1I25La2EdFwp4a7rdT2yQ90YxcBVACsiLPAgMZ0y3EV8k05lGF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR04MB6514.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(376002)(396003)(346002)(136003)(86362001)(55016002)(110136005)(53546011)(5660300002)(9686003)(316002)(6506007)(66446008)(186003)(76116006)(71200400001)(91956017)(52536014)(33656002)(83380400001)(66556008)(66946007)(2906002)(66476007)(478600001)(8936002)(64756008)(8676002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: r2BaLR0ECtytBCQ8ga545t1xQ9z+EnFdPrPJ+U6NyXb2Mxk19JqhvRWxh3513dfmYd2gcqiKcShJPvK8PG6iT/gwrtB8P2twA7jPFBQpA+th0DyBXt3N90AJMwk0gIY9Y3/uNNju0mhFHq9Bzlq+83DabNgvE8Sfap/Yi/Tg2tMemPe2CBxMrrfeBoivpOJ3tIvbip5ig1zCjIcqmxKf3MF376RrUHuGUtmoK9XbVl0yxg2fS4sH9zs67TYB5usfEr0UJQrfyHhAIML3b774eUAtONIdJj/ptZDApd0nS57+FRRCY0uj17ABjVVofIbr4AOgWY5unPIAa7lnJWTYFt/Rhve/KM8d3dAkgDoU5mnmZySz4Zp3ieU9HuL4BXUTsBwp7kDXv71q5uAqSvdIc6jdSmIXE0dZYz7pVswMktv5EkZ9gNsFPvjqyFfprMB94kJ5SFaf+5qYSRwxchXlZMPNNDdXVrEx2jkBjy639priEDy01yCj27iGDfsbblF3qQuMBi5aua36a4+B6EYkjuRkcmx+nJIQXH0Rw2Awj1tPLhT4+S7zo0QMCmNf+rs5DvqPN/P9n9Bfnkg1bZXp3BjsR1Y+KpnE/bQ8Tvv6vcPzWRfH3e6Qp1i7R2838waTw4188U/YMY6Gm4jNHsW9kUuRds/pOx+z25VXwxLvFnx4E1Ffw/QoSCkvNJokoMy9rr9SdBkfQStmIiil5OAuIQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h/Cku1++groDoIudZSzMGKm2dLSZyb3jfaMxuRhcM44=;
+        b=DtCVoeuLQ0cF4bur7H1dmJR67mXXpDZ75psHAIcNKR35IR5/lZlzo9+7iLl7MZ4U+t
+         HNGUZk348TQ58/Z8UB/yiSBeuPDLhoPH2OCBSCXdtxcGQMuBIRk6ecvgarUs+qacDbm7
+         ZpervRhot+3+XU+NBnyK0Bcksk9OEcKrtmw1M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h/Cku1++groDoIudZSzMGKm2dLSZyb3jfaMxuRhcM44=;
+        b=fJIkJFOS1Js6sp4ItxNCGEpY6x+bC/NNLyBNqe2R9wYOjIFa+WKzIbuGsWDILcUfIp
+         +8lAGOLMxXVE1SWKuSMdAKfUMxsmtpVybhR7lVYearNOLE4HIGYVvaN/2VxB0Qma+4Ko
+         9K6zEDvxONb5zKDhaYrlijDcBW81HNOcqqjwzumdMdghd6o1AONhC877s3znkgcusrnN
+         7LlYwdtohpJhn+H5JEBSoZjPqzq32IFhLnnK0evTSLevF4ixqWeWZBSXsBWjFXnaQMt8
+         5AqJgzCkqBsEWfGOVPoga9K+Wlc97JdhNOMN5gVNPkWDgWF5GMJ6VUq+w+2sCrPjh4rD
+         eFOA==
+X-Gm-Message-State: AOAM532fdSrk56FFD7CRoGQHyz00f5rjsREgWv675FuDdIXOUA0tMutD
+        6deVkSaQCcpVEDHzCOgGDgtIkZXkJR0olC2g9KzXsA==
+X-Google-Smtp-Source: ABdhPJzEvrRe1WOy4obCtHzIIXRR8Lo1+duzLVyXSxF+9UALAM0sAEzAIXxDRhpRqGq5EF6jQuOzneU4VyRjGbGtjMI=
+X-Received: by 2002:a9d:a0d:: with SMTP id 13mr15816351otg.348.1605079706407;
+ Tue, 10 Nov 2020 23:28:26 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR04MB6514.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 368b305d-5ed9-402a-ccd6-08d88607afdd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 06:04:44.5197
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ps8US+2DFl0yPveXsWTEwdBLGJkQxFnn4FKhAmM4m37T42SpENKJTbXEjSId+GcpMk1mSdVQOiiW77xUNn5Riw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6352
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+ <1597850436-116171-18-git-send-email-john.garry@huawei.com>
+ <fe3dff7dae4494e5a88caffbb4d877bbf472dceb.camel@redhat.com>
+ <385d5408-6ba2-6bb6-52d3-b59c9aa9c5e5@huawei.com> <193a0440eed447209c48bda042f0e4db102355e7.camel@redhat.com>
+ <519e0d58-e73e-22ce-0ddb-1be71487ba6d@huawei.com> <d8fd51b11d5d54e6ec7e4e9a4f7dcc83f1215cd3.camel@redhat.com>
+ <d4f86cccccc3bffccc4eda39500ce1e1fee2109a.camel@redhat.com>
+ <7624d3fe1613f19af5c3a77f4ae8fe55@mail.gmail.com> <d1040c06-74ea-7016-d259-195fa52196a9@huawei.com>
+ <CAL2rwxoAAGQDud1djb3_LNvBw95YoYUGhe22FwE=hYhy7XOLSw@mail.gmail.com>
+ <aaf849d38ca3cdd45151ffae9b6a99fe6f6ea280.camel@redhat.com>
+ <0c75b881-3096-12cf-07cc-1119ca6a453e@huawei.com> <06a1a6bde51a66461d7b3135349641856315401d.camel@redhat.com>
+ <db92d37c-28fd-4f81-7b59-8f19e9178543@huawei.com> <8043d516-c041-c94b-a7d9-61bdbfef0d7e@huawei.com>
+In-Reply-To: <8043d516-c041-c94b-a7d9-61bdbfef0d7e@huawei.com>
+From:   Sumit Saxena <sumit.saxena@broadcom.com>
+Date:   Wed, 11 Nov 2020 12:57:59 +0530
+Message-ID: <CAL2rwxpQt-w2Re8ttu0=6Yzb7ibX3_FB6j-kd_cbtrWxzc7chw@mail.gmail.com>
+Subject: Re: [PATCH v8 17/18] scsi: megaraid_sas: Added support for shared
+ host tagset for cpuhotplug
+To:     John Garry <john.garry@huawei.com>
+Cc:     Qian Cai <cai@redhat.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        don.brace@microsemi.com, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>, dgilbert@interlog.com,
+        paolo.valente@linaro.org, Hannes Reinecke <hare@suse.de>,
+        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        esc.storagedev@microsemi.com,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        chenxiang66@hisilicon.com, luojiaxing@huawei.com,
+        Hannes Reinecke <hare@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2020/11/11 14:16, Damien Le Moal wrote:=0A=
-> Jens,=0A=
-> =0A=
-> This series provides fixes and improvements for null_blk.=0A=
-> =0A=
-> The first two patches are bug fixes which likely should go into 5.10.=0A=
-> The first patch fixes a problem with zone initialization when the=0A=
-> device capacity is not a multiple of the zone size and the second=0A=
-> patch fixes zone append handling.=0A=
-> =0A=
-> The following patches are improvements and cleanups:=0A=
-> * Patch 3 makes sure that the device max_sectors limit is aligned to the=
-=0A=
->   block size.=0A=
-> * Patch 4 improves zone locking overall, and especially the memory=0A=
->   backing disabled case by introducing a spinlock array to implement a=0A=
->   per zone lock in place of a global lock. With this patch, write=0A=
->   performance remains mostly unchanged, but read performance with a=0A=
->   multi-queue setup more than double from 1.3 MIOPS to 3.3 MIOPS (4K=0A=
->   random reads to zones with fio zonemode=3Dzbd).=0A=
-> * Patch 5 improves implicit zone close=0A=
-> * Patch 6 and 7 cleanup discard handling code and use that code to free=
-=0A=
->   the memory backing a zone that is being reset.=0A=
-> * Patch 8 adds the max_sectors configuration option to allow changing=0A=
->   the max_sectors/max_hw_sectors of the device.=0A=
-> * Finally, patch 9 moves nullblk into its own directory under=0A=
->   drivers/block/null_blk/=0A=
-> =0A=
-> Comments are as always welcome.=0A=
-=0A=
-I forgot to add the changelog. Here it is:=0A=
-=0A=
-Changes from V1:=0A=
-* Added patch 2, 3 and 8.=0A=
-* Fix the last patch as suggested by Bart (file names under=0A=
-  driver/block/null_blk/)=0A=
-* Reworded patch 1 commit message to more correctly describe the problem.=
-=0A=
-=0A=
-Note that I also just sent a patch to improve blk_revalidate_disk_zones() t=
-o=0A=
-catch problems such as what patch 1 here fixes. C.f. "[PATCH] block: Improv=
-e=0A=
-blk_revalidate_disk_zones() checks".=0A=
-=0A=
-> =0A=
-> Damien Le Moal (9):=0A=
->   null_blk: Fix zone size initialization=0A=
->   null_blk: Fail zone append to conventional zones=0A=
->   null_blk: Align max_hw_sectors to blocksize=0A=
->   null_blk: improve zone locking=0A=
->   null_blk: Improve implicit zone close=0A=
->   null_blk: cleanup discard handling=0A=
->   null_blk: discard zones on reset=0A=
->   null_blk: Allow controlling max_hw_sectors limit=0A=
->   null_blk: Move driver into its own directory=0A=
-> =0A=
->  drivers/block/Kconfig                         |   8 +-=0A=
->  drivers/block/Makefile                        |   7 +-=0A=
->  drivers/block/null_blk/Kconfig                |  12 +=0A=
->  drivers/block/null_blk/Makefile               |  11 +=0A=
->  .../{null_blk_main.c =3D> null_blk/main.c}      |  65 +++--=0A=
->  drivers/block/{ =3D> null_blk}/null_blk.h       |   9 +-=0A=
->  .../{null_blk_trace.c =3D> null_blk/trace.c}    |   2 +-=0A=
->  .../{null_blk_trace.h =3D> null_blk/trace.h}    |   2 +-=0A=
->  .../{null_blk_zoned.c =3D> null_blk/zoned.c}    | 245 ++++++++++++------=
-=0A=
->  9 files changed, 239 insertions(+), 122 deletions(-)=0A=
->  create mode 100644 drivers/block/null_blk/Kconfig=0A=
->  create mode 100644 drivers/block/null_blk/Makefile=0A=
->  rename drivers/block/{null_blk_main.c =3D> null_blk/main.c} (97%)=0A=
->  rename drivers/block/{ =3D> null_blk}/null_blk.h (94%)=0A=
->  rename drivers/block/{null_blk_trace.c =3D> null_blk/trace.c} (93%)=0A=
->  rename drivers/block/{null_blk_trace.h =3D> null_blk/trace.h} (97%)=0A=
->  rename drivers/block/{null_blk_zoned.c =3D> null_blk/zoned.c} (76%)=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On Tue, Nov 10, 2020 at 11:12 PM John Garry <john.garry@huawei.com> wrote:
+>
+> On 09/11/2020 14:05, John Garry wrote:
+> > On 09/11/2020 13:39, Qian Cai wrote:
+> >>> I suppose I could try do this myself also, but an authentic version
+> >>> would be nicer.
+> >> The closest one I have here is:
+> >> https://cailca.coding.net/public/linux/mm/git/files/master/arm64.confi=
+g
+> >>
+> >> but it only selects the Thunder X2 platform and needs to manually sele=
+ct
+> >> CONFIG_MEGARAID_SAS=3Dm to start with, but none of arm64 systems here =
+have
+> >> megaraid_sas.
+> >
+> > Thanks, I'm confident I can fix it up to get it going on my Huawei arm6=
+4
+> > D06CS.
+> >
+> > So that board has a megaraid sas card. In addition, it also has hisi_sa=
+s
+> > HW, which is another storage controller which we enabled this same
+> > feature which is causing the problem.
+> >
+> > I'll report back when I can.
+>
+> So I had to hack that arm64 config a bit to get it booting:
+> https://github.com/hisilicon/kernel-dev/commits/private-topic-sas-5.10-me=
+garaid-hang
+>
+> Boot is ok on my board without the megaraid sas card, but includes
+> hisi_sas HW (which enables the equivalent option which is exposing the
+> problem).
+>
+> But the board with the megaraid sas boots very slowly, specifically
+> around the megaraid sas probe:
+>
+> : ttyS0 at MMIO 0x3f00002f8 (irq =3D 17, base_baud =3D 115200) is a 16550=
+A
+> [   50.023726][    T1] printk: console [ttyS0] enabled
+> [   50.412597][    T1] megasas: 07.714.04.00-rc1
+> [   50.436614][    T5] megaraid_sas 0000:08:00.0: FW now in Ready state
+> [   50.450079][    T5] megaraid_sas 0000:08:00.0: 63 bit DMA mask and 63
+> bit consistent mask
+> [   50.467811][    T5] megaraid_sas 0000:08:00.0: firmware supports msix
+>         : (128)
+> [   50.845995][    T5] megaraid_sas 0000:08:00.0: requested/available
+> msix 128/128
+> [   50.861476][    T5] megaraid_sas 0000:08:00.0: current msix/online
+> cpus      : (128/128)
+> [   50.877616][    T5] megaraid_sas 0000:08:00.0: RDPQ mode     : (enable=
+d)
+> [   50.891018][    T5] megaraid_sas 0000:08:00.0: Current firmware
+> supports maximum commands: 4077       LDIO threshold: 0
+> [   51.262942][    T5] megaraid_sas 0000:08:00.0: Performance mode
+> :Latency (latency index =3D 1)
+> [   51.280749][    T5] megaraid_sas 0000:08:00.0: FW supports sync cache
+>         : Yes
+> [   51.295451][    T5] megaraid_sas 0000:08:00.0:
+> megasas_disable_intr_fusion is called outbound_intr_mask:0x40000009
+> [   51.387474][    T5] megaraid_sas 0000:08:00.0: FW provided
+> supportMaxExtLDs: 1       max_lds: 64
+> [   51.404931][    T5] megaraid_sas 0000:08:00.0: controller type
+> : MR(2048MB)
+> [   51.419616][    T5] megaraid_sas 0000:08:00.0: Online Controller
+> Reset(OCR)  : Enabled
+> [   51.436132][    T5] megaraid_sas 0000:08:00.0: Secure JBOD support
+> : Yes
+> [   51.450265][    T5] megaraid_sas 0000:08:00.0: NVMe passthru support
+> : Yes
+> [   51.464757][    T5] megaraid_sas 0000:08:00.0: FW provided TM
+> TaskAbort/Reset timeout        : 6 secs/60 secs
+> [   51.484379][    T5] megaraid_sas 0000:08:00.0: JBOD sequence map
+> support     : Yes
+> [   51.499607][    T5] megaraid_sas 0000:08:00.0: PCI Lane Margining
+> support    : No
+> [   51.547610][    T5] megaraid_sas 0000:08:00.0: NVME page size
+> : (4096)
+> [   51.608635][    T5] megaraid_sas 0000:08:00.0:
+> megasas_enable_intr_fusion is called outbound_intr_mask:0x40000000
+> [   51.630285][    T5] megaraid_sas 0000:08:00.0: INIT adapter done
+> [   51.649854][    T5] megaraid_sas 0000:08:00.0: pci id
+> : (0x1000)/(0x0016)/(0x19e5)/(0xd215)
+> [   51.667873][    T5] megaraid_sas 0000:08:00.0: unevenspan support    :=
+ no
+> [   51.681646][    T5] megaraid_sas 0000:08:00.0: firmware crash dump   :=
+ no
+> [   51.695596][    T5] megaraid_sas 0000:08:00.0: JBOD sequence map
+> : enabled
+> [   51.711521][    T5] megaraid_sas 0000:08:00.0: Max firmware commands:
+> 4076 shared with nr_hw_queues =3D 127
+> [   51.733056][    T5] scsi host0: Avago SAS based MegaRAID driver
+> [   65.304363][    T5] scsi 0:0:0:0: Direct-Access     ATA      SAMSUNG
+> MZ7KH1T9 404Q PQ: 0 ANSI: 6
+> [   65.392401][    T5] scsi 0:0:1:0: Direct-Access     ATA      SAMSUNG
+> MZ7KH1T9 404Q PQ: 0 ANSI: 6
+> [   79.508307][    T5] scsi 0:0:65:0: Enclosure         HUAWEI
+> Expander 12Gx16  131  PQ: 0 ANSI: 6
+> [  183.965109][   C14] random: fast init done
+>
+> Notice the 14 and 104 second delays.
+>
+> But does boot fully to get to the console. I'll wait for further issues,
+> which you guys seem to experience after a while.
+>
+> Thanks,
+> John
+"megaraid_sas" driver calls =E2=80=9Cscsi_scan_host()=E2=80=9D to discover =
+SCSI
+devices. In this failure case, scsi_scan_host() is taking a long time
+to complete, hence causing delay in system boot.
+With "host_tagset" enabled, scsi_scan_host() takes around 20 mins.
+With "host_tagset" disabled, scsi_scan_host() takes upto 5-8 mins.
+
+The scan time depends upon the number of scsi channels and devices per
+scsi channel is exposed by LLD.
+megaraid_sas driver exposes 4 channels and 128 drives per channel.
+
+Each target scan takes 2 seconds (in case of failure with host_tagset
+enabled).  That's why driver load completes after ~20 minutes. See
+below:
+
+[  299.725271] kobject: 'target18:0:96': free name
+[  301.681267] kobject: 'target18:0:97' (00000000987c7f11):
+kobject_cleanup, parent 0000000000000000
+[  301.681269] kobject: 'target18:0:97' (00000000987c7f11): calling
+ktype release
+[  301.681273] kobject: 'target18:0:97': free name
+[  303.575268] kobject: 'target18:0:98' (00000000a8c34149):
+kobject_cleanup, parent 0000000000000000
+
+In Qian's kernel .config, async scsi scan is disabled so in failure
+case SCSI scan type is synchronous.
+Below is the stack trace when scsi_scan_host() hangs:
+
+[<0>] __wait_rcu_gp+0x134/0x170
+[<0>] synchronize_rcu.part.80+0x53/0x60
+[<0>] blk_free_flush_queue+0x12/0x30
+[<0>] blk_mq_hw_sysfs_release+0x21/0x70
+[<0>] kobject_release+0x46/0x150
+[<0>] blk_mq_release+0xb4/0xf0
+[<0>] blk_release_queue+0xc4/0x130
+[<0>] kobject_release+0x46/0x150
+[<0>] scsi_device_dev_release_usercontext+0x194/0x3f0
+[<0>] execute_in_process_context+0x22/0xa0
+[<0>] device_release+0x2e/0x80
+[<0>] kobject_release+0x46/0x150
+[<0>] scsi_alloc_sdev+0x2e7/0x310
+[<0>] scsi_probe_and_add_lun+0x410/0xbd0
+[<0>] __scsi_scan_target+0xf2/0x530
+[<0>] scsi_scan_channel.part.7+0x51/0x70
+[<0>] scsi_scan_host_selected+0xd4/0x140
+[<0>] scsi_scan_host+0x198/0x1c0
+
+This issue hits when lock related debugging is enabled in kernel config.
+kernel .config parameters(may be subset of this list) are required to
+hit the issue:
+
+CONFIG_PREEMPT_COUNT=3Dy
+CONFIG_UNINLINE_SPIN_UNLOCK=3Dy
+CONFIG_LOCK_STAT=3Dy
+CONFIG_DEBUG_RT_MUTEXES=3Dy
+CONFIG_DEBUG_SPINLOCK=3Dy
+CONFIG_DEBUG_MUTEXES=3Dy
+CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
+CONFIG_DEBUG_RWSEMS=3Dy
+CONFIG_DEBUG_LOCK_ALLOC=3Dy
+CONFIG_LOCKDEP=3Dy
+CONFIG_DEBUG_LOCKDEP=3Dy
+CONFIG_TRACE_IRQFLAGS=3Dy
+CONFIG_TRACE_IRQFLAGS_NMI=3Dy
+CONFIG_DEBUG_KOBJECT=3Dy
+CONFIG_PROVE_RCU=3Dy
+CONFIG_PREEMPTIRQ_TRACEPOINTS=3Dy
+
+When scsi_scan_host() hangs, there are no outstanding IOs with
+megaraid_sas driver-firmware stack as SCSI "host_busy" counter and
+megaraid_sas driver's internal counter are "0".
+Key takeaways:
+1. Issue is observed when lock related debugging is enabled so issue
+is seen in debug environment.
+2. Issue seems to be related to generic shared "host_tagset" code
+whenever some kind of kernel debugging is enabled. We do not see an
+immediate reason to hide this issue through disabling the
+"host_tagset" feature.
+
+John,
+Issue may hit on ARM platform too using Qian's .config file with other
+adapters (e.g. hisi_sas) as well. So I feel disabling =E2=80=9Chost_tagset=
+=E2=80=9D in
+megaraid_sas driver will not help.  It requires debugging from the
+=E2=80=9CEntire Shared host tag feature=E2=80=9D perspective as scsi_scan_h=
+ost()
+waittime aggravates when "host_tagset" is enabled. Also, I am doing
+parallel debugging and if I find anything useful, I will share.
+
+Qian,
+I need full dmesg logs from your setup with
+megaraid_sas.host_tagset_enable=3D1 and
+megaraid_sas.host_tagset_enable=3D0. Please wait for a long time. I just
+want to make sure that whatever you observe is the same as mine.
+
+Thanks,
+Sumit
