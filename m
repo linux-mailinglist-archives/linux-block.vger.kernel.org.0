@@ -2,54 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF912B4874
-	for <lists+linux-block@lfdr.de>; Mon, 16 Nov 2020 16:08:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6378E2B4925
+	for <lists+linux-block@lfdr.de>; Mon, 16 Nov 2020 16:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbgKPPF3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Nov 2020 10:05:29 -0500
-Received: from verein.lst.de ([213.95.11.211]:54709 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730107AbgKPPF3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Nov 2020 10:05:29 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C42D56736F; Mon, 16 Nov 2020 16:05:24 +0100 (CET)
-Date:   Mon, 16 Nov 2020 16:05:24 +0100
-From:   Christoph Hellwig <hch@lst.de>
+        id S1731097AbgKPPXz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Nov 2020 10:23:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25516 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731021AbgKPPXy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 16 Nov 2020 10:23:54 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AGF5Fvs191473;
+        Mon, 16 Nov 2020 10:23:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=YfyBAuxAoU/fCaWqFG6X/yKGgo8hTwdoVRlxvO2I2yY=;
+ b=oKCR+gJC+GNkJH80mnO/KQK+C1lisQOJUDUvH0ogseYMLSsHYZxoZxGPUTxzNDxosGas
+ IPFNpQevPoFo4n0ndzy2/7tlDS+ZjGEHl7Ue0hilQRlf0pxlt2jkwrXVjpjxFoCLPag9
+ BN69dKIqjJWzKJwZk+UB0FvcAmhOLdWvoHibca+DtwhZsQ3qnoCTm8a2MoiQaGuiesg+
+ Ivu6NR7Ti03dSDLi2W9QatO+ymn0Xo+8PkHqtEYvSah2m8dp8xRFXmfcT8S187D5HA9o
+ bRko3b61fiWnByMVB+tKQwGTZBvX4nBhSU026Lsp/4zSZnjjgSr+Ak+Y+tIRdu0PXeIs Mw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34uu48srh3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Nov 2020 10:23:53 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AGFH426011410;
+        Mon, 16 Nov 2020 15:23:50 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 34t6v8a83u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Nov 2020 15:23:50 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AGFNmhX33227076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Nov 2020 15:23:48 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15030A4078;
+        Mon, 16 Nov 2020 15:23:48 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03F1DA405D;
+        Mon, 16 Nov 2020 15:23:48 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Nov 2020 15:23:47 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 9DDA3E0367; Mon, 16 Nov 2020 16:23:47 +0100 (CET)
+From:   Stefan Haberland <sth@linux.ibm.com>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Justin Sanders <justin@coraid.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        linux-nvme@lists.infradead.org, Song Liu <song@kernel.org>,
-        dm-devel@redhat.com, drbd-dev@lists.linbit.com,
-        linux-scsi@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>, nbd@other.debian.org,
-        linux-raid@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-Subject: Re: cleanup updating the size of block devices v3
-Message-ID: <20201116150524.GA13367@lst.de>
-References: <20201116145809.410558-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201116145809.410558-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/1] fix null pointer dereference for ERP requests
+Date:   Mon, 16 Nov 2020 16:23:46 +0100
+Message-Id: <20201116152347.61093-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-16_08:2020-11-13,2020-11-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 malwarescore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=767 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2011160092
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Oops,
+Hi Jens,
 
-this is a bigger patch bomb than intended.  Only patches 1-23 are this
-series which should be ready to be applied once for-5.11/block pulles in
-5.10-rc4.
+pleas apply the following patch that fixes a null pointer derefernce in the
+DASD driver.
 
-After that follow patches already in for-5.11/block and my current hot
-off the press development branch.
+Stefan Haberland (1):
+  s390/dasd: fix null pointer dereference for ERP requests
+
+ drivers/s390/block/dasd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+-- 
+2.17.1
+
