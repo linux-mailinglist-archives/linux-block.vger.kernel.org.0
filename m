@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD54C2B46CA
-	for <lists+linux-block@lfdr.de>; Mon, 16 Nov 2020 15:59:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A092B46DA
+	for <lists+linux-block@lfdr.de>; Mon, 16 Nov 2020 15:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbgKPO7L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Nov 2020 09:59:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
+        id S1730871AbgKPO7T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Nov 2020 09:59:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730817AbgKPO7K (ORCPT
+        with ESMTP id S1730860AbgKPO7R (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Nov 2020 09:59:10 -0500
+        Mon, 16 Nov 2020 09:59:17 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57738C0613CF;
-        Mon, 16 Nov 2020 06:59:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45434C0613D1;
+        Mon, 16 Nov 2020 06:59:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=v/lQzgfk3g8cFkaFjGaW1PVi+J4d/Qp7XTb0qTcrcMw=; b=YqzdVakmLdPHF6ezNwy3j22Rhk
-        XQVP6AxA/GIysbqTVVeNbFaXKt7fGm9agC08PMgcnJUJeh74vxBSvOfGIuDA/W9HICp10ASgp343S
-        hLuXPuNnKIIaKSmewfilQzler2ZMSLSZNnA3JzXsI/oA/vpGcupQtF+vIl+sykv24N3IbJmKQaPjW
-        Jn9WRJEVebbUFdcTwhZRo/qo4f5NgH2pRWNmJeZrAnILNTOw/lnNzTwrq9w/rBYEhDgZjS59KWZ4g
-        UrBImqs7+qvykUY+GYj6lm5Ht8/hTyu9yEFUWTYQLA51bItg9eUgBTuodXJbLE5gVUevZsuOFItUu
-        Kp0yfIOw==;
+        bh=j9YzX4Imfj42oekp8Tth+LQoKAxJAOk+J48Ms5WWyRs=; b=tNKy0A5I0JGyRwszKo8CS5i8OD
+        +8V953YfFx3Xman6sQ8F42cjnDZ+fEMnGq+5JSKyBoWRq84B0ROGouApW++jZ44y6feigXqLuqKsR
+        cxqh2lFOkiVIegiphp90kij1qmc1NDslqQZNsGbC21VOg69MDd/n08QOAs5NDSIePC2uZIeQod82Z
+        T6wB+Z9xXg1/0NZKtWCv5t7lkIbvOb2buar5vD5Qry8bhovOugY2M7SSd4S16Dl+mklfVYWbkqbny
+        8IY3ZaEc9JVI0kFlBfL2Zv+6ubgx5Kd03xor/wsERRQOPm0Gj4ArtdUOT7w0cJYRw8cIK/bIaVXYw
+        0ktG/eKQ==;
 Received: from [2001:4bb8:180:6600:255b:7def:a93:4a09] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kefy5-0003vm-UU; Mon, 16 Nov 2020 14:58:58 +0000
+        id 1kefyB-0003xB-Ni; Mon, 16 Nov 2020 14:59:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Justin Sanders <justin@coraid.com>,
@@ -47,10 +47,11 @@ Cc:     Justin Sanders <justin@coraid.com>,
         drbd-dev@lists.linbit.com, nbd@other.debian.org,
         ceph-devel@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 34/78] block: propagate BLKROSET to all partitions
-Date:   Mon, 16 Nov 2020 15:57:25 +0100
-Message-Id: <20201116145809.410558-35-hch@lst.de>
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 38/78] block: rework requesting modules for unclaimed devices
+Date:   Mon, 16 Nov 2020 15:57:29 +0100
+Message-Id: <20201116145809.410558-39-hch@lst.de>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201116145809.410558-1-hch@lst.de>
 References: <20201116145809.410558-1-hch@lst.de>
@@ -61,31 +62,73 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When setting the whole device read-only (or clearing the read-only
-state), also update the policy for all partitions.  The s390 dasd
-driver has awlways been doing this and it makes a lot of sense.
+Instead of reusing the ranges in bdev_map, add a new helper that is
+called if no ranges was found.  This is a first step to unpeel and
+eventually remove the complex ranges structure.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/ioctl.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/genhd.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 6b785181344fe1..22f394d118c302 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -354,7 +354,10 @@ static int blkdev_roset(struct block_device *bdev, fmode_t mode,
- 		if (ret)
- 			return ret;
- 	}
--	bdev->bd_part->policy = n;
-+	if (bdev_is_partition(bdev))
-+		bdev->bd_part->policy = n;
-+	else
-+		set_disk_ro(bdev->bd_disk, n);
- 	return 0;
+diff --git a/block/genhd.c b/block/genhd.c
+index 2a20372756625e..8391e7d83a6920 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1028,6 +1028,13 @@ static ssize_t disk_badblocks_store(struct device *dev,
+ 	return badblocks_store(disk->bb, page, len, 0);
  }
  
++static void request_gendisk_module(dev_t devt)
++{
++	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
++		/* Make old-style 2.4 aliases work */
++		request_module("block-major-%d", MAJOR(devt));
++}
++
+ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+ {
+ 	struct kobject *kobj;
+@@ -1052,6 +1059,14 @@ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+ 		probe = p->probe;
+ 		best = p->range - 1;
+ 		*partno = dev - p->dev;
++
++		if (!probe) {
++			mutex_unlock(&bdev_map_lock);
++			module_put(owner);
++			request_gendisk_module(dev);
++			goto retry;
++		}
++
+ 		if (p->lock && p->lock(dev, data) < 0) {
+ 			module_put(owner);
+ 			continue;
+@@ -1290,15 +1305,6 @@ static const struct seq_operations partitions_op = {
+ };
+ #endif
+ 
+-
+-static struct kobject *base_probe(dev_t devt, int *partno, void *data)
+-{
+-	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
+-		/* Make old-style 2.4 aliases work */
+-		request_module("block-major-%d", MAJOR(devt));
+-	return NULL;
+-}
+-
+ static void bdev_map_init(void)
+ {
+ 	struct bdev_map *base;
+@@ -1310,7 +1316,6 @@ static void bdev_map_init(void)
+ 
+ 	base->dev = 1;
+ 	base->range = ~0 ;
+-	base->probe = base_probe;
+ 	for (i = 0; i < 255; i++)
+ 		bdev_map[i] = base;
+ }
 -- 
 2.29.2
 
