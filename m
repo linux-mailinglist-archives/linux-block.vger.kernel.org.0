@@ -2,57 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A11912B66E2
-	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 15:11:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D1002B66DD
+	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 15:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387915AbgKQOH3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S2387919AbgKQOH3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 17 Nov 2020 09:07:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387548AbgKQOHW (ORCPT
+        with ESMTP id S2387564AbgKQOH1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Nov 2020 09:07:22 -0500
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016C6C061A4B
-        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:21 -0800 (PST)
-Received: by mail-pf1-x44a.google.com with SMTP id d6so14703337pfn.15
-        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:20 -0800 (PST)
+        Tue, 17 Nov 2020 09:07:27 -0500
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC965C061A51
+        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:22 -0800 (PST)
+Received: by mail-qk1-x74a.google.com with SMTP id b191so14028390qkc.10
+        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=4NJdRU1Ce0aa6Hnfqmub71YUmFd4Qx8kk5Y17DesY40=;
-        b=nFNLxAfPd8e/zZTqlZUXpXuN77+dJdfeaniNFRSeDnLdmkHZ4pPlCypUrVhliOogm2
-         4Dwh4eHqmw2aUK8kmS7CCa6ww0SDvMftt2FkxmnXssuFtIw0EusEu5Tkclj14gnChFDP
-         nxiC5qrIaleDvreRVgMA2Wlvc7e6OAIU8ncMChxF9U+5y5/JiD5FTbKCl+/WuKfwvoEH
-         mCKaCC4qnI+2FSmVaNkQ7Him8OftmfrHMw8NaMSBnAohoHm15k5RFsSppzf8zmthwEic
-         mYwEOwBuIURqwBhUSgbh3+kM8mQOu63f4FrhK7OWUC5IlMyZLtGBLvhREdbtOF4tBIKo
-         hkEA==
+        bh=VFLfomyHfS1rChguiUYux0VDzmO87K0fqGJKV/Zo06o=;
+        b=lsrEjARHRfnK+GRKjAxdOdYK84058343x4ulP/2szJFkfRTORC2ldq4cnjAxiY8jFI
+         VQLtam4zqFLuBEcfKLbMnYFBrc32LaXluaMUMRa9Q0lhpOiy17Y8e5FpWCYnvuxFlQcp
+         +qgOqNxvhb7p7nbmzb3olVL/Wp9bYkkluw/hVMI8LRZExpX+23VEDIC4LLOSsmGyFkYJ
+         uYKVQe833Zw5GqXv9aw6cVkP5qfvpcB7mibNUbGyOlTqiXHs2rELMbbwEkRA7ghwvovl
+         8cJR9PNzWNaFeurdO8tvnYukki2HEdBkRu7gHibwFjZNw2DaBb8Sv8CWJWiewGjFMyKg
+         o55Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=4NJdRU1Ce0aa6Hnfqmub71YUmFd4Qx8kk5Y17DesY40=;
-        b=eCUi63FK/ERfYG0HpOvbvb0KHuCpt1rpYAI8tdJJ74zTkYSZea9DN1lULLugJhJYXB
-         bXGtUOa+i/8tnoAvFvZO9alEtpC1biEWrHy8GCrMroNUFqTi6IIIpKnHYKfzDHQ06cai
-         MBRIj+LXaEyVArbHxSftT+xbzENdxXffV0y/TEC2MbAC0a8cDbn9xVEZ5Xf1vt8fJVbS
-         3GH46NiwWT5udp6Ua3DPl/1blMQsSYe/28bWu7vyuRJC5y/S3ppUndwL7bUGavMad/aG
-         nYwhC/apL+j13lIGSMuvoTgIENO5e1GPqt1IiD3Xan4FCm/oIXzfAY1crBi0QrJYjl9W
-         wEpg==
-X-Gm-Message-State: AOAM531RtvSuw1FCZpvkWAHCj2HACJbwgr9QN3htZyMgTJElmytLdW/N
-        vDf2E6Uv4p5v3SCXXE1PmW/BroKd3FQ=
-X-Google-Smtp-Source: ABdhPJxfrRrknOI/BvOJaGPc6TEIdJJ1naDUKZko8kN45MeyLyMTe361mEhiYF+cx+Qes0o2OJZjXCGY5eY=
+        bh=VFLfomyHfS1rChguiUYux0VDzmO87K0fqGJKV/Zo06o=;
+        b=NB6cXtQ82ELQ9ylNoQbbBy/+xpU8AoIxWHY9WAbH6WJd9o91LsqL9MgnY6vo3ooQZO
+         eYmmV7dGLKKSC4PHsHYqGkk5Z2DrgxHszblVaG1xx4KHGVSKINAvCCrkPq+jOsle9OsL
+         wNR9A/L7eUmIfCnBccGa2JPjwKFYaSlmx+Y7zgdhof7/qOKvBZ6x2gbLcuwPvHrAYTKd
+         MueW8Dn/fohni2RzT/ecs36oKDXmdPSMAFHg+hprHKNu6ULQCFj4lL2eVgNYMmBiMFaX
+         2ZcFaPRSUIB1MiqpAPkNcDKVIDWe9Oqw4cd/xsGbMySmU3i0InvpO2v0s8mPvFk8iGno
+         UKUg==
+X-Gm-Message-State: AOAM532H9KDxK/W2NOZAsTw1FmCLyDxGetd9fh7iADQ7DIaLoDzJguN5
+        PUhHmS6YN7DZc9zRi+SXjbrVt7yvLmA=
+X-Google-Smtp-Source: ABdhPJziptkvCq37CzgbpEBQNKwt2yD7i4Pi8fsOTIWooGKOH1aD86wFQm0soQyhT2NOVUgerF6aSe6rQFQ=
 Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a17:90a:8043:: with SMTP id
- e3mr4901058pjw.52.1605622040427; Tue, 17 Nov 2020 06:07:20 -0800 (PST)
-Date:   Tue, 17 Nov 2020 14:07:04 +0000
+ (user=satyat job=sendgmr) by 2002:ad4:470d:: with SMTP id k13mr21059648qvz.40.1605622042064;
+ Tue, 17 Nov 2020 06:07:22 -0800 (PST)
+Date:   Tue, 17 Nov 2020 14:07:05 +0000
 In-Reply-To: <20201117140708.1068688-1-satyat@google.com>
-Message-Id: <20201117140708.1068688-5-satyat@google.com>
+Message-Id: <20201117140708.1068688-6-satyat@google.com>
 Mime-Version: 1.0
 References: <20201117140708.1068688-1-satyat@google.com>
 X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
-Subject: [PATCH v7 4/8] direct-io: add support for fscrypt using blk-crypto
+Subject: [PATCH v7 5/8] iomap: support direct I/O with fscrypt using blk-crypto
 From:   Satya Tangirala <satyat@google.com>
 To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -71,69 +71,55 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-Set bio crypt contexts on bios by calling into fscrypt when required,
-and explicitly check for DUN continuity when adding pages to the bio.
-(While DUN continuity is usually implied by logical block contiguity,
-this is not the case when using certain fscrypt IV generation methods
-like IV_INO_LBLK_32).
+Set bio crypt contexts on bios by calling into fscrypt when required.
+No DUN contiguity checks are done - callers are expected to set up the
+iomap correctly to ensure that each bio submitted by iomap will not have
+blocks with incontiguous DUNs by calling fscrypt_limit_io_blocks()
+appropriately.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 Co-developed-by: Satya Tangirala <satyat@google.com>
 Signed-off-by: Satya Tangirala <satyat@google.com>
-Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- fs/direct-io.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/iomap/direct-io.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index d53fa92a1ab6..f6672c4030e3 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -24,6 +24,7 @@
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 933f234d5bec..b4240cc3c9f9 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -6,6 +6,7 @@
  #include <linux/module.h>
- #include <linux/types.h>
+ #include <linux/compiler.h>
  #include <linux/fs.h>
 +#include <linux/fscrypt.h>
- #include <linux/mm.h>
- #include <linux/slab.h>
- #include <linux/highmem.h>
-@@ -392,6 +393,7 @@ dio_bio_alloc(struct dio *dio, struct dio_submit *sdio,
- 	      sector_t first_sector, int nr_vecs)
+ #include <linux/iomap.h>
+ #include <linux/backing-dev.h>
+ #include <linux/uio.h>
+@@ -185,11 +186,14 @@ static void
+ iomap_dio_zero(struct iomap_dio *dio, struct iomap *iomap, loff_t pos,
+ 		unsigned len)
  {
++	struct inode *inode = file_inode(dio->iocb->ki_filp);
+ 	struct page *page = ZERO_PAGE(0);
+ 	int flags = REQ_SYNC | REQ_IDLE;
  	struct bio *bio;
-+	struct inode *inode = dio->inode;
  
- 	/*
- 	 * bio_alloc() is guaranteed to return a bio when allowed to sleep and
-@@ -399,6 +401,9 @@ dio_bio_alloc(struct dio *dio, struct dio_submit *sdio,
- 	 */
- 	bio = bio_alloc(GFP_KERNEL, nr_vecs);
- 
-+	fscrypt_set_bio_crypt_ctx(bio, inode,
-+				  sdio->cur_page_fs_offset >> inode->i_blkbits,
+ 	bio = bio_alloc(GFP_KERNEL, 1);
++	fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
 +				  GFP_KERNEL);
- 	bio_set_dev(bio, bdev);
- 	bio->bi_iter.bi_sector = first_sector;
- 	bio_set_op_attrs(bio, dio->op, dio->op_flags);
-@@ -763,9 +768,17 @@ static inline int dio_send_cur_page(struct dio *dio, struct dio_submit *sdio,
- 		 * current logical offset in the file does not equal what would
- 		 * be the next logical offset in the bio, submit the bio we
- 		 * have.
-+		 *
-+		 * When fscrypt inline encryption is used, data unit number
-+		 * (DUN) contiguity is also required.  Normally that's implied
-+		 * by logical contiguity.  However, certain IV generation
-+		 * methods (e.g. IV_INO_LBLK_32) don't guarantee it.  So, we
-+		 * must explicitly check fscrypt_mergeable_bio() too.
- 		 */
- 		if (sdio->final_block_in_bio != sdio->cur_page_block ||
--		    cur_offset != bio_next_offset)
-+		    cur_offset != bio_next_offset ||
-+		    !fscrypt_mergeable_bio(sdio->bio, dio->inode,
-+					   cur_offset >> dio->inode->i_blkbits))
- 			dio_bio_submit(dio, sdio);
- 	}
+ 	bio_set_dev(bio, iomap->bdev);
+ 	bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
+ 	bio->bi_private = dio;
+@@ -272,6 +276,8 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+ 		}
  
+ 		bio = bio_alloc(GFP_KERNEL, nr_pages);
++		fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
++					  GFP_KERNEL);
+ 		bio_set_dev(bio, iomap->bdev);
+ 		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
+ 		bio->bi_write_hint = dio->iocb->ki_hint;
 -- 
 2.29.2.299.gdc1121823c-goog
 
