@@ -2,122 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03ED22B66F0
-	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 15:11:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3AEE2B68FD
+	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 16:47:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgKQOHo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Nov 2020 09:07:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbgKQOHn (ORCPT
+        id S1726570AbgKQPqj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Nov 2020 10:46:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20931 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726569AbgKQPqj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Nov 2020 09:07:43 -0500
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2170DC0617A7
-        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:42 -0800 (PST)
-Received: by mail-qk1-x749.google.com with SMTP id s9so14136216qks.2
-        for <linux-block@vger.kernel.org>; Tue, 17 Nov 2020 06:07:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=yJkkPo7d0J6NtmBv7rzIbrBkhqskC5NsYDTAoyAGSwU=;
-        b=CRCbMwpu14Qny/Fey+w65l3KTXcgMu/wKgUqWyt7la+sSuhY3Qh3bSLfvbmNmy2ohN
-         d6CLetvPjrxg9HdcLQrwcUJI/t7E3dhAItIG3xDBSGqno0iPXS+Up8TqksLE2sx9De7b
-         RnDWU7ZU+TwovEWzFLtOxWOaWhir5AxQO2FAkbTw00c9UXWqh58duX34o1osKQfPEqVH
-         kKqjD9fQyxlm+X97TMmYjnC8FTr0DpcoshYQpZMqrkZkd8QOZGD/NcSiuteoNG9hyOLX
-         0VnfOnPnKTkbYUbPzPkiA75vd3hEs8SLeW/KWNERv36yx+7UQx03bI8wWQFRjgua6eps
-         yiDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=yJkkPo7d0J6NtmBv7rzIbrBkhqskC5NsYDTAoyAGSwU=;
-        b=j0Pjh0ag7y1AsNHqyWirhGupgJZbcGLnz/128SK0s2GTUIJwc7BsCq6EuYLWd+YHj5
-         8Ec+VK/Ly4j+jDupRWKluEmEL2N9jDPoIAFQdwQkbvjTVDTvniVbGBkRDZ1G9piQlVvI
-         K66iDfk1a9Kt9shymezaGGh5sYmBLFBrOh4wv7ESsvRr02BOd6iY8SAo5uAcAkn2eq1x
-         45JlfG+x2eQhSneBYkMKdfsQ7WCCd7yKcTuGQqS2Gj6dYJGXJNV/vzEDyr5+MJWtl8u6
-         V/LECZxBigc/O7GM/M74YqjbOdMiziLMPl+KJqeLLoFoUm8hwrqBje2XhlSK7G9zQF9u
-         7X1A==
-X-Gm-Message-State: AOAM5300ihK44Ah/zN2HaGwWA5z9tviOUkVQ0socjkqRnbb+5dIiKWNL
-        XDrtJ7mSYsMFVHUxvS5mK7fvrL3GWuk=
-X-Google-Smtp-Source: ABdhPJxEG4c+F9yJyuTls+kfuLbDaGW8pmeOfu1t4VEHHtaVEi94dVbJaunxNyEQ37dnM4o0k+oO8Td4NSk=
-Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a05:6214:386:: with SMTP id
- l6mr21357187qvy.49.1605622061201; Tue, 17 Nov 2020 06:07:41 -0800 (PST)
-Date:   Tue, 17 Nov 2020 14:07:08 +0000
-In-Reply-To: <20201117140708.1068688-1-satyat@google.com>
-Message-Id: <20201117140708.1068688-9-satyat@google.com>
-Mime-Version: 1.0
-References: <20201117140708.1068688-1-satyat@google.com>
-X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
-Subject: [PATCH v7 8/8] fscrypt: update documentation for direct I/O support
-From:   Satya Tangirala <satyat@google.com>
-To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>, Chao Yu <chao@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Satya Tangirala <satyat@google.com>,
-        Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Nov 2020 10:46:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605627998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FYTJCFMw3HBh+Maj7+5z3ky42cWoFclAuHWeLpHwgeI=;
+        b=YR7hLuYkzDU7V+6B5Lj1EiUE8NxpzPrcEgxy0GTZHojgu8C+2ViiNkhB8UCn4LCfhGsWbB
+        nfJE3DLSxIFzEhCgwHlloUaPXWHaFbGVTuvEd7sjBLCvRdVvvGLOLIk4tEf9noUCwxfE7F
+        tmMh0O8sMEOWELNE0m/nBIkJ0uOZb2M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-afiCGzq-PqS-qSDmKIcJxg-1; Tue, 17 Nov 2020 10:46:35 -0500
+X-MC-Unique: afiCGzq-PqS-qSDmKIcJxg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F5441074653;
+        Tue, 17 Nov 2020 15:46:34 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9A0210013DB;
+        Tue, 17 Nov 2020 15:46:30 +0000 (UTC)
+Date:   Tue, 17 Nov 2020 10:46:29 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Minchan Kim <minchan@kernel.org>,
+        dm-devel@redhat.com, linux-block@vger.kernel.org
+Subject: Re: misc struct block_device related driver cleanups
+Message-ID: <20201117154629.GA27085@redhat.com>
+References: <20201116212020.1099154-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201116212020.1099154-1-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Update fscrypt documentation to reflect the addition of direct I/O support
-and document the necessary conditions for direct I/O on encrypted files.
+On Mon, Nov 16 2020 at  4:20pm -0500,
+Christoph Hellwig <hch@lst.de> wrote:
 
-Signed-off-by: Satya Tangirala <satyat@google.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- Documentation/filesystems/fscrypt.rst | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+> Hi Jens, Minchan and Mike,
+> 
+> this series cleans up a few interactions of driver with struct
+> block_device, in preparation for big changes to struct block_device
+> that I plan to send soon.
 
-diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-index 44b67ebd6e40..757b8aa2af9b 100644
---- a/Documentation/filesystems/fscrypt.rst
-+++ b/Documentation/filesystems/fscrypt.rst
-@@ -1047,8 +1047,10 @@ astute users may notice some differences in behavior:
-   may be used to overwrite the source files but isn't guaranteed to be
-   effective on all filesystems and storage devices.
- 
--- Direct I/O is not supported on encrypted files.  Attempts to use
--  direct I/O on such files will fall back to buffered I/O.
-+- Direct I/O is supported on encrypted files only under some
-+  circumstances (see `Direct I/O support`_ for details). When these
-+  circumstances are not met, attempts to use direct I/O on encrypted
-+  files will fall back to buffered I/O.
- 
- - The fallocate operations FALLOC_FL_COLLAPSE_RANGE and
-   FALLOC_FL_INSERT_RANGE are not supported on encrypted files and will
-@@ -1121,6 +1123,21 @@ It is not currently possible to backup and restore encrypted files
- without the encryption key.  This would require special APIs which
- have not yet been implemented.
- 
-+Direct I/O support
-+==================
-+
-+Direct I/O on encrypted files is supported through blk-crypto. In
-+particular, this means the kernel must have CONFIG_BLK_INLINE_ENCRYPTION
-+enabled, the filesystem must have had the 'inlinecrypt' mount option
-+specified, and either hardware inline encryption must be present, or
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK must have been enabled. Further,
-+the length of any I/O must be aligned to the filesystem block size
-+(*not* necessarily the same as the block device's block size). If any of
-+these conditions isn't met, attempts to do direct I/O on an encrypted file
-+will fall back to buffered I/O. However, there aren't any additional
-+requirements on user buffer alignment (apart from those already present
-+when using direct I/O on unencrypted files).
-+
- Encryption policy enforcement
- =============================
- 
--- 
-2.29.2.299.gdc1121823c-goog
+Thanks, I've picked up 5 and 6 for 5.11.
 
