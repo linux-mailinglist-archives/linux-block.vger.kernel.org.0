@@ -2,143 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81D732B5A88
-	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 08:53:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A045C2B5A96
+	for <lists+linux-block@lfdr.de>; Tue, 17 Nov 2020 08:56:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725792AbgKQHxe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Nov 2020 02:53:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54406 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725774AbgKQHxe (ORCPT
+        id S1726853AbgKQH4a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Nov 2020 02:56:30 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:37963 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725774AbgKQH4a (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Nov 2020 02:53:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605599612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q/ESqcgzgFsT4AbtqoLRrUl4kyW0esnycCJV/qp7nn8=;
-        b=HC1PiIiYsPQv08X8jvUggGumdv8FQMH1gSWlUQo8Tlbm71oUw/VOBZqGiLCL0mko5dZF0k
-        9N+nRR2eE8ZOWlxoRGJX+nw6eFk3fR3qaRZ5vICQULpCFcCn4aT0/8HIIngjexhDzguL6C
-        Kw0LG4x+9B5ra00ha1gcUhDpSlEs+4A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-587-x8Mf2m0YNeyDAi2egJAt4g-1; Tue, 17 Nov 2020 02:53:30 -0500
-X-MC-Unique: x8Mf2m0YNeyDAi2egJAt4g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A77778030D1;
-        Tue, 17 Nov 2020 07:53:28 +0000 (UTC)
-Received: from T590 (ovpn-13-195.pek2.redhat.com [10.72.13.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46FB75D9CC;
-        Tue, 17 Nov 2020 07:53:16 +0000 (UTC)
-Date:   Tue, 17 Nov 2020 15:53:13 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
-        "Ewan D . Milne" <emilne@redhat.com>
-Subject: Re: [PATCH V4 05/12] sbitmap: export sbitmap_weight
-Message-ID: <20201117075313.GB74954@T590>
-References: <20201116090737.50989-1-ming.lei@redhat.com>
- <20201116090737.50989-6-ming.lei@redhat.com>
- <d05cb6bf-35e6-d939-30a5-6ef3a9c8a679@suse.de>
- <20201117021030.GC56247@T590>
- <1183d3b9-bd52-2428-d696-ef02d0134299@suse.de>
+        Tue, 17 Nov 2020 02:56:30 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UFgn5fM_1605599785;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UFgn5fM_1605599785)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Nov 2020 15:56:25 +0800
+From:   Jeffle Xu <jefflexu@linux.alibaba.com>
+To:     axboe@kernel.dk, hch@infradead.org, ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+        joseph.qi@linux.alibaba.com
+Subject: [PATCH v4 0/2] block, iomap: disable iopoll for split bio
+Date:   Tue, 17 Nov 2020 15:56:23 +0800
+Message-Id: <20201117075625.46118-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1183d3b9-bd52-2428-d696-ef02d0134299@suse.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 07:57:40AM +0100, Hannes Reinecke wrote:
-> On 11/17/20 3:10 AM, Ming Lei wrote:
-> > On Mon, Nov 16, 2020 at 10:38:58AM +0100, Hannes Reinecke wrote:
-> > > On 11/16/20 10:07 AM, Ming Lei wrote:
-> > > > SCSI's .device_busy will be converted to sbitmap, and sbitmap_weight
-> > > > is needed, so export the helper.
-> > > > 
-> > > > Cc: Omar Sandoval <osandov@fb.com>
-> > > > Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-> > > > Cc: Sumanesh Samanta <sumanesh.samanta@broadcom.com>
-> > > > Cc: Ewan D. Milne <emilne@redhat.com>
-> > > > Reviewed-by: Hannes Reinecke <hare@suse.de>
-> > > > Tested-by: Sumanesh Samanta <sumanesh.samanta@broadcom.com>
-> > > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > > ---
-> > > >    include/linux/sbitmap.h |  9 +++++++++
-> > > >    lib/sbitmap.c           | 11 ++++++-----
-> > > >    2 files changed, 15 insertions(+), 5 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-> > > > index 103b41c03311..34343ce3ef6c 100644
-> > > > --- a/include/linux/sbitmap.h
-> > > > +++ b/include/linux/sbitmap.h
-> > > > @@ -346,6 +346,15 @@ static inline int sbitmap_test_bit(struct sbitmap *sb, unsigned int bitnr)
-> > > >     */
-> > > >    void sbitmap_show(struct sbitmap *sb, struct seq_file *m);
-> > > > +
-> > > > +/**
-> > > > + * sbitmap_weight() - Return how many real bits set in a &struct sbitmap.
-> > > > + * @sb: Bitmap to check.
-> > > > + *
-> > > > + * Return: How many real bits set
-> > > > + */
-> > > > +unsigned int sbitmap_weight(const struct sbitmap *sb);
-> > > > +
-> > > >    /**
-> > > >     * sbitmap_bitmap_show() - Write a hex dump of a &struct sbitmap to a &struct
-> > > >     * seq_file.
-> > > > diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-> > > > index dcd6a89b4d2f..fb1d3c2f70a2 100644
-> > > > --- a/lib/sbitmap.c
-> > > > +++ b/lib/sbitmap.c
-> > > > @@ -342,20 +342,21 @@ static unsigned int __sbitmap_weight(const struct sbitmap *sb, bool set)
-> > > >    	return weight;
-> > > >    }
-> > > > -static unsigned int sbitmap_weight(const struct sbitmap *sb)
-> > > > +static unsigned int sbitmap_cleared(const struct sbitmap *sb)
-> > > >    {
-> > > > -	return __sbitmap_weight(sb, true);
-> > > > +	return __sbitmap_weight(sb, false);
-> > > >    }
-> > > > -static unsigned int sbitmap_cleared(const struct sbitmap *sb)
-> > > > +unsigned int sbitmap_weight(const struct sbitmap *sb)
-> > > >    {
-> > > > -	return __sbitmap_weight(sb, false);
-> > > > +	return __sbitmap_weight(sb, true) - sbitmap_cleared(sb);
-> > > >    }
-> > > > +EXPORT_SYMBOL_GPL(sbitmap_weight);
-> > > That is extremely confusing. Why do you change the meaning of
-> > > 'sbitmap_weight' from __sbitmap_weight(sb, true) to
-> > > __sbitmap_weight(sb, true) - __sbitmap_weight(sb, false)?
-> > 
-> > Because the only user of sbitmap_weight() just uses the following way:
-> > 
-> > 	sbitmap_weight(sb) - sbitmap_cleared(sb)
-> > 
-> > Frankly, I think sbitmap_weight(sb) should return real busy bits.
-> > 
-> No argument about that. Just wanted to be clear that this is by intention.
-> 
-> > > Does this mean that the original definition was wrong?
-> > > Or does this mean that this patch implies a different meaning of
-> > > 'sbitmap_weight'?
-> > 
-> > Yeah, this patch changes meaning of sbitmap_weight(), now it is
-> > exported, and we should make it more accurate/readable from user view.
-> > 
-> So can you please state this in the patch description?
+This patchset is to fix the potential hang occurred in sync polling.
 
-Sure.
+Please refer the following link for background info and the v1 patch:
+https://patchwork.kernel.org/project/linux-block/patch/20201013084051.27255-1-jefflexu@linux.alibaba.com/
 
-Thanks, 
-Ming
+The first patch disables iopoll for split bio in block layer, which is
+suggested by Ming Lei.
+
+
+The second patch disables iopoll when one dio need to be split into
+multiple bios. As for this patch, Ming Lei had ever asked what's the
+expected behaviour of upper layers when simply clear IOCB_HIPRI in
+the direct routine of blkdev fs, iomap-based fs. Currently there are
+two parts concerning IOCB_HIPRI (or io polling). One is the sync
+polling logic embedded in the direct IO routine. In this case, sync
+polling won't be executed any more since IOCB_HIPRI flag has been
+cleared from iocb->ki_flags. Consider the following code snippet:
+
+fs/block_dev.c: __blkdev_direct_IO
+	for (;;) {
+		...
+		if (!(iocb->ki_flags & IOCB_HIPRI) ||
+		    !blk_poll(bdev_get_queue(bdev), qc, true))
+			blk_io_schedule();
+	}
+
+fs/iomap/direct-io.c: __iomap_dio_rw
+	for (;;) {
+		...
+		if (!(iocb->ki_flags & IOCB_HIPRI) ||
+		    !dio->submit.last_queue ||
+		    !blk_poll(dio->submit.last_queue,
+				 dio->submit.cookie, true))
+			blk_io_schedule();
+	}
+
+
+The other part is io_uring. 
+
+fs/io_uring.c: 
+io_iopoll_getevents
+  io_do_iopoll
+    list_for_each_entry_safe(...) {
+      ret = kiocb->ki_filp->f_op->iopoll(kiocb, spin);
+    }
+
+In this case, though the split bios have been enqueued into DEFAULT
+hw queues, io_uring will still poll POLL hw queues. When polling on
+the cookie returned by split bio, blk_poll() will return 0 immediately
+since the hw queue type check added in patch 1. If there's no other
+bio in the POLL hw queues, io_do_iopoll() will loop indefinitely
+until the split bio is completed by interrupt of DEFAULT queue. Indeed
+there may be a pulse of high CPU sys in this time window here, but it
+is no worse than before. After all io_do_iopoll() will still get stuck
+in this loop when there's only one bio (that we are polling on) in POLL
+hw queue, before this patch applied.
+
+The situation described above may be less impossible. As long as there
+are other bios in POLL hw queue, work of io_do_iopoll() is still
+meaningful as it *helps* reap these other bios in POLL hw queue, while
+the split bios are still completed by interrupt of DEFAULT hw queue.
+
+
+changes since v3:
+- patch 1: add hw queue type check in blk_poll(), so that cookie returned
+  by split bio won't get into the real polling routine
+
+changes since v2:
+- tune the line length of patch 1
+- fix the condition checking whether split needed in patch 2
+
+changes since v1:
+- adopt the fix suggested by Ming Lei, to disable iopoll for split bio directly
+- disable iopoll in direct IO routine of blkdev fs and iomap
+
+Jeffle Xu (2):
+  block: disable iopoll for split bio
+  block,iomap: disable iopoll when split needed
+
+ block/blk-merge.c    |  7 +++++++
+ block/blk-mq.c       |  6 ++++--
+ fs/block_dev.c       |  9 +++++++++
+ fs/iomap/direct-io.c | 10 ++++++++++
+ 4 files changed, 30 insertions(+), 2 deletions(-)
+
+-- 
+2.27.0
 
