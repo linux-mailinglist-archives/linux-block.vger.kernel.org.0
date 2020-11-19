@@ -2,78 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9046E2B95E5
-	for <lists+linux-block@lfdr.de>; Thu, 19 Nov 2020 16:17:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D95B2B9642
+	for <lists+linux-block@lfdr.de>; Thu, 19 Nov 2020 16:35:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbgKSPOA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Nov 2020 10:14:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42516 "EHLO
+        id S1727556AbgKSPdA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Nov 2020 10:33:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgKSPOA (ORCPT
+        with ESMTP id S1727535AbgKSPdA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Nov 2020 10:14:00 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34925C0613CF;
-        Thu, 19 Nov 2020 07:14:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aI9mH0dq7mTuWpujo4T+CjmE2gbvb95KnVfM843FQ84=; b=NQxl2LUeXdxB2yfG38WXbOdZDF
-        4m3yXl2LUAYY4UoHaaLjO55fQMRmjPGQ3+B+xj1A4lwNOqB+KRFQoIk1nbaMMuKB/WnQRRcUmsRbV
-        R2K9qIjBs0hPN6TTWcG6BAmilJQG1snUXu5nywrLj8Cz/xFJxvZUmVOZATxF0u8B82LwZZSJWb1hl
-        RGyLJC+B2H7/mLhmvZRyTkib7wsKGqq179e8VAUmByqV2VbOMsqMaYFdiiZ3EUGK3Uw1hPAA3usoO
-        WlHH4d0KOLmy0/ejtH1mtQgmdWJPaNlHqDfX4UPUMcxUgftU+j2y1V0nrwb5yjBJnF9f3J8T+0xqW
-        MLlqYaTw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kflcb-0002ed-15; Thu, 19 Nov 2020 15:13:17 +0000
-Date:   Thu, 19 Nov 2020 15:13:16 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        dm-devel@redhat.com, Richard Weinberger <richard@nod.at>,
-        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 17/20] filemap: consistently use ->f_mapping over
- ->i_mapping
-Message-ID: <20201119151316.GH29991@casper.infradead.org>
-References: <20201118084800.2339180-1-hch@lst.de>
- <20201118084800.2339180-18-hch@lst.de>
+        Thu, 19 Nov 2020 10:33:00 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F45DC0613CF;
+        Thu, 19 Nov 2020 07:33:00 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id a15so6285209edy.1;
+        Thu, 19 Nov 2020 07:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddxSt3wpSpboFERrBzVXzYpBlWugsPxM3x0s+uiBN2M=;
+        b=iMB7AActJAYhUi6yp+uKKqf/eJgTmphnLGUbc/I2BAdd/Ao2za7FuaEkiyf+eSfTGe
+         YaAvGicLhCpfhrskqGXxqOzGB27p+JVMgJJSCvy9OajV1xCiCCscL/lg7HbT11J2uJcB
+         7m8ngC1oWnR/81cVGHR0jXPlU13LKVgvvHRyXmjS8YhYzpRNWFffw1cugGAmybdjpfC+
+         3J1SKQKa5gjYZmBE3GA6sGW9U87foJ0p9AdYH7VbiK5SzsFgF6nwlhuC86p3iG2mhZih
+         Z2lKpQ7PIgv1tvzeuHuhAUCGlhKH31uqeTNjd8570WC1GlA0fhT1lylnjmfjUUyvb3rk
+         t3tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddxSt3wpSpboFERrBzVXzYpBlWugsPxM3x0s+uiBN2M=;
+        b=BopokDnwjd6QQABAijRn/LPeAjxLxQZzCg7qBo7Lc9ABjS1HyC/CDoo5fjqtroARHy
+         XmVdPykJunnpQj7QQ4OOFMmIW8Tot0vdb0uGO6H+c6CYKfqSm9iTFvTKwdm1WH2Mju9+
+         6UhrKGknnZ1CyL8hcsPZmq7uUHs1jVhLKIUG4aDr1XX0ABA1s9ZbCsUrknJKVFp122gr
+         a3P129Y7FH4OxyX0Qysd22XCmAhGJ9ToDEFSwqREyWHjMKozCOCG3jBKkipXXKyQCSc0
+         TiBlU93OKnhHGr8XCYv0KX7lHau4g1VTe+8XbZfvUhETIAtOT260jYk0rV7tuGzR006i
+         sv6w==
+X-Gm-Message-State: AOAM532L3vORalOw0/Eqpwyr9dTnGSSu7Lcf44QEep9yXxFLiH+G1P8a
+        IIf+Hk7HP5+FDcHVParQbsuNiKhKzJ44sA==
+X-Google-Smtp-Source: ABdhPJwGZZjfAcLjNFQmoj+12BbllR5+smck15BtFcLyUbze6Gh2p/TVFNPCRgVO4m5B8mnPcLb9BA==
+X-Received: by 2002:a50:da4b:: with SMTP id a11mr13553485edk.364.1605799979057;
+        Thu, 19 Nov 2020 07:32:59 -0800 (PST)
+Received: from localhost.localdomain (host109-152-100-135.range109-152.btcentralplus.com. [109.152.100.135])
+        by smtp.gmail.com with ESMTPSA id u7sm3595612ejf.83.2020.11.19.07.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2020 07:32:58 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] optimise iov_iter
+Date:   Thu, 19 Nov 2020 15:29:41 +0000
+Message-Id: <cover.1605799583.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201118084800.2339180-18-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 09:47:57AM +0100, Christoph Hellwig wrote:
-> @@ -2887,13 +2887,13 @@ EXPORT_SYMBOL(filemap_map_pages);
->  vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)
->  {
->  	struct page *page = vmf->page;
-> -	struct inode *inode = file_inode(vmf->vma->vm_file);
-> +	struct inode *inode = vmf->vma->vm_file->f_mapping->host;
->  	vm_fault_t ret = VM_FAULT_LOCKED;
->  
->  	sb_start_pagefault(inode->i_sb);
->  	file_update_time(vmf->vma->vm_file);
->  	lock_page(page);
-> -	if (page->mapping != inode->i_mapping) {
-> +	if (page->mapping != vmf->vma->vm_file->f_mapping) {
+The first patch optimises iov_iter_npages() for the bvec case, and the
+second helps code generation to kill unreachable code.
 
-Bit messy.  I'd do:
+Pavel Begunkov (2):
+  iov_iter: optimise iov_iter_npages for bvec
+  iov_iter: optimise iter type checking
 
-	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+ include/linux/uio.h | 10 +++++-----
+ lib/iov_iter.c      | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-	sb_start_pagefault(mapping->host->i_sb);
-
-	if (page->mapping != mapping)
-
-	sb_end_pagefault(mapping->host->i_sb);
+-- 
+2.24.0
 
