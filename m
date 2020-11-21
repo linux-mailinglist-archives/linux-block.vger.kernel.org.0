@@ -2,139 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ECD72BBA7F
-	for <lists+linux-block@lfdr.de>; Sat, 21 Nov 2020 01:06:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 697D12BBAD6
+	for <lists+linux-block@lfdr.de>; Sat, 21 Nov 2020 01:31:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgKUAEg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 20 Nov 2020 19:04:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgKUAEf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 20 Nov 2020 19:04:35 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C49C061A04;
-        Fri, 20 Nov 2020 16:04:35 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id 1so12079565wme.3;
-        Fri, 20 Nov 2020 16:04:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f8U62WcszabPEjfRiz8PL6bPd6YXedpkQur+ELLcNC4=;
-        b=dWyUhrKB2cftTV9R6ZY4W1ouEZ4mrMBqCyJgfYIyUF0gFgTKdE4Px68sj52ErRNcQZ
-         ZiYy7MBTweHDvI9bELzzsN7aqLwWuJSv/JtW1duYFn2Z9rtfe2flmqHggDQr32PFw54Q
-         tgrhodXZ67uj3x2ZVgulw/hCe2Var45F/EmJjMcym5uBrwARWV7mc2fZUxOA3bq+ER+T
-         +vN9aDcwAQ4J4nDTLDI3PC7AzrzsN23tKQe2Nd8NkwxeUI4rch/W7iVY+8yhETcMWz87
-         DmxSfCJjv4NiyKlxizl5eQtVe5/TCnsi/5kEWqcLJmyP/cb4eRJm2m8hKnA3UJ2sgC2W
-         qhsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f8U62WcszabPEjfRiz8PL6bPd6YXedpkQur+ELLcNC4=;
-        b=VqMpPI37bASBNtOY8EXTsK74x2heobGc1/itaByJ/uiNI69SiUU0hKTmgEmTKu9BYZ
-         allwg6Q8tu1hpZh3QsBCp7U8fVRyDKHRxrIc7rC1b4qYV1O0APYIG8xfeM4nUm/cT9vG
-         /V8uHi0R/Mya0UjWK88y2J3Rv8D03UosFXnTqgx8+zhR1RWOzioGO6w1EfvGAS/4rqhS
-         S8xswvMek6XHWZ01+fkDbw0B9jacCIOQf0r7PCnLMbUkGwBq0tkeYbdhevs1P8uPfBdA
-         MuKTShkukOQQJuZVRhKfppTRRj9CrbP2JFDhziMzsYwn3wK4seb48xFx9cgJXbpMQPHs
-         3bYQ==
-X-Gm-Message-State: AOAM530zUWaFjJKizY6V3eFvLMb7CbAW/VXP+XW6nQLobwZSIiKAjPoX
-        QldW1MCh9wgufSENRFDB3AU3vz5VRuw=
-X-Google-Smtp-Source: ABdhPJw4FnGisGN+PCv2bPrnHld1JjJGWhuUDS7LLmsbjAai+/qdqUw4QuNHBpcpi1wVm0yNWpGxqQ==
-X-Received: by 2002:a1c:4086:: with SMTP id n128mr12588662wma.68.1605917073885;
-        Fri, 20 Nov 2020 16:04:33 -0800 (PST)
-Received: from localhost.localdomain (host109-152-100-189.range109-152.btcentralplus.com. [109.152.100.189])
-        by smtp.gmail.com with ESMTPSA id d3sm6145518wmb.5.2020.11.20.16.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 16:04:33 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Omar Sandoval <osandov@osandov.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] sbitmap: remove swap_lock
-Date:   Sat, 21 Nov 2020 00:01:16 +0000
-Message-Id: <e903f4b2fa327e4bbe5ad80b4bcffac3de17a780.1605908165.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1605908165.git.asml.silence@gmail.com>
-References: <cover.1605908165.git.asml.silence@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726587AbgKUA3F (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 20 Nov 2020 19:29:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgKUA3E (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 20 Nov 2020 19:29:04 -0500
+Subject: Re: [GIT PULL] Block fixes for 5.10-rc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605918544;
+        bh=+e8vSI3xuYITt/LG4Seon7nnNYdOxPkhoHCXGswfmDA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lQGaz+d6hoadnhpeKAN4FQX97MAfMVQ0OikagQN+zV8lYKUd7Sfo8o7sNKUSSsr5g
+         I+XVIb/EMYER6gruN0Fl9G+6VeJ8bwv4W9GN9TanRk0nXM+qwwL6ADjKHOGCXkmHGf
+         LIYbmssQXhBKokG5QnVOBj2qcSF5NstwKZxl6k3o=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <5e56dcf2-0320-c637-e6ee-143de81f2c41@kernel.dk>
+References: <5e56dcf2-0320-c637-e6ee-143de81f2c41@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <5e56dcf2-0320-c637-e6ee-143de81f2c41@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.10-2020-11-20
+X-PR-Tracked-Commit-Id: 45f703a0d4b87f940ea150367dc4f4a9c06fa868
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4fd84bc9692958cd07b3a3320dba26baa04a17d0
+Message-Id: <160591854446.19527.4210552002507911018.pr-tracker-bot@kernel.org>
+Date:   Sat, 21 Nov 2020 00:29:04 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-map->swap_lock serialises concurrent calls to sbitmap_deferred_clear(),
-however that function is already works in atomic fashion and guarantees
-to not loose bits while applying map->cleared bitmask.
+The pull request you sent on Fri, 20 Nov 2020 11:45:35 -0700:
 
-Remove spinlocking in sbitmap_deferred_clear(). For a one-threaded
-tag allocation heavy test on top of nullblk it yields ~1.0-1.5% t-put
-increase, and according to perf 3% -> 1.5% cycle reduction of
-sbitmap_get().
+> git://git.kernel.dk/linux-block.git tags/block-5.10-2020-11-20
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- include/linux/sbitmap.h |  5 -----
- lib/sbitmap.c           | 14 +++-----------
- 2 files changed, 3 insertions(+), 16 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4fd84bc9692958cd07b3a3320dba26baa04a17d0
 
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index e40d019c3d9d..74cc6384715e 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -32,11 +32,6 @@ struct sbitmap_word {
- 	 * @cleared: word holding cleared bits
- 	 */
- 	unsigned long cleared ____cacheline_aligned_in_smp;
--
--	/**
--	 * @swap_lock: Held while swapping word <-> cleared
--	 */
--	spinlock_t swap_lock;
- } ____cacheline_aligned_in_smp;
- 
- /**
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 49afb34e8340..238d9849f24b 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -16,13 +16,9 @@ static inline bool sbitmap_deferred_clear(struct sbitmap *sb, int index)
- {
- 	struct sbitmap_word *map = &sb->map[index];
- 	unsigned long mask, val;
--	bool ret = false;
--	unsigned long flags;
- 
--	spin_lock_irqsave(&map->swap_lock, flags);
--
--	if (!map->cleared)
--		goto out_unlock;
-+	if (!READ_ONCE(map->cleared))
-+		return false;
- 
- 	/*
- 	 * First get a stable cleared mask, setting the old mask to 0.
-@@ -36,10 +32,7 @@ static inline bool sbitmap_deferred_clear(struct sbitmap *sb, int index)
- 		val = map->word;
- 	} while (cmpxchg(&map->word, val, val & ~mask) != val);
- 
--	ret = true;
--out_unlock:
--	spin_unlock_irqrestore(&map->swap_lock, flags);
--	return ret;
-+	return true;
- }
- 
- int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
-@@ -81,7 +74,6 @@ int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
- 	for (i = 0; i < sb->map_nr; i++) {
- 		sb->map[i].depth = min(depth, bits_per_word);
- 		depth -= sb->map[i].depth;
--		spin_lock_init(&sb->map[i].swap_lock);
- 	}
- 	return 0;
- }
+Thank you!
+
 -- 
-2.24.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
