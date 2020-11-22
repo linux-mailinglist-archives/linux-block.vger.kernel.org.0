@@ -2,104 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F33822BC5EB
-	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 14:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00DE12BC688
+	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 16:39:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgKVN6Q convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Sun, 22 Nov 2020 08:58:16 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27491 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727513AbgKVN6P (ORCPT
+        id S1727926AbgKVPjJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 22 Nov 2020 10:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbgKVPjI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 22 Nov 2020 08:58:15 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-83-68wCZSYwMYuMi8rKowULxQ-1; Sun, 22 Nov 2020 13:58:11 +0000
-X-MC-Unique: 68wCZSYwMYuMi8rKowULxQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 22 Nov 2020 13:58:10 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 22 Nov 2020 13:58:10 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Howells' <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Pavel Begunkov <asml.silence@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 01/29] iov_iter: Switch to using a table of operations
-Thread-Topic: [PATCH 01/29] iov_iter: Switch to using a table of operations
-Thread-Index: AQHWwNQxMI88twW4zUSLxoYAnZFgBanUKLlw
-Date:   Sun, 22 Nov 2020 13:58:10 +0000
-Message-ID: <4890290b302e480fb0d1cc66bd0d6ce9@AcuMS.aculab.com>
-References: <CAHk-=wjttbQzVUR-jSW-Q42iOUJtu4zCxYe9HO3ovLGOQ_3jSA@mail.gmail.com>
- <160596800145.154728.7192318545120181269.stgit@warthog.procyon.org.uk>
- <160596801020.154728.15935034745159191564.stgit@warthog.procyon.org.uk>
- <254318.1606051984@warthog.procyon.org.uk>
-In-Reply-To: <254318.1606051984@warthog.procyon.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 22 Nov 2020 10:39:08 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B88C0613CF;
+        Sun, 22 Nov 2020 07:39:08 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id gj5so19801028ejb.8;
+        Sun, 22 Nov 2020 07:39:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ftXwQvyxOtcWWpnt7XYMWgjz5qMtAk2DUcYi43bDv84=;
+        b=PdJCrZPkHvWOcst+CCC62W6xNE4eAr5hye/30q1J5e9aZ1lJvevE+tyWBH5KuW5BOO
+         YNpVWN+691ticJKStM9Y5C24IXRAdRQoZaRVjaXBUopa3ouSnV/u7XK10yLvanX94+Uz
+         6QF1wTFppJ4VwL2TPAr8znxEDX20rR5O2Jkm/VRmqZV4vbH4D0yWPly934Yk9IjOOZZY
+         wnqgBomkoS0IV7+Fumbsf2/t7FxW0Zo2rQEomHg95+iD98RMvtlxtMDTLeEP3fuxJECg
+         0hkqOpMyngQcTMs69k9NdP4bXkCHkqqGUFG4bCEuHy1t3IiYBByoyftGO0JytSLqdeLN
+         29lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ftXwQvyxOtcWWpnt7XYMWgjz5qMtAk2DUcYi43bDv84=;
+        b=Mw5gG/M3iQsK0AoJhlpsxlX/NGG7yzFTbMOXKlVF8Lpop4HpK7xwqA7zAR3MP/thw5
+         NGW7QI1E5hl6jSb8FTkbESBj86BkvIkds1TAWtByRfgsYHAv41o3mFwkfCu9+gykkBzc
+         mVbO1a3kRtjHUwa/BAvnEfKp00uJKq2DFpNbv8Tf5+xLk9Pjr0JiT5hxXdbTi8qKyvI8
+         uDbh6EuC0XZxXCYfRpspLkfffjwxWzWgbFk3oVEWlkl7VFj8GuSlxB73nzTLEPBYN24V
+         JnhS7cbA3KeszE8nfwSd0jahPMMApR2NbJRzt4YCTt1bUZK+ydcDsQNnvA4qZIITyTaX
+         3K3w==
+X-Gm-Message-State: AOAM533BrHJKVLs5jPQDHQwiYNKsxi4KAExSjQ+Lwd2a8nWNasljnzA5
+        MhRrQQdIldQR4fWaNf1Wa/MC8pZfYCCOtg==
+X-Google-Smtp-Source: ABdhPJwMYEgrVKwLekIaOl6hxXu8AxP9wFNJBtJ+GnB9oB6MbKZrp7K7yNeeDV6nhq3AgIFUOopkFg==
+X-Received: by 2002:a17:906:76d0:: with SMTP id q16mr9010685ejn.164.1606059545736;
+        Sun, 22 Nov 2020 07:39:05 -0800 (PST)
+Received: from localhost.localdomain (host109-152-100-189.range109-152.btcentralplus.com. [109.152.100.189])
+        by smtp.gmail.com with ESMTPSA id q19sm3693742ejz.90.2020.11.22.07.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Nov 2020 07:39:05 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Omar Sandoval <osandov@osandov.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 for-next 0/4] optimise sbitmap deferred clear
+Date:   Sun, 22 Nov 2020 15:35:44 +0000
+Message-Id: <cover.1606058975.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: David Howells
-> Sent: 22 November 2020 13:33
-> 
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> >  - I worry a bit about the indirect call overhead and spectre v2.
-> 
-> I don't know enough about how spectre v2 works to say if this would be a
-> problem for the ops-table approach, but wouldn't it also affect the chain of
-> conditional branches that we currently use, since it's branch-prediction
-> based?
+sbitmap takes away some cycles for my tag-deficient test, removal of
+locking in sbitmap_deferred_clear() gives +~1% throuhput.
 
-The advantage of the 'chain of branches' is that it can be converted
-into a 'tree of branches' because the values are all separate bits.
+[1/4] and [4/4] are simple, it'd be great if someone could double
+check for ordering issues for other two patches.
 
-So as well as putting the (expected) common one first; you can do:
-	if (likely((a & (A | B))) {
-		if (a & A) {
-			code for A;
-		} else {
-			code for B;
-	} else ...
-So get better control over the branch sequence.
-(Hopefully the compiler doesn't change the logic.
-I want a dumb compiler that (mostly) compiles what I write!)
+v2: add 3rd (CAS -> atomic and) and 4th patches
 
-Part of the difficulty is deciding the common case.
-There'll always be a benchmark that exercises an uncommon case.
+Pavel Begunkov (4):
+  sbitmap: optimise sbitmap_deferred_clear()
+  sbitmap: remove swap_lock
+  sbitmap: replace CAS with atomic and
+  sbitmap: simplify wrap check
 
-Adding an indirect call does let you do things like adding
-ITER_IOVER_SINGLE and ITER_KVEC_SINGLE that are used in the
-common case of a single buffer fragment.
-That might be a measurable gain.
+ include/linux/sbitmap.h |  5 -----
+ lib/sbitmap.c           | 44 +++++++++++++++++------------------------
+ 2 files changed, 18 insertions(+), 31 deletions(-)
 
-It is also possible to optimise the common case to a direct
-call (or even inline code) and use an indirect call for
-everything else.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+2.24.0
 
