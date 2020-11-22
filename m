@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85BF32BC687
-	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 16:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5E162BC68A
+	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 16:39:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgKVPjI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 22 Nov 2020 10:39:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        id S1727969AbgKVPjK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 22 Nov 2020 10:39:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbgKVPjI (ORCPT
+        with ESMTP id S1727317AbgKVPjJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 22 Nov 2020 10:39:08 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01B5C0613CF;
-        Sun, 22 Nov 2020 07:39:07 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id l5so14513871edq.11;
-        Sun, 22 Nov 2020 07:39:07 -0800 (PST)
+        Sun, 22 Nov 2020 10:39:09 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B226CC0613D3;
+        Sun, 22 Nov 2020 07:39:08 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id oq3so19792059ejb.7;
+        Sun, 22 Nov 2020 07:39:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LLyBQQxzTUvx0SP9ZpRqeAeAOBvzcvUPKIXIwPCTeyk=;
-        b=iVfSAHc1H9CV77pfjvfc2M51745vfVMqC1BNMpV7rs02iO6woKtZ4/l+Rc8W+/UvcR
-         mlXP3F8+M78HXArx6mxnxilEU794c5aorXUI2ylqwYsJd7SusnLF28NeLD9hZai22o9k
-         N1duXM6iKDCsPdDLRGpl+nQhZIU2zsoVBbWL1Sn81XnZ59BKF9lz/CVva8rPFL6KL9iy
-         mpKTfeWnCV8QeWHf5BnnK7TeO6C5cD0Yuxm7AbkjQiIkkp3tia97dby5WN8jiJ8w6grU
-         nONmBF7S4Y+80jS6veNK7gqqvwL+IXwtaYxDb5bySLFWi3en9lb1Bqf8m/CnorHYsyhU
-         0tqQ==
+        bh=dLNpQoSRr9iK3S6Fw6tI1eE1E/khRsaWGUWRPRmH1yI=;
+        b=LhebEEN3u1hRCFIyVbHk1ufMBKXxVarWm7ctpvx3YlEWPUQoXm4Kvu7NsS/iy1Z/ug
+         4MIYE9VN03lgb7DWw3PijIpltHFbxDwjoyv9CDl576zwuCCyTqmjJX6AZWiW+8mMc4g3
+         GKTQ023PwGMYbixYdcAJ9T+tFw0KxWzBpp86kQhhPVlEFI/KgH7bcUafdseB4UQMMj9Q
+         yDNGyXSh8WfQXFduMQcRX6YYGTWfiPxr511BL1ey+iJWS58+eanyn3H/XEtDgEyJTaRj
+         Esb4HfCFwVaf6vIC9QmnX8N7BjWzAMIOVvEG5M0gzRQpOnR3lbVGP244vslfNgVTQpEr
+         i/gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LLyBQQxzTUvx0SP9ZpRqeAeAOBvzcvUPKIXIwPCTeyk=;
-        b=B0i6/TbrOCIkvG1eecLQSAR4HyZSopsCeMjJGkdKCjSu1+eAr7D8M1ByqurwHKivLL
-         qbS4UTN1zeLPSSFIEV7A++/rtCAD56C6Q2VUGCMoBry65oJA7ElhS/G3xMbCFHbBYtSA
-         5gNRMFjmcoseX0JjACQCX3dCFZrxTzQvytatE2P6NZyzEyzSMM7oSPSnt7R+gBatBDbV
-         10ll9hiiL2WoFTQjzYQxSYPcRfYMc/F8T4YntieBpvqXZk5qH3saHUkGHcnSezrI2zCA
-         nrkm/mSQByrI6BCu9Bmu9JcSwJjsHkc3M636Kp/w4UvBk8KRbCib4HUT0JdO4i7D1vQP
-         62JA==
-X-Gm-Message-State: AOAM532oI1DGre6FD3eFUjZ6inhbf1iIWaNeGarU1KQYxZVmi2hCvXlh
-        qSCGSGFLIXJIWX754xkDnLq7xKUig9hWjw==
-X-Google-Smtp-Source: ABdhPJyebL7zIQqA01s/GGvRTBnKNRzSk2yReIcnpgmnn8zZbYu0c6VwxeDiINHFefts9hjy0S6IQg==
-X-Received: by 2002:aa7:ca57:: with SMTP id j23mr19873066edt.292.1606059546594;
-        Sun, 22 Nov 2020 07:39:06 -0800 (PST)
+        bh=dLNpQoSRr9iK3S6Fw6tI1eE1E/khRsaWGUWRPRmH1yI=;
+        b=HNiTBXDwrbKW3hlmPYh1qg7XOklm8I/jbjNR0UzE8z8aXEIqw9eDZhM1v9Iwoovt+H
+         B2LFmY+XZ8WFlJ9r2nwZj3XnZ+L0fgKdEmSTtjr7/jij2MNnSWpw1mR3pxv7LW+/5tyU
+         hmWKiX8L42qboTH3lv5xl9ST0TzvpjX7+MfHh+XoG3PdwNEuplU/SU9peHUXxffMpgpj
+         e2M3/PXWVhgYO8xMCQHqXs7xCC+Zgrf3TrKUBuUp1W3fCtopOGMzt7jGSsnTNxXSg8fI
+         ulQUpOx5FGtFdnT1i+GpeL/IchpTg3omqvRmHkydmrcFYby63D83qiJWacjIR6N2PYsr
+         5umQ==
+X-Gm-Message-State: AOAM531l9zKjumN/oaqIe1xjuAF0wfQhlvlUbjt0hPJfd3ges/3Q/hHG
+        LB3S7ckq+cM6gWzjWEE1B6U=
+X-Google-Smtp-Source: ABdhPJwcQCyO9nlMXYJcQGNDq6WXtwyRPZHNIePeRwwCEz9RkGB8EgeUqHKzbqi9LybMbyKzTpEQhA==
+X-Received: by 2002:a17:906:268c:: with SMTP id t12mr40737027ejc.91.1606059547406;
+        Sun, 22 Nov 2020 07:39:07 -0800 (PST)
 Received: from localhost.localdomain (host109-152-100-189.range109-152.btcentralplus.com. [109.152.100.189])
-        by smtp.gmail.com with ESMTPSA id q19sm3693742ejz.90.2020.11.22.07.39.05
+        by smtp.gmail.com with ESMTPSA id q19sm3693742ejz.90.2020.11.22.07.39.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Nov 2020 07:39:06 -0800 (PST)
+        Sun, 22 Nov 2020 07:39:07 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Omar Sandoval <osandov@osandov.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] sbitmap: optimise sbitmap_deferred_clear()
-Date:   Sun, 22 Nov 2020 15:35:45 +0000
-Message-Id: <ddfa166d93f38e812751b6ff986fd5403b7893b7.1606058975.git.asml.silence@gmail.com>
+Subject: [PATCH v2 2/4] sbitmap: remove swap_lock
+Date:   Sun, 22 Nov 2020 15:35:46 +0000
+Message-Id: <488177c02dccda60c5e8af2e53156c42b7f1acc0.1606058975.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1606058975.git.asml.silence@gmail.com>
 References: <cover.1606058975.git.asml.silence@gmail.com>
@@ -64,98 +64,76 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Because of spinlocks and atomics sbitmap_deferred_clear() have to reload
-&sb->map[index] on each access even though the map address won't change.
-Pass in sbitmap_word instead of {sb, index}, so it's cached in a
-variable. It also improves code generation of
-sbitmap_find_bit_in_index().
+map->swap_lock protects map->cleared from concurrent modification,
+however sbitmap_deferred_clear() is already atomically drains it, so
+it's guaranteed to not loose bits on concurrent
+sbitmap_deferred_clear().
+
+A one threaded tag heavy test on top of nullbk showed ~1.5% t-put
+increase, and 3% -> 1% cycle reduction of sbitmap_get() according to perf.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- lib/sbitmap.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ include/linux/sbitmap.h |  5 -----
+ lib/sbitmap.c           | 14 +++-----------
+ 2 files changed, 3 insertions(+), 16 deletions(-)
 
+diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+index e40d019c3d9d..74cc6384715e 100644
+--- a/include/linux/sbitmap.h
++++ b/include/linux/sbitmap.h
+@@ -32,11 +32,6 @@ struct sbitmap_word {
+ 	 * @cleared: word holding cleared bits
+ 	 */
+ 	unsigned long cleared ____cacheline_aligned_in_smp;
+-
+-	/**
+-	 * @swap_lock: Held while swapping word <-> cleared
+-	 */
+-	spinlock_t swap_lock;
+ } ____cacheline_aligned_in_smp;
+ 
+ /**
 diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 267aa7709416..c1c8a4e69325 100644
+index c1c8a4e69325..4fd877048ba8 100644
 --- a/lib/sbitmap.c
 +++ b/lib/sbitmap.c
-@@ -12,32 +12,32 @@
- /*
-  * See if we have deferred clears that we can batch move
-  */
--static inline bool sbitmap_deferred_clear(struct sbitmap *sb, int index)
-+static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+@@ -15,13 +15,9 @@
+ static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
  {
  	unsigned long mask, val;
- 	bool ret = false;
- 	unsigned long flags;
+-	bool ret = false;
+-	unsigned long flags;
  
--	spin_lock_irqsave(&sb->map[index].swap_lock, flags);
-+	spin_lock_irqsave(&map->swap_lock, flags);
- 
--	if (!sb->map[index].cleared)
-+	if (!map->cleared)
- 		goto out_unlock;
+-	spin_lock_irqsave(&map->swap_lock, flags);
+-
+-	if (!map->cleared)
+-		goto out_unlock;
++	if (!READ_ONCE(map->cleared))
++		return false;
  
  	/*
  	 * First get a stable cleared mask, setting the old mask to 0.
- 	 */
--	mask = xchg(&sb->map[index].cleared, 0);
-+	mask = xchg(&map->cleared, 0);
+@@ -35,10 +31,7 @@ static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+ 		val = map->word;
+ 	} while (cmpxchg(&map->word, val, val & ~mask) != val);
  
- 	/*
- 	 * Now clear the masked bits in our free word
- 	 */
- 	do {
--		val = sb->map[index].word;
--	} while (cmpxchg(&sb->map[index].word, val, val & ~mask) != val);
-+		val = map->word;
-+	} while (cmpxchg(&map->word, val, val & ~mask) != val);
- 
- 	ret = true;
- out_unlock:
--	spin_unlock_irqrestore(&sb->map[index].swap_lock, flags);
-+	spin_unlock_irqrestore(&map->swap_lock, flags);
- 	return ret;
+-	ret = true;
+-out_unlock:
+-	spin_unlock_irqrestore(&map->swap_lock, flags);
+-	return ret;
++	return true;
  }
  
-@@ -92,7 +92,7 @@ void sbitmap_resize(struct sbitmap *sb, unsigned int depth)
- 	unsigned int i;
- 
- 	for (i = 0; i < sb->map_nr; i++)
--		sbitmap_deferred_clear(sb, i);
-+		sbitmap_deferred_clear(&sb->map[i]);
- 
- 	sb->depth = depth;
- 	sb->map_nr = DIV_ROUND_UP(sb->depth, bits_per_word);
-@@ -139,15 +139,15 @@ static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
- static int sbitmap_find_bit_in_index(struct sbitmap *sb, int index,
- 				     unsigned int alloc_hint, bool round_robin)
- {
-+	struct sbitmap_word *map = &sb->map[index];
- 	int nr;
- 
- 	do {
--		nr = __sbitmap_get_word(&sb->map[index].word,
--					sb->map[index].depth, alloc_hint,
-+		nr = __sbitmap_get_word(&map->word, map->depth, alloc_hint,
- 					!round_robin);
- 		if (nr != -1)
- 			break;
--		if (!sbitmap_deferred_clear(sb, index))
-+		if (!sbitmap_deferred_clear(map))
- 			break;
- 	} while (1);
- 
-@@ -207,7 +207,7 @@ int sbitmap_get_shallow(struct sbitmap *sb, unsigned int alloc_hint,
- 			break;
- 		}
- 
--		if (sbitmap_deferred_clear(sb, index))
-+		if (sbitmap_deferred_clear(&sb->map[index]))
- 			goto again;
- 
- 		/* Jump to next index. */
+ int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
+@@ -80,7 +73,6 @@ int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
+ 	for (i = 0; i < sb->map_nr; i++) {
+ 		sb->map[i].depth = min(depth, bits_per_word);
+ 		depth -= sb->map[i].depth;
+-		spin_lock_init(&sb->map[i].swap_lock);
+ 	}
+ 	return 0;
+ }
 -- 
 2.24.0
 
