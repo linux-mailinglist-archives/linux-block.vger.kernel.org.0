@@ -2,105 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD812BC68C
-	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 16:39:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C24B2BC6A4
+	for <lists+linux-block@lfdr.de>; Sun, 22 Nov 2020 17:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgKVPjN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 22 Nov 2020 10:39:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
+        id S1727567AbgKVQIa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 22 Nov 2020 11:08:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgKVPjK (ORCPT
+        with ESMTP id S1727317AbgKVQI3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 22 Nov 2020 10:39:10 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3897EC0613D3;
-        Sun, 22 Nov 2020 07:39:10 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id lv15so13952045ejb.12;
-        Sun, 22 Nov 2020 07:39:10 -0800 (PST)
+        Sun, 22 Nov 2020 11:08:29 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635DFC0613CF
+        for <linux-block@vger.kernel.org>; Sun, 22 Nov 2020 08:08:29 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id a9so20401533lfh.2
+        for <linux-block@vger.kernel.org>; Sun, 22 Nov 2020 08:08:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fl28dO735aCAhko0B6RL7SyZGlL+dtaEdr7rVCrHNgQ=;
-        b=rPLfAxEfQrMaZWxlGBBQ5d77LNndT6OVQI8MQ2T6907z53C9QoVTKOPOFsmL4yC2JW
-         36wJA7mxNcfbneKzsAqdpifGDGflHREGS2wnjXY4y+noVa17TU09bkb1/5bjIUHCpeDo
-         BztYKy35vV3e+DDGG38CSWfnkDaogGcnAttQ20IRJKGOkG2qFlVSCw3SYBLqd/Esz3uy
-         HOokYMbQI94IaNxVk/4L7hQhSbepslrv1vpfo9BGZfsoappahdARgR6uA7ccqgNZkWkj
-         l5Joo5IHrLaOWvzNLkCvGpA0xM8IJiq2T8OsTs4fJXzxuRrt7Iq33AKxdF1J+cxwtOnW
-         8aWg==
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=safEzczHGHLXs45ryoEAbi+vFjxDiy4IY9/ZKygPeno=;
+        b=Eo76B3qt1Iak9u+z31PtXQiZoVCKTWV2jZKDS91tXdNvEgzikGvFxeyOxH8UKgG9WF
+         w6CAiu0PIqWisd1OOR6l/SUpvKxHdCcRWyNdbPjxj8V5vuuo4HvtZR9lbP+OivvlIu9B
+         vR/ekmYVE43reG3CpC8eV5N+5ZRKQS7roSZgvWtUGpYvbfpEFYUCSFwg2l3Sx/JX3dXA
+         AceERB9NkIUcIIM+FqNoPFSyMTB0BrvvFGwcS3VlclZuagdcL/EHCU+OVIHesWYcn4kB
+         BtQfsuarcYnG9Cv0KO2Z7kHEtqInD0b5Sbmry2VWzqRGppsk9DpyG/5Ps3s5taCBHTfe
+         juFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fl28dO735aCAhko0B6RL7SyZGlL+dtaEdr7rVCrHNgQ=;
-        b=XAxFAr8V2/6aHZlPfqer70Fd7490sYPQch986SCZC39jkCoHUwT+rap82CJ5jN0AZS
-         nKUty2HzWNe/cFBFPnUvLpWm5C2EgQeZOqziOmY4kbCNAAh5nxhlCXRrIKr8JqvE8wkA
-         f43Dp9R+wPPSYwZiRIyM5gbdnzlcldF8hshPEcAjP3KvFZTaK1oo8VG1Ai00IaC/hYSP
-         XnepPxU6AS7z6/Hh6CZqUWFe6Ey/o/jYl0yidLxSsFR1q0m1zgO7fvmxKwMqAirZXNZN
-         zcqhDQDXc0o7G/KcXujbviCQOyd+nUYRaV9cQ0MvwdQE67y4BYMH9YlnlwrV5NwDUnAv
-         D+Dw==
-X-Gm-Message-State: AOAM533W9hzmvNauTpQa+Bey95SEq1gkMcl3f3t9zyeCyIrQo/sTrRyp
-        n9q/fQvx/W5nnQT1YXfM4oL4CR9mPLbPcg==
-X-Google-Smtp-Source: ABdhPJzReAQ2abZZjO+qZieauY3jPn1AV5BGddQdRsAaDLI8owcy622mYph2MO6f7bQjG6vikUT4oQ==
-X-Received: by 2002:a17:906:1c87:: with SMTP id g7mr35785480ejh.37.1606059549013;
-        Sun, 22 Nov 2020 07:39:09 -0800 (PST)
-Received: from localhost.localdomain (host109-152-100-189.range109-152.btcentralplus.com. [109.152.100.189])
-        by smtp.gmail.com with ESMTPSA id q19sm3693742ejz.90.2020.11.22.07.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Nov 2020 07:39:08 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Omar Sandoval <osandov@osandov.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] sbitmap: simplify wrap check
-Date:   Sun, 22 Nov 2020 15:35:48 +0000
-Message-Id: <120b9b0870719675c91764822016597bdfa3ee15.1606058975.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1606058975.git.asml.silence@gmail.com>
-References: <cover.1606058975.git.asml.silence@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=safEzczHGHLXs45ryoEAbi+vFjxDiy4IY9/ZKygPeno=;
+        b=taBPz8/pDZx1kgh9/ACx3PvezPE2TC7nG0ruDkFvNTsD7qxdR3/tdXu/YOj9oyfFhj
+         kNYGBMnQU79EYOJG0K33lwn+J1qmeHUDbT53Z9wa/A0QWn9jI2Sfw/TS4q9P4R975H3f
+         CkcXvUAfAil6uYudumAc6r6EhfEs3Jbj6ZOXfZWoa/Kkl2Bsd240KVxgLpWQY3WzyXpO
+         ymgyNgaA8PRYxGXgGV6Otb8Kkdi6eu61PWpe8Y5WBSDE2d+pdFZQsTpRzM7IYRg8em1G
+         nOENR2EWGd0x57FuyZ5jgXUjPAT6iW1bJkkYnKWah9V01ai8l8wFpCFf1vbPZ1Vy2p99
+         PsbA==
+X-Gm-Message-State: AOAM531/lyl9SOe5dP64nn6QjDqnMIqDIBKDWb4IXwl86BZ9Swq+lgQT
+        Tyg0Lk3p4JsDKEYrMTReGpWt61rb6pU62fSXW9jwmT72PMxh
+X-Google-Smtp-Source: ABdhPJxytEe46vZYdqpmquTHcqOtJ6iCost52VJxvqnFhXqqqLVsS0bJnFZk7HNiDucyLAFRUgZ/LmZWN0GCc44beEE=
+X-Received: by 2002:a19:ca:: with SMTP id 193mr83210lfa.331.1606061307677;
+ Sun, 22 Nov 2020 08:08:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHg0Huzvhg7ZizbCGQyyVNdnAWmQCsypRWvdBzm0GWwPzXD0dw@mail.gmail.com>
+ <5438d63e-0879-1d7b-cac1-f20fa24ecedb@grimberg.me>
+In-Reply-To: <5438d63e-0879-1d7b-cac1-f20fa24ecedb@grimberg.me>
+From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Date:   Sun, 22 Nov 2020 17:08:16 +0100
+Message-ID: <CAHg0Huzufxh1bjATpAy6PppTLFaj3N4S1HevNjpGwNE=zmqObQ@mail.gmail.com>
+Subject: Re: [RFC] Reliable Multicast on top of RTRS
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     linux-rdma@vger.kernel.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-__sbitmap_get_word() doesn't warp if it's starting from the beginning
-(i.e. initial hint is 0). Instead of stashing the original hint just set
-@wrap accordingly.
+Hi Sagi,
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- lib/sbitmap.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On Fri, Sep 4, 2020 at 12:18 AM Sagi Grimberg <sagi@grimberg.me> wrote:
+>
+>
+> > Hi @,
+> >
+> > RTRS allows for reliable transmission of sg lists between two hosts
+> > over rdma. It is optimised for block io. One can implement a client
+> > and a server module on top of RTRS which would allow for reliable
+> > transmission to a group of hosts.
+> >
+> > In the networking world this is called reliable multicast. I think one
+> > can say that reliable multicast is an equivalent to what is called
+> > "mirror" in the storage world.
+>
+> md-raid1
 
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index c18b518a16ba..d693d9213ceb 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -97,9 +97,11 @@ EXPORT_SYMBOL_GPL(sbitmap_resize);
- static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
- 			      unsigned int hint, bool wrap)
- {
--	unsigned int orig_hint = hint;
- 	int nr;
- 
-+	/* don't wrap if starting from 0 */
-+	wrap = wrap && hint;
-+
- 	while (1) {
- 		nr = find_next_zero_bit(word, depth, hint);
- 		if (unlikely(nr >= depth)) {
-@@ -108,8 +110,8 @@ static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
- 			 * offset to 0 in a failure case, so start from 0 to
- 			 * exhaust the map.
- 			 */
--			if (orig_hint && hint && wrap) {
--				hint = orig_hint = 0;
-+			if (hint && wrap) {
-+				hint = 0;
- 				continue;
- 			}
- 			return -1;
--- 
-2.24.0
+Exact
 
+>
+> > There is something called XoR network
+> > coding which seems to be an equivalent of raid5.
+>
+> md-raid5
+
+Exact
+
+>
+> > There is also Reed
+> > Solomon network coding.
+> >
+> > Having a reliable multicast with coding rdma-based transport layer
+> > would allow for very flexible and scalable designs of distributed
+> > replication solutions based on different in-kernel transport, block
+> > and replication drivers.
+> >
+> > What do you think?
+>
+> You should probably use the device-mapper stack or modify it to fit your
+> needs.
+
+Will look into the dm framework,
+Thank you,
+Danil.
