@@ -2,62 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6059C2C0116
-	for <lists+linux-block@lfdr.de>; Mon, 23 Nov 2020 09:09:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DDBB2C013D
+	for <lists+linux-block@lfdr.de>; Mon, 23 Nov 2020 09:19:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgKWIFQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Nov 2020 03:05:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgKWIFQ (ORCPT
+        id S1726988AbgKWIM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Nov 2020 03:12:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35508 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgKWIM0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Nov 2020 03:05:16 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5584CC0613CF;
-        Mon, 23 Nov 2020 00:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6vGNH6/LtgD9H2B7jY2SC28nVQh3dS5TfEwthu4Yqq0=; b=ZAqo9NfKjGkL2SJi0Et2eFTHHn
-        SyVCEbdUmUIfwpdvBuuWvFBs+XXOd7k1xLJehh+E7u1OeHRW7tdsHvERCOFJ18rpuaDwZrh2Bpf4p
-        GHifpGgC0MOM2Cj739hSkfHtJxZ7U412O1Tzn65r8/mLOHMADt9YJdfREPFf2EtryGT+OIY+r4Nz1
-        WBeADPY66kCsCM8yUaREC77lOZ09vI2AT1QsaaFr1N1hHvNXhVevUpoQ2ZnJ531G4XlESqBTwNfAN
-        9Se0TiLHstfosyW2NcAEDqbCjU1U+jZvKjRy4hDToRxwrdt597/uGrDfWAgjbGxLFhVXqyo8FblrG
-        HduUcWMw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kh6qQ-000852-Hy; Mon, 23 Nov 2020 08:05:06 +0000
-Date:   Mon, 23 Nov 2020 08:05:06 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/29] iov_iter: Switch to using a table of operations
-Message-ID: <20201123080506.GA30578@infradead.org>
-References: <160596800145.154728.7192318545120181269.stgit@warthog.procyon.org.uk>
- <160596801020.154728.15935034745159191564.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160596801020.154728.15935034745159191564.stgit@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 23 Nov 2020 03:12:26 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AN81nvt181756;
+        Mon, 23 Nov 2020 03:12:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=tAKNuYZffSpOFwBpuBhOnjzWOmBxw1tP/G3s35IS3+8=;
+ b=D+kVJeQq7uqrgoLNzexLuqKXhrjITZt8YltULxTZEBhuHxgRxxB5vxY6ucEJJVzYkqPW
+ 5pONzb1ZFhxVstWPeJ4lTINfpidTjtASikT5Dnj/ukUhKR4QzSW/aHjovF8+j43Av0ZV
+ uqirSWYA78mwjhxWE6Owl8y5Lk8z9zR3aF9Hs4B8tEcNgczb+/nBAHAdYNZy2GI9NFzc
+ GYGkqu7XqQyx3t4z8UsMQ/2u1zic1J1gZhrzH6rNBa40Uw0nie45W6t4FcYlU1mTdSEp
+ bwj7k00DRaGzSG/0hoalBFUlS6G8gMjaTTeqHX/gUKzJMdi8VioxY5HS/zYnC6UrjLuq QA== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34ygtshvrr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Nov 2020 03:12:25 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AN81jcp023277;
+        Mon, 23 Nov 2020 08:12:22 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 34xth8958v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Nov 2020 08:12:21 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AN8CJDD7078618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 08:12:19 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1644852075;
+        Mon, 23 Nov 2020 08:12:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D50105207E;
+        Mon, 23 Nov 2020 08:12:18 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH 1/2] block: update documentation for blk_rq_timeout()
+Date:   Mon, 23 Nov 2020 09:12:15 +0100
+Message-Id: <20201123081216.64025-1-jwi@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-23_02:2020-11-20,2020-11-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 spamscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230052
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Nov 21, 2020 at 02:13:30PM +0000, David Howells wrote:
-> Switch to using a table of operations.  In a future patch the individual
-> methods will be split up by type.  For the moment, however, the ops tables
-> just jump directly to the old functions - which are now static.  Inline
-> wrappers are provided to jump through the hooks.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Requests don't have their own timers anymore, they share the queue's
+timer instead.
 
-Please run performance tests.  I think the indirect calls could totally
-wreck things like high performance direct I/O, especially using io_uring
-on x86.
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+---
+ block/blk-timeout.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-timeout.c b/block/blk-timeout.c
+index 1b8de0417fc1..61430575cb58 100644
+--- a/block/blk-timeout.c
++++ b/block/blk-timeout.c
+@@ -122,8 +122,8 @@ unsigned long blk_rq_timeout(unsigned long timeout)
+  * @req:	request that is about to start running.
+  *
+  * Notes:
+- *    Each request has its own timer, and as it is added to the queue, we
+- *    set up the timer. When the request completes, we cancel the timer.
++ *    Each request has its own timeout. As a request is added to the queue,
++ *    we start/adjust the queue's timer to keep track of the earliest timeout.
+  */
+ void blk_add_timer(struct request *req)
+ {
+-- 
+2.17.1
+
