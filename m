@@ -2,66 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55B732C1C0A
-	for <lists+linux-block@lfdr.de>; Tue, 24 Nov 2020 04:30:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6E432C1C1D
+	for <lists+linux-block@lfdr.de>; Tue, 24 Nov 2020 04:34:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgKXD3i (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Nov 2020 22:29:38 -0500
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:38256 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgKXD3i (ORCPT
+        id S1729125AbgKXDeE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Nov 2020 22:34:04 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:24189 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727550AbgKXDeA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Nov 2020 22:29:38 -0500
-Received: by mail-pg1-f176.google.com with SMTP id j19so16200296pgg.5
-        for <linux-block@vger.kernel.org>; Mon, 23 Nov 2020 19:29:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tk7+VHs3A54MHBNnCv10uKUdSrI/jE3yN5ABibRDiUY=;
-        b=ik9tdeTWbjQDcrzI6nW1AATooKxzRfvrtB8u4MIb9G/q9qalPLaroj8AOtKKKMidFp
-         ldG6asCi03Q7PXsW1ETZs7qBYNVB2eO71qjxDfMzcjPpgFV91DrxEbHcA2pjeiAsCqit
-         u1+8NVS/EQtkevZZDrfZ/tE3DlbXojHw3qSBpumy3GZeJX9Fh52amQrugJnyzQcfYfsc
-         RvJGtEGJnQT565z9err1ZWVrk3U7KLynKCcmF06EVSlWqhOKOeNQzTs/0XuArOb0Kfi7
-         v/+rNdbM5+79EPQqoQn6b1Fsu/h4W3JjXmZBuhKC5DUK4sRl0mraL0tEGqL52xBKP9Oa
-         Bv6A==
-X-Gm-Message-State: AOAM531pbLAn/ygN9AFnQM6N2l2tZGiXJR6MWyWb1cM3WR40TIrerLn+
-        3VklUESi1WCwJf12OimFEIQdgcHRAmQ=
-X-Google-Smtp-Source: ABdhPJyKNuXF8srsElWxl86G5Fv8L7MJYCVGyM5K556Aqe/33OS8zCTCadCOeAMy+wSk8rwc6jhmFA==
-X-Received: by 2002:a63:161a:: with SMTP id w26mr2058225pgl.17.1606188577594;
-        Mon, 23 Nov 2020 19:29:37 -0800 (PST)
-Received: from [192.168.3.218] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 3sm13007624pfv.92.2020.11.23.19.29.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2020 19:29:36 -0800 (PST)
-Subject: Re: [PATCH blktests 4/5] common/rc: _have_iproute2 fix for "ip -V"
- change
-To:     Yi Zhang <yi.zhang@redhat.com>, osandov@osandov.com
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        sagi@grimberg.me
-References: <20201124010427.18595-1-yi.zhang@redhat.com>
- <20201124010427.18595-5-yi.zhang@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <6f235fda-3d68-f0cc-f714-5c1daf67c28b@acm.org>
-Date:   Mon, 23 Nov 2020 19:29:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
-MIME-Version: 1.0
-In-Reply-To: <20201124010427.18595-5-yi.zhang@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Nov 2020 22:34:00 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UGN9oOX_1606188828;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UGN9oOX_1606188828)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 24 Nov 2020 11:33:48 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     axboe@kernel.dk, tj@kernel.org
+Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] Some cleanups and improvements for blk-iocost
+Date:   Tue, 24 Nov 2020 11:33:29 +0800
+Message-Id: <cover.1606186717.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/23/20 5:04 PM, Yi Zhang wrote:
-> With bellow commit, the version will be updated base on the tag
-       ^^^^^^
-       below?
-> fbef6555 replace SNAPSHOT with auto-generated version string
+Hi,
 
-Thanks,
+This patch set did some cleanups and improvements for blk-iocost, and
+no big functional changes. Please help to review. Thanks.
 
-Bart.
+Baolin Wang (7):
+  blk-iocost: Fix some typos in comments
+  blk-iocost: Remove unnecessary advance declaration
+  blk-iocost: Just open code the q_name()
+  blk-iocost: Add a flag to indicate if need update hwi
+  blk-iocost: Move the usage ratio calculation to the correct place
+  blk-iocost: Factor out the active iocgs' state check into a separate  
+      function
+  blk-iocost: Factor out the base vrate change into a separate function
+
+ block/blk-iocost.c | 238 ++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 126 insertions(+), 112 deletions(-)
+
+-- 
+1.8.3.1
+
