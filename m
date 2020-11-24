@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD1DC2C1C19
-	for <lists+linux-block@lfdr.de>; Tue, 24 Nov 2020 04:34:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 235AE2C1C20
+	for <lists+linux-block@lfdr.de>; Tue, 24 Nov 2020 04:34:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbgKXDd4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Nov 2020 22:33:56 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:45425 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726039AbgKXDdz (ORCPT
+        id S1726158AbgKXDe0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Nov 2020 22:34:26 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:60511 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725797AbgKXDeZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Nov 2020 22:33:55 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UGN.XXv_1606188831;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UGN.XXv_1606188831)
+        Mon, 23 Nov 2020 22:34:25 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UGNUG0B_1606188832;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UGNUG0B_1606188832)
           by smtp.aliyun-inc.com(127.0.0.1);
           Tue, 24 Nov 2020 11:33:52 +0800
 From:   Baolin Wang <baolin.wang@linux.alibaba.com>
 To:     axboe@kernel.dk, tj@kernel.org
 Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] blk-iocost: Factor out the active iocgs' state check into a separate function
-Date:   Tue, 24 Nov 2020 11:33:35 +0800
-Message-Id: <aa1f4c6e637974d7195bf4e019880e50acdd5ca5.1606186717.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH 7/7] blk-iocost: Factor out the base vrate change into a separate function
+Date:   Tue, 24 Nov 2020 11:33:36 +0800
+Message-Id: <f58ff36d7e24716994f2de22be461602fb49b6d5.1606186717.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1606186717.git.baolin.wang@linux.alibaba.com>
 References: <cover.1606186717.git.baolin.wang@linux.alibaba.com>
@@ -32,158 +32,114 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Factor out the iocgs' state check into a separate function to
-simplify the ioc_timer_fn().
+Factor out the base vrate change code into a separate function
+to fimplify the ioc_timer_fn().
 
 No functional change.
 
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- block/blk-iocost.c | 91 ++++++++++++++++++++++++++++++------------------------
- 1 file changed, 51 insertions(+), 40 deletions(-)
+ block/blk-iocost.c | 78 ++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 41 insertions(+), 37 deletions(-)
 
 diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index e36cd8e..db4f894 100644
+index db4f894..739c8d4 100644
 --- a/block/blk-iocost.c
 +++ b/block/blk-iocost.c
-@@ -2069,40 +2069,17 @@ static void ioc_forgive_debts(struct ioc *ioc, u64 usage_us_sum, int nr_debtors,
- 	}
+@@ -968,6 +968,44 @@ static void ioc_refresh_vrate(struct ioc *ioc, struct ioc_now *now)
+ 	ioc->vtime_err = clamp(ioc->vtime_err, -vperiod, vperiod);
  }
  
--static void ioc_timer_fn(struct timer_list *timer)
-+/*
-+ * Waiters determine the sleep durations based on the vrate they
-+ * saw at the time of sleep.  If vrate has increased, some waiters
-+ * could be sleeping for too long.  Wake up tardy waiters which
-+ * should have woken up in the last period and expire idle iocgs.
-+ */
-+static int ioc_check_iocg_state(struct ioc *ioc, struct ioc_now *now)
- {
--	struct ioc *ioc = container_of(timer, struct ioc, timer);
-+	int nr_debtors = 0;
- 	struct ioc_gq *iocg, *tiocg;
--	struct ioc_now now;
--	LIST_HEAD(surpluses);
--	int nr_debtors = 0, nr_shortages = 0, nr_lagging = 0;
--	u64 usage_us_sum = 0;
--	u32 ppm_rthr = MILLION - ioc->params.qos[QOS_RPPM];
--	u32 ppm_wthr = MILLION - ioc->params.qos[QOS_WPPM];
--	u32 missed_ppm[2], rq_wait_pct;
--	u64 period_vtime;
--	int prev_busy_level;
- 
--	/* how were the latencies during the period? */
--	ioc_lat_stat(ioc, missed_ppm, &rq_wait_pct);
--
--	/* take care of active iocgs */
--	spin_lock_irq(&ioc->lock);
--
--	ioc_now(ioc, &now);
--
--	period_vtime = now.vnow - ioc->period_at_vtime;
--	if (WARN_ON_ONCE(!period_vtime)) {
--		spin_unlock_irq(&ioc->lock);
--		return;
--	}
--
--	/*
--	 * Waiters determine the sleep durations based on the vrate they
--	 * saw at the time of sleep.  If vrate has increased, some waiters
--	 * could be sleeping for too long.  Wake up tardy waiters which
--	 * should have woken up in the last period and expire idle iocgs.
--	 */
- 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
- 		if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
- 		    !iocg->delay && !iocg_is_idle(iocg))
-@@ -2112,24 +2089,24 @@ static void ioc_timer_fn(struct timer_list *timer)
- 
- 		/* flush wait and indebt stat deltas */
- 		if (iocg->wait_since) {
--			iocg->local_stat.wait_us += now.now - iocg->wait_since;
--			iocg->wait_since = now.now;
-+			iocg->local_stat.wait_us += now->now - iocg->wait_since;
-+			iocg->wait_since = now->now;
- 		}
- 		if (iocg->indebt_since) {
- 			iocg->local_stat.indebt_us +=
--				now.now - iocg->indebt_since;
--			iocg->indebt_since = now.now;
-+				now->now - iocg->indebt_since;
-+			iocg->indebt_since = now->now;
- 		}
- 		if (iocg->indelay_since) {
- 			iocg->local_stat.indelay_us +=
--				now.now - iocg->indelay_since;
--			iocg->indelay_since = now.now;
-+				now->now - iocg->indelay_since;
-+			iocg->indelay_since = now->now;
- 		}
- 
- 		if (waitqueue_active(&iocg->waitq) || iocg->abs_vdebt ||
- 		    iocg->delay) {
- 			/* might be oversleeping vtime / hweight changes, kick */
--			iocg_kick_waitq(iocg, true, &now);
-+			iocg_kick_waitq(iocg, true, now);
- 			if (iocg->abs_vdebt || iocg->delay)
- 				nr_debtors++;
- 		} else if (iocg_is_idle(iocg)) {
-@@ -2143,7 +2120,7 @@ static void ioc_timer_fn(struct timer_list *timer)
- 			 * error and throw away. On reactivation, it'll start
- 			 * with the target budget.
- 			 */
--			excess = now.vnow - vtime - ioc->margins.target;
-+			excess = now->vnow - vtime - ioc->margins.target;
- 			if (excess > 0) {
- 				u32 old_hwi;
- 
-@@ -2152,12 +2129,46 @@ static void ioc_timer_fn(struct timer_list *timer)
- 							    WEIGHT_ONE);
- 			}
- 
--			__propagate_weights(iocg, 0, 0, false, &now);
-+			__propagate_weights(iocg, 0, 0, false, now);
- 			list_del_init(&iocg->active_list);
- 		}
- 
- 		spin_unlock(&iocg->waitq.lock);
- 	}
-+
-+	return nr_debtors;
-+}
-+
-+static void ioc_timer_fn(struct timer_list *timer)
++static void ioc_refresh_base_vrate(struct ioc *ioc, u32 rq_wait_pct)
 +{
-+	struct ioc *ioc = container_of(timer, struct ioc, timer);
-+	struct ioc_gq *iocg, *tiocg;
-+	struct ioc_now now;
-+	LIST_HEAD(surpluses);
-+	int nr_debtors, nr_shortages = 0, nr_lagging = 0;
-+	u64 usage_us_sum = 0;
-+	u32 ppm_rthr = MILLION - ioc->params.qos[QOS_RPPM];
-+	u32 ppm_wthr = MILLION - ioc->params.qos[QOS_WPPM];
-+	u32 missed_ppm[2], rq_wait_pct;
-+	u64 period_vtime;
-+	int prev_busy_level;
++	u64 vrate = ioc->vtime_base_rate;
++	u64 vrate_min = ioc->vrate_min, vrate_max = ioc->vrate_max;
 +
-+	/* how were the latencies during the period? */
-+	ioc_lat_stat(ioc, missed_ppm, &rq_wait_pct);
++	/* rq_wait signal is always reliable, ignore user vrate_min */
++	if (rq_wait_pct > RQ_WAIT_BUSY_PCT)
++		vrate_min = VRATE_MIN;
 +
-+	/* take care of active iocgs */
-+	spin_lock_irq(&ioc->lock);
++	/*
++	 * If vrate is out of bounds, apply clamp gradually as the
++	 * bounds can change abruptly.  Otherwise, apply busy_level
++	 * based adjustment.
++	 */
++	if (vrate < vrate_min) {
++		vrate = div64_u64(vrate * (100 + VRATE_CLAMP_ADJ_PCT), 100);
++		vrate = min(vrate, vrate_min);
++	} else if (vrate > vrate_max) {
++		vrate = div64_u64(vrate * (100 - VRATE_CLAMP_ADJ_PCT), 100);
++		vrate = max(vrate, vrate_max);
++	} else {
++		int idx = min_t(int, abs(ioc->busy_level),
++				ARRAY_SIZE(vrate_adj_pct) - 1);
++		u32 adj_pct = vrate_adj_pct[idx];
 +
-+	ioc_now(ioc, &now);
++		if (ioc->busy_level > 0)
++			adj_pct = 100 - adj_pct;
++		else
++			adj_pct = 100 + adj_pct;
 +
-+	period_vtime = now.vnow - ioc->period_at_vtime;
-+	if (WARN_ON_ONCE(!period_vtime)) {
-+		spin_unlock_irq(&ioc->lock);
-+		return;
++		vrate = clamp(DIV64_U64_ROUND_UP(vrate * adj_pct, 100),
++			      vrate_min, vrate_max);
 +	}
 +
-+	nr_debtors = ioc_check_iocg_state(ioc, &now);
++	ioc->vtime_base_rate = vrate;
++	ioc_refresh_margins(ioc);
++}
 +
- 	commit_weights(ioc);
+ /* take a snapshot of the current [v]time and vrate */
+ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
+ {
+@@ -2320,45 +2358,11 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 	ioc->busy_level = clamp(ioc->busy_level, -1000, 1000);
  
- 	/*
+ 	if (ioc->busy_level > 0 || (ioc->busy_level < 0 && !nr_lagging)) {
+-		u64 vrate = ioc->vtime_base_rate;
+-		u64 vrate_min = ioc->vrate_min, vrate_max = ioc->vrate_max;
+-
+-		/* rq_wait signal is always reliable, ignore user vrate_min */
+-		if (rq_wait_pct > RQ_WAIT_BUSY_PCT)
+-			vrate_min = VRATE_MIN;
+-
+-		/*
+-		 * If vrate is out of bounds, apply clamp gradually as the
+-		 * bounds can change abruptly.  Otherwise, apply busy_level
+-		 * based adjustment.
+-		 */
+-		if (vrate < vrate_min) {
+-			vrate = div64_u64(vrate * (100 + VRATE_CLAMP_ADJ_PCT),
+-					  100);
+-			vrate = min(vrate, vrate_min);
+-		} else if (vrate > vrate_max) {
+-			vrate = div64_u64(vrate * (100 - VRATE_CLAMP_ADJ_PCT),
+-					  100);
+-			vrate = max(vrate, vrate_max);
+-		} else {
+-			int idx = min_t(int, abs(ioc->busy_level),
+-					ARRAY_SIZE(vrate_adj_pct) - 1);
+-			u32 adj_pct = vrate_adj_pct[idx];
+-
+-			if (ioc->busy_level > 0)
+-				adj_pct = 100 - adj_pct;
+-			else
+-				adj_pct = 100 + adj_pct;
++		ioc_refresh_base_vrate(ioc, rq_wait_pct);
+ 
+-			vrate = clamp(DIV64_U64_ROUND_UP(vrate * adj_pct, 100),
+-				      vrate_min, vrate_max);
+-		}
+-
+-		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
++		trace_iocost_ioc_vrate_adj(ioc, ioc->vtime_base_rate,
++					   missed_ppm, rq_wait_pct,
+ 					   nr_lagging, nr_shortages);
+-
+-		ioc->vtime_base_rate = vrate;
+-		ioc_refresh_margins(ioc);
+ 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
+ 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
+ 					   missed_ppm, rq_wait_pct, nr_lagging,
 -- 
 1.8.3.1
 
