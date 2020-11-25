@@ -2,99 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDDC2C3EE7
-	for <lists+linux-block@lfdr.de>; Wed, 25 Nov 2020 12:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC2242C3F1B
+	for <lists+linux-block@lfdr.de>; Wed, 25 Nov 2020 12:32:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgKYLRS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Nov 2020 06:17:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46821 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727885AbgKYLRS (ORCPT
+        id S1728161AbgKYLbJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Nov 2020 06:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgKYLbJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Nov 2020 06:17:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606303037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zu/0xmXlaDABvq6r7zqamQ2WuJBTK7BYJVbbGKeJBKY=;
-        b=AWFLdXJ7ofylgmVaCIuzg1eOlnNcU7213qJEP2vrGcXnTM0TMMxbcGhAtmZ1hHIHKW2+wI
-        qNngsbcIh47ywXS0SpuisnTcguvitLM6oFEWiqIGvemCKkvKNF+jdXYWiZIk6C44N2EUoF
-        sVZHPocM+3fS/GcdWaVpJLCICq5sOVg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-437-UBfojiHJNpiYo2Nr2nIqkQ-1; Wed, 25 Nov 2020 06:17:13 -0500
-X-MC-Unique: UBfojiHJNpiYo2Nr2nIqkQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47B4C1005D44;
-        Wed, 25 Nov 2020 11:17:11 +0000 (UTC)
-Received: from thinkpad.redhat.com (ovpn-113-83.ams2.redhat.com [10.36.113.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 452F3100AE32;
-        Wed, 25 Nov 2020 11:17:08 +0000 (UTC)
-From:   Laurent Vivier <lvivier@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>, Greg Kurz <groug@kaod.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH v2 2/2] powerpc/pseries: pass MSI affinity to irq_create_mapping()
-Date:   Wed, 25 Nov 2020 12:16:57 +0100
-Message-Id: <20201125111657.1141295-3-lvivier@redhat.com>
-In-Reply-To: <20201125111657.1141295-1-lvivier@redhat.com>
-References: <20201125111657.1141295-1-lvivier@redhat.com>
+        Wed, 25 Nov 2020 06:31:09 -0500
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA45C0613D4;
+        Wed, 25 Nov 2020 03:31:08 -0800 (PST)
+Received: by mail-io1-xd42.google.com with SMTP id z136so1026404iof.3;
+        Wed, 25 Nov 2020 03:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lGlvuabGufuxy6ujt/Rc7r7lPdDL7IxgeI87NR4IWa8=;
+        b=aujxCesOJ9iF8uyVKIgwnpJX3SgqGJ6u5G5iAml09Fd7SzN1UI2jk+YmQI0zYMu0sq
+         sxwXLYA/hIdrs8RvMFdR6VrIXPZ8nRwvh3Kl5VXAuctuFlwE/YQkXJf1dPm7+0r4Y5jV
+         s0iOn2G4HfGpafPkuM2pM+1t+D4eQxBRqd6pb8nPNk16hyYzYrQT+kQgFPQfFZ/X/z2J
+         lCO80FuS9DgQk20zkaC9bm3ldapFcIVNwvMjFINfGXy2WrELoyqo+3WNmWKS/wnzBDB0
+         lk13q1jh/u3/Sx2CBG5I40GL/0WWKtEydtSZwrfBAl2R+sUjpgjiG/a2eSGZc6FLdCKw
+         07yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=lGlvuabGufuxy6ujt/Rc7r7lPdDL7IxgeI87NR4IWa8=;
+        b=bPueIiv6cEn0VSUy2vIPdC5OPep2tau2b4D/6AV/ZezPpTbcW5mhQ60auEOI44psap
+         IEsCr8wATN10cfm6RUm3cVkhv8/WrqTXrOn05NClPo4XBW1T3plG+sI72UJixN4xmvWv
+         ZmX3hgzHaC+DG2qiEHQWM7FJDSs4gdrl349kEISfwbwBqgE1AUPTjDy4i0DgGFNYszAg
+         WhaHpacgWuRAJDawQA+60FoWWyqVK1fIMxN5dTYoP1WcTXzKi/YjksmGAEFzPHXxOu6r
+         I5vDJUZiUg860tZBTHY5q96JqNo347xSXazUCyGxhLKhH1GT74PtKP7ms8DT41udcH+k
+         Ix2A==
+X-Gm-Message-State: AOAM531zs9iMh5u0k8+IwVbTCy0XXbUskQQ8eBjY7WtMEQ22X4W01VPl
+        o0to0bZwoUC65EGec7cOMco=
+X-Google-Smtp-Source: ABdhPJwoA5m584VMLHOvmW1s/OSUpuiYo6A68F7i3Hb++UdP5jaalpukZyBEuuOkSrp2FJeUFcwTrQ==
+X-Received: by 2002:a6b:db18:: with SMTP id t24mr2135845ioc.51.1606303867972;
+        Wed, 25 Nov 2020 03:31:07 -0800 (PST)
+Received: from localhost (dhcp-6c-ae-f6-dc-d8-61.cpe.echoes.net. [72.28.8.195])
+        by smtp.gmail.com with ESMTPSA id a7sm944187ioa.50.2020.11.25.03.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2020 03:31:07 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 25 Nov 2020 06:30:45 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     axboe@kernel.dk, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] blk-iocost: Fix some typos in comments
+Message-ID: <X75AZeHmESipRzcH@mtj.duckdns.org>
+References: <cover.1606186717.git.baolin.wang@linux.alibaba.com>
+ <54cf5f249bf91a6d1a0ea18a1024ba1af861f9c5.1606186717.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54cf5f249bf91a6d1a0ea18a1024ba1af861f9c5.1606186717.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With virtio multiqueue, normally each queue IRQ is mapped to a CPU.
+On Tue, Nov 24, 2020 at 11:33:30AM +0800, Baolin Wang wrote:
+> Fix some typos in comments.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-But since commit 0d9f0a52c8b9f ("virtio_scsi: use virtio IRQ affinity")
-this is broken on pseries.
+Acked-by: Tejun Heo <tj@kernel.org>
 
-The affinity is correctly computed in msi_desc but this is not applied
-to the system IRQs.
-
-It appears the affinity is correctly passed to rtas_setup_msi_irqs() but
-lost at this point and never passed to irq_domain_alloc_descs()
-(see commit 06ee6d571f0e ("genirq: Add affinity hint to irq allocation"))
-because irq_create_mapping() doesn't take an affinity parameter.
-
-As the previous patch has added the affinity parameter to
-irq_create_mapping() we can forward the affinity from rtas_setup_msi_irqs()
-to irq_domain_alloc_descs().
-
-With this change, the virtqueues are correctly dispatched between the CPUs
-on pseries.
-
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
----
- arch/powerpc/platforms/pseries/msi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
-index 133f6adcb39c..b3ac2455faad 100644
---- a/arch/powerpc/platforms/pseries/msi.c
-+++ b/arch/powerpc/platforms/pseries/msi.c
-@@ -458,7 +458,8 @@ static int rtas_setup_msi_irqs(struct pci_dev *pdev, int nvec_in, int type)
- 			return hwirq;
- 		}
- 
--		virq = irq_create_mapping(NULL, hwirq);
-+		virq = irq_create_mapping_affinity(NULL, hwirq,
-+						   entry->affinity);
- 
- 		if (!virq) {
- 			pr_debug("rtas_msi: Failed mapping hwirq %d\n", hwirq);
 -- 
-2.28.0
-
+tejun
