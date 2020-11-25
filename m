@@ -2,69 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6CE82C4672
-	for <lists+linux-block@lfdr.de>; Wed, 25 Nov 2020 18:09:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B322C474E
+	for <lists+linux-block@lfdr.de>; Wed, 25 Nov 2020 19:12:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732606AbgKYRGq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Nov 2020 12:06:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730608AbgKYRGp (ORCPT
+        id S1731621AbgKYSL5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Nov 2020 13:11:57 -0500
+Received: from 2.mo52.mail-out.ovh.net ([178.33.105.233]:59181 "EHLO
+        2.mo52.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730774AbgKYSL5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Nov 2020 12:06:45 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B07EC0613D4;
-        Wed, 25 Nov 2020 09:06:45 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id g14so2603404wrm.13;
-        Wed, 25 Nov 2020 09:06:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=dGJMb77GDzWChJEAI+yrqcqxPKMRYlsd94NoVMVof0f7TOQt2ljYJBd9nOY48D5qFg
-         w8+Qq5haLAKauxgwcYba8jKXk9vFFq+CBMWcAmztrn0BPA6pcIbBZiSckcxme9lY6C9f
-         FX6DCQkAtGBb/6vOFqKqLS0b9iy7PljIb0s2blcxA8ZgKFZzVgSzMo98RF9Yd6KmAOE4
-         ECtRdyujmvD6LYm1J7BNb0lVMMLOWznjvJVUb88eMf86G7By8m28dIWpzNlSGKfEmbyb
-         QDIXNkxgMCMRB9+L2zzuhA4x4pb1hr43ZNgQOhhIq0k5d2qr95jHBbwhaHHxoemL86/2
-         xXeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=qdkpB3O0mQagmXzrciyFqvBXFL0w00r4Scjq9tapAx8M1/zXnfVhy6F7TxRr2hUxvM
-         t1aw9ovo/aWjHvX198Ey2VGlbODpdfLSfcC7Whzb0ey1/SMFhN43ji85FPT8frRschNM
-         lvvwDO1HN1ogHqlPU679ZPhbf5/YFpnrlJhkyv8go6FEZ/mNBryk9InkH3JUQslM3ikz
-         JIB8zNjWURxZ2nwJZ2bWkWYBtf5CioTPnXeXYTXAiDLC4sw5t28Za5jsiNnJNEDEkfFo
-         7z+fgsAYUtRqXAoDpfdh2U5E8F/+0DgGREhZbl/eI7jhcqlQlOl6IudCz5loolZGZXBI
-         6WhQ==
-X-Gm-Message-State: AOAM531blEnACQ3HhGLl2su7LmV+rLT1FkDgClj/7XpBiSThRDKx/76o
-        ii5slLC3P2odEB2DaK7ewfs=
-X-Google-Smtp-Source: ABdhPJxvwc7n4Xqt4ibmbS8KwNf8fXPFJWQgJq7uzK07W2WKvfD65d/3/9N1QMMxNZyKNYO6zlte6w==
-X-Received: by 2002:adf:cf0b:: with SMTP id o11mr5252247wrj.162.1606324003890;
-        Wed, 25 Nov 2020 09:06:43 -0800 (PST)
-Received: from [192.168.1.152] ([102.64.149.89])
-        by smtp.gmail.com with ESMTPSA id k11sm347089wmj.42.2020.11.25.09.06.32
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Nov 2020 09:06:43 -0800 (PST)
-Message-ID: <5fbe8f23.1c69fb81.304da.190f@mx.google.com>
-From:   "Dailborh R." <micjac8000@gmail.com>
-X-Google-Original-From: Dailborh R.
-Content-Type: text/plain; charset="iso-8859-1"
+        Wed, 25 Nov 2020 13:11:57 -0500
+X-Greylist: delayed 2255 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Nov 2020 13:11:56 EST
+Received: from mxplan5.mail.ovh.net (unknown [10.109.156.21])
+        by mo52.mail-out.ovh.net (Postfix) with ESMTPS id 3A81A217625;
+        Wed, 25 Nov 2020 18:34:19 +0100 (CET)
+Received: from kaod.org (37.59.142.105) by DAG8EX1.mxp5.local (172.16.2.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Wed, 25 Nov
+ 2020 18:34:18 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-105G006b56b7170-7741-40ac-97e5-c5413baab032,
+                    13817E1CA0648EB9EE095497159C33290D197662) smtp.auth=groug@kaod.org
+Date:   Wed, 25 Nov 2020 18:34:12 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Laurent Vivier <lvivier@redhat.com>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Mackerras <paulus@samba.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        <linux-block@vger.kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v3 2/2] powerpc/pseries: pass MSI affinity to
+ irq_create_mapping()
+Message-ID: <20201125183412.351c96ee@bahia.lan>
+In-Reply-To: <5419d1790c9ea0d9d7791ae887794285@kernel.org>
+References: <20201125150932.1150619-1-lvivier@redhat.com>
+        <20201125150932.1150619-3-lvivier@redhat.com>
+        <CAOJe8K1Q7sGf67bdj-2Mthkj4XNR4fOSskV1dyh62AdzefhpAQ@mail.gmail.com>
+        <7184880b-0351-ae18-d2e1-fab7b79fc864@redhat.com>
+        <5419d1790c9ea0d9d7791ae887794285@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Please reply to me
-To:     Recipients <Dailborh@vger.kernel.org>
-Date:   Wed, 25 Nov 2020 17:06:18 +0000
-Reply-To: dailrrob.83@gmail.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [37.59.142.105]
+X-ClientProxiedBy: DAG6EX2.mxp5.local (172.16.2.52) To DAG8EX1.mxp5.local
+ (172.16.2.71)
+X-Ovh-Tracer-GUID: d6bac3c7-d957-44cb-8e9b-55ca8dec327a
+X-Ovh-Tracer-Id: 10779928659030088123
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedujedrudehtddguddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgihesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepfedutdeijeejveehkeeileetgfelteekteehtedtieefffevhffflefftdefleejnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrddutdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehmshhtsehrvgguhhgrthdrtghomh
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I'm Dailborh R. from US. I picked interest in you and I would like to know
-more about you and establish relationship with you. i will wait for
-your response. thank you.
+On Wed, 25 Nov 2020 16:42:30 +0000
+Marc Zyngier <maz@kernel.org> wrote:
+
+> On 2020-11-25 16:24, Laurent Vivier wrote:
+> > On 25/11/2020 17:05, Denis Kirjanov wrote:
+> >> On 11/25/20, Laurent Vivier <lvivier@redhat.com> wrote:
+> >>> With virtio multiqueue, normally each queue IRQ is mapped to a CPU.
+> >>> 
+> >>> But since commit 0d9f0a52c8b9f ("virtio_scsi: use virtio IRQ 
+> >>> affinity")
+> >>> this is broken on pseries.
+> >> 
+> >> Please add "Fixes" tag.
+> > 
+> > In fact, the code in commit 0d9f0a52c8b9f is correct.
+> > 
+> > The problem is with MSI/X irq affinity and pseries. So this patch
+> > fixes more than virtio_scsi. I put this information because this
+> > commit allows to clearly show the problem. Perhaps I should remove
+> > this line in fact?
+> 
+> This patch does not fix virtio_scsi at all, which as you noticed, is
+> correct. It really fixes the PPC MSI setup, which is starting to show
+> its age. So getting rid of the reference seems like the right thing to 
+> do.
+> 
+> I'm also not keen on the BugId thing. It should really be a lore link.
+> I also cannot find any such tag in the kernel, nor is it a documented
+> practice. The last reference to a Bugzilla entry seems to have happened
+> with 786b5219081ff16 (five years ago).
+> 
+
+My bad, I suggested BugId to Laurent but the intent was actually BugLink,
+which seems to be commonly used in the kernel.
+
+Cheers,
+
+--
+Greg
+
+> Thanks,
+> 
+>          M.
 
