@@ -2,184 +2,159 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 087982C5250
-	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 11:47:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DA142C52DF
+	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 12:24:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388368AbgKZKre (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Nov 2020 05:47:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
+        id S1729231AbgKZLXf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Nov 2020 06:23:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388360AbgKZKrd (ORCPT
+        with ESMTP id S1726985AbgKZLXf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Nov 2020 05:47:33 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F34C0617A7
-        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:33 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id k4so1812562edl.0
-        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:33 -0800 (PST)
+        Thu, 26 Nov 2020 06:23:35 -0500
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C1DC0613D4
+        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 03:23:31 -0800 (PST)
+Received: by mail-qt1-x844.google.com with SMTP id v11so852633qtq.12
+        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 03:23:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4cvh6HyOuMNhHZbDU7N8V5pKfLuDMvs/XUaQs3r6Mgo=;
-        b=QSRGZm4LWcLrV18IP8RyMgz8YSZ1BOaXwqudeV3nmtr/yyHNO3HwkN1zbHbuPzPgAx
-         ifmg+7LH9YKC+v902Xzt/6RYPr3dxQdVQfMDPil5iv21N381eLSrz5N6iGhihJflyRhs
-         LMu6yCW676GrRofZ7HTU83iFeTKN9D13ZuHrI/pRXRHYKci2XHlTH94702fIM6gXEm8G
-         HOrUaYFAktNrb4tuBX1Xz9ypiD6+ZZtFuxkzs9T/75LXPtu3UY2DoO5lYnkKlhLwJ5NS
-         m4JojMtRoLgR85luuHeAKogCbl1VItLPKkWAUOvLBNpMyZz3L31+EimWKdw1pTZU7YWB
-         Sn6w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XrSNwmjeL2xlBSl2tAZW+HijmvvVQH72wAR8vpGnQXo=;
+        b=GzZ1XQmgS87zZBJRslZquPaF4ObKOxIO/s+5mLl6L1sC3htxeKLJnHI2XWWIdThUBl
+         gLzkAAsUmxC/M4XJu6MEtigLGtF/BfNURNaIgYwrrcF8cwqnkUFiq6619exAqxYlBBGw
+         tUF/qCIXjGnp3fuj8SbrfCXpyz/srBM5qUZBf78mCauQ1s840wadRY/FFayxLNOU+O0R
+         khaD44weWsS/1PJWg5C7YJs5dW5e8mvJOz4KGknHMoQS/xRLALpmdi6umX1nrZBESpeX
+         qZ7mhXqe8pwhC0RAeuootBgha1lWcmRKv8vwlwbKapii8ehoxC4TV/9/zfm2qDGV+ou9
+         62sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4cvh6HyOuMNhHZbDU7N8V5pKfLuDMvs/XUaQs3r6Mgo=;
-        b=tcKKxwOK7nekuacfDAtEFoHP093PMpGmTG6FQ0b3RkO/0aOxwioWkxHpLSyfV8evAw
-         RKg+UkLi0GdUPb6ONz7kSNBO9zzU5n8VfKg7g1VmCOThvhuUDS95a8vC6uyyQO8tmecj
-         /VLSRfFUuvMhEnpKieKCYRN1mjG6jeVxpktgEnFMEQVs8tNJIvCd2fBT7EhWJEp62C9o
-         TlFdBmPGkSde9NBMDTob5oogd5D9B3kz986YljC5F8SK8z0F6LRTp0MvD87jWR+h9ofB
-         Ii/banv9DsZUfZ2YW7Ju87EOhqJIj2VlzBOodiO3jvNe/NefXED81P1a4Qof6sMGTZqx
-         dQsw==
-X-Gm-Message-State: AOAM53381DkhQSG+sLoWORAeME2DmrCZZEdcx2PGIy/CD6IO2qcI4PKj
-        qWssPaa1OCVwRsmWSiRylAnKXRCAyYTl0Q==
-X-Google-Smtp-Source: ABdhPJztqAjyBMAx1ImaIT5o/MfvoiimNXM1RYHKOOUyjR6fl/9GRChdDtF4kuTkESvXsz4/h/fMjg==
-X-Received: by 2002:a05:6402:176e:: with SMTP id da14mr1907624edb.245.1606387652067;
-        Thu, 26 Nov 2020 02:47:32 -0800 (PST)
-Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4961:8400:6960:35a2:747a:e0ad])
-        by smtp.gmail.com with ESMTPSA id f19sm2910053edm.70.2020.11.26.02.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2020 02:47:31 -0800 (PST)
-From:   Jack Wang <jinpu.wang@cloud.ionos.com>
-To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
-        Lutz Pogrell <lutz.pogrell@cloud.ionos.com>
-Subject: [PATCH for-next 8/8] block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name
-Date:   Thu, 26 Nov 2020 11:47:23 +0100
-Message-Id: <20201126104723.150674-9-jinpu.wang@cloud.ionos.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201126104723.150674-1-jinpu.wang@cloud.ionos.com>
-References: <20201126104723.150674-1-jinpu.wang@cloud.ionos.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XrSNwmjeL2xlBSl2tAZW+HijmvvVQH72wAR8vpGnQXo=;
+        b=EOwNmRDix7h+s8iALiz1hNlr3ATNCnyPsVfFxXEsocAz9snhRdWAlVC/Ivd94EiLpF
+         opVbPV1VEoGHAZKDrbLwdfyZjGvzenGhE2MMhr6g7D5cexmdHYkh5fynCLCB18LUhxxr
+         187P8aSYOA1sFKrNwoefKYk1q87b4i/J14PNoeYhJT/vkxT/BJxEppPgneWMCHSci/ez
+         w3nJ8pyq0VxBnTLHgI9A/WTJA3tvO8SPjwKG3OhStiLUEAS5g2igoLRHXpzgur6tMP8i
+         2OFbxsRmC9BccRigAhA76lR2Yd2Pk5V6TUzQxCr2NmIFa1etPFoR+5zqekSRC0kKV8dc
+         2HfA==
+X-Gm-Message-State: AOAM5311rV4F+wKcv+xkYn+jCeVgPZlAmDan9BlCIx4YNI20MIOs+HZY
+        9WJh69r7O1Vkt9ST5ux12rMEKMZw3nErxNv4/NY=
+X-Google-Smtp-Source: ABdhPJxERWLDQCH71Gu4XFavYkzWv+DeUvRDcTysmZVW7sunLy88fsXZ0Lb3S9KAEsUZrMqKiYq9ZQ8E+NIa9m/f51k=
+X-Received: by 2002:aed:3144:: with SMTP id 62mr2584286qtg.342.1606389810870;
+ Thu, 26 Nov 2020 03:23:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201027045411.GA39796@192.168.3.9> <CAA70yB7bepwNPAMtxth8qJCE6sQM9vxr1A5sU8miFn3tSOSYQQ@mail.gmail.com>
+ <CAA70yB6caVcKjJOTkEZa9ZBzZAHPgYrsr9nZWDgm-tfPMLGXHQ@mail.gmail.com>
+ <20201117032756.GE56247@T590> <CAA70yB4G_1jHYRyVsf_mhHQA-_mGXzaZ6n4Bgtq9n-x1_Yz4rg@mail.gmail.com>
+ <20201117074039.GA74954@T590> <CAA70yB4c_mBxr3ftDd1omU=Piozxw2jKM0nyMmOP9P_hOYjNMQ@mail.gmail.com>
+In-Reply-To: <CAA70yB4c_mBxr3ftDd1omU=Piozxw2jKM0nyMmOP9P_hOYjNMQ@mail.gmail.com>
+From:   Weiping Zhang <zwp10758@gmail.com>
+Date:   Thu, 26 Nov 2020 19:23:19 +0800
+Message-ID: <CAA70yB76dWneSJvtyA=1BFSJit3jzyvBAzJQYO-UHo-KACSZ9g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] fix inaccurate io_ticks
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>,
+        mpatocka@redhat.com, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+Ping
 
-For every rnbd_clt_dev, we alloc the pathname and blk_symlink_name
-statically to NAME_MAX which is 255 bytes. In most of the cases we only
-need less than 10 bytes, so 500 bytes per block device are wasted.
-
-This commit dynamically allocates memory buffer for pathname and
-blk_symlink_name.
-
-Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Reviewed-by: Lutz Pogrell <lutz.pogrell@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
----
- drivers/block/rnbd/rnbd-clt-sysfs.c | 12 ++++++++++--
- drivers/block/rnbd/rnbd-clt.c       | 14 +++++++++++---
- drivers/block/rnbd/rnbd-clt.h       |  4 ++--
- 3 files changed, 23 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
-index e3c3270b0cee..c3c96a567568 100644
---- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-@@ -434,6 +434,7 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
- 	 */
- 	if (strlen(dev->blk_symlink_name) && try_module_get(THIS_MODULE)) {
- 		sysfs_remove_link(rnbd_devs_kobj, dev->blk_symlink_name);
-+		kfree(dev->blk_symlink_name);
- 		module_put(THIS_MODULE);
- 	}
- }
-@@ -492,10 +493,17 @@ static int rnbd_clt_get_path_name(struct rnbd_clt_dev *dev, char *buf,
- static int rnbd_clt_add_dev_symlink(struct rnbd_clt_dev *dev)
- {
- 	struct kobject *gd_kobj = &disk_to_dev(dev->gd)->kobj;
--	int ret;
-+	int ret, len;
-+
-+	len = strlen(dev->pathname) + strlen(dev->sess->sessname) + 2;
-+	dev->blk_symlink_name = kzalloc(len, GFP_KERNEL);
-+	if (!dev->blk_symlink_name) {
-+		rnbd_clt_err(dev, "Failed to allocate memory for blk_symlink_name\n");
-+		goto out_err;
-+	}
- 
- 	ret = rnbd_clt_get_path_name(dev, dev->blk_symlink_name,
--				      sizeof(dev->blk_symlink_name));
-+				      len);
- 	if (ret) {
- 		rnbd_clt_err(dev, "Failed to get /sys/block symlink path, err: %d\n",
- 			      ret);
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 1bb495e50931..34bc6083b58d 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -59,6 +59,7 @@ static void rnbd_clt_put_dev(struct rnbd_clt_dev *dev)
- 	ida_simple_remove(&index_ida, dev->clt_device_id);
- 	mutex_unlock(&ida_lock);
- 	kfree(dev->hw_queues);
-+	kfree(dev->pathname);
- 	rnbd_clt_put_sess(dev->sess);
- 	mutex_destroy(&dev->lock);
- 	kfree(dev);
-@@ -1387,10 +1388,17 @@ static struct rnbd_clt_dev *init_dev(struct rnbd_clt_session *sess,
- 		       pathname, sess->sessname, ret);
- 		goto out_queues;
- 	}
-+
-+	dev->pathname = kzalloc(strlen(pathname) + 1, GFP_KERNEL);
-+	if (!dev->pathname) {
-+		ret = -ENOMEM;
-+		goto out_queues;
-+	}
-+	strlcpy(dev->pathname, pathname, strlen(pathname) + 1);
-+
- 	dev->clt_device_id	= ret;
- 	dev->sess		= sess;
- 	dev->access_mode	= access_mode;
--	strlcpy(dev->pathname, pathname, sizeof(dev->pathname));
- 	mutex_init(&dev->lock);
- 	refcount_set(&dev->refcount, 1);
- 	dev->dev_state = DEV_STATE_INIT;
-@@ -1422,8 +1430,8 @@ static bool __exists_dev(const char *pathname, const char *sessname)
- 			continue;
- 		mutex_lock(&sess->lock);
- 		list_for_each_entry(dev, &sess->devs_list, list) {
--			if (!strncmp(dev->pathname, pathname,
--				     sizeof(dev->pathname))) {
-+			if (strlen(dev->pathname) == strlen(pathname) &&
-+			    !strcmp(dev->pathname, pathname)) {
- 				found = true;
- 				break;
- 			}
-diff --git a/drivers/block/rnbd/rnbd-clt.h b/drivers/block/rnbd/rnbd-clt.h
-index ed33654aa486..b193d5904050 100644
---- a/drivers/block/rnbd/rnbd-clt.h
-+++ b/drivers/block/rnbd/rnbd-clt.h
-@@ -108,7 +108,7 @@ struct rnbd_clt_dev {
- 	u32			clt_device_id;
- 	struct mutex		lock;
- 	enum rnbd_clt_dev_state	dev_state;
--	char			pathname[NAME_MAX];
-+	char			*pathname;
- 	enum rnbd_access_mode	access_mode;
- 	bool			read_only;
- 	bool			rotational;
-@@ -126,7 +126,7 @@ struct rnbd_clt_dev {
- 	struct list_head        list;
- 	struct gendisk		*gd;
- 	struct kobject		kobj;
--	char			blk_symlink_name[NAME_MAX];
-+	char			*blk_symlink_name;
- 	refcount_t		refcount;
- 	struct work_struct	unmap_on_rmmod_work;
- };
--- 
-2.25.1
-
+On Wed, Nov 18, 2020 at 1:55 PM Weiping Zhang <zwp10758@gmail.com> wrote:
+>
+> On Tue, Nov 17, 2020 at 3:40 PM Ming Lei <ming.lei@redhat.com> wrote:
+> >
+> > On Tue, Nov 17, 2020 at 12:59:46PM +0800, Weiping Zhang wrote:
+> > > On Tue, Nov 17, 2020 at 11:28 AM Ming Lei <ming.lei@redhat.com> wrote:
+> > > >
+> > > > On Tue, Nov 17, 2020 at 11:01:49AM +0800, Weiping Zhang wrote:
+> > > > > Hi Jens,
+> > > > >
+> > > > > Ping
+> > > >
+> > > > Hello Weiping,
+> > > >
+> > > > Not sure we have to fix this issue, and adding blk_mq_queue_inflight()
+> > > > back to IO path brings cost which turns out to be visible, and I did
+> > > > get soft lockup report on Azure NVMe because of this kind of cost.
+> > > >
+> > > Have you test v5, this patch is different from v1, the v1 gets
+> > > inflight for each IO,
+> > > v5 has changed to get inflight every jiffer.
+> >
+> > I meant the issue can be reproduced on kernel before 5b18b5a73760("block:
+> > delete part_round_stats and switch to less precise counting").
+> >
+> > Also do we really need to fix this issue? I understand device
+> > utilization becomes not accurate at very small load, is it really
+> > worth of adding runtime load in fast path for fixing this issue?
+> >
+> Hello Ming,
+>
+> The problem is user hard to know how busy disk is,
+> for small load, it shows high utilization, for heavy load it also shows
+> high utilization, that makes %util meaningless.
+>
+> The following test case shows a big gap with same workload:
+>
+> modprobe null_blk submit_queues=8 queue_mode=2 irqmode=2 completion_nsec=100000
+> fio -name=test -ioengine=sync -bs=4K -rw=write -filename=/dev/nullb0
+> -size=100M -time_based=1 -direct=1 -runtime=300 -rate=4m &
+>
+>                         w/s   w_await  %util
+> -----------------------------------------------
+> before patch 1024         0.15  100
+> after   patch  1024         0.15  14.5
+>
+> I know for hyper speed disk, add such accounting in fast path is harmful,
+> maybe we add an interface to enable/disable io_ticks accounting, like
+> what /sys/block/<disk>/queue/iostat does.
+>
+> eg: /sys/block/<disk>/queue/iostat_io_ticks
+> when write 0 to it, just disable io_ticks totally.
+>
+> Or any other good idea ?
+>
+> > >
+> > > If for v5, can we reproduce it on null_blk ?
+> >
+> > No, I just saw report on Azure NVMe.
+> >
+> > >
+> > > > BTW, suppose the io accounting issue needs to be fixed, just wondering
+> > > > why not simply revert 5b18b5a73760 ("block: delete part_round_stats and
+> > > > switch to less precise counting"), and the original way had been worked
+> > > > for decades.
+> > > >
+> > > This patch is more better than before, it will break early when find there is
+> > > inflight io on any cpu, for the worst case(the io in running on the last cpu),
+> > > it iterates all cpus.
+> >
+> Yes, it's the worst case.
+> Actually v5 has two improvements compare to before 5b18b5a73760:
+> 1. for io end, v5 do not get inflight count
+> 2. for io start, v5 just find the first inflight io in any cpu, for
+> the worst case it does same as before.
+>
+> > Please see the following case:
+> >
+> > 1) one device has 256 hw queues, and the system has 256 cpu cores, and
+> > each hw queue's depth is 1k.
+> >
+> > 2) there isn't any io load on CPUs(0 ~ 254)
+> >
+> > 3) heavy io load is run on CPU 255
+> >
+> > So with your trick the code still need to iterate hw queues from 0 to 254, and
+> > the load isn't something which can be ignored. Especially it is just for
+> > io accounting.
+> >
+> >
+> > Thanks,
+> > Ming
+> >
+> Thanks
