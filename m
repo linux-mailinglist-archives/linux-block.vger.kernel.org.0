@@ -2,163 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC762C5015
-	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 09:17:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E89FD2C501E
+	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 09:17:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388697AbgKZIQ1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Nov 2020 03:16:27 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:34808 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728901AbgKZIQ1 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Nov 2020 03:16:27 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UGa-lFP_1606378582;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UGa-lFP_1606378582)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 26 Nov 2020 16:16:23 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     axboe@kernel.dk, tj@kernel.org
-Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] blk-iocost: Factor out the base vrate change into a separate function
-Date:   Thu, 26 Nov 2020 16:16:15 +0800
-Message-Id: <6d14f8c88beee6561cf0ab091e3bbf0a60fb8e34.1606378475.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1606378475.git.baolin.wang@linux.alibaba.com>
-References: <cover.1606378475.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1606378475.git.baolin.wang@linux.alibaba.com>
-References: <cover.1606378475.git.baolin.wang@linux.alibaba.com>
+        id S2388770AbgKZIQy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Nov 2020 03:16:54 -0500
+Received: from verein.lst.de ([213.95.11.211]:33418 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388774AbgKZIQy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 26 Nov 2020 03:16:54 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AF45968B02; Thu, 26 Nov 2020 09:16:50 +0100 (CET)
+Date:   Thu, 26 Nov 2020 09:16:50 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        dm-devel@redhat.com, Richard Weinberger <richard@nod.at>,
+        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 25/45] block: reference struct block_device from struct
+ hd_struct
+Message-ID: <20201126081650.GA18807@lst.de>
+References: <20201124132751.3747337-1-hch@lst.de> <20201124132751.3747337-26-hch@lst.de> <X714udEyPuGarVYp@mtj.duckdns.org> <20201125164515.GB1975@lst.de> <X768hzEnD/ySog5b@mtj.duckdns.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <X768hzEnD/ySog5b@mtj.duckdns.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Factor out the base vrate change code into a separate function
-to fimplify the ioc_timer_fn().
+On Wed, Nov 25, 2020 at 03:20:23PM -0500, Tejun Heo wrote:
+> Agreed. It'd be nice to replace the stale comment.
 
-No functional change.
+I've updated the comment.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- block/blk-iocost.c | 99 +++++++++++++++++++++++++++++-------------------------
- 1 file changed, 54 insertions(+), 45 deletions(-)
+> > Jan added lookup_sem in commit 56c0908c855afbb to prevent a three way
+> > race between del_gendisk and blkdev_open due to the weird bdev vs
+> > gendisk lifetime rules.  None of that can happen with the new lookup
+> > scheme.
+> 
+> Understood. I think it'd be worthwhile to note that in the commit log.
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 93abfe0..8348db4 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -971,6 +971,58 @@ static void ioc_refresh_vrate(struct ioc *ioc, struct ioc_now *now)
- 	ioc->vtime_err = clamp(ioc->vtime_err, -vperiod, vperiod);
- }
- 
-+static void ioc_adjust_base_vrate(struct ioc *ioc, u32 rq_wait_pct,
-+				  int nr_lagging, int nr_shortages,
-+				  int prev_busy_level, u32 *missed_ppm)
-+{
-+	u64 vrate = ioc->vtime_base_rate;
-+	u64 vrate_min = ioc->vrate_min, vrate_max = ioc->vrate_max;
-+
-+	if (!ioc->busy_level || (ioc->busy_level < 0 && nr_lagging)) {
-+		if (ioc->busy_level != prev_busy_level || nr_lagging)
-+			trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
-+						   missed_ppm, rq_wait_pct,
-+						   nr_lagging, nr_shortages);
-+
-+		return;
-+	}
-+
-+	/* rq_wait signal is always reliable, ignore user vrate_min */
-+	if (rq_wait_pct > RQ_WAIT_BUSY_PCT)
-+		vrate_min = VRATE_MIN;
-+
-+	/*
-+	 * If vrate is out of bounds, apply clamp gradually as the
-+	 * bounds can change abruptly.  Otherwise, apply busy_level
-+	 * based adjustment.
-+	 */
-+	if (vrate < vrate_min) {
-+		vrate = div64_u64(vrate * (100 + VRATE_CLAMP_ADJ_PCT), 100);
-+		vrate = min(vrate, vrate_min);
-+	} else if (vrate > vrate_max) {
-+		vrate = div64_u64(vrate * (100 - VRATE_CLAMP_ADJ_PCT), 100);
-+		vrate = max(vrate, vrate_max);
-+	} else {
-+		int idx = min_t(int, abs(ioc->busy_level),
-+				ARRAY_SIZE(vrate_adj_pct) - 1);
-+		u32 adj_pct = vrate_adj_pct[idx];
-+
-+		if (ioc->busy_level > 0)
-+			adj_pct = 100 - adj_pct;
-+		else
-+			adj_pct = 100 + adj_pct;
-+
-+		vrate = clamp(DIV64_U64_ROUND_UP(vrate * adj_pct, 100),
-+			      vrate_min, vrate_max);
-+	}
-+
-+	trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
-+				   nr_lagging, nr_shortages);
-+
-+	ioc->vtime_base_rate = vrate;
-+	ioc_refresh_margins(ioc);
-+}
-+
- /* take a snapshot of the current [v]time and vrate */
- static void ioc_now(struct ioc *ioc, struct ioc_now *now)
- {
-@@ -2323,51 +2375,8 @@ static void ioc_timer_fn(struct timer_list *timer)
- 
- 	ioc->busy_level = clamp(ioc->busy_level, -1000, 1000);
- 
--	if (ioc->busy_level > 0 || (ioc->busy_level < 0 && !nr_lagging)) {
--		u64 vrate = ioc->vtime_base_rate;
--		u64 vrate_min = ioc->vrate_min, vrate_max = ioc->vrate_max;
--
--		/* rq_wait signal is always reliable, ignore user vrate_min */
--		if (rq_wait_pct > RQ_WAIT_BUSY_PCT)
--			vrate_min = VRATE_MIN;
--
--		/*
--		 * If vrate is out of bounds, apply clamp gradually as the
--		 * bounds can change abruptly.  Otherwise, apply busy_level
--		 * based adjustment.
--		 */
--		if (vrate < vrate_min) {
--			vrate = div64_u64(vrate * (100 + VRATE_CLAMP_ADJ_PCT),
--					  100);
--			vrate = min(vrate, vrate_min);
--		} else if (vrate > vrate_max) {
--			vrate = div64_u64(vrate * (100 - VRATE_CLAMP_ADJ_PCT),
--					  100);
--			vrate = max(vrate, vrate_max);
--		} else {
--			int idx = min_t(int, abs(ioc->busy_level),
--					ARRAY_SIZE(vrate_adj_pct) - 1);
--			u32 adj_pct = vrate_adj_pct[idx];
--
--			if (ioc->busy_level > 0)
--				adj_pct = 100 - adj_pct;
--			else
--				adj_pct = 100 + adj_pct;
--
--			vrate = clamp(DIV64_U64_ROUND_UP(vrate * adj_pct, 100),
--				      vrate_min, vrate_max);
--		}
--
--		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
--					   nr_lagging, nr_shortages);
--
--		ioc->vtime_base_rate = vrate;
--		ioc_refresh_margins(ioc);
--	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
--		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
--					   missed_ppm, rq_wait_pct, nr_lagging,
--					   nr_shortages);
--	}
-+	ioc_adjust_base_vrate(ioc, rq_wait_pct, nr_lagging, nr_shortages,
-+			      prev_busy_level, missed_ppm);
- 
- 	ioc_refresh_params(ioc, false);
- 
--- 
-1.8.3.1
-
+So after the idea of just holding a disk reference from each bdev did
+not work out very well I've reworked this a bit, and lookup_sem stays,
+but becomes global to protect the disk lookup (similar to the previous
+global bdev_map_lock).
