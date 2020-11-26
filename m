@@ -2,45 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2F222C50A1
-	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 09:37:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3E292C50A3
+	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 09:37:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgKZIgL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Nov 2020 03:36:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46082 "EHLO
+        id S1728364AbgKZIgN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Nov 2020 03:36:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60179 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728364AbgKZIgK (ORCPT
+        by vger.kernel.org with ESMTP id S1728698AbgKZIgN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Nov 2020 03:36:10 -0500
+        Thu, 26 Nov 2020 03:36:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606379770;
+        s=mimecast20190719; t=1606379772;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lCz5ifcT7O2+wDdEnfcaQQvtu4Jd45LXFSIcs0dZ4Oo=;
-        b=SayaGnEsAf2pQCf7dzyymkz6EoNFpCHlbNTV8d7mAB9PQGxbvZ0C0IpbbBIJuGkyzvo7SN
-        yfiu4zSpU9SM9H/2xRSsBwgv5MxITdlQv0HCwasg5EXczon4Q6gKIYRSvmZMcpP1l2KUFi
-        JHOThP3EnxJfDI38efVZLQQAYBBdgBo=
+        bh=1wEeIHBFqdeT2BNPcW+1wYEqAC+uZW5kXPJtQYxi8fo=;
+        b=ZOw9uQzFxMoFzXCjippI02b6pCL81Gweo7CR3W0FTqOmppyp+3MWXYgz7uaT3Bzd2JDP3w
+        N39bNn73uHTDP1fvyfMPw9uB8Kf5n9yIgmY4zNHQoyyJgqpUcprEE40L8m9XUeMlSqzQMd
+        JHz97qidrsOUVz+Wr/nc40MZyf4jZMA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-G4Ty0S98OrSs0KpjHCQsRQ-1; Thu, 26 Nov 2020 03:36:07 -0500
-X-MC-Unique: G4Ty0S98OrSs0KpjHCQsRQ-1
+ us-mta-166-ez99gfV2PIahdMcY8YG5eA-1; Thu, 26 Nov 2020 03:36:09 -0500
+X-MC-Unique: ez99gfV2PIahdMcY8YG5eA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507161012E83;
-        Thu, 26 Nov 2020 08:36:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A604E80ED8A;
+        Thu, 26 Nov 2020 08:36:08 +0000 (UTC)
 Received: from dhcp-12-105.nay.redhat.com (unknown [10.66.61.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78B9719C66;
-        Thu, 26 Nov 2020 08:36:04 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA58519C66;
+        Thu, 26 Nov 2020 08:36:06 +0000 (UTC)
 From:   Yi Zhang <yi.zhang@redhat.com>
 To:     osandov@osandov.com, bvanassche@acm.org
 Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
         sagi@grimberg.me
-Subject: [PATCH V3 blktests 4/5] common/rc: _have_iproute2 fix for "ip -V" change
-Date:   Thu, 26 Nov 2020 16:35:31 +0800
-Message-Id: <20201126083532.27509-5-yi.zhang@redhat.com>
+Subject: [PATCH V3 blktests 5/5] common/multipath-over-rdma: allow to set use_siw
+Date:   Thu, 26 Nov 2020 16:35:32 +0800
+Message-Id: <20201126083532.27509-6-yi.zhang@redhat.com>
 In-Reply-To: <20201126083532.27509-1-yi.zhang@redhat.com>
 References: <20201126083532.27509-1-yi.zhang@redhat.com>
 MIME-Version: 1.0
@@ -50,31 +50,31 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With below commit, the version will be updated base on the tag
-fbef6555 replace SNAPSHOT with auto-generated version string
+With this change, we can change to use siw for nvme-rdma/nvmeof-mp/srp
+testing from cmdline:
 
-To reproduce it:
-$ ./check srp/015
-common/rc: line 98: [: ip utility, iproute2-5.9.0: integer expression expected
+$ use_siw=1 nvme-trtype=rdma ./check nvme/
+$ use_siw=1 ./check nvmeof-mp/
+$ use_siw=1 ./check srp/
 
 Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
 ---
- common/rc | 2 +-
+ common/multipath-over-rdma | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/common/rc b/common/rc
-index 0d7a3cd..37eb873 100644
---- a/common/rc
-+++ b/common/rc
-@@ -95,7 +95,7 @@ _have_iproute2() {
- 		SKIP_REASON="ip utility not found"
- 		return 1
- 	fi
--	if [ "$snapshot" -lt "$1" ]; then
-+	if [[ "$snapshot" =~ ^[0-9]+$ && "$snapshot" -lt "$1" ]]; then
- 		SKIP_REASON="ip utility too old"
- 		return 1
- 	fi
+diff --git a/common/multipath-over-rdma b/common/multipath-over-rdma
+index ba6fa0d..b12dec3 100644
+--- a/common/multipath-over-rdma
++++ b/common/multipath-over-rdma
+@@ -12,7 +12,7 @@ filesystem_type=ext4
+ fio_aux_path=/tmp/fio-state-files
+ memtotal=$(sed -n 's/^MemTotal:[[:blank:]]*\([0-9]*\)[[:blank:]]*kB$/\1/p' /proc/meminfo)
+ max_ramdisk_size=$((1<<25))
+-use_siw=
++use_siw=${use_siw:-""}
+ ramdisk_size=$((memtotal*(1024/16)))  # in bytes
+ if [ $ramdisk_size -gt $max_ramdisk_size ]; then
+ 	ramdisk_size=$max_ramdisk_size
 -- 
 2.21.0
 
