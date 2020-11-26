@@ -2,59 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FAC12C524F
-	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 11:47:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75C4F2C5251
+	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 11:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388341AbgKZKrc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Nov 2020 05:47:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59732 "EHLO
+        id S2388360AbgKZKre (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Nov 2020 05:47:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388340AbgKZKrb (ORCPT
+        with ESMTP id S2388371AbgKZKre (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Nov 2020 05:47:31 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931E7C0613D4
-        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:31 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id d17so342826ejy.9
-        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:31 -0800 (PST)
+        Thu, 26 Nov 2020 05:47:34 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8679AC0613D4
+        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:32 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id mc24so2253671ejb.6
+        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 02:47:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LoZdjc+EEym8aqHt4kiTDOTP1U08c51WASyvgO99dkc=;
-        b=Lc+W67HrjUAN0y+dJrInUdaNYqCoXPhcTUhclxy+/ViGaYNNngChrEjXO95JusyQv1
-         sPJVf9qE33z55eRoWLsWuEns7IKH8vt4dEZ+sCGrc8PYcN2qthVlYblS8U2BgKI72s3i
-         ptWW0938fgaMl8l6jBEpQHBirw5XLpSJw6xVEgq59pP3FMrXh8DtJG3G+46wXitpC5mz
-         btijiA5URyhDVdxJuBnBRDZ0Tq2vZhCSfyGEkW3/LJVT9ESuWRRVVJz0nkJkHCDXH4IK
-         zv0xhgag+uYx2OkS32EjhTT+Niv82o8eglzi29ieiaNfqu1mLPBixx2BYeITfQ7EG4It
-         JiNw==
+        bh=89v079U432pNB380YF5DCvbaMnPCcXZlFPoWl982ARA=;
+        b=EPdz6+CwHOo3zXI3fcS+IB/TmT0SbtM6X+1QcHJxTOSCKFZzapNrQUIbIS40BLnbPL
+         U7KU3jDWhwe6rjLAar55z05bbtrihbMXwkFGLdVcEfxEMlI8k3qOaN+wIZuC1XG7iqvX
+         I/QUoOKYdkwu+ReWqjlQJ4qXSWT3ZlukgYAlwNPyjDKwZ3+/ShY8UXDiK99OpyvfrnIH
+         Vvu5f7H8ttlBs+LVTRZ1eijvgd74Kss0wu3e8BP6gxjx1k7DEFTmeiBP/mfIJTsZ1pDF
+         hLemGCxQKUPJkSupCWsdRVI1PzViuaxsGF6Lj6q9JvLPm5muKQmqXgamrouPncmNZf/T
+         VCyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LoZdjc+EEym8aqHt4kiTDOTP1U08c51WASyvgO99dkc=;
-        b=RNUXDOCjo5xGYdfUidnZMv3pwABAWQmX2WibbU6ZN9G+m9En7DNLTE44vBzTYf/hpR
-         hFyKHrJGofp4EGN621Dj8HYOodpyszwYFi4D4gN1ZSkLlhTlladpp7/+4wD7WjOwHCia
-         GtOQ9ayPcmi0AhV6rT+jVRsT3UXrKd7V3NZosLJkjq4FMEKJjYyI8syIL85cyEWaMylU
-         hdfjAawe/+Rvs9imk5l22BVDSUU2lWK/IIPZHL6jClJhYonWRttoexJ+EHOts6UZbUj2
-         MuGGnHuXiuMaotYLtCumhorzCFkC2giUbcCoowuRhy4Dx+zB8GiaBVlk4mya83RFBgkP
-         6EKA==
-X-Gm-Message-State: AOAM5320RZPMOctKkoRYB2quAbLZjXb4b/2hfja0Nyem0BlFOIMGuxU7
-        WJ6jhkrxSH4d+R3BQXUzcw0oh7V/l94X4A==
-X-Google-Smtp-Source: ABdhPJxmJ/4CVN+23ANkNxVHaDnY1UrCMVspZBvkJbWgZ5JZHq0+rr55ym5yzjmcCUMvqDwUk3r6vw==
-X-Received: by 2002:a17:906:604e:: with SMTP id p14mr2126458ejj.515.1606387650148;
-        Thu, 26 Nov 2020 02:47:30 -0800 (PST)
+        bh=89v079U432pNB380YF5DCvbaMnPCcXZlFPoWl982ARA=;
+        b=XUyUxlR1I1eQoeg1FA5p00Y+uJIJEvQw2dhxZjuQEZ2wdyiABQ1WFf77L+hmOHl2DU
+         N7Now6N4k9jdJHqNNhEA2jSbehxNUg/hAF+So8lO+vNvLFE2C2MuFvSnn2QtWqcHAG9H
+         9paiVeiNhv+8bfRhbhdfZIge1jYb4uB+DPdA4k8L7NxZywbNDMk+7On3JyP3TwQ6kd0i
+         1QbcuRqa1iptx3lRiBYOBBl732SF13FOhNXYP/7tnDx7sPky/wkBoDrT8ICcvae54bjz
+         gl1Xqz+BXa9D0R2//EZeyPt9+ou95ULjuLo/HRaIKaUNMWYHYGhsOQXlth28soKVuG+k
+         yePQ==
+X-Gm-Message-State: AOAM533DmUZ3laTnendj70hus9z9pa9w8OGQOHsJMJXpyCh0/rFa2vCd
+        znfsjAR4A2lTPHO6HTBbaavK4mgKr2w8zA==
+X-Google-Smtp-Source: ABdhPJxlFirjF1XPWyzEcppZ9gGDiwRGfqAILNnQztMw76Pp693hYyJ7H4WF7FE0gmE5OUiTJ5lqhg==
+X-Received: by 2002:a17:906:b53:: with SMTP id v19mr2118147ejg.250.1606387651154;
+        Thu, 26 Nov 2020 02:47:31 -0800 (PST)
 Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4961:8400:6960:35a2:747a:e0ad])
-        by smtp.gmail.com with ESMTPSA id f19sm2910053edm.70.2020.11.26.02.47.29
+        by smtp.gmail.com with ESMTPSA id f19sm2910053edm.70.2020.11.26.02.47.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2020 02:47:29 -0800 (PST)
+        Thu, 26 Nov 2020 02:47:30 -0800 (PST)
 From:   Jack Wang <jinpu.wang@cloud.ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, danil.kipnis@cloud.ionos.com
-Subject: [PATCH for-next 6/8] Documentation/ABI/rnbd-srv: add document for force_close
-Date:   Thu, 26 Nov 2020 11:47:21 +0100
-Message-Id: <20201126104723.150674-7-jinpu.wang@cloud.ionos.com>
+        bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+Subject: [PATCH for-next 7/8] block/rnbd: call kobject_put in the failure path
+Date:   Thu, 26 Nov 2020 11:47:22 +0100
+Message-Id: <20201126104723.150674-8-jinpu.wang@cloud.ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201126104723.150674-1-jinpu.wang@cloud.ionos.com>
 References: <20201126104723.150674-1-jinpu.wang@cloud.ionos.com>
@@ -64,29 +66,100 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-describe force_close of device
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
+Per the comment of kobject_init_and_add, we need to cleanup the memory
+by call kobject_put.
+
+Also we need to call kobject_del for the other failure cases if the
+kobject_init_and_add doesn't fail.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Reviewed-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 ---
- Documentation/ABI/testing/sysfs-class-rnbd-server | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/block/rnbd/rnbd-clt-sysfs.c |  4 +++-
+ drivers/block/rnbd/rnbd-srv-sysfs.c | 28 ++++++++++++++++------------
+ 2 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-rnbd-server b/Documentation/ABI/testing/sysfs-class-rnbd-server
-index ba60a90c0e45..6c5996cd7cfb 100644
---- a/Documentation/ABI/testing/sysfs-class-rnbd-server
-+++ b/Documentation/ABI/testing/sysfs-class-rnbd-server
-@@ -48,3 +48,11 @@ Date:		Feb 2020
- KernelVersion:	5.7
- Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
- Description:	Contains the device access mode: ro, rw or migration.
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/<session-name>/force_close
-+Date:		Nov 2020
-+KernelVersion:	5.10
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Write "1" to the file to close the device on server side. Please
-+		note that the client side device will not be closed, read or
-+		write to the device will get -ENOTCONN.
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index 5d3c3c80dab4..e3c3270b0cee 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -450,9 +450,11 @@ static int rnbd_clt_add_dev_kobj(struct rnbd_clt_dev *dev)
+ 
+ 	ret = kobject_init_and_add(&dev->kobj, &rnbd_dev_ktype, gd_kobj, "%s",
+ 				   "rnbd");
+-	if (ret)
++	if (ret) {
+ 		rnbd_clt_err(dev, "Failed to create device sysfs dir, err: %d\n",
+ 			      ret);
++		kobject_put(&dev->kobj);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
+index 08ffb492ebfa..05ffe488ddc6 100644
+--- a/drivers/block/rnbd/rnbd-srv-sysfs.c
++++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
+@@ -47,13 +47,17 @@ int rnbd_srv_create_dev_sysfs(struct rnbd_srv_dev *dev,
+ 
+ 	ret = kobject_init_and_add(&dev->dev_kobj, &dev_ktype,
+ 				   rnbd_devs_kobj, dev_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&dev->dev_kobj);
+ 		return ret;
++	}
+ 
+ 	dev->dev_sessions_kobj = kobject_create_and_add("sessions",
+ 							&dev->dev_kobj);
+-	if (!dev->dev_sessions_kobj)
+-		goto put_dev_kobj;
++	if (!dev->dev_sessions_kobj) {
++		ret = -ENOMEM;
++		goto free_dev_kobj;
++	}
+ 
+ 	bdev_kobj = &disk_to_dev(bdev->bd_disk)->kobj;
+ 	ret = sysfs_create_link(&dev->dev_kobj, bdev_kobj, "block_dev");
+@@ -64,7 +68,8 @@ int rnbd_srv_create_dev_sysfs(struct rnbd_srv_dev *dev,
+ 
+ put_sess_kobj:
+ 	kobject_put(dev->dev_sessions_kobj);
+-put_dev_kobj:
++free_dev_kobj:
++	kobject_del(&dev->dev_kobj);
+ 	kobject_put(&dev->dev_kobj);
+ 	return ret;
+ }
+@@ -196,18 +201,17 @@ int rnbd_srv_create_dev_session_sysfs(struct rnbd_srv_sess_dev *sess_dev)
+ 	ret = kobject_init_and_add(&sess_dev->kobj, &rnbd_srv_sess_dev_ktype,
+ 				   sess_dev->dev->dev_sessions_kobj, "%s",
+ 				   sess_dev->sess->sessname);
+-	if (ret)
++	if (ret) {
++		kobject_put(&sess_dev->kobj);
+ 		return ret;
++	}
+ 
+ 	ret = sysfs_create_group(&sess_dev->kobj,
+ 				 &rnbd_srv_default_dev_session_attr_group);
+-	if (ret)
+-		goto err;
+-
+-	return 0;
+-
+-err:
+-	kobject_put(&sess_dev->kobj);
++	if (ret) {
++		kobject_del(&sess_dev->kobj);
++		kobject_put(&sess_dev->kobj);
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.25.1
 
