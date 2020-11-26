@@ -2,48 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2304A2C5128
-	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 10:29:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14B4C2C5199
+	for <lists+linux-block@lfdr.de>; Thu, 26 Nov 2020 10:49:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389407AbgKZJ0w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Nov 2020 04:26:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389405AbgKZJ0v (ORCPT
+        id S1732141AbgKZJsg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Nov 2020 04:48:36 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:57658 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbgKZJsg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Nov 2020 04:26:51 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27FFC0613D4
-        for <linux-block@vger.kernel.org>; Thu, 26 Nov 2020 01:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=sIxrjYYGY/DG65N02a5zfcHxju
-        u1dtDeUL/J4hJzXa1PJ2mHu95Corgrc3qVSksK4ZW4zMnwRWBIqCR2Lc2f/KTlmUe0Hsg8sd1zktp
-        Qqic9tzFd3VDY5oaCPLSvlPSBJubw/imu5jRqA+pXRMzDrYbcwAmcYfBtOAayuhWrVNBeHCuzr0fw
-        VminCFqwTcJaS3zhvZ+GFxBFTEfjzHnzoEZfs3BozLHDxeSqGqpyxBcUJ0TESAExaJddzrQiY4zBC
-        bVub3fAuI92ii/sBx8AlHTBcg3GecpgpKLvdyYhLk3UffMCo6+2llEFW3o1orokNsFoL1cUdlEhEX
-        eQnA5Qeg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kiDY8-0006xP-MB; Thu, 26 Nov 2020 09:26:48 +0000
-Date:   Thu, 26 Nov 2020 09:26:48 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        joseph.qi@linux.alibaba.com
-Subject: Re: [PATCH v9] block: disable iopoll for split bio
-Message-ID: <20201126092648.GA26667@infradead.org>
-References: <20201126091852.8588-1-jefflexu@linux.alibaba.com>
+        Thu, 26 Nov 2020 04:48:36 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0UGarA.G_1606384113;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UGarA.G_1606384113)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 26 Nov 2020 17:48:34 +0800
+From:   Jeffle Xu <jefflexu@linux.alibaba.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com
+Subject: [PATCH] block: fix inflight statistics of part0
+Date:   Thu, 26 Nov 2020 17:48:33 +0800
+Message-Id: <20201126094833.61309-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201126091852.8588-1-jefflexu@linux.alibaba.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+The inflight of partition 0 doesn't include inflight IOs to all
+sub-partitions, since currently mq calculates inflight of specific
+partition by simply camparing the value of the partition pointer.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Thus the following case is possible:
+
+$ cat /sys/block/vda/inflight
+       0        0
+$ cat /sys/block/vda/vda1/inflight
+       0      128
+
+Partition 0 should be specially handled since it represents the whole
+disk.
+
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+---
+ block/blk-mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 55bcee5dc032..04b6b4d21ce6 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -105,7 +105,8 @@ static bool blk_mq_check_inflight(struct blk_mq_hw_ctx *hctx,
+ {
+ 	struct mq_inflight *mi = priv;
+ 
+-	if (rq->part == mi->part && blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT)
++	if ((!mi->part->partno || rq->part == mi->part) &&
++	    blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT)
+ 		mi->inflight[rq_data_dir(rq)]++;
+ 
+ 	return true;
+-- 
+2.27.0
+
