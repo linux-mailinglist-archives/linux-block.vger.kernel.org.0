@@ -2,86 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2DD22C6A9E
-	for <lists+linux-block@lfdr.de>; Fri, 27 Nov 2020 18:30:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF542C6CB4
+	for <lists+linux-block@lfdr.de>; Fri, 27 Nov 2020 21:49:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbgK0RaM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Nov 2020 12:30:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58830 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731337AbgK0RaL (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Nov 2020 12:30:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5DF80ABD7;
-        Fri, 27 Nov 2020 17:30:10 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 1DA451E1319; Fri, 27 Nov 2020 18:30:10 +0100 (CET)
-Date:   Fri, 27 Nov 2020 18:30:10 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        dm-devel@redhat.com, Jan Kara <jack@suse.com>,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 41/44] block: switch disk_part_iter_* to use a struct
- block_device
-Message-ID: <20201127173010.GB4276@quack2.suse.cz>
-References: <20201126130422.92945-1-hch@lst.de>
- <20201126130422.92945-42-hch@lst.de>
- <20201127125341.GD27162@quack2.suse.cz>
- <20201127152407.GA7115@lst.de>
+        id S1731484AbgK0Urb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Nov 2020 15:47:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731036AbgK0UrJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 27 Nov 2020 15:47:09 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5486CC0613D1
+        for <linux-block@vger.kernel.org>; Fri, 27 Nov 2020 12:47:07 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id b10so4100343pfo.4
+        for <linux-block@vger.kernel.org>; Fri, 27 Nov 2020 12:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=YiPUdAEKof8QSeTGDontfiIjhYgQ6O7+xiP2zueOI+k=;
+        b=yYnOju88SvxJVTPnjDOqro7kvYH7ySOzSSDcHRb2t4qHiI7KPrTKKCdjqQ4n3fzzQw
+         MQQjbfGqjVJjHbGmbRk48ycxh8O3/9XGv3oaM7TU9m4mY4972INjaSxbEKemAiXqxuOR
+         vZDxRxn5aMEtNRmhMCF7Fbegh54/kEZl6pOhY/q+ozADyqon91k3QcBh0famAwiuXxNv
+         NRmMoas4BAzkZ6OwCuWv09JxWz9Yim1Qr0BNb1m+ZMJak2KrnFb57lvphY9wW+QMDpvr
+         ThmSADs4lWFFltmJPK6oA3gaMSN9ouROd72UEv/uz9ewUKIKQEsy6xhgKbxwbjH4tI+I
+         fNfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=YiPUdAEKof8QSeTGDontfiIjhYgQ6O7+xiP2zueOI+k=;
+        b=Ba+lFI1mbNgoskCZR9OmPbq/iQBEoc+qiZUVYlmJsVoHwY4N/rFzIZ1DCNfxiDFroF
+         MY4gsRfXQOpMuquU4i15WeSOH16Esy/GyJmMOpON4tC7qzG0CZX1JZJGZgkaB/7lOv/w
+         jdfFdmWAwUnVmpWRPK6g5PJO5icFKUQwxYDpGITJVNPa2ATEQtuwlmfHRfKIGx01ZtvV
+         Nln1PZz5yT5fEfWSivhYF2koqEp891zvybINlcnY0dGvVEKEJnvD1vRDQMgGAqlR7dBa
+         hUgsCNRmxG1v3pfUxpxYiREsybnBg4Qw2NJameNPpZwG5R8p4jpsWRvUCKb5SE68VF8Z
+         6j/A==
+X-Gm-Message-State: AOAM533VQp6Nc93rJ6k8DXh1y2UrzX4weoLy3QuKkfCapAwIO2G4qnkB
+        GNbrF0hxUXINs/PvaXlS9aIW1LdD3akBFg==
+X-Google-Smtp-Source: ABdhPJzTTWNJuWkhFG+IKWp3/wJLfg4+O4bm/FQB63Sya4t8UJw0ToKe5cTqWg9QCNjqsF6+NiWGRw==
+X-Received: by 2002:a63:154e:: with SMTP id 14mr8051456pgv.49.1606510025878;
+        Fri, 27 Nov 2020 12:47:05 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:9f8b:f9ad:5d0d:795? ([2605:e000:100e:8c61:9f8b:f9ad:5d0d:795])
+        by smtp.gmail.com with ESMTPSA id a16sm8700865pfl.125.2020.11.27.12.47.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Nov 2020 12:47:05 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fix for 5.10-rc
+Message-ID: <5287b66c-74e6-c86c-a55b-b1cb5da39399@kernel.dk>
+Date:   Fri, 27 Nov 2020 13:47:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201127152407.GA7115@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri 27-11-20 16:24:07, Christoph Hellwig wrote:
-> On Fri, Nov 27, 2020 at 01:53:41PM +0100, Jan Kara wrote:
-> > On Thu 26-11-20 14:04:19, Christoph Hellwig wrote:
-> > 
-> > There's:
-> > 
-> >         /* put the last partition */
-> >         disk_put_part(piter->part);
-> >         piter->part = NULL;
-> > 
-> > at the beginning of disk_part_iter_next() which also needs switching to
-> > bdput(), doesn't it?
-> 
-> That is switched to call disk_part_iter_exit in patch 13.
+Hi Linus,
 
-I see, sorry for the noise.
+Just a single fix, for a crash in the keyslot manager. Please pull!
 
-> > > @@ -271,8 +271,7 @@ struct hd_struct *disk_part_iter_next(struct disk_part_iter *piter)
-> > >  		      piter->idx == 0))
-> > >  			continue;
-> > >  
-> > > -		get_device(part_to_dev(part->bd_part));
-> > > -		piter->part = part->bd_part;
-> > > +		piter->part = bdgrab(part);
-> > 
-> > bdgrab() could return NULL if we are racing with delete_partition() so I
-> > think we need to take care of that.
-> 
-> bdgrab never retuns NULL..
 
-Ah, that's what I misunderstood. I was confusing bdgrab() with igrab().
-igrab() can return NULL but bdgrab() uses ihold() and thus cannot return
-NULL. But for the lifetime rules to be safe, we should be indeed using
-igrab() and check for NULL return...
+The following changes since commit 45f703a0d4b87f940ea150367dc4f4a9c06fa868:
 
-								Honza
+  Merge tag 'nvme-5.10-2020-11-19' of git://git.infradead.org/nvme into block-5.10 (2020-11-19 09:23:27 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.10-2020-11-27
+
+for you to fetch changes up to 47a846536e1bf62626f1c0d8488f3718ce5f8296:
+
+  block/keyslot-manager: prevent crash when num_slots=1 (2020-11-20 11:52:52 -0700)
+
+----------------------------------------------------------------
+block-5.10-2020-11-27
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      block/keyslot-manager: prevent crash when num_slots=1
+
+ block/keyslot-manager.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jens Axboe
+
