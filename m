@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 690332C7CEA
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 03:48:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D462C7CF2
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 03:48:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgK3CrK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 29 Nov 2020 21:47:10 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35850 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgK3CrK (ORCPT
+        id S1726861AbgK3CrS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 29 Nov 2020 21:47:18 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40954 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgK3CrR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 21:47:10 -0500
-Received: by mail-pl1-f195.google.com with SMTP id r2so5672368pls.3;
-        Sun, 29 Nov 2020 18:46:54 -0800 (PST)
+        Sun, 29 Nov 2020 21:47:17 -0500
+Received: by mail-pj1-f65.google.com with SMTP id t12so432897pjq.5;
+        Sun, 29 Nov 2020 18:46:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=L9bMMO9PLHWj2MaCkKXM22x7qw+mqsaR/qfG6E0Sag8=;
-        b=Jcdsbpw0pmxN5VUAFk7Lu+nQJlat4dE4HSdCoNq2gJ2AVtZloomv4OcyhR5xZKbyIB
-         dd5H7Aic8NFAZzXBWwzYeL7FFksGSBVtXcQep5EVcjd1e45q/9SGt+W2/fGrT+qMxypV
-         M0zNpXE/eqNIOYQEDuBr4PFtg9K0rsxMyU19hR9glJxZ/ay0T/yBgiF5J1fXwTzxGFAq
-         3bxUMS3UdgUXxyN5t6Kq8oOf3mOdWisQPPdXMfLVdJC6o2+ZQymVJZRtH2JXyWaXZCQ/
-         IrN1LVUnXXF+MgTk9qm6aLN8MrMteHvNZvmo51E9CVKsBfUirECBxwxJXFCl8SJCmqXc
-         hI+Q==
-X-Gm-Message-State: AOAM5317Q+kapGvmO10BN8X7Su3kUnRzwSmOd1S/xdtCRI1o4CZHsaYj
-        /tYXWimV7bnhpjOS76lYmbk=
-X-Google-Smtp-Source: ABdhPJypsp/jGB9VdBi6zZ4uaJD0Ls1LCxAHHQ0IB9jT11HRJOa/TZ1ASPMTtcFmQASWDKjuv8FOsg==
-X-Received: by 2002:a17:902:d716:b029:da:10c1:51b5 with SMTP id w22-20020a170902d716b02900da10c151b5mr16783188ply.50.1606704388827;
-        Sun, 29 Nov 2020 18:46:28 -0800 (PST)
+        bh=VEU+xCwmLM+BtzvRP5JXTk9ZPc+wm9/yMiB5hxhuJk0=;
+        b=MvIh6KFIeZw/NvNX/DS8J+hQMnNvMWfyFbPyTXUHu/FJ5kX8IW/uw8l6Fa43H3V6YJ
+         CFaEY5w8MPuifN7HScmVM/vXnQ4ljcp3U1XqN+6mKvwEeY4lVleaQYkkOr8WkyahsY7W
+         Dvdbl77RW7yBhNWpgmjMEWZUKyzL+lBr5YREPYAOd6dwFZQw4GRxF3+vIhSu2xnkRp/u
+         Q26C2FHsxYa+9O9fGA49c/yYpqy8gaUtMDk5Ft4cxrxQKLZ/pbhmMj+L5aY52KIUJMqp
+         lB3WOfbJ+7KkdTukGSErBmx69/f/bhoAQBaYzvS+ES0Cwf/NxZSlcyW8xHXABo7oDffM
+         RLYg==
+X-Gm-Message-State: AOAM532hnWTMmBaF3NKbv2n4pC6y0Hk5k2f3Fz4eSRW8hPztmEd9eMxp
+        DMtXgLH5sPFVdo/A9YGlu34=
+X-Google-Smtp-Source: ABdhPJxeHWlCShqBgl1RlcInuRhMcfTWzGXDC79erLCIRyaWbXT/fj9BT/a9YIp70TQ/nQHay7KcwA==
+X-Received: by 2002:a17:90a:d086:: with SMTP id k6mr23638224pju.141.1606704390962;
+        Sun, 29 Nov 2020 18:46:30 -0800 (PST)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id n127sm14734659pfd.143.2020.11.29.18.46.26
+        by smtp.gmail.com with ESMTPSA id n127sm14734659pfd.143.2020.11.29.18.46.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 18:46:27 -0800 (PST)
+        Sun, 29 Nov 2020 18:46:30 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
@@ -46,9 +46,9 @@ Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         Can Guo <cang@codeaurora.org>,
         Stanley Chu <stanley.chu@mediatek.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v4 3/9] ide: Do not set the RQF_PREEMPT flag for sense requests
-Date:   Sun, 29 Nov 2020 18:46:09 -0800
-Message-Id: <20201130024615.29171-4-bvanassche@acm.org>
+Subject: [PATCH v4 4/9] ide: Mark power management requests with RQF_PM instead of RQF_PREEMPT
+Date:   Sun, 29 Nov 2020 18:46:10 -0800
+Message-Id: <20201130024615.29171-5-bvanassche@acm.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201130024615.29171-1-bvanassche@acm.org>
 References: <20201130024615.29171-1-bvanassche@acm.org>
@@ -58,34 +58,7 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-RQF_PREEMPT is used for two different purposes in the legacy IDE code:
-1. To mark power management requests.
-2. To mark requests that should preempt another request. An (old)
-   explanation of that feature is as follows:
-   "The IDE driver in the Linux kernel normally uses a series of busywait
-   delays during its initialization. When the driver executes these
-   busywaits, the kernel does nothing for the duration of the wait. The
-   time spent in these waits could be used for other initialization
-   activities, if they could be run concurrently with these waits.
-
-   More specifically, busywait-style delays such as udelay() in module
-   init functions inhibit kernel preemption because the Big Kernel Lock
-   is held, while yielding APIs such as schedule_timeout() allow
-   preemption. This is true because the kernel handles the BKL specially
-   and releases and reacquires it across reschedules allowed by the
-   current thread.
-
-   This IDE-preempt specification requires that the driver eliminate these
-   busywaits and replace them with a mechanism that allows other work to
-   proceed while the IDE driver is initializing."
-
-Since I haven't found an implementation of (2), do not set the PREEMPT
-flag for sense requests. This patch causes sense requests to be
-postponed while a drive is suspended instead of being submitted to
-ide_queue_rq().
-
-If it would ever be necessary to restore the IDE PREEMPT functionality,
-that can be done by introducing a new flag in struct ide_request.
+This is another step that prepares for the removal of RQF_PREEMPT.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Hannes Reinecke <hare@suse.de>
@@ -97,35 +70,33 @@ Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/ide/ide-atapi.c | 1 -
- drivers/ide/ide-io.c    | 5 -----
- 2 files changed, 6 deletions(-)
+ drivers/ide/ide-io.c | 2 +-
+ drivers/ide/ide-pm.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ide/ide-atapi.c b/drivers/ide/ide-atapi.c
-index 2162bc80f09e..013ad33fbbc8 100644
---- a/drivers/ide/ide-atapi.c
-+++ b/drivers/ide/ide-atapi.c
-@@ -223,7 +223,6 @@ void ide_prep_sense(ide_drive_t *drive, struct request *rq)
- 	sense_rq->rq_disk = rq->rq_disk;
- 	sense_rq->cmd_flags = REQ_OP_DRV_IN;
- 	ide_req(sense_rq)->type = ATA_PRIV_SENSE;
--	sense_rq->rq_flags |= RQF_PREEMPT;
- 
- 	req->cmd[0] = GPCMD_REQUEST_SENSE;
- 	req->cmd[4] = cmd_len;
 diff --git a/drivers/ide/ide-io.c b/drivers/ide/ide-io.c
-index 1a53c7a75224..c210ea3bd02f 100644
+index c210ea3bd02f..4867b67b60d6 100644
 --- a/drivers/ide/ide-io.c
 +++ b/drivers/ide/ide-io.c
-@@ -515,11 +515,6 @@ blk_status_t ide_issue_rq(ide_drive_t *drive, struct request *rq,
- 		 * above to return us whatever is in the queue. Since we call
- 		 * ide_do_request() ourselves, we end up taking requests while
- 		 * the queue is blocked...
--		 * 
--		 * We let requests forced at head of queue with ide-preempt
--		 * though. I hope that doesn't happen too much, hopefully not
--		 * unless the subdriver triggers such a thing in its own PM
--		 * state machine.
+@@ -518,7 +518,7 @@ blk_status_t ide_issue_rq(ide_drive_t *drive, struct request *rq,
  		 */
  		if ((drive->dev_flags & IDE_DFLAG_BLOCKED) &&
  		    ata_pm_request(rq) == 0 &&
+-		    (rq->rq_flags & RQF_PREEMPT) == 0) {
++		    (rq->rq_flags & RQF_PM) == 0) {
+ 			/* there should be no pending command at this point */
+ 			ide_unlock_port(hwif);
+ 			goto plug_device;
+diff --git a/drivers/ide/ide-pm.c b/drivers/ide/ide-pm.c
+index 192e6c65d34e..82ab308f1aaf 100644
+--- a/drivers/ide/ide-pm.c
++++ b/drivers/ide/ide-pm.c
+@@ -77,7 +77,7 @@ int generic_ide_resume(struct device *dev)
+ 	}
+ 
+ 	memset(&rqpm, 0, sizeof(rqpm));
+-	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PREEMPT);
++	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PM);
+ 	ide_req(rq)->type = ATA_PRIV_PM_RESUME;
+ 	ide_req(rq)->special = &rqpm;
+ 	rqpm.pm_step = IDE_PM_START_RESUME;
