@@ -2,53 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35D462C7CF2
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 03:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E4AC2C7CEE
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 03:48:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgK3CrS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 29 Nov 2020 21:47:18 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40954 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgK3CrR (ORCPT
+        id S1726751AbgK3CrO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 29 Nov 2020 21:47:14 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52015 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgK3CrO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 21:47:17 -0500
-Received: by mail-pj1-f65.google.com with SMTP id t12so432897pjq.5;
-        Sun, 29 Nov 2020 18:46:56 -0800 (PST)
+        Sun, 29 Nov 2020 21:47:14 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r20so397247pjp.1;
+        Sun, 29 Nov 2020 18:46:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VEU+xCwmLM+BtzvRP5JXTk9ZPc+wm9/yMiB5hxhuJk0=;
-        b=MvIh6KFIeZw/NvNX/DS8J+hQMnNvMWfyFbPyTXUHu/FJ5kX8IW/uw8l6Fa43H3V6YJ
-         CFaEY5w8MPuifN7HScmVM/vXnQ4ljcp3U1XqN+6mKvwEeY4lVleaQYkkOr8WkyahsY7W
-         Dvdbl77RW7yBhNWpgmjMEWZUKyzL+lBr5YREPYAOd6dwFZQw4GRxF3+vIhSu2xnkRp/u
-         Q26C2FHsxYa+9O9fGA49c/yYpqy8gaUtMDk5Ft4cxrxQKLZ/pbhmMj+L5aY52KIUJMqp
-         lB3WOfbJ+7KkdTukGSErBmx69/f/bhoAQBaYzvS+ES0Cwf/NxZSlcyW8xHXABo7oDffM
-         RLYg==
-X-Gm-Message-State: AOAM532hnWTMmBaF3NKbv2n4pC6y0Hk5k2f3Fz4eSRW8hPztmEd9eMxp
-        DMtXgLH5sPFVdo/A9YGlu34=
-X-Google-Smtp-Source: ABdhPJxeHWlCShqBgl1RlcInuRhMcfTWzGXDC79erLCIRyaWbXT/fj9BT/a9YIp70TQ/nQHay7KcwA==
-X-Received: by 2002:a17:90a:d086:: with SMTP id k6mr23638224pju.141.1606704390962;
-        Sun, 29 Nov 2020 18:46:30 -0800 (PST)
+        bh=7/BAMz2CYvfGS5mHYfgF/debVAmENTs8RcHIS0BLCRE=;
+        b=blp3ClspGjPIfRVPjBnp9YY6/JWfUknFjMh+oroRtF/P796EEyx1aP8OrYITmn/SrS
+         DZinbLSSxDdGvAzUXJz869ZYUOD6NDckb9P8psbKmSCX0zPu/vY78bgwL+faKt8OB2cF
+         jmpakyw1emaP6EfjKtGWilgomBzPSO3wtxI9rwzueXBi6jJjN/XywZw7UnUweTl4O3de
+         wXZaYTc0TkfMTLyqukuoMYl93YsE4pPX5odfplYUgBVe4Q9cRwzpIQns6N+VC9/AP/md
+         OwbvEhL7YuAjnk8KptPwTC8ah86DeiLb50TWEA5hZj8JClZWCgBkzNv7tysnqGQnmx3A
+         zI1A==
+X-Gm-Message-State: AOAM532rbW4L/sNFlNq+oB9JWcLoBASFr/M8VSM1myXi+FHeXfSOaiwq
+        6xqBRIQOLxdW3SvkpHDRzlU=
+X-Google-Smtp-Source: ABdhPJwVIZrAn+WXwvUCw81oOt5ne9jRKZ0UkaewnWLMgQ2sH96yj9G+yLkkHzT9dCsAajJgkkrUSg==
+X-Received: by 2002:a17:902:7607:b029:da:62c8:e206 with SMTP id k7-20020a1709027607b02900da62c8e206mr7086658pll.1.1606704393072;
+        Sun, 29 Nov 2020 18:46:33 -0800 (PST)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id n127sm14734659pfd.143.2020.11.29.18.46.28
+        by smtp.gmail.com with ESMTPSA id n127sm14734659pfd.143.2020.11.29.18.46.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 18:46:30 -0800 (PST)
+        Sun, 29 Nov 2020 18:46:32 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         Ming Lei <ming.lei@redhat.com>, linux-scsi@vger.kernel.org,
         linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.de>,
-        "David S . Miller" <davem@davemloft.net>,
         Alan Stern <stern@rowland.harvard.edu>,
         Can Guo <cang@codeaurora.org>,
         Stanley Chu <stanley.chu@mediatek.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v4 4/9] ide: Mark power management requests with RQF_PM instead of RQF_PREEMPT
-Date:   Sun, 29 Nov 2020 18:46:10 -0800
-Message-Id: <20201130024615.29171-5-bvanassche@acm.org>
+Subject: [PATCH v4 5/9] scsi: Do not wait for a request in scsi_eh_lock_door()
+Date:   Sun, 29 Nov 2020 18:46:11 -0800
+Message-Id: <20201130024615.29171-6-bvanassche@acm.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201130024615.29171-1-bvanassche@acm.org>
 References: <20201130024615.29171-1-bvanassche@acm.org>
@@ -58,45 +56,37 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is another step that prepares for the removal of RQF_PREEMPT.
+scsi_eh_lock_door() is the only function in the SCSI error handler that
+calls blk_get_request(). It is not guaranteed that a request is available
+when scsi_eh_lock_door() is called. Hence pass the BLK_MQ_REQ_NOWAIT flag
+to blk_get_request().
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Cc: Can Guo <cang@codeaurora.org>
 Cc: Stanley Chu <stanley.chu@mediatek.com>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/ide/ide-io.c | 2 +-
- drivers/ide/ide-pm.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_error.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ide/ide-io.c b/drivers/ide/ide-io.c
-index c210ea3bd02f..4867b67b60d6 100644
---- a/drivers/ide/ide-io.c
-+++ b/drivers/ide/ide-io.c
-@@ -518,7 +518,7 @@ blk_status_t ide_issue_rq(ide_drive_t *drive, struct request *rq,
- 		 */
- 		if ((drive->dev_flags & IDE_DFLAG_BLOCKED) &&
- 		    ata_pm_request(rq) == 0 &&
--		    (rq->rq_flags & RQF_PREEMPT) == 0) {
-+		    (rq->rq_flags & RQF_PM) == 0) {
- 			/* there should be no pending command at this point */
- 			ide_unlock_port(hwif);
- 			goto plug_device;
-diff --git a/drivers/ide/ide-pm.c b/drivers/ide/ide-pm.c
-index 192e6c65d34e..82ab308f1aaf 100644
---- a/drivers/ide/ide-pm.c
-+++ b/drivers/ide/ide-pm.c
-@@ -77,7 +77,7 @@ int generic_ide_resume(struct device *dev)
- 	}
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index d94449188270..6de6e1bf3dcb 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -1993,7 +1993,12 @@ static void scsi_eh_lock_door(struct scsi_device *sdev)
+ 	struct request *req;
+ 	struct scsi_request *rq;
  
- 	memset(&rqpm, 0, sizeof(rqpm));
--	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PREEMPT);
-+	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PM);
- 	ide_req(rq)->type = ATA_PRIV_PM_RESUME;
- 	ide_req(rq)->special = &rqpm;
- 	rqpm.pm_step = IDE_PM_START_RESUME;
+-	req = blk_get_request(sdev->request_queue, REQ_OP_SCSI_IN, 0);
++	/*
++	 * It is not guaranteed that a request is available nor that
++	 * sdev->request_queue is unfrozen. Hence the BLK_MQ_REQ_NOWAIT below.
++	 */
++	req = blk_get_request(sdev->request_queue, REQ_OP_SCSI_IN,
++			      BLK_MQ_REQ_NOWAIT);
+ 	if (IS_ERR(req))
+ 		return;
+ 	rq = scsi_req(req);
