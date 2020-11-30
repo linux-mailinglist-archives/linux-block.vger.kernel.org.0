@@ -2,91 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CE9C2C7D69
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 04:32:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60B372C7E4B
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 07:47:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgK3DbD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 29 Nov 2020 22:31:03 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:54598 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgK3DbC (ORCPT
+        id S1725880AbgK3Gqw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Nov 2020 01:46:52 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:37591 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725860AbgK3Gqw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 22:31:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606707062; x=1638243062;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KZvesihZxqvpooUM98Q5I5u1Gk/h9BuWE3/slZ8Ndhs=;
-  b=UBdvyebJc2SOdg+ELh6SZqEifbF43g++iuH7JxGv0x22eiv2p+8sR5Qd
-   sGki3AXkfHh+FCzYlFzuIIcj3OczxrnnvI1cp4SI6I9PR+5fGtb1u+cUa
-   x7G/fGYBKuVimSDbQpU5lOiZvIjJ5Pqj1NwGQYgLYGT4emb984Ug5eOfv
-   hoxWfHN/yH/BkZmz11iQfh6oFCg2GYbJbBOyDrsROkVEfzHzXgIMZ4VIj
-   8k4pbnZXgZxuiQyxAbgXS1fX3MsC2QF8HLNtdwOuSJKJLRYSMZMIXJQY3
-   CCzw3vhfVNNB8hM9XD17jxbjIuwY1S7gme7f9Q6a/2PNVvNFI3g3QGyHI
-   g==;
-IronPort-SDR: q6auArkCvMXP5GfT3QlRBRR58YIruQbcldjguEJSSSJiHez2vQNrADn1bhlyykvg0dxmh031Yk
- WpC0x1QUZmbSVEXni8Ooj+Q/MipyhcI92oN++h8vLtYXpi2du802rw0f3sBH9G828196mtGhkD
- SLWgvPAEIjvRCILSGUONNfPQi0GcMYnOyMe3ptJ++w0vAj5EjyOJgv7AwGZQoboHMIzhfiIObz
- O9OCSCCIuJbFQisJPl7pjgMQSRMBhqydDwUuoRLM3k6q9HT+n3LawobKyg2k+rAtDA+dUCq2zK
- uQk=
-X-IronPort-AV: E=Sophos;i="5.78,379,1599494400"; 
-   d="scan'208";a="263892556"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Nov 2020 11:30:17 +0800
-IronPort-SDR: M+kG19BmbL9kxF4oLhZ9+t5FHLIr+Qr3z4smG03AWjK9WbMY5zB2OCe9BZ1RDT2Eum2ojx8d+L
- uYGnG3fBfzEofho2Q8+1D8+wg+IikCilU=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 19:15:54 -0800
-IronPort-SDR: D/BUOXWv2eTkbgoe7jKf7dg39j2KiXkWrENICF9TxUT2qMl1QE4vc8zXddcDHx96f86j97JzMx
- xRrVlGunzBPQ==
-WDCIronportException: Internal
-Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2020 19:30:17 -0800
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     hch@lst.de, sagi@grimberg.me, damien.lemoal@wdc.com,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V2 9/9] nvmet: add ZNS based I/O cmds handlers
-Date:   Sun, 29 Nov 2020 19:29:09 -0800
-Message-Id: <20201130032909.40638-10-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
-References: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
+        Mon, 30 Nov 2020 01:46:52 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0UGxEgXG_1606718768;
+Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UGxEgXG_1606718768)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 30 Nov 2020 14:46:09 +0800
+Subject: Re: [PATCH] block: fix inflight statistics of part0
+From:   JeffleXu <jefflexu@linux.alibaba.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com
+References: <20201126094833.61309-1-jefflexu@linux.alibaba.com>
+Message-ID: <3d5f8d86-469f-0bb5-d055-6a79c63d0734@linux.alibaba.com>
+Date:   Mon, 30 Nov 2020 14:46:08 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.5.0
 MIME-Version: 1.0
+In-Reply-To: <20201126094833.61309-1-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add zone-mgmt-send, zone-mgmt-recv and zone-zppend handlers for the
-bdev backend so that it can support zbd.
+Hello, any comment? Is this indeed a BUG or just a deliberate design?
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- drivers/nvme/target/io-cmd-bdev.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index e1f6d59dd341..25dcd0544d5d 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -453,6 +453,15 @@ u16 nvmet_bdev_parse_io_cmd(struct nvmet_req *req)
- 	case nvme_cmd_write_zeroes:
- 		req->execute = nvmet_bdev_execute_write_zeroes;
- 		return 0;
-+	case nvme_cmd_zone_append:
-+		req->execute = nvmet_bdev_execute_zone_append;
-+		return 0;
-+	case nvme_cmd_zone_mgmt_recv:
-+		req->execute = nvmet_bdev_execute_zone_mgmt_recv;
-+		return 0;
-+	case nvme_cmd_zone_mgmt_send:
-+		req->execute = nvmet_bdev_execute_zone_mgmt_send;
-+		return 0;
- 	default:
- 		pr_err("unhandled cmd %d on qid %d\n", cmd->common.opcode,
- 		       req->sq->qid);
 -- 
-2.22.1
+Thanks,
+Jeffle
+
+
+On 11/26/20 5:48 PM, Jeffle Xu wrote:
+> The inflight of partition 0 doesn't include inflight IOs to all
+> sub-partitions, since currently mq calculates inflight of specific
+> partition by simply camparing the value of the partition pointer.
+> 
+> Thus the following case is possible:
+> 
+> $ cat /sys/block/vda/inflight
+>        0        0
+> $ cat /sys/block/vda/vda1/inflight
+>        0      128
+> 
+> Partition 0 should be specially handled since it represents the whole
+> disk.
+> 
+> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> ---
+>  block/blk-mq.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 55bcee5dc032..04b6b4d21ce6 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -105,7 +105,8 @@ static bool blk_mq_check_inflight(struct blk_mq_hw_ctx *hctx,
+>  {
+>  	struct mq_inflight *mi = priv;
+>  
+> -	if (rq->part == mi->part && blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT)
+> +	if ((!mi->part->partno || rq->part == mi->part) &&
+> +	    blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT)
+>  		mi->inflight[rq_data_dir(rq)]++;
+>  
+>  	return true;
+> 
 
