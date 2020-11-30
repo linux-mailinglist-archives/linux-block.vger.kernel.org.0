@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 026F22C7D6D
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 04:32:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 997CF2C7D6A
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 04:32:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgK3Dbd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 29 Nov 2020 22:31:33 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:7669 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgK3Dbd (ORCPT
+        id S1728491AbgK3DbF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 29 Nov 2020 22:31:05 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:30921 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbgK3DbE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 22:31:33 -0500
+        Sun, 29 Nov 2020 22:31:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606707092; x=1638243092;
+  t=1606707063; x=1638243063;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+iv8i8xvGTKjTFiSy9i/jgbNCBRhvNbZSotD5vVTWDc=;
-  b=B7zQlVUjpQhB+TxGszzissP/i90gyIndK+Z50Pk2el/xVav3hiudQRbs
-   SkW2IhAGqG4AGFP5ubFVewdf/Vyv4y5F8P0SlYLOIHTzUoEkMcVtQPjqX
-   wWiLqBWgysGW9BOF9yGvHr/OvqGBqdMwOwDCRWr4SwaxB+jKMxPKNLysA
-   JnxwLxt6D+XYRN8WUcLB0FhaE8dfUxZV3Ss1vn3wJH90T8x0FHN8UFtKY
-   lLP2Kd19Rglp8gMm4jknAg2EVhOPZMoH4jiGmJDqcXXTmJ6Er9JJmzBhX
-   /QsKXGgnJwlZpxq8rNV33p94KOkB5bm2Ae6K1EFY2YjblycgSDuWI4W6P
-   w==;
-IronPort-SDR: RfownR/igd/+cQ2lzPzDTDE4DIklwiLMHhoTEWpqPqnZX23q+7JeXFcupm8KayvIGMPMy8MSSI
- mMoEejbz2CjmRG1f65M3fDRcfn56IUpUvCq2LGEkfZbhGu+zWjmW3Smg1LO2JR7I2k4BAo79aF
- qMW6qdYNlAvFVtONp45SkaEK15g8XfZ1e7WFLu1pKhHKe7S9vFFyjAicrvO5JBQjaUpwcrnGm2
- Mg9LT+QNBDhe9xrneZ59Zk2z5CvtFliaoAkcpXQnk/uAGPKB2lTda5Q2g0DyOevPq0cVKp1dq/
- ktI=
+  bh=m/bvl+lK7ll6HRYiQ0kG1ndR5SFePuzrxfzuz5g9atQ=;
+  b=HDdVQZ01MelWNtD4omtMk96mCMAdp3PoCrbvIsilr9UObMQAvjj2lHqX
+   XRbBl5oktdVwm2eS9qflP/s5b7+BGGt4pS5P4C3rAY5izwi2SbwIVOEta
+   vBwF8CApDSZhlRQEMO6e4ybImHQhxDxeabTslDtTh42aPKuJOviGU9L8/
+   VgO4tSH7v8/jYjzumGYdXcTlAv4RicdwAXdhSvvKqMthMREugnkaH/taA
+   sIKmx5+5aMZEfcHzRQtmMgBjcrSNfSJoW3x2QlcnJFo+Ptn//zmRuxbvM
+   WXSGBAnUMw/SIft8/6XZw4Cnt3aXKxKrdbj4h2yU6cfYN9c9vTDjJvu3E
+   Q==;
+IronPort-SDR: TxAlE2An9q/CVwARNiv3zPizoccRASYFHdu6VkWih2bhZ3O/rY+jRdjxJFoCTt+ScanTur48CB
+ NMI8IS32AQdMzMhMRcTf+/ecBfpJqyhoVNs5U1kuWArWdXBEFiAxN/wMvxSc02r/JmuvfrX5x4
+ 709tcp8WaTZ1z2KvjBszRaOaE82LOe0cpfM3i0Vv2CBvd8MnQzPldY7SWJVzdPV7mdX9xhxyZ/
+ 2jOgNZ/5r2hGDB6Fj5Mhrt7azHBMtoCro1HxJ6MqIZGbZPsFpZjju0M49LaLlz7uW7nVzECnA8
+ Edc=
 X-IronPort-AV: E=Sophos;i="5.78,379,1599494400"; 
-   d="scan'208";a="153844127"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Nov 2020 11:29:52 +0800
-IronPort-SDR: R5Oe9Tzsnn8GQKn3IpqJfHYiS+d2AkCR9JpSW/lTwcm6J9cEolKj0sRR8Qeo8qFahiO9g9VI1x
- K9R8htegaVJrGT4MdfXPODhzI66AE22HU=
+   d="scan'208";a="158242330"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Nov 2020 11:29:58 +0800
+IronPort-SDR: 1etDQ/Q0tYF3kMPjJDYy8Le5jbF0l3SN+0HgnXXLyjkEg94TO2igzVAmJWPEKVU7UVWsLiBtap
+ 5Wr5Ot5iJ98JlJbRcHxtx7+xitvEG5BLo=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 19:15:29 -0800
-IronPort-SDR: ZghdTP2hUjm0I1Qgwto2KfQJ9OGlJkbo1+lSPAJEzbmb15HOrtNBh91W5okyYiyTe/4R+GSkZb
- 5DTBgMLHPVUw==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 19:15:35 -0800
+IronPort-SDR: 1cd6sDZyQ0eW+cQgh9SqyaYRHq8ZG37xwpOgg+VbZJJk9PztxYllEcyJRy/LJq1CZAp2FZGK55
+ q0ZDYSBiUV9g==
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2020 19:29:52 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2020 19:29:58 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     hch@lst.de, sagi@grimberg.me, damien.lemoal@wdc.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V2 5/9] nvmet: add cns-cs-ctrl in id-ctrl for ZNS bdev
-Date:   Sun, 29 Nov 2020 19:29:05 -0800
-Message-Id: <20201130032909.40638-6-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 6/9] nvmet: add cns-cs-ns in id-ctrl for ZNS bdev
+Date:   Sun, 29 Nov 2020 19:29:06 -0800
+Message-Id: <20201130032909.40638-7-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
 References: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
@@ -60,8 +60,8 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 Update the nvmet_execute_identify() such that it can now handle
-NVME_ID_CNS_CS_CTRL when identify.cis is set to ZNS. This allows
-host to identify the support for ZNS.
+NVME_ID_CNS_CS_NS when identify.cis is set to ZNS. This allows
+host to identify the ns with ZNS capabilities.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
@@ -69,20 +69,20 @@ Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index d4fc1bb1a318..e7d2b96cda6b 100644
+index e7d2b96cda6b..cd368cbe3855 100644
 --- a/drivers/nvme/target/admin-cmd.c
 +++ b/drivers/nvme/target/admin-cmd.c
-@@ -650,6 +650,10 @@ static void nvmet_execute_identify(struct nvmet_req *req)
+@@ -648,6 +648,10 @@ static void nvmet_execute_identify(struct nvmet_req *req)
+ 	switch (req->cmd->identify.cns) {
+ 	case NVME_ID_CNS_NS:
  		return nvmet_execute_identify_ns(req);
++	case NVME_ID_CNS_CS_NS:
++		if (req->cmd->identify.csi == NVME_CSI_ZNS)
++			return nvmet_execute_identify_cns_cs_ns(req);
++		break;
  	case NVME_ID_CNS_CTRL:
  		return nvmet_execute_identify_ctrl(req);
-+	case NVME_ID_CNS_CS_CTRL:
-+		if (req->cmd->identify.csi == NVME_CSI_ZNS)
-+			return nvmet_execute_identify_cns_cs_ctrl(req);
-+		break;
- 	case NVME_ID_CNS_NS_ACTIVE_LIST:
- 		return nvmet_execute_identify_nslist(req);
- 	case NVME_ID_CNS_NS_DESC_LIST:
+ 	case NVME_ID_CNS_CS_CTRL:
 -- 
 2.22.1
 
