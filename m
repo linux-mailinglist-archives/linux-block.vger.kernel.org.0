@@ -2,57 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E83BF2C7C7E
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 02:41:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6059C2C7C7F
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 02:41:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgK3Bkf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1726669AbgK3Bkf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Sun, 29 Nov 2020 20:40:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgK3Bke (ORCPT
+        with ESMTP id S1727701AbgK3Bkf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 20:40:34 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0638C0613D3
-        for <linux-block@vger.kernel.org>; Sun, 29 Nov 2020 17:39:53 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id h21so20839118wmb.2
-        for <linux-block@vger.kernel.org>; Sun, 29 Nov 2020 17:39:53 -0800 (PST)
+        Sun, 29 Nov 2020 20:40:35 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4A8C0613D4
+        for <linux-block@vger.kernel.org>; Sun, 29 Nov 2020 17:39:54 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id z7so13511128wrn.3
+        for <linux-block@vger.kernel.org>; Sun, 29 Nov 2020 17:39:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=US5yRushGVKjXXXhnDbhPM2UlXqQN3YfBLJdnKDGXgU=;
-        b=cEI9Xgw56KYfx/SV2lbfyvMII9OHUhr73oi1UIv2atH4AyXEb2lEeUDaOtrRqyrmIg
-         PV1QtMgDFhT5sxai+bqKexh09gMu/YZ5yA/G2ml20qq0TBuaMlkOLnnwpAZHIcvdf0L8
-         4a0HhPVATI9XyNY5VxjdOiIlLyI65NUVCFBE3j7xeSu0zDGCeTbSDG+VbBxLKmelYiU/
-         y2pVbUfwCO1zYGPAfHQLOwWUnWfWfrKRLml4JHRGfmhwyCqWJk/CREoujBtEsbLxj/xs
-         VZlcsfKiMC7y0tznF+iMtV4/oP7hq9Uc0YubN6xAMUt0Ujp0gxByX/xDg26myUGBZphc
-         ycgQ==
+        bh=ZZ1///T+vYg4MLvcwCYhoWFn6ELsEtEXdv0FmIojt8c=;
+        b=PAtUgbSmEuQM5Y4zjeW+T7NomEJrz6WC2oJQB/IBVQBS58hTojd1AQwHtBsY3YcZiN
+         rrKlFfxWX9oGJbwD0KADKGqiQIYDNGNB5dpOv1gpekG1QADXGVZGhIzY3NATmzOytOYk
+         ObOzCTiku0ZDPtumKiXEuKI3U8KfK1KqPoy5buAt6dWeaoqItIbQgokS4djjhmhIbqeL
+         5fbZt0hP7i6dH5GRM5Z5VvXoBu9n8BrT7CjLrWTm5k3fAwPQlEjv8COVpcx6iS6NX04W
+         t5MOWdf7D8MlxLDsOLI+yyow5Oy1eEE4v2U+Z2SECAIbe4gCxfUDlLRs4NyT5+8FZFgN
+         3SSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=US5yRushGVKjXXXhnDbhPM2UlXqQN3YfBLJdnKDGXgU=;
-        b=dwEo7SpnTf0yDfgvz5GvbRpyOkhFh0K5DzTe2H/MzEiPaTaYpdzhooS8RS1ow7JteD
-         VwuuIlptGtQRvb9pt6P01jbFjRdv+J62XcZPR6XRfEt122wl9sge+Ow1rJsC5fckY2r8
-         EJPGwdyIwrxhm7jypuNGezdIyJo4YOdhXtaHQfn3t5yLTbYt9TXhhjU9eXftKXaGh8QN
-         OkSs5rqbpZ1/J58U21rcY+5Z8/fUxgY4BRIDGKqscGfgVojMwwZ1k4r/O/RqieimctfK
-         JazJGPXMgtTRB1ktpl2m5lWrYRKuY9IzGq/Dr+o47DeiYjilAliM2HqCJfWmWnXoXHd0
-         W3qg==
-X-Gm-Message-State: AOAM533RSqonJprj90gvHbjBCe3N0mwU7bYlBKIGqCTBy7LO2Agfh9dz
-        9U59ITT6nKmcQgZEwiHGo57Cr+Xki3Q=
-X-Google-Smtp-Source: ABdhPJxmd+q8Wf0u74V8QGVePtjC6MoELVEnF/W1yEgJ9hmWJSfiXEEFi7r/Ikxj38j6xLfEdpIuTw==
-X-Received: by 2002:a1c:5f8a:: with SMTP id t132mr14169336wmb.121.1606700392592;
-        Sun, 29 Nov 2020 17:39:52 -0800 (PST)
+        bh=ZZ1///T+vYg4MLvcwCYhoWFn6ELsEtEXdv0FmIojt8c=;
+        b=h0CmeQwc01jA1yPBvHH3clXeQ7PCOa1tk+aeW4RKoZlLK3xUlOamdIAh2fzysVBY5Z
+         liGyLtM6E9EimDA58IIKcQm5ooInrtkbhKsUFm8rcw/BcIm8FjuK5HWBNjaQCMMA7ovN
+         ZVhfuMyt52vsSWdzRcRxp1TF9SaFK8hsxSTMlZP32GNLzax/1SlZvDo7MaNqw4XG4c5S
+         TNMdfCkIJM+wGEofWadA4HQCm4cIkd3U7EZ8jQTqtKBeZx79bnD7W4odgXnxCRjnhwxP
+         OH8n/y5J9m98SkBoLP4qJ6wFS1D3lfHXXpilEWuiiVzZZ7kEz26RUAX5bimunUVbYwM/
+         2h8Q==
+X-Gm-Message-State: AOAM5303g7hzSpCnbZgD/jqmDmf7dXKlJUlL9k+kALo2MUiKQL03tyWk
+        zVMcDDVhHfJEh/wMZi3amR8=
+X-Google-Smtp-Source: ABdhPJywcwKiggtvdIaBPd98tGAxjssZ5TbV4gpCV6akgzD7RV/vRT2w2OPXjYHGvkRRemmrS8AN4w==
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr25603265wrq.401.1606700393511;
+        Sun, 29 Nov 2020 17:39:53 -0800 (PST)
 Received: from localhost.localdomain (host109-152-100-135.range109-152.btcentralplus.com. [109.152.100.135])
-        by smtp.gmail.com with ESMTPSA id k1sm24573414wrp.23.2020.11.29.17.39.51
+        by smtp.gmail.com with ESMTPSA id k1sm24573414wrp.23.2020.11.29.17.39.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 17:39:52 -0800 (PST)
+        Sun, 29 Nov 2020 17:39:53 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH 2/3] blk-mq: deduplicate blk_mq_get_tag() bits
-Date:   Mon, 30 Nov 2020 01:36:26 +0000
-Message-Id: <15662b9565f5d372e5a2fd568f1fccc083198e90.1606699505.git.asml.silence@gmail.com>
+Subject: [PATCH 3/3] blk-mq: idiomatic use of WARN_ON_ONCE
+Date:   Mon, 30 Nov 2020 01:36:27 +0000
+Message-Id: <bf149a4f4a73d21ed89e7d481eb92f46adb8bf6d.1606699505.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1606699505.git.asml.silence@gmail.com>
 References: <cover.1606699505.git.asml.silence@gmail.com>
@@ -62,41 +62,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Deduplicate bt_wait_ptr() call in blk_mq_get_tag(), condition-less while
-and absence of loop controls in-between former and current call location
-makes the change functionally identical.
+Let WARN_ON_ONCE() to be more clear by passing the warn condition
+directly, so it'll be printed.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- block/blk-mq-tag.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ block/blk-mq-tag.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index dbbf11edf9a6..98f6ea219bb4 100644
+index 98f6ea219bb4..f2743a9159ca 100644
 --- a/block/blk-mq-tag.c
 +++ b/block/blk-mq-tag.c
-@@ -112,10 +112,11 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 	if (data->flags & BLK_MQ_REQ_NOWAIT)
- 		return BLK_MQ_NO_TAG;
+@@ -96,10 +96,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
+ 	int tag;
  
--	ws = bt_wait_ptr(bt, data->hctx);
- 	do {
- 		struct sbitmap_queue *bt_prev;
- 
-+		ws = bt_wait_ptr(bt, data->hctx);
-+
- 		/*
- 		 * We're out of tags on this hardware queue, kick any
- 		 * pending IO submits before going to sleep waiting for
-@@ -158,8 +159,6 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 		 */
- 		if (bt != bt_prev)
- 			sbitmap_queue_wake_up(bt_prev);
--
--		ws = bt_wait_ptr(bt, data->hctx);
- 	} while (1);
- 
- 	sbitmap_finish_wait(bt, ws, &wait);
+ 	if (data->flags & BLK_MQ_REQ_RESERVED) {
+-		if (unlikely(!tags->nr_reserved_tags)) {
+-			WARN_ON_ONCE(1);
++		if (WARN_ON_ONCE(!tags->nr_reserved_tags))
+ 			return BLK_MQ_NO_TAG;
+-		}
+ 		bt = tags->breserved_tags;
+ 	} else {
+ 		bt = tags->bitmap_tags;
 -- 
 2.24.0
 
