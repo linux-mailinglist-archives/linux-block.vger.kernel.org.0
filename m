@@ -2,129 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89D592C7D6C
-	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 04:32:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E67BA2C7D64
+	for <lists+linux-block@lfdr.de>; Mon, 30 Nov 2020 04:32:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgK3DbL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 29 Nov 2020 22:31:11 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:10519 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgK3DbL (ORCPT
+        id S1728345AbgK3Daw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 29 Nov 2020 22:30:52 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:7669 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbgK3Dav (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 29 Nov 2020 22:31:11 -0500
+        Sun, 29 Nov 2020 22:30:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606707840; x=1638243840;
+  t=1606707051; x=1638243051;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AZ0ASPEdFnz/BJCpcrFT1z2buOCvE1xQZBqdQG2WuUM=;
-  b=lqBYJl2HbbnbTW5PVT+9GOcGSp9rjBLuoffslBVpHOG50QPcTM11IXE0
-   +NheZGHhafVsrT55LozlFDhtlKBrmzhljP8BVaTXxVgmEWQKV5z51rDRR
-   wI+2luEZ32nJa/FcYxALNnf3Qv9yv4z2GX5/L0LVg9CrmHEMmdM0OX+Xx
-   pxuZoetRr1qIh10QqhXdFkXcA+2ybtWFdezhN7sb3ZVcG2jR0USmSfn2n
-   xJ9QZ3YnF7vrk8yd4UQ7/zn3Gq85fgi9BaYaiJu4xIKFqRoiiR/2dxD0W
-   0rC6rxkH6UEi9Yquj6Nb0GPK8RGIjpo65Bbh2+JYFPeyd1yCAKlXCZpEk
-   A==;
-IronPort-SDR: iOD7xjCYy1F7DExZRcQIJOXu0OjPBZCFSjD36pFaoGhmiCLrPUeZbCceMpcJZ6ZOaRAdjBAFY2
- hoH2A7hErY5fSB1jIHpsjBIT8OcYalpn5zVpMXXBMgk5df1hCqskKqfYf17RRxg6Lf0h+VMKeu
- tPCjhu1lE75dJvnaAw8VY9Fias6n+88ecXcxgZXO378VTdeYRIR4pMLTvDnbGAzAIVrEgR1/iA
- 2dHRWvuPreJiKwwCOFRMRBlVpNKe7obQxCgMMRN0FSVkpJziusVQ2KG4Kj6/Gk1gXUrwVVYSPT
- KoU=
+  bh=hpoI1V55y5gwFhJlJIS3F+nAY0E41Z5thazQ0M5y7lA=;
+  b=IeWxcpjfcwrgjAWAWilh+lNL1Rdkq39rrmrAsHu9neWzD0KZk6LrM6Vv
+   +KG+A2cAblguVGBhkWtB8hdi958dWJvkUCEsl27bPySVWnk7eIomtt+Ku
+   sSYcT5LZPQpPJOHf+m5R5L/jqjiGTmRwM/7GVuhDGqgbzillEf1p6r0Lb
+   QRPYIgTHlLkJ7P1bFwkct0otYr+Y9zTzphB/QkROWu9BlICQA2ptpdj8T
+   9grkTXC/VdCNB9jslNvB0vrXjKjhv4xp22WyDe4LxzTZTVylxpU6szB2z
+   e7XvSklKxWP48xPlS30mUnVyXJXaPylPMH788fNokERYYP6ATQwCyM7IA
+   w==;
+IronPort-SDR: gc34GLN1gOILGMj2J9NdQxVTnnGgQYhMLKRP3oRliCyTKiio3uVtVdpwicGlaXnzIrZRC5h2Jf
+ w/jIbGPQgksW+KZ5YTF+IFQ0MmO0h6XM6xo+QXmFS2STGV7rvU9rZKMw/oXOPCzLROCKsWtpXw
+ J2+t+UCP8wItc2h32YFIvIeBWp/OR//kbQrbXELLGmfQ1A5dKZj8LsbR4aOzqQCnD9oj34Lbzm
+ rb5XHxIgS7i+i/l+cKkKQocwqa6wP/s9Ap/Tz4ybrntfrZHng2sZb6yxS37U2QfAO2KkMcS47H
+ 8SU=
 X-IronPort-AV: E=Sophos;i="5.78,379,1599494400"; 
-   d="scan'208";a="257450823"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Nov 2020 11:41:43 +0800
-IronPort-SDR: hI2I/02BGViqQoImEI3XWhzVXAedpyT8cEH/aSD/+IvdmecZlJNX4lvSUrohZgTXnd0xh2FxX4
- AL3Gku13ThfGfmOeJZP2pzdhddGa3xAws=
+   d="scan'208";a="153844119"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Nov 2020 11:29:45 +0800
+IronPort-SDR: GgeB9HL+m3guBQ/Xyi2DySyvq6UTW8zz9ISY6a11Q86uQvRXncMP8ijrllt/AdHJ6Ok6BpwDJx
+ A5GqGHN4HuGwcnwjER3x+9Zu1rfioqQoA=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 19:13:53 -0800
-IronPort-SDR: yKyMZjhNk/mnExspfaixYDt4y+icg4sZftOOtN/oNyNL08lCZ87fPtnoUGYT879cStE/buz84X
- PWlWyymkpzAA==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 19:15:23 -0800
+IronPort-SDR: 6xWCH0RaF8WNbAwW/PPWh9osExPyzV/1nidU+0Z3OEJdmdikHsqbn/84veuNpiweFXykiE+nKv
+ w97dQe4exBQg==
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2020 19:29:39 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2020 19:29:46 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     hch@lst.de, sagi@grimberg.me, damien.lemoal@wdc.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V2 3/9] nvmet: trim down id-desclist to use req->ns
-Date:   Sun, 29 Nov 2020 19:29:03 -0800
-Message-Id: <20201130032909.40638-4-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 4/9] nvmet: add NVME_CSI_ZNS in ns-desc for zbdev
+Date:   Sun, 29 Nov 2020 19:29:04 -0800
+Message-Id: <20201130032909.40638-5-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
 References: <20201130032909.40638-1-chaitanya.kulkarni@wdc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In this prep patch we remove the extra local variable struct nvmet_ns
-in nvmet_execute_identify_desclist() since req already has the member
-that can be reused, this also eliminates the explicit call to
-nvmet_put_namespace() which is already present in the request
-completion path.
-
-This reduces the arguments to the function in the following patch to
-implement the ZNS for bdev-ns so we can get away with passing the req
-argument instead of req and ns.
+When discovering the ZNS, the host-side looks for the NVME_CSI_ZNS
+value in the ns-desc. Update the nvmet_execute_identify_desclist()
+such that it can now update the ns-desc with NVME_CSI_ZNS if bdev is
+zoned.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/nvme/target/admin-cmd.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ drivers/nvme/target/admin-cmd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 509fd8dcca0c..c64b40c631e0 100644
+index c64b40c631e0..d4fc1bb1a318 100644
 --- a/drivers/nvme/target/admin-cmd.c
 +++ b/drivers/nvme/target/admin-cmd.c
-@@ -603,37 +603,35 @@ u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
- 
- static void nvmet_execute_identify_desclist(struct nvmet_req *req)
- {
--	struct nvmet_ns *ns;
- 	u16 status = 0;
- 	off_t off = 0;
- 
--	ns = nvmet_find_namespace(req->sq->ctrl, req->cmd->identify.nsid);
--	if (!ns) {
-+	req->ns = nvmet_find_namespace(req->sq->ctrl, req->cmd->identify.nsid);
-+	if (!req->ns) {
- 		req->error_loc = offsetof(struct nvme_identify, nsid);
- 		status = NVME_SC_INVALID_NS | NVME_SC_DNR;
- 		goto out;
+@@ -628,6 +628,10 @@ static void nvmet_execute_identify_desclist(struct nvmet_req *req)
+ 			goto out;
  	}
  
--	if (memchr_inv(&ns->uuid, 0, sizeof(ns->uuid))) {
-+	if (memchr_inv(&req->ns->uuid, 0, sizeof(req->ns->uuid))) {
- 		status = nvmet_copy_ns_identifier(req, NVME_NIDT_UUID,
- 						  NVME_NIDT_UUID_LEN,
--						  &ns->uuid, &off);
-+						  &req->ns->uuid, &off);
- 		if (status)
--			goto out_put_ns;
-+			goto out;
- 	}
--	if (memchr_inv(ns->nguid, 0, sizeof(ns->nguid))) {
-+	if (memchr_inv(req->ns->nguid, 0, sizeof(req->ns->nguid))) {
- 		status = nvmet_copy_ns_identifier(req, NVME_NIDT_NGUID,
- 						  NVME_NIDT_NGUID_LEN,
--						  &ns->nguid, &off);
-+						  &req->ns->nguid, &off);
- 		if (status)
--			goto out_put_ns;
-+			goto out;
- 	}
- 
++	status = nvmet_process_zns_cis(req, &off);
++	if (status)
++		goto out;
++
  	if (sg_zero_buffer(req->sg, req->sg_cnt, NVME_IDENTIFY_DATA_SIZE - off,
  			off) != NVME_IDENTIFY_DATA_SIZE - off)
  		status = NVME_SC_INTERNAL | NVME_SC_DNR;
--out_put_ns:
--	nvmet_put_namespace(ns);
-+
- out:
- 	nvmet_req_complete(req, status);
- }
 -- 
 2.22.1
 
