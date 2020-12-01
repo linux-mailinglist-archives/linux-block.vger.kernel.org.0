@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72CEF2C965D
-	for <lists+linux-block@lfdr.de>; Tue,  1 Dec 2020 05:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 851C62C965B
+	for <lists+linux-block@lfdr.de>; Tue,  1 Dec 2020 05:16:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgLAEQZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Nov 2020 23:16:25 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:21474 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbgLAEQZ (ORCPT
+        id S1728049AbgLAEQP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Nov 2020 23:16:15 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:13185 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728039AbgLAEQP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Nov 2020 23:16:25 -0500
+        Mon, 30 Nov 2020 23:16:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606796184; x=1638332184;
+  t=1606796175; x=1638332175;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hUhzJ651cVoNvniIQeg3wff/FCoz1DE77FDFCSJt0Zk=;
-  b=L8th+e4ZXzJS1i3QJZPgxvVb3a1I/DCHS5izxrMsXxGFOD31UhQiAD6F
-   wxrXilTG0+xwcEmTsIdG3EUUDW2pW8WXgJwu2F2MCO6n1g0Q7rPPPqElR
-   F3NCB1Z3ybp1d22d1Yvb5M4dMkQP/JxMM3kARo6viLR7QfvWZMWIVwb3j
-   voGBsTsNNlIkj0MnIHBluf0eNZMk51GVWYAxElt4t4Xe1KE0fkSMlCL1W
-   kJe6YTvctO9DJAatBYKkfgGNqMqD2RIxOpIDcL1onm/GgtjkNTZieoDes
-   4UUwm3Z7y0PyTdKOcEknkB7xjmW6VTzSVVHJHofzKcgGClsZEFIc1Cebe
-   Q==;
-IronPort-SDR: 53w5cCa5sRJK5NzY39J9XwRunGhqO2IzhJYQD7pM4YprOVRVTLjdUpt3Oryd+IhDv1rrOreVy/
- RDSWiS/V4JGkV9wM5CbWE1LfHmfvrRq7XAsd2WhymNxzXn0wErqcsRJqhgx+diEYPi9OCKuVdk
- NPfZQ75XUgzgZI1uibUCdwoqI3D01987/C6y8Eqi5WZTLsnfXAp8vTBzHKdkzFWqd30a3JAJmu
- Pa8APl0w2gq1NwHyE6HQcSf8F8p/72pLvf56DIiXpfxD+6SxlG0Gqm8bbwlyUsMW57+s/8iex9
- LTo=
+  bh=DGst3WtKZogqGUvuhSXY1Do01tQZeR4MGYSWqYweif8=;
+  b=pPJovK4FH9VSlnr7Li2pHPWKsdbPUWJlOXEPksRtZD2OqjzAOZl408cr
+   YHVBsaLlH6DQxewhlRM5GABVoUZLSBv+x5e/ac5Th4lqaLiberLoDxSD1
+   QQ+o3EA1XOySvRgerjPQjiz8x24F5LZdAhJlS6r9wTEWFDzRR+FG83Y74
+   Usy/KRJ9uay6/S9Hgisf5D+EGKYQrMXu5u0jAEymDRAK2NQAnekPefQ0f
+   /UpBvHPznYhsbKk0hHvMqMH1V1GMZLkMPGJPp7zSQrxsh6Qg3k1lvhZCC
+   2Xxobfs76Xxc6M1p/h/xb2LN631trfW4A4wf+8N0MUAVHDKi6FRSnLT25
+   A==;
+IronPort-SDR: 3dbcpKrfSkblsgJUAVASGjMzc7ODDoO29Jz1FIkNvUVoNpYtRWgzrgQTNzZxunIligKdAihh8B
+ wPSPD4T1Nr/JX9lfqtz9PFQDHf1rgzIbwn1okA+OnYa2DMSSCKEjwtkiLqET34LHuphZnMN/KV
+ LNNSPkgIR9qkbqMpGWfr4SOnjrHp0UCE/pPTOf3Xu2Zl4ZtkINvFEjyAKjaPeVDmCcvcRL4p8e
+ dnJGhQLKy1OawvsRl6Y7iXZJ2P6sm8oTrK0AQHRd1xSJgSwNSb4vahNLwfno0M0Fs4T+rLog2Q
+ ycA=
 X-IronPort-AV: E=Sophos;i="5.78,383,1599494400"; 
-   d="scan'208";a="264005915"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Dec 2020 12:15:19 +0800
-IronPort-SDR: UqEen0blP2gIFgKZV2ap2uXdX9PGwE1wqVWGaNt0kUgL5gLBIkiojg/OpVbDdudGBahNChkCXA
- 4EPKc5QvVbSnufeRo3hNBCtH6OyEKhxuA=
+   d="scan'208";a="155078201"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Dec 2020 12:15:27 +0800
+IronPort-SDR: P+kmGW8GUScSXbGJXHtxlaV8GNbSLQz7XxLZPjcQVEGv/ksHK8dmbguNp0bikAocsQ/mqqsk5d
+ aBQ2K4stmFy/ylW/hsW8P1B4I2g4eWflU=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2020 20:00:55 -0800
-IronPort-SDR: //xZ+qNsQRcAGeKCluZYuo0aHD1Fp1gdnJAggnvul6GPdSwObZMVXcGJymVr1bni4SUp1y9Rwi
- 3XYh8f/KljCg==
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2020 19:59:39 -0800
+IronPort-SDR: oOK355WftzbW+cpLDbRUEOgaJ9Q54PUztkfR5GVdew0njI760zH51zNV2nucOhyUy42YzZnvQf
+ NVwIxHV2/ttw==
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip01.wdc.com with ESMTP; 30 Nov 2020 20:15:19 -0800
+  by uls-op-cesaip01.wdc.com with ESMTP; 30 Nov 2020 20:15:27 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     sagi@grimberg.me, hch@lst.de, damien.lemoal@wdc.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V3 7/9] nvmet: add zns cmd effects to support zbdev
-Date:   Mon, 30 Nov 2020 20:14:14 -0800
-Message-Id: <20201201041416.16293-8-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V3 8/9] nvmet: add zns bdev config support
+Date:   Mon, 30 Nov 2020 20:14:15 -0800
+Message-Id: <20201201041416.16293-9-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20201201041416.16293-1-chaitanya.kulkarni@wdc.com>
 References: <20201201041416.16293-1-chaitanya.kulkarni@wdc.com>
@@ -59,27 +59,31 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Update the target side command effects logs with support for
-ZNS commands for zbdev.
+For zbd based bdev backend we need to override the ns->blksize_shift
+with the physical block size instead of using the logical block size
+so that SMR drives will not result in an error.
+
+Update the nvmet_bdev_ns_enable() to reflect that.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/nvme/target/admin-cmd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/target/io-cmd-bdev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index cd368cbe3855..0099275951da 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -191,6 +191,8 @@ static void nvmet_execute_get_log_cmd_effects_ns(struct nvmet_req *req)
- 	log->iocs[nvme_cmd_dsm]			= cpu_to_le32(1 << 0);
- 	log->iocs[nvme_cmd_write_zeroes]	= cpu_to_le32(1 << 0);
+diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
+index 125dde3f410e..e1f6d59dd341 100644
+--- a/drivers/nvme/target/io-cmd-bdev.c
++++ b/drivers/nvme/target/io-cmd-bdev.c
+@@ -86,6 +86,9 @@ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
+ 	if (IS_ENABLED(CONFIG_BLK_DEV_INTEGRITY_T10))
+ 		nvmet_bdev_ns_enable_integrity(ns);
  
-+	nvmet_zns_add_cmd_effects(log);
++	if (bdev_is_zoned(ns->bdev) && !nvmet_bdev_zns_enable(ns))
++		return -EINVAL;
 +
- 	status = nvmet_copy_to_sgl(req, 0, log, sizeof(*log));
+ 	return 0;
+ }
  
- 	kfree(log);
 -- 
 2.22.1
 
