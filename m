@@ -2,77 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 849C32CA331
-	for <lists+linux-block@lfdr.de>; Tue,  1 Dec 2020 13:56:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1742CA33D
+	for <lists+linux-block@lfdr.de>; Tue,  1 Dec 2020 13:58:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbgLAMxg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Dec 2020 07:53:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
+        id S1728862AbgLAM5C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Dec 2020 07:57:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgLAMxf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Dec 2020 07:53:35 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74EDC0613CF;
-        Tue,  1 Dec 2020 04:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/x/BlGz9wsyeKt9EH9JP9Ms34VbCwEASozEkM1sVSX4=; b=lPsff/K7OVPirotdLNK1OSP1s/
-        PAkE5qpR7HxRTYXDVx+gkFw787/AeWtM50F9uqMGnpf0FanqvA+chj0FDNeDzzbUXTGqaSMS7gUm6
-        /AQo4k7+gstFcxSulWHnxlHX42J/VEgcid4aPuzvnoqthgKskgUjc29hBI+0ySW5MDdj5j/bruPuj
-        dd82hX88lJoWWYIsab/f5uCFAlaUf3olllL4SaA635xzhiKNWwbJOOhUSwe8cKfMDXVxAzzoUYsOi
-        Y85bDHdYhLHgj2xUpHb23F71DuzMp7TFkf5Wsrbd9MKdsPHBtVfwu9qRV65Y6Zp+GG/SSSCZz0Tui
-        dF9LUQ/w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kk59I-0006Bb-04; Tue, 01 Dec 2020 12:52:52 +0000
-Date:   Tue, 1 Dec 2020 12:52:51 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] block: add bio_iov_iter_nvecs for figuring out nr_vecs
-Message-ID: <20201201125251.GA11935@casper.infradead.org>
-References: <20201201120652.487077-1-ming.lei@redhat.com>
+        with ESMTP id S1728237AbgLAM5B (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Dec 2020 07:57:01 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BD5C0613CF
+        for <linux-block@vger.kernel.org>; Tue,  1 Dec 2020 04:56:15 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id f9so3898570ejw.4
+        for <linux-block@vger.kernel.org>; Tue, 01 Dec 2020 04:56:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xHTwekTMHBxnzJvZgFr7Rrub1GZfhNFwsQwlD3O2K1U=;
+        b=RWoTNTSW1M042+k5M7VQxKEO4QG+Tv5qRlOcyxZfamL01nFTX4xiLQMWhJ0PVjgbdq
+         2J6AROcEYP4pl1Ebfk69Fwch3z8Y94mwwUB82UaYTtols0RJ6oYCQxuqB0hHOSKiCSnS
+         +Rk6LIGSSCxSPh0L+o8biy2Na55HtHAsj0h0ONRVlPOYWbxY91cU85UWWxq+KWz2ioFf
+         U9NxNHDnHvZzkh12DHwhYUj0w/mBrJb7Cb1+11PAggL+KhpVQpgB/gE8gWmY9JmGPLLX
+         d/PB+7UGRfCkFdqQ6ivgiOwUgcBRWrZFdAy0uQBeDbEx/3nIecx20Jn9WKylQCi5ghvj
+         1m3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xHTwekTMHBxnzJvZgFr7Rrub1GZfhNFwsQwlD3O2K1U=;
+        b=j4XhO82lzrbsO/Ermqh/nSdeYYZS6YPPNZDcPq2tsmTWQQwOM/hovfISaGxY6OUQhX
+         Lagv1gkLfRGzsRVR7zTy19jPCvvT8S4R8JKQi1QLm60VA09WPjJgql67B+PAxBWXbSVp
+         36aE3bzRA5+Kv4Id9wEcnKxwyqjuIwBH2BHgtVhNdJF3icZiYhXSgz7BbIFM4YHJ27Gb
+         FQORATT3QR3zTtuwbIeRhBzzXNYNdjuyD41DoKlC5Co+41+ruEh08qxofCxSJkNBaoBs
+         VANafJBAIon+/WSacaLOLj/vNyJhigBV2LnB1QGOkbMbqA9rtNm3tJFxiETn9asyMgE0
+         jOAg==
+X-Gm-Message-State: AOAM530Yi8JvuFNolFmOcxjfAhOHOZNLkg7lzaVxdaaR01T/fDGGqAeW
+        sgvCUXavnUXwJyL2TAasBQtZXA==
+X-Google-Smtp-Source: ABdhPJyNIkNoBljyczIcLAxluT/ncJslz82vRxuNdgyl0p0COQRoENkoyaekMBGw5TpbyXVtmyxQnQ==
+X-Received: by 2002:a17:906:c1c6:: with SMTP id bw6mr2783569ejb.199.1606827373837;
+        Tue, 01 Dec 2020 04:56:13 -0800 (PST)
+Received: from ch-wrk-javier.localdomain (5.186.124.214.cgn.fibianet.dk. [5.186.124.214])
+        by smtp.gmail.com with ESMTPSA id be6sm796864edb.29.2020.12.01.04.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 04:56:13 -0800 (PST)
+From:   javier@javigon.com
+X-Google-Original-From: javier.gonz@samsung.com
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-block@vger.kernel.org, hch@lst.de, kbusch@kernel.org,
+        sagi@grimberg.me,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>
+Subject: [PATCH 0/4] nvme: enable per-namespace char device
+Date:   Tue,  1 Dec 2020 13:56:06 +0100
+Message-Id: <20201201125610.17138-1-javier.gonz@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201201120652.487077-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 01, 2020 at 08:06:52PM +0800, Ming Lei wrote:
-> Pavel reported that iov_iter_npages is a bit heavy in case of bvec
-> iter.
-> 
-> Turns out it isn't necessary to iterate every page in the bvec iter,
-> and we call iov_iter_npages() just for figuring out how many bio
-> vecs need to be allocated. And we can simply map each vector in bvec iter
-> to bio's vec, so just return iter->nr_segs from bio_iov_iter_nvecs() for
-> bvec iter.
-> 
-> Also rename local variable 'nr_pages' as 'nr_vecs' which exactly matches its
-> real usage.
-> 
-> This patch is based on Mathew's post:
-> 
-> https://lore.kernel.org/linux-block/20201120123931.GN29991@casper.infradead.org/
+From: Javier González <javier.gonz@samsung.com>
 
-But the only reason we want to know 'nr_vecs' is so we can allocate a
-BIO which has that many vecs, right?  But we then don't actually use the
-vecs in the bio because we use the ones already present in the iter.
-That was why I had it return 1, not nr_vecs.
+This series enables a per-namespace char device that is always presented
+to the host, independently of the block device associated with the
+namespace. This allows user-space to use the char device's IOCTL
+interface when the kernel rejects the block device due to unsupported
+features. Examples of these features include unsupported PI
+configurations, ZNS features such as zoc, or unsupported command sets
+such as KV.
 
-Did I miss something?
+One of the things that I would appreciate more input on is the naming
+convention. This series follows the hidden device naming nvmeXcYnZ, but
+I am not sure how this will work out with multipath. The concern is if
+we will have unfixable naming collisions that will jepardize user-space
+tools depending on this naming.
 
-> +static inline int bio_iov_iter_nvecs(const struct iov_iter *i, int maxvecs)
-> +{
-> +	if (!iov_iter_count(i))
-> +		return 0;
-> +	if (iov_iter_is_bvec(i))
-> +               return min_t(int, maxvecs, i->nr_segs);
-> +	return iov_iter_npages(i, maxvecs);
-> +}
+Thanks to Christoph for proposing this in the first place and Christoph
+and Keith for early reviews of this patchset!
+
+Javier
+
+Javier González (4):
+  nvme: remove unnecessary return values
+  nvme: rename controller base dev_t char device
+  nvme: rename bdev operations
+  nvme: enable char device per namespace
+
+ drivers/nvme/host/core.c | 172 ++++++++++++++++++++++++++++++++-------
+ drivers/nvme/host/nvme.h |   3 +
+ 2 files changed, 146 insertions(+), 29 deletions(-)
+
+-- 
+2.17.1
+
