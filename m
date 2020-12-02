@@ -2,66 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AB902CC2B7
-	for <lists+linux-block@lfdr.de>; Wed,  2 Dec 2020 17:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB9052CC2DF
+	for <lists+linux-block@lfdr.de>; Wed,  2 Dec 2020 17:58:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgLBQsv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Dec 2020 11:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35948 "EHLO
+        id S1730647AbgLBQ5q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Dec 2020 11:57:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgLBQsv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Dec 2020 11:48:51 -0500
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96510C0613CF
-        for <linux-block@vger.kernel.org>; Wed,  2 Dec 2020 08:48:05 -0800 (PST)
-Received: by mail-io1-xd43.google.com with SMTP id z5so2567825iob.11
-        for <linux-block@vger.kernel.org>; Wed, 02 Dec 2020 08:48:05 -0800 (PST)
+        with ESMTP id S1730628AbgLBQ5q (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Dec 2020 11:57:46 -0500
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DA7C061A4E
+        for <linux-block@vger.kernel.org>; Wed,  2 Dec 2020 08:56:53 -0800 (PST)
+Received: by mail-il1-x141.google.com with SMTP id x15so2181203ilq.1
+        for <linux-block@vger.kernel.org>; Wed, 02 Dec 2020 08:56:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ol3Q5QFZA81+FhWWolOBgRbxm5fm9KZ2929mrul4800=;
-        b=BoCledKWaE4uuWSuHxn7Nuq86OCaGvhfDI1EEfXMcC2DePc137vNpAk8abiVnkuOrY
-         rWyQ4D4wD1HYzBbXFlnno2sgWo8MxMIpARVR1WQj9zwkncbydKVLIKHwFBIaNNu/BJ3D
-         UjOdaGTW3SCweTxjUBWamX4twLy3aENgXGFmWpXQdCIQm9beqjXP4d367sgk5aiyViQk
-         Yl7lbeWEartwPFWcCzL/ELQVaXO8R9i4KIENoxWkn7z9JSztW2UFK0jxHEn9ExwukiBY
-         VaW9KriE+HraYutVs5NKM9zlocjP3mc2Hp7UBVOwSRez6H0uUDN0mMIm608080OdwdGu
-         ECiA==
+        bh=QPknBxtQoCpT/zvKKXpkK/ZoNkojGaFc65IMqcOjeCo=;
+        b=znT+GrC5ntQsghSmwd5WkHL3YyU0u2hS19p2l25n+qsOlECRun1wQOJ1DtAoqGdodf
+         PF5JAPnJCuBUwxdNrk6p4h+FIJg2BqSsMNaewCVgWso+ViL/rtZ+rgVDHcOkgS2BE9eW
+         APSE5ahzEyaYTydVbHwbo3esRnf7gdOYytcFoHbX+1dcSZKmx4rz9RhEpJsFDBFSUX7E
+         8AEWLMykbOFYAAya4uUWrV+jPXSOvrwlNTfJ0lEIWsYXpx8Anmxoyb9/AYHbj30JFTdW
+         AYqgFXSJhi5gMOIPnQVXDTYpROxYpOv5zke96hODa5KIF9AqgvUKDqw65sOKwbrzH1bS
+         +6mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ol3Q5QFZA81+FhWWolOBgRbxm5fm9KZ2929mrul4800=;
-        b=J29d5OAgei4dMJ5yPuwOZaU1mTTtAQ0ks9jFwrJaAuZhtwLyL/SdeQ1IVb/Bj6p2eH
-         l4twytnMDE56wGM2aRTd6bjC9YR0mWzsUAyR8m3rVoXeEyt28pmwF5WyCW3aSBflvihK
-         yPW2nG4KCV9xRNBf3BruRdt1HzGDut1cxObbZXEgnXN5oIoYkkE0zvzyDMCziEglu3t+
-         VoAM2zWll9lyTc5CqlJydN0RrxBdcpbMsW6kGHeebm63D7SFew1oxKV3LETfxRksTyLN
-         jViXBpw9prKu9Rkl5kZVsTvR6UT7gvtOAT3fAXmIFIfQqPG4DQmXXD36IoQ2jgaukKXR
-         d7NA==
-X-Gm-Message-State: AOAM531VNCcNi1K8e+XyQhk9gAAa+v0PR5JWjPzPINV7t61WjKWpd7+F
-        egmXqLKlPUXXilp8yG8sYxrngNuXvCSB+w==
-X-Google-Smtp-Source: ABdhPJyN/Ic9hBtZ9Qob32Y7t9aP65fWqFYkt9iyQjzHWnd3WK7XCGtZIfVHe01RMVADGy5w5AmPeg==
-X-Received: by 2002:a02:9002:: with SMTP id w2mr2916580jaf.111.1606927684780;
-        Wed, 02 Dec 2020 08:48:04 -0800 (PST)
+        bh=QPknBxtQoCpT/zvKKXpkK/ZoNkojGaFc65IMqcOjeCo=;
+        b=CMpY6rN9d2CLQis05y15a9Jf+NUC3G4dmMrvUDikW0QB1LUcOanLcGn8HENLSMER9f
+         pVFY1ZTV0FMWv00P4cDope4ZMncZ7KvSGTfUtq7zF0rbb9O7nafdID3hVboyb56XrdcO
+         XToblkJdX32XJM3ZdQtirJ0eG1xdJjPY5a6JCWAr2jKtuR7CM4FO48VrS18+9ntJXjH2
+         XeAtvItl0LpSzPrAYW3pw7OYIayMSCWfgC0NaKlzwNV68Y8KUOo2S4i53LpdY0JSpDIT
+         TAsJWcHihzIDbUtZUoQDokcxn6DliV1ZAUBNrd0vcmgmuzpiOD5LBmP6iSSspSyYT+OF
+         QXww==
+X-Gm-Message-State: AOAM5312beiNYvvck+6BRJ/hg/84no7T6meNnOIAQd93qeUeJz7lkszQ
+        RXb3dqQauk8KhN+5sB2IqqzVvg==
+X-Google-Smtp-Source: ABdhPJyxz4IgRtE5sxlFOWEwmI1ekbF5NyPTv+/LiPUVGAiUYzljzebwvQt0VpHBPvn/n7GDuyx3RA==
+X-Received: by 2002:a92:c88d:: with SMTP id w13mr3003916ilo.37.1606928212666;
+        Wed, 02 Dec 2020 08:56:52 -0800 (PST)
 Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id a13sm1389371ilh.0.2020.12.02.08.48.04
+        by smtp.gmail.com with ESMTPSA id p18sm1376199ile.27.2020.12.02.08.56.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Dec 2020 08:48:04 -0800 (PST)
-Subject: Re: [PATCH v2] block: fix inflight statistics of part0
-To:     Christoph Hellwig <hch@infradead.org>,
-        JeffleXu <jefflexu@linux.alibaba.com>
-Cc:     joseph.qi@linux.alibaba.com, linux-block@vger.kernel.org
-References: <20201202111145.36000-1-jefflexu@linux.alibaba.com>
- <4317c6c9-886f-c921-70c1-ccc12ba6ae79@linux.alibaba.com>
- <20201202112050.GA2201@infradead.org>
+        Wed, 02 Dec 2020 08:56:52 -0800 (PST)
+Subject: Re: [PATCH] block: add bio_iov_iter_nvecs for figuring out nr_vecs
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-fsdevel@vger.kernel.org
+References: <20201201120652.487077-1-ming.lei@redhat.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <699798e0-6b38-105f-aacc-938f3ecd6ce4@kernel.dk>
-Date:   Wed, 2 Dec 2020 09:48:03 -0700
+Message-ID: <335f3f7a-8b24-8ef2-8481-0139687d0dbb@kernel.dk>
+Date:   Wed, 2 Dec 2020 09:56:51 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20201202112050.GA2201@infradead.org>
+In-Reply-To: <20201201120652.487077-1-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,24 +69,20 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 12/2/20 4:20 AM, Christoph Hellwig wrote:
-> On Wed, Dec 02, 2020 at 07:17:55PM +0800, JeffleXu wrote:
->>> Fixes: bf0ddaba65dd ("blk-mq: fix sysfs inflight counter")
->>> Fixes: f299b7c7a9de ("blk-mq: provide internal in-flight variant")
->>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
->>> ---
->>> v2: update the commit log, adding 'Fixes' tag
->>
->> Forgot to add 'stable' tag.
+On 12/1/20 5:06 AM, Ming Lei wrote:
+> Pavel reported that iov_iter_npages is a bit heavy in case of bvec
+> iter.
 > 
-> The fixes tags take care of that automatically.
+> Turns out it isn't necessary to iterate every page in the bvec iter,
+> and we call iov_iter_npages() just for figuring out how many bio
+> vecs need to be allocated. And we can simply map each vector in bvec iter
+> to bio's vec, so just return iter->nr_segs from bio_iov_iter_nvecs() for
+> bvec iter.
 > 
-> Note that this patch will cause a merge conflict with my work in
-> linux-next, but the resolution is pretty trivial.
+> Also rename local variable 'nr_pages' as 'nr_vecs' which exactly matches its
+> real usage.
 
-Might be better to handle on the stable side, and just apply this to
-5.11. It's not a new regression.
+I'd really prefer to keep the renaming separate from the actual change.
 
 -- 
 Jens Axboe
