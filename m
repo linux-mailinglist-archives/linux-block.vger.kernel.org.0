@@ -2,88 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8F72CF257
-	for <lists+linux-block@lfdr.de>; Fri,  4 Dec 2020 17:52:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 878752CF2C6
+	for <lists+linux-block@lfdr.de>; Fri,  4 Dec 2020 18:13:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbgLDQv2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Dec 2020 11:51:28 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35824 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729617AbgLDQv2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Dec 2020 11:51:28 -0500
-Received: by mail-pf1-f195.google.com with SMTP id c79so4113211pfc.2;
-        Fri, 04 Dec 2020 08:51:13 -0800 (PST)
+        id S2388426AbgLDRKG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Dec 2020 12:10:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387823AbgLDRKF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Dec 2020 12:10:05 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF42FC061A4F
+        for <linux-block@vger.kernel.org>; Fri,  4 Dec 2020 09:09:25 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id o8so6496399ioh.0
+        for <linux-block@vger.kernel.org>; Fri, 04 Dec 2020 09:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=kq2jyHJDfxqOxuShgwYNcAto0qAucvJCi8yLZBnTurg=;
+        b=Qvw7fqK4FgH9I2rx9x6+zSZKUgVc7MXsFu0qrz9yaaeFbh50zpK30gj3+maaFah3yd
+         zoXaIay8zfRG+kPBTANB7umLS3Skvg7C59Vbfmy23Zivd0uQajFQBWXFsvkisM+RT38m
+         S83Xt+DCc65w37ldLQdWp+3zBkPS/3xCDzw5X1UuoJQ+CtpcPeb6xlvFqViIc6jTiUlw
+         zdgRAzGja9tAvYR7iTCMIBdnx+DNEFN/+jww5LUU7yA0G3nYKs3P5CPPiTqDXMTj2gTa
+         2rqw0WGORr9XVXsdZMP4o0oc29mjT57QNVpDN2JB4FI0FSDmpk3y2JRbBpSBlUj4JitA
+         l09g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tKNG89IP0eWAuFAmQbkXENZV9Tbmi4dU4MxDvBA7mFI=;
-        b=OfUNSUs5OxS2as7eBxQdTZXATgCM9VvgbpYwrkxk2Ok51AW9WU1Dbem2i14dSOaPVU
-         Ki0X7/cmuq87VlyBZlHKNOmxHZZYKN15nhhfDpitfcgPJQcGiMT10fAOy1Oco9oUBgbV
-         V1O4qdZq2ef0bLDSrWfbE0TQXia8Hgr6K+M/o3zDGs+GruFatt+3yiVgmPnAB0NEu99F
-         BVMgw9+uF5D6eqNxSvIxwJ+axyCz0VPqLy7VTwhuoEf9yeN6m4cYUBMKtVmlphd01GD4
-         0VBRMTWv++TkWjO5aifejOmxMd9RVZJQFbXBCZfIZUH0Z3rmvfBLF6hxpqVfSFFGmVdO
-         iDTw==
-X-Gm-Message-State: AOAM531ogFjfZAO+LBBfTAcRjuRGJxEuRp2sqnEdobUR25fYvMJrdKbv
-        QMicZtvKn76CAK9nBz+xeIo=
-X-Google-Smtp-Source: ABdhPJyVjoClBTZulB9nZ/rWWhlx2xF6FBwXReB+wzB03dYuTytWT/YAJkp7loPNHUyzV5nqAtAYEg==
-X-Received: by 2002:a63:4:: with SMTP id 4mr8059058pga.443.1607100647637;
-        Fri, 04 Dec 2020 08:50:47 -0800 (PST)
-Received: from [192.168.3.218] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id w2sm2687796pjb.22.2020.12.04.08.50.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Dec 2020 08:50:46 -0800 (PST)
-Subject: Re: [PATCH v4 5/9] scsi: Do not wait for a request in
- scsi_eh_lock_door()
-To:     Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Can Guo <cang@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20201130024615.29171-1-bvanassche@acm.org>
- <20201130024615.29171-6-bvanassche@acm.org>
- <bdadfbcd-76c4-4658-0b36-b7666fa1dc7b@suse.de>
- <6e5fbc73-881e-69c7-54ce-381b8b695b3c@acm.org>
- <b56cf3af-940f-62ed-2a79-eb80599e2f44@suse.de> <20201203072738.GB633702@T590>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <32732e89-e425-2b71-4564-35e243f170bc@acm.org>
-Date:   Fri, 4 Dec 2020 08:50:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=kq2jyHJDfxqOxuShgwYNcAto0qAucvJCi8yLZBnTurg=;
+        b=J8GUwy8CN+bXSMBZo3evfqbgKFDDbmv82htb2hp/JXZD950bpnFtF/qTOqgrihAjI3
+         QevEr3lTDDcvvkymzt9H3AuU/xODNqchBHe3zVVTtrYtJCSgIc7iU5YjfwFVmDVTAhjT
+         4lab3n6uLF7ZQr1qNgxQx/zc/OHfCVVsGlr23+2V5FfTnoP8J059q9R9x4AYG94z4U/f
+         nQswhvDy5Y0RyYyFMql5SO4C5FW15nrtmUQEc77+jv/Jb2CpJTKNw0cv6ZCgj3hm3ql+
+         4jgEN3GLfModKuMb2U2ng+6dVdrA/dRF9up3EIk2KUzdrXlSYk9Flxfa0Cxe8WkUXxji
+         tlfQ==
+X-Gm-Message-State: AOAM531vYyzGhsoXNJ+SWFzfm2+O5LOYGor8cbA2qu5Pa1sqVm7rTsbF
+        fclhOcA/pryTCKqcQIrouspVoDpNz29/o1FV2rg=
+X-Google-Smtp-Source: ABdhPJy2NZ370VsFQgrBGQBICDir3AUJ2Z3fz2FAmXwHZsAfXuSSQxWb5UcOGjZnUeDsPuqcLlIL9dITruIHagTxFsc=
+X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr7311241iow.131.1607101765092;
+ Fri, 04 Dec 2020 09:09:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201203072738.GB633702@T590>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a6b:d004:0:0:0:0:0 with HTTP; Fri, 4 Dec 2020 09:09:24 -0800 (PST)
+Reply-To: hs8qfc11@gmail.com
+From:   "Dr. Dagbo Igho" <dagboigho@gmail.com>
+Date:   Fri, 4 Dec 2020 18:09:24 +0100
+Message-ID: <CANqtXm59dN7Mm8EgB4s3D0ZxH555w7_HOgdWjZA--nROS_wjsA@mail.gmail.com>
+Subject: Good Morning,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 12/2/20 11:27 PM, Ming Lei wrote:
-> BTW, scsi_eh_lock_door() returns void, and it can't be sync because
-> there may not be any driver tag available. Even though it is available,
-> the host state isn't running yet, so the command can't be queued to LLD
-> yet.
-> 
-> Maybe the above lines should be put after host state is updated to
-> RUNNING.
-> 
-> Also changing to NOWAIT can't avoid the issue completely, what if 'none'
-> is used?
-
-Hi Ming,
-
-I am considering to drop this patch since the latest version of the SPI
-DV patch no longer introduces a new blk_mq_freeze_queue() call in the
-SPI DV code. In other words, any potential issues with
-scsi_eh_lock_door() are existing issues and are not made worse by my
-patch series.
+-- 
+I'm Dr. Dagbo Igho, did you Receive the (FUND), that was paid to you?
+please, do not hesitate to Let me know with your full name:.. for
+immediate verification notice,
 
 Thanks,
+Dr. Dagbo Igho
+Foreign Remittance Director
 
-Bart.
+Sincerely Yours, Respectfully,
+
+Mr Bill T Winters,
+Group Chief Executive Officer & Executive Director,
