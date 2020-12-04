@@ -2,103 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9B72CF0A3
-	for <lists+linux-block@lfdr.de>; Fri,  4 Dec 2020 16:23:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE3B52CF12B
+	for <lists+linux-block@lfdr.de>; Fri,  4 Dec 2020 16:51:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgLDPWH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Dec 2020 10:22:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
+        id S1730899AbgLDPtm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Dec 2020 10:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730493AbgLDPWH (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Dec 2020 10:22:07 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E920C061A53;
-        Fri,  4 Dec 2020 07:21:27 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id n7so3708761pgg.2;
-        Fri, 04 Dec 2020 07:21:27 -0800 (PST)
+        with ESMTP id S1730549AbgLDPtl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Dec 2020 10:49:41 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AA8C061A53
+        for <linux-block@vger.kernel.org>; Fri,  4 Dec 2020 07:48:56 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id q7so2937136qvt.12
+        for <linux-block@vger.kernel.org>; Fri, 04 Dec 2020 07:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zSiFncf9bc1IksnnHanoKbYxCLnTdwlPlYIeXCQuzAo=;
-        b=NUKe7m154RACyFxE/BsYVTHsM+7z19YuU1au+5V0prlFmNfBtv35ChQeOuXhYQOYCj
-         3CI6C3YYYH+MGvrU4CJQoxjLKPPuYRH83yoXKkUz5TngBc6ExqMocojFL9lNfe6EtCb4
-         NQXG2ESRU+N6+MRDUKE738qzQyf48T+vksFsfbo6qmp8etFfjSUlM0lk2MQdIyza5T66
-         HCje7fK+NkTwTzSR8XM2FO+NO2PoEkYObT21FdKUCVpxGxSIXhwSzQ7EwedFlomQ/qe2
-         hKgPU0y26HfWMJdo6D4SMQCwRVP2J3t88rzwzFaxca2EBYIIFyfvCriCbNDWSHq0ZPoJ
-         MSpg==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=PA56DtQ3U6OS3ADt3JtiQH9iJ5okRT03tMtGP16RXIA=;
+        b=p4AZo33WMTXTpz74XuTaQCvr8JjiLn7ypdk62+VPzm5BdMKt9igpjZmiV4Ts4qi6+J
+         SKGTsVwNJHxvNy9D43S5RpkEjJtwvyjUcFbtGl6g7qLXlUFpBTsSCxXpBePSHE5OPbfm
+         mksQaolb9sXzm7+22TDrXsouNjPDrgzfQk55cGZ8dcksUDtecVBuIrV/rL0rDS4FIXGa
+         CvPH8RXGjKym1lMM679nc6sYC/ea1CzYYsrPdIStasXpT1d5deVX/6/ey0wtHLMxDXaU
+         REoOC8e2HrqtsbjM8fzvA/EMqQSINaRo0nL6ofS1dQc6bP4Jew/L1eiqWwgkD+J/NGRS
+         Uo0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zSiFncf9bc1IksnnHanoKbYxCLnTdwlPlYIeXCQuzAo=;
-        b=l3Zkla0h1iHZHUgZqYP1zkeYw6TqnHRuDH8ESBOSh+PqXUsENAUM+kHvF4nXbjwnqd
-         48sGYAQXCVVKlrVJiSgGeKexHnk9V2y7r39U+ULG8EbGl7ZsBi8DL0TvjgrBceq5AE7u
-         BVBVW6uj3roEHtO6u3ZT8pjbLEhyogrP4ML4v16GpZzUK6C7MAjbZ0abD3Fd7ZFqt1wr
-         j6FReZWg+x8ddh3anpkIwwNa0eQPYtfN3NoznxGfos5kAW5b9lcsMHVk0uvrNh5sYlQT
-         87ngPrATIsWmFPPrNLYRArohDgD1KiCUa+8+LYU9PRQr1c8IT1OVTfsdWbb7O+J4q1+u
-         unkg==
-X-Gm-Message-State: AOAM530u5CDU7qqD6gv7q5Q9tl5EQRDMnD4JhwbP2ly1inkICeeh5kwj
-        ZYp+tYN2Y2nO8WRQ5OiMndKJukyyMKSMRQ==
-X-Google-Smtp-Source: ABdhPJypSxXb5nWWg6zFc4F311ljR6V39mAg0gur2Z3gKt7vFFgkNKvnCs1Fp44NFAGk3rNiuZKADQ==
-X-Received: by 2002:a63:1b42:: with SMTP id b2mr2745121pgm.401.1607095286645;
-        Fri, 04 Dec 2020 07:21:26 -0800 (PST)
-Received: from localhost.localdomain ([211.108.35.36])
-        by smtp.gmail.com with ESMTPSA id d20sm2407286pjz.3.2020.12.04.07.21.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 07:21:26 -0800 (PST)
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: [PATCH 3/3] blk-mq: fix msec comment from micro to milli seconds
-Date:   Sat,  5 Dec 2020 00:20:55 +0900
-Message-Id: <20201204152055.31605-4-minwoo.im.dev@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201204152055.31605-1-minwoo.im.dev@gmail.com>
-References: <20201204152055.31605-1-minwoo.im.dev@gmail.com>
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=PA56DtQ3U6OS3ADt3JtiQH9iJ5okRT03tMtGP16RXIA=;
+        b=Fu+3PE8uHoYQWxpyfXY/movIpbipgVxFrOY/KR99BkBUDPz9U0d/qjODIPxN4ffNVP
+         Q728hiMVIT/cTUe5aQLM6x5ZWpHdUYE2MMyp9fPSeGdBrXutqyJck1A0sfnmv/1KyO8d
+         xeiXvRKPU9PHt8li/BbriqNE/99JWHz3te95O9l/RSlvlY15V6TROTcpZevzGmVHsT1w
+         MtJ48Q3f57nkv4WfNMjYP20nqZRpuspcyD1PeHkQ7Yd60ZNXkjPRLS81Rl13FVUsVgJd
+         VgMcfukGS4fyhStU2TjHcSgNN7Si6oCH0mrMpfrks5glf1mAENPuUXX+JVlnGauu+rwU
+         OSpw==
+X-Gm-Message-State: AOAM530BFSYR1gBJ/+rvR8CNOM6hHCgckehsZVaHyzu+cP01XIW9oWi/
+        HjIfBZvGE/3aQYLhMPR/CdGPnw==
+X-Google-Smtp-Source: ABdhPJxnvGuh1h4AicIp2Z2Ob074CL8yAHW4/pb+/Ip6VIx5jqWNzkUvWI0x5L/Pf3ERPP+MY/J4+Q==
+X-Received: by 2002:a0c:e18f:: with SMTP id p15mr6149469qvl.12.1607096935114;
+        Fri, 04 Dec 2020 07:48:55 -0800 (PST)
+Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id y1sm5586436qky.63.2020.12.04.07.48.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Dec 2020 07:48:54 -0800 (PST)
+To:     Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nvme@vger.kernel.org" <linux-nvme@vger.kernel.org>
+From:   Josef Bacik <josef@toxicpanda.com>
+Subject: [LSFMMBPF 2021] A status update
+Message-ID: <fd5264ac-c84d-e1d4-01e2-62b9c05af892@toxicpanda.com>
+Date:   Fri, 4 Dec 2020 10:48:53 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.5.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Delay to wait for queue running is milli second unit which is passed to
-delayed work via msecs_to_jiffies() which is to convert milliseconds to
-jiffies.
+Hello,
 
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
----
- block/blk-mq.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+We on the program committee hope everybody has been able to stay safe and 
+healthy during this challenging time, and look forward to being able to see all 
+of you in person again when it is safe.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 69771ba18f1f..284d103bd0e7 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1594,7 +1594,7 @@ static int blk_mq_hctx_next_cpu(struct blk_mq_hw_ctx *hctx)
-  * __blk_mq_delay_run_hw_queue - Run (or schedule to run) a hardware queue.
-  * @hctx: Pointer to the hardware queue to run.
-  * @async: If we want to run the queue asynchronously.
-- * @msecs: Microseconds of delay to wait before running the queue.
-+ * @msecs: Milliseconds of delay to wait before running the queue.
-  *
-  * If !@async, try to run the queue now. Else, run the queue asynchronously and
-  * with a delay of @msecs.
-@@ -1623,7 +1623,7 @@ static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- /**
-  * blk_mq_delay_run_hw_queue - Run a hardware queue asynchronously.
-  * @hctx: Pointer to the hardware queue to run.
-- * @msecs: Microseconds of delay to wait before running the queue.
-+ * @msecs: Milliseconds of delay to wait before running the queue.
-  *
-  * Run a hardware queue asynchronously with a delay of @msecs.
-  */
-@@ -1687,7 +1687,7 @@ EXPORT_SYMBOL(blk_mq_run_hw_queues);
- /**
-  * blk_mq_delay_run_hw_queues - Run all hardware queues asynchronously.
-  * @q: Pointer to the request queue to run.
-- * @msecs: Microseconds of delay to wait before running the queues.
-+ * @msecs: Milliseconds of delay to wait before running the queues.
-  */
- void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
- {
--- 
-2.17.1
+The current plans for LSFMMBPF 2021 are to schedule an in person conference in 
+H2 (after June) of 2021.  The tentative plan is to use the same hotel that we 
+had planned to use for 2020, as we still have contracts with them.  However 
+clearly that is not set in stone.  The Linux Foundation has done a wonderful job 
+of working with us to formulate a plan and figure out the logistics that will 
+work the best for everybody, I really can't thank them enough for their help.
 
+Once we have a finalized date we will redo the CFP emails, probably coming out 
+March time frame.  If you have any questions or concerns please feel free to 
+respond to this email, or email me or any of the other PC members privately and 
+we will do our best to answer your questions.  Rest assured the general timing 
+of the conference is going to take into account the wide variety of schedules 
+that we are dealing with, and we will do our best to come up with something that 
+works for as many as people as possible.
+
+We hope that you and your families continue to stay safe and health.  Thank you 
+on behalf of the program committee:
+
+	Josef Bacik (Filesystems)
+	Amir Goldstein (Filesystems)
+	Martin K. Petersen (Storage)
+	Omar Sandoval (Storage)
+	Michal Hocko (MM)
+	Dan Williams (MM)
+	Alexei Starovoitov (BPF)
+	Daniel Borkmann (BPF)
