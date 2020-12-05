@@ -2,52 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 248222CFDB9
-	for <lists+linux-block@lfdr.de>; Sat,  5 Dec 2020 19:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C7392CFE4D
+	for <lists+linux-block@lfdr.de>; Sat,  5 Dec 2020 20:24:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgLESnI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 5 Dec 2020 13:43:08 -0500
-Received: from in01-tec.fasttelco.net ([78.159.162.5]:46298 "EHLO
-        in01-tec.fasttelco.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgLEQzv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Dec 2020 11:55:51 -0500
-Received: from psxr9bd.com ([62.215.195.91])
-        by in01-tec.fasttelco.net (8.14.3/8.14.3/Debian-9.4) with ESMTP id 0B5Fpigb028414
-        for <linux-block@vger.kernel.org>; Sat, 5 Dec 2020 18:51:45 +0300
-Message-Id: <202012051551.0B5Fpigb028414@in01-tec.fasttelco.net>
-From:   "United Nations Organization" <Office6@un.com>
-Subject: {United Nations for Strategic Coordination}
-To:     linux-block@vger.kernel.org
-Content-Type: text/plain; charset=us-ascii
-Reply-To: "United Nations Organization" <mariamalmeer786@outlook.com>,
-          mariamalmeer786@outlook.com
-Date:   Sat, 5 Dec 2020 16:51:46 +0100
-X-Priority: 3
-X-Bayes-Prob: 0.0001 (Score 0, tokens from: corp_smtp, base:default, @@RPTN)
-X-Spam-Score: 2.91 (**) [Hold at 5.00] COMPENSATION:1.499,MISSING_MID:0.14,RDNS_NONE:1.274
-X-CanIt-Geo: ip=62.215.195.91; country=KW; latitude=29.3375; longitude=47.6581; http://maps.google.com/maps?q=29.3375,47.6581&z=6
-X-CanItPRO-Stream: base:corp_smtp (inherits from base:makc.com.kw,base:default)
-X-Canit-Stats-ID: 0440DPJMJ - dff1f13e9be4 - 20201205
-X-Antispam-Training-Forget: https://spam.fasttelco.com/canit/b.php?c=f&i=0440DPJMJ&m=dff1f13e9be4&rlm=base&t=20201205
-X-Antispam-Training-Nonspam: https://spam.fasttelco.com/canit/b.php?c=n&i=0440DPJMJ&m=dff1f13e9be4&rlm=base&t=20201205
-X-Antispam-Training-Phish: https://spam.fasttelco.com/canit/b.php?c=p&i=0440DPJMJ&m=dff1f13e9be4&rlm=base&t=20201205
-X-Antispam-Training-Spam: https://spam.fasttelco.com/canit/b.php?c=s&i=0440DPJMJ&m=dff1f13e9be4&rlm=base&t=20201205
-X-Scanned-By: CanIt (www . roaringpenguin . com) on 78.159.162.5
+        id S1728002AbgLETWe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 5 Dec 2020 14:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbgLETWT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 5 Dec 2020 14:22:19 -0500
+Subject: Re: [dm-devel] [git pull] device mapper induced block fix for 5.10-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607196099;
+        bh=vl/ksZFlRXwC5qkUZ25jXVpIAO83WfmPACYxC4QTGjs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=bgYzFj2ZLCebWBfpb+s7DAyNGT8/8YEqnXdiqCgJm63/2RV9RbN/TL/1nIvd9Yx35
+         wXwejhH5a2Ol9it3G7T4cnIeoihgVgbAPVGlU/QU4j2HTu7HcuAT4ExnKtul4WHLPE
+         u/jc5kdnWjMDC2HUs0Q5fRDcULe4oDr3TYiAILQjj4A0pr6qaGoh2xC/DTtwIObcGo
+         wdiBo9lklEld0llCPlLl3skNrXVrH26rVx52NmYCpxZ8UQsUAyyOd5g5v+xj3nUwXh
+         MK760xARafPn6woerY0+aqgE1pPISniTcuHBkvujQ9uS6IQBNezMTGvsnFiwEWI1Ne
+         rsvHB0kGQ7d/w==
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20201204231225.GA4574@redhat.com>
+References: <20201204210521.GA3937@redhat.com>
+        <160711773655.16738.13830016046956700847.pr-tracker-bot@kernel.org>
+        <20201204223742.GA82260@lobo> <20201204231225.GA4574@redhat.com>
+X-PR-Tracked-List-Id: device-mapper development <dm-devel.redhat.com>
+X-PR-Tracked-Message-Id: <20201204231225.GA4574@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.10/dm-fixes-2
+X-PR-Tracked-Commit-Id: 65f33b35722952fa076811d5686bfd8a611a80fa
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8762340561397fce0f0b41220ed9619101c870d0
+Message-Id: <160719609911.18711.171386792638793811.pr-tracker-bot@kernel.org>
+Date:   Sat, 05 Dec 2020 19:21:39 +0000
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-block@vger.kernel.org, axboe@kernel.dk, dm-devel@redhat.com
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-United Nations Assistant Secretary-General for Development Coordination.
+The pull request you sent on Fri, 4 Dec 2020 18:12:26 -0500:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.10/dm-fixes-2
 
-Congratulations,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8762340561397fce0f0b41220ed9619101c870d0
 
+Thank you!
 
-Your email was randomly selected for the 2020 Relief Compensation of $1.5M Package for Third Quarter Reimbursement via certified ATM CARD. Please reach Mrs. Mariam AlMeer for more information.
-
-Name: Mrs. Mariam AlMeer
-Email:  mariamalmeer786@outlook.com
-
-
-Assistant Secretary General- Volker Turk
-United Nations for Strategic Coordination
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
