@@ -2,80 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85BCC2D11B5
-	for <lists+linux-block@lfdr.de>; Mon,  7 Dec 2020 14:22:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B9E2D1218
+	for <lists+linux-block@lfdr.de>; Mon,  7 Dec 2020 14:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgLGNVz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Dec 2020 08:21:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35213 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725918AbgLGNVz (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 7 Dec 2020 08:21:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607347228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oUiOfk966dJJcf9pZKvx+8hjWQVZNkI78m5XaAH1pfQ=;
-        b=OdsuD1kyFTl9Uz1LmvIdp2eZ2dhFXxnOGtzyWSfLHiW4tJIty0xAesOcHVlBwGGRItt61K
-        t4YRpT+FSw8y0JTG1FUvUEjEYcGsla766FSjVAlRC0PBFbO71pbv8PlMQitvMGdBydW4Mi
-        PEJacp7dbDrB43cCFgaSVQe8bP0KGNM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-586-BN3x6tUpNwakD-FcVPDnfQ-1; Mon, 07 Dec 2020 08:20:25 -0500
-X-MC-Unique: BN3x6tUpNwakD-FcVPDnfQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7960858180;
-        Mon,  7 Dec 2020 13:20:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-116-67.rdu2.redhat.com [10.10.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32B0760CA3;
-        Mon,  7 Dec 2020 13:20:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20201207131037.GA3826@xsang-OptiPlex-9020>
-References: <20201207131037.GA3826@xsang-OptiPlex-9020> <20201203064536.GE27350@xsang-OptiPlex-9020> <98294.1607082708@warthog.procyon.org.uk>
-To:     Oliver Sang <oliver.sang@intel.com>
-Cc:     dhowells@redhat.com, lkp@lists.01.org, lkp@intel.com,
-        ying.huang@intel.com, feng.tang@intel.com, zhengjun.xing@intel.com,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        id S1726653AbgLGNbP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Dec 2020 08:31:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34058 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgLGNbP (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 7 Dec 2020 08:31:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1607347829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=TlW6LRYzNqv2k8YiMXo4C8ho53DA5MhvO4sDaaIu7G8=;
+        b=Isny2xaeNXr0QwvWgDPZvWhlph9aEdARWAGMR8XD8mIwJQVGDRljPeuqNDCgqaNncogi7U
+        kExKzaMsp3RukRSg9ga3/hbaAlEjkMHMsOZBAa9to1CWegHsRMFs8r6bfuK7vxPsMa92G0
+        EoXiC//R5iM0/X6/MTVWmbjDGY0eTzI=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 04B78AB63;
+        Mon,  7 Dec 2020 13:30:29 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
         Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [iov_iter] 9bd0e337c6: will-it-scale.per_process_ops -4.8% regression
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH 0/2] xen: fix using ZONE_DEVICE memory for foreign mappings
+Date:   Mon,  7 Dec 2020 14:30:22 +0100
+Message-Id: <20201207133024.16621-1-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <478031.1607347219.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 07 Dec 2020 13:20:19 +0000
-Message-ID: <478032.1607347219@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Oliver Sang <oliver.sang@intel.com> wrote:
+Fix an issue found in dom0 when running on a host with NVMe.
 
-> > Out of interest, would it be possible for you to run this on the tail =
-of the
-> > series on the same hardware?
-> =
+Juergen Gross (2):
+  xen: add helpers for caching grant mapping pages
+  xen: don't use page->lru for ZONE_DEVICE memory
 
-> sorry for late. below is the result adding the tail of the series:
-> * ded69a6991fe0 (linux-review/David-Howells/RFC-iov_iter-Switch-to-using=
--an-ops-table/20201121-222344) iov_iter: Remove iterate_all_kinds() and it=
-erate_and_advance()
+ drivers/block/xen-blkback/blkback.c |  89 ++++----------------
+ drivers/block/xen-blkback/common.h  |   4 +-
+ drivers/block/xen-blkback/xenbus.c  |   6 +-
+ drivers/xen/grant-table.c           | 123 ++++++++++++++++++++++++++++
+ drivers/xen/unpopulated-alloc.c     |  20 +++--
+ drivers/xen/xen-scsiback.c          |  60 +++-----------
+ include/xen/grant_table.h           |  17 ++++
+ 7 files changed, 182 insertions(+), 137 deletions(-)
 
-Thanks very much for doing that!
-
-David
+-- 
+2.26.2
 
