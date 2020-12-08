@@ -2,53 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B61A82D1F5D
-	for <lists+linux-block@lfdr.de>; Tue,  8 Dec 2020 01:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE2292D1F0C
+	for <lists+linux-block@lfdr.de>; Tue,  8 Dec 2020 01:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgLHAvj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Dec 2020 19:51:39 -0500
-Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:35012 "EHLO
-        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbgLHAvi (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Dec 2020 19:51:38 -0500
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
-        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id CBA0F1A606C;
-        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
-        by postfix.imss71 (Postfix) with ESMTP id 71FC683826D;
-        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
-Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
-        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id 426EA83825B;
-        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
+        id S1725995AbgLHAff (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Dec 2020 19:35:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgLHAfe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Dec 2020 19:35:34 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3715C061749
+        for <linux-block@vger.kernel.org>; Mon,  7 Dec 2020 16:34:48 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id 131so12123378pfb.9
+        for <linux-block@vger.kernel.org>; Mon, 07 Dec 2020 16:34:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=4QCHLS3U7zqDnpTaPBuJz4uQUsnBczg1hiUP0MYvmv0=;
+        b=YlQ/uxa4hPd8zGY9N0j32P6wOWn1Vw1lOutEi8Ct+S7EsvBAdQVVBFcA3u5HhNdWn0
+         0rwmP0p71waYk35MhAClcsB46ob0xkW4hHfFf58cw+PQshyrsNLCJwhy6tMKt/31B56p
+         4EIypaip4yccNWgxM3hfOO1nFVPaamCX5CHIXYDM/OqTE/SkjFtoRBugU1rFBVEpby4j
+         pHovMEYfZ4XWbYrKjN9czC0kHhXnQ3EXF2ChVFqlZzyOlxwKrHOOynnJNcy1SPcV4qVh
+         L1eLjqvvu6bdFMijFHMLUzaz2x3iQ0oSKKrM8eE4/Bi73aTbMCqy4Ymw+b2vf/Kbb4Dw
+         KKog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4QCHLS3U7zqDnpTaPBuJz4uQUsnBczg1hiUP0MYvmv0=;
+        b=G8U/6I3iLYKr8Y/GG57QZ1681C2sem1lsi/FHf8mJYsKb8JihkZx9DM95Gg3ZawkIm
+         nAFBs9BuB71L0Lu5/fnewebmsh+0re9Yd4+huIA3jiPeOqChOX6mpxL+wm/dPGap/GKD
+         5QwyBLKbWGXmuB9Dah5Sg5fqcdcRVm2yqLDXlA14hKkHeJWum9+owmyqyOqFo4bm2mPH
+         BFKwDqKbvRf5C3SBbVWr+oN4e23xlLVW01mJ10zeAzZ7dzxBSY6xmZ/rqxb5eqIvUb5f
+         IgrWrY3AdOpdJZtbVxDozZSxGFmx6ikyXIo+PcJLS2UmwS3TWaSS/THT+PnNreAQLxCw
+         Vx+w==
+X-Gm-Message-State: AOAM530yY/oT9b/gqRjDhwsGPcXPQt8gDU2VvvXEcsR+xPDceSSjMcjb
+        ASsLEZaDzbBW0KW75I2yTEzJqDJxNh4QYQ==
+X-Google-Smtp-Source: ABdhPJzVia/AGSz277pBeDNDpZZDIehz2foyIYSujvaJi5KLf6Zl7/TP8eziGPuoGYwvvHJxFXUqEA==
+X-Received: by 2002:a17:90a:e38d:: with SMTP id b13mr1350352pjz.101.1607387688151;
+        Mon, 07 Dec 2020 16:34:48 -0800 (PST)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id o11sm558909pjs.36.2020.12.07.16.34.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Dec 2020 16:34:47 -0800 (PST)
+Subject: Re: [PATCH v2] block: Improve blk_revalidate_disk_zones() checks
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <20201111073606.767757-1-damien.lemoal@wdc.com>
+ <CH2PR04MB65223742BEE5687703584A55E7CD0@CH2PR04MB6522.namprd04.prod.outlook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <eafc156a-765c-4b7d-0726-8ab67be36b36@kernel.dk>
+Date:   Mon, 7 Dec 2020 17:34:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <20201207190926.000057A2.0664@hyogo-dai.ac.jp>
-Date:   Tue, 08 Dec 2020 04:09:26 +0900
-From:   "Raymond " <hozumi@hyogo-dai.ac.jp>
-To:     <infocarferw1@aim.com>
-Reply-To: <infocarfer@aim.com>
-Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
-         Kuo Fung I have Important Matter to Discuss with you concerning
-         my late client. Died without a NEXT OF KIN. Send me your private
-         email for full details information.
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CH2PR04MB65223742BEE5687703584A55E7CD0@CH2PR04MB6522.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MAILER: Active! mail
-X-TM-AS-MML: disable
-X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
-X-TM-AS-Result: No--2.951-5.0-31-10
-X-imss-scan-details: No--2.951-5.0-31-10
-X-TM-AS-User-Approved-Sender: No
-X-TMASE-MatchedRID: X41QhRrT5f5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce6P0
-        clhHAFPyJA6GJqxAEzL554DD9nXlqqPFjJEFr+olfeZdJ1XsoriOub3SYcq1hJf7eAx/Ae/AbQo
-        eraIcZBRw7u01FqNA2K1Ia4IbeAdLm9ukrtqhno/rIUidklntLAP5zT0d393cymsk/wUE4hoZaR
-        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
-        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-email:kraymond75@aol.com
+On 12/7/20 5:29 PM, Damien Le Moal wrote:
+> On 2020/11/11 16:36, Damien Le Moal wrote:
+>> Improves the checks on the zones of a zoned block device done in
+>> blk_revalidate_disk_zones() by making sure that the device report_zones
+>> method did report at least one zone and that the zones reported exactly
+>> cover the entire disk capacity, that is, that there are no missing zones
+>> at the end of the disk sector range.
+>>
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> 
+> Jens,
+> 
+> Ping ?
 
+Picked up, thanks.
 
+-- 
+Jens Axboe
 
