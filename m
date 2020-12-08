@@ -2,185 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5820D2D2821
-	for <lists+linux-block@lfdr.de>; Tue,  8 Dec 2020 10:51:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 856052D285B
+	for <lists+linux-block@lfdr.de>; Tue,  8 Dec 2020 11:02:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgLHJuo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Dec 2020 04:50:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbgLHJuo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Dec 2020 04:50:44 -0500
-Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23A3C061749
-        for <linux-block@vger.kernel.org>; Tue,  8 Dec 2020 01:50:03 -0800 (PST)
-Received: by mail-vk1-xa30.google.com with SMTP id w190so3799103vkg.13
-        for <linux-block@vger.kernel.org>; Tue, 08 Dec 2020 01:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I2kZdU6xAATA8afPjSbaUFvj53IL1FloZ2Fcg9Z0qb0=;
-        b=SbL5adQziQdh41QS9rIWevrpl3jNzf2hMWA39qV7Sr++gAmUeFcJzR4+3YHe+6yILx
-         YtOvysRrbLU1FP7a9pLUytPmGXtujjXe3bXyV7s0WdpDty84gRtTgZfyhQecMcrntVsF
-         Z4Lc2HHJOHgSZoic98FIlLGMDp6wqgM8GvwMp3G/vG1jpgzAnH/4Y3gHEb6ad+8Zym5J
-         Sy66uy7282XP8fWthAgR7ZVKE7ozfXfFH2+76CqlhX9ILWBSkBawPEXWXqHZ7FYMmRY2
-         BukxA4fnWQr5W5bO0p1KlB2dTxn8e4tBnUOk1gbxB05Vbhnx8bu2vh2i3eD1ZCZRvwaP
-         VNHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I2kZdU6xAATA8afPjSbaUFvj53IL1FloZ2Fcg9Z0qb0=;
-        b=Bh07HtMSdvBJgdLav+GygvIbM8u8y0GtJeNAanvaCWudTtsUzeVRRDZqBLcsfvYEvp
-         U1XPZrwDcYyfYu7RWwc1vr79wCZq/LamylYgfwyrti7bVoxJKcl/jvYmUGjTVGzpmprX
-         tXqNGXiSPZoSev+a9Ax5YCyKxt7g9PrWbLi7Kr0bhkf+m3xKZdS8/+YW9M4jXruNMqc8
-         7dRqpuKJFrRgrOf3yWtwjW43TDf1FnfO4D05d0CVAckJZRK7WYBQAXbv49AFAFpwm59f
-         UUxM9KcIQgGC/Bz7OY+F0vOmPv7Izp0iDyvbWkFSlaq2+nVhyGYjZwocQfKV6bS/Ya0L
-         5Pcw==
-X-Gm-Message-State: AOAM5321O+4Nv9tCHrdYVwwhR2Ipg+o28OZ7K2akhlLhvQaKncizHm0x
-        hskrlvu5tiTu8R5lVfIjV5tYvynPs/4F8pzIaUzmyg==
-X-Google-Smtp-Source: ABdhPJz9FLrnfEq+ttBq7kxXr5aUvSnFrr/unwT7mZDLOoTpuZGVnF+AL0GuhpkR0nPFa8fJgflwL9QbL2jgEflNe7I=
-X-Received: by 2002:a1f:8f48:: with SMTP id r69mr15757760vkd.6.1607421002919;
- Tue, 08 Dec 2020 01:50:02 -0800 (PST)
+        id S1728416AbgLHKBd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Dec 2020 05:01:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30523 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbgLHKBc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 8 Dec 2020 05:01:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607421606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0iZqkZAphNZf99PJFIaYexFrQFdjyflH/vT614+uZb8=;
+        b=iAsDN+N3RksdiwtUTN9EXLZv4qhEadoGSKo9wWFBODFs3GrgV5VvieXAf/LTkIW7cRCtyS
+        u50n+7/AC5rrihCn9UGEB7ZudWRlsJsUoSP0HihyLbgG2aB+Bjf8YpeR7YECm1DDGa9WoO
+        vZuh6lWaWpItqbla4pQbED0phmiO++c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-519-k_m0i4LmMCqeNxMYW764Fg-1; Tue, 08 Dec 2020 05:00:04 -0500
+X-MC-Unique: k_m0i4LmMCqeNxMYW764Fg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9573F10054FF;
+        Tue,  8 Dec 2020 09:59:59 +0000 (UTC)
+Received: from T590 (ovpn-12-237.pek2.redhat.com [10.72.12.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F1AF2B394;
+        Tue,  8 Dec 2020 09:59:40 +0000 (UTC)
+Date:   Tue, 8 Dec 2020 17:59:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Oleksii Kurochko <olkuroch@cisco.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        ceph-devel@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 1/6] dm: use bdev_read_only to check if a device is
+ read-only
+Message-ID: <20201208095935.GA1202995@T590>
+References: <20201207131918.2252553-1-hch@lst.de>
+ <20201207131918.2252553-2-hch@lst.de>
 MIME-Version: 1.0
-References: <97c4bb65c8a3e688b191d57e9f06aa5a@walle.cc> <20201207183534.GA52960@mit.edu>
- <2edcf8e344937b3c5b92a0b87ebd13bd@walle.cc> <20201208024057.GC52960@mit.edu>
-In-Reply-To: <20201208024057.GC52960@mit.edu>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 8 Dec 2020 10:49:26 +0100
-Message-ID: <CAPDyKFpY+M_FVXCyeg+97jAgDSqhGDTNoND8CQDMWH-e09KGKQ@mail.gmail.com>
-Subject: Re: discard feature, mkfs.ext4 and mmc default fallback to normal
- erase op
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Michael Walle <michael@walle.cc>
-Cc:     linux-ext4@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201207131918.2252553-2-hch@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Ted, Michael,
+On Mon, Dec 07, 2020 at 02:19:13PM +0100, Christoph Hellwig wrote:
+> dm-thin and dm-cache also work on partitions, so use the proper
+> interface to check if the device is read-only.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> ---
+>  drivers/md/dm-cache-metadata.c | 2 +-
+>  drivers/md/dm-thin-metadata.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/md/dm-cache-metadata.c b/drivers/md/dm-cache-metadata.c
+> index af6d4f898e4c1d..89a73204dbf47f 100644
+> --- a/drivers/md/dm-cache-metadata.c
+> +++ b/drivers/md/dm-cache-metadata.c
+> @@ -449,7 +449,7 @@ static int __check_incompat_features(struct cache_disk_superblock *disk_super,
+>  	/*
+>  	 * Check for read-only metadata to skip the following RDWR checks.
+>  	 */
+> -	if (get_disk_ro(cmd->bdev->bd_disk))
+> +	if (bdev_read_only(cmd->bdev))
+>  		return 0;
+>  
+>  	features = le32_to_cpu(disk_super->compat_ro_flags) & ~DM_CACHE_FEATURE_COMPAT_RO_SUPP;
+> diff --git a/drivers/md/dm-thin-metadata.c b/drivers/md/dm-thin-metadata.c
+> index 6ebb2127f3e2e0..e75b20480e460e 100644
+> --- a/drivers/md/dm-thin-metadata.c
+> +++ b/drivers/md/dm-thin-metadata.c
+> @@ -636,7 +636,7 @@ static int __check_incompat_features(struct thin_disk_superblock *disk_super,
+>  	/*
+>  	 * Check for read-only metadata to skip the following RDWR checks.
+>  	 */
+> -	if (get_disk_ro(pmd->bdev->bd_disk))
+> +	if (bdev_read_only(pmd->bdev))
+>  		return 0;
+>  
+>  	features = le32_to_cpu(disk_super->compat_ro_flags) & ~THIN_FEATURE_COMPAT_RO_SUPP;
+> -- 
+> 2.29.2
+> 
 
-On Tue, 8 Dec 2020 at 03:41, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Mon, Dec 07, 2020 at 09:39:32PM +0100, Michael Walle wrote:
-> > > There are three different MMC commands which are defined:
-> > >
-> > > 1) DISCARD
-> > > 2) ERASE
-> > > 3) SECURE ERASE
-> > >
-> > > The first two are expected to be fast, since it only involves clearing
-> > > some metadata fields in the Flash Translation Layer (FTL), so that the
-> > > LBA's in the specified range are no longer mapped to a flash page.
-> >
-> > Mh, where is it specified that the erase command is fast? According
-> > to the Physical Layer Simplified Specification Version 8.00:
-> >
-> >  The actual erase time may be quite long, and the host may issue CMD7
-> >  to deselect thhe card or perform card disconnection, as described in
-> >  the Block Write section, above.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Before I go into some more detail, of course I fully agree that
-dealing with erase/discard from the eMMC/SD specifications (and other
-types of devices) point of view isn't entirely easy. :-)
+-- 
+Ming
 
-But I also think we can do better than currently, at least for eMMC/SD.
-
->
-> I looked at the eMMC specification from JEDEC (JESD84-A44) and there,
-> both the "erase" and "trim" are specified that the work is to be
-> queued to be done at a time which is convenient to the controller
-> (read: FTL).  This is in contrast to the "secure erase" and "secure
-> trim" commands, where the erasing has to be done NOW NOW NOW for "high
-> security applications".
->
-> The only difference between "erase" and "trim" seems to be that erahse
-> has to be done in units of the "erase groups" which is typically
-> larger than the "write pages" which is the granularity required by the
-> trim command.  There is also a comment that when you are erasing the
-> entire partition, "erase" is preferred over "trim".  (Presumably
-> because it is more convenient?  The spec is not clear.)
->
-> Unfortunately, the SD Card spec and the eMMC spec both read like they
-> were written by a standards committee stacked by hardware engineers.
-> It doesn't look like they had file system engineers in the room,
-> because the distinctions between "erase" and "trim" are pretty silly,
-> and not well defined.  Aside from what I wrote, the spec is remarkably
-> silent about what the host OS can depend upon.
-
-Moreover, the specs have evolved over the years. Somehow, we need to
-map a REQ_OP_DISCARD and REQ_OP_SECURE_ERASE to the best matching
-operation that the currently inserted eMMC/SD card supports...
-
-Long time time ago, both the SD and eMMC spec introduced support for
-real discards commands, as being hints to the card without any
-guarantees of what will happen to the data from a logical or a
-physical point of view. If the card supports that, we should use it as
-the first option for REQ_OP_DISCARD. Although, what should we pick as
-the second best option, when the card doesn't support discard - that's
-when it becomes more tricky. And the similar applies for
-REQ_OP_SECURE_ERASE, or course.
-
-If you have any suggestions for how we can improve in the above
-decisions, feel free to suggest something.
-
-Another issue that most likely is causing poor performance for
-REQ_OP_DISCARD/REQ_OP_SECURE_ERASE for eMMC/SD, is that in
-mmc_queue_setup_discard() we set up the maximum discard sectors
-allowed per request and the discard granularity.
-
-To find performance bottlenecks, I would start looking at what actual
-eMMC/SD commands/args we end up mapping towards the
-REQ_OP_DISCARD/REQ_OP_SECURE_ERASE requests. Then definitely, I would
-also look at the values we end up picking as max discard sectors and
-the discard granularity.
-
->
-> From the fs perspective, what we care about is whether or not the
-> command is a hint or a reliable way to zero a range of sectors.  A
-> command could be a hint if the device is allowed to ignore it, or if
-> the values of the sector are indeterminate, or if the sectors are
-> zero'ed or not could change after a power cycle.  (I've seen an
-> implementation where discard would result in the LBA's being read as
-> zero --- but after a power cycle, reading from the same LBA would
-> return the old data again.  This is standards complaint, but it's not
-> terribly useful.)
-
-:-)
-
->
-> Assuming that the command is reliable, the next question is whether
-> the erase operation is logical or physical --- which is to say, if an
-> attacker has physical access to the die, with the ability to bypass
-> the FTL and directly read the flash cells, could the attack retrieve
-> the data, even if it required a distructive, physical attack on the
-> hardware?  A logical erase would not require that the data be erased
-> or otherwise made inaccessible against an attacker who bypasses the
-> FTL; a physical erase would provide security guarantees that even if
-> your phone has handed over to state-sponsored attacker, that nothing
-> could be extracted after a physical erase.
->
-> So if I were king, those would be the three levels of discard: "hint",
-> "reliable logical", and "reliable physical", as those map to real use
-> cases that are of actual use to a Host.  The challenge is mapping what
-> we *actually* are given by different specs, which were written by
-> hardware engineers and make distinctions that are not well defined so
-> that multiple implementations can be "standard compliant", but have
-> completely different performance profiles, thus making life easy for
-> the marketing types, and hard for the file system engineers.  :-)
-
-I agree, these are the three levels that make sense to support.
-
-Honestly I haven't been paying enough attention to discussions for the
-generic block layer around discards. However, considering what you
-just stated above, we seem to be missing one request operation, don't
-we?
-
-[...]
-
-Kind regards
-Uffe
