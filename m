@@ -2,60 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2887A2D3D39
+	by mail.lfdr.de (Postfix) with ESMTP id 9589B2D3D3A
 	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 09:21:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgLIIVg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Dec 2020 03:21:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
+        id S1726281AbgLIIVh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Dec 2020 03:21:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S1726231AbgLIIVg (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 03:21:36 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6976C0613D6
-        for <linux-block@vger.kernel.org>; Wed,  9 Dec 2020 00:20:55 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id qw4so809820ejb.12
-        for <linux-block@vger.kernel.org>; Wed, 09 Dec 2020 00:20:55 -0800 (PST)
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E0EC061793
+        for <linux-block@vger.kernel.org>; Wed,  9 Dec 2020 00:20:56 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id x16so831537ejj.7
+        for <linux-block@vger.kernel.org>; Wed, 09 Dec 2020 00:20:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=i0es42Aa/rvDu/nGYWkHzt0D8sik7Ir6dCcdmicZQ30=;
-        b=VVVQ1FiRl/gjQscUtCkjwwp27lRRUtrYr5i3uN+hpS9/aCg4Em3eKFQ8tCJUbzVnUC
-         z9Pp6nsrG3NR08oHgpXSBAcOqjheLlvzzZpb/JQZEtW5zvokYM4RVMdT0i5lpJ36LCuy
-         iNW0/mbIW9Gpkt4mNsnjzJQpFXY735jgoRq6IT7AW6i7GEernVwzV7iOjWdlMgNazAYQ
-         q5pd08q8UVJw0yduADu2qTT2WCtpoevvXO2bTUDBJr/vAeAr2Lu7lDnBuiTGb3z4q2a3
-         2dsZRbwoIyanQDfRnfy50gr2iny0u/GgMOWDDsZHfklz1qmZwUjfaMHX+JrNrax9euB2
-         dg0g==
+        bh=fwUB98OMU5vN+dBpGv0EWnnHA2hhEx1MlU32S5W8EnI=;
+        b=Y7iAr8W9bTfDF+GBMnJgiqr+SqswugJViBgz+7cr1bw2XVu4V16CQAENB3Q7wBbAz7
+         NFYLuzpQmGxVgVPTpLW7sCypvlj+y1ybi1YYOkcbdsGzI0dCurYUI9QBhAaiInm+B1WZ
+         jPS9SKy+lxtp8nICT8rWvP7LgaONnrpP1SZvApUFW/Fv7n6YN0vRTw4IYuKZJDxoBe1J
+         l268QuEXKUzw6PgBfhoHkzyiPLN4mT8zQ/3HBGmyJ9NW9iUXO9v2Cfmc19PC0S+SpHyw
+         ZO/DOak7P3gR9PKJhF1dvoisLRhasPltTfgFUL2uXh5l5w0/tgFNq9r/oJ3f4twwF3tZ
+         VuxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=i0es42Aa/rvDu/nGYWkHzt0D8sik7Ir6dCcdmicZQ30=;
-        b=aZCBAwYOo57+zZ92KW1NrU3gO4mZ+LCM/4TtEDMG1/N0XZxan3A/AnjFrbKpYia26R
-         gDGubm8TLjirHA2K1bkZ1NuZnH2ffRd2hhFrzwkZKLfiNxC/056zuwkODi3lmYj64IJ/
-         pjpL5DGreLlmlJknK0+uToeYhTtn3SdmPy15TA8f93uAz5p3sVSeBGgj/meYN9l0v7ru
-         mEd/GhLfds/a2D7LVKr+XrP7wjcp/9TY+zCKdinn3npaDRK7ZNDECmj9sflCBKs/53Fv
-         rxnDlzeBZIGJswfwvKa0bc295SkmBgmpFYqfDbLAkfcYnsr8mg1q4HpdNpywdwe/Z7Ex
-         Ss7w==
-X-Gm-Message-State: AOAM533xodSwjetUII/6gxVDWOkMUM3cIB1ivMzdfWnUjM/bbgAEMPj0
-        qvflATKAD70nUr4uXlcS5LzBlMOy70ujHA==
-X-Google-Smtp-Source: ABdhPJx1Etru+OzCMNCiuB6rWpCjveRpilZxhtD6r7Ud2IFGI442XjoObaRGYGDR541HmNkblL8uuA==
-X-Received: by 2002:a17:906:76cd:: with SMTP id q13mr610934ejn.67.1607502054182;
-        Wed, 09 Dec 2020 00:20:54 -0800 (PST)
+        bh=fwUB98OMU5vN+dBpGv0EWnnHA2hhEx1MlU32S5W8EnI=;
+        b=FAOEOBdADRVwvFObgnum+eyaOjiQu7FTQ5T327SfJgtMuGmUUF9E5zRQ8RZQKEcsjQ
+         FYaVMiBDMgUxfBvp3L9r3Ui5QVI97lhyuQm7IYF/PYxhZ4ppFurCKAfEvYPnxTrl7Iwt
+         55ZWOcuOj1LUeROcLCGmygSDLMTm4ni2taWmzY2UZcXGRkVS0SLsDi6j+q6JC9vCQa4Y
+         mOAXdjAPm6eleEbImv91Wqh778jfgXMQYBKNACJbTnkIdlD+lK9aEoU2wMQKoQemgmVZ
+         JQkUdMZHqMKvU5d4XfGZWKXhRevrp7VqacCkeKxE8TmoRQR/SbGmesJ7/1a/H0jVtts+
+         RNmQ==
+X-Gm-Message-State: AOAM531fKxN3QP3wwe/TrAeoMEbfdgpghnyy/wHVi8Iqb05IDd30zB5J
+        QNZN+GPFENXei17MYz3z8up0Q9Za7qOqaA==
+X-Google-Smtp-Source: ABdhPJxmMFgDEnqtKjdXG4Wk75pBmlC+sPXVEOEbJkKy4oxIAiMat73fsjasSujS/E764NNjdbXOYQ==
+X-Received: by 2002:a17:906:60c8:: with SMTP id f8mr1085979ejk.14.1607502055098;
+        Wed, 09 Dec 2020 00:20:55 -0800 (PST)
 Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:49e0:2500:1d14:118d:b29c:98ec])
-        by smtp.gmail.com with ESMTPSA id cf17sm823225edb.16.2020.12.09.00.20.53
+        by smtp.gmail.com with ESMTPSA id cf17sm823225edb.16.2020.12.09.00.20.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 00:20:53 -0800 (PST)
+        Wed, 09 Dec 2020 00:20:54 -0800 (PST)
 From:   Jack Wang <jinpu.wang@cloud.ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH for-next 1/7] block/rnbd-clt: Get rid of warning regarding size argument in strlcpy
-Date:   Wed,  9 Dec 2020 09:20:45 +0100
-Message-Id: <20201209082051.12306-2-jinpu.wang@cloud.ionos.com>
+        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+Subject: [PATCH for-next 2/7] block/rnbd-clt: Fix possible memleak
+Date:   Wed,  9 Dec 2020 09:20:46 +0100
+Message-Id: <20201209082051.12306-3-jinpu.wang@cloud.ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201209082051.12306-1-jinpu.wang@cloud.ionos.com>
 References: <20201209082051.12306-1-jinpu.wang@cloud.ionos.com>
@@ -65,56 +64,43 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+In error case, we do not free the memory for blk_symlink_name.
 
-The kernel test robot triggerred the following warning,
+Do it by free the memory in error case, and set to NULL
+afterwards.
 
->> drivers/block/rnbd/rnbd-clt.c:1397:42: warning: size argument in
-'strlcpy' call appears to be size of the source; expected the size of the
-destination [-Wstrlcpy-strlcat-size]
-	strlcpy(dev->pathname, pathname, strlen(pathname) + 1);
-					      ~~~~~~~^~~~~~~~~~~~~
-
-To get rid of the above warning, use a len variable for doing kzalloc and
-then strlcpy.
+Also fix the condition in rnbd_clt_remove_dev_symlink.
 
 Fixes: 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
 ---
- drivers/block/rnbd/rnbd-clt.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index a199b190c73d..62b77b5dc061 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -1365,7 +1365,7 @@ static struct rnbd_clt_dev *init_dev(struct rnbd_clt_session *sess,
- 				      const char *pathname)
- {
- 	struct rnbd_clt_dev *dev;
--	int ret;
-+	int len, ret;
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index a7caeedeb198..d4aa6bfc9555 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -432,7 +432,7 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
+ 	 * i.e. rnbd_clt_unmap_dev_store() leading to a sysfs warning because
+ 	 * of sysfs link already was removed already.
+ 	 */
+-	if (strlen(dev->blk_symlink_name) && try_module_get(THIS_MODULE)) {
++	if (dev->blk_symlink_name && try_module_get(THIS_MODULE)) {
+ 		sysfs_remove_link(rnbd_devs_kobj, dev->blk_symlink_name);
+ 		kfree(dev->blk_symlink_name);
+ 		module_put(THIS_MODULE);
+@@ -521,7 +521,8 @@ static int rnbd_clt_add_dev_symlink(struct rnbd_clt_dev *dev)
+ 	return 0;
  
- 	dev = kzalloc_node(sizeof(*dev), GFP_KERNEL, NUMA_NO_NODE);
- 	if (!dev)
-@@ -1388,12 +1388,13 @@ static struct rnbd_clt_dev *init_dev(struct rnbd_clt_session *sess,
- 		goto out_queues;
- 	}
+ out_err:
+-	dev->blk_symlink_name[0] = '\0';
++	kfree(dev->blk_symlink_name);
++	dev->blk_symlink_name = NULL ;
+ 	return ret;
+ }
  
--	dev->pathname = kzalloc(strlen(pathname) + 1, GFP_KERNEL);
-+	len = strlen(pathname) + 1;
-+	dev->pathname = kzalloc(len, GFP_KERNEL);
- 	if (!dev->pathname) {
- 		ret = -ENOMEM;
- 		goto out_queues;
- 	}
--	strlcpy(dev->pathname, pathname, strlen(pathname) + 1);
-+	strlcpy(dev->pathname, pathname, len);
- 
- 	dev->clt_device_id	= ret;
- 	dev->sess		= sess;
 -- 
 2.25.1
 
