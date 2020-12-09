@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22CE62D3A8C
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:32:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 049702D3A82
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:31:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgLIFa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1727684AbgLIFa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Wed, 9 Dec 2020 00:30:56 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35970 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbgLIFaw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:52 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b26so280558pfi.3;
-        Tue, 08 Dec 2020 21:30:36 -0800 (PST)
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42363 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbgLIFay (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:54 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w16so465310pga.9;
+        Tue, 08 Dec 2020 21:30:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XMPNBLC7erCmsHGfeP6BsbcItk7t2bKK4kjtfKvNqKQ=;
-        b=k4LWi682jmdJgVLlyU2wTm3E6tggMd5ZsJNsbxEtinqNcTZhjo4w4EjU6bNOMq2Yph
-         qnTeVA6XdVcYil1d6nNqkrN5usyhTsHXBy3k79qv2+ZeZiZk16dPUXZ0B8fTnAIj6eFP
-         g+1cWh0r+jeQ7H1hnrDtn0pCwn0rqNpT8T+01KEi29urLqoozBBu9qT4XmVJh6adaVB6
-         OtZ5wj86RgU2pGIJvOhcF1pv3mKZwE72ZWEZjj3p/mqdfkEP+zF9xr6nfJMRTbhCcUCc
-         aJxBAq9CVNyFondvXPgz711a7L2Dcrhpzho3XsUYrGLD1okNF1jG97vxrQQlOhnYhGFd
-         SKFw==
-X-Gm-Message-State: AOAM5318FlvHW0TZEzrjP+WqGo/Gyc11qyo5KiAAXwCrShTJlUMrhKhz
-        lzIPABRBlHEaklcjo81KejI=
-X-Google-Smtp-Source: ABdhPJzf2OMDrP87HF8jRLQfCTdwfKsLZzXPguCHpomNNcnMqzIuMSJTt2cv0SKD0KtDM4c4WuOSEw==
-X-Received: by 2002:a63:534c:: with SMTP id t12mr531888pgl.128.1607491811226;
-        Tue, 08 Dec 2020 21:30:11 -0800 (PST)
+        bh=eSnzSUuvQrC5p1Y0rVmkEdnqJIdtZsM2tdwkwVFoHMc=;
+        b=NuMUxQWq/f5zUar+jlBOPW5+BEPcos5ScuvfsWDPrLuZQ5OaKGtzUWH2z4al6Q2W5m
+         9LwHTsgtLsbwVGFaubv4OAsTh27LNErKywFljbX6Jdj2Yri/RVi2Md6b7Mq19zwapXds
+         t7AR7I8l/qk1jdpAEnJkw8F/lckX9tYHxbtvIyPn5zMzs45WbsQeywuwPt8szkmI1TSI
+         Zd03PnR8W+kOE1rpCgrImZOW5Nsk7mjsogG5Qt+LqPG48RzfbAePj5YECHM1IDiGwvT3
+         XEWyD4X0YGzHiZnGOM3haI8Wi37WmowQ5C/ZzLYgpB/sDcgtODVrtKH1463Xo3ZSqRbC
+         zkcg==
+X-Gm-Message-State: AOAM531H5xOGqUq9/B85Cjl4J9fy5q+nvWQ66H69nE+mCU1yCaLLM1H2
+        ZFduk8ZMNKQVuqRPk88OaL0BMv4PbjU=
+X-Google-Smtp-Source: ABdhPJzuBhxAqwIxVhU4JlolqHhPJtYxNbPzVh9Tm00RbtaFZCDoe9IzEcN51WWHs/U5sjpOCX9MSw==
+X-Received: by 2002:a65:518a:: with SMTP id h10mr510130pgq.340.1607491813422;
+        Tue, 08 Dec 2020 21:30:13 -0800 (PST)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.09
+        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 21:30:10 -0800 (PST)
+        Tue, 08 Dec 2020 21:30:12 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
@@ -40,16 +40,14 @@ Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         Bart Van Assche <bvanassche@acm.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Woody Suwalski <terraluna977@gmail.com>,
         Can Guo <cang@codeaurora.org>,
         Stanley Chu <stanley.chu@mediatek.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Stan Johnson <userm57@yahoo.com>
-Subject: [PATCH v5 5/8] scsi_transport_spi: Set RQF_PM for domain validation commands
-Date:   Tue,  8 Dec 2020 21:29:48 -0800
-Message-Id: <20201209052951.16136-6-bvanassche@acm.org>
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v5 6/8] scsi: Only process PM requests if rpm_status != RPM_ACTIVE
+Date:   Tue,  8 Dec 2020 21:29:49 -0800
+Message-Id: <20201209052951.16136-7-bvanassche@acm.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209052951.16136-1-bvanassche@acm.org>
 References: <20201209052951.16136-1-bvanassche@acm.org>
@@ -59,95 +57,104 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Disable runtime power management during domain validation. Since a later
-patch removes RQF_PREEMPT, set RQF_PM for domain validation commands such
-that these are executed in the quiesced SCSI device state.
+Instead of submitting all SCSI commands submitted with scsi_execute() to a
+SCSI device if rpm_status != RPM_ACTIVE, only submit RQF_PM (power
+management requests) if rpm_status != RPM_ACTIVE. This patch makes the
+SCSI core handle the runtime power management status (rpm_status) as it
+should be handled.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Woody Suwalski <terraluna977@gmail.com>
 Cc: Can Guo <cang@codeaurora.org>
 Cc: Stanley Chu <stanley.chu@mediatek.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Stan Johnson <userm57@yahoo.com>
+Cc: Martin Kepplinger <martin.kepplinger@puri.sm>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_transport_spi.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ drivers/scsi/scsi_lib.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
-index f3d5b1bbd5aa..c37dd15d16d2 100644
---- a/drivers/scsi/scsi_transport_spi.c
-+++ b/drivers/scsi/scsi_transport_spi.c
-@@ -117,12 +117,16 @@ static int spi_execute(struct scsi_device *sdev, const void *cmd,
- 		sshdr = &sshdr_tmp;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index b7ac14571415..91bc39a4c3c3 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -249,7 +249,8 @@ int __scsi_execute(struct scsi_device *sdev, const unsigned char *cmd,
  
- 	for(i = 0; i < DV_RETRIES; i++) {
-+		/*
-+		 * The purpose of the RQF_PM flag below is to bypass the
-+		 * SDEV_QUIESCE state.
-+		 */
- 		result = scsi_execute(sdev, cmd, dir, buffer, bufflen, sense,
- 				      sshdr, DV_TIMEOUT, /* retries */ 1,
- 				      REQ_FAILFAST_DEV |
- 				      REQ_FAILFAST_TRANSPORT |
- 				      REQ_FAILFAST_DRIVER,
--				      0, NULL);
-+				      RQF_PM, NULL);
- 		if (driver_byte(result) != DRIVER_SENSE ||
- 		    sshdr->sense_key != UNIT_ATTENTION)
- 			break;
-@@ -1005,23 +1009,26 @@ spi_dv_device(struct scsi_device *sdev)
+ 	req = blk_get_request(sdev->request_queue,
+ 			data_direction == DMA_TO_DEVICE ?
+-			REQ_OP_SCSI_OUT : REQ_OP_SCSI_IN, BLK_MQ_REQ_PREEMPT);
++			REQ_OP_SCSI_OUT : REQ_OP_SCSI_IN,
++			rq_flags & RQF_PM ? BLK_MQ_REQ_PM : 0);
+ 	if (IS_ERR(req))
+ 		return ret;
+ 	rq = scsi_req(req);
+@@ -1206,6 +1207,8 @@ static blk_status_t
+ scsi_device_state_check(struct scsi_device *sdev, struct request *req)
+ {
+ 	switch (sdev->sdev_state) {
++	case SDEV_CREATED:
++		return BLK_STS_OK;
+ 	case SDEV_OFFLINE:
+ 	case SDEV_TRANSPORT_OFFLINE:
+ 		/*
+@@ -1232,18 +1235,18 @@ scsi_device_state_check(struct scsi_device *sdev, struct request *req)
+ 		return BLK_STS_RESOURCE;
+ 	case SDEV_QUIESCE:
+ 		/*
+-		 * If the devices is blocked we defer normal commands.
++		 * If the device is blocked we only accept power management
++		 * commands.
+ 		 */
+-		if (req && !(req->rq_flags & RQF_PREEMPT))
++		if (req && WARN_ON_ONCE(!(req->rq_flags & RQF_PM)))
+ 			return BLK_STS_RESOURCE;
+ 		return BLK_STS_OK;
+ 	default:
+ 		/*
+ 		 * For any other not fully online state we only allow
+-		 * special commands.  In particular any user initiated
+-		 * command is not allowed.
++		 * power management commands.
+ 		 */
+-		if (req && !(req->rq_flags & RQF_PREEMPT))
++		if (req && !(req->rq_flags & RQF_PM))
+ 			return BLK_STS_IOERR;
+ 		return BLK_STS_OK;
+ 	}
+@@ -2517,15 +2520,13 @@ void sdev_evt_send_simple(struct scsi_device *sdev,
+ EXPORT_SYMBOL_GPL(sdev_evt_send_simple);
+ 
+ /**
+- *	scsi_device_quiesce - Block user issued commands.
++ *	scsi_device_quiesce - Block all commands except power management.
+  *	@sdev:	scsi device to quiesce.
+  *
+  *	This works by trying to transition to the SDEV_QUIESCE state
+  *	(which must be a legal transition).  When the device is in this
+- *	state, only special requests will be accepted, all others will
+- *	be deferred.  Since special requests may also be requeued requests,
+- *	a successful return doesn't guarantee the device will be
+- *	totally quiescent.
++ *	state, only power management requests will be accepted, all others will
++ *	be deferred.
+  *
+  *	Must be called with user context, may sleep.
+  *
+@@ -2587,12 +2588,12 @@ void scsi_device_resume(struct scsi_device *sdev)
+ 	 * device deleted during suspend)
  	 */
- 	lock_system_sleep();
- 
-+	if (scsi_autopm_get_device(sdev))
-+		goto unlock_system_sleep;
-+
- 	if (unlikely(spi_dv_in_progress(starget)))
--		goto unlock;
-+		goto put_autopm;
- 
- 	if (unlikely(scsi_device_get(sdev)))
--		goto unlock;
-+		goto put_autopm;
- 
- 	spi_dv_in_progress(starget) = 1;
- 
- 	buffer = kzalloc(len, GFP_KERNEL);
- 
- 	if (unlikely(!buffer))
--		goto out_put;
-+		goto put_sdev;
- 
- 	/* We need to verify that the actual device will quiesce; the
- 	 * later target quiesce is just a nice to have */
- 	if (unlikely(scsi_device_quiesce(sdev)))
--		goto out_free;
-+		goto free_buffer;
- 
- 	scsi_target_quiesce(starget);
- 
-@@ -1041,12 +1048,16 @@ spi_dv_device(struct scsi_device *sdev)
- 
- 	spi_initial_dv(starget) = 1;
- 
-- out_free:
-+free_buffer:
- 	kfree(buffer);
-- out_put:
-+
-+put_sdev:
- 	spi_dv_in_progress(starget) = 0;
- 	scsi_device_put(sdev);
--unlock:
-+put_autopm:
-+	scsi_autopm_put_device(sdev);
-+
-+unlock_system_sleep:
- 	unlock_system_sleep();
+ 	mutex_lock(&sdev->state_mutex);
++	if (sdev->sdev_state == SDEV_QUIESCE)
++		scsi_device_set_state(sdev, SDEV_RUNNING);
+ 	if (sdev->quiesced_by) {
+ 		sdev->quiesced_by = NULL;
+ 		blk_clear_pm_only(sdev->request_queue);
+ 	}
+-	if (sdev->sdev_state == SDEV_QUIESCE)
+-		scsi_device_set_state(sdev, SDEV_RUNNING);
+ 	mutex_unlock(&sdev->state_mutex);
  }
- EXPORT_SYMBOL(spi_dv_device);
+ EXPORT_SYMBOL(scsi_device_resume);
