@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BB842D3A81
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:31:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22CE62D3A8C
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgLIFa5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Dec 2020 00:30:57 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46627 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbgLIFat (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:49 -0500
-Received: by mail-pl1-f193.google.com with SMTP id v3so323633plz.13;
-        Tue, 08 Dec 2020 21:30:34 -0800 (PST)
+        id S1727673AbgLIFa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Dec 2020 00:30:56 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35970 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727668AbgLIFaw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b26so280558pfi.3;
+        Tue, 08 Dec 2020 21:30:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9PAa4uvnthw1irmoOC8T38RyKP9VHz19jIArD7aDop8=;
-        b=BSFx7CzqD/M71teGksmlLzvHc+9zMh5apP5O+KXoar94mcMoJSY0V0BeRgoAy58JaC
-         fd8QYwN5VVmyJfhC/2JFVlQWu4priThkKyYHfQH6dYHFlZ6Gg7QmlgOFfpooWqvr7Fvx
-         VC64uwTCE7HJ4ypLDjYTmhMBkmhaHkhEF3TQTPUJ6AuDjqRwFwnb30nu2gvrVWL70oA+
-         5C2UkxCBD1r10+qkNC+hnUIoJ9ka6WBYUndtPCNDGckCYyza1sOcuc+pUM6wdhZXVZ0G
-         62Cx2IIMdsBY3NuJ53tEveyXd2FMEdUL95+75TW0fL5FwLDKam4fQWM8UOkdONHXVY20
-         FghQ==
-X-Gm-Message-State: AOAM530RIqbvov9ufN+ircX9mUKrlHA9slrQsFgr13MYfB6DHyqEIIZD
-        9ENabiA4Ukt8tKbKnYEXelM=
-X-Google-Smtp-Source: ABdhPJwOdBu8JAcI0LCjbKhKlKInInlGJ7MFYTM+xVdM0aAjELU98TeTga24/CKvZZEYLpshLa+TmQ==
-X-Received: by 2002:a17:90a:dd46:: with SMTP id u6mr710832pjv.162.1607491808915;
-        Tue, 08 Dec 2020 21:30:08 -0800 (PST)
+        bh=XMPNBLC7erCmsHGfeP6BsbcItk7t2bKK4kjtfKvNqKQ=;
+        b=k4LWi682jmdJgVLlyU2wTm3E6tggMd5ZsJNsbxEtinqNcTZhjo4w4EjU6bNOMq2Yph
+         qnTeVA6XdVcYil1d6nNqkrN5usyhTsHXBy3k79qv2+ZeZiZk16dPUXZ0B8fTnAIj6eFP
+         g+1cWh0r+jeQ7H1hnrDtn0pCwn0rqNpT8T+01KEi29urLqoozBBu9qT4XmVJh6adaVB6
+         OtZ5wj86RgU2pGIJvOhcF1pv3mKZwE72ZWEZjj3p/mqdfkEP+zF9xr6nfJMRTbhCcUCc
+         aJxBAq9CVNyFondvXPgz711a7L2Dcrhpzho3XsUYrGLD1okNF1jG97vxrQQlOhnYhGFd
+         SKFw==
+X-Gm-Message-State: AOAM5318FlvHW0TZEzrjP+WqGo/Gyc11qyo5KiAAXwCrShTJlUMrhKhz
+        lzIPABRBlHEaklcjo81KejI=
+X-Google-Smtp-Source: ABdhPJzf2OMDrP87HF8jRLQfCTdwfKsLZzXPguCHpomNNcnMqzIuMSJTt2cv0SKD0KtDM4c4WuOSEw==
+X-Received: by 2002:a63:534c:: with SMTP id t12mr531888pgl.128.1607491811226;
+        Tue, 08 Dec 2020 21:30:11 -0800 (PST)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.06
+        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 21:30:08 -0800 (PST)
+        Tue, 08 Dec 2020 21:30:10 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
@@ -40,14 +40,16 @@ Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         Bart Van Assche <bvanassche@acm.org>,
-        "David S . Miller" <davem@davemloft.net>,
         Alan Stern <stern@rowland.harvard.edu>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Woody Suwalski <terraluna977@gmail.com>,
         Can Guo <cang@codeaurora.org>,
         Stanley Chu <stanley.chu@mediatek.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v5 4/8] ide: Mark power management requests with RQF_PM instead of RQF_PREEMPT
-Date:   Tue,  8 Dec 2020 21:29:47 -0800
-Message-Id: <20201209052951.16136-5-bvanassche@acm.org>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Stan Johnson <userm57@yahoo.com>
+Subject: [PATCH v5 5/8] scsi_transport_spi: Set RQF_PM for domain validation commands
+Date:   Tue,  8 Dec 2020 21:29:48 -0800
+Message-Id: <20201209052951.16136-6-bvanassche@acm.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209052951.16136-1-bvanassche@acm.org>
 References: <20201209052951.16136-1-bvanassche@acm.org>
@@ -57,46 +59,95 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is another step that prepares for the removal of RQF_PREEMPT.
+Disable runtime power management during domain validation. Since a later
+patch removes RQF_PREEMPT, set RQF_PM for domain validation commands such
+that these are executed in the quiesced SCSI device state.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Cc: David S. Miller <davem@davemloft.net>
 Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Woody Suwalski <terraluna977@gmail.com>
 Cc: Can Guo <cang@codeaurora.org>
 Cc: Stanley Chu <stanley.chu@mediatek.com>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/ide/ide-io.c | 2 +-
- drivers/ide/ide-pm.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_transport_spi.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/ide/ide-io.c b/drivers/ide/ide-io.c
-index c210ea3bd02f..4867b67b60d6 100644
---- a/drivers/ide/ide-io.c
-+++ b/drivers/ide/ide-io.c
-@@ -518,7 +518,7 @@ blk_status_t ide_issue_rq(ide_drive_t *drive, struct request *rq,
- 		 */
- 		if ((drive->dev_flags & IDE_DFLAG_BLOCKED) &&
- 		    ata_pm_request(rq) == 0 &&
--		    (rq->rq_flags & RQF_PREEMPT) == 0) {
-+		    (rq->rq_flags & RQF_PM) == 0) {
- 			/* there should be no pending command at this point */
- 			ide_unlock_port(hwif);
- 			goto plug_device;
-diff --git a/drivers/ide/ide-pm.c b/drivers/ide/ide-pm.c
-index 192e6c65d34e..82ab308f1aaf 100644
---- a/drivers/ide/ide-pm.c
-+++ b/drivers/ide/ide-pm.c
-@@ -77,7 +77,7 @@ int generic_ide_resume(struct device *dev)
- 	}
+diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
+index f3d5b1bbd5aa..c37dd15d16d2 100644
+--- a/drivers/scsi/scsi_transport_spi.c
++++ b/drivers/scsi/scsi_transport_spi.c
+@@ -117,12 +117,16 @@ static int spi_execute(struct scsi_device *sdev, const void *cmd,
+ 		sshdr = &sshdr_tmp;
  
- 	memset(&rqpm, 0, sizeof(rqpm));
--	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PREEMPT);
-+	rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, BLK_MQ_REQ_PM);
- 	ide_req(rq)->type = ATA_PRIV_PM_RESUME;
- 	ide_req(rq)->special = &rqpm;
- 	rqpm.pm_step = IDE_PM_START_RESUME;
+ 	for(i = 0; i < DV_RETRIES; i++) {
++		/*
++		 * The purpose of the RQF_PM flag below is to bypass the
++		 * SDEV_QUIESCE state.
++		 */
+ 		result = scsi_execute(sdev, cmd, dir, buffer, bufflen, sense,
+ 				      sshdr, DV_TIMEOUT, /* retries */ 1,
+ 				      REQ_FAILFAST_DEV |
+ 				      REQ_FAILFAST_TRANSPORT |
+ 				      REQ_FAILFAST_DRIVER,
+-				      0, NULL);
++				      RQF_PM, NULL);
+ 		if (driver_byte(result) != DRIVER_SENSE ||
+ 		    sshdr->sense_key != UNIT_ATTENTION)
+ 			break;
+@@ -1005,23 +1009,26 @@ spi_dv_device(struct scsi_device *sdev)
+ 	 */
+ 	lock_system_sleep();
+ 
++	if (scsi_autopm_get_device(sdev))
++		goto unlock_system_sleep;
++
+ 	if (unlikely(spi_dv_in_progress(starget)))
+-		goto unlock;
++		goto put_autopm;
+ 
+ 	if (unlikely(scsi_device_get(sdev)))
+-		goto unlock;
++		goto put_autopm;
+ 
+ 	spi_dv_in_progress(starget) = 1;
+ 
+ 	buffer = kzalloc(len, GFP_KERNEL);
+ 
+ 	if (unlikely(!buffer))
+-		goto out_put;
++		goto put_sdev;
+ 
+ 	/* We need to verify that the actual device will quiesce; the
+ 	 * later target quiesce is just a nice to have */
+ 	if (unlikely(scsi_device_quiesce(sdev)))
+-		goto out_free;
++		goto free_buffer;
+ 
+ 	scsi_target_quiesce(starget);
+ 
+@@ -1041,12 +1048,16 @@ spi_dv_device(struct scsi_device *sdev)
+ 
+ 	spi_initial_dv(starget) = 1;
+ 
+- out_free:
++free_buffer:
+ 	kfree(buffer);
+- out_put:
++
++put_sdev:
+ 	spi_dv_in_progress(starget) = 0;
+ 	scsi_device_put(sdev);
+-unlock:
++put_autopm:
++	scsi_autopm_put_device(sdev);
++
++unlock_system_sleep:
+ 	unlock_system_sleep();
+ }
+ EXPORT_SYMBOL(spi_dv_device);
