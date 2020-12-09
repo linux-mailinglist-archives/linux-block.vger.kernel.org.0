@@ -2,101 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0672D2D3CF2
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 09:07:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB0B2D3D38
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 09:21:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgLIIGe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Dec 2020 03:06:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33676 "EHLO
+        id S1726263AbgLIIVf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Dec 2020 03:21:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgLIIGa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 03:06:30 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38335C0613CF
-        for <linux-block@vger.kernel.org>; Wed,  9 Dec 2020 00:05:50 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id ce23so771243ejb.8
-        for <linux-block@vger.kernel.org>; Wed, 09 Dec 2020 00:05:50 -0800 (PST)
+        with ESMTP id S1726253AbgLIIVf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 03:21:35 -0500
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D4BC0613CF
+        for <linux-block@vger.kernel.org>; Wed,  9 Dec 2020 00:20:54 -0800 (PST)
+Received: by mail-ej1-x644.google.com with SMTP id g20so863908ejb.1
+        for <linux-block@vger.kernel.org>; Wed, 09 Dec 2020 00:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+h4P+nIxMIn2Y17NPQM2gbJgkQrOgIbiZP/S+TvIccw=;
-        b=iK+fifgp9ztTYCWBGhchDKiH6Xk+PoA9PRfKf3MQ2gjmRv3SgwbrcO6EzTaYEdZiYa
-         HWgqerMK3ZpzmVGqKPOGJnViNSGmaExatmF4Tb3utBavWIrJ8l+6axfczdeHtXZsL5O3
-         HiIqekm7wQMFs34n5uD6nvZtTQHIX6+u1CcqxjT6Hbwiduq9hqUzCagaXE/S9t7gWVD7
-         Uep9yNb21BuT9RfYdbugersTEa/rcEX/u3Oe674CPwyO0JzR/kLblL4+T8DKioh0tvci
-         K733wJYMvuRM2K+JK8GL4k9mkvkxsvZcAe4XXfxMTgJ6/sqxArCdsrxOUN8OTOdHf4Bo
-         C1og==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UjGATTQ9Lr9mRaXTY4JfpSKxRrLubz3xzYpAsaHjJ4w=;
+        b=Oo/+k9NArSKIDf+HvrumsXY0GBnwvwO4U099AOrfIaw76s0MeQxtL2wQ4yMoIau0TE
+         HiB7MxGiHWfT155JhK+9dJ4c52MwVwSmKPf/c5UqhAHLhsgOodBRsnBBD5G/slgAGDa9
+         fG+/1pBEM7qoHzmHFpHaUKrBxb7HS/3wx8n/7klShxyKe6BacjqHbCUQzqc1t5PHU69y
+         Q3oZ6KDvnMMnxfYYd+DHcVRVolhx+BR55cZBqYHWDxIA2rrfS4TQDX0k3HHzjypMK0sc
+         IJSHx9qfcnIPnEarnEAYPtV3UEjqXU2+GUgI/T18vrJmBRUcf5rsfuiy7ZLvcwRpvimt
+         svcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+h4P+nIxMIn2Y17NPQM2gbJgkQrOgIbiZP/S+TvIccw=;
-        b=NLiVnQZHvk9O08/209gvHByJGmCQv8W5hMUHv5eKcqNEIbFnp29O4E/45vLZd1W7em
-         c9szZq2m4grx7ls4fnZ44sjAHQCQ5FTiSAr9WNDzdNGZ4qJv6clygL9iajGmcBOFt7Cg
-         F7/QP3FPvYw7FWt40Vzxx1sxbTe++WFs4uI1QzlJAqqNnFJYkZ2UhGMLV351sBai23Bk
-         Oz2xqOIikO+UDMo48w2IBC4O+Hf4Sm7CtknJWRXupUNTk4wf2bP84w1Ym9OTws4wRFNn
-         beupDOyYuRFeCFimjzbF93SKkcds36cSsukeqH47V8Lj1IsW/sWsyjyVx1fYZE01WN+v
-         F49g==
-X-Gm-Message-State: AOAM533x8hehAz3FT/cxL9Vvd3dK4TSIaLKUt6jcIkTUr+zoE58hKYXc
-        grHSRoi/dtbt50M4yhsn7ObZWF/fwFP6Al6mVUhf/A==
-X-Google-Smtp-Source: ABdhPJwV7Myf/TtvpWVIHTPvl6WzfnFktfXbV4T5cs7TAoX/XRTpUe1MdTRks785ev4S2kBQNQ02AJaJiAypkKqyIDg=
-X-Received: by 2002:a17:906:16da:: with SMTP id t26mr1017805ejd.478.1607501148992;
- Wed, 09 Dec 2020 00:05:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UjGATTQ9Lr9mRaXTY4JfpSKxRrLubz3xzYpAsaHjJ4w=;
+        b=OYi4M3lCnHXGaWaGFQ5aOYqb1WOnghRYRyGe/d6lr/ES2aChDwf6F99OeifbI1CTV4
+         NL81KQBT/zIOawitJvkcmVfyTes33avPk67c+WAcrwFdn+Qr9R8HoCAX/ocENK3bdaSG
+         2Otigm10ebHWlggsSIFsCvhGbe9n9DM4/q8ugClgSfXMPpc5PyqVAh2+ZYgyidHx3JuQ
+         KyhtEqyBJaF2C9lEy1uZzzN3mFvRkD2KFh7StG2cDrnYizig1eEzeIaBa3cfV2jND2r4
+         ZcIpWPj6OKPmZ6Rfkh80aRzwlN7SAsbA0ce6bg+VTbuPeRSlsbr4M+zcBnAfRt3O7yjX
+         mxlg==
+X-Gm-Message-State: AOAM531+1r7Itt5UVHsvAW3WIyNzuagxX3CYu1qbPsqc3VsHwkw50dTQ
+        OrE/tUchIy5GHelYd6bx9esk1DD4wGCVUw==
+X-Google-Smtp-Source: ABdhPJzqEZH8sJ/LkbMemVSn7DhV0m232TlWKj71css6SKRVWzbmU/DLwWpAahzRaT8aJdjrOsoREQ==
+X-Received: by 2002:a17:906:a43:: with SMTP id x3mr1037348ejf.197.1607502053259;
+        Wed, 09 Dec 2020 00:20:53 -0800 (PST)
+Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:49e0:2500:1d14:118d:b29c:98ec])
+        by smtp.gmail.com with ESMTPSA id cf17sm823225edb.16.2020.12.09.00.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Dec 2020 00:20:52 -0800 (PST)
+From:   Jack Wang <jinpu.wang@cloud.ionos.com>
+To:     linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, danil.kipnis@cloud.ionos.com
+Subject: [PATCH for-next 0/7] Misc update for rnbd
+Date:   Wed,  9 Dec 2020 09:20:44 +0100
+Message-Id: <20201209082051.12306-1-jinpu.wang@cloud.ionos.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <X9B0IyxwbBDq+cSS@mwanda> <CAMGffEn6a92UDBgzkR2L6wutNBpxY_xNf3cakvbivkaGRnk_uQ@mail.gmail.com>
- <20201209080323.GE2767@kadam>
-In-Reply-To: <20201209080323.GE2767@kadam>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Wed, 9 Dec 2020 09:05:38 +0100
-Message-ID: <CAMGffE=5PJhKujzdHyP_AsujfcABxRQoCSkC6HnM+AuxxcVCmQ@mail.gmail.com>
-Subject: Re: [PATCH] block/rnbd-clt: Fix error code in rnbd_clt_add_dev_symlink()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Lutz Pogrell <lutz.pogrell@cloud.ionos.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 9:03 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Wed, Dec 09, 2020 at 08:36:31AM +0100, Jinpu Wang wrote:
-> > Hi Dan,
-> >
-> >
-> >
-> > On Wed, Dec 9, 2020 at 7:52 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > >
-> > > The "ret" variable should be set to -ENOMEM but it returns uninitialized
-> > > stack data.
-> > >
-> > > Fixes: 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> >
-> > Thanks for the patch. But there is already a fix from Colin merged in
-> > block tree:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.11/drivers&id=733c15bd3a944b8eeaacdddf061759b6a83dd3f4
-> >
-> > There is still other problem through with commit 64e8a6ece1a5
-> > ("block/rnbd-clt: Dynamically alloc buffer for pathname &
-> > blk_symlink_name")
-> >
-> > I will send the fix today together with other changes.
->
-> Ah...  Haha...  Sorry about that.  We already discussed this yesterday.
->
-> What happens is that when I write a patch, I normally save it in my
-> postponed messages until the next day.  But then I decided to not fix it
-> but instead to just report it.  Unfortunately, I forgot to delete it and
-> I also forgot about yesterday's discussion because I have the memory of
-> a gnat.  :P
->
-> regards,
-> dan carpenter
->
-No problem, thanks! :)
+Hi Jens,
+
+This is the misc update for rnbd. It inlcudes:
+- 2 follow-up fixes for commit 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
+  one warning, and one possible memleak.
+- one fix for race with dev session sysfs removal.
+- fix for write-back cache & FUA.
+- reduce memory footprint by allocate sglist on demand and do not request pdu
+  from rtrs-clt.
+- Typo fix.
+
+The patches are based on your block/for-next.
+
+Gioh Kim (3):
+  block/rnbd: Set write-back cache and fua same to the target device
+  block/rnbd-clt: Dynamically allocate sglist for rnbd_iu
+  block/rnbd-clt: Does not request pdu to rtrs-clt
+
+Jack Wang (2):
+  block/rnbd-clt: Fix possible memleak
+  block/rnbd: Fix typos
+
+Md Haris Iqbal (2):
+  block/rnbd-clt: Get rid of warning regarding size argument in strlcpy
+  block/rnbd-srv: Protect dev session sysfs removal
+
+ drivers/block/rnbd/rnbd-clt-sysfs.c    |  5 +-
+ drivers/block/rnbd/rnbd-clt.c          | 96 +++++++++++++++-----------
+ drivers/block/rnbd/rnbd-clt.h          | 12 +++-
+ drivers/block/rnbd/rnbd-proto.h        |  9 ++-
+ drivers/block/rnbd/rnbd-srv.c          | 12 +++-
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c |  6 --
+ drivers/infiniband/ulp/rtrs/rtrs.h     |  7 --
+ 7 files changed, 88 insertions(+), 59 deletions(-)
+
+-- 
+2.25.1
+
