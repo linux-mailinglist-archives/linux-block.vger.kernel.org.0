@@ -2,84 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3394B2D3845
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 02:25:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88B022D38CA
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 03:26:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbgLIBZH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Dec 2020 20:25:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58449 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbgLIBZH (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 8 Dec 2020 20:25:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607477021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ks3Ply4N96m4k2H0dn1kKwtldUSUQfBTesh+Kzg2SfY=;
-        b=QP4Y65M2xtnSp0GawFA8xDwy/C+Ktg9Gyvi4u3RzO09gbMo7s+t/sllOvjntgJtDWt12Hv
-        0LDmiuQLCpQJ7YN+YeRzTr9G5wR9CJq/sDWUU1ijJHaBB76YsP75C1TCKlcJILk+URlMHc
-        Ah70duf0R443FCh888ztbbMoYmUzcJw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-8a_meGOmMGOcPRAitz_oJQ-1; Tue, 08 Dec 2020 20:23:39 -0500
-X-MC-Unique: 8a_meGOmMGOcPRAitz_oJQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89BB41005513;
-        Wed,  9 Dec 2020 01:23:37 +0000 (UTC)
-Received: from T590 (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EEBD660BE2;
-        Wed,  9 Dec 2020 01:23:21 +0000 (UTC)
-Date:   Wed, 9 Dec 2020 09:23:17 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Oleksii Kurochko <olkuroch@cisco.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-nvme@lists.infradead.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH 4/6] block: propagate BLKROSET on the whole device to all
- partitions
-Message-ID: <20201209012317.GC1217988@T590>
-References: <20201207131918.2252553-1-hch@lst.de>
- <20201207131918.2252553-5-hch@lst.de>
- <20201208102923.GD1202995@T590>
- <20201208105927.GB21762@lst.de>
+        id S1726716AbgLICYO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Dec 2020 21:24:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgLICYJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Dec 2020 21:24:09 -0500
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE2AC0613CF;
+        Tue,  8 Dec 2020 18:23:23 -0800 (PST)
+Received: by mail-wm1-x343.google.com with SMTP id d3so126230wmb.4;
+        Tue, 08 Dec 2020 18:23:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2oioyFLR2bFNpjjk5al2TpT+eS54q+WK5/M1bDWQq8Y=;
+        b=oDJccotZxIU1EHGzNTq4hfh5WcKNEFZmeQ3MaKAzRhp3LvOg33xVS5Zts/JLvl79bc
+         2chccfsoBYt8t4MpQJAs85iFB/9O7NAEX1IDyovACFDFoVOzZHk+GL7pWapo7oTjCVTk
+         mvBhGOBGqIAG066p4hVZcsRiD7WGBxTmTwygzPu1Q9tcNejuRfoKvsFiDlQDDyxPPLfF
+         HTycdtH0HWmnHe5nrXjGKoYySBQAoo/r69ZvKZ9lOf3hQCVrA81/Cx3sKHt5JQprbmdX
+         y34y4++GXIP9gSitcNePRN3/htCNhRuSeovkaVJSkiUHXYudshBP8lnjjElY4oKMBBKd
+         mOew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2oioyFLR2bFNpjjk5al2TpT+eS54q+WK5/M1bDWQq8Y=;
+        b=lFopdHnT+kBA95phFPK6k4Ua95CXHVpBzHnNdrG1iaLeCKGZJyWhmEOaR4TfFbb+Xr
+         ageeeYyiqr9WEzQgWoi5k6QbGj5NJ5FKaRVm34CkrXDXyXVDDThSChOVQ2onu3a0RN4G
+         mQFk6PKs5kuhLrQHaks1hKWrOlOsgkvKANin2a6MTp475aE6qft5dF/y9PpA0jlSWWHg
+         k35GTwXjtT/sSC9CKy5Wrydr2OQhll4BgKQ96xnq1lmBHa1gUj2MDta7wl8O7SBKxtDt
+         It9ZFWHmW04t6SFsZAFXJxn6OvZDaKuHu5lQU3eBg+heULq4qMc9YrE3NYCfl3nyRoHT
+         H5PA==
+X-Gm-Message-State: AOAM533EtuqduvlShegIjLaPNnb624c61eIRYJUvxAhHtuGIFDrytgGJ
+        xt8dbJKETQz9Y7DGUpALVPI=
+X-Google-Smtp-Source: ABdhPJzWr26qXVlQbn+WLoaf5ahxMb42KDZknutFM27XXfuv6U6vlI0gMQaN4rhryPfgRX53lc84dA==
+X-Received: by 2002:a1c:309:: with SMTP id 9mr303633wmd.80.1607480602202;
+        Tue, 08 Dec 2020 18:23:22 -0800 (PST)
+Received: from localhost.localdomain ([85.255.233.156])
+        by smtp.gmail.com with ESMTPSA id k64sm330606wmb.11.2020.12.08.18.23.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Dec 2020 18:23:21 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: [RFC 0/2] nocopy bvec for direct IO
+Date:   Wed,  9 Dec 2020 02:19:50 +0000
+Message-Id: <cover.1607477897.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201208105927.GB21762@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 11:59:27AM +0100, Christoph Hellwig wrote:
-> On Tue, Dec 08, 2020 at 06:29:23PM +0800, Ming Lei wrote:
-> > > -		test_bit(GD_READ_ONLY, &bdev->bd_disk->state);
-> > > +	return bdev->bd_read_only || get_disk_ro(bdev->bd_disk);
-> > >  }
-> > >  EXPORT_SYMBOL(bdev_read_only);
-> > 
-> > I think this patch should be folded into previous one, otherwise
-> > bdev_read_only(part) may return false even though ioctl(BLKROSET)
-> > has been done on the whole disk.
-> 
-> The above is the existing behavior going back back very far, and I feel
-> much more comfortable having a small self-contained patch that changes
-> this behavior.
-> 
+The idea is to avoid copying, merging, etc. bvec from iterator to bio
+in direct I/O and use the one we've already got. Hook it up for io_uring.
+Had an eye on it for a long, and it also was brought up by Matthew
+just recently. Let me know if I forgot or misplaced some tags.
 
-OK, then looks fine:
+A benchmark got me 430KIOPS vs 540KIOPS, or +25% on bare metal. And perf
+shows that bio_iov_iter_get_pages() was taking ~20%. The test is pretty
+silly, but still imposing. I'll redo it closer to reality for next
+iteration, anyway need to double check some cases.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+If same applied to iomap, common chunck can be moved from block_dev
+into bio_iov_iter_get_pages(), but if there any benefit for filesystems,
+they should explicitly opt in with ITER_BVEC_FLAG_FIXED.
+
+# how to apply
+based on Jens' for-11/block
++ Ming's nr_vec patch,
++ io_uring fix, 9c3a205c5ffa36e96903c2 ("io_uring: fix ITER_BVEC check")
+
+or there:
+https://github.com/isilence/linux/commits/bvec_nocopy
+
+# how to reproduce
+null_blk queue_mode=2 completion_nsec=0 submit_queues=NUM_CPU
+fio/t/io_uring with null blk, no iopoll, BS=16*4096
+
+
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+
+Pavel Begunkov (2):
+  iov: introduce ITER_BVEC_FLAG_FIXED
+  block: no-copy bvec for direct IO
+
+ fs/block_dev.c      | 30 +++++++++++++++++++++++++++++-
+ fs/io_uring.c       |  1 +
+ include/linux/uio.h | 14 +++++++++++---
+ 3 files changed, 41 insertions(+), 4 deletions(-)
 
 -- 
-Ming
+2.24.0
 
