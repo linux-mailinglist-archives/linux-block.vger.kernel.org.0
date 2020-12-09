@@ -2,87 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4BF72D3C67
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 08:37:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A02052D3D10
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 09:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgLIHhY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Dec 2020 02:37:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgLIHhY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 02:37:24 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9920CC0613D6
-        for <linux-block@vger.kernel.org>; Tue,  8 Dec 2020 23:36:43 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id jx16so652998ejb.10
-        for <linux-block@vger.kernel.org>; Tue, 08 Dec 2020 23:36:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UA44RrXj/Op8plv0v8h0D8Z4mBnynfJmnSPQ6/b9gLY=;
-        b=LZX1uYunDFgDIxR6Lnkx6UdTzZlmqfRGkqrFxy8lsqpObwm8MJXc7nZ8yo2t6r9yVL
-         n6cNFUqFLqomN1h8VuODjwheM6wXalgBw43+cUB5yk5Hp3MVofxrb5kX2YNr35HA6Oxk
-         YW+x3N7gJYx2eh30VoLL6bWDr8ohtYw7ca3yxdqYmgMKkUSPysFGoQO5ESm41c1JMmFz
-         CIWD4r/O0udeqhibEtol4wz0Gyl9uh/s0EiaF8DY3TVS3XPoCoakm86uX11JeGHEZh+0
-         GOcFuS1C1QcQNtW/9vByhTygy9OR0QqbIAJOj9yc55oZOwhWK9dZKvEb+/Y+MFfTOcYm
-         1ong==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UA44RrXj/Op8plv0v8h0D8Z4mBnynfJmnSPQ6/b9gLY=;
-        b=e4ySXcGI+P+9p4BT7WS/kDAf2renhM3uMveAGZ199XsosZfeT1ElCnmnU36uJCc5kE
-         q5cH52ntVlPOSUY1U0M/Yvb2vNGCcFnOEnkBAdZ0mqwv5BoqQZC60xXUAv0Ho/7XCYY8
-         tRQWz2esawwGVhZMmNxdjWtir1EAgRoHfSf4ojmfuA25Cpe/5PHzhFK4sD7IgdrqJgDb
-         6GbbOMLy0dmM45WfHcVgfvyr8GKNqIDH0OUR29Fa7v2RFONF1phWtLk4KHOBDt7XJhfo
-         1Yk3u1E1tV/egArMmd6dbQypgyXWL3ATUUc4jBk6/EQG86mGnE0aHWvbz77NsuGnKtME
-         ikIg==
-X-Gm-Message-State: AOAM5301t7tMDCHnXoa3hVTXosqmHbKUQsV5qv3wLXDFm4t/hJHtodBb
-        A79P63AhgTo2NvE7RsH63v9lkASVlMpstGia9yhuMw==
-X-Google-Smtp-Source: ABdhPJy4xAuX5Q3bGZ4jdHtO3el9O1QyJABOEBrHlTFr+KeC6eOsQgQ21Wa+c4RzNjXDBBwQJLtuwWK/2Ow7dNbE0w8=
-X-Received: by 2002:a17:906:94ca:: with SMTP id d10mr942078ejy.62.1607499402342;
- Tue, 08 Dec 2020 23:36:42 -0800 (PST)
-MIME-Version: 1.0
-References: <X9B0IyxwbBDq+cSS@mwanda>
-In-Reply-To: <X9B0IyxwbBDq+cSS@mwanda>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Wed, 9 Dec 2020 08:36:31 +0100
-Message-ID: <CAMGffEn6a92UDBgzkR2L6wutNBpxY_xNf3cakvbivkaGRnk_uQ@mail.gmail.com>
-Subject: Re: [PATCH] block/rnbd-clt: Fix error code in rnbd_clt_add_dev_symlink()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
+        id S1728629AbgLIIEU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Dec 2020 03:04:20 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:50194 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728616AbgLIIET (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 03:04:19 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B97xNqi006094;
+        Wed, 9 Dec 2020 08:03:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=JgWUramQ4RWjeQKitCLWZEl8JrsgQKifBI74AB7jLB8=;
+ b=OhgPKeNvaIjlHpKIt9U4k5bRSNW9yKHo8S257oiYb7C4Bxy+TxVuEDtwFWrqNwr0x2ic
+ zKdQhs27UOOpR90+Z5vIbLbERB0k6s0rwN0NKHJng/bEphQmMcIx2mgNRyM9iPOl+tB3
+ IlKoQt3do4/rBjuV09IoE5k5CHEi3RZH650JTAH+PM28Zv9/V9L7wsty3tZp4qRrfvUT
+ uHfOLiIHWXMNkDAk1xMKmmkRx6b+nmsqmSMBXBBhffzj4tOT42+zV1QzLroS5a/Hery3
+ h1B2EOcedlg1T8mF+E6T4v42/CwC7ZD4x4cONhAgkTL1s2xzc8NNVwiYoMrc9tnV8sTV fg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 357yqbxu6s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Dec 2020 08:03:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B980osC020588;
+        Wed, 9 Dec 2020 08:03:32 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 358kspqrj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Dec 2020 08:03:32 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B983Vn3029963;
+        Wed, 9 Dec 2020 08:03:31 GMT
+Received: from kadam (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Dec 2020 00:03:30 -0800
+Date:   Wed, 9 Dec 2020 11:03:23 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
 Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
         Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
         Jens Axboe <axboe@kernel.dk>,
         Lutz Pogrell <lutz.pogrell@cloud.ionos.com>,
         linux-block <linux-block@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] block/rnbd-clt: Fix error code in
+ rnbd_clt_add_dev_symlink()
+Message-ID: <20201209080323.GE2767@kadam>
+References: <X9B0IyxwbBDq+cSS@mwanda>
+ <CAMGffEn6a92UDBgzkR2L6wutNBpxY_xNf3cakvbivkaGRnk_uQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMGffEn6a92UDBgzkR2L6wutNBpxY_xNf3cakvbivkaGRnk_uQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012090056
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0 adultscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012090056
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Dan,
+On Wed, Dec 09, 2020 at 08:36:31AM +0100, Jinpu Wang wrote:
+> Hi Dan,
+> 
+> 
+> 
+> On Wed, Dec 9, 2020 at 7:52 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > The "ret" variable should be set to -ENOMEM but it returns uninitialized
+> > stack data.
+> >
+> > Fixes: 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> Thanks for the patch. But there is already a fix from Colin merged in
+> block tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.11/drivers&id=733c15bd3a944b8eeaacdddf061759b6a83dd3f4
+> 
+> There is still other problem through with commit 64e8a6ece1a5
+> ("block/rnbd-clt: Dynamically alloc buffer for pathname &
+> blk_symlink_name")
+> 
+> I will send the fix today together with other changes.
 
+Ah...  Haha...  Sorry about that.  We already discussed this yesterday.
 
+What happens is that when I write a patch, I normally save it in my
+postponed messages until the next day.  But then I decided to not fix it
+but instead to just report it.  Unfortunately, I forgot to delete it and
+I also forgot about yesterday's discussion because I have the memory of
+a gnat.  :P
 
-On Wed, Dec 9, 2020 at 7:52 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> The "ret" variable should be set to -ENOMEM but it returns uninitialized
-> stack data.
->
-> Fixes: 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+regards,
+dan carpenter
 
-Thanks for the patch. But there is already a fix from Colin merged in
-block tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.11/drivers&id=733c15bd3a944b8eeaacdddf061759b6a83dd3f4
-
-There is still other problem through with commit 64e8a6ece1a5
-("block/rnbd-clt: Dynamically alloc buffer for pathname &
-blk_symlink_name")
-
-I will send the fix today together with other changes.
-
-Regards!
-Jack
