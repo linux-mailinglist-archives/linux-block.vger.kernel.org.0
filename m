@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 909632D3A7F
-	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:31:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B1532D3A85
+	for <lists+linux-block@lfdr.de>; Wed,  9 Dec 2020 06:31:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgLIFas (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Dec 2020 00:30:48 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45179 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbgLIFap (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:45 -0500
-Received: by mail-pg1-f195.google.com with SMTP id v29so453695pgk.12;
-        Tue, 08 Dec 2020 21:30:30 -0800 (PST)
+        id S1727698AbgLIFa5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Dec 2020 00:30:57 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38537 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727650AbgLIFas (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Dec 2020 00:30:48 -0500
+Received: by mail-pj1-f67.google.com with SMTP id j13so277058pjz.3;
+        Tue, 08 Dec 2020 21:30:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kpaABBaTm2eEnOhP2FWFHi2c3i6BhMnLZ0O2VqeGX/g=;
-        b=CktDdddCDo+Plpg6tAk4m615JUuY42JPRcanMVZcnd/jA0Vu7UrmcMljLO/uY4PJ3q
-         EW6mv37hwZJbTmQeuvXblbUqoV/K+36EsHqwslCHUmDjmEiKZCwR5x1GhEwt5QR/g7Om
-         SJgCziMsfRiratZrfogFzXk3AYC2G6ynAZd7Ue+6RsgQLSuJFZ+knqf7FmeZfnM1R8L7
-         qy3e7eZQfRQYG+OHSg7mVWgt8FmURVBzhKP6apRhRSWlKcYGgTsdrarkN+mJVuffH72H
-         Q8AZgwpBG1kVom0Yw9FvUIppy5doNeK9gVmoqAGt5gc49PQl54Op8mfmf2dXhnX6wvSx
-         v5jA==
-X-Gm-Message-State: AOAM531jEYk67DEKOLIrHRPvrhrR8AaA79tNx3lYak6X/xTRmLpQWgc0
-        3nZk71AVfczIAU8Zxh61PS8=
-X-Google-Smtp-Source: ABdhPJycZlGY1AHx6RrCm9ftrvm5cSb0hC0HgyExFOgJQVRMzZ0cV+22sQUFwyXgFcFCfsof+C4TwQ==
-X-Received: by 2002:a63:6d49:: with SMTP id i70mr503148pgc.216.1607491804634;
-        Tue, 08 Dec 2020 21:30:04 -0800 (PST)
+        bh=04Btu7lbOuaVvM3R+6/4SYZzVRJYUH5aY8lm7YPXAKg=;
+        b=Z8aj5Z6mw1be3jte3nEVpoGPE2mkpE8wln6hk9KOPbFtQynN+3x7kQqDNszrTGRQl4
+         TsVhQlekQ4mWsHlA83nwTn5HYWYYVeWjxabJ54Orz9XBupe9Sk9HXM2zjKPLcAjHZgLy
+         U15usT7bSZPbvWQKVs3zXKrW+cZueUg3AKyWVZhvceOARWkuY8Y5EBFN69DpyqvKxVLX
+         bTFprD4Dfv+enLBDJC9z9UEa2GqlHrb808tILshwkGbEbiojhDBDAjsdzXAZvTQVI/au
+         nTKuqRfbEl9Ufcb2rAm6IrlXz79xVtHaxI/03OtZu1Gy0NszfQurEM6S6hQe6/yzVpJX
+         vsPw==
+X-Gm-Message-State: AOAM531CLJLrXpq2iBDGWwgdrdx0MDIe6CBHTExNJeYTYwzpUHTI7NdZ
+        PdlQbw7XCG45cPFaI7md+nOyH13gIkk=
+X-Google-Smtp-Source: ABdhPJxXqh+72aStnba/hvJQp+DMUZSkXW4knXFjbU1f3lvD0tzShjQ32/nGqcy9PmOUU204ipfBbA==
+X-Received: by 2002:a17:90b:a53:: with SMTP id gw19mr702961pjb.216.1607491806797;
+        Tue, 08 Dec 2020 21:30:06 -0800 (PST)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.02
+        by smtp.gmail.com with ESMTPSA id 77sm753097pfv.16.2020.12.08.21.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 21:30:03 -0800 (PST)
+        Tue, 08 Dec 2020 21:30:05 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
@@ -40,13 +40,14 @@ Cc:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         Bart Van Assche <bvanassche@acm.org>,
+        "David S . Miller" <davem@davemloft.net>,
         Alan Stern <stern@rowland.harvard.edu>,
+        Can Guo <cang@codeaurora.org>,
         Stanley Chu <stanley.chu@mediatek.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Can Guo <cang@codeaurora.org>
-Subject: [PATCH v5 2/8] block: Introduce BLK_MQ_REQ_PM
-Date:   Tue,  8 Dec 2020 21:29:45 -0800
-Message-Id: <20201209052951.16136-3-bvanassche@acm.org>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v5 3/8] ide: Do not set the RQF_PREEMPT flag for sense requests
+Date:   Tue,  8 Dec 2020 21:29:46 -0800
+Message-Id: <20201209052951.16136-4-bvanassche@acm.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209052951.16136-1-bvanassche@acm.org>
 References: <20201209052951.16136-1-bvanassche@acm.org>
@@ -56,76 +57,75 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Introduce the BLK_MQ_REQ_PM flag. This flag makes the request allocation
-functions set RQF_PM. This is the first step towards removing
-BLK_MQ_REQ_PREEMPT.
+RQF_PREEMPT is used for two different purposes in the legacy IDE code:
+1. To mark power management requests.
+2. To mark requests that should preempt another request. An (old)
+   explanation of that feature is as follows:
+   "The IDE driver in the Linux kernel normally uses a series of busywait
+   delays during its initialization. When the driver executes these
+   busywaits, the kernel does nothing for the duration of the wait. The
+   time spent in these waits could be used for other initialization
+   activities, if they could be run concurrently with these waits.
+
+   More specifically, busywait-style delays such as udelay() in module
+   init functions inhibit kernel preemption because the Big Kernel Lock
+   is held, while yielding APIs such as schedule_timeout() allow
+   preemption. This is true because the kernel handles the BKL specially
+   and releases and reacquires it across reschedules allowed by the
+   current thread.
+
+   This IDE-preempt specification requires that the driver eliminate these
+   busywaits and replace them with a mechanism that allows other work to
+   proceed while the IDE driver is initializing."
+
+Since I haven't found an implementation of (2), do not set the PREEMPT
+flag for sense requests. This patch causes sense requests to be
+postponed while a drive is suspended instead of being submitted to
+ide_queue_rq().
+
+If it would ever be necessary to restore the IDE PREEMPT functionality,
+that can be done by introducing a new flag in struct ide_request.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Cc: David S. Miller <davem@davemloft.net>
 Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Can Guo <cang@codeaurora.org>
 Cc: Stanley Chu <stanley.chu@mediatek.com>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Can Guo <cang@codeaurora.org>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-core.c       | 7 ++++---
- block/blk-mq.c         | 2 ++
- include/linux/blk-mq.h | 2 ++
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/ide/ide-atapi.c | 1 -
+ drivers/ide/ide-io.c    | 5 -----
+ 2 files changed, 6 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 2db8bda43b6e..10696f9fb6ac 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -424,11 +424,11 @@ EXPORT_SYMBOL(blk_cleanup_queue);
- /**
-  * blk_queue_enter() - try to increase q->q_usage_counter
-  * @q: request queue pointer
-- * @flags: BLK_MQ_REQ_NOWAIT and/or BLK_MQ_REQ_PREEMPT
-+ * @flags: BLK_MQ_REQ_NOWAIT, BLK_MQ_REQ_PM and/or BLK_MQ_REQ_PREEMPT
-  */
- int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
- {
--	const bool pm = flags & BLK_MQ_REQ_PREEMPT;
-+	const bool pm = flags & (BLK_MQ_REQ_PM | BLK_MQ_REQ_PREEMPT);
+diff --git a/drivers/ide/ide-atapi.c b/drivers/ide/ide-atapi.c
+index 2162bc80f09e..013ad33fbbc8 100644
+--- a/drivers/ide/ide-atapi.c
++++ b/drivers/ide/ide-atapi.c
+@@ -223,7 +223,6 @@ void ide_prep_sense(ide_drive_t *drive, struct request *rq)
+ 	sense_rq->rq_disk = rq->rq_disk;
+ 	sense_rq->cmd_flags = REQ_OP_DRV_IN;
+ 	ide_req(sense_rq)->type = ATA_PRIV_SENSE;
+-	sense_rq->rq_flags |= RQF_PREEMPT;
  
- 	while (true) {
- 		bool success = false;
-@@ -630,7 +630,8 @@ struct request *blk_get_request(struct request_queue *q, unsigned int op,
- 	struct request *req;
- 
- 	WARN_ON_ONCE(op & REQ_NOWAIT);
--	WARN_ON_ONCE(flags & ~(BLK_MQ_REQ_NOWAIT | BLK_MQ_REQ_PREEMPT));
-+	WARN_ON_ONCE(flags & ~(BLK_MQ_REQ_NOWAIT | BLK_MQ_REQ_PM |
-+			       BLK_MQ_REQ_PREEMPT));
- 
- 	req = blk_mq_alloc_request(q, op, flags);
- 	if (!IS_ERR(req) && q->mq_ops->initialize_rq_fn)
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 1b25ec2fe9be..b5880a1fb38d 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -292,6 +292,8 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	rq->mq_hctx = data->hctx;
- 	rq->rq_flags = 0;
- 	rq->cmd_flags = data->cmd_flags;
-+	if (data->flags & BLK_MQ_REQ_PM)
-+		rq->rq_flags |= RQF_PM;
- 	if (data->flags & BLK_MQ_REQ_PREEMPT)
- 		rq->rq_flags |= RQF_PREEMPT;
- 	if (blk_queue_io_stat(data->q))
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index b23eeca4d677..c00e856c6fb1 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -444,6 +444,8 @@ enum {
- 	BLK_MQ_REQ_NOWAIT	= (__force blk_mq_req_flags_t)(1 << 0),
- 	/* allocate from reserved pool */
- 	BLK_MQ_REQ_RESERVED	= (__force blk_mq_req_flags_t)(1 << 1),
-+	/* set RQF_PM */
-+	BLK_MQ_REQ_PM		= (__force blk_mq_req_flags_t)(1 << 2),
- 	/* set RQF_PREEMPT */
- 	BLK_MQ_REQ_PREEMPT	= (__force blk_mq_req_flags_t)(1 << 3),
- };
+ 	req->cmd[0] = GPCMD_REQUEST_SENSE;
+ 	req->cmd[4] = cmd_len;
+diff --git a/drivers/ide/ide-io.c b/drivers/ide/ide-io.c
+index 1a53c7a75224..c210ea3bd02f 100644
+--- a/drivers/ide/ide-io.c
++++ b/drivers/ide/ide-io.c
+@@ -515,11 +515,6 @@ blk_status_t ide_issue_rq(ide_drive_t *drive, struct request *rq,
+ 		 * above to return us whatever is in the queue. Since we call
+ 		 * ide_do_request() ourselves, we end up taking requests while
+ 		 * the queue is blocked...
+-		 * 
+-		 * We let requests forced at head of queue with ide-preempt
+-		 * though. I hope that doesn't happen too much, hopefully not
+-		 * unless the subdriver triggers such a thing in its own PM
+-		 * state machine.
+ 		 */
+ 		if ((drive->dev_flags & IDE_DFLAG_BLOCKED) &&
+ 		    ata_pm_request(rq) == 0 &&
