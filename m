@@ -2,61 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 756682D5818
-	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 11:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C79622D581B
+	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 11:20:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgLJKTW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Dec 2020 05:19:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        id S1726363AbgLJKTa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Dec 2020 05:19:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729565AbgLJKTM (ORCPT
+        with ESMTP id S1725988AbgLJKTa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Dec 2020 05:19:12 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4EEC06179C
-        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:32 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id r5so4875222eda.12
-        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:32 -0800 (PST)
+        Thu, 10 Dec 2020 05:19:30 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202DBC0617A6
+        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:33 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id h16so4882327edt.7
+        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I1nkDS+t71lcZcyKCx1EdDkNSPvYcn8wLT9ZWpiLudM=;
-        b=RPWNMP+eTWP+4JQCgK9cGj2p75kCnnScwZcNskA6nn+FE5Tj+LiOYEzLHlEPnZgk32
-         CRhmOvzgn09XqFTBDDRX7Ye1pb/+T0WAJp0g7w/s5Z6z6ZcsfA+MJ3325eouJjrR41vU
-         2svmKzmjuxSnkWeUe8GK/txAmmNHPL4g5sNLbMR6sYgfBFQLMIgBx84IA9JlMwtgMXe2
-         C5Wg6v2X+7sqnsr5sUFmNhmKLWocWf+GD/x/wJu/qdLpd3n9EzPxc9agLqsxoAqMWIi4
-         lJu9wmIg2OPu6jqU28TsE818eAchQCFRSLS5XK4GIHUXnILCjIwqHYsWfKg4P1jbVxVR
-         LYew==
+        bh=1awzXDTD2OO7hinTkZTbXg+d34hetKU44PxypjgAm/U=;
+        b=PW8i6GNTDEts8xVCi5xucWAFxFPuh2dmJbYEcpich1+UKKLdiqDckiBNu2BrG7rznM
+         OzCpZOn03eU5AZBM3tlqmidbAAiAAuFTFsH3r/e6ofUJfZlfyMV+turURnHvhdz8iklE
+         ZECt+NZzkjU5hhgF9CDHKOIypRrx0RlcNaDAHMRPYQGLQyh/G2kMFgnaVnphiboL+EAh
+         ZoqVsVIKgtJ179vwwZmmySyEYU3hqttzBkzVk3lBa269DUvnPDHz0w1M8AkpL7z4jLk6
+         PW+FBoxe8OdPr6G19L7TWAEPJF3EwVCIL3zuA3tX1d2AvFzK3GDBSfDh0I6svngqHILJ
+         HfMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I1nkDS+t71lcZcyKCx1EdDkNSPvYcn8wLT9ZWpiLudM=;
-        b=YgZjJzf+sN9XvLDKxjIbiiO4bU7Xojhf9qfQbTJr2pK+ljrWwI6CJh8GQfXDoVYHzZ
-         CHcX2uwhE8PnldH+TxYRtb6b1mGKO2DbaB7EpVZlVzic4g0b/XzmbZ6Sl06yHuq1ozQs
-         Suj5OEgzkzzTa6Frl4sGuMP2ZtLRAlwOGgYX2JcnAdfSOEy2FrxwjBy0elhdEHStbMyF
-         5GCruxvSe9nRNdrsy0wuNJyNV64+9DvTA7gKeVS1hWYrJp3vIsZCCCsW721Js6IU6LQ/
-         j3aeFQpC9OnpmlJvMGiHSzTGdiEkd8Eq3OFVyyaqM4mADhkN7VSE281VwSY3+i6Gckdn
-         RKBQ==
-X-Gm-Message-State: AOAM532syfCVXW29MhwWwkZ21INSMhrkHlTXYgiMgtHY9q4M/zjhZEoa
-        z/EM7Uad9wU356mv4imfspXlSSJCVKkapQ==
-X-Google-Smtp-Source: ABdhPJwnQ1TRux1B6UlziLnXPzzWJZwvKYrSzLotnDqvsHV8veLu14vOvU8L2S9fQQGE2IhQqxmPaw==
-X-Received: by 2002:a05:6402:16c8:: with SMTP id r8mr5909508edx.59.1607595510758;
-        Thu, 10 Dec 2020 02:18:30 -0800 (PST)
+        bh=1awzXDTD2OO7hinTkZTbXg+d34hetKU44PxypjgAm/U=;
+        b=OPysBquLKmqWrfuEim1LBiYzN6PNAjgyiQzmWQ1pLR89qhCzg5BSI2ubVCO5Vudovk
+         4N3DAUxvibm3WD4Oa16cnh5ujvSNThCPodGCATtzAo9IndznJ3i1g6l7fIxDJYFXJkgr
+         H986lPTC7LCRUE/WiqrfixQcZ5C/xYQbxe0C0CtAdkwkvw/jvVpgCQAyP5Xpo4a7NSiY
+         zEfFcJ24Jj7sfMSNYdEOO5X45evxb4XENilVCzYidrdEXqM1jq/zHURTRaX6OpWAabMX
+         9TrpwbiW0i/T1E9+m/Qv5ayefXVhxzQ49Kuvcq2bm+H1rfUNKe7UTnQ+BMKALyZJu4Xl
+         yyAA==
+X-Gm-Message-State: AOAM53355q+Hb6v/WOWvogDbvaKrpzKbqZHS1i4ucut5hIhDQznPR3IH
+        jbAfuAcBqdtxRAjbr+g7rSRu62XNnMGS7Q==
+X-Google-Smtp-Source: ABdhPJxpJYcVSQ3/3P6wNfPRPm4yPXtyWTGh7XJkUqTl/kifz6l0UCesCSHohXtnZPimNCGimZpsLA==
+X-Received: by 2002:a50:fb85:: with SMTP id e5mr5899374edq.153.1607595511745;
+        Thu, 10 Dec 2020 02:18:31 -0800 (PST)
 Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:4938:300:58f0:963a:32b2:ff05])
-        by smtp.gmail.com with ESMTPSA id s24sm3955878ejb.20.2020.12.10.02.18.29
+        by smtp.gmail.com with ESMTPSA id s24sm3955878ejb.20.2020.12.10.02.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 02:18:30 -0800 (PST)
+        Thu, 10 Dec 2020 02:18:31 -0800 (PST)
 From:   Jack Wang <jinpu.wang@cloud.ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCHv2 for-next 3/7] block/rnbd-srv: Protect dev session sysfs removal
-Date:   Thu, 10 Dec 2020 11:18:22 +0100
-Message-Id: <20201210101826.29656-4-jinpu.wang@cloud.ionos.com>
+        bvanassche@acm.org, danil.kipnis@cloud.ionos.com
+Subject: [PATCHv2 for-next 4/7] block/rnbd: Fix typos
+Date:   Thu, 10 Dec 2020 11:18:23 +0100
+Message-Id: <20201210101826.29656-5-jinpu.wang@cloud.ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
 References: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
@@ -66,36 +64,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-
-Since the removal of the session sysfs can also be called from the
-function destroy_sess, there is a need to protect the call from the
-function rnbd_srv_sess_dev_force_close
-
-Fixes: 786998050cbc ("block/rnbd-srv: close a mapped device from server side.")
-Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Reviewed-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 ---
- drivers/block/rnbd/rnbd-srv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/rnbd/rnbd-clt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index d1ee72ed8384..066411cce5e2 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -338,9 +338,10 @@ static int rnbd_srv_link_ev(struct rtrs_srv *rtrs,
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index d63f0974bd04..3a2e6e8ed6b1 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -359,7 +359,7 @@ static struct rnbd_iu *rnbd_get_iu(struct rnbd_clt_session *sess,
+ 	 * 2nd reference is dropped after confirmation with the response is
+ 	 * returned.
+ 	 * 1st and 2nd can happen in any order, so the rnbd_iu should be
+-	 * released (rtrs_permit returned to ibbtrs) only leased after both
++	 * released (rtrs_permit returned to rtrs) only after both
+ 	 * are finished.
+ 	 */
+ 	atomic_set(&iu->refcount, 2);
+@@ -803,7 +803,7 @@ static struct rnbd_clt_session *alloc_sess(const char *sessname)
+ 	rnbd_init_cpu_qlists(sess->cpu_queues);
  
- void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
- {
-+	mutex_lock(&sess_dev->sess->lock);
- 	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
-+	mutex_unlock(&sess_dev->sess->lock);
- 	sess_dev->keep_id = true;
--
- }
- 
- static int process_msg_close(struct rtrs_srv *rtrs,
+ 	/*
+-	 * That is simple percpu variable which stores cpu indeces, which are
++	 * That is simple percpu variable which stores cpu indices, which are
+ 	 * incremented on each access.  We need that for the sake of fairness
+ 	 * to wake up queues in a round-robin manner.
+ 	 */
+@@ -1666,7 +1666,7 @@ static void rnbd_destroy_sessions(void)
+ 	/*
+ 	 * Here at this point there is no any concurrent access to sessions
+ 	 * list and devices list:
+-	 *   1. New session or device can'be be created - session sysfs files
++	 *   1. New session or device can't be created - session sysfs files
+ 	 *      are removed.
+ 	 *   2. Device or session can't be removed - module reference is taken
+ 	 *      into account in unmap device sysfs callback.
 -- 
 2.25.1
 
