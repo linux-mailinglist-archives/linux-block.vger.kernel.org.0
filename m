@@ -2,107 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6BE2D5816
-	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 11:20:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E20C22D5819
+	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 11:20:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgLJKTQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Dec 2020 05:19:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        id S1730130AbgLJKTX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Dec 2020 05:19:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgLJKTJ (ORCPT
+        with ESMTP id S1727278AbgLJKTL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Dec 2020 05:19:09 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359CAC0613D6
-        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:29 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id v22so4879171edt.9
-        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:29 -0800 (PST)
+        Thu, 10 Dec 2020 05:19:11 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4D6C061793
+        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:30 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id g20so6575094ejb.1
+        for <linux-block@vger.kernel.org>; Thu, 10 Dec 2020 02:18:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dthc2x5czv7Omf8LNqaI7gJTMFrZ7BUMJazoTpUaa1w=;
-        b=WoAwdE6xVsnbsPuZ0t6piagBiojf7yIHyT35Q/hFX41G/fx5i2zxCmdiK/aIZc+faN
-         dP95pJOE6ND5FLteKuucKvHYp+3j/1mwvAH9yVzY8EBV8kAZMt+Q78PWsMWC6boBuc76
-         0QzC4IWwUnL7aamKSnXECyCSoghzmmh/rK99ytwGx30R+hv3Q/8mwHF8lcwKKWx9c1xx
-         QQwZ3eORrbZkiunUIxKYuSGBoxPyPGet/ZceUnlx2JGDvv6MVLZvIro5xmrX/hBAlxkt
-         0CXHZhsTRquLWlaens8TIASIDc05rbsf0xiR3RkO42EGSPm45v+Y4pDMIzTrFjv3Vwre
-         XNDg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FZj2H/4ea4ki/8QS6r4ZPiAvzyYfSVv6rdGzABwADaU=;
+        b=A5MUOk0qIJDVs10H7gO8T+rzfFRIqSwrlemrbV8MSM/uy4EaS2I2dUlK1U0L7eFOwu
+         0EJzh/qw6sJq2yt3Pm9xEb0O+dJHQ5bKk8pPrcr5nYQHx5VVkQBR8CRulBD/O39hPtkF
+         jMcUtL+S2KVo8Ar+urn4AHWseCDrzofW34PqlfVkvc19fCZmmcXOQwym5pVL/NEXtJEI
+         f4pZlsVMCG1X2Qs50NA7V3kwUOkk5TYiZzuMZg+Ubk4940z9tgpV5r8yPFUHumcGJ0Sg
+         jjKOtMn9OV6KmC9x9S6pf3ytCxMP+gF0dBLPKZAruS4LFT3Fl8owzB0JUvn2YfFGy7CL
+         YaKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dthc2x5czv7Omf8LNqaI7gJTMFrZ7BUMJazoTpUaa1w=;
-        b=P3Kq+7JqrmcmsSDkKtBrkD52WndzQCYmrSJsCnwIbLiXqUalc6E+Ubem2o5NFHkRJT
-         YTVHxCKEgx+MoZoJXINoRdcMVmATPw1q2ZzSL2ZZWnvFZS4RR+kkEjn78gD2/NtcDw6A
-         Fsr+Z7g3RcPnlRzvsl7ezfQVkPDCa2sIhRkjEA4jkjO/8zoT1QnpFUSvF0a/k6IuBMT7
-         y8KfLqmvzmHLJ6ERxEOG5eYN2yYBrLLwdxsTeUOWEMokfsFCvndUZIOT2qizKCxU+d3D
-         kfmh9xhMWxjUcDrA3zkqx/xCDtFyE+fsz8zlpgwIRqhagPRqbmkLTFMKFxUd9n/niTh5
-         KWIQ==
-X-Gm-Message-State: AOAM532dvlEqMcRxpO5KaDqXbmCC4k5lPlsp0YtlCovWUOIlHOVqAkFD
-        cW2ZAnXphBdEsI1SbvsAZ7M1h8PkillCzQ==
-X-Google-Smtp-Source: ABdhPJx2jdRLfBye6+O6vKZDe3A7mTuOPcnKVcamLj1w5hBsWx2fZUA1atNlggtOyyLkFOnoOzNUQg==
-X-Received: by 2002:a50:e688:: with SMTP id z8mr6156322edm.129.1607595507734;
-        Thu, 10 Dec 2020 02:18:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FZj2H/4ea4ki/8QS6r4ZPiAvzyYfSVv6rdGzABwADaU=;
+        b=GXC2ylTeFX1lvXKlI+GkpMIoZRQCsF4vY/LvsctJ3PchbMUdVGkg+YKKo6Mf6zZmE6
+         CnIqzH50G0vg4R4s1wEhLoHrzLekmBoiOpDT9HIwL0+xnZZ46xDe2HZI2vTkBKTRtaYd
+         Gau+sTDTg/uIgPi1p48mJFj9Ux3lR68g1dwYBeYnFnuRFi1RO6JNI+ENhGl1Sf4Ef99d
+         Tmt05QVgn3b9LcJOhU4+v/dS4sSIj11oRiUWN8duPHGlVwdkzbyE8CTxXqEhOcgbMMC1
+         YQoWKQwUbVnZH6dgYRipr9Zl4AvOhckWQq/z1t8X8G6higG9AUGxXlHROfbrUc2OObxs
+         QsHQ==
+X-Gm-Message-State: AOAM533ck40EUaCpngTC/YzGTKTYeKwgOF1v7j6MuU/KIGwyp5JIhfAp
+        7jU0cAkKpHScx+jOZ7MSgL2Sv8UCNZ4NQg==
+X-Google-Smtp-Source: ABdhPJxNg6PMre1lQA2bWVN4aZfR0DU2omI2V/L75uIA6Gacodu/kUQc2yxnanbMDRJlzCdRviQPmw==
+X-Received: by 2002:a17:907:2061:: with SMTP id qp1mr5542437ejb.222.1607595508790;
+        Thu, 10 Dec 2020 02:18:28 -0800 (PST)
 Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:4938:300:58f0:963a:32b2:ff05])
-        by smtp.gmail.com with ESMTPSA id s24sm3955878ejb.20.2020.12.10.02.18.26
+        by smtp.gmail.com with ESMTPSA id s24sm3955878ejb.20.2020.12.10.02.18.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 02:18:27 -0800 (PST)
+        Thu, 10 Dec 2020 02:18:28 -0800 (PST)
 From:   Jack Wang <jinpu.wang@cloud.ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, danil.kipnis@cloud.ionos.com
-Subject: [PATCHv2 for-next 0/7] Misc update for rnbd
-Date:   Thu, 10 Dec 2020 11:18:19 +0100
-Message-Id: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
+        bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
+        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCHv2 for-next 1/7] block/rnbd-clt: Get rid of warning regarding size argument in strlcpy
+Date:   Thu, 10 Dec 2020 11:18:20 +0100
+Message-Id: <20201210101826.29656-2-jinpu.wang@cloud.ionos.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
+References: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
 
-This is the misc update for rnbd. It inlcudes:
-- 2 follow-up fixes for commit 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
-  one warning, and one possible memleak.
-- one fix for race with dev session sysfs removal.
-- fix for write-back cache & FUA.
-- reduce memory footprint by allocate sglist on demand and do not request pdu
-  from rtrs-clt.
-- Typo fix.
+The kernel test robot triggerred the following warning,
 
-change since v1:
-- use kstrdup as Bart suggested.
-- fix return code and leaking iu in block/rnbd-clt: Dynamically allocate sglist for rnbd_iu
+>> drivers/block/rnbd/rnbd-clt.c:1397:42: warning: size argument in
+'strlcpy' call appears to be size of the source; expected the size of the
+destination [-Wstrlcpy-strlcat-size]
+	strlcpy(dev->pathname, pathname, strlen(pathname) + 1);
+					      ~~~~~~~^~~~~~~~~~~~~
 
-v1: https://lore.kernel.org/linux-block/20201209082051.12306-1-jinpu.wang@cloud.ionos.com/T/#md330070d0688bbc57325ce0a6b2181f39dca495c
+To get rid of the above warning, use a kstrdup as Bart suggested.
 
-The patches are based on block/for-next.
+Fixes: 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+---
+ drivers/block/rnbd/rnbd-clt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Gioh Kim (3):
-  block/rnbd: Set write-back cache and fua same to the target device
-  block/rnbd-clt: Dynamically allocate sglist for rnbd_iu
-  block/rnbd-clt: Does not request pdu to rtrs-clt
-
-Jack Wang (2):
-  block/rnbd-clt: Fix possible memleak
-  block/rnbd: Fix typos
-
-Md Haris Iqbal (2):
-  block/rnbd-clt: Get rid of warning regarding size argument in strlcpy
-  block/rnbd-srv: Protect dev session sysfs removal
-
- drivers/block/rnbd/rnbd-clt-sysfs.c    |  5 +-
- drivers/block/rnbd/rnbd-clt.c          | 94 +++++++++++++++-----------
- drivers/block/rnbd/rnbd-clt.h          | 12 +++-
- drivers/block/rnbd/rnbd-proto.h        |  9 ++-
- drivers/block/rnbd/rnbd-srv.c          | 12 +++-
- drivers/infiniband/ulp/rtrs/rtrs-clt.c |  6 --
- drivers/infiniband/ulp/rtrs/rtrs.h     |  7 --
- 7 files changed, 87 insertions(+), 58 deletions(-)
-
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index a199b190c73d..d63f0974bd04 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -1388,12 +1388,11 @@ static struct rnbd_clt_dev *init_dev(struct rnbd_clt_session *sess,
+ 		goto out_queues;
+ 	}
+ 
+-	dev->pathname = kzalloc(strlen(pathname) + 1, GFP_KERNEL);
++	dev->pathname = kstrdup(pathname, GFP_KERNEL);
+ 	if (!dev->pathname) {
+ 		ret = -ENOMEM;
+ 		goto out_queues;
+ 	}
+-	strlcpy(dev->pathname, pathname, strlen(pathname) + 1);
+ 
+ 	dev->clt_device_id	= ret;
+ 	dev->sess		= sess;
 -- 
 2.25.1
 
