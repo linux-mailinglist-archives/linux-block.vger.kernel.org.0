@@ -2,91 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E852D58C5
-	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 12:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CB292D5963
+	for <lists+linux-block@lfdr.de>; Thu, 10 Dec 2020 12:40:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbgLJK5k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Dec 2020 05:57:40 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:33911 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389253AbgLJK5h (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Dec 2020 05:57:37 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UI8pCsw_1607597813;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0UI8pCsw_1607597813)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 10 Dec 2020 18:56:53 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     axboe@kernel.dk, tj@kernel.org
-Cc:     baolin.wang@linux.alibaba.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] blk-iocost: Add iocg idle state tracepoint
-Date:   Thu, 10 Dec 2020 18:56:44 +0800
-Message-Id: <1ba7a38d5a6186b1e71432ef424c23ba1904a365.1607591591.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1725947AbgLJLkG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Dec 2020 06:40:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55728 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731355AbgLJLkF (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 10 Dec 2020 06:40:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CBE94AD60;
+        Thu, 10 Dec 2020 11:39:22 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6A06D1E0F6A; Thu, 10 Dec 2020 10:44:43 +0100 (CET)
+From:   Jan Kara <jack@suse.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH] bfq: Fix computation of shallow depth
+Date:   Thu, 10 Dec 2020 10:44:33 +0100
+Message-Id: <20201210094433.25491-1-jack@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It will be helpful to trace the iocg's whole state, including active and
-idle state. And we can easily expand the original iocost_iocg_activate
-trace event to support a state trace class, including active and idle
-state tracing.
+BFQ computes number of tags it allows to be allocated for each request type
+based on tag bitmap. However it uses 1 << bitmap.shift as number of
+available tags which is wrong. 'shift' is just an internal bitmap value
+containing logarithm of how many bits bitmap uses in each bitmap word.
+Thus number of tags allowed for some request types can be far to low.
+Use proper bitmap.depth which has the number of tags instead.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/blk-iocost.c            |  3 +++
- include/trace/events/iocost.h | 16 +++++++++++++++-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ block/bfq-iosched.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index ffa418c..ac6078a 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2185,6 +2185,9 @@ static int ioc_check_iocgs(struct ioc *ioc, struct ioc_now *now)
- 							    WEIGHT_ONE);
- 			}
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 9e81d1052091..9e4eb0fc1c16 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -6332,13 +6332,13 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
+ 	 * limit 'something'.
+ 	 */
+ 	/* no more than 50% of tags for async I/O */
+-	bfqd->word_depths[0][0] = max((1U << bt->sb.shift) >> 1, 1U);
++	bfqd->word_depths[0][0] = max(bt->sb.depth >> 1, 1U);
+ 	/*
+ 	 * no more than 75% of tags for sync writes (25% extra tags
+ 	 * w.r.t. async I/O, to prevent async I/O from starving sync
+ 	 * writes)
+ 	 */
+-	bfqd->word_depths[0][1] = max(((1U << bt->sb.shift) * 3) >> 2, 1U);
++	bfqd->word_depths[0][1] = max((bt->sb.depth * 3) >> 2, 1U);
  
-+			TRACE_IOCG_PATH(iocg_idle, iocg, now,
-+					atomic64_read(&iocg->active_period),
-+					atomic64_read(&ioc->cur_period), vtime);
- 			__propagate_weights(iocg, 0, 0, false, now);
- 			list_del_init(&iocg->active_list);
- 		}
-diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-index 0b68699..e282ce0 100644
---- a/include/trace/events/iocost.h
-+++ b/include/trace/events/iocost.h
-@@ -11,7 +11,7 @@
+ 	/*
+ 	 * In-word depths in case some bfq_queue is being weight-
+@@ -6348,9 +6348,9 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
+ 	 * shortage.
+ 	 */
+ 	/* no more than ~18% of tags for async I/O */
+-	bfqd->word_depths[1][0] = max(((1U << bt->sb.shift) * 3) >> 4, 1U);
++	bfqd->word_depths[1][0] = max((bt->sb.depth * 3) >> 4, 1U);
+ 	/* no more than ~37% of tags for sync writes (~20% extra tags) */
+-	bfqd->word_depths[1][1] = max(((1U << bt->sb.shift) * 6) >> 4, 1U);
++	bfqd->word_depths[1][1] = max((bt->sb.depth * 6) >> 4, 1U);
  
- #include <linux/tracepoint.h>
- 
--TRACE_EVENT(iocost_iocg_activate,
-+DECLARE_EVENT_CLASS(iocost_iocg_state,
- 
- 	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
- 		u64 last_period, u64 cur_period, u64 vtime),
-@@ -59,6 +59,20 @@
- 	)
- );
- 
-+DEFINE_EVENT(iocost_iocg_state, iocost_iocg_activate,
-+	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
-+		 u64 last_period, u64 cur_period, u64 vtime),
-+
-+	TP_ARGS(iocg, path, now, last_period, cur_period, vtime)
-+);
-+
-+DEFINE_EVENT(iocost_iocg_state, iocost_iocg_idle,
-+	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
-+		 u64 last_period, u64 cur_period, u64 vtime),
-+
-+	TP_ARGS(iocg, path, now, last_period, cur_period, vtime)
-+);
-+
- DECLARE_EVENT_CLASS(iocg_inuse_update,
- 
- 	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+ 	for (i = 0; i < 2; i++)
+ 		for (j = 0; j < 2; j++)
 -- 
-1.8.3.1
+2.16.4
 
