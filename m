@@ -2,93 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2DD32D9E9B
-	for <lists+linux-block@lfdr.de>; Mon, 14 Dec 2020 19:12:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F090D2D9E31
+	for <lists+linux-block@lfdr.de>; Mon, 14 Dec 2020 18:53:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406513AbgLNSLU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Dec 2020 13:11:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732089AbgLNSLN (ORCPT
+        id S2439866AbgLNRtg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Dec 2020 12:49:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29508 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439016AbgLNRtc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Dec 2020 13:11:13 -0500
-X-Greylist: delayed 2429 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Dec 2020 10:10:28 PST
-Received: from scorn.kernelslacker.org (scorn.kernelslacker.org [IPv6:2600:3c03:e000:2fb::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FB4C0613D6
-        for <linux-block@vger.kernel.org>; Mon, 14 Dec 2020 10:10:28 -0800 (PST)
-Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
-        by scorn.kernelslacker.org with esmtp (Exim 4.92)
-        (envelope-from <davej@codemonkey.org.uk>)
-        id 1korfY-0004o6-Dt; Mon, 14 Dec 2020 12:29:56 -0500
-Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
-        id 08F3C56016E; Mon, 14 Dec 2020 12:29:56 -0500 (EST)
-Date:   Mon, 14 Dec 2020 12:29:55 -0500
-From:   Dave Jones <davej@codemonkey.org.uk>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com
-Subject: Re: Linux 5.10
-Message-ID: <20201214172955.GA9066@codemonkey.org.uk>
-Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com
-References: <CAHk-=whCKhxNyKn1Arut8xUDKTwp3fWcCj_jbL5dbzkUmo45gQ@mail.gmail.com>
- <20201214053147.GA24093@codemonkey.org.uk>
- <X9b9ujh5T6U5+aBY@kroah.com>
- <20201214160247.GA2090@redhat.com>
- <20201214162631.GA2290@redhat.com>
- <6522caad-bfe8-2554-2ba9-dff5856233d1@kernel.dk>
+        Mon, 14 Dec 2020 12:49:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607968086;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=I7Ckpg9ORH87HoCvloaykZ4ZIvN/i9MuLsNlW7R/uGo=;
+        b=DnnZIMIE7tZZsqJZYad0ShACFLFimE+1uAq24QSZ/MlcqfnujHS2tAYVo9lfzm4PAsm5MG
+        CX22TyO9B5a5PJdNWYIlx9EBvGu99k8zJ8qkow8nJwtr4n1DdepxMgHtYBZaJxDOSeud6R
+        ycVRXBiz4v8Gm3/K06c7X3wvaIKohxo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-527-JchcsMI8PkqcDHaaFDT-wQ-1; Mon, 14 Dec 2020 12:48:03 -0500
+X-MC-Unique: JchcsMI8PkqcDHaaFDT-wQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B0C5107ACF7;
+        Mon, 14 Dec 2020 17:48:01 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51AD66267C;
+        Mon, 14 Dec 2020 17:47:58 +0000 (UTC)
+Date:   Mon, 14 Dec 2020 12:47:57 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org, axboe@kernel.dk,
+        song@kernel.org, linux-raid@vger.kernel.org,
+        davej@codemonkey.org.uk, gregkh@linuxfoundation.org
+Subject: [git pull] 2 reverts for 5.11 to fix v5.10 MD regression
+Message-ID: <20201214174757.GC2290@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6522caad-bfe8-2554-2ba9-dff5856233d1@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Note: SpamAssassin invocation failed
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 10:21:59AM -0700, Jens Axboe wrote:
- 
- > >>>> [   87.290698] attempt to access beyond end of device
- > >>>>                md0: rw=4096, want=13996467328, limit=6261202944
- > >>>> [   87.293371] attempt to access beyond end of device
- > >>>>                md0: rw=4096, want=13998564480, limit=6261202944
- > >>>> [   87.296045] BTRFS warning (device md0): couldn't read tree root
- > >>>> [   87.300056] BTRFS error (device md0): open_ctree failed
- > >>>>
- > >>>> Reverting it goes back to the -rc7 behaviour where it mounts fine.
- > >>>
- > >>> If the developer/maintainer(s) agree, I can revert this and push out a
- > >>> 5.10.1, just let me know.
- > >>
- > >> Yes, these should be reverted from 5.10 via 5.10.1:
- > >>
- > >> e0910c8e4f87 dm raid: fix discard limits for raid1 and raid10
- > >> f075cfb1dc59 md: change mddev 'chunk_sectors' from int to unsigned
- > > 
- > > Sorry, f075cfb1dc59 was my local commit id, the corresponding upstream
- > > commit as staged by Jens is:
- > > 
- > > 6ffeb1c3f82 md: change mddev 'chunk_sectors' from int to unsigned
- > > 
- > > So please revert:
- > > 6ffeb1c3f822 md: change mddev 'chunk_sectors' from int to unsigned
- > > and then revert:
- > > e0910c8e4f87 dm raid: fix discard limits for raid1 and raid10
- > 
- > Working with Song on understanding the failure case here. raid6 was
- > tested prior to this being shipped. We'll be back with more soon...
+Hi Linus,
 
-FYI, mixup in my original mail, it was raid5  (I forgot I converted it from
-raid6->raid5 a few months back).  But I wouldn't be surprised if they
-were both equally affected given what that header touched.
+The following changes since commit 2c85ebc57b3e1817b6ce1a6b703928e113a90442:
 
-	Dave
+  Linux 5.10 (2020-12-13 14:41:30 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.11/revert-problem-v5.10-raid-changes
+
+for you to fetch changes up to 0941e3b0653fef1ea68287f6a948c6c68a45c9ba:
+
+  Revert "dm raid: fix discard limits for raid1 and raid10" (2020-12-14 12:12:08 -0500)
+
+Please pull, thanks.
+Mike
+
+----------------------------------------------------------------
+A cascade of MD reverts occurred late in the v5.10-rcX cycle due to MD
+raid10 discard optimizations having introduced potential for
+corruption. Those reverts exposed a dm-raid.c compiler warning that
+wasn't ever knowingly introduced. That min_not_zero() type mismatch
+warning was thought to be safely fixed simply by changing 'struct
+mddev' to use 'unsigned int' rather than int for chunk_sectors members
+in that struct. I proposed either using a cast local to dm-raid.c but
+thought changing the type to 'unsigned int' more correct. While that
+may be, not enough testing was paired with code review associated with
+making that change. As such we were left exposed and the result was a
+report that with v5.10 btrfs on MD RAID6 failed to mount:
+https://lkml.org/lkml/2020/12/14/7
+
+Given that report, it is justified to simply revert these offending
+commits. stable@ has already taken steps to revert these for 5.10.1 -
+this pull request just makes sure mainline does so too.
+
+----------------------------------------------------------------
+Mike Snitzer (2):
+      Revert "md: change mddev 'chunk_sectors' from int to unsigned"
+      Revert "dm raid: fix discard limits for raid1 and raid10"
+
+ drivers/md/dm-raid.c | 12 +++++-------
+ drivers/md/md.h      |  4 ++--
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
