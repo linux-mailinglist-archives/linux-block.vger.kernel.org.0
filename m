@@ -2,210 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5232DC03F
-	for <lists+linux-block@lfdr.de>; Wed, 16 Dec 2020 13:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C21432DBB33
+	for <lists+linux-block@lfdr.de>; Wed, 16 Dec 2020 07:29:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725976AbgLPMYz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Dec 2020 07:24:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49136 "EHLO
+        id S1725905AbgLPG3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Dec 2020 01:29:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgLPMYz (ORCPT
+        with ESMTP id S1725812AbgLPG3O (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Dec 2020 07:24:55 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95F4C0619DC
-        for <linux-block@vger.kernel.org>; Wed, 16 Dec 2020 04:23:45 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id g18so17560272pgk.1
-        for <linux-block@vger.kernel.org>; Wed, 16 Dec 2020 04:23:45 -0800 (PST)
+        Wed, 16 Dec 2020 01:29:14 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1C2C0613D6
+        for <linux-block@vger.kernel.org>; Tue, 15 Dec 2020 22:28:33 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id q22so13345245eja.2
+        for <linux-block@vger.kernel.org>; Tue, 15 Dec 2020 22:28:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=dQGlXyf0vEPza/ynTsm+2Uc3URJx33bTtExYBUVYQpU=;
-        b=XreEgCI+5a+hlN92FgTe1iojt4AIg+TlWvbzl18HZfGEN93U/KdCjP0wTbfW/t2lf7
-         n1IsMiMqsZerQj11Fjb+UR0p7veut2ae9YcZWdoLZXKqM1eMpje5E6VhjKW1HA2OQD63
-         PfKIWjl2SEWlDcdyoMyH9FXBOkZf58BJqUZCo=
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OUbQn9gI6Y9byE+OVB6xI/iZcBXpPFEFI+/OxjCYHSU=;
+        b=dCHyrJ9ldolqIV3vm3kKdZtj/L6zf+1aycMFo5vCfPgOrqAqvrXdvL2RDOsPm8qIcs
+         lpHgpSPNkXGCJ1iddrUjOOY8CMjtycqnFZkkyz6cUzCth37Obo/W8/pzEuFGz+thQAkb
+         BG2Ts112Z8PYQUIjjnrboZuu9bgrFp164h+pp+RHvAWh88rzdpQo+EbLeSQdVJChAOVA
+         N9lqvsvFpS0nE8UO25kBaauNDcZMgv9GvgBy54+nxdYvheMmqKQJ1ChEiu+WRP65mh9U
+         02iZQOjUI4w3jER2zBDGDteukb7IdriWYc4oI2Ut066hlALJ05hq5j1XG7Sv6viR2l/+
+         aHzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=dQGlXyf0vEPza/ynTsm+2Uc3URJx33bTtExYBUVYQpU=;
-        b=ZRyLTEOfms+mmvQWCRG5yOgp68uab+52PYltNlkpju0oBzJt4Lo2IyQP2BPBsZkYAf
-         TtYHp7XNXPNEokvdMfCQQzlnVtkoaKNKjMg/J3DQc1cZQZToKWhoc7JVrKPmx1A/+2IU
-         Z7UGrh1oeGjJB0hv3EWn/yey9I6+CsEo1dHpa93x6jVqeLZJkltA+ziGXfedCHyJ4WtQ
-         cTSy8IKP0NzbA7DviE5dZt3ow4qCPizt3eLsjG5j9FfE8OX7Ksl1PR7NZ6N0ppizCkOd
-         0Zq9R0j0jKEFMV8+s0BVw3Zc4T7Okvg3ioOxSX3Suqf8tD2Q0yPoDJT2pNUTfsu+ICAX
-         CgYQ==
-X-Gm-Message-State: AOAM530SrshUB4EWdWjpAFbL7sRnfZ+ULCkc2ca5B/40w65CT1ynp8Vj
-        AUohRK9YPZvSJo9NGi0dw2wsNQpIB//fE5O115Cp7rO6/Q/1uhVrnZMCxppt3W1XRl+LLWUZKru
-        gb0wBmh8/j0VqmZ/vakEdfuPKyx5pOldeBh7v6QDjvjEvayKMUpSfdTz6yNcJk8Oi3qdImXH68Y
-        s8YOBrRBDKr4V5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OUbQn9gI6Y9byE+OVB6xI/iZcBXpPFEFI+/OxjCYHSU=;
+        b=KZzdMLZHUdPbanTz2YJDVzQxKNSdn4r24ZRbL488KzSVSdJluC1hjRfp3FUHVGAcTJ
+         wTZrVd4l8WhFOAsegYFqY4nFFPWFpnwbgvJSrv+Myltyqdcz/WF7oLGNxIbwiInts1TE
+         aPuYQVSgwhBUTCr7OcQRwMJOwIhxeahLGQppfy9JeAcxslAZenO8ZhMvxaa5TDAETDPJ
+         csKUIzsbVMsC1iRLes2m5K2bNCVpiYWyRMdA1BkZ2OZ7oyJWfoi9e57bYZw403f7sNXR
+         Rod6jzqVfxEgWv2KSnf9Kr5zhpjgQeThV/is3lO/Azq7ok62y7M7qitjRJ93kTaaXTJV
+         VbVA==
+X-Gm-Message-State: AOAM530pdAWie1wuP1NwkFyke+cYXMDUNZynXdKHMLBQ+8KmtJbVCREf
+        dFRF9uI4Yg8WuhJIZ3vUYXn6Qg76EoWksjwwBivH0id29Qc=
+X-Google-Smtp-Source: ABdhPJyKM7ndsuhZUkF18D7UC4RlAZySXJwF30MnRXLrk/OKhA7Ew3XAe9PdEkSCuYaKDef4JPgyzhaEbnUZHwbr4HE=
+X-Received: by 2002:a17:906:9452:: with SMTP id z18mr20915828ejx.389.1608100112305;
+ Tue, 15 Dec 2020 22:28:32 -0800 (PST)
 MIME-Version: 1.0
-X-Google-Smtp-Source: ABdhPJyy+6dwj0PPZFiZrnYOnSc3tBKkom9gKX3bghAuJoeKbZVQ8ZXeS6UgD2THpSjA0LJmgKLXmA==
-X-Received: by 2002:a63:4083:: with SMTP id n125mr33154867pga.356.1608121424672;
-        Wed, 16 Dec 2020 04:23:44 -0800 (PST)
-Received: from localhost.localdomain ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s7sm2477296pfh.207.2020.12.16.04.23.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Dec 2020 04:23:44 -0800 (PST)
-From:   Muneendra <muneendra.kumar@broadcom.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
-Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
-        pbonzini@redhat.com, Muneendra <muneendra.kumar@broadcom.com>
-Subject: [PATCH v5 16/16] scsi: Made changes in Kconfig to select BLK_CGROUP_FC_APPID
-Date:   Wed, 16 Dec 2020 10:59:46 +0530
-Message-Id: <1608096586-21656-17-git-send-email-muneendra.kumar@broadcom.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1608096586-21656-1-git-send-email-muneendra.kumar@broadcom.com>
-References: <1608096586-21656-1-git-send-email-muneendra.kumar@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000004f0f4f05b693f2aa"
+References: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
+In-Reply-To: <20201210101826.29656-1-jinpu.wang@cloud.ionos.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Wed, 16 Dec 2020 07:28:21 +0100
+Message-ID: <CAMGffE=F0i_HqLNQBuek76-WNe9s+iKP24SRnHkkezQBejy+DA@mail.gmail.com>
+Subject: Re: [PATCHv2 for-next 0/7] Misc update for rnbd
+To:     linux-block <linux-block@vger.kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---0000000000004f0f4f05b693f2aa
-Content-Type: text/plain; charset="US-ASCII"
+On Thu, Dec 10, 2020 at 11:18 AM Jack Wang <jinpu.wang@cloud.ionos.com> wrote:
+>
+> Hi Jens,
+>
+> This is the misc update for rnbd. It inlcudes:
+> - 2 follow-up fixes for commit 64e8a6ece1a5 ("block/rnbd-clt: Dynamically alloc buffer for pathname & blk_symlink_name")
+>   one warning, and one possible memleak.
+> - one fix for race with dev session sysfs removal.
+> - fix for write-back cache & FUA.
+> - reduce memory footprint by allocate sglist on demand and do not request pdu
+>   from rtrs-clt.
+> - Typo fix.
 
-Added a new config FC_APPID to select BLK_CGROUP_FC_APPID
-which Enable support to track FC io Traffic.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
-
----
-v5:
-No change
-
-v4:
-Addressed the error reported by kernel test robot
-
-v3:
-New patch
----
- drivers/scsi/Kconfig | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 701b61ec76ee..1c73c60e398f 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -235,6 +235,19 @@ config SCSI_FC_ATTRS
- 	  each attached FiberChannel device to sysfs, say Y.
- 	  Otherwise, say N.
- 
-+config FC_APPID
-+	bool "Enable support to track FC io Traffic"
-+	depends on BLOCK && BLK_CGROUP
-+	depends on SCSI
-+	select BLK_CGROUP_FC_APPID
-+	default y
-+	help
-+	  If you say Y here, it enables the support to track
-+	  FC IO traffic over fabric.It enables the Fabric and the
-+	  storage targets to identify, monitor, and handle FC traffic
-+	  based on vm tags by inserting application specific
-+	  identification into the FC frame
-+
- config SCSI_ISCSI_ATTRS
- 	tristate "iSCSI Transport Attributes"
- 	depends on SCSI && NET
--- 
-2.26.2
-
-
--- 
-This electronic communication and the information and any files transmitted 
-with it, or attached to it, are confidential and are intended solely for 
-the use of the individual or entity to whom it is addressed and may contain 
-information that is confidential, legally privileged, protected by privacy 
-laws, or otherwise restricted from disclosure to anyone else. If you are 
-not the intended recipient or the person responsible for delivering the 
-e-mail to the intended recipient, you are hereby notified that any use, 
-copying, distributing, dissemination, forwarding, printing, or copying of 
-this e-mail is strictly prohibited. If you received this e-mail in error, 
-please return the e-mail to the sender, delete it from your computer, and 
-destroy any printed copy of it.
-
---0000000000004f0f4f05b693f2aa
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-J/4V6ms/nIUi+/4vPYjckYUbRzkXm1/X0IyUfpp5cgdrFn9jBIk69fQGAUEhnVvwcXnHWotYxZFd
-Xew5Fz0CAwEAAaOCAdMwggHPMA4GA1UdDwEB/wQEAwIFoDCBngYIKwYBBQUHAQEEgZEwgY4wTQYI
-KwYBBQUHMAKGQWh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzcGVyc29uYWxz
-aWduMnNoYTJnM29jc3AuY3J0MD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5j
-b20vZ3NwZXJzb25hbHNpZ24yc2hhMmczME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsG
-AQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAA
-MEQGA1UdHwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNp
-Z24yc2hhMmczLmNybDAnBgNVHREEIDAegRxtdW5lZW5kcmEua3VtYXJAYnJvYWRjb20uY29tMBMG
-A1UdJQQMMAoGCCsGAQUFBwMEMB8GA1UdIwQYMBaAFGlygmIxZ5VEhXeRgMQENkmdewthMB0GA1Ud
-DgQWBBR6On9cEmlB2VsuST951zNMSKtFBzANBgkqhkiG9w0BAQsFAAOCAQEAOGDBLQ17Ge8BVULh
-hsKhgh5eDx0mNmRRdhvTJnxOTRX5QsOKvsJGOUbyrKjD3BTTcGmIUti9HmbqDe/3gRTbhu8LA508
-LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
-9KsxA+DECRfSGfXJJQSq6nEZUGKhz+dz5CV1s8UIZLe9HEEfyJO4eRP+Fw9X16cthAbY0kpVnAvT
-/j45FAauY/h87uphdvSb5wC9v5w4VO0JKs0yNUjyWXg/RG+6JCvcViLFLAlRCLrcRcVaQwWZQ3YB
-EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
-b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
-SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCDXC58TFl/c/ER2QmtsF4tNw4s5GoLmqY3q8SH8zaBrgDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDEyMTYxMjIzNDVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
-AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAu7VKktdAH7kjK22O
-q5wWznDwKNN5Baof+y9lXsEbfj+NRa6jmzpHCGAB7N4JGC6JE2kYwK1LOvC3Jc3nGN0fFUXn0Rwa
-tMi4nkrZg3gccHgPXPq+vnqzS4mMsDTP0Wy9av/irhKd5evGGupx0T6Uro91e/c7Dr3uWwfXRtdJ
-Ta0AVnWdflNXzf9RNh/+2NmGW4dPDsL6arNZVw8lPdIJfoOS2cuWacjiov3UpNLMGkgLBukkw59Y
-d8rbuD6a+vSOFJi/CO9nTiL5FlMy7DxckkrDHhqL87q9gFZSmboaRvbcJTP4oKK6zBqVMBm2CdVV
-FAOU4+dexKdRyxbEXokkHA==
---0000000000004f0f4f05b693f2aa--
+Ping?
+>
+> change since v1:
+> - use kstrdup as Bart suggested.
+> - fix return code and leaking iu in block/rnbd-clt: Dynamically allocate sglist for rnbd_iu
+>
+> v1: https://lore.kernel.org/linux-block/20201209082051.12306-1-jinpu.wang@cloud.ionos.com/T/#md330070d0688bbc57325ce0a6b2181f39dca495c
+>
+> The patches are based on block/for-next.
+>
+> Gioh Kim (3):
+>   block/rnbd: Set write-back cache and fua same to the target device
+>   block/rnbd-clt: Dynamically allocate sglist for rnbd_iu
+>   block/rnbd-clt: Does not request pdu to rtrs-clt
+>
+> Jack Wang (2):
+>   block/rnbd-clt: Fix possible memleak
+>   block/rnbd: Fix typos
+>
+> Md Haris Iqbal (2):
+>   block/rnbd-clt: Get rid of warning regarding size argument in strlcpy
+>   block/rnbd-srv: Protect dev session sysfs removal
+>
+>  drivers/block/rnbd/rnbd-clt-sysfs.c    |  5 +-
+>  drivers/block/rnbd/rnbd-clt.c          | 94 +++++++++++++++-----------
+>  drivers/block/rnbd/rnbd-clt.h          | 12 +++-
+>  drivers/block/rnbd/rnbd-proto.h        |  9 ++-
+>  drivers/block/rnbd/rnbd-srv.c          | 12 +++-
+>  drivers/infiniband/ulp/rtrs/rtrs-clt.c |  6 --
+>  drivers/infiniband/ulp/rtrs/rtrs.h     |  7 --
+>  7 files changed, 87 insertions(+), 58 deletions(-)
+>
+> --
+> 2.25.1
+>
