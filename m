@@ -2,79 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CB922DCE04
-	for <lists+linux-block@lfdr.de>; Thu, 17 Dec 2020 10:00:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A09BB2DD029
+	for <lists+linux-block@lfdr.de>; Thu, 17 Dec 2020 12:13:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgLQI7e (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Dec 2020 03:59:34 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55559 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgLQI7e (ORCPT
+        id S1728218AbgLQLMw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Dec 2020 06:12:52 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:9461 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbgLQLMw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Dec 2020 03:59:34 -0500
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7B417240010;
-        Thu, 17 Dec 2020 08:58:49 +0000 (UTC)
-Date:   Thu, 17 Dec 2020 00:58:47 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nbd: Respect max_part for all partition scans
-Message-ID: <86d03378210ddac44eb07ebb78c9b0f32c56fe96.1608195087.git.josh@joshtriplett.org>
+        Thu, 17 Dec 2020 06:12:52 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4CxTp32Sk6zhsq9;
+        Thu, 17 Dec 2020 19:11:23 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.498.0; Thu, 17 Dec 2020 19:11:43 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hch@lst.de>, <hare@suse.de>, <ppvk@codeaurora.org>,
+        <bvanassche@acm.org>, <kashyap.desai@broadcom.com>,
+        <linuxarm@huawei.com>, John Garry <john.garry@huawei.com>
+Subject: [RFC PATCH v2 0/2] blk-mq: Avoid use-after-free for accessing old requests
+Date:   Thu, 17 Dec 2020 19:07:51 +0800
+Message-ID: <1608203273-170555-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The creation path of the NBD device respects max_part and only scans for
-partitions if max_part is not 0. However, some other code paths ignore
-max_part, and unconditionally scan for partitions. Add a check for
-max_part on each partition scan.
+This series aims to tackle the various UAF reports, like:
+- https://lore.kernel.org/linux-block/8376443a-ec1b-0cef-8244-ed584b96fa96@huawei.com/
+- https://lore.kernel.org/linux-block/5c3ac5af-ed81-11e4-fee3-f92175f14daf@acm.org/T/#m6c1ac11540522716f645d004e2a5a13c9f218908
+- https://lore.kernel.org/linux-block/04e2f9e8-79fa-f1cb-ab23-4a15bf3f64cc@kernel.dk/
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
----
+Details are in the commit messages. Most important detail is that
+fastpath is untouched.
 
-Caught this when reading recent NBD patches, which tweaked the
-nbd_set_size path.
+The issue addressed in patch 1/2 is pretty easy to reproduce, 2/2 not so
+much.
 
-It doesn't seem worth factoring these two lines into a function,
-especially since the callers obtain the disk structure in different
-ways.
+Differences to v1:
+- add 2nd patch
 
- drivers/block/nbd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+John Garry (2):
+  blk-mq: Clean up references to old requests when freeing rqs
+  blk-mq: Lockout tagset iter when freeing rqs
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 92f84ed0ba9e..6727358e147d 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -318,7 +318,8 @@ static int nbd_set_size(struct nbd_device *nbd, loff_t bytesize,
- 	blk_queue_logical_block_size(nbd->disk->queue, blksize);
- 	blk_queue_physical_block_size(nbd->disk->queue, blksize);
- 
--	set_bit(GD_NEED_PART_SCAN, &nbd->disk->state);
-+	if (max_part)
-+		set_bit(GD_NEED_PART_SCAN, &nbd->disk->state);
- 	if (!set_capacity_and_notify(nbd->disk, bytesize >> 9))
- 		kobject_uevent(&nbd_to_dev(nbd)->kobj, KOBJ_CHANGE);
- 	return 0;
-@@ -1476,9 +1477,11 @@ static int nbd_open(struct block_device *bdev, fmode_t mode)
- 		refcount_set(&nbd->config_refs, 1);
- 		refcount_inc(&nbd->refs);
- 		mutex_unlock(&nbd->config_lock);
--		set_bit(GD_NEED_PART_SCAN, &bdev->bd_disk->state);
-+		if (max_part)
-+			set_bit(GD_NEED_PART_SCAN, &bdev->bd_disk->state);
- 	} else if (nbd_disconnected(nbd->config)) {
--		set_bit(GD_NEED_PART_SCAN, &bdev->bd_disk->state);
-+		if (max_part)
-+			set_bit(GD_NEED_PART_SCAN, &bdev->bd_disk->state);
- 	}
- out:
- 	mutex_unlock(&nbd_index_mutex);
+ block/blk-mq-sched.c |  2 +-
+ block/blk-mq-tag.c   | 22 +++++++++++++++++++---
+ block/blk-mq-tag.h   |  3 +++
+ block/blk-mq.c       | 22 ++++++++++++++++++++--
+ block/blk-mq.h       |  2 ++
+ 5 files changed, 45 insertions(+), 6 deletions(-)
+
 -- 
-2.29.2
+2.26.2
+
