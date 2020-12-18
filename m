@@ -2,162 +2,127 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 981992DEB3E
-	for <lists+linux-block@lfdr.de>; Fri, 18 Dec 2020 22:45:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF07D2DEBB8
+	for <lists+linux-block@lfdr.de>; Fri, 18 Dec 2020 23:45:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgLRVpB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Dec 2020 16:45:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52724 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgLRVpB (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Dec 2020 16:45:01 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 28CCBAD12;
-        Fri, 18 Dec 2020 21:44:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B76D81E1332; Fri, 18 Dec 2020 22:44:19 +0100 (CET)
-From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>, hare@suse.de,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 2/2] blk-mq: Improve performance of non-mq IO schedulers with multiple HW queues
-Date:   Fri, 18 Dec 2020 22:44:12 +0100
-Message-Id: <20201218214412.1543-3-jack@suse.cz>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20201218214412.1543-1-jack@suse.cz>
-References: <20201218214412.1543-1-jack@suse.cz>
+        id S1726202AbgLRWo0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Dec 2020 17:44:26 -0500
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:44458 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgLRWo0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 18 Dec 2020 17:44:26 -0500
+Received: by mail-pf1-f181.google.com with SMTP id f9so2378281pfc.11;
+        Fri, 18 Dec 2020 14:44:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mjYQFKlw1OKFIFpIBjFxMCpNInHN23kLECgiubg/j/A=;
+        b=nScerJXXgkvUrud5S4ihLMjBuryxQg5ejRFdI6q4BYjoMYh6PgkGOYbXmSkR7hGig9
+         Iqj9vw6C1MqoXQ5XY8IVHzsaLsMx/SETHoqa6D6h5/VjVuFHKLIrIsJsXamGNGYhTtTP
+         1I8TVqBdg8QDJFFgj2kgOPUs30XYsekks9IjLM5FsFiSwfNjWuGj9OXYn5dxPFCyyc6b
+         w67dByQPv9oMMm7ev2ZniRS8IAJisKEIIIAM7r/2LHd/hWcGNzA+bpD3F3+EJdlDLlPT
+         WI51vewmrefUUgfKzmikNsSmODt8iX07TmK3UcIrXmoKqAl10fgoZH2NaHL408sjfnOJ
+         CJ3g==
+X-Gm-Message-State: AOAM533/4hieRKRQB7GTABasgHpzEqo6hG38+ZXxzEaJkTP1FpNjAAXa
+        UaYNO2GDFT8R9ghYnxmp7Lw=
+X-Google-Smtp-Source: ABdhPJxVVa1Gkt4uJ4IWKRzN8WDqjTd0sTVRJLUcGBAJZl61mODqhcKpqSAVrSXM86h2JbfnmnVboA==
+X-Received: by 2002:a63:ea4b:: with SMTP id l11mr5986767pgk.61.1608331425060;
+        Fri, 18 Dec 2020 14:43:45 -0800 (PST)
+Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id u3sm9974174pjf.52.2020.12.18.14.43.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Dec 2020 14:43:43 -0800 (PST)
+Subject: Re: [RFC PATCH v2 2/2] blk-mq: Lockout tagset iter when freeing rqs
+To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
+        ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, hare@suse.de, ppvk@codeaurora.org,
+        kashyap.desai@broadcom.com, linuxarm@huawei.com
+References: <1608203273-170555-1-git-send-email-john.garry@huawei.com>
+ <1608203273-170555-3-git-send-email-john.garry@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <df44b73d-6c42-87ee-3c25-b95a44712e05@acm.org>
+Date:   Fri, 18 Dec 2020 14:43:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+MIME-Version: 1.0
+In-Reply-To: <1608203273-170555-3-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently when non-mq aware IO scheduler (BFQ, mq-deadline) is used for
-a queue with multiple HW queues, the performance it rather bad. The
-problem is that these IO schedulers use queue-wide locking and their
-dispatch function does not respect the hctx it is passed in and returns
-any request it finds appropriate. Thus locality of request access is
-broken and dispatch from multiple CPUs just contends on IO scheduler
-locks. For these IO schedulers there's little point in dispatching from
-multiple CPUs. Instead dispatch always only from a single CPU to limit
-contention.
+On 12/17/20 3:07 AM, John Garry wrote:
+> References to old IO sched requests are currently cleared from the
+> tagset when freeing those requests; switching elevator or changing
+> request queue depth is such a scenario in which this occurs.
+> 
+> However, this does not stop the potentially racy behaviour of freeing
+> and clearing a request reference between a tagset iterator getting a
+> reference to a request and actually dereferencing that request.
+> 
+> Such a use-after-free can be triggered, as follows:
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in bt_iter+0xa0/0x120
+> Read of size 8 at addr ffff00108d589300 by task fio/3052
+> 
+> CPU: 32 PID: 3052 Comm: fio Tainted: GW
+> 5.10.0-rc4-64839-g2dcf1ee5054f #693
+> Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon
+> D05 IT21 Nemo 2.0 RC0 04/18/2018
+> Call trace:
+> dump_backtrace+0x0/0x2d0
+> show_stack+0x18/0x68
+> dump_stack+0x100/0x16c
+> print_address_description.constprop.12+0x6c/0x4e8
+> kasan_report+0x130/0x200
+> __asan_load8+0x9c/0xd8
+> bt_iter+0xa0/0x120
+> blk_mq_queue_tag_busy_iter+0x2d8/0x540
+> blk_mq_in_flight+0x80/0xb8
+> part_stat_show+0xd8/0x238
+> dev_attr_show+0x44/0x90
+> sysfs_kf_seq_show+0x128/0x1c8
+> kernfs_seq_show+0xa0/0xb8
+> seq_read_iter+0x1ec/0x6a0
+> seq_read+0x1d0/0x250
+> kernfs_fop_read+0x70/0x330
+> vfs_read+0xe4/0x250
+> ksys_read+0xc8/0x178
+> __arm64_sys_read+0x44/0x58
+> el0_svc_common.constprop.2+0xc4/0x1e8
+> do_el0_svc+0x90/0xa0
+> el0_sync_handler+0x128/0x178
+> el0_sync+0x158/0x180
+> 
+> This is found experimentally by running fio on 2x SCSI disks - 1x disk
+> holds the root partition. Userspace is constantly triggering the tagset
+> iter from reading the root (gen)disk partition info. And so if the IO
+> sched is constantly changed on the other disk, eventually the UAF occurs,
+> as described above.
 
-Below is a comparison of dbench runs on XFS filesystem where the storage
-is a raid card with 64 HW queues and to it attached a single rotating
-disk. BFQ is used as IO scheduler:
+Hi John,
 
-      clients           MQ                     SQ             MQ-Patched
-Amean 1      39.12 (0.00%)       43.29 * -10.67%*       36.09 *   7.74%*
-Amean 2     128.58 (0.00%)      101.30 *  21.22%*       96.14 *  25.23%*
-Amean 4     577.42 (0.00%)      494.47 *  14.37%*      508.49 *  11.94%*
-Amean 8     610.95 (0.00%)      363.86 *  40.44%*      362.12 *  40.73%*
-Amean 16    391.78 (0.00%)      261.49 *  33.25%*      282.94 *  27.78%*
-Amean 32    324.64 (0.00%)      267.71 *  17.54%*      233.00 *  28.23%*
-Amean 64    295.04 (0.00%)      253.02 *  14.24%*      242.37 *  17.85%*
-Amean 512 10281.61 (0.00%)    10211.16 *   0.69%*    10447.53 *  -1.61%*
+Something is not clear to me. The above call stack includes
+blk_mq_queue_tag_busy_iter(). That function starts with
+percpu_ref_tryget(&q->q_usage_counter) and ends with calling
+percpu_ref_put(&q->q_usage_counter). So it will only iterate over a tag set
+if q->q_usage_counter is live. However, both blk_mq_update_nr_requests()
+and elevator_switch() start with freezing the request queue.
+blk_mq_freeze_queue() starts with killing q->q_usage_counter and waits
+until that counter has dropped to zero. In other words,
+blk_mq_queue_tag_busy_iter() should not iterate over a tag set while a tag
+set is being freed or reallocated. Does this mean that we do not yet have
+a full explanation about why the above call stack can be triggered?
 
-Numbers are times so lower is better. MQ is stock 5.10-rc6 kernel. SQ is
-the same kernel with megaraid_sas.host_tagset_enable=0 so that the card
-advertises just a single HW queue. MQ-Patched is a kernel with this
-patch applied.
+Thanks,
 
-You can see multiple hardware queues heavily hurt performance in
-combination with BFQ. The patch restores the performance.
+Bart.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/blk-mq.c           | 37 +++++++++++++++++++++++++++++++++++++
- block/kyber-iosched.c    |  1 +
- include/linux/elevator.h |  2 ++
- 3 files changed, 40 insertions(+)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 57d0461f2be5..6d80054c231b 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1663,6 +1663,31 @@ void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
- }
- EXPORT_SYMBOL(blk_mq_run_hw_queue);
- 
-+static struct blk_mq_hw_ctx *blk_mq_sq_iosched_hctx(struct request_queue *q)
-+{
-+	struct elevator_queue *e = q->elevator;
-+	struct blk_mq_hw_ctx *hctx;
-+
-+	/*
-+	 * The queue has multiple hardware queues but uses IO scheduler that
-+	 * does not respect hardware queues when dispatching? This is not a
-+	 * great setup but it can be sensible when we have a single rotational
-+	 * disk behind a raid card. Just don't bother with multiple HW queues
-+	 * and dispatch from hctx for the current CPU since running multiple
-+	 * queues just causes lock contention inside the scheduler and
-+	 * pointless cache bouncing because the hctx is not respected by the IO
-+	 * scheduler's dispatch function anyway.
-+	 */
-+	if (q->nr_hw_queues > 1 && e && e->type->ops.dispatch_request &&
-+	    !(e->type->elevator_features & ELEVATOR_F_MQ_AWARE)) {
-+		hctx = blk_mq_map_queue_type(q, HCTX_TYPE_DEFAULT,
-+					     raw_smp_processor_id());
-+		if (!blk_mq_hctx_stopped(hctx))
-+			return hctx;
-+	}
-+	return NULL;
-+}
-+
- /**
-  * blk_mq_run_hw_queues - Run all hardware queues in a request queue.
-  * @q: Pointer to the request queue to run.
-@@ -1673,6 +1698,12 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
- 
-+	hctx = blk_mq_sq_iosched_hctx(q);
-+	if (hctx) {
-+		blk_mq_run_hw_queue(hctx, async);
-+		return;
-+	}
-+
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (blk_mq_hctx_stopped(hctx))
- 			continue;
-@@ -1692,6 +1723,12 @@ void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
- 
-+	hctx = blk_mq_sq_iosched_hctx(q);
-+	if (hctx) {
-+		blk_mq_delay_run_hw_queue(hctx, msecs);
-+		return;
-+	}
-+
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (blk_mq_hctx_stopped(hctx))
- 			continue;
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index dc89199bc8c6..c25c41d0d061 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -1029,6 +1029,7 @@ static struct elevator_type kyber_sched = {
- #endif
- 	.elevator_attrs = kyber_sched_attrs,
- 	.elevator_name = "kyber",
-+	.elevator_features = ELEVATOR_F_MQ_AWARE,
- 	.elevator_owner = THIS_MODULE,
- };
- 
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index bacc40a0bdf3..1fe8e105b83b 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -172,6 +172,8 @@ extern struct request *elv_rb_find(struct rb_root *, sector_t);
- 
- /* Supports zoned block devices sequential write constraint */
- #define ELEVATOR_F_ZBD_SEQ_WRITE	(1U << 0)
-+/* Supports scheduling on multiple hardware queues */
-+#define ELEVATOR_F_MQ_AWARE		(1U << 1)
- 
- #endif /* CONFIG_BLOCK */
- #endif
--- 
-2.16.4
 
