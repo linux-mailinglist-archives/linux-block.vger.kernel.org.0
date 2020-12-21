@@ -2,89 +2,162 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E122DF84B
-	for <lists+linux-block@lfdr.de>; Mon, 21 Dec 2020 05:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB85D2DFB56
+	for <lists+linux-block@lfdr.de>; Mon, 21 Dec 2020 12:05:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgLUEfR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 20 Dec 2020 23:35:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30527 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725308AbgLUEfQ (ORCPT
+        id S1726553AbgLULEq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Dec 2020 06:04:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgLULEp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 20 Dec 2020 23:35:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608525230;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lZM3RNwmwWP54uqTbzBkqorYuZ8rgPl/4mZufV9L+F8=;
-        b=I/sa8GIaryVEGqUTasV6qC9guDsiQfOhpQYuyZEN8u+ywFPkHPmD+yKoa0X7Klid1O2dCN
-        04O/CiJY43yEA9SwW0FnXPhni3isS3zcfgcsuf7zdE6uLSSt+VvKPlNslb+FDmF4J7uUkA
-        2TVvqvm87irm3IXxuxFoI79JTBSRSoU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-al7_xAzLP8yLWtMjbiG1vA-1; Sun, 20 Dec 2020 23:33:48 -0500
-X-MC-Unique: al7_xAzLP8yLWtMjbiG1vA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507C959;
-        Mon, 21 Dec 2020 04:33:47 +0000 (UTC)
-Received: from localhost (ovpn-13-38.pek2.redhat.com [10.72.13.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAF7160938;
-        Mon, 21 Dec 2020 04:33:42 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, stable@vger.kernel.org,
-        syzbot+825f0f9657d4e528046e@syzkaller.appspotmail.com
-Subject: [PATCH] block: fix use-after-free in disk_part_iter_next
-Date:   Mon, 21 Dec 2020 12:33:35 +0800
-Message-Id: <20201221043335.2831589-1-ming.lei@redhat.com>
+        Mon, 21 Dec 2020 06:04:45 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FAEC061285;
+        Mon, 21 Dec 2020 03:04:05 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id c79so6271239pfc.2;
+        Mon, 21 Dec 2020 03:04:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m4RXLnH7YBILbODpuDyfo9E1AOFVv93WhdclcHi3eRM=;
+        b=mA4rkZ2mW5ilVtJlHTLxyUJbz4DtMizPCLvCnvGrHm7XoPsPZE3HcUISa+DINhe1cX
+         VnYcPtgRrVmlD6iNUktCM9CvhFg9hFAd2+NL7spFpNLgaisQkXQoLUa7nGIHVPR+fLpN
+         2I17vlr0JuScYxcSiGi7rInpQQyijOiIzaxI1+JQAQKmHHDxFUhD5SvuVRafD4MnaZjZ
+         t+INoEhNht+H8bbDqe5ZGkOUwFQsAaOgVpDusW+3UvbbW2dXhteuIdvNxb1BJcVLbT9p
+         vjMw8oeCMmbo4M6zu3eUhnpqj05Y8DMRrEtXs18/xyx62faIELK50YvCt56IRRchkFkj
+         VxRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m4RXLnH7YBILbODpuDyfo9E1AOFVv93WhdclcHi3eRM=;
+        b=WnlMOqHLZ6C8jQ/pOjT4lqV2GNqdcfx9quoEABklUrqcSSCn+aw7PEngGsrClxGlyE
+         ZBVbak6RBHqWJyKBSlBGJiPV1o7GJHwUok1PJ9ynWv9sCt1e0y83UNAnl4DelNoT24uf
+         FYbiwIXJ3ca2kXrdB4VedY1v9QoWX/8fNXjLpDPn2ScQAutXJlS8lIdi/OEuSR6mXFW+
+         QReYFc3G8Jr3n2SrbDt561Axe/QVVVkMq2vwE2GMHFqQVRFl/ejAbbvbF1uDtCeqHEMc
+         a31rRtMXCavPiG9axJJNnt6fz0ukIqotocxWoifX/E9MnN5MKAeZja0xH78nzo1wkqfk
+         mTGw==
+X-Gm-Message-State: AOAM530IWm/qifT1tRWRUQ3yPAzGcP28SI47LkmPF4nn/ZZziZHCoCCR
+        DmCTHPuJnDIOx9bdqEfM2TjcKqEz6Y5fOw==
+X-Google-Smtp-Source: ABdhPJxfsK/TKyeT0KVqf2ULDbwG5cq5edfGnp7+WRd1iwL7NlFlagqlJMZ9LY5DQLObCcAUtGM3gQ==
+X-Received: by 2002:a62:1ccb:0:b029:1ad:8138:dc42 with SMTP id c194-20020a621ccb0000b02901ad8138dc42mr6727056pfc.0.1608548645079;
+        Mon, 21 Dec 2020 03:04:05 -0800 (PST)
+Received: from localhost ([103.248.31.152])
+        by smtp.gmail.com with ESMTPSA id 84sm16889194pfy.9.2020.12.21.03.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Dec 2020 03:04:04 -0800 (PST)
+Date:   Mon, 21 Dec 2020 16:33:56 +0530
+From:   'Amey Narkhede' <ameynarkhede03@gmail.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: aoe: replace use of __constant_htons to htons
+Message-ID: <20201221110356.6x2h2ip6o3hlwztd@archlinux>
+References: <20201220164625.94105-1-ameynarkhede03@gmail.com>
+ <d708db73308747feb0484287a09c443e@AcuMS.aculab.com>
+ <20201220202019.j7x64yahapgilr7u@archlinux>
+ <c5df63bdc5a94ebdac9505a64f2cece5@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pglt4qwsfzwfhuk6"
+Content-Disposition: inline
+In-Reply-To: <c5df63bdc5a94ebdac9505a64f2cece5@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make sure that bdgrab() is done on the 'block_device' instance before
-referring to it for avoiding use-after-free.
 
-Cc: <stable@vger.kernel.org>
-Reported-by: syzbot+825f0f9657d4e528046e@syzkaller.appspotmail.com
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/genhd.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+--pglt4qwsfzwfhuk6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/block/genhd.c b/block/genhd.c
-index b84b8671e627..2df3c5b1c9c8 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -244,15 +244,18 @@ struct block_device *disk_part_iter_next(struct disk_part_iter *piter)
- 		part = rcu_dereference(ptbl->part[piter->idx]);
- 		if (!part)
- 			continue;
-+		piter->part = bdgrab(part);
-+		if (!piter->part)
-+			continue;
- 		if (!bdev_nr_sectors(part) &&
- 		    !(piter->flags & DISK_PITER_INCL_EMPTY) &&
- 		    !(piter->flags & DISK_PITER_INCL_EMPTY_PART0 &&
--		      piter->idx == 0))
-+		      piter->idx == 0)) {
-+			bdput(piter->part);
-+			piter->part = NULL;
- 			continue;
-+		}
- 
--		piter->part = bdgrab(part);
--		if (!piter->part)
--			continue;
- 		piter->idx += inc;
- 		break;
- 	}
--- 
-2.28.0
+On 20/12/21 09:23AM, David Laight wrote:
+> From: 'Amey Narkhede' <ameynarkhede03@gmail.com>
+> > Sent: 20 December 2020 20:20
+> > To: David Laight <David.Laight@ACULAB.COM>
+> > Subject: Re: [PATCH] block: aoe: replace use of __constant_htons to htons
+> >
+> > On 20/12/20 07:35PM, David Laight wrote:
+> > > From: Amey Narkhede
+> > > > Sent: 20 December 2020 16:46
+> > > >
+> > > > The macro htons expands to __swab16 which has special
+> > > > case for constants in little endian case. In big
+> > > > endian case both __constant_htons and htons macros
+> > > > expand to the same code. So, replace __constant_htons
+> > > > with htons to get rid of the definition of __constant_htons
+> > > > completely.
+> > > >
+> > > ...
+> > > >  static struct packet_type aoe_pt __read_mostly = {
+> > > > -	.type = __constant_htons(ETH_P_AOE),
+> > > > +	.type = htons(ETH_P_AOE),
+> > > >  	.func = aoenet_rcv,
+> > >
+> > > Does this cause grief if someone is doing a COMPILE_TEST on LE?
+> > >
+> > > 	David
+> > >
+> > > -
+> > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> > > Registration No: 1397386 (Wales)
+> > >
+> > I did COMPILE_TEST on my x86_64 machine and it compiled
+> > without any problems.
+> > I assume that was the point or am I missing
+> > something? I'm a beginner contributor so please
+> > let me know if there any mistakes.
+>
+> It depends on exactly how the bswap functions are defined.
+>
+> You can't have anything that contains a function call (or asm) for a
+> static initialiser or case label.
+> The bswap functions have used the builtin_constant() check to switch
+> between an asm block and C expression.
+> So the C expression is used for constants - so evaluated by the compiler,
+> and the asm for variables.
+> Last I looked this wasn't valid for initialisers - so the __constant_bswap()
+> exists for these cases.
+>
+> Now, it might be that, on more recent gcc __builtin_bswap() is used.
+> This might be valid for constants in initialisers.
+> Whether the same is true for CLANG is another issue.
+>
+> Basically it is all complex and partially historic.
+>
+> So you may need to use __constant_htons() for initialisers
+> and case labels.
+> For constants in code it doesn't matter whether you use the __constant form.
+> For variables in code the __constant form is likely to generate horrid code.
+>
+> FWIW you'll get more credit for finding real bugs than stylistic changes.
+>
+> 	David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+>
+Thanks for thee detail explanation.
+Actually I was submitting stylistic changes to get
+familiar with email and patch based workflows
 
+Amey
+
+--pglt4qwsfzwfhuk6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEb5tNK+B4oWmn+0Z9BBTsy/Z3yzYFAl/ggRwACgkQBBTsy/Z3
+yzYPmAgAj9feO9UUbbeCG7DTkaIBhNMpNLZKvL43vcz3WGtDjxYzYPtobHwJWPAE
+bbMcHYGtAgulWogYVNHW5YDHufc1C/0I/mvtobDOyuaVzw8dC8h8VA7kVwnZV+uZ
+2mHoEa4dQZlPjo4JcfV0OO1RGqGGO5GRQ5fke+QzELm75DIx2/1qAIUz1lXvLsMQ
+yCTOIk0Brrce1o9tRvoXzwha+c3QXVxjsQyN3K5296v01FgTkk0DOkvNl/X4lDWJ
++rwaH0XJu8Gz5i0dGNa+gcl3IlhezAQXVq98sKMrx/0zZgBaiGZDZCRg43UWJnWD
+0SxEi4heFn70eTAh+ESp2l/FUa4lTA==
+=HrGu
+-----END PGP SIGNATURE-----
+
+--pglt4qwsfzwfhuk6--
