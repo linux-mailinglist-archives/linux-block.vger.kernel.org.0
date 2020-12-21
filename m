@@ -2,106 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2347B2DF908
-	for <lists+linux-block@lfdr.de>; Mon, 21 Dec 2020 06:58:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94E122DF84B
+	for <lists+linux-block@lfdr.de>; Mon, 21 Dec 2020 05:37:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgLUF6I (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Dec 2020 00:58:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgLUF6H (ORCPT
+        id S1726552AbgLUEfR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 20 Dec 2020 23:35:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30527 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725308AbgLUEfQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Dec 2020 00:58:07 -0500
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA9CC0613D3;
-        Sun, 20 Dec 2020 21:57:27 -0800 (PST)
-Received: by mail-il1-x130.google.com with SMTP id g1so7882711ilk.7;
-        Sun, 20 Dec 2020 21:57:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:cc:subject:message-id:mime-version:content-disposition;
-        bh=Ua2/mrhX7ym2QXGBEungLOzE+u2b0KzmVzT/pkdbpzo=;
-        b=bFZlldJt3vfK14cwTAu+D0ZhNYxMOzJOoFBVGenuCiGG9uwOKBJ92qRYIdUb/u6c9P
-         JO4nYeQWfr4iDiKbMraAqJU0SjxfrQFkg82aFN3vOXyBUT0YyQuTWd5GLUec7JsZAJeB
-         7pA+MLq+lfreJ0tVRaM2JBSouHDFFfOrvyNeglPoqSQ5R+fciWA+36ZOcd1bUvKb2sPM
-         vBrXsHumfB9pT3Y/XpSzFrNRVJCfa9g2jdUISYS0SjNIR5hsa9oSB1I4LfFNuoAnS/Ge
-         Yn3bnUgnRQtyp2K/wAwBjJ8g4AE//Dtci/ad6QfIpymH/VYbliEQ4AkuhFjwadb2Ng0O
-         u+fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Ua2/mrhX7ym2QXGBEungLOzE+u2b0KzmVzT/pkdbpzo=;
-        b=rgodsMa4c/46s19+KoUzykgwBXhiO+mt40GxH5J22piOMp8MC5t8xL7nyZmO03qlBP
-         fFg4OL2dsd0yhXaHeb2CDT9B54TQpN+tlejJ7436T0m8QTioFX2hqv60EAKPLjggK714
-         mndVD1RIAsLKgrOiP1l+Wn1IDELnHkLlD2uEhWZtQYqVCGChE1Lyvsz4avWHB7nU7w/E
-         j6bZTOscUPtEv2tZYIDZ+MO9hluIoJDWd366eQn5PCx5xzywX6ljVypkVbznf9CVsLyo
-         GBrA3OoBeGncanL6KcI/QHG+Fa44FqBwIsYvBOgmHADQRHnNT6o1DLuGbHu4WxZbrB+n
-         ev1w==
-X-Gm-Message-State: AOAM533Yfh9ABHtVWmlIK2H6dOS6A7jicy6GDozNJNZnU7lE+H6lFT+t
-        Rp8Wga2TmmrN8bpdxmSrcF7zGjqvVE9kFQ==
-X-Google-Smtp-Source: ABdhPJw3OxbU8kCBPjHc/G4pSzt1LGk2w7H+roZ4Z/vrGyD+/2nbsAT4FpHB7iZjGY10MMc6yUeogA==
-X-Received: by 2002:a63:9dc1:: with SMTP id i184mr5900518pgd.409.1608497817444;
-        Sun, 20 Dec 2020 12:56:57 -0800 (PST)
-Received: from localhost ([103.248.31.152])
-        by smtp.gmail.com with ESMTPSA id c62sm14367644pfa.116.2020.12.20.12.56.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Dec 2020 12:56:57 -0800 (PST)
-Date:   Mon, 21 Dec 2020 02:26:50 +0530
-From:   'Amey Narkhede' <ameynarkhede03@gmail.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: aoe: replace use of __constant_htons to htons
-Message-ID: <20201220205650.nznim44tnseb66hb@archlinux>
+        Sun, 20 Dec 2020 23:35:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608525230;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lZM3RNwmwWP54uqTbzBkqorYuZ8rgPl/4mZufV9L+F8=;
+        b=I/sa8GIaryVEGqUTasV6qC9guDsiQfOhpQYuyZEN8u+ywFPkHPmD+yKoa0X7Klid1O2dCN
+        04O/CiJY43yEA9SwW0FnXPhni3isS3zcfgcsuf7zdE6uLSSt+VvKPlNslb+FDmF4J7uUkA
+        2TVvqvm87irm3IXxuxFoI79JTBSRSoU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-al7_xAzLP8yLWtMjbiG1vA-1; Sun, 20 Dec 2020 23:33:48 -0500
+X-MC-Unique: al7_xAzLP8yLWtMjbiG1vA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507C959;
+        Mon, 21 Dec 2020 04:33:47 +0000 (UTC)
+Received: from localhost (ovpn-13-38.pek2.redhat.com [10.72.13.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CAF7160938;
+        Mon, 21 Dec 2020 04:33:42 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, stable@vger.kernel.org,
+        syzbot+825f0f9657d4e528046e@syzkaller.appspotmail.com
+Subject: [PATCH] block: fix use-after-free in disk_part_iter_next
+Date:   Mon, 21 Dec 2020 12:33:35 +0800
+Message-Id: <20201221043335.2831589-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: message/rfc822
-Content-Disposition: inline
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Date: Mon, 21 Dec 2020 01:50:23 +0530
-From: 'Amey Narkhede' <ameynarkhede03@gmail.com>
-To: David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH] block: aoe: replace use of __constant_htons to htons
-Message-ID: <20201220202019.j7x64yahapgilr7u@archlinux>
-References: <20201220164625.94105-1-ameynarkhede03@gmail.com>
- <d708db73308747feb0484287a09c443e@AcuMS.aculab.com>
-Content-Disposition: inline
-In-Reply-To: <d708db73308747feb0484287a09c443e@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Make sure that bdgrab() is done on the 'block_device' instance before
+referring to it for avoiding use-after-free.
 
-On 20/12/20 07:35PM, David Laight wrote:
-> From: Amey Narkhede
-> > Sent: 20 December 2020 16:46
-> >
-> > The macro htons expands to __swab16 which has special
-> > case for constants in little endian case. In big
-> > endian case both __constant_htons and htons macros
-> > expand to the same code. So, replace __constant_htons
-> > with htons to get rid of the definition of __constant_htons
-> > completely.
-> >
-> ...
-> >  static struct packet_type aoe_pt __read_mostly = {
-> > -	.type = __constant_htons(ETH_P_AOE),
-> > +	.type = htons(ETH_P_AOE),
-> >  	.func = aoenet_rcv,
->
-> Does this cause grief if someone is doing a COMPILE_TEST on LE?
->
-> 	David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
->
-I did COMPILE_TEST on my x86_64 machine and it compiled
-without any problems.
-I assume that was the point or am I missing
-something? I'm a beginner contributor so please
-let me know if there any mistakes.
+Cc: <stable@vger.kernel.org>
+Reported-by: syzbot+825f0f9657d4e528046e@syzkaller.appspotmail.com
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ block/genhd.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Amey
+diff --git a/block/genhd.c b/block/genhd.c
+index b84b8671e627..2df3c5b1c9c8 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -244,15 +244,18 @@ struct block_device *disk_part_iter_next(struct disk_part_iter *piter)
+ 		part = rcu_dereference(ptbl->part[piter->idx]);
+ 		if (!part)
+ 			continue;
++		piter->part = bdgrab(part);
++		if (!piter->part)
++			continue;
+ 		if (!bdev_nr_sectors(part) &&
+ 		    !(piter->flags & DISK_PITER_INCL_EMPTY) &&
+ 		    !(piter->flags & DISK_PITER_INCL_EMPTY_PART0 &&
+-		      piter->idx == 0))
++		      piter->idx == 0)) {
++			bdput(piter->part);
++			piter->part = NULL;
+ 			continue;
++		}
+ 
+-		piter->part = bdgrab(part);
+-		if (!piter->part)
+-			continue;
+ 		piter->idx += inc;
+ 		break;
+ 	}
+-- 
+2.28.0
+
