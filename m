@@ -2,122 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 600E32E0A97
-	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 14:26:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F1062E0AB0
+	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 14:31:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgLVN0M (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Dec 2020 08:26:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25098 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726549AbgLVN0M (ORCPT
+        id S1727418AbgLVNat (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Dec 2020 08:30:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbgLVNat (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Dec 2020 08:26:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608643485;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L0CdssNXtolY/0xYUDMExZliyMsWlcG2nRZfwv4H7qI=;
-        b=f6eBJyT7Ok+2GeMLHBYJ9bYLdHIuD2PjBdpDHN0IYq7LCAWvJQcwVzx+N0Sfo8ohs+zXRB
-        CuwtWVhTpiHqT0ZnG6kiVjxnKdmxYFlD1evi6uBbZfL1zkJNUsx/NS6w57bBzno5SA22Z9
-        L2IgHEye1wzzvqvDSSdNONzxgSXzeuk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-bViHCkLyOM68OxpeBYxKSw-1; Tue, 22 Dec 2020 08:24:43 -0500
-X-MC-Unique: bViHCkLyOM68OxpeBYxKSw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E98D3107ACE6;
-        Tue, 22 Dec 2020 13:24:41 +0000 (UTC)
-Received: from T590 (ovpn-13-66.pek2.redhat.com [10.72.13.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D661E5C8A7;
-        Tue, 22 Dec 2020 13:24:33 +0000 (UTC)
-Date:   Tue, 22 Dec 2020 21:24:28 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@lst.de, hare@suse.de, kashyap.desai@broadcom.com,
-        linuxarm@huawei.com
-Subject: Re: [RFC PATCH v2 2/2] blk-mq: Lockout tagset iter when freeing rqs
-Message-ID: <20201222132428.GA2938310@T590>
-References: <1608203273-170555-1-git-send-email-john.garry@huawei.com>
- <1608203273-170555-3-git-send-email-john.garry@huawei.com>
- <df44b73d-6c42-87ee-3c25-b95a44712e05@acm.org>
- <4d2004bb-4444-7a63-7c72-1759e3037cfd@huawei.com>
- <31de2806-bbc1-dcc3-b9eb-ce9257420432@acm.org>
- <b2edab2b-8af7-816d-9da2-4720d19b96f8@huawei.com>
- <e97a0603-f9e3-1b00-4a09-c569d4f73d7b@acm.org>
- <2d985fbd-7a22-6399-e214-8052604a2a65@huawei.com>
+        Tue, 22 Dec 2020 08:30:49 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB771C0613D3
+        for <linux-block@vger.kernel.org>; Tue, 22 Dec 2020 05:30:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=YCu4csy/mxer5fYnsax39tqEZZf/yXtZRuwE+1/5VOo=; b=s+pY5r+Ho0pqUaPw5+LkDMSIH9
+        eL7pUPi7ffUrmPAnR5Wy5xhJ4QWhYx3Y3yS+5i5y4gz1pcdwN/hX8h71g4+BVj8Ml2xwlZQMLji+L
+        nn+c+t3Dn1YkmAqjJbS+mn5drbN4Lzi3b1eZJeFQGAQUJMLwlS2W6QpIF7U47Ya5BV9xC00XijAzK
+        9KQwwKg3lQLDKzECkKOSWs3EMu3kwM43mqUxTGJgujd+tSxgdMH8txfBLI5wiLffLetq2X/exlQUG
+        1crN5rp6YSllDNQes0olIxyJ+Y0B9FUn5G7UxC3hogVIaXQblEtFCs8Uy+9c7W/P8KfR2bqaXvv2p
+        /NbK1Gag==;
+Received: from [2001:4bb8:180:8063:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1krhjq-0001FK-Ro; Tue, 22 Dec 2020 13:30:07 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH 1/2] block: fixup the kerneldoc for bd_abort_claiming
+Date:   Tue, 22 Dec 2020 14:30:03 +0100
+Message-Id: <20201222133004.3016790-1-hch@lst.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d985fbd-7a22-6399-e214-8052604a2a65@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 22, 2020 at 11:22:19AM +0000, John Garry wrote:
-> Resend without ppvk@codeaurora.org, which bounces for me
-> 
-> On 22/12/2020 02:13, Bart Van Assche wrote:
-> > On 12/21/20 10:47 AM, John Garry wrote:
-> >> Yes, I agree, and I'm not sure what I wrote to give that impression.
-> >>
-> >> About "root partition", above, I'm just saying that / is mounted on a
-> >> sda partition:
-> >>
-> >> root@ubuntu:/home/john# mount | grep sda
-> >> /dev/sda2 on / type ext4 (rw,relatime,errors=remount-ro,stripe=32)
-> >> /dev/sda1 on /boot/efi type vfat
-> >> (rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
-> > Hi John,
-> >
-> 
-> Hi Bart, Ming,
-> 
-> > Thanks for the clarification. I want to take back my suggestion about
-> > adding rcu_read_lock() / rcu_read_unlock() in blk_mq_tagset_busy_iter()
-> > since it is not allowed to sleep inside an RCU read-side critical
-> > section, since blk_mq_tagset_busy_iter() is used in request timeout
-> > handling and since there may be blk_mq_ops.timeout implementations that
-> > sleep.
-> 
-> Yes, that's why I was going with atomic, rather than some synchronization
-> primitive which may sleep.
-> 
-> >
-> > Ming's suggestion to serialize blk_mq_tagset_busy_iter() and
-> > blk_mq_free_rqs() looks interesting to me.
-> >
-> 
-> So then we could have something like this:
-> 
-> ---8<---
-> 
->  -435,9 +444,13 @@ void blk_mq_queue_tag_busy_iter(struct request_queue *q,
-> busy_iter_fn *fn,
->     if (!blk_mq_hw_queue_mapped(hctx))
->             continue;
-> 
-> +    while (!atomic_inc_not_zero(&tags->iter_usage_counter));
-> +
->     if (tags->nr_reserved_tags)
->         bt_for_each(hctx, tags->breserved_tags, fn, priv, true);
->     bt_for_each(hctx, tags->bitmap_tags, fn, priv, false);
-> 
-> +    atomic_dec(&tags->iter_usage_counter);
-> }
+Remove the documentation for a removed parameter.
 
-Then it is just one spin_lock variant, and you may have to consider
-lock validation.
+Fixes: 37c3fc9abb25 ("block: simplify the block device claiming interface")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/block_dev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-For example, scsi_host_busy() is called from scsi_log_completion()<-scsi_softirq_done(),
-which may be run in irq context, then dead lock can be triggered when the irq
-is fired during freeing request.
-
-thanks,
-Ming
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 9e56ee1f265230..7633e5ac0885f7 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1056,7 +1056,6 @@ static void bd_finish_claiming(struct block_device *bdev, void *holder)
+ /**
+  * bd_abort_claiming - abort claiming of a block device
+  * @bdev: block device of interest
+- * @whole: whole block device
+  * @holder: holder that has claimed @bdev
+  *
+  * Abort claiming of a block device when the exclusive open failed. This can be
+-- 
+2.29.2
 
