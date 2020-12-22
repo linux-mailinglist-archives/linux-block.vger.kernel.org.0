@@ -2,77 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E672E0AB1
-	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 14:31:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C412E0AB3
+	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 14:31:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgLVNbB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Dec 2020 08:31:01 -0500
+        id S1727457AbgLVNbR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Dec 2020 08:31:17 -0500
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgLVNa7 (ORCPT
+        with ESMTP id S1727006AbgLVNbQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Dec 2020 08:30:59 -0500
+        Tue, 22 Dec 2020 08:31:16 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E4EC0613D6
-        for <linux-block@vger.kernel.org>; Tue, 22 Dec 2020 05:30:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89821C0613D6;
+        Tue, 22 Dec 2020 05:31:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=gipqDoV/3w9NrVhIFxS/QtPwIzE4z//qItjhh69SQIA=; b=FPtr1etZ50O+gWzo0dwrISWt2X
-        kOX6w61vYbcx0xBRQbJvifizwflC+lKWBqNAXToaB7kpx1Kix1fFlXVkScg5p9/wAojbafeu34Lyg
-        s3VSSX5fmw2DgCBFPO5t+i93rRob9cErvFswz+3kyGlUoCbEFgxRCnc037H395U7W0gx8vy8mQ1OQ
-        qhMOWh4jKudHDW2zJXNXFK/AHgeM4cZSv8n7B4PxjTfkoJzyatucNHov+Lhdqi/radI02v1lApkPI
-        j1XCMe9/EUW7U8vsNgJFo/9J0EAriKz8ZAwwkMiGNEUDqBOJkV2pnjwE8+dZ9Xrudcsb8wunUME88
-        dcv28Row==;
-Received: from [2001:4bb8:180:8063:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1krhjs-0001FO-06; Tue, 22 Dec 2020 13:30:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH 2/2] block: fixup the kerneldoc for lookup_bdev
-Date:   Tue, 22 Dec 2020 14:30:04 +0100
-Message-Id: <20201222133004.3016790-2-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201222133004.3016790-1-hch@lst.de>
-References: <20201222133004.3016790-1-hch@lst.de>
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=42fzafLRxdLNbzacrFdM4qrpWHImldmnOrdNk/6ZVck=; b=iePoeRjEV0kcCjWEwPHuCUm1iq
+        DsnCh6wlOMy9pj7bxofpZcd6sMzCSd2I/GgHLbXe4+d47bGf8PoYmhaWHX4JAljs7Pmp11Q61zZry
+        uNBn6b2e9O7Ol30xD2+f25f/OKKo2EejBCMSi4aXnQWCWGJcyN7m5KeZkWhfJKK8x6qocjLrF9eK1
+        HuGXF8R0AhSu2kId/AcyD/guIzYRawRmiUACVaunqnykwQLtLbuUJiBWDZwM1zc3OyBhtUOWuhfLW
+        utOSM4ESay1lTFxwSK16xqDEiDyUT1DDFnMXTzCKwbMnLypMRHujdLLBoRjOiVAFdvst9fpmxG+0d
+        rCC+BbMA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1krhkb-0001K5-MZ; Tue, 22 Dec 2020 13:30:53 +0000
+Date:   Tue, 22 Dec 2020 13:30:53 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        joseph.qi@linux.alibaba.com
+Subject: Re: [PATCH] block: move definition of blk_qc_t to types.h
+Message-ID: <20201222133053.GA2935@infradead.org>
+References: <20201222031154.62150-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201222031154.62150-1-jefflexu@linux.alibaba.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Document the new dev parameter and the changed return value convention.
+> -typedef unsigned int blk_qc_t;
+>  #define BLK_QC_T_NONE		-1U
+>  #define BLK_QC_T_SHIFT		16
+>  #define BLK_QC_T_INTERNAL	(1U << 31)
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 4e7b5671c6a8 ("block: remove i_bdev")
----
- fs/block_dev.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 7633e5ac0885f7..d6ee0bb7005538 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1828,10 +1828,11 @@ const struct file_operations def_blk_fops = {
- /**
-  * lookup_bdev  - lookup a struct block_device by name
-  * @pathname:	special file representing the block device
-+ * @dev:	returns the dev_t for the device
-  *
-- * Get a reference to the blockdevice at @pathname in the current
-- * namespace if possible and return it.  Return ERR_PTR(error)
-- * otherwise.
-+ * Find the dev_t for the block device at @pathname.  Returns 0 if there is a
-+ * block device at @pathname, or a negative errno value if not.  The dev_t for
-+ * the block device is placed in the variable pointed to by the @dev parameter.
-  */
- int lookup_bdev(const char *pathname, dev_t *dev)
- {
--- 
-2.29.2
-
+I think we need a comment here explaining these are the values for
+blk_qc_t at least.
