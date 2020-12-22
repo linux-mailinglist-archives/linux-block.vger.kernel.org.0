@@ -2,77 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEBC42E065E
-	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 08:06:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 864052E0679
+	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 08:08:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgLVHGT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Dec 2020 02:06:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
+        id S1726300AbgLVHGp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Dec 2020 02:06:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgLVHGS (ORCPT
+        with ESMTP id S1725850AbgLVHGp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Dec 2020 02:06:18 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68FECC0611CE
-        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 23:05:21 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id x12so6939820plr.10
-        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 23:05:21 -0800 (PST)
+        Tue, 22 Dec 2020 02:06:45 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D21C0611CF
+        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 23:05:26 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id f9so7907087pfc.11
+        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 23:05:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FlTioNUsfXWBrmRvnkyGXL3Uf+OgEN+kdt3RbKJ9BhE=;
-        b=GQpmC3AMyN4KYy/dak9Bw67x+3MaGlPmYffKtFP2QrCXQgb/n7kIc6Iz6q8ETGH/hI
-         GaZDPvMuvvQf2KsCJ6qAcTo91vNcxfTtS7IoPwDEUgSLl8u7fBqT41YYUSRo98H91+2J
-         9LDqZB+osqgQwBk60tM9wYrah0bFcu7ZEAuX4=
+        bh=+NLfeQbYOT+MT1mOtUVLwE8Ugpo1nJhC9RRuHP9/t6Y=;
+        b=hubJ0gjR4a3QLA78227CdMvGYmC6zgaNv44l3NruQnqbb4oonp8un50s6Hk2G9+k+p
+         9SQkiYy4A4WReu7eE7lAybI7hkVpEwIzhC8Eynpws1/zF7Nu8zWUOee3FAtT5JT65zBl
+         iFZWjlDamYCubyPsK8dv7RuvqeVSChyJkpULI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=FlTioNUsfXWBrmRvnkyGXL3Uf+OgEN+kdt3RbKJ9BhE=;
-        b=CmGg4K6laL/2EQVmXF4jrQslHyFO5tlDnyKYWABbdzjF209CL64mJYQL/PPbTtixzY
-         W1bYhqgAa3I1JVAr5Y7hETX4rGIhZwPcKLClarMYyQhFZRuNboVQce5GmopijrqbBZbE
-         TsJrn2yPCswubCg7bpGYD+5WTQVqbE8HUShZaK+AdZPHCjHZHEQmE2f/+3BPy85t4EQl
-         +zzvmOaltb0joD5YbH2YaK0u/VaRJYSILE3SToOqfvBrI6XQIIdaVO8WdC75OH+NGPyR
-         1Zz21vHtBXCy44JyspLEUe2CVHwpEn9wGGDjEdkaATnjzR51uY5IeQP3K99UWLMRfW3o
-         AWOQ==
-X-Gm-Message-State: AOAM530zrldQPl/yBEAQhr7maySUVJeI2w4RXBCX4UdVQaGSFWmBVYsR
-        j8J0KoCeSOqol4eGWKctE+PZcWDlq+AW2uN5CDiW2upF1JDl5JLL6gzPu9RLI1ok8PXFb0N/TtJ
-        Tse99recXtSLwfMMbmB57Z9M2PA8Cx7RVNLfDpxBjteiqvfePie+4JaEvL60v1upI3xGIY0vswh
-        BX7PUs+m3/vYFp
+        bh=+NLfeQbYOT+MT1mOtUVLwE8Ugpo1nJhC9RRuHP9/t6Y=;
+        b=nxQ8s9j5s93c4iDT+7oosyU1vPeIy5Vpan+kaCKZ39Tw0YMHDKmy6kM5pgfn+lN3j5
+         m7lH2VIS3EaeJ1WqzR9m6gifyqcKGMopJXO8CzDM+dNNpGvJLjFUmKoeiJaKOp/qWtKQ
+         K54poGDBvpOFyXsoVFbnmaM0or8sEjlgWNmoo+Ea10qvj8sUg32jdCwxWZJZnmfN58V+
+         NKpmctCwU7wYNVlnUygrlkTM6PF5IPhF6Y5OboYhu7mugrGp52D2wsjLpOpXTzjB3Cv9
+         Hb9q+tI8RfcyN3sZIs2XKc2Zgb3Die8mSrbO0XW1W6HlHyjHxJnHDWv3+vjVe5fkwS7/
+         vgew==
+X-Gm-Message-State: AOAM531BrsvvYMctyOK/Pg/Ji7qJi0KjDG21SiwqjOJw2dCBGlj/cZAw
+        oXSNttNfwSsDKr6qeuwyV867+P9kLraU2X2UQ7CbcjktEuLthKbUVfE7F1M26PmdvK9H+Axz3qu
+        CJv3GmojN2g1fO45j0iya000eXouX2vMlFaGzxg/vmmkWKvaXUJPbcSr2heVLTe4g4sftkz5SuA
+        aQqGGXU0IUJiCg
 MIME-Version: 1.0
-X-Google-Smtp-Source: ABdhPJzQwVziPylxTTjpryDYbkDK45ELSY+FQD5eYHgXWV8LyJa/CZOgXCtBuCyzOiF330FsknTRog==
-X-Received: by 2002:a17:902:868a:b029:da:ea50:d55f with SMTP id g10-20020a170902868ab02900daea50d55fmr20158517plo.84.1608620720469;
-        Mon, 21 Dec 2020 23:05:20 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwD0aF7YWOswWSg/MjSgm/Ea0GZO1zBEqaJqK3FwXYhEBO6UIxhPe6cDgNluhr3pvj6aV+BJA==
+X-Received: by 2002:aa7:8d86:0:b029:19e:cb57:2849 with SMTP id i6-20020aa78d860000b029019ecb572849mr18842062pfr.54.1608620725190;
+        Mon, 21 Dec 2020 23:05:25 -0800 (PST)
 Received: from localhost.localdomain ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id t9sm12466082pgh.41.2020.12.21.23.05.16
+        by smtp.gmail.com with ESMTPSA id t9sm12466082pgh.41.2020.12.21.23.05.20
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Dec 2020 23:05:19 -0800 (PST)
+        Mon, 21 Dec 2020 23:05:24 -0800 (PST)
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         pbonzini@redhat.com,
         Gaurav Srivastava <gaurav.srivastava@broadcom.com>
-Subject: [PATCH v6 06/16] lpfc: vmid: Forward declarations for APIs
-Date:   Tue, 22 Dec 2020 05:41:48 +0530
-Message-Id: <1608595918-21954-7-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v6 07/16] lpfc: vmid: VMID params initialization
+Date:   Tue, 22 Dec 2020 05:41:49 +0530
+Message-Id: <1608595918-21954-8-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1608595918-21954-1-git-send-email-muneendra.kumar@broadcom.com>
 References: <1608595918-21954-1-git-send-email-muneendra.kumar@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000a6a7ba05b7083243"
+        boundary="000000000000ef322d05b70832f5"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---000000000000a6a7ba05b7083243
+--000000000000ef322d05b70832f5
 Content-Type: text/plain; charset="US-ASCII"
 
 From: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 
-This patch contains the forward declarations of commonly used APIs which
-are used outside the scope of the file.
+This patch initializes the VMID parameters like the type of vmid, max
+number of vmids supported and timeout value for the vmid registration
+based on the user input.
 
 Signed-off-by: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
@@ -93,28 +94,81 @@ No change
 v2:
 Ported the patch on top of 5.10/scsi-queue
 ---
- drivers/scsi/lpfc/lpfc_crtn.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/scsi/lpfc/lpfc_attr.c | 47 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_crtn.h b/drivers/scsi/lpfc/lpfc_crtn.h
-index f78e52a18b0b..7eb0200ecaa8 100644
---- a/drivers/scsi/lpfc/lpfc_crtn.h
-+++ b/drivers/scsi/lpfc/lpfc_crtn.h
-@@ -606,3 +606,14 @@ extern unsigned long lpfc_no_hba_reset[];
- extern union lpfc_wqe128 lpfc_iread_cmd_template;
- extern union lpfc_wqe128 lpfc_iwrite_cmd_template;
- extern union lpfc_wqe128 lpfc_icmnd_cmd_template;
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index 4528166dee36..d8cca950fa3b 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -6151,6 +6151,44 @@ LPFC_ATTR_RW(enable_dpp, 1, 0, 1, "Enable Direct Packet Push");
+  */
+ LPFC_ATTR_R(enable_mi, 1, 0, 1, "Enable MI");
+ 
++/*
++ * lpfc_max_vmid: Maximum number of VMs to be tagged. This is valid only if
++ * either vmid_app_header or vmid_priority_tagging is enabled.
++ *       4 - 255  = vmid support enabled for 4-255 VMs
++ *       Value range is [4,255].
++ */
++LPFC_ATTR_RW(max_vmid, LPFC_MIN_VMID, LPFC_MIN_VMID, LPFC_MAX_VMID,
++	     "Maximum number of VMs supported");
 +
-+/* vmid interface */
-+int lpfc_vmid_uvem(struct lpfc_vport *vport, struct lpfc_vmid *vmid, bool ins);
-+uint32_t lpfc_vmid_get_cs_ctl(struct lpfc_vport *vport);
-+int lpfc_vmid_cmd(struct lpfc_vport *vport,
-+		  int cmdcode, struct lpfc_vmid *vmid);
-+int lpfc_vmid_hash_fn(char *vmid, int len);
-+struct lpfc_vmid *lpfc_get_vmid_from_hastable(struct lpfc_vport *vport,
-+					      uint32_t hash, uint8_t *buf);
-+void lpfc_vmid_vport_cleanup(struct lpfc_vport *vport);
-+int lpfc_issue_els_qfpa(struct lpfc_vport *vport);
++/*
++ * lpfc_vmid_inactivity_timeout: Inactivity timeout duration in hours
++ *       0  = Timeout is disabled
++ * Value range is [0,24].
++ */
++LPFC_ATTR_RW(vmid_inactivity_timeout, 4, 0, 24,
++	     "Inactivity timeout in hours");
++
++/*
++ * lpfc_vmid_app_header: Enable App Header VMID support
++ *       0  = Support is disabled (default)
++ *       1  = Support is enabled
++ * Value range is [0,1].
++ */
++LPFC_ATTR_RW(vmid_app_header, LPFC_VMID_APP_HEADER_DISABLE,
++	     LPFC_VMID_APP_HEADER_DISABLE, LPFC_VMID_APP_HEADER_ENABLE,
++	     "Enable App Header VMID support");
++
++/*
++ * lpfc_vmid_priority_tagging: Enable Priority Tagging VMID support
++ *       0  = Support is disabled (default)
++ *       1  = Support is enabled
++ * Value range is [0,1]..
++ */
++LPFC_ATTR_RW(vmid_priority_tagging, LPFC_VMID_PRIO_TAG_DISABLE,
++	     LPFC_VMID_PRIO_TAG_DISABLE,
++	     LPFC_VMID_PRIO_TAG_ALL_TARGETS,
++	     "Enable Priority Tagging VMID support");
++
+ struct device_attribute *lpfc_hba_attrs[] = {
+ 	&dev_attr_nvme_info,
+ 	&dev_attr_scsi_stat,
+@@ -6269,6 +6307,10 @@ struct device_attribute *lpfc_hba_attrs[] = {
+ 	&dev_attr_lpfc_enable_bbcr,
+ 	&dev_attr_lpfc_enable_dpp,
+ 	&dev_attr_lpfc_enable_mi,
++	&dev_attr_lpfc_max_vmid,
++	&dev_attr_lpfc_vmid_inactivity_timeout,
++	&dev_attr_lpfc_vmid_app_header,
++	&dev_attr_lpfc_vmid_priority_tagging,
+ 	NULL,
+ };
+ 
+@@ -7328,6 +7370,11 @@ lpfc_get_cfgparam(struct lpfc_hba *phba)
+ 	lpfc_enable_hba_heartbeat_init(phba, lpfc_enable_hba_heartbeat);
+ 
+ 	lpfc_EnableXLane_init(phba, lpfc_EnableXLane);
++	/* VMID Inits */
++	lpfc_max_vmid_init(phba, lpfc_max_vmid);
++	lpfc_vmid_inactivity_timeout_init(phba, lpfc_vmid_inactivity_timeout);
++	lpfc_vmid_app_header_init(phba, lpfc_vmid_app_header);
++	lpfc_vmid_priority_tagging_init(phba, lpfc_vmid_priority_tagging);
+ 	if (phba->sli_rev != LPFC_SLI_REV4)
+ 		phba->cfg_EnableXLane = 0;
+ 	lpfc_XLanePriority_init(phba, lpfc_XLanePriority);
 -- 
 2.26.2
 
@@ -132,7 +186,7 @@ this e-mail is strictly prohibited. If you received this e-mail in error,
 please return the e-mail to the sender, delete it from your computer, and 
 destroy any printed copy of it.
 
---000000000000a6a7ba05b7083243
+--000000000000ef322d05b70832f5
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -203,13 +257,13 @@ LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
 EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
 b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
 SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCAh31EFym9OFCm8ZnAwscL1ayR6UaeTYRVclDi5f3mhJzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDEyMjIwNzA1MjBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
+BCCylLUZrgKI7Yj9EDPUzZY+0rhAnbp5OVfrBzK+pU0IRzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
+AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDEyMjIwNzA1MjVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
 AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAhJfQRG0pr1otKlmZ
-TlV6HqCBwOxeOD3urIqcaA/ZBP5mJls7fp5zC59P6/enD6h/gpm6mQtPznNs02+VDlOGQis3iUAA
-2tD/M3fL9zE++kGSxgFrfhCNNVMCsMTApacUkcXolF8nzFEkWT4p5zr0QZcS3vjb/cRhjYHsXOE3
-jbfJruRaf93eozyPRUYJ1TIARFZm8TmqQiUBM3mY+zt5Td3W3UjDEn8n7H/klk9rNqy8us6T3Jav
-41ewnlw6swDJTzl4iY+zSbvtYEvKz+UEYjgBLgAnidym1UGfpDeKPNH+p1zrmHTaW3oWBIBADGI8
-ASitFUQv1g3K9eTKhfZIqQ==
---000000000000a6a7ba05b7083243--
+MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAc6dSGvLgACd5EAXZ
+a3kHwlIG2+rYVXIbMamwj1f4M7yfBOkVEGTOYkXYC7Rf4DF6/e6/cdfbk0qSegHV+OvxBjhwpmiV
+LmTnRgLarEdeqIiV3mK8L6HHk1l1B7g3Lih+TLPbiMYfE63KBPHvj8ChpNolUXzM21OVRgmxeQa7
+0KuHn3dBSo5raDO6N2hitolGrTkpgQqQIqkFaYfQq0nE+zoFBvw/adHAj/9GlTXlF7RV9eH2rzP5
+mQchHniqSf3XRieibwMryfxY5K6H/s+wVXMf9zUxLBIIrA1uRBsjPdi4gunbl7zz7WVY8A+W3a4/
+c+HVlEHS0CagTGf1gCiZsg==
+--000000000000ef322d05b70832f5--
