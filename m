@@ -2,225 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF192E05E5
-	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 07:03:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F9E02E08B8
+	for <lists+linux-block@lfdr.de>; Tue, 22 Dec 2020 11:25:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgLVGDl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Dec 2020 01:03:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgLVGDl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Dec 2020 01:03:41 -0500
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69318C0613D6
-        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 22:03:01 -0800 (PST)
-Received: by mail-oo1-xc43.google.com with SMTP id n127so2723534ooa.13
-        for <linux-block@vger.kernel.org>; Mon, 21 Dec 2020 22:03:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=ABH9JR7xdrC6C2Y/0LfA0mlQysanILcDx5NXXWGkJvo=;
-        b=KCaogL96DzXIxU1Unj5kLxkxkuTlMqmA2AIEd8vIPURk5/NrNr4dnpprRaVa8S+8YT
-         /Cd0Af+8Uy4rBsUVAR1FtsinBaKjsq7G36EJE87m4xh5vYg09je/ruli0fL3dBNDf6ne
-         tGzZ6cU9fMP1LRdjYgFNV6AnIDsu6USaUKOd4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=ABH9JR7xdrC6C2Y/0LfA0mlQysanILcDx5NXXWGkJvo=;
-        b=ZHy3ZXkUpIX+IRVLtZk0n1f7cK1+B+JMYNjaq209rsTEFqgY35D12JUB0yfrDM76cR
-         SRAyyAtXY3VSsrlPp1CkZjzD7tklt3g7aNHcjIMEhB/kwrQqNM1c1XB4kmXYiF32Xxq6
-         SJzqZg1OeCcHVTp/92cnAovLyXgTI2SeCncjjy38l2B6YajJ2L0gVyBES9ch4dVSteZu
-         fSt39N4mjSR9zp/L/4eqSUrARmlI/dtGsNTayAookM9fB7sd9pt3bHNPVlUOr1LOOxvb
-         f0zCcJ1blgtwKPgP0G8XxaE55Pf0Nmaz4snOmg12ZslgRGzbpf28IW63gRpy6XB/iTzT
-         0yDg==
-X-Gm-Message-State: AOAM533CVKV4Um97GR7mJ6uIrWLWRYZfjYM4VFLm7gCb8FzKuzX7wN1T
-        UkD9xDDn1OUeYgrumLMGlAbcvEF+lewF04Qfk9Gxjq9BCHNFiDgAyXhznJdweVmXpDHuu/XVuXq
-        W+B9+xjaUG381E/h/3Ac43pSncnpGQrug5pGvWQ==
-X-Google-Smtp-Source: ABdhPJyyvdF7xTn2PhNHoFpkWTRLF0ZiGDmaRR1KL7ajuipLeNItHptYqPzHC7zheuDHphFVaB6HQ0TICLHxnZW0VOQ=
-X-Received: by 2002:a4a:3001:: with SMTP id q1mr13888022oof.88.1608616980352;
- Mon, 21 Dec 2020 22:03:00 -0800 (PST)
-From:   Muneendra Kumar M <muneendra.kumar@broadcom.com>
-References: <1608096586-21656-1-git-send-email-muneendra.kumar@broadcom.com>
- <1608096586-21656-3-git-send-email-muneendra.kumar@broadcom.com> <b765fa4e-87ba-a9a4-6c8c-68f3b410129b@infradead.org>
-In-Reply-To: <b765fa4e-87ba-a9a4-6c8c-68f3b410129b@infradead.org>
+        id S1726351AbgLVKZU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Dec 2020 05:25:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60636 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726123AbgLVKZT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 22 Dec 2020 05:25:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C2FC7AEE8;
+        Tue, 22 Dec 2020 10:24:37 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1BF1B1E1332; Tue, 22 Dec 2020 11:18:22 +0100 (CET)
+Date:   Tue, 22 Dec 2020 11:18:22 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, hare@suse.de,
+        Kashyap Desai <kashyap.desai@broadcom.com>
+Subject: Re: [PATCH 2/2] blk-mq: Improve performance of non-mq IO schedulers
+ with multiple HW queues
+Message-ID: <20201222101822.GD13601@quack2.suse.cz>
+References: <20201218214412.1543-1-jack@suse.cz>
+ <20201218214412.1543-3-jack@suse.cz>
+ <20201219031427.GA2711539@T590>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQGglR+rh46kAP1ZRtKDc6OPzwqQQgG3o1MuAa0lddKqU/9fcA==
-Date:   Tue, 22 Dec 2020 11:32:58 +0530
-Message-ID: <4f119560bc2610e263f91f85a9853c76@mail.gmail.com>
-Subject: RE: [PATCH v5 02/16] blkcg: Added a app identifier support for blkcg
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, tj@kernel.org,
-        linux-nvme@lists.infradead.org, hare@suse.de
-Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
-        pbonzini@redhat.com
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000b7eb5705b7075376"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201219031427.GA2711539@T590>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---000000000000b7eb5705b7075376
-Content-Type: text/plain; charset="UTF-8"
+On Sat 19-12-20 11:14:27, Ming Lei wrote:
+> On Fri, Dec 18, 2020 at 10:44:12PM +0100, Jan Kara wrote:
+> > Currently when non-mq aware IO scheduler (BFQ, mq-deadline) is used for
+> > a queue with multiple HW queues, the performance it rather bad. The
+> > problem is that these IO schedulers use queue-wide locking and their
+> > dispatch function does not respect the hctx it is passed in and returns
+> > any request it finds appropriate. Thus locality of request access is
+> > broken and dispatch from multiple CPUs just contends on IO scheduler
+> > locks. For these IO schedulers there's little point in dispatching from
+> > multiple CPUs. Instead dispatch always only from a single CPU to limit
+> > contention.
+> > 
+> > Below is a comparison of dbench runs on XFS filesystem where the storage
+> > is a raid card with 64 HW queues and to it attached a single rotating
+> > disk. BFQ is used as IO scheduler:
+> > 
+> >       clients           MQ                     SQ             MQ-Patched
+> > Amean 1      39.12 (0.00%)       43.29 * -10.67%*       36.09 *   7.74%*
+> > Amean 2     128.58 (0.00%)      101.30 *  21.22%*       96.14 *  25.23%*
+> > Amean 4     577.42 (0.00%)      494.47 *  14.37%*      508.49 *  11.94%*
+> > Amean 8     610.95 (0.00%)      363.86 *  40.44%*      362.12 *  40.73%*
+> > Amean 16    391.78 (0.00%)      261.49 *  33.25%*      282.94 *  27.78%*
+> > Amean 32    324.64 (0.00%)      267.71 *  17.54%*      233.00 *  28.23%*
+> > Amean 64    295.04 (0.00%)      253.02 *  14.24%*      242.37 *  17.85%*
+> > Amean 512 10281.61 (0.00%)    10211.16 *   0.69%*    10447.53 *  -1.61%*
+> > 
+> > Numbers are times so lower is better. MQ is stock 5.10-rc6 kernel. SQ is
+> > the same kernel with megaraid_sas.host_tagset_enable=0 so that the card
+> > advertises just a single HW queue. MQ-Patched is a kernel with this
+> > patch applied.
+> > 
+> > You can see multiple hardware queues heavily hurt performance in
+> > combination with BFQ. The patch restores the performance.
+> > 
+> > Signed-off-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  block/blk-mq.c           | 37 +++++++++++++++++++++++++++++++++++++
+> >  block/kyber-iosched.c    |  1 +
+> >  include/linux/elevator.h |  2 ++
+> >  3 files changed, 40 insertions(+)
+> > 
+> > diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > index 57d0461f2be5..6d80054c231b 100644
+> > --- a/block/blk-mq.c
+> > +++ b/block/blk-mq.c
+> > @@ -1663,6 +1663,31 @@ void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
+> >  }
+> >  EXPORT_SYMBOL(blk_mq_run_hw_queue);
+> >  
+> > +static struct blk_mq_hw_ctx *blk_mq_sq_iosched_hctx(struct request_queue *q)
+> > +{
+> > +	struct elevator_queue *e = q->elevator;
+> > +	struct blk_mq_hw_ctx *hctx;
+> > +
+> > +	/*
+> > +	 * The queue has multiple hardware queues but uses IO scheduler that
+> > +	 * does not respect hardware queues when dispatching? This is not a
+> > +	 * great setup but it can be sensible when we have a single rotational
+> > +	 * disk behind a raid card. Just don't bother with multiple HW queues
+> > +	 * and dispatch from hctx for the current CPU since running multiple
+> > +	 * queues just causes lock contention inside the scheduler and
+> > +	 * pointless cache bouncing because the hctx is not respected by the IO
+> > +	 * scheduler's dispatch function anyway.
+> > +	 */
+> > +	if (q->nr_hw_queues > 1 && e && e->type->ops.dispatch_request &&
+> > +	    !(e->type->elevator_features & ELEVATOR_F_MQ_AWARE)) {
+> > +		hctx = blk_mq_map_queue_type(q, HCTX_TYPE_DEFAULT,
+> > +					     raw_smp_processor_id());
+> > +		if (!blk_mq_hctx_stopped(hctx))
+> > +			return hctx;
+> > +	}
+> > +	return NULL;
+> > +}
+> > +
+> >  /**
+> >   * blk_mq_run_hw_queues - Run all hardware queues in a request queue.
+> >   * @q: Pointer to the request queue to run.
+> > @@ -1673,6 +1698,12 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
+> >  	struct blk_mq_hw_ctx *hctx;
+> >  	int i;
+> >  
+> > +	hctx = blk_mq_sq_iosched_hctx(q);
+> > +	if (hctx) {
+> > +		blk_mq_run_hw_queue(hctx, async);
+> > +		return;
+> > +	}
+> > +
+> 
+> This approach looks reasonable, just wondering which code path is wrt.
+> blk_mq_run_hw_queues() improvement by this patch.
+> 
+> Since ed5dd6a67d5e ("scsi: core: Only re-run queue in scsi_end_request() if device
+> queue is busy") is merged, blk_mq_run_hw_queues() is only called from scsi_end_request()
+> when the scsi device is busy for megaraid.
+> 
+> Another one is bfq_schedule_dispatch(), in which blk_mq_run_hw_queues()
+> is still be called, if that is the reason, maybe it is easier to optimize
+> bfq_schedule_dispatch() by avoiding to call blk_mq_run_hw_queues().
 
-Hi Randy,
-Thanks for your comments.
-I will incorporate your comments in my next version.
+That's a good question. Tracing shows that with dbench I'm seeing *lots*
+(about 23000/s) blk_mq_delay_run_hw_queues() calls, mostly from
+__blk_mq_do_dispatch_sched(). This drops to "only" about 2000 calls/s with
+my patches applied.
 
-Regards,
-Muneendra.
+So it means BFQ decided not to dispatch any request (e.g. because it is
+idling for more IO from the same process) and that triggers that path in
+__blk_mq_do_dispatch_sched() that just queues the dispatch again. So blk-mq
+ends up polling BFQ rather heavily for requests it doesn't want to give out
+:). In this sense my patch just makes the real problem less severe.
 
------Original Message-----
-From: Randy Dunlap [mailto:rdunlap@infradead.org]
-Sent: Saturday, December 19, 2020 10:42 PM
-To: Muneendra <muneendra.kumar@broadcom.com>; linux-block@vger.kernel.org;
-linux-scsi@vger.kernel.org; tj@kernel.org; linux-nvme@lists.infradead.org;
-hare@suse.de
-Cc: jsmart2021@gmail.com; emilne@redhat.com; mkumar@redhat.com;
-pbonzini@redhat.com
-Subject: Re: [PATCH v5 02/16] blkcg: Added a app identifier support for
-blkcg
+I've noticed that if ->has_work() returned false, we would not end up
+calling blk_mq_delay_run_hw_queues(). But for BFQ ->has_work() often
+returns true because it has requests queued but ->dispatch_request()
+doesn't dispatch anything because of other scheduling constraints. And so
+we end up calling blk_mq_delay_run_hw_queues() because if we allocated
+dispatch budget and didn't dispatch in the end, we could have blocked
+dispatch from another hctx and so now need to rerun that hctx to dispatch
+possibly queued requests.
 
-On 12/15/20 9:29 PM, Muneendra wrote:
+I was thinking how we could possibly improve this. One obvious possibility
+is to modify IO schedulers so that their ->has_work() does not return true
+if they later decide not to dispatch anything. However this can happen both
+to mq-deadline and BFQ and for either of them determining whether they will
+dispatch a request or not is about as expensive as dispatching it. So it
+doesn't seem very appealing for these IO schedulers to do the work twice or
+to somehow cache the request found. What seems more workable would be for
+blk_mq_put_dispatch_budget() to return whether rerunning the queue might be
+needed or not (for SCSI, which is the only subsystem using budgeting, this
+means returning whether we were currently at queue_depth) and use that
+information in __blk_mq_do_dispatch_sched(). I'll experiment with a patch I
+guess...
 
-Hi--
-
-> ---
->  block/Kconfig              |  9 ++++++
->  include/linux/blk-cgroup.h | 56
-> ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+)
->
-> diff --git a/block/Kconfig b/block/Kconfig index
-> a2297edfdde8..1920388fb0e9 100644
-> --- a/block/Kconfig
-> +++ b/block/Kconfig
-> @@ -144,6 +144,15 @@ config BLK_CGROUP_IOLATENCY
->
->  	Note, this is an experimental interface and could be changed
-someday.
->
-> +config BLK_CGROUP_FC_APPID
-> +	bool "Enable support to track FC io Traffic across cgroup
-applications"
-> +	depends on BLK_CGROUP=y
-> +	help
-> +	Enabling this option enables the support to track FC io traffic
-across
-> +	cgroup applications.It enables the Fabric and the storage targets
-to
-> +	identify, monitor, and handle FC traffic based on vm tags by
-inserting
-> +	application specific identification into the FC frame.
-
-Please follow coding-style for Kconfig files:
-
-from Documentation/process/coding-style.rst, section 10):
-
-For all of the Kconfig* configuration files throughout the source tree,
-the indentation is somewhat different.  Lines under a ``config``
-definition are indented with one tab, while help text is indented an
-additional two spaces.
-
-
-thanks.
---
-~Randy
-
+								Honza
 -- 
-This electronic communication and the information and any files transmitted 
-with it, or attached to it, are confidential and are intended solely for 
-the use of the individual or entity to whom it is addressed and may contain 
-information that is confidential, legally privileged, protected by privacy 
-laws, or otherwise restricted from disclosure to anyone else. If you are 
-not the intended recipient or the person responsible for delivering the 
-e-mail to the intended recipient, you are hereby notified that any use, 
-copying, distributing, dissemination, forwarding, printing, or copying of 
-this e-mail is strictly prohibited. If you received this e-mail in error, 
-please return the e-mail to the sender, delete it from your computer, and 
-destroy any printed copy of it.
-
---000000000000b7eb5705b7075376
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIQTQYJKoZIhvcNAQcCoIIQPjCCEDoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg2iMIIE6DCCA9CgAwIBAgIOSBtqCRO9gCTKXSLwFPMwDQYJKoZIhvcNAQELBQAwTDEgMB4GA1UE
-CxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMT
-Ckdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAwWhcNMjQwNjE1MDAwMDAwWjBdMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25h
-bFNpZ24gMiBDQSAtIFNIQTI1NiAtIEczMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-tpZok2X9LAHsYqMNVL+Ly6RDkaKar7GD8rVtb9nw6tzPFnvXGeOEA4X5xh9wjx9sScVpGR5wkTg1
-fgJIXTlrGESmaqXIdPRd9YQ+Yx9xRIIIPu3Jp/bpbiZBKYDJSbr/2Xago7sb9nnfSyjTSnucUcIP
-ZVChn6hKneVGBI2DT9yyyD3PmCEJmEzA8Y96qT83JmVH2GaPSSbCw0C+Zj1s/zqtKUbwE5zh8uuZ
-p4vC019QbaIOb8cGlzgvTqGORwK0gwDYpOO6QQdg5d03WvIHwTunnJdoLrfvqUg2vOlpqJmqR+nH
-9lHS+bEstsVJtZieU1Pa+3LzfA/4cT7XA/pnwwIDAQABo4IBtTCCAbEwDgYDVR0PAQH/BAQDAgEG
-MGoGA1UdJQRjMGEGCCsGAQUFBwMCBggrBgEFBQcDBAYIKwYBBQUHAwkGCisGAQQBgjcUAgIGCisG
-AQQBgjcKAwQGCSsGAQQBgjcVBgYKKwYBBAGCNwoDDAYIKwYBBQUHAwcGCCsGAQUFBwMRMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFGlygmIxZ5VEhXeRgMQENkmdewthMB8GA1UdIwQYMBaA
-FI/wS3+oLkUkrk1Q+mOai97i3Ru8MD4GCCsGAQUFBwEBBDIwMDAuBggrBgEFBQcwAYYiaHR0cDov
-L29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3RyMzA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3Js
-Lmdsb2JhbHNpZ24uY29tL3Jvb3QtcjMuY3JsMGcGA1UdIARgMF4wCwYJKwYBBAGgMgEoMAwGCisG
-AQQBoDIBKAowQQYJKwYBBAGgMgFfMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNp
-Z24uY29tL3JlcG9zaXRvcnkvMA0GCSqGSIb3DQEBCwUAA4IBAQConc0yzHxn4gtQ16VccKNm4iXv
-6rS2UzBuhxI3XDPiwihW45O9RZXzWNgVcUzz5IKJFL7+pcxHvesGVII+5r++9eqI9XnEKCILjHr2
-DgvjKq5Jmg6bwifybLYbVUoBthnhaFB0WLwSRRhPrt5eGxMw51UmNICi/hSKBKsHhGFSEaJQALZy
-4HL0EWduE6ILYAjX6BSXRDtHFeUPddb46f5Hf5rzITGLsn9BIpoOVrgS878O4JnfUWQi29yBfn75
-HajifFvPC+uqn+rcVnvrpLgsLOYG/64kWX/FRH8+mhVe+mcSX3xsUpcxK9q9vLTVtroU/yJUmEC4
-OcH5dQsbHBqjMIIDXzCCAkegAwIBAgILBAAAAAABIVhTCKIwDQYJKoZIhvcNAQELBQAwTDEgMB4G
-A1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNV
-BAMTCkdsb2JhbFNpZ24wHhcNMDkwMzE4MTAwMDAwWhcNMjkwMzE4MTAwMDAwWjBMMSAwHgYDVQQL
-ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
-R2xvYmFsU2lnbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMwldpB5BngiFvXAg7aE
-yiie/QV2EcWtiHL8RgJDx7KKnQRfJMsuS+FggkbhUqsMgUdwbN1k0ev1LKMPgj0MK66X17YUhhB5
-uzsTgHeMCOFJ0mpiLx9e+pZo34knlTifBtc+ycsmWQ1z3rDI6SYOgxXG71uL0gRgykmmKPZpO/bL
-yCiR5Z2KYVc3rHQU3HTgOu5yLy6c+9C7v/U9AOEGM+iCK65TpjoWc4zdQQ4gOsC0p6Hpsk+QLjJg
-6VfLuQSSaGjlOCZgdbKfd/+RFO+uIEn8rUAVSNECMWEZXriX7613t2Saer9fwRPvm2L7DWzgVGkW
-qQPabumDk3F2xmmFghcCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
-HQYDVR0OBBYEFI/wS3+oLkUkrk1Q+mOai97i3Ru8MA0GCSqGSIb3DQEBCwUAA4IBAQBLQNvAUKr+
-yAzv95ZURUm7lgAJQayzE4aGKAczymvmdLm6AC2upArT9fHxD4q/c2dKg8dEe3jgr25sbwMpjjM5
-RcOO5LlXbKr8EpbsU8Yt5CRsuZRj+9xTaGdWPoO4zzUhw8lo/s7awlOqzJCK6fBdRoyV3XpYKBov
-Hd7NADdBj+1EbddTKJd+82cEHhXXipa0095MJ6RMG3NzdvQXmcIfeg7jLQitChws/zyrVQ4PkX42
-68NXSb7hLi18YIvDQVETI53O9zJrlAGomecsMx86OyXShkDOOyyGeMlhLxS67ttVb9+E7gUJTb0o
-2HLO02JQZR7rkpeDMdmztcpHWD9fMIIFTzCCBDegAwIBAgIMX/krgFDQUQNyOf+1MA0GCSqGSIb3
-DQEBCwUAMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTMwMQYDVQQD
-EypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0gRzMwHhcNMjAwOTA0MDgz
-NTI5WhcNMjIwOTA1MDgzNTI5WjCBljELMAkGA1UEBhMCSU4xEjAQBgNVBAgTCUthcm5hdGFrYTES
-MBAGA1UEBxMJQmFuZ2Fsb3JlMRYwFAYDVQQKEw1Ccm9hZGNvbSBJbmMuMRowGAYDVQQDExFNdW5l
-ZW5kcmEgS3VtYXIgTTErMCkGCSqGSIb3DQEJARYcbXVuZWVuZHJhLmt1bWFyQGJyb2FkY29tLmNv
-bTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMoadg8/B0JvnQVWQZyfiiEMmDhh0bSq
-BIThkSCjIdy7yOV9fBOs6MdrPZgCDeX5rJvOw6PJiWjeQQ9RkTJH6WccvxwXugoyspkG/RfFdUKk
-t0/bk1Ml9aUobcee2+cC79gyzwpHUjzEpcsx49FskGIxI+n9wybrDhpurtj8mmc1C1sVzKNoIEwC
-/eHrCsDnag9JEGotxVVv0KcLXv7N0CXs03bP8uvocms3+gO1K8dasJkc7noMt/i0/xcZnaABWkgV
-J/4V6ms/nIUi+/4vPYjckYUbRzkXm1/X0IyUfpp5cgdrFn9jBIk69fQGAUEhnVvwcXnHWotYxZFd
-Xew5Fz0CAwEAAaOCAdMwggHPMA4GA1UdDwEB/wQEAwIFoDCBngYIKwYBBQUHAQEEgZEwgY4wTQYI
-KwYBBQUHMAKGQWh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzcGVyc29uYWxz
-aWduMnNoYTJnM29jc3AuY3J0MD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5j
-b20vZ3NwZXJzb25hbHNpZ24yc2hhMmczME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsG
-AQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAA
-MEQGA1UdHwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNp
-Z24yc2hhMmczLmNybDAnBgNVHREEIDAegRxtdW5lZW5kcmEua3VtYXJAYnJvYWRjb20uY29tMBMG
-A1UdJQQMMAoGCCsGAQUFBwMEMB8GA1UdIwQYMBaAFGlygmIxZ5VEhXeRgMQENkmdewthMB0GA1Ud
-DgQWBBR6On9cEmlB2VsuST951zNMSKtFBzANBgkqhkiG9w0BAQsFAAOCAQEAOGDBLQ17Ge8BVULh
-hsKhgh5eDx0mNmRRdhvTJnxOTRX5QsOKvsJGOUbyrKjD3BTTcGmIUti9HmbqDe/3gRTbhu8LA508
-LbMkW5lUoTb8ycBNOKLYhNE8UEOY8jRTUtMEhzT6NJDEE+1hb3kSGfArrrF3Z8pRYiUUhcpC5GKL
-9KsxA+DECRfSGfXJJQSq6nEZUGKhz+dz5CV1s8UIZLe9HEEfyJO4eRP+Fw9X16cthAbY0kpVnAvT
-/j45FAauY/h87uphdvSb5wC9v5w4VO0JKs0yNUjyWXg/RG+6JCvcViLFLAlRCLrcRcVaQwWZQ3YB
-EpmWnHflnrBcah5Ozy137DGCAm8wggJrAgEBMG0wXTELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEds
-b2JhbFNpZ24gbnYtc2ExMzAxBgNVBAMTKkdsb2JhbFNpZ24gUGVyc29uYWxTaWduIDIgQ0EgLSBT
-SEEyNTYgLSBHMwIMX/krgFDQUQNyOf+1MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEi
-BCDTngoPcO6xDAtshY2ilL0J5TFseFiJFh4hksTEA+st0DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-AQcBMBwGCSqGSIb3DQEJBTEPFw0yMDEyMjIwNjAzMDBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZI
-AWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEK
-MAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAsBYAUPgVInWcjT0i
-65x3Fyefocm5hXc/jI+Al/Wi9pkn3Wob2XwZUgwsnmw2WhqI22IvDJd4tnBZiS83flGItJVX/xwe
-0pIGWRJlBH7hSWEzHLFUnNYAPEDkOPWLLmf04mJJu70pdpGBa0KgmYqCkAjOWsSVQxPYOjQTjeEf
-A5V5xBBT1VB+RFfKj0+t2Gk2PLAoEmyfbp/ldfulVj5QRHROF9BW4ynPekquvnaRLqXGGk2x+xID
-/RDRG8RMvxnDnij1jh5fXnzalhcVH3VHPG0e/X3e58IV1ViDsT+1vPXLhwgH9zkpE2hVGb2YKaOC
-HMivWyILqCOdzS5Um/pL0A==
---000000000000b7eb5705b7075376--
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
