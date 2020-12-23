@@ -2,39 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F08D62E1EE8
-	for <lists+linux-block@lfdr.de>; Wed, 23 Dec 2020 16:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C762E1EF4
+	for <lists+linux-block@lfdr.de>; Wed, 23 Dec 2020 16:54:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgLWPts (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Dec 2020 10:49:48 -0500
-Received: from verein.lst.de ([213.95.11.211]:34843 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgLWPtr (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Dec 2020 10:49:47 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0B65E67373; Wed, 23 Dec 2020 16:49:05 +0100 (CET)
-Date:   Wed, 23 Dec 2020 16:49:04 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [RFC] nvme: set block size during namespace validation
-Message-ID: <20201223154904.GA5967@lst.de>
-References: <20201223150136.4221-1-minwoo.im.dev@gmail.com>
+        id S1728023AbgLWPwb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Dec 2020 10:52:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgLWPwa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Dec 2020 10:52:30 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2CFC06179C;
+        Wed, 23 Dec 2020 07:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DvH0NyUD3VzfHuiFkeAq1PYtCpt4Xs2NiwNXDYcFb5E=; b=r5Av1aYEpmlsqfXcI87HZwooYp
+        hNoYZTPHlzpf8R3PngDBkeUYyekmPZHjSvP+5Y3t/QDQeOb7PjtU60bOreHBspxZd8YUySWfx6LXs
+        Jc2J9cL/2SNWMnDDg0JGyL1dbeq6bwFLoAYSIkWYQpYYDrcyBWd1k7ay5dhh6Ajknf6vcfWMobB4M
+        d7YDf4C3uW5cb8WAsCp1mdzQnIS5cXmqbZK92BQ+Gkc1Nn7tDAmwqTDjrN+pMSjzMJ8ia/7RQBNPY
+        TuwEJMOQDeNP7zK1fBQ2omM4imubJcd/XoiZyc13i9XFXRjtUoP5Advk/4h1hgU32RFuK0kJecodo
+        rkLAE63g==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ks6QT-0001ad-OM; Wed, 23 Dec 2020 15:51:45 +0000
+Date:   Wed, 23 Dec 2020 15:51:45 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 0/6] no-copy bvec
+Message-ID: <20201223155145.GA5902@infradead.org>
+References: <cover.1607976425.git.asml.silence@gmail.com>
+ <20201215014114.GA1777020@T590>
+ <103235c1-e7d0-0b55-65d0-013d1a09304e@gmail.com>
+ <20201215120357.GA1798021@T590>
+ <e755fec3-4181-1414-0603-02e1a1f4e9eb@gmail.com>
+ <20201222141112.GE13079@infradead.org>
+ <933030f0-e428-18fd-4668-68db4f14b976@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201223150136.4221-1-minwoo.im.dev@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <933030f0-e428-18fd-4668-68db4f14b976@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-set_blocksize just sets the block sise used for buffer heads and should
-not be called by the driver.  blkdev_get updates the block size, so
-you must already have the fd re-reading the partition table open?
-I'm not entirely sure how we can work around this except by avoiding
-buffer head I/O in the partition reread code.  Note that this affects
-all block drivers where the block size could change at runtime.
+On Wed, Dec 23, 2020 at 12:52:59PM +0000, Pavel Begunkov wrote:
+> Can scatterlist have 0-len entries? Those are directly translated into
+> bvecs, e.g. in nvme/target/io-cmd-file.c and target/target_core_file.c.
+> I've audited most of others by this moment, they're fine.
+
+For block layer SGLs we should never see them, and for nvme neither.
+I think the same is true for the SCSI target code, but please double
+check.
