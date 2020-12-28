@@ -2,71 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 599882E34B2
-	for <lists+linux-block@lfdr.de>; Mon, 28 Dec 2020 08:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 491862E350F
+	for <lists+linux-block@lfdr.de>; Mon, 28 Dec 2020 09:30:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgL1HYs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Dec 2020 02:24:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgL1HYs (ORCPT
+        id S1726419AbgL1IaU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Dec 2020 03:30:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51671 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726354AbgL1IaT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Dec 2020 02:24:48 -0500
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B0FC061799
-        for <linux-block@vger.kernel.org>; Sun, 27 Dec 2020 23:24:07 -0800 (PST)
-Received: by mail-io1-xd29.google.com with SMTP id r9so8623693ioo.7
-        for <linux-block@vger.kernel.org>; Sun, 27 Dec 2020 23:24:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=kq2jyHJDfxqOxuShgwYNcAto0qAucvJCi8yLZBnTurg=;
-        b=fOMCIgJQHNx20kYFTdQKQu7/5C0dr9uLNbBYAB32XkU5BLjFNANYkxJV1n2Ebt1rP3
-         4vlg3aA75qJVNEWySieOl12N/QM5QZAdoGW86/sAguX0cdPFZjrHWzOkO84Q+2eY0Cv/
-         SahXDS2J+RytZ5BUzscAVUJqvzmO48U8QbgI5mi62kN49+QKcgq07R87wBs78VLH8ijf
-         9a7+p62jYL+gc/eYVUwMNbh5DN3hfJzmyfnw/LirJyhve1FURqD7RGDY3ApLTS/MLBQA
-         mdiQCkPF9Wgfz38qy1MxQ2/Oc/+UaXbdZ2XuQvrqxbp7MDFxRWjsWVBgs2lO+mMzi/Wc
-         AeqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=kq2jyHJDfxqOxuShgwYNcAto0qAucvJCi8yLZBnTurg=;
-        b=IUDJgDpJTK1NY1gMdlJjoa4RkBTupB1h35Pr9okLgtjzTQ05l9/vHDouChoyDIuhHx
-         oA/J6MFo4hfgdSTuYwK9OFt+m3b4YSoQfzOXBd3XTeNJ7g0+/tsXCHis7O1RGT57Mwns
-         7IWTBPy8SPbRNX96k7S7TH61wRoWRUxH3ZgNJjiRkzqZ3qIS/dIIfd6iDmCG2fo9+eDw
-         aD10fXa5OmzpdfQ4jfSJh0fdccuNB0/SuYU9wSq93W36VaY8I4lUgVUFlnf4+SerDegU
-         bGIZ2ckxabQj69Zf3DbWU6wp16JEw9k4+YBjgjKfDPUQVWfqy4iHhSdr1DrZ2C56wuAt
-         Z7TA==
-X-Gm-Message-State: AOAM5312cMHXN5vCvt2g9BSe2Tn3zOfEmiv342/nWFvEjnbmnW9mqukw
-        0vRQi/LmoVnzNBsjFEo5TKNcaNZ4Oc0+DC93Iy8=
-X-Google-Smtp-Source: ABdhPJzMBCTQSNEtLib8fKYQFbXGFNQE8o8pBn3X0WJf7LUximTHdLrgFQWueWejQHR/F7NHBIJhyiVzVAKJHyGhouA=
-X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr35115598iow.131.1609140246551;
- Sun, 27 Dec 2020 23:24:06 -0800 (PST)
+        Mon, 28 Dec 2020 03:30:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609144132;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UaOuLgpFoeN0oTRLHLO4TgNcGhQC3vq+vzim6sDzPWg=;
+        b=MvENQa0j/gWTVGlWnLq4xrg/LAsi0ZDkAn7OvWGLERJDZRR9xKKYs9Ot7hPF0FCObBWWTM
+        D5IDNvFP2E8QIYStzvcoDDwQbq3/25mXbRfsZsw3dsivAxxfKMoAMUOIblh2Hn6FBEVWDg
+        cHB5SaB6qouAqqIEyX87SqKQlYYerbA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-vPJBaJFINfWXd14xKzAlXw-1; Mon, 28 Dec 2020 03:28:47 -0500
+X-MC-Unique: vPJBaJFINfWXd14xKzAlXw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54A761005513;
+        Mon, 28 Dec 2020 08:28:46 +0000 (UTC)
+Received: from T590 (ovpn-13-139.pek2.redhat.com [10.72.13.139])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0253C1F44D;
+        Mon, 28 Dec 2020 08:28:39 +0000 (UTC)
+Date:   Mon, 28 Dec 2020 16:28:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhangxiaoxu5@huawei.com
+Subject: Re: [PATCH 1/3] blk-mq: allow hardware queue to get more tag while
+ sharing a tag set
+Message-ID: <20201228082835.GB3304670@T590>
+References: <20201226102808.2534966-1-yukuai3@huawei.com>
+ <20201226102808.2534966-2-yukuai3@huawei.com>
+ <20201227115859.GA3282759@T590>
+ <04c39621-0c4a-e593-5545-c4bd274c5fc2@huawei.com>
 MIME-Version: 1.0
-Received: by 2002:a6b:490a:0:0:0:0:0 with HTTP; Sun, 27 Dec 2020 23:24:05
- -0800 (PST)
-Reply-To: hs8qfc11@gmail.com
-From:   "Dr. Dagbo Igho" <dagboigho@gmail.com>
-Date:   Mon, 28 Dec 2020 08:24:05 +0100
-Message-ID: <CANqtXm49kMMhvXKCdkF0MHCG1fnwV5iAGA51AWbDrOh-rCkZkA@mail.gmail.com>
-Subject: Good Morning,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <04c39621-0c4a-e593-5545-c4bd274c5fc2@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-I'm Dr. Dagbo Igho, did you Receive the (FUND), that was paid to you?
-please, do not hesitate to Let me know with your full name:.. for
-immediate verification notice,
+On Mon, Dec 28, 2020 at 09:56:15AM +0800, yukuai (C) wrote:
+> Hi,
+> 
+> On 2020/12/27 19:58, Ming Lei wrote:
+> > Hi Yu Kuai,
+> > 
+> > On Sat, Dec 26, 2020 at 06:28:06PM +0800, Yu Kuai wrote:
+> > > When sharing a tag set, if most disks are issuing small amount of IO, and
+> > > only a few is issuing a large amount of IO. Current approach is to limit
+> > > the max amount of tags a disk can get equally to the average of total
+> > > tags. Thus the few heavy load disk can't get enough tags while many tags
+> > > are still free in the tag set.
+> > 
+> > Yeah, current approach just allocates same share for each active queue
+> > which is evaluated in each timeout period.
+> > 
+> > That said you are trying to improve the following case:
+> > - heavy IO on one or several disks, and the average share for these
+> >    disks become bottleneck of IO performance
+> > - small amount IO on other disks attached to the same host, and all IOs are
+> > submitted to disk in <30 second period.
+> > 
+> > Just wondering if you may share the workload you are trying to optimize,
+> > or it is just one improvement in theory? And what is the disk(hdd, ssd
+> > or nvme) and host? And how many disks in your setting? And how deep the tagset
+> > depth is?
+> 
+> The details of the environment that we found the problem are as follows:
+> 
+>  total driver tags: 128
+
+Looks the tagset depth is a bit low.
+
+>  number of disks: 13 (network drive, and they form a dm-multipath)
+>  default queue_depth: 32
+
+Another candidate solution may be to always return true from hctx_may_queue()
+for this kind of queue because queue_depth has provided fair allocation for
+each LUN, and looks not necessary to do that again.
+
+>  disk performance: when test with 4k randread and single thread, iops is
+>                    300. And can up to 4000 with 32 thread.
+>  test cmd: fio -ioengine=psync -numjobs=32 ...
+> 
+> We found that mpath will issue sg_io periodically(about 15s)，which lead
+> to active_queues setting to 13 for about 5s in every 15s.
+
+BTW, I just observe sg_io on rhel8 & rhel7 on mpath over scsi_debug, looks not
+see any such activity.
+
+> 
+> By the way, I'm not sure this is a common scenario, however, sq don't
+> have such problem,
+
+If it is done by mpath at default setting, I think it can be thought as
+one common case.
+
 
 Thanks,
-Dr. Dagbo Igho
-Foreign Remittance Director
+Ming
 
-Sincerely Yours, Respectfully,
-
-Mr Bill T Winters,
-Group Chief Executive Officer & Executive Director,
