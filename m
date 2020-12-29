@@ -2,59 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A11A2E6F30
+	by mail.lfdr.de (Postfix) with ESMTP id 1D87B2E6F2F
 	for <lists+linux-block@lfdr.de>; Tue, 29 Dec 2020 09:58:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgL2I4w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S1726488AbgL2I4w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 29 Dec 2020 03:56:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgL2I4v (ORCPT
+        with ESMTP id S1726350AbgL2I4v (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 29 Dec 2020 03:56:51 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32923C0617A2
-        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:38 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id k7so22676848ybm.13
-        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:38 -0800 (PST)
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC65C0617A4
+        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:39 -0800 (PST)
+Received: by mail-pg1-x54a.google.com with SMTP id v5so9748092pgq.15
+        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=r1uNbK6vumQ2S39nZ29dwK/wuBEGW5LyLS9BAyhIDUk=;
-        b=CJKxr1tVDbYCd2gmA9SkBlYMe/ogzmzQaqOpt1dUZGkoIDBPIu1TyahgJ7yLlRVXEI
-         LVG0HbaYzdac4yPQ0G7ui2cqw5sX7rYggjiQqRykh65ZunCCnZyDAzGWeltD30dZhlnr
-         LYa7svxRhbbIWLHyOdX7ITnNIGogLwGFr8srfk0KQfhLFA/n4ArBGyaXSVrXR0gDzcH6
-         lBL6XUo1JLCrndsuJfcsi/VGUEWbZMw7epOZDz1iVnkIC+kngniOvW8ZjOkezb8XPvKV
-         w1/0aWTrOtjLGLST7ViOHYpgtbAjURTsyQtYnbECoCKcxDM4J7/vvMgVvziWklqD85JT
-         XqKg==
+        bh=2LL28w8HYDB56TY4Xorb2dz9gBz+2+A0z3a585XX/NA=;
+        b=nDEvUHzhbpJUyaY1GFMF8SnI/Bi2pF3NjiPXylvwGkn/R4l7PH/3ZWXIG0oW380SPo
+         rXvzQjEX9SLkpAyDFKTaKrWEn+XGPutjCm3a6a4NXMpYJ6+d8OCLoqAxJYbOOGPZABzo
+         gTDfXR/4mo+Zq5MbO3/behA5LVrOEiC8YktvStH4eTkl36MwAfyMMWqLAIOJAZldIW55
+         dEVeR85wjuzu8G0xmaDcXslZtMJ3b4Bnf46G0y6d8AQIsvajrXFAToJYv6A2usjzBlqS
+         6htTTktyeKBEmjvEhJyP4xhMdXvzHFJEBDIDgr9Ic5vrmKA0qEBUQ+uIqnBRqL4Hy3e8
+         Rn+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=r1uNbK6vumQ2S39nZ29dwK/wuBEGW5LyLS9BAyhIDUk=;
-        b=tNqUKqGhX3y9YKa8uxqFc5VSuAYsx3Se1zfkWpMISfX4zOkcncMU1gXBEituadt5Ou
-         fHMryQ5el9FTjFXeQu0PdYZUL//ttsrMNA4v+0Gz73lN0p26VdCNbASIldUt2df+Vckw
-         ezLJpXOgCAbnsMKkEEr0yZyhADqtOnyUAq51M1UDxtFp7ni+/ARDrj1s+n2sXuWvjbuB
-         qop6Enll9c9SMdaSq4vh3HqMy3a5ECF6Scp3vBi1Uw3Lx5VDXZnmInNvP3/x5pOe878U
-         Cb1eyL/eYUrm+C/R9D7GhxiTZiG+9lOtDLTgtA/l3U365p7z07Yw0HAguh9ZyeNg0Bk6
-         fjvg==
-X-Gm-Message-State: AOAM533ieo+oGA3PlK8nvkHxtuKvRAJKywbTpFMVZmR33hlx6L2w/gSe
-        KJEtRyAlAr117tfwRxNyzCfPWiXzQBe3qFowpf59lkYpZucuTtAZLSKbFtu+Kft8OLT/fP+P+kM
-        BTooGHoCrBqafzb9AO+bNUSxVEAMiHhEtnbLIGRQu8VxjnzyENCtrRXSryzZGQxXn+ABl
-X-Google-Smtp-Source: ABdhPJwAOebr5YmlpPKNLl4A1ee+wOmB1Pjbxc5UpF9vjNQ+t39UJhcZfwlSIs9MpPG+YVcV9uIsQgPy5Q0=
+        bh=2LL28w8HYDB56TY4Xorb2dz9gBz+2+A0z3a585XX/NA=;
+        b=pyGkoMAOqt4epqLTKp+XOU6C4BfWLzaUvkvXj5ESqNADYdoTcn2x6OitAfO2aopJ9Y
+         nQ9GvY6WGmzeFwbKOcU62Gd1/8fJHgBeAe5F/ehyZZXKivrJF3HVUL7BD7zECRf2alVo
+         rmOZHiXbkNeAXaGRa9brHxatiLbVtRsOTW4q5qO6WSi4tJuPLONA4hNTnzcDU/PD+6DS
+         MT5cssC4kP++Jq7OSYG1Guv4EykpuNh1ZpT5eWVtUg1Ab/qohxBDtsIUH2/UfFG9BnOq
+         ARb4EtatSOjTtvXm2SwUr9hkHwQtdCitrD+4z3baqa6BAG2jQqIy61zb3YLnRtB0IkHs
+         XVnQ==
+X-Gm-Message-State: AOAM533QbUNMNAk5GQK06lndqz5eXGTkjsvhSVTrVqFw3fAkAOogFTIs
+        OQR4QqCNvS1J08EiCumUjX3A1kVFwANbasLDV+t0bP/V12r3F2G8m8QcL9VtWah4py44dKg76xN
+        ixTOaem1uZMng5IXBnc0HAauDNlmIZFdzSOdznhGZztpHeJwFsjRqybeGGgcQimfBG7we
+X-Google-Smtp-Source: ABdhPJy6RhyhTBX3auLabsBxWya+RNuNUROjMBZdQZOWghOMiLaEGenNF5fpXuLFLtCdUUfLnFSYw+uPxJE=
 Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a25:aa91:: with SMTP id t17mr63938387ybi.394.1609232137422;
- Tue, 29 Dec 2020 00:55:37 -0800 (PST)
-Date:   Tue, 29 Dec 2020 08:55:22 +0000
+ (user=satyat job=sendgmr) by 2002:a17:902:a585:b029:db:feae:425c with SMTP id
+ az5-20020a170902a585b02900dbfeae425cmr48031963plb.25.1609232138954; Tue, 29
+ Dec 2020 00:55:38 -0800 (PST)
+Date:   Tue, 29 Dec 2020 08:55:23 +0000
 In-Reply-To: <20201229085524.2795331-1-satyat@google.com>
-Message-Id: <20201229085524.2795331-5-satyat@google.com>
+Message-Id: <20201229085524.2795331-6-satyat@google.com>
 Mime-Version: 1.0
 References: <20201229085524.2795331-1-satyat@google.com>
 X-Mailer: git-send-email 2.29.2.729.g45daf8777d-goog
-Subject: [PATCH v3 4/6] dm: Support key eviction from keyslot managers of
- underlying devices
+Subject: [PATCH v3 5/6] dm: Verify inline encryption capabilities of new table
+ when it is loaded
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         dm-devel@redhat.com
@@ -67,99 +68,117 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that device mapper supports inline encryption, add the ability to
-evict keys from all underlying devices. When an upper layer requests
-a key eviction, we simply iterate through all underlying devices
-and evict that key from each device.
+DM only allows the table to be swapped if the new table's inline encryption
+capabilities are a superset of the old table's. We only check that this
+constraint is true when the table is actually swapped in (in
+dm_swap_table()). But this allows a user to load an unacceptable table
+without any complaint from DM, only for DM to throw an error when the
+device is resumed, and the table is swapped in.
 
-Co-developed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+This patch makes DM verify the inline encryption capabilities of the new
+table when the table is loaded. DM continues to verify and use the
+capabilities at the time of table swap, since the capabilities of
+underlying child devices can expand during the time between the table load
+and table swap (which in turn can cause the capabilities of this parent
+device to expand as well).
+
 Signed-off-by: Satya Tangirala <satyat@google.com>
 ---
- block/blk-crypto.c |  1 +
- drivers/md/dm.c    | 53 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/md/dm-ioctl.c |  8 ++++++++
+ drivers/md/dm.c       | 25 +++++++++++++++++++++++++
+ drivers/md/dm.h       | 19 +++++++++++++++++++
+ 3 files changed, 52 insertions(+)
 
-diff --git a/block/blk-crypto.c b/block/blk-crypto.c
-index 5da43f0973b4..c2be8f15006c 100644
---- a/block/blk-crypto.c
-+++ b/block/blk-crypto.c
-@@ -409,3 +409,4 @@ int blk_crypto_evict_key(struct request_queue *q,
- 	 */
- 	return blk_crypto_fallback_evict_key(key);
- }
-+EXPORT_SYMBOL_GPL(blk_crypto_evict_key);
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index 5e306bba4375..055a3c745243 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -1358,6 +1358,10 @@ static int table_load(struct file *filp, struct dm_ioctl *param, size_t param_si
+ 		goto err_unlock_md_type;
+ 	}
+ 
++	r = dm_verify_inline_encryption(md, t);
++	if (r)
++		goto err_unlock_md_type;
++
+ 	if (dm_get_md_type(md) == DM_TYPE_NONE) {
+ 		/* Initial table load: acquire type of table. */
+ 		dm_set_md_type(md, dm_table_get_type(t));
+@@ -2115,6 +2119,10 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 	if (r)
+ 		goto err_destroy_table;
+ 
++	r = dm_verify_inline_encryption(md, t);
++	if (r)
++		goto err_destroy_table;
++
+ 	md->type = dm_table_get_type(t);
+ 	/* setup md->queue to reflect md's type (may block) */
+ 	r = dm_setup_md_queue(md, t);
 diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 13b9c8e2e21b..b8844171d8e4 100644
+index b8844171d8e4..04322de34d29 100644
 --- a/drivers/md/dm.c
 +++ b/drivers/md/dm.c
-@@ -1949,6 +1949,58 @@ struct dm_keyslot_manager {
- 	struct mapped_device *md;
- };
+@@ -2094,6 +2094,31 @@ dm_construct_keyslot_manager(struct mapped_device *md, struct dm_table *t)
+ 	return ksm;
+ }
  
-+struct dm_keyslot_evict_args {
-+	const struct blk_crypto_key *key;
-+	int err;
-+};
-+
-+static int dm_keyslot_evict_callback(struct dm_target *ti, struct dm_dev *dev,
-+				     sector_t start, sector_t len, void *data)
++/**
++ * dm_verify_inline_encryption() - Verifies that the current keyslot manager of
++ *				   the mapped_device can be replaced by the
++ *				   keyslot manager of a given dm_table.
++ * @md: The mapped_device
++ * @t: The dm_table
++ *
++ * In particular, this function checks that the keyslot manager that will be
++ * constructed for the dm_table will support a superset of the capabilities that
++ * the current keyslot manager of the mapped_device supports.
++ *
++ * Return: 0 if the table's keyslot_manager can replace the current keyslot
++ *	   manager of the mapped_device. Negative value otherwise.
++ */
++int dm_verify_inline_encryption(struct mapped_device *md, struct dm_table *t)
 +{
-+	struct dm_keyslot_evict_args *args = data;
-+	int err;
++	struct blk_keyslot_manager *ksm = dm_construct_keyslot_manager(md, t);
 +
-+	err = blk_crypto_evict_key(bdev_get_queue(dev->bdev), args->key);
-+	if (!args->err)
-+		args->err = err;
-+	/* Always try to evict the key from all devices. */
++	if (IS_ERR(ksm))
++		return PTR_ERR(ksm);
++	dm_destroy_keyslot_manager(ksm);
++
 +	return 0;
 +}
 +
+ static void dm_update_keyslot_manager(struct request_queue *q,
+ 				      struct blk_keyslot_manager *ksm)
+ {
+diff --git a/drivers/md/dm.h b/drivers/md/dm.h
+index fffe1e289c53..eaf92e4cbe70 100644
+--- a/drivers/md/dm.h
++++ b/drivers/md/dm.h
+@@ -208,4 +208,23 @@ void dm_free_md_mempools(struct dm_md_mempools *pools);
+  */
+ unsigned dm_get_reserved_bio_based_ios(void);
+ 
 +/*
-+ * When an inline encryption key is evicted from a device-mapper device, evict
-+ * it from all the underlying devices.
++ *  Inline Encryption
 + */
-+static int dm_keyslot_evict(struct blk_keyslot_manager *ksm,
-+			    const struct blk_crypto_key *key, unsigned int slot)
-+{
-+	struct dm_keyslot_manager *dksm = container_of(ksm,
-+						       struct dm_keyslot_manager,
-+						       ksm);
-+	struct mapped_device *md = dksm->md;
-+	struct dm_keyslot_evict_args args = { key };
-+	struct dm_table *t;
-+	int srcu_idx;
-+	int i;
-+	struct dm_target *ti;
++struct blk_keyslot_manager;
 +
-+	t = dm_get_live_table(md, &srcu_idx);
-+	if (!t)
-+		return 0;
-+	for (i = 0; i < dm_table_get_num_targets(t); i++) {
-+		ti = dm_table_get_target(t, i);
-+		if (!ti->type->iterate_devices)
-+			continue;
-+		ti->type->iterate_devices(ti, dm_keyslot_evict_callback, &args);
-+	}
-+	dm_put_live_table(md, srcu_idx);
-+	return args.err;
++#ifdef CONFIG_BLK_INLINE_ENCRYPTION
++
++int dm_verify_inline_encryption(struct mapped_device *md, struct dm_table *t);
++
++#else /* !CONFIG_BLK_INLINE_ENCRYPTION */
++
++static inline int dm_verify_inline_encryption(struct mapped_device *md,
++					      struct dm_table *t)
++{
++	return 0;
 +}
 +
-+static struct blk_ksm_ll_ops dm_ksm_ll_ops = {
-+	.keyslot_evict = dm_keyslot_evict,
-+};
++#endif /* !CONFIG_BLK_INLINE_ENCRYPTION */
 +
- static int device_intersect_crypto_modes(struct dm_target *ti,
- 					 struct dm_dev *dev, sector_t start,
- 					 sector_t len, void *data)
-@@ -1998,6 +2050,7 @@ dm_construct_keyslot_manager(struct mapped_device *md, struct dm_table *t)
- 
- 	ksm = &dksm->ksm;
- 	blk_ksm_init_passthrough(ksm);
-+	ksm->ksm_ll_ops = dm_ksm_ll_ops;
- 	ksm->max_dun_bytes_supported = UINT_MAX;
- 	memset(ksm->crypto_modes_supported, 0xFF,
- 	       sizeof(ksm->crypto_modes_supported));
+ #endif
 -- 
 2.29.2.729.g45daf8777d-goog
 
