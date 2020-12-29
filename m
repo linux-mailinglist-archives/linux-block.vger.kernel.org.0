@@ -2,153 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80C52E6F5D
-	for <lists+linux-block@lfdr.de>; Tue, 29 Dec 2020 10:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98CD72E70FA
+	for <lists+linux-block@lfdr.de>; Tue, 29 Dec 2020 14:48:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgL2J3L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Dec 2020 04:29:11 -0500
-Received: from mail.synology.com ([211.23.38.101]:43852 "EHLO synology.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726156AbgL2J3K (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Dec 2020 04:29:10 -0500
-Received: from localhost.localdomain (unknown [10.17.198.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726138AbgL2NsT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Dec 2020 08:48:19 -0500
+Received: from mx.rz.hs-furtwangen.de ([141.28.2.11]:60460 "EHLO
+        mx.rz.hs-furtwangen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgL2NsT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 29 Dec 2020 08:48:19 -0500
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Dec 2020 08:48:18 EST
+Received: from mx.rz.hs-furtwangen.de (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id E59E5618D3
+        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 14:41:00 +0100 (CET)
+Received: from mail.rz.hs-furtwangen.de (mail.rz.hs-furtwangen.de [141.28.2.16])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by synology.com (Postfix) with ESMTPSA id 553B1CE781AC;
-        Tue, 29 Dec 2020 17:21:11 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
-        t=1609233671; bh=uW8Adw4OvUpDdOcXBQ8eWpTQ3vZt8hQfYkYX0sMcN9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=WjyLSyv1x3fJJQzV+FWwVvw6GU3jkWibYBBjm9PjUJ0OKVWNx+VF+yZXED5FK3bRm
-         flgaGcBzEAi257bS/0CdUKgSWkLEfM8iOocZ48B46j8C5Ddekam2JcxhRDeAi857wK
-         aJ0IapZ+0OR25ER98oHAfPjYEaDZhlVesWFPlEsA=
-From:   dannyshih <dannyshih@synology.com>
-To:     axboe@kernel.dk
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, Danny Shih <dannyshih@synology.com>
-Subject: [PATCH 4/4] md: use submit_bio_noacct_add_head for split bio sending back
-Date:   Tue, 29 Dec 2020 17:18:42 +0800
-Message-Id: <1609233522-25837-5-git-send-email-dannyshih@synology.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
-References: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
-X-Synology-MCP-Status: no
-X-Synology-Spam-Flag: no
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Virus-Status: no
+        by mx.rz.hs-furtwangen.de (Postfix) with ESMTPS
+        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 14:41:00 +0100 (CET)
+Received: from [192.168.11.84] (p4ffb2d34.dip0.t-ipconnect.de [79.251.45.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.rz.hs-furtwangen.de (Postfix) with ESMTPSA id BD18426087D
+        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 14:41:00 +0100 (CET)
+To:     linux-block@vger.kernel.org
+From:   Stefan Lederer <lederers@hs-furtwangen.de>
+Subject: How to utilize a PCIE4.0 SSD?
+Message-ID: <eeaa8871-59f5-a56a-f4e5-723c91ac8d5a@hs-furtwangen.de>
+Date:   Tue, 29 Dec 2020 14:40:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-PMX-Version: 6.4.9.2830568, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2020.12.29.133316, AntiVirus-Engine: 5.79.0, AntiVirus-Data: 2020.12.29.5790000
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Danny Shih <dannyshih@synology.com>
+Hello dear list,
 
-Use submit_bio_noacct_add_head when sending split bio back to md device.
-Otherwise, it might be handled after the lately split bio.
+(I hope I do not annoy you as a simple application programmer)
 
-Signed-off-by: Danny Shih <dannyshih@synology.com>
-Reviewed-by: Allen Peng <allenpeng@synology.com>
-Reviewed-by: Alex Wu <alexwu@synology.com>
----
- drivers/md/md-linear.c | 2 +-
- drivers/md/raid0.c     | 4 ++--
- drivers/md/raid1.c     | 4 ++--
- drivers/md/raid10.c    | 4 ++--
- drivers/md/raid5.c     | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+for a seminar paper at my university we reproduced the 2009 paper
+"Pathologies of big data" by Jacobs, where he basically reads a
+100GB file sequentially from a HDD with some light processing.
 
-diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-index 68cac7d..24418ee 100644
---- a/drivers/md/md-linear.c
-+++ b/drivers/md/md-linear.c
-@@ -243,7 +243,7 @@ static bool linear_make_request(struct mddev *mddev, struct bio *bio)
- 		struct bio *split = bio_split(bio, end_sector - bio_sector,
- 					      GFP_NOIO, &mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 	}
- 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 67f157f..92e82d5 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -447,7 +447,7 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
- 			zone->zone_end - bio->bi_iter.bi_sector, GFP_NOIO,
- 			&mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		end = zone->zone_end;
- 	} else
-@@ -552,7 +552,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		struct bio *split = bio_split(bio, sectors, GFP_NOIO,
- 					      &mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 	}
- 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index c034799..31cec76 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1282,7 +1282,7 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 		struct bio *split = bio_split(bio, max_sectors,
- 					      gfp, &conf->bio_split);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		r1_bio->master_bio = bio;
- 		r1_bio->sectors = max_sectors;
-@@ -1453,7 +1453,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		struct bio *split = bio_split(bio, max_sectors,
- 					      GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		r1_bio->master_bio = bio;
- 		r1_bio->sectors = max_sectors;
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index c5d88ef..c4dc970 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1177,7 +1177,7 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
- 					      gfp, &conf->bio_split);
- 		bio_chain(split, bio);
- 		allow_barrier(conf);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		wait_barrier(conf);
- 		bio = split;
- 		r10_bio->master_bio = bio;
-@@ -1460,7 +1460,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
- 					      GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, bio);
- 		allow_barrier(conf);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		wait_barrier(conf);
- 		bio = split;
- 		r10_bio->master_bio = bio;
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 3a90cc0..17458ac 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5490,7 +5490,7 @@ static struct bio *chunk_aligned_read(struct mddev *mddev, struct bio *raid_bio)
- 		struct r5conf *conf = mddev->private;
- 		split = bio_split(raid_bio, sectors, GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, raid_bio);
--		submit_bio_noacct(raid_bio);
-+		submit_bio_noacct_add_head(raid_bio);
- 		raid_bio = split;
- 	}
- 
--- 
-2.7.4
+We have a PCIE4.0 SSD with up to 7GB/s reading (Samsung 980) but
+nothing we programmed so far comes even close to that speed (regular
+read(), mmap() with optional threads, io_uring, multi-process) so we
+wonder if it is possible at all?
 
+According to iostat mmap is the fastest with 4GB/s and a queue depth
+of ~3. All other approaches do not go beyond 2.5GB/s.
+
+Also we get some strange effects like sequential read() with 16KB
+buffers being faster than one with 16MB and io_uring being alot
+slower than mmap (all tested on Manjaro with kernel 5.8/5.10 and ext4).
+
+So, now we are quite lost and would appreciate a hint into the right
+direction :)
+
+What is neccesary to simply read 100GB of data at 7GB/s?
+
+I wish everybody a happy new year!
+Stefan Lederer
