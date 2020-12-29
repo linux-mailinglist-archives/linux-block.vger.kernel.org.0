@@ -2,114 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C6012E6F31
-	for <lists+linux-block@lfdr.de>; Tue, 29 Dec 2020 09:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 973142E6F5F
+	for <lists+linux-block@lfdr.de>; Tue, 29 Dec 2020 10:29:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgL2I4x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Dec 2020 03:56:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgL2I4x (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Dec 2020 03:56:53 -0500
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32D2C0617A6
-        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:54 -0800 (PST)
-Received: by mail-qk1-x749.google.com with SMTP id f27so10117128qkh.0
-        for <linux-block@vger.kernel.org>; Tue, 29 Dec 2020 00:55:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=3bO6YItz9vvTQJgokX465W6GGn8iDP/PMw/J2QDO/So=;
-        b=qt4nW1TtN3vSNgIGdyu19lUtFHsVWuR3MeUBrUmhT19aLj3ZcPjez61n26uGT+H95h
-         5tcLJ1375oK/zFIjSjeC3fAN/INVwBSIq9Nm5ScVlw7t84DRqEg8YYiRDYRDt4TPArRK
-         oBB6wXkztBTuST2NYqsfxqsityuBpstl9esliPLnYtnFQjHHaYkYbfZb9WjANtuhJ07c
-         FaUdCvUnjkxdCiYr2KHr1MNLyPFQ3P0Ngr+09MDIv4q770sHyuU5dNIPUIllfyrixLSG
-         NPkAW501swO4Gq3RzVJodfbT+qPUZhDyNDZceY5LVNjRs5w06RHC5vV4mE+5YM5w59Jz
-         Ue5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3bO6YItz9vvTQJgokX465W6GGn8iDP/PMw/J2QDO/So=;
-        b=RU1XpdPbg226PmEzxx4VA6fVB5ytu0NI1vSAn2fCU0c08pb3JU0o7WXQVeVBuU+l5g
-         zhb0SmEU/d75HdRjRJ0yhbmGHGagEaTIRFeKEnVG07BWys4mlap9QrRyMjCze7n8I2gu
-         sv2CHPMeLpntVz9OPBGClombwTRauU8X6T0KLIWPeIL+ksK4sV8qIRvwKK59VaLqK54M
-         2ug7hdUoLsvGrbDhs0wmCeE1PWyJmpMLLjvUFc9Y6DFcRrcXFHLKiYURdFKcFzTyXb5Z
-         HjxUGFVcpk8tYHINQQjRGybIi/Gw44osW2ytmUAKqdglWgPw5uYlMekBs5FPn/h7rAOR
-         S7yQ==
-X-Gm-Message-State: AOAM5338CU7DRxXWxLw+FakX6nxELh1t1KqlzLplNMHfGUfYO4qP1X31
-        V20V5VS1hzXe0ChEGtt+x8ncMASWmrMwlFNoVRqxrglIkQnSuNba8Lt6Pny8RMfzyYXxju1VSOY
-        q6h1iVlkdjo1CpcR/D0mVqcQLRuj+HKLYYHq49UCReV0u12GUekkH2fjEOa2Cur+Icoat
-X-Google-Smtp-Source: ABdhPJxhU4q7GN5C1Z1AyzKVyRUGN5znZ+v3G/MJUPuiA4RVAhWGOcFupFszWQEI8exuXS9BJFU+l6WmdIw=
-Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a0c:99c8:: with SMTP id y8mr50020306qve.35.1609232154123;
- Tue, 29 Dec 2020 00:55:54 -0800 (PST)
-Date:   Tue, 29 Dec 2020 08:55:24 +0000
-In-Reply-To: <20201229085524.2795331-1-satyat@google.com>
-Message-Id: <20201229085524.2795331-7-satyat@google.com>
-Mime-Version: 1.0
-References: <20201229085524.2795331-1-satyat@google.com>
-X-Mailer: git-send-email 2.29.2.729.g45daf8777d-goog
-Subject: [PATCH v3 6/6] dm: set DM_TARGET_PASSES_CRYPTO feature for some targets
-From:   Satya Tangirala <satyat@google.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dm-devel@redhat.com
-Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726284AbgL2J3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Dec 2020 04:29:14 -0500
+Received: from mail.synology.com ([211.23.38.101]:43864 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726166AbgL2J3K (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 29 Dec 2020 04:29:10 -0500
+Received: from localhost.localdomain (unknown [10.17.198.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by synology.com (Postfix) with ESMTPSA id 07179CE781A0;
+        Tue, 29 Dec 2020 17:21:11 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1609233671; bh=32wEpt+o16XR2yhAXOPLZ3KuX9QlbNXlE2s9KIpvWw0=;
+        h=From:To:Cc:Subject:Date;
+        b=aOOBj8S8ahSnLersQy/26iOI8ZK9ENJzkcAMrTMfZgqH5vaVMbxkLXpXM4e7WwR9s
+         RSRMeVP8CjKwYktRrOiS0IuXBdjfuQiUxq/8BDn6NUp+rrcqbVvCkT+43sbxef36x2
+         cbBH174IR9/bloHwqZEE9d/Rp71+N7MKy0jFtcg0=
+From:   dannyshih <dannyshih@synology.com>
+To:     axboe@kernel.dk
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org, Danny Shih <dannyshih@synology.com>
+Subject: [PATCH 0/4] Fix order when split bio and send remaining back to itself
+Date:   Tue, 29 Dec 2020 17:18:38 +0800
+Message-Id: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
+X-Mailer: git-send-email 2.7.4
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-dm-linear and dm-flakey obviously can pass through inline crypto support.
+From: Danny Shih <dannyshih@synology.com>
 
-Co-developed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Satya Tangirala <satyat@google.com>
----
- drivers/md/dm-flakey.c | 4 +++-
- drivers/md/dm-linear.c | 5 +++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+We found out that split bios might handle not in order when a big bio
+had split by blk_queue_split() and also split in stacking block device,
+such as md device because chunk size boundary limit.
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index a2cc9e45cbba..30c6bc151213 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -482,8 +482,10 @@ static struct target_type flakey_target = {
- 	.name   = "flakey",
- 	.version = {1, 5, 0},
- #ifdef CONFIG_BLK_DEV_ZONED
--	.features = DM_TARGET_ZONED_HM,
-+	.features = DM_TARGET_ZONED_HM | DM_TARGET_PASSES_CRYPTO,
- 	.report_zones = flakey_report_zones,
-+#else
-+	.features = DM_TARGET_PASSES_CRYPTO,
- #endif
- 	.module = THIS_MODULE,
- 	.ctr    = flakey_ctr,
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index 00774b5d7668..fc9c4272c10d 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -229,10 +229,11 @@ static struct target_type linear_target = {
- 	.version = {1, 4, 0},
- #ifdef CONFIG_BLK_DEV_ZONED
- 	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_NOWAIT |
--		    DM_TARGET_ZONED_HM,
-+		    DM_TARGET_ZONED_HM | DM_TARGET_PASSES_CRYPTO,
- 	.report_zones = linear_report_zones,
- #else
--	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_NOWAIT,
-+	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_NOWAIT |
-+		    DM_TARGET_PASSES_CRYPTO,
- #endif
- 	.module = THIS_MODULE,
- 	.ctr    = linear_ctr,
+Stacking block device normally use submit_bio_noacct() add the remaining
+bio to current->bio_list's tail after they split original bio. Therefore,
+when bio split first time, the last part of bio was add to bio_list.
+After then, when bio split second time, the middle part of bio was add to
+bio_list. Results that the middle part is now behind the last part of bio.
+
+For example:
+	There is a RAID0 md device, with max_sectors_kb = 2 KB,
+	and chunk_size = 1 KB
+
+	1. a read bio come to md device wants to read 0-7 KB
+	2. In blk_queue_split(), bio split into (0-1), (2-7),
+	   and send (2-7) back to md device
+
+	   current->bio_list = bio_list_on_stack[0]: (md 2-7)
+	3. RAID0 split bio (0-1) into (0) and (1), since chunk size is 1 KB
+	   and send (1) back to md device
+
+	   bio_list_on_stack[0]: (md 2-7) -> (md 1)
+	4. remap and send (0) to lower layer device
+
+	   bio_list_on_stack[0]: (md 2-7) -> (md 1) -> (lower 0)
+	5. __submit_bio_noacct() sorting bio let lower bio handle firstly
+	   bio_list_on_stack[0]: (lower 0) -> (md 2-7) -> (md 1)
+	   pop (lower 0)
+	   move bio_list_on_stack[0] to bio_list_on_stack[1]
+
+	   bio_list_on_stack[1]: (md 2-7) -> (md 1)
+	6. after handle lower bio, it handle (md 2-7) firstly, and split
+	   in blk_queue_split() into (2-3), (4-7), send (4-7) back
+
+	   bio_list_on_stack[0]: (md 4-7)
+	   bio_list_on_stack[1]: (md 1)
+	7. RAID0 split bio (2-3) into (2) and (3) and send (3) back
+
+	   bio_list_on_stack[0]: (md 4-7) -> (md 3)
+	   bio_list_on_stack[1]: (md 1)
+	...
+	In the end, the split bio handle's order will become
+	0 -> 2 -> 4 -> 6 -> 7 -> 5 -> 3 -> 1
+
+Reverse the order of same queue bio when sorting bio in
+__submit_bio_noacct() can solve this issue, but it might influence
+too much. So we provide alternative version of submit_bio_noacct(),
+named submit_bio_noacct_add_head(), for the case which need to add bio
+to the head of current->bio_list. And replace submit_bio_noacct() with
+submit_bio_noacct_add_head() in block device layer when we want to
+split bio and send remaining back to itself.
+
+Danny Shih (4):
+  block: introduce submit_bio_noacct_add_head
+  block: use submit_bio_noacct_add_head for split bio sending back
+  dm: use submit_bio_noacct_add_head for split bio sending back
+  md: use submit_bio_noacct_add_head for split bio sending back
+
+ block/blk-core.c       | 44 +++++++++++++++++++++++++++++++++-----------
+ block/blk-merge.c      |  2 +-
+ block/bounce.c         |  2 +-
+ drivers/md/dm.c        |  2 +-
+ drivers/md/md-linear.c |  2 +-
+ drivers/md/raid0.c     |  4 ++--
+ drivers/md/raid1.c     |  4 ++--
+ drivers/md/raid10.c    |  4 ++--
+ drivers/md/raid5.c     |  2 +-
+ include/linux/blkdev.h |  1 +
+ 10 files changed, 45 insertions(+), 22 deletions(-)
+
 -- 
-2.29.2.729.g45daf8777d-goog
+2.7.4
 
