@@ -2,65 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B0C2E8D1C
-	for <lists+linux-block@lfdr.de>; Sun,  3 Jan 2021 17:26:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E2172E8E8E
+	for <lists+linux-block@lfdr.de>; Sun,  3 Jan 2021 22:43:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbhACQZJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 3 Jan 2021 11:25:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35466 "EHLO mx2.suse.de"
+        id S1727805AbhACVnj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 3 Jan 2021 16:43:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727348AbhACQZJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sun, 3 Jan 2021 11:25:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C92E7AF2C;
-        Sun,  3 Jan 2021 16:24:27 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-bcache@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
-Subject: [PATCH 3/3] bcache-tools: improve column alignment for "bcache show -m" output
-Date:   Mon,  4 Jan 2021 00:24:13 +0800
-Message-Id: <20210103162413.16895-3-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210103162413.16895-1-colyli@suse.de>
-References: <20210103162413.16895-1-colyli@suse.de>
+        id S1726008AbhACVni (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 3 Jan 2021 16:43:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1207E207FB;
+        Sun,  3 Jan 2021 21:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609710178;
+        bh=HFbAff8REzmBaLboQEAcDQ0tQ/Dw45kdlKYr8pVEu0o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=buk1xPEsrRLk1CcOz6hENxYQyH0VSkdRrKh9nIayS+Uxy+J9C4uqnwyrAsqfs9MOO
+         ZSrI6cLeqUQ0GLXMR/yzokXh+wEqPyU16UYNE/QrlhbBSe09YGyxvQxk7PuBgf7HxQ
+         F1VOTyKxjgkJM7WDJldw8s0peomMW+JlrQpp6AVcqyfWaKVdRaA77kYBuI3wAHD5Ja
+         Czobe+mRX4w67keMOmCkZVxX1tO+Kb/Cbxx9anvvUV4PGoCq5iM51fgfQm96QDXdZR
+         erlunpwRRAI18wt8bvgUEQs4u8aGS01GBzF0YctBMjMVP2xti5QfreGgrAXCM57mqt
+         Onopj93cbqQig==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Philip J Kelleher <pjk1939@linux.vnet.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: rsxx: select CONFIG_CRC32
+Date:   Sun,  3 Jan 2021 22:42:39 +0100
+Message-Id: <20210103214254.1996764-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch improves the output column alignment for command
-"bcache show -m". The changes are adding missing '\t' in printf
-format strings.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Coly Li <colyli@suse.de>
+Without crc32, the driver fails to link:
+
+arm-linux-gnueabi-ld: drivers/block/rsxx/config.o: in function `rsxx_load_config':
+config.c:(.text+0x124): undefined reference to `crc32_le'
+
+Fixes: 8722ff8cdbfa ("block: IBM RamSan 70/80 device driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- bcache.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/bcache.c b/bcache.c
-index a0c5a67..234702b 100644
---- a/bcache.c
-+++ b/bcache.c
-@@ -195,7 +195,7 @@ int show_bdevs_detail(void)
- 		fprintf(stderr, "Failed to list devices\n");
- 		return ret;
- 	}
--	printf("Name\t\tUuid\t\t\t\t\tCset_Uuid\t\t\t\tType\t\tState");
-+	printf("Name\t\tUuid\t\t\t\t\tCset_Uuid\t\t\t\tType\t\t\tState");
- 	printf("\t\t\tBname\t\tAttachToDev\tAttachToCset\n");
- 	list_for_each_entry_safe(devs, n, &head, dev_list) {
- 		printf("%s\t%s\t%s\t%lu", devs->name, devs->uuid,
-@@ -217,7 +217,7 @@ int show_bdevs_detail(void)
- 			printf(" (unknown)");
- 			break;
- 		}
--		printf("\t%-16s", devs->state);
-+		printf("\t\t%-16s", devs->state);
- 		printf("\t%-16s", devs->bname);
- 		char attachdev[30];
- 
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 262326973ee0..583b671b1d2d 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -445,6 +445,7 @@ config BLK_DEV_RBD
+ config BLK_DEV_RSXX
+ 	tristate "IBM Flash Adapter 900GB Full Height PCIe Device Driver"
+ 	depends on PCI
++	select CRC32
+ 	help
+ 	  Device driver for IBM's high speed PCIe SSD
+ 	  storage device: Flash Adapter 900GB Full Height.
 -- 
-2.26.2
+2.29.2
 
