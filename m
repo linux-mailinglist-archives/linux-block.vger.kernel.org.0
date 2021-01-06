@@ -2,211 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAB142EBC54
-	for <lists+linux-block@lfdr.de>; Wed,  6 Jan 2021 11:25:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C64832EBC92
+	for <lists+linux-block@lfdr.de>; Wed,  6 Jan 2021 11:43:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbhAFKZR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Jan 2021 05:25:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54036 "EHLO mx2.suse.de"
+        id S1726063AbhAFKlt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 6 Jan 2021 05:41:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33850 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbhAFKZQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 6 Jan 2021 05:25:16 -0500
+        id S1725868AbhAFKls (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 6 Jan 2021 05:41:48 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 10F46B7A5;
-        Wed,  6 Jan 2021 10:24:35 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C29DDACAF;
+        Wed,  6 Jan 2021 10:41:06 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id CB3401E0816; Wed,  6 Jan 2021 11:24:34 +0100 (CET)
+        id 78CB61E0812; Wed,  6 Jan 2021 11:41:06 +0100 (CET)
+Date:   Wed, 6 Jan 2021 11:41:06 +0100
 From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>, Ming Lei <ming.lei@redhat.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 2/2] blk-mq: Improve performance of non-mq IO schedulers with multiple HW queues
-Date:   Wed,  6 Jan 2021 11:24:28 +0100
-Message-Id: <20210106102428.551-3-jack@suse.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210106102428.551-1-jack@suse.cz>
-References: <20210106102428.551-1-jack@suse.cz>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH kernel] block: initialize block_device::bd_bdi for
+ bdev_cache
+Message-ID: <20210106104106.GA29271@quack2.suse.cz>
+References: <20210106092900.26595-1-aik@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210106092900.26595-1-aik@ozlabs.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently when non-mq aware IO scheduler (BFQ, mq-deadline) is used for
-a queue with multiple HW queues, the performance it rather bad. The
-problem is that these IO schedulers use queue-wide locking and their
-dispatch function does not respect the hctx it is passed in and returns
-any request it finds appropriate. Thus locality of request access is
-broken and dispatch from multiple CPUs just contends on IO scheduler
-locks. For these IO schedulers there's little point in dispatching from
-multiple CPUs. Instead dispatch always only from a single CPU to limit
-contention.
+On Wed 06-01-21 20:29:00, Alexey Kardashevskiy wrote:
+> This is a workaround to fix a null derefence crash:
+> 
+> [c00000000b01f840] c00000000b01f880 (unreliable)
+> [c00000000b01f880] c000000000769a3c bdev_evict_inode+0x21c/0x370
+> [c00000000b01f8c0] c00000000070bacc evict+0x11c/0x230
+> [c00000000b01f900] c00000000070c138 iput+0x2a8/0x4a0
+> [c00000000b01f970] c0000000006ff030 dentry_unlink_inode+0x220/0x250
+> [c00000000b01f9b0] c0000000007001c0 __dentry_kill+0x190/0x320
+> [c00000000b01fa00] c000000000701fb8 dput+0x5e8/0x860
+> [c00000000b01fa80] c000000000705848 shrink_dcache_for_umount+0x58/0x100
+> [c00000000b01fb00] c0000000006cf864 generic_shutdown_super+0x54/0x200
+> [c00000000b01fb80] c0000000006cfd48 kill_anon_super+0x38/0x60
+> [c00000000b01fbc0] c0000000006d12cc deactivate_locked_super+0xbc/0x110
+> [c00000000b01fbf0] c0000000006d13bc deactivate_super+0x9c/0xc0
+> [c00000000b01fc20] c00000000071a340 cleanup_mnt+0x1b0/0x250
+> [c00000000b01fc80] c000000000278fa8 task_work_run+0xf8/0x180
+> [c00000000b01fcd0] c00000000002b4ac do_notify_resume+0x4dc/0x5d0
+> [c00000000b01fda0] c00000000004ba0c syscall_exit_prepare+0x28c/0x370
+> [c00000000b01fe10] c00000000000e06c system_call_common+0xfc/0x27c
+> --- Exception: c00 (System Call) at 0000000010034890
+> 
+> Is this fixed properly already somewhere? Thanks,
+> 
+> Fixes: e6cb53827ed6 ("block: initialize struct block_device in bdev_alloc")
 
-Below is a comparison of dbench runs on XFS filesystem where the storage
-is a raid card with 64 HW queues and to it attached a single rotating
-disk. BFQ is used as IO scheduler:
+I don't think it's fixed anywhere and I've seen the syzbot report and I was
+wondering how this can happen when bdev_alloc() initializes bdev->bd_bdi
+and it also wasn't clear to me whether bd_bdi is really the only field that
+is problematic - if we can get to bdev_evict_inode() without going through
+bdev_alloc(), we are probably missing initialization of other fields in
+that place as well...
 
-      clients           MQ                     SQ             MQ-Patched
-Amean 1      39.12 (0.00%)       43.29 * -10.67%*       36.09 *   7.74%*
-Amean 2     128.58 (0.00%)      101.30 *  21.22%*       96.14 *  25.23%*
-Amean 4     577.42 (0.00%)      494.47 *  14.37%*      508.49 *  11.94%*
-Amean 8     610.95 (0.00%)      363.86 *  40.44%*      362.12 *  40.73%*
-Amean 16    391.78 (0.00%)      261.49 *  33.25%*      282.94 *  27.78%*
-Amean 32    324.64 (0.00%)      267.71 *  17.54%*      233.00 *  28.23%*
-Amean 64    295.04 (0.00%)      253.02 *  14.24%*      242.37 *  17.85%*
-Amean 512 10281.61 (0.00%)    10211.16 *   0.69%*    10447.53 *  -1.61%*
+But now I've realized that probably the inode is a root inode for bdev
+superblock which is allocated by VFS through new_inode() and thus doesn't
+undergo the initialization in bdev_alloc(). And AFAICT the root inode on
+bdev superblock can get only to bdev_evict_inode() and bdev_free_inode().
+Looking at bdev_evict_inode() the only thing that's used there from struct
+block_device is really bd_bdi. bdev_free_inode() will also access
+bdev->bd_stats and bdev->bd_meta_info. So we need to at least initialize
+these to NULL as well. IMO the most logical place for all these
+initializations is in bdev_alloc_inode()...
 
-Numbers are times so lower is better. MQ is stock 5.10-rc6 kernel. SQ is
-the same kernel with megaraid_sas.host_tagset_enable=0 so that the card
-advertises just a single HW queue. MQ-Patched is a kernel with this
-patch applied.
+								Honza
 
-You can see multiple hardware queues heavily hurt performance in
-combination with BFQ. The patch restores the performance.
-
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/blk-mq.c           | 62 ++++++++++++++++++++++++++++++++++------
- block/kyber-iosched.c    |  1 +
- include/linux/elevator.h |  2 ++
- 3 files changed, 56 insertions(+), 9 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 57f3482b2c26..26e0f6e64a3a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -63,15 +63,20 @@ static int blk_mq_poll_stats_bkt(const struct request *rq)
- 	return bucket;
- }
- 
-+/* Check if there are requests queued in hctx lists. */
-+static bool blk_mq_hctx_has_queued_rq(struct blk_mq_hw_ctx *hctx)
-+{
-+	return !list_empty_careful(&hctx->dispatch) ||
-+		sbitmap_any_bit_set(&hctx->ctx_map);
-+}
-+
- /*
-  * Check if any of the ctx, dispatch list or elevator
-  * have pending work in this hardware queue.
-  */
- static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
- {
--	return !list_empty_careful(&hctx->dispatch) ||
--		sbitmap_any_bit_set(&hctx->ctx_map) ||
--			blk_mq_sched_has_work(hctx);
-+	return blk_mq_hctx_has_queued_rq(hctx) || blk_mq_sched_has_work(hctx);
- }
- 
- /*
-@@ -1646,6 +1651,31 @@ void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
- }
- EXPORT_SYMBOL(blk_mq_run_hw_queue);
- 
-+static struct blk_mq_hw_ctx *blk_mq_get_sqsched_hctx(struct request_queue *q)
-+{
-+	struct elevator_queue *e = q->elevator;
-+	struct blk_mq_hw_ctx *hctx;
-+
-+	/*
-+	 * The queue has multiple hardware queues but uses IO scheduler that
-+	 * does not respect hardware queues when dispatching? This is not a
-+	 * great setup but it can be sensible when we have a single rotational
-+	 * disk behind a raid card. Just don't bother with multiple HW queues
-+	 * and dispatch from hctx for the current CPU since running multiple
-+	 * queues just causes lock contention inside the scheduler and
-+	 * pointless cache bouncing because the hctx is not respected by the IO
-+	 * scheduler's dispatch function anyway.
-+	 */
-+	if (q->nr_hw_queues > 1 && e && e->type->ops.dispatch_request &&
-+	    !(e->type->elevator_features & ELEVATOR_F_MQ_AWARE)) {
-+		hctx = blk_mq_map_queue_type(q, HCTX_TYPE_DEFAULT,
-+					     raw_smp_processor_id());
-+		if (!blk_mq_hctx_stopped(hctx))
-+			return hctx;
-+	}
-+	return NULL;
-+}
-+
- /**
-  * blk_mq_run_hw_queues - Run all hardware queues in a request queue.
-  * @q: Pointer to the request queue to run.
-@@ -1653,14 +1683,21 @@ EXPORT_SYMBOL(blk_mq_run_hw_queue);
-  */
- void blk_mq_run_hw_queues(struct request_queue *q, bool async)
- {
--	struct blk_mq_hw_ctx *hctx;
-+	struct blk_mq_hw_ctx *hctx, *sq_hctx;
- 	int i;
- 
-+	sq_hctx = blk_mq_get_sqsched_hctx(q);
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (blk_mq_hctx_stopped(hctx))
- 			continue;
--
--		blk_mq_run_hw_queue(hctx, async);
-+		/*
-+		 * Dispatch from this hctx either if there's no hctx preferred
-+		 * by IO scheduler or if it has requests that bypass the
-+		 * scheduler.
-+		 */
-+		if (!sq_hctx || blk_mq_hctx_has_queued_rq(hctx) ||
-+		   sq_hctx == hctx)
-+			blk_mq_run_hw_queue(hctx, async);
- 	}
- }
- EXPORT_SYMBOL(blk_mq_run_hw_queues);
-@@ -1672,14 +1709,21 @@ EXPORT_SYMBOL(blk_mq_run_hw_queues);
-  */
- void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
- {
--	struct blk_mq_hw_ctx *hctx;
-+	struct blk_mq_hw_ctx *hctx, *sq_hctx;
- 	int i;
- 
-+	sq_hctx = blk_mq_get_sqsched_hctx(q);
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (blk_mq_hctx_stopped(hctx))
- 			continue;
--
--		blk_mq_delay_run_hw_queue(hctx, msecs);
-+		/*
-+		 * Dispatch from this hctx either if there's no hctx preferred
-+		 * by IO scheduler or if it has requests that bypass the
-+		 * scheduler.
-+		 */
-+		if (!sq_hctx || blk_mq_hctx_has_queued_rq(hctx) ||
-+		   sq_hctx == hctx)
-+			blk_mq_delay_run_hw_queue(hctx, msecs);
- 	}
- }
- EXPORT_SYMBOL(blk_mq_delay_run_hw_queues);
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index dc89199bc8c6..c25c41d0d061 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -1029,6 +1029,7 @@ static struct elevator_type kyber_sched = {
- #endif
- 	.elevator_attrs = kyber_sched_attrs,
- 	.elevator_name = "kyber",
-+	.elevator_features = ELEVATOR_F_MQ_AWARE,
- 	.elevator_owner = THIS_MODULE,
- };
- 
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index bacc40a0bdf3..1fe8e105b83b 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -172,6 +172,8 @@ extern struct request *elv_rb_find(struct rb_root *, sector_t);
- 
- /* Supports zoned block devices sequential write constraint */
- #define ELEVATOR_F_ZBD_SEQ_WRITE	(1U << 0)
-+/* Supports scheduling on multiple hardware queues */
-+#define ELEVATOR_F_MQ_AWARE		(1U << 1)
- 
- #endif /* CONFIG_BLOCK */
- #endif
+> ---
+>  fs/block_dev.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index 3e5b02f6606c..86fdc28d565e 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -792,8 +792,10 @@ static void bdev_free_inode(struct inode *inode)
+>  static void init_once(void *data)
+>  {
+>  	struct bdev_inode *ei = data;
+> +	struct block_device *bdev = &ei->bdev;
+>  
+>  	inode_init_once(&ei->vfs_inode);
+> +	bdev->bd_bdi = &noop_backing_dev_info;
+>  }
+>  
+>  static void bdev_evict_inode(struct inode *inode)
+> -- 
+> 2.17.1
+> 
 -- 
-2.26.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
