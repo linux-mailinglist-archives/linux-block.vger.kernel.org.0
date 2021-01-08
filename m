@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B24C2EF401
-	for <lists+linux-block@lfdr.de>; Fri,  8 Jan 2021 15:38:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9E52EF409
+	for <lists+linux-block@lfdr.de>; Fri,  8 Jan 2021 15:38:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbhAHOhX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Jan 2021 09:37:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55994 "EHLO
+        id S1727494AbhAHOh6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Jan 2021 09:37:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbhAHOhU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Jan 2021 09:37:20 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4ADC0612FE
-        for <linux-block@vger.kernel.org>; Fri,  8 Jan 2021 06:36:40 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id y24so11366401edt.10
-        for <linux-block@vger.kernel.org>; Fri, 08 Jan 2021 06:36:40 -0800 (PST)
+        with ESMTP id S1726748AbhAHOh5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Jan 2021 09:37:57 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692CEC0612FF
+        for <linux-block@vger.kernel.org>; Fri,  8 Jan 2021 06:36:41 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id u19so11451711edx.2
+        for <linux-block@vger.kernel.org>; Fri, 08 Jan 2021 06:36:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZdhYqzo7vGHt0kaFItNFL8QlDmgaVS2uhNAqxmjrpdU=;
-        b=Q5NkzXOb1zqk1ACAFnCSwmXnUm40Pa2+oS5BVplA3rYKnIzDHYl+p3QZtsJG2MB3U8
-         nWVJgwaDbbwi4RoRscdFsrPZc+df8QVYd9JpYh/ZG8ucrO2GkAErpTByh/eBZ/P6PK3J
-         nz+YOuA+nD4tFPuFJ2z4imcafvbcnegcgJBWCdQJ3TYY4qav7G6AtmJkX5BKqryA1g9U
-         kdda9RfV4yyefxfPvrGXnoLLo8dZpgVuritiTtp7G8lEkIc1xKnsOlG2h2pUj4SeXIDv
-         u1mt4Uf1A3C6ktDDHb8EcBdaQra9v/RaJO+ks855eepc4uEYcvxTQVZQEHYlPPuH7lV6
-         m+QA==
+        bh=ScMrBuTqjTl8319DDqHcMUIBD1FsCL0Z6pG3bPYJIM4=;
+        b=H7A4uGKBnPTa7bvvSnMq0Jt7V5kVZC/xTLbWWQzKDgMLJSXQqVKt7sXR1j973lyYkV
+         OtQj49+RUzyS4i7VBPhEpgV5AMy6HT+7lkTadhZ1r+706jrfSR0kdTvncTDteo50trpZ
+         5PAnYsYm9O7MannRIMDUW9+z34ZwXQGKsMmzjDFHLOsgHDV5Pm2/DN2gnZKokVaANUT9
+         WJKiZwvlsCmuz8EYg2yXncGnVG/EsFyz3EV9VAbYYsxZMzZXF6bL0n35AaXqnBkjcPGW
+         mom0VEaQj1Aqzi0B/ZFvZLghVREBwOSsgWlZQtB6i4B94hIhRwhj10KD5X8Prd8Lin83
+         EyJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZdhYqzo7vGHt0kaFItNFL8QlDmgaVS2uhNAqxmjrpdU=;
-        b=aSoZzcKDstxZjh9A3+khHnKOkTL8vltV41T82le71Yup0jh1Uchjfh2iSrkcO/JcOa
-         deWvgqv6mQEslMTb6eRGZ+0YV+oBxvj1YNz5iLMdqNO5NIONW9h2ADAK86cw1qivS5D/
-         XAcmFl422ZzkGV10In61ZRYOMGr/cxvS/ObZYtLkMg2HX2VGIV77k7pRt6PsY4LuQc7+
-         7EvHo9v9Lfi9rBtaRH0/1bB0nSGQgKDIL8KOEuqw74uoxgDE7atE6/lCYRTeKPrVGw7o
-         tVOf7K11QaaoyPxRhBsZcdqJ2b3/kVDwRJZWac5irz/k5Be3TxH9nIKOLHKkCQ76uuPa
-         gyxw==
-X-Gm-Message-State: AOAM53392T3NtjDCSMr6/zqkADsQaN5obGNjWy3KZFZO7kkJ7S6YV6zq
-        PhTUkdGCERGCFUsRA1rilFfpSX5B/wh+WA==
-X-Google-Smtp-Source: ABdhPJyh81QCgA8fVsaRaSru1rNwtnMg2jXBG7J9/SANWKKG26wI+YIeI7rJi8A8aXaXfIBQ91Z3pw==
-X-Received: by 2002:a50:abc6:: with SMTP id u64mr5546709edc.21.1610116599197;
-        Fri, 08 Jan 2021 06:36:39 -0800 (PST)
+        bh=ScMrBuTqjTl8319DDqHcMUIBD1FsCL0Z6pG3bPYJIM4=;
+        b=VxF0uBLPxK92MeBqDg/6lN49H9bnjzD6Zr5xq+BBlEgcRDQKrHqIG6XXrvM2RNjNCS
+         TV0uQ+pzWbk/Ldd/gRDCDIdBLuZDqupl/lcyNMPGrq60CKj2KiDD9F2Rto4tpuGkK9CI
+         p5wvTdYBXkhOGpPSZKJaEHiYEjXv8b7oxQ33do/jhZmrc6KB1QyPXOl0iChSUFgzWLsL
+         DSWTaeJMm6cqRu24vOOJEv1VNYiUMACFEU6SDxVSi17xMFyWA44NgBb394/DuRXrJK2X
+         faxwiKM7m1s5k0kFBy1zhvxCwQSDlMPE7mbFx8V3F0Lc1XEljk23pYP1dWPysqxBg1bQ
+         VAIg==
+X-Gm-Message-State: AOAM532qOxnieuVey1B7tvy9RDRR1aBwmDXV5hs52w2WlXkqhra3iW4K
+        3RbVyfkqksGCaPOHjIWLg8T7YfgPiki/1A==
+X-Google-Smtp-Source: ABdhPJz+Vb7nmsHRmskf7mb3upTeTt8wbLoY7+LjVjje+rEqNONSgjuvL2ZTD5AbrJkjoFBCHrn8Ow==
+X-Received: by 2002:aa7:c58a:: with SMTP id g10mr5409627edq.315.1610116600052;
+        Fri, 08 Jan 2021 06:36:40 -0800 (PST)
 Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:4906:c200:31ac:50df:cd1f:f7fc])
-        by smtp.gmail.com with ESMTPSA id e25sm3858698edq.24.2021.01.08.06.36.38
+        by smtp.gmail.com with ESMTPSA id e25sm3858698edq.24.2021.01.08.06.36.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jan 2021 06:36:38 -0800 (PST)
+        Fri, 08 Jan 2021 06:36:39 -0800 (PST)
 From:   Jack Wang <jinpu.wang@cloud.ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, danil.kipnis@cloud.ionos.com,
-        Swapnil Ingle <ingleswapnil@gmail.com>
-Subject: [PATCH for-rc 4/5] block/rnbd: Adding name to the Contributors List
-Date:   Fri,  8 Jan 2021 15:36:33 +0100
-Message-Id: <20210108143634.175394-5-jinpu.wang@cloud.ionos.com>
+        Gioh Kim <gi-oh.kim@cloud.ionos.com>
+Subject: [PATCH for-rc 5/5] block/rnbd-clt: avoid module unload race with close confirmation
+Date:   Fri,  8 Jan 2021 15:36:34 +0100
+Message-Id: <20210108143634.175394-6-jinpu.wang@cloud.ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210108143634.175394-1-jinpu.wang@cloud.ionos.com>
 References: <20210108143634.175394-1-jinpu.wang@cloud.ionos.com>
@@ -64,27 +64,56 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Swapnil Ingle <ingleswapnil@gmail.com>
+We had kernel panic, it is caused by unload module and last
+close confirmation.
 
-Adding name to the Contributors List
+call trace:
+[1196029.743127]  free_sess+0x15/0x50 [rtrs_client]
+[1196029.743128]  rtrs_clt_close+0x4c/0x70 [rtrs_client]
+[1196029.743129]  ? rnbd_clt_unmap_device+0x1b0/0x1b0 [rnbd_client]
+[1196029.743130]  close_rtrs+0x25/0x50 [rnbd_client]
+[1196029.743131]  rnbd_client_exit+0x93/0xb99 [rnbd_client]
+[1196029.743132]  __x64_sys_delete_module+0x190/0x260
 
-Signed-off-by: Swapnil Ingle <ingleswapnil@gmail.com>
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Acked-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
+And in the crashdump confirmation kworker is also running.
+PID: 6943   TASK: ffff9e2ac8098000  CPU: 4   COMMAND: "kworker/4:2"
+ #0 [ffffb206cf337c30] __schedule at ffffffff9f93f891
+ #1 [ffffb206cf337cc8] schedule at ffffffff9f93fe98
+ #2 [ffffb206cf337cd0] schedule_timeout at ffffffff9f943938
+ #3 [ffffb206cf337d50] wait_for_completion at ffffffff9f9410a7
+ #4 [ffffb206cf337da0] __flush_work at ffffffff9f08ce0e
+ #5 [ffffb206cf337e20] rtrs_clt_close_conns at ffffffffc0d5f668 [rtrs_client]
+ #6 [ffffb206cf337e48] rtrs_clt_close at ffffffffc0d5f801 [rtrs_client]
+ #7 [ffffb206cf337e68] close_rtrs at ffffffffc0d26255 [rnbd_client]
+ #8 [ffffb206cf337e78] free_sess at ffffffffc0d262ad [rnbd_client]
+ #9 [ffffb206cf337e88] rnbd_clt_put_dev at ffffffffc0d266a7 [rnbd_client]
+
+The problem is both code path try to close same session, which lead to
+panic.
+
+To fix it, just skip the sess if the refcount already drop to 0.
+
+Fixes: f7a7a5c228d4 ("block/rnbd: client: main functionality")
 Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 ---
- drivers/block/rnbd/README | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/rnbd/rnbd-clt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/rnbd/README b/drivers/block/rnbd/README
-index 1773c0aa0bd4..080f58a5400a 100644
---- a/drivers/block/rnbd/README
-+++ b/drivers/block/rnbd/README
-@@ -90,3 +90,4 @@ Kleber Souza <kleber.souza@profitbricks.com>
- Lutz Pogrell <lutz.pogrell@cloud.ionos.com>
- Milind Dumbare <Milind.dumbare@gmail.com>
- Roman Penyaev <roman.penyaev@profitbricks.com>
-+Swapnil Ingle <ingleswapnil@gmail.com>
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index c696c3a937d7..7bdd26229c70 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -1697,7 +1697,8 @@ static void rnbd_destroy_sessions(void)
+ 	 */
+ 
+ 	list_for_each_entry_safe(sess, sn, &sess_list, list) {
+-		WARN_ON(!rnbd_clt_get_sess(sess));
++		if (!rnbd_clt_get_sess(sess))
++			continue;
+ 		close_rtrs(sess);
+ 		list_for_each_entry_safe(dev, tn, &sess->devs_list, list) {
+ 			/*
 -- 
 2.25.1
 
