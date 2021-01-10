@@ -2,122 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAFC02F0634
-	for <lists+linux-block@lfdr.de>; Sun, 10 Jan 2021 10:46:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BFE2F07AD
+	for <lists+linux-block@lfdr.de>; Sun, 10 Jan 2021 16:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbhAJJqE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 10 Jan 2021 04:46:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbhAJJqD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 10 Jan 2021 04:46:03 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48834C0617A4
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:23 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id ce23so20452396ejb.8
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Hf/mF6iwnrVFlIuClv3PcBYTzfxrz6M0GNkOg7s98nM=;
-        b=EprqDYrmfym7cJ0YEoYR0CbcvJG3noO3YzCGn/zI6MF6UIJ4PtythWtgbo/iQZXjNg
-         opAJ+MMXsBVhFM7uXGmeSO9G/7+cNS2XVwZ1hsSwcSkjwrhnUb/6Ae286op4uFGghwtm
-         h6dgQ1tlEuZpELzp7wDHZ4mYkeXdyYMID+1z1mlyjAye/eiUXgQePcSbChMig9V10/9b
-         yr55KOqcJhN4mc+VP811+wdNnITI6GFfko8vM98yYw0ZZeZ5Y8lS8hnIp1glSuMIh4I2
-         SsKtAVidcMaprol8dbYBuWO4DkavoZQmvU8zUrXcbZ5Y3K4Fy05UfRiPF0TDk8hVzt7a
-         +htw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Hf/mF6iwnrVFlIuClv3PcBYTzfxrz6M0GNkOg7s98nM=;
-        b=i4GAs583DW/VKSizgO9i7/GcMykeIQxplhw9VIndapYvi02Rn1+rJrHBa6fFyhBDh6
-         aUUF97JOpxs8ilb7BMGuXHoPaSo37upgzLNE6BZZ7KHPUIJV/U9lYoJlS/4k76xlnPM6
-         9yEguUZ0xInquUDklrRt9q7Vkoy2nB+hpJW6Zx5+MAVyfjfKScwHqmhYVRt8RZBqfYxJ
-         GmVbPyspzietvqyx8YjKhyrsdvEl6U30SLJAw1sTdaABr+cIScNg9yR/HkS7ln+sCxZu
-         PReV8APMVOyKgdgOjmjHzGg7OdS7GELWhYY8mmqSQP2LhPF+BVJVCFt0CI54ItDWgJf9
-         GoPg==
-X-Gm-Message-State: AOAM530NRsAooim8klwja6Qv302gtfFzlib+pL8910pJk+nBOvbUhFLZ
-        PqS53rS1YXCwEMlR3sPHcGx8gA==
-X-Google-Smtp-Source: ABdhPJyhJBECWKPtxe6RSyS9IDwuyMuIprm5wt2YT0YLKP60qNy6LhkWVbF8SZaaDngCVbSQDN/F/g==
-X-Received: by 2002:a17:906:7d09:: with SMTP id u9mr7223201ejo.380.1610271921876;
-        Sun, 10 Jan 2021 01:45:21 -0800 (PST)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:f4fd:e8ab:2d54:e8c])
-        by smtp.gmail.com with ESMTPSA id k15sm5549675ejc.79.2021.01.10.01.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 01:45:21 -0800 (PST)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH RFC V4 4/4] block: call blk_additional_{latency,sector} only when io_extra_stats is true
-Date:   Sun, 10 Jan 2021 10:44:57 +0100
-Message-Id: <20210110094457.6624-5-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
-References: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
+        id S1726346AbhAJPA3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 10 Jan 2021 10:00:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50728 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbhAJPA3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 10 Jan 2021 10:00:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1B71EAAF1;
+        Sun, 10 Jan 2021 14:59:47 +0000 (UTC)
+Subject: Re: [PATCH 2/6] block: remove the NULL bdev check in bdev_read_only
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Oleksii Kurochko <olkuroch@cisco.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        ceph-devel@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Ming Lei <ming.lei@redhat.com>
+References: <20210109104254.1077093-1-hch@lst.de>
+ <20210109104254.1077093-3-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <9ed48321-4fa9-84a6-ac39-9b4ca56e81e6@suse.de>
+Date:   Sun, 10 Jan 2021 15:59:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+MIME-Version: 1.0
+In-Reply-To: <20210109104254.1077093-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If ADDITIONAL_DISKSTAT is enabled carelessly, then it is bad to people
-who don't want the additional overhead.
+On 1/9/21 11:42 AM, Christoph Hellwig wrote:
+> Only a single caller can end up in bdev_read_only, so move the check
+> there.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+> ---
+>   block/genhd.c | 3 ---
+>   fs/super.c    | 3 ++-
+>   2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Now add check before call blk_additional_{latency,sector}, which guarntee
-only those who really know about the attribute can account the additional
-data.
+Cheers,
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
- block/blk-core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 719595578bc8..c38287d34825 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1326,7 +1326,8 @@ static void blk_account_io_completion(struct request *req, unsigned int bytes)
- 		const int sgrp = op_stat_group(req_op(req));
- 
- 		part_stat_lock();
--		blk_additional_sector(req->part, sgrp, bytes >> SECTOR_SHIFT);
-+		if (blk_queue_io_extra_stat(req->q))
-+			blk_additional_sector(req->part, sgrp, bytes >> SECTOR_SHIFT);
- 		part_stat_add(req->part, sectors[sgrp], bytes >> 9);
- 		part_stat_unlock();
- 	}
-@@ -1345,7 +1346,8 @@ void blk_account_io_done(struct request *req, u64 now)
- 
- 		part_stat_lock();
- 		update_io_ticks(req->part, jiffies, true);
--		blk_additional_latency(req->part, sgrp, req, 0);
-+		if (blk_queue_io_extra_stat(req->q))
-+			blk_additional_latency(req->part, sgrp, req, 0);
- 		part_stat_inc(req->part, ios[sgrp]);
- 		part_stat_add(req->part, nsecs[sgrp], now - req->start_time_ns);
- 		part_stat_unlock();
-@@ -1374,7 +1376,8 @@ static unsigned long __part_start_io_acct(struct block_device *part,
- 	update_io_ticks(part, now, false);
- 	part_stat_inc(part, ios[sgrp]);
- 	part_stat_add(part, sectors[sgrp], sectors);
--	blk_additional_sector(part, sgrp, sectors);
-+	if (blk_queue_io_extra_stat(part->bd_disk->queue))
-+		blk_additional_sector(part, sgrp, sectors);
- 	part_stat_local_inc(part, in_flight[op_is_write(op)]);
- 	part_stat_unlock();
- 
-@@ -1406,7 +1409,8 @@ static void __part_end_io_acct(struct block_device *part, unsigned int op,
- 
- 	part_stat_lock();
- 	update_io_ticks(part, now, true);
--	blk_additional_latency(part, sgrp, NULL, start_time);
-+	if (blk_queue_io_extra_stat(part->bd_disk->queue))
-+		blk_additional_latency(part, sgrp, NULL, start_time);
- 	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
- 	part_stat_local_dec(part, in_flight[op_is_write(op)]);
- 	part_stat_unlock();
+Hannes
 -- 
-2.17.1
-
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
