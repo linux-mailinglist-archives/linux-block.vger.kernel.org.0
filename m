@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 200E42F0636
-	for <lists+linux-block@lfdr.de>; Sun, 10 Jan 2021 10:46:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D03C2F0637
+	for <lists+linux-block@lfdr.de>; Sun, 10 Jan 2021 10:46:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbhAJJqB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 10 Jan 2021 04:46:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37256 "EHLO
+        id S1726022AbhAJJqC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 10 Jan 2021 04:46:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbhAJJqA (ORCPT
+        with ESMTP id S1725807AbhAJJqC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 10 Jan 2021 04:46:00 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4487AC06179F
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:20 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id b9so20589276ejy.0
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:20 -0800 (PST)
+        Sun, 10 Jan 2021 04:46:02 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E784C0617A2
+        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:21 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id w1so20377855ejf.11
+        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 01:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uRUpkim9GeyZSrMIp8Mj1SXPSgk6+Y1Eu1l7OFdPFxM=;
-        b=YWwPQZ2bzvc1i/jQMu8cUfvnkrGsRiHw5J9apBbRrteiceU1G+IUaqUiZ28fCAWaNI
-         qaS0jIlSCN9eUan3JwqsOq1AgNHoaqB7y7GNDbRnHghfS7JgH2dTywCUW7uyRxuHuv0s
-         qwalIDmoK0ytSj0DISJ2jv78gdy39Dt1K5+DZpNNo1WsP0le7oUHsj0Jk2nXWh7Qibh5
-         nv5FLPgVeY/UyPRIjBR5OnD8sHfh79urUodF5+k7QHF93jkiaeOnZdOVVYWj9LeKwcU7
-         YvC7cAfjhN47ycfKbd5FA1NpMSj/Ic7Pv45RexuUkHfxL6x1itfcUa88rxumd0mrxT4c
-         U9Rg==
+        bh=ynHjJZnXcTj+bY9/RDRCYwdL51Yr1C6TsS7Tr2/rNzo=;
+        b=gEWGV1KdKtgbnv3xFFJYzbawrAPzveV89G/ctL1RPtKHY8Ismh8x1u3nZvQVmg05qs
+         AoWT8VWXFPLxN09+q8vs89ofYldfjGDA3h+mZqAGprEtUXZDK0cUMzVk8JxMfxRTd6db
+         7gl1JJNN8P3o/70L3BUUcpQAto8cBsDXlQ8l/FIqXTfxaPP6lAndjkZ+zBbHXfbKm8VM
+         rNdP6VuEphz4eQ3rCorKcRke5XZ4TX2LXVZX68qUBDtf6bbNiIQsehJUKwDJt72tgem8
+         rKLnnpkDZ9Sc4KQVRPdFxXKaPZaVCwdAklhd3zRShVyvs5HonOD9wI/Znh/jqTgN9xWy
+         L5ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uRUpkim9GeyZSrMIp8Mj1SXPSgk6+Y1Eu1l7OFdPFxM=;
-        b=iU/TJRIWeER2Tm8glhyiYeDJAa6r7AMQRe/41Apiq4emI0KfstaD70zq1koeULUy3q
-         BISwP7JqwmXUO1KMXADAD20GplBINVXyXhCVDW4qV3Mpfw9Uh5XF3UxO1mJOViGSdgIP
-         L7TIguZPYBE8rGY3gPScucWzArhqjuYwEfGxm5paqYsY5YG+bop8o+v1gV8MSc/ggB2d
-         btAEkhnhvpBGETxHwaiR2f6R4Cf9/Lb5/im9h3hXLijTEdzZB9JW3NKHqySM4XTutSls
-         rRNZFCQJcqYH9yuyR9lrXN/3vzypsJuK6aPY4OnNUaKawQ1D+gXCtcLqJDVW2S9Axh5O
-         cqlQ==
-X-Gm-Message-State: AOAM532nrCabVYErXDoaa9PT0kdQIv1e08wD1ckvTZPhFIedh2vN0pyV
-        +t5GmPh00u+IMcw7/0X/zycmoP8foO1TjUZE
-X-Google-Smtp-Source: ABdhPJwkrZLIWdrO8+rFOHXaBZm9QIKujJJwm27e9nvMEGevvC1A6aERfsE+9XqGExdm1ll+RgSX/w==
-X-Received: by 2002:a17:906:98d4:: with SMTP id zd20mr7584814ejb.532.1610271918950;
-        Sun, 10 Jan 2021 01:45:18 -0800 (PST)
+        bh=ynHjJZnXcTj+bY9/RDRCYwdL51Yr1C6TsS7Tr2/rNzo=;
+        b=GVP6y1q+LFc3M0MMgK0X0IYD2nc9qWExhkuFUpbAYD9aqFUA4Vg0H1YpTT4FmXxOvI
+         CBD59lL2DyJ5Pl9xkAvMIykgnJyf7HK+SPd8SXJ4LU+WNymYnjvhVTVrqaZV9bQzWpK/
+         UqbK0zL067U1JTV8/89UTuiPRfel2ZZSxDmRgeoEnVLZbjUrskFi8gVlYQTabilhrNPo
+         SAdIoY89NdVD4MR5DxaCHU0NVthummBcVGRqVExisNa6xqugerjkuoaEqXXHQPJRpcQE
+         K5Soy/4Fd+CvsWVsmTCxkQ6I+2lTpkpybUoAtTyO4aPC/kX3h/oXezg7NWRzVuHE+9VB
+         bHRw==
+X-Gm-Message-State: AOAM531dAMwWtoyifuoE8RTEXOxZSHk7xYCRzlFnqoKeYpx1uYAVtVa+
+        LQRBklC6jD9uIWmBJuT8D2Mjng==
+X-Google-Smtp-Source: ABdhPJw4AYtLjene+x5O2Q74CmALI1SH8ALR4l+RRX6tVIlS1LQAfWiFSiSyllUqZillAsXryZ5iAQ==
+X-Received: by 2002:a17:906:d8dc:: with SMTP id re28mr7667264ejb.168.1610271919889;
+        Sun, 10 Jan 2021 01:45:19 -0800 (PST)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:f4fd:e8ab:2d54:e8c])
-        by smtp.gmail.com with ESMTPSA id k15sm5549675ejc.79.2021.01.10.01.45.18
+        by smtp.gmail.com with ESMTPSA id k15sm5549675ejc.79.2021.01.10.01.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 01:45:18 -0800 (PST)
+        Sun, 10 Jan 2021 01:45:19 -0800 (PST)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, danil.kipnis@cloud.ionos.com,
         jinpu.wang@cloud.ionos.com,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH RFC V4 1/4] block: add a statistic table for io latency
-Date:   Sun, 10 Jan 2021 10:44:54 +0100
-Message-Id: <20210110094457.6624-2-guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH RFC V4 2/4] block: add a statistic table for io sector
+Date:   Sun, 10 Jan 2021 10:44:55 +0100
+Message-Id: <20210110094457.6624-3-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
 References: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
@@ -62,129 +62,108 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Usually, we get the status of block device by cat stat file, but we can
-only know the total time with that file. And we would like to know more
-accurate statistic, such as each latency range, which helps people to
-diagnose if there is issue about the hardware.
-
-Also a new config option is introduced to control if people want to know
-the additional statistics or not, and we use the option for io sector in
-next patch.
+With the sector table, so we can know the distribution of different IO
+size from upper layer, which means we could have the opportunity to tune
+the performance based on the mostly issued IOs.
 
 This change is based on our internal patch from Florian-Ewald Mueller
 (florian-ewald.mueller@cloud.ionos.com).
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- Documentation/ABI/testing/sysfs-block |  8 ++++++
- block/Kconfig                         |  8 ++++++
- block/blk-core.c                      | 29 +++++++++++++++++++
- block/genhd.c                         | 41 +++++++++++++++++++++++++++
- include/linux/part_stat.h             |  7 +++++
- 5 files changed, 93 insertions(+)
+ Documentation/ABI/testing/sysfs-block |  9 +++++++
+ block/Kconfig                         |  3 ++-
+ block/blk-core.c                      | 18 +++++++++++++
+ block/genhd.c                         | 37 +++++++++++++++++++++++++++
+ include/linux/part_stat.h             |  3 ++-
+ 5 files changed, 68 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
-index e34cdeeeb9d4..4371a0f2cb5e 100644
+index 4371a0f2cb5e..0ffb63469772 100644
 --- a/Documentation/ABI/testing/sysfs-block
 +++ b/Documentation/ABI/testing/sysfs-block
-@@ -27,6 +27,14 @@ Description:
+@@ -36,6 +36,15 @@ Description:
+ 		the statistics of I/O latency for each type (read, write,
+ 		discard and flush) which have happened to the disk.
  
- 		For more details refer Documentation/admin-guide/iostats.rst
- 
-+What:		/sys/block/<disk>/io_latency
++What:		/sys/block/<disk>/io_size
 +Date:		January 2021
 +Contact:	Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 +Description:
-+		The /sys/block/<disk>/io_latency files displays the I/O
-+		latency of disk <disk>. With it, it is convenient to know
-+		the statistics of I/O latency for each type (read, write,
++		The /sys/block/<disk>/io_size files displays the I/O
++		size of disk <disk>. With it, it is convenient to know
++		the statistics of I/O size for each type (read, write,
 +		discard and flush) which have happened to the disk.
- 
++
  What:		/sys/block/<disk>/<part>/stat
  Date:		February 2008
+ Contact:	Jerome Marchand <jmarchan@redhat.com>
 diff --git a/block/Kconfig b/block/Kconfig
-index a2297edfdde8..ca3854a7e3db 100644
+index ca3854a7e3db..ad04ec253b09 100644
 --- a/block/Kconfig
 +++ b/block/Kconfig
-@@ -174,6 +174,14 @@ config BLK_DEBUG_FS
- 	Unless you are building a kernel for a tiny system, you should
- 	say Y here.
+@@ -178,7 +178,8 @@ config BLK_ADDITIONAL_DISKSTAT
+ 	bool "Block layer additional diskstat"
+ 	default n
+ 	help
+-	Enabling this option adds io latency statistics for each block device.
++	Enabling this option adds io latency and io size statistics for each
++	block device.
  
-+config BLK_ADDITIONAL_DISKSTAT
-+	bool "Block layer additional diskstat"
-+	default n
-+	help
-+	Enabling this option adds io latency statistics for each block device.
-+
-+	If unsure, say N.
-+
- config BLK_DEBUG_FS_ZONED
-        bool
-        default BLK_DEBUG_FS && BLK_DEV_ZONED
+ 	If unsure, say N.
+ 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 96e5fcd7f071..18cf881d8194 100644
+index 18cf881d8194..719595578bc8 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -1277,6 +1277,33 @@ static void update_io_ticks(struct block_device *part, unsigned long now,
- 	}
+@@ -1304,12 +1304,29 @@ static void blk_additional_latency(struct block_device *part, const int sgrp,
+ #endif
  }
  
-+/*
-+ * Either account additional stat for request if req is not NULL or account for bio.
-+ */
-+static void blk_additional_latency(struct block_device *part, const int sgrp,
-+				   struct request *req, unsigned long start_jiffies)
++static void blk_additional_sector(struct block_device *part, const int sgrp,
++				  unsigned int sectors)
 +{
 +#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
 +	unsigned int idx;
-+	unsigned long duration, now = READ_ONCE(jiffies);
 +
-+	if (req)
-+		duration = jiffies_to_nsecs(now) - req->start_time_ns;
-+	else
-+		duration = jiffies_to_nsecs(now - start_jiffies);
-+
-+	duration /= NSEC_PER_MSEC;
-+	duration /= HZ_TO_MSEC_NUM;
-+	if (likely(duration > 0)) {
-+		idx = ilog2(duration);
-+		if (idx > ADD_STAT_NUM - 1)
-+			idx = ADD_STAT_NUM - 1;
-+	} else
++	if (sectors == 1)
 +		idx = 0;
-+	part_stat_inc(part, latency_table[idx][sgrp]);
++	else
++		idx = ilog2(sectors);
++
++	idx = (idx > (ADD_STAT_NUM - 1)) ? (ADD_STAT_NUM - 1) : idx;
++	part_stat_inc(part, size_table[idx][sgrp]);
 +#endif
 +}
 +
  static void blk_account_io_completion(struct request *req, unsigned int bytes)
  {
  	if (req->part && blk_do_io_stat(req)) {
-@@ -1301,6 +1328,7 @@ void blk_account_io_done(struct request *req, u64 now)
+ 		const int sgrp = op_stat_group(req_op(req));
  
  		part_stat_lock();
- 		update_io_ticks(req->part, jiffies, true);
-+		blk_additional_latency(req->part, sgrp, req, 0);
- 		part_stat_inc(req->part, ios[sgrp]);
- 		part_stat_add(req->part, nsecs[sgrp], now - req->start_time_ns);
++		blk_additional_sector(req->part, sgrp, bytes >> SECTOR_SHIFT);
+ 		part_stat_add(req->part, sectors[sgrp], bytes >> 9);
  		part_stat_unlock();
-@@ -1360,6 +1388,7 @@ static void __part_end_io_acct(struct block_device *part, unsigned int op,
- 
- 	part_stat_lock();
- 	update_io_ticks(part, now, true);
-+	blk_additional_latency(part, sgrp, NULL, start_time);
- 	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
- 	part_stat_local_dec(part, in_flight[op_is_write(op)]);
+ 	}
+@@ -1357,6 +1374,7 @@ static unsigned long __part_start_io_acct(struct block_device *part,
+ 	update_io_ticks(part, now, false);
+ 	part_stat_inc(part, ios[sgrp]);
+ 	part_stat_add(part, sectors[sgrp], sectors);
++	blk_additional_sector(part, sgrp, sectors);
+ 	part_stat_local_inc(part, in_flight[op_is_write(op)]);
  	part_stat_unlock();
+ 
 diff --git a/block/genhd.c b/block/genhd.c
-index 419548e92d82..643b679883e1 100644
+index 643b679883e1..059c82088cc4 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
-@@ -1276,6 +1276,44 @@ static struct device_attribute dev_attr_fail_timeout =
- 	__ATTR(io-timeout-fail, 0644, part_timeout_show, part_timeout_store);
- #endif
+@@ -1312,6 +1312,42 @@ static ssize_t io_latency_show(struct device *dev, struct device_attribute *attr
  
-+#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
-+static ssize_t io_latency_show(struct device *dev, struct device_attribute *attr, char *buf)
+ static struct device_attribute dev_attr_io_latency =
+ 	__ATTR(io_latency, 0444, io_latency_show, NULL);
++
++static ssize_t io_size_show(struct device *dev, struct device_attribute *attr, char *buf)
 +{
 +	struct block_device *bdev = dev_to_bdev(dev);
 +	size_t count = 0;
@@ -194,8 +173,9 @@ index 419548e92d82..643b679883e1 100644
 +		unsigned int from, to;
 +
 +		if (i == ADD_STAT_NUM - 1) {
-+			count += scnprintf(buf + count, PAGE_SIZE - count, "      >= %5d  ms: ",
-+					   (2 << (i - 2)) * HZ_TO_MSEC_NUM);
++			from = 2 << (i - 2);
++			count += scnprintf(buf + count, PAGE_SIZE - count,
++					   "      >=%5d   KB: ", from);
 +		} else {
 +			if (i < 2) {
 +				from = i;
@@ -204,54 +184,48 @@ index 419548e92d82..643b679883e1 100644
 +				from = 2 << (i - 2);
 +				to = 2 << (i - 1);
 +			}
-+			count += scnprintf(buf + count, PAGE_SIZE - count, "[%5d - %-5d) ms: ",
-+					   from * HZ_TO_MSEC_NUM, to * HZ_TO_MSEC_NUM);
++			count += scnprintf(buf + count, PAGE_SIZE - count,
++					   "[%5d - %-5d) KB: ", from, to);
 +		}
-+
 +		for (sgrp = 0; sgrp < NR_STAT_GROUPS; sgrp++)
 +			count += scnprintf(buf + count, PAGE_SIZE - count, "%lu ",
-+					   part_stat_read(bdev, latency_table[i][sgrp]));
++					   part_stat_read(bdev, size_table[i][sgrp]));
 +		count += scnprintf(buf + count, PAGE_SIZE - count, "\n");
 +	}
 +
 +	return count;
 +}
 +
-+static struct device_attribute dev_attr_io_latency =
-+	__ATTR(io_latency, 0444, io_latency_show, NULL);
-+#endif
-+
- static struct attribute *disk_attrs[] = {
- 	&dev_attr_range.attr,
- 	&dev_attr_ext_range.attr,
-@@ -1294,6 +1332,9 @@ static struct attribute *disk_attrs[] = {
++static struct device_attribute dev_attr_io_size =
++	__ATTR(io_size, 0444, io_size_show, NULL);
  #endif
- #ifdef CONFIG_FAIL_IO_TIMEOUT
- 	&dev_attr_fail_timeout.attr,
-+#endif
-+#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
-+	&dev_attr_io_latency.attr,
+ 
+ static struct attribute *disk_attrs[] = {
+@@ -1335,6 +1371,7 @@ static struct attribute *disk_attrs[] = {
+ #endif
+ #ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
+ 	&dev_attr_io_latency.attr,
++	&dev_attr_io_size.attr,
  #endif
  	NULL
  };
 diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index d2558121d48c..763953238227 100644
+index 763953238227..8a6440ec9134 100644
 --- a/include/linux/part_stat.h
 +++ b/include/linux/part_stat.h
-@@ -9,6 +9,13 @@ struct disk_stats {
- 	unsigned long sectors[NR_STAT_GROUPS];
- 	unsigned long ios[NR_STAT_GROUPS];
+@@ -11,10 +11,11 @@ struct disk_stats {
  	unsigned long merges[NR_STAT_GROUPS];
-+#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
-+	/*
-+	 * We measure latency (ms) for 1, 2, ..., 1024 and >=1024.
-+	 */
-+#define ADD_STAT_NUM	12
-+	unsigned long latency_table[ADD_STAT_NUM][NR_STAT_GROUPS];
-+#endif
+ #ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
+ 	/*
+-	 * We measure latency (ms) for 1, 2, ..., 1024 and >=1024.
++	 * We measure latency (ms) and size (KB) for 1, 2, ..., 1024 and >=1024.
+ 	 */
+ #define ADD_STAT_NUM	12
+ 	unsigned long latency_table[ADD_STAT_NUM][NR_STAT_GROUPS];
++	unsigned long size_table[ADD_STAT_NUM][NR_STAT_GROUPS];
+ #endif
  	unsigned long io_ticks;
  	local_t in_flight[2];
- };
 -- 
 2.17.1
 
