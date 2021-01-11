@@ -2,31 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A8F2F0D09
-	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 07:58:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 171FA2F0D0F
+	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 08:00:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbhAKG5v (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Jan 2021 01:57:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34508 "EHLO mx2.suse.de"
+        id S1727552AbhAKG61 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Jan 2021 01:58:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34582 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbhAKG5v (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Jan 2021 01:57:51 -0500
+        id S1727543AbhAKG60 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 11 Jan 2021 01:58:26 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7EE35AB3E;
-        Mon, 11 Jan 2021 06:57:10 +0000 (UTC)
-Subject: Re: [PATCH V3 1/6] block: manage bio slab cache by xarray
+        by mx2.suse.de (Postfix) with ESMTP id B5295ADC4;
+        Mon, 11 Jan 2021 06:57:45 +0000 (UTC)
+Subject: Re: [PATCH V3 2/6] block: don't pass BIOSET_NEED_BVECS for
+ q->bio_split
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
 References: <20210111030557.4154161-1-ming.lei@redhat.com>
- <20210111030557.4154161-2-ming.lei@redhat.com>
+ <20210111030557.4154161-3-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <27b9d901-51d4-2974-bb9d-3d0c4b2d8230@suse.de>
-Date:   Mon, 11 Jan 2021 07:57:09 +0100
+Message-ID: <968dfd4b-17fc-a78f-ec97-2bd5d06562a3@suse.de>
+Date:   Mon, 11 Jan 2021 07:57:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20210111030557.4154161-2-ming.lei@redhat.com>
+In-Reply-To: <20210111030557.4154161-3-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -35,77 +36,29 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 1/11/21 4:05 AM, Ming Lei wrote:
-> Managing bio slab cache via xarray by using slab cache size as xarray
-> index, and storing 'struct bio_slab' instance into xarray.
-> 
-> So code is simplified a lot, meantime it becomes more readable than before.
+> q->bio_split is only used by bio_split() for fast cloning bio, and no
+> need to allocate bvecs, so remove this flag.
 > 
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->   block/bio.c | 116 ++++++++++++++++++++++------------------------------
->   1 file changed, 49 insertions(+), 67 deletions(-)
+>   block/blk-core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/block/bio.c b/block/bio.c
-> index 1f2cc1fbe283..cfa0e9db30e0 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -19,6 +19,7 @@
->   #include <linux/highmem.h>
->   #include <linux/sched/sysctl.h>
->   #include <linux/blk-crypto.h>
-> +#include <linux/xarray.h>
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 7663a9b94b80..00d415be74e6 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -531,7 +531,7 @@ struct request_queue *blk_alloc_queue(int node_id)
+>   	if (q->id < 0)
+>   		goto fail_q;
 >   
->   #include <trace/events/block.h>
->   #include "blk.h"
-> @@ -58,89 +59,80 @@ struct bio_slab {
->   	char name[8];
->   };
->   static DEFINE_MUTEX(bio_slab_lock);
-> -static struct bio_slab *bio_slabs;
-> -static unsigned int bio_slab_nr, bio_slab_max;
-> +static DEFINE_XARRAY(bio_slabs);
+> -	ret = bioset_init(&q->bio_split, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
+> +	ret = bioset_init(&q->bio_split, BIO_POOL_SIZE, 0, 0);
+>   	if (ret)
+>   		goto fail_id;
 >   
-> -static struct kmem_cache *bio_find_or_create_slab(unsigned int extra_size)
-> +static struct bio_slab *create_bio_slab(unsigned int size)
->   {
-> -	unsigned int sz = sizeof(struct bio) + extra_size;
-> -	struct kmem_cache *slab = NULL;
-> -	struct bio_slab *bslab, *new_bio_slabs;
-> -	unsigned int new_bio_slab_max;
-> -	unsigned int i, entry = -1;
-> +	struct bio_slab *bslab = kzalloc(sizeof(*bslab), GFP_KERNEL);
->   
-> -	mutex_lock(&bio_slab_lock);
-> +	if (!bslab)
-> +		return NULL;
->   
-> -	i = 0;
-> -	while (i < bio_slab_nr) {
-> -		bslab = &bio_slabs[i];
-> +	snprintf(bslab->name, sizeof(bslab->name), "bio-%d", size);
-> +	bslab->slab = kmem_cache_create(bslab->name, size,
-> +			ARCH_KMALLOC_MINALIGN, SLAB_HWCACHE_ALIGN, NULL);
-> +	if (!bslab->slab)
-> +		goto fail_alloc_slab;
->   
-> -		if (!bslab->slab && entry == -1)
-> -			entry = i;
-> -		else if (bslab->slab_size == sz) {
-> -			slab = bslab->slab;
-> -			bslab->slab_ref++;
-> -			break;
-> -		}
-> -		i++;
-> -	}
-> +	bslab->slab_ref = 1;
-> +	bslab->slab_size = size;
->   
-
-Why don't you use a kref here?
-
-Otherwise:
-
+> 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
