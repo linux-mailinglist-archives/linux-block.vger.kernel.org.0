@@ -2,58 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D0DB2F0BDE
-	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 05:44:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E432F0BE0
+	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 05:45:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbhAKEnU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 10 Jan 2021 23:43:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53168 "EHLO
+        id S1727158AbhAKEp0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 10 Jan 2021 23:45:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbhAKEnT (ORCPT
+        with ESMTP id S1726176AbhAKEpZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 10 Jan 2021 23:43:19 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A258C061794
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 20:42:39 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id y23so13773426wmi.1
-        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 20:42:39 -0800 (PST)
+        Sun, 10 Jan 2021 23:45:25 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557AFC061786
+        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 20:44:45 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id t16so14995531wra.3
+        for <linux-block@vger.kernel.org>; Sun, 10 Jan 2021 20:44:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jvUs4D1It5HUJiN9desNsRbL2weIz3yRevXzkPRQirc=;
-        b=PgUojlmeQk0eD3MUEvzllxpNDpOl1dop6U85329fY/rRDN1CgsG29hXqgC9tMYI8+B
-         6FiHzJvFKUBKLWa/QJdewbdLa2O3A4eDiI0/01dD84DqE6pJIytG3WOsZDQAHcKR+gRh
-         +WVwtJ6spKBaBEs05DYdEoGP7C6Pr7SdQNXY/T3vzRWsVPFX9vrM6SdEJFQXU9CSB8kT
-         /IVgpwpc09clIXdnBzUL1Io3DDKzH/ADDW2zNKTXsFXha+RSg8A7wQhf+/uo6Lr1kTM/
-         tp/AWqWwqwWaIgT2baexEfUVcxi5YuGZTW6eHTMYslfLuvL1Uz/HOy2iUxr96MZiT0bD
-         bdvg==
+        bh=oRZCwGRE2bMs28Kxq4vB2fy60cZKdCQGCcGin5wVC+E=;
+        b=CtHDO7KIuGEUh3RRUL1YsQ8kltopEba5oEWxz02YdCdY2wNNI3HcvWmJES/283dLq9
+         LOnOlSlBnFEYiDGw/CjAaKHIlSPxfHVcWUFAsiJMFo2qJm7TSJNqlzfbqS7lR5LH8abb
+         tOsEVpxbp1nYgLdDEuLeX8wrEimQjliZtGf85EeqwBER7gpNnmTahmsQk5a8rgxB3fa4
+         iDl5dIzS1szF7Ivg8MT4ofZQ7JVq4Rbe4GZBlax6XusKYN2+IyOWKaPja99gT1cHgxBR
+         NPLd1DZVCx9byp9kL4t6VoQwmReRwssaeK2BXVruvFkIBnbmUDIiZyZke73NdULyG63+
+         y92w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=jvUs4D1It5HUJiN9desNsRbL2weIz3yRevXzkPRQirc=;
-        b=KsxXnDoRf00M1e5ErkE2X+04kpnetEAgEXgMHXkTU8C2BRsbbmHf8/oaj3QJ5bQWVK
-         i2kxXC3xZ28R9tjMQKVqQinlIrquw3V/O3OCNxmnYUD6QXHVWf7V4DqF76Yw7yW1S/Rv
-         aOAiOEEwqsUyC1XHXwoe99w8AFtX2fAN7l2bIKmLkv1WvGiQ5wxadoD5hLCPrdmtb7vj
-         2pEcbynRrg5Kx/hR7igBcM2CWxGrx0rVLyQ4GC5owURLLlyImK+oQZRMDUtcZLxPL72U
-         BBfzof/qCM8oLpdd62xlQfMH82MpyMpuiuZwZBC3ZaRKh0uNEENIK6y7KMQP6o1qwUzD
-         kJUg==
-X-Gm-Message-State: AOAM530GHeUKgYGyZxYupc00c7EgBA6JpOnac30VjLCsXZsccAYjCExh
-        KbsxFc7Lh06FLE1981zgISmggij4XLE=
-X-Google-Smtp-Source: ABdhPJzl3u7AXsCYd22iRnSmn+fIavCF0ZT55I+llDrCZDYvEC/MPwpo/O8vqj8f/kvNtSjVQYWwGw==
-X-Received: by 2002:a1c:6208:: with SMTP id w8mr12949497wmb.96.1610340157948;
-        Sun, 10 Jan 2021 20:42:37 -0800 (PST)
+        bh=oRZCwGRE2bMs28Kxq4vB2fy60cZKdCQGCcGin5wVC+E=;
+        b=c63avVZrJ/WiDyzTzL8cF5/1GNVWKULC5IvUap67t+/g3aiI8a0LECrlDaZM6yyl72
+         ULEL2CEwlqvi2Tq1hGy1Zlt4wrpYtvIvJXDbaCPdgcf3pMvK9gMXOOQqBDuRAQUdylE6
+         aaOQxkHh5buJJpzNCLvMcFyGvST0WUxAM7uOb1KXrn7jUBL1iV3rofly5p+PoPUQ2D42
+         desWRN+utxkSBkYFKaqWyGO2vzqsCmgSTu/U9ZXHh6omoX00eFpKCEhF53lbwhH3B877
+         kj6hEVmczBjfZbRlQScGv/4nxQ4rDAr3dPtpzRjzm6+I5vsOQU02Y8McjCvFNDbXj6Hu
+         aCSA==
+X-Gm-Message-State: AOAM530cMD9E0Vn5kA4jj7MljBGHdjj5x4Kan7ZTU1tUjbUHcyKcsyak
+        3kbRvx2mMgz37OaiHYDMXf4=
+X-Google-Smtp-Source: ABdhPJxSvrPI0CW/DNn/Zxwd7RtejfA8fISB1qG5xRuEn5HrUgmmtToXFk5Y5YEExbiPBsZIf7+E2Q==
+X-Received: by 2002:a5d:6944:: with SMTP id r4mr14207664wrw.134.1610340284200;
+        Sun, 10 Jan 2021 20:44:44 -0800 (PST)
 Received: from [192.168.8.119] ([85.255.237.6])
-        by smtp.gmail.com with ESMTPSA id y11sm20046936wmi.0.2021.01.10.20.42.37
+        by smtp.gmail.com with ESMTPSA id g5sm23049714wro.60.2021.01.10.20.44.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Jan 2021 20:42:37 -0800 (PST)
-Subject: Re: [PATCH V3 1/6] block: manage bio slab cache by xarray
+        Sun, 10 Jan 2021 20:44:43 -0800 (PST)
+Subject: Re: [PATCH V3 2/6] block: don't pass BIOSET_NEED_BVECS for
+ q->bio_split
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
 References: <20210111030557.4154161-1-ming.lei@redhat.com>
- <20210111030557.4154161-2-ming.lei@redhat.com>
+ <20210111030557.4154161-3-ming.lei@redhat.com>
 From:   Pavel Begunkov <asml.silence@gmail.com>
 Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
@@ -98,12 +99,12 @@ Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
  UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
  m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
  OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Message-ID: <531f35df-97df-3a3d-b4c6-820b4f66fa37@gmail.com>
-Date:   Mon, 11 Jan 2021 04:39:04 +0000
+Message-ID: <4d3593be-8bc8-07bc-632d-94a643f7815d@gmail.com>
+Date:   Mon, 11 Jan 2021 04:41:10 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20210111030557.4154161-2-ming.lei@redhat.com>
+In-Reply-To: <20210111030557.4154161-3-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -112,16 +113,33 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 11/01/2021 03:05, Ming Lei wrote:
-> Managing bio slab cache via xarray by using slab cache size as xarray
-> index, and storing 'struct bio_slab' instance into xarray.
-> 
-> So code is simplified a lot, meantime it becomes more readable than before.
+> q->bio_split is only used by bio_split() for fast cloning bio, and no
+> need to allocate bvecs, so remove this flag.
 > 
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 
 Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
 Tested-by: Pavel Begunkov <asml.silence@gmail.com>
+
+> ---
+>  block/blk-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 7663a9b94b80..00d415be74e6 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -531,7 +531,7 @@ struct request_queue *blk_alloc_queue(int node_id)
+>  	if (q->id < 0)
+>  		goto fail_q;
+>  
+> -	ret = bioset_init(&q->bio_split, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
+> +	ret = bioset_init(&q->bio_split, BIO_POOL_SIZE, 0, 0);
+>  	if (ret)
+>  		goto fail_id;
+>  
+> 
 
 -- 
 Pavel Begunkov
