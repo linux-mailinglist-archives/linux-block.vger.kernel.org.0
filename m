@@ -2,30 +2,33 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC2CA2F0D1F
-	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 08:14:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E16CB2F0D34
+	for <lists+linux-block@lfdr.de>; Mon, 11 Jan 2021 08:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbhAKHMH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Jan 2021 02:12:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43752 "EHLO mx2.suse.de"
+        id S1727599AbhAKHaB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Jan 2021 02:30:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49464 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbhAKHMH (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Jan 2021 02:12:07 -0500
+        id S1725917AbhAKHaA (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 11 Jan 2021 02:30:00 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 00E1CAFB4;
-        Mon, 11 Jan 2021 07:11:25 +0000 (UTC)
-Subject: Re: [PATCH] blk-mq-debugfs: Add decode for BLK_MQ_F_TAG_HCTX_SHARED
-To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1610096137-187414-1-git-send-email-john.garry@huawei.com>
+        by mx2.suse.de (Postfix) with ESMTP id 015F6AB3E;
+        Mon, 11 Jan 2021 07:29:19 +0000 (UTC)
+Subject: Re: [PATCH v7 01/16] cgroup: Added cgroup_get_from_id
+To:     Muneendra <muneendra.kumar@broadcom.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        tj@kernel.org, linux-nvme@lists.infradead.org
+Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com
+References: <1609970430-19084-1-git-send-email-muneendra.kumar@broadcom.com>
+ <1609970430-19084-2-git-send-email-muneendra.kumar@broadcom.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <574c9ec8-d262-b47d-9fc8-f09ede4516fc@suse.de>
-Date:   Mon, 11 Jan 2021 08:11:24 +0100
+Message-ID: <0a1453c2-9f8a-0818-1678-78e1775a773b@suse.de>
+Date:   Mon, 11 Jan 2021 08:29:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <1610096137-187414-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1609970430-19084-2-git-send-email-muneendra.kumar@broadcom.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -33,30 +36,41 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/8/21 9:55 AM, John Garry wrote:
-> Showing the hctx flags for when BLK_MQ_F_TAG_HCTX_SHARED is set gives
-> something like:
+On 1/6/21 11:00 PM, Muneendra wrote:
+> Added a new function cgroup_get_from_id  to retrieve the cgroup
+> associated with cgroup id.
+> Exported the same as this can be used by blk-cgorup.c
 > 
-> root@debian:/home/john# more /sys/kernel/debug/block/sda/hctx0/flags
-> alloc_policy=FIFO SHOULD_MERGE|TAG_QUEUE_SHARED|3
+> Added function declaration of cgroup_get_from_id in cgorup.h
 > 
-> Add the decoding for that flag.
+> This patch also exported the function cgroup_get_e_css
+> as this is getting used in blk-cgroup.h
 > 
-> Fixes: 32bc15afed04b ("blk-mq: Facilitate a shared sbitmap per tagset")
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
 > 
-> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-> index 3094542e12ae..ea4ab98e6b25 100644
-> --- a/block/blk-mq-debugfs.c
-> +++ b/block/blk-mq-debugfs.c
-> @@ -245,6 +245,7 @@ static const char *const hctx_flag_name[] = {
->   	HCTX_FLAG_NAME(BLOCKING),
->   	HCTX_FLAG_NAME(NO_SCHED),
->   	HCTX_FLAG_NAME(STACKING),
-> +	HCTX_FLAG_NAME(TAG_HCTX_SHARED),
->   };
->   #undef HCTX_FLAG_NAME
->   
+> ---
+> v7:
+> No change
+> 
+> v6:
+> No change
+> 
+> v5:
+> renamed the function cgroup_get_from_kernfs_id to
+> cgroup_get_from_id
+> 
+> v4:
+> No change
+> 
+> v3:
+> Exported the cgroup_get_e_css
+> 
+> v2:
+> New patch
+> ---
+>   include/linux/cgroup.h |  6 ++++++
+>   kernel/cgroup/cgroup.c | 26 ++++++++++++++++++++++++++
+>   2 files changed, 32 insertions(+)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
