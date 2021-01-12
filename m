@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B772F270D
-	for <lists+linux-block@lfdr.de>; Tue, 12 Jan 2021 05:28:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B4992F2717
+	for <lists+linux-block@lfdr.de>; Tue, 12 Jan 2021 05:30:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbhALE2f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Jan 2021 23:28:35 -0500
+        id S1730715AbhALE3Q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Jan 2021 23:29:16 -0500
 Received: from esa6.hgst.iphmx.com ([216.71.154.45]:60620 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730406AbhALE2f (ORCPT
+        with ESMTP id S1730695AbhALE3Q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Jan 2021 23:28:35 -0500
+        Mon, 11 Jan 2021 23:29:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1610425715; x=1641961715;
+  t=1610425755; x=1641961755;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=b7JlLdLhTEJHSJkJ2Ot7J3cXNRNUJqtnFvAN4lx8PoE=;
-  b=dE3uWV6TSdd+FCFGvPPTuNkW3Z/IfxTgnXuFxXAflsKzAvpLr5WV3J1g
-   /GNEBCvf5vIh17dQoV1Iqbrev51nrKaeKJf/IJa/nVMTpeCp/1Cp/Q/iV
-   nN1eFZ4NLgxECigg3GmXT1GnsO2B9KeUlp6uJmcJdoBUc3iYGzrEau9SK
-   pm6EIQf893zeqFWWes5wV8Q+1ELZQvCLFE/Qz0osxwiB0TSTwovvycNap
-   OHx21MOnGh+JyON5InRtCUbCo0ecfzG2BoNJQmxf0rktoN64BeQpR5K/3
-   VeBXoQsEDK9z/8yJVyVPsQCqCbAq7JlXVOe99GEXgfSdDg79wLCxLz/qn
-   Q==;
-IronPort-SDR: VOIw82T3DeXshPYcAmQGoE7TOSLrJKmxJWPEeEnmIV8gCN3h2MbwALdAABsv5QrWsQ8GT7nf9A
- lLVL37k1nSYy9VITc7hssC7DTp/2sZy4AwruTA4yeTmxMQtaMV9UaUJ4CNFluoxMigQa4PyoYu
- s61dRh5z9uQdlD/XEyhKnc+1ejuX3rWrjMXFIiS+1kiKr+0WmrqfyqQx5syt2HQafvMdXUj/rK
- S3cd+9p0fqK6kvQI/W2pTJv8VLowOCI+LG28QuQZwNV0xzTp336iORIhRHlIO0lOiT91+IMLN/
- 05g=
+  bh=R91N4OJCuometnQDJ1w4j46SwlbKLZn5XO72xfDzsGA=;
+  b=RefBlu6yjzIJtQNzpKSpiP+s6vDZseSfEyiVY50OdhSFmHd1YQVvbpnR
+   hegJYJhEdoMWpw3fvGxi07dbwqh+gVoMvnrrCzPEghyXszw6bEkLiwwCU
+   4ccFCH7i6oH9dpDk8MeaKAKUE2OTCbZDdCrAVF361f2gVMivCdfhER/dr
+   iJvX3P36GNqprygacHcdrLHZVyu1H1gx55tqFb34H1fKFGyTqTQA1s1Jr
+   vRXhNBsNExi+l3vOmM8847zr31NJZAIzIvvfYRSkEWsw+p9pKGdLn3uEi
+   X6nV7Ms1q92n1/RhLK89KJkpe0J3ui7dDitNooS13oZb7upITPy+uoBux
+   g==;
+IronPort-SDR: o6nLi8viqlLvWOWA5y9+W3dGK+ug3OpNTqPjEzWa/PIbpxL0NQiSsuE2Ah0oPa8kIFRLV80G+I
+ bf8s0wsAm3lpx4Re6HHVwiN4ojQOXguLRby+4JGMTb8+p+a2NTpLJlFG0ccIlKD48dNKaEhRcb
+ lDrLECC4Dao/H5LakRPC4DA5VKXcn2BZEimd+GeTLv8sHUowjUveZMyycMIE/MSv4s4zzVd6o7
+ LxN0pJmNruhm8QZJQrCDrkBZOwZEt/HDsJsh+tnbsvX4jYVaDSdYvPQFsLPLeJUBC7rAdLY6nh
+ HLU=
 X-IronPort-AV: E=Sophos;i="5.79,340,1602518400"; 
-   d="scan'208";a="158381152"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Jan 2021 12:27:29 +0800
-IronPort-SDR: Ns/zCeppbo4+D88zZtNZL9vGwZjbBmgSyMhJPdWRXrKvxQkw2J1PYGZoobGuAuLl5weY0hNvVr
- aR/JJAUpU6bTihXun+bvWkMYJuUqfDxLrysv4xfsk/iMdmExsegm70Vc9UFP9KlLq3Ti/QLA+/
- KnaXGeei7yhyX0dnh7YV8jhvF7L4ln6QcIUEINx64dwB2OHrCR373jyYalzjY0nLmvRRKMEhSc
- zxLbfRozZqMHDVCx5Il7HrSWZD1u3POi+e+4pXuKLSXqSlfWkOhOeAN2D8HAstxSxOdk6xqMjD
- iLhj7PwTWiPphKLUbJgNXYXZ
+   d="scan'208";a="158381165"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Jan 2021 12:27:40 +0800
+IronPort-SDR: V+t/B5TQGMJgALLGoW7b44cmQmnFDbWh6vnicHXyWus0aml3m+xpd1sh4dWoE2Dl8McVQyQofX
+ JQRbv2JNK/lAfCvLX11HGVLExj544H/zgeS0lnAfPAZnwG/hxyleLJSI9KWuTm5GgOsTgGRSJz
+ OOWecvoBh06gBQEND73CB08eT+ki9nPNEUbbIwIHzzKBvtZ/BhrMq6uFZknqAlncSVMlQUB1vw
+ +T/BuKCXM7F4lOGwEBgt0ZUWlyn9V+DhYU6MhGkQIwWFIqMrQqxYJtYezrYlHihmqkrpbizIQh
+ e9BkssxBk15KA/IeF1zq2CbE
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 20:10:22 -0800
-IronPort-SDR: o/sg1RlO55nBZvuaf2UOWUKg+CwrJQNyX5ExWX1SiQ1CQgy3BqgOm1LU6PVb42JWsHrs1QDrz3
- J4uJFV4zVQf6HISX5Eyak8w1215IcPdF0qV6tiyMi7rmneB27b5IacvY31BmKRQmfMifwJdI6O
- ilxFN4yx2Lcch6etVa3iripRW7bx1OkyKCMAqN0sVauyJcMtAb19GNvzUQFF7IAq+s35HG8MzY
- OyGtGIawg02tKIBBBAuIliFJgPfrBuIYFc4kVsoQYs7Xf1YHt4zwOXnUpOZml5byXfy6e9HCE5
- GNM=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 20:12:25 -0800
+IronPort-SDR: cxxBy+WvCfwIT1aN0fSwJRc2u0a0ZFgDTUxwy0EBRvjkwF5bLgRJxyGovX/xmoU5rD13K1GVW3
+ bdxsbX9+S3UcDkMCpCGjBKXhrIFLsNudnpIbh02UZKb+rDNvC7X94PBTsTVMXU4IcTzEW2MnfD
+ tMQTA/NR6PSxweczXJaZ4CuWvi3jCPUyPVqrWCAKzkWUwzWWBE2H7mhRd+UczzKAfmny0o7SUc
+ DZGVO0+0N9KD5Y8dTLMYYtCGL12zKvk7hNnQFP2nqENoLuup5VbnhyugiO/z/cJ8vcXYCdyjMq
+ NPc=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Jan 2021 20:27:29 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 11 Jan 2021 20:27:40 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     hch@lst.de, sagi@grimberg.me, damien.lemoal@wdc.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V9 6/9] nvmet: add bio init helper for different backends
-Date:   Mon, 11 Jan 2021 20:26:20 -0800
-Message-Id: <20210112042623.6316-7-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V9 7/9] nvmet: add bio put helper for different backends
+Date:   Mon, 11 Jan 2021 20:26:21 -0800
+Message-Id: <20210112042623.6316-8-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210112042623.6316-1-chaitanya.kulkarni@wdc.com>
 References: <20210112042623.6316-1-chaitanya.kulkarni@wdc.com>
@@ -65,82 +65,78 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With the addition of the zns backend now we have two different backends
-with the same bio initialization code. That leads to having duplicate
-code in two backends: generic bdev and generic zns.
+With the addition of zns backend now we have three different backends
+with inline bio optimization. That leads to having duplicate code in for
+freeing the bio in all three backends: generic bdev, passsthru and
+generic zns.
 
-Add a helper function to reduce the duplicate code such that helper
-function initializes the various bio initialization parameters such as
-bio block device, op flags, sector, end io callback, and private member,
+Add a helper function to avoid the duplicate code and update the
+respective backends.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/nvme/target/io-cmd-bdev.c |  6 +-----
- drivers/nvme/target/nvmet.h       | 11 +++++++++++
- drivers/nvme/target/zns.c         |  6 +++---
- 3 files changed, 15 insertions(+), 8 deletions(-)
+ drivers/nvme/target/io-cmd-bdev.c | 3 +--
+ drivers/nvme/target/nvmet.h       | 6 ++++++
+ drivers/nvme/target/passthru.c    | 3 +--
+ drivers/nvme/target/zns.c         | 3 +--
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index 72746e29cb0d..b1fb0bb1f39f 100644
+index b1fb0bb1f39f..562c2dd9c08c 100644
 --- a/drivers/nvme/target/io-cmd-bdev.c
 +++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -267,11 +267,7 @@ static void nvmet_bdev_execute_rw(struct nvmet_req *req)
- 	sector = nvmet_lba_to_sect(req->ns, req->cmd->rw.slba);
+@@ -172,8 +172,7 @@ static void nvmet_bio_done(struct bio *bio)
+ 	struct nvmet_req *req = bio->bi_private;
  
- 	bio = nvmet_req_bio_get(req, NULL);
--	bio_set_dev(bio, req->ns->bdev);
--	bio->bi_iter.bi_sector = sector;
--	bio->bi_private = req;
--	bio->bi_end_io = nvmet_bio_done;
--	bio->bi_opf = op;
-+	nvmet_bio_init(bio, req->ns->bdev, op, sector, req, nvmet_bio_done);
- 
- 	blk_start_plug(&plug);
- 	if (req->metadata_len)
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 3fc84f79cce1..1ec9e1b35c67 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -668,4 +668,15 @@ static inline struct bio *nvmet_req_bio_get(struct nvmet_req *req,
- 	return bio;
+ 	nvmet_req_complete(req, blk_to_nvme_status(req, bio->bi_status));
+-	if (bio != &req->b.inline_bio)
+-		bio_put(bio);
++	nvmet_req_bio_put(req, bio);
  }
  
-+static inline void nvmet_bio_init(struct bio *bio, struct block_device *bdev,
-+				  unsigned int op, sector_t sect, void *private,
-+				  bio_end_io_t *bi_end_io)
+ #ifdef CONFIG_BLK_DEV_INTEGRITY
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 1ec9e1b35c67..93ebc9ae3fe4 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -679,4 +679,10 @@ static inline void nvmet_bio_init(struct bio *bio, struct block_device *bdev,
+ 	bio->bi_end_io = bi_end_io;
+ }
+ 
++static inline void nvmet_req_bio_put(struct nvmet_req *req, struct bio *bio)
 +{
-+	bio_set_dev(bio, bdev);
-+	bio->bi_opf = op;
-+	bio->bi_iter.bi_sector = sect;
-+	bio->bi_private = private;
-+	bio->bi_end_io = bi_end_io;
++	if (bio != &req->b.inline_bio)
++		bio_put(bio);
 +}
 +
  #endif /* _NVMET_H */
+diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
+index 54f765b566ee..a4a73d64c603 100644
+--- a/drivers/nvme/target/passthru.c
++++ b/drivers/nvme/target/passthru.c
+@@ -200,8 +200,7 @@ static int nvmet_passthru_map_sg(struct nvmet_req *req, struct request *rq)
+ 	for_each_sg(req->sg, sg, req->sg_cnt, i) {
+ 		if (bio_add_pc_page(rq->q, bio, sg_page(sg), sg->length,
+ 				    sg->offset) < sg->length) {
+-			if (bio != &req->p.inline_bio)
+-				bio_put(bio);
++			nvmet_req_bio_put(req, bio);
+ 			return -EINVAL;
+ 		}
+ 	}
 diff --git a/drivers/nvme/target/zns.c b/drivers/nvme/target/zns.c
-index c32e93a3c7e1..92213bed0006 100644
+index 92213bed0006..bba1d6957b6a 100644
 --- a/drivers/nvme/target/zns.c
 +++ b/drivers/nvme/target/zns.c
-@@ -281,6 +281,7 @@ void nvmet_bdev_execute_zone_append(struct nvmet_req *req)
- {
- 	sector_t sect = nvmet_lba_to_sect(req->ns, req->cmd->rw.slba);
- 	struct request_queue *q = req->ns->bdev->bd_disk->queue;
-+	unsigned int op = REQ_OP_ZONE_APPEND | REQ_SYNC | REQ_IDLE;
- 	unsigned int max_sects = queue_max_zone_append_sectors(q);
- 	u16 status = NVME_SC_SUCCESS;
- 	unsigned int total_len = 0;
-@@ -297,9 +298,8 @@ void nvmet_bdev_execute_zone_append(struct nvmet_req *req)
- 	}
+@@ -330,7 +330,6 @@ void nvmet_bdev_execute_zone_append(struct nvmet_req *req)
+ 						 bio->bi_iter.bi_sector);
  
- 	bio = nvmet_req_bio_get(req, NULL);
--	bio_set_dev(bio, req->ns->bdev);
--	bio->bi_iter.bi_sector = sect;
--	bio->bi_opf = REQ_OP_ZONE_APPEND | REQ_SYNC | REQ_IDLE;
-+	nvmet_bio_init(bio, req->ns->bdev, op, sect, NULL, NULL);
-+
- 	if (req->cmd->rw.control & cpu_to_le16(NVME_RW_FUA))
- 		bio->bi_opf |= REQ_FUA;
- 
+ out_bio_put:
+-	if (bio != &req->b.inline_bio)
+-		bio_put(bio);
++	nvmet_req_bio_put(req, bio);
+ 	nvmet_req_complete(req, ret < 0 ? NVME_SC_INTERNAL : status);
+ }
 -- 
 2.22.1
 
