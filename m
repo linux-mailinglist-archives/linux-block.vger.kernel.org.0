@@ -2,131 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4CA2F5666
-	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 02:58:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11AFE2F59A7
+	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 04:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbhANBre (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Jan 2021 20:47:34 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:3733 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729940AbhANAnc (ORCPT
+        id S1726951AbhANDyc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Jan 2021 22:54:32 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41651 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726081AbhANDyb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Jan 2021 19:43:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1610585012; x=1642121012;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=cKhND9DZTDa+SSPqub/cbLrUf7sjsGrRZpusE0KMlno=;
-  b=oLJCDx7fnc51OGBMMxBtpUunF/BgX0M8FeLanvdphwl7JouHE0U03VAk
-   gx7m6x3IHuvjbtUW4KCnEgh6V1LE3Q9RPsyFZIDBAsHmroDsVLXLMd2aA
-   QidUDDPoTPO6fR2YMVNBsUzCTN45wonYDJ4OkWN+geix7GEkSjEUVDfia
-   slk2cEgdGxj+oWvvyPQgmegyaw4iiwY5/XyDxFDhz25/KTXfWtk3dcZ+3
-   Jlvo2E7iOAhowyIsJNyn6Dcc1a1mTenPnzD/dz4OuNaLXnWUyb38+fh9U
-   P7sfw6GfEvyux9VZPedLwYhUYzb/1gcjczkQZUvMo2AMF27pk1eBlWnqg
-   w==;
-IronPort-SDR: 9QJgL13vra3iRqrT7LHThn174LuBYgvcXJZ5HhlhAmL0dqeSq9Dd+NuENBdSwdnmF8Kx0MmUdH
- C6VDpPqYlJd/x3JqFKv6AKCsUysUa4u7FPSIeVH+Y6bcyZa01kWWwIoYIQ7zuBr34XMt9/5RKV
- 0FTn3mvS+51mleR5zwUuHTdspKsVMI/7DqZInBkNBTu1epD0nVAEE2eMnxLy8uo7b+wnwjOsKL
- HdlwohA44/8rTfE9E5e/i2ITMeb8QH97XZCkvx/sWRtMW17RIltFiZTi/CcrQQPPWaTPEeYnzm
- nGI=
-X-IronPort-AV: E=Sophos;i="5.79,345,1602518400"; 
-   d="scan'208";a="161814795"
-Received: from mail-bn7nam10lp2107.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.107])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Jan 2021 08:41:53 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K9GOFEdjFz9CMwabjRtGqpuGgND+hNAcVftvQe6ph9qZlEyoiN6Vox54G9D7UIgUmmpy2u7lYaI2LeU7tt4xiDo3VPWPKgsN//8OfBxPK7B4qce0EQwnIPYAuYupgtT/xRcaURFVmMhSkUVA1/q8Vohi6ZtE6jaydsKIDQXC9vZy/28+eMLBRAtfbQbVQ7TbCl/EJ96jmcrKsrn+ECyrTaiNEQA1dwXWAVpXIrrTa2nU18A1RORkW8tQ5STPurzOD+9o+XshDBod0b9r16wklvzFeh7rRfwy+w/bl9zErrxthIjlYIvoeNr58kVKG81U2sNgj7w5hU6wj3yEwkDjgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cKhND9DZTDa+SSPqub/cbLrUf7sjsGrRZpusE0KMlno=;
- b=LY/ls/5AoAa5oaNCEybPa5A4F65Ic2F1bDdAZ9cW09l5/OBp2Iic42YuI0VXx8EYG6IS6iiApJ8fIijiZNTGECAxxYvfJ43tQkLWlUTABTmxo1nsIaXnQ+fJbMgJO9Bsd19J7FBdKEeMp4GmolsnseaGORjti8p0clNf2FXSQ6q7gByuTjupKxVKiQ/o+bszAa7GfY7sx4zZ1gp3P2fgNTWKXZnuYAdcMvoMWgc585NlWFwmbUrfKEOzCWc9lJNxE3UkKMXtST1NIKWcCoBSzzJN8m/MpurOWV1D/VMXrEG2+DbCNy0xSTZ/QjN8RNp3VppbH6hhICRxsmYu6O/MmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cKhND9DZTDa+SSPqub/cbLrUf7sjsGrRZpusE0KMlno=;
- b=E1wYlKcQ4vCDuk9pU07wC1HeRPtZRCfba1O+stToO9RnUBY6PWQfjxbHCh7PwP10Kr++kCV67RWnl0eXT8dKDOJ4fia0++o/V4nY+u3sht093xJ1nLfANEbOdaGzaMqZkfBmkZaienEkxSXiiRe3vOoOFiHuI88fIq2OOTT9b9c=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (52.135.233.89) by
- BYAPR04MB4869.namprd04.prod.outlook.com (52.135.236.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3742.11; Thu, 14 Jan 2021 00:41:52 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::716c:4e0c:c6d1:298a]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::716c:4e0c:c6d1:298a%6]) with mapi id 15.20.3742.012; Thu, 14 Jan 2021
- 00:41:52 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH] blkparse: Print time when trace was started
-Thread-Topic: [PATCH] blkparse: Print time when trace was started
-Thread-Index: AQHW6Z9Zew4mkTblY0e00liPQPN2jQ==
-Date:   Thu, 14 Jan 2021 00:41:52 +0000
-Message-ID: <BYAPR04MB496593E9A067218A38462AAF86A80@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20210113112643.12893-1-jack@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.cz; dkim=none (message not signed)
- header.d=none;suse.cz; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a1cffe42-ca1c-4338-0c00-08d8b8252f80
-x-ms-traffictypediagnostic: BYAPR04MB4869:
-x-microsoft-antispam-prvs: <BYAPR04MB486955477E6C038BADC1A89586A80@BYAPR04MB4869.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:883;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u+Q/Xc6OaYDGQDOt7mEEWiRnf+yFrgXoWT5q2zL2Avo6EUnzrM9RiPucBv34FJwVudI53Vwk3tWVwe0BkK404U4kjNfQ7sYNqKxw/JiH3Esfm3jNcbeOCBuQChfk08eFugF/LKUv71vAt1eNGFvHrfdBtrFJK3/iHE8T80OMK+6FN5FbpZtUiUHQXauyxHf7UzbcxKYBjQDhxGepYXkXfx1nFnrlqjHLMu6uUsVrzAAuorCv6cVC/fzRCzNEt15B7FBNHfOO3KTvlFd5nR94dtPxTQxKpSQZnpIsEaYrlrfk3z9yCKtMi3WWhz2L+RbcEqhpIiFjv8sR4l6fqT5AxOUm0/CyP5spnE+/7EjOdKh5g7W3AIiNc7nygmrNpm7PN2WDA8oieZoWQ5ULtVJ4Yw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(71200400001)(66946007)(66556008)(66446008)(9686003)(55016002)(2906002)(52536014)(53546011)(66476007)(478600001)(5660300002)(86362001)(76116006)(8676002)(26005)(4326008)(64756008)(316002)(110136005)(8936002)(6506007)(558084003)(7696005)(33656002)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?LCZ/FYcv5bQ34yyoLwvDD4nQtAL8He5vztgBlwx7gczV+VBMhh6RGvPCIRHl?=
- =?us-ascii?Q?KXw8Wovh++UHKzbnkGhl4azrEUezTpER0fhFyrkt9ifwSuYZdyang1LzyHIW?=
- =?us-ascii?Q?m6QdXL7RH0PUoDsboBxG1Q5to89duW4/iQOVLeXCCcxAfs2YBMqzAgL9sMyT?=
- =?us-ascii?Q?QoTamc9a3Oi0yMd0+86XHedJ3WpsuxaJjVYPoxgE+KKOB0Cek9jL06k2st1i?=
- =?us-ascii?Q?/RFnddT0z1p032u8LI2rLFPVybejsDWxD7U/KsBXaAxovm8QahXoBZh0AL5N?=
- =?us-ascii?Q?1Sb4L8ot65yb/kjd+dNmvmeE9wM4uQkA9xM31Tn2A7FmeACCSJoC7KSa1yds?=
- =?us-ascii?Q?6pSogTgxC+mSCWGqJ8BN0uRk2F3QYniUyHB9q6nd6t6R7i2/113DhYAb23QT?=
- =?us-ascii?Q?WyXAe+YXK9Itcp+NDPhYPdR3PS9LxKobWyCilmISlIF5igHZDxtTXUPpE2eW?=
- =?us-ascii?Q?5bn9WgJLdZDPnuMb3diI9gmfxY0BL9k/Pp3r+pU+Y8dLf2m28JZHzzikdiZG?=
- =?us-ascii?Q?hsgjk6xVFd936wNpLREzctjZ+G2hxEOrIULcbYqk3IWr5JTn+Mw756P2ouHL?=
- =?us-ascii?Q?gvf0X/bvbVpYsOmqt1XHb2n8l8NJj75XnVJbRMcL+Nao4pMvagTXZA9A0epr?=
- =?us-ascii?Q?lvXFpI+iOoADNDGaarux/kIKKxpB/tQu06MFAw21cp5B/2jrK5n6zyN9uhDn?=
- =?us-ascii?Q?YTTOEQPi0fUyPm4Tmbve/8QLygDj+oJBKrMs8jKBvBYC8oW2mUmyHSutP7bz?=
- =?us-ascii?Q?RqixwW80R1BBqmzXCP8OCojMUea3jHAq0+YpjfxXNanhmcw9M7WN7JflE+CI?=
- =?us-ascii?Q?MYkzPqdvU4LUpwDETRtNjd/K4s1IlXd8+UDqJgxYfoSoewyE3hGwb6RDeMqP?=
- =?us-ascii?Q?LRiP2MdxCGdb2vWzhuUvgkIPCb9pqkWTAN5Aw/KWZOG8xC20RV1E9EOg0D9u?=
- =?us-ascii?Q?AWFnhNoBKvfHRAubHoMlrd7+X/Y/9To7yc3uQUl7lslnBWU2Jv86v3TVbKCO?=
- =?us-ascii?Q?E9+i?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Jan 2021 22:54:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610596384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6fpQY7UlpMXveilA95KGU9W/hHWNl3BythnUbapXejc=;
+        b=YHw1rcfU5GAojX+JmBW9BQQbdrJLRatvZbX74GnUamUBRQoR85zacGn2QGCjgz1gyYdqR8
+        wu0HDuV1AIE/MeJPzprBJ1dgZrx0VJRuBi47YXTKzoZHhOWa9z2cR1kWtyJAvGNXfNe2Ac
+        Hy+8kx/n0DNjUAcHGwe5N15vc7zssWg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-W9_8viw0MYSqZHxzsHY_yg-1; Wed, 13 Jan 2021 22:53:00 -0500
+X-MC-Unique: W9_8viw0MYSqZHxzsHY_yg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35F60107ACF7;
+        Thu, 14 Jan 2021 03:52:57 +0000 (UTC)
+Received: from T590 (ovpn-13-18.pek2.redhat.com [10.72.13.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6084360D08;
+        Thu, 14 Jan 2021 03:52:47 +0000 (UTC)
+Date:   Thu, 14 Jan 2021 11:52:42 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Ming Lei <tom.leiming@gmail.com>,
+        Changheun Lee <nanich.lee@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "jisoo2146.oh@samsung.com" <jisoo2146.oh@samsung.com>,
+        "junho89.kim@samsung.com" <junho89.kim@samsung.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "mj0123.lee@samsung.com" <mj0123.lee@samsung.com>,
+        "seunghwan.hyun@samsung.com" <seunghwan.hyun@samsung.com>,
+        "sookwan7.kim@samsung.com" <sookwan7.kim@samsung.com>,
+        Tejun Heo <tj@kernel.org>,
+        "yt0928.kim@samsung.com" <yt0928.kim@samsung.com>,
+        "woosung2.lee@samsung.com" <woosung2.lee@samsung.com>
+Subject: Re: [PATCH] bio: limit bio max size.
+Message-ID: <20210114035242.GB237540@T590>
+References: <CGME20210113040146epcas1p230596c7c3760471dca442d1f7ce4dc55@epcas1p2.samsung.com>
+ <CH2PR04MB65225EDDA7069CCD47A459A5E7A90@CH2PR04MB6522.namprd04.prod.outlook.com>
+ <20210113034637.1382-1-nanich.lee@samsung.com>
+ <CACVXFVMb0eE5-yo2k3KvnJjKN+aDLzOuT9rKQ7LY5-4WTgM3jw@mail.gmail.com>
+ <CH2PR04MB65228D54F66068DA125CCE47E7A90@CH2PR04MB6522.namprd04.prod.outlook.com>
+ <20210113102450.GA220440@T590>
+ <CH2PR04MB6522CF231DAA4615DABA8457E7A90@CH2PR04MB6522.namprd04.prod.outlook.com>
+ <20210113114722.GA233746@T590>
+ <CH2PR04MB652295091E1D9455D2132BD8E7A90@CH2PR04MB6522.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1cffe42-ca1c-4338-0c00-08d8b8252f80
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2021 00:41:52.1759
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zqoQXfIKZFZvxdr6JGmpAy28tyQI6ZrSrviNS+DGZ5za+tIFtvY3IPH4eA1WQ7/2MW5lSTsEM9aBXCYgbXgRsQxUGUoTAuzYdYcBFG60eEc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4869
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR04MB652295091E1D9455D2132BD8E7A90@CH2PR04MB6522.namprd04.prod.outlook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/13/21 03:29, Jan Kara wrote:=0A=
-> For correlating blktrace data with other information, it is useful to=0A=
-> know when the trace has been captured. Since the absolute timestamp=0A=
-> is contained in the blktrace file, just output it.=0A=
->=0A=
-> Signed-off-by: Jan Kara <jack@suse.cz>=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+On Wed, Jan 13, 2021 at 12:02:44PM +0000, Damien Le Moal wrote:
+> On 2021/01/13 20:48, Ming Lei wrote:
+> > On Wed, Jan 13, 2021 at 11:16:11AM +0000, Damien Le Moal wrote:
+> >> On 2021/01/13 19:25, Ming Lei wrote:
+> >>> On Wed, Jan 13, 2021 at 09:28:02AM +0000, Damien Le Moal wrote:
+> >>>> On 2021/01/13 18:19, Ming Lei wrote:
+> >>>>> On Wed, Jan 13, 2021 at 12:09 PM Changheun Lee <nanich.lee@samsung.com> wrote:
+> >>>>>>
+> >>>>>>> On 2021/01/12 21:14, Changheun Lee wrote:
+> >>>>>>>>> On 2021/01/12 17:52, Changheun Lee wrote:
+> >>>>>>>>>> From: "Changheun Lee" <nanich.lee@samsung.com>
+> >>>>>>>>>>
+> >>>>>>>>>> bio size can grow up to 4GB when muli-page bvec is enabled.
+> >>>>>>>>>> but sometimes it would lead to inefficient behaviors.
+> >>>>>>>>>> in case of large chunk direct I/O, - 64MB chunk read in user space -
+> >>>>>>>>>> all pages for 64MB would be merged to a bio structure if memory address is
+> >>>>>>>>>> continued phsycally. it makes some delay to submit until merge complete.
+> >>>>>>>>>> bio max size should be limited as a proper size.
+> >>>>>>>>>
+> >>>>>>>>> But merging physically contiguous pages into the same bvec + later automatic bio
+> >>>>>>>>> split on submit should give you better throughput for large IOs compared to
+> >>>>>>>>> having to issue a bio chain of smaller BIOs that are arbitrarily sized and will
+> >>>>>>>>> likely need splitting anyway (because of DMA boundaries etc).
+> >>>>>>>>>
+> >>>>>>>>> Do you have a specific case where you see higher performance with this patch
+> >>>>>>>>> applied ? On Intel, BIO_MAX_SIZE would be 1MB... That is arbitrary and too small
+> >>>>>>>>> considering that many hardware can execute larger IOs than that.
+> >>>>>>>>>
+> >>>>>>>>
+> >>>>>>>> When I tested 32MB chunk read with O_DIRECT in android, all pages of 32MB
+> >>>>>>>> is merged into a bio structure.
+> >>>>>>>> And elapsed time to merge complete was about 2ms.
+> >>>>>>>> It means first bio-submit is after 2ms.
+> >>>>>>>> If bio size is limited with 1MB with this patch, first bio-submit is about
+> >>>>>>>> 100us by bio_full operation.
+> >>>>>>>
+> >>>>>>> bio_submit() will split the large BIO case into multiple requests while the
+> >>>>>>> small BIO case will likely result one or two requests only. That likely explain
+> >>>>>>> the time difference here. However, for the large case, the 2ms will issue ALL
+> >>>>>>> requests needed for processing the entire 32MB user IO while the 1MB bio case
+> >>>>>>> will need 32 different bio_submit() calls. So what is the actual total latency
+> >>>>>>> difference for the entire 32MB user IO ? That is I think what needs to be
+> >>>>>>> compared here.
+> >>>>>>>
+> >>>>>>> Also, what is your device max_sectors_kb and max queue depth ?
+> >>>>>>>
+> >>>>>>
+> >>>>>> 32MB total latency is about 19ms including merge time without this patch.
+> >>>>>> But with this patch, total latency is about 17ms including merge time too.
+> >>>>>
+> >>>>> 19ms looks too big just for preparing one 32MB sized bio, which isn't
+> >>>>> supposed to
+> >>>>> take so long.  Can you investigate where the 19ms is taken just for
+> >>>>> preparing one
+> >>>>> 32MB sized bio?
+> >>>>
+> >>>> Changheun mentioned that the device side IO latency is 16.7ms out of the 19ms
+> >>>> total. So the BIO handling, submission+completion takes about 2.3ms, and
+> >>>> Changheun points above to 2ms for the submission part.
+> >>>
+> >>> OK, looks I misunderstood the data.
+> >>>
+> >>>>
+> >>>>>
+> >>>>> It might be iov_iter_get_pages() for handling page fault. If yes, one suggestion
+> >>>>> is to enable THP(Transparent HugePage Support) in your application.
+> >>>>
+> >>>> But if that was due to page faults, the same large-ish time would be taken for
+> >>>> the preparing the size-limited BIOs too, no ? No matter how the BIOs are diced,
+> >>>> all 32MB of pages of the user IO are referenced...
+> >>>
+> >>> If bio size is reduced to 1MB, just 256 pages need to be faulted before submitting this
+> >>> bio, instead of 256*32 pages, that is why the following words are mentioned:
+> >>>
+> >>> 	It means first bio-submit is after 2ms.
+> >>> 	If bio size is limited with 1MB with this patch, first bio-submit is about
+> >>> 	100us by bio_full operation.
+> >>
+> >> Yes, but eventually, all pages for the 32MB IO will be faulted in, just not in
+> >> one go. Overall number of page faults is likely the same as with the large BIO
+> >> preparation. So I think we are back to my previous point, that is, reducing the
+> >> device idle time by starting a BIO more quickly, even a small one, leads to
+> >> overlap between CPU time needed for the next BIO preparation and previous BIO
+> >> execution, reducing overall the latency for the entire 32MB user IO.
+> > 
+> > When bio size is reduced from 32M to 1M:
+> > 
+> > 1MB/(P(1M) + D(1M)) may become bigger than 32MB/(P(1M) + D(1M)), so
+> > throughput is improved.
+> 
+> I think that the reason is that P(1M) < D(1M) and so there is overlap between P
+> and D: P of the next BIO is done on the CPU while D of the previous BIO is
+> ongoing on the device, assuming there is no plugging.
+
+Looks you are talking about AIO. IMO, if AIO is used in Changheun's
+test, the UFS controller pipeline can be saturated easily by many
+enough(> 8 or more) 32M requests(preparing each takes 2ms, and device need
+16ms to handle 32MB req), then there shouldn't be such issue.
+
+So I guess Changheun uses sync dio, and the 2ms preparing time is added
+to bio submission delay every time.
+
+Changheun, can you talk about your 32MB block size direct IO test in a
+bit detail? AIO or sync dio? Do you have fio command line to reproduce
+this issue?
+
+
+Thanks, 
+Ming
+
