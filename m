@@ -2,261 +2,222 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB482F651D
-	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 16:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 700FD2F656B
+	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 17:08:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbhANPsb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Jan 2021 10:48:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729488AbhANPs3 (ORCPT
+        id S1726527AbhANQHv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Jan 2021 11:07:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50886 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726468AbhANQHv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Jan 2021 10:48:29 -0500
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597DEC06179F
-        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:44 -0800 (PST)
-Received: by mail-qv1-xf49.google.com with SMTP id l3so4890188qvr.10
-        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=yjd7j/oRyi/09Ir0jClwnKrYAzTy2DPmihjhcr8kWmc=;
-        b=YiREpvemIUhEmqaqL7UIAOp0t9TKxvhpsMRPaJXjYRycY9YcQHN79MViB3j2yosid1
-         fcVc9F58S5arQiivAzziZ5HC+Cw9J2lSVwpVjgLz0U/HuGkcpjR2Q8xHBL6P4sUyfU7p
-         ohOraXB1O/Vqraj0V9oqga+jIrZ8eOqgGLULv3XH8JOrzKgkkKhDH09Ye2Ej4eguMvo7
-         WEV1iHYJ5dj4UHQM6yDWk5B8j5QIEgv9iMnXPrtNJWmUa3UtFNETfeWwWlLWzmpWG861
-         2I9T6Dgm1gSTJwhBrAA0IRLAfK+HeF6On2w/ZhzDTaLsGGIARr7/CmmP/CKTDKX3cK7x
-         KgBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=yjd7j/oRyi/09Ir0jClwnKrYAzTy2DPmihjhcr8kWmc=;
-        b=GlGJ5K1sqei8UY3xc2F+j44gPYwrRdiMUt9FfpHrpp+H6p+D1aPZiNvCAkHrELhvMk
-         yjK6/CWDkIydQE2YeiSDY/Y7MpdkjczSX751/T8Qa8NambAnoqMzHEyjinWF+rfj28hw
-         aaSifEmtKBW4KRyqC77QebAP1dYvOtsVGnHenTZfY6iLY3Hzc+32g9zDNkDl2eQ0k3z6
-         3L4KWPvr5m2D9CZIln0r5t3nl8KSOGlM94aUfFxR8cJGO3DCSahdBhZqSNPTZPsnfmgg
-         WHv8vNKx6/1lkb02lFLyGA7aHzgSuUoVRWbY/FVMY9CC5XKcd7hZa/VymFA8q0snJWvG
-         TMCw==
-X-Gm-Message-State: AOAM530E3wo6ntsx3LD5OuAv9cXuqYfSpQfp0Af++HJt5OTHAbZ6VXBC
-        CwyrKx8rpe+619x3lGbX9E9wm2dQCDPCoqspYvKQIpFfWweDmOoi6uBBcrg9Vry27QjLAzxLgYI
-        QGZ8UXGGHiBxtaQ1UN022+7u1NHpylYbDMsyxMt/pVZvUepZM2ayJ3shii+eJGM1E8I21
-X-Google-Smtp-Source: ABdhPJyi8OkvC7JM5jNlxAohk9r69dEQp7fliC/97rsmmY8YySVm9GtYm8d8/SHRxKz74I3GTEmSmucDh/8=
-Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a25:6b52:: with SMTP id o18mr12072716ybm.143.1610639263413;
- Thu, 14 Jan 2021 07:47:43 -0800 (PST)
-Date:   Thu, 14 Jan 2021 15:47:23 +0000
-In-Reply-To: <20210114154723.2495814-1-satyat@google.com>
-Message-Id: <20210114154723.2495814-8-satyat@google.com>
-Mime-Version: 1.0
-References: <20210114154723.2495814-1-satyat@google.com>
-X-Mailer: git-send-email 2.30.0.284.gd98b1dd5eaa7-goog
-Subject: [PATCH 7/7] block: compute nsegs more accurately in blk_bio_segment_split()
-From:   Satya Tangirala <satyat@google.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 Jan 2021 11:07:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610640397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3Ue2oTqzUauGiC3/nXqCxLeCghBHyE2PI1REDvBNOnM=;
+        b=EsoD1pH9I/Tw2np4RSgfFebNz9bpfBKtbS+PEyBMmjWlK2LpQ2XypDgXTSMaCPjqe/k6KP
+        TXHJhq5LqgKFA68rlh7LpAqOsq5lrFOH1cL5tvubZ93IoC7VvxpnNIZuNGaKlOnSVBVbd0
+        2/+7Ea482iY1bY1sUlqkNEeVPAZugAM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-505-qW59LuyIN7uytaAATVUk6w-1; Thu, 14 Jan 2021 11:06:35 -0500
+X-MC-Unique: qW59LuyIN7uytaAATVUk6w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E88E806662;
+        Thu, 14 Jan 2021 16:06:33 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A286A5D734;
+        Thu, 14 Jan 2021 16:06:29 +0000 (UTC)
+Date:   Thu, 14 Jan 2021 11:06:29 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Satya Tangirala <satyat@google.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dm-devel@redhat.com, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH v3 2/6] block: keyslot-manager: Introduce functions for
+ device mapper support
+Message-ID: <20210114160628.GA26178@redhat.com>
+References: <20201229085524.2795331-1-satyat@google.com>
+ <20201229085524.2795331-3-satyat@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201229085524.2795331-3-satyat@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Previously, we rounded down the number of sectors just before calling
-bio_split() in blk_bio_segment_split(). While this ensures that bios
-are not split in the middle of a data unit, it makes it possible
-for nsegs to be overestimated. This patch calculates nsegs accurately (it
-calculates the smallest number of segments required for the aligned number
-of sectors in the split bio).
+On Tue, Dec 29 2020 at  3:55am -0500,
+Satya Tangirala <satyat@google.com> wrote:
 
-Signed-off-by: Satya Tangirala <satyat@google.com>
----
- block/blk-merge.c | 97 ++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 80 insertions(+), 17 deletions(-)
+> Introduce blk_ksm_update_capabilities() to update the capabilities of
+> a keyslot manager (ksm) in-place. The pointer to a ksm in a device's
+> request queue may not be easily replaced, because upper layers like
+> the filesystem might access it (e.g. for programming keys/checking
+> capabilities) at the same time the device wants to replace that
+> request queue's ksm (and free the old ksm's memory). This function
+> allows the device to update the capabilities of the ksm in its request
+> queue directly.
+> 
+> Also introduce blk_ksm_is_superset() which checks whether one ksm's
+> capabilities are a (not necessarily strict) superset of another ksm's.
+> The blk-crypto framework requires that crypto capabilities that were
+> advertised when a bio was created continue to be supported by the
+> device until that bio is ended - in practice this probably means that
+> a device's advertised crypto capabilities can *never* "shrink" (since
+> there's no synchronization between bio creation and when a device may
+> want to change its advertised capabilities) - so a previously
+> advertised crypto capability must always continue to be supported.
+> This function can be used to check that a new ksm is a valid
+> replacement for an old ksm.
+> 
+> Signed-off-by: Satya Tangirala <satyat@google.com>
+> ---
+>  block/keyslot-manager.c         | 91 +++++++++++++++++++++++++++++++++
+>  include/linux/keyslot-manager.h |  9 ++++
+>  2 files changed, 100 insertions(+)
+> 
+> diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
+> index ac7ce83a76e8..f13ab7410eca 100644
+> --- a/block/keyslot-manager.c
+> +++ b/block/keyslot-manager.c
+> @@ -424,6 +424,97 @@ void blk_ksm_unregister(struct request_queue *q)
+>  	q->ksm = NULL;
+>  }
+>  
+> +/**
+> + * blk_ksm_intersect_modes() - restrict supported modes by child device
+> + * @parent: The keyslot manager for parent device
+> + * @child: The keyslot manager for child device, or NULL
+> + *
+> + * Clear any crypto mode support bits in @parent that aren't set in @child.
+> + * If @child is NULL, then all parent bits are cleared.
+> + *
+> + * Only use this when setting up the keyslot manager for a layered device,
+> + * before it's been exposed yet.
+> + */
+> +void blk_ksm_intersect_modes(struct blk_keyslot_manager *parent,
+> +			     const struct blk_keyslot_manager *child)
+> +{
+> +	if (child) {
+> +		unsigned int i;
+> +
+> +		parent->max_dun_bytes_supported =
+> +			min(parent->max_dun_bytes_supported,
+> +			    child->max_dun_bytes_supported);
+> +		for (i = 0; i < ARRAY_SIZE(child->crypto_modes_supported);
+> +		     i++) {
+> +			parent->crypto_modes_supported[i] &=
+> +				child->crypto_modes_supported[i];
+> +		}
+> +	} else {
+> +		parent->max_dun_bytes_supported = 0;
+> +		memset(parent->crypto_modes_supported, 0,
+> +		       sizeof(parent->crypto_modes_supported));
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(blk_ksm_intersect_modes);
+> +
+> +/**
+> + * blk_ksm_is_superset() - Check if a KSM supports a superset of crypto modes
+> + *			   and DUN bytes that another KSM supports. Here,
+> + *			   "superset" refers to the mathematical meaning of the
+> + *			   word - i.e. if two KSMs have the *same* capabilities,
+> + *			   they *are* considered supersets of each other.
+> + * @ksm_superset: The KSM that we want to verify is a superset
+> + * @ksm_subset: The KSM that we want to verify is a subset
+> + *
+> + * Return: True if @ksm_superset supports a superset of the crypto modes and DUN
+> + *	   bytes that @ksm_subset supports.
+> + */
+> +bool blk_ksm_is_superset(struct blk_keyslot_manager *ksm_superset,
+> +			 struct blk_keyslot_manager *ksm_subset)
+> +{
+> +	int i;
+> +
+> +	if (!ksm_subset)
+> +		return true;
+> +
+> +	if (!ksm_superset)
+> +		return false;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ksm_superset->crypto_modes_supported); i++) {
+> +		if (ksm_subset->crypto_modes_supported[i] &
+> +		    (~ksm_superset->crypto_modes_supported[i])) {
+> +			return false;
+> +		}
+> +	}
+> +
+> +	if (ksm_subset->max_dun_bytes_supported >
+> +	    ksm_superset->max_dun_bytes_supported) {
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_GPL(blk_ksm_is_superset);
+> +
+> +/**
+> + * blk_ksm_update_capabilities() - Update the restrictions of a KSM to those of
+> + *				   another KSM
+> + * @target_ksm: The KSM whose restrictions to update.
+> + * @reference_ksm: The KSM to whose restrictions this function will update
+> + *		   @target_ksm's restrictions to,
+> + */
+> +void blk_ksm_update_capabilities(struct blk_keyslot_manager *target_ksm,
+> +				 struct blk_keyslot_manager *reference_ksm)
+> +{
+> +	memcpy(target_ksm->crypto_modes_supported,
+> +	       reference_ksm->crypto_modes_supported,
+> +	       sizeof(target_ksm->crypto_modes_supported));
+> +
+> +	target_ksm->max_dun_bytes_supported =
+> +				reference_ksm->max_dun_bytes_supported;
+> +}
+> +EXPORT_SYMBOL_GPL(blk_ksm_update_capabilities);
+> +
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 45cda45c1066..58428d348661 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -145,17 +145,17 @@ static inline unsigned get_max_io_size(struct request_queue *q,
- 				       struct bio *bio)
- {
- 	unsigned sectors = blk_max_size_offset(q, bio->bi_iter.bi_sector, 0);
--	unsigned max_sectors = sectors;
- 	unsigned pbs = queue_physical_block_size(q) >> SECTOR_SHIFT;
- 	unsigned lbs = queue_logical_block_size(q) >> SECTOR_SHIFT;
--	unsigned start_offset = bio->bi_iter.bi_sector & (pbs - 1);
-+	unsigned pbs_aligned_sector =
-+		round_down(sectors + bio->bi_iter.bi_sector, pbs);
- 
--	max_sectors += start_offset;
--	max_sectors &= ~(pbs - 1);
--	if (max_sectors > start_offset)
--		return max_sectors - start_offset;
-+	lbs = max(lbs, blk_crypto_bio_sectors_alignment(bio));
- 
--	return sectors & ~(lbs - 1);
-+	if (pbs_aligned_sector >= bio->bi_iter.bi_sector + lbs)
-+		sectors = pbs_aligned_sector;
-+
-+	return round_down(sectors, lbs);
- }
- 
- static inline unsigned get_max_segment_size(const struct request_queue *q,
-@@ -174,6 +174,41 @@ static inline unsigned get_max_segment_size(const struct request_queue *q,
- 			(unsigned long)queue_max_segment_size(q));
- }
- 
-+/**
-+ * update_aligned_sectors_and_segs() - Ensures that *@aligned_sectors is aligned
-+ *				       to @bio_sectors_alignment, and that
-+ *				       *@aligned_segs is the value of nsegs
-+ *				       when sectors reached/first exceeded that
-+ *				       value of *@aligned_sectors.
-+ *
-+ * @nsegs: [in] The current number of segs
-+ * @sectors: [in] The current number of sectors
-+ * @aligned_segs: [in,out] The number of segments that make up @aligned_sectors
-+ * @aligned_sectors: [in,out] The largest number of sectors <= @sectors that is
-+ *		     aligned to @sectors
-+ * @bio_sectors_alignment: [in] The alignment requirement for the number of
-+ *			  sectors
-+ *
-+ * Updates *@aligned_sectors to the largest number <= @sectors that is also a
-+ * multiple of @bio_sectors_alignment. This is done by updating *@aligned_sectors
-+ * whenever @sectors is at least @bio_sectors_alignment more than
-+ * *@aligned_sectors, since that means we can increment *@aligned_sectors while
-+ * still keeping it aligned to @bio_sectors_alignment and also keeping it <=
-+ * @sectors. *@aligned_segs is updated to the value of nsegs when @sectors first
-+ * reaches/exceeds any value that causes *@aligned_sectors to be updated.
-+ */
-+static inline void update_aligned_sectors_and_segs(const unsigned int nsegs,
-+						   const unsigned int sectors,
-+						   unsigned int *aligned_segs,
-+				unsigned int *aligned_sectors,
-+				const unsigned int bio_sectors_alignment)
-+{
-+	if (sectors - *aligned_sectors < bio_sectors_alignment)
-+		return;
-+	*aligned_sectors = round_down(sectors, bio_sectors_alignment);
-+	*aligned_segs = nsegs;
-+}
-+
- /**
-  * bvec_split_segs - verify whether or not a bvec should be split in the middle
-  * @q:        [in] request queue associated with the bio associated with @bv
-@@ -195,9 +230,12 @@ static inline unsigned get_max_segment_size(const struct request_queue *q,
-  * the block driver.
-  */
- static bool bvec_split_segs(const struct request_queue *q,
--			    const struct bio_vec *bv, unsigned *nsegs,
--			    unsigned *sectors, unsigned max_segs,
--			    unsigned max_sectors)
-+			    const struct bio_vec *bv, unsigned int *nsegs,
-+			    unsigned int *sectors, unsigned int *aligned_segs,
-+			    unsigned int *aligned_sectors,
-+			    unsigned int bio_sectors_alignment,
-+			    unsigned int max_segs,
-+			    unsigned int max_sectors)
- {
- 	unsigned max_len = (min(max_sectors, UINT_MAX >> 9) - *sectors) << 9;
- 	unsigned len = min(bv->bv_len, max_len);
-@@ -211,6 +249,11 @@ static bool bvec_split_segs(const struct request_queue *q,
- 
- 		(*nsegs)++;
- 		total_len += seg_size;
-+		update_aligned_sectors_and_segs(*nsegs,
-+						*sectors + (total_len >> 9),
-+						aligned_segs,
-+						aligned_sectors,
-+						bio_sectors_alignment);
- 		len -= seg_size;
- 
- 		if ((bv->bv_offset + total_len) & queue_virt_boundary(q))
-@@ -258,6 +301,9 @@ static int blk_bio_segment_split(struct request_queue *q,
- 	unsigned nsegs = 0, sectors = 0;
- 	const unsigned max_sectors = get_max_io_size(q, bio);
- 	const unsigned max_segs = queue_max_segments(q);
-+	const unsigned int bio_sectors_alignment =
-+					blk_crypto_bio_sectors_alignment(bio);
-+	unsigned int aligned_segs = 0, aligned_sectors = 0;
- 
- 	bio_for_each_bvec(bv, bio, iter) {
- 		/*
-@@ -272,8 +318,14 @@ static int blk_bio_segment_split(struct request_queue *q,
- 		    bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
- 			nsegs++;
- 			sectors += bv.bv_len >> 9;
--		} else if (bvec_split_segs(q, &bv, &nsegs, &sectors, max_segs,
--					 max_sectors)) {
-+			update_aligned_sectors_and_segs(nsegs, sectors,
-+							&aligned_segs,
-+							&aligned_sectors,
-+							bio_sectors_alignment);
-+		} else if (bvec_split_segs(q, &bv, &nsegs, &sectors,
-+					   &aligned_segs, &aligned_sectors,
-+					   bio_sectors_alignment, max_segs,
-+					   max_sectors)) {
- 			goto split;
- 		}
- 
-@@ -281,11 +333,18 @@ static int blk_bio_segment_split(struct request_queue *q,
- 		bvprvp = &bvprv;
- 	}
- 
-+	/*
-+	 * The input bio's number of sectors is assumed to be aligned to
-+	 * bio_sectors_alignment. If that's the case, then this function should
-+	 * ensure that aligned_segs == nsegs and aligned_sectors == sectors if
-+	 * the bio is not going to be split.
-+	 */
-+	WARN_ON(aligned_segs != nsegs || aligned_sectors != sectors);
- 	*segs = nsegs;
- 	*split = NULL;
- 	return 0;
- split:
--	*segs = nsegs;
-+	*segs = aligned_segs;
- 
- 	/*
- 	 * Bio splitting may cause subtle trouble such as hang when doing sync
-@@ -294,10 +353,9 @@ static int blk_bio_segment_split(struct request_queue *q,
- 	 */
- 	bio->bi_opf &= ~REQ_HIPRI;
- 
--	sectors = round_down(sectors, blk_crypto_bio_sectors_alignment(bio));
--	if (WARN_ON(sectors == 0))
-+	if (WARN_ON(aligned_sectors == 0))
- 		return -EIO;
--	*split = bio_split(bio, sectors, GFP_NOIO, bs);
-+	*split = bio_split(bio, aligned_sectors, GFP_NOIO, bs);
- 	return 0;
- }
- 
-@@ -395,6 +453,9 @@ unsigned int blk_recalc_rq_segments(struct request *rq)
- {
- 	unsigned int nr_phys_segs = 0;
- 	unsigned int nr_sectors = 0;
-+	unsigned int nr_aligned_phys_segs = 0;
-+	unsigned int nr_aligned_sectors = 0;
-+	unsigned int bio_sectors_alignment;
- 	struct req_iterator iter;
- 	struct bio_vec bv;
- 
-@@ -410,9 +471,11 @@ unsigned int blk_recalc_rq_segments(struct request *rq)
- 		return 1;
- 	}
- 
-+	bio_sectors_alignment = blk_crypto_bio_sectors_alignment(rq->bio);
- 	rq_for_each_bvec(bv, rq, iter)
- 		bvec_split_segs(rq->q, &bv, &nr_phys_segs, &nr_sectors,
--				UINT_MAX, UINT_MAX);
-+				&nr_aligned_phys_segs, &nr_aligned_sectors,
-+				bio_sectors_alignment, UINT_MAX, UINT_MAX);
- 	return nr_phys_segs;
- }
- 
--- 
-2.30.0.284.gd98b1dd5eaa7-goog
+Given the patch header's preamble about FS possibly accessing/checking
+the existing ksm: without any locking or other coordination how is
+blk_ksm_update_capabilities() safe?
+
+Please document any assumptions about the caller (e.g. DM) that enables
+blk_ksm_update_capabilities() to be used safely.
+
+Mike
+
+>  /**
+>   * blk_ksm_init_passthrough() - Init a passthrough keyslot manager
+>   * @ksm: The keyslot manager to init
+> diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
+> index 323e15dd6fa7..164568f52be7 100644
+> --- a/include/linux/keyslot-manager.h
+> +++ b/include/linux/keyslot-manager.h
+> @@ -103,6 +103,15 @@ void blk_ksm_reprogram_all_keys(struct blk_keyslot_manager *ksm);
+>  
+>  void blk_ksm_destroy(struct blk_keyslot_manager *ksm);
+>  
+> +void blk_ksm_intersect_modes(struct blk_keyslot_manager *parent,
+> +			     const struct blk_keyslot_manager *child);
+> +
+>  void blk_ksm_init_passthrough(struct blk_keyslot_manager *ksm);
+>  
+> +bool blk_ksm_is_superset(struct blk_keyslot_manager *ksm_superset,
+> +			 struct blk_keyslot_manager *ksm_subset);
+> +
+> +void blk_ksm_update_capabilities(struct blk_keyslot_manager *target_ksm,
+> +				 struct blk_keyslot_manager *reference_ksm);
+> +
+>  #endif /* __LINUX_KEYSLOT_MANAGER_H */
+> -- 
+> 2.29.2.729.g45daf8777d-goog
+> 
 
