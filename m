@@ -2,58 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E5802F651C
-	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 16:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E522F6520
+	for <lists+linux-block@lfdr.de>; Thu, 14 Jan 2021 16:52:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbhANPs3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Jan 2021 10:48:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53742 "EHLO
+        id S1729524AbhANPsh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Jan 2021 10:48:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729480AbhANPs2 (ORCPT
+        with ESMTP id S1729504AbhANPsc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Jan 2021 10:48:28 -0500
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A30EC061799
-        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:38 -0800 (PST)
-Received: by mail-qk1-x749.google.com with SMTP id w204so5081723qka.18
-        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:38 -0800 (PST)
+        Thu, 14 Jan 2021 10:48:32 -0500
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110B4C06179B
+        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:40 -0800 (PST)
+Received: by mail-pl1-x64a.google.com with SMTP id 32so3441835plf.3
+        for <linux-block@vger.kernel.org>; Thu, 14 Jan 2021 07:47:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=T+AWygX7OH80QXvfOzs3n7xe/G6bC11ON9WcWWdoQ+8=;
-        b=U4LFD2nsz8xQHgT0rhZ1G/AMQ+FWnUzAzA6avnsMxwvpUEx7V1inLTHZQPW/o8yTam
-         aw46GWdNFUsm2oO00a4n4ZmI7vlVdSmBFGetcUXDRbc/Udqh/xgSCv552WA2uRnnQXdI
-         B9T9yIsTX6ts6jNo5CxgjE0vidmRPd2x+ooyvuit2hN7D5/lYkONfYd/jISnYd8Ote2W
-         8/hBCTJ3FEndjzU/0YlKBd32qdMUY0sFawi+o0QqDVhiCVy8rHWSaHFWA6WgRnd+4+j4
-         fLqFb0kBmx5FANNwVGnto0X18SlLpCMkazzi262K7CAjO3YV36X3Pun3EMS+IJLJvORo
-         L05A==
+        bh=g2xCDGkf1QV8m2oT6FSaZhKIqRrYyoL3mQeF9dlubXk=;
+        b=P8luqrH5fshKRy49UY321ccjqfMF+1nPrvcMgYsQRGwWvzW/T10vlEN+9nLbYE+bLf
+         NsB5qJP6UoUga+wSwzCUgpPYoUTykzMHGpgY54Dk0ey2sF18Cai0yXtv6Pn8xgAJgqSN
+         D0cvYGOQWpyl2O1Qp1p61+R5otk3CSYbHjPKSRCmZBe7yxYdsyxWWNC3O5uxD9+azrUS
+         me2JZj16nNfGby1IxHjCh6NMlxx2RqfWyGNkkEI8zh4PzJfRJz1NlS5l0zN82Qps7rRB
+         SD8uLJwWUCRC2jsiIthRvO1rU8da7j0B1yjDT/4oMNOmUTBcrWG6RaWlYYxQ369Wsd8O
+         SwUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=T+AWygX7OH80QXvfOzs3n7xe/G6bC11ON9WcWWdoQ+8=;
-        b=GwxQdANIAn+m0iutthdz0UL9J9Ce9CAVUUhpXGoEgs9EMHANNfZ32Zl5JWlzthox5J
-         WZ/0vj7b6rWiMW3QFQ5STvIXh+phPGmNAJoJV4Cma7sg3iKO1xzvAaOzwbD3Ry4GDiEP
-         K9U9tyNM0ttEgigwcN6pTOAnqPVIV81pENI8M6x9giW39DWrJYmgddW6ddnHDT5S+ZoE
-         hosRtcU9oynFlRugxcsfmVXPw9fuuwrMxHskeGja0iQ6Uyp/4OLzjmcgYpFH31h4420M
-         Gnj6tiLa+uFd6WhqIqVba3IvV2DBed32sfAprGq8J7LbcQY1ImREmOyluHGysMFuDpO/
-         kLgA==
-X-Gm-Message-State: AOAM533+Je2kUkME679/0UMtE1VP4faUvU5o6M/ZaYiXOfjbbrmCssz0
-        TAO6XPr2cnsjHBbjcHPUBm6ySpXlbX5q6moVOjWjnl2PazXiZWm0PtQ1ywr7sUCW++Kqv0TFzKR
-        17Nx/2sztwNlsvtsxI64h0fve57T5N8dubVxEDH6lRIjp4wBYaqy0uPehHSr+DTuKTSM2
-X-Google-Smtp-Source: ABdhPJzTX4rjIJNaqVFSCnwwKO5HfCbqTP33xZ/K20KnPSIjDpsOY8CWYUyJncST7orNHt+rk2kmGBrif0Q=
+        bh=g2xCDGkf1QV8m2oT6FSaZhKIqRrYyoL3mQeF9dlubXk=;
+        b=lHWFVMB8/OylhJ4RR+CutNk/Q/5jHKJh4igPoMbJDZVM/EZ/f64GEcQHvxZShEPJbW
+         JvNUFxyYm1ntLUmwVSzlHt2OW4JUmenwdu3P9DvTN86kMe00whYF9xdHsMI6Gkc6LPlt
+         /pRIpHgNzs2Swse5BsZKR+FQewUGS/JVhMfQCrcLljnfvRZsJc6o3yQNJaASb20FLqKE
+         m1OjIaYhjnbX7rm71LAoOjvQnZko3FW8AYoBdCAHT9jeWz1KQBSy9F1V7U68i7yNnnWv
+         IvPbI9xodnVVq4B4RdcqkZoxk1zM9pux+TnqTQ1oGAQ10LJUmR24qR8Pl82UQJaihNPn
+         1ITA==
+X-Gm-Message-State: AOAM5337lHrfpkspViMX6N0o76XtDt5weY/xH//kZKXajEOGiTxx9D7A
+        FBc9p+5/znWmu+PJLAZjICv1dL9moSK0f5PHxhy+S+PQjvou9SdALJPW7kUdC6HvufokGRmjV10
+        +YGVpD5IbQfV27oXmpIxNcocJdxkOpv6KbJUNIsNMs5Orli4Ymsi5+g8D4UogD+pcXdyX
+X-Google-Smtp-Source: ABdhPJwoueZO6ismwa6iFeqnJ2iy7LZ1F+RkesR2OnxUVW0OhtcSuObGIvf/i3mP2BWIbkcszBYJMxFg97c=
 Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:ad4:4a70:: with SMTP id cn16mr7421032qvb.38.1610639257345;
- Thu, 14 Jan 2021 07:47:37 -0800 (PST)
-Date:   Thu, 14 Jan 2021 15:47:20 +0000
+ (user=satyat job=sendgmr) by 2002:aa7:96d9:0:b029:1a1:c2c4:bdb8 with SMTP id
+ h25-20020aa796d90000b02901a1c2c4bdb8mr7961145pfq.72.1610639259410; Thu, 14
+ Jan 2021 07:47:39 -0800 (PST)
+Date:   Thu, 14 Jan 2021 15:47:21 +0000
 In-Reply-To: <20210114154723.2495814-1-satyat@google.com>
-Message-Id: <20210114154723.2495814-5-satyat@google.com>
+Message-Id: <20210114154723.2495814-6-satyat@google.com>
 Mime-Version: 1.0
 References: <20210114154723.2495814-1-satyat@google.com>
 X-Mailer: git-send-email 2.30.0.284.gd98b1dd5eaa7-goog
-Subject: [PATCH 4/7] block: respect blk_crypto_bio_sectors_alignment() in blk-crypto-fallback
+Subject: [PATCH 5/7] block: respect blk_crypto_bio_sectors_alignment() in blk-merge
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
@@ -63,27 +64,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make blk_crypto_split_bio_if_needed() respect
-blk_crypto_bio_sectors_alignment() when calling bio_split().
+Make blk_bio_segment_split() respect blk_crypto_bio_sectors_alignment()
+when calling bio_split(). The number of sectors is rounded down to the
+required alignment just before the call to bio_split(). This makes it
+possible for nsegs to be overestimated, but this solution is a lot
+simpler than trying to calculate the exact number of nsegs required
+for the aligned number of sectors. A future patch will attempt to
+calculate nsegs more accurately.
 
 Signed-off-by: Satya Tangirala <satyat@google.com>
 ---
- block/blk-crypto-fallback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/blk-merge.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
-index c162b754efbd..77e20175df40 100644
---- a/block/blk-crypto-fallback.c
-+++ b/block/blk-crypto-fallback.c
-@@ -222,6 +222,8 @@ static bool blk_crypto_split_bio_if_needed(struct bio **bio_ptr)
- 	if (num_sectors < bio_sectors(bio)) {
- 		struct bio *split_bio;
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index a23a91e12e24..45cda45c1066 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -236,6 +236,8 @@ static bool bvec_split_segs(const struct request_queue *q,
+  * following is guaranteed for the cloned bio:
+  * - That it has at most get_max_io_size(@q, @bio) sectors.
+  * - That it has at most queue_max_segments(@q) segments.
++ * - That the number of sectors in the returned bio is aligned to
++ *   blk_crypto_bio_sectors_alignment(@bio)
+  *
+  * Except for discard requests the cloned bio will point at the bi_io_vec of
+  * the original bio. It is the responsibility of the caller to ensure that the
+@@ -292,6 +294,9 @@ static int blk_bio_segment_split(struct request_queue *q,
+ 	 */
+ 	bio->bi_opf &= ~REQ_HIPRI;
  
-+		num_sectors = round_down(len,
-+					 blk_crypto_bio_sectors_alignment(bio));
- 		split_bio = bio_split(bio, num_sectors, GFP_NOIO, NULL);
- 		if (!split_bio) {
- 			bio->bi_status = BLK_STS_RESOURCE;
++	sectors = round_down(sectors, blk_crypto_bio_sectors_alignment(bio));
++	if (WARN_ON(sectors == 0))
++		return -EIO;
+ 	*split = bio_split(bio, sectors, GFP_NOIO, bs);
+ 	return 0;
+ }
 -- 
 2.30.0.284.gd98b1dd5eaa7-goog
 
