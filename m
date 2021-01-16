@@ -2,112 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E11C2F8E9C
-	for <lists+linux-block@lfdr.de>; Sat, 16 Jan 2021 19:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A18602F8F0F
+	for <lists+linux-block@lfdr.de>; Sat, 16 Jan 2021 21:03:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbhAPSNr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Jan 2021 13:13:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbhAPSNq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Jan 2021 13:13:46 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67455C061573
-        for <linux-block@vger.kernel.org>; Sat, 16 Jan 2021 10:13:06 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id 15so8230299pgx.7
-        for <linux-block@vger.kernel.org>; Sat, 16 Jan 2021 10:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=Eq+zx9MxmPa4AKIZDZ3v9xIKvQgbky5+QsDMHEM7b+U=;
-        b=Jh6ka+go++ldfRaOgt5xAtWh3H3SuMw8e+rU8IqizKcZaL3q3OViTiwK393gHxXT0K
-         adlu84wNjGi9It6PfmmtfqOHP6Jnl7FaI+UUX1j74S51EpoSucatRe1w6TF2JgW9M2Lu
-         GV08y84AdaaDFUh6uGxZqD3Yyyd0K6ZCUSW2X85Cbt8nO8VlovZOik4AajXMo7EYnYzK
-         erUKL7NT9CrQRbuQ+KDOOdGvl4X0Fhh2eIXcwKMaJPEgxqFFATsxLe3UDTVbWglmYXnq
-         bkZQYuXE+rt55ax3Fd9YsVo4ZKGIXeYQXFmEEm4PLiwjIAqI4H7SkrRMY5mwhO8jTXGH
-         Dy8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Eq+zx9MxmPa4AKIZDZ3v9xIKvQgbky5+QsDMHEM7b+U=;
-        b=tdw0dODf1mpaWjOpQnoVaV3Vxy9E/5AzQsqN6FJAbRGgm4fPGpxdFtBsOSkeV1qtoh
-         EkZ/WgrAWlIGBpAqDT+6ojwMPIQlQKB+fyOcCsSIfRUCVZbjUwTiiQgUKlrdgh1zepI7
-         Q/eKbanbS97kLb9Qz+3zOmV4/XuHMb5EwlCpj2sTfKEgzA0NFwkns15fNvOz9uXRg666
-         +ajGIbWv8xw/BpzD9FEHuySXBEyBwDdPZsqczbmHSLLC1W3oLFZTv93M50gy7aXT77fX
-         Ex58HFpthLvD7jX4Hp+q5digeEnQ8/D6EvskJeYuoEBBlZAOEUqnq5fbXKUig56WWydR
-         q2EA==
-X-Gm-Message-State: AOAM531+aGKqTQxaBYNHuUr+QZ8xLvQd81gWWxY8FQGdtiCjKS6yAmZl
-        CEtgTFhO5h3oz678qjD0WubFeIr/XI+Z3w==
-X-Google-Smtp-Source: ABdhPJyPmuSsY3E/zLpumiAH98/3075zWaA2NMWRLwbEA7NsKPZvtkzFCB1gjlsf6sLlc3HwMTYFMg==
-X-Received: by 2002:a65:4785:: with SMTP id e5mr18889557pgs.0.1610820785659;
-        Sat, 16 Jan 2021 10:13:05 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id x6sm11679378pfq.57.2021.01.16.10.13.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Jan 2021 10:13:05 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] Block fixes for 5.11-rc4
-Message-ID: <95bd6ed5-4851-bd56-f528-d6aebe55bfba@kernel.dk>
-Date:   Sat, 16 Jan 2021 11:13:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727090AbhAPUCs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Jan 2021 15:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbhAPUCr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 Jan 2021 15:02:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4046722CAE;
+        Sat, 16 Jan 2021 20:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610827327;
+        bh=lbbx+u5v1/2asYY+rF6qXrwswl2TvVHnjYViOrHQEAQ=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=rPIh356rUynU/si2NmFFwnNMdvr6U9fs53W09GxfvHrCsg24VDRaxadfQVgid5hB/
+         /FE+D/5v3Jgqw2Km9PJWwkok5KfyE53GR5VW8gxFiFiM90xIJuAFmAHl7q5BoVE0ve
+         qQxqxgztgiZL7P/xEReD1yvl1UZzEiwuZuzLvi2q1iAeaAVEDghGrkFCbw8+HHG4wf
+         HAEyLrViHZ8rkLKOFZhc7Acpa+AnHRfdmXV0uLlol39t9VySsQz69b2hczSG+6TWjg
+         TteMg+ZM+ibDGNy6s1O6KVMKfwd/L7+OEPz6TJr1G6lE4tP2iqXOQYbMg0EUlvXh6z
+         Okmq4VhztUDlw==
+Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 3B53F60593;
+        Sat, 16 Jan 2021 20:02:07 +0000 (UTC)
+Subject: Re: [GIT PULL] Block fixes for 5.11-rc4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <95bd6ed5-4851-bd56-f528-d6aebe55bfba@kernel.dk>
+References: <95bd6ed5-4851-bd56-f528-d6aebe55bfba@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <95bd6ed5-4851-bd56-f528-d6aebe55bfba@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.11-2021-01-16
+X-PR-Tracked-Commit-Id: b4f664252f51e119e9403ef84b6e9ff36d119510
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 54c6247d06f110d2129f9ef75e5eb02d39aec316
+Message-Id: <161082732723.9271.9519876849434903585.pr-tracker-bot@kernel.org>
+Date:   Sat, 16 Jan 2021 20:02:07 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Sat, 16 Jan 2021 11:13:03 -0700:
 
-Just an nvme pull request via Christoph:
+> git://git.kernel.dk/linux-block.git tags/block-5.11-2021-01-16
 
-- don't initialize hwmon for discover controllers (Sagi Grimberg)
-- fix iov_iter handling in nvme-tcp (Sagi Grimberg)
-- fix a preempt warning in nvme-tcp (Sagi Grimberg)
-- fix a possible NULL pointer dereference in nvme (Israel Rukshin)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/54c6247d06f110d2129f9ef75e5eb02d39aec316
 
-Please pull!
-
-
-The following changes since commit 5342fd4255021ef0c4ce7be52eea1c4ebda11c63:
-
-  bcache: set bcache device into read-only mode for BCH_FEATURE_INCOMPAT_OBSO_LARGE_BUCKET (2021-01-09 09:21:03 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux-block.git tags/block-5.11-2021-01-16
-
-for you to fetch changes up to b4f664252f51e119e9403ef84b6e9ff36d119510:
-
-  Merge tag 'nvme-5.11-2021-01-14' of git://git.infradead.org/nvme into block-5.11 (2021-01-14 15:17:33 -0700)
-
-----------------------------------------------------------------
-block-5.11-2021-01-16
-
-----------------------------------------------------------------
-Israel Rukshin (1):
-      nvmet-rdma: Fix NULL deref when setting pi_enable and traddr INADDR_ANY
-
-Jens Axboe (1):
-      Merge tag 'nvme-5.11-2021-01-14' of git://git.infradead.org/nvme into block-5.11
-
-Sagi Grimberg (3):
-      nvme-tcp: Fix warning with CONFIG_DEBUG_PREEMPT
-      nvme-tcp: fix possible data corruption with bio merges
-      nvme: don't intialize hwmon for discovery controllers
-
- drivers/nvme/host/core.c   | 11 ++++++++---
- drivers/nvme/host/tcp.c    |  4 ++--
- drivers/nvme/target/rdma.c | 16 ++++++++--------
- 3 files changed, 18 insertions(+), 13 deletions(-)
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
