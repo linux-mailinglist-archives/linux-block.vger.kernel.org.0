@@ -2,61 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ED3D2FBD84
-	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 18:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A3AE2FBEBE
+	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 19:18:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbhASR0E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Jan 2021 12:26:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
+        id S2392602AbhASSSF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Jan 2021 13:18:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390855AbhASRZc (ORCPT
+        with ESMTP id S2392531AbhASSR5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Jan 2021 12:25:32 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE67BC061573;
-        Tue, 19 Jan 2021 09:24:51 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id g3so10244155ejb.6;
-        Tue, 19 Jan 2021 09:24:51 -0800 (PST)
+        Tue, 19 Jan 2021 13:17:57 -0500
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5ABC061793
+        for <linux-block@vger.kernel.org>; Tue, 19 Jan 2021 10:17:16 -0800 (PST)
+Received: by mail-qv1-xf2c.google.com with SMTP id h21so604135qvb.8
+        for <linux-block@vger.kernel.org>; Tue, 19 Jan 2021 10:17:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qy8mcYDslRubqQMPczlIvoAYWYvQDOq96eQu0PafMfE=;
-        b=eYfwUxhXfHaIuxuNwRrS8kQvPBRik+2A3J6NIRPhdjdSewQ2FD4YP6cz0CzJ/dRyni
-         3Nl8SNvf0ZfUSIH8M8bHbgPvVZvfOZh0F1olxQfRGqmUlZJvT4CTvQ1IDetZNfnsywLS
-         YTJObCiYFz8qs4JmrJZDJYx5rTXYoq16cu9z8PGpv1+jUY7yoMBmJNHhjOqw0/673aU1
-         yQvFUpoKeMzBAzJWh6m+uMLYfNoqwWB9COa2EkQvGd1kF5yH+8MjCmiKVDLrMSlI80B3
-         Tp0X5UjNbZ7UilcKIoJ4Si85g+Hc0vOra2v3AuTTGdKTsvo2eg2Qd2ujYfLeZdBrFosQ
-         BYmA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xe5OFFqXJOpZrf1RLwm8O32rAqSG/3wjoFtUA7SKQys=;
+        b=Cu9pQdgkuPmGsFfK1Bhot2GEDj34YX1UgywSUTlAnfjohEWUJcdw+iydHBAK385oP1
+         Aon6yUBiuqKBJyOIdmjXm9R9+pwFK1YM6ancISnFbej5qVTRjaAbtoXHhnSCihZ0idpY
+         SKse4iqkAvOCevShsndb3tq/GBo/VVzIj06N5mXpU32g2HE0TAwRq/I1cpBZ8fPleUsa
+         LtFWoa9cvTJigy1WSHjsTCqUP1WXBPp/oFQ1FmgktRV7Y3nwsRJIaT/QLxF3dAIRsx/H
+         dnBrbBD3QVcioOWh2VJck5oLCvv8jfJ/t5toQlSIr58Wlgkksz0jcLXApcGe9Am4Bjkx
+         aaTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qy8mcYDslRubqQMPczlIvoAYWYvQDOq96eQu0PafMfE=;
-        b=Za0i2LrP7pnw2SHBT7m8MKwhmTaRnIwXstgAzRFjlDT/NB8+Coat7Yymuym6CI2NPS
-         l9nzXgq0IVtetQQ9InLpAK9S2viTxi5aGgK2NY4+z0Sgbcuf2yBEcGlEDqk+4NwtAaM/
-         +dofHkd9tlVqy06APZJ4oOxzElrmsMThYSGa7zySIa188Zbpe0fSSxbJxu6+Dqxp1HS4
-         2eUWyKVAl8ZUG3lQkOWjZ61CnfP+Ea7ZvgGohu7lOzUCVodog+lbfjoccei80TaaMRdo
-         qHGFQJIRLOFBldCxuI6Z5RVm39Ht/W/FQ/0++6rsdMr6E2/uJTxZ8Qy+K3jo5WQTqSuX
-         LWTw==
-X-Gm-Message-State: AOAM533bnQrhnWaaCcrtUPiUTIBd7C2ckmn/A24uCNg+4n0riS8qjZyf
-        Q9DtaAKJUsl/1xJoSz4DZTA=
-X-Google-Smtp-Source: ABdhPJwIemtsVHlkxlk8JB7ypAMSs0GcJ4fX03fAf9hgs661+3MwI0c+/ccJWxE9OP0oPSEYjCWTVQ==
-X-Received: by 2002:a17:906:dfce:: with SMTP id jt14mr2794501ejc.435.1611077090638;
-        Tue, 19 Jan 2021 09:24:50 -0800 (PST)
-Received: from [192.168.178.40] (ipbcc06d06.dynamic.kabel-deutschland.de. [188.192.109.6])
-        by smtp.gmail.com with ESMTPSA id s19sm13021962edx.7.2021.01.19.09.24.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Jan 2021 09:24:50 -0800 (PST)
-Subject: Re: [PATCH v6 1/4] sgl_alloc_order: remove 4 GiB limit, sgl_free()
- warning
-To:     Jason Gunthorpe <jgg@ziepe.ca>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xe5OFFqXJOpZrf1RLwm8O32rAqSG/3wjoFtUA7SKQys=;
+        b=A33nmt8M9+kWQ5+hEQqzfSIWkHmte961u+ufzwa1GKa87CX/BrvLtToYcEn1Vzkr4s
+         /Cz2mfU93wO7H6RhJSaOFQ129UBdwutq2jxfabGohW+9ouztxM1HdIZAOlyQdMO0G6c2
+         oU9S9kXJAJI45i9CSgt4Zx/Mk0DLZCYcSgMupoByHL3Pa0Clym1oPacI6UT1t9ae/z/J
+         DjRJxGsoeBoY0fwUPM8cRH0bBV4fHaiBG/OsRcsGNvZJVG5Ke1JenLue6WW7TAUCc4cU
+         ChxCz/b7KWecIQ3u7rrAiRA4YVqrxY5uIqJsPy+BMnO4TD6ncwY07QRP0OAeT1ejajGu
+         tNig==
+X-Gm-Message-State: AOAM531YFcSAZv6zTxYhRNBi7Zs3Hjfoa7PIidONK9PEfmfudPCtngNN
+        tagiwYKoLPQEra9ubab+5oLfmN7Wmv/Oaw==
+X-Google-Smtp-Source: ABdhPJyeOj0cdYmfZSjIN+M4tTaXUXGkK5bEWqkePXdbU3A+6DIKwM6G35J8cfVSNYvzxhuLPBTc/w==
+X-Received: by 2002:a0c:a525:: with SMTP id y34mr5711355qvy.37.1611080235780;
+        Tue, 19 Jan 2021 10:17:15 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
+        by smtp.gmail.com with ESMTPSA id f134sm13257161qke.23.2021.01.19.10.17.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Jan 2021 10:17:15 -0800 (PST)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1l1vZ4-003pQw-MM; Tue, 19 Jan 2021 14:17:14 -0400
+Date:   Tue, 19 Jan 2021 14:17:14 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bodo Stroesser <bostroesser@gmail.com>
 Cc:     Douglas Gilbert <dgilbert@interlog.com>,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         target-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
         jejb@linux.vnet.ibm.com, ddiss@suse.de, bvanassche@acm.org
+Subject: Re: [PATCH v6 1/4] sgl_alloc_order: remove 4 GiB limit, sgl_free()
+ warning
+Message-ID: <20210119181714.GA909645@ziepe.ca>
 References: <20210118163006.61659-1-dgilbert@interlog.com>
  <20210118163006.61659-2-dgilbert@interlog.com>
  <20210118182854.GJ4605@ziepe.ca>
@@ -64,94 +69,32 @@ References: <20210118163006.61659-1-dgilbert@interlog.com>
  <20210118202431.GO4605@ziepe.ca>
  <7f443666-b210-6f99-7b50-6c26d87fa7ca@gmail.com>
  <20210118234818.GP4605@ziepe.ca>
-From:   Bodo Stroesser <bostroesser@gmail.com>
-Message-ID: <6faed1e2-13bc-68ba-7726-91924cf21b66@gmail.com>
-Date:   Tue, 19 Jan 2021 18:24:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <6faed1e2-13bc-68ba-7726-91924cf21b66@gmail.com>
+ <20210119180327.GX4605@ziepe.ca>
+ <7ba5bfdf-6bc2-eddb-4c26-133c1bc08a33@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210118234818.GP4605@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ba5bfdf-6bc2-eddb-4c26-133c1bc08a33@gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 19.01.21 00:48, Jason Gunthorpe wrote:
-> On Mon, Jan 18, 2021 at 10:22:56PM +0100, Bodo Stroesser wrote:
->> On 18.01.21 21:24, Jason Gunthorpe wrote:
->>> On Mon, Jan 18, 2021 at 03:08:51PM -0500, Douglas Gilbert wrote:
->>>> On 2021-01-18 1:28 p.m., Jason Gunthorpe wrote:
->>>>> On Mon, Jan 18, 2021 at 11:30:03AM -0500, Douglas Gilbert wrote:
->>>>>
->>>>>> After several flawed attempts to detect overflow, take the fastest
->>>>>> route by stating as a pre-condition that the 'order' function argument
->>>>>> cannot exceed 16 (2^16 * 4k = 256 MiB).
->>>>>
->>>>> That doesn't help, the point of the overflow check is similar to
->>>>> overflow checks in kcalloc: to prevent the routine from allocating
->>>>> less memory than the caller might assume.
->>>>>
->>>>> For instance ipr_store_update_fw() uses request_firmware() (which is
->>>>> controlled by userspace) to drive the length argument to
->>>>> sgl_alloc_order(). If userpace gives too large a value this will
->>>>> corrupt kernel memory.
->>>>>
->>>>> So this math:
->>>>>
->>>>>      	nent = round_up(length, PAGE_SIZE << order) >> (PAGE_SHIFT + order);
->>>>
->>>> But that check itself overflows if order is too large (e.g. 65).
->>>
->>> I don't reall care about order. It is always controlled by the kernel
->>> and it is fine to just require it be low enough to not
->>> overflow. length is the data under userspace control so math on it
->>> must be checked for overflow.
->>>
->>>> Also note there is another pre-condition statement in that function's
->>>> definition, namely that length cannot be 0.
->>>
->>> I don't see callers checking for that either, if it is true length 0
->>> can't be allowed it should be blocked in the function
->>>
->>> Jason
->>>
->>
->> A already said, I also think there should be a check for length or
->> rather nent overflow.
->>
->> I like the easy to understand check in your proposed code:
->>
->> 	if (length >> (PAGE_SHIFT + order) >= UINT_MAX)
->> 		return NULL;
->>
->>
->> But I don't understand, why you open-coded the nent calculation:
->>
->> 	nent = length >> (PAGE_SHIFT + order);
->> 	if (length & ((1ULL << (PAGE_SHIFT + order)) - 1))
->> 		nent++;
+On Tue, Jan 19, 2021 at 07:08:32PM +0100, Bodo Stroesser wrote:
+> On 19.01.21 19:03, Jason Gunthorpe wrote:
+> > On Tue, Jan 19, 2021 at 06:24:49PM +0100, Bodo Stroesser wrote:
+> > > 
+> > > I had a second look into math.h, but I don't find any reason why round_up
+> > > could overflow. Can you give a hint please?
+> > 
+> > #define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
+> >                                                      ^^^^^
+> > 
+> > That +1 can overflow
 > 
-> It is necessary to properly check for overflow, because the easy to
-> understand check doesn't prove that round_up will work, only that >>
-> results in something that fits in an int and that +1 won't overflow
-> the int.
-> 
->> Wouldn't it be better to keep the original line instead:
->>
->> 	nent = round_up(length, PAGE_SIZE << order) >> (PAGE_SHIFT + order);
-> 
-> This can overflow inside the round_up
+> But that would be a unsigned long long overflow. I considered this to
+> not be relevant.
 
-I had a second look into math.h, but I don't find any reason why 
-round_up could overflow. Can you give a hint please?
+Why not? It still makes nents 0 and still causes a bad bug
 
-Regarding the overflow checks: would it be a good idea to not check
-length >> (PAGE_SHIFT + order) in the beginning, but check nalloc
-immediately before the kmalloc_array() as the only overrun check:
-
-	if ((unsigned long long)nalloc << (PAGE_SHIFT + order) < length)
-		return NULL;
-
--Bodo
+Jason
