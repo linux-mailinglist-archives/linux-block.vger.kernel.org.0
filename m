@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C4522FB1D4
-	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 07:46:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE8D2FB1DA
+	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 07:46:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390891AbhASFiI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Jan 2021 00:38:08 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:40916 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388447AbhASFKo (ORCPT
+        id S2390990AbhASFiO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Jan 2021 00:38:14 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:51835 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389314AbhASFLK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Jan 2021 00:10:44 -0500
+        Tue, 19 Jan 2021 00:11:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1611033043; x=1642569043;
+  t=1611033069; x=1642569069;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=w8Mrhn53C/xIBUdIFO7UKVArjHLD+jnktLncJKflGH0=;
-  b=A6shQQssXe5lCJyYySIWAaXX3f9xVuUkiwPju1rU3Hw1HkuQnsjqFF3a
-   y0imaY05Doo0tUDv+9EbctpkF9SsJNkoofLIL0Su6suKjCIRtEe0CKzI9
-   t67HeHbUMYv9mfNZRDrn5lO869a/r8tKc0RWNQ36HbPNFveqvqWhmGhZU
-   6AUjPfekUVNgY/YVj+cJ/Sa3DY225gqyaUiC2HwMD0cgxhT0XhatmNVcP
-   tAiS2kSE25l8zrJRMB0gfjuUL+2ET+YpL5vPo81zkLL/ZNs5H3eYkctuq
-   adga7qFMo2lsuAum+UqyPpKQUjmbg1kBCyzxUuCk65F68EsGXbWec/rJw
+  bh=wDWv58LHKZByyePyDiVmBTfQ0E5jsIWpV0zm9LPXpkA=;
+  b=qBiZpaumSDTpkYLLaDKrdIIaENH9awMoOcNQx+qV+IZi39jSFwlBFMKj
+   SBL0Wb/8Cd8eo49GUXs0DGvClJMryB1586Xl9Yaf+xbTyhScxNgLVkQfH
+   pQaJJgYm1APfbJzqOoqKJuNzm1Ji882ET4/Xg2buLtUnHoj1XfdDpF3LE
+   BEipdHIgzYFlU6Kb5gwil/n/bTPl/Z/hsdduUo0z8Fva7F8iyCksWnfGk
+   CCtfiHUQu1KsgWOsqZTA5x0xcMiVNiAkfe4cH2kCmnwf7nPrUsuqA+4Ay
+   eQw0NjHtdvekK6nF4RXcGLFmkaDAvj5t+52fez2LXfkYG+oTlkxNOwfuL
    w==;
-IronPort-SDR: w9sGdC8A1/2YAZm1cF3Zkx0CIHGMOdZ2yNGawzpWIafsKVHKOMwMByTYvZqt2Zs/x7Dlk7PUPZ
- PxcK+SPLugFkyxg5wxI3Wme/2LUW5FhNK9FAr1dHc8rJxld14vRXZCH2tj1+XCzqCGuDuaRruq
- XM4De1q+2j/LMkX4eQMKnhi8Yruj8EFULYWbo6P6Ctmikc6zf+c7xNDQpcrxBduT89An69AOHP
- G8IFqE1ssb35mYs8qMHRawqRz9HtLEJrPvcMNGTY1CQ2Gy4xIA4mlQeyCNmd2rHbcqk4Qj6XNu
- uDw=
+IronPort-SDR: yOKOfYWsY5pvhNiovVDC3nHUDdP46u6zCAoVRLAtMPAlBKuoy6uT5mkhlPsWV2sJJLGcudIsAM
+ QlzSHVHQLlyhYL+akfnQ/cyCU6IfTpsMt3+5bcI6d+44dxN1tF0lX6qxGxIPT4WP+HQPkKcgde
+ AY4YUAYNfcUU7qJFeTw6bU3pwH2oIIIPpoF2B4Cz+A7gKsAMohlMgMQIWM5TXaJiXEgwPckDoe
+ nFi8SqSIwKD3fTv5A2SgPwNFDuLkGvJzm21CPRn5R6l1614RyMrc+Tp/A+cMiVWfL0Xfw9Lfcn
+ F2A=
 X-IronPort-AV: E=Sophos;i="5.79,357,1602518400"; 
-   d="scan'208";a="157758656"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:08:44 +0800
-IronPort-SDR: /4rknuhBgDt675asJXfOJT26NRbCq/B9PRx3/J8J6q0CouuDDLww71phCdwW4tmclxneBFI+0T
- ayjDOD3yQIDTLMAvYW50nqtkkhFRW1XCfUBESumEK7E7j8UCBbHZhNHItdwsO/9VHzReTuxV1r
- rfZrlzNGZ+XEE14l0430IfGsqKnfXTX7jeajLHv1MP3445CLcNMxfJkESLLRjDBtNNGRnes2lO
- gOLvtuiTlu0PsGwJWnMwDSoTAGfFyxyvDz09WaPK+5R6iwpdcEL6kuSkw/mbAu4uKwDC9mnPDJ
- P4eVH92RIt1EAfIKyStvw8Qe
+   d="scan'208";a="157763947"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:08:51 +0800
+IronPort-SDR: bQvCPuZFI+aaY4xhcSrkTYVAP+H+T/nZnmXJ0IEqYDNSJ4rjFZLxr0B/CjtmBmF35t5xDh8hZ4
+ fW0T4jFym2ovFkxiaBoEjggq43wN03Tx3A5wehqF7pdpRHHIqlDZeOuoWEGtydIg08AuyagMqi
+ vJrHcbx+1E0QvxtTky5RRLSrtOaBDf4BwCmv71hlnGg0KLMnFgD+PS141W8c4ATBVYk+qNS/Jy
+ hN7ZphN8cRo/dU0Zah+XDotNjI33TlkN8fOGxLttYxnuHdKaInLpZbZ4ZtUD7YUf5wIBNb8+3U
+ tgEvN2TKuKmZBSxUcdua5vJl
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:51:20 -0800
-IronPort-SDR: xHO7HSedCSnJKcraGlp7cKbNn6U0vc/h0J7EqOAnrofU3EEgY4EwjLXGgaVPQ5fUfdFd219vRC
- LbXct13YZVVN6KiDu7+byPcBbjh+W64o6mdrAGqpUIdo+laa5H7zxxeLGqJmYjiZ2ypNwYS6EG
- 9RidoyBhQkvm19kb9tceoxELnw81qM1BKYuv80rD63H6aZrLZIzawrq4dPgHk7mfEo+EtG3r5z
- NCmJQgYY2IUYeXtIflYFA9t16yIX5Qq8Uqp9iDzkQXKkZabUiMynH1bRZzCY09gOJtgWn+rlXY
- Wrs=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:53:29 -0800
+IronPort-SDR: zqmdr8uNSGUFgZ7LrU0GCeEBE+HwqEp3d6yRCc4vmJxwtA/Yo4CFOUY62UCXmXuPUcpvGTrzPZ
+ ZvCO6cAymIpMTiIbl4e2oge4VHFzjo0lUvlL/UEVWaUmjNMbvFL6pQOn3IbgBdVAxsKv/xFkfH
+ Muc3sg0LIgVa0PCQf7zl6WshjAalrUxlLiYGPDB48hNEN7m0zho6fJXM/WqCYq7SGSNzGvX8Gl
+ 6TzvHwI3LTXrv+sfDj/IEWvxKvmwhi3VABVseKTOUqh9RvyxCMjwM25iJM4iyI7r5ezZ5UcdOF
+ Ldg=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:08:44 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:08:51 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     jfs-discussion@lists.sourceforge.net, dm-devel@redhat.com,
         osandov@fb.com, bvanassche@acm.org, gustavo@embeddedor.com,
         asml.silence@gmail.com, jefflexu@linux.alibaba.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [RFC PATCH 18/37] bcache: use bio_init_fields in journal
-Date:   Mon, 18 Jan 2021 21:06:12 -0800
-Message-Id: <20210119050631.57073-19-chaitanya.kulkarni@wdc.com>
+Subject: [RFC PATCH 19/37] bcache: use bio_init_fields in super
+Date:   Mon, 18 Jan 2021 21:06:13 -0800
+Message-Id: <20210119050631.57073-20-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
 References: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
@@ -84,67 +84,61 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/md/bcache/journal.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/md/bcache/super.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index aefbdb7e003b..0aabcb5cf2ad 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -54,12 +54,10 @@ reread:		left = ca->sb.bucket_size - offset;
- 		len = min_t(unsigned int, left, PAGE_SECTORS << JSET_BITS);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index a4752ac410dc..b4ced138a0c0 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -312,9 +312,7 @@ void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent)
+ 	closure_init(cl, parent);
  
- 		bio_reset(bio);
--		bio->bi_iter.bi_sector	= bucket + offset;
--		bio_set_dev(bio, ca->bdev);
-+		bio_init_fields(bio, ca->bdev, bucket + offset,
-+				&cl, journal_read_endio, 0, 0);
- 		bio->bi_iter.bi_size	= len << 9;
+ 	bio_init(bio, dc->sb_bv, 1);
+-	bio_set_dev(bio, dc->bdev);
+-	bio->bi_end_io	= write_bdev_super_endio;
+-	bio->bi_private = dc;
++	bio_init_fields(bio, dc->bdev, 0, dc, write_bdev_super_endio, 0, 0);
  
--		bio->bi_end_io	= journal_read_endio;
--		bio->bi_private = &cl;
- 		bio_set_op_attrs(bio, REQ_OP_READ, 0);
- 		bch_bio_map(bio, data);
+ 	closure_get(cl);
+ 	/* I/O request sent to backing device */
+@@ -356,9 +354,7 @@ void bcache_write_super(struct cache_set *c)
+ 		ca->sb.version = version;
  
-@@ -588,6 +586,7 @@ static void do_journal_discard(struct cache *ca)
- {
- 	struct journal_device *ja = &ca->journal;
- 	struct bio *bio = &ja->discard_bio;
-+	sector_t sect;
+ 	bio_init(bio, ca->sb_bv, 1);
+-	bio_set_dev(bio, ca->bdev);
+-	bio->bi_end_io	= write_super_endio;
+-	bio->bi_private = ca;
++	bio_init_fields(bio, ca->bdev, 0, ca, write_super_endio, 0, 0);
  
- 	if (!ca->discard) {
- 		ja->discard_idx = ja->last_idx;
-@@ -613,12 +612,10 @@ static void do_journal_discard(struct cache *ca)
+ 	closure_get(cl);
+ 	__write_super(&ca->sb, ca->sb_disk, bio);
+@@ -402,9 +398,7 @@ static void uuid_io(struct cache_set *c, int op, unsigned long op_flags,
  
- 		bio_init(bio, bio->bi_inline_vecs, 1);
- 		bio_set_op_attrs(bio, REQ_OP_DISCARD, 0);
--		bio->bi_iter.bi_sector	= bucket_to_sector(ca->set,
--						ca->sb.d[ja->discard_idx]);
--		bio_set_dev(bio, ca->bdev);
- 		bio->bi_iter.bi_size	= bucket_bytes(ca);
--		bio->bi_end_io		= journal_discard_endio;
+ 		bio->bi_opf = REQ_SYNC | REQ_META | op_flags;
+ 		bio->bi_iter.bi_size = KEY_SIZE(k) << 9;
 -
-+		sect = bucket_to_sector(ca->set, ca->sb.d[ja->discard_idx]);
-+		bio_init_fields(bio, ca->bdev, sect, NULL,
-+				journal_discard_endio, 0, 0);
- 		closure_get(&ca->set->cl);
- 		INIT_WORK(&ja->discard_work, journal_discard_work);
- 		queue_work(bch_journal_wq, &ja->discard_work);
-@@ -774,12 +771,10 @@ static void journal_write_unlocked(struct closure *cl)
- 		atomic_long_add(sectors, &ca->meta_sectors_written);
+-		bio->bi_end_io	= uuid_endio;
+-		bio->bi_private = cl;
++		bio_init_fields(bio, NULL, 0, cl, uuid_endio, 0, 0);
+ 		bio_set_op_attrs(bio, op, REQ_SYNC|REQ_META|op_flags);
+ 		bch_bio_map(bio, c->uuids);
  
- 		bio_reset(bio);
--		bio->bi_iter.bi_sector	= PTR_OFFSET(k, i);
--		bio_set_dev(bio, ca->bdev);
- 		bio->bi_iter.bi_size = sectors << 9;
+@@ -566,12 +560,9 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
  
--		bio->bi_end_io	= journal_write_endio;
--		bio->bi_private = w;
-+		bio_init_fields(bio, ca->bdev, PTR_OFFSET(k, i), w,
-+				journal_write_endio, 0, 0);
- 		bio_set_op_attrs(bio, REQ_OP_WRITE,
- 				 REQ_SYNC|REQ_META|REQ_PREFLUSH|REQ_FUA);
- 		bch_bio_map(bio, w->data);
+ 	closure_init_stack(cl);
+ 
+-	bio->bi_iter.bi_sector	= bucket * ca->sb.bucket_size;
+-	bio_set_dev(bio, ca->bdev);
+ 	bio->bi_iter.bi_size	= meta_bucket_bytes(&ca->sb);
+-
+-	bio->bi_end_io	= prio_endio;
+-	bio->bi_private = ca;
++	bio_init_fields(bio, ca->bdev, bucket * ca->sb.bucket_size, ca,
++			prio_endio, 0, 0);
+ 	bio_set_op_attrs(bio, op, REQ_SYNC|REQ_META|op_flags);
+ 	bch_bio_map(bio, ca->disk_buckets);
+ 
 -- 
 2.22.1
 
