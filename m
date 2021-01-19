@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 721502FB041
-	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 06:25:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E50B92FB0C4
+	for <lists+linux-block@lfdr.de>; Tue, 19 Jan 2021 06:38:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389690AbhASFM3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Jan 2021 00:12:29 -0500
+        id S1732443AbhASFdM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Jan 2021 00:33:12 -0500
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:51811 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389393AbhASFLc (ORCPT
+        with ESMTP id S2389834AbhASFH5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Jan 2021 00:11:32 -0500
+        Tue, 19 Jan 2021 00:07:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1611033092; x=1642569092;
+  t=1611032876; x=1642568876;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qoLn2/rcoIe5Xy1n1hC3Lt6hQmgoOhAQmKsRVXN2pPE=;
-  b=KoF7KWQBPdGWGHFA65SbXnOdhUqaL3slSuZod9pGPHFjUfmAVD3NmS6n
-   1uK3cMo1BqS00wSrxw2aD3H9f0zIM42pQ3HipI80wM84BXnFnxw5T0Jfn
-   m4ZF+36CRCeTfIt8NdlOyGC65OZ2V6p48gNQnNFS16SZLrhLtifUx0Rst
-   lugCPmT/XxFnTV3vyLfVSSmaRuUNiArPc6WJqi2cbHEK8Fumq+xVBwSjs
-   6MoCesfjkTIhEith4mGQMaJzrHDuCevd+8mazJ8Bd0hhbubgTDjUbO2AM
-   4boDZHIMJgwNmKAUzzHWL6ntFOvAwhTWIuQmXGpctLUvvKGFHNjDI/P4/
-   g==;
-IronPort-SDR: Sc1cagcp05wNi2gPdQB66ZrsusaAKJdzIDe8CzUtmgYSVeCWffOGB4WamBfNMqdybt8inn5CFE
- 4c4eaVNL/mxAhB4VNOta4avTywzNn1LZHVlhQjwF+r5TtB/utQTB/kD+QlEOH3BdF18S1Nb4WS
- YWHMv0vZxi1o0bBsjOLaEru9HdlhdWPIWW8QMHhuTvPa7TwtfzyPWgSszh1c4DZrUZqOGggoKg
- Jsxg/mlpDBbAS2i0FBx23xPliBUIcVqCj1c4YNtIomXUOeisByIUhducn7/0CbpMmvHpMnBj9h
- 7Vs=
+  bh=ZpEdbwVtPI0wVPLoSXxNauBL5CtIsv1pRUC3n0RI/T8=;
+  b=RQ08hgtgbjsaEc/NjIqdiz+HXgZyCES5X29TOkQCoOtMdpU3OGNR+ZXq
+   owpIEhX9i5TG/PujPBmIl4HioeOCUY9ZJxiIM9G4iUedYHqoRU4i8xD7r
+   R47ESZvAyr/qGqW41V55myWI2oOj551s3Rvdwt8Z76+yS4mIw4d8t/bGu
+   t75OGek8s90L7x9HrJmD8TPnvvZsQXTUr2+Mt/Nb85i3zrXLrQhUHrp2v
+   7qjBWLKT7LrwRR6xvfxz140fQflG5Mj2ZCxa+nlI/E4WQ9bnqAscJGAnW
+   l0e2nMfDvY1kIdyYV07+J1b1qNJi9ZSRf90LERkYC/mSb+dFYaafI7o86
+   A==;
+IronPort-SDR: 7b250JfhUMmv07RyLN/n/+VSCSNzF7O9pHe6QqDNllClPx/HsmrdWDQX826O9RlqR1t+o0FeU2
+ 3nNFZSceZBxc+aDMcwdP+dqFkMCj5kQPJYv1fzOumgTYkODSh19iDZlTgzXzIkIl4EXn+H85xz
+ gDFMkA/Ic5uGB4YjCCWD8MdAfX+JR90Ngoxx17kM8pieDOeCh2XmQhzKTAODhzycVqg5moMAQL
+ 78vzF77Oy3BNccc/JvDu8CE40KVv1iE2giVQmFYdO/4t9SjS5FPbO3dI5Yaz8AkTk94l3Htsmd
+ wck=
 X-IronPort-AV: E=Sophos;i="5.79,357,1602518400"; 
-   d="scan'208";a="157763964"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:09:06 +0800
-IronPort-SDR: l0fGcm/mOaOvrk3ufBaX+Z/JgvxI9YqtJPwTy7GsQJFIw+iHk2No+n9cg2xF3/o1kj41JtgFoy
- KgqJ5FUZvI7zi5KU/Y1P55lf9RcNzP0Ipuh5OQYWlzhIQdbSkO+NBnXNTFsREg+DOVFKYwVPE3
- 673Y2brb4YkMXNlnLa3fTxM/hxCJrtRJtqk7KclrfCGAQS632iQYaCXGQWK3FDUqqdKyQa3hHL
- 85lBTtP5HoxeeunvXyGizhknf6hV66hPA/ZmJXnnLBOF781krzjsvPFwrSAt4qSmMt0kosYvZz
- wVJ5mlUHv3PO8nmWRIAhnwu7
+   d="scan'208";a="157763755"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:06:49 +0800
+IronPort-SDR: PnLGHmRPjPv6mVfmbEJTDrsqOIAqCK5GE42P8oM4jZlpKaoSdYM+TtBl67mehGcYNisyA19sgS
+ yLwLCTScdhlnnkHND2lvQFzDCcnbqO5oHieP/2DhU0SfGiHR2VSi5UBNo8L5qtweDt6D+VePPZ
+ pPNMxR6viaOuZURe4jB076VeJLcyQpX+8pSZ9P1TaSQIc3p8YBehcDrmaTPMXbRArxJfcRdjPN
+ w+ZRAQSYb5s6fq6Sn6wRcGzFeWcgq5QGP2XOGDsnAAmFRlkU6L8HW/TO5YqJ86+Jq4wC5wG0XV
+ 85gjqPbui5TRiNpxdNbbC8OF
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:51:42 -0800
-IronPort-SDR: YTx2sPI+S6B3s0zwLxmE9JLYYaAYYdsBlTi/QBtBxd/WH8egWo/s2t318EELWraWDHn4aYbSz+
- GTI/c0RV1f+ot/Yyog9omiJsfpSR5vK5KT4IJoKlPtJElbAfKckX/OVaF06ki+8DfWwezcFUha
- cQceDg9EfnRtvtgEBcHMkJqbMz+Hf9lDezVT3gRBkt4FXtAK8F0+3Jw8Dlu3r3MJXdxsm4oEy7
- lej+XAjPd2ZdZGUr333NTWzmm/vXM3I7gj6chGIMLH1v36uCSVr35WYHxwt+NXTGuosML8y4Lr
- Cxg=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:51:27 -0800
+IronPort-SDR: XoCPpBnEyAS0C26NACpPNr6hc2mgCkBhR/slXc8vz6d3NBxAPkngsmR+924mOBWvaQi6WZHAP1
+ e4hIrlRuqs07ngks51wLmgnhqz6gvPVZzt6c/xtYGHpktVNv4G+tlyQwdXjSld+DKB31WM3e0X
+ o4xJZXi1ZVzEGxYUOHxoYuaGW27b5AhyEnbnJEWPqSGnvSmb4YAK4r55aDWz+qouFqxTNJ1Ve4
+ MmaSi236cQpo5ubtxkwfTjN+hUw7qXvWgQEEinw8kPT9rlOQYeg6qJM9v7qJDF5MBv1NXcWrD2
+ OOA=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:09:06 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:06:49 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     jfs-discussion@lists.sourceforge.net, dm-devel@redhat.com,
         osandov@fb.com, bvanassche@acm.org, gustavo@embeddedor.com,
         asml.silence@gmail.com, jefflexu@linux.alibaba.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [RFC PATCH 21/37] dm-bufio: use bio_init_fields
-Date:   Mon, 18 Jan 2021 21:06:15 -0800
-Message-Id: <20210119050631.57073-22-chaitanya.kulkarni@wdc.com>
+Subject: [RFC PATCH 02/37] fs: use bio_init_fields in block_dev
+Date:   Mon, 18 Jan 2021 21:05:56 -0800
+Message-Id: <20210119050631.57073-3-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
 References: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
@@ -84,26 +84,44 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/md/dm-bufio.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ fs/block_dev.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 9c1a86bde658..1295e7e33e06 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -633,11 +633,8 @@ static void use_bio(struct dm_buffer *b, int rw, sector_t sector,
- 		return;
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 3e5b02f6606c..44b992976ee5 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -239,12 +239,9 @@ __blkdev_direct_IO_simple(struct kiocb *iocb, struct iov_iter *iter,
  	}
  
--	bio->bi_iter.bi_sector = sector;
--	bio_set_dev(bio, b->c->bdev);
- 	bio_set_op_attrs(bio, rw, 0);
--	bio->bi_end_io = bio_complete;
--	bio->bi_private = b;
-+	bio_init_fields(bio, b->c->bdev, sector, b, bio_complete, 0, 0);
+ 	bio_init(&bio, vecs, nr_pages);
+-	bio_set_dev(&bio, bdev);
+-	bio.bi_iter.bi_sector = pos >> 9;
+-	bio.bi_write_hint = iocb->ki_hint;
+-	bio.bi_private = current;
+-	bio.bi_end_io = blkdev_bio_end_io_simple;
+-	bio.bi_ioprio = iocb->ki_ioprio;
++	bio_init_fields(&bio, bdev, pos >> 9, current, blkdev_bio_end_io_simple,
++			iocb->ki_ioprio, iocb->ki_hint);
++
  
- 	ptr = (char *)b->data + offset;
- 	len = n_sectors << SECTOR_SHIFT;
+ 	ret = bio_iov_iter_get_pages(&bio, iter);
+ 	if (unlikely(ret))
+@@ -390,12 +387,8 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 		blk_start_plug(&plug);
+ 
+ 	for (;;) {
+-		bio_set_dev(bio, bdev);
+-		bio->bi_iter.bi_sector = pos >> 9;
+-		bio->bi_write_hint = iocb->ki_hint;
+-		bio->bi_private = dio;
+-		bio->bi_end_io = blkdev_bio_end_io;
+-		bio->bi_ioprio = iocb->ki_ioprio;
++		bio_init_fields(bio, bdev, pos >> 9, dio, blkdev_bio_end_io,
++				iocb->ki_ioprio, iocb->ki_hint);
+ 
+ 		ret = bio_iov_iter_get_pages(bio, iter);
+ 		if (unlikely(ret)) {
 -- 
 2.22.1
 
