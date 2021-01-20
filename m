@@ -2,45 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31CB62FD11C
-	for <lists+linux-block@lfdr.de>; Wed, 20 Jan 2021 14:19:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2462FD306
+	for <lists+linux-block@lfdr.de>; Wed, 20 Jan 2021 15:52:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389360AbhATNFW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Jan 2021 08:05:22 -0500
-Received: from verein.lst.de ([213.95.11.211]:55685 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389858AbhATMht (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Jan 2021 07:37:49 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 086E667357; Wed, 20 Jan 2021 13:36:50 +0100 (CET)
-Date:   Wed, 20 Jan 2021 13:36:49 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Keith Busch <Keith.Busch@wdc.com>
-Subject: Re: [PATCH v2 1/2] block: introduce zone_write_granularity limit
-Message-ID: <20210120123649.GA3870@lst.de>
-References: <20210119131723.1637853-1-damien.lemoal@wdc.com> <20210119131723.1637853-2-damien.lemoal@wdc.com> <20210120101018.GB25746@lst.de> <BL0PR04MB65144D0B02939681617B61A8E7A20@BL0PR04MB6514.namprd04.prod.outlook.com>
+        id S1726699AbhATOOi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Jan 2021 09:14:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732626AbhATMxh (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 20 Jan 2021 07:53:37 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07BCC06179F
+        for <linux-block@vger.kernel.org>; Wed, 20 Jan 2021 04:52:25 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id hs11so31036029ejc.1
+        for <linux-block@vger.kernel.org>; Wed, 20 Jan 2021 04:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Br6UVy1fKZWQK9T/1MzkZkQs0zVn+GaHRpNTTy2H0w=;
+        b=H6H+fu1CGqkj8wmSjfWKLRC7BiUGeypprNzWTcxgUWM4iIMfi4c8Q5P6MBPQ2Mu/f8
+         54PKBL5Fxk15XMkHTxg2SVO+KbPcbltgwUMkqUmm7pCYjR+VeSf6rA4X63JRhbjbsctR
+         fLmPLn9589W4HPoJHrxRTnz7y4TldZUe8ANYnFhQSnW7jB1pRawzZVBr8yPsOpl5SI5Z
+         vinGaC1arl1+CwEH8pohPmaiRm8OH7OY7uEtH9zXSEeDFkNeGc5PbLlETu6eZ/WftLQo
+         IRLL7Z89fnig+MO75HQ5czBSWbCY2YPAyTf2siAh36BYiDVPqcrCDh2Rrng9hZIT+wj1
+         p7Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Br6UVy1fKZWQK9T/1MzkZkQs0zVn+GaHRpNTTy2H0w=;
+        b=kxHUUfQ5EiG0AetYefx3DYTd5kzUoO8cYqEGoEOLCu8ZuJGVVvugMsz78PsTXF6Zbl
+         6t/rEFcObqfxZwvDynZ76fXXYSkRoZNKjy71RBYGuKthRL6OTPLR5xRlxGMBuRdem8Pz
+         IcnaEdXjkCWk4WyKao0rchluOP4wx5HOz5L0Tf7oaancaKsrBV1TQBMxMLsGd2zsaXM5
+         lk4I2xebLYW3FyipDA9g/OUJRTMkzq//1Lre6CMpbbGEYVZJumb0TrwCiLjOiYhsUrKh
+         tADtiJyIbhAbxo9fvBsRVBHepTyiwG8rh2mRp4krDOCZtUvZiJqUjLf95XyXkom+mwQ+
+         H1/g==
+X-Gm-Message-State: AOAM530IjQpXvH+2hztYENq08g26HrwYhl+4QT0GXkP9jSOdkxR6cWu2
+        5vuglB9WCetb2oewF+igfNfSQ50pgh4veTJvlQEhqQ==
+X-Google-Smtp-Source: ABdhPJxbwaiXd9u8RPNyuuEyy8rlQ3s19h6lQgI7PtIbpz4NYtSFCpXJkQOWaRs4sUzKSIbyT7+M448CKqQcwJwCqcU=
+X-Received: by 2002:a17:906:a669:: with SMTP id en9mr6270740ejb.353.1611147144655;
+ Wed, 20 Jan 2021 04:52:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR04MB65144D0B02939681617B61A8E7A20@BL0PR04MB6514.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20210110094457.6624-1-guoqing.jiang@cloud.ionos.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Wed, 20 Jan 2021 13:52:13 +0100
+Message-ID: <CAMGffE=K7Q_Rho0WPfDo_HCLM=mLf6OTx1CYknBXEm0sT9-LCg@mail.gmail.com>
+Subject: Re: [PATCH RFC V4 0/4] block: add two statistic tables
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 11:00:29AM +0000, Damien Le Moal wrote:
-> Hmm. I wanted to keep this limit to 0 for regular devices. If we default to 512,
-> regular devices will see that value. They can ignore it of course, but having it
-> as 0 makes it clear that it should be ignored.
-
-Hmm.  Maybe we should keep the 0 default and only set it in sd.c.  Then the
-query helper can default to the logical block size instead.  That'll just d
-o the right thing without changes to most drivers.
+On Sun, Jan 10, 2021 at 10:45 AM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+> Hi,
+>
+> No more comments since the last version, so this version is just rebase
+> with latest tree.
+>
+> To make the tables work, it is necessary to enable BLK_ADDITIONAL_DISKSTAT
+> option, and also enable the sysfs node.
+> # echo 1 > /sys/block/md0/queue/io_extra_stats
+>
+> After that, the size and latency of io are recorded in each table.
+>
+> Thanks,
+> Guoqing
+>
+> RFC V3: https://marc.info/?l=linux-block&m=159730633416534&w=2
+> * Move the #ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT into the function body
+>   per Johannes's comment.
+> * Tweak the output of two tables to make they are more intuitive
+>
+> RFC V2: https://marc.info/?l=linux-block&m=159467483514062&w=2
+> * don't call ktime_get_ns and drop unnecessary patches.
+> * add io_extra_stats to avoid potential overhead.
+>
+> RFC V1: https://marc.info/?l=linux-block&m=159419516730386&w=2
+>
+> Guoqing Jiang (4):
+>   block: add a statistic table for io latency
+>   block: add a statistic table for io sector
+>   block: add io_extra_stats node
+>   block: call blk_additional_{latency,sector} only when io_extra_stats
+>     is true
+>
+>  Documentation/ABI/testing/sysfs-block | 26 +++++++++
+>  Documentation/block/queue-sysfs.rst   |  6 +++
+>  block/Kconfig                         |  9 ++++
+>  block/blk-core.c                      | 51 ++++++++++++++++++
+>  block/blk-sysfs.c                     | 10 ++++
+>  block/genhd.c                         | 78 +++++++++++++++++++++++++++
+>  include/linux/blkdev.h                |  6 +++
+>  include/linux/part_stat.h             |  8 +++
+>  8 files changed, 194 insertions(+)
+>
+> --
+> 2.17.1
+>
+For the whole series,  look good to me, thx.
+Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
