@@ -2,71 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F69B2FE364
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 08:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E469E2FE40C
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 08:35:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbhAUHFT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 02:05:19 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11119 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbhAUHEi (ORCPT
+        id S1726793AbhAUHe6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 02:34:58 -0500
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:39247 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbhAUHeS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 02:04:38 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DLtcj59K5z15wfw;
-        Thu, 21 Jan 2021 15:02:29 +0800 (CST)
-Received: from huawei.com (10.29.88.127) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.498.0; Thu, 21 Jan 2021
- 15:03:34 +0800
-From:   Chao Leng <lengchao@huawei.com>
-To:     <linux-nvme@lists.infradead.org>
-CC:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>, <linux-block@vger.kernel.org>,
-        <axboe@kernel.dk>
-Subject: [PATCH v3 5/5] nvme-fc: avoid IO error for nvme native multipath
-Date:   Thu, 21 Jan 2021 15:03:30 +0800
-Message-ID: <20210121070330.19701-6-lengchao@huawei.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20210121070330.19701-1-lengchao@huawei.com>
-References: <20210121070330.19701-1-lengchao@huawei.com>
+        Thu, 21 Jan 2021 02:34:18 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1303425|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0211761-0.00130404-0.97752;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047205;MF=liu.xiang@zlingsmart.com;NM=1;PH=DW;RN=4;RT=4;SR=0;TI=W4_6085603_DEFAULT_0AC264B5_1611214294767_o7001c689i;
+Received: from WS-web (liu.xiang@zlingsmart.com[W4_6085603_DEFAULT_0AC264B5_1611214294767_o7001c689i]) by ay29a011140100061.et135 at Thu, 21 Jan 2021 15:33:26 +0800
+Date:   Thu, 21 Jan 2021 15:33:26 +0800
+From:   "liu xiang" <liu.xiang@zlingsmart.com>
+To:     "Christoph Hellwig" <hch@infradead.org>
+Cc:     "linux-block" <linux-block@vger.kernel.org>,
+        "axboe" <axboe@kernel.dk>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Reply-To: "liu xiang" <liu.xiang@zlingsmart.com>
+Message-ID: <460a3fcd-b7a1-42f4-abc3-b1a267259c26.liu.xiang@zlingsmart.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYmxrLW1xOiBpbnRyb2R1Y2UgUkVRX0NPTVBMRVRFX1dRIGFuZCBhZGQg?=
+  =?UTF-8?B?YSB3b3JrcXVldWUgdG8gY29tcGxldGUgdGhlIHJlcXVlc3Q=?=
+X-Mailer: [Alimail-Mailagent revision 794][W4_6085603][DEFAULT][Chrome]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.29.88.127]
-X-CFilter-Loop: Reflected
+References: <20210120021522.28584-1-liu.xiang@zlingsmart.com>,<20210120095409.GB3694085@infradead.org>
+In-Reply-To: <20210120095409.GB3694085@infradead.org>
+x-aliyun-mail-creator: W4_6085603_DEFAULT_AoSTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV09XNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS83NS4wLjM3NzAuMTAwIFNhZmFyaS81MzcuMzY=zN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Work with nvme native multipath, if a path related error occurs when
-queue_rq call HBA drive to send request, queue_rq will return
-BLK_STS_IOERR to blk-mq. The request is completed with BLK_STS_IOERR
-instead of fail over to retry.
-queue_rq need call nvme_complete_rq to complete the request with
-NVME_SC_HOST_PATH_ERROR, the request will fail over to retry if needed.
-
-Signed-off-by: Chao Leng <lengchao@huawei.com>
----
- drivers/nvme/host/fc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 5f36cfa8136c..ebc9911f9528 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -2791,7 +2791,12 @@ nvme_fc_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	}
- 
- 
--	return nvme_fc_start_fcp_op(ctrl, queue, op, data_len, io_dir);
-+	ret = nvme_fc_start_fcp_op(ctrl, queue, op, data_len, io_dir);
-+	if (ret == BLK_STS_IOERR) {
-+		nvme_complete_failed_req(rq);
-+		ret = BLK_STS_OK;
-+	}
-+	return ret;
- }
- 
- static void
--- 
-2.16.4
-
+T24gV2VkLCBKYW4gMjAsIDIwMjEgYXQgMTA6MTU6MjJBTSArMDgwMCwgTGl1IFhpYW5nIHdyb3Rl
+Ogo+IFRoZSBjb21taXQgIjQwZDA5YjUzYmZjNTU3YWY3NDgxYjlkODBmMDYwYTdhYzljN2QzMTQi
+IGhhcyBzb2x2ZWQgdGhlCj4gaXJxc29mZiBwcm9ibGVtIGJ5IGNvbXBsZXRpbmcgdGhlIHJlcXVl
+c3QgaW4gc29mdGlycS4gQnV0IGl0IG1heSBjYXVzZQo+IHRoZSBzeXN0ZW0gdG8gc3VmZmVyIGJh
+ZCBwcmVlbXB0b2ZmIHRpbWUuCj4gSW50cm9kdWNlIHRoZSBSRVFfQ09NUExFVEVfV1EgZmxhZyBh
+bmQgYmxrX2NvbXBsZXRlIHdvcmtxdWV1ZS4KPiBUaGlzIGZsYWcgbWFrZXMgdGhlIHJlcXVlc3Qg
+dG8gYmUgY29tcGxldGVkIGluIHRoZSBibGtfY29tcGxldGUgd29ya3F1ZXVlLgo+IEl0IGNhbiBi
+ZSB1c2VkIGZvciByZXF1ZXN0cyB0aGF0IHdhbnQgdG8gY3V0IGRvd24gYm90aCBpcnFzb2ZmIGFu
+ZAo+IHByZWVtcHRvZmYgdGltZS4KCkluIGFkZGl0aW9uIHRvIGJsb2F0aW5nIHRoZSByZXF1ZXN0
+X3F1ZXVlIGFuZCBpbnRyb2R1Y2luZyB0aGUgY29tcGxldGlvbgpmYXN0IHBhdGggdGhpcyBzZWVt
+cyB0byBsYWNrIGFuIGFjdHVhbCB1c2VyLgoKSSBoYXZlIHRlc3RlZCBtbWMgYW5kIHZpcnRpb19i
+bGsgZHJpdmVycy4gVGhleSBib3RoIGhhdmUgcHJlZW1wdG9mZiBwcm9ibGVtLgpUaGUgbW1jIGRy
+aXZlciBoYXMgaXRzIG93biBjb21wbGV0ZSB3b3JrcXVldWUuIEJ1dCBpdCBjYW4gbm90IHdvcmsg
+d2VsbCBub3cuIApJIHRoaW5rIGl0IGlzIGJldHRlciB0byBjb21wbGV0ZSByZXF1ZXN0IGRpcmVj
+dGx5IHdpdGggUkVRX0hJUFJJIGZsYWcuClRoZSB2aXJ0aW9fYmxrIGRyaXZlciBjYW4gdXNlIFJF
+UV9DT01QTEVURV9XUSBmbGFnIHRvIGF2b2lkIHByZWVtcHRvZmYgcHJvYmxlbS4=
