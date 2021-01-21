@@ -2,122 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC032FF8C3
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 00:26:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3962FF8A3
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 00:22:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbhAUXZI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 18:25:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50764 "EHLO
+        id S1725912AbhAUXV7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 18:21:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbhAUXGb (ORCPT
+        with ESMTP id S1726497AbhAUXVt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 18:06:31 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304DBC061A27
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:03:55 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id f127so981519ybf.12
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:03:55 -0800 (PST)
+        Thu, 21 Jan 2021 18:21:49 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D286DC0613D6
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:21:03 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id j3so4458111ljb.9
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:21:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=CZMyGWlKFZQTRektdrF/slvssAIzMQGtBohXi2xlJZo=;
-        b=rrCQEqKVW1ZDhW4+xC0fjbzkbeY/JM71fiwBKXHsmFH4bwE2GxtDFk+U88/SUhdZrf
-         m7wzzh7s3pqKnNjd10foCZJDNdK/vkuuRpPD69ujIVZe3eifyns8biUA8hZoFwPNKnDb
-         Ba3v3G79vllZnXC34ggan7U2sUksnH545H+f+6bih9NuBbW12SjTSwsWplttdtVyg536
-         GP0pN9LaqdE82PHlByUSvgve2pSMZuoQ6XfZu6yXARBBw+19h3asuK13j5tmK1ncQkcY
-         r6k+aHDCwUHG8X/Lo9Rh9plI3yOEJxIzYYGPgdsvlhvIGQPysaEunA99fEdDpORoP0Ww
-         T1lg==
+        d=ucsc.edu; s=ucsc-google-2018;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=aGtXJ9JSGxtBc9xg3WRFWW32mVSM+OhKXJJnwYOIaH8=;
+        b=rQ5kYcRgKxaek75+QtT2RaTkkaOSXLf7tvSbcjzY2DdFv8GXepB+qApS1tGx0cSB+T
+         C1bO3TvVY/KuRpM6zK4zgVl91lpYDM4+TOT2bhqIsqcJEPQHyomWRu+uBcCyOGF2Zpnx
+         hvlnTZz1lnNsfGJWjztmol9dymRW0GSCfAqdT6Lvoj0X/QSREG/arcGxmGDvDXLcM4h7
+         IggIQbxXdKD5KDoi2ojculnbBGt8HeeusoFoh0UXo7sfneScir/bBAq1I0EXGnBjr1Up
+         xLSHd0KN31iPzjyeXyMs7XV3rSq8371KbFrBAYGOxsDTYcV7QhRchXEV2hNQR7wF7MKn
+         iLxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=CZMyGWlKFZQTRektdrF/slvssAIzMQGtBohXi2xlJZo=;
-        b=rI9PV0QQ9eHHcDmiS1c50hKBOGKbE7/hNBvYefiw7Zo+txc720PvUygNdyYlUSnpcj
-         9uRaGYAnq7tmGwN2HK1tmabMs/5FE4hMEG5BDkXhoNrqkCWhwpaZZ/oXWhR/YMxCnLBL
-         H6Cfi0SADT2ZOW7Nzk3G9hESx2TEiIIdphDG2+ghkb7RdXPO5zGvkhqVwEVfYSceAORT
-         BAwIzJHxhrk7R0ipwh/0QxqlWQ8cHqSZUcnTOMMzlgMqzq7fmXujTn3bJtJZh0XI3i/1
-         GhtBf+d/fvrGDkpfwLCBSdBtmRSZ3lUV3rdvWXh2RhraOBDfWpuWBElU1pPoEOzYYDSz
-         KAQQ==
-X-Gm-Message-State: AOAM532c4uzu0FviLAmwneJYRBPqGh5goKNJu6NJPu5Zac7JR8gd8EVn
-        YasbbOiKjwOmf5ZWtitYrqGH2VY7ge4=
-X-Google-Smtp-Source: ABdhPJwB0G5OeVzx657WHRwvKU6JZee+AtLxAL7APPuuacdYF8k9c5jXPavHspxiawBp2gvtwJK1mN7H78c=
-Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a25:61c2:: with SMTP id v185mr2563181ybb.378.1611270234438;
- Thu, 21 Jan 2021 15:03:54 -0800 (PST)
-Date:   Thu, 21 Jan 2021 23:03:36 +0000
-In-Reply-To: <20210121230336.1373726-1-satyat@google.com>
-Message-Id: <20210121230336.1373726-9-satyat@google.com>
-Mime-Version: 1.0
-References: <20210121230336.1373726-1-satyat@google.com>
-X-Mailer: git-send-email 2.30.0.280.ga3ce27912f-goog
-Subject: [PATCH v8 8/8] fscrypt: update documentation for direct I/O support
-From:   Satya Tangirala <satyat@google.com>
-To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>, Chao Yu <chao@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Satya Tangirala <satyat@google.com>,
-        Eric Biggers <ebiggers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=aGtXJ9JSGxtBc9xg3WRFWW32mVSM+OhKXJJnwYOIaH8=;
+        b=nB22SALtzhOpi63nUM53mJo+n+cfQmOESv8kwE7W6NzQFCCkedbCr2Z/G+2iOIXqh5
+         /IAdo7RY1Cjdmx6srrnZpSV7cYeQx8qOPZstWGh93GQ9PtVaQ2vEe6FS6QF5Y2eZRi4l
+         901xvyBx9tuYcR3lyaxoEvKoMAt404SzJygD2sb7qS0L2WLsZMhAE5tXDMj7F7AoCoqV
+         wSPS8haOXTW3YvRIw7d3fJX46RQ4chqB3lfcLbXWmntJ6sj0m4TGx3CqVPn2OL4ETVmI
+         Logbb0geuEvbHU96QSWCnrwpMg+ehPWyPLKc7OSqGzASaXXDxfsgyie/E0jLm5MR5HwF
+         eHLQ==
+X-Gm-Message-State: AOAM531Y9VhLdH2EfqmDugcd2C7idALE4jEB8b4+bbH/eodgWJxwY+OC
+        GmVFLQJw0oQ6/1bMUaNvoZFUGvdDtHRYi5KTM9pRqA==
+X-Google-Smtp-Source: ABdhPJxgoZFXwC/GJMoLTVnJ9jo6wg5JBDrPwbNgtDIDaYGc88FWKCooZ+gkYoMaXwLPzopG+G/5NzzEWXMwXq/wcAY=
+X-Received: by 2002:a2e:b1d2:: with SMTP id e18mr54330lja.101.1611271262294;
+ Thu, 21 Jan 2021 15:21:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20210121072202.120810-1-bianpan2016@163.com> <55045608-01cb-d5af-682b-5a213944e33d@kernel.dk>
+ <474055ad-978a-4da5-d7f0-e2dc862b781c@lightnvm.io> <CAJbgVnWxmwfmdgk-e290kcMfhUNAjP9uO2k45rx7R=x8jBdJcw@mail.gmail.com>
+ <59a735f0-9fef-5e6d-f7eb-851e14a2883e@lightnvm.io> <CAJbgVnW40qrYBdsM6dC5uhDFZJJDc9kwvCWtK24Rg5GWCHpb2g@mail.gmail.com>
+ <586510be-5a56-5e99-6ee6-ee20031f166b@lightnvm.io>
+In-Reply-To: <586510be-5a56-5e99-6ee6-ee20031f166b@lightnvm.io>
+From:   Heiner Litz <hlitz@ucsc.edu>
+Date:   Thu, 21 Jan 2021 15:20:51 -0800
+Message-ID: <CAJbgVnXXnLvWx-TtJh1YJxPfv+=_L2+gt0vNPpYKoLCOkCBN4Q@mail.gmail.com>
+Subject: Re: [PATCH] lightnvm: fix memory leak when submit fails
+To:     =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>
+Cc:     Jens Axboe <axboe@kernel.dk>, Pan Bian <bianpan2016@163.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Update fscrypt documentation to reflect the addition of direct I/O support
-and document the necessary conditions for direct I/O on encrypted files.
+thanks, Matias, I am going to look out for dm-zap!
 
-Signed-off-by: Satya Tangirala <satyat@google.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- Documentation/filesystems/fscrypt.rst | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-index 44b67ebd6e40..c0c1747fa2fb 100644
---- a/Documentation/filesystems/fscrypt.rst
-+++ b/Documentation/filesystems/fscrypt.rst
-@@ -1047,8 +1047,10 @@ astute users may notice some differences in behavior:
-   may be used to overwrite the source files but isn't guaranteed to be
-   effective on all filesystems and storage devices.
- 
--- Direct I/O is not supported on encrypted files.  Attempts to use
--  direct I/O on such files will fall back to buffered I/O.
-+- Direct I/O is supported on encrypted files only under some
-+  circumstances (see `Direct I/O support`_ for details). When these
-+  circumstances are not met, attempts to use direct I/O on encrypted
-+  files will fall back to buffered I/O.
- 
- - The fallocate operations FALLOC_FL_COLLAPSE_RANGE and
-   FALLOC_FL_INSERT_RANGE are not supported on encrypted files and will
-@@ -1121,6 +1123,21 @@ It is not currently possible to backup and restore encrypted files
- without the encryption key.  This would require special APIs which
- have not yet been implemented.
- 
-+Direct I/O support
-+==================
-+
-+Direct I/O on encrypted files is supported through blk-crypto. In
-+particular, this means the kernel must have CONFIG_BLK_INLINE_ENCRYPTION
-+enabled, the filesystem must have had the 'inlinecrypt' mount option
-+specified, and either hardware inline encryption must be present, or
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK must have been enabled. Further,
-+the starting position in the file and the length of any I/O must be aligned
-+to the filesystem block size (*not* necessarily the same as the block
-+device's block size). If any of these conditions isn't met, attempts to do
-+direct I/O on an encrypted file will fall back to buffered I/O. However,
-+there aren't any additional requirements on user buffer alignment (apart
-+from those already present when using direct I/O on unencrypted files).
-+
- Encryption policy enforcement
- =============================
- 
--- 
-2.30.0.280.ga3ce27912f-goog
-
+On Thu, Jan 21, 2021 at 12:14 PM Matias Bj=C3=B8rling <mb@lightnvm.io> wrot=
+e:
+>
+> On 21/01/2021 20.49, Heiner Litz wrote:
+> > there are a couple more, but again I would understand if those are
+> > deemed not important enough to keep it.
+> >
+> > device emulation of (non-ZNS) SSD block device
+>
+> That'll soon be available. We will be open-sourcing a new device mapper
+> (dm-zap), which implements an indirection layer that enables ZNS SSDs to
+> be exposed as a conventional block device.
+>
+> > die control: yes endurance groups would help but I am not aware of any
+> > vendor supporting it
+> It is out there. Although, is this still important in 2021? OCSSD was
+> made back in the days where media program/erase suspend wasn't commonly
+> available and SSD controller were more simple. With today's media and
+> SSD controllers, it is hard to compete without leaving media throughput
+> on the table. If needed, splitting a drive into a few partitions should
+> be sufficient for many many types of workloads.
+> > finer-grained control: 1000's of open blocks vs. a handful of
+> > concurrently open zones
+>
+> It is dependent on the implementation - ZNS SSDs also supports 1000's of
+> open zones.
+>
+> Wrt to available OCSSD hardware - there isn't, to my knowledge, proper
+> implementations available, where media reliability is taken into account.
+>
+> Generally for the OCSSD hardware implementations, their UBER is
+> extremely low, and as such RAID or similar schemes must be implemented
+> on the host. pblk does not implement this, so at best, one should not
+> store data if one wants to get it back at some point. It also makes for
+> an unfair SSD comparison, as there is much more to an SSD than what
+> OCSSD + pblk implements. At worst, it'll lead to false understanding of
+> the challenges of making SSDs, and at best, work can be used as the
+> foundation for doing an actual SSD implementation.
+>
+> > OOB area: helpful for L2P recovery
+>
+> It is known as LBA metadata in NVMe. It is commonly available in many of
+> today's SSD.
+>
+> I understand your point that there is a lot of flexibility, but my
+> counter point is that there isn't anything in OCSSD, that is not
+> implementable or commonly available using today's NVMe concepts.
+> Furthermore, the known OCSSD research platforms can easily be updated to
+> expose the OCSSD characteristics through standardized NVMe concepts.
+> That would probably make for a good research paper.
+>
+>
