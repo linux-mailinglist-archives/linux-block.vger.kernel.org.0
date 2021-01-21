@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BFD42FED4C
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 15:48:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31E1F2FEE56
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 16:21:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbhAUOr3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 09:47:29 -0500
-Received: from mail-lj1-f177.google.com ([209.85.208.177]:35325 "EHLO
-        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732093AbhAUOqR (ORCPT
+        id S1732341AbhAUPUQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 10:20:16 -0500
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:37888 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732472AbhAUPDd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 09:46:17 -0500
-Received: by mail-lj1-f177.google.com with SMTP id p13so2784945ljg.2;
-        Thu, 21 Jan 2021 06:46:00 -0800 (PST)
+        Thu, 21 Jan 2021 10:03:33 -0500
+Received: by mail-lf1-f51.google.com with SMTP id m22so2932560lfg.5;
+        Thu, 21 Jan 2021 07:03:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:reply-to:to:cc:references:from:subject
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=405oyctWCF4c6HZyWVXh37+hz6ooySr8zjsgVJNe27I=;
-        b=MbcXA4JOY7+mctDWKy0oxqnrunp19dret4nkIZQOx4P7hj0RIBeS20CyarWVL6MVLH
-         5Bln9dxZpDmD6vMSX6QoesQnULK4k5UxDcHeIyJdSe6hq1RKqBmjF8RZ72j4kVfMEZ6/
-         EIZ74Ed/bmpQ5HUr5TIehw6V6HQ1isIlAW2BaPctvm/vzfQLjYxAfk6ZpfatrE5G0efj
-         1Qu/57xFwB/xlx8qc3mL9ZnH9OPGtU9P6aXuOuhQ7ScD+3xG0UTUIQadzvx697Cmgc42
-         21SlemIVUZNikPVoMvjlvRTAg/F3l01QEYPLha5S1doMbS1HSSQ5LmuJzxyTfbcQNbqY
-         0K1A==
-X-Gm-Message-State: AOAM533EGtLnY5fReEwGbany/VzjygxpcRiJQLvnl/kZJojzFJX9eNlg
-        NZ+NxjwNlxYH0A2XP2LCN3k7y1QrrPI=
-X-Google-Smtp-Source: ABdhPJwlE/upxBt3OxW6i90tURdrT8MWAcmKys2pJo69FN0nAynnTtMAAXEvdNA1XgvviKuBiP+tOg==
-X-Received: by 2002:a05:651c:1254:: with SMTP id h20mr7069162ljh.211.1611240334966;
-        Thu, 21 Jan 2021 06:45:34 -0800 (PST)
+        bh=KczDQBYnwUc6Db3Y4wdjMxvDRIDolHP882VvzzfUBDk=;
+        b=YBaQiDuRER6CzJ2xgeTmxKLaym7I5kTCssN5m8/PntnZ5x8IGHc9u3p5xNXVoGybOF
+         DnFFW5h7KHhBQxvSxxcv++4AYhNbguSK+bB+Dof1MghVv1C8S8q/xkHBUDfLGiOH35Cx
+         wkMmVrWV8BTARjWhLl016AYGaE5AZ9Ic4eYiFBuVIzZgGYPUbVehP1hl+EmU4SPuOjYG
+         GR3J6UauefXS+xFlx4VwfQdaugemxayFFV+fPeLVWqvag0H714anfYvr+A/likQb+4vK
+         W6EWMKpK5qODhVfLv/ukenyFKDOJML8hYV2bpepTczkh2cDN9Ji3ELUPdo8PoWXknVN9
+         4Z/w==
+X-Gm-Message-State: AOAM531vbmR9t7yaU+lJrPKuSJMsH5tOgk7FgIcWRuAmRGSmu2JWE5tJ
+        6z9g+ir1oJMQH17o15QIyzM=
+X-Google-Smtp-Source: ABdhPJwoKe7rQL58Fz74MlnRk483tfISgGrn5h7fvXquVY0DB7zvefQOv6gc5jRpGxaXOBwrtzulIg==
+X-Received: by 2002:a05:6512:1311:: with SMTP id x17mr6830381lfu.307.1611241370510;
+        Thu, 21 Jan 2021 07:02:50 -0800 (PST)
 Received: from [10.68.32.148] (broadband-188-32-236-56.ip.moscow.rt.ru. [188.32.236.56])
-        by smtp.gmail.com with ESMTPSA id 132sm546867lff.197.2021.01.21.06.45.34
+        by smtp.gmail.com with ESMTPSA id l11sm554314lfp.284.2021.01.21.07.02.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jan 2021 06:45:34 -0800 (PST)
+        Thu, 21 Jan 2021 07:02:49 -0800 (PST)
 Reply-To: efremov@linux.com
 To:     Jiri Kosina <jikos@kernel.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
@@ -52,14 +52,15 @@ References: <20160610230255.GA27770@djo.tudelft.nl>
  <nycvar.YFH.7.76.2101191649190.5622@cbobk.fhfr.pm>
  <5cb57175-7f0b-5536-925d-337241bcda93@linux.com>
  <nycvar.YFH.7.76.2101211122290.5622@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2101211543230.5622@cbobk.fhfr.pm>
 From:   Denis Efremov <efremov@linux.com>
 Subject: Re: [PATCH RESEND] floppy: fix open(O_ACCMODE) for ioctl-only open
-Message-ID: <08c74fa2-ecbf-3c1d-be09-2447bb009bcb@linux.com>
-Date:   Thu, 21 Jan 2021 17:45:33 +0300
+Message-ID: <e503292b-5f51-eac5-771f-e35991d1084c@linux.com>
+Date:   Thu, 21 Jan 2021 18:02:48 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.76.2101211122290.5622@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.2101211543230.5622@cbobk.fhfr.pm>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -67,22 +68,23 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/21/21 1:25 PM, Jiri Kosina wrote:
-> On Thu, 21 Jan 2021, Denis Efremov wrote:
+
+
+On 1/21/21 5:44 PM, Jiri Kosina wrote:
+> On Thu, 21 Jan 2021, Jiri Kosina wrote:
 > 
->> I think it's hard to recall the exact reasons after so many years. 
+>> I am currently waiting for confirmation by the original reporter that the 
+>> patch below fixes the issue.
 > 
-> Yeah, I guess so :)
-> 
->> I'll send a patch today based on this one.
-> 
-> I am currently waiting for confirmation by the original reporter that the 
-> patch below fixes the issue.
-> 
-> 
+> ... a now a patch that actually compiles :) (made a mistake when 
+> forward-porting from the older kernel on which this has been reported).
+
+Oh, sorry for the last message (forgot to check the inbox before hitting
+the send button). I'll test the patch. A couple of nitpicks below.
+
 > 
 > From: Jiri Kosina <jkosina@suse.cz>
-> Subject: [PATCH] floppy: reintroduce O_NDELAY fix
+> Subject: [PATCH v2] floppy: reintroduce O_NDELAY fix
 > 
 > Originally fixed in 09954bad4 ("floppy: refactor open() flags handling")
 > then reverted for unknown reason in f2791e7eadf437 instead of taking
@@ -97,6 +99,12 @@ On 1/21/21 1:25 PM, Jiri Kosina wrote:
 > modes, while still keeping the original O_NDELAY bug fixed.
 > 
 > Cc: stable@vger.kernel.org # v4.5+
+
+Are you sure that it's not worth to backport it to LTS v4.4?
+Because f2791e7ead is just a revert and 09954bad4 is not
+presented in v4.4 I'm not sure what fixes tag is better to
+use in this case.
+
 > Reported-by: Wim Osterholt <wim@djo.tudelft.nl>
 > Tested-by: Wim Osterholt <wim@djo.tudelft.nl>
 > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
@@ -106,14 +114,17 @@ On 1/21/21 1:25 PM, Jiri Kosina wrote:
 > Fixes: f2791e7ead ("Revert "floppy: refactor open() flags handling"")
 > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 > ---
->  drivers/block/floppy.c | 29 ++++++++++++++---------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
+> 
+> v1 -> v2: fix build issue due to bad forward-port
+> 
+>  drivers/block/floppy.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-> index dfe1dfc901cc..bda9417aa0a8 100644
+> index dfe1dfc901cc..f9e839c8c5aa 100644
 > --- a/drivers/block/floppy.c
 > +++ b/drivers/block/floppy.c
-> @@ -4121,23 +4121,22 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+> @@ -4121,23 +4121,23 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
 >  	if (fdc_state[FDC(drive)].rawcmd == 1)
 >  		fdc_state[FDC(drive)].rawcmd = 2;
 >  
@@ -133,19 +144,13 @@ On 1/21/21 1:25 PM, Jiri Kosina wrote:
 > -		if ((mode & FMODE_WRITE) &&
 > -		    !test_bit(FD_DISK_WRITABLE_BIT, &drive_state[drive].flags))
 > +	if (mode & (FMODE_READ|FMODE_WRITE)) {
+> +		UDRS->last_checked = 0;
 
+UDRS will still break the compilation here.
 
-As the bot points out this was refactored a bit in:
-8d9d34e25a37 ("floppy: cleanup: expand macro UDRS")
-4a6f3d480edc ("floppy: use bdev_check_media_change")
-
-Should be something like:
-+               drive_state[drive].last_checked = 0;
-+               clear_bit(FD_OPEN_SHOULD_FAIL_BIT,
-+                         &drive_state[drive].flags);
-+               if (bdev_check_media_change(bdev))
-+                       floppy_revalidate(bdev->bd_disk);
-
+> +		clear_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags);
+> +		if (bdev_check_media_change(bdev))
+> +			floppy_revalidate(bdev->bd_disk);
 > +		if (test_bit(FD_DISK_CHANGED_BIT, &drive_state[drive].flags))
 > +			goto out;
 > +		if (test_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags))
