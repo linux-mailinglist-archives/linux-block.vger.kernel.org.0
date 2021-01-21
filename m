@@ -2,83 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE01B2FEE1F
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 16:10:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EC572FF13A
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 18:01:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbhAUPKI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 10:10:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732421AbhAUPGq (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 10:06:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 712DC235FF;
-        Thu, 21 Jan 2021 15:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611241556;
-        bh=qRBq4u7IBFJWAXc+l6+Z4BWGpd3fk5F9IR1G/OirCzw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=uWwiMQ8WxDMfmMeAE+vYHFkePF5KTk6uBeasfNO/dnCJ7nvQE0ZBnK78g/OkrtQES
-         gVP8X9klIuBGtZDmQOXMrLFqMh7ELL7k+IeSomNgF6Kcfyv6doEdJUrhs+iOIVpDTH
-         i1GaGf4AUQa8zDlDuOFnugysBdrKExBWhI5CASF1r2mxORZWaPaP8vIZuE6/j0jfqg
-         JNl1y/cL69uo0eVohMe3AQJp4yYs34Cj2ZrR356csQzmiJWZrcRMxEvtt6kpAT+La9
-         H/PFRYZrN6hpe4jXhjuYKWSXNvbmYclNg6SM/5MIo/wKchuW2idSUsWZk/qtEa2/BH
-         XLMvIUG4nI5aA==
-Date:   Thu, 21 Jan 2021 16:05:52 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, Wim Osterholt <wim@djo.tudelft.nl>
-Subject: Re: [PATCH RESEND] floppy: fix open(O_ACCMODE) for ioctl-only open
-In-Reply-To: <e503292b-5f51-eac5-771f-e35991d1084c@linux.com>
-Message-ID: <nycvar.YFH.7.76.2101211603590.5622@cbobk.fhfr.pm>
-References: <20160610230255.GA27770@djo.tudelft.nl> <alpine.LNX.2.00.1606131414420.6874@cbobk.fhfr.pm> <20160614184308.GA6188@djo.tudelft.nl> <alpine.LNX.2.00.1606150906320.6874@cbobk.fhfr.pm> <20160615132040.GZ14480@ZenIV.linux.org.uk>
- <alpine.LNX.2.00.1606151610420.6874@cbobk.fhfr.pm> <20160615224722.GA9545@djo.tudelft.nl> <alpine.LNX.2.00.1606160946000.6874@cbobk.fhfr.pm> <alpine.LNX.2.00.1606301317290.6874@cbobk.fhfr.pm> <9c713fa8-9da1-47b5-0d5d-92f4cd13493a@kernel.dk>
- <nycvar.YFH.7.76.2101191649190.5622@cbobk.fhfr.pm> <5cb57175-7f0b-5536-925d-337241bcda93@linux.com> <nycvar.YFH.7.76.2101211122290.5622@cbobk.fhfr.pm> <nycvar.YFH.7.76.2101211543230.5622@cbobk.fhfr.pm> <e503292b-5f51-eac5-771f-e35991d1084c@linux.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S2388319AbhAUQ7x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 11:59:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388305AbhAUQ7v (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 21 Jan 2021 11:59:51 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E25C0613ED
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 08:59:10 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id o10so3445506lfl.13
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 08:59:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ucsc.edu; s=ucsc-google-2018;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wlC8jXsMe1HIuwZiVJ+3vAtunYXGcJMzh+yYd+DdBME=;
+        b=TheRvIxPi3twaM1+OG/+oewoB/tUMjA8hzpYfCPxtI2yKHER/D8+BzqHXNBqbRzmSW
+         Up0YyXLqtbFKlowz5YuO/LPUHMqtKlUGVstdI73+vdoMuQckEMlck34fetxGj3DMQJfd
+         rQZNHm2vdV+4wNHejgurPIKJ24SUvGor6ZklOU12R4lSXdzN9X4xRrqX+qb+bAbWauwr
+         WF/XtBDCgSllLg4DIPcjR6a9lfQE3u0GxQiph6q2HrXUoHWQtRNqnkGrl0xwB+ta9amV
+         M3Pp3xLVqgxF0JH552Jz2DALPjF1Cz9PIalIlRCilUSJNsp/rKvH/j+zrAdT/ssRA+Be
+         sc2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wlC8jXsMe1HIuwZiVJ+3vAtunYXGcJMzh+yYd+DdBME=;
+        b=cacyHebfQ6bL4LnF5mKgE+z7t+mg9OeQOacjy7JAIeMvQ1vsvt0YttifR7aQtc9eLo
+         d8AXWzbo3qjricUdXpU221aCoEpNTbch0Xz5iKYxNHDotJgEb7s4xJJ6G73av78T0P8u
+         1OgF/r830AlrbzGqd6re6j1c0hFV/UW86giprLjWSHGOzLR1VSMihuWSQ8sLLjrbTqoL
+         uNjEFRwa+CMlJRjH5pSeuOn0bUthRD/AHgQYdFIyerDaZ1Zb6BapByBfEXvVQ6x+Xpjo
+         qC3vgKx1gO2HiL7Po0KIN4FM2W+C8tm4D0Q63ppJ/Dls+owu5auiq+a2pZiA9rgOcnTb
+         35aw==
+X-Gm-Message-State: AOAM530fo9BQc0q9DovdX4f7vwhgiGvBQ6CC6VyO8zv9PgXlSby5aQ0z
+        xD7zPTU3lzZPbuj3S23Vol2CTHKE1XilnqLxgFeFuaj1kDo=
+X-Google-Smtp-Source: ABdhPJxftuch7sATRvzaCLPmYLdgyQX0HyB1LAh7L3aD8SCIly8XBPIRllhm863QyqbI+lzhvDJsSUaHTIDHdShweDM=
+X-Received: by 2002:a05:6512:488:: with SMTP id v8mr46056lfq.457.1611248349473;
+ Thu, 21 Jan 2021 08:59:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20210121072202.120810-1-bianpan2016@163.com> <55045608-01cb-d5af-682b-5a213944e33d@kernel.dk>
+ <474055ad-978a-4da5-d7f0-e2dc862b781c@lightnvm.io>
+In-Reply-To: <474055ad-978a-4da5-d7f0-e2dc862b781c@lightnvm.io>
+From:   Heiner Litz <hlitz@ucsc.edu>
+Date:   Thu, 21 Jan 2021 08:58:58 -0800
+Message-ID: <CAJbgVnWxmwfmdgk-e290kcMfhUNAjP9uO2k45rx7R=x8jBdJcw@mail.gmail.com>
+Subject: Re: [PATCH] lightnvm: fix memory leak when submit fails
+To:     =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>
+Cc:     Jens Axboe <axboe@kernel.dk>, Pan Bian <bianpan2016@163.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, 21 Jan 2021, Denis Efremov wrote:
+I don't think that ZNS supersedes OCSSD. OCSSDs provide much more
+flexibility and device control and remain valuable for academia. For
+us, PBLK is the most accurate "SSD Emulator" out there that, as
+another benefit, enables real-time performance measurements.
+That being said, I understand that this may not be a good enough
+reason to keep it around, but I wouldn't mind if it stayed for another
+while.
 
-> > From: Jiri Kosina <jkosina@suse.cz>
-> > Subject: [PATCH v2] floppy: reintroduce O_NDELAY fix
-> > 
-> > Originally fixed in 09954bad4 ("floppy: refactor open() flags handling")
-> > then reverted for unknown reason in f2791e7eadf437 instead of taking
-> > the open(O_ACCMODE) for ioctl-only open fix, which had the changelog below
-> > 
-> > ====
-> > Commit 09954bad4 ("floppy: refactor open() flags handling"), as a
-> > side-effect, causes open(/dev/fdX, O_ACCMODE) to fail. It turns out that
-> > this is being used setfdprm userspace for ioctl-only open().
-> > 
-> > Reintroduce back the original behavior wrt !(FMODE_READ|FMODE_WRITE)
-> > modes, while still keeping the original O_NDELAY bug fixed.
-> > 
-> > Cc: stable@vger.kernel.org # v4.5+
-> 
-> Are you sure that it's not worth to backport it to LTS v4.4? Because 
-> f2791e7ead is just a revert and 09954bad4 is not presented in v4.4 I'm 
-> not sure what fixes tag is better to use in this case.
-
-You are right; I'll drop the '4.5+' indicator and will backport it once/if 
-it hits Linus' tree.
-
-> > +	if (mode & (FMODE_READ|FMODE_WRITE)) {
-> > +		UDRS->last_checked = 0;
-> 
-> UDRS will still break the compilation here.
-
-Doh, forgot to refresh before sending, sorry for the noise.
-I'll send the final version once I get confirmation from the reporter that 
-it's fixing the issue properly, add his Reported-by: etc.
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+On Thu, Jan 21, 2021 at 5:57 AM Matias Bj=C3=B8rling <mb@lightnvm.io> wrote=
+:
+>
+> On 21/01/2021 13.47, Jens Axboe wrote:
+> > On 1/21/21 12:22 AM, Pan Bian wrote:
+> >> The allocated page is not released if error occurs in
+> >> nvm_submit_io_sync_raw(). __free_page() is moved ealier to avoid
+> >> possible memory leak issue.
+> > Applied, thanks.
+> >
+> > General question for Matias - is lightnvm maintained anymore at all, or
+> > should we remove it? The project seems dead from my pov, and I don't
+> > even remember anyone even reviewing fixes from other people.
+> >
+> Hi Jens,
+>
+> ZNS has superseded OCSSD/lightnvm. As a result, the hardware and
+> software development around OCSSD have also moved on to ZNS. To my
+> knowledge, there is not anyone implementing OCSSD1.2/2.0 commercially at
+> this point, and what has been deployed in production does not utilize
+> the Linux kernel stack.
+>
+> I do not mind continuing to keep an eye on it, but on the other hand, it
+> has served its purpose. It enabled the "Open-Channel SSD architectures"
+> of the world to take hold in the market and thereby gained enough
+> momentum to be standardized in NVMe as ZNS.
+>
+> Would you like me to send a PR to remove lightnvm immediately, or should
+> we mark it as deprecated for a while before pulling it?
+>
+> Best, Matias
+>
+>
