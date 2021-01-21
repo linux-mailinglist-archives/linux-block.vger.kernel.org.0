@@ -2,158 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F112FED06
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 15:39:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0111B2FED6E
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 15:51:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbhAUOXp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 09:23:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        id S1729209AbhAUOuf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 09:50:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbhAUOX0 (ORCPT
+        with ESMTP id S1731142AbhAUOkl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 09:23:26 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B30C061757
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 06:22:22 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id c2so2414618edr.11
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 06:22:22 -0800 (PST)
+        Thu, 21 Jan 2021 09:40:41 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41732C08EB24
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 06:29:26 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id kg20so2390524ejc.4
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 06:29:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=CERj7KX7K7JrIuOWQ4oCgUXlbuWovrpN34BQcQ4mS0k=;
-        b=a9DGwPU6YuxjdiXy7bPZGmuW3CRORweTSSDax0eZONL7sOJpHHSJ0hgTGdra9cfAB6
-         UlyYKmbjsO6uej0cqbY7ee2hmntsFkLH9eZwXvBY9MguKkEPh4bHnL/iwcswLX6RLukF
-         QnQNbyaa3W0x0OVAtWmuvLkvm6x+qBwP7XJQsU+5R8ggiQu+03d+vYrXKSbSR+99zko6
-         LhuR1hAaU/WPo/qk4iGUV0B0VlrI7U56BHze2YlrKEd2iZ7qUZaIq6fNwz0miZiTN5hV
-         KIfnpuGTDcWmTSHrC0stZpe/WoCjGTN6rnHRYoEFoCFCL0nafGeqqS1dGlMkkvBUyYlK
-         dRoA==
+        bh=6d+dhFnF8O5Dji9MI3uQGCEsi3R81Xte/6yH406EepA=;
+        b=iAMU6N4iZaZA9+7UD8H8MnQtQ2Cpe3YeQRtcdIAvDIMVUVH+8jruJobsWtbta2pu9/
+         TS8Em6eCbSnkRLg6QmIFMfSZ5NJiLC+P0inASmZ1ck5hcL92XvnYfrUlOIh5NEockg3M
+         sngnJTujgRmBntErYNkPTd0lC5Q5BMFqfS/xZ+2i8/20XXJh1hncFJ8r/5F4dE4HO8vc
+         msi5NMvm1FcfSz2eZTGnR8q8mysXQrGwM4CEPaKERmRRfWMj9G4a+EFmcV5fQkZvfVMO
+         B83i0efToxwbo6fT4gVOFQj0cp9m8jld4Df7IpwukDPFpkDLwdoGd2XTiQfnKp9lWEKD
+         guUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CERj7KX7K7JrIuOWQ4oCgUXlbuWovrpN34BQcQ4mS0k=;
-        b=ql1q2mVq72T0GGYFvG7cp+J2SKIqANB9Fx4E4EFoIua87EGiZcOl0LMax9/exejTH3
-         vHo5Z0g2gpoXIaNBJ4F6/W5KOvnTTz+TaMbhkT4Ko3ktX8VIZkyzQ3doGkFhFsRv3mer
-         np+qguGdpvlqGuNw3g9hASZyAYfaN09TH9AvVBnvGc2mlnwMyLH+TAqFmHH1RLUIhSND
-         xpC2Mc0ikN3g46ulWnW21ZK75kaVx0YLao68TIvLH1OeyDBn5XYxpkB6vSvnVvMA5XQM
-         xby9KY3HsAs7YpDCyfOpazVZhvCahpHozd9eWBrw/sEyvPe+ps3B29QIyQHtcU2LvLmn
-         0SzQ==
-X-Gm-Message-State: AOAM532d3khPcaYWcdRFw4cDQWL/JoK72HjU7iz1ywpoO6Z4/3Fxsrxa
-        iz2GRLBQ9PXtvbB6fGSkgZGdlw==
-X-Google-Smtp-Source: ABdhPJzzcFoJ1Sc53EmjDpU1L67A0MtbbKiS5vfFPW1i5Jmk6+i953CLLAopcb/AM2SXCf6cHXXcjA==
-X-Received: by 2002:a05:6402:160f:: with SMTP id f15mr11332273edv.348.1611238941391;
-        Thu, 21 Jan 2021 06:22:21 -0800 (PST)
+        bh=6d+dhFnF8O5Dji9MI3uQGCEsi3R81Xte/6yH406EepA=;
+        b=NQbcQeYkhp7gew6AvJrQ18Ooe/ayO838oUWfhEP/QrGgTT1R4ZerE0+dDwjwGAqOx1
+         9n0NiUUC3kLCgofqiMdDucOi+xk75w6Eeui9mB+4rB0iTsjVU6KvmTTZHlqADTsKRGfY
+         8Oce02EQC/AbrVz5tOq2qznwt3QpH0MVg2FflAfy1xNCL0Q+roEtsqe/CFdnqALzeFBn
+         kHLlpie0+6z0vCq9Kcht+X9yicU9JDpeMDYBfwk3qfewaCTmlRT6hVpNhEA1qZi/0rCX
+         FHeiE9J3pBFqD0ipDz2FZkM6c31ymonSncSU/xgW4bM73FbMnVcoPJBUiRvihUNj8J9G
+         foog==
+X-Gm-Message-State: AOAM5312GZIH3eoQGAd23R63/YWM/7XHVO18G5fKLi9eJxiLdZIWyFxk
+        fEVX2s26lqtX2HXVvMF+q2fU0g==
+X-Google-Smtp-Source: ABdhPJxCDi5bLwTWjg3Cogi17XLUs88z2mnzLi3uB5dGCnmO1AkoP5tvuP3B7w2NbRmf5F5CDrtLTw==
+X-Received: by 2002:a17:906:95cf:: with SMTP id n15mr9672034ejy.178.1611239364997;
+        Thu, 21 Jan 2021 06:29:24 -0800 (PST)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:481b:68e3:af3e:e933])
-        by smtp.gmail.com with ESMTPSA id f20sm2868405edd.47.2021.01.21.06.22.20
+        by smtp.gmail.com with ESMTPSA id gt18sm2263684ejb.104.2021.01.21.06.29.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 06:22:20 -0800 (PST)
+        Thu, 21 Jan 2021 06:29:24 -0800 (PST)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        drbd-dev@lists.linbit.com
-Subject: [PATCH RESEND] drbd: remove unused argument from drbd_request_prepare and __drbd_make_request
-Date:   Thu, 21 Jan 2021 15:21:50 +0100
-Message-Id: <20210121142150.12998-1-guoqing.jiang@cloud.ionos.com>
+Cc:     linux-block@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH 0/2] remove unused argument from blk_execute_rq_nowait and blk_execute_rq
+Date:   Thu, 21 Jan 2021 15:29:03 +0100
+Message-Id: <20210121142905.13089-1-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We can remove start_jif since it is not used by drbd_request_prepare,
-then remove it from __drbd_make_request further.
+Hi Jens,
 
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc: drbd-dev@lists.linbit.com
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
- drivers/block/drbd/drbd_int.h  |  2 +-
- drivers/block/drbd/drbd_main.c |  3 +--
- drivers/block/drbd/drbd_req.c  | 11 ++++-------
- 3 files changed, 6 insertions(+), 10 deletions(-)
+This series remove unused 'q' from blk_execute_rq_nowait and blk_execute_rq.
+Also update the comment for blk_execute_rq_nowait.
 
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index 8f879e5c2f67..8faa31a17b8f 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -1449,7 +1449,7 @@ extern void conn_free_crypto(struct drbd_connection *connection);
- 
- /* drbd_req */
- extern void do_submit(struct work_struct *ws);
--extern void __drbd_make_request(struct drbd_device *, struct bio *, unsigned long);
-+extern void __drbd_make_request(struct drbd_device *, struct bio *);
- extern blk_qc_t drbd_submit_bio(struct bio *bio);
- extern int drbd_read_remote(struct drbd_device *device, struct drbd_request *req);
- extern int is_valid_ar_handle(struct drbd_request *, sector_t);
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 1c8c18b2a25f..7e5fcce812e1 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2288,7 +2288,6 @@ static void do_retry(struct work_struct *ws)
- 	list_for_each_entry_safe(req, tmp, &writes, tl_requests) {
- 		struct drbd_device *device = req->device;
- 		struct bio *bio = req->master_bio;
--		unsigned long start_jif = req->start_jif;
- 		bool expected;
- 
- 		expected =
-@@ -2323,7 +2322,7 @@ static void do_retry(struct work_struct *ws)
- 		/* We are not just doing submit_bio_noacct(),
- 		 * as we want to keep the start_time information. */
- 		inc_ap_bio(device);
--		__drbd_make_request(device, bio, start_jif);
-+		__drbd_make_request(device, bio);
- 	}
- }
- 
-diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
-index 330f851cb8f0..5e5602af9643 100644
---- a/drivers/block/drbd/drbd_req.c
-+++ b/drivers/block/drbd/drbd_req.c
-@@ -1188,7 +1188,7 @@ static void drbd_queue_write(struct drbd_device *device, struct drbd_request *re
-  * Returns ERR_PTR(-ENOMEM) if we cannot allocate a drbd_request.
-  */
- static struct drbd_request *
--drbd_request_prepare(struct drbd_device *device, struct bio *bio, unsigned long start_jif)
-+drbd_request_prepare(struct drbd_device *device, struct bio *bio)
- {
- 	const int rw = bio_data_dir(bio);
- 	struct drbd_request *req;
-@@ -1416,9 +1416,9 @@ static void drbd_send_and_submit(struct drbd_device *device, struct drbd_request
- 		complete_master_bio(device, &m);
- }
- 
--void __drbd_make_request(struct drbd_device *device, struct bio *bio, unsigned long start_jif)
-+void __drbd_make_request(struct drbd_device *device, struct bio *bio)
- {
--	struct drbd_request *req = drbd_request_prepare(device, bio, start_jif);
-+	struct drbd_request *req = drbd_request_prepare(device, bio);
- 	if (IS_ERR_OR_NULL(req))
- 		return;
- 	drbd_send_and_submit(device, req);
-@@ -1596,19 +1596,16 @@ void do_submit(struct work_struct *ws)
- blk_qc_t drbd_submit_bio(struct bio *bio)
- {
- 	struct drbd_device *device = bio->bi_disk->private_data;
--	unsigned long start_jif;
- 
- 	blk_queue_split(&bio);
- 
--	start_jif = jiffies;
--
- 	/*
- 	 * what we "blindly" assume:
- 	 */
- 	D_ASSERT(device, IS_ALIGNED(bio->bi_iter.bi_size, 512));
- 
- 	inc_ap_bio(device);
--	__drbd_make_request(device, bio, start_jif);
-+	__drbd_make_request(device, bio);
- 	return BLK_QC_T_NONE;
- }
- 
+Thanks,
+Guoqing
+
+Guoqing Jiang (2):
+  block: remove unnecessary argument from blk_execute_rq_nowait
+  block: remove unnecessary argument from blk_execute_rq
+
+ block/blk-exec.c                   | 13 +++++--------
+ block/bsg.c                        |  2 +-
+ block/scsi_ioctl.c                 |  6 +++---
+ drivers/block/mtip32xx/mtip32xx.c  |  2 +-
+ drivers/block/paride/pd.c          |  2 +-
+ drivers/block/pktcdvd.c            |  2 +-
+ drivers/block/sx8.c                |  4 ++--
+ drivers/block/virtio_blk.c         |  2 +-
+ drivers/cdrom/cdrom.c              |  2 +-
+ drivers/ide/ide-atapi.c            |  2 +-
+ drivers/ide/ide-cd.c               |  2 +-
+ drivers/ide/ide-cd_ioctl.c         |  2 +-
+ drivers/ide/ide-devsets.c          |  2 +-
+ drivers/ide/ide-disk.c             |  2 +-
+ drivers/ide/ide-ioctls.c           |  4 ++--
+ drivers/ide/ide-park.c             |  2 +-
+ drivers/ide/ide-pm.c               |  4 ++--
+ drivers/ide/ide-tape.c             |  2 +-
+ drivers/ide/ide-taskfile.c         |  2 +-
+ drivers/mmc/core/block.c           | 10 +++++-----
+ drivers/nvme/host/core.c           |  8 ++++----
+ drivers/nvme/host/lightnvm.c       |  4 ++--
+ drivers/nvme/host/pci.c            |  4 ++--
+ drivers/nvme/target/passthru.c     |  2 +-
+ drivers/scsi/scsi_error.c          |  2 +-
+ drivers/scsi/scsi_lib.c            |  2 +-
+ drivers/scsi/sg.c                  |  3 +--
+ drivers/scsi/st.c                  |  2 +-
+ drivers/target/target_core_pscsi.c |  3 +--
+ fs/nfsd/blocklayout.c              |  2 +-
+ include/linux/blkdev.h             |  5 ++---
+ 31 files changed, 50 insertions(+), 56 deletions(-)
+
 -- 
 2.17.1
 
