@@ -2,115 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAF182FE530
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 09:40:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23F262FE514
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jan 2021 09:35:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbhAUIji (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 03:39:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbhAUIYB (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 03:24:01 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 326D52399A;
-        Thu, 21 Jan 2021 08:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611217400;
-        bh=QbeE9MQBd7zs5w6Q8wyNKWSY+K0sfedfVA8kFcC/D1k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=er3RUMK+lFXY2DFzbTF9CSYtSuui5eXC0t7O1MEkvjbrAsWlvaj8iaVwEAviw6c3M
-         wMPFN1vNwMfplL19rvBkA4StC4p/20vilN/ijhyn7sC/e3RAJjg0TsfweUY3udICyI
-         czbAVEW3GllqQ+3g2npTy+2tU2VrcncJJ9dS95nHdeDX9RO6OJojkzx8uS+p36F0Bb
-         5Tmd788QRFX1MzV+tcAEuq4SwqjzJ/RwkFSZwGGqEiniuJNevbxrMySdo+QOAOiDWb
-         x8mBI4Pm2bDJcHzuac18B/NWm9xSX1ulxYEkHC6aZ8n5IRZbjVESbLxnKlzDOZaAkV
-         DmekpAbpSakfQ==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-block@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     Satya Tangirala <satyat@google.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 2/2] scsi: ufs: use devm_blk_ksm_init()
-Date:   Thu, 21 Jan 2021 00:21:55 -0800
-Message-Id: <20210121082155.111333-3-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210121082155.111333-1-ebiggers@kernel.org>
-References: <20210121082155.111333-1-ebiggers@kernel.org>
+        id S1725933AbhAUIe0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 03:34:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbhAUIdc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 21 Jan 2021 03:33:32 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704B5C061575
+        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 00:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=tCQyPoxlkt0mcG4IJQ3TV9idT57nElqTrtxIPpTvinM=; b=tp4x2GI4WPuksHoYU/5ymQSsmM
+        tG839XzOj4nrxflSbc8s8Ytzj89Sgbj3bGt3UP47vhOaVuknMsnO0EBA1kfAkz7uj8eWWqcIWtt2r
+        AOwt2gy+iezMoGJvOufJ/m4+kzTeEVULui/lOLSMJyhIfUh8RaRV9IrsRD7JF4DxreLSGEW4vvuUx
+        jyANyk0pH2pyhv6ajHV8NAljSmYI0p/m5BI/9qQ2b22Jghq2p7AQLWzaf20J0Yt3NnCvfFvfilQnL
+        EaUHrQ7a9k2cEDQc5VGsAIGeC7lazK8zqF/qSO8+QxLg+iyRs38qplBO3NjOHgm3os3TWvXrdWGcc
+        AdE4AS+A==;
+Received: from [2001:4bb8:188:1954:d5b3:2657:287:e45f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1l2VOV-00Go83-83; Thu, 21 Jan 2021 08:32:44 +0000
+Date:   Thu, 21 Jan 2021 09:32:42 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: [GIT PULL] nvme fixes for 5.11
+Message-ID: <YAk8Kt/DRZ7T6WBl@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+The following changes since commit b4f664252f51e119e9403ef84b6e9ff36d119510:
 
-Use the new resource-managed variant of blk_ksm_init() so that the UFS
-driver doesn't have to manually call blk_ksm_destroy().
+  Merge tag 'nvme-5.11-2021-01-14' of git://git.infradead.org/nvme into block-5.11 (2021-01-14 15:17:33 -0700)
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- drivers/scsi/ufs/ufshcd-crypto.c | 9 ++-------
- drivers/scsi/ufs/ufshcd-crypto.h | 5 -----
- drivers/scsi/ufs/ufshcd.c        | 1 -
- 3 files changed, 2 insertions(+), 13 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/scsi/ufs/ufshcd-crypto.c b/drivers/scsi/ufs/ufshcd-crypto.c
-index 07310b12a5dc8..153dd5765d9ca 100644
---- a/drivers/scsi/ufs/ufshcd-crypto.c
-+++ b/drivers/scsi/ufs/ufshcd-crypto.c
-@@ -179,8 +179,8 @@ int ufshcd_hba_init_crypto_capabilities(struct ufs_hba *hba)
- 	}
- 
- 	/* The actual number of configurations supported is (CFGC+1) */
--	err = blk_ksm_init(&hba->ksm,
--			   hba->crypto_capabilities.config_count + 1);
-+	err = devm_blk_ksm_init(hba->dev, &hba->ksm,
-+				hba->crypto_capabilities.config_count + 1);
- 	if (err)
- 		goto out_free_caps;
- 
-@@ -238,8 +238,3 @@ void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
- 	if (hba->caps & UFSHCD_CAP_CRYPTO)
- 		blk_ksm_register(&hba->ksm, q);
- }
--
--void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba)
--{
--	blk_ksm_destroy(&hba->ksm);
--}
-diff --git a/drivers/scsi/ufs/ufshcd-crypto.h b/drivers/scsi/ufs/ufshcd-crypto.h
-index d53851be55416..78a58e788dff9 100644
---- a/drivers/scsi/ufs/ufshcd-crypto.h
-+++ b/drivers/scsi/ufs/ufshcd-crypto.h
-@@ -43,8 +43,6 @@ void ufshcd_init_crypto(struct ufs_hba *hba);
- void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
- 					    struct request_queue *q);
- 
--void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba);
--
- #else /* CONFIG_SCSI_UFS_CRYPTO */
- 
- static inline void ufshcd_prepare_lrbp_crypto(struct request *rq,
-@@ -69,9 +67,6 @@ static inline void ufshcd_init_crypto(struct ufs_hba *hba) { }
- static inline void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
- 						struct request_queue *q) { }
- 
--static inline void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba)
--{ }
--
- #endif /* CONFIG_SCSI_UFS_CRYPTO */
- 
- #endif /* _UFSHCD_CRYPTO_H */
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index e31d2c5c7b23b..d905c84474c2c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -9139,7 +9139,6 @@ EXPORT_SYMBOL_GPL(ufshcd_remove);
-  */
- void ufshcd_dealloc_host(struct ufs_hba *hba)
- {
--	ufshcd_crypto_destroy_keyslot_manager(hba);
- 	scsi_host_put(hba->host);
- }
- EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
--- 
-2.30.0
+  git://git.infradead.org/nvme.git tags/nvme-5.11-2020-01-21
 
+for you to fetch changes up to fa0732168fa1369dd089e5b06d6158a68229f7b7:
+
+  nvme-pci: fix error unwind in nvme_map_data (2021-01-20 18:56:33 +0100)
+
+----------------------------------------------------------------
+nvme fixes for 5.11:
+
+ - fix a status code in nvmet (Chaitanya Kulkarni)
+ - avoid double completions in nvme-rdma/nvme-tcp (Chao Leng)
+ - fix the CMB support to cope with NVMe 1.4 controllers (Klaus Jensen)
+ - fix PRINFO handling in the passthrough ioctl (Revanth Rajashekar)
+ - fix a double DMA unmap in nvme-pci
+
+----------------------------------------------------------------
+Chaitanya Kulkarni (1):
+      nvmet: set right status on error in id-ns handler
+
+Chao Leng (2):
+      nvme-rdma: avoid request double completion for concurrent nvme_rdma_timeout
+      nvme-tcp: avoid request double completion for concurrent nvme_tcp_timeout
+
+Christoph Hellwig (2):
+      nvme-pci: refactor nvme_unmap_data
+      nvme-pci: fix error unwind in nvme_map_data
+
+Klaus Jensen (1):
+      nvme-pci: allow use of cmb on v1.4 controllers
+
+Revanth Rajashekar (1):
+      nvme: check the PRINFO bit before deciding the host buffer length
+
+ drivers/nvme/host/core.c        |  17 +++++-
+ drivers/nvme/host/pci.c         | 119 +++++++++++++++++++++++++++-------------
+ drivers/nvme/host/rdma.c        |  15 +++--
+ drivers/nvme/host/tcp.c         |  14 +++--
+ drivers/nvme/target/admin-cmd.c |   8 ++-
+ include/linux/nvme.h            |   6 ++
+ 6 files changed, 129 insertions(+), 50 deletions(-)
