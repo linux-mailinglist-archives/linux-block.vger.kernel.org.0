@@ -2,119 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D3962FF8A3
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 00:22:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2492FFA1A
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 02:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbhAUXV7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jan 2021 18:21:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbhAUXVt (ORCPT
+        id S1726576AbhAVBoj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jan 2021 20:44:39 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:60329 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726424AbhAVBo1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jan 2021 18:21:49 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D286DC0613D6
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:21:03 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id j3so4458111ljb.9
-        for <linux-block@vger.kernel.org>; Thu, 21 Jan 2021 15:21:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ucsc.edu; s=ucsc-google-2018;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aGtXJ9JSGxtBc9xg3WRFWW32mVSM+OhKXJJnwYOIaH8=;
-        b=rQ5kYcRgKxaek75+QtT2RaTkkaOSXLf7tvSbcjzY2DdFv8GXepB+qApS1tGx0cSB+T
-         C1bO3TvVY/KuRpM6zK4zgVl91lpYDM4+TOT2bhqIsqcJEPQHyomWRu+uBcCyOGF2Zpnx
-         hvlnTZz1lnNsfGJWjztmol9dymRW0GSCfAqdT6Lvoj0X/QSREG/arcGxmGDvDXLcM4h7
-         IggIQbxXdKD5KDoi2ojculnbBGt8HeeusoFoh0UXo7sfneScir/bBAq1I0EXGnBjr1Up
-         xLSHd0KN31iPzjyeXyMs7XV3rSq8371KbFrBAYGOxsDTYcV7QhRchXEV2hNQR7wF7MKn
-         iLxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aGtXJ9JSGxtBc9xg3WRFWW32mVSM+OhKXJJnwYOIaH8=;
-        b=nB22SALtzhOpi63nUM53mJo+n+cfQmOESv8kwE7W6NzQFCCkedbCr2Z/G+2iOIXqh5
-         /IAdo7RY1Cjdmx6srrnZpSV7cYeQx8qOPZstWGh93GQ9PtVaQ2vEe6FS6QF5Y2eZRi4l
-         901xvyBx9tuYcR3lyaxoEvKoMAt404SzJygD2sb7qS0L2WLsZMhAE5tXDMj7F7AoCoqV
-         wSPS8haOXTW3YvRIw7d3fJX46RQ4chqB3lfcLbXWmntJ6sj0m4TGx3CqVPn2OL4ETVmI
-         Logbb0geuEvbHU96QSWCnrwpMg+ehPWyPLKc7OSqGzASaXXDxfsgyie/E0jLm5MR5HwF
-         eHLQ==
-X-Gm-Message-State: AOAM531Y9VhLdH2EfqmDugcd2C7idALE4jEB8b4+bbH/eodgWJxwY+OC
-        GmVFLQJw0oQ6/1bMUaNvoZFUGvdDtHRYi5KTM9pRqA==
-X-Google-Smtp-Source: ABdhPJxgoZFXwC/GJMoLTVnJ9jo6wg5JBDrPwbNgtDIDaYGc88FWKCooZ+gkYoMaXwLPzopG+G/5NzzEWXMwXq/wcAY=
-X-Received: by 2002:a2e:b1d2:: with SMTP id e18mr54330lja.101.1611271262294;
- Thu, 21 Jan 2021 15:21:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20210121072202.120810-1-bianpan2016@163.com> <55045608-01cb-d5af-682b-5a213944e33d@kernel.dk>
- <474055ad-978a-4da5-d7f0-e2dc862b781c@lightnvm.io> <CAJbgVnWxmwfmdgk-e290kcMfhUNAjP9uO2k45rx7R=x8jBdJcw@mail.gmail.com>
- <59a735f0-9fef-5e6d-f7eb-851e14a2883e@lightnvm.io> <CAJbgVnW40qrYBdsM6dC5uhDFZJJDc9kwvCWtK24Rg5GWCHpb2g@mail.gmail.com>
- <586510be-5a56-5e99-6ee6-ee20031f166b@lightnvm.io>
-In-Reply-To: <586510be-5a56-5e99-6ee6-ee20031f166b@lightnvm.io>
-From:   Heiner Litz <hlitz@ucsc.edu>
-Date:   Thu, 21 Jan 2021 15:20:51 -0800
-Message-ID: <CAJbgVnXXnLvWx-TtJh1YJxPfv+=_L2+gt0vNPpYKoLCOkCBN4Q@mail.gmail.com>
-Subject: Re: [PATCH] lightnvm: fix memory leak when submit fails
-To:     =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>
-Cc:     Jens Axboe <axboe@kernel.dk>, Pan Bian <bianpan2016@163.com>,
+        Thu, 21 Jan 2021 20:44:27 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMTXQh2_1611279807;
+Received: from B-D1K7ML85-0059.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0UMTXQh2_1611279807)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 22 Jan 2021 09:43:27 +0800
+Subject: Re: [PATCH RFC] virtio-blk: support per-device queue depth
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
         linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <1610942338-78252-1-git-send-email-joseph.qi@linux.alibaba.com>
+ <405493e0-7917-2ee9-7242-5f02c044a0fb@redhat.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <ce313c74-645f-3a55-44ac-4e757497c778@linux.alibaba.com>
+Date:   Fri, 22 Jan 2021 09:43:27 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <405493e0-7917-2ee9-7242-5f02c044a0fb@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-thanks, Matias, I am going to look out for dm-zap!
+Hi Michael,
 
-On Thu, Jan 21, 2021 at 12:14 PM Matias Bj=C3=B8rling <mb@lightnvm.io> wrot=
-e:
->
-> On 21/01/2021 20.49, Heiner Litz wrote:
-> > there are a couple more, but again I would understand if those are
-> > deemed not important enough to keep it.
-> >
-> > device emulation of (non-ZNS) SSD block device
->
-> That'll soon be available. We will be open-sourcing a new device mapper
-> (dm-zap), which implements an indirection layer that enables ZNS SSDs to
-> be exposed as a conventional block device.
->
-> > die control: yes endurance groups would help but I am not aware of any
-> > vendor supporting it
-> It is out there. Although, is this still important in 2021? OCSSD was
-> made back in the days where media program/erase suspend wasn't commonly
-> available and SSD controller were more simple. With today's media and
-> SSD controllers, it is hard to compete without leaving media throughput
-> on the table. If needed, splitting a drive into a few partitions should
-> be sufficient for many many types of workloads.
-> > finer-grained control: 1000's of open blocks vs. a handful of
-> > concurrently open zones
->
-> It is dependent on the implementation - ZNS SSDs also supports 1000's of
-> open zones.
->
-> Wrt to available OCSSD hardware - there isn't, to my knowledge, proper
-> implementations available, where media reliability is taken into account.
->
-> Generally for the OCSSD hardware implementations, their UBER is
-> extremely low, and as such RAID or similar schemes must be implemented
-> on the host. pblk does not implement this, so at best, one should not
-> store data if one wants to get it back at some point. It also makes for
-> an unfair SSD comparison, as there is much more to an SSD than what
-> OCSSD + pblk implements. At worst, it'll lead to false understanding of
-> the challenges of making SSDs, and at best, work can be used as the
-> foundation for doing an actual SSD implementation.
->
-> > OOB area: helpful for L2P recovery
->
-> It is known as LBA metadata in NVMe. It is commonly available in many of
-> today's SSD.
->
-> I understand your point that there is a lot of flexibility, but my
-> counter point is that there isn't anything in OCSSD, that is not
-> implementable or commonly available using today's NVMe concepts.
-> Furthermore, the known OCSSD research platforms can easily be updated to
-> expose the OCSSD characteristics through standardized NVMe concepts.
-> That would probably make for a good research paper.
->
->
+Any comments on this patch?
+
+Thanks,
+Joseph
+
+On 1/19/21 12:14 PM, Jason Wang wrote:
+> 
+> On 2021/1/18 上午11:58, Joseph Qi wrote:
+>> module parameter 'virtblk_queue_depth' was firstly introduced for
+>> testing/benchmarking purposes described in commit fc4324b4597c
+>> ("virtio-blk: base queue-depth on virtqueue ringsize or module param").
+>> Since we have different virtio-blk devices which have different
+>> capabilities, it requires that we support per-device queue depth instead
+>> of per-module. So defaultly use vq free elements if module parameter
+>> 'virtblk_queue_depth' is not set.
+>>
+>> Signed-off-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> 
+> 
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> 
+> 
+>> ---
+>>   drivers/block/virtio_blk.c | 12 +++++++-----
+>>   1 file changed, 7 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+>> index 145606d..f83a417 100644
+>> --- a/drivers/block/virtio_blk.c
+>> +++ b/drivers/block/virtio_blk.c
+>> @@ -705,6 +705,7 @@ static int virtblk_probe(struct virtio_device *vdev)
+>>       u32 v, blk_size, max_size, sg_elems, opt_io_size;
+>>       u16 min_io_size;
+>>       u8 physical_block_exp, alignment_offset;
+>> +    unsigned int queue_depth;
+>>         if (!vdev->config->get) {
+>>           dev_err(&vdev->dev, "%s failure: config access disabled\n",
+>> @@ -755,17 +756,18 @@ static int virtblk_probe(struct virtio_device *vdev)
+>>           goto out_free_vq;
+>>       }
+>>   -    /* Default queue sizing is to fill the ring. */
+>> -    if (!virtblk_queue_depth) {
+>> -        virtblk_queue_depth = vblk->vqs[0].vq->num_free;
+>> +    if (likely(!virtblk_queue_depth)) {
+>> +        queue_depth = vblk->vqs[0].vq->num_free;
+>>           /* ... but without indirect descs, we use 2 descs per req */
+>>           if (!virtio_has_feature(vdev, VIRTIO_RING_F_INDIRECT_DESC))
+>> -            virtblk_queue_depth /= 2;
+>> +            queue_depth /= 2;
+>> +    } else {
+>> +        queue_depth = virtblk_queue_depth;
+>>       }
+>>         memset(&vblk->tag_set, 0, sizeof(vblk->tag_set));
+>>       vblk->tag_set.ops = &virtio_mq_ops;
+>> -    vblk->tag_set.queue_depth = virtblk_queue_depth;
+>> +    vblk->tag_set.queue_depth = queue_depth;
+>>       vblk->tag_set.numa_node = NUMA_NO_NODE;
+>>       vblk->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
+>>       vblk->tag_set.cmd_size =
