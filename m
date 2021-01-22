@@ -2,120 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6377230033A
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 13:36:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94330300336
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jan 2021 13:36:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbhAVJZZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 Jan 2021 04:25:25 -0500
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:52466 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbhAVJRF (ORCPT
+        id S1726944AbhAVJY5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 Jan 2021 04:24:57 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:36020 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727343AbhAVJOm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 Jan 2021 04:17:05 -0500
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Jan 2021 04:17:02 EST
-Received: from ubuntu.localdomain (unknown [157.0.31.125])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 448344E16AB;
-        Fri, 22 Jan 2021 17:06:43 +0800 (CST)
-From:   Yang Yang <yang.yang@vivo.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Cc:     onlyfever@icloud.com, yang.yang@vivo.com
-Subject: [PATCH] kyber: introduce kyber_depth_updated()
-Date:   Fri, 22 Jan 2021 01:06:36 -0800
-Message-Id: <20210122090636.55428-1-yang.yang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZS09MTEIYQkJNSEMYVkpNSkpIS01PS0hPSkhVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hNSlVLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pio6Ojo4HT8NNkIsS0sxOAtJ
-        TSgaCQhVSlVKTUpKSEtNT0tIQ0hLVTMWGhIXVQIaFRxVAhoVHDsNEg0UVRgUFkVZV1kSC1lBWUpO
-        TFVLVUhKVUpJTllXWQgBWUFISElINwY+
-X-HM-Tid: 0a77295886129376kuws448344e16ab
+        Fri, 22 Jan 2021 04:14:42 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMW501u_1611306827;
+Received: from B-D1K7ML85-0059.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0UMW501u_1611306827)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 22 Jan 2021 17:13:47 +0800
+Subject: Re: [PATCH RFC] virtio-blk: support per-device queue depth
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <1610942338-78252-1-git-send-email-joseph.qi@linux.alibaba.com>
+ <405493e0-7917-2ee9-7242-5f02c044a0fb@redhat.com>
+ <ce313c74-645f-3a55-44ac-4e757497c778@linux.alibaba.com>
+ <20210122033412-mutt-send-email-mst@kernel.org>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <4295b785-cb0e-cacf-4b86-c9019e16c617@linux.alibaba.com>
+Date:   Fri, 22 Jan 2021 17:13:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <20210122033412-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hang occurs when user changes the scheduler queue depth, by writing to
-the 'nr_requests' sysfs file of that device.
-This patch introduces kyber_depth_updated(), so that kyber can update its
-internal state when queue depth changes.
 
-Signed-off-by: Yang Yang <yang.yang@vivo.com>
----
- block/kyber-iosched.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index dc89199bc8c6..b64f80d3eaf3 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -353,19 +353,9 @@ static void kyber_timer_fn(struct timer_list *t)
- 	}
- }
- 
--static unsigned int kyber_sched_tags_shift(struct request_queue *q)
--{
--	/*
--	 * All of the hardware queues have the same depth, so we can just grab
--	 * the shift of the first one.
--	 */
--	return q->queue_hw_ctx[0]->sched_tags->bitmap_tags->sb.shift;
--}
--
- static struct kyber_queue_data *kyber_queue_data_alloc(struct request_queue *q)
- {
- 	struct kyber_queue_data *kqd;
--	unsigned int shift;
- 	int ret = -ENOMEM;
- 	int i;
- 
-@@ -400,9 +390,6 @@ static struct kyber_queue_data *kyber_queue_data_alloc(struct request_queue *q)
- 		kqd->latency_targets[i] = kyber_latency_targets[i];
- 	}
- 
--	shift = kyber_sched_tags_shift(q);
--	kqd->async_depth = (1U << shift) * KYBER_ASYNC_PERCENT / 100U;
--
- 	return kqd;
- 
- err_buckets:
-@@ -458,9 +445,18 @@ static void kyber_ctx_queue_init(struct kyber_ctx_queue *kcq)
- 		INIT_LIST_HEAD(&kcq->rq_list[i]);
- }
- 
--static int kyber_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
-+static void kyber_depth_updated(struct blk_mq_hw_ctx *hctx)
- {
- 	struct kyber_queue_data *kqd = hctx->queue->elevator->elevator_data;
-+	struct blk_mq_tags *tags = hctx->sched_tags;
-+
-+	kqd->async_depth = tags->bitmap_tags->sb.depth * KYBER_ASYNC_PERCENT / 100U;
-+
-+	sbitmap_queue_min_shallow_depth(tags->bitmap_tags, kqd->async_depth);
-+}
-+
-+static int kyber_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
-+{
- 	struct kyber_hctx_data *khd;
- 	int i;
- 
-@@ -502,8 +498,7 @@ static int kyber_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
- 	khd->batching = 0;
- 
- 	hctx->sched_data = khd;
--	sbitmap_queue_min_shallow_depth(hctx->sched_tags->bitmap_tags,
--					kqd->async_depth);
-+	kyber_depth_updated(hctx);
- 
- 	return 0;
- 
-@@ -1022,6 +1017,7 @@ static struct elevator_type kyber_sched = {
- 		.completed_request = kyber_completed_request,
- 		.dispatch_request = kyber_dispatch_request,
- 		.has_work = kyber_has_work,
-+		.depth_updated = kyber_depth_updated,
- 	},
- #ifdef CONFIG_BLK_DEBUG_FS
- 	.queue_debugfs_attrs = kyber_queue_debugfs_attrs,
--- 
-2.17.1
+On 1/22/21 4:34 PM, Michael S. Tsirkin wrote:
+> On Fri, Jan 22, 2021 at 09:43:27AM +0800, Joseph Qi wrote:
+>> Hi Michael,
+>>
+>> Any comments on this patch?
+>>
+>> Thanks,
+>> Joseph
+> 
+> Suggest copying all reviewers, including Paolo Bonzini
+> <pbonzini@redhat.com> and Stefan Hajnoczi <stefanha@redhat.com>.
+> 
 
+Sure, will send v2 including cc reviewers.
+
+Thanks,
+Joseph
