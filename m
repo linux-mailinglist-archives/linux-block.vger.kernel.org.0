@@ -2,50 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EA0C30153F
-	for <lists+linux-block@lfdr.de>; Sat, 23 Jan 2021 13:43:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84ABF301845
+	for <lists+linux-block@lfdr.de>; Sat, 23 Jan 2021 21:12:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbhAWMnJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 23 Jan 2021 07:43:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
+        id S1726509AbhAWULX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 23 Jan 2021 15:11:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbhAWMnI (ORCPT
+        with ESMTP id S1726374AbhAWULT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 23 Jan 2021 07:43:08 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD410C06174A;
-        Sat, 23 Jan 2021 04:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=PIQ+56ytgL8BITTLkCIzNrn7rp
-        rkwLLz37WYnmE4hAW5jNkxI6hgNTsT34NP4KuhYwCiS0hiAdi+caWZ7ydU5hCNTnwxJ6BpP4uLFR5
-        ozKvqtzHTEfgLkdIi3q4j0SePMiambd2pNojHGvQjqgaEg4BgGFvvRn/6hrVUA1QUFoFrSnXCqG/R
-        pDyYGvjgJ476RTozrXcVf0daXPRY2JBi5lYvf/2dPzWpZmjAju198qkwrx7ASc9IbPrqzpVRNsZPF
-        ZlFX5Nr/QqcLbfEd/uuO4uni5F7KHLIJ/dhj/fsWLGVQeGZNxneJmnmM9vnxP7TSuVVYHByePJJKR
-        sylR9eAQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l3IF0-001vNH-RQ; Sat, 23 Jan 2021 12:42:12 +0000
-Date:   Sat, 23 Jan 2021 12:42:10 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lauri Kasanen <cand@gmx.com>
-Cc:     linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v11] block: Add n64 cart driver
-Message-ID: <20210123124210.GB458363@infradead.org>
-References: <20210123095327.58e5ab6c05f38e9080a79bd3@gmx.com>
+        Sat, 23 Jan 2021 15:11:19 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20425C0613D6;
+        Sat, 23 Jan 2021 12:10:39 -0800 (PST)
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1611432634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=snbBb8jbhWawsw2GQsoMHEAKGubaOMjN8g5bGgFLep8=;
+        b=b6HbygbiVP2lcXA+lKmy7IiN+6FqeUJFUkgeR5UelMv2N8aINVYMIQ1tcLOoHrvmv3ePTT
+        n61hiRZhsU+Jyy4YJs35a16Hc+W8wzgRoHhYKEBn3FRgrgwa3LODg074Tc+6p6cwgbPphb
+        8OKYLYwLwiqp6yDPk7ZS9VH0r1e1iVGElLKoTsVd5939d8eOxoHzIcxj50F72PUfI2Iqdj
+        I3kWF89xRZf3Ydl4RTtqjVXRpIwF7dtl/EeB2/cA1OWP1+SUVaCzcobhxTn3kq3N2uRwVT
+        Um3G8+5ZuxMFbXlG6JXNUXhoSO9raFovDkJSVCaaZWfOCU981ilwa+lJFx+xSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1611432634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=snbBb8jbhWawsw2GQsoMHEAKGubaOMjN8g5bGgFLep8=;
+        b=jdIEwID/4bQ3nmAPbaZAtu9xC+D1aOSxyJaF/RtW1fqRhdcS97ZAwgx+WYKCfdSVq1i24b
+        jFlK7OZgy37YMDDQ==
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v3 0/3] blk-mq: Don't complete in IRQ, use llist_head
+Date:   Sat, 23 Jan 2021 21:10:24 +0100
+Message-Id: <20210123201027.3262800-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210123095327.58e5ab6c05f38e9080a79bd3@gmx.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+Patch 2+3 were applied and then dropped by Jens due to a NOHZ+softirq
+related warning [0]. Turns out a successful wakeup via
+set_nr_if_polling() will not process any softirqs and the CPU may go
+back to idle. This is addressed by patch #1.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+smpcfd_dying_cpu() will also invoke SMP-functions calls via
+flush_smp_call_function_queue() but the block layer shouldn't queue
+anything because the CPU isn't online anymore.
+The two caller of flush_smp_call_function_from_idle() look fine with
+opening interrupts from within do_softirq().
+
+[0] https://lkml.kernel.org/r/1ee4b31b-350e-a9f5-4349-cfb34b89829a@kernel.dk
+
+Sebastian
+
+
