@@ -2,49 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A8A301844
-	for <lists+linux-block@lfdr.de>; Sat, 23 Jan 2021 21:12:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1AAD301841
+	for <lists+linux-block@lfdr.de>; Sat, 23 Jan 2021 21:11:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbhAWULW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 23 Jan 2021 15:11:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbhAWULT (ORCPT
+        id S1726480AbhAWULU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 23 Jan 2021 15:11:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33390 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbhAWULS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 23 Jan 2021 15:11:19 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187C5C06174A;
-        Sat, 23 Jan 2021 12:10:39 -0800 (PST)
+        Sat, 23 Jan 2021 15:11:18 -0500
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1611432635;
+        s=2020; t=1611432636;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RvialIUza76ZQsVU543wsyBevXPATQcHABCWvzhOsa0=;
-        b=WvSBCSb7AKFnNe0oNkxslbemJCZo+5Wn3G8cPxu2WQHbSkRcsMxQ7zXSEi+mrqAjE3e5bP
-        sirdN98jEqRvdfI97P28vkHMaiwZzr1+ha3bVFW+7oRtJOwKfS5oDElKJf0u0+HfuRHb38
-        ULM9Vc84IakrEMl0pwxTXqnFzUCALQl+Nxw4uCJc/jaYtgKg9M5SaxSevVzsVm1cWZ4cWq
-        QKFbmRG9TRcxVHKCNxHyZuRS2fnLPuo4IMJENO1Ee3FDZpzBMxeMytVRql7ox+g1q11bld
-        eTehjLw9gVnl0QAYMmbOpCj/xS1Z7vmjIVJGzLX4M55mO6/Yr8Nrnw4cRhTXng==
+        bh=FXtKHqimthZytcdJDbVm1RJiJEFrCp7q87+tAWESN50=;
+        b=Xpr0UAX3SBHng2S2PsZcHE9cil5C2zfy62SMwHQ9oana5hWH2FqnXJFUjplVYbrPnc5c9V
+        alABo9w6jnrrt+P3AWNKa5EUbb8GgzHTGZMd0gpalXhQhQlRWoB/E/pgTs4ok7T0aimbrV
+        AUwJrDBw0V11RrTn4DXgGAolTAB4TKLYsDwawcrTKAjWHfzpqYA8FY7ULRH96pXTym5Gh4
+        CE2Fp6s0EK8dYMkCl7gzYwHpNaJDTBDms3rmhJJFpGfVjKzvbsjigGFlQeaX/7hFD3ys8Q
+        Ocj00S7+6RK3ierIm8ChUAtTRB3QrvaekQU6Izlz3l0ztPLRZST68YwVsTbVOg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1611432635;
+        s=2020e; t=1611432636;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RvialIUza76ZQsVU543wsyBevXPATQcHABCWvzhOsa0=;
-        b=n5lkVAuRVZqteTCZ7UWJtYsIMymG6Zjw0vi4qtRMTPqoCQw4OFzkFApI6HCVCWb74H2qAx
-        cGgbT30Jxat9iyAg==
+        bh=FXtKHqimthZytcdJDbVm1RJiJEFrCp7q87+tAWESN50=;
+        b=ouIsL2O14nSxYq0yflXVMdGLkZdVAg5NqvPVmOBSlT66bALlbVhPk8ezeM98DO7ePm+t3q
+        oBljjHyZQ/S5G0DQ==
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/3] smp: Process pending softirqs in flush_smp_call_function_from_idle()
-Date:   Sat, 23 Jan 2021 21:10:25 +0100
-Message-Id: <20210123201027.3262800-2-bigeasy@linutronix.de>
+Subject: [PATCH 2/3] blk-mq: Always complete remote completions requests in softirq
+Date:   Sat, 23 Jan 2021 21:10:26 +0100
+Message-Id: <20210123201027.3262800-3-bigeasy@linutronix.de>
 In-Reply-To: <20210123201027.3262800-1-bigeasy@linutronix.de>
 References: <20210123201027.3262800-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -53,44 +50,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-send_call_function_single_ipi() may wake an idle CPU without sending an
-IPI. The woken up CPU will process the SMP-functions in
-flush_smp_call_function_from_idle(). Any raised softirq from within the
-SMP-function call will not be processed.
-Should the CPU have no tasks assigned, then it will go back to idle with
-pending softirqs and the NOHZ will rightfully complain.
+Controllers with multiple queues have their IRQ-handelers pinned to a
+CPU. The core shouldn't need to complete the request on a remote CPU.
 
-Process pending softirqs on return from flush_smp_call_function_queue().
+Remove this case and always raise the softirq to complete the request.
 
-Fixes: b2a02fc43a1f4 ("smp: Optimize send_call_function_single_ipi()")
-Reported-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/smp.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ block/blk-mq.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 1b6070bf97bb0..aeb0adfa06063 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -14,6 +14,7 @@
- #include <linux/export.h>
- #include <linux/percpu.h>
- #include <linux/init.h>
-+#include <linux/interrupt.h>
- #include <linux/gfp.h>
- #include <linux/smp.h>
- #include <linux/cpu.h>
-@@ -449,6 +450,9 @@ void flush_smp_call_function_from_idle(void)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f285a9123a8b0..90348ae518461 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -628,19 +628,7 @@ static void __blk_mq_complete_request_remote(void *dat=
+a)
+ {
+ 	struct request *rq =3D data;
 =20
- 	local_irq_save(flags);
- 	flush_smp_call_function_queue(true);
-+	if (local_softirq_pending())
-+		do_softirq();
-+
- 	local_irq_restore(flags);
+-	/*
+-	 * For most of single queue controllers, there is only one irq vector
+-	 * for handling I/O completion, and the only irq's affinity is set
+-	 * to all possible CPUs.  On most of ARCHs, this affinity means the irq
+-	 * is handled on one specific CPU.
+-	 *
+-	 * So complete I/O requests in softirq context in case of single queue
+-	 * devices to avoid degrading I/O performance due to irqsoff latency.
+-	 */
+-	if (rq->q->nr_hw_queues =3D=3D 1)
+-		blk_mq_trigger_softirq(rq);
+-	else
+-		rq->q->mq_ops->complete(rq);
++	blk_mq_trigger_softirq(rq);
  }
 =20
+ static inline bool blk_mq_complete_need_ipi(struct request *rq)
 --=20
 2.30.0
 
