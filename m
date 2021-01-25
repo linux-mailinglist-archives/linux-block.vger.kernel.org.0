@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B92530493F
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 892A630493C
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbhAZFb0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 00:31:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
+        id S1726126AbhAZFbB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbhAYJZY (ORCPT
+        with ESMTP id S1726317AbhAYJUO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 04:25:24 -0500
+        Mon, 25 Jan 2021 04:20:14 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEC2C0617A7;
-        Mon, 25 Jan 2021 00:30:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D92C061220;
+        Mon, 25 Jan 2021 00:49:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7yVqflIwxbWPrQTBGwlaVvHWryILP/M7IQGatiOKOy4=; b=kEmWH7L36XURkGDwt5Bt4DQM8I
-        +9QyGaxW2J9XGxizkK+PvLs0QG7ahjXAFh0bwCgNmRAVBQ7ScYMfQNO/ommNz3H/jl/lLKL72E76/
-        rDhHENXpLDibqGYW1UqFAriVyjmX86/6vZdsadEQdm3pzXQw2vPZCajmDm/XLFZQVyDzVLRc+O9eY
-        S2LgH75ijbVtHRhlz8JuDXeAViPygINHFmhgwChWO0We8H3uCAZ6TpLjICdwrnS2cSdAQxVWKaXwa
-        3z2bsV24k+gY4LdqYFlEdkIJiLstYfL+WxlZnxhlig3YQAdt1v9wDUlUsP3jvcO5x+WGjPOYvWsMl
-        VcQbf25Q==;
+        bh=6x3jwWsE8Pp1a5Oj7dG5Rac0+wUmTjdtsRT6Ukvd5hQ=; b=UQ8+JK+C5EdxVY3h9h7kqA3yxq
+        HcO3BJsbTUyaJU6LFWyBBlOSHzCtWbkEJGo+41AOwL/CIl5/c8XgOAaVylnjU7lflirCCksiS2ujD
+        pbTzXbUR5YOy48DDHhmrxLlNqsR5zo0u4s/lO6/R1TL+91NfdAtrWWHlrT/txhfG8Qjna6qyOgqyH
+        cPrth9syTOHeIujb9kKDlnkcUKHsKZJV0cksqMX088MxcSXh2qismrjgGUx1FrWYEbmbSXLVQCLuT
+        x0O1Sfy6fKCTf5xaDI4YltHgAHtVEBRpDHUjDIeKF6pqUpDRsBwnQIYU2XV70jBklmMoPx+2X8BHf
+        g+1GQqRg==;
 Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l3xGG-003xry-LL; Mon, 25 Jan 2021 08:30:14 +0000
-Date:   Mon, 25 Jan 2021 08:30:12 +0000
+        id 1l3xYb-003yxX-Jo; Mon, 25 Jan 2021 08:49:10 +0000
+Date:   Mon, 25 Jan 2021 08:49:09 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -35,35 +35,32 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 3/3] blk-mq: Use llist_head for blk_cpu_done
-Message-ID: <20210125083012.GD942655@infradead.org>
+Subject: Re: [PATCH 2/3] blk-mq: Always complete remote completions requests
+ in softirq
+Message-ID: <20210125084909.GA948851@infradead.org>
 References: <20210123201027.3262800-1-bigeasy@linutronix.de>
- <20210123201027.3262800-4-bigeasy@linutronix.de>
+ <20210123201027.3262800-3-bigeasy@linutronix.de>
+ <20210125082259.GB942655@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210123201027.3262800-4-bigeasy@linutronix.de>
+In-Reply-To: <20210125082259.GB942655@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> +static void blk_mq_complete_send_ipi(struct request *rq)
-> +{
-> +	struct llist_head *list;
-> +	unsigned int cpu;
-> +
-> +	cpu = rq->mq_ctx->cpu;
-> +	list = &per_cpu(blk_cpu_done, cpu);
-> +	if (llist_add(&rq->ipi_list, list)) {
-> +		INIT_CSD(&rq->csd, __blk_mq_complete_request_remote, rq);
-> +		smp_call_function_single_async(cpu, &rq->csd);
-> +	}
-> +}
+On Mon, Jan 25, 2021 at 08:23:03AM +0000, Christoph Hellwig wrote:
+> On Sat, Jan 23, 2021 at 09:10:26PM +0100, Sebastian Andrzej Siewior wrote:
+> > Controllers with multiple queues have their IRQ-handelers pinned to a
+> > CPU. The core shouldn't need to complete the request on a remote CPU.
+> > 
+> > Remove this case and always raise the softirq to complete the request.
+> 
+> What about changing blk_mq_trigger_softirq to take a void * argument
+> and thus removing __blk_mq_complete_request_remote entirely?
 
-Nit: it would be nice to initialize cpu and list in the declaration
-lines.
-
-Otherwise looks good:
+I'll take this back - that change is in the way of what you do in patch
+3.  So this looks good as-is:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
