@@ -2,65 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A32301FDC
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 02:24:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8315301FE4
+	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 02:25:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbhAYBVd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 Jan 2021 20:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45152 "EHLO
+        id S1726601AbhAYBZo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 24 Jan 2021 20:25:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbhAYBUy (ORCPT
+        with ESMTP id S1726480AbhAYBVl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 Jan 2021 20:20:54 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB94C061573
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:20:14 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id b17so56911plz.6
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:20:14 -0800 (PST)
+        Sun, 24 Jan 2021 20:21:41 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235E1C061756
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:21:01 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id my11so8401472pjb.1
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:21:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rDCH8ssNvRh56D4K9BgC9iGmoQjBN/dPHMN5SJwmyYM=;
-        b=AmEGBigeVqRqfuQsYXNce465V0cqwySPRdMKlDNNWGXL/qFq28BBfpOWJu7OoH31UI
-         cvThXAc4uNYMfQ2fbmg931kPRmk67kpjeNnsj6m6dVleaPyszad48wnAUVsZl8V1CmRh
-         t9Q4Tf+cnrGF4OmQ+bx8r5PdSNjKk3eVfu8jGXFq4Jco6wwNPzMz94hwhiTHrDVAnfPt
-         8WevLcjjPtUHDFxcMK/cjeV1z3tDDUDikAvftyrTPCG9CHoFEruRzPLaaq4lzrSrsgNA
-         w0K+ccAJ64KMCOXuCUP0wvAwtEylZ/fypl5Iv6D+w3s2S7kLAUNkSHTyHP+PQt7vuOj+
-         GW1Q==
+        bh=f7QtsZwPr4U46GTFuhzyc8M7URNXvRStxFGcvYKpg4Y=;
+        b=dxPJSW7sJXGk9Z7ugYcaWLjVSvz/6xTcnLwO41v+nGxxOXbAL9YFZ/+kaBrUc1qHoq
+         3dyBBwxb7cvbUb2FKL/DgAaxk84qalOL+k4XKdHGcSEcEE3krqSHKIH/9wIPmQPWcBjl
+         jgXDdNWnC7lnHPQnl13UuM6y0DoBRZs2QJOZwEI3swKbKBJ/evd/4wQOiWtgmkYTfgWU
+         mFFsUmCFSb5E5S5yXOb3r5noySr0/+PAyvdsSABWBCra37B8cGWZlOJM+pmijybOyYe9
+         0WLwDW5O5P/ynxM58WpNyQsf6iZfIGLNPHNExuWZEXuRFc7LwALQAh9HskjCarBMi7ai
+         +wCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rDCH8ssNvRh56D4K9BgC9iGmoQjBN/dPHMN5SJwmyYM=;
-        b=neeBly06V/+3EHGWRJtktr4pszDhyrOmh80Ghv2YKKf7+chnjRtyvQQMA6Yn0Gnyi8
-         qUCuYQyHEoLZyHUaEg+Li5gR2TV7ZCWUASYbcI20Q1m/YSFz9a+iFrd0K8aS7SVFSPKU
-         EQrTiXfBYeHGdJ8CwtNaobfXftGgwVLxkgqe7oK9vFAVt0D+Jrqp9DQJWMhw/BtFWZKC
-         xa76hI1TT86JTFFWN2Vy05FP+wtYVDONo7vevNfPZMhVKpjxy/VtWQn5GNuILoPNIo+c
-         OQ8Rzxiig53XwtMRUrOva67lxi5I3s0Zn84PlPIH26BS64vniqwfH982AcNty0wc6V6D
-         nzvA==
-X-Gm-Message-State: AOAM5324/H7sHC++x9JFbuoS4+ybNNVVfQtw24YahAVESTkYRq4UQyT7
-        0ekAuJtQRQSleIAMrcz/PNL9Hw==
-X-Google-Smtp-Source: ABdhPJzqbYXgncDR2lnPCLJ+J0lzKzqnrGnBt5/XyieRAjPImZgsybsBWCQnwUTLGTVyJHow5krSmw==
-X-Received: by 2002:a17:902:a512:b029:db:cf4c:336b with SMTP id s18-20020a170902a512b02900dbcf4c336bmr9248141plq.17.1611537613966;
-        Sun, 24 Jan 2021 17:20:13 -0800 (PST)
+        bh=f7QtsZwPr4U46GTFuhzyc8M7URNXvRStxFGcvYKpg4Y=;
+        b=Z6rjcXYt1vc2+LI+OsPgiR//nfD2X/7vFurySW/Ynyds0/PC/h2sy852wnbU45xWsm
+         8oU6j6aZjfFmtB0O3SgqSrGtY+yI4XCtC7xGHr0gPYPXheUtPaMnjARjVDx17wAIdM7M
+         ICKkkrwL56aHLNMpFinYO3RJgs+Y+jE403DBx9vxv04VxaCA5VI/CLqw71gBt/U79hYF
+         LaOPFYLf4cTPfdG216RNfBVJDhzBYWC6U/3ppglwMnY1adMyBoA0h0e+V/NMTIDp4PnW
+         zE9k2zoZ9NlQpnQh/m0nb9bYrQCgqWYXwUpM7xA/mIaVQk7zf4EUmElnnriBZNhIEvjF
+         GXQw==
+X-Gm-Message-State: AOAM532Yb2+AJdac12B0ojXAN20rInTdcEI2ucvYKmFOLNv0JbV5+vjZ
+        NsJrEROMwprZZojbJl2agPSu9nl5fYVw5A==
+X-Google-Smtp-Source: ABdhPJxMYBoliHQRb+yB0y+wU/ln9B7DO7VcnUWGxF9Arwj8gp7wLjnxVFvUK2H3IemOuchDHyHDsA==
+X-Received: by 2002:a17:90a:eb13:: with SMTP id j19mr4708041pjz.219.1611537660417;
+        Sun, 24 Jan 2021 17:21:00 -0800 (PST)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id i132sm7875777pfe.10.2021.01.24.17.20.12
+        by smtp.gmail.com with ESMTPSA id j3sm16147773pjs.50.2021.01.24.17.20.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Jan 2021 17:20:13 -0800 (PST)
-Subject: Re: [PATCH 0/2 v3] blk-mq: Improve performance of non-mq IO
- schedulers with multiple HW queues
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-References: <20210111164717.21937-1-jack@suse.cz>
+        Sun, 24 Jan 2021 17:20:59 -0800 (PST)
+Subject: Re: [PATCH] bfq: don't duplicate code for different paths
+To:     huhai <huhai@tj.kylinos.cn>, paolo.valente@linaro.org
+Cc:     linux-block@vger.kernel.org
+References: <20201225130016.20485-1-huhai@tj.kylinos.cn>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7afa35b2-cf35-a149-d325-3ad2ae8d8935@kernel.dk>
-Date:   Sun, 24 Jan 2021 18:20:11 -0700
+Message-ID: <508c8e85-908b-573e-289d-796c6cd254a7@kernel.dk>
+Date:   Sun, 24 Jan 2021 18:20:58 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210111164717.21937-1-jack@suse.cz>
+In-Reply-To: <20201225130016.20485-1-huhai@tj.kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -68,17 +67,9 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/11/21 9:47 AM, Jan Kara wrote:
-> Hello!
-> 
-> This patch series aims to fix a regression we've noticed on our test grid when
-> support for multiple HW queues in megaraid_sas driver was added during the 5.10
-> cycle (103fbf8e4020 scsi: megaraid_sas: Added support for shared host tagset
-> for cpuhotplug). The commit was reverted in the end for other reasons but I
-> believe the fundamental problem still exists for any other similar setup. The
-> problem manifests when the storage card supports multiple hardware queues
-> however storage behind it is slow (single rotating disk in our case) and so
-> using IO scheduler such as BFQ is desirable. See the second patch for details.
+On 12/25/20 6:00 AM, huhai wrote:
+> As we can see, returns parent_sched_may_change whether
+> sd->next_in_service changes or not, so remove this judgment.
 
 Applied, thanks.
 
