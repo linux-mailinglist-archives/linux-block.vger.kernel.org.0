@@ -2,88 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53320304718
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 19:53:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8EE304940
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbhAZROx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 12:14:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390620AbhAZIyl (ORCPT
+        id S1728690AbhAZFbj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:31:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11148 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbhAYJuD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 03:54:41 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC9BC061573;
-        Tue, 26 Jan 2021 00:54:01 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id i187so11449373lfd.4;
-        Tue, 26 Jan 2021 00:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Sb/6toZ1LycHVLxZfHlszRFpvafXWffrLwLHIch7P58=;
-        b=MEClQLDAcozrJgdfIdWWmjK9kiQ5t2+ZV7bfGHZMo7IGBB3WwBixH2DCKVGJgHWuuL
-         fYTv7tv09gzoA7uiLzCm1kzGsUkxZST+tm80Bf1LaV5n9zEHJg/CaT6Z7Nu/zPjMcHZw
-         CW4ujC3OKvJ/ml1S7bQ/SFdgQZEDnC8zWQjEGWz4lSyCngMYc4p675/rFE5FKJrvhTS3
-         K6JIt8EyhpAzDrY8ZR5UzBIBZR4nYZLfO/yI44VJqztcgbULO/3EtN56uCL5lCAdR78e
-         xPmc5+lrTedpwqgn4W7z5wt4CdI1I/fdlb7iTw2vk/HmDMlESuQC3/v9k2/yNJbh2O8q
-         ir/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Sb/6toZ1LycHVLxZfHlszRFpvafXWffrLwLHIch7P58=;
-        b=V1icFHZD1AJgkzYCpTmADU6p0/z3MQMWRDdcVFtGUDlNUkhzbxOvtjDayDL9BzsswU
-         BXhboq7PUIBpK7gspUUi7hpzuEFWnySRPGvNAczjvM/3RoWWHy+4Qy/7XJ2A61TY0/65
-         pv8lUI2kJAa/gtYlnBiZ6zjZmcMagStXNMb/8IncJmYo8m+Ydsw14+GHNGXElam0jGmS
-         9kW19meZOnq+GghlJ4XH2V+yV2sW3OTAia3+BCwqJ9wud1Dgmwq3UP0MP1kkTvxK7XOy
-         vViuC048gN+KPpYZpapze/DhfbE63vnF/gyviPoJvlO8sUxMT0IhejfSwzN9FfmtrvDq
-         yytA==
-X-Gm-Message-State: AOAM530yJYTXw+kYRepLOYd+HFfedlfG6dTx/wsRR5Azh+Y6GonDZKCe
-        VD3lma5eEDDGf2uvTmwi+Bk=
-X-Google-Smtp-Source: ABdhPJx/fgoA7NcvxleaAnbF1rvre3L9SR2PeGlhWa0xHE+O5IygoOIrj2QtpKKzQ5CNoocSRbVg1A==
-X-Received: by 2002:a19:8705:: with SMTP id j5mr818331lfd.148.1611651240125;
-        Tue, 26 Jan 2021 00:54:00 -0800 (PST)
-Received: from [192.168.1.100] ([178.176.75.50])
-        by smtp.gmail.com with ESMTPSA id g4sm2431428lfu.283.2021.01.26.00.53.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Jan 2021 00:53:59 -0800 (PST)
-Subject: Re: [PATCH 7/9] n64: cosmetics changes
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-mips@vger.kernel.org
-Cc:     tsbogend@alpha.franken.de, axboe@kernel.dk,
-        linux-block@vger.kernel.org, cand@gmx.com
-References: <20210125233243.5982-1-chaitanya.kulkarni@wdc.com>
- <20210125233243.5982-8-chaitanya.kulkarni@wdc.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <01128ba0-35bf-7873-a953-bf9402d05c4c@gmail.com>
-Date:   Tue, 26 Jan 2021 11:53:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Mon, 25 Jan 2021 04:50:03 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DPMzJ2z2Lz15yXX;
+        Mon, 25 Jan 2021 16:12:12 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.498.0; Mon, 25 Jan 2021 16:13:19 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <minchan@kernel.org>, <ngupta@vflare.org>,
+        <sergey.senozhatsky.work@gmail.com>, <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>
+Subject: [PATCH] zram: fix NULL check before some freeing functions is not needed
+Date:   Mon, 25 Jan 2021 16:13:01 +0800
+Message-ID: <1611562381-14985-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20210125233243.5982-8-chaitanya.kulkarni@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello!
+fixed the below warning:
+/drivers/block/zram/zram_drv.c:534:2-8: WARNING: NULL check
+before some freeing functions is not needed.
 
-On 26.01.2021 2:32, Chaitanya Kulkarni wrote:
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+---
+ drivers/block/zram/zram_drv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> Make the variable declaration ascending order and initialize the
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index e2933cb..92739b9 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -530,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
+ 
+ 	return len;
+ out:
+-	if (bitmap)
+-		kvfree(bitmap);
++	kvfree(bitmap);
+ 
+ 	if (bdev)
+ 		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
+-- 
+2.7.4
 
-    Usually the vars are declared in descending order, no?
-
-> variables at the time of declaration when possible.
-> 
-> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> Reviewed-by: Lauri Kasanen <cand@gmx.com>
-[...]
-
-MBR, Sergei
