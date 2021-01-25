@@ -2,88 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F2B301FE3
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 02:25:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A06830205F
+	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 03:26:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbhAYBZL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 Jan 2021 20:25:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbhAYBYu (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 Jan 2021 20:24:50 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB79C061573
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:24:10 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id r38so1943924pgk.13
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 17:24:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MSpVHwkCX6jn2zmjsM3ERb1RCWT/CaWYVTGYkGxLPMQ=;
-        b=cANH8e1JsQWWCA6K7c2yEeTbdiEO1GVf52BOvOvHMuuzuOwLMbDpTIG8lwpolK0icK
-         0L3S/ocwk1bn0K4m4mezLZfUoMQFkPMVdzF0swABRaRDvhjPdS//d4rYF/hhSVlIj0e5
-         GCTjUL4+USqxWngHHgmkMMISuZnFlCQ/DjAcXqZTPP+gCqtwV9N6H5Us2R2RTf4/Wm3l
-         v9dC6xJ3eOcxO2kdzsIP9/VK8pDSh3vIrWiQigEURvRp6ZKeNDds2ga8oMas6khTZbUU
-         bAXCXf9s6wkbPhLdiUZZx1F3c1+XzZivD4vAPVU1i93DCZ5GpPiHbaFqNE9Ar2HplqEB
-         J7+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MSpVHwkCX6jn2zmjsM3ERb1RCWT/CaWYVTGYkGxLPMQ=;
-        b=WHrREaZxyaqIZ10KTnapjKvwQcHcG0SkJQT/EHvFRrymhsdt8y1CUePsb6FPrAB2Y7
-         nLoADjMUa/VTo/wu8J3QxJDws+MNpA19vjn0rGtlNPfb/XIgYVH7zNy9STiMGFtPTPsx
-         vlu9iNmiu130EhzTa+e6qn/CEzl1Xo/ly0ZIKTTkP867/yrQPFbm5Mv/qBaBhSzZAg0V
-         vw14TaeYLO3U2jrtdVwAEmzYG4pr7z0ler9iRsruJfK/b/huHDd4TcNhdRd6WAnjpe5z
-         XfbmR1HPp7cV5eM5rahLbZUXx5/B4+k8v9yi6PkdkAalTiADoJ3y8CA3neHHuk+X74qw
-         v/OA==
-X-Gm-Message-State: AOAM5328896KKzZC+9MpSyYtM1sATD0a0cKCAS/V4WdlGEhHmGyiLhmY
-        rmYxfri8QDdIhoB5QgiAfYyutQ==
-X-Google-Smtp-Source: ABdhPJwGmmoJHjWbM4oOrfmGt+RyPavosTLmBxchZDys8SFvm/6ZSwmX7zSbzb/FwCp9pNaqXVDW9g==
-X-Received: by 2002:a63:e30d:: with SMTP id f13mr8331115pgh.39.1611537849731;
-        Sun, 24 Jan 2021 17:24:09 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id b18sm15216556pfi.173.2021.01.24.17.24.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Jan 2021 17:24:08 -0800 (PST)
-Subject: Re: [PATCH V2 0/2] remove unused argument from blk_execute_rq_nowait
- and blk_execute_rq
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-block@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
-        hch@infradead.org
-References: <20210122092824.20971-1-guoqing.jiang@cloud.ionos.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <683e16be-1146-e60c-cfea-e4606844f080@kernel.dk>
-Date:   Sun, 24 Jan 2021 18:24:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726758AbhAYBxm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 24 Jan 2021 20:53:42 -0500
+Received: from smtp.infotech.no ([82.134.31.41]:45861 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbhAYBxJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 24 Jan 2021 20:53:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id CB0BD204195;
+        Mon, 25 Jan 2021 02:37:55 +0100 (CET)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GEY7eBnC0RNN; Mon, 25 Jan 2021 02:37:54 +0100 (CET)
+Received: from xtwo70.bingwo.ca (host-104-157-204-209.dyn.295.ca [104.157.204.209])
+        by smtp.infotech.no (Postfix) with ESMTPA id 049B320415B;
+        Mon, 25 Jan 2021 02:37:52 +0100 (CET)
+From:   Douglas Gilbert <dgilbert@interlog.com>
+To:     linux-scsi@vger.kernel.org, axboe@kernel.dk,
+        linux-block@vger.kernel.org
+Cc:     martin.petersen@oracle.com, jejb@linux.vnet.ibm.com, hare@suse.de,
+        kashyap.desai@broadcom.com
+Subject: [PATCH] fio: add hipri option to sg engine
+Date:   Sun, 24 Jan 2021 20:37:51 -0500
+Message-Id: <20210125013751.269675-1-dgilbert@interlog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210122092824.20971-1-guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/22/21 2:28 AM, Guoqing Jiang wrote:
-> V2 changes:
-> 1. update commit header per Christoph's comment.
-> 
-> Hi Jens,
-> 
-> This series remove unused 'q' from blk_execute_rq_nowait and blk_execute_rq.
-> Also update the comment for blk_execute_rq_nowait.
+Adds hipri option to the Linux sg driver engine. This turns on the
+SGV4_FLAG_HIPRI flag in recent sg drivers (January 2021) on READ
+and WRITE commands (and not on UNMAP (trim), VERIFY, etc). Uses
+blk_poll() and the mq_poll() callback in SCSI LLDs. The mechanism
+is also called "iopoll".
 
-What's this against? The lightnvm patch doesn't apply.
+The Linux sg engine in fio uses the struct sg_io_hdr based interface
+known as the sg driver "v3" interface.
+Linux sg drivers in the kernel prior to January 2021 (sg version
+4.0.12) will just ignore the SGV4_FLAG_HIPRI flag and do normal
+completions where LLDs indicate command completion with a (software)
+interrupt or similar mechanism.
 
+Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+---
+ engines/sg.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/engines/sg.c b/engines/sg.c
+index a1a6de4c..0c2d2c8b 100644
+--- a/engines/sg.c
++++ b/engines/sg.c
+@@ -60,6 +60,10 @@
+ 
+ #ifdef FIO_HAVE_SGIO
+ 
++#ifndef SGV4_FLAG_HIPRI
++#define SGV4_FLAG_HIPRI 0x800
++#endif
++
+ enum {
+ 	FIO_SG_WRITE		= 1,
+ 	FIO_SG_WRITE_VERIFY	= 2,
+@@ -68,12 +72,22 @@ enum {
+ 
+ struct sg_options {
+ 	void *pad;
++	unsigned int hipri;
+ 	unsigned int readfua;
+ 	unsigned int writefua;
+ 	unsigned int write_mode;
+ };
+ 
+ static struct fio_option options[] = {
++        {
++                .name   = "hipri",
++                .lname  = "High Priority",
++                .type   = FIO_OPT_STR_SET,
++                .off1   = offsetof(struct sg_options, hipri),
++                .help   = "Use polled IO completions",
++                .category = FIO_OPT_C_ENGINE,
++                .group  = FIO_OPT_G_SG,
++        },
+ 	{
+ 		.name	= "readfua",
+ 		.lname	= "sg engine read fua flag support",
+@@ -527,6 +541,8 @@ static int fio_sgio_prep(struct thread_data *td, struct io_u *io_u)
+ 		else
+ 			hdr->cmdp[0] = 0x88; // read(16)
+ 
++		if (o->hipri)
++			hdr->flags |= SGV4_FLAG_HIPRI;
+ 		if (o->readfua)
+ 			hdr->cmdp[1] |= 0x08;
+ 
+@@ -542,6 +558,8 @@ static int fio_sgio_prep(struct thread_data *td, struct io_u *io_u)
+ 				hdr->cmdp[0] = 0x2a; // write(10)
+ 			else
+ 				hdr->cmdp[0] = 0x8a; // write(16)
++			if (o->hipri)
++				hdr->flags |= SGV4_FLAG_HIPRI;
+ 			if (o->writefua)
+ 				hdr->cmdp[1] |= 0x08;
+ 			break;
+@@ -865,6 +883,7 @@ static int fio_sgio_init(struct thread_data *td)
+ {
+ 	struct sgio_data *sd;
+ 	struct sgio_trim *st;
++	struct sg_io_hdr *h3p;
+ 	int i;
+ 
+ 	sd = calloc(1, sizeof(*sd));
+@@ -880,12 +899,13 @@ static int fio_sgio_init(struct thread_data *td)
+ #ifdef FIO_SGIO_DEBUG
+ 	sd->trim_queue_map = calloc(td->o.iodepth, sizeof(int));
+ #endif
+-	for (i = 0; i < td->o.iodepth; i++) {
++	for (i = 0, h3p = sd->sgbuf; i < td->o.iodepth; i++, ++h3p) {
+ 		sd->trim_queues[i] = calloc(1, sizeof(struct sgio_trim));
+ 		st = sd->trim_queues[i];
+ 		st->unmap_param = calloc(td->o.iodepth + 1, sizeof(char[16]));
+ 		st->unmap_range_count = 0;
+ 		st->trim_io_us = calloc(td->o.iodepth, sizeof(struct io_u *));
++		h3p->interface_id = 'S';
+ 	}
+ 
+ 	td->io_ops_data = sd;
 -- 
-Jens Axboe
+2.25.1
 
