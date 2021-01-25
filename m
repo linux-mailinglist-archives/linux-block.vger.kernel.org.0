@@ -2,71 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2E1302D63
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 22:15:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D83A3302DA6
+	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 22:29:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732587AbhAYVPh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Jan 2021 16:15:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
+        id S1732656AbhAYV2n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Jan 2021 16:28:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732372AbhAYVPP (ORCPT
+        with ESMTP id S1732635AbhAYVTj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 16:15:15 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05900C061574
-        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:14:34 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id u11so8415563plg.13
-        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:14:34 -0800 (PST)
+        Mon, 25 Jan 2021 16:19:39 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3D2C06174A
+        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:18:59 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id q20so9133281pfu.8
+        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:18:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qRHVlys2zAjjxBtjE+T6wwnyF8H38Om4NwqdpPjEWwM=;
-        b=XJ6Etu3MXGdkNqFWNxmgTkstn5En/9aC8l8yyMUXyYE3wCP9zGyS2+HSQJ1I0mwg63
-         1iigcIsBBPA/wvpReIFCrkTxffBIgLQ0eTlgAl3USfTYLmMl+dFPLwOrED/C+Xxdtrc9
-         0YfFifIVT0hCyBp0W2XVYhLuNWiYWsjlO2W2AnUDLkODBTsusnyoNCKtMQN60UB7Y+VD
-         rZbG0Fh8LevhgLJk43X6VXrrLQ6l0rX7awWPrdGAUYqgVzd5cSpFd0d1jm4PfkBwuCjX
-         BSq5KEn9OYAZY+LZrMjK8ZU8SoBm+cAr2PkM3EGg1yuypLHblRFwzA03nmRkNKBSQV5N
-         cC1Q==
+        bh=q+E2QKYZrluBg1iBjQcak9MCibuQJCXbencd0L2CEXM=;
+        b=w4IcicZbBoygZLxK2+ZjwfLVCA5GB0v4cbBBX+5PEGG9DjSu4dgMOET+57SXcJyBd/
+         vONyKRVJJf7NIkT/Tg8JeJgtTzy9mceZ2+wyfmL+2bGpbzJej1eUsz6MlHoX3AX4elY8
+         VV7onfeGs/WwGYsk1MfxUoGHtNg/yn0j/Qt6ty/YrR68JosNkFYn1HnFoSnhWCw2yt8P
+         68/WR/FiZ+28j3UrwQBmd8iVwyucoP8IzkssTqyen0IEwUwQUc3XagTD+InltkBjrMew
+         n8D5wE3Gn7iV9CtrMoTtcFas09mEAaQhUgX+aK0k7DZRFPgtIveXLAHXuc6wRWCoTcR8
+         cdAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qRHVlys2zAjjxBtjE+T6wwnyF8H38Om4NwqdpPjEWwM=;
-        b=qbDy+0O6dKPHt8c5IqRscythyEQH4enUVxopkAK5zLQxbgna8Ge7jvWvblk4Y/iH2J
-         8JncRa98SctnCiroQVvPP5/P1qRizQUOoM7T4sj2t0HfCTyGrSblyTeY5Ue0OwHd9ayN
-         v7gQYJ2XJGkWWTKvIMr7Ib+mq4iuow+g81law1WyzphoYJ9+hBzOizUec/HyBtOsYjVi
-         B54GmuPCV5X7LvSbQzDe4qOfX0R/acXVl96ITO1RSD2RhOFoAazVYzf8KfswtWZZQdyA
-         T5csTwFrikw2fxmLJGQVM9OHQao3sw4Y//xUniMhLrZzADQJP1BcvVTl9AIZFmJAFESx
-         9t6g==
-X-Gm-Message-State: AOAM532iXPuuXrZqiVFosN4DLZy0LCY0F1p1Fxjj8OkPBKMw6HVVj0Rn
-        imIJn/xzWLFqaFM0Zqrkxa6lkA==
-X-Google-Smtp-Source: ABdhPJyu4y6/35DKByDjoOtf3OGFpY5YYhLb7LjvpjQwqZaT4/kHlkcBWKXiBbFTRzB5pEth1NfUJg==
-X-Received: by 2002:a17:90a:c907:: with SMTP id v7mr2207890pjt.0.1611609274381;
-        Mon, 25 Jan 2021 13:14:34 -0800 (PST)
+        bh=q+E2QKYZrluBg1iBjQcak9MCibuQJCXbencd0L2CEXM=;
+        b=Uyxe3kL7Arr3XMuzHKgppZTzEFotDg4LHuNo+tFhZgu0nX7mD6I3NKVQ9li4L8EKcg
+         d1ieiZX6kYUtD7VOorB7hU/tSrdB4WFH9j92kaKikw7O09QCRvSwwmvkv8Igjw6kGyzj
+         6DIoWqEZyONEoOliL8UNJvyj9I6pj55i4ONAdgkQmSMIZXL9qlXNqOcLE2gup3lzgmol
+         dp6uw9Ps+ZebUOVd+2H8WCcMxt0KSUTr8PyOMOxcuyxiZAKVkCp1qAP9oSEUOXdgX96Q
+         LJ19D3LRIjoO5v2QZ96mP5MET9iKHMmRCvb1mDEKxatboh2Zohd4zwQeV6iaO7xInasr
+         HYyw==
+X-Gm-Message-State: AOAM532Ywxylz2KRhHDGLPjAns6OHgNJzowDRTsRMzvqt1Uuhd2rnKQ9
+        8B0gMMUUXRY0xQOEzo+g+Cze/g==
+X-Google-Smtp-Source: ABdhPJwLqpaGmQeIn98hN4B/n7hJ4LVC8tm8BvqnQxWCX+m2eS68Fwi/gy7lTD0qb2ib36JEDvAIaw==
+X-Received: by 2002:a65:5b47:: with SMTP id y7mr2363233pgr.221.1611609539114;
+        Mon, 25 Jan 2021 13:18:59 -0800 (PST)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id r14sm18607214pgi.27.2021.01.25.13.14.32
+        by smtp.gmail.com with ESMTPSA id n1sm240830pjv.47.2021.01.25.13.18.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Jan 2021 13:14:33 -0800 (PST)
-Subject: Re: [PATCH 0/2] Resource-managed blk_ksm_init()
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        Satya Tangirala <satyat@google.com>
-References: <20210121082155.111333-1-ebiggers@kernel.org>
- <CAPDyKFrLn_4Csxc6BeRR0-zY+_RQuNqNSF9SmKk3Bx2WFJJ_Ag@mail.gmail.com>
+        Mon, 25 Jan 2021 13:18:58 -0800 (PST)
+Subject: Re: [PATCH BUGFIX/IMPROVEMENT 0/6] block, bfq: second batch of fixes
+ and improvements
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210125190248.49338-1-paolo.valente@linaro.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2d03dda2-adaf-a44a-922d-f3770e3da8f4@kernel.dk>
-Date:   Mon, 25 Jan 2021 14:14:32 -0700
+Message-ID: <50888903-86bd-0815-e671-58df34aa01e2@kernel.dk>
+Date:   Mon, 25 Jan 2021 14:18:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrLn_4Csxc6BeRR0-zY+_RQuNqNSF9SmKk3Bx2WFJJ_Ag@mail.gmail.com>
+In-Reply-To: <20210125190248.49338-1-paolo.valente@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,32 +68,26 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/21/21 5:50 AM, Ulf Hansson wrote:
-> + Jens, Martin, James
+On 1/25/21 12:02 PM, Paolo Valente wrote:
+> Hi,
+> here's batch 2/3.
 > 
+> Thanks,
+> Paolo
 > 
-> On Thu, 21 Jan 2021 at 09:23, Eric Biggers <ebiggers@kernel.org> wrote:
->>
->> This patchset adds a resource-managed variant of blk_ksm_init() so that
->> drivers don't have to worry about calling blk_ksm_destroy().
->>
->> This was suggested during review of my patchset which adds eMMC inline
->> encryption support
->> (https://lkml.kernel.org/linux-mmc/20210104184542.4616-1-ebiggers@kernel.org/T/#u).
->> That patchset proposes a second caller of blk_ksm_init().  But it can
->> instead use the resource-managed variant, as can the UFS driver.
->>
->> My preference is that patch #1 be taken through the MMC tree together
->> with my MMC patchset, so that we don't have to wait an extra cycle for
->> the MMC changes.  Patch #2 can then go in later.
+> Paolo Valente (6):
+>   block, bfq: replace mechanism for evaluating I/O intensity
+>   block, bfq: re-evaluate convenience of I/O plugging on rq arrivals
+>   block, bfq: fix switch back from soft-rt weitgh-raising
+>   block, bfq: save also weight-raised service on queue merging
+>   block, bfq: save also injection state on queue merging
+>   block, bfq: make waker-queue detection more robust
 > 
-> Sure, I can pick patch #1 through my mmc tree, but need an ack from
-> Jens to do it. Or whatever he prefers.
+>  block/bfq-iosched.c | 328 ++++++++++++++++++++++++++------------------
+>  block/bfq-iosched.h |  29 ++--
+>  2 files changed, 214 insertions(+), 143 deletions(-)
 
-Or we can take it through the block tree, usually the easiest as
-it's the most likely source of potential conflicts. And that's true
-for both of them, as long as the SCSI side signs off on patch 2/2.
-
+Applied, thanks.
 
 -- 
 Jens Axboe
