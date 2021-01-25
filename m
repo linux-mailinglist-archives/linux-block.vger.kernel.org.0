@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BE7F304944
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5FE2304949
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbhAZFcP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 00:32:15 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59155 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727871AbhAYMPd (ORCPT
+        id S1730549AbhAZFc2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:32:28 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:58842 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727881AbhAYMPq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:15:33 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMqjSkp_1611576821;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UMqjSkp_1611576821)
+        Mon, 25 Jan 2021 07:15:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMpeZ6T_1611576822;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UMpeZ6T_1611576822)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 25 Jan 2021 20:13:41 +0800
+          Mon, 25 Jan 2021 20:13:43 +0800
 From:   Jeffle Xu <jefflexu@linux.alibaba.com>
 To:     snitzer@redhat.com
 Cc:     joseph.qi@linux.alibaba.com, dm-devel@redhat.com,
         linux-block@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH v2 2/6] block: add queue_to_disk() to get gendisk from request_queue
-Date:   Mon, 25 Jan 2021 20:13:36 +0800
-Message-Id: <20210125121340.70459-3-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 5/6] block: add QUEUE_FLAG_POLL_CAP flag
+Date:   Mon, 25 Jan 2021 20:13:39 +0800
+Message-Id: <20210125121340.70459-6-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
 References: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
@@ -32,66 +32,72 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Sometimes we need to get the corresponding gendisk from request_queue.
-
-It is preferred that block drivers store private data in
-gendisk->private_data rather than request_queue->queuedata, e.g. see:
-commit c4a59c4e5db3 ("dm: stop using ->queuedata").
-
-So if only request_queue is given, we need to get its corresponding
-gendisk to get the private data stored in that gendisk.
+Introduce QUEUE_FLAG_POLL_CAP flag representing if the request queue
+capable of polling or not.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Review-by: Mike Snitzer <snitzer@redhat.com>
 ---
- include/linux/blkdev.h       | 2 ++
- include/trace/events/kyber.h | 6 +++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ block/blk-mq.c         | 2 +-
+ block/blk-sysfs.c      | 3 +--
+ include/linux/blkdev.h | 6 ++++++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d058b9cbdf76..10f06337d8dc 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3203,7 +3203,7 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 	q->queue_flags |= QUEUE_FLAG_MQ_DEFAULT;
+ 	if (set->nr_maps > HCTX_TYPE_POLL &&
+ 	    set->map[HCTX_TYPE_POLL].nr_queues)
+-		blk_queue_flag_set(QUEUE_FLAG_POLL, q);
++		q->queue_flags |= QUEUE_FLAG_POLL_MASK;
+ 
+ 	q->sg_reserved_size = INT_MAX;
+ 
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index b513f1683af0..65693efb7c76 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -420,8 +420,7 @@ static ssize_t queue_poll_store(struct request_queue *q, const char *page,
+ 	unsigned long poll_on;
+ 	ssize_t ret;
+ 
+-	if (!q->tag_set || q->tag_set->nr_maps <= HCTX_TYPE_POLL ||
+-	    !q->tag_set->map[HCTX_TYPE_POLL].nr_queues)
++	if (!blk_queue_poll_cap(q))
+ 		return -EINVAL;
+ 
+ 	ret = queue_var_store(&poll_on, page, count);
 diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index f94ee3089e01..2a802e011a95 100644
+index bc540df197cb..095b486de02f 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
-@@ -687,6 +687,8 @@ static inline bool blk_account_rq(struct request *rq)
- 	dma_map_page_attrs(dev, (bv)->bv_page, (bv)->bv_offset, (bv)->bv_len, \
- 	(dir), (attrs))
+@@ -621,11 +621,16 @@ struct request_queue {
+ #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+ #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
++#define QUEUE_FLAG_POLL_CAP	30	/* capable of IO polling */
  
-+#define queue_to_disk(q)	(dev_to_disk(kobj_to_dev((q)->kobj.parent)))
+ #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+ 				 (1 << QUEUE_FLAG_NOWAIT))
+ 
++#define QUEUE_FLAG_POLL_MASK	((1 << QUEUE_FLAG_POLL) |		\
++				 (1<< QUEUE_FLAG_POLL_CAP))
 +
- static inline bool queue_is_mq(struct request_queue *q)
- {
- 	return q->mq_ops;
-diff --git a/include/trace/events/kyber.h b/include/trace/events/kyber.h
-index c0e7d24ca256..f9802562edf6 100644
---- a/include/trace/events/kyber.h
-+++ b/include/trace/events/kyber.h
-@@ -30,7 +30,7 @@ TRACE_EVENT(kyber_latency,
- 	),
++
+ void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
+ void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);
+ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+@@ -667,6 +672,7 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
+ #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
+ #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
++#define blk_queue_poll_cap(q)	test_bit(QUEUE_FLAG_POLL_CAP, &(q)->queue_flags)
  
- 	TP_fast_assign(
--		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
-+		__entry->dev		= disk_devt(queue_to_disk(q));
- 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
- 		strlcpy(__entry->type, type, sizeof(__entry->type));
- 		__entry->percentile	= percentile;
-@@ -59,7 +59,7 @@ TRACE_EVENT(kyber_adjust,
- 	),
- 
- 	TP_fast_assign(
--		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
-+		__entry->dev		= disk_devt(queue_to_disk(q));
- 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
- 		__entry->depth		= depth;
- 	),
-@@ -81,7 +81,7 @@ TRACE_EVENT(kyber_throttled,
- 	),
- 
- 	TP_fast_assign(
--		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
-+		__entry->dev		= disk_devt(queue_to_disk(q));
- 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
- 	),
- 
+ extern void blk_set_pm_only(struct request_queue *q);
+ extern void blk_clear_pm_only(struct request_queue *q);
 -- 
 2.27.0
 
