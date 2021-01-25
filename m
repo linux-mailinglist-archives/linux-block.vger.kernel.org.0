@@ -2,67 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4ECC302114
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 05:26:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA854302117
+	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 05:29:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbhAYE0U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 Jan 2021 23:26:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56298 "EHLO
+        id S1726863AbhAYE2r (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 24 Jan 2021 23:28:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbhAYE0T (ORCPT
+        with ESMTP id S1726855AbhAYE2p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 Jan 2021 23:26:19 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39380C061573
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:25:39 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id b8so6788233plh.12
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:25:39 -0800 (PST)
+        Sun, 24 Jan 2021 23:28:45 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D474C061574
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:28:05 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id b8so6791569plh.12
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:28:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lA7TVMM1qEXKPlpnw5pY6Qs5gLDneWRq6rWhbNC1CaQ=;
-        b=OQkH6QE9pSAoVQuUzeHlJDBKKRQZnq8wEOHlee+HgcMMm3Fv/Y7DgTeYlTLVPbGZWI
-         x7TQplfRlzmKusMHpYnR4/FK5LE+IPiKsDoPtDRFQh7QXfdPWQQnIjGaq73Cy+GQSaRn
-         SB7aMtOpGcVzXRXlcS3zARuEcsmgMeENtURFYoG6IyL2Q78+iXrqxPdxGV9QjekeCOUc
-         5OlBPBjBTMAn6yWpJ2EcCpwvvmfnn9tFksT8lPh+/mRWH4Av0yKM9ouA/k9FOwwnvvFO
-         5QGg+Shk8NdVTkLMJ+nyTVUcYL/7Sbad6mf4K30wLAeiTqhCQTwFmfeedhUy3YSJ6ZRA
-         ePRQ==
+        bh=6dXiISuywEBuazI4xj4yFxY1nkp6ZflUiyorvnDifvs=;
+        b=Pq81h34KvrPTQiyWomze+Gw0KOD9of/oGveHh8B5C5f5Sw4seL+lndqGq/fAjIrD+J
+         05Cx+85/WkzFyXxhTM5yroL3dsKGbDYim/4ymqHmdb7IR3xzTBf3w2oGIBTQFsDm1st3
+         hHEDn3TsvNVeMQ3/2qwteLe7YDeG/gE+x/cn6aO3UAHsIa7MF1h9DPFeoaf2sCEvujnO
+         6JaptvWLA7TZRWpvpkGFFG4C6yh9Hy5FZUS1NW8LBIQbROK31BVgszsAhQZK9qtmOJzX
+         WqSFtCAH8vAZvmoCr00LoAGUqYUtjbSl418ug6Cav3y2Loqs5rsA09FKY4BJumwuwhQa
+         d0VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lA7TVMM1qEXKPlpnw5pY6Qs5gLDneWRq6rWhbNC1CaQ=;
-        b=LtOEowflPsGvzEyZHgmN3zjdCvH28D3C5t94UkCI1DTuy3ZDmuAzt/gWqCRUWPvKpT
-         ZP3gMbOEAk9HKswVaNgSNSaSck89Dmi/SXaL2Xds9CuiMuYb1N2gUYj3wdaRuJYLYvfY
-         /lc6Jez7w3MIihQGQI+TDCcqkCSvP9leXLKlF0J784aTpyrW2Ljr6v60tB785lhsR4dQ
-         nw+FqKu1blkxNrAAWNCiYyZMhEZbIvFCKJlKw/lT4ARPQ8Ycv+QH+8rFAFNifrllE029
-         2GtNp1aSrGlViyqC4Aa7h53ZAF+6D/K5fDNCK8/WBSz5oRDmxTWBzEU5VPJZ1CnGhgmK
-         CkDQ==
-X-Gm-Message-State: AOAM5314VwiMfqX6B1pu+BYDTNlAu8/enKGKysVPXGh9glXDxk8LG0Bp
-        dzbpkzvsE7i2iWWk3YtvGOKZAA==
-X-Google-Smtp-Source: ABdhPJyrspS2mAHP9F1IdnWzMqSLWuNY/me9goHdfLtnAkjVGH/Ll+rJDJWjtgFzViBkNC8hJVs04w==
-X-Received: by 2002:a17:902:9b95:b029:df:d859:42bb with SMTP id y21-20020a1709029b95b02900dfd85942bbmr2552640plp.2.1611548738677;
-        Sun, 24 Jan 2021 20:25:38 -0800 (PST)
+        bh=6dXiISuywEBuazI4xj4yFxY1nkp6ZflUiyorvnDifvs=;
+        b=XuHI9WM9bZVKY7EpttRRV6kcyNixrI+gjiuPTiJ1NPQRRht2wvwQh1Gih7DuRHJWPn
+         Es6SybAL4x5IkoH9ddm2lfFf8UyllsYLd+49SB61QMOzotr8qvfA7LTfcuAJXSeDxkrQ
+         zqCEVGa5ZvHG/Gg5/bZk1wSjE1FzWI2crXF4pFK49/b96VjI64+PstQWD/B26eVAW+Tw
+         XpeqKNqhE9d807aDF9uZXu0WyJmPUC7oiSF/vGAxBqWXtF2rQHt6R+NOzRTW4Pj8AMzU
+         YXD6nvYLrSa4rKZXOUufdsfEkQ1ZnyUYQsPgNHsZpNk58pdvnessglwBu4TzvV96U4lI
+         WLbg==
+X-Gm-Message-State: AOAM532mzgu3YmwhY1MZqNmAePjgo4CMU1MU8j7i7Chj9qAZpbTRym99
+        8EPbQgAItnHUAUHSIwwKvFzxuA==
+X-Google-Smtp-Source: ABdhPJw/2/1B5rytSzbIS7zdfgAkoF4oaB/9PLp8Tj4sfje42S00tsY6WtySESAMMoXHwKIe7NHOoQ==
+X-Received: by 2002:a17:902:ed88:b029:de:86f9:3e09 with SMTP id e8-20020a170902ed88b02900de86f93e09mr17759813plj.38.1611548885148;
+        Sun, 24 Jan 2021 20:28:05 -0800 (PST)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id t206sm14773216pgb.84.2021.01.24.20.25.37
+        by smtp.gmail.com with ESMTPSA id gv22sm16102738pjb.56.2021.01.24.20.28.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Jan 2021 20:25:38 -0800 (PST)
-Subject: Re: [PATCH] blk-mq: test QUEUE_FLAG_HCTX_ACTIVE for sbitmap_shared in
- hctx_may_queue
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20201227113458.3289082-1-ming.lei@redhat.com>
- <20210125022915.GC984849@T590>
+        Sun, 24 Jan 2021 20:28:04 -0800 (PST)
+Subject: Re: [PATCH v3 0/3] blk-mq: Don't complete in IRQ, use llist_head
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <20210123201027.3262800-1-bigeasy@linutronix.de>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <161afb46-6cb9-0b49-8e31-ed9e201b1c7b@kernel.dk>
-Date:   Sun, 24 Jan 2021 21:25:36 -0700
+Message-ID: <4e703284-2f75-6030-f697-aa2d362c3949@kernel.dk>
+Date:   Sun, 24 Jan 2021 21:27:54 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210125022915.GC984849@T590>
+In-Reply-To: <20210123201027.3262800-1-bigeasy@linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,23 +70,22 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/24/21 7:29 PM, Ming Lei wrote:
-> On Sun, Dec 27, 2020 at 07:34:58PM +0800, Ming Lei wrote:
->> In case of blk_mq_is_sbitmap_shared(), we should test QUEUE_FLAG_HCTX_ACTIVE against
->> q->queue_flags instead of BLK_MQ_S_TAG_ACTIVE.
->>
->> So fix it.
->>
->> Cc: John Garry <john.garry@huawei.com>
->> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
->> Fixes: f1b49fdc1c64 ("blk-mq: Record active_queues_shared_sbitmap per tag_set for when using shared sbitmap")
->> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+On 1/23/21 1:10 PM, Sebastian Andrzej Siewior wrote:
+> Patch 2+3 were applied and then dropped by Jens due to a NOHZ+softirq
+> related warning [0]. Turns out a successful wakeup via
+> set_nr_if_polling() will not process any softirqs and the CPU may go
+> back to idle. This is addressed by patch #1.
 > 
-> Hello Jens,
+> smpcfd_dying_cpu() will also invoke SMP-functions calls via
+> flush_smp_call_function_queue() but the block layer shouldn't queue
+> anything because the CPU isn't online anymore.
+> The two caller of flush_smp_call_function_from_idle() look fine with
+> opening interrupts from within do_softirq().
 > 
-> This one fixes one v5.11 issue, can you queue it?
+> [0] https://lkml.kernel.org/r/1ee4b31b-350e-a9f5-4349-cfb34b89829a@kernel.dk
 
-Queued up, thanks.
+I can queue up the block side once the IPI fix is in some stable branch
+that I can pull in.
 
 -- 
 Jens Axboe
