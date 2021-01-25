@@ -2,118 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74FFE303071
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 00:47:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4418D30303B
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 00:35:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbhAYXrJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Jan 2021 18:47:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732559AbhAYVRj (ORCPT
+        id S1732922AbhAYXeC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Jan 2021 18:34:02 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:57920 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732907AbhAYXdv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 16:17:39 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19061C06174A
-        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:16:32 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id m6so9139067pfm.6
-        for <linux-block@vger.kernel.org>; Mon, 25 Jan 2021 13:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+xXlGKTVDgIyvWhOoljB9Gs9FebPS3Flyvxw1e08Ee4=;
-        b=NdK/uI7VhBO9KWdGbLnVxZKhox4QUgowO1vpru6G1PeartHOjKFh8WvQlF0fhdPl5q
-         mIKgSpdJ+WvOOnLJcgqMvgONzmyPe9PDyw/yFcX33n45HgJJgmlsXSx1kuaMomVt/N5W
-         osFpkbr1DVcEkYoEXaU4vIk52KZkVSFgS8YkpLIzU64oGgcI44BzqlTlKjLIJL0DTace
-         ENKiFrM+ATIX/9iI2oSLmKgx6mpwqfBObVg+NvFCBLfMfULuFtG+WiOFZ/7vf7IAAu12
-         3ArfEIKUs/wSdNPilvkqKr33g5B8lK38kWT9GMJff3a7tx0lRCfU+eHbtkOMLLbtL01t
-         Ymeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+xXlGKTVDgIyvWhOoljB9Gs9FebPS3Flyvxw1e08Ee4=;
-        b=VYqKPgfP/SjpJBikAGAuHjYKgIBT6P6GDbR9Wv71UmV/oiVcrzs0N2tI00I1adxgtR
-         AD79Yb3AfcdfbOWBCL7ddPGVA2MVL/z9ki1yXkMZgVJ6r/CzShphkuCVT9zcF/0NcLFE
-         UMmsYQC0WLmKxm8PttBouzN16I6wfmjZ+RIFq0GDKUuGmUmkb85grxubNoka2yIcJrTH
-         axCuIHfKz26ReUpld3x8Ei42BsGbJDbIH+Bgf4WKWQUG9T9hB/aYxwk4PLZbRpHlWMG/
-         eYMitkT1YGUYFdiBLly4ZU2oz9QH2SMlVsPxnNm6btvaVyZnPPWVLZY2+E2pJP/tJZa5
-         tCEQ==
-X-Gm-Message-State: AOAM532cTGWZhQArB60kHAiL1w0ppleqDPthN2G0CobquBv787XRye1t
-        MA0BXS25GUvOZVzCrCEQdUGJ9iRdrZR06A==
-X-Google-Smtp-Source: ABdhPJwzuZn6IAHaUTKcz4pq9UDRKZp32og5hS04jcTF9nG6ejx0eeknVKsRuMOrUgoTmKNsC5GZKA==
-X-Received: by 2002:a65:6290:: with SMTP id f16mr2400670pgv.69.1611609391559;
-        Mon, 25 Jan 2021 13:16:31 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id 6sm17653269pfz.34.2021.01.25.13.16.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Jan 2021 13:16:30 -0800 (PST)
-Subject: Re: [PATCH 1/2] block/keyslot-manager: introduce devm_blk_ksm_init()
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Satya Tangirala <satyat@google.com>
-Cc:     linux-block@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-References: <20210121082155.111333-1-ebiggers@kernel.org>
- <20210121082155.111333-2-ebiggers@kernel.org>
- <CAA+FYZerh02JXSKghCKuG29ATdYU_=2O93moGnLgD6Jv2v2auQ@mail.gmail.com>
- <YA8pMDqHsKZA0zfR@sol.localdomain>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3b1b6a94-f283-e8a3-8638-6475d0323c30@kernel.dk>
-Date:   Mon, 25 Jan 2021 14:16:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 25 Jan 2021 18:33:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1611617631; x=1643153631;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mPASIDLmjS6/gWOki7jCwozF9YRKuRlJbPJgrKGbESI=;
+  b=DMDQiooA0vQmxfl04dLsXcsvIdmbDRckrFwWTjrpqv8JiOkdfxG0NtFA
+   C/76JRaeCnsVRPRro+ParNDB1QKXiWoySHVV91cgxlBd++qUiOpbSeXTX
+   8N4WpR3LYjEMwJDKGCx23u4pSwVBK2V1Rm7TkKTm1NBKBbfG3YT0Y+GW5
+   FBCEpLPQp7PBIKsrl1+L4W72VYz4FCoUzLEPtAomLKLSlJKR9pCpes5ky
+   fVVwNouINxk6RP3u11sC7LebNxvS2M4dkeEwf2NkvxxxkG72LT+uTEJTT
+   LM5Bs+pGqx1K34uiBmB+PBLqXPThgWG6u1ZpbC80qyneyCe5XiepraxBC
+   A==;
+IronPort-SDR: gERTxdvqBtQItYn3w2gpBJu6ercePY/UKxYI4nl/bQZEu2jIcbi43wmsHe0alv1d/wokF7Tkd8
+ WMcu5PD6t6vkuaf+IStnGP0tR2rVbxPCcuBU0PO2Z3wygbLmIL/p34w/shYuejQlRi4LCbGiDy
+ pVwqXhpc7grzTveOuXO4lmfN/iFook6yrzccZJSBz84OEg6al9umLudf9glElRny2zxmf3lDWX
+ JdeqMBRZ5GRUIC9Yo/MUqRZgAoyEFcyx4FKe3r6Wkd49y6nvdzvYz+Ue5414jGjuJ89wpEi/BS
+ CpE=
+X-IronPort-AV: E=Sophos;i="5.79,374,1602518400"; 
+   d="scan'208";a="268657365"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Jan 2021 07:32:45 +0800
+IronPort-SDR: aXqmzUPScCimblTTfdnShwrtEJgDKkcUsaUdaOk2UmRjEgJv9OtA1BReUZrq4lnMW6k2Hctv72
+ WrGHre5S5QGUj1Zf7OsYNuNie3/B/oPA7jOTYlk5WDlxLYhFBKWPe7coJ14OVMsKWoMxSsAQk1
+ PZevWakdE351E2VnhwpKxA2rwdK6ulOOM94Skgme7bCyZZKZRKcyNeQHp53FXV/8GuOBsq2/Wz
+ 4rvrlXbL3mtxYVLzyGphlSJiuu29gAdzy0ZFJttUWOVBkfzQebeFzeB4moORmpb8re/SOxPaM2
+ N+R2ILzCJC0SXZDb9yKrXT4/
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2021 15:17:12 -0800
+IronPort-SDR: VAvgenprhQ+K8hfHLxdAbHdvto9J5RhQcw9vdgL+sUmhPhXEPfPKLCY4374QkI+nrZI/C4+XfU
+ SXZhOa699epkurpHpSvHQwDbF2Qcv1KJem4fj+8c5pzI0m/1RSAaKmBDpoJVo1niJ9RpH2qksS
+ TOGBG4B2TBwv4c6QrFdHgOgjks932AzZQoA8IkmvigsZmziS102Ejr69HUREE7Prp4Gv19nXj3
+ 9eQ9+srT3+Ueb3BK6nN0yxW9+lE10WqgxiLrYUdTX2HxU4ixeTdjfOB5WMJKuUEmmtEgJraEvi
+ yyg=
+WDCIronportException: Internal
+Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
+  by uls-op-cesaip02.wdc.com with ESMTP; 25 Jan 2021 15:32:45 -0800
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-mips@vger.kernel.org
+Cc:     tsbogend@alpha.franken.de, axboe@kernel.dk,
+        linux-block@vger.kernel.org, cand@gmx.com,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH 0/9] n64: small cleanups
+Date:   Mon, 25 Jan 2021 15:32:34 -0800
+Message-Id: <20210125233243.5982-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <YA8pMDqHsKZA0zfR@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/25/21 1:25 PM, Eric Biggers wrote:
-> On Mon, Jan 25, 2021 at 12:14:00PM -0800, Satya Tangirala wrote:
->> On Thu, Jan 21, 2021 at 12:23 AM Eric Biggers <ebiggers@kernel.org> wrote:
->>>
->>> From: Eric Biggers <ebiggers@google.com>
->>>
->>> Add a resource-managed variant of blk_ksm_init() so that drivers don't
->>> have to worry about calling blk_ksm_destroy().
->>>
->>> Note that the implementation uses a custom devres action to call
->>> blk_ksm_destroy() rather than switching the two allocations to be
->>> directly devres-managed, e.g. with devm_kmalloc().  This is because we
->>> need to keep zeroing the memory containing the keyslots when it is
->>> freed, and also because we want to continue using kvmalloc() (and there
->>> is no devm_kvmalloc()).
->>>
->>> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> [..]
->>> diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
->>> index 18f3f5346843f..443ad817c6c57 100644
->>> --- a/include/linux/keyslot-manager.h
->>> +++ b/include/linux/keyslot-manager.h
->>> @@ -85,6 +85,9 @@ struct blk_keyslot_manager {
->>>
->>>  int blk_ksm_init(struct blk_keyslot_manager *ksm, unsigned int num_slots);
->>>
->>> +int devm_blk_ksm_init(struct device *dev, struct blk_keyslot_manager *ksm,
->>> +                     unsigned int num_slots);
->>> +
->>>  blk_status_t blk_ksm_get_slot_for_key(struct blk_keyslot_manager *ksm,
->>>                                       const struct blk_crypto_key *key,
->>>                                       struct blk_ksm_keyslot **slot_ptr);
->>> --
->>
->> Looks good to me. Please feel free to add
->> Reviewed-by: Satya Tangirala <satyat@google.com>
-> 
-> Thanks Satya.  Jens, any objection to this patch going in through the MMC tree?
+Hi Lauri,
 
-No objections from me, doesn't look like we have any real worries of
-conflicts.
+This cleanup series is based on the top of v11 that adds kernel coding
+style fixes in the various places without changing the functionality.
+
+Instead of sending a one big patch I've made small patches which are
+easier to review, integrate, blame and revert in case of any error.
+
+I've got the reviewed-by tag from the driver owner offline which
+is added to the series.
+
+-ck
+
+Chaitanya Kulkarni (9):
+  n64: use pr_fmt to avoid duplicate string
+  n64: move module info at the end
+  n64: move module param at the top
+  n64: use enums for reg
+  n64: use sector SECTOR_SHIFT instead 512
+  n64: remove curly brackets
+  n64: cosmetics changes
+  n64: cleanup n64cart_probe()
+  n64: store dev instance into disk private data
+
+ drivers/block/n64cart.c | 87 ++++++++++++++++++-----------------------
+ 1 file changed, 38 insertions(+), 49 deletions(-)
 
 -- 
-Jens Axboe
+2.22.1
 
