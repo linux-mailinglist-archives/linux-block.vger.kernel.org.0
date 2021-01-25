@@ -2,95 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30632303504
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 06:35:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73BC53034FE
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 06:32:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbhAZFdF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 00:33:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbhAYMpG (ORCPT
+        id S1727871AbhAZFcU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:32:20 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:39364 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727874AbhAYMPh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:45:06 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B787C061794;
-        Mon, 25 Jan 2021 03:27:28 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d13so1658872plg.0;
-        Mon, 25 Jan 2021 03:27:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=USqO0hVIRRmy8RPtiAMvZ6fj22xmDUfHHapspTdrP0M=;
-        b=lpKuGhfSYhzqAOztL8yd9fnExl2zUK2nnIOxIkM/H6LQxRthh4Ip03ljGo3nky8DlG
-         pKaturulK4+ccQPGZzHSEuS/GcsyO7bw/jfQrjbS18E+V79k0Csox+TmkI6Eqzyzt0mu
-         vfkA8uPv19a8X/5Yy676ViYoFxGIAGwpV5iYrIROOMa4ALSKBdvzOSudAeEptjdyky6/
-         RzlJRLGUNVAwdcoGiCyR5Z0XGbuOwvmeLqJoQiD68HTRpIQHn7MmUIUdX/lIyyL1UacJ
-         N11EbzbhuwAGBI3Jg+IYZhSqfLDS/Eaw/P9FlT25Noj9X001TG/FLWC7Lto9XTtb9iks
-         Jqqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=USqO0hVIRRmy8RPtiAMvZ6fj22xmDUfHHapspTdrP0M=;
-        b=Z0IYrr1oUvwA0j+xw7FLaiviX/C+t1E3/h+brUYLimMHYpRy/KBJCwVhWcK6fmdFUc
-         ZfQUwqaV5n3pRUaGAYMTySqjqNsTCpxWtlPEnmUSlTVu9q36TzyiYKw10QITXjjqr28v
-         K0iwvTunVjwgczk6qvhYENZXdDqJoO14sCvGVHe9J4r29C37/oljTiLVfSZmd/ZM1Nkn
-         Q33mnHUcrhiWF8L75ZR69D6a6evpmuOCd74++lKfKaLK+XFe+J0Pco7LWMu9ySHgZbvE
-         gHRz4OZBG/uqTUMILNkSkKnsf3JZ1PoP5WRh2h3Ili/FNvdWZv7gUnpb1Ix+gUkrAUHy
-         Y+wA==
-X-Gm-Message-State: AOAM530Zge8xcu9ns2tJWIYQ2ORi8FZ9DZxBHiLmONtMTgFrUdV2PhpI
-        AtMsNv1T/Y+L2Md1tYLlWMk=
-X-Google-Smtp-Source: ABdhPJyyZY6f7l0Qx1et36y54Mvtzr9V7Bf1MFFKLcdOknazL4qHnVEeHpIzmrcOh++5g8h9oE79zw==
-X-Received: by 2002:a17:90a:d249:: with SMTP id o9mr13301205pjw.196.1611574047644;
-        Mon, 25 Jan 2021 03:27:27 -0800 (PST)
-Received: from localhost.localdomain ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id mj21sm18406747pjb.12.2021.01.25.03.27.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Jan 2021 03:27:26 -0800 (PST)
-From:   chenlei0x@gmail.com
-X-Google-Original-From: lennychen@tencent.com
-To:     chenlei0x@gmail.com, axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Lei Chen <lennychen@tencent.com>
-Subject: [PATCH] blk: wbt: remove unused parameter from wbt_should_throttle
-Date:   Mon, 25 Jan 2021 19:27:04 +0800
-Message-Id: <1611574024-23713-1-git-send-email-lennychen@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 25 Jan 2021 07:15:37 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMqjSkl_1611576821;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UMqjSkl_1611576821)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 25 Jan 2021 20:13:41 +0800
+From:   Jeffle Xu <jefflexu@linux.alibaba.com>
+To:     snitzer@redhat.com
+Cc:     joseph.qi@linux.alibaba.com, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH v2 1/6] block: move definition of blk_qc_t to types.h
+Date:   Mon, 25 Jan 2021 20:13:35 +0800
+Message-Id: <20210125121340.70459-2-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
+References: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Lei Chen <lennychen@tencent.com>
+So that kiocb.ki_cookie can be defined as blk_qc_t, which will enforce
+the encapsulation.
 
-The first parameter rwb is not used for this function.
-So just remove it.
-
-Signed-off-by: Lei Chen <lennychen@tencent.com>
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Mike Snitzer <snitzer@redhat.com>
 ---
- block/blk-wbt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/blk_types.h | 2 +-
+ include/linux/fs.h        | 2 +-
+ include/linux/types.h     | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 0321ca8..42aed01 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -518,7 +518,7 @@ static void __wbt_wait(struct rq_wb *rwb, enum wbt_flags wb_acct,
- 	rq_qos_wait(rqw, &data, wbt_inflight_cb, wbt_cleanup_cb);
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 866f74261b3b..2e05244fc16d 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -532,7 +532,7 @@ static inline int op_stat_group(unsigned int op)
+ 	return op_is_write(op);
  }
  
--static inline bool wbt_should_throttle(struct rq_wb *rwb, struct bio *bio)
-+static inline bool wbt_should_throttle(struct bio *bio)
- {
- 	switch (bio_op(bio)) {
- 	case REQ_OP_WRITE:
-@@ -545,7 +545,7 @@ static enum wbt_flags bio_to_wbt_flags(struct rq_wb *rwb, struct bio *bio)
+-typedef unsigned int blk_qc_t;
++/* Macros for blk_qc_t */
+ #define BLK_QC_T_NONE		-1U
+ #define BLK_QC_T_SHIFT		16
+ #define BLK_QC_T_INTERNAL	(1U << 31)
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index fd47deea7c17..04b687150736 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -330,7 +330,7 @@ struct kiocb {
+ 	u16			ki_hint;
+ 	u16			ki_ioprio; /* See linux/ioprio.h */
+ 	union {
+-		unsigned int		ki_cookie; /* for ->iopoll */
++		blk_qc_t		ki_cookie; /* for ->iopoll */
+ 		struct wait_page_queue	*ki_waitq; /* for async buffered IO */
+ 	};
  
- 	if (bio_op(bio) == REQ_OP_READ) {
- 		flags = WBT_READ;
--	} else if (wbt_should_throttle(rwb, bio)) {
-+	} else if (wbt_should_throttle(bio)) {
- 		if (current_is_kswapd())
- 			flags |= WBT_KSWAPD;
- 		if (bio_op(bio) == REQ_OP_DISCARD)
+diff --git a/include/linux/types.h b/include/linux/types.h
+index a147977602b5..da5ca7e1bea9 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -125,6 +125,9 @@ typedef s64			int64_t;
+ typedef u64 sector_t;
+ typedef u64 blkcnt_t;
+ 
++/* cookie used for IO polling */
++typedef unsigned int blk_qc_t;
++
+ /*
+  * The type of an index into the pagecache.
+  */
 -- 
-1.8.3.1
+2.27.0
 
