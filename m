@@ -2,67 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D720930212B
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 05:37:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31214302135
+	for <lists+linux-block@lfdr.de>; Mon, 25 Jan 2021 05:38:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbhAYEgw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 24 Jan 2021 23:36:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
+        id S1727078AbhAYEhm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 24 Jan 2021 23:37:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbhAYEgv (ORCPT
+        with ESMTP id S1727068AbhAYEhh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 24 Jan 2021 23:36:51 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91177C061573
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:36:11 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id kx7so7600433pjb.2
-        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:36:11 -0800 (PST)
+        Sun, 24 Jan 2021 23:37:37 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BACDC061573
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:36:57 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id jx18so2292892pjb.5
+        for <linux-block@vger.kernel.org>; Sun, 24 Jan 2021 20:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Eqqx1gni4Q4abmvsdVexzq6eMIJu3GVUnZLPq6wIbFo=;
-        b=Y2TplnQ9iYj65TLPlSyyE6QipJSeTh2Pj+iCGthqP1bCGfCKPVAXQAZtssww6b4Uu4
-         q55bCtBN04czu06KWVLIatzqCSavXLUQE7opvY/k4XIZQsJ0WoKOcZr1nYAuVXgyJbpq
-         BIxlEAXuvk2UEBjGsc6o2kqx3qI5ByWXhUTuMGMHIQ/i0C60O157mzLjGnpmB9cFtvin
-         iTsfY3lnwB/Z3hGYYPBV655TnZmENYxmnV+oC1Tw308HNRnNknu3RZKzJfTSi+Zu0swT
-         hDgqgluDTyHRKyB0QR4EAHSjr+6uGIPtcvea6btppiItIs0UaN9KeKfc/C+82q6Ncm+P
-         uM9A==
+        bh=CvMA3FL8dHSfKJXeGv3WAf10xOnVS1nCO8k/Gm1YzTQ=;
+        b=su+CfV5uTWK9uTt1Ew0ySTu9kxgdoDgPjBAY0wClNThUH43koxiXLnDyyfv/rfikW8
+         BIYIC4b85X16l79slKjRUYF1hsnYs/nIaGp58SqKq0sEFpHjkAS3XBDPf8+w6dgpI5Rv
+         GnH6atAAScQb+FkV7B+rLbPCxSYX4614HldAA9hSvTMhYktagh/KFeeQhFLMG7KFAxb8
+         AcPFCMmOqn7FlsQFwc7v133qo9aezgVHK6s8BgS9SZtl0coRyrS40bNFBU1MfaDB7R8z
+         bhKiWeCrPk88rv/2ncADRRly5wu9XjHa49OorOPU1Ytl5EDbOg71iZPv3AgqSToLU+8K
+         RmBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Eqqx1gni4Q4abmvsdVexzq6eMIJu3GVUnZLPq6wIbFo=;
-        b=siEQt7WtfUITfL2BARNetIjSY/ihY23m3+pA8xUSFvPGI33BFS650WW9KAJ/QvpOMF
-         E53pHgN3OtUIMBnQXjGjx6WjVytPX44aRMha+GLA0tcHSpwoKsOXBYNosQ+Hu5FSOIIx
-         ILWuYN/vpeofvrf6FUbfwrKSMW6tZonu5FdIV/xqKS0DPdVIqWQwzF37KZ51vs4DyYJx
-         1KbQW48cHk7JDT0+YsGS34KQjpuCr2rtOAAN2hs6SoLdthB2B0RSQBLlSqtf5xXJ2Ii4
-         wbdq/E8EGQ8ab3LER0HXan3J4yiE37s821jI+FfQUBmdQ9WUbRhTE4TGm/cEPJFYH+9X
-         Tadw==
-X-Gm-Message-State: AOAM53370m6KptU4HAY7Nwn3P5tXt4bMV/uKPnKtYIvoAuFtVjRNbDrG
-        n8dACyupjL0M1ZYftejngR7vdw==
-X-Google-Smtp-Source: ABdhPJx3lPBpwUJl7dARi46jEU8sXgzhA40DeONLxaK+kkCYBeLzfDrfg42AwsVn4afHZcri1JOFXw==
-X-Received: by 2002:a17:90a:dac6:: with SMTP id g6mr7759003pjx.178.1611549371102;
-        Sun, 24 Jan 2021 20:36:11 -0800 (PST)
+        bh=CvMA3FL8dHSfKJXeGv3WAf10xOnVS1nCO8k/Gm1YzTQ=;
+        b=AsY9l5zs98Y3fshNlalru2qVGssoKhMhPZCy0bcTLY9X7nnS7twc6rtcBc+SrjWD7J
+         GkQLhUny3brkXma2lNF6BaL9f+4NHWf8HG87x5XYOpiSOU+2bGIZLYrA+Fi5bop8akk4
+         8OTVYPtWiUNWcM4YTBvC0NWF1xKZNZPHsnYJA5Yd20xYHa+ELx7uEb4uJedJdzwBH0VI
+         89PulHF1Zfu21f+2hgRiZYmH8WkJ8X13h3lHzpIOTNskSRl5w8FEUVt+LQ+ySu+iI5BF
+         vKz4gfHBZluCH1g3QADGUonFTf75u1yhGY8x+ZXsGsAH9+/YQGxC9MS0Q5vvwZTceT8X
+         WpyA==
+X-Gm-Message-State: AOAM533DEhwyNBpMJwRplFF63W4oivqxNUsevTSt8q3M7NlsY0+NVkgs
+        sA2Mqg2rHtTVS5nVFHiO24TQJQ==
+X-Google-Smtp-Source: ABdhPJzLQpPv+gD+Lys9TV4lNKinpYYaDjG7wsKLtc/8IPHdd11nmaWfE+aFmtiaHwis9uk519M7KA==
+X-Received: by 2002:a17:90a:5aa4:: with SMTP id n33mr4205318pji.66.1611549417115;
+        Sun, 24 Jan 2021 20:36:57 -0800 (PST)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id k9sm16243155pjj.8.2021.01.24.20.36.09
+        by smtp.gmail.com with ESMTPSA id a30sm14772483pfh.66.2021.01.24.20.36.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Jan 2021 20:36:10 -0800 (PST)
-Subject: Re: [PATCH] block: Fix an error handling in add_partition
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
-Cc:     Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        Sun, 24 Jan 2021 20:36:56 -0800 (PST)
+Subject: Re: [PATCH 1/1] bsg: free the request before return error code
+To:     Pan Bian <bianpan2016@163.com>,
+        FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20210117085023.24352-1-dinghao.liu@zju.edu.cn>
+References: <20210119123311.108137-1-bianpan2016@163.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <bfd373f2-8101-d1a1-549b-9163718ec658@kernel.dk>
-Date:   Sun, 24 Jan 2021 21:36:08 -0700
+Message-ID: <391237ba-b507-25a5-555d-23d59d3dbfb4@kernel.dk>
+Date:   Sun, 24 Jan 2021 21:36:55 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210117085023.24352-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20210119123311.108137-1-bianpan2016@163.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,12 +70,10 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/17/21 1:50 AM, Dinghao Liu wrote:
-> Once we have called device_initialize(), we should use put_device() to
-> give up the reference on error, just like what we have done on failure
-> of device_add().
+On 1/19/21 5:33 AM, Pan Bian wrote:
+> Free the request rq before returning error code.
 
-Applied for 5.11, thanks.
+Applied, thanks.
 
 -- 
 Jens Axboe
