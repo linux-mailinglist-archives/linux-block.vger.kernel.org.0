@@ -2,61 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8EE304940
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1824B30493B
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 20:56:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbhAZFbj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 00:31:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11148 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbhAYJuD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 04:50:03 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DPMzJ2z2Lz15yXX;
-        Mon, 25 Jan 2021 16:12:12 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.498.0; Mon, 25 Jan 2021 16:13:19 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <minchan@kernel.org>, <ngupta@vflare.org>,
-        <sergey.senozhatsky.work@gmail.com>, <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>
-Subject: [PATCH] zram: fix NULL check before some freeing functions is not needed
-Date:   Mon, 25 Jan 2021 16:13:01 +0800
-Message-ID: <1611562381-14985-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726480AbhAZFam (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:30:42 -0500
+Received: from verein.lst.de ([213.95.11.211]:43804 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbhAYJQk (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 25 Jan 2021 04:16:40 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7027768B05; Mon, 25 Jan 2021 09:20:42 +0100 (CET)
+Date:   Mon, 25 Jan 2021 09:20:42 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: Re: [PATCH] block: unexport truncate_bdev_range
+Message-ID: <20210125082042.GA11659@lst.de>
+References: <20210109111332.1132424-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210109111332.1132424-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-fixed the below warning:
-/drivers/block/zram/zram_drv.c:534:2-8: WARNING: NULL check
-before some freeing functions is not needed.
+Jens,
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/block/zram/zram_drv.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+can you pick this one up?
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index e2933cb..92739b9 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -530,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
- 
- 	return len;
- out:
--	if (bitmap)
--		kvfree(bitmap);
-+	kvfree(bitmap);
- 
- 	if (bdev)
- 		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
--- 
-2.7.4
-
+On Sat, Jan 09, 2021 at 12:13:32PM +0100, Christoph Hellwig wrote:
+> truncate_bdev_range is only used in always built-in block layer code,
+> so remove the export and the !CONFIG_BLOCK stub.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/block_dev.c         | 1 -
+>  include/linux/blkdev.h | 9 ++-------
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index 3e5b02f6606c42..41a9b0cb2d8a16 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -126,7 +126,6 @@ int truncate_bdev_range(struct block_device *bdev, fmode_t mode,
+>  		bd_abort_claiming(bdev, truncate_bdev_range);
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(truncate_bdev_range);
+>  
+>  static void set_init_blocksize(struct block_device *bdev)
+>  {
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index f94ee3089e015e..22fc4f3141d555 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -2012,21 +2012,16 @@ void bdev_add(struct block_device *bdev, dev_t dev);
+>  struct block_device *I_BDEV(struct inode *inode);
+>  struct block_device *bdgrab(struct block_device *bdev);
+>  void bdput(struct block_device *);
+> +int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,
+> +		loff_t lend);
+>  
+>  #ifdef CONFIG_BLOCK
+>  void invalidate_bdev(struct block_device *bdev);
+> -int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,
+> -			loff_t lend);
+>  int sync_blockdev(struct block_device *bdev);
+>  #else
+>  static inline void invalidate_bdev(struct block_device *bdev)
+>  {
+>  }
+> -static inline int truncate_bdev_range(struct block_device *bdev, fmode_t mode,
+> -				      loff_t lstart, loff_t lend)
+> -{
+> -	return 0;
+> -}
+>  static inline int sync_blockdev(struct block_device *bdev)
+>  {
+>  	return 0;
+> -- 
+> 2.29.2
+---end quoted text---
