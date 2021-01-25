@@ -2,212 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2BD2303218
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 03:48:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C803F3034F8
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 06:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbhAYPd4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Jan 2021 10:33:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729845AbhAYO4v (ORCPT
+        id S1728306AbhAZFb3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:31:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbhAYJgx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 09:56:51 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10PEW8uA190023;
-        Mon, 25 Jan 2021 09:56:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc :
- references : subject : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=ccaBuw3Lf3Q7m9bGxHCNfUXZ2tIMoQgu6UK8lZueDAY=;
- b=o3u9y6nCmEOcMpTQkYt1y9o8XSh0TmNfQIvBfxjSM/LcRcrun/yaUpUYnEArsG8ahVkf
- 307f0pl3vNR8kTYB9v+YyG2sPlQABdBciO4zA2wjBFf61g3598pfruSeEKbcIHCupQPu
- NQzkX+g1ARsBH2TjB/mt8oq6OZ6g+myJ82JYpu81GcX4/WiXVKLZkxsmq0O9ntbOTSMr
- I2hOoIl0/cFfryVZLpc5+xE/hKfxnV5uI5fFyqOl4yf5UT0gLK3BXGtpGFIYksFUWtb8
- cxE1taVsPhpVyjakXMJX8+logmfsJ3EXFXJWV0cZquu7mhs0e1WymXjLFcdFghcIAgXg rw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 369x3x4fg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Jan 2021 09:56:04 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10PEm31g015805;
-        Mon, 25 Jan 2021 14:56:02 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 368b2h8yvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Jan 2021 14:56:02 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10PEtxRm41419048
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Jan 2021 14:55:59 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A38A3A4055;
-        Mon, 25 Jan 2021 14:55:59 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B91FA4051;
-        Mon, 25 Jan 2021 14:55:59 +0000 (GMT)
-Received: from linux.fritz.box (unknown [9.145.26.175])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Jan 2021 14:55:59 +0000 (GMT)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20210118165518.14578-1-sth@linux.ibm.com>
- <20210118165518.14578-2-sth@linux.ibm.com>
-Subject: Re: [PATCH 1/1] s390/dasd: Fix inconsistent kobject removal
-Message-ID: <7e7051ac-dbe2-2951-2362-1bc9e7a8dfc6@linux.ibm.com>
-Date:   Mon, 25 Jan 2021 15:55:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        Mon, 25 Jan 2021 04:36:53 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB1DC061793;
+        Mon, 25 Jan 2021 00:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zGgRl2LgOrK08d1LlX0vwaKxdqZFCdwsDDwW3pCK04w=; b=A63P29axSeGvBYaQuSr4Z1mADH
+        aTLPtQ6DtNCVre3pP7QIT5fd2Oag/WJkcrEHyVvNIfJq2vKZUPRzcyfB2Wqylv7D/V8cj/DNr+1Ts
+        h7oKUycP2rePf8U0wqHGmbcj49Yv40r7KQkmHCTPgt8qV8dIAqDaLbD/gSJVtoW8cmeKtXxnuLm36
+        22AW2HvZjNL0m/F/pMxCJpRGiWlVDayA399Q2a8YMUcxZWCm6MfG3wXo8MzHhAILtr/gsLPWFtyK5
+        LgegfnCry02MugNTroJREw2on5XGPe2HgX91fh87DL8ThWlWPIQrJzM9908v9CrJYL+9b6dS3h4x4
+        9plS3HCg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l3x9H-003xRk-RF; Mon, 25 Jan 2021 08:23:01 +0000
+Date:   Mon, 25 Jan 2021 08:22:59 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 2/3] blk-mq: Always complete remote completions requests
+ in softirq
+Message-ID: <20210125082259.GB942655@infradead.org>
+References: <20210123201027.3262800-1-bigeasy@linutronix.de>
+ <20210123201027.3262800-3-bigeasy@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20210118165518.14578-2-sth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-25_04:2021-01-25,2021-01-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101250081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210123201027.3262800-3-bigeasy@linutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+On Sat, Jan 23, 2021 at 09:10:26PM +0100, Sebastian Andrzej Siewior wrote:
+> Controllers with multiple queues have their IRQ-handelers pinned to a
+> CPU. The core shouldn't need to complete the request on a remote CPU.
+> 
+> Remove this case and always raise the softirq to complete the request.
 
-small question.
-Do you plan to include the fix still for 5.11 or with the merge window
-for 5.12?
-The faulty patch was included in the 5.11 merge window.
-
-Best regards,
-Stefan
-
-Am 18.01.21 um 17:55 schrieb Stefan Haberland:
-> From: Jan H=C3=B6ppner <hoeppner@linux.ibm.com>
->
-> Our intention was to only remove path kobjects whenever a device is
-> being set offline. However, one corner case was missing.
->
-> If a device is disabled and enabled (using the IOCTLs BIODASDDISABLE an=
-d
-> BIODASDENABLE respectively), the enabling process will call
-> dasd_eckd_reload_device() which itself calls dasd_eckd_read_conf() in
-> order to update path information. During that update,
-> dasd_eckd_clear_conf_data() clears all old data and also removes all
-> kobjects. This will leave us with an inconsistent state of path kobject=
-s
-> and a subsequent path verification leads to a failing kobject creation.=
-
->
-> Fix this by removing kobjects only in the context of offlining a device=
-
-> as initially intended.
->
-> Fixes: 19508b204740 ("s390/dasd: Display FC Endpoint Security informati=
-on via sysfs")
-> Reported-by: Stefan Haberland <sth@linux.ibm.com>
-> Signed-off-by: Jan H=C3=B6ppner <hoeppner@linux.ibm.com>
-> Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-> ---
->  drivers/s390/block/dasd_devmap.c | 20 ++++++++++++++------
->  drivers/s390/block/dasd_eckd.c   |  3 ++-
->  drivers/s390/block/dasd_int.h    |  2 +-
->  3 files changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd=
-_devmap.c
-> index 16bb135c20aa..03d27ee9cac6 100644
-> --- a/drivers/s390/block/dasd_devmap.c
-> +++ b/drivers/s390/block/dasd_devmap.c
-> @@ -1874,18 +1874,26 @@ void dasd_path_create_kobjects(struct dasd_devi=
-ce *device)
->  }
->  EXPORT_SYMBOL(dasd_path_create_kobjects);
-> =20
-> -/*
-> - * As we keep kobjects for the lifetime of a device, this function mus=
-t not be
-> - * called anywhere but in the context of offlining a device.
-> - */
-> -void dasd_path_remove_kobj(struct dasd_device *device, int chp)
-> +static void dasd_path_remove_kobj(struct dasd_device *device, int chp)=
-
->  {
->  	if (device->path[chp].in_sysfs) {
->  		kobject_put(&device->path[chp].kobj);
->  		device->path[chp].in_sysfs =3D false;
->  	}
->  }
-> -EXPORT_SYMBOL(dasd_path_remove_kobj);
-> +
-> +/*
-> + * As we keep kobjects for the lifetime of a device, this function mus=
-t not be
-> + * called anywhere but in the context of offlining a device.
-> + */
-> +void dasd_path_remove_kobjects(struct dasd_device *device)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < 8; i++)
-> +		dasd_path_remove_kobj(device, i);
-> +}
-> +EXPORT_SYMBOL(dasd_path_remove_kobjects);
-> =20
->  int dasd_add_sysfs_files(struct ccw_device *cdev)
->  {
-> diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_e=
-ckd.c
-> index 3caa1ee5f4b0..65eb87cbbb9b 100644
-> --- a/drivers/s390/block/dasd_eckd.c
-> +++ b/drivers/s390/block/dasd_eckd.c
-> @@ -1036,7 +1036,6 @@ static void dasd_eckd_clear_conf_data(struct dasd=
-_device *device)
->  		device->path[i].ssid =3D 0;
->  		device->path[i].chpid =3D 0;
->  		dasd_path_notoper(device, i);
-> -		dasd_path_remove_kobj(device, i);
->  	}
->  }
-> =20
-> @@ -2173,6 +2172,7 @@ dasd_eckd_check_characteristics(struct dasd_devic=
-e *device)
->  	device->block =3D NULL;
->  out_err1:
->  	dasd_eckd_clear_conf_data(device);
-> +	dasd_path_remove_kobjects(device);
->  	kfree(device->private);
->  	device->private =3D NULL;
->  	return rc;
-> @@ -2191,6 +2191,7 @@ static void dasd_eckd_uncheck_device(struct dasd_=
-device *device)
->  	private->vdsneq =3D NULL;
->  	private->gneq =3D NULL;
->  	dasd_eckd_clear_conf_data(device);
-> +	dasd_path_remove_kobjects(device);
->  }
-> =20
->  static struct dasd_ccw_req *
-> diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_in=
-t.h
-> index 3bc008f9136c..b8a04c42d1d2 100644
-> --- a/drivers/s390/block/dasd_int.h
-> +++ b/drivers/s390/block/dasd_int.h
-> @@ -858,7 +858,7 @@ int dasd_add_sysfs_files(struct ccw_device *);
->  void dasd_remove_sysfs_files(struct ccw_device *);
->  void dasd_path_create_kobj(struct dasd_device *, int);
->  void dasd_path_create_kobjects(struct dasd_device *);
-> -void dasd_path_remove_kobj(struct dasd_device *, int);
-> +void dasd_path_remove_kobjects(struct dasd_device *);
-> =20
->  struct dasd_device *dasd_device_from_cdev(struct ccw_device *);
->  struct dasd_device *dasd_device_from_cdev_locked(struct ccw_device *);=
-
-
-
+What about changing blk_mq_trigger_softirq to take a void * argument
+and thus removing __blk_mq_complete_request_remote entirely?
