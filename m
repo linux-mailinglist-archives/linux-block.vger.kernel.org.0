@@ -2,170 +2,133 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 076893034FD
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 06:32:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C589303506
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 06:35:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbhAZFcK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 00:32:10 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51282 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727875AbhAYMPa (ORCPT
+        id S2387672AbhAZFdV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 00:33:21 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:60488 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729183AbhAYODy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:15:30 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UMpgSO-_1611576822;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UMpgSO-_1611576822)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 25 Jan 2021 20:13:42 +0800
-From:   Jeffle Xu <jefflexu@linux.alibaba.com>
-To:     snitzer@redhat.com
-Cc:     joseph.qi@linux.alibaba.com, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH v2 4/6] dm: always return BLK_QC_T_NONE for bio-based device
-Date:   Mon, 25 Jan 2021 20:13:38 +0800
-Message-Id: <20210125121340.70459-5-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
-References: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
+        Mon, 25 Jan 2021 09:03:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1611583433; x=1643119433;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=Ek2G7xRmYt8CIqEqm1zWuFdOelKVDeLNfESt/tOkG5QIgstFlJcvqmeB
+   GrXlMgQCtcYqWaxXN+IpPiJs/+qMyQEyEu8AzfdV/rV17VQhYmf+pm8VO
+   g0A/q05XEGNDQWfTQBB7eSkgQUvrHemXYTPWaK/ojrlcztl5I19ETNdj6
+   WeFMcGkIlm6cClwkZ/tWmerqMzw1kGyHOnUUNd4TNecQybFarfrnWhuwW
+   uM1uWk83lWNK38AuzeS9W/BvF1jelSHzxR2vfDAIMSYFf3rRqWNlXStTg
+   VLhMunftGAB1ewI6ERpECKk6D23t+G9OFt6z/C9X6ldc/s15UlSXBAexw
+   w==;
+IronPort-SDR: V3N7ZrSNWeXTX+/dvYszCBh4E/pXfqshqmFMQiMDWHwAOGTJLRcZyxI7cUo0ne28UotquITEKB
+ hnQwqn/jFVOVtBJJoaTeOUBFGDZ5/ZFyrhIj+VIsmE6lUg1fhJwQ1XV9HpOq3eyypOn+lrR42W
+ FNq8SmU/8wKOP+cwLSCO+abdeSsPtD1YM+6BGllHSO7Wo6lqKk9ys0tIxZPaL6+kJp1FVrleH3
+ s2CLpO2JgDRD2q2cVeg/mxi6xsXZI/4HkZ6+GgxKMC5Sxpfiwe4I+HsoIfaeGP6XKvrzcHdc5G
+ kJE=
+X-IronPort-AV: E=Sophos;i="5.79,373,1602518400"; 
+   d="scan'208";a="268618223"
+Received: from mail-dm6nam10lp2108.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.108])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Jan 2021 22:02:43 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l6bcB5R5jIoIfcZc6+zFOHuKSzvTUeHiqn46Q9kH+cxGQiAW+dxW1QO1LtqdLsljZXk3r6ni91anp7sow46DkaBRC7tN27xSyH5PkPpeclOqnkWZuFFOpkxM/wvJ49M09uKkYg/3zg+NI5amn57QJDtHq0HIAUsxpPYw+0LxeFVSJmpNegJIz9Ioq14lkLHrSrncwHb+8dHK7ccXZipYE/bl4kEZdPgVzgnBl8U1h3Fz+S5nmiNIGEZt+B+5J6P2ZqWuRod1QbvS1Uef8S0pVsc87HVYxSkYfWYJakuh54g8nh26ebvqD2oi/3ERF7lakdRUb+u6NO2ebsr1fnIwMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=kE/1ffCr2PsT/L/ulxGI7UqOOVPBs1vt8wNsJ3mhubM8+zv83o3xwSR6LgosGNbFltKaD0XZa8F5uAsyN9+oomBeCG/ChC0WIRMI8F84NenOHLrDbyfVxbQLq+LM16J/Jydx6ClG661CMTvq6LUNUtmlfCEi4x0PvHFMW/F0hs/Df7pDnPzK0OlnNVnKGQT64T4N3T5tNyXqqvodNGxHhNERFYvwDhxPiLt9Q0tswKpiyCqoumEDf85m+DD6hEiPcnn9yiXeb+I4rYLqXMhle9++rdy8BT9QuK75NBn7LOICzcaPpyXWjh9M3M2D3qFvUFRA+bPkUzLDjLOZ8xUYMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=pSsJNYj9HSyBhWLlyls+otVykfUCHA9ifkm+K0huU+DSdLclkDks3gwjGEfoeI+zZ0CB7mDSS3Pn+g2DHTMxYWSmhX+3pO2pGWVRDps5x/fSkFqPtBSNyJ0o1TjIjcR0stVEJ7lorvU9WtrRUUseAHtB+rhKheY1QTphV3zI9k8=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SA0PR04MB7212.namprd04.prod.outlook.com
+ (2603:10b6:806:ef::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.16; Mon, 25 Jan
+ 2021 14:02:42 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::c19b:805:20e0:6274]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::c19b:805:20e0:6274%6]) with mapi id 15.20.3784.017; Mon, 25 Jan 2021
+ 14:02:42 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Tejun Heo <tj@kernel.org>, Coly Li <colyli@suse.de>,
+        Song Liu <song@kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 04/10] block: simplify submit_bio_checks a bit
+Thread-Topic: [PATCH 04/10] block: simplify submit_bio_checks a bit
+Thread-Index: AQHW8jixUFjfNZP8d0CYJnK7p9X8jw==
+Date:   Mon, 25 Jan 2021 14:02:42 +0000
+Message-ID: <SN4PR0401MB35984AC9DFB6DD0A76E1D70D9BBD9@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20210124100241.1167849-1-hch@lst.de>
+ <20210124100241.1167849-5-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 663f6028-63f4-4c21-dbfb-08d8c139e21e
+x-ms-traffictypediagnostic: SA0PR04MB7212:
+x-microsoft-antispam-prvs: <SA0PR04MB7212FF2C79CE723C2C66ED789BBD9@SA0PR04MB7212.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3z+t9zY+VtyQRVr6x2e728wxrgOx8Z1LU8v2ZTfhEyKJV5EJZa9wXklT+6x7v/Rpx06TnTCc5M7quAZqxbulQc2YjI+zwcBRAgs2aFAABXGIApSYD/YpkUUsBKvPsjH4CDe/meID2menHRrNVYTbg0ivQRi7ViWNjJ8cczsvBX5v8BiJ0St5f4hF/52lvSWk6X/Y5Ujov5hajxKPAXr5b+wEEzamhUScP5ekVhFbs27+V1FPi++DIyONVBU2p3FOF9xc7dv5QSzQDKZL9QV8x7KuaKH8vRrIeVdfOp67kmjypLaR1VwIjJp94jJ2aTgRx96v2o873FFBDswTaPWKgUnhjUffwKiuk3+wJ6TKKtdghTjH5uSlMiI2yF3sDdpwHByxZW4YJVpkeg7dkHK76w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(8936002)(26005)(8676002)(478600001)(66446008)(4270600006)(55016002)(4326008)(91956017)(76116006)(5660300002)(2906002)(19618925003)(316002)(33656002)(66556008)(9686003)(66946007)(71200400001)(52536014)(54906003)(7416002)(558084003)(6506007)(7696005)(86362001)(110136005)(64756008)(186003)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?v+KZhFzsc9vL0pMjFctD/Kc+LQPY1mH7rMEVZCQxzqvGZHos/FBc5dt4qqmX?=
+ =?us-ascii?Q?8G6urzTZDq99meQ25U7cWy3ck1Kh0weXZqD+PTERKuBiWX5v2wm6e1lObFdw?=
+ =?us-ascii?Q?0pNulamlrVka219ThF+QGBZLaDqXWb/UOvuKdX1Mb5dcRVm6EY6ZainjG4Hi?=
+ =?us-ascii?Q?fyeKwVY2HPq3ysq6MlKmth3p2nqyYPcK6ZjEcvrwujmrzg8QvwndUe4Y3JrI?=
+ =?us-ascii?Q?4gwr4N6CLCcXB3mvr+onujNgvzuj9mkWNnseao52/uKc//zWfUaL7ip0FkPV?=
+ =?us-ascii?Q?fI5678ALh0ITCAZXHFywPbfjAELzW7InbKkif374TqBVxRpPMHj91ZzsP8Qu?=
+ =?us-ascii?Q?l9inPvKZUnhKdceb4uz82QD01+DSIo0NCVxeEr6u95PNW3D0fI2w2wR7pnmh?=
+ =?us-ascii?Q?rcNFJsIGLy1+j/ZKkRx/gLhqD0zWzxAKliMO+q1pN7pqdqBA/g3T0NaGuu/v?=
+ =?us-ascii?Q?2t04krV6s9HzBMZVLr/ApGAHaa8ZQyXAyi/Mwqi+WRonR8TZ7WtE1kqEDlUc?=
+ =?us-ascii?Q?kzflIx+pRtB8qM5DNxYoqv2GJlk4vkw2Ht7NbGFlwffHO3zzjFkA03IsqB7T?=
+ =?us-ascii?Q?Djoo7cPHPaFzZJbQ/qRP866AVIaSDgBPfwM0ZXwKPBf0RxthWa2/QbFgRPT8?=
+ =?us-ascii?Q?lBxqFPkpEOU+GWE+u1xDYEXh+VSRhnver6pJ93Tnn0B8Gw82s6T/qpkRvM1W?=
+ =?us-ascii?Q?esgQdO4GD69U79d0Iy9kma4vTcKODHLqDp/baeuvf00jQWMlFT9pO+6Wqvq9?=
+ =?us-ascii?Q?TUcBzSpuVqyoJgjRGbaCSbI5CezgmnYNjPY9uFmOipDkRhWCXkaPvZGjYiFQ?=
+ =?us-ascii?Q?SCuca5lbcZWBTfVX7EkdoVHjZXzI/KZOHXylvFor1feGxDpcu5SpFHs6vVrl?=
+ =?us-ascii?Q?s9w+NHvAQFJcX5mYmGjuheoWfaq5/kNMsAwSza+V6T4Sijs4LQndUQMmB0q4?=
+ =?us-ascii?Q?hx2p1AtDFDvg33W0HWSFtaIDw74DOdYR1GmxuyqRlf/PaACQ4VntjeknRCEk?=
+ =?us-ascii?Q?NFpBu45Um8n+ullPbPdnCDlzweKPM3/TKiIFi+yGdC16DFB9q7H4zkINgGp1?=
+ =?us-ascii?Q?P170RebQYjRvZMRCYUBR0J9LPoLOJA=3D=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 663f6028-63f4-4c21-dbfb-08d8c139e21e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2021 14:02:42.3355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Fecisb+yikKWREgRIW50+ya6NJK+A8bZWz/Eb5F1pseTJMZRl00cGDVDkHaUMTFuuJTLJWBXdzr5zQN863D87daA+RyOKYEuyk2QWI8UqMY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR04MB7212
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently the returned cookie of bio-based device is not used at all.
-
-In the following patch, bio-based device will actually return a
-pointer to a specific object as the returned cookie.
-
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Mike Snitzer <snitzer@redhat.com>
----
- drivers/md/dm.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 7bac564f3faa..46ca3b739396 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1252,14 +1252,13 @@ void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors)
- }
- EXPORT_SYMBOL_GPL(dm_accept_partial_bio);
- 
--static blk_qc_t __map_bio(struct dm_target_io *tio)
-+static void __map_bio(struct dm_target_io *tio)
- {
- 	int r;
- 	sector_t sector;
- 	struct bio *clone = &tio->clone;
- 	struct dm_io *io = tio->io;
- 	struct dm_target *ti = tio->ti;
--	blk_qc_t ret = BLK_QC_T_NONE;
- 
- 	clone->bi_end_io = clone_endio;
- 
-@@ -1278,7 +1277,7 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 	case DM_MAPIO_REMAPPED:
- 		/* the bio has been remapped so dispatch it */
- 		trace_block_bio_remap(clone, bio_dev(io->orig_bio), sector);
--		ret = submit_bio_noacct(clone);
-+		submit_bio_noacct(clone);
- 		break;
- 	case DM_MAPIO_KILL:
- 		free_tio(tio);
-@@ -1292,8 +1291,6 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 		DMWARN("unimplemented target map return value: %d", r);
- 		BUG();
- 	}
--
--	return ret;
- }
- 
- static void bio_setup_sector(struct bio *bio, sector_t sector, unsigned len)
-@@ -1380,7 +1377,7 @@ static void alloc_multiple_bios(struct bio_list *blist, struct clone_info *ci,
- 	}
- }
- 
--static blk_qc_t __clone_and_map_simple_bio(struct clone_info *ci,
-+static void __clone_and_map_simple_bio(struct clone_info *ci,
- 					   struct dm_target_io *tio, unsigned *len)
- {
- 	struct bio *clone = &tio->clone;
-@@ -1391,7 +1388,7 @@ static blk_qc_t __clone_and_map_simple_bio(struct clone_info *ci,
- 	if (len)
- 		bio_setup_sector(clone, ci->sector, *len);
- 
--	return __map_bio(tio);
-+	__map_bio(tio);
- }
- 
- static void __send_duplicate_bios(struct clone_info *ci, struct dm_target *ti,
-@@ -1405,7 +1402,7 @@ static void __send_duplicate_bios(struct clone_info *ci, struct dm_target *ti,
- 
- 	while ((bio = bio_list_pop(&blist))) {
- 		tio = container_of(bio, struct dm_target_io, clone);
--		(void) __clone_and_map_simple_bio(ci, tio, len);
-+		__clone_and_map_simple_bio(ci, tio, len);
- 	}
- }
- 
-@@ -1450,7 +1447,7 @@ static int __clone_and_map_data_bio(struct clone_info *ci, struct dm_target *ti,
- 		free_tio(tio);
- 		return r;
- 	}
--	(void) __map_bio(tio);
-+	__map_bio(tio);
- 
- 	return 0;
- }
-@@ -1565,11 +1562,10 @@ static void init_clone_info(struct clone_info *ci, struct mapped_device *md,
- /*
-  * Entry point to split a bio into clones and submit them to the targets.
-  */
--static blk_qc_t __split_and_process_bio(struct mapped_device *md,
-+static void __split_and_process_bio(struct mapped_device *md,
- 					struct dm_table *map, struct bio *bio)
- {
- 	struct clone_info ci;
--	blk_qc_t ret = BLK_QC_T_NONE;
- 	int error = 0;
- 
- 	init_clone_info(&ci, md, map, bio);
-@@ -1613,7 +1609,7 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
- 
- 				bio_chain(b, bio);
- 				trace_block_split(b, bio->bi_iter.bi_sector);
--				ret = submit_bio_noacct(bio);
-+				submit_bio_noacct(bio);
- 				break;
- 			}
- 		}
-@@ -1621,13 +1617,11 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
- 
- 	/* drop the extra reference count */
- 	dec_pending(ci.io, errno_to_blk_status(error));
--	return ret;
- }
- 
- static blk_qc_t dm_submit_bio(struct bio *bio)
- {
- 	struct mapped_device *md = bio->bi_disk->private_data;
--	blk_qc_t ret = BLK_QC_T_NONE;
- 	int srcu_idx;
- 	struct dm_table *map;
- 
-@@ -1657,10 +1651,10 @@ static blk_qc_t dm_submit_bio(struct bio *bio)
- 	if (is_abnormal_io(bio))
- 		blk_queue_split(&bio);
- 
--	ret = __split_and_process_bio(md, map, bio);
-+	__split_and_process_bio(md, map, bio);
- out:
- 	dm_put_live_table(md, srcu_idx);
--	return ret;
-+	return BLK_QC_T_NONE;
- }
- 
- /*-----------------------------------------------------------------
--- 
-2.27.0
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
