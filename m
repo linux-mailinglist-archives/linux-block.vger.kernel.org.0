@@ -2,87 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C07A1304C05
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 23:27:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BED8304C08
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 23:27:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbhAZV7o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 16:59:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405193AbhAZUFa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 15:05:30 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9956422B2C;
-        Tue, 26 Jan 2021 20:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611691489;
-        bh=GhsOY7dwQeZzdKA+1WHW1WqJfwy0Ae81jjbvBQf+Bz8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llrd9nfy8Dt6Zb89AhD2HLqH4a/mu0ZfVrMYSBrf68Fod1XWPOruDFCBtlH82SKjb
-         S5WvwbzpR+KXNcHb0Kp/Mx8MXQ+A4RfbRdePrw1DC/u9hFS87Vlc8mu10m3gni6uls
-         4ELRnoMJbovojVOK5kGo7IUvddFZqbvjQ2whtgcidMyyH20FOntQ7puARVhCqeq3EG
-         Nc54r/WkTdzZnJuKCSZKQ3LFKZS/jO2aKxgCdnFufzmqVP6WGO/RWtKsSspZ5cvUQV
-         HO77qx+U15ZWssTLVJ0/V8uIDIe5aJfSkYpz9XU/vNsup8kAGjYzINOb6FoVQ1+4AI
-         1OXjIIMk4IpBg==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] mtip32xx: prefer pcie_capability_read_word()
-Date:   Tue, 26 Jan 2021 14:04:33 -0600
-Message-Id: <20210126200433.2911982-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210126200433.2911982-1-helgaas@kernel.org>
-References: <20210126200433.2911982-1-helgaas@kernel.org>
+        id S1726537AbhAZV7x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 16:59:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405295AbhAZUJt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 26 Jan 2021 15:09:49 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27A5C061573
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:09:08 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id 30so12171184pgr.6
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:09:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=RFzsjs73B5QGolUY36etsSHceLP09/8jna6hDkWinoI=;
+        b=NHT3FZZp9joO/4A2cIe+S9vs9lbh0VEwMmGIlFcM997cgIKdCTtbDRMw4vIA8MMDdf
+         6jcCKXxlNPkYB8uu8Hy+MaYzrcgk3VKsx2mI9hjgdhZe72QkNP4jUkynGfyhyI0ITftK
+         227BFngVq9IP8Wgi0ugTfmuPU4FVdvPhokdvsmjWzu+T+fPoJBlhy3Q4n2tsleUiNta0
+         6Py2C+w367MVGvQRkucb6NNdksabAslf+2p+oOiyJiF/FNPG7ExQ4vVuqt63u+NqL3H4
+         XatCkFDYUoDc2dcuDuNyVZTYgSwbubVLj78PUT9GqcK99Vh7sUSCVekPcyShTy7JHGpC
+         F+Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RFzsjs73B5QGolUY36etsSHceLP09/8jna6hDkWinoI=;
+        b=WioNvAG1Hb2yUpnpVFZowcw7SMnhiTc/yiNHCyrD3LlWvBmPRenl3qHU+RP6/DnQmo
+         g2qgYi3IK+8zMi3GRQOMDYL946wA8VQS2iAOFjMEjQtTC0rvJM1SxroUyZ2UzvUqy/lQ
+         2DjhpANX40dOw8Wjd0L3z5mWSN/FiOSooDb5QHXAsQXodLIJ5Y8vpryiJBDKBWfdhiQV
+         oZFuBmr6RtOKZ09JitypN7uDlAL64Iku3w95xpLH0R/tLoifnTRbM0UZf5tM778AhOU/
+         hAgI494jShLUSwn1R2ePsdS0FEq6wOx9nd89xenkxbdqhmTxsRUSLC8j+W7zPdGIdZwD
+         AmBA==
+X-Gm-Message-State: AOAM530W6YoWxnzVWwya7axH1habgXD1WSHs+ZGhMR9K0cDKn0fyBV2e
+        xEYJ0IJsFbojmtJ1iB14tb/GfQ==
+X-Google-Smtp-Source: ABdhPJz8CuV4Pt+g2YOn4X6fah7MOajq5qzAEUxnHyOT2+pUQj854HVAxAZIErQWr8QR9q0WtpBfNw==
+X-Received: by 2002:a62:380a:0:b029:1a9:5aa1:6d0d with SMTP id f10-20020a62380a0000b02901a95aa16d0dmr6617617pfa.45.1611691748448;
+        Tue, 26 Jan 2021 12:09:08 -0800 (PST)
+Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id u126sm18970542pfu.113.2021.01.26.12.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Jan 2021 12:09:07 -0800 (PST)
+Subject: Re: [PATCH v4 1/1] loop: scale loop device by introducing per device
+ lock
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        tyhicks@linux.microsoft.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sashal@kernel.org, jmorris@namei.org,
+        lukas.bulwahn@gmail.com, hch@lst.de, pvorel@suse.cz,
+        ming.lei@redhat.com, mzxreary@0pointer.de, mcgrof@kernel.org,
+        zhengbin13@huawei.com, maco@android.com, colin.king@canonical.com,
+        evgreen@chromium.org
+References: <20210126144630.230714-1-pasha.tatashin@soleen.com>
+ <20210126144630.230714-2-pasha.tatashin@soleen.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <daf21294-f51e-3f03-8a46-d0181104d9e3@kernel.dk>
+Date:   Tue, 26 Jan 2021 13:09:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210126144630.230714-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On 1/26/21 7:46 AM, Pavel Tatashin wrote:
+> Currently, loop device has only one global lock: loop_ctl_mutex.
+> 
+> This becomes hot in scenarios where many loop devices are used.
+> 
+> Scale it by introducing per-device lock: lo_mutex that protects
+> modifications of all fields in struct loop_device.
+> 
+> Keep loop_ctl_mutex to protect global data: loop_index_idr, loop_lookup,
+> loop_add.
+> 
+> The new lock ordering requirement is that loop_ctl_mutex must be taken
+> before lo_mutex.
 
-Replace pci_read_config_word() with pcie_capability_read_word().
+Applied, thanks.
 
-pcie_capability_read_word() takes care of a few special cases when reading
-the PCIe capability.  See 8c0d3a02c130 ("PCI: Add accessors for PCI Express
-Capability").
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/block/mtip32xx/mtip32xx.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
-index 543eb30a3bc0..a0f9bf152ddc 100644
---- a/drivers/block/mtip32xx/mtip32xx.c
-+++ b/drivers/block/mtip32xx/mtip32xx.c
-@@ -3924,14 +3924,10 @@ static DEFINE_HANDLER(7);
- 
- static void mtip_disable_link_opts(struct driver_data *dd, struct pci_dev *pdev)
- {
--	int pos;
- 	unsigned short pcie_dev_ctrl;
- 
--	pos = pci_find_capability(pdev, PCI_CAP_ID_EXP);
--	if (pos) {
--		pci_read_config_word(pdev,
--			pos + PCI_EXP_DEVCTL,
--			&pcie_dev_ctrl);
-+	if (pci_is_pcie(pdev)) {
-+		pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &pcie_dev_ctrl);
- 		if (pcie_dev_ctrl & PCI_EXP_DEVCTL_NOSNOOP_EN ||
- 		    pcie_dev_ctrl & PCI_EXP_DEVCTL_RELAX_EN) {
- 			dev_info(&dd->pdev->dev,
-@@ -3939,8 +3935,7 @@ static void mtip_disable_link_opts(struct driver_data *dd, struct pci_dev *pdev)
- 					pdev->vendor, pdev->device);
- 			pcie_dev_ctrl &= ~(PCI_EXP_DEVCTL_NOSNOOP_EN |
- 						PCI_EXP_DEVCTL_RELAX_EN);
--			pci_write_config_word(pdev,
--				pos + PCI_EXP_DEVCTL,
-+			pcie_capability_write_word(pdev, PCI_EXP_DEVCTL,
- 				pcie_dev_ctrl);
- 		}
- 	}
 -- 
-2.25.1
+Jens Axboe
 
