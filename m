@@ -2,130 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BC393040DC
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 15:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24FBB304075
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 15:37:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbhAZOt5 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Tue, 26 Jan 2021 09:49:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
+        id S2391731AbhAZOZ2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 09:25:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391327AbhAZJj1 (ORCPT
+        with ESMTP id S2392070AbhAZOYI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 04:39:27 -0500
-X-Greylist: delayed 402 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 26 Jan 2021 01:38:47 PST
-Received: from cc-smtpout1.netcologne.de (cc-smtpout1.netcologne.de [IPv6:2001:4dd0:100:1062:25:2:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08557C061573
-        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 01:38:46 -0800 (PST)
-Received: from cc-smtpin1.netcologne.de (cc-smtpin1.netcologne.de [89.1.8.201])
-        by cc-smtpout1.netcologne.de (Postfix) with ESMTP id DD3AA13A1F;
-        Tue, 26 Jan 2021 10:31:13 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by cc-smtpin1.netcologne.de (Postfix) with ESMTP id CF7C111E75;
-        Tue, 26 Jan 2021 10:31:13 +0100 (CET)
-Received: from [89.1.203.165] (helo=cc-smtpin1.netcologne.de)
-        by localhost with ESMTP (eXpurgate 4.19.0)
-        (envelope-from <kurt@garloff.de>)
-        id 600fe161-031e-7f0000012729-7f000001c664-1
-        for <multiple-recipients>; Tue, 26 Jan 2021 10:31:13 +0100
-Received: from nas2.garloff.de (xdsl-89-1-203-165.nc.de [89.1.203.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by cc-smtpin1.netcologne.de (Postfix) with ESMTPSA;
-        Tue, 26 Jan 2021 10:31:08 +0100 (CET)
-Received: from [192.168.155.24] (ap4.garloff.de [192.168.155.15])
-        by nas2.garloff.de (Postfix) with ESMTPSA id F049FB3B13A5;
-        Tue, 26 Jan 2021 10:31:07 +0100 (CET)
-To:     Denis Efremov <efremov@linux.com>, Jiri Kosina <jikos@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Wim Osterholt <wim@djo.tudelft.nl>
-References: <20160610230255.GA27770@djo.tudelft.nl>
- <alpine.LNX.2.00.1606131414420.6874@cbobk.fhfr.pm>
- <20160614184308.GA6188@djo.tudelft.nl>
- <alpine.LNX.2.00.1606150906320.6874@cbobk.fhfr.pm>
- <20160615132040.GZ14480@ZenIV.linux.org.uk>
- <alpine.LNX.2.00.1606151610420.6874@cbobk.fhfr.pm>
- <20160615224722.GA9545@djo.tudelft.nl>
- <alpine.LNX.2.00.1606160946000.6874@cbobk.fhfr.pm>
- <alpine.LNX.2.00.1606301317290.6874@cbobk.fhfr.pm>
- <9c713fa8-9da1-47b5-0d5d-92f4cd13493a@kernel.dk>
- <nycvar.YFH.7.76.2101191649190.5622@cbobk.fhfr.pm>
- <5cb57175-7f0b-5536-925d-337241bcda93@linux.com>
- <nycvar.YFH.7.76.2101211122290.5622@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.2101211543230.5622@cbobk.fhfr.pm>
- <e503292b-5f51-eac5-771f-e35991d1084c@linux.com>
- <nycvar.YFH.7.76.2101211603590.5622@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.2101221209060.5622@cbobk.fhfr.pm>
- <5ef748c9-9ab9-9a7e-6ae9-6e4a292b6842@linux.com>
-From:   Kurt Garloff <kurt@garloff.de>
-Subject: Re: [PATCH] floppy: reintroduce O_NDELAY fix
-Message-ID: <f822ebde-89d6-dbbf-ae4e-b06a4aadedf5@garloff.de>
-Date:   Tue, 26 Jan 2021 10:31:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 26 Jan 2021 09:24:08 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D631EC0611C2
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 06:23:25 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id n6so19930243edt.10
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 06:23:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1czbBZLLxHwEsDj/a0a94VF0yBz3u23rkRDZfhlmeos=;
+        b=nyCAT2ReufMhKUDlIx0rQQya1EhvNd3CAXYn6nE2QL4Vmc6395uy5mK+D+jGDLbH8z
+         YBTHMXZ5OTYvLZQCey/ax2VfTRjckHrVObU3ETyQjToqgDfw4if7zzGcu1bFvjVsLdLT
+         F4gzk6kKy+eZ2ZD6f+6CMfR+xgdho8L/8V2tlsFkR6eehlqnDN5KeIm2DzPp7oGr46TA
+         I1QpUnH2hx6ubfWT7ZKBTQ13Ru+n+hkvKoz317kqYa32yGBC2jDOOm4nFn9neiUgZb6E
+         n4mwe9IXjh/CKhqAes1aQMDcP5JYr8mrKYekaWRrWhxbJQXU9qlhVaUOoSQLVgeLluAG
+         GjNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1czbBZLLxHwEsDj/a0a94VF0yBz3u23rkRDZfhlmeos=;
+        b=IsvoJLxs5zfvzhHHiUyE6yxjeOaosm/MNNxkOv8X0ZQmasxVja++2YbUKRMn/0ld16
+         xRuGh/IhedBNvY8Fc9bzP5U35o8tJBSsjAYA/qoH5XAK30VjO1TgFuwgYMT3R5AJnDpo
+         ohTNGB1/T4g+B6ctIwMCOEy/irbYQIoOqHC7Tl/kEb7Cr2FP87ctliVhsMAd0ncZ8KJw
+         i4NauXaMm8B1/maC80WdDx3F5aJVR9SGzfr03KwYACh9TReLOMnt+5Uum6Uay80H8Rnz
+         Wt98ylGRODDqKmdOdS1eFo4DhgvKieK/bJBo9lHvi8a1DZdO2u2ekYL5mQnIQeE+/i1m
+         cEWg==
+X-Gm-Message-State: AOAM533C1Ags3pEZYQba5g3gLazMS30+6SOhRC8PgGo6+9bL8O7x8ljx
+        34zQODGtGlm7o1iCZzRH/VxRQ4ru4/OI9K9tzDoQFQ==
+X-Google-Smtp-Source: ABdhPJxP3v2LeM908ihblFdyCJ83JaTf4lsLhbskKLoinjZa37ZibxDpo5jfrONK2pUpfuITkUtYiA+FbDR8mmfbk/0=
+X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr4815634edd.341.1611671004588;
+ Tue, 26 Jan 2021 06:23:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5ef748c9-9ab9-9a7e-6ae9-6e4a292b6842@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
+References: <20210125201156.1330164-1-pasha.tatashin@soleen.com>
+ <20210125201156.1330164-2-pasha.tatashin@soleen.com> <YA/fwFU+Wg6+jr85@pevik>
+In-Reply-To: <YA/fwFU+Wg6+jr85@pevik>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 26 Jan 2021 09:22:48 -0500
+Message-ID: <CA+CK2bBVdVOP6TmJED4Wndovxf+dGbcbw=0LQ8neAGL_2=TEwA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] loop: scale loop device by introducing per device lock
+To:     Petr Vorel <pvorel@suse.cz>
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        James Morris <jmorris@namei.org>, lukas.bulwahn@gmail.com,
+        hch@lst.de, ming.lei@redhat.com, mzxreary@0pointer.de,
+        mcgrof@kernel.org, zhengbin13@huawei.com, maco@android.com,
+        Colin King <colin.king@canonical.com>, evgreen@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Denis, Jiri, Jens,
-
-Am 26.01.21 um 09:21 schrieb Denis Efremov:
-> On 1/22/21 2:13 PM, Jiri Kosina wrote:
->> From: Jiri Kosina <jkosina@suse.cz>
->>
->> This issue was originally fixed in 09954bad4 ("floppy: refactor open() 
->> flags handling").
->>
->> The fix as a side-effect, however, introduce issue for open(O_ACCMODE) 
->> that is being used for ioctl-only open. I wrote a fix for that, but 
->> instead of it being merged, full revert of 09954bad4 was performed, 
->> re-introducing the O_NDELAY / O_NONBLOCK issue, and it strikes again.
->>
->> This is a forward-port of the original fix to current codebase; the 
->> original submission had the changelog below:
->>
->> ====
->> Commit 09954bad4 ("floppy: refactor open() flags handling"), as a
->> side-effect, causes open(/dev/fdX, O_ACCMODE) to fail. It turns out that
->> this is being used setfdprm userspace for ioctl-only open().
->>
->> Reintroduce back the original behavior wrt !(FMODE_READ|FMODE_WRITE) 
->> modes, while still keeping the original O_NDELAY bug fixed.
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: Wim Osterholt <wim@djo.tudelft.nl>
->> Tested-by: Wim Osterholt <wim@djo.tudelft.nl>
->> Reported-and-tested-by: Kurt Garloff <kurt@garloff.de>
->> Fixes: 09954bad4 ("floppy: refactor open() flags handling")
->> Fixes: f2791e7ead ("Revert "floppy: refactor open() flags handling"")
->> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-> Applied. I'll send it to Jens soon with a couple of cleanup patches.
+On Tue, Jan 26, 2021 at 4:24 AM Petr Vorel <pvorel@suse.cz> wrote:
 >
-> https://github.com/evdenis/linux-floppy/commit/e32f6163c47efbdbad06258560aa00d1c7e5b699
+> Hi,
+>
+> > Currently, loop device has only one global lock:
+> > loop_ctl_mutex.
+>
+> > This becomes hot in scenarios where many loop devices are used.
+>
+> > Scale it by introducing per-device lock: lo_mutex that protects the
+> > fields in struct loop_device. Keep loop_ctl_mutex to protect global
+> > data such as loop_index_idr, loop_lookup, loop_add.
+>
+> > Lock ordering: loop_ctl_mutex > lo_mutex.
+>
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-Great, thanks.
+Thank you for reviewing this patch.
 
-Due to libblkid (rightfully) using O_NONBLOCK these days when probing
-devices, the floppy driver does spit loads of
-[    9.533513] floppy0: disk absent or changed during operation
-[    9.534989] blk_update_request: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
-[    9.537206] Buffer I/O error on dev fd0, logical block 0, async page read
-[    9.546837] floppy0: disk absent or changed during operation
-[    9.548389] blk_update_request: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1
-and fails a mount prior to being opened without O_NONBLOCK at least once.
-(Reproduction is easy with qemu-kvm.)
-
-The patch addresses it and I would suggest it to also be backported and
-applied to the active stable kernel trees.
-
-Thanks,
-
--- 
-Kurt Garloff <kurt@garloff.de>, Cologne, Germany
-
-
+Pasha
