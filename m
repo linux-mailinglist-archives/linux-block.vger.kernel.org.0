@@ -2,64 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE175304C12
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 23:28:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3B52304C14
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 23:28:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbhAZWAZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 17:00:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35444 "EHLO
+        id S1726935AbhAZWAe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 17:00:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732505AbhAZUOy (ORCPT
+        with ESMTP id S2405501AbhAZUPW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 15:14:54 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C81C06178B
-        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:14:14 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id 11so11113951pfu.4
-        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:14:14 -0800 (PST)
+        Tue, 26 Jan 2021 15:15:22 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D095CC0613ED
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:14:41 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id o16so2560907pgg.5
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 12:14:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qEjsyAI3zsxeeAL9SDqR30dDyfOJAEMLL6jZFQpEttk=;
-        b=x0MwlPyiRd6qNIb7XiH3QSErb9wGUVymqZjBbsw50RYXJaA3VDsCyf+/x16/1hBeHK
-         qrj7yO1MIIBpNCmkAO1e2i+GJ4UzW6Lq3rcX+OO36u0RF6FbY/6vrW6Or/lPrty3i4bW
-         yqERrDvRI02lWpfPShD34l6OvU+2mCDC4Ftfyu1iImKeUvb5SO8HUAvVYCeZ0b9zu0b6
-         GLajrhR6YmOuOuW66P99eJsb81cwVmuzScYq2uYIjLANrYCTF8+p041zaQk0dyRl5Ids
-         HFZYf9qpsz4Jz+cQKyHSzrK2A9+qwVQbYNQC+Ccq0l/eHqnzXJVHnZ6JDBjJlu4/jKeN
-         pkMw==
+        bh=vUWa/nqQ/A/FFzCKwNGOfLjGalA5xZDYWlP7k0RNMN4=;
+        b=aNgxpXHyhquyX9+OT/S2Ivy6rHQvxdf0vWV+hC/39bhX3aBUpNlzTSFfQdDEp6im8a
+         KZhIP25K3RXUXHMBHDU2+dIAvUM4Qov7IunrwNKrDe4/iii/ofIR3PHoAf6vIv+u0Sox
+         8o1VIvGjcaRhwqOwJS+/5qnakNwYzfdsA9Pl+1uyHDYTU7MxgqkduHTzan9z9YVbuGcA
+         WIdrk2f+1p2PLr+n/q/GH6AueR4Rccs1Cwo9IbOcka+0wNK7zwOUj2WmQibuXoQvitJB
+         2pStJzimWuAv3RFiPHpupixIKybApinZr033DoaPjOEF3xMis+zpZdSLS1YPg40rrkmU
+         FGgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qEjsyAI3zsxeeAL9SDqR30dDyfOJAEMLL6jZFQpEttk=;
-        b=YTer3TN4FRW2slP0kBqRCOLP14mbgl3ENynYV0eD2ShLCO544m+4SAwj03EXDVNI1O
-         Cg/dMP763/4fK4MB4rxG2P3KH+oL59SQvDbQCuyUXX6LXRxPg0/96rsSjaB3kiuBs8AD
-         gQlM4VtRrWmpXMwMK0BBK8/czuB59uIKmoYqukIYrElGFElLqNXQz/yOiEZO3ResG6wc
-         p9Yesx/es3EMFXHaxmTm5fEByfxP+2nRiSNAnJUufZMbY9cRbQo73YNxPCy916RXr8Ei
-         drEUez9dzSjimlhamOI4m1h5kckuaDInqxPTgHRCJneSKmYg+YkGLJYb3V/D/93RjCdV
-         tggw==
-X-Gm-Message-State: AOAM5337wIg3oTJIOxcP6k9yU4LoRqbvT1NUlTsCYdQ1zdMA93UxuHIQ
-        LgagCEdUeqg+iY/H2/eKWhYh5QHA8TAt2A==
-X-Google-Smtp-Source: ABdhPJwSz0/YvEgDMXduskoFYxdDOP4tAGvtJGnPpH4oL4Lki9xu5f7VI9bNqaF9nCuEPkICMBfjOQ==
-X-Received: by 2002:a05:6a00:16c7:b029:1b6:68a6:985a with SMTP id l7-20020a056a0016c7b02901b668a6985amr6770914pfc.44.1611692053787;
-        Tue, 26 Jan 2021 12:14:13 -0800 (PST)
+        bh=vUWa/nqQ/A/FFzCKwNGOfLjGalA5xZDYWlP7k0RNMN4=;
+        b=qfbSMtKcNch9wuB0YkWaqBndaAAIDvye817iECwxGlZRR7t7T35D/q6kfnYnGxtY4W
+         u6Dex9T2lKLYAFJ1dL9K8JKvbLlRFP4+E+hBn0SxN6lZDoSLDIOyon5VZ7FMJosrEzlo
+         0IIuJcix8YIgC2KwPD2HuMqQGg4eZoQKTRloini8lB1G2/OyP+kNF99DLsASLyMLM+sW
+         KPu0Q+u9XVLbHtRVM2PqV7/sCkmd+N3F8cF+tTr8av2kXS1asSSFuNkxSFlnIwr7x4xC
+         thuEFr+HjvPqQIqG2ORQgHo5twiscJ+8j6UAm2GaFq3WJatwVUECkr6SUI7Yg94rfGI+
+         8BCw==
+X-Gm-Message-State: AOAM533ocddcypK9KABozSWQI+9vGsaD8OpcLrETOGRh/+te1Se/AdU8
+        eHu3kvmOtHh+aQtYvvoW9epdMIFyu+4hxg==
+X-Google-Smtp-Source: ABdhPJzpMN5r9lAMFHvuk1vF95rtBTPz9BzU0foNJAQXszB/nNFtuhg2wLn+q3qj7UpO6E9wwS3P6A==
+X-Received: by 2002:a63:656:: with SMTP id 83mr7314185pgg.222.1611692081226;
+        Tue, 26 Jan 2021 12:14:41 -0800 (PST)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id x186sm19005437pfd.57.2021.01.26.12.14.12
+        by smtp.gmail.com with ESMTPSA id i36sm14433901pgi.81.2021.01.26.12.14.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Jan 2021 12:14:13 -0800 (PST)
-Subject: Re: [PATCH] block: unexport truncate_bdev_range
-To:     Christoph Hellwig <hch@lst.de>
+        Tue, 26 Jan 2021 12:14:40 -0800 (PST)
+Subject: Re: [PATCH RESEND] blkcg: delete redundant get/put operations for
+ queue
+To:     Chunguang Xu <brookxu.cn@gmail.com>, tj@kernel.org
 Cc:     linux-block@vger.kernel.org
-References: <20210109111332.1132424-1-hch@lst.de>
+References: <1611551128-1238-1-git-send-email-brookxu@tencent.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0173995f-29e0-ba65-2c90-61ab2035c693@kernel.dk>
-Date:   Tue, 26 Jan 2021 13:14:12 -0700
+Message-ID: <fc9cc1dd-9b2f-d5e2-1575-796239742b08@kernel.dk>
+Date:   Tue, 26 Jan 2021 13:14:39 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210109111332.1132424-1-hch@lst.de>
+In-Reply-To: <1611551128-1238-1-git-send-email-brookxu@tencent.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -67,9 +68,11 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/9/21 4:13 AM, Christoph Hellwig wrote:
-> truncate_bdev_range is only used in always built-in block layer code,
-> so remove the export and the !CONFIG_BLOCK stub.
+On 1/24/21 10:05 PM, Chunguang Xu wrote:
+> From: Chunguang Xu <brookxu@tencent.com>
+> 
+> When calling blkcg_schedule_throttle(), for the same queue,
+> redundant get/put operations can be removed.
 
 Applied, thanks.
 
