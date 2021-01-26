@@ -2,56 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFE213044D1
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 18:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACC7304711
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 19:53:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389518AbhAZRO4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 12:14:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35800 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390989AbhAZJZB (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 04:25:01 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6E458AC4F;
-        Tue, 26 Jan 2021 09:24:19 +0000 (UTC)
-Date:   Tue, 26 Jan 2021 10:24:16 +0100
-From:   Petr Vorel <pvorel@suse.cz>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     tyhicks@linux.microsoft.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sashal@kernel.org, jmorris@namei.org, lukas.bulwahn@gmail.com,
-        hch@lst.de, ming.lei@redhat.com, mzxreary@0pointer.de,
-        mcgrof@kernel.org, zhengbin13@huawei.com, maco@android.com,
-        colin.king@canonical.com, evgreen@chromium.org
-Subject: Re: [PATCH v3 1/1] loop: scale loop device by introducing per device
- lock
-Message-ID: <YA/fwFU+Wg6+jr85@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210125201156.1330164-1-pasha.tatashin@soleen.com>
- <20210125201156.1330164-2-pasha.tatashin@soleen.com>
+        id S2389384AbhAZROh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 12:14:37 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11495 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389736AbhAZIQt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 26 Jan 2021 03:16:49 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DPzzX1Hz9zjDQL;
+        Tue, 26 Jan 2021 16:14:32 +0800 (CST)
+Received: from huawei.com (10.29.88.127) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.498.0; Tue, 26 Jan 2021
+ 16:15:39 +0800
+From:   Chao Leng <lengchao@huawei.com>
+To:     <linux-nvme@lists.infradead.org>
+CC:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
+        <sagi@grimberg.me>, <linux-block@vger.kernel.org>,
+        <axboe@kernel.dk>
+Subject: [PATCH v4 0/5] avoid double request completion and IO error
+Date:   Tue, 26 Jan 2021 16:15:34 +0800
+Message-ID: <20210126081539.13320-1-lengchao@huawei.com>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210125201156.1330164-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain
+X-Originating-IP: [10.29.88.127]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+Add blk_mq_set_request_complete and nvme_complete_failed_req for two bug
+fixs.
+First avoid double request completion for nvmf_fail_nonready_command.
+Second avoid IO error for nvme native multipath.
 
-> Currently, loop device has only one global lock:
-> loop_ctl_mutex.
+V4:
+	- add status parameter for nvme_complete_failed_req.
+	- export nvme_complete_failed_req instead of inline function.
+V3:
+	- complete the request just for HBA driver path related error.
+V2:
+	- use "switch" instead "if" to check return status.
 
-> This becomes hot in scenarios where many loop devices are used.
+Chao Leng (5):
+  blk-mq: introduce blk_mq_set_request_complete
+  nvme-core: introduce complete failed request
+  nvme-fabrics: avoid double request completion for
+    nvmf_fail_nonready_command
+  nvme-rdma: avoid IO error for nvme native multipath
+  nvme-fc: avoid IO error for nvme native multipath
 
-> Scale it by introducing per-device lock: lo_mutex that protects the
-> fields in struct loop_device. Keep loop_ctl_mutex to protect global
-> data such as loop_index_idr, loop_lookup, loop_add.
+ drivers/nvme/host/core.c    | 8 ++++++++
+ drivers/nvme/host/fabrics.c | 4 +---
+ drivers/nvme/host/fc.c      | 7 ++++++-
+ drivers/nvme/host/nvme.h    | 1 +
+ drivers/nvme/host/rdma.c    | 9 ++++++++-
+ include/linux/blk-mq.h      | 5 +++++
+ 6 files changed, 29 insertions(+), 5 deletions(-)
 
-> Lock ordering: loop_ctl_mutex > lo_mutex.
+-- 
+2.16.4
 
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-Kind regards,
-Petr
