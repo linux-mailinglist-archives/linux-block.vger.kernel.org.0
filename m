@@ -2,105 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 652BD303CEC
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 13:25:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3404303D7D
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jan 2021 13:46:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391617AbhAZMYn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jan 2021 07:24:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54512 "EHLO
+        id S2391725AbhAZMpb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jan 2021 07:45:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404524AbhAZKwr (ORCPT
+        with ESMTP id S2391775AbhAZJ7R (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jan 2021 05:52:47 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF0AC061794
-        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 02:51:25 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id u14so2031511wml.4
-        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 02:51:24 -0800 (PST)
+        Tue, 26 Jan 2021 04:59:17 -0500
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3236C06178A
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 01:58:36 -0800 (PST)
+Received: by mail-vs1-xe2b.google.com with SMTP id b5so4126270vsh.3
+        for <linux-block@vger.kernel.org>; Tue, 26 Jan 2021 01:58:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eDB2VePP2gLo3jktXjvGnSm3jDWHWVOh6rC8z0CbRvQ=;
-        b=D7x3P3OFR2vff+Yisjrvazi8eadRJNZbJnawBZbQpfFxy4dMa/orEnq0vHCEEDJL5p
-         kLf5J9b4uznLltOw5/AuQA7c4JtVJS5tWd3XV2xZCo/QMYerYkgcfBVBJ8m/gt3+9pII
-         fVhlxp2QrMCtwfNZoLRG6TGUEXup8VrC6YaIUNfjVr8LmWlbg2NbS7jjmegOFbe7KmRK
-         8bTtTWco0Xh45LldthuzzW8S4sL4fQ/ZdfVmAwzTguy8WBcROiEkYlEmabKewjrhpJeE
-         S5iKogUo4fst39p5sS8skCcFs1ScgkFe4iJncmXTbaBjfclKz/4Cgitov9ctk+kgVtjS
-         Aa5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xAUX4GprPzfJpnKS+Lo2k56itTCgxOq8hTIK9hhikBo=;
+        b=yMLqhusdi2aisI8n3EYsY4b7uX64DLjmgiN7ntAidBYbDsED5leOQCmJSlsCarF/T+
+         Ed34AakMn7atFG1tHuru1bxCZfLwNf3/9RWXCZqJfzrhoYcYJvYvZe3JAWsNcN3mx029
+         XvbZasWKe7z20SCTOhJwM5B5hOteG5k+4UWVWSTm7bDy4+lrjVJDZhlEPzteoaS36tCi
+         OMPlQCWh5EfwHMGAT0qeom5wyPo9iJfFcvgT/t7wjQ5SWXN46cvFMbJ5nXx1Mbgx6RBk
+         AKawWmFxBazSWcZt940JkHuyie/rMXEQA0YAypuSICTCX1A68NMG9s+JBxZurKZbKqMZ
+         X7xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eDB2VePP2gLo3jktXjvGnSm3jDWHWVOh6rC8z0CbRvQ=;
-        b=T1yYS2k7Mh12DumlgycbIFls3NtkAENIm4+dY+g4dH1lB7YtF41Ytusy9z61+LUYKg
-         2026LbMgbUYagTV6d381byGuljdCnQgZsnzabuHBDpIeLJWTQDWBey0wR29sWbjVq97w
-         ERqROY/bmQREfCWzt/VoYoNDrwbm9eFx84lgCBi73NV/5qf6bI7By8Acyxve809Ltqb+
-         uoOivpurWT+Od5j415XtFN31xF8JFMVz5sgaxQzL3+SF4LK5wqNGBlHdjEQ64Z4baKyr
-         3HmvKf7Vk5LBriBVxoF9qwNiwm30NMINOkby4Sw1H0gDMrXKOGB8XMAcGL0198pYW7rR
-         13Fg==
-X-Gm-Message-State: AOAM532B65Ry5L2EbQRXyKdQXjo9+XY3is06Hatf7tR/yLWGYvCU+m5n
-        V5ObU/AgdTHagUkdDEqXNeUJZQ==
-X-Google-Smtp-Source: ABdhPJxt0t0zfhum4rHmKwRmfDFrxAJaGG/0X91xEqYzJx6/dtV9+zRIwoFomMvoiUeOP+B2K1NtCQ==
-X-Received: by 2002:a7b:ce96:: with SMTP id q22mr4150055wmj.165.1611658283791;
-        Tue, 26 Jan 2021 02:51:23 -0800 (PST)
-Received: from localhost.localdomain ([83.216.184.132])
-        by smtp.gmail.com with ESMTPSA id h18sm7177879wru.65.2021.01.26.02.51.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Jan 2021 02:51:23 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH BUGFIX/IMPROVEMENT 5/6] block, bfq: keep shared queues out of the waker mechanism
-Date:   Tue, 26 Jan 2021 11:51:01 +0100
-Message-Id: <20210126105102.53102-6-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210126105102.53102-1-paolo.valente@linaro.org>
-References: <20210126105102.53102-1-paolo.valente@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xAUX4GprPzfJpnKS+Lo2k56itTCgxOq8hTIK9hhikBo=;
+        b=i8d99eS7zYtBeFAhXC3d0xfuDIo2RbnSlb7u9ETCkHKJVtanKjirrFGg1wtS7YSPVN
+         h3JMDmCV1N8RfA0RnuJzxUY5SASgaENaPjExytFNQqsju5BMMY8cCwmBYRru3QqEwHdW
+         nH0rrrB4TmQ4wNEokcQBsknxhjShev2YEZ73l7LuePqhoKwekuLFqlWRQ6LajlibH+/l
+         0pHyRSQwtT27GaZYRJDNUkWKDNj/ql7mZUwqvFJo2KhU0gTFr4r/Ak+2WW28PNbYkJ2J
+         RxUOdt8ht7hZ2W3KxCr0YiZIE21dG3LPg2oQyssVP1VLHBO0pcixopqfIxV5wYXdvSD4
+         nPtA==
+X-Gm-Message-State: AOAM531NzV5bP1efr28XhopuUP6UlkFri+qQSy01n5mtsoCj01+DKrs/
+        DIoP+lWb2n3jdbTmghx0gjbI1sPpVJ+01DQosmwXnA==
+X-Google-Smtp-Source: ABdhPJz/rKFclHqeegtULkB5WJdYhx0oUc8lnkCsoUksDa5rkBDuriXnXzAWxmfhrKfLGYMbfLPN+b1awwoLDJ9pLa8=
+X-Received: by 2002:a05:6102:67b:: with SMTP id z27mr2247015vsf.19.1611655115911;
+ Tue, 26 Jan 2021 01:58:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210121082155.111333-1-ebiggers@kernel.org> <20210121082155.111333-3-ebiggers@kernel.org>
+In-Reply-To: <20210121082155.111333-3-ebiggers@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 26 Jan 2021 10:57:59 +0100
+Message-ID: <CAPDyKFo_nsZuCX+nVBDTJ5QxZ18mQMx=MssJZtWTfJfFC=u+xw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] scsi: ufs: use devm_blk_ksm_init()
+To:     Eric Biggers <ebiggers@kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Satya Tangirala <satyat@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Shared queues are likely to receive I/O at a high rate. This may
-deceptively let them be considered as wakers of other queues. But a
-false waker will unjustly steal bandwidth to its supposedly woken
-queue. So considering also shared queues in the waking mechanism may
-cause more control troubles than throughput benefits. This commit
-keeps shared queues out of the waker-detection mechanism.
++ Martin, James
 
-Tested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-iosched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On Thu, 21 Jan 2021 at 09:23, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> Use the new resource-managed variant of blk_ksm_init() so that the UFS
+> driver doesn't have to manually call blk_ksm_destroy().
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0c7e203085f1..23d0dd7bd90f 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5825,7 +5825,17 @@ static void bfq_completed_request(struct bfq_queue *bfqq, struct bfq_data *bfqd)
- 			1UL<<(BFQ_RATE_SHIFT - 10))
- 		bfq_update_rate_reset(bfqd, NULL);
- 	bfqd->last_completion = now_ns;
--	bfqd->last_completed_rq_bfqq = bfqq;
-+	/*
-+	 * Shared queues are likely to receive I/O at a high
-+	 * rate. This may deceptively let them be considered as wakers
-+	 * of other queues. But a false waker will unjustly steal
-+	 * bandwidth to its supposedly woken queue. So considering
-+	 * also shared queues in the waking mechanism may cause more
-+	 * control troubles than throughput benefits. Then do not set
-+	 * last_completed_rq_bfqq to bfqq if bfqq is a shared queue.
-+	 */
-+	if (!bfq_bfqq_coop(bfqq))
-+		bfqd->last_completed_rq_bfqq = bfqq;
- 
- 	/*
- 	 * If we are waiting to discover whether the request pattern
--- 
-2.20.1
+I took the liberty of applying this one to my mmc tree along with
+patch1, as it looks trivial to me.
 
+Martin/James - if you have objections or want to ack it, please tell me.
+
+Thanks and kind regards
+Uffe
+
+
+
+
+
+> ---
+>  drivers/scsi/ufs/ufshcd-crypto.c | 9 ++-------
+>  drivers/scsi/ufs/ufshcd-crypto.h | 5 -----
+>  drivers/scsi/ufs/ufshcd.c        | 1 -
+>  3 files changed, 2 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/scsi/ufs/ufshcd-crypto.c b/drivers/scsi/ufs/ufshcd-crypto.c
+> index 07310b12a5dc8..153dd5765d9ca 100644
+> --- a/drivers/scsi/ufs/ufshcd-crypto.c
+> +++ b/drivers/scsi/ufs/ufshcd-crypto.c
+> @@ -179,8 +179,8 @@ int ufshcd_hba_init_crypto_capabilities(struct ufs_hba *hba)
+>         }
+>
+>         /* The actual number of configurations supported is (CFGC+1) */
+> -       err = blk_ksm_init(&hba->ksm,
+> -                          hba->crypto_capabilities.config_count + 1);
+> +       err = devm_blk_ksm_init(hba->dev, &hba->ksm,
+> +                               hba->crypto_capabilities.config_count + 1);
+>         if (err)
+>                 goto out_free_caps;
+>
+> @@ -238,8 +238,3 @@ void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
+>         if (hba->caps & UFSHCD_CAP_CRYPTO)
+>                 blk_ksm_register(&hba->ksm, q);
+>  }
+> -
+> -void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba)
+> -{
+> -       blk_ksm_destroy(&hba->ksm);
+> -}
+> diff --git a/drivers/scsi/ufs/ufshcd-crypto.h b/drivers/scsi/ufs/ufshcd-crypto.h
+> index d53851be55416..78a58e788dff9 100644
+> --- a/drivers/scsi/ufs/ufshcd-crypto.h
+> +++ b/drivers/scsi/ufs/ufshcd-crypto.h
+> @@ -43,8 +43,6 @@ void ufshcd_init_crypto(struct ufs_hba *hba);
+>  void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
+>                                             struct request_queue *q);
+>
+> -void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba);
+> -
+>  #else /* CONFIG_SCSI_UFS_CRYPTO */
+>
+>  static inline void ufshcd_prepare_lrbp_crypto(struct request *rq,
+> @@ -69,9 +67,6 @@ static inline void ufshcd_init_crypto(struct ufs_hba *hba) { }
+>  static inline void ufshcd_crypto_setup_rq_keyslot_manager(struct ufs_hba *hba,
+>                                                 struct request_queue *q) { }
+>
+> -static inline void ufshcd_crypto_destroy_keyslot_manager(struct ufs_hba *hba)
+> -{ }
+> -
+>  #endif /* CONFIG_SCSI_UFS_CRYPTO */
+>
+>  #endif /* _UFSHCD_CRYPTO_H */
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index e31d2c5c7b23b..d905c84474c2c 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -9139,7 +9139,6 @@ EXPORT_SYMBOL_GPL(ufshcd_remove);
+>   */
+>  void ufshcd_dealloc_host(struct ufs_hba *hba)
+>  {
+> -       ufshcd_crypto_destroy_keyslot_manager(hba);
+>         scsi_host_put(hba->host);
+>  }
+>  EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
+> --
+> 2.30.0
+>
