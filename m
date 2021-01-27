@@ -2,144 +2,174 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C88C305F6A
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 16:21:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E271305FB3
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 16:33:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343800AbhA0PUx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jan 2021 10:20:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49748 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343683AbhA0PUV (ORCPT
+        id S235367AbhA0PF3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jan 2021 10:05:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232072AbhA0PBy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jan 2021 10:20:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611760732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y8CI0qhLiRTzgvTJnz39fBqQX6rleE9goWMGoeQDUHM=;
-        b=hdyTJd5ccf/N6MdfncJHTvpTOAhYOcfmQ2FVTNHDuhVGSCQ9qvloGU5D1ATcNvYAnsKdIT
-        ZVHLYTfIVIRljT9+4dywjtC4xwwg8C+8MndIlv4vqqIG4lpnyJVzhqx7Y9EFe2O/QrXtIq
-        VcGh4KXYsY3+P1OtiEFKNnLrLVQtCnk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-Q_p0DMDDOLWzMbA0s1tO-Q-1; Wed, 27 Jan 2021 10:18:50 -0500
-X-MC-Unique: Q_p0DMDDOLWzMbA0s1tO-Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 826648797E7;
-        Wed, 27 Jan 2021 15:18:48 +0000 (UTC)
-Received: from T590 (ovpn-12-152.pek2.redhat.com [10.72.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 634A45D9CA;
-        Wed, 27 Jan 2021 15:18:44 +0000 (UTC)
-Date:   Wed, 27 Jan 2021 23:18:38 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "block: simplify set_init_blocksize" to regain
- lost performance
-Message-ID: <20210127151838.GA1325688@T590>
-References: <20210126195907.2273494-1-maxtram95@gmail.com>
- <d3effbdc-12c2-c6aa-98ba-7bde006fc4e1@acm.org>
- <CAKErNvpCdTvg-Bx-U+k3jYiazoz-Pr0LwruaSh+LszH9yP5c8A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKErNvpCdTvg-Bx-U+k3jYiazoz-Pr0LwruaSh+LszH9yP5c8A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Wed, 27 Jan 2021 10:01:54 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EA6C0617AA
+        for <linux-block@vger.kernel.org>; Wed, 27 Jan 2021 06:59:51 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id gx5so3068484ejb.7
+        for <linux-block@vger.kernel.org>; Wed, 27 Jan 2021 06:59:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=V+W+fPaccyHn1uXbBCoY+DAN6C3QZSzOPnBrXdEQLXA=;
+        b=Gp9IN3z/wBEUsW2g4glH7zxnEY67YpBP5RJ9e70/zy9rOeTlCvGijNFvpnhU27uuDe
+         Wi9qNhpY/6I8zEojpsotpXjHLEeLKjxdZAGmatG5hF5kfW+KLPwFVivarhSlx77iOEh6
+         IviMR0de5IhH4bhcLx6wD5UT3PEUpbGwGR/4BP7/EXZqIH+o0+ulxnfN2J/WVUzEniDy
+         ODeKS36FwHHeANcd1/9UgXFWMEGppMD1CGlgTEdC6lMX549RUaMSYfzaHX/GfHGJxGeP
+         KWgGdgg/mZx8ISbeYrFJ1sfwxb/M84B0rGNdBhqj9AT5bxWYMIfbWGm9f/+nJ1G2dd4Z
+         IAhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=V+W+fPaccyHn1uXbBCoY+DAN6C3QZSzOPnBrXdEQLXA=;
+        b=YYvgI668RpYbonbKltWMRmLsxrrJI3pln1Cw+3dU9Btid3YU9j+cZZPAtiIZXbzs1+
+         fGkt/i3qE+mSd23Dk/3jqkNX4M/pldKp4VAqVLQop8PXHOaKfwHQU6U8q5kwEXLvkIDQ
+         U0c4ZGEhY88befmZr7mfQoqE6C7wKX7jvqUn5/FTP6Xcuwn3sqXp/FlO4Quh/s98eqNK
+         DcKg9+GGANF5UE0cQdyX2To5kb2C+nyvNO2w7OKGQ0E60pp/9SiZJmP68EEfSEiqg1o7
+         stVezrvU+HDp5Y3Ofb9cmhj0NeIP699vx0ENYfVsO8C5VDPZt5yKQ3baMA1+JWntKG7t
+         l1Pw==
+X-Gm-Message-State: AOAM530gNPIh6W4kxfXhFS1qrM+CTkNFI5UenUwyxCr6psRzCflqTcyp
+        kAd38V5HbbEFSHZFCBfQ0LFVoQ==
+X-Google-Smtp-Source: ABdhPJweruQ4a91+DnWTvScjHLED5X/D8dSzhSRBRuu3IMu3gn232ifJIFFja4xHLJU+WBYoKTys2w==
+X-Received: by 2002:a17:906:4c90:: with SMTP id q16mr7440802eju.49.1611759590404;
+        Wed, 27 Jan 2021 06:59:50 -0800 (PST)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:9172:bd00:1e95:fbc9])
+        by smtp.gmail.com with ESMTPSA id j4sm1477140edt.18.2021.01.27.06.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Jan 2021 06:59:48 -0800 (PST)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH 3/4] block: add io_extra_stats node
+Date:   Wed, 27 Jan 2021 15:59:29 +0100
+Message-Id: <20210127145930.8826-4-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210127145930.8826-1-guoqing.jiang@cloud.ionos.com>
+References: <20210127145930.8826-1-guoqing.jiang@cloud.ionos.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jan 27, 2021 at 09:44:50AM +0200, Maxim Mikityanskiy wrote:
-> On Wed, Jan 27, 2021 at 6:23 AM Bart Van Assche <bvanassche@acm.org> wrote:
-> >
-> > On 1/26/21 11:59 AM, Maxim Mikityanskiy wrote:
-> > > The cited commit introduced a serious regression with SATA write speed,
-> > > as found by bisecting. This patch reverts this commit, which restores
-> > > write speed back to the values observed before this commit.
-> > >
-> > > The performance tests were done on a Helios4 NAS (2nd batch) with 4 HDDs
-> > > (WD8003FFBX) using dd (bs=1M count=2000). "Direct" is a test with a
-> > > single HDD, the rest are different RAID levels built over the first
-> > > partitions of 4 HDDs. Test results are in MB/s, R is read, W is write.
-> > >
-> > >                 | Direct | RAID0 | RAID10 f2 | RAID10 n2 | RAID6
-> > > ----------------+--------+-------+-----------+-----------+--------
-> > > 9011495c9466    | R:256  | R:313 | R:276     | R:313     | R:323
-> > > (before faulty) | W:254  | W:253 | W:195     | W:204     | W:117
-> > > ----------------+--------+-------+-----------+-----------+--------
-> > > 5ff9f19231a0    | R:257  | R:398 | R:312     | R:344     | R:391
-> > > (faulty commit) | W:154  | W:122 | W:67.7    | W:66.6    | W:67.2
-> > > ----------------+--------+-------+-----------+-----------+--------
-> > > 5.10.10         | R:256  | R:401 | R:312     | R:356     | R:375
-> > > unpatched       | W:149  | W:123 | W:64      | W:64.1    | W:61.5
-> > > ----------------+--------+-------+-----------+-----------+--------
-> > > 5.10.10         | R:255  | R:396 | R:312     | R:340     | R:393
-> > > patched         | W:247  | W:274 | W:220     | W:225     | W:121
-> > >
-> > > Applying this patch doesn't hurt read performance, while improves the
-> > > write speed by 1.5x - 3.5x (more impact on RAID tests). The write speed
-> > > is restored back to the state before the faulty commit, and even a bit
-> > > higher in RAID tests (which aren't HDD-bound on this device) - that is
-> > > likely related to other optimizations done between the faulty commit and
-> > > 5.10.10 which also improved the read speed.
-> > >
-> > > Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> > > Fixes: 5ff9f19231a0 ("block: simplify set_init_blocksize")
-> > > Cc: Christoph Hellwig <hch@lst.de>
-> > > Cc: Jens Axboe <axboe@kernel.dk>
-> > > ---
-> > >  fs/block_dev.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/block_dev.c b/fs/block_dev.c
-> > > index 3b8963e228a1..235b5042672e 100644
-> > > --- a/fs/block_dev.c
-> > > +++ b/fs/block_dev.c
-> > > @@ -130,7 +130,15 @@ EXPORT_SYMBOL(truncate_bdev_range);
-> > >
-> > >  static void set_init_blocksize(struct block_device *bdev)
-> > >  {
-> > > -     bdev->bd_inode->i_blkbits = blksize_bits(bdev_logical_block_size(bdev));
-> > > +     unsigned int bsize = bdev_logical_block_size(bdev);
-> > > +     loff_t size = i_size_read(bdev->bd_inode);
-> > > +
-> > > +     while (bsize < PAGE_SIZE) {
-> > > +             if (size & bsize)
-> > > +                     break;
-> > > +             bsize <<= 1;
-> > > +     }
-> > > +     bdev->bd_inode->i_blkbits = blksize_bits(bsize);
-> > >  }
-> > >
-> > >  int set_blocksize(struct block_device *bdev, int size)
-> >
-> > How can this patch affect write speed? I haven't found any calls of
-> > set_init_blocksize() in the I/O path. Did I perhaps overlook something?
-> 
-> I don't know the exact mechanism how this change affects the speed,
-> I'm not an expert in the block device subsystem (I'm a networking
-> guy). This commit was found by git bisect, and my performance test
-> confirmed that reverting it fixes the bug.
-> 
-> It looks to me as this function sets the block size as part of control
-> flow, and this size is used later in the fast path, and the commit
-> that removed the loop decreased this block size.
+Even we have introduced a Kconfig option (default N) to control the
+accounting of additional data, but the option still could be enabled
+occasionally while user doesn't care about the size and latency of io,
+and they could suffer from the additional overhead. So introduce a
+specific sysfs node to avoid such mistake.
 
-Right, the issue is stupid __block_write_full_page() which submits single bio
-for each buffer head. And I have tried to improve the situation by merging
-BHs into single bio, see below patch:
+Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+ Documentation/ABI/testing/sysfs-block |  9 +++++++++
+ Documentation/block/queue-sysfs.rst   |  6 ++++++
+ block/blk-sysfs.c                     | 10 ++++++++++
+ include/linux/blkdev.h                |  6 ++++++
+ 4 files changed, 31 insertions(+)
 
-	https://lore.kernel.org/linux-block/20201230000815.3448707-1-ming.lei@redhat.com/
-
-The above patch should improve perf for your test case.
-
+diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
+index 0ffb63469772..e1611c62a3e1 100644
+--- a/Documentation/ABI/testing/sysfs-block
++++ b/Documentation/ABI/testing/sysfs-block
+@@ -333,3 +333,12 @@ Description:
+ 		does not complete in this time then the block driver timeout
+ 		handler is invoked. That timeout handler can decide to retry
+ 		the request, to fail it or to start a device recovery strategy.
++
++What:		/sys/block/<disk>/queue/io_extra_stats
++Date:		January 2021
++Contact:	Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
++Description:
++		Indicates if people want to know the extra statistics (I/O
++		size and I/O latency) from /sys/block/<disk>/io_latency
++		and /sys/block/<disk>/io_size. The value is 0 by default,
++		set if the extra statistics are needed.
+diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
+index 2638d3446b79..14c4a4c7b9a9 100644
+--- a/Documentation/block/queue-sysfs.rst
++++ b/Documentation/block/queue-sysfs.rst
+@@ -99,6 +99,12 @@ iostats (RW)
+ This file is used to control (on/off) the iostats accounting of the
+ disk.
+ 
++io_extra_stats (RW)
++-------------------
++This file is used to control (on/off) the additional accounting of the
++io size and io latency of disk, and BLK_ADDITIONAL_DISKSTAT should be
++enabled if you want the additional accounting.
++
+ logical_block_size (RO)
+ -----------------------
+ This is the logical block size of the device, in bytes.
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index b513f1683af0..87f174f32e9a 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -288,6 +288,9 @@ QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 1);
+ QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
+ QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
+ QUEUE_SYSFS_BIT_FNS(stable_writes, STABLE_WRITES, 0);
++#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
++QUEUE_SYSFS_BIT_FNS(io_extra_stats, IO_EXTRA_STAT, 0);
++#endif
+ #undef QUEUE_SYSFS_BIT_FNS
+ 
+ static ssize_t queue_zoned_show(struct request_queue *q, char *page)
+@@ -616,6 +619,10 @@ QUEUE_RW_ENTRY(queue_iostats, "iostats");
+ QUEUE_RW_ENTRY(queue_random, "add_random");
+ QUEUE_RW_ENTRY(queue_stable_writes, "stable_writes");
+ 
++#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
++QUEUE_RW_ENTRY(queue_io_extra_stats, "io_extra_stats");
++#endif
++
+ static struct attribute *queue_attrs[] = {
+ 	&queue_requests_entry.attr,
+ 	&queue_ra_entry.attr,
+@@ -658,6 +665,9 @@ static struct attribute *queue_attrs[] = {
+ 	&queue_io_timeout_entry.attr,
+ #ifdef CONFIG_BLK_DEV_THROTTLING_LOW
+ 	&blk_throtl_sample_time_entry.attr,
++#endif
++#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
++	&queue_io_extra_stats_entry.attr,
+ #endif
+ 	NULL,
+ };
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 20f3706b6b2e..6cebc689c36a 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -621,6 +621,7 @@ struct request_queue {
+ #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+ #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
++#define QUEUE_FLAG_IO_EXTRA_STAT 30	/* extra IO accounting for size and latency */
+ 
+ #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+@@ -658,6 +659,11 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #else
+ #define blk_queue_rq_alloc_time(q)	false
+ #endif
++#ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT
++#define blk_queue_io_extra_stat(q) test_bit(QUEUE_FLAG_IO_EXTRA_STAT, &(q)->queue_flags)
++#else
++#define blk_queue_io_extra_stat(q) false
++#endif
+ 
+ #define blk_noretry_request(rq) \
+ 	((rq)->cmd_flags & (REQ_FAILFAST_DEV|REQ_FAILFAST_TRANSPORT| \
 -- 
-Ming
+2.17.1
 
