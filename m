@@ -2,156 +2,184 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 663FA30528E
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 06:54:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F6CD3053C8
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 08:00:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231585AbhA0Fx0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jan 2021 00:53:26 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:5785 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235506AbhA0Fiq (ORCPT
+        id S232573AbhA0G7s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jan 2021 01:59:48 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:8870 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S317535AbhA0BFB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jan 2021 00:38:46 -0500
+        Tue, 26 Jan 2021 20:05:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1611725926; x=1643261926;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3d2QpFwVqA+EAwziR0sxGf4TezRzuprvOs57VuIcJj4=;
-  b=ad/nWqaLRZTF3+dlm+Sx0XMP8lS6AYuhsWvhU2m6E5fLNmZqtp9eAryl
-   sRYpmWV8HILMaPVVfc3KENR3bHIhPvQ46RD7fYz/0BhZK2qNsw4aYHmuM
-   TTBu5BON+sZylB27PnI9/uz7LNbGmGvZARolZZbJQijHNAILMaZKIOPs9
-   /AHJCqv/7st/Hk72/4YHIy1rKYU6fbeI7lQImbeqVSWn1d4lCD7Z7GHGI
-   /8uVwFNce2YKU0qfu3ZF5O6DyvwVAzc6IZBaLcIO468wQg1l8oRl9WetN
-   UCV2ykfAKq0ZZ7F5AXj4CsW3gLQ/yEttBZXrSUGoiAS0KhNu0HG7DvRTs
-   g==;
-IronPort-SDR: ABxqyQCAyqNBzhvhezXRIjFSzpzT1N/d2Rw7Nzsrd1NscYLVdVbf6FADAZZOaIUMGAb8zG9OAG
- ISuSUDR3+5+wq6DuxBf6+NjUMd/BVVhRhVxEflqSxK7mVzIqQLgUhpz/C6hn9gfUn19Io+M1re
- R2qr5F1l67Mi1rv5wpT+82PkJ+Ur8JqwOa6XejZz0a+T3WdSx3K/952fIAa233GX4ynntQUDgV
- ScMVfV47asvJtSGz5LWRksthEopK7I9323lsS8+wyswmHVOV3+yoS8bCLQmrtrtX4rCFnuzvIC
- ETQ=
+  t=1611709500; x=1643245500;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=jp1Tk83nZC1VZXwg692H0eVI/BrlvXtPSd51iJLEZv0=;
+  b=LjR2h5/55Vn8otaeocyJj22n9rmM+hzLAdx0h2M92kloB4Sgsws93fD/
+   +UsxsVdYluh//jGxrJpRU8vokKd0CXEr81t/X22DZ9lJfKTdGBTV67oX5
+   YIH3ykwbGxc+pJUJ4/0xEY4DiGp0gK6GBxGtw+aqlZUKf/eN3NJLcG7gx
+   MyJ3RErrUThqT/+81SmxUTrJ3w32LDP/0tGsI/aeNkZ0NmniO7I4c/lBN
+   KEaVcBslPDqLvUkq7Pqg6RZBoa7tebLW+Tfy2namUfEebQrQOTUy1+LDz
+   iWDZw3EmP1lOHisBAGfEOix5dIdBbTMAxsk344gm9r2LlFL8qIdEIRS7g
+   A==;
+IronPort-SDR: nm6nNLuG6jy3tEgRxKtI0DkgF6j0X4fskPbgnQy66swPOR8qjbKZEftu6VVrl7ElwjV04TZi9U
+ YwW6PdC8RlYVd0VL3e+bOmbc57wePifTZK7K56m/9p7lLj4cyXelJtt4mjmOhEaljHlWnRisys
+ 6d89UL/Ge7NiIj4dAAiBrRqRg58XEIEg+/NyfW/6pjdJuoMSqZ9ar7tUarxJUoWk0hpUIIiS+k
+ l1rALMt7fX6qGTYlUt6+DCp12+nM6sy/x1tm+BJjlf/cw0UiRwsfVs8dRDQNJvxfc9Hz0j9LWS
+ icE=
 X-IronPort-AV: E=Sophos;i="5.79,378,1602518400"; 
-   d="scan'208";a="158419055"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Jan 2021 13:37:40 +0800
-IronPort-SDR: DMcC1ngxjKv/WpWewRTv/cyUrJCLU2/CALW+51zxSgA+azyMVmD6WybRMTgDHTquJFmq4Z0Da4
- Cylt3lb03JkuRpPWQ+V6DAYlabZWCeOmcAmJfMj13PKO273c1w1xHFwqTocPtQUaOKzzh4mz9A
- zG6+2xkiPc4OyCRLtgXFmh6Q2C1EWx7U9+GjqfRB2uSdC/Y+KuGh1ZVcQ2BN5CNm7kt5b8QoQe
- GUoRZqkTUrxRwsbcG/uI6fuQW6Ci0ZYoi7H1eMBxLoQuJzQj2OIHvPEwkhvJXRInLKre81tIr9
- jbz9ar5u9Fr60TDFQnh8jm66
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 21:22:05 -0800
-IronPort-SDR: p2RVAto3NVZEFEdYg56+AOpjFxHaZlO32pDzXYz9ZiALpMijuVvecEucsyuBUv+UyZUOOFmqm/
- /aI4710kLPvPyY1kqDU8ku+BZFb7Sg7uNJQunWXBu+6KunD/y61O+xTCe6RV9gNeZopBPpDe5q
- 4AfW8wCT4lM1Jdbme/0VwT8+roaRYJzwKuibj85uRQ8c/ctG4Y619e21GKBiBF3s43PKBrnBeg
- Hr/PnkyeIcums+8I5XfC525qYVz0jlLqLcWO7UgP878eS4ROYxgOAg74otvwt629mWP6uqpdwF
- wLE=
-WDCIronportException: Internal
-Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 26 Jan 2021 21:37:40 -0800
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     axboe@fb.com, hch@lst.de, kbusch@kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH] nvme-core: check bdev value for NULL
-Date:   Tue, 26 Jan 2021 21:37:38 -0800
-Message-Id: <20210127053738.4922-1-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.22.1
+   d="scan'208";a="162847602"
+Received: from mail-sn1nam04lp2058.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.58])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jan 2021 09:03:19 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Iz+LSVV6Ofwf1BJpj8lUobh/R7IJ8InjoGyTwwd4xd2aQCKpv4aiW1vDnRE49G+nPhgAk+fLinCIkllpzFtLg/meOX1Yh6FmHzU+Svin/Utc8rAXHrY9I/RlGTqPh2wfn4zJetdyKG8OAGsfHc5qgrh3HM7IlfRUNVIUpLylSkgBNm/XBO0mNrRnC4nMr3FHT5lsBspsbBLZSoiqsxeBaZvIsbSmnXc1Vj8B+QBwAicRSfYoGXaFaG4f/AMq/JNg8XdTmjw0LS1a6Rhq/bjqK16MM5ZrSolrsYcR/H1lapYAGWuey7paVAD4Evm7fWnRhh40hooAGxbz5Bem4cdR3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/VYekWUrEY9e6IiA8dLagj9F/kxMD/R/VsuF15hZl9E=;
+ b=fUVxZBEifNEmJ4NXe8O4mNf1m80HbKSauLEdCMdt4nugXPYn4GO6tEg8HjVgNGSoqlp5MMpy0qtf9UdsyOREHB3itYmmQFsJZtg7/lgxbsFI6el6pVJRhA7JI3al6mtTiM3oOEps76UdHa0B2Ufl7ueItvT+11lgfkwxmIjUkfD2xTo0E0sLeOVFNrv7XW/DFmWFnUbkuw9bSOgUE8Yp1cj0P+sQAJdAb2PisEpsPMbzXqiGT3Tu/hhRc+Fn5270bl00ekiC1J8cDvB1+qxRzsA89F6ZwwYVpoytOMh3gh+1LIxUmer1vmdhk+U6Q4vByZTpWGYTVwu1iHxxJJQIWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/VYekWUrEY9e6IiA8dLagj9F/kxMD/R/VsuF15hZl9E=;
+ b=Re1x39wPPKQpr+NZhIImAncsG/sZ1g97qthP42WzVPLitd64b4VKoT/t2blm03Vo3q/qSgW3wyYLH51A1LRrAG6xyboMECnWizmr0/lLL5xx0wmHTAxix/jxV8IAeX1s+QKCndXv6yz7gCW+BUEX53fKOf5qiuY/J4u95fRF12o=
+Received: from BL0PR04MB6514.namprd04.prod.outlook.com (2603:10b6:208:1ca::23)
+ by BL0PR04MB4978.namprd04.prod.outlook.com (2603:10b6:208:5f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.17; Wed, 27 Jan
+ 2021 01:03:16 +0000
+Received: from BL0PR04MB6514.namprd04.prod.outlook.com
+ ([fe80::b880:19d5:c7fe:329d]) by BL0PR04MB6514.namprd04.prod.outlook.com
+ ([fe80::b880:19d5:c7fe:329d%7]) with mapi id 15.20.3784.017; Wed, 27 Jan 2021
+ 01:03:16 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Changheun Lee <nanich.lee@samsung.com>
+CC:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jisoo2146.oh@samsung.com" <jisoo2146.oh@samsung.com>,
+        "junho89.kim@samsung.com" <junho89.kim@samsung.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "mj0123.lee@samsung.com" <mj0123.lee@samsung.com>,
+        "osandov@fb.com" <osandov@fb.com>,
+        "patchwork-bot@kernel.org" <patchwork-bot@kernel.org>,
+        "seunghwan.hyun@samsung.com" <seunghwan.hyun@samsung.com>,
+        "sookwan7.kim@samsung.com" <sookwan7.kim@samsung.com>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "tom.leiming@gmail.com" <tom.leiming@gmail.com>,
+        "woosung2.lee@samsung.com" <woosung2.lee@samsung.com>,
+        "yt0928.kim@samsung.com" <yt0928.kim@samsung.com>
+Subject: Re: [PATCH v3 1/2] bio: limit bio max size
+Thread-Topic: [PATCH v3 1/2] bio: limit bio max size
+Thread-Index: AQHW88bVafk/AI14qEmQ667BUb4FrQ==
+Date:   Wed, 27 Jan 2021 01:03:16 +0000
+Message-ID: <BL0PR04MB6514D7392DB2F6B9069A4B7FE7BB9@BL0PR04MB6514.namprd04.prod.outlook.com>
+References: <BL0PR04MB65147D829369D0E6B45507E0E7BC9@BL0PR04MB6514.namprd04.prod.outlook.com>
+ <CGME20210127003642epcas1p4f167d553fc79ef5029a928550adbebea@epcas1p4.samsung.com>
+ <20210127002113.8280-1-nanich.lee@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2400:2411:43c0:6000:59be:e05f:a0a7:a46c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0d5098c0-1529-48ce-a017-08d8c25f541a
+x-ms-traffictypediagnostic: BL0PR04MB4978:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR04MB4978AE20D05B7AF970D453E2E7BB9@BL0PR04MB4978.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:238;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Jad5Fi+nYk5QlQAeVJ6nPWIvPeWJlaD0PsV4roGBZEe5ZZ+7Afy4SDyiNPjb8sBJINASKUcyzqqb5LsXPQqGgt4UnX4RKAWWGRJhOW7gtvR+ZmYv35lmM/ufdSjOk6Z6BYUw5N3ICPI0oN3lnX3fNMdiW0s2Oab/a/oeZCxrGh82pnhBp6OPSBiC1A0qDdru33ryDBEdbZUWOFcwFuyT6Jot3uzXhsPb4kBdMMQoVH27VDu2mxMYVY+h7ka+pUHsKIFklcNG45oKLzVpMFtJTYffHuxoIs0iyvPdEFh1sN3FY8CSpEXf2/RyD/mcd4xOXNRQvE4vE/NG8URguzvdKiS4J7CTf8YLhsp/G3aDsBWwhmsLVMzxe+4MT+m+qFOc6rTKKxBZPYlEAu+C01K+k0lf3xlY4VfQgacwLxKpn+dEwLCOECyl45Uc7il/X+9XHzzg2QlPs8HlCKdAG89ILRsp3mCLCGf+TanaciVYfzRDKOMMWpUE0ClGS0pd7aqe/t04QtupbZMbTMchsja0+Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR04MB6514.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(66446008)(6506007)(52536014)(8936002)(66946007)(316002)(76116006)(7696005)(186003)(86362001)(55016002)(66556008)(478600001)(66476007)(91956017)(64756008)(9686003)(54906003)(71200400001)(33656002)(7416002)(4326008)(83380400001)(53546011)(6916009)(8676002)(2906002)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?EaGxRf7xQtBxg5ef+FouvdO4Bxz/AvQwFb9qfq8eSVY7MNMS/Ms2KOdJ3x4I?=
+ =?us-ascii?Q?e7SndDh5Vyy4MveM3FB2nZOonSjKnxXadwofcgoU+ExbuV9IbdDdeJDUMkcH?=
+ =?us-ascii?Q?sjuRwqcqGwJoZJ7xYQiyqNywqO70Q47JF3rvurso34tcoqMjRAg+nFYay/nd?=
+ =?us-ascii?Q?PfX+JDTq8T1+AGnHEPrB+WKKbNg5hMVcsP1kb3bah/W/q2k1TsDyMwFzazyk?=
+ =?us-ascii?Q?igTcy2fb5rlDs0PzcUUIYW9/SUee+vmtf1f/zZTj5lLRTcWCSwtkCOQC4ceL?=
+ =?us-ascii?Q?30Zp24zIpwtI6lmVvDTFy3TFQW2ZWyXxQwSlY4qY0zC2cHUuaiGMSzXQUXwx?=
+ =?us-ascii?Q?2LvEQGBQBAntr+8rhy1uDTfdfNUOmTSyFLO8VLbMUkdm0G08B1zX2UTmjrFe?=
+ =?us-ascii?Q?Afhb61uJIke4Vi00j6itDw6i1+Okr+jYMpovaO/7zbwznV35ruBB9djFyzgl?=
+ =?us-ascii?Q?BkQw1xUEzlukJY42SFKpb1lV3HSucFW+Cng4NtfMPVMglwv5yjs9zEsHnqTw?=
+ =?us-ascii?Q?Rdt2elCJbckSvy+ReaTyx+npIVWGii5ZYoUBLfe0FEtXK4oQ7muEOQQqtitf?=
+ =?us-ascii?Q?TDy8rt9CKifgJf1cNp8jMm3r+DVHx6H/oNOuxmW9MbwS1fjsAYbBj5lkLPpS?=
+ =?us-ascii?Q?Uhx6DGcHTKvg3Up6nayf4sS1zk7yH0ocEVw6lANucyB5AesDkXcPv09A1lsR?=
+ =?us-ascii?Q?rm2qhmcdVKleqzlQG6ghR2UbaY1sVAgfI8MIfc41gjSjEfq867OezQxp7x7t?=
+ =?us-ascii?Q?sIWphZV5UqqbuM+fXyBMO2SoWJxS5psTZR00uws8y6ejEuEzRSSYTUjOq84A?=
+ =?us-ascii?Q?oZaXrK0i+ku57MiWKcCyRpPtKAGORnndb1pzLuPrNoC6wvpMJogiSA/2xOCJ?=
+ =?us-ascii?Q?NxR3lyHoZT8rckj0PEQDAp2n5goWkHBzeIoUUehFF4FRZZ+ML6N0PbdY2qu7?=
+ =?us-ascii?Q?szDilmU4dl9exms39kkGRhESyba3VmieVz7aNhKIqesM0t5ODc9U29BR5EFR?=
+ =?us-ascii?Q?TgvxpOcGIhKq+7bRHRs0FPHSpgkBWKimvP7TFX4LUOv/8YP6n6wv/MpFSfne?=
+ =?us-ascii?Q?VMKVW4pUPcA6Rv4CtFOTetwzfqWJnG9e8N/31fwSEXz+WgimmnVcacONz2ud?=
+ =?us-ascii?Q?bosiginzhkjr9E2HlkZPxE+MTQ1Xdp7itA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR04MB6514.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d5098c0-1529-48ce-a017-08d8c25f541a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2021 01:03:16.0791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 13tX6PYbusme/BjdWwVBeWEtlbfD1+laPEatAx8EPXzHmEo2Az+DC5osoqIslKon7vzA6QxPtx5NAWKwQT9nbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4978
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The nvme-core sets the bdev to NULL when admin comamnd is issued from
-IOCTL in the following path e.g. nvme list :-
-
-block_ioctl()
- blkdev_ioctl()
-  nvme_ioctl()
-   nvme_user_cmd()
-    nvme_submit_user_cmd()
-
-The commit 309dca309fc3 ("block: store a block_device pointer in struct bio")
-now uses bdev unconditionally in the macro bio_set_dev() and assumes
-that bdev value is not NULL which results in the following crash in
-since thats where bdev is actually accessed :-
-
-void bio_associate_blkg_from_css(struct bio *bio,
-				 struct cgroup_subsys_state *css)
-{
-	if (bio->bi_blkg)
-		blkg_put(bio->bi_blkg);
-
-	if (css && css->parent) {
-		bio->bi_blkg = blkg_tryget_closest(bio, css);
-	} else {
--------------->	blkg_get(bio->bi_bdev->bd_disk->queue->root_blkg);
-		bio->bi_blkg = bio->bi_bdev->bd_disk->queue->root_blkg;
-	}
-}
-EXPORT_SYMBOL_GPL(bio_associate_blkg_from_css);
-
-<1>[  345.385947] BUG: kernel NULL pointer dereference, address: 0000000000000690
-<1>[  345.387103] #PF: supervisor read access in kernel mode
-<1>[  345.387894] #PF: error_code(0x0000) - not-present page
-<6>[  345.388756] PGD 162a2b067 P4D 162a2b067 PUD 1633eb067 PMD 0
-<4>[  345.389625] Oops: 0000 [#1] SMP NOPTI
-<4>[  345.390206] CPU: 15 PID: 4100 Comm: nvme Tainted: G           OE     5.11.0-rc5blk+ #141
-<4>[  345.391377] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba52764
-<4>[  345.393074] RIP: 0010:bio_associate_blkg_from_css.cold.47+0x58/0x21f
-
-<4>[  345.396362] RSP: 0018:ffffc90000dbbce8 EFLAGS: 00010246
-<4>[  345.397078] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000027
-<4>[  345.398114] RDX: 0000000000000000 RSI: ffff888813be91f0 RDI: ffff888813be91f8
-<4>[  345.399039] RBP: ffffc90000dbbd30 R08: 0000000000000001 R09: 0000000000000001
-<4>[  345.399950] R10: 0000000064c66670 R11: 00000000ef955201 R12: ffff888812d32800
-<4>[  345.401031] R13: 0000000000000000 R14: ffff888113e51540 R15: ffff888113e51540
-<4>[  345.401976] FS:  00007f3747f1d780(0000) GS:ffff888813a00000(0000) knlGS:0000000000000000
-<4>[  345.402997] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[  345.403737] CR2: 0000000000000690 CR3: 000000081a4bc000 CR4: 00000000003506e0
-<4>[  345.404685] Call Trace:
-<4>[  345.405031]  bio_associate_blkg+0x71/0x1c0
-<4>[  345.405649]  nvme_submit_user_cmd+0x1aa/0x38e [nvme_core]
-<4>[  345.406348]  nvme_user_cmd.isra.73.cold.98+0x54/0x92 [nvme_core]
-<4>[  345.407117]  nvme_ioctl+0x226/0x260 [nvme_core]
-<4>[  345.407707]  blkdev_ioctl+0x1c8/0x2b0
-<4>[  345.408183]  block_ioctl+0x3f/0x50
-<4>[  345.408627]  __x64_sys_ioctl+0x84/0xc0
-<4>[  345.409117]  do_syscall_64+0x33/0x40
-<4>[  345.409592]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-<4>[  345.410233] RIP: 0033:0x7f3747632107
-
-<4>[  345.413125] RSP: 002b:00007ffe461b6648 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
-<4>[  345.414086] RAX: ffffffffffffffda RBX: 00000000007b7fd0 RCX: 00007f3747632107
-<4>[  345.414998] RDX: 00007ffe461b6650 RSI: 00000000c0484e41 RDI: 0000000000000004
-<4>[  345.415966] RBP: 0000000000000004 R08: 00000000007b7fe8 R09: 00000000007b9080
-<4>[  345.416883] R10: 00007ffe461b62c0 R11: 0000000000000206 R12: 00000000007b7fd0
-<4>[  345.417808] R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
-
-Add a NULL check before we set the bdev for bio.
-
-This issue is found on block/for-next tree.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- drivers/nvme/host/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index ba5df80881ea..1a3cdc6b1036 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1133,7 +1133,8 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 		if (ret)
- 			goto out;
- 		bio = req->bio;
--		bio_set_dev(bio, bdev);
-+		if (bdev)
-+			bio_set_dev(bio, bdev);
- 		if (bdev && meta_buffer && meta_len) {
- 			meta = nvme_add_user_metadata(bio, meta_buffer, meta_len,
- 					meta_seed, write);
--- 
-2.22.1
-
+On 2021/01/27 9:36, Changheun Lee wrote:=0A=
+>>> +=0A=
+>>>  /**=0A=
+>>>   * bio_reset - reinitialize a bio=0A=
+>>>   * @bio:	bio to reset=0A=
+>>> @@ -877,7 +892,7 @@ bool __bio_try_merge_page(struct bio *bio, struct p=
+age *page,=0A=
+>>>  		struct bio_vec *bv =3D &bio->bi_io_vec[bio->bi_vcnt - 1];=0A=
+>>>  =0A=
+>>>  		if (page_is_mergeable(bv, page, len, off, same_page)) {=0A=
+>>> -			if (bio->bi_iter.bi_size > UINT_MAX - len) {=0A=
+>>> +			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {=0A=
+>>>  				*same_page =3D false;=0A=
+>>>  				return false;=0A=
+>>>  			}=0A=
+>>> diff --git a/include/linux/bio.h b/include/linux/bio.h=0A=
+>>> index 1edda614f7ce..cdb134ca7bf5 100644=0A=
+>>> --- a/include/linux/bio.h=0A=
+>>> +++ b/include/linux/bio.h=0A=
+>>> @@ -100,6 +100,8 @@ static inline void *bio_data(struct bio *bio)=0A=
+>>>  	return NULL;=0A=
+>>>  }=0A=
+>>>  =0A=
+>>> +extern unsigned int bio_max_size(struct bio *);=0A=
+>>=0A=
+>> No need for extern.=0A=
+> =0A=
+> It's just for compile warning in my test environment.=0A=
+> I'll remove it too. But I think compile warning could be in the other=0A=
+> .c file which includes bio.h. Is it OK?=0A=
+=0A=
+Hmmm... not having extern should not generate a compilation warning. There =
+are=0A=
+tons of functions declared without extern in header files in the kernel. Wh=
+at=0A=
+compiler are you using ?=0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
