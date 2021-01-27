@@ -2,94 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92B0A306150
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 17:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7CA430619B
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 18:11:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbhA0Qw4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jan 2021 11:52:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
+        id S235563AbhA0RL0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jan 2021 12:11:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232813AbhA0Qwz (ORCPT
+        with ESMTP id S234758AbhA0RKF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jan 2021 11:52:55 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51517C06174A
-        for <linux-block@vger.kernel.org>; Wed, 27 Jan 2021 08:52:15 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id cq1so1583763pjb.4
-        for <linux-block@vger.kernel.org>; Wed, 27 Jan 2021 08:52:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lQKD9AgPexRDubj64bboSIKnHej4WVBTeYTVGyeOaHk=;
-        b=0n7IOfJztdBvyCO+NwquWZO/9oDoBxQCCGXsafUQ/GvUYsfJ9GMPAPuFm/2AHz2s7h
-         uCjspaY6eWonaZrU5TNO1bFTgmPIbBbshQEov2cSyySKuYe6JHBj4YtmSsCgqqeJQ0sz
-         TEp+kDX55Ttsnc0J6mELqLNa4WTTuqIBpHFd3WA2ygVL+9LP+Y/h3dPZ0HRlZG6rjvCq
-         o8+mzv9CEKGMlgIZqlWOyLBHKwUPEfZAqrHsgb5eQJ8jwi6mY18MiLv0LfN195kWsU1I
-         9aIP573InHU/7bIMgKM0aes7wOoE1YqdbZK7PAc68mg/7wVOpXqK0JLzoUJL/hUqxtsf
-         yCNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lQKD9AgPexRDubj64bboSIKnHej4WVBTeYTVGyeOaHk=;
-        b=MZDT1LbBniAKP/syiKjGy54VSsyAYWT/IT9HEdmjBfDj3zvhJ5bx7Q5hMJ6tvWzLTp
-         bFAvD7GUSD3ZijBxdywNHtZuI5UzvpLcJrSO3KYSTPYJZAJ6uQ8t0+HdrtV4SkdXy73v
-         vaBf1L1hC4yV22h3WxYU2Oz/Vz8V7vnGmT+xyAQbDj5HtdluoMb6JSuYZ3w90Mj94anz
-         9CFgOEapD3I5DrL7N8pUL6SMpNCbomlrp+rnI9rMTV9HZDCQTCVaeN3V+LirVfAw9S0G
-         Ule5aqrgoAIH8kLEupGZLPOe0F1iurPArMCceMzfAofp0CcVH7HEc9H6YV0yq/zWpayO
-         aMGg==
-X-Gm-Message-State: AOAM530ATG8SBhhhuPkuVjO1//a/OgS5XsPCVNC8uRlFFKu1qJFs1QY9
-        OFNeAThmJCQ399jyP6IuI/g51w==
-X-Google-Smtp-Source: ABdhPJznkZAkmGjzE0K3XJ7r+1OuPOB/uSu+0QVk0qZGt1uSi7gcicfz36VtRv3b8tVtY1Mr6zsRVA==
-X-Received: by 2002:a17:90a:b782:: with SMTP id m2mr6555276pjr.220.1611766334716;
-        Wed, 27 Jan 2021 08:52:14 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id z13sm2914261pgf.89.2021.01.27.08.52.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jan 2021 08:52:14 -0800 (PST)
-Subject: Re: misc bio allocation cleanups
-To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-References: <20210126145247.1964410-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <53e9b2e0-7169-f2fe-3c33-5f8a28cbd01b@kernel.dk>
-Date:   Wed, 27 Jan 2021 09:52:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 27 Jan 2021 12:10:05 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AB5C061756
+        for <linux-block@vger.kernel.org>; Wed, 27 Jan 2021 09:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=h0v1Tx9cI/lmIloEVpWKlesNS9gJ2TamXcqRw8fFK4w=; b=EHjrg7n5CaKGXWuwf2kUad3J5F
+        cSxinHpO4ZOa75OOevnd2Oc8Tj2dzVD7eAX4zn0t8bsF2CYgFloZim/wn3EueN3NL/V0nWYtY4Kob
+        ud88pJGptnTlmnESrJRwos/zlLwOzbukM1HmOz4aaRtwWqeGsF9/NglE2cUK5EintdTtvlYCiVGOI
+        dkNrMLY4eeYaFFDpppuy45zSgdmKqogac9Mq68O3iBWaPl7OLr5EbXiwSMtTGSdwvV52TffxxJN1K
+        TJCGqgkOzs/OANXiNHyzQ9XPQD13NZt1Z/B5SHPGPipXDLcPIdvkAkPrXqd2U1ns+0lHKeC9FeTjH
+        IvrZ4Wjw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l4oJe-007Gjk-5a; Wed, 27 Jan 2021 17:09:16 +0000
+Date:   Wed, 27 Jan 2021 17:09:14 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com
+Subject: Re: [PATCH 4/4] block: call blk_additional_{latency,sector} only
+ when io_extra_stats is true
+Message-ID: <20210127170914.GA1732537@infradead.org>
+References: <20210127145930.8826-1-guoqing.jiang@cloud.ionos.com>
+ <20210127145930.8826-5-guoqing.jiang@cloud.ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <20210126145247.1964410-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210127145930.8826-5-guoqing.jiang@cloud.ionos.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/26/21 7:52 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series contains various cleanups for how bios are allocated or
-> initialized plus related fallout.
+On Wed, Jan 27, 2021 at 03:59:30PM +0100, Guoqing Jiang wrote:
+> +		if (blk_queue_io_extra_stat(req->q))
+> +			blk_additional_sector(req->part, sgrp, bytes >> SECTOR_SHIFT);
 
-Applied, thanks.
-
--- 
-Jens Axboe
-
+This is completely unreadable due to the long line.
