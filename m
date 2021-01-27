@@ -2,131 +2,223 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F6BB30543E
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 08:17:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE05730544C
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jan 2021 08:19:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233504AbhA0HQs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jan 2021 02:16:48 -0500
-Received: from verein.lst.de ([213.95.11.211]:51671 "EHLO verein.lst.de"
+        id S233249AbhA0HTk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jan 2021 02:19:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232946AbhA0HOa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jan 2021 02:14:30 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4CD2467373; Wed, 27 Jan 2021 08:13:44 +0100 (CET)
-Date:   Wed, 27 Jan 2021 08:13:44 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@fb.com, hch@lst.de, kbusch@kernel.org
-Subject: Re: [PATCH] nvme-core: check bdev value for NULL
-Message-ID: <20210127071344.GA21223@lst.de>
-References: <20210127053738.4922-1-chaitanya.kulkarni@wdc.com>
+        id S233498AbhA0HQr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 27 Jan 2021 02:16:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A14A22073A;
+        Wed, 27 Jan 2021 07:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611731766;
+        bh=roeH+S42no3Sboc4a7IJP429EgMi3Brd/syWUAT1emI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YwAkJqJB5KFzCdu4e+4xCNTp5SGGkGySjdzbItm+79z64FYD48iciemcPnv9Mlnh2
+         fQe/1cHafViGhPE5p2SUGGk7l2Vhny6UH/75EGwWZ3nK0+HnxUNWUmWGRosC2xio9O
+         dRi+UbUKyDXe8JCUdmtUZW0806oZFEhVUm2J2GGpN8AlBtCoUdYBvDoW9GI5hoFou2
+         3xjIKrj9pkB94a6Kv5TBwDw6939ekhvFTRuKbb7P+RY+RabHAYJmGrLgripNRJJX3W
+         Raf3XxHZrQEIZAvG4133epfOMyH9k3RvBZMOilB6mOoVuQkWm455KOkyOh/K8Y5DFv
+         MHtESQFL6GhMA==
+Received: by mail-lf1-f50.google.com with SMTP id f1so1249639lfu.3;
+        Tue, 26 Jan 2021 23:16:05 -0800 (PST)
+X-Gm-Message-State: AOAM530hTGoI/NZEUqRnpztQG0Cn43JQoq4V3v2LqhN1rQpHFale6zgN
+        YHpuyXJcRDV06hRuJQEI2t3QbwUHSclvuTQlo4w=
+X-Google-Smtp-Source: ABdhPJwFmb6CVFGHBWXlzQnS58PALEhepsv7f0h0Je/37NQinPkKDgqPDkTeBlpmndchuGkIHeS1z4Fyx1z/Fa+aNwE=
+X-Received: by 2002:a05:6512:b1b:: with SMTP id w27mr4506047lfu.10.1611731763892;
+ Tue, 26 Jan 2021 23:16:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210127053738.4922-1-chaitanya.kulkarni@wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20210126145247.1964410-1-hch@lst.de> <20210126145247.1964410-15-hch@lst.de>
+In-Reply-To: <20210126145247.1964410-15-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 26 Jan 2021 23:15:52 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW599kbe-YFX0FOOGJy30gy3V2_hMYW3jg3sK_VwaayEBQ@mail.gmail.com>
+Message-ID: <CAPhsuW599kbe-YFX0FOOGJy30gy3V2_hMYW3jg3sK_VwaayEBQ@mail.gmail.com>
+Subject: Re: [PATCH 14/17] md/raid6: refactor raid5_read_one_chunk
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good:
+On Tue, Jan 26, 2021 at 7:19 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Refactor raid5_read_one_chunk so that all simple checks are done
+> before allocating the bio.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Song Liu <song@kernel.org>
 
-Jens, can you pick this up as it fixes an issue I introduced in
-for-5.12/block?
+Thanks for the clean-up!
 
-On Tue, Jan 26, 2021 at 09:37:38PM -0800, Chaitanya Kulkarni wrote:
-> The nvme-core sets the bdev to NULL when admin comamnd is issued from
-> IOCTL in the following path e.g. nvme list :-
-> 
-> block_ioctl()
->  blkdev_ioctl()
->   nvme_ioctl()
->    nvme_user_cmd()
->     nvme_submit_user_cmd()
-> 
-> The commit 309dca309fc3 ("block: store a block_device pointer in struct bio")
-> now uses bdev unconditionally in the macro bio_set_dev() and assumes
-> that bdev value is not NULL which results in the following crash in
-> since thats where bdev is actually accessed :-
-> 
-> void bio_associate_blkg_from_css(struct bio *bio,
-> 				 struct cgroup_subsys_state *css)
-> {
-> 	if (bio->bi_blkg)
-> 		blkg_put(bio->bi_blkg);
-> 
-> 	if (css && css->parent) {
-> 		bio->bi_blkg = blkg_tryget_closest(bio, css);
-> 	} else {
-> -------------->	blkg_get(bio->bi_bdev->bd_disk->queue->root_blkg);
-> 		bio->bi_blkg = bio->bi_bdev->bd_disk->queue->root_blkg;
-> 	}
-> }
-> EXPORT_SYMBOL_GPL(bio_associate_blkg_from_css);
-> 
-> <1>[  345.385947] BUG: kernel NULL pointer dereference, address: 0000000000000690
-> <1>[  345.387103] #PF: supervisor read access in kernel mode
-> <1>[  345.387894] #PF: error_code(0x0000) - not-present page
-> <6>[  345.388756] PGD 162a2b067 P4D 162a2b067 PUD 1633eb067 PMD 0
-> <4>[  345.389625] Oops: 0000 [#1] SMP NOPTI
-> <4>[  345.390206] CPU: 15 PID: 4100 Comm: nvme Tainted: G           OE     5.11.0-rc5blk+ #141
-> <4>[  345.391377] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba52764
-> <4>[  345.393074] RIP: 0010:bio_associate_blkg_from_css.cold.47+0x58/0x21f
-> 
-> <4>[  345.396362] RSP: 0018:ffffc90000dbbce8 EFLAGS: 00010246
-> <4>[  345.397078] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000027
-> <4>[  345.398114] RDX: 0000000000000000 RSI: ffff888813be91f0 RDI: ffff888813be91f8
-> <4>[  345.399039] RBP: ffffc90000dbbd30 R08: 0000000000000001 R09: 0000000000000001
-> <4>[  345.399950] R10: 0000000064c66670 R11: 00000000ef955201 R12: ffff888812d32800
-> <4>[  345.401031] R13: 0000000000000000 R14: ffff888113e51540 R15: ffff888113e51540
-> <4>[  345.401976] FS:  00007f3747f1d780(0000) GS:ffff888813a00000(0000) knlGS:0000000000000000
-> <4>[  345.402997] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  345.403737] CR2: 0000000000000690 CR3: 000000081a4bc000 CR4: 00000000003506e0
-> <4>[  345.404685] Call Trace:
-> <4>[  345.405031]  bio_associate_blkg+0x71/0x1c0
-> <4>[  345.405649]  nvme_submit_user_cmd+0x1aa/0x38e [nvme_core]
-> <4>[  345.406348]  nvme_user_cmd.isra.73.cold.98+0x54/0x92 [nvme_core]
-> <4>[  345.407117]  nvme_ioctl+0x226/0x260 [nvme_core]
-> <4>[  345.407707]  blkdev_ioctl+0x1c8/0x2b0
-> <4>[  345.408183]  block_ioctl+0x3f/0x50
-> <4>[  345.408627]  __x64_sys_ioctl+0x84/0xc0
-> <4>[  345.409117]  do_syscall_64+0x33/0x40
-> <4>[  345.409592]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> <4>[  345.410233] RIP: 0033:0x7f3747632107
-> 
-> <4>[  345.413125] RSP: 002b:00007ffe461b6648 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
-> <4>[  345.414086] RAX: ffffffffffffffda RBX: 00000000007b7fd0 RCX: 00007f3747632107
-> <4>[  345.414998] RDX: 00007ffe461b6650 RSI: 00000000c0484e41 RDI: 0000000000000004
-> <4>[  345.415966] RBP: 0000000000000004 R08: 00000000007b7fe8 R09: 00000000007b9080
-> <4>[  345.416883] R10: 00007ffe461b62c0 R11: 0000000000000206 R12: 00000000007b7fd0
-> <4>[  345.417808] R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
-> 
-> Add a NULL check before we set the bdev for bio.
-> 
-> This issue is found on block/for-next tree.
-> 
-> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+
 > ---
->  drivers/nvme/host/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index ba5df80881ea..1a3cdc6b1036 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -1133,7 +1133,8 @@ static int nvme_submit_user_cmd(struct request_queue *q,
->  		if (ret)
->  			goto out;
->  		bio = req->bio;
-> -		bio_set_dev(bio, bdev);
-> +		if (bdev)
-> +			bio_set_dev(bio, bdev);
->  		if (bdev && meta_buffer && meta_len) {
->  			meta = nvme_add_user_metadata(bio, meta_buffer, meta_len,
->  					meta_seed, write);
-> -- 
-> 2.22.1
----end quoted text---
+>  drivers/md/raid5.c | 108 +++++++++++++++++++--------------------------
+>  1 file changed, 45 insertions(+), 63 deletions(-)
+>
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index f411b9e5c332f4..a348b2adf2a9f9 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -5393,90 +5393,72 @@ static void raid5_align_endio(struct bio *bi)
+>  static int raid5_read_one_chunk(struct mddev *mddev, struct bio *raid_bio)
+>  {
+>         struct r5conf *conf = mddev->private;
+> -       int dd_idx;
+> -       struct bio* align_bi;
+> +       struct bio *align_bio;
+>         struct md_rdev *rdev;
+> -       sector_t end_sector;
+> +       sector_t sector, end_sector, first_bad;
+> +       int bad_sectors, dd_idx;
+>
+>         if (!in_chunk_boundary(mddev, raid_bio)) {
+>                 pr_debug("%s: non aligned\n", __func__);
+>                 return 0;
+>         }
+> -       /*
+> -        * use bio_clone_fast to make a copy of the bio
+> -        */
+> -       align_bi = bio_clone_fast(raid_bio, GFP_NOIO, &mddev->bio_set);
+> -       if (!align_bi)
+> -               return 0;
+> -       /*
+> -        *   set bi_end_io to a new function, and set bi_private to the
+> -        *     original bio.
+> -        */
+> -       align_bi->bi_end_io  = raid5_align_endio;
+> -       align_bi->bi_private = raid_bio;
+> -       /*
+> -        *      compute position
+> -        */
+> -       align_bi->bi_iter.bi_sector =
+> -               raid5_compute_sector(conf, raid_bio->bi_iter.bi_sector,
+> -                                    0, &dd_idx, NULL);
+>
+> -       end_sector = bio_end_sector(align_bi);
+> +       sector = raid5_compute_sector(conf, raid_bio->bi_iter.bi_sector, 0,
+> +                                     &dd_idx, NULL);
+> +       end_sector = bio_end_sector(raid_bio);
+> +
+>         rcu_read_lock();
+> +       if (r5c_big_stripe_cached(conf, sector))
+> +               goto out_rcu_unlock;
+> +
+>         rdev = rcu_dereference(conf->disks[dd_idx].replacement);
+>         if (!rdev || test_bit(Faulty, &rdev->flags) ||
+>             rdev->recovery_offset < end_sector) {
+>                 rdev = rcu_dereference(conf->disks[dd_idx].rdev);
+> -               if (rdev &&
+> -                   (test_bit(Faulty, &rdev->flags) ||
+> +               if (!rdev)
+> +                       goto out_rcu_unlock;
+> +               if (test_bit(Faulty, &rdev->flags) ||
+>                     !(test_bit(In_sync, &rdev->flags) ||
+> -                     rdev->recovery_offset >= end_sector)))
+> -                       rdev = NULL;
+> +                     rdev->recovery_offset >= end_sector))
+> +                       goto out_rcu_unlock;
+>         }
+>
+> -       if (r5c_big_stripe_cached(conf, align_bi->bi_iter.bi_sector)) {
+> -               rcu_read_unlock();
+> -               bio_put(align_bi);
+> +       atomic_inc(&rdev->nr_pending);
+> +       rcu_read_unlock();
+> +
+> +       align_bio = bio_clone_fast(raid_bio, GFP_NOIO, &mddev->bio_set);
+> +       bio_set_dev(align_bio, rdev->bdev);
+> +       align_bio->bi_end_io = raid5_align_endio;
+> +       align_bio->bi_private = raid_bio;
+> +       align_bio->bi_iter.bi_sector = sector;
+> +
+> +       raid_bio->bi_next = (void *)rdev;
+> +
+> +       if (is_badblock(rdev, sector, bio_sectors(align_bio), &first_bad,
+> +                       &bad_sectors)) {
+> +               bio_put(align_bio);
+> +               rdev_dec_pending(rdev, mddev);
+>                 return 0;
+>         }
+>
+> -       if (rdev) {
+> -               sector_t first_bad;
+> -               int bad_sectors;
+> -
+> -               atomic_inc(&rdev->nr_pending);
+> -               rcu_read_unlock();
+> -               raid_bio->bi_next = (void*)rdev;
+> -               bio_set_dev(align_bi, rdev->bdev);
+> -
+> -               if (is_badblock(rdev, align_bi->bi_iter.bi_sector,
+> -                               bio_sectors(align_bi),
+> -                               &first_bad, &bad_sectors)) {
+> -                       bio_put(align_bi);
+> -                       rdev_dec_pending(rdev, mddev);
+> -                       return 0;
+> -               }
+> +       /* No reshape active, so we can trust rdev->data_offset */
+> +       align_bio->bi_iter.bi_sector += rdev->data_offset;
+>
+> -               /* No reshape active, so we can trust rdev->data_offset */
+> -               align_bi->bi_iter.bi_sector += rdev->data_offset;
+> +       spin_lock_irq(&conf->device_lock);
+> +       wait_event_lock_irq(conf->wait_for_quiescent, conf->quiesce == 0,
+> +                           conf->device_lock);
+> +       atomic_inc(&conf->active_aligned_reads);
+> +       spin_unlock_irq(&conf->device_lock);
+>
+> -               spin_lock_irq(&conf->device_lock);
+> -               wait_event_lock_irq(conf->wait_for_quiescent,
+> -                                   conf->quiesce == 0,
+> -                                   conf->device_lock);
+> -               atomic_inc(&conf->active_aligned_reads);
+> -               spin_unlock_irq(&conf->device_lock);
+> +       if (mddev->gendisk)
+> +               trace_block_bio_remap(align_bio, disk_devt(mddev->gendisk),
+> +                                     raid_bio->bi_iter.bi_sector);
+> +       submit_bio_noacct(align_bio);
+> +       return 1;
+>
+> -               if (mddev->gendisk)
+> -                       trace_block_bio_remap(align_bi, disk_devt(mddev->gendisk),
+> -                                             raid_bio->bi_iter.bi_sector);
+> -               submit_bio_noacct(align_bi);
+> -               return 1;
+> -       } else {
+> -               rcu_read_unlock();
+> -               bio_put(align_bi);
+> -               return 0;
+> -       }
+> +out_rcu_unlock:
+> +       rcu_read_unlock();
+> +       return 0;
+>  }
+>
+>  static struct bio *chunk_aligned_read(struct mddev *mddev, struct bio *raid_bio)
+> --
+> 2.29.2
+>
