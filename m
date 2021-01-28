@@ -2,121 +2,171 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 863AC306FE1
-	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 08:42:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA1213070B3
+	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 09:09:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232031AbhA1HmG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Jan 2021 02:42:06 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:11904 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231158AbhA1HlQ (ORCPT
+        id S232298AbhA1H5F (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Jan 2021 02:57:05 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:22235 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231630AbhA1HM5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Jan 2021 02:41:16 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DRC5y5JP5z7cFJ;
-        Thu, 28 Jan 2021 15:39:18 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.498.0; Thu, 28 Jan 2021
- 15:40:21 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <sunke32@huawei.com>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nbd: Fix NULL pointer in flush_workqueue
-Date:   Thu, 28 Jan 2021 02:41:53 -0500
-Message-ID: <20210128074153.1633374-1-sunke32@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 28 Jan 2021 02:12:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1611817976; x=1643353976;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BWhCtPmFmY8SRwjALXcTfESKnsKfTCmOrzddkgcZe24=;
+  b=faLGKvi9FFV57Q0dVYgonwYrSTczxE9mFzdDUiyH3A743tinm8FHpmYz
+   E84KWYZzllaXLzXqmEQ3vDkz3D8fsHBtSi4Hmv/1R+AeQBknTP0ot2Svv
+   rnDYlpCWtEJ2+q1R44DxVzeuA5GnmFibXE1B6D+5DQso/hdAwQoFVa5pT
+   CLQn2gu7AeGLEYqMTzcoV59mbnaInDk5X20SLVrY6g8oA6DjKhe5i6x2+
+   WTW7Ce2WfoH/L9CLkjXMJ2Ixf1nQnpqJivqFH3mN0W6kUljS2DJh2UW3A
+   Q25yxzK7UVPZBNsUgpZo4nVvY5QMoYY170OhpNR7KneK5MlK1nUkKKU7H
+   A==;
+IronPort-SDR: VT21les7nQG03JqHJ+I6EARWf5lMn66DxTi2QYbOMs2YfDOw2AniSPT+pjejA5tq7xp1aaI8NN
+ IJyHOrnvEj1JtURy8HGmu0MgaB3qFyIEUADD5Ek4rL9/qSDzGRwHO6xyMdhO+CtZpDm/nh3433
+ uqgijKjcu6L3970RM639kqqPrmUmIl7WoTjb0NNVH7bhLYWGI4IDe794zDrJ4IASxPghSaTjLe
+ TOkBT9TLksFi3mVkIqXo6YzEuM9Kaiezl7crmDupPQhL0bBL9PWXidnupZGcR3WjWU0VGSuTZw
+ LNA=
+X-IronPort-AV: E=Sophos;i="5.79,381,1602518400"; 
+   d="scan'208";a="158517186"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2021 15:11:38 +0800
+IronPort-SDR: w5IsHUigPS/mWpQBf9qBrfSIaakaFZLRWoHP6+aNWprDyks+eKEz/GYBDl9uDW4vjngYTV/B2D
+ IFvxlHDM6q/6/9nde34O8UYBh6I0uIn3r+BtZNG8Q1Tp2UBHT91nGmc+bRVSX0vH6wYM+9iszA
+ F/KYhmG/TW8AEVRLeQEnipOU8wNqnajsU2fYF/lAkiJR/GA7ObRI9w0PiHGbcZOSAzOETqvDL8
+ hpZV/LAw9Bj86sme5bSbMQqxe65yf8vYoskZfjC3ApT6ZscD9accTAHZbY6UsQpC8kRLHHWojB
+ s+1/3Wcsa3O5HFCg61j2s/8m
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2021 22:55:58 -0800
+IronPort-SDR: 61Jf/0E9AfrbFBR+VL+aX9SYCVB0aW8ut/7/jLtTqvhkleWzu7b9JjkuOaGgMYwgMXw5C5Sybl
+ VeNQs3LEjTqxDsR0ZyK8GA/cVYEZNMX2maaVF3ljBoeSQOO/ApbWgebfLMlSCkYd12pl+6neKj
+ zn8nHOcIOMnNA2IBKV67KMXVLkXTllokNu+jCcdgoa5YFwfQecWL2vYSP5hgldmlqCiXple2ew
+ fybG/wLzJMKvqPxvYQ59ATt+ZGQv1DjVDDtxXyNp0NJ+IswNbwLOu8d1uiq12NaSa1/W79MYTO
+ wq8=
+WDCIronportException: Internal
+Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
+  by uls-op-cesaip02.wdc.com with ESMTP; 27 Jan 2021 23:11:38 -0800
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        xen-devel@lists.xenproject.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org,
+        ocfs2-devel@oss.oracle.com, linux-pm@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     axboe@kernel.dk, philipp.reisner@linbit.com,
+        lars.ellenberg@linbit.com, konrad.wilk@oracle.com,
+        roger.pau@citrix.com, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, agk@redhat.com,
+        snitzer@redhat.com, hch@lst.de, sagi@grimberg.me,
+        chaitanya.kulkarni@wdc.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, tytso@mit.edu, jaegeuk@kernel.org,
+        ebiggers@kernel.org, djwong@kernel.org, shaggy@kernel.org,
+        konishi.ryusuke@gmail.com, mark@fasheh.com, jlbec@evilplan.org,
+        joseph.qi@linux.alibaba.com, damien.lemoal@wdc.com,
+        naohiro.aota@wdc.com, jth@kernel.org, rjw@rjwysocki.net,
+        len.brown@intel.com, pavel@ucw.cz, akpm@linux-foundation.org,
+        hare@suse.de, gustavoars@kernel.org, tiwai@suse.de,
+        alex.shi@linux.alibaba.com, asml.silence@gmail.com,
+        ming.lei@redhat.com, tj@kernel.org, osandov@fb.com,
+        bvanassche@acm.org, jefflexu@linux.alibaba.com
+Subject: [RFC PATCH 00/34] block: introduce bio_new()
+Date:   Wed, 27 Jan 2021 23:10:59 -0800
+Message-Id: <20210128071133.60335-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Open /dev/nbdX first, the config_refs will be 1 and
-the pointers in nbd_device are still null. Disconnect
-/dev/nbdX, then reference a null recv_workq. The
-protection by config_refs in nbd_genl_disconnect is useless.
+Hi,
 
-[  656.366194] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[  656.368943] #PF: supervisor write access in kernel mode
-[  656.369844] #PF: error_code(0x0002) - not-present page
-[  656.370717] PGD 10cc87067 P4D 10cc87067 PUD 1074b4067 PMD 0
-[  656.371693] Oops: 0002 [#1] SMP
-[  656.372242] CPU: 5 PID: 7977 Comm: nbd-client Not tainted 5.11.0-rc5-00040-g76c057c84d28 #1
-[  656.373661] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
-[  656.375904] RIP: 0010:mutex_lock+0x29/0x60
-[  656.376627] Code: 00 0f 1f 44 00 00 55 48 89 fd 48 83 05 6f d7 fe 08 01 e8 7a c3 ff ff 48 83 05 6a d7 fe 08 01 31 c0 65 48 8b 14 25 00 6d 01 00 <f0> 48 0f b1 55 d
-[  656.378934] RSP: 0018:ffffc900005eb9b0 EFLAGS: 00010246
-[  656.379350] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  656.379915] RDX: ffff888104cf2600 RSI: ffffffffaae8f452 RDI: 0000000000000020
-[  656.380473] RBP: 0000000000000020 R08: 0000000000000000 R09: ffff88813bd6b318
-[  656.381039] R10: 00000000000000c7 R11: fefefefefefefeff R12: ffff888102710b40
-[  656.381599] R13: ffffc900005eb9e0 R14: ffffffffb2930680 R15: ffff88810770ef00
-[  656.382166] FS:  00007fdf117ebb40(0000) GS:ffff88813bd40000(0000) knlGS:0000000000000000
-[  656.382806] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  656.383261] CR2: 0000000000000020 CR3: 0000000100c84000 CR4: 00000000000006e0
-[  656.383819] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  656.384370] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  656.384927] Call Trace:
-[  656.385111]  flush_workqueue+0x92/0x6c0
-[  656.385395]  nbd_disconnect_and_put+0x81/0xd0
-[  656.385716]  nbd_genl_disconnect+0x125/0x2a0
-[  656.386034]  genl_family_rcv_msg_doit.isra.0+0x102/0x1b0
-[  656.386422]  genl_rcv_msg+0xfc/0x2b0
-[  656.386685]  ? nbd_ioctl+0x490/0x490
-[  656.386954]  ? genl_family_rcv_msg_doit.isra.0+0x1b0/0x1b0
-[  656.387354]  netlink_rcv_skb+0x62/0x180
-[  656.387638]  genl_rcv+0x34/0x60
-[  656.387874]  netlink_unicast+0x26d/0x590
-[  656.388162]  netlink_sendmsg+0x398/0x6c0
-[  656.388451]  ? netlink_rcv_skb+0x180/0x180
-[  656.388750]  ____sys_sendmsg+0x1da/0x320
-[  656.389038]  ? ____sys_recvmsg+0x130/0x220
-[  656.389334]  ___sys_sendmsg+0x8e/0xf0
-[  656.389605]  ? ___sys_recvmsg+0xa2/0xf0
-[  656.389889]  ? handle_mm_fault+0x1671/0x21d0
-[  656.390201]  __sys_sendmsg+0x6d/0xe0
-[  656.390464]  __x64_sys_sendmsg+0x23/0x30
-[  656.390751]  do_syscall_64+0x45/0x70
-[  656.391017]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This is a *compile only RFC* which adds a generic helper to initialize
+the various fields of the bio that is repeated all the places in
+file-systems, block layer, and drivers.
 
-To fix it, just add a check for a non null task_recv in
-nbd_genl_disconnect.
+The new helper allows callers to initialize non-optional members of bio
+such as bdev, sector, op, opflags, max_bvecs and gfp_mask by
+encapsulating new bio allocation with bio alloc with initialization
+at one place.
 
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
----
- drivers/block/nbd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The objective of this RFC is to only start a discussion, this it not 
+completely tested at all.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 6727358e147d..4f7885966d32 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -2011,12 +2011,20 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
- 		       index);
- 		return -EINVAL;
- 	}
-+	mutex_lock(&nbd->config_lock);
- 	if (!refcount_inc_not_zero(&nbd->refs)) {
- 		mutex_unlock(&nbd_index_mutex);
-+		mutex_unlock(&nbd->config_lock);
- 		printk(KERN_ERR "nbd: device at index %d is going down\n",
- 		       index);
- 		return -EINVAL;
- 	}
-+	if (!nbd->recv_workq) {
-+		mutex_unlock(&nbd->config_lock);
-+		mutex_unlock(&nbd_index_mutex);
-+		return -EINVAL;
-+	}
-+	mutex_unlock(&nbd->config_lock);
- 	mutex_unlock(&nbd_index_mutex);
- 	if (!refcount_inc_not_zero(&nbd->config_refs)) {
- 		nbd_put(nbd);
+-ck                         
+
+Chaitanya Kulkarni (34):
+  block: move common code into blk_next_bio()
+  block: introduce and use bio_new
+  drdb: use bio_new in drdb
+  drdb: use bio_new() in submit_one_flush
+  xen-blkback: use bio_new
+  zram: use bio_new
+  dm: use bio_new in dm-log-writes
+  dm-zoned: use bio_new in get_mblock_slow
+  dm-zoned: use bio_new in dmz_write_mblock
+  dm-zoned: use bio_new in dmz_rdwr_block
+  nvmet: use bio_new in nvmet_bdev_execute_rw
+  scsi: target/iblock: use bio_new
+  block: use bio_new in __blkdev_direct_IO
+  fs/buffer: use bio_new in submit_bh_wbc
+  fscrypt: use bio_new in fscrypt_zeroout_range
+  fs/direct-io: use bio_new in dio_bio_alloc
+  iomap: use bio_new in iomap_dio_zero
+  iomap: use bio_new in iomap_dio_bio_actor
+  fs/jfs/jfs_logmgr.c: use bio_new in lbmRead
+  fs/jfs/jfs_logmgr.c: use bio_new in lbmStartIO
+  fs/jfs/jfs_metapage.c: use bio_new in metapage_writepage
+  fs/jfs/jfs_metapage.c: use bio_new in metapage_readpage
+  fs/mpage.c: use bio_new mpage_alloc
+  fs/nilfs: use bio_new nilfs_alloc_seg_bio
+  ocfs/cluster: use bio_new in dm-log-writes
+  xfs: use bio_new in xfs_rw_bdev
+  xfs: use bio_new in xfs_buf_ioapply_map
+  zonefs: use bio_new
+  power/swap: use bio_new in hib_submit_io
+  hfsplus: use bio_new in hfsplus_submit_bio()
+  iomap: use bio_new in iomap_readpage_actor
+  mm: use bio_new in __swap_writepage
+  mm: use bio_new in swap_readpage
+  mm: add swap_bio_new common bio helper
+
+ block/blk-lib.c                     | 34 ++++++++++-------------------
+ block/blk-zoned.c                   |  4 +---
+ block/blk.h                         |  5 +++--
+ drivers/block/drbd/drbd_receiver.c  | 12 +++++-----
+ drivers/block/xen-blkback/blkback.c | 20 +++++++++++------
+ drivers/block/zram/zram_drv.c       |  5 ++---
+ drivers/md/dm-log-writes.c          | 30 +++++++++----------------
+ drivers/md/dm-zoned-metadata.c      | 18 +++++----------
+ drivers/nvme/target/io-cmd-bdev.c   |  9 +++-----
+ drivers/target/target_core_iblock.c |  5 ++---
+ fs/block_dev.c                      |  6 ++---
+ fs/buffer.c                         | 16 ++++++--------
+ fs/crypto/bio.c                     |  5 ++---
+ fs/direct-io.c                      |  6 ++---
+ fs/hfsplus/wrapper.c                |  5 +----
+ fs/iomap/buffered-io.c              | 12 +++++-----
+ fs/iomap/direct-io.c                | 11 ++++------
+ fs/jfs/jfs_logmgr.c                 | 13 ++++-------
+ fs/jfs/jfs_metapage.c               | 15 +++++--------
+ fs/mpage.c                          | 18 +++++----------
+ fs/nilfs2/segbuf.c                  | 10 ++-------
+ fs/ocfs2/cluster/heartbeat.c        |  6 ++---
+ fs/xfs/xfs_bio_io.c                 |  7 ++----
+ fs/xfs/xfs_buf.c                    |  6 ++---
+ fs/zonefs/super.c                   |  6 ++---
+ include/linux/bio.h                 | 25 +++++++++++++++++++++
+ kernel/power/swap.c                 |  7 +++---
+ mm/page_io.c                        | 30 +++++++++++++------------
+ 28 files changed, 151 insertions(+), 195 deletions(-)
+
 -- 
-2.25.4
+2.22.1
 
