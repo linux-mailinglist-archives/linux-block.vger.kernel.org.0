@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 394043072D9
-	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 10:40:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BDAA3072DD
+	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 10:40:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232480AbhA1JfP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Jan 2021 04:35:15 -0500
-Received: from verein.lst.de ([213.95.11.211]:56674 "EHLO verein.lst.de"
+        id S231848AbhA1JgZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Jan 2021 04:36:25 -0500
+Received: from verein.lst.de ([213.95.11.211]:56682 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231810AbhA1JdY (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Jan 2021 04:33:24 -0500
+        id S232290AbhA1Jd6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 28 Jan 2021 04:33:58 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 13FDC68AFE; Thu, 28 Jan 2021 10:32:41 +0100 (CET)
-Date:   Thu, 28 Jan 2021 10:32:40 +0100
+        id 0E83168B02; Thu, 28 Jan 2021 10:33:11 +0100 (CET)
+Date:   Thu, 28 Jan 2021 10:33:10 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Damien Le Moal <Damien.LeMoal@wdc.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
@@ -24,42 +24,38 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
         Keith Busch <Keith.Busch@wdc.com>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [PATCH v4 2/8] nvme: cleanup zone information initialization
-Message-ID: <20210128093240.GA3212@lst.de>
-References: <20210128044733.503606-1-damien.lemoal@wdc.com> <20210128044733.503606-3-damien.lemoal@wdc.com> <20210128091710.GA1959@lst.de> <BL0PR04MB6514F6AD357E545CBCAB877DE7BA9@BL0PR04MB6514.namprd04.prod.outlook.com>
+Subject: Re: [PATCH v4 7/8] block: introduce blk_queue_clear_zone_settings()
+Message-ID: <20210128093310.GB3212@lst.de>
+References: <20210128044733.503606-1-damien.lemoal@wdc.com> <20210128044733.503606-8-damien.lemoal@wdc.com> <20210128092107.GE1959@lst.de> <BL0PR04MB6514021E07E861070BDD852EE7BA9@BL0PR04MB6514.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL0PR04MB6514F6AD357E545CBCAB877DE7BA9@BL0PR04MB6514.namprd04.prod.outlook.com>
+In-Reply-To: <BL0PR04MB6514021E07E861070BDD852EE7BA9@BL0PR04MB6514.namprd04.prod.outlook.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 09:27:41AM +0000, Damien Le Moal wrote:
+On Thu, Jan 28, 2021 at 09:32:22AM +0000, Damien Le Moal wrote:
+> On 2021/01/28 18:21, Christoph Hellwig wrote:
+> > On Thu, Jan 28, 2021 at 01:47:32PM +0900, Damien Le Moal wrote:
+> >> Introduce the internal function blk_queue_clear_zone_settings() to
+> >> cleanup all limits and resources related to zoned block devices. This
+> >> new function is called from blk_queue_set_zoned() when a disk zoned
+> >> model is set to BLK_ZONED_NONE. This particular case can happens when a
+> >> partition is created on a host-aware scsi disk.
+> > 
+> > Shouldn't we just do all this work when blk_queue_set_zoned is called
+> > with a BLK_ZONED_NONE argument?  That seems like the more obvious API
+> > to me.
 > 
-> I tried that first, but it did not work. I end up with
-> blk_revalidate_disk_zones() undefined error with !CONFIG_BLK_DEV_ZONED.
-> This is because blk_queue_is_zoned() is *not* stubbed for !CONFIG_BLK_DEV_ZONED.
-> It will simply always return 0/none in that case. We would need to have:
+> That is what I did. blk_queue_set_zoned() calls blk_queue_clear_zone_settings()
+> for BLK_ZONED_NONE case. I simply did not open code the cleanups in that
+> functions because it is simpler to stub only blk_queue_clear_zone_settings()
+> rather than having conditionals in blk_queue_set_zoned(). That also puts the
+> cleanup function together with the code that allocates most resources in
+> blk-zoned.c. Easier to not overlook something.
 
-Hmm.  blk_queue_is_zoned is calls blk_queue_zoned_model, which
-always returns BLK_ZONED_NONE for !CONFIG_BLK_DEV_ZONED, and I thought we
-rely on that elsewhere in nvme.  That is a fairly recent change from me,
-though.
-
-> 
-> if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) && blk_queue_is_zoned()) {
-> 	ret = blk_revalidate_disk_zones(ns->disk, NULL);
-> 	...
-> 
-> Or stub blk_queue_is_zoned()...
-
-If the above really doesn't work we should properly stub it out.
-
-Anyway, I think we can go with your current patch:
+Ok, looks good to me then:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-
-and refine all the zoned stubs later.  I have a few more ideas for
-improvements there anyway.
