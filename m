@@ -2,54 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A66823071D3
-	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 09:43:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 962983072A3
+	for <lists+linux-block@lfdr.de>; Thu, 28 Jan 2021 10:29:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232164AbhA1ImC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Jan 2021 03:42:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232042AbhA1Ilk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Jan 2021 03:41:40 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86356C061573;
-        Thu, 28 Jan 2021 00:40:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mgoB+i+Auh++1htuEFoAkzFwUIwzArtUbMqdLzdMRFA=; b=XD2Ymn9xzss6bgJBjakru6YpEv
-        +aQKprD1jaNuWqi0E0lBJL+lFxRGXpjVkCH7RyT0saCj6GulNNAoWxvrINgBa7EdIIj9sIi0tyDnP
-        4P9nkVFfVUPjyGMfsSkFVJJ12PxH96irOGCLdpI9K42Mb3yk+lSiBUoVBC66JNws7LDeUDQrjdu7b
-        7+bR0tss4MDb+ybdVvFlUVX9MvopZvp96VUcb1QKPsM+OA/Gyzdr5+CYlURVaaqFplj2SSUrqjXfG
-        vxXrBvJ7l7lFb0pE13O85pIl08NldGvOXAl69MaEOJGNdOTt5uKdm7D1t617ZTVNAzHxgqZEWUbTW
-        mmSvOEVA==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l52qe-008CXK-O3; Thu, 28 Jan 2021 08:40:17 +0000
-Date:   Thu, 28 Jan 2021 08:40:16 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc:     snitzer@redhat.com, joseph.qi@linux.alibaba.com,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        io-uring@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] block: add iopoll method to support bio-based IO
- polling
-Message-ID: <20210128084016.GA1951639@infradead.org>
-References: <20210125121340.70459-1-jefflexu@linux.alibaba.com>
- <20210125121340.70459-4-jefflexu@linux.alibaba.com>
+        id S232443AbhA1JVC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Jan 2021 04:21:02 -0500
+Received: from verein.lst.de ([213.95.11.211]:56588 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232476AbhA1JR4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 28 Jan 2021 04:17:56 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 51C6868AFE; Thu, 28 Jan 2021 10:17:10 +0100 (CET)
+Date:   Thu, 28 Jan 2021 10:17:10 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@wdc.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: Re: [PATCH v4 2/8] nvme: cleanup zone information initialization
+Message-ID: <20210128091710.GA1959@lst.de>
+References: <20210128044733.503606-1-damien.lemoal@wdc.com> <20210128044733.503606-3-damien.lemoal@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125121340.70459-4-jefflexu@linux.alibaba.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210128044733.503606-3-damien.lemoal@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 08:13:37PM +0800, Jeffle Xu wrote:
-> +int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
+>  int nvme_revalidate_zones(struct nvme_ns *ns)
+>  {
+> -	struct request_queue *q = ns->queue;
+> -	int ret;
+> -
+> -	ret = blk_revalidate_disk_zones(ns->disk, NULL);
+> -	if (!ret)
+> -		blk_queue_max_zone_append_sectors(q, ns->ctrl->max_zone_append);
+> -	return ret;
+> +	return blk_revalidate_disk_zones(ns->disk, NULL);
 
-Can you split the guts of this function into two separate helpers
-for the mq vs non-mq case?  As is is is a little hard to read and
-introduced extra branches in the fast path.
+We can just kill off nvme_revalidate_zones now and open code it in
+the caller as the stub is no needed now that blk_queue_is_zoned always
+return false for the !CONFIG_BLK_DEV_ZONED case.
+
+Otherwise this look great, nice cleanup:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
