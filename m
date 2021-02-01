@@ -2,125 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F103A311185
-	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 20:52:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 029E4311253
+	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 21:26:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233201AbhBESJA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 13:09:00 -0500
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23078 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232591AbhBESHB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 5 Feb 2021 13:07:01 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1612554545; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=NPsWXIeL1yu7Zu/3blrDQ6G8CVyagjT+skV5dFqeInA=;
- b=nOXPCdItt4JPUEMjDKClHWJyZuR/vugSYFsvl9NFvr2Zb+Xw/0PqXkLUQQkvvAPw1S4vkJXv
- y6FkfPYbIwIdwmEE/Nw7pu/+VV/QhiFKmgm1klOUvTxQJC/I1lozXBh60mj0UEBRq+7xtzxb
- vwJENEJVj/lYHp8PQvMsyxLU+e0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MmE5NyIsICJsaW51eC1ibG9ja0B2Z2VyLmtlcm5lbC5vcmciLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 601d647df112b7872c1bdd10 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Feb 2021 15:30:05
- GMT
-Sender: pragalla=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 42706C43465; Fri,  5 Feb 2021 15:30:05 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pragalla)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EA69C433C6;
-        Fri,  5 Feb 2021 15:30:04 +0000 (UTC)
+        id S233527AbhBEShY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 13:37:24 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:54986 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S233003AbhBEPJb (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 5 Feb 2021 10:09:31 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=UQEHlnVg5XQbvsB12U1Ol3bhaQI9w8E6XPoWFxWLZmrTEAjZvoQaEbrphRRSyBGIIWdRriBN1NgjJnIHHuwrDk7Jiepk7hcecgKlubZ8Cbf+eyLm3How+vKdkYfuxbESucRjBUGhM3uNAIEl+djc5YuHgus55Al0uLGG/w84VCgbq4C5haAYakmS1vYlSgFchzN2F++luNM29v8DFhI75uaDxJSrLZjsc+U9sEzNpAaOCR9pw2OgdpmsaX
+        RpEWSooLH5k7s+lJH9RwsRzupCIBYaSMrEgafQL+30fpkHM9MFjkLmthx4Z1XqGeg54bjdS4mLhUgJrpa/zvXopT6v+g==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Mon, 1 Feb 2021 08:49:51 +0000
+Message-ID: <7494048F-E4B5-4167-8C98-9021CA321467@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Mon, 1 Feb 2021 08:49:50 -0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain;
+        charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Feb 2021 21:00:04 +0530
-From:   pragalla@codeaurora.org
-To:     John Garry <john.garry@huawei.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
-        evgreen@google.com, jianchao.w.wang@oracle.com,
-        linux-block@vger.kernel.org, stummala@codeaurora.org,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: use-after-free access in bt_iter()
-In-Reply-To: <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
-References: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
- <056783fa-a510-2463-f353-c64dd8f37be9@acm.org>
- <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
-Message-ID: <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
-X-Sender: pragalla@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2021-02-04 21:47, John Garry wrote:
-> On 04/02/2021 15:51, Bart Van Assche wrote:
->> On 2/4/21 3:46 AM,pragalla@codeaurora.org  wrote:
->>> Is this issue got fixed on any latest kernel ? if so, can you please
->>> help point the patch ?
->>> If not got fixed, can we have a final solution ? i can even help in
->>> testing the solution.
->> Hi John,
->> 
-> 
-> Hi Bart,
-> 
->> Some time ago you replied the following to an email from me with a
->> suggestion for a fix: "Please let me consider it a bit more." Are you
->> still working on a fix?
-> 
-> Unfortunately I have not had a chance, sorry. But I can look again.
-> 
-> So I have only seen KASAN use-after-free's myself, but never an actual
-> oops. IIRC, someone did report an oops.
-> 
-Hi John,
+Hello,
 
-> @Pradeep, do you have a reliable re-creator? I noticed the timeout
-> handler stackframe in your mail, so I guess not. However, as an
-> experiment, could you test:
-> https://lore.kernel.org/linux-block/1608203273-170555-2-git-send-email-john.garry@huawei.com/
-> 
-Yes, i don't have a reliable re-creator. The oops was noticed as a part 
-of stability testing and
-was not an intentional try. This was noticed couple of times.
-Please share the steps (if any) to easy hit or to exercise this path 
-more frequently.
-Meanwhile, i will go with the usual stability procedure. i will update 
-the results here later.
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-> This should fix the common issue. But no final solution to issues
-> discussed from patch 2/2, which is more exotic.
-> 
-> BTW, is this the same Pradeep who reported:
-> https://lore.kernel.org/linux-block/1606402925-24420-1-git-send-email-ppvk@codeaurora.org/
-> 
-> I did cc ppvk@codeaurora.org on earlier version of my series, but it 
-> bounced.
-> 
-Yes, it's the same Pradeep. Unfortunately my old email 
-"ppvk@codeaurora.org" got expired and
-couldn't able to restore. Hence the bounced emails. Now this got 
-resolved with a new email
-"pragalla@codeaurora.org" which I'm now currently replying.
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
->> 
->> See also
->> https://lore.kernel.org/linux-block/1bcc1d9e-6a32-1e00-0d32-f5b7325b2f8c@huawei.com/
-> 
-> Thanks,
-> John
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
-Thanks and Regards,
-Pradeep
+Regards,
+Ms. Reem.
+
