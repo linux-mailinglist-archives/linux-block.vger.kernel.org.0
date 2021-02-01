@@ -2,344 +2,399 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A19B30A87A
-	for <lists+linux-block@lfdr.de>; Mon,  1 Feb 2021 14:19:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB6C930A170
+	for <lists+linux-block@lfdr.de>; Mon,  1 Feb 2021 06:28:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbhBANSQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Feb 2021 08:18:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
+        id S229629AbhBAF1h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Feb 2021 00:27:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231405AbhBANRg (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Feb 2021 08:17:36 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA2DC061786
-        for <linux-block@vger.kernel.org>; Mon,  1 Feb 2021 05:16:16 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id b8so9944772plh.12
-        for <linux-block@vger.kernel.org>; Mon, 01 Feb 2021 05:16:16 -0800 (PST)
+        with ESMTP id S229556AbhBAFY5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Feb 2021 00:24:57 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45674C06178C
+        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:22:42 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id r38so11257689pgk.13
+        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:22:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JbIPuAc8qWHqihnFCSjQH3tbXdJtYSpBrxjOlZqdZAE=;
-        b=M/zkOybr1Th6GNfoAkQRnNC9Oclr542o5Irf2jvdEMttiegIkQoBHgX0evazKCQuN2
-         AnXzx45SjHo7Z2Xn2kKthPKQuOMEFJTesINgOrWlQtuYoWXiaHyyewRhQ4L6BQU5Mfl9
-         7jVklykmwuH3UOrmIqEtyOBuB43sTYRHD2qF4=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kgau3vxD8lx86uHt+rDSQhFn7BPMBlqOkVLQlLIj5pY=;
+        b=E0dX55dFwLe0ofA+LT9j9+T08UjHrlEbOLfgGuAv7EyLDiq2YeeW1hJSbo7N/aSmTy
+         G8PCeDDz20p7F3pMIhMUJny/SVnlvJKNxRDfrnvA7xP5epO8b0+yobYkUK6/k04oyAlb
+         WUedR5jZ/SDHnO5h2N7zo3aqEOEOWTgAGEwbVqer0DecGGMfBhkXcxwMMPngCNKUsQym
+         2KYmVkxv7f9xmd+KuI8/dgBqOA0ncw/LV9ApXdHAt9huWn1ByWuavONzlWf3Es3HO9UP
+         Xsbjdz6agC4otenePgX8Q86huBvMuE3uNu9GfDX/0Hfh2f41nxomEQhKI61V2/yhTIbb
+         Rndw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JbIPuAc8qWHqihnFCSjQH3tbXdJtYSpBrxjOlZqdZAE=;
-        b=E0cqfX6FCn9ddl8u1Po5nVPFNDiabP6Rk/cV9fx7Ej7rRJkzwLiaF81bF8EodbDgCw
-         P+TSIkVMwNvKfXJ+aA0NvfRqrZnlzwcCOM8r3h5A2t2yPeGB5gssfJj2cl4FM66STSbT
-         d7qNhWH+saOGdjZ3OhrarbfNa+yO6Tf7h0I5UnQOSjZVHt7UkrWsGfd+VUuF8hdI43tR
-         jYqPmoFMlfKH+e2IbFCMP6rdt5QjqOb23wLeIQ8ZAb10UuXSXHfw/pM5wwgDfXOZs454
-         xzJjgIyr3n7p29Hrr7/I/ewQ6uuT3sXl6Vw6JfsRuEtrQRwtS7cYQQR21f1FPYMo4hQt
-         WDPw==
-X-Gm-Message-State: AOAM532pHt6nRLRMZGrvJT6yJyEoL0wkxuwaPopE/TsNHWlMGv46zI6X
-        BuGK8UvJgZiOrjrbAH/ECf0zX1VgTHXzppOa
-X-Google-Smtp-Source: ABdhPJwJi1g2c2tRawM/0CohONEgpRkv1PcfaX6jYs9T/vH4xndn+dDIYo3OKXGduChQ5CQGLz5k5w==
-X-Received: by 2002:a17:90a:d188:: with SMTP id fu8mr16809959pjb.77.1612185375506;
-        Mon, 01 Feb 2021 05:16:15 -0800 (PST)
-Received: from drv-bst-rhel8.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id h2sm18573898pfk.4.2021.02.01.05.16.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kgau3vxD8lx86uHt+rDSQhFn7BPMBlqOkVLQlLIj5pY=;
+        b=KLZN2yQAJFN8aGd7zuFYGqwnvhWcw7gLTL0w30M717Zzohv+z+LJIVxwVSlNgBtH+j
+         NukmBZsi6rS7g9NxPMt8I+O6G575FKb7iwKqGS37vG+uOBQWuUKNBA6O3Tcwgbl5+1DM
+         sybtzF8N0NscbzyPoVGnST2JtqRWehA+EuBS0NRexohIq9kjAkYU3zrP/5v48LV5Nz7S
+         Q6hLUm0v8UXQxuw06DhOySjhZuLQb1+lo9yK2wM8dbTr0bSShJcRtnJoDakjrSnGhTMh
+         UQN2OFjecdUvm1vzSFZEg9meRKp1vMmTQ/0/+Xj3cEzjcBIihwosutwz98dTlC/uoG5t
+         +KEQ==
+X-Gm-Message-State: AOAM531/az3nC9pAzjpng6cT/MNpCYnp+uR63NeCvllbMq+y/z6bgxHw
+        jZEHg+/9XmbFrkXNlJwhNtSk/A==
+X-Google-Smtp-Source: ABdhPJzV2RP9A/EmsI7hXrZqOHEnU/D0OmLDKcG3R+Cv254+gXsKoYOpc4nzSh5j3QdbxQYPd0MCsA==
+X-Received: by 2002:a63:dd42:: with SMTP id g2mr15585498pgj.285.1612156961509;
+        Sun, 31 Jan 2021 21:22:41 -0800 (PST)
+Received: from google.com (139.60.82.34.bc.googleusercontent.com. [34.82.60.139])
+        by smtp.gmail.com with ESMTPSA id f71sm16041506pfa.138.2021.01.31.21.22.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 05:16:15 -0800 (PST)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-To:     linux-scsi@vger.kernel.org
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>, dgilbert@interlog.com,
-        linux-block@vger.kernel.org
-Subject: [PATCH v3 3/4] scsi_debug : iouring iopoll support
-Date:   Mon,  1 Feb 2021 10:46:18 +0530
-Message-Id: <20210201051619.19909-4-kashyap.desai@broadcom.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20210201051619.19909-1-kashyap.desai@broadcom.com>
-References: <20210201051619.19909-1-kashyap.desai@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000a40a3d05ba46281c"
+        Sun, 31 Jan 2021 21:22:40 -0800 (PST)
+Date:   Mon, 1 Feb 2021 05:22:37 +0000
+From:   Satya Tangirala <satyat@google.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dm-devel@redhat.com, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH v3 3/6] dm: add support for passing through inline crypto
+ support
+Message-ID: <YBeQHd6whGayp5WV@google.com>
+References: <20201229085524.2795331-1-satyat@google.com>
+ <20201229085524.2795331-4-satyat@google.com>
+ <20210114180049.GA26410@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210114180049.GA26410@redhat.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---000000000000a40a3d05ba46281c
+On Thu, Jan 14, 2021 at 01:00:49PM -0500, Mike Snitzer wrote:
+> On Tue, Dec 29 2020 at  3:55am -0500,
+> Satya Tangirala <satyat@google.com> wrote:
+> 
+> > Update the device-mapper core to support exposing the inline crypto
+> > support of the underlying device(s) through the device-mapper device.
+> > 
+> > This works by creating a "passthrough keyslot manager" for the dm
+> > device, which declares support for encryption settings which all
+> > underlying devices support.  When a supported setting is used, the bio
+> > cloning code handles cloning the crypto context to the bios for all the
+> > underlying devices.  When an unsupported setting is used, the blk-crypto
+> > fallback is used as usual.
+> > 
+> > Crypto support on each underlying device is ignored unless the
+> > corresponding dm target opts into exposing it.  This is needed because
+> > for inline crypto to semantically operate on the original bio, the data
+> > must not be transformed by the dm target.  Thus, targets like dm-linear
+> > can expose crypto support of the underlying device, but targets like
+> > dm-crypt can't.  (dm-crypt could use inline crypto itself, though.)
+> > 
+> > A DM device's table can only be changed if the "new" inline encryption
+> > capabilities are a (*not* necessarily strict) superset of the "old" inline
+> > encryption capabilities.  Attempts to make changes to the table that result
+> > in some inline encryption capability becoming no longer supported will be
+> > rejected.
+> > 
+> > For the sake of clarity, key eviction from underlying devices will be
+> > handled in a future patch.
+> > 
+> > Co-developed-by: Eric Biggers <ebiggers@google.com>
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > Signed-off-by: Satya Tangirala <satyat@google.com>
+> > ---
+> >  drivers/md/dm.c                 | 164 +++++++++++++++++++++++++++++++-
+> >  include/linux/device-mapper.h   |   6 ++
+> >  include/linux/keyslot-manager.h |   8 ++
+> >  3 files changed, 177 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> > index b3c3c8b4cb42..13b9c8e2e21b 100644
+> > --- a/drivers/md/dm.c
+> > +++ b/drivers/md/dm.c
+> > @@ -28,6 +28,7 @@
+> >  #include <linux/refcount.h>
+> >  #include <linux/part_stat.h>
+> >  #include <linux/blk-crypto.h>
+> > +#include <linux/keyslot-manager.h>
+> >  
+> >  #define DM_MSG_PREFIX "core"
+> >  
+> > @@ -1718,6 +1719,8 @@ static const struct dax_operations dm_dax_ops;
+> >  
+> >  static void dm_wq_work(struct work_struct *work);
+> >  
+> > +static void dm_destroy_inline_encryption(struct request_queue *q);
+> > +
+> >  static void cleanup_mapped_device(struct mapped_device *md)
+> >  {
+> >  	if (md->wq)
+> > @@ -1739,8 +1742,10 @@ static void cleanup_mapped_device(struct mapped_device *md)
+> >  		put_disk(md->disk);
+> >  	}
+> >  
+> > -	if (md->queue)
+> > +	if (md->queue) {
+> > +		dm_destroy_inline_encryption(md->queue);
+> >  		blk_cleanup_queue(md->queue);
+> > +	}
+> >  
+> >  	cleanup_srcu_struct(&md->io_barrier);
+> >  
+> > @@ -1937,6 +1942,150 @@ static void event_callback(void *context)
+> >  	dm_issue_global_event();
+> >  }
+> >  
+> > +#ifdef CONFIG_BLK_INLINE_ENCRYPTION
+> > +
+> > +struct dm_keyslot_manager {
+> > +	struct blk_keyslot_manager ksm;
+> > +	struct mapped_device *md;
+> > +};
+> > +
+> > +static int device_intersect_crypto_modes(struct dm_target *ti,
+> > +					 struct dm_dev *dev, sector_t start,
+> > +					 sector_t len, void *data)
+> > +{
+> > +	struct blk_keyslot_manager *parent = data;
+> > +	struct blk_keyslot_manager *child = bdev_get_queue(dev->bdev)->ksm;
+> > +
+> > +	blk_ksm_intersect_modes(parent, child);
+> > +	return 0;
+> > +}
+> > +
+> > +static void dm_destroy_keyslot_manager(struct blk_keyslot_manager *ksm)
+> > +{
+> > +	struct dm_keyslot_manager *dksm = container_of(ksm,
+> > +						       struct dm_keyslot_manager,
+> > +						       ksm);
+> > +
+> > +	if (!ksm)
+> > +		return;
+> > +
+> > +	blk_ksm_destroy(ksm);
+> > +	kfree(dksm);
+> > +}
+> > +
+> > +/*
+> > + * Constructs and returns a keyslot manager that represents the crypto
+> > + * capabilities of the devices described by the dm_table. However, if the
+> > + * constructed keyslot manager does not support a superset of the crypto
+> > + * capabilities supported by the current keyslot manager of the mapped_device,
+> > + * it returns an error instead, since we don't support restricting crypto
+> > + * capabilities on table changes. Finally, if the constructed keyslot manager
+> > + * doesn't actually support any crypto modes at all, it just returns NULL.
+> > + */
+> > +static struct blk_keyslot_manager *
+> > +dm_construct_keyslot_manager(struct mapped_device *md, struct dm_table *t)
+> > +{
+> > +	struct dm_keyslot_manager *dksm;
+> > +	struct blk_keyslot_manager *ksm;
+> > +	struct dm_target *ti;
+> > +	unsigned int i;
+> > +	bool ksm_is_empty = true;
+> > +
+> > +	dksm = kmalloc(sizeof(*dksm), GFP_KERNEL);
+> > +	if (!dksm)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	dksm->md = md;
+> > +
+> > +	ksm = &dksm->ksm;
+> > +	blk_ksm_init_passthrough(ksm);
+> > +	ksm->max_dun_bytes_supported = UINT_MAX;
+> > +	memset(ksm->crypto_modes_supported, 0xFF,
+> > +	       sizeof(ksm->crypto_modes_supported));
+> > +
+> > +	for (i = 0; i < dm_table_get_num_targets(t); i++) {
+> > +		ti = dm_table_get_target(t, i);
+> > +
+> > +		if (!dm_target_passes_crypto(ti->type)) {
+> > +			blk_ksm_intersect_modes(ksm, NULL);
+> > +			break;
+> > +		}
+> > +		if (!ti->type->iterate_devices)
+> > +			continue;
+> > +		ti->type->iterate_devices(ti, device_intersect_crypto_modes,
+> > +					  ksm);
+> > +	}
+> > +
+> > +	if (!blk_ksm_is_superset(ksm, md->queue->ksm)) {
+> > +		DMWARN("Inline encryption capabilities of new DM table were more restrictive than the old table's. This is not supported!");
+> > +		dm_destroy_keyslot_manager(ksm);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	/*
+> > +	 * If the new KSM doesn't actually support any crypto modes, we may as
+> > +	 * well represent it with a NULL ksm.
+> > +	 */
+> > +	ksm_is_empty = true;
+> > +	for (i = 0; i < ARRAY_SIZE(ksm->crypto_modes_supported); i++) {
+> > +		if (ksm->crypto_modes_supported[i]) {
+> > +			ksm_is_empty = false;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	if (ksm_is_empty) {
+> > +		dm_destroy_keyslot_manager(ksm);
+> > +		ksm = NULL;
+> > +	}
+> > +
+> > +	return ksm;
+> > +}
+> > +
+> > +static void dm_update_keyslot_manager(struct request_queue *q,
+> > +				      struct blk_keyslot_manager *ksm)
+> > +{
+> > +	if (!ksm)
+> > +		return;
+> > +
+> > +	/* Make the ksm less restrictive */
+> > +	if (!q->ksm) {
+> > +		blk_ksm_register(ksm, q);
+> > +	} else {
+> > +		blk_ksm_update_capabilities(q->ksm, ksm);
+> > +		dm_destroy_keyslot_manager(ksm);
+> > +	}
+> > +}
+> > +
+> > +static void dm_destroy_inline_encryption(struct request_queue *q)
+> > +{
+> > +	if (!q->ksm)
+> > +		return;
+> > +	dm_destroy_keyslot_manager(q->ksm);
+> > +}
+> > +
+> > +#else /* CONFIG_BLK_INLINE_ENCRYPTION */
+> > +
+> > +static inline struct blk_keyslot_manager *
+> > +dm_construct_keyslot_manager(struct mapped_device *md, struct dm_table *t)
+> > +{
+> > +	return NULL;
+> > +}
+> > +
+> > +static void dm_update_keyslot_manager(struct request_queue *q,
+> > +				      struct blk_keyslot_manager *ksm)
+> > +{
+> > +}
+> > +
+> > +static void dm_destroy_keyslot_manager(struct blk_keyslot_manager *ksm)
+> > +{
+> > +}
+> > +
+> > +static inline void dm_destroy_inline_encryption(struct request_queue *q)
+> > +{
+> > +}
+> > +
+> > +#endif /* !CONFIG_BLK_INLINE_ENCRYPTION */
+> > +
+> >  /*
+> >   * Returns old map, which caller must destroy.
+> >   */
+> > @@ -2332,6 +2481,7 @@ struct dm_table *dm_swap_table(struct mapped_device *md, struct dm_table *table)
+> >  {
+> >  	struct dm_table *live_map = NULL, *map = ERR_PTR(-EINVAL);
+> >  	struct queue_limits limits;
+> > +	struct blk_keyslot_manager *ksm;
+> >  	int r;
+> >  
+> >  	mutex_lock(&md->suspend_lock);
+> > @@ -2361,7 +2511,19 @@ struct dm_table *dm_swap_table(struct mapped_device *md, struct dm_table *table)
+> >  		}
+> >  	}
+> >  
+> > +	ksm = dm_construct_keyslot_manager(md, table);
+> > +	if (IS_ERR(ksm)) {
+> > +		map = ERR_CAST(ksm);
+> > +		goto out;
+> > +	}
+> > +
+> 
+> The work done in dm_construct_keyslot_manager() is inappropriate to do
+> at this point in the DM core code.
+> 
+> This should be split into 2 phases:
+> 1) allocation/setup of ksm in dm-table.c:dm_table_complete()
+> 2) quick install of ksm in dm.c:__bind()
+> 
+> Memory allocation should be done as part of dm_table_complete().
+> Meaning I think the ksm should be allocated on demand as part of
+> dm_table creation. Then if in dm_swap_table()'s __bind() table->ksm
+> isn't NULL, dm_update_keyslot_manager() is called.
+> dm_update_keyslot_manager() should be updated to take dm_table rather
+> than ksm (and table->ksm is set to NULL at end).
+> 
+> But if DM table creation's validation of ksm fails, then any newly
+> allocated ksm (stored in table->ksm) should be destroyed as part of
+> dm_table_destroy().
+I followed your suggestion for v4 (which I just sent out at
+https://lore.kernel.org/dm-devel/20210201051019.1174983-1-satyat@google.com/)
 
-Add support of iouring iopoll interface in scsi_debug.
-This feature requires shared hosttag support in kernel and driver.
+> This should also eliminate the need for an
+> intermediate 'struct dm_keyslot_manager'
+> 
+> Mike
+> 
 
-Signed-off-by: Kashyap Desai <kashyap.desai@broadcom.com>
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Tested-by: Douglas Gilbert <dgilbert@interlog.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+I'd have liked to remove the struct dm_keyslot_manager too, but I think
+it's still necessary because of the key eviction support introduced in
+the next patch. dm_keyslot_evict() needs to know the mapped device given
+the ksm. In an earlier version of the series, I tried introducing a
+private data field to struct blk_keyslot_manager, but that was objected
+to (and this approach was suggested instead).
 
-Cc: dgilbert@interlog.com
-Cc: linux-block@vger.kernel.org
----
- drivers/scsi/scsi_debug.c | 130 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
-
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index d1b0cbe1b5f1..746eec521f79 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -829,6 +829,7 @@ static int sdeb_zbc_max_open = DEF_ZBC_MAX_OPEN_ZONES;
- static int sdeb_zbc_nr_conv = DEF_ZBC_NR_CONV_ZONES;
- 
- static int submit_queues = DEF_SUBMIT_QUEUES;  /* > 1 for multi-queue (mq) */
-+static int poll_queues; /* iouring iopoll interface.*/
- static struct sdebug_queue *sdebug_q_arr;  /* ptr to array of submit queues */
- 
- static DEFINE_RWLOCK(atomic_rw);
-@@ -5432,6 +5433,14 @@ static int schedule_resp(struct scsi_cmnd *cmnd, struct sdebug_dev_info *devip,
- 	cmnd->host_scribble = (unsigned char *)sqcp;
- 	sd_dp = sqcp->sd_dp;
- 	spin_unlock_irqrestore(&sqp->qc_lock, iflags);
-+
-+	/* Do not complete IO from default completion path.
-+	 * Let it to be on queue.
-+	 * Completion should happen from mq_poll interface.
-+	 */
-+	if ((sqp - sdebug_q_arr) >= (submit_queues - poll_queues))
-+		return 0;
-+
- 	if (!sd_dp) {
- 		sd_dp = kzalloc(sizeof(*sd_dp), GFP_ATOMIC);
- 		if (!sd_dp) {
-@@ -5615,6 +5624,7 @@ module_param_named(sector_size, sdebug_sector_size, int, S_IRUGO);
- module_param_named(statistics, sdebug_statistics, bool, S_IRUGO | S_IWUSR);
- module_param_named(strict, sdebug_strict, bool, S_IRUGO | S_IWUSR);
- module_param_named(submit_queues, submit_queues, int, S_IRUGO);
-+module_param_named(poll_queues, poll_queues, int, S_IRUGO);
- module_param_named(tur_ms_to_ready, sdeb_tur_ms_to_ready, int, S_IRUGO);
- module_param_named(unmap_alignment, sdebug_unmap_alignment, int, S_IRUGO);
- module_param_named(unmap_granularity, sdebug_unmap_granularity, int, S_IRUGO);
-@@ -5677,6 +5687,7 @@ MODULE_PARM_DESC(opt_xferlen_exp, "optimal transfer length granularity exponent
- MODULE_PARM_DESC(opts, "1->noise, 2->medium_err, 4->timeout, 8->recovered_err... (def=0)");
- MODULE_PARM_DESC(per_host_store, "If set, next positive add_host will get new store (def=0)");
- MODULE_PARM_DESC(physblk_exp, "physical block exponent (def=0)");
-+MODULE_PARM_DESC(poll_queues, "support for iouring iopoll queues (1 to max(submit_queues - 1)");
- MODULE_PARM_DESC(ptype, "SCSI peripheral type(def=0[disk])");
- MODULE_PARM_DESC(random, "If set, uniformly randomize command duration between 0 and delay_in_ns");
- MODULE_PARM_DESC(removable, "claim to have removable media (def=0)");
-@@ -7201,6 +7212,104 @@ static int resp_not_ready(struct scsi_cmnd *scp, struct sdebug_dev_info *devip)
- 	return check_condition_result;
- }
- 
-+static int sdebug_map_queues(struct Scsi_Host *shost)
-+{
-+	int i, qoff;
-+
-+	if (shost->nr_hw_queues == 1)
-+		return 0;
-+
-+	for (i = 0, qoff = 0; i < HCTX_MAX_TYPES; i++) {
-+		struct blk_mq_queue_map *map = &shost->tag_set.map[i];
-+
-+		map->nr_queues  = 0;
-+
-+		if (i == HCTX_TYPE_DEFAULT)
-+			map->nr_queues = submit_queues - poll_queues;
-+		else if (i == HCTX_TYPE_POLL)
-+			map->nr_queues = poll_queues;
-+
-+		if (!map->nr_queues) {
-+			BUG_ON(i == HCTX_TYPE_DEFAULT);
-+			continue;
-+		}
-+
-+		map->queue_offset = qoff;
-+		blk_mq_map_queues(map);
-+
-+		qoff += map->nr_queues;
-+	}
-+
-+	return 0;
-+
-+}
-+
-+static int sdebug_blk_mq_poll(struct Scsi_Host *shost, unsigned int queue_num)
-+{
-+	int qc_idx;
-+	int retiring = 0;
-+	unsigned long iflags;
-+	struct sdebug_queue *sqp;
-+	struct sdebug_queued_cmd *sqcp;
-+	struct scsi_cmnd *scp;
-+	struct sdebug_dev_info *devip;
-+	int num_entries = 0;
-+
-+	sqp = sdebug_q_arr + queue_num;
-+
-+	do {
-+		spin_lock_irqsave(&sqp->qc_lock, iflags);
-+		qc_idx = find_first_bit(sqp->in_use_bm, sdebug_max_queue);
-+		if (unlikely((qc_idx < 0) || (qc_idx >= sdebug_max_queue)))
-+			goto out;
-+
-+		sqcp = &sqp->qc_arr[qc_idx];
-+		scp = sqcp->a_cmnd;
-+		if (unlikely(scp == NULL)) {
-+			pr_err("scp is NULL, queue_num=%d, qc_idx=%d from %s\n",
-+			       queue_num, qc_idx, __func__);
-+			goto out;
-+		}
-+		devip = (struct sdebug_dev_info *)scp->device->hostdata;
-+		if (likely(devip))
-+			atomic_dec(&devip->num_in_q);
-+		else
-+			pr_err("devip=NULL from %s\n", __func__);
-+		if (unlikely(atomic_read(&retired_max_queue) > 0))
-+			retiring = 1;
-+
-+		sqcp->a_cmnd = NULL;
-+		if (unlikely(!test_and_clear_bit(qc_idx, sqp->in_use_bm))) {
-+			pr_err("Unexpected completion sqp %p queue_num=%d qc_idx=%d from %s\n",
-+				sqp, queue_num, qc_idx, __func__);
-+			goto out;
-+		}
-+
-+		if (unlikely(retiring)) {	/* user has reduced max_queue */
-+			int k, retval;
-+
-+			retval = atomic_read(&retired_max_queue);
-+			if (qc_idx >= retval) {
-+				pr_err("index %d too large\n", retval);
-+				goto out;
-+			}
-+			k = find_last_bit(sqp->in_use_bm, retval);
-+			if ((k < sdebug_max_queue) || (k == retval))
-+				atomic_set(&retired_max_queue, 0);
-+			else
-+				atomic_set(&retired_max_queue, k + 1);
-+		}
-+		spin_unlock_irqrestore(&sqp->qc_lock, iflags);
-+		scp->scsi_done(scp); /* callback to mid level */
-+		num_entries++;
-+	} while (1);
-+
-+out:
-+	spin_unlock_irqrestore(&sqp->qc_lock, iflags);
-+	return num_entries;
-+}
-+
-+
- static int scsi_debug_queuecommand(struct Scsi_Host *shost,
- 				   struct scsi_cmnd *scp)
- {
-@@ -7380,6 +7489,8 @@ static struct scsi_host_template sdebug_driver_template = {
- 	.ioctl =		scsi_debug_ioctl,
- 	.queuecommand =		scsi_debug_queuecommand,
- 	.change_queue_depth =	sdebug_change_qdepth,
-+	.map_queues =		sdebug_map_queues,
-+	.mq_poll =		sdebug_blk_mq_poll,
- 	.eh_abort_handler =	scsi_debug_abort,
- 	.eh_device_reset_handler = scsi_debug_device_reset,
- 	.eh_target_reset_handler = scsi_debug_target_reset,
-@@ -7427,6 +7538,25 @@ static int sdebug_driver_probe(struct device *dev)
- 	if (sdebug_host_max_queue)
- 		hpnt->host_tagset = 1;
- 
-+	/* poll queues are possible for nr_hw_queues > 1 */
-+	if (hpnt->nr_hw_queues == 1 || (poll_queues < 1)) {
-+		pr_warn("%s: trim poll_queues to 0. poll_q/nr_hw = (%d/%d)\n",
-+			 my_name, poll_queues, hpnt->nr_hw_queues);
-+		poll_queues = 0;
-+	}
-+
-+	/*
-+	 * Poll queues don't need interrupts, but we need at least one I/O queue
-+	 * left over for non-polled I/O.
-+	 * If condition not met, trim poll_queues to 1 (just for simplicity).
-+	 */
-+	if (poll_queues >= submit_queues) {
-+		pr_warn("%s: trim poll_queues to 1\n", my_name);
-+		poll_queues = 1;
-+	}
-+	if (poll_queues)
-+		hpnt->nr_maps = 3;
-+
- 	sdbg_host->shost = hpnt;
- 	*((struct sdebug_host_info **)hpnt->hostdata) = sdbg_host;
- 	if ((hpnt->this_id >= 0) && (sdebug_num_tgts > hpnt->this_id))
--- 
-2.18.1
-
-
---000000000000a40a3d05ba46281c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-yfWKfxJx8FcWmsjkSlrwDu+oVuDUa2wqeKBU12HQ4JAVd+LOb5edsbbFQxgGHu+MPuc/1hl9kTkC
-AwEAAaOCAdEwggHNMA4GA1UdDwEB/wQEAwIFoDCBngYIKwYBBQUHAQEEgZEwgY4wTQYIKwYBBQUH
-MAKGQWh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzcGVyc29uYWxzaWduMnNo
-YTJnM29jc3AuY3J0MD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vZ3Nw
-ZXJzb25hbHNpZ24yc2hhMmczME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIB
-FiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEQGA1Ud
-HwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNpZ24yc2hh
-MmczLmNybDAlBgNVHREEHjAcgRprYXNoeWFwLmRlc2FpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAK
-BggrBgEFBQcDBDAfBgNVHSMEGDAWgBRpcoJiMWeVRIV3kYDEBDZJnXsLYTAdBgNVHQ4EFgQU4dX1
-Yg4eoWXbqyPW/N1ZD/LPIWcwDQYJKoZIhvcNAQELBQADggEBABBuHYKGUwHIhCjd3LieJwKVuJNr
-YohEnZzCoNaOj33/j5thiA4cZehCh6SgrIlFBIktLD7jW9Dwl88Gfcy+RrVa7XK5Hyqwr1JlCVsW
-pNj4hlSJMNNqxNSqrKaD1cR4/oZVPFVnJJYlB01cLVjGMzta9x27e6XEtseo2s7aoPS2l82koMr7
-8S/v9LyyP4X2aRTWOg9RG8D/13rLxFAApfYvCrf0quIUBWw2BXlq3+e3r7pU7j40d6P04VV3Zxws
-M+LbYxcXFT2gXvoYd2Ms8zsLrhO2M6pMzeNGWk2HWTof9s7EEHDjis/MRlbYSNaohV23IUzNlBw7
-1FmvvW5GKK0xggJvMIICawIBATBtMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWdu
-IG52LXNhMTMwMQYDVQQDEypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0g
-RzMCDDSdoX7GqonhoE7TszANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQggqGG0zvD
-/hTLAsaOEHJZefTi8RFhDTJS3l8IaY6Rk3cwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkq
-hkiG9w0BCQUxDxcNMjEwMjAxMTMxNjE1WjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjAL
-BglghkgBZQMEARYwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG
-9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBABxXLyKB9B1v3BsZ+faogVLhlKFs
-p8xBm8bKZtQFK19x9UttHsCkWOnO9kNcpV3c+i2u6+gNjQmWw2bIofR7wEz9C+Fjv3ZNttquzX/P
-94uD2Mn2cwPPgxsJjcKWcTatsG1PEzkB4QEvURUS1qeoqk/EgjRZSzYPzqsEVLGO2kzvvbmBXDUL
-lZAS8QPcxrdYyZtm4g2vR2b/eczAS0IePWgnGRi6eOawcs/NYIjFaRSYq8rHn2YeEg6USGT9iTl5
-RockzE+M5IorilOkgio7l4pkwknitMqTnTfKQNEhLxpTfrwl+kSzJmfuXR5AiEtMdXHHD388jmbs
-Mfggaz4+a+0=
---000000000000a40a3d05ba46281c--
+> >  	map = __bind(md, table, &limits);
+> > +
+> > +	if (IS_ERR(map))
+> > +		dm_destroy_keyslot_manager(ksm);
+> > +	else
+> > +		dm_update_keyslot_manager(md->queue, ksm);
+> > +
+> >  	dm_issue_global_event();
+> >  
+> >  out:
+> > diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+> > index 61a66fb8ebb3..0d5794a0a89a 100644
+> > --- a/include/linux/device-mapper.h
+> > +++ b/include/linux/device-mapper.h
+> > @@ -257,6 +257,12 @@ struct target_type {
+> >  #define DM_TARGET_NOWAIT		0x00000080
+> >  #define dm_target_supports_nowait(type) ((type)->features & DM_TARGET_NOWAIT)
+> >  
+> > +/*
+> > + *
+> > + */
+> > +#define DM_TARGET_PASSES_CRYPTO		0x00000100
+> > +#define dm_target_passes_crypto(type) ((type)->features & DM_TARGET_PASSES_CRYPTO)
+> > +
+> >  struct dm_target {
+> >  	struct dm_table *table;
+> >  	struct target_type *type;
+> > diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
+> > index 164568f52be7..9164c1c72288 100644
+> > --- a/include/linux/keyslot-manager.h
+> > +++ b/include/linux/keyslot-manager.h
+> > @@ -11,6 +11,8 @@
+> >  
+> >  struct blk_keyslot_manager;
+> >  
+> > +#ifdef CONFIG_BLK_INLINE_ENCRYPTION
+> > +
+> >  /**
+> >   * struct blk_ksm_ll_ops - functions to manage keyslots in hardware
+> >   * @keyslot_program:	Program the specified key into the specified slot in the
+> > @@ -114,4 +116,10 @@ bool blk_ksm_is_superset(struct blk_keyslot_manager *ksm_superset,
+> >  void blk_ksm_update_capabilities(struct blk_keyslot_manager *target_ksm,
+> >  				 struct blk_keyslot_manager *reference_ksm);
+> >  
+> > +#else /* CONFIG_BLK_INLINE_ENCRYPTION */
+> > +
+> > +static inline void blk_ksm_destroy(struct blk_keyslot_manager *ksm) { }
+> > +
+> > +#endif /* CONFIG_BLK_INLINE_ENCRYPTION */
+> > +
+> >  #endif /* __LINUX_KEYSLOT_MANAGER_H */
+> > -- 
+> > 2.29.2.729.g45daf8777d-goog
+> > 
+> 
