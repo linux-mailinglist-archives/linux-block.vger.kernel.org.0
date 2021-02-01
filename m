@@ -2,55 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C923D30A108
-	for <lists+linux-block@lfdr.de>; Mon,  1 Feb 2021 06:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11C3230A10F
+	for <lists+linux-block@lfdr.de>; Mon,  1 Feb 2021 06:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbhBAFLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Feb 2021 00:11:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        id S229633AbhBAFLP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Feb 2021 00:11:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbhBAFLI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Feb 2021 00:11:08 -0500
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFBFC061756
-        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:10:28 -0800 (PST)
-Received: by mail-pg1-x549.google.com with SMTP id 33so10667314pgv.0
-        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:10:28 -0800 (PST)
+        with ESMTP id S229613AbhBAFLM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Feb 2021 00:11:12 -0500
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E326C061786
+        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:10:30 -0800 (PST)
+Received: by mail-qt1-x84a.google.com with SMTP id o7so9820729qtw.7
+        for <linux-block@vger.kernel.org>; Sun, 31 Jan 2021 21:10:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=5ZoMmUaGdgNrxvzHYeMz2EcFPXbySR8ZrCc4GJHr60Q=;
-        b=GsGk6EeZc10sUAJZaOf4YTwiJ7noIyqt1ZL6Q4iD9nWKnsiLLIf4G98Z0Qa9svXj1a
-         5uUDVIxoZ5Ep3sUweBy2fDlOJWdJC9+/XEEPHEXYQ8uhHZDDDndOwryqfBimR1WG2fjY
-         UWTLp1Xo1eof/KOu5IJKr1PPP4c1/Dvwcjvhew4XIkbUbw+xK4c+osUzV8D0r9Efhc/H
-         I53hHpo/Nxmst24178Rbc8S99wyHtj+jQyw5EKpPo7qFRkduwbhay0nWYoGVvTsMHzQ/
-         jUvxoC7NCeUJgovARnpZ9piEdKheliJddcnxWeGf+4lKg+z2GIjWvrW+1mcSpJX57oup
-         Tv2g==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=OYJeK0hVnx58UggyO2F28C91EjwnMSUOQRtxvIVo72M=;
+        b=hhBMcbrNpjg+7F40lsDSYrGfjddDSjDzLPjNoj37hrryrdNJI3HjA17Ec9iLbnAXT2
+         NsTQ5vwhzCaClkLOdwTBzvR61b3KFX42FjZ65Aojdi9MhgvT0we1qz0PH78vA+zxFuTR
+         W+RfF1bSkIg+HRpUwem3hDBagASF30L+8GiMtJStszxT1UTYU9Wa3luhii9ptuNeXsEY
+         54L0tlZA1hTQyBvW4Mws9poX3Q+BHgCEW2VufY8TgVLS/2iQngS1gYDAS1aT6e8BejDp
+         UFfrClUcXHtmchVdffrO+GNNlbRVMVKZDPs+sZYUSclSWT7ompouF/NTGnmr1d5zKALx
+         0DGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=5ZoMmUaGdgNrxvzHYeMz2EcFPXbySR8ZrCc4GJHr60Q=;
-        b=Uo/mj6I5sEg9Nzm2DwQDq4/H3S6QUUrlzqJDU/dvzSKQn+Q5su2fmPq2znFtv41Sp2
-         BznCbwnR9LmTDz9n1729ixbn/Aag26OYmIZWngYPxp06wf+SlaMU6E+LA5Z7Za+Wkbe3
-         esv+ZlysQoes7HKslJHPwrfpPYr75WZyjjZ94Lq/tm1TV2jJTBsvMJmF74FImPFYIPbb
-         LPCPEsrxvH5tRrldti/pgfpiVDH4mr9DBrO6Nv1brjYdTdUyin/cBBtj5TJpfeL2kpXw
-         0XA+eLLnjAGIGpMkSgLjRXufTvWC1Aqzt54D26tOMM5qBZ6cxAnqaa061uLF+RGxS2Xt
-         7+mA==
-X-Gm-Message-State: AOAM530JtDSmPgvQIUtmOFxgof3MRK3SQaE6gdju1/2m5uPT5ioqSji5
-        xWtroZBKOrOdRJwXbe0dtgBQSHiD2YqTGSOE2vWvjK0ZoCTgfDv3mR9oWTfnPo4qwOi9buViwvV
-        AYUOHWWR6Hv7FI2G8RL+cjdlMt12hY2qHf1XoaJLLGnAuQK1At2Fu6x5EIX8J7a6HoPid
-X-Google-Smtp-Source: ABdhPJx7kmsVH9WtDT4ayliJVLV/lqAyWP654IizECuvbo2azm7D5+QBqPGedxCBE8YFh0HDRNKdzQUMhKM=
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=OYJeK0hVnx58UggyO2F28C91EjwnMSUOQRtxvIVo72M=;
+        b=sw+G17aWptICm5aFrcMdcBx9LxMsJYrp69DuNktw/iW8TYithiRt5MmoDD8oXV76xS
+         IAnX3Two6ToFE+CZzh19sjSTN6GmVU6e3JBrx2aDQ5t0ha5h2Fzg0dnBFKFR8iGzdtMl
+         BJ+XGdQ7Z+XT7q5VSXOefmtaBxGsel34Y2A9BfjZvwsZryL6Vsb2eTjbCQrwVmuci3oz
+         Gp1WFk8P7Q5f4dbrkyJ9J1f00h2ZSmuIsz5EewgOWavBUWnedfTjXfKHatH3079lMsqQ
+         Kah8FygNH4O3s5J0u3ZSXx9FHBuuDqjEfLv8RFO3tEaXyjMfW3wqa44gmL860PkOTJSZ
+         O5kQ==
+X-Gm-Message-State: AOAM532X5SzcN0AgVoRrP8YSoxVkrn9hweMnLMgscLnLDTpieWenlQL5
+        vCDd62CTjPZ9G3rTpoR4Ckof3Kxn49SyF+KtvYAq3604oJuQxpRBuLF8pt92gDDlvGGUMSVLoBa
+        V7/jAkoB4UP6et7rxUTkP3Ma6i82odBfdHxxjnheNVyzce3RjX0ihCUkVGN+SqKR+cUnZ
+X-Google-Smtp-Source: ABdhPJzA4ai7ItUQd6ZhrYgFG/L5lCvckpTLSTAjIG3efXljDLlJWi4+i8Dybs8vpLbTmOxvCmAX9oNJGns=
 Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a05:6a00:86:b029:1c1:99a1:fe2b with SMTP id
- c6-20020a056a000086b02901c199a1fe2bmr15065660pfj.29.1612156227897; Sun, 31
- Jan 2021 21:10:27 -0800 (PST)
-Date:   Mon,  1 Feb 2021 05:10:14 +0000
-Message-Id: <20210201051019.1174983-1-satyat@google.com>
+ (user=satyat job=sendgmr) by 2002:a05:6214:48f:: with SMTP id
+ ay15mr13728404qvb.58.1612156229581; Sun, 31 Jan 2021 21:10:29 -0800 (PST)
+Date:   Mon,  1 Feb 2021 05:10:15 +0000
+In-Reply-To: <20210201051019.1174983-1-satyat@google.com>
+Message-Id: <20210201051019.1174983-2-satyat@google.com>
 Mime-Version: 1.0
+References: <20210201051019.1174983-1-satyat@google.com>
 X-Mailer: git-send-email 2.30.0.365.g02bc693789-goog
-Subject: [PATCH v4 0/5] add support for inline encryption to device mapper
+Subject: [PATCH v4 1/5] block: keyslot-manager: Introduce passthrough keyslot manager
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         dm-devel@redhat.com
@@ -63,127 +65,130 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch series adds support for inline encryption to the device mapper.
+The device mapper may map over devices that have inline encryption
+capabilities, and to make use of those capabilities, the DM device must
+itself advertise those inline encryption capabilities. One way to do this
+would be to have the DM device set up a keyslot manager with a
+"sufficiently large" number of keyslots, but that would use a lot of
+memory. Also, the DM device itself has no "keyslots", and it doesn't make
+much sense to talk about "programming a key into a DM device's keyslot
+manager", so all that extra memory used to represent those keyslots is just
+wasted. All a DM device really needs to be able to do is advertise the
+crypto capabilities of the underlying devices in a coherent manner and
+expose a way to evict keys from the underlying devices.
 
-Patch 1 introduces the "passthrough" keyslot manager.
+There are also devices with inline encryption hardware that do not
+have a limited number of keyslots. One can send a raw encryption key along
+with a bio to these devices (as opposed to typical inline encryption
+hardware that require users to first program a raw encryption key into a
+keyslot, and send the index of that keyslot along with the bio). These
+devices also only need the same things from the keyslot manager that DM
+devices need - a way to advertise crypto capabilities and potentially a way
+to expose a function to evict keys from hardware.
 
-The regular keyslot manager is designed for inline encryption hardware that
-have only a small fixed number of keyslots. A DM device itself does not
-actually have only a small fixed number of keyslots - it doesn't actually
-have any keyslots in the first place, and programming an encryption context
-into a DM device doesn't make much semantic sense. It is possible for a DM
-device to set up a keyslot manager with some "sufficiently large" number of
-keyslots in its request queue, so that upper layers can use the inline
-encryption capabilities of the DM device's underlying devices, but the
-memory being allocated for the DM device's keyslots is a waste since they
-won't actually be used by the DM device.
+So we introduce a "passthrough" keyslot manager that provides a way to
+represent a keyslot manager that doesn't have just a limited number of
+keyslots, and for which do not require keys to be programmed into keyslots.
+DM devices can set up a passthrough keyslot manager in their request
+queues, and advertise appropriate crypto capabilities based on those of the
+underlying devices. Blk-crypto does not attempt to program keys into any
+keyslots in the passthrough keyslot manager. Instead, if/when the bio is
+resubmitted to the underlying device, blk-crypto will try to program the
+key into the underlying device's keyslot manager.
 
-The passthrough keyslot manager solves this issue - when the block layer
-sees that a request queue has a passthrough keyslot manager, it doesn't
-attempt to program any encryption context into the keyslot manager. The
-passthrough keyslot manager only allows the device to expose its inline
-encryption capabilities, and a way for upper layers to evict keys if
-necessary.
+Signed-off-by: Satya Tangirala <satyat@google.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+---
+ block/keyslot-manager.c         | 39 +++++++++++++++++++++++++++++++++
+ include/linux/keyslot-manager.h |  2 ++
+ 2 files changed, 41 insertions(+)
 
-There also exist inline encryption hardware that can handle encryption
-contexts directly, and allow users to pass them a data request along with
-the encryption context (as opposed to inline encryption hardware that
-require users to first program a keyslot with an encryption context, and
-then require the users to pass the keyslot index with the data request).
-Such devices can also make use of the passthrough keyslot manager.
-
-Patch 2 introduces some keyslot manager functions useful for the device
-mapper.
-
-Patch 3 introduces the changes for inline encryption support for the device
-mapper. A DM device only exposes the intersection of the crypto
-capabilities of its underlying devices. This is so that in case a bio with
-an encryption context is eventually mapped to an underlying device that
-doesn't support that encryption context, the blk-crypto-fallback's cipher
-tfms are allocated ahead of time by the call to blk_crypto_start_using_key.
-
-Each DM target can now also specify the "DM_TARGET_PASSES_CRYPTO" flag in
-the target type features to opt-in to supporting passing through the
-underlying inline encryption capabilities.  This flag is needed because it
-doesn't make much semantic sense for certain targets like dm-crypt to
-expose the underlying inline encryption capabilities to the upper layers.
-Again, the DM exposes inline encryption capabilities of the underlying
-devices only if all of them opt-in to passing through inline encryption
-support.
-
-A keyslot manager is created for a table when it is loaded. However, the
-mapped device's exposed capabilities *only* updated once the table is
-swapped in (until the new table is swapped in, the mapped device continues
-to expose the old table's crypto capabilities).
-
-This patch only allows the keyslot manager's capabilities to *expand*
-because of table changes. Any attempt to load a new table that doesn't
-support a crypto capability that the old table did is rejected.
-
-This patch also only exposes the intersection of the underlying device's
-capabilities, which has the effect of causing en/decryption of a bio to
-fall back to the kernel crypto API (if the fallback is enabled) whenever
-any of the underlying devices doesn't support the encryption context of the
-bio - it might be possible to make the bio only fall back to the kernel
-crypto API if the bio's target underlying device doesn't support the bio's
-encryption context, but the use case may be uncommon enough in the first
-place not to warrant worrying about it right now.
-
-Patch 4 makes DM evict a key from all its underlying devices when asked to
-evict a key.
-
-Patch 5 makes some DM targets opt-in to passing through inline encryption
-support. It does not (yet) try to enable this option with dm-raid, since
-users can "hot add" disks to a raid device, which makes this not completely
-straightforward (we'll need to ensure that any "hot added" disks must have
-a superset of the inline encryption capabilities of the rest of the disks
-in the raid device, due to the way Patch 2 of this series works).
-
-Changes v3 => v4:
- - Allocate the memory for the ksm of the mapped device in
-   dm_table_complete(), and install the ksm in the md queue in __bind()
-   (as suggested by Mike). Also drop patch 5 from v3 since it's no longer
-   needed.
- - Some cleanups
-
-Changes v2 => v3:
- - Split up the main DM patch into 4 separate patches
- - Removed the priv variable added to struct keyslot manager in v2
- - Use a flag in target type features for opting-in to inline encryption
-   support, instead of using "may_passthrough_inline_crypto"
- - cleanups, improve docs and restructure code
-
-Changes v1 => v2:
- - Introduce private field to struct blk_keyslot_manager
- - Allow the DM keyslot manager to expand its crypto capabilities if the
-   table is changed.
- - Make DM reject table changes that would otherwise cause crypto
-   capabilities to be dropped.
- - Allocate the DM device's keyslot manager only when at least one crypto
-   capability is supported (since a NULL value for q->ksm represents "no
-   crypto support" anyway).
- - Remove the struct blk_keyslot_manager field from struct mapped_device.
-   This patch now relies on just directly setting up the keyslot manager in
-   the request queue, since each DM device is tied to only 1 queue.
-
-Satya Tangirala (5):
-  block: keyslot-manager: Introduce passthrough keyslot manager
-  block: keyslot-manager: Introduce functions for device mapper support
-  dm: add support for passing through inline crypto support
-  dm: support key eviction from keyslot managers of underlying devices
-  dm: set DM_TARGET_PASSES_CRYPTO feature for some targets
-
- block/blk-crypto.c              |   1 +
- block/keyslot-manager.c         | 146 ++++++++++++++++++++++
- drivers/md/dm-core.h            |   5 +
- drivers/md/dm-flakey.c          |   4 +-
- drivers/md/dm-linear.c          |   5 +-
- drivers/md/dm-table.c           | 210 ++++++++++++++++++++++++++++++++
- drivers/md/dm.c                 |  18 ++-
- include/linux/device-mapper.h   |  11 ++
- include/linux/keyslot-manager.h |  11 ++
- 9 files changed, 407 insertions(+), 4 deletions(-)
-
+diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
+index 86f8195d8039..ac7ce83a76e8 100644
+--- a/block/keyslot-manager.c
++++ b/block/keyslot-manager.c
+@@ -62,6 +62,11 @@ static inline void blk_ksm_hw_exit(struct blk_keyslot_manager *ksm)
+ 		pm_runtime_put_sync(ksm->dev);
+ }
+ 
++static inline bool blk_ksm_is_passthrough(struct blk_keyslot_manager *ksm)
++{
++	return ksm->num_slots == 0;
++}
++
+ /**
+  * blk_ksm_init() - Initialize a keyslot manager
+  * @ksm: The keyslot_manager to initialize.
+@@ -205,6 +210,10 @@ blk_status_t blk_ksm_get_slot_for_key(struct blk_keyslot_manager *ksm,
+ 	int err;
+ 
+ 	*slot_ptr = NULL;
++
++	if (blk_ksm_is_passthrough(ksm))
++		return BLK_STS_OK;
++
+ 	down_read(&ksm->lock);
+ 	slot = blk_ksm_find_and_grab_keyslot(ksm, key);
+ 	up_read(&ksm->lock);
+@@ -325,6 +334,16 @@ int blk_ksm_evict_key(struct blk_keyslot_manager *ksm,
+ 	struct blk_ksm_keyslot *slot;
+ 	int err = 0;
+ 
++	if (blk_ksm_is_passthrough(ksm)) {
++		if (ksm->ksm_ll_ops.keyslot_evict) {
++			blk_ksm_hw_enter(ksm);
++			err = ksm->ksm_ll_ops.keyslot_evict(ksm, key, -1);
++			blk_ksm_hw_exit(ksm);
++			return err;
++		}
++		return 0;
++	}
++
+ 	blk_ksm_hw_enter(ksm);
+ 	slot = blk_ksm_find_keyslot(ksm, key);
+ 	if (!slot)
+@@ -360,6 +379,9 @@ void blk_ksm_reprogram_all_keys(struct blk_keyslot_manager *ksm)
+ {
+ 	unsigned int slot;
+ 
++	if (blk_ksm_is_passthrough(ksm))
++		return;
++
+ 	/* This is for device initialization, so don't resume the device */
+ 	down_write(&ksm->lock);
+ 	for (slot = 0; slot < ksm->num_slots; slot++) {
+@@ -401,3 +423,20 @@ void blk_ksm_unregister(struct request_queue *q)
+ {
+ 	q->ksm = NULL;
+ }
++
++/**
++ * blk_ksm_init_passthrough() - Init a passthrough keyslot manager
++ * @ksm: The keyslot manager to init
++ *
++ * Initialize a passthrough keyslot manager.
++ * Called by e.g. storage drivers to set up a keyslot manager in their
++ * request_queue, when the storage driver wants to manage its keys by itself.
++ * This is useful for inline encryption hardware that doesn't have the concept
++ * of keyslots, and for layered devices.
++ */
++void blk_ksm_init_passthrough(struct blk_keyslot_manager *ksm)
++{
++	memset(ksm, 0, sizeof(*ksm));
++	init_rwsem(&ksm->lock);
++}
++EXPORT_SYMBOL_GPL(blk_ksm_init_passthrough);
+diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
+index 18f3f5346843..323e15dd6fa7 100644
+--- a/include/linux/keyslot-manager.h
++++ b/include/linux/keyslot-manager.h
+@@ -103,4 +103,6 @@ void blk_ksm_reprogram_all_keys(struct blk_keyslot_manager *ksm);
+ 
+ void blk_ksm_destroy(struct blk_keyslot_manager *ksm);
+ 
++void blk_ksm_init_passthrough(struct blk_keyslot_manager *ksm);
++
+ #endif /* __LINUX_KEYSLOT_MANAGER_H */
 -- 
 2.30.0.365.g02bc693789-goog
 
