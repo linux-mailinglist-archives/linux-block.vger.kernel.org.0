@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F8D530B70D
-	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D9430B720
+	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:35:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231546AbhBBFcn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Feb 2021 00:32:43 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:64769 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbhBBFck (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:32:40 -0500
+        id S229719AbhBBFeG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Feb 2021 00:34:06 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:42122 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231658AbhBBFeB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:34:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1612243959; x=1643779959;
+  t=1612245180; x=1643781180;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/yKFFxZIFPH4ommScjtAVEoptJgXEFRq8F+7i4VsxOI=;
-  b=GPje78c0InKRtVwnRLDuktZt+UlrXZhVKTMz+hY/HTp/XiSs+Or38NhO
-   9ML/u0H4JUSYvWNSt6xpu6loweoVUNaV3ZapKR71M9//0caZxtOU0vnJR
-   xfh7led26X+z48FIX9SaNH/dFpzHMq6gOHKcGB+Ans4oowWUPhOJqq7td
-   SwpCkvDI0F/PYoXQVbIh0wmbi+PB6ynKd+ZlxmnEAnAkFZOlB1p4WQuNa
-   nfBy1VHwRdIOULp/SYbRFcf3D6dYl6LBGD2//qPjeaSPJ8sKI4w/17I8h
-   HTNiVryHktvGt4svr6Q8Cqldxqq8kV4vHMX5ceYOWgLvtRzaMfSWjjiF7
-   w==;
-IronPort-SDR: 0NyRxN6xUbrtwpkAOK1Ah11NkJr5ImhmeFPezx4QRMq72zYcemgFPD1Hm2nwueukBDnu2Q2VUT
- a9HbkFBGfj2j9495NJtyhfsNBP+5tUgIVyu0TLGG7+RCbG6hVtpkNAe639ZfadEd3ICIB3Q7x7
- E5qs1zhNS1PtWaRmePJJdTeIZUqG6/NFcZ0xkaQbNPOXr2NHOSKyc7XR2C++/Tsl5cDk361wUv
- Q7DmKWpKTBM2efIRUudi+aslbEVBVJy8Cp3wWbcQ0E5+s7PfVfcIvV/GWMDhPjvVJD78nqji73
- tko=
+  bh=d0/IH7i+oVuHvN9VVrN5674v1nvrYU6Nas++JivtJic=;
+  b=a36EthF0TZmW5nQVjuOBVooBKUszofVA060kXgdd7dr7Br4CJC0mH8q7
+   5zA3IDWI0DFZikFnf6zUargA7KuTBTiJV+dXgqURTBEpnj7dObCOXDbHP
+   qJBfN43stqYjCXZ/nVhliEdt8YCTVk9v5w+/Yn0ihIJk2Vv2DJ2ufuQBF
+   mm/ARrh33NLU0yQyAZgNH7/KOdYaomhO5AwF1vE0JThZ42/x1UtWwKab9
+   ppoScH58eJ8Jxtj61z6P867+bmFB2FdG7hJvG9P/w8lTinlEwwzt01IHB
+   zlcTJsjhs3LgQSykwkV6ATTgQWTAP9KxcaMidgETMuUlfN2+S1+c4mWyF
+   A==;
+IronPort-SDR: eCduXhKtUNtFfA1jKfblivTKrv/8LqGJPMSqdwOyRUNdnhH7In+jrRZwUQKKlvkXqp/mU9jbrE
+ rVsLFyWjkWsVgwk4n0nMFKGyHeYBtkhvu0dI2ve+V8/3Z4deBTLdGSqbWaGeZ862MrF9RWFQh4
+ WlnZyJkfqAxRR/yfG1tirrsg4XyVZR5kNBjxEMBOwbg+YlXzEQvGY50Vj+b61JE76MRzB7ixMs
+ /lz+/DpIpqJPNfba4wqbmbABP9kNY2fHe1JKJT4HC90IMHJPBWUBrqB0xn8rwIiJZHAdZVFN/L
+ sI8=
 X-IronPort-AV: E=Sophos;i="5.79,394,1602518400"; 
-   d="scan'208";a="163333690"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:27:26 +0800
-IronPort-SDR: U8tXSCCG+mzkQ0e5jUqG5qo1eE/HKDJBiqI3bSvKrEN93DZu0GZcKaKKskVE4OZzrWRkDtxH4V
- xcxT3lGXIfsmQeXLqkNSixbH1evSAWkjl26Aqd3pmWW4Qsk80KyP2qGNjBSIQh4uAYOTz1QDMj
- xxznVz1UCvrHUyL/dQBuLLarHJAbAlvKrgNiQQq5yySNcuHd8tkD0Fxt/+f6MMRUNytQXf87Ts
- A+rKtIfR4P17aow64Tl8fkzoSq+Ee0JxHRwwn4wLC1EHdc2v4h/9mdoHg0B6cDr4WakozR/nXH
- D+TCnzflqf1QhHLmSzOmdKf4
+   d="scan'208";a="262961187"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:43:16 +0800
+IronPort-SDR: 1qo3jULHQXVbX04Uz283hIOauCWFdzsnG0T6i9x7L+A/+dnVkfY5UEz62jc3pwAW1g9iUPu3MB
+ Phobb78GVAfuOnzMY9E8kC5B7uOvko3hDRWo32Lqe0Qo33ih4Usqx7UQHPGOF55ByD7DZR6saS
+ +qO44oyWaqil6ynC5MkTt8Eu9sk2w/DnlJAY4ypQJDm1J7HTClS19mmSDMeCMK8sHXAOjQ3JwK
+ NHiajp8KNNMwUkBUvRSgualcss77wnEwdbD5q288uFNbbmEqNJdWx6mMbhHMy7nh2uTUYd95Nn
+ /9xVFi/XHn6BDOq/VElkLVTa
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:09:35 -0800
-IronPort-SDR: 5feJos1SrIRFz0U4AosIE5NytSw+a2rndtegz1GyIxMpm7bJCjvd3tAoCtgr5BexgXmd4YP9nq
- CACpUZ9LM85PkPy3B+cU3LPUm9b+vsz5KtWRUWdsD4AkfS9Jzce9dp8/ED4xrQBvhd7AGgHjNW
- XVczM3Nc+0VPZ9LB4gjx+hK1hj80ymVkvRXGmz48fLrFhOsWT0WUcvdQex4kpMpkwnABByyItv
- E/8k+8XRJ2G4C/ozy0MiFPR06fngZroupmEGXT1kLWVBdXGCInueZXhkEUg2rer4OMRG2nI9NW
- VFs=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:09:43 -0800
+IronPort-SDR: 7d93h5+DpLuW8AYKCP2qkYr7b0TMlXKzOxInYd5vuzkpas/u2wLW8LmLFuCFBnKi5H5/lRvzga
+ ftXULseFr9brYeLtjulc+UyZrc+3gjkKswxpg9g/DCPMd8vzNjGodgJ4V9tKFKOwIrigHncuAE
+ BDCDaGQU8o1EEk9s3+7T5XihKQLxCiqRPdoNQfLyKcI8VYrnlLVV0A0tHniwTgMnSRkdisy1ng
+ h1chiiHSv4UoNoyvCW+3NvHLCb5dxNTVvXkuie2BkqoY6ca9WygIbdwHC+W5zKBBg6iCympfwB
+ 7/Y=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:27:26 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:27:34 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     paolo.valente@linaro.org, axboe@kernel.dk, rostedt@goodmis.org,
@@ -58,9 +58,9 @@ Cc:     paolo.valente@linaro.org, axboe@kernel.dk, rostedt@goodmis.org,
         joshi.k@samsung.com, niklas.cassel@wdc.com, hare@suse.de,
         colyli@suse.de, tj@kernel.org, rdunlap@infradead.org, jack@suse.cz,
         hch@lst.de
-Subject: [PATCH 3/7] blktrace: fix blk_rq_issue documentation
-Date:   Mon,  1 Feb 2021 21:25:40 -0800
-Message-Id: <20210202052544.4108-12-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH 4/7] blktrace: fix blk_rq_merge documentation
+Date:   Mon,  1 Feb 2021 21:25:41 -0800
+Message-Id: <20210202052544.4108-13-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210202052544.4108-1-chaitanya.kulkarni@wdc.com>
 References: <20210202052544.4108-1-chaitanya.kulkarni@wdc.com>
@@ -70,8 +70,8 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The commit 881245dcff29 ("Add DocBook documentation for the block tracepoints.")
-added the comment for blk_rq_issue() tracepoint. Remove the duplicate
+The commit f3bdc62fd82e ("blktrace: Provide event for request merging")
+added the comment for blk_rq_merge() tracepoint. Remove the duplicate
 word from the tracepoint documentation.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
@@ -80,18 +80,18 @@ Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 879cba8bdfca..004cfe34ef37 100644
+index 004cfe34ef37..cc5ab96a7471 100644
 --- a/include/trace/events/block.h
 +++ b/include/trace/events/block.h
-@@ -196,7 +196,7 @@ DEFINE_EVENT(block_rq, block_rq_insert,
+@@ -210,7 +210,7 @@ DEFINE_EVENT(block_rq, block_rq_issue,
  
  /**
-  * block_rq_issue - issue pending block IO request operation to device driver
+  * block_rq_merge - merge request with another one in the elevator
 - * @rq: block IO operation operation request
 + * @rq: block IO operation request
   *
-  * Called when block operation request @rq from queue @q is sent to a
-  * device driver for processing.
+  * Called when block operation request @rq from queue @q is merged to another
+  * request queued in the elevator.
 -- 
 2.22.1
 
