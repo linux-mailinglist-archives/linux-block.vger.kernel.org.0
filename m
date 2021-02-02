@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F23C530B736
-	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:38:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C989330B73A
+	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:40:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231638AbhBBFiy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Feb 2021 00:38:54 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:8090 "EHLO
+        id S231641AbhBBFjQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Feb 2021 00:39:16 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:8116 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231468AbhBBFiw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:38:52 -0500
+        with ESMTP id S231658AbhBBFjJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:39:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1612244332; x=1643780332;
+  t=1612244349; x=1643780349;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jnkcazWpDtA8Y/1t9LF2AY34gS9NTjFtP15AuXyA4aY=;
-  b=YvjydcCaoR8GFAsLQXa2FJ65CYDsjfRmVs/N5jZr0kqipOd7qx2u/nQ6
-   1IWi7bYSma0OKfn2/PRyOtq+OZXGo8HZ6Xwjjq587rYMmQ5dYZtJyqrFH
-   hRXQnKTnzm+FSX+Lo0mHzrtjRDDRpn+tVhIBtxtgGwPLpPahgKWybE2rW
-   4KKk7xRrpCkV61jjkxZAcchwvhaicpdm5wxXJ2g7sEoPxaDCBDbGhac7J
-   desZDeRsiJdGEOylRz1UE0t7z7b4Vv4DOR6xSb3lK5oinMtUMwYSC8CJm
-   a4yep606pFR92W+qq6CqmAK9CdwUfJM5/T/H19nCsWxEjbNgMFQ3LKDD9
-   g==;
-IronPort-SDR: tx3uaULpnFcHkTBfI+jhXTKnH46bXZ59e7rRU8Sn2X3qBRumPzd4tdTnw6mMA+GDczhAJ5SuOI
- nyGo1XdtZjOx7mUpPYiRqZr68wHbc1vK6RR8ZkLieMcpZWL1mPrcEWMAg8iiFKl9F/XgRUuKtm
- RFeT8f4S5iQ2Jp1UNjXucNlcTtlRGWe7y2IrUzVnUX3e9vVqkDg4SGCCtTwMwcGckbdgiIf/yA
- TefrZJYPgPlgs+6BDtFZNgvcpDlaxQbDWRPF5DHFogCAXZB+FJc6AWQIUof0oReFM7surzOk1Q
- CAg=
+  bh=3RBDbYn543ZOL7s6ZUD1kK+SJdSkbPKc01sGuIleXx0=;
+  b=i1eCB+j5LVPDsABmYG5sKlR65dNuRjTkNk06sI0sk6YaY4DnxVwiavwF
+   cijo1Hb5bD/8aMsqPPm/C3leqOx8oD+YarZQ6uSIug9jy4V5oKYiOQV3f
+   9tlpo027toP6Sx/uTjKU2tHN0qKXsi6SZpn5gnJKQBz879iDmoRh8NEyL
+   Q2btBrkR0K8H6T455sdpsIqRYRg4bRnI33eTw8g92o0ZNxDqDkAs3/C1m
+   n9UAomzEQyEkjEQ1Xna3JnXUCMm2t+0gZGDlHhxsixnq/McXVjWujQMaB
+   fXyIZsADuCD4/VKUsP8bEkCfiepL681lgX1Vu6qFBVQvfNy/Yp81E6WM+
+   w==;
+IronPort-SDR: hJHsq1DxKBtcfP2RC7bH113ob2zeNuNKl8nN8ptsWzGTLVlQBSZSiugDBVgHmPDnFc/+KkkWWf
+ kPROHz2Pk/GxcMLQiA6ZDCwGCbBQ84SOPchhyZsaF3xXDU0V/cIh1wStFeMizSVxT2qg6aEQUv
+ ssNuUhBZKvtsz1YlOgvBqHJGp5OW9CUcjEWx8vYMewXiTb/c/E1mPX1KatVu2pQ5Nvv9P8f8RP
+ bGSUKtBZ6CRLHJmfwmAtu8wIPIX0stQzn5otDu93V0SvW3jszi6S0hKNn/4GiCIyuLzHxDIDoj
+ D+s=
 X-IronPort-AV: E=Sophos;i="5.79,394,1602518400"; 
-   d="scan'208";a="160067278"
+   d="scan'208";a="160067286"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:38:12 +0800
-IronPort-SDR: pik/+1ZHAisv2neR3qyRg9vzWTKgkP0JCB5TkZCOE7ykbm3sFIFU4mc++lNod1YTLKYS7j3v44
- nt2a98qvht4XXTYBdayrf3xBmq9Snvw1kjNSTO6a/z4G6kETg5WA1cTwtt8z6HSxuctcg2rkyO
- RhIY6Srk9Zl+Ed56aYUy66a47KlUSo/ixxDl4VLivzXTQPzkzYDkcMlKGpigsbMl18jLzLAeOm
- vA64DIHZlUanvvdnwwrbW8t38vhSai7Q6waRGXPpQSOJBcXRoM993vNj3O9cZxunCKWk3LV+o5
- irHO/ywe0uerU79M97XHn7pk
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:38:20 +0800
+IronPort-SDR: sVbGT3N3AxDFBH9jQA4MWoLvLaFpXyVs7WbpG/N93TqTnw6UHJaGH3NpDnZlbFGCF+8Prx10NM
+ s+XlsGeEu1f9Z0wB1Ptj0oCpsE4jvO1e0/yHUKRY1sd48grlK4Z8Crku+rYwRtlkeMDmgYmw8s
+ l65+LzJPkl/pIQCfRAHkezC5H1aaZVHI+5SRuq5TLyGFfS60VIinsaSgC2nUjwkHAB5EJp6jvu
+ S/iuQedy+svrQhsPCFxVTcztfiQUAywU0oxpLBHmj0j3pYV3K+5Pu7i55Kmi0XS74NFCaIMCSu
+ bKKxjN/yyXH2ZkP0uGEL2S+L
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:22:20 -0800
-IronPort-SDR: +5mOU5TXeULAnc7u0ZFohTur92kAZA/7wh4ZTTmc1l31xYEr64rTKX2bApvecARDLbQeIWk6cz
- PyxlSQsW6qYIO9oTWQle47AtZ4ELoTyjuPgV3IdtfeYAoOar4Wqa2LrK+BcWBYw/X90lNe3WGt
- NbrxCgLAkDoUY8gCtEHrFZZT9PWJZMn0YZfwofIWEVutZt3QYNDgOSmYo94BmQYfMpUJaI033n
- rJ6RcqYk/giWbpB5aFxkUe4U7b7f5mdrMWmDXI3EVY9PCGejzNKlvxuFzkjKHeD+59IQK99woq
- mgo=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:22:29 -0800
+IronPort-SDR: 1i8xr1R2g4aEPYzFHu7lKcGcS8I3TgEajL/ed2c0JC6KeJ0mTpHktFUZEtGhLPpOraBlEmhvCs
+ rhLPYuvIBMpJ6I9zVrMVlocTKDUGNlgx99CzzCxpgrTYwhITaDPSKuzns+ppSuijejM7u4NCzg
+ QuSIFFdV+zko+zkheekYiNktT42QXi4dFpb4BQ2HBqM+RQ4CFWPJtw3Qwh8nz9TWV6QB8zoqJW
+ 5cY0mSN758Wj/UZ95S6YTq7dnlaJMCXDG2uLJLKwk4dtAxxUtq5raNNbFNE7BpfeZjbGH8Ere9
+ xXQ=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:38:12 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:38:20 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [RFC PATCH 17/20] loop: change fd set err at actual error condition
-Date:   Mon,  1 Feb 2021 21:35:49 -0800
-Message-Id: <20210202053552.4844-18-chaitanya.kulkarni@wdc.com>
+Subject: [RFC PATCH 18/20] loop: configure set err at actual error condition
+Date:   Mon,  1 Feb 2021 21:35:50 -0800
+Message-Id: <20210202053552.4844-19-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210202053552.4844-1-chaitanya.kulkarni@wdc.com>
 References: <20210202053552.4844-1-chaitanya.kulkarni@wdc.com>
@@ -63,68 +63,49 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The function loop_change_fd() set error = -ENXIO before checking loop
-state, error = -EINVAL before checking loop flags, error = -EBADF
-before calling fget and error = -EINVAL before comparing the old file
-size to the new file file. None of these error values are reused for
-the above conditions.
+The function loop_configure() set error = -EBADF before calling fget(),
+error = -EBUSY before checking the state. None of these error values are
+reused for the above conditions.
 
 Conditionally set the error after we actually know that error condition
 is true instead of setting it before the if check.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/block/loop.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/block/loop.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index af3e3bcd564d..89f9c73bb2af 100644
+index 89f9c73bb2af..d99ae348e4e2 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -704,19 +704,22 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	error = mutex_lock_killable(&lo->lo_mutex);
- 	if (error)
- 		return error;
--	error = -ENXIO;
--	if (lo->lo_state != Lo_bound)
-+	if (lo->lo_state != Lo_bound) {
-+		error = -ENXIO;
- 		goto out_err;
-+	}
- 
- 	/* the loop device has to be read-only */
--	error = -EINVAL;
--	if (!(lo->lo_flags & LO_FLAGS_READ_ONLY))
-+	if (!(lo->lo_flags & LO_FLAGS_READ_ONLY)) {
-+		error = -EINVAL;
- 		goto out_err;
-+	}
+@@ -1076,10 +1076,11 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+ 	/* This is safe, since we have a reference from open(). */
+ 	__module_get(THIS_MODULE);
  
 -	error = -EBADF;
- 	file = fget(arg);
+ 	file = fget(config->fd);
 -	if (!file)
 +	if (!file) {
 +		error = -EBADF;
- 		goto out_err;
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * If we don't hold exclusive handle for the device, upgrade to it
+@@ -1095,9 +1096,10 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+ 	if (error)
+ 		goto out_bdev;
+ 
+-	error = -EBUSY;
+-	if (lo->lo_state != Lo_unbound)
++	if (lo->lo_state != Lo_unbound) {
++		error = -EBUSY;
+ 		goto out_unlock;
 +	}
  
  	error = loop_validate_file(file, bdev);
  	if (error)
-@@ -724,11 +727,11 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 
- 	old_file = lo->lo_backing_file;
- 
--	error = -EINVAL;
--
- 	/* size of the new backing store needs to be the same */
--	if (get_loop_size(lo, file) != get_loop_size(lo, old_file))
-+	if (get_loop_size(lo, file) != get_loop_size(lo, old_file)) {
-+		error = -EINVAL;
- 		goto out_err;
-+	}
- 
- 	/* and ... switch */
- 	blk_mq_freeze_queue(lo->lo_queue);
 -- 
 2.22.1
 
