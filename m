@@ -2,115 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA7F30BE2F
-	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 13:29:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECFD430C1E9
+	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 15:38:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231402AbhBBM3W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Feb 2021 07:29:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58126 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231366AbhBBM3T (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Feb 2021 07:29:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C65A4AC45;
-        Tue,  2 Feb 2021 12:28:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2E3A41E14C3; Tue,  2 Feb 2021 13:28:36 +0100 (CET)
-Date:   Tue, 2 Feb 2021 13:28:36 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Lin Feng <linf@wangsu.com>
-Cc:     axboe@kernel.dk, paolo.valente@linaro.org, jack@suse.cz,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+        id S234405AbhBBOhY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Feb 2021 09:37:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234491AbhBBOcI (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 09:32:08 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A069C061786
+        for <linux-block@vger.kernel.org>; Tue,  2 Feb 2021 06:20:16 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id m20so11661322ilj.13
+        for <linux-block@vger.kernel.org>; Tue, 02 Feb 2021 06:20:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t1KFZQVY/DxQ9liNlk4p5rHsTe1eztkSWG9pZLclAaM=;
+        b=Roe+D204Ctd0npf37Ni88h2NOvgV6xaroR+sXYPETApFsoi3natQ82RzJtyfetiH1B
+         xKjRZ9xOv73sQOXuTZIv0Cvxk4TvlcmI3HLnxu7j7lEY8zm/CUp7TRiuf5RPwHf0pSFo
+         AC0/fAjcViva9q1JJjys0qAYFvLxqXHvetYiqtHFq/DMtv1fDDN7IGm3CyT3D5lAsTGJ
+         C9zheHWkl4bUZbZ77ZDeeQCNE6BWSabVLKcpe9VLHxhYolYY7rL6r2i3kqldDzkMVWq1
+         zL43j+s4WZZnqIhUKrcXj5ds6pK3Ok6peFO8tTpUI8f8brdDU+yy2OvOvHhd9+Yby0NR
+         YRKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t1KFZQVY/DxQ9liNlk4p5rHsTe1eztkSWG9pZLclAaM=;
+        b=FyfBqTRA1LxpbBg9kZDF2tebd19tNig0FM4G7XZLO4GhnOIoHEyks77x1uhHyB6lRS
+         4uHYSSuPmZ638cCDf50o8LnOxAwmFQYmrFhssVfc9JTbzCbTgA7GnzYRFZ7Z/EhnBp85
+         4fvRp6Bn1BcLwlRafQ+ToEn5UHm0hmpGNJAk6V1MrvAb+TkiAhIrsC5JWvMOX08c1Rx4
+         6NgtFVwM/fYnjwlUHKZZq4vW66jMBMlUiqx7Ri6efi+50P3jD1xbEYeG5cZ4AILTSASv
+         WH2IdTlKlPVUW4lWlS/iVEsUJQwV9jaDVmmjsuHCmY/3wrEI3Auf/+mY3V/Dlm7PjECC
+         t/kA==
+X-Gm-Message-State: AOAM531LU0Qy5d5TJZonMncOjPTiuK5XmKy1cKTDb/le/9fMgLxBgbi8
+        SuxobRZSO37DoJoH/U6xYkeriKEmWJnJNVXy
+X-Google-Smtp-Source: ABdhPJxkdEchUAvYW/rkyrEcHpNi1VxOF9nH09cLjhcdz49G3SRvbrpf5/5CT4BvCNo00Q78q87qZQ==
+X-Received: by 2002:a05:6e02:b2c:: with SMTP id e12mr17301468ilu.143.1612275615609;
+        Tue, 02 Feb 2021 06:20:15 -0800 (PST)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p19sm11005722ilj.37.2021.02.02.06.20.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Feb 2021 06:20:14 -0800 (PST)
 Subject: Re: [PATCH] Revert "bfq: Fix computation of shallow depth"
-Message-ID: <20210202122836.GC17147@quack2.suse.cz>
+To:     Jan Kara <jack@suse.cz>, Lin Feng <linf@wangsu.com>
+Cc:     paolo.valente@linaro.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
 References: <20210129111808.45796-1-linf@wangsu.com>
+ <20210202122836.GC17147@quack2.suse.cz>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f92a55b4-0743-a700-8296-e739f4fcf093@kernel.dk>
+Date:   Tue, 2 Feb 2021 07:20:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210129111808.45796-1-linf@wangsu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210202122836.GC17147@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello!
-
-On Fri 29-01-21 19:18:08, Lin Feng wrote:
-> This reverts commit 6d4d273588378c65915acaf7b2ee74e9dd9c130a.
+On 2/2/21 5:28 AM, Jan Kara wrote:
+> Hello!
 > 
-> bfq.limit_depth passes word_depths[] as shallow_depth down to sbitmap core
-> sbitmap_get_shallow, which uses just the number to limit the scan depth of
-> each bitmap word, formula:
-> scan_percentage_for_each_word = shallow_depth / (1 << sbimap->shift) * 100%
-
-Looking at sbitmap_get_shallow() again more carefully, I agree that I
-misunderstood how shallow_depth argument gets used and the original code
-was correct and I broke it. Thanks for spotting this!
-
-What I didn't notice is that shallow_depth indeed gets used for each bitmap
-word separately and not for bitmap as a whole. I'd say this could use some
-more documentation but that's unrelated to your revert. So feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-to your patch. Thanks.
-
-								Honza
-
+> On Fri 29-01-21 19:18:08, Lin Feng wrote:
+>> This reverts commit 6d4d273588378c65915acaf7b2ee74e9dd9c130a.
+>>
+>> bfq.limit_depth passes word_depths[] as shallow_depth down to sbitmap core
+>> sbitmap_get_shallow, which uses just the number to limit the scan depth of
+>> each bitmap word, formula:
+>> scan_percentage_for_each_word = shallow_depth / (1 << sbimap->shift) * 100%
 > 
-> That means the comments's percentiles 50%, 75%, 18%, 37% of bfq are correct.
-> But after commit patch 'bfq: Fix computation of shallow depth', we use
-> sbitmap.depth instead, as a example in following case:
+> Looking at sbitmap_get_shallow() again more carefully, I agree that I
+> misunderstood how shallow_depth argument gets used and the original code
+> was correct and I broke it. Thanks for spotting this!
 > 
-> sbitmap.depth = 256, map_nr = 4, shift = 6; sbitmap_word.depth = 64.
-> The resulsts of computed bfqd->word_depths[] are {128, 192, 48, 96}, and
-> three of the numbers exceed core dirver's 'sbitmap_word.depth=64' limit
-> nothing. Do we really don't want limit depth for such workloads, or we
-> just want to bump up the percentiles to 100%?
+> What I didn't notice is that shallow_depth indeed gets used for each bitmap
+> word separately and not for bitmap as a whole. I'd say this could use some
+> more documentation but that's unrelated to your revert. So feel free to add:
 > 
-> Please correct me if I miss something, thanks.
-> 
-> Signed-off-by: Lin Feng <linf@wangsu.com>
-> ---
->  block/bfq-iosched.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index 9e4eb0fc1c16..9e81d1052091 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -6332,13 +6332,13 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
->  	 * limit 'something'.
->  	 */
->  	/* no more than 50% of tags for async I/O */
-> -	bfqd->word_depths[0][0] = max(bt->sb.depth >> 1, 1U);
-> +	bfqd->word_depths[0][0] = max((1U << bt->sb.shift) >> 1, 1U);
->  	/*
->  	 * no more than 75% of tags for sync writes (25% extra tags
->  	 * w.r.t. async I/O, to prevent async I/O from starving sync
->  	 * writes)
->  	 */
-> -	bfqd->word_depths[0][1] = max((bt->sb.depth * 3) >> 2, 1U);
-> +	bfqd->word_depths[0][1] = max(((1U << bt->sb.shift) * 3) >> 2, 1U);
->  
->  	/*
->  	 * In-word depths in case some bfq_queue is being weight-
-> @@ -6348,9 +6348,9 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
->  	 * shortage.
->  	 */
->  	/* no more than ~18% of tags for async I/O */
-> -	bfqd->word_depths[1][0] = max((bt->sb.depth * 3) >> 4, 1U);
-> +	bfqd->word_depths[1][0] = max(((1U << bt->sb.shift) * 3) >> 4, 1U);
->  	/* no more than ~37% of tags for sync writes (~20% extra tags) */
-> -	bfqd->word_depths[1][1] = max((bt->sb.depth * 6) >> 4, 1U);
-> +	bfqd->word_depths[1][1] = max(((1U << bt->sb.shift) * 6) >> 4, 1U);
->  
->  	for (i = 0; i < 2; i++)
->  		for (j = 0; j < 2; j++)
-> -- 
-> 2.25.4
-> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+
+I don't have the original patch (neither directly nor in the archive), so
+I had to hand-apply it. In any case, applied for 5.11, thanks.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jens Axboe
+
