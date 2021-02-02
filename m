@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB7A130B717
-	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:35:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 460AE30B70B
+	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:33:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbhBBFdb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Feb 2021 00:33:31 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:3786 "EHLO
+        id S231540AbhBBFci (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Feb 2021 00:32:38 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:26499 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbhBBFdQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:33:16 -0500
+        with ESMTP id S231546AbhBBFcf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:32:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1612243995; x=1643779995;
+  t=1612243955; x=1643779955;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Yfp9aj/5CTvO1j61/h0dSyXCmGTMl9jVFfTSlsUW1j4=;
-  b=fWumtGQIP+mZzl8gkGdFRDgoTtioERjwnXjuXhWNvzgbZLDMrv1a0fYr
-   LY0SsK03xktuOQXzhCtSBhH7NYXbPL3voIJ3ApkV9jTzYBoNTiezTqpZH
-   2S03pPd+abDzreKDGqAEOi3vO3NHrQq/A05Ufw39b9tgH/akeGzE1xLSi
-   nJtj1/glpjsO0jWGTwfawq3Gpoq9symeP8N5JlMgQSrBYTeM0dYPWT7ql
-   Hj5RxK7CEqAuulZ00QJ2GptVK/jD5XmuEjl3PKl5w9JI4VPsj8QS1sgd7
-   pJa8XWlKPaFi06O7v32/j/eVvKdZNaV+SGt3ickey5MF7lZhRbJiKYXxO
-   Q==;
-IronPort-SDR: 1NxpUWKbSddQyHOC3R0sjAYJSb2uqlvXFoKsg+IcJIqgVKRh0NYKIV4etcH502QoNWaS9XGhB1
- zBJyvc8rzwEZgBV5OG/7APVYBvWpcoIl3XbhzybvLFfw6vbx27yyVuG2H47M4kD4DRKtlLOBXJ
- +7utu/BVs5+xFDC9g71N/GNyQnC+GD9ZO2NoNyZu+Id1dVfoGRdH7nGUTJlh5foiiasMKS9Xn0
- nVKyuvo99PIkYfGJgRDMP7648yTuBqGGsBaQAKgyhxPg5Xv4MkDT74oAAmM+Co5N4aOMkLu732
- PUg=
+  bh=LyeFeoshqjgI2rNYAGq0Im5Ns+zauYn+vP0jM5YnlNY=;
+  b=SMyvCvFE7Ty/dCdsNCdlGcW+Y6njUx1j4ub7XKGsM1fuLCy64TTKfLFM
+   HhzjOsQWVaEZGXCnL9hXQhk75hO/6az/20SjAi04zP5uC/KfWsWLP4n+I
+   5A9XJQQ5r/A7i0PRhAKkrcnVnnkElJyiCa8Ic7+qTrVm96saxgQ1I75ZN
+   nE5gvPEaRdwzM9pdRXehUJoTb0MWGiXAR99I9oafYCzPK4/52dqMFJS9a
+   NJJ22GvRF7wTbBdtfgDkC/8CoOiGLvI+UQ/c9C2HsrMESSlc11F4U+T6i
+   w2eW4iUXfqkcTuNs7b4gbv4fkufwGuXgKlQrFYoiSDDsuQnZfLNIS9d7F
+   A==;
+IronPort-SDR: nY8rvhWT0oGzlerd0zPIf4fnfuVEyOwByMCHnNMvtRJxz59NB2thAX18kbTBGMBnTqQ+aUgQGt
+ 5tzreLc6K/fnF3cVeml0grc8RBYAR/Tgmh/tkhykrTwvG6dFgl635oJeobfYsdpSrO9UZ0fsBl
+ Boluw43bl9Het8znkWYuM8colRqr8IT6wIQuu3hCAUrPyRWvk2+YKVWhseq0+cmO3oxqYbavXw
+ MDi5Qqzw0SzvAc27nW5Z57uKBMs2iALjyUQexnL4JMLBmt/soNtL+/XY7a/PPtwQjFvTebfwVS
+ v4s=
 X-IronPort-AV: E=Sophos;i="5.79,394,1602518400"; 
-   d="scan'208";a="160066376"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:26:36 +0800
-IronPort-SDR: /d+0Z9/Gbq1sCc/ynMrBJr3Sk+Mf5GGL6HSpt/OjeW9M1Wsx9yuYKdHgyGcRhppORpdgb+Z3wa
- Z4RmZ4e/UaNa8NLmmlLjS0od1S03t5h1u/oSS6H/ZAWQaxNUFq2FiNskKImpaAnXWExDjdmQNf
- N6ih24CHMee3qwMu0pBknhNQjJGFt8t/7l8vDDL4q8b3lBx/2S3REJlvOpzmYHt6+bq2KIDHYt
- VXyFcNCkqmKDOZqzUVQmfd6aAQHwQW3ty2PDN/IqqwWuVbhDicKPnwi+Uk40MA2yZozQo7DKT2
- pWYoYJ99O354ZYt4aUo3gMLI
+   d="scan'208";a="160066381"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:26:45 +0800
+IronPort-SDR: ZKei8qLMMz1bjOZSyKMoluIfRiLyvhrw7oDlmfYr9OtvBkjCIYgrFk1dcNkQKzQO/xbAQXhupP
+ 22Nz+P8n+68AO2pvXyKuc2ZkfMXxSMVTblLra4lnmeZXSk2oDMLZquUmgyb8sdo+fFy9wP/oWJ
+ sEF2w7rkg2/u4J21w3aQFRw7PKIVq4yoT2/m7fHM/4kQF1bjoXQUFpKiEpCaz/MRYWnk8jL0qJ
+ Q6B38PktqmdcUtwRnlDzL+EsgVCaYd00BvDupr+Rxxe09aqqHoSfd8hMH3CRx0wrGR2npzsga1
+ 4IrTHrho8+3++kdYmMcq6koW
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:10:45 -0800
-IronPort-SDR: W91Ht6lWVMJYIOpMvPjqI5z4yl2vOcmfBWdskU+FV2+JqRX9RqZXUMgcBXqGtmqoGZNsoaEYA8
- /b4WBzXC1aRD304BtFfh+xwFlGXpeWqBFXJ1XAeFCh3MtkmZrwLYLHcv65FFCRlsU3EIrSxdHq
- UNaBZIOBQqjdJfjVkQwUp8VSsZVEA9EAKIy3Qt5wP1DQ7vjftqEM3ZKI3xX+oJn8pg5vIhE5DK
- Lj/klGpwqtnHcmFXJLBBOX2MinRC16BAMq/xW00zw7bBB6sPMBnO1Ca4AkpauELuZKoqOpbPJ1
- 14M=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:08:53 -0800
+IronPort-SDR: 0UYPYdsDr63rqvEu2+LgsgDTpJCr8bvzuMHdsu/GvXD5vaSRzRSXzRhRlLCWYDv2NGGIIgA7Rb
+ NtgdBtL3eEfhas4E98fF4WR+cJXhCYwmUbzIYhLYoSynO6gzEkD98PdvbLiJmGzPWYP5XlBzKC
+ 9DFIqHaVCl0kymljw/5bYIkweveIa+EtEOFjC4vOK+THLt4HqTmBIk3duzhy/YoqT9Lj8AUEU1
+ QqrdGjByyb6Gkqq2D72xl4wgTxoNXpOPlyaFRm8w/bUDpOEBDsO3SyG9jaqjbg5Sqis84vL769
+ +u4=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:26:35 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:26:44 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     paolo.valente@linaro.org, axboe@kernel.dk, rostedt@goodmis.org,
@@ -58,9 +58,9 @@ Cc:     paolo.valente@linaro.org, axboe@kernel.dk, rostedt@goodmis.org,
         joshi.k@samsung.com, niklas.cassel@wdc.com, hare@suse.de,
         colyli@suse.de, tj@kernel.org, rdunlap@infradead.org, jack@suse.cz,
         hch@lst.de
-Subject: [PATCH 5/7] block: get rid of the trace rq insert wrapper
-Date:   Mon,  1 Feb 2021 21:25:34 -0800
-Message-Id: <20210202052544.4108-6-chaitanya.kulkarni@wdc.com>
+Subject: [PATCH 6/7] null_blk: allow disacrd on non-membacked mode
+Date:   Mon,  1 Feb 2021 21:25:35 -0800
+Message-Id: <20210202052544.4108-7-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20210202052544.4108-1-chaitanya.kulkarni@wdc.com>
 References: <20210202052544.4108-1-chaitanya.kulkarni@wdc.com>
@@ -70,126 +70,145 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Get rid of the wrapper for trace_block_rq_insert() and call the function
-directly.
+null blk driver supports REQ_OP_DISACRD in membacked mode. When testing
+special requests having REQ_OP_DISCARD support is helpful to validate
+the special request path when mixed with read-write.
+
+Consider module parameter when setting the queue discard flag when
+device is not memory backed.
+
+This is needed to test the tracepoint related to REQ_OP_DISCARD.
 
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- block/bfq-iosched.c     | 4 +++-
- block/blk-mq-sched.c    | 6 ------
- block/blk-mq-sched.h    | 1 -
- block/kyber-iosched.c   | 4 +++-
- block/mq-deadline.c     | 4 +++-
- kernel/trace/blktrace.c | 1 +
- 6 files changed, 10 insertions(+), 10 deletions(-)
+# modprobe  -r null_blk
+# gitlog -7 
+4ac4d49e1028 (HEAD -> for-next) null_blk: add module param queue bounce limit
+468e3617dae8 null_blk: allow disacrd on non-membacked mode
+bdc96efe9681 block: get rid of the trace rq insert wrapper
+73bf523a7ce4 blktrace: fix blk_rq_merge documentation
+6016632555da blktrace: fix blk_rq_issue documentation
+58b5d7103a94 blktrace: add blk_fill_rwbs documentation comment
+534f321f57dd block: remove superfluous param in blk_fill_rwbs()
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index dfa87e360d71..da5e1f620625 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -125,6 +125,8 @@
- #include <linux/delay.h>
- #include <linux/backing-dev.h>
+Test to exercise module parameter vs configfs discard param, set up
+nullb0 such a way that it errors out in both cases for module param
+discard :-
+
+for discard in 0 1
+do 
+	modprobe -r null_blk
+	i=0
+	echo "Module param discard ${discard}"
+	modprobe null_blk nr_devices=0 discard=${discard}
+	# Create dev 0 no discard 
+	NULLB_DIR=config/nullb/nullb${i}
+	mkdir config/nullb/nullb${i}
+	echo 1 > config/nullb/nullb${i}/memory_backed
+	echo 512 > config/nullb/nullb${i}/blocksize 
+	echo 2048 > config/nullb/nullb${i}/size 
+	echo 1 > config/nullb/nullb${i}/power
+	echo -n "$nullb${i} membacked : ";
+	cat /sys/kernel/config/nullb/nullb${i}/memory_backed 
+	echo -n "$nullb${i} discard   : ";
+	cat /sys/kernel/config/nullb/nullb${i}/discard
+	# Create dev 1 with discard 
+	i=1
+	NULLB_DIR=config/nullb/nullb${i}
+	mkdir config/nullb/nullb${i}
+	echo 1 > config/nullb/nullb${i}/memory_backed
+	echo 512 > config/nullb/nullb${i}/blocksize 
+	echo 2048 > config/nullb/nullb${i}/size 
+	echo 1 > config/nullb/nullb${i}/discard
+	echo 1 > config/nullb/nullb${i}/power
+	echo -n "$nullb${i} membacked : ";
+	cat /sys/kernel/config/nullb/nullb${i}/memory_backed 
+	echo -n "$nullb${i} discard   : ";
+	cat /sys/kernel/config/nullb/nullb${i}/discard
+
+	# should fail 
+	blkdiscard -o 0 -l 1024 /dev/nullb0 
+	# should pass
+	blkdiscard -o 0 -l 1024 /dev/nullb1
+
+	echo 0 > config/nullb/nullb0/power
+	echo 0 > config/nullb/nullb1/power
+	rmdir config/nullb/nullb*
+
+	modprobe -r null_blk
+	modprobe null_blk
+	# should fail 
+	blkdiscard -o 0 -l 1024 /dev/nullb0 
+	modprobe -r null_blk
+	modprobe null_blk discard=1
+	# should pass
+	blkdiscard -o 0 -l 1024 /dev/nullb0 
+	modprobe -r null_blk
+	echo "--------------------------"
+done
+
+modprobe -r null_blk
+modprobe null_blk
+blkdiscard -o 0 -l 1024 /dev/nullb0 
+modprobe -r null_blk
+modprobe null_blk discard=1
+blkdiscard -o 0 -l 1024 /dev/nullb0 
+modprobe -r null_blk
+
+# ./discard_module_param_test.sh 
+Module param discard 0
+0 membacked : 1
+0 discard   : 0
+1 membacked : 1
+1 discard   : 1
+blkdiscard: /dev/nullb0: BLKDISCARD ioctl failed: Operation not supported
+blkdiscard: /dev/nullb0: BLKDISCARD ioctl failed: Operation not supported
+--------------------------
+Module param discard 1
+0 membacked : 1
+0 discard   : 0
+1 membacked : 1
+1 discard   : 1
+blkdiscard: /dev/nullb0: BLKDISCARD ioctl failed: Operation not supported
+blkdiscard: /dev/nullb0: BLKDISCARD ioctl failed: Operation not supported
+--------------------------
+blkdiscard: /dev/nullb0: BLKDISCARD ioctl failed: Operation not supported
+---
+ drivers/block/null_blk/main.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index d6c821d48090..6e6cbb953a12 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -172,6 +172,10 @@ static bool g_shared_tag_bitmap;
+ module_param_named(shared_tag_bitmap, g_shared_tag_bitmap, bool, 0444);
+ MODULE_PARM_DESC(shared_tag_bitmap, "Use shared tag bitmap for all submission queues for blk-mq");
  
-+#include <trace/events/block.h>
++static bool g_discard;
++module_param_named(discard, g_discard, bool, 0444);
++MODULE_PARM_DESC(discard, "Enable queue discard (default: false)");
 +
- #include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-tag.h"
-@@ -5621,7 +5623,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ static int g_irqmode = NULL_IRQ_SOFTIRQ;
  
- 	spin_unlock_irq(&bfqd->lock);
+ static int null_set_irqmode(const char *str, const struct kernel_param *kp)
+@@ -1588,14 +1592,11 @@ static void null_del_dev(struct nullb *nullb)
  
--	blk_mq_sched_request_inserted(rq);
-+	trace_block_rq_insert(rq);
- 
- 	spin_lock_irq(&bfqd->lock);
- 	bfqq = bfq_init_rq(rq);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index deff4e826e23..ddb65e9e6fd9 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -384,12 +384,6 @@ bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq)
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_try_insert_merge);
- 
--void blk_mq_sched_request_inserted(struct request *rq)
--{
--	trace_block_rq_insert(rq);
--}
--EXPORT_SYMBOL_GPL(blk_mq_sched_request_inserted);
--
- static bool blk_mq_sched_bypass_insert(struct blk_mq_hw_ctx *hctx,
- 				       bool has_sched,
- 				       struct request *rq)
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 0476360f05f1..5b18ab915c65 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -7,7 +7,6 @@
- 
- void blk_mq_sched_assign_ioc(struct request *rq);
- 
--void blk_mq_sched_request_inserted(struct request *rq);
- bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs, struct request **merged_request);
- bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index c25c41d0d061..f13da10953bf 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -13,6 +13,8 @@
- #include <linux/module.h>
- #include <linux/sbitmap.h>
- 
-+#include <trace/events/block.h>
-+
- #include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-debugfs.h"
-@@ -602,7 +604,7 @@ static void kyber_insert_requests(struct blk_mq_hw_ctx *hctx,
- 			list_move_tail(&rq->queuelist, head);
- 		sbitmap_set_bit(&khd->kcq_map[sched_domain],
- 				rq->mq_ctx->index_hw[hctx->type]);
--		blk_mq_sched_request_inserted(rq);
-+		trace_block_rq_insert(rq);
- 		spin_unlock(&kcq->lock);
- 	}
- }
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index b57470e154c8..f3631a287466 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -18,6 +18,8 @@
- #include <linux/rbtree.h>
- #include <linux/sbitmap.h>
- 
-+#include <trace/events/block.h>
-+
- #include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-debugfs.h"
-@@ -496,7 +498,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	if (blk_mq_sched_try_insert_merge(q, rq))
+ static void null_config_discard(struct nullb *nullb)
+ {
+-	if (nullb->dev->discard == false)
++	if (nullb->dev->memory_backed && nullb->dev->discard == false)
  		return;
  
--	blk_mq_sched_request_inserted(rq);
-+	trace_block_rq_insert(rq);
+-	if (!nullb->dev->memory_backed) {
+-		nullb->dev->discard = false;
+-		pr_info("discard option is ignored without memory backing\n");
++	if (!nullb->dev->memory_backed && !g_discard)
+ 		return;
+-	}
  
- 	if (at_head || blk_rq_is_passthrough(rq)) {
- 		if (at_head)
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 1a931afcf5c4..259635217a53 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -852,6 +852,7 @@ static void blk_add_trace_rq_issue(void *ignore, struct request *rq)
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_ISSUE,
- 			 blk_trace_request_get_cgid(rq));
- }
-+EXPORT_TRACEPOINT_SYMBOL_GPL(block_rq_insert);
- 
- static void blk_add_trace_rq_merge(void *ignore, struct request *rq)
- {
+ 	if (nullb->dev->zoned) {
+ 		nullb->dev->discard = false;
 -- 
 2.22.1
 
