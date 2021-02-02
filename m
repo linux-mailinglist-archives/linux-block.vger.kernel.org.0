@@ -2,91 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4640730B73B
-	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 06:40:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 842F930B8A5
+	for <lists+linux-block@lfdr.de>; Tue,  2 Feb 2021 08:33:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231658AbhBBFjU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Feb 2021 00:39:20 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43351 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbhBBFjT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 00:39:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1612244358; x=1643780358;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ohU0hoBnxnVD7RrmFfsPWCRZPgRPY5M/4trVfv1J0Ug=;
-  b=B6g3d4IT/mGkvPH8mWBDPSPAG/ybd7cqIQJRg8L9xCg8jqKoRFlGeC6o
-   5THB0dlBYQHvJRjg+2m8l4TlLlksdQ/ef4Porf2ue102b8M+bVUow65s9
-   uPNigIO9qQioUqYNcy3wKbrZlZgMfDdXJ6+bMDjFwpBAOjTbuN5pwrE+a
-   WfBNymOmo3sfx0dmD6UGM7xH0TFuFyWWftxT4P6tZk2Je7YB3TYM3FWZk
-   mhk9G+4jNc95xzgYC9K8Vtm550h8OsVCgJxKYCwB58PVAmTKqDdAXHVnX
-   R7AxfIdwSwxj2izSCYLwmegUlNL9K3FLDjrmt9YpEaWEEbIdrr2LvTpAb
-   A==;
-IronPort-SDR: fXXp81jf8DVpf802unacaP2RAd//Ngw3QkTCVe6titzzPmwFtLQfAftIwd8fDE4Ew8/pBJFmpe
- ZOjTF4QzF31MjSJHAOPpxg+2iCm7fRF0V+l6IYJ7EF7quXZYO9ivtuDHY6HNX1aJgUtF76PF6G
- 4uy4voGpIbxjYUNBqfzbbq2ygCtW9CMF2p7jybH9u3WOG/53TAjyze8poba8/krj30PyF+HweE
- fncwPfYFu/lnKu3PVDmuU6xjApwli5qabJUFC0zcF4BiebasAB4Ts2Cxxwff/aKkzctGarSBIJ
- D7o=
-X-IronPort-AV: E=Sophos;i="5.79,394,1602518400"; 
-   d="scan'208";a="163334507"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2021 13:38:38 +0800
-IronPort-SDR: QTO/kDHmt6U32a4VXvMyqroR47FPSwBgsFj0q2Fms/YHIWOp5gHI6CpJSPmcfhEWZz+J/femdm
- GuWQG5Z9oG1Lpv7WvPP+kb/CyXa/fnAWhMUNu+MpcI1QzIdLBsc6cKHxjxhv2sSSXv8YU10nwH
- rsVygq9h3/MsIt38HNv4/wyTF7gswPZXWr67mWEU3ytW04SGI54/9hPvEnA+YjAkzlikbVUpSF
- JDNY5V8f9a8VUokJWHt0sPUSInsi1JrvgMvxKyREy9BzjQ1basfyNPATpBAGpJYnsl7hEjIcys
- FffBKVjAYA5rn+H2WefgHDmF
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:22:47 -0800
-IronPort-SDR: YdnTVhZiLQYId5VS+WERx7iRFtIki0Eaxihwdjkj3CJGczfRfjJeHDHGn8OEHZQv4MNj5eUMF4
- 9LogNh2kdIXvaEaiPo3tf1JekTUlf7/7Zt/oVvbUcUlKiDuoJ8JKtjM0LHUVQNXLr36oVdu1uM
- ZDxCRi/VPSFEMZp/ftt0rGW8IZE6jI4zaJIRvWt1JPkpJxMm5KGCUB4UwBfZXd5bWMQ2oxzrZO
- Vxi/WAs1tbltfg03TB6ayNk8YQ/jJ64VwA3wEGtMbteVPFYMOfnukjuSgrU3h3dRflUMBbmIaV
- Y24=
-WDCIronportException: Internal
-Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2021 21:38:38 -0800
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [RFC PATCH 20/20] loop: remove the extra line in declaration
-Date:   Mon,  1 Feb 2021 21:35:52 -0800
-Message-Id: <20210202053552.4844-21-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20210202053552.4844-1-chaitanya.kulkarni@wdc.com>
-References: <20210202053552.4844-1-chaitanya.kulkarni@wdc.com>
+        id S231543AbhBBHdC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Feb 2021 02:33:02 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:40778 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231508AbhBBHdA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Feb 2021 02:33:00 -0500
+Received: by mail-io1-f72.google.com with SMTP id x26so13983367ior.7
+        for <linux-block@vger.kernel.org>; Mon, 01 Feb 2021 23:32:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yEspMoGKMDuEEGSpdgz0FaL0GKC/NspiboJRr5zloY4=;
+        b=tcE970eEc7v3AyQ99cbrUV1Hc7awMPCsZg9fRkHeAqLVBiwQzrPaEe8MaUSvx0uoEh
+         DYzXmIep/NgynqJnxAjRzZINjLXbits6BDVDqmFhCdErxBsMGR0aCTWXL7oY0TbPMhyo
+         +WdqcU7JszW94fvhnQg6dmONG1ilYQO/vaoZLVacinYNzPO69C1laGsJQNUF0W9ZkIDd
+         Y12dJREEdokGIJ12pKY/LAqrNWJZ2aehk0mYqqq64nrs8Vxo1/9/ipfC1vVBagXFhhij
+         yfdy9IlHayV01uzvYhHB/H0uInExTv36SL2IQzJNosP9I6eMF7DYmHjajSfSzRtzYyhI
+         ijsg==
+X-Gm-Message-State: AOAM532G8w7UmtoQbIIOpoaEU5S2IQ5ZCIc+C6gzI2Vt+YePkwbHl+/0
+        2eLU6jRULZrQKA3NduVhzWUSxiwA5F3ZVVCA0UWSe/f+e7tl
+X-Google-Smtp-Source: ABdhPJw0ABknIZcjmWqfmFc8vxwHhusveS85e+Bq0Y/H0YQpQqNAseSgn9pii8y8Cj8Sj6uh56kPbgCZ9TcNWB2S/NkkfYwke/v+
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:8887:: with SMTP id d7mr15283961ioo.151.1612251139885;
+ Mon, 01 Feb 2021 23:32:19 -0800 (PST)
+Date:   Mon, 01 Feb 2021 23:32:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007b503905ba5578a6@google.com>
+Subject: general protection fault in invalidate_bdev
+From:   syzbot <syzbot+d65b0638dd3d123794f2@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The initialization line fits into the one line nicely no need to break
-it to the next line.
+Hello,
 
-No functional change in this patch.
+syzbot found the following issue on:
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+HEAD commit:    d03154e8 Add linux-next specific files for 20210128
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1088091cd00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6953ffb584722a1
+dashboard link: https://syzkaller.appspot.com/bug?extid=d65b0638dd3d123794f2
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d65b0638dd3d123794f2@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000005: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
+CPU: 0 PID: 30787 Comm: syz-executor.3 Not tainted 5.11.0-rc5-next-20210128-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:invalidate_bdev+0x1f/0xd0 fs/block_dev.c:92
+Code: ff 66 2e 0f 1f 84 00 00 00 00 00 55 53 48 89 fb e8 16 29 a0 ff 48 8d 7b 28 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 93 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+RSP: 0018:ffffc90017c07848 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f244000
+RDX: 0000000000000005 RSI: ffffffff81d2ec3a RDI: 0000000000000028
+RBP: ffff888073ecc000 R08: 0000000000000000 R09: ffffffff8b2146c3
+R10: fffffbfff16428d8 R11: 0000000000000000 R12: ffff888076c38cc0
+R13: 0000000000000001 R14: 0000000000000001 R15: ffff888028720000
+FS:  00007fe9ef641700(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb745112db8 CR3: 000000008b834000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ open_ctree+0xab3/0x4060 fs/btrfs/disk-io.c:3086
+ btrfs_fill_super fs/btrfs/super.c:1356 [inline]
+ btrfs_mount_root.cold+0x14/0x165 fs/btrfs/super.c:1723
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1497
+ fc_mount fs/namespace.c:993 [inline]
+ vfs_kern_mount.part.0+0xd3/0x170 fs/namespace.c:1023
+ vfs_kern_mount+0x3c/0x60 fs/namespace.c:1010
+ btrfs_mount+0x234/0xa20 fs/btrfs/super.c:1783
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1497
+ do_new_mount fs/namespace.c:2903 [inline]
+ path_mount+0x132a/0x1f90 fs/namespace.c:3233
+ do_mount fs/namespace.c:3246 [inline]
+ __do_sys_mount fs/namespace.c:3454 [inline]
+ __se_sys_mount fs/namespace.c:3431 [inline]
+ __x64_sys_mount+0x27f/0x300 fs/namespace.c:3431
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x460c6a
+Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ad 89 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 8a 89 fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007fe9ef640a78 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fe9ef640b10 RCX: 0000000000460c6a
+RDX: 0000000020000000 RSI: 0000000020000100 RDI: 00007fe9ef640ad0
+RBP: 00007fe9ef640ad0 R08: 00007fe9ef640b10 R09: 0000000020000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000000
+R13: 0000000020000100 R14: 0000000020000200 R15: 0000000020003d00
+Modules linked in:
+---[ end trace 44edaf4ec7942bd8 ]---
+RIP: 0010:invalidate_bdev+0x1f/0xd0 fs/block_dev.c:92
+Code: ff 66 2e 0f 1f 84 00 00 00 00 00 55 53 48 89 fb e8 16 29 a0 ff 48 8d 7b 28 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 93 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+RSP: 0018:ffffc90017c07848 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f244000
+RDX: 0000000000000005 RSI: ffffffff81d2ec3a RDI: 0000000000000028
+RBP: ffff888073ecc000 R08: 0000000000000000 R09: ffffffff8b2146c3
+R10: fffffbfff16428d8 R11: 0000000000000000 R12: ffff888076c38cc0
+R13: 0000000000000001 R14: 0000000000000001 R15: ffff888028720000
+FS:  00007fe9ef641700(0000) GS:ffff8880b9f00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffdfaea9138 CR3: 000000008b834000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/block/loop.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ef70795e36ab..e691a8c6b04a 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2033,8 +2033,7 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
- 
- static void loop_queue_work(struct kthread_work *work)
- {
--	struct loop_cmd *cmd =
--		container_of(work, struct loop_cmd, work);
-+	struct loop_cmd *cmd = container_of(work, struct loop_cmd, work);
- 
- 	loop_handle_cmd(cmd);
- }
--- 
-2.22.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
