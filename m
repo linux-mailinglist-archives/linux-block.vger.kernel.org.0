@@ -2,30 +2,30 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1052830DEDF
-	for <lists+linux-block@lfdr.de>; Wed,  3 Feb 2021 16:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E085B30DEDA
+	for <lists+linux-block@lfdr.de>; Wed,  3 Feb 2021 16:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234590AbhBCP5T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Feb 2021 10:57:19 -0500
-Received: from mx2.veeam.com ([64.129.123.6]:54930 "EHLO mx2.veeam.com"
+        id S234048AbhBCP40 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Feb 2021 10:56:26 -0500
+Received: from mx2.veeam.com ([64.129.123.6]:55108 "EHLO mx2.veeam.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234663AbhBCPz5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 3 Feb 2021 10:55:57 -0500
+        id S234576AbhBCP4C (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 3 Feb 2021 10:56:02 -0500
 Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 1C8E341370;
-        Wed,  3 Feb 2021 10:54:28 -0500 (EST)
+        by mx2.veeam.com (Postfix) with ESMTPS id C5B05415BA;
+        Wed,  3 Feb 2021 10:54:35 -0500 (EST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
-        t=1612367668; bh=9cj23SyRRouckAdb7Z39R80REv0U3iAfWT8sKecQBIg=;
+        t=1612367676; bh=KRRIE1mjAT5i1J0tuyS17RP7x4cjxFiHD1kWlqdATWo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=qNyi3/U2lyC4IlxoeXPmxJV67d+Om4rs6Gkhhs3bIm+kXoi0NV8g6a6NuFhqtO5sF
-         GguVDUwzPncEuyjrk226yhysZjaBDHDtUjOrdYWLrUxXIfHEs4e9XaR6pfOgcbkb2n
-         YZeq/cIUpsU7qmS6xUi+JbSDfy/YZl/+EXeg9C1I=
+        b=N3j45aCkbC/Xd8JVHlYASGskT7MQWVIcATGx3ptYWDtvbT2NrHrxaF7ghP4/fFCTw
+         bCz6ayPTzRn7vmcoTZQJmeNZcrtjtf4FuScyNOi2dnZoG4ogjdFNx6jyZfDa5dWkBP
+         y9UXPrUccmqM72f9koaqgsyhb7sVrE6xwpdiNlQs=
 Received: from prgdevlinuxpatch01.amust.local (172.24.14.5) by
  prgmbx01.amust.local (172.24.0.171) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.721.2;
- Wed, 3 Feb 2021 16:54:18 +0100
+ Wed, 3 Feb 2021 16:54:21 +0100
 From:   Sergei Shtepa <sergei.shtepa@veeam.com>
 To:     <Damien.LeMoal@wdc.com>, <snitzer@redhat.com>, <hare@suse.de>,
         <ming.lei@redhat.com>, <agk@redhat.com>, <corbet@lwn.net>,
@@ -34,9 +34,9 @@ To:     <Damien.LeMoal@wdc.com>, <snitzer@redhat.com>, <hare@suse.de>,
         <dm-devel@redhat.com>, <linux-block@vger.kernel.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <sergei.shtepa@veeam.com>, <pavgel.tide@veeam.com>
-Subject: [PATCH v4 1/6] docs: device-mapper: add remap_and_filter
-Date:   Wed, 3 Feb 2021 18:53:53 +0300
-Message-ID: <1612367638-3794-2-git-send-email-sergei.shtepa@veeam.com>
+Subject: [PATCH v4 2/6] block: add blk_interposer
+Date:   Wed, 3 Feb 2021 18:53:54 +0300
+Message-ID: <1612367638-3794-3-git-send-email-sergei.shtepa@veeam.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1612367638-3794-1-git-send-email-sergei.shtepa@veeam.com>
 References: <1612367638-3794-1-git-send-email-sergei.shtepa@veeam.com>
@@ -52,166 +52,250 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-remap_and_filter - describes the new features that
-blk_interposer provides for device mapper.
+blk_interposer allows to intercept bio requests, remap bio to another devices or add new bios.
 
 Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
 ---
- .../admin-guide/device-mapper/index.rst       |   1 +
- .../device-mapper/remap_and_filter.rst        | 132 ++++++++++++++++++
- 2 files changed, 133 insertions(+)
- create mode 100644 Documentation/admin-guide/device-mapper/remap_and_filter.rst
+ block/bio.c               |  2 +
+ block/blk-core.c          | 33 ++++++++++++++++
+ block/genhd.c             | 82 +++++++++++++++++++++++++++++++++++++++
+ include/linux/blk_types.h |  6 ++-
+ include/linux/genhd.h     | 18 +++++++++
+ 5 files changed, 139 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/device-mapper/index.rst b/Documentation/admin-guide/device-mapper/index.rst
-index 6cf8adc86fa8..e868d5bbec7e 100644
---- a/Documentation/admin-guide/device-mapper/index.rst
-+++ b/Documentation/admin-guide/device-mapper/index.rst
-@@ -27,6 +27,7 @@ Device Mapper
-     linear
-     log-writes
-     persistent-data
-+    remap_and_filter
-     snapshot
-     statistics
-     striped
-diff --git a/Documentation/admin-guide/device-mapper/remap_and_filter.rst b/Documentation/admin-guide/device-mapper/remap_and_filter.rst
-new file mode 100644
-index 000000000000..616b67998305
---- /dev/null
-+++ b/Documentation/admin-guide/device-mapper/remap_and_filter.rst
-@@ -0,0 +1,132 @@
-+=================
-+DM remap & filter
-+=================
+diff --git a/block/bio.c b/block/bio.c
+index 1f2cc1fbe283..f6f135eb84b5 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -684,6 +684,8 @@ void __bio_clone_fast(struct bio *bio, struct bio *bio_src)
+ 	bio_set_flag(bio, BIO_CLONED);
+ 	if (bio_flagged(bio_src, BIO_THROTTLED))
+ 		bio_set_flag(bio, BIO_THROTTLED);
++	if (bio_flagged(bio_src, BIO_INTERPOSED))
++		bio_set_flag(bio, BIO_INTERPOSED);
+ 	bio->bi_opf = bio_src->bi_opf;
+ 	bio->bi_ioprio = bio_src->bi_ioprio;
+ 	bio->bi_write_hint = bio_src->bi_write_hint;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 7663a9b94b80..c84bc42ba88b 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1032,6 +1032,32 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
+ 	return ret;
+ }
+ 
++static blk_qc_t __submit_bio_interposed(struct bio *bio)
++{
++	struct bio_list bio_list[2] = { };
++	blk_qc_t ret = BLK_QC_T_NONE;
 +
-+Introduction
-+============
++	current->bio_list = bio_list;
++	if (likely(bio_queue_enter(bio) == 0)) {
++		struct gendisk *disk = bio->bi_disk;
 +
-+Usually LVM should be used for new devices.
-+The administrator have to create logical volumes for the system partition
-+when installing the operating system. For a running system with
-+partitioned disk space and mounted file systems, it is quite difficult to
-+reconfigure to logical volumes. As a result, all the features that Device
-+Mapper provides are not available for non-LVM systems.
-+This problem is partially solved by the dm remap functionality, which
-+uses the kernel's blk_interposer.
++		if (likely(blk_has_interposer(disk))) {
++			bio_set_flag(bio, BIO_INTERPOSED);
++			disk->interposer->ip_submit_bio(bio);
++		} else /* interposer was removed */
++			bio_list_add(&current->bio_list[0], bio);
 +
-+blk_interposer
-+==============
++		blk_queue_exit(disk->queue);
++	}
++	current->bio_list = NULL;
 +
-+Blk_interposer extends the capabilities of the DM, as it allows to
-+intercept and redirect bio requests for block devices that are not
-+dm device. At the same time, blk_interposer allows to attach and detach
-+from devices "on the fly", without stopping the execution of user
-+programs.
++	/* Resubmit remaining bios */
++	while ((bio = bio_list_pop(&bio_list[0])))
++		ret = submit_bio_noacct(bio);
 +
-+Blk_interposer allows to do two tasks: remap and filter.
-+Remap allows to redirect all requests from one block device to another.
-+Filter allows to do additional processing of the request, but without
-+redirection. An intercepted request can get to the block device to which
-+it was addressed, without changes.
++	return ret;
++}
 +
-+Remap
-+=====
+ /**
+  * submit_bio_noacct - re-submit a bio to the block device layer for I/O
+  * @bio:  The bio describing the location in memory and on the device.
+@@ -1057,6 +1083,13 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
+ 		return BLK_QC_T_NONE;
+ 	}
+ 
++	/*
++	 * Checking the BIO_INTERPOSED flag is necessary so that the bio
++	 * created by the blk_interposer do not get to it for processing.
++	 */
++	if (blk_has_interposer(bio->bi_disk) &&
++	    !bio_flagged(bio, BIO_INTERPOSED))
++		return __submit_bio_interposed(bio);
+ 	if (!bio->bi_disk->fops->submit_bio)
+ 		return __submit_bio_noacct_mq(bio);
+ 	return __submit_bio_noacct(bio);
+diff --git a/block/genhd.c b/block/genhd.c
+index 419548e92d82..39785a3ef703 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -30,6 +30,7 @@
+ static struct kobject *block_depr;
+ 
+ DECLARE_RWSEM(bdev_lookup_sem);
++DEFINE_MUTEX(bdev_interposer_mutex);
+ 
+ /* for extended dynamic devt allocation, currently only one major is used */
+ #define NR_EXT_DEVT		(1 << MINORBITS)
+@@ -2148,3 +2149,84 @@ static void disk_release_events(struct gendisk *disk)
+ 	WARN_ON_ONCE(disk->ev && disk->ev->block != 1);
+ 	kfree(disk->ev);
+ }
 +
-+Consider the functionality of the remap. This will allow to connect
-+any block device with a dm device "on the fly".
-+Suppose we have a file system mounted on the block device /dev/sda1::
++/**
++ * blk_interposer_attach - Attach interposer to disk
++ * @disk: target disk
++ * @interposer: block device interposer
++ * @ip_submit_bio: hook for submit_bio()
++ *
++ * Returns:
++ *     -EINVAL if @interposer is NULL.
++ *     -EPERM if queue is not frozen.
++ *     -EBUSY if the block device already has @interposer.
++ *     -EALREADY if the block device already has @interposer with same callback.
++ *
++ * Disk must be frozen by blk_mq_freeze_queue().
++ */
++int blk_interposer_attach(struct gendisk *disk, struct blk_interposer *interposer,
++			  const ip_submit_bio_t ip_submit_bio)
++{
++	int ret = 0;
 +
-+  +-------------+
-+  | file system |
-+  +-------------+
-+        ||
-+        \/
-+  +-------------+
-+  | /dev/sda1   |
-+  +-------------+
++	if (WARN_ON(!interposer))
++		return -EINVAL;
 +
-+Creating a new DM device that will be mapped on the same /dev/sda1::
++	if (!blk_mq_is_queue_frozen(disk->queue))
++		return -EPERM;
 +
-+  +-------------+  +-----------+
-+  | file system |  | dm-linear |
-+  +-------------+  +-----------+
-+           ||         ||
-+           \/         \/
-+         +---------------+
-+         |   /dev/sda1   |
-+         +---------------+
++	mutex_lock(&bdev_interposer_mutex);
++	if (blk_has_interposer(disk)) {
++		if (disk->interposer->ip_submit_bio == ip_submit_bio)
++			ret = -EALREADY;
++		else
++			ret = -EBUSY;
++		goto out;
++	}
 +
-+Redirecting all bio requests for the /dev/sda1 device to the new dm
-+device::
++	interposer->ip_submit_bio = ip_submit_bio;
++	interposer->disk = disk;
 +
-+  +-------------+
-+  | file system |
-+  +-------------+
-+        ||
-+        \/
-+   +----------+    +-----------+
-+   |  remap   | => | dm-linear |
-+   +----------+    +-----------+
-+                         ||
-+                         \/
-+                   +-----------+
-+                   | /dev/sda1 |
-+                   +-----------+
++	disk->interposer = interposer;
++out:
++	mutex_unlock(&bdev_interposer_mutex);
 +
-+To achieve this, you need to:
++	return ret;
++}
++EXPORT_SYMBOL_GPL(blk_interposer_attach);
 +
-+Create new dm device with option 'noexcl'. It's allow to open
-+underlying block-device without the FMODE_EXCL flag::
++/**
++ * blk_interposer_detach - Detach interposer from disk
++ * @interposer: block device interposer
++ * @ip_submit_bio: hook for submit_bio()
++ *
++ * Disk must be frozen by blk_mq_freeze_queue().
++ */
++void blk_interposer_detach(struct blk_interposer *interposer,
++			  const ip_submit_bio_t ip_submit_bio)
++{
++	struct gendisk *disk;
 +
-+  echo "0 `blockdev --getsz $1` linear $DEV 0 noexcl" | dmsetup create dm-noexcl
++	if (WARN_ON(!interposer))
++		return;
 +
-+Call remap command::
++	mutex_lock(&bdev_interposer_mutex);
 +
-+  dmsetup remap start dm-noexcl $1
++	/* Check if the interposer is still active. */
++	disk = interposer->disk;
++	if (WARN_ON(!disk))
++		goto out;
 +
-+Remap can be used to extend the functionality of dm-snap. This will allow
-+to take snapshots from any block devices, not just logical volumes.
++	if (WARN_ON(!blk_mq_is_queue_frozen(disk->queue)))
++		goto out;
 +
-+Filter
-+======
++	/* Check if it is really our interposer. */
++	if (WARN_ON(disk->interposer->ip_submit_bio != ip_submit_bio))
++		goto out;
 +
-+Filter does not redirect the bio to another device. It does not create
-+a clone of the bio request. After receiving the request, the filter can
-+only add some processing, complete the bio request, or return the bio
-+for further processing.
++	disk->interposer = NULL;
++	interposer->disk = NULL;
++out:
++	mutex_unlock(&bdev_interposer_mutex);
++}
++EXPORT_SYMBOL_GPL(blk_interposer_detach);
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 866f74261b3b..6c1351d7b73f 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -227,7 +227,7 @@ struct bio {
+ 						 * top bits REQ_OP. Use
+ 						 * accessors.
+ 						 */
+-	unsigned short		bi_flags;	/* status, etc and bvec pool number */
++	unsigned int		bi_flags;	/* status, etc and bvec pool number */
+ 	unsigned short		bi_ioprio;
+ 	unsigned short		bi_write_hint;
+ 	blk_status_t		bi_status;
+@@ -304,6 +304,8 @@ enum {
+ 				 * of this bio. */
+ 	BIO_CGROUP_ACCT,	/* has been accounted to a cgroup */
+ 	BIO_TRACKED,		/* set if bio goes through the rq_qos path */
++	BIO_INTERPOSED,		/* bio has been interposed and can be moved to
++				 * a different disk */
+ 	BIO_FLAG_LAST
+ };
+ 
+@@ -322,7 +324,7 @@ enum {
+  * freed.
+  */
+ #define BVEC_POOL_BITS		(3)
+-#define BVEC_POOL_OFFSET	(16 - BVEC_POOL_BITS)
++#define BVEC_POOL_OFFSET	(32 - BVEC_POOL_BITS)
+ #define BVEC_POOL_IDX(bio)	((bio)->bi_flags >> BVEC_POOL_OFFSET)
+ #if (1<< BVEC_POOL_BITS) < (BVEC_POOL_NR+1)
+ # error "BVEC_POOL_BITS is too small"
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 809aaa32d53c..f68c8e83b4f1 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -134,6 +134,13 @@ struct blk_integrity {
+ 	unsigned char				tag_size;
+ };
+ 
++typedef void (*ip_submit_bio_t) (struct bio *bio);
 +
-+Suppose we have a file system mounted on the block device /dev/sda1::
++struct blk_interposer {
++	ip_submit_bio_t ip_submit_bio;
++	struct gendisk *disk;
++};
 +
-+  +-------------+
-+  | file system |
-+  +-------------+
-+        ||
-+        \/
-+  +-------------+
-+  | /dev/sda1   |
-+  +-------------+
+ struct gendisk {
+ 	/* major, first_minor and minors are input parameters only,
+ 	 * don't use directly.  Use disk_devt() and disk_max_parts().
+@@ -158,6 +165,7 @@ struct gendisk {
+ 
+ 	const struct block_device_operations *fops;
+ 	struct request_queue *queue;
++	struct blk_interposer *interposer;
+ 	void *private_data;
+ 
+ 	int flags;
+@@ -346,4 +354,14 @@ static inline void printk_all_partitions(void)
+ }
+ #endif /* CONFIG_BLOCK */
+ 
++/*
++ * block layer interposer
++ */
++#define blk_has_interposer(d) ((d)->interposer != NULL)
 +
-+Creating a new dm device that will implement filter::
++int blk_interposer_attach(struct gendisk *disk, struct blk_interposer *interposer,
++			  const ip_submit_bio_t ip_submit_bio);
++void blk_interposer_detach(struct blk_interposer *interposer,
++			   const ip_submit_bio_t ip_submit_bio);
 +
-+  +-------------+
-+  | file system |
-+  +-------------+
-+        ||
-+        \/
-+    +--------+    +----------+
-+    | filter | => | dm-delay |
-+    +--------+    +----------+
-+        ||
-+        \/
-+  +-------------+
-+  | /dev/sda1   |
-+  +-------------+
-+
-+Using filter we can change the behavior of debugging tools:
-+ * dm-dust,
-+ * dm-delay,
-+ * dm-flakey,
-+ * dm-verity.
-+
-+In the new version, they are will be able to change the behavior of any
-+existing block device, without creating a new one.
+ #endif /* _LINUX_GENHD_H */
 -- 
 2.20.1
 
