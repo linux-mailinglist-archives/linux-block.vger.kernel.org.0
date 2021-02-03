@@ -2,109 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2337E30DDC8
-	for <lists+linux-block@lfdr.de>; Wed,  3 Feb 2021 16:14:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 029D830DDC3
+	for <lists+linux-block@lfdr.de>; Wed,  3 Feb 2021 16:13:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233186AbhBCPOC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Feb 2021 10:14:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
+        id S232761AbhBCPMb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Feb 2021 10:12:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234075AbhBCPL2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Feb 2021 10:11:28 -0500
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F24C0613ED
-        for <linux-block@vger.kernel.org>; Wed,  3 Feb 2021 07:10:47 -0800 (PST)
-Received: by mail-il1-x12e.google.com with SMTP id z18so22417638ile.9
-        for <linux-block@vger.kernel.org>; Wed, 03 Feb 2021 07:10:47 -0800 (PST)
+        with ESMTP id S234081AbhBCPLa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Feb 2021 10:11:30 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF6DC061786
+        for <linux-block@vger.kernel.org>; Wed,  3 Feb 2021 07:10:50 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id j5so191223iog.11
+        for <linux-block@vger.kernel.org>; Wed, 03 Feb 2021 07:10:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=h+u3c1x+iHyqjckyxE0QvNhs3RUcX7XNRtl4dzwmlDs=;
-        b=d1SZtbrABZKvOGJV2MIbYnoHtWphx+/ewCIL7fuHmlRKPj1tocPKQAT8HFXVoDA29d
-         Qam1aGRgq1HbMuT8x28t7d6stjRPmVLHofe0mNDoNTgmA3D6haIR8NQJF1PFopiTjYNu
-         NZKcnTXkk7/OZ5WTl6z2MmaiLBPgea50IJ1qYl1U3Lottnoh0B70tZRV0xCehKNi8NzW
-         YsIngRnW68/A72jecsjLN/nGbjmFhogUzBQ4ZMRkbKYCdo/gkhcUJtvHZdhEpdKx72BG
-         RPZMVO9qyHVB94xLS3Yl4lgfaY3Ixmu5BZGaiNDJrG8T7F+pPqwOQVAIGzg865zPXZfD
-         tHCA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dzaJa3Etccl8JcjQv8dbYH5nAqdNSqE8WXoX6JBC4yw=;
+        b=TJo1Gl6hS7K5oorQvDzO7xqQCDkxI9l0Q9rundtz6o6TdMGxRscj8FoiRyz+kSRVjB
+         HQWq1WZ0Uygl0/ZmX8+v/LXU4IacNvCZQOF1KW9wGR0gRRX8zbTT2/zaMGRYuLOEn9Sb
+         i8MbILlSUNHetsbp9HeJoJIuYTHiwfzYCWycpe64UFYBNhC3W95q8zmmoUTaCEUkIPkH
+         OMUva76qb7gj7EAQITpT25jL+sTKaq5lE+l1FqEXB+aDoQsV52gPkysDSCppSl7gfdLT
+         sGD1XgThwD/SfJceA3RFruQU7oHA8NaaZGp+E4tkHgA8zD+qfqISHza3aLqMkJOjp8AT
+         iIpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h+u3c1x+iHyqjckyxE0QvNhs3RUcX7XNRtl4dzwmlDs=;
-        b=bRC5SEsskST/emylOkbGWtMwZRxZoE12tzBhJbB8oTKWfmnHaRxI52VDrgRapH6Htn
-         0eKj310hCkUY2FuOnPDgKVBHzea2nJHW3fitlBPwzrA+OQ6+rJbSevARcrbLNtNX+Ccg
-         Z8l1p14iT1TIKTDJl/fmWBHjxu3J0HE0FdLTvOBg+rElIzoRrIUBQLzkJhiFl3MzWxGi
-         B84DBvp12JDlWA1oWcAQepTvIDuRMMrNKrgUxPHAaugNJx8z4mVj10L/uxXY04ZmXqm5
-         uy1vREBkwfmbjAWvNHsePprS/JhxekOuvzaim7PPxZFUWm6HFbF8M2uIQhTy46jxOzXV
-         GTfw==
-X-Gm-Message-State: AOAM530BnolWbAQ16ZWwzsy2pmXvmhD0FtOXNJ/Kg2DWCiG/MUQbs5e9
-        cenZV9cEZQyfML2s8P0p2oNddA==
-X-Google-Smtp-Source: ABdhPJySVnNlxI70FEyqpIgJsDpyAplBdhqB7XAFWtTXlJGWK3Hsv6gG17RKX1zIL/ca3sIqfxUQ8Q==
-X-Received: by 2002:a92:c26f:: with SMTP id h15mr2895008ild.65.1612365045901;
-        Wed, 03 Feb 2021 07:10:45 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dzaJa3Etccl8JcjQv8dbYH5nAqdNSqE8WXoX6JBC4yw=;
+        b=JH89gK+zGhGn+g3LOTXnb8JAlIvxH9uBIy9EAPsTnV7BDR4HUmSQg3tsckqHzMoU7Q
+         bXDUqWa33zwS69gMb+kH9c41fSOKDgF8/xRuZzXCkNtiNCV/TzlZP/L2rqyZM+/3pCd9
+         5DdsUvLepq+gb3Zh0mglSvVsN9+JB4iYIIeWOwRevInqCVcw7rxULIBkJQp8yQxjRfJ1
+         J8Hpz4QjYJ3fxTquKAkpRGLgls9F0z15SuUdwM1SAfTvGAFox/vyLltKBhusrIdjd8+w
+         8e7R88brS4iRWTeoZv5pPlJ0pvTCKa7ZXYfN5KM5dTDP0s9UzRh8xqZbDTMBlo8y0sTX
+         gAaA==
+X-Gm-Message-State: AOAM5303y/3j3dkTu+7ZWKSeq5CWSu84gEei3XKbIhrfneUPjtuONgjP
+        ZFEXrbBXBC8enLIy4zrFGi/qwg==
+X-Google-Smtp-Source: ABdhPJwyQbU6Fs/WT/ms2SaE2i72NAXlJo4jRScdXICFHxbqwvHQzUDxTC083zesYcYZUZzJ+nD0IQ==
+X-Received: by 2002:a5d:9c4a:: with SMTP id 10mr2814768iof.145.1612365049320;
+        Wed, 03 Feb 2021 07:10:49 -0800 (PST)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:fd01:c087:775e:21aa])
-        by smtp.gmail.com with ESMTPSA id e15sm1201962iog.24.2021.02.03.07.10.43
+        by smtp.gmail.com with ESMTPSA id e15sm1201962iog.24.2021.02.03.07.10.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 07:10:45 -0800 (PST)
+        Wed, 03 Feb 2021 07:10:48 -0800 (PST)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, danil.kipnis@cloud.ionos.com,
         jinpu.wang@cloud.ionos.com,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH V4 0/3] block: add two statistic tables
-Date:   Wed,  3 Feb 2021 16:10:16 +0100
-Message-Id: <20210203151019.27036-1-guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH V4 1/3] block: add io_extra_stats node
+Date:   Wed,  3 Feb 2021 16:10:17 +0100
+Message-Id: <20210203151019.27036-2-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210203151019.27036-1-guoqing.jiang@cloud.ionos.com>
+References: <20210203151019.27036-1-guoqing.jiang@cloud.ionos.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+We will track the size and latency of each io, which could make people
+suffer from the additional overhead if they don't need the statistics.
+So introduce a specific sysfs node to enable/disable the tracking.
 
-This version adds Reviewed-by tag from Johannes.
+Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+ Documentation/ABI/testing/sysfs-block | 9 +++++++++
+ Documentation/block/queue-sysfs.rst   | 5 +++++
+ block/blk-sysfs.c                     | 3 +++
+ include/linux/blkdev.h                | 2 ++
+ 4 files changed, 19 insertions(+)
 
-Thanks,
-Guoqing
-
-PATCH V3: https://lore.kernel.org/linux-block/7f78132a-affc-eb03-735a-4da43e143b6e@cloud.ionos.com/T/#t
-* reorgnize the patchset per Johannes's suggestion.
-
-PATCH V2: https://lore.kernel.org/linux-block/20210201012727.28305-1-guoqing.jiang@cloud.ionos.com/T/#t
-*. remove BLK_ADDITIONAL_DISKSTAT option per Christoph's comment.
-*. move blk_queue_io_extra_stat into blk_additional_{latency,sector}
-   per Christoph's comment.
-*. simplify blk_additional_latency by pass duration time directly.
-
-PATCH V1: https://marc.info/?l=linux-block&m=161176000024443&w=2
-* add Jack's reviewed-by.
-
-RFC V4: https://marc.info/?l=linux-block&m=161027198729158&w=2
-* rebase with latest code.
-
-RFC V3: https://marc.info/?l=linux-block&m=159730633416534&w=2
-* Move the #ifdef CONFIG_BLK_ADDITIONAL_DISKSTAT into the function body
-  per Johannes's comment.
-* Tweak the output of two tables to make they are more intuitive
-
-RFC V2: https://marc.info/?l=linux-block&m=159467483514062&w=2
-* don't call ktime_get_ns and drop unnecessary patches.
-* add io_extra_stats to avoid potential overhead.
-
-RFC V1: https://marc.info/?l=linux-block&m=159419516730386&w=2
-
-Guoqing Jiang (3):
-  block: add io_extra_stats node
-  block: add a statistic table for io latency
-  block: add a statistic table for io sector
-
- Documentation/ABI/testing/sysfs-block | 26 ++++++++++
- Documentation/block/queue-sysfs.rst   |  5 ++
- block/blk-core.c                      | 43 ++++++++++++++++
- block/blk-sysfs.c                     |  3 ++
- block/genhd.c                         | 74 +++++++++++++++++++++++++++
- include/linux/blkdev.h                |  2 +
- include/linux/part_stat.h             |  6 +++
- 7 files changed, 159 insertions(+)
-
+diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
+index e34cdeeeb9d4..503314efec13 100644
+--- a/Documentation/ABI/testing/sysfs-block
++++ b/Documentation/ABI/testing/sysfs-block
+@@ -316,3 +316,12 @@ Description:
+ 		does not complete in this time then the block driver timeout
+ 		handler is invoked. That timeout handler can decide to retry
+ 		the request, to fail it or to start a device recovery strategy.
++
++What:		/sys/block/<disk>/queue/io_extra_stats
++Date:		January 2021
++Contact:	Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
++Description:
++		Indicates if people want to know the extra statistics (I/O
++		size and I/O latency) from /sys/block/<disk>/io_latency
++		and /sys/block/<disk>/io_size. The value is 0 by default,
++		set if the extra statistics are needed.
+diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
+index 2638d3446b79..28ffce653eb1 100644
+--- a/Documentation/block/queue-sysfs.rst
++++ b/Documentation/block/queue-sysfs.rst
+@@ -99,6 +99,11 @@ iostats (RW)
+ This file is used to control (on/off) the iostats accounting of the
+ disk.
+ 
++io_extra_stats (RW)
++-------------------
++This file is used to control (on/off) the additional accounting of the
++io size and io latency of disk.
++
+ logical_block_size (RO)
+ -----------------------
+ This is the logical block size of the device, in bytes.
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index b513f1683af0..ed31938e89fe 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -287,6 +287,7 @@ queue_##name##_store(struct request_queue *q, const char *page, size_t count) \
+ QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 1);
+ QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
+ QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
++QUEUE_SYSFS_BIT_FNS(io_extra_stats, IO_EXTRA_STAT, 0);
+ QUEUE_SYSFS_BIT_FNS(stable_writes, STABLE_WRITES, 0);
+ #undef QUEUE_SYSFS_BIT_FNS
+ 
+@@ -613,6 +614,7 @@ static struct queue_sysfs_entry queue_hw_sector_size_entry = {
+ 
+ QUEUE_RW_ENTRY(queue_nonrot, "rotational");
+ QUEUE_RW_ENTRY(queue_iostats, "iostats");
++QUEUE_RW_ENTRY(queue_io_extra_stats, "io_extra_stats");
+ QUEUE_RW_ENTRY(queue_random, "add_random");
+ QUEUE_RW_ENTRY(queue_stable_writes, "stable_writes");
+ 
+@@ -647,6 +649,7 @@ static struct attribute *queue_attrs[] = {
+ 	&queue_nomerges_entry.attr,
+ 	&queue_rq_affinity_entry.attr,
+ 	&queue_iostats_entry.attr,
++	&queue_io_extra_stats_entry.attr,
+ 	&queue_stable_writes_entry.attr,
+ 	&queue_random_entry.attr,
+ 	&queue_poll_entry.attr,
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 0dea268bd61b..62881db2004f 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -621,6 +621,7 @@ struct request_queue {
+ #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+ #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
++#define QUEUE_FLAG_IO_EXTRA_STAT 30	/* extra IO accounting for size and latency */
+ 
+ #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+@@ -641,6 +642,7 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_stable_writes(q) \
+ 	test_bit(QUEUE_FLAG_STABLE_WRITES, &(q)->queue_flags)
+ #define blk_queue_io_stat(q)	test_bit(QUEUE_FLAG_IO_STAT, &(q)->queue_flags)
++#define blk_queue_io_extra_stat(q) test_bit(QUEUE_FLAG_IO_EXTRA_STAT, &(q)->queue_flags)
+ #define blk_queue_add_random(q)	test_bit(QUEUE_FLAG_ADD_RANDOM, &(q)->queue_flags)
+ #define blk_queue_discard(q)	test_bit(QUEUE_FLAG_DISCARD, &(q)->queue_flags)
+ #define blk_queue_zone_resetall(q)	\
 -- 
 2.17.1
 
