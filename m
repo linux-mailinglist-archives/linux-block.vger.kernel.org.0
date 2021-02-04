@@ -2,73 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6F430F7A6
-	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 17:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1E6930F74B
+	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 17:13:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237091AbhBDQXX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Feb 2021 11:23:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237159AbhBDPIY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Feb 2021 10:08:24 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89881C061788
-        for <linux-block@vger.kernel.org>; Thu,  4 Feb 2021 07:07:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=vc7vRliYes5zaCs8iBxhh34R72R5PPnrfftjwCg4twk=; b=YO8d0D4yNDZTcIzkA7+YUMpPaZ
-        kBM17bWol6tL2O47zoifb2czaVrFcBQgoF+jVUY33uQDvLkkFRBWqxCKduYfcE5XutLH0Pym1Lvnn
-        gWj8qhT/DeurR+anDvhIb+LDGCDxlt4YVjn8RJr5KpHLUFrgyhszM6uPdHiPJMp00IcmljwHT5GNm
-        rlfoa8mYygSsIOIsLar9QOU8yVHZhEQksYo2fhA7tA3WQ3vSqhaPYVd22uvWHWruTdPZ2aOz9lVwN
-        lYguah0E+IMVFgXADKAX5Qrhs2FTKxVMGr4xLEU8H9y6Ag/iOqrknbFj4QWFSpMdbapKxQazq10sa
-        JQCL9jmg==;
-Received: from [2001:4bb8:184:7d04:e998:f47:b9fb:7611] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l7gEN-0011WA-HK; Thu, 04 Feb 2021 15:07:39 +0000
-Date:   Thu, 4 Feb 2021 16:07:38 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Subject: [GIT PULL] nvme fixes for 5.11
-Message-ID: <YBwNukLwQfsXQL9U@infradead.org>
+        id S237836AbhBDQJi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Feb 2021 11:09:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237835AbhBDQJa (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 4 Feb 2021 11:09:30 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B37B264F6A;
+        Thu,  4 Feb 2021 16:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1612454929;
+        bh=3IAPQCCNYn5V60zzmVrr36a9HtGkWRc99HBODO496rg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SbGXD2TYulwmiUQymxa1aJ6E9gI3aWMtXnHBN5sPgXVrkpXtCbu+v0ZHPxelGg3kf
+         OCEK7Js2lxNP6OULdJSFxzpq9FfVDxZmJCQNHvO0+GZx0qC8q1M2tspWFbV3CM2ebX
+         7vYTxzaaKedXFZO77mr+R3l5UMy2ORCNsruSabzc=
+Date:   Thu, 4 Feb 2021 17:08:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@kernel.dk>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Haren Myneni <haren@us.ibm.com>,
+        Breno =?iso-8859-1?Q?Leit=E3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Steven Royer <seroyer@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cristobal Forno <cforno12@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dany Madden <drt@linux.ibm.com>, Lijun Pan <ljp@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Cyr <mikecyr@linux.ibm.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
+        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: Re: [PATCH] vio: make remove callback return void
+Message-ID: <YBwcDmtefa2WmS90@kroah.com>
+References: <20210127215010.99954-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210127215010.99954-1-uwe@kleine-koenig.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The following changes since commit cd92cdb9c8bcfc27a8f28bcbf7c414a0ea79e5ec:
+On Wed, Jan 27, 2021 at 10:50:10PM +0100, Uwe Kleine-König wrote:
+> The driver core ignores the return value of struct bus_type::remove()
+> because there is only little that can be done. To simplify the quest to
+> make this function return void, let struct vio_driver::remove() return
+> void, too. All users already unconditionally return 0, this commit makes
+> it obvious that returning an error code is a bad idea and makes it
+> obvious for future driver authors that returning an error code isn't
+> intended.
+> 
+> Note there are two nominally different implementations for a vio bus:
+> one in arch/sparc/kernel/vio.c and the other in
+> arch/powerpc/platforms/pseries/vio.c. I didn't care to check which
+> driver is using which of these busses (or if even some of them can be
+> used with both) and simply adapt all drivers and the two bus codes in
+> one go.
+> 
+> Note that for the powerpc implementation there is a semantical change:
+> Before this patch for a device that was bound to a driver without a
+> remove callback vio_cmo_bus_remove(viodev) wasn't called. As the device
+> core still considers the device unbound after vio_bus_remove() returns
+> calling this unconditionally is the consistent behaviour which is
+> implemented here.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+> ---
+> Hello,
+> 
+> note that this change depends on
+> https://lore.kernel.org/r/20210121062005.53271-1-ljp@linux.ibm.com which removes
+> an (ignored) return -EBUSY in drivers/net/ethernet/ibm/ibmvnic.c.
+> I don't know when/if this latter patch will be applied, so it might take
+> some time until my patch can go in.
 
-  null_blk: cleanup zoned mode initialization (2021-01-29 07:49:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/nvme.git nvme-5.11
-
-for you to fetch changes up to cb8563f5c735a042ea2dd7df1ad55ae06d63ffeb:
-
-  nvmet-tcp: fix out-of-bounds access when receiving multiple h2cdata PDUs (2021-02-03 16:57:36 +0100)
-
-----------------------------------------------------------------
-Claus Stovgaard (1):
-      nvme-pci: ignore the subsysem NQN on Phison E16
-
-Keith Busch (1):
-      update the email address for Keith Bush
-
-Sagi Grimberg (1):
-      nvmet-tcp: fix out-of-bounds access when receiving multiple h2cdata PDUs
-
-Thorsten Leemhuis (1):
-      nvme-pci: avoid the deepest sleep state on Kingston A2000 SSDs
-
- .mailmap                  | 2 ++
- drivers/nvme/host/pci.c   | 4 ++++
- drivers/nvme/target/tcp.c | 3 ++-
- 3 files changed, 8 insertions(+), 1 deletion(-)
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
