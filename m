@@ -2,153 +2,235 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E1630E5FA
-	for <lists+linux-block@lfdr.de>; Wed,  3 Feb 2021 23:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B288430E954
+	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 02:18:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbhBCWWn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Feb 2021 17:22:43 -0500
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:34780 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231230AbhBCWWn (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Feb 2021 17:22:43 -0500
-Received: by mail-pl1-f171.google.com with SMTP id u15so658564plf.1
-        for <linux-block@vger.kernel.org>; Wed, 03 Feb 2021 14:22:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i/NbabQJZBZ366AVWIrLP+6MNQ/MvruNt9+cq1+IsS8=;
-        b=Kb7IxZ1X1lypsbXpTnmyDztKQGg54ENXEL/0gClobX865FEF9SHw+KrO6rHGt3wUfc
-         +rrJ6fiCb3nJtI5ECPYDDuR/7C9zMytnE4hRNamIPsVTXHVhfuAeG+y3FoBBSrb03J5n
-         u0pm17959N0u7dewZkkE78fLPIHVM7r1V0BFycLqZUPl5hb7V8nNU2bXLhHYTbAJaRiC
-         Q3EK00lX1SdQ3C1kByZxFxfw0PurtjZ4HOCD9T1LmdNCCO1nPeXDPeLRy52lA8RiNeVo
-         TNQ0DZbc3T3ehM+waM2IGk1vKSRPEGTzDywkDo4XNCD2bsnnxc15IS5BbZPEP3xZHF1x
-         5duA==
-X-Gm-Message-State: AOAM531XhBwyS2YHH1fCIosWF4zLe0MxWEQJgTynAnrBemXU5uJPlKFV
-        fzMmhvKlwjpJsMBdnX46FX0=
-X-Google-Smtp-Source: ABdhPJxM20NILI5ccKSLTileVt27NeMAC0am8zdczs0gB0BrleepC1oWoLCFW0e46w6hDm46biU87g==
-X-Received: by 2002:a17:90a:fd0f:: with SMTP id cv15mr5303238pjb.36.1612390922345;
-        Wed, 03 Feb 2021 14:22:02 -0800 (PST)
-Received: from ?IPv6:2601:647:4802:9070:cd99:e813:1dae:a15a? ([2601:647:4802:9070:cd99:e813:1dae:a15a])
-        by smtp.gmail.com with ESMTPSA id d18sm2943910pjs.31.2021.02.03.14.22.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Feb 2021 14:22:01 -0800 (PST)
-Subject: Re: [PATCH v5 0/3] avoid double request completion and IO error
-To:     Christoph Hellwig <hch@lst.de>, Chao Leng <lengchao@huawei.com>
-Cc:     linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@fb.com,
-        linux-block@vger.kernel.org, axboe@kernel.dk
-References: <20210201034940.18891-1-lengchao@huawei.com>
- <20210203161455.GB4116@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <ae2ff390-739e-ac2d-a7a8-162a6297653f@grimberg.me>
-Date:   Wed, 3 Feb 2021 14:22:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S233750AbhBDBS1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Feb 2021 20:18:27 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:47216 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233391AbhBDBS0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Feb 2021 20:18:26 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20210204011743epoutp035ab28f0f4f3a25dbabdbaa0bbe62b1f0~gZpakd4FD2137821378epoutp03S
+        for <linux-block@vger.kernel.org>; Thu,  4 Feb 2021 01:17:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20210204011743epoutp035ab28f0f4f3a25dbabdbaa0bbe62b1f0~gZpakd4FD2137821378epoutp03S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1612401463;
+        bh=ok7IJjIXz6xGgJxQYwq++bBOaNrRRQtln/5yQX/Ab8E=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=NDxVyQkskiIXpsZdN5eHiieRm6hHvG17IdUkmaiOilFtPsd7eVwN7wpwIHALoGGe3
+         Nd4i8VYHeJ0LyjvbP3eggRGXL85gPceLOcC9WTKUVObX9ljr/zaBj0QDAQlGp/ZxWm
+         Efa5RbEHvteKgu90yD0d43Jjp1dpqE/bwpMSnQaI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20210204011742epcas1p3073e2d76ccc10d36b4943328f8d4681d~gZpZrHRc51044210442epcas1p3Z;
+        Thu,  4 Feb 2021 01:17:42 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4DWLJP2Dlmz4x9Ps; Thu,  4 Feb
+        2021 01:17:41 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C9.02.02418.53B4B106; Thu,  4 Feb 2021 10:17:41 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20210204011740epcas1p35481e568b664de42d7c5d4579f80787e~gZpXmdPYu1025810258epcas1p3M;
+        Thu,  4 Feb 2021 01:17:40 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20210204011740epsmtrp1b884dc5b23824ebb690752ffd589e966~gZpXiHFhs2863728637epsmtrp1E;
+        Thu,  4 Feb 2021 01:17:40 +0000 (GMT)
+X-AuditID: b6c32a35-c0dff70000010972-04-601b4b35a4bd
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        56.A0.13470.43B4B106; Thu,  4 Feb 2021 10:17:40 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.99.105]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210204011740epsmtip11122738e0e35d4b978fad8040b05d5db~gZpXSv5kr0345303453epsmtip1L;
+        Thu,  4 Feb 2021 01:17:40 +0000 (GMT)
+From:   Changheun Lee <nanich.lee@samsung.com>
+To:     ming.lei@redhat.com, Johannes.Thumshirn@wdc.com,
+        asml.silence@gmail.com, axboe@kernel.dk, damien.lemoal@wdc.com,
+        hch@infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, osandov@fb.com,
+        patchwork-bot@kernel.org, tj@kernel.org, tom.leiming@gmail.com,
+        gregkh@linuxfoundation.org
+Cc:     jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
+        mj0123.lee@samsung.com, seunghwan.hyun@samsung.com,
+        sookwan7.kim@samsung.com, woosung2.lee@samsung.com,
+        yt0928.kim@samsung.com, Changheun Lee <nanich.lee@samsung.com>
+Subject: [PATCH v5 1/2] bio: limit bio max size
+Date:   Thu,  4 Feb 2021 10:01:55 +0900
+Message-Id: <20210204010156.5105-1-nanich.lee@samsung.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20210203161455.GB4116@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTVxjOube9rWyFS0V2gmxC4xbBAf2gcGaE6CTkZkDCsixOiCkXuCmM
+        0ja91Gwkc4RqGd8gy5x8bOoUmuJGVoQACYgtjCAUEkFxgHRMFh3yFQgEJYy1u5Dx73me93nf
+        57zn3CvExS4iQJitzWMMWlojIbx47Y4QaZgy4XCadGrZG9Vb2wFqflpJoMtFGxgy/dRCoKGq
+        mxgqmyvko+2SGQytz7Koe/I4GuuqJ5C9xoShq631OHrsGhYgx8wjHpq9VY2jkcFVPvrh2Sn0
+        uqkfoOXNCQF60FGDo5buV8SpQ1S1aUlAddY+FVCtllBqzGmkbNZigrrXcEdALfc8IqiKu1ZA
+        rdneoYp6S7FkrxTNySyGzmQMQYw2Q5eZrVXHSBI+UZ1RKaOksjDZByhaEqSlc5kYSVxiclh8
+        tsa9oCToAq0xuqVkmmUlEbEnDTpjHhOUpWPzYiSMPlOjl0n14Sydyxq16vAMXe4JmVQqV7qd
+        aZqsf1bb+HrHsS/Mri1eARgMLAEHhJCMhKbSl4IS4CUUkx0ALjotgCOrAJZ3LOySDQBvz3aB
+        vZaJxj8xrtAN4MqvZbtkDcDSgSrc4yLI92HF4iThKfiRbRi8MV3J9xCcfAbg+KCZ8LgOkhHQ
+        YS3GPJhHvguH2+d4HiwiT8A7dZsCLu8I/Ku8Ced0Xzh4jfPgbt3UVod7hkJyXAhvvLbuHjAO
+        PriyTnD4IJwfuLs7KAD+XWkWcA2lAJrMPwKOVAF463kjxrkUcHVtzV0QuiNCYEtXBCcHw86t
+        BsAle8Ol9TK+xwJJEfzGLOYsR+HwJRe+l/X8587diRQcHVvje7CYPA+fmMrxKnCkdt8+tfv2
+        qf0/+DrArcCf0bO5aoaV6WX7X9YG/vvSQ5UdoHpxJdwOMCGwAyjEJX4i2hyQJhZl0l/mMwad
+        ymDUMKwdKN03XI0HHMrQuX8VbZ5KppQrFAoUGRUdpVRI3hKlS/9QiUk1ncfkMIyeMez1YcID
+        AQWYcfyjb78S9cT4pF3/RbARuzDwovHyaeeLOb7vh7zte2/bV8sujKh+i7N4hexUU+ten/kd
+        225OlPY+yf5uomhqerqX2in4uKH8+FViJevz+7aU7rowNS/WunNxymlLKh6AvvFvfh/ZXzN1
+        X7aYdHasaU5/tOtxz9eB8SMNsfP5eEJHfg+THyif8RkN70s5X9v98nZQsD8ROST3a4iZdyQ9
+        NH3qlEtHmeiLVxILr7GYvz48/w31UvrCdHnZaGq/bTy19b1z3i6H5uzWq5xgbWBLakKhz2b6
+        zGKBadmS05yYmXMpfYgoPPfQ7uyrSKBcgVVO++kzv9PIYrxprpwcLD3cJ+GxWbQsFDew9L/f
+        NUQpcgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJTtfEWzrBYPdWSYs5q7YxWqy+289m
+        0dr+jcmiefF6NovTExYxWfQ8aWK1+Nt1j8ni68Nii723tC0u75rDZnFocjOTxfTNc5gtrt0/
+        w25x+N5VFouHSyYyW5w7+YnVYt5jB4tfy48yWrz/cZ3d4tSOycwW6/f+ZHMQ9ZjY/I7dY+es
+        u+wem1doeVw+W+qxaVUnm8f+uWvYPd7vu8rm0bdlFaPH501yHu0HupkCuKK4bFJSczLLUov0
+        7RK4Mv592spacFijou3+b5YGxpMyXYycHBICJhLXlz1i6mLk4hAS2M0oMXndTlaIhJTE8RNv
+        gWwOIFtY4vDhYoiaj4wS3y+tYAepYRPQkeh7e4sNxBYROMokcWddHkgRs8BrRomux4tYQBLC
+        AvoSh1d1MoHYLAKqEme2PQGL8wpYSayZ/YMdYpm8xNPe5cwQcUGJkzMhapiB4s1bZzNPYOSb
+        hSQ1C0lqASPTKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0veT83E2M4NjS0tzBuH3VB71DjEwc
+        jIcYJTiYlUR4E9ukEoR4UxIrq1KL8uOLSnNSiw8xSnOwKInzXug6GS8kkJ5YkpqdmlqQWgST
+        ZeLglGpgqmtysch5/WGazJPXPXbfPy6USr+5pWqJqMn9n7XvNr/bGCTs+9x15bL77D/+LLH9
+        sm2VSerk42rmK7KnSn64YGo85/cMLZFnvybKC09erKCSGHr/UURtCLt05xymwkdq/GZGkzbk
+        LHP9+vfphFePGlPKnTYsandMkWWZ1uVoc0l1fsVH9o87qxkmikU5bqm8M/vGRVN1u+Z4sbkL
+        ZX9NeuR7p0CFpb+GbzNPppHKhrmR2heUNm0JmfUqxUng6Z6bdgctF66S6PGYVynHzdvRrs27
+        6MdGH9mVb8qCtfz/hX5f2Trpxq2NHLGJv0xnTGXruV5kOOvRfcOndT9qCxIPrmII0DmRPddU
+        t3LenCeickosxRmJhlrMRcWJACiPNakcAwAA
+X-CMS-MailID: 20210204011740epcas1p35481e568b664de42d7c5d4579f80787e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20210204011740epcas1p35481e568b664de42d7c5d4579f80787e
+References: <CGME20210204011740epcas1p35481e568b664de42d7c5d4579f80787e@epcas1p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+bio size can grow up to 4GB when muli-page bvec is enabled.
+but sometimes it would lead to inefficient behaviors.
+in case of large chunk direct I/O, - 32MB chunk read in user space -
+all pages for 32MB would be merged to a bio structure if the pages
+physical addresses are contiguous. it makes some delay to submit
+until merge complete. bio max size should be limited to a proper size.
 
+When 32MB chunk read with direct I/O option is coming from userspace,
+kernel behavior is below now in do_direct_IO() loop. it's timeline.
 
-On 2/3/21 8:14 AM, Christoph Hellwig wrote:
-> So I think this is conceptually fine, but I still find the API a little
-> arcane.  What do you think about the following incremental patch?
-> If that looks good and tests good for you I can apply the series with
-> the modifications:
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index 0befaad788a094..02579f4f776c7d 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -355,6 +355,21 @@ void nvme_complete_rq(struct request *req)
->   }
->   EXPORT_SYMBOL_GPL(nvme_complete_rq);
->   
-> +/*
-> + * Called to unwind from ->queue_rq on a failed command submission so that the
-> + * multipathing code gets called to potentially failover to another path.
-> + * The caller needs to unwind all transport specific resource allocations and
-> + * must return propagate the return value.
-> + */
-> +blk_status_t nvme_host_path_error(struct request *req)
-> +{
-> +	nvme_req(req)->status = NVME_SC_HOST_PATH_ERROR;
-> +	blk_mq_set_request_complete(req);
-> +	nvme_complete_rq(req);
-> +	return BLK_STS_OK;
-> +}
-> +EXPORT_SYMBOL_GPL(nvme_host_path_error);
-> +
->   bool nvme_cancel_request(struct request *req, void *data, bool reserved)
->   {
->   	dev_dbg_ratelimited(((struct nvme_ctrl *) data)->device,
-> diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-> index cedf9b31898673..5dfd806fc2d28c 100644
-> --- a/drivers/nvme/host/fabrics.c
-> +++ b/drivers/nvme/host/fabrics.c
-> @@ -552,11 +552,7 @@ blk_status_t nvmf_fail_nonready_command(struct nvme_ctrl *ctrl,
->   	    !test_bit(NVME_CTRL_FAILFAST_EXPIRED, &ctrl->flags) &&
->   	    !blk_noretry_request(rq) && !(rq->cmd_flags & REQ_NVME_MPATH))
->   		return BLK_STS_RESOURCE;
-> -
-> -	nvme_req(rq)->status = NVME_SC_HOST_PATH_ERROR;
-> -	blk_mq_set_request_complete(rq);
-> -	nvme_complete_rq(rq);
-> -	return BLK_STS_OK;
-> +	return nvme_host_path_error(rq);
->   }
->   EXPORT_SYMBOL_GPL(nvmf_fail_nonready_command);
->   
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index a72f0718109100..5819f038104149 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -575,6 +575,7 @@ static inline bool nvme_is_aen_req(u16 qid, __u16 command_id)
->   }
->   
->   void nvme_complete_rq(struct request *req);
-> +blk_status_t nvme_host_path_error(struct request *req);
->   bool nvme_cancel_request(struct request *req, void *data, bool reserved);
->   void nvme_cancel_tagset(struct nvme_ctrl *ctrl);
->   void nvme_cancel_admin_tagset(struct nvme_ctrl *ctrl);
-> diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-> index 6993efb27b39f0..f51af5e4970a2b 100644
-> --- a/drivers/nvme/host/rdma.c
-> +++ b/drivers/nvme/host/rdma.c
-> @@ -2091,16 +2091,6 @@ static blk_status_t nvme_rdma_queue_rq(struct blk_mq_hw_ctx *hctx,
->   	err = nvme_rdma_post_send(queue, sqe, req->sge, req->num_sge,
->   			req->mr ? &req->reg_wr.wr : NULL);
->   	if (unlikely(err)) {
-> -		if (err == -EIO) {
-> -			/*
-> -			 * Fail the reqest so upper layer can failover I/O
-> -			 * if another path is available
-> -			 */
-> -			req->status = NVME_SC_HOST_PATH_ERROR;
-> -			blk_mq_set_request_complete(rq);
-> -			nvme_rdma_complete_rq(rq);
-> -			return BLK_STS_OK;
-> -		}
->   		goto err_unmap;
->   	}
->   
-> @@ -2109,7 +2099,9 @@ static blk_status_t nvme_rdma_queue_rq(struct blk_mq_hw_ctx *hctx,
->   err_unmap:
->   	nvme_rdma_unmap_data(queue, rq);
->   err:
-> -	if (err == -ENOMEM || err == -EAGAIN)
-> +	if (err == -EIO)
-> +		ret = nvme_host_path_error(rq);
-> +	else if (err == -ENOMEM || err == -EAGAIN)
->   		ret = BLK_STS_RESOURCE;
->   	else
->   		ret = BLK_STS_IOERR;
-> 
+ | bio merge for 32MB. total 8,192 pages are merged.
+ | total elapsed time is over 2ms.
+ |------------------ ... ----------------------->|
+                                                 | 8,192 pages merged a bio.
+                                                 | at this time, first bio submit is done.
+                                                 | 1 bio is split to 32 read request and issue.
+                                                 |--------------->
+                                                  |--------------->
+                                                   |--------------->
+                                                              ......
+                                                                   |--------------->
+                                                                    |--------------->|
+                          total 19ms elapsed to complete 32MB read done from device. |
 
-This looks good to me.
+If bio max size is limited with 1MB, behavior is changed below.
+
+ | bio merge for 1MB. 256 pages are merged for each bio.
+ | total 32 bio will be made.
+ | total elapsed time is over 2ms. it's same.
+ | but, first bio submit timing is fast. about 100us.
+ |--->|--->|--->|---> ... -->|--->|--->|--->|--->|
+      | 256 pages merged a bio.
+      | at this time, first bio submit is done.
+      | and 1 read request is issued for 1 bio.
+      |--------------->
+           |--------------->
+                |--------------->
+                                      ......
+                                                 |--------------->
+                                                  |--------------->|
+        total 17ms elapsed to complete 32MB read done from device. |
+
+As a result, read request issue timing is faster if bio max size is limited.
+Current kernel behavior with multipage bvec, super large bio can be created.
+And it lead to delay first I/O request issue.
+
+Signed-off-by: Changheun Lee <nanich.lee@samsung.com>
+---
+ block/bio.c            | 13 ++++++++++++-
+ include/linux/bio.h    |  2 +-
+ include/linux/blkdev.h |  3 +++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/block/bio.c b/block/bio.c
+index 1f2cc1fbe283..c528e1f944c7 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -287,6 +287,17 @@ void bio_init(struct bio *bio, struct bio_vec *table,
+ }
+ EXPORT_SYMBOL(bio_init);
+ 
++unsigned int bio_max_size(struct bio *bio)
++{
++	struct request_queue *q = bio->bi_disk->queue;
++
++	if (blk_queue_limit_bio_size(q))
++		return blk_queue_get_max_sectors(q, bio_op(bio))
++			<< SECTOR_SHIFT;
++
++	return UINT_MAX;
++}
++
+ /**
+  * bio_reset - reinitialize a bio
+  * @bio:	bio to reset
+@@ -877,7 +888,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+ 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 
+ 		if (page_is_mergeable(bv, page, len, off, same_page)) {
+-			if (bio->bi_iter.bi_size > UINT_MAX - len) {
++			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {
+ 				*same_page = false;
+ 				return false;
+ 			}
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index 1edda614f7ce..13b6f6562a5b 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -113,7 +113,7 @@ static inline bool bio_full(struct bio *bio, unsigned len)
+ 	if (bio->bi_vcnt >= bio->bi_max_vecs)
+ 		return true;
+ 
+-	if (bio->bi_iter.bi_size > UINT_MAX - len)
++	if (bio->bi_iter.bi_size > bio_max_size(bio) - len)
+ 		return true;
+ 
+ 	return false;
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index f94ee3089e01..3aeab9e7e97b 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -621,6 +621,7 @@ struct request_queue {
+ #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+ #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
++#define QUEUE_FLAG_LIMIT_BIO_SIZE 30	/* limit bio size */
+ 
+ #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+@@ -667,6 +668,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
+ #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
+ #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
++#define blk_queue_limit_bio_size(q)	\
++	test_bit(QUEUE_FLAG_LIMIT_BIO_SIZE, &(q)->queue_flags)
+ 
+ extern void blk_set_pm_only(struct request_queue *q);
+ extern void blk_clear_pm_only(struct request_queue *q);
+-- 
+2.28.0
+
