@@ -2,70 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 848A530ECFE
-	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 08:11:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E87230EDFD
+	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 09:06:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbhBDHIh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Feb 2021 02:08:37 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12021 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234102AbhBDHIe (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Feb 2021 02:08:34 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DWV2t46yCzjJqp;
-        Thu,  4 Feb 2021 15:06:30 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.498.0; Thu, 4 Feb 2021
- 15:07:42 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <Markus.Elfring@web.de>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>, <sunke32@huawei.com>
-Subject: [PATCH v4 2/2] nbd: share exception handling code by goto put_nbd
-Date:   Thu, 4 Feb 2021 02:09:10 -0500
-Message-ID: <20210204070910.1401239-3-sunke32@huawei.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20210204070910.1401239-1-sunke32@huawei.com>
-References: <20210204070910.1401239-1-sunke32@huawei.com>
+        id S234860AbhBDIFs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Feb 2021 03:05:48 -0500
+Received: from verein.lst.de ([213.95.11.211]:54840 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234878AbhBDIF3 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 4 Feb 2021 03:05:29 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A77D768CEC; Thu,  4 Feb 2021 09:04:43 +0100 (CET)
+Date:   Thu, 4 Feb 2021 09:04:42 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Chao Leng <lengchao@huawei.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
+        linux-block@vger.kernel.org, axboe@kernel.dk
+Subject: Re: [PATCH v5 0/3] avoid double request completion and IO error
+Message-ID: <20210204080442.GA30542@lst.de>
+References: <20210201034940.18891-1-lengchao@huawei.com> <20210203161455.GB4116@lst.de> <7d39e0a4-3765-85b8-aab5-b0ded93f8bec@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d39e0a4-3765-85b8-aab5-b0ded93f8bec@huawei.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace the following two statements by the statement “goto put_nbd;”
+On Thu, Feb 04, 2021 at 01:56:34PM +0800, Chao Leng wrote:
+> This looks good to me.
+> Thank you very much.
 
-	nbd_put(nbd);
-	return 0;
+Thanks a lot to you!
 
-Signed-off-by: Sun Ke <sunke32@huawei.com>
----
- drivers/block/nbd.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Please double check there version here:
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 3c9b3bf3f4c2..ecae81e43122 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -2029,12 +2029,11 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
- 	}
- 	mutex_unlock(&nbd->config_lock);
- 	mutex_unlock(&nbd_index_mutex);
--	if (!refcount_inc_not_zero(&nbd->config_refs)) {
--		nbd_put(nbd);
--		return 0;
--	}
-+	if (!refcount_inc_not_zero(&nbd->config_refs))
-+		goto put_nbd;
- 	nbd_disconnect_and_put(nbd);
- 	nbd_config_put(nbd);
-+put_nbd:
- 	nbd_put(nbd);
- 	return 0;
- }
--- 
-2.25.4
-
+http://git.infradead.org/nvme.git/shortlog/refs/heads/nvme-5.12
