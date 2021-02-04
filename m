@@ -2,73 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9AFF30F6E1
-	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 16:56:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6F430F7A6
+	for <lists+linux-block@lfdr.de>; Thu,  4 Feb 2021 17:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237439AbhBDPxb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Feb 2021 10:53:31 -0500
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:43826 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237618AbhBDPwh (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Feb 2021 10:52:37 -0500
-Received: by mail-pl1-f182.google.com with SMTP id 8so1960274plc.10
-        for <linux-block@vger.kernel.org>; Thu, 04 Feb 2021 07:52:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IPQw/vw6QrtWvNONNThd5V+63/fFKcr3xt91STQ/8CQ=;
-        b=dSjlgfmqLjIOL+30AnPe5krYBc6PukxHAOvo7f3+zJAr+sQxtH7hX+QAR7QHw/WyNq
-         cS1w6Xs79aTOuvadPI4yo94jKuFWTuVwWZOdE1E0Fq/RZvPh/yX9v6As9tL53FaN1c0f
-         FMUeulXHwzGAeL2gbQyzn40VVXGk353l021G1Uw0h+WBGOu9aPElmwWcWjr01GNtyVBm
-         URX9kuCi9aUarz7+BFhxlUaXDu+hHMX0uYNOscIp94kq2NzHUpP4y57TTXBcns7FhCxn
-         t2XfJYACE/WgRRVvIjSo95etb9qFJ/eALokmomQZrGhQ0ZXczVFPnaulOA1LYNxyIEsJ
-         aWPA==
-X-Gm-Message-State: AOAM530kpQOxKXz/ZzDl6Pnr6tXPOV204iVi7bC6Tbv2eXTFd5GGpvZA
-        agc8U+OXdC4kMPDTPmT/ulZ9T+VaPlQ=
-X-Google-Smtp-Source: ABdhPJxDNe3ZlXWvMwcN5zzlNgSJTMW0C3EyXh520/E+DXTxD2/NaEeUVuGWVAAGuG2Wo7UUx3jahg==
-X-Received: by 2002:a17:90b:4ac8:: with SMTP id mh8mr182224pjb.38.1612453914857;
-        Thu, 04 Feb 2021 07:51:54 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:8322:e64a:7b80:3b82? ([2601:647:4000:d7:8322:e64a:7b80:3b82])
-        by smtp.gmail.com with ESMTPSA id g19sm6415915pfk.113.2021.02.04.07.51.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Feb 2021 07:51:53 -0800 (PST)
-Subject: Re: use-after-free access in bt_iter()
-To:     pragalla@codeaurora.org, axboe@kernel.dk, evgreen@google.com,
-        jianchao.w.wang@oracle.com
-Cc:     linux-block@vger.kernel.org, stummala@codeaurora.org,
-        John Garry <john.garry@huawei.com>
-References: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <056783fa-a510-2463-f353-c64dd8f37be9@acm.org>
-Date:   Thu, 4 Feb 2021 07:51:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S237091AbhBDQXX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Feb 2021 11:23:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237159AbhBDPIY (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Feb 2021 10:08:24 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89881C061788
+        for <linux-block@vger.kernel.org>; Thu,  4 Feb 2021 07:07:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=vc7vRliYes5zaCs8iBxhh34R72R5PPnrfftjwCg4twk=; b=YO8d0D4yNDZTcIzkA7+YUMpPaZ
+        kBM17bWol6tL2O47zoifb2czaVrFcBQgoF+jVUY33uQDvLkkFRBWqxCKduYfcE5XutLH0Pym1Lvnn
+        gWj8qhT/DeurR+anDvhIb+LDGCDxlt4YVjn8RJr5KpHLUFrgyhszM6uPdHiPJMp00IcmljwHT5GNm
+        rlfoa8mYygSsIOIsLar9QOU8yVHZhEQksYo2fhA7tA3WQ3vSqhaPYVd22uvWHWruTdPZ2aOz9lVwN
+        lYguah0E+IMVFgXADKAX5Qrhs2FTKxVMGr4xLEU8H9y6Ag/iOqrknbFj4QWFSpMdbapKxQazq10sa
+        JQCL9jmg==;
+Received: from [2001:4bb8:184:7d04:e998:f47:b9fb:7611] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1l7gEN-0011WA-HK; Thu, 04 Feb 2021 15:07:39 +0000
+Date:   Thu, 4 Feb 2021 16:07:38 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: [GIT PULL] nvme fixes for 5.11
+Message-ID: <YBwNukLwQfsXQL9U@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/4/21 3:46 AM, pragalla@codeaurora.org wrote:
-> Is this issue got fixed on any latest kernel ? if so, can you please
-> help point the patch ?
-> If not got fixed, can we have a final solution ? i can even help in
-> testing the solution.
+The following changes since commit cd92cdb9c8bcfc27a8f28bcbf7c414a0ea79e5ec:
 
-Hi John,
+  null_blk: cleanup zoned mode initialization (2021-01-29 07:49:22 -0700)
 
-Some time ago you replied the following to an email from me with a
-suggestion for a fix: "Please let me consider it a bit more." Are you
-still working on a fix?
+are available in the Git repository at:
 
-See also
-https://lore.kernel.org/linux-block/1bcc1d9e-6a32-1e00-0d32-f5b7325b2f8c@huawei.com/
+  git://git.infradead.org/nvme.git nvme-5.11
 
-Thanks,
+for you to fetch changes up to cb8563f5c735a042ea2dd7df1ad55ae06d63ffeb:
 
-Bart.
+  nvmet-tcp: fix out-of-bounds access when receiving multiple h2cdata PDUs (2021-02-03 16:57:36 +0100)
+
+----------------------------------------------------------------
+Claus Stovgaard (1):
+      nvme-pci: ignore the subsysem NQN on Phison E16
+
+Keith Busch (1):
+      update the email address for Keith Bush
+
+Sagi Grimberg (1):
+      nvmet-tcp: fix out-of-bounds access when receiving multiple h2cdata PDUs
+
+Thorsten Leemhuis (1):
+      nvme-pci: avoid the deepest sleep state on Kingston A2000 SSDs
+
+ .mailmap                  | 2 ++
+ drivers/nvme/host/pci.c   | 4 ++++
+ drivers/nvme/target/tcp.c | 3 ++-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
