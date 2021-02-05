@@ -2,110 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 753AD3111AB
-	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 21:01:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B97D3114F5
+	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 23:23:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbhBESRJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 13:17:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233238AbhBESQw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 13:16:52 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FA8C0613D6
-        for <linux-block@vger.kernel.org>; Fri,  5 Feb 2021 11:58:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=VT69IMYI6mAaXWDFon2gjK7u76Ws00zlx+76ATnHUW8=; b=Gf1Ti/diL8V+j1Ov6fdmpMrnLW
-        deDbd9BbuKqt+qnDur5ahuUSIV2JEe9nZ0V3nMpDXWGPno9VyoSjHTHar3VLRXd5knCUGARNnHT6a
-        dZG/4MzrpDCNz5n5Zot2R2RzfE2deCKD8BXRcQfxl00lz7i3g9P/AyfvqpCcbmQkdErHkkmLetJQC
-        aVSWwrnYxhs+Hw5gLSuWg1ueE3xR+rinoEqi7bVPh30X6XyeYsNXtjb65mNHyV1+dQi/CuW7meghm
-        1Q0fy4+cpzo8T2ccTWMRsCoNk47Eml8VPr7P0f7hKCtoFTKep1ecb1zbdnALft+4ooG6GUOUPnaeu
-        YNvQLNQQ==;
-Received: from [2601:1c0:6280:3f0::aec2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1l87FA-0004kG-6G; Fri, 05 Feb 2021 19:58:16 +0000
-Subject: Re: [PATCH V2 2/5] blktrace: add blk_fill_rwbs documentation comment
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org
-Cc:     paolo.valente@linaro.org, axboe@kernel.dk, rostedt@goodmis.org,
-        mingo@redhat.com, johannes.thumshirn@wdc.com,
-        damien.lemoal@wdc.com, bvanassche@acm.org, dongli.zhang@oracle.com,
-        akpm@linux-foundation.org, aravind.ramesh@wdc.com,
-        joshi.k@samsung.com, niklas.cassel@wdc.com, hare@suse.de,
-        colyli@suse.de, tj@kernel.org, jack@suse.cz, hch@lst.de
-References: <20210205035044.5645-1-chaitanya.kulkarni@wdc.com>
- <20210205035044.5645-3-chaitanya.kulkarni@wdc.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3f752068-5c38-3056-bff9-282d1a4a535c@infradead.org>
-Date:   Fri, 5 Feb 2021 11:58:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S229981AbhBEWTL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 17:19:11 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2510 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232659AbhBEObN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 09:31:13 -0500
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DXKtg4Bs6z67kVq;
+        Sat,  6 Feb 2021 00:02:19 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 5 Feb 2021 17:08:39 +0100
+Received: from [10.210.170.68] (10.210.170.68) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 5 Feb 2021 16:08:38 +0000
+Subject: Re: use-after-free access in bt_iter()
+To:     <pragalla@codeaurora.org>
+CC:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>,
+        <evgreen@google.com>, <linux-block@vger.kernel.org>,
+        <stummala@codeaurora.org>, Ming Lei <ming.lei@redhat.com>
+References: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
+ <056783fa-a510-2463-f353-c64dd8f37be9@acm.org>
+ <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
+ <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5ab6e628-6c93-618a-a10b-fe0df1ab4a40@huawei.com>
+Date:   Fri, 5 Feb 2021 16:07:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20210205035044.5645-3-chaitanya.kulkarni@wdc.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.170.68]
+X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/4/21 7:50 PM, Chaitanya Kulkarni wrote:
-> blk_fill_rwbs() is an expoted function, add kernel style documentation
-> comment.
-> 
-> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/blktrace_api.h |  2 +-
->  kernel/trace/blktrace.c      | 10 ++++++++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-> index 11484f1d19a1..e17d04abf6a3 100644
-> --- a/include/linux/blktrace_api.h
-> +++ b/include/linux/blktrace_api.h
-> @@ -119,7 +119,7 @@ struct compat_blk_user_trace_setup {
->  
->  #endif
->  
-> -extern void blk_fill_rwbs(char *rwbs, unsigned int op);
-> +void blk_fill_rwbs(char *rwbs, unsigned int op);
->  
->  static inline sector_t blk_rq_trace_sector(struct request *rq)
->  {
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 8a2591c7aa41..d7ebef83771c 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -1867,6 +1867,16 @@ void blk_trace_remove_sysfs(struct device *dev)
->  
->  #ifdef CONFIG_EVENT_TRACING
->  
-> +/**
-> + * blk_fill_rwbs - Fill the buffer rwbs by mapping op to character string.
+- bouncing jianchao.w.wang@oracle.com
 
-Hi,
-                for any next time:                    @op
-
-> + * @rwbs	buffer to be filled
-> + * @op:		REQ_OP_XXX for the tracepoint
-> + *
-> + * Description:
-> + *     Maps the REQ_OP_XXX to character and fills the buffer provided by the
-> + *     caller with resulting string.
-> + *
-> + **/
->  void blk_fill_rwbs(char *rwbs, unsigned int op)
->  {
->  	int i = 0;
+>>
+>>> Some time ago you replied the following to an email from me with a
+>>> suggestion for a fix: "Please let me consider it a bit more." Are you
+>>> still working on a fix?
+>>
+>> Unfortunately I have not had a chance, sorry. But I can look again.
+>>
+>> So I have only seen KASAN use-after-free's myself, but never an actual
+>> oops. IIRC, someone did report an oops.
+>>
+> Hi John,
+> 
+>> @Pradeep, do you have a reliable re-creator? I noticed the timeout
+>> handler stackframe in your mail, so I guess not. However, as an
+>> experiment, could you test:
+>> https://lore.kernel.org/linux-block/1608203273-170555-2-git-send-email-john.garry@huawei.com/ 
+>>
+>>
+> Yes, i don't have a reliable re-creator. The oops was noticed as a part 
+> of stability testing and
+> was not an intentional try. This was noticed couple of times.
+> Please share the steps (if any) to easy hit or to exercise this path 
+> more frequently.
+> Meanwhile, i will go with the usual stability procedure. i will update 
+> the results here later.
 > 
 
-thanks.
--- 
-~Randy
+Do you have a full kernel log for your crash?
+
+So there are different flavors of this issue, and you reported a crash 
+from blk_mq_queue_tag_busy_iter().
+
+If you check:
+https://lore.kernel.org/linux-block/76190c94-c5c1-9553-5509-9969fc323544@huawei.com/
+
+You can see how I artificially trigger an issue in 
+blk_mq_queue_tag_busy_iter().
+
+>> This should fix the common issue. But no final solution to issues
+>> discussed from patch 2/2, which is more exotic.
+>>
+>> BTW, is this the same Pradeep who reported:
+>> https://lore.kernel.org/linux-block/1606402925-24420-1-git-send-email-ppvk@codeaurora.org/ 
+>>
+
+Thanks,
+John
 
