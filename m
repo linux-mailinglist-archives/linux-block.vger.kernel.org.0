@@ -2,233 +2,228 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64B6D3108E4
-	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 11:22:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B82B8310E63
+	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 18:14:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231286AbhBEKVr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 05:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55944 "EHLO
+        id S233247AbhBEP3D (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 10:29:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbhBEKTd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 05:19:33 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B454C0617AB
-        for <linux-block@vger.kernel.org>; Fri,  5 Feb 2021 02:16:54 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id m1so5461251wml.2
-        for <linux-block@vger.kernel.org>; Fri, 05 Feb 2021 02:16:54 -0800 (PST)
+        with ESMTP id S233249AbhBEP1Q (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 10:27:16 -0500
+Received: from mail-ej1-x649.google.com (mail-ej1-x649.google.com [IPv6:2a00:1450:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB371C0617A7
+        for <linux-block@vger.kernel.org>; Fri,  5 Feb 2021 08:58:44 -0800 (PST)
+Received: by mail-ej1-x649.google.com with SMTP id m4so6945347ejc.14
+        for <linux-block@vger.kernel.org>; Fri, 05 Feb 2021 08:58:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xocG/S8P551z1Q0qsVJwJDkFJwPOHcnTgqwvnPTPysw=;
-        b=UEbFYUw+pWzZXAWzURTp9Kg1/pq1VCHVMRL+ZetN+YrEqLZVMOnj9NmzNGA7FnefOq
-         iAT13LG0o412RsFD4f1SvsaiTg9gCLcOkNopj9mEfPkKzz2pJK+zC6SerAvpQ+9GGlFS
-         1ZmpGNYNUT0bFx/CrsGeYN37zUPBHQPqDjQLsbzornx5ZTbju+WgAOg0w9OcVNZnnVrX
-         iRPiHAaatvk513Of7Fi3MX7NqoKQ9vYPd3z7nQAnZTQ9FFvCgTqS8YxNR3AdzZoJL4G5
-         HLNPprFBCBlwUGao9oQQlmHO0Fo5vOO5rXvb1HLNSsDxzF5IR5V7TUkWzx0ey9IrqFHf
-         BkFw==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=4GtWCwQDeimvfkN1mTaSptGywDj7eww9UKGtvZYIBUg=;
+        b=KBklsWedQU4WWmG49UKX496WNk8xQGJXnMQCKxME7lEcweuC3XA0fTMug2U9c8htls
+         2c++B32BAC1MtXZo6OZjeHeOFZ90sT5JzwAbZwjtZM23BcbfMBEDUhKcH3Eo/LpIuzKm
+         4wO2OrG5iyTZ+H4nQDjcePBPjpv1CBp8AvOiZyWQ4sJK10khL4FY9ERkg96LxoLSNzQy
+         RlvTjuSB61dpR8aCxO9crcD6BTIZ1RdjWWulg1OvWVSiYD4JhbxMJuB1ooMwL4gxuaJM
+         RcSD3HGmSkmx7pB+WRYezM+yeaJKpFC23Z1xOeQQOjae9LYy9OwS6eKpRR6qodl5sB9S
+         cAjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xocG/S8P551z1Q0qsVJwJDkFJwPOHcnTgqwvnPTPysw=;
-        b=UkZoXiqgKQu7mw1+yIhz16bNoCJbNsppyd+U9GUPl6CNOnwnaAZrXssmwCdzNobRiZ
-         C2mA36WdQWwJqKl63MFigpsrH3rMTET3j+n6XK/4xBMTPrV2xJyRiMIZchkAvptO1T82
-         eRWdMNmkb5nX2WUiTcHDggX79OuVQ2xOaz0d277DS9vsO0IiIBJzc7vIb0JKnsQtBlVG
-         XBeS8/+EiKNCV3l0z5HHOgWgVTiEM0DaH6GgP4lDhrX1J4MUOYA9G7xw8y5OpTYCV7av
-         wIgYH9FNrPnqUZKvhfbHMk3SBqJUpgkKJAYcZ95MfPRRJ6zf7a2lZbsgV3EYGyBB/pi4
-         KkRA==
-X-Gm-Message-State: AOAM533nmVshk4Ri33greE7JwXR7vPs99Dk+RGl3w5N+MKJJ7UocfzUK
-        9Xy+bpwpo8Umx6hyjPL3DQSK+Q==
-X-Google-Smtp-Source: ABdhPJzgQdOmE6tKKpb13xa7oosdlxMjaUXX5wp9Kn9+XGsTNplh/GiBhNwR2a1C8c+DlzJ/EJhZjg==
-X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr2929947wmh.1.1612520212917;
-        Fri, 05 Feb 2021 02:16:52 -0800 (PST)
-Received: from [192.168.0.13] ([83.216.184.132])
-        by smtp.gmail.com with ESMTPSA id b2sm8988353wmd.41.2021.02.05.02.16.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Feb 2021 02:16:52 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH BUGFIX/IMPROVEMENT 2/6] block, bfq: put reqs of waker and
- woken in dispatch list
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20210203114308.GB7094@quack2.suse.cz>
-Date:   Fri, 5 Feb 2021 11:16:50 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC22F02F-B215-4836-88F5-207FDFDED56B@linaro.org>
-References: <20210126105102.53102-1-paolo.valente@linaro.org>
- <20210126105102.53102-3-paolo.valente@linaro.org>
- <36ecc71d-ef51-c667-74f8-d8f289e2f7db@kernel.dk>
- <A5A6D401-D774-4D9E-A68B-08D46368653E@linaro.org>
- <20210203114308.GB7094@quack2.suse.cz>
-To:     Jan Kara <jack@suse.cz>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=4GtWCwQDeimvfkN1mTaSptGywDj7eww9UKGtvZYIBUg=;
+        b=ZZQQGgHxVk9L0xxr1HbvDhCq3FkdsyaxnHx/HC29NSr7BWj5B7P2O0GG4HDVYHyb2P
+         cxyEuEx7kh84ruYtbiiA+IzH39POk1Sysr7DVtuA43rW5/d7xu1Fg3rC2W+l/wzcDPRK
+         amdfJwW+dyMOkENgdN1py+IXNdkm8jQdxf8dHk6eT/6rPq/KydIoQdbfA5ocvWAphRF1
+         6Yd+wOGJ5t7AwFi0NVE/1tw9P8LFr23/XnWWc81iXK+SUrhLOfY+SINmZ8u3nK0n8MBd
+         rS78zsAjhA4zV+1LOx7HVYUND3Ib98jGPNM7zB3uRsi9Ly8Mlnzqe4NE0jgfoslaLese
+         K5wA==
+X-Gm-Message-State: AOAM53397mVbPFuV53EvSY2BZe6N57k1iGqIGSoXC4YTVF161b1ibVrA
+        DoGnZpvK1RYXXy9ha3PyvNx9jYoxaA==
+X-Google-Smtp-Source: ABdhPJyg+Z53MiQXPBUdbUaO+0V+VxVmGSyDZvALt8fHclQXS0owRQ1TA0F83a2RbOjfnAR1jb/VTUBYPw==
+Sender: "elver via sendgmr" <elver@elver.muc.corp.google.com>
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:c86d:8e60:951e:3880])
+ (user=elver job=sendgmr) by 2002:a50:e14d:: with SMTP id i13mr2777193edl.106.1612544323216;
+ Fri, 05 Feb 2021 08:58:43 -0800 (PST)
+Date:   Fri,  5 Feb 2021 17:58:35 +0100
+Message-Id: <20210205165835.821714-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.30.0.365.g02bc693789-goog
+Subject: [PATCH] blk-mq-debugfs: mark concurrent stats counters as data races
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        syzbot+2c308b859c8c103aae53@syzkaller.appspotmail.com,
+        syzbot+44f9b37d2de57637dbfd@syzkaller.appspotmail.com,
+        syzbot+49a9bcf457723ecaf1cf@syzkaller.appspotmail.com,
+        syzbot+b9914ed52d5b1d63f71d@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+KCSAN reports that several of the blk-mq debugfs stats counters are
+updated concurrently. Because blk-mq-debugfs does not demand precise
+stats counters, potential lossy updates due to data races can be
+tolerated. Therefore, mark and comment the accesses accordingly.
 
+Reported-by: syzbot+2c308b859c8c103aae53@syzkaller.appspotmail.com
+Reported-by: syzbot+44f9b37d2de57637dbfd@syzkaller.appspotmail.com
+Reported-by: syzbot+49a9bcf457723ecaf1cf@syzkaller.appspotmail.com
+Reported-by: syzbot+b9914ed52d5b1d63f71d@syzkaller.appspotmail.com
+Signed-off-by: Marco Elver <elver@google.com>
+---
+Note: These 4 data races are among the most frequently encountered by
+syzbot:
 
-> Il giorno 3 feb 2021, alle ore 12:43, Jan Kara <jack@suse.cz> ha =
-scritto:
->=20
-> On Thu 28-01-21 18:54:05, Paolo Valente wrote:
->>=20
->>=20
->>> Il giorno 26 gen 2021, alle ore 17:18, Jens Axboe <axboe@kernel.dk> =
-ha scritto:
->>>=20
->>> On 1/26/21 3:50 AM, Paolo Valente wrote:
->>>> Consider a new I/O request that arrives for a bfq_queue bfqq. If, =
-when
->>>> this happens, the only active bfq_queues are bfqq and either its =
-waker
->>>> bfq_queue or one of its woken bfq_queues, then there is no point in
->>>> queueing this new I/O request in bfqq for service. In fact, the
->>>> in-service queue and bfqq agree on serving this new I/O request as
->>>> soon as possible. So this commit puts this new I/O request directly
->>>> into the dispatch list.
->>>>=20
->>>> Tested-by: Jan Kara <jack@suse.cz>
->>>> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
->>>> ---
->>>> block/bfq-iosched.c | 17 ++++++++++++++++-
->>>> 1 file changed, 16 insertions(+), 1 deletion(-)
->>>>=20
->>>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->>>> index a83149407336..e5b83910fbe0 100644
->>>> --- a/block/bfq-iosched.c
->>>> +++ b/block/bfq-iosched.c
->>>> @@ -5640,7 +5640,22 @@ static void bfq_insert_request(struct =
-blk_mq_hw_ctx *hctx, struct request *rq,
->>>>=20
->>>> 	spin_lock_irq(&bfqd->lock);
->>>> 	bfqq =3D bfq_init_rq(rq);
->>>> -	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
->>>> +
->>>> +	/*
->>>> +	 * Additional case for putting rq directly into the dispatch
->>>> +	 * queue: the only active bfq_queues are bfqq and either its
->>>> +	 * waker bfq_queue or one of its woken bfq_queues. In this
->>>> +	 * case, there is no point in queueing rq in bfqq for
->>>> +	 * service. In fact, the in-service queue and bfqq agree on
->>>> +	 * serving this new I/O request as soon as possible.
->>>> +	 */
->>>> +	if (!bfqq ||
->>>> +	    (bfqq !=3D bfqd->in_service_queue &&
->>>> +	     bfqd->in_service_queue !=3D NULL &&
->>>> +	     bfq_tot_busy_queues(bfqd) =3D=3D 1 + bfq_bfqq_busy(bfqq) &&
->>>> +	     (bfqq->waker_bfqq =3D=3D bfqd->in_service_queue ||
->>>> +	      bfqd->in_service_queue->waker_bfqq =3D=3D bfqq)) ||
->>>> +	    at_head || blk_rq_is_passthrough(rq)) {
->>>> 		if (at_head)
->>>> 			list_add(&rq->queuelist, &bfqd->dispatch);
->>>> 		else
->>>>=20
->>>=20
->>> This is unreadable... Just seems like you are piling heuristics in =
-to
->>> catch some case, and it's neither readable nor clean.
->>>=20
->>=20
->> Yeah, these comments inappropriately assume that the reader knows the
->> waker mechanism in depth.  And they do not stress at all how =
-important
->> this improvement is.
->>=20
->> I'll do my best to improve these comments.
->>=20
->> To try to do a better job, let me also explain the matter early here.
->> Maybe you or others can give me some early feedback (or just tell me
->> to proceed).
->>=20
->> This change is one of the main improvements that boosted
->> throughput in Jan's tests.  Here is the rationale:
->> - consider a bfq_queue, say Q1, detected as a waker of another
->>  bfq_queue, say Q2
->> - by definition of a waker, Q1 blocks the I/O of Q2, i.e., some I/O =
-of
->>  of Q1 needs to be completed for new I/O of Q1 to arrive.  A notable
-> 					       ^^ Q2?
->=20
+  https://syzkaller.appspot.com/bug?id=7994761095b9677fb8bccaf41a77a82d5f444839
+  https://syzkaller.appspot.com/bug?id=08193ca23b80ec0e9bcbefba039162cff4f5d7a3
+  https://syzkaller.appspot.com/bug?id=7c51c15438f963024c4a4b3a6d7e119f4bdb2199
+  https://syzkaller.appspot.com/bug?id=6436cb57d04e8c5d6f0f40926d7511232aa2b5d4
+---
+ block/blk-mq-debugfs.c | 22 ++++++++++++----------
+ block/blk-mq-sched.c   |  3 ++-
+ block/blk-mq.c         |  9 ++++++---
+ 3 files changed, 20 insertions(+), 14 deletions(-)
 
-Yes, thank you!
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index 4de03da9a624..687d201f0d7b 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -554,15 +554,16 @@ static int hctx_dispatched_show(void *data, struct seq_file *m)
+ 	struct blk_mq_hw_ctx *hctx = data;
+ 	int i;
+ 
+-	seq_printf(m, "%8u\t%lu\n", 0U, hctx->dispatched[0]);
++	seq_printf(m, "%8u\t%lu\n", 0U, data_race(hctx->dispatched[0]));
+ 
+ 	for (i = 1; i < BLK_MQ_MAX_DISPATCH_ORDER - 1; i++) {
+ 		unsigned int d = 1U << (i - 1);
+ 
+-		seq_printf(m, "%8u\t%lu\n", d, hctx->dispatched[i]);
++		seq_printf(m, "%8u\t%lu\n", d, data_race(hctx->dispatched[i]));
+ 	}
+ 
+-	seq_printf(m, "%8u+\t%lu\n", 1U << (i - 1), hctx->dispatched[i]);
++	seq_printf(m, "%8u+\t%lu\n", 1U << (i - 1),
++		   data_race(hctx->dispatched[i]));
+ 	return 0;
+ }
+ 
+@@ -573,7 +574,7 @@ static ssize_t hctx_dispatched_write(void *data, const char __user *buf,
+ 	int i;
+ 
+ 	for (i = 0; i < BLK_MQ_MAX_DISPATCH_ORDER; i++)
+-		hctx->dispatched[i] = 0;
++		data_race(hctx->dispatched[i] = 0);
+ 	return count;
+ }
+ 
+@@ -581,7 +582,7 @@ static int hctx_queued_show(void *data, struct seq_file *m)
+ {
+ 	struct blk_mq_hw_ctx *hctx = data;
+ 
+-	seq_printf(m, "%lu\n", hctx->queued);
++	seq_printf(m, "%lu\n", data_race(hctx->queued));
+ 	return 0;
+ }
+ 
+@@ -590,7 +591,7 @@ static ssize_t hctx_queued_write(void *data, const char __user *buf,
+ {
+ 	struct blk_mq_hw_ctx *hctx = data;
+ 
+-	hctx->queued = 0;
++	data_race(hctx->queued = 0);
+ 	return count;
+ }
+ 
+@@ -598,7 +599,7 @@ static int hctx_run_show(void *data, struct seq_file *m)
+ {
+ 	struct blk_mq_hw_ctx *hctx = data;
+ 
+-	seq_printf(m, "%lu\n", hctx->run);
++	seq_printf(m, "%lu\n", data_race(hctx->run));
+ 	return 0;
+ }
+ 
+@@ -607,7 +608,7 @@ static ssize_t hctx_run_write(void *data, const char __user *buf, size_t count,
+ {
+ 	struct blk_mq_hw_ctx *hctx = data;
+ 
+-	hctx->run = 0;
++	data_race(hctx->run = 0);
+ 	return count;
+ }
+ 
+@@ -702,7 +703,8 @@ static int ctx_completed_show(void *data, struct seq_file *m)
+ {
+ 	struct blk_mq_ctx *ctx = data;
+ 
+-	seq_printf(m, "%lu %lu\n", ctx->rq_completed[1], ctx->rq_completed[0]);
++	seq_printf(m, "%lu %lu\n", data_race(ctx->rq_completed[1]),
++		   data_race(ctx->rq_completed[0]));
+ 	return 0;
+ }
+ 
+@@ -711,7 +713,7 @@ static ssize_t ctx_completed_write(void *data, const char __user *buf,
+ {
+ 	struct blk_mq_ctx *ctx = data;
+ 
+-	ctx->rq_completed[0] = ctx->rq_completed[1] = 0;
++	data_race(ctx->rq_completed[0] = ctx->rq_completed[1] = 0);
+ 	return count;
+ }
+ 
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index deff4e826e23..71a49835e89a 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -332,7 +332,8 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+ 		return;
+ 
+-	hctx->run++;
++	/* data race ok: hctx->run only for debugfs stats. */
++	data_race(hctx->run++);
+ 
+ 	/*
+ 	 * A return of -EAGAIN is an indication that hctx->dispatch is not
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f285a9123a8b..1d8970602032 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -341,7 +341,8 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
+ 		}
+ 	}
+ 
+-	data->hctx->queued++;
++	/* data race ok: hctx->queued only for debugfs stats. */
++	data_race(data->hctx->queued++);
+ 	return rq;
+ }
+ 
+@@ -519,7 +520,8 @@ void blk_mq_free_request(struct request *rq)
+ 		}
+ 	}
+ 
+-	ctx->rq_completed[rq_is_sync(rq)]++;
++	/* data race ok: ctx->rq_completed only for debugfs stats. */
++	data_race(ctx->rq_completed[rq_is_sync(rq)]++);
+ 	if (rq->rq_flags & RQF_MQ_INFLIGHT)
+ 		__blk_mq_dec_active_requests(hctx);
+ 
+@@ -1419,7 +1421,8 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
+ 	if (!list_empty(&zone_list))
+ 		list_splice_tail_init(&zone_list, list);
+ 
+-	hctx->dispatched[queued_to_index(queued)]++;
++	/* data race ok: hctx->dispatched only for debugfs stats. */
++	data_race(hctx->dispatched[queued_to_index(queued)]++);
+ 
+ 	/* If we didn't flush the entire list, we could have told the driver
+ 	 * there was more coming, but that turned out to be a lie.
 
-(after this interaction, I'll fix and improve all this description,
-according to your comments)
-
->>  example is journald
->> - so, Q1 and Q2 are in any respect two cooperating processes: if the
->>  service of Q1's I/O is delayed, Q2 can only suffer from it.
->>  Conversely, if Q2's I/O is delayed, the purpose of Q1 is just =
-defeated.
->=20
-> What do you exactly mean by this last sentence?
-
-By definition of waker, the purpose of Q1's I/O is doing what needs to
-be done, so that new Q2's I/O can finally be issued.  Delaying Q2's I/O
-is the opposite of this goal.
-
->=20
->> - as a consequence if some I/O of Q1/Q2 arrives while Q2/Q1 is the
->>  only queue in service, there is absolutely no point in delaying the
->>  service of such an I/O.  The only possible result is a throughput
->>  loss, detected by Jan's test
->=20
-> If we are idling at that moment waiting for more IO from in service =
-queue,
-> I agree.
-
-And I agree too, if the drive has no internal queueing, has no
-parallelism or pipeline, or is at least one order of magnitude slower
-than the CPU is processing I/O.  In all other cases, serving the I/O
-of only one queue at a time means throwing away throughput.  For
-example, on a consumer SSD, moving from one to two I/O threads served
-in parallel usually means doubling the throughput.
-
-So, the best thing to do, if all the above conditions are met, is to
-have this new I/O dispatched as soon as possible.
-
-The most efficient way to attain this goal is to just put the new I/O
-directly into the dispatch list.
-
-> But that doesn't seem to be part of your condition above?
->=20
->> - so, when the above condition holds, the most effective and =
-efficient
->>  action is to put the new I/O directly in the dispatch list
->> - as an additional restriction, Q1 and Q2 must be the only busy =
-queues
->>  for this commit to put the I/O of Q2/Q1 in the dispatch list.  This =
-is
->>  necessary, because, if also other queues are waiting for service, =
-then
->>  putting new I/O directly in the dispatch list may evidently cause a
->>  violation of service guarantees for the other queues
->=20
-> This last restriction is not ideal for cases like jbd2 thread since it =
-may
-> still lead to pointless idling but I understand that without some
-> restriction like this several waking threads could just starve other =
-ones.
-
-Yeah, the goal here is to reduce a little bit false positives.
-
-> So I guess it's fine for now.
->=20
-
-Yes, hopefully experience will lead us to even improvements or even
-better solutions.
-
-Thanks,
-Paolo
-
-> 								Honza
-> --=20
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+base-commit: 61556703b610a104de324e4f061dc6cf7b218b46
+-- 
+2.30.0.365.g02bc693789-goog
 
