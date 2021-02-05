@@ -2,100 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B97D3114F5
-	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 23:23:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B90963118BE
+	for <lists+linux-block@lfdr.de>; Sat,  6 Feb 2021 03:49:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbhBEWTL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 17:19:11 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2510 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232659AbhBEObN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 09:31:13 -0500
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DXKtg4Bs6z67kVq;
-        Sat,  6 Feb 2021 00:02:19 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 5 Feb 2021 17:08:39 +0100
-Received: from [10.210.170.68] (10.210.170.68) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 5 Feb 2021 16:08:38 +0000
-Subject: Re: use-after-free access in bt_iter()
-To:     <pragalla@codeaurora.org>
-CC:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>,
-        <evgreen@google.com>, <linux-block@vger.kernel.org>,
-        <stummala@codeaurora.org>, Ming Lei <ming.lei@redhat.com>
-References: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
- <056783fa-a510-2463-f353-c64dd8f37be9@acm.org>
- <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
- <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5ab6e628-6c93-618a-a10b-fe0df1ab4a40@huawei.com>
-Date:   Fri, 5 Feb 2021 16:07:08 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S231327AbhBFCox (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 21:44:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231293AbhBFCkF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 21:40:05 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFDEC08ED38
+        for <linux-block@vger.kernel.org>; Fri,  5 Feb 2021 15:16:50 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id g15so5589338pgu.9
+        for <linux-block@vger.kernel.org>; Fri, 05 Feb 2021 15:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=Qzublt+OSpzjrakyinu33+i+M4UkOIdnFqOBEWhR9Ds=;
+        b=Qt32I1ykmR+juSOU2UYUjoCULWgIzKxi16l4onKNx+1VsS7eCIbrdcFDOiZDJindHP
+         rxr4l4h2pM+n7/aG2Ge0F546UlB6ObXrWu3WNSP8LW0bYKFBga1KLHP5LjMEXS+JNZor
+         E9Qbz77uihS/BWOxnfuu4YC+YmnqA38Qox/Grm7zKn9Oy9EGgr3mZdh/0059TKsp4FoS
+         My+8poGn5Ilwd6KLdfhWWCX9RVTZ5r2iNzn3v6pnK4/LCh8vfvzN4zcr6dIApLY9Emij
+         kpaV3owUlEDkJAB4LtXXmJc3V6+kuG0P9rz/fwKYq9riNqPjKFpsyHaQh4SPiEbbxk0X
+         5cyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=Qzublt+OSpzjrakyinu33+i+M4UkOIdnFqOBEWhR9Ds=;
+        b=FgXixPeRleo8GkRcILNDQj2uj0qcjRNehHXe60igWxD4tw5excyPzG2T6bus6B2u4p
+         ifWjRk6u0lnDqQ0/UoBsWZBRa3IfaGNRRmsn4VrCZuB3aKfVoR91IVkl1QjNpTYq3ghh
+         mr17yu3TpeEoa6tZv/hktfc+3OUT0zxLHjItE0tAVC0ZkA4p7eBPrMNRQD94u/I7ER3V
+         lA8KL0KQDz6LVPqqxEIdAKzGemBeSROuuBW1J5Rj3wkyTLWt76Aq1AuBJPirmGRWUYOa
+         3zm0vDnIfoYbjo5E6sFf/0S/3at1VPWbB5uPvtbMhbJ7dr3hajrWR8faaeyxtlvFHvj8
+         FE0Q==
+X-Gm-Message-State: AOAM5302r/thLhcAUqZJKXQruSiM6nyQH1PJAMNjk2cuogCvlZmydfon
+        8rd0eqWPPzng54yb81hXMWhAEKuW7VKh6Q==
+X-Google-Smtp-Source: ABdhPJzn/wwdkk97Bv4rXRsFPztDfe+QYJx5EkiS4aXWf3pKkrlEDQ7sFwxMFKTS6MjHjV075BnIGg==
+X-Received: by 2002:a63:4444:: with SMTP id t4mr6481289pgk.329.1612567009463;
+        Fri, 05 Feb 2021 15:16:49 -0800 (PST)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id j26sm10072215pfa.35.2021.02.05.15.16.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Feb 2021 15:16:49 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 5.11-rc7
+Message-ID: <1b6014c3-84cf-ec3e-69bf-73a8b10c7e88@kernel.dk>
+Date:   Fri, 5 Feb 2021 16:16:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.68]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-- bouncing jianchao.w.wang@oracle.com
+Hi Linus,
 
->>
->>> Some time ago you replied the following to an email from me with a
->>> suggestion for a fix: "Please let me consider it a bit more." Are you
->>> still working on a fix?
->>
->> Unfortunately I have not had a chance, sorry. But I can look again.
->>
->> So I have only seen KASAN use-after-free's myself, but never an actual
->> oops. IIRC, someone did report an oops.
->>
-> Hi John,
-> 
->> @Pradeep, do you have a reliable re-creator? I noticed the timeout
->> handler stackframe in your mail, so I guess not. However, as an
->> experiment, could you test:
->> https://lore.kernel.org/linux-block/1608203273-170555-2-git-send-email-john.garry@huawei.com/ 
->>
->>
-> Yes, i don't have a reliable re-creator. The oops was noticed as a part 
-> of stability testing and
-> was not an intentional try. This was noticed couple of times.
-> Please share the steps (if any) to easy hit or to exercise this path 
-> more frequently.
-> Meanwhile, i will go with the usual stability procedure. i will update 
-> the results here later.
-> 
+A few small regression fixes:
 
-Do you have a full kernel log for your crash?
+- NVMe pull request from Christoph:
+	- more quirks for buggy devices (Thorsten Leemhuis, Claus Stovgaard)
+	- update the email address for Keith (Keith Busch)
+	- fix an out of bounds access in nvmet-tcp (Sagi Grimberg)
 
-So there are different flavors of this issue, and you reported a crash 
-from blk_mq_queue_tag_busy_iter().
+- Regression fix for BFQ shallow depth calculations introduced in this
+  merge window (Lin)
 
-If you check:
-https://lore.kernel.org/linux-block/76190c94-c5c1-9553-5509-9969fc323544@huawei.com/
+Please pull!
 
-You can see how I artificially trigger an issue in 
-blk_mq_queue_tag_busy_iter().
 
->> This should fix the common issue. But no final solution to issues
->> discussed from patch 2/2, which is more exotic.
->>
->> BTW, is this the same Pradeep who reported:
->> https://lore.kernel.org/linux-block/1606402925-24420-1-git-send-email-ppvk@codeaurora.org/ 
->>
+The following changes since commit cd92cdb9c8bcfc27a8f28bcbf7c414a0ea79e5ec:
 
-Thanks,
-John
+  null_blk: cleanup zoned mode initialization (2021-01-29 07:49:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.11-2021-02-05
+
+for you to fetch changes up to ea8465e611022a04d85393f776874911a9fc0a2b:
+
+  Merge branch 'nvme-5.11' of git://git.infradead.org/nvme into block-5.11 (2021-02-04 08:24:16 -0700)
+
+----------------------------------------------------------------
+block-5.11-2021-02-05
+
+----------------------------------------------------------------
+Claus Stovgaard (1):
+      nvme-pci: ignore the subsysem NQN on Phison E16
+
+Jens Axboe (1):
+      Merge branch 'nvme-5.11' of git://git.infradead.org/nvme into block-5.11
+
+Keith Busch (1):
+      update the email address for Keith Bush
+
+Lin Feng (1):
+      bfq-iosched: Revert "bfq: Fix computation of shallow depth"
+
+Sagi Grimberg (1):
+      nvmet-tcp: fix out-of-bounds access when receiving multiple h2cdata PDUs
+
+Thorsten Leemhuis (1):
+      nvme-pci: avoid the deepest sleep state on Kingston A2000 SSDs
+
+ .mailmap                  | 2 ++
+ block/bfq-iosched.c       | 8 ++++----
+ drivers/nvme/host/pci.c   | 4 ++++
+ drivers/nvme/target/tcp.c | 3 ++-
+ 4 files changed, 12 insertions(+), 5 deletions(-)
+
+-- 
+Jens Axboe
 
