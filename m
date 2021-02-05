@@ -2,161 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47D52310E62
-	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 18:14:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F103A311185
+	for <lists+linux-block@lfdr.de>; Fri,  5 Feb 2021 20:52:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbhBEP3B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 10:29:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233253AbhBEP1Q (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 10:27:16 -0500
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F89DC06178C
-        for <linux-block@vger.kernel.org>; Fri,  5 Feb 2021 09:07:05 -0800 (PST)
-Received: by mail-oi1-x22b.google.com with SMTP id j25so8216823oii.0
-        for <linux-block@vger.kernel.org>; Fri, 05 Feb 2021 09:07:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6CiRHiBjfgyKWH3em9AEl+bMDdVNYxlHfJr2DRSDCVA=;
-        b=NBKD+zfoWfUVKP89J2Ssz3Psr/aqZy7P/yxdbeUclUL2nsLAmpMJPjuIqgfnO72M+R
-         OWbAGtezNS0EqGFi5gs7atqG1Jns61I5+lffC18AMCZ79goL1vtoeakGDY3VGPsFC6pN
-         bjNfE2uFHcCWp2BEYsK4eRRuP0vDwyAXBjkx1RnDbA8SM1+volxFk6c+KG+g1urYAERT
-         9KsQjcxW6KEFW6jHdWOY9Li4Oq2eVwdJrd4cXiAkocnP5eoAJhVLoBsZ6w39lnLzBAuF
-         ofqKCVAaQ1FDA4WK6c4gBoHZvk6Sm8T/WKC3R1WxVfr/bgvVgAXb651Zu+1QJTD6Ye0E
-         K4SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6CiRHiBjfgyKWH3em9AEl+bMDdVNYxlHfJr2DRSDCVA=;
-        b=ZlAvo6Wi7eMJmLvGwFQ0MJp5MLbMo03K7C8EwpB8lJmG/DSc3tBu6AVZajXTaB/z9z
-         /gJ23XyinFX0zTqTK4dwFqEqb/zMBjaucASLMDfSvMd5sMPN55ym0scetYW3V77a+Q7x
-         ngClJehNrQRTGFBimNqvm+9vys3ed6FGA5z9g3BlKUqiUKqLOoJbdTghbSFkRYlioonS
-         Ef/8Jo48nlEc01z4Xbt8QO0R3eakFwfNs01DkyttZNw8WrHx2W2qU9wkT8cfp8gPGmgf
-         4Gtsr/StN9PjZVb3ysKMB3976ATMVUQJJr1ygGkSymSJX0q6xM59DKN4ATQdxnvbogT7
-         HvyQ==
-X-Gm-Message-State: AOAM533r7i3+suKwIj4aWwhgyz217/U+/IcSxI5Qddu8z+JnA10uXpyY
-        h73DkI9k3rrJOssTl61LEyLVfEK7vofoBi2chyqBOlD+1Sh92g==
-X-Google-Smtp-Source: ABdhPJwyG5XHMfddTE3lTh9bXPoLB+Ng8ywxGO1+tKiyNWfb5gczV3/qwp51P3hd5Ndbwk/m3ODFCndmdHaw3xEkRrE=
-X-Received: by 2002:a54:4482:: with SMTP id v2mr3641744oiv.121.1612544824351;
- Fri, 05 Feb 2021 09:07:04 -0800 (PST)
+        id S233201AbhBESJA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 13:09:00 -0500
+Received: from mail29.static.mailgun.info ([104.130.122.29]:23078 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232591AbhBESHB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 5 Feb 2021 13:07:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1612554545; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=NPsWXIeL1yu7Zu/3blrDQ6G8CVyagjT+skV5dFqeInA=;
+ b=nOXPCdItt4JPUEMjDKClHWJyZuR/vugSYFsvl9NFvr2Zb+Xw/0PqXkLUQQkvvAPw1S4vkJXv
+ y6FkfPYbIwIdwmEE/Nw7pu/+VV/QhiFKmgm1klOUvTxQJC/I1lozXBh60mj0UEBRq+7xtzxb
+ vwJENEJVj/lYHp8PQvMsyxLU+e0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MmE5NyIsICJsaW51eC1ibG9ja0B2Z2VyLmtlcm5lbC5vcmciLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 601d647df112b7872c1bdd10 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Feb 2021 15:30:05
+ GMT
+Sender: pragalla=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 42706C43465; Fri,  5 Feb 2021 15:30:05 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pragalla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EA69C433C6;
+        Fri,  5 Feb 2021 15:30:04 +0000 (UTC)
 MIME-Version: 1.0
-References: <0000000000006e8af605ba99c1af@google.com>
-In-Reply-To: <0000000000006e8af605ba99c1af@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 5 Feb 2021 18:06:53 +0100
-Message-ID: <CANpmjNNX22dDoYK3XgrgCmoEPo5Fv+1dqm=nbYhTJWs7gPSw_A@mail.gmail.com>
-Subject: Re: KCSAN: data-race in blk_stat_add / blk_stat_timer_fn (5)
-To:     syzbot <syzbot+2b6452167d85a022bc6f@syzkaller.appspotmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Feb 2021 21:00:04 +0530
+From:   pragalla@codeaurora.org
+To:     John Garry <john.garry@huawei.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
+        evgreen@google.com, jianchao.w.wang@oracle.com,
+        linux-block@vger.kernel.org, stummala@codeaurora.org,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: use-after-free access in bt_iter()
+In-Reply-To: <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
+References: <f98dd950466b0408d8589de053b02e05@codeaurora.org>
+ <056783fa-a510-2463-f353-c64dd8f37be9@acm.org>
+ <f1027dc3-d5a7-02c8-ef02-e34aeb12c0ac@huawei.com>
+Message-ID: <bbed52ea0c788b07ca68142bd86a07df@codeaurora.org>
+X-Sender: pragalla@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, 5 Feb 2021 at 18:00, syzbot
-<syzbot+2b6452167d85a022bc6f@syzkaller.appspotmail.com> wrote:
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    2ab38c17 mailmap: remove the "repo-abbrev" comment
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=130e19b4d00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=38728258f37833e3
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2b6452167d85a022bc6f
-> compiler:       clang version 12.0.0 (https://github.com/llvm/llvm-project.git 913f6005669cfb590c99865a90bc51ed0983d09d)
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+2b6452167d85a022bc6f@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KCSAN: data-race in blk_stat_add / blk_stat_timer_fn
->
-> write to 0xffffe8ffffd35c80 of 8 bytes by interrupt on cpu 0:
->  blk_rq_stat_init block/blk-stat.c:24 [inline]
->  blk_stat_timer_fn+0x349/0x410 block/blk-stat.c:95
->  call_timer_fn+0x2e/0x240 kernel/time/timer.c:1417
->  expire_timers+0x116/0x260 kernel/time/timer.c:1462
->  __run_timers+0x338/0x3d0 kernel/time/timer.c:1731
->  run_timer_softirq+0x19/0x30 kernel/time/timer.c:1744
->  __do_softirq+0x13c/0x2c3 kernel/softirq.c:343
->  asm_call_irq_on_stack+0xf/0x20
->  __run_on_irqstack arch/x86/include/asm/irq_stack.h:26 [inline]
->  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:77 [inline]
->  do_softirq_own_stack+0x32/0x40 arch/x86/kernel/irq_64.c:77
->  invoke_softirq kernel/softirq.c:226 [inline]
->  __irq_exit_rcu+0xb4/0xc0 kernel/softirq.c:420
->  sysvec_apic_timer_interrupt+0x74/0x90 arch/x86/kernel/apic/apic.c:1096
->  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:628
->
-> read to 0xffffe8ffffd35c80 of 8 bytes by interrupt on cpu 1:
->  blk_rq_stat_add block/blk-stat.c:46 [inline]
->  blk_stat_add+0x13d/0x230 block/blk-stat.c:74
->  __blk_mq_end_request+0x142/0x230 block/blk-mq.c:546
->  scsi_end_request+0x2a6/0x470 drivers/scsi/scsi_lib.c:604
->  scsi_io_completion+0x104/0xfb0 drivers/scsi/scsi_lib.c:969
->  scsi_finish_command+0x263/0x2b0 drivers/scsi/scsi.c:214
->  scsi_softirq_done+0xdf/0x440 drivers/scsi/scsi_lib.c:1449
->  blk_done_softirq+0x145/0x190 block/blk-mq.c:588
->  __do_softirq+0x13c/0x2c3 kernel/softirq.c:343
->  asm_call_irq_on_stack+0xf/0x20
->  __run_on_irqstack arch/x86/include/asm/irq_stack.h:26 [inline]
->  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:77 [inline]
->  do_softirq_own_stack+0x32/0x40 arch/x86/kernel/irq_64.c:77
->  invoke_softirq kernel/softirq.c:226 [inline]
->  __irq_exit_rcu+0xb4/0xc0 kernel/softirq.c:420
->  common_interrupt+0xb5/0x130 arch/x86/kernel/irq.c:239
->  asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:619
->  check_access kernel/kcsan/core.c:633 [inline]
->  __tsan_read1+0x156/0x180 kernel/kcsan/core.c:839
->  tomoyo_get_mode security/tomoyo/util.c:1003 [inline]
->  tomoyo_init_request_info+0xfc/0x160 security/tomoyo/util.c:1031
->  tomoyo_path_perm+0x8b/0x330 security/tomoyo/file.c:815
->  tomoyo_inode_getattr+0x18/0x20 security/tomoyo/tomoyo.c:123
->  security_inode_getattr+0x7f/0xd0 security/security.c:1280
->  vfs_getattr fs/stat.c:121 [inline]
->  vfs_fstat+0x45/0x390 fs/stat.c:146
->  __do_sys_newfstat fs/stat.c:386 [inline]
->  __se_sys_newfstat+0x35/0x240 fs/stat.c:383
->  __x64_sys_newfstat+0x2d/0x40 fs/stat.c:383
->  do_syscall_64+0x39/0x80 arch/x86/entry/common.c:46
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 PID: 18199 Comm: modprobe Not tainted 5.11.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> ==================================================================
+On 2021-02-04 21:47, John Garry wrote:
+> On 04/02/2021 15:51, Bart Van Assche wrote:
+>> On 2/4/21 3:46 AM,pragalla@codeaurora.org  wrote:
+>>> Is this issue got fixed on any latest kernel ? if so, can you please
+>>> help point the patch ?
+>>> If not got fixed, can we have a final solution ? i can even help in
+>>> testing the solution.
+>> Hi John,
+>> 
+> 
+> Hi Bart,
+> 
+>> Some time ago you replied the following to an email from me with a
+>> suggestion for a fix: "Please let me consider it a bit more." Are you
+>> still working on a fix?
+> 
+> Unfortunately I have not had a chance, sorry. But I can look again.
+> 
+> So I have only seen KASAN use-after-free's myself, but never an actual
+> oops. IIRC, someone did report an oops.
+> 
+Hi John,
 
-I've been looking at some data races in block/. For this one I was
-wondering if there are any requirements for the stats counters? E.g.
-do they have to be somewhat consistent, or does it not matter at all?
+> @Pradeep, do you have a reliable re-creator? I noticed the timeout
+> handler stackframe in your mail, so I guess not. However, as an
+> experiment, could you test:
+> https://lore.kernel.org/linux-block/1608203273-170555-2-git-send-email-john.garry@huawei.com/
+> 
+Yes, i don't have a reliable re-creator. The oops was noticed as a part 
+of stability testing and
+was not an intentional try. This was noticed couple of times.
+Please share the steps (if any) to easy hit or to exercise this path 
+more frequently.
+Meanwhile, i will go with the usual stability procedure. i will update 
+the results here later.
 
-Because as-is, with concurrent update and aggregation (followed by
-reinit) of the per-CPU counters, the values in blk_rq_stat can become
-quite inconsistent.
+> This should fix the common issue. But no final solution to issues
+> discussed from patch 2/2, which is more exotic.
+> 
+> BTW, is this the same Pradeep who reported:
+> https://lore.kernel.org/linux-block/1606402925-24420-1-git-send-email-ppvk@codeaurora.org/
+> 
+> I did cc ppvk@codeaurora.org on earlier version of my series, but it 
+> bounced.
+> 
+Yes, it's the same Pradeep. Unfortunately my old email 
+"ppvk@codeaurora.org" got expired and
+couldn't able to restore. Hence the bounced emails. Now this got 
+resolved with a new email
+"pragalla@codeaurora.org" which I'm now currently replying.
 
-I wanted to throw together a fix for this, but wasn't sure what the
-level of tolerable errors for these counters is appropriate. I thought
-of 3 options:
+>> 
+>> See also
+>> https://lore.kernel.org/linux-block/1bcc1d9e-6a32-1e00-0d32-f5b7325b2f8c@huawei.com/
+> 
+> Thanks,
+> John
 
-1. Just add more data_race() around them and accept whatever
-inaccuracies we get due to the data races.
-
-2. Add a per-CPU spinlock. This should be uncontended unless the timer
-fires too often.
-
-3. Use per-CPU seqlock. Not sure this buys us much because the timer
-also resets the per-CPU counters and has to be serialized with other
-potential updaters.
-
-Thanks,
--- Marco
+Thanks and Regards,
+Pradeep
