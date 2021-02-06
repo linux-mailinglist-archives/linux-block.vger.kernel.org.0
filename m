@@ -2,157 +2,406 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 028D031195C
-	for <lists+linux-block@lfdr.de>; Sat,  6 Feb 2021 04:04:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F9E3119B7
+	for <lists+linux-block@lfdr.de>; Sat,  6 Feb 2021 04:18:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231783AbhBFDC4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 22:02:56 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:28491 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232065AbhBFCvL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 21:51:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1612580978; x=1644116978;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=E1DUmiM0ycmy6zwDBnIrd3/oSxgZbonYO9UMhgsBdeE=;
-  b=imIcZSk6rCycwiDeX63yqTWwd1yYXMYMNcoiEf6kkNnfe2O4MIVY2Rfw
-   RyUGxPl84qLkPUX4zAYhdilHnOZwybVUjJpN9e6p/plUo/EPrX1/9GSUV
-   XmzALwERNfUAq5s8+ys67A3XKzgoHBOiexspXkOT8J7IPOGI0gUjKHISp
-   3oYvaeWyRVpQ96xYtGSPjd9cruQxx2FR5aHIQxtA6uirxX/Y+NWDgOJwS
-   6brPH0n2w753JMqL88WPE9mpA4emOIfxT3RbCgcs4doiCIJXyLbX7H5xS
-   Pda+QXFW7NEqyXYqMOWTBlun+8Rpgpmyx1HGALdDAnlTO9opeymImGG3Y
-   w==;
-IronPort-SDR: +heLSGAuF569tAswn6FmihyTfe97jSvMxnEqfHh8xfWB4PGLrjHZx0QPqVH8fxCF36fbnYdIAc
- vM4hwpRQRec9I4PZ7yt7Yg6fig01wJ9HZiNuNtZubgr/IkBD4vEcWIZLhubsYSTqw9vUU65G9X
- raHq6zbOPy6Qh7LHcl1rdO5MQtTALNK4zrLemKGl9c0gVvIOJq9sIUnaIy9XCFfGWiJE7DVcAH
- B9V+tB27D602qD6/EUf0PuXFL4YKRfLap5K6QZ+AjmQ8/g/LjezEFm756jLQh6pLVnXZHa8h/H
- 30I=
-X-IronPort-AV: E=Sophos;i="5.81,156,1610380800"; 
-   d="scan'208";a="263381810"
-Received: from mail-dm6nam12lp2176.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.176])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Feb 2021 10:14:50 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fkAUmHEXqTRKHptY+IwIw790fyfZFdmAhuBgo6dKZIjeEwuQnt2wK+GakSCu06+YKTLFK8A1exMNEY3gCVUVrx+FuscOUDC0N8/Yv/7xZhVWmMBFXYB/7gc2mDsMcIi0t7gPGfswLXf47oe/fwzNt2gg0beg6dFnJVUxFyYa/45SeD1c8yGjSaCER7EZchJ3j72CN2tKyQzuq6fIhc4IWrJtRN3qAdqpdS4qoxZxczRGOkjWAy4vIqMtT9691HisZRxfgL7nrdkAPYfKOC9cgvwEUTx9uWzNfAsq/LhUi3E401CUUE4ML6hlqTILRxwYz5y6ExIizKr2B9SHiHRqLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GP3jE1Kt0+R/4r0jbdiTEXQuh4k24f5fihFoDZi/e30=;
- b=R9MFT9Our3N3JgxvQ36T/fIxgV2Cz20YTc2GXMUvofYNL4SThXy9vwV+D9eBSPFRCnp+Wvfuj6V/ZkJJq1yqy5S6BZjep6kQx39QWnHUb3ITqbsjYtZAgoEcl5UcEvwFJz7jVA5HN1tc/3au5TayU6+56geBRLQkhX9Wfr8QJ/A5Q7nwH7NicaCJnCr9OEBmFOgPV6kUjY6nn6BtuMeK3yckxbsy3B8EWsRjqwWc/l6zW3PqCreTob0zhkZehUyDkWTZCgguwFzNBx94mrUz9q+PlyrTS+gM9w7YkpktaiZX+jDoczjgtZcDrmfFkQJL3a7wEi9YlvuQRr4cvClCvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GP3jE1Kt0+R/4r0jbdiTEXQuh4k24f5fihFoDZi/e30=;
- b=iRtGWjyOK/RRH5xP6aAI9RL9M514Orgs6cGvtKCq6uMLMqomguuRwpiRD7DKUGT+48ycVPrjsxh5BJrgLcx8K+JQUDoBjb5HjLKJ/XMtFTkbT/ua2D9+Pz6+BvpnHkem2y/o/+mP9GFmSTxX004leaIYENJUF/Bf8qGwoUjVc9I=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB4983.namprd04.prod.outlook.com (2603:10b6:a03:41::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.19; Sat, 6 Feb
- 2021 02:01:26 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::1d83:38d9:143:4c9c]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::1d83:38d9:143:4c9c%5]) with mapi id 15.20.3825.024; Sat, 6 Feb 2021
- 02:01:26 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "paolo.valente@linaro.org" <paolo.valente@linaro.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "dongli.zhang@oracle.com" <dongli.zhang@oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
-        "joshi.k@samsung.com" <joshi.k@samsung.com>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        "hare@suse.de" <hare@suse.de>, "colyli@suse.de" <colyli@suse.de>,
-        "tj@kernel.org" <tj@kernel.org>, "jack@suse.cz" <jack@suse.cz>,
-        "hch@lst.de" <hch@lst.de>
-Subject: Re: [PATCH V2 2/5] blktrace: add blk_fill_rwbs documentation comment
-Thread-Topic: [PATCH V2 2/5] blktrace: add blk_fill_rwbs documentation comment
-Thread-Index: AQHW+3Il2k0WxjBBhkCev1OBGworiA==
-Date:   Sat, 6 Feb 2021 02:01:26 +0000
-Message-ID: <BYAPR04MB4965A95FA7DB7B463B0B83B686B19@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20210205035044.5645-1-chaitanya.kulkarni@wdc.com>
- <20210205035044.5645-3-chaitanya.kulkarni@wdc.com>
- <3f752068-5c38-3056-bff9-282d1a4a535c@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0f00a3b9-c9c0-4564-f8d0-08d8ca431c80
-x-ms-traffictypediagnostic: BYAPR04MB4983:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB498367F9652FF407F35F08A386B19@BYAPR04MB4983.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XvEoApuLGAQZUlDFryew0RFoSRkcb0tOGiPXKCuaXJXV+D6Vwp139ObR5oytdXt9W1457zzRSE9e6z3BH6DCrLuHxmUmWlXjLO1T5ljQxu/sK19+IjtGXxIjgooBlTzukeVfD6+YIFK2kn0qFhnjI0p8aTkRXdnRHnSr6gY6p8uUF2oxg1Wphwc6t7fJ9EasRRITehGIQ9uV64w+EVtAjJbHi0Ho9wO7I1jTGU1jQ9kY79lEJxlflSmTztldHDpI2MtM8alcJFNRczA+eeBwhZWNjAlB6BlLTObuNSMQuxjVH6M7LcCty9NitmplTVF0691oiCt4sfSO0tSQWCIvkGwgIfjGQHfmrhumpaO1Ok6hGhmXAIveMQPZvk6mzFOvHhm5jeySyZv53SQcgo08u7qnnOZfhBsvA3bQHdPRoKnPVQMbKMancE0/2xKiiD8qtKttSp57umaURR5iYerGFzogULcO1/YrtWyZsiwAXktOV35DFyxDuVCSSWaQCOm0Q5ZAF067m8IIkKWmFm962A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(376002)(136003)(396003)(39850400004)(8936002)(5660300002)(316002)(2906002)(54906003)(558084003)(7416002)(33656002)(52536014)(66446008)(66556008)(64756008)(66946007)(76116006)(66476007)(110136005)(86362001)(4326008)(26005)(53546011)(6506007)(9686003)(55016002)(71200400001)(7696005)(8676002)(478600001)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?E+VBFSj1kYF7AqtwLBESGiLjUt1BT06TtHqjWh+xp0RbYZkzA//eMuUpQr4y?=
- =?us-ascii?Q?b5cByNdWTZzu5h8FusFM7CypIt9HqTNouHot/k6HRpaWw2lR8J0AfFhh8zyg?=
- =?us-ascii?Q?1PXKmbALhzr5cnfOSTvzYELkviNKkNpKg6wna3Iji7fSDzZXq5VA1bg52wYO?=
- =?us-ascii?Q?4G1Mg9ytdJEl8v2/mr1TINGjKzKdwfy3l/c21A+gQcsHW1YEj6vnbHROjr/0?=
- =?us-ascii?Q?A+lVYhbQwgIRTpllYZ9KMw2TjFJ6xFDTbXhQtXX3EYXMdmY/X5n7XX+Skfbb?=
- =?us-ascii?Q?N/zhSa9xAIojQFU7Jrjo6rd7De7tTmNsQdULotTPU9WSdSYeKY2X00WAjOfv?=
- =?us-ascii?Q?p1tUR/wxjTPOZ1jdIYj3NqxYbFToy3geVOUj86xFm65IihWYyUFyQrYjMM8H?=
- =?us-ascii?Q?tMt6xq5Dc7fzmmv1xCubrimGhrFaQewXxYbWjHqYbacctlxMy8BSwpeCidIm?=
- =?us-ascii?Q?O9tDjH3Fmb72xMx9sgOCx/ZA35Ip3v7VHCimb4Kcm+XJa4YNq/JMwJY7Lxq0?=
- =?us-ascii?Q?ZV3UiPl52suU0X6ycSn5WIlwuMN5hLb9FhHhehjoBOEu13SJtMZh2LP/aahe?=
- =?us-ascii?Q?hVAq05Tn807631kBTmekydbc3OYNcdU2fbkrJ50q2L39DW4N3wGj+smt2nmS?=
- =?us-ascii?Q?+qc+rmCxKo6XoTc5qI/EpHs3/1NHZGbIYWZPX92LOdJyS3ULFD+RcRm9ce8E?=
- =?us-ascii?Q?6rOsOF7Sj/4ft9zk3f5kCs60J+NFlwdwTOXnUgjoBU8Fh+sXu3pinITrEvxw?=
- =?us-ascii?Q?CVRowbQF54abxQty0Y6mnLspkmz+DEhdGwv2E7/oyR3Wv5YAmlo2ZcBgzTsy?=
- =?us-ascii?Q?RpKntVgUggGP+7RkQEH5MTmilJUVKFPKC5ROgp2jKuX0x2kR1tvLMfjNRWMY?=
- =?us-ascii?Q?IGAmI2a5kXFFVCcNmQPAVx0qaqEvds//HFrwFw/IEG9jljJ3Fi2/Xmx7Qf2D?=
- =?us-ascii?Q?uaOI8JBvLu3CcFCvPjzZYLYEqu0D0KbfpVC0NwK12rjRn7NZgTtXAylOXEO/?=
- =?us-ascii?Q?9HLrdfkvMCka6UjyfOXyEWT0Be3uYK9tik31CIk/K/T13lMkUftv0vboUgqJ?=
- =?us-ascii?Q?RWGOKBzw0GhlEqSUp47OWhmCiWmc2GTejqppvU7IEXFPrbPSKzJ/XjPXs2Tu?=
- =?us-ascii?Q?FW6Yn/GM5T7WbFGpakuBGV+ERl+5U6uCJZ09YXNwmuVzILpMZJQndEdPQlwc?=
- =?us-ascii?Q?cNuebsVIJf1Pt45XYxku8rg99G99SP4/G7kBwomydV17Pq29e9rCae9bWs6Y?=
- =?us-ascii?Q?zhn+FgsvS1D3k2SxSj1mlHkr/X1MKXX1tKaliOdQYwuqj+X5q/6//SgywEgW?=
- =?us-ascii?Q?dXOQTEZndutHNiMQ9Bh8aDix?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S230126AbhBFDQw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 22:16:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52705 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231899AbhBFDJx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 5 Feb 2021 22:09:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612580904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3P9g5lDtMznIBfONiKLC2zb/uvdx0T8SU9E4UtFW63U=;
+        b=ejDYtbMrc7XheRaPfohQ86gUysl6FvVd+2nVokoVXz4a2u7Qx7qx+/dCrOPf1KSVlH9PyH
+        4EROwzUD8uosZfLDFLsQHbiYPFoZ7mEFNeGYn64FA7e9UCOtKDTRzaIOdfZIpL46sa/dyG
+        Y5jY54dz1eUVs4ArlhwH/ZhwM4e9DZg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-MiGIyjWCMAaCfpxD1BRL6g-1; Fri, 05 Feb 2021 22:08:21 -0500
+X-MC-Unique: MiGIyjWCMAaCfpxD1BRL6g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E5E1804023;
+        Sat,  6 Feb 2021 03:08:20 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F19460C9C;
+        Sat,  6 Feb 2021 03:08:19 +0000 (UTC)
+Received: from zmail25.collab.prod.int.phx2.redhat.com (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id CD06D4A7C6;
+        Sat,  6 Feb 2021 03:08:18 +0000 (UTC)
+Date:   Fri, 5 Feb 2021 22:08:18 -0500 (EST)
+From:   Yi Zhang <yi.zhang@redhat.com>
+To:     linux-nvme@lists.infradead.org,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     axboe@kernel.dk, Rachel Sibley <rasibley@redhat.com>,
+        CKI Project <cki-project@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <630237787.11660686.1612580898410.JavaMail.zimbra@redhat.com>
+In-Reply-To: <cki.F3E139361A.EN5MUSJKK9@redhat.com>
+References: <cki.F3E139361A.EN5MUSJKK9@redhat.com>
+Subject: kernel null pointer at nvme_tcp_init_iter+0x7d/0xd0 [nvme_tcp]
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f00a3b9-c9c0-4564-f8d0-08d8ca431c80
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2021 02:01:26.0480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NiwZVRWNyVD5GKJXb6SXo/HMf9Y37SslWPG6OqjGXrlv/qO+QnlHN8bFjBDOxCcXreZmlJ3FPDyk54HVC+v0he1CDyNrXeyG4DvVdW74VqI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4983
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [10.68.5.41, 10.4.195.22]
+Thread-Topic: kernel null pointer at nvme_tcp_init_iter+0x7d/0xd0 [nvme_tcp]
+Thread-Index: 2tBd7/Jehsbeb/mKAfYcWAj9LaDbog==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/5/21 11:58, Randy Dunlap wrote:=0A=
->>  #ifdef CONFIG_EVENT_TRACING=0A=
->>  =0A=
->> +/**=0A=
->> + * blk_fill_rwbs - Fill the buffer rwbs by mapping op to character stri=
-ng.=0A=
-> Hi,=0A=
->                 for any next time:                    @op=0A=
->=0A=
-Thanks a alot for your comment, it can be done at the time of apply also.=
-=0A=
-=0A=
-I'll keep in mind.=0A=
+Hello
+
+We found this kernel NULL pointer issue with latest linux-block/for-next an=
+d it's 100% reproduced, let me know if you need more info/testing, thanks=
+=20
+
+Kernel repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-bl=
+ock.git
+Commit: 11f8b6fd0db9 - Merge branch 'for-5.12/io_uring' into for-next
+
+Reproducer: blktests nvme-tcp/012
+
+
+[  124.458121] run blktests nvme/012 at 2021-02-05 21:53:34=20
+[  125.525568] BUG: kernel NULL pointer dereference, address: 0000000000000=
+008=20
+[  125.532524] #PF: supervisor read access in kernel mode=20
+[  125.537665] #PF: error_code(0x0000) - not-present page=20
+[  125.542803] PGD 0 P4D 0 =20
+[  125.545343] Oops: 0000 [#1] SMP NOPTI=20
+[  125.549009] CPU: 15 PID: 12069 Comm: kworker/15:2H Tainted: G S        I=
+       5.11.0-rc6+ #1=20
+[  125.557528] Hardware name: Dell Inc. PowerEdge R640/06NR82, BIOS 2.10.0 =
+11/12/2020=20
+[  125.565093] Workqueue: kblockd blk_mq_run_work_fn=20
+[  125.569797] RIP: 0010:nvme_tcp_init_iter+0x7d/0xd0 [nvme_tcp]=20
+[  125.575544] Code: 8b 75 68 44 8b 45 28 44 8b 7d 30 49 89 d4 48 c1 e2 04 =
+4c 01 f2 45 89 fb 44 89 c7 85 ff 74 4d 44 89 e0 44 8b 55 10 48 c1 e0 04 <41=
+> 8b 5c 06 08 45 0f b6 ca 89 d8 44 29 d8 39 f8 0f 47 c7 41 83 e9=20
+[  125.594290] RSP: 0018:ffffbd084447bd18 EFLAGS: 00010246=20
+[  125.599515] RAX: 0000000000000000 RBX: ffffa0bba9f3ce80 RCX: 00000000000=
+00000=20
+[  125.606648] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 00000000020=
+00000=20
+[  125.613781] RBP: ffffa0ba8ac6fec0 R08: 0000000002000000 R09: 00000000000=
+00000=20
+[  125.620914] R10: 0000000002800809 R11: 0000000000000000 R12: 00000000000=
+00000=20
+[  125.628045] R13: ffffa0bba9f3cf90 R14: 0000000000000000 R15: 00000000000=
+00000=20
+[  125.635178] FS:  0000000000000000(0000) GS:ffffa0c9ff9c0000(0000) knlGS:=
+0000000000000000=20
+[  125.643264] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033=20
+[  125.649009] CR2: 0000000000000008 CR3: 00000001c9c6c005 CR4: 00000000007=
+706e0=20
+[  125.656142] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000=20
+[  125.663274] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400=20
+[  125.670407] PKRU: 55555554=20
+[  125.673119] Call Trace:=20
+[  125.675575]  nvme_tcp_queue_rq+0xef/0x330 [nvme_tcp]=20
+[  125.680537]  blk_mq_dispatch_rq_list+0x11c/0x7c0=20
+[  125.685157]  ? blk_mq_flush_busy_ctxs+0xf6/0x110=20
+[  125.689775]  __blk_mq_sched_dispatch_requests+0x12b/0x170=20
+[  125.695175]  blk_mq_sched_dispatch_requests+0x30/0x60=20
+[  125.700227]  __blk_mq_run_hw_queue+0x2b/0x60=20
+[  125.704500]  process_one_work+0x1cb/0x360=20
+[  125.708513]  ? process_one_work+0x360/0x360=20
+[  125.712699]  worker_thread+0x30/0x370=20
+[  125.716365]  ? process_one_work+0x360/0x360=20
+[  125.720550]  kthread+0x116/0x130=20
+[  125.723782]  ? kthread_park+0x80/0x80=20
+[  125.727448]  ret_from_fork+0x1f/0x30=20
+[  125.731028] Modules linked in: nvme_tcp nvme_fabrics nvmet_tcp nvmet loo=
+p nvme nvme_core rfkill sunrpc vfat fat dm_multipath intel_rapl_msr intel_r=
+apl_common isst_if_common skx_edac x86_pkg_temp_thermal intel_powerclamp co=
+retemp kvm_intel kvm ipmi_ssif mgag200 i2c_algo_bit drm_kms_helper irqbypas=
+s iTCO_wdt crct10dif_pclmul iTCO_vendor_support syscopyarea crc32_pclmul sy=
+sfillrect sysimgblt ghash_clmulni_intel fb_sys_fops dcdbas rapl drm intel_c=
+state acpi_ipmi ipmi_si mei_me dell_smbios intel_uncore i2c_i801 mei dax_pm=
+em_compat wmi_bmof dell_wmi_descriptor ipmi_devintf device_dax intel_pch_th=
+ermal pcspkr i2c_smbus lpc_ich ipmi_msghandler dax_pmem_core acpi_power_met=
+er ip_tables xfs libcrc32c nd_pmem nd_btt sd_mod t10_pi sg ahci libahci lib=
+ata tg3 megaraid_sas crc32c_intel nfit wmi libnvdimm dm_mirror dm_region_ha=
+sh dm_log dm_mod [last unloaded: nvmet]=20
+[  125.806140] CR2: 0000000000000008=20
+[  125.809467] ---[ end trace 312795dd33fab339 ]---=20
+[  125.824717] RIP: 0010:nvme_tcp_init_iter+0x7d/0xd0 [nvme_tcp]=20
+[  125.830465] Code: 8b 75 68 44 8b 45 28 44 8b 7d 30 49 89 d4 48 c1 e2 04 =
+4c 01 f2 45 89 fb 44 89 c7 85 ff 74 4d 44 89 e0 44 8b 55 10 48 c1 e0 04 <41=
+> 8b 5c 06 08 45 0f b6 ca 89 d8 44 29 d8 39 f8 0f 47 c7 41 83 e9=20
+[  125.849212] RSP: 0018:ffffbd084447bd18 EFLAGS: 00010246=20
+[  125.854436] RAX: 0000000000000000 RBX: ffffa0bba9f3ce80 RCX: 00000000000=
+00000=20
+[  125.861560] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 00000000020=
+00000=20
+[  125.868692] RBP: ffffa0ba8ac6fec0 R08: 0000000002000000 R09: 00000000000=
+00000=20
+[  125.875817] R10: 0000000002800809 R11: 0000000000000000 R12: 00000000000=
+00000=20
+[  125.882948] R13: ffffa0bba9f3cf90 R14: 0000000000000000 R15: 00000000000=
+00000=20
+[  125.890072] FS:  0000000000000000(0000) GS:ffffa0c9ff9c0000(0000) knlGS:=
+0000000000000000=20
+[  125.898158] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033=20
+[  125.903897] CR2: 0000000000000008 CR3: 00000001c9c6c005 CR4: 00000000007=
+706e0=20
+[  125.911029] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000=20
+[  125.918160] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400=20
+[  125.925292] PKRU: 55555554=20
+[  125.927998] Kernel panic - not syncing: Fatal exception=20
+[  126.309099] Kernel Offset: 0x2d400000 from 0xffffffff81000000 (relocatio=
+n range: 0xffffffff80000000-0xffffffffbfffffff)=20
+[  126.330633] ---[ end Kernel panic - not syncing: Fatal exception ]---=20
+
+Best Regards,
+  Yi Zhang
+
+
+----- Original Message -----
+From: "CKI Project" <cki-project@redhat.com>
+To: axboe@kernel.dk
+Cc: "Yi Zhang" <yizhan@redhat.com>
+Sent: Saturday, February 6, 2021 7:36:43 AM
+Subject: =E2=9C=85 PASS: Test report for kernel 5.11.0-rc6 (block)
+
+
+Hello,
+
+We ran automated tests on a recent commit from this kernel tree:
+
+       Kernel repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/l=
+inux-block.git
+            Commit: 11f8b6fd0db9 - Merge branch 'for-5.12/io_uring' into fo=
+r-next
+
+The results of these automated tests are provided below.
+
+    Overall result: PASSED
+             Merge: OK
+           Compile: OK
+             Tests: OK
+
+All kernel binaries, config files, and logs are available for download here=
+:
+
+  https://arr-cki-prod-datawarehouse-public.s3.amazonaws.com/index.html?pre=
+fix=3Ddatawarehouse-public/2021/02/05/623209
+
+Please reply to this email if you have any questions about the tests that w=
+e
+ran or if you have any suggestions on how to make future tests more effecti=
+ve.
+
+        ,-.   ,-.
+       ( C ) ( K )  Continuous
+        `-',-.`-'   Kernel
+          ( I )     Integration
+           `-'
+___________________________________________________________________________=
+___
+
+Compile testing
+---------------
+
+We compiled the kernel for 4 architectures:
+
+    aarch64:
+      make options: make  -j30 INSTALL_MOD_STRIP=3D1 targz-pkg
+
+    ppc64le:
+      make options: make  -j30 INSTALL_MOD_STRIP=3D1 targz-pkg
+
+    s390x:
+      make options: make  -j30 INSTALL_MOD_STRIP=3D1 targz-pkg
+
+    x86_64:
+      make options: make  -j30 INSTALL_MOD_STRIP=3D1 targz-pkg
+
+
+
+Hardware testing
+----------------
+We booted each kernel and ran the following tests:
+
+  aarch64:
+    Host 1:
+       =E2=9C=85 Boot test
+       =E2=9C=85 ACPI table test
+       =E2=9C=85 LTP
+       =E2=9C=85 Loopdev Sanity
+       =E2=9C=85 Memory: fork_mem
+       =E2=9C=85 Memory function: memfd_create
+       =E2=9C=85 AMTU (Abstract Machine Test Utility)
+       =E2=9C=85 storage: SCSI VPD
+       =F0=9F=9A=A7 =E2=9C=85 CIFS Connectathon
+       =F0=9F=9A=A7 =E2=9C=85 POSIX pjd-fstest suites
+       =F0=9F=9A=A7 =E2=9C=85 Ethernet drivers sanity
+
+    Host 2:
+       =E2=9C=85 Boot test
+       =E2=9C=85 storage: software RAID testing
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - ext4
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - xfs
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - btrfs
+       =F0=9F=9A=A7 =E2=9C=85 Storage blktests
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - filesystem fio test
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - queue scheduler test
+       =F0=9F=9A=A7 =F0=9F=92=A5 Storage nvme - tcp
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Storage: swraid mdadm raid_=
+module test
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 stress: stress-ng
+
+  ppc64le:
+    Host 1:
+
+       =E2=9A=A1 Internal infrastructure issues prevented one or more tests=
+ (marked
+       with =E2=9A=A1=E2=9A=A1=E2=9A=A1) from running on this architecture.
+       This is not the fault of the kernel that was tested.
+
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 Boot test
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 LTP
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 Loopdev Sanity
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 Memory: fork_mem
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 Memory function: memfd_create
+       =E2=9A=A1=E2=9A=A1=E2=9A=A1 AMTU (Abstract Machine Test Utility)
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 CIFS Connectathon
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 POSIX pjd-fstest suites
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Ethernet drivers sanity
+
+    Host 2:
+       =E2=9C=85 Boot test
+       =E2=9C=85 storage: software RAID testing
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - ext4
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - xfs
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - btrfs
+       =F0=9F=9A=A7 =E2=9C=85 Storage blktests
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - filesystem fio test
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - queue scheduler test
+       =F0=9F=9A=A7 =F0=9F=92=A5 Storage nvme - tcp
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Storage: swraid mdadm raid_=
+module test
+
+    Host 3:
+       =E2=9C=85 Boot test
+       =E2=9C=85 LTP
+       =E2=9C=85 Loopdev Sanity
+       =E2=9C=85 Memory: fork_mem
+       =E2=9C=85 Memory function: memfd_create
+       =E2=9C=85 AMTU (Abstract Machine Test Utility)
+       =F0=9F=9A=A7 =E2=9C=85 CIFS Connectathon
+       =F0=9F=9A=A7 =E2=9C=85 POSIX pjd-fstest suites
+       =F0=9F=9A=A7 =E2=9C=85 Ethernet drivers sanity
+
+  s390x:
+    Host 1:
+
+       =E2=9A=A1 Internal infrastructure issues prevented one or more tests=
+ (marked
+       with =E2=9A=A1=E2=9A=A1=E2=9A=A1) from running on this architecture.
+       This is not the fault of the kernel that was tested.
+
+       =E2=9C=85 Boot test
+       =F0=9F=9A=A7 =E2=9C=85 Storage blktests
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Storage nvme - tcp
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Storage: swraid mdadm raid_=
+module test
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 stress: stress-ng
+
+    Host 2:
+       =E2=9C=85 Boot test
+       =E2=9C=85 LTP
+       =E2=9C=85 Loopdev Sanity
+       =E2=9C=85 Memory: fork_mem
+       =E2=9C=85 Memory function: memfd_create
+       =E2=9C=85 AMTU (Abstract Machine Test Utility)
+       =F0=9F=9A=A7 =E2=9C=85 CIFS Connectathon
+       =F0=9F=9A=A7 =E2=9C=85 POSIX pjd-fstest suites
+       =F0=9F=9A=A7 =E2=9C=85 Ethernet drivers sanity
+
+  x86_64:
+    Host 1:
+       =E2=9C=85 Boot test
+       =E2=9C=85 Storage SAN device stress - qedf driver
+
+    Host 2:
+       =E2=9C=85 Boot test
+       =E2=9C=85 Storage SAN device stress - qla2xxx driver
+
+    Host 3:
+       =E2=9C=85 Boot test
+       =E2=9C=85 storage: software RAID testing
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - ext4
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - xfs
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - btrfs
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - nfsv4.2
+       =F0=9F=9A=A7 =E2=9C=85 xfstests - cifsv3.11
+       =F0=9F=9A=A7 =E2=9C=85 Storage blktests
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - filesystem fio test
+       =F0=9F=9A=A7 =E2=9C=85 Storage block - queue scheduler test
+       =F0=9F=9A=A7 =F0=9F=92=A5 Storage nvme - tcp
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 Storage: swraid mdadm raid_=
+module test
+       =F0=9F=9A=A7 =E2=9A=A1=E2=9A=A1=E2=9A=A1 stress: stress-ng
+
+    Host 4:
+       =E2=9C=85 Boot test
+       =E2=9C=85 Storage SAN device stress - mpt3sas_gen1
+
+    Host 5:
+       =E2=9C=85 Boot test
+       =E2=9C=85 ACPI table test
+       =E2=9C=85 LTP
+       =E2=9C=85 Loopdev Sanity
+       =E2=9C=85 Memory: fork_mem
+       =E2=9C=85 Memory function: memfd_create
+       =E2=9C=85 AMTU (Abstract Machine Test Utility)
+       =E2=9C=85 storage: SCSI VPD
+       =F0=9F=9A=A7 =E2=9C=85 CIFS Connectathon
+       =F0=9F=9A=A7 =E2=9C=85 POSIX pjd-fstest suites
+       =F0=9F=9A=A7 =E2=9C=85 Ethernet drivers sanity
+
+    Host 6:
+       =E2=9C=85 Boot test
+       =E2=9C=85 Storage SAN device stress - lpfc driver
+
+  Test sources: https://gitlab.com/cki-project/kernel-tests
+    =F0=9F=92=9A Pull requests are welcome for new tests or improvements to=
+ existing tests!
+
+Aborted tests
+-------------
+Tests that didn't complete running successfully are marked with =E2=9A=A1=
+=E2=9A=A1=E2=9A=A1.
+If this was caused by an infrastructure issue, we try to mark that
+explicitly in the report.
+
+Waived tests
+------------
+If the test run included waived tests, they are marked with =F0=9F=9A=A7. S=
+uch tests are
+executed but their results are not taken into account. Tests are waived whe=
+n
+their results are not reliable enough, e.g. when they're just introduced or=
+ are
+being fixed.
+
+Testing timeout
+---------------
+We aim to provide a report within reasonable timeframe. Tests that haven't
+finished running yet are marked with =E2=8F=B1.
+
