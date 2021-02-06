@@ -2,52 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE56311855
-	for <lists+linux-block@lfdr.de>; Sat,  6 Feb 2021 03:36:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFF0831195E
+	for <lists+linux-block@lfdr.de>; Sat,  6 Feb 2021 04:04:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbhBFCfC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Feb 2021 21:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37426 "EHLO
+        id S231902AbhBFDDG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Feb 2021 22:03:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbhBFCcp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 21:32:45 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28691C033274;
-        Fri,  5 Feb 2021 17:25:47 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id v24so12824349lfr.7;
-        Fri, 05 Feb 2021 17:25:47 -0800 (PST)
+        with ESMTP id S231648AbhBFCwv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Feb 2021 21:52:51 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7BBC033275;
+        Fri,  5 Feb 2021 17:26:54 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id a8so12786755lfi.8;
+        Fri, 05 Feb 2021 17:26:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OAQ3yX80CT+PWZsMkbbsby+9FcIwY7MvIPOlo3nK144=;
-        b=jXKpZcpWWst4BmGxxnTV2rntTCu+YReE3ptmp4wsVMDmPjq3mdmbIOqNiBfvP1F40t
-         6CO8122CaHFMkRgcFpTnC+0KR8rnA2pzthxZ6FbKXVxxwAue3EDxtt6pYcGoiNJnXt0z
-         Ajo5EvlZJb2gNk2pjDvbH93qMT4cFshCQlRTVOAKGflDBJfioBGGOzvgVYwuxyK9b5lH
-         a31SmEIawjDVSvRJkH7RnOKUlNfT+GN6y/YSpMvop4GGDIyL/ug1OA8Zx7K0wNeTWgiZ
-         3uBY+w5UZNko9rf4jiFzf5+NEnhpvjdqefgaCklHxTXU2mN2t7JvdQ3dSnb94uvtdg/b
-         OHjg==
-X-Gm-Message-State: AOAM533BBrprVhZWmcHg5m7jnQjZoZA4MVQszPFpp7O8aKKaAed3WXeF
-        T3jNZAd5mghNBBKip1+JqcMdKIWTelk=
-X-Google-Smtp-Source: ABdhPJwSrxaDHvFQ2KqpN0/Iz/1gmfklhTKJ65S7WGsWwCRT1efpQ4IcZxhDzsPPHBKdwAysHD51uw==
-X-Received: by 2002:a5d:4204:: with SMTP id n4mr7772326wrq.196.1612570429573;
-        Fri, 05 Feb 2021 16:13:49 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AYoAF7gPgCmz0hFYeiRmD4lOmSaTwA1DbF9cbEqAcQ0=;
+        b=ie63wiewQTPFO5AyrseRnYIWAna3cvOcmTRM5ltEPbD/emfDeZilCvFSRht467yRcU
+         ZEB6fBxFTpZEoCOnKTGrp9PBRcBCX3ds2VEpVtxD65Iazdpv8z+lAVJmFOfJgoYTkUg2
+         AVJyZJLnX4OYRbYlHYVeuO7tRizj+wEnCT69pI745LhjTB0wyk69MifKgYNnKyMTa10r
+         udJG6kPRhuAJbQoryGMdbrSF1fFeiZXSd/+do9GOTUK6XdDnIh1Behu/KA/ndg1Zd2r7
+         jVtx9qjqZi8M5yYCCSkxAmC8ul2LD8nDoNeQUkYReihA75x6X6dfGPSdpmTWbWuJVDNP
+         owLw==
+X-Gm-Message-State: AOAM531BqxcM1IzhRPKa5mHXDJEWIaJvx8RUP8VZJOtFUr63kUX1MBAc
+        H2Q8iiwZ9A1OrPRYmaZWTNezPSIHBBc=
+X-Google-Smtp-Source: ABdhPJz0zPGnTDbhSwzmVhzv+2yGPRYdicJfRxej/w+rmJd8/nndZwohleSblLFZNNYj9MfNIOTTQw==
+X-Received: by 2002:a5d:49c1:: with SMTP id t1mr7634170wrs.56.1612570147262;
+        Fri, 05 Feb 2021 16:09:07 -0800 (PST)
 Received: from msft-t490s.teknoraver.net (net-37-182-2-234.cust.vodafonedsl.it. [37.182.2.234])
-        by smtp.gmail.com with ESMTPSA id d3sm14566390wrp.79.2021.02.05.16.13.48
+        by smtp.gmail.com with ESMTPSA id d3sm14566390wrp.79.2021.02.05.16.09.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Feb 2021 16:13:48 -0800 (PST)
+        Fri, 05 Feb 2021 16:09:06 -0800 (PST)
 From:   Matteo Croce <mcroce@linux.microsoft.com>
 To:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Lennart Poettering <lennart@poettering.net>,
         Luca Boccassi <bluca@debian.org>, Jens Axboe <axboe@kernel.dk>,
         Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5/5] loop: increment sequence number
-Date:   Sat,  6 Feb 2021 01:09:03 +0100
-Message-Id: <20210206000903.215028-6-mcroce@linux.microsoft.com>
+Subject: [PATCH 0/5] block: add a sequence number to disks
+Date:   Sat,  6 Feb 2021 01:08:58 +0100
+Message-Id: <20210206000903.215028-1-mcroce@linux.microsoft.com>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210206000903.215028-1-mcroce@linux.microsoft.com>
-References: <20210206000903.215028-1-mcroce@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -56,46 +54,80 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Matteo Croce <mcroce@microsoft.com>
 
-On a very loaded system, if there are many events queued up from multiple
-attach/detach cycles, it's impossible to match them up with the
-LOOP_CONFIGURE or LOOP_SET_FD call, since we don't know where the position
-of our own association in the queue is[1].
-Not even an empty uevent queue is a reliable indication that we already
-received the uevent we were waiting for, since with multi-partition block
-devices each partition's event is queued asynchronously and might be
-delivered later.
+With this series a monotonically increasing number is added to disks,
+precisely in the genhd struct, and it's exported in sysfs and uevent.
 
-Increment the disk sequence number when setting or changing the backing
-file, so the userspace knows which backing file generated the event.
+This helps the userspace correlate events for devices that reuse the
+same device, like loop.
 
-[1] https://github.com/systemd/systemd/issues/17469#issuecomment-762919781
+The first patch is the core one, the 2..4 expose the information in
+different ways, while the last one increase the sequence number for
+loop devices at every attach.
 
-Signed-off-by: Matteo Croce <mcroce@microsoft.com>
----
- drivers/block/loop.c | 3 +++
- 1 file changed, 3 insertions(+)
+    # udevadm monitor -kp |grep -e ^DEVNAME -e ^DISKSEQ &
+    [1] 523
+    # losetup -fP 3part
+    [ 3698.615848] loop0: detected capacity change from 16384 to 0
+    DEVNAME=/dev/loop0
+    DISKSEQ=13
+    [ 3698.647189]  loop0: p1 p2 p3
+    DEVNAME=/dev/loop0
+    DISKSEQ=13
+    DEVNAME=/dev/loop0p1
+    DISKSEQ=13
+    DEVNAME=/dev/loop0p2
+    DISKSEQ=13
+    DEVNAME=/dev/loop0p3
+    DISKSEQ=13
+    # losetup -fP 2part
+    [ 3705.170766] loop1: detected capacity change from 40960 to 0
+    DEVNAME=/dev/loop1
+    DISKSEQ=14
+    [ 3705.247280]  loop1: p1 p2
+    DEVNAME=/dev/loop1
+    DISKSEQ=14
+    DEVNAME=/dev/loop1p1
+    DISKSEQ=14
+    DEVNAME=/dev/loop1p2
+    DISKSEQ=14
+    # ./getdiskseq /dev/loop*
+    /dev/loop0:     13
+    /dev/loop0p1:   13
+    /dev/loop0p2:   13
+    /dev/loop0p3:   13
+    /dev/loop1:     14
+    /dev/loop1p1:   14
+    /dev/loop1p2:   14
+    /dev/loop2:     5
+    /dev/loop3:     6
+    /dev/loop-control: Function not implemented
+    # grep . /sys/class/block/*/diskseq
+    /sys/class/block/loop0/diskseq:13
+    /sys/class/block/loop1/diskseq:14
+    /sys/class/block/loop2/diskseq:5
+    /sys/class/block/loop3/diskseq:6
+    /sys/class/block/ram0/diskseq:1
+    /sys/class/block/ram1/diskseq:2
+    /sys/class/block/vda/diskseq:7
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index e5ff328f0917..c12b3faae3ab 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -734,6 +734,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 		goto out_err;
- 
- 	/* and ... switch */
-+	inc_diskseq(lo->lo_disk);
- 	blk_mq_freeze_queue(lo->lo_queue);
- 	mapping_set_gfp_mask(old_file->f_mapping, lo->old_gfp_mask);
- 	lo->lo_backing_file = file;
-@@ -1122,6 +1123,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	if (error)
- 		goto out_unlock;
- 
-+	inc_diskseq(lo->lo_disk);
-+
- 	if (!(file->f_mode & FMODE_WRITE) || !(mode & FMODE_WRITE) ||
- 	    !file->f_op->write_iter)
- 		lo->lo_flags |= LO_FLAGS_READ_ONLY;
+If merged, this feature will immediately used by the userspace:
+https://github.com/systemd/systemd/issues/17469#issuecomment-762919781
+
+Matteo Croce (5):
+  block: add disk sequence number
+  block: add ioctl to read the disk sequence number
+  block: refactor sysfs code
+  block: export diskseq in sysfs
+  loop: increment sequence number
+
+ Documentation/ABI/testing/sysfs-block | 12 ++++++++
+ block/genhd.c                         | 43 ++++++++++++++++++++++++---
+ block/ioctl.c                         |  2 ++
+ drivers/block/loop.c                  |  3 ++
+ include/linux/genhd.h                 |  2 ++
+ include/uapi/linux/fs.h               |  1 +
+ 6 files changed, 59 insertions(+), 4 deletions(-)
+
 -- 
 2.29.2
 
