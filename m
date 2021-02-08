@@ -2,170 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF0F312C90
-	for <lists+linux-block@lfdr.de>; Mon,  8 Feb 2021 09:58:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67BD1312D08
+	for <lists+linux-block@lfdr.de>; Mon,  8 Feb 2021 10:15:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbhBHI4o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 Feb 2021 03:56:44 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:41110 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230408AbhBHIxp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 8 Feb 2021 03:53:45 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0UOAeIP5_1612774375;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UOAeIP5_1612774375)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 08 Feb 2021 16:52:56 +0800
-From:   Jeffle Xu <jefflexu@linux.alibaba.com>
-To:     snitzer@redhat.com, axboe@kernel.dk
-Cc:     joseph.qi@linux.alibaba.com, caspar@linux.alibaba.com, hch@lst.de,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        io-uring@vger.kernel.org
-Subject: [PATCH v3 11/11] dm: fastpath of bio-based polling
-Date:   Mon,  8 Feb 2021 16:52:43 +0800
-Message-Id: <20210208085243.82367-12-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210208085243.82367-1-jefflexu@linux.alibaba.com>
-References: <20210208085243.82367-1-jefflexu@linux.alibaba.com>
+        id S231444AbhBHJNu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 Feb 2021 04:13:50 -0500
+Received: from mail.xenproject.org ([104.130.215.37]:58000 "EHLO
+        mail.xenproject.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231431AbhBHJMa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 8 Feb 2021 04:12:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
+        s=20200302mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject;
+        bh=Z2FuntU0FCSPGAWD+ofKK+yUmsoCyrZClvV7APxBvaU=; b=S3YFzpNjNeKQK9a3thbvJwcCVT
+        /0VqloskC35+uEOgRFBZD+9JV3WrwxjsyPgNFqKOnfjWAtoIi0DKRJlxFQvbTwbupeSSukJX8x1dj
+        n1sYe+iGxzjWMHsDVsqLDKXVJUELdnB3CcU8BTrhm0NTQvuJ5S5mzzk9OVF2XbxfQZ1w=;
+Received: from xenbits.xenproject.org ([104.239.192.120])
+        by mail.xenproject.org with esmtp (Exim 4.92)
+        (envelope-from <julien@xen.org>)
+        id 1l92Zm-00046z-Fi; Mon, 08 Feb 2021 09:11:22 +0000
+Received: from [54.239.6.177] (helo=a483e7b01a66.ant.amazon.com)
+        by xenbits.xenproject.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <julien@xen.org>)
+        id 1l92Zm-0003Oc-7O; Mon, 08 Feb 2021 09:11:22 +0000
+Subject: Re: [PATCH 0/7] xen/events: bug fixes and some diagnostic aids
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        stable@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>, Wei Liu <wei.liu@kernel.org>,
+        Paul Durrant <paul@xen.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <20210206104932.29064-1-jgross@suse.com>
+ <bd63694e-ac0c-7954-ec00-edad05f8da1c@xen.org>
+ <eeb62129-d9fc-2155-0e0f-aff1fbb33fbc@suse.com>
+From:   Julien Grall <julien@xen.org>
+Message-ID: <fcf3181b-3efc-55f5-687c-324937b543e6@xen.org>
+Date:   Mon, 8 Feb 2021 09:11:18 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.7.0
 MIME-Version: 1.0
+In-Reply-To: <eeb62129-d9fc-2155-0e0f-aff1fbb33fbc@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Offer one fastpath of bio-based polling when bio submitted to dm device
-is not split.
+Hi Juergen,
 
-In this case, there will be only one bio submitted to only one polling
-hw queue of one underlying mq device, and thus we don't need to track
-all split bios or iterate through all polling hw queues. The pointer to
-the polling hw queue the bio submitted to is returned here as the
-returned cookie. In this case, the polling routine will call
-mq_ops->poll() directly with the hw queue converted from the input
-cookie.
+On 07/02/2021 12:58, Jürgen Groß wrote:
+> On 06.02.21 19:46, Julien Grall wrote:
+>> Hi Juergen,
+>>
+>> On 06/02/2021 10:49, Juergen Gross wrote:
+>>> The first three patches are fixes for XSA-332. The avoid WARN splats
+>>> and a performance issue with interdomain events.
+>>
+>> Thanks for helping to figure out the problem. Unfortunately, I still 
+>> see reliably the WARN splat with the latest Linux master 
+>> (1e0d27fce010) + your first 3 patches.
+>>
+>> I am using Xen 4.11 (1c7d984645f9) and dom0 is forced to use the 2L 
+>> events ABI.
+>>
+>> After some debugging, I think I have an idea what's went wrong. The 
+>> problem happens when the event is initially bound from vCPU0 to a 
+>> different vCPU.
+>>
+>>  From the comment in xen_rebind_evtchn_to_cpu(), we are masking the 
+>> event to prevent it being delivered on an unexpected vCPU. However, I 
+>> believe the following can happen:
+>>
+>> vCPU0                | vCPU1
+>>                  |
+>>                  | Call xen_rebind_evtchn_to_cpu()
+>> receive event X            |
+>>                  | mask event X
+>>                  | bind to vCPU1
+>> <vCPU descheduled>        | unmask event X
+>>                  |
+>>                  | receive event X
+>>                  |
+>>                  | handle_edge_irq(X)
+>> handle_edge_irq(X)        |  -> handle_irq_event()
+>>                  |   -> set IRQD_IN_PROGRESS
+>>   -> set IRQS_PENDING        |
+>>                  |   -> evtchn_interrupt()
+>>                  |   -> clear IRQD_IN_PROGRESS
+>>                  |  -> IRQS_PENDING is set
+>>                  |  -> handle_irq_event()
+>>                  |   -> evtchn_interrupt()
+>>                  |     -> WARN()
+>>                  |
+>>
+>> All the lateeoi handlers expect a ONESHOT semantic and 
+>> evtchn_interrupt() is doesn't tolerate any deviation.
+>>
+>> I think the problem was introduced by 7f874a0447a9 ("xen/events: fix 
+>> lateeoi irq acknowledgment") because the interrupt was disabled 
+>> previously. Therefore we wouldn't do another iteration in 
+>> handle_edge_irq().
+> 
+> I think you picked the wrong commit for blaming, as this is just
+> the last patch of the three patches you were testing.
 
-If the original bio submitted to dm device is split to multiple bios and
-thus submitted to multiple polling hw queues, the bio submission routine
-will return BLK_QC_T_BIO_MULTI, while the polling routine will fall
-back to iterating all hw queues (in polling mode) of all underlying mq
-devices.
+I actually found the right commit for blaming but I copied the 
+information from the wrong shell :/. The bug was introduced by:
 
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
----
- block/blk-core.c          | 33 +++++++++++++++++++++++++++++++--
- include/linux/blk_types.h |  8 ++++++++
- include/linux/types.h     |  2 +-
- 3 files changed, 40 insertions(+), 3 deletions(-)
+c44b849cee8c ("xen/events: switch user event channels to lateeoi model")
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 37aa513da5f2..cb24b33a4870 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -956,11 +956,19 @@ static blk_qc_t __submit_bio(struct bio *bio)
-  * bio_list_on_stack[0] contains bios submitted by the current ->submit_bio.
-  * bio_list_on_stack[1] contains bios that were submitted before the current
-  *	->submit_bio_bio, but that haven't been processed yet.
-+ *
-+ * Return:
-+ *   - BLK_QC_T_NONE, no need for IO polling.
-+ *   - BLK_QC_T_BIO_MULTI, @bio gets split and enqueued into multi hw queues.
-+ *   - Otherwise, @bio is not split, returning the pointer to the corresponding
-+ *     hw queue that the bio enqueued into as the returned cookie.
-  */
- static blk_qc_t __submit_bio_noacct(struct bio *bio)
- {
- 	struct bio_list bio_list_on_stack[2];
- 	blk_qc_t ret = BLK_QC_T_NONE;
-+	struct request_queue *top_q = bio->bi_disk->queue;
-+	bool poll_on = test_bit(QUEUE_FLAG_POLL, &top_q->queue_flags);
- 
- 	BUG_ON(bio->bi_next);
- 
-@@ -968,6 +976,7 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
- 	current->bio_list = bio_list_on_stack;
- 
- 	do {
-+		blk_qc_t cookie;
- 		struct request_queue *q = bio->bi_disk->queue;
- 		struct bio_list lower, same;
- 
-@@ -980,7 +989,20 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
- 		bio_list_on_stack[1] = bio_list_on_stack[0];
- 		bio_list_init(&bio_list_on_stack[0]);
- 
--		ret = __submit_bio(bio);
-+		cookie = __submit_bio(bio);
-+
-+		if (poll_on &&
-+		    blk_qc_t_bio_valid(ret) && blk_qc_t_valid(cookie)) {
-+			unsigned int queue_num = blk_qc_t_to_queue_num(cookie);
-+			struct blk_mq_hw_ctx *hctx = q->queue_hw_ctx[queue_num];
-+
-+			cookie = (blk_qc_t)hctx;
-+
-+			if (!blk_qc_t_valid(ret)) /* set initial value */
-+				ret = cookie;
-+			else if (ret != cookie)   /* bio got split */
-+				ret = BLK_QC_T_BIO_MULTI;
-+		}
- 
- 		/*
- 		 * Sort new bios into those for a lower level and those for the
-@@ -1003,6 +1025,7 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
- 	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
- 
- 	current->bio_list = NULL;
-+
- 	return ret;
- }
- 
-@@ -1142,7 +1165,13 @@ static int blk_bio_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
- 	do {
- 		int ret;
- 
--		ret = disk->fops->poll(q, cookie);
-+		if (blk_qc_t_bio_valid(cookie)) {
-+			struct blk_mq_hw_ctx *hctx = (struct blk_mq_hw_ctx *)cookie;
-+			struct request_queue *target_q = hctx->queue;
-+
-+			ret = blk_mq_poll_hctx(target_q, hctx);
-+		} else
-+			ret = disk->fops->poll(q, cookie);
- 		if (ret > 0) {
- 			__set_current_state(TASK_RUNNING);
- 			return ret;
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 2e05244fc16d..4173754532c0 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -557,6 +557,14 @@ static inline bool blk_qc_t_is_internal(blk_qc_t cookie)
- 	return (cookie & BLK_QC_T_INTERNAL) != 0;
- }
- 
-+/* Macros for blk_qc_t used for bio-based polling */
-+#define BLK_QC_T_BIO_MULTI	-2U
-+
-+static inline bool blk_qc_t_bio_valid(blk_qc_t cookie)
-+{
-+	return cookie != BLK_QC_T_BIO_MULTI;
-+}
-+
- struct blk_rq_stat {
- 	u64 mean;
- 	u64 min;
-diff --git a/include/linux/types.h b/include/linux/types.h
-index da5ca7e1bea9..f6301014a459 100644
---- a/include/linux/types.h
-+++ b/include/linux/types.h
-@@ -126,7 +126,7 @@ typedef u64 sector_t;
- typedef u64 blkcnt_t;
- 
- /* cookie used for IO polling */
--typedef unsigned int blk_qc_t;
-+typedef uintptr_t blk_qc_t;
- 
- /*
-  * The type of an index into the pagecache.
+> 
+>> Aside the handlers, I think it may impact the defer EOI mitigation 
+>> because in theory if a 3rd vCPU is joining the party (let say vCPU A 
+>> migrate the event from vCPU B to vCPU C). So info->{eoi_cpu, 
+>> irq_epoch, eoi_time} could possibly get mangled?
+>>
+>> For a fix, we may want to consider to hold evtchn_rwlock with the 
+>> write permission. Although, I am not 100% sure this is going to 
+>> prevent everything.
+> 
+> It will make things worse, as it would violate the locking hierarchy
+> (xen_rebind_evtchn_to_cpu() is called with the IRQ-desc lock held).
+
+Ah, right.
+
+> 
+> On a first glance I think we'll need a 3rd masking state ("temporarily
+> masked") in the second patch in order to avoid a race with lateeoi.
+> 
+> In order to avoid the race you outlined above we need an "event is being
+> handled" indicator checked via test_and_set() semantics in
+> handle_irq_for_port() and reset only when calling clear_evtchn().
+
+It feels like we are trying to workaround the IRQ flow we are using 
+(i.e. handle_edge_irq()).
+
+This reminds me the thread we had before discovering XSA-332 (see [1]). 
+Back then, it was suggested to switch back to handle_fasteoi_irq().
+
+Cheers,
+
+[1] 
+https://lore.kernel.org/xen-devel/alpine.DEB.2.21.2004271552430.29217@sstabellini-ThinkPad-T480s/
+
 -- 
-2.27.0
-
+Julien Grall
