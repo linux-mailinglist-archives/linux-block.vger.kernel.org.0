@@ -2,67 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9FAC312E1C
-	for <lists+linux-block@lfdr.de>; Mon,  8 Feb 2021 10:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4815B312DCA
+	for <lists+linux-block@lfdr.de>; Mon,  8 Feb 2021 10:50:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231965AbhBHJ4S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 Feb 2021 04:56:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbhBHJt4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 8 Feb 2021 04:49:56 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82E4C061BC3
-        for <linux-block@vger.kernel.org>; Mon,  8 Feb 2021 01:46:11 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id s15so7511958plr.9
-        for <linux-block@vger.kernel.org>; Mon, 08 Feb 2021 01:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=dAt0DPqe0Mujn1u+Uttoi2FnTsXNotLyGcx1zMqIocF32rJa8fdAXHfYgM4Olv0otZ
-         bUKd3wfft4YGCo03zfdn0HoOJV7dW2fpwETqgVjKuycFWibJ2nj9qfRqI46hBUNrvbs/
-         PVSEzR3Xb2AqQhEv0DygqPYCqRgCv6NwgkFYPGN319voxMy6tmErIF26r+5zNXkt2lBx
-         j/DD/oypjCdiVADQ5pRtY+sjUFHZDWtFRGikLumzZI1NjuLs39Tr5K1NwR8Zfavf7mLD
-         Ac39r8ksmSNZ1M4d6A52W4J/UgQi9Nnwdm9nGGvdr+GQtmke2Cvz9h6f+0W1TH5bUku2
-         3hFQ==
+        id S231874AbhBHJtJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 Feb 2021 04:49:09 -0500
+Received: from mail-pj1-f47.google.com ([209.85.216.47]:36623 "EHLO
+        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231835AbhBHJrC (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 8 Feb 2021 04:47:02 -0500
+Received: by mail-pj1-f47.google.com with SMTP id gx20so8482531pjb.1
+        for <linux-block@vger.kernel.org>; Mon, 08 Feb 2021 01:46:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=dx8tIQdS2iCJgR+j4luO8i0b/nvYHshbNOFlFk8ysaCt6VM0E43uYNTXDYlKIgIIUV
-         8qe4QnC5gabYmy5/zs2kzSBTZp4eCYUIQLLnV9LcNM1gqFHGndxfDTtYahORlfJqT5Ak
-         c3UK380LFXrP6TLZcvsk0I6O0X7xUc1lq0KOvWtlsK1htJP8Q8QlJKv7b+CePHx5F+3e
-         R+3YRSQum7DZfaD0r1GrwT8RSbfzYBrcT/kH1WawDUer+Ug1DeGceekcZqjokaTKMziv
-         4RakG1W2WEpd5SV3AZJhdfMZI0Uwquhe5+u6YxS9I27iIz01ybcuaP6DSjoDRAUlyvjP
-         GbDw==
-X-Gm-Message-State: AOAM532GZLudWChDru70qRQ+4T7CmQxy5fU1Mr+Ia0CC0PKvUA/eQUvu
-        FjOf4IE0arfoAKJJvDaozOgjk7eFT3ixMMDnTWY=
-X-Google-Smtp-Source: ABdhPJx+17ATKhXSfSmxcmHNoiAXPc5hq0SNyRxeqztxbAZ3R4vDl5TTrxROULrvZqwlssaFXPF5nFuQ9ygbxtYpTHs=
-X-Received: by 2002:a17:902:d304:b029:e1:7503:4dce with SMTP id
- b4-20020a170902d304b02900e175034dcemr15453730plc.23.1612777570994; Mon, 08
- Feb 2021 01:46:10 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+5lag2Pu6I7LiNjAlkA3XIIi+18BqMl/gWMUP4PB43A=;
+        b=DGDt8sByMkDYmmF1pHeu4T6cl3hTCtPxboeoTAo2jfurLbXKEy9ISbdyVHkFDWzdt1
+         Xm0gwTHtUfZdL0X/0XoY7nxOJMSKm+oCfsGgF3Pl9j9HIT6LRKH+JYgjef/FjCwSaOeG
+         Sx0lhD0JwUjhALF1uecDeXWNuz56bQkAypqf5ltKaidJqHAQF0IH5eUU78E/n3OnSEf/
+         3D3AU2G9Z1pd6MrgLCI6fAqQTMGOXSbOVgSXWzxsULhVv0yAZHNvPcmZ98ewUz6/4VlG
+         Spi+u5MnFL26SrxE99G4mPxQFJwXEr8Ac8ICBJgv/1U92apm0Z4dui/LQJvTGfSR5tg9
+         H/3Q==
+X-Gm-Message-State: AOAM530kAmwtRenWeglCrGyrU4xAMja4veLfdmPy6yEQLrxfzjVNs61T
+        jYJEAaaSVV7nnYRVk8EaIx4=
+X-Google-Smtp-Source: ABdhPJy8xQLPSwWLgKj+ORWAdbX7wyFKae7Xnn0rh4IR5FnLBcnBgwMyNw18lwvLuxv1Aj5O+MLVyQ==
+X-Received: by 2002:a17:902:b485:b029:e1:916c:a4d6 with SMTP id y5-20020a170902b485b02900e1916ca4d6mr15412946plr.57.1612777581324;
+        Mon, 08 Feb 2021 01:46:21 -0800 (PST)
+Received: from ?IPv6:2601:647:4802:9070:a769:ced1:851:e710? ([2601:647:4802:9070:a769:ced1:851:e710])
+        by smtp.gmail.com with ESMTPSA id g5sm17831358pfm.115.2021.02.08.01.46.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Feb 2021 01:46:20 -0800 (PST)
+Subject: Re: kernel null pointer at nvme_tcp_init_iter+0x7d/0xd0 [nvme_tcp]
+To:     Yi Zhang <yi.zhang@redhat.com>, linux-nvme@lists.infradead.org,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     axboe@kernel.dk, Rachel Sibley <rasibley@redhat.com>,
+        CKI Project <cki-project@redhat.com>
+References: <cki.F3E139361A.EN5MUSJKK9@redhat.com>
+ <630237787.11660686.1612580898410.JavaMail.zimbra@redhat.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e1d08160-ca49-91e2-dafc-3ee80516842d@grimberg.me>
+Date:   Mon, 8 Feb 2021 01:46:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Received: by 2002:a17:90a:5d0a:0:0:0:0 with HTTP; Mon, 8 Feb 2021 01:46:10
- -0800 (PST)
-Reply-To: richadtomm@qq.com
-From:   "Mr.Richard Thomas" <tommiirrrch@gmail.com>
-Date:   Mon, 8 Feb 2021 01:46:10 -0800
-Message-ID: <CAGbSTZMPLOkHK2GLzTi+4k2XMyvDvecx548GS=b_0GSHwg=Ucw@mail.gmail.com>
-Subject: Re Thanks.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <630237787.11660686.1612580898410.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
-I will be pleased if you can allow me to invest $104M Dollars in
-Estate Management,in your company or any area you best that will be
-of good profit to both of us
 
-Please do well to respond including your information for more details.
+> Hello
+> 
+> We found this kernel NULL pointer issue with latest linux-block/for-next and it's 100% reproduced, let me know if you need more info/testing, thanks
+> 
+> Kernel repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+> Commit: 11f8b6fd0db9 - Merge branch 'for-5.12/io_uring' into for-next
+> 
+> Reproducer: blktests nvme-tcp/012
 
-Thanks.
-Mr.Richard Thomas
+Thanks for reporting Ming, I've tried to reproduce this on my VM
+but did not succeed. Given that you have it 100% reproducible,
+can you try to revert commit:
+
+0dc9edaf80ea nvme-tcp: pass multipage bvec to request iov_iter
+
+Also, would it be possible to share your config?
