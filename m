@@ -2,159 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45048314ABF
-	for <lists+linux-block@lfdr.de>; Tue,  9 Feb 2021 09:51:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 103DE314B39
+	for <lists+linux-block@lfdr.de>; Tue,  9 Feb 2021 10:16:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230224AbhBIIsq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 Feb 2021 03:48:46 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:55181 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230139AbhBIIqq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 9 Feb 2021 03:46:46 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0UOHsEzl_1612860361;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UOHsEzl_1612860361)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 09 Feb 2021 16:46:02 +0800
-Subject: Re: [PATCH v3 09/11] dm: support IO polling for bio-based dm device
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     snitzer@redhat.com, axboe@kernel.dk, joseph.qi@linux.alibaba.com,
-        caspar@linux.alibaba.com, hch@lst.de, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, io-uring@vger.kernel.org
-References: <20210208085243.82367-1-jefflexu@linux.alibaba.com>
- <20210208085243.82367-10-jefflexu@linux.alibaba.com>
- <20210209031122.GA63798@T590>
- <a499a33f-da2e-b5aa-5266-9e7c76a34b48@linux.alibaba.com>
- <20210209080739.GB94287@T590>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <4ac63594-7764-dc13-a217-50a96cd9a93c@linux.alibaba.com>
-Date:   Tue, 9 Feb 2021 16:46:01 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.0
+        id S230223AbhBIJM7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Tue, 9 Feb 2021 04:12:59 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:37522 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S230245AbhBIJKG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Feb 2021 04:10:06 -0500
+X-ASG-Debug-ID: 1612860995-112c0d6a7998680001-Cu09wu
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id 2ZKpDVSFR76G7xpy; Tue, 09 Feb 2021 03:56:35 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:44:01 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-In-Reply-To: <20210209080739.GB94287@T590>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:43:15 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <67115bd0-7ba7-4a38-8269-fd8c74a9c433@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612860995
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87857
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
+
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
+
+Please contact us for more details;
 
 
-On 2/9/21 4:07 PM, Ming Lei wrote:
-> On Tue, Feb 09, 2021 at 02:13:38PM +0800, JeffleXu wrote:
->>
->>
->> On 2/9/21 11:11 AM, Ming Lei wrote:
->>> On Mon, Feb 08, 2021 at 04:52:41PM +0800, Jeffle Xu wrote:
->>>> DM will iterate and poll all polling hardware queues of all target mq
->>>> devices when polling IO for dm device. To mitigate the race introduced
->>>> by iterating all target hw queues, a per-hw-queue flag is maintained
->>>
->>> What is the per-hw-queue flag?
->>
->> Sorry I forgot to update the commit message as the implementation
->> changed. Actually this mechanism is implemented by patch 10 of this
->> patch set.
-> 
-> It is hard to associate patch 10's spin_trylock() with per-hw-queue
-> flag. 
+Kind regards,
 
-You're right, the commit message here is totally a mistake. Actually I
-had ever implemented a per-hw-queue flag, such as
-
-```
-struct blk_mq_hw_ctx {
-	atomic_t busy;
-	...
-};
-```
-
-In this case, the skipping mechanism is implemented in block layer.
-
-
-But later I refactor the code and move the implementation to the device
-driver layer as described by patch 10, while forgetting to update the
-commit message. The reason why I implement it in device driver layer is
-that, the competition actually stems from the underlying device driver
-(e.g., nvme driver), as described in the following snippet.
-
-```
-nvme_poll
-	spin_lock(&nvmeq->cq_poll_lock);
-	found = nvme_process_cq(nvmeq);
-	spin_unlock(&nvmeq->cq_poll_lock);
-```
-
-It is @nvmeq->cq_poll_lock, i.e., the implementation of the underlying
-device driver that has caused the competition. Thus maybe it is
-reasonable to handle the competition issue in the device driver layer?
-
-
-> Also scsi's poll implementation is in-progress, and scsi's poll may
-> not be implemented in this way.
-
-Yes. The defect of leaving the competition issue to the device driver
-layer is that, every device driver supporting polling need to be somehow
-optimized individually. Actually I have not taken a close look at the
-other two types of nvme driver (drivers/nvme/host/tcp.c and
-drivers/nvme/host/rdma.c), which also support polling.
-
-
-
->>
->>>
->>>> to indicate whether this polling hw queue currently being polled on or
->>>> not. Every polling hw queue is exclusive to one polling instance, i.e.,
->>>> the polling instance will skip this polling hw queue if this hw queue
->>>> currently is being polled by another polling instance, and start
->>>> polling on the next hw queue.
->>>
->>> Not see such skip in dm_poll_one_dev() in which
->>> queue_for_each_poll_hw_ctx() is called directly for polling all POLL
->>> hctxs of the request queue, so can you explain it a bit more about this
->>> skip mechanism?
->>>
->>
->> It is implemented as patch 10 of this patch set. When spin_trylock()
->> fails, the polling instance will return immediately, instead of busy
->> waiting.
->>
->>
->>> Even though such skipping is implemented, not sure if good performance
->>> can be reached because hctx poll may be done in ping-pong style
->>> among several CPUs. But blk-mq hctx is supposed to have its cpu affinities.
->>>
->>
->> Yes, the mechanism of iterating all hw queues can make the competition
->> worse.
->>
->> If every underlying data device has **only** one polling hw queue, then
->> this ping-pong style polling still exist, even when we implement split
->> bio tracking mechanism, i.e., acquiring the specific hw queue the bio
->> enqueued into. Because multiple polling instance has to compete for the
->> only polling hw queue.
->>
->> But if multiple polling hw queues per device are reserved for multiple
->> polling instances, (e.g., every underlying data device has 3 polling hw
->> queues when there are 3 polling instances), just as what we practice on
->> mq polling, then the current implementation of iterating all hw queues
->> will indeed works in a ping-pong style, while this issue shall not exist
->> when accurate split bio tracking mechanism could be implemented.
-> 
-> In reality it could be possible to have one hw queue for each numa node.
-> 
-> And you may re-use blk_mq_map_queue() for getting the proper hw queue for poll.
-
-Thanks. But the optimization I proposed in [1] may not works well when
-the IO submitting process migrates to another CPU halfway. I mean, the
-process has submitted several split bios, and then it migrates to
-another CPU and moves on submitting the left split bios.
-
-[1]
-https://lore.kernel.org/io-uring/20210208085243.82367-1-jefflexu@linux.alibaba.com/T/#m0d9a0e55e11874a70c6a3491f191289df72a84f8
+Paul McCann
 
 -- 
-Thanks,
-Jeffle
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
