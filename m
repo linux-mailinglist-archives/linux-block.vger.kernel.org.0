@@ -2,108 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D74B93151AE
-	for <lists+linux-block@lfdr.de>; Tue,  9 Feb 2021 15:33:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 632F931543B
+	for <lists+linux-block@lfdr.de>; Tue,  9 Feb 2021 17:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232027AbhBIOcd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 Feb 2021 09:32:33 -0500
-Received: from mx2.veeam.com ([64.129.123.6]:55760 "EHLO mx2.veeam.com"
+        id S233116AbhBIQqB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 Feb 2021 11:46:01 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57059 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231366AbhBIOca (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 9 Feb 2021 09:32:30 -0500
-Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 6AF154141F;
-        Tue,  9 Feb 2021 09:31:14 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
-        t=1612881074; bh=iOyxKFHPVnSJiNEqoIQLb5N7mlhEeMv/ecD8/bTsSt0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=EJi2swXfmkqGcb7cjVWZJ/3bBW0j9ANhODuOdQENhciXXuSAoVarVi9ek4yhuXdkL
-         FJjKFaaRKbZeQ1AKEohOVGTJclTFqLULWm8yM8yrkbL+A5m3lRnuaqpXbBNcTBtCK5
-         CTEr9VnxNrVz3tuhlyUcAkBjR939aeCRw6QCC6FU=
-Received: from prgdevlinuxpatch01.amust.local (172.24.14.5) by
- prgmbx01.amust.local (172.24.0.171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.721.2;
- Tue, 9 Feb 2021 15:30:53 +0100
-From:   Sergei Shtepa <sergei.shtepa@veeam.com>
-To:     <Damien.LeMoal@wdc.com>, <snitzer@redhat.com>, <hare@suse.de>,
-        <ming.lei@redhat.com>, <agk@redhat.com>, <corbet@lwn.net>,
-        <axboe@kernel.dk>, <jack@suse.cz>, <johannes.thumshirn@wdc.com>,
-        <gregkh@linuxfoundation.org>, <koct9i@gmail.com>, <steve@sk2.org>,
-        <dm-devel@redhat.com>, <linux-block@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <sergei.shtepa@veeam.com>, <pavel.tide@veeam.com>
-Subject: [PATCH v5 6/6] docs: device-mapper: 'noexcl' option for dm-linear
-Date:   Tue, 9 Feb 2021 17:30:28 +0300
-Message-ID: <1612881028-7878-7-git-send-email-sergei.shtepa@veeam.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1612881028-7878-1-git-send-email-sergei.shtepa@veeam.com>
-References: <1612881028-7878-1-git-send-email-sergei.shtepa@veeam.com>
+        id S233097AbhBIQoL (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 9 Feb 2021 11:44:11 -0500
+IronPort-SDR: sIMJIRUviSBFkyp+MMW4d3jguMrSdf2vl5XcrniIDPN5RMMNndL5kKPEzPJ9sUXiya5/5t0q8n
+ 4Fex8gM+NsqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="200990899"
+X-IronPort-AV: E=Sophos;i="5.81,165,1610438400"; 
+   d="scan'208";a="200990899"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 08:42:22 -0800
+IronPort-SDR: OS31wxu51AWt/+jBvQK1mkAiLpkbd1pBywbpQLoA6uAT10LGHdINSyblaNHJlomlONIRMyjt5L
+ eP9uv3mYWG4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,165,1610438400"; 
+   d="scan'208";a="398835806"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 09 Feb 2021 08:42:20 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2434D1C7; Tue,  9 Feb 2021 18:42:19 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] lightnvm: pblk: Replace guid_copy() with export_guid()/import_guid()
+Date:   Tue,  9 Feb 2021 18:42:19 +0200
+Message-Id: <20210209164219.53849-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.24.14.5]
-X-ClientProxiedBy: prgmbx02.amust.local (172.24.0.172) To prgmbx01.amust.local
- (172.24.0.171)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29C604D265617465
-X-Veeam-MMEX: True
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-New 'noexcl' option allow to open underlying block-device
-without FMODE_EXCL flag.
+There is a specific API to treat raw data as GUID, i.e. export_guid()
+and import_guid(). Use them instead of guid_copy() with explicit casting.
 
-Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- .../admin-guide/device-mapper/linear.rst      | 26 ++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ drivers/lightnvm/pblk-core.c     | 5 ++---
+ drivers/lightnvm/pblk-recovery.c | 3 +--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/admin-guide/device-mapper/linear.rst b/Documentation/admin-guide/device-mapper/linear.rst
-index 9d17fc6e64a9..f035cd7ad78c 100644
---- a/Documentation/admin-guide/device-mapper/linear.rst
-+++ b/Documentation/admin-guide/device-mapper/linear.rst
-@@ -6,12 +6,22 @@ Device-Mapper's "linear" target maps a linear range of the Device-Mapper
- device onto a linear range of another device.  This is the basic building
- block of logical volume managers.
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index 1dddba11e721..33d39d3dd343 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -988,7 +988,7 @@ static int pblk_line_init_metadata(struct pblk *pblk, struct pblk_line *line,
+ 	bitmap_set(line->lun_bitmap, 0, lm->lun_bitmap_len);
  
--Parameters: <dev path> <offset>
-+Parameters: <dev path> <offset> [<options>]
-     <dev path>:
--	Full pathname to the underlying block-device, or a
-+        Full pathname to the underlying block-device, or a
-         "major:minor" device-number.
-     <offset>:
--	Starting sector within the device.
-+        Starting sector within the device.
-+    <options>:
-+        Options allow to set the exclusivity mode. The exclusivity mode
-+        can be 'excl' and 'noexcl'. By default, then options is not set,
-+        the 'excl' mode is used. 'noexcl' mode allow to open device
-+        without FMODE_EXCL flag. This allow to create liner device with
-+        underlying block-device that are already used by the system. For
-+        example, the file system on this device is already mounted.
-+        The 'noexcl' option should be used when creating dm devices that
-+        will be used as acceptor when connecting the device mapper to an
-+        existing block device with the 'dmsetup remap' command.
+ 	smeta_buf->header.identifier = cpu_to_le32(PBLK_MAGIC);
+-	guid_copy((guid_t *)&smeta_buf->header.uuid, &pblk->instance_uuid);
++	export_guid(smeta_buf->header.uuid, &pblk->instance_uuid);
+ 	smeta_buf->header.id = cpu_to_le32(line->id);
+ 	smeta_buf->header.type = cpu_to_le16(line->type);
+ 	smeta_buf->header.version_major = SMETA_VERSION_MAJOR;
+@@ -1803,8 +1803,7 @@ void pblk_line_close_meta(struct pblk *pblk, struct pblk_line *line)
  
+ 	if (le32_to_cpu(emeta_buf->header.identifier) != PBLK_MAGIC) {
+ 		emeta_buf->header.identifier = cpu_to_le32(PBLK_MAGIC);
+-		guid_copy((guid_t *)&emeta_buf->header.uuid,
+-							&pblk->instance_uuid);
++		export_guid(emeta_buf->header.uuid, &pblk->instance_uuid);
+ 		emeta_buf->header.id = cpu_to_le32(line->id);
+ 		emeta_buf->header.type = cpu_to_le16(line->type);
+ 		emeta_buf->header.version_major = EMETA_VERSION_MAJOR;
+diff --git a/drivers/lightnvm/pblk-recovery.c b/drivers/lightnvm/pblk-recovery.c
+index 299ef47a17b2..0e6f0c76e930 100644
+--- a/drivers/lightnvm/pblk-recovery.c
++++ b/drivers/lightnvm/pblk-recovery.c
+@@ -706,8 +706,7 @@ struct pblk_line *pblk_recov_l2p(struct pblk *pblk)
  
- Example scripts
-@@ -61,3 +71,13 @@ Example scripts
-   }
+ 		/* The first valid instance uuid is used for initialization */
+ 		if (!valid_uuid) {
+-			guid_copy(&pblk->instance_uuid,
+-				  (guid_t *)&smeta_buf->header.uuid);
++			import_guid(&pblk->instance_uuid, smeta_buf->header.uuid);
+ 			valid_uuid = 1;
+ 		}
  
-   `echo \"$table\" | dmsetup create $name`;
-+
-+::
-+
-+  #!/bin/sh
-+  # Create linear device and remap all requests from the original device
-+  # to new linear.
-+  DEV=$1
-+
-+  echo "0 `blockdev --getsz $DEV` linear $DEV 0 noexcl" | dmsetup create dm-noexcl
-+  dmsetup remap start dm-noexcl $DEV
 -- 
-2.20.1
+2.30.0
 
