@@ -2,117 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD89316835
-	for <lists+linux-block@lfdr.de>; Wed, 10 Feb 2021 14:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AE2431687C
+	for <lists+linux-block@lfdr.de>; Wed, 10 Feb 2021 14:58:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbhBJNmI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Feb 2021 08:42:08 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53342 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbhBJNmG (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Feb 2021 08:42:06 -0500
-X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Feb 2021 08:42:04 EST
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_smtp) via UNIX with SMTP (IdeaSmtpServer 0.83.537)
- id 356713fafb91dd28; Wed, 10 Feb 2021 14:34:38 +0100
-Received: from kreacher.localnet (89-64-80-225.dynamic.chello.pl [89.64.80.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 193DE6608F9;
-        Wed, 10 Feb 2021 14:34:37 +0100 (CET)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH] mm: simplify swapdev_block
-Date:   Wed, 10 Feb 2021 14:34:37 +0100
-Message-ID: <6090993.SemHdl1DLP@kreacher>
-In-Reply-To: <20210209171419.4003839-2-hch@lst.de>
-References: <20210209171419.4003839-1-hch@lst.de> <20210209171419.4003839-2-hch@lst.de>
+        id S230229AbhBJN6N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Feb 2021 08:58:13 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45326 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231278AbhBJN5p (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 10 Feb 2021 08:57:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 58C4BAC97;
+        Wed, 10 Feb 2021 13:57:03 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-bcache@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH 1/4] bcache: correct return value in register_nvdimm_meta()
+Date:   Wed, 10 Feb 2021 21:56:54 +0800
+Message-Id: <20210210135657.35284-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrheejgdehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhgggfgtsehtufertddttddvnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgfelheffhfetffelhfelteejffetteetgfetkeejvdfhfeeftdeufeevgeevieevnecukfhppeekledrieegrdektddrvddvheenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeekledrieegrdektddrvddvhedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrughkpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehlihhnuhigqdgslhhotghksehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tuesday, February 9, 2021 6:14:19 PM CET Christoph Hellwig wrote:
-> Open code the parts of map_swap_entry that was actually used by
-> swapdev_block, and remove the now unused map_swap_entry function.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+'ret' should be used a return value, thi patch fixes this error.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+---
+ drivers/md/bcache/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  mm/swapfile.c | 30 +++---------------------------
->  1 file changed, 3 insertions(+), 27 deletions(-)
-> 
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 351999a84e6e4e..21a98cb8d646e3 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1790,9 +1790,6 @@ int free_swap_and_cache(swp_entry_t entry)
->  }
->  
->  #ifdef CONFIG_HIBERNATION
-> -
-> -static sector_t map_swap_entry(swp_entry_t, struct block_device**);
-> -
->  /*
->   * Find the swap type that corresponds to given device (if any).
->   *
-> @@ -1852,12 +1849,13 @@ int find_first_swap(dev_t *device)
->   */
->  sector_t swapdev_block(int type, pgoff_t offset)
->  {
-> -	struct block_device *bdev;
->  	struct swap_info_struct *si = swap_type_to_swap_info(type);
-> +	struct swap_extent *se;
->  
->  	if (!si || !(si->flags & SWP_WRITEOK))
->  		return 0;
-> -	return map_swap_entry(swp_entry(type, offset), &bdev);
-> +	se = offset_to_swap_extent(si, offset);
-> +	return se->start_block + (offset - se->start_page);
->  }
->  
->  /*
-> @@ -2283,28 +2281,6 @@ static void drain_mmlist(void)
->  	spin_unlock(&mmlist_lock);
->  }
->  
-> -#ifdef CONFIG_HIBERNATION
-> -/*
-> - * Use this swapdev's extent info to locate the (PAGE_SIZE) block which
-> - * corresponds to page offset for the specified swap entry.
-> - * Note that the type of this function is sector_t, but it returns page offset
-> - * into the bdev, not sector offset.
-> - */
-> -static sector_t map_swap_entry(swp_entry_t entry, struct block_device **bdev)
-> -{
-> -	struct swap_info_struct *sis;
-> -	struct swap_extent *se;
-> -	pgoff_t offset;
-> -
-> -	sis = swp_swap_info(entry);
-> -	*bdev = sis->bdev;
-> -
-> -	offset = swp_offset(entry);
-> -	se = offset_to_swap_extent(sis, offset);
-> -	return se->start_block + (offset - se->start_page);
-> -}
-> -#endif
-> -
->  /*
->   * Free all of a swapdev's extent information
->   */
-> 
-
-
-
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index c273eeef0d38..47a1225b3496 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -2554,7 +2554,7 @@ static ssize_t register_nvdimm_meta(struct kobject *k, struct kobj_attribute *at
+ 		ret = -EINVAL;
+ 	}
+ 
+-	return size;
++	return ret;
+ }
+ #endif
+ 
+-- 
+2.26.2
 
