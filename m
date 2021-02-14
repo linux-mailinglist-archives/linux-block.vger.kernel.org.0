@@ -2,61 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C0E31B018
+	by mail.lfdr.de (Postfix) with ESMTP id 7A2F931B019
 	for <lists+linux-block@lfdr.de>; Sun, 14 Feb 2021 11:32:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbhBNKcA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 14 Feb 2021 05:32:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35620 "EHLO
+        id S229637AbhBNKcF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 14 Feb 2021 05:32:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbhBNKb7 (ORCPT
+        with ESMTP id S229575AbhBNKcE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 14 Feb 2021 05:31:59 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16932C061574
-        for <linux-block@vger.kernel.org>; Sun, 14 Feb 2021 02:31:19 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id jt13so6648297ejb.0
-        for <linux-block@vger.kernel.org>; Sun, 14 Feb 2021 02:31:18 -0800 (PST)
+        Sun, 14 Feb 2021 05:32:04 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21AD6C061756
+        for <linux-block@vger.kernel.org>; Sun, 14 Feb 2021 02:31:23 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id df22so4889682edb.1
+        for <linux-block@vger.kernel.org>; Sun, 14 Feb 2021 02:31:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N98p0U+cHuyXVmhjuFaGftj4NomTav3ZwnLGwBYW7yk=;
-        b=JCEO7BqkPSUjU0hZhMcBwr/YwuhC0rjiQN5bj/n09RF9q+Lr973E76m/UB3FYu4u1s
-         mP1gNL7SPNs8+o0INtfPFlPjhbtS10VSm921W6rKRDu1lLFMdKDRl5bxmSxhwSDd6Ww/
-         vqIw9aCQQkYuxeoN8WMGlH6i+Cpl3s8dxnJvaDMI454bmZm5zIv2dwCqltehHFCQ8hVM
-         RwAz4B2RnoXn8HF6XbytWyC2vxxpwEicdgm2Yahzgf3QjowJvQlHbSWzvGod/E6Fezzk
-         0X0bSejdKxeitdObPy6k7mDYBGcdNy1TFsj6h/fclj2Bw+OWyHaVqqg4JnzI32vwUY99
-         4AHw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=r6lfNCFf4uKnnzJN/1ss3nfQ+Q8FtVs4F7Dj+Ua2rTA=;
+        b=WDW2Keoae3cOc4k4eLbq/veMFVTgA1wVt5pvVxq/WJTjG7kuPIdvUSQdPBTulud5U9
+         fM1VdNUvplD8WMBVS77jAhEk3qNsU+ZR6701r8YEZgK43bk56Ct+1SfLkQGQMWCev9LD
+         qaYA8zdxj+CrJn+48B5UJCGfpMlCFCSJL724y0nHedfmcFGGzmsAV8+8hFlo4S+R73pa
+         4OMMzrDVszyKjyMg0CuRjH7RG9Asv1ZRcct4ZuVrAMGGcVjtW+Zxl0fHI90EL5Nmtvx/
+         na/VrGRILiy8RSobhmV0syIN5RNhpHITUe0lvhLVH7pOVNvPpkMVRKxsqUD4XC0D8KcB
+         L16Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N98p0U+cHuyXVmhjuFaGftj4NomTav3ZwnLGwBYW7yk=;
-        b=BihE7X+NuhTwa3j41bPl2CkX7IfrP7Hadpb4LRuHOXTMPuS+qFkjg/YhSNn8v+rNA6
-         VXtiD1Y+tOU3PVAdzaNRApOEI0Alu9Uhz0fuIVeCz8PYkW8QRUqbpeHIoHT2MA9gi5w6
-         iaTorDhBAbV0d4VDolmXnZNmJ9f3k7FNiKCrotjVXaYx/7t8nrXxqme9jqw9M2QT0hxb
-         01aTIXl7Uq7PMcnX8K0ecI4iBFaE34NH2SSWAtiCrwiG8yNE4efXFprN1Okl6lPeU0Zc
-         wBr6AUsgxdke8m1kfWQmNy5HDYUY8GzrQ937q/ebDQSRh26eSj21CDwOBgxc2ZyXcvks
-         zvLA==
-X-Gm-Message-State: AOAM531v3TMdQ7hFmi32Na5nG7s13bflx70MIhpNzZqhgw/tpzB6B6YO
-        /xlgrkgB+YgxiSsm8nf2iRFOkg==
-X-Google-Smtp-Source: ABdhPJzzNSODDIvlXa8P06ebtwjBqnQl/HjxcNxU1rynJ5c5rLBU3umOtzh7uYtHMhSocUjri0PydA==
-X-Received: by 2002:a17:906:6696:: with SMTP id z22mr10810989ejo.322.1613298677773;
-        Sun, 14 Feb 2021 02:31:17 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r6lfNCFf4uKnnzJN/1ss3nfQ+Q8FtVs4F7Dj+Ua2rTA=;
+        b=hDvF6OqZknVWByjNo0ZmSR8VZH8hdrHXmrvVE0IpfNqdGRPDr8uFTe6zJ03qcZuoXw
+         ma3enymozcJvSkEFX15zqYTcNr2Li5fwkP5ZO3mb30t699JinUNJlNe2hxZtQFY5uD3w
+         4xLt6Qpje493RffrURspoPgbpMHpbwj5DCn1ZMVHSm4fMH2FAUClQTPTGuXv/aRWHSqd
+         f4csyCSw+qC8aqT7Af4eHKcE5Wf78h4A7Zi4mjtr3dsYlSecgQiwpbIgDpR6weJ9eZMv
+         ujRuLLVqe6qaZUYRKqorwjumBBKvXEHzCn1DQyx20rxmhyCMfEzf8eNlUZU/3GLzLnl2
+         HmTw==
+X-Gm-Message-State: AOAM530eKKHHT3sDuQkmCWiudq1FlSs2M87e7JziYyGgLj1G0cWTbBCG
+        JvRUeyHxDMZLykG8taZ3S5QCVA==
+X-Google-Smtp-Source: ABdhPJyE3Lt+s4+Drdb++31omBVZy7TDEq+TkdOJw7dKZKXxsHM7DzH6hoGU6FEWfMJOA6+o8a+YhA==
+X-Received: by 2002:a05:6402:26d5:: with SMTP id x21mr11055285edd.50.1613298681879;
+        Sun, 14 Feb 2021 02:31:21 -0800 (PST)
 Received: from dellx1.cphwdc ([87.116.37.42])
-        by smtp.googlemail.com with ESMTPSA id c18sm8180512edu.20.2021.02.14.02.31.16
+        by smtp.googlemail.com with ESMTPSA id c18sm8180512edu.20.2021.02.14.02.31.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Feb 2021 02:31:17 -0800 (PST)
+        Sun, 14 Feb 2021 02:31:21 -0800 (PST)
 From:   "=?UTF-8?q?Matias=20Bj=C3=B8rling?=" <mb@lightnvm.io>
 X-Google-Original-From: =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
 To:     axboe@kernel.dk, m@bjorling.me
-Cc:     linux-block@vger.kernel.org,
+Cc:     linux-block@vger.kernel.org, Tian Tao <tiantao6@hisilicon.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
-Subject: [PATCH 0/2] lightnvm pull request
-Date:   Sun, 14 Feb 2021 10:31:01 +0000
-Message-Id: <20210214103103.122312-1-matias.bjorling@wdc.com>
+Subject: [PATCH 1/2] lightnvm: fix unnecessary NULL check warnings
+Date:   Sun, 14 Feb 2021 10:31:02 +0000
+Message-Id: <20210214103103.122312-2-matias.bjorling@wdc.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210214103103.122312-1-matias.bjorling@wdc.com>
+References: <20210214103103.122312-1-matias.bjorling@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,23 +66,32 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+From: Tian Tao <tiantao6@hisilicon.com>
 
-A small PR for 5.12. Can you please pick them up when convenient.
+Remove NULL checks before vfree() to fix these warnings:
+./drivers/lightnvm/pblk-gc.c:27:2-7: WARNING: NULL check before some
+freeing functions is not needed.
 
-Thank you, Matias
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Matias Bjørling <matias.bjorling@wdc.com>
+---
+ drivers/lightnvm/pblk-gc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Andy Shevchenko (1):
-  lightnvm: pblk: Replace guid_copy() with export_guid()/import_guid()
-
-Tian Tao (1):
-  lightnvm: fix unnecessary NULL check warnings
-
- drivers/lightnvm/pblk-core.c     | 5 ++---
- drivers/lightnvm/pblk-gc.c       | 3 +--
- drivers/lightnvm/pblk-recovery.c | 3 +--
- 3 files changed, 4 insertions(+), 7 deletions(-)
-
---
+diff --git a/drivers/lightnvm/pblk-gc.c b/drivers/lightnvm/pblk-gc.c
+index 2581eebcfc41..b31658be35a7 100644
+--- a/drivers/lightnvm/pblk-gc.c
++++ b/drivers/lightnvm/pblk-gc.c
+@@ -23,8 +23,7 @@
+ 
+ static void pblk_gc_free_gc_rq(struct pblk_gc_rq *gc_rq)
+ {
+-	if (gc_rq->data)
+-		vfree(gc_rq->data);
++	vfree(gc_rq->data);
+ 	kfree(gc_rq);
+ }
+ 
+-- 
 2.25.1
 
