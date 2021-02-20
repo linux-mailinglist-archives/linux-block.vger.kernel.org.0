@@ -2,37 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C293206C8
-	for <lists+linux-block@lfdr.de>; Sat, 20 Feb 2021 20:12:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F293206E0
+	for <lists+linux-block@lfdr.de>; Sat, 20 Feb 2021 20:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhBTTLd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 20 Feb 2021 14:11:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbhBTTLc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sat, 20 Feb 2021 14:11:32 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA018C061574;
-        Sat, 20 Feb 2021 11:10:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=z8+/WNpbsZkqwy3FrYALDel13DrFd2M7SHQC2LqXykk=; b=Coqv5TZ84pbYV63BlHltSBs+O6
-        PKlkeMKd9GjQBqahXNppgY+/xX6UfosepmWfMMZGYxfbMYZLokGKnYGxzrHd//hRD3ea6ydPU5Ytr
-        jk14BWdCLSI0Xjk4dUlY/0AuGf7+IS46QTKPcxQDHjVPt697wE7M9ASyd68sRt67wCFENbj1Sy0kt
-        KqqHpoWVrNfHkIOOJDK9bcVxCM3THBS7gsYqggibHRGGsuhhWcqYjoHcE5wj4W2q5T06Uq2cui7oH
-        FimgH0MLEq4pfqGbJ2iPd/+91tRxJFefAI/iiGCu+kY3koSvRTlYD9gNzRUZzIek5wvaRqZ0H05K1
-        L7LLTzpg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lDXcL-004MAE-36; Sat, 20 Feb 2021 19:08:48 +0000
-Date:   Sat, 20 Feb 2021 19:08:37 +0000
-From:   Matthew Wilcox <willy@infradead.org>
+        id S229886AbhBTTUN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 20 Feb 2021 14:20:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229808AbhBTTUI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 20 Feb 2021 14:20:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5BF2264E51;
+        Sat, 20 Feb 2021 19:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1613848768;
+        bh=opkZV9+iiOg5i7CeRhciYmBMWsz/qz9Xmo/qIEL+++w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lAzR3vLqQJN7zA0sj+1l2vnXCMVW4WzYcT/7zoi2XEkR75dxEfZxsr9ZZXs0vfoPA
+         MIIgjdK8Bfi/OCFnVUkAXbnH1QuOe78GE9Zog3tA5xLd9ntizTOGRftkJ5DbbTpQLW
+         omYiai3857LXH2o97xCBrMSxBqmNpxN940EtlMYI230TK91985WJW6trAwt3FkdY/L
+         VqIe5cfn3Bm95NdASEstDvnzMUXt7VhCJVGdKAJfJ58WvX9DqAgAts08MiZ6GAolne
+         0nuR0yF2z+6rnQQ4z7QrJaZEUfQQrwShmPsQQ1TDKXSeEoktfn9AzBO1+I/LSxew2+
+         2ipaElzzXH/Mw==
+Date:   Sun, 21 Feb 2021 04:19:21 +0900
+From:   Keith Busch <kbusch@kernel.org>
 To:     David Laight <David.Laight@aculab.com>
 Cc:     'SelvaKumar S' <selvakuma.s1@samsung.com>,
         "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
         "axboe@kernel.dk" <axboe@kernel.dk>,
         "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
         "hch@lst.de" <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>,
@@ -48,7 +43,7 @@ Cc:     'SelvaKumar S' <selvakuma.s1@samsung.com>,
         "kch@kernel.org" <kch@kernel.org>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 Subject: Re: [RFC PATCH v5 0/4] add simple copy support
-Message-ID: <20210220190837.GE2858050@casper.infradead.org>
+Message-ID: <20210220191921.GA7968@redsun51.ssa.fujisawa.hgst.com>
 References: <CGME20210219124555epcas5p1334e7c4d64ada5dc4a2ca0feb48c1d44@epcas5p1.samsung.com>
  <20210219124517.79359-1-selvakuma.s1@samsung.com>
  <146c47907c2446d4a896830de400dd81@AcuMS.aculab.com>
@@ -56,6 +51,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <146c47907c2446d4a896830de400dd81@AcuMS.aculab.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
@@ -77,15 +73,6 @@ On Sat, Feb 20, 2021 at 06:01:56PM +0000, David Laight wrote:
 > Sounds to me like the real reason is that the copy just ends up changing
 > some indirect block pointers rather than having to actually copy the data.
 
-That would be incorrect, at least for firmware that I have knowledge of.
-There are checksums which involve the logical block address of the data,
-and you can't just rewrite the checksum on NAND, you have to write the
-entire block.
-
-Now, firmware doesn't have to implement their checksum like this,
-but there are good reasons to do it this way (eg if the command gets
-corrupted in transfer and you read the wrong block, it will fail the
-checksum, preventing the drive from returning Somebody Else's Data).
-
-So let's take these people at their word.  It is to reduce traffic
-between drive and host.  And that is a good enough reason to do it.
+I guess an implementation could do that, but I think that's missing the
+point of the command. The intention is to copy the data to a new
+location on the media for host managed garbage collection. 
