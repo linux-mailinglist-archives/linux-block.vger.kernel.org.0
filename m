@@ -2,98 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88A3F32265E
-	for <lists+linux-block@lfdr.de>; Tue, 23 Feb 2021 08:25:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D916B32267D
+	for <lists+linux-block@lfdr.de>; Tue, 23 Feb 2021 08:40:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbhBWHXj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Feb 2021 02:23:39 -0500
-Received: from verein.lst.de ([213.95.11.211]:32997 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231822AbhBWHXg (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Feb 2021 02:23:36 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B7D5268D0D; Tue, 23 Feb 2021 08:22:52 +0100 (CET)
-Date:   Tue, 23 Feb 2021 08:22:52 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        David Anderson <dvander@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        YongQin Liu <yongqin.liu@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        Satya Tangirala <satyat@google.com>
-Subject: Re: [REGRESSION] "split bio_kmalloc from bio_alloc_bioset" causing
- crash shortly after bootup
-Message-ID: <20210223072252.GA18035@lst.de>
-References: <CALAqxLUWjr2oR=5XxyGQ2HcC-TLARvboHRHHaAOUFq6_TsKXyw@mail.gmail.com> <20210223070408.GA16980@lst.de>
+        id S231749AbhBWHkN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Feb 2021 02:40:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54086 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230429AbhBWHji (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Feb 2021 02:39:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614065884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9TIXmQ0RNQdJ2dixYmYDGqb30SpsFD0g6DsYMu6sBds=;
+        b=DWyca4aqaogGVtMlNeq6EHgxOWt7Rv2x/QTc+mMxExoYgfwf4H0wNqiNi1PaCc7VQv30ae
+        Amk8DZ27qyzw8NPOYw2v6izoRGKyos4/3KXYlhg3znQCe+ezWBQDWbIn0NB4c9LJ8JrhLN
+        4GxAxt9LtXb1ZL8MR/Pu/viEpUzyB3k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-__mYrrmxMNSAJof5tMgvHQ-1; Tue, 23 Feb 2021 02:38:02 -0500
+X-MC-Unique: __mYrrmxMNSAJof5tMgvHQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39D0A80196C;
+        Tue, 23 Feb 2021 07:38:01 +0000 (UTC)
+Received: from T590 (ovpn-12-246.pek2.redhat.com [10.72.12.246])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DAEF25D764;
+        Tue, 23 Feb 2021 07:37:50 +0000 (UTC)
+Date:   Tue, 23 Feb 2021 15:37:46 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Marian Csontos <mcsontos@redhat.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com
+Subject: Re: [PATCH] blk-settings: make sure that max_sectors is aligned on
+ "logical_block_size" boundary. (fwd)
+Message-ID: <YDSwyrLeiP/fKgZH@T590>
+References: <alpine.LRH.2.02.2102221312070.5407@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210223070408.GA16980@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <alpine.LRH.2.02.2102221312070.5407@file01.intranet.prod.int.rdu2.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Feb 23, 2021 at 08:04:08AM +0100, Christoph Hellwig wrote:
-> The problem is that the blk-crypto fallback code calls bio_split
-> with a NULL bioset.  That was aready broken before, as the mempool
-> needed to guarantee forward progress was missing, but is not fatal.
+On Mon, Feb 22, 2021 at 01:15:32PM -0500, Mikulas Patocka wrote:
 > 
-> Satya, can you look into adding a mempool that can guarantees forward
-> progress here?
+> 
+> ---------- Forwarded message ----------
+> Date: Thu, 19 Nov 2020 15:36:51 -0500 (EST)
+> From: Mikulas Patocka <mpatocka@redhat.com>
+> To: David Teigland <teigland@redhat.com>, Jens Axboe <axboe@kernel.dk>
+> Cc: heinzm@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>,
+>     Marian Csontos <mcsontos@redhat.com>, linux-block@vger.kernel.org,
+>     dm-devel@redhat.com
+> Subject: [PATCH] blk-settings: make sure that max_sectors is aligned on
+>     "logical_block_size" boundary.
+> 
+> We get these I/O errors when we run md-raid1 on the top of dm-integrity on 
+> the top of ramdisk:
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0xff00, 0xff
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0xff00, 0xff
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0xffff, 0x1
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0xffff, 0x1
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0x8048, 0xff
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0x8147, 0xff
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0x8246, 0xff
+> device-mapper: integrity: Bio not aligned on 8 sectors: 0x8345, 0xbb
+> 
+> The ramdisk device has logical_block_size 512 and max_sectors 255. The 
+> dm-integrity device uses logical_block_size 4096 and it doesn't affect the 
+> "max_sectors" value - thus, it inherits 255 from the ramdisk. So, we have 
+> a device with max_sectors not aligned on logical_block_size.
+> 
+> The md-raid device sees that the underlying leg has max_sectors 255 and it
+> will split the bios on 255-sector boundary, making the bios unaligned on
+> logical_block_size.
+> 
+> In order to fix the bug, we round down max_sectors to logical_block_size.
+> 
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> Cc: stable@vger.kernel.org
+> 
+> ---
+>  block/blk-settings.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> Index: linux-2.6/block/blk-settings.c
+> ===================================================================
+> --- linux-2.6.orig/block/blk-settings.c	2020-10-29 12:20:46.000000000 +0100
+> +++ linux-2.6/block/blk-settings.c	2020-11-19 21:20:18.000000000 +0100
+> @@ -591,6 +591,16 @@ int blk_stack_limits(struct queue_limits
+>  		ret = -1;
+>  	}
+>  
+> +	t->max_sectors = round_down(t->max_sectors, t->logical_block_size / 512);
+> +	if (t->max_sectors < PAGE_SIZE / 512)
+> +		t->max_sectors = PAGE_SIZE / 512;
+> +	t->max_hw_sectors = round_down(t->max_hw_sectors, t->logical_block_size / 512);
+> +	if (t->max_sectors < PAGE_SIZE / 512)
 
-Something like this would be the minimum viable fix:
+	if (t->max_hw_sectors < PAGE_SIZE / 512)
 
-diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
-index e8327c50d7c9f4..c176b7af56a7a5 100644
---- a/block/blk-crypto-fallback.c
-+++ b/block/blk-crypto-fallback.c
-@@ -80,6 +80,7 @@ static struct blk_crypto_keyslot {
- static struct blk_keyslot_manager blk_crypto_ksm;
- static struct workqueue_struct *blk_crypto_wq;
- static mempool_t *blk_crypto_bounce_page_pool;
-+static struct bio_set crypto_bio_split;
- 
- /*
-  * This is the key we set when evicting a keyslot. This *should* be the all 0's
-@@ -224,7 +225,8 @@ static bool blk_crypto_split_bio_if_needed(struct bio **bio_ptr)
- 	if (num_sectors < bio_sectors(bio)) {
- 		struct bio *split_bio;
- 
--		split_bio = bio_split(bio, num_sectors, GFP_NOIO, NULL);
-+		split_bio = bio_split(bio, num_sectors, GFP_NOIO,
-+				      &crypto_bio_split);
- 		if (!split_bio) {
- 			bio->bi_status = BLK_STS_RESOURCE;
- 			return false;
-@@ -538,9 +540,13 @@ static int blk_crypto_fallback_init(void)
- 
- 	prandom_bytes(blank_key, BLK_CRYPTO_MAX_KEY_SIZE);
- 
--	err = blk_ksm_init(&blk_crypto_ksm, blk_crypto_num_keyslots);
-+	err = bioset_init(&crypto_bio_split, 64, 0, 0);
- 	if (err)
- 		goto out;
-+
-+	err = blk_ksm_init(&blk_crypto_ksm, blk_crypto_num_keyslots);
-+	if (err)
-+		goto fail_free_bioset;
- 	err = -ENOMEM;
- 
- 	blk_crypto_ksm.ksm_ll_ops = blk_crypto_ksm_ll_ops;
-@@ -591,6 +597,8 @@ static int blk_crypto_fallback_init(void)
- 	destroy_workqueue(blk_crypto_wq);
- fail_free_ksm:
- 	blk_ksm_destroy(&blk_crypto_ksm);
-+fail_free_bioset:
-+	bioset_exit(&crypto_bio_split);
- out:
- 	return err;
- }
+> +		t->max_hw_sectors = PAGE_SIZE / 512;
+> +	t->max_dev_sectors = round_down(t->max_dev_sectors, t->logical_block_size / 512);
+> +	if (t->max_sectors < PAGE_SIZE / 512)
+
+	if (t->max_dev_sectors < PAGE_SIZE / 512)
+
+> +		t->max_dev_sectors = PAGE_SIZE / 512;
+
+I'd suggest to add a helper(such as, blk_round_down_sectors()) to round_down each
+one.
+
+-- 
+Ming
+
