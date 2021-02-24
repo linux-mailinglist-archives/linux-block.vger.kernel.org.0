@@ -2,44 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB19F3237E4
-	for <lists+linux-block@lfdr.de>; Wed, 24 Feb 2021 08:27:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3972A323878
+	for <lists+linux-block@lfdr.de>; Wed, 24 Feb 2021 09:19:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232471AbhBXH1H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 Feb 2021 02:27:07 -0500
-Received: from verein.lst.de ([213.95.11.211]:36446 "EHLO verein.lst.de"
+        id S231818AbhBXITR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 24 Feb 2021 03:19:17 -0500
+Received: from verein.lst.de ([213.95.11.211]:36585 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232823AbhBXH0q (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 Feb 2021 02:26:46 -0500
+        id S232661AbhBXITJ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 24 Feb 2021 03:19:09 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6539B68D0A; Wed, 24 Feb 2021 08:26:03 +0100 (CET)
-Date:   Wed, 24 Feb 2021 08:26:03 +0100
+        id 29D7C68D0A; Wed, 24 Feb 2021 09:18:26 +0100 (CET)
+Date:   Wed, 24 Feb 2021 09:18:25 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, Tom Seewald <tseewald@gmail.com>
-Subject: Re: [PATCH] block: reopen the device in blkdev_reread_part
-Message-ID: <20210224072603.GA32368@lst.de>
-References: <20210223151822.399791-1-hch@lst.de> <20210224015202.GA2166@localhost.localdomain>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        "Ewan D . Milne" <emilne@redhat.com>
+Subject: Re: [PATCH V2 0/3] block: avoid to drop & re-add partitions if
+ partitions aren't changed
+Message-ID: <20210224081825.GA1339@lst.de>
+References: <20210224035830.990123-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210224015202.GA2166@localhost.localdomain>
+In-Reply-To: <20210224035830.990123-1-ming.lei@redhat.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 10:52:02AM +0900, Minwoo Im wrote:
-> On 21-02-23 16:18:22, Christoph Hellwig wrote:
-> > Historically the BLKRRPART ioctls called into the now defunct ->revalidate
-> > method, which caused the sd driver to check if any media is present.
-> > When the ->revalidate method was removed this revalidation was lost,
-> > leading to lots of I/O errors when using the eject command.  Fix this by
-> > reopening the device to rescan the partitions, and thus calling the
-> > revalidation logic in the sd driver.
+On Wed, Feb 24, 2021 at 11:58:26AM +0800, Ming Lei wrote:
+> Hi Guys,
 > 
-> It looks like a related issue that I've reported in [1].  And this looks
-> much better!
+> The two patches changes block ioctl(BLKRRPART) for avoiding drop &
+> re-add partitions if partitions state isn't changed. The current
+> behavior confuses userspace because partitions can disappear anytime
+> when calling into ioctl(BLKRRPART).
 
-I don't think it fixes the block size issue, does it?
+Which is the f***king point of BLKRRPART and the behavior it had
+since day 1.  Please fix the application(s) that all it all the time
+instead of bloating the kernel, as said before.
