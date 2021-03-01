@@ -2,80 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A20E732871C
-	for <lists+linux-block@lfdr.de>; Mon,  1 Mar 2021 18:20:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FF99328E6C
+	for <lists+linux-block@lfdr.de>; Mon,  1 Mar 2021 20:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237959AbhCARUD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Mar 2021 12:20:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46974 "EHLO
+        id S235785AbhCATa0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Mar 2021 14:30:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237648AbhCARQr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Mar 2021 12:16:47 -0500
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB82BC06178C
-        for <linux-block@vger.kernel.org>; Mon,  1 Mar 2021 09:16:02 -0800 (PST)
-Received: by mail-il1-x136.google.com with SMTP id h18so15343540ils.2
-        for <linux-block@vger.kernel.org>; Mon, 01 Mar 2021 09:16:02 -0800 (PST)
+        with ESMTP id S241479AbhCATZj (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Mar 2021 14:25:39 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D027C06178A
+        for <linux-block@vger.kernel.org>; Mon,  1 Mar 2021 11:24:57 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id do6so30406219ejc.3
+        for <linux-block@vger.kernel.org>; Mon, 01 Mar 2021 11:24:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3b+9xfQ3i3dcB8RYtniu4ZRljRD43FwK2Tz7Gg/ahJQ=;
-        b=OcJ43NvS/MnhZTl4L4AwdDmK+aOfEdKG6FIcmnN2uXaQSJUqz2Wr2Cl3KehHqIWKWI
-         1Qv4LCSrYxgSKr9IITn57HaJc2Tq7+LlnEBkg744EvkKob5tfTsOYF6sDa9WGcgi0Cu5
-         kO9MlPtHcerGQW8Fs7PtLTj8Vm23crDvj/n02nK9mPEDDqiIc5+GytWLtzS1hMe/B1N5
-         KorR9ikGi2Jl89u7UcaRJQIvhE6/0Ky6n5beeXbyz+k0BuWxFtVDrHg8t8RO4wzxlDiA
-         2WZwjnpQ7Y+90eT+ngtsmdXrVwp4Q3E5dZ/jsPKhjU6qqY3S54u6q8ENRjdYnV+OPTV4
-         7xTA==
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5l1F+wGO5Nb1bwNWSiP0iexmLFzCMcNx6yWjh9GDkl8=;
+        b=1CoUBdIYvIuaC0DQg7GZmUY56DBIHEmIF+T/PlfBojIM4jnZIo2xmPoKJewZcF9QaE
+         GAO2tvPHeZ1PkZDK8l6PTi5+YtaNDVKj0eNZqzNw5aSP6di8DP6YYOsMb0pdvKJs//V9
+         lTAmzvu8DUkYZckNQivK8yS99XxFIRt0fICKuurfH1UNLI0VTWABsBdtpEf8FJ+GFi1F
+         RdTbjUscmxCDeRe+h1NR8s4hLuLGNt1wBNONM3Km77CpFNC+Ge8oj9jwAy7wJCvmNA0S
+         Pni72/MHv/recoWifuObzqjCtzYIXy4NI4aeHfzQFMa0DRSuO7BFMSMxqgix8QTgSHjS
+         Mkqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3b+9xfQ3i3dcB8RYtniu4ZRljRD43FwK2Tz7Gg/ahJQ=;
-        b=YZ9HOt+kvHjj2OFsgBEDSySlxWPMUMJdTt3FN5kJLZFiRcHfduvuwB149wcdgRK9Ev
-         DmQNYSizmZPaD4bM8DKkvRq+wTrUmeLYuBkbSOzYAQSUx9viVAS0yOqPKoz4t8gblhep
-         RaeTYtB1RvEScytyrgzQjP3rctFricMm2ftaD4UWJbAwgXB694OY1Tp1cmKATqKPIrHZ
-         jG6dCpC3M1mOOPbuqd+nHsJBSTn2hjCnL4/8g/4ba9kAPub05D0teK9nwyyDCQDvnhXK
-         MbBII5LxTLw9zcllBgjcRLHuZsZyDNkhbWhtEpLu8FPec0IgSBS/SPmd4S6U2Y334p96
-         pIVQ==
-X-Gm-Message-State: AOAM533jpCW1Ek55gtJlK/0JGsGxQibgAOktcvqIBHsFSHQsZACNQLg2
-        ajs6O4ycC/Jmm1kmM2+e8fV7lw==
-X-Google-Smtp-Source: ABdhPJwOWrLvxVqr07BcFaMhPsZa3/dODLF1rUUHsnEGBwz3abPDxjLP+Co2xSVu1/g4jU+5zTeSgA==
-X-Received: by 2002:a92:d18e:: with SMTP id z14mr14110035ilz.130.1614618962214;
-        Mon, 01 Mar 2021 09:16:02 -0800 (PST)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r9sm9165974ill.72.2021.03.01.09.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Mar 2021 09:16:01 -0800 (PST)
-Subject: Re: [PATCH v2] block: Drop leftover references to RQF_SORTED
-To:     Jean Delvare <jdelvare@suse.de>, linux-block@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <20210301172325.1b2a16fe@endymion>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <61594cb9-06dd-acda-9205-e1b88839e343@kernel.dk>
-Date:   Mon, 1 Mar 2021 10:16:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=5l1F+wGO5Nb1bwNWSiP0iexmLFzCMcNx6yWjh9GDkl8=;
+        b=WJ+H0sAMjHjHnj/9DEP5jXuJIAGWMAIOYNoR+j7n0dBLcnJTWTaI8KKZ/Lwn5C1ZVF
+         hkuYrP2y4+PSdyQCpgy1MT04CvAt+H7gQccY4wCRemFdLA7IGbNeKVqVJTSNhvQIMJto
+         DQCzpUtui0a4ns/QXY1g+wxwUUrUkh5CBuyBld1bCefVThICXJfm1vpQ4hgThFCNyENl
+         xY8Y/F6z/L0kycOEalJG1PxEsKgWWEe4lcMvwS62F3BgqRQvCAeWGOyYbaPW/UXIu0Hq
+         MinJiHbl3bLlXtseqmvPnzDAJv1TdRgOyagM3paef0Top0dbAxY1qf8AgwBD2irx4/lr
+         pbQA==
+X-Gm-Message-State: AOAM530PGPLb0I5GjWJXxD4FmBhV22isJBUxkfNZIn55TjIXMefWc/ct
+        A4ErdKJSQapVktz8rP8vXg9rGA==
+X-Google-Smtp-Source: ABdhPJwYFsDUaeZgzUEyiNQ3NKvuH1vsSYZBWEEH8kFW6WSW79+Va11Wf2oNdKBtftXLumXMStVEcw==
+X-Received: by 2002:a17:906:22d4:: with SMTP id q20mr751162eja.54.1614626696497;
+        Mon, 01 Mar 2021 11:24:56 -0800 (PST)
+Received: from ch-wrk-javier.localdomain (5.186.124.214.cgn.fibianet.dk. [5.186.124.214])
+        by smtp.gmail.com with ESMTPSA id i4sm14107110eje.90.2021.03.01.11.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Mar 2021 11:24:56 -0800 (PST)
+From:   javier@javigon.com
+X-Google-Original-From: javier.gonz@samsung.com
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-block@vger.kernel.org, hch@lst.de, kbusch@kernel.org,
+        sagi@grimberg.me, minwoo.im.dev@gmail.com,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>
+Subject: [PATCH V6 0/2] nvme: enable char device per namespace
+Date:   Mon,  1 Mar 2021 20:24:50 +0100
+Message-Id: <20210301192452.16770-1-javier.gonz@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20210301172325.1b2a16fe@endymion>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/1/21 9:23 AM, Jean Delvare wrote:
-> Commit a1ce35fa49852db60fc6e268038530be533c5b15 ("block: remove dead
-> elevator code") removed all users of RQF_SORTED. However it is still
-> defined, and there is one reference left to it (which in effect is
-> dead code). Clear it all up.
+From: Javier González <javier.gonz@samsung.com>
 
-Thanks - hand applied, since it didn't apply without fuzz on the current
-tree, looks like you generated it against 5.11.
+These two patches enable a char device per namespace, also through
+multipath. It is possible to test this in QEMU using Keith's and Klaus'
+tree in nvme-next
+
+     http://git.infradead.org/qemu-nvme.git/shortlog/refs/heads/nvme-next
+
+
+One question that came up while preparing V6 is what to do with the bdev
+sysfs entries when the block device fails. On the one hand, these values
+are useful for the char device, but on the other, they are in principle
+only valid for the block device. We have 3 options: (i) clear sysfs when
+bdev fails and require user-space to query the nvme device directly
+through sysfs, (ii) maintain the bdev sysfs entries, and (iii) make char
+device dedicated sysfs entries, which might be redundant when both the
+char device and the block device are brought up. Thoughts?
+
+Keith: Regarding nvme-cli support, once this is in place, we will send a
+patch to nvme-cli so that this device is shown in verbose mode. Do you
+have anu thoughts about this?
+
+Changes since V5
+  - Addressed style and naming comments from Christoph
+  - Change the logic around nvme_update_ns_info() to (i) make the
+    GENHD_FL_HIDDEN more explicit in the init logic, and (ii) to support
+    an error path that also stops the char device from being created.
+    This error path is not exercised currently.
+
+Changes since V4
+  - Added support for multipath (from Minwoo)
+  - Fixed typo in commit message for sysfs naming
+  - Rebase into nvme-5.12
+
+Changes since V3
+  - Use a dedicated ida for the generic handle
+  - Do not abort namespace greation if the generic handle fails
+
+Changes since V2:
+  - Apply a number of naming and code structure improvements (from
+    Christoph)
+  - Use i_cdev to pull struct nvme_ns in the ioctl path instead of
+    populating file->private_data (from Christoph)
+  - Change char device and sysfs entries to /dev/nvme-generic-XcYnZ to
+    follow the hidden device naming scheme (from Christoph and Keith)
+
+Changes since V1:
+  - Remove patches 1-3 which are already picked up by Christoph
+  - Change the char device and sysfs entries to nvmeXnYc / c signals
+    char device
+  - Address Minwoo's comments on inline functions and style
+
+
+Javier González (1):
+  nvme: enable char device per namespace
+
+Minwoo Im (1):
+  nvme: allow open for nvme-generic char device
+
+ drivers/nvme/host/core.c | 198 ++++++++++++++++++++++++++++++++++-----
+ drivers/nvme/host/nvme.h |   5 +
+ 2 files changed, 182 insertions(+), 21 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
