@@ -2,387 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 098C832AE86
-	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 03:54:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4695B32AE8B
+	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 03:54:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231265AbhCBXmY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Mar 2021 18:42:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40010 "EHLO mx2.suse.de"
+        id S231486AbhCBXpd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Mar 2021 18:45:33 -0500
+Received: from mout.gmx.net ([212.227.17.21]:39555 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238284AbhCBEKz (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 1 Mar 2021 23:10:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9FF02AED8;
-        Tue,  2 Mar 2021 04:03:27 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com, neilb@suse.de
-Cc:     antlists@youngman.org.uk, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
-        Coly Li <colyli@suse.de>
-Subject: [RFC PATCH v1 6/6] badblocks: switch to the improved badblock handling code
-Date:   Tue,  2 Mar 2021 12:02:52 +0800
-Message-Id: <20210302040252.103720-7-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210302040252.103720-1-colyli@suse.de>
-References: <20210302040252.103720-1-colyli@suse.de>
+        id S1577086AbhCBFma (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 2 Mar 2021 00:42:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1614663647;
+        bh=vuF4asm5oftnr0ailpx2QxWzLruw3F+JLEa0u6Q/iz0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=bSC+pfyU2JXcnedNBCzpoIPZqWorJDIAAIH1FjECMK1k8kwuyPnbxEtYBsNe/liKo
+         oDBfGCfOEOA3p5iydEdCUP/ZsQFKGkGSqzHwYvG+ALyfryTF7g/VRmedwMNaziF/3z
+         cNvCQX+fTa3AlFSOiJF2bKF67dm1GShikoMmfcKY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.10.213.91] ([103.52.188.137]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mwwdf-1m1Ehk2IJ9-00yTu4; Tue, 02
+ Mar 2021 06:30:28 +0100
+Subject: Re: Large latency with bcache for Ceph OSD
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-bcache@vger.kernel.org
+References: <3f3e20a3-c165-1de1-7fdd-f0bd4da598fe@gmx.com>
+ <632258f7-b138-3fba-456b-9da37c1de710@gmx.com>
+ <5867daf1-0960-39aa-1843-1a76c1e9a28d@suse.de>
+ <07bcb6c8-21e1-11de-d1f0-ffd417bd36ff@gmx.com>
+ <cfe2746f-18a7-a768-ea72-901793a3133e@gmx.com>
+ <96daa0bf-c8e1-a334-14cb-2d260aed5115@suse.de>
+ <b808dde3-cb58-907b-4df0-e0eb2938b51e@gmx.com>
+ <04770825-b1d2-8ec0-2345-77d49d99631a@suse.de>
+From:   "Norman.Kern" <norman.kern@gmx.com>
+Message-ID: <e67ea64d-7e36-761d-0e28-cc0d1012c3aa@gmx.com>
+Date:   Tue, 2 Mar 2021 13:30:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <04770825-b1d2-8ec0-2345-77d49d99631a@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:xDgdIpJFStLSXW2RLKUWYAHjPp/5talER5FW8ivrkP11vqfNqM7
+ vVBWqAf0Qfu/KAD83otSeT0kHwnZlOaDEj5ZR4L1f2DotH8KCXYKJdUlW0osxd7L7O3k+DZ
+ gYSv3UJjEQqeAVnHMyMDVN6iWLEam5DssGsZngvjs0tpnJbZGWifqRvAVxMhNoXszKbBHX+
+ w9h4TQAjyLjCqDw4Hy/IA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QcwdvkAQ6Ok=:Jlo5MXft9h7U8pJa8yHiaY
+ 6lTfiXUR3keB5WcCfL5vHZLoy5oOJLnuiCx4lfCbAwxingA9NbEZn5s4yaDsyGzzK7IGXhiOo
+ 6oSNds/8PGfHDiAfFme4rL4jEN/tDKi64EvnQ6i5YtFdEQKfumq72N3Md8Sh3K39i5suczZx3
+ UOpsMAFe7kD97NPkDe4nmwK1vkap04GSoJ18rh3upGaZNYwOmKSn0/aDEqnEUrSuQ915hx7Jy
+ yF2p+q3FS/SyZQ9n/kWoeLL5B6Q8QOoKTosebCVQ+9Bj9UYAD+OvKXhB+wEPFkXaKcG/pi+B3
+ RPHWCH5BKa7G/kG4/0slKAq4HMi+2mvFBKnHxX74lbJ2CpFSBoLiQnLO5SdeVtpEk17Rua2gh
+ yWjGlhnbcZnUb4MK+xLLAoySRMpuf/aNFg2Z1cIOOY8VNRVcQjENN88zlcPHmujbOVZLTx9Dn
+ CnX4mvVq+FwqOfa25r9sbbVRaioMVR1TGRzb5pL8imHQ3bD51q8U2rsBU8wUxPGOReO5j6pcV
+ xAS2p1/Mh/tQZr6Zq677fE0VX7VO4QNPwNDLG/wg32395wRtssC3iaf7scqv3EgC4gzDM1YYk
+ s8kw4cUeGbyId2WEqy5fE51EZHQlwV6nRqcr7NECGeyxgv+saALKOZH5K9m4Y9CiuoKWYXSQU
+ NjFtmzNr9yx2DlnBZPyHgztcN8lemMFh03iFsZz3snE5Svmp9xZHSpBL7x2HOedSxWasiKFCb
+ a1jgnZ8uojrctpGNqIwEKUoz0yJuqMToZitEI3bKD7aYuCBAKXLCZJVObPsWiGbUcek1vdQ/8
+ zSTbK+2n2TSV2JsYgz598940Jqc31xrbMF/veOIc5+phZIaP4KzTYsj5l8HQy6Ek7dCz5KCDQ
+ +jd0C8H8P2KLEJOYE8+g==
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch removes old code of badblocks_set(), badblocks_clear() and
-badblocks_check(), and make them as wrappers to call _badblocks_set(),
-_badblocks_clear() and _badblocks_check().
 
-By this change now the badblock handing switch to the improved algorithm
-in  _badblocks_set(), _badblocks_clear() and _badblocks_check().
+On 2021/2/26 =E4=B8=8B=E5=8D=885:54, Coly Li wrote:
+> On 2/26/21 4:57 PM, Norman.Kern wrote:
+> [snipped]
+>>> You may try to trigger a gc by writing to
+>>> sys/fs/bcache/<cache-set-uuid>/internal/trigger_gc
+>>>
+>> When all cache had written back, I triggered gc, it recalled.
+>>
+>> root@WXS0106:~# cat /sys/block/bcache0/bcache/cache/cache_available_per=
+cent
+>> 30
+>>
+>> root@WXS0106:~# echo 1 > /sys/block/bcache0/bcache/cache/internal/trigg=
+er_gc
+>> root@WXS0106:~# cat /sys/block/bcache0/bcache/cache/cache_available_per=
+cent
+>> 97
+>>
+>> Why must I trigger gc manually? Is not a default action of bcache-gc th=
+read? And I found it can only work when all dirty data written back.
+>>
+> 1, GC is automatically triggered after some mount of data consumed. I
+> guess it is just not about time in your situation.
+>
+> 2, Because the gc will shrink all cached clean data, which is very
+> unfriendly for read-intend workload. Therefore gc_after_writeback is
+> defaulted as 0, when this sysfs file content set to 1, a gc will trigger
+> after the writeback accomplished.
 
-This patch only contains the changes of old code deletion, new added
-code for the improved algorithms are in previous patches.
+I made a test again and get more infomation:
 
-Signed-off-by: Coly Li <colyli@suse.de>
----
- block/badblocks.c | 310 +---------------------------------------------
- 1 file changed, 3 insertions(+), 307 deletions(-)
+root@WXS0089:~# cat /sys/block/bcache0/bcache/dirty_data
+0.0k
+root@WXS0089:~# lsblk /dev/sda
+NAME=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAJ:MIN RM=C2=A0=C2=A0 SIZE RO TYPE MOU=
+NTPOINT
+sda=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 8:0=C2=A0=C2=A0=C2=A0 =
+0 447.1G=C2=A0 0 disk
+`-bcache0 252:0=C2=A0=C2=A0=C2=A0 0=C2=A0 10.9T=C2=A0 0 disk
+root@WXS0089:~# cat /sys/block/sda/bcache/priority_stats
+Unused:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1%
+Clean:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 29%
+Dirty:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 70%
+Metadata:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0%
+Average:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 49
+Sectors per Q:=C2=A0 29184768
+Quantiles:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [1 2 3 5 6 8 9 11 13 14 16 19 21 =
+23 26 29 32 36 39 43 48 53 59 65 73 83 94 109 129 156 203]
+root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/in=
+ternal/gc_after_writeback
+1
+You have new mail in /var/mail/root
+root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/ca=
+che_available_percent
+28
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index 304b91159a42..904c6ed0de6d 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -1386,75 +1386,7 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- 			sector_t *first_bad, int *bad_sectors)
- {
--	int hi;
--	int lo;
--	u64 *p = bb->page;
--	int rv;
--	sector_t target = s + sectors;
--	unsigned seq;
--
--	if (bb->shift > 0) {
--		/* round the start down, and the end up */
--		s >>= bb->shift;
--		target += (1<<bb->shift) - 1;
--		target >>= bb->shift;
--		sectors = target - s;
--	}
--	/* 'target' is now the first block after the bad range */
--
--retry:
--	seq = read_seqbegin(&bb->lock);
--	lo = 0;
--	rv = 0;
--	hi = bb->count;
--
--	/* Binary search between lo and hi for 'target'
--	 * i.e. for the last range that starts before 'target'
--	 */
--	/* INVARIANT: ranges before 'lo' and at-or-after 'hi'
--	 * are known not to be the last range before target.
--	 * VARIANT: hi-lo is the number of possible
--	 * ranges, and decreases until it reaches 1
--	 */
--	while (hi - lo > 1) {
--		int mid = (lo + hi) / 2;
--		sector_t a = BB_OFFSET(p[mid]);
--
--		if (a < target)
--			/* This could still be the one, earlier ranges
--			 * could not.
--			 */
--			lo = mid;
--		else
--			/* This and later ranges are definitely out. */
--			hi = mid;
--	}
--	/* 'lo' might be the last that started before target, but 'hi' isn't */
--	if (hi > lo) {
--		/* need to check all range that end after 's' to see if
--		 * any are unacknowledged.
--		 */
--		while (lo >= 0 &&
--		       BB_OFFSET(p[lo]) + BB_LEN(p[lo]) > s) {
--			if (BB_OFFSET(p[lo]) < target) {
--				/* starts before the end, and finishes after
--				 * the start, so they must overlap
--				 */
--				if (rv != -1 && BB_ACK(p[lo]))
--					rv = 1;
--				else
--					rv = -1;
--				*first_bad = BB_OFFSET(p[lo]);
--				*bad_sectors = BB_LEN(p[lo]);
--			}
--			lo--;
--		}
--	}
--
--	if (read_seqretry(&bb->lock, seq))
--		goto retry;
--
--	return rv;
-+	return _badblocks_check(bb, s, sectors, first_bad, bad_sectors);
- }
- EXPORT_SYMBOL_GPL(badblocks_check);
- 
-@@ -1476,154 +1408,7 @@ EXPORT_SYMBOL_GPL(badblocks_check);
- int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
- 			int acknowledged)
- {
--	u64 *p;
--	int lo, hi;
--	int rv = 0;
--	unsigned long flags;
--
--	if (bb->shift < 0)
--		/* badblocks are disabled */
--		return 1;
--
--	if (bb->shift) {
--		/* round the start down, and the end up */
--		sector_t next = s + sectors;
--
--		s >>= bb->shift;
--		next += (1<<bb->shift) - 1;
--		next >>= bb->shift;
--		sectors = next - s;
--	}
--
--	write_seqlock_irqsave(&bb->lock, flags);
--
--	p = bb->page;
--	lo = 0;
--	hi = bb->count;
--	/* Find the last range that starts at-or-before 's' */
--	while (hi - lo > 1) {
--		int mid = (lo + hi) / 2;
--		sector_t a = BB_OFFSET(p[mid]);
--
--		if (a <= s)
--			lo = mid;
--		else
--			hi = mid;
--	}
--	if (hi > lo && BB_OFFSET(p[lo]) > s)
--		hi = lo;
--
--	if (hi > lo) {
--		/* we found a range that might merge with the start
--		 * of our new range
--		 */
--		sector_t a = BB_OFFSET(p[lo]);
--		sector_t e = a + BB_LEN(p[lo]);
--		int ack = BB_ACK(p[lo]);
--
--		if (e >= s) {
--			/* Yes, we can merge with a previous range */
--			if (s == a && s + sectors >= e)
--				/* new range covers old */
--				ack = acknowledged;
--			else
--				ack = ack && acknowledged;
--
--			if (e < s + sectors)
--				e = s + sectors;
--			if (e - a <= BB_MAX_LEN) {
--				p[lo] = BB_MAKE(a, e-a, ack);
--				s = e;
--			} else {
--				/* does not all fit in one range,
--				 * make p[lo] maximal
--				 */
--				if (BB_LEN(p[lo]) != BB_MAX_LEN)
--					p[lo] = BB_MAKE(a, BB_MAX_LEN, ack);
--				s = a + BB_MAX_LEN;
--			}
--			sectors = e - s;
--		}
--	}
--	if (sectors && hi < bb->count) {
--		/* 'hi' points to the first range that starts after 's'.
--		 * Maybe we can merge with the start of that range
--		 */
--		sector_t a = BB_OFFSET(p[hi]);
--		sector_t e = a + BB_LEN(p[hi]);
--		int ack = BB_ACK(p[hi]);
--
--		if (a <= s + sectors) {
--			/* merging is possible */
--			if (e <= s + sectors) {
--				/* full overlap */
--				e = s + sectors;
--				ack = acknowledged;
--			} else
--				ack = ack && acknowledged;
--
--			a = s;
--			if (e - a <= BB_MAX_LEN) {
--				p[hi] = BB_MAKE(a, e-a, ack);
--				s = e;
--			} else {
--				p[hi] = BB_MAKE(a, BB_MAX_LEN, ack);
--				s = a + BB_MAX_LEN;
--			}
--			sectors = e - s;
--			lo = hi;
--			hi++;
--		}
--	}
--	if (sectors == 0 && hi < bb->count) {
--		/* we might be able to combine lo and hi */
--		/* Note: 's' is at the end of 'lo' */
--		sector_t a = BB_OFFSET(p[hi]);
--		int lolen = BB_LEN(p[lo]);
--		int hilen = BB_LEN(p[hi]);
--		int newlen = lolen + hilen - (s - a);
--
--		if (s >= a && newlen < BB_MAX_LEN) {
--			/* yes, we can combine them */
--			int ack = BB_ACK(p[lo]) && BB_ACK(p[hi]);
--
--			p[lo] = BB_MAKE(BB_OFFSET(p[lo]), newlen, ack);
--			memmove(p + hi, p + hi + 1,
--				(bb->count - hi - 1) * 8);
--			bb->count--;
--		}
--	}
--	while (sectors) {
--		/* didn't merge (it all).
--		 * Need to add a range just before 'hi'
--		 */
--		if (bb->count >= MAX_BADBLOCKS) {
--			/* No room for more */
--			rv = 1;
--			break;
--		} else {
--			int this_sectors = sectors;
--
--			memmove(p + hi + 1, p + hi,
--				(bb->count - hi) * 8);
--			bb->count++;
--
--			if (this_sectors > BB_MAX_LEN)
--				this_sectors = BB_MAX_LEN;
--			p[hi] = BB_MAKE(s, this_sectors, acknowledged);
--			sectors -= this_sectors;
--			s += this_sectors;
--		}
--	}
--
--	bb->changed = 1;
--	if (!acknowledged)
--		bb->unacked_exist = 1;
--	else
--		badblocks_update_acked(bb);
--	write_sequnlock_irqrestore(&bb->lock, flags);
--
--	return rv;
-+	return _badblocks_set(bb, s, sectors, acknowledged);
- }
- EXPORT_SYMBOL_GPL(badblocks_set);
- 
-@@ -1643,96 +1428,7 @@ EXPORT_SYMBOL_GPL(badblocks_set);
-  */
- int badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- {
--	u64 *p;
--	int lo, hi;
--	sector_t target = s + sectors;
--	int rv = 0;
--
--	if (bb->shift > 0) {
--		/* When clearing we round the start up and the end down.
--		 * This should not matter as the shift should align with
--		 * the block size and no rounding should ever be needed.
--		 * However it is better the think a block is bad when it
--		 * isn't than to think a block is not bad when it is.
--		 */
--		s += (1<<bb->shift) - 1;
--		s >>= bb->shift;
--		target >>= bb->shift;
--		sectors = target - s;
--	}
--
--	write_seqlock_irq(&bb->lock);
--
--	p = bb->page;
--	lo = 0;
--	hi = bb->count;
--	/* Find the last range that starts before 'target' */
--	while (hi - lo > 1) {
--		int mid = (lo + hi) / 2;
--		sector_t a = BB_OFFSET(p[mid]);
--
--		if (a < target)
--			lo = mid;
--		else
--			hi = mid;
--	}
--	if (hi > lo) {
--		/* p[lo] is the last range that could overlap the
--		 * current range.  Earlier ranges could also overlap,
--		 * but only this one can overlap the end of the range.
--		 */
--		if ((BB_OFFSET(p[lo]) + BB_LEN(p[lo]) > target) &&
--		    (BB_OFFSET(p[lo]) < target)) {
--			/* Partial overlap, leave the tail of this range */
--			int ack = BB_ACK(p[lo]);
--			sector_t a = BB_OFFSET(p[lo]);
--			sector_t end = a + BB_LEN(p[lo]);
--
--			if (a < s) {
--				/* we need to split this range */
--				if (bb->count >= MAX_BADBLOCKS) {
--					rv = -ENOSPC;
--					goto out;
--				}
--				memmove(p+lo+1, p+lo, (bb->count - lo) * 8);
--				bb->count++;
--				p[lo] = BB_MAKE(a, s-a, ack);
--				lo++;
--			}
--			p[lo] = BB_MAKE(target, end - target, ack);
--			/* there is no longer an overlap */
--			hi = lo;
--			lo--;
--		}
--		while (lo >= 0 &&
--		       (BB_OFFSET(p[lo]) + BB_LEN(p[lo]) > s) &&
--		       (BB_OFFSET(p[lo]) < target)) {
--			/* This range does overlap */
--			if (BB_OFFSET(p[lo]) < s) {
--				/* Keep the early parts of this range. */
--				int ack = BB_ACK(p[lo]);
--				sector_t start = BB_OFFSET(p[lo]);
--
--				p[lo] = BB_MAKE(start, s - start, ack);
--				/* now low doesn't overlap, so.. */
--				break;
--			}
--			lo--;
--		}
--		/* 'lo' is strictly before, 'hi' is strictly after,
--		 * anything between needs to be discarded
--		 */
--		if (hi - lo > 1) {
--			memmove(p+lo+1, p+hi, (bb->count - hi) * 8);
--			bb->count -= (hi - lo - 1);
--		}
--	}
--
--	badblocks_update_acked(bb);
--	bb->changed = 1;
--out:
--	write_sequnlock_irq(&bb->lock);
--	return rv;
-+	return _badblocks_clear(bb, s, sectors);
- }
- EXPORT_SYMBOL_GPL(badblocks_clear);
- 
--- 
-2.26.2
+I read the source codes and found if cache_available_percent > 50, it shou=
+ld wakeup gc while doing writeback, but it seemed not work right.
 
+>
+> Coly Li
+>
+>
+>
+>
