@@ -2,86 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE5932AE8E
-	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 03:55:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57FEE32AE90
+	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 03:55:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231375AbhCBXqV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Mar 2021 18:46:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41930 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351177AbhCBNe7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:34:59 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CB4EBAF78;
-        Tue,  2 Mar 2021 13:20:08 +0000 (UTC)
-To:     "Norman.Kern" <norman.kern@gmx.com>
-Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
-References: <9b7dfd49-67b0-53b1-96e1-3b90c2d9d09a@gmx.com>
-From:   Coly Li <colyli@suse.de>
-Subject: Re: Large latency with bcache for Ceph OSD(new mail thread)
-Message-ID: <f6755b89-4d13-92a5-df1a-343602dec957@suse.de>
-Date:   Tue, 2 Mar 2021 21:20:04 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.8.0
+        id S231491AbhCBXqq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Mar 2021 18:46:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350258AbhCBS04 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Mar 2021 13:26:56 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8B8C0617AB
+        for <linux-block@vger.kernel.org>; Tue,  2 Mar 2021 10:25:53 -0800 (PST)
+Received: by mail-il1-x12a.google.com with SMTP id d5so18925350iln.6
+        for <linux-block@vger.kernel.org>; Tue, 02 Mar 2021 10:25:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/tR2XTG0HxjyVGlaiC+WrfL7p8OXI5fljdp3i9qrHB0=;
+        b=aqjY/V6RGVgwKRL3/lnscUN2LZ6ifrGWr6AfB4V8YKtxF6R2oeWYBA19kyaPGfjI9i
+         1+OZ+ZoBIQgOmkat3LFIZ4oXs9nUp3wluYxoRBavOpqQg7AlgdOkqYIJ6ha4GCWhniZj
+         eudr58unxm0p5t6SC2J12nC6zk14Dj2uUIW7P+JeI/hiwPLRMyFW41Pk+HDwY6szSXOR
+         pjb7i5NyzCaMtMcGxYV9snoFVZBU8xrnFi+bvEOXzgOJd4/AsdNLWTc2uaw1Zc1cg9fT
+         ZC+Xptql+b5CzelkIDp7i0xdCCi8cLL5qhvnVz0IuPq5naC/xtkBdtv0HdPrzlCy8ABM
+         uq0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/tR2XTG0HxjyVGlaiC+WrfL7p8OXI5fljdp3i9qrHB0=;
+        b=UzurAbML2HThlP8WiVqyOpCmSXG/a0nGfUp4cuDUX/jLz1qBPPynhh8VbHkPadS1rr
+         p3mLiOZ309JA4hYO5mikRLg5m2JJZC+FaXseEWLbvUvflfOM11hWeMM35bQGBTULQHVp
+         Ugy2csfgTTjHkv28/efyRq2+6FDljGNBKwU5IkUT1PQxOnuemFba2MyfR6gH/LH+u9a9
+         qA1Y4u6nJRjEiVAw9YaCiV7fXz9d07F39lD4Gc3qtuAVARg1v7lc0FWqZEm1oGkskyMy
+         Vq+jcVWifnLT5GcV8FVkyaucNYnCqOuQU3xYVGzH/YvlzfrddSQT8s7kPIQPLdwpdffj
+         CY9A==
+X-Gm-Message-State: AOAM531wdw8/4SZbxQWVIjD2CgUj+d4iFto0DNbZs2bLpQG7mwOiAmqF
+        yHPEtIhmF6fxcrgyZKwN14OTRCMHAPWpig==
+X-Google-Smtp-Source: ABdhPJxy5HeFvi7BpQUeJ7U/Std4KxNuGk5C3a6ucMAQfIiEHxLI3BHv4WrSSKvXo1Q9FozOFscU1A==
+X-Received: by 2002:a05:6e02:e87:: with SMTP id t7mr18767828ilj.211.1614709552488;
+        Tue, 02 Mar 2021 10:25:52 -0800 (PST)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id g6sm8840282ilj.28.2021.03.02.10.25.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Mar 2021 10:25:52 -0800 (PST)
+Subject: Re: [PATCH] block/bfq: update comments and default value in docs for
+ fifo_expire
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org
+References: <1614045328-87234-1-git-send-email-joseph.qi@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a98d251d-f68f-a0e0-acda-54ad0b2779d8@kernel.dk>
+Date:   Tue, 2 Mar 2021 11:25:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <9b7dfd49-67b0-53b1-96e1-3b90c2d9d09a@gmx.com>
+In-Reply-To: <1614045328-87234-1-git-send-email-joseph.qi@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/2/21 6:20 PM, Norman.Kern wrote:
-> Sorry for creating a new mail thread(the origin is so long...)
-> 
-> 
-> I made a test again and get more infomation:
-> 
-> root@WXS0089:~# cat /sys/block/bcache0/bcache/dirty_data
-> 0.0k
-> root@WXS0089:~# lsblk /dev/sda
-> NAME      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-> sda         8:0    0 447.1G  0 disk
-> `-bcache0 252:0    0  10.9T  0 disk
-> root@WXS0089:~# cat /sys/block/sda/bcache/priority_stats
-> Unused:         1%
-> Clean:          29%
-> Dirty:          70%
-> Metadata:       0%
-> Average:        49
-> Sectors per Q:  29184768
-> Quantiles:      [1 2 3 5 6 8 9 11 13 14 16 19 21 23 26 29 32 36 39 43 48 53 59 65 73 83 94 109 129 156 203]
-> root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/internal/gc_after_writeback
-> 1
-> You have new mail in /var/mail/root
-> root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/cache_available_percent
-> 28
-> 
-> I read the source codes and found if cache_available_percent > 50, it should wakeup gc while doing writeback, but it seemed not work right.
-> 
+On 2/22/21 6:55 PM, Joseph Qi wrote:
+> Correct the comments since bfq_fifo_expire[0] is for async request,
+> while bfq_fifo_expire[1] is for sync request.
+> Also update docs, according the source code, the default
+> fifo_expire_async is 250ms, and fifo_expire_sync is 125ms.
 
-If gc_after_writeback is enabled, and after it is enabled and the cache
-usage > 50%, a tag BCH_DO_AUTO_GC will be set to c->gc_after_writeback.
-Then when the writeback completed the gc thread will wake up in force.
+Applied, thanks.
 
-so the auto gc after writeback will be triggered when,
-1, the bcache device is in writeback mode
-2, gc_after_writeback set to 1
-3, After 2) done, the cache usage exceeds 50% threshold.
-4, writeback rate set to maximum rate when the bcache device is idle (no
-regular I/O request)
-5, after the writeback accomplished, the gc thread will be waken up.
+-- 
+Jens Axboe
 
-But /sys/block/bcache0/bcache/dirty_data is 0.0k doesn't mean the
-writeback is accomplished. It is possible the writeback thread still
-goes through all btree keys for the last try even all the dirty data are
-flushed. Therefore you should check whether the writeback thread is
-still active before a conclusion is made that the writeback is completed.
-
-BTW, do you try a Linux v5.8+ kernel and see how things are ?
-
-Thanks.
-
-Coly Li
