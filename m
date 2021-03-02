@@ -2,86 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 484AB32AE97
+	by mail.lfdr.de (Postfix) with ESMTP id B92F932AE98
 	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 03:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbhCBXrq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 2 Mar 2021 18:47:46 -0500
-Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:46138
-        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1838041AbhCBWO7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Mar 2021 17:14:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1614723223; bh=IoJyUk4Nbh+2Yi6LTvulv/umucSKxOqnBZJ9GCPOcw0=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=mXmmAAXWDd5KucDFiZfAUgJisY7bNyIius9akQPBlsZwy1SIN47u7bi0Ny00fi8feqKioQ5r6pim8uxkF2d/3JSfmwgb4JOUY8vCqZGw1C3GIQ3X4f61YhxZICuUF3dSUyYOJXYlIqnJRU8a0MZOoJCF6RnXPkHM8ydIkVlKW6qE+4QwRq4fxp+/UVXdRvLyWblm9HVYP5bmY3NGJXaXUoDhsNFb/OSPEFTYWjR0VvBscthitk3PFf2fcRqwzWdguBsKCCbtZm2GOTUJ5t+CfIvc4Ul/YEZ1uQLeWmlzklS16E48KZFRAtRRXwR9I0Pps0kESvxqsTwdaNHzV/GZGA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1614723223; bh=nSnUWLqFKDj7l9bM1P39OX0x1yrMMRmmaL3EhCjtJCx=; h=X-Sonic-MF:Date:From:Subject:To:From:Subject; b=rOYTDKaXbjAv4DTWQ7Xtp37OxaOtsXeuLmCgTQRmFIbUvhUurioNr4X5P4ZanOj4+IWNLQg7/azXXFvyOp1D37JAnvj1/SaMRbYRs5nLIvRlZQ4ecSsVsZDzY6HG4dLle+p+5kgJWeGF3DweTTJUhewQJ+KCco7fRNQNzKLRvKUTsWrcN5tMDRARzFOaDtRjRUJ7xoEyXbi8DGeYAtLpMuamDDBXcR03eiKjdHA+PXqlrowJ+3P7L+ydm4AUC+sZ8rYpwwbaFS0P7QmxymFWLonp2QsFJGNjWUAo7bQB9vcVNQQ2D9n16Jo/RNbHG8lSbq+ggQU3suzSurm3CT8T/w==
-X-YMail-OSG: kiwJ1NIVM1nIwCu0XcoAuO0BzwhSgO437LZSUF7P.no3b2g6XUtdD8dOwiY8wkB
- NxZ6k1U0c5s6nQAZNHnsQDujVap0Ji90jOxdhqDGB5g9A12.c6b32XE9kFmcsGORB9U7xP1CnqHY
- _57WTOMUY7jpnCZ2MCz8A4gh9CIqpE.8xMOr7cGtuJ_Jmt1qZvoEfc7MdKDAFBfdg3kNpDXIb3o9
- 13st_.3h.oqeFo7ePsUodU6j1OtdSEu8xkS6Xg4fJtlfOiHRk.4pMRXBZ7vaeKZHw4R60zhLiz9J
- K495DAaTeUEfI183oOFXAPf.wBybp9rBH1nw5pIqVT8fJ160Un2b63IeVzQsb.RbXg0Kij2u7Kxa
- _nU8grCaoBjtIWjzKJM2PJ5hqKmVfn14TAbTQOwSro6pomLlGZSAEYdDSt5v_porEk4Q7kuIgEtQ
- Z9Nrzs34EO0kTi4BGSulr53ahzuAB_9NAGBgn1q8u1_TsgRQMbDbO1x5LCmHhdPzTNKYYf.vr4V6
- FnXCJPYRJrg85SB1O0874MvguA73OoZqdfTfh4.KZb.IFGjdjJMCbtUaHWpm9yNsPCBzRuFqeBHQ
- YtJsPU6lo1hTRPHffH_kaP65Fqc34e5d310ejnd6.eej6SMpzeMy2mTy4uZvoTkGKtIVeBr1vKUI
- iXP2UYdjEKG6uR.pZbNT.xydPcl57LBudbw644Negp94MgKTgTd7uMG7e0wNYQdgIWd.0wPFMgMr
- g40.d_XX4jizXZP6p7kkg.uHoFP2NM7zLYi5k9EUbpQy_o0BHgPTy5ertlcDF9SrwMUCEYX.4WDc
- ua_ql6MFz8Hfe3ybOQtoiGrO9l10egzYcfhD_Os.7SnLMlPVL2LjHbidCqz6nU6Ker.q9PRYv8Io
- WLFvsTOIDN9MAV_nMv90AhOWZwsrVlAm.wwpSCBlK_1oZRBLQCGT1zitl_XRea1cjtPXhisJO10j
- fZ3iBSDTii.WbO3ac5N7nYL7m6H9LWztP4kPcKIPhs8Z9yKQO6hL5U_wuC2zcP2wNpOIsq5B4Dro
- s4ye39T0qSH1ObNHHhXrkCE4f7AVKkFxzHETKudBG3fmqc7s52xJM98byyoWaTjdbEU8Vp84rVn0
- NQQmy_XIFa0KDBzL4PyRdjxO6ckMXLgR3Zsu8bolLZH_ChG84Iaw1_O41MPdu8qAyqRYKr0mw7hN
- OiPyvJOA5V0gWocwX7q6M8rWc0SHFa6tXPMyWPjTl0VkHukO3viopv5IFfkLaLkK4wzUrk3DcBYy
- fGmm_ZSc5xuMsJBcwKLcwotujMQOyLWtZtF1WsdhtkgQzS3AnkM2XAwPbdIeZDvlWlDccNQwErMN
- an_XK3HKn7Ia01jxA39j.JwwmuPuCc99qEQcyPfKScNV.FdxSvs3V.TcOmwJMMsJt55rVrEEI98s
- cvPAmfYogjxTLuCiOR7zrVy7Pofpkh6W3SmBVXmaqUDQaM0KWrlSExDJakmLEeqCaPGGT9MlqAnL
- OYqWeptnwlOcZMl8Y1A7d4f9OgHbUiLH7DMPmeXmQ7WD4WOAD2Cru1d7hqjaP4gHrtebPDemqkoM
- Re41hosA_swxRfYOf3TJiItadXgMySMw5e8eSF62ZIoo5gJTV3gHLpJLRPlOapaLZoiHf4H71ohU
- gVWAqBarrYM8hJP1brvfFAg30FqeNeiU0TAW5x5yukfAlL.zF2jCRhVTOW_FxXvUxafMbd5iEVEC
- 6I3roJt74TXTt8Y60Yere.Lv_Tbk1MiOrMWiYRMa_KX5XQ2ajOVrGYvuIOGp.JUYsN0DgvfaNRtV
- mrVLxWDa5UExj5nFfcZI5_.1.2BNgRRtHsam9CdOlb.yIuJiP4g4rGPCXtRli3_Xa.Yvp0UEPKSa
- .wxZ8TuNvU3hDkuWRdeP_wCb_Xdy1Ivi6jRSNz3PBc4Ww.JO3zFgXDXYtMoKCtWkE6zuZP4yhkqA
- M_XrzDOyOfEo6m.LNgsIqNNEAKfyhxVMmadMdmtLGbp2J1O7TUS3MvDbXJAz.GcxM9CVi_vT0qcI
- uM0nI9FstEyo4JfrW5fjKmIkt0i1yUCv8DyOE0ofawmNdQ5CpLbGEkD_OUT_LHcvktRdlBeAs67E
- dLjOgX7GZZIpqbBwTu1.Mkt0qLXIDzpECapinf4zqqep_UQrnt3eqvnpyeknK4ab0PNFQhpdq1QU
- hYAhMXdozJXp.jEA6L18QY8AjBg90zDV5.6u8tEzmDMornWBvmjDbcvlr6HzItNPqlnuAqT7K28B
- .LOzf3Qnb.FB50gEfww510IWFwvwjg8WvWphGwyAeIk3_9RPGbwdNhQrfhLOE4bC4kXXBiwD4Qzr
- rQ4fwn.pubC59fYxm95i3zqhInCqfkNS.zGPJ8eDMmcMWw.G5EliVKhS2CNTC.S6oc1pTY2PoLYg
- MejlGUFHaJN.2dqaH8mZ0CwI3C9mQ1FNXv9QNQF8xIE3117sxFU1613c2TCOLuW3HxGEsLlH6d5F
- DL8GzSbpDNUYSWuEN.E38YOGnfoZCzzgSnCHGYOw8SlbT.fvoMzHmfi.5wX0uq7awXWygfaUnh9v
- mWJETy6dMmIpDgX_ZAM6rT_o1souRHP2UtWDrWrbbKBak7z5mLvwBTIchH.cj7PPoBmL.cPJHEDo
- -
-X-Sonic-MF: <alex_y_xu@yahoo.ca>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Tue, 2 Mar 2021 22:13:43 +0000
-Received: by smtp404.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 4d896f5c720e3fb92b3aad8e7a720f1c;
-          Tue, 02 Mar 2021 22:13:39 +0000 (UTC)
-Date:   Tue, 02 Mar 2021 17:13:35 -0500
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+        id S231607AbhCBXrw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 2 Mar 2021 18:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350794AbhCBWcm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 2 Mar 2021 17:32:42 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4D8C06178A
+        for <linux-block@vger.kernel.org>; Tue,  2 Mar 2021 14:31:36 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id 201so14791392pfw.5
+        for <linux-block@vger.kernel.org>; Tue, 02 Mar 2021 14:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dDOaCYCI2rpb4LQP8rVQ+Pz//+9Nqe8cELMz0UAeG/0=;
+        b=OydL0mHpz8KkNLNjKg7Zcw4wTSbA9kc6aXnfOAX70XgHQvEPOG40YrS25pKI1DVtr4
+         UbRHduhr4FhAqoaiMb4z9azXoFNMnr52gKTbbsfpq9jSlG917vdFyj5Q+q0f/8T+KXZb
+         OCNZ7aUa/jjafQiiLYbD09B95mPvJj1tRyJj9g5PbTtv7mlMm6WUzS4hB4n4hPJEK9HB
+         zMNSgvVxZ29tI8u6blcJAROHOHfV2OgtkuUoNfWOsQ11ctzgWmoPA6y8Zkfbru9IdXoP
+         uqBEhrouei5ayHodTThwjOWrH9I/l+Pn2rar5uhS/egj4mI8ckHarMn+A9zzrh2WY4H6
+         zQag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dDOaCYCI2rpb4LQP8rVQ+Pz//+9Nqe8cELMz0UAeG/0=;
+        b=fldqM+xI8Met4JfC1sGNwwdQlR15QayBh2u6fwxlRxe8zV8pWcyDDWnr7/A6AEWONK
+         C8PDw3HoGnb7QF1QAhB/3mJGsshAd7hWbdd0RhWN93eq3JS3FfXCEkWtbrvjgF/HQ6if
+         0nLJcrnd6zJN2Atp4k8F5WTvrqjFFAhIjZH2fxQct+MtWY2cl5NsPKawBE0PMXqajwp7
+         WzvGGDsUxSCZeacHbndWaXcS/qHf5GAQ5hUml6xkrmvS5YfcTCqUHER2A/WXcAPTNA64
+         ByUEDURaiqwzGP+Fs1XYGrOBi4ZsfnJCozAiVAunooDZ8HI26h7vX8DDiYYy0ZJtps73
+         ofOQ==
+X-Gm-Message-State: AOAM531LAJSVb+Z9NTWuS9HgvhNI0diMUzQ6QqdTg+Y6cpOkYnOJvRRP
+        eWMCC9MOIr6EMznfLYPDuaUELw==
+X-Google-Smtp-Source: ABdhPJynei85DD/12aeywxJt2eZTx14tQ/eEgKpARUyMiW6zvkxoyIapV6e2KTjaHjLzyHbHckRm5Q==
+X-Received: by 2002:aa7:9281:0:b029:1ec:48b2:811c with SMTP id j1-20020aa792810000b02901ec48b2811cmr5109495pfa.18.1614724296196;
+        Tue, 02 Mar 2021 14:31:36 -0800 (PST)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id 68sm8831655pfd.75.2021.03.02.14.31.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Mar 2021 14:31:35 -0800 (PST)
 Subject: Re: 5.12-rc1 regression: freezing iou-mgr/wrk failed
-To:     Jens Axboe <axboe@kernel.dk>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1614646241.av51lk2de4.none.ref@localhost>
-        <1614646241.av51lk2de4.none@localhost>
-        <ad672889-2757-142b-9259-3e0aee6d8078@kernel.dk>
-        <fd148797-d8cb-7597-8612-83ddfafac425@kernel.dk>
-        <8cd026a0-ada6-9ae5-9ea1-a685b482173c@kernel.dk>
-In-Reply-To: <8cd026a0-ada6-9ae5-9ea1-a685b482173c@kernel.dk>
+ <1614646241.av51lk2de4.none@localhost>
+ <ad672889-2757-142b-9259-3e0aee6d8078@kernel.dk>
+ <fd148797-d8cb-7597-8612-83ddfafac425@kernel.dk>
+ <8cd026a0-ada6-9ae5-9ea1-a685b482173c@kernel.dk>
+ <1614722744.btwkumq4s4.none@localhost>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bb6fc05c-f2b0-d7ad-489b-2db23e2abe52@kernel.dk>
+Date:   Tue, 2 Mar 2021 15:31:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-Id: <1614722744.btwkumq4s4.none@localhost>
+In-Reply-To: <1614722744.btwkumq4s4.none@localhost>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.17828 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.9.1)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I tried 29be7fc03d ("io_uring: ensure that threads freeze on suspend")=20
-and it seems to work OK. The system suspends fine and no errors are=20
-printed to the kernel log.
+On 3/2/21 3:13 PM, Alex Xu (Hello71) wrote:
+> I tried 29be7fc03d ("io_uring: ensure that threads freeze on suspend") 
+> and it seems to work OK. The system suspends fine and no errors are 
+> printed to the kernel log.
+> 
+> I am using Gentoo on the machine in question.
+> 
+> I didn't test the other patches you supplied. Let me know if there's 
+> anything you would like me to test.
 
-I am using Gentoo on the machine in question.
+OK great, thanks. I'll add your reported/tested-by to the patch.
 
-I didn't test the other patches you supplied. Let me know if there's=20
-anything you would like me to test.
+-- 
+Jens Axboe
 
-Thanks,
-Alex.
