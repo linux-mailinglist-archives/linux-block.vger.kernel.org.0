@@ -2,198 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FF5432BDDD
-	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 23:30:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B510B32BDE4
+	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 23:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346875AbhCCQjJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Mar 2021 11:39:09 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57053 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1442262AbhCCL6i (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 3 Mar 2021 06:58:38 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0UQGMHnb_1614772673;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UQGMHnb_1614772673)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Mar 2021 19:57:53 +0800
-From:   Jeffle Xu <jefflexu@linux.alibaba.com>
-To:     msnitzer@redhat.com, axboe@kernel.dk
-Cc:     io-uring@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, mpatocka@redhat.com,
-        caspar@linux.alibaba.com, joseph.qi@linux.alibaba.com
-Subject: [PATCH v5 12/12] dm: support IO polling for bio-based dm device
-Date:   Wed,  3 Mar 2021 19:57:40 +0800
-Message-Id: <20210303115740.127001-13-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210303115740.127001-1-jefflexu@linux.alibaba.com>
-References: <20210303115740.127001-1-jefflexu@linux.alibaba.com>
+        id S1347040AbhCCQjU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Mar 2021 11:39:20 -0500
+Received: from mx4.veeam.com ([104.41.138.86]:58134 "EHLO mx4.veeam.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1380627AbhCCMbW (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 3 Mar 2021 07:31:22 -0500
+Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx4.veeam.com (Postfix) with ESMTPS id 45D99114A78;
+        Wed,  3 Mar 2021 15:30:33 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx4;
+        t=1614774633; bh=aBSfpMXxxV9PaecPo4foX+saJn6ZV4rfSlstLXcgSh0=;
+        h=From:To:CC:Subject:Date:From;
+        b=DWwf8vhFH+qdbdQhd26ZLMQmdas5SvBkwUc0e/wZojIPeg/9Ogy0QMcYVNYiGfpma
+         x+EmcHTdyiJ2Lcp7RSdnF2PNTIYTC9xyLQ9gQsR4G2UTYjTo6nxY3Qbr5tGz0u3Kgj
+         5w7IkRv/RLqSEg42G4kNupGG5u0YzL/KIqAXSDt8=
+Received: from prgdevlinuxpatch01.amust.local (172.24.14.5) by
+ prgmbx01.amust.local (172.24.0.171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.721.2;
+ Wed, 3 Mar 2021 13:30:31 +0100
+From:   Sergei Shtepa <sergei.shtepa@veeam.com>
+To:     <snitzer@redhat.com>, <agk@redhat.com>, <hare@suse.de>,
+        <song@kernel.org>, <axboe@kernel.dk>, <dm-devel@redhat.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-raid@vger.kernel.org>, <linux-api@vger.kernel.org>
+CC:     <sergei.shtepa@veeam.com>, <pavel.tide@veeam.com>
+Subject: [PATCH v6 0/4] block-layer interposer
+Date:   Wed, 3 Mar 2021 15:30:14 +0300
+Message-ID: <1614774618-22410-1-git-send-email-sergei.shtepa@veeam.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.24.14.5]
+X-ClientProxiedBy: prgmbx01.amust.local (172.24.0.171) To prgmbx01.amust.local
+ (172.24.0.171)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29C604D265637363
+X-Veeam-MMEX: True
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-IO polling is enabled when all underlying target devices are capable
-of IO polling. The sanity check supports the stacked device model, in
-which one dm device may be build upon another dm device. In this case,
-the mapped device will check if the underlying dm target device
-supports IO polling.
+Hi all.
 
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
----
- drivers/md/dm-table.c         | 26 ++++++++++++
- drivers/md/dm.c               | 74 +++++++++++++++++++++++++++++++++++
- include/linux/device-mapper.h |  1 +
- 3 files changed, 101 insertions(+)
+I'm joyful to suggest the block-layer interposer (blk_interposer) v6.
+blk_interposer allows to intercept bio requests, remap bio to another
+devices or add new bios.
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 95391f78b8d5..ed72349eb1db 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1982,6 +1982,19 @@ static int device_requires_stable_pages(struct dm_target *ti,
- 	return blk_queue_stable_writes(q);
- }
- 
-+static int device_not_poll_capable(struct dm_target *ti, struct dm_dev *dev,
-+				   sector_t start, sector_t len, void *data)
-+{
-+	struct request_queue *q = bdev_get_queue(dev->bdev);
-+
-+	return !test_bit(QUEUE_FLAG_POLL, &q->queue_flags);
-+}
-+
-+int dm_table_supports_poll(struct dm_table *t)
-+{
-+	return !dm_table_any_dev_attr(t, device_not_poll_capable, NULL);
-+}
-+
- void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 			       struct queue_limits *limits)
- {
-@@ -2079,6 +2092,19 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 
- 	dm_update_keyslot_manager(q, t);
- 	blk_queue_update_readahead(q);
-+
-+	/*
-+	 * Check for request-based device is remained to
-+	 * dm_mq_init_request_queue()->blk_mq_init_allocated_queue().
-+	 * For bio-based device, only set QUEUE_FLAG_POLL when all underlying
-+	 * devices supporting polling.
-+	 */
-+	if (__table_type_bio_based(t->type)) {
-+		if (dm_table_supports_poll(t))
-+			blk_queue_flag_set(QUEUE_FLAG_POLL, q);
-+		else
-+			blk_queue_flag_clear(QUEUE_FLAG_POLL, q);
-+	}
- }
- 
- unsigned int dm_table_get_num_targets(struct dm_table *t)
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index f1b76203b3c7..3f3f47d66386 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1714,6 +1714,78 @@ static blk_qc_t dm_submit_bio(struct bio *bio)
- 	return BLK_QC_T_NONE;
- }
- 
-+struct dm_poll_data {
-+	blk_qc_t cookie;
-+	int count;
-+};
-+
-+static int dm_poll_one_dev(struct dm_target *ti, struct dm_dev *dev,
-+			   sector_t start, sector_t len, void *data)
-+{
-+	struct dm_poll_data *pdata = data;
-+	struct request_queue *q = bdev_get_queue(dev->bdev);
-+
-+	if (queue_is_mq(q)) {
-+		struct blk_mq_hw_ctx *hctx;
-+		int i, cpu;
-+
-+		if (!percpu_ref_tryget(&q->q_usage_counter))
-+			return 0;
-+
-+		if (blk_qc_t_is_poll_cpu(pdata->cookie)) {
-+			cpu = blk_qc_t_to_cpu(pdata->cookie);
-+			hctx = blk_mq_get_hctx(q, cpu, REQ_HIPRI);
-+			pdata->count += blk_mq_poll_hctx(q, hctx);
-+		} else {
-+			queue_for_each_poll_hw_ctx(q, hctx, i)
-+				pdata->count += blk_mq_poll_hctx(q, hctx);
-+		}
-+
-+		percpu_ref_put(&q->q_usage_counter);
-+	} else {
-+		struct gendisk *disk = dev->bdev->bd_disk;
-+
-+		pdata->count += disk->fops->poll(q, pdata->cookie);
-+	}
-+
-+	return 0;
-+}
-+
-+static int dm_bio_poll(struct request_queue *q, blk_qc_t cookie)
-+{
-+	int i, srcu_idx;
-+	struct dm_table *t;
-+	struct dm_target *ti;
-+	struct mapped_device *md = queue_to_disk(q)->private_data;
-+	struct dm_poll_data pdata = {
-+		.cookie = cookie,
-+	};
-+
-+	t = dm_get_live_table(md, &srcu_idx);
-+
-+	for (i = 0; i < dm_table_get_num_targets(t); i++) {
-+		ti = dm_table_get_target(t, i);
-+		ti->type->iterate_devices(ti, dm_poll_one_dev, &pdata);
-+	}
-+
-+	dm_put_live_table(md, srcu_idx);
-+
-+	return pdata.count;
-+}
-+
-+static bool dm_bio_poll_capable(struct gendisk *disk)
-+{
-+	int ret, srcu_idx;
-+	struct mapped_device *md = disk->private_data;
-+	struct dm_table *t;
-+
-+	t = dm_get_live_table(md, &srcu_idx);
-+	ret = dm_table_supports_poll(t);
-+	dm_put_live_table(md, srcu_idx);
-+
-+	return ret;
-+}
-+
- /*-----------------------------------------------------------------
-  * An IDR is used to keep track of allocated minor numbers.
-  *---------------------------------------------------------------*/
-@@ -3126,6 +3198,8 @@ static const struct pr_ops dm_pr_ops = {
- };
- 
- static const struct block_device_operations dm_blk_dops = {
-+	.poll = dm_bio_poll,
-+	.poll_capable = dm_bio_poll_capable,
- 	.submit_bio = dm_submit_bio,
- 	.open = dm_blk_open,
- 	.release = dm_blk_close,
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 7f4ac87c0b32..31bfd6f70013 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -538,6 +538,7 @@ unsigned int dm_table_get_num_targets(struct dm_table *t);
- fmode_t dm_table_get_mode(struct dm_table *t);
- struct mapped_device *dm_table_get_md(struct dm_table *t);
- const char *dm_table_device_name(struct dm_table *t);
-+int dm_table_supports_poll(struct dm_table *t);
- 
- /*
-  * Trigger an event.
+This series of patches adds the ability to use blk_interposer for
+any dm-target using the DM_INTERPOSED_FLAG flag.
+
+The first patch adds the function blk_mq_is_queue_frozen(). It allows to
+assert a queue state.
+
+The second patch is dedicated to blk_interposer itself, which provides
+the ability to intercept bio.
+
+The third one adds support for blk_interposer from the device mapper.
+
+The fourth patch adds the DM_INTERPOSED_FLAG flag. When this flag is
+applied with the ioctl DM_TABLE_LOAD_CMD, the underlying devices are
+opened without the FMODE_EXCL flag and connected via blk_interposer.
+
+Changes:
+v6 - current patch set
+  * designed for 5.12;
+  * thanks to the new design of the bio structure in v5.12, it is
+    possible to perform interception not for the entire disk, but
+    for each block device;
+  * instead of the new ioctl DM_DEV_REMAP_CMD and the 'noexcl' option,
+    the DM_INTERPOSED_FLAG flag for the ioctl DM_TABLE_LOAD_CMD is
+    applied.
+
+v5 - https://patchwork.kernel.org/project/linux-block/cover/1612881028-7878-1-git-send-email-sergei.shtepa@veeam.com/
+ * rebase for v5.11-rc7;
+ * patch set organization;
+ * fix defects in documentation;
+ * add some comments;
+ * change mutex names for better code readability;
+ * remove calling bd_unlink_disk_holder() for targets with non-exclusive
+   flag;
+ * change type for struct dm_remap_param from uint8_t to __u8.
+
+v4 - https://patchwork.kernel.org/project/linux-block/cover/1612367638-3794-1-git-send-email-sergei.shtepa@veeam.com/
+Mostly changes were made, due to Damien's comments:
+ * on the design of the code;
+ * by the patch set organization;
+ * bug with passing a wrong parameter to dm_get_device();
+ * description of the 'noexcl' parameter in the linear.rst.
+Also added remap_and_filter.rst.
+
+v3 - https://patchwork.kernel.org/project/linux-block/cover/1611853955-32167-1-git-send-email-sergei.shtepa@veeam.com/
+In this version, I already suggested blk_interposer to apply to dm-linear.
+Problems were solved:
+ * Interception of bio requests from a specific device on the disk, not
+   from the entire disk. To do this, we added the dm_interposed_dev
+   structure and an interval tree to store these structures.
+ * Implemented ioctl DM_DEV_REMAP_CMD. A patch with changes in the lvm2
+   project was sent to the team lvm-devel@redhat.com.
+ * Added the 'noexcl' option for dm-linear, which allows you to open
+   the underlying block-device without FMODE_EXCL mode.
+
+v2 - https://patchwork.kernel.org/project/linux-block/cover/1607518911-30692-1-git-send-email-sergei.shtepa@veeam.com/
+I tried to suggest blk_interposer without using it in device mapper,
+but with the addition of a sample of its use. It was then that I learned
+about the maintainers' attitudes towards the samples directory :).
+
+v1 - https://lwn.net/ml/linux-block/20201119164924.74401-1-hare@suse.de/
+This Hannes's patch can be considered as a starting point, since this is
+where the interception mechanism and the term blk_interposer itself
+appeared. It became clear that blk_interposer can be useful for
+device mapper.
+
+before v1 - https://patchwork.kernel.org/project/linux-block/cover/1603271049-20681-1-git-send-email-sergei.shtepa@veeam.com/
+I tried to offer a rather cumbersome blk-filter and a monster-like
+blk-snap module for creating snapshots.
+
+Thank you to everyone who was able to take the time to review
+the previous versions.
+I hope that this time I achieved the required quality.
+
+Thanks,
+Sergei.
+
+Sergei Shtepa (4):
+  block: add blk_mq_is_queue_frozen()
+  block: add blk_interposer
+  dm: introduce dm-interposer
+  dm: add DM_INTERPOSED_FLAG
+
+ block/bio.c                   |   2 +
+ block/blk-core.c              |  36 +++++
+ block/blk-mq.c                |  12 ++
+ block/genhd.c                 |  93 ++++++++++++
+ drivers/md/Makefile           |   2 +-
+ drivers/md/dm-core.h          |   6 +
+ drivers/md/dm-interposer.c    | 258 ++++++++++++++++++++++++++++++++++
+ drivers/md/dm-interposer.h    |  40 ++++++
+ drivers/md/dm-ioctl.c         |   9 ++
+ drivers/md/dm-table.c         | 115 +++++++++++++--
+ drivers/md/dm.c               |  38 +++--
+ include/linux/blk-mq.h        |   1 +
+ include/linux/blk_types.h     |   4 +
+ include/linux/blkdev.h        |  17 +++
+ include/linux/device-mapper.h |   1 +
+ include/uapi/linux/dm-ioctl.h |   6 +
+ 16 files changed, 618 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/md/dm-interposer.c
+ create mode 100644 drivers/md/dm-interposer.h
+
 -- 
-2.27.0
+2.20.1
 
