@@ -2,96 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7980632BDED
-	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 23:32:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F21F32C888
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 02:15:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378984AbhCCQjf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Mar 2021 11:39:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240038AbhCCQYw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Mar 2021 11:24:52 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E609C0613D9
-        for <linux-block@vger.kernel.org>; Wed,  3 Mar 2021 08:24:14 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id c10so21890430ilo.8
-        for <linux-block@vger.kernel.org>; Wed, 03 Mar 2021 08:24:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ihYiaJFOB9DYTRhB/PyeoELBx0bDt4gsenP9UzgjlqQ=;
-        b=NTwXCtWQ4Pqx46ICAK8qJCNcwh9OdFYNBbglI0W7QCBBDmKq5ifnmU3sahf7vZOnhA
-         LFmuTUyePf67r8tlxU5rMktb8Oe5BrM7BOYhPUklDQe5lXOj4YsxsfFGltHp2SGPD3cx
-         zJnpKd35ySd30+uqDc3ayakJZsPwJVSvZdgowJikgOAZJO2X9sp7PwMxKMXxzKfEjDPT
-         YHZUowz4aB3YgVPQJIboUTpqPAVhqbbbiXmf7PkJk3Z9qD836Z20whixK4CIR0Vo7t6C
-         rsKIPP52yONbxMqvxrJw24dO6805S0Gy9J8i9OHq8WqfKiFI5jm2NkfD20osqmwInk47
-         1DyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ihYiaJFOB9DYTRhB/PyeoELBx0bDt4gsenP9UzgjlqQ=;
-        b=ZV4ilz27kqRuucJAS6sJ6PiJ0PB7f+Cc+rhjleCGTD2F5o/fj0vWdmZaQqsjItGG+/
-         +1TJ8B8D7/sk44RxHkXV+X6ry49LiPi7ddxo/KMYtZ6pAF1NJPa9D9SeCri9ZOQQSUXW
-         ledWH965MpGnK2o2j30aGR76xh7rdlgwyDOGFYlRLfgg3rk5hNt1VISbc1/t8wrc3MZB
-         zIUcXDZJP8ts7ITaMV/uPyW2sbg65vwCgA9PM+3djxjp4XcaJ91OSKyhzLl58FGfNErz
-         AteIceX03zo01XYX2lAxf37wMHZj+K1LPOykdURLdYhy6ip5/hisJM7gs1QUxo+mneQr
-         dCdw==
-X-Gm-Message-State: AOAM533q5oGujLTjV6+qv4JckpWy0IECcDr5A3PNYAFLRCJkSZQMbPgR
-        gRWuIGBLQxqoaFlT+jLMjsawxQ==
-X-Google-Smtp-Source: ABdhPJxqJiJfaUOLML8ghvodO3ZGgw4isNJmhlvEU3rLB7l+Qy38SE7bO3qNmV3feWzpjKvm5fSRSw==
-X-Received: by 2002:a05:6e02:20ee:: with SMTP id q14mr1516ilv.259.1614788653972;
-        Wed, 03 Mar 2021 08:24:13 -0800 (PST)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s6sm12193292ild.45.2021.03.03.08.24.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Mar 2021 08:24:13 -0800 (PST)
-Subject: Re: [PATCH] swap: fix swapfile read/write offset
-To:     Anthony Iliopoulos <ailiop@suse.com>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, akpm@linux-foundation.org
-References: <6f9da9c6-c6c5-08fe-95ea-940954456c40@kernel.dk>
- <YD+vZW2bJsmpCGn5@technoir>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <910b8b56-e16d-ec91-5e76-c88cac69d89b@kernel.dk>
-Date:   Wed, 3 Mar 2021 09:24:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S240550AbhCDAux (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Mar 2021 19:50:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44472 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235354AbhCCRNo (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 3 Mar 2021 12:13:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C4462AEB3;
+        Wed,  3 Mar 2021 17:12:02 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>, Martin Wilck <mwilck@suse.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH] block: Suppress uevent for hidden device when removed
+Date:   Wed,  3 Mar 2021 18:12:01 +0100
+Message-Id: <20210303171201.8432-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-In-Reply-To: <YD+vZW2bJsmpCGn5@technoir>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/3/21 8:46 AM, Anthony Iliopoulos wrote:
-> On Tue, Mar 02, 2021 at 03:36:19PM -0700, Jens Axboe wrote:
->> We're not factoring in the start of the file for where to write and
->> read the swapfile, which leads to very unfortunate side effects of
->> writing where we should not be...
->>
->> Fixes: 48d15436fde6 ("mm: remove get_swap_bio")
-> 
-> Presumably the usage of swap_page_sector was already affecting swap on
-> blockdevs that implement rw_page (currently brd, zram, btt, pmem), so it
-> may worth adding:
-> 
-> Fixes: dd6bd0d9c7db ("swap: use bdev_read_page() / bdev_write_page()")
-> Cc: <stable@vger.kernel.org> # v3.16+
-> 
-> for backporting, since it also affects stable.
+register_disk() suppress uevents for devices with the GENHD_FL_HIDDEN
+but enables uevents at the end again in order to announce disk after
+possible partitions are created.
 
-yes indeed, in fact that is the source of the original issue (copy/paste
-from that broken path).
+When the device is removed the uevents are still on and user land sees
+'remove' messages for devices which were never 'add'ed to the system.
 
-Fix is already upstream, but would be nice if someone would turn it into
-something that could be applied to stable.
+  KERNEL[95481.571887] remove   /devices/virtual/nvme-fabrics/ctl/nvme5/nvme0c5n1 (block)
 
+Let's suppress the uevents for GENHD_FL_HIDDEN again before calling
+device_del() which will write trigger uevents.
+
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ block/genhd.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/block/genhd.c b/block/genhd.c
+index c55e8f0fced1..ab9ed355bdef 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -731,6 +731,9 @@ void del_gendisk(struct gendisk *disk)
+ 	if (!sysfs_deprecated)
+ 		sysfs_remove_link(block_depr, dev_name(disk_to_dev(disk)));
+ 	pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
++
++	if (disk->flags & GENHD_FL_HIDDEN)
++		dev_set_uevent_suppress(disk_to_dev(disk), 1);
+ 	device_del(disk_to_dev(disk));
+ }
+ EXPORT_SYMBOL(del_gendisk);
 -- 
-Jens Axboe
+2.30.1
 
