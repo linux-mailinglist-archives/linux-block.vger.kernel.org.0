@@ -2,84 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5542F32BDC8
+	by mail.lfdr.de (Postfix) with ESMTP id C785932BDC9
 	for <lists+linux-block@lfdr.de>; Wed,  3 Mar 2021 23:30:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235204AbhCCQgQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Mar 2021 11:36:16 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:52844 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344172AbhCCC4f (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 2 Mar 2021 21:56:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0UQAbNuR_1614740007;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UQAbNuR_1614740007)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Mar 2021 10:53:27 +0800
-Subject: Re: [dm-devel] [PATCH 4/4] dm: support I/O polling
-To:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        Heinz Mauelshagen <heinzm@redhat.com>, axboe@kernel.dk,
-        caspar@linux.alibaba.com, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com,
-        dm-devel@redhat.com, hch@lst.de
-References: <20210302190555.201228400@debian-a64.vm>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <33fa121a-88a8-5c27-0a43-a7efc9b5b3e3@linux.alibaba.com>
-Date:   Wed, 3 Mar 2021 10:53:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.0
-MIME-Version: 1.0
-In-Reply-To: <20210302190555.201228400@debian-a64.vm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S238207AbhCCQgh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Mar 2021 11:36:37 -0500
+Received: from mail.synology.com ([211.23.38.101]:37154 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1351597AbhCCDXT (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 2 Mar 2021 22:23:19 -0500
+Received: from localhost.localdomain (unknown [10.17.210.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by synology.com (Postfix) with ESMTPSA id F1D19CE781B5;
+        Wed,  3 Mar 2021 11:22:37 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1614741758; bh=xgbf6WZCaD/FFIaA3Mp4FPHSkXy9rxV+ldX5NyY3vEA=;
+        h=From:To:Cc:Subject:Date;
+        b=NRkkX1SdcFPOTAJK1DDZbDb4N8NJ9nEPoLKHMNd+OxBA6DVJRsTrVXFnj+qssv2ZJ
+         UeGATxekQtR6iTZdty0Az+OeBXevMpDNx5/9zfCYXqY44z6TfcX/0tvp22v9NQu7T1
+         40hxIajkCGd1Q+dUewYACnzsaN20+zzl2TWMRckA=
+From:   edwardh <edwardh@synology.com>
+To:     axboe@kernel.dk, neilb@suse.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s3t@synology.com, bingjingc@synology.com, cccheng@synology.com,
+        Edward Hsieh <edwardh@synology.com>
+Subject: [PATCH v2] block: fix trace completion for chained bio
+Date:   Wed,  3 Mar 2021 11:22:06 +0800
+Message-Id: <1614741726-28074-1-git-send-email-edwardh@synology.com>
+X-Mailer: git-send-email 2.7.4
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Edward Hsieh <edwardh@synology.com>
 
+For chained bio, trace_block_bio_complete in bio_endio is currently called
+only by the parent bio once upon all chained bio completed.
+However, the sector and size for the parent bio are modified in bio_split.
+Therefore, the size and sector of the complete events might not match the
+queue events in blktrace.
 
-On 3/3/21 3:05 AM, Mikulas Patocka wrote:
+The original fix of bio completion trace <fbbaf700e7b1> ("block: trace
+completion of all bios.") wants multiple complete events to correspond
+to one queue event but missed this.
 
-> Support I/O polling if submit_bio_noacct_mq_direct returned non-empty
-> cookie.
-> 
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> 
-> ---
->  drivers/md/dm.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> Index: linux-2.6/drivers/md/dm.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm.c	2021-03-02 19:26:34.000000000 +0100
-> +++ linux-2.6/drivers/md/dm.c	2021-03-02 19:26:34.000000000 +0100
-> @@ -1682,6 +1682,11 @@ static void __split_and_process_bio(stru
->  		}
->  	}
->  
-> +	if (ci.poll_cookie != BLK_QC_T_NONE) {
-> +		while (atomic_read(&ci.io->io_count) > 1 &&
-> +		       blk_poll(ci.poll_queue, ci.poll_cookie, true)) ;
-> +	}
-> +
->  	/* drop the extra reference count */
->  	dec_pending(ci.io, errno_to_blk_status(error));
->  }
+md/raid5 read with bio cross chunks can reproduce this issue.
 
-It seems that the general idea of your design is to
-1) submit *one* split bio
-2) blk_poll(), waiting the previously submitted split bio complets
+To fix, move trace completion into the loop for every chained bio to call.
 
-and then submit next split bio, repeating the above process. I'm afraid
-the performance may be an issue here, since the batch every time
-blk_poll() reaps may decrease.
+Fixes: fbbaf700e7b1 ("block: trace completion of all bios.")
+Reviewed-by: Wade Liang <wadel@synology.com>
+Reviewed-by: BingJing Chang <bingjingc@synology.com>
+Signed-off-by: Edward Hsieh <edwardh@synology.com>
+---
+ block/bio.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-
-Besides, the submitting routine and polling routine is bound together
-here, i.e., polling is always synchronous.
-
+diff --git a/block/bio.c b/block/bio.c
+index a1c4d29..2ff72cb 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1397,8 +1397,7 @@ static inline bool bio_remaining_done(struct bio *bio)
+  *
+  *   bio_endio() can be called several times on a bio that has been chained
+  *   using bio_chain().  The ->bi_end_io() function will only be called the
+- *   last time.  At this point the BLK_TA_COMPLETE tracing event will be
+- *   generated if BIO_TRACE_COMPLETION is set.
++ *   last time.
+  **/
+ void bio_endio(struct bio *bio)
+ {
+@@ -1411,6 +1410,11 @@ void bio_endio(struct bio *bio)
+ 	if (bio->bi_bdev)
+ 		rq_qos_done_bio(bio->bi_bdev->bd_disk->queue, bio);
+ 
++	if (bio->bi_bdev && bio_flagged(bio, BIO_TRACE_COMPLETION)) {
++		trace_block_bio_complete(bio->bi_bdev->bd_disk->queue, bio);
++		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
++	}
++
+ 	/*
+ 	 * Need to have a real endio function for chained bios, otherwise
+ 	 * various corner cases will break (like stacking block devices that
+@@ -1424,11 +1428,6 @@ void bio_endio(struct bio *bio)
+ 		goto again;
+ 	}
+ 
+-	if (bio->bi_bdev && bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+-		trace_block_bio_complete(bio->bi_bdev->bd_disk->queue, bio);
+-		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
+-	}
+-
+ 	blk_throtl_bio_endio(bio);
+ 	/* release cgroup info */
+ 	bio_uninit(bio);
 -- 
-Thanks,
-Jeffle
+2.7.4
+
