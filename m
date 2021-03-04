@@ -2,33 +2,33 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D91B232D2D9
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 13:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53E4232D2E6
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 13:29:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240449AbhCDM05 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Mar 2021 07:26:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49158 "EHLO mx2.suse.de"
+        id S240578AbhCDM2f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Mar 2021 07:28:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50206 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240453AbhCDM0h (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 4 Mar 2021 07:26:37 -0500
+        id S240555AbhCDM2d (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 4 Mar 2021 07:28:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6D175AFB4;
-        Thu,  4 Mar 2021 12:25:56 +0000 (UTC)
-Subject: Re: [PATCH v8 02/16] blkcg: Added a app identifier support for blkcg
+        by mx2.suse.de (Postfix) with ESMTP id CA48CAE42;
+        Thu,  4 Mar 2021 12:27:51 +0000 (UTC)
+Subject: Re: [PATCH v8 03/16] nvme: Added a newsysfs attribute appid_store
 To:     Muneendra <muneendra.kumar@broadcom.com>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com
 References: <1614835646-16217-1-git-send-email-muneendra.kumar@broadcom.com>
- <1614835646-16217-3-git-send-email-muneendra.kumar@broadcom.com>
+ <1614835646-16217-4-git-send-email-muneendra.kumar@broadcom.com>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <21d35185-705f-4baa-0f43-f9d71103c7b7@suse.de>
-Date:   Thu, 4 Mar 2021 13:25:55 +0100
+Message-ID: <86e604e5-3dc9-4a6b-a34d-6a91cdfc5d0a@suse.de>
+Date:   Thu, 4 Mar 2021 13:27:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <1614835646-16217-3-git-send-email-muneendra.kumar@broadcom.com>
+In-Reply-To: <1614835646-16217-4-git-send-email-muneendra.kumar@broadcom.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -37,20 +37,21 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 3/4/21 6:27 AM, Muneendra wrote:
-> This Patch added a unique application identifier i.e
-> fc_app_id  member in blkcg which allows identification of traffic
-> sources at an individual cgroup based Applications
-> (ex:virtual machine (VM))level in both host and
-> fabric infrastructure.
+> Added a new sysfs attribute appid_store under
+> /sys/class/fc/fc_udev_device/*
 > 
-> Added a new function blkcg_get_fc_appid to
-> grab the app identifier associated with a bio.
+> With this new interface the user can set the application identfier
+> in  the blkcg associted with cgroup id.
 > 
-> Added a new function blkcg_set_fc_appid to
-> set the app identifier in a blkcgrp associated with cgroup id
+> Once the application identifer has set with this interface it allows
+> identification of traffic sources at an individual cgroup based
+> Applications (ex:virtual machine (VM))level in both host and
+> fabric infrastructure(FC).
 > 
-> Added a new config BLK_CGROUP_FC_APPID and moved the changes
-> under this config
+> Below is the interface provided to set the app_id
+> 
+> echo "<cgroupid>:<appid>" >> /sys/class/fc/fc_udev_device/appid_store
+> echo "457E:100000109b521d27" >> /sys/class/fc/fc_udev_device/appid_store
 > 
 > Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
 > 
@@ -59,39 +60,26 @@ On 3/4/21 6:27 AM, Muneendra wrote:
 > No change
 > 
 > v7:
-> Modified the Kconfig file
+> No change
 > 
 > v6:
-> Modified the Kconfig file as per standard specified
-> in Documentation/process/coding-style.rst
+> No change
 > 
 > v5:
-> Renamed the arguments appropriatley
-> Renamed APPID_LEN  to FC_APPID_LEN
-> Moved the input validation at the begining of the function
-> Modified the comments
+> Replaced APPID_LEN with FC_APPID_LEN
 > 
 > v4:
 > No change
 > 
 > v3:
-> Renamed the functions and app_id to more specific
-> 
-> Addressed the reference leaks in blkcg_set_app_identifier
-> 
-> Added a new config BLK_CGROUP_FC_APPID and moved the changes
-> under this config
-> 
-> Added blkcg_get_fc_appid,blkcg_set_fc_appid as inline functions
+> Replaced blkcg_set_app_identifier function with blkcg_set_fc_appid
 > 
 > v2:
-> renamed app_identifier to app_id
-> removed the  sysfs interface blkio.app_identifie under
+> New Patch
 > ---
->   block/Kconfig              |  9 ++++++
->   include/linux/blk-cgroup.h | 56 ++++++++++++++++++++++++++++++++++++++
->   2 files changed, 65 insertions(+)
->
+>   drivers/nvme/host/fc.c | 73 +++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 72 insertions(+), 1 deletion(-)
+> 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
