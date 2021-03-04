@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 522C532D8E8
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 18:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0B9D32D8F0
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 18:48:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239878AbhCDRq5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Mar 2021 12:46:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48650 "EHLO
+        id S236477AbhCDRr0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Mar 2021 12:47:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239612AbhCDRqg (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Mar 2021 12:46:36 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1A8C0613E6
-        for <linux-block@vger.kernel.org>; Thu,  4 Mar 2021 09:45:32 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id h7so1197274wmf.3
-        for <linux-block@vger.kernel.org>; Thu, 04 Mar 2021 09:45:32 -0800 (PST)
+        with ESMTP id S239909AbhCDRrA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Mar 2021 12:47:00 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168DCC0613E8
+        for <linux-block@vger.kernel.org>; Thu,  4 Mar 2021 09:45:34 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id m1so10510088wml.2
+        for <linux-block@vger.kernel.org>; Thu, 04 Mar 2021 09:45:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fqoAgrq4fJR4HLR5WghEXfCAYNkU/FugUfR5Q3syhNI=;
-        b=qlMH0cAiJPI42edwa7vSynVTvwlt7RzKWBRJnfYew+7ItSFTZGvO+GflZH1ioB75VE
-         7KwH/80xPrc6XmRzh+f9o1EuaBrM6O74hIx/arXEb6VSZTJuDVYKhc95T54asR64a5mx
-         KDZuxHPG9+0fobf971+p3EgR6WvX4G44xnZSTSWgLKu+3EwLbJWTyEzyk6MB8pK8txhR
-         S1cuFiOdYZX8UOfdssdUyHI/IxVhFdtmYvrDbELV/FRQZFvt6BiuQHuLTkCcpjH0iv8c
-         dHrvHnJKyp4gdkVHTkXa44MOzxze864WvQpo2+jdOciSJANxt6Hl+4jk40ZpX7O/SvJc
-         XQ4g==
+        bh=rUJYO+IGGMUmfH4jP8L8tpLpJtsLPrUa2la0FyD/fNk=;
+        b=w71kKpWQdhCsUkBUQjZcnm852YrBxPbDflL4e5eq8Z7eCNmiVdswPSnjDOQuYJmzfe
+         kHaVMjQUQn6NjJ0RB/ryZqAyNXV0a+JZFSTYzm3e+9g6l1L1F/gxYRCaSSqlzW1H4kkr
+         X8+ksVZS60DKqRCMLH+311IYTJrMwzrffNqMPtSl35Zfhca1/KiMID8sPGmC04TFkO+U
+         E999xkB4rpXkzYgXJAoHyX4iwSpxDScPA2PtSGNDFsGAb5X01tuF2WBqbkvwjp5RH3gs
+         QZmwWfjc5jD7ORbzIVR+Kn2AoXV6SuKYDsGKzgx+V8nCY2U+GMH0Hzl+y8bfTkI0XIjb
+         rEIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fqoAgrq4fJR4HLR5WghEXfCAYNkU/FugUfR5Q3syhNI=;
-        b=Qf0LZLinfH9uLTRWjLqDDx3DXsJ/5TXK3b0enoObcLGiaYspBRDSM6ZvpSJ0HTDfkb
-         z11oUIzUFUMwPDkt/KnI9xGFxnFB/TmD7UpPQz3bAg7pOp6JBHWDN4MbW1qU4kWxSieO
-         hvVR1kI2DvH6qrpKjlVoEJuAeLbe4EoPWDhDPWeU/HneM8VG4bZLdJL6cx3DxcB+Z6uU
-         1im1i8ylbHHUqCu7x/0DET2TAhJYsosLqFzAII29FLRH6SxfVWylSuWHcy/OGnlDfXNa
-         lgootNfJuog6a0eyFjxRjRQJ14Wvn+RtQ1tFK021p+Jchglskuj8snHdhljalOej9rwn
-         R7Vw==
-X-Gm-Message-State: AOAM533DxPP5VxSuu0A9Iz07D/hlTm1HJJ6VZhOnPsU5lHzg1QoJ5/Zh
-        wCIXFCSTZhok3Yetf+SIHbKn2Q==
-X-Google-Smtp-Source: ABdhPJzUjkxf4oTl38XpoTuIZ90ldSKeCXuYNmoMUkpEQWZP8didLAO2Ul56bAwAhDv2VYbyZkl84w==
-X-Received: by 2002:a1c:7407:: with SMTP id p7mr5107660wmc.51.1614879931659;
-        Thu, 04 Mar 2021 09:45:31 -0800 (PST)
+        bh=rUJYO+IGGMUmfH4jP8L8tpLpJtsLPrUa2la0FyD/fNk=;
+        b=aERu4U5+CF/zPCNOP5OkBNgFW5sFbtUXsUTJSvMp9nX1ccB8XYgJJlhbvpDPUmq2an
+         EoxjJQ77/6XEoJRmyj6a1637cPEZ/9j15QKfRnUDgoW8QQJLGxDJMdwWWs7weCK0Bj/z
+         NmXEpsGY4IwoZxXmqRP2dnXJTG/7NZ6MxmsP9PSJpGmTd78RARacEak/Wl6+VNGEQ46Z
+         KSU6mPK4gUjfNtGbHPM6x0kV7diuTw0Lhcg6GR42wzgarb6IF1gGGdE1PmP58jUR7gzs
+         CckJb7swN6xC8iA1tfl7W/ZGeq1sZdzqatbS2oRpbMubIjH0lPl3UgSaUIc3Wj0qFrXF
+         Hawg==
+X-Gm-Message-State: AOAM530P0sBowfasv7FTUvsnfpVenlZbDqUmiNHfJltC36g6s+OflKgG
+        hywiOQkAuPpmmpIl8mswgd4/eQ==
+X-Google-Smtp-Source: ABdhPJzKHnQ5n2U6++9t9B6tZNjfgHBzeETen39ABFLxdfoMORV+IlsoQF3VkuBXawComtjhQdL0jg==
+X-Received: by 2002:a1c:400b:: with SMTP id n11mr5021778wma.167.1614879933070;
+        Thu, 04 Mar 2021 09:45:33 -0800 (PST)
 Received: from localhost.localdomain ([83.216.184.132])
-        by smtp.gmail.com with ESMTPSA id a21sm271023wmb.5.2021.03.04.09.45.30
+        by smtp.gmail.com with ESMTPSA id a21sm271023wmb.5.2021.03.04.09.45.31
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Mar 2021 09:45:31 -0800 (PST)
+        Thu, 04 Mar 2021 09:45:32 -0800 (PST)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paolo Valente <paolo.valente@linaro.org>,
         Jan Kara <jack@suse.cz>
-Subject: [PATCH BUGFIX/IMPROVEMENT V2 5/6] block, bfq: keep shared queues out of the waker mechanism
-Date:   Thu,  4 Mar 2021 18:46:26 +0100
-Message-Id: <20210304174627.161-6-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX/IMPROVEMENT V2 6/6] block, bfq: merge bursts of newly-created queues
+Date:   Thu,  4 Mar 2021 18:46:27 +0100
+Message-Id: <20210304174627.161-7-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210304174627.161-1-paolo.valente@linaro.org>
 References: <20210304174627.161-1-paolo.valente@linaro.org>
@@ -64,42 +64,509 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Shared queues are likely to receive I/O at a high rate. This may
-deceptively let them be considered as wakers of other queues. But a
-false waker will unjustly steal bandwidth to its supposedly woken
-queue. So considering also shared queues in the waking mechanism may
-cause more control troubles than throughput benefits. This commit
-keeps shared queues out of the waker-detection mechanism.
+Many throughput-sensitive workloads are made of several parallel I/O
+flows, with all flows generated by the same application, or more
+generically by the same task (e.g., system boot). The most
+counterproductive action with these workloads is plugging I/O dispatch
+when one of the bfq_queues associated with these flows remains
+temporarily empty.
+
+To avoid this plugging, BFQ has been using a burst-handling mechanism
+for years now. This mechanism has proven effective for throughput, and
+not detrimental for service guarantees. This commit pushes this
+mechanism a little bit further, basing on the following two facts.
+
+First, all the I/O flows of a the same application or task contribute
+to the execution/completion of that common application or task. So the
+performance figures that matter are total throughput of the flows and
+task-wide I/O latency.  In particular, these flows do not need to be
+protected from each other, in terms of individual bandwidth or
+latency.
+
+Second, the above fact holds regardless of the number of flows.
+
+Putting these two facts together, this commits merges stably the
+bfq_queues associated with these I/O flows, i.e., with the processes
+that generate these IO/ flows, regardless of how many the involved
+processes are.
+
+To decide whether a set of bfq_queues is actually associated with the
+I/O flows of a common application or task, and to merge these queues
+stably, this commit operates as follows: given a bfq_queue, say Q2,
+currently being created, and the last bfq_queue, say Q1, created
+before Q2, Q2 is merged stably with Q1 if
+- very little time has elapsed since when Q1 was created
+- Q2 has the same ioprio as Q1
+- Q2 belongs to the same group as Q1
+
+Merging bfq_queues also reduces scheduling overhead. A fio test with
+ten random readers on /dev/nullb shows a throughput boost of 40%, with
+a quadcore. Since BFQ's execution time amounts to ~50% of the total
+per-request processing time, the above throughput boost implies that
+BFQ's overhead is reduced by more than 50%.
 
 Tested-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ block/bfq-cgroup.c  |   2 +
+ block/bfq-iosched.c | 259 ++++++++++++++++++++++++++++++++++++++++++--
+ block/bfq-iosched.h |  15 +++
+ 3 files changed, 266 insertions(+), 10 deletions(-)
 
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index b791e2041e49..e2f14508f2d6 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -547,6 +547,8 @@ static void bfq_pd_init(struct blkg_policy_data *pd)
+ 
+ 	entity->orig_weight = entity->weight = entity->new_weight = d->weight;
+ 	entity->my_sched_data = &bfqg->sched_data;
++	entity->last_bfqq_created = NULL;
++
+ 	bfqg->my_entity = entity; /*
+ 				   * the root_group's will be set to NULL
+ 				   * in bfq_init_queue()
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 8497d0803d74..c62dbbe9cc33 100644
+index c62dbbe9cc33..4ba89c55a856 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -5852,7 +5852,17 @@ static void bfq_completed_request(struct bfq_queue *bfqq, struct bfq_data *bfqd)
- 			1UL<<(BFQ_RATE_SHIFT - 10))
- 		bfq_update_rate_reset(bfqd, NULL);
- 	bfqd->last_completion = now_ns;
--	bfqd->last_completed_rq_bfqq = bfqq;
-+	/*
-+	 * Shared queues are likely to receive I/O at a high
-+	 * rate. This may deceptively let them be considered as wakers
-+	 * of other queues. But a false waker will unjustly steal
-+	 * bandwidth to its supposedly woken queue. So considering
-+	 * also shared queues in the waking mechanism may cause more
-+	 * control troubles than throughput benefits. Then do not set
-+	 * last_completed_rq_bfqq to bfqq if bfqq is a shared queue.
-+	 */
-+	if (!bfq_bfqq_coop(bfqq))
-+		bfqd->last_completed_rq_bfqq = bfqq;
+@@ -1073,7 +1073,7 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
+ static int bfqq_process_refs(struct bfq_queue *bfqq)
+ {
+ 	return bfqq->ref - bfqq->allocated - bfqq->entity.on_st_or_in_serv -
+-		(bfqq->weight_counter != NULL);
++		(bfqq->weight_counter != NULL) - bfqq->stable_ref;
+ }
  
+ /* Empty burst list and add just bfqq (see comments on bfq_handle_burst) */
+@@ -2625,6 +2625,11 @@ static bool bfq_may_be_close_cooperator(struct bfq_queue *bfqq,
+ 	return true;
+ }
+ 
++static bool idling_boosts_thr_without_issues(struct bfq_data *bfqd,
++					     struct bfq_queue *bfqq);
++
++static void bfq_put_stable_ref(struct bfq_queue *bfqq);
++
+ /*
+  * Attempt to schedule a merge of bfqq with the currently in-service
+  * queue or with a close queue among the scheduled queues.  Return
+@@ -2647,10 +2652,49 @@ static bool bfq_may_be_close_cooperator(struct bfq_queue *bfqq,
+  */
+ static struct bfq_queue *
+ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+-		     void *io_struct, bool request)
++		     void *io_struct, bool request, struct bfq_io_cq *bic)
+ {
+ 	struct bfq_queue *in_service_bfqq, *new_bfqq;
+ 
++	/*
++	 * Check delayed stable merge for rotational or non-queueing
++	 * devs. For this branch to be executed, bfqq must not be
++	 * currently merged with some other queue (i.e., bfqq->bic
++	 * must be non null). If we considered also merged queues,
++	 * then we should also check whether bfqq has already been
++	 * merged with bic->stable_merge_bfqq. But this would be
++	 * costly and complicated.
++	 */
++	if (unlikely(!bfqd->nonrot_with_queueing)) {
++		if (bic->stable_merge_bfqq &&
++		    !bfq_bfqq_just_created(bfqq) &&
++		    time_is_after_jiffies(bfqq->split_time +
++					  msecs_to_jiffies(200))) {
++			struct bfq_queue *stable_merge_bfqq =
++				bic->stable_merge_bfqq;
++			int proc_ref = min(bfqq_process_refs(bfqq),
++					   bfqq_process_refs(stable_merge_bfqq));
++
++			/* deschedule stable merge, because done or aborted here */
++			bfq_put_stable_ref(stable_merge_bfqq);
++
++			bic->stable_merge_bfqq = NULL;
++
++			if (!idling_boosts_thr_without_issues(bfqd, bfqq) &&
++			    proc_ref > 0) {
++				/* next function will take at least one ref */
++				struct bfq_queue *new_bfqq =
++					bfq_setup_merge(bfqq, stable_merge_bfqq);
++
++				bic->stably_merged = true;
++				if (new_bfqq && new_bfqq->bic)
++					new_bfqq->bic->stably_merged = true;
++				return new_bfqq;
++			} else
++				return NULL;
++		}
++	}
++
  	/*
- 	 * If we are waiting to discover whether the request pattern
+ 	 * Do not perform queue merging if the device is non
+ 	 * rotational and performs internal queueing. In fact, such a
+@@ -2792,6 +2836,17 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
+ 	}
+ }
+ 
++
++static void
++bfq_reassign_last_bfqq(struct bfq_queue *cur_bfqq, struct bfq_queue *new_bfqq)
++{
++	if (cur_bfqq->entity.parent &&
++	    cur_bfqq->entity.parent->last_bfqq_created == cur_bfqq)
++		cur_bfqq->entity.parent->last_bfqq_created = new_bfqq;
++	else if (cur_bfqq->bfqd && cur_bfqq->bfqd->last_bfqq_created == cur_bfqq)
++		cur_bfqq->bfqd->last_bfqq_created = new_bfqq;
++}
++
+ void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	/*
+@@ -2809,6 +2864,8 @@ void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 	    bfqq != bfqd->in_service_queue)
+ 		bfq_del_bfqq_busy(bfqd, bfqq, false);
+ 
++	bfq_reassign_last_bfqq(bfqq, NULL);
++
+ 	bfq_put_queue(bfqq);
+ }
+ 
+@@ -2905,6 +2962,9 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
+ 	 */
+ 	new_bfqq->pid = -1;
+ 	bfqq->bic = NULL;
++
++	bfq_reassign_last_bfqq(bfqq, new_bfqq);
++
+ 	bfq_release_process_ref(bfqd, bfqq);
+ }
+ 
+@@ -2932,7 +2992,7 @@ static bool bfq_allow_bio_merge(struct request_queue *q, struct request *rq,
+ 	 * We take advantage of this function to perform an early merge
+ 	 * of the queues of possible cooperating processes.
+ 	 */
+-	new_bfqq = bfq_setup_cooperator(bfqd, bfqq, bio, false);
++	new_bfqq = bfq_setup_cooperator(bfqd, bfqq, bio, false, bfqd->bio_bic);
+ 	if (new_bfqq) {
+ 		/*
+ 		 * bic still points to bfqq, then it has not yet been
+@@ -5033,6 +5093,12 @@ void bfq_put_queue(struct bfq_queue *bfqq)
+ 	bfqg_and_blkg_put(bfqg);
+ }
+ 
++static void bfq_put_stable_ref(struct bfq_queue *bfqq)
++{
++	bfqq->stable_ref--;
++	bfq_put_queue(bfqq);
++}
++
+ static void bfq_put_cooperator(struct bfq_queue *bfqq)
+ {
+ 	struct bfq_queue *__bfqq, *next;
+@@ -5089,6 +5155,24 @@ static void bfq_exit_icq(struct io_cq *icq)
+ {
+ 	struct bfq_io_cq *bic = icq_to_bic(icq);
+ 
++	if (bic->stable_merge_bfqq) {
++		struct bfq_data *bfqd = bic->stable_merge_bfqq->bfqd;
++
++		/*
++		 * bfqd is NULL if scheduler already exited, and in
++		 * that case this is the last time bfqq is accessed.
++		 */
++		if (bfqd) {
++			unsigned long flags;
++
++			spin_lock_irqsave(&bfqd->lock, flags);
++			bfq_put_stable_ref(bic->stable_merge_bfqq);
++			spin_unlock_irqrestore(&bfqd->lock, flags);
++		} else {
++			bfq_put_stable_ref(bic->stable_merge_bfqq);
++		}
++	}
++
+ 	bfq_exit_icq_bfqq(bic, true);
+ 	bfq_exit_icq_bfqq(bic, false);
+ }
+@@ -5149,7 +5233,8 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
+ 
+ static struct bfq_queue *bfq_get_queue(struct bfq_data *bfqd,
+ 				       struct bio *bio, bool is_sync,
+-				       struct bfq_io_cq *bic);
++				       struct bfq_io_cq *bic,
++				       bool respawn);
+ 
+ static void bfq_check_ioprio_change(struct bfq_io_cq *bic, struct bio *bio)
+ {
+@@ -5169,7 +5254,7 @@ static void bfq_check_ioprio_change(struct bfq_io_cq *bic, struct bio *bio)
+ 	bfqq = bic_to_bfqq(bic, false);
+ 	if (bfqq) {
+ 		bfq_release_process_ref(bfqd, bfqq);
+-		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic);
++		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic, true);
+ 		bic_set_bfqq(bic, bfqq, false);
+ 	}
+ 
+@@ -5212,6 +5297,8 @@ static void bfq_init_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 	/* set end request to minus infinity from now */
+ 	bfqq->ttime.last_end_request = now_ns + 1;
+ 
++	bfqq->creation_time = jiffies;
++
+ 	bfqq->io_start_time = now_ns;
+ 
+ 	bfq_mark_bfqq_IO_bound(bfqq);
+@@ -5261,9 +5348,156 @@ static struct bfq_queue **bfq_async_queue_prio(struct bfq_data *bfqd,
+ 	}
+ }
+ 
++static struct bfq_queue *
++bfq_do_early_stable_merge(struct bfq_data *bfqd, struct bfq_queue *bfqq,
++			  struct bfq_io_cq *bic,
++			  struct bfq_queue *last_bfqq_created)
++{
++	struct bfq_queue *new_bfqq =
++		bfq_setup_merge(bfqq, last_bfqq_created);
++
++	if (!new_bfqq)
++		return bfqq;
++
++	if (new_bfqq->bic)
++		new_bfqq->bic->stably_merged = true;
++	bic->stably_merged = true;
++
++	/*
++	 * Reusing merge functions. This implies that
++	 * bfqq->bic must be set too, for
++	 * bfq_merge_bfqqs to correctly save bfqq's
++	 * state before killing it.
++	 */
++	bfqq->bic = bic;
++	bfq_merge_bfqqs(bfqd, bic, bfqq, new_bfqq);
++
++	return new_bfqq;
++}
++
++/*
++ * Many throughput-sensitive workloads are made of several parallel
++ * I/O flows, with all flows generated by the same application, or
++ * more generically by the same task (e.g., system boot). The most
++ * counterproductive action with these workloads is plugging I/O
++ * dispatch when one of the bfq_queues associated with these flows
++ * remains temporarily empty.
++ *
++ * To avoid this plugging, BFQ has been using a burst-handling
++ * mechanism for years now. This mechanism has proven effective for
++ * throughput, and not detrimental for service guarantees. The
++ * following function pushes this mechanism a little bit further,
++ * basing on the following two facts.
++ *
++ * First, all the I/O flows of a the same application or task
++ * contribute to the execution/completion of that common application
++ * or task. So the performance figures that matter are total
++ * throughput of the flows and task-wide I/O latency.  In particular,
++ * these flows do not need to be protected from each other, in terms
++ * of individual bandwidth or latency.
++ *
++ * Second, the above fact holds regardless of the number of flows.
++ *
++ * Putting these two facts together, this commits merges stably the
++ * bfq_queues associated with these I/O flows, i.e., with the
++ * processes that generate these IO/ flows, regardless of how many the
++ * involved processes are.
++ *
++ * To decide whether a set of bfq_queues is actually associated with
++ * the I/O flows of a common application or task, and to merge these
++ * queues stably, this function operates as follows: given a bfq_queue,
++ * say Q2, currently being created, and the last bfq_queue, say Q1,
++ * created before Q2, Q2 is merged stably with Q1 if
++ * - very little time has elapsed since when Q1 was created
++ * - Q2 has the same ioprio as Q1
++ * - Q2 belongs to the same group as Q1
++ *
++ * Merging bfq_queues also reduces scheduling overhead. A fio test
++ * with ten random readers on /dev/nullb shows a throughput boost of
++ * 40%, with a quadcore. Since BFQ's execution time amounts to ~50% of
++ * the total per-request processing time, the above throughput boost
++ * implies that BFQ's overhead is reduced by more than 50%.
++ *
++ * This new mechanism most certainly obsoletes the current
++ * burst-handling heuristics. We keep those heuristics for the moment.
++ */
++static struct bfq_queue *bfq_do_or_sched_stable_merge(struct bfq_data *bfqd,
++						      struct bfq_queue *bfqq,
++						      struct bfq_io_cq *bic)
++{
++	struct bfq_queue **source_bfqq = bfqq->entity.parent ?
++		&bfqq->entity.parent->last_bfqq_created :
++		&bfqd->last_bfqq_created;
++
++	struct bfq_queue *last_bfqq_created = *source_bfqq;
++
++	/*
++	 * If last_bfqq_created has not been set yet, then init it. If
++	 * it has been set already, but too long ago, then move it
++	 * forward to bfqq. Finally, move also if bfqq belongs to a
++	 * different group than last_bfqq_created, or if bfqq has a
++	 * different ioprio or ioprio_class. If none of these
++	 * conditions holds true, then try an early stable merge or
++	 * schedule a delayed stable merge.
++	 *
++	 * A delayed merge is scheduled (instead of performing an
++	 * early merge), in case bfqq might soon prove to be more
++	 * throughput-beneficial if not merged. Currently this is
++	 * possible only if bfqd is rotational with no queueing. For
++	 * such a drive, not merging bfqq is better for throughput if
++	 * bfqq happens to contain sequential I/O. So, we wait a
++	 * little bit for enough I/O to flow through bfqq. After that,
++	 * if such an I/O is sequential, then the merge is
++	 * canceled. Otherwise the merge is finally performed.
++	 */
++	if (!last_bfqq_created ||
++	    time_before(last_bfqq_created->creation_time +
++			bfqd->bfq_burst_interval,
++			bfqq->creation_time) ||
++		bfqq->entity.parent != last_bfqq_created->entity.parent ||
++		bfqq->ioprio != last_bfqq_created->ioprio ||
++		bfqq->ioprio_class != last_bfqq_created->ioprio_class)
++		*source_bfqq = bfqq;
++	else if (time_after_eq(last_bfqq_created->creation_time +
++				 bfqd->bfq_burst_interval,
++				 bfqq->creation_time)) {
++		if (likely(bfqd->nonrot_with_queueing))
++			/*
++			 * With this type of drive, leaving
++			 * bfqq alone may provide no
++			 * throughput benefits compared with
++			 * merging bfqq. So merge bfqq now.
++			 */
++			bfqq = bfq_do_early_stable_merge(bfqd, bfqq,
++							 bic,
++							 last_bfqq_created);
++		else { /* schedule tentative stable merge */
++			/*
++			 * get reference on last_bfqq_created,
++			 * to prevent it from being freed,
++			 * until we decide whether to merge
++			 */
++			last_bfqq_created->ref++;
++			/*
++			 * need to keep track of stable refs, to
++			 * compute process refs correctly
++			 */
++			last_bfqq_created->stable_ref++;
++			/*
++			 * Record the bfqq to merge to.
++			 */
++			bic->stable_merge_bfqq = last_bfqq_created;
++		}
++	}
++
++	return bfqq;
++}
++
++
+ static struct bfq_queue *bfq_get_queue(struct bfq_data *bfqd,
+ 				       struct bio *bio, bool is_sync,
+-				       struct bfq_io_cq *bic)
++				       struct bfq_io_cq *bic,
++				       bool respawn)
+ {
+ 	const int ioprio = IOPRIO_PRIO_DATA(bic->ioprio);
+ 	const int ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
+@@ -5321,7 +5555,10 @@ static struct bfq_queue *bfq_get_queue(struct bfq_data *bfqd,
+ 
+ out:
+ 	bfqq->ref++; /* get a process reference to this queue */
+-	bfq_log_bfqq(bfqd, bfqq, "get_queue, at end: %p, %d", bfqq, bfqq->ref);
++
++	if (bfqq != &bfqd->oom_bfqq && is_sync && !respawn)
++		bfqq = bfq_do_or_sched_stable_merge(bfqd, bfqq, bic);
++
+ 	rcu_read_unlock();
+ 	return bfqq;
+ }
+@@ -5563,7 +5800,8 @@ static void bfq_rq_enqueued(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ static bool __bfq_insert_request(struct bfq_data *bfqd, struct request *rq)
+ {
+ 	struct bfq_queue *bfqq = RQ_BFQQ(rq),
+-		*new_bfqq = bfq_setup_cooperator(bfqd, bfqq, rq, true);
++		*new_bfqq = bfq_setup_cooperator(bfqd, bfqq, rq, true,
++						 RQ_BIC(rq));
+ 	bool waiting, idle_timer_disabled = false;
+ 
+ 	if (new_bfqq) {
+@@ -6220,7 +6458,7 @@ static struct bfq_queue *bfq_get_bfqq_handle_split(struct bfq_data *bfqd,
+ 
+ 	if (bfqq)
+ 		bfq_put_queue(bfqq);
+-	bfqq = bfq_get_queue(bfqd, bio, is_sync, bic);
++	bfqq = bfq_get_queue(bfqd, bio, is_sync, bic, split);
+ 
+ 	bic_set_bfqq(bic, bfqq, is_sync);
+ 	if (split && is_sync) {
+@@ -6341,7 +6579,8 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
+ 
+ 	if (likely(!new_queue)) {
+ 		/* If the queue was seeky for too long, break it apart. */
+-		if (bfq_bfqq_coop(bfqq) && bfq_bfqq_split_coop(bfqq)) {
++		if (bfq_bfqq_coop(bfqq) && bfq_bfqq_split_coop(bfqq) &&
++			!bic->stably_merged) {
+ 			struct bfq_queue *old_bfqq = bfqq;
+ 
+ 			/* Update bic before losing reference to bfqq */
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index b8e793c34ff1..99c2a3cb081e 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -197,6 +197,9 @@ struct bfq_entity {
+ 
+ 	/* flag, set if the entity is counted in groups_with_pending_reqs */
+ 	bool in_groups_with_pending_reqs;
++
++	/* last child queue of entity created (for non-leaf entities) */
++	struct bfq_queue *last_bfqq_created;
+ };
+ 
+ struct bfq_group;
+@@ -230,6 +233,8 @@ struct bfq_ttime {
+ struct bfq_queue {
+ 	/* reference counter */
+ 	int ref;
++	/* counter of references from other queues for delayed stable merge */
++	int stable_ref;
+ 	/* parent bfq_data */
+ 	struct bfq_data *bfqd;
+ 
+@@ -365,6 +370,8 @@ struct bfq_queue {
+ 
+ 	unsigned long first_IO_time; /* time of first I/O for this queue */
+ 
++	unsigned long creation_time; /* when this queue is created */
++
+ 	/* max service rate measured so far */
+ 	u32 max_service_rate;
+ 
+@@ -454,6 +461,11 @@ struct bfq_io_cq {
+ 	u64 saved_last_serv_time_ns;
+ 	unsigned int saved_inject_limit;
+ 	unsigned long saved_decrease_time_jif;
++
++	/* candidate queue for a stable merge (due to close creation time) */
++	struct bfq_queue *stable_merge_bfqq;
++
++	bool stably_merged;	/* non splittable if true */
+ };
+ 
+ /**
+@@ -578,6 +590,9 @@ struct bfq_data {
+ 	/* bfqq owning the last completed rq */
+ 	struct bfq_queue *last_completed_rq_bfqq;
+ 
++	/* last bfqq created, among those in the root group */
++	struct bfq_queue *last_bfqq_created;
++
+ 	/* time of last transition from empty to non-empty (ns) */
+ 	u64 last_empty_occupied_ns;
+ 
 -- 
 2.20.1
 
