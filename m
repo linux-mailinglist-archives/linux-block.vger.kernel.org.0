@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F70F32D2F8
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 13:31:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F40E532D2FC
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 13:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240623AbhCDM3i (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Mar 2021 07:29:38 -0500
-Received: from relay.smtp-ext.broadcom.com ([192.19.221.30]:40556 "EHLO
+        id S240628AbhCDM3j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Mar 2021 07:29:39 -0500
+Received: from relay.smtp-ext.broadcom.com ([192.19.221.30]:40552 "EHLO
         relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240624AbhCDM3F (ORCPT
+        by vger.kernel.org with ESMTP id S240617AbhCDM3F (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 4 Mar 2021 07:29:05 -0500
 Received: from localhost.localdomain (unknown [10.157.2.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id EA5CD22584;
-        Thu,  4 Mar 2021 04:19:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com EA5CD22584
+        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id 3C89322593;
+        Thu,  4 Mar 2021 04:19:59 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 3C89322593
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1614860397;
-        bh=4GuaDJPfm/7HhVsRNduegcN28qbXm59vhAMEhpSMEOQ=;
+        s=dkimrelay; t=1614860399;
+        bh=jaH1qwYRDWUByAoY/DHa5MS/4Ord3fdF/BNu2XWm1Zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBDXjUp+Qxv2cjVtiLRAvhAS3v6fRVw5dqZxbXoxg86xPP4zl53VRNfUz7UQDCCNn
-         0OMRZ7TJ8YE6dRdKpACd1gxbNwyPGpBsjEKZcMvqm6NBuyq3sAOYMLhHL1ld2nM3+j
-         0Z7MJuo4JEJmDuK3Ftj0CocrpJnfiMSBLwAuLuLA=
+        b=JyIKhAEIUAJ9UfibfGkLrEKUBVzdy7rYDgdgPjg31pIM7KvD8/WFVPS3qObb4h6v4
+         I4Gkzo8YPDT6auceWjAryMw5ERkm547hnhWIm7jZU3oKQk/n6d4jdLa6M2OvISLM7o
+         24BTTnG09JWauT9LEDr5wLU+5Ee85e2CXkKMUQsg=
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         Gaurav Srivastava <gaurav.srivastava@broadcom.com>
-Subject: [PATCH v8 04/16] lpfc: vmid: Add the datastructure for supporting VMID in lpfc
-Date:   Thu,  4 Mar 2021 10:57:14 +0530
-Message-Id: <1614835646-16217-5-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v8 08/16] lpfc: vmid: Add support for vmid in mailbox command, does vmid resource allocation and vmid cleanup
+Date:   Thu,  4 Mar 2021 10:57:18 +0530
+Message-Id: <1614835646-16217-9-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1614835646-16217-1-git-send-email-muneendra.kumar@broadcom.com>
 References: <1614835646-16217-1-git-send-email-muneendra.kumar@broadcom.com>
@@ -42,25 +42,30 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 
-This patch adds the primary datastructures needed to implement VMID in lpfc
-driver. It maintains the capability, current state, hash table for the
-vmid/appid along with other information.
+This patch does the following -
+1.adds supporting datastructures for mailbox command which helps in
+determining if the firmware supports appid or not.
+2.This patch allocates the resource for vmid and checks if the firmware
+supports the feature or not.
+3.The patch cleans up the vmid resources and stops the timer.
 
 Signed-off-by: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 
 ---
 v8:
-modify structure member to uniform data type naming scheme
+Added new function declaration, return error code and
+memory allocation API changes
 
 v7:
 No change
 
 v6:
-No change
+Added Forward declarations and functions to static
 
 v5:
-No Change
+Merged patches 8 and 11 of v4 to this patch
+Changed Return code to non-numeric/Symbol
 
 v4:
 No change
@@ -70,157 +75,232 @@ No change
 
 v2:
 Ported the patch on top of 5.10/scsi-queue
-Removed unused variable.
 ---
- drivers/scsi/lpfc/lpfc.h | 97 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ drivers/scsi/lpfc/lpfc_hw4.h  | 12 +++++++
+ drivers/scsi/lpfc/lpfc_init.c | 66 +++++++++++++++++++++++++++++++++++
+ drivers/scsi/lpfc/lpfc_mbox.c |  6 ++++
+ drivers/scsi/lpfc/lpfc_scsi.c | 21 +++++++++++
+ drivers/scsi/lpfc/lpfc_sli.c  |  9 +++++
+ 5 files changed, 114 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 6ba5fa08c47a..dccebe3aae68 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -303,6 +303,63 @@ struct lpfc_stats {
- struct lpfc_hba;
+diff --git a/drivers/scsi/lpfc/lpfc_hw4.h b/drivers/scsi/lpfc/lpfc_hw4.h
+index 541b9aef6bfe..5fdafc92fc2d 100644
+--- a/drivers/scsi/lpfc/lpfc_hw4.h
++++ b/drivers/scsi/lpfc/lpfc_hw4.h
+@@ -272,6 +272,9 @@ struct lpfc_sli4_flags {
+ #define lpfc_vfi_rsrc_rdy_MASK		0x00000001
+ #define lpfc_vfi_rsrc_rdy_WORD		word0
+ #define LPFC_VFI_RSRC_RDY		1
++#define lpfc_ftr_ashdr_SHIFT            4
++#define lpfc_ftr_ashdr_MASK             0x00000001
++#define lpfc_ftr_ashdr_WORD             word0
+ };
  
+ struct sli4_bls_rsp {
+@@ -2943,6 +2946,9 @@ struct lpfc_mbx_request_features {
+ #define lpfc_mbx_rq_ftr_rq_mrqp_SHIFT		16
+ #define lpfc_mbx_rq_ftr_rq_mrqp_MASK		0x00000001
+ #define lpfc_mbx_rq_ftr_rq_mrqp_WORD		word2
++#define lpfc_mbx_rq_ftr_rq_ashdr_SHIFT          17
++#define lpfc_mbx_rq_ftr_rq_ashdr_MASK           0x00000001
++#define lpfc_mbx_rq_ftr_rq_ashdr_WORD           word2
+ 	uint32_t word3;
+ #define lpfc_mbx_rq_ftr_rsp_iaab_SHIFT		0
+ #define lpfc_mbx_rq_ftr_rsp_iaab_MASK		0x00000001
+@@ -2974,6 +2980,9 @@ struct lpfc_mbx_request_features {
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_SHIFT		16
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_MASK		0x00000001
+ #define lpfc_mbx_rq_ftr_rsp_mrqp_WORD		word3
++#define lpfc_mbx_rq_ftr_rsp_ashdr_SHIFT         17
++#define lpfc_mbx_rq_ftr_rsp_ashdr_MASK          0x00000001
++#define lpfc_mbx_rq_ftr_rsp_ashdr_WORD          word3
+ };
  
-+#define LPFC_VMID_TIMER   300	/* timer interval in seconds. */
-+
-+#define LPFC_MAX_VMID_SIZE      256
-+#define LPFC_COMPRESS_VMID_SIZE 16
-+
-+union lpfc_vmid_io_tag {
-+	u32 app_id;	/* App Id vmid */
-+	u8 cs_ctl_vmid;	/* Priority tag vmid */
-+};
-+
-+#define JIFFIES_PER_HR	(HZ * 60 * 60)
-+
-+struct lpfc_vmid {
-+	u8 flag;
-+#define LPFC_VMID_SLOT_FREE     0x0
-+#define LPFC_VMID_SLOT_USED     0x1
-+#define LPFC_VMID_REQ_REGISTER  0x2
-+#define LPFC_VMID_REGISTERED    0x4
-+#define LPFC_VMID_DE_REGISTER   0x8
-+	char host_vmid[LPFC_MAX_VMID_SIZE];
-+	union lpfc_vmid_io_tag un;
-+	u64 io_rd_cnt;
-+	u64 io_wr_cnt;
-+	u8 vmid_len;
-+	u8 delete_inactive; /* Delete if inactive flag 0 = no, 1 = yes */
-+	u32 hash_index;
-+	u64 __percpu *last_io_time;
-+};
-+
-+#define lpfc_vmid_is_type_priority_tag(vport)\
-+	(vport->vmid_priority_tagging ? 1 : 0)
-+
-+#define LPFC_VMID_HASH_SIZE     256
-+#define LPFC_VMID_HASH_MASK     255
-+#define LPFC_VMID_HASH_SHIFT    6
-+
-+struct lpfc_vmid_context {
-+	struct lpfc_vmid *vmp;
-+	struct lpfc_nodelist *nlp;
-+	u8 instantiated;
-+};
-+
-+struct lpfc_vmid_priority_range {
-+	u8 low;
-+	u8 high;
-+	u8 qos;
-+};
-+
-+struct lpfc_vmid_priority_info {
-+	u32 num_descriptors;
-+	struct lpfc_vmid_priority_range *vmid_range;
-+};
-+
-+#define QFPA_EVEN_ONLY 0x01
-+#define QFPA_ODD_ONLY  0x02
-+#define QFPA_EVEN_ODD  0x03
-+
- enum discovery_state {
- 	LPFC_VPORT_UNKNOWN     =  0,    /* vport state is unknown */
- 	LPFC_VPORT_FAILED      =  1,    /* vport has failed */
-@@ -442,6 +499,9 @@ struct lpfc_vport {
- #define WORKER_RAMP_DOWN_QUEUE         0x800	/* hba: Decrease Q depth */
- #define WORKER_RAMP_UP_QUEUE           0x1000	/* hba: Increase Q depth */
- #define WORKER_SERVICE_TXQ             0x2000	/* hba: IOCBs on the txq */
-+#define WORKER_CHECK_INACTIVE_VMID     0x4000	/* hba: check inactive vmids */
-+#define WORKER_CHECK_VMID_ISSUE_QFPA   0x8000	/* vport: Check if qfpa need */
-+						/* to issue */
+ struct lpfc_mbx_supp_pages {
+@@ -4391,6 +4400,9 @@ struct wqe_common {
+ #define wqe_xchg_WORD         word10
+ #define LPFC_SCSI_XCHG	      0x0
+ #define LPFC_NVME_XCHG	      0x1
++#define wqe_appid_SHIFT       5
++#define wqe_appid_MASK        0x00000001
++#define wqe_appid_WORD        word10
+ #define wqe_oas_SHIFT         6
+ #define wqe_oas_MASK          0x00000001
+ #define wqe_oas_WORD          word10
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 71f340dd4fbd..78934724aaad 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -98,6 +98,7 @@ static struct scsi_transport_template *lpfc_transport_template = NULL;
+ static struct scsi_transport_template *lpfc_vport_transport_template = NULL;
+ static DEFINE_IDR(lpfc_hba_index);
+ #define LPFC_NVMET_BUF_POST 254
++static int lpfc_vmid_res_alloc(struct lpfc_hba *phba, struct lpfc_vport *vport);
  
- 	struct timer_list els_tmofunc;
- 	struct timer_list delayed_disc_tmo;
-@@ -452,6 +512,8 @@ struct lpfc_vport {
- #define FC_LOADING		0x1	/* HBA in process of loading drvr */
- #define FC_UNLOADING		0x2	/* HBA in process of unloading drvr */
- #define FC_ALLOW_FDMI		0x4	/* port is ready for FDMI requests */
-+#define FC_ALLOW_VMID		0x8	/* Allow VMID IO's */
-+#define FC_DEREGISTER_ALL_APP_ID	0x10	/* Deregister all vmid's */
- 	/* Vport Config Parameters */
- 	uint32_t cfg_scan_down;
- 	uint32_t cfg_lun_queue_depth;
-@@ -470,9 +532,36 @@ struct lpfc_vport {
- 	uint32_t cfg_tgt_queue_depth;
- 	uint32_t cfg_first_burst_size;
- 	uint32_t dev_loss_tmo_changed;
-+	/* VMID parameters */
-+	u8 lpfc_vmid_host_uuid[LPFC_COMPRESS_VMID_SIZE];
-+	u32 max_vmid;	/* maximum VMIDs allowed per port */
-+	u32 cur_vmid_cnt;	/* Current VMID count */
-+#define LPFC_MIN_VMID	4
-+#define LPFC_MAX_VMID	255
-+	u32 vmid_inactivity_timeout;	/* Time after which the VMID */
-+						/* deregisters from switch */
-+	u32 vmid_priority_tagging;
-+#define LPFC_VMID_PRIO_TAG_DISABLE	0 /* Disable */
-+#define LPFC_VMID_PRIO_TAG_SUP_TARGETS	1 /* Allow supported targets only */
-+#define LPFC_VMID_PRIO_TAG_ALL_TARGETS	2 /* Allow all targets */
-+	unsigned long *vmid_priority_range;
-+#define LPFC_VMID_MAX_PRIORITY_RANGE    256
-+#define LPFC_VMID_PRIORITY_BITMAP_SIZE  32
-+	u8 vmid_flag;
-+#define LPFC_VMID_IN_USE		0x1
-+#define LPFC_VMID_ISSUE_QFPA		0x2
-+#define LPFC_VMID_QFPA_CMPL		0x4
-+#define LPFC_VMID_QOS_ENABLED		0x8
-+#define LPFC_VMID_TIMER_ENBLD		0x10
-+	struct fc_qfpa_res *qfpa_res;
+ /**
+  * lpfc_config_port_prep - Perform lpfc initialization prior to config port
+@@ -2888,6 +2889,10 @@ lpfc_cleanup(struct lpfc_vport *vport)
+ 	if (phba->link_state > LPFC_LINK_DOWN)
+ 		lpfc_port_link_failure(vport);
  
- 	struct fc_vport *fc_vport;
- 
-+	struct lpfc_vmid *vmid;
-+	struct lpfc_vmid *hash_table[LPFC_VMID_HASH_SIZE];
-+	rwlock_t vmid_lock;
-+	struct lpfc_vmid_priority_info vmid_priority;
++	/* cleanup vmid resources */
++	if (lpfc_is_vmid_enabled(phba))
++		lpfc_vmid_vport_cleanup(vport);
 +
- #ifdef CONFIG_SCSI_LPFC_DEBUG_FS
- 	struct dentry *debug_disc_trc;
- 	struct dentry *debug_nodelist;
-@@ -937,6 +1026,13 @@ struct lpfc_hba {
- 	struct nvmet_fc_target_port *targetport;
- 	lpfc_vpd_t vpd;		/* vital product data */
+ 	list_for_each_entry_safe(ndlp, next_ndlp, &vport->fc_nodes, nlp_listp) {
+ 		if (vport->port_type != LPFC_PHYSICAL_PORT &&
+ 		    ndlp->nlp_DID == Fabric_DID) {
+@@ -4318,6 +4323,59 @@ lpfc_get_wwpn(struct lpfc_hba *phba)
+ 		return rol64(wwn, 32);
+ }
  
-+	u32 cfg_max_vmid;	/* maximum VMIDs allowed per port */
-+	u32 cfg_vmid_app_header;
-+#define LPFC_VMID_APP_HEADER_DISABLE	0
-+#define LPFC_VMID_APP_HEADER_ENABLE	1
-+	u32 cfg_vmid_priority_tagging;
-+	u32 cfg_vmid_inactivity_timeout;	/* Time after which the VMID */
-+						/*  deregisters from switch */
- 	struct pci_dev *pcidev;
- 	struct list_head      work_list;
- 	uint32_t              work_ha;      /* Host Attention Bits for WT */
-@@ -1177,6 +1273,7 @@ struct lpfc_hba {
- 	struct list_head ct_ev_waiters;
- 	struct unsol_rcv_ct_ctx ct_ctx[LPFC_CT_CTX_MAX];
- 	uint32_t ctx_idx;
-+	struct timer_list inactive_vmid_poll;
++/**
++ * lpfc_vmid_res_alloc - Allocates resources for VMID
++ * @phba: pointer to lpfc hba data structure.
++ * @vport: pointer to vport data structure
++ *
++ * This routine allocated the resources needed for the vmid.
++ *
++ * Return codes
++ *	0 on Succeess
++ *	Non-0 on Failure
++ */
++static int
++lpfc_vmid_res_alloc(struct lpfc_hba *phba, struct lpfc_vport *vport)
++{
++	u16 i;
++
++	/* vmid feature is supported only on SLI4 */
++	if (phba->sli_rev == LPFC_SLI_REV3) {
++		phba->cfg_vmid_app_header = 0;
++		phba->cfg_vmid_priority_tagging = 0;
++	}
++
++	/* if enabled, then allocated the resources */
++	if (lpfc_is_vmid_enabled(phba)) {
++		vport->vmid =
++		    kcalloc(phba->cfg_max_vmid, sizeof(struct lpfc_vmid),
++			    GFP_KERNEL);
++		if (!vport->vmid)
++			return -ENOMEM;
++
++		rwlock_init(&vport->vmid_lock);
++
++		/* setting the VMID parameters for the vport */
++		vport->vmid_priority_tagging = phba->cfg_vmid_priority_tagging;
++		vport->vmid_inactivity_timeout =
++		    phba->cfg_vmid_inactivity_timeout;
++		vport->max_vmid = phba->cfg_max_vmid;
++		vport->cur_vmid_cnt = 0;
++
++		for (i = 0; i < LPFC_VMID_HASH_SIZE; i++)
++			vport->hash_table[i] = NULL;
++
++		vport->vmid_priority_range = bitmap_zalloc
++			(LPFC_VMID_MAX_PRIORITY_RANGE, GFP_KERNEL);
++
++		if (!vport->vmid_priority_range) {
++			kfree(vport->vmid);
++			return -ENOMEM;
++		}
++	}
++	return 0;
++}
++
+ /**
+  * lpfc_create_port - Create an FC port
+  * @phba: pointer to lpfc hba data structure.
+@@ -4470,6 +4528,12 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
+ 			vport->port_type, shost->sg_tablesize,
+ 			phba->cfg_scsi_seg_cnt, phba->cfg_sg_seg_cnt);
  
- 	/* RAS Support */
- 	struct lpfc_ras_fwlog ras_fwlog;
++	/* allocate the resources for vmid */
++	rc = lpfc_vmid_res_alloc(phba, vport);
++
++	if (rc)
++		goto out;
++
+ 	/* Initialize all internally managed lists. */
+ 	INIT_LIST_HEAD(&vport->fc_nodes);
+ 	INIT_LIST_HEAD(&vport->rcv_buffer_list);
+@@ -4494,6 +4558,8 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
+ 	return vport;
+ 
+ out_put_shost:
++	kfree(vport->vmid);
++	bitmap_free(vport->vmid_priority_range);
+ 	scsi_host_put(shost);
+ out:
+ 	return NULL;
+diff --git a/drivers/scsi/lpfc/lpfc_mbox.c b/drivers/scsi/lpfc/lpfc_mbox.c
+index c03a7f12dd65..7a15986ed586 100644
+--- a/drivers/scsi/lpfc/lpfc_mbox.c
++++ b/drivers/scsi/lpfc/lpfc_mbox.c
+@@ -2100,6 +2100,12 @@ lpfc_request_features(struct lpfc_hba *phba, struct lpfcMboxq *mboxq)
+ 		bf_set(lpfc_mbx_rq_ftr_rq_iaab, &mboxq->u.mqe.un.req_ftrs, 0);
+ 		bf_set(lpfc_mbx_rq_ftr_rq_iaar, &mboxq->u.mqe.un.req_ftrs, 0);
+ 	}
++
++	/* Enable Application Services Header for apphedr VMID */
++	if (phba->cfg_vmid_app_header) {
++		bf_set(lpfc_mbx_rq_ftr_rq_ashdr, &mboxq->u.mqe.un.req_ftrs, 1);
++		bf_set(lpfc_ftr_ashdr, &phba->sli4_hba.sli4_flags, 1);
++	}
+ 	return;
+ }
+ 
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index a4d697373c71..e96e767faa2a 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -5370,6 +5370,27 @@ lpfc_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *cmnd)
+ 	return 0;
+ }
+ 
++/*
++ * lpfc_vmid_vport_cleanup - cleans up the resources associated with a vports
++ * @vport: The virtual port for which this call is being executed.
++ */
++void lpfc_vmid_vport_cleanup(struct lpfc_vport *vport)
++{
++	/* delete the timer */
++	if (vport->port_type == LPFC_PHYSICAL_PORT)
++		del_timer_sync(&vport->phba->inactive_vmid_poll);
++
++	/* free the resources */
++	kfree(vport->qfpa_res);
++	kfree(vport->vmid_priority.vmid_range);
++	kfree(vport->vmid);
++
++	/* reset variables */
++	vport->qfpa_res = NULL;
++	vport->vmid_priority.vmid_range = NULL;
++	vport->vmid = NULL;
++	vport->cur_vmid_cnt = 0;
++}
+ 
+ /**
+  * lpfc_abort_handler - scsi_host_template eh_abort_handler entry point
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index fa1a714a78f0..b20fa5d4bd80 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -7701,6 +7701,15 @@ lpfc_sli4_hba_setup(struct lpfc_hba *phba)
+ 		goto out_free_mbox;
+ 	}
+ 
++	/* Disable vmid if app header is not supported */
++	if (phba->cfg_vmid_app_header && !(bf_get(lpfc_mbx_rq_ftr_rsp_ashdr,
++						  &mqe->un.req_ftrs))) {
++		bf_set(lpfc_ftr_ashdr, &phba->sli4_hba.sli4_flags, 0);
++		phba->cfg_vmid_app_header = 0;
++		lpfc_printf_log(phba, KERN_DEBUG, LOG_SLI,
++				"1242 vmid feature not supported\n");
++	}
++
+ 	/*
+ 	 * The port must support FCP initiator mode as this is the
+ 	 * only mode running in the host.
 -- 
 2.26.2
 
