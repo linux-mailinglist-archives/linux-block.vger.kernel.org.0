@@ -2,105 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A5C32C886
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 02:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2337532C889
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 02:15:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235354AbhCDAuz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Mar 2021 19:50:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39946 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1359034AbhCCRbY (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 3 Mar 2021 12:31:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1614792635; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=egCST0Rney7JPu2RYQem6LVUwo8s+4euh2SRmmo9eVM=;
-        b=cAXBQI+qNeBUJXGyjZkZPTVerspuX5S3hVS/whxo5bEk4HcJAyN3wgJbnpW2dLUDu9LQgj
-        ISRy6RYv/DgPHpi0wjC0ar/wLUuaJQLi9uCi54CyrTigVAnG+lCsZjiBOUSt671jzp+tAc
-        HpERgrxQ6YoHMoNSW9xQWtPPOchiFFM=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6A546AC24;
-        Wed,  3 Mar 2021 17:30:35 +0000 (UTC)
-Message-ID: <66a9b7ff4958ab990f58a3dad8152d00c59775ce.camel@suse.com>
-Subject: Re: [PATCH] block: Suppress uevent for hidden device when removed
-From:   Martin Wilck <mwilck@suse.com>
-To:     Daniel Wagner <dwagner@suse.de>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>
-Date:   Wed, 03 Mar 2021 18:30:34 +0100
-In-Reply-To: <20210303171201.8432-1-dwagner@suse.de>
-References: <20210303171201.8432-1-dwagner@suse.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.38.2 
+        id S240632AbhCDAu6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Mar 2021 19:50:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1451822AbhCDAiL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Mar 2021 19:38:11 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335A0C0613E5
+        for <linux-block@vger.kernel.org>; Wed,  3 Mar 2021 16:37:29 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id j12so17528382pfj.12
+        for <linux-block@vger.kernel.org>; Wed, 03 Mar 2021 16:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=3lw4xYsAYM4nNGD3pp839+oyNk5fzKw4o00Jp0gKL3g=;
+        b=fpTUmdMLr9O0F3dsWilaKpMfgoq51uCqsvKsJZL/QxMWTCXyFfF34vl4kbMMfNAPay
+         CAK/rd0DY8O6YBcqgoimMZcx9A06F/X5y+B7OydM2XSJ0FW1qwxtnQKZwY9GA0atFQkQ
+         X21r9I/Oap8fzbiQyC8VMhExGriRMRSUQNQ/G3LznS2id04Kjn5XqKoReIrFIUgDhgb+
+         haiM4reKn8wRRAVGiIzIUOsjsPM1nytLzQETrsW6xZPQZG81TaLXeRqAlTsyolJJ8x0m
+         ceZQKnrpf+9bgpqqGgg1IoqjJm+W/BH73Mggqtr69H2LwlHh6YL8Un4PCqiH9SxYaa31
+         jD5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3lw4xYsAYM4nNGD3pp839+oyNk5fzKw4o00Jp0gKL3g=;
+        b=gpkb49m5TUIiz9UILIkBBXy6Lp6N+XKZO6xHmLBerK9yiN8+GbtC8LE+kpIlXYJ5zG
+         P2DEC44X3U1YQUaBClvTQQ0LA6F9R1wzPbRGPhPikb7uUIjep4bQS6Z1976Bg/iyBFuP
+         PpWvwPmNpVXOg8a65os5+Gvx7/AsI2xRTdKSP3Ym5rRXs7w4JkV/jf8Lit4Lh68R2B1k
+         v0d+xEi8zf31WnINmImz6KHHWt9HBZZv6L8nmL7NRw+yjr5rLSOV9Sb9M6YT16SytulF
+         uQ0tHm9wzagXpEbDhDIRkyUA87mgQ5Hm7gkh1KRElaqWd7y+gTOD9MykcoR3/BwkMtB9
+         sHeQ==
+X-Gm-Message-State: AOAM530jgqc8aVMIZc19UCSGdk6Ca9AyUVd4eDYPFfsdLmt+73WyKeqd
+        1MemL7UMvkrnbRaNgW3kNRa5Sg==
+X-Google-Smtp-Source: ABdhPJwMGv3OcuecvAWs+zF2L0Hj4jwyck66kQjBzy0EQ4mvd/le2HXi8XyCGl94ffMOcSh1fbFt7Q==
+X-Received: by 2002:a63:4442:: with SMTP id t2mr1309496pgk.23.1614818248751;
+        Wed, 03 Mar 2021 16:37:28 -0800 (PST)
+Received: from ?IPv6:2600:380:7540:52b5:3f01:150c:3b2:bf47? ([2600:380:7540:52b5:3f01:150c:3b2:bf47])
+        by smtp.gmail.com with ESMTPSA id e10sm8019732pgd.63.2021.03.03.16.37.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Mar 2021 16:37:28 -0800 (PST)
+Subject: Re: [PATCH 1/4] block: introduce a function
+ submit_bio_noacct_mq_direct
+To:     Mikulas Patocka <mpatocka@redhat.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        Heinz Mauelshagen <heinzm@redhat.com>,
+        caspar@linux.alibaba.com, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com,
+        dm-devel@redhat.com, hch@lst.de
+References: <20210302190551.473015400@debian-a64.vm>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8424036e-fba9-227e-4173-8f6d05562ee3@kernel.dk>
+Date:   Wed, 3 Mar 2021 17:37:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210302190551.473015400@debian-a64.vm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 2021-03-03 at 18:12 +0100, Daniel Wagner wrote:
-> register_disk() suppress uevents for devices with the GENHD_FL_HIDDEN
-> but enables uevents at the end again in order to announce disk after
-> possible partitions are created.
-> 
-> When the device is removed the uevents are still on and user land
-> sees
-> 'remove' messages for devices which were never 'add'ed to the system.
-> 
->   KERNEL[95481.571887] remove   /devices/virtual/nvme-
-> fabrics/ctl/nvme5/nvme0c5n1 (block)
-> 
-> Let's suppress the uevents for GENHD_FL_HIDDEN again before calling
-> device_del() which will write trigger uevents.
-> 
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->  block/genhd.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/block/genhd.c b/block/genhd.c
-> index c55e8f0fced1..ab9ed355bdef 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -731,6 +731,9 @@ void del_gendisk(struct gendisk *disk)
->         if (!sysfs_deprecated)
->                 sysfs_remove_link(block_depr,
-> dev_name(disk_to_dev(disk)));
->         pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
-> +
-> +       if (disk->flags & GENHD_FL_HIDDEN)
-> +               dev_set_uevent_suppress(disk_to_dev(disk), 1);
->         device_del(disk_to_dev(disk));
->  }
->  EXPORT_SYMBOL(del_gendisk);
+On 3/2/21 12:05 PM, Mikulas Patocka wrote:
 
-I wonder if it wouldn't be wiser to remove this code
+There seems to be something wrong with how this series is being sent
+out. I have 1/4 and 3/4, but both are just attachments.
 
-        if (disk->flags & GENHD_FL_HIDDEN) {
-                dev_set_uevent_suppress(ddev, 0);
-                return;
-        }
-
-from register_disk(). The way you did it now, we would receive neither
-"add" nor "remove" events in user space, but there might be change
-events in between ?
-
-This said, I'd like to raise the question whether it was the right
-decision to suppress these uevents in the first place. 8ddcd653257c
-("block: introduce GENHD_FL_HIDDEN") simply stated that they aren't
-registered as usable block devices. Maybe the kernel should leave the
-decision whether or not they are interesting to user space itself?
-
-For example, I've written an extension for multipath-tools some time
-ago which displays the topology of NVMe native multipath devices, and
-uses sysfs data from the hidden NVMe private namespaces for that
-purpose. Not receiving  uevents for them makes it practically
-impossible to track the status of these devices.
-
-Regards,
-Martin
-
+-- 
+Jens Axboe
 
