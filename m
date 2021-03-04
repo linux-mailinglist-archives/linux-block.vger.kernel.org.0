@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88D9932D8E6
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 18:48:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 522C532D8E8
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 18:48:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239468AbhCDRq5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S239878AbhCDRq5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 4 Mar 2021 12:46:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239624AbhCDRqg (ORCPT
+        with ESMTP id S239612AbhCDRqg (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 4 Mar 2021 12:46:36 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEE2C0613E5
-        for <linux-block@vger.kernel.org>; Thu,  4 Mar 2021 09:45:31 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id m7so2177339wmq.0
-        for <linux-block@vger.kernel.org>; Thu, 04 Mar 2021 09:45:31 -0800 (PST)
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1A8C0613E6
+        for <linux-block@vger.kernel.org>; Thu,  4 Mar 2021 09:45:32 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id h7so1197274wmf.3
+        for <linux-block@vger.kernel.org>; Thu, 04 Mar 2021 09:45:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZifMIAy4GGWpMtKfD5bvrDinqLUVzewXwC0UEUTmlwY=;
-        b=PjYZ1GpCiBD4K0H0z8sr3//ABAf+ulr3tGusEeh/C3izrUkvaloOjyfQ51rrogquga
-         oec8/6rWVQytHyJkUvjAGG19+tBG0Ad06w/eHjy27k0uAgQz1EImxVuoHri2/H5eIMmD
-         pxA3q41/6l3VlgRlHp8grI2tIX68AVyokEPXVmjsb0SSunZwNdCT0WUGxqpufHvZTyFt
-         alRqne7tAZ/ZNOKDrGRYslmEXLDGiwreqLy7nuInIBl9F2+3+K/GkGU/zZJwGlehre+y
-         Kqa+vQaSnmxtfUJt+bVk3SOV8T4WOfLZAaROCswwZkOx4pMHBd/KiInH3c8ITBjsUuqc
-         c9EA==
+        bh=fqoAgrq4fJR4HLR5WghEXfCAYNkU/FugUfR5Q3syhNI=;
+        b=qlMH0cAiJPI42edwa7vSynVTvwlt7RzKWBRJnfYew+7ItSFTZGvO+GflZH1ioB75VE
+         7KwH/80xPrc6XmRzh+f9o1EuaBrM6O74hIx/arXEb6VSZTJuDVYKhc95T54asR64a5mx
+         KDZuxHPG9+0fobf971+p3EgR6WvX4G44xnZSTSWgLKu+3EwLbJWTyEzyk6MB8pK8txhR
+         S1cuFiOdYZX8UOfdssdUyHI/IxVhFdtmYvrDbELV/FRQZFvt6BiuQHuLTkCcpjH0iv8c
+         dHrvHnJKyp4gdkVHTkXa44MOzxze864WvQpo2+jdOciSJANxt6Hl+4jk40ZpX7O/SvJc
+         XQ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZifMIAy4GGWpMtKfD5bvrDinqLUVzewXwC0UEUTmlwY=;
-        b=MmrASw8DiYju3M98MfQ19UdwDXnyBtw3N+0EpWrB4Sm7jmaUfCLvB8ZIUh6QXGJfhm
-         xIbhk3E4Kv+t8bcJVcct6Y92PXlVTr9pWXli4o9HDj3za9D/+Aev/A9i/091ywFVZDlz
-         fuk2SNRYL34CLXFqWlJJdo9j1USSQU19K76zDLrsQhEti8G/y2EDXpAng0fYXfEh1O65
-         QrkXFw9wG5h8QWraJTmXtmz+7E6+VMWqHBpno4fx+pzPeXMlxce5xUlz5racML1zhflG
-         68Bw0ZT5rpdFq7qbam3bupi9wptpP63pNDLYL1PESaV1v4TnE3bLcixXyXQXTtK7szXt
-         Bv6g==
-X-Gm-Message-State: AOAM532w8i3MBoWSBWUNC0696M84CF07LWgnSx2iy77XHQV1zrHWSAvT
-        dKiZyxih7g6q8JA28E0YoT0OFQ==
-X-Google-Smtp-Source: ABdhPJwSrAkfUofaXmnIahdY/3otBrfJ8ZpCF9gnb8mBk0i69W/Y3UzlbotwhW3L0SirKLRbithIEg==
-X-Received: by 2002:a1c:1d14:: with SMTP id d20mr5146554wmd.36.1614879930430;
-        Thu, 04 Mar 2021 09:45:30 -0800 (PST)
+        bh=fqoAgrq4fJR4HLR5WghEXfCAYNkU/FugUfR5Q3syhNI=;
+        b=Qf0LZLinfH9uLTRWjLqDDx3DXsJ/5TXK3b0enoObcLGiaYspBRDSM6ZvpSJ0HTDfkb
+         z11oUIzUFUMwPDkt/KnI9xGFxnFB/TmD7UpPQz3bAg7pOp6JBHWDN4MbW1qU4kWxSieO
+         hvVR1kI2DvH6qrpKjlVoEJuAeLbe4EoPWDhDPWeU/HneM8VG4bZLdJL6cx3DxcB+Z6uU
+         1im1i8ylbHHUqCu7x/0DET2TAhJYsosLqFzAII29FLRH6SxfVWylSuWHcy/OGnlDfXNa
+         lgootNfJuog6a0eyFjxRjRQJ14Wvn+RtQ1tFK021p+Jchglskuj8snHdhljalOej9rwn
+         R7Vw==
+X-Gm-Message-State: AOAM533DxPP5VxSuu0A9Iz07D/hlTm1HJJ6VZhOnPsU5lHzg1QoJ5/Zh
+        wCIXFCSTZhok3Yetf+SIHbKn2Q==
+X-Google-Smtp-Source: ABdhPJzUjkxf4oTl38XpoTuIZ90ldSKeCXuYNmoMUkpEQWZP8didLAO2Ul56bAwAhDv2VYbyZkl84w==
+X-Received: by 2002:a1c:7407:: with SMTP id p7mr5107660wmc.51.1614879931659;
+        Thu, 04 Mar 2021 09:45:31 -0800 (PST)
 Received: from localhost.localdomain ([83.216.184.132])
-        by smtp.gmail.com with ESMTPSA id a21sm271023wmb.5.2021.03.04.09.45.29
+        by smtp.gmail.com with ESMTPSA id a21sm271023wmb.5.2021.03.04.09.45.30
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Mar 2021 09:45:30 -0800 (PST)
+        Thu, 04 Mar 2021 09:45:31 -0800 (PST)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paolo Valente <paolo.valente@linaro.org>,
         Jan Kara <jack@suse.cz>
-Subject: [PATCH BUGFIX/IMPROVEMENT V2 4/6] block, bfq: fix weight-raising resume with !low_latency
-Date:   Thu,  4 Mar 2021 18:46:25 +0100
-Message-Id: <20210304174627.161-5-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX/IMPROVEMENT V2 5/6] block, bfq: keep shared queues out of the waker mechanism
+Date:   Thu,  4 Mar 2021 18:46:26 +0100
+Message-Id: <20210304174627.161-6-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210304174627.161-1-paolo.valente@linaro.org>
 References: <20210304174627.161-1-paolo.valente@linaro.org>
@@ -64,45 +64,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the io_latency heuristic is off, bfq_queues must not start to be
-weight-raised. Unfortunately, by mistake, this may happen when the
-state of a previously weight-raised bfq_queue is resumed after a queue
-split. This commit fixes this error.
+Shared queues are likely to receive I/O at a high rate. This may
+deceptively let them be considered as wakers of other queues. But a
+false waker will unjustly steal bandwidth to its supposedly woken
+queue. So considering also shared queues in the waking mechanism may
+cause more control troubles than throughput benefits. This commit
+keeps shared queues out of the waker-detection mechanism.
 
 Tested-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ block/bfq-iosched.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 4b3d4849f3f5..8497d0803d74 100644
+index 8497d0803d74..c62dbbe9cc33 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -1010,7 +1010,7 @@ static void
- bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
- 		      struct bfq_io_cq *bic, bool bfq_already_existing)
- {
--	unsigned int old_wr_coeff = bfqq->wr_coeff;
-+	unsigned int old_wr_coeff = 1;
- 	bool busy = bfq_already_existing && bfq_bfqq_busy(bfqq);
- 
- 	if (bic->saved_has_short_ttime)
-@@ -1031,7 +1031,13 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
- 	bfqq->ttime = bic->saved_ttime;
- 	bfqq->io_start_time = bic->saved_io_start_time;
- 	bfqq->tot_idle_time = bic->saved_tot_idle_time;
--	bfqq->wr_coeff = bic->saved_wr_coeff;
+@@ -5852,7 +5852,17 @@ static void bfq_completed_request(struct bfq_queue *bfqq, struct bfq_data *bfqd)
+ 			1UL<<(BFQ_RATE_SHIFT - 10))
+ 		bfq_update_rate_reset(bfqd, NULL);
+ 	bfqd->last_completion = now_ns;
+-	bfqd->last_completed_rq_bfqq = bfqq;
 +	/*
-+	 * Restore weight coefficient only if low_latency is on
++	 * Shared queues are likely to receive I/O at a high
++	 * rate. This may deceptively let them be considered as wakers
++	 * of other queues. But a false waker will unjustly steal
++	 * bandwidth to its supposedly woken queue. So considering
++	 * also shared queues in the waking mechanism may cause more
++	 * control troubles than throughput benefits. Then do not set
++	 * last_completed_rq_bfqq to bfqq if bfqq is a shared queue.
 +	 */
-+	if (bfqd->low_latency) {
-+		old_wr_coeff = bfqq->wr_coeff;
-+		bfqq->wr_coeff = bic->saved_wr_coeff;
-+	}
- 	bfqq->service_from_wr = bic->saved_service_from_wr;
- 	bfqq->wr_start_at_switch_to_srt = bic->saved_wr_start_at_switch_to_srt;
- 	bfqq->last_wr_start_finish = bic->saved_last_wr_start_finish;
++	if (!bfq_bfqq_coop(bfqq))
++		bfqd->last_completed_rq_bfqq = bfqq;
+ 
+ 	/*
+ 	 * If we are waiting to discover whether the request pattern
 -- 
 2.20.1
 
