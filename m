@@ -2,83 +2,162 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 614A832D084
-	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 11:16:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB7C532D2E8
+	for <lists+linux-block@lfdr.de>; Thu,  4 Mar 2021 13:29:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238369AbhCDKP7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Mar 2021 05:15:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44507 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238401AbhCDKPr (ORCPT
+        id S240560AbhCDM2d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Mar 2021 07:28:33 -0500
+Received: from relay.smtp-ext.broadcom.com ([192.19.221.30]:40444 "EHLO
+        relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240478AbhCDM2D (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 4 Mar 2021 05:15:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614852862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T9wLNs0hY9LPW8i/bbOeiyn0/hKvk++/9L1iE/B+NAI=;
-        b=JM+2qWzCFEA5gpFR0r2YP5TI/0QqwtGhxxZKrrf4Dr9xFfEXEN7emEZtetdEl/9FdmHCOF
-        HmNal6ZhkoGLPIhZIp9wVCldAhUBTHg7bac66/Of2if+4KRROlQQdTAS1gR9FHTiW+OVzK
-        v2n8blO0jDcsNUz+yYQRGvvgU8akLCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-558-x_5YU6v_O-uljnGm4Wrmpw-1; Thu, 04 Mar 2021 05:14:20 -0500
-X-MC-Unique: x_5YU6v_O-uljnGm4Wrmpw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 4 Mar 2021 07:28:03 -0500
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Mar 2021 07:28:02 EST
+Received: from localhost.localdomain (unknown [10.157.2.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6A9B107465E;
-        Thu,  4 Mar 2021 10:14:18 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A700639A73;
-        Thu,  4 Mar 2021 10:14:15 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 124AEFOQ008051;
-        Thu, 4 Mar 2021 05:14:15 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 124AEFO1008046;
-        Thu, 4 Mar 2021 05:14:15 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Thu, 4 Mar 2021 05:14:15 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Jens Axboe <axboe@kernel.dk>
-cc:     JeffleXu <jefflexu@linux.alibaba.com>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        caspar@linux.alibaba.com, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com,
-        dm-devel@redhat.com, hch@lst.de
-Subject: Re: [PATCH 1/4] block: introduce a function
- submit_bio_noacct_mq_direct
-In-Reply-To: <8424036e-fba9-227e-4173-8f6d05562ee3@kernel.dk>
-Message-ID: <alpine.LRH.2.02.2103040511050.7400@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20210302190551.473015400@debian-a64.vm> <8424036e-fba9-227e-4173-8f6d05562ee3@kernel.dk>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id 9B48422565;
+        Thu,  4 Mar 2021 04:19:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 9B48422565
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1614860395;
+        bh=cNp3e06wPZ7e8aq644Ukouz3uEU6eR5XZ/CCS2oSZx4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iVi2YjhAV+UzmhqrXh1nwmPJkl27Ovx8ugmjrozF/tBG1YYKY3gPFWsLM7jAGq6g0
+         pXopgOiDJ2xqQOxDOJ7gRovsKOANC4/hRKtHoXfakvoMs61TRx7j4HFTj5HV1SRyY5
+         BOOWEFB4ET4PmxN30nqpgQ4UDICYi7FwWowUyPRM=
+From:   Muneendra <muneendra.kumar@broadcom.com>
+To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
+Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
+        Muneendra <muneendra.kumar@broadcom.com>
+Subject: [PATCH v8 00/16] blkcg:Support to track FC storage blk io traffic
+Date:   Thu,  4 Mar 2021 10:57:10 +0530
+Message-Id: <1614835646-16217-1-git-send-email-muneendra.kumar@broadcom.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+This Patch added a unique application identifier i.e
+app_id  knob to  blkcg which allows identification of traffic
+sources at an individual cgroup based Applications
+(ex:virtual machine (VM))level in both host and
+fabric infrastructure.
+
+Added a new sysfs attribute appid_store to set the application identfier
+in  the blkcg associted with cgroup id under
+/sys/class/fc/fc_udev_device/*
+
+With this new interface the user can set the application identfier
+in  the blkcg associted with cgroup id.
+
+This capability can be utilized by multiple block transport infrastructure
+like fc,iscsi,roce.
+
+Existing FC fabric will use this feature and the description of
+the use case is below.
+
+Various virtualization technologies used in Fibre Channel
+SAN deployments have created the opportunity to identify
+and associate traffic with specific virtualized applications.
+The concepts behind the T11 Application Services standard is
+to provide the general mechanisms needed to identify
+virtualized services.
+It enables the Fabric and the storage targets to
+identify, monitor, and handle FC traffic
+based on vm tags by inserting application specific identification
+into the FC frame.
+
+The patches were cut against  5.12/scsi-queue tree
+
+v8:
+Modified the structure member,log messages and function declarations
+Added proper error codes and return values
+
+v7:
+Modified the Kconfig comments
+
+v6:
+Addressed the issues reported by kernel test robot
+Modified the Kconfig files as per standard
+
+v5:
+Renamed the function cgroup_get_from_kernfs_id to
+cgroup_get_from_id.
+
+Moved the input validation at the beginning of the function in 
+Renamed the arguments appropriatley.
+
+Changed Return code to non-numeric/SymbolChanged Return code
+to non-numeric/Symbol
+
+Modified the comments.
+
+v4:
+Addressed the error reported by  kernel test robot
+
+v3:
+removed RFC.
+
+Renamed the functions and app_id to more specific
+Addressed the reference leaks in blkcg_set_app_identifier
+Added a new config BLK_CGROUP_FC_APPID and made changes to 
+select the same under SCSI_FC_ATTRS
+
+V2:
+renamed app_identifier to app_id.
+removed the  sysfs interface blkio.app_identifie under
+/sys/fs/cgroup/blkio
+Ported the patch on top of 5.10/scsi-queue.
+Removed redundant code due to changes since last submit.
+Added a fix for issuing QFPA command.
 
 
-On Wed, 3 Mar 2021, Jens Axboe wrote:
 
-> On 3/2/21 12:05 PM, Mikulas Patocka wrote:
-> 
-> There seems to be something wrong with how this series is being sent
-> out. I have 1/4 and 3/4, but both are just attachments.
-> 
-> -- 
-> Jens Axboe
+Gaurav Srivastava (12):
+  lpfc: vmid: Add the datastructure for supporting VMID in lpfc
+  lpfc: vmid: Supplementary data structures for vmid and APIs
+  lpfc: vmid: Forward declarations for APIs
+  lpfc: vmid: VMID params initialization
+  lpfc: vmid: Add support for vmid in mailbox command, does vmid
+    resource allocation and vmid cleanup
+  lpfc: vmid: Implements ELS commands for appid patch
+  lpfc: vmid: Functions to manage vmids
+  lpfc: vmid: Implements CT commands for appid.
+  lpfc: vmid: Appends the vmid in the wqe before sending
+  lpfc: vmid: Timeout implementation for vmid
+  lpfc: vmid: Adding qfpa and vmid timeout check in worker thread
+  lpfc: vmid: Introducing vmid in io path.
 
-I used quilt to send it. I don't know what's wrong with it - if you look 
-at archives at 
-https://listman.redhat.com/archives/dm-devel/2021-March/thread.html , it 
-seems normal.
+Muneendra (4):
+  cgroup: Added cgroup_get_from_id
+  blkcg: Added a app identifier support for blkcg
+  nvme: Added a newsysfs attribute appid_store
+  scsi: Made changes in Kconfig to select BLK_CGROUP_FC_APPID
 
-Mikulas
+ block/Kconfig                    |   9 +
+ drivers/nvme/host/fc.c           |  73 ++++++-
+ drivers/scsi/Kconfig             |  13 ++
+ drivers/scsi/lpfc/lpfc.h         | 121 ++++++++++
+ drivers/scsi/lpfc/lpfc_attr.c    |  47 ++++
+ drivers/scsi/lpfc/lpfc_crtn.h    |  11 +
+ drivers/scsi/lpfc/lpfc_ct.c      | 249 ++++++++++++++++++++-
+ drivers/scsi/lpfc/lpfc_disc.h    |   1 +
+ drivers/scsi/lpfc/lpfc_els.c     | 364 ++++++++++++++++++++++++++++++-
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 153 +++++++++++++
+ drivers/scsi/lpfc/lpfc_hw.h      | 124 ++++++++++-
+ drivers/scsi/lpfc/lpfc_hw4.h     |  12 +
+ drivers/scsi/lpfc/lpfc_init.c    | 106 +++++++++
+ drivers/scsi/lpfc/lpfc_mbox.c    |   6 +
+ drivers/scsi/lpfc/lpfc_scsi.c    | 337 ++++++++++++++++++++++++++++
+ drivers/scsi/lpfc/lpfc_sli.c     |  63 ++++++
+ drivers/scsi/lpfc/lpfc_sli.h     |   8 +
+ include/linux/blk-cgroup.h       |  56 +++++
+ include/linux/cgroup.h           |   6 +
+ kernel/cgroup/cgroup.c           |  26 +++
+ 20 files changed, 1775 insertions(+), 10 deletions(-)
+
+-- 
+2.26.2
 
