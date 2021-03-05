@@ -2,108 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036D232EBAE
-	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 13:55:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 198C532EBEF
+	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 14:14:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbhCEMzF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Mar 2021 07:55:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26590 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230076AbhCEMyq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 5 Mar 2021 07:54:46 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 125CWYn8159882;
-        Fri, 5 Mar 2021 07:54:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=d9rFIyCBjHUDWrGQTITwDi1/WrZOZ0DE0DM2ME1KBRM=;
- b=VljuItkJ0TIcRa8MBXzh0eIx7CGRC+Klmwh8NKWFNmc9hLmNVRgCfOpU55osc78vqaKS
- CKgeHseHk4+oGxbmQQr1wZG8bu9+mknAHcx8BHIAs0ba2BqXDzXimRRfX/YoMQRLVfcF
- +TwVVKJPVnPAuZOdWDyI/XDiiyaGei+GazVykEJXsRhW9mcsQ4aIPJuYMWIYDBU1YY05
- EE1ePx3VKynPOpjMMp7B6UWC1Tz3LPx+bpJZ2MAZUm7ukdDjPe2D9eQKnE+kUohIi9Se
- ipp7xaEsTPXLy1DEo3U5wBrtjDt0yiQwUQzN5bZKGWeWfM+tq5xHTY1fQupm5HVV6xox wQ== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 373m1y9urm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 07:54:46 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 125Cg5RU018967;
-        Fri, 5 Mar 2021 12:54:43 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 371a8est7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 12:54:43 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 125CsPan32899494
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Mar 2021 12:54:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46FDA52057;
-        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 33CC752050;
-        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id C2D41E05BC; Fri,  5 Mar 2021 13:54:39 +0100 (CET)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 2/2] s390/dasd: fix hanging IO request during DASD driver unbind
-Date:   Fri,  5 Mar 2021 13:54:39 +0100
-Message-Id: <20210305125439.568125-3-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210305125439.568125-1-sth@linux.ibm.com>
-References: <20210305125439.568125-1-sth@linux.ibm.com>
+        id S229637AbhCENNp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Mar 2021 08:13:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229611AbhCENNU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Mar 2021 08:13:20 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB12EC061574;
+        Fri,  5 Mar 2021 05:13:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=tIA0NXDSyz49QGV+/MhXdn6xDD
+        7fCk5gSXFl4tCHyUz+RI+CAqse6j2yxe+AM5TiB2Q92QLonrCrDei96xLHGbX/rpuT8fddwnCHgLW
+        mVaZ8fRIWgQ0QxECZQ8ePN4lurdX2ac0QorwPtgbpWi+awHr/WvEUx0Aftl78Q4Al/l+kAsXBubVo
+        S2P3jBvDOx4apE6oCVwiJuKCQoFedpeYcLFgkzdwU1Lmv2KGLj7QZtwB4tunBd0kQVZNhr2WMFdMD
+        joZ/+tmmOMDj2jcihlIU/7fratWOQf+Pejeuyz3RJ8zkCC7GBF3NUP92azMJZj9oS/iNa+2B9FXnh
+        YxzZ/nFQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lIAFz-00BkCK-Az; Fri, 05 Mar 2021 13:12:48 +0000
+Date:   Fri, 5 Mar 2021 13:12:39 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] block: Try to handle busy underlying device on discard
+Message-ID: <20210305131239.GA2799004@infradead.org>
+References: <20210222094809.21775-1-jack@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-05_08:2021-03-03,2021-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015 spamscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103050063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210222094809.21775-1-jack@suse.cz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Prevent that an IO request is build during device shutdown initiated by
-a driver unbind. This request will never be able to be processed or
-canceled and will hang forever. This will lead also to a hanging unbind.
+Looks good,
 
-Fix by checking not only if the device is in READY state but also check
-that there is no device offline initiated before building a new IO request.
-
-Fixes: e443343e509a ("s390/dasd: blk-mq conversion")
-
-Cc: <stable@vger.kernel.org> # v4.14+
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Tested-by: Bjoern Walk <bwalk@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
----
- drivers/s390/block/dasd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index 22805115ebc2..ba9ce4e0d30a 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -3052,7 +3052,8 @@ static blk_status_t do_dasd_request(struct blk_mq_hw_ctx *hctx,
- 
- 	basedev = block->base;
- 	spin_lock_irq(&dq->lock);
--	if (basedev->state < DASD_STATE_READY) {
-+	if (basedev->state < DASD_STATE_READY ||
-+	    test_bit(DASD_FLAG_OFFLINE, &basedev->flags)) {
- 		DBF_DEV_EVENT(DBF_ERR, basedev,
- 			      "device not ready for request %p", req);
- 		rc = BLK_STS_IOERR;
--- 
-2.25.1
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
