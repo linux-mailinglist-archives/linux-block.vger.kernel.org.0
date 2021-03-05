@@ -2,100 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C5F332E59F
-	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 11:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 743A432EBAF
+	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 13:55:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbhCEKDX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Mar 2021 05:03:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47710 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229520AbhCEKDQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 5 Mar 2021 05:03:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 50E3CAD29;
-        Fri,  5 Mar 2021 10:03:14 +0000 (UTC)
-Subject: Re: Large latency with bcache for Ceph OSD(new mail thread)
-To:     "Norman.Kern" <norman.kern@gmx.com>
-Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
-References: <9b7dfd49-67b0-53b1-96e1-3b90c2d9d09a@gmx.com>
- <f6755b89-4d13-92a5-df1a-343602dec957@suse.de>
- <91cf3980-ed9d-a5f8-4f2d-d9a79b1cbed0@gmx.com>
-From:   Coly Li <colyli@suse.de>
-Message-ID: <1fa52fcb-1886-148f-2d55-02060dce7f93@suse.de>
-Date:   Fri, 5 Mar 2021 18:03:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.8.0
+        id S230087AbhCEMzG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Mar 2021 07:55:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230051AbhCEMyq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 5 Mar 2021 07:54:46 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 125CnqUm083683;
+        Fri, 5 Mar 2021 07:54:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=uSyPRghV1O4VXYrW7rznI6rOz9jkzWXMhPKsmpJ0kKE=;
+ b=HqrLchpJSV3V2z3ckMkAmkCUBQQGcNATxNT8RcqxgnXHI8v6mN6kGQRJ2YxyXnt6rK3H
+ qMxcDnQeZYjCFR/avN+itd5ooQakBL5zQMrB/5m/ptv71b3XH3OXqY1HIxOibYsTVRND
+ G+zJMcZ4tLl1sze0isJuvnFVU5GT2ge/DsXILfzHFdnq2qKnyJHyWh+usBqOhEciZLFA
+ qgBy+F1OolbTCCVNwbK7oE1FtPjaWYvGi4zZAz+tDl+rHbqo0qls3tgpgkNSz7dnp8gI
+ y59meh4uQ7t31+xEVreM9W6FJvYqYBM3pFQIsjn8lKZS98GrPVKjztBe/nNj8ITnApEU Kw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 373n0782e9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Mar 2021 07:54:44 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 125CcJ4n020539;
+        Fri, 5 Mar 2021 12:54:43 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 371162kruf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Mar 2021 12:54:43 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 125CseU148103878
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Mar 2021 12:54:40 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55105A4060;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 405A3A405C;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id BF34FE047D; Fri,  5 Mar 2021 13:54:39 +0100 (CET)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/2] s390/dasd: driver unbind fixes
+Date:   Fri,  5 Mar 2021 13:54:37 +0100
+Message-Id: <20210305125439.568125-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <91cf3980-ed9d-a5f8-4f2d-d9a79b1cbed0@gmx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-05_08:2021-03-03,2021-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0 clxscore=1011
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103050063
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/5/21 5:00 PM, Norman.Kern wrote:
-> 
-> On 2021/3/2 下午9:20, Coly Li wrote:
->> On 3/2/21 6:20 PM, Norman.Kern wrote:
->>> Sorry for creating a new mail thread(the origin is so long...)
->>>
->>>
->>> I made a test again and get more infomation:
->>>
->>> root@WXS0089:~# cat /sys/block/bcache0/bcache/dirty_data
->>> 0.0k
->>> root@WXS0089:~# lsblk /dev/sda
->>> NAME      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
->>> sda         8:0    0 447.1G  0 disk
->>> `-bcache0 252:0    0  10.9T  0 disk
->>> root@WXS0089:~# cat /sys/block/sda/bcache/priority_stats
->>> Unused:         1%
->>> Clean:          29%
->>> Dirty:          70%
->>> Metadata:       0%
->>> Average:        49
->>> Sectors per Q:  29184768
->>> Quantiles:      [1 2 3 5 6 8 9 11 13 14 16 19 21 23 26 29 32 36 39 43 48 53 59 65 73 83 94 109 129 156 203]
->>> root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/internal/gc_after_writeback
->>> 1
->>> You have new mail in /var/mail/root
->>> root@WXS0089:~# cat /sys/fs/bcache/066319e1-8680-4b5b-adb8-49596319154b/cache_available_percent
->>> 28
->>>
->>> I read the source codes and found if cache_available_percent > 50, it should wakeup gc while doing writeback, but it seemed not work right.
->>>
->> If gc_after_writeback is enabled, and after it is enabled and the cache
->> usage > 50%, a tag BCH_DO_AUTO_GC will be set to c->gc_after_writeback.
->> Then when the writeback completed the gc thread will wake up in force.
->>
->> so the auto gc after writeback will be triggered when,
->> 1, the bcache device is in writeback mode
->> 2, gc_after_writeback set to 1
->> 3, After 2) done, the cache usage exceeds 50% threshold.
->> 4, writeback rate set to maximum rate when the bcache device is idle (no
->> regular I/O request)
->> 5, after the writeback accomplished, the gc thread will be waken up.
->>
->> But /sys/block/bcache0/bcache/dirty_data is 0.0k doesn't mean the
->> writeback is accomplished. It is possible the writeback thread still
->> goes through all btree keys for the last try even all the dirty data are
->> flushed. Therefore you should check whether the writeback thread is
->> still active before a conclusion is made that the writeback is completed.
->>
->> BTW, do you try a Linux v5.8+ kernel and see how things are ?
-> 
-> I have test on 5.8.X,  but it doesn't help. I test on the same config on another server(480G SSD + 8T HDD),
-> 
+Hi Jens,
 
-What do you mean on "doesn't help" ?  Do you mean the force gc does not
-trigger, or something else.
+please apply the following patches that fix two issues that may happen
+during driver unbind.
 
-> it can't reproduce, this really made me confused. I will compare the configs and try to find out the diffs.
+Stefan Haberland (2):
+  s390/dasd: fix hanging DASD driver unbind
+  s390/dasd: fix hanging IO request during DASD driver unbind
 
-For which behavior that it don't reproduce ?
+ drivers/s390/block/dasd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks.
+-- 
+2.25.1
 
-Coly Li
