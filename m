@@ -2,30 +2,30 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2309D32EE57
-	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 16:20:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C05A32EE4F
+	for <lists+linux-block@lfdr.de>; Fri,  5 Mar 2021 16:20:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbhCEPUD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Mar 2021 10:20:03 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12700 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbhCEPTj (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Mar 2021 10:19:39 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DsWYZ3HdDzlSl4;
-        Fri,  5 Mar 2021 23:17:06 +0800 (CST)
+        id S229740AbhCEPTb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Mar 2021 10:19:31 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:13442 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229935AbhCEPTW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Mar 2021 10:19:22 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4DsWZS6TNdzjV27;
+        Fri,  5 Mar 2021 23:17:52 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.498.0; Fri, 5 Mar 2021 23:19:07 +0800
+ 14.3.498.0; Fri, 5 Mar 2021 23:19:08 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <hare@suse.de>, <bvanassche@acm.org>, <ming.lei@redhat.com>,
         <axboe@kernel.dk>, <hch@lst.de>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <pragalla@codeaurora.org>, <kashyap.desai@broadcom.com>,
         <yuyufen@huawei.com>, John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH v3 1/3] blk-mq: Clean up references to old requests when freeing rqs
-Date:   Fri, 5 Mar 2021 23:14:52 +0800
-Message-ID: <1614957294-188540-2-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH v3 2/3] blk-mq: Freeze and quiesce all queues for tagset in elevator_exit()
+Date:   Fri, 5 Mar 2021 23:14:53 +0800
+Message-ID: <1614957294-188540-3-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1614957294-188540-1-git-send-email-john.garry@huawei.com>
 References: <1614957294-188540-1-git-send-email-john.garry@huawei.com>
@@ -37,116 +37,96 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It has been reported many times that a use-after-free can be intermittently
-found when iterating busy requests:
+A use-after-free may occur if blk_mq_queue_tag_busy_iter() is run on a
+queue when another queue associated with the same tagset is switching IO
+scheduler:
 
-- https://lore.kernel.org/linux-block/8376443a-ec1b-0cef-8244-ed584b96fa96@huawei.com/
-- https://lore.kernel.org/linux-block/5c3ac5af-ed81-11e4-fee3-f92175f14daf@acm.org/T/#m6c1ac11540522716f645d004e2a5a13c9f218908
-- https://lore.kernel.org/linux-block/04e2f9e8-79fa-f1cb-ab23-4a15bf3f64cc@kernel.dk/
+BUG: KASAN: use-after-free in bt_iter+0xa0/0x120
+Read of size 8 at addr ffff0410285e7e00 by task fio/2302
 
-The issue is that when we switch scheduler or change queue depth, there may
-be references in the driver tagset to the stale requests.
+CPU: 24 PID: 2302 Comm: fio Not tainted 5.12.0-rc1-11925-g29a317e228d9 #747
+Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018 
+ Call trace:
+dump_backtrace+0x0/0x2d8 
+show_stack+0x18/0x68
+dump_stack+0x124/0x1a0
+print_address_description.constprop.13+0x68/0x30c
+kasan_report+0x1e8/0x258 
+__asan_load8+0x9c/0xd8
+bt_iter+0xa0/0x120 
+blk_mq_queue_tag_busy_iter+0x348/0x5d8
+blk_mq_in_flight+0x80/0xb8
+part_stat_show+0xcc/0x210
+dev_attr_show+0x44/0x90
+sysfs_kf_seq_show+0x120/0x1c0
+kernfs_seq_show+0x9c/0xb8
+seq_read_iter+0x214/0x668
+kernfs_fop_read_iter+0x204/0x2c0
+new_sync_read+0x1ec/0x2d0
+vfs_read+0x18c/0x248
+ksys_read+0xc8/0x178
+__arm64_sys_read+0x44/0x58
+el0_svc_common.constprop.1+0xc8/0x1a8
+do_el0_svc+0x90/0xa0
+el0_svc+0x24/0x38
+el0_sync_handler+0x90/0xb8
+el0_sync+0x154/0x180
 
-As a solution, clean up any references to those requests in the driver
-tagset. This is done with a cmpxchg to make safe any race with setting the
-driver tagset request from another queue.
+Indeed, blk_mq_queue_tag_busy_iter() already does take a reference to its
+queue usage counter when called, and the queue cannot be frozen to switch
+IO scheduler until all refs are dropped. This ensures no stale references
+to IO scheduler requests will be seen by blk_mq_queue_tag_busy_iter().
+
+However, there is nothing to stop blk_mq_queue_tag_busy_iter() being
+run for another queue associated with the same tagset, and it seeing
+a stale IO scheduler request from the other queue after they are freed.
+
+To stop this happening, freeze and quiesce all queues associated with the
+tagset as the elevator is exited.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- block/blk-mq-sched.c |  2 +-
- block/blk-mq-tag.c   |  2 +-
- block/blk-mq.c       | 20 ++++++++++++++++++--
- block/blk-mq.h       |  2 ++
- 4 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index ddb65e9e6fd9..bc19bd8f8c7b 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -615,7 +615,7 @@ void blk_mq_sched_free_requests(struct request_queue *q)
- 
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (hctx->sched_tags)
--			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
-+			blk_mq_free_rqs_ext(q->tag_set, hctx->sched_tags, i, hctx->tags);
- 	}
- }
- 
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index ce813b909339..7ff1b20d58e7 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -580,7 +580,7 @@ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
- 			return -ENOMEM;
- 		}
- 
--		blk_mq_free_rqs(set, *tagsptr, hctx->queue_num);
-+		blk_mq_free_rqs_ext(set, *tagsptr, hctx->queue_num, hctx->tags);
- 		blk_mq_free_rq_map(*tagsptr, flags);
- 		*tagsptr = new;
- 	} else {
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index d4d7c1caa439..9cb60bf7ac24 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2286,8 +2286,8 @@ blk_qc_t blk_mq_submit_bio(struct bio *bio)
- 	return BLK_QC_T_NONE;
- }
- 
--void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
--		     unsigned int hctx_idx)
-+void __blk_mq_free_rqs_ext(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-+		     unsigned int hctx_idx, struct blk_mq_tags *ref_tags)
+I think that this patch is what Bart suggested:
+https://lore.kernel.org/linux-block/c0d127a9-9320-6e1c-4e8d-412aa9ea9ca6@acm.org/
+
+ block/blk.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/block/blk.h b/block/blk.h
+index 3b53e44b967e..1a948bfd91e4 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -201,10 +201,29 @@ void elv_unregister_queue(struct request_queue *q);
+ static inline void elevator_exit(struct request_queue *q,
+ 		struct elevator_queue *e)
  {
- 	struct page *page;
- 
-@@ -2296,10 +2296,14 @@ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 
- 		for (i = 0; i < tags->nr_tags; i++) {
- 			struct request *rq = tags->static_rqs[i];
-+			int j;
- 
- 			if (!rq)
- 				continue;
- 			set->ops->exit_request(set, rq, hctx_idx);
-+			/* clean up any references which occur in @ref_tags */
-+			for (j = 0; ref_tags && j < ref_tags->nr_tags; j++)
-+				cmpxchg(&ref_tags->rqs[j], rq, 0);
- 			tags->static_rqs[i] = NULL;
- 		}
- 	}
-@@ -2316,6 +2320,18 @@ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 	}
- }
- 
-+void blk_mq_free_rqs_ext(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-+		     unsigned int hctx_idx, struct blk_mq_tags *ref_tags)
-+{
-+	__blk_mq_free_rqs_ext(set, tags, hctx_idx, ref_tags);
-+}
-+			 
-+void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-+		     unsigned int hctx_idx)
-+{
-+	__blk_mq_free_rqs_ext(set, tags, hctx_idx, NULL);
-+}
++	struct blk_mq_tag_set *set = q->tag_set;
++	struct request_queue *tmp;
 +
- void blk_mq_free_rq_map(struct blk_mq_tags *tags, unsigned int flags)
- {
- 	kfree(tags->rqs);
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 3616453ca28c..031e29f74926 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -53,6 +53,8 @@ struct request *blk_mq_dequeue_from_ctx(struct blk_mq_hw_ctx *hctx,
-  */
- void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 		     unsigned int hctx_idx);
-+void blk_mq_free_rqs_ext(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-+		     unsigned int hctx_idx, struct blk_mq_tags *references);
- void blk_mq_free_rq_map(struct blk_mq_tags *tags, unsigned int flags);
- struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
- 					unsigned int hctx_idx,
+ 	lockdep_assert_held(&q->sysfs_lock);
+ 
++	mutex_lock(&set->tag_list_lock);
++	list_for_each_entry(tmp, &set->tag_list, tag_set_list) {
++		if (tmp == q)
++			continue;
++		blk_mq_freeze_queue(tmp);
++		blk_mq_quiesce_queue(tmp);
++	}
++
+ 	blk_mq_sched_free_requests(q);
+ 	__elevator_exit(q, e);
++
++	list_for_each_entry(tmp, &set->tag_list, tag_set_list) {
++		if (tmp == q)
++			continue;
++		blk_mq_unquiesce_queue(tmp);
++		blk_mq_unfreeze_queue(tmp);
++	}
++	mutex_unlock(&set->tag_list_lock);
+ }
+ 
+ ssize_t part_size_show(struct device *dev, struct device_attribute *attr,
 -- 
 2.26.2
 
