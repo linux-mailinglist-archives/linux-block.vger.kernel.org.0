@@ -2,241 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF23A32F7C7
-	for <lists+linux-block@lfdr.de>; Sat,  6 Mar 2021 03:22:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F65E32F7EB
+	for <lists+linux-block@lfdr.de>; Sat,  6 Mar 2021 03:54:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbhCFCUy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Mar 2021 21:20:54 -0500
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:45328 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbhCFCUl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Mar 2021 21:20:41 -0500
-Received: by mail-pf1-f172.google.com with SMTP id j12so3298307pfj.12;
-        Fri, 05 Mar 2021 18:20:41 -0800 (PST)
+        id S229935AbhCFCxo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 Mar 2021 21:53:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230052AbhCFCxM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Mar 2021 21:53:12 -0500
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E85C06175F
+        for <linux-block@vger.kernel.org>; Fri,  5 Mar 2021 18:53:05 -0800 (PST)
+Received: by mail-qk1-x72f.google.com with SMTP id f124so4097249qkj.5
+        for <linux-block@vger.kernel.org>; Fri, 05 Mar 2021 18:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M+YCL/IyIuK1NeKJH3MDV8vrtJRaU1BXYq0SRzFaHFQ=;
+        b=NAPjS6p6uFmhxnv93faL3kvzWHSRSQt1qokfnVEazvdCO7i8FU//usO0BNP5WZj/+W
+         Oioi7uZz8pXsYeE9mCppDD6RTgrQqXc/kdwLRT4tJuK/f4g/VeppLBlzgi4Xdiuc1xuM
+         +JUrON6zinWyzAjVY48fpOwtnaElkaUFr8KTPrviCEhhM8ebRq1isZSZVTGolD/+DimE
+         gm/vjlQlYCC0XzmBsYDuLuhN0xhOPw4k1+1FzOyZ6y6au6uL99ac/JIbvDtAa1itBHoW
+         f/iLpFCv5RAnWKeV0D9ze0Fnj023Lqpwg+XeWfD34omY8FcjD9OG/CTOQj99HQMubFKD
+         YvfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sH3OkCvCOBYt79tZW/C4X89IagBOPX3UHnmVepERPXk=;
-        b=KykEVRV/axRG18e/mVbGueqP/h3ZwzZgDSJVbm90+E66PAbosvUZcBpHuI2JUHp4PD
-         SiwKs8QjfA4zloEPkU0ypR9DpFzDAcowNli9yqKJKPlpXyesUoixbUYsMudVdG+0Mkyt
-         QRwiVhEltTE/V7a+bXFfoYZGmHxdpdo8UDEIVnoAi/LIaNx5dVK+Vqn7cTDrFGw2qQeV
-         g67yJ2JDg1eMQyQUEtDCPYrr1zZ3029/xdyzf6hUb4SXEb7vRXU3cBAV4Je+Z18iekEB
-         4fDvFVWy/uw3znX5VGzK7c+kjGT631D8fPG7IIXOQPejJs0A3CLrmwk9lbaABWNUpZnc
-         RG3Q==
-X-Gm-Message-State: AOAM532slLcciZyP9HXgPYkE6qorzFcijY/aRn+kvn0LmoR1/sEqB6/K
-        1GD7bX50uc2LrsAQ+x8ve84=
-X-Google-Smtp-Source: ABdhPJw/TP9vazlfiwjqnc2l8n9ra1Xm8G6cfoPVHppcpU5wH6Fj7rRbbeT/SR2P94Kx5ntffks6Bw==
-X-Received: by 2002:a62:1558:0:b029:1ef:19ac:2b00 with SMTP id 85-20020a6215580000b02901ef19ac2b00mr10915165pfv.67.1614997240827;
-        Fri, 05 Mar 2021 18:20:40 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id d14sm3214566pji.22.2021.03.05.18.20.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 18:20:37 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C3925419AC; Sat,  6 Mar 2021 02:20:36 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com
-Cc:     axboe@kernel.dk, mbenes@suse.com, mcgrof@kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] zram: fix races of sysfs attribute removal and usage
-Date:   Sat,  6 Mar 2021 02:20:35 +0000
-Message-Id: <20210306022035.11266-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20210306022035.11266-1-mcgrof@kernel.org>
-References: <20210306022035.11266-1-mcgrof@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M+YCL/IyIuK1NeKJH3MDV8vrtJRaU1BXYq0SRzFaHFQ=;
+        b=VMHcfuDCISKI18S9j8zsVgzHd398Fy5wbB5C5YPxK705uBPKUNln00yhLAqOoU9AEG
+         if/s8UEESjGlsfwr9yVqqrW85b6E5jcPVj3chRB/KlFCySdjY8VcMq0mzT/kI4row157
+         xb7fxesMDFj0dMG0Gaq6A5jSKkOrgP9GaQhmmvYvqe0XiKW0fZkJqAnrMfp5qn08FDJy
+         KSFDcQ0KaHeLXNVEZ+7j7bU59fvMlR3QlG5xbRLjsB5+6eabLf7QBHeMnvEKG1yGKNFC
+         dut+OPib3lTWyQzWaquYuEgeEN4iRcNTBejnC/8jeAE6RQKc0I1eeHyZC21MX8WAIjQY
+         ZIIw==
+X-Gm-Message-State: AOAM532A7KabgBhEg5RWD4lAlCpcQRygOKFEix4kAcvFUmIQavps6G/Y
+        seedIZgpQ9WMozAg1XT0mLSli0UBz5t8tm0PL2PXcQ==
+X-Google-Smtp-Source: ABdhPJzYBwiaQNBAKnZ8nLw6CQcMDxTnugmhc1fHi+vsy50PArwEFZdPY10xorkg+82823h2HgImdM2Yk9GYOdkgSpI=
+X-Received: by 2002:a05:620a:981:: with SMTP id x1mr11739808qkx.501.1614999184492;
+ Fri, 05 Mar 2021 18:53:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1614957294-188540-1-git-send-email-john.garry@huawei.com> <1614957294-188540-2-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1614957294-188540-2-git-send-email-john.garry@huawei.com>
+From:   Khazhy Kumykov <khazhy@google.com>
+Date:   Fri, 5 Mar 2021 18:52:53 -0800
+Message-ID: <CACGdZY+Qft=55Si5Lmjh1RmVb5Roe-KTsrJHJLz0opSXuesTBg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 1/3] blk-mq: Clean up references to old requests
+ when freeing rqs
+To:     John Garry <john.garry@huawei.com>
+Cc:     hare@suse.de, Bart Van Assche <bvanassche@acm.org>,
+        ming.lei@redhat.com, Jens Axboe <axboe@kernel.dk>, hch@lst.de,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        pragalla@codeaurora.org, kashyap.desai@broadcom.com,
+        yuyufen@huawei.com
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000bb490f05bcd54c4c"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When we have sysfs attributes which muck with the driver
-heavily we me end up with situations where the core
-kernel driver removal call races with usage of a sysfs
-attribute. The can happen when for instance a lock is
-used on the sysfs attribute which is also used for
-driver removal.
+--000000000000bb490f05bcd54c4c
+Content-Type: text/plain; charset="UTF-8"
 
-To fix this we just *try* to get a refcount to the
-module prior to mucking with a sysfs attribute. If this
-fails we just give up right away. Ideally we'd want
-a generic solution, however this requires a bit more
-work. If we tried to generalize this on the block layer
-the closest we get is the disk->fops->owner, however
-zram is an example driver where the disk->fops is
-actually even changed *after* module load, and so the
-original disk->fops->owner can be dynamic. In zram's
-case the fops->owner is the same, however we have no
-semantics to ensure this is the case for all block
-drivers.
+On Fri, Mar 5, 2021 at 7:20 AM John Garry <john.garry@huawei.com> wrote:
+>
+> It has been reported many times that a use-after-free can be intermittently
+> found when iterating busy requests:
+>
+> - https://lore.kernel.org/linux-block/8376443a-ec1b-0cef-8244-ed584b96fa96@huawei.com/
+> - https://lore.kernel.org/linux-block/5c3ac5af-ed81-11e4-fee3-f92175f14daf@acm.org/T/#m6c1ac11540522716f645d004e2a5a13c9f218908
+> - https://lore.kernel.org/linux-block/04e2f9e8-79fa-f1cb-ab23-4a15bf3f64cc@kernel.dk/
+>
+> The issue is that when we switch scheduler or change queue depth, there may
+> be references in the driver tagset to the stale requests.
+>
+> As a solution, clean up any references to those requests in the driver
+> tagset. This is done with a cmpxchg to make safe any race with setting the
+> driver tagset request from another queue.
 
-Using these two lines in two separate terminals can easily
-reproduce this hang:
+I noticed this crash recently when running blktests on a "debug"
+config on a 4.15 based kernel (it would always crash), and backporting
+this change fixes it. (testing on linus's latest tree also confirmed
+the fix, with the same config). I realize I'm late to the
+conversation, but appreciate the investigation and fixes :)
 
-Loop 1 on one terminal:
+--000000000000bb490f05bcd54c4c
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-while true;
-	do modprobe zram;
-	modprobe -r zram;
-done
-
-Loop 2 on a second terminal:
-while true; do
-	echo 1024 >  /sys/block/zram0/disksize;
-	echo 1 > /sys/block/zram0/reset;
-done
-
-The splat which follows is comes up without this patch.
-
-INFO: task bash:888 blocked for more than 120 seconds.
-      Tainted: G            E 5.12.0-rc1-next-20210304+ #4
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:bash            state:D stack:    0 pid:  888 ppid: 887 flags:0x00000004
-Call Trace:
- __schedule+0x2e4/0x900
- schedule+0x46/0xb0
- schedule_preempt_disabled+0xa/0x10
- __mutex_lock.constprop.0+0x2c3/0x490
- ? _kstrtoull+0x35/0xd0
- reset_store+0x6c/0x160 [zram]
- kernfs_fop_write_iter+0x124/0x1b0
- new_sync_write+0x11c/0x1b0
- vfs_write+0x1c2/0x260
- ksys_write+0x5f/0xe0
- do_syscall_64+0x33/0x80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f34f2c3df33
-RSP: 002b:00007ffe751df6e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f34f2c3df33
-RDX: 0000000000000002 RSI: 0000561ccb06ec10 RDI: 0000000000000001
-RBP: 0000561ccb06ec10 R08: 000000000000000a R09: 0000000000000001
-R10: 0000561ccb157590 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007f34f2d0e6a0 R14: 0000000000000002 R15: 00007f34f2d0e8a0
-INFO: task modprobe:1104 can't die for more than 120 seconds.
-task:modprobe        state:D stack:    0 pid: 1104 ppid: 916 flags:0x00004004
-Call Trace:
- __schedule+0x2e4/0x900
- schedule+0x46/0xb0
- __kernfs_remove.part.0+0x228/0x2b0
- ? finish_wait+0x80/0x80
- kernfs_remove_by_name_ns+0x50/0x90
- remove_files+0x2b/0x60
- sysfs_remove_group+0x38/0x80
- sysfs_remove_groups+0x29/0x40
- device_remove_attrs+0x4a/0x80
- device_del+0x183/0x3e0
- ? mutex_lock+0xe/0x30
- del_gendisk+0x27a/0x2d0
- zram_remove+0x8a/0xb0 [zram]
- ? hot_remove_store+0xf0/0xf0 [zram]
- zram_remove_cb+0xd/0x10 [zram]
- idr_for_each+0x5e/0xd0
- destroy_devices+0x39/0x6f [zram]
- __do_sys_delete_module+0x190/0x2a0
- do_syscall_64+0x33/0x80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f32adf727d7
-RSP: 002b:00007ffc08bb38a8 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000055eea23cbb10 RCX: 00007f32adf727d7
-RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055eea23cbb78
-RBP: 000055eea23cbb10 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007f32adfe5ac0 R11: 0000000000000206 R12: 000055eea23cbb78
-R13: 0000000000000000 R14: 0000000000000000 R15: 000055eea23cbc20
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/block/zram/zram_drv.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 63b6119cee93..ce54f4bf5a5b 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1722,6 +1722,9 @@ static ssize_t disksize_store(struct device *dev,
- 	struct zram *zram = dev_to_zram(dev);
- 	int err;
- 
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
- 	mutex_lock(&zram_index_mutex);
- 
- 	if (!zram_up) {
-@@ -1762,6 +1765,7 @@ static ssize_t disksize_store(struct device *dev,
- 	up_write(&zram->init_lock);
- 
- 	mutex_unlock(&zram_index_mutex);
-+	module_put(THIS_MODULE);
- 
- 	return len;
- 
-@@ -1771,6 +1775,7 @@ static ssize_t disksize_store(struct device *dev,
- 	up_write(&zram->init_lock);
- out:
- 	mutex_unlock(&zram_index_mutex);
-+	module_put(THIS_MODULE);
- 	return err;
- }
- 
-@@ -1786,6 +1791,9 @@ static ssize_t reset_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
- 	mutex_lock(&zram_index_mutex);
- 
- 	if (!zram_up) {
-@@ -1823,6 +1831,7 @@ static ssize_t reset_store(struct device *dev,
- 
- out:
- 	mutex_unlock(&zram_index_mutex);
-+	module_put(THIS_MODULE);
- 	return len;
- }
- 
-@@ -2043,13 +2052,19 @@ static ssize_t hot_add_show(struct class *class,
- {
- 	int ret;
- 
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
- 	mutex_lock(&zram_index_mutex);
- 	if (!zram_up) {
- 		mutex_unlock(&zram_index_mutex);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
- 	}
- 	ret = zram_add();
-+out:
- 	mutex_unlock(&zram_index_mutex);
-+	module_put(THIS_MODULE);
- 
- 	if (ret < 0)
- 		return ret;
-@@ -2073,6 +2088,9 @@ static ssize_t hot_remove_store(struct class *class,
- 	if (dev_id < 0)
- 		return -EINVAL;
- 
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
- 	mutex_lock(&zram_index_mutex);
- 
- 	if (!zram_up) {
-@@ -2091,6 +2109,7 @@ static ssize_t hot_remove_store(struct class *class,
- 
- out:
- 	mutex_unlock(&zram_index_mutex);
-+	module_put(THIS_MODULE);
- 	return ret ? ret : count;
- }
- static CLASS_ATTR_WO(hot_remove);
--- 
-2.30.1
-
+MIIPmAYJKoZIhvcNAQcCoIIPiTCCD4UCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggzyMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+MEvaI7F4ZN2DM20wTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAyBggrBgEFBQcCARYmaHR0cHM6
+Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADCBmgYIKwYBBQUHAQEE
+gY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2NhL2dzYXRsYXNy
+M3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2Nh
+Y2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgwFoAUfMwKaNei6x4schvRzV2V
+b4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9jYS9nc2F0
+bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEBAIKZMQsUIWBTlSa6tHLU5L8W
+YVOXfTkEXU6aeq8JjYjcj1fQD+1K0EQhvwz6SB5I0NhqfMLyQBUZHJXChsLGygbCqXbmBF143+sK
+xsY5En+KQ03HHHn8pmLHFMAgvO2f8cJyJD3cBi8nMNRia/ZMy2jayQPOiiK34RpcoyXr80KWUZQh
+iqPea7dSkHy8G0Vjeo4vj+RQBse+NKpyEzJilDUVpd5x307jeFjYBp2fLWt0UAZ8P2nUeSPjC2fF
+kGXeiYWeVPpQCSzowcRluUVFrKApZDZpm3Ly7a5pMVFQ23m2Waaup/DHnJkgxlRQRbcxDhqLKrJj
+tATPzBYapBLXne4xggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxT
+aWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENBIDIwMjACEAH+
+DkXtUaeOlUVJH2IZ1xgwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEINPhOn/hZ9KP
+h/1bcG39a7myQp9gt6wb2eMaPOdXEFRSMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIxMDMwNjAyNTMwNFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQB0VK8nQRQmzoV28HJOzpNGgXgReMmB
+fOjNH/ctVGY6535M7p031O0fzesI/D2ZKVaS4mppDPYMghNw8jXgVzmTjTzfXYwORghvGoH0MgCG
+OVci9rgGcBOHMTs46CX2qRIkypVWGe6kwZCPeGdhh462aZ5nB4qt9B3JJZk4PGt7qESIhiCpKosr
+7d/wGWRn+3vncz3FD4pstVPK9c/0YhpDU2kGSm/sCUSQM81jiVUyeqfbmjbIVgAIOnaryTY3R34v
+4NeVyMP0taXL9ausv0+VLFnuzSq3WSbzoCbyFfmxKErDorE/D1GcxfxefTJO8y0E6ip2s+a1rM4O
+GR41HARR
+--000000000000bb490f05bcd54c4c--
