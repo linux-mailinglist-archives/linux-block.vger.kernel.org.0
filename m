@@ -2,102 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8114C3308EA
-	for <lists+linux-block@lfdr.de>; Mon,  8 Mar 2021 08:47:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C57903308F5
+	for <lists+linux-block@lfdr.de>; Mon,  8 Mar 2021 08:51:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232096AbhCHHq3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 Mar 2021 02:46:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
+        id S232196AbhCHHu3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 Mar 2021 02:50:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232114AbhCHHqM (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 8 Mar 2021 02:46:12 -0500
+        with ESMTP id S232730AbhCHHt5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 8 Mar 2021 02:49:57 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8398CC06174A
-        for <linux-block@vger.kernel.org>; Sun,  7 Mar 2021 23:46:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932F2C06174A;
+        Sun,  7 Mar 2021 23:49:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=c7sb+A4wHTchgvyY+VHcVt1ZX/G2Fcwphae/YqoQRwQ=; b=H5nj9+OZ5MgwmIWWBiY92Nb9Ou
-        b8E7w8rPZtKwWcyOzfiVyJIVw9qpYZcNF79oGErqQ+9WuBF0mT9lFsxQ58LrTTUAbwR+NmaktheSh
-        cy2nayWmN6Cu/sjBr/rRoMsv+ctQFCDVjnPTEKopLya5TP5jNgIynv3o2Cy2dZR2OrZtHw7UAcxu3
-        ZaZr50tgyI62ezZUHWcjwa+kV/5TLnQ1L2wnrwKapRiN5rBOHtEDC0dvUBNRBQuUiHalQVHonfB0L
-        LhBmFd6+9LfYBs4FWrdro4e9aKAmgy+4GctXfyCcZpd/7KStc9HiB6mNSH6o7vq9O5w8ohpy7iUtm
-        8hCl/tTA==;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=MvZzO53jDnLeIXWcdyjd3dBeQWtZ83MkEDAnbxpqG9E=; b=WOcK0fS6sDg9XBsaT83vmexDnZ
+        jaSRFz6vNjj7TkKvZidtsyBWM/bpEIpVPisdZ0jn5HRnV3FlV3EYNHBTvzt2Jfyy/RPNAfBtaNS0j
+        VHSEIn8maXGu7aB+ijVZOrsLzNCPjQI+bzBg5gQDA94adovwGwjSpu/oaOVp++X88aXyP5F9GlzdH
+        54qQ1WEbzIch7gTrIfjNEnb9rvNzHshA8qQ7sa+bXy4RIKOmxFjlBLzibT92IphcS0bIZevBPVb0J
+        wj+wG4df534ns8cuvazzSCLDk2zODzGIZv5+yroyUCspUI2vewkUt5Chmqj2n6ImBiPFMY+z42rTT
+        sIL6s5pw==;
 Received: from [2001:4bb8:180:9884:c70:4a89:bc61:3] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lJAad-00FBqK-NY; Mon, 08 Mar 2021 07:46:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Tim Waugh <tim@cyberelk.net>
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 3/3] block: remove the revalidate_disk method
-Date:   Mon,  8 Mar 2021 08:45:50 +0100
-Message-Id: <20210308074550.422714-4-hch@lst.de>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210308074550.422714-1-hch@lst.de>
-References: <20210308074550.422714-1-hch@lst.de>
+        id 1lJAdw-00FC1e-GS; Mon, 08 Mar 2021 07:49:38 +0000
+Date:   Mon, 8 Mar 2021 08:49:31 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org
+Subject: can we kill the internal blkdev_get in the dasd driver now?
+Message-ID: <YEXXCw2MYKzAIKX6@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-No implementations left.
+Hi DASD maintainers,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- Documentation/filesystems/locking.rst | 2 --
- fs/block_dev.c                        | 3 ---
- include/linux/blkdev.h                | 1 -
- 3 files changed, 6 deletions(-)
+I've recently changed the life time rules for struct block_device so
+that is is a long-living instead of an ephemeral structure, that is the
+whole device block_device exists from the time the disk is alloced until
+it is feed, and the partitions exist from as soon as they are scanned.
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index b7dcc86c92a45f..9774e92e449fbd 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -469,7 +469,6 @@ prototypes::
- 	int (*direct_access) (struct block_device *, sector_t, void **,
- 				unsigned long *);
- 	void (*unlock_native_capacity) (struct gendisk *);
--	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
- 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
- 
-@@ -484,7 +483,6 @@ ioctl:			no
- compat_ioctl:		no
- direct_access:		no
- unlock_native_capacity:	no
--revalidate_disk:	no
- getgeo:			no
- swap_slot_free_notify:	no	(see below)
- ======================= ===================
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 4aa1f88d5bf8b3..422d088ac7dbaa 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1250,9 +1250,6 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 		if (disk_part_scan_enabled(disk) ||
- 		    !(disk->flags & GENHD_FL_REMOVABLE))
- 			set_capacity(disk, 0);
--	} else {
--		if (disk->fops->revalidate_disk)
--			disk->fops->revalidate_disk(disk);
- 	}
- 
- 	if (get_capacity(disk)) {
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index bc6bc8383b434e..b4241f73f7a89c 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1870,7 +1870,6 @@ struct block_device_operations {
- 	unsigned int (*check_events) (struct gendisk *disk,
- 				      unsigned int clearing);
- 	void (*unlock_native_capacity) (struct gendisk *);
--	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
- 	int (*set_read_only)(struct block_device *bdev, bool ro);
- 	/* this callback is with swap_lock and sometimes page table lock held */
--- 
-2.30.1
+With this the blkdev_get in the DASD driver should not be required, but
+there seems to be a lot of magic that accounts of it in the open count.
+
+Any chance one of you maintainers could try to remove it to further
+simplify our open and liftetime rules?
 
