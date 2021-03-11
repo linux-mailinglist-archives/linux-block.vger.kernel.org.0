@@ -2,662 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E69CB3370C0
-	for <lists+linux-block@lfdr.de>; Thu, 11 Mar 2021 12:02:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2743233710C
+	for <lists+linux-block@lfdr.de>; Thu, 11 Mar 2021 12:20:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232527AbhCKLC1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 Mar 2021 06:02:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232539AbhCKLCP (ORCPT
+        id S232518AbhCKLTc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 Mar 2021 06:19:32 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:3296 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232519AbhCKLTH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 Mar 2021 06:02:15 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DC6C061574;
-        Thu, 11 Mar 2021 03:02:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=bXu4ullxxriRwZQTRZva1z8RpPpLh8M8zqDMx8058UY=; b=Woefge1ojD22GbUNPBRIjloR1H
-        M6aPEpFW8RR5BLuJK66bUU25BPri6oRYsOA7gZ08zsrcz8zH1FRDADm8fUmLY5ieI90qRi6wmVLHw
-        Vxnc2BK5yM3Hsgsqbx8M4DKrb21XhyKf+I8fY+4cijojnTW+n5agj4a52E7wj/oEjqxuLNJA6WdZG
-        1VJzR7SNkTOHK1xO/FzybhYo251cjRIMYUq3GawqeEAX78DMznKTvwj6oaZnEg92YzH/Z3jfoC65T
-        /uBNqKCWdBmwqpu+gjTf3IbVzeiucwVXf5uwhoGgrIl1s2q1KlrKWn/1oUfjLq9dhLpVRPlr2B+ix
-        QPn4PMuA==;
-Received: from [2001:4bb8:180:9884:c70:4a89:bc61:3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lKJ4r-007Dlq-Nd; Thu, 11 Mar 2021 11:02:05 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] block: rename BIO_MAX_PAGES to BIO_MAX_VECS
-Date:   Thu, 11 Mar 2021 12:01:37 +0100
-Message-Id: <20210311110137.1132391-2-hch@lst.de>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210311110137.1132391-1-hch@lst.de>
-References: <20210311110137.1132391-1-hch@lst.de>
+        Thu, 11 Mar 2021 06:19:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1615461546; x=1646997546;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=hLWQBAaxtn3yXmdfI76otB4JeavKfhl56mPs91s0Rp/2Fi4Mo4aZNf2s
+   Aus4Jl9j9TM8eNA69u0cph03tRwpr6jpXu56XcJRwe9RuqX+U5yplElDF
+   Bk+HFKc6ZUyST2OFAznl4/Lx5/pRTmrs0MhKo8dER6ScS5hN72RtjYEz5
+   AbERDJ05/BxKxteHtgjkslavBoDUfIaq470i5Lq5UrmcDO24ad1Z80il5
+   QkW9XnDg9/sFh/f2xvgxlsF7OJIO95+zvItOAmkChiA6BS9eOr9aPiN3t
+   A3vppAqwgnC3eqSC5NdaRtHXOr0RHqDZaSZyK8P3Y1rb0ApEHBKrDcBJh
+   g==;
+IronPort-SDR: YmSi3Hu0fzhHlWJYraEoLacLo64uzafF/k8lmBgELoAoYvT17Yp2ywoDD73c2L6b0FO7g/qdPT
+ HX7D5+BLxaL3utR/Pc4j6NOiQ3oD2c665Uz2N8xaHXeWj/wIszzrF9p6KSfz2m4zxCTLJg/3E6
+ I+T7/8wU0Oest4QQ1BMAfayD+CsUAUAVZxVtQXvpGSBhspoj3sYGFueEaP1QWiFC2Z9co0oWLQ
+ Z+gyjdTRlssgMamDDh+dVPmm3D7h4IeURonSlx/HCPM4LyxqUkFeS0Ve3SAID5R1Icb1TD69NF
+ 8yg=
+X-IronPort-AV: E=Sophos;i="5.81,240,1610380800"; 
+   d="scan'208";a="166406688"
+Received: from mail-bn7nam10lp2106.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.106])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Mar 2021 19:19:06 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b8ZVPb4sHMiDFeh5DqUzgRoVPysBl4PQ0TQsckGQfwTBR21gSka/3bo7Q6cTjTA43bhtcBhEFwaW6HodExxb1fG7ZqOMeKDdyzX/PwJ1EXjVbP7Q94IzTEXTejdm0GcZQgdJDo7G8UuyAoAGaXwV4HMwfEEn+RWJDWdAfUTwToSB+muVl5HZkAwKWsBsA6F4spRqGF5dLVIuwfD6vX1a2W7Y94Ywy/1+aUTA0cCVaB4MIzE61G/q0bmRNAVKHYIauWo2cDAjbQDdWSENTrDR4CmG7IqerfvSS/JK984/JfG04+Ho+/gD8mz8O8BsXUbfAzI0VBPVoOxoAdeVoeeBuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=bFQa4MWZRVrAu/KT7VdFCYs47+yUKbpVeGRk038qyTHmzNTP/FWMblijCzCa7qR/lVvepzYrVYu7cHjz+/ACh7qfqkHaUjKd9TTQDbOoeYuAa0UdWoHGBNMcGCa6aWIecIuZKL9VW/KQBhHu57ZwqSpDQ8apiMjr4RPxh6SwQfv+aP3fgoBnA7WojNbFDHJL7AtyrEil+JISo7shjYw/4rZxWtI6CWpFfNC2Pl5KwOL+yMwJs44FDg72Ll+MeIFko3VSp0MzDUokviiU6rznhLqrSDubAwO39g9edv8uOWLV9IhJk1xrOCVwRyV1CmhBVKTXYU5DIvnniA30qbWdIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=hy4Odl9dWvfqHflTm5pzKC6BvKaMC5Fu1T6KvgzOfWgac1ToCd6srhckLKIo69Fmxl+NjlcEkfBmKEC8zsAQyesHQaNBQ8ReunCzcH97b2pMcJ2lLiJgOgt59IfqX9ONWJbZnOEBQzPYjQsWkXbcPKJisXzuGe93adYVP5NScSE=
+Received: from PH0PR04MB7416.namprd04.prod.outlook.com (2603:10b6:510:12::17)
+ by PH0PR04MB7302.namprd04.prod.outlook.com (2603:10b6:510:1d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.19; Thu, 11 Mar
+ 2021 11:19:04 +0000
+Received: from PH0PR04MB7416.namprd04.prod.outlook.com
+ ([fe80::3c7d:5381:1232:e725]) by PH0PR04MB7416.namprd04.prod.outlook.com
+ ([fe80::3c7d:5381:1232:e725%7]) with mapi id 15.20.3933.031; Thu, 11 Mar 2021
+ 11:19:04 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Nikolay Borisov <nborisov@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>
+Subject: Re: [PATCH] blk-mq: Document some blk_mq_ctx fields
+Thread-Topic: [PATCH] blk-mq: Document some blk_mq_ctx fields
+Thread-Index: AQHXFk8Yfk0REIBv7UKU7h2pk/E+Fw==
+Date:   Thu, 11 Mar 2021 11:19:04 +0000
+Message-ID: <PH0PR04MB7416B237A830612B38DD242A9B909@PH0PR04MB7416.namprd04.prod.outlook.com>
+References: <20210311081729.2763232-1-nborisov@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1542:e101:d87b:bccb:ca15:1ed8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e0e4056d-676f-4fc7-2d3c-08d8e47f7afa
+x-ms-traffictypediagnostic: PH0PR04MB7302:
+x-microsoft-antispam-prvs: <PH0PR04MB73021105ECEF845AEE0CF6139B909@PH0PR04MB7302.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N3gCScjGgX+u/ciwS8+l33rZP1LsACom4qH+iblqfkBNj+7gGBTfQaVpe2CmSI9FQwg+2CCTuigrYsB3S6oVWN2KCToMwOyYAX0c1nJMQ4eU+psrxU0q0V/93GswtNl1KihHPtylaUF6f22dOckJv8A4hx0vqd3jplPKZC+P9LUSOrwLnMqHEoAl6JKwX6hEObYc7mMl5lc+n706eVAkRUDddR4gG+NmBffgLNYmfdRzGlJUhMk2085ejhOy8THzQUflRk81X4MKbRgb2j+2Epqi+bSN0vOBsuuXg34NLF2KXQW1lhbnuEHF29v8jFi5cehCPYxOebKkLbXJ+GW2YSY/lay2CIJ9kiLI180PLUN59fjWKbQVw9J2AA7KohAhPLaST/zsek4NAPkIsfmYzKbRAZo9Yes7MLy9F1efr/YXRYJe9u6eo0kmovTse5qUpBqOXy5ZBUgl4yZ93nhHDoXsUcUlu6cOmMC3rTo7OJ6Ot+KrZs02lHkWv7AQD921sob4e3o0l8S2oHTcvZZ7jA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR04MB7416.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(55016002)(478600001)(186003)(7696005)(5660300002)(33656002)(4270600006)(558084003)(86362001)(9686003)(6506007)(316002)(64756008)(66946007)(8936002)(52536014)(76116006)(91956017)(66556008)(71200400001)(66476007)(2906002)(19618925003)(66446008)(8676002)(4326008)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?zdbhZWJHen2V1UEOdCC4zkQ/YyJTw52ARQDiJRcBHAYsmj6oP5S8AV2pRBRA?=
+ =?us-ascii?Q?i037/nqbgg+cBBL5pIUgCsKUNm7gwLIjv+DqxHHYYW9kfnR8IGOVKOUuVlMG?=
+ =?us-ascii?Q?lG9307oJ8XdBADbHH+j45jwMtMG7C3qXiX4NZrTO6k/xF4QVKbZam+zA0CLK?=
+ =?us-ascii?Q?/ScIC+P+etw49HyMVP3P4RZv3beiFGR374U6H9MKBkhJa4kqxc1tfcmWObCM?=
+ =?us-ascii?Q?wSun1EtprtXygMKaYPqaf3IRDCMyBYz58fW8ecOy7BS5EQgej20Ebpfjvnjm?=
+ =?us-ascii?Q?BS1EOjTtKSCLO/9VfjjADhx0dtdBqHcZwMnkf5hOc+a729NwS9Vj7tZoh+PK?=
+ =?us-ascii?Q?cmT7Kn7+MnsfQ7aCZR2HihchSwmiLtihllPFCoRzWhTzhZK5+ZcYNd/ZArk8?=
+ =?us-ascii?Q?0N8PzDvhpYEVn5oxa40KDLkom4nO15MftP9Srn00g1C1UY+3xk/GZK+v2dT1?=
+ =?us-ascii?Q?XBgWgAPhLe6lVp/YXhzaeQpQVWok+2jw7EtFMyVgOF3N3HPsUecYWpuFyajN?=
+ =?us-ascii?Q?WFzgJF3nGT8fz9l1GV/mleoki6Aueqhm7LoDxJZ82FKB1pN6pBbr/u05hh+b?=
+ =?us-ascii?Q?tv7SJa9pZWaXVh73eRJQhsOGTuXlZIsMyrv/gRBpntJfk+GtHYiPaPPXmcOu?=
+ =?us-ascii?Q?FpbvLZPPcQ6bYvHVrYup4u0hisiBR61PjyYnctDRd3RrErjVnewMfIc3AIYw?=
+ =?us-ascii?Q?ue42Q84VzqFX53DoqdQOn9vjpbvDig0Ig23iXymjcW1l2qgQZLg7oOvWs6rL?=
+ =?us-ascii?Q?oe2xNCUv4597PxxFUQld67SgI3JEN2wV4lWVQsUBJpY5xRbgRMCYFpy9UqJZ?=
+ =?us-ascii?Q?ZP4xDbCmIgNi2WrdmW7y5jbZVECfaq0LlwCynFKCuRQoppn1Ra+NbPhOuJb0?=
+ =?us-ascii?Q?A8pMbc/ZWgL+5b9g+EVIhY4dMC59Qg5vi3CCxlfi2tpeKoapG0WRHuV+T7mF?=
+ =?us-ascii?Q?Eu+D2cIcm30IUoHo4wXHErebWLvWwfyjD62pZn2mftmXqgX+iugXRAHzloO7?=
+ =?us-ascii?Q?tymmN9z06MLO/qXE9qhfRWo7RPory5Dg+MIkjj71cDEqifXRfei2ZywHpD2f?=
+ =?us-ascii?Q?Gb+rtQRIBJHl6FboDSIuzktkhsZBc6d2guNPrf8vBtrjH37JhPZ5n/zQtiyQ?=
+ =?us-ascii?Q?4I6+LmS7dL9Evea0fP3DPBl/5Ac/FvURhJpR6NqnO0bdNdVp8Oipe+g/2kHV?=
+ =?us-ascii?Q?DYToxQ/PjnymCbFe/BnZo1ApAmkK33+8/efRj+szDCv6BWNqMm7DOT/BrvZ9?=
+ =?us-ascii?Q?YSmC6vbhenmudSMvnksQRUoI+UchcgSnx5xPFXxVRcbgLGZUyxoBqhcgxhF9?=
+ =?us-ascii?Q?Ukzc04q//IsNiuFzjCVr/Man1HKgSYC8ZUc06/SFSVKb76gXfil9z6npfdzp?=
+ =?us-ascii?Q?ywalhV7KJ0zzoAFi6f0SpQOomHC9+zOW9Q4828d9ihfZjoTcRg=3D=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR04MB7416.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0e4056d-676f-4fc7-2d3c-08d8e47f7afa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2021 11:19:04.6726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lx5WXFp/f+FiO1kxiSqOMJMiFAMYa+yW6ncbG7oZWhvuN4ZePOs1dxeMuYu+xplyyRo6BNaSiBIQ8MwvsePjNZlLJnKuUjG1l+oTAniUkts=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB7302
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ever since the addition of multipage bio_vecs BIO_MAX_PAGES has been
-horribly confusingly misnamed.  Rename it to BIO_MAX_VECS to stop
-confusing users of the bio API.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/bio.c                    | 14 +++++++-------
- block/blk-crypto-fallback.c    |  2 +-
- block/blk-lib.c                |  2 +-
- block/blk-map.c                |  2 +-
- block/bounce.c                 |  6 +++---
- drivers/block/drbd/drbd_int.h  |  2 +-
- drivers/md/bcache/super.c      |  2 +-
- drivers/md/dm-crypt.c          |  8 ++++----
- drivers/md/dm-writecache.c     |  4 ++--
- drivers/md/raid5-cache.c       |  4 ++--
- drivers/md/raid5-ppl.c         |  2 +-
- drivers/nvme/target/passthru.c |  6 +++---
- fs/block_dev.c                 |  6 +++---
- fs/btrfs/extent_io.c           |  2 +-
- fs/btrfs/scrub.c               |  2 +-
- fs/crypto/bio.c                |  6 +++---
- fs/erofs/zdata.c               |  2 +-
- fs/ext4/page-io.c              |  2 +-
- fs/f2fs/checkpoint.c           |  2 +-
- fs/f2fs/data.c                 |  4 ++--
- fs/f2fs/segment.c              |  2 +-
- fs/f2fs/segment.h              |  4 ++--
- fs/f2fs/super.c                |  4 ++--
- fs/gfs2/lops.c                 |  2 +-
- fs/iomap/buffered-io.c         |  4 ++--
- fs/iomap/direct-io.c           |  4 ++--
- fs/mpage.c                     |  2 +-
- fs/nilfs2/segbuf.c             |  2 +-
- fs/squashfs/block.c            |  2 +-
- fs/zonefs/super.c              |  2 +-
- include/linux/bio.h            |  4 ++--
- 31 files changed, 56 insertions(+), 56 deletions(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index a1c4d2900c7a83..26b7f721cda88b 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -33,7 +33,7 @@ static struct biovec_slab {
- 	{ .nr_vecs = 16, .name = "biovec-16" },
- 	{ .nr_vecs = 64, .name = "biovec-64" },
- 	{ .nr_vecs = 128, .name = "biovec-128" },
--	{ .nr_vecs = BIO_MAX_PAGES, .name = "biovec-max" },
-+	{ .nr_vecs = BIO_MAX_VECS, .name = "biovec-max" },
- };
- 
- static struct biovec_slab *biovec_slab(unsigned short nr_vecs)
-@@ -46,7 +46,7 @@ static struct biovec_slab *biovec_slab(unsigned short nr_vecs)
- 		return &bvec_slabs[1];
- 	case 65 ... 128:
- 		return &bvec_slabs[2];
--	case 129 ... BIO_MAX_PAGES:
-+	case 129 ... BIO_MAX_VECS:
- 		return &bvec_slabs[3];
- 	default:
- 		BUG();
-@@ -151,9 +151,9 @@ static void bio_put_slab(struct bio_set *bs)
- 
- void bvec_free(mempool_t *pool, struct bio_vec *bv, unsigned short nr_vecs)
- {
--	BIO_BUG_ON(nr_vecs > BIO_MAX_PAGES);
-+	BIO_BUG_ON(nr_vecs > BIO_MAX_VECS);
- 
--	if (nr_vecs == BIO_MAX_PAGES)
-+	if (nr_vecs == BIO_MAX_VECS)
- 		mempool_free(bv, pool);
- 	else if (nr_vecs > BIO_INLINE_VECS)
- 		kmem_cache_free(biovec_slab(nr_vecs)->slab, bv);
-@@ -186,15 +186,15 @@ struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
- 	/*
- 	 * Try a slab allocation first for all smaller allocations.  If that
- 	 * fails and __GFP_DIRECT_RECLAIM is set retry with the mempool.
--	 * The mempool is sized to handle up to BIO_MAX_PAGES entries.
-+	 * The mempool is sized to handle up to BIO_MAX_VECS entries.
- 	 */
--	if (*nr_vecs < BIO_MAX_PAGES) {
-+	if (*nr_vecs < BIO_MAX_VECS) {
- 		struct bio_vec *bvl;
- 
- 		bvl = kmem_cache_alloc(bvs->slab, bvec_alloc_gfp(gfp_mask));
- 		if (likely(bvl) || !(gfp_mask & __GFP_DIRECT_RECLAIM))
- 			return bvl;
--		*nr_vecs = BIO_MAX_PAGES;
-+		*nr_vecs = BIO_MAX_VECS;
- 	}
- 
- 	return mempool_alloc(pool, gfp_mask);
-diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
-index c176b7af56a7a5..c322176a1e0995 100644
---- a/block/blk-crypto-fallback.c
-+++ b/block/blk-crypto-fallback.c
-@@ -219,7 +219,7 @@ static bool blk_crypto_split_bio_if_needed(struct bio **bio_ptr)
- 
- 	bio_for_each_segment(bv, bio, iter) {
- 		num_sectors += bv.bv_len >> SECTOR_SHIFT;
--		if (++i == BIO_MAX_PAGES)
-+		if (++i == BIO_MAX_VECS)
- 			break;
- 	}
- 	if (num_sectors < bio_sectors(bio)) {
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 752f9c7220622a..7b256131b20bbb 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -296,7 +296,7 @@ static unsigned int __blkdev_sectors_to_bio_pages(sector_t nr_sects)
- {
- 	sector_t pages = DIV_ROUND_UP_SECTOR_T(nr_sects, PAGE_SIZE / 512);
- 
--	return min(pages, (sector_t)BIO_MAX_PAGES);
-+	return min(pages, (sector_t)BIO_MAX_VECS);
- }
- 
- static int __blkdev_issue_zero_pages(struct block_device *bdev,
-diff --git a/block/blk-map.c b/block/blk-map.c
-index 369e204d14d013..1ffef782fcf2dd 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -249,7 +249,7 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
- 	if (!iov_iter_count(iter))
- 		return -EINVAL;
- 
--	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, BIO_MAX_PAGES));
-+	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, BIO_MAX_VECS));
- 	if (!bio)
- 		return -ENOMEM;
- 	bio->bi_opf |= req_op(rq);
-diff --git a/block/bounce.c b/block/bounce.c
-index 87983a35079c22..6c441f4f1cd4aa 100644
---- a/block/bounce.c
-+++ b/block/bounce.c
-@@ -229,10 +229,10 @@ static struct bio *bounce_clone_bio(struct bio *bio_src)
- 	 *  - The point of cloning the biovec is to produce a bio with a biovec
- 	 *    the caller can modify: bi_idx and bi_bvec_done should be 0.
- 	 *
--	 *  - The original bio could've had more than BIO_MAX_PAGES biovecs; if
-+	 *  - The original bio could've had more than BIO_MAX_VECS biovecs; if
- 	 *    we tried to clone the whole thing bio_alloc_bioset() would fail.
- 	 *    But the clone should succeed as long as the number of biovecs we
--	 *    actually need to allocate is fewer than BIO_MAX_PAGES.
-+	 *    actually need to allocate is fewer than BIO_MAX_VECS.
- 	 *
- 	 *  - Lastly, bi_vcnt should not be looked at or relied upon by code
- 	 *    that does not own the bio - reason being drivers don't use it for
-@@ -299,7 +299,7 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
- 	int sectors = 0;
- 
- 	bio_for_each_segment(from, *bio_orig, iter) {
--		if (i++ < BIO_MAX_PAGES)
-+		if (i++ < BIO_MAX_VECS)
- 			sectors += from.bv_len >> 9;
- 		if (page_to_pfn(from.bv_page) > q->limits.bounce_pfn)
- 			bounce = true;
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index 7d9cc433b758ae..5d9181382ce190 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -1324,7 +1324,7 @@ struct bm_extent {
-  * A followup commit may allow even bigger BIO sizes,
-  * once we thought that through. */
- #define DRBD_MAX_BIO_SIZE (1U << 20)
--#if DRBD_MAX_BIO_SIZE > (BIO_MAX_PAGES << PAGE_SHIFT)
-+#if DRBD_MAX_BIO_SIZE > (BIO_MAX_VECS << PAGE_SHIFT)
- #error Architecture not supported: DRBD_MAX_BIO_SIZE > BIO_MAX_SIZE
- #endif
- #define DRBD_MAX_BIO_SIZE_SAFE (1U << 12)       /* Works always = 4k */
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 71691f32959b38..03e1fe4de53dea 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -965,7 +965,7 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
- 	q->limits.max_hw_sectors	= UINT_MAX;
- 	q->limits.max_sectors		= UINT_MAX;
- 	q->limits.max_segment_size	= UINT_MAX;
--	q->limits.max_segments		= BIO_MAX_PAGES;
-+	q->limits.max_segments		= BIO_MAX_VECS;
- 	blk_queue_max_discard_sectors(q, UINT_MAX);
- 	q->limits.discard_granularity	= 512;
- 	q->limits.io_min		= block_size;
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 11c105ecd165a0..b0ab080f256769 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -229,7 +229,7 @@ static DEFINE_SPINLOCK(dm_crypt_clients_lock);
- static unsigned dm_crypt_clients_n = 0;
- static volatile unsigned long dm_crypt_pages_per_client;
- #define DM_CRYPT_MEMORY_PERCENT			2
--#define DM_CRYPT_MIN_PAGES_PER_CLIENT		(BIO_MAX_PAGES * 16)
-+#define DM_CRYPT_MIN_PAGES_PER_CLIENT		(BIO_MAX_VECS * 16)
- 
- static void clone_init(struct dm_crypt_io *, struct bio *);
- static void kcryptd_queue_crypt(struct dm_crypt_io *io);
-@@ -3246,7 +3246,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		ALIGN(sizeof(struct dm_crypt_io) + cc->dmreq_start + additional_req_size,
- 		      ARCH_KMALLOC_MINALIGN);
- 
--	ret = mempool_init(&cc->page_pool, BIO_MAX_PAGES, crypt_page_alloc, crypt_page_free, cc);
-+	ret = mempool_init(&cc->page_pool, BIO_MAX_VECS, crypt_page_alloc, crypt_page_free, cc);
- 	if (ret) {
- 		ti->error = "Cannot allocate page mempool";
- 		goto bad;
-@@ -3373,9 +3373,9 @@ static int crypt_map(struct dm_target *ti, struct bio *bio)
- 	/*
- 	 * Check if bio is too large, split as needed.
- 	 */
--	if (unlikely(bio->bi_iter.bi_size > (BIO_MAX_PAGES << PAGE_SHIFT)) &&
-+	if (unlikely(bio->bi_iter.bi_size > (BIO_MAX_VECS << PAGE_SHIFT)) &&
- 	    (bio_data_dir(bio) == WRITE || cc->on_disk_tag_size))
--		dm_accept_partial_bio(bio, ((BIO_MAX_PAGES << PAGE_SHIFT) >> SECTOR_SHIFT));
-+		dm_accept_partial_bio(bio, ((BIO_MAX_VECS << PAGE_SHIFT) >> SECTOR_SHIFT));
- 
- 	/*
- 	 * Ensure that bio is a multiple of internal sector encryption size
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 844c4be11768d3..4f72b6f66c3aeb 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -1892,10 +1892,10 @@ static void writecache_writeback(struct work_struct *work)
- 			list_add(&g->lru, &wbl.list);
- 			wbl.size++;
- 			g->write_in_progress = true;
--			g->wc_list_contiguous = BIO_MAX_PAGES;
-+			g->wc_list_contiguous = BIO_MAX_VECS;
- 			f = g;
- 			e->wc_list_contiguous++;
--			if (unlikely(e->wc_list_contiguous == BIO_MAX_PAGES)) {
-+			if (unlikely(e->wc_list_contiguous == BIO_MAX_VECS)) {
- 				if (unlikely(wc->writeback_all)) {
- 					next_node = rb_next(&f->rb_node);
- 					if (likely(next_node))
-diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
-index 4337ae0e6af2e4..0b5dcaabbc1559 100644
---- a/drivers/md/raid5-cache.c
-+++ b/drivers/md/raid5-cache.c
-@@ -735,7 +735,7 @@ static void r5l_submit_current_io(struct r5l_log *log)
- 
- static struct bio *r5l_bio_alloc(struct r5l_log *log)
- {
--	struct bio *bio = bio_alloc_bioset(GFP_NOIO, BIO_MAX_PAGES, &log->bs);
-+	struct bio *bio = bio_alloc_bioset(GFP_NOIO, BIO_MAX_VECS, &log->bs);
- 
- 	bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
- 	bio_set_dev(bio, log->rdev->bdev);
-@@ -1634,7 +1634,7 @@ static int r5l_recovery_allocate_ra_pool(struct r5l_log *log,
- {
- 	struct page *page;
- 
--	ctx->ra_bio = bio_alloc_bioset(GFP_KERNEL, BIO_MAX_PAGES, &log->bs);
-+	ctx->ra_bio = bio_alloc_bioset(GFP_KERNEL, BIO_MAX_VECS, &log->bs);
- 	if (!ctx->ra_bio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/md/raid5-ppl.c b/drivers/md/raid5-ppl.c
-index e8c118e05dfd46..3ddc2aa0b53064 100644
---- a/drivers/md/raid5-ppl.c
-+++ b/drivers/md/raid5-ppl.c
-@@ -496,7 +496,7 @@ static void ppl_submit_iounit(struct ppl_io_unit *io)
- 		if (!bio_add_page(bio, sh->ppl_page, PAGE_SIZE, 0)) {
- 			struct bio *prev = bio;
- 
--			bio = bio_alloc_bioset(GFP_NOIO, BIO_MAX_PAGES,
-+			bio = bio_alloc_bioset(GFP_NOIO, BIO_MAX_VECS,
- 					       &ppl_conf->bs);
- 			bio->bi_opf = prev->bi_opf;
- 			bio->bi_write_hint = prev->bi_write_hint;
-diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-index 26c587ccd152c2..2798944899b736 100644
---- a/drivers/nvme/target/passthru.c
-+++ b/drivers/nvme/target/passthru.c
-@@ -50,9 +50,9 @@ static u16 nvmet_passthru_override_id_ctrl(struct nvmet_req *req)
- 
- 	/*
- 	 * nvmet_passthru_map_sg is limitted to using a single bio so limit
--	 * the mdts based on BIO_MAX_PAGES as well
-+	 * the mdts based on BIO_MAX_VECS as well
- 	 */
--	max_hw_sectors = min_not_zero(BIO_MAX_PAGES << (PAGE_SHIFT - 9),
-+	max_hw_sectors = min_not_zero(BIO_MAX_VECS << (PAGE_SHIFT - 9),
- 				      max_hw_sectors);
- 
- 	page_shift = NVME_CAP_MPSMIN(ctrl->cap) + 12;
-@@ -191,7 +191,7 @@ static int nvmet_passthru_map_sg(struct nvmet_req *req, struct request *rq)
- 	struct bio *bio;
- 	int i;
- 
--	if (req->sg_cnt > BIO_MAX_PAGES)
-+	if (req->sg_cnt > BIO_MAX_VECS)
- 		return -EINVAL;
- 
- 	if (req->transfer_len <= NVMET_MAX_INLINE_DATA_LEN) {
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 03166b3dea4db2..92ed7d5df67744 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -432,7 +432,7 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 		dio->size += bio->bi_iter.bi_size;
- 		pos += bio->bi_iter.bi_size;
- 
--		nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_PAGES);
-+		nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_VECS);
- 		if (!nr_pages) {
- 			bool polled = false;
- 
-@@ -500,8 +500,8 @@ blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 	if (!iov_iter_count(iter))
- 		return 0;
- 
--	nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_PAGES + 1);
--	if (is_sync_kiocb(iocb) && nr_pages <= BIO_MAX_PAGES)
-+	nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_VECS + 1);
-+	if (is_sync_kiocb(iocb) && nr_pages <= BIO_MAX_VECS)
- 		return __blkdev_direct_IO_simple(iocb, iter, nr_pages);
- 
- 	return __blkdev_direct_IO(iocb, iter, bio_max_segs(nr_pages));
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 4dfb3ead117572..db8cb98c020c75 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3048,7 +3048,7 @@ struct bio *btrfs_bio_alloc(u64 first_byte)
- {
- 	struct bio *bio;
- 
--	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_PAGES, &btrfs_bioset);
-+	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_VECS, &btrfs_bioset);
- 	bio->bi_iter.bi_sector = first_byte >> 9;
- 	btrfs_io_bio_init(btrfs_io_bio(bio));
- 	return bio;
-diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-index 582df11d298af7..6daa4309c974d4 100644
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -1428,7 +1428,7 @@ static void scrub_recheck_block_on_raid56(struct btrfs_fs_info *fs_info,
- 	if (!first_page->dev->bdev)
- 		goto out;
- 
--	bio = btrfs_io_bio_alloc(BIO_MAX_PAGES);
-+	bio = btrfs_io_bio_alloc(BIO_MAX_VECS);
- 	bio_set_dev(bio, first_page->dev->bdev);
- 
- 	for (page_num = 0; page_num < sblock->page_count; page_num++) {
-diff --git a/fs/crypto/bio.c b/fs/crypto/bio.c
-index b048a0e3851629..68a2de6b5a9b13 100644
---- a/fs/crypto/bio.c
-+++ b/fs/crypto/bio.c
-@@ -52,7 +52,7 @@ static int fscrypt_zeroout_range_inline_crypt(const struct inode *inode,
- 	int num_pages = 0;
- 
- 	/* This always succeeds since __GFP_DIRECT_RECLAIM is set. */
--	bio = bio_alloc(GFP_NOFS, BIO_MAX_PAGES);
-+	bio = bio_alloc(GFP_NOFS, BIO_MAX_VECS);
- 
- 	while (len) {
- 		unsigned int blocks_this_page = min(len, blocks_per_page);
-@@ -74,7 +74,7 @@ static int fscrypt_zeroout_range_inline_crypt(const struct inode *inode,
- 		len -= blocks_this_page;
- 		lblk += blocks_this_page;
- 		pblk += blocks_this_page;
--		if (num_pages == BIO_MAX_PAGES || !len ||
-+		if (num_pages == BIO_MAX_VECS || !len ||
- 		    !fscrypt_mergeable_bio(bio, inode, lblk)) {
- 			err = submit_bio_wait(bio);
- 			if (err)
-@@ -126,7 +126,7 @@ int fscrypt_zeroout_range(const struct inode *inode, pgoff_t lblk,
- 		return fscrypt_zeroout_range_inline_crypt(inode, lblk, pblk,
- 							  len);
- 
--	BUILD_BUG_ON(ARRAY_SIZE(pages) > BIO_MAX_PAGES);
-+	BUILD_BUG_ON(ARRAY_SIZE(pages) > BIO_MAX_VECS);
- 	nr_pages = min_t(unsigned int, ARRAY_SIZE(pages),
- 			 (len + blocks_per_page - 1) >> blocks_per_page_bits);
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 6cb356c4217b26..3851e1a64f730d 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1235,7 +1235,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
- 			}
- 
- 			if (!bio) {
--				bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-+				bio = bio_alloc(GFP_NOIO, BIO_MAX_VECS);
- 
- 				bio->bi_end_io = z_erofs_decompressqueue_endio;
- 				bio_set_dev(bio, sb->s_bdev);
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index 03a44a0de86add..f038d578d8d8ff 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -398,7 +398,7 @@ static void io_submit_init_bio(struct ext4_io_submit *io,
- 	 * bio_alloc will _always_ be able to allocate a bio if
- 	 * __GFP_DIRECT_RECLAIM is set, see comments for bio_alloc_bioset().
- 	 */
--	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-+	bio = bio_alloc(GFP_NOIO, BIO_MAX_VECS);
- 	fscrypt_set_bio_crypt_ctx_bh(bio, bh, GFP_NOIO);
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 174a0819ad967e..be5415a0dbbc6d 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -292,7 +292,7 @@ void f2fs_ra_meta_pages_cond(struct f2fs_sb_info *sbi, pgoff_t index)
- 	f2fs_put_page(page, 0);
- 
- 	if (readahead)
--		f2fs_ra_meta_pages(sbi, index, BIO_MAX_PAGES, META_POR, true);
-+		f2fs_ra_meta_pages(sbi, index, BIO_MAX_VECS, META_POR, true);
- }
- 
- static int __f2fs_write_meta_page(struct page *page,
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 7c95818639a630..4e5257c763d014 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -857,7 +857,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- 		f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
- alloc_new:
- 	if (!bio) {
--		bio = __bio_alloc(fio, BIO_MAX_PAGES);
-+		bio = __bio_alloc(fio, BIO_MAX_VECS);
- 		__attach_io_flag(fio);
- 		f2fs_set_bio_crypt_ctx(bio, fio->page->mapping->host,
- 				       fio->page->index, fio, GFP_NOIO);
-@@ -932,7 +932,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 			fio->retry = true;
- 			goto skip;
- 		}
--		io->bio = __bio_alloc(fio, BIO_MAX_PAGES);
-+		io->bio = __bio_alloc(fio, BIO_MAX_VECS);
- 		f2fs_set_bio_crypt_ctx(io->bio, fio->page->mapping->host,
- 				       bio_page->index, fio, GFP_NOIO);
- 		io->fio = *fio;
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 993004f06a772e..c2866561263e96 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -4381,7 +4381,7 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 	block_t total_node_blocks = 0;
- 
- 	do {
--		readed = f2fs_ra_meta_pages(sbi, start_blk, BIO_MAX_PAGES,
-+		readed = f2fs_ra_meta_pages(sbi, start_blk, BIO_MAX_VECS,
- 							META_SIT, true);
- 
- 		start = start_blk * sit_i->sents_per_block;
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 229814b4f4a6cc..e9a7a637d68877 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -851,7 +851,7 @@ static inline int nr_pages_to_skip(struct f2fs_sb_info *sbi, int type)
- 	else if (type == NODE)
- 		return 8 * sbi->blocks_per_seg;
- 	else if (type == META)
--		return 8 * BIO_MAX_PAGES;
-+		return 8 * BIO_MAX_VECS;
- 	else
- 		return 0;
- }
-@@ -868,7 +868,7 @@ static inline long nr_pages_to_write(struct f2fs_sb_info *sbi, int type,
- 		return 0;
- 
- 	nr_to_write = wbc->nr_to_write;
--	desired = BIO_MAX_PAGES;
-+	desired = BIO_MAX_VECS;
- 	if (type == NODE)
- 		desired <<= 1;
- 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 7069793752f114..82592b19b4e025 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -753,9 +753,9 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		case Opt_io_size_bits:
- 			if (args->from && match_int(args, &arg))
- 				return -EINVAL;
--			if (arg <= 0 || arg > __ilog2_u32(BIO_MAX_PAGES)) {
-+			if (arg <= 0 || arg > __ilog2_u32(BIO_MAX_VECS)) {
- 				f2fs_warn(sbi, "Not support %d, larger than %d",
--					  1 << arg, BIO_MAX_PAGES);
-+					  1 << arg, BIO_MAX_VECS);
- 				return -EINVAL;
- 			}
- 			F2FS_OPTION(sbi).write_io_size_bits = arg;
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index dc1b93a877c6d3..a82f4747aa8d5e 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -267,7 +267,7 @@ static struct bio *gfs2_log_alloc_bio(struct gfs2_sbd *sdp, u64 blkno,
- 				      bio_end_io_t *end_io)
- {
- 	struct super_block *sb = sdp->sd_vfs;
--	struct bio *bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-+	struct bio *bio = bio_alloc(GFP_NOIO, BIO_MAX_VECS);
- 
- 	bio->bi_iter.bi_sector = blkno << sdp->sd_fsb2bb_shift;
- 	bio_set_dev(bio, sb->s_bdev);
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 7ffcd7ef33d4f5..414769a6ad113a 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1221,7 +1221,7 @@ iomap_alloc_ioend(struct inode *inode, struct iomap_writepage_ctx *wpc,
- 	struct iomap_ioend *ioend;
- 	struct bio *bio;
- 
--	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_PAGES, &iomap_ioend_bioset);
-+	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_VECS, &iomap_ioend_bioset);
- 	bio_set_dev(bio, wpc->iomap.bdev);
- 	bio->bi_iter.bi_sector = sector;
- 	bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
-@@ -1252,7 +1252,7 @@ iomap_chain_bio(struct bio *prev)
- {
- 	struct bio *new;
- 
--	new = bio_alloc(GFP_NOFS, BIO_MAX_PAGES);
-+	new = bio_alloc(GFP_NOFS, BIO_MAX_VECS);
- 	bio_copy_dev(new, prev);/* also copies over blkcg information */
- 	new->bi_iter.bi_sector = bio_end_sector(prev);
- 	new->bi_opf = prev->bi_opf;
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index e2c4991833b8f9..bdd0d89bbf0a34 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -296,7 +296,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
- 	 */
- 	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua);
- 
--	nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_PAGES);
-+	nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_VECS);
- 	do {
- 		size_t n;
- 		if (dio->error) {
-@@ -338,7 +338,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
- 		copied += n;
- 
- 		nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter,
--						 BIO_MAX_PAGES);
-+						 BIO_MAX_VECS);
- 		iomap_dio_submit_bio(dio, iomap, bio, pos);
- 		pos += n;
- 	} while (nr_pages);
-diff --git a/fs/mpage.c b/fs/mpage.c
-index 961234d687792a..334e7d09aa6527 100644
---- a/fs/mpage.c
-+++ b/fs/mpage.c
-@@ -616,7 +616,7 @@ static int __mpage_writepage(struct page *page, struct writeback_control *wbc,
- 				goto out;
- 		}
- 		bio = mpage_alloc(bdev, blocks[0] << (blkbits - 9),
--				BIO_MAX_PAGES, GFP_NOFS|__GFP_HIGH);
-+				BIO_MAX_VECS, GFP_NOFS|__GFP_HIGH);
- 		if (bio == NULL)
- 			goto confused;
- 
-diff --git a/fs/nilfs2/segbuf.c b/fs/nilfs2/segbuf.c
-index 1e75417bfe6e52..56872e93823da0 100644
---- a/fs/nilfs2/segbuf.c
-+++ b/fs/nilfs2/segbuf.c
-@@ -399,7 +399,7 @@ static void nilfs_segbuf_prepare_write(struct nilfs_segment_buffer *segbuf,
- {
- 	wi->bio = NULL;
- 	wi->rest_blocks = segbuf->sb_sum.nblocks;
--	wi->max_pages = BIO_MAX_PAGES;
-+	wi->max_pages = BIO_MAX_VECS;
- 	wi->nr_vecs = min(wi->max_pages, wi->rest_blocks);
- 	wi->start = wi->end = 0;
- 	wi->blocknr = segbuf->sb_pseg_start;
-diff --git a/fs/squashfs/block.c b/fs/squashfs/block.c
-index 45f44425d85601..b9e87ebb1060ee 100644
---- a/fs/squashfs/block.c
-+++ b/fs/squashfs/block.c
-@@ -87,7 +87,7 @@ static int squashfs_bio_read(struct super_block *sb, u64 index, int length,
- 	int error, i;
- 	struct bio *bio;
- 
--	if (page_count <= BIO_MAX_PAGES)
-+	if (page_count <= BIO_MAX_VECS)
- 		bio = bio_alloc(GFP_NOIO, page_count);
- 	else
- 		bio = bio_kmalloc(GFP_NOIO, page_count);
-diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
-index b6ff4a21abacc6..0fe76f376dee2e 100644
---- a/fs/zonefs/super.c
-+++ b/fs/zonefs/super.c
-@@ -684,7 +684,7 @@ static ssize_t zonefs_file_dio_append(struct kiocb *iocb, struct iov_iter *from)
- 	max = ALIGN_DOWN(max << SECTOR_SHIFT, inode->i_sb->s_blocksize);
- 	iov_iter_truncate(from, max);
- 
--	nr_pages = iov_iter_npages(from, BIO_MAX_PAGES);
-+	nr_pages = iov_iter_npages(from, BIO_MAX_VECS);
- 	if (!nr_pages)
- 		return 0;
- 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 983ed2fe7c8504..d0246c92a6e865 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -20,11 +20,11 @@
- #define BIO_BUG_ON
- #endif
- 
--#define BIO_MAX_PAGES		256U
-+#define BIO_MAX_VECS		256U
- 
- static inline unsigned int bio_max_segs(unsigned int nr_segs)
- {
--	return min(nr_segs, BIO_MAX_PAGES);
-+	return min(nr_segs, BIO_MAX_VECS);
- }
- 
- #define bio_prio(bio)			(bio)->bi_ioprio
--- 
-2.30.1
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
