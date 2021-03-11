@@ -2,137 +2,150 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FCC2337D34
-	for <lists+linux-block@lfdr.de>; Thu, 11 Mar 2021 20:09:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B7DA3381D7
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 00:49:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbhCKTIc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 Mar 2021 14:08:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229721AbhCKTIE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 Mar 2021 14:08:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 77EF664FE0;
-        Thu, 11 Mar 2021 19:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615489682;
-        bh=+MqxPqLxS0fmcZSkxqaGS/7xnCYlQhr8+DK+/ePJsDE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V5MNT4BHOqod0O8XEiHiDDZBzJM7BDrJFZjL0FvTnGjdV85TOijRaR9AQvrOnhQVV
-         ulfWeO2Q785ENXGd2iGmhcoNfHLkxx2Bqc08uWVvOnOubM6nPIb0RQsSvdDDieSMQp
-         KppyVCtJpMEDvovtpatEtA4lyZkdu3Xj28dkoQmEbWotinPIbdSq69fhHZqd+5XoOc
-         dWbaROFQm2qh/8YRFEwDfHNd49yvkAMK2B3kTwPRFD1mfJ93HRE0Noih6TRvCZ90hV
-         AF+nW/B5JSeAfFgAf+u0Rld8GnK/9c9HWhHUrV1gMUzjZCMNEk+hNUpJ30iF/+g1CN
-         3Fv1Efm/4Cegg==
-Date:   Thu, 11 Mar 2021 11:08:00 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Peng Zhou <peng.zhou@mediatek.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Satya Tangirala <satyat@google.com>,
-        Wulin Li <wulin.li@mediatek.com>
-Subject: Re: [PATCH v2 2/4] mmc: Mediatek: enable crypto hardware engine
-Message-ID: <YEpqkAq6wOZ+TpR9@gmail.com>
-References: <20210309015750.6283-1-peng.zhou@mediatek.com>
- <CACRpkdYTkW7b9SFEY6Ubq4NicgR_5ewQMjE2zHvGbgxYadhHQQ@mail.gmail.com>
+        id S231374AbhCKXtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 Mar 2021 18:49:03 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:52526 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231250AbhCKXsu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 11 Mar 2021 18:48:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=kE7unqHb96tgCLiqAy7oTQD9QBaPCBADwUUVoF85ezA=; b=NgonvtaxHynX26gURA+2WbVFF7
+        EdmjT2rJo+H+u9pFbAy9IsACHfULVpJDenz/wZp/uIJ7n11VpJ4PmS3Bye0OakNE8a74IZjm9kiZr
+        HmCO0vtzmtENVocWjr8J6ARILinTKOBgkFxrQ2/zoJCo5nIyXNy4Bnqyn7uw0M3TDFbsPJBGNThgo
+        y9SPPR7K0JweAHZs5X2Ib7iIZBz6T/pQNeEPzLNj+SbWX0fVWQ2YUJ0etkvfvadDo6kE5IIEVbp8y
+        R1+iSUFNpi7MQb8lTFwrflPLEtzmvEAkRYK/jnMRPh29G2joRkm0gvJhU1WPsT4owdgClS4/omxu5
+        9EE77grw==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1lKUmZ-0003eq-Rw; Thu, 11 Mar 2021 16:32:15 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1lKUmV-00024K-OI; Thu, 11 Mar 2021 16:31:51 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 11 Mar 2021 16:31:30 -0700
+Message-Id: <20210311233142.7900-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYTkW7b9SFEY6Ubq4NicgR_5ewQMjE2zHvGbgxYadhHQQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, dan.j.williams@intel.com, iweiny@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.2 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        MYRULES_NO_TEXT,MYRULES_URI_HASH autolearn=no autolearn_force=no
+        version=3.4.2
+Subject: [RFC PATCH v2 00/11] Add support to dma_map_sg for P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 02:48:23PM +0100, Linus Walleij wrote:
-> Hi Peng,
-> 
-> thanks for your patch!
-> 
-> On Tue, Mar 9, 2021 at 3:06 AM Peng Zhou <peng.zhou@mediatek.com> wrote:
-> 
-> > Use SMC call enable hardware crypto engine
-> > due to it only be changed in ATF(EL3).
-> >
-> > Signed-off-by: Peng Zhou <peng.zhou@mediatek.com>
-> 
-> Unfortunately this commit message is way to short to
-> understand what is going on, and has a lot of assumed
-> previous knowledge.
-> 
-> Can you expand the commit message so that anyone
-> who just know MMC and some SoC basics can understand
-> what an SMC call and and what ATF(EL3) means?
-> 
-> I assume this some kind of inline encryption?
-> 
-> I think maybe linux-block mailing list need to be involved
-> because there is certain a Linux standard way of setting
-> up inline encryption for the block layer.
-> 
-> For example: how is the key to be used derived?
-> How is the device unlocked in the first place?
-> 
-> If I insert a LUKS encrypted harddrive in a Linux machine
-> the whole system is pretty much aware of how this should
-> be handled and everything "just works", I enter a pass
-> phrase and off it goes. I can use symmetric keys as well.
-> How is this stuff done for this hardware?
-> 
-> > +       /*
-> > +        * 1: MSDC_AES_CTL_INIT
-> > +        * 4: cap_id, no-meaning now
-> > +        * 1: cfg_id, we choose the second cfg group
-> > +        */
-> > +       if (mmc->caps2 & MMC_CAP2_CRYPTO)
-> > +               arm_smccc_smc(MTK_SIP_MMC_CONTROL,
-> > +                             1, 4, 1, 0, 0, 0, 0, &smccc_res);
-> 
-> The same as above: these comments assume that everyone
-> already knows what is going on.
-> 
-> AES encryption requires a key and I don't see the driver
-> setting up any key. How is the code in this file:
-> drivers/mmc/core/crypto.c
-> interacting with your driver?
-> drivers/mmc/host/cqhci-crypto.c
-> is used by SDHCI and is quite readable and I see what is going on.
-> For example it contains functions like:
-> cqhci_crypto_program_key()
-> cqhci_crypto_keyslot_program()
-> cqhci_crypto_clear_keyslot()
-> cqhci_crypto_keyslot_evict()
-> cqhci_find_blk_crypto_mode()
-> 
-> MMC_CAP2_CRYPTO is used as a sign that the driver
-> can do inline encryption, then devm_blk_ksm_init() is called
-> to initialize a block encryption abstraction with the block layer.
-> Ops are registered using
-> struct blk_ksm_ll_ops cqhci_ksm_ops.
-> 
-> This is very straight forward.
-> 
-> But where does all the above happen for this driver?
-> 
+Hi,
 
-It happens in the same place, cqhci-crypto.c.  Mediatek's eMMC inline encryption
-hardware follows the eMMC standard fairly closely, so Peng's patch series just
-sets MMC_CAP2_CRYPTO to make it use the standard cqhci crypto code, and does a
-couple extra things to actually enable the hardware's crypto support on Mediatek
-platforms since it isn't enabled by default.  (*Why* it requires an SMC call to
-enable instead of just working as expected, I don't know though.)
+This is a rework of the first half of my RFC for doing P2PDMA in userspace
+with O_DIRECT[1].
 
-The way all this gets used is via the blk-crypto framework
-(Documentation/block/inline-encryption.rst), which is used by fscrypt
-(ext4 and f2fs encryption).
+The largest issue with that series was the gross way of flagging P2PDMA
+SGL segments. This RFC proposes a different approach, (suggested by
+Dan Williams[2]) which uses the third bit in the page_link field of the
+SGL.
 
-Peng, if you could explain all this properly in the cover letter, commit
-messages, and code comments (where it makes sense), that would be really helpful
-for people.  Also please make sure your patch series is in a thread so that
-people see it together.
+This approach is a lot less hacky but comes at the cost of adding a
+CONFIG_64BIT dependency to CONFIG_PCI_P2PDMA and using up the last
+scarce bit in the page_link. For our purposes, a 64BIT restriction is
+acceptable but it's not clear if this is ok for all usecases hoping
+to make use of P2PDMA.
 
-- Eric
+Matthew Wilcox has already suggested (off-list) that this is the wrong
+approach, preferring a new dma mapping operation and an SGL replacement. I
+don't disagree that something along those lines would be a better long
+term solution, but it involves overcoming a lot of challenges to get
+there. Creating a new mapping operation still means adding support to more
+than 25 dma_map_ops implementations (many of which are on obscure
+architectures) or creating a redundant path to fallback with dma_map_sg()
+for every driver that uses the new operation. This RFC is an approach
+that doesn't require overcoming these blocks.
+
+Any alternative ideas or feedback is welcome.
+
+These patches are based on v5.12-rc2 and a git branch is available here:
+
+  https://github.com/sbates130272/linux-p2pmem/  p2pdma_dma_map_ops_rfc
+
+A branch with the patches from the previous RFC that add userspace
+O_DIRECT support is available at the same URL with the name
+"p2pdma_dma_map_ops_rfc+user" (however, none of the issues with those
+extra patches from the feedback of the last posting have been fixed).
+
+Thanks,
+
+Logan
+
+[1] https://lore.kernel.org/linux-block/20201106170036.18713-1-logang@deltatee.com/
+[2] https://lore.kernel.org/linux-block/CAPcyv4ifGcrdOtUt8qr7pmFhmecGHqGVre9G0RorGczCGVECQQ@mail.gmail.com/
+
+--
+
+Logan Gunthorpe (11):
+  PCI/P2PDMA: Pass gfp_mask flags to upstream_bridge_distance_warn()
+  PCI/P2PDMA: Avoid pci_get_slot() which sleeps
+  PCI/P2PDMA: Attempt to set map_type if it has not been set
+  PCI/P2PDMA: Introduce pci_p2pdma_should_map_bus() and
+    pci_p2pdma_bus_offset()
+  lib/scatterlist: Add flag for indicating P2PDMA segments in an SGL
+  dma-direct: Support PCI P2PDMA pages in dma-direct map_sg
+  dma-mapping: Add flags to dma_map_ops to indicate PCI P2PDMA support
+  iommu/dma: Support PCI P2PDMA pages in dma-iommu map_sg
+  block: Add BLK_STS_P2PDMA
+  nvme-pci: Check DMA ops when indicating support for PCI P2PDMA
+  nvme-pci: Convert to using dma_map_sg for p2pdma pages
+
+ block/blk-core.c            |  2 +
+ drivers/iommu/dma-iommu.c   | 63 +++++++++++++++++++++-----
+ drivers/nvme/host/core.c    |  3 +-
+ drivers/nvme/host/nvme.h    |  2 +-
+ drivers/nvme/host/pci.c     | 38 +++++++---------
+ drivers/pci/Kconfig         |  2 +-
+ drivers/pci/p2pdma.c        | 89 +++++++++++++++++++++++++++++++------
+ include/linux/blk_types.h   |  7 +++
+ include/linux/dma-map-ops.h |  3 ++
+ include/linux/dma-mapping.h |  5 +++
+ include/linux/pci-p2pdma.h  | 11 +++++
+ include/linux/scatterlist.h | 49 ++++++++++++++++++--
+ kernel/dma/direct.c         | 35 +++++++++++++--
+ kernel/dma/mapping.c        | 21 +++++++--
+ 14 files changed, 271 insertions(+), 59 deletions(-)
+
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+--
+2.20.1
