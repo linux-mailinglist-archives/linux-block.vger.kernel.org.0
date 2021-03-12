@@ -2,122 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 126B0338AA9
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2F3338AB4
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233641AbhCLKz5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S233594AbhCLKz5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Fri, 12 Mar 2021 05:55:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233653AbhCLKzg (ORCPT
+        with ESMTP id S233659AbhCLKzh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:55:36 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0456C061761
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:35 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id m20-20020a7bcb940000b029010cab7e5a9fso15505425wmi.3
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:35 -0800 (PST)
+        Fri, 12 Mar 2021 05:55:37 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6E8C061574
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:36 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id d139-20020a1c1d910000b029010b895cb6f2so14905240wmd.5
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U8krqYE8Ef8qnGsiAipJzGQpaVm5t8lDtkhTxaSOQf8=;
-        b=yo+0Pv1vGiiRr+BRTMkp3T9EiYl7WyqiXEjQPicDPEauSFiYyR62sktJewMDa8dedY
-         TtEdyo/qjJQ2oVaYRSQ7M53MZM7dmCSqleG5phx9kfrPM/3iQZKaUrptoZGtnKshKPhT
-         k8vBK+orZOsk37DTLhw4a5zMwn0ZRe0W0KpUJE4c2vUJnFGNzRTKNOrfj7BUVsMiySCS
-         KpG8zUZke0l4urksnmr+8FXqKdvK/LQQp9twKzZeG5Anzi66F3YJXeBbnAbLfyEs9Mdm
-         33HdF8a5+NO+J+PGn7XcVBn02oWNoEAEpdVHkH2yt2jK9lzPK6A0zywtAJ78xDs41uwS
-         Okkw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vi8YKLs5KwVaFxKjaiBjlz1cXBojpCCGEw35f+O4dtY=;
+        b=j7z+uYOO70ltOQL4GOyJ9R0QdnV1jtke8K0pmYvPWlYRriz34DqdictipRn5zk3Mo/
+         O0K0zDmcVf4uDDvFx5S23C84JTNRg7lOGV7+4f7qkvrBkkpIQStciOGUSHZkqnsDoL8C
+         4IxxZi+EWkfaM5BuV6ann9TENAStt8F9Bxj7n3uwEqAbAiMYz/ajZVvvsF9BhgXBVoKi
+         P76EL04h+oQXd7QgTqanT/t5HFnyk+GmYCKyA1z6vWKS8r2gToaHstOB/xGfUWlv8sd7
+         K/ncTZjlObIicuM2fuKkgRtj2KIKSotBzfq9D/F0jCoECyGSeYobxNUrXOY/h/oZje2i
+         ftMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U8krqYE8Ef8qnGsiAipJzGQpaVm5t8lDtkhTxaSOQf8=;
-        b=h9k8CStWM/oF4YEgTbHY944qGQvfdmMLG0AG1CqvgNpum1i1dYRv0qEK2ULGjb6S1Q
-         6G9wW2oYDz3EHfSsXFCLO3uiymqqDaXRoywjNd4kCWsZiljdo5d8xeCRvdP2zluC50PD
-         b17mColBzLIVZAmVUBSMfsv6piQuZCyhs1ldsMSH3Dc/3Vm78++71qF3HTtDlfSZ06LZ
-         fnveWERM2SmAzYPbo4ixVi1v/scvcNzeqryEbXy06y8YYwAAV4w92UVFv5riaIF/1gev
-         7aBTOMJG/kBzewBtnjFlHKgeX5zJABh03q8I/Ycn9FEvJQm0jgMzbLsktMY54HkKbp6/
-         JqzA==
-X-Gm-Message-State: AOAM531gDB4MiJv1Bx0LfzfJR2oSoWcsqVPTxRXmr3pZUx+FOY2TfkF9
-        vMvp9RrOTFUXUhNLJ7whYZ/v6A==
-X-Google-Smtp-Source: ABdhPJwGy2yiZng+8p42AiTsODzcXCoCU2A55jsurjv+Rkg7hZ8K/NGYGP3VtK/HkA0LP08aOZ4tBg==
-X-Received: by 2002:a1c:7e16:: with SMTP id z22mr12397544wmc.74.1615546534304;
-        Fri, 12 Mar 2021 02:55:34 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vi8YKLs5KwVaFxKjaiBjlz1cXBojpCCGEw35f+O4dtY=;
+        b=KXF6SMWbRqUjNOh+oNN56ksJBX7AhB/NtjfluxxTRQEy/V8cYdxuUkBIwAQywMIHxl
+         C9ZUMCk6ntDlnn+yFNDM/awEsLnEYnVRG+00KjZxVVr3U0haQfZFlp5HK7E18suqiLlz
+         ZhfFLDMx2OTD5jQJIL0/qIWtrS+kbNsUbuyz9erN+Ltf9ZtxB0yrOjvqGp1QVqNt0lZT
+         AnFLsr4OdVutEGWvsVA5bPvm2h4rTwUsmQrQkWRMWAMmEupgp/rkmLAabtMzZb57G8DL
+         1KLP15LdgAkx+lqkWgzn1WBoFPYTJoTt/3fR5i7O5pyhg0wSRrp/aRqSflXVitk/k7u2
+         iHGg==
+X-Gm-Message-State: AOAM530GpIqFUCe7bMGqKqebZJqObpmTz+5skfSNiKRBOcBWWDhzBnq+
+        KlfTa+dUVj2UwTZAo0FsYI3z6A==
+X-Google-Smtp-Source: ABdhPJxufQqTU/7eaFRbbpeWTbLrnhEtXNOYhKwbYlwIz6JMrKAesY7QxYtH1T3od8aL7PF83B+Qhg==
+X-Received: by 2002:a7b:c3c1:: with SMTP id t1mr12367552wmj.47.1615546535520;
+        Fri, 12 Mar 2021 02:55:35 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.32
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:33 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:34 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        drbd-dev@lists.linbit.com, Jens Axboe <axboe@kernel.dk>,
         Joshua Morris <josh.h.morris@us.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        linux-block@vger.kernel.org,
         Philip Kelleher <pjk1939@linux.ibm.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH 00/11] Rid W=1 warnings from Block
-Date:   Fri, 12 Mar 2021 10:55:19 +0000
-Message-Id: <20210312105530.2219008-1-lee.jones@linaro.org>
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: [PATCH 01/11] block: rsxx: core: Remove superfluous const qualifier
+Date:   Fri, 12 Mar 2021 10:55:20 +0000
+Message-Id: <20210312105530.2219008-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
+References: <20210312105530.2219008-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+This function returns a const string.
 
-Lee Jones (11):
-  block: rsxx: core: Remove superfluous const qualifier
-  block: drbd: drbd_interval: Demote some kernel-doc abuses and fix
-    another header
-  block: mtip32xx: mtip32xx: Mark debugging variable 'start' as
-    __maybe_unused
-  block: drbd: drbd_state: Fix some function documentation issues
-  block: drbd: drbd_receiver: Demote non-conformant kernel-doc headers
-  block: drbd: drbd_main: Remove duplicate field initialisation
-  block: drbd: drbd_nl: Make conversion to 'enum drbd_ret_code' explicit
-  block: drbd: drbd_main: Fix a bunch of function documentation
-    discrepancies
-  block: drbd: drbd_receiver: Demote less than half complete kernel-doc
-    header
-  block: xen-blkfront: Demote kernel-doc abuses
-  block: drbd: drbd_nl: Demote half-complete kernel-doc headers
+The second const qualifier is not required.
 
- drivers/block/drbd/drbd_interval.c |  8 +++++---
- drivers/block/drbd/drbd_main.c     | 30 +++++++++++++++---------------
- drivers/block/drbd/drbd_nl.c       | 17 ++++++++++-------
- drivers/block/drbd/drbd_receiver.c | 26 ++++++++++++--------------
- drivers/block/drbd/drbd_state.c    |  7 ++++---
- drivers/block/mtip32xx/mtip32xx.c  |  2 +-
- drivers/block/rsxx/core.c          |  2 +-
- drivers/block/xen-blkfront.c       |  6 +++---
- 8 files changed, 51 insertions(+), 47 deletions(-)
+Fixes the following W=1 kernel build warning(s):
 
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: drbd-dev@lists.linbit.com
-Cc: Jens Axboe <axboe@kernel.dk>
+ drivers/block/rsxx/core.c:395:8: warning: type qualifiers ignored on function return type [-Wignored-qualifiers]
+
 Cc: Joshua Morris <josh.h.morris@us.ibm.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc: linux-block@vger.kernel.org
 Cc: Philip Kelleher <pjk1939@linux.ibm.com>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: xen-devel@lists.xenproject.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/block/rsxx/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
+index 5ac1881396afb..813b0a554d4a8 100644
+--- a/drivers/block/rsxx/core.c
++++ b/drivers/block/rsxx/core.c
+@@ -392,7 +392,7 @@ static irqreturn_t rsxx_isr(int irq, void *pdata)
+ }
+ 
+ /*----------------- Card Event Handler -------------------*/
+-static const char * const rsxx_card_state_to_str(unsigned int state)
++static const char *rsxx_card_state_to_str(unsigned int state)
+ {
+ 	static const char * const state_strings[] = {
+ 		"Unknown", "Shutdown", "Starting", "Formatting",
 -- 
 2.27.0
 
