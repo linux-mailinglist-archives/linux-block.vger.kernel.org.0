@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 789AA338AB6
+	by mail.lfdr.de (Postfix) with ESMTP id 2B777338AB5
 	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233728AbhCLK4A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Mar 2021 05:56:00 -0500
+        id S233730AbhCLK4B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Mar 2021 05:56:01 -0500
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233686AbhCLKzp (ORCPT
+        with ESMTP id S233690AbhCLKzq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:55:45 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07181C061763
+        Fri, 12 Mar 2021 05:55:46 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03632C061763
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:46 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id d139-20020a1c1d910000b029010b895cb6f2so14905508wmd.5
         for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:45 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id x16so1522266wrn.4
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YQunP1ZnGfw+bwS7V3Svy77qoJ9EJsTQfaA2Monbig8=;
-        b=KP1AmmQ+NJSSU0KU2H+UpoBIZOhjYnpekFWd/hrndh4zSEqgIb7OuA0ekt5TYszzZD
-         aFoY15Yo8rDQ6+wx/1o+HPMF+ZJT0qzpPd+tW4XDACr4HbacjI/aHUmdWEt7MO1HhQpP
-         XNvYnWT8rj+9XYBYzSUIBJrbE2xPIpz7lPuarTNn5SdnlG+wyZSclkITgB1M3Ez4NDeO
-         jubZngWDtl4YM30v8R5EmQZj6VXi4Wcn5qXTxUOSKHFyLUDABXqc2a56gARdjOCyNn6v
-         lMkXW7S7cJEE4J5IXPkyTSi8n8bqG8qQD0ORpi1E8j2DBbT9CoNmQIn81bkFhFppCEDT
-         h4PA==
+        bh=CQ2DfDdVbjmrehTjwybpEwMo+GbFYXt1R0CwuBdY3Z0=;
+        b=OghrvRpS8GWv/AV2ViOXbgTejwPy/gpOEe32zLkGmtvykZU0mA2lJyRWzqmmb1K1j4
+         FesBzDGRHwApz1sUTLSb7KsA0Kq7y3o+Aa8+OLK4bYkbcmGmf5eH2y1s8jQbwcSFZwqX
+         Jj1LPCVlsV8XrcQNIsjLT2QiXqB2L+guzQ4YkhZ/ZvNFtQ3juB+J7AKfIS8Hq+g6KXly
+         xONNkru+slCIA/hDIB+kLJwxk+wRqinyKG4qqc33vRzGKfmm4CeOkiX/n4xWDkFhCpL9
+         1AGgKMsjnXiZKJFNc27dCH3ocNFLOMDsy68oApOjCZchXDOusCet6BaY9iQN6N/KkEkZ
+         1ltw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YQunP1ZnGfw+bwS7V3Svy77qoJ9EJsTQfaA2Monbig8=;
-        b=c2M693zqZCo1kFgEcRbVryw+jf6Idy6E53qhoICkopCpgTam2cdG8pQPagzk26VP4H
-         4CWHs/nxlEP3C8f/as2R4JnYj4Me4J96b3MMXzjck4SN9Cr/2/8gX7iswflOxzrwVr+R
-         Ehu0GqGkIpftgMKQxLQCNybLN++ChY/xOR0ByTtot0oWhhXYTbc57ysHAKTgHIkUyR+B
-         ynx/bcoym1eZcG8Pylao+E0Qu8nXiU5gW8KSRp8PtwG6XfT8QTmupX20fLjqWdx55IPe
-         Eh73inSf4782/6PIPS2bclHGvYbnNWmTFUBSwzjCuRSwZmnPcB2EtvX9zDBVn9p4Lfmv
-         ZIGw==
-X-Gm-Message-State: AOAM530L+Alou5srlNg+nH7E6uerExBx8zO5DoSMiQMQ1Z6gH+Ok1qk8
-        2l7/F7LNGrTaofVFyJ07utYqGA==
-X-Google-Smtp-Source: ABdhPJx1fA6N7m56sWMhlgXOLGDI5ePwmRDLwv9uAPX0L7j+xje182ndLf7sjHY94sTD0nZ6VeeR+A==
-X-Received: by 2002:adf:f60b:: with SMTP id t11mr8137456wrp.269.1615546543715;
-        Fri, 12 Mar 2021 02:55:43 -0800 (PST)
+        bh=CQ2DfDdVbjmrehTjwybpEwMo+GbFYXt1R0CwuBdY3Z0=;
+        b=lqCAEEP8OnoXPW8cDwJfedwlA2tCfe1t/YXpYkd24Y98aFMcQ0N2Z9BaqATOPkunRJ
+         jGKu1dJXnM1znaIOdKkgtvONGh3Zqio7SNvS5H+uVQtslN/7jKBm9Gd5/iQAdF6lY5Ac
+         /IyS+rg00cWqz4lNYWTzQo/Kz9T9NAznD3kHRcEMIm4COTlsmZwleqOcc4WkSxXFlLGw
+         XfRknTlaiArm3sZFHVlaQOjjTBFGJrNtkhz+bDaf+kLl/6NXyY0eTnrOd3GYCaIIZNPr
+         5VDWyCCT5ZS+AXJqgTr63FvHQZ4VqnsUhHOvrVjthMqia7bvhyh10+RhFOd1yX78xqgX
+         eLwg==
+X-Gm-Message-State: AOAM533JyERNbS2f3vmctt4fdnyb2RfS+4VFS2ditVC4XL5SMYx/7nRs
+        4WvTiQc9AIMoBb0AYfYnOq1aZQ==
+X-Google-Smtp-Source: ABdhPJz0HY2DHTHFDRtkB2revKFFtu6vGCyfJwf+UX60jhtgQzFrnGp54e9OnekD8J52ZO5w2YW1hQ==
+X-Received: by 2002:a1c:a306:: with SMTP id m6mr12059136wme.13.1615546544651;
+        Fri, 12 Mar 2021 02:55:44 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.42
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:43 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:44 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
         Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 08/11] block: drbd: drbd_main: Fix a bunch of function documentation discrepancies
-Date:   Fri, 12 Mar 2021 10:55:27 +0000
-Message-Id: <20210312105530.2219008-9-lee.jones@linaro.org>
+Subject: [PATCH 09/11] block: drbd: drbd_receiver: Demote less than half complete kernel-doc header
+Date:   Fri, 12 Mar 2021 10:55:28 +0000
+Message-Id: <20210312105530.2219008-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
 References: <20210312105530.2219008-1-lee.jones@linaro.org>
@@ -69,24 +69,9 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/block/drbd/drbd_main.c:278: warning: Function parameter or member 'connection' not described in 'tl_clear'
- drivers/block/drbd/drbd_main.c:278: warning: Excess function parameter 'device' description in 'tl_clear'
- drivers/block/drbd/drbd_main.c:489: warning: Function parameter or member 'cpu_mask' not described in 'drbd_calc_cpu_mask'
- drivers/block/drbd/drbd_main.c:528: warning: Excess function parameter 'device' description in 'drbd_thread_current_set_cpu'
- drivers/block/drbd/drbd_main.c:549: warning: Function parameter or member 'connection' not described in 'drbd_header_size'
- drivers/block/drbd/drbd_main.c:1204: warning: Function parameter or member 'device' not described in 'send_bitmap_rle_or_plain'
- drivers/block/drbd/drbd_main.c:1204: warning: Function parameter or member 'c' not described in 'send_bitmap_rle_or_plain'
- drivers/block/drbd/drbd_main.c:1335: warning: Function parameter or member 'peer_device' not described in '_drbd_send_ack'
- drivers/block/drbd/drbd_main.c:1335: warning: Excess function parameter 'device' description in '_drbd_send_ack'
- drivers/block/drbd/drbd_main.c:1379: warning: Function parameter or member 'peer_device' not described in 'drbd_send_ack'
- drivers/block/drbd/drbd_main.c:1379: warning: Excess function parameter 'device' description in 'drbd_send_ack'
- drivers/block/drbd/drbd_main.c:1892: warning: Function parameter or member 'connection' not described in 'drbd_send_all'
- drivers/block/drbd/drbd_main.c:1892: warning: Function parameter or member 'sock' not described in 'drbd_send_all'
- drivers/block/drbd/drbd_main.c:1892: warning: Function parameter or member 'buffer' not described in 'drbd_send_all'
- drivers/block/drbd/drbd_main.c:1892: warning: Function parameter or member 'size' not described in 'drbd_send_all'
- drivers/block/drbd/drbd_main.c:1892: warning: Function parameter or member 'msg_flags' not described in 'drbd_send_all'
- drivers/block/drbd/drbd_main.c:3525: warning: Function parameter or member 'flags' not described in 'drbd_queue_bitmap_io'
- drivers/block/drbd/drbd_main.c:3563: warning: Function parameter or member 'flags' not described in 'drbd_bitmap_io'
+ drivers/block/drbd/drbd_receiver.c:1641: warning: Function parameter or member 'op' not described in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:1641: warning: Function parameter or member 'op_flags' not described in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:1641: warning: Function parameter or member 'fault_type' not described in 'drbd_submit_peer_request'
 
 Cc: Philipp Reisner <philipp.reisner@linbit.com>
 Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
@@ -95,112 +80,22 @@ Cc: drbd-dev@lists.linbit.com
 Cc: linux-block@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/block/drbd/drbd_main.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 69c9640d407df..2ca126bbbc377 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -268,7 +268,7 @@ void tl_restart(struct drbd_connection *connection, enum drbd_req_event what)
- 
- /**
-  * tl_clear() - Clears all requests and &struct drbd_tl_epoch objects out of the TL
-- * @device:	DRBD device.
-+ * @connection:	DRBD connection.
-  *
-  * This is called after the connection to the peer was lost. The storage covered
-  * by the requests on the transfer gets marked as our of sync. Called from the
-@@ -479,7 +479,7 @@ int conn_lowest_minor(struct drbd_connection *connection)
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 89818a5e0ac67..7a32185347247 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -1618,7 +1618,7 @@ static void drbd_issue_peer_wsame(struct drbd_device *device,
  }
  
- #ifdef CONFIG_SMP
--/**
-+/*
-  * drbd_calc_cpu_mask() - Generate CPU masks, spread over all CPUs
-  *
-  * Forces all threads of a resource onto the same CPU. This is beneficial for
-@@ -518,7 +518,6 @@ static void drbd_calc_cpu_mask(cpumask_var_t *cpu_mask)
- 
- /**
-  * drbd_thread_current_set_cpu() - modifies the cpu mask of the _current_ thread
-- * @device:	DRBD device.
-  * @thi:	drbd_thread object
-  *
-  * call in the "main loop" of _all_ threads, no need for any mutex, current won't die
-@@ -538,7 +537,7 @@ void drbd_thread_current_set_cpu(struct drbd_thread *thi)
- #define drbd_calc_cpu_mask(A) ({})
- #endif
  
 -/**
 +/*
-  * drbd_header_size  -  size of a packet header
-  *
-  * The header size is a multiple of 8, so any payload following the header is
-@@ -1193,7 +1192,7 @@ static int fill_bitmap_rle_bits(struct drbd_device *device,
- 	return len;
- }
- 
--/**
-+/*
-  * send_bitmap_rle_or_plain
-  *
-  * Return 0 when done, 1 when another iteration is needed, and a negative error
-@@ -1324,11 +1323,11 @@ void drbd_send_b_ack(struct drbd_connection *connection, u32 barrier_nr, u32 set
- 
- /**
-  * _drbd_send_ack() - Sends an ack packet
-- * @device:	DRBD device.
-- * @cmd:	Packet command code.
-- * @sector:	sector, needs to be in big endian byte order
-- * @blksize:	size in byte, needs to be in big endian byte order
-- * @block_id:	Id, big endian byte order
-+ * @peer_device:	DRBD peer device.
-+ * @cmd:		Packet command code.
-+ * @sector:		sector, needs to be in big endian byte order
-+ * @blksize:		size in byte, needs to be in big endian byte order
-+ * @block_id:		Id, big endian byte order
-  */
- static int _drbd_send_ack(struct drbd_peer_device *peer_device, enum drbd_packet cmd,
- 			  u64 sector, u32 blksize, u64 block_id)
-@@ -1370,9 +1369,9 @@ void drbd_send_ack_rp(struct drbd_peer_device *peer_device, enum drbd_packet cmd
- 
- /**
-  * drbd_send_ack() - Sends an ack packet
-- * @device:	DRBD device
-- * @cmd:	packet command code
-- * @peer_req:	peer request
-+ * @peer_device:	DRBD peer device
-+ * @cmd:		packet command code
-+ * @peer_req:		peer request
-  */
- int drbd_send_ack(struct drbd_peer_device *peer_device, enum drbd_packet cmd,
- 		  struct drbd_peer_request *peer_req)
-@@ -1882,7 +1881,7 @@ int drbd_send(struct drbd_connection *connection, struct socket *sock,
- 	return sent;
- }
- 
--/**
-+/*
-  * drbd_send_all  -  Send an entire buffer
-  *
-  * Returns 0 upon success and a negative error value otherwise.
-@@ -3509,6 +3508,7 @@ static int w_bitmap_io(struct drbd_work *w, int unused)
-  * @io_fn:	IO callback to be called when bitmap IO is possible
-  * @done:	callback to be called after the bitmap IO was performed
-  * @why:	Descriptive text of the reason for doing the IO
-+ * @flags:	Bitmap flags
-  *
-  * While IO on the bitmap happens we freeze application IO thus we ensure
-  * that drbd_set_out_of_sync() can not be called. This function MAY ONLY be
-@@ -3554,6 +3554,7 @@ void drbd_queue_bitmap_io(struct drbd_device *device,
+  * drbd_submit_peer_request()
   * @device:	DRBD device.
-  * @io_fn:	IO callback to be called when bitmap IO is possible
-  * @why:	Descriptive text of the reason for doing the IO
-+ * @flags:	Bitmap flags
-  *
-  * freezes application IO while that the actual IO operations runs. This
-  * functions MAY NOT be called from worker context.
+  * @peer_req:	peer request
 -- 
 2.27.0
 
