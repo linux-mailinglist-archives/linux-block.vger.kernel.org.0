@@ -2,115 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E19733835B
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 03:00:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 043A1338378
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 03:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbhCLB4m (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 Mar 2021 20:56:42 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:39170 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229470AbhCLB4U (ORCPT
+        id S230084AbhCLCS7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 Mar 2021 21:18:59 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:49156 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229569AbhCLCSb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 Mar 2021 20:56:20 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0URXfkii_1615514176;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0URXfkii_1615514176)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Mar 2021 09:56:17 +0800
-Subject: Re: [dm-devel] [PATCH v5 10/12] block: fastpath for bio-based polling
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, msnitzer@redhat.com, caspar@linux.alibaba.com,
-        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com,
-        dm-devel@redhat.com, mpatocka@redhat.com, io-uring@vger.kernel.org
-References: <20210303115740.127001-1-jefflexu@linux.alibaba.com>
- <20210303115740.127001-11-jefflexu@linux.alibaba.com> <YEohgwIIy5ryme8x@T590>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <40f6c434-8414-3967-0000-4b3bffc11d75@linux.alibaba.com>
-Date:   Fri, 12 Mar 2021 09:56:16 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.0
+        Thu, 11 Mar 2021 21:18:31 -0500
+X-Greylist: delayed 2466 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Mar 2021 21:18:30 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=TthgKQQeKaY8Nk8kByxBsMn1+rajpO9j2vCO0oMycYg=; b=k5/TOv/t9MI8U4lhl5xd0eVHRI
+        DEKyTXEcuq5sX7Xy2TXIwqOAOZ73ZqhrLuTntYIMTvCOCq8PRu9o7rWRFdwy4LEmwJcHwyWL9BvxE
+        E3psi+/9MRziL+BVzgCEmcxCM77bWwNBiF0H8QBoLUfFeTtCEH58WSnu/bBSwfWEc0X1HLYx+UY6W
+        Ig6tahtLX1Cp8ddWB4Vw3kJiR4S7bXzhUgT4PrlGFGZiBmn37haj35vV85OvDcD2h9GakgTEPhmP8
+        5ULZeqF8e05hdIS9qe+Vati5jKVwahKR4z2FkN46o43eFB9sPRT5TVTR6byB7fKBkdA6vj9c1GMvK
+        qXUpe9FA==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lKWjj-0005aG-5w; Thu, 11 Mar 2021 18:37:08 -0700
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>
+References: <20210311233142.7900-1-logang@deltatee.com>
+ <20210311233142.7900-12-logang@deltatee.com>
+ <20210311235943.GB2710221@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c6cc9e07-b7cf-6d3d-b0bf-25428b197731@deltatee.com>
+Date:   Thu, 11 Mar 2021 18:37:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <YEohgwIIy5ryme8x@T590>
+In-Reply-To: <20210311235943.GB2710221@ziepe.ca>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, iweiny@intel.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH v2 11/11] nvme-pci: Convert to using dma_map_sg for
+ p2pdma pages
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 
 
-On 3/11/21 9:56 PM, Ming Lei wrote:
-> On Wed, Mar 03, 2021 at 07:57:38PM +0800, Jeffle Xu wrote:
->> Offer one fastpath for bio-based polling when bio submitted to dm
->> device is not split.
+On 2021-03-11 4:59 p.m., Jason Gunthorpe wrote:
+> On Thu, Mar 11, 2021 at 04:31:41PM -0700, Logan Gunthorpe wrote:
+>> Convert to using dma_[un]map_sg() for PCI p2pdma pages.
 >>
->> In this case, there will be only one bio submitted to only one polling
->> hw queue of one underlying mq device, and thus we don't need to track
->> all split bios or iterate through all polling hw queues. The pointer to
->> the polling hw queue the bio submitted to is returned here as the
->> returned cookie. In this case, the polling routine will call
->> mq_ops->poll() directly with the hw queue converted from the input
->> cookie.
+>> This should be equivalent, though support will be somewhat less
+>> (only dma-direct and dma-iommu are currently supported).
 >>
->> If the original bio submitted to dm device is split to multiple bios and
->> thus submitted to multiple polling hw queues, the polling routine will
->> fall back to iterating all hw queues (in polling mode) of all underlying
->> mq devices.
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>  drivers/nvme/host/pci.c | 27 +++++++--------------------
+>>  1 file changed, 7 insertions(+), 20 deletions(-)
 >>
->> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
->> ---
->>  block/blk-core.c          | 73 +++++++++++++++++++++++++++++++++++++--
->>  include/linux/blk_types.h | 66 +++++++++++++++++++++++++++++++++--
->>  include/linux/types.h     |  2 +-
->>  3 files changed, 135 insertions(+), 6 deletions(-)
->>
->> diff --git a/block/blk-core.c b/block/blk-core.c
->> index 6d7d53030d7c..e5cd4ff08f5c 100644
->> --- a/block/blk-core.c
->> +++ b/block/blk-core.c
->> @@ -947,14 +947,22 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
->>  {
->>  	struct bio_list bio_list_on_stack[2];
->>  	blk_qc_t ret = BLK_QC_T_NONE;
->> +	struct request_queue *top_q;
->> +	bool poll_on;
+>> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+>> index 7d40c6a9e58e..89ca5acf7a62 100644
+>> +++ b/drivers/nvme/host/pci.c
+>> @@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
 >>  
->>  	BUG_ON(bio->bi_next);
+>>  }
 >>  
->>  	bio_list_init(&bio_list_on_stack[0]);
->>  	current->bio_list = bio_list_on_stack;
->>  
->> +	top_q = bio->bi_bdev->bd_disk->queue;
->> +	poll_on = test_bit(QUEUE_FLAG_POLL, &top_q->queue_flags) &&
->> +		  (bio->bi_opf & REQ_HIPRI);
->> +
->>  	do {
->> -		struct request_queue *q = bio->bi_bdev->bd_disk->queue;
->> +		blk_qc_t cookie;
->> +		struct block_device *bdev = bio->bi_bdev;
->> +		struct request_queue *q = bdev->bd_disk->queue;
->>  		struct bio_list lower, same;
->>  
->>  		if (unlikely(bio_queue_enter(bio) != 0))
->> @@ -966,7 +974,23 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
->>  		bio_list_on_stack[1] = bio_list_on_stack[0];
->>  		bio_list_init(&bio_list_on_stack[0]);
->>  
->> -		ret = __submit_bio(bio);
->> +		cookie = __submit_bio(bio);
->> +
->> +		if (poll_on && blk_qc_t_valid(cookie)) {
+>> -static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
+>> -{
+>> -	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+>> -
+>> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+>> -		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
+>> -				    rq_dma_dir(req));
+>> -	else
+>> -		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+>> -}
 > 
-> In patch 8, dm_submit_bio() is changed to return BLK_QC_T_NONE always,
-> so the returned cookie may be BLK_QC_T_NONE for DM device, such as, in
-> case of DM_MAPIO_SUBMITTED returned from ->map(), and underlying bios
-> can be submitted from another context, then nothing is fed to blk_poll().
+> Can the two other places with this code pattern be changed too?
 
-Thanks for poniting out this. Indeed this issue exists. If the IO
-submission is offloaded to another process context, the current simple
-cookie mechanism doesn't support that.
+Yes, if this goes forward, I imagine completely dropping
+pci_p2pdma_unmap_sg().
 
-
--- 
-Thanks,
-Jeffle
+Logan
