@@ -2,66 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D33338AAF
+	by mail.lfdr.de (Postfix) with ESMTP id 06FBB338AAD
 	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233437AbhCLKz6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S233716AbhCLKz6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Fri, 12 Mar 2021 05:55:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233662AbhCLKzi (ORCPT
+        with ESMTP id S233670AbhCLKzj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:55:38 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07337C061761
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:38 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id 7so4560936wrz.0
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:37 -0800 (PST)
+        Fri, 12 Mar 2021 05:55:39 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48933C061574
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:39 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id w203-20020a1c49d40000b029010c706d0642so4343084wma.0
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j/WYLYLqmQFWxlr9WoVnLBGdoC49pGhDOWKpOODCm24=;
-        b=OuQeMCfTT4DatgyvzMVQDGeeb5cw3kg6EcS8gxT0b9bi0EC0YubnFpjF9nNaWKZHgc
-         QdXmiRwI/ZD6uDY8J9puCjAmJJfsbyIKB31Ed+8S/4kY32MFrgGJA8dQek3l3TZroSaj
-         LL3NP4zewqLYp4qjM7gvay4NKq4zrqXasmNsyidm1eIpkYCYoJlwkMWP2m/adoAF0u+S
-         noDM1gQxWUaKB8u7Hr/CcnVOq5gbjcEXe4MOZTgHhSUiBAWrd6v6DR6Kc0x8MDXzVN6k
-         kF9u7zGq3JBrnKmIZN0MPZmFMR2NrT2iq9eiifs7MMewPrD9YNvMBmvmHz/YK3mEQldv
-         s7Sw==
+        bh=dTDdaTycGYlNA/lyonpjEoSlsLiRrWvU/OfIN0f1xg4=;
+        b=ERbKKB4/+jTtG9cxQCI6ys1C2lW4tUaNJdMui+/oWeXE0HsW6DNJRDpnpLOoJZqG0c
+         q/pOK+PWJGTFd8jFRLH9zGHgjPEFavi2IYR4k4+Idhx6YPwn/rp+WCdB0OGFv2TQQ6QC
+         r4O3cad/oKkNIC/0CFfazs3nN/6O3Geh/pOdj9I5in5kIzD6IyLwgDdn7B1b13yE5KJA
+         RmAKA8Qas52QlZP1QXMSDfm9vPfp0l0i/LCI5PgJb4IsLPDiT/goCdDhzArJVbXqjMGc
+         f7juz1rKAoMY+aUOBma/t299ym1GFGKBUu0ra3mWr0vJi5mlw7J63BC9Aziq6waqvas2
+         p9Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j/WYLYLqmQFWxlr9WoVnLBGdoC49pGhDOWKpOODCm24=;
-        b=VJW5G/0id7UHbBE821CKfOroGLl0U/mhNdOu/OD7pKf7i1SNNM2c06xnS1sJHbUZUi
-         5fa1A5nAIe8KRyYERN98bsiF41CB/xkSPwpCbnwEfyulPoiyLpLGxCUgmh5dhS2DVH5k
-         QLRRyrd0aEu8cXBPL0jT68xXc48TpXIhGmc0eSqLdTv2CTGXotADXmBJUF8L2+DEGvI3
-         1vlLTnpRtbPrX0tvTC0EEExbNkKt9a9VLZmJU1g7Ff/EKg+5396pb4sxQjBQiofOJHJM
-         JTr2THNdTDdMqLWjjFHm1D/fDglF4+UMrjguxxLvUA4ba4A3Z31rs0nBr1Z/LtYs7/Hy
-         D/eA==
-X-Gm-Message-State: AOAM532h3k73M3S857i38f3Uj/0zkSkvvoC8+EjoBPjvolfg4itdC6n6
-        Q358OQEzcPtgFxxgY2JhxR9ZEw==
-X-Google-Smtp-Source: ABdhPJy+LSfk15aIBYGicZ5iq8PFrPFac51w86XE4skIkuw+WVP7ywQfAlsxnz2II7j14s8zrlbb4Q==
-X-Received: by 2002:adf:a703:: with SMTP id c3mr13132259wrd.379.1615546536734;
-        Fri, 12 Mar 2021 02:55:36 -0800 (PST)
+        bh=dTDdaTycGYlNA/lyonpjEoSlsLiRrWvU/OfIN0f1xg4=;
+        b=ku2nSX0owpShIJcvPQVxGGa2oNfkWRrnKlByCjX1ON1TIx4FgQmlEtV8eHSFKB8gn7
+         QNM1+Nnt1EewVNSoZFBJa139S5Vrssam0eztGjaxef1jY+viAHdv4hH+oSuU5oXjMSOZ
+         0kxHZXRy6y3gM1aX9ECVyLrzlIwxkQqKdebkhm8rrL5o//2dYZxUJW/r0a1FlPHvQH9b
+         5QXWPlpMJjyikmECtN0AYIZxzSt+Q+uz6A3yYTN/voAXlEdouYm+xjDdCOyO549MtT34
+         vP676vBPPjzogVMoG57gi1ZMTb90NC8egSIKkwPB4RO6UPwVmbELUlgSzNpnlwwKh+qR
+         OSGw==
+X-Gm-Message-State: AOAM530nnKT8jaguvFzQ+eO57dEZUItcGNT/E8mfvQ2cLFFEoz0rQNxj
+        0Jn1cPO60DZu0x8a4VovF5wPfw==
+X-Google-Smtp-Source: ABdhPJyBSWReAMX3zAKD9jX8PV62DEBUVoL14DbaG+qxxdzW1KCswtemO46FdCsHks6M611re71JtA==
+X-Received: by 2002:a1c:7704:: with SMTP id t4mr12256371wmi.159.1615546538048;
+        Fri, 12 Mar 2021 02:55:38 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.35
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:36 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:37 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         linux-block@vger.kernel.org
-Subject: [PATCH 02/11] block: drbd: drbd_interval: Demote some kernel-doc abuses and fix another header
-Date:   Fri, 12 Mar 2021 10:55:21 +0000
-Message-Id: <20210312105530.2219008-3-lee.jones@linaro.org>
+Subject: [PATCH 03/11] block: mtip32xx: mtip32xx: Mark debugging variable 'start' as __maybe_unused
+Date:   Fri, 12 Mar 2021 10:55:22 +0000
+Message-Id: <20210312105530.2219008-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
 References: <20210312105530.2219008-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
@@ -69,71 +67,29 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/block/drbd/drbd_interval.c:11: warning: Function parameter or member 'node' not described in 'interval_end'
- drivers/block/drbd/drbd_interval.c:26: warning: Function parameter or member 'root' not described in 'drbd_insert_interval'
- drivers/block/drbd/drbd_interval.c:26: warning: Function parameter or member 'this' not described in 'drbd_insert_interval'
- drivers/block/drbd/drbd_interval.c:70: warning: Function parameter or member 'root' not described in 'drbd_contains_interval'
- drivers/block/drbd/drbd_interval.c:96: warning: Function parameter or member 'root' not described in 'drbd_remove_interval'
- drivers/block/drbd/drbd_interval.c:96: warning: Function parameter or member 'this' not described in 'drbd_remove_interval'
- drivers/block/drbd/drbd_interval.c:113: warning: Function parameter or member 'root' not described in 'drbd_find_overlap'
+ drivers/block/mtip32xx/mtip32xx.c: In function ‘mtip_standby_immediate’:
+ drivers/block/mtip32xx/mtip32xx.c:1216:16: warning: variable ‘start’ set but not used [-Wunused-but-set-variable]
 
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
 Cc: Jens Axboe <axboe@kernel.dk>
-Cc: drbd-dev@lists.linbit.com
 Cc: linux-block@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/block/drbd/drbd_interval.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/block/mtip32xx/mtip32xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_interval.c b/drivers/block/drbd/drbd_interval.c
-index 651bd0236a996..f07b4378388b0 100644
---- a/drivers/block/drbd/drbd_interval.c
-+++ b/drivers/block/drbd/drbd_interval.c
-@@ -3,7 +3,7 @@
- #include <linux/rbtree_augmented.h>
- #include "drbd_interval.h"
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 3be0dbc674bd0..bc485f1623361 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -1213,7 +1213,7 @@ static int mtip_standby_immediate(struct mtip_port *port)
+ {
+ 	int rv;
+ 	struct host_to_dev_fis	fis;
+-	unsigned long start;
++	unsigned long __maybe_unused start;
+ 	unsigned int timeout;
  
--/**
-+/*
-  * interval_end  -  return end of @node
-  */
- static inline
-@@ -18,7 +18,7 @@ sector_t interval_end(struct rb_node *node)
- RB_DECLARE_CALLBACKS_MAX(static, augment_callbacks,
- 			 struct drbd_interval, rb, sector_t, end, NODE_END);
- 
--/**
-+/*
-  * drbd_insert_interval  -  insert a new interval into a tree
-  */
- bool
-@@ -56,6 +56,7 @@ drbd_insert_interval(struct rb_root *root, struct drbd_interval *this)
- 
- /**
-  * drbd_contains_interval  -  check if a tree contains a given interval
-+ * @root:	red black tree root
-  * @sector:	start sector of @interval
-  * @interval:	may not be a valid pointer
-  *
-@@ -88,7 +89,7 @@ drbd_contains_interval(struct rb_root *root, sector_t sector,
- 	return false;
- }
- 
--/**
-+/*
-  * drbd_remove_interval  -  remove an interval from a tree
-  */
- void
-@@ -99,6 +100,7 @@ drbd_remove_interval(struct rb_root *root, struct drbd_interval *this)
- 
- /**
-  * drbd_find_overlap  - search for an interval overlapping with [sector, sector + size)
-+ * @root:	red black tree root
-  * @sector:	start sector
-  * @size:	size, aligned to 512 bytes
-  *
+ 	/* Build the FIS. */
 -- 
 2.27.0
 
