@@ -2,65 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2383338AB9
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E34338ABB
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233732AbhCLK4B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Mar 2021 05:56:01 -0500
+        id S233738AbhCLK4C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Mar 2021 05:56:02 -0500
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233692AbhCLKzr (ORCPT
+        with ESMTP id S233696AbhCLKzs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:55:47 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF797C061761
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:46 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id m20-20020a7bcb940000b029010cab7e5a9fso15505736wmi.3
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:46 -0800 (PST)
+        Fri, 12 Mar 2021 05:55:48 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1ADC061763
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:47 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id y124-20020a1c32820000b029010c93864955so15516184wmy.5
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xA52xjDJnHJLgzflByk0CYC2xv7fgNWSlI8xs2AjI2I=;
-        b=yBhGkoCBvWZlTxApi3aQJCnXm6iZzfXW4lQ1f6lbu63T/UR1hwscaZQgi6mFsVg64a
-         oiA/rWoXUQKQGJ5nth3GW+1+N6Q9vQ+LsOSskFQvM5+FfVpyUsxa1oVrzuO7bgSsVet+
-         1LCEz6xdgaUNJ0NNVGWeHhf6ln0L/JSLz2qMsYBqA3fk6Yl2JEUPxgAQyQB+GlNOero6
-         ZpeDtbIKY2N+DkzL73rgHW+TRdFtjfwk7QEw69eurO+gkMsQEIQpbkTgDWbcfs1q/+t5
-         Bx5XTPDeM450Q5ULCtVDlRXPeZuf8JJp9FGJSRNnul8wY2tmaHUSIYbYczvw3aGjkxBJ
-         9yiQ==
+        bh=ChpkgDvC00jlcyTpzmO/AxUi3IFbRKq2Rr45Vj3i/Mk=;
+        b=M7HIi8f+gB/JI8PhrAXj82T0nj05L6LxfnxpB9qnEn5uMRXJ6CB95P0Xr79R4BKzAp
+         oJq2DYDFa3UK8r5lVDLHFzKF0MIkdbHt3U2SjDf3Pyb9fS5fyaS1KpK0ja7B3nvMXRFE
+         bKFLwSPRhVig3OaTQ+x9C3G+Sw47s0lkTmPwGLgV10lyhINnpPyl5X+vKGbJbY/WuuDp
+         vEbXQOx6WEsgGazJtFIRFqznDnQSMOO91Mm8LBTMJeLUafj/fFKQ1TnGVtcxjV4CPkgM
+         Obyjv2plNvWObSL2wRfSXNZaPq6fciMow1nJCzNhfs+o6ue6XZLEEX6jnCXlgCVn3+bA
+         NHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xA52xjDJnHJLgzflByk0CYC2xv7fgNWSlI8xs2AjI2I=;
-        b=b49Ys+FZHGlxbGQWn4exSpn4ZDZU6a28B4ndct021jUMKsiWfelWx9/LIdCJzfRUvK
-         Uf1OAgauloWc5MhsbGZpRAmN99EDCzXJ9s3/da0O9V48fF3YU6S/E3lqX9iGrv89k+IO
-         gAYjA6d3oInfvKxs0Vyp3Uuy/Vv/Ww+rav3gSbWczW9cN+nUcpjncC9x/+1I0btNdZkc
-         Lfuh/W/AWvifzW6NLXj75FQK7tpcEMOBdTzt7O7eg5dijeTwe/UGvaMVivpx1CxYBo1q
-         cUF+oNtV691A2jVe+/O8bFINaV5v2WhZfGIz6j9uADmhjDfHX0tOMefmec/bjVb8/O84
-         DSDQ==
-X-Gm-Message-State: AOAM530a2CxXlHqtMgS8u+uCJQPzW1eO9DTeU66nfRSmQgjOqiohRzaS
-        BonwL2tTf68Ixk/9r16Oww+xPw==
-X-Google-Smtp-Source: ABdhPJyuSwTDyvh7rCaXNW786qrIPBHDymlJenX8Hl8exjSrhayuRqjYskb8CzXmWzlIWfVNFKDDdw==
-X-Received: by 2002:a1c:9a0e:: with SMTP id c14mr12656107wme.34.1615546545649;
-        Fri, 12 Mar 2021 02:55:45 -0800 (PST)
+        bh=ChpkgDvC00jlcyTpzmO/AxUi3IFbRKq2Rr45Vj3i/Mk=;
+        b=JRT7ubBr7rbzbAZg6uioVie5Z15mMozbiNf8hQ+tcvUncNGCXgAt5IoWyIElFkftol
+         7RqB5sXY4JszqaruZOk3rOWeVTOdt1UtQlhzzhyLiihXrfryxrtqoBsIynBcduXudwQq
+         LwrVlata+/AbZ6KprzuC94b2T+YXamUooY0glstQfectOtyf493DcLrIzsT4t0MluYnc
+         ZEDHvEBrV03xw9etmDaeirQkITi+l/PWwoMcz9EhgBQ9RTDRxIoqzn7sW7NWh+RqMhe9
+         VR6KXDb3aj6ur5C+CSjeW9ARGrwfs9sbvFICvO3fFcDN83Y2bIrsl4U50l765UBYuKE9
+         s72A==
+X-Gm-Message-State: AOAM532vVq65lh3NlIOMOyiuDkaEPx697C7uTbpNHnKH5cW9x7ppdhom
+        oJOM+DarKK72X+5ndybEz3mddg==
+X-Google-Smtp-Source: ABdhPJwC/cvyVmhhLtpqzhs4+UAHBO67pW6y4yjeQq1dW5Hf2tw1TaVh9srGIIR86iZZVMjXPPD57g==
+X-Received: by 2002:a1c:f404:: with SMTP id z4mr12767958wma.39.1615546546556;
+        Fri, 12 Mar 2021 02:55:46 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.44
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:45 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:46 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 10/11] block: xen-blkfront: Demote kernel-doc abuses
-Date:   Fri, 12 Mar 2021 10:55:29 +0000
-Message-Id: <20210312105530.2219008-11-lee.jones@linaro.org>
+Subject: [PATCH 11/11] block: drbd: drbd_nl: Demote half-complete kernel-doc headers
+Date:   Fri, 12 Mar 2021 10:55:30 +0000
+Message-Id: <20210312105530.2219008-12-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
 References: <20210312105530.2219008-1-lee.jones@linaro.org>
@@ -73,57 +70,45 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/block/xen-blkfront.c:1960: warning: Function parameter or member 'dev' not described in 'blkfront_probe'
- drivers/block/xen-blkfront.c:1960: warning: Function parameter or member 'id' not described in 'blkfront_probe'
- drivers/block/xen-blkfront.c:1960: warning: expecting prototype for Allocate the basic(). Prototype was for blkfront_probe() instead
- drivers/block/xen-blkfront.c:2085: warning: Function parameter or member 'dev' not described in 'blkfront_resume'
- drivers/block/xen-blkfront.c:2085: warning: expecting prototype for or a backend(). Prototype was for blkfront_resume() instead
- drivers/block/xen-blkfront.c:2444: warning: wrong kernel-doc identifier on line:
+ from drivers/block/drbd/drbd_nl.c:24:
+ drivers/block/drbd/drbd_nl.c: In function ‘drbd_adm_attach’:
+ drivers/block/drbd/drbd_nl.c:1968:10: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
+ drivers/block/drbd/drbd_nl.c:930: warning: Function parameter or member 'flags' not described in 'drbd_determine_dev_size'
+ drivers/block/drbd/drbd_nl.c:930: warning: Function parameter or member 'rs' not described in 'drbd_determine_dev_size'
+ drivers/block/drbd/drbd_nl.c:1148: warning: Function parameter or member 'dc' not described in 'drbd_check_al_size'
 
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
 Cc: Jens Axboe <axboe@kernel.dk>
-Cc: xen-devel@lists.xenproject.org
+Cc: drbd-dev@lists.linbit.com
 Cc: linux-block@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/block/xen-blkfront.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/block/drbd/drbd_nl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-index e1c6798889f48..e57e3cd354fb8 100644
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1949,7 +1949,7 @@ module_param(feature_persistent, bool, 0644);
- MODULE_PARM_DESC(feature_persistent,
- 		"Enables the persistent grants feature");
- 
--/**
-+/*
-  * Entry point to this code when a new device is created.  Allocate the basic
-  * structures and the ring buffer for communication with the backend, and
-  * inform the backend of the appropriate details for those.  Switch to
-@@ -2075,7 +2075,7 @@ static int blkif_recover(struct blkfront_info *info)
- 	return 0;
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index 31902304ddac7..e7d0e637e6321 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -918,7 +918,7 @@ void drbd_resume_io(struct drbd_device *device)
+ 		wake_up(&device->misc_wait);
  }
  
 -/**
 +/*
-  * We are reconnecting to the backend, due to a suspend/resume, or a backend
-  * driver restart.  We tear down our blkif structure and recreate it, but
-  * leave the device-layer structures intact so that this is transparent to the
-@@ -2440,7 +2440,7 @@ static void blkfront_connect(struct blkfront_info *info)
- 	return;
+  * drbd_determine_dev_size() -  Sets the right device size obeying all constraints
+  * @device:	DRBD device.
+  *
+@@ -1136,7 +1136,7 @@ drbd_new_dev_size(struct drbd_device *device, struct drbd_backing_dev *bdev,
+ 	return size;
  }
  
 -/**
 +/*
-  * Callback received when the backend's state changes.
-  */
- static void blkback_changed(struct xenbus_device *dev,
+  * drbd_check_al_size() - Ensures that the AL is of the right size
+  * @device:	DRBD device.
+  *
 -- 
 2.27.0
 
