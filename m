@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482F4338AB1
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FD26338AB8
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233189AbhCLKz7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Mar 2021 05:55:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        id S233725AbhCLK4A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Mar 2021 05:56:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233679AbhCLKzn (ORCPT
+        with ESMTP id S233681AbhCLKzo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:55:43 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A90DC061574
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:43 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id j2so4535781wrx.9
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:43 -0800 (PST)
+        Fri, 12 Mar 2021 05:55:44 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A926C061761
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:44 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id j18so1516402wra.2
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IHYhJM9nMyAbr9kC0PuVmzVL2n+2I82Ba3dsjUeY+AI=;
-        b=d9pSu1o7M26wU29kEvwgXHR/9OVEDjrsKEs7qA14xPmWODrzW4tRDS+O/ts0F6JnJj
-         x8LEZn2Mxngo9It+fCDXY5fgfGOD4zgSTA6ebhbt4XLG9X5WFjcMG1GW/qH9Dc54vTTQ
-         qtO6jZ6Q12Be2RxnqCH6coaZLJ1/7iKCa4GUEm3PK9l9ecouej6FvqT4qQtwC9EEBjfC
-         6UCJZ01F8JIqq0ga1L79yVOaCcrGTLakUKnzqxO4hIjCiE5+wJ02o3TyIz3uifCAb/s+
-         xnthZx1vQSV8G+vAhq1he8Qp91qlJKzBGpZKDLAaMHHOE+iWfyWF65ScVDsCEdij7GLM
-         mAkQ==
+        bh=ra48pT9rfpiijjx5/hqCOGUdkD2PZ1gvyu+SmCrCjD4=;
+        b=Oef+d4eRWh1sAVKLw1nPhinRKqgeXpg/GUlyB4VHS87v+IMN6D8TxBv1W64GWviozS
+         VoIEf+MupbFHJFaNddKk1CGZfBGSchQpUsXuDWcwTdiJ3KRmd4gPqtLIfy29kogPBbgu
+         hjixb95FG3Isvqs/BhAjWAm923IKAVF7M+mi70eSov3NFrbG0RwI7Zel83ln6I/2VszK
+         f7bWbDXZZBKhU59Pnpnh3itv2dH5MchQgMwyJak0kjvEA4xUvZFS1C+XdkiXRX6tMfQw
+         Ii+IuYZ74uJiRQHgtzit+eUkURgREtTUka8Xb1LXjJgnvNFtYqGapKdTzKmhD68hj71T
+         pCEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IHYhJM9nMyAbr9kC0PuVmzVL2n+2I82Ba3dsjUeY+AI=;
-        b=UsBCyeHsDsoBsoDmGD/GMXM3b4lD4IJaRIPax/ydSG50+XLreyUdoFjtNwhsYfsQL3
-         TFXNp17MtO+wV5N3sMUYwOGpKMbGi8uat/tO8VmjBHvB8j3GdAhwrtbE3GBdhGvEIR9l
-         3y0mQuVwRXbUQNm4UMpub5j/2/z8q9OQCPUGVv9/k86hBxjt8AP/oVKR+u41h8ZcEqMM
-         SKgyyjGrP/EQusjmOOKsM5LM1Ckv3PoeeI9Hei1cXvEQd0ZxQz9fddDbimdTF6N6kQIE
-         dz1whYxYPv/WurODOJIoZn8n4R5zyIlW1aQccX6v1A1UMUBuSYPEqL7GaH8dxcj7Ceb3
-         5SZA==
-X-Gm-Message-State: AOAM5320ESGiYVqixFfu89jykmDNf+5IKRa5Y3aMYVhbmoGGCQqnTQmr
-        ErDoX34sX9lMHlnpTTM56Y+eWA==
-X-Google-Smtp-Source: ABdhPJwn83lXba8ON91dxvqRmuL6Fo3sSgrermJApEsbmfY2Mjz9q/po8sAA6SAMQtVCUVHM4Ak+VQ==
-X-Received: by 2002:a5d:4445:: with SMTP id x5mr13658139wrr.30.1615546541806;
-        Fri, 12 Mar 2021 02:55:41 -0800 (PST)
+        bh=ra48pT9rfpiijjx5/hqCOGUdkD2PZ1gvyu+SmCrCjD4=;
+        b=kEbS+lW+OE6uWtFe+/j29XTIQDax8fTXRAUHX/Rrv3VBtnXbblx0UVoK/nrnaue56u
+         i6AW6/aOCU+I9YFf0SPHyK6KIRNo50l4lC0ZW2Ec+i8HkSwq2qThMMhQ6NRVJkJLHLiq
+         w7vWvmv5IgXactDPZMBTfzNsW2LxlWIRVHuIvM9bjMHkTjMQQib5kHrpOIFJH/yniPXo
+         +lXWfhwlTC2T9cz3LopdQydYPd5OQ7wOg5U4IhU8cD3ckRslpuKidzXACgTzQUyJtsGL
+         S8lQZy6m8t0B0icuv44U902CuRqgJ7gMJekZjnMa7fclrQxOfrvB5wHvrQdK59d7wQME
+         HZcw==
+X-Gm-Message-State: AOAM531hYVliUwfAdvdd0YClpzhXc44PDH0TMYkHbrAtAJ+AbB8xBIwt
+        6lyrCV8p828PAlUACRjAmsalFJK618BugA==
+X-Google-Smtp-Source: ABdhPJzMqLsZXEdmvMOw6kJWzAJoj5oRWwuNxlJb3z7y5Zj3s4CdlgUTzAeRsuGUgysF2Ux1mr9chQ==
+X-Received: by 2002:adf:d1ce:: with SMTP id b14mr13284518wrd.126.1615546542769;
+        Fri, 12 Mar 2021 02:55:42 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.40
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:41 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:42 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
         Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 06/11] block: drbd: drbd_main: Remove duplicate field initialisation
-Date:   Fri, 12 Mar 2021 10:55:25 +0000
-Message-Id: <20210312105530.2219008-7-lee.jones@linaro.org>
+Subject: [PATCH 07/11] block: drbd: drbd_nl: Make conversion to 'enum drbd_ret_code' explicit
+Date:   Fri, 12 Mar 2021 10:55:26 +0000
+Message-Id: <20210312105530.2219008-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
 References: <20210312105530.2219008-1-lee.jones@linaro.org>
@@ -68,13 +68,18 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-[P_RETRY_WRITE] is initialised more than once.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/block/drbd/drbd_main.c: In function ‘cmdname’:
- drivers/block/drbd/drbd_main.c:3660:22: warning: initialized field overwritten [-Woverride-init]
- drivers/block/drbd/drbd_main.c:3660:22: note: (near initialization for ‘cmdnames[44]’)
+ from drivers/block/drbd/drbd_nl.c:24:
+ drivers/block/drbd/drbd_nl.c: In function ‘drbd_adm_set_role’:
+ drivers/block/drbd/drbd_nl.c:793:11: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
+ drivers/block/drbd/drbd_nl.c:795:11: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
+ drivers/block/drbd/drbd_nl.c: In function ‘drbd_adm_attach’:
+ drivers/block/drbd/drbd_nl.c:1965:10: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
+ drivers/block/drbd/drbd_nl.c: In function ‘drbd_adm_connect’:
+ drivers/block/drbd/drbd_nl.c:2690:10: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
+ drivers/block/drbd/drbd_nl.c: In function ‘drbd_adm_disconnect’:
+ drivers/block/drbd/drbd_nl.c:2803:11: warning: implicit conversion from ‘enum drbd_state_rv’ to ‘enum drbd_ret_code’ [-Wenum-conversion]
 
 Cc: Philipp Reisner <philipp.reisner@linbit.com>
 Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
@@ -83,21 +88,55 @@ Cc: drbd-dev@lists.linbit.com
 Cc: linux-block@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/block/drbd/drbd_main.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/block/drbd/drbd_nl.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 25cd8a2f729db..69c9640d407df 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -3657,7 +3657,6 @@ const char *cmdname(enum drbd_packet cmd)
- 		[P_RS_CANCEL]		= "RSCancel",
- 		[P_CONN_ST_CHG_REQ]	= "conn_st_chg_req",
- 		[P_CONN_ST_CHG_REPLY]	= "conn_st_chg_reply",
--		[P_RETRY_WRITE]		= "retry_write",
- 		[P_PROTOCOL_UPDATE]	= "protocol_update",
- 		[P_RS_THIN_REQ]         = "rs_thin_req",
- 		[P_RS_DEALLOCATED]      = "rs_deallocated",
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index bf7de4c7b96c1..31902304ddac7 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -790,9 +790,11 @@ int drbd_adm_set_role(struct sk_buff *skb, struct genl_info *info)
+ 	mutex_lock(&adm_ctx.resource->adm_mutex);
+ 
+ 	if (info->genlhdr->cmd == DRBD_ADM_PRIMARY)
+-		retcode = drbd_set_role(adm_ctx.device, R_PRIMARY, parms.assume_uptodate);
++		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
++						R_PRIMARY, parms.assume_uptodate);
+ 	else
+-		retcode = drbd_set_role(adm_ctx.device, R_SECONDARY, 0);
++		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
++						R_SECONDARY, 0);
+ 
+ 	mutex_unlock(&adm_ctx.resource->adm_mutex);
+ 	genl_lock();
+@@ -1962,7 +1964,7 @@ int drbd_adm_attach(struct sk_buff *skb, struct genl_info *info)
+ 	drbd_flush_workqueue(&connection->sender_work);
+ 
+ 	rv = _drbd_request_state(device, NS(disk, D_ATTACHING), CS_VERBOSE);
+-	retcode = rv;  /* FIXME: Type mismatch. */
++	retcode = (enum drbd_ret_code)rv;
+ 	drbd_resume_io(device);
+ 	if (rv < SS_SUCCESS)
+ 		goto fail;
+@@ -2687,7 +2689,8 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	retcode = conn_request_state(connection, NS(conn, C_UNCONNECTED), CS_VERBOSE);
++	retcode = (enum drbd_ret_code)conn_request_state(connection,
++					NS(conn, C_UNCONNECTED), CS_VERBOSE);
+ 
+ 	conn_reconfig_done(connection);
+ 	mutex_unlock(&adm_ctx.resource->adm_mutex);
+@@ -2800,7 +2803,7 @@ int drbd_adm_disconnect(struct sk_buff *skb, struct genl_info *info)
+ 	mutex_lock(&adm_ctx.resource->adm_mutex);
+ 	rv = conn_try_disconnect(connection, parms.force_disconnect);
+ 	if (rv < SS_SUCCESS)
+-		retcode = rv;  /* FIXME: Type mismatch. */
++		retcode = (enum drbd_ret_code)rv;
+ 	else
+ 		retcode = NO_ERROR;
+ 	mutex_unlock(&adm_ctx.resource->adm_mutex);
 -- 
 2.27.0
 
