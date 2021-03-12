@@ -2,118 +2,147 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E32E33836E
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 03:15:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45B9533838B
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 03:27:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbhCLCPO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 Mar 2021 21:15:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbhCLCOo (ORCPT
+        id S229664AbhCLC0d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 Mar 2021 21:26:33 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:47331 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229569AbhCLC03 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 Mar 2021 21:14:44 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74892C061574;
-        Thu, 11 Mar 2021 18:14:44 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id a188so834368pfb.4;
-        Thu, 11 Mar 2021 18:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DLypqHmd9Wl8adDWo2RyhZBE8XSLiDUVzOC9qvznIU8=;
-        b=B3oWOI+K2T5zV/Md7TadfLAmGLPu+uD1roU9mISoVp8QM6Lton5aFPivU8QWfVxj4j
-         5zfvtkNN2yjCDsDAt27yTASwV8QOfEq5cT58TNhxWU0dL/g/6DYGP47z6dSqzhPsI2I+
-         BDc9thgGofUPaS4GbYAqm6nR0VgRjU7LiWtACxjR0TddbJFDRvZXvIVbt1JCUrcL0bhe
-         8F1E+XSbMT5jQZ1E331ImgIUYr7nQe4+a78GtAqAUe8O9PKjDC/eOiAIhkd0btitmR98
-         BQmrgY3a74lrgjv3kSNGf+FLhv9Sl7ncAUKrwi2BgvO8kuspQm3smpflI/pZ6a2MHJ+9
-         xj9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=DLypqHmd9Wl8adDWo2RyhZBE8XSLiDUVzOC9qvznIU8=;
-        b=YKapaVX+tC4G7bELxBX9uIeYbJAwfaMB+0DA1Vh+PqDPEch0roKT18qX5uiAlFptwN
-         7kKqNqxOO+WiI1pnhy/zAS2yO0UgSzI97fj29CXG4rOb+jD/UVqnvkAEE8YgBHdAxL+S
-         j8D9TXj7LYCZizYjIUgFMKuvHe3IZPUnhnskn/Ii4vSlTDWO9blZYIj0xtZyBsmCQ26o
-         RwzM7l2VX5Y4uIleCQgZoNZR9ibBZW+E1FIg72/eVI/v5nOnA1e+HALo9UXTpQcI4lyb
-         7LLckPfATZK1aHm8P1H0GrBU6Qqd3KgfKSKY97tATlqi9zPji5z4HPsSBpudGzbc9dd/
-         8hCw==
-X-Gm-Message-State: AOAM531YAWFWKtyhptMqqHC/UQC+l66bSvl42C6MTQhQAdehqe/+IfyO
-        dJxGJ0jf2nWYzxsAmdam8uU=
-X-Google-Smtp-Source: ABdhPJz33tsfuzaXaKHm7Wr7SIqzZWngowKHicIKhIrkJ5ud501aWmDCFj1D/XjPCwgckpPdOhrnMQ==
-X-Received: by 2002:a63:fb18:: with SMTP id o24mr9404191pgh.55.1615515283833;
-        Thu, 11 Mar 2021 18:14:43 -0800 (PST)
-Received: from google.com ([2620:15c:211:201:64cb:74c7:f2c:e5e0])
-        by smtp.gmail.com with ESMTPSA id l22sm371771pjl.14.2021.03.11.18.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 18:14:42 -0800 (PST)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date:   Thu, 11 Mar 2021 18:14:40 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>, gregkh@linuxfoundation.org
-Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        axboe@kernel.dk, mbenes@suse.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] zram: fix crashes due to use of cpu hotplug
- multistate
-Message-ID: <YErOkGrvtQODXtB0@google.com>
-References: <20210306022035.11266-1-mcgrof@kernel.org>
- <20210306022035.11266-2-mcgrof@kernel.org>
- <YEbjom8FIclEgRYv@google.com>
- <20210310212128.GR4332@42.do-not-panic.com>
+        Thu, 11 Mar 2021 21:26:29 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0URYCgK-_1615515984;
+Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0URYCgK-_1615515984)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Mar 2021 10:26:25 +0800
+Subject: Re: [dm-devel] [PATCH v5 10/12] block: fastpath for bio-based polling
+From:   JeffleXu <jefflexu@linux.alibaba.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     axboe@kernel.dk, caspar@linux.alibaba.com,
+        linux-block@vger.kernel.org, joseph.qi@linux.alibaba.com,
+        dm-devel@redhat.com, mpatocka@redhat.com, io-uring@vger.kernel.org
+References: <20210303115740.127001-1-jefflexu@linux.alibaba.com>
+ <20210303115740.127001-11-jefflexu@linux.alibaba.com>
+ <20210310231808.GD23410@redhat.com>
+ <b6f0799a-1a11-3778-9b8a-702c3c103db5@linux.alibaba.com>
+Message-ID: <99a31346-0720-d586-4e9f-ba6ee855f9b5@linux.alibaba.com>
+Date:   Fri, 12 Mar 2021 10:26:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210310212128.GR4332@42.do-not-panic.com>
+In-Reply-To: <b6f0799a-1a11-3778-9b8a-702c3c103db5@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 09:21:28PM +0000, Luis Chamberlain wrote:
-> On Mon, Mar 08, 2021 at 06:55:30PM -0800, Minchan Kim wrote:
-> > If I understand correctly, bugs you found were related to module
-> > unloading race while the zram are still working.
+
+
+On 3/11/21 2:36 PM, JeffleXu wrote:
 > 
-> No, that is a simplifcation of the issue. The issue consists of
-> two separate issues:
 > 
->  a) race against module unloading in light of incorrect racty use of
->     cpu hotplug multistate support
-
-
-Could you add some pusedo code sequence to show the race cleary?
-It would be great if it goes in the description, too since it's
-more clear to show the problme.
-
->  b) module unload race with sysfs attribute race on *any* driver which
->     has sysfs attributes which also shares the same lock as used during
->     module unload
-
-Yub, that part I missed. Maybe, we need some wrapper to zram sysfs
-to get try_module_get in the warapper funnction and then call sub
-rountine only if it got the refcount.
-
-zram_sysfs_wrapper(func, A, B)
-    if (!try_module_get(THIS_MODULE)
-        return -ENODEV;
-    ret = func(A,B);
-    module_put(THIS_MODULE);
-    return ret;
-
+> On 3/11/21 7:18 AM, Mike Snitzer wrote:
+>> On Wed, Mar 03 2021 at  6:57am -0500,
+>> Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
+>>
+>>> Offer one fastpath for bio-based polling when bio submitted to dm
+>>> device is not split.
+>>>
+>>> In this case, there will be only one bio submitted to only one polling
+>>> hw queue of one underlying mq device, and thus we don't need to track
+>>> all split bios or iterate through all polling hw queues. The pointer to
+>>> the polling hw queue the bio submitted to is returned here as the
+>>> returned cookie. In this case, the polling routine will call
+>>> mq_ops->poll() directly with the hw queue converted from the input
+>>> cookie.
+>>>
+>>> If the original bio submitted to dm device is split to multiple bios and
+>>> thus submitted to multiple polling hw queues, the polling routine will
+>>> fall back to iterating all hw queues (in polling mode) of all underlying
+>>> mq devices.
+>>>
+>>> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+>>> ---
+>>>  block/blk-core.c          | 73 +++++++++++++++++++++++++++++++++++++--
+>>>  include/linux/blk_types.h | 66 +++++++++++++++++++++++++++++++++--
+>>>  include/linux/types.h     |  2 +-
+>>>  3 files changed, 135 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/block/blk-core.c b/block/blk-core.c
+>>> index 6d7d53030d7c..e5cd4ff08f5c 100644
+>>> --- a/block/blk-core.c
+>>> +++ b/block/blk-core.c
+>>> @@ -947,14 +947,22 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
+>>>  {
+>>>  	struct bio_list bio_list_on_stack[2];
+>>>  	blk_qc_t ret = BLK_QC_T_NONE;
+>>> +	struct request_queue *top_q;
+>>> +	bool poll_on;
+>>>  
+>>>  	BUG_ON(bio->bi_next);
+>>>  
+>>>  	bio_list_init(&bio_list_on_stack[0]);
+>>>  	current->bio_list = bio_list_on_stack;
+>>>  
+>>> +	top_q = bio->bi_bdev->bd_disk->queue;
+>>> +	poll_on = test_bit(QUEUE_FLAG_POLL, &top_q->queue_flags) &&
+>>> +		  (bio->bi_opf & REQ_HIPRI);
+>>> +
+>>>  	do {
+>>> -		struct request_queue *q = bio->bi_bdev->bd_disk->queue;
+>>> +		blk_qc_t cookie;
+>>> +		struct block_device *bdev = bio->bi_bdev;
+>>> +		struct request_queue *q = bdev->bd_disk->queue;
+>>>  		struct bio_list lower, same;
+>>>  
+>>>  		if (unlikely(bio_queue_enter(bio) != 0))
+>>> @@ -966,7 +974,23 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
+>>>  		bio_list_on_stack[1] = bio_list_on_stack[0];
+>>>  		bio_list_init(&bio_list_on_stack[0]);
+>>>  
+>>> -		ret = __submit_bio(bio);
+>>> +		cookie = __submit_bio(bio);
+>>> +
+>>> +		if (poll_on && blk_qc_t_valid(cookie)) {
+>>> +			unsigned int queue_num = blk_qc_t_to_queue_num(cookie);
+>>> +			unsigned int devt = bdev_whole(bdev)->bd_dev;
+>>> +
+>>> +			cookie = blk_qc_t_get_by_devt(devt, queue_num);
+>>
+>> The need to rebuild the cookie here is pretty awkward.  This
+>> optimization living in block core may be worthwhile but the duality of
+>> block core conditionally overriding the driver's returned cookie (that
+>> is meant to be opaque to upper layer) is not great.
 > 
-> It is important to realize that issue b) is actually a generic kernel
-> issue, it would be present on *any* driver which shares a lock used on
-> a sysfs attribute and module unload. I looked to implement a generic
-> solution on kernfs, however we don't yet have semantics to enable this
-> generically, and so for now each driver needs to deal with those races
-> on their own. That sysfs race is dealt with in the second patch.
-
-It's unforunate. Let me Cc Greg who might have some ideas or
-find zram mess on zram sysfs implementation.
-
+> I agree that currently this design pattern has caused blk-core and dm
+> being tightly coupled together. Maybe it's the most serous problem of
+> this patchset, personally.
 > 
-> The first patch only deals with the cpu hotplug races exposed at module
-> unloading.
+> I can explain it though... Since the nature of the IO path of dm, dm
+> itself doesn't know if the original bio be split to multiple split bios
+> and thus submitted to multiple underlying devices or not. Currently I
+> can only get this information in __submit_bio_noacct(), and that's why
+> there's so much logic specific to dm is coupled with blk-core here.
+> 
 
-True. Thanks for the clarification.
+I didn't point out the most important part of that. dm can't get the
+(really valid) cookie returned by mq. Suppose one dm device is built
+upon one nvme, then dm_submit_bio() only remaps and the remapped bio is
+actually *buffered* in the bio_list. In fact, he remapped bio is later
+submitted in __submit_bio_noacct(). So dm doesn't know the cookie
+(returned by underlying mq), while blk-core does.
+
+dm could "predict" the cookie of following submitted IO to mq (dev_t and
+index of hw queue), and return it (built by dev_t and hw queue index) in
+advance, but this "prediction" is quite fragile, since the IO submitting
+process could be migrated to another CPU, or the hw queue mapping of the
+underlying mq device could change before __submit_bio_noacct() really
+submits the IO.
+
+
+-- 
+Thanks,
+Jeffle
