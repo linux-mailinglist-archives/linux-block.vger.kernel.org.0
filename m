@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA80338AAC
-	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38AF9338AB3
+	for <lists+linux-block@lfdr.de>; Fri, 12 Mar 2021 11:56:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233670AbhCLKz6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Mar 2021 05:55:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40974 "EHLO
+        id S233720AbhCLKz7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Mar 2021 05:55:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233672AbhCLKzl (ORCPT
+        with ESMTP id S233677AbhCLKzl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Fri, 12 Mar 2021 05:55:41 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AE9C061761
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:40 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id k8so1516498wrc.3
-        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:40 -0800 (PST)
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897C4C061763
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:41 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id g8so3532942wmd.4
+        for <linux-block@vger.kernel.org>; Fri, 12 Mar 2021 02:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y2upXzLPWVLGRwG0458fGKMH0wzW7zeYu4SHHuwM9k4=;
-        b=qnmSZDmaTXegmiqZpDi4s1t/1ZjZBLNoJ77NVtDc4tz6lLgtq9aNxhP9OLRGfQX25/
-         fyPMHBbhR0aQZUhTpjDNfJSyVUG5YPVieXrYdfJt5saetIwsP0jpZWqrox9h7Qx6jdLM
-         KseuLgzmUH4x2OBMgclQp/KtxrKONLfnF/qp6almy6emiwfJr9OXegUGI9IpmDclA9A9
-         i587SxFjTcq8/b/xj9WoscWR7ZwClHToKBHOGaoCLIrfTyKud3KSVwfGuZDSUh/sK0yg
-         OE84eXyy90QcvFKGErYTD1jZ1sba1wcdxvqOVgCMB+H+SzN8RJgmGbbqFT/Q5Itl6Fxe
-         XKPw==
+        bh=sw8b8l9dps18Xv2F/jvI6V4dn5OX8FDm+STKM7LA6jU=;
+        b=ph4Qipw3vnD2W6lREvmCQLVrUB+U8JnOeBp4T5M3UR3dkLpGIvDI/Qqpyot/aU5jRU
+         h0Wv/2Azze2niqV/g99QYo/f8iFnpFZbGZdko9FA5eo7lNrlHYXtG6/Q2X93yV4euKAm
+         BpGHRgU6+nmwLfQzXRmGAwR6wNDHZShgjKvV71080WNbziegbKyHlHOM/KQSt7DzZfRV
+         reEnjLSr7cDy48ssxYE50vO8leeMSPEfzHlLqt4LL786DPcKq59lFwGpcQuemxGA3kzU
+         /widTCznZTf/aCR4CaZzZBXjTyrke5Inp6CK6A+hR2lJU7+MoGo+R/SdDbMU8ngiwcir
+         8xhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y2upXzLPWVLGRwG0458fGKMH0wzW7zeYu4SHHuwM9k4=;
-        b=unU0NANCwo1NHumgiI/Y8So0V3EosZV2NpoZMU59BtNrSm1rprzcmZBYtAQGB5KTbN
-         cxbSmlnL39mFB4zaFljk2/4jMMC/09HFSzH1AwPgku+c0Jdy4aDwcbxx0AIE6Xg3AGo+
-         xb4++9v4X5LvYH+QZO6OlqHkc9KVt/dpLcOjI7epVQ0HZ8A2axh64svrz0ycjpj2USx8
-         k65uYTKStpeqm8plMuUfc0Mo24oxw4vwkaqaCC1HX7w5JeT2t09/aGZ0YInT2ITqxWXJ
-         dEXb7dJZYdEzhnxp+LZTfE5pc19a40FtxSAIopcM9Qz1UvRDQu9cS/WGow2d/i//FJJJ
-         Hy/Q==
-X-Gm-Message-State: AOAM530tqrNm/5sTQETlNBja6jMF+UxG+D16WzpRhwWl6iSD8hHu2TT+
-        Xu6aR2/e9sdE6w7YjWu/MAZqpQ==
-X-Google-Smtp-Source: ABdhPJyskrfqJ/c4QwfqtJ+2rayWd9noi5nBNi8HA7AQIB7lsqXTyBYCnN4toqJQFQUuztuv46l2Zw==
-X-Received: by 2002:adf:c54a:: with SMTP id s10mr13707663wrf.58.1615546539220;
-        Fri, 12 Mar 2021 02:55:39 -0800 (PST)
+        bh=sw8b8l9dps18Xv2F/jvI6V4dn5OX8FDm+STKM7LA6jU=;
+        b=dBA6HVMP84JwRLbt94oFJmW/1nbZnIzhoPjgH14gJVEndxJ/PjNofYC27Ml9Ed6bcH
+         iX5SnDVBPW9HJvWtZuhV80yuo46eMUUDX6LDOiBpJY5rGtIR2GP4VJbsmUyfJcrBIjAr
+         tZSms1qMKXCq3bhxdjt2WvvlQTjZKxCjAl7UVS8fAtUx7rT9yg2qpC8ZCQqyoJQk8KSL
+         y3fWyxXaI3+sGF8dwGkI34WOyvME644+r1m8deDrGCTcUTJFbW87/yPKGc+9nLrDRndW
+         Ll95RpfBi0FUfhVK8kllLnOTmC5pqvEaTL9aixPrnkReN7zjhUwh1EzT5HBE2ukUd/pc
+         EMQg==
+X-Gm-Message-State: AOAM530q3rH62tiNLpKUcqG0l4Cd2nZ/Qp7bbOSwHqP9iwUhwRCcl0ZC
+        8h36bjBdMPxyKpwy4/02HpAH0A==
+X-Google-Smtp-Source: ABdhPJxyBpDoMe0jjXCzzm1MfK2QSdn/u7jhhNjZfsVa285gvFGm6GJ+at2a4EqDtCKDp6MqwVx2pg==
+X-Received: by 2002:a1c:5f89:: with SMTP id t131mr12086962wmb.173.1615546540196;
+        Fri, 12 Mar 2021 02:55:40 -0800 (PST)
 Received: from dell.default ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.38
+        by smtp.gmail.com with ESMTPSA id q15sm7264962wrr.58.2021.03.12.02.55.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 02:55:38 -0800 (PST)
+        Fri, 12 Mar 2021 02:55:39 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
         Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 04/11] block: drbd: drbd_state: Fix some function documentation issues
-Date:   Fri, 12 Mar 2021 10:55:23 +0000
-Message-Id: <20210312105530.2219008-5-lee.jones@linaro.org>
+Subject: [PATCH 05/11] block: drbd: drbd_receiver: Demote non-conformant kernel-doc headers
+Date:   Fri, 12 Mar 2021 10:55:24 +0000
+Message-Id: <20210312105530.2219008-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210312105530.2219008-1-lee.jones@linaro.org>
 References: <20210312105530.2219008-1-lee.jones@linaro.org>
@@ -69,11 +69,32 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/block/drbd/drbd_state.c:913: warning: Function parameter or member 'connection' not described in 'is_valid_soft_transition'
- drivers/block/drbd/drbd_state.c:913: warning: Excess function parameter 'device' description in 'is_valid_soft_transition'
- drivers/block/drbd/drbd_state.c:1054: warning: Function parameter or member 'warn' not described in 'sanitize_state'
- drivers/block/drbd/drbd_state.c:1054: warning: Excess function parameter 'warn_sync_abort' description in 'sanitize_state'
- drivers/block/drbd/drbd_state.c:1703: warning: Function parameter or member 'state_change' not described in 'after_state_ch'
+ drivers/block/drbd/drbd_receiver.c:265: warning: Function parameter or member 'peer_device' not described in 'drbd_alloc_pages'
+ drivers/block/drbd/drbd_receiver.c:265: warning: Excess function parameter 'device' description in 'drbd_alloc_pages'
+ drivers/block/drbd/drbd_receiver.c:1362: warning: Function parameter or member 'connection' not described in 'drbd_may_finish_epoch'
+ drivers/block/drbd/drbd_receiver.c:1362: warning: Excess function parameter 'device' description in 'drbd_may_finish_epoch'
+ drivers/block/drbd/drbd_receiver.c:1451: warning: Function parameter or member 'resource' not described in 'drbd_bump_write_ordering'
+ drivers/block/drbd/drbd_receiver.c:1451: warning: Function parameter or member 'bdev' not described in 'drbd_bump_write_ordering'
+ drivers/block/drbd/drbd_receiver.c:1451: warning: Excess function parameter 'connection' description in 'drbd_bump_write_ordering'
+ drivers/block/drbd/drbd_receiver.c:1643: warning: Function parameter or member 'op' not described in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:1643: warning: Function parameter or member 'op_flags' not described in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:1643: warning: Function parameter or member 'fault_type' not described in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:1643: warning: Excess function parameter 'rw' description in 'drbd_submit_peer_request'
+ drivers/block/drbd/drbd_receiver.c:3055: warning: Function parameter or member 'peer_device' not described in 'drbd_asb_recover_0p'
+ drivers/block/drbd/drbd_receiver.c:3138: warning: Function parameter or member 'peer_device' not described in 'drbd_asb_recover_1p'
+ drivers/block/drbd/drbd_receiver.c:3195: warning: Function parameter or member 'peer_device' not described in 'drbd_asb_recover_2p'
+ drivers/block/drbd/drbd_receiver.c:4684: warning: Function parameter or member 'peer_device' not described in 'receive_bitmap_plain'
+ drivers/block/drbd/drbd_receiver.c:4684: warning: Function parameter or member 'size' not described in 'receive_bitmap_plain'
+ drivers/block/drbd/drbd_receiver.c:4684: warning: Function parameter or member 'p' not described in 'receive_bitmap_plain'
+ drivers/block/drbd/drbd_receiver.c:4684: warning: Function parameter or member 'c' not described in 'receive_bitmap_plain'
+ drivers/block/drbd/drbd_receiver.c:4738: warning: Function parameter or member 'peer_device' not described in 'recv_bm_rle_bits'
+ drivers/block/drbd/drbd_receiver.c:4738: warning: Function parameter or member 'p' not described in 'recv_bm_rle_bits'
+ drivers/block/drbd/drbd_receiver.c:4738: warning: Function parameter or member 'c' not described in 'recv_bm_rle_bits'
+ drivers/block/drbd/drbd_receiver.c:4738: warning: Function parameter or member 'len' not described in 'recv_bm_rle_bits'
+ drivers/block/drbd/drbd_receiver.c:4807: warning: Function parameter or member 'peer_device' not described in 'decode_bitmap_c'
+ drivers/block/drbd/drbd_receiver.c:4807: warning: Function parameter or member 'p' not described in 'decode_bitmap_c'
+ drivers/block/drbd/drbd_receiver.c:4807: warning: Function parameter or member 'c' not described in 'decode_bitmap_c'
+ drivers/block/drbd/drbd_receiver.c:4807: warning: Function parameter or member 'len' not described in 'decode_bitmap_c'
 
 Cc: Philipp Reisner <philipp.reisner@linbit.com>
 Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
@@ -82,42 +103,108 @@ Cc: drbd-dev@lists.linbit.com
 Cc: linux-block@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/block/drbd/drbd_state.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
-index 0067d328f0b56..b8a27818ab3f8 100644
---- a/drivers/block/drbd/drbd_state.c
-+++ b/drivers/block/drbd/drbd_state.c
-@@ -904,9 +904,9 @@ is_valid_state(struct drbd_device *device, union drbd_state ns)
-  * is_valid_soft_transition() - Returns an SS_ error code if the state transition is not possible
-  * This function limits state transitions that may be declined by DRBD. I.e.
-  * user requests (aka soft transitions).
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index c3f09a122f20c..89818a5e0ac67 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -242,9 +242,9 @@ static void conn_reclaim_net_peer_reqs(struct drbd_connection *connection)
+ 
+ /**
+  * drbd_alloc_pages() - Returns @number pages, retries forever (or until signalled)
 - * @device:	DRBD device.
-- * @ns:		new state.
-  * @os:		old state.
-+ * @ns:		new state.
-+ * @connection:  DRBD connection.
-  */
- static enum drbd_state_rv
- is_valid_soft_transition(union drbd_state os, union drbd_state ns, struct drbd_connection *connection)
-@@ -1044,7 +1044,7 @@ static void print_sanitize_warnings(struct drbd_device *device, enum sanitize_st
-  * @device:	DRBD device.
-  * @os:		old state.
-  * @ns:		new state.
-- * @warn_sync_abort:
-+ * @warn:	placeholder for returned state warning.
+- * @number:	number of pages requested
+- * @retry:	whether to retry, if not enough pages are available right now
++ * @peer_device:	DRBD device.
++ * @number:		number of pages requested
++ * @retry:		whether to retry, if not enough pages are available right now
   *
-  * When we loose connection, we have to set the state of the peers disk (pdsk)
-  * to D_UNKNOWN. This rule and many more along those lines are in this function.
-@@ -1696,6 +1696,7 @@ static bool lost_contact_to_peer_data(enum drbd_disk_state os, enum drbd_disk_st
-  * @os:		old state.
-  * @ns:		new state.
-  * @flags:	Flags
-+ * @state_change: state change to broadcast
+  * Tries to allocate number pages, first from our own page pool, then from
+  * the kernel.
+@@ -1352,7 +1352,7 @@ static void drbd_flush(struct drbd_connection *connection)
+ 
+ /**
+  * drbd_may_finish_epoch() - Applies an epoch_event to the epoch's state, eventually finishes it.
+- * @device:	DRBD device.
++ * @connection:	DRBD connection.
+  * @epoch:	Epoch object.
+  * @ev:		Epoch event.
   */
- static void after_state_ch(struct drbd_device *device, union drbd_state os,
- 			   union drbd_state ns, enum chg_state_flags flags,
+@@ -1441,9 +1441,8 @@ max_allowed_wo(struct drbd_backing_dev *bdev, enum write_ordering_e wo)
+ 	return wo;
+ }
+ 
+-/**
++/*
+  * drbd_bump_write_ordering() - Fall back to an other write ordering method
+- * @connection:	DRBD connection.
+  * @wo:		Write ordering method to try.
+  */
+ void drbd_bump_write_ordering(struct drbd_resource *resource, struct drbd_backing_dev *bdev,
+@@ -1623,7 +1622,6 @@ static void drbd_issue_peer_wsame(struct drbd_device *device,
+  * drbd_submit_peer_request()
+  * @device:	DRBD device.
+  * @peer_req:	peer request
+- * @rw:		flag field, see bio->bi_opf
+  *
+  * May spread the pages to multiple bios,
+  * depending on bio_add_page restrictions.
+@@ -3048,7 +3046,7 @@ static int receive_DataRequest(struct drbd_connection *connection, struct packet
+ 	return -EIO;
+ }
+ 
+-/**
++/*
+  * drbd_asb_recover_0p  -  Recover after split-brain with no remaining primaries
+  */
+ static int drbd_asb_recover_0p(struct drbd_peer_device *peer_device) __must_hold(local)
+@@ -3131,7 +3129,7 @@ static int drbd_asb_recover_0p(struct drbd_peer_device *peer_device) __must_hold
+ 	return rv;
+ }
+ 
+-/**
++/*
+  * drbd_asb_recover_1p  -  Recover after split-brain with one remaining primary
+  */
+ static int drbd_asb_recover_1p(struct drbd_peer_device *peer_device) __must_hold(local)
+@@ -3188,7 +3186,7 @@ static int drbd_asb_recover_1p(struct drbd_peer_device *peer_device) __must_hold
+ 	return rv;
+ }
+ 
+-/**
++/*
+  * drbd_asb_recover_2p  -  Recover after split-brain with two remaining primaries
+  */
+ static int drbd_asb_recover_2p(struct drbd_peer_device *peer_device) __must_hold(local)
+@@ -4672,7 +4670,7 @@ static int receive_sync_uuid(struct drbd_connection *connection, struct packet_i
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * receive_bitmap_plain
+  *
+  * Return 0 when done, 1 when another iteration is needed, and a negative error
+@@ -4724,7 +4722,7 @@ static int dcbp_get_pad_bits(struct p_compressed_bm *p)
+ 	return (p->encoding >> 4) & 0x7;
+ }
+ 
+-/**
++/*
+  * recv_bm_rle_bits
+  *
+  * Return 0 when done, 1 when another iteration is needed, and a negative error
+@@ -4793,7 +4791,7 @@ recv_bm_rle_bits(struct drbd_peer_device *peer_device,
+ 	return (s != c->bm_bits);
+ }
+ 
+-/**
++/*
+  * decode_bitmap_c
+  *
+  * Return 0 when done, 1 when another iteration is needed, and a negative error
 -- 
 2.27.0
 
