@@ -2,76 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD096339B51
-	for <lists+linux-block@lfdr.de>; Sat, 13 Mar 2021 03:38:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F78D339B72
+	for <lists+linux-block@lfdr.de>; Sat, 13 Mar 2021 03:56:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232255AbhCMCh2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Mar 2021 21:37:28 -0500
-Received: from mga06.intel.com ([134.134.136.31]:47383 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233086AbhCMCg7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Mar 2021 21:36:59 -0500
-IronPort-SDR: cJORzfneF+E1h6BVEedk2B31mPGAkpZmaKvhxZLRM+7QZ0kgVQRWom2LxJg/V06Maxa9TM9wrd
- 522Po48FfejA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9921"; a="250281130"
-X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
-   d="scan'208";a="250281130"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 18:36:58 -0800
-IronPort-SDR: vWH9MrQPUopS4cxXwdJS5su75dKHztdNXjGGlH9ufjynLLu86PmrmvGK6dqQ7nNaiN1giHbb0p
- Ed7tLl9U/OgQ==
-X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
-   d="scan'208";a="404614708"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 18:36:57 -0800
-Date:   Fri, 12 Mar 2021 18:36:57 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Ira Weiny <iweiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-Subject: Re: [RFC PATCH v2 07/11] dma-mapping: Add flags to dma_map_ops to
- indicate PCI P2PDMA support
-Message-ID: <20210313023657.GC3402637@iweiny-DESK2.sc.intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-8-logang@deltatee.com>
+        id S232917AbhCMCzk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Mar 2021 21:55:40 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:13160 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232487AbhCMCzH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 12 Mar 2021 21:55:07 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Dy6g31yjrzlTnk;
+        Sat, 13 Mar 2021 10:52:47 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.498.0; Sat, 13 Mar 2021
+ 10:54:56 +0800
+From:   "zhangyi (F)" <yi.zhang@huawei.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <jack@suse.cz>
+CC:     <tytso@mit.edu>, <viro@zeniv.linux.org.uk>, <hch@infradead.org>,
+        <axboe@kernel.dk>, <mcgrof@kernel.org>, <keescook@chromium.org>,
+        <yzaikin@google.com>, <yi.zhang@huawei.com>
+Subject: [RFC PATCH 0/3] block_dump: remove block dump
+Date:   Sat, 13 Mar 2021 11:01:43 +0800
+Message-ID: <20210313030146.2882027-1-yi.zhang@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210311233142.7900-8-logang@deltatee.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 04:31:37PM -0700, Logan Gunthorpe wrote:
- 
-> +int dma_pci_p2pdma_supported(struct device *dev)
-   ^^^
-  bool?
+Hi,
 
-> +{
-> +	const struct dma_map_ops *ops = get_dma_ops(dev);
-> +
-> +	return !ops || ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED;
+block_dump is an old debugging interface and can be replaced by
+tracepoints, and we also found a deadlock issue relate to it[1]. As Jan
+suggested, this patch set delete the whole block_dump feature, we can
+use tracepoints to get the similar information. If someone still using
+this feature cannot switch to use tracepoints or any other suggestions,
+please let us know.
 
-Is this logic correct?  I would have expected.
+Thanks,
+Yi.
 
-	return (ops && ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED);
+[1]. https://lore.kernel.org/linux-fsdevel/20210305132442.GA2801131@infradead.org/T/#m385b0f84bc381d3089740e33d94f6e1b67dd06d2
 
-Ira
+zhangyi (F) (3):
+  block_dump: remove block_dump feature in mark_inode_dirty()
+  block_dump: remove block_dump feature
+  block_dump: remove comments in docs
+
+ .../admin-guide/laptops/laptop-mode.rst       | 11 --------
+ Documentation/admin-guide/sysctl/vm.rst       |  8 ------
+ block/blk-core.c                              |  9 -------
+ fs/fs-writeback.c                             | 25 -------------------
+ include/linux/writeback.h                     |  1 -
+ kernel/sysctl.c                               |  8 ------
+ mm/page-writeback.c                           |  5 ----
+ 7 files changed, 67 deletions(-)
+
+-- 
+2.25.4
+
