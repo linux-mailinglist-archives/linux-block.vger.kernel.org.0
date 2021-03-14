@@ -2,125 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19D34339F42
-	for <lists+linux-block@lfdr.de>; Sat, 13 Mar 2021 17:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A653339FE5
+	for <lists+linux-block@lfdr.de>; Sat, 13 Mar 2021 19:35:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233570AbhCMQzP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 13 Mar 2021 11:55:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234075AbhCMQzL (ORCPT
+        id S234259AbhCMSfE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Sat, 13 Mar 2021 13:35:04 -0500
+Received: from smtp.econet.co.zw ([77.246.51.158]:62181 "EHLO
+        ironportDMZ.econet.co.zw" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233635AbhCMSfD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 13 Mar 2021 11:55:11 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7316BC061574;
-        Sat, 13 Mar 2021 08:55:10 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id n9so16899993pgi.7;
-        Sat, 13 Mar 2021 08:55:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=inlPIT9YAU/L7BKjPTjnpiP35IjHmvlJFgvsurh3w4E=;
-        b=YoSzK1SGjHXARDw2jmew25yOw/D4k8OS0TAnwFKLAaWkyyYszg83VBWbsxMh5rpoiS
-         bV8DROmQOIOotXRSmee+UKJHbzP1PqeSZC3/eZLczy6xeUjO60K0JlY2zP9QRiMjoPZy
-         F1mzfvdPZeGaBALNYNcs2CJUQrswJpNwi7yMjwqjmey3mBU49qa29NlsaU8asBs5rrdX
-         Q0qKxWksvlmOfFxU3il92O+RGmlJfdxZsuwXEOl6N5ueB0r5U5HXYapPjKEaYCtJaxrm
-         OYYzr8PI2SZfDye9HssdK7kc+BXMJJygC/Q4s2LorlQiK8fAPQa5PvJnCbvl1YGPjD3G
-         RJrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=inlPIT9YAU/L7BKjPTjnpiP35IjHmvlJFgvsurh3w4E=;
-        b=RuvrVHpHJOXznvmSnHolvRz0S2D9klOI9mjO2Zy6vFbgoeIXcKxQIh8gji22fY2+GO
-         9fjsDz1PX5KVvuc8fHHRbqCFwccOL3YU7DrZjlPgsn8+iw5Eq6V85Nb4unt5Zf6wQK02
-         ftiXp70seqjjbqSaAEIXlMbvUU0QPqzVaFVhhlHrgQ/u6tIm1n2Z8w/gSE0NDI4iaa8A
-         Jagm9GB88tzUy3rO4tfHXVjnZosNBtFgbEU2ROOzaBkYk2Ce225HX/Ql3FEE/1I7jOAV
-         tEq8agRuqVZd8u6cBw0w9GRAuDV3wCgkTVcFEFOczjAA2CGQlyApehH3W+2VMlPo6XwD
-         dHwQ==
-X-Gm-Message-State: AOAM533ksXjEqN2bt4dznsT+0A6c5HYtFaRI6gANqiXm81aXlWjJuNE+
-        wQ5H365Uf+6ToS1zXMtcbZI=
-X-Google-Smtp-Source: ABdhPJwCdPGpeEKu1Nbu81x3B3xRWGi2V116vJB8RmDToIm0/6vBcwhLPWoDoeq2VrZEbh67BWpOfg==
-X-Received: by 2002:a63:9dc2:: with SMTP id i185mr16381314pgd.329.1615654509826;
-        Sat, 13 Mar 2021 08:55:09 -0800 (PST)
-Received: from client-VirtualBox ([223.186.9.86])
-        by smtp.gmail.com with ESMTPSA id 6sm9336872pfv.179.2021.03.13.08.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Mar 2021 08:55:09 -0800 (PST)
-Date:   Sat, 13 Mar 2021 22:25:01 +0530
-From:   Chinmayi Shetty <chinmayishetty359@gmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bkkathik@pesu.pes.edu
-Subject: [PATCH] Bio: Fixed the code indentation using tabs
-Message-ID: <20210313165501.grdrrhi5l6ezv7ze@client-VirtualBox>
+        Sat, 13 Mar 2021 13:35:03 -0500
+X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Mar 2021 13:34:59 EST
+IronPort-SDR: mDSsjbKcaVdFG5GqQFMTeVc4aoZLRWVLGK1vUixCIY/uKtiD+m/7fNEhsBwBepPPMn5tEcgkXN
+ 0kf+g54xDaGQWLxdgNKWkT/NUYMdqLmEqGlbInNSaPrs7yIG9pllVbsvofgOvAiBfF2rtkOKdd
+ 7jDcRkn+QnPB1cMXsh3WrHO408qEXiGC2s0ldR4usP1gFSqmQD3lDKIoO1zSIRS7akrX1fM7+K
+ c3Wh8mzoculYKqvYE5rOQJx27JaaDEmpetBPJ1QOhwlDUj3Q04CLzUjG78czQ4P1gDppi3dbk+
+ HVc=
+IronPort-HdrOrdr: A9a23:hlvA3aN5TRyAvsBcTmGjsMiAIKoaSvp033AA0UdtRRtJNvGCn8
+ e1k/gBkTPygjAdWHYv8OrwWpWoa3Xa6JJz/M0tLa6vNTOW21eAAYl+4eLZogHINDb58odmup
+ tIV4hbJJnOAUNhjcD8iTPZL/8FzMOc+K6lwcfypk0dND1CUK1r4wdnBgvzKCQfL2MqObMDGI
+ OY9o57oVObFUg/VcinGmIDG9HKutyjruOcXTc9GxUl5AOS5AnH1JfGFXGjr28jegIK5Y0H+W
+ jB1zXj5qO5s+yqoyWss1P73tBzkNvlxsArPr3qtuElbhHtjgqPQagJYczlgBkF5Ni16FAwkM
+ Tdyi1QWvhO1w==
+X-IronPort-AV: E=Sophos;i="5.81,245,1610402400"; 
+   d="scan'208";a="3444427"
+Received: from unknown (HELO wvale-jmb-svr-1.econetzw.local) ([192.168.101.35])
+  by ironportLAN.econet.co.zw with ESMTP; 13 Mar 2021 20:27:44 +0200
+Received: from PKTS-MB-SVR-03.econetzw.local (192.168.81.9) by
+ wvale-jmb-svr-1.econetzw.local (192.168.101.35) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Sat, 13 Mar 2021 20:27:43 +0200
+Received: from WVALE-CAS-SVR-9.econetzw.local (192.168.101.60) by
+ pkts-mb-svr-03.econetzw.local (192.168.81.9) with Microsoft SMTP Server (TLS)
+ id 15.0.1473.3; Sat, 13 Mar 2021 20:27:41 +0200
+Received: from User (165.231.148.189) by WVALE-CAS-SVR-9.econetzw.local
+ (10.10.11.230) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sat, 13 Mar 2021 20:27:55 +0200
+Reply-To: <r19772744@daum.net>
+From:   "Reem E. A" <chawora@econet.co.zw>
+Subject: Re:
+Date:   Sat, 13 Mar 2021 18:27:40 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 8BIT
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <a0187928693a4e759d4094abaf71afbe@WVALE-CAS-SVR-9.econetzw.local>
+To:     Undisclosed recipients:;
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Bio: Fixed code indentation using tabs
+Hello,
 
-Fixed coding style issue
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (2) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home on their behalf and
+for our "Mutual Benefits".
 
-Signed-off-by: Chinmayi Shetty <chinmayishetty359@gmail.com>
----
- block/bio.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Turkish Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-diff --git a/block/bio.c b/block/bio.c
-index a1c4d2900c7a..7c1354f7065c 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -501,6 +501,7 @@ void zero_fill_bio_iter(struct bio *bio, struct bvec_iter start)
- 
- 	__bio_for_each_segment(bv, bio, iter, start) {
- 		char *data = bvec_kmap_irq(&bv, &flags);
-+
- 		memset(data, 0, bv.bv_len);
- 		flush_dcache_page(bv.bv_page);
- 		bvec_kunmap_irq(data, &flags);
-@@ -616,15 +617,15 @@ void bio_put(struct bio *bio)
- EXPORT_SYMBOL(bio_put);
- 
- /**
-- * 	__bio_clone_fast - clone a bio that shares the original bio's biovec
-- * 	@bio: destination bio
-- * 	@bio_src: bio to clone
-+ *	__bio_clone_fast - clone a bio that shares the original bio's biovec
-+ *	@bio: destination bio
-+ *	@bio_src: bio to clone
-  *
-  *	Clone a &bio. Caller will own the returned bio, but not
-  *	the actual data it points to. Reference count of returned
-- * 	bio will be one.
-+ *	bio will be one.
-  *
-- * 	Caller must ensure that @bio_src is not freed before @bio.
-+ *	Caller must ensure that @bio_src is not freed before @bio.
-  */
- void __bio_clone_fast(struct bio *bio, struct bio *bio_src)
- {
-@@ -657,7 +658,7 @@ EXPORT_SYMBOL(__bio_clone_fast);
-  *	@gfp_mask: allocation priority
-  *	@bs: bio_set to allocate from
-  *
-- * 	Like __bio_clone_fast, only also allocates the returned bio
-+ *	Like __bio_clone_fast, only also allocates the returned bio
-  */
- struct bio *bio_clone_fast(struct bio *bio, gfp_t gfp_mask, struct bio_set *bs)
- {
-@@ -1009,7 +1010,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 				put_page(page);
- 		} else {
- 			if (WARN_ON_ONCE(bio_full(bio, len)))
--                                return -EINVAL;
-+				return -EINVAL;
- 			__bio_add_page(bio, page, len, offset);
- 		}
- 		offset = 0;
--- 
-2.25.1
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+reem.alhashimi@yandex.com
 
+Regards,
+Ms. Reem.
+This mail was sent through Econet Wireless, a Global telecoms leader.
+
+DISCLAIMER
+
+The information in this message is confidential and is legally privileged. It is intended solely for the addressee. Access to this message by anyone else is unauthorized. If received in error please accept our apologies and notify the sender immediately. You must also delete the original message from your machine. If you are not the intended recipient, any use, disclosure, copying, distribution or action taken in reliance of it, is prohibited and may be unlawful. The information, attachments, opinions or advice contained in this email are not the views or opinions of Econet Wireless, its subsidiaries or affiliates. Econet Wireless therefore accepts no liability for claims, losses, or damages arising from the inaccuracy, incorrectness, or lack of integrity of such information.
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/AgileBanner.png]
+WORK ISN'T A PLACE
+IT'S WHAT WE DO
+________________________________
+
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/telephone.png]
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/email.png]
+
+<mailto:>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/location.png]
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/website.png]
+
+www.econet.co.zw<https://www.econet.co.zw>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/inspired.jpg]
