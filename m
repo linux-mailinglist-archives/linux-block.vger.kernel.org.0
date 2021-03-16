@@ -2,107 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAC9933CBE5
-	for <lists+linux-block@lfdr.de>; Tue, 16 Mar 2021 04:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F78333CBE9
+	for <lists+linux-block@lfdr.de>; Tue, 16 Mar 2021 04:18:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbhCPDRy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Mar 2021 23:17:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26511 "EHLO
+        id S233330AbhCPDSZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Mar 2021 23:18:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49329 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233061AbhCPDRk (ORCPT
+        by vger.kernel.org with ESMTP id S233613AbhCPDSB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Mar 2021 23:17:40 -0400
+        Mon, 15 Mar 2021 23:18:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615864660;
+        s=mimecast20190719; t=1615864680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rVViYM6RdcSRq6ph00xTm+3/tk+wViBgPjyHPeg8h0o=;
-        b=RFIRMm9mYoTWYnXvZAJlzgHZK+xXDFUx64CaHrcsnHTxfUkBdB2S4hbg4j0COu0jKiH2A+
-        Tbp/5PboLGrHJbzroJHiSnMo9xWtm9HEvJyRdo+cIjxAzgBulru1QAcnSBU7AfE5sKW6YG
-        YfELJVFWO8Sp/MIru1hx9FGfM1teIiw=
+        bh=hiQvZh7foPjrFz+jjL1c3fsVbvj1Kh2WiEPhGKCssXE=;
+        b=cqsM0Hsn2y5g28l87SOgwy3StuvaU8h8BRUcwSJlME/qk4z3Wi0TGma97524Hiz5h8pCUg
+        B3DSy0CqQLUJ5HXbecspSsmHmEdBPH+agg6SGb7zYw2O23jb/6WfzqEclKfjmj9H7cZ6mQ
+        TvUxwWwN6fqmVQ8NAPZ4d4LOQ7sFl6Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-p0ousvEjPGGJUTyVpz_IAQ-1; Mon, 15 Mar 2021 23:17:38 -0400
-X-MC-Unique: p0ousvEjPGGJUTyVpz_IAQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-27-KfXlP2LPNwCQ6xbXJaS3TQ-1; Mon, 15 Mar 2021 23:17:57 -0400
+X-MC-Unique: KfXlP2LPNwCQ6xbXJaS3TQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0324E107ACCA;
-        Tue, 16 Mar 2021 03:17:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F5DC107ACCA;
+        Tue, 16 Mar 2021 03:17:56 +0000 (UTC)
 Received: from localhost (ovpn-12-86.pek2.redhat.com [10.72.12.86])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 30776614FB;
-        Tue, 16 Mar 2021 03:17:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F21760C0F;
+        Tue, 16 Mar 2021 03:17:44 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
         Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
         Ming Lei <ming.lei@redhat.com>
-Subject: [RFC PATCH 02/11] block: add one helper to free io_context
-Date:   Tue, 16 Mar 2021 11:15:14 +0800
-Message-Id: <20210316031523.864506-3-ming.lei@redhat.com>
+Subject: [RFC PATCH 03/11] block: add helper of blk_create_io_context
+Date:   Tue, 16 Mar 2021 11:15:15 +0800
+Message-Id: <20210316031523.864506-4-ming.lei@redhat.com>
 In-Reply-To: <20210316031523.864506-1-ming.lei@redhat.com>
 References: <20210316031523.864506-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Prepare for putting bio poll queue into io_context, so add one helper
-for free io_context.
+Add one helper for creating io context and prepare for supporting
+efficient bio based io poll.
+
+Meantime move the code of creating io_context before checking bio's
+REQ_HIPRI flag because the following patch may change to clear REQ_HIPRI
+if io_context can't be created.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-ioc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ block/blk-core.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 57299f860d41..b0cde18c4b8c 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -17,6 +17,11 @@
-  */
- static struct kmem_cache *iocontext_cachep;
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a31371d55b9d..d58f8a0c80de 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -792,6 +792,18 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
+ 	return BLK_STS_OK;
+ }
  
-+static inline void free_io_context(struct io_context *ioc)
++static inline void blk_create_io_context(struct request_queue *q)
 +{
-+	kmem_cache_free(iocontext_cachep, ioc);
++	/*
++	 * Various block parts want %current->io_context, so allocate it up
++	 * front rather than dealing with lots of pain to allocate it only
++	 * where needed. This may fail and the block layer knows how to live
++	 * with it.
++	 */
++	if (unlikely(!current->io_context))
++		create_task_io_context(current, GFP_ATOMIC, q->node);
 +}
 +
- /**
-  * get_io_context - increment reference count to io_context
-  * @ioc: io_context to get
-@@ -129,7 +134,7 @@ static void ioc_release_fn(struct work_struct *work)
- 
- 	spin_unlock_irq(&ioc->lock);
- 
--	kmem_cache_free(iocontext_cachep, ioc);
-+	free_io_context(ioc);
- }
- 
- /**
-@@ -164,7 +169,7 @@ void put_io_context(struct io_context *ioc)
+ static noinline_for_stack bool submit_bio_checks(struct bio *bio)
+ {
+ 	struct block_device *bdev = bio->bi_bdev;
+@@ -836,6 +848,8 @@ static noinline_for_stack bool submit_bio_checks(struct bio *bio)
+ 		}
  	}
  
- 	if (free_ioc)
--		kmem_cache_free(iocontext_cachep, ioc);
-+		free_io_context(ioc);
- }
++	blk_create_io_context(q);
++
+ 	if (!blk_queue_poll(q))
+ 		bio->bi_opf &= ~REQ_HIPRI;
  
- /**
-@@ -278,7 +283,7 @@ int create_task_io_context(struct task_struct *task, gfp_t gfp_flags, int node)
- 	    (task == current || !(task->flags & PF_EXITING)))
- 		task->io_context = ioc;
- 	else
--		kmem_cache_free(iocontext_cachep, ioc);
-+		free_io_context(ioc);
+@@ -876,15 +890,6 @@ static noinline_for_stack bool submit_bio_checks(struct bio *bio)
+ 		break;
+ 	}
  
- 	ret = task->io_context ? 0 : -EBUSY;
- 
+-	/*
+-	 * Various block parts want %current->io_context, so allocate it up
+-	 * front rather than dealing with lots of pain to allocate it only
+-	 * where needed. This may fail and the block layer knows how to live
+-	 * with it.
+-	 */
+-	if (unlikely(!current->io_context))
+-		create_task_io_context(current, GFP_ATOMIC, q->node);
+-
+ 	if (blk_throtl_bio(bio)) {
+ 		blkcg_bio_issue_init(bio);
+ 		return false;
 -- 
 2.29.2
 
