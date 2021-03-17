@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 138C633E432
-	for <lists+linux-block@lfdr.de>; Wed, 17 Mar 2021 02:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D27333E42E
+	for <lists+linux-block@lfdr.de>; Wed, 17 Mar 2021 02:00:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232129AbhCQA6u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S232141AbhCQA6u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 16 Mar 2021 20:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231730AbhCQA5g (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Mar 2021 20:57:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6469C64FD2;
-        Wed, 17 Mar 2021 00:57:33 +0000 (UTC)
+        id S231428AbhCQA5s (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 16 Mar 2021 20:57:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 16D6965001;
+        Wed, 17 Mar 2021 00:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615942654;
-        bh=t549l9Uw5gYRXHZbXiDetHBjMekwEXPSC78muQDnEsI=;
+        s=k20201202; t=1615942661;
+        bh=56uNLpGhow18UAxJYzyNBOTBjBLlIqWJDSkel4S87w4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdIhRQ52ahEmHTgXIoxWb+SG9G+vUVlsDwIamhnv6cgdHaZVJWW+PV7m2dx2w4pPr
-         aI7kR1ZBR5dBxyvgU4XWrzR99fLJqv+9SvJlnF6dd0MoRKOkeNhKG6xAv7x4DkBp7P
-         TxlQzxNSil9GvYk2kpjqHi6VEcHDQ3v0z4O5n72UZIllz/3j3Tmqg59HIROW/RSUnp
-         0N1Yb8fXi58oPsEkRKH1BBsIGmAmNsZRVSy9p3Jrr8l54RYd7BbyNYJ+ea1Pm/4GFz
-         9oWXLsWghJG02M9ptsaECKbLq1G4gy5J5thwTCJjKf0qi8jTkFa+vyvuQmRxyk54RV
-         ly0dZkTMGaopg==
+        b=NIrBvD3cvzPmx3LMXQYTARDM5YmAw5+1RiMg+RLhqlLkZi8CW+++3rNGZtmvFR0js
+         YaayNFF3UQZ1gjvQiPk8216JLldk6RPrVYcXJ51Flb39cR4koHxAr57bcIOLLEdV1T
+         gjlYo9czE3JaFODg31DYDaLo2BsxcYgTHrPE3p+CCjbIxmVX0TUs2oa8IMVZ1+EsTY
+         q76iLXHVRwQjXM6qsmDSkNch2V51iyEfIEIRlaL9JqCFFhh/YPmjWTdhEnuomvberA
+         v9E3kWZahWNmaav7pROYybpkgRa9wP51i5I7iowyloPGKbgcscGWaZ+SrJIfLlEdiB
+         bDGx+KPwfgFDg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 32/54] umem: fix error return code in mm_pci_probe()
-Date:   Tue, 16 Mar 2021 20:56:31 -0400
-Message-Id: <20210317005654.724862-32-sashal@kernel.org>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 39/54] block: Fix REQ_OP_ZONE_RESET_ALL handling
+Date:   Tue, 16 Mar 2021 20:56:38 -0400
+Message-Id: <20210317005654.724862-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210317005654.724862-1-sashal@kernel.org>
 References: <20210317005654.724862-1-sashal@kernel.org>
@@ -42,46 +42,32 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-[ Upstream commit eeb05595d22c19c8f814ff893dcf88ec277a2365 ]
+[ Upstream commit faa44c69daf9ccbd5b8a1aee13e0e0d037c0be17 ]
 
-Fix to return negative error code -ENOMEM from the blk_alloc_queue()
-and dma_alloc_coherent() error handling cases instead of 0, as done
-elsewhere in this function.
+Similarly to a single zone reset operation (REQ_OP_ZONE_RESET), execute
+REQ_OP_ZONE_RESET_ALL operations with REQ_SYNC set.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20210308123501.2573816-1-weiyongjun1@huawei.com
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/umem.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/blk-zoned.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/umem.c b/drivers/block/umem.c
-index 2b95d7b33b91..5eb44e4a91ee 100644
---- a/drivers/block/umem.c
-+++ b/drivers/block/umem.c
-@@ -877,6 +877,7 @@ static int mm_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (card->mm_pages[0].desc == NULL ||
- 	    card->mm_pages[1].desc == NULL) {
- 		dev_printk(KERN_ERR, &card->dev->dev, "alloc failed\n");
-+		ret = -ENOMEM;
- 		goto failed_alloc;
- 	}
- 	reset_page(&card->mm_pages[0]);
-@@ -888,8 +889,10 @@ static int mm_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	spin_lock_init(&card->lock);
- 
- 	card->queue = blk_alloc_queue(NUMA_NO_NODE);
--	if (!card->queue)
-+	if (!card->queue) {
-+		ret = -ENOMEM;
- 		goto failed_alloc;
-+	}
- 
- 	tasklet_init(&card->tasklet, process_page, (unsigned long)card);
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 6817a673e5ce..f81eac647feb 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -240,7 +240,7 @@ int blkdev_zone_mgmt(struct block_device *bdev, enum req_opf op,
+ 		 */
+ 		if (op == REQ_OP_ZONE_RESET &&
+ 		    blkdev_allow_reset_all_zones(bdev, sector, nr_sectors)) {
+-			bio->bi_opf = REQ_OP_ZONE_RESET_ALL;
++			bio->bi_opf = REQ_OP_ZONE_RESET_ALL | REQ_SYNC;
+ 			break;
+ 		}
  
 -- 
 2.30.1
