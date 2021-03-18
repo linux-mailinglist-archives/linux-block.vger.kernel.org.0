@@ -2,96 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9521340C33
-	for <lists+linux-block@lfdr.de>; Thu, 18 Mar 2021 18:55:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 497CB340C93
+	for <lists+linux-block@lfdr.de>; Thu, 18 Mar 2021 19:13:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbhCRRys (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Mar 2021 13:54:48 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:45584 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbhCRRy0 (ORCPT
+        id S232483AbhCRSMa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Mar 2021 14:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229467AbhCRSMB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:54:26 -0400
-Received: by mail-pf1-f176.google.com with SMTP id h3so4010489pfr.12;
-        Thu, 18 Mar 2021 10:54:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zw9NDxhZI9qzGWmlzDIZRAJNmsg1FVsGW1vH7/3lAzE=;
-        b=Uov5OHL0eXHyfEHVhZCeCACF4bIG4jlTj8VtVvfzrGu5btOKbi3O5piYbBxoUHcLqT
-         WJjkXihnma+c88xNRn3O+MYV4TgmEGvtjcVtwwTMseI6JjgtwP30QkYhv0Ct0S/huEje
-         zI7BIvKNBu7juvRljsnZmi6YXSlVT3dS62Pyf0VN+9+CLYnMSRDHEtbWlxQJEaHkQmLp
-         tIOYJe2i7/RgrsnorKzgvZ3iyOpphuUXkXhW0TTtdoklNxpYnntbgA4GVYpR4cttT4Su
-         k7ZP6Xrdb5cO/JECplAfo1CsJeaj0cCx/ptm9aq+ov4Z+hpIni44Xoc8vM/6ln/XV+8s
-         Cn/g==
-X-Gm-Message-State: AOAM533RxF1vnDaZPMvHVeqnIYwJ+W382P93wm3yavtckjJFHMDLzDC6
-        WDmzAzwBCt6bUdg6c+LkkZOCHy85uMZTPg==
-X-Google-Smtp-Source: ABdhPJxEZsgqX5znjy5cHX8VUcyqPfqRya34MwqfUBV/oA0KXRbq+gFLGOZDV+d4RYHUWWgu2TmJ/w==
-X-Received: by 2002:a62:fc10:0:b029:1ef:141f:609 with SMTP id e16-20020a62fc100000b02901ef141f0609mr5077001pfh.78.1616090066177;
-        Thu, 18 Mar 2021 10:54:26 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id u22sm2812190pgh.20.2021.03.18.10.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Mar 2021 10:54:25 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 3A27740244; Thu, 18 Mar 2021 17:54:24 +0000 (UTC)
-Date:   Thu, 18 Mar 2021 17:54:24 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-block@vger.kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: blktests: block/009 next-20210304 failure rate average of 1/448
-Message-ID: <20210318175424.GR13911@42.do-not-panic.com>
-References: <20210316174645.GI4332@42.do-not-panic.com>
+        Thu, 18 Mar 2021 14:12:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D258AC06174A;
+        Thu, 18 Mar 2021 11:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=AhWQBtnDNYvH/ya/AilgCW5hgqljREfLQqYtgqmwu64=; b=KPjEv644KlKlam1JpsXjkJj3Nq
+        h3Y5CFAy9TnlWYUg+woZccdZBWvl+XiynfTjFsbHEsZ2ZGGxr9KUvJMTfnH/ueRGKvb4wQ/OxxpC4
+        G4mGFov2DA7K0poTnaiCcYiFHK7vU6S7KSm80ShiEoWfUXQFjkMbxlIPyPpdmPB9NZpf6phDLQslz
+        4KlfFhfxzltlnuUICyC3Tyu+3VzQ6mTYYdA4vbW+lxtpw3ugTTnxD19owlSGzIc0KcJf76rLcuWhA
+        wqfK1WiYC+y/YRQ0ULHsafCBL//fuC0WzpjqNoKEOLj8CxtpcOKnZyxHfU+Z7KBMqqkIxTfOZyKzj
+        Q8oiMedA==;
+Received: from [2601:1c0:6280:3f0::9757]
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lMx7W-003KeR-PX; Thu, 18 Mar 2021 18:11:49 +0000
+Subject: Re: [PATCH] block: Fix a typo
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210318111204.20873-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d4ee01e7-b627-71cc-c4da-fa004a6309b9@infradead.org>
+Date:   Thu, 18 Mar 2021 11:11:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210316174645.GI4332@42.do-not-panic.com>
+In-Reply-To: <20210318111204.20873-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Adding linux-fsdevel as folks working on fstests might be
-interested.
-
-On Tue, Mar 16, 2021 at 05:46:45PM +0000, Luis Chamberlain wrote:
-> My personal suspicion is not on the block layer but on scsi_debug
-> because this can fail:
+On 3/18/21 4:12 AM, Bhaskar Chowdhury wrote:
+> s/trival/trivial/
 > 
-> modprobe scsi_debug; rmmod scsi_debug
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+> ---
+>  block/blk-merge.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This second issue may be a secondary separate issue, but I figured 
-> I'd mention it. To fix this later issue I've looked at ways to
-> make scsi_debug_init() wait until its scsi devices are probed,
-> however its not clear how to do this correctly. If someone has
-> an idea let me know. If that fixes this issue then we know it was
-> that.
+> diff --git a/block/blk-merge.c b/block/blk-merge.c
+> index ffb4aa0ea68b..ba112cffd49f 100644
+> --- a/block/blk-merge.c
+> +++ b/block/blk-merge.c
+> @@ -283,7 +283,7 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
+>  	/*
+>  	 * Bio splitting may cause subtle trouble such as hang when doing sync
+>  	 * iopoll in direct IO routine. Given performance gain of iopoll for
+> -	 * big IO can be trival, disable iopoll when split needed.
+> +	 * big IO can be trivial, disable iopoll when split needed.
+>  	 */
+>  	bio->bi_opf &= ~REQ_HIPRI;
+> 
+> --
+> 2.26.2
+> 
 
-OK so this other issue with scsi_debug indeed deserves its own tracking
-so I filed a bug for it but also looked into it and tried to see how to
-resolve it.
 
-Someone who works on scsi should revise my work as I haven't touched
-scsi before except for the recent block layer work I had done for the
-blktrace races, however, my own analysis is that this should not be
-fixed in scsi_debug but instead in the users of scsi_debug.
+-- 
+~Randy
 
-The rationale for that is here:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=212337
-
-The skinny of it is that we have no control over when userspace may muck
-with the newly exposed devices as they are being initialized, and
-shoe-horning a solution in scsi_debug_init() is prone to always be allow
-a race with userspace never letting scsi_debug_init() complete.
-
-So best we can do is just use something like lsof on the tools which
-use scsi_debug *prior* to mucking with the devices and / or removal of
-the module.
-
-I'll follow up with respective blktests / fstests patches, which I
-suspect may address a few false positives.
-
-  Luis
