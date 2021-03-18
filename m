@@ -2,51 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC0234062B
-	for <lists+linux-block@lfdr.de>; Thu, 18 Mar 2021 13:55:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F03F4340630
+	for <lists+linux-block@lfdr.de>; Thu, 18 Mar 2021 13:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231220AbhCRMzM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Mar 2021 08:55:12 -0400
-Received: from verein.lst.de ([213.95.11.211]:41581 "EHLO verein.lst.de"
+        id S230408AbhCRM4s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Mar 2021 08:56:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:41586 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231440AbhCRMy4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Mar 2021 08:54:56 -0400
+        id S230477AbhCRM4T (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 18 Mar 2021 08:56:19 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 616BA68C4E; Thu, 18 Mar 2021 13:54:54 +0100 (CET)
-Date:   Thu, 18 Mar 2021 13:54:53 +0100
+        id D84DC68C4E; Thu, 18 Mar 2021 13:56:17 +0100 (CET)
+Date:   Thu, 18 Mar 2021 13:56:17 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Ondrej Zary <linux@rainbow-software.org>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 4/8] advansys: remove ISA support
-Message-ID: <20210318125453.GB21262@lst.de>
-References: <20210318063923.302738-1-hch@lst.de> <20210318063923.302738-5-hch@lst.de> <20210318112025.GK3420@casper.infradead.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, hch@lst.de,
+        keescook@chromium.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH] block: do not copy data to user when bi_status is error
+Message-ID: <20210318125617.GC21262@lst.de>
+References: <20210318122621.330010-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210318112025.GK3420@casper.infradead.org>
+In-Reply-To: <20210318122621.330010-1-yanaijie@huawei.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 11:20:25AM +0000, Matthew Wilcox wrote:
-> On Thu, Mar 18, 2021 at 07:39:19AM +0100, Christoph Hellwig wrote:
-> > @@ -2875,7 +2859,6 @@ static void asc_prt_asc_board_eeprom(struct seq_file *m, struct Scsi_Host *shost
-> >  	uchar serialstr[13];
-> >  #ifdef CONFIG_ISA
-> >  	ASC_DVC_VAR *asc_dvc_varp;
-> > -	int isa_dma_speed[] = { 10, 8, 7, 6, 5, 4, 3, 2 };
-> >  
-> >  	asc_dvc_varp = &boardp->dvc_var.asc_dvc_var;
-> >  #endif /* CONFIG_ISA */
+On Thu, Mar 18, 2021 at 08:26:21PM +0800, Jason Yan wrote:
+> When the user submitted a request with unaligned buffer, we will
+> allocate a new page and try to copy data to or from the new page.
+> If it is a reading request, we always copy back the data to user's
+> buffer, whether the result is good or error. So if the driver or
+> hardware returns an error, garbage data is copied to the user space.
+> This is a potential security issue which makes kernel info leaks.
 > 
-> I think you can remove the conditional definition & assignment of
-> asc_dvc_varp here.
+> So do not copy the uninitalized data to user's buffer if the
+> bio->bi_status is not BLK_STS_OK in bio_copy_kern_endio_read().
 
-The way I read the driver CONFIG_ISA also covers Vesa Local Bus
-support, which is not removed by this patch.  Corret me if I'm wrong.
+Looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
