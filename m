@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DEF343AC1
-	for <lists+linux-block@lfdr.de>; Mon, 22 Mar 2021 08:39:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4184343AC3
+	for <lists+linux-block@lfdr.de>; Mon, 22 Mar 2021 08:39:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbhCVHim (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Mar 2021 03:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
+        id S229984AbhCVHjM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Mar 2021 03:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbhCVHib (ORCPT
+        with ESMTP id S230012AbhCVHiy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Mar 2021 03:38:31 -0400
+        Mon, 22 Mar 2021 03:38:54 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD56C061574
-        for <linux-block@vger.kernel.org>; Mon, 22 Mar 2021 00:38:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFF4C061574
+        for <linux-block@vger.kernel.org>; Mon, 22 Mar 2021 00:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=05RNuovLC8826n5nGcnM3ZFTkBnIL/J3sP0rbLctFVI=; b=Z4TV9xB3P9BEZmSuy5pUwdZVJU
-        GNK1WdDgCbtT9YD/sZAL6fAvKIBv7joCNulX6ZMZw1MXR7s0bic5Tyt4PZmb+7paadGh33QPo6BhN
-        sBZ8BjsfVTgDcs3MePDlzVMgqFWrfx1L8PIm5XKwgBDtF0yZt8E9eDn1LOtDlSqgT7ArK12oao2K1
-        eaBUVzA4ueSmLqpwhAjw4ejUB+fGWI3lulxNWeomHi4NiGuOHckmCYl2edIS9MgvioZneVrCOyEK/
-        l8aY0BxfuYgxez5r+WzL4VgISxHzpCeVjL9Kjp55FPRd1rINSsJHRFFE18dYRUFeAG24Njy/QQDJp
-        Kcku3Dyg==;
+        bh=LPpAEJDzmufdcoHvyDzkNMH6hO0chhf3uoTJ8hwYRok=; b=u8VsPfjMYb970wglnBMT0YFbf6
+        X7VNN1Qv83hYRbuZCndyiYVfaPcM8sZHjMX3yt13TEbQCv5dENHmV8MixscDHMSkCCwWiUh3T9nb3
+        AN6c1REyH9yDJgmJUu0tm6b8x3uVGfy/3Fxafjxs8TUkdMI3W+cfjyqVvQqpVtPAXh2wv5ZJ8S5na
+        4QrLyEMarNjQ7C33OPatBx85BK1qVOzsdsLgagjbKTW7Q4tPR3i30dQPn4AnsjlDCFX3dPIDBKUrb
+        cPGsp+gIuHW3R+Pg561ggs8cupxjD55zZT4zzj9l8Kwgi0HHOJP7nJwLdWKUBdBIA3d7fubVsk3bh
+        sQPZHTYA==;
 Received: from [2001:4bb8:180:4ea2:5b87:a441:96f6:10e9] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lOF8B-0089qG-Nr; Mon, 22 Mar 2021 07:37:58 +0000
+        id 1lOF8d-0089sB-Ql; Mon, 22 Mar 2021 07:38:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
         Jens Axboe <axboe@kernel.dk>
 Cc:     Chao Leng <lengchao@huawei.com>, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: [PATCH 1/2] blk-mq: add a blk_mq_submit_bio_direct API
-Date:   Mon, 22 Mar 2021 08:37:25 +0100
-Message-Id: <20210322073726.788347-2-hch@lst.de>
+Subject: [PATCH 2/2] nvme-multipath: don't block on blk_queue_enter of the underlying device
+Date:   Mon, 22 Mar 2021 08:37:26 +0100
+Message-Id: <20210322073726.788347-3-hch@lst.de>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210322073726.788347-1-hch@lst.de>
 References: <20210322073726.788347-1-hch@lst.de>
@@ -46,105 +46,65 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds (back) and API for simple stacking drivers to submit a bio to
-blk-mq queue.  The prime aim is to avoid blocking on the queue freeze
-percpu ref, as a multipath driver really does not want to get blocked
-on that when an underlying device is undergoing error recovery.  It also
-happens to optimize away the small overhead of the curren->bio_list based
-recursion avoidance.
+When we reset/teardown a controller, we must freeze and quiesce the
+namespaces request queues to make sure that we safely stop inflight I/O
+submissions. Freeze is mandatory because if our hctx map changed between
+reconnects, blk_mq_update_nr_hw_queues will immediately attempt to freeze
+the queue, and if it still has pending submissions (that are still
+quiesced) it will hang.
 
+However, by freezing the namespaces request queues, and only unfreezing
+them when we successfully reconnect, inflight submissions that are
+running concurrently can now block grabbing the nshead srcu until either
+we successfully reconnect or ctrl_loss_tmo expired (or the user
+explicitly disconnected).
+
+This caused a deadlock when a different controller (different path on the
+same subsystem) became live (i.e. optimized/non-optimized). This is
+because nvme_mpath_set_live needs to synchronize the nshead srcu before
+requeueing I/O in order to make sure that current_path is visible to
+future (re-)submisions. However the srcu lock is taken by a blocked
+submission on a frozen request queue, and we have a deadlock.
+
+In order to fix this use the blk_mq_submit_bio_direct API to submit the
+bio to the low-level driver, which does not block on the queue free
+but instead allows nvme-multipath to pick another path or queue up the
+bio.
+
+Fixes: 9f98772ba307 ("nvme-rdma: fix controller reset hang during traffic")
+Fixes: 2875b0aecabe ("nvme-tcp: fix controller reset hang during traffic")
+
+Reported-by Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-core.c       |  2 +-
- block/blk-mq.c         | 37 +++++++++++++++++++++++++++++++++++++
- block/blk.h            |  1 +
- include/linux/blk-mq.h |  1 +
- 4 files changed, 40 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index fc60ff20849738..4344f3c9058282 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -792,7 +792,7 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
- 	return BLK_STS_OK;
- }
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index a1d476e1ac020f..92adebfaf86fd1 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -309,6 +309,7 @@ blk_qc_t nvme_ns_head_submit_bio(struct bio *bio)
+ 	 */
+ 	blk_queue_split(&bio);
  
--static noinline_for_stack bool submit_bio_checks(struct bio *bio)
-+noinline_for_stack bool submit_bio_checks(struct bio *bio)
- {
- 	struct block_device *bdev = bio->bi_bdev;
- 	struct request_queue *q = bdev->bd_disk->queue;
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index d4d7c1caa43966..4ff85692843b49 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2286,6 +2286,43 @@ blk_qc_t blk_mq_submit_bio(struct bio *bio)
- 	return BLK_QC_T_NONE;
- }
- 
-+/**
-+ * blk_mq_submit_bio_direct - hand a bio directly to the driver for I/O
-+ * @bio:  The bio describing the location in memory and on the device.
-+ *
-+ * This function behaves similar to submit_bio_noacct(), but does never waits
-+ * for the queue to be unfreozen, instead it return false and lets the caller
-+ * deal with the fallout.  It also does not protect against recursion and thus
-+ * must only be used if the called driver is known to be blk-mq based.
-+ */
-+bool blk_mq_submit_bio_direct(struct bio *bio, blk_qc_t *qc)
-+{
-+	struct gendisk *disk = bio->bi_bdev->bd_disk;
-+	struct request_queue *q = disk->queue;
++retry:
+ 	srcu_idx = srcu_read_lock(&head->srcu);
+ 	ns = nvme_find_path(head);
+ 	if (likely(ns)) {
+@@ -316,7 +317,12 @@ blk_qc_t nvme_ns_head_submit_bio(struct bio *bio)
+ 		bio->bi_opf |= REQ_NVME_MPATH;
+ 		trace_block_bio_remap(bio, disk_devt(ns->head->disk),
+ 				      bio->bi_iter.bi_sector);
+-		ret = submit_bio_noacct(bio);
 +
-+	if (WARN_ON_ONCE(!current->bio_list) ||
-+	    WARN_ON_ONCE(disk->fops->submit_bio)) {
-+		bio_io_error(bio);
-+		goto fail;
-+	}
-+	if (!submit_bio_checks(bio))
-+		goto fail;
-+
-+	if (unlikely(blk_queue_enter(q, BLK_MQ_REQ_NOWAIT)))
-+		return false;
-+	if (!blk_crypto_bio_prep(&bio))
-+		goto fail_queue_exit;
-+	*qc = blk_mq_submit_bio(bio);
-+	return true;
-+
-+fail_queue_exit:
-+	blk_queue_exit(disk->queue);
-+fail:
-+	*qc = BLK_QC_T_NONE;
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(blk_mq_submit_bio_direct);
-+
- void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 		     unsigned int hctx_idx)
- {
-diff --git a/block/blk.h b/block/blk.h
-index 3b53e44b967e4e..c4c66b2a9ffb19 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -221,6 +221,7 @@ ssize_t part_timeout_show(struct device *, struct device_attribute *, char *);
- ssize_t part_timeout_store(struct device *, struct device_attribute *,
- 				const char *, size_t);
- 
-+bool submit_bio_checks(struct bio *bio);
- void __blk_queue_split(struct bio **bio, unsigned int *nr_segs);
- int ll_back_merge_fn(struct request *req, struct bio *bio,
- 		unsigned int nr_segs);
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 2c473c9b899089..6804f397106ada 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -615,6 +615,7 @@ static inline void blk_rq_bio_prep(struct request *rq, struct bio *bio,
- }
- 
- blk_qc_t blk_mq_submit_bio(struct bio *bio);
-+bool blk_mq_submit_bio_direct(struct bio *bio, blk_qc_t *qc);
- void blk_mq_hctx_set_fq_lock_class(struct blk_mq_hw_ctx *hctx,
- 		struct lock_class_key *key);
++		if (!blk_mq_submit_bio_direct(bio, &ret)) {
++			nvme_mpath_clear_current_path(ns);
++			srcu_read_unlock(&head->srcu, srcu_idx);
++			goto retry;
++		}
+ 	} else if (nvme_available_path(head)) {
+ 		dev_warn_ratelimited(dev, "no usable path - requeuing I/O\n");
  
 -- 
 2.30.1
