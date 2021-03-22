@@ -2,61 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D54343A6D
-	for <lists+linux-block@lfdr.de>; Mon, 22 Mar 2021 08:18:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C96DC343ABF
+	for <lists+linux-block@lfdr.de>; Mon, 22 Mar 2021 08:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbhCVHS2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Mar 2021 03:18:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:53831 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229696AbhCVHSE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Mar 2021 03:18:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0C2A368BEB; Mon, 22 Mar 2021 08:18:02 +0100 (CET)
-Date:   Mon, 22 Mar 2021 08:18:01 +0100
+        id S229746AbhCVHil (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Mar 2021 03:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229547AbhCVHiM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 22 Mar 2021 03:38:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F053C061574
+        for <linux-block@vger.kernel.org>; Mon, 22 Mar 2021 00:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=iWYlea68c8FzuH+4tg8qDv1Nl0eXO516A6zNqzfMHec=; b=IUo/T/VIuycDnv4C9zh3g+gFlr
+        JpV+bUzBRtGfp7q9hGpG5SiqiPHsLm29rmyJoTKXrguZAttgLKY0KJM06GoqkvQNfcyKmWcrZP0CO
+        eTLZJbRnmNk5y78ZkpEFK1e0uyU0cIpBd/8e5buzLEG36d7K6GD+qkil/62qJ2FuS8cW/CcJCr5yX
+        kJUsaHGZ5NzTD/LjtWMLm9+Jk8iVun58aqQNBX7BVHvQC9vlLzj7yLoybBtvcivoSpRJQqA2KJkr2
+        5wi/20P7WqGk0Nh857z2gPpt3DqkBiOKQ9PO262335k3eeZONdANkGdFjhP5JxVOWZwbfpegAhxX6
+        +aE+1AAg==;
+Received: from [2001:4bb8:180:4ea2:5b87:a441:96f6:10e9] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lOF7v-0089pY-BI; Mon, 22 Mar 2021 07:37:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     syzbot <syzbot+8fede7e30c7cee0de139@syzkaller.appspotmail.com>
-Cc:     axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tj@kernel.org
-Subject: Re: [syzbot] KASAN: use-after-free Read in disk_part_iter_next (2)
-Message-ID: <20210322071801.GE3440@lst.de>
-References: <00000000000053da9405bd7d2644@google.com> <000000000000a17fb305be0b3f38@google.com>
+To:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Chao Leng <lengchao@huawei.com>, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Subject: fix nvme-tcp and nvme-rdma controller reset hangs when using multipath
+Date:   Mon, 22 Mar 2021 08:37:24 +0100
+Message-Id: <20210322073726.788347-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000a17fb305be0b3f38@google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I've been running the reproducer on a KASAN enable VM for about
-15 minutes now, but haven't been able to reproduce it.
+Hi all,
 
-Is there a way to inject this proposed fix into the syzbot queue?
-
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 1a7558917c47d6..f5d5872b89d57e 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -288,15 +288,12 @@ struct device_type part_type = {
- void delete_partition(struct block_device *part)
- {
- 	xa_erase(&part->bd_disk->part_tbl, part->bd_partno);
--	kobject_put(part->bd_holder_dir);
--	device_del(&part->bd_device);
--
--	/*
--	 * Remove the block device from the inode hash, so that it cannot be
--	 * looked up any more even when openers still hold references.
--	 */
- 	remove_inode_hash(part->bd_inode);
- 
-+	synchronize_rcu();
-+
-+	kobject_put(part->bd_holder_dir);
-+	device_del(&part->bd_device);
- 	put_device(&part->bd_device);
- }
- 
+this series attempts to fix the nvme queue freeze deadlock Sagi reported.
+It needs a little help from the block layer so that we can avoid blocking
+on the queue free percpu_ref without forcing the entire NOWAIT flag and
+thus also not waiting for tag allocations.
