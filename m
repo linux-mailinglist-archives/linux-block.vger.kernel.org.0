@@ -2,40 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 141B3345E9D
-	for <lists+linux-block@lfdr.de>; Tue, 23 Mar 2021 13:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B20E5345F36
+	for <lists+linux-block@lfdr.de>; Tue, 23 Mar 2021 14:15:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbhCWM4J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Mar 2021 08:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40808 "EHLO mail.kernel.org"
+        id S231646AbhCWNOb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Mar 2021 09:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230453AbhCWMzk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Mar 2021 08:55:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 59D34619C2;
-        Tue, 23 Mar 2021 12:55:37 +0000 (UTC)
+        id S231683AbhCWNNn (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Mar 2021 09:13:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B53C61994;
+        Tue, 23 Mar 2021 13:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616504139;
-        bh=g8c3uxdKrpmxUuNjoAwznCNrlaiTJm8qlDIHtTeQkSU=;
+        s=k20201202; t=1616505222;
+        bh=LqDHJq2C5bM3oecuxbWy2D1v4SxKCuP3OjlMBuhAU7g=;
         h=From:To:Cc:Subject:Date:From;
-        b=o2VP3Wx/3B3eoEDwF46on2ovZ3XGfrawww5w8h4d0KDXBJs2ru9QCwu8wpi2d35VP
-         PtT/sx5g6U3jOANm029jo+nun/nKm6NYaP4MHUru+NfEjIXUv1xLLhcllDox6peI3q
-         poQa7EHNsLHHkd8LmXNA+I8k7NcV5r5nONGo43RYYrBDfzLKgWs1DpDCq/UBAiq5JD
-         zkFK5fKSS/nEBWI3gdbCJVnrnK3uSim9l5MqmKm2VKPgMYsWRs/0DYp5KgzvmVWgQJ
-         DtwTYctG/8cJmjy5b49NEYIfqByo3wuthq2Jd+QblMyuMUupSPYoU4kexNJGkhwNgT
-         ve0zmScPVDt/A==
+        b=C6Hlgn3LxfZeY5laGu/OmHFn/DeXk4QmW4SY4fwHsCmhdPJptmiF55rlbueIiP1gW
+         r+kzoAZ/59x2FW7chal5PdbwZBceoHL1KfFPXCM/ivfKkbFS7uNryHXTsIw4dger4j
+         qjVDFErWaS7KxLeanqZ8wLYL2NFLV1RIqyJx6lMcQNPz7JhSgYsyIjH7lMZRtuPJp+
+         cTtspFOrPYYTarJmK0YDBORUEx1xmdQhSiw0owGoAsGYB77R1xvAWye95mFID3qbut
+         rchv7jd0wmqjmhy9uXS9kxD0DaW9lg1nvpIyZ1ekhAoQy/4HEC2rMYTQG55FD9F2M3
+         W4uz+HoUXYETg==
 From:   Arnd Bergmann <arnd@kernel.org>
-To:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
+To:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Shaohua Li <shli@fb.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.cz>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] block/rnbd-clt: fix overlapping snprintf arguments
-Date:   Tue, 23 Mar 2021 13:55:24 +0100
-Message-Id: <20210323125535.1866249-1-arnd@kernel.org>
+Subject: [PATCH] block: avoid -Wunused-but-set-parameter warning
+Date:   Tue, 23 Mar 2021 14:12:19 +0100
+Message-Id: <20210323131337.2510952-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -45,43 +44,41 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The -Wrestrict warning (disabled by default) points out undefined
-behavior calling snprintf():
+Building with 'make W=1' shows a warning for one function parameter
+that is only set but not used in some configurations:
 
-drivers/block/rnbd/rnbd-clt-sysfs.c: In function 'rnbd_clt_get_path_name':
-drivers/block/rnbd/rnbd-clt-sysfs.c:486:8: error: 'snprintf' argument 4 overlaps destination object 'buf' [-Werror=restrict]
-  486 |  ret = snprintf(buf, len, "%s@%s", buf, dev->sess->sessname);
-      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/block/rnbd/rnbd-clt-sysfs.c:472:67: note: destination object referenced by 'restrict'-qualified argument 1 was declared here
-  472 | static int rnbd_clt_get_path_name(struct rnbd_clt_dev *dev, char *buf,
-      |                                                             ~~~~~~^~~
+kernel/trace/blktrace.c: In function '__trace_note_message':
+kernel/trace/blktrace.c:148:63: error: parameter 'blkcg' set but not used [-Werror=unused-but-set-parameter]
+  148 | void __trace_note_message(struct blk_trace *bt, struct blkcg *blkcg,
 
-This can be simplified by using a single snprintf() to print the
-whole buffer, avoiding the undefined behavior.
+Move the assignment into the #ifdef block that contains the only
+use to clarify how it's used and avoid the warning.
 
-Fixes: 91f4acb2801c ("block/rnbd-clt: support mapping two devices with the same name from different servers")
+Apparently this is the only -Wunused-but-set-parameter warning in the
+kernel as of v5.12, after similar cleanups done by others. It may be time
+to turn it on globally.
+
+Fixes: 35fe6d763229 ("block: use standard blktrace API to output cgroup info for debug notes")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/block/rnbd/rnbd-clt-sysfs.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ kernel/trace/blktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
-index d4aa6bfc9555..38251b749664 100644
---- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-@@ -479,11 +479,7 @@ static int rnbd_clt_get_path_name(struct rnbd_clt_dev *dev, char *buf,
- 	while ((s = strchr(pathname, '/')))
- 		s[0] = '!';
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index c221e4c3f625..f9314351a7e2 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -170,9 +170,9 @@ void __trace_note_message(struct blk_trace *bt, struct blkcg *blkcg,
+ 	n = vscnprintf(buf, BLK_TN_MAX_MSG, fmt, args);
+ 	va_end(args);
  
--	ret = snprintf(buf, len, "%s", pathname);
--	if (ret >= len)
--		return -ENAMETOOLONG;
--
--	ret = snprintf(buf, len, "%s@%s", buf, dev->sess->sessname);
-+	ret = snprintf(buf, len, "%s@%s", pathname, dev->sess->sessname);
- 	if (ret >= len)
- 		return -ENAMETOOLONG;
- 
++#ifdef CONFIG_BLK_CGROUP
+ 	if (!(blk_tracer_flags.val & TRACE_BLK_OPT_CGROUP))
+ 		blkcg = NULL;
+-#ifdef CONFIG_BLK_CGROUP
+ 	trace_note(bt, current->pid, BLK_TN_MESSAGE, buf, n,
+ 		   blkcg ? cgroup_id(blkcg->css.cgroup) : 1);
+ #else
 -- 
 2.29.2
 
