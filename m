@@ -2,160 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18E61346520
-	for <lists+linux-block@lfdr.de>; Tue, 23 Mar 2021 17:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD1134657D
+	for <lists+linux-block@lfdr.de>; Tue, 23 Mar 2021 17:41:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233222AbhCWQ3B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 Mar 2021 12:29:01 -0400
-Received: from mail-eopbgr760053.outbound.protection.outlook.com ([40.107.76.53]:14496
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233316AbhCWQ2w (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 Mar 2021 12:28:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D4h58ml4kThb89neCjlOY5Ic95bk7SILq7JcY816ivYAiPt5hQNbzT51P0+bdeOSXoC/4q6R5fumo46Qwu8AYSF/mgAgqE5a1xnLGJf4MVVLGgHE3WOHoMxLNgiv+hK15ee8VTKsM/JDpWDxpFObPOIbpOHmTbMZNdPn/Nz9KCKnpWvBQHASoYjoFUC9KNhFYJZXwd2b+ZEUfV//Y+GQfmtyWfxhSRiHJOtVbrwnqnuEY/wo5rNrUlq/hWcOIYoXVypqy8X3y+VgVO3X7WhTPlE3XQWpSkupzLtnI75/v5PhaPVhg6M6+pjpnTA8cZXorRecLGqpICgdHQ4SClGCzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhsk6AL94YBbLzmn/zCho12U/YJ2GFpVoXVWB5GXAN8=;
- b=jMvoQ9Dw9KApFQfey/4iMeXgeScqiWspKFL5VgR566E2zHh2RgHtpPizJe7bkPqRvbshelRjR950vGJFZuSvqd1Hl1CNHIz3M1pv4XWPIGoTGyE9AUAwe4abD/xDfwhgvGWm3SLjX88Yx/NPXZcJFXoDwYHea+JrRczUzqPe5etN80/I2+rzYrb+BxdpX4FZ/DwAcN6SW5ulZiDr5gVKmlDOE4WAhmzvLdd3L2GBE2UVbKdZEieso5/YZY9Wy9YlzFgARSBztjqS9a2ALYS4GTIzZe/osLBEkUrFHKGorivvSPP8CvU0oOLFmYs9ZI8z50qeGUJMuQRCNYjvGSXyIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=lists.ozlabs.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
+        id S233276AbhCWQkr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 Mar 2021 12:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233264AbhCWQkj (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 23 Mar 2021 12:40:39 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEBFC061574
+        for <linux-block@vger.kernel.org>; Tue, 23 Mar 2021 09:40:26 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id z9so18701191ilb.4
+        for <linux-block@vger.kernel.org>; Tue, 23 Mar 2021 09:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhsk6AL94YBbLzmn/zCho12U/YJ2GFpVoXVWB5GXAN8=;
- b=K1XVlOJnGr3OjElBtBy98bqnUMbWJkNBSC1Hx2ZmwsybQ4CnM4HaqB6XWP0xOUxZiAVCWlPXnXwuExv8DTAW2rgvfyoIKxhSDiyzF+gxi/bfQdInoKtsQ8N/v6lipYkG3aUSJCfE6CWl0fgPv6Rp2o+pPJoGCGQKpuearBT93DY=
-Received: from SN4PR0201CA0070.namprd02.prod.outlook.com
- (2603:10b6:803:20::32) by CH2PR02MB6903.namprd02.prod.outlook.com
- (2603:10b6:610:81::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Tue, 23 Mar
- 2021 16:28:50 +0000
-Received: from SN1NAM02FT005.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:20:cafe::bc) by SN4PR0201CA0070.outlook.office365.com
- (2603:10b6:803:20::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend
- Transport; Tue, 23 Mar 2021 16:28:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; lists.ozlabs.org; dkim=none (message not signed)
- header.d=none;lists.ozlabs.org; dmarc=pass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT005.mail.protection.outlook.com (10.152.72.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3955.24 via Frontend Transport; Tue, 23 Mar 2021 16:28:48 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 23 Mar 2021 09:28:47 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2106.2 via Frontend Transport; Tue, 23 Mar 2021 09:28:47 -0700
-Envelope-to: git@xilinx.com,
- linuxppc-dev@lists.ozlabs.org,
- linux-block@vger.kernel.org,
- devicetree@vger.kernel.org,
- yuehaibing@huawei.com,
- robh+dt@kernel.org,
- paulus@samba.org,
- mpe@ellerman.id.au,
- chris.packham@alliedtelesis.co.nz,
- benh@kernel.crashing.org,
- monstr@monstr.eu,
- linux-kernel@vger.kernel.org,
- dave@stgolabs.net,
- axboe@kernel.dk
-Received: from [172.30.17.109] (port=50090)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1lOjte-0003T2-GO; Tue, 23 Mar 2021 09:28:46 -0700
-Subject: Re: [PATCH] xsysace: Remove SYSACE driver
-To:     Jens Axboe <axboe@kernel.dk>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-CC:     <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-        <git@xilinx.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>, <devicetree@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-References: <ee1fe969905f641f5f97d812ee0cac44c12fe0f6.1604919578.git.michal.simek@xilinx.com>
- <20210323000436.qm5rkiplwt5x5ttk@offworld>
- <6948510c-dc7e-d74a-62e3-e42be14cff16@kernel.dk>
- <9c4911e6-92dc-0a0f-2f81-7d23e268144f@xilinx.com>
- <66a774e3-f068-984e-e69f-b55667a494cf@kernel.dk>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <f3ecc92d-9f53-6a25-9e40-74efba199da6@xilinx.com>
-Date:   Tue, 23 Mar 2021 17:28:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Iw5CPLlTcGucRxEu7vlzfvI+RatbIeTpMhtRqIEzc3g=;
+        b=XeWlpbtwG7WfTuQUp7SZmDJSOwsohY1N9qLcBgXcqWgJ+GIwuvfzmv+u2zpdaOzpGN
+         H4Huggo0IplQmkVZQ0je4OFfvE3pgy02g2USgkVnDUuSlF89axZfEAJrpqiV5R9kCxen
+         5VSPDh3jC9tUJYnnr16CrGyNTd3zE6xKlSipFHStAqrtArxsKmYdRxFBun94Gr1xquHv
+         jLyEQCyvm7wutJNqsGwOogtH2Uh5+JzTUNBqDFdO4MtCBRsaVhYld5hFdJAXd0H7ihQB
+         6AGFy/hXlN0XSiyxH3fthMMg8PfJoWQvhVZ6kkuGMw1wYg80NAFtYTZr5Ee0TfIy1Nu/
+         irhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Iw5CPLlTcGucRxEu7vlzfvI+RatbIeTpMhtRqIEzc3g=;
+        b=q6T7tI50DNPNUn3ze1zLQJYr1Iur1o2D/tkUbPXQoEN3qn1WvvYqABQvTGhDcO/F0T
+         nfIFCt4gVM57y6+G16RWReh5oyhPxPc23KdQkL9rCDsQ4uOj/YWr8GAxeejA6KDMT2Ur
+         IheZeFwbwHPZwXG/0BJUvB8fV5q2/sSmaRQZFPZ+NCJGeFJjRL1+r7P9aRQXS3wKeVbx
+         xqMb65ML9Z87A874XlT7EWdq5TtUcRA+Wy5oEvqJrhyez0pfelz1mWwzFjzK7/AUHLUB
+         g3idNp83yjnjkHajnw4aVHMlnll+eBfQG1OEwEu87iC1pSeJuEYfMUVNi3lOssajpbav
+         sqyg==
+X-Gm-Message-State: AOAM530bx04agl5RsYqiU3Xfnv9QW8sqyb1h2T84wOMA9YsMdEl28IEE
+        QAOFNcRRrMo7wslG3IE2coMdsTorEDT0ew==
+X-Google-Smtp-Source: ABdhPJzCr77dVHWyAc4qjt5c40JPw0/DpGt+ZZ6j6DqfBUTusQj/f9exqT1TWBsUpPlogIl6004RUw==
+X-Received: by 2002:a05:6e02:13d4:: with SMTP id v20mr5423377ilj.1.1616517625651;
+        Tue, 23 Mar 2021 09:40:25 -0700 (PDT)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id d1sm2797866ils.49.2021.03.23.09.40.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Mar 2021 09:40:23 -0700 (PDT)
+Subject: Re: [PATCH v2] block: recalculate segment count for multi-segment
+ discards correctly
+To:     David Jeffery <djeffery@redhat.com>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20210211143807.GA115624@redhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c04bac6b-8375-ba5f-53f4-ee737ad33743@kernel.dk>
+Date:   Tue, 23 Mar 2021 10:40:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <66a774e3-f068-984e-e69f-b55667a494cf@kernel.dk>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20210211143807.GA115624@redhat>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 560c4081-5f3d-4f0a-c6f1-08d8ee18bcee
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6903:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <CH2PR02MB6903CD76CAE27CF1CD49C520C6649@CH2PR02MB6903.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JqaIdtuRCwqGi1EnUFdDbHeHIkwF3KfQI5/RY3qA5P3xHf4BWCJXdjXM6wQtRjZD5x6xtlziKaHu3lXE81V927bUJ+WTnxnvnIXriT5CcDqTZ5c3XKeah1JuHBFzL1bTHQv0f/xz8h1/IP34eEMbOhcD+6nJCBuRH1LE+SRkDLPOXoqrpMjN3Z5d62/1S9CUo9X4UelXtXSwp0ReZfFYzNSjRxCSHZ6PR2WZtBtbramUYp3PMwVJVkUmhMyNi3VeyJV4ktzgsMc5SbGGL4xy2Qwkfd8DK7TH20MhG4NgwBm1r821F7BFKImSQXp7I6i7VoPvntqwanPKc/iO6Efg/5hRR3E1Tywpxw6ELZyk9quK/sinOEu1pxAhIpe/Xmtms0FZfukUtlXcZoTpqh24T203XtLUGJI6JeWyITtZUd05TJpGrvrmQtD7Qs3lADiBhm2HyV6gZAlKICOmbODJt3EEiaLlYrkNEmwaEuhHHC+Ik5NECXEhwhtZCQyTlRPYz3cgN41/ue6PvzyrfAta4v0auljZ7vwyPS7wDfkxR5yjTyNrvO+nJPFXckeebwoAzacQBEknszBtHxxAvpjM/IbOr4D45tGHwoZukqvrLoLl9bNjm92hcZnpF1UIsZV7mctqkUjeddIpiwyvGjVENAY4Ubng32AoYj7RE6fs2aXcQFMLGyBRnLbiQh4oULR9VPD3LN3bxRqyo43Hru13dw==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(39850400004)(36840700001)(46966006)(31696002)(5660300002)(7636003)(478600001)(36860700001)(82310400003)(36756003)(356005)(4326008)(82740400003)(53546011)(2906002)(36906005)(47076005)(316002)(70586007)(110136005)(26005)(4744005)(31686004)(8936002)(8676002)(44832011)(7416002)(70206006)(54906003)(6666004)(336012)(2616005)(426003)(9786002)(186003)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2021 16:28:48.8516
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 560c4081-5f3d-4f0a-c6f1-08d8ee18bcee
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT005.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6903
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On 3/23/21 5:28 PM, Jens Axboe wrote:
-> On 3/23/21 10:25 AM, Michal Simek wrote:
->>
->>
->> On 3/23/21 5:23 PM, Jens Axboe wrote:
->>> On 3/22/21 6:04 PM, Davidlohr Bueso wrote:
->>>> Hi,
->>>>
->>>> On Mon, 09 Nov 2020, Michal Simek wrote:
->>>>
->>>>> Sysace IP is no longer used on Xilinx PowerPC 405/440 and Microblaze
->>>>> systems. The driver is not regularly tested and very likely not working for
->>>>> quite a long time that's why remove it.
->>>>
->>>> Is there a reason this patch was never merged? can the driver be
->>>> removed? I ran into this as a potential tasklet user that can be
->>>> replaced/removed.
->>>
->>> I'd be happy to merge it for 5.13.
->>>
->>
->> Can you just take this version? Or do you want me to send it again?
+On 2/11/21 7:38 AM, David Jeffery wrote:
+> When a stacked block device inserts a request into another block device
+> using blk_insert_cloned_request, the request's nr_phys_segments field gets
+> recalculated by a call to blk_recalc_rq_segments in
+> blk_cloned_rq_check_limits. But blk_recalc_rq_segments does not know how to
+> handle multi-segment discards. For disk types which can handle
+> multi-segment discards like nvme, this results in discard requests which
+> claim a single segment when it should report several, triggering a warning
+> in nvme and causing nvme to fail the discard from the invalid state.
 > 
-> Minor edits needed for fuzz, but I've applied this version.
+>  WARNING: CPU: 5 PID: 191 at drivers/nvme/host/core.c:700 nvme_setup_discard+0x170/0x1e0 [nvme_core]
+>  ...
+>  nvme_setup_cmd+0x217/0x270 [nvme_core]
+>  nvme_loop_queue_rq+0x51/0x1b0 [nvme_loop]
+>  __blk_mq_try_issue_directly+0xe7/0x1b0
+>  blk_mq_request_issue_directly+0x41/0x70
+>  ? blk_account_io_start+0x40/0x50
+>  dm_mq_queue_rq+0x200/0x3e0
+>  blk_mq_dispatch_rq_list+0x10a/0x7d0
+>  ? __sbitmap_queue_get+0x25/0x90
+>  ? elv_rb_del+0x1f/0x30
+>  ? deadline_remove_request+0x55/0xb0
+>  ? dd_dispatch_request+0x181/0x210
+>  __blk_mq_do_dispatch_sched+0x144/0x290
+>  ? bio_attempt_discard_merge+0x134/0x1f0
+>  __blk_mq_sched_dispatch_requests+0x129/0x180
+>  blk_mq_sched_dispatch_requests+0x30/0x60
+>  __blk_mq_run_hw_queue+0x47/0xe0
+>  __blk_mq_delay_run_hw_queue+0x15b/0x170
+>  blk_mq_sched_insert_requests+0x68/0xe0
+>  blk_mq_flush_plug_list+0xf0/0x170
+>  blk_finish_plug+0x36/0x50
+>  xlog_cil_committed+0x19f/0x290 [xfs]
+>  xlog_cil_process_committed+0x57/0x80 [xfs]
+>  xlog_state_do_callback+0x1e0/0x2a0 [xfs]
+>  xlog_ioend_work+0x2f/0x80 [xfs]
+>  process_one_work+0x1b6/0x350
+>  worker_thread+0x53/0x3e0
+>  ? process_one_work+0x350/0x350
+>  kthread+0x11b/0x140
+>  ? __kthread_bind_mask+0x60/0x60
+>  ret_from_fork+0x22/0x30
+> 
+> This patch fixes blk_recalc_rq_segments to be aware of devices which can
+> have multi-segment discards. It calculates the correct discard segment
+> count by counting the number of bio as each discard bio is considered its
+> own segment.
 
-Thanks,
-Michal
+Applied, thanks.
+
+-- 
+Jens Axboe
 
