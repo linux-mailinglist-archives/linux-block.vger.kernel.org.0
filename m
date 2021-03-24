@@ -2,75 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E0D347238
-	for <lists+linux-block@lfdr.de>; Wed, 24 Mar 2021 08:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33EAD347217
+	for <lists+linux-block@lfdr.de>; Wed, 24 Mar 2021 08:12:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235763AbhCXHQZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 Mar 2021 03:16:25 -0400
-Received: from mail-m17637.qiye.163.com ([59.111.176.37]:42004 "EHLO
-        mail-m17637.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232088AbhCXHQI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 Mar 2021 03:16:08 -0400
-X-Greylist: delayed 378 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Mar 2021 03:16:08 EDT
-Received: from wanjb-virtual-machine.localdomain (unknown [36.152.145.182])
-        by mail-m17637.qiye.163.com (Hmail) with ESMTPA id 74C14980276;
-        Wed, 24 Mar 2021 15:09:46 +0800 (CST)
-From:   Wan Jiabing <wanjiabing@vivo.com>
-To:     Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kael_w@yeah.net, Wan Jiabing <wanjiabing@vivo.com>
-Subject: [PATCH] include: linux: lightnvm: Remove duplicate include
-Date:   Wed, 24 Mar 2021 15:09:21 +0800
-Message-Id: <20210324070921.736874-1-wanjiabing@vivo.com>
-X-Mailer: git-send-email 2.25.1
+        id S231375AbhCXHLc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 24 Mar 2021 03:11:32 -0400
+Received: from verein.lst.de ([213.95.11.211]:35681 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235723AbhCXHLW (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 24 Mar 2021 03:11:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4F7C868B02; Wed, 24 Mar 2021 08:11:20 +0100 (CET)
+Date:   Wed, 24 Mar 2021 08:11:19 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH] block: support zone append bvecs
+Message-ID: <20210324071119.GA647@lst.de>
+References: <739a96e185f008c238fcf06cb22068016149ad4a.1616497531.git.johannes.thumshirn@wdc.com> <20210323123002.GA30758@lst.de> <PH0PR04MB7416CEB0FE5E8E56370A0A1D9B639@PH0PR04MB7416.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZGk9OTk0eQ04YGRhOVkpNSk1OTUJMQ01NTkpVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS09ISFVLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PAw6Qhw*CD8IODgSTyEyPj0Z
-        PxJPCSxVSlVKTUpNTk1CTENMTkpDVTMWGhIXVQwaFRESGhkSFRw7DRINFFUYFBZFWVdZEgtZQVlI
-        TVVKTklVSk9OVUpDSVlXWQgBWUFKQ0pONwY+
-X-HM-Tid: 0a78631160d0d992kuws74c14980276
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR04MB7416CEB0FE5E8E56370A0A1D9B639@PH0PR04MB7416.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ifdef CONFIG_NVM, linux/blkdev.h and uapi/linux/lightnvm.h
-would be included twice. So remove them.
-By the way, I find that struct nvm_rq is declared twice. 
-If removing the duplicated declaration really makes sense, it would 
-be much clean up work to do in inlude/linux.
+On Wed, Mar 24, 2021 at 07:07:27AM +0000, Johannes Thumshirn wrote:
+> >>  	if (iov_iter_is_bvec(iter)) {
+> >> -		if (WARN_ON_ONCE(bio_op(bio) == REQ_OP_ZONE_APPEND))
+> >> -			return -EINVAL;
+> >> +		if (bio_op(bio) == REQ_OP_ZONE_APPEND) {
+> >> +			struct request_queue *q = bio->bi_bdev->bd_disk->queue;
+> >> +			unsigned int max_append =
+> >> +				queue_max_zone_append_sectors(q) << 9;
+> >> +
+> >> +			if (WARN_ON_ONCE(iter->count > max_append))
+> >> +				return -EINVAL;
+> >> +		}
+> > 
+> > That is not correct.  bio_iov_iter_get_pages just fills the bio as far
+> > as we can, and then returns 0 for the next call to continue.  Basically
+> > what you want here is a partial version of bio_iov_bvec_set.
+> > 
+> 
+> Isn't that what I did? The above is checking if we have REQ_OP_ZONE_APPEND and
+> then returns EINVAL if iter->count is bigger than queue_max_zone_append_sectors().
+> If the check doesn't fail, its going to call bio_iov_bvec_set().
 
-Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
----
- include/linux/lightnvm.h | 3 ---
- 1 file changed, 3 deletions(-)
+And that is the problem.  It should not fail, the payload is decoupled
+from the max_append size.
 
-diff --git a/include/linux/lightnvm.h b/include/linux/lightnvm.h
-index 1db223710b28..1ddb41ee71eb 100644
---- a/include/linux/lightnvm.h
-+++ b/include/linux/lightnvm.h
-@@ -112,10 +112,8 @@ struct nvm_dev_ops {
- 
- #ifdef CONFIG_NVM
- 
--#include <linux/blkdev.h>
- #include <linux/file.h>
- #include <linux/dmapool.h>
--#include <uapi/linux/lightnvm.h>
- 
- enum {
- 	/* HW Responsibilities */
-@@ -276,7 +274,6 @@ struct nvm_target {
- 
- #define NVM_MAX_VLBA (64) /* max logical blocks in a vector command */
- 
--struct nvm_rq;
- typedef void (nvm_end_io_fn)(struct nvm_rq *);
- 
- struct nvm_rq {
--- 
-2.25.1
-
+Doing the proper thing is not too hard as described above - make sure
+the bi_iter points to only the chunk of iter passed in that fits, and
+only advance the passed in iter by that amount.
