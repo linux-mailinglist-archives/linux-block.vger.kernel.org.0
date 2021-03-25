@@ -2,61 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 220FD34957F
-	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C991A34957E
+	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231131AbhCYPag (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S231153AbhCYPag (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 25 Mar 2021 11:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36318 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbhCYPaD (ORCPT
+        with ESMTP id S231162AbhCYPaE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 25 Mar 2021 11:30:03 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0EAC06174A
+        Thu, 25 Mar 2021 11:30:04 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF448C06174A
         for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:03 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id e14so3553230ejz.11
+Received: by mail-ej1-x62a.google.com with SMTP id jy13so3622595ejc.2
         for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SoMSIcCp8+AqPcP3Tord2AzO8LTHhNxNANk75Scwquk=;
-        b=V/C0jL+8D0s6YbdyLwDLKytpv+8Hp8eT6Z9sVtSiHVTOOIDvLDBOFhs2AVaklMO93p
-         rLa9l+ZiOvZ0A7GrIdKigZO1mXUNhccHU49VHw/7QOHcGHpFbm/E/4SqFq8e17Oh0j6Q
-         N9BghMwcDo6G4iixmoC/Oq+Kng8sK/abZt6Y+Mkfvgk1rskj4wWgZiMrl4ivCbuSWQUT
-         7n9AraBMMwEFZuTziqk93FNGLZjgibU3C0zd9lwrJtJGeEfNFE6xeh5rnwMUzB4m+7tl
-         JACiuMrCyaFK4m6F8+EeoF56nTc1jdZlCV4Ttp/nsSzKwCrtLK1xuBI36w5M4aRleLNw
-         uYeQ==
+        bh=+fPRExy/th2Wxi81rNTwbnWXQ+KI4WdiMLN79pZ5LSY=;
+        b=RLtG/AVT+z4VCmeg3rqcgm+IBqLYCFj3SougvFOZcBbPyOzAzltz1YlukfGQlDXVMP
+         suC9ESQiZozRREmnjcth5mbKyeJI/o9PbBCgfFucH3sFhve7Bns7jtBt/CnWVoi9u101
+         J+MlOrahH0SLXYZOsXl77YG0ZMjmz1hl4/bEB3VS7o18lE9KWCMmQnR8pT47l4le9K7F
+         sh0yY3ru6ZSO8f09eLVw2vSvUBYEnf4NYYm/l8u9Kn41OhjrNqebv0oWsshDZHPJqeWh
+         S/GuSg/32KA43Bt0u65KSmVNBFJMpL0HMoylOTCIsGMVG/GpGjVgzRrp0QqtRy4CX00j
+         i7oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SoMSIcCp8+AqPcP3Tord2AzO8LTHhNxNANk75Scwquk=;
-        b=Sy+aR1PFxqmuqEusoclyJr3kurxo2CacpgrPe5pL45H7VGScvxvSFpSuVapztBxi9G
-         3N300SGsluxMG33CvygzjEj7CstRmsXUzNiR35jsWmRlLOqjaxKshGIyvNx+G/OBS1jJ
-         YeA5ckZPaDJcbyBMltd283SLf5C1A4DIqYYSrZSW+o6FJO/a+lkQmbR+wACNvnfTcQ27
-         dNPWMaAqO3n4B5snXf78GAZ2lXqLBsrAhdxJksAd1EkW4qAZkY8PhGl3opce9dfrBKaV
-         vWhKwpD1Rh1qg/UnnuLbHdgXgi1GUY5yW4tRhNnpfnnCInXMvuwtuC1PMIIkV3GyhK1+
-         xdkw==
-X-Gm-Message-State: AOAM530WwqW+cOUmTCGTHkJR9k0ne+BrMSR2RoGqbJA65872wJ5heiq+
-        DPQ8iJ2+kPXSiaH1VhkyoYqw3aSTC5LhK4ku
-X-Google-Smtp-Source: ABdhPJyM3JBFTy1k+rBIN25NQYFFQMUC6ARQtfDON36bjqgEinyVDcYHXARjcwYaYU59Y325VzqXlw==
-X-Received: by 2002:a17:907:76c7:: with SMTP id kf7mr9988954ejc.470.1616686201719;
-        Thu, 25 Mar 2021 08:30:01 -0700 (PDT)
+        bh=+fPRExy/th2Wxi81rNTwbnWXQ+KI4WdiMLN79pZ5LSY=;
+        b=dJid0fCdSdNP56Q/9uy41RPQVTbMxKZQOGLVBgXV8g4BXiCLbpMMkKLc+m/J4uRtTa
+         hR4lqC5xy848syFnf1o1LtXiQupRackrtVR5Js/TnkNQuGbIxo/qcnXGQ8dZ3iX4Tbjt
+         sF7QPlK59sZbAzPXn3pSQOu5sy/U3H4h7uWQSilLAH/sVawMcAcCwxqIxlSXYPkj7z6T
+         /mHpveBCojzbTmSrygFELawl1qObiE3O8e1mqQkupVZMkpqjxYfbl8Hug8zwZub33Wis
+         KaU4hIJrvX0L0OeXckIusafxMDtRYTknWVmev+n7ctA713XzcUGnoelv71B/yKxDKBHr
+         hwAQ==
+X-Gm-Message-State: AOAM531bZnKNE/pIr7C24aA0zfE4Y6aRnR116XdpG1/luPuP5dNSLAP0
+        bBr5nV0kSKNA40RDeftEqiGqibvmS2W61OQT
+X-Google-Smtp-Source: ABdhPJwPijzgqYnlyTrfqG+48d8H5NA6GxYWlE4pRPiTtdoMjvgjxDFD8RMMTp8r6K92vhB41cG0nA==
+X-Received: by 2002:a17:907:9e6:: with SMTP id ce6mr9847051ejc.207.1616686202493;
+        Thu, 25 Mar 2021 08:30:02 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
         by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.30.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 08:30:01 -0700 (PDT)
+        Thu, 25 Mar 2021 08:30:02 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
         Gioh Kim <gi-oh.kim@cloud.ionos.com>,
         Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCH for-rc 14/24] block/rnbd-srv: Prevent a deadlock generated by accessing sysfs in parallel
-Date:   Thu, 25 Mar 2021 16:29:01 +0100
-Message-Id: <20210325152911.1213627-15-gi-oh.kim@ionos.com>
+Subject: [PATCH for-rc 15/24] block/rnbd-srv: Remove force_close file after holding a lock
+Date:   Thu, 25 Mar 2021 16:29:02 +0100
+Message-Id: <20210325152911.1213627-16-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
 References: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
@@ -68,142 +68,77 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
-We got a warning message below.
-When server tries to close one session by force, it locks the sysfs
-interface and locks the srv_sess lock.
-The problem is that client can send a request to close at the same time.
-By close request, server locks the srv_sess lock and locks the sysfs
-to remove the sysfs interfaces.
+We changed the rnbd_srv_sess_dev_force_close to use try-lock
+because rnbd_srv_sess_dev_force_close and process_msg_close
+can generate a deadlock.
 
-The simplest way to prevent that situation could be just use
-mutex_trylock.
-
-[  234.153965] ======================================================
-[  234.154093] WARNING: possible circular locking dependency detected
-[  234.154219] 5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10 Tainted: G           O
-[  234.154381] ------------------------------------------------------
-[  234.154531] kworker/1:1H/618 is trying to acquire lock:
-[  234.154651] ffff8887a09db0a8 (kn->count#132){++++}, at: kernfs_remove_by_name_ns+0x40/0x80
-[  234.154819]
-               but task is already holding lock:
-[  234.154965] ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
-[  234.155132]
-               which lock already depends on the new lock.
-
-[  234.155311]
-               the existing dependency chain (in reverse order) is:
-[  234.155462]
-               -> #1 (&srv_sess->lock){+.+.}:
-[  234.155614]        __mutex_lock+0x134/0xcb0
-[  234.155761]        rnbd_srv_sess_dev_force_close+0x36/0x50 [rnbd_server]
-[  234.155889]        rnbd_srv_dev_session_force_close_store+0x69/0xc0 [rnbd_server]
-[  234.156042]        kernfs_fop_write+0x13f/0x240
-[  234.156162]        vfs_write+0xf3/0x280
-[  234.156278]        ksys_write+0xba/0x150
-[  234.156395]        do_syscall_64+0x62/0x270
-[  234.156513]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  234.156632]
-               -> #0 (kn->count#132){++++}:
-[  234.156782]        __lock_acquire+0x129e/0x23a0
-[  234.156900]        lock_acquire+0xf3/0x210
-[  234.157043]        __kernfs_remove+0x42b/0x4c0
-[  234.157161]        kernfs_remove_by_name_ns+0x40/0x80
-[  234.157282]        remove_files+0x3f/0xa0
-[  234.157399]        sysfs_remove_group+0x4a/0xb0
-[  234.157519]        rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
-[  234.157648]        rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
-[  234.157775]        process_io_req+0x29a/0x6a0 [rtrs_server]
-[  234.157924]        __ib_process_cq+0x8c/0x100 [ib_core]
-[  234.158709]        ib_cq_poll_work+0x31/0xb0 [ib_core]
-[  234.158834]        process_one_work+0x4e5/0xaa0
-[  234.158958]        worker_thread+0x65/0x5c0
-[  234.159078]        kthread+0x1e0/0x200
-[  234.159194]        ret_from_fork+0x24/0x30
-[  234.159309]
-               other info that might help us debug this:
-
-[  234.159513]  Possible unsafe locking scenario:
-
-[  234.159658]        CPU0                    CPU1
-[  234.159775]        ----                    ----
-[  234.159891]   lock(&srv_sess->lock);
-[  234.160005]                                lock(kn->count#132);
-[  234.160128]                                lock(&srv_sess->lock);
-[  234.160250]   lock(kn->count#132);
-[  234.160364]
-                *** DEADLOCK ***
-
-[  234.160536] 3 locks held by kworker/1:1H/618:
-[  234.160677]  #0: ffff8883ca1ed528 ((wq_completion)ib-comp-wq){+.+.}, at: process_one_work+0x40a/0xaa0
-[  234.160840]  #1: ffff8883d2d5fe10 ((work_completion)(&cq->work)){+.+.}, at: process_one_work+0x40a/0xaa0
-[  234.161003]  #2: ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
-[  234.161168]
-               stack backtrace:
-[  234.161312] CPU: 1 PID: 618 Comm: kworker/1:1H Tainted: G           O      5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10
-[  234.161490] Hardware name: Supermicro H8QG6/H8QG6, BIOS 3.00       09/04/2012
-[  234.161643] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
-[  234.161765] Call Trace:
-[  234.161910]  dump_stack+0x96/0xe0
-[  234.162028]  check_noncircular+0x29e/0x2e0
-[  234.162148]  ? print_circular_bug+0x100/0x100
-[  234.162267]  ? register_lock_class+0x1ad/0x8a0
-[  234.162385]  ? __lock_acquire+0x68e/0x23a0
-[  234.162505]  ? trace_event_raw_event_lock+0x190/0x190
-[  234.162626]  __lock_acquire+0x129e/0x23a0
-[  234.162746]  ? register_lock_class+0x8a0/0x8a0
-[  234.162866]  lock_acquire+0xf3/0x210
-[  234.162982]  ? kernfs_remove_by_name_ns+0x40/0x80
-[  234.163127]  __kernfs_remove+0x42b/0x4c0
-[  234.163243]  ? kernfs_remove_by_name_ns+0x40/0x80
-[  234.163363]  ? kernfs_fop_readdir+0x3b0/0x3b0
-[  234.163482]  ? strlen+0x1f/0x40
-[  234.163596]  ? strcmp+0x30/0x50
-[  234.163712]  kernfs_remove_by_name_ns+0x40/0x80
-[  234.163832]  remove_files+0x3f/0xa0
-[  234.163948]  sysfs_remove_group+0x4a/0xb0
-[  234.164068]  rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
-[  234.164196]  rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
-[  234.164345]  ? _raw_spin_unlock_irqrestore+0x43/0x50
-[  234.164466]  ? lockdep_hardirqs_on+0x1a8/0x290
-[  234.164597]  ? mlx4_ib_poll_cq+0x927/0x1280 [mlx4_ib]
-[  234.164732]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
-[  234.164859]  process_io_req+0x29a/0x6a0 [rtrs_server]
-[  234.164982]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
-[  234.165130]  __ib_process_cq+0x8c/0x100 [ib_core]
-[  234.165279]  ib_cq_poll_work+0x31/0xb0 [ib_core]
-[  234.165404]  process_one_work+0x4e5/0xaa0
-[  234.165550]  ? pwq_dec_nr_in_flight+0x160/0x160
-[  234.165675]  ? do_raw_spin_lock+0x119/0x1d0
-[  234.165796]  worker_thread+0x65/0x5c0
-[  234.165914]  ? process_one_work+0xaa0/0xaa0
-[  234.166031]  kthread+0x1e0/0x200
-[  234.166147]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[  234.166268]  ret_from_fork+0x24/0x30
-[  234.251591] rnbd_server L243: </dev/loop1@close_device_session>: Device closed
-[  234.604221] rnbd_server L264: RTRS Session close_device_session disconnected
+Now rnbd_srv_sess_dev_force_close would do nothing
+if it fails to get the lock. So removing the force_close
+file should be moved to after the lock. Or the force_close
+file is removed but the others are not removed.
 
 Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
 Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 ---
- drivers/block/rnbd/rnbd-srv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/block/rnbd/rnbd-srv-sysfs.c | 5 +----
+ drivers/block/rnbd/rnbd-srv.c       | 5 ++++-
+ drivers/block/rnbd/rnbd-srv.h       | 3 ++-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
+index 278a981302b9..76f9c08f611f 100644
+--- a/drivers/block/rnbd/rnbd-srv-sysfs.c
++++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
+@@ -147,10 +147,7 @@ static ssize_t rnbd_srv_dev_session_force_close_store(struct kobject *kobj,
+ 	}
+ 
+ 	rnbd_srv_info(sess_dev, "force close requested\n");
+-
+-	/* first remove sysfs itself to avoid deadlock */
+-	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
+-	rnbd_srv_sess_dev_force_close(sess_dev);
++	rnbd_srv_sess_dev_force_close(sess_dev, attr);
+ 
+ 	return count;
+ }
 diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 895e9c313ff0..f284620ef0d3 100644
+index f284620ef0d3..a71b6f7662f5 100644
 --- a/drivers/block/rnbd/rnbd-srv.c
 +++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -340,7 +340,9 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
+@@ -335,7 +335,8 @@ static int rnbd_srv_link_ev(struct rtrs_srv *rtrs,
+ 	}
+ }
+ 
+-void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
++void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
++				   struct kobj_attribute *attr)
+ {
  	struct rnbd_srv_session	*sess = sess_dev->sess;
  
- 	sess_dev->keep_id = true;
--	mutex_lock(&sess->lock);
-+	/* It is already started to close by client's close message. */
-+	if (!mutex_trylock(&sess->lock))
-+		return;
+@@ -343,6 +344,8 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
+ 	/* It is already started to close by client's close message. */
+ 	if (!mutex_trylock(&sess->lock))
+ 		return;
++	/* first remove sysfs itself to avoid deadlock */
++	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
  	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
  	mutex_unlock(&sess->lock);
  }
+diff --git a/drivers/block/rnbd/rnbd-srv.h b/drivers/block/rnbd/rnbd-srv.h
+index 120e6d64cb82..b513021efc92 100644
+--- a/drivers/block/rnbd/rnbd-srv.h
++++ b/drivers/block/rnbd/rnbd-srv.h
+@@ -72,7 +72,8 @@ struct rnbd_srv_sess_dev {
+ 	struct rnbd_srv_fault_inject    fault_inject;
+ };
+ 
+-void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev);
++void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
++				   struct kobj_attribute *attr);
+ /* rnbd-srv-sysfs.c */
+ 
+ int rnbd_srv_create_dev_sysfs(struct rnbd_srv_dev *dev,
 -- 
 2.25.1
 
