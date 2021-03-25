@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B43F434957B
-	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D85434957D
+	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbhCYPae (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 25 Mar 2021 11:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36292 "EHLO
+        id S230517AbhCYPaf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 25 Mar 2021 11:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbhCYPaA (ORCPT
+        with ESMTP id S230494AbhCYPaA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 25 Mar 2021 11:30:00 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E520C06175F
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:29:59 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id jy13so3622136ejc.2
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:29:59 -0700 (PDT)
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AA7C06174A
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:00 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id u21so3543585ejo.13
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nb98K5yr7Hr81H1xM1HbveTdnjGZy9hyYyfNIs0ucDU=;
-        b=WnD4lSj/Emowr6dXNt2FsbXHKG9b43biD6ypdKw5w9gzQh9A1dLF/bYhLUAOA4ye3n
-         c44VJ+SwaC6MrkjD4Y+7+wXxRCWZcSh7Cv+5quPE6PIuUZg64+jV7lM9LBfTBXcSEGlV
-         +mTdrcTfGy5kTq4iBPbKXXoVKlsJHe6zfvnUZwbKga51qOY9kguvMZDUr164HsKUaCz+
-         5ByW58k45N+jCwY1Pz2/o7PRY/s9vbniEAsYKPSJWiC/YHPILf6gLqxuzMC1GCyKHdfA
-         cVTq4Ak2lDOSNohw11on0jYWEQ3o2kXggZtkfT+geNFqbunpWCd2lO052fQKBptZ9d5w
-         jL9g==
+        bh=b2yp/UBdxAZOVqKqqU3/o+Z/JLidVsfOi1IBQ0gDYP8=;
+        b=DWoCjn50UvcIfjPcfZl0U5vqDJbzP2059USRNCQ4pIslC5T3bmmtxCWT8TramDkS7F
+         G2kC1Fo9RaVQ98q5DcQeVT0Vy5vjOd18o3iyGShPAhXu31vY+s//XT0Q5Sa4CVXDLFqj
+         li2hxFsuKXz6zGggg/zDpkpk7BoW6kVrPHuPMfsmpz8aqwUEkNE3oibuliP8cO3BcyVJ
+         dvSHeOr5ClX7u5LGseWEfsyoSftKR381bXYtrOotyMAu9XL5QP0pD1NgZd6YuqpxZV8/
+         lrEBy92ayiTn2tOTakzZ5S6pCSvCCOA6hzxfInja5tH5xkazo/NQq1tslG5CsokVOtYM
+         HTdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nb98K5yr7Hr81H1xM1HbveTdnjGZy9hyYyfNIs0ucDU=;
-        b=hbha0pP45xVOerr1IzU5DUQr9Q3RNstNjBFKQ2BShEtI9l3vubbY02WStlxNqvjfNa
-         IgTcgtd1QWwZRFE2FRVDVcIkgNaeYfBnenHwrNO+QdEFCrcGUr37K5TJqLWKRFNMhvig
-         8tr1KOjxp/v02WDBz36bv2TB+89oLW3cB/xQvfqd30NQBcnFdxmHfLrGSeMrPya+q8kh
-         cv7OCOSR0kV6H5WM/tSNSx86ZoU3tLo9mjK0A66swW4NkC5vs5shJBZkxSzWDzh3gZPe
-         FTuPm17fPJFdKOU64p+UX6JtWO5hJTqKi+3aBvf4VaZHIsBnvUuDmV9E0ewg8igFH0tZ
-         DX6Q==
-X-Gm-Message-State: AOAM531RXGIsNETt1+Tu6hiP6qIn4Y7Fw3uilpeJXler0+ejsLDSMnra
-        XpQmwY0ymavHc+oLUhO9V+a05WdrzyeQkQ==
-X-Google-Smtp-Source: ABdhPJygOr1zSzrJrHMgx+fl7LMsr5BYRlCJpiMsVkDgqhNhfNXmVA/OPzkFM5VqLA4BHmTte8oYBQ==
-X-Received: by 2002:a17:907:2112:: with SMTP id qn18mr9840281ejb.220.1616686198043;
+        bh=b2yp/UBdxAZOVqKqqU3/o+Z/JLidVsfOi1IBQ0gDYP8=;
+        b=EfrjRJAn1z9BNmqfY7uPMVv5WLfDR15gH5SUeOPEv0gLdQOIhX4Esw3hOw2P7iEip7
+         wzMEpGMjAHAmLjxiQHOHacOQMgX4LVO8j9iZ3Q9mkMYspuZLDrTCNRBs6imoUSglJunl
+         swFKXoCpeqHsB+v6wkcbq+xZRGps+fkSpDV/9CwJR9s6nUdjVRpc/+AXwGz5xTwdEIQ+
+         qSHDODljCJZKRzyG5TZGX1j/3eLFRu1pwCgSEVGHkSb/bA89/QNMts2aWPQo7dOZQcqL
+         GW/2n3i//k2EjWLg/1g++pbu4xacO9gNlzgvbpLUVh1jhk6hBm8DGBFn1jPdcsud9KCe
+         dRyg==
+X-Gm-Message-State: AOAM53272WHUnes40LxaRdhaD27We+g2f7tDVw8oh0yAcF1ZMqZ9IzBv
+        WpEeiTSLoIGh3JeG8Z8E0kb5UZU/+wG0HA==
+X-Google-Smtp-Source: ABdhPJxCWVmRjtk9ofAbcBw5M2/WwkOPdbPix6xxC+8nZH/vEdA++wZUpNWUyNgmTM2Un7/6Wfc5Ng==
+X-Received: by 2002:a17:906:8583:: with SMTP id v3mr10285252ejx.361.1616686198791;
         Thu, 25 Mar 2021 08:29:58 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.29.57
+        by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.29.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 08:29:57 -0700 (PDT)
+        Thu, 25 Mar 2021 08:29:58 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
@@ -56,9 +56,9 @@ Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         Danil Kipnis <danil.kipnis@cloud.ionos.com>,
         Gioh Kim <gi-oh.kim@cloud.ionos.com>,
         Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH for-rc 09/24] block/rnbd-clt: Remove some arguments from rnbd_client_setup_device
-Date:   Thu, 25 Mar 2021 16:28:56 +0100
-Message-Id: <20210325152911.1213627-10-gi-oh.kim@ionos.com>
+Subject: [PATCH for-rc 10/24] block/rnbd-clt: Move add_disk(dev->gd) to rnbd_clt_setup_gen_disk
+Date:   Thu, 25 Mar 2021 16:28:57 +0100
+Message-Id: <20210325152911.1213627-11-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
 References: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
@@ -70,43 +70,38 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Guoqing Jiang <guoqing.jiang@gmx.com>
 
-Remove them since both sess and idx can be dereferenced from dev. And
-sess is not used in the function.
+It makes more sense to add gendisk in rnbd_clt_setup_gen_disk, instead
+of do it in rnbd_clt_map_device.
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@gmx.com>
 Reviewed-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
 Signed-off-by: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 ---
- drivers/block/rnbd/rnbd-clt.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/block/rnbd/rnbd-clt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index c8de016553a9..5d085bc80e24 100644
+index 5d085bc80e24..d8b9c552271c 100644
 --- a/drivers/block/rnbd/rnbd-clt.c
 +++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -1360,10 +1360,9 @@ static void rnbd_clt_setup_gen_disk(struct rnbd_clt_dev *dev, int idx)
+@@ -1358,6 +1358,7 @@ static void rnbd_clt_setup_gen_disk(struct rnbd_clt_dev *dev, int idx)
+ 
+ 	if (!dev->rotational)
  		blk_queue_flag_set(QUEUE_FLAG_NONROT, dev->queue);
++	add_disk(dev->gd);
  }
  
--static int rnbd_client_setup_device(struct rnbd_clt_session *sess,
--				     struct rnbd_clt_dev *dev, int idx)
-+static int rnbd_client_setup_device(struct rnbd_clt_dev *dev)
- {
--	int err;
-+	int err, idx = dev->clt_device_id;
+ static int rnbd_client_setup_device(struct rnbd_clt_dev *dev)
+@@ -1561,8 +1562,6 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const char *sessname,
+ 		       dev->max_hw_sectors, dev->rotational, dev->wc, dev->fua);
  
- 	dev->size = dev->nsectors * dev->logical_block_size;
+ 	mutex_unlock(&dev->lock);
+-
+-	add_disk(dev->gd);
+ 	rnbd_clt_put_sess(sess);
  
-@@ -1541,7 +1540,7 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const char *sessname,
- 	mutex_lock(&dev->lock);
- 	pr_debug("Opened remote device: session=%s, path='%s'\n",
- 		 sess->sessname, pathname);
--	ret = rnbd_client_setup_device(sess, dev, dev->clt_device_id);
-+	ret = rnbd_client_setup_device(dev);
- 	if (ret) {
- 		rnbd_clt_err(dev,
- 			      "map_device: Failed to configure device, err: %d\n",
+ 	return dev;
 -- 
 2.25.1
 
