@@ -2,58 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA8E349B97
+	by mail.lfdr.de (Postfix) with ESMTP id 1E646349B96
 	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 22:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbhCYV1g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 25 Mar 2021 17:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
+        id S230509AbhCYV1h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 25 Mar 2021 17:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230509AbhCYV1W (ORCPT
+        with ESMTP id S230512AbhCYV1Y (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 25 Mar 2021 17:27:22 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE86C06175F
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 14:27:21 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id o9so4896554pgm.15
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 14:27:21 -0700 (PDT)
+        Thu, 25 Mar 2021 17:27:24 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42080C061761
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 14:27:23 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id r18so5023809pfc.17
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 14:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TnnMN4vSnburpP0p5zfJZ0YTWAM3zr+1yO4sOYNeObw=;
-        b=iDerRLqN0sWzjLVCp6K3+9wTVIJZe/I52K0B0MAzj+s2oWoQiLuRv/6tj2akbgx/DE
-         tklxs/X/ZZ3dc77dCHHSJU0EhzfGBWXKsrPJR+CX/CaqLlfBwgJlDrgIyBGM2bUd+/GG
-         JxxOGWi19FLW2tYu0DPKm4bOqga6AW3MAYdw0EMI/pmPt92phB2b41Jlasrp3xqgdEpV
-         wRbg2n5FUk1uYjjyIx+IpmaKzwleep8ORV5Rl8LawAPTOxET33rR5zBA0q1kyUfwu1hL
-         NkEAkNWCAFAIjFC9fMVr5vm5PmpFTPTyUKmOQVduOcSuk7EPQ2Cg9/x0LOl6mqz5bOgI
-         wL/Q==
+        bh=VeqQSH4BAMfamuR0TIVDu2q/mURjw8ysmtF95aAYc5g=;
+        b=iIB/QotjWVxSDIpkUJeHf+48IT7EqDCP7QaLJh6PM3Hv3F8UcFt/7c1mQhoByWDg5w
+         B2UHGD+Tl9Jx/foLXk869SWCL5TI84wfOoQSFaRrWF8nQOV3EMqGDt+FmZ/tEnUhSPDn
+         dgB6JKaUs1NSogJqeqWeQkD6m8ftwSRvlxURDFlo1NDdyLDvyE5DXiI5J53iDrAptWQS
+         OV/7OVzexzU9nL3RGuwfSIuKvdbmnYl+8c2s29BlAUm6jjERXmfoRskDwEwnjldkUvM1
+         2w/0N6UamJghZiBZyvA5CCsmECbqiSwczQZsiXPOHg+gUaSDmxCwJsP2uznjv7L2nkS5
+         UwDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TnnMN4vSnburpP0p5zfJZ0YTWAM3zr+1yO4sOYNeObw=;
-        b=sm5rDWrucl+3YnXmrNMbhVs194VgtS8xgCrzFjKshNRrUJqY22y8G1hVeeew+C8qjF
-         V51YeDRVhz4FkHHn6Rj9US0s+cL2zqLeQfQYg1ayuU/LduznPRkbJWgtXSlwJvYr/LGT
-         ht/7adqpueIkrsioCyowIXzCfUDU6EJWBkfZ8DXExrANU9vEuDlMxaM7kxtccNppHr5p
-         oL2oGKcs32mEBW7QqPyGDYcMVAcZ/Nds+f8ubexEEdFJQqzuacsF74clu4f53dDf4Kst
-         nsokb46Qk64AtkAJ+I15pRlgfpAqJTvtCFTv7V/6Iu2w2m0YWgOY1OXVoAthjN7hl09l
-         mepA==
-X-Gm-Message-State: AOAM531kKjNAisLZlzoIXe/465xN1wWdOD36rI0Ut8sjcmr0L11sczuN
-        7pXfsBqYsvw0AohKRYozkmZTRqgIJipkRWNjoMninvYN1kWnERj3ttvFZNl1gwv9Ea/Zm2FSfoc
-        DN5+g8PmiDKX/DVFkfo65vP9NOUvxuQ2uCNr4qX4FIFU8REU/EhlgqiiHjrokfaRtO37B
-X-Google-Smtp-Source: ABdhPJy5Mf8TqiV+22r/mFlrkFLXc1kV2/znD6Fm/hdveG/IK+/VGL0qOev5BKQlzB1G/D8b93CG7TxG1XU=
+        bh=VeqQSH4BAMfamuR0TIVDu2q/mURjw8ysmtF95aAYc5g=;
+        b=T1qnHzPuKM1TsMcbJsrPp6zr/Q0rUJowXC/25+5xPMHx2tmNIuHA1GgtBz47wYaG/u
+         7fZoj4FLMO6P5f/LS7KDUBmq38p3XAZIv4UhQbw2k//RcKX/SDt/lMra9WoBxROuNHVF
+         AR5FMsFkR9T9OAvnE1YJXIZ0kQkNLHt2SSAwPZFb2Ua4/lsexmBQ0le2a24z+43XEEDs
+         PeVvam9t4wEwlA5lbOflwbOLRSBV/rPwJdEKSz9JKGYWphclFgxWyd4mMjyz7vqyl5aj
+         7LDNtJpI6sz1F36wmswXh8RVuVhXybzy7zJbEQbWZXkOBqpEYGnL/jmvTxvMxbQo+Qp4
+         sgHg==
+X-Gm-Message-State: AOAM531VfSz7bhD74KrYj9DVLU06YVllzDTKTGXJiut4GGFGoMQmIioQ
+        tNQ3PF1gj5cv3xJ4LdXKcufZhDMFVGGPyftk+FG2qAzEuqWM0uUPHCyLMcALnjQhZAMj+R+xN2u
+        VhuXCZsZQfhw9V8l/yodRUrr4kozcy1xmoB0exYS/AIoKQoz8V4gyksdUJiFMxKWyXwmi
+X-Google-Smtp-Source: ABdhPJx8aHEdvXlb3UgvsOScmw6EfBXxYY/yM5TkRR0f5jYmkvclrzvTBWVREz+Lt00OU3rQNPW32DXzrfk=
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a17:90a:8b97:: with SMTP id
- z23mr1664117pjn.1.1616707640440; Thu, 25 Mar 2021 14:27:20 -0700 (PDT)
-Date:   Thu, 25 Mar 2021 21:26:08 +0000
+ (user=satyat job=sendgmr) by 2002:a63:c84a:: with SMTP id l10mr9146122pgi.159.1616707642540;
+ Thu, 25 Mar 2021 14:27:22 -0700 (PDT)
+Date:   Thu, 25 Mar 2021 21:26:09 +0000
 In-Reply-To: <20210325212609.492188-1-satyat@google.com>
-Message-Id: <20210325212609.492188-8-satyat@google.com>
+Message-Id: <20210325212609.492188-9-satyat@google.com>
 Mime-Version: 1.0
 References: <20210325212609.492188-1-satyat@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v2 7/8] blk-merge: Ensure bios aren't split in middle of a
- crypto data unit
+Subject: [PATCH v2 8/8] block: add WARN() in bio_split() for sector alignment
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
@@ -63,95 +62,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Update get_max_io_size() to return a value aligned to
-bio_required_sector_alignment(). With this change, and the changes
-to blk_ksm_register() that restrict the supported data unit sizes
-based on the queue's limits, blk_bio_segment_split() won't split bios in
-the middle of a data unit anymore
+The number of sectors passed to bio_split() should be aligned to
+bio_required_sector_alignment(). All callers (other than bounce.c) have
+been updated to ensure this, so add a WARN() if the number of sectors is
+not aligned. (bounce.c was not updated since it's legacy code that
+won't interact with inline encryption).
 
 Signed-off-by: Satya Tangirala <satyat@google.com>
 ---
- block/blk-merge.c | 49 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 18 deletions(-)
+ block/bio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index ffb4aa0ea68b..2903de62aaca 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -135,27 +135,39 @@ static struct bio *blk_bio_write_same_split(struct request_queue *q,
+diff --git a/block/bio.c b/block/bio.c
+index 26b7f721cda8..cb348f134a15 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1458,6 +1458,7 @@ struct bio *bio_split(struct bio *bio, int sectors,
  
- /*
-  * Return the maximum number of sectors from the start of a bio that may be
-- * submitted as a single request to a block device. If enough sectors remain,
-- * align the end to the physical block size. Otherwise align the end to the
-- * logical block size. This approach minimizes the number of non-aligned
-- * requests that are submitted to a block device if the start of a bio is not
-- * aligned to a physical block boundary.
-+ * submitted as a single request to a block device. Tries to align the end to
-+ * the physical block size, while also aligning the returned number of sectors
-+ * to bio_required_sector_alignment(). This approach minimizes the number of
-+ * non-aligned requests that are submitted to a block device if the start of a
-+ * bio is not aligned to a physical block boundary.
-+ *
-+ * More clearly, there are two conditions we're interested in satisfying.
-+ *
-+ * Condition 1) We absolutely must have @return divisible by the
-+ * bio_required_sector_alignment(bio).
-+ *
-+ * Condition 2) *If possible*, while still satisfying Condition 1, we would like
-+ * to have start_offset + @return divisible by physical block size in sectors
-+ * (pbs).
-  */
- static inline unsigned get_max_io_size(struct request_queue *q,
- 				       struct bio *bio)
- {
--	unsigned sectors = blk_max_size_offset(q, bio->bi_iter.bi_sector, 0);
--	unsigned max_sectors = sectors;
--	unsigned pbs = queue_physical_block_size(q) >> SECTOR_SHIFT;
--	unsigned lbs = queue_logical_block_size(q) >> SECTOR_SHIFT;
--	unsigned start_offset = bio->bi_iter.bi_sector & (pbs - 1);
--
--	max_sectors += start_offset;
--	max_sectors &= ~(pbs - 1);
--	if (max_sectors > start_offset)
--		return max_sectors - start_offset;
--
--	return sectors & ~(lbs - 1);
-+	unsigned int start_offset = bio->bi_iter.bi_sector;
-+	unsigned int sectors = blk_max_size_offset(q, start_offset, 0);
-+	unsigned int pbs = queue_physical_block_size(q) >> SECTOR_SHIFT;
-+	unsigned int req_sector_align = bio_required_sector_alignment(bio);
-+	unsigned int pbs_aligned_sector = round_down(start_offset + sectors, pbs);
-+
-+	/*
-+	 * If we can return a pbs aligned endpoint while satisfying Condition 1,
-+	 * then do so.
-+	 */
-+	if (pbs_aligned_sector > start_offset &&
-+	    IS_ALIGNED(pbs_aligned_sector - start_offset, req_sector_align))
-+		return pbs_aligned_sector - start_offset;
-+
-+	return round_down(sectors, req_sector_align);
- }
+ 	BUG_ON(sectors <= 0);
+ 	BUG_ON(sectors >= bio_sectors(bio));
++	WARN_ON(!IS_ALIGNED(sectors, bio_required_sector_alignment(bio)));
  
- static inline unsigned get_max_segment_size(const struct request_queue *q,
-@@ -235,6 +247,7 @@ static bool bvec_split_segs(const struct request_queue *q,
-  * following is guaranteed for the cloned bio:
-  * - That it has at most get_max_io_size(@q, @bio) sectors.
-  * - That it has at most queue_max_segments(@q) segments.
-+ * - That the number of sectors is aligned to bio_required_sector_alignment(@bio).
-  *
-  * Except for discard requests the cloned bio will point at the bi_io_vec of
-  * the original bio. It is the responsibility of the caller to ensure that the
-@@ -286,7 +299,7 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
- 	 * big IO can be trival, disable iopoll when split needed.
- 	 */
- 	bio->bi_opf &= ~REQ_HIPRI;
--
-+	sectors = round_down(sectors, bio_required_sector_alignment(bio));
- 	return bio_split(bio, sectors, GFP_NOIO, bs);
- }
- 
+ 	/* Zone append commands cannot be split */
+ 	if (WARN_ON_ONCE(bio_op(bio) == REQ_OP_ZONE_APPEND))
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
