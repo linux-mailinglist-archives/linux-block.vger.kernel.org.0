@@ -2,60 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DA38349582
-	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFDF9349581
+	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231363AbhCYPah (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S231177AbhCYPah (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 25 Mar 2021 11:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbhCYPaF (ORCPT
+        with ESMTP id S231178AbhCYPaF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 25 Mar 2021 11:30:05 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DE9C06174A
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:04 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id l18so2866147edc.9
-        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:04 -0700 (PDT)
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E396C06174A
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:05 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id kt15so3555912ejb.12
+        for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NYrKVjesVD1IcOvr0jp+YRcYHhKoOXOE75IsHPsZDFE=;
-        b=XLzlZ6cuiNoXMt0vpFQKcjWrteYRJuPHE/CumV0u5W3LaGcZul3OkoY/C+8CUqKULg
-         BO9IF7CZbpAr7clk/FJzJ9imQS+WMv0T4biaQ4Thf14vflxIXlt+4HI6yrX4Xf468eli
-         EnnTB0r5gNEzt8dNQcLqiCHGIgZhCCpLRVy+dHUo2Z1lL3ZSD0+exgnVtg73xF1jMkFA
-         eQpv0E5rWVtM4LNzR/oRSvp66FHWU0J7igXzAotWXmr9nOgYnfK27PqLPYg1F9NBc2DQ
-         0vUxFCbthCd/mHyltONRf3O8mJwQWy9kK609tt6KMp2rOstiK28rcTabCEoa0Ctz/jLR
-         pFBg==
+        bh=0w1fRI368Vhqwr68IvgBQDB9m3lTg5l6TH+c+9pCq5Y=;
+        b=X26JgmxU0/mTKLWHlHEKbRxMF7YkaLg89ogJXlvDRC/Mn5PjWVy/f4uA/RsXU2pkNb
+         DJShuGxGj7FFkiqz+AAYAZMV1W2d3FR+oO1NjC7r2M7XkjoJ8iwbqUDIPmJH4maULt/J
+         FWuzpCKMObi4wNb2YMEb4aVLBL7/VHOQXsOfXfBfRL1nt2yFuQ1i7lQy90m/v31RQt00
+         D2bDJj5IPkwqW9BweSZ9nVXhrvfBdsRUmXfQqwpjf5yezCqK+KCihP2m0w3gj9nMGKgB
+         +V9zTE7UVEmjMA91oUKOv+/dhlI2SP3yjERGegMpa36Mjhc9aIEygAOSMs4pyFL1Dq9Q
+         r6vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NYrKVjesVD1IcOvr0jp+YRcYHhKoOXOE75IsHPsZDFE=;
-        b=OPyYUw1CwmhIyUGJnjMefiB5IkvfOciUAXkyBx/EsuKbqgryyO2VjWxYdqlrh+3ieu
-         K9uFCvGY4uBr8YLBScfwXDJcFrnym/dllB9UUscYu8Mfhpe5oxvjddISaSNBFI4EduGy
-         ngvH/OCiI+B/nETV1Z1LE3uJKvE7pog5okDCx9zJDilLreafRyaEandV0d33YThP2zeK
-         SQgkRMwQx29fIYyzjaXZ9bWiboJgHP04xN1hK12EDO8zT1WtW94Ek8cP+4NlPPw/0Fz+
-         W4MJu5+O3k/08Q+NFBeqrx1aVdn6IvXiBMtYyVG8x6kW4U5fACFdJkGPTszhMvdmwdki
-         1wHg==
-X-Gm-Message-State: AOAM531+LHXlSwVZxn7dhOy6x7tLMXe84fHxt/qyxj4x3V9GZ+YW+jg5
-        pO+LKn/zQe93Xq1I+YacFGLtTvEBguEtJNOP
-X-Google-Smtp-Source: ABdhPJwlx+fEkS3xWkhHL+BPM2x+eoD1ayZUh1b9oFgn7h6f3S+9neELL6Gq8Fdqr2z7o0bG/wqiDw==
-X-Received: by 2002:a05:6402:31e9:: with SMTP id dy9mr9933323edb.186.1616686203203;
+        bh=0w1fRI368Vhqwr68IvgBQDB9m3lTg5l6TH+c+9pCq5Y=;
+        b=kaDm407MEAhDeHq1YB79Ok27QXU4YDNqwCx/8gd5OEFoYrMk8K2NVAoZlwk+Vtp+AY
+         AUNtQ2mHoDrUc/F6pmwy/tI7HjvnbreWKWHDHidVDEPZFvStg/nNqdNHMhsvZv8bGgqC
+         Y3kwRnzrlCKVmxRkvRfQkumps3Flt1M/vmSX34KgX9owR8Ty9WlsOfnaNRsxE4h8s9xI
+         fSfHC0cB3IYdLK5pz8erKLuJLgsyqlTZxYC83R1IjfCN9xVG811q5hWflFCdvCbQDq64
+         1/7hQzk/L8J1O+GxVhlMacMYszAwnDCulgG7G1/v/ST/vqLndOdLAoanPFs/LwuipgVh
+         TZNg==
+X-Gm-Message-State: AOAM533o5ZzOGwFvBFQl88pmqABTRahMD2wCwCDUkSPZ4Tq+JY1+Dcj3
+        AXY4vcwp7eCRu5E1MfZ21Ei8fDB5m2vmtkaA
+X-Google-Smtp-Source: ABdhPJwIteApUoE0ElIlRWxnyKYviyGxpNVqKdiiwyEiqld/BjL3cyg2t0HJNVYLRgAPIF2l3VwOPw==
+X-Received: by 2002:a17:907:3d87:: with SMTP id he7mr3159446ejc.26.1616686203921;
         Thu, 25 Mar 2021 08:30:03 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.30.02
+        by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.30.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 08:30:02 -0700 (PDT)
+        Thu, 25 Mar 2021 08:30:03 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Tom Rix <trix@redhat.com>, Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCH for-rc 16/24] block/rnbd-clt: Improve find_or_create_sess() return check
-Date:   Thu, 25 Mar 2021 16:29:03 +0100
-Message-Id: <20210325152911.1213627-17-gi-oh.kim@ionos.com>
+        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
+        Gioh Kim <gi-oh.kim@ionos.com>
+Subject: [PATCH for-rc 17/24] block/rnbd-clt: Fix missing a memory free when unloading the module
+Date:   Thu, 25 Mar 2021 16:29:04 +0100
+Message-Id: <20210325152911.1213627-18-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
 References: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
@@ -65,81 +66,53 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
-clang static analysis reports this problem
+When unloading the rnbd-clt module, it does not free a memory
+including the filename of the symbolic link to /sys/block/rnbdX.
 
-rnbd-clt.c:1212:11: warning: Branch condition evaluates to a
-  garbage value
-        else if (!first)
-                 ^~~~~~
+It is found by kmemleak as below.
 
-This is triggered in the find_and_get_or_create_sess() call
-because the variable first is not initialized and the
-earlier check is specifically for
+unreferenced object 0xffff9f1a83d3c740 (size 16):
+  comm "bash", pid 736, jiffies 4295179665 (age 9841.310s)
+  hex dump (first 16 bytes):
+    21 64 65 76 21 6e 75 6c 6c 62 30 40 62 6c 61 00  !dev!nullb0@bla.
+  backtrace:
+    [<0000000039f0c55e>] 0xffffffffc0456c24
+    [<000000001aab9513>] kernfs_fop_write+0xcf/0x1c0
+    [<00000000db5aa4b3>] vfs_write+0xdb/0x1d0
+    [<000000007a2e2207>] ksys_write+0x65/0xe0
+    [<00000000055e280a>] do_syscall_64+0x50/0x1b0
+    [<00000000c2b51831>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-	if (sess == ERR_PTR(-ENOMEM))
-
-This is false positive.
-
-But the if-check can be reduced by initializing first to
-false and then returning if the call to find_or_creat_sess()
-does not set it to true.  When it remains false, either
-sess will be valid or not.  The not case is caught by
-find_and_get_or_create_sess()'s caller rnbd_clt_map_device()
-
-	sess = find_and_get_or_create_sess(...);
-	if (IS_ERR(sess))
-		return ERR_CAST(sess);
-
-Since find_and_get_or_create_sess() initializes first to false
-setting it in find_or_create_sess() is not needed.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
+Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 ---
- drivers/block/rnbd/rnbd-clt.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 1a1c57b51fd8..8fda94460a88 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -915,6 +915,7 @@ static struct rnbd_clt_session *__find_and_get_sess(const char *sessname)
- 	return NULL;
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index 2452eb67547c..885074f2f734 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -432,10 +432,14 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
+ 	 * i.e. rnbd_clt_unmap_dev_store() leading to a sysfs warning because
+ 	 * of sysfs link already was removed already.
+ 	 */
+-	if (dev->blk_symlink_name && try_module_get(THIS_MODULE)) {
+-		sysfs_remove_link(rnbd_devs_kobj, dev->blk_symlink_name);
++	if (dev->blk_symlink_name) {
++		if (try_module_get(THIS_MODULE)) {
++			sysfs_remove_link(rnbd_devs_kobj, dev->blk_symlink_name);
++			module_put(THIS_MODULE);
++		}
++		/* It should be freed always. */
+ 		kfree(dev->blk_symlink_name);
+-		module_put(THIS_MODULE);
++		dev->blk_symlink_name = NULL;
+ 	}
  }
  
-+/* caller is responsible for initializing 'first' to false */
- static struct
- rnbd_clt_session *find_or_create_sess(const char *sessname, bool *first)
- {
-@@ -930,8 +931,7 @@ rnbd_clt_session *find_or_create_sess(const char *sessname, bool *first)
- 		}
- 		list_add(&sess->list, &sess_list);
- 		*first = true;
--	} else
--		*first = false;
-+	}
- 	mutex_unlock(&sess_lock);
- 
- 	return sess;
-@@ -1200,13 +1200,11 @@ find_and_get_or_create_sess(const char *sessname,
- 	struct rnbd_clt_session *sess;
- 	struct rtrs_attrs attrs;
- 	int err;
--	bool first;
-+	bool first = false;
- 	struct rtrs_clt_ops rtrs_ops;
- 
- 	sess = find_or_create_sess(sessname, &first);
--	if (sess == ERR_PTR(-ENOMEM))
--		return ERR_PTR(-ENOMEM);
--	else if (!first)
-+	if (!first)
- 		return sess;
- 
- 	if (!path_cnt) {
 -- 
 2.25.1
 
