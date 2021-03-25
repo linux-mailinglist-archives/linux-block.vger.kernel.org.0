@@ -2,63 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D85434957D
-	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65D1B34957A
+	for <lists+linux-block@lfdr.de>; Thu, 25 Mar 2021 16:31:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230517AbhCYPaf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 25 Mar 2021 11:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36296 "EHLO
+        id S230406AbhCYPae (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 25 Mar 2021 11:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbhCYPaA (ORCPT
+        with ESMTP id S230517AbhCYPaB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 25 Mar 2021 11:30:00 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AA7C06174A
+        Thu, 25 Mar 2021 11:30:01 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2903C06175F
         for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:00 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id u21so3543585ejo.13
+Received: by mail-ej1-x62d.google.com with SMTP id e14so3553026ejz.11
         for <linux-block@vger.kernel.org>; Thu, 25 Mar 2021 08:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b2yp/UBdxAZOVqKqqU3/o+Z/JLidVsfOi1IBQ0gDYP8=;
-        b=DWoCjn50UvcIfjPcfZl0U5vqDJbzP2059USRNCQ4pIslC5T3bmmtxCWT8TramDkS7F
-         G2kC1Fo9RaVQ98q5DcQeVT0Vy5vjOd18o3iyGShPAhXu31vY+s//XT0Q5Sa4CVXDLFqj
-         li2hxFsuKXz6zGggg/zDpkpk7BoW6kVrPHuPMfsmpz8aqwUEkNE3oibuliP8cO3BcyVJ
-         dvSHeOr5ClX7u5LGseWEfsyoSftKR381bXYtrOotyMAu9XL5QP0pD1NgZd6YuqpxZV8/
-         lrEBy92ayiTn2tOTakzZ5S6pCSvCCOA6hzxfInja5tH5xkazo/NQq1tslG5CsokVOtYM
-         HTdQ==
+        bh=CnARvf2OVorx0aWtIbfM1m/ZXt63MvsBP7Ym4cjRdv4=;
+        b=D8wg2YPxnrT0S0QdgH0NimU1/ikJagM+/z+j9LAionXVXon2jlauvPPSalKXtHA14d
+         kBOUjfyZ5KYa7O6IYZAtiQXevt0sogpy+Gu+/3OuMNDhBkZZZACHjJWAsKyX8kDoTpNx
+         SlQgVlQ+I0lMPGy9OXTvXHJC1ytIUOx3MEYLey1Y3W7Fa2jBdfhzX3ImWSH7l4hwgiG5
+         1upm/8yVL4BMY6rAwoPAeG1OewbcMIvIhfog5lG3M2os85v64NpHMmTEl4q+jiEQJeTW
+         L1r01i4hjzqaI42t+8Xjmx/kiK3arZGX9JrjPqhz0e+UIxNjnNhVntw13xKPMr8FzUk6
+         My6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b2yp/UBdxAZOVqKqqU3/o+Z/JLidVsfOi1IBQ0gDYP8=;
-        b=EfrjRJAn1z9BNmqfY7uPMVv5WLfDR15gH5SUeOPEv0gLdQOIhX4Esw3hOw2P7iEip7
-         wzMEpGMjAHAmLjxiQHOHacOQMgX4LVO8j9iZ3Q9mkMYspuZLDrTCNRBs6imoUSglJunl
-         swFKXoCpeqHsB+v6wkcbq+xZRGps+fkSpDV/9CwJR9s6nUdjVRpc/+AXwGz5xTwdEIQ+
-         qSHDODljCJZKRzyG5TZGX1j/3eLFRu1pwCgSEVGHkSb/bA89/QNMts2aWPQo7dOZQcqL
-         GW/2n3i//k2EjWLg/1g++pbu4xacO9gNlzgvbpLUVh1jhk6hBm8DGBFn1jPdcsud9KCe
-         dRyg==
-X-Gm-Message-State: AOAM53272WHUnes40LxaRdhaD27We+g2f7tDVw8oh0yAcF1ZMqZ9IzBv
-        WpEeiTSLoIGh3JeG8Z8E0kb5UZU/+wG0HA==
-X-Google-Smtp-Source: ABdhPJxCWVmRjtk9ofAbcBw5M2/WwkOPdbPix6xxC+8nZH/vEdA++wZUpNWUyNgmTM2Un7/6Wfc5Ng==
-X-Received: by 2002:a17:906:8583:: with SMTP id v3mr10285252ejx.361.1616686198791;
-        Thu, 25 Mar 2021 08:29:58 -0700 (PDT)
+        bh=CnARvf2OVorx0aWtIbfM1m/ZXt63MvsBP7Ym4cjRdv4=;
+        b=njQuY+TyxAQ83btUuo4lj6i4Lo4Z9JoSwf+sKAeEUQwU6Z7liRU2llrl4QMrlFBzQ3
+         iWbdA5DK7MdTrnf/FjYByf83dYBYLj/YBFAYovO5L/EWPVE3zzc9lX1XKrAwmcXAIZ9N
+         lR1oO1Zp17mwl46M3hLOsefS/aNlRwGUQ5tLTi9byoz0NfQjeLtqvyfS7wJsEwv7sOWL
+         Y1WrhEFHC1CvlIKasXeUNcX1xYuJszP5ZIl7vUzPQHrZAFeyiuKv7TZUbiiYXtGRQZI3
+         hilM2MRbI8aLP+vzD0XVIUVCbpVVUatnRZTtXG4jINeLgBfFnPiEOqcTeVjzJuRXTlnH
+         afMw==
+X-Gm-Message-State: AOAM533a9HiEz9bJS5MvS+GRnZVUaBVORSCTyf1XGtTjHLEKg5FqO+Qg
+        x956mLLinipOPlm9ktUSncRJqmuMgs1IdXWC
+X-Google-Smtp-Source: ABdhPJz9QvG9Ck35dp1UIq3abXX2+EDOUp3DJ3gEKB7Qw5lzEsIpXiQXh41zV80tysuldsEOzdSgEA==
+X-Received: by 2002:a17:906:b4c:: with SMTP id v12mr10153683ejg.330.1616686199547;
+        Thu, 25 Mar 2021 08:29:59 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
         by smtp.googlemail.com with ESMTPSA id b18sm2574837ejb.77.2021.03.25.08.29.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 08:29:58 -0700 (PDT)
+        Thu, 25 Mar 2021 08:29:59 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Guoqing Jiang <guoqing.jiang@gmx.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH for-rc 10/24] block/rnbd-clt: Move add_disk(dev->gd) to rnbd_clt_setup_gen_disk
-Date:   Thu, 25 Mar 2021 16:28:57 +0100
-Message-Id: <20210325152911.1213627-11-gi-oh.kim@ionos.com>
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@ionos.com>,
+        Danil Kipnis <danil.kipnis@ionos.com>,
+        Gioh Kim <gi-oh.kim@ionos.com>
+Subject: [PATCH for-rc 11/24] block/rnbd: Kill rnbd_clt_destroy_default_group
+Date:   Thu, 25 Mar 2021 16:28:58 +0100
+Message-Id: <20210325152911.1213627-12-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
 References: <20210325152911.1213627-1-gi-oh.kim@ionos.com>
@@ -68,40 +68,67 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@gmx.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-It makes more sense to add gendisk in rnbd_clt_setup_gen_disk, instead
-of do it in rnbd_clt_map_device.
+No need to have it since we can call sysfs_remove_group in the
+rnbd_clt_destroy_sysfs_files.
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@gmx.com>
-Reviewed-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Signed-off-by: Gioh Kim <gi-oh.kim@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Then rnbd_clt_destroy_sysfs_files is paired with it's counterpart
+rnbd_clt_create_sysfs_files.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@ionos.com>
+Reviewed-by: Danil Kipnis <danil.kipnis@ionos.com>
+Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
+Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 ---
- drivers/block/rnbd/rnbd-clt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 6 +-----
+ drivers/block/rnbd/rnbd-clt.c       | 1 -
+ drivers/block/rnbd/rnbd-clt.h       | 1 -
+ 3 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 5d085bc80e24..d8b9c552271c 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -1358,6 +1358,7 @@ static void rnbd_clt_setup_gen_disk(struct rnbd_clt_dev *dev, int idx)
- 
- 	if (!dev->rotational)
- 		blk_queue_flag_set(QUEUE_FLAG_NONROT, dev->queue);
-+	add_disk(dev->gd);
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index d83415875960..2452eb67547c 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -639,13 +639,9 @@ int rnbd_clt_create_sysfs_files(void)
+ 	return err;
  }
  
- static int rnbd_client_setup_device(struct rnbd_clt_dev *dev)
-@@ -1561,8 +1562,6 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const char *sessname,
- 		       dev->max_hw_sectors, dev->rotational, dev->wc, dev->fua);
- 
- 	mutex_unlock(&dev->lock);
+-void rnbd_clt_destroy_default_group(void)
+-{
+-	sysfs_remove_group(&rnbd_dev->kobj, &default_attr_group);
+-}
 -
--	add_disk(dev->gd);
- 	rnbd_clt_put_sess(sess);
+ void rnbd_clt_destroy_sysfs_files(void)
+ {
++	sysfs_remove_group(&rnbd_dev->kobj, &default_attr_group);
+ 	kobject_del(rnbd_devs_kobj);
+ 	kobject_put(rnbd_devs_kobj);
+ 	device_destroy(rnbd_dev_class, MKDEV(0, 0));
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index d8b9c552271c..fce0f345f796 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -1692,7 +1692,6 @@ static void rnbd_destroy_sessions(void)
+ 	struct rnbd_clt_dev *dev, *tn;
  
- 	return dev;
+ 	/* Firstly forbid access through sysfs interface */
+-	rnbd_clt_destroy_default_group();
+ 	rnbd_clt_destroy_sysfs_files();
+ 
+ 	/*
+diff --git a/drivers/block/rnbd/rnbd-clt.h b/drivers/block/rnbd/rnbd-clt.h
+index 5ecbe8dedf24..d2a709f5d7ed 100644
+--- a/drivers/block/rnbd/rnbd-clt.h
++++ b/drivers/block/rnbd/rnbd-clt.h
+@@ -168,7 +168,6 @@ int rnbd_clt_resize_disk(struct rnbd_clt_dev *dev, size_t newsize);
+ int rnbd_clt_create_sysfs_files(void);
+ 
+ void rnbd_clt_destroy_sysfs_files(void);
+-void rnbd_clt_destroy_default_group(void);
+ 
+ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev);
+ 
 -- 
 2.25.1
 
