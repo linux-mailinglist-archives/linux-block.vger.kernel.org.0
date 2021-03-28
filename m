@@ -2,63 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF0A734BE16
-	for <lists+linux-block@lfdr.de>; Sun, 28 Mar 2021 20:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 588E834BE75
+	for <lists+linux-block@lfdr.de>; Sun, 28 Mar 2021 21:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbhC1SH3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Mar 2021 14:07:29 -0400
-Received: from mail.hanoi.gov.vn ([113.160.32.33]:31610 "EHLO
-        mx01.hanoi.gov.vn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbhC1SHR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Mar 2021 14:07:17 -0400
-X-Greylist: delayed 474 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Mar 2021 14:07:01 EDT
-Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30259EC3D8;
-        Mon, 29 Mar 2021 00:57:51 +0700 (+07)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hanoi.gov.vn;
-        s=default; t=1616954272;
-        bh=FuW10Z6fSdeNlf/0u/BQ1jcwkjYBw0uHUPQgn0LGo7I=; h=Date:From:To;
-        b=R9blPfqJCHUsZAyZxsyyryS61fl4krmBjYKWM6eGGwB8ZdbTBVPL1mmKOmZXMqNlA
-         7CEqA0MXgUAy+X4oK/wthh4vC9Xoov1Ce8tjf/qJvnL7KGsGNVg9ic0krGeHrdNzGM
-         5cIEKsz0emmHL/izbEfCtadst3HYllOJWdonlm5o=
-X-IMSS-DKIM-Authentication-Result: mx01.hanoi.gov.vn; sigcount=0
-Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50FCBEC3DD;
-        Mon, 29 Mar 2021 00:57:49 +0700 (+07)
-Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
-        by mx01.hanoi.gov.vn (Postfix) with ESMTPS;
-        Mon, 29 Mar 2021 00:57:49 +0700 (+07)
-Received: from mail.hanoi.gov.vn (localhost [127.0.0.1])
-        by mail.hanoi.gov.vn (Postfix) with ESMTPS id 02AFC7F41B42;
-        Mon, 29 Mar 2021 00:57:44 +0700 (+07)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.hanoi.gov.vn (Postfix) with ESMTP id 08FE47F41B5D;
-        Mon, 29 Mar 2021 00:57:41 +0700 (+07)
-Received: from mail.hanoi.gov.vn ([127.0.0.1])
-        by localhost (mail.hanoi.gov.vn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1D3oZsOAVsx3; Mon, 29 Mar 2021 00:57:36 +0700 (+07)
-Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
-        by mail.hanoi.gov.vn (Postfix) with ESMTP id 478CE7F41B59;
-        Mon, 29 Mar 2021 00:57:33 +0700 (+07)
-Date:   Mon, 29 Mar 2021 00:57:33 +0700 (ICT)
-From:   Mackenzie Scott <ttptqd_thanhoai@hanoi.gov.vn>
-Reply-To: Mackenzie Scott <propack@propck.net>
-Message-ID: <354204758.25920932.1616954253215.JavaMail.zimbra@hanoi.gov.vn>
-Subject: Congratulations ($ 100,800,000.00)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [185.107.80.217]
-X-Mailer: Zimbra 8.8.15_GA_3894 (zclient/8.8.15_GA_3894)
-Thread-Index: ao/APhyKX+JH1nE2Rn/kAmnh2LEgkw==
-Thread-Topic: Congratulations ($ 100,800,000.00)
-To:     undisclosed-recipients:;
-X-TM-AS-GCONF: 00
+        id S231566AbhC1TLo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 28 Mar 2021 15:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230334AbhC1TL2 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 28 Mar 2021 15:11:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 04BD26196E;
+        Sun, 28 Mar 2021 19:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616958688;
+        bh=aVZfCrgK6ji0Vh6jiXt12fgtYs9ZTX7L7/37EN6eCf0=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=gydkNAkp8vBi04bHiKQmoem+foTkEwuC6Q2PDLtahlHADEEDLHa1Rgdjk8Yi2dXI7
+         eiBsg0+2vciJMm7xUE+x6uDY6QCv2TUawufst3tkZJ7pVSr4RKfRomXggbEEHaPuXf
+         R6h7Eo9nybioPSsFVkGLzlQj58Yooeg1QlqeCCp21FmtcfKduuIZQFSMWJ3PSAuVFx
+         AVxudpe6kej+W957bz4MMFFgwb4v3lcnkDQx3qRwVhYY6KdJtOTBM3aSDsYSkxmGpR
+         bc+kS65e1a1f+P3Q7HiLyQTtT6MNrdFy3YSWhTh0/qcTA74qs0vk2KUsctg3kiqA44
+         ATJ2ULJyTQT1w==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 000B4609E8;
+        Sun, 28 Mar 2021 19:11:27 +0000 (UTC)
+Subject: Re: [GIT PULL] Block fixes for 5.12-rc5
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <e5bb408c-534d-4255-8a97-e525e686c596@kernel.dk>
+References: <e5bb408c-534d-4255-8a97-e525e686c596@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <e5bb408c-534d-4255-8a97-e525e686c596@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.12-2021-03-27
+X-PR-Tracked-Commit-Id: e82fc7855749aa197740a60ef22c492c41ea5d5f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: abed516ecd02ceb30fbd091e9b26205ea3192c65
+Message-Id: <161695868799.24587.3003965637939966694.pr-tracker-bot@kernel.org>
+Date:   Sun, 28 Mar 2021 19:11:27 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+The pull request you sent on Sat, 27 Mar 2021 19:04:37 -0600:
 
+> git://git.kernel.dk/linux-block.git tags/block-5.12-2021-03-27
 
-Hello,i&#39;m Mackenzie Scott,Ex-wife of Amazon founder i&#39;m donating $4 billion to charities,individuals,universities across the Globe from my divorce funds,i&#39;m donating part of it to provide immediate support to people suffering economically during the COVID-19 pandemic,i have a donation worth $100,800,000.00 Dollars for you,you can contact me for more information if you&#39;re interested.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/abed516ecd02ceb30fbd091e9b26205ea3192c65
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
