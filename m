@@ -2,21 +2,19 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8453034C3C5
-	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 08:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ABB234C3CF
+	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 08:32:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbhC2GYD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Mar 2021 02:24:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60206 "EHLO mx2.suse.de"
+        id S229762AbhC2Gbe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Mar 2021 02:31:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34676 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229709AbhC2GXf (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Mar 2021 02:23:35 -0400
+        id S229630AbhC2GbX (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 29 Mar 2021 02:31:23 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D0C63B329;
-        Mon, 29 Mar 2021 06:23:33 +0000 (UTC)
-Subject: Re: [PATCH 3/8] BusLogic: reject broken old firmware that requires
- ISA-style bounce buffering
+        by mx2.suse.de (Postfix) with ESMTP id 99A11B329;
+        Mon, 29 Mar 2021 06:31:22 +0000 (UTC)
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Khalid Aziz <khalid@gonehiking.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
@@ -25,14 +23,15 @@ To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Ondrej Zary <linux@rainbow-software.org>
 Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
 References: <20210326055822.1437471-1-hch@lst.de>
- <20210326055822.1437471-4-hch@lst.de>
+ <20210326055822.1437471-5-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <6cde6c70-242a-4a87-a15b-237a3d08fec9@suse.de>
-Date:   Mon, 29 Mar 2021 08:23:33 +0200
+Subject: Re: [PATCH 4/8] advansys: remove ISA support
+Message-ID: <f02b33b0-a898-505c-24f1-c84c35d21b78@suse.de>
+Date:   Mon, 29 Mar 2021 08:31:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210326055822.1437471-4-hch@lst.de>
+In-Reply-To: <20210326055822.1437471-5-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -41,16 +40,54 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 3/26/21 6:58 AM, Christoph Hellwig wrote:
-> Warn on and don't support adapters that have a DMA bug that forces ISA-style
-> bounce buffering.
+> This is the last piece in the kernel requiring the block layer ISA
+> bounce buffering, and it does not actually look used.  So remove it
+> to see if anyone screams, in which case we'll need to find a solution
+> to fix it back up.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  drivers/scsi/BusLogic.c | 21 ++++++---------------
->  drivers/scsi/BusLogic.h |  1 -
->  2 files changed, 6 insertions(+), 16 deletions(-)
+>  drivers/scsi/advansys.c | 283 ++++------------------------------------
+>  1 file changed, 25 insertions(+), 258 deletions(-)
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> diff --git a/drivers/scsi/advansys.c b/drivers/scsi/advansys.c
+> index ec5627890809e6..ccdd78ac7abd95 100644
+> --- a/drivers/scsi/advansys.c
+> +++ b/drivers/scsi/advansys.c
+> @@ -84,8 +84,6 @@ typedef unsigned char uchar;
+>  
+>  #define ASC_CS_TYPE  unsigned short
+>  
+> -#define ASC_IS_ISA          (0x0001)
+> -#define ASC_IS_ISAPNP       (0x0081)
+>  #define ASC_IS_EISA         (0x0002)
+>  #define ASC_IS_PCI          (0x0004)
+>  #define ASC_IS_PCI_ULTRA    (0x0104)
+
+Any particular reason why the remaining ISA defines (like
+ASC_CHIP_MIN_VER_ISA etc) are being left intact?
+
+[ .. ]
+> @@ -8768,16 +8662,6 @@ static void AscInitAscDvcVar(ASC_DVC_VAR *asc_dvc)
+>  	}
+>  
+>  	asc_dvc->cfg->isa_dma_speed = ASC_DEF_ISA_DMA_SPEED;
+> -#ifdef CONFIG_ISA
+> -	if ((asc_dvc->bus_type & ASC_IS_ISA) != 0) {
+> -		if (chip_version >= ASC_CHIP_MIN_VER_ISA_PNP) {
+> -			AscSetChipIFC(iop_base, IFC_INIT_DEFAULT);
+> -			asc_dvc->bus_type = ASC_IS_ISAPNP;
+> -		}
+> -		asc_dvc->cfg->isa_dma_channel =
+> -		    (uchar)AscGetIsaDmaChannel(iop_base);
+> -	}
+> -#endif /* CONFIG_ISA */
+>  	for (i = 0; i <= ASC_MAX_TID; i++) {
+>  		asc_dvc->cur_dvc_qng[i] = 0;
+>  		asc_dvc->max_dvc_qng[i] = ASC_MAX_SCSI1_QNG;
+
+Please remove the 'isa_dma_channel' field from struct asc_dvc_cfg, too.
 
 Cheers,
 
