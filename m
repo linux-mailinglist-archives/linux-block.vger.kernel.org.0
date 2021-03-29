@@ -2,78 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA78934C124
-	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 03:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F6F34C1D2
+	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 04:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbhC2Bd2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Mar 2021 21:33:28 -0400
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:34454 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbhC2BdU (ORCPT
+        id S230450AbhC2CAp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 28 Mar 2021 22:00:45 -0400
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:34767 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231195AbhC2CAf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Mar 2021 21:33:20 -0400
-Received: by mail-pg1-f178.google.com with SMTP id i6so1239186pgs.1
-        for <linux-block@vger.kernel.org>; Sun, 28 Mar 2021 18:33:20 -0700 (PDT)
+        Sun, 28 Mar 2021 22:00:35 -0400
+Received: by mail-pg1-f169.google.com with SMTP id i6so1270568pgs.1
+        for <linux-block@vger.kernel.org>; Sun, 28 Mar 2021 19:00:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MOJf8hKhe/Ue0c4xf4oxRzQ+S8na3cKxiLXrfqEaMsE=;
-        b=XgV7sDV9YLUARnL9Gpp+YryL13wiw6YMR0I3Vb1Tgt7vRCBXLMpHbCOpLJL0r6LtpW
-         +Rll2WATWIuu0pc5LeynEpNMeXzACdvJo1yCFnSx+9MR61X3Qi97N1pt8sVPjIYlYvT3
-         DfmJC4NPet/UI7l1VtwvDeLG4VA3W9bVuS1MTsTOtEni0MuG5fAXNpYcnT/wLoIETO+V
-         vrW7eAvFhXbspjtFIjMfdvsSnrwBW9xXjoWREPE0kiBWl9FL8psvpZaygddaIxbYBA1D
-         ma1ZJWk1zIuYwhDU/qte92/rbbCkhdiFMzCOxajsChJBdpupGVPmXqBDz9H/nJIxWGSv
-         hkoA==
-X-Gm-Message-State: AOAM533vemuY+1h7Y37H3iQI1qve5sbfQ7cPnKyRMuJ12130v8YRVOa7
-        aut/+Tgl/G+/FQ5hwJr/59UH4hQf0Ec=
-X-Google-Smtp-Source: ABdhPJw1Mkd5u8Sr+PXaLo2ECk2OPT8deqv3QzdSvgOTgoDGjhRqvhrRBzqX5l3Q1t7Izrec3yqfqA==
-X-Received: by 2002:a63:5c1e:: with SMTP id q30mr21323745pgb.259.1616981599881;
-        Sun, 28 Mar 2021 18:33:19 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:7123:9470:fec5:1a3a? ([2601:647:4000:d7:7123:9470:fec5:1a3a])
-        by smtp.gmail.com with ESMTPSA id 76sm15892419pfw.156.2021.03.28.18.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Mar 2021 18:33:18 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] blk-mq: Fix a race between iterating over requests
- and freeing requests
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Khazhy Kumykov <khazhy@google.com>
-References: <20210326022919.19638-1-bvanassche@acm.org>
- <20210326022919.19638-4-bvanassche@acm.org>
- <20210326084456.tymobjbpy2oh7vx3@shindev.dhcp.fujisawa.hgst.com>
+        bh=znQQMvHjubrWucDtKVM4arblRFfmMMDu2f/7m0/Isjw=;
+        b=M1U2yuXRVegsjNgk7bcZro6gtEI70IRWaGoqa2MY8j4PAeK9jYzlQ9GwZV/H/lVVPQ
+         Tvul2cTswfinN2Jp4FNWOdOzegJlxFN4/T/UQgWWnKzdWxCrDau+bYZT79TZKtUTBHoD
+         IIxWLdYdQ4eF55EUyHxuWaXT8jTj52wb7iXKcigIZLaykAeurD44I6EgAugoDfftlg+6
+         QfjNhXQ23YcTbzNWN4kxpZ8zKg6rmyFzxNqHg8fOy6btl8FoH/Q3E8OHCBhC/0Mdatrk
+         8E7e/dghMiLKDUfRJVZ8Um8LjQqCPqSjcWjLVU4+pIH3b+GgjeN2b5QPWYw0rYogaWjU
+         Rj7w==
+X-Gm-Message-State: AOAM533qAHvDQApDTvn7S5TcXN9AwgdXU1ecJOJ+NsRDCOFQZy7519gl
+        hBE85ff4o+twN3JA9ygSv+k=
+X-Google-Smtp-Source: ABdhPJwgAEyN89K8u+dTUCPvQe1B3kGGsxwY88CHTkfDTiTXzf38fBzWITjsNN66D6Eq5LfLbkJLCg==
+X-Received: by 2002:a65:4344:: with SMTP id k4mr22141100pgq.48.1616983234864;
+        Sun, 28 Mar 2021 19:00:34 -0700 (PDT)
+Received: from asus.hsd1.ca.comcast.net ([2601:647:4000:d7:7123:9470:fec5:1a3a])
+        by smtp.gmail.com with ESMTPSA id x125sm15784979pfd.124.2021.03.28.19.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Mar 2021 19:00:34 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <4453d38d-3369-f32a-dd21-0c5899c02211@acm.org>
-Date:   Sun, 28 Mar 2021 18:33:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v4 0/3] blk-mq: Fix a race between iterating over requests and freeing requests
+Date:   Sun, 28 Mar 2021 19:00:25 -0700
+Message-Id: <20210329020028.18241-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20210326084456.tymobjbpy2oh7vx3@shindev.dhcp.fujisawa.hgst.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/26/21 1:44 AM, Shinichiro Kawasaki wrote:
-> I applied this series on v5.12-rc4 and ran blktests block/005 with a HDD behind
-> SAS-HBA, and I observed kernel INFO and WARNING [1]. It looks like that
-> tags->iter_rwsem is not initialized. I found blk_mq_init_tags() has two paths
-> to "return tags". I think when blk_mq_init_tags() returns at the first path to
-> "return tags", tags->iter_rwsem misses the initialization. To confirm it, I
-> moved the init_rwsem() before the first "return tags", then saw the kernel
-> messages disappeared (use-after-free disappeared also).
+Hi Jens,
 
-Hi Shinichiro,
+This patch series fixes the race between iterating over requests and
+freeing requests that has been reported by multiple different users over
+the past two years. Please consider this patch series for kernel v5.13.
 
-Thanks for the quick feedback. I agree with your analysis and will fix
-this in v4 of this patch series.
+Thank you,
 
 Bart.
+
+Changes between v3 and v4:
+- Fixed support for tag sets shared across hardware queues.
+- Renamed blk_mq_wait_for_tag_readers() into blk_mq_wait_for_tag_iter().
+- Removed the fourth argument of blk_mq_queue_tag_busy_iter() again.
+
+Changes between v2 and v3:
+- Converted the single v2 patch into a series of three patches.
+- Switched from SRCU to a combination of RCU and semaphores.
+
+Changes between v1 and v2:
+- Reformatted patch description.
+- Added Tested-by/Reviewed-by tags.
+- Changed srcu_barrier() calls into synchronize_srcu() calls.
+
+Bart Van Assche (3):
+  blk-mq: Move the elevator_exit() definition
+  blk-mq: Introduce atomic variants of the tag iteration functions
+  blk-mq: Fix a race between iterating over requests and freeing
+    requests
+
+ block/blk-core.c          | 34 ++++++++++++++++-
+ block/blk-mq-tag.c        | 79 ++++++++++++++++++++++++++++++++++-----
+ block/blk-mq-tag.h        |  6 ++-
+ block/blk-mq.c            | 23 +++++++++---
+ block/blk-mq.h            |  1 +
+ block/blk.h               | 11 +-----
+ block/elevator.c          |  9 +++++
+ drivers/scsi/hosts.c      | 16 ++++----
+ drivers/scsi/ufs/ufshcd.c |  4 +-
+ include/linux/blk-mq.h    |  2 +
+ 10 files changed, 149 insertions(+), 36 deletions(-)
+
