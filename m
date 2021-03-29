@@ -2,109 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3DC934D3E0
-	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 17:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E642434D3E3
+	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 17:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbhC2P2S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Mar 2021 11:28:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32492 "EHLO
+        id S231270AbhC2P2T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Mar 2021 11:28:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26263 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231244AbhC2P1u (ORCPT
+        by vger.kernel.org with ESMTP id S231196AbhC2P2C (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Mar 2021 11:27:50 -0400
+        Mon, 29 Mar 2021 11:28:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617031669;
+        s=mimecast20190719; t=1617031681;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yiAZ1LG/jl/FrJlJpKhJ5cneSmOPmuiOZBkRQiXX7gg=;
-        b=Brprz7ffKPsxHymN9t5jRZTpw9NoFBtNm3mxx28os4+QzUTv8oLFbcyavONJT5K7/h37p1
-        FiDkzvDRUxjrbOwKuApW2Qfl8GTrLb8wCwpCw11/MAwn1F2ytF3TfEOxqbVVqLUSzirFe1
-        p7CTuepL+KIbvOTiPQQ4SVNhTumSSS4=
+        bh=JmE5i/m5IEEsJrMpVFAKNyycD7jJsnJYAktcyMjzdnY=;
+        b=a4ZBJY9jk51c1uMXCAxSOAsXLhSq8zPWgC3MAUcLDXbKVlxaFiO+yqFW/XGxWGePK0cbTQ
+        jNqbRs9eOQ7QMhY9SXkKWzeJi4AKY6lZNZiL58E6memSfNSwsz840cHIfG90TmOAWYHMHe
+        o59vdHauD6HFjYHIRbemALHXQAOvMVA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-489-1uYXQKzJOy6aPs0Jlkcu7A-1; Mon, 29 Mar 2021 11:27:45 -0400
-X-MC-Unique: 1uYXQKzJOy6aPs0Jlkcu7A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-35-0-6Bkd4LPt2Yz5pzvQWVWA-1; Mon, 29 Mar 2021 11:27:51 -0400
+X-MC-Unique: 0-6Bkd4LPt2Yz5pzvQWVWA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56EA0871377;
-        Mon, 29 Mar 2021 15:27:44 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9330807341;
+        Mon, 29 Mar 2021 15:27:49 +0000 (UTC)
 Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ADCD5C5DF;
-        Mon, 29 Mar 2021 15:27:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6715B5D6A1;
+        Mon, 29 Mar 2021 15:27:46 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
         Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 05/12] block: add new field into 'struct bvec_iter'
-Date:   Mon, 29 Mar 2021 23:26:15 +0800
-Message-Id: <20210329152622.173035-6-ming.lei@redhat.com>
+Subject: [PATCH V4 06/12] block/mq: extract one helper function polling hw queue
+Date:   Mon, 29 Mar 2021 23:26:16 +0800
+Message-Id: <20210329152622.173035-7-ming.lei@redhat.com>
 In-Reply-To: <20210329152622.173035-1-ming.lei@redhat.com>
 References: <20210329152622.173035-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is a hole at the end of 'struct bvec_iter', so put a new field
-here and we can save cookie returned from submit_bio() here for
-supporting bio based polling.
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-This way can avoid to extend bio unnecessarily.
-
-Meantime add two helpers to get/set this field.
+Extract the logic of polling one hw queue and related statistics
+handling out as the helper function.
 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk.h          | 10 ++++++++++
- include/linux/bvec.h |  8 ++++++++
- 2 files changed, 18 insertions(+)
+ block/blk-mq.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk.h b/block/blk.h
-index 35901cee709d..c1d8456656df 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -395,4 +395,14 @@ static inline void blk_create_io_poll_context(struct request_queue *q)
- 		bio_poll_ctx_alloc(ioc);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 1ada2c0e76b1..0cb88c719916 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3852,6 +3852,19 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
+ 	return blk_mq_poll_hybrid_sleep(q, rq);
  }
  
-+static inline unsigned int bio_get_private_data(struct bio *bio)
++static inline int blk_mq_poll_hctx(struct request_queue *q,
++				   struct blk_mq_hw_ctx *hctx)
 +{
-+	return bio->bi_iter.bi_private_data;
++	int ret;
++
++	hctx->poll_invoked++;
++	ret = q->mq_ops->poll(hctx);
++	if (ret > 0)
++		hctx->poll_success++;
++
++	return ret;
 +}
 +
-+static inline void bio_set_private_data(struct bio *bio, unsigned int data)
-+{
-+	bio->bi_iter.bi_private_data = data;
-+}
-+
- #endif /* BLK_INTERNAL_H */
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index ff832e698efb..547ad7526960 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -43,6 +43,14 @@ struct bvec_iter {
+ static int blk_bio_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
+ {
+ 	/*
+@@ -3908,11 +3921,8 @@ int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
+ 	do {
+ 		int ret;
  
- 	unsigned int            bi_bvec_done;	/* number of bytes completed in
- 						   current bvec */
-+
-+	/*
-+	 * There is a hole at the end of bvec_iter, add one new field to hold
-+	 * something which isn't related with 'bvec_iter', so that we can
-+	 * avoid extending bio. So far this new field is used for bio based
-+	 * polling, we will store returning value of submit_bio() here.
-+	 */
-+	unsigned int		bi_private_data;
- };
- 
- struct bvec_iter_all {
+-		hctx->poll_invoked++;
+-
+-		ret = q->mq_ops->poll(hctx);
++		ret = blk_mq_poll_hctx(q, hctx);
+ 		if (ret > 0) {
+-			hctx->poll_success++;
+ 			__set_current_state(TASK_RUNNING);
+ 			return ret;
+ 		}
 -- 
 2.29.2
 
