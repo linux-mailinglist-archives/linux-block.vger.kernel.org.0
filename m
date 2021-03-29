@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E642434D3E3
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB1034D3E1
 	for <lists+linux-block@lfdr.de>; Mon, 29 Mar 2021 17:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbhC2P2T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Mar 2021 11:28:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26263 "EHLO
+        id S231244AbhC2P2S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Mar 2021 11:28:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20671 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231196AbhC2P2C (ORCPT
+        by vger.kernel.org with ESMTP id S231270AbhC2P15 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Mar 2021 11:28:02 -0400
+        Mon, 29 Mar 2021 11:27:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617031681;
+        s=mimecast20190719; t=1617031676;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JmE5i/m5IEEsJrMpVFAKNyycD7jJsnJYAktcyMjzdnY=;
-        b=a4ZBJY9jk51c1uMXCAxSOAsXLhSq8zPWgC3MAUcLDXbKVlxaFiO+yqFW/XGxWGePK0cbTQ
-        jNqbRs9eOQ7QMhY9SXkKWzeJi4AKY6lZNZiL58E6memSfNSwsz840cHIfG90TmOAWYHMHe
-        o59vdHauD6HFjYHIRbemALHXQAOvMVA=
+        bh=fNlG+3ho3blgJVyFVypZc5c3TnkhPbJk0ckqheigCu8=;
+        b=DJeaqRz+bhmKXKte+4pa601xC2xvi9ydbYrJauroVB7c2JzwzDchy7GO+ez5civnDi4JUf
+        BZOC4HPmyOQHAZu/BxFmaM8TGaIaGFKFQjh7JlHQ6t6u2Dzq63OZrAYEJr6Kp7WIRZKUzJ
+        o1sllRYrQo+0/Of3DbhtbiphFH7GdcY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-0-6Bkd4LPt2Yz5pzvQWVWA-1; Mon, 29 Mar 2021 11:27:51 -0400
-X-MC-Unique: 0-6Bkd4LPt2Yz5pzvQWVWA-1
+ us-mta-358-LGej-2lTNAWJ_5UslOIKxQ-1; Mon, 29 Mar 2021 11:27:54 -0400
+X-MC-Unique: LGej-2lTNAWJ_5UslOIKxQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9330807341;
-        Mon, 29 Mar 2021 15:27:49 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 574D287A83B;
+        Mon, 29 Mar 2021 15:27:53 +0000 (UTC)
 Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6715B5D6A1;
-        Mon, 29 Mar 2021 15:27:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 622EA5D6A1;
+        Mon, 29 Mar 2021 15:27:52 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
         Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 06/12] block/mq: extract one helper function polling hw queue
-Date:   Mon, 29 Mar 2021 23:26:16 +0800
-Message-Id: <20210329152622.173035-7-ming.lei@redhat.com>
+Subject: [PATCH V4 07/12] block: prepare for supporting bio_list via other link
+Date:   Mon, 29 Mar 2021 23:26:17 +0800
+Message-Id: <20210329152622.173035-8-ming.lei@redhat.com>
 In-Reply-To: <20210329152622.173035-1-ming.lei@redhat.com>
 References: <20210329152622.173035-1-ming.lei@redhat.com>
 MIME-Version: 1.0
@@ -52,55 +52,173 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
+So far bio list helpers always use .bi_next to traverse the list, we
+will support to link bios by other bio field.
 
-Extract the logic of polling one hw queue and related statistics
-handling out as the helper function.
+Prepare for such support by adding a macro so that users can define
+another helpers for linking bios by other bio field.
 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ include/linux/bio.h | 132 +++++++++++++++++++++++---------------------
+ 1 file changed, 68 insertions(+), 64 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 1ada2c0e76b1..0cb88c719916 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3852,6 +3852,19 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
- 	return blk_mq_poll_hybrid_sleep(q, rq);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index d0246c92a6e8..619edd26a6c0 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -608,75 +608,11 @@ static inline unsigned bio_list_size(const struct bio_list *bl)
+ 	return sz;
  }
  
-+static inline int blk_mq_poll_hctx(struct request_queue *q,
-+				   struct blk_mq_hw_ctx *hctx)
-+{
-+	int ret;
-+
-+	hctx->poll_invoked++;
-+	ret = q->mq_ops->poll(hctx);
-+	if (ret > 0)
-+		hctx->poll_success++;
-+
-+	return ret;
-+}
-+
- static int blk_bio_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
- {
- 	/*
-@@ -3908,11 +3921,8 @@ int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin)
- 	do {
- 		int ret;
- 
--		hctx->poll_invoked++;
+-static inline void bio_list_add(struct bio_list *bl, struct bio *bio)
+-{
+-	bio->bi_next = NULL;
 -
--		ret = q->mq_ops->poll(hctx);
-+		ret = blk_mq_poll_hctx(q, hctx);
- 		if (ret > 0) {
--			hctx->poll_success++;
- 			__set_current_state(TASK_RUNNING);
- 			return ret;
- 		}
+-	if (bl->tail)
+-		bl->tail->bi_next = bio;
+-	else
+-		bl->head = bio;
+-
+-	bl->tail = bio;
+-}
+-
+-static inline void bio_list_add_head(struct bio_list *bl, struct bio *bio)
+-{
+-	bio->bi_next = bl->head;
+-
+-	bl->head = bio;
+-
+-	if (!bl->tail)
+-		bl->tail = bio;
+-}
+-
+-static inline void bio_list_merge(struct bio_list *bl, struct bio_list *bl2)
+-{
+-	if (!bl2->head)
+-		return;
+-
+-	if (bl->tail)
+-		bl->tail->bi_next = bl2->head;
+-	else
+-		bl->head = bl2->head;
+-
+-	bl->tail = bl2->tail;
+-}
+-
+-static inline void bio_list_merge_head(struct bio_list *bl,
+-				       struct bio_list *bl2)
+-{
+-	if (!bl2->head)
+-		return;
+-
+-	if (bl->head)
+-		bl2->tail->bi_next = bl->head;
+-	else
+-		bl->tail = bl2->tail;
+-
+-	bl->head = bl2->head;
+-}
+-
+ static inline struct bio *bio_list_peek(struct bio_list *bl)
+ {
+ 	return bl->head;
+ }
+ 
+-static inline struct bio *bio_list_pop(struct bio_list *bl)
+-{
+-	struct bio *bio = bl->head;
+-
+-	if (bio) {
+-		bl->head = bl->head->bi_next;
+-		if (!bl->head)
+-			bl->tail = NULL;
+-
+-		bio->bi_next = NULL;
+-	}
+-
+-	return bio;
+-}
+-
+ static inline struct bio *bio_list_get(struct bio_list *bl)
+ {
+ 	struct bio *bio = bl->head;
+@@ -686,6 +622,74 @@ static inline struct bio *bio_list_get(struct bio_list *bl)
+ 	return bio;
+ }
+ 
++#define BIO_LIST_HELPERS(_pre, link)					\
++									\
++static inline void _pre##_add(struct bio_list *bl, struct bio *bio)	\
++{									\
++	bio->bi_##link = NULL;						\
++									\
++	if (bl->tail)							\
++		bl->tail->bi_##link = bio;				\
++	else								\
++		bl->head = bio;						\
++									\
++	bl->tail = bio;							\
++}									\
++									\
++static inline void _pre##_add_head(struct bio_list *bl, struct bio *bio) \
++{									\
++	bio->bi_##link = bl->head;					\
++									\
++	bl->head = bio;							\
++									\
++	if (!bl->tail)							\
++		bl->tail = bio;						\
++}									\
++									\
++static inline void _pre##_merge(struct bio_list *bl, struct bio_list *bl2) \
++{									\
++	if (!bl2->head)							\
++		return;							\
++									\
++	if (bl->tail)							\
++		bl->tail->bi_##link = bl2->head;			\
++	else								\
++		bl->head = bl2->head;					\
++									\
++	bl->tail = bl2->tail;						\
++}									\
++									\
++static inline void _pre##_merge_head(struct bio_list *bl,		\
++				       struct bio_list *bl2)		\
++{									\
++	if (!bl2->head)							\
++		return;							\
++									\
++	if (bl->head)							\
++		bl2->tail->bi_##link = bl->head;			\
++	else								\
++		bl->tail = bl2->tail;					\
++									\
++	bl->head = bl2->head;						\
++}									\
++									\
++static inline struct bio *_pre##_pop(struct bio_list *bl)		\
++{									\
++	struct bio *bio = bl->head;					\
++									\
++	if (bio) {							\
++		bl->head = bl->head->bi_##link;				\
++		if (!bl->head)						\
++			bl->tail = NULL;				\
++									\
++		bio->bi_##link = NULL;					\
++	}								\
++									\
++	return bio;							\
++}									\
++
++BIO_LIST_HELPERS(bio_list, next);
++
+ /*
+  * Increment chain count for the bio. Make sure the CHAIN flag update
+  * is visible before the raised count.
 -- 
 2.29.2
 
