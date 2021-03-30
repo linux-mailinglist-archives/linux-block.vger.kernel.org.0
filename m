@@ -2,60 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ED5234E260
-	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79F5234E263
+	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231329AbhC3Hip (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Mar 2021 03:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
+        id S231370AbhC3Hiq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Mar 2021 03:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231338AbhC3HiO (ORCPT
+        with ESMTP id S231371AbhC3HiO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 30 Mar 2021 03:38:14 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F13C061762
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:13 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id h10so16998460edt.13
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:13 -0700 (PDT)
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627C3C061764
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:14 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a7so23327481ejs.3
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tsqeH5MSM4WbTb4VKhs81+DKBsJLqPP/9bH4vGe5fWs=;
-        b=DMc/khhH7OoDWL0/7S4ob7huNbmxVOL9Rn+xY21KkTFiWafuieOmN3bFtc1flNLQxd
-         JjFrU0Fl32RStbdCVKWCIPO3bPj0/v2QrVEB3KRUsXW0wwvrjL95ag222a2OIP6xoV/n
-         q2ZtR9EgjA/6XFhSrUKn1Rl9LTKJqeuqJ79Fd5fve1FZVxlAFJm+Mr7c4GJUROTa76U2
-         li4Fwqk3yYtxMbjjiRn03P1TEW7R7S5wRCJlE1oOH8TKznmkfky7AlXK/AEMvqJhQACw
-         dj0sbz8J8AmJYFMxeEQdiNRVJPf3LXHNTPFA/kZQRW50xnOKowUUpO6Ao0vh8hqOjQcd
-         vReg==
+        bh=+wNTS4XPUWn/jF7E63ntoE+HOXhLVAf70pg15ObO2xg=;
+        b=brHGtSON3jImzIRE1Wid398RfM1Awe0yDVRTJp4gTLGoDkt2SndXqDNY1r6T+atb1J
+         7Kfig6nfl+lGQ/pgWtJyjdC1qGCYb9+p+29buiT09r/uULD2aOK92Wyot4us99RrY1sH
+         kDsO0/6kzwMygFUnrD5Goubxbzw8WKhpliXbTv2aVQy4fWlvsQQ9cXkq/pxAmIYLtPET
+         Q/sm8pB6y+5L5+wqaVTc/HnfdRHmpuDBfKvkb7MfGQnFUkbqcjUx5rxnJVT6wKb45G3L
+         KuTG8KJlATh9hZgxkY8Z9Lki7J87dBkXBQ0PvD7JK8OcXsIsI6MhoII1GmLFDFnmJpB5
+         wSsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tsqeH5MSM4WbTb4VKhs81+DKBsJLqPP/9bH4vGe5fWs=;
-        b=GSXtk3K6wHjP3LNITYsYJVTaHGB0jGIgDQUsmNclubeclNDMcpvz0pztwOtcVRcju+
-         I933BZgJwARlYxusRa09wRcQryeJOyVMX18Se/0ohstDeUTVfiOZBJC6g6Y9B0LZw0fE
-         iFq3pqMx1EoWZj8Qu5/nf+4sAou8dd8i2Iww5WRb7M14dMXemiXOLo7TaDPwHbl63Ynh
-         O+cd4SUqfZ5QCUbniAdGkq4+UuPidE38QG5vdqTL+9H7nzUiYlIW/Ed6SUQBGiF2RvO2
-         2dTBwc9+9kSpI2DdxyYdcPfxEbcKZKp76O0UjA8tdxpGIrkrKA4A9ywz2NtslHlNh/q7
-         fvuw==
-X-Gm-Message-State: AOAM533fnBqxn5HFa4OwiP0SvRCNM7RvT78YrKj42w7Kme3gGvd4ogka
-        +j2vP0MFXGygcO/R6eOLRTRSxa3wIWqIzHPT
-X-Google-Smtp-Source: ABdhPJyGFpcXeQYZsMyqXNZ1BmY1bb/qSdJgaf0tZTVDQucaAD/Iueem1rfRz/Mdrfur8YbBFBmu5w==
-X-Received: by 2002:a50:d84e:: with SMTP id v14mr21692722edj.357.1617089892172;
-        Tue, 30 Mar 2021 00:38:12 -0700 (PDT)
+        bh=+wNTS4XPUWn/jF7E63ntoE+HOXhLVAf70pg15ObO2xg=;
+        b=RJSdw6pdzs7UWyH51AKP+gJJAEVLNE1O5GtRjY9akS2bRco0zOxQGb2ZCiUkPdqMUI
+         BYOcCHxeMMiYOIGWzfM+xDPDcIm0upvmZGuLB1oNnXz0oYTV1Ij0B5/GJYQiNkm5LyHY
+         cQfHdYruC6exsjhXS8DsPmufBoq6jt/qRDHnnMJp23IoVckWrUA19aV0XAjQxCS4IZ0C
+         ZtB2KKei92aZuaXNeutgAGVXrh2IqNvrKwm8h5774F68NzWxqAAk1AJr0gQFRgh8SMCN
+         sy2Gu1pogpp8hnDAw4SDMpCD0udlrw8DSSMMgnm+QzVAUjKzdoLBkeZyBymZOFQIXor+
+         hCbg==
+X-Gm-Message-State: AOAM531LbfE3yfS1Jd9E4br90M5k/7fKkIZbfUyMbREbsHZQU2Fp/qL0
+        kObCYO1P2c/XJ5T7NXZXDhDTLJomG7kSemVG
+X-Google-Smtp-Source: ABdhPJxIF1hG1RscAxIssw08tn4fhsmYHF3kOBMAxxmXv26Led2ovP3+9M+gcd5MvrQXBOUfrR5bcA==
+X-Received: by 2002:a17:906:1453:: with SMTP id q19mr32502682ejc.76.1617089893062;
+        Tue, 30 Mar 2021 00:38:13 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.11
+        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 00:38:11 -0700 (PDT)
+        Tue, 30 Mar 2021 00:38:12 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        linux-rdma@vger.kernel.org,
+        Aleksei Marov <aleksei.marov@ionos.com>,
         Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCHv2 for-next 19/24] Documentation/ABI/rnbd-clt: Add description for nr_poll_queues
-Date:   Tue, 30 Mar 2021 09:37:47 +0200
-Message-Id: <20210330073752.1465613-20-gi-oh.kim@ionos.com>
+Subject: [PATCHv2 for-next 20/24] block/rnbd-srv: Remove unused arguments of rnbd_srv_rdma_ev
+Date:   Tue, 30 Mar 2021 09:37:48 +0200
+Message-Id: <20210330073752.1465613-21-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
 References: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
@@ -65,52 +70,163 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-describe how to set nr_poll_queues and enable the polling
+From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
+struct rtrs_srv is not used when handling rnbd_srv_rdma_ev messages, so
+cleaned up
+rdma_ev function pointer in rtrs_srv_ops also is changed.
+
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>
+Cc: linux-rdma@vger.kernel.org
+Signed-off-by: Aleksei Marov <aleksei.marov@ionos.com>
+Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
 ---
- Documentation/ABI/testing/sysfs-block-rnbd        |  6 ++++++
- Documentation/ABI/testing/sysfs-class-rnbd-client | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/block/rnbd/rnbd-srv.c          | 39 ++++++++++----------------
+ drivers/infiniband/ulp/rtrs/rtrs-srv.c |  4 +--
+ drivers/infiniband/ulp/rtrs/rtrs.h     |  3 +-
+ 3 files changed, 18 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-block-rnbd b/Documentation/ABI/testing/sysfs-block-rnbd
-index ec716e1c31a8..80b420b5d6b8 100644
---- a/Documentation/ABI/testing/sysfs-block-rnbd
-+++ b/Documentation/ABI/testing/sysfs-block-rnbd
-@@ -56,3 +56,9 @@ Date:		Feb 2020
- KernelVersion:	5.7
- Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
- Description:	Remap the disconnected device if the session is not destroyed yet.
-+
-+What:		/sys/block/rnbd<N>/rnbd/nr_poll_queues
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains the number of poll-mode queues
-diff --git a/Documentation/ABI/testing/sysfs-class-rnbd-client b/Documentation/ABI/testing/sysfs-class-rnbd-client
-index 2aa05b3e348e..0b5997ab3365 100644
---- a/Documentation/ABI/testing/sysfs-class-rnbd-client
-+++ b/Documentation/ABI/testing/sysfs-class-rnbd-client
-@@ -85,6 +85,19 @@ Description:	Expected format is the following::
+diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+index a71b6f7662f5..78bd0ce0ebf0 100644
+--- a/drivers/block/rnbd/rnbd-srv.c
++++ b/drivers/block/rnbd/rnbd-srv.c
+@@ -119,8 +119,7 @@ rnbd_get_sess_dev(int dev_id, struct rnbd_srv_session *srv_sess)
+ 	return sess_dev;
+ }
  
- 		By default "rw" is used.
+-static int process_rdma(struct rtrs_srv *sess,
+-			struct rnbd_srv_session *srv_sess,
++static int process_rdma(struct rnbd_srv_session *srv_sess,
+ 			struct rtrs_srv_op *id, void *data, u32 datalen,
+ 			const void *usr, size_t usrlen)
+ {
+@@ -350,8 +349,7 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
+ 	mutex_unlock(&sess->lock);
+ }
  
-+		nr_poll_queues
-+		  specifies the number of poll-mode queues. If the IO has HIPRI flag,
-+		  the block-layer will send the IO via the poll-mode queue.
-+		  For fast network and device the polling is faster than interrupt-base
-+		  IO handling because it saves time for context switching, switching to
-+		  another process, handling the interrupt and switching back to the
-+		  issuing process.
-+
-+		  Set -1 if you want to set it as the number of CPUs
-+		  By default rnbd client creates only irq-mode queues.
-+
-+		  NOTICE: MUST make a unique session for a device using the poll-mode queues.
-+
- 		Exit Codes:
+-static int process_msg_close(struct rtrs_srv *rtrs,
+-			     struct rnbd_srv_session *srv_sess,
++static int process_msg_close(struct rnbd_srv_session *srv_sess,
+ 			     void *data, size_t datalen, const void *usr,
+ 			     size_t usrlen)
+ {
+@@ -370,20 +368,18 @@ static int process_msg_close(struct rtrs_srv *rtrs,
+ 	return 0;
+ }
  
- 		If the device is already mapped it will fail with EEXIST. If the input
+-static int process_msg_open(struct rtrs_srv *rtrs,
+-			    struct rnbd_srv_session *srv_sess,
++static int process_msg_open(struct rnbd_srv_session *srv_sess,
+ 			    const void *msg, size_t len,
+ 			    void *data, size_t datalen);
+ 
+-static int process_msg_sess_info(struct rtrs_srv *rtrs,
+-				 struct rnbd_srv_session *srv_sess,
++static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
+ 				 const void *msg, size_t len,
+ 				 void *data, size_t datalen);
+ 
+-static int rnbd_srv_rdma_ev(struct rtrs_srv *rtrs, void *priv,
+-			     struct rtrs_srv_op *id, int dir,
+-			     void *data, size_t datalen, const void *usr,
+-			     size_t usrlen)
++static int rnbd_srv_rdma_ev(void *priv,
++			    struct rtrs_srv_op *id, int dir,
++			    void *data, size_t datalen, const void *usr,
++			    size_t usrlen)
+ {
+ 	struct rnbd_srv_session *srv_sess = priv;
+ 	const struct rnbd_msg_hdr *hdr = usr;
+@@ -397,19 +393,16 @@ static int rnbd_srv_rdma_ev(struct rtrs_srv *rtrs, void *priv,
+ 
+ 	switch (type) {
+ 	case RNBD_MSG_IO:
+-		return process_rdma(rtrs, srv_sess, id, data, datalen, usr,
+-				    usrlen);
++		return process_rdma(srv_sess, id, data, datalen, usr, usrlen);
+ 	case RNBD_MSG_CLOSE:
+-		ret = process_msg_close(rtrs, srv_sess, data, datalen,
+-					usr, usrlen);
++		ret = process_msg_close(srv_sess, data, datalen, usr, usrlen);
+ 		break;
+ 	case RNBD_MSG_OPEN:
+-		ret = process_msg_open(rtrs, srv_sess, usr, usrlen,
+-				       data, datalen);
++		ret = process_msg_open(srv_sess, usr, usrlen, data, datalen);
+ 		break;
+ 	case RNBD_MSG_SESS_INFO:
+-		ret = process_msg_sess_info(rtrs, srv_sess, usr, usrlen,
+-					    data, datalen);
++		ret = process_msg_sess_info(srv_sess, usr, usrlen, data,
++					    datalen);
+ 		break;
+ 	default:
+ 		pr_warn("Received unexpected message type %d with dir %d from session %s\n",
+@@ -662,8 +655,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
+ 	return full_path;
+ }
+ 
+-static int process_msg_sess_info(struct rtrs_srv *rtrs,
+-				 struct rnbd_srv_session *srv_sess,
++static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
+ 				 const void *msg, size_t len,
+ 				 void *data, size_t datalen)
+ {
+@@ -704,8 +696,7 @@ find_srv_sess_dev(struct rnbd_srv_session *srv_sess, const char *dev_name)
+ 	return NULL;
+ }
+ 
+-static int process_msg_open(struct rtrs_srv *rtrs,
+-			    struct rnbd_srv_session *srv_sess,
++static int process_msg_open(struct rnbd_srv_session *srv_sess,
+ 			    const void *msg, size_t len,
+ 			    void *data, size_t datalen)
+ {
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs-srv.c b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
+index d071809e3ed2..f7aa2a7e7442 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs-srv.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
+@@ -998,7 +998,7 @@ static void process_read(struct rtrs_srv_con *con,
+ 	usr_len = le16_to_cpu(msg->usr_len);
+ 	data_len = off - usr_len;
+ 	data = page_address(srv->chunks[buf_id]);
+-	ret = ctx->ops.rdma_ev(srv, srv->priv, id, READ, data, data_len,
++	ret = ctx->ops.rdma_ev(srv->priv, id, READ, data, data_len,
+ 			   data + data_len, usr_len);
+ 
+ 	if (unlikely(ret)) {
+@@ -1051,7 +1051,7 @@ static void process_write(struct rtrs_srv_con *con,
+ 	usr_len = le16_to_cpu(req->usr_len);
+ 	data_len = off - usr_len;
+ 	data = page_address(srv->chunks[buf_id]);
+-	ret = ctx->ops.rdma_ev(srv, srv->priv, id, WRITE, data, data_len,
++	ret = ctx->ops.rdma_ev(srv->priv, id, WRITE, data, data_len,
+ 			   data + data_len, usr_len);
+ 	if (unlikely(ret)) {
+ 		rtrs_err_rl(s,
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs.h b/drivers/infiniband/ulp/rtrs/rtrs.h
+index eb050738cda1..c25a0fd8a607 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs.h
++++ b/drivers/infiniband/ulp/rtrs/rtrs.h
+@@ -139,7 +139,6 @@ struct rtrs_srv_ops {
+ 	 *			message for the data transfer will be sent to
+ 	 *			the client.
+ 
+-	 *	@sess:		Session
+ 	 *	@priv:		Private data set by rtrs_srv_set_sess_priv()
+ 	 *	@id:		internal RTRS operation id
+ 	 *	@dir:		READ/WRITE
+@@ -153,7 +152,7 @@ struct rtrs_srv_ops {
+ 	 *	@usr:		The extra user message sent by the client (%vec)
+ 	 *	@usrlen:	Size of the user message
+ 	 */
+-	int (*rdma_ev)(struct rtrs_srv *sess, void *priv,
++	int (*rdma_ev)(void *priv,
+ 		       struct rtrs_srv_op *id, int dir,
+ 		       void *data, size_t datalen, const void *usr,
+ 		       size_t usrlen);
 -- 
 2.25.1
 
