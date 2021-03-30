@@ -2,168 +2,335 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 067D434E267
-	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C002A34E332
+	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 10:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbhC3Hiq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Mar 2021 03:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231395AbhC3HiR (ORCPT
+        id S231340AbhC3Idi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Mar 2021 04:33:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26742 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231589AbhC3IdU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Mar 2021 03:38:17 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B93C061762
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:17 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id o19so17039938edc.3
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T5srQ/60JF7ZiUGd4AoDyuQgYPEKKpRTj50Ou9B6W4A=;
-        b=XgeSH8V2m5j94LepZ8Iv8Sjiv90ybPfz5YS/1AEQKcs2iZ+c1H/uqXwrFUaoZboRHk
-         XnjRcVlC1x1AcYQceHUvJ93cB7AtuSI/hlwtHPmFbFtmMr3l/yfnlF8hNYr5qWup3UiT
-         JM946+wzb2tGrzK4IUh/HCmQcTduwlaFuq/7pJO444yZkriBjIsZolNs1M+K+DIpC4sn
-         yIVu1M0w411LcbHlGFPBsnOzumhgb+jL/7rxnpoljYkHWSF8xADdR7q2PWiZOv5x7Pvo
-         c/rNoWiK7q4Xcs/XBrRsu1IGZId/AtQk4mtcQEdFU7bLmGi0mPkZlpHgqqOyrRkDE/ip
-         Ar9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T5srQ/60JF7ZiUGd4AoDyuQgYPEKKpRTj50Ou9B6W4A=;
-        b=CAXvuxcmhNqRAIlqLuXDcm5A8gXZqXT6kv9WkzdhCWaPCodPMN29CZ2pHeiVfvWzcm
-         huIFp0OAeziENQF1cLt9o/HuE+lAikQMNbrcG+xGf9U1laPyJPA1uH1mDeL9iKHPkgKn
-         L4sxdn3/ABRu5FZOFSVGjWdMgoS1azyeD+mkOlhdiApLTGAjV4J6vmo2XPNQojvmcrCr
-         DmXCpIWwCNuPC4InCGjtUiLiOmAWkvHj3XphQYp2+9KQArUn720rlVmCqfI1VO5Ove7o
-         JeTMoBJ1z30WNxcYeZTurWsPqdGFM9bEJn1ZlSU8PCFv/kuuN1Elj2DGrCBhR1+X0b7h
-         GoKw==
-X-Gm-Message-State: AOAM530IbiDhSU+rdUOyyXlpYhwcqqQSVADl0UDWF5lYSVdkTdT4koj1
-        6a0KtMmYC/Xkxtfln6ZTU8c5RgWIHKl5Q3MG
-X-Google-Smtp-Source: ABdhPJzF2Qf76nCOB3pvPx83f4ecxiawHlqx5sBknkXDL72ure1LvmAMPEKLD2jTIzrotL7Wuqm0Dg==
-X-Received: by 2002:a50:ec96:: with SMTP id e22mr32324389edr.385.1617089895904;
-        Tue, 30 Mar 2021 00:38:15 -0700 (PDT)
-Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 00:38:15 -0700 (PDT)
-From:   Gioh Kim <gi-oh.kim@ionos.com>
-To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>
-Subject: [PATCHv2 for-next 24/24] block/rnbd: Use strscpy instead of strlcpy
-Date:   Tue, 30 Mar 2021 09:37:52 +0200
-Message-Id: <20210330073752.1465613-25-gi-oh.kim@ionos.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
-References: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
+        Tue, 30 Mar 2021 04:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617093200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5tKrTDux36cd1+6b8LlArx/wX4qE12vY5sJDFG6PAfk=;
+        b=VuBn+jdC6YvyAyTWhxboK92wSOba7ej3yB0jtqv/4YXprQRNhuNQSRqkXBfU1F60C5fpm8
+        BaIZb2L+QlQrMUtfjVLp5day2NzA0RUDGozDUKZ55DUDlyywTqhDubYcfjimtJhkRFITjw
+        2uJpz7/xIckuO0P2tEp4hdwgyzR4v6E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-9ot52xD_PJq0l7USCP_Y7Q-1; Tue, 30 Mar 2021 04:33:17 -0400
+X-MC-Unique: 9ot52xD_PJq0l7USCP_Y7Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11328501FF;
+        Tue, 30 Mar 2021 08:33:16 +0000 (UTC)
+Received: from T590 (ovpn-13-69.pek2.redhat.com [10.72.13.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CEDC10016DB;
+        Tue, 30 Mar 2021 08:33:01 +0000 (UTC)
+Date:   Tue, 30 Mar 2021 16:32:57 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com
+Subject: Re: [PATCH V4 08/12] block: use per-task poll context to implement
+ bio based io polling
+Message-ID: <YGLiOQUEsWw57pKO@T590>
+References: <20210329152622.173035-1-ming.lei@redhat.com>
+ <20210329152622.173035-9-ming.lei@redhat.com>
+ <0a4829ae-a590-c058-a0ec-060eba48c102@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a4829ae-a590-c058-a0ec-060eba48c102@suse.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>
+On Tue, Mar 30, 2021 at 08:40:22AM +0200, Hannes Reinecke wrote:
+> On 3/29/21 5:26 PM, Ming Lei wrote:
+> > Currently bio based IO polling needs to poll all hw queue blindly, this
+> > way is very inefficient, and one big reason is that we can't pass any
+> > bio submission result to blk_poll().
+> > 
+> > In IO submission context, track associated underlying bios by per-task
+> > submission queue and store returned 'cookie' in
+> > bio->bi_iter.bi_private_data, and return current->pid to caller of
+> > submit_bio() for any bio based driver's IO, which is submitted from FS.
+> > 
+> > In IO poll context, the passed cookie tells us the PID of submission
+> > context, then we can find bios from the per-task io pull context of
+> > submission context. Moving bios from submission queue to poll queue of
+> > the poll context, and keep polling until these bios are ended. Remove
+> > bio from poll queue if the bio is ended. Add bio flags of BIO_DONE and
+> > BIO_END_BY_POLL for such purpose.
+> > 
+> > In was found in Jeffle Xu's test that kfifo doesn't scale well for a
+> > submission queue as queue depth is increased, so a new mechanism for
+> > tracking bios is needed. So far bio's size is close to 2 cacheline size,
+> > and it may not be accepted to add new field into bio for solving the
+> > scalability issue by tracking bios via linked list, switch to bio group
+> > list for tracking bio, the idea is to reuse .bi_end_io for linking bios
+> > into a linked list for all sharing same .bi_end_io(call it bio group),
+> > which is recovered before ending bio really, since BIO_END_BY_POLL is
+> > added for enhancing this point. Usually .bi_end_bio is same for all
+> > bios in same layer, so it is enough to provide very limited groups, such
+> > as 16 or less for fixing the scalability issue.
+> > 
+> > Usually submission shares context with io poll. The per-task poll context
+> > is just like stack variable, and it is cheap to move data between the two
+> > per-task queues.
+> > 
+> > Also when the submission task is exiting, drain pending IOs in the context
+> > until all are done.
+> > 
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > ---
+> >   block/bio.c               |   5 +
+> >   block/blk-core.c          | 153 +++++++++++++++++++++++-
+> >   block/blk-ioc.c           |   3 +
+> >   block/blk-mq.c            | 240 +++++++++++++++++++++++++++++++++++++-
+> >   block/blk.h               |  10 ++
+> >   include/linux/blk_types.h |  18 ++-
+> >   6 files changed, 425 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/block/bio.c b/block/bio.c
+> > index 26b7f721cda8..04c043dc60fc 100644
+> > --- a/block/bio.c
+> > +++ b/block/bio.c
+> > @@ -1402,6 +1402,11 @@ static inline bool bio_remaining_done(struct bio *bio)
+> >    **/
+> >   void bio_endio(struct bio *bio)
+> >   {
+> > +	/* BIO_END_BY_POLL has to be set before calling submit_bio */
+> > +	if (bio_flagged(bio, BIO_END_BY_POLL)) {
+> > +		bio_set_flag(bio, BIO_DONE);
+> > +		return;
+> > +	}
+> >   again:
+> >   	if (!bio_remaining_done(bio))
+> >   		return;
+> > diff --git a/block/blk-core.c b/block/blk-core.c
+> > index a777ba4fe06f..939730440693 100644
+> > --- a/block/blk-core.c
+> > +++ b/block/blk-core.c
+> > @@ -805,6 +805,81 @@ static inline unsigned int bio_grp_list_size(unsigned int nr_grps)
+> >   		sizeof(struct bio_grp_list_data);
+> >   }
+> > +static inline void *bio_grp_data(struct bio *bio)
+> > +{
+> > +	return bio->bi_poll;
+> > +}
+> > +
+> > +/* add bio into bio group list, return true if it is added */
+> > +static bool bio_grp_list_add(struct bio_grp_list *list, struct bio *bio)
+> > +{
+> > +	int i;
+> > +	struct bio_grp_list_data *grp;
+> > +
+> > +	for (i = 0; i < list->nr_grps; i++) {
+> > +		grp = &list->head[i];
+> > +		if (grp->grp_data == bio_grp_data(bio)) {
+> > +			__bio_grp_list_add(&grp->list, bio);
+> > +			return true;
+> > +		}
+> > +	}
+> > +
+> > +	if (i == list->max_nr_grps)
+> > +		return false;
+> > +
+> > +	/* create a new group */
+> > +	grp = &list->head[i];
+> > +	bio_list_init(&grp->list);
+> > +	grp->grp_data = bio_grp_data(bio);
+> > +	__bio_grp_list_add(&grp->list, bio);
+> > +	list->nr_grps++;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static int bio_grp_list_find_grp(struct bio_grp_list *list, void *grp_data)
+> > +{
+> > +	int i;
+> > +	struct bio_grp_list_data *grp;
+> > +
+> > +	for (i = 0; i < list->nr_grps; i++) {
+> > +		grp = &list->head[i];
+> > +		if (grp->grp_data == grp_data)
+> > +			return i;
+> > +	}
+> > +
+> > +	if (i < list->max_nr_grps) {
+> > +		grp = &list->head[i];
+> > +		bio_list_init(&grp->list);
+> > +		return i;
+> > +	}
+> > +
+> > +	return -1;
+> > +}
+> > +
+> > +/* Move as many as possible groups from 'src' to 'dst' */
+> > +void bio_grp_list_move(struct bio_grp_list *dst, struct bio_grp_list *src)
+> > +{
+> > +	int i, j, cnt = 0;
+> > +	struct bio_grp_list_data *grp;
+> > +
+> > +	for (i = src->nr_grps - 1; i >= 0; i--) {
+> > +		grp = &src->head[i];
+> > +		j = bio_grp_list_find_grp(dst, grp->grp_data);
+> > +		if (j < 0)
+> > +			break;
+> > +		if (bio_grp_list_grp_empty(&dst->head[j])) {
+> > +			dst->head[j].grp_data = grp->grp_data;
+> > +			dst->nr_grps++;
+> > +		}
+> > +		__bio_grp_list_merge(&dst->head[j].list, &grp->list);
+> > +		bio_list_init(&grp->list);
+> > +		cnt++;
+> > +	}
+> > +
+> > +	src->nr_grps -= cnt;
+> > +}
+> > +
+> >   static void bio_poll_ctx_init(struct blk_bio_poll_ctx *pc)
+> >   {
+> >   	pc->sq = (void *)pc + sizeof(*pc);
+> > @@ -866,6 +941,45 @@ static inline void blk_bio_poll_preprocess(struct request_queue *q,
+> >   		bio->bi_opf |= REQ_POLL_CTX;
+> >   }
+> > +static inline void blk_bio_poll_mark_queued(struct bio *bio, bool queued)
+> > +{
+> > +	/*
+> > +	 * The bio has been added to per-task poll queue, mark it as
+> > +	 * END_BY_POLL, so that this bio is always completed from
+> > +	 * blk_poll() which is provided with cookied from this bio's
+> > +	 * submission.
+> > +	 */
+> > +	if (!queued)
+> > +		bio->bi_opf &= ~(REQ_HIPRI | REQ_POLL_CTX);
+> > +	else
+> > +		bio_set_flag(bio, BIO_END_BY_POLL);
+> > +}
+> > +
+> > +static bool blk_bio_poll_prep_submit(struct io_context *ioc, struct bio *bio)
+> > +{
+> > +	struct blk_bio_poll_ctx *pc = ioc->data;
+> > +	unsigned int queued;
+> > +
+> > +	/*
+> > +	 * We rely on immutable .bi_end_io between blk-mq bio submission
+> > +	 * and completion. However, bio crypt may update .bi_end_io during
+> > +	 * submission, so simply don't support bio based polling for this
+> > +	 * setting.
+> > +	 */
+> > +	if (likely(!bio_has_crypt_ctx(bio))) {
+> > +		/* track this bio via bio group list */
+> > +		spin_lock(&pc->sq_lock);
+> > +		queued = bio_grp_list_add(pc->sq, bio);
+> > +		blk_bio_poll_mark_queued(bio, queued);
+> > +		spin_unlock(&pc->sq_lock);
+> > +	} else {
+> > +		queued = false;
+> > +		blk_bio_poll_mark_queued(bio, false);
+> > +	}
+> > +
+> > +	return queued;
+> > +}
+> > +
+> >   static noinline_for_stack bool submit_bio_checks(struct bio *bio)
+> >   {
+> >   	struct block_device *bdev = bio->bi_bdev;
+> > @@ -1024,7 +1138,7 @@ static blk_qc_t __submit_bio(struct bio *bio)
+> >    * bio_list_on_stack[1] contains bios that were submitted before the current
+> >    *	->submit_bio_bio, but that haven't been processed yet.
+> >    */
+> > -static blk_qc_t __submit_bio_noacct(struct bio *bio)
+> > +static blk_qc_t __submit_bio_noacct_ctx(struct bio *bio, struct io_context *ioc)
+> >   {
+> >   	struct bio_list bio_list_on_stack[2];
+> >   	blk_qc_t ret = BLK_QC_T_NONE;
+> > @@ -1047,7 +1161,15 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
+> >   		bio_list_on_stack[1] = bio_list_on_stack[0];
+> >   		bio_list_init(&bio_list_on_stack[0]);
+> > -		ret = __submit_bio(bio);
+> > +		if (ioc && queue_is_mq(q) && (bio->bi_opf & REQ_HIPRI)) {
+> > +			bool queued = blk_bio_poll_prep_submit(ioc, bio);
+> > +
+> > +			ret = __submit_bio(bio);
+> > +			if (queued)
+> > +				bio_set_private_data(bio, ret);
+> 
+> Isn't this racy?
+> I was under the impression that the bio might have been completed before
+> __submit_bio() returns, which would mean the call to bio_set_private_data()
+> would be executed on a completed bio (and the bio won't have the private
+> data set at completion time).
+> Hmm?
 
-During checkpatch analyzing the following warning message was found:
-  WARNING:STRLCPY: Prefer strscpy over strlcpy - see:
-  https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-Fix it by using strscpy calls instead of strlcpy.
+If 'queued' is true, the bio is guaranteed to be completed via blk_poll(),
+which will be called with current task's pid, so this bio shouldn't be
+completed before calling bio_set_private_data(bio, ret) if both
+submission and polling share same context.
 
-Signed-off-by: Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
----
- drivers/block/rnbd/rnbd-clt-sysfs.c | 6 +++---
- drivers/block/rnbd/rnbd-clt.c       | 4 ++--
- drivers/block/rnbd/rnbd-srv.c       | 6 +++---
- 3 files changed, 8 insertions(+), 8 deletions(-)
+However, if polling is run on another standalone context, and previous
+returned 'pid' may point to the current context too, the polling task
+may complete this bio before bio_set_private_data(bio, ret).
 
-diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
-index b1d04115e049..3c3172af08da 100644
---- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-@@ -99,7 +99,7 @@ static int rnbd_clt_parse_map_options(const char *buf, size_t max_path_cnt,
- 				kfree(p);
- 				goto out;
- 			}
--			strlcpy(opt->sessname, p, NAME_MAX);
-+			strscpy(opt->sessname, p, NAME_MAX);
- 			kfree(p);
- 			break;
- 
-@@ -142,7 +142,7 @@ static int rnbd_clt_parse_map_options(const char *buf, size_t max_path_cnt,
- 				kfree(p);
- 				goto out;
- 			}
--			strlcpy(opt->pathname, p, NAME_MAX);
-+			strscpy(opt->pathname, p, NAME_MAX);
- 			kfree(p);
- 			break;
- 
-@@ -511,7 +511,7 @@ static int rnbd_clt_get_path_name(struct rnbd_clt_dev *dev, char *buf,
- 	int ret;
- 	char pathname[NAME_MAX], *s;
- 
--	strlcpy(pathname, dev->pathname, sizeof(pathname));
-+	strscpy(pathname, dev->pathname, sizeof(pathname));
- 	while ((s = strchr(pathname, '/')))
- 		s[0] = '!';
- 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 9d1bc49d5595..6e5d4a02a9b7 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -583,7 +583,7 @@ static int send_msg_open(struct rnbd_clt_dev *dev, enum wait_type wait)
- 
- 	msg.hdr.type	= cpu_to_le16(RNBD_MSG_OPEN);
- 	msg.access_mode	= dev->access_mode;
--	strlcpy(msg.dev_name, dev->pathname, sizeof(msg.dev_name));
-+	strscpy(msg.dev_name, dev->pathname, sizeof(msg.dev_name));
- 
- 	WARN_ON(!rnbd_clt_get_dev(dev));
- 	err = send_usr_msg(sess->rtrs, READ, iu,
-@@ -805,7 +805,7 @@ static struct rnbd_clt_session *alloc_sess(const char *sessname)
- 	sess = kzalloc_node(sizeof(*sess), GFP_KERNEL, NUMA_NO_NODE);
- 	if (!sess)
- 		return ERR_PTR(-ENOMEM);
--	strlcpy(sess->sessname, sessname, sizeof(sess->sessname));
-+	strscpy(sess->sessname, sessname, sizeof(sess->sessname));
- 	atomic_set(&sess->busy, 0);
- 	mutex_init(&sess->lock);
- 	INIT_LIST_HEAD(&sess->devs_list);
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 78bd0ce0ebf0..d6ec16d7211d 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -304,7 +304,7 @@ static int create_sess(struct rtrs_srv *rtrs)
- 	mutex_unlock(&sess_lock);
- 
- 	srv_sess->rtrs = rtrs;
--	strlcpy(srv_sess->sessname, sessname, sizeof(srv_sess->sessname));
-+	strscpy(srv_sess->sessname, sessname, sizeof(srv_sess->sessname));
- 
- 	rtrs_srv_set_sess_priv(rtrs, srv_sess);
- 
-@@ -443,7 +443,7 @@ static struct rnbd_srv_dev *rnbd_srv_init_srv_dev(const char *id)
- 	if (!dev)
- 		return ERR_PTR(-ENOMEM);
- 
--	strlcpy(dev->id, id, sizeof(dev->id));
-+	strscpy(dev->id, id, sizeof(dev->id));
- 	kref_init(&dev->kref);
- 	INIT_LIST_HEAD(&dev->sess_dev_list);
- 	mutex_init(&dev->lock);
-@@ -595,7 +595,7 @@ rnbd_srv_create_set_sess_dev(struct rnbd_srv_session *srv_sess,
- 
- 	kref_init(&sdev->kref);
- 
--	strlcpy(sdev->pathname, open_msg->dev_name, sizeof(sdev->pathname));
-+	strscpy(sdev->pathname, open_msg->dev_name, sizeof(sdev->pathname));
- 
- 	sdev->rnbd_dev		= rnbd_dev;
- 	sdev->sess		= srv_sess;
--- 
-2.25.1
+It can be fixed by adding one new cookie value of BLK_QC_T_NOT_READY,
+and let blk_poll() not complete any bios which private data is
+BLK_QC_T_NOT_READY.
+
+Will fix it in next version.
+
+> 
+> 
+> > +		} else {
+> > +			ret = __submit_bio(bio);
+> > +		}
+> >   		/*
+> >   		 * Sort new bios into those for a lower level and those for the
+> > @@ -1073,6 +1195,33 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
+> >   	return ret;
+> >   }
+> > +static inline blk_qc_t __submit_bio_noacct_poll(struct bio *bio,
+> > +		struct io_context *ioc)
+> > +{
+> > +	struct blk_bio_poll_ctx *pc = ioc->data;
+> > +
+> > +	__submit_bio_noacct_ctx(bio, ioc);
+> > +
+> > +	/* bio submissions queued to per-task poll context */
+> > +	if (READ_ONCE(pc->sq->nr_grps))
+> > +		return current->pid;
+> > +
+> > +	/* swapper's pid is 0, but it can't submit poll IO for us */
+> > +	return BLK_QC_T_BIO_NONE;
+> > +}
+> > +
+> > +static inline blk_qc_t __submit_bio_noacct(struct bio *bio)
+> > +{
+> > +	struct io_context *ioc = current->io_context;
+> > +
+> > +	if (ioc && ioc->data && (bio->bi_opf & REQ_HIPRI))
+> > + > +	return __submit_bio_noacct_poll(bio, ioc);
+> > +
+> > +	__submit_bio_noacct_ctx(bio, NULL);
+> > +
+> > +	return BLK_QC_T_BIO_NONE;
+> 
+> Shouldn't you return the return value from __submit_bio_noacct_ctx() here?
+
+We return BLK_QC_T_BIO_NONE here deliberately since the bio will be
+completed from underlying queue's irq handler finally, so we have to
+return one invalid cookie to blk_poll().
+
+Thanks,
+Ming
 
