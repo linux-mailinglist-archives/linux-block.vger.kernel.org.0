@@ -2,115 +2,145 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B2434E187
-	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 08:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EC0C34E24D
+	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:38:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230415AbhC3Gu7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Mar 2021 02:50:59 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:35376 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229950AbhC3Guy (ORCPT
+        id S231246AbhC3HiD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Mar 2021 03:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229530AbhC3Hh6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Mar 2021 02:50:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UTpnuEy_1617087051;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UTpnuEy_1617087051)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 30 Mar 2021 14:50:52 +0800
-Subject: Re: [PATCH V4 11/12] block: add poll_capable method to support
- bio-based IO polling
-To:     Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
-        dm-devel@redhat.com
-References: <20210329152622.173035-1-ming.lei@redhat.com>
- <20210329152622.173035-12-ming.lei@redhat.com>
- <162f000f-7f86-8988-4a15-2c3bf70de1b7@suse.de>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <a213b9b1-992d-3deb-200d-c74eac500747@linux.alibaba.com>
-Date:   Tue, 30 Mar 2021 14:50:51 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.1
+        Tue, 30 Mar 2021 03:37:58 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52F0C061762
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:37:57 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id ce10so23337669ejb.6
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SpCsfsh5k4XDGQoyhZbcRXga5RIB1LROTe/1Fl1GftQ=;
+        b=SXIqfezlT2jLed6NVR4JyPQUPR3dmHxHAtY1jDw7OSs5ydMrf8Kl3H6xHZSoRKNCb8
+         y/lpfqgtWE7Vp47V22vBVO57YYV1oPD+6MRz1TGuXqOldws4zt6XYTaBEkEgTe1920H7
+         +j9TR4PUCny1mD+84duyDHKqxYrjDLTjPmQD4xVZwvAm9ezXrDS0KH9C6vAABbDOUsgR
+         oF2Ud1GYXf8iqVb9XNw4vMsh8sLi3caJF4q75k1unxX+MbTXD732BgJ8vOHrIRyHLlkD
+         8d1DnMG4KVhzhYXvt7hGbcS5Xr1ptyq4pT/74C6hyVWbbULpITNiQ0BvajhC8z9wNlhb
+         Fucg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SpCsfsh5k4XDGQoyhZbcRXga5RIB1LROTe/1Fl1GftQ=;
+        b=q1rkDtQN9sdnSaHpy1Merw5SkpfS4jEMYDv0DP5NlhUxVi/P9R57x3KEurrwRmhYY/
+         Nq1QAi/OsSYwD6RjxhxcCVMawHcU6XcPOkXNVUXR3/3J8kRwnvFtsOvrVZ9sn/Oi53tq
+         DFFdUA45iIvlIla6sdEWoRgFrgFk6fAdxksfjhvcl0f99A6JDVueW8iqcq95FgHA4EwI
+         x/bCh/Z0wogz6pFOBqSkJ40jLa+nQ3Y4qNzex7KLomE9DEW530tx7GLbKqDy9MKX68t6
+         P6ECx3YSnGx2x+D65iFMeDaHTpWKNX3peNURqClJAk2D8yMkNM7+mMbZDrx7+nF+yxtf
+         +ozw==
+X-Gm-Message-State: AOAM530hjgQ/O1puGT/7H6pXTSQJsHOFJQLeTPpplq+qu37mMdNdII46
+        Y2VSCE0o5oDDLzA6voeYKS6VAJGMwjhfvQ==
+X-Google-Smtp-Source: ABdhPJwSHEINxW24tbPb4+jZz6CQWnhrS8I9kjoHL21aj2zxGpksrxTrFK1NU10rcHXW+vkJhIxlpg==
+X-Received: by 2002:a17:907:204c:: with SMTP id pg12mr21625380ejb.225.1617089876474;
+        Tue, 30 Mar 2021 00:37:56 -0700 (PDT)
+Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
+        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Mar 2021 00:37:56 -0700 (PDT)
+From:   Gioh Kim <gi-oh.kim@ionos.com>
+To:     linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+        Gioh Kim <gi-oh.kim@ionos.com>
+Subject: [PATCHv2 for-next 00/24] Misc update for rnbd
+Date:   Tue, 30 Mar 2021 09:37:28 +0200
+Message-Id: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <162f000f-7f86-8988-4a15-2c3bf70de1b7@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+This is the misc update for rnbd. It inlcudes:
+- Change maintainer
+- Change domain address of maintainers' email: from cloud.ionos.com to ionos.com
+- Add polling IO mode and document update
+- Add some fault-injection points and document update
+- Fix memory leak and some bug detected by static code analysis tools
+- Code refactoring
 
+V2->V1
+- Change the title: for-rc -> for-next
+- Remove unnecessary (void) casting requested by Leon
 
-On 3/30/21 2:26 PM, Hannes Reinecke wrote:
-> On 3/29/21 5:26 PM, Ming Lei wrote:
->> From: Jeffle Xu <jefflexu@linux.alibaba.com>
->>
->> This method can be used to check if bio-based device supports IO polling
->> or not. For mq devices, checking for hw queue in polling mode is
->> adequate, while the sanity check shall be implementation specific for
->> bio-based devices. For example, dm device needs to check if all
->> underlying devices are capable of IO polling.
->>
->> Though bio-based device may have done the sanity check during the
->> device initialization phase, cacheing the result of this sanity check
->> (such as by cacheing in the queue_flags) may not work. Because for dm
->> devices, users could change the state of the underlying devices through
->> '/sys/block/<dev>/io_poll', bypassing the dm device above. In this case,
->> the cached result of the very beginning sanity check could be
->> out-of-date. Thus the sanity check needs to be done every time 'io_poll'
->> is to be modified.
->>
->> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
->> ---
->>   block/blk-sysfs.c      | 14 +++++++++++---
->>   include/linux/blkdev.h |  1 +
->>   2 files changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
->> index db3268d41274..c8e7e4af66cb 100644
->> --- a/block/blk-sysfs.c
->> +++ b/block/blk-sysfs.c
->> @@ -426,9 +426,17 @@ static ssize_t queue_poll_store(struct
->> request_queue *q, const char *page,
->>       unsigned long poll_on;
->>       ssize_t ret;
->>   -    if (!q->tag_set || q->tag_set->nr_maps <= HCTX_TYPE_POLL ||
->> -        !q->tag_set->map[HCTX_TYPE_POLL].nr_queues)
->> -        return -EINVAL;
->> +    if (queue_is_mq(q)) {
->> +        if (!q->tag_set || q->tag_set->nr_maps <= HCTX_TYPE_POLL ||
->> +            !q->tag_set->map[HCTX_TYPE_POLL].nr_queues)
->> +            return -EINVAL;
->> +    } else {
->> +        struct gendisk *disk = queue_to_disk(q);
->> +
->> +        if (!disk->fops->poll_capable ||
->> +            !disk->fops->poll_capable(disk))
->> +            return -EINVAL;
->> +    }
->>         ret = queue_var_store(&poll_on, page, count);
->>       if (ret < 0)
->> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->> index bfab74b45f15..a46f975f2a2f 100644
->> --- a/include/linux/blkdev.h
->> +++ b/include/linux/blkdev.h
->> @@ -1881,6 +1881,7 @@ struct block_device_operations {
->>       int (*report_zones)(struct gendisk *, sector_t sector,
->>               unsigned int nr_zones, report_zones_cb cb, void *data);
->>       char *(*devnode)(struct gendisk *disk, umode_t *mode);
->> +    bool (*poll_capable)(struct gendisk *disk);
->>       struct module *owner;
->>       const struct pr_ops *pr_ops;
->>   };
->>
-> I really wonder how this would work for nvme multipath; but I guess it
-> doesn't change the current situation.
+Best regards
 
-I wonder, at least, md/dm, which is built upon other devices, or
-'virtual device' in other words, should be distinguished from other
-'original' bio-based device (e.g., nvme multipath) then. Maybe one extra
-flag or something.
+Danil Kipnis (1):
+  MAINTAINERS: Change maintainer for rnbd module
+
+Dima Stepanov (2):
+  block/rnbd-clt-sysfs: Remove copy buffer overlap in
+    rnbd_clt_get_path_name
+  block/rnbd: Use strscpy instead of strlcpy
+
+Gioh Kim (13):
+  Documentation/sysfs-block-rnbd: Add descriptions for remap_device and
+    resize
+  block/rnbd: Enable the fault-injection
+  block/rnbd-srv: Inject a fault at bio processing
+  block/rnbd-clt: Inject some fault points
+  docs: fault-injection: Add fault-injection manual of RNBD
+  docs: Add RTRS/RNBD to the index of fault-injection
+  block/rnbd-clt: Replace {NO_WAIT,WAIT} with RTRS_PERMIT_{WAIT,NOWAIT}
+  block/rnbd-srv: Prevent a deadlock generated by accessing sysfs in
+    parallel
+  block/rnbd-srv: Remove force_close file after holding a lock
+  block/rnbd-clt: Fix missing a memory free when unloading the module
+  block/rnbd-clt: Support polling mode for IO latency optimization
+  Documentation/ABI/rnbd-clt: Add description for nr_poll_queues
+  block/rnbd-srv: Remove unused arguments of rnbd_srv_rdma_ev
+
+Guoqing Jiang (5):
+  block/rnbd-clt: Remove some arguments from
+    insert_dev_if_not_exists_devpath
+  block/rnbd-clt: Remove some arguments from rnbd_client_setup_device
+  block/rnbd-clt: Move add_disk(dev->gd) to rnbd_clt_setup_gen_disk
+  block/rnbd: Kill rnbd_clt_destroy_default_group
+  block/rnbd: Kill destroy_device_cb
+
+Jack Wang (1):
+  block/rnbd-clt: Remove max_segment_size
+
+Md Haris Iqbal (1):
+  block/rnbd-clt: Generate kobject_uevent when the rnbd device state
+    changes
+
+Tom Rix (1):
+  block/rnbd-clt: Improve find_or_create_sess() return check
+
+ Documentation/ABI/testing/sysfs-block-rnbd    |  18 ++
+ .../ABI/testing/sysfs-class-rnbd-client       |  13 ++
+ Documentation/fault-injection/index.rst       |   2 +
+ .../fault-injection/rnbd-fault-injection.rst  | 208 ++++++++++++++++++
+ MAINTAINERS                                   |   4 +-
+ drivers/block/rnbd/rnbd-clt-sysfs.c           | 138 +++++++++---
+ drivers/block/rnbd/rnbd-clt.c                 | 184 +++++++++++-----
+ drivers/block/rnbd/rnbd-clt.h                 |  21 +-
+ drivers/block/rnbd/rnbd-common.c              |  44 ++++
+ drivers/block/rnbd/rnbd-proto.h               |  14 ++
+ drivers/block/rnbd/rnbd-srv-sysfs.c           |  41 +++-
+ drivers/block/rnbd/rnbd-srv.c                 |  76 +++----
+ drivers/block/rnbd/rnbd-srv.h                 |  16 +-
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c        |  75 +++++--
+ drivers/infiniband/ulp/rtrs/rtrs-clt.h        |   1 -
+ drivers/infiniband/ulp/rtrs/rtrs-pri.h        |   1 +
+ drivers/infiniband/ulp/rtrs/rtrs-srv.c        |   4 +-
+ drivers/infiniband/ulp/rtrs/rtrs.h            |  13 +-
+ 18 files changed, 712 insertions(+), 161 deletions(-)
+ create mode 100644 Documentation/fault-injection/rnbd-fault-injection.rst
 
 -- 
-Thanks,
-Jeffle
+2.25.1
+
