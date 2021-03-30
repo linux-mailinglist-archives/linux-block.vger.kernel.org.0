@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6AE34E261
-	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D82234E25E
+	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbhC3Hio (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Mar 2021 03:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
+        id S231337AbhC3Him (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Mar 2021 03:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231329AbhC3HiJ (ORCPT
+        with ESMTP id S231341AbhC3HiL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Mar 2021 03:38:09 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30C5C0613D8
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:08 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id bf3so17029899edb.6
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:08 -0700 (PDT)
+        Tue, 30 Mar 2021 03:38:11 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9275EC061762
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:09 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id kt15so23282308ejb.12
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XRGE6YSZlGMJfheJ34bYryhpSeJn76sa8WGvFZ76Ync=;
-        b=HuKlJmO327uqa1epPSGqfHDDGCQc0R1mSFe295/0D+tgj2E7DYwUYmHsR8ieBJOd1+
-         Gt/MGsW7oIFMuwHlMNgeq+lxvJcnUP1sjKv6WH2xycTJVXfU4zSFRpBzzq8AFQG3vZxp
-         nrm85EEmOe9UkYkKxTUEEBPN5uf4r0b4zkm620p4WaSjfMBXx6EdrmWG7znm4ZDOJtin
-         5CRFuRe2EpyWkrygvUmZ/OMKb4phEYveqgn+EZkH0oLcbEsDjS5Jaqd32YJWyk1rbpAl
-         zaND4V5fDZ7OodR1tFGTs9gPPPR6Dkpu8YbcTQFgrbzmTucksmE0I0W88g49tE/b/0EB
-         C8/Q==
+        bh=SoMSIcCp8+AqPcP3Tord2AzO8LTHhNxNANk75Scwquk=;
+        b=ITFd70WEYwdOvjemh4iTNpEczrRqBt1NDOlkhgunqsWoHahUkm8TodeNTi5GypuQhN
+         wrPtqU7l0MbgtK5gsHjRFMvAn9/3/afe73NUYM4XxmlmCnGVGC109612VlaFp4nCR9oJ
+         qaJ7lxpU6p70FySP74iNxuQ3Fdukc49MTk3HGr2g1I2xkgRfWWHZNsvNn1HkhUovbURf
+         YTvp7ynX1wKjzSYhgVvcANvHqNgwUNssbT6lROxmX6MDssNIk0X/EtgBdS1D8W2+U4/R
+         OADz8I5RqWjHRz63voYCniM95aINh/pWZLvrTu3Shf113C54r1RAeUGWGK/nx8CcGmKB
+         0T3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XRGE6YSZlGMJfheJ34bYryhpSeJn76sa8WGvFZ76Ync=;
-        b=uOc8Q83TtLVxCQkUF6GbHMlSQO2fYEd4uJ7sGLpU1hm3V/6oTzueJJNddD8ATBUlNw
-         zc+26pjgdRd3olALFJG1qxzXlFWyZ5486TyNEEOOTDbjoqnof4cuYdXapdNOr6xQsLO7
-         NVRHyOOLYgfGqlDOdkro4hP/ckRqrWW96U1uaRvO0mJu/ZxrSF4avvtNySPU4scvnhko
-         cr1R9dbOGX/nCYk42j4mThhLmEN/JYqOPu6nSqRX60jnwOqVSKHyp4eGWHD0PRUH+q6D
-         CC9AV30ujhN6rqGW01Ail7QIcxgZ1WV/XNxsjCSlUxEfDSccmcViNxuPPOWSg5JEaarg
-         v+yQ==
-X-Gm-Message-State: AOAM533o9BRxCEZXm2zdOqpP8bNwMkE/LZP9caLRixE8IYHdyWyQhxib
-        MQuH0A/QctOm4E1jP/DW4omWVYmrHDhTZKDU
-X-Google-Smtp-Source: ABdhPJyLG+ibtypQgqhve52tSur+fWMfNPHf1Xdf4huK5wMYYs9tiFAdKaX7YiXCgnU5bbKG6HYX8Q==
-X-Received: by 2002:a05:6402:484:: with SMTP id k4mr31989952edv.321.1617089887400;
-        Tue, 30 Mar 2021 00:38:07 -0700 (PDT)
+        bh=SoMSIcCp8+AqPcP3Tord2AzO8LTHhNxNANk75Scwquk=;
+        b=apq6RQvyPaAAArtxhOtohcOxM+G8+qn1goFa6DXn4biMuhCEfpYc99qH2647oHey/4
+         Q/p9NPmy49KpQ32wcuO/Dfc78I5xN/YbgwvZGoyviPgDe+YFH0w5R8HedtWp1Xo6/iKX
+         7JVX2D64oxBA3Y0Xfr+vY6+D9SBGwKlMPjqTO463Ofi5yvF0//3bPAuXZDCKZAjUB0dN
+         v4+NXdg8qtUBsylAi0YS2Sd0j/xvMwzMO2LX28UG5YU6om+YK0JnC7wYuFkuXgCytNHm
+         c1ShjXYTK7wq2EpX/S/7koHyHpP/vxT1uN3JFxKouge3xMzFpS6+Kj1LNYT5Ys8LuLtR
+         w+Qg==
+X-Gm-Message-State: AOAM532zVQvfqPgMT4Qe8l2E5tTESiKv430CK89TmaIvlgLGX+JYRU2i
+        nnrqGef721nB7wtmwujzGz8/OBvz0ipYpxiJ
+X-Google-Smtp-Source: ABdhPJxpN6jUprFr0lhe7Y6m7AVLX6BZuXwf+zjXZUTHGkpXjuPemXdbLpbBHNiqZ5tud1tMHdsT2g==
+X-Received: by 2002:a17:906:85b:: with SMTP id f27mr32597212ejd.414.1617089888132;
+        Tue, 30 Mar 2021 00:38:08 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.06
+        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 30 Mar 2021 00:38:07 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
@@ -53,14 +53,10 @@ To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
         Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        linux-rdma@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@ionos.com>,
         Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCHv2 for-next 13/24] block/rnbd-clt: Replace {NO_WAIT,WAIT} with RTRS_PERMIT_{WAIT,NOWAIT}
-Date:   Tue, 30 Mar 2021 09:37:41 +0200
-Message-Id: <20210330073752.1465613-14-gi-oh.kim@ionos.com>
+Subject: [PATCHv2 for-next 14/24] block/rnbd-srv: Prevent a deadlock generated by accessing sysfs in parallel
+Date:   Tue, 30 Mar 2021 09:37:42 +0200
+Message-Id: <20210330073752.1465613-15-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
 References: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
@@ -72,226 +68,142 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
-They are defined with the same value and similar meaning, let's remove
-one of them, then we can remove {WAIT,NOWAIT}.
+We got a warning message below.
+When server tries to close one session by force, it locks the sysfs
+interface and locks the srv_sess lock.
+The problem is that client can send a request to close at the same time.
+By close request, server locks the srv_sess lock and locks the sysfs
+to remove the sysfs interfaces.
 
-Also change the type of 'wait' from 'int' to 'enum wait_type' to make
-it clear.
+The simplest way to prevent that situation could be just use
+mutex_trylock.
 
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>
-Cc: linux-rdma@vger.kernel.org
-Signed-off-by: Guoqing Jiang <guoqing.jiang@ionos.com>
-Reviewed-by: Md Haris Iqbal <haris.iqbal@ionos.com>
+[  234.153965] ======================================================
+[  234.154093] WARNING: possible circular locking dependency detected
+[  234.154219] 5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10 Tainted: G           O
+[  234.154381] ------------------------------------------------------
+[  234.154531] kworker/1:1H/618 is trying to acquire lock:
+[  234.154651] ffff8887a09db0a8 (kn->count#132){++++}, at: kernfs_remove_by_name_ns+0x40/0x80
+[  234.154819]
+               but task is already holding lock:
+[  234.154965] ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
+[  234.155132]
+               which lock already depends on the new lock.
+
+[  234.155311]
+               the existing dependency chain (in reverse order) is:
+[  234.155462]
+               -> #1 (&srv_sess->lock){+.+.}:
+[  234.155614]        __mutex_lock+0x134/0xcb0
+[  234.155761]        rnbd_srv_sess_dev_force_close+0x36/0x50 [rnbd_server]
+[  234.155889]        rnbd_srv_dev_session_force_close_store+0x69/0xc0 [rnbd_server]
+[  234.156042]        kernfs_fop_write+0x13f/0x240
+[  234.156162]        vfs_write+0xf3/0x280
+[  234.156278]        ksys_write+0xba/0x150
+[  234.156395]        do_syscall_64+0x62/0x270
+[  234.156513]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  234.156632]
+               -> #0 (kn->count#132){++++}:
+[  234.156782]        __lock_acquire+0x129e/0x23a0
+[  234.156900]        lock_acquire+0xf3/0x210
+[  234.157043]        __kernfs_remove+0x42b/0x4c0
+[  234.157161]        kernfs_remove_by_name_ns+0x40/0x80
+[  234.157282]        remove_files+0x3f/0xa0
+[  234.157399]        sysfs_remove_group+0x4a/0xb0
+[  234.157519]        rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
+[  234.157648]        rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
+[  234.157775]        process_io_req+0x29a/0x6a0 [rtrs_server]
+[  234.157924]        __ib_process_cq+0x8c/0x100 [ib_core]
+[  234.158709]        ib_cq_poll_work+0x31/0xb0 [ib_core]
+[  234.158834]        process_one_work+0x4e5/0xaa0
+[  234.158958]        worker_thread+0x65/0x5c0
+[  234.159078]        kthread+0x1e0/0x200
+[  234.159194]        ret_from_fork+0x24/0x30
+[  234.159309]
+               other info that might help us debug this:
+
+[  234.159513]  Possible unsafe locking scenario:
+
+[  234.159658]        CPU0                    CPU1
+[  234.159775]        ----                    ----
+[  234.159891]   lock(&srv_sess->lock);
+[  234.160005]                                lock(kn->count#132);
+[  234.160128]                                lock(&srv_sess->lock);
+[  234.160250]   lock(kn->count#132);
+[  234.160364]
+                *** DEADLOCK ***
+
+[  234.160536] 3 locks held by kworker/1:1H/618:
+[  234.160677]  #0: ffff8883ca1ed528 ((wq_completion)ib-comp-wq){+.+.}, at: process_one_work+0x40a/0xaa0
+[  234.160840]  #1: ffff8883d2d5fe10 ((work_completion)(&cq->work)){+.+.}, at: process_one_work+0x40a/0xaa0
+[  234.161003]  #2: ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
+[  234.161168]
+               stack backtrace:
+[  234.161312] CPU: 1 PID: 618 Comm: kworker/1:1H Tainted: G           O      5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10
+[  234.161490] Hardware name: Supermicro H8QG6/H8QG6, BIOS 3.00       09/04/2012
+[  234.161643] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
+[  234.161765] Call Trace:
+[  234.161910]  dump_stack+0x96/0xe0
+[  234.162028]  check_noncircular+0x29e/0x2e0
+[  234.162148]  ? print_circular_bug+0x100/0x100
+[  234.162267]  ? register_lock_class+0x1ad/0x8a0
+[  234.162385]  ? __lock_acquire+0x68e/0x23a0
+[  234.162505]  ? trace_event_raw_event_lock+0x190/0x190
+[  234.162626]  __lock_acquire+0x129e/0x23a0
+[  234.162746]  ? register_lock_class+0x8a0/0x8a0
+[  234.162866]  lock_acquire+0xf3/0x210
+[  234.162982]  ? kernfs_remove_by_name_ns+0x40/0x80
+[  234.163127]  __kernfs_remove+0x42b/0x4c0
+[  234.163243]  ? kernfs_remove_by_name_ns+0x40/0x80
+[  234.163363]  ? kernfs_fop_readdir+0x3b0/0x3b0
+[  234.163482]  ? strlen+0x1f/0x40
+[  234.163596]  ? strcmp+0x30/0x50
+[  234.163712]  kernfs_remove_by_name_ns+0x40/0x80
+[  234.163832]  remove_files+0x3f/0xa0
+[  234.163948]  sysfs_remove_group+0x4a/0xb0
+[  234.164068]  rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
+[  234.164196]  rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
+[  234.164345]  ? _raw_spin_unlock_irqrestore+0x43/0x50
+[  234.164466]  ? lockdep_hardirqs_on+0x1a8/0x290
+[  234.164597]  ? mlx4_ib_poll_cq+0x927/0x1280 [mlx4_ib]
+[  234.164732]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
+[  234.164859]  process_io_req+0x29a/0x6a0 [rtrs_server]
+[  234.164982]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
+[  234.165130]  __ib_process_cq+0x8c/0x100 [ib_core]
+[  234.165279]  ib_cq_poll_work+0x31/0xb0 [ib_core]
+[  234.165404]  process_one_work+0x4e5/0xaa0
+[  234.165550]  ? pwq_dec_nr_in_flight+0x160/0x160
+[  234.165675]  ? do_raw_spin_lock+0x119/0x1d0
+[  234.165796]  worker_thread+0x65/0x5c0
+[  234.165914]  ? process_one_work+0xaa0/0xaa0
+[  234.166031]  kthread+0x1e0/0x200
+[  234.166147]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  234.166268]  ret_from_fork+0x24/0x30
+[  234.251591] rnbd_server L243: </dev/loop1@close_device_session>: Device closed
+[  234.604221] rnbd_server L264: RTRS Session close_device_session disconnected
+
 Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
+Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 ---
- drivers/block/rnbd/rnbd-clt.c          | 42 +++++++++++---------------
- drivers/infiniband/ulp/rtrs/rtrs-clt.c |  4 +--
- drivers/infiniband/ulp/rtrs/rtrs.h     |  6 ++--
- 3 files changed, 22 insertions(+), 30 deletions(-)
+ drivers/block/rnbd/rnbd-srv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index fce0f345f796..6aba7b26f260 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -312,13 +312,11 @@ static void rnbd_rerun_all_if_idle(struct rnbd_clt_session *sess)
+diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+index 895e9c313ff0..f284620ef0d3 100644
+--- a/drivers/block/rnbd/rnbd-srv.c
++++ b/drivers/block/rnbd/rnbd-srv.c
+@@ -340,7 +340,9 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
+ 	struct rnbd_srv_session	*sess = sess_dev->sess;
  
- static struct rtrs_permit *rnbd_get_permit(struct rnbd_clt_session *sess,
- 					     enum rtrs_clt_con_type con_type,
--					     int wait)
-+					     enum wait_type wait)
- {
- 	struct rtrs_permit *permit;
- 
--	permit = rtrs_clt_get_permit(sess->rtrs, con_type,
--				      wait ? RTRS_PERMIT_WAIT :
--				      RTRS_PERMIT_NOWAIT);
-+	permit = rtrs_clt_get_permit(sess->rtrs, con_type, wait);
- 	if (likely(permit))
- 		/* We have a subtle rare case here, when all permits can be
- 		 * consumed before busy counter increased.  This is safe,
-@@ -344,7 +342,7 @@ static void rnbd_put_permit(struct rnbd_clt_session *sess,
- 
- static struct rnbd_iu *rnbd_get_iu(struct rnbd_clt_session *sess,
- 				     enum rtrs_clt_con_type con_type,
--				     int wait)
-+				     enum wait_type wait)
- {
- 	struct rnbd_iu *iu;
- 	struct rtrs_permit *permit;
-@@ -354,9 +352,7 @@ static struct rnbd_iu *rnbd_get_iu(struct rnbd_clt_session *sess,
- 		return NULL;
- 	}
- 
--	permit = rnbd_get_permit(sess, con_type,
--				  wait ? RTRS_PERMIT_WAIT :
--				  RTRS_PERMIT_NOWAIT);
-+	permit = rnbd_get_permit(sess, con_type, wait);
- 	if (unlikely(!permit)) {
- 		kfree(iu);
- 		return NULL;
-@@ -440,16 +436,11 @@ static void msg_conf(void *priv, int errno)
- 	schedule_work(&iu->work);
+ 	sess_dev->keep_id = true;
+-	mutex_lock(&sess->lock);
++	/* It is already started to close by client's close message. */
++	if (!mutex_trylock(&sess->lock))
++		return;
+ 	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
+ 	mutex_unlock(&sess->lock);
  }
- 
--enum wait_type {
--	NO_WAIT = 0,
--	WAIT    = 1
--};
--
- static int send_usr_msg(struct rtrs_clt *rtrs, int dir,
- 			struct rnbd_iu *iu, struct kvec *vec,
- 			size_t len, struct scatterlist *sg, unsigned int sg_len,
- 			void (*conf)(struct work_struct *work),
--			int *errno, enum wait_type wait)
-+			int *errno, int wait)
- {
- 	int err;
- 	struct rtrs_clt_req_ops req_ops;
-@@ -481,7 +472,8 @@ static void msg_close_conf(struct work_struct *work)
- 	rnbd_clt_put_dev(dev);
- }
- 
--static int send_msg_close(struct rnbd_clt_dev *dev, u32 device_id, bool wait)
-+static int send_msg_close(struct rnbd_clt_dev *dev, u32 device_id,
-+			  enum wait_type wait)
- {
- 	struct rnbd_clt_session *sess = dev->sess;
- 	struct rnbd_msg_close msg;
-@@ -535,7 +527,7 @@ static void msg_open_conf(struct work_struct *work)
- 			 * If server thinks its fine, but we fail to process
- 			 * then be nice and send a close to server.
- 			 */
--			(void)send_msg_close(dev, device_id, NO_WAIT);
-+			send_msg_close(dev, device_id, RTRS_PERMIT_NOWAIT);
- 		}
- 	}
- 	kfree(rsp);
-@@ -559,7 +551,7 @@ static void msg_sess_info_conf(struct work_struct *work)
- 	rnbd_clt_put_sess(sess);
- }
- 
--static int send_msg_open(struct rnbd_clt_dev *dev, bool wait)
-+static int send_msg_open(struct rnbd_clt_dev *dev, enum wait_type wait)
- {
- 	struct rnbd_clt_session *sess = dev->sess;
- 	struct rnbd_msg_open_rsp *rsp;
-@@ -606,7 +598,7 @@ static int send_msg_open(struct rnbd_clt_dev *dev, bool wait)
- 	return err;
- }
- 
--static int send_msg_sess_info(struct rnbd_clt_session *sess, bool wait)
-+static int send_msg_sess_info(struct rnbd_clt_session *sess, enum wait_type wait)
- {
- 	struct rnbd_msg_sess_info_rsp *rsp;
- 	struct rnbd_msg_sess_info msg;
-@@ -692,7 +684,7 @@ static void remap_devs(struct rnbd_clt_session *sess)
- 	 * be asynchronous.
- 	 */
- 
--	err = send_msg_sess_info(sess, NO_WAIT);
-+	err = send_msg_sess_info(sess, RTRS_PERMIT_NOWAIT);
- 	if (err) {
- 		pr_err("send_msg_sess_info(\"%s\"): %d\n", sess->sessname, err);
- 		return;
-@@ -716,7 +708,7 @@ static void remap_devs(struct rnbd_clt_session *sess)
- 			continue;
- 
- 		rnbd_clt_info(dev, "session reconnected, remapping device\n");
--		err = send_msg_open(dev, NO_WAIT);
-+		err = send_msg_open(dev, RTRS_PERMIT_NOWAIT);
- 		if (err) {
- 			rnbd_clt_err(dev, "send_msg_open(): %d\n", err);
- 			break;
-@@ -1248,7 +1240,7 @@ find_and_get_or_create_sess(const char *sessname,
- 	if (err)
- 		goto close_rtrs;
- 
--	err = send_msg_sess_info(sess, WAIT);
-+	err = send_msg_sess_info(sess, RTRS_PERMIT_WAIT);
- 	if (err)
- 		goto close_rtrs;
- 
-@@ -1531,7 +1523,7 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const char *sessname,
- 		ret = -EEXIST;
- 		goto put_dev;
- 	}
--	ret = send_msg_open(dev, WAIT);
-+	ret = send_msg_open(dev, RTRS_PERMIT_WAIT);
- 	if (ret) {
- 		rnbd_clt_err(dev,
- 			      "map_device: failed, can't open remote device, err: %d\n",
-@@ -1567,7 +1559,7 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const char *sessname,
- 	return dev;
- 
- send_close:
--	send_msg_close(dev, dev->device_id, WAIT);
-+	send_msg_close(dev, dev->device_id, RTRS_PERMIT_WAIT);
- del_dev:
- 	delete_dev(dev);
- put_dev:
-@@ -1636,7 +1628,7 @@ int rnbd_clt_unmap_device(struct rnbd_clt_dev *dev, bool force,
- 	destroy_sysfs(dev, sysfs_self);
- 	destroy_gen_disk(dev);
- 	if (was_mapped && sess->rtrs)
--		send_msg_close(dev, dev->device_id, WAIT);
-+		send_msg_close(dev, dev->device_id, RTRS_PERMIT_WAIT);
- 
- 	rnbd_clt_info(dev, "Device is unmapped\n");
- 
-@@ -1670,7 +1662,7 @@ int rnbd_clt_remap_device(struct rnbd_clt_dev *dev)
- 	mutex_unlock(&dev->lock);
- 	if (!err) {
- 		rnbd_clt_info(dev, "Remapping device.\n");
--		err = send_msg_open(dev, WAIT);
-+		err = send_msg_open(dev, RTRS_PERMIT_WAIT);
- 		if (err)
- 			rnbd_clt_err(dev, "remap_device: %d\n", err);
- 	}
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-index 0a08b4b742a3..7efd49bdc78c 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-@@ -103,11 +103,11 @@ static inline void __rtrs_put_permit(struct rtrs_clt *clt,
-  *    up earlier.
-  *
-  * Context:
-- *    Can sleep if @wait == RTRS_TAG_WAIT
-+ *    Can sleep if @wait == RTRS_PERMIT_WAIT
-  */
- struct rtrs_permit *rtrs_clt_get_permit(struct rtrs_clt *clt,
- 					  enum rtrs_clt_con_type con_type,
--					  int can_wait)
-+					  enum wait_type can_wait)
- {
- 	struct rtrs_permit *permit;
- 	DEFINE_WAIT(wait);
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs.h b/drivers/infiniband/ulp/rtrs/rtrs.h
-index 8738e90e715a..2db1b5eb3ab0 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs.h
-+++ b/drivers/infiniband/ulp/rtrs/rtrs.h
-@@ -63,9 +63,9 @@ struct rtrs_clt *rtrs_clt_open(struct rtrs_clt_ops *ops,
- 
- void rtrs_clt_close(struct rtrs_clt *sess);
- 
--enum {
-+enum wait_type {
- 	RTRS_PERMIT_NOWAIT = 0,
--	RTRS_PERMIT_WAIT   = 1,
-+	RTRS_PERMIT_WAIT   = 1
- };
- 
- /**
-@@ -81,7 +81,7 @@ enum rtrs_clt_con_type {
- 
- struct rtrs_permit *rtrs_clt_get_permit(struct rtrs_clt *sess,
- 				    enum rtrs_clt_con_type con_type,
--				    int wait);
-+				    enum wait_type wait);
- 
- void rtrs_clt_put_permit(struct rtrs_clt *sess, struct rtrs_permit *permit);
- 
 -- 
 2.25.1
 
