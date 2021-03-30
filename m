@@ -2,65 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F5234E263
+	by mail.lfdr.de (Postfix) with ESMTP id C4A6C34E264
 	for <lists+linux-block@lfdr.de>; Tue, 30 Mar 2021 09:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbhC3Hiq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Mar 2021 03:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
+        id S231366AbhC3Hip (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Mar 2021 03:38:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231371AbhC3HiO (ORCPT
+        with ESMTP id S231379AbhC3HiP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Mar 2021 03:38:14 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627C3C061764
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:14 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a7so23327481ejs.3
-        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:14 -0700 (PDT)
+        Tue, 30 Mar 2021 03:38:15 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136DFC061762
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:15 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id e7so16992454edu.10
+        for <linux-block@vger.kernel.org>; Tue, 30 Mar 2021 00:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+wNTS4XPUWn/jF7E63ntoE+HOXhLVAf70pg15ObO2xg=;
-        b=brHGtSON3jImzIRE1Wid398RfM1Awe0yDVRTJp4gTLGoDkt2SndXqDNY1r6T+atb1J
-         7Kfig6nfl+lGQ/pgWtJyjdC1qGCYb9+p+29buiT09r/uULD2aOK92Wyot4us99RrY1sH
-         kDsO0/6kzwMygFUnrD5Goubxbzw8WKhpliXbTv2aVQy4fWlvsQQ9cXkq/pxAmIYLtPET
-         Q/sm8pB6y+5L5+wqaVTc/HnfdRHmpuDBfKvkb7MfGQnFUkbqcjUx5rxnJVT6wKb45G3L
-         KuTG8KJlATh9hZgxkY8Z9Lki7J87dBkXBQ0PvD7JK8OcXsIsI6MhoII1GmLFDFnmJpB5
-         wSsQ==
+        bh=FzPBTlBw1MjHnrff8Rt1PN/OBBefnhXSEo3ZW0EmbAU=;
+        b=bbArIyYc+Agi+s2EyURgl/1IBAtSupFhrqJeJVFieKqC6DrK0VxEQGrjnjyQli60sN
+         3TJ+29XTA1n9Y+0eiM2JUR64szIF5FVN1bTWwc5F7PaLQFOAmGjtlxnZp1hRoJ3I3Q+Q
+         Vs3yp2MrK/gfMllKsWQZT27WHACMVwNgUczOFH73R54vn9i1Unsm+I4i0KFr3MBodgY6
+         aZv0bxw8w9UZeVRlha9YGY9mUaHH9VeXIjbUphVeVAVtMI3L70LvguE/q6ma+2KWmeVU
+         jNGBL6LVg+7/m7T2YTz4583aPm8jSIg+eA04u/ufHoTShUglX4h2plvcUGDLmXxI0/Km
+         3XFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+wNTS4XPUWn/jF7E63ntoE+HOXhLVAf70pg15ObO2xg=;
-        b=RJSdw6pdzs7UWyH51AKP+gJJAEVLNE1O5GtRjY9akS2bRco0zOxQGb2ZCiUkPdqMUI
-         BYOcCHxeMMiYOIGWzfM+xDPDcIm0upvmZGuLB1oNnXz0oYTV1Ij0B5/GJYQiNkm5LyHY
-         cQfHdYruC6exsjhXS8DsPmufBoq6jt/qRDHnnMJp23IoVckWrUA19aV0XAjQxCS4IZ0C
-         ZtB2KKei92aZuaXNeutgAGVXrh2IqNvrKwm8h5774F68NzWxqAAk1AJr0gQFRgh8SMCN
-         sy2Gu1pogpp8hnDAw4SDMpCD0udlrw8DSSMMgnm+QzVAUjKzdoLBkeZyBymZOFQIXor+
-         hCbg==
-X-Gm-Message-State: AOAM531LbfE3yfS1Jd9E4br90M5k/7fKkIZbfUyMbREbsHZQU2Fp/qL0
-        kObCYO1P2c/XJ5T7NXZXDhDTLJomG7kSemVG
-X-Google-Smtp-Source: ABdhPJxIF1hG1RscAxIssw08tn4fhsmYHF3kOBMAxxmXv26Led2ovP3+9M+gcd5MvrQXBOUfrR5bcA==
-X-Received: by 2002:a17:906:1453:: with SMTP id q19mr32502682ejc.76.1617089893062;
+        bh=FzPBTlBw1MjHnrff8Rt1PN/OBBefnhXSEo3ZW0EmbAU=;
+        b=ug8EsmpdKFdxX8yk9eXmXV6La5NJkxlJ4l0dYefrzISv19zhbUksQ6XWhYKTd3VxKl
+         SUURsGHQc0FDPNWDhum/2hPgju+NPxvGgx6htQXINcUmlwEfeK2SJVR+n85hgiba1AMI
+         JO1d9hRIquVhOtGAOyIClVfWDrkQrT45UxQ9mpJOc8i8OFaCtzJ57GjK+Wvh92iVHlpf
+         DeXwRivyT1v+6/iD7zuScuB9Dq3+pv63TEuceobCNv9aQcBxRjNIQFoN3ebfii7OVfHk
+         grpspVvS81u64BdgjypgKNhjO70CioFG721Vjmrw7jrQCvh4osFOvHyrFQ+IpMAG65lJ
+         DMDQ==
+X-Gm-Message-State: AOAM533ktNpIvUcqwHtWKzCmf6Aii2xqEzXRnM36VNuWXYG90fdSuvMT
+        yjHI4HT1FFNRVeXAz3W6wtRFjWoA8Yv4CWAn
+X-Google-Smtp-Source: ABdhPJytZKYkL3tcAScufRusigsym4RlmZ6xECFID60oCDH2h9TEwBWONMMWE4BrTcbpThkOgUN5sg==
+X-Received: by 2002:a05:6402:1157:: with SMTP id g23mr32424798edw.303.1617089893730;
         Tue, 30 Mar 2021 00:38:13 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.12
+        by smtp.googlemail.com with ESMTPSA id a3sm9556180ejv.40.2021.03.30.00.38.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 00:38:12 -0700 (PDT)
+        Tue, 30 Mar 2021 00:38:13 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        linux-rdma@vger.kernel.org,
-        Aleksei Marov <aleksei.marov@ionos.com>,
+        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
         Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCHv2 for-next 20/24] block/rnbd-srv: Remove unused arguments of rnbd_srv_rdma_ev
-Date:   Tue, 30 Mar 2021 09:37:48 +0200
-Message-Id: <20210330073752.1465613-21-gi-oh.kim@ionos.com>
+Subject: [PATCHv2 for-next 21/24] block/rnbd-clt: Generate kobject_uevent when the rnbd device state changes
+Date:   Tue, 30 Mar 2021 09:37:49 +0200
+Message-Id: <20210330073752.1465613-22-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
 References: <20210330073752.1465613-1-gi-oh.kim@ionos.com>
@@ -70,163 +66,76 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
+From: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
 
-struct rtrs_srv is not used when handling rnbd_srv_rdma_ev messages, so
-cleaned up
-rdma_ev function pointer in rtrs_srv_ops also is changed.
+When an RTRS session state changes, the transport layer generates an event
+to RNBD. Then RNBD will change the state of the RNBD client device
+accordingly.
 
-Cc: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>
-Cc: linux-rdma@vger.kernel.org
-Signed-off-by: Aleksei Marov <aleksei.marov@ionos.com>
+This commit add kobject_uevent when the RNBD device state changes. With
+this udev rules can be configured to react accordingly.
+
+Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
 Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
 Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
 ---
- drivers/block/rnbd/rnbd-srv.c          | 39 ++++++++++----------------
- drivers/infiniband/ulp/rtrs/rtrs-srv.c |  4 +--
- drivers/infiniband/ulp/rtrs/rtrs.h     |  3 +-
- 3 files changed, 18 insertions(+), 28 deletions(-)
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 1 +
+ drivers/block/rnbd/rnbd-clt.c       | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index a71b6f7662f5..78bd0ce0ebf0 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -119,8 +119,7 @@ rnbd_get_sess_dev(int dev_id, struct rnbd_srv_session *srv_sess)
- 	return sess_dev;
- }
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index 9ea4da7f894a..630351574d1b 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -491,6 +491,7 @@ static int rnbd_clt_add_dev_kobj(struct rnbd_clt_dev *dev)
+ 			      ret);
+ 		kobject_put(&dev->kobj);
+ 	}
++	kobject_uevent(gd_kobj, KOBJ_ONLINE);
  
--static int process_rdma(struct rtrs_srv *sess,
--			struct rnbd_srv_session *srv_sess,
-+static int process_rdma(struct rnbd_srv_session *srv_sess,
- 			struct rtrs_srv_op *id, void *data, u32 datalen,
- 			const void *usr, size_t usrlen)
+ 	return ret;
+ }
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index 998cadd73d47..6f3ca2e3bc02 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -110,6 +110,7 @@ static int rnbd_clt_change_capacity(struct rnbd_clt_dev *dev,
+ static int process_msg_open_rsp(struct rnbd_clt_dev *dev,
+ 				struct rnbd_msg_open_rsp *rsp)
  {
-@@ -350,8 +349,7 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
++	struct kobject *gd_kobj;
+ 	int err = 0;
+ 
+ 	mutex_lock(&dev->lock);
+@@ -128,6 +129,8 @@ static int process_msg_open_rsp(struct rnbd_clt_dev *dev,
+ 		 */
+ 		if (dev->nsectors != nsectors)
+ 			rnbd_clt_change_capacity(dev, nsectors);
++		gd_kobj = &disk_to_dev(dev->gd)->kobj;
++		kobject_uevent(gd_kobj, KOBJ_ONLINE);
+ 		rnbd_clt_info(dev, "Device online, device remapped successfully\n");
+ 	}
+ 	err = rnbd_clt_set_dev_attr(dev, rsp);
+@@ -654,14 +657,18 @@ static int send_msg_sess_info(struct rnbd_clt_session *sess, enum wait_type wait
+ static void set_dev_states_to_disconnected(struct rnbd_clt_session *sess)
+ {
+ 	struct rnbd_clt_dev *dev;
++	struct kobject *gd_kobj;
+ 
+ 	mutex_lock(&sess->lock);
+ 	list_for_each_entry(dev, &sess->devs_list, list) {
+ 		rnbd_clt_err(dev, "Device disconnected.\n");
+ 
+ 		mutex_lock(&dev->lock);
+-		if (dev->dev_state == DEV_STATE_MAPPED)
++		if (dev->dev_state == DEV_STATE_MAPPED) {
+ 			dev->dev_state = DEV_STATE_MAPPED_DISCONNECTED;
++			gd_kobj = &disk_to_dev(dev->gd)->kobj;
++			kobject_uevent(gd_kobj, KOBJ_OFFLINE);
++		}
+ 		mutex_unlock(&dev->lock);
+ 	}
  	mutex_unlock(&sess->lock);
- }
- 
--static int process_msg_close(struct rtrs_srv *rtrs,
--			     struct rnbd_srv_session *srv_sess,
-+static int process_msg_close(struct rnbd_srv_session *srv_sess,
- 			     void *data, size_t datalen, const void *usr,
- 			     size_t usrlen)
- {
-@@ -370,20 +368,18 @@ static int process_msg_close(struct rtrs_srv *rtrs,
- 	return 0;
- }
- 
--static int process_msg_open(struct rtrs_srv *rtrs,
--			    struct rnbd_srv_session *srv_sess,
-+static int process_msg_open(struct rnbd_srv_session *srv_sess,
- 			    const void *msg, size_t len,
- 			    void *data, size_t datalen);
- 
--static int process_msg_sess_info(struct rtrs_srv *rtrs,
--				 struct rnbd_srv_session *srv_sess,
-+static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 				 const void *msg, size_t len,
- 				 void *data, size_t datalen);
- 
--static int rnbd_srv_rdma_ev(struct rtrs_srv *rtrs, void *priv,
--			     struct rtrs_srv_op *id, int dir,
--			     void *data, size_t datalen, const void *usr,
--			     size_t usrlen)
-+static int rnbd_srv_rdma_ev(void *priv,
-+			    struct rtrs_srv_op *id, int dir,
-+			    void *data, size_t datalen, const void *usr,
-+			    size_t usrlen)
- {
- 	struct rnbd_srv_session *srv_sess = priv;
- 	const struct rnbd_msg_hdr *hdr = usr;
-@@ -397,19 +393,16 @@ static int rnbd_srv_rdma_ev(struct rtrs_srv *rtrs, void *priv,
- 
- 	switch (type) {
- 	case RNBD_MSG_IO:
--		return process_rdma(rtrs, srv_sess, id, data, datalen, usr,
--				    usrlen);
-+		return process_rdma(srv_sess, id, data, datalen, usr, usrlen);
- 	case RNBD_MSG_CLOSE:
--		ret = process_msg_close(rtrs, srv_sess, data, datalen,
--					usr, usrlen);
-+		ret = process_msg_close(srv_sess, data, datalen, usr, usrlen);
- 		break;
- 	case RNBD_MSG_OPEN:
--		ret = process_msg_open(rtrs, srv_sess, usr, usrlen,
--				       data, datalen);
-+		ret = process_msg_open(srv_sess, usr, usrlen, data, datalen);
- 		break;
- 	case RNBD_MSG_SESS_INFO:
--		ret = process_msg_sess_info(rtrs, srv_sess, usr, usrlen,
--					    data, datalen);
-+		ret = process_msg_sess_info(srv_sess, usr, usrlen, data,
-+					    datalen);
- 		break;
- 	default:
- 		pr_warn("Received unexpected message type %d with dir %d from session %s\n",
-@@ -662,8 +655,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
- 	return full_path;
- }
- 
--static int process_msg_sess_info(struct rtrs_srv *rtrs,
--				 struct rnbd_srv_session *srv_sess,
-+static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 				 const void *msg, size_t len,
- 				 void *data, size_t datalen)
- {
-@@ -704,8 +696,7 @@ find_srv_sess_dev(struct rnbd_srv_session *srv_sess, const char *dev_name)
- 	return NULL;
- }
- 
--static int process_msg_open(struct rtrs_srv *rtrs,
--			    struct rnbd_srv_session *srv_sess,
-+static int process_msg_open(struct rnbd_srv_session *srv_sess,
- 			    const void *msg, size_t len,
- 			    void *data, size_t datalen)
- {
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-srv.c b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-index d071809e3ed2..f7aa2a7e7442 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-srv.c
-@@ -998,7 +998,7 @@ static void process_read(struct rtrs_srv_con *con,
- 	usr_len = le16_to_cpu(msg->usr_len);
- 	data_len = off - usr_len;
- 	data = page_address(srv->chunks[buf_id]);
--	ret = ctx->ops.rdma_ev(srv, srv->priv, id, READ, data, data_len,
-+	ret = ctx->ops.rdma_ev(srv->priv, id, READ, data, data_len,
- 			   data + data_len, usr_len);
- 
- 	if (unlikely(ret)) {
-@@ -1051,7 +1051,7 @@ static void process_write(struct rtrs_srv_con *con,
- 	usr_len = le16_to_cpu(req->usr_len);
- 	data_len = off - usr_len;
- 	data = page_address(srv->chunks[buf_id]);
--	ret = ctx->ops.rdma_ev(srv, srv->priv, id, WRITE, data, data_len,
-+	ret = ctx->ops.rdma_ev(srv->priv, id, WRITE, data, data_len,
- 			   data + data_len, usr_len);
- 	if (unlikely(ret)) {
- 		rtrs_err_rl(s,
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs.h b/drivers/infiniband/ulp/rtrs/rtrs.h
-index eb050738cda1..c25a0fd8a607 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs.h
-+++ b/drivers/infiniband/ulp/rtrs/rtrs.h
-@@ -139,7 +139,6 @@ struct rtrs_srv_ops {
- 	 *			message for the data transfer will be sent to
- 	 *			the client.
- 
--	 *	@sess:		Session
- 	 *	@priv:		Private data set by rtrs_srv_set_sess_priv()
- 	 *	@id:		internal RTRS operation id
- 	 *	@dir:		READ/WRITE
-@@ -153,7 +152,7 @@ struct rtrs_srv_ops {
- 	 *	@usr:		The extra user message sent by the client (%vec)
- 	 *	@usrlen:	Size of the user message
- 	 */
--	int (*rdma_ev)(struct rtrs_srv *sess, void *priv,
-+	int (*rdma_ev)(void *priv,
- 		       struct rtrs_srv_op *id, int dir,
- 		       void *data, size_t datalen, const void *usr,
- 		       size_t usrlen);
 -- 
 2.25.1
 
