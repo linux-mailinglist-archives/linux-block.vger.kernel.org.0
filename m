@@ -2,179 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2A31350CA0
+	by mail.lfdr.de (Postfix) with ESMTP id 9662A350C9F
 	for <lists+linux-block@lfdr.de>; Thu,  1 Apr 2021 04:22:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233102AbhDACWL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S233153AbhDACWL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Wed, 31 Mar 2021 22:22:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36086 "EHLO
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54789 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233155AbhDACVt (ORCPT
+        by vger.kernel.org with ESMTP id S232271AbhDACWC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 Mar 2021 22:21:49 -0400
+        Wed, 31 Mar 2021 22:22:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617243708;
+        s=mimecast20190719; t=1617243722;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4PtUUiOR+GA8RordYFGfCjb74c0aCLBg8hc9ijEhfWk=;
-        b=JaX/abCVcK1CMnRyqThY5TjekJUxk/Oh1PUUVzoAk9fxojCFHo+EX0Qp4igL/aW7lPHGor
-        W4zv9Cxu5SRq+sVNywG1tfqmzg57HAGjYAjoS/8dbEnAE8E0y8ih0KjLQGIF4E1n5RBfWH
-        9SpFPrziC1DNUHSQb+tYVxFlqW1+wLI=
+        bh=3Zqpo560edNUB6Mjp3brYM932nhFYn7tH7BiS4D33pg=;
+        b=BwvoMcuCbpIj/xWeeJNB5HFzjRuXDzDPKPcmweepAU1CMci6+bUYblivaLuxRh6pYPR0XB
+        izCr1mea/WAalmVGBt6nVsPWRfIOmZgC7YX+vDYQs0Ff++HWqfR1jaO/duwJHkl9RIpSTc
+        U7HNpMQf7S1c19DcmWBXHamkX8auJTE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74--Z-BmyiWMJquXcPllKv-fw-1; Wed, 31 Mar 2021 22:21:46 -0400
-X-MC-Unique: -Z-BmyiWMJquXcPllKv-fw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-406-_LUHaZDAPzSdccjzUBfbvg-1; Wed, 31 Mar 2021 22:21:59 -0400
+X-MC-Unique: _LUHaZDAPzSdccjzUBfbvg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D16871084C83;
-        Thu,  1 Apr 2021 02:21:45 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD4806B9C0;
+        Thu,  1 Apr 2021 02:21:58 +0000 (UTC)
 Received: from localhost (ovpn-12-93.pek2.redhat.com [10.72.12.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C0F795D720;
-        Thu,  1 Apr 2021 02:21:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 701E05944D;
+        Thu,  1 Apr 2021 02:21:48 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
         Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V5 09/12] blk-mq: limit hw queues to be polled in each blk_poll()
-Date:   Thu,  1 Apr 2021 10:19:24 +0800
-Message-Id: <20210401021927.343727-10-ming.lei@redhat.com>
+Subject: [PATCH V5 10/12] block: add queue_to_disk() to get gendisk from request_queue
+Date:   Thu,  1 Apr 2021 10:19:25 +0800
+Message-Id: <20210401021927.343727-11-ming.lei@redhat.com>
 In-Reply-To: <20210401021927.343727-1-ming.lei@redhat.com>
 References: <20210401021927.343727-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Limit at most 8 queues are polled in each blk_pull(), avoid to
-add extra latency when queue depth is high.
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-Reviewed-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Sometimes we need to get the corresponding gendisk from request_queue.
+
+It is preferred that block drivers store private data in
+gendisk->private_data rather than request_queue->queuedata, e.g. see:
+commit c4a59c4e5db3 ("dm: stop using ->queuedata").
+
+So if only request_queue is given, we need to get its corresponding
+gendisk to get the private data stored in that gendisk.
+
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq.c | 79 +++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 55 insertions(+), 24 deletions(-)
+ include/linux/blkdev.h       | 2 ++
+ include/trace/events/kyber.h | 6 +++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 20bfc8c2d02e..e2701d502e51 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3865,36 +3865,31 @@ static inline int blk_mq_poll_hctx(struct request_queue *q,
- 	return ret;
- }
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 89a01850cf12..bfab74b45f15 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -686,6 +686,8 @@ static inline bool blk_account_rq(struct request *rq)
+ 	dma_map_page_attrs(dev, (bv)->bv_page, (bv)->bv_offset, (bv)->bv_len, \
+ 	(dir), (attrs))
  
--static int blk_mq_poll_io(struct bio *bio)
--{
--	struct request_queue *q = bio->bi_bdev->bd_disk->queue;
--	blk_qc_t cookie = bio_get_private_data(bio);
--	int ret = 0;
-+#define POLL_HCTX_MAX_CNT 8
- 
--	/* wait until the bio is submitted really */
--	if (!blk_qc_t_ready(cookie))
--		return 0;
-+static bool blk_add_unique_hctx(struct blk_mq_hw_ctx **data, int *cnt,
-+		struct blk_mq_hw_ctx *hctx)
-+{
-+	int i;
- 
--	if (!bio_flagged(bio, BIO_DONE) && blk_qc_t_valid(cookie)) {
--		struct blk_mq_hw_ctx *hctx =
--			q->queue_hw_ctx[blk_qc_t_to_queue_num(cookie)];
-+	for (i = 0; i < *cnt; i++) {
-+		if (data[i] == hctx)
-+			goto exit;
-+	}
- 
--		ret += blk_mq_poll_hctx(q, hctx);
-+	if (i < POLL_HCTX_MAX_CNT) {
-+		data[i] = hctx;
-+		(*cnt)++;
- 	}
--	return ret;
-+ exit:
-+	return *cnt == POLL_HCTX_MAX_CNT;
- }
- 
--static int blk_bio_poll_and_end_io(struct bio_grp_list *grps)
-+static void blk_build_poll_queues(struct bio_grp_list *grps,
-+		struct blk_mq_hw_ctx **data, int *cnt)
++#define queue_to_disk(q)	(dev_to_disk(kobj_to_dev((q)->kobj.parent)))
++
+ static inline bool queue_is_mq(struct request_queue *q)
  {
--	int ret = 0;
- 	int i;
+ 	return q->mq_ops;
+diff --git a/include/trace/events/kyber.h b/include/trace/events/kyber.h
+index c0e7d24ca256..f9802562edf6 100644
+--- a/include/trace/events/kyber.h
++++ b/include/trace/events/kyber.h
+@@ -30,7 +30,7 @@ TRACE_EVENT(kyber_latency,
+ 	),
  
--	/*
--	 * Poll hw queue first.
--	 *
--	 * TODO: limit max poll times and make sure to not poll same
--	 * hw queue one more time.
--	 */
- 	for (i = 0; i < grps->nr_grps; i++) {
- 		struct bio_grp_list_data *grp = &grps->head[i];
- 		struct bio *bio;
-@@ -3902,11 +3897,31 @@ static int blk_bio_poll_and_end_io(struct bio_grp_list *grps)
- 		if (bio_grp_list_grp_empty(grp))
- 			continue;
+ 	TP_fast_assign(
+-		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
++		__entry->dev		= disk_devt(queue_to_disk(q));
+ 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+ 		strlcpy(__entry->type, type, sizeof(__entry->type));
+ 		__entry->percentile	= percentile;
+@@ -59,7 +59,7 @@ TRACE_EVENT(kyber_adjust,
+ 	),
  
--		for (bio = grp->list.head; bio; bio = bio->bi_poll)
--			ret += blk_mq_poll_io(bio);
-+		for (bio = grp->list.head; bio; bio = bio->bi_poll) {
-+			blk_qc_t  cookie;
-+			struct blk_mq_hw_ctx *hctx;
-+			struct request_queue *q;
-+
-+			if (bio_flagged(bio, BIO_DONE))
-+				continue;
-+
-+			/* wait until the bio is submitted really */
-+			cookie = bio_get_private_data(bio);
-+			if (!blk_qc_t_ready(cookie) || !blk_qc_t_valid(cookie))
-+				continue;
-+
-+			q = bio->bi_bdev->bd_disk->queue;
-+			hctx = q->queue_hw_ctx[blk_qc_t_to_queue_num(cookie)];
-+			if (blk_add_unique_hctx(data, cnt, hctx))
-+				return;
-+		}
- 	}
-+}
-+
-+static void blk_bio_poll_reap_ios(struct bio_grp_list *grps)
-+{
-+	int i;
+ 	TP_fast_assign(
+-		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
++		__entry->dev		= disk_devt(queue_to_disk(q));
+ 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+ 		__entry->depth		= depth;
+ 	),
+@@ -81,7 +81,7 @@ TRACE_EVENT(kyber_throttled,
+ 	),
  
--	/* reap bios */
- 	for (i = 0; i < grps->nr_grps; i++) {
- 		struct bio_grp_list_data *grp = &grps->head[i];
- 		struct bio *bio;
-@@ -3931,6 +3946,22 @@ static int blk_bio_poll_and_end_io(struct bio_grp_list *grps)
- 		}
- 		__bio_grp_list_merge(&grp->list, &bl);
- 	}
-+}
-+
-+static int blk_bio_poll_and_end_io(struct bio_grp_list *grps)
-+{
-+	int ret = 0;
-+	int i;
-+	struct blk_mq_hw_ctx *hctx[POLL_HCTX_MAX_CNT];
-+	int cnt = 0;
-+
-+	blk_build_poll_queues(grps, hctx, &cnt);
-+
-+	for (i = 0; i < cnt; i++)
-+		ret += blk_mq_poll_hctx(hctx[i]->queue, hctx[i]);
-+
-+	blk_bio_poll_reap_ios(grps);
-+
- 	return ret;
- }
+ 	TP_fast_assign(
+-		__entry->dev		= disk_devt(dev_to_disk(kobj_to_dev(q->kobj.parent)));
++		__entry->dev		= disk_devt(queue_to_disk(q));
+ 		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+ 	),
  
 -- 
 2.29.2
