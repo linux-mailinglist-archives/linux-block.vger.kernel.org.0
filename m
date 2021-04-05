@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7994535448D
-	for <lists+linux-block@lfdr.de>; Mon,  5 Apr 2021 18:05:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C823544A2
+	for <lists+linux-block@lfdr.de>; Mon,  5 Apr 2021 18:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242120AbhDEQFf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Apr 2021 12:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
+        id S242002AbhDEQFs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Apr 2021 12:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241958AbhDEQFb (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 5 Apr 2021 12:05:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 10924613DA;
-        Mon,  5 Apr 2021 16:05:23 +0000 (UTC)
+        id S239140AbhDEQFk (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 5 Apr 2021 12:05:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1CC01613E1;
+        Mon,  5 Apr 2021 16:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617638724;
-        bh=Pnu4XLT048i01pPL7dUpm0pczXeNSgGFed1aJZ2t7Wc=;
+        s=k20201202; t=1617638733;
+        bh=KYAN3BxRm/d45qQPO+VJEPD+cFCDPf1hNxi5Ys+0qpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxePwx7IPWUlKbMJXhHYqL1OdpYkYg66aUNzLF4/akhVXRS0zsFypaAbyzJXltCGk
-         Hs2B/omW8SfnfbgrCG+aXgnSR1tt7WqCa0zq7JyDH5c6iGxaoOBAMqmB0vrrbom2Dw
-         FJbggzSt9dM37d6agex3PxIMI2bru5WVoMDOtFs+n2eUTIbe0BvaoiIT2VuaQZySpR
-         cvcfXuEN3os5HIp7vMxZU6inMGpoP1MylT9qVqTmekgvG9BHasH08j+oE4geYhCJRY
-         HMa1Cup3dEEDNKs6lgaP5yf20Df7MyXhKnsmTibDDc7QvGsLJoLCgP0/WO70P03csg
-         wmpp2axtZz6bg==
+        b=h92QLovv6yxv98kykkoj2uXOxV3D4/DMS5Xblt2+8i94wS+e5AehFAOCNRUF7P/Qq
+         9KqZaxmO8+og+FbH6lGedQhZDggxIuL0QJr+oqfUdBFt9IwkOIzEOTLqXpYjyRe7oc
+         FLsnx22Y0/oo4GH4VNZuzZN3X4XVsIGlKX0//UOWTvhTwuoEuEePp7i4dHMhIdSZGw
+         8SwPyQL4Qr+QM5eLPZUyeBN0uju2a6qrObOgYXlFJX44SZN/obdyCofPrXbBopdPj/
+         OBqvVtIVizbTtUD5DrEdP11JvqzGQDiNSAXLMdtfs0Rl0MASbEG1uEXciJtO8PcbYg
+         JqTCIlnMqc88A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yufen Yu <yuyufen@huawei.com>, Keith Busch <kbusch@kernel.org>,
         Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 7/8] block: only update parent bi_status when bio fail
-Date:   Mon,  5 Apr 2021 12:05:14 -0400
-Message-Id: <20210405160515.269020-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 5/5] block: only update parent bi_status when bio fail
+Date:   Mon,  5 Apr 2021 12:05:26 -0400
+Message-Id: <20210405160526.269140-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210405160515.269020-1-sashal@kernel.org>
-References: <20210405160515.269020-1-sashal@kernel.org>
+In-Reply-To: <20210405160526.269140-1-sashal@kernel.org>
+References: <20210405160526.269140-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -101,10 +101,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index 3d757055305f..fe749404ef93 100644
+index 1384f9790882..30df1b45dde8 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -314,7 +314,7 @@ static struct bio *__bio_chain_endio(struct bio *bio)
+@@ -312,7 +312,7 @@ static struct bio *__bio_chain_endio(struct bio *bio)
  {
  	struct bio *parent = bio->bi_private;
  
