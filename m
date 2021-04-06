@@ -2,207 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 142B3354D59
-	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF01E354D4F
+	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244157AbhDFHHg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Apr 2021 03:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244161AbhDFHHf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Apr 2021 03:07:35 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFB4C06174A
-        for <linux-block@vger.kernel.org>; Tue,  6 Apr 2021 00:07:27 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id p4so4945221edr.2
-        for <linux-block@vger.kernel.org>; Tue, 06 Apr 2021 00:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FGH+Ljl4s6SmZtr/mbRqxMi5iJCFYf0z8DPotTgMP2c=;
-        b=hczZH0CqXAUh4LWKFyZNcWcaOiFK88nParQCciRud6pvWm8Nxir6qEuhCEuTp6jFYX
-         3NHG+20jY0hdjFgYt2BR7syxk6KbQk9aA5HsOOfbSgd6yqDUhY7CAWR+lMY1LK1RohDp
-         hK1i5/yGtIkGnDju+fe9EXiSdV1Y2qR0PlO/KpPGUzhlWJFeAc0L1MXqP+32cfwPtNuf
-         WG5QWbUvKTwyR6opQzDLz0i0CGaKJ8Pt5LEip/enHkOVrWfDnGx+KQJwg875w86qaGKB
-         j/Xa+ma4Xa1S0Aqk+/Nfqt8sswYPxgYWylq9Gk/7oBQ9oG768+iTEGjHHD+EUu8sY1DG
-         75fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FGH+Ljl4s6SmZtr/mbRqxMi5iJCFYf0z8DPotTgMP2c=;
-        b=Cf88r5U8I/KbPsiGSK5PKhUU9bcENXXu2uEq7pvNVQDxYC7oBL2FxKBY/cW4L6Y9pK
-         cmGWASk/eCEbn75mz+lchdXWU6ZlewVFFs15G6Qel28SqjCCd0OKUPNaUDWrpubrK1I/
-         Th5Rg8RktyJsZf/1M3RtE4kskvdN5yCg1wQmJAHZlzSbMSCZub390WMAzZ8XpcOG0aKG
-         VP0jxc4JUIeyJZ6PbTlgI9gWcRKEzE60LjqvR1PjGoSKnSWEDQdk7GMXGgKC7nmggJQr
-         fxdNvtFFUKTMoAQVo71sCPkiyzB570pEY55xrQ9+BImRMaS1gshoiDbU2ny2UvhQC6cF
-         s9Og==
-X-Gm-Message-State: AOAM5310SX1QnVTXIvJnG6e5/cnng4wD1dgUHsoG5Lu1z/bdHlQ7bl2D
-        jG9IHJetaUSkElr4SZK7KlGzCmLxms3150Th
-X-Google-Smtp-Source: ABdhPJzo55eFGexFJ4OQtjswzKl2/hESbYXS4DXd2iLhGXrPlJRZ0VPFUR1UlcO/nwyA51bZo9haxA==
-X-Received: by 2002:a05:6402:4388:: with SMTP id o8mr22685282edc.262.1617692846361;
-        Tue, 06 Apr 2021 00:07:26 -0700 (PDT)
-Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id rh6sm3976566ejb.39.2021.04.06.00.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Apr 2021 00:07:26 -0700 (PDT)
-From:   Gioh Kim <gi-oh.kim@ionos.com>
+        id S244136AbhDFHHP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Apr 2021 03:07:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60728 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244153AbhDFHHO (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 6 Apr 2021 03:07:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1617692826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HfFh6ZjZPthEgwcndwZi/HB6XSEIUsHFZ7RPWwdJ02w=;
+        b=m3AYf1wMm3xReVtZ0WOd+GNRx246Jf4m7xyIeTtD13NJ6mXlmGhHYORhW+gTiLMkdJeR3e
+        xhNUG2b0Fq57eLZX1JpAljY8zygb4I/j83NqWAOpUDWOrmNNjpyeA9VQq4prHnDEZz6RJN
+        s2DnJdEW+GVmRpD+6DEr1wQLsC76oeI=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D69FBAE81;
+        Tue,  6 Apr 2021 07:07:06 +0000 (UTC)
+Subject: Re: [PATCH] blk-mq: Always use blk_mq_is_sbitmap_shared
 To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCHv3 for-next 09/19] block/rnbd-srv: Prevent a deadlock generated by accessing sysfs in parallel
-Date:   Tue,  6 Apr 2021 09:07:06 +0200
-Message-Id: <20210406070716.168541-10-gi-oh.kim@ionos.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210406070716.168541-1-gi-oh.kim@ionos.com>
-References: <20210406070716.168541-1-gi-oh.kim@ionos.com>
+Cc:     axboe@kernel.dk
+References: <20210311081713.2763171-1-nborisov@suse.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Message-ID: <69af0d7b-192a-eebd-9dff-223a301e9605@suse.com>
+Date:   Tue, 6 Apr 2021 10:07:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
+In-Reply-To: <20210311081713.2763171-1-nborisov@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
-We got a warning message below.
-When server tries to close one session by force, it locks the sysfs
-interface and locks the srv_sess lock.
-The problem is that client can send a request to close at the same time.
-By close request, server locks the srv_sess lock and locks the sysfs
-to remove the sysfs interfaces.
 
-The simplest way to prevent that situation could be just use
-mutex_trylock.
+On 11.03.21 г. 10:17, Nikolay Borisov wrote:
+> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
 
-[  234.153965] ======================================================
-[  234.154093] WARNING: possible circular locking dependency detected
-[  234.154219] 5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10 Tainted: G           O
-[  234.154381] ------------------------------------------------------
-[  234.154531] kworker/1:1H/618 is trying to acquire lock:
-[  234.154651] ffff8887a09db0a8 (kn->count#132){++++}, at: kernfs_remove_by_name_ns+0x40/0x80
-[  234.154819]
-               but task is already holding lock:
-[  234.154965] ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
-[  234.155132]
-               which lock already depends on the new lock.
+Ping
 
-[  234.155311]
-               the existing dependency chain (in reverse order) is:
-[  234.155462]
-               -> #1 (&srv_sess->lock){+.+.}:
-[  234.155614]        __mutex_lock+0x134/0xcb0
-[  234.155761]        rnbd_srv_sess_dev_force_close+0x36/0x50 [rnbd_server]
-[  234.155889]        rnbd_srv_dev_session_force_close_store+0x69/0xc0 [rnbd_server]
-[  234.156042]        kernfs_fop_write+0x13f/0x240
-[  234.156162]        vfs_write+0xf3/0x280
-[  234.156278]        ksys_write+0xba/0x150
-[  234.156395]        do_syscall_64+0x62/0x270
-[  234.156513]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  234.156632]
-               -> #0 (kn->count#132){++++}:
-[  234.156782]        __lock_acquire+0x129e/0x23a0
-[  234.156900]        lock_acquire+0xf3/0x210
-[  234.157043]        __kernfs_remove+0x42b/0x4c0
-[  234.157161]        kernfs_remove_by_name_ns+0x40/0x80
-[  234.157282]        remove_files+0x3f/0xa0
-[  234.157399]        sysfs_remove_group+0x4a/0xb0
-[  234.157519]        rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
-[  234.157648]        rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
-[  234.157775]        process_io_req+0x29a/0x6a0 [rtrs_server]
-[  234.157924]        __ib_process_cq+0x8c/0x100 [ib_core]
-[  234.158709]        ib_cq_poll_work+0x31/0xb0 [ib_core]
-[  234.158834]        process_one_work+0x4e5/0xaa0
-[  234.158958]        worker_thread+0x65/0x5c0
-[  234.159078]        kthread+0x1e0/0x200
-[  234.159194]        ret_from_fork+0x24/0x30
-[  234.159309]
-               other info that might help us debug this:
-
-[  234.159513]  Possible unsafe locking scenario:
-
-[  234.159658]        CPU0                    CPU1
-[  234.159775]        ----                    ----
-[  234.159891]   lock(&srv_sess->lock);
-[  234.160005]                                lock(kn->count#132);
-[  234.160128]                                lock(&srv_sess->lock);
-[  234.160250]   lock(kn->count#132);
-[  234.160364]
-                *** DEADLOCK ***
-
-[  234.160536] 3 locks held by kworker/1:1H/618:
-[  234.160677]  #0: ffff8883ca1ed528 ((wq_completion)ib-comp-wq){+.+.}, at: process_one_work+0x40a/0xaa0
-[  234.160840]  #1: ffff8883d2d5fe10 ((work_completion)(&cq->work)){+.+.}, at: process_one_work+0x40a/0xaa0
-[  234.161003]  #2: ffff8887ae5f6518 (&srv_sess->lock){+.+.}, at: rnbd_srv_rdma_ev+0x144/0x1590 [rnbd_server]
-[  234.161168]
-               stack backtrace:
-[  234.161312] CPU: 1 PID: 618 Comm: kworker/1:1H Tainted: G           O      5.4.84-storage #5.4.84-1+feature+linux+5.4.y+dbg+20201216.1319+b6b887b~deb10
-[  234.161490] Hardware name: Supermicro H8QG6/H8QG6, BIOS 3.00       09/04/2012
-[  234.161643] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
-[  234.161765] Call Trace:
-[  234.161910]  dump_stack+0x96/0xe0
-[  234.162028]  check_noncircular+0x29e/0x2e0
-[  234.162148]  ? print_circular_bug+0x100/0x100
-[  234.162267]  ? register_lock_class+0x1ad/0x8a0
-[  234.162385]  ? __lock_acquire+0x68e/0x23a0
-[  234.162505]  ? trace_event_raw_event_lock+0x190/0x190
-[  234.162626]  __lock_acquire+0x129e/0x23a0
-[  234.162746]  ? register_lock_class+0x8a0/0x8a0
-[  234.162866]  lock_acquire+0xf3/0x210
-[  234.162982]  ? kernfs_remove_by_name_ns+0x40/0x80
-[  234.163127]  __kernfs_remove+0x42b/0x4c0
-[  234.163243]  ? kernfs_remove_by_name_ns+0x40/0x80
-[  234.163363]  ? kernfs_fop_readdir+0x3b0/0x3b0
-[  234.163482]  ? strlen+0x1f/0x40
-[  234.163596]  ? strcmp+0x30/0x50
-[  234.163712]  kernfs_remove_by_name_ns+0x40/0x80
-[  234.163832]  remove_files+0x3f/0xa0
-[  234.163948]  sysfs_remove_group+0x4a/0xb0
-[  234.164068]  rnbd_srv_destroy_dev_session_sysfs+0x19/0x30 [rnbd_server]
-[  234.164196]  rnbd_srv_rdma_ev+0x14c/0x1590 [rnbd_server]
-[  234.164345]  ? _raw_spin_unlock_irqrestore+0x43/0x50
-[  234.164466]  ? lockdep_hardirqs_on+0x1a8/0x290
-[  234.164597]  ? mlx4_ib_poll_cq+0x927/0x1280 [mlx4_ib]
-[  234.164732]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
-[  234.164859]  process_io_req+0x29a/0x6a0 [rtrs_server]
-[  234.164982]  ? rnbd_get_sess_dev+0x270/0x270 [rnbd_server]
-[  234.165130]  __ib_process_cq+0x8c/0x100 [ib_core]
-[  234.165279]  ib_cq_poll_work+0x31/0xb0 [ib_core]
-[  234.165404]  process_one_work+0x4e5/0xaa0
-[  234.165550]  ? pwq_dec_nr_in_flight+0x160/0x160
-[  234.165675]  ? do_raw_spin_lock+0x119/0x1d0
-[  234.165796]  worker_thread+0x65/0x5c0
-[  234.165914]  ? process_one_work+0xaa0/0xaa0
-[  234.166031]  kthread+0x1e0/0x200
-[  234.166147]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[  234.166268]  ret_from_fork+0x24/0x30
-[  234.251591] rnbd_server L243: </dev/loop1@close_device_session>: Device closed
-[  234.604221] rnbd_server L264: RTRS Session close_device_session disconnected
-
-Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
-Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
----
- drivers/block/rnbd/rnbd-srv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index a4fd9f167c18..1549a6361630 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -334,7 +334,9 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
- 	struct rnbd_srv_session	*sess = sess_dev->sess;
- 
- 	sess_dev->keep_id = true;
--	mutex_lock(&sess->lock);
-+	/* It is already started to close by client's close message. */
-+	if (!mutex_trylock(&sess->lock))
-+		return;
- 	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
- 	mutex_unlock(&sess->lock);
- }
--- 
-2.25.1
-
+> ---
+>  block/blk-mq-tag.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+> index 9c92053e704d..99bc5fe14e9b 100644
+> --- a/block/blk-mq-tag.c
+> +++ b/block/blk-mq-tag.c
+> @@ -517,7 +517,7 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+>  	tags->nr_tags = total_tags;
+>  	tags->nr_reserved_tags = reserved_tags;
+>  
+> -	if (flags & BLK_MQ_F_TAG_HCTX_SHARED)
+> +	if (blk_mq_is_sbitmap_shared(flags))
+>  		return tags;
+>  
+>  	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
+> @@ -529,7 +529,7 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
+>  
+>  void blk_mq_free_tags(struct blk_mq_tags *tags, unsigned int flags)
+>  {
+> -	if (!(flags & BLK_MQ_F_TAG_HCTX_SHARED)) {
+> +	if (!blk_mq_is_sbitmap_shared(flags)) {
+>  		sbitmap_queue_free(tags->bitmap_tags);
+>  		sbitmap_queue_free(tags->breserved_tags);
+>  	}
+> 
