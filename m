@@ -2,60 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DD3354D5B
-	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E702354D5C
+	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244161AbhDFHHh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S244165AbhDFHHh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 6 Apr 2021 03:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58934 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244156AbhDFHHf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Apr 2021 03:07:35 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A080C06175F
+        with ESMTP id S244160AbhDFHHg (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Apr 2021 03:07:36 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E465FC06174A
         for <linux-block@vger.kernel.org>; Tue,  6 Apr 2021 00:07:28 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id r22so2717442edq.9
+Received: by mail-ed1-x52f.google.com with SMTP id w18so15277701edc.0
         for <linux-block@vger.kernel.org>; Tue, 06 Apr 2021 00:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+WusjvsYw5StKARzVGPy5VqECBTOsgPT1toBxn5pBW8=;
-        b=NWVVj+xsbec1zi5irfFY60twDIp2xhY45HkRjOWKXLfDEK7kT5z+tVqfZmbVxA1YQ2
-         dhb8IXFyzZKGJGu1tGWEHBCC3OjaKfyUGGlKsfSYQT+JphXuN8a45Jbdz1QRoPe8MHWS
-         vec/FaYgDYTXhX7SP08PRKLCIDwdqs6cMdG4TmIRnRadNYwokZ2qHxK7eY6PxWps6UP/
-         E6f7+Rot4/yVjg10MB+6zHkLxLC641W+lemtXH8X69EEGC1pP7Y5U+nCQkiaMTBIk4EX
-         pa1Ql5r2Ai9PHSYpEok0PnBGW/JjC8VImzSMgFivaaHhPPqZjEsbr+twTQUg9NPm6pxj
-         gGCw==
+        bh=d7YY4Yx0tOezgEdUSrG57nr2i7WNMjSlXas7hudpooo=;
+        b=Gq+AJzHwygRQecO1DUI06EgwmtIa2x4/T8iosx3EBM8c3yRRgv7bGbKNjbQ0AIhmRe
+         5DM6KEOIFHqB3syV7L9gJZgazFTYf2KMtOj+5KAsvarLRVq0h/YIzTi1yIrylaGr/M9E
+         nEOAMPYRVSrJc668DKuUQWy0Rvh2PfHhlBVo3/d1oHvo3MCbG3cl8XrtRuNuiKHlTXr2
+         epgIHAP1rg37dbX2xVhRAyvuUX1EXOVeGxUi+YqNLIEXfTgRN1pffiiy5axpIlxNw466
+         mc5wemeI9vAsCRVdnb+QJcfSu/BtNlC8gt5IgOLM4rDqHojOKvB69+cogP8YuPDHwi8X
+         kXpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+WusjvsYw5StKARzVGPy5VqECBTOsgPT1toBxn5pBW8=;
-        b=c7b66KVIa6u64ROuiQHSoblt3yGJCufTXSF6xoh0Z3+BfSCs9dfhGJboIAW6xx7t4d
-         Ix4sQK5UdfPhBIk0MVLtdKVZSlR3UxcFeSIEeJIJZS+h8Sbx5uR2sIqf6JKhAi+/AxPX
-         GAij160sOX3mj5ObAiqK6cVW9yRcB5art/P6+R/vJ8wPEypRQq0Hic65PZQy8pZAfGz7
-         WVWM0XXI/Un6nID5Bo+Ncleg1y0RDFIt7q/Em6EzH27Sye3FLwpuLO8tG5WIaRiqsorj
-         8rKxd/yYL3kZpBMIQh957BrlxqrpBczJBXtW9faPLfTSea6bQxsOzGs1sPg3jogbn9zL
-         zyWw==
-X-Gm-Message-State: AOAM533IY/BGwLC6rRB9zG4SFjjStAz9Q9dknha+QRsM86tcDU6Ck67q
-        INmx33ek4aQv4G12Gce0QhoEoTg/eqjZrC3y
-X-Google-Smtp-Source: ABdhPJzfHZjDCaSxZMZCqSvGZZAnCtXbuJ9dcytYS4TgNxTV0+XodGf9U1kK+TYXhLgYylCQaVYRsQ==
-X-Received: by 2002:a05:6402:430c:: with SMTP id m12mr37036358edc.138.1617692847015;
+        bh=d7YY4Yx0tOezgEdUSrG57nr2i7WNMjSlXas7hudpooo=;
+        b=SvgX9UP93W3U8o0zIH/HtdqiRm3Z11u6aQk8PP6c/Ro735XExbFp9XtyLe48rMyWFL
+         02Iy1hWQIWs2GeUdYkfhJej7TFGQdh+3JG55oUech5BH466LAwP5tXSUaA6lReJe4M0e
+         RjnU/PX8JYlxpggNiwPa/2vmfqXKxHWjRmoGYa7QSLj2LOAcTdxyMHuh5vzfZ6DZYdBr
+         EY+5Ryml9mnue3O4z9Rr/kpaqI/ngVObwuZmiaztoV6LUImGqzFGBLnuGnH1USLxpPRa
+         CWrEyFgoUDAbjE4XGVTjyVuIv9kAhkQjBd6uNOmSAoCUqRQsUh/VDd6ft/C+It+ltqUb
+         LFzA==
+X-Gm-Message-State: AOAM5307v2CrArSCUBP8rhx1ttylcblFYFy6OyOoVRZqdy3c1skiRe9F
+        x1oSPASdXNovhPuIk0rRzcPpINkqAa9PRpFk
+X-Google-Smtp-Source: ABdhPJwVeqfTK7amZO6bEOReVOaiRcS+6tLwJ2OtzEytlMVd6aVDY1v+p4dcvmhHy99aH1tvzHCCLg==
+X-Received: by 2002:aa7:cd12:: with SMTP id b18mr17421092edw.340.1617692847611;
         Tue, 06 Apr 2021 00:07:27 -0700 (PDT)
 Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id rh6sm3976566ejb.39.2021.04.06.00.07.26
+        by smtp.googlemail.com with ESMTPSA id rh6sm3976566ejb.39.2021.04.06.00.07.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Apr 2021 00:07:26 -0700 (PDT)
+        Tue, 06 Apr 2021 00:07:27 -0700 (PDT)
 From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
 Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
         bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Gioh Kim <gi-oh.kim@ionos.com>
-Subject: [PATCHv3 for-next 10/19] block/rnbd-srv: Remove force_close file after holding a lock
-Date:   Tue,  6 Apr 2021 09:07:07 +0200
-Message-Id: <20210406070716.168541-11-gi-oh.kim@ionos.com>
+        Tom Rix <trix@redhat.com>, Gioh Kim <gi-oh.kim@ionos.com>
+Subject: [PATCHv3 for-next 11/19] block/rnbd-clt: Improve find_or_create_sess() return check
+Date:   Tue,  6 Apr 2021 09:07:08 +0200
+Message-Id: <20210406070716.168541-12-gi-oh.kim@ionos.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210406070716.168541-1-gi-oh.kim@ionos.com>
 References: <20210406070716.168541-1-gi-oh.kim@ionos.com>
@@ -65,79 +64,81 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
+From: Tom Rix <trix@redhat.com>
 
-We changed the rnbd_srv_sess_dev_force_close to use try-lock
-because rnbd_srv_sess_dev_force_close and process_msg_close
-can generate a deadlock.
+clang static analysis reports this problem
 
-Now rnbd_srv_sess_dev_force_close would do nothing
-if it fails to get the lock. So removing the force_close
-file should be moved to after the lock. Or the force_close
-file is removed but the others are not removed.
+rnbd-clt.c:1212:11: warning: Branch condition evaluates to a
+  garbage value
+        else if (!first)
+                 ^~~~~~
 
-Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
-Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
+This is triggered in the find_and_get_or_create_sess() call
+because the variable first is not initialized and the
+earlier check is specifically for
+
+	if (sess == ERR_PTR(-ENOMEM))
+
+This is false positive.
+
+But the if-check can be reduced by initializing first to
+false and then returning if the call to find_or_creat_sess()
+does not set it to true.  When it remains false, either
+sess will be valid or not.  The not case is caught by
+find_and_get_or_create_sess()'s caller rnbd_clt_map_device()
+
+	sess = find_and_get_or_create_sess(...);
+	if (IS_ERR(sess))
+		return ERR_CAST(sess);
+
+Since find_and_get_or_create_sess() initializes first to false
+setting it in find_or_create_sess() is not needed.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
+Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
 ---
- drivers/block/rnbd/rnbd-srv-sysfs.c | 5 +----
- drivers/block/rnbd/rnbd-srv.c       | 5 ++++-
- drivers/block/rnbd/rnbd-srv.h       | 3 ++-
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/block/rnbd/rnbd-clt.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
-index 05ffe488ddc6..acf5fced11ef 100644
---- a/drivers/block/rnbd/rnbd-srv-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
-@@ -147,10 +147,7 @@ static ssize_t rnbd_srv_dev_session_force_close_store(struct kobject *kobj,
- 	}
- 
- 	rnbd_srv_info(sess_dev, "force close requested\n");
--
--	/* first remove sysfs itself to avoid deadlock */
--	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
--	rnbd_srv_sess_dev_force_close(sess_dev);
-+	rnbd_srv_sess_dev_force_close(sess_dev, attr);
- 
- 	return count;
- }
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 1549a6361630..a9bb414f7442 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -329,7 +329,8 @@ static int rnbd_srv_link_ev(struct rtrs_srv *rtrs,
- 	}
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index 652b41cc4492..9b44aac680d5 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -910,6 +910,7 @@ static struct rnbd_clt_session *__find_and_get_sess(const char *sessname)
+ 	return NULL;
  }
  
--void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
-+void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
-+				   struct kobj_attribute *attr)
++/* caller is responsible for initializing 'first' to false */
+ static struct
+ rnbd_clt_session *find_or_create_sess(const char *sessname, bool *first)
  {
- 	struct rnbd_srv_session	*sess = sess_dev->sess;
+@@ -925,8 +926,7 @@ rnbd_clt_session *find_or_create_sess(const char *sessname, bool *first)
+ 		}
+ 		list_add(&sess->list, &sess_list);
+ 		*first = true;
+-	} else
+-		*first = false;
++	}
+ 	mutex_unlock(&sess_lock);
  
-@@ -337,6 +338,8 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
- 	/* It is already started to close by client's close message. */
- 	if (!mutex_trylock(&sess->lock))
- 		return;
-+	/* first remove sysfs itself to avoid deadlock */
-+	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
- 	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
- 	mutex_unlock(&sess->lock);
- }
-diff --git a/drivers/block/rnbd/rnbd-srv.h b/drivers/block/rnbd/rnbd-srv.h
-index b157371c25ed..98ddc31eb408 100644
---- a/drivers/block/rnbd/rnbd-srv.h
-+++ b/drivers/block/rnbd/rnbd-srv.h
-@@ -64,7 +64,8 @@ struct rnbd_srv_sess_dev {
- 	enum rnbd_access_mode		access_mode;
- };
+ 	return sess;
+@@ -1194,13 +1194,11 @@ find_and_get_or_create_sess(const char *sessname,
+ 	struct rnbd_clt_session *sess;
+ 	struct rtrs_attrs attrs;
+ 	int err;
+-	bool first;
++	bool first = false;
+ 	struct rtrs_clt_ops rtrs_ops;
  
--void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev);
-+void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
-+				   struct kobj_attribute *attr);
- /* rnbd-srv-sysfs.c */
+ 	sess = find_or_create_sess(sessname, &first);
+-	if (sess == ERR_PTR(-ENOMEM))
+-		return ERR_PTR(-ENOMEM);
+-	else if (!first)
++	if (!first)
+ 		return sess;
  
- int rnbd_srv_create_dev_sysfs(struct rnbd_srv_dev *dev,
+ 	if (!path_cnt) {
 -- 
 2.25.1
 
