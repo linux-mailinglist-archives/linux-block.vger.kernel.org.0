@@ -2,77 +2,142 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF01E354D4F
-	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87DD3354D5B
+	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 09:07:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244136AbhDFHHP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Apr 2021 03:07:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60728 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244153AbhDFHHO (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 6 Apr 2021 03:07:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1617692826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HfFh6ZjZPthEgwcndwZi/HB6XSEIUsHFZ7RPWwdJ02w=;
-        b=m3AYf1wMm3xReVtZ0WOd+GNRx246Jf4m7xyIeTtD13NJ6mXlmGhHYORhW+gTiLMkdJeR3e
-        xhNUG2b0Fq57eLZX1JpAljY8zygb4I/j83NqWAOpUDWOrmNNjpyeA9VQq4prHnDEZz6RJN
-        s2DnJdEW+GVmRpD+6DEr1wQLsC76oeI=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D69FBAE81;
-        Tue,  6 Apr 2021 07:07:06 +0000 (UTC)
-Subject: Re: [PATCH] blk-mq: Always use blk_mq_is_sbitmap_shared
+        id S244161AbhDFHHh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Apr 2021 03:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244156AbhDFHHf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Apr 2021 03:07:35 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A080C06175F
+        for <linux-block@vger.kernel.org>; Tue,  6 Apr 2021 00:07:28 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id r22so2717442edq.9
+        for <linux-block@vger.kernel.org>; Tue, 06 Apr 2021 00:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+WusjvsYw5StKARzVGPy5VqECBTOsgPT1toBxn5pBW8=;
+        b=NWVVj+xsbec1zi5irfFY60twDIp2xhY45HkRjOWKXLfDEK7kT5z+tVqfZmbVxA1YQ2
+         dhb8IXFyzZKGJGu1tGWEHBCC3OjaKfyUGGlKsfSYQT+JphXuN8a45Jbdz1QRoPe8MHWS
+         vec/FaYgDYTXhX7SP08PRKLCIDwdqs6cMdG4TmIRnRadNYwokZ2qHxK7eY6PxWps6UP/
+         E6f7+Rot4/yVjg10MB+6zHkLxLC641W+lemtXH8X69EEGC1pP7Y5U+nCQkiaMTBIk4EX
+         pa1Ql5r2Ai9PHSYpEok0PnBGW/JjC8VImzSMgFivaaHhPPqZjEsbr+twTQUg9NPm6pxj
+         gGCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+WusjvsYw5StKARzVGPy5VqECBTOsgPT1toBxn5pBW8=;
+        b=c7b66KVIa6u64ROuiQHSoblt3yGJCufTXSF6xoh0Z3+BfSCs9dfhGJboIAW6xx7t4d
+         Ix4sQK5UdfPhBIk0MVLtdKVZSlR3UxcFeSIEeJIJZS+h8Sbx5uR2sIqf6JKhAi+/AxPX
+         GAij160sOX3mj5ObAiqK6cVW9yRcB5art/P6+R/vJ8wPEypRQq0Hic65PZQy8pZAfGz7
+         WVWM0XXI/Un6nID5Bo+Ncleg1y0RDFIt7q/Em6EzH27Sye3FLwpuLO8tG5WIaRiqsorj
+         8rKxd/yYL3kZpBMIQh957BrlxqrpBczJBXtW9faPLfTSea6bQxsOzGs1sPg3jogbn9zL
+         zyWw==
+X-Gm-Message-State: AOAM533IY/BGwLC6rRB9zG4SFjjStAz9Q9dknha+QRsM86tcDU6Ck67q
+        INmx33ek4aQv4G12Gce0QhoEoTg/eqjZrC3y
+X-Google-Smtp-Source: ABdhPJzfHZjDCaSxZMZCqSvGZZAnCtXbuJ9dcytYS4TgNxTV0+XodGf9U1kK+TYXhLgYylCQaVYRsQ==
+X-Received: by 2002:a05:6402:430c:: with SMTP id m12mr37036358edc.138.1617692847015;
+        Tue, 06 Apr 2021 00:07:27 -0700 (PDT)
+Received: from gkim-laptop.fkb.profitbricks.net (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
+        by smtp.googlemail.com with ESMTPSA id rh6sm3976566ejb.39.2021.04.06.00.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Apr 2021 00:07:26 -0700 (PDT)
+From:   Gioh Kim <gi-oh.kim@ionos.com>
 To:     linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk
-References: <20210311081713.2763171-1-nborisov@suse.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Message-ID: <69af0d7b-192a-eebd-9dff-223a301e9605@suse.com>
-Date:   Tue, 6 Apr 2021 10:07:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
+        Gioh Kim <gi-oh.kim@ionos.com>
+Subject: [PATCHv3 for-next 10/19] block/rnbd-srv: Remove force_close file after holding a lock
+Date:   Tue,  6 Apr 2021 09:07:07 +0200
+Message-Id: <20210406070716.168541-11-gi-oh.kim@ionos.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210406070716.168541-1-gi-oh.kim@ionos.com>
+References: <20210406070716.168541-1-gi-oh.kim@ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <20210311081713.2763171-1-nborisov@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
 
+We changed the rnbd_srv_sess_dev_force_close to use try-lock
+because rnbd_srv_sess_dev_force_close and process_msg_close
+can generate a deadlock.
 
-On 11.03.21 г. 10:17, Nikolay Borisov wrote:
-> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Now rnbd_srv_sess_dev_force_close would do nothing
+if it fails to get the lock. So removing the force_close
+file should be moved to after the lock. Or the force_close
+file is removed but the others are not removed.
 
-Ping
+Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
+Signed-off-by: Md Haris Iqbal <haris.iqbal@ionos.com>
+Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
+---
+ drivers/block/rnbd/rnbd-srv-sysfs.c | 5 +----
+ drivers/block/rnbd/rnbd-srv.c       | 5 ++++-
+ drivers/block/rnbd/rnbd-srv.h       | 3 ++-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-> ---
->  block/blk-mq-tag.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-> index 9c92053e704d..99bc5fe14e9b 100644
-> --- a/block/blk-mq-tag.c
-> +++ b/block/blk-mq-tag.c
-> @@ -517,7 +517,7 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
->  	tags->nr_tags = total_tags;
->  	tags->nr_reserved_tags = reserved_tags;
->  
-> -	if (flags & BLK_MQ_F_TAG_HCTX_SHARED)
-> +	if (blk_mq_is_sbitmap_shared(flags))
->  		return tags;
->  
->  	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
-> @@ -529,7 +529,7 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
->  
->  void blk_mq_free_tags(struct blk_mq_tags *tags, unsigned int flags)
->  {
-> -	if (!(flags & BLK_MQ_F_TAG_HCTX_SHARED)) {
-> +	if (!blk_mq_is_sbitmap_shared(flags)) {
->  		sbitmap_queue_free(tags->bitmap_tags);
->  		sbitmap_queue_free(tags->breserved_tags);
->  	}
-> 
+diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
+index 05ffe488ddc6..acf5fced11ef 100644
+--- a/drivers/block/rnbd/rnbd-srv-sysfs.c
++++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
+@@ -147,10 +147,7 @@ static ssize_t rnbd_srv_dev_session_force_close_store(struct kobject *kobj,
+ 	}
+ 
+ 	rnbd_srv_info(sess_dev, "force close requested\n");
+-
+-	/* first remove sysfs itself to avoid deadlock */
+-	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
+-	rnbd_srv_sess_dev_force_close(sess_dev);
++	rnbd_srv_sess_dev_force_close(sess_dev, attr);
+ 
+ 	return count;
+ }
+diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+index 1549a6361630..a9bb414f7442 100644
+--- a/drivers/block/rnbd/rnbd-srv.c
++++ b/drivers/block/rnbd/rnbd-srv.c
+@@ -329,7 +329,8 @@ static int rnbd_srv_link_ev(struct rtrs_srv *rtrs,
+ 	}
+ }
+ 
+-void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
++void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
++				   struct kobj_attribute *attr)
+ {
+ 	struct rnbd_srv_session	*sess = sess_dev->sess;
+ 
+@@ -337,6 +338,8 @@ void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev)
+ 	/* It is already started to close by client's close message. */
+ 	if (!mutex_trylock(&sess->lock))
+ 		return;
++	/* first remove sysfs itself to avoid deadlock */
++	sysfs_remove_file_self(&sess_dev->kobj, &attr->attr);
+ 	rnbd_srv_destroy_dev_session_sysfs(sess_dev);
+ 	mutex_unlock(&sess->lock);
+ }
+diff --git a/drivers/block/rnbd/rnbd-srv.h b/drivers/block/rnbd/rnbd-srv.h
+index b157371c25ed..98ddc31eb408 100644
+--- a/drivers/block/rnbd/rnbd-srv.h
++++ b/drivers/block/rnbd/rnbd-srv.h
+@@ -64,7 +64,8 @@ struct rnbd_srv_sess_dev {
+ 	enum rnbd_access_mode		access_mode;
+ };
+ 
+-void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev);
++void rnbd_srv_sess_dev_force_close(struct rnbd_srv_sess_dev *sess_dev,
++				   struct kobj_attribute *attr);
+ /* rnbd-srv-sysfs.c */
+ 
+ int rnbd_srv_create_dev_sysfs(struct rnbd_srv_dev *dev,
+-- 
+2.25.1
+
