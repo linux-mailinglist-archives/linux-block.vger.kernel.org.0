@@ -2,198 +2,241 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C91F4354A08
-	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 03:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97FCF354A97
+	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 03:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239083AbhDFB26 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Apr 2021 21:28:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:15600 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbhDFB25 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Apr 2021 21:28:57 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FDqcb002Rz17QKx;
-        Tue,  6 Apr 2021 09:26:38 +0800 (CST)
-Received: from [10.174.176.73] (10.174.176.73) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.498.0; Tue, 6 Apr 2021 09:28:44 +0800
-Subject: Re: [PATCH] block: reexpand iov_iter after read/write
-To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
-        <asml.silence@gmail.com>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <io-uring@vger.kernel.org>
-References: <20210401071807.3328235-1-yangerkun@huawei.com>
-From:   yangerkun <yangerkun@huawei.com>
-Message-ID: <3bd14a60-b259-377b-38d5-907780bc2416@huawei.com>
-Date:   Tue, 6 Apr 2021 09:28:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S239470AbhDFBt1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Apr 2021 21:49:27 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:62514 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242082AbhDFBtU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Apr 2021 21:49:20 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20210406014908epoutp01ae0440510f8f0cf6102bf5c9d0c12b0c~zIbQQfn8q1731717317epoutp01z
+        for <linux-block@vger.kernel.org>; Tue,  6 Apr 2021 01:49:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20210406014908epoutp01ae0440510f8f0cf6102bf5c9d0c12b0c~zIbQQfn8q1731717317epoutp01z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1617673748;
+        bh=i+cY6POYdCkrVMozJTyt8kBL/ujUnaLOG9/PlhmQ16I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f0BBvCBcqhne3pyi6OkeRLj1Vq6pjfZntIi/PG8SXL3VCvsy6hrvymJCLKSPzz7rG
+         0vE+sfgjQtC9bxjytG6zbpOpISoD4rzMXdjxXVTJ+X95OR2ZS++sm5zdRiYYvLm648
+         fdSqHOIKAClSKdoyBmVYH4Xe+L5L68sr2Z7gyroA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20210406014906epcas1p4de17a227ad5092d5489c00f0948acf74~zIbO3LZrx1401514015epcas1p4_;
+        Tue,  6 Apr 2021 01:49:06 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4FDr6T4KTqz4x9QC; Tue,  6 Apr
+        2021 01:49:05 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0B.41.23820.11EBB606; Tue,  6 Apr 2021 10:49:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859~zIbNF91mc1434114341epcas1p1G;
+        Tue,  6 Apr 2021 01:49:05 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210406014904epsmtrp2525b7e9c72b76224895e802998d8c5fa~zIbNEcXzr1508315083epsmtrp2Y;
+        Tue,  6 Apr 2021 01:49:04 +0000 (GMT)
+X-AuditID: b6c32a37-a59ff70000015d0c-79-606bbe1102a7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8A.81.33967.01EBB606; Tue,  6 Apr 2021 10:49:04 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.99.105]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20210406014904epsmtip21fbf51108f25076b17f062ad898d4b00~zIbMxqdZd3025330253epsmtip2j;
+        Tue,  6 Apr 2021 01:49:04 +0000 (GMT)
+From:   Changheun Lee <nanich.lee@samsung.com>
+To:     Johannes.Thumshirn@wdc.com, asml.silence@gmail.com,
+        axboe@kernel.dk, damien.lemoal@wdc.com, gregkh@linuxfoundation.org,
+        hch@infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ming.lei@redhat.com, osandov@fb.com,
+        patchwork-bot@kernel.org, tj@kernel.org, tom.leiming@gmail.com
+Cc:     jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
+        mj0123.lee@samsung.com, seunghwan.hyun@samsung.com,
+        sookwan7.kim@samsung.com, woosung2.lee@samsung.com,
+        yt0928.kim@samsung.com
+Subject: [RESEND PATCH v5 1/2] bio: limit bio max size
+Date:   Tue,  6 Apr 2021 10:31:28 +0900
+Message-Id: <20210406013128.16284-1-nanich.lee@samsung.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <20210316074401.4594-1-nanich.lee@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20210401071807.3328235-1-yangerkun@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.73]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmrq7gvuwEg2+tChZzVm1jtFh9t5/N
+        orX9G5NF8+L1bBanJyxisuh50sRq8bfrHpPF14fFFntvaVtc3jWHzeLQ5GYmi+mb5zBbHL53
+        lcXi4ZKJzBbnTn5itZj32MHi1/KjjBbvf1xntzi1YzKzxfq9P9kcRDwmNr9j99g56y67x+YV
+        Wh6Xz5Z6bFrVyeaxf+4ado/3+66yefRtWcXo8XmTnEf7gW6mAK6oHJuM1MSU1CKF1Lzk/JTM
+        vHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoN+UFMoSc0qBQgGJxcVK+nY2Rfml
+        JakKGfnFJbZKqQUpOQWGBgV6xYm5xaV56XrJ+blWhgYGRqZAlQk5GZ/nfWEtmKBd8fLAR6YG
+        xna5LkZODgkBE4mPH9cxg9hCAjsYJTY0eHQxcgHZnxglXl88zwLhfGOUWLZhLytMx6F73cwQ
+        ib2MEie/L2GDaP/MKLH0gQaIzSagI9H39hYbSJGIwFYmiZZrh8E6mAV2As3dPhtsobCAmcTe
+        v18YQWwWAVWJv8uagPZxcPAKWEt0r06B2CYv8ed+DzNImBMovG5tDEiYV0BQ4uTMJywgNjNQ
+        SfPW2WDjJQTecEjcv3AU6lIXid379kDZwhKvjm9hh7ClJD6/28sG0dDNKNHcNp8RwpnAKLHk
+        +TImiCpjiU+fPzOCbGYW0JRYv0sfIqwosfP3XEaIzXwS7772sIKUSAjwSnS0CUGUqEicabnP
+        DLPr+dqdTBAlHhJHG5QhAdfHKNH0aQbLBEaFWUj+mYXkn1kIixcwMq9iFEstKM5NTy02LDBG
+        juFNjODErmW+g3Ha2w96hxiZOBgPMUpwMCuJ8O7ozU4Q4k1JrKxKLcqPLyrNSS0+xGgKDOuJ
+        zFKiyfnA3JJXEm9oamRsbGxhYmZuZmqsJM6bZPAgXkggPbEkNTs1tSC1CKaPiYNTqoFJ1eSf
+        3s0J/1++l+mYZ9P4q2/mHkUeji/MHRIMcuw7XycHWlwXidn46O3tiX8u2ul2bl/UEyR3rYh5
+        Tt6ZaSdee+9bd+Cq3rK20m8d8RMcTWWzpQ+4i1llM0dtzMraNnMJp4GJjlIm18o2b43NMnG7
+        JXtSuIskss7bnq/nbenSPXWgOLvh+0yNXfPPdJXmbwn7NOclc4vUlAWBwtPNLrK9+PywWm7m
+        sen35vfxqoQ77Tq3dKJw0KyZNTcqlR7W611ft3rRBa6n2yb7m/6UqymqlttvkXlR43vOe4Fl
+        L+2Vpn0R+S5ceXpa2FoOTk/+I3y98fb3YkTvpy5yvcbqlaDq1spx0tAkukx1ZduHkCtKLMUZ
+        iYZazEXFiQBEccdidQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvK7AvuwEg7PbjC3mrNrGaLH6bj+b
+        RWv7NyaL5sXr2SxOT1jEZNHzpInV4m/XPSaLrw+LLfbe0ra4vGsOm8Whyc1MFtM3z2G2OHzv
+        KovFwyUTmS3OnfzEajHvsYPFr+VHGS3e/7jObnFqx2Rmi/V7f7I5iHhMbH7H7rFz1l12j80r
+        tDwuny312LSqk81j/9w17B7v911l8+jbsorR4/MmOY/2A91MAVxRXDYpqTmZZalF+nYJXBmf
+        531hLZigXfHywEemBsZ2uS5GTg4JAROJQ/e6mbsYuTiEBHYzSkw4/5AJIiElcfzEW9YuRg4g
+        W1ji8OFiiJqPjBJTvuxnBalhE9CR6Ht7iw0kISJwlEliw9VjYJOYBQ4yShyffYYRpEpYwExi
+        798vYDaLgKrE32VNLCBTeQWsJbpXp0Ask5f4c7+HGSTMCRRetzYGxBQSsJK4vcMApIJXQFDi
+        5MwnLCA2M1B189bZzBMYBWYhSc1CklrAyLSKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93
+        EyM4+rQ0dzBuX/VB7xAjEwfjIUYJDmYlEd4dvdkJQrwpiZVVqUX58UWlOanFhxilOViUxHkv
+        dJ2MFxJITyxJzU5NLUgtgskycXBKNTDt0Li8Ynv+zXVPef1YnlXlm7de/1XqMvGKcLb5UvHT
+        0TaKz2uO7TgUY7s3QS3ku5bVvnvHu9v8bh9zsT/jxcJbo/Vs5bYAxbYte+cIRmeseJdomnW8
+        WT5tdwqP4a+pGXEXE98sTTrWYOVewRa28Nm9s0Z3vT02tPtr56r4v4v7wWp1eOFf+S2xMhZv
+        74r8v2koJHkxKj1w20bLxCk6d2N1Um9LzLswv0Jm6ratRyPlrhoU7rr8yvsrR57/m7XXZdMX
+        b7C48+bml4dXFn3IaEi91ruidn/DliP6BpsLVNLvCF7vsMv/esD9ANuV36HOgk9bbbrqctYt
+        shNaK+71QoyB7WLmnprgF7+Vz/5lrElSYinOSDTUYi4qTgQAH+n3PS0DAAA=
+X-CMS-MailID: 20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859
+References: <20210316074401.4594-1-nanich.lee@samsung.com>
+        <CGME20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859@epcas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ping...
-
-ÔÚ 2021/4/1 15:18, yangerkun Ð´µÀ:
-> We get a bug:
+> bio size can grow up to 4GB when muli-page bvec is enabled.
+> but sometimes it would lead to inefficient behaviors.
+> in case of large chunk direct I/O, - 32MB chunk read in user space -
+> all pages for 32MB would be merged to a bio structure if the pages
+> physical addresses are contiguous. it makes some delay to submit
+> until merge complete. bio max size should be limited to a proper size.
 > 
-> BUG: KASAN: slab-out-of-bounds in iov_iter_revert+0x11c/0x404
-> lib/iov_iter.c:1139
-> Read of size 8 at addr ffff0000d3fb11f8 by task
+> When 32MB chunk read with direct I/O option is coming from userspace,
+> kernel behavior is below now in do_direct_IO() loop. it's timeline.
 > 
-> CPU: 0 PID: 12582 Comm: syz-executor.2 Not tainted
-> 5.10.0-00843-g352c8610ccd2 #2
-> Hardware name: linux,dummy-virt (DT)
-> Call trace:
->   dump_backtrace+0x0/0x2d0 arch/arm64/kernel/stacktrace.c:132
->   show_stack+0x28/0x34 arch/arm64/kernel/stacktrace.c:196
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x110/0x164 lib/dump_stack.c:118
->   print_address_description+0x78/0x5c8 mm/kasan/report.c:385
->   __kasan_report mm/kasan/report.c:545 [inline]
->   kasan_report+0x148/0x1e4 mm/kasan/report.c:562
->   check_memory_region_inline mm/kasan/generic.c:183 [inline]
->   __asan_load8+0xb4/0xbc mm/kasan/generic.c:252
->   iov_iter_revert+0x11c/0x404 lib/iov_iter.c:1139
->   io_read fs/io_uring.c:3421 [inline]
->   io_issue_sqe+0x2344/0x2d64 fs/io_uring.c:5943
->   __io_queue_sqe+0x19c/0x520 fs/io_uring.c:6260
->   io_queue_sqe+0x2a4/0x590 fs/io_uring.c:6326
->   io_submit_sqe fs/io_uring.c:6395 [inline]
->   io_submit_sqes+0x4c0/0xa04 fs/io_uring.c:6624
->   __do_sys_io_uring_enter fs/io_uring.c:9013 [inline]
->   __se_sys_io_uring_enter fs/io_uring.c:8960 [inline]
->   __arm64_sys_io_uring_enter+0x190/0x708 fs/io_uring.c:8960
->   __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
->   invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
->   el0_svc_common arch/arm64/kernel/syscall.c:158 [inline]
->   do_el0_svc+0x120/0x290 arch/arm64/kernel/syscall.c:227
->   el0_svc+0x1c/0x28 arch/arm64/kernel/entry-common.c:367
->   el0_sync_handler+0x98/0x170 arch/arm64/kernel/entry-common.c:383
->   el0_sync+0x140/0x180 arch/arm64/kernel/entry.S:670
+>  | bio merge for 32MB. total 8,192 pages are merged.
+>  | total elapsed time is over 2ms.
+>  |------------------ ... ----------------------->|
+>                                                  | 8,192 pages merged a bio.
+>                                                  | at this time, first bio submit is done.
+>                                                  | 1 bio is split to 32 read request and issue.
+>                                                  |--------------->
+>                                                   |--------------->
+>                                                    |--------------->
+>                                                               ......
+>                                                                    |--------------->
+>                                                                     |--------------->|
+>                           total 19ms elapsed to complete 32MB read done from device. |
 > 
-> Allocated by task 12570:
->   stack_trace_save+0x80/0xb8 kernel/stacktrace.c:121
->   kasan_save_stack mm/kasan/common.c:48 [inline]
->   kasan_set_track mm/kasan/common.c:56 [inline]
->   __kasan_kmalloc+0xdc/0x120 mm/kasan/common.c:461
->   kasan_kmalloc+0xc/0x14 mm/kasan/common.c:475
->   __kmalloc+0x23c/0x334 mm/slub.c:3970
->   kmalloc include/linux/slab.h:557 [inline]
->   __io_alloc_async_data+0x68/0x9c fs/io_uring.c:3210
->   io_setup_async_rw fs/io_uring.c:3229 [inline]
->   io_read fs/io_uring.c:3436 [inline]
->   io_issue_sqe+0x2954/0x2d64 fs/io_uring.c:5943
->   __io_queue_sqe+0x19c/0x520 fs/io_uring.c:6260
->   io_queue_sqe+0x2a4/0x590 fs/io_uring.c:6326
->   io_submit_sqe fs/io_uring.c:6395 [inline]
->   io_submit_sqes+0x4c0/0xa04 fs/io_uring.c:6624
->   __do_sys_io_uring_enter fs/io_uring.c:9013 [inline]
->   __se_sys_io_uring_enter fs/io_uring.c:8960 [inline]
->   __arm64_sys_io_uring_enter+0x190/0x708 fs/io_uring.c:8960
->   __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
->   invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
->   el0_svc_common arch/arm64/kernel/syscall.c:158 [inline]
->   do_el0_svc+0x120/0x290 arch/arm64/kernel/syscall.c:227
->   el0_svc+0x1c/0x28 arch/arm64/kernel/entry-common.c:367
->   el0_sync_handler+0x98/0x170 arch/arm64/kernel/entry-common.c:383
->   el0_sync+0x140/0x180 arch/arm64/kernel/entry.S:670
+> If bio max size is limited with 1MB, behavior is changed below.
 > 
-> Freed by task 12570:
->   stack_trace_save+0x80/0xb8 kernel/stacktrace.c:121
->   kasan_save_stack mm/kasan/common.c:48 [inline]
->   kasan_set_track+0x38/0x6c mm/kasan/common.c:56
->   kasan_set_free_info+0x20/0x40 mm/kasan/generic.c:355
->   __kasan_slab_free+0x124/0x150 mm/kasan/common.c:422
->   kasan_slab_free+0x10/0x1c mm/kasan/common.c:431
->   slab_free_hook mm/slub.c:1544 [inline]
->   slab_free_freelist_hook mm/slub.c:1577 [inline]
->   slab_free mm/slub.c:3142 [inline]
->   kfree+0x104/0x38c mm/slub.c:4124
->   io_dismantle_req fs/io_uring.c:1855 [inline]
->   __io_free_req+0x70/0x254 fs/io_uring.c:1867
->   io_put_req_find_next fs/io_uring.c:2173 [inline]
->   __io_queue_sqe+0x1fc/0x520 fs/io_uring.c:6279
->   __io_req_task_submit+0x154/0x21c fs/io_uring.c:2051
->   io_req_task_submit+0x2c/0x44 fs/io_uring.c:2063
->   task_work_run+0xdc/0x128 kernel/task_work.c:151
->   get_signal+0x6f8/0x980 kernel/signal.c:2562
->   do_signal+0x108/0x3a4 arch/arm64/kernel/signal.c:658
->   do_notify_resume+0xbc/0x25c arch/arm64/kernel/signal.c:722
->   work_pending+0xc/0x180
+>  | bio merge for 1MB. 256 pages are merged for each bio.
+>  | total 32 bio will be made.
+>  | total elapsed time is over 2ms. it's same.
+>  | but, first bio submit timing is fast. about 100us.
+>  |--->|--->|--->|---> ... -->|--->|--->|--->|--->|
+>       | 256 pages merged a bio.
+>       | at this time, first bio submit is done.
+>       | and 1 read request is issued for 1 bio.
+>       |--------------->
+>            |--------------->
+>                 |--------------->
+>                                       ......
+>                                                  |--------------->
+>                                                   |--------------->|
+>         total 17ms elapsed to complete 32MB read done from device. |
 > 
-> blkdev_read_iter can truncate iov_iter's count since the count + pos may
-> exceed the size of the blkdev. This will confuse io_read that we have
-> consume the iovec. And once we do the iov_iter_revert in io_read, we
-> will trigger the slab-out-of-bounds. Fix it by reexpand the count with
-> size has been truncated.
+> As a result, read request issue timing is faster if bio max size is limited.
+> Current kernel behavior with multipage bvec, super large bio can be created.
+> And it lead to delay first I/O request issue.
 > 
-> blkdev_write_iter can trigger the problem too.
-> 
-> Signed-off-by: yangerkun <yangerkun@huawei.com>
+> Signed-off-by: Changheun Lee <nanich.lee@samsung.com>
 > ---
->   fs/block_dev.c | 20 +++++++++++++++++---
->   1 file changed, 17 insertions(+), 3 deletions(-)
+>  block/bio.c            | 13 ++++++++++++-
+>  include/linux/bio.h    |  2 +-
+>  include/linux/blkdev.h |  3 +++
+>  3 files changed, 16 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 92ed7d5df677..788e1014576f 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1680,6 +1680,7 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
->   	struct inode *bd_inode = bdev_file_inode(file);
->   	loff_t size = i_size_read(bd_inode);
->   	struct blk_plug plug;
-> +	size_t shorted = 0;
->   	ssize_t ret;
->   
->   	if (bdev_read_only(I_BDEV(bd_inode)))
-> @@ -1697,12 +1698,17 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
->   	if ((iocb->ki_flags & (IOCB_NOWAIT | IOCB_DIRECT)) == IOCB_NOWAIT)
->   		return -EOPNOTSUPP;
->   
-> -	iov_iter_truncate(from, size - iocb->ki_pos);
-> +	size -= iocb->ki_pos;
-> +	if (iov_iter_count(from) > size) {
-> +		shorted = iov_iter_count(from) - size;
-> +		iov_iter_truncate(from, size);
-> +	}
->   
->   	blk_start_plug(&plug);
->   	ret = __generic_file_write_iter(iocb, from);
->   	if (ret > 0)
->   		ret = generic_write_sync(iocb, ret);
-> +	iov_iter_reexpand(from, iov_iter_count(from) + shorted);
->   	blk_finish_plug(&plug);
->   	return ret;
->   }
-> @@ -1714,13 +1720,21 @@ ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
->   	struct inode *bd_inode = bdev_file_inode(file);
->   	loff_t size = i_size_read(bd_inode);
->   	loff_t pos = iocb->ki_pos;
-> +	size_t shorted = 0;
-> +	ssize_t ret;
->   
->   	if (pos >= size)
->   		return 0;
->   
->   	size -= pos;
-> -	iov_iter_truncate(to, size);
-> -	return generic_file_read_iter(iocb, to);
-> +	if (iov_iter_count(to) > size) {
-> +		shorted = iov_iter_count(to) - size;
-> +		iov_iter_truncate(to, size);
-> +	}
+> diff --git a/block/bio.c b/block/bio.c
+> index 1f2cc1fbe283..c528e1f944c7 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -287,6 +287,17 @@ void bio_init(struct bio *bio, struct bio_vec *table,
+>  }
+>  EXPORT_SYMBOL(bio_init);
+>  
+> +unsigned int bio_max_size(struct bio *bio)
+> +{
+> +	struct request_queue *q = bio->bi_disk->queue;
 > +
-> +	ret = generic_file_read_iter(iocb, to);
-> +	iov_iter_reexpand(to, iov_iter_count(to) + shorted);
-> +	return ret;
->   }
->   EXPORT_SYMBOL_GPL(blkdev_read_iter);
->   
+> +	if (blk_queue_limit_bio_size(q))
+> +		return blk_queue_get_max_sectors(q, bio_op(bio))
+> +			<< SECTOR_SHIFT;
+> +
+> +	return UINT_MAX;
+> +}
+> +
+>  /**
+>   * bio_reset - reinitialize a bio
+>   * @bio:	bio to reset
+> @@ -877,7 +888,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+>  		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+>  
+>  		if (page_is_mergeable(bv, page, len, off, same_page)) {
+> -			if (bio->bi_iter.bi_size > UINT_MAX - len) {
+> +			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {
+>  				*same_page = false;
+>  				return false;
+>  			}
+> diff --git a/include/linux/bio.h b/include/linux/bio.h
+> index 1edda614f7ce..13b6f6562a5b 100644
+> --- a/include/linux/bio.h
+> +++ b/include/linux/bio.h
+> @@ -113,7 +113,7 @@ static inline bool bio_full(struct bio *bio, unsigned len)
+>  	if (bio->bi_vcnt >= bio->bi_max_vecs)
+>  		return true;
+>  
+> -	if (bio->bi_iter.bi_size > UINT_MAX - len)
+> +	if (bio->bi_iter.bi_size > bio_max_size(bio) - len)
+>  		return true;
+>  
+>  	return false;
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index f94ee3089e01..3aeab9e7e97b 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -621,6 +621,7 @@ struct request_queue {
+>  #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+>  #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+>  #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+> +#define QUEUE_FLAG_LIMIT_BIO_SIZE 30	/* limit bio size */
+>  
+>  #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+>  				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+> @@ -667,6 +668,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+>  #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
+>  #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
+>  #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
+> +#define blk_queue_limit_bio_size(q)	\
+> +	test_bit(QUEUE_FLAG_LIMIT_BIO_SIZE, &(q)->queue_flags)
+>  
+>  extern void blk_set_pm_only(struct request_queue *q);
+>  extern void blk_clear_pm_only(struct request_queue *q);
+> -- 
+> 2.28.0
 > 
+
+Please feedback to me if more modification is needed to apply. :)
+
+---
+Changheun Lee
