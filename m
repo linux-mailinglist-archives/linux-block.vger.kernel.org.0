@@ -2,241 +2,443 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FCF354A97
-	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 03:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C16354A49
+	for <lists+linux-block@lfdr.de>; Tue,  6 Apr 2021 03:45:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239470AbhDFBt1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Apr 2021 21:49:27 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:62514 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242082AbhDFBtU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Apr 2021 21:49:20 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20210406014908epoutp01ae0440510f8f0cf6102bf5c9d0c12b0c~zIbQQfn8q1731717317epoutp01z
-        for <linux-block@vger.kernel.org>; Tue,  6 Apr 2021 01:49:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20210406014908epoutp01ae0440510f8f0cf6102bf5c9d0c12b0c~zIbQQfn8q1731717317epoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1617673748;
-        bh=i+cY6POYdCkrVMozJTyt8kBL/ujUnaLOG9/PlhmQ16I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0BBvCBcqhne3pyi6OkeRLj1Vq6pjfZntIi/PG8SXL3VCvsy6hrvymJCLKSPzz7rG
-         0vE+sfgjQtC9bxjytG6zbpOpISoD4rzMXdjxXVTJ+X95OR2ZS++sm5zdRiYYvLm648
-         fdSqHOIKAClSKdoyBmVYH4Xe+L5L68sr2Z7gyroA=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20210406014906epcas1p4de17a227ad5092d5489c00f0948acf74~zIbO3LZrx1401514015epcas1p4_;
-        Tue,  6 Apr 2021 01:49:06 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4FDr6T4KTqz4x9QC; Tue,  6 Apr
-        2021 01:49:05 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0B.41.23820.11EBB606; Tue,  6 Apr 2021 10:49:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859~zIbNF91mc1434114341epcas1p1G;
-        Tue,  6 Apr 2021 01:49:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20210406014904epsmtrp2525b7e9c72b76224895e802998d8c5fa~zIbNEcXzr1508315083epsmtrp2Y;
-        Tue,  6 Apr 2021 01:49:04 +0000 (GMT)
-X-AuditID: b6c32a37-a59ff70000015d0c-79-606bbe1102a7
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8A.81.33967.01EBB606; Tue,  6 Apr 2021 10:49:04 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.253.99.105]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20210406014904epsmtip21fbf51108f25076b17f062ad898d4b00~zIbMxqdZd3025330253epsmtip2j;
-        Tue,  6 Apr 2021 01:49:04 +0000 (GMT)
-From:   Changheun Lee <nanich.lee@samsung.com>
-To:     Johannes.Thumshirn@wdc.com, asml.silence@gmail.com,
-        axboe@kernel.dk, damien.lemoal@wdc.com, gregkh@linuxfoundation.org,
-        hch@infradead.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ming.lei@redhat.com, osandov@fb.com,
-        patchwork-bot@kernel.org, tj@kernel.org, tom.leiming@gmail.com
-Cc:     jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
-        mj0123.lee@samsung.com, seunghwan.hyun@samsung.com,
-        sookwan7.kim@samsung.com, woosung2.lee@samsung.com,
-        yt0928.kim@samsung.com
-Subject: [RESEND PATCH v5 1/2] bio: limit bio max size
-Date:   Tue,  6 Apr 2021 10:31:28 +0900
-Message-Id: <20210406013128.16284-1-nanich.lee@samsung.com>
-X-Mailer: git-send-email 2.29.0
-In-Reply-To: <20210316074401.4594-1-nanich.lee@samsung.com>
+        id S241983AbhDFBpM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Apr 2021 21:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240634AbhDFBpM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Apr 2021 21:45:12 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02EE1C06174A;
+        Mon,  5 Apr 2021 18:45:04 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id 185so8894080ybf.3;
+        Mon, 05 Apr 2021 18:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GhFuSU0adajGubBX4Ule4ocsHQm4xPIfHN+0ZP2284Q=;
+        b=Wn7ZoBDph7CMtJHFrM/2HqLQhhknorL39ExoxjRlEWg0ChI34+pe7PBgVLf9IVyQHP
+         x1jd40BR14iSbCYze82mZLAL3xuUfeNkUR+PfMAuL1+O+1+mekmbAyflotP2lCKFNbK/
+         qjXLsrpoIpXnRANynkRppL5bQ+3iOXLGRP6tSA8LpOxwI7F80q2e7Lm6/HZv3rleQ2C6
+         5t7WM30+YhlCpcYcM5xk4Daow6smkIoTt1XRch/0FAv9s+6Kbq5W1ueLwabvaKzbNnj2
+         vHmP233UcxBsOlISyE7eI65P8WHtacA589Az3egFcgLAYv0yUiTS6XA+l9YNrEwUAOSl
+         I7mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GhFuSU0adajGubBX4Ule4ocsHQm4xPIfHN+0ZP2284Q=;
+        b=TLm/zd8mlDtnPmo0UvopSGzLTvomdjx+RoRkl+QxRNz1wMk1ZFb0soeZFQIt3uL4d6
+         rvy1CbP5CLcGgsFI5Hy7LC6HzWT7eYmcJ2/B9TIXkJWV0C+fjgn7m14LmJ4GwKsH2fXY
+         bz4DzO3aWX1kxCGRonltOu4xhdB4QUDZHzElel89rqKlwxM5FPiMAY9KlTFY/BNaLuR9
+         EVFc5LZDaEOOtNV2QJaY4RakpBySM0reDMBL/r+o3uvll6286+kCKq7d7ASeKimHdHIY
+         b2PxhBCkkM6ZqclZVX6r5tZEqvR4aqFfdYYImtxCVzePKrrblvSq4vngqnZBKHrOjGn5
+         b0sA==
+X-Gm-Message-State: AOAM533PnDdCPOaUM1oGjDFRp/1M8ZZC5ABV+iYt7kmfqH+6lLxODw6f
+        eFzX4LElWLfJ8oc1VivIClSlPPl6iAq1Z0B0Sds=
+X-Google-Smtp-Source: ABdhPJzWDkyIBp9H0O69KyBgnJfKhFlGYRVsXqXyFvIHuBDP+f12i1HWnw1DI5S91GimY6fqKNdOLI81W5eNfQFZsMQ=
+X-Received: by 2002:a25:5004:: with SMTP id e4mr38975670ybb.144.1617673503260;
+ Mon, 05 Apr 2021 18:45:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmrq7gvuwEg2+tChZzVm1jtFh9t5/N
-        orX9G5NF8+L1bBanJyxisuh50sRq8bfrHpPF14fFFntvaVtc3jWHzeLQ5GYmi+mb5zBbHL53
-        lcXi4ZKJzBbnTn5itZj32MHi1/KjjBbvf1xntzi1YzKzxfq9P9kcRDwmNr9j99g56y67x+YV
-        Wh6Xz5Z6bFrVyeaxf+4ado/3+66yefRtWcXo8XmTnEf7gW6mAK6oHJuM1MSU1CKF1Lzk/JTM
-        vHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoN+UFMoSc0qBQgGJxcVK+nY2Rfml
-        JakKGfnFJbZKqQUpOQWGBgV6xYm5xaV56XrJ+blWhgYGRqZAlQk5GZ/nfWEtmKBd8fLAR6YG
-        xna5LkZODgkBE4mPH9cxg9hCAjsYJTY0eHQxcgHZnxglXl88zwLhfGOUWLZhLytMx6F73cwQ
-        ib2MEie/L2GDaP/MKLH0gQaIzSagI9H39hYbSJGIwFYmiZZrh8E6mAV2As3dPhtsobCAmcTe
-        v18YQWwWAVWJv8uagPZxcPAKWEt0r06B2CYv8ed+DzNImBMovG5tDEiYV0BQ4uTMJywgNjNQ
-        SfPW2WDjJQTecEjcv3AU6lIXid379kDZwhKvjm9hh7ClJD6/28sG0dDNKNHcNp8RwpnAKLHk
-        +TImiCpjiU+fPzOCbGYW0JRYv0sfIqwosfP3XEaIzXwS7772sIKUSAjwSnS0CUGUqEicabnP
-        DLPr+dqdTBAlHhJHG5QhAdfHKNH0aQbLBEaFWUj+mYXkn1kIixcwMq9iFEstKM5NTy02LDBG
-        juFNjODErmW+g3Ha2w96hxiZOBgPMUpwMCuJ8O7ozU4Q4k1JrKxKLcqPLyrNSS0+xGgKDOuJ
-        zFKiyfnA3JJXEm9oamRsbGxhYmZuZmqsJM6bZPAgXkggPbEkNTs1tSC1CKaPiYNTqoFJ1eSf
-        3s0J/1++l+mYZ9P4q2/mHkUeji/MHRIMcuw7XycHWlwXidn46O3tiX8u2ul2bl/UEyR3rYh5
-        Tt6ZaSdee+9bd+Cq3rK20m8d8RMcTWWzpQ+4i1llM0dtzMraNnMJp4GJjlIm18o2b43NMnG7
-        JXtSuIskss7bnq/nbenSPXWgOLvh+0yNXfPPdJXmbwn7NOclc4vUlAWBwtPNLrK9+PywWm7m
-        sen35vfxqoQ77Tq3dKJw0KyZNTcqlR7W611ft3rRBa6n2yb7m/6UqymqlttvkXlR43vOe4Fl
-        L+2Vpn0R+S5ceXpa2FoOTk/+I3y98fb3YkTvpy5yvcbqlaDq1spx0tAkukx1ZduHkCtKLMUZ
-        iYZazEXFiQBEccdidQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvK7AvuwEg7PbjC3mrNrGaLH6bj+b
-        RWv7NyaL5sXr2SxOT1jEZNHzpInV4m/XPSaLrw+LLfbe0ra4vGsOm8Whyc1MFtM3z2G2OHzv
-        KovFwyUTmS3OnfzEajHvsYPFr+VHGS3e/7jObnFqx2Rmi/V7f7I5iHhMbH7H7rFz1l12j80r
-        tDwuny312LSqk81j/9w17B7v911l8+jbsorR4/MmOY/2A91MAVxRXDYpqTmZZalF+nYJXBmf
-        531hLZigXfHywEemBsZ2uS5GTg4JAROJQ/e6mbsYuTiEBHYzSkw4/5AJIiElcfzEW9YuRg4g
-        W1ji8OFiiJqPjBJTvuxnBalhE9CR6Ht7iw0kISJwlEliw9VjYJOYBQ4yShyffYYRpEpYwExi
-        798vYDaLgKrE32VNLCBTeQWsJbpXp0Ask5f4c7+HGSTMCRRetzYGxBQSsJK4vcMApIJXQFDi
-        5MwnLCA2M1B189bZzBMYBWYhSc1CklrAyLSKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93
-        EyM4+rQ0dzBuX/VB7xAjEwfjIUYJDmYlEd4dvdkJQrwpiZVVqUX58UWlOanFhxilOViUxHkv
-        dJ2MFxJITyxJzU5NLUgtgskycXBKNTDt0Li8Ynv+zXVPef1YnlXlm7de/1XqMvGKcLb5UvHT
-        0TaKz2uO7TgUY7s3QS3ku5bVvnvHu9v8bh9zsT/jxcJbo/Vs5bYAxbYte+cIRmeseJdomnW8
-        WT5tdwqP4a+pGXEXE98sTTrWYOVewRa28Nm9s0Z3vT02tPtr56r4v4v7wWp1eOFf+S2xMhZv
-        74r8v2koJHkxKj1w20bLxCk6d2N1Um9LzLswv0Jm6ratRyPlrhoU7rr8yvsrR57/m7XXZdMX
-        b7C48+bml4dXFn3IaEi91ruidn/DliP6BpsLVNLvCF7vsMv/esD9ANuV36HOgk9bbbrqctYt
-        shNaK+71QoyB7WLmnprgF7+Vz/5lrElSYinOSDTUYi4qTgQAH+n3PS0DAAA=
-X-CMS-MailID: 20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859
-References: <20210316074401.4594-1-nanich.lee@samsung.com>
-        <CGME20210406014905epcas1p16830a46b7ac6af95a0e2c2c6f4c04859@epcas1p1.samsung.com>
+References: <20210402191638.3249835-1-schatzberg.dan@gmail.com> <20210402191638.3249835-2-schatzberg.dan@gmail.com>
+In-Reply-To: <20210402191638.3249835-2-schatzberg.dan@gmail.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Tue, 6 Apr 2021 09:44:51 +0800
+Message-ID: <CACVXFVPgVf2fkf_00pLTiYbUhX-YpGxAJMfnPY0hPeYUhpB+=g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] loop: Use worker per cgroup instead of kworker
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Yang Shi <shy828301@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> bio size can grow up to 4GB when muli-page bvec is enabled.
-> but sometimes it would lead to inefficient behaviors.
-> in case of large chunk direct I/O, - 32MB chunk read in user space -
-> all pages for 32MB would be merged to a bio structure if the pages
-> physical addresses are contiguous. it makes some delay to submit
-> until merge complete. bio max size should be limited to a proper size.
-> 
-> When 32MB chunk read with direct I/O option is coming from userspace,
-> kernel behavior is below now in do_direct_IO() loop. it's timeline.
-> 
->  | bio merge for 32MB. total 8,192 pages are merged.
->  | total elapsed time is over 2ms.
->  |------------------ ... ----------------------->|
->                                                  | 8,192 pages merged a bio.
->                                                  | at this time, first bio submit is done.
->                                                  | 1 bio is split to 32 read request and issue.
->                                                  |--------------->
->                                                   |--------------->
->                                                    |--------------->
->                                                               ......
->                                                                    |--------------->
->                                                                     |--------------->|
->                           total 19ms elapsed to complete 32MB read done from device. |
-> 
-> If bio max size is limited with 1MB, behavior is changed below.
-> 
->  | bio merge for 1MB. 256 pages are merged for each bio.
->  | total 32 bio will be made.
->  | total elapsed time is over 2ms. it's same.
->  | but, first bio submit timing is fast. about 100us.
->  |--->|--->|--->|---> ... -->|--->|--->|--->|--->|
->       | 256 pages merged a bio.
->       | at this time, first bio submit is done.
->       | and 1 read request is issued for 1 bio.
->       |--------------->
->            |--------------->
->                 |--------------->
->                                       ......
->                                                  |--------------->
->                                                   |--------------->|
->         total 17ms elapsed to complete 32MB read done from device. |
-> 
-> As a result, read request issue timing is faster if bio max size is limited.
-> Current kernel behavior with multipage bvec, super large bio can be created.
-> And it lead to delay first I/O request issue.
-> 
-> Signed-off-by: Changheun Lee <nanich.lee@samsung.com>
+On Sat, Apr 3, 2021 at 3:17 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
+>
+> Existing uses of loop device may have multiple cgroups reading/writing
+> to the same device. Simply charging resources for I/O to the backing
+> file could result in priority inversion where one cgroup gets
+> synchronously blocked, holding up all other I/O to the loop device.
+>
+> In order to avoid this priority inversion, we use a single workqueue
+> where each work item is a "struct loop_worker" which contains a queue of
+> struct loop_cmds to issue. The loop device maintains a tree mapping blk
+> css_id -> loop_worker. This allows each cgroup to independently make
+> forward progress issuing I/O to the backing file.
+>
+> There is also a single queue for I/O associated with the rootcg which
+> can be used in cases of extreme memory shortage where we cannot allocate
+> a loop_worker.
+>
+> The locking for the tree and queues is fairly heavy handed - we acquire
+> a per-loop-device spinlock any time either is accessed. The existing
+> implementation serializes all I/O through a single thread anyways, so I
+> don't believe this is any worse.
+>
+> Fixes-from: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
 > ---
->  block/bio.c            | 13 ++++++++++++-
->  include/linux/bio.h    |  2 +-
->  include/linux/blkdev.h |  3 +++
->  3 files changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index 1f2cc1fbe283..c528e1f944c7 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -287,6 +287,17 @@ void bio_init(struct bio *bio, struct bio_vec *table,
+>  drivers/block/loop.c | 203 ++++++++++++++++++++++++++++++++++++-------
+>  drivers/block/loop.h |  12 ++-
+>  2 files changed, 178 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index d58d68f3c7cd..4750b373d4bb 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -71,7 +71,6 @@
+>  #include <linux/writeback.h>
+>  #include <linux/completion.h>
+>  #include <linux/highmem.h>
+> -#include <linux/kthread.h>
+>  #include <linux/splice.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/miscdevice.h>
+> @@ -84,6 +83,8 @@
+>
+>  #include <linux/uaccess.h>
+>
+> +#define LOOP_IDLE_WORKER_TIMEOUT (60 * HZ)
+> +
+>  static DEFINE_IDR(loop_index_idr);
+>  static DEFINE_MUTEX(loop_ctl_mutex);
+>
+> @@ -921,27 +922,83 @@ static void loop_config_discard(struct loop_device *lo)
+>         q->limits.discard_alignment = 0;
 >  }
->  EXPORT_SYMBOL(bio_init);
->  
-> +unsigned int bio_max_size(struct bio *bio)
+>
+> -static void loop_unprepare_queue(struct loop_device *lo)
+> -{
+> -       kthread_flush_worker(&lo->worker);
+> -       kthread_stop(lo->worker_task);
+> -}
+> +struct loop_worker {
+> +       struct rb_node rb_node;
+> +       struct work_struct work;
+> +       struct list_head cmd_list;
+> +       struct list_head idle_list;
+> +       struct loop_device *lo;
+> +       struct cgroup_subsys_state *css;
+> +       unsigned long last_ran_at;
+> +};
+>
+> -static int loop_kthread_worker_fn(void *worker_ptr)
+> -{
+> -       current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+> -       return kthread_worker_fn(worker_ptr);
+> -}
+> +static void loop_workfn(struct work_struct *work);
+> +static void loop_rootcg_workfn(struct work_struct *work);
+> +static void loop_free_idle_workers(struct timer_list *timer);
+>
+> -static int loop_prepare_queue(struct loop_device *lo)
+> +static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
+>  {
+> -       kthread_init_worker(&lo->worker);
+> -       lo->worker_task = kthread_run(loop_kthread_worker_fn,
+> -                       &lo->worker, "loop%d", lo->lo_number);
+> -       if (IS_ERR(lo->worker_task))
+> -               return -ENOMEM;
+> -       set_user_nice(lo->worker_task, MIN_NICE);
+> -       return 0;
+> +       struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
+> +       struct loop_worker *cur_worker, *worker = NULL;
+> +       struct work_struct *work;
+> +       struct list_head *cmd_list;
+> +
+> +       spin_lock_irq(&lo->lo_work_lock);
+> +
+> +       if (!cmd->css)
+> +               goto queue_work;
+> +
+> +       node = &lo->worker_tree.rb_node;
+> +
+> +       while (*node) {
+> +               parent = *node;
+> +               cur_worker = container_of(*node, struct loop_worker, rb_node);
+> +               if (cur_worker->css == cmd->css) {
+> +                       worker = cur_worker;
+> +                       break;
+> +               } else if ((long)cur_worker->css < (long)cmd->css) {
+> +                       node = &(*node)->rb_left;
+> +               } else {
+> +                       node = &(*node)->rb_right;
+> +               }
+> +       }
+> +       if (worker)
+> +               goto queue_work;
+> +
+> +       worker = kzalloc(sizeof(struct loop_worker), GFP_NOWAIT | __GFP_NOWARN);
+> +       /*
+> +        * In the event we cannot allocate a worker, just queue on the
+> +        * rootcg worker
+> +        */
+> +       if (!worker)
+> +               goto queue_work;
+> +
+> +       worker->css = cmd->css;
+> +       css_get(worker->css);
+> +       INIT_WORK(&worker->work, loop_workfn);
+> +       INIT_LIST_HEAD(&worker->cmd_list);
+> +       INIT_LIST_HEAD(&worker->idle_list);
+> +       worker->lo = lo;
+> +       rb_link_node(&worker->rb_node, parent, node);
+> +       rb_insert_color(&worker->rb_node, &lo->worker_tree);
+> +queue_work:
+> +       if (worker) {
+> +               /*
+> +                * We need to remove from the idle list here while
+> +                * holding the lock so that the idle timer doesn't
+> +                * free the worker
+> +                */
+> +               if (!list_empty(&worker->idle_list))
+> +                       list_del_init(&worker->idle_list);
+> +               work = &worker->work;
+> +               cmd_list = &worker->cmd_list;
+> +       } else {
+> +               work = &lo->rootcg_work;
+> +               cmd_list = &lo->rootcg_cmd_list;
+> +       }
+> +       list_add_tail(&cmd->list_entry, cmd_list);
+> +       queue_work(lo->workqueue, work);
+> +       spin_unlock_irq(&lo->lo_work_lock);
+>  }
+>
+>  static void loop_update_rotational(struct loop_device *lo)
+> @@ -1127,12 +1184,23 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+>             !file->f_op->write_iter)
+>                 lo->lo_flags |= LO_FLAGS_READ_ONLY;
+>
+> -       error = loop_prepare_queue(lo);
+> -       if (error)
+> +       lo->workqueue = alloc_workqueue("loop%d",
+> +                                       WQ_UNBOUND | WQ_FREEZABLE,
+> +                                       0,
+> +                                       lo->lo_number);
+> +       if (!lo->workqueue) {
+> +               error = -ENOMEM;
+>                 goto out_unlock;
+> +       }
+>
+>         set_disk_ro(lo->lo_disk, (lo->lo_flags & LO_FLAGS_READ_ONLY) != 0);
+>
+> +       INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
+> +       INIT_LIST_HEAD(&lo->rootcg_cmd_list);
+> +       INIT_LIST_HEAD(&lo->idle_worker_list);
+> +       lo->worker_tree = RB_ROOT;
+> +       timer_setup(&lo->timer, loop_free_idle_workers,
+> +               TIMER_DEFERRABLE);
+>         lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
+>         lo->lo_device = bdev;
+>         lo->lo_backing_file = file;
+> @@ -1200,6 +1268,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>         int err = 0;
+>         bool partscan = false;
+>         int lo_number;
+> +       struct loop_worker *pos, *worker;
+>
+>         mutex_lock(&lo->lo_mutex);
+>         if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
+> @@ -1219,6 +1288,18 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>         /* freeze request queue during the transition */
+>         blk_mq_freeze_queue(lo->lo_queue);
+>
+> +       destroy_workqueue(lo->workqueue);
+> +       spin_lock_irq(&lo->lo_work_lock);
+> +       list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
+> +                               idle_list) {
+> +               list_del(&worker->idle_list);
+> +               rb_erase(&worker->rb_node, &lo->worker_tree);
+> +               css_put(worker->css);
+> +               kfree(worker);
+> +       }
+> +       spin_unlock_irq(&lo->lo_work_lock);
+> +       del_timer_sync(&lo->timer);
+> +
+>         spin_lock_irq(&lo->lo_lock);
+>         lo->lo_backing_file = NULL;
+>         spin_unlock_irq(&lo->lo_lock);
+> @@ -1255,7 +1336,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>
+>         partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
+>         lo_number = lo->lo_number;
+> -       loop_unprepare_queue(lo);
+>  out_unlock:
+>         mutex_unlock(&lo->lo_mutex);
+>         if (partscan) {
+> @@ -2026,7 +2106,7 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
+>         } else
+>  #endif
+>                 cmd->css = NULL;
+> -       kthread_queue_work(&lo->worker, &cmd->work);
+> +       loop_queue_work(lo, cmd);
+>
+>         return BLK_STS_OK;
+>  }
+> @@ -2056,26 +2136,82 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>         }
+>  }
+>
+> -static void loop_queue_work(struct kthread_work *work)
+> +static void loop_set_timer(struct loop_device *lo)
 > +{
-> +	struct request_queue *q = bio->bi_disk->queue;
-> +
-> +	if (blk_queue_limit_bio_size(q))
-> +		return blk_queue_get_max_sectors(q, bio_op(bio))
-> +			<< SECTOR_SHIFT;
-> +
-> +	return UINT_MAX;
+> +       timer_reduce(&lo->timer, jiffies + LOOP_IDLE_WORKER_TIMEOUT);
 > +}
 > +
->  /**
->   * bio_reset - reinitialize a bio
->   * @bio:	bio to reset
-> @@ -877,7 +888,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
->  		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
->  
->  		if (page_is_mergeable(bv, page, len, off, same_page)) {
-> -			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-> +			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {
->  				*same_page = false;
->  				return false;
->  			}
-> diff --git a/include/linux/bio.h b/include/linux/bio.h
-> index 1edda614f7ce..13b6f6562a5b 100644
-> --- a/include/linux/bio.h
-> +++ b/include/linux/bio.h
-> @@ -113,7 +113,7 @@ static inline bool bio_full(struct bio *bio, unsigned len)
->  	if (bio->bi_vcnt >= bio->bi_max_vecs)
->  		return true;
->  
-> -	if (bio->bi_iter.bi_size > UINT_MAX - len)
-> +	if (bio->bi_iter.bi_size > bio_max_size(bio) - len)
->  		return true;
->  
->  	return false;
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index f94ee3089e01..3aeab9e7e97b 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -621,6 +621,7 @@ struct request_queue {
->  #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
->  #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
->  #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
-> +#define QUEUE_FLAG_LIMIT_BIO_SIZE 30	/* limit bio size */
->  
->  #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
->  				 (1 << QUEUE_FLAG_SAME_COMP) |		\
-> @@ -667,6 +668,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
->  #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
->  #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
->  #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
-> +#define blk_queue_limit_bio_size(q)	\
-> +	test_bit(QUEUE_FLAG_LIMIT_BIO_SIZE, &(q)->queue_flags)
->  
->  extern void blk_set_pm_only(struct request_queue *q);
->  extern void blk_clear_pm_only(struct request_queue *q);
-> -- 
-> 2.28.0
-> 
+> +static void loop_process_work(struct loop_worker *worker,
+> +                       struct list_head *cmd_list, struct loop_device *lo)
+> +{
+> +       int orig_flags = current->flags;
+> +       struct loop_cmd *cmd;
+> +
+> +       current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+> +       spin_lock_irq(&lo->lo_work_lock);
+> +       while (!list_empty(cmd_list)) {
+> +               cmd = container_of(
+> +                       cmd_list->next, struct loop_cmd, list_entry);
+> +               list_del(cmd_list->next);
+> +               spin_unlock_irq(&lo->lo_work_lock);
+> +
+> +               loop_handle_cmd(cmd);
+> +               cond_resched();
+> +
+> +               spin_lock_irq(&lo->lo_work_lock);
+> +       }
+> +
+> +       /*
+> +        * We only add to the idle list if there are no pending cmds
+> +        * *and* the worker will not run again which ensures that it
+> +        * is safe to free any worker on the idle list
+> +        */
+> +       if (worker && !work_pending(&worker->work)) {
+> +               worker->last_ran_at = jiffies;
+> +               list_add_tail(&worker->idle_list, &lo->idle_worker_list);
+> +               loop_set_timer(lo);
+> +       }
+> +       spin_unlock_irq(&lo->lo_work_lock);
+> +       current->flags = orig_flags;
+> +}
+> +
+> +static void loop_workfn(struct work_struct *work)
+>  {
+> -       struct loop_cmd *cmd =
+> -               container_of(work, struct loop_cmd, work);
+> +       struct loop_worker *worker =
+> +               container_of(work, struct loop_worker, work);
+> +       loop_process_work(worker, &worker->cmd_list, worker->lo);
+> +}
+>
+> -       loop_handle_cmd(cmd);
+> +static void loop_rootcg_workfn(struct work_struct *work)
+> +{
+> +       struct loop_device *lo =
+> +               container_of(work, struct loop_device, rootcg_work);
+> +       loop_process_work(NULL, &lo->rootcg_cmd_list, lo);
+>  }
+>
+> -static int loop_init_request(struct blk_mq_tag_set *set, struct request *rq,
+> -               unsigned int hctx_idx, unsigned int numa_node)
+> +static void loop_free_idle_workers(struct timer_list *timer)
+>  {
+> -       struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
+> +       struct loop_device *lo = container_of(timer, struct loop_device, timer);
+> +       struct loop_worker *pos, *worker;
+>
+> -       kthread_init_work(&cmd->work, loop_queue_work);
+> -       return 0;
+> +       spin_lock_irq(&lo->lo_work_lock);
+> +       list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
+> +                               idle_list) {
+> +               if (time_is_after_jiffies(worker->last_ran_at +
+> +                                               LOOP_IDLE_WORKER_TIMEOUT))
+> +                       break;
+> +               list_del(&worker->idle_list);
+> +               rb_erase(&worker->rb_node, &lo->worker_tree);
+> +               css_put(worker->css);
+> +               kfree(worker);
+> +       }
+> +       if (!list_empty(&lo->idle_worker_list))
+> +               loop_set_timer(lo);
+> +       spin_unlock_irq(&lo->lo_work_lock);
+>  }
+>
+>  static const struct blk_mq_ops loop_mq_ops = {
+>         .queue_rq       = loop_queue_rq,
+> -       .init_request   = loop_init_request,
+>         .complete       = lo_complete_rq,
+>  };
+>
+> @@ -2164,6 +2300,7 @@ static int loop_add(struct loop_device **l, int i)
+>         mutex_init(&lo->lo_mutex);
+>         lo->lo_number           = i;
+>         spin_lock_init(&lo->lo_lock);
+> +       spin_lock_init(&lo->lo_work_lock);
+>         disk->major             = LOOP_MAJOR;
+>         disk->first_minor       = i << part_shift;
+>         disk->fops              = &lo_fops;
+> diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+> index a3c04f310672..9289c1cd6374 100644
+> --- a/drivers/block/loop.h
+> +++ b/drivers/block/loop.h
+> @@ -14,7 +14,6 @@
+>  #include <linux/blk-mq.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/mutex.h>
+> -#include <linux/kthread.h>
+>  #include <uapi/linux/loop.h>
+>
+>  /* Possible states of device */
+> @@ -54,8 +53,13 @@ struct loop_device {
+>
+>         spinlock_t              lo_lock;
+>         int                     lo_state;
+> -       struct kthread_worker   worker;
+> -       struct task_struct      *worker_task;
+> +       spinlock_t              lo_work_lock;
+> +       struct workqueue_struct *workqueue;
+> +       struct work_struct      rootcg_work;
+> +       struct list_head        rootcg_cmd_list;
+> +       struct list_head        idle_worker_list;
+> +       struct rb_root          worker_tree;
+> +       struct timer_list       timer;
+>         bool                    use_dio;
+>         bool                    sysfs_inited;
+>
+> @@ -66,7 +70,7 @@ struct loop_device {
+>  };
+>
+>  struct loop_cmd {
+> -       struct kthread_work work;
+> +       struct list_head list_entry;
+>         bool use_aio; /* use AIO interface to handle I/O */
+>         atomic_t ref; /* only for aio */
+>         long ret;
+> --
+> 2.30.2
+>
 
-Please feedback to me if more modification is needed to apply. :)
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
----
-Changheun Lee
+-- 
+Ming Lei
