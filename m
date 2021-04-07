@@ -2,159 +2,179 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0713560D4
-	for <lists+linux-block@lfdr.de>; Wed,  7 Apr 2021 03:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65D573562D8
+	for <lists+linux-block@lfdr.de>; Wed,  7 Apr 2021 07:06:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238555AbhDGBii (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Apr 2021 21:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232884AbhDGBih (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Apr 2021 21:38:37 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82ED4C06174A;
-        Tue,  6 Apr 2021 18:38:28 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id p10so3388383pld.0;
-        Tue, 06 Apr 2021 18:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vYV8q9cPR39r8XTv5NGEbYCLUvn316w9E8k7pBADmqg=;
-        b=T3OjG7pfoC/aH0hlb4jmWpTRfPfin47UDirBmbxO+5Rj/5DfxGzphuvBUIzEE/Z+rE
-         GlrzSByibJQ1StDX05ya8MHWMNDVcKilz6j1vloMRX5iR4r3HveyxoOxcVGGkecF89T1
-         mKpDhU1IGTXlw3wx+fL+xa7nw1lFsv12+Zd3vIbn3knfrEKM8WG39mkDFJn3fbYXOfo5
-         6N3HMl2UUdZTiyU723AcJGlsNkmiVtS1kvrqkGJ4kGWcP1DKjGyQfztygaJbpnO3RKSV
-         raCOr+SANoE4nsZm5d23qlT2x8CQK/wc2GBn7EHP6ROfmBQ7kxOdqWwL8L79iN2cN4pU
-         eROQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=vYV8q9cPR39r8XTv5NGEbYCLUvn316w9E8k7pBADmqg=;
-        b=D09tMe5krUeP+cru6MY0C5CJ4TR6sSXgQLF/Gx0uZznRlnPEMUw6dACC1/lZirSOSg
-         oqa8tO4Xtwigib4ZPd/axznDJf+jJtWTZ6aQDvy5eefDj3j8BmQS5r+FAlm8wOntT8Ze
-         6T7jyBSNtzn/Xm/FJf8K0SwNXYN0BlKxvm90UeEUAAkn/NPsQIo3raFYNriM9L1WDeEt
-         30CnfMe9qD8ir0CZ8rRV/zBYvgdOVSp0AXXKZcOHgNzKt7SR+9khySRgxh1jfAqjNv5T
-         Mo3MKkCrf7AFshAzEK1bxsGkhPgOqilMjyxJEp2gVweHp+9RMhTeZ8ACtxQ7/iKL6Rg7
-         ZZfw==
-X-Gm-Message-State: AOAM533l3eCXCwUp3y8uz6bXpB6ad3tkvRwL8a765hzg3MrVI+FqP+ac
-        1LEwJ8hTNMXWvL7ZlH7aA1k=
-X-Google-Smtp-Source: ABdhPJymbio9FUUUVE0VvfQ/hhxcFRjaxvMlfG8qdoolaPAemBXI64vcL/KJSEUD4iuv4PUDAMLdqQ==
-X-Received: by 2002:a17:902:d2c7:b029:e6:dd9e:d652 with SMTP id n7-20020a170902d2c7b02900e6dd9ed652mr977807plc.1.1617759507863;
-        Tue, 06 Apr 2021 18:38:27 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:5a8:9f08:98f1:7659])
-        by smtp.gmail.com with ESMTPSA id d19sm3335897pjs.55.2021.04.06.18.38.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Apr 2021 18:38:26 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date:   Tue, 6 Apr 2021 18:38:24 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     keescook@chromium.org, dhowells@redhat.com, hch@infradead.org,
-        mbenes@suse.com, gregkh@linuxfoundation.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] zram: fix crashes due to use of cpu hotplug
- multistate
-Message-ID: <YG0NEIUfJ5lmS4DL@google.com>
-References: <20210319190924.GK4332@42.do-not-panic.com>
- <YFjHvUolScp3btJ9@google.com>
- <20210322204156.GM4332@42.do-not-panic.com>
- <YFkWMZ0m9nKCT69T@google.com>
- <20210401235925.GR4332@42.do-not-panic.com>
- <YGtDzH0dEfEngCij@google.com>
- <20210405190023.GX4332@42.do-not-panic.com>
- <YGtrzXYDiO3Gf9Aa@google.com>
- <20210406002909.GY4332@42.do-not-panic.com>
- <YG0JouWqrJPHbpqz@google.com>
+        id S1348587AbhDGFGK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Apr 2021 01:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348586AbhDGFGK (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 7 Apr 2021 01:06:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1E663613CC;
+        Wed,  7 Apr 2021 05:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1617771961;
+        bh=z0uIQi7/j6KjVaNigS35ejfjE0HWuyMH4+nCAwvFFeU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z61Ayh6VopGEEXs0GGAKA3KIL9Sxc02c07KYQfPAqnNWiLsZnKBRc9W7iZlyWcUSF
+         vtwdy9iQcxs4zyL0909FA/BJmdq6+bzYF5aIwxv8h1CCGsNmvHM9EqIC3/JXEEhzCk
+         D/6enBR86CBKD2UjEyPsxsPJuHBlw1LEEGkOLw3I=
+Date:   Wed, 7 Apr 2021 07:05:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Changheun Lee <nanich.lee@samsung.com>
+Cc:     Johannes.Thumshirn@wdc.com, asml.silence@gmail.com,
+        axboe@kernel.dk, damien.lemoal@wdc.com, hch@infradead.org,
+        jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ming.lei@redhat.com, mj0123.lee@samsung.com, osandov@fb.com,
+        patchwork-bot@kernel.org, seunghwan.hyun@samsung.com,
+        sookwan7.kim@samsung.com, tj@kernel.org, tom.leiming@gmail.com,
+        woosung2.lee@samsung.com, yt0928.kim@samsung.com
+Subject: Re: [RESEND PATCH v5 1/2] bio: limit bio max size
+Message-ID: <YG09t9VRYfxRnhPt@kroah.com>
+References: <YGwOiL7tN905H0h0@kroah.com>
+ <CGME20210407003345epcas1p21376df37d3dfe933684139d3beaf9c51@epcas1p2.samsung.com>
+ <20210407001612.17631-1-nanich.lee@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YG0JouWqrJPHbpqz@google.com>
+In-Reply-To: <20210407001612.17631-1-nanich.lee@samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 06:23:46PM -0700, Minchan Kim wrote:
-> On Tue, Apr 06, 2021 at 12:29:09AM +0000, Luis Chamberlain wrote:
-> > On Mon, Apr 05, 2021 at 12:58:05PM -0700, Minchan Kim wrote:
-> > > On Mon, Apr 05, 2021 at 07:00:23PM +0000, Luis Chamberlain wrote:
-> > > > On Mon, Apr 05, 2021 at 10:07:24AM -0700, Minchan Kim wrote:
-> > > > > On Thu, Apr 01, 2021 at 11:59:25PM +0000, Luis Chamberlain wrote:
-> > > > > > And come to think of it the last patch I had sent with a new
-> > > > > > DECLARE_RWSEM(zram_unload) also has this same issue making most
-> > > > > > sysfs attributes rather fragile.
-> > > > > 
-> > > > > Thanks for looking the way. I agree the single zram_index_rwlock is
-> > > > > not the right approach to fix it. However, I still hope we find more
-> > > > > generic solution to fix them at once since I see it's zram instance
-> > > > > racing problem.
+On Wed, Apr 07, 2021 at 09:16:12AM +0900, Changheun Lee wrote:
+> > On Tue, Apr 06, 2021 at 10:31:28AM +0900, Changheun Lee wrote:
+> > > > bio size can grow up to 4GB when muli-page bvec is enabled.
+> > > > but sometimes it would lead to inefficient behaviors.
+> > > > in case of large chunk direct I/O, - 32MB chunk read in user space -
+> > > > all pages for 32MB would be merged to a bio structure if the pages
+> > > > physical addresses are contiguous. it makes some delay to submit
+> > > > until merge complete. bio max size should be limited to a proper size.
 > > > > 
-> > > > They are 3 separate different problems. Related, but different.
+> > > > When 32MB chunk read with direct I/O option is coming from userspace,
+> > > > kernel behavior is below now in do_direct_IO() loop. it's timeline.
+> > > > 
+> > > >  | bio merge for 32MB. total 8,192 pages are merged.
+> > > >  | total elapsed time is over 2ms.
+> > > >  |------------------ ... ----------------------->|
+> > > >                                                  | 8,192 pages merged a bio.
+> > > >                                                  | at this time, first bio submit is done.
+> > > >                                                  | 1 bio is split to 32 read request and issue.
+> > > >                                                  |--------------->
+> > > >                                                   |--------------->
+> > > >                                                    |--------------->
+> > > >                                                               ......
+> > > >                                                                    |--------------->
+> > > >                                                                     |--------------->|
+> > > >                           total 19ms elapsed to complete 32MB read done from device. |
+> > > > 
+> > > > If bio max size is limited with 1MB, behavior is changed below.
+> > > > 
+> > > >  | bio merge for 1MB. 256 pages are merged for each bio.
+> > > >  | total 32 bio will be made.
+> > > >  | total elapsed time is over 2ms. it's same.
+> > > >  | but, first bio submit timing is fast. about 100us.
+> > > >  |--->|--->|--->|---> ... -->|--->|--->|--->|--->|
+> > > >       | 256 pages merged a bio.
+> > > >       | at this time, first bio submit is done.
+> > > >       | and 1 read request is issued for 1 bio.
+> > > >       |--------------->
+> > > >            |--------------->
+> > > >                 |--------------->
+> > > >                                       ......
+> > > >                                                  |--------------->
+> > > >                                                   |--------------->|
+> > > >         total 17ms elapsed to complete 32MB read done from device. |
+> > > > 
+> > > > As a result, read request issue timing is faster if bio max size is limited.
+> > > > Current kernel behavior with multipage bvec, super large bio can be created.
+> > > > And it lead to delay first I/O request issue.
+> > > > 
+> > > > Signed-off-by: Changheun Lee <nanich.lee@samsung.com>
+> > > > ---
+> > > >  block/bio.c            | 13 ++++++++++++-
+> > > >  include/linux/bio.h    |  2 +-
+> > > >  include/linux/blkdev.h |  3 +++
+> > > >  3 files changed, 16 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/block/bio.c b/block/bio.c
+> > > > index 1f2cc1fbe283..c528e1f944c7 100644
+> > > > --- a/block/bio.c
+> > > > +++ b/block/bio.c
+> > > > @@ -287,6 +287,17 @@ void bio_init(struct bio *bio, struct bio_vec *table,
+> > > >  }
+> > > >  EXPORT_SYMBOL(bio_init);
+> > > >  
+> > > > +unsigned int bio_max_size(struct bio *bio)
+> > > > +{
+> > > > +	struct request_queue *q = bio->bi_disk->queue;
+> > > > +
+> > > > +	if (blk_queue_limit_bio_size(q))
+> > > > +		return blk_queue_get_max_sectors(q, bio_op(bio))
+> > > > +			<< SECTOR_SHIFT;
+> > > > +
+> > > > +	return UINT_MAX;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * bio_reset - reinitialize a bio
+> > > >   * @bio:	bio to reset
+> > > > @@ -877,7 +888,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+> > > >  		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+> > > >  
+> > > >  		if (page_is_mergeable(bv, page, len, off, same_page)) {
+> > > > -			if (bio->bi_iter.bi_size > UINT_MAX - len) {
+> > > > +			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {
+> > > >  				*same_page = false;
+> > > >  				return false;
+> > > >  			}
+> > > > diff --git a/include/linux/bio.h b/include/linux/bio.h
+> > > > index 1edda614f7ce..13b6f6562a5b 100644
+> > > > --- a/include/linux/bio.h
+> > > > +++ b/include/linux/bio.h
+> > > > @@ -113,7 +113,7 @@ static inline bool bio_full(struct bio *bio, unsigned len)
+> > > >  	if (bio->bi_vcnt >= bio->bi_max_vecs)
+> > > >  		return true;
+> > > >  
+> > > > -	if (bio->bi_iter.bi_size > UINT_MAX - len)
+> > > > +	if (bio->bi_iter.bi_size > bio_max_size(bio) - len)
+> > > >  		return true;
+> > > >  
+> > > >  	return false;
+> > > > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> > > > index f94ee3089e01..3aeab9e7e97b 100644
+> > > > --- a/include/linux/blkdev.h
+> > > > +++ b/include/linux/blkdev.h
+> > > > @@ -621,6 +621,7 @@ struct request_queue {
+> > > >  #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+> > > >  #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+> > > >  #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+> > > > +#define QUEUE_FLAG_LIMIT_BIO_SIZE 30	/* limit bio size */
+> > > >  
+> > > >  #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+> > > >  				 (1 << QUEUE_FLAG_SAME_COMP) |		\
+> > > > @@ -667,6 +668,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+> > > >  #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
+> > > >  #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
+> > > >  #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
+> > > > +#define blk_queue_limit_bio_size(q)	\
+> > > > +	test_bit(QUEUE_FLAG_LIMIT_BIO_SIZE, &(q)->queue_flags)
+> > > >  
+> > > >  extern void blk_set_pm_only(struct request_queue *q);
+> > > >  extern void blk_clear_pm_only(struct request_queue *q);
+> > > > -- 
+> > > > 2.28.0
+> > > > 
 > > > 
-> > > What are 3 different problems? I am asking since I remember only two:
-> > > one for CPU multistate and the other one for sysfs during rmmod.
+> > > Please feedback to me if more modification is needed to apply. :)
 > > 
-> > The third one is the race to use sysfs attributes and those routines
-> > then derefernece th egendisk private_data.
+> > You are adding code that tests for a value to be set, yet you never set
+> > it in this code so why is it needed at all?
 > 
-> First of all, thanks for keeping discussion, Luis.
-> 
-> That was the one I thought race between sysfs and during rmmod.
-> 
-> > 
-> > > > If the idea then is to busy out rmmod if a sysfs attribute is being
-> > > > read, that could then mean rmmod can sometimes never complete. Hogging
-> > > > up / busying out sysfs attributes means the module cannto be removed.
-> > > 
-> > > It's true but is it a big problem? There are many cases that system
-> > > just return error if it's busy and rely on the admin. IMHO, rmmod should
-> > > be part of them.
-> > 
-> > It depends on existing userspace scripts which are used to test and
-> > expectations set. Consider existing tests, you would know better, and
-> > since you are the maintainer you decide.
-> > 
-> > I at least know for many other types of device drivers an rmmod is
-> > a sledge hammer.
-> > 
-> > You decide. I just thought it would be good to highlight the effect now
-> > rather than us considering it later.
-> 
-> To me, the rmmod faillure is not a big problem for zram since it's
-> common cases in the system with -EBUSY(Having said, I agree that's the
-> best if we could avoid the fail-and-retrial. IOW, -EBUSY should be
-> last resort unless we have nicer way.)
-> 
-> > 
-> > > > Which is why the *try_module_get()* I think is much more suitable, as
-> > > > it will always fails if we're already going down.
-> > > 
-> > > How does the try_module_get solved the problem?
-> > 
-> > The try stuff only resolves the deadlock. The bget() / bdput() resolves
-> > the race to access to the gendisk private_data.
-> 
-> That's the one I missed in this discussion. Now I am reading your [2/2]
-> in original patch. I thought it was just zram instance was destroyed
-> by sysfs race problem so you had seen the deadlock. I might miss the
-> point here, too. 
-> 
-> Hmm, we are discussing several problems all at once. I feel it's time
-> to jump v2 with your way in this point. You said three different
-> problems. As I asked, please write it down with more detail with
-> code sequence as we discussed other thread. If you mean a deadlock,
-> please write what specific locks was deadlock with it.
-> It would make discussion much easier. Let's discuss the issue
-> one by one in each thread.
+> This patch is a solution for some inefficient case of multipage bvec like
+> as current DIO scenario. So it's not set as a default.
+> It will be set when bio size limitation is needed in runtime.
 
-To clarify what I understood form the discussion until now:
-
-1. zram shouldn't allow creating more zram instance during
-rmmod(It causes CPU multistate splat)
-
-2. the private data of gendisk shouldn't destroyed while zram
-sysfs knob is working(it makes system goes crash)
-
-Thank you.
+Set where?
