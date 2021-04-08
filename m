@@ -2,92 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D6B3589DF
-	for <lists+linux-block@lfdr.de>; Thu,  8 Apr 2021 18:38:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4EB358A26
+	for <lists+linux-block@lfdr.de>; Thu,  8 Apr 2021 18:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbhDHQiK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Apr 2021 12:38:10 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2808 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231480AbhDHQiK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Apr 2021 12:38:10 -0400
-Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FGRb20xQHz686p9;
-        Fri,  9 Apr 2021 00:30:54 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Thu, 8 Apr 2021 18:37:56 +0200
-Received: from [10.47.1.29] (10.47.1.29) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Thu, 8 Apr 2021
- 17:37:55 +0100
-Subject: Re: [PATCH v6 2/5] blk-mq: Introduce atomic variants of
- blk_mq_(all_tag|tagset_busy)_iter
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Hannes Reinecke" <hare@suse.de>,
+        id S231480AbhDHQwf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Apr 2021 12:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230522AbhDHQwe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Apr 2021 12:52:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB3EC061760
+        for <linux-block@vger.kernel.org>; Thu,  8 Apr 2021 09:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Q29oYU7+PgQv3ImQdZEytRCH3GU1GnkRUKQuVZW+bJQ=; b=B5D+DmP9E0SNV1OcJ3g5AD9/6X
+        atRPiTH8PjYJjtWbnYbT1VQsmGYvd62WWatBFl7n0iuEoQijEGpz6PR7yyLFJcfIMMbyFUGXxFJqm
+        WROt1IMYokuXgRTzxiSYQo+o2keQgJ3YSo2wleBrgsynwdlhidlZLuwATsz+ssaBoPl8mkti+gBDh
+        6tqJbsOIxrGsqce4AD+yrsIXFv7gAFREfHO7AmFmajn9lINKM5PXqMaNKXzlig85O7lTmSm5ZTAbU
+        YzSjEiezYMBAmkDNyWYu4s5s1pMI1NFNG/riaupYuZ23iGcAxIJ/kdqDLqQ8X1YkzdHHODHI9HJG6
+        Fqrj52vQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lUXt2-00GY4z-4c; Thu, 08 Apr 2021 16:52:10 +0000
+Date:   Thu, 8 Apr 2021 17:52:08 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Md Haris Iqbal <haris.iqbal@ionos.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, jinpu.wang@ionos.com,
+        danil.kipnis@ionos.com, Guoqing Jiang <guoqing.jiang@ionos.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Khazhy Kumykov <khazhy@google.com>
-References: <20210406214905.21622-1-bvanassche@acm.org>
- <20210406214905.21622-3-bvanassche@acm.org>
- <31402243-57ca-8fa5-473a-d5ce20774c50@huawei.com>
- <1610af81-ce46-26c4-5aae-d84aba5cf1f5@acm.org>
- <14be9975-fbd1-796a-e44e-3342c5a330fb@huawei.com>
- <9774f2c5-0d76-59b4-c272-22a627c1ed84@acm.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <0047a549-efa4-c011-fff4-11ac1803fc3c@huawei.com>
-Date:   Thu, 8 Apr 2021 17:35:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Guoqing Jiang <jgq516@gmail.com>
+Subject: Re: [PATCH V5 2/3] block: add a statistic table for io latency
+Message-ID: <20210408165208.GA3944028@infradead.org>
+References: <20210408135840.386076-1-haris.iqbal@ionos.com>
+ <20210408135840.386076-3-haris.iqbal@ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <9774f2c5-0d76-59b4-c272-22a627c1ed84@acm.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.1.29]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210408135840.386076-3-haris.iqbal@ionos.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Bart,
+> +static ssize_t io_latency_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct block_device *bdev = dev_to_bdev(dev);
+> +	size_t count = 0;
+> +	int i, sgrp;
+> +
+> +	for (i = 0; i < ADD_STAT_NUM; i++) {
+> +		unsigned int from, to;
+> +
+> +		if (i == ADD_STAT_NUM - 1) {
+> +			count += scnprintf(buf + count, PAGE_SIZE - count, "      >= %5d  ms: ",
 
->> But blk_mq_tagset_busy_iter() uses BT_TAG_ITER_MAY sleep flag in your
->> series.
-> 
-> I will mention the nbd driver in the commit message.
-> 
->> As for the fc, I am not sure. I assume that you would know more about
->> this. My concern is
->>
->> __nvme_fc_abort_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_fcp_op *op)
->> {
->> ...
->>
->>      ctrl->lport->ops->fcp_abort(&ctrl->lport->localport, ..);
->> }
->>
->> Looking at many instances of fcp_abort callback, they look atomic safe
->> from general high usage of spinlock, but I am not certain. They are
->> quite complex.
-> I have not tried to analyze whether or not it is safe to call
-> __nvme_fc_abort_op() from an atomic context. Instead I analyzed the
-> contexts from which this function is called, namely the
-> blk_mq_tagset_busy_iter() calls in __nvme_fc_abort_outstanding_ios() and
-> __nvme_fc_abort_outstanding_ios(). Both blk_mq_tagset_busy_iter() calls
-> are followed by a call to a function that may sleep. Hence it is safe to
-> sleep inside the blk_mq_tagset_busy_iter() calls from the nvme_fc code.
-> I have not tried to analyze whether it would be safe to change these
-> blk_mq_tagset_busy_iter() calls into blk_mq_tagset_busy_iter_atomic()
-> calls. Does this answer your question?
+Please fix your overly long lines all over this code.
 
-Yes, fine.
-
-Thanks,
-John
