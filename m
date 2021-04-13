@@ -2,126 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D791235DCDD
-	for <lists+linux-block@lfdr.de>; Tue, 13 Apr 2021 12:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5502535DCE2
+	for <lists+linux-block@lfdr.de>; Tue, 13 Apr 2021 12:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244880AbhDMKxc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Apr 2021 06:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39550 "EHLO
+        id S245302AbhDMKyl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Apr 2021 06:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237637AbhDMKxb (ORCPT
+        with ESMTP id S245261AbhDMKyk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Apr 2021 06:53:31 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB80BC061574
-        for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:53:11 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id n2so25148071ejy.7
-        for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:53:11 -0700 (PDT)
+        Tue, 13 Apr 2021 06:54:40 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74DBDC061574
+        for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:54:21 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id mh2so3617663ejb.8
+        for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=c1p4UuWXUcDL5Md++SwHU7dqkkEr/TBzQyQcjlzcBQw=;
-        b=tcSQR0S/SU9me1Ajo2o9ergyObgc7OaQXSgtS+l+5miEnb42187A7whMd2BofZL4v/
-         7T5juKjej5UrUgs0rD9mnrz8ra3o+h4eYWb/aggLkPJGZ7hLHTiIrEGE7qhPomiRg8xP
-         CcgKTVlZYuw4bXXyiw+jSt7XZpwqAUUQ0igbuXtSY1s/cKYShWy8GXdsRnvrE3HcmrT4
-         pUb/4fvCMbE2RSKO6vSqiNIN5iRFowbGTWctm6tPT7LRf1He2GW1Fbg98l77tU6FEiDw
-         RiX+Y6dBdtYXy2aNeJBnHMAUoR5Sp3RvssduUZgD+tKOze090rUKlNyIbygeS0S3e3vD
-         Bjcg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=kWM6YWNw3sQhkBrGWvR8Yt+o+cd1hxdL2Pb6mH6ok+g=;
+        b=UeC2bcUTGYwxKp3JQVhGg3kAN8lLguvIhfDLnRVoqf4wh+bbiDukYGK0lGLtzEr7LY
+         8w/NzMotvf0DfR/Fb7OLD5nloHvLBI7G7dR48q6FnKnWQMl04B4XiXoXS9ZPl4T0kBY8
+         t5kWgTf5Xqg7PfFMYogmSDUQpfY3epNjgAu/odEn3JMTNZG4os4hiWvytrPAWRVnCLpe
+         jN4PgJStr8h8/hecpUB1iQ89XglijD8cg5zbCftBb+CrcMATuCO4tdaPOLzAkXy1O3Ue
+         NqrmK4FhDE01sk+vVLeXKt5WJGgTvCXglY7/m4yrGKP3CIBgDDFpl+5YS5DcO6HHiq1U
+         Jg6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=c1p4UuWXUcDL5Md++SwHU7dqkkEr/TBzQyQcjlzcBQw=;
-        b=I8oe3iUl6Rrm8JO92RgOOWEbJ6k6Z/roSXjbn71Zkdx0kRvT8pjyvg+PhTpddOBd2x
-         oMOCKMzm0YJ83NCpIpp6ghr2QXbdWHC9F8O/WfoIHlzmIhCcIzrYiCd9LUwgYsXcioih
-         7AtKMB+0a6R+9yNm80sBQlj3wMzF6Y9tIx3fGetcWva+usMqAu6fJEZZtIM6XdiJi11j
-         ag32Cbbav6CnZ8+eS7GGonHET2CxP2nJkxaB0SkY536DT6/DYiJS+RRBkjr/uena+V9l
-         zruQVWvcG02RA4XrJd/F9QDrCHcEX6kUfLFbf+PBf0H+feif7q9elt3WCG8eloeSlpww
-         JJ7g==
-X-Gm-Message-State: AOAM531nkSDY7RMNM+7Umd2zCOTpl/sN/qx1u4+yILO4fiyu0eSSEvWr
-        Sc32eq6DFxOAa697E6z+mExHZg==
-X-Google-Smtp-Source: ABdhPJxfZ4hijsdEAW+lZn8dtQ7MQBoHW9ksx6ii3MScJYyhatBmARFjMSoyh6EulIVTjAh7IS9RKA==
-X-Received: by 2002:a17:907:118c:: with SMTP id uz12mr23436488ejb.308.1618311190614;
-        Tue, 13 Apr 2021 03:53:10 -0700 (PDT)
-Received: from dellx1.cphwdc ([87.116.37.42])
-        by smtp.googlemail.com with ESMTPSA id m5sm9140064edi.52.2021.04.13.03.53.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 03:53:10 -0700 (PDT)
-From:   "=?UTF-8?q?Matias=20Bj=C3=B8rling?=" <mb@lightnvm.io>
-X-Google-Original-From: =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [PATCH 4/4] lightnvm: deprecated OCSSD support and schedule it for removal in Linux 5.15
-Date:   Tue, 13 Apr 2021 10:52:57 +0000
-Message-Id: <20210413105257.159260-5-matias.bjorling@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210413105257.159260-1-matias.bjorling@wdc.com>
-References: <20210413105257.159260-1-matias.bjorling@wdc.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=kWM6YWNw3sQhkBrGWvR8Yt+o+cd1hxdL2Pb6mH6ok+g=;
+        b=rc9Wa5CojG4BQ3Z3h+0F1sj5+Zji/uRYhDxpLigdqwPJGIRVOEhODNvfMBy9OEx2Tk
+         WM+EflHkHdlps6Uq9lcLHxp2SOGGHTcAB9L8LKXt7FTzSpIHahyvgVxeQZ2+XejdJi+O
+         wOXFVXs9RliWaSD5PA0hPDjtYxxmYt6hH+xNE2SH/3l8MjxAblrpD+oLT91feawNAUbQ
+         agubsbl5wXaumfLanNyC8XzLcwAhLLT2EJZm39EYzKTRy2CUGZ1qu8xHv7I9xi2Jjjqs
+         C+RgZ1239bTLciyoyFvDdH0nhqpYsdAo6E2AVyBHz480jsDql2mbKeJPmwaM1V3jcjXn
+         WJJw==
+X-Gm-Message-State: AOAM531TskDSkTNp8wSvpUPuUl+lHkthi9yWYgWtcLxpSXjCXbQukxgV
+        tZBJLahWd9HYE2fcg7SsraWAISJCXqRPCB70CCA=
+X-Google-Smtp-Source: ABdhPJxfo6D5gIm697PZkk6Yornq7nPxIYMhVfpMxTmc71hNXm7N7sEvx0go6+WqL3rEe1mWgSEWUg==
+X-Received: by 2002:a17:907:2d0c:: with SMTP id gs12mr17800725ejc.443.1618311260212;
+        Tue, 13 Apr 2021 03:54:20 -0700 (PDT)
+Received: from [10.0.0.62] (xb932c246.cust.hiper.dk. [185.50.194.70])
+        by smtp.gmail.com with ESMTPSA id cy5sm9259959edb.46.2021.04.13.03.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Apr 2021 03:54:19 -0700 (PDT)
+Subject: Re: [PATCH] lightnvm: Return the correct return value
+To:     Tian Tao <tiantao6@hisilicon.com>
+Cc:     linux-block@vger.kernel.org
+References: <1618213134-21099-1-git-send-email-tiantao6@hisilicon.com>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <0e4c8c3e-921b-0e49-c671-647dc09692e4@lightnvm.io>
+Date:   Tue, 13 Apr 2021 12:54:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1618213134-21099-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-
-Lightnvm was an innovative idea to expose more low-level control over SSDs.
-But it failed to get properly standardized and remains a non-standarized
-extension to NVMe that requires vendor specific quirks for a few now mostly
-obsolete SSD devices.  The standardized ZNS command set for NVMe has take
-over a lot of the approaches and allows for fully standardized operation.
-
-Remove the Linux code to support open channel SSDs as the few production
-deployments of the above mentioned SSDs are using userspace driver stacks
-instead of the fairly limited Linux support.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Javier González <javier@javigon.com>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
----
- drivers/lightnvm/Kconfig | 4 +++-
- drivers/lightnvm/core.c  | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/lightnvm/Kconfig b/drivers/lightnvm/Kconfig
-index 4c2ce210c123..04caa0f2d445 100644
---- a/drivers/lightnvm/Kconfig
-+++ b/drivers/lightnvm/Kconfig
-@@ -4,7 +4,7 @@
- #
- 
- menuconfig NVM
--	bool "Open-Channel SSD target support"
-+	bool "Open-Channel SSD target support (DEPRECATED)"
- 	depends on BLOCK
- 	help
- 	  Say Y here to get to enable Open-channel SSDs.
-@@ -15,6 +15,8 @@ menuconfig NVM
- 	  If you say N, all options in this submenu will be skipped and disabled
- 	  only do this if you know what you are doing.
- 
-+	  This code is deprecated and will be removed in Linux 5.15.
-+
- if NVM
- 
- config NVM_PBLK
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 42774beeba94..40a948c08a0b 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -1174,6 +1174,8 @@ int nvm_register(struct nvm_dev *dev)
- {
- 	int ret, exp_pool_size;
- 
-+	pr_warn_once("lightnvm support is deprecated and will be removed in Linux 5.15.\n");
-+
- 	if (!dev->q || !dev->ops) {
- 		kref_put(&dev->ref, nvm_free);
- 		return -EINVAL;
--- 
-2.25.1
-
+On 12/04/2021 09.38, Tian Tao wrote:
+> When memdup_user returns an error, memdup_user has two different return
+> values, use PTR_ERR to get the correct return value.
+>
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> ---
+>   drivers/lightnvm/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
+> index 28ddcaa..42774be 100644
+> --- a/drivers/lightnvm/core.c
+> +++ b/drivers/lightnvm/core.c
+> @@ -1257,7 +1257,7 @@ static long nvm_ioctl_info(struct file *file, void __user *arg)
+>   
+>   	info = memdup_user(arg, sizeof(struct nvm_ioctl_info));
+>   	if (IS_ERR(info))
+> -		return -EFAULT;
+> +		return PTR_ERR(info);
+>   
+>   	info->version[0] = NVM_VERSION_MAJOR;
+>   	info->version[1] = NVM_VERSION_MINOR;
+Thanks, Tian. It has been pulled.
