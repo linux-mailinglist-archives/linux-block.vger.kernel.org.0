@@ -2,60 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0E0B35DCDC
-	for <lists+linux-block@lfdr.de>; Tue, 13 Apr 2021 12:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8919A35DCDE
+	for <lists+linux-block@lfdr.de>; Tue, 13 Apr 2021 12:53:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237553AbhDMKxa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Apr 2021 06:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
+        id S237637AbhDMKxd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Apr 2021 06:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237637AbhDMKx3 (ORCPT
+        with ESMTP id S237823AbhDMKxb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Apr 2021 06:53:29 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EAEC061574
+        Tue, 13 Apr 2021 06:53:31 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE643C06175F
         for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:53:10 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id mh2so3613000ejb.8
+Received: by mail-ej1-x644.google.com with SMTP id w3so25209730ejc.4
         for <linux-block@vger.kernel.org>; Tue, 13 Apr 2021 03:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vK+P6yZH8yZzrPNQ8OJQLkBIHcLK9frC/HeCWw+8mU0=;
-        b=NCxWM1hNqK8I07R6oQdD6Om79rQI23rMT5Jw7n5er8CWflLYHJwPqhsnB8AcTaYCn8
-         xbEy4bZRGX7zHGOiWjwHettp7FtRvZaS6ADflg1ay3Tqoiy1aX9AO0XA/1AnxBdnbVpT
-         fgf/Z6P3/1baYQuXwUuqy3z1tM3C64Zep8BoV+e9JcV1I/vMtGKvX1eBPhbB+kVJ6mES
-         QByLY7iuOQTeaSX9Ya20/fFyilnErZc/NxGrWHPTz7Cila+ozLHY70jNduiNFsbo8xQl
-         m11r38UIEpAPjOMCAs02nFyvXP+gHnCgUFR/wy6vNNJ2gkpLIsF+nxflxx6lVUQBcwgk
-         cEeA==
+        bh=obEac+9Zc6bGKd4KfPkTZdxJfUx2XdIM7kC/FXrC9/c=;
+        b=KonNN35cLh4+Zo8yZ5ceNhasSLNlDw3TZ0JBNLtKjP1q6+1WiAd4RBRxXKGb0HZZ9i
+         Y4OeWPK3U5dItjY+b9WG+LyQMZSWbVvgniMFNsiev5Es/xoe7hAfEmQRZ4jc+rhia1jP
+         u+JbrzjIoN9TXHl0Anfk38VrtbLkWxGBPsV40fZD4POEwweehx73YqXRJcpl6ozqryrE
+         PMp/Tcsl46ceKICeLCxLBN8Aqdn9NRZyYu4LPs4vkYwZBd5VuW24LT8cFfc+2gKjWpyf
+         WivCUx6CKsY0As0BNFTj9+TGsNsc+iiRrsAJ4Za80W6nAnWQnAObv5ZtOe4q7Qwy9C+r
+         fXag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vK+P6yZH8yZzrPNQ8OJQLkBIHcLK9frC/HeCWw+8mU0=;
-        b=apnIyi2OWwqb5cFKFs/gOQnkkdNqRkcSb9T+Pu4PJ0azmhFUHDsFvGRepUWCTW/EZN
-         Kr4Htcl6+Ky+UE4cbfAcUEfY/V0wHd2WVS8AIdMs15AfRiVj8DjKlHlkgFAiRjz6+IqR
-         fqnq9jjpi4XPMw/U3upi3ppOQkQoaaZxntpTa7RmKTQH9aGooLXMYW3sPs4lQBE2XVt3
-         l7YlXrEhHh+21OsYBonb/zpNBg3QPqHajt/tC67Ud6PQxy4chKuW0dF8poDXiYQDs8PE
-         DjdVx5i8x+INsZNnEVaZ9utsvJd0GO/IVUcoZWz1xbrLAzwKGaN1VWK4uFXzPGYERB51
-         Bwxw==
-X-Gm-Message-State: AOAM533gRzNnh7cUd7JzJs8cPBiQ5IpeATEEtlS37vhunzkc+2nMKTlq
-        YQyR97i5R2L+Ljp15QEaSnxWK6/tyrbGAIE82sY=
-X-Google-Smtp-Source: ABdhPJyP435AIAsxqu0uKtzjWghzeVKumsnDacoPQZ6iJplx5UicHXfAfn/L9g2ukcrFetjpTc00Ow==
-X-Received: by 2002:a17:906:7c4:: with SMTP id m4mr32198019ejc.63.1618311188930;
-        Tue, 13 Apr 2021 03:53:08 -0700 (PDT)
+        bh=obEac+9Zc6bGKd4KfPkTZdxJfUx2XdIM7kC/FXrC9/c=;
+        b=iRsjUID8JRv1k7YS8ChYFcUiZs6/b6wgfxuJdkSQp15lFRk5Dnm9FGGv5F2ZHzND+Y
+         pXm5Gi3r8PAs0qTUDOXjsymm089gv7dVj3dYY/B91SszWD+xVBeyUch6sI/gSidkKqYu
+         WUG/ww2WIVZs2NQRKcPKvL2mitd/6RqExI+Gb3PqwUV/W6CZ+cIYALj1OR3RTZAYDlp5
+         6D1EPCqoGVjFHPKVH+UGGDhSYxmPQHrVilT3ET0MfDFZ94GzGQSD9YucxjDTGMXz8vW2
+         gzhxAOagfw7aMnmjHiVXN3ilf2DjUNYgOUjrrxrcoX5kAslUeAiYIl9BF9dotfkpCmZI
+         a8Ew==
+X-Gm-Message-State: AOAM5315vc9FoUg1J/xJTHFc8Y6ylLGQbM/e5ZstLVlUpY4kKPWjbfIk
+        To61zUKfze0NewxgkCeHMznkPw==
+X-Google-Smtp-Source: ABdhPJxpWFashQBS2gy90LyOD7Nv7Bo5FOPIVjCP8QbDdfuimCoh+C6KBmBg6FBuKFYLfS87x3LLFA==
+X-Received: by 2002:a17:906:c08f:: with SMTP id f15mr31722634ejz.318.1618311189604;
+        Tue, 13 Apr 2021 03:53:09 -0700 (PDT)
 Received: from dellx1.cphwdc ([87.116.37.42])
         by smtp.googlemail.com with ESMTPSA id m5sm9140064edi.52.2021.04.13.03.53.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 03:53:08 -0700 (PDT)
+        Tue, 13 Apr 2021 03:53:09 -0700 (PDT)
 From:   "=?UTF-8?q?Matias=20Bj=C3=B8rling?=" <mb@lightnvm.io>
 X-Google-Original-From: =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
 To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, Tian Tao <tiantao6@hisilicon.com>,
+Cc:     linux-block@vger.kernel.org,
+        Zhang Yunkai <zhang.yunkai@zte.com.cn>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>
-Subject: [PATCH 2/4] lightnvm: return the correct return value
-Date:   Tue, 13 Apr 2021 10:52:55 +0000
-Message-Id: <20210413105257.159260-3-matias.bjorling@wdc.com>
+Subject: [PATCH 3/4] lightnvm: remove duplicate include in lightnvm.h
+Date:   Tue, 13 Apr 2021 10:52:56 +0000
+Message-Id: <20210413105257.159260-4-matias.bjorling@wdc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210413105257.159260-1-matias.bjorling@wdc.com>
 References: <20210413105257.159260-1-matias.bjorling@wdc.com>
@@ -66,30 +67,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Tian Tao <tiantao6@hisilicon.com>
+From: Zhang Yunkai <zhang.yunkai@zte.com.cn>
 
-When memdup_user returns an error, memdup_user has two different return
-values, use PTR_ERR to get the correct return value.
+'linux/blkdev.h' and 'uapi/linux/lightnvm.h' included in 'lightnvm.h'
+is duplicated.It is also included in the 5th and 7th line.
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Zhang Yunkai <zhang.yunkai@zte.com.cn>
 Signed-off-by: Matias Bjørling <matias.bjorling@wdc.com>
 ---
- drivers/lightnvm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/lightnvm.h      | 2 --
+ include/uapi/linux/lightnvm.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 28ddcaa5358b..42774beeba94 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -1257,7 +1257,7 @@ static long nvm_ioctl_info(struct file *file, void __user *arg)
+diff --git a/include/linux/lightnvm.h b/include/linux/lightnvm.h
+index 1db223710b28..0908abda9c1b 100644
+--- a/include/linux/lightnvm.h
++++ b/include/linux/lightnvm.h
+@@ -112,10 +112,8 @@ struct nvm_dev_ops {
  
- 	info = memdup_user(arg, sizeof(struct nvm_ioctl_info));
- 	if (IS_ERR(info))
--		return -EFAULT;
-+		return PTR_ERR(info);
+ #ifdef CONFIG_NVM
  
- 	info->version[0] = NVM_VERSION_MAJOR;
- 	info->version[1] = NVM_VERSION_MINOR;
+-#include <linux/blkdev.h>
+ #include <linux/file.h>
+ #include <linux/dmapool.h>
+-#include <uapi/linux/lightnvm.h>
+ 
+ enum {
+ 	/* HW Responsibilities */
+diff --git a/include/uapi/linux/lightnvm.h b/include/uapi/linux/lightnvm.h
+index ead2e72e5c88..2745afd9b8fa 100644
+--- a/include/uapi/linux/lightnvm.h
++++ b/include/uapi/linux/lightnvm.h
+@@ -22,7 +22,6 @@
+ 
+ #ifdef __KERNEL__
+ #include <linux/const.h>
+-#include <linux/ioctl.h>
+ #else /* __KERNEL__ */
+ #include <stdio.h>
+ #include <sys/ioctl.h>
 -- 
 2.25.1
 
