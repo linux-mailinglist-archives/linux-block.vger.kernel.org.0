@@ -2,306 +2,234 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A59AD360734
-	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 12:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0253607D0
+	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 12:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231610AbhDOKej (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Apr 2021 06:34:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39066 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231534AbhDOKei (ORCPT
+        id S232253AbhDOK4h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Apr 2021 06:56:37 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:45769 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231549AbhDOK4g (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Apr 2021 06:34:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618482855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QZlC/yFRAzpA3qKEw9fTVKuwam05UecbY6LxriES8ZU=;
-        b=O9U5NdpXzpjVECsuB6OJKcAyi0dq8DALf5oICPCb3bREVlH/2uQx6LjaqZL/iBBp0X1HeF
-        vnR6KNc7nMM/fBMxKi/A/P0XeLN/ijaZjzm5dIgV3FuG498ULOUGG5gD9TAcBENShWYmBO
-        NVZ8ITO7HFfVWSxjGiTrjyhApaTcynE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-xKThsBeAOx2-DtOpqVgIRQ-1; Thu, 15 Apr 2021 06:34:11 -0400
-X-MC-Unique: xKThsBeAOx2-DtOpqVgIRQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DF8218B9F42;
-        Thu, 15 Apr 2021 10:34:10 +0000 (UTC)
-Received: from localhost (ovpn-13-200.pek2.redhat.com [10.72.13.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A5DDB5D76F;
-        Thu, 15 Apr 2021 10:34:09 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
-        linux-nvme@lists.infradead.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [RFC PATCH 2/2] block: support to freeze bio based request queue
-Date:   Thu, 15 Apr 2021 18:33:10 +0800
-Message-Id: <20210415103310.1513841-3-ming.lei@redhat.com>
-In-Reply-To: <20210415103310.1513841-1-ming.lei@redhat.com>
-References: <20210415103310.1513841-1-ming.lei@redhat.com>
+        Thu, 15 Apr 2021 06:56:36 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20210415105611epoutp048c45d9fb4e47c483e3f27f7e2da73a2f~2Asd18QcV2398623986epoutp04n
+        for <linux-block@vger.kernel.org>; Thu, 15 Apr 2021 10:56:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20210415105611epoutp048c45d9fb4e47c483e3f27f7e2da73a2f~2Asd18QcV2398623986epoutp04n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1618484171;
+        bh=Z44z3Lkz3Z/wDbPAEE/WCSjzDxeBal58wKN8vdQlIX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=me1UcxdyOH/Yen5ZCezEz8+xX2hG9GMzPS1wMCZ6TcP/YbxFGoN6mNIDyJIma3R9U
+         ww0vRECdmXneDecO+Y+I2G0KEoc5cwO4Q5uiz0setiH203pS8qwCnzwZunCgQ+xdDE
+         43ZEmUJZT5SyIlR7HfN+OK3x1/nAiG5VXLLPQ/Cs=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20210415105610epcas1p1f09c03ed76c5e2de6ed6cf39521ea70b~2AscphuE11703717037epcas1p1N;
+        Thu, 15 Apr 2021 10:56:10 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4FLbqY1bwgz4x9Pq; Thu, 15 Apr
+        2021 10:56:09 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        01.E9.02277.9CB18706; Thu, 15 Apr 2021 19:56:09 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210415105608epcas1p269bae87b8a7dab133753f7916420251e~2Asac748W0970809708epcas1p2T;
+        Thu, 15 Apr 2021 10:56:08 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210415105608epsmtrp2488d3100a157adb1b392ca8481050c21~2Asaben-W1601216012epsmtrp25;
+        Thu, 15 Apr 2021 10:56:08 +0000 (GMT)
+X-AuditID: b6c32a36-4edff700000108e5-3e-60781bc9caf8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DD.A2.33967.7CB18706; Thu, 15 Apr 2021 19:56:07 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.99.105]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210415105607epsmtip1fe2d434b793a03a751722f2556893984~2AsaICRa70849408494epsmtip17;
+        Thu, 15 Apr 2021 10:56:07 +0000 (GMT)
+From:   Changheun Lee <nanich.lee@samsung.com>
+To:     bvanassche@acm.org
+Cc:     Johannes.Thumshirn@wdc.com, asml.silence@gmail.com,
+        axboe@kernel.dk, damien.lemoal@wdc.com, gregkh@linuxfoundation.org,
+        hch@infradead.org, jisoo2146.oh@samsung.com,
+        junho89.kim@samsung.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ming.lei@redhat.com,
+        mj0123.lee@samsung.com, nanich.lee@samsung.com, osandov@fb.com,
+        patchwork-bot@kernel.org, seunghwan.hyun@samsung.com,
+        sookwan7.kim@samsung.com, tj@kernel.org, tom.leiming@gmail.com,
+        woosung2.lee@samsung.com, yt0928.kim@samsung.com
+Subject: Re: [PATCH v7 1/3] bio: limit bio max size
+Date:   Thu, 15 Apr 2021 19:38:20 +0900
+Message-Id: <20210415103820.23272-1-nanich.lee@samsung.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <2e54f27a-ae4c-af65-34ba-18b43bd4815d@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUxTVxjGc3rb2xZXcymMnTHHSjMg4MCWWrwT2FzGzM1wyj7YksUMbuAO
+        0NJ2/WCwmIxRKAhYAck2CohQoozpcHwIOPEDRGR2E2wpGYkiVoegfKyVigpuLRcy/nve9/ye
+        +5z3nHM5CN+B+nMy5BpKJSdlQtSLeaYvVBQ++Ep2sui2noPXNJ8B+M83D6P49/NPELyg0MXA
+        daYWFL9W1sDAS+/msfDl4lsMfGFCjfeMbcYtZ2tQvPeIjoH/0FaD4LZxMxvvuzXCxCcayxH8
+        z0EHCz9q34E/PdEP8LnFUTb+e9cRBG/peYLu8CMs1niiXDfLJrqNN9lEW1MYYflDS7Q2H0SJ
+        C7Un2cTc+RGUMLQ3A8LZGkAUXixhJGz4XBaTTpGplEpAyVMUqRnytFhh/MdJ7yZJo0TicPGb
+        +DahQE5mUrHCuF0J4TszZO5JhYIsUqZ1txJItVq45a0YlUKroQTpCrUmVkgpU2VKsUgZoSYz
+        1Vp5WkSKInO7WCSKlLrJZFl6nTleORCQfeJvOzMXHHq5GHA5ENsKH9+4zi4GXhw+1gWgveo4
+        gy4cABqrriIeio+5ALSO8tYcTXPnWTTUA2Djb60oXTgBfDg4zPJQKPYGNMyMoR7ti/lByyMX
+        8EAIpmfCsXzbyoIPJoGdy/Vsj2ZiQbDMZGR4NA+LhpX59YCOew0ujZeubIPr7pv+OYzQjDcc
+        rLrL9GjEzeg6qhFPAMQWOXB44DKDNsfBqw+/Y9PaB04PtK9qf+ic7UFpQwmAOn0doIsy90CT
+        x1fdEuhwOt0LHHdEKGw5u4VuB8LuZ7WATt4IZxdKWR4EYjxYpOfTyOvQnD+OrGVNnupe/SIB
+        p62NCH1cBgDnTAakDAiM6wYyrhvI+H/yMYA0Az9Kqc5Mo9RiZeT6O24FK48/LKoLVMzMR/QC
+        Bgf0AshBhL68nZWaZD4vlcz5hlIpklRaGaXuBVL3cZcj/i+mKNx/j1yTJJZGSiQSfGvUtiip
+        RPgSjxTdTuJjaaSG2k9RSkq15mNwuP65jKplS8VQ7cHrpv0PrFadd8C+T8yXjRtD2Xmkz9et
+        1fdyCt/OTRyNLWi6P/xsKeP0naJpje4vx+ZgJ+ej/phE7l79c57UGhIgqCj6xXo6iDnE9DPt
+        qmxIjEdy67iTI6ir3SYURj/9se/V5Uvfavdm767uMJYsmHWHfs0/MGVfejA01fhFcMhXUl+f
+        fsupCy05aDXxzgf/nsve8+jijXvWCYb+y922IZK7vc41dWWqpWbOfulxQVZg+aJrz7Er+fts
+        hiD0J+9P7+uC7bLOkvdfQLjRSP1y3IGjbXees1xET0r7TKfNZDBnTc43hERsqJb5nzRsKjn3
+        WR7L4RXYcW3Th+/NQiFTnU6KwxCVmvwPdMkQPIUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSnO5x6YoEg0PTrSzmrNrGaLH6bj+b
+        xbQPP5ktWtu/MVk0L17PZnF6wiImi54nTawWf7vuMVl8fVhssfeWtsXlXXPYLA5NbmaymL55
+        DrPFtftn2C0O37vKYvFwyURmi3MnP7FazHvsYPFr+VFGi/c/rrNbnNoxmdli/d6fbA5iHpev
+        eHtMbH7H7rFz1l12j80rtDwuny312LSqk81j/9w17B7v911l8+jbsorR4/MmOY/2A91MAdxR
+        XDYpqTmZZalF+nYJXBnzz3gXHJerWP7sMUsDY69kFyMnh4SAicSK9/tYQWwhgd2MEo2LOCHi
+        UhLHT7wFinMA2cIShw8XdzFyAZV8ZJRYN+0qE0gNm4CORN/bW2wgtoiAmMTlL98YQYqYBRaw
+        SBzceYIdJCEsYCyx/e9CMJtFQFViwuJZYM28AtYSU1oWMkIsk5f4c7+HGcTmBIov/tjPDHGQ
+        lcSnxb1sEPWCEidnPmEBsZmB6pu3zmaewCgwC0lqFpLUAkamVYySqQXFuem5xYYFhnmp5XrF
+        ibnFpXnpesn5uZsYwZGppbmDcfuqD3qHGJk4GA8xSnAwK4nwuk0pSRDiTUmsrEotyo8vKs1J
+        LT7EKM3BoiTOe6HrZLyQQHpiSWp2ampBahFMlomDU6qBSe+x8OOsc8V1bxlMozP2P8hYuKBe
+        NIx/fRdL5dSKFr7VzwpNJgadOHQw/ItwXLqYuOVBYfG/m0VcI77NXX7P8ubZmuM/Nnh84XTW
+        dqv6Jvxxh8nSKwK9rZfWMKjX6784YPxJpu/vtNi5rWe2pkVMmKbUcPLUBy7W1h/TT3hsfx6r
+        VrDGxU/05b+89dWvZ+v0buzena64adFf4y2VKl7BCY5Xp906L1B3qj7LeI/Ozc9+tx5ot2xs
+        Oqe5Wnedr9yyq+VHUn+/32nmJ6/WwnppMof656/vj0Temz8tLez59UU7YqzuTlHkadSfv7dA
+        Wd3kCUONxiLx4m+PZ3W9T+VyC49VF/+1gpkjYPUDhj71zUosxRmJhlrMRcWJAHbf3oU7AwAA
+X-CMS-MailID: 20210415105608epcas1p269bae87b8a7dab133753f7916420251e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20210415105608epcas1p269bae87b8a7dab133753f7916420251e
+References: <2e54f27a-ae4c-af65-34ba-18b43bd4815d@acm.org>
+        <CGME20210415105608epcas1p269bae87b8a7dab133753f7916420251e@epcas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-For bio based request queue, the queue usage refcnt is only grabbed
-during submission, which isn't consistent with request base queue.
+> On 4/12/21 7:55 PM, Changheun Lee wrote:
+> > +unsigned int bio_max_size(struct bio *bio)
+> > +{
+> > +	struct request_queue *q = bio->bi_bdev->bd_disk->queue;
+> > +
+> > +	if (blk_queue_limit_bio_size(q))
+> > +		return blk_queue_get_max_sectors(q, bio_op(bio))
+> > +			<< SECTOR_SHIFT;
+> > +
+> > +	return UINT_MAX;
+> > +}
+> 
+> This patch adds an if-statement to the hot path and that may have a
+> slight negative performance impact. I recommend to follow the approach
+> of max_hw_sectors. That means removing QUEUE_FLAG_LIMIT_BIO_SIZE and to
+> initialize the maximum bio size to UINT_MAX in blk_set_default_limits().
+> 
+> Thanks,
+> 
+> Bart.
 
-Queue freezing has been used widely, and turns out it is very useful
-to quiesce queue activity.
+I modified as Bart's approach. Thanks for your advice.
+It's more simple than before. I think it looks good.
+Please, review below. I'll prepare new version base on this.
 
-Support to freeze bio based request queue by the following approach:
-
-1) grab two queue usage refcount for blk-mq before submitting blk-mq
-bio, one is for bio, anther is for request;
-
-2) add bio flag of BIO_QUEUE_REFFED for making sure that only one
-refcnt is grabbed for each bio, so we can put the refcnt when the
-bio is going away
-
-3) nvme mpath is a bit special, because same bio is used for both
-mpath queue and underlying nvme queue. So we put the mpath queue's
-usage refcnt before completing the nvme request.
-
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/bio.c                   | 12 ++++++++++--
- block/blk-core.c              | 23 +++++++++++++++++------
- drivers/nvme/host/core.c      | 16 ++++++++++++++++
- drivers/nvme/host/multipath.c |  6 ++++++
- include/linux/blk-mq.h        |  2 ++
- include/linux/blk_types.h     |  1 +
- include/linux/blkdev.h        |  7 ++++++-
- 7 files changed, 58 insertions(+), 9 deletions(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index 303298996afe..941a306e390b 100644
+index 50e579088aca..9e5061ecc317 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -1365,14 +1365,18 @@ static inline bool bio_remaining_done(struct bio *bio)
-  **/
- void bio_endio(struct bio *bio)
- {
-+	struct block_device *bdev;
-+	bool put_queue;
- again:
-+	bdev = bio->bi_bdev;
-+	put_queue = bio_flagged(bio, BIO_QUEUE_REFFED);
- 	if (!bio_remaining_done(bio))
- 		return;
- 	if (!bio_integrity_endio(bio))
- 		return;
- 
--	if (bio->bi_bdev)
--		rq_qos_done_bio(bio->bi_bdev->bd_disk->queue, bio);
-+	if (bdev)
-+		rq_qos_done_bio(bdev->bd_disk->queue, bio);
- 
- 	/*
- 	 * Need to have a real endio function for chained bios, otherwise
-@@ -1384,6 +1388,8 @@ void bio_endio(struct bio *bio)
- 	 */
- 	if (bio->bi_end_io == bio_chain_endio) {
- 		bio = __bio_chain_endio(bio);
-+		if (bdev && put_queue)
-+			blk_queue_exit(bdev->bd_disk->queue);
- 		goto again;
- 	}
- 
-@@ -1397,6 +1403,8 @@ void bio_endio(struct bio *bio)
- 	bio_uninit(bio);
- 	if (bio->bi_end_io)
- 		bio->bi_end_io(bio);
-+	if (bdev && put_queue)
-+		blk_queue_exit(bdev->bd_disk->queue);
+@@ -255,6 +255,13 @@ void bio_init(struct bio *bio, struct bio_vec *table,
  }
- EXPORT_SYMBOL(bio_endio);
+ EXPORT_SYMBOL(bio_init);
  
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 09f774e7413d..f71e4b433030 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -431,12 +431,13 @@ EXPORT_SYMBOL(blk_cleanup_queue);
- int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
- {
- 	const bool pm = flags & BLK_MQ_REQ_PM;
-+	const unsigned int nr = (flags & BLK_MQ_REQ_DOUBLE_REF) ? 2 : 1;
- 
- 	while (true) {
- 		bool success = false;
- 
- 		rcu_read_lock();
--		if (percpu_ref_tryget_live(&q->q_usage_counter)) {
-+		if (percpu_ref_tryget_many_live(&q->q_usage_counter, nr)) {
- 			/*
- 			 * The code that increments the pm_only counter is
- 			 * responsible for ensuring that that counter is
-@@ -446,7 +447,7 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
- 			    !blk_queue_pm_only(q)) {
- 				success = true;
- 			} else {
--				percpu_ref_put(&q->q_usage_counter);
-+				percpu_ref_put_many(&q->q_usage_counter, nr);
- 			}
- 		}
- 		rcu_read_unlock();
-@@ -480,8 +481,18 @@ static inline int bio_queue_enter(struct bio *bio)
- 	struct request_queue *q = bio->bi_bdev->bd_disk->queue;
- 	bool nowait = bio->bi_opf & REQ_NOWAIT;
- 	int ret;
-+	blk_mq_req_flags_t flags = nowait ? BLK_MQ_REQ_NOWAIT : 0;
-+	bool reffed = bio_flagged(bio, BIO_QUEUE_REFFED);
- 
--	ret = blk_queue_enter(q, nowait ? BLK_MQ_REQ_NOWAIT : 0);
-+	if (!reffed)
-+		bio_set_flag(bio, BIO_QUEUE_REFFED);
-+
-+	/*
-+	 * Grab two queue references for blk-mq, one is for bio, and
-+	 * another is for blk-mq request.
-+	 */
-+	ret = blk_queue_enter(q, q->mq_ops && !reffed ?
-+			(flags | BLK_MQ_REQ_DOUBLE_REF) : flags);
- 	if (unlikely(ret)) {
- 		if (nowait && !blk_queue_dying(q))
- 			bio_wouldblock_error(bio);
-@@ -492,10 +503,11 @@ static inline int bio_queue_enter(struct bio *bio)
- 	return ret;
- }
- 
--void blk_queue_exit(struct request_queue *q)
-+void __blk_queue_exit(struct request_queue *q, unsigned int nr)
- {
--	percpu_ref_put(&q->q_usage_counter);
-+	percpu_ref_put_many(&q->q_usage_counter, nr);
- }
-+EXPORT_SYMBOL_GPL(__blk_queue_exit);
- 
- static void blk_queue_usage_counter_release(struct percpu_ref *ref)
- {
-@@ -920,7 +932,6 @@ static blk_qc_t __submit_bio(struct bio *bio)
- 			return blk_mq_submit_bio(bio);
- 		ret = disk->fops->submit_bio(bio);
- 	}
--	blk_queue_exit(disk->queue);
- 	return ret;
- }
- 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 34b8c78f88e0..791638a7164b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -323,14 +323,30 @@ static inline enum nvme_disposition nvme_decide_disposition(struct request *req)
- static inline void nvme_end_req(struct request *req)
- {
- 	blk_status_t status = nvme_error_status(nvme_req(req)->status);
-+	const bool mpath = req->cmd_flags & REQ_NVME_MPATH;
-+	unsigned int nr = 0;
-+	struct bio *bio;
-+	struct nvme_ns *ns;
- 
- 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
- 	    req_op(req) == REQ_OP_ZONE_APPEND)
- 		req->__sector = nvme_lba_to_sect(req->q->queuedata,
- 			le64_to_cpu(nvme_req(req)->result.u64));
- 
-+	if (mpath) {
-+		ns = req->q->queuedata;
-+		__rq_for_each_bio(bio, req)
-+			nr++;
-+	}
- 	nvme_trace_bio_complete(req);
- 	blk_mq_end_request(req, status);
-+
-+	/*
-+	 * We changed multipath bio->bi_bdev, so have to drop the queue
-+	 * reference manually
-+	 */
-+	if (mpath && nr)
-+		__blk_queue_exit(ns->head->disk->queue, nr);
- }
- 
- void nvme_complete_rq(struct request *req)
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index a1d476e1ac02..017487c835fb 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -312,6 +312,12 @@ blk_qc_t nvme_ns_head_submit_bio(struct bio *bio)
- 	srcu_idx = srcu_read_lock(&head->srcu);
- 	ns = nvme_find_path(head);
- 	if (likely(ns)) {
-+		/*
-+		 * this bio's ownership is transferred to underlying queue, so
-+		 * clear the queue reffed flag and let underlying queue to put
-+		 * the multipath queue for us.
-+		 */
-+		bio_clear_flag(bio, BIO_QUEUE_REFFED);
- 		bio_set_dev(bio, ns->disk->part0);
- 		bio->bi_opf |= REQ_NVME_MPATH;
- 		trace_block_bio_remap(bio, disk_devt(ns->head->disk),
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 2c473c9b8990..b96ac162e703 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -445,6 +445,8 @@ enum {
- 	BLK_MQ_REQ_RESERVED	= (__force blk_mq_req_flags_t)(1 << 1),
- 	/* set RQF_PM */
- 	BLK_MQ_REQ_PM		= (__force blk_mq_req_flags_t)(1 << 2),
-+	/* double queue reference */
-+	BLK_MQ_REQ_DOUBLE_REF	= (__force blk_mq_req_flags_t)(1 << 3),
- };
- 
- struct request *blk_mq_alloc_request(struct request_queue *q, unsigned int op,
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 57099b37ef3a..e7f7d67198cc 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -305,6 +305,7 @@ enum {
- 	BIO_CGROUP_ACCT,	/* has been accounted to a cgroup */
- 	BIO_TRACKED,		/* set if bio goes through the rq_qos path */
- 	BIO_REMAPPED,
-+	BIO_QUEUE_REFFED,	/* need to put queue refcnt */
- 	BIO_FLAG_LAST
- };
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 62944d06a80f..6ad09b2ff2d1 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -925,7 +925,7 @@ extern int get_sg_io_hdr(struct sg_io_hdr *hdr, const void __user *argp);
- extern int put_sg_io_hdr(const struct sg_io_hdr *hdr, void __user *argp);
- 
- extern int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags);
--extern void blk_queue_exit(struct request_queue *q);
-+extern void __blk_queue_exit(struct request_queue *q, unsigned int nr);
- extern void blk_sync_queue(struct request_queue *q);
- extern int blk_rq_map_user(struct request_queue *, struct request *,
- 			   struct rq_map_data *, void __user *, unsigned long,
-@@ -947,6 +947,11 @@ blk_status_t errno_to_blk_status(int errno);
- 
- int blk_poll(struct request_queue *q, blk_qc_t cookie, bool spin);
- 
-+static inline void blk_queue_exit(struct request_queue *q)
++unsigned int bio_max_size(struct bio *bio)
 +{
-+	__blk_queue_exit(q, 1);
++	struct request_queue *q = bio->bi_bdev->bd_disk->queue;
++
++	return q->limits.bio_max_bytes;
 +}
 +
- static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+ /**
+  * bio_reset - reinitialize a bio
+  * @bio:	bio to reset
+@@ -866,7 +873,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+ 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 
+ 		if (page_is_mergeable(bv, page, len, off, same_page)) {
+-			if (bio->bi_iter.bi_size > UINT_MAX - len) {
++			if (bio->bi_iter.bi_size > bio_max_size(bio) - len) {
+ 				*same_page = false;
+ 				return false;
+ 			}
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index b4aa2f37fab6..b167e8db856b 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -37,6 +37,7 @@ EXPORT_SYMBOL_GPL(blk_queue_rq_timeout);
+  */
+ void blk_set_default_limits(struct queue_limits *lim)
  {
- 	return bdev->bd_disk->queue;	/* this is never NULL */
--- 
-2.29.2
-
++	lim->bio_max_bytes = UINT_MAX;
+ 	lim->max_segments = BLK_MAX_SEGMENTS;
+ 	lim->max_discard_segments = 1;
+ 	lim->max_integrity_segments = 0;
+@@ -167,6 +168,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
+ 	max_sectors = round_down(max_sectors,
+ 				 limits->logical_block_size >> SECTOR_SHIFT);
+ 	limits->max_sectors = max_sectors;
++	limits->bio_max_bytes = max_sectors << SECTOR_SHIFT;
+ 
+ 	q->backing_dev_info->io_pages = max_sectors >> (PAGE_SHIFT - 9);
+ }
+@@ -538,6 +540,8 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+ {
+ 	unsigned int top, bottom, alignment, ret = 0;
+ 
++	t->bio_max_bytes = min_not_zero(t->bio_max_bytes, b->bio_max_bytes);
++
+ 	t->max_sectors = min_not_zero(t->max_sectors, b->max_sectors);
+ 	t->max_hw_sectors = min_not_zero(t->max_hw_sectors, b->max_hw_sectors);
+ 	t->max_dev_sectors = min_not_zero(t->max_dev_sectors, b->max_dev_sectors);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index d0246c92a6e8..e5add63da3af 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -106,6 +106,8 @@ static inline void *bio_data(struct bio *bio)
+ 	return NULL;
+ }
+ 
++extern unsigned int bio_max_size(struct bio *bio);
++
+ /**
+  * bio_full - check if the bio is full
+  * @bio:	bio to check
+@@ -119,7 +121,7 @@ static inline bool bio_full(struct bio *bio, unsigned len)
+ 	if (bio->bi_vcnt >= bio->bi_max_vecs)
+ 		return true;
+ 
+-	if (bio->bi_iter.bi_size > UINT_MAX - len)
++	if (bio->bi_iter.bi_size > bio_max_size(bio) - len)
+ 		return true;
+ 
+ 	return false;
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 158aefae1030..c205d60ac611 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -312,6 +312,8 @@ enum blk_zoned_model {
+ };
+ 
+ struct queue_limits {
++	unsigned int		bio_max_bytes;
++
+ 	unsigned long		bounce_pfn;
+ 	unsigned long		seg_boundary_mask;
+ 	unsigned long		virt_boundary_mask;
