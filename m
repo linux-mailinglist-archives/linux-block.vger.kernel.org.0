@@ -2,136 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B69D73615EB
-	for <lists+linux-block@lfdr.de>; Fri, 16 Apr 2021 01:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5AC83615F2
+	for <lists+linux-block@lfdr.de>; Fri, 16 Apr 2021 01:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234961AbhDOXM0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Apr 2021 19:12:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51292 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235060AbhDOXM0 (ORCPT
+        id S234936AbhDOXP7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Apr 2021 19:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234659AbhDOXP6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Apr 2021 19:12:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618528322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=94zuZHD1AcmssYFmYMQu/dNUL2KZGqC7q8q91XeVNNY=;
-        b=F5helbpod1d1w9Xf8k36SeUHz1F14K3cCIJ1J/8n9kyM8gdy11HNbwI/qAsFIt8pAU5224
-        Wqd9hCSqv8b7rLRrRNicXqsuxHK4gMrAU141NYrWKg7bPLgui/oEwypv4vkd0Upx3CFjgT
-        499FvMfDeslUrIrA1hPREmHfYc4YLCw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-tcKUGrnMOnSwIdIXFF0vew-1; Thu, 15 Apr 2021 19:11:59 -0400
-X-MC-Unique: tcKUGrnMOnSwIdIXFF0vew-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51BCA107ACCD;
-        Thu, 15 Apr 2021 23:11:58 +0000 (UTC)
-Received: from localhost (thegoat.4a2m.lab.eng.bos.redhat.com [10.16.209.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C13DB50C0D;
-        Thu, 15 Apr 2021 23:11:51 +0000 (UTC)
+        Thu, 15 Apr 2021 19:15:58 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAACC061574
+        for <linux-block@vger.kernel.org>; Thu, 15 Apr 2021 16:15:32 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id 1so19563705qtb.0
+        for <linux-block@vger.kernel.org>; Thu, 15 Apr 2021 16:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=A2s2OPIGot51QKltNpTIuUg2YDwX1FQEhuCnxgRK/jE=;
+        b=uW2CDH33NH/4zz5ntTk7aMqjkleJZLBlea4NFuebMro2OdQo5SDOxqJjXWpYCD4DGi
+         A8VgdmLYIDDf9Xxvc5sN9QnqWSNkec4JReEnbJ0IGcDMp86ri1FHitV9khS1CZBOV986
+         CSIoQCSvI7NqCKBxQK22R3ebHgBslXZwbtVrE1d/sZAfkThzUEGSd3bbYW3qdReccLj0
+         v1vg3yqHKSnrRcTI9AYCOf5RW9UVqrbHyytI2DSqaOM+QJi0+DwN634DOE45YJGY1clW
+         tUhe1YaAeTwy9uP8I39JUzQTxRlBnoBUWMKmt+ql9ipSP6bhY8TdGPx32Md/IVg4b3Sy
+         fBTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=A2s2OPIGot51QKltNpTIuUg2YDwX1FQEhuCnxgRK/jE=;
+        b=hOIa/W51k4yl7YqFQEu24uPSvKaslPWqk/LZNB013Fxo/KVzvgnukpr5O/D1BjlK69
+         3kFIkf9W4agXi2EORwLObMMdaM2Wd0u1gwh83D5sR7UZWvTtBCriI79t91YQEYntCi/Y
+         TN81m9xYta++vOlXns42ZOR/Lj5aN9foqsMVpiM8z0aR9+mJWukx94lEKtPYCi2HIVdf
+         NEoWmMbyknXj22cfTkPT5OnLw7t4Z+q0n6Z8qyuppxB8vr5u57IwE4QkpO+YLatjTxYw
+         fMoeTtjommGODbgx96wQ6GhePTrp0oks2rY3ExwRnRbpmOZ4IQkhYSrD6YitNAbn0jd8
+         BVOQ==
+X-Gm-Message-State: AOAM532mVaSp4B/40OFTIX4x3VhSpETCUpKXTwrCbCSpIgGRI7FeRrGV
+        GD1ASpxkb1uVzR70o0lbd7Y=
+X-Google-Smtp-Source: ABdhPJwAgbtdrrcWaDUhxSmioFl2dV0taaSqWO02nP0rl5pOrMokGKWTzXuEaUGSdiGHrWDedY0uGg==
+X-Received: by 2002:ac8:7f53:: with SMTP id g19mr5286316qtk.249.1618528531955;
+        Thu, 15 Apr 2021 16:15:31 -0700 (PDT)
+Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
+        by smtp.gmail.com with ESMTPSA id v127sm3099344qkh.37.2021.04.15.16.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 16:15:31 -0700 (PDT)
+Sender: Mike Snitzer <snitzer@gmail.com>
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: nvme: allow retry for requests with REQ_FAILFAST_TRANSPORT set
-Date:   Thu, 15 Apr 2021 19:11:26 -0400
-Message-Id: <20210415231126.8746-4-snitzer@redhat.com>
-In-Reply-To: <20210415231126.8746-1-snitzer@redhat.com>
-References: <20210415231126.8746-1-snitzer@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Subject: [PATCH v2 0/4] nvme: improve error handling and ana_state to work well with dm-multipath
+Date:   Thu, 15 Apr 2021 19:15:26 -0400
+Message-Id: <20210415231530.95464-1-snitzer@redhat.com>
+X-Mailer: git-send-email 2.15.0
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-BZ: 1948690
-Upstream Status: RHEL-only
+Hi,
 
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+I just rebased and tweaked these 4 patches ontop of v5.12-rc7.
 
-rhel-8.git commit 7dadadb072515f243868e6fe2f7e9c97fd3516c9
-Author: Mike Snitzer <snitzer@redhat.com>
-Date:   Tue Aug 25 21:52:48 2020 -0400
+Been carrying an older ~5.9 based version in RHEL8 (since RHEL8.3,
+August 2020; yes the patchset I just mistakenly emailed instead of
+this patchset):
+https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=nvme-error-handling-fixes/for-5.9
 
-    [nvme] nvme: allow retry for requests with REQ_FAILFAST_TRANSPORT set
-    
-    Message-id: <20200825215248.2291-11-snitzer@redhat.com>
-    Patchwork-id: 325180
-    Patchwork-instance: patchwork
-    O-Subject: [RHEL8.3 PATCH 10/10] nvme: allow retry for requests with REQ_FAILFAST_TRANSPORT set
-    Bugzilla: 1843515
-    RH-Acked-by: David Milburn <dmilburn@redhat.com>
-    RH-Acked-by: Gopal Tiwari <gtiwari@redhat.com>
-    RH-Acked-by: Ewan Milne <emilne@redhat.com>
-    
-    BZ: 1843515
-    Upstream Status: RHEL-only
-    
-    Based on patch that was proposed upstream but ultimately rejected, see:
-    https://www.spinics.net/lists/linux-block/msg57490.html
-    
-    I'd have made this change even if this wasn't already posted obviously,
-    but I figured I'd give proper attribution due to their public post with
-    the same code change.
-    
-    Author: Chao Leng <lengchao@huawei.com>
-    Date:   Wed Aug 12 16:18:55 2020 +0800
-    
-        nvme: allow retry for requests with REQ_FAILFAST_TRANSPORT set
-    
-        REQ_FAILFAST_TRANSPORT may be designed for SCSI, because SCSI protocol
-        does not define the local retry mechanism. SCSI implements a fuzzy
-        local retry mechanism, so REQ_FAILFAST_TRANSPORT is needed to allow
-        higher-level multipathing software to perform failover/retry.
-    
-        NVMe is different with SCSI about this. It defines a local retry
-        mechanism and path error codes, so NVMe should retry local for non
-        path error.  If path related error, whether to retry and how to retry
-        is still determined by higher-level multipathing's failover.
-    
-        Unlike SCSI, NVMe shouldn't prevent retry if REQ_FAILFAST_TRANSPORT
-        because NVMe's local retry is needed -- as is NVMe specific logic to
-        categorize whether an error is path related.
-    
-        In this way, the mechanism of NVMe multipath or other multipath are
-        now equivalent.  The mechanism is: non path related error will be
-        retry local, path related error is handled by multipath.
-    
-        Signed-off-by: Chao Leng <lengchao@huawei.com>
-        [snitzer: edited header for grammar and to make clearer]
-        Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-    
-    Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-    Signed-off-by: Frantisek Hrbata <fhrbata@redhat.com>
+RHEL9 is coming, would really prefer that these changes land upstream
+rather than carry them within RHEL.
 
----
- drivers/nvme/host/core.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+All review/feedback welcome.
 
-Index: linux-rhel9/drivers/nvme/host/core.c
-===================================================================
---- linux-rhel9.orig/drivers/nvme/host/core.c
-+++ linux-rhel9/drivers/nvme/host/core.c
-@@ -306,7 +306,14 @@ static inline enum nvme_disposition nvme
- 	if (likely(nvme_req(req)->status == 0))
- 		return COMPLETE;
- 
--	if (blk_noretry_request(req) ||
-+	/*
-+	 * REQ_FAILFAST_TRANSPORT is set by upper layer software that
-+	 * handles multipathing. Unlike SCSI, NVMe's error handling was
-+	 * specifically designed to handle local retry for non-path errors.
-+	 * As such, allow NVMe's local retry mechanism to be used for
-+	 * requests marked with REQ_FAILFAST_TRANSPORT.
-+	 */
-+	if ((req->cmd_flags & (REQ_FAILFAST_DEV | REQ_FAILFAST_DRIVER)) ||
- 	    (nvme_req(req)->status & NVME_SC_DNR) ||
- 	    nvme_req(req)->retries >= nvme_max_retries)
- 		return COMPLETE;
+Thanks,
+Mike
+
+Chao Leng (1):
+  nvme: allow local retry for requests with REQ_FAILFAST_TRANSPORT set
+
+Mike Snitzer (3):
+  nvme: return BLK_STS_DO_NOT_RETRY if the DNR bit is set
+  nvme: introduce FAILUP handling for REQ_FAILFAST_TRANSPORT
+  nvme: decouple basic ANA log page re-read support from native multipathing
+
+ drivers/nvme/host/core.c      | 45 +++++++++++++++++++++++++++++++++++++------
+ drivers/nvme/host/multipath.c | 16 ++++++++++-----
+ drivers/nvme/host/nvme.h      |  4 ++++
+ include/linux/blk_types.h     |  8 ++++++++
+ 4 files changed, 62 insertions(+), 11 deletions(-)
+
+-- 
+2.15.0
 
