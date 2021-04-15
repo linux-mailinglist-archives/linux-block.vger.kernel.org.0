@@ -2,138 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9D1735FFA9
-	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 03:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8F343600A0
+	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 05:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229450AbhDOBfB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Apr 2021 21:35:01 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53117 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229449AbhDOBfB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Apr 2021 21:35:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UVaqHuM_1618450476;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UVaqHuM_1618450476)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 15 Apr 2021 09:34:37 +0800
-Subject: Re: [PATCH V5 11/12] block: add poll_capable method to support
- bio-based IO polling
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Hannes Reinecke <hare@suse.de>
-References: <20210401021927.343727-1-ming.lei@redhat.com>
- <20210401021927.343727-12-ming.lei@redhat.com>
- <20210412093856.GA978201@infradead.org>
- <a6d46979-810e-bc53-bc19-8acd449e3718@linux.alibaba.com>
- <YHbQ/rZUPoTFUMDs@T590>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <5f30059d-6650-8268-b681-d8567ac1c509@linux.alibaba.com>
-Date:   Thu, 15 Apr 2021 09:34:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.1
+        id S229450AbhDODsM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Apr 2021 23:48:12 -0400
+Received: from mail.wangsu.com ([123.103.51.227]:42184 "EHLO wangsu.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229457AbhDODsM (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 14 Apr 2021 23:48:12 -0400
+X-Greylist: delayed 473 seconds by postgrey-1.27 at vger.kernel.org; Wed, 14 Apr 2021 23:48:11 EDT
+Received: from fedora33.wangsu.com (unknown [183.253.10.81])
+        by app2 (Coremail) with SMTP id 4zNnewAHX5B1tXdgWAwCAA--.5503S2;
+        Thu, 15 Apr 2021 11:39:45 +0800 (CST)
+From:   Lin Feng <linf@wangsu.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, ming.lei@redhat.com, linf@wangsu.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] blk-mq: bypass IO scheduler's limit_depth for passthrough request
+Date:   Thu, 15 Apr 2021 11:39:20 +0800
+Message-Id: <20210415033920.213963-1-linf@wangsu.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <YHbQ/rZUPoTFUMDs@T590>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: 4zNnewAHX5B1tXdgWAwCAA--.5503S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4UCF45KF17AF18WFy7Awb_yoW8tF1fpF
+        WDAFs5CFW8XF1xKFn7t3W3uw18Xw43ury7JFW5Kr1rA3s5KFsFgr95Xr40qryfAws3KFWU
+        Jrs8J3s8ur1j93DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyY1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
+        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+        x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
+        z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
+        xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26r48McIj6xkF7I0En7xvr7AKxVW8
+        Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6I
+        AqYI8I648v4I1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+        1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+        JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+        W3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8
+        JbIYCTnIWIevJa73UjIFyTuYvjfUcLZ2DUUUU
+X-CM-SenderInfo: holqwq5zdqw23xof0z/
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Commit 01e99aeca39796003 ("blk-mq: insert passthrough request into
+hctx->dispatch directly") gives high priority to passthrough requests and
+bypass underlying IO scheduler. But as we allocate tag for such request it
+still runs io-scheduler's callback limit_depth, while we really want is to
+give full sbitmap-depth capabity to such request for acquiring available
+tag.
+blktrace shows PC requests(dmraid -s -c -i) hit bfq's limit_depth:
+  8,0    2        0     0.000000000 39952 1,0  m   N bfq [bfq_limit_depth] wr_busy 0 sync 0 depth 8
+  8,0    2        1     0.000008134 39952  D   R 4 [dmraid]
+  8,0    2        2     0.000021538    24  C   R [0]
+  8,0    2        0     0.000035442 39952 1,0  m   N bfq [bfq_limit_depth] wr_busy 0 sync 0 depth 8
+  8,0    2        3     0.000038813 39952  D   R 24 [dmraid]
+  8,0    2        4     0.000044356    24  C   R [0]
 
+This patch introduce a new wrapper to make code not that ugly.
 
-On 4/14/21 7:24 PM, Ming Lei wrote:
-> On Wed, Apr 14, 2021 at 04:38:25PM +0800, JeffleXu wrote:
->>
->>
->> On 4/12/21 5:38 PM, Christoph Hellwig wrote:
->>> On Thu, Apr 01, 2021 at 10:19:26AM +0800, Ming Lei wrote:
->>>> From: Jeffle Xu <jefflexu@linux.alibaba.com>
->>>>
->>>> This method can be used to check if bio-based device supports IO polling
->>>> or not. For mq devices, checking for hw queue in polling mode is
->>>> adequate, while the sanity check shall be implementation specific for
->>>> bio-based devices. For example, dm device needs to check if all
->>>> underlying devices are capable of IO polling.
->>>>
->>>> Though bio-based device may have done the sanity check during the
->>>> device initialization phase, cacheing the result of this sanity check
->>>> (such as by cacheing in the queue_flags) may not work. Because for dm
->>>> devices, users could change the state of the underlying devices through
->>>> '/sys/block/<dev>/io_poll', bypassing the dm device above. In this case,
->>>> the cached result of the very beginning sanity check could be
->>>> out-of-date. Thus the sanity check needs to be done every time 'io_poll'
->>>> is to be modified.
->>>
->>> I really don't think thi should be a method, and I really do dislike
->>> how we have all this "if (is_mq)" junk.  Why can't we have a flag on
->>> the gendisk that signals if the device can support polling that
->>> is autoamtically set for blk-mq and as-needed by bio based drivers?
->>
->> That would consume one more bit of queue->queue_flags.
->>
->> Besides, DM/MD is somehow special here that when one of the underlying
->> devices is disabled polling through '/sys/block/<dev>/io_poll',
->> currently there's no mechanism notifying the above MD/DM to clear the
->> previously set queue_flags. Thus the outdated queue_flags still
->> indicates this DM/MD is capable of polling, while in fact one of the
->> underlying device has been disabled for polling.
-> 
-> Right, just like there isn't queue limit progagation.
-> 
-> Another blocker could be that bio based queue doesn't support queue
-> freezing.
+Signed-off-by: Lin Feng <linf@wangsu.com>
+---
+ block/blk-mq.c         | 3 ++-
+ include/linux/blkdev.h | 6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Do you mean the queue freezing is called in the following code snippet?
-
-```
-static ssize_t queue_poll_store(struct request_queue *q, const char
-*page, size_t count)
-{
-	...
-	if (poll_on) {
-		blk_queue_flag_set(QUEUE_FLAG_POLL, q);
-	} else {
-		blk_mq_freeze_queue(q);
-		blk_queue_flag_clear(QUEUE_FLAG_POLL, q);
-		blk_mq_unfreeze_queue(q);
-	}
-```
-
-And I can't understand how bio-based queue doesn't support queue freezing.
-
-```
-submit_bio_noacct
-	__submit_bio_noacct
-		bio_queue_enter
-```
-
-Every time submitting a bio, bio_queue_enter() will be called, and once
-the queue has been frozen, bio_queue_enter() will wait there until the
-queue is unfrozen.
-
-> 
->>
->> Mike had ever suggested that we can trust the queue_flag, and clear the
->> outdated queue_flags when later the IO submission or polling routine
->> finally finds that the device is not capable of polling. Currently
->> submit_bio_checks() will silently clear the REQ_HIPRI flag and still
->> submit the bio when the device is actually not capable of polling. To
->> fix the issue, could we break the submission and return an error code in
->> submit_bio_checks() if the device is not capable of polling when
->> submitting HIPRI bio?
-> 
-> I think we may just leave it alone, if underlying queue becomes not pollable,
-> the bio still can be submitted & completed via IRQ, just not efficient enough.
-
-Yes it still works. I agree if there's no better solution...
-
-And what about the issue Christoph originally concerned? Do we use one
-more flag bit indicating if the queue capable of polling, or the
-poll_capable() method way?
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d4d7c1caa439..927189a55575 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -361,11 +361,12 @@ static struct request *__blk_mq_alloc_request(struct blk_mq_alloc_data *data)
+ 
+ 	if (e) {
+ 		/*
+-		 * Flush requests are special and go directly to the
++		 * Flush/passthrough requests are special and go directly to the
+ 		 * dispatch list. Don't include reserved tags in the
+ 		 * limiting, as it isn't useful.
+ 		 */
+ 		if (!op_is_flush(data->cmd_flags) &&
++		    !blk_op_is_passthrough(data->cmd_flags) &&
+ 		    e->type->ops.limit_depth &&
+ 		    !(data->flags & BLK_MQ_REQ_RESERVED))
+ 			e->type->ops.limit_depth(data->cmd_flags, data);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 158aefae1030..0d81eed39833 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -272,6 +272,12 @@ static inline bool bio_is_passthrough(struct bio *bio)
+ 	return blk_op_is_scsi(op) || blk_op_is_private(op);
+ }
+ 
++static inline bool blk_op_is_passthrough(unsigned int op)
++{
++	return (blk_op_is_scsi(op & REQ_OP_MASK) ||
++			blk_op_is_private(op & REQ_OP_MASK));
++}
++
+ static inline unsigned short req_get_ioprio(struct request *req)
+ {
+ 	return req->ioprio;
 -- 
-Thanks,
-Jeffle
+2.30.2
+
