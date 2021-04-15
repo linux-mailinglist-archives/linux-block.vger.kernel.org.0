@@ -2,68 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31BFB35FE12
-	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 00:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 943CD35FF19
+	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 02:58:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233710AbhDNWwZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Apr 2021 18:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233679AbhDNWwW (ORCPT
+        id S229575AbhDOA7B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Apr 2021 20:59:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40042 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229570AbhDOA7B (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Apr 2021 18:52:22 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C380C061574
-        for <linux-block@vger.kernel.org>; Wed, 14 Apr 2021 15:52:00 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id a4so21383800wrr.2
-        for <linux-block@vger.kernel.org>; Wed, 14 Apr 2021 15:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=FB9ffVgv9MGEJSSW+p7l1641ZpAhJ8oP7yeu0DFe398=;
-        b=lYVh0oNB66CdxETtuxC7cHKz/8VDa4EdT9gEYov408TSQ+3gLUeYEg6EH9CCdsPR9K
-         y1za2HCBM4qMiIS6cBOPtkndQsZaot1G4UOwChw7HzVHHzNYYNWpZ/jSIsphiXOaI9uC
-         fYNBff/ttqwrcYeInTe/GoeoulrlJySEgjDM6ohHMLQkl+k2dlu8BHSwsDG6H0CvKXM6
-         R3ISvYaYfcHN9mvQjeYi/R2WNUk770swtx95gvOY2dkvJBThjDAi85YwHhPfougStVSQ
-         Ov0J75mAJkSG0NVo2SU0WWYrvlnCVYGeTSnZ3vKa3ViW+dyYZHDBIT4QIyan61Y6phyl
-         /1Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=FB9ffVgv9MGEJSSW+p7l1641ZpAhJ8oP7yeu0DFe398=;
-        b=VewSoVR5Ri5SNWN1est7+7L+3fGoYv3l8B1hSV28TDObpHefFpmtC1Asu0GWxzE+HS
-         JYMPMXoTVmOOn/yIXY4x6AZtbwX+1UBtT1mlofzUC8cuvo6a1ax2n2m6EYqK5CrnOCpw
-         Ds1O1apQ1UX5madaqIC5/NqGW0GiTbXM03tpxq+IzLIqJC6C8lLJsUOjdkqAWDs+aE6Z
-         hdX1K41L6+CZdEL0lUP1QlSawvfv2lOfV4Ee56GCsGBzKehuo/spGIf+d/HLRNL73EuF
-         wXd6e3rq/F6eo4MyYx9OkG4MpAjOE2KkR4qnBaGiT4HLkqmg7ZItKhdFQxy3oiWY38Sx
-         UQFw==
-X-Gm-Message-State: AOAM531K/yJt0rkMUhiTvbIjI8ifGwLeiBD5a94LHdW+Usvx0HFVs+BH
-        hBKQ1TVySX4/DxKyZ9gIGag=
-X-Google-Smtp-Source: ABdhPJxvk+Qq1U+uwkBOqn6qnPlW7FPchZubjxbqX1423r0iWfqZpDXO2d4IdGI6BAXhTSDbeIIREA==
-X-Received: by 2002:adf:fdca:: with SMTP id i10mr189128wrs.55.1618440719118;
-        Wed, 14 Apr 2021 15:51:59 -0700 (PDT)
-Received: from [192.168.1.152] ([102.64.194.225])
-        by smtp.gmail.com with ESMTPSA id 7sm707161wry.60.2021.04.14.15.51.56
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 14 Apr 2021 15:51:58 -0700 (PDT)
-Message-ID: <6077720e.1c69fb81.4ed71.2b78@mx.google.com>
-From:   Vanina curth <afalouvidodji4@gmail.com>
-X-Google-Original-From: Vanina curth
-Content-Type: text/plain; charset="iso-8859-1"
+        Wed, 14 Apr 2021 20:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618448314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XnPCEVIdxYCsS8gproXXaTnFS7nmBynsTat3IoG/ov8=;
+        b=SZ0AcEM6stI+ABHuUOy8wd315w0si/et/MpRl+QUFlzCfLiK/3auT9Z7tcVJdfmctFSAM0
+        mxS/OC7Zip8UH9Hd73khWcrze93tbJfVETwwjKakuVDQFbvRvKS/lWC9hZqsXsvVB8P0oA
+        vQUR87XoSOdqqwW6sbpyGLttLYtqdNw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-466-m6FwddKAOECh47N005bXqA-1; Wed, 14 Apr 2021 20:58:30 -0400
+X-MC-Unique: m6FwddKAOECh47N005bXqA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 745A387A82A;
+        Thu, 15 Apr 2021 00:58:29 +0000 (UTC)
+Received: from T590 (ovpn-12-113.pek2.redhat.com [10.72.12.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7657E60877;
+        Thu, 15 Apr 2021 00:58:25 +0000 (UTC)
+Date:   Thu, 15 Apr 2021 08:58:21 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>
+Cc:     John Garry <john.garry@huawei.com>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Douglas Gilbert <dgilbert@interlog.com>
+Subject: Re: [bug report] shared tags causes IO hang and performance drop
+Message-ID: <YHePrQluaOJG/P8w@T590>
+References: <YHaez6iN2HHYxYOh@T590>
+ <9a6145a5-e6ac-3d33-b52a-0823bfc3b864@huawei.com>
+ <cb326d404c6e0785d03a7dfadc42832c@mail.gmail.com>
+ <YHbOOfGNHwO4SMS7@T590>
+ <b41586781cffea03c5fd6b0849e2b9e4@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Please reply to me
-To:     Recipients <Vanina@vger.kernel.org>
-Date:   Wed, 14 Apr 2021 22:51:47 +0000
-Reply-To: curtisvani9008@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b41586781cffea03c5fd6b0849e2b9e4@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-How are you? I'm Vanina C. I picked interest in you and I would like to kno=
-w more about you and establish relationship with you. i will wait for your =
-response. thank you.
+On Wed, Apr 14, 2021 at 07:29:07PM +0530, Kashyap Desai wrote:
+> > > I tried both - 5.12.0-rc1 and 5.11.0-rc2+ and there is a same
+> behavior.
+> > > Let me also check  megaraid_sas and see if anything generic or this is
+> > > a special case of scsi_debug.
+> >
+> > As I mentioned, it could be one generic issue wrt. SCHED_RESTART.
+> > shared tags might have to restart all hctx since all share same tags.
+> 
+> Ming - I tried many combination on MR shared host tag driver but there is
+> no single instance of IO hang.
+> I will keep trying, but when I look at scsi_debug driver code I found
+> below odd settings in scsi_debug driver.
+> can_queue of adapter is set to 128 but queue_depth of sdev is set to 255.
+> 
+> If I apply below patch, scsi_debug driver's hang is also resolved. Ideally
+> sdev->queue depth cannot exceed shost->can_queue.
+> Not sure why cmd_per_lun is 255 in scsi_debug driver which can easily
+> exceed can_queue.  I will simulate something similar in MR driver and see
+> how it behaves w.r.t IO hang issue.
+> 
+> diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+> index 70165be10f00..dded762540ee 100644
+> --- a/drivers/scsi/scsi_debug.c
+> +++ b/drivers/scsi/scsi_debug.c
+> @@ -218,7 +218,7 @@ static const char *sdebug_version_date = "20200710";
+>   */
+>  #define SDEBUG_CANQUEUE_WORDS  3       /* a WORD is bits in a long */
+>  #define SDEBUG_CANQUEUE  (SDEBUG_CANQUEUE_WORDS * BITS_PER_LONG)
+> -#define DEF_CMD_PER_LUN  255
+> +#define DEF_CMD_PER_LUN  SDEBUG_CANQUEUE
+> 
+>  /* UA - Unit Attention; SA - Service Action; SSU - Start Stop Unit */
+>  #define F_D_IN                 1       /* Data-in command (e.g. READ) */
+> @@ -7558,6 +7558,7 @@ static int sdebug_driver_probe(struct device *dev)
+>         sdbg_host = to_sdebug_host(dev);
+> 
+>         sdebug_driver_template.can_queue = sdebug_max_queue;
+> +       sdebug_driver_template.cmd_per_lun = sdebug_max_queue;
+>         if (!sdebug_clustering)
+>                 sdebug_driver_template.dma_boundary = PAGE_SIZE - 1;
+
+Yeah, the change makes the issue disappear. That looks scsi's restart
+(scsi_run_queue_async<-scsi_end_request) finally restarts the queue.
+
+
+Thanks,
+Ming
+
