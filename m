@@ -2,183 +2,189 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B009F360771
-	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 12:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6227036082B
+	for <lists+linux-block@lfdr.de>; Thu, 15 Apr 2021 13:22:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232130AbhDOKrr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Apr 2021 06:47:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40352 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229481AbhDOKrq (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Apr 2021 06:47:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8F509AD09;
-        Thu, 15 Apr 2021 10:47:22 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 579FC1F2B65; Thu, 15 Apr 2021 12:47:22 +0200 (CEST)
-Date:   Thu, 15 Apr 2021 12:47:22 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Khazhy Kumykov <khazhy@google.com>
-Cc:     Jan Kara <jack@suse.cz>, Paolo Valente <paolo.valente@linaro.org>,
+        id S232278AbhDOLWV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Apr 2021 07:22:21 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:55198 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231482AbhDOLWR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 15 Apr 2021 07:22:17 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UVeFt.m_1618485712;
+Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0UVeFt.m_1618485712)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 15 Apr 2021 19:21:53 +0800
+Subject: Re: [PATCH V5 11/12] block: add poll_capable method to support
+ bio-based IO polling
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bfq: silence lockdep for bfqd/ioc lock inversion
-Message-ID: <20210415104722.GB25217@quack2.suse.cz>
-References: <20210319060015.3979352-1-khazhy@google.com>
- <20210414095455.GA29760@quack2.suse.cz>
- <CACGdZYJAoTjE3bbXS8ATRT6R3WHdY8P+q989RjKM_z_J7wpvyg@mail.gmail.com>
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Hannes Reinecke <hare@suse.de>
+References: <20210401021927.343727-1-ming.lei@redhat.com>
+ <20210401021927.343727-12-ming.lei@redhat.com>
+ <20210412093856.GA978201@infradead.org>
+ <a6d46979-810e-bc53-bc19-8acd449e3718@linux.alibaba.com>
+ <YHbQ/rZUPoTFUMDs@T590>
+ <5f30059d-6650-8268-b681-d8567ac1c509@linux.alibaba.com>
+ <YHfumsTKHuvPGp47@T590>
+ <0ceb3060-bce4-c39d-26cf-8c715ebbfd51@linux.alibaba.com>
+ <YHgQNL4byNCEmh3/@T590>
+From:   JeffleXu <jefflexu@linux.alibaba.com>
+Message-ID: <5f2542e4-1c36-71e8-5c72-a85b23c98b72@linux.alibaba.com>
+Date:   Thu, 15 Apr 2021 19:21:52 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACGdZYJAoTjE3bbXS8ATRT6R3WHdY8P+q989RjKM_z_J7wpvyg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <YHgQNL4byNCEmh3/@T590>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed 14-04-21 11:33:14, Khazhy Kumykov wrote:
-> On Wed, Apr 14, 2021 at 2:54 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Thu 18-03-21 23:00:15, Khazhismel Kumykov wrote:
-> > > lockdep warns of circular locking due to inversion between
-> > > bfq_insert_requests and bfq_exit_icq. If we end freeing a request when
-> > > merging, we *may* grab an ioc->lock if that request is the last refcount
-> > > to that ioc. bfq_bio_merge also potentially could have this ordering.
-> > > bfq_exit_icq, conversely, grabs bfqd but is always called with ioc->lock
-> > > held.
-> > >
-> > > bfq_exit_icq may either be called from put_io_context_active with ioc
-> > > refcount raised, ioc_release_fn after the last refcount was already
-> > > dropped, or ioc_clear_queue, which is only called while queue is
-> > > quiesced or exiting, so the inverted orderings should never conflict.
-> > >
-> > > Fixes: aee69d78dec0 ("block, bfq: introduce the BFQ-v0 I/O scheduler as
-> > > an extra scheduler")
-> > >
-> > > Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> >
-> > I've just hit the same lockdep complaint. When looking at this another
-> > option to solve this complaint seemed to be to modify bfq_bio_merge() like:
-> >
-> >         ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
-> >
-> > +       spin_unlock_irq(&bfqd->lock);
-> >         if (free)
-> >                 blk_mq_free_request(free);
-> > -       spin_unlock_irq(&bfqd->lock);
-> >
-> >         return ret;
-> >
-> > to release request outside of bfqd->lock. Because AFAICT there's no good
-> > reason why we are actually freeing the request under bfqd->lock. And it
-> > would seem a bit safer than annotating-away the lockdep complaint (as much
-> > as I don't see a problem with your analysis). Paolo?
+
+
+On 4/15/21 6:06 PM, Ming Lei wrote:
+> On Thu, Apr 15, 2021 at 05:21:56PM +0800, JeffleXu wrote:
+>>
+>>
+>> On 4/15/21 3:43 PM, Ming Lei wrote:
+>>> On Thu, Apr 15, 2021 at 09:34:36AM +0800, JeffleXu wrote:
+>>>>
+>>>>
+>>>> On 4/14/21 7:24 PM, Ming Lei wrote:
+>>>>> On Wed, Apr 14, 2021 at 04:38:25PM +0800, JeffleXu wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 4/12/21 5:38 PM, Christoph Hellwig wrote:
+>>>>>>> On Thu, Apr 01, 2021 at 10:19:26AM +0800, Ming Lei wrote:
+>>>>>>>> From: Jeffle Xu <jefflexu@linux.alibaba.com>
+>>>>>>>>
+>>>>>>>> This method can be used to check if bio-based device supports IO polling
+>>>>>>>> or not. For mq devices, checking for hw queue in polling mode is
+>>>>>>>> adequate, while the sanity check shall be implementation specific for
+>>>>>>>> bio-based devices. For example, dm device needs to check if all
+>>>>>>>> underlying devices are capable of IO polling.
+>>>>>>>>
+>>>>>>>> Though bio-based device may have done the sanity check during the
+>>>>>>>> device initialization phase, cacheing the result of this sanity check
+>>>>>>>> (such as by cacheing in the queue_flags) may not work. Because for dm
+>>>>>>>> devices, users could change the state of the underlying devices through
+>>>>>>>> '/sys/block/<dev>/io_poll', bypassing the dm device above. In this case,
+>>>>>>>> the cached result of the very beginning sanity check could be
+>>>>>>>> out-of-date. Thus the sanity check needs to be done every time 'io_poll'
+>>>>>>>> is to be modified.
+>>>>>>>
+>>>>>>> I really don't think thi should be a method, and I really do dislike
+>>>>>>> how we have all this "if (is_mq)" junk.  Why can't we have a flag on
+>>>>>>> the gendisk that signals if the device can support polling that
+>>>>>>> is autoamtically set for blk-mq and as-needed by bio based drivers?
+>>>>>>
+>>>>>> That would consume one more bit of queue->queue_flags.
+>>>>>>
+>>>>>> Besides, DM/MD is somehow special here that when one of the underlying
+>>>>>> devices is disabled polling through '/sys/block/<dev>/io_poll',
+>>>>>> currently there's no mechanism notifying the above MD/DM to clear the
+>>>>>> previously set queue_flags. Thus the outdated queue_flags still
+>>>>>> indicates this DM/MD is capable of polling, while in fact one of the
+>>>>>> underlying device has been disabled for polling.
+>>>>>
+>>>>> Right, just like there isn't queue limit progagation.
+>>>>>
+>>>>> Another blocker could be that bio based queue doesn't support queue
+>>>>> freezing.
+>>>>
+>>>> Do you mean the queue freezing is called in the following code snippet?
+>>>>
+>>>> ```
+>>>> static ssize_t queue_poll_store(struct request_queue *q, const char
+>>>> *page, size_t count)
+>>>> {
+>>>> 	...
+>>>> 	if (poll_on) {
+>>>> 		blk_queue_flag_set(QUEUE_FLAG_POLL, q);
+>>>> 	} else {
+>>>> 		blk_mq_freeze_queue(q);
+>>>> 		blk_queue_flag_clear(QUEUE_FLAG_POLL, q);
+>>>> 		blk_mq_unfreeze_queue(q);
+>>>> 	}
+>>>> ```
+>>>
+>>> Yes, if it is a bio based queue. Or bio queued queue(DM, MD or others) may
+>>> use freeze_queue to do similar thing.
+>>>
+>>>>
+>>>> And I can't understand how bio-based queue doesn't support queue freezing.
+>>>>
+>>>> ```
+>>>> submit_bio_noacct
+>>>> 	__submit_bio_noacct
+>>>> 		bio_queue_enter
+>>>> ```
+>>>>
+>>>> Every time submitting a bio, bio_queue_enter() will be called, and once
+>>>> the queue has been frozen, bio_queue_enter() will wait there until the
+>>>> queue is unfrozen.
+>>>
+>>> Not like blk-mq, the refcount is just grabbed during submission for bio based
+>>> queue. 
+>>
+>> Could you please explain it more detailed ....
 > 
-> If we can re-order the locking so we don't need the annotation, that
-> seems better ("inversion is OK so long as either we're frozen or we
-> have ioc refcount, and we only grab ioc->lock normally if we drop the
-> last refcount" is a tad "clever"). Though we still need to deal with
-> blk_mq_sched_try_insert_merge which can potentially free a request.
+> Please see __submit_bio(), in which the queue ref is dropped.
+> 
+>>
+>>
+>> I will research a bit and see if we can extend freeze queue for
+>>> covering bio based queue. One trouble is that bio is ended before
+>>> freeing request.
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Mike had ever suggested that we can trust the queue_flag, and clear the
+>>>>>> outdated queue_flags when later the IO submission or polling routine
+>>>>>> finally finds that the device is not capable of polling. Currently
+>>>>>> submit_bio_checks() will silently clear the REQ_HIPRI flag and still
+>>>>>> submit the bio when the device is actually not capable of polling. To
+>>>>>> fix the issue, could we break the submission and return an error code in
+>>>>>> submit_bio_checks() if the device is not capable of polling when
+>>>>>> submitting HIPRI bio?
+>>>>>
+>>>>> I think we may just leave it alone, if underlying queue becomes not pollable,
+>>>>> the bio still can be submitted & completed via IRQ, just not efficient enough.
+>>>>
+>>>> Yes it still works. I agree if there's no better solution...
+>>>>
+>>>> And what about the issue Christoph originally concerned? Do we use one
+>>>> more flag bit indicating if the queue capable of polling, or the
+>>>> poll_capable() method way?
+>>>
+>>> Just wondering why we can't use QUEUE_FLAG_POLL simply? If user wants to
+>>> enable it, let's do it for them. And bio driver can start with default poll
+>>> state by checking underlying queues.
+>>>
+>>
+>> Consider the following scenario: QUEUE_FLAG_POLL is set after
+>> initialization, indicating the device capable of polling; then polling
+>> is turned off by '/sys/block/<dev>/io_poll', thus QUEUE_FLAG_POLL is
+>> cleared.
+> 
+> If the flag is cleared, the bio will be submitted to irq queue, what is
+> the problem?
+> 
 
-I see, right.
-
-> (See the first stacktrace). Something simple that I wasn't sure of is:
-> could we delay bfq_exit_icq work, then avoid the inversion? Simpler to
-> analyze then.
-
-That's problematic because ICQ (referencing BFQQs etc.) is going to be
-freed after RCU grace period expires. So we cannot really postpone the
-teardown of bfq_io_cq. What we could do is to modify
-blk_mq_sched_try_insert_merge() so that it returns request to free
-similarly to blk_mq_sched_try_merge().  Then we can free the request after
-dropping bfqd->lock.
-
-								Honza
-
-> > > ---
-> > >  block/bfq-iosched.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > Noticed this lockdep running xfstests (generic/464) on top of a bfq
-> > > block device. I was also able to tease it out w/ binary trying to issue
-> > > requests that would end up merging while rapidly swapping the active
-> > > scheduler. As far as I could see, the deadlock would not actually occur,
-> > > so this patch opts to change lock class for the inverted case.
-> > >
-> > > bfqd -> ioc :
-> > > [ 2995.524557] __lock_acquire+0x18f5/0x2660
-> > > [ 2995.524562] lock_acquire+0xb4/0x3a0
-> > > [ 2995.524565] _raw_spin_lock_irqsave+0x3f/0x60
-> > > [ 2995.524569] put_io_context+0x33/0x90.  -> ioc->lock grabbed
-> > > [ 2995.524573] blk_mq_free_request+0x51/0x140
-> > > [ 2995.524577] blk_put_request+0xe/0x10
-> > > [ 2995.524580] blk_attempt_req_merge+0x1d/0x30
-> > > [ 2995.524585] elv_attempt_insert_merge+0x56/0xa0
-> > > [ 2995.524590] blk_mq_sched_try_insert_merge+0x4b/0x60
-> > > [ 2995.524595] bfq_insert_requests+0x9e/0x18c0.    -> bfqd->lock grabbed
-> > > [ 2995.524598] blk_mq_sched_insert_requests+0xd6/0x2b0
-> > > [ 2995.524602] blk_mq_flush_plug_list+0x154/0x280
-> > > [ 2995.524606] blk_finish_plug+0x40/0x60
-> > > [ 2995.524609] ext4_writepages+0x696/0x1320
-> > > [ 2995.524614] do_writepages+0x1c/0x80
-> > > [ 2995.524621] __filemap_fdatawrite_range+0xd7/0x120
-> > > [ 2995.524625] sync_file_range+0xac/0xf0
-> > > [ 2995.524642] __x64_sys_sync_file_range+0x44/0x70
-> > > [ 2995.524646] do_syscall_64+0x31/0x40
-> > > [ 2995.524649] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > >
-> > > ioc -> bfqd
-> > > [ 2995.524490] _raw_spin_lock_irqsave+0x3f/0x60
-> > > [ 2995.524498] bfq_exit_icq+0xa3/0xe0 -> bfqd->lock grabbed
-> > > [ 2995.524512] put_io_context_active+0x78/0xb0 -> ioc->lock grabbed
-> > > [ 2995.524516] exit_io_context+0x48/0x50
-> > > [ 2995.524519] do_exit+0x7e9/0xdd0
-> > > [ 2995.524526] do_group_exit+0x54/0xc0
-> > > [ 2995.524530] __x64_sys_exit_group+0x18/0x20
-> > > [ 2995.524534] do_syscall_64+0x31/0x40
-> > > [ 2995.524537] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > >
-> > > Another trace where we grab ioc -> bfqd through bfq_exit_icq is when
-> > > changing elevator
-> > >                -> #1 (&(&bfqd->lock)->rlock){-.-.}:
-> > > [  646.890820]        lock_acquire+0x9b/0x140
-> > > [  646.894868]        _raw_spin_lock_irqsave+0x3b/0x50
-> > > [  646.899707]        bfq_exit_icq_bfqq+0x47/0x1f0
-> > > [  646.904196]        bfq_exit_icq+0x21/0x30
-> > > [  646.908160]        ioc_destroy_icq+0xf3/0x130
-> > > [  646.912466]        ioc_clear_queue+0xb8/0x140
-> > > [  646.916771]        elevator_switch_mq+0xa4/0x3c0
-> > > [  646.921333]        elevator_switch+0x5f/0x340
-> > >
-> > > diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> > > index 95586137194e..cb50ac0ffe80 100644
-> > > --- a/block/bfq-iosched.c
-> > > +++ b/block/bfq-iosched.c
-> > > @@ -5027,7 +5027,14 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
-> > >       if (bfqq && bfqd) {
-> > >               unsigned long flags;
-> > >
-> > > -             spin_lock_irqsave(&bfqd->lock, flags);
-> > > +             /* bfq_exit_icq is usually called with ioc->lock held, which is
-> > > +              * inverse order from elsewhere, which may grab ioc->lock
-> > > +              * under bfqd->lock if we merge requests and drop the last ioc
-> > > +              * refcount. Since exit_icq is either called with a refcount,
-> > > +              * or with queue quiesced, use a differnet lock class to
-> > > +              * silence lockdep
-> > > +              */
-> > > +             spin_lock_irqsave_nested(&bfqd->lock, flags, 1);
-> > >               bfqq->bic = NULL;
-> > >               bfq_exit_bfqq(bfqd, bfqq);
-> > >               bic_set_bfqq(bic, NULL, is_sync);
-> > > --
-> > > 2.31.0.rc2.261.g7f71774620-goog
-> > >
-> > --
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-
+The IO path has no problem. It is the control path. If you want to turn
+on polling then, you have to check if the device capable of polling,
+while QUEUE_FLAG_POLL has been cleared in this case. IOW you can't rely
+on QUEUE_FLAG_POLL to see if the device has the **ability** of polling.
+QUEUE_FLAG_POLL flag only indicates if polling is turned on or off
+currently.
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks,
+Jeffle
