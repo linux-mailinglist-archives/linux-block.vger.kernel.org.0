@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86C55362AC1
+	by mail.lfdr.de (Postfix) with ESMTP id D41E0362AC2
 	for <lists+linux-block@lfdr.de>; Sat, 17 Apr 2021 00:07:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236307AbhDPWHL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S236324AbhDPWHL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Fri, 16 Apr 2021 18:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236324AbhDPWHJ (ORCPT
+        with ESMTP id S235608AbhDPWHK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 16 Apr 2021 18:07:09 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7349EC061756
-        for <linux-block@vger.kernel.org>; Fri, 16 Apr 2021 15:06:43 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id q136so9526612qka.7
-        for <linux-block@vger.kernel.org>; Fri, 16 Apr 2021 15:06:43 -0700 (PDT)
+        Fri, 16 Apr 2021 18:07:10 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEC6C06175F
+        for <linux-block@vger.kernel.org>; Fri, 16 Apr 2021 15:06:44 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id e13so20621186qkl.6
+        for <linux-block@vger.kernel.org>; Fri, 16 Apr 2021 15:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bMR2VTLj6F901p54R7TJJG701KH0qEMwjYWby2WBJ1k=;
-        b=mDbIrcwHFRy36PxLRjINn8KBeQK2Ja/TGUbAGVEyEBT37K1rvaRAlkrDNeJq/H3FZZ
-         cqqFrzkh9T9aBaM0RJ1UtGCc/jYEa82z2twH0NyE1CWV5hijRzXptVHlq3Hv6G3g7Ozb
-         AKvmml+Zn2DR4xbG4k4pu9aYBgvbr0jJWoiNtwGjphQfr4Z1KxKXnlHMwyBbpwSRzzBa
-         6yDUJOsJ4AOGUWhkUvDkGml3yGr8IrGqo07FHzOug43DugUS+N9qWNfke0iDL2o/8ONi
-         cTF+LUdYsZ39xgjDEt0IC2jdjJ97Q7aNOMU0SlXTWjwuvWOZwH9hjj/3O4eu9gdXoYVi
-         mhhw==
+        bh=rDUiV58X75hPG1P5uWek/G5MSETfeVhGHbmBONCaZ8U=;
+        b=CKj5b28UASeTOfqPWz2oTGQYrduQxQZ2eAG3FT5PPVb8fdVDOOEKtJWkRcoYjAzuFc
+         sn0wYTkzxYbNVPpJ3G6aPgjV986ykrnqPpLuTeHUlplzLZCEjLzD35cvh96xpre24pgJ
+         qn1zA9POnl5XUHMKv+5bLtr94YthtfWjPwvNjLwjMKR3nGxy6UaGKhz+OAiN+RNG4GFK
+         2a1aJY/O9wImAS/STIru/YR9iWLevZtnYSmqyncOgWv6rRizKsXMdOPozJIgniljDwET
+         EO477RXXJbHey8Y3MjWjpyQq60MAarpTff+yOghpQW1Srv8llLnIRInzD2lSZYnY95X7
+         V/2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=bMR2VTLj6F901p54R7TJJG701KH0qEMwjYWby2WBJ1k=;
-        b=NhRVATg0pWe1B1wTZpzkx8tgn5jKM62PCVVcMwsD7i+kOxWqZygedKZrF+OGp8lXLJ
-         WTeH/AM6LmJieQiPcj2ssRtxEfQn0VTmh7Do8C63IopkVy89yezI3ibdlmyDFvpguWGL
-         q/dXvSIWUseGR9ZbcoVRhzZsPNjQnmD09OZggrylP9Y3a6iTZL/gKAR7Zbr/IAzkS0VD
-         CidMtfhBkzhC87ZRoJLfGfXqbQ+H00ZDhUDfLieElQyRTOcFCbhvXuU9oZwWkBSxXH3d
-         cNCCkLLwqI3unR0V9sTyUJ0piA/tNtQGkPUScAekffxLufZ/CTKgR4ZrOurYyX/p2iMT
-         R9dw==
-X-Gm-Message-State: AOAM532rdKKLQut0F0SrN+wT81YIhvvm/t7uTz1ASqk102qMzmiHRADC
-        4mXNmY9uu35dm6p7OVE/D5Q=
-X-Google-Smtp-Source: ABdhPJwWCSOVGVoMxgIJwBSWNNpF9FwTIxmOZvPSZ8Rmi8aNJ381/s9+9qabM8hKroVd8ED9vuQBtw==
-X-Received: by 2002:a37:7006:: with SMTP id l6mr1394793qkc.137.1618610802681;
-        Fri, 16 Apr 2021 15:06:42 -0700 (PDT)
+        bh=rDUiV58X75hPG1P5uWek/G5MSETfeVhGHbmBONCaZ8U=;
+        b=dHgkNnyWUo4450KxvCs2sL8Lx2rLlPPRk6iSP737J+vpig2Nqves+cATABPQENA8W6
+         aq7cnp41E3fEKuTE/ntVHKE361GfimRE5cQ0bFFclMu0Fx6h4PnEMkg/RDC00G3JEJs8
+         1XzHJG3niRvwYYIpq3pVZ+iaE7BndDkmxyWsAVog/AeVAgJCrFZRkdoVoJewPnAWwlhF
+         Ju8NDLcHr4sGN5YTE+ZE5xQl+but1ABoWh9CfcKQsPnjrvxAP5IkORkiCSPq7cmsCrvl
+         /pg8TDhxKSg6QtHBYZ0t45r+IOATlHada+OgaW8VST4vDtKkXtMjonDQrTRTqbgBTD77
+         e9Kw==
+X-Gm-Message-State: AOAM530/tWpWkDzuXIJKAE+RC94iZrqZGn49Lp1nQKENfX1BImzrvMgZ
+        EzaySu/fq9XternaI8Usm8g=
+X-Google-Smtp-Source: ABdhPJwQGhrESLAHtZ/cMgCEXSH14BFWFw6ZctlPgcT4kjH9HsxQmaXkprC7Mn2+sEKVYnurrbUTtQ==
+X-Received: by 2002:a37:a1d3:: with SMTP id k202mr1452014qke.97.1618610804004;
+        Fri, 16 Apr 2021 15:06:44 -0700 (PDT)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id d62sm5173006qkg.55.2021.04.16.15.06.42
+        by smtp.gmail.com with ESMTPSA id 132sm5094410qkn.52.2021.04.16.15.06.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Apr 2021 15:06:42 -0700 (PDT)
+        Fri, 16 Apr 2021 15:06:43 -0700 (PDT)
 Sender: Mike Snitzer <snitzer@gmail.com>
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: [PATCH v3 3/4] nvme: introduce FAILUP handling for REQ_FAILFAST_TRANSPORT
-Date:   Fri, 16 Apr 2021 18:06:36 -0400
-Message-Id: <20210416220637.41111-4-snitzer@redhat.com>
+Subject: [PATCH v3 4/4] nvme: decouple basic ANA log page re-read support from native multipathing
+Date:   Fri, 16 Apr 2021 18:06:37 -0400
+Message-Id: <20210416220637.41111-5-snitzer@redhat.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20210416220637.41111-1-snitzer@redhat.com>
 References: <20210416220637.41111-1-snitzer@redhat.com>
@@ -62,86 +62,109 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If REQ_FAILFAST_TRANSPORT is set it means the driver should not retry
-IO that completed with transport errors. REQ_FAILFAST_TRANSPORT is
-set by multipathing software (e.g. dm-multipath) before it issues IO.
+Whether or not ANA is present is a choice of the target implementation;
+the host (and whether it supports multipathing) has _zero_ influence on
+this. If the target declares a path as 'inaccessible' the path _is_
+inaccessible to the host. As such, ANA support should be functional
+even if native multipathing is not.
 
-Update NVMe to allow failover of requests marked with either
-REQ_NVME_MPATH or REQ_FAILFAST_TRANSPORT. This allows such requests
-to be given a disposition of either FAILOVER or FAILUP respectively.
-FAILUP handling ensures a retryable error is returned up from NVMe.
+Introduce ability to always re-read ANA log page as required due to ANA
+error and make current ANA state available via sysfs -- even if native
+multipathing is disabled on the host (e.g. nvme_core.multipath=N).
+This is achieved by factoring out nvme_update_ana() and calling it in
+nvme_complete_rq() for all FAILOVER requests.
 
-Introduce nvme_failup_req() for use in nvme_complete_rq() if
-nvme_decide_disposition() returns FAILUP. nvme_failup_req() ensures
-the request is completed with a retryable IO error when appropriate.
+This affords userspace access to the current ANA state independent of
+which layer might be doing multipathing. This makes 'nvme list-subsys'
+show ANA state for all NVMe subsystems with multiple controllers. It
+also allows userspace multipath-tools to rely on the NVMe driver for
+ANA support while dm-multipath takes care of multipathing.
+
+And as always, if embedded NVMe users do not want any performance
+overhead associated with ANA or native NVMe multipathing they can
+disable CONFIG_NVME_MULTIPATH.
 
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
- drivers/nvme/host/core.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c      |  2 ++
+ drivers/nvme/host/multipath.c | 16 +++++++++++-----
+ drivers/nvme/host/nvme.h      |  4 ++++
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 4134cf3c7e48..605ffba6835f 100644
+index 605ffba6835f..9a878a599897 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -299,6 +299,7 @@ enum nvme_disposition {
- 	COMPLETE,
- 	RETRY,
- 	FAILOVER,
-+	FAILUP,
- };
- 
- static inline enum nvme_disposition nvme_decide_disposition(struct request *req)
-@@ -318,10 +319,11 @@ static inline enum nvme_disposition nvme_decide_disposition(struct request *req)
- 	    nvme_req(req)->retries >= nvme_max_retries)
- 		return COMPLETE;
- 
--	if (req->cmd_flags & REQ_NVME_MPATH) {
-+	if (req->cmd_flags & (REQ_NVME_MPATH | REQ_FAILFAST_TRANSPORT)) {
- 		if (nvme_is_path_error(nvme_req(req)->status) ||
- 		    blk_queue_dying(req->q))
--			return FAILOVER;
-+			return (req->cmd_flags & REQ_NVME_MPATH) ?
-+				FAILOVER : FAILUP;
- 	} else {
- 		if (blk_queue_dying(req->q))
- 			return COMPLETE;
-@@ -343,6 +345,25 @@ static inline void nvme_end_req(struct request *req)
- 	blk_mq_end_request(req, status);
- }
- 
-+static void nvme_failup_req(struct request *req)
-+{
-+	blk_status_t status = nvme_error_status(nvme_req(req)->status);
-+
-+	/* Ensure a retryable path error is returned */
-+	if (WARN_ON_ONCE(!blk_path_error(status))) {
-+		/*
-+		 * If here, nvme_is_path_error() returned true.
-+		 * So nvme_error_status() translation needs updating
-+		 * relative to blk_path_error(), or vice versa.
-+		 */
-+		pr_debug("Request meant for failover but blk_status_t (errno=%d) was not retryable.\n",
-+			 blk_status_to_errno(status));
-+		nvme_req(req)->status = NVME_SC_HOST_PATH_ERROR;
-+	}
-+
-+	nvme_end_req(req);
-+}
-+
- void nvme_complete_rq(struct request *req)
+@@ -349,6 +349,8 @@ static void nvme_failup_req(struct request *req)
  {
- 	trace_nvme_complete_rq(req);
-@@ -361,6 +382,9 @@ void nvme_complete_rq(struct request *req)
- 	case FAILOVER:
- 		nvme_failover_req(req);
- 		return;
-+	case FAILUP:
-+		nvme_failup_req(req);
-+		return;
+ 	blk_status_t status = nvme_error_status(nvme_req(req)->status);
+ 
++	nvme_update_ana(req);
++
+ 	/* Ensure a retryable path error is returned */
+ 	if (WARN_ON_ONCE(!blk_path_error(status))) {
+ 		/*
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index a1d476e1ac02..7d94250264aa 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -65,23 +65,29 @@ void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
  	}
  }
- EXPORT_SYMBOL_GPL(nvme_complete_rq);
+ 
+-void nvme_failover_req(struct request *req)
++void nvme_update_ana(struct request *req)
+ {
+ 	struct nvme_ns *ns = req->q->queuedata;
+ 	u16 status = nvme_req(req)->status & 0x7ff;
+-	unsigned long flags;
+-
+-	nvme_mpath_clear_current_path(ns);
+ 
+ 	/*
+ 	 * If we got back an ANA error, we know the controller is alive but not
+-	 * ready to serve this namespace.  Kick of a re-read of the ANA
++	 * ready to serve this namespace.  Kick off a re-read of the ANA
+ 	 * information page, and just try any other available path for now.
+ 	 */
+ 	if (nvme_is_ana_error(status) && ns->ctrl->ana_log_buf) {
+ 		set_bit(NVME_NS_ANA_PENDING, &ns->flags);
+ 		queue_work(nvme_wq, &ns->ctrl->ana_work);
+ 	}
++}
++
++void nvme_failover_req(struct request *req)
++{
++	struct nvme_ns *ns = req->q->queuedata;
++	unsigned long flags;
++
++	nvme_mpath_clear_current_path(ns);
++	nvme_update_ana(req);
+ 
+ 	spin_lock_irqsave(&ns->head->requeue_lock, flags);
+ 	blk_steal_bios(&ns->head->requeue_list, req);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 07b34175c6ce..4eed8536625c 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -664,6 +664,7 @@ void nvme_mpath_start_freeze(struct nvme_subsystem *subsys);
+ void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
+ 			struct nvme_ctrl *ctrl, int *flags);
+ void nvme_failover_req(struct request *req);
++void nvme_update_ana(struct request *req);
+ void nvme_kick_requeue_lists(struct nvme_ctrl *ctrl);
+ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl,struct nvme_ns_head *head);
+ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id);
+@@ -714,6 +715,9 @@ static inline void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
+ static inline void nvme_failover_req(struct request *req)
+ {
+ }
++static inline void nvme_update_ana(struct request *req)
++{
++}
+ static inline void nvme_kick_requeue_lists(struct nvme_ctrl *ctrl)
+ {
+ }
 -- 
 2.15.0
 
