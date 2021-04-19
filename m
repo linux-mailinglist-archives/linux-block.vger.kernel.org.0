@@ -2,173 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A75FF363CD3
-	for <lists+linux-block@lfdr.de>; Mon, 19 Apr 2021 09:38:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A47E363CE9
+	for <lists+linux-block@lfdr.de>; Mon, 19 Apr 2021 09:47:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237953AbhDSHih (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 19 Apr 2021 03:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237981AbhDSHif (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 19 Apr 2021 03:38:35 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D47C061760
-        for <linux-block@vger.kernel.org>; Mon, 19 Apr 2021 00:38:06 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id j12so14396689edy.3
-        for <linux-block@vger.kernel.org>; Mon, 19 Apr 2021 00:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OBxjluacdx44Ad2DUdXDx0FetvYAHBA3papJxkIAM7s=;
-        b=ElXPKaW5VxqI7pBiBJTX9KZjia9NEbmTGGLXYonGevuIOND6ijttUWkabkwosR65wK
-         R9NNkrGkE5Ps9Sp8RJuDB20tdplca/krXFm4VjXalsDLdij3JZPN47qzMu/ilax4FV3k
-         h7lvlP59K7DAG+N4ysHfiyMvB4UURrYWdETCkhdiewglwoLfrurB530I2Oa/uzoDBqll
-         IExn4YiN8DAgftj34EI9F+85IdSG4wGsArAQmiiiW4w9PJXHSxbBDqvPV373CA5ZNVMI
-         7p/ya3OA6JSC1f6JtB9ZDG15BNyKy20mIr92kdY4shMwzSFv8v7BLQcAc+bo94onztvH
-         m0qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OBxjluacdx44Ad2DUdXDx0FetvYAHBA3papJxkIAM7s=;
-        b=SMd98fX6dXZVfgL5SaGPKYjDxKV3KriHuG/KnXT6ejuEibcfUYfoNlYPUK5Mv7QKu4
-         HbuPCVLxR0NMdJf9kpF9SRGoaMuoW42pLe74XtjYzPcIrIduixv4FzG+PMRFz1hL8DW1
-         H4hBKR2eAE0430HE8h4cADEo3SzIaNAiw96YrpFKXuRCAfPcTEVORq2LHmiayFzKTry/
-         MMoIetChrVk//UnzAjoaU9lkgTZl6E/Dil/qDXo7bS3qyfMfxP+yvHYewh8MPIlfPo9P
-         75UjJNY0COEAl44uOE+DF54xMGOOhd7U7evfe/sPnXnsp1sUkGl0tZdVZwF0L52abHIM
-         JC+g==
-X-Gm-Message-State: AOAM533IgTyV3CWDYgUNuYu53yguhXuQT2H0N0QFIrZRjXGNwL7y+q06
-        NCHhdqaYtNUhYDcTgRvWEt+H6xSdwTH4c+XJ
-X-Google-Smtp-Source: ABdhPJw1DrHlPDDt5k1QBPcSIQfEwEd5Hnl9ujAbb4zsWty9CmI3vFx0vctgcfuIk1YKRqGY31680A==
-X-Received: by 2002:aa7:c90a:: with SMTP id b10mr16186433edt.276.1618817884985;
-        Mon, 19 Apr 2021 00:38:04 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5aeee5.dynamic.kabel-deutschland.de. [95.90.238.229])
-        by smtp.googlemail.com with ESMTPSA id g22sm8701833ejz.46.2021.04.19.00.38.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Apr 2021 00:38:04 -0700 (PDT)
-From:   Gioh Kim <gi-oh.kim@ionos.com>
-To:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     axboe@kernel.dk, akinobu.mita@gmail.com, corbet@lwn.net,
-        hch@infradead.org, sagi@grimberg.me, bvanassche@acm.org,
-        haris.iqbal@ionos.com, jinpu.wang@ionos.com,
-        Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>,
-        Gioh Kim <gi-oh.kim@ionos.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCHv5 for-next 19/19] block/rnbd: Use strscpy instead of strlcpy
-Date:   Mon, 19 Apr 2021 09:37:22 +0200
-Message-Id: <20210419073722.15351-20-gi-oh.kim@ionos.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210419073722.15351-1-gi-oh.kim@ionos.com>
+        id S237937AbhDSHrd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 19 Apr 2021 03:47:33 -0400
+Received: from mail-dm6nam08on2041.outbound.protection.outlook.com ([40.107.102.41]:39265
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237895AbhDSHrd (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 19 Apr 2021 03:47:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CgBVfa1u+qFkOYCtg7esAVx1SeQVFazGR6rv+A9WI56ebYTDRTBq6ztZEITNioWPgOoB80BQ3clYOEBkppzTj6birfvfRFj0mX0B6SZJAZZmOVV7wRPeQdjLM+66yX9g23pIyNm0iUorpSIQhW9+XZtukgfclbX85fygOmXxzcp0s0jYWv2zF0AeaZzoSHTAxJ8gjFMYNYOPssM03MUsvtS/T/Akxbtob2x9fI7WEn/kospdCuER67ntvNUFjM+uc4mVSkR7Sa34KZN9zE0FozeXs6utLUFJ2iTmttTuC0gvcCo0nYN5MU0dfv5m1BvYZms0GKK6D0b1TuYaKmKFNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6I9sOkmxN1NXQf6UemQxx9sLypH914o0KvHa35ZAHcA=;
+ b=MfeKQRWQTWj81eLMoK1ohZQGowx7deeTCRfOTrn6lt3y90foRjWwJiNNuA+a2NWskTSUF+xZK60RsR95KOvG0AmL+xMAfCNLtdcfiBZvNbNSg5WiYD1PozukuMTY3Br0xCHoXTzeqWFjwApwIt+65LkEuk7QO+y7yJynWuB1m7bjfhnNP8j+a/allskPnwWQoohw79Ffj66HRvpKkQNI/fRIJM7Fj//t8j0TJyc2yDEbUDx3t1135sEfbVS1S9tYGRtPZqbYsYya4Cl/Elh4AMrMa7Qh6B21uKLRXJ76tlbrtV7glFGk4CDdJCfCZBoaQZ4kf5Gu22fHBQc9Elt6zw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=ionos.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6I9sOkmxN1NXQf6UemQxx9sLypH914o0KvHa35ZAHcA=;
+ b=aqesMWh5kaY9MmujtVuO+GKJMMifaxIyn2wamn56R4/cY6KXKxZwD5ZcQ5MYtYkQUcChj5r3RZbVuf206mUpmjhlARCCMK3XZmPefYMwRaCXwPxam0n5okH7UXMzBel0BuHFsC30qKhPdV47W+jf4wWCVzZouuGQOqqkSfsrXwP09+vAfUVxfq4hCzB2c3RGLZfceDDE4k5brO34YnJ6El8mffQBIv35T7D9XdbygBUSpCsK7EF1n5vWPFeqlBYLeLAZNkZ3K+PsuRuM8P8NywboWZA0us6YY9SJBkTfvk7OO2zoCUxOgp8MRzCyJNXFeT2EphPjDbhmd8+3v+Fn2Q==
+Received: from BN6PR16CA0002.namprd16.prod.outlook.com (2603:10b6:404:f5::12)
+ by DM6PR12MB3354.namprd12.prod.outlook.com (2603:10b6:5:11f::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.24; Mon, 19 Apr
+ 2021 07:47:01 +0000
+Received: from BN8NAM11FT026.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f5:cafe::3) by BN6PR16CA0002.outlook.office365.com
+ (2603:10b6:404:f5::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend
+ Transport; Mon, 19 Apr 2021 07:47:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; ionos.com; dkim=none (message not signed)
+ header.d=none;ionos.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT026.mail.protection.outlook.com (10.13.177.51) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4042.16 via Frontend Transport; Mon, 19 Apr 2021 07:47:00 +0000
+Received: from localhost (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 19 Apr
+ 2021 07:46:59 +0000
+Date:   Mon, 19 Apr 2021 10:46:56 +0300
+From:   Leon Romanovsky <leonro@nvidia.com>
+To:     Gioh Kim <gi-oh.kim@ionos.com>
+CC:     <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <axboe@kernel.dk>, <akinobu.mita@gmail.com>, <corbet@lwn.net>,
+        <hch@infradead.org>, <sagi@grimberg.me>, <bvanassche@acm.org>,
+        <haris.iqbal@ionos.com>, <jinpu.wang@ionos.com>,
+        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
+        <linux-rdma@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@ionos.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCHv5 for-next 08/19] block/rnbd-clt: Replace {NO_WAIT,WAIT}
+ with RTRS_PERMIT_{WAIT,NOWAIT}
+Message-ID: <YH01cJefECbRDZLl@unreal>
 References: <20210419073722.15351-1-gi-oh.kim@ionos.com>
+ <20210419073722.15351-9-gi-oh.kim@ionos.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20210419073722.15351-9-gi-oh.kim@ionos.com>
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2fc2847e-c6ca-4506-6e6f-08d9030750fc
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3354:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB33548EEF6182E995FDE26E13BD499@DM6PR12MB3354.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: T+5nUJVelGkvmcVybpjr5srHE5xlUVyItwY003b6dXZNHTzUbMZ5288Ue8qYh7Z6vI4R/1rk7SOhPbWg71fMujwFTjRdonMdcW0EvFQH8qAS3HAyfK1brX6VoihLT344TNpy22RqFfajV1j0Z1F3vt36AS54uMotaKCo8gNHtyVgK1sLY26dPSFBAP4Mg/ek4w9AplMx29J9/lBcxNKv1OXrcJ0NONi10etX2URXZuxG5+FijoosAduxp4d8C55IPmxRKSvr79m6JtpX9cTEqcxqT1NULZM39z7um/x1xnldB9iC/tfrlSniLbGqdYSnI9BsY5YvVip0dtb19qqqW/VIXMlQgT5hQ3UhoCC9wDgAsg9WiPdhti7s+jhp6FmS1DjNOPCPK2A4JSqQ7Yvcx78pQaWqatU37a3Hd9jzAsiMszG7O1mCTQIR5DmMm5w5ziTYgsXCZIcSBvf8ops2RTRoOBLzt9KNIZYhTxZ3ZQmLjrCu1nruOaI8SXYarjsCa9o/lfbnemmPZ7FYlo8QxADERX200d29Ak1BIMeLDiiJL8C9Gzfv+ZwLLLlIE/Z0H0wHuya2/AZTB/AbU0D6rPMLIsmeigqT5rJBWaRtF/TpaEyD3fb9E01BnrX+qa6Ky+LjYzWnhVPF0BZ8orHESQ==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(7916004)(346002)(376002)(39860400002)(396003)(136003)(36840700001)(46966006)(426003)(5660300002)(82310400003)(107886003)(54906003)(6916009)(316002)(4326008)(70206006)(478600001)(2906002)(47076005)(33716001)(83380400001)(26005)(186003)(7636003)(70586007)(36860700001)(8936002)(82740400003)(6666004)(336012)(356005)(9686003)(16526019)(86362001)(4744005)(8676002)(7416002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2021 07:47:00.6321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fc2847e-c6ca-4506-6e6f-08d9030750fc
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT026.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3354
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>
+On Mon, Apr 19, 2021 at 09:37:11AM +0200, Gioh Kim wrote:
+> From: Gioh Kim <gi-oh.kim@cloud.ionos.com>
+> 
+> They are defined with the same value and similar meaning, let's remove
+> one of them, then we can remove {WAIT,NOWAIT}.
+> 
+> Also change the type of 'wait' from 'int' to 'enum wait_type' to make
+> it clear.
+> 
+> Cc: Leon Romanovsky <leonro@nvidia.com>
+> Cc: linux-rdma@vger.kernel.org
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@ionos.com>
+> Reviewed-by: Md Haris Iqbal <haris.iqbal@ionos.com>
+> Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
+> Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
+> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> Acked-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  drivers/block/rnbd/rnbd-clt.c          | 42 +++++++++++---------------
+>  drivers/infiniband/ulp/rtrs/rtrs-clt.c |  4 +--
+>  drivers/infiniband/ulp/rtrs/rtrs.h     |  6 ++--
+>  3 files changed, 22 insertions(+), 30 deletions(-)
+> 
 
-During checkpatch analyzing the following warning message was found:
-  WARNING:STRLCPY: Prefer strscpy over strlcpy - see:
-  https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-Fix it by using strscpy calls instead of strlcpy.
-
-Signed-off-by: Dima Stepanov <dmitrii.stepanov@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
-Signed-off-by: Gioh Kim <gi-oh.kim@ionos.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- drivers/block/rnbd/rnbd-clt-sysfs.c | 6 +++---
- drivers/block/rnbd/rnbd-clt.c       | 4 ++--
- drivers/block/rnbd/rnbd-srv.c       | 6 +++---
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
-index 042566b47bd9..324afdd63a96 100644
---- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-@@ -99,7 +99,7 @@ static int rnbd_clt_parse_map_options(const char *buf, size_t max_path_cnt,
- 				kfree(p);
- 				goto out;
- 			}
--			strlcpy(opt->sessname, p, NAME_MAX);
-+			strscpy(opt->sessname, p, NAME_MAX);
- 			kfree(p);
- 			break;
- 
-@@ -142,7 +142,7 @@ static int rnbd_clt_parse_map_options(const char *buf, size_t max_path_cnt,
- 				kfree(p);
- 				goto out;
- 			}
--			strlcpy(opt->pathname, p, NAME_MAX);
-+			strscpy(opt->pathname, p, NAME_MAX);
- 			kfree(p);
- 			break;
- 
-@@ -510,7 +510,7 @@ static int rnbd_clt_get_path_name(struct rnbd_clt_dev *dev, char *buf,
- 	int ret;
- 	char pathname[NAME_MAX], *s;
- 
--	strlcpy(pathname, dev->pathname, sizeof(pathname));
-+	strscpy(pathname, dev->pathname, sizeof(pathname));
- 	while ((s = strchr(pathname, '/')))
- 		s[0] = '!';
- 
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 95381e6663e0..c01786afe1b1 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -578,7 +578,7 @@ static int send_msg_open(struct rnbd_clt_dev *dev, enum wait_type wait)
- 
- 	msg.hdr.type	= cpu_to_le16(RNBD_MSG_OPEN);
- 	msg.access_mode	= dev->access_mode;
--	strlcpy(msg.dev_name, dev->pathname, sizeof(msg.dev_name));
-+	strscpy(msg.dev_name, dev->pathname, sizeof(msg.dev_name));
- 
- 	WARN_ON(!rnbd_clt_get_dev(dev));
- 	err = send_usr_msg(sess->rtrs, READ, iu,
-@@ -800,7 +800,7 @@ static struct rnbd_clt_session *alloc_sess(const char *sessname)
- 	sess = kzalloc_node(sizeof(*sess), GFP_KERNEL, NUMA_NO_NODE);
- 	if (!sess)
- 		return ERR_PTR(-ENOMEM);
--	strlcpy(sess->sessname, sessname, sizeof(sess->sessname));
-+	strscpy(sess->sessname, sessname, sizeof(sess->sessname));
- 	atomic_set(&sess->busy, 0);
- 	mutex_init(&sess->lock);
- 	INIT_LIST_HEAD(&sess->devs_list);
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index abacd9ef10d6..899dd9d7c10b 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -298,7 +298,7 @@ static int create_sess(struct rtrs_srv *rtrs)
- 	mutex_unlock(&sess_lock);
- 
- 	srv_sess->rtrs = rtrs;
--	strlcpy(srv_sess->sessname, sessname, sizeof(srv_sess->sessname));
-+	strscpy(srv_sess->sessname, sessname, sizeof(srv_sess->sessname));
- 
- 	rtrs_srv_set_sess_priv(rtrs, srv_sess);
- 
-@@ -437,7 +437,7 @@ static struct rnbd_srv_dev *rnbd_srv_init_srv_dev(const char *id)
- 	if (!dev)
- 		return ERR_PTR(-ENOMEM);
- 
--	strlcpy(dev->id, id, sizeof(dev->id));
-+	strscpy(dev->id, id, sizeof(dev->id));
- 	kref_init(&dev->kref);
- 	INIT_LIST_HEAD(&dev->sess_dev_list);
- 	mutex_init(&dev->lock);
-@@ -589,7 +589,7 @@ rnbd_srv_create_set_sess_dev(struct rnbd_srv_session *srv_sess,
- 
- 	kref_init(&sdev->kref);
- 
--	strlcpy(sdev->pathname, open_msg->dev_name, sizeof(sdev->pathname));
-+	strscpy(sdev->pathname, open_msg->dev_name, sizeof(sdev->pathname));
- 
- 	sdev->rnbd_dev		= rnbd_dev;
- 	sdev->sess		= srv_sess;
--- 
-2.25.1
-
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
