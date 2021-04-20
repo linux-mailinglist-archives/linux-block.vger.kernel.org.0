@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D3F3365768
-	for <lists+linux-block@lfdr.de>; Tue, 20 Apr 2021 13:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C2A36576B
+	for <lists+linux-block@lfdr.de>; Tue, 20 Apr 2021 13:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbhDTLVJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Apr 2021 07:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
+        id S231869AbhDTLVK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Apr 2021 07:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231805AbhDTLVI (ORCPT
+        with ESMTP id S231837AbhDTLVJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Apr 2021 07:21:08 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02832C06138C;
-        Tue, 20 Apr 2021 04:20:37 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id y1so3847937plg.11;
-        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
+        Tue, 20 Apr 2021 07:21:09 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6384AC06138A;
+        Tue, 20 Apr 2021 04:20:38 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id cu16so17659565pjb.4;
+        Tue, 20 Apr 2021 04:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=kfQ3tysIoxsatHCHD/2ZhyT8LCxPccS8PgExkIm8Ohw=;
-        b=hXAE7fxzva1kCWVxkakrCakKQrPcHFhibFXiK+vF0uaHxUy5jfzQv6a97DjxPsJUKA
-         AGCBJUZM7WuW5ysoVTFV7tz6fEs8fiByWd/TxegyE9xnU3jQcL6VETm1LYJ+ZnmVdmcO
-         JPSt0cqR0rg2MGe6QkxWfpwOr20e3rsi1YP7llKF4YKe3k9IHETbxOwPo3vv/8nzzRM0
-         I/GcgiBRMbg9yA/roUSivUIlLa4CM0kuYEcT1dilIPmpZ2DbHAJdMTjI8trDWRp4henP
-         EEIKj9pHwsdxmse7l+/IvDq8IlGkt48NXZZPCPYJOlbvIJ16xv9CaRsg/MG4jEVdSwx5
-         L4Hw==
+        bh=tfZJcsESVJJ7LF8DyaFqXDwDLdv4yW2KMDeBAC866jo=;
+        b=HHlhkFuIT3/E5oLlfNfJToXUKA4q4QJqlBFVsRIiZB+9wu5yf2mtd+cQ/IPhUC22ON
+         odRSdjzuYwQjrh6m9ZSyUKdRr6Eg31izfhHUVkrwbvtr/r43FPoTmJB0oiCInUDskMaP
+         WOLKw2nfh71WRLarYH4+M5u+mzOgD3wU32KSsmo2ftT6AQVuDK6UcYptgWeyAswgxwGz
+         bAvGB0raoTbqwAyj21X87L0gpAzG5U5KM5eFU4OYho8Z2qsiFTdtaOEvJWTTa9mJnLCN
+         JFlqgsZbfSDdhITrYTNrHTZHvZ7WRRr43z/l3E8yvuuxhL/tKNstgnNBVYR0vxlokEp2
+         duYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=kfQ3tysIoxsatHCHD/2ZhyT8LCxPccS8PgExkIm8Ohw=;
-        b=f+MgIji45xQEyQNuCYI9XbPKOGr/RiXCWgF/qM3o/dznOAuK/RKBUhxm0ukDBdMJVJ
-         CUG+TNnwRbsiJU2X+70gDvjnWt7c1qQ01AXEN0W3cp96sFO+VLohUDqAQ1UyU6CNxmGF
-         emxtI6JmNnlxq9ZBbthMNwB1bzyVZGfT3C52RvJzpNczzrW4VdCmhr3JifDCm2PEn+Yd
-         c+57GeCegab1rQcc7Lb3pI8guk8s+AcRi5SvLcOGwCFU+agO40cD10FKD7N6HJqn80PQ
-         TNZXMy8IHoJwBDZwACwthZUhX9OZTAEaX1fbgR/QwbXxfMP38g67ZFW94030jP6Eyj/s
-         VAWw==
-X-Gm-Message-State: AOAM533pjZXmLXDWyjf0B1fEyYIT0HsmOjduwko021KXdY86lFpVTnw7
-        A+w5fEOCxBQfcknvduNgrgiKoNkversBGA==
-X-Google-Smtp-Source: ABdhPJxxNbkRaBeT5aArcLlXmFXnWv+4UnnloMjashrlLk96pX2aGqacSyOI2C2tt4WLNFS8q9ojBA==
-X-Received: by 2002:a17:90b:1118:: with SMTP id gi24mr4344521pjb.30.1618917636634;
-        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
+        bh=tfZJcsESVJJ7LF8DyaFqXDwDLdv4yW2KMDeBAC866jo=;
+        b=CT8WBZxind3Dor6hjjoDBcQWcw7cSyaFGizLENyOOeCur3OFFyvImkCNes3H9NwSCj
+         VN8SKIw1jDCwDR6Pc04ieBnfeO5RR98Aow86/d5c8wliPvGA6ctyre/t95cQrnwVPJJn
+         XCc4mEgPjabHYFSJnW5PHvMf9J3JxRCrq8OmAdgvX23YKJLNez14Mm2jDauBOMV4FtfY
+         XjtTSYY5Cm/NDYjkHW9QdeCHeHDJ3BhajWnxJk5zMMSPl/TX9IAhrRIPQg3umZrCYqE/
+         y8uK3PNgaplxdlVpD6bpYlPG55C86KZaU+62gbrat8tlGR81o3oMDrsN1zC4myvOY+E/
+         RUxw==
+X-Gm-Message-State: AOAM533SfrfZGsv0oQES3R/OkVl9i7b5bc/5TEaSgXsEv+On+NGmQ9rd
+        GRxHvbuXgUktF561CLErIOc=
+X-Google-Smtp-Source: ABdhPJwhtKio1/NXn2mOTJSCoi6eeI7xCDByM6/15sltzKq6VIfjBHwyKeRKrz4+6GR7/Y6wV5XxwA==
+X-Received: by 2002:a17:90a:6f45:: with SMTP id d63mr4459617pjk.39.1618917638072;
+        Tue, 20 Apr 2021 04:20:38 -0700 (PDT)
 Received: from VM-0-3-centos.localdomain ([101.32.213.191])
-        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.35
+        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.36
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
+        Tue, 20 Apr 2021 04:20:37 -0700 (PDT)
 From:   brookxu <brookxu.cn@gmail.com>
 To:     paolo.valente@linaro.org, axboe@kernel.dk, tj@kernel.org
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] bfq: optimize the calculation of bfq_weight_to_ioprio()
-Date:   Tue, 20 Apr 2021 19:20:23 +0800
-Message-Id: <d824bd955851ea5cb5af54b6b901045f058207b2.1618916839.git.brookxu@tencent.com>
+Subject: [PATCH 7/8] bfq: reset entity->prio_changed in bfq_init_entity()
+Date:   Tue, 20 Apr 2021 19:20:24 +0800
+Message-Id: <34c02f3525ed632ea1878591b41174aee50e953d.1618916839.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1618916839.git.brookxu@tencent.com>
 References: <cover.1618916839.git.brookxu@tencent.com>
@@ -65,31 +65,29 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Chunguang Xu <brookxu@tencent.com>
 
-The value range of ioprio is [0, 7], but the result of
-bfq_weight_to_ioprio() may exceed this range, so simple
-optimization is required.
+Since weight, ioprio, ioprio_class will be updated in bfq_init_entity(),
+st->wsum will be updated in __bfq_activate_entity(), so when it is first
+active, it seems that __bfq_entity_update_weight_prio() has nothing to
+do. By resetting entity->prio_change in bfq_init_entity(), we can avoid
+unnecessary logic calls.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- block/bfq-wf2q.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ block/bfq-cgroup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 619ed21..ea5b90d 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -527,8 +527,9 @@ unsigned short bfq_ioprio_to_weight(int ioprio)
-  */
- static unsigned short bfq_weight_to_ioprio(int weight)
- {
--	return max_t(int, 0,
--		     IOPRIO_BE_NR * BFQ_WEIGHT_CONVERSION_COEFF - weight);
-+	int ioprio = IOPRIO_BE_NR  - weight / BFQ_WEIGHT_CONVERSION_COEFF;
-+
-+	return ioprio < 0 ? 0 : min_t(int, ioprio, IOPRIO_BE_NR - 1);
- }
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index c8c68dc..79a5aaa 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -426,6 +426,7 @@ void bfq_init_entity(struct bfq_entity *entity, struct bfq_group *bfqg)
  
- static void bfq_get_entity(struct bfq_entity *entity)
+ 	entity->weight = entity->new_weight;
+ 	entity->orig_weight = entity->new_weight;
++	entity->prio_changed = 0;
+ 	if (bfqq) {
+ 		bfqq->ioprio = bfqq->new_ioprio;
+ 		bfqq->ioprio_class = bfqq->new_ioprio_class;
 -- 
 1.8.3.1
 
