@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A1BA365760
-	for <lists+linux-block@lfdr.de>; Tue, 20 Apr 2021 13:21:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B5D3365763
+	for <lists+linux-block@lfdr.de>; Tue, 20 Apr 2021 13:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231423AbhDTLVC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Apr 2021 07:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
+        id S231697AbhDTLVD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Apr 2021 07:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231660AbhDTLVA (ORCPT
+        with ESMTP id S231640AbhDTLVC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Apr 2021 07:21:00 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72459C06138A;
-        Tue, 20 Apr 2021 04:20:29 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id v13so5905949ple.9;
-        Tue, 20 Apr 2021 04:20:29 -0700 (PDT)
+        Tue, 20 Apr 2021 07:21:02 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27BDC06174A;
+        Tue, 20 Apr 2021 04:20:30 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id s22so5278499pgk.6;
+        Tue, 20 Apr 2021 04:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=k7foMZZRtisGPq+uUebUl4zeTE385Qk+YuiaUy6ZRfU=;
-        b=D2nrbqQXFOAlluD1rWc2pfvpP1MJP3G6tlvBCQbJhv7F1+eV5k8to7bL1cVMMed2Gv
-         stpC6/tKQG1vfxYRV3jwhi534xyJY8vY7wXJmIORtuj0Y18a512UXYeoFz2ljPLVk0Y+
-         H6YRwe5GfrkEO/wLu3avPYzuufGPPgSAk8E6CtcNM6yl/4cCDywBceM7Kwtlfaty5vRV
-         VFj+vZiTK3aw4Ca7uS6F72ZshzYi7IigBpN7NfwZ2kYcuWMKIEZXxFzgM9TJE3TYLfA5
-         7MlgVhSGw5dPGo0IJAjuDBal2uzzfzmSVNfeG/ZCtudiFVaWKXS1XNKHgSQi5yhkPDX8
-         tRcw==
+        bh=YXgpUa5T67Dw4AbYp5KoLO/kJdOhq1vLhGhKXZoWFNo=;
+        b=GH2ig0nsuG2U8HvPMZwr/S/7fAM3RXR2E8yKMIVYIS6H//pgKckhhyRnJbUZtA7npX
+         +4ZYf9kuSOURwDBg8pHfdLAwsYsmYm5Omn8H5QkK1DBC0dMYnkynPRMm2GiP2ElZ4a4T
+         bauu/+3iRKL/TUA2YvR0wrAYzKK+PtpCkP12OvgNUdpFeUMk6EEnMyq0lpN2cMgI3dNV
+         eV/RUofQUzJWz1dBSyLoREKm7feWgDLcQDuJwDN5cvdA64pWPA0FDVtyMV0rOe7wSb1c
+         k9SkLpSzGvhCopB3w/8fkf27Q/aUL2WjsIe22EGczBPVlWazTOSbljtobrN609Xr8d+L
+         7oLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=k7foMZZRtisGPq+uUebUl4zeTE385Qk+YuiaUy6ZRfU=;
-        b=M/uqVCWe0Gg0ZnlEtupM9P6nDgdyiJbMIL7VHJebuVS+BQ2bCxlABiMbwRD9ki9q8X
-         EmO3xSxO4S7CKJUOKrwZDEr1lxQrKZ3knVRV4m9p0Dc+l6maobITofp9F200K9ExUhF8
-         p3qcGft9kpY1nR8mQbqOADMRx39lxsQH1BJz0INgIqkfSSlz+TQH96zN9/p/FtcL+z4w
-         m6FOHDtlgbGFdHfXQjxo4ORABtTgwh29MoV6UU8opE7AiMHvtcpQ1+S+4Bf2bWzvPkVK
-         jPxMw9ttkifroC9KEgpR8ISBlB7xwx+J+VC7DEX5YZpKg9QJO3Va0PHbN68lcdaW8jif
-         dXPA==
-X-Gm-Message-State: AOAM532A0vLFxdyXD1u5rnBKiJQPfMBdZhk4I5Td17zeAH4kdpl+eZRR
-        wD2FoNVWPySYG865D9/rnk0=
-X-Google-Smtp-Source: ABdhPJxZNhoIPNDlDI7FoU69B1Xr9dXt5bHcXFunC4cDlh+IjfVASzfH1Ewj8o6B9/Yq+KAkEIjuKw==
-X-Received: by 2002:a17:90b:1d88:: with SMTP id pf8mr4444598pjb.114.1618917629065;
-        Tue, 20 Apr 2021 04:20:29 -0700 (PDT)
+        bh=YXgpUa5T67Dw4AbYp5KoLO/kJdOhq1vLhGhKXZoWFNo=;
+        b=VnDQiDkFlJUYhTvXH9IceMaAB5ULgvIOTTJJvJcKQCDDTr77Q0jYZErz+Bro1WnDVR
+         TFb0Uxp7roQcR79ao8EvefsbnMcdnM1Re2/gswdOztpGEcZXbQik5ZC41RDuUYqFeued
+         Ox22HFmsXwP2fRmyXjEIInQRUt/o9TS/oUaHzjgfH29rlmEzp6va/SL53B7UFrL2oBXJ
+         +XQzWhLFLU66fLXqwosoVlkf009r5yGAEE5fHcbTHc/36CDYTfpfSPoM82rWdb+NCBCO
+         PuLtiqqkRyWIVyidGHmMQiQSyjcawxuT5DZ55E6FnQ+T8417YgEJUZsR5iOrSYw7vQHn
+         D9qg==
+X-Gm-Message-State: AOAM5327I+zClUpmLUtUczTEdoxbAWDjGxgdGHwC0QmB996/TmPPB5NA
+        HO4HR9xXUOPZMb1Ol7GqFC8=
+X-Google-Smtp-Source: ABdhPJwt6Wgtq/z5Y+kkE8MHl4OYvdLw4esQyiSJKo2RUVeQvs6dKU94anOaBlgSRcb/bxks0ZU/5g==
+X-Received: by 2002:a63:f40b:: with SMTP id g11mr16922042pgi.133.1618917630632;
+        Tue, 20 Apr 2021 04:20:30 -0700 (PDT)
 Received: from VM-0-3-centos.localdomain ([101.32.213.191])
-        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.27
+        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.29
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Apr 2021 04:20:28 -0700 (PDT)
+        Tue, 20 Apr 2021 04:20:30 -0700 (PDT)
 From:   brookxu <brookxu.cn@gmail.com>
 To:     paolo.valente@linaro.org, axboe@kernel.dk, tj@kernel.org
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] bfq: introduce bfq_entity_to_bfqg helper method
-Date:   Tue, 20 Apr 2021 19:20:18 +0800
-Message-Id: <1ce935f1bb10e0c7ecea7b79b826ff4cfc89acf0.1618916839.git.brookxu@tencent.com>
+Subject: [PATCH 2/8] bfq: convert the type of bfq_group.bfqd to bfq_data*
+Date:   Tue, 20 Apr 2021 19:20:19 +0800
+Message-Id: <ee08300e3d393b71b67aeaf1609fd6277968f1f1.1618916839.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1618916839.git.brookxu@tencent.com>
 References: <cover.1618916839.git.brookxu@tencent.com>
@@ -65,100 +65,74 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Chunguang Xu <brookxu@tencent.com>
 
-Introduce bfq_entity_to_bfqg() to make it easier to obtain the
-bfq_group corresponding to the entity.
+Setting bfq_group.bfqd to void* type does not seem to make much sense.
+This will cause unnecessary type conversion. Perhaps it would be better
+to change it to bfq_data* type.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- block/bfq-cgroup.c  |  6 ++----
- block/bfq-iosched.h |  1 +
- block/bfq-wf2q.c    | 16 ++++++++++++----
- 3 files changed, 15 insertions(+), 8 deletions(-)
+ block/bfq-cgroup.c  | 2 +-
+ block/bfq-iosched.h | 2 +-
+ block/bfq-wf2q.c    | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index b791e20..a5f544a 100644
+index a5f544a..50d06c7 100644
 --- a/block/bfq-cgroup.c
 +++ b/block/bfq-cgroup.c
-@@ -309,8 +309,7 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq)
+@@ -224,7 +224,7 @@ void bfqg_stats_update_io_add(struct bfq_group *bfqg, struct bfq_queue *bfqq,
  {
- 	struct bfq_entity *group_entity = bfqq->entity.parent;
- 
--	return group_entity ? container_of(group_entity, struct bfq_group,
--					   entity) :
-+	return group_entity ? bfq_entity_to_bfqg(group_entity) :
- 			      bfqq->bfqd->root_group;
+ 	blkg_rwstat_add(&bfqg->stats.queued, op, 1);
+ 	bfqg_stats_end_empty_time(&bfqg->stats);
+-	if (!(bfqq == ((struct bfq_data *)bfqg->bfqd)->in_service_queue))
++	if (!(bfqq == bfqg->bfqd->in_service_queue))
+ 		bfqg_stats_set_start_group_wait_time(bfqg, bfqq_group(bfqq));
  }
  
-@@ -610,8 +609,7 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
- 	 */
- 	entity = &bfqg->entity;
- 	for_each_entity(entity) {
--		struct bfq_group *curr_bfqg = container_of(entity,
--						struct bfq_group, entity);
-+		struct bfq_group *curr_bfqg = bfq_entity_to_bfqg(entity);
- 		if (curr_bfqg != bfqd->root_group) {
- 			parent = bfqg_parent(curr_bfqg);
- 			if (!parent)
 diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index b8e793c..a6f98e9 100644
+index a6f98e9..28d8590 100644
 --- a/block/bfq-iosched.h
 +++ b/block/bfq-iosched.h
-@@ -941,6 +941,7 @@ struct bfq_group {
- #endif
+@@ -914,7 +914,7 @@ struct bfq_group {
+ 	struct bfq_entity entity;
+ 	struct bfq_sched_data sched_data;
  
- struct bfq_queue *bfq_entity_to_bfqq(struct bfq_entity *entity);
-+struct bfq_group *bfq_entity_to_bfqg(struct bfq_entity *entity);
+-	void *bfqd;
++	struct bfq_data *bfqd;
  
- /* --------------- main algorithm interface ----------------- */
- 
+ 	struct bfq_queue *async_bfqq[2][IOPRIO_BE_NR];
+ 	struct bfq_queue *async_idle_bfqq;
 diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 070e34a..5ff0028 100644
+index 5ff0028..276f225 100644
 --- a/block/bfq-wf2q.c
 +++ b/block/bfq-wf2q.c
-@@ -149,7 +149,7 @@ struct bfq_group *bfq_bfqq_to_bfqg(struct bfq_queue *bfqq)
- 	if (!group_entity)
- 		group_entity = &bfqq->bfqd->root_group->entity;
- 
--	return container_of(group_entity, struct bfq_group, entity);
-+	return bfq_entity_to_bfqg(group_entity);
- }
- 
- /*
-@@ -208,7 +208,7 @@ static bool bfq_no_longer_next_in_service(struct bfq_entity *entity)
- 	if (bfq_entity_to_bfqq(entity))
- 		return true;
- 
--	bfqg = container_of(entity, struct bfq_group, entity);
-+	bfqg = bfq_entity_to_bfqg(entity);
- 
- 	/*
- 	 * The field active_entities does not always contain the
-@@ -266,6 +266,15 @@ struct bfq_queue *bfq_entity_to_bfqq(struct bfq_entity *entity)
- 	return bfqq;
- }
- 
-+struct bfq_group *bfq_entity_to_bfqg(struct bfq_entity *entity)
-+{
-+	struct bfq_group *bfqg = NULL;
-+
-+	if (entity->my_sched_data)
-+		bfqg = container_of(entity, struct bfq_group, entity);
-+
-+	return bfqg;
-+}
- 
- /**
-  * bfq_delta - map service into the virtual time domain.
-@@ -1001,8 +1010,7 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
- 
+@@ -498,7 +498,7 @@ static void bfq_active_insert(struct bfq_service_tree *st,
  #ifdef CONFIG_BFQ_GROUP_IOSCHED
- 	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
--		struct bfq_group *bfqg =
--			container_of(entity, struct bfq_group, entity);
-+		struct bfq_group *bfqg = bfq_entity_to_bfqg(entity);
- 		struct bfq_data *bfqd = bfqg->bfqd;
+ 	sd = entity->sched_data;
+ 	bfqg = container_of(sd, struct bfq_group, sched_data);
+-	bfqd = (struct bfq_data *)bfqg->bfqd;
++	bfqd = bfqg->bfqd;
+ #endif
+ 	if (bfqq)
+ 		list_add(&bfqq->bfqq_list, &bfqq->bfqd->active_list);
+@@ -597,7 +597,7 @@ static void bfq_active_extract(struct bfq_service_tree *st,
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+ 	sd = entity->sched_data;
+ 	bfqg = container_of(sd, struct bfq_group, sched_data);
+-	bfqd = (struct bfq_data *)bfqg->bfqd;
++	bfqd = bfqg->bfqd;
+ #endif
+ 	if (bfqq)
+ 		list_del(&bfqq->bfqq_list);
+@@ -743,7 +743,7 @@ struct bfq_service_tree *
+ 		else {
+ 			sd = entity->my_sched_data;
+ 			bfqg = container_of(sd, struct bfq_group, sched_data);
+-			bfqd = (struct bfq_data *)bfqg->bfqd;
++			bfqd = bfqg->bfqd;
+ 		}
+ #endif
  
- 		if (!entity->in_groups_with_pending_reqs) {
 -- 
 1.8.3.1
 
