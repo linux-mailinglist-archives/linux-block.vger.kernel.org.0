@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9901A365769
+	by mail.lfdr.de (Postfix) with ESMTP id 4D3F3365768
 	for <lists+linux-block@lfdr.de>; Tue, 20 Apr 2021 13:21:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231855AbhDTLVK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Apr 2021 07:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
+        id S231769AbhDTLVJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Apr 2021 07:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231811AbhDTLVI (ORCPT
+        with ESMTP id S231805AbhDTLVI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 20 Apr 2021 07:21:08 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D34C06138A;
-        Tue, 20 Apr 2021 04:20:35 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id lr7so3519780pjb.2;
-        Tue, 20 Apr 2021 04:20:35 -0700 (PDT)
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02832C06138C;
+        Tue, 20 Apr 2021 04:20:37 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id y1so3847937plg.11;
+        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=wHtH4uowNcGLatA4FtFRbjnON3Vo2NBBY5rs+rY1XYM=;
-        b=c4/sSzQKcasmJkJFn4h93qpMW9dQmHFZ7rEnFMeO/cWgHkP/NKVhBySiwfSEEV2h2i
-         SK5MMPJeJpi1qn2almMXadtczC26Q87pnBvU37VYCMbw4W0AYEI9jBE719Dettio+HQ6
-         seeW5eKU/He3sCV5m6pDsakF3+TDBLjSAHV2/F3Pc1+X+X8Q85HE3WTPoJVF1NbphZss
-         bzMe0tQniY8bUcVw1a+uWbmWZRn1pZouTfonSXxir0csBmO5HlvCnPPtNSbiW0RTolww
-         ETyeaXnSmqLdY45fGl0nDKhBRqiJo2RhwJJPiXXGrt2vqt2bnWjanK7z3OuaiHCqCKVY
-         5PZA==
+        bh=kfQ3tysIoxsatHCHD/2ZhyT8LCxPccS8PgExkIm8Ohw=;
+        b=hXAE7fxzva1kCWVxkakrCakKQrPcHFhibFXiK+vF0uaHxUy5jfzQv6a97DjxPsJUKA
+         AGCBJUZM7WuW5ysoVTFV7tz6fEs8fiByWd/TxegyE9xnU3jQcL6VETm1LYJ+ZnmVdmcO
+         JPSt0cqR0rg2MGe6QkxWfpwOr20e3rsi1YP7llKF4YKe3k9IHETbxOwPo3vv/8nzzRM0
+         I/GcgiBRMbg9yA/roUSivUIlLa4CM0kuYEcT1dilIPmpZ2DbHAJdMTjI8trDWRp4henP
+         EEIKj9pHwsdxmse7l+/IvDq8IlGkt48NXZZPCPYJOlbvIJ16xv9CaRsg/MG4jEVdSwx5
+         L4Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=wHtH4uowNcGLatA4FtFRbjnON3Vo2NBBY5rs+rY1XYM=;
-        b=QEMPpXGIrGRX3H0BC/S8WKImA2vEncRKTO3EtpORTkb1TiOKUJTyIPwVe3it0yU2f2
-         2vUNImizFijWd0gVMpwQJWK8opsi25Wp/4uXlAZJQOtlUn8xF42d/2LAriU2OgBZqJb2
-         tQZNOo6aVjw8aYp4GPFxP5vOHsWGa8WCzyd0YMfOtxyyq+66thd9vG1yiY9aspakk0eN
-         5oXbMyixobum7XpI6uegug5yDSzK8T8l76k9V7Kg7a2DDxgkr19XUlGeS3dA3KKH5Gc7
-         X85slANcJ2+nNWL7slZFbMS+UqDaB+Lnro2ExUfGM0Aw5EP3sRMG+zrSJzaHYu9gmHKk
-         mr4Q==
-X-Gm-Message-State: AOAM530NTlgE5sV4DLbmvs3kv6iOzVtZBDjEUN32Yq0lmGta1h5GitRt
-        rD6shFglQ6qTqUoC7I6EmvFRhcl9XKG7zA==
-X-Google-Smtp-Source: ABdhPJzxpmUrNZFFmUXZ+fGDda03R/VoG50oqI7bVzBOxaMsrqDWSkfK3RjtkMGHDa/Z+yBeIgemZQ==
-X-Received: by 2002:a17:90b:3649:: with SMTP id nh9mr4318932pjb.0.1618917635184;
-        Tue, 20 Apr 2021 04:20:35 -0700 (PDT)
+        bh=kfQ3tysIoxsatHCHD/2ZhyT8LCxPccS8PgExkIm8Ohw=;
+        b=f+MgIji45xQEyQNuCYI9XbPKOGr/RiXCWgF/qM3o/dznOAuK/RKBUhxm0ukDBdMJVJ
+         CUG+TNnwRbsiJU2X+70gDvjnWt7c1qQ01AXEN0W3cp96sFO+VLohUDqAQ1UyU6CNxmGF
+         emxtI6JmNnlxq9ZBbthMNwB1bzyVZGfT3C52RvJzpNczzrW4VdCmhr3JifDCm2PEn+Yd
+         c+57GeCegab1rQcc7Lb3pI8guk8s+AcRi5SvLcOGwCFU+agO40cD10FKD7N6HJqn80PQ
+         TNZXMy8IHoJwBDZwACwthZUhX9OZTAEaX1fbgR/QwbXxfMP38g67ZFW94030jP6Eyj/s
+         VAWw==
+X-Gm-Message-State: AOAM533pjZXmLXDWyjf0B1fEyYIT0HsmOjduwko021KXdY86lFpVTnw7
+        A+w5fEOCxBQfcknvduNgrgiKoNkversBGA==
+X-Google-Smtp-Source: ABdhPJxxNbkRaBeT5aArcLlXmFXnWv+4UnnloMjashrlLk96pX2aGqacSyOI2C2tt4WLNFS8q9ojBA==
+X-Received: by 2002:a17:90b:1118:: with SMTP id gi24mr4344521pjb.30.1618917636634;
+        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
 Received: from VM-0-3-centos.localdomain ([101.32.213.191])
-        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.33
+        by smtp.gmail.com with ESMTPSA id s40sm14187367pfw.100.2021.04.20.04.20.35
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Apr 2021 04:20:34 -0700 (PDT)
+        Tue, 20 Apr 2021 04:20:36 -0700 (PDT)
 From:   brookxu <brookxu.cn@gmail.com>
 To:     paolo.valente@linaro.org, axboe@kernel.dk, tj@kernel.org
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] bfq: remove unnecessary initialization logic
-Date:   Tue, 20 Apr 2021 19:20:22 +0800
-Message-Id: <686dd8506bb511ae181a99c9b45f287233aa2ecf.1618916839.git.brookxu@tencent.com>
+Subject: [PATCH 6/8] bfq: optimize the calculation of bfq_weight_to_ioprio()
+Date:   Tue, 20 Apr 2021 19:20:23 +0800
+Message-Id: <d824bd955851ea5cb5af54b6b901045f058207b2.1618916839.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1618916839.git.brookxu@tencent.com>
 References: <cover.1618916839.git.brookxu@tencent.com>
@@ -65,36 +65,31 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Chunguang Xu <brookxu@tencent.com>
 
-Since we will initialize sched_data.service_tree[] in
-bfq_init_root_group(), bfq_create_group_hierarchy() can
-ignore this part of the initialization, which can avoid
-repeated initialization.
+The value range of ioprio is [0, 7], but the result of
+bfq_weight_to_ioprio() may exceed this range, so simple
+optimization is required.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- block/bfq-cgroup.c | 4 ----
- 1 file changed, 4 deletions(-)
+ block/bfq-wf2q.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 50d06c7..c8c68dc 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -1429,15 +1429,11 @@ void bfqg_and_blkg_put(struct bfq_group *bfqg) {}
- struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node)
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 619ed21..ea5b90d 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -527,8 +527,9 @@ unsigned short bfq_ioprio_to_weight(int ioprio)
+  */
+ static unsigned short bfq_weight_to_ioprio(int weight)
  {
- 	struct bfq_group *bfqg;
--	int i;
- 
- 	bfqg = kmalloc_node(sizeof(*bfqg), GFP_KERNEL | __GFP_ZERO, node);
- 	if (!bfqg)
- 		return NULL;
- 
--	for (i = 0; i < BFQ_IOPRIO_CLASSES; i++)
--		bfqg->sched_data.service_tree[i] = BFQ_SERVICE_TREE_INIT;
--
- 	return bfqg;
+-	return max_t(int, 0,
+-		     IOPRIO_BE_NR * BFQ_WEIGHT_CONVERSION_COEFF - weight);
++	int ioprio = IOPRIO_BE_NR  - weight / BFQ_WEIGHT_CONVERSION_COEFF;
++
++	return ioprio < 0 ? 0 : min_t(int, ioprio, IOPRIO_BE_NR - 1);
  }
- #endif	/* CONFIG_BFQ_GROUP_IOSCHED */
+ 
+ static void bfq_get_entity(struct bfq_entity *entity)
 -- 
 1.8.3.1
 
