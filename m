@@ -2,316 +2,240 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7362F369C6D
-	for <lists+linux-block@lfdr.de>; Sat, 24 Apr 2021 00:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 691F7369CED
+	for <lists+linux-block@lfdr.de>; Sat, 24 Apr 2021 00:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232657AbhDWWGn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 23 Apr 2021 18:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231218AbhDWWGl (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 23 Apr 2021 18:06:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6639F61467;
-        Fri, 23 Apr 2021 22:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619215565;
-        bh=WC6okdkJnyksxo1ofAM6rL0O0NwmX0aGwFuZnSXTAUk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdSfy/uIWAf1yIlih3WjihzORgyH4AwsLPzBK7QeJoK/uRkFwkygoWM/wgd9x+v3o
-         7xwuE8VHwYQikH4hzbJ6Dxov8sOqa1QrwYzH8tjBrKdchDKUp0k7W7UmhhXG4OOB3G
-         6zrnIF9qZG2viAmRd7u+mIWDZeHnRi5I0zhxlzpNlf2nyn4CEMfVnvu4GVR63RKY+4
-         h/mAFMn1WwdnRblVKflA8oNqnVwqqpaWkpIAN3KGNMX7Oz2XZlp4JSoqhiRC1f8q3L
-         +LBA5BRZuXd5Q/NZMrkcykUNEScGj8Bnro1/myHlT1nos92a2V/A/vJBkMD8WIbvqt
-         pplYWL47nb/Kg==
-From:   Keith Busch <kbusch@kernel.org>
-To:     linux-nvme@lists.infradead.org, sagi@grimberg.me, hch@lst.de,
-        axboe@kernel.dk, linux-block@vger.kernel.org
-Cc:     Yuanyuan Zhong <yzhong@purestorage.com>,
-        Casey Chen <cachen@purestorage.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 5/5] nvme: allow user passthrough commands to poll
-Date:   Fri, 23 Apr 2021 15:05:58 -0700
-Message-Id: <20210423220558.40764-6-kbusch@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20210423220558.40764-1-kbusch@kernel.org>
-References: <20210423220558.40764-1-kbusch@kernel.org>
+        id S232101AbhDWW46 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 23 Apr 2021 18:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231359AbhDWW45 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 23 Apr 2021 18:56:57 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E359C061574;
+        Fri, 23 Apr 2021 15:56:18 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id x19so49368402lfa.2;
+        Fri, 23 Apr 2021 15:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=KfnCAYdtX4ALPXWJJjuQArnTYYCUMVEl462yj1Y6sR8=;
+        b=THJnr/PoclY6cWHewUeBet0iF51429NzvLRllT4L8fYM8ajk+bdr61vqTq7Q/tlmUk
+         7A+M1Mq4n2G5BUMTahgRhYIgsDlS8Xasy2txlWxHwCSVeF+ifYJl3qshwQldCqn8VpKj
+         FTsReQY2DgPSyJ0DkXNDnsuVtiw+lCQsOgXCZudePfeEQU7FLOasAQgAUCN8YghwDgQ9
+         qqfkSIDBnMo74b3tYAPZyveAG7j20crRA6Lw1KCIBETjwlGyjqv8kasak5klFhhEWAwG
+         DIrseHnAQpov+WlbvwNaL9Uj1nQr0cSNoEerNwze6AXNq4dbywWSP4aHEwC5CI1LpM/H
+         M+vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=KfnCAYdtX4ALPXWJJjuQArnTYYCUMVEl462yj1Y6sR8=;
+        b=aImmyeCwFnT0HDnipUSGggvWpIDvNPqR1uXjyxpBlRTE4AMqv12N4pzbyzNnSsIVnd
+         LlkCD6zTf/Fz6BUrQ57Q5227Kn3Hal9fhiR3A6VeF1TqDUxtkrrjOzFp0LNxUEpUBix/
+         jZnk5Yt2cla7Z6hLhIGfEX8WhDChcv8y6/A6WcVZfAF9Y57FC/vFaq6zc2H0MC++m6yb
+         dFNwOu0U/2gZRKXHGoLFPQv6s5r7Sh7qWk8A13qlLSEB3R8m8SyvvljeSPxXdM/efpLs
+         +WcCaYOLhsW5ghPuB4+oGs1cdAJgDBYPUqI8hMyOStMfQ4g/NWw9kYbhhw1evA1cHb5n
+         WJCA==
+X-Gm-Message-State: AOAM533QSMXHXOAEqnVzN2to5/yCTS/hOJR+4IjmUqvDx4omQrvAIPol
+        E1aif49XaUht2CfW3ZU3KQb7aDNJQqRHoLOfbKRsLInbLAxkhQ==
+X-Google-Smtp-Source: ABdhPJxhC1dHFb4XwpXNpOFL6SfngTfL+tHmW4rRG6obNksUhwSdLLKRbOSURjqR6Q5l0GqhUOUoP2MBKrY8aAAqu4A=
+X-Received: by 2002:a05:6512:3f08:: with SMTP id y8mr4332000lfa.657.1619218576023;
+ Fri, 23 Apr 2021 15:56:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Sat, 24 Apr 2021 03:56:05 +0500
+Message-ID: <CABXGCsPWS8mCsGFR_NbhCv-8p1JxBbmV_L4C=zPzev8y-omwow@mail.gmail.com>
+Subject: [bug][5.12-rc8] It sounds like madness but nvme controller is down
+ when I plug at the same time 3.5 jack headphones and USB headset to MB.
+To:     linux-usb@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, kbusch@kernel.org, luto@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The block layer knows how to deal with polled requests. Let the NVMe
-driver use the previously reserved user "flags" fields to define an
-option to allocate the request from the polled hardware contexts. If
-polling is not enabled, then the block layer will automatically fallback
-to a non-polled request.
+Hi,
+It sounds like madness but "nvme controller is down" when I plug at
+the same time 3.5 jack headphones and USB headset to MB.
+This really scares me because I've never seen such an easy way to make
+a system broken.
+The most offensive thing is that in the kernel logs nothing strange is
+visible except for connecting a USB device and disabling the nvme
+controller.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/nvme/host/core.c        | 10 ++++++----
- drivers/nvme/host/ioctl.c       | 32 ++++++++++++++++++--------------
- drivers/nvme/host/lightnvm.c    |  4 ++--
- drivers/nvme/host/nvme.h        |  3 ++-
- drivers/nvme/host/pci.c         |  4 ++--
- drivers/nvme/target/passthru.c  |  2 +-
- include/uapi/linux/nvme_ioctl.h |  4 ++++
- 7 files changed, 35 insertions(+), 24 deletions(-)
+[  510.573670] usb 1-3.3.4: new full-speed USB device number 23 using xhci_hcd
+[  510.968115] usb 1-3.3.4: New USB device found, idVendor=1b1c,
+idProduct=0a5f, bcdDevice= 1.03
+[  510.968125] usb 1-3.3.4: New USB device strings: Mfr=1, Product=2,
+SerialNumber=0
+[  510.968129] usb 1-3.3.4: Product: CORSAIR HS60 HAPTIC Gaming Headset
+[  510.968132] usb 1-3.3.4: Manufacturer: CORSAIR COMPONENTS, INC.
+[  511.896484] input: CORSAIR COMPONENTS, INC. CORSAIR HS60 HAPTIC
+Gaming Headset Consumer Control as
+/devices/pci0000:00/0000:00:01.2/0000:02:00.0/0000:03:08.0/0000:06:00.1/usb1/1-3/1-3.3/1-3.3.4/1-3.3.4:1.3/0003:1B1C:0A5F.0019/input/input61
+[  511.947854] input: CORSAIR COMPONENTS, INC. CORSAIR HS60 HAPTIC
+Gaming Headset as
+/devices/pci0000:00/0000:00:01.2/0000:02:00.0/0000:03:08.0/0000:06:00.1/usb1/1-3/1-3.3/1-3.3.4/1-3.3.4:1.3/0003:1B1C:0A5F.0019/input/input62
+[  511.948023] hid-generic 0003:1B1C:0A5F.0019:
+input,hiddev99,hidraw5: USB HID v1.11 Device [CORSAIR COMPONENTS, INC.
+CORSAIR HS60 HAPTIC Gaming Headset] on usb-0000:06:00.1-3.3.4/input3
+[  517.603789] nvme nvme0: controller is down; will reset:
+CSTS=0xffffffff, PCI_STATUS=0xffff
+[  517.636775] nvme 0000:01:00.0: can't change power state from D3hot
+to D0 (config space inaccessible)
+[  517.636899] nvme nvme0: Removing after probe failure status: -19
+[  517.654772] nvme0n1: detected capacity change from 937703088 to 0
+[  517.654778] blk_update_request: I/O error, dev nvme0n1, sector
+5632792 op 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
+[  517.654781] blk_update_request: I/O error, dev nvme0n1, sector
+105981294 op 0x1:(WRITE) flags 0x9800 phys_seg 1 prio class 0
+[  517.654795] XFS (nvme0n1p2): log I/O error -5
+[  517.654794] blk_update_request: I/O error, dev nvme0n1, sector
+3099104 op 0x1:(WRITE) flags 0x1000 phys_seg 3 prio class 0
+[  517.654798] nvme0n1p2: writeback error on inode 90909, offset
+3129344, sector 5632800
+[  517.654805] blk_update_request: I/O error, dev nvme0n1, sector
+5632728 op 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
+[  517.654812] nvme0n1p2: writeback error on inode 90909, offset
+3096576, sector 5632736
+[  517.654812] XFS (nvme0n1p2): xfs_do_force_shutdown(0x2) called from
+line 1272 of file fs/xfs/xfs_log.c. Return address = 000000000bfa0ccf
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 62af5fe7a0ce..3af4d955405b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -610,11 +610,13 @@ static inline void nvme_init_request(struct request *req,
- }
- 
- struct request *nvme_alloc_request(struct request_queue *q,
--		struct nvme_command *cmd, blk_mq_req_flags_t flags)
-+		struct nvme_command *cmd, blk_mq_req_flags_t flags,
-+		unsigned rq_flags)
- {
-+	unsigned cmd_flags = nvme_req_op(cmd) | rq_flags;
- 	struct request *req;
- 
--	req = blk_mq_alloc_request(q, nvme_req_op(cmd), flags);
-+	req = blk_mq_alloc_request(q, cmd_flags, flags);
- 	if (!IS_ERR(req))
- 		nvme_init_request(req, cmd);
- 	return req;
-@@ -957,7 +959,7 @@ int __nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
- 	int ret;
- 
- 	if (qid == NVME_QID_ANY)
--		req = nvme_alloc_request(q, cmd, flags);
-+		req = nvme_alloc_request(q, cmd, flags, 0);
- 	else
- 		req = nvme_alloc_request_qid(q, cmd, flags, qid);
- 	if (IS_ERR(req))
-@@ -1130,7 +1132,7 @@ static void nvme_keep_alive_work(struct work_struct *work)
- 	}
- 
- 	rq = nvme_alloc_request(ctrl->admin_q, &ctrl->ka_cmd,
--				BLK_MQ_REQ_RESERVED | BLK_MQ_REQ_NOWAIT);
-+				BLK_MQ_REQ_RESERVED | BLK_MQ_REQ_NOWAIT, 0);
- 	if (IS_ERR(rq)) {
- 		/* allocation failure, reset the controller */
- 		dev_err(ctrl->device, "keep-alive failed: %ld\n", PTR_ERR(rq));
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index 9cdd8bfebb80..79fc90f010b0 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -56,7 +56,7 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
- static int nvme_submit_user_cmd(struct request_queue *q,
- 		struct nvme_command *cmd, void __user *ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
--		u32 meta_seed, u64 *result, unsigned timeout)
-+		u32 meta_seed, u64 *result, unsigned timeout, unsigned rq_flags)
- {
- 	bool write = nvme_is_write(cmd);
- 	struct nvme_ns *ns = q->queuedata;
-@@ -66,7 +66,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 	void *meta = NULL;
- 	int ret;
- 
--	req = nvme_alloc_request(q, cmd, 0);
-+	req = nvme_alloc_request(q, cmd, 0, rq_flags);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 
-@@ -116,11 +116,12 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 	struct nvme_command c;
- 	unsigned length, meta_len;
- 	void __user *metadata;
-+	unsigned rq_flags = 0;
- 
- 	if (copy_from_user(&io, uio, sizeof(io)))
- 		return -EFAULT;
--	if (io.flags)
--		return -EINVAL;
-+	if (io.flags & NVME_HIPRI)
-+		rq_flags |= REQ_HIPRI;
- 
- 	switch (io.opcode) {
- 	case nvme_cmd_write:
-@@ -158,7 +159,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 
- 	memset(&c, 0, sizeof(c));
- 	c.rw.opcode = io.opcode;
--	c.rw.flags = io.flags;
-+	c.rw.flags = 0;
- 	c.rw.nsid = cpu_to_le32(ns->head->ns_id);
- 	c.rw.slba = cpu_to_le64(io.slba);
- 	c.rw.length = cpu_to_le16(io.nblocks);
-@@ -170,7 +171,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 
- 	return nvme_submit_user_cmd(ns->queue, &c,
- 			nvme_to_user_ptr(io.addr), length,
--			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
-+			metadata, meta_len, lower_32_bits(io.slba), NULL, 0,
-+			rq_flags);
- }
- 
- static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-@@ -178,6 +180,7 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- {
- 	struct nvme_passthru_cmd cmd;
- 	struct nvme_command c;
-+	unsigned rq_flags = 0;
- 	unsigned timeout = 0;
- 	u64 result;
- 	int status;
-@@ -186,8 +189,8 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 		return -EACCES;
- 	if (copy_from_user(&cmd, ucmd, sizeof(cmd)))
- 		return -EFAULT;
--	if (cmd.flags)
--		return -EINVAL;
-+	if (cmd.flags & NVME_HIPRI)
-+		rq_flags |= REQ_HIPRI;
- 	if (ns && cmd.nsid != ns->head->ns_id) {
- 		dev_err(ctrl->device,
- 			"%s: nsid (%u) in cmd does not match nsid (%u) of namespace\n",
-@@ -197,7 +200,7 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	memset(&c, 0, sizeof(c));
- 	c.common.opcode = cmd.opcode;
--	c.common.flags = cmd.flags;
-+	c.common.flags = 0;
- 	c.common.nsid = cpu_to_le32(cmd.nsid);
- 	c.common.cdw2[0] = cpu_to_le32(cmd.cdw2);
- 	c.common.cdw2[1] = cpu_to_le32(cmd.cdw3);
-@@ -214,7 +217,7 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
- 			nvme_to_user_ptr(cmd.addr), cmd.data_len,
- 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
--			0, &result, timeout);
-+			0, &result, timeout, rq_flags);
- 
- 	if (status >= 0) {
- 		if (put_user(result, &ucmd->result))
-@@ -229,6 +232,7 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- {
- 	struct nvme_passthru_cmd64 cmd;
- 	struct nvme_command c;
-+	unsigned rq_flags = 0;
- 	unsigned timeout = 0;
- 	int status;
- 
-@@ -236,8 +240,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 		return -EACCES;
- 	if (copy_from_user(&cmd, ucmd, sizeof(cmd)))
- 		return -EFAULT;
--	if (cmd.flags)
--		return -EINVAL;
-+	if (cmd.flags & NVME_HIPRI)
-+		rq_flags |= REQ_HIPRI;
- 	if (ns && cmd.nsid != ns->head->ns_id) {
- 		dev_err(ctrl->device,
- 			"%s: nsid (%u) in cmd does not match nsid (%u) of namespace\n",
-@@ -247,7 +251,7 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	memset(&c, 0, sizeof(c));
- 	c.common.opcode = cmd.opcode;
--	c.common.flags = cmd.flags;
-+	c.common.flags = 0;
- 	c.common.nsid = cpu_to_le32(cmd.nsid);
- 	c.common.cdw2[0] = cpu_to_le32(cmd.cdw2);
- 	c.common.cdw2[1] = cpu_to_le32(cmd.cdw3);
-@@ -264,7 +268,7 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
- 			nvme_to_user_ptr(cmd.addr), cmd.data_len,
- 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
--			0, &cmd.result, timeout);
-+			0, &cmd.result, timeout, rq_flags);
- 
- 	if (status >= 0) {
- 		if (put_user(cmd.result, &ucmd->result))
-diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
-index e9d9ad47f70f..a7fff633cdee 100644
---- a/drivers/nvme/host/lightnvm.c
-+++ b/drivers/nvme/host/lightnvm.c
-@@ -653,7 +653,7 @@ static struct request *nvme_nvm_alloc_request(struct request_queue *q,
- 
- 	nvme_nvm_rqtocmd(rqd, ns, cmd);
- 
--	rq = nvme_alloc_request(q, (struct nvme_command *)cmd, 0);
-+	rq = nvme_alloc_request(q, (struct nvme_command *)cmd, 0, 0);
- 	if (IS_ERR(rq))
- 		return rq;
- 
-@@ -766,7 +766,7 @@ static int nvme_nvm_submit_user_cmd(struct request_queue *q,
- 	DECLARE_COMPLETION_ONSTACK(wait);
- 	int ret = 0;
- 
--	rq = nvme_alloc_request(q, (struct nvme_command *)vcmd, 0);
-+	rq = nvme_alloc_request(q, (struct nvme_command *)vcmd, 0, 0);
- 	if (IS_ERR(rq)) {
- 		ret = -ENOMEM;
- 		goto err_cmd;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 76a7ed0728b9..6005a61c7f4c 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -629,7 +629,8 @@ void nvme_start_freeze(struct nvme_ctrl *ctrl);
- 
- #define NVME_QID_ANY -1
- struct request *nvme_alloc_request(struct request_queue *q,
--		struct nvme_command *cmd, blk_mq_req_flags_t flags);
-+		struct nvme_command *cmd, blk_mq_req_flags_t flags,
-+		unsigned rq_flags);
- void nvme_cleanup_cmd(struct request *req);
- blk_status_t nvme_setup_cmd(struct nvme_ns *ns, struct request *req);
- int nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 09d4c5f99fc3..0400ac53964f 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1344,7 +1344,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 		 req->tag, nvmeq->qid);
- 
- 	abort_req = nvme_alloc_request(dev->ctrl.admin_q, &cmd,
--			BLK_MQ_REQ_NOWAIT);
-+			BLK_MQ_REQ_NOWAIT, 0);
- 	if (IS_ERR(abort_req)) {
- 		atomic_inc(&dev->ctrl.abort_limit);
- 		return BLK_EH_RESET_TIMER;
-@@ -2268,7 +2268,7 @@ static int nvme_delete_queue(struct nvme_queue *nvmeq, u8 opcode)
- 	cmd.delete_queue.opcode = opcode;
- 	cmd.delete_queue.qid = cpu_to_le16(nvmeq->qid);
- 
--	req = nvme_alloc_request(q, &cmd, BLK_MQ_REQ_NOWAIT);
-+	req = nvme_alloc_request(q, &cmd, BLK_MQ_REQ_NOWAIT, 0);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 
-diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-index d9a649d9903b..be7c6d50d23a 100644
---- a/drivers/nvme/target/passthru.c
-+++ b/drivers/nvme/target/passthru.c
-@@ -244,7 +244,7 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
- 		timeout = nvmet_req_subsys(req)->admin_timeout;
- 	}
- 
--	rq = nvme_alloc_request(q, req->cmd, 0);
-+	rq = nvme_alloc_request(q, req->cmd, 0, 0);
- 	if (IS_ERR(rq)) {
- 		status = NVME_SC_INTERNAL;
- 		goto out_put_ns;
-diff --git a/include/uapi/linux/nvme_ioctl.h b/include/uapi/linux/nvme_ioctl.h
-index d99b5a772698..683d33c37a96 100644
---- a/include/uapi/linux/nvme_ioctl.h
-+++ b/include/uapi/linux/nvme_ioctl.h
-@@ -9,6 +9,10 @@
- 
- #include <linux/types.h>
- 
-+enum nvme_io_flags {
-+	NVME_HIPRI	= 1 << 0, /* use polling queue if available */
-+};
-+
- struct nvme_user_io {
- 	__u8	opcode;
- 	__u8	flags;
+The issue is reproducing on my system. I checked all the contacts for
+a bad connection. Even when I expose the motherboard and connectors to
+mechanical stress, nothing happens. So it doesn't look like a hardware
+fault.
+
+$ git blame drivers/nvme/host/pci.c -L 1239,1259
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1239) static void nvme_warn_reset(struct nvme_dev *dev,
+u32 csts)
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1240) {
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1241)      /* Read a config register to help see what
+died. */
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1242)      u16 pci_status;
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1243)      int result;
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1244)
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1245)      result =
+pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1246)                                    &pci_status);
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1247)      if (result == PCIBIOS_SUCCESSFUL)
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1248)              dev_warn(dev->ctrl.device,
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1249)                       "controller is down; will
+reset: CSTS=0x%x, PCI_STATUS=0x%hx\n",
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1250)                       csts, pci_status);
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1251)      else
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1252)              dev_warn(dev->ctrl.device,
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1253)                       "controller is down; will
+reset: CSTS=0x%x, PCI_STATUS read failed (%d)\n",
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1254)                       csts, result);
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1255) }
+b2a0eb1a0ac72 drivers/nvme/host/pci.c   (Keith Busch       2017-06-07
+20:32:50 +0200 1256)
+31c7c7d2c9f17 drivers/nvme/host/pci.c   (Christoph Hellwig 2015-10-22
+14:03:35 +0200 1257) static enum blk_eh_timer_return
+nvme_timeout(struct request *req, bool reserved)
+c30341dc3c436 drivers/block/nvme-core.c (Keith Busch       2013-12-10
+13:10:38 -0700 1258) {
+f4800d6d1548e drivers/nvme/host/pci.c   (Christoph Hellwig 2015-11-28
+15:43:10 +0100 1259)      struct nvme_iod *iod =
+blk_mq_rq_to_pdu(req);
+
+Andy and Keith excuse me, but you wrote code which said to me that
+"controller is down". Can you help me clarify what is really happening
+here?
+I can apply patches for verbose messages for understanding why block
+layers depend on USB and audio devices.
+
+My hardware:
+# inxi -F
+System:    Host: fedora Kernel: 5.12.0-0.rc8.191.fc35.x86_64+debug
+x86_64 bits: 64 Console: tty pts/0
+           Distro: Fedora release 35 (Rawhide)
+Machine:   Type: Desktop Mobo: ASUSTeK model: ROG STRIX X570-I GAMING
+v: Rev X.0x serial: 190958552300672
+           UEFI: American Megatrends v: 3603 date: 03/20/2021
+CPU:       Info: 16-Core (2-Die) model: AMD Ryzen 9 3950X bits: 64
+type: MT MCP MCM cache: L2: 8 MiB
+           Speed: 2056 MHz min/max: 2200/3500 MHz Core speeds (MHz):
+1: 2056 2: 3598 3: 2056 4: 3598 5: 2056 6: 2056 7: 3600
+           8: 2057 9: 2056 10: 3599 11: 2056 12: 2398 13: 2057 14:
+2198 15: 2198 16: 2200 17: 2200 18: 3593 19: 2056 20: 2054
+           21: 3599 22: 2055 23: 2056 24: 2398 25: 3600 26: 2056 27:
+2197 28: 2200 29: 2199 30: 2201 31: 3606 32: 2056
+Graphics:  Device-1: Advanced Micro Devices [AMD/ATI] Navi 21 [Radeon
+RX 6800/6800 XT / 6900 XT] driver: amdgpu v: kernel
+           Device-2: AVerMedia Live Streamer CAM 513 type: USB driver:
+hid-generic,usbhid,uvcvideo
+           Display: server: X.org 1.20.11 driver: loaded: amdgpu note:
+n/a (using device driver) tty: 238x53
+           Message: Advanced graphics data unavailable in console for root.
+Audio:     Device-1: Advanced Micro Devices [AMD/ATI] driver: snd_hda_intel
+           Device-2: Advanced Micro Devices [AMD] Starship/Matisse HD
+Audio driver: snd_hda_intel
+           Device-3: Kingston HyperX Cloud Orbit S Hi-Res 2Ch type:
+USB driver: hid-generic,snd-usb-audio,usbhid
+           Device-4: AVerMedia Live Streamer CAM 513 type: USB driver:
+hid-generic,snd-usb-audio,usbhid
+           Device-5: Corsair CORSAIR HS60 HAPTIC Gaming Headset type:
+USB driver: hid-generic,snd-usb-audio,usbhid
+           Sound Server-1: ALSA v: k5.12.0-0.rc8.191.fc35.x86_64+debug
+running: yes
+           Sound Server-2: PipeWire v: 0.3.26 running: yes
+Network:   Device-1: Intel Wi-Fi 6 AX200 driver: iwlwifi
+           IF: wlp4s0 state: down mac: fe:0f:cb:73:b4:f0
+           Device-2: Intel I211 Gigabit Network driver: igb
+           IF: enp5s0 state: up speed: 1000 Mbps duplex: full mac:
+a8:5e:45:50:a6:59
+Bluetooth: Device-1: Intel AX200 Bluetooth type: USB driver: btusb
+           Report: This feature requires one of these tools:
+hciconfig/bt-adapter
+Drives:    Local Storage: total: 16.81 TiB used: 5.71 TiB (33.9%)
+           ID-1: /dev/nvme0n1 vendor: Intel model: SSDPE21D480GA size:
+447.13 GiB
+           ID-2: /dev/sda vendor: Western Digital model:
+WUH721818ALE6L4 size: 16.37 TiB
+Partition: ID-1: / size: 99.95 GiB used: 8.66 GiB (8.7%) fs: xfs dev:
+/dev/nvme0n1p2
+           ID-2: /boot/efi size: 511 MiB used: 20.4 MiB (4.0%) fs:
+vfat dev: /dev/nvme0n1p1
+           ID-3: /home size: 16.37 TiB used: 5.7 TiB (34.8%) fs: xfs
+dev: /dev/sda1
+Swap:      ID-1: swap-1 type: partition size: 64 GiB used: 0 KiB
+(0.0%) dev: /dev/nvme0n1p3
+           ID-2: swap-2 type: zram size: 8 GiB used: 0 KiB (0.0%) dev:
+/dev/zram0
+Sensors:   System Temperatures: cpu: 51.2 C mobo: N/A gpu: amdgpu temp: 55.0 C
+           Fan Speeds (RPM): N/A gpu: amdgpu fan: 561
+Info:      Processes: 495 Uptime: 1m Memory: 62.63 GiB used: 1.75 GiB
+(2.8%) Init: systemd runlevel: 5 Shell: Bash
+           inxi: 3.3.03
+
+
+Full logs:
+[1] https://pastebin.com/ndsqaj4X
+[2] https://pastebin.com/J5wjipwN
+[3] https://pastebin.com/ZvvcjMzg
+
+
 -- 
-2.25.4
-
+Best Regards,
+Mike Gavrilov.
