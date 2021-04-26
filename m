@@ -2,36 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1643B36ACB7
-	for <lists+linux-block@lfdr.de>; Mon, 26 Apr 2021 09:12:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E7A36ACC7
+	for <lists+linux-block@lfdr.de>; Mon, 26 Apr 2021 09:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231816AbhDZHM7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Apr 2021 03:12:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41092 "EHLO mx2.suse.de"
+        id S232149AbhDZHSA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Apr 2021 03:18:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44744 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231616AbhDZHM7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Apr 2021 03:12:59 -0400
+        id S232119AbhDZHR5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 26 Apr 2021 03:17:57 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 55022B00D;
-        Mon, 26 Apr 2021 07:12:17 +0000 (UTC)
-Subject: Re: [PATCH V6 04/12] block: move block polling code into one
- dedicated source file
+        by mx2.suse.de (Postfix) with ESMTP id CB651AF31;
+        Mon, 26 Apr 2021 07:17:15 +0000 (UTC)
+Subject: Re: [PATCH V6 09/12] block: use per-task poll context to implement
+ bio based io polling
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Christoph Hellwig <hch@lst.de>
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com
 References: <20210422122038.2192933-1-ming.lei@redhat.com>
- <20210422122038.2192933-5-ming.lei@redhat.com>
+ <20210422122038.2192933-10-ming.lei@redhat.com>
 From:   Hannes Reinecke <hare@suse.de>
 Organization: SUSE Linux GmbH
-Message-ID: <2811ba56-dee3-9c3b-0bc6-d1072425032d@suse.de>
-Date:   Mon, 26 Apr 2021 09:12:08 +0200
+Message-ID: <527cf81d-5d6c-03ca-a6ae-cc18b9a67787@suse.de>
+Date:   Mon, 26 Apr 2021 09:17:08 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.1
 MIME-Version: 1.0
-In-Reply-To: <20210422122038.2192933-5-ming.lei@redhat.com>
+In-Reply-To: <20210422122038.2192933-10-ming.lei@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -40,19 +39,53 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 4/22/21 2:20 PM, Ming Lei wrote:
-> Prepare for supporting bio based io polling, and move blk polling
-> code into one dedicated source file. And three shared functions are
-> put into private header of blk-mq.h
+> Currently bio based IO polling needs to poll all hw queue blindly, this
+> way is very inefficient, and one big reason is that we can't pass any
+> bio submission result to blk_poll().
 > 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
+> In IO submission context, track associated underlying bios by per-task
+> submission queue and store returned 'cookie' in bio->bi_poll_data which
+> is added by filling a hole of .bi_iter, and return current->pid to
+> caller of submit_bio() for any bio based driver's IO, which is
+> submitted from FS.
+> 
+> In IO poll context, the passed cookie tells us the PID of submission
+> context, then we can find bios from the per-task io pull context of
+> submission context. Moving bios from submission queue to poll queue of
+> the poll context, and keep polling until these bios are ended. Remove
+> bio from poll queue if the bio is ended. Add bio flags of BIO_DONE and
+> BIO_END_BY_POLL for such purpose.
+> 
+> In was found in Jeffle Xu's test that kfifo doesn't scale well for a
+> submission queue as queue depth is increased, so a new mechanism for
+> tracking bios is needed. So far bio's size is close to 2 cacheline size,
+> and it may not be accepted to add new field into bio for solving the
+> scalability issue by tracking bios via linked list, switch to bio group
+> list for tracking bio, the idea is to reuse .bi_end_io for linking bios
+> into a linked list for all sharing same .bi_end_io(call it bio group),
+> which is recovered before ending bio really, since BIO_END_BY_POLL is
+> added for enhancing this point. Usually .bi_end_bio is same for all
+> bios in same layer, so it is enough to provide very limited groups, such
+> as 16 or less for fixing the scalability issue.
+> 
+> Usually submission shares context with io poll. The per-task poll context
+> is just like stack variable, and it is cheap to move data between the two
+> per-task queues.
+> 
+> Also when the submission task is exiting, drain pending IOs in the context
+> until all are done.
+> 
+> Tested-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> Reviewed-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->  block/Makefile   |   3 +-
->  block/blk-mq.c   | 230 -----------------------------------------------
->  block/blk-mq.h   |  40 +++++++++
->  block/blk-poll.c | 196 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 238 insertions(+), 231 deletions(-)
->  create mode 100644 block/blk-poll.c
+>  block/bio.c               |   5 +
+>  block/blk-core.c          |  39 ++++-
+>  block/blk-ioc.c           |   3 +
+>  block/blk-poll.c          | 345 +++++++++++++++++++++++++++++++++++++-
+>  block/blk.h               |  33 ++++
+>  include/linux/blk_types.h |  27 ++-
+>  6 files changed, 448 insertions(+), 4 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
