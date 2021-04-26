@@ -2,119 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A4336B733
-	for <lists+linux-block@lfdr.de>; Mon, 26 Apr 2021 18:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E583636B787
+	for <lists+linux-block@lfdr.de>; Mon, 26 Apr 2021 19:06:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbhDZQss (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Apr 2021 12:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbhDZQsr (ORCPT
+        id S235098AbhDZRGa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Apr 2021 13:06:30 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2917 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235532AbhDZRGN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Apr 2021 12:48:47 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB81C061574
-        for <linux-block@vger.kernel.org>; Mon, 26 Apr 2021 09:48:06 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id c3so968123ils.5
-        for <linux-block@vger.kernel.org>; Mon, 26 Apr 2021 09:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=puGzBLwZv++5HHjd7fY19pEjsXMx9goCdL3lunTxYdQ=;
-        b=J3hDuQRym59MuVErqE8iq0UtDP+T7SI07BCrWQ3p4KTcFE2Q29lkGYxa/J88Mu8034
-         YgIZto9R9JjsVvzVbYma7W6GsD5vm7L4lZzmUi94q8y4d5jgVXGVtRr0Uo2itlDt7JrN
-         gWDgQ5bUQwl5tPSCG2L2lY+85ia/nVgHRYK/M5SMoMEPLngjOzRWl4pa09GZk+QDgpBe
-         i8cNUQ/4NVngRynvEnqgGPCaGI0CzNMoF0QTyQT8XJ1sxBEFSFOvuyk/FViLzXEpfH8V
-         NBZpWe9YD+xElbx9cot5VbAuh83JCr3xV9okQpnHN5FLGA0voaSdWnSpqS/gEmBcytIf
-         KstQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=puGzBLwZv++5HHjd7fY19pEjsXMx9goCdL3lunTxYdQ=;
-        b=MTwkh2q2GbEvY6EAM3B15laUS4v7BQPGeW/dQ/D1iYrh4SB5MH4Yht7tfKR+8/dQR4
-         F516dJlaP3aTE4ZIi1V3Ufff2sjREWzEUPwBbX/8iDgJEDhUELE9N26hA7Fpnf75YZ4v
-         t9FZyJ6h8dRY1wwi7EFV2JjVuGq+9A8ZBFCbdct7pyZd/8iGWLoaKunVpCHZNVwMHoow
-         UNyvW4CGrK9NjO2RajaQxOs7pBcDXMSi9gkMplLbmZWD1QWW2S8aEyU6TYazvmKrEagC
-         u8tZG1ejXrpOn3PGHAqG48JSuKQ7IH4zTbfNBYxYezGr9GhkEX94LzAqhPTd+5FYFt/n
-         GZnA==
-X-Gm-Message-State: AOAM530NMK5cHj1a3SGrm+E38AyX2wCqrEjbJPeumk3k3+UQWETjA2jA
-        vu2HgwMZIjLdaFXXR6dpIB1Wtg==
-X-Google-Smtp-Source: ABdhPJyz84UTTivuvf7p9WHBWJPdNtTnBqQ9MVSQ0iwDxMl87Xhp7DRqTHJVVCrqyJShe3XjXtWP/Q==
-X-Received: by 2002:a92:d3c4:: with SMTP id c4mr13648591ilh.50.1619455685329;
-        Mon, 26 Apr 2021 09:48:05 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m8sm182147ilc.13.2021.04.26.09.48.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Apr 2021 09:48:04 -0700 (PDT)
-Subject: Re: switch block layer polling to a bio based model
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20210426134821.2191160-1-hch@lst.de>
- <2d229167-f56d-583b-569c-166c97ce2e71@kernel.dk>
- <20210426150638.GA24618@lst.de>
- <6b7e3ba0-aa09-b86d-8ea1-dc2e78c7529e@kernel.dk>
- <20210426161503.GA30994@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3c77394a-c6fc-8f58-302e-8e997adc8620@kernel.dk>
-Date:   Mon, 26 Apr 2021 10:48:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 26 Apr 2021 13:06:13 -0400
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FTWGW57Nnz680L7;
+        Tue, 27 Apr 2021 00:54:59 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 26 Apr 2021 19:05:29 +0200
+Received: from [10.47.94.234] (10.47.94.234) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 26 Apr
+ 2021 18:05:28 +0100
+Subject: Re: [bug report] shared tags causes IO hang and performance drop
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Hannes Reinecke <hare@suse.com>
+References: <YHaez6iN2HHYxYOh@T590>
+ <9a6145a5-e6ac-3d33-b52a-0823bfc3b864@huawei.com>
+ <cb326d404c6e0785d03a7dfadc42832c@mail.gmail.com> <YHbOOfGNHwO4SMS7@T590>
+ <87ceccf2-287b-9bd1-899a-f15026c9e65b@huawei.com> <YHe3M62agQET6o6O@T590>
+ <0c85fe52-ebc7-68b3-2dbe-dfad5d604346@huawei.com>
+ <c1d5abaa-c460-55f8-5351-16f09d6aa81f@huawei.com> <YIbS1dgSYrsAeGvZ@T590>
+ <55743a51-4d6f-f481-cebf-e2af9c657911@huawei.com> <YIbkX2G0+dp3PV+u@T590>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <9ad15067-ba7b-a335-ae71-8c4328856b91@huawei.com>
+Date:   Mon, 26 Apr 2021 18:02:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20210426161503.GA30994@lst.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <YIbkX2G0+dp3PV+u@T590>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.234]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/26/21 10:15 AM, Christoph Hellwig wrote:
-> On Mon, Apr 26, 2021 at 09:12:09AM -0600, Jens Axboe wrote:
->> Here's the series. It's not super clean (yet), but basically allows
->> users like io_uring to setup a bio cache, and pass that in through
->> iocb->ki_bi_cache. With that, we can recycle them instead of going
->> through free+alloc continually. If you look at profiles for high iops,
->> we're spending more time than desired doing just that.
->>
->> https://git.kernel.dk/cgit/linux-block/log/?h=io_uring-bio-cache
+On 26/04/2021 17:03, Ming Lei wrote:
+>> For both hostwide and non-hostwide tags, we have standalone sched tags and
+>> request pool per hctx when q->nr_hw_queues > 1.
+> driver tags is shared for hostwide tags.
 > 
-> So where do you spend the cycles?  The do not memset the whole bio
-> optimization is pretty obvious and is someting we should do independent
-> of the allocator.
+>>> That is why you observe that scheduler tag exhaustion
+>>> is easy to trigger in case of non-hostwide tags.
+>>>
+>>> I'd suggest to add one per-request-queue sched tags, and make all hctxs
+>>> sharing it, just like what you did for driver tag.
+>>>
+>> That sounds reasonable.
+>>
+>> But I don't see how this is related to hostwide tags specifically, but
+>> rather just having q->nr_hw_queues > 1, which NVMe PCI and some other SCSI
+>> MQ HBAs have (without using hostwide tags).
+> Before hostwide tags, the whole scheduler queue depth should be 256.
+> After hostwide tags, the whole scheduler queue depth becomes 256 *
+> nr_hw_queues. But the driver tag queue depth is_not_  changed.
 
-memset is just a small optimization on top. If we look at current
-profiles, the alloc+free looks something ala:
+Fine.
 
-+    2.71%  io_uring  [kernel.vmlinux]  [k] bio_alloc_bioset
-+    2.03%  io_uring  [kernel.vmlinux]  [k] kmem_cache_alloc
+> 
+> More requests come and are tried to dispatch to LLD and can't succeed
+> because of limited driver tag depth, and CPU utilization could be increased.
 
-and
+Right, maybe this is a problem.
 
-+    2.82%  io_uring  [kernel.vmlinux]  [k] __slab_free
-+    1.73%  io_uring  [kernel.vmlinux]  [k] kmem_cache_free
-     0.36%  io_uring  [kernel.vmlinux]  [k] mempool_free_slab
-     0.27%  io_uring  [kernel.vmlinux]  [k] mempool_free
+I quickly added some debug, and see that 
+__blk_mq_get_driver_tag()->__sbitmap_queue_get() fails ~7% for hostwide 
+tags and 3% for non-hostwide tags.
 
-Which is a substantial amount of cycles that is needed just to
-repeatedly use the same set of bios for doing IO. Using the caching
-patchset, all of the above are completely eliminated, and the only thing
-we dynamically allocate is a request which is a lot cheaper (ends up
-being 1-2% for either kernel).
+Having it fail at all for non-hostwide tags seems a bit dubious... 
+here's the code for deciding the rq sched tag depth:
 
-> The other thing that sucks is the mempool implementation, as it forces
-> each allocation and free to do an indirect call.  I think it might be
-> worth to try to frontend it with a normal slab cache and only fall back
-> to the mempool if that fails.
+q->nr_requests = 2 * min(q->tags_set->queue_depth [128], BLK_DEV_MAX_RQ 
+[128])
 
-Also minor I believe, but yes it'll eat cycles too. FWIW, the testing
-above is done without RETPOLINE.
+So we get 256 for our test scenario, which is appreciably bigger than 
+q->tags_set->queue_depth, so the failures make sense.
 
--- 
-Jens Axboe
+Anyway, I'll look at adding code for a per-request queue sched tags to 
+see if it helps. But I would plan to continue to use a per hctx sched 
+request pool.
+
+Thanks,
+John
 
