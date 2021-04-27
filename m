@@ -2,38 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B7F36D1AA
-	for <lists+linux-block@lfdr.de>; Wed, 28 Apr 2021 07:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A13A36D1BE
+	for <lists+linux-block@lfdr.de>; Wed, 28 Apr 2021 07:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232529AbhD1FgU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Apr 2021 01:36:20 -0400
-Received: from saphodev.broadcom.com ([192.19.11.229]:58622 "EHLO
+        id S236069AbhD1Fgk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Apr 2021 01:36:40 -0400
+Received: from relay.smtp-ext.broadcom.com ([192.19.11.229]:58690 "EHLO
         relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229437AbhD1FgT (ORCPT
+        by vger.kernel.org with ESMTP id S235851AbhD1Fga (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Apr 2021 01:36:19 -0400
-X-Greylist: delayed 503 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Apr 2021 01:36:18 EDT
+        Wed, 28 Apr 2021 01:36:30 -0400
 Received: from localhost.localdomain (unknown [10.157.2.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id 45660E927D;
-        Tue, 27 Apr 2021 22:27:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 45660E927D
+        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id CBAECE927A;
+        Tue, 27 Apr 2021 22:27:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com CBAECE927A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1619587636;
-        bh=BsV9KqIXrVGA5Fhq+mKNOzUnqup1sAIVRln0rFmCyn4=;
+        s=dkimrelay; t=1619587639;
+        bh=FHKxiI8jX6Ptk6GaAGidUigfOIpf4Di3Z+Au5CQKu7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0wqO6FDds38IBvcf/feJBu0LnJcfX1JOaQLHcGn4QpP4FTx/N1dAkN3wbwwaemOr
-         B2oMg9GqSjD48zzybTTRpAaVynGyvvPAD+NQyXN9gdmNocwtpA60UEwjXeBnXQitDA
-         dTmpFgqEhXwgCJQl0xfyLReiVUVz8FdkNB9awWRs=
+        b=lIdc3OsKPLZBFuySVYDgblQSSYSPDIK29ZQ8kKyXPEf6oQn37dm6hwd0XuPMxNEJm
+         C3L8r18rPDHVLIq9Z9Pbv8AWQ2LTKRVwgRIq1bTIoZkL67zErHT93W5VicJxI7sTHM
+         dl2OZB9zmXvbeRNAjQZEZLJ4xAmjaLRWWbBfSoHU=
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         Muneendra <muneendra.kumar@broadcom.com>
-Subject: [PATCH v10 02/13] blkcg: Added a app identifier support for blkcg
-Date:   Wed, 28 Apr 2021 04:04:46 +0530
-Message-Id: <1619562897-14062-3-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v10 03/13] nvme: Added a newsysfs attribute appid_store
+Date:   Wed, 28 Apr 2021 04:04:47 +0530
+Message-Id: <1619562897-14062-4-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1619562897-14062-1-git-send-email-muneendra.kumar@broadcom.com>
 References: <1619562897-14062-1-git-send-email-muneendra.kumar@broadcom.com>
@@ -41,24 +40,21 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This Patch added a unique application identifier i.e
-fc_app_id  member in blkcg which allows identification of traffic
-sources at an individual cgroup based Applications
-(ex:virtual machine (VM))level in both host and
-fabric infrastructure.
+Added a new sysfs attribute appid_store under
+/sys/class/fc/fc_udev_device/*
 
-Added a new function blkcg_get_fc_appid to
-grab the app identifier associated with a bio.
+With this new interface the user can set the application identfier
+in  the blkcg associted with cgroup id.
 
-Added a new function blkcg_set_fc_appid to
-set the app identifier in a blkcgrp associated with cgroup id
+Once the application identifer has set with this interface it allows
+identification of traffic sources at an individual cgroup based
+Applications (ex:virtual machine (VM))level in both host and
+fabric infrastructure(FC).
 
-Added a new config BLK_CGROUP_FC_APPID and moved the changes
-under this config
+Below is the interface provided to set the app_id
 
-Merged the patch 16 of previous version in which we
-added a new config FC_APPID to select BLK_CGROUP_FC_APPID which Enable
-support to track FC io Traffic.
+echo "<cgroupid>:<appid>" >> /sys/class/fc/fc_udev_device/appid_store
+echo "457E:100000109b521d27" >> /sys/class/fc/fc_udev_device/appid_store
 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
@@ -68,170 +64,127 @@ v10:
 No change
 
 v9:
-Merged patch16 of previosu version to this patch
-where we are using Kconfig settings
+No change
 
 v8:
 No change
 
 v7:
-Modified the Kconfig file
+No change
 
 v6:
-Modified the Kconfig file as per standard specified
-in Documentation/process/coding-style.rst
+No change
 
 v5:
-Renamed the arguments appropriatley
-Renamed APPID_LEN  to FC_APPID_LEN
-Moved the input validation at the begining of the function
-Modified the comments
+Replaced APPID_LEN with FC_APPID_LEN
 
 v4:
 No change
 
 v3:
-Renamed the functions and app_id to more specific
-
-Addressed the reference leaks in blkcg_set_app_identifier
-
-Added a new config BLK_CGROUP_FC_APPID and moved the changes
-under this config
-
-Added blkcg_get_fc_appid,blkcg_set_fc_appid as inline functions
+Replaced blkcg_set_app_identifier function with blkcg_set_fc_appid
 
 v2:
-renamed app_identifier to app_id
-removed the  sysfs interface blkio.app_identifie under
+New Patch
 ---
- block/Kconfig              |  9 ++++++
- drivers/scsi/Kconfig       | 13 +++++++++
- include/linux/blk-cgroup.h | 56 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 78 insertions(+)
+ drivers/nvme/host/fc.c | 73 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 72 insertions(+), 1 deletion(-)
 
-diff --git a/block/Kconfig b/block/Kconfig
-index a2297edfdde8..03886d105301 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -144,6 +144,15 @@ config BLK_CGROUP_IOLATENCY
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 20dadd86e981..f0ce876700d6 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -9,7 +9,7 @@
+ #include <uapi/scsi/fc/fc_els.h>
+ #include <linux/delay.h>
+ #include <linux/overflow.h>
+-
++#include <linux/blk-cgroup.h>
+ #include "nvme.h"
+ #include "fabrics.h"
+ #include <linux/nvme-fc-driver.h>
+@@ -3782,10 +3782,81 @@ static ssize_t nvme_fc_nvme_discovery_store(struct device *dev,
  
- 	Note, this is an experimental interface and could be changed someday.
- 
-+config BLK_CGROUP_FC_APPID
-+	bool "Enable support to track FC I/O Traffic across cgroup applications"
-+	depends on BLK_CGROUP=y
-+	help
-+	  Enabling this option enables the support to track FC I/O traffic across
-+	  cgroup applications. It enables the Fabric and the storage targets to
-+	  identify, monitor, and handle FC traffic based on VM tags by inserting
-+	  application specific identification into the FC frame.
+ 	return count;
+ }
 +
- config BLK_CGROUP_IOCOST
- 	bool "Enable support for cost model based cgroup IO controller"
- 	depends on BLK_CGROUP=y
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 06b87c7f6bab..20aa1536a3ba 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -235,6 +235,19 @@ config SCSI_FC_ATTRS
- 	  each attached FiberChannel device to sysfs, say Y.
- 	  Otherwise, say N.
- 
-+config FC_APPID
-+	bool "Enable support to track FC I/O Traffic"
-+	depends on BLOCK && BLK_CGROUP
-+	depends on SCSI
-+	select BLK_CGROUP_FC_APPID
-+	default y
-+	help
-+	  If you say Y here, it enables the support to track
-+	  FC I/O traffic over fabric. It enables the Fabric and the
-+	  storage targets to identify, monitor, and handle FC traffic
-+	  based on VM tags by inserting application specific
-+	  identification into the FC frame.
-+
- config SCSI_ISCSI_ATTRS
- 	tristate "iSCSI Transport Attributes"
- 	depends on SCSI && NET
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index b9f3c246c3c9..9204f8f8a932 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -30,6 +30,8 @@
- 
- /* Max limits for throttle policy */
- #define THROTL_IOPS_MAX		UINT_MAX
-+#define FC_APPID_LEN              129
-+
- 
- #ifdef CONFIG_BLK_CGROUP
- 
-@@ -55,6 +57,9 @@ struct blkcg {
- 	struct blkcg_policy_data	*cpd[BLKCG_MAX_POLS];
- 
- 	struct list_head		all_blkcgs_node;
-+#ifdef CONFIG_BLK_CGROUP_FC_APPID
-+	char                            fc_app_id[FC_APPID_LEN];
-+#endif
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct list_head		cgwb_list;
- #endif
-@@ -660,4 +665,55 @@ static inline void blk_cgroup_bio_start(struct bio *bio) { }
- 
- #endif	/* CONFIG_BLOCK */
- #endif	/* CONFIG_BLK_CGROUP */
-+
-+#ifdef CONFIG_BLK_CGROUP_FC_APPID
-+/*
-+ * Sets the fc_app_id field associted to blkcg
-+ * @app_id: application identifier
-+ * @cgrp_id: cgroup id
-+ * @app_id_len: size of application identifier
-+ */
-+static inline int blkcg_set_fc_appid(char *app_id, u64 cgrp_id, size_t app_id_len)
++/*parse the Cgroup id from a buf and returns the length of cgrpid*/
++static int fc_parse_cgrpid(const char *buf, u64 *id)
 +{
-+	struct cgroup *cgrp;
-+	struct cgroup_subsys_state *css;
-+	struct blkcg *blkcg;
-+	int ret  = 0;
++	char cgrp_id[16+1];
++	int cgrpid_len, j;
 +
-+	if (app_id_len > FC_APPID_LEN)
++	memset(cgrp_id, 0x0, sizeof(cgrp_id));
++	for (cgrpid_len = 0, j = 0; cgrpid_len < 17; cgrpid_len++) {
++		if (buf[cgrpid_len] != ':')
++			cgrp_id[cgrpid_len] = buf[cgrpid_len];
++		else {
++			j = 1;
++			break;
++		}
++	}
++	if (!j)
++		return -EINVAL;
++	if (kstrtou64(cgrp_id, 16, id) < 0)
++		return -EINVAL;
++	return cgrpid_len;
++}
++
++/*
++ * fc_update_appid :parses and updates the appid in the blkcg associated with
++ * cgroupid.
++ * @buf: buf contains both cgrpid and appid info
++ * @count: size of the buffer
++ */
++static int fc_update_appid(const char *buf, size_t count)
++{
++	u64 cgrp_id;
++	int appid_len = 0;
++	int cgrpid_len = 0;
++	char app_id[FC_APPID_LEN];
++	int ret = 0;
++
++	if (buf[count-1] == '\n')
++		count--;
++
++	if ((count > (16+1+FC_APPID_LEN)) || (!strchr(buf, ':')))
 +		return -EINVAL;
 +
-+	cgrp = cgroup_get_from_id(cgrp_id);
-+	if (!cgrp)
-+		return -ENOENT;
-+	css = cgroup_get_e_css(cgrp, &io_cgrp_subsys);
-+	if (!css) {
-+		ret = -ENOENT;
-+		goto out_cgrp_put;
-+	}
-+	blkcg = css_to_blkcg(css);
-+	strlcpy(blkcg->fc_app_id, app_id, app_id_len);
-+	css_put(css);
-+out_cgrp_put:
-+	cgroup_put(cgrp);
-+	return ret;
++	cgrpid_len = fc_parse_cgrpid(buf, &cgrp_id);
++	if (cgrpid_len < 0)
++		return -EINVAL;
++	/*appid len is count - cgrpid_len -1 (: + \n) */
++	appid_len = count - cgrpid_len - 1;
++	if (appid_len > FC_APPID_LEN)
++		return -EINVAL;
++
++	memset(app_id, 0x0, sizeof(app_id));
++	memcpy(app_id, &buf[cgrpid_len+1], appid_len);
++	ret = blkcg_set_fc_appid(app_id, cgrp_id, sizeof(app_id));
++	if (ret < 0)
++		return ret;
++	return count;
 +}
 +
-+/**
-+ * blkcg_get_fc_appid - get the fc app identifier associated with a bio
-+ * @bio: target bio
-+ *
-+ * On success it returns the fc_app_id on failure it returns NULL
-+ */
-+static inline char *blkcg_get_fc_appid(struct bio *bio)
++static ssize_t fc_appid_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
 +{
-+	if (bio && bio->bi_blkg &&
-+		(bio->bi_blkg->blkcg->fc_app_id[0] != '\0'))
-+		return bio->bi_blkg->blkcg->fc_app_id;
-+	return NULL;
++	int ret  = 0;
++
++	ret = fc_update_appid(buf, count);
++	if (ret < 0)
++		return -EINVAL;
++	return count;
 +}
-+#else
-+static inline int blkcg_set_fc_appid(char *buf, u64 id, size_t len) { return -EINVAL; }
-+static inline char *blkcg_get_fc_appid(struct bio *bio) { return NULL; }
-+#endif /*CONFIG_BLK_CGROUP_FC_APPID*/
- #endif	/* _BLK_CGROUP_H */
+ static DEVICE_ATTR(nvme_discovery, 0200, NULL, nvme_fc_nvme_discovery_store);
++static DEVICE_ATTR(appid_store, 0200, NULL, fc_appid_store);
+ 
+ static struct attribute *nvme_fc_attrs[] = {
+ 	&dev_attr_nvme_discovery.attr,
++	&dev_attr_appid_store.attr,
+ 	NULL
+ };
+ 
 -- 
 2.26.2
 
