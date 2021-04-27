@@ -2,169 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1AD36D1B5
-	for <lists+linux-block@lfdr.de>; Wed, 28 Apr 2021 07:38:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C45E36D1BB
+	for <lists+linux-block@lfdr.de>; Wed, 28 Apr 2021 07:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbhD1FgZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Apr 2021 01:36:25 -0400
-Received: from relay.smtp-ext.broadcom.com ([192.19.11.229]:58674 "EHLO
+        id S235946AbhD1Fgf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Apr 2021 01:36:35 -0400
+Received: from saphodev.broadcom.com ([192.19.11.229]:58682 "EHLO
         relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235766AbhD1FgX (ORCPT
+        by vger.kernel.org with ESMTP id S235808AbhD1Fg0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Apr 2021 01:36:23 -0400
+        Wed, 28 Apr 2021 01:36:26 -0400
 Received: from localhost.localdomain (unknown [10.157.2.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id EDB33E9277;
-        Tue, 27 Apr 2021 22:27:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com EDB33E9277
+        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id B335AE9273;
+        Tue, 27 Apr 2021 22:27:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com B335AE9273
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1619587631;
-        bh=0d3lEW+cPvrHyMfGa1TXdzyCoM5KR8c3lo+uDbUr32g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MbSLzCdGrzEq3sqFl5XNqI+UCAAPT9TtYHodW27FlWsqn5Mg8USewGD75tH1PHjPG
-         B3mkGXnTQ5ZJEhr5YvQor1j4YpupM1MRQdtk2TT1kvqA0qS+JiEcxWe7aPdX0QIivV
-         b/lBGjf7yjNo8hLD44XQ6YcDzeIISnyJgIq24t90=
+        s=dkimrelay; t=1619587633;
+        bh=zx08FqUZMxPf1wzkIAWqIUYpLbrkGxW8GDEFeG8vI5c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LrTqjFs4cwko+TLHu7vieUtABblVkTwG4GjXH4W38yhCPbHf5CW+OvdzhpzYjwlCv
+         GJm988pOKQmfdCS3KSaoa7/D4tqrG5wLY1Ik/vLaUkvkCIwgXGQrGLNKbzqfY3Ktk7
+         uycMuoJfNHc8NEBzXBx1+PdoErQuL/e0haPR7+Tc=
 From:   Muneendra <muneendra.kumar@broadcom.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
 Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
         Muneendra <muneendra.kumar@broadcom.com>
-Subject: [PATCH v10 00/13] blkcg:Support to track FC storage blk io traffic
-Date:   Wed, 28 Apr 2021 04:04:44 +0530
-Message-Id: <1619562897-14062-1-git-send-email-muneendra.kumar@broadcom.com>
+Subject: [PATCH v10 01/13] cgroup: Added cgroup_get_from_id
+Date:   Wed, 28 Apr 2021 04:04:45 +0530
+Message-Id: <1619562897-14062-2-git-send-email-muneendra.kumar@broadcom.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1619562897-14062-1-git-send-email-muneendra.kumar@broadcom.com>
+References: <1619562897-14062-1-git-send-email-muneendra.kumar@broadcom.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This Patch added a unique application identifier i.e
-app_id  knob to  blkcg which allows identification of traffic
-sources at an individual cgroup based Applications
-(ex:virtual machine (VM))level in both host and
-fabric infrastructure.
+Added a new function cgroup_get_from_id  to retrieve the cgroup
+associated with cgroup id.
+Exported the same as this can be used by blk-cgorup.c
 
-Added a new sysfs attribute appid_store to set the application identfier
-in  the blkcg associted with cgroup id under
-/sys/class/fc/fc_udev_device/*
+Added function declaration of cgroup_get_from_id in cgorup.h
 
-With this new interface the user can set the application identfier
-in  the blkcg associted with cgroup id.
+This patch also exported the function cgroup_get_e_css
+as this is getting used in blk-cgroup.h
 
-This capability can be utilized by multiple block transport infrastructure
-like fc,iscsi,roce.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Muneendra <muneendra.kumar@broadcom.com>
 
-Existing FC fabric will use this feature and the description of
-the use case is below.
-
-Various virtualization technologies used in Fibre Channel
-SAN deployments have created the opportunity to identify
-and associate traffic with specific virtualized applications.
-The concepts behind the T11 Application Services standard is
-to provide the general mechanisms needed to identify
-virtualized services.
-It enables the Fabric and the storage targets to
-identify, monitor, and handle FC traffic
-based on vm tags by inserting application specific identification
-into the FC frame.
-
-The patches were cut against  5.13/scsi-queue tree
-
+---
 v10:
-Fixed the spelling mistakes and function name corrections
-Removed the redundant code
+No change
 
 v9:
 Addressed the issues reported by kernel test robot
-Replaced lpfc_get_vmid_from_hashtable with the
-generic kernel based hashtable (include/linux/hashtable.h)
-and made the changes in the code accordingly.
-Addressed the locking issue and also merged few patches
 
 v8:
-Modified the structure member,log messages and function declarations
-Added proper error codes and return values
+No change
 
 v7:
-Modified the Kconfig comments
+No change
 
 v6:
-Addressed the issues reported by kernel test robot
-Modified the Kconfig files as per standard
+No change
 
 v5:
-Renamed the function cgroup_get_from_kernfs_id to
-cgroup_get_from_id.
-
-Moved the input validation at the beginning of the function in 
-Renamed the arguments appropriatley.
-
-Changed Return code to non-numeric/SymbolChanged Return code
-to non-numeric/Symbol
-
-Modified the comments.
+renamed the function cgroup_get_from_kernfs_id to
+cgroup_get_from_id
 
 v4:
-Addressed the error reported by  kernel test robot
+No change
 
 v3:
-removed RFC.
+Exported the cgroup_get_e_css
 
-Renamed the functions and app_id to more specific
-Addressed the reference leaks in blkcg_set_app_identifier
-Added a new config BLK_CGROUP_FC_APPID and made changes to 
-select the same under SCSI_FC_ATTRS
+v2:
+New patch
+---
+ include/linux/cgroup.h |  6 ++++++
+ kernel/cgroup/cgroup.c | 26 ++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-V2:
-renamed app_identifier to app_id.
-removed the  sysfs interface blkio.app_identifie under
-/sys/fs/cgroup/blkio
-Ported the patch on top of 5.10/scsi-queue.
-Removed redundant code due to changes since last submit.
-Added a fix for issuing QFPA command.
-
-
-
-Gaurav Srivastava (10):
-  lpfc: vmid: Add the datastructure for supporting VMID in lpfc
-  lpfc: vmid: VMID params initialization
-  lpfc: vmid: Add support for vmid in mailbox command, does vmid
-    resource allocation and vmid cleanup
-  lpfc: vmid: Implements ELS commands for appid patch
-  lpfc: vmid: Functions to manage vmids
-  lpfc: vmid: Implements CT commands for appid.
-  lpfc: vmid: Appends the vmid in the wqe before sending
-  lpfc: vmid: Timeout implementation for vmid
-  lpfc: vmid: Adding qfpa and vmid timeout check in worker thread
-  lpfc: vmid: Introducing vmid in io path.
-
-Muneendra (3):
-  cgroup: Added cgroup_get_from_id
-  blkcg: Added a app identifier support for blkcg
-  nvme: Added a newsysfs attribute appid_store
-
- block/Kconfig                    |   9 +
- drivers/nvme/host/fc.c           |  73 +++++-
- drivers/scsi/Kconfig             |  13 ++
- drivers/scsi/lpfc/lpfc.h         | 122 +++++++++++
- drivers/scsi/lpfc/lpfc_attr.c    |  48 ++++
- drivers/scsi/lpfc/lpfc_crtn.h    |  11 +
- drivers/scsi/lpfc/lpfc_ct.c      | 255 +++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_disc.h    |   1 +
- drivers/scsi/lpfc/lpfc_els.c     | 366 ++++++++++++++++++++++++++++++-
- drivers/scsi/lpfc/lpfc_hbadisc.c | 148 +++++++++++++
- drivers/scsi/lpfc/lpfc_hw.h      | 124 ++++++++++-
- drivers/scsi/lpfc/lpfc_hw4.h     |  12 +
- drivers/scsi/lpfc/lpfc_init.c    | 104 +++++++++
- drivers/scsi/lpfc/lpfc_mbox.c    |   6 +
- drivers/scsi/lpfc/lpfc_scsi.c    | 321 +++++++++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_sli.c     |  23 ++
- drivers/scsi/lpfc/lpfc_sli.h     |   8 +
- include/linux/blk-cgroup.h       |  56 +++++
- include/linux/cgroup.h           |   6 +
- kernel/cgroup/cgroup.c           |  26 +++
- 20 files changed, 1723 insertions(+), 9 deletions(-)
-
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 4f2f79de083e..d2eace88d9d1 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -696,6 +696,7 @@ static inline void cgroup_kthread_ready(void)
+ }
+ 
+ void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen);
++struct cgroup *cgroup_get_from_id(u64 id);
+ #else /* !CONFIG_CGROUPS */
+ 
+ struct cgroup_subsys_state;
+@@ -743,6 +744,11 @@ static inline bool task_under_cgroup_hierarchy(struct task_struct *task,
+ 
+ static inline void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen)
+ {}
++
++static inline struct cgroup *cgroup_get_from_id(u64 id)
++{
++	return NULL;
++}
+ #endif /* !CONFIG_CGROUPS */
+ 
+ #ifdef CONFIG_CGROUPS
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 9153b20e5cc6..20e5424a8227 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -577,6 +577,7 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
+ 	rcu_read_unlock();
+ 	return css;
+ }
++EXPORT_SYMBOL_GPL(cgroup_get_e_css);
+ 
+ static void cgroup_get_live(struct cgroup *cgrp)
+ {
+@@ -5768,6 +5769,31 @@ void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen)
+ 	kernfs_put(kn);
+ }
+ 
++/*
++ * cgroup_get_from_id : get the cgroup associated with cgroup id
++ * @id: cgroup id
++ * On success it returns the cgrp on failure it returns NULL
++ */
++struct cgroup *cgroup_get_from_id(u64 id)
++{
++	struct kernfs_node *kn;
++	struct cgroup *cgrp = NULL;
++
++	mutex_lock(&cgroup_mutex);
++	kn = kernfs_find_and_get_node_by_id(cgrp_dfl_root.kf_root, id);
++	if (!kn)
++		goto out_unlock;
++
++	cgrp = kn->priv;
++	if (cgroup_is_dead(cgrp) || !cgroup_tryget(cgrp))
++		cgrp = NULL;
++	kernfs_put(kn);
++out_unlock:
++	mutex_unlock(&cgroup_mutex);
++	return cgrp;
++}
++EXPORT_SYMBOL_GPL(cgroup_get_from_id);
++
+ /*
+  * proc_cgroup_show()
+  *  - Print task's cgroup paths into seq_file, one line for each hierarchy
 -- 
 2.26.2
 
