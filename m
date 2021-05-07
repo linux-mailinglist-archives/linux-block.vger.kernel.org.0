@@ -2,86 +2,255 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7CCB375E3C
-	for <lists+linux-block@lfdr.de>; Fri,  7 May 2021 03:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73992375E8D
+	for <lists+linux-block@lfdr.de>; Fri,  7 May 2021 03:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232314AbhEGBNB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 May 2021 21:13:01 -0400
-Received: from mail-pg1-f180.google.com ([209.85.215.180]:40645 "EHLO
-        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbhEGBNA (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 May 2021 21:13:00 -0400
-Received: by mail-pg1-f180.google.com with SMTP id y30so5982020pgl.7
-        for <linux-block@vger.kernel.org>; Thu, 06 May 2021 18:12:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5GlhX9USqS0WbTyLMO6h0d5nXblY1YU3GTlW0bjgsg=;
-        b=bakk2sUWK5GdjU48kJklp46ffnqdXKuPkuzDzxS7Hf1freAskbr4kVXAX7sjklcvCS
-         B00OEKSYKM+tR9Gt8ZtRHyppu6AleQC9O69946KXlzb7wK8CHA4RyXc1WqzO/GpaNsVT
-         +TUW1p9zwrrn8PlLNbfSGtBTU8g/rvR3B42LgfC1zOAk37vevASrg5xB0KSAaKkrUTw/
-         lMEvSlY/86u+dEW0ccKw7NSS70C6gIP4qyNX0NorCofusz9hsGVyc8L4yBzqXIJFql2x
-         g/Y6NwDJMW/CG+PTxSVnsuMcQ0ffr7/lUXXxddFfm0Ye6vtZQ09RLrORvXiJOAdUg6xo
-         Mv7A==
-X-Gm-Message-State: AOAM533faQI+LotTJtUhhdIE6Dm/pMvMqTmU6r1NY7dkeWy1M4ep4ifU
-        yib7A2Pbc8ayRo/UdXaTqQhNn94bVgU=
-X-Google-Smtp-Source: ABdhPJzCuu3q4F3Ut/xm1AKkiiq2wjRis6tFAfuD79oODq1YSs8LuH21mHzvZ4cDErZH67Ud1jEEUQ==
-X-Received: by 2002:a63:9c6:: with SMTP id 189mr7116551pgj.411.1620349921420;
-        Thu, 06 May 2021 18:12:01 -0700 (PDT)
-Received: from [192.168.51.110] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id p1sm3119390pfp.137.2021.05.06.18.12.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 May 2021 18:12:00 -0700 (PDT)
-Subject: Re: [PATCH V5 3/4] blk-mq: clear stale request in tags->rq[] before
- freeing one request pool
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        John Garry <john.garry@huawei.com>,
-        David Jeffery <djeffery@redhat.com>
-References: <20210505145855.174127-1-ming.lei@redhat.com>
- <20210505145855.174127-4-ming.lei@redhat.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <423139b7-cb64-64dd-08f0-86f5b2681e70@acm.org>
-Date:   Thu, 6 May 2021 18:11:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S231179AbhEGBvB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 May 2021 21:51:01 -0400
+Received: from regular1.263xmail.com ([211.150.70.202]:33292 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229801AbhEGBvB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 May 2021 21:51:01 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by regular1.263xmail.com (Postfix) with ESMTP id 51C0A694;
+        Fri,  7 May 2021 09:42:21 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.64] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P18566T140528133846784S1620351738235284_;
+        Fri, 07 May 2021 09:42:19 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <a10d003676044a432ba5bce4c0d3867d>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-RCPT-COUNT: 10
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+Message-ID: <64729494-6a61-99f9-db08-ab9d5f6af4cf@rock-chips.com>
+Date:   Fri, 7 May 2021 09:42:18 +0800
 MIME-Version: 1.0
-In-Reply-To: <20210505145855.174127-4-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101
+ Thunderbird/87.0
+Cc:     shawn.lin@rock-chips.com, Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] mmc: core: Drop open coding when preparing commands
+ with busy signaling
+To:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>
+References: <20210504161222.101536-1-ulf.hansson@linaro.org>
+ <20210504161222.101536-2-ulf.hansson@linaro.org>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20210504161222.101536-2-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/5/21 7:58 AM, Ming Lei wrote:
-> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-> index 4a40d409f5dd..8b239dcce85f 100644
-> --- a/block/blk-mq-tag.c
-> +++ b/block/blk-mq-tag.c
-> @@ -203,9 +203,14 @@ static struct request *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
->   		unsigned int bitnr)
+On 2021/5/5 0:12, Ulf Hansson wrote:
+> Similar code for validating the host->max_busy_timeout towards the current
+> command's busy timeout, exists in mmc_do_erase(), mmc_sleep() and
+> __mmc_switch(). Let's move the common code into a helper function.
+
+Looks nice.
+
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>   drivers/mmc/core/core.c    | 20 ++----------------
+>   drivers/mmc/core/mmc.c     | 20 +++---------------
+>   drivers/mmc/core/mmc_ops.c | 42 +++++++++++++++++++++-----------------
+>   drivers/mmc/core/mmc_ops.h |  3 +++
+>   4 files changed, 31 insertions(+), 54 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index f194940c5974..b00c84ea8441 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -1582,7 +1582,7 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
 >   {
->   	struct request *rq = tags->rqs[bitnr];
-> +	unsigned long flags;
+>   	struct mmc_command cmd = {};
+>   	unsigned int qty = 0, busy_timeout = 0;
+> -	bool use_r1b_resp = false;
+> +	bool use_r1b_resp;
+>   	int err;
 >   
-> -	if (!rq || !refcount_inc_not_zero(&rq->ref))
-> +	spin_lock_irqsave(&tags->lock, flags);
-> +	if (!rq || !refcount_inc_not_zero(&rq->ref)) {
-> +		spin_unlock_irqrestore(&tags->lock, flags);
->   		return NULL;
-> +	}
-> +	spin_unlock_irqrestore(&tags->lock, flags);
->   	return rq;
+>   	mmc_retune_hold(card->host);
+> @@ -1650,23 +1650,7 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
+>   	cmd.opcode = MMC_ERASE;
+>   	cmd.arg = arg;
+>   	busy_timeout = mmc_erase_timeout(card, arg, qty);
+> -	/*
+> -	 * If the host controller supports busy signalling and the timeout for
+> -	 * the erase operation does not exceed the max_busy_timeout, we should
+> -	 * use R1B response. Or we need to prevent the host from doing hw busy
+> -	 * detection, which is done by converting to a R1 response instead.
+> -	 * Note, some hosts requires R1B, which also means they are on their own
+> -	 * when it comes to deal with the busy timeout.
+> -	 */
+> -	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
+> -	    card->host->max_busy_timeout &&
+> -	    busy_timeout > card->host->max_busy_timeout) {
+> -		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+> -	} else {
+> -		cmd.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+> -		cmd.busy_timeout = busy_timeout;
+> -		use_r1b_resp = true;
+> -	}
+> +	use_r1b_resp = mmc_prepare_busy_cmd(card->host, &cmd, busy_timeout);
+>   
+>   	err = mmc_wait_for_cmd(card->host, &cmd, 0);
+>   	if (err) {
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 8674c3e0c02c..63a7bd0b239c 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -1910,6 +1910,7 @@ static int mmc_sleep(struct mmc_host *host)
+>   	struct mmc_command cmd = {};
+>   	struct mmc_card *card = host->card;
+>   	unsigned int timeout_ms = DIV_ROUND_UP(card->ext_csd.sa_timeout, 10000);
+> +	bool use_r1b_resp;
+>   	int err;
+>   
+>   	/* Re-tuning can't be done once the card is deselected */
+> @@ -1922,22 +1923,7 @@ static int mmc_sleep(struct mmc_host *host)
+>   	cmd.opcode = MMC_SLEEP_AWAKE;
+>   	cmd.arg = card->rca << 16;
+>   	cmd.arg |= 1 << 15;
+> -
+> -	/*
+> -	 * If the max_busy_timeout of the host is specified, validate it against
+> -	 * the sleep cmd timeout. A failure means we need to prevent the host
+> -	 * from doing hw busy detection, which is done by converting to a R1
+> -	 * response instead of a R1B. Note, some hosts requires R1B, which also
+> -	 * means they are on their own when it comes to deal with the busy
+> -	 * timeout.
+> -	 */
+> -	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
+> -	    (timeout_ms > host->max_busy_timeout)) {
+> -		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+> -	} else {
+> -		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
+> -		cmd.busy_timeout = timeout_ms;
+> -	}
+> +	use_r1b_resp = mmc_prepare_busy_cmd(host, &cmd, timeout_ms);
+>   
+>   	err = mmc_wait_for_cmd(host, &cmd, 0);
+>   	if (err)
+> @@ -1949,7 +1935,7 @@ static int mmc_sleep(struct mmc_host *host)
+>   	 * SEND_STATUS command to poll the status because that command (and most
+>   	 * others) is invalid while the card sleeps.
+>   	 */
+> -	if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
+> +	if (!use_r1b_resp || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
+>   		mmc_delay(timeout_ms);
+>   
+>   out_release:
+> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> index 5756781fef37..025a4134d5c7 100644
+> --- a/drivers/mmc/core/mmc_ops.c
+> +++ b/drivers/mmc/core/mmc_ops.c
+> @@ -521,6 +521,27 @@ int mmc_poll_for_busy(struct mmc_card *card, unsigned int timeout_ms,
+>   	return __mmc_poll_for_busy(card, timeout_ms, true, false, busy_cmd);
 >   }
+>   
+> +bool mmc_prepare_busy_cmd(struct mmc_host *host, struct mmc_command *cmd,
+> +			  unsigned int timeout_ms)
+> +{
+> +	/*
+> +	 * If the max_busy_timeout of the host is specified, make sure it's
+> +	 * enough to fit the used timeout_ms. In case it's not, let's instruct
+> +	 * the host to avoid HW busy detection, by converting to a R1 response
+> +	 * instead of a R1B. Note, some hosts requires R1B, which also means
+> +	 * they are on their own when it comes to deal with the busy timeout.
+> +	 */
+> +	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
+> +	    (timeout_ms > host->max_busy_timeout)) {
+> +		cmd->flags = MMC_CMD_AC | MMC_RSP_SPI_R1 | MMC_RSP_R1;
+> +		return false;
+> +	}
+> +
+> +	cmd->flags = MMC_CMD_AC | MMC_RSP_SPI_R1B | MMC_RSP_R1B;
+> +	cmd->busy_timeout = timeout_ms;
+> +	return true;
+> +}
+> +
+>   /**
+>    *	__mmc_switch - modify EXT_CSD register
+>    *	@card: the MMC card associated with the data transfer
+> @@ -543,7 +564,7 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+>   	struct mmc_host *host = card->host;
+>   	int err;
+>   	struct mmc_command cmd = {};
+> -	bool use_r1b_resp = true;
+> +	bool use_r1b_resp;
+>   	unsigned char old_timing = host->ios.timing;
+>   
+>   	mmc_retune_hold(host);
+> @@ -554,29 +575,12 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+>   		timeout_ms = card->ext_csd.generic_cmd6_time;
+>   	}
+>   
+> -	/*
+> -	 * If the max_busy_timeout of the host is specified, make sure it's
+> -	 * enough to fit the used timeout_ms. In case it's not, let's instruct
+> -	 * the host to avoid HW busy detection, by converting to a R1 response
+> -	 * instead of a R1B. Note, some hosts requires R1B, which also means
+> -	 * they are on their own when it comes to deal with the busy timeout.
+> -	 */
+> -	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
+> -	    (timeout_ms > host->max_busy_timeout))
+> -		use_r1b_resp = false;
+> -
+>   	cmd.opcode = MMC_SWITCH;
+>   	cmd.arg = (MMC_SWITCH_MODE_WRITE_BYTE << 24) |
+>   		  (index << 16) |
+>   		  (value << 8) |
+>   		  set;
+> -	cmd.flags = MMC_CMD_AC;
+> -	if (use_r1b_resp) {
+> -		cmd.flags |= MMC_RSP_SPI_R1B | MMC_RSP_R1B;
+> -		cmd.busy_timeout = timeout_ms;
+> -	} else {
+> -		cmd.flags |= MMC_RSP_SPI_R1 | MMC_RSP_R1;
+> -	}
+> +	use_r1b_resp = mmc_prepare_busy_cmd(host, &cmd, timeout_ms);
+>   
+>   	err = mmc_wait_for_cmd(host, &cmd, retries);
+>   	if (err)
+> diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
+> index 7bc1cfb0654c..ba898c435658 100644
+> --- a/drivers/mmc/core/mmc_ops.h
+> +++ b/drivers/mmc/core/mmc_ops.h
+> @@ -18,6 +18,7 @@ enum mmc_busy_cmd {
+>   
+>   struct mmc_host;
+>   struct mmc_card;
+> +struct mmc_command;
+>   
+>   int mmc_select_card(struct mmc_card *card);
+>   int mmc_deselect_cards(struct mmc_host *host);
+> @@ -35,6 +36,8 @@ int mmc_bus_test(struct mmc_card *card, u8 bus_width);
+>   int mmc_can_ext_csd(struct mmc_card *card);
+>   int mmc_get_ext_csd(struct mmc_card *card, u8 **new_ext_csd);
+>   int mmc_switch_status(struct mmc_card *card, bool crc_err_fatal);
+> +bool mmc_prepare_busy_cmd(struct mmc_host *host, struct mmc_command *cmd,
+> +			  unsigned int timeout_ms);
+>   int mmc_poll_for_busy(struct mmc_card *card, unsigned int timeout_ms,
+>   		      enum mmc_busy_cmd busy_cmd);
+>   int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+> 
 
-Shouldn't the 'rq = tags->rqs[bitnr]' assignment be protected by 
-tags->lock too? Otherwise a request pointer could be read before the 
-request pointer clearing happens and the refcount_inc_not_zero() call 
-could happen after the request clearing.
 
-Thanks,
-
-Bart.
