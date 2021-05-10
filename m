@@ -2,58 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14A7C37931C
-	for <lists+linux-block@lfdr.de>; Mon, 10 May 2021 17:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A098379643
+	for <lists+linux-block@lfdr.de>; Mon, 10 May 2021 19:44:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231594AbhEJPyB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 May 2021 11:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54162 "EHLO
+        id S231200AbhEJRn0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 May 2021 13:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231299AbhEJPyA (ORCPT
+        with ESMTP id S231631AbhEJRnZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 May 2021 11:54:00 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A531C061760
-        for <linux-block@vger.kernel.org>; Mon, 10 May 2021 08:52:55 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id i67so15777503qkc.4
-        for <linux-block@vger.kernel.org>; Mon, 10 May 2021 08:52:55 -0700 (PDT)
+        Mon, 10 May 2021 13:43:25 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409FFC06175F
+        for <linux-block@vger.kernel.org>; Mon, 10 May 2021 10:42:19 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id k127so16154444qkc.6
+        for <linux-block@vger.kernel.org>; Mon, 10 May 2021 10:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:from:subject;
-        bh=NYc/MZlBlwt5YgNQkkROXA//MB1afSMHWoiK5K7m2hY=;
-        b=J4W070uW9JkndTf7txYxLYi9FZsIaQ1IFg+rqbFyf7654TnBq2HEXAn6Zny3qY1O4C
-         WD0oGmdMJFQwcF+DY4mM+PGvaBvyPVHJEbr73g6Hp24q2mjAoCe+gy0ebSQIoCNawwQf
-         /is5s+wKr8R1Q5QnfyzjF3m6EtcGZO8mnmdSzJbbfCNPcxSbCVF9lXB9jJKLDPPrKz6f
-         ztAhCOCezjumz5Ahheuaq/V2AtbhxeCpJzQt96+bBiXaYbhu4BImFEJV0lbFhYfGRIzK
-         8aroHfzwS/3SVQx0dFx8bcEDwiHHh8H3RjYcg2Y2eVuayvngdZ7iAoXgZEO1i70Ib6wL
-         5NCg==
+        h=message-id:date:from:to:cc:subject;
+        bh=n5gxQcJcWf8uN8nViJiC2oY2o4qpc3D4xM0tKR6YYWA=;
+        b=IWPeC1KeCJWcRYiMi/iOkteNjl3MP0cQx6RWg3IG/lTEXG+OBFqZJ84ZKty0x0V1hA
+         wWO4vZplz7tfGCQg2OV6cRT9D03LcQnDGInItUJ4R/NYr5RJY0QI0bdszTf6qKkkqmOd
+         1FQRKCKPAl8QMuzpFRSg48xlfhpQZpTIn6LIuK5Aq4lKpQwysWDGQ0/UmFsPQY7/dhZ3
+         5CpfDXUDx7eDnAHO3sKNFZJ/xSRpZSVO6nWf0LwZ1DH9rk2V9jdLBAm1mbcl9qMeLeGP
+         3OhD1lZ8+lKsbnJZjS62/KlPRlCzHUt/lHTnk/S4rjJQjyFjLwdIYFrLUFpmLfO/tthm
+         WHhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:subject;
-        bh=NYc/MZlBlwt5YgNQkkROXA//MB1afSMHWoiK5K7m2hY=;
-        b=pA8Ipd1ZKM67FEW00Lo5gpbdlbeWonD/WaMB7cnNX2eV/czl4dFPsXioOcpFLVTZ5d
-         XgO2VLxTXDzyZE/6MfarDYq2KOLmIl7DB2a+S1imvfIFaoReozxARLQZUOw+36P9dsqX
-         fD+TSzVUsFz7YbY3rl4dXKpy8xmF4VdRmLE1f1FZDdnsRSYyxeD11B0aCNomx6f0TXbR
-         8OYid0eoqnBnlYIlHhb5saG7bBzBFFyZa8hpvm+ZS1fKm+lad+wIsdxK/qNfIlNIrJNb
-         v3fbfiJqWD9m76PEOJ3d+QIVhRo7bi3TvX1j7kZAKVHP632g86KE/ePneaacmyhvsIlG
-         ainw==
-X-Gm-Message-State: AOAM531TnydxNi5oIA+o6430rWMqPk9ByexPA/M0bfaW4CoV2xIEfiYd
-        7asAqJyeZJP91Ft0X9jg8MmJhQ==
-X-Google-Smtp-Source: ABdhPJxC6gQVkPwzSWD5MfvNquR7Yv7Zt6rZ1PhjOm6M6tjviv/fH8SGjHWCdN94LOptT0LD/21LVg==
-X-Received: by 2002:a05:620a:1678:: with SMTP id d24mr22024622qko.317.1620661974254;
-        Mon, 10 May 2021 08:52:54 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject;
+        bh=n5gxQcJcWf8uN8nViJiC2oY2o4qpc3D4xM0tKR6YYWA=;
+        b=p7xdnjYFTgm7OZMtJ8qdJSSEdyd5ZDFs/eX3/JiONHFI390vslsrbeNaIRtmzkVN50
+         creBXJOGy7FM2zA4QPg58CGVw/72RgH7kv5r0VkZ4bGdD56VCdGWomaDKbUE59F10ORN
+         OgqdAS06EN1guALFffGrawfciJtlVnyqCwJEp6BtuQXdP76pcNA6Aq7/ch7d9oVlXN2k
+         S5zULRnYFftG0eH5/O+6eepQQzgYEXuxG6ZY01jLTLSL55D/DsTg1uWAB2OWxh2Jh2mH
+         Pf9fCzGQSlX5mvp7XwQHoYvcwQftda2dd1+v14TYpEw4u+mOaK04bgRIOnRTRfqyzzel
+         i6VA==
+X-Gm-Message-State: AOAM531ItuByhAHriTV1QzjqhBlrCT6GX1vSgRoQfbkgDSt8WFo302U9
+        VLvEQIWlDhbT3nm9AbJaItqmyw==
+X-Google-Smtp-Source: ABdhPJxQFETD6GAmxPhza4gO2s5UxBFf1tocdyjImVzCAogXWQ07nVOtv38yIho+4lIEBuKwJZC63w==
+X-Received: by 2002:a37:a2d5:: with SMTP id l204mr22524422qke.331.1620668538377;
+        Mon, 10 May 2021 10:42:18 -0700 (PDT)
 Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id z4sm11717198qtv.7.2021.05.10.08.52.53
+        by smtp.gmail.com with ESMTPSA id z30sm12740561qtm.11.2021.05.10.10.42.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 08:52:53 -0700 (PDT)
-Message-ID: <609956d5.1c69fb81.66457.441a@mx.google.com>
-Date:   Mon, 10 May 2021 11:52:52 -0400
+        Mon, 10 May 2021 10:42:17 -0700 (PDT)
+Message-ID: <60997079.1c69fb81.77f3f.a045@mx.google.com>
+Date:   Mon, 10 May 2021 13:42:16 -0400
 From:   Josef Bacik <josef@toxicpanda.com>
-Subject: LSF/MM/BPF: 2021: Call for Proposals
-To:     unlisted-recipients:; (no To-header on input)
+To:     lsf-pc@lists.linuxfoundation.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvme@lists.infradead.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND] LSF/MM/BPF: 2021: Call for Proposals
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
+
+[apologies, 2021 and email is still my nemesis]
 
 The annual Linux Storage, Filesystem, Memory Management, and BPF
 (LSF/MM/BPF) Summit for 2021 will be held from December 6 to December 8
