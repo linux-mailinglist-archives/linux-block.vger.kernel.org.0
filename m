@@ -2,65 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C67D37B679
-	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 09:02:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97D8437B677
+	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 09:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbhELHDV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 May 2021 03:03:21 -0400
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:44642 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbhELHDP (ORCPT
+        id S230301AbhELHDU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 May 2021 03:03:20 -0400
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:46955 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230198AbhELHDM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 May 2021 03:03:15 -0400
-Received: by mail-pj1-f48.google.com with SMTP id lj11-20020a17090b344bb029015bc3073608so2780094pjb.3
-        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 00:02:08 -0700 (PDT)
+        Wed, 12 May 2021 03:03:12 -0400
+Received: by mail-pl1-f172.google.com with SMTP id s20so12026068plr.13
+        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 00:02:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tX2/HIactIt7NjJSfm6Bq6JyF+8TGI+Z7Qcq3Vw2vvQ=;
-        b=A+E4P+kI6i7ATZ0OEOqTbrweXxAlb0B/MW1AqCV3M+WyUInVz2zLiEjxIpjmb5wT8p
-         0brtDo7JbdOLV9NkLeItwJpj5TcgmWhqOvXR6ygWLmiB14a5mnrBzCXFngcA0AiTu0EB
-         nAyL+1qKw/2wy8ZgrOaPJImou70YRyY0kLre/qzygJQk2F9PzPhSbGpYena832B1zrN+
-         9bn0ZBO2DcGXzUgmpTTJY9LxxmkZY5GNJkMW8r2eaBXzxnCHJmk1SNF+espoa+AxbOMy
-         Hui4/ihZYgRTdLnHYLkymNsdzvHbSsj4wH9QRuiiLD+RHka+Yas+GbR8bG1ZiZtcWC/H
-         LjeA==
-X-Gm-Message-State: AOAM533c03KlNG915+v36KA7LqHC7C+GTg421S1SqVUlxDZH6ID1EQgR
-        apLq+fy/TbrzVeKXTrcl0oY=
-X-Google-Smtp-Source: ABdhPJxQ5tuvFh24jFY8ukJdFYrb4nf6N4blRBraw2SHNhZAF8j5yGAJOvafvUx7XGsZztGVeGRjnQ==
-X-Received: by 2002:a17:90b:310b:: with SMTP id gc11mr38152951pjb.118.1620802927731;
-        Wed, 12 May 2021 00:02:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MZ8lqPuFLIIpyk4oWpBaJ8mqH+P94KTlykrkpl4Pmwo=;
+        b=EOOe11Fa0YRexKvZcA4U3NSDu9NRSdDpL9shfXvmwBJBWOiwo1/DUbiRn0aJ09yHfr
+         ZAHQVnRKz/4KDCNyfX/ndxqFOgQDpFW4OBFOyQ25TjiCnIc5ETWPNr/ZNJJCeelJiY6Z
+         arg7Saf3b2GcXceNe2vvSQmQPGiilFCtetlQ32Vsa+MLf4RAPsOhInbg9L1zEBicD8Qa
+         q1bqsY3ZfHKiCoM6IfyS81iXtICVbADGeVlt0pVjACP7YXpEzw3VBa+oBHLGXzgwzaab
+         ivPPsErUskP1koCzS+Qnoty8eUjecny+ijg/fbYMt45eNnXyPptYGcMXN88zq3gqedih
+         nV8Q==
+X-Gm-Message-State: AOAM530ej0Dt+LiAMYVvAdXYU+fM/5NTyO+bF2/fBqma65Z/BqZ9rk+o
+        KejisbDHbd/7DPdvby6Is+0=
+X-Google-Smtp-Source: ABdhPJyweHRSz7HMB4o3L30kDMroEdFUE7EWnsZNUrPK2lXxV1yCHIRkJMLglwi7F2FL2V0EHVNmmQ==
+X-Received: by 2002:a17:90a:d18b:: with SMTP id fu11mr38217472pjb.129.1620802924530;
+        Wed, 12 May 2021 00:02:04 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 204sm15355085pfw.158.2021.05.12.00.02.00
+        by smtp.gmail.com with ESMTPSA id w123sm14737285pfb.109.2021.05.12.00.02.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 12 May 2021 00:02:03 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A2344418C0; Wed, 12 May 2021 06:14:24 +0000 (UTC)
+        id A884A400AF; Wed, 12 May 2021 06:14:24 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     osandov@fb.com, linux-block@vger.kernel.org
 Cc:     bvanassche@acm.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 0/2] blktests: add add_disk() error handling testing
-Date:   Wed, 12 May 2021 06:14:18 +0000
-Message-Id: <20210512061420.13611-1-mcgrof@kernel.org>
+Subject: [PATCH 1/2] null_blk: add ability to use a quiet modprobe
+Date:   Wed, 12 May 2021 06:14:19 +0000
+Message-Id: <20210512061420.13611-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20210512061420.13611-1-mcgrof@kernel.org>
+References: <20210512061420.13611-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds the tests for testing error handling on the add_disk() paths.
+We may want to ignore modprobe errors. For instance when
+doing error injection.
 
-Luis Chamberlain (2):
-  null_blk: add ability to use a quiet modprobe
-  block: add add_disk() error handling tests
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ common/null_blk | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
- common/null_blk     |   8 ++-
- tests/block/013     | 156 ++++++++++++++++++++++++++++++++++++++++++++
- tests/block/013.out |   4 +-
- 3 files changed, 164 insertions(+), 4 deletions(-)
- create mode 100755 tests/block/013
-
+diff --git a/common/null_blk b/common/null_blk
+index 6611db0..720dcd8 100644
+--- a/common/null_blk
++++ b/common/null_blk
+@@ -19,9 +19,15 @@ _init_null_blk() {
+ 	_remove_null_blk_devices
+ 
+ 	local zoned=""
++	local modprobe_load_args=""
++
++	if [ ! -z "$NULL_BLK_QUIET_MODPROBE" ]; then
++		modprobe_load_args="-q"
++	fi
++
+ 	if (( RUN_FOR_ZONED )); then zoned="zoned=1"; fi
+ 
+-	if ! modprobe -r null_blk || ! modprobe null_blk "$@" "${zoned}" ; then
++	if ! modprobe -r null_blk || ! modprobe null_blk $modprobe_load_args "$@" "${zoned}" ; then
+ 		return 1
+ 	fi
+ 
 -- 
 2.30.2
 
