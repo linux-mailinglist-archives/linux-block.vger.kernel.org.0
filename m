@@ -2,78 +2,127 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6264637D057
+	by mail.lfdr.de (Postfix) with ESMTP id AA6A937D058
 	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 19:41:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238384AbhELRc3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 May 2021 13:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238655AbhELQyk (ORCPT
+        id S239002AbhELRcg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 May 2021 13:32:36 -0400
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:42739 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244566AbhELQ5u (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 May 2021 12:54:40 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17AEEC06134E
-        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 09:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=LnOZdM199sgRBQAQQNQHEuJjslE5h07AOS56jCCV/lM=; b=SDxI592YIDOL7euX1Bm7qsFAOE
-        ai3jARlgeJAJdpk2K075d/Sbcro4BvtApwQ6/gKLFgh/y+fMzNSokaW3W4Y8A04sJTozy7Umqn92I
-        oq9RRSONwQBqgWZwlxojRevZfDLdlIyWmFuBo8GEN8D3qFX90B+9iXtSI76s16lsRXhHbKGTirMkG
-        yR5c/RvSwh+F3OWHWR/3CKGXLNM1XH0gX7c9hpALt0PZ67o87KPwiYPwsrl/9nqRrYIkwNaBRUYUc
-        w1SG2RrZu55Hw1XgWtqeCE0HNGFE7Pr7fm4Oz+RDZASCqHBN2xMuIG1mx1O+JTXjvLwRXJEBgwXXp
-        pe8CIH9Q==;
-Received: from [2001:4bb8:198:fbc8:1036:7ab9:f97a:adbc] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lgs4X-00AcHK-BM; Wed, 12 May 2021 16:50:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     Gulam Mohamed <gulam.mohamed@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org
-Subject: [PATCH 2/2] block: fix a race between del_gendisk and BLKRRPART
-Date:   Wed, 12 May 2021 18:50:50 +0200
-Message-Id: <20210512165050.628550-3-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512165050.628550-1-hch@lst.de>
-References: <20210512165050.628550-1-hch@lst.de>
+        Wed, 12 May 2021 12:57:50 -0400
+Received: by mail-pl1-f171.google.com with SMTP id v13so12813466ple.9;
+        Wed, 12 May 2021 09:56:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Uknf8jddePWS2IYubSH9Et4R9Rpo/P7qdwbcNygekGc=;
+        b=K6WYwVKxCrPn9tLBY1dgvFgnObOkCxOXULhYo4KfIfBRCCXQJNbbdwLLxcWKiaUOrw
+         qy7oYtFL0px8SRxJeyhScPw/vY95bY6X+nMkMJkf0sbTXmhC7jxdGho9jWrOtdZ/FKAi
+         /+iki/7eOQ2Cq5ZLhNAeCPtpOOnIgklU3vhZibIMcGyIVvy/ySGkiPe23qT3ez30Quq1
+         gctDR5U54lA8hj1LCIKNR1azZPMlqdHyivr8gBQS4868NEHeoMoWA434RV39zPJETO0E
+         LNIvyVphxxLZMXSOQP0nAiT0vKWAFbXq6UYPuRkd9lnb/GJz9/ttciPN3wsmEBKUDHGr
+         cIWQ==
+X-Gm-Message-State: AOAM530eKcCiqor8+EiatE2eU14y3yElgGBiNbsMTnhSx4pui3Og4P2O
+        0oHAlv5Hz8yPqFAmlxygUo8=
+X-Google-Smtp-Source: ABdhPJyX7xXh6nmW3pjm+1mzXL4+huAcoF0LAXm6gpwnW+qMddYSo3pXEPYHm/FCAUXxL1mHJBNomA==
+X-Received: by 2002:a17:902:8ec9:b029:ef:5a88:e7cf with SMTP id x9-20020a1709028ec9b02900ef5a88e7cfmr9837635plo.48.1620838602150;
+        Wed, 12 May 2021 09:56:42 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y23sm313905pfb.83.2021.05.12.09.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 09:56:40 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7909141321; Wed, 12 May 2021 16:56:39 +0000 (UTC)
+Date:   Wed, 12 May 2021 16:56:39 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hannes Reinecke <hare@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     axboe@kernel.dk, bvanassche@acm.org, ming.lei@redhat.com,
+        hch@infradead.org, jack@suse.cz, osandov@fb.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 8/8] block: add add_disk() failure injection support
+Message-ID: <20210512165639.GB4332@42.do-not-panic.com>
+References: <20210512064629.13899-1-mcgrof@kernel.org>
+ <20210512064629.13899-9-mcgrof@kernel.org>
+ <e938c21f-3872-232c-4956-dfa53aec579b@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e938c21f-3872-232c-4956-dfa53aec579b@suse.de>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Gulam Mohamed <gulam.mohamed@oracle.com>
+On Wed, May 12, 2021 at 05:22:48PM +0200, Hannes Reinecke wrote:
+> On 5/12/21 8:46 AM, Luis Chamberlain wrote:
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index d1467658361f..4fccc0fad190 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1917,6 +1917,19 @@ config FAULT_INJECTION_USERCOPY
+> >   	  Provides fault-injection capability to inject failures
+> >   	  in usercopy functions (copy_from_user(), get_user(), ...).
+> > +config FAIL_ADD_DISK
+> > +	bool "Fault-injection capability for add_disk() callers"
+> > +	depends on FAULT_INJECTION && BLOCK
+> > +	help
+> > +	  Provide fault-injection capability for the add_disk() block layer
+> > +	  call path. This allows the kernel to provide error injection when
+> > +	  the add_disk() call is made. You would use something like blktests
+> > +	  test against this or just load the null_blk driver. This only
+> > +	  enables the error injection functionality. To use it you must
+> > +	  configure which path you want to trigger on error on using debugfs
+> > +	  under /sys/kernel/debug/block/config_fail_add_disk/. By default
+> > +	  all of these are disabled.
+> > +
+> >   config FAIL_MAKE_REQUEST
+> >   	bool "Fault-injection capability for disk IO"
+> >   	depends on FAULT_INJECTION && BLOCK
+> > 
+> 
+> Hmm. Not a fan of this approach.
+> 
+> Having to have a separate piece of code just to test individual functions,
+> _and_ having to place hooks in the code to _simulate_ a failure seems rather
+> fragile to me.
+> 
+> I would have vastly preferred if we could to this via generic tools like
+> ebpf or livepatching.
 
-When BLKRRPART is called concurrently with del_gendisk, the partitions
-rescan can create a stale partition that will never be be cleaned up.
+Agreed. Now, we would then need a place to dump these as well. I guess
+blktets would be it for the block layer... and fstests for fs. If done
+with livepatching it would take a long time, consider the time added for
+probing modules just for a new fault injection for a few routines...
+how many modules.. and time.
 
-Fix this by checking the the disk is up before rescanning partitions
-while under bd_mutex.
+ebpf maybe. Someone is going to have to try it.
 
-Signed-off-by: Gulam Mohamed <gulam.mohamed@oracle.com>
-[hch: split from a larger patch]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/block_dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+Another possibility is kunit, and I think the tests would be faster.
+However maintained boiler place would still be needed.
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index de1a760da62d..577f112c3818 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1244,6 +1244,9 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 
- 	lockdep_assert_held(&bdev->bd_mutex);
- 
-+	if (!(disk->flags & GENHD_FL_UP))
-+		return -ENXIO;
-+
- rescan:
- 	if (bdev->bd_part_count)
- 		return -EBUSY;
--- 
-2.30.2
+> Also I'm worried that this approach doesn't really scale; taken to extremes
+> we would have to add duplicate calls to each and every function for full
+> error injection, essentially double the size of the code just on the
+> off-chance that someone wants to do error injection.
 
+Indeed. What would be better is to have the ability to get this for
+free and programatically enable knobs. Now fault-injection has some
+ability to fail on functions dynamically but I haven't tested that.
+Reason I didn't go with that is we want certain functions to fail but
+*only* in certain context, not all the time for every caller. This
+approach was safer and specific to the block layer, and in fact
+only applicable to the add_disk() path.
+
+> So I'd rather delegate the topic of error injection to a more general
+> discussion (LSF springs to mind ...), and then agree on a framework which is
+> suitable for every function.
+
+Or we just get cranking and produce proof of concepts to compare and
+contrast later. At least I hope this patch and the respective blktests
+patches suffice to help demo what we need to test.
+
+  Luis
