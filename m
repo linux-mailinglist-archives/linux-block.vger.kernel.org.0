@@ -2,84 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 071A537BDEF
-	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 15:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1CE37BE5A
+	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 15:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbhELNSF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 May 2021 09:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
+        id S230300AbhELNlE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 May 2021 09:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230370AbhELNRo (ORCPT
+        with ESMTP id S230265AbhELNlD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 May 2021 09:17:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25411C06138E;
-        Wed, 12 May 2021 06:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PWp5GWUmwMmy7IuWpaRzqy+L9+Y1AjYA6yCgQ3sSgvc=; b=2jgNoGGjA5FbUMdzUkhiNCq6jb
-        HHfKQim1kGBM9+4BfRWrmSP3h25FiasH6VB90L6NmCxKViScIk5hhE04UYQuZadhutqUp4vVWDW0K
-        Fy0nzzMpKioMcOpcy+POqPRJKZFz4pRsHvI5BpAdNA10B++WUBpjVmXWiuHKmnqvYJgtwgrsBgpNd
-        /MTfVdk9EGC/ZsHo6CrKxCXbflgxVEuOmRg55odvGnENJ5LjsfjTFXPfA1BoS3udzmEeunXxs3xoJ
-        hpfjNGlwnEzPjvxRrjw5GV/alRF4pEOg14uii636yafZGcytQRLmMmIps+K6S00czzfMlgebbcVVL
-        LjEH9p6Q==;
-Received: from [2001:4bb8:198:fbc8:1036:7ab9:f97a:adbc] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lgoiz-00AO62-77; Wed, 12 May 2021 13:16:29 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Wunderlich, Mark" <mark.wunderlich@intel.com>,
-        "Vasudevan, Anil" <anil.vasudevan@intel.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: [PATCH 15/15] nvme-multipath: enable polled I/O
-Date:   Wed, 12 May 2021 15:15:45 +0200
-Message-Id: <20210512131545.495160-16-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512131545.495160-1-hch@lst.de>
-References: <20210512131545.495160-1-hch@lst.de>
+        Wed, 12 May 2021 09:41:03 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCE8C061574
+        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 06:39:54 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id jc24so834808pjb.2
+        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 06:39:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7HnfwX7m3Z+g9y+GxvV9dTr4oQgwcIKMOrB57DgGB/M=;
+        b=RTwXYeJiCx5LbA/TppKdWG0bNmgqampo4zDXVYfA3AqbhFdlwCw6wfiKqLIhVRtIfb
+         B21DPt8xHlw5rCM8LXxfjz4tQk2HAaxCGEQcTciSfS/n2YFZ+4Rhi8zibR8jxWcZwOFv
+         lRKod4qWmA5J6HeVQKaKZ9sI7OCtqJMAwknWMBp5BYjMwP9EJwNo1v6Ozv4V+xiuq/eK
+         RfYjLjgOhHeKoKhf+YfcXLDrRV2NDeY6XM8ttaNLryA9S8q4hZcFuhvqTexYvaKvKMZ/
+         Xf5JNRv1IA6j20ir1aCmw+4BxFof+6PFo20aHoS0ToPpVZQw6F5pT8VZ8LTkePK/7xg6
+         YSqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7HnfwX7m3Z+g9y+GxvV9dTr4oQgwcIKMOrB57DgGB/M=;
+        b=XIZJntdPY8yoEEDwAeLy+JOWruCXwjz0Pkkn02TtsuLHhkNZiEMfArK63ThdWuFO3g
+         KUTu23EpYwo7CYAtWTUJgnD1UpQdrFcsTynXEdfDBHT8+cH4al/Hx4XFwd9elCyW8LzY
+         T5CmU9tecEjGipi1MUP11b+tMRqEdyfoLwfSioas5OLrdaIwC6+Vbk1P3wkyeZLvBfwv
+         BOP/Yvs/kjQBQQQ8tdT6MbVerkYp3a6p7OCCVpigmbnZ/iHE7h8bx2orbMCQ3zoNh7Ch
+         IY+BtdYuQH1g3dm7yqi/ny2H0GlD56IyTS4f6y4alscWMlpsvPgU3kQn1TIIkZ4NEtZ8
+         sHqA==
+X-Gm-Message-State: AOAM530GI+3FWHKFeYt0R7ysObDb1xslsnkKFZ2QhbYVVM3psn6zmb8u
+        gERxdaNQfAio13xPPmBW0i4Oi+9M7pbD0A==
+X-Google-Smtp-Source: ABdhPJxP6vRQYyKOUIGJG6xxYEUOrOMhrrtAzel+K3wr2JRaGqTBKmFUGojyyUTsAfc0BvuvA9M1Fg==
+X-Received: by 2002:a17:90a:1382:: with SMTP id i2mr10981240pja.83.1620826794133;
+        Wed, 12 May 2021 06:39:54 -0700 (PDT)
+Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id 80sm49501pgc.23.2021.05.12.06.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 May 2021 06:39:53 -0700 (PDT)
+Subject: Re: [PATCH BUGFIX 0/1] block, bfq: a bugfix for stable merge
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@redhat.com
+References: <20210512094352.85545-1-paolo.valente@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d83a2097-3800-a222-4580-ae692bfac030@kernel.dk>
+Date:   Wed, 12 May 2021 07:39:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210512094352.85545-1-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Set the poll queue flag to enable polling, given that the multipath
-node just dispatches the bios to a lower queue.
+On 5/12/21 3:43 AM, Paolo Valente wrote:
+> Hi,
+> this patch fixes a bug I've found while debugging a failure reported
+> by Yi Zhang [1].
+> 
+> This patch seems to make that failure disappear [1]. Yet it was tested
+> only together with other debug patches (which add logs and invariant
+> checks), so I don't know whether the other patches influenced the
+> outcome as well. At any rate, this patch does fix a bug.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/multipath.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Applied, thanks.
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 516fe977606d..e95b93655d06 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -446,6 +446,15 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
- 		goto out;
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, q);
- 	blk_queue_flag_set(QUEUE_FLAG_NOWAIT, q);
-+	/*
-+	 * This assumes all controllers that refer to a namespace either
-+	 * support poll queues or not.  That is not a strict guarantee,
-+	 * but if the assumption is wrong the effect is only suboptimal
-+	 * performance but not correctness problem.
-+	 */
-+	if (ctrl->tagset->nr_maps > HCTX_TYPE_POLL &&
-+	    ctrl->tagset->map[HCTX_TYPE_POLL].nr_queues)
-+		blk_queue_flag_set(QUEUE_FLAG_POLL, q);
- 
- 	/* set to a default value for 512 until disk is validated */
- 	blk_queue_logical_block_size(q, 512);
 -- 
-2.30.2
+Jens Axboe
 
