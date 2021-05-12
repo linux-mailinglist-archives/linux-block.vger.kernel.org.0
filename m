@@ -2,472 +2,264 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CCA037B672
-	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 09:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5932037B6B2
+	for <lists+linux-block@lfdr.de>; Wed, 12 May 2021 09:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbhELHDK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 May 2021 03:03:10 -0400
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:35396 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbhELHDJ (ORCPT
+        id S230070AbhELHOe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 May 2021 03:14:34 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37302 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230011AbhELHOd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 May 2021 03:03:09 -0400
-Received: by mail-pl1-f182.google.com with SMTP id t21so12048118plo.2;
-        Wed, 12 May 2021 00:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kvl/e3jQZBH+Hezey5cigUvg3Mz+1vyT6hVjyuG2ZqE=;
-        b=mDqZCgaSp9+8k7swWvrm5q2m1RHj1TDIA/iEwoJVDHFCCxa+ZKF6QagTbnGvSTW7e9
-         pWyX60vpfBGUI4tvWsh1cDkNrhywKAVDEe2MUGj79yVzGUBdamPrq654eI40e2Od47wR
-         qhbZjzAjzol4YKNsAKmb51OrKqNgAnzJ4OQOzy0hCFKZxVDI4mE3uRE8mzytlAS5YakZ
-         NOFakrB82y3RGc1OmDPWOAtq/NjhGCphn1B4ppYYerMdll3A0/2nimQ94EbyMF9a2n7N
-         UkltgM1JO2e+MLKT6Fql+ZdPxSP5hAQtEcuIiJhcdyZimCX4y/GMsHmVNX8ck8UV4If2
-         0wBQ==
-X-Gm-Message-State: AOAM533DA11Wxrt6owGy9NrX/bSC7Op6xr2z4A3QOiRAGqa+NobeLsGm
-        8ABFPe4LgjSPWvwB83nA7dM=
-X-Google-Smtp-Source: ABdhPJy922jIcBfmK2YZ0erkKtc8H3wOs9ndZ/IAggHRjG0vLrQWDnBLg8/QKg80JPL+kJRlN8vHwQ==
-X-Received: by 2002:a17:90a:2ec6:: with SMTP id h6mr9342512pjs.103.1620802922105;
-        Wed, 12 May 2021 00:02:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q27sm15160768pfl.41.2021.05.12.00.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 May 2021 00:01:58 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5FC8A4243B; Wed, 12 May 2021 06:46:35 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, hch@infradead.org,
-        jack@suse.cz, osandov@fb.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v1 8/8] block: add add_disk() failure injection support
-Date:   Wed, 12 May 2021 06:46:29 +0000
-Message-Id: <20210512064629.13899-9-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20210512064629.13899-1-mcgrof@kernel.org>
-References: <20210512064629.13899-1-mcgrof@kernel.org>
+        Wed, 12 May 2021 03:14:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20210512071322euoutp0188d120fad21d472815a2a08a2c45cbd7~_QEoKGcaJ0934709347euoutp01R
+        for <linux-block@vger.kernel.org>; Wed, 12 May 2021 07:13:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20210512071322euoutp0188d120fad21d472815a2a08a2c45cbd7~_QEoKGcaJ0934709347euoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1620803602;
+        bh=XHSTq8qz3TLNkv4AcbF3e3lonEYzTBY9sMof/cA8cPQ=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=FMl6ELgZRDdpf3aOntPoZSABQAURhRNpoe84cFe36BILa5cKBQqYtx6QLqO6KuaIa
+         gecQTvN/idNRFZ1U9bvjStn9/i1E+KXM4a9YmYxfXXbKjHrStLfHgPm33ytkfvNyMH
+         AGY/w5cRt7Qe7/Z4Uztu9jL+TEk2UDp3jnM3iAQM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20210512071322eucas1p2657b4d5c249ba14c3dde7105655880b7~_QEnyFQt61142111421eucas1p2e;
+        Wed, 12 May 2021 07:13:22 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id D1.10.09452.2108B906; Wed, 12
+        May 2021 08:13:22 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210512071321eucas1p2ca2253e90449108b9f3e4689bf8e0512~_QEnPivnm0606706067eucas1p2K;
+        Wed, 12 May 2021 07:13:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20210512071321eusmtrp1d154eb7dc28942d10f16f02fca921391~_QEnOm2R92087720877eusmtrp1Q;
+        Wed, 12 May 2021 07:13:21 +0000 (GMT)
+X-AuditID: cbfec7f2-a9fff700000024ec-d4-609b801274f9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C9.E5.08696.1108B906; Wed, 12
+        May 2021 08:13:21 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210512071321eusmtip1ddffca367e61938552a43c3235a4573d~_QEnCRiKp2705427054eusmtip1A;
+        Wed, 12 May 2021 07:13:21 +0000 (GMT)
+Received: from localhost (106.210.248.142) by CAMSVWEXC02.scsc.local
+        (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+        Wed, 12 May 2021 08:13:21 +0100
+Date:   Wed, 12 May 2021 09:13:19 +0200
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "msnitzer@redhat.com" <msnitzer@redhat.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "roland@purestorage.com" <roland@purestorage.com>,
+        "mpatocka@redhat.com" <mpatocka@redhat.com>,
+        "hare@suse.de" <hare@suse.de>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "rwheeler@redhat.com" <rwheeler@redhat.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "Frederick.Knight@netapp.com" <Frederick.Knight@netapp.com>,
+        "zach.brown@ni.com" <zach.brown@ni.com>,
+        "osandov@fb.com" <osandov@fb.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: Re: [LSF/MM/BFP ATTEND] [LSF/MM/BFP TOPIC] Storage: Copy Offload
+Message-ID: <20210512071319.x4wtf5uaknypoxrx@mpHalley.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB49652C4B75E38F3716F3C06386539@BYAPR04MB4965.namprd04.prod.outlook.com>
+X-Originating-IP: [106.210.248.142]
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsWy7djPc7pCDbMTDM5v4rRYfbefzWLah5/M
+        FrNuv2ax2PtuNqvF403/mSz2LJrEZLFy9VEmi0mHrjFa7L2lbTF/2VN2i+7rO9gs9r3ey2yx
+        /Pg/JouJHVeZLM7N+sNmcfjeVRaL1X8sLFY+Y7J4tT/OQdjj8hVvj4nN79g9Lp8t9di0qpPN
+        Y/OSeo/JN5Yzeuy+2cDmMePTFzaP62e2M3l8fHqLxWPbw152j/f7rgKVna72+LxJzqP9QDdT
+        AH8Ul01Kak5mWWqRvl0CV8abld9YC15oVyxZvZu5gbFVtYuRk0NCwERi8a2DbF2MXBxCAisY
+        Jb5/ncYC4XxhlHg4eSoThPOZUWLpwZ9MMC19fX9ZIRLLGSX2fVzCDJIAq3p+JA0isZVRYtn0
+        L2AdLAKqEttWfmQFsdkE7CUuLbsF1iAiYCwx/+ZcNhCbWeAcu8SLZ5kgtrCAp8SODf1gvbwC
+        NhL9V9+zQNiCEidnPmGBqLeS6PzQBDSTA8iWllj+jwMkzCkQK3H03RNmkLCEgLLE8um+EDfX
+        SpzacgvsGQmBX5wSK9c3Qj3jIrHyQjeULSzx6vgWdghbRuL05B4WiIZmRokza64wQzg9jBJ/
+        Jq1ghNhgLdF3JgeiwVFi1ZVmVogwn8SNt4IQZ/JJTNo2HeoeXomONiGIajWJHU1bGScwKs9C
+        8tgsJI/NQnhsASPzKkbx1NLi3PTUYsO81HK94sTc4tK8dL3k/NxNjMC0efrf8U87GOe++qh3
+        iJGJg/EQowQHs5IIr1jS7AQh3pTEyqrUovz4otKc1OJDjNIcLErivKtmr4kXEkhPLEnNTk0t
+        SC2CyTJxcEo1MInF++37xt0jtKFvwz2FQwyiE1lTU4IyUy++n/Ro38fMvR17rXaeufRU3j8t
+        tMdMc3qSy0VBmYldt2ZN7BedtyWi7NuptZb81/Y4fd8k9qY8tMN0h5in7qoVNd/+fBLhPXJj
+        bZhwXyyTXJetajL7S/m1JZp/HMOV9j1eJHQ4NIjpcMtTm8h3x3r1yy5GxFfG9Obr720TXefb
+        5mD4h1n2j7ugSemyrY8ez9fZMqdk9infK8JntHXvzJzEpTN3oWtJy2JF0yah+kbH0gbOm5qz
+        J4fl7q7b5fj/xsWFb3UcpsZfWFF+PiPt6doMd3e1ebV1nPJnhfkWP9huI3R86j72u2HBSVvX
+        aG1gXe8iHus0X4mlOCPRUIu5qDgRAF+sxm4KBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsVy+t/xu7qCDbMTDPZfULBYfbefzWLah5/M
+        FrNuv2ax2PtuNqvF403/mSz2LJrEZLFy9VEmi0mHrjFa7L2lbTF/2VN2i+7rO9gs9r3ey2yx
+        /Pg/JouJHVeZLM7N+sNmcfjeVRaL1X8sLFY+Y7J4tT/OQdjj8hVvj4nN79g9Lp8t9di0qpPN
+        Y/OSeo/JN5Yzeuy+2cDmMePTFzaP62e2M3l8fHqLxWPbw152j/f7rgKVna72+LxJzqP9QDdT
+        AH+Unk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsab
+        ld9YC15oVyxZvZu5gbFVtYuRk0NCwESir+8vaxcjF4eQwFJGic4Jb9khEjISn658hLKFJf5c
+        62KDKPrIKLG+bz47hLOVUWLVxgZWkCoWAVWJbSs/gtlsAvYSl5bdYgaxRQSMJebfnMsGYjML
+        nGOXePEsE8QWFvCU2LGhnwnE5hWwkei/+p4FxBYSiJHY9molK0RcUOLkzCcsEL0WEjPnn2fs
+        YuQAsqUllv/jAAlzCsRKHH33hBkkLCGgLLF8ui/EzbUSn/8+Y5zAKDwLyaBZSAbNQhi0gJF5
+        FaNIamlxbnpusZFecWJucWleul5yfu4mRmDy2Hbs55YdjCtffdQ7xMjEwXiIUYKDWUmEVyxp
+        doIQb0piZVVqUX58UWlOavEhRlNgQExklhJNzgemr7ySeEMzA1NDEzNLA1NLM2MlcV6TI2vi
+        hQTSE0tSs1NTC1KLYPqYODilGpj2VL8rSbarul7584upaoVbn07009zpxo7rVnN+kNdbt1nK
+        VkrqhNj6m4L7BDuCYtk7du8WZN211ML4xBvR6n/3DyicZ9vAEBMzT1bgbWPk2/0VizI2Gtpq
+        96eaFH64JS6iUDeD1zYkZ39IyiHBLzUN+Q/v9GxYUsynZbjvqe421XmFq3XsQgx23Iz7Fb/6
+        eqfo/bdl2YbsxSt8nKoa8yW7W1R9pd6+3MMZ+Gkx95PkXvWDrLMbDnnmbIg6EfCQKS4gZun2
+        nFlcTHsvXt1s2/rw+o7Vq0QUQnRefrbXlf7eZ/OR6djhWTcM132dpiYXfcU/JPpj/qlXK5iV
+        2Wy5c55I859cfZrx9IWdds4y85RYijMSDbWYi4oTAfITnzGnAwAA
+X-CMS-MailID: 20210512071321eucas1p2ca2253e90449108b9f3e4689bf8e0512
+X-Msg-Generator: CA
+X-RootMTR: 20210512071321eucas1p2ca2253e90449108b9f3e4689bf8e0512
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20210512071321eucas1p2ca2253e90449108b9f3e4689bf8e0512
+References: <BYAPR04MB49652C4B75E38F3716F3C06386539@BYAPR04MB4965.namprd04.prod.outlook.com>
+        <CGME20210512071321eucas1p2ca2253e90449108b9f3e4689bf8e0512@eucas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-For a long time we have lived without any error handling
-on the add_disk() error path. Now that we have some initial
-error handling, add error injection support for its path so
-that we can test it and ensure we don't regress this path
-moving forward.
+On 11.05.2021 00:15, Chaitanya Kulkarni wrote:
+>Hi,
+>
+>* Background :-
+>-----------------------------------------------------------------------
+>
+>Copy offload is a feature that allows file-systems or storage devices
+>to be instructed to copy files/logical blocks without requiring
+>involvement of the local CPU.
+>
+>With reference to the RISC-V summit keynote [1] single threaded
+>performance is limiting due to Denard scaling and multi-threaded
+>performance is slowing down due Moore's law limitations. With the rise
+>of SNIA Computation Technical Storage Working Group (TWG) [2],
+>offloading computations to the device or over the fabrics is becoming
+>popular as there are several solutions available [2]. One of the common
+>operation which is popular in the kernel and is not merged yet is Copy
+>offload over the fabrics or on to the device.
+>
+>* Problem :-
+>-----------------------------------------------------------------------
+>
+>The original work which is done by Martin is present here [3]. The
+>latest work which is posted by Mikulas [4] is not merged yet. These two
+>approaches are totally different from each other. Several storage
+>vendors discourage mixing copy offload requests with regular READ/WRITE
+>I/O. Also, the fact that the operation fails if a copy request ever
+>needs to be split as it traverses the stack it has the unfortunate
+>side-effect of preventing copy offload from working in pretty much
+>every common deployment configuration out there.
+>
+>* Current state of the work :-
+>-----------------------------------------------------------------------
+>
+>With [3] being hard to handle arbitrary DM/MD stacking without
+>splitting the command in two, one for copying IN and one for copying
+>OUT. Which is then demonstrated by the [4] why [3] it is not a suitable
+>candidate. Also, with [4] there is an unresolved problem with the
+>two-command approach about how to handle changes to the DM layout
+>between an IN and OUT operations.
+>
+>* Why Linux Kernel Storage System needs Copy Offload support now ?
+>-----------------------------------------------------------------------
+>
+>With the rise of the SNIA Computational Storage TWG and solutions [2],
+>existing SCSI XCopy support in the protocol, recent advancement in the
+>Linux Kernel File System for Zoned devices (Zonefs [5]), Peer to Peer
+>DMA support in the Linux Kernel mainly for NVMe devices [7] and
+>eventually NVMe Devices and subsystem (NVMe PCIe/NVMeOF) will benefit
+>from Copy offload operation.
+>
+>With this background we have significant number of use-cases which are
+>strong candidates waiting for outstanding Linux Kernel Block Layer Copy
+>Offload support, so that Linux Kernel Storage subsystem can to address
+>previously mentioned problems [1] and allow efficient offloading of the
+>data related operations. (Such as move/copy etc.)
+>
+>For reference following is the list of the use-cases/candidates waiting
+>for Copy Offload support :-
+>
+>1. SCSI-attached storage arrays.
+>2. Stacking drivers supporting XCopy DM/MD.
+>3. Computational Storage solutions.
+>7. File systems :- Local, NFS and Zonefs.
+>4. Block devices :- Distributed, local, and Zoned devices.
+>5. Peer to Peer DMA support solutions.
+>6. Potentially NVMe subsystem both NVMe PCIe and NVMeOF.
+>
+>* What we will discuss in the proposed session ?
+>-----------------------------------------------------------------------
+>
+>I'd like to propose a session to go over this topic to understand :-
+>
+>1. What are the blockers for Copy Offload implementation ?
+>2. Discussion about having a file system interface.
+>3. Discussion about having right system call for user-space.
+>4. What is the right way to move this work forward ?
+>5. How can we help to contribute and move this work forward ?
+>
+>* Required Participants :-
+>-----------------------------------------------------------------------
+>
+>I'd like to invite file system, block layer, and device drivers
+>developers to:-
+>
+>1. Share their opinion on the topic.
+>2. Share their experience and any other issues with [4].
+>3. Uncover additional details that are missing from this proposal.
+>
+>Required attendees :-
+>
+>Martin K. Petersen
+>Jens Axboe
+>Christoph Hellwig
+>Bart Van Assche
+>Zach Brown
+>Roland Dreier
+>Ric Wheeler
+>Trond Myklebust
+>Mike Snitzer
+>Keith Busch
+>Sagi Grimberg
+>Hannes Reinecke
+>Frederick Knight
+>Mikulas Patocka
+>Keith Busch
+>
+>Regards,
+>Chaitanya
+>
+>[1]https://content.riscv.org/wp-content/uploads/2018/12/A-New-Golden-Age-for-Computer-Architecture-History-Challenges-and-Opportunities-David-Patterson-.pdf
+>[2] https://www.snia.org/computational
+>https://www.napatech.com/support/resources/solution-descriptions/napatech-smartnic-solution-for-hardware-offload/
+>      https://www.eideticom.com/products.html
+>https://www.xilinx.com/applications/data-center/computational-storage.html
+>[3] git://git.kernel.org/pub/scm/linux/kernel/git/mkp/linux.git xcopy
+>[4] https://www.spinics.net/lists/linux-block/msg00599.html
+>[5] https://lwn.net/Articles/793585/
+>[6] https://nvmexpress.org/new-nvmetm-specification-defines-zoned-
+>namespaces-zns-as-go-to-industry-technology/
+>[7] https://github.com/sbates130272/linux-p2pmem
+>[8] https://kernel.dk/io_uring.pdf
 
-This only adds runtime code *iff* the new bool CONFIG_FAIL_ADD_DISK is
-enabled in your kernel. If you don't have this enabled this provides
-no new functional. When CONFIG_FAIL_ADD_DISK is disabled the new routine
-blk_should_fail_add_disk() ends up being transformed to if (false), and
-so the compiler should optimize these out as dead code producing no
-new effective binary changes.
 
-Failure injection lets us configure at boot how often we want a failure
-to take place by specifying the interval, the probability, and when needed
-a size constraint. We don't need to test for size constraints for
-add_disk() and so ignore that part of error injection. Although testing
-early boot failures with add_disk() failures might be useful we don't
-to make add_disk() fail every time as otherwise we wouldn't be able to
-boot. So enabling add_disk() error injection requires a second post
-boot step where you specify where in the add_disk() code path you want
-to enable failure injection for. This lets us verify correctness of
-the different error handling parts of add_disk(), while also allowing
-a respective blktests test to grow dynamically in case the add_disk()
-paths grows.
+I would like to participate in this discussion too.
 
-We currently enable 11 code paths on add_disk() which can fail
-and we can test for:
+Cc'in Selva and Kanchan, who have been posting several series for NVMe
+Simple Copy (SCC). Even though SCC is a very narrow use-case of
+copy-offload, it seems like a good start to start getting generic code
+in the block layer.
 
-	# ls -1 /sys/kernel/debug/block/config_fail_add_disk/
-	alloc_devt
-	alloc_events
-	bdi_register
-	device_add
-	disk_add_events
-	get_queue
-	integrity_add
-	register_disk
-	register_queue
-	sysfs_bdi_link
-	sysfs_depr_link
+Javier
 
-If you want to modify the configuration of fail_add_disk dynamically
-at boot, you can enable CONFIG_FAULT_INJECTION_DEBUG_FS. If you've
-enabled CONFIG_FAIL_ADD_DISK you will see these knobs:
-
-	# ls -1 /sys/kernel/debug/block/fail_add_disk/
-	interval
-	probability
-	space
-	task-filter
-	times
-	verbose
-	verbose_ratelimit_burst
-	verbose_ratelimit_interval_ms
-
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- .../fault-injection/fault-injection.rst       | 23 ++++++++
- block/Makefile                                |  1 +
- block/blk-core.c                              |  1 +
- block/blk.h                                   | 55 ++++++++++++++++++
- block/failure-injection.c                     | 54 ++++++++++++++++++
- block/genhd.c                                 | 57 +++++++++++++++++++
- lib/Kconfig.debug                             | 13 +++++
- 7 files changed, 204 insertions(+)
- create mode 100644 block/failure-injection.c
-
-diff --git a/Documentation/fault-injection/fault-injection.rst b/Documentation/fault-injection/fault-injection.rst
-index 31ecfe44e5b4..129f41b9a581 100644
---- a/Documentation/fault-injection/fault-injection.rst
-+++ b/Documentation/fault-injection/fault-injection.rst
-@@ -24,6 +24,29 @@ Available fault injection capabilities
- 
-   injects futex deadlock and uaddr fault errors.
- 
-+- fail_add_disk
-+
-+  allows error injection to the block layer's add_disk() call path. Enabling
-+  this at boot doesn't immediately force errors, you have to then select post
-+  boot where in the add_disk() code path you want a failure to be triggered.
-+  The following code paths are supported:
-+
-+  # ls -1 /sys/kernel/debug/block/config_fail_add_disk/
-+  alloc_devt
-+  alloc_events
-+  bdi_register
-+  device_add
-+  disk_add_events
-+  get_queue
-+  integrity_add
-+  register_disk
-+  register_queue
-+  sysfs_bdi_link
-+  sysfs_depr_link
-+
-+  If you enable CONFIG_FAULT_INJECTION_DEBUG_FS the fail_add_disk failure
-+  injection parameters are placed under /sys/kernel/debug/block/fail_add_disk/
-+
- - fail_make_request
- 
-   injects disk IO errors on devices permitted by setting
-diff --git a/block/Makefile b/block/Makefile
-index 8d841f5f986f..1589bffe2528 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_BLOCK) := bio.o elevator.o blk-core.o blk-sysfs.o \
- 			blk-mq-sysfs.o blk-mq-cpumap.o blk-mq-sched.o ioctl.o \
- 			genhd.o ioprio.o badblocks.o partitions/ blk-rq-qos.o
- 
-+obj-$(CONFIG_FAIL_ADD_DISK)	+= failure-injection.o
- obj-$(CONFIG_BOUNCE)		+= bounce.o
- obj-$(CONFIG_BLK_SCSI_REQUEST)	+= scsi_ioctl.o
- obj-$(CONFIG_BLK_DEV_BSG)	+= bsg.o
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 9bcdae93f6d4..657da4ae7d35 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1797,6 +1797,7 @@ int __init blk_dev_init(void)
- 			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
- 
- 	blk_debugfs_root = debugfs_create_dir("block", NULL);
-+	blk_init_add_disk_fail();
- 
- 	return 0;
- }
-diff --git a/block/blk.h b/block/blk.h
-index 01ec7aba8d70..b92972433f86 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -344,6 +344,61 @@ static inline void blk_queue_free_zone_bitmaps(struct request_queue *q) {}
- static inline void blk_queue_clear_zone_settings(struct request_queue *q) {}
- #endif
- 
-+#ifdef CONFIG_FAIL_ADD_DISK
-+
-+/**
-+ * struct blk_add_disk_fail - configuration for add disk failure injection
-+ *
-+ * You can enable add_disk() failure injection on boot, but the add_disk()
-+ * path is quite large. In order to support allowing configuration of where
-+ * exactly on that add_disk() we want to fail, we use a debugfs directory.
-+
-+ * By default enabling add_disk() failure on boot won't produce any failures,
-+ * after boot you must enable at least one of the debugfs knobs. Kernel warnings
-+ * which would typically happen on the block layer are supressed when using
-+ * error injection.
-+ *
-+ * @get_queue: mimics a failure on the first blk_get_queue() at the beginning of
-+ *	the add_disk() call chain.
-+ * @alloc_devt: mimics a failure as if blk_alloc_devt() had failed
-+ * @alloc_events: mimics failure as if disk_alloc_events() had failed
-+ * @bdi_register: mimics failure as if bdi_register() had failed
-+ * @register_disk: mimics failure as if register_disk() had failed
-+ * @device_add: mimics failure as if the core device_add() call had failed
-+ * @sysfs_depr_link: mimics failure as if creating the now deprecated sysfs
-+ *	device link with sysfs_create_link() had failed.
-+ * @sysfs_bdi_link: mimics failure as if creating the bdi link with
-+ *	sysfs_create_link() had failed
-+ * @register_queue: mimics failure on blk_register_queue()
-+ * @disk_add_events: mimics failure on disk_add_events()
-+ * @integrity_add: mimics failure on blk_integrity_add() at the very end
-+ *	of the add_disk() call chain.
-+ */
-+struct blk_config_add_disk_fail {
-+	bool get_queue;
-+	bool alloc_devt;
-+	bool alloc_events;
-+	bool bdi_register;
-+	bool register_disk;
-+	bool device_add;
-+	bool sysfs_depr_link;
-+	bool sysfs_bdi_link;
-+	bool register_queue;
-+	bool disk_add_events;
-+	bool integrity_add;
-+};
-+
-+extern struct blk_config_add_disk_fail blk_config_add_disk_fail;
-+
-+void blk_init_add_disk_fail(void);
-+#define blk_should_fail_add_disk(path_name) \
-+	__blk_should_fail_add_disk(blk_config_add_disk_fail.path_name)
-+int __blk_should_fail_add_disk(bool evaluate);
-+#else
-+static inline void blk_init_add_disk_fail(void) {}
-+#define blk_should_fail_add_disk(path_name) (false)
-+#endif
-+
- int blk_alloc_devt(struct block_device *part, dev_t *devt);
- void blk_free_devt(dev_t devt);
- char *disk_name(struct gendisk *hd, int partno, char *buf);
-diff --git a/block/failure-injection.c b/block/failure-injection.c
-new file mode 100644
-index 000000000000..ba7717192eaa
---- /dev/null
-+++ b/block/failure-injection.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/fault-inject.h>
-+
-+#include "blk.h"
-+
-+static DECLARE_FAULT_ATTR(fail_add_disk);
-+struct blk_config_add_disk_fail blk_config_add_disk_fail;
-+
-+static int __init setup_fail_add_disk(char *str)
-+{
-+	return setup_fault_attr(&fail_add_disk, str);
-+}
-+
-+__setup("fail_blk_add_disk=", setup_fail_add_disk);
-+
-+struct dentry *config_fail_add_disk;
-+
-+void blk_init_add_disk_fail(void)
-+{
-+	fault_create_debugfs_attr("fail_add_disk", blk_debugfs_root, &fail_add_disk);
-+	config_fail_add_disk = debugfs_create_dir("config_fail_add_disk", blk_debugfs_root);
-+
-+	debugfs_create_bool("get_queue", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.get_queue);
-+	debugfs_create_bool("alloc_devt", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.alloc_devt);
-+	debugfs_create_bool("alloc_events", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.alloc_events);
-+	debugfs_create_bool("bdi_register", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.bdi_register);
-+	debugfs_create_bool("register_disk", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.register_disk);
-+	debugfs_create_bool("device_add", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.device_add);
-+	debugfs_create_bool("sysfs_depr_link", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.sysfs_depr_link);
-+	debugfs_create_bool("sysfs_bdi_link", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.sysfs_bdi_link);
-+	debugfs_create_bool("register_queue", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.register_queue);
-+	debugfs_create_bool("disk_add_events", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.disk_add_events);
-+	debugfs_create_bool("integrity_add", 0600, config_fail_add_disk,
-+			    &blk_config_add_disk_fail.integrity_add);
-+}
-+
-+int __blk_should_fail_add_disk(bool evaluate)
-+{
-+	if (!evaluate)
-+		return 0;
-+
-+	return should_fail(&fail_add_disk, 0);
-+}
-diff --git a/block/genhd.c b/block/genhd.c
-index eafcd256fc6f..27b4b446cf3e 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -24,6 +24,7 @@
- #include <linux/log2.h>
- #include <linux/pm_runtime.h>
- #include <linux/badblocks.h>
-+#include <linux/fault-inject.h>
- 
- #include "blk.h"
- 
-@@ -512,6 +513,10 @@ static int __must_check register_disk(struct device *parent,
- 		WARN_ON(ddev->groups);
- 		ddev->groups = groups;
- 	}
-+
-+	if (blk_should_fail_add_disk(device_add))
-+		return -ENOMEM;
-+
- 	err = device_add(ddev);
- 	if (err) {
- 		/*
-@@ -521,7 +526,14 @@ static int __must_check register_disk(struct device *parent,
- 		 */
- 		return err;
- 	}
-+
-+
- 	if (!sysfs_deprecated) {
-+		if (blk_should_fail_add_disk(sysfs_depr_link)) {
-+			err = -ENOMEM;
-+			goto exit_del_device;
-+		}
-+
- 		err = sysfs_create_link(block_depr, &ddev->kobj,
- 					kobject_name(&ddev->kobj));
- 		if (err)
-@@ -546,6 +558,11 @@ static int __must_check register_disk(struct device *parent,
- 	disk_announce(disk);
- 
- 	if (disk->queue->backing_dev_info->dev) {
-+		if (blk_should_fail_add_disk(sysfs_bdi_link)) {
-+			err = -ENOMEM;
-+			goto exit_del_block_depr;
-+		}
-+
- 		err = sysfs_create_link(&ddev->kobj,
- 			  &disk->queue->backing_dev_info->dev->kobj,
- 			  "bdi");
-@@ -582,6 +599,11 @@ static int __device_add_disk(struct device *parent, struct gendisk *disk,
- 	dev_t devt;
- 	int retval;
- 
-+	if (blk_should_fail_add_disk(get_queue)) {
-+		disk->queue = NULL;
-+		return -ESHUTDOWN;
-+	}
-+
- 	/*
- 	 * Take an extra ref on queue which will be put on disk_release()
- 	 * so that it sticks around as long as @disk is there. The driver
-@@ -614,6 +636,9 @@ static int __device_add_disk(struct device *parent, struct gendisk *disk,
- 
- 	disk->flags |= GENHD_FL_UP;
- 
-+	if (blk_should_fail_add_disk(alloc_devt))
-+		return -EINVAL;
-+
- 	retval = blk_alloc_devt(disk->part0, &devt);
- 	if (WARN_ON(retval))
- 		return retval;
-@@ -621,6 +646,11 @@ static int __device_add_disk(struct device *parent, struct gendisk *disk,
- 	disk->major = MAJOR(devt);
- 	disk->first_minor = MINOR(devt);
- 
-+	if (blk_should_fail_add_disk(alloc_events)) {
-+		retval = -ENOMEM;
-+		goto exit_blk_free_devt;
-+	}
-+
- 	retval = disk_alloc_events(disk);
- 	if (retval)
- 		goto exit_blk_free_devt;
-@@ -638,26 +668,53 @@ static int __device_add_disk(struct device *parent, struct gendisk *disk,
- 
- 		/* Register BDI before referencing it from bdev */
- 		dev->devt = devt;
-+
-+		if (blk_should_fail_add_disk(bdi_register)) {
-+			retval = -ENOMEM;
-+			goto exit_disk_release_events;
-+		}
-+
- 		retval = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
- 		if (WARN_ON(retval))
- 			goto exit_disk_release_events;
- 		bdi_set_owner(bdi, dev);
- 		bdev_add(disk->part0, devt);
- 	}
-+
-+	if (blk_should_fail_add_disk(register_disk)) {
-+		retval = -ENOMEM;
-+		goto exit_unregister_bdi;
-+	}
-+
- 	retval = register_disk(parent, disk, groups);
- 	if (retval)
- 		goto exit_unregister_bdi;
- 
-+	if (blk_should_fail_add_disk(register_queue)) {
-+		retval = -ENOMEM;
-+		goto exit_unregister_disk;
-+	}
-+
- 	if (register_queue) {
- 		retval = blk_register_queue(disk);
- 		if (retval)
- 			goto exit_unregister_disk;
- 	}
- 
-+	if (blk_should_fail_add_disk(disk_add_events)) {
-+		retval = -ENOMEM;
-+		goto exit_unregister_disk;
-+	}
-+
- 	retval = disk_add_events(disk);
- 	if (retval)
- 		goto exit_unregister_disk;
- 
-+	if (blk_should_fail_add_disk(integrity_add)) {
-+		retval = -ENOMEM;
-+		goto exit_del_events;
-+	}
-+
- 	retval = blk_integrity_add(disk);
- 	if (retval)
- 		goto exit_del_events;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d1467658361f..4fccc0fad190 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1917,6 +1917,19 @@ config FAULT_INJECTION_USERCOPY
- 	  Provides fault-injection capability to inject failures
- 	  in usercopy functions (copy_from_user(), get_user(), ...).
- 
-+config FAIL_ADD_DISK
-+	bool "Fault-injection capability for add_disk() callers"
-+	depends on FAULT_INJECTION && BLOCK
-+	help
-+	  Provide fault-injection capability for the add_disk() block layer
-+	  call path. This allows the kernel to provide error injection when
-+	  the add_disk() call is made. You would use something like blktests
-+	  test against this or just load the null_blk driver. This only
-+	  enables the error injection functionality. To use it you must
-+	  configure which path you want to trigger on error on using debugfs
-+	  under /sys/kernel/debug/block/config_fail_add_disk/. By default
-+	  all of these are disabled.
-+
- config FAIL_MAKE_REQUEST
- 	bool "Fault-injection capability for disk IO"
- 	depends on FAULT_INJECTION && BLOCK
--- 
-2.30.2
 
