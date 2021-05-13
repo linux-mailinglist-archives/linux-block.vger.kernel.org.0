@@ -2,61 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 461AA37F6A8
-	for <lists+linux-block@lfdr.de>; Thu, 13 May 2021 13:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8261C37F760
+	for <lists+linux-block@lfdr.de>; Thu, 13 May 2021 14:05:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232431AbhEML1U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 May 2021 07:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbhEML1S (ORCPT
+        id S232873AbhEMMGd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 May 2021 08:06:33 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3747 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231609AbhEMMGb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 May 2021 07:27:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA59C06174A;
-        Thu, 13 May 2021 04:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=r9oN4rAfYVkltFP1nqUdIrhELASwJQF3sOXiPvRVsQo=; b=hDwMX6WOwOcFiVtmwICnmhPT+f
-        IgyOnHKvIq+Pt8H/edI/WB7n/lztayeU4Mzk9luE9yim4lGtdFWhPd4MY07tBJg2MZvZR2ckXCof4
-        zWZBjhX8kPT9Jk9x0alASXqpFgR4/srMCq88LEesSW6tVk1snu/PfnKfZkdRwFXESkppIx8+QjkX2
-        p/ob8iqQzdp5+tu3DFh+banaV3Mg1DYLsm3R5Albl0A2gMnDdfIGauty8LkIhxoQ/ofiSqlLxH/z5
-        4r+mo1P0pAsA+PNQ+U6Fi12UdEpMraXjpKw61260jrfn3HYoF8wqWmfnmm2nU5cjYKyFYwP483hTT
-        M1fnf/IA==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lh9Qz-009NfE-A0; Thu, 13 May 2021 11:23:23 +0000
-Date:   Thu, 13 May 2021 12:23:17 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Changheun Lee <nanich.lee@samsung.com>
-Cc:     alex_y_xu@yahoo.ca, yi.zhang@redhat.com, jaegeuk@kernel.org,
-        bgoncalv@redhat.com, Johannes.Thumshirn@wdc.com,
-        asml.silence@gmail.com, axboe@kernel.dk, bvanassche@acm.org,
-        damien.lemoal@wdc.com, gregkh@linuxfoundation.org,
-        hch@infradead.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ming.lei@redhat.com, osandov@fb.com,
-        patchwork-bot@kernel.org, tj@kernel.org, tom.leiming@gmail.com,
-        jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
-        mj0123.lee@samsung.com, seunghwan.hyun@samsung.com,
-        sookwan7.kim@samsung.com, woosung2.lee@samsung.com,
-        yt0928.kim@samsung.com
-Subject: Re: [PATCH v10 0/1] bio: limit bio max size
-Message-ID: <YJ0MJe1Gc5XMV1gB@infradead.org>
-References: <CGME20210513102018epcas1p2a69f8e50cdf8380e433aea1a9303d04c@epcas1p2.samsung.com>
- <20210513100205.17965-1-nanich.lee@samsung.com>
+        Thu, 13 May 2021 08:06:31 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FgqyX3Xc4zqTdF;
+        Thu, 13 May 2021 20:01:56 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.498.0; Thu, 13 May 2021 20:05:12 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <ming.lei@redhat.com>,
+        <kashyap.desai@broadcom.com>, <chenxiang66@hisilicon.com>,
+        <yama@redhat.com>, <dgilbert@interlog.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v3 0/2] blk-mq: Request queue-wide tags for shared sbitmap
+Date:   Thu, 13 May 2021 20:00:56 +0800
+Message-ID: <1620907258-30910-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210513100205.17965-1-nanich.lee@samsung.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-FYI, I still think this whole limit is a bad idea, and instead we
-need to fix the algorithms to not waste time iterating over the bios
-again and again in non-optimal ways.  I still haven't seen an answer
-if your original latency problems are reproducable with the iomap
-direct I/O implementation, and we've also not even started the work on
-making some of the common iterators less stupid.
+This is v3 of patch/series. I have spun off a new patch for tag allocation
+refactoring.
+
+Details are in commit messages.
+
+Changes since v2:
+- Spin off separate patch for tag allocation refactoring
+- Combine sched shared sbitmap code into a single function
+
+Changes since v1:
+- Embed sbitmaps in request_queue struct
+- Relocate IO sched functions to blk-mq-sched.c
+- Fix error path code
+
+Please retest, thanks! For some reason I could not recreate the original
+issue, but I am using qemu...
+
+John Garry (2):
+  blk-mq: Some tag allocation code refactoring
+  blk-mq: Use request queue-wide tags for tagset-wide sbitmap
+
+ block/blk-mq-sched.c   | 67 ++++++++++++++++++++++++++++++++++--------
+ block/blk-mq-sched.h   |  2 ++
+ block/blk-mq-tag.c     | 65 +++++++++++++++++++++++-----------------
+ block/blk-mq-tag.h     |  9 ++++--
+ block/blk-mq.c         | 15 ++++++++--
+ include/linux/blkdev.h |  4 +++
+ 6 files changed, 116 insertions(+), 46 deletions(-)
+
+-- 
+2.26.2
+
