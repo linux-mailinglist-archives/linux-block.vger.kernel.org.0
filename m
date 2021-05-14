@@ -2,80 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34D3E380D4F
-	for <lists+linux-block@lfdr.de>; Fri, 14 May 2021 17:36:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74104380DE8
+	for <lists+linux-block@lfdr.de>; Fri, 14 May 2021 18:16:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234938AbhENPhl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 May 2021 11:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234932AbhENPhl (ORCPT
+        id S230375AbhENQRK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 May 2021 12:17:10 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60726 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229958AbhENQRJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 May 2021 11:37:41 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64284C06174A
-        for <linux-block@vger.kernel.org>; Fri, 14 May 2021 08:36:29 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id j12so123889ils.4
-        for <linux-block@vger.kernel.org>; Fri, 14 May 2021 08:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4/GUoS/s/pmKCrrW4dpmT6VyHP1dRyQUpvAxP6l+m+4=;
-        b=c/J6awobOutwsD8qM65lKbpitWshdM0Z3jJuwxILQ6ZhdwOTgg7+Q4QqgKLGH09LiQ
-         eYe6ECuHYExhZOU1TzMshCSmCu5Z5pVwlAvAtpfyLXNrCQNwttgPE0vvS197KKDfxZvA
-         hlcp0d2PbZxB/7DNYSQC4dmNbOZzr+/+hIUGgvyYder5bqiKqyWjVH0HDtA05YAU1uvd
-         EnRvJFEOUeRGGvFNRMKXVl0xdUwP9ZU8YGE4Mq9ab49QmEmSvL6Zk3RQIykZsGlSvvrr
-         IJj5nwwSk+pwSYxxmSq/wtplyXwYrB8jHSGEB06BvGG2zwpQSZTxuv7/T5ZSIjDEylUs
-         974w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4/GUoS/s/pmKCrrW4dpmT6VyHP1dRyQUpvAxP6l+m+4=;
-        b=EYQV+ezZzbZbeRJk08t0igCHQVZbdjIT6xD4Cr9dAwOUOLVuOx70qREPOoiA+/nBeQ
-         nAgCnx4FrdjhYz77SJ9GDgBcLwNkIMwNfXMo9NOj8aJjRU4gAo3Xnd5SCeflaPMf4rFX
-         Zic98+k86PgNRo9j7RlUKGnrdQGF2xrCHfXewQVwFnFm6Ne0RKCeVApcv6LEaa0tlrhR
-         tzeHkmrb/hjPFrwSdhIeBXus6ozreZ28FjlxB8WEtYiN38HPBnRG0bHatG7R+p9pdSMh
-         8s1hFoC240b93Y/e0Kd3PPirJg50criPA11H41ITz5/HyYmRi7X+dP0/f4ebeV1WrfXw
-         NwsQ==
-X-Gm-Message-State: AOAM532HF1O4lq3syy+qfpLqwoabGBniRP4xNqK+sPz/LZyYlcNW3q/Q
-        vVgSi5ghjSyCv7Fm36301UAWKw==
-X-Google-Smtp-Source: ABdhPJyvIbSzncjDIb1dxsq2wEqhStDkWRXqtgyPV4HOJ6yW8EigZ4R0exjw+BiFUMHrrJ7pt2CVxQ==
-X-Received: by 2002:a92:d1c4:: with SMTP id u4mr30973664ilg.286.1621006588857;
-        Fri, 14 May 2021 08:36:28 -0700 (PDT)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n184sm2922523iod.0.2021.05.14.08.36.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 May 2021 08:36:28 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] blk-mq: Request queue-wide tags for shared sbitmap
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, ming.lei@redhat.com,
-        kashyap.desai@broadcom.com, chenxiang66@hisilicon.com,
-        yama@redhat.com, dgilbert@interlog.com
-References: <1620907258-30910-1-git-send-email-john.garry@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2d136383-7728-e680-7d1a-71c9f180fb28@kernel.dk>
-Date:   Fri, 14 May 2021 09:36:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 May 2021 12:17:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=8mPdRqweUyDLPmZFuViN51lMyyF6RcsMDP/27vYhzgo=; b=U+OPhYGBE7d5nwlGLwZsALzoro
+        3tgyDKF/0JnvDnEhiVty+7KLtudPXGsgdLrXK8kYa1UhRxLVYx5DTHvguR2b2SxqVbUGMOinTz5RG
+        MaiKBrvV+aFk8n5JKHIpqq0/+O13MOf6raVLj/ytmq6kFn5OoOGeKnMdZV7srdp5EypPDRzRNnvDt
+        Xcx+TrldLjB0CdBFWcHNA4i8QC6d1CT/44a9DZFyyrmkyCerhqDEyUgv2VGtTRFpKTv3RSlewLnZy
+        ZjgSDqhOMfyPwZfy59y4RAtucHTLNIX3hzhpPDgPTeL+UzDpvLPANK7ryKC925sZWizH3oNMMS0fQ
+        rpj+1uKw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lhaTO-00065v-3k; Fri, 14 May 2021 10:15:35 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20210513223203.5542-1-logang@deltatee.com>
+ <20210513223203.5542-7-logang@deltatee.com> <20210514134900.GA4715@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e1407362-26fe-09db-0964-acfbb45c032c@deltatee.com>
+Date:   Fri, 14 May 2021 10:15:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <1620907258-30910-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <20210514134900.GA4715@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v2 06/22] PCI/P2PDMA: Attempt to set map_type if it has
+ not been set
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/13/21 6:00 AM, John Garry wrote:
-> This is v3 of patch/series. I have spun off a new patch for tag allocation
-> refactoring.
 
-Applied for 5.14, thanks.
 
--- 
-Jens Axboe
+On 2021-05-14 7:49 a.m., Christoph Hellwig wrote:
+> On Thu, May 13, 2021 at 04:31:47PM -0600, Logan Gunthorpe wrote:
+>> Attempt to find the mapping type for P2PDMA pages on the first
+>> DMA map attempt if it has not been done ahead of time.
+>>
+>> Previously, the mapping type was expected to be calculated ahead of
+>> time, but if pages are to come from userspace then there's no
+>> way to ensure the path was checked ahead of time.
+>>
+>> With this change it's no longer invalid to call pci_p2pdma_map_sg()
+>> before the mapping type is calculated so drop the WARN_ON when that
+>> is the case.
+> 
+> Why?
 
+Before this change, the if the mapping type wasn't already calculated
+pci_p2pdma_map_sg() would just fail. This was fine for NVMe-of as it
+always called pci_p2pdma_distance() ahead of time which calculated the
+mapping type, stored it in the xarray and did not proceed if the two
+devices could not talk to each other.
+
+This patch makes it so if the mapping type is not already calculated at
+dma map time, it does the calculation. This means the dma map operation
+can fail if the two devices aren't able to talk to each other.
+
+Logan
