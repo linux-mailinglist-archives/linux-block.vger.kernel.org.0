@@ -2,128 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A6A38BCBE
-	for <lists+linux-block@lfdr.de>; Fri, 21 May 2021 05:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 976B738BCF2
+	for <lists+linux-block@lfdr.de>; Fri, 21 May 2021 05:28:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238738AbhEUDC7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 May 2021 23:02:59 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:25389 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238147AbhEUDC7 (ORCPT
+        id S238895AbhEUD3j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 May 2021 23:29:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34118 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238890AbhEUD3i (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 May 2021 23:02:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1621566097; x=1653102097;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=GypGqk+P9NK3nH7MTJFSvTP9WqAa/tRgXSLKL6Mh68I=;
-  b=pQSA/CdMdfHIQScOjykahusY9csSmKS/XskHLMn1JoGYiGVWz6/7Jd5P
-   1iRK7uqZe+KA+eNVu1PZFzNi9KrvJXY9jo/ZaLIQEXm4UhFZCozKeJwO2
-   6izUsMYfld1AvPHcB9GgbpcBCO0hUoGGIbLJRRM2tDS7Y21cJU0o98VAu
-   d8XsUrF4GtUHtNy3iBwONrsp+h31ZIWgchLCZ+bDT9nsjIhKWWiaA26Oj
-   2al9TU7x7NWgZWnxI6HjnDdj06M7MPe/AQd1O3qoX7ffjaUeUgyWrCkRA
-   OwMjn1j2UMxQrXLpYGJfAotn3ofDtOfDuSdIWmRwjI2nD29ESmjFXGIdl
-   w==;
-IronPort-SDR: EYyESBhykEsE/s5gaJwKkExZhgDnzNXpbZQVF8TzOcU2N0Ua37NFfiydN/62A+ZZXiokgUmVot
- mJGSpWrNeYcBYKWJD1HRbnBOdvfWoLqOlJEV1PW8qeI1gR3SAe1pcm8APeLGgNDqfc/wuEyKMD
- QvbtoDlZeJqDpQTFgJ/R/Qm8lauhrml4FQEVWeXslJfnzkHkssV1wxzNj2k0b7RIzezeTlbEOI
- K5dUqdZHvajOaFXmANUJnzhuBkzVyo0e5fPBpoHweqeizDTIl3IAR76vhAB5lJa31U/Jh52udi
- QQ8=
-X-IronPort-AV: E=Sophos;i="5.82,313,1613404800"; 
-   d="scan'208";a="168943921"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 May 2021 11:01:37 +0800
-IronPort-SDR: 4SI7H2n2jZZeAGkcAdqK5SdlYBBd7wZ5IOfaK2NAXbzqGkD6d1I/Uz3Db4aR2/P4hsnL/sBmdV
- HhQ+9su6sO759RZlcByVkmFfocnpo6OC5dEsxWKGyDKbI5KIotzO9Vm5NakAZ1OSdzTINIZo0b
- co1ZtHoGAK06xFxSfI39hGIBmM8I96Lirikm4EnbHExJpX90EwbZnVwnfosYhmCh749nCMiEa3
- U+1lTvGCWSW51y2RuNU3MXusGU8u8h47KbD1kzKzR+Afc0mxiwElXTmLUQaQ7rEazy8xKN4yb1
- 6vfejEoY+JY9jEO4GOrd24+C
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 19:41:13 -0700
-IronPort-SDR: Zn2PPmc/iCohYVwADqN/1taYAjbCyo5RH1HgFYMvsiahQov8RWWTIKcCbOwB4ANUohJhTysDXW
- YPi/MxU7ElIUYU4IyK9OAb62hxbGbefiXAGBqcNn4lr/E6Oaxw7lzGUeTbptAcVYwe2ViEsac+
- JNlDJsrTe7OAtcxNheVUFIVQdwldEnaRHanIquiY8xCJO1UpztxVQ+KbL4d5hpbPImm5ElOn27
- 5ocHdDWDy8BU32hnNS5OCre9z3wYMvll+jmvaKXknL4OqNej1ql1gSI5CfQ/N1qM2fzb2otzJH
- d5Q=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 20 May 2021 20:01:36 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v3 11/11] dm crypt: Fix zoned block device support
-Date:   Fri, 21 May 2021 12:01:19 +0900
-Message-Id: <20210521030119.1209035-12-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210521030119.1209035-1-damien.lemoal@wdc.com>
-References: <20210521030119.1209035-1-damien.lemoal@wdc.com>
+        Thu, 20 May 2021 23:29:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621567696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=yxYbURZnuPc0zodV6Lb+qv8VGn2mQcxc80yfYxXtL3M=;
+        b=a2d9WJMvlwE1lDBpENB6dlxIPQ/i7CJdNQJA6yNTIBI+COzzATvO6F3yN2hpVUYwSc1rui
+        y/HQU1jZRDkyzKU5TrWWazcZnNDmqbnpDQ9FdocMT4ITZQ/X+NSxrT4RQHmh1ojsjhsXIx
+        SUQrHQtvl5tPn90aBDEE1/rUyFA182A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-55-YrK4L1j6MOeYOhkca2n2Sw-1; Thu, 20 May 2021 23:28:14 -0400
+X-MC-Unique: YrK4L1j6MOeYOhkca2n2Sw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 099B58015DB;
+        Fri, 21 May 2021 03:28:13 +0000 (UTC)
+Received: from T590 (ovpn-12-75.pek2.redhat.com [10.72.12.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DADF5C5FD;
+        Fri, 21 May 2021 03:27:58 +0000 (UTC)
+Date:   Fri, 21 May 2021 11:27:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: iomap: writeback ioend/bio allocation deadlock risk 
+Message-ID: <YKcouuVR/y/L4T58@T590>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Zone append BIOs (REQ_OP_ZONE_APPEND) always specify the start sector
-of the zone to be written instead of the actual sector location to
-write. The write location is determined by the device and returned to
-the host upon completion of the operation. This interface, while simple
-and efficient for writing into sequential zones of a zoned block
-device, is incompatible with the use of sector values to calculate a
-cypher block IV. All data written in a zone end up using the same IV
-values corresponding to the first sectors of the zone, but read
-operation will specify any sector within the zone resulting in an IV
-mismatch between encryption and decryption.
+Hello Guys,
 
-To solve this problem, report to DM core that zone append operations are
-not supported. This result in the zone append operations being emulated
-using regular write operations.
+I found there may be two deadlock risk under memory pressure wrt.
+ioend/bio allocation in iomap writeback code wrt. bio_alloc_bioset():
 
-Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
----
- drivers/md/dm-crypt.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+        if %__gfp_direct_reclaim is set then bio_alloc will always be able to
+        allocate a bio.  this is due to the mempool guarantees.  to make this work,
+        callers must never allocate more than 1 bio at a time from the general pool.
+        callers that need to allocate more than 1 bio must always submit the
+        previously allocated bio for io before attempting to allocate a new one.
+        failure to do so can cause deadlocks under memory pressure.
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index f410ceee51d7..50f4cbd600d5 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -3280,14 +3280,28 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	}
- 	cc->start = tmpll;
- 
--	/*
--	 * For zoned block devices, we need to preserve the issuer write
--	 * ordering. To do so, disable write workqueues and force inline
--	 * encryption completion.
--	 */
- 	if (bdev_is_zoned(cc->dev->bdev)) {
-+		/*
-+		 * For zoned block devices, we need to preserve the issuer write
-+		 * ordering. To do so, disable write workqueues and force inline
-+		 * encryption completion.
-+		 */
- 		set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
- 		set_bit(DM_CRYPT_WRITE_INLINE, &cc->flags);
-+
-+		/*
-+		 * All zone append writes to a zone of a zoned block device will
-+		 * have the same BIO sector, the start of the zone. When the
-+		 * cypher IV mode uses sector values, all data targeting a
-+		 * zone will be encrypted using the first sector numbers of the
-+		 * zone. This will not result in write errors but will
-+		 * cause most reads to fail as reads will use the sector values
-+		 * for the actual data locations, resulting in IV mismatch.
-+		 * To avoid this problem, ask DM core to emulate zone append
-+		 * operations with regular writes.
-+		 */
-+		DMDEBUG("Zone append operations will be emulated");
-+		ti->emulate_zone_append = true;
- 	}
- 
- 	if (crypt_integrity_aead(cc) || cc->integrity_iv_size) {
--- 
-2.31.1
+1) more than one ioends can be allocated from 'iomap_ioend_bioset'
+before submitting them all, so mempoll guarantee can't be made, which can
+be observed frequently in writeback over ext4
+
+2) more than one chained bio(allocated from fs_bio_set) via iomap_chain_bio,
+which is easy observed when writing big files on XFS:
+
+- the old bio is submitted _after_ the new allocation
+- submission on old chained bio can't make forward progress because all chained
+bios can only be freed after the whole ioend is completed, see iomap_finish_ioend()
+
+Both looks not hard to fix, just want to make sure they are real issues?
+
+
+Thanks,
+Ming
 
