@@ -2,306 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6955738E3A4
-	for <lists+linux-block@lfdr.de>; Mon, 24 May 2021 12:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 723E438E4B2
+	for <lists+linux-block@lfdr.de>; Mon, 24 May 2021 13:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232493AbhEXKGs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 May 2021 06:06:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43860 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232318AbhEXKGm (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 May 2021 06:06:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1621850663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DAW9P9RVYGDdIzOuq5zlYI6MAA1ja7E2E5VgrqYhUow=;
-        b=vvBg4AtuhxbEOP+pdv7uLZsfd8v0Hm375uyFvWavKAd+ZRlAd6vXp+4Bi+1mMOhW0yo4tn
-        +ZydfB/K5PcCJ5T4vF+i7jVh20zCnWd+KCEIatdSjVGwv1M0e3z5VSQJ5wQ+l/qzZR2LA9
-        RElnlkE60upjH4RkFtxzfoQYTqLz2/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1621850663;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DAW9P9RVYGDdIzOuq5zlYI6MAA1ja7E2E5VgrqYhUow=;
-        b=fWZZJsYJfG1qvV9JzJ9doQ6kTdeEbnjVr3WVhskKSmrLdQJvlVq0cBAyxJ+HeFJD0oMCb0
-        g9D706QK10ZHFTCQ==
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9E300AC2B;
-        Mon, 24 May 2021 10:04:23 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7BA251F2CAB; Mon, 24 May 2021 12:04:23 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>, Khazhy Kumykov <khazhy@google.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 2/2] blk: Fix lock inversion between ioc lock and bfqd lock
-Date:   Mon, 24 May 2021 12:04:16 +0200
-Message-Id: <20210524100416.3578-3-jack@suse.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210524100416.3578-1-jack@suse.cz>
-References: <20210524100416.3578-1-jack@suse.cz>
+        id S232516AbhEXLCG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Mon, 24 May 2021 07:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232494AbhEXLCF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 May 2021 07:02:05 -0400
+Received: from wp118.webpack.hosteurope.de (wp118.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:847d::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F950C061574;
+        Mon, 24 May 2021 04:00:36 -0700 (PDT)
+Received: from 91.141.3.207.wireless.dyn.drei.com ([91.141.3.207] helo=[10.120.169.88]); authenticated
+        by wp118.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1ll8K0-0005Md-Js; Mon, 24 May 2021 13:00:32 +0200
+Date:   Mon, 24 May 2021 13:00:31 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAPhsuW7W7NfBTHY3A87py1No=FOPZgxMP4Ms43Re3uRnT0JzkQ@mail.gmail.com>
+References: <20210519062215.4111256-1-hch@lst.de> <1102825331.165797.1621422078235@ox.hosteurope.de> <CAPhsuW7W7NfBTHY3A87py1No=FOPZgxMP4Ms43Re3uRnT0JzkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] md/raid5: remove an incorect assert in in_chunk_boundary
+To:     Song Liu <song@kernel.org>
+CC:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-block@vger.kernel.org
+From:   "Florian D." <spam02@dazinger.net>
+Message-ID: <5C3BA4F9-DBA4-49AF-9F2C-D469BCA9E1A0@dazinger.net>
+X-bounce-key: webpack.hosteurope.de;spam02@dazinger.net;1621854037;a224ce19;
+X-HE-SMSGID: 1ll8K0-0005Md-Js
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Lockdep complains about lock inversion between ioc->lock and bfqd->lock:
+As you like... if it's better in the 'tested by:' line, you can also take my full name: Florian Dazinger.
+ I use the e- mail address regularly, so that's ok.
 
-bfqd -> ioc:
- put_io_context+0x33/0x90 -> ioc->lock grabbed
- blk_mq_free_request+0x51/0x140
- blk_put_request+0xe/0x10
- blk_attempt_req_merge+0x1d/0x30
- elv_attempt_insert_merge+0x56/0xa0
- blk_mq_sched_try_insert_merge+0x4b/0x60
- bfq_insert_requests+0x9e/0x18c0 -> bfqd->lock grabbed
- blk_mq_sched_insert_requests+0xd6/0x2b0
- blk_mq_flush_plug_list+0x154/0x280
- blk_finish_plug+0x40/0x60
- ext4_writepages+0x696/0x1320
- do_writepages+0x1c/0x80
- __filemap_fdatawrite_range+0xd7/0x120
- sync_file_range+0xac/0xf0
+Thanks for the quick patch!
+Florian
 
-ioc->bfqd:
- bfq_exit_icq+0xa3/0xe0 -> bfqd->lock grabbed
- put_io_context_active+0x78/0xb0 -> ioc->lock grabbed
- exit_io_context+0x48/0x50
- do_exit+0x7e9/0xdd0
- do_group_exit+0x54/0xc0
+On 24 May 2021 06:38:35 CEST, Song Liu <song@kernel.org> wrote:
+>On Wed, May 19, 2021 at 4:36 AM wp1083705-spam02 wp1083705-spam02
+><spam02@dazinger.net> wrote:
+>>
+>>
+>> > Christoph Hellwig <hch@lst.de> hat am 19.05.2021 08:22 geschrieben:
+>> >
+>> >
+>> > Now that the original bdev is stored in the bio this assert is
+>incorrect
+>> > and will trigge for any partitioned raid5 device.
+>> >
+>> > Reported-by:  Florian D. <spam02@dazinger.net>
+>> > Fixes: 309dca309fc3 ("block: store a block_device pointer in struct
+>bio"),
+>> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> > ---
+>> >  drivers/md/raid5.c | 2 --
+>> >  1 file changed, 2 deletions(-)
+>> >
+>> > diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+>> > index 841e1c1aa5e6..7d4ff8a5c55e 100644
+>> > --- a/drivers/md/raid5.c
+>> > +++ b/drivers/md/raid5.c
+>> > @@ -5311,8 +5311,6 @@ static int in_chunk_boundary(struct mddev
+>*mddev, struct bio *bio)
+>> >       unsigned int chunk_sectors;
+>> >       unsigned int bio_sectors = bio_sectors(bio);
+>> >
+>> > -     WARN_ON_ONCE(bio->bi_bdev->bd_partno);
+>> > -
+>> >       chunk_sectors = min(conf->chunk_sectors,
+>conf->prev_chunk_sectors);
+>> >       return  chunk_sectors >=
+>> >               ((sector & (chunk_sectors - 1)) + bio_sectors);
+>> > --
+>> > 2.30.2
+>>
+>> yes, this solves it, I can confirm with this patch the error/warning
+>message when booting linux-5.12 is gone!
+>
+>Applied to md-fixes. Thanks all.
+>
+>@ Florian, would you like to update the Reported-by tag (with your
+>full name and/or
+>different email)?
+>
+>Thanks,
+>Song
 
-To avoid this inversion we change blk_mq_sched_try_insert_merge() to not
-free the merged request but rather leave that upto the caller similarly
-to blk_mq_sched_try_merge(). And in bfq_insert_requests() we make sure
-to free all the merged requests after dropping bfqd->lock.
-
-Fixes: aee69d78dec0 ("block, bfq: introduce the BFQ-v0 I/O scheduler as an extra scheduler")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bfq-iosched.c      |  6 ++++--
- block/blk-merge.c        | 19 ++++++++-----------
- block/blk-mq-sched.c     |  5 +++--
- block/blk-mq-sched.h     |  3 ++-
- block/blk-mq.h           | 11 +++++++++++
- block/blk.h              |  2 +-
- block/elevator.c         | 11 ++++++++---
- block/mq-deadline.c      |  5 ++++-
- include/linux/elevator.h |  3 ++-
- 9 files changed, 43 insertions(+), 22 deletions(-)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 50a29fdf51da..5e076396b588 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2317,9 +2317,9 @@ static bool bfq_bio_merge(struct request_queue *q, struct bio *bio,
- 
- 	ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
- 
-+	spin_unlock_irq(&bfqd->lock);
- 	if (free)
- 		blk_mq_free_request(free);
--	spin_unlock_irq(&bfqd->lock);
- 
- 	return ret;
- }
-@@ -5933,14 +5933,16 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	struct bfq_queue *bfqq;
- 	bool idle_timer_disabled = false;
- 	unsigned int cmd_flags;
-+	LIST_HEAD(free);
- 
- #ifdef CONFIG_BFQ_GROUP_IOSCHED
- 	if (!cgroup_subsys_on_dfl(io_cgrp_subsys) && rq->bio)
- 		bfqg_stats_update_legacy_io(q, rq);
- #endif
- 	spin_lock_irq(&bfqd->lock);
--	if (blk_mq_sched_try_insert_merge(q, rq)) {
-+	if (blk_mq_sched_try_insert_merge(q, rq, &free)) {
- 		spin_unlock_irq(&bfqd->lock);
-+		blk_mq_free_requests(&free);
- 		return;
- 	}
- 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 4d97fb6dd226..1398b52a24b4 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -846,18 +846,15 @@ static struct request *attempt_front_merge(struct request_queue *q,
- 	return NULL;
- }
- 
--int blk_attempt_req_merge(struct request_queue *q, struct request *rq,
--			  struct request *next)
-+/*
-+ * Try to merge 'next' into 'rq'. Return true if the merge happened, false
-+ * otherwise. The caller is responsible for freeing 'next' if the merge
-+ * happened.
-+ */
-+bool blk_attempt_req_merge(struct request_queue *q, struct request *rq,
-+			   struct request *next)
- {
--	struct request *free;
--
--	free = attempt_merge(q, rq, next);
--	if (free) {
--		blk_put_request(free);
--		return 1;
--	}
--
--	return 0;
-+	return attempt_merge(q, rq, next);
- }
- 
- bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 714e678f516a..bf0a3dec8226 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -400,9 +400,10 @@ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 	return ret;
- }
- 
--bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq)
-+bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq,
-+				   struct list_head *free)
- {
--	return rq_mergeable(rq) && elv_attempt_insert_merge(q, rq);
-+	return rq_mergeable(rq) && elv_attempt_insert_merge(q, rq, free);
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_try_insert_merge);
- 
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 5b18ab915c65..8b70de4b8d23 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -11,7 +11,8 @@ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs, struct request **merged_request);
- bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs);
--bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq);
-+bool blk_mq_sched_try_insert_merge(struct request_queue *q, struct request *rq,
-+				   struct list_head *free);
- void blk_mq_sched_mark_restart_hctx(struct blk_mq_hw_ctx *hctx);
- void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx);
- 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 81a775171be7..20ef743a3ff6 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -301,6 +301,17 @@ static inline struct blk_plug *blk_mq_plug(struct request_queue *q,
- 	return NULL;
- }
- 
-+/* Free all requests on the list */
-+static inline void blk_mq_free_requests(struct list_head *list)
-+{
-+	while (!list_empty(list)) {
-+		struct request *rq = list_entry_rq(list->next);
-+
-+		list_del_init(&rq->queuelist);
-+		blk_mq_free_request(rq);
-+	}
-+}
-+
- /*
-  * For shared tag users, we track the number of currently active users
-  * and attempt to provide a fair share of the tag depth for each of them.
-diff --git a/block/blk.h b/block/blk.h
-index 8b3591aee0a5..99ef4f7e7a70 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -225,7 +225,7 @@ ssize_t part_timeout_store(struct device *, struct device_attribute *,
- void __blk_queue_split(struct bio **bio, unsigned int *nr_segs);
- int ll_back_merge_fn(struct request *req, struct bio *bio,
- 		unsigned int nr_segs);
--int blk_attempt_req_merge(struct request_queue *q, struct request *rq,
-+bool blk_attempt_req_merge(struct request_queue *q, struct request *rq,
- 				struct request *next);
- unsigned int blk_recalc_rq_segments(struct request *rq);
- void blk_rq_set_mixed_merge(struct request *rq);
-diff --git a/block/elevator.c b/block/elevator.c
-index 440699c28119..62e9c672da7c 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -350,9 +350,11 @@ enum elv_merge elv_merge(struct request_queue *q, struct request **req,
-  * we can append 'rq' to an existing request, so we can throw 'rq' away
-  * afterwards.
-  *
-- * Returns true if we merged, false otherwise
-+ * Returns true if we merged, false otherwise. 'free' will contain all
-+ * requests that need to be freed.
-  */
--bool elv_attempt_insert_merge(struct request_queue *q, struct request *rq)
-+bool elv_attempt_insert_merge(struct request_queue *q, struct request *rq,
-+			      struct list_head *free)
- {
- 	struct request *__rq;
- 	bool ret;
-@@ -363,8 +365,10 @@ bool elv_attempt_insert_merge(struct request_queue *q, struct request *rq)
- 	/*
- 	 * First try one-hit cache.
- 	 */
--	if (q->last_merge && blk_attempt_req_merge(q, q->last_merge, rq))
-+	if (q->last_merge && blk_attempt_req_merge(q, q->last_merge, rq)) {
-+		list_add(&rq->queuelist, free);
- 		return true;
-+	}
- 
- 	if (blk_queue_noxmerges(q))
- 		return false;
-@@ -378,6 +382,7 @@ bool elv_attempt_insert_merge(struct request_queue *q, struct request *rq)
- 		if (!__rq || !blk_attempt_req_merge(q, __rq, rq))
- 			break;
- 
-+		list_add(&rq->queuelist, free);
- 		/* The merged request could be merged with others, try again */
- 		ret = true;
- 		rq = __rq;
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 8eea2cbf2bf4..7136262819f1 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -487,6 +487,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	struct request_queue *q = hctx->queue;
- 	struct deadline_data *dd = q->elevator->elevator_data;
- 	const int data_dir = rq_data_dir(rq);
-+	LIST_HEAD(free);
- 
- 	/*
- 	 * This may be a requeue of a write request that has locked its
-@@ -494,8 +495,10 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	 */
- 	blk_req_zone_write_unlock(rq);
- 
--	if (blk_mq_sched_try_insert_merge(q, rq))
-+	if (blk_mq_sched_try_insert_merge(q, rq, &free)) {
-+		blk_mq_free_requests(&free);
- 		return;
-+	}
- 
- 	trace_block_rq_insert(rq);
- 
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index dcb2f9022c1d..1a5965174f5b 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -117,7 +117,8 @@ extern void elv_merge_requests(struct request_queue *, struct request *,
- 			       struct request *);
- extern void elv_merged_request(struct request_queue *, struct request *,
- 		enum elv_merge);
--extern bool elv_attempt_insert_merge(struct request_queue *, struct request *);
-+extern bool elv_attempt_insert_merge(struct request_queue *, struct request *,
-+				     struct list_head *);
- extern struct request *elv_former_request(struct request_queue *, struct request *);
- extern struct request *elv_latter_request(struct request_queue *, struct request *);
- 
 -- 
-2.26.2
-
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
