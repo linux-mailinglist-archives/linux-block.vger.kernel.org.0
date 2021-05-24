@@ -2,50 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A89838EB6D
-	for <lists+linux-block@lfdr.de>; Mon, 24 May 2021 17:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 598EF38ED45
+	for <lists+linux-block@lfdr.de>; Mon, 24 May 2021 17:34:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233499AbhEXPC7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 May 2021 11:02:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:54895 "EHLO verein.lst.de"
+        id S233209AbhEXPfl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 May 2021 11:35:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:55288 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233846AbhEXPA6 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 May 2021 11:00:58 -0400
+        id S233654AbhEXPeR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 24 May 2021 11:34:17 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5699267373; Mon, 24 May 2021 16:59:28 +0200 (CEST)
-Date:   Mon, 24 May 2021 16:59:28 +0200
+        id 57D6667373; Mon, 24 May 2021 17:32:47 +0200 (CEST)
+Date:   Mon, 24 May 2021 17:32:47 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, slp@redhat.com,
-        sgarzare@redhat.com, "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH 3/3] virtio_blk: implement blk_mq_ops->poll()
-Message-ID: <20210524145928.GA3873@lst.de>
-References: <20210520141305.355961-1-stefanha@redhat.com> <20210520141305.355961-4-stefanha@redhat.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: iomap: writeback ioend/bio allocation deadlock risk
+Message-ID: <20210524153247.GA6041@lst.de>
+References: <YKcouuVR/y/L4T58@T590> <20210521071727.GA11473@lst.de> <YKdhuUZBtKMxDpsr@T590> <20210521073547.GA11955@lst.de> <YKdwtzp+WWQ3krhI@T590> <20210521083635.GA15311@lst.de> <YKd1VS5gkzQRn+7x@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210520141305.355961-4-stefanha@redhat.com>
+In-Reply-To: <YKd1VS5gkzQRn+7x@T590>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, May 20, 2021 at 03:13:05PM +0100, Stefan Hajnoczi wrote:
-> Possible drawbacks of this approach:
+On Fri, May 21, 2021 at 04:54:45PM +0800, Ming Lei wrote:
+> On Fri, May 21, 2021 at 10:36:35AM +0200, Christoph Hellwig wrote:
+> > On Fri, May 21, 2021 at 04:35:03PM +0800, Ming Lei wrote:
+> > > Just wondering why the ioend isn't submitted out after it becomes full?
+> > 
+> > block layer plugging?  Although failing bio allocations will kick that,
+> > so that is not a deadlock risk.
 > 
-> - Hardware virtio_blk implementations may find virtqueue_disable_cb()
->   expensive since it requires DMA. If such devices become popular then
->   the virtio_blk driver could use a similar approach to NVMe when
->   VIRTIO_F_ACCESS_PLATFORM is detected in the future.
-> 
-> - If a blk_poll() thread is descheduled it not only hurts polling
->   performance but also delays completion of non-REQ_HIPRI requests on
->   that virtqueue since vq notifications are disabled.
+> These ioends are just added to one list stored on local stack variable(submit_list),
 
-Yes, I think this is a dangerous configuration.  What argument exists
-again just using dedicated poll queues?
+Yes.  But only until the code finished iterating over a page.  The
+worst case number of bios for a page is PAGE_SIZE / SECTOR_SIZE, and
+the bio_set is side to handle that comfortably.
+
+> how can block layer plugging observe & submit them out?
+
+It can't.  I was talking about the high-level plug that is held
+over multiple pages.  At that point the bios are submitted to the
+block layer already, but they might be held in a plug.  And looking at
+the bio_alloc_bioset code we don't actually flush a plug at the moment
+in that case.  Something like the patch below would do that:
+
+diff --git a/block/bio.c b/block/bio.c
+index 44205dfb6b60..5b9d2f4d7c08 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -432,6 +432,7 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned short nr_iovecs,
+ 
+ 	p = mempool_alloc(&bs->bio_pool, gfp_mask);
+ 	if (!p && gfp_mask != saved_gfp) {
++		blk_schedule_flush_plug(current);
+ 		punt_bios_to_rescuer(bs);
+ 		gfp_mask = saved_gfp;
+ 		p = mempool_alloc(&bs->bio_pool, gfp_mask);
