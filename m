@@ -2,114 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98F9F38FC25
-	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 10:08:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 865C338FC5B
+	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 10:12:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbhEYIJg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 May 2021 04:09:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34617 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232034AbhEYIJI (ORCPT
+        id S232069AbhEYIOM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 May 2021 04:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232139AbhEYINc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 May 2021 04:09:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621930003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ub5yjHLwnKgzkGvx4GaW/I0s0yGaXeZ4jZCMAsk/qs4=;
-        b=ONGluuS6Dj9+GBOTCE7PEnMcun4BZV6k8P21zDM5VXgG1V1nTa838S2NnILhK5KCslf+5Q
-        JXgFc/NduQpmhRlvJ5z4ZiKjiQFMwAX5PZ0Pa47g0Ac//oMemWfuR/2vjpbo+D1j9I0LCz
-        WKVZo/GEqaRAs6mfPEHpNbapFc7jyrU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-599-66IQZ28XNMenjkNHEyr-yA-1; Tue, 25 May 2021 04:06:39 -0400
-X-MC-Unique: 66IQZ28XNMenjkNHEyr-yA-1
-Received: by mail-ej1-f71.google.com with SMTP id i23-20020a17090685d7b02903d089ab83fcso8461985ejy.19
-        for <linux-block@vger.kernel.org>; Tue, 25 May 2021 01:06:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ub5yjHLwnKgzkGvx4GaW/I0s0yGaXeZ4jZCMAsk/qs4=;
-        b=WtOa3f4vzKZr8x6HXHLlE1yveKdYcDXFrRUpKYwJa3OWQcqrsDv2Tzhft/HI87Pudf
-         RBrqJVaxgoenhb7PWa9os4TE/8Rqk775pBS7uYO4VQSeiw6ShPiDdRuJGGFQGVuf3OI8
-         bNUa+RUMQOSLslt5DzN6w5z6d3/Bee9gZSmZLhTMtgyEC0wE1Z3IufaF5+82B8+EbGVx
-         4tZjzE0ibAzjyuzHxH2VGwQdTTRV3RuFIT21uAPijxicbnOWm/xaaxxZFoCrAr6UN5eD
-         gzxnBBiLluRuvAmOjlP4wCljLv7mtwxhq6ym4JK803RNqxpyFoW2tpJPfGqgxAadcFeY
-         pcUQ==
-X-Gm-Message-State: AOAM5317sVSc71ak6eqjrEI2Q/d+vMqZvw8Q+YaV7W8r70ILpusMeJfr
-        OlQC88l7VF2GQ+wuXFbKNZ0QiYZDLWY5KyNXjPGC1hIlo4UiQ45MU8O3sit7C4V3V0q8rkvFLFl
-        hdGz6BV/f1ebq3ygEuwmYX70=
-X-Received: by 2002:a05:6402:40c1:: with SMTP id z1mr29288927edb.97.1621929998253;
-        Tue, 25 May 2021 01:06:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJygZqhf+xYB7Ndg3ayTHtQu/3t0kArAedOP5pe98sDgQVP2z7+rV66oJGM/D3XST8tFG3f5gA==
-X-Received: by 2002:a05:6402:40c1:: with SMTP id z1mr29288906edb.97.1621929998039;
-        Tue, 25 May 2021 01:06:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.gmail.com with ESMTPSA id n8sm8645618ejl.0.2021.05.25.01.06.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 May 2021 01:06:37 -0700 (PDT)
-Subject: Re: [PATCH 3/3] virtio_blk: implement blk_mq_ops->poll()
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        slp@redhat.com, sgarzare@redhat.com,
-        "Michael S. Tsirkin" <mst@redhat.com>
-References: <20210520141305.355961-1-stefanha@redhat.com>
- <20210520141305.355961-4-stefanha@redhat.com> <20210524145928.GA3873@lst.de>
- <7cc7f19b-34b3-1501-898d-3f41e047d766@redhat.com> <YKypgi2qcYVTgYdv@T590>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f1997919-e059-b50b-19b3-5741e3309000@redhat.com>
-Date:   Tue, 25 May 2021 10:06:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Tue, 25 May 2021 04:13:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6FC5C061249
+        for <linux-block@vger.kernel.org>; Tue, 25 May 2021 01:09:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BHkmSXbexSqVKfSWUyjg+nTH6QI3hVq2/I/E7OYWsB0=; b=oxNHw8MYX7fOK40IvQhAYi2MCh
+        CfGm6bi0kAveH+AQ7hwaAFmNzFVqnbNRRVborvfVg0cN3qz0nErHHWLOfbOQB57v7mQgW7lx/oaoz
+        PRX2i7d3BMvPTOBZVZkGWYtNr8tWkB05iT5rgkaSb6iRX9o3RnHXbQaKeUx4tpSnNzRLUT21GVaXk
+        XUcUgxddKEzOvXoQNDiXxn7Zc4r4X1tJZ4KhQSuu9W4fNGCYmJGx7f5AZcTinpKayvSGz815k7WNl
+        gm5NI6zO385ngMR5yt7RwrS+7QQwNLvrKczscmewSm1NF/mFib4rUxZiwrWs+I12rQG82AkxrY3zZ
+        VmKn8CVw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1llS7E-003GHq-1f; Tue, 25 May 2021 08:09:05 +0000
+Date:   Tue, 25 May 2021 09:08:40 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v4 02/11] block: introduce bio zone helpers
+Message-ID: <YKywiKQX1nFFF4/8@infradead.org>
+References: <20210525022539.119661-1-damien.lemoal@wdc.com>
+ <20210525022539.119661-3-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <YKypgi2qcYVTgYdv@T590>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210525022539.119661-3-damien.lemoal@wdc.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 25/05/21 09:38, Ming Lei wrote:
-> On Tue, May 25, 2021 at 09:22:48AM +0200, Paolo Bonzini wrote:
->> On 24/05/21 16:59, Christoph Hellwig wrote:
->>> On Thu, May 20, 2021 at 03:13:05PM +0100, Stefan Hajnoczi wrote:
->>>> Possible drawbacks of this approach:
->>>>
->>>> - Hardware virtio_blk implementations may find virtqueue_disable_cb()
->>>>     expensive since it requires DMA. If such devices become popular then
->>>>     the virtio_blk driver could use a similar approach to NVMe when
->>>>     VIRTIO_F_ACCESS_PLATFORM is detected in the future.
->>>>
->>>> - If a blk_poll() thread is descheduled it not only hurts polling
->>>>     performance but also delays completion of non-REQ_HIPRI requests on
->>>>     that virtqueue since vq notifications are disabled.
->>>
->>> Yes, I think this is a dangerous configuration.  What argument exists
->>> again just using dedicated poll queues?
->>
->> There isn't an equivalent of the admin queue in virtio-blk, which would
->> allow the guest to configure the desired number of poll queues.  The number
->> of queues is fixed.
-> 
-> Dedicated vqs can be used for poll only, and I understand VM needn't to know
-> if the vq is polled or driven by IRQ in VM.
-> 
-> I tried that in v5.4, but not see obvious IOPS boost, so give up.
-> 
-> https://github.com/ming1/linux/commits/my_v5.4-virtio-irq-poll
+On Tue, May 25, 2021 at 11:25:30AM +0900, Damien Le Moal wrote:
+> Introduce the helper functions bio_zone_no() and bio_zone_is_seq().
+> Both are the BIO counterparts of the request helpers blk_rq_zone_no()
+> and blk_rq_zone_is_seq(), respectively returning the number of the
+> target zone of a bio and true if the BIO target zone is sequential.
 
-Sure, but polling can be beneficial even for a single queue.  Queues 
-have a cost on the host side as well, so a 1 vCPU - 1 queue model may 
-not be always the best.
+Looks good,
 
-Paolo
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
