@@ -2,83 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA5F138FCA7
-	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 10:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3975538FC45
+	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 10:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbhEYIZJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 May 2021 04:25:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37892 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232326AbhEYIZH (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 May 2021 04:25:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1621929850; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C480wFYuyMOjFSQyTKDRSRXds+ZLVDO5E1tUMdJxUt4=;
-        b=xhE1T+Cno8jWuBsiEl2sdfKLsT7McuoVcMzjwR57HTVMOtcHFNBGnzsUYMGrWaMnKq8xog
-        SmghlYh9Gl940M3wDV+k+G2MjuVB+7kMX0Kpgx554C3Mh5l5/fX3OTTurMPxWNqyyrewe9
-        hMfwCFSY96LwEP2NNvy5miqhKeDNkAI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1621929850;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C480wFYuyMOjFSQyTKDRSRXds+ZLVDO5E1tUMdJxUt4=;
-        b=Xt1nrSXUUy05qzE6z8wXGM1BfTfpFvGIst+f7mMARjOU77Nj/4YJEkOTfh92Uayj0L5NMq
-        bXQqutIGYITGhgCg==
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 01E89AE99;
-        Tue, 25 May 2021 08:04:10 +0000 (UTC)
-Subject: Re: [PATCH 1/8] block: split __blkdev_get
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>
-References: <20210525061301.2242282-1-hch@lst.de>
- <20210525061301.2242282-2-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <80e5e5f9-463a-ce5c-460d-389e0589fb37@suse.de>
-Date:   Tue, 25 May 2021 10:04:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S231327AbhEYIK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 May 2021 04:10:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57863 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232069AbhEYIJb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 25 May 2021 04:09:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621930081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6lFZWfeQzl0yIedwLiNq8NX80owQeoZW56S/uR3EMJA=;
+        b=Nyu8cWjRPDqKUQEtYHnTYaKObmLKnDnjSdT9cKyV8LB2ZSAEtZu0XQzx8IfhZkLVNa/gs7
+        oyDBaWoFLi2qkCpR1J0tND62IFYYH6MCTEbaIcLWBbbCk5XaaOlzkPeYk+m2z6qGHD2ltG
+        nriWIuPwccywG8H0Fy8TOnXVp6PHtPk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-W-1icp9XOAKHrcz1O3vkKg-1; Tue, 25 May 2021 04:04:57 -0400
+X-MC-Unique: W-1icp9XOAKHrcz1O3vkKg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 119B5180FD66;
+        Tue, 25 May 2021 08:04:56 +0000 (UTC)
+Received: from localhost (ovpn-13-203.pek2.redhat.com [10.72.13.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 683F478620;
+        Tue, 25 May 2021 08:04:55 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Yi Zhang <yi.zhang@redhat.com>
+Subject: [PATCH 0/4] block: fix race between adding wbt and normal IO 
+Date:   Tue, 25 May 2021 16:04:38 +0800
+Message-Id: <20210525080442.1896417-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210525061301.2242282-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/25/21 8:12 AM, Christoph Hellwig wrote:
-> Split __blkdev_get into one helper for the whole device, and one for
-> opening partitions.  This removes the (bounded) recursion when opening
-> a partition.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> ---
->   fs/block_dev.c | 118 ++++++++++++++++++++++++-------------------------
->   1 file changed, 57 insertions(+), 61 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hello,
 
-Cheers,
+Yi reported several kernel panics on:
 
-Hannes
+[16687.001777] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+...
+[16687.163549] pc : __rq_qos_track+0x38/0x60
+
+or
+
+[  997.690455] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000020
+...
+[  997.850347] pc : __rq_qos_done+0x2c/0x50
+
+Turns out it is caused by race between adding wbt and normal IO.
+
+Fix the issue by moving wbt allocation/addition into blk_alloc_queue().
+
+
+Ming Lei (4):
+  block: split wbt_init() into two parts
+  block: move wbt allocation into blk_alloc_queue
+  block: reuse wbt_set_min_lat for setting wbt->min_lat_nsec
+  block: mark queue init done at the end of blk_register_queue
+
+ block/blk-core.c       |  6 +++++
+ block/blk-mq-debugfs.c |  3 +++
+ block/blk-sysfs.c      | 53 ++++++++++++++----------------------------
+ block/blk-wbt.c        | 42 +++++++++++++++++++++++----------
+ block/blk-wbt.h        | 14 +++++++----
+ 5 files changed, 66 insertions(+), 52 deletions(-)
+
+Cc: Yi Zhang <yi.zhang@redhat.com>
+
 -- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.29.2
+
