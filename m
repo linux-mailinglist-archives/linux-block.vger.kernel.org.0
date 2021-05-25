@@ -2,129 +2,144 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93FD3390B57
-	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 23:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 580E5390C5B
+	for <lists+linux-block@lfdr.de>; Wed, 26 May 2021 00:42:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbhEYV0t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 May 2021 17:26:49 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:36450 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232508AbhEYV0r (ORCPT
+        id S231685AbhEYWnr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 May 2021 18:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230269AbhEYWnq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 May 2021 17:26:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1621977917; x=1653513917;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=bFcRaggZ9tBN12RVTPVwAzImTsSc/VkMzkTVeX3Uo8g=;
-  b=HyayAsfXi2EJ+XHR5ykqc/SdLHwKSW3xM645Ah5RW+Z9kJCRGgvFjykW
-   gseSApcjol8/HQhDd/nxmLRS0FjYVs9N+taVSV9OKMDALeXNUzFoQ3gK5
-   platCEo2MOtoIE7GtLoJ3n8rookhql2yE7D0J9VrPUg8l5U+s+uhpTw8D
-   i0VOBqDL4UwWdTdX5QfKndaM2g/fT5uTgMzqZBCeLPQIrqKUurtSUSc2v
-   lGBnK0Gs0hZp5slSoK4Nv5YVuSkZMWNp6ARaxNns6EnIJEDBpRnZMDi7h
-   74lbF+QhCnwtFsZ0VRgeMtqbwUf1aXuPCemGggXCZRXWk00G5bYmx0tG8
-   w==;
-IronPort-SDR: 0j8o+QnfmfuARJ3/B1gTKcwDjmkfdLlAqz5IBV/yiq2NrYJdZOL6KN3P6UU6mwcYnW7JyDnJJ7
- aKbaBVOIBKeY7rQXl/96Pc18Qz4BueDAhl9wjk2h9OC3+KnyETCCZy/zzSygnFehsG8+qEwXX8
- fZzbx3xDqTVp8LsR0d1ofhY7RZBkQK05PLxvxqDzKmYdMPE/FkRZgP+tmJSszHD6Tk1goD6ffR
- cjAi6Z1EiZScstKrhOz41XHNnGCIKYefvceGFy8/4LME1AjpMoH8C8wGdMOWMVug/COaenhwBp
- IsM=
-X-IronPort-AV: E=Sophos;i="5.82,329,1613404800"; 
-   d="scan'208";a="168717550"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 26 May 2021 05:25:17 +0800
-IronPort-SDR: 1QfQARWClb/cmw6YSKcfDEQ5e4eOMQ25ohk6kmiLsdw/WCiIv5dAcXrz/l0CRabD2qrv9mEvWK
- e9v+RBTSaO8e0qq6dumBMH726z6+dqCy9wr3O9XhIKd32X9y6EB40MwaWxG4jTmNUCfdVGUuoQ
- aY/SFKE8qR3UJ8D2S5jWfVhIPMuGynGbQsWUOcjIYGH92uwPn2VL1+3YZy62XUgPrr7L6Nijp+
- PTXk007YQORBbZRzgDZH1HUFNPUO54ifDShZ/nYzARohE+r3SJxP0IYMsOCaZvZrNxsYszvbUV
- BP3ICFCO3Hy0g2triUJMrH1p
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2021 14:04:44 -0700
-IronPort-SDR: FNmk77p8RaJkKJ4Lf3DM2Ud9DNupkU6U5O1zROkYxyKxSGhxq4OJunGO10+o4L6MuRYtE2H1Fm
- po1vbCpBIFroKqFEYU3NDhTff2xyL58bH+mLvyJ5deJuKcgsD6BBAh8lLqygUWRQlH8k/Cu6yl
- FafTPsK47Kcw2TinMkQH+7J/7/yP8tQe69m71KK4x49inIVgLiBsngobFb6vHGIIibRq+0dC78
- ey/iqrz7U2rHkRpxzRP+MaA9lgOO/OAGdLY3rFFte99MK8UsGuQtYi5VZJKkQdR0wOtAoPsExe
- IUU=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 25 May 2021 14:25:17 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v5 11/11] dm crypt: Fix zoned block device support
-Date:   Wed, 26 May 2021 06:25:01 +0900
-Message-Id: <20210525212501.226888-12-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210525212501.226888-1-damien.lemoal@wdc.com>
-References: <20210525212501.226888-1-damien.lemoal@wdc.com>
+        Tue, 25 May 2021 18:43:46 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09559C061756
+        for <linux-block@vger.kernel.org>; Tue, 25 May 2021 15:42:14 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id x22so8885048vsn.2
+        for <linux-block@vger.kernel.org>; Tue, 25 May 2021 15:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q2ntYm6uDO3tojaF9gfgprihNvjCO5hVlU6EmFGOmTo=;
+        b=K9wqVdOPxXHut6A0EevQX/nqmrPWosCHVPu4555rYr8tuCz8O0lI/p4Rb77PfQ8Yfq
+         fRmWkgPHBfsqXzE6lREE/b8PxdKg0U8EuVSS9rL2xjxve3ATaYRjERwWLkhwXRfzDPTA
+         KMH0Jn7mx/0V+2ZMCJ2ntLBKrEex0sj58ibU9GJdf25N1KPIZf6ysG7S8bBIp5GxRiyl
+         oW1gRaEs+jb593kt9via8xPWNweotp+DwCl/Vc0y0ZfLnCUPzk4X9FC3QvSvLxInEfdN
+         EReMXPyNQilw4NAPZf5vV5feE5jyQ8EEPE5nGtQ/Fqd8VnVaNh6v5d36RKW9J9jTG3bc
+         rUhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q2ntYm6uDO3tojaF9gfgprihNvjCO5hVlU6EmFGOmTo=;
+        b=kAEB7CUskBq6GTt7n/VjruKJpNAZG+thDNd0jM/qD2oAA67yEmsnjtzM0A+EBU5N90
+         zwGv3pykUDBXA6YVeaHVaVIPAr3B7K5jOhNzeWFt6nZYpQIIxKE2ajd7CIs4suK9dfym
+         PWfHAiH7E0Pi601xSXvHyzlyqope8bmiTwvi2jDuCmvvXpAukaVq5YK+N92CJv1rHnoz
+         a0wwa6041LYkGYvV9cJIn5gzH57afLjiWEFrgYs0G2Au0cRh4TMihBG/ka3QDeMmk0Kj
+         ET2MzF8Q9HTCYWYM7swJKxBZS/PYF5gOI5lt2+mLvfM4S3pVaytXvLfSbMT7Y6qVBku8
+         tPlw==
+X-Gm-Message-State: AOAM530+pS0aI4R5ZrpRzgyCFndTv7EdXJAu2qX4ji96Rs6vcKdSxAxi
+        kFJmGtyi7USrTEv/QSvP93tsJDcKEZKTU5Qb33z2Ug==
+X-Google-Smtp-Source: ABdhPJwx/fwYmfo8P5+A7EuWXJoD8LuumWi86gXq03cq2Wld1BR6mX3B8HbBTdDiayCS1IrjwzR0gvQYH9nbZXbeRCI=
+X-Received: by 2002:a05:6102:7c1:: with SMTP id y1mr29600317vsg.34.1621982533995;
+ Tue, 25 May 2021 15:42:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210521055116.1053587-1-hch@lst.de>
+In-Reply-To: <20210521055116.1053587-1-hch@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 26 May 2021 00:41:37 +0200
+Message-ID: <CAPDyKFpqdSYeA+Zg=9Ewi46CmSWNpXQbju6HQo7aviCcRzyAAg@mail.gmail.com>
+Subject: Re: simplify gendisk and request_queue allocation for bio based drivers
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jim Paris <jim@jtan.com>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Matias Bjorling <mb@lightnvm.io>, Coly Li <colyli@suse.de>,
+        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-block <linux-block@vger.kernel.org>, dm-devel@redhat.com,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>, nvdimm@lists.linux.dev,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Zone append BIOs (REQ_OP_ZONE_APPEND) always specify the start sector
-of the zone to be written instead of the actual sector location to
-write. The write location is determined by the device and returned to
-the host upon completion of the operation. This interface, while simple
-and efficient for writing into sequential zones of a zoned block
-device, is incompatible with the use of sector values to calculate a
-cypher block IV. All data written in a zone end up using the same IV
-values corresponding to the first sectors of the zone, but read
-operation will specify any sector within the zone resulting in an IV
-mismatch between encryption and decryption.
+On Fri, 21 May 2021 at 07:51, Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi all,
+>
+> this series is the first part of cleaning up lifetimes and allocation of
+> the gendisk and request_queue structure.  It adds a new interface to
+> allocate the disk and queue together for bio based drivers, and a helper
+> for cleanup/free them when a driver is unloaded or a device is removed.
 
-To solve this problem, report to DM core that zone append operations are
-not supported. This result in the zone append operations being emulated
-using regular write operations.
+May I ask what else you have in the pipe for the next steps?
 
-Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
----
- drivers/md/dm-crypt.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+The reason why I ask is that I am looking into some issues related to
+lifecycle problems of gendisk/mmc, typically triggered at SD/MMC card
+removal.
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index f410ceee51d7..50f4cbd600d5 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -3280,14 +3280,28 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	}
- 	cc->start = tmpll;
- 
--	/*
--	 * For zoned block devices, we need to preserve the issuer write
--	 * ordering. To do so, disable write workqueues and force inline
--	 * encryption completion.
--	 */
- 	if (bdev_is_zoned(cc->dev->bdev)) {
-+		/*
-+		 * For zoned block devices, we need to preserve the issuer write
-+		 * ordering. To do so, disable write workqueues and force inline
-+		 * encryption completion.
-+		 */
- 		set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
- 		set_bit(DM_CRYPT_WRITE_INLINE, &cc->flags);
-+
-+		/*
-+		 * All zone append writes to a zone of a zoned block device will
-+		 * have the same BIO sector, the start of the zone. When the
-+		 * cypher IV mode uses sector values, all data targeting a
-+		 * zone will be encrypted using the first sector numbers of the
-+		 * zone. This will not result in write errors but will
-+		 * cause most reads to fail as reads will use the sector values
-+		 * for the actual data locations, resulting in IV mismatch.
-+		 * To avoid this problem, ask DM core to emulate zone append
-+		 * operations with regular writes.
-+		 */
-+		DMDEBUG("Zone append operations will be emulated");
-+		ti->emulate_zone_append = true;
- 	}
- 
- 	if (crypt_integrity_aead(cc) || cc->integrity_iv_size) {
--- 
-2.31.1
+>
+> Together this removes the need to treat the gendisk and request_queue
+> as separate entities for bio based drivers.
+>
+> Diffstat:
+>  arch/m68k/emu/nfblock.c             |   20 +---
+>  arch/xtensa/platforms/iss/simdisk.c |   29 +------
+>  block/blk-core.c                    |    1
+>  block/blk.h                         |    6 -
+>  block/genhd.c                       |  149 +++++++++++++++++++-----------------
+>  block/partitions/core.c             |   19 ++--
+>  drivers/block/brd.c                 |   94 +++++++---------------
+>  drivers/block/drbd/drbd_main.c      |   23 +----
+>  drivers/block/n64cart.c             |    8 -
+>  drivers/block/null_blk/main.c       |   38 ++++-----
+>  drivers/block/pktcdvd.c             |   11 --
+>  drivers/block/ps3vram.c             |   31 +------
+>  drivers/block/rsxx/dev.c            |   39 +++------
+>  drivers/block/rsxx/rsxx_priv.h      |    1
+>  drivers/block/zram/zram_drv.c       |   19 ----
+>  drivers/lightnvm/core.c             |   24 +----
+>  drivers/md/bcache/super.c           |   15 ---
+>  drivers/md/dm.c                     |   16 +--
+>  drivers/md/md.c                     |   25 ++----
+>  drivers/memstick/core/ms_block.c    |    1
+>  drivers/nvdimm/blk.c                |   27 +-----
+>  drivers/nvdimm/btt.c                |   25 +-----
+>  drivers/nvdimm/btt.h                |    2
+>  drivers/nvdimm/pmem.c               |   17 +---
+>  drivers/nvme/host/core.c            |    1
+>  drivers/nvme/host/multipath.c       |   46 +++--------
+>  drivers/s390/block/dcssblk.c        |   26 +-----
+>  drivers/s390/block/xpram.c          |   26 ++----
+>  include/linux/blkdev.h              |    1
+>  include/linux/genhd.h               |   23 +++++
+>  30 files changed, 297 insertions(+), 466 deletions(-)
 
+This looks like a nice cleanup to me.  Feel free to add, for the series:
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
