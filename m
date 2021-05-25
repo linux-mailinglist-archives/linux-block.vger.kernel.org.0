@@ -2,162 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CF22390155
-	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 14:50:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38374390205
+	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 15:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232854AbhEYMvn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 May 2021 08:51:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58174 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231847AbhEYMvm (ORCPT
+        id S233151AbhEYNVR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 May 2021 09:21:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46738 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233172AbhEYNVK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 May 2021 08:51:42 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14PCXIWk135521;
-        Tue, 25 May 2021 08:50:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=UNSHIvb3ylepQx8JAx/nvBvccCSjMNhdss0IoKGIWSg=;
- b=ZmYyM9ISWHX3DThR1PwyPg5gly3B1oWWPXMYjzOSeU7Yz9WSnnilqBc2sfLtgTDwMVqL
- MaQTEPJKyYpgHKbV2Y/x3LpgvVa1rvH0kiuDcU5Z7kH+lRrVU39wckTY85o5bwLv3SGc
- uXbJ2XzaLvE0Zx+NcWmp9X2u7Z0Hj0lLb05Sbdm/DjB9p8FSazZEmQSrz9jXOiYXu1pI
- EF+p17uZOfSYG5oD+CzGg3neLnWbcVxyghGJIp+lFtKicpzsTTUJaRVDvMx9yr2t8iFc
- 4ParfYsM6uTNq09BKL7O8qgdwBu6alJgl6OF3twQ+yJk9EPcdKGMewtkkQCySV0GS7gl hA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 38s1adrqh5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 08:50:12 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 14PCmY2i015892;
-        Tue, 25 May 2021 12:50:10 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 38s1jn801p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 12:50:10 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14PCnc8B33423694
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 May 2021 12:49:38 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1453311C05E;
-        Tue, 25 May 2021 12:50:07 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C3A811C05B;
-        Tue, 25 May 2021 12:50:07 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 25 May 2021 12:50:07 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id ACCF6E06BE; Tue, 25 May 2021 14:50:06 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 1/1] s390/dasd: add missing discipline function
-Date:   Tue, 25 May 2021 14:50:06 +0200
-Message-Id: <20210525125006.157531-2-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210525125006.157531-1-sth@linux.ibm.com>
-References: <20210525125006.157531-1-sth@linux.ibm.com>
+        Tue, 25 May 2021 09:21:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621948780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zZxaIXMKBL2xYZBd8FBb6gCvi6cm3iqOYV73SsLQBnI=;
+        b=U1yHlL5oDVAYzoc+HD9+BMX796k6Zwp6Tuv7BGdsQGaEjI4mQ0vuDi2r4HdNbgbAkEcaKe
+        glJrrylUZfOot7MxMA5L372a8wUpP9F1iBEc39t+7ARt8D0MHwzkhGmSjXDRNI4wrpxNoG
+        C7yohMvteSvtpz365oVngM2G2W+VD5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-4G8AXiD4MC6vQu30vdl2ng-1; Tue, 25 May 2021 09:19:32 -0400
+X-MC-Unique: 4G8AXiD4MC6vQu30vdl2ng-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D733100945E;
+        Tue, 25 May 2021 13:19:31 +0000 (UTC)
+Received: from localhost (ovpn-115-80.ams2.redhat.com [10.36.115.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 15982100760F;
+        Tue, 25 May 2021 13:19:23 +0000 (UTC)
+Date:   Tue, 25 May 2021 14:19:22 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, slp@redhat.com,
+        sgarzare@redhat.com, "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH 3/3] virtio_blk: implement blk_mq_ops->poll()
+Message-ID: <YKz5WqaeU0R0jQMu@stefanha-x1.localdomain>
+References: <20210520141305.355961-1-stefanha@redhat.com>
+ <20210520141305.355961-4-stefanha@redhat.com>
+ <20210524145928.GA3873@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XnxfX2KS_IBLOiCmyJPJI7ZoiBCoG5YL
-X-Proofpoint-GUID: XnxfX2KS_IBLOiCmyJPJI7ZoiBCoG5YL
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-05-25_06:2021-05-25,2021-05-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 mlxlogscore=957 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2105250077
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FcfGVErKD3SlOPsb"
+Content-Disposition: inline
+In-Reply-To: <20210524145928.GA3873@lst.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Fix crash with illegal operation exception in dasd_device_tasklet.
-Commit b72949328869 ("s390/dasd: Prepare for additional path event handling")
-renamed the verify_path function for ECKD but not for FBA and DIAG.
-This leads to a panic when the path verification function is called for a
-FBA or DIAG device.
 
-Fix by defining a wrapper function for dasd_generic_verify_path().
+--FcfGVErKD3SlOPsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: b72949328869 ("s390/dasd: Prepare for additional path event handling")
+On Mon, May 24, 2021 at 04:59:28PM +0200, Christoph Hellwig wrote:
+> On Thu, May 20, 2021 at 03:13:05PM +0100, Stefan Hajnoczi wrote:
+> > Possible drawbacks of this approach:
+> >=20
+> > - Hardware virtio_blk implementations may find virtqueue_disable_cb()
+> >   expensive since it requires DMA. If such devices become popular then
+> >   the virtio_blk driver could use a similar approach to NVMe when
+> >   VIRTIO_F_ACCESS_PLATFORM is detected in the future.
+> >=20
+> > - If a blk_poll() thread is descheduled it not only hurts polling
+> >   performance but also delays completion of non-REQ_HIPRI requests on
+> >   that virtqueue since vq notifications are disabled.
+>=20
+> Yes, I think this is a dangerous configuration.  What argument exists
+> again just using dedicated poll queues?
 
-Cc: <stable@vger.kernel.org> #5.11
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd_diag.c | 8 +++++++-
- drivers/s390/block/dasd_fba.c  | 8 +++++++-
- drivers/s390/block/dasd_int.h  | 1 -
- 3 files changed, 14 insertions(+), 3 deletions(-)
+Aside from what Paolo described (the lack of a hardware interface to
+designate polling queues), the poll_queues=3DN parameter needs to be added
+to the full guest and host software stack. Users also need to learn
+about this so they can enable it in all the places. This is much more
+hassle for users to configure. The dynamic polling mode approach
+requires no configuration.
 
-diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
-index 1b9e1442e6a5..fd42a5fffaed 100644
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -642,12 +642,18 @@ static void dasd_diag_setup_blk_queue(struct dasd_block *block)
- 	blk_queue_segment_boundary(q, PAGE_SIZE - 1);
- }
- 
-+static int dasd_diag_pe_handler(struct dasd_device *device,
-+				__u8 tbvpm, __u8 fcsecpm)
-+{
-+	return dasd_generic_verify_path(device, tbvpm);
-+}
-+
- static struct dasd_discipline dasd_diag_discipline = {
- 	.owner = THIS_MODULE,
- 	.name = "DIAG",
- 	.ebcname = "DIAG",
- 	.check_device = dasd_diag_check_device,
--	.verify_path = dasd_generic_verify_path,
-+	.pe_handler = dasd_diag_pe_handler,
- 	.fill_geometry = dasd_diag_fill_geometry,
- 	.setup_blk_queue = dasd_diag_setup_blk_queue,
- 	.start_IO = dasd_start_diag,
-diff --git a/drivers/s390/block/dasd_fba.c b/drivers/s390/block/dasd_fba.c
-index 4789410885e4..3ad319aee51e 100644
---- a/drivers/s390/block/dasd_fba.c
-+++ b/drivers/s390/block/dasd_fba.c
-@@ -794,13 +794,19 @@ static void dasd_fba_setup_blk_queue(struct dasd_block *block)
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
- }
- 
-+static int dasd_fba_pe_handler(struct dasd_device *device,
-+			       __u8 tbvpm, __u8 fcsecpm)
-+{
-+	return dasd_generic_verify_path(device, tbvpm);
-+}
-+
- static struct dasd_discipline dasd_fba_discipline = {
- 	.owner = THIS_MODULE,
- 	.name = "FBA ",
- 	.ebcname = "FBA ",
- 	.check_device = dasd_fba_check_characteristics,
- 	.do_analysis = dasd_fba_do_analysis,
--	.verify_path = dasd_generic_verify_path,
-+	.pe_handler = dasd_fba_pe_handler,
- 	.setup_blk_queue = dasd_fba_setup_blk_queue,
- 	.fill_geometry = dasd_fba_fill_geometry,
- 	.start_IO = dasd_start_IO,
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index 1c59b0e86a9f..155428bfed8a 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -297,7 +297,6 @@ struct dasd_discipline {
- 	 * e.g. verify that new path is compatible with the current
- 	 * configuration.
- 	 */
--	int (*verify_path)(struct dasd_device *, __u8);
- 	int (*pe_handler)(struct dasd_device *, __u8, __u8);
- 
- 	/*
--- 
-2.25.1
+Paolo's suggestion is to notify the driver when irqs need to be
+re-enabled if the polling thread is descheduled. I actually have a
+prototype that achieves something similar here:
+https://gitlab.com/stefanha/linux/-/commits/cpuidle-haltpoll-virtqueue
+
+It's a different approach from the current patch series: the cpuidle
+driver provides poll_start/stop() callbacks and virtio_blk participates
+in cpuidle-haltpoll. That means all virtio-blk devices temporarily use
+polling mode while the vCPU is doing cpuidle-haltpoll polling. The neat
+thing about the cpuidle approach is:
+1. Applications don't need to set the RWF_HIPRI flag!
+2. Other drivers besides virtio_blk can participate in polling too.
+
+Maybe we should go with cpuidle polling instead?
+
+Stefan
+
+--FcfGVErKD3SlOPsb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmCs+VoACgkQnKSrs4Gr
+c8iQxwgAmR9W7hmYqTRjXDc7N6m7WlEUvC5lJOdzS6z9lyWow8E4NbsDC3bWMGRA
+FqBeqV/uXR7quNHf2SlUJRYU8vCiHklVo2GuEVi28frjrI+a1jNIAYqgreDPruWp
+raBsSoXtEiYp7hbNFxTbRV78h/NiM/YB5SaVLSW5X+0JTbIDvQ3Too7VZeDfvdki
+ia88AtFEQ19hFnvIMnnEPu/Lh6J71U2opqacHvBqJMfFJGIQotpBlnHc/uwW+GQ6
+Uys7SGQ073N8tZStszYefcPI0QRiptiIAE08DO40KlLjKtBHt1hc5QAd3y89y5el
+ZSupk+mYJLpzLXQUB+VvLAINMtu2Og==
+=PIq+
+-----END PGP SIGNATURE-----
+
+--FcfGVErKD3SlOPsb--
 
