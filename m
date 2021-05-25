@@ -2,93 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E151B38FC26
+	by mail.lfdr.de (Postfix) with ESMTP id 98F9F38FC25
 	for <lists+linux-block@lfdr.de>; Tue, 25 May 2021 10:08:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232040AbhEYIJh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 May 2021 04:09:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34662 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231946AbhEYIJI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S231950AbhEYIJg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 May 2021 04:09:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34617 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232034AbhEYIJI (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
         Tue, 25 May 2021 04:09:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1621929980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621930003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=szeRdhgdMogyeTFchLFXMKvq8Aq37OBkprO//rw53jU=;
-        b=toZXb1uxWtXlHCyRMGIg5D0LZxjoX2nS6rz1AJIeeOyIbRs45sCf12RLJ/Ga50h9uXk0+F
-        +NgqygZiieR5AMy3waEdLJZ512o7Oq2S5T08wK1F0Q1QBa91Aojw52/Iz9MRyY4Jj7jEvW
-        SVl56puAWec8mMXVSstJG+lFTXircgk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1621929980;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=szeRdhgdMogyeTFchLFXMKvq8Aq37OBkprO//rw53jU=;
-        b=27fZmbkLpRaBUagGXPQ8fbO9hxJvE17Em7lgTXFTKGr4NXiJiqP7fw+dQNVPdZ3lUgzHBu
-        97HwAGXkIOTd7CCQ==
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id ACB6CAE92;
-        Tue, 25 May 2021 08:06:20 +0000 (UTC)
-Subject: Re: [PATCH 3/8] block: move bd_mutex to struct gendisk
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20210525061301.2242282-1-hch@lst.de>
- <20210525061301.2242282-4-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <53b953d0-9ba3-3ad6-1004-e96e3141d121@suse.de>
-Date:   Tue, 25 May 2021 10:06:20 +0200
+        bh=Ub5yjHLwnKgzkGvx4GaW/I0s0yGaXeZ4jZCMAsk/qs4=;
+        b=ONGluuS6Dj9+GBOTCE7PEnMcun4BZV6k8P21zDM5VXgG1V1nTa838S2NnILhK5KCslf+5Q
+        JXgFc/NduQpmhRlvJ5z4ZiKjiQFMwAX5PZ0Pa47g0Ac//oMemWfuR/2vjpbo+D1j9I0LCz
+        WKVZo/GEqaRAs6mfPEHpNbapFc7jyrU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-599-66IQZ28XNMenjkNHEyr-yA-1; Tue, 25 May 2021 04:06:39 -0400
+X-MC-Unique: 66IQZ28XNMenjkNHEyr-yA-1
+Received: by mail-ej1-f71.google.com with SMTP id i23-20020a17090685d7b02903d089ab83fcso8461985ejy.19
+        for <linux-block@vger.kernel.org>; Tue, 25 May 2021 01:06:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ub5yjHLwnKgzkGvx4GaW/I0s0yGaXeZ4jZCMAsk/qs4=;
+        b=WtOa3f4vzKZr8x6HXHLlE1yveKdYcDXFrRUpKYwJa3OWQcqrsDv2Tzhft/HI87Pudf
+         RBrqJVaxgoenhb7PWa9os4TE/8Rqk775pBS7uYO4VQSeiw6ShPiDdRuJGGFQGVuf3OI8
+         bNUa+RUMQOSLslt5DzN6w5z6d3/Bee9gZSmZLhTMtgyEC0wE1Z3IufaF5+82B8+EbGVx
+         4tZjzE0ibAzjyuzHxH2VGwQdTTRV3RuFIT21uAPijxicbnOWm/xaaxxZFoCrAr6UN5eD
+         gzxnBBiLluRuvAmOjlP4wCljLv7mtwxhq6ym4JK803RNqxpyFoW2tpJPfGqgxAadcFeY
+         pcUQ==
+X-Gm-Message-State: AOAM5317sVSc71ak6eqjrEI2Q/d+vMqZvw8Q+YaV7W8r70ILpusMeJfr
+        OlQC88l7VF2GQ+wuXFbKNZ0QiYZDLWY5KyNXjPGC1hIlo4UiQ45MU8O3sit7C4V3V0q8rkvFLFl
+        hdGz6BV/f1ebq3ygEuwmYX70=
+X-Received: by 2002:a05:6402:40c1:: with SMTP id z1mr29288927edb.97.1621929998253;
+        Tue, 25 May 2021 01:06:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJygZqhf+xYB7Ndg3ayTHtQu/3t0kArAedOP5pe98sDgQVP2z7+rV66oJGM/D3XST8tFG3f5gA==
+X-Received: by 2002:a05:6402:40c1:: with SMTP id z1mr29288906edb.97.1621929998039;
+        Tue, 25 May 2021 01:06:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
+        by smtp.gmail.com with ESMTPSA id n8sm8645618ejl.0.2021.05.25.01.06.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 May 2021 01:06:37 -0700 (PDT)
+Subject: Re: [PATCH 3/3] virtio_blk: implement blk_mq_ops->poll()
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        slp@redhat.com, sgarzare@redhat.com,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20210520141305.355961-1-stefanha@redhat.com>
+ <20210520141305.355961-4-stefanha@redhat.com> <20210524145928.GA3873@lst.de>
+ <7cc7f19b-34b3-1501-898d-3f41e047d766@redhat.com> <YKypgi2qcYVTgYdv@T590>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f1997919-e059-b50b-19b3-5741e3309000@redhat.com>
+Date:   Tue, 25 May 2021 10:06:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210525061301.2242282-4-hch@lst.de>
+In-Reply-To: <YKypgi2qcYVTgYdv@T590>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/25/21 8:12 AM, Christoph Hellwig wrote:
-> Replace the per-block device bd_mutex with a per-gendisk open_mutex,
-> thus simplifying locking wherever we deal with partitions.
+On 25/05/21 09:38, Ming Lei wrote:
+> On Tue, May 25, 2021 at 09:22:48AM +0200, Paolo Bonzini wrote:
+>> On 24/05/21 16:59, Christoph Hellwig wrote:
+>>> On Thu, May 20, 2021 at 03:13:05PM +0100, Stefan Hajnoczi wrote:
+>>>> Possible drawbacks of this approach:
+>>>>
+>>>> - Hardware virtio_blk implementations may find virtqueue_disable_cb()
+>>>>     expensive since it requires DMA. If such devices become popular then
+>>>>     the virtio_blk driver could use a similar approach to NVMe when
+>>>>     VIRTIO_F_ACCESS_PLATFORM is detected in the future.
+>>>>
+>>>> - If a blk_poll() thread is descheduled it not only hurts polling
+>>>>     performance but also delays completion of non-REQ_HIPRI requests on
+>>>>     that virtqueue since vq notifications are disabled.
+>>>
+>>> Yes, I think this is a dangerous configuration.  What argument exists
+>>> again just using dedicated poll queues?
+>>
+>> There isn't an equivalent of the admin queue in virtio-blk, which would
+>> allow the guest to configure the desired number of poll queues.  The number
+>> of queues is fixed.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   Documentation/filesystems/locking.rst |  2 +-
->   block/genhd.c                         |  7 ++---
->   block/partitions/core.c               | 24 ++++++++---------
->   drivers/block/loop.c                  | 14 +++++-----
->   drivers/block/xen-blkfront.c          |  8 +++---
->   drivers/block/zram/zram_drv.c         | 18 ++++++-------
->   drivers/block/zram/zram_drv.h         |  2 +-
->   drivers/md/md.h                       |  6 ++---
->   drivers/s390/block/dasd_genhd.c       |  8 +++---
->   drivers/scsi/sd.c                     |  4 +--
->   fs/block_dev.c                        | 37 +++++++++++----------------
->   fs/btrfs/volumes.c                    |  2 +-
->   fs/super.c                            |  8 +++---
->   include/linux/blk_types.h             |  1 -
->   include/linux/genhd.h                 |  3 +++
->   15 files changed, 68 insertions(+), 76 deletions(-)
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Dedicated vqs can be used for poll only, and I understand VM needn't to know
+> if the vq is polled or driven by IRQ in VM.
+> 
+> I tried that in v5.4, but not see obvious IOPS boost, so give up.
+> 
+> https://github.com/ming1/linux/commits/my_v5.4-virtio-irq-poll
 
-Cheers,
+Sure, but polling can be beneficial even for a single queue.  Queues 
+have a cost on the host side as well, so a 1 vCPU - 1 queue model may 
+not be always the best.
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Paolo
+
