@@ -2,44 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1B92392812
-	for <lists+linux-block@lfdr.de>; Thu, 27 May 2021 08:54:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D22A33927FC
+	for <lists+linux-block@lfdr.de>; Thu, 27 May 2021 08:48:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234012AbhE0Gzn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 May 2021 02:55:43 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:55124 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233796AbhE0Gzl (ORCPT
+        id S233438AbhE0GuB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 May 2021 02:50:01 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:53712 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232762AbhE0GuA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 May 2021 02:55:41 -0400
+        Thu, 27 May 2021 02:50:00 -0400
 Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
         (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 01BC7218E1;
-        Thu, 27 May 2021 06:47:25 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id CE6961FD2F;
+        Thu, 27 May 2021 06:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1622098045; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1622098106; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=N3oqs9ucgQNEV7q+MwPF/x2t3qqQK4uJOjMOhCqxAf4=;
-        b=SUj29IEP5GZBgXhN6kWvVX0O8u9L9p5I7cYd274IusZ2LVgczujgxH8xbLSu0wjWK5rqhd
-        /oilrXL+4I2n+o3JC/rZxhHPq3dsnIjCDAkm0qR1eMmyq2PEAie3RyBpBzRJPI0gWXztIr
-        zLedJClccVu60I7YXWAxUol9Fq+x//Q=
+        bh=yJjGMjrzdsaCBwGch+HJB75EMJGuOD7HUcPcZkvG1yQ=;
+        b=kDkNcNwdSPh7640v1roOkOl1RQMD1qLYzQX/UEo9GsAQXMTSRLNuz1suA+xDUjK/VZTyix
+        Mo9DZo1Y5MYF+BzCrJLg2qjr4vmFpr2CdJ19DAxXuUUDMwGJw/Q2++uKBFiG2IN6s5HKZW
+        rWlO+iJgPYA+d/z48yJq+nkP7OkEAKc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1622098045;
+        s=susede2_ed25519; t=1622098106;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=N3oqs9ucgQNEV7q+MwPF/x2t3qqQK4uJOjMOhCqxAf4=;
-        b=rKl4gjOLp1/ebll2KOjFj2SlYwZpi/+mNefM3rz3Ji466ErsjInRaiE2fhwL8mHa49s8A7
-        Jh5UnAz+nQPuN1Dg==
+        bh=yJjGMjrzdsaCBwGch+HJB75EMJGuOD7HUcPcZkvG1yQ=;
+        b=owN9mBCmt9u6MQMqlP9FNwEKspA1F4fUMKm0491M5E+SdvdeWRlgx8NvfWH4wSmT4OhuBe
+        QWu6uS+FevB5ZhAQ==
 Received: from director2.suse.de (director2.suse-dmz.suse.de [192.168.254.72])
-        by imap.suse.de (Postfix) with ESMTPSA id E1FF311A98;
-        Thu, 27 May 2021 06:47:24 +0000 (UTC)
-Subject: Re: [PATCH 4/9] block/mq-deadline: Rename dd_init_queue() and
- dd_exit_queue()
+        by imap.suse.de (Postfix) with ESMTPSA id B9D2911A98;
+        Thu, 27 May 2021 06:48:26 +0000 (UTC)
+Subject: Re: [PATCH 5/9] block/mq-deadline: Improve compile-time argument
+ checking
 To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -47,15 +47,15 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Ming Lei <ming.lei@redhat.com>
 References: <20210527010134.32448-1-bvanassche@acm.org>
- <20210527010134.32448-5-bvanassche@acm.org>
+ <20210527010134.32448-6-bvanassche@acm.org>
 From:   Hannes Reinecke <hare@suse.de>
 Organization: SUSE Linux GmbH
-Message-ID: <9cdbe005-3347-1742-5d12-758c9bc67af6@suse.de>
-Date:   Thu, 27 May 2021 08:47:24 +0200
+Message-ID: <a8c968bb-5e6d-445a-2e6f-1ca0d6b444d6@suse.de>
+Date:   Thu, 27 May 2021 08:48:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210527010134.32448-5-bvanassche@acm.org>
+In-Reply-To: <20210527010134.32448-6-bvanassche@acm.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -64,16 +64,18 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 5/27/21 3:01 AM, Bart Van Assche wrote:
-> Change "queue" into "sched" to make the function names reflect better the
-> purpose of these functions.
+> Modern compilers complain if an out-of-range value is passed to a function
+> argument that has an enumeration type. Let the compiler detect out-of-range
+> data direction arguments instead of verifying the data_dir argument at
+> runtime.
 > 
 > Cc: Damien Le Moal <damien.lemoal@wdc.com>
 > Cc: Christoph Hellwig <hch@lst.de>
 > Cc: Ming Lei <ming.lei@redhat.com>
 > Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 > ---
->  block/mq-deadline.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  block/mq-deadline.c | 96 +++++++++++++++++++++++----------------------
+>  1 file changed, 49 insertions(+), 47 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
