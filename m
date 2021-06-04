@@ -2,56 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC2C39C0E9
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 21:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA6439C0F3
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 22:00:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231147AbhFDUBP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Jun 2021 16:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231265AbhFDUBN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 16:01:13 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD74C061767
-        for <linux-block@vger.kernel.org>; Fri,  4 Jun 2021 12:59:15 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id w130-20020a25df880000b02905327e5d7f43so13190329ybg.3
-        for <linux-block@vger.kernel.org>; Fri, 04 Jun 2021 12:59:15 -0700 (PDT)
+        id S230421AbhFDUCJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Jun 2021 16:02:09 -0400
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:57064 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231363AbhFDUCD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 16:02:03 -0400
+Received: by mail-yb1-f202.google.com with SMTP id m205-20020a25d4d60000b029052a8de1fe41so13098494ybf.23
+        for <linux-block@vger.kernel.org>; Fri, 04 Jun 2021 13:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=R3HMBFHospGnC9Opd1R53FLCvcJarpfKxQXd852tZKY=;
-        b=o/e7RzBLKivm9MR0djmqRPiA7UqgFavlq7CZ6C7ujUQ4xJW9sKCvusYV8Wjv7azcNF
-         GSRJO+oc7exvTHwGRccUsla+3cH6Shf4/mQDAFh9WuieKusx6AvCPFT6Mkzfa7Dbeucr
-         PQNp/k/I52NavAo4qdqzFqBlFvxbHC5pXqZYRWw+PNyReppr7DMFz7PiVFXbtiB2ypiI
-         xb+/l9Ws5QmVb1kNKnTCCUcdGwMPTr+vsHmSDpmwIRr/45Dr4tzkwhKOlyDodWPZVGjW
-         ROv294W4itIH06Hmj6Ky0PXe7RWcKIL20UnO75KjzvtIaj+KEWiaOhB8PBIMk4feF6a9
-         dsnQ==
+        bh=CrvB+067/I+CxLLg5RI6y2+/auWfNk2l0qpau+BMbco=;
+        b=K3j5LwA4O8C/vL99eQGQ0tGLMUIZpSoXyyrsmYczwJFjEtEXne1IRUnR1Tmeecqq3f
+         CKDu3ca7OKlE4hozFKVOA2tgtpIW9mwzj+Ykf4tS1w6le5spKOHwnUhciOQXa1LQ+fkD
+         Fl7oQg1vxQmJSZDSDjR/62PqI5sGiLG/rjBILcpSeCxjzXIWBdgzlaS/9cRsCerSIS7A
+         8C46TVhK+bEMbWW2yVrl4z3hZp01Z9+TNVOxUdnL6btYGTwYDGWoAbaeKRgrx2L4bBkw
+         KVPRQNmjxiRdE6ewFIPTop8MTUD86m1zZ9Qt+dR+y7gPhcJKP2WesNdZ3vi8SIJqyEIJ
+         usVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=R3HMBFHospGnC9Opd1R53FLCvcJarpfKxQXd852tZKY=;
-        b=l6uuVVEb18DgwD5Iif1zNlHU9P4se4x/MHRNxNc8Kfe6WrXv5lsGypyYUrV8saYnpa
-         ARlAFfhjKQlspKC7qnyzX08v7EFsDzce6O570mtQgb2uMpl/+A6X36BCSd8WvAmA5aor
-         a4L0tYVNhbVxcBEcbICRXnZ88dRh4e2+5No3VHwaqFOTXmCjVOHJfFq4akrl+WMer1sE
-         PyhpTqPwtbPUBMiO2C+t2O1x3o8W+oC2j52S+mVy1J8mSMUMG4XddTQ7PILiGjSUwYgB
-         oLczxvc+oXqIT1MZhWqsbNmsIbNeRRZWUYIIro8NuWBt7wEgoSz2uQbHSP9D1lesDPnT
-         WPZA==
-X-Gm-Message-State: AOAM5302d50L4LknNJxs8H1qmWjdPOH83OUmOPEUxdgRoxB2EPGvD7oD
-        zPh4wdySAl13Cfhx3eqIaXzipGGt2al+mfhw6mYfIrRVtsBOY4jkBUFWaM9yXseLBzHUT9HQrPT
-        3C7dtCx/HeX6WZyKhFfeUx44s7cnnOrMtED+QSsgEXge7mxG44ti8T4x7sFzcthWeLpKh
-X-Google-Smtp-Source: ABdhPJzFZypqjRzJtlE+aOSTEjYGKn65clE50NBU5ELxH8iIHgXb/wJcszapXniKS65VqovIMY2D3B1Zvrs=
+        bh=CrvB+067/I+CxLLg5RI6y2+/auWfNk2l0qpau+BMbco=;
+        b=Alkjjr4UVgDlw+eSFW1bvB8yZUIQ8JrwMHH206rkuqip6lROk8VMGjkJLNdjFNprHi
+         AgAzIC1yPrPJuRS5K+q3WiOyfQtBlcjyKQ4hTpCDb2wNSHFLXTW2EMlKlFYdUyf+oBP2
+         99BCUUr1r3S1sCCqGjKysnWbJYWR1toykjY+9Ic0Pr326Iw8WkvRcrDID/B0ksLlFYB/
+         TObkQacZTzCdK31UUZm2dnqhtguIhX64tlXNjJGFnBb9zQ8Enpn/RSL4RmIMzuwIz+Tg
+         on8D0aM0EwWBoY8s01lAGkSij99UsSab3Sky2K0prb4ZfUBuaGn6NeN7378zRGhSv2lG
+         bI2g==
+X-Gm-Message-State: AOAM53029OFVZdmRjUEDOjdQA8vqUNUdl5dz21J49V0DHyiI5fNhTvVJ
+        YAGndqmKO8CA2lKEsoNJIdrsdZwAXgiMLnws+VrcGKLXmGfyhebYyUluc0FST2NHSkA+wMCSxbv
+        fu9lpBhyBYlXBQxH80ImU5lX+Ix85E6jRLAwDfPqcU4Ne2SVidn2rUKjUTcmiBhLi5onC
+X-Google-Smtp-Source: ABdhPJwRpwAf7i+p+qPOvbpLnxp6faKw5GUkn35qPs//LLow4O922a8pO0+n/57Cx+JXfX6OXE4kFyKGRr4=
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a5b:34a:: with SMTP id q10mr7679716ybp.224.1622836754233;
- Fri, 04 Jun 2021 12:59:14 -0700 (PDT)
-Date:   Fri,  4 Jun 2021 19:58:53 +0000
+ (user=satyat job=sendgmr) by 2002:a25:824f:: with SMTP id d15mr7687638ybn.273.1622836755998;
+ Fri, 04 Jun 2021 12:59:15 -0700 (PDT)
+Date:   Fri,  4 Jun 2021 19:58:54 +0000
 In-Reply-To: <20210604195900.2096121-1-satyat@google.com>
-Message-Id: <20210604195900.2096121-4-satyat@google.com>
+Message-Id: <20210604195900.2096121-5-satyat@google.com>
 Mime-Version: 1.0
 References: <20210604195900.2096121-1-satyat@google.com>
 X-Mailer: git-send-email 2.32.0.rc1.229.g3e70b5a671-goog
-Subject: [PATCH v3 03/10] block: introduce bio_required_sector_alignment()
+Subject: [PATCH v3 04/10] block: respect bio_required_sector_alignment() in blk-crypto-fallback
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
@@ -61,40 +58,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This function returns the required alignment for the number of sectors in
-a bio. In particular, the number of sectors passed to bio_split() must be
-aligned to this value.
+Make blk_crypto_split_bio_if_needed() respect
+bio_required_sector_alignment() when calling bio_split(). Without this,
+blk-crypto-fallback could possibly split a bio in the middle of a data
+unit, and the resulting bios can no longer be encrypted (since encryption
+can only be done on complete crypto data units).
 
 Signed-off-by: Satya Tangirala <satyat@google.com>
 ---
- block/blk.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ block/blk-crypto-fallback.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/block/blk.h b/block/blk.h
-index 8b3591aee0a5..c8dcad7dde81 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -262,6 +262,20 @@ static inline unsigned int bio_allowed_max_sectors(struct request_queue *q)
- 	return round_down(UINT_MAX, queue_logical_block_size(q)) >> 9;
- }
+diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
+index c322176a1e09..85c813ef670b 100644
+--- a/block/blk-crypto-fallback.c
++++ b/block/blk-crypto-fallback.c
+@@ -19,6 +19,7 @@
+ #include <linux/module.h>
+ #include <linux/random.h>
  
-+/*
-+ * The required sector alignment for a bio. The number of sectors in any bio
-+ * must be aligned to this value.
-+ */
-+static inline unsigned int bio_required_sector_alignment(struct bio *bio)
-+{
-+	unsigned int alignmask =
-+		(bdev_logical_block_size(bio->bi_bdev) >> SECTOR_SHIFT) - 1;
-+
-+	alignmask |= blk_crypto_bio_sectors_alignment(bio) - 1;
-+
-+	return alignmask + 1;
-+}
-+
- /*
-  * The max bio size which is aligned to q->limits.discard_granularity. This
-  * is a hint to split large discard bio in generic block layer, then if device
++#include "blk.h"
+ #include "blk-crypto-internal.h"
+ 
+ static unsigned int num_prealloc_bounce_pg = 32;
+@@ -225,6 +226,8 @@ static bool blk_crypto_split_bio_if_needed(struct bio **bio_ptr)
+ 	if (num_sectors < bio_sectors(bio)) {
+ 		struct bio *split_bio;
+ 
++		num_sectors = round_down(num_sectors,
++					 bio_required_sector_alignment(bio));
+ 		split_bio = bio_split(bio, num_sectors, GFP_NOIO,
+ 				      &crypto_bio_split);
+ 		if (!split_bio) {
 -- 
 2.32.0.rc1.229.g3e70b5a671-goog
 
