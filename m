@@ -2,81 +2,142 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC6E39BCC9
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 18:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9455B39C0E8
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 21:59:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231289AbhFDQPJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Jun 2021 12:15:09 -0400
-Received: from mail-pj1-f50.google.com ([209.85.216.50]:35476 "EHLO
-        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbhFDQPJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 12:15:09 -0400
-Received: by mail-pj1-f50.google.com with SMTP id fy24-20020a17090b0218b029016c5a59021fso1184061pjb.0;
-        Fri, 04 Jun 2021 09:13:06 -0700 (PDT)
+        id S231225AbhFDUBK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Jun 2021 16:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231261AbhFDUBK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 16:01:10 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2901CC061766
+        for <linux-block@vger.kernel.org>; Fri,  4 Jun 2021 12:59:10 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id b7-20020a1709026507b0290103ee45ae76so4747380plk.18
+        for <linux-block@vger.kernel.org>; Fri, 04 Jun 2021 12:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=/04tQF1Bnfn2Yc8uCL4+PnvsgVsKHdmSFWQrGNAAQTo=;
+        b=OdotDs3ViB0pZgE6DEc+6edU7n+2pew1IMH9sobDI7oCvsmNkS1U0u0qDa1WS3UOdn
+         ohrkEo/LbInEpIwhhc1Mpick65/30Z2BUvRuBFslZC9l/zKchwqxzfjLTY+xsqqi7UY7
+         +6PgMCJuB5M3eulB08ixhiIZaumXfwcinlZyLzSz4bp8VKYT9G7UjuH8B6ztKs47M3BE
+         JssOkek6pXCCqezZE7Sd8HoNcTp23P1BtwyQBujSi4/EOqZC90Zc13jrq3FelamPVUPb
+         NWUD7sMK+zOfrpuR0BYOBz5hXcEz0LOa+usGqdMqOXFaQlQLhwvuOQj2zyyTn0F5OZbg
+         FsSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gmm8KlnIo/nuK5ud9oSk0ktzCTOuNeA4tmOo0gRaut8=;
-        b=mYocplnxAY6qMT6hyyPnGbI98DszmDXfL4MHG+HRgkaLE0OXUyu7SS5/wqeW7SF5yt
-         6ZhuFax6RdyOITzuWrKAVyJpKaXVIi9UA3fNnk091r6hQfbFmNIIGsXYYO8SD5WvYHcI
-         9yD3pFoZheJlRBH7fFdeSe9BEIJVhPk3mT+6ssmWt40s2fQ9vNTYOkEMZyioNvNaRMBA
-         ZDVu+CGU3yn27w474c8yI8++7eAqZFGU8poAJJ729iPu+CE3wOAewEVx04yMhaw0Stli
-         Py3jaI0VrVYc4dgdjaqB+5N4Co76nWCD5ZRDsMd5J1+cQhUqwn99yUJvY//DFPqRj3PA
-         eZ8g==
-X-Gm-Message-State: AOAM533DtWirHB4kPlCAbizd67m6805Ou3c7m1IbjLsrAcjbwURpLQFB
-        5+3yJxR/V5glFh02HOnyqRI=
-X-Google-Smtp-Source: ABdhPJz0VSZ0d2HnuXgK560zrDLOhqWYxGflmdVC+KLAhx45ksnzqoY/KuwnAaBbTgE0CRmghEiYHA==
-X-Received: by 2002:a17:90a:520f:: with SMTP id v15mr5558604pjh.23.1622823186456;
-        Fri, 04 Jun 2021 09:13:06 -0700 (PDT)
-Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 190sm2439582pgd.1.2021.06.04.09.13.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 09:13:05 -0700 (PDT)
-Subject: Re: [PATCH v12 0/3] bio: control bio max size
-To:     Changheun Lee <nanich.lee@samsung.com>, Johannes.Thumshirn@wdc.com,
-        alex_y_xu@yahoo.ca, asml.silence@gmail.com, axboe@kernel.dk,
-        bgoncalv@redhat.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, cang@codeaurora.org,
-        avri.altman@wdc.com, alim.akhtar@samsung.com,
-        damien.lemoal@wdc.com, gregkh@linuxfoundation.org,
-        hch@infradead.org, jaegeuk@kernel.org, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ming.lei@redhat.com, osandov@fb.com, patchwork-bot@kernel.org,
-        tj@kernel.org, tom.leiming@gmail.com, yi.zhang@redhat.com
-Cc:     jisoo2146.oh@samsung.com, junho89.kim@samsung.com,
-        mj0123.lee@samsung.com, seunghwan.hyun@samsung.com,
-        sookwan7.kim@samsung.com, woosung2.lee@samsung.com,
-        yt0928.kim@samsung.com
-References: <CGME20210604052157epcas1p2e5eebb52d08b06174696290e11fdd5a4@epcas1p2.samsung.com>
- <20210604050324.28670-1-nanich.lee@samsung.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <9e1c43a8-1c6d-95c6-ce4c-34ac194b9022@acm.org>
-Date:   Fri, 4 Jun 2021 09:13:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
-MIME-Version: 1.0
-In-Reply-To: <20210604050324.28670-1-nanich.lee@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=/04tQF1Bnfn2Yc8uCL4+PnvsgVsKHdmSFWQrGNAAQTo=;
+        b=jCmEf4kqg9CC00zsVwSSXlk9aKSLhx2xX/Kpvd5too20HNmNLKun0FcQt5gfyKTVzs
+         l2pDPIQXNh/yNRlpWKxrN1oc03Fc1YZnn1Ho8KYnYdBOCIy4poGGsvLRd+4AdcTlMpi4
+         rQSsmCiF+FjHtPYxGv/KuTmv3Rh40Nt/OR6ZP1lZXKzz6u4PrMUot5zt4shWbbqEpNko
+         FNfqMeIDv9PWwBX9FAREbZ88IcMyCNyGHzpRaVp666+GwPbJIaQ6Sf0m3/CLGbQ2eatw
+         tD6PXBXt0xbK83oXD4Rf4Uide1LMSU9EWcHWs5wsiH/j3KkTK4leDN9sVCwTnWI4/6gE
+         fO5A==
+X-Gm-Message-State: AOAM533diG3NIT/fMgTISiIPoTyJgbTnsG2Bzkw4SN+6d3hdlSuejaHK
+        wCRe/gvZOPnjWpQpCTEgo+9LJneD88dQZsi3K8IaJZbnUS3QX84YZMZ1fwFM9mv9/MjIJH5pKN3
+        GZPNwwAjZasNoQ2ocX1bzeB9FXI4ytDWdyUR0iLxjNeJIyDjourvJyyLEEa6Lc5kV491m
+X-Google-Smtp-Source: ABdhPJxnrz3xZhzV6FeOMd1wzAG31DcRHzsGjcwsuZKTpzCJkEIRznGRbNoCzAYyAxLCtGWco/g1FiuJrOk=
+X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
+ (user=satyat job=sendgmr) by 2002:a17:902:6546:b029:101:abf0:d882 with SMTP
+ id d6-20020a1709026546b0290101abf0d882mr6045293pln.73.1622836749269; Fri, 04
+ Jun 2021 12:59:09 -0700 (PDT)
+Date:   Fri,  4 Jun 2021 19:58:50 +0000
+Message-Id: <20210604195900.2096121-1-satyat@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.32.0.rc1.229.g3e70b5a671-goog
+Subject: [PATCH v3 00/10] ensure bios aren't split in middle of crypto data unit
+From:   Satya Tangirala <satyat@google.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
+        Satya Tangirala <satyat@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/3/21 10:03 PM, Changheun Lee wrote:
-> bio size can grow up to 4GB after muli-page bvec has been enabled.
-> But sometimes large size of bio would lead to inefficient behaviors.
-> Control of bio max size will be helpful to improve inefficiency.
-> 
-> blk_queue_max_bio_bytes() is added to enable be set the max_bio_bytes in
-> each driver layer. And max_bio_bytes sysfs is added to show current
-> max_bio_bytes for each request queue.
-> bio size can be controlled via max_bio_bytes.
+When a bio has an encryption context, its size must be aligned to its
+crypto data unit size. A bio must not be split in the middle of a data
+unit. Currently, bios are split at logical block boundaries, but a crypto
+data unit size might be larger than the logical block size - e.g. a machine
+could be using fscrypt (which uses 4K crypto data units) with an eMMC block
+device with inline encryption hardware that has a logical block size of 512
+bytes. So we need to support cases where the data unit size is larger than
+the logical block size.
 
-Where is the version history for this patch series?
+Patch 1 introduces blk_ksm_is_empty() that checks whether a keyslot manager
+advertises a non-zero number of crypto capabilities. This function helps
+clean up code a little.
 
-Has this patch series been tested in combination with dm-crypt?
+Patch 2 and 3 introduce blk_crypto_bio_sectors_alignment() and
+bio_required_sector_alignment() respectively. The former returns the
+required sector alignment due to any crypto requirements the bio has.  The
+latter returns the required sector alignment due to any reason.  The number
+of sectors in any bio (and in particular, the number of sectors passed to
+bio_split) *must* be aligned to the value returned by the latter function
+(which, of course, calls the former function to decide what to return).
 
-Bart.
+Patch 4 updates blk-crypto-fallback.c to respect
+bio_required_sector_alignment() when calling bio_split(), so that any split
+bio's size has the required alignment.
+
+Patch 5 introduces restrictions on the data unit sizes advertised by a
+keyslot manager. These restrictions come about due to the request_queue's
+queue_limits, and are required to ensure that blk_bio_segment_split() can
+always split a bio so that it has a limited number of sectors and segments,
+and that the number of sectors it has is non-zero and aligned to
+bio_required_sector_alignment().
+
+Patch 6, 7 and 8 handle the error code from blk_ksm_register() in all
+callers.  This return code was previously ignored by all callers because
+the function could only fail if the request_queue had integrity support,
+which the callers ensured would not be the case. But the patches in this
+series add more cases where this function might fail, so it's better to
+just handle the return code properly in all the callers.
+
+Patch 9 updates get_max_io_size() and blk_bio_segment_split() to respect
+bio_required_sector_alignment(). get_max_io_size() always returns a
+value that is aligned to bio_required_sector_alignment(), and together
+with Patch 5, this is enough to ensure that if the bio is split, it is
+split at a crypto data unit size boundary.
+
+Since all callers to bio_split() should have been updated by the previous
+patches, Patch 10 adds a WARN_ON() to bio_split() when sectors isn't aligned
+to bio_required_sector_alignment() (the one exception is bounce.c which is
+legacy code and won't interact with inline encryption).
+
+This patch series was tested by running android xfstests on the SDM630
+chipset (which has eMMC inline encryption hardware with logical block size
+512 bytes) with test_dummy_encryption with and without the 'inlinecrypt'
+mount option.
+
+Satya Tangirala (10):
+  block: introduce blk_ksm_is_empty()
+  block: blk-crypto: introduce blk_crypto_bio_sectors_alignment()
+  block: introduce bio_required_sector_alignment()
+  block: respect bio_required_sector_alignment() in blk-crypto-fallback
+  block: keyslot-manager: introduce
+    blk_ksm_restrict_dus_to_queue_limits()
+  ufshcd: handle error from blk_ksm_register()
+  mmc: handle error from blk_ksm_register()
+  dm: handle error from blk_ksm_register()
+  blk-merge: Ensure bios aren't split in middle of a crypto data unit
+  block: add WARN_ON_ONCE() to bio_split() for sector alignment
+
+ block/bio.c                      |   1 +
+ block/blk-crypto-fallback.c      |   3 +
+ block/blk-crypto-internal.h      |  20 ++++++
+ block/blk-merge.c                |  49 +++++++++-----
+ block/blk.h                      |  14 ++++
+ block/keyslot-manager.c          | 112 +++++++++++++++++++++++++++++++
+ drivers/md/dm-table.c            |  27 +++++---
+ drivers/mmc/core/crypto.c        |  13 +++-
+ drivers/scsi/ufs/ufshcd-crypto.c |  13 +++-
+ include/linux/keyslot-manager.h  |   2 +
+ 10 files changed, 221 insertions(+), 33 deletions(-)
+
+-- 
+2.32.0.rc1.229.g3e70b5a671-goog
+
