@@ -2,53 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9455B39C0E8
-	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 21:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A228A39C0F6
+	for <lists+linux-block@lfdr.de>; Fri,  4 Jun 2021 22:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbhFDUBK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Jun 2021 16:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231261AbhFDUBK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 16:01:10 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2901CC061766
-        for <linux-block@vger.kernel.org>; Fri,  4 Jun 2021 12:59:10 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id b7-20020a1709026507b0290103ee45ae76so4747380plk.18
-        for <linux-block@vger.kernel.org>; Fri, 04 Jun 2021 12:59:10 -0700 (PDT)
+        id S231374AbhFDUCQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 4 Jun 2021 16:02:16 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:45736 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231421AbhFDUCL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Jun 2021 16:02:11 -0400
+Received: by mail-yb1-f201.google.com with SMTP id d63-20020a254f420000b02904f91ef33453so13129179ybb.12
+        for <linux-block@vger.kernel.org>; Fri, 04 Jun 2021 13:00:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/04tQF1Bnfn2Yc8uCL4+PnvsgVsKHdmSFWQrGNAAQTo=;
-        b=OdotDs3ViB0pZgE6DEc+6edU7n+2pew1IMH9sobDI7oCvsmNkS1U0u0qDa1WS3UOdn
-         ohrkEo/LbInEpIwhhc1Mpick65/30Z2BUvRuBFslZC9l/zKchwqxzfjLTY+xsqqi7UY7
-         +6PgMCJuB5M3eulB08ixhiIZaumXfwcinlZyLzSz4bp8VKYT9G7UjuH8B6ztKs47M3BE
-         JssOkek6pXCCqezZE7Sd8HoNcTp23P1BtwyQBujSi4/EOqZC90Zc13jrq3FelamPVUPb
-         NWUD7sMK+zOfrpuR0BYOBz5hXcEz0LOa+usGqdMqOXFaQlQLhwvuOQj2zyyTn0F5OZbg
-         FsSA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=wt2qxnxy/b8IZ2QO+GAswkwuO0WmiwjICqpUWuqeT7k=;
+        b=BfgL5Q+yv1Gzkf9o/f8X1rtUSSA6murv+6sH8j0ykCJia1piKw55urpOJDjgFIA3d/
+         w5f5IcTOuWS+JBGTk+bguWV5C12rMZXZtB0xm7lZDCQUJOpo3W/o3HhYzRCz+j3nd4Na
+         2MG4BJwFIlnlVeOPF1RTCXrVb+lxsdrYUGneWMEAB5qYNO9WJg90ztm3pH6jIb1q9pRB
+         y8gfQ8jdWPSXMskZmMcnFpdu5RwSp207haB+zUlq0h3mhcegzHaqlHMHliNz9P6/0j9b
+         nH0IJycwD2kbfSUwzBN/MhBwvwxPBtL6vmgkKmEvT4RMFHgdXsacye8S76Y6+Yqvmgn/
+         14Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/04tQF1Bnfn2Yc8uCL4+PnvsgVsKHdmSFWQrGNAAQTo=;
-        b=jCmEf4kqg9CC00zsVwSSXlk9aKSLhx2xX/Kpvd5too20HNmNLKun0FcQt5gfyKTVzs
-         l2pDPIQXNh/yNRlpWKxrN1oc03Fc1YZnn1Ho8KYnYdBOCIy4poGGsvLRd+4AdcTlMpi4
-         rQSsmCiF+FjHtPYxGv/KuTmv3Rh40Nt/OR6ZP1lZXKzz6u4PrMUot5zt4shWbbqEpNko
-         FNfqMeIDv9PWwBX9FAREbZ88IcMyCNyGHzpRaVp666+GwPbJIaQ6Sf0m3/CLGbQ2eatw
-         tD6PXBXt0xbK83oXD4Rf4Uide1LMSU9EWcHWs5wsiH/j3KkTK4leDN9sVCwTnWI4/6gE
-         fO5A==
-X-Gm-Message-State: AOAM533diG3NIT/fMgTISiIPoTyJgbTnsG2Bzkw4SN+6d3hdlSuejaHK
-        wCRe/gvZOPnjWpQpCTEgo+9LJneD88dQZsi3K8IaJZbnUS3QX84YZMZ1fwFM9mv9/MjIJH5pKN3
-        GZPNwwAjZasNoQ2ocX1bzeB9FXI4ytDWdyUR0iLxjNeJIyDjourvJyyLEEa6Lc5kV491m
-X-Google-Smtp-Source: ABdhPJxnrz3xZhzV6FeOMd1wzAG31DcRHzsGjcwsuZKTpzCJkEIRznGRbNoCzAYyAxLCtGWco/g1FiuJrOk=
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=wt2qxnxy/b8IZ2QO+GAswkwuO0WmiwjICqpUWuqeT7k=;
+        b=DArE3e4DZPg2MDGxcrD/R5x6Ko8XyAqbPIeBn86OQ1neCqsVegZBiieSR03ro7PKg8
+         QAkjZR9JZZfFemUupdJFDzrJVY/h4WHoDZY9i7JOUoxJWVSfp5P5w8oDewGY58xey5CO
+         sKJJIKJPaJmE5rm4TuJ5osbbFcIFIi/fSUqWnRvi+Boc5khPWL+u5C6+PSzia5LOG8yt
+         Jc8wCKyW+plS/3VOrZmMt+AgSmDEbviHp9jyCafrcQHIBvWILz3yLVlz+SPYfCPwNnr3
+         qOT7hKqxpSjnoa7iyp4EZ+DlsPMCbgAC/dkUe4rUq99MqFpymTSDkHlsZX4UPmQu/nDS
+         cybg==
+X-Gm-Message-State: AOAM530Kk6aH79SmiNIZmWx37jDRTpkFkPrYPJKViqidxdGABHRZW8UR
+        LO7xEI++6HBfZSEvH58OhzZhQ8uhxs8l55kC58WLYI2cw7hkIoxpX0PPy7xg/J7Nd0y1f+I2Jji
+        Mzm/DBRFw1togqM/z2hSZ8J023yqtx96eZQtPLDwww5OLP4jylj5IPC18BFs+UBlrxus4
+X-Google-Smtp-Source: ABdhPJyLk0AvyZyFGRqqG2Cq3AZd0VBGrOlLaB7qb3b7G+q4lx5yzm3JQXDwZUkv/saaoV5YgDjx1rjc46E=
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a17:902:6546:b029:101:abf0:d882 with SMTP
- id d6-20020a1709026546b0290101abf0d882mr6045293pln.73.1622836749269; Fri, 04
- Jun 2021 12:59:09 -0700 (PDT)
-Date:   Fri,  4 Jun 2021 19:58:50 +0000
-Message-Id: <20210604195900.2096121-1-satyat@google.com>
+ (user=satyat job=sendgmr) by 2002:a05:6902:1343:: with SMTP id
+ g3mr7100296ybu.283.1622836750940; Fri, 04 Jun 2021 12:59:10 -0700 (PDT)
+Date:   Fri,  4 Jun 2021 19:58:51 +0000
+In-Reply-To: <20210604195900.2096121-1-satyat@google.com>
+Message-Id: <20210604195900.2096121-2-satyat@google.com>
 Mime-Version: 1.0
+References: <20210604195900.2096121-1-satyat@google.com>
 X-Mailer: git-send-email 2.32.0.rc1.229.g3e70b5a671-goog
-Subject: [PATCH v3 00/10] ensure bios aren't split in middle of crypto data unit
+Subject: [PATCH v3 01/10] block: introduce blk_ksm_is_empty()
 From:   Satya Tangirala <satyat@google.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
@@ -58,86 +58,91 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When a bio has an encryption context, its size must be aligned to its
-crypto data unit size. A bio must not be split in the middle of a data
-unit. Currently, bios are split at logical block boundaries, but a crypto
-data unit size might be larger than the logical block size - e.g. a machine
-could be using fscrypt (which uses 4K crypto data units) with an eMMC block
-device with inline encryption hardware that has a logical block size of 512
-bytes. So we need to support cases where the data unit size is larger than
-the logical block size.
+This function checks if a given keyslot manager supports any encryption
+mode/data unit size combination (and returns true if there is no such
+supported combination). Helps clean up code a little.
 
-Patch 1 introduces blk_ksm_is_empty() that checks whether a keyslot manager
-advertises a non-zero number of crypto capabilities. This function helps
-clean up code a little.
+Signed-off-by: Satya Tangirala <satyat@google.com>
+---
+ block/keyslot-manager.c         | 21 +++++++++++++++++++++
+ drivers/md/dm-table.c           | 11 +----------
+ include/linux/keyslot-manager.h |  2 ++
+ 3 files changed, 24 insertions(+), 10 deletions(-)
 
-Patch 2 and 3 introduce blk_crypto_bio_sectors_alignment() and
-bio_required_sector_alignment() respectively. The former returns the
-required sector alignment due to any crypto requirements the bio has.  The
-latter returns the required sector alignment due to any reason.  The number
-of sectors in any bio (and in particular, the number of sectors passed to
-bio_split) *must* be aligned to the value returned by the latter function
-(which, of course, calls the former function to decide what to return).
-
-Patch 4 updates blk-crypto-fallback.c to respect
-bio_required_sector_alignment() when calling bio_split(), so that any split
-bio's size has the required alignment.
-
-Patch 5 introduces restrictions on the data unit sizes advertised by a
-keyslot manager. These restrictions come about due to the request_queue's
-queue_limits, and are required to ensure that blk_bio_segment_split() can
-always split a bio so that it has a limited number of sectors and segments,
-and that the number of sectors it has is non-zero and aligned to
-bio_required_sector_alignment().
-
-Patch 6, 7 and 8 handle the error code from blk_ksm_register() in all
-callers.  This return code was previously ignored by all callers because
-the function could only fail if the request_queue had integrity support,
-which the callers ensured would not be the case. But the patches in this
-series add more cases where this function might fail, so it's better to
-just handle the return code properly in all the callers.
-
-Patch 9 updates get_max_io_size() and blk_bio_segment_split() to respect
-bio_required_sector_alignment(). get_max_io_size() always returns a
-value that is aligned to bio_required_sector_alignment(), and together
-with Patch 5, this is enough to ensure that if the bio is split, it is
-split at a crypto data unit size boundary.
-
-Since all callers to bio_split() should have been updated by the previous
-patches, Patch 10 adds a WARN_ON() to bio_split() when sectors isn't aligned
-to bio_required_sector_alignment() (the one exception is bounce.c which is
-legacy code and won't interact with inline encryption).
-
-This patch series was tested by running android xfstests on the SDM630
-chipset (which has eMMC inline encryption hardware with logical block size
-512 bytes) with test_dummy_encryption with and without the 'inlinecrypt'
-mount option.
-
-Satya Tangirala (10):
-  block: introduce blk_ksm_is_empty()
-  block: blk-crypto: introduce blk_crypto_bio_sectors_alignment()
-  block: introduce bio_required_sector_alignment()
-  block: respect bio_required_sector_alignment() in blk-crypto-fallback
-  block: keyslot-manager: introduce
-    blk_ksm_restrict_dus_to_queue_limits()
-  ufshcd: handle error from blk_ksm_register()
-  mmc: handle error from blk_ksm_register()
-  dm: handle error from blk_ksm_register()
-  blk-merge: Ensure bios aren't split in middle of a crypto data unit
-  block: add WARN_ON_ONCE() to bio_split() for sector alignment
-
- block/bio.c                      |   1 +
- block/blk-crypto-fallback.c      |   3 +
- block/blk-crypto-internal.h      |  20 ++++++
- block/blk-merge.c                |  49 +++++++++-----
- block/blk.h                      |  14 ++++
- block/keyslot-manager.c          | 112 +++++++++++++++++++++++++++++++
- drivers/md/dm-table.c            |  27 +++++---
- drivers/mmc/core/crypto.c        |  13 +++-
- drivers/scsi/ufs/ufshcd-crypto.c |  13 +++-
- include/linux/keyslot-manager.h  |   2 +
- 10 files changed, 221 insertions(+), 33 deletions(-)
-
+diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
+index 2c4a55bea6ca..88211581141a 100644
+--- a/block/keyslot-manager.c
++++ b/block/keyslot-manager.c
+@@ -437,6 +437,27 @@ void blk_ksm_destroy(struct blk_keyslot_manager *ksm)
+ }
+ EXPORT_SYMBOL_GPL(blk_ksm_destroy);
+ 
++/**
++ * blk_ksm_is_empty() - Checks if the keyslot manager has any crypto
++ *			capabilities at all.
++ * @ksm: The input keyslot manager to check
++ *
++ * Return: true if @ksm doesn't have any crypto capabilities at all, and
++ *	   false otherwise.
++ */
++bool blk_ksm_is_empty(struct blk_keyslot_manager *ksm)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(ksm->crypto_modes_supported); i++) {
++		if (ksm->crypto_modes_supported[i])
++			return false;
++	}
++
++	return true;
++}
++EXPORT_SYMBOL_GPL(blk_ksm_is_empty);
++
+ bool blk_ksm_register(struct blk_keyslot_manager *ksm, struct request_queue *q)
+ {
+ 	if (blk_integrity_queue_supports_integrity(q)) {
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index ee47a332b462..29cbfc3e3c4b 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1295,7 +1295,6 @@ static int dm_table_construct_keyslot_manager(struct dm_table *t)
+ 	struct blk_keyslot_manager *ksm;
+ 	struct dm_target *ti;
+ 	unsigned int i;
+-	bool ksm_is_empty = true;
+ 
+ 	dksm = kmalloc(sizeof(*dksm), GFP_KERNEL);
+ 	if (!dksm)
+@@ -1332,15 +1331,7 @@ static int dm_table_construct_keyslot_manager(struct dm_table *t)
+ 	 * If the new KSM doesn't actually support any crypto modes, we may as
+ 	 * well represent it with a NULL ksm.
+ 	 */
+-	ksm_is_empty = true;
+-	for (i = 0; i < ARRAY_SIZE(ksm->crypto_modes_supported); i++) {
+-		if (ksm->crypto_modes_supported[i]) {
+-			ksm_is_empty = false;
+-			break;
+-		}
+-	}
+-
+-	if (ksm_is_empty) {
++	if (blk_ksm_is_empty(ksm)) {
+ 		dm_destroy_keyslot_manager(ksm);
+ 		ksm = NULL;
+ 	}
+diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
+index a27605e2f826..0f09b4f310f7 100644
+--- a/include/linux/keyslot-manager.h
++++ b/include/linux/keyslot-manager.h
+@@ -106,6 +106,8 @@ void blk_ksm_reprogram_all_keys(struct blk_keyslot_manager *ksm);
+ 
+ void blk_ksm_destroy(struct blk_keyslot_manager *ksm);
+ 
++bool blk_ksm_is_empty(struct blk_keyslot_manager *ksm);
++
+ void blk_ksm_intersect_modes(struct blk_keyslot_manager *parent,
+ 			     const struct blk_keyslot_manager *child);
+ 
 -- 
 2.32.0.rc1.229.g3e70b5a671-goog
 
