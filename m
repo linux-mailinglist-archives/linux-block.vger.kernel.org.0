@@ -2,389 +2,666 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A679A39DD99
-	for <lists+linux-block@lfdr.de>; Mon,  7 Jun 2021 15:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DBD739DE5C
+	for <lists+linux-block@lfdr.de>; Mon,  7 Jun 2021 16:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230207AbhFGNbw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Jun 2021 09:31:52 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3087 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbhFGNbv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Jun 2021 09:31:51 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FzDcz1pyQzWtPp;
-        Mon,  7 Jun 2021 21:25:07 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 21:29:56 +0800
-Received: from thunder-town.china.huawei.com (10.174.177.72) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 21:29:56 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jason Baron <jbaron@akamai.com>,
-        Stefani Seibold <stefani@seibold.net>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        Jens Axboe <axboe@kernel.dk>, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 1/1] lib: Fix spelling mistakes
-Date:   Mon, 7 Jun 2021 21:29:25 +0800
-Message-ID: <20210607132925.12469-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20210607132925.12469-1-thunder.leizhen@huawei.com>
-References: <20210607132925.12469-1-thunder.leizhen@huawei.com>
+        id S230197AbhFGOL2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Jun 2021 10:11:28 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:38681 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230193AbhFGOL2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Jun 2021 10:11:28 -0400
+Received: by mail-vs1-f54.google.com with SMTP id x8so8972590vso.5
+        for <linux-block@vger.kernel.org>; Mon, 07 Jun 2021 07:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3TC4Aw+kK4d25EK8EX2Xwmj82BcJOK8oYZnLrQ3VGgo=;
+        b=u9xczOx9DGmv0tn4qGEr1OFjlLdDeQic0oF2YaYd0ruQ91qHkI0YrA67NLQsOaKEyB
+         Hec2axZJX3GI4BYYAbHkrUwyEWh/T2wdkMvKVjlBDwyt4OuxXHB+OKKGv+EFAA6FQpWh
+         /39RtEaXtRN5eDclU1GYD7ZeNrl2L3SNuWCGoB4HVPmnNimlbTVnRRJmu9R2TritQ1ry
+         h2YhtZDVxQcf9VISfl+aZRww0v07voTRY/2NBnRAO7j+LdELmNrQv/b2FSElo5jML67N
+         jIgW9w2qw3ExRH7PjUh5dnacEkapw0AJ8OP91wI9iWP0x4n3Fc0+NHo31aooF9RMn6Wd
+         ysfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3TC4Aw+kK4d25EK8EX2Xwmj82BcJOK8oYZnLrQ3VGgo=;
+        b=pM+NJJN4wGwYaQWUxYHoKE3u24JMYiIvvM2RL25J+l1WcIZ2IL82QHw0pFls6bGJCe
+         Zx9uJH0oEcEGUryts7PonzwLGH4aA0uqtaTOwPE9eJ5nI2RGVwa7iSjJR44h6gsGZanV
+         v40ojNlPhOuHZy1INLs0ZgM/N9zLUEjDIru948g9id4D4bwSLJCZPWVnMbLmigAfcCuJ
+         5kTXCWaRLMnbpbCUab4LDquIODiG4pWuI+KDtHA7j0Wufp1BOV8sHSwWQorJ1zZ5q+gG
+         BbPpo4TifOuutFj8pJlqmpsevQEcwi/F4gv2pys1+ojPOOQBEbbJcclCtRBL5gCtxP34
+         /65Q==
+X-Gm-Message-State: AOAM533ZwoyF9XpxnbjSoiyeA+sSwi5O8IOspm/lQy47BBwoP9Ix+p1v
+        DAeAuK+1FYbmHGujsZnrPNX9q39sWZvXLetT2UrjsA==
+X-Google-Smtp-Source: ABdhPJwA8V0jUJ+R9KbqcC77hzViZi5hDQpxXNhCssI43gAwu1IlkmSmKruE9ye9zvzfqWG/+gzybLNMFyL8YqeUrq8=
+X-Received: by 2002:a05:6102:3023:: with SMTP id v3mr8385724vsa.19.1623074916303;
+ Mon, 07 Jun 2021 07:08:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.72]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+References: <20210120121047.2601-1-bbudiredla@marvell.com> <20210120121047.2601-2-bbudiredla@marvell.com>
+ <CAPDyKFoF7jz-mbsY8kPUGca5civFKRRyPpHbRkj9P=xevRRfbA@mail.gmail.com>
+ <CY4PR1801MB2070F43EFCB9139D8168164FDE3A9@CY4PR1801MB2070.namprd18.prod.outlook.com>
+ <CAPDyKFrVQbALjSeFBckaZQgkgwcBVuwHy563pdBxHQNA7bxRnQ@mail.gmail.com> <CY4PR1801MB2070B09D27404F8B7A84D446DE389@CY4PR1801MB2070.namprd18.prod.outlook.com>
+In-Reply-To: <CY4PR1801MB2070B09D27404F8B7A84D446DE389@CY4PR1801MB2070.namprd18.prod.outlook.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 7 Jun 2021 16:07:59 +0200
+Message-ID: <CAPDyKFpXKG1iO0-i1DSJ+oApR6zWrY6e6O=H1_dkZ3AOaBONLQ@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 1/2] mmc: Support kmsg dumper based on pstore/blk
+To:     Bhaskara Budiredla <bbudiredla@marvell.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Fix some spelling mistakes in comments found by "codespell":
-permanentely ==> permanently
-wont ==> won't
-remaning ==> remaining
-succed ==> succeed
-shouldnt ==> shouldn't
-alpha-numeric ==> alphanumeric
-storeing ==> storing
-funtion ==> function
-documenation ==> documentation
-Determin ==> Determine
-intepreted ==> interpreted
-ammount ==> amount
-obious ==> obvious
-interupts ==> interrupts
-occured ==> occurred
-asssociated ==> associated
-taking into acount ==> taking into account
-squence ==> sequence
-stil ==> still
-contiguos ==> contiguous
-matchs ==> matches
+On Mon, 7 Jun 2021 at 14:37, Bhaskara Budiredla <bbudiredla@marvell.com> wrote:
+>
+> [...]
+> >What patches are you referring to?
+>
+> I was referring to this patch.
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/pstore
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- lib/Kconfig.debug             | 6 +++---
- lib/asn1_encoder.c            | 2 +-
- lib/devres.c                  | 2 +-
- lib/dynamic_debug.c           | 2 +-
- lib/fonts/font_pearl_8x8.c    | 2 +-
- lib/kfifo.c                   | 2 +-
- lib/list_sort.c               | 2 +-
- lib/nlattr.c                  | 4 ++--
- lib/oid_registry.c            | 2 +-
- lib/pldmfw/pldmfw.c           | 2 +-
- lib/reed_solomon/test_rslib.c | 2 +-
- lib/refcount.c                | 2 +-
- lib/rhashtable.c              | 2 +-
- lib/sbitmap.c                 | 2 +-
- lib/scatterlist.c             | 4 ++--
- lib/seq_buf.c                 | 2 +-
- lib/sort.c                    | 2 +-
- lib/stackdepot.c              | 2 +-
- lib/vsprintf.c                | 2 +-
- 19 files changed, 23 insertions(+), 23 deletions(-)
+Alright. I didn't know about these, thanks for the pointer. Looks like
+a big step in the right direction.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 150f13baa6cc..3cf48998a374 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1293,7 +1293,7 @@ config PROVE_RAW_LOCK_NESTING
- 	 option expect lockdep splats until these problems have been fully
- 	 addressed which is work in progress. This config switch allows to
- 	 identify and analyze these problems. It will be removed and the
--	 check permanentely enabled once the main issues have been fixed.
-+	 check permanently enabled once the main issues have been fixed.
- 
- 	 If unsure, select N.
- 
-@@ -1459,7 +1459,7 @@ config DEBUG_LOCKING_API_SELFTESTS
- 	  Say Y here if you want the kernel to run a short self-test during
- 	  bootup. The self-test checks whether common types of locking bugs
- 	  are detected by debugging mechanisms or not. (if you disable
--	  lock debugging then those bugs wont be detected of course.)
-+	  lock debugging then those bugs won't be detected of course.)
- 	  The following locking APIs are covered: spinlocks, rwlocks,
- 	  mutexes and rwsems.
- 
-@@ -1945,7 +1945,7 @@ config FAIL_IO_TIMEOUT
- 	  thus exercising the error handling.
- 
- 	  Only works with drivers that use the generic timeout handling,
--	  for others it wont do anything.
-+	  for others it won't do anything.
- 
- config FAIL_FUTEX
- 	bool "Fault-injection capability for futexes"
-diff --git a/lib/asn1_encoder.c b/lib/asn1_encoder.c
-index 41e71aae3ef6..27bbe891714f 100644
---- a/lib/asn1_encoder.c
-+++ b/lib/asn1_encoder.c
-@@ -181,7 +181,7 @@ EXPORT_SYMBOL_GPL(asn1_encode_oid);
- /**
-  * asn1_encode_length() - encode a length to follow an ASN.1 tag
-  * @data: pointer to encode at
-- * @data_len: pointer to remaning length (adjusted by routine)
-+ * @data_len: pointer to remaining length (adjusted by routine)
-  * @len: length to encode
-  *
-  * This routine can encode lengths up to 65535 using the ASN.1 rules.
-diff --git a/lib/devres.c b/lib/devres.c
-index bdb06898a977..b0e1c6702c71 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -355,7 +355,7 @@ static void pcim_iomap_release(struct device *gendev, void *res)
-  * detach.
-  *
-  * This function might sleep when the table is first allocated but can
-- * be safely called without context and guaranteed to succed once
-+ * be safely called without context and guaranteed to succeed once
-  * allocated.
-  */
- void __iomem * const *pcim_iomap_table(struct pci_dev *pdev)
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index d3ce78298832..cb5abb42c16a 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -991,7 +991,7 @@ static int ddebug_dyndbg_param_cb(char *param, char *val,
- 
- 	ddebug_exec_queries((val ? val : "+p"), modname);
- 
--	return 0; /* query failure shouldnt stop module load */
-+	return 0; /* query failure shouldn't stop module load */
- }
- 
- /* handle both dyndbg and $module.dyndbg params at boot */
-diff --git a/lib/fonts/font_pearl_8x8.c b/lib/fonts/font_pearl_8x8.c
-index b1678ed0017c..ae98ca17982e 100644
---- a/lib/fonts/font_pearl_8x8.c
-+++ b/lib/fonts/font_pearl_8x8.c
-@@ -3,7 +3,7 @@
- /*                                            */
- /*       Font file generated by cpi2fnt       */
- /*       ------------------------------       */
--/*       Combined with the alpha-numeric      */
-+/*       Combined with the alphanumeric       */
- /*       portion of Greg Harp's old PEARL     */
- /*       font (from earlier versions of       */
- /*       linux-m86k) by John Shifflett        */
-diff --git a/lib/kfifo.c b/lib/kfifo.c
-index 70dab9ac7827..12f5a347aa13 100644
---- a/lib/kfifo.c
-+++ b/lib/kfifo.c
-@@ -415,7 +415,7 @@ static unsigned int __kfifo_peek_n(struct __kfifo *fifo, size_t recsize)
- 	)
- 
- /*
-- * __kfifo_poke_n internal helper function for storeing the length of
-+ * __kfifo_poke_n internal helper function for storing the length of
-  * the record into the fifo
-  */
- static void __kfifo_poke_n(struct __kfifo *fifo, unsigned int n, size_t recsize)
-diff --git a/lib/list_sort.c b/lib/list_sort.c
-index 1e1e37762799..0fb59e92ca2d 100644
---- a/lib/list_sort.c
-+++ b/lib/list_sort.c
-@@ -104,7 +104,7 @@ static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
-  * @head: the list to sort
-  * @cmp: the elements comparison function
-  *
-- * The comparison funtion @cmp must return > 0 if @a should sort after
-+ * The comparison function @cmp must return > 0 if @a should sort after
-  * @b ("@a > @b" if you want an ascending sort), and <= 0 if @a should
-  * sort before @b *or* their original order should be preserved.  It is
-  * always called with the element that came first in the input in @a,
-diff --git a/lib/nlattr.c b/lib/nlattr.c
-index 1d051ef66afe..86029ad5ead4 100644
---- a/lib/nlattr.c
-+++ b/lib/nlattr.c
-@@ -619,7 +619,7 @@ static int __nla_validate_parse(const struct nlattr *head, int len, int maxtype,
-  * Validates all attributes in the specified attribute stream against the
-  * specified policy. Validation depends on the validate flags passed, see
-  * &enum netlink_validation for more details on that.
-- * See documenation of struct nla_policy for more details.
-+ * See documentation of struct nla_policy for more details.
-  *
-  * Returns 0 on success or a negative error code.
-  */
-@@ -633,7 +633,7 @@ int __nla_validate(const struct nlattr *head, int len, int maxtype,
- EXPORT_SYMBOL(__nla_validate);
- 
- /**
-- * nla_policy_len - Determin the max. length of a policy
-+ * nla_policy_len - Determine the max. length of a policy
-  * @policy: policy to use
-  * @n: number of policies
-  *
-diff --git a/lib/oid_registry.c b/lib/oid_registry.c
-index 3dfaa836e7c5..e592d48b1974 100644
---- a/lib/oid_registry.c
-+++ b/lib/oid_registry.c
-@@ -124,7 +124,7 @@ EXPORT_SYMBOL_GPL(parse_OID);
-  * @bufsize: The size of the buffer
-  *
-  * The OID is rendered into the buffer in "a.b.c.d" format and the number of
-- * bytes is returned.  -EBADMSG is returned if the data could not be intepreted
-+ * bytes is returned.  -EBADMSG is returned if the data could not be interpreted
-  * and -ENOBUFS if the buffer was too small.
-  */
- int sprint_oid(const void *data, size_t datasize, char *buffer, size_t bufsize)
-diff --git a/lib/pldmfw/pldmfw.c b/lib/pldmfw/pldmfw.c
-index e5d4b3b2af81..6e77eb6d8e72 100644
---- a/lib/pldmfw/pldmfw.c
-+++ b/lib/pldmfw/pldmfw.c
-@@ -82,7 +82,7 @@ pldm_check_fw_space(struct pldmfw_priv *data, size_t offset, size_t length)
-  * @bytes_to_move: number of bytes to move the offset forward by
-  *
-  * Check that there is enough space past the current offset, and then move the
-- * offset forward by this ammount.
-+ * offset forward by this amount.
-  *
-  * Returns: zero on success, or -EFAULT if the image is too small to fit the
-  * expected length.
-diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
-index 4eb29f365ece..d9d1c33aebda 100644
---- a/lib/reed_solomon/test_rslib.c
-+++ b/lib/reed_solomon/test_rslib.c
-@@ -385,7 +385,7 @@ static void test_bc(struct rs_control *rs, int len, int errs,
- 
- 			/*
- 			 * We check that the returned word is actually a
--			 * codeword. The obious way to do this would be to
-+			 * codeword. The obvious way to do this would be to
- 			 * compute the syndrome, but we don't want to replicate
- 			 * that code here. However, all the codes are in
- 			 * systematic form, and therefore we can encode the
-diff --git a/lib/refcount.c b/lib/refcount.c
-index ebac8b7d15a7..a207a8f22b3c 100644
---- a/lib/refcount.c
-+++ b/lib/refcount.c
-@@ -164,7 +164,7 @@ EXPORT_SYMBOL(refcount_dec_and_lock);
-  * @flags: saved IRQ-flags if the is acquired
-  *
-  * Same as refcount_dec_and_lock() above except that the spinlock is acquired
-- * with disabled interupts.
-+ * with disabled interrupts.
-  *
-  * Return: true and hold spinlock if able to decrement refcount to 0, false
-  *         otherwise
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index c949c1e3b87c..e12bbfb240b8 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -703,7 +703,7 @@ EXPORT_SYMBOL_GPL(rhashtable_walk_exit);
-  *
-  * Returns zero if successful.
-  *
-- * Returns -EAGAIN if resize event occured.  Note that the iterator
-+ * Returns -EAGAIN if resize event occurred.  Note that the iterator
-  * will rewind back to the beginning and you may use it immediately
-  * by calling rhashtable_walk_next.
-  *
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 47b3691058eb..b25db9be938a 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -583,7 +583,7 @@ void sbitmap_queue_clear(struct sbitmap_queue *sbq, unsigned int nr,
- 	/*
- 	 * Once the clear bit is set, the bit may be allocated out.
- 	 *
--	 * Orders READ/WRITE on the asssociated instance(such as request
-+	 * Orders READ/WRITE on the associated instance(such as request
- 	 * of blk_mq) by this bit for avoiding race with re-allocation,
- 	 * and its pair is the memory barrier implied in __sbitmap_get_word.
- 	 *
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index a59778946404..27efa6178153 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -38,7 +38,7 @@ EXPORT_SYMBOL(sg_next);
-  * @sg:		The scatterlist
-  *
-  * Description:
-- * Allows to know how many entries are in sg, taking into acount
-+ * Allows to know how many entries are in sg, taking into account
-  * chaining as well
-  *
-  **/
-@@ -59,7 +59,7 @@ EXPORT_SYMBOL(sg_nents);
-  *
-  * Description:
-  * Determines the number of entries in sg that are required to meet
-- * the supplied length, taking into acount chaining as well
-+ * the supplied length, taking into account chaining as well
-  *
-  * Returns:
-  *   the number of sg entries needed, negative error on failure
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 707453f5d58e..b81e87ab34f6 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -285,7 +285,7 @@ int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc)
- }
- 
- /**
-- * seq_buf_to_user - copy the squence buffer to user space
-+ * seq_buf_to_user - copy the sequence buffer to user space
-  * @s: seq_buf descriptor
-  * @ubuf: The userspace memory location to copy to
-  * @cnt: The amount to copy
-diff --git a/lib/sort.c b/lib/sort.c
-index 3ad454411997..aa18153864d2 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -51,7 +51,7 @@ static bool is_aligned(const void *base, size_t size, unsigned char align)
-  * which basically all CPUs have, to minimize loop overhead computations.
-  *
-  * For some reason, on x86 gcc 7.3.0 adds a redundant test of n at the
-- * bottom of the loop, even though the zero flag is stil valid from the
-+ * bottom of the loop, even though the zero flag is still valid from the
-  * subtract (since the intervening mov instructions don't alter the flags).
-  * Gcc 8.1.0 doesn't have that problem.
-  */
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index df9179f4f441..0a2e417f83cb 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -11,7 +11,7 @@
-  * Instead, stack depot maintains a hashtable of unique stacktraces. Since alloc
-  * and free stacks repeat a lot, we save about 100x space.
-  * Stacks are never removed from depot, so we store them contiguously one after
-- * another in a contiguos memory allocation.
-+ * another in a contiguous memory allocation.
-  *
-  * Author: Alexander Potapenko <glider@google.com>
-  * Copyright (C) 2016 Google, Inc.
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 1d6bca047690..87acf66f0e4c 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -3422,7 +3422,7 @@ int vsscanf(const char *buf, const char *fmt, va_list args)
- 
- 	while (*fmt) {
- 		/* skip any white space in format */
--		/* white space in format matchs any amount of
-+		/* white space in format matches any amount of
- 		 * white space, including none, in the input.
- 		 */
- 		if (isspace(*fmt)) {
--- 
-2.25.1
+I guess Christoph simply has been busy with other things. Perhaps you
+should ask if you can help and pick up from where he left the series?
 
+Kind regards
+Uffe
 
+>
+> Thanks,
+> Bhaskara
+>
+> >-----Original Message-----
+> >From: Ulf Hansson <ulf.hansson@linaro.org>
+> >Sent: Monday, June 7, 2021 4:47 PM
+> >To: Bhaskara Budiredla <bbudiredla@marvell.com>
+> >Cc: Kees Cook <keescook@chromium.org>; Colin Cross
+> ><ccross@android.com>; Tony Luck <tony.luck@intel.com>; Sunil Kovvuri
+> >Goutham <sgoutham@marvell.com>; linux-mmc@vger.kernel.org; Linux
+> >Kernel Mailing List <linux-kernel@vger.kernel.org>; linux-block <linux-
+> >block@vger.kernel.org>; Jens Axboe <axboe@kernel.dk>; Christoph Hellwig
+> ><hch@lst.de>
+> >Subject: Re: [EXT] Re: [PATCH v5 1/2] mmc: Support kmsg dumper based on
+> >pstore/blk
+> >
+> >On Sat, 5 Jun 2021 at 12:31, Bhaskara Budiredla <bbudiredla@marvell.com>
+> >wrote:
+> >>
+> >> Hi Uffe,
+> >>
+> >> With due respect to pstore/blk subsystem changes we have been waiting
+> >since long time to see Christoph patches taken.
+> >
+> >What patches are you referring to?
+> >
+> >> But unfortunately it is still finding at that same stage only. Can you
+> >> please take up my patch in the current form (which is based on current
+> >> pstore/blk framework) instead of waiting indefinitely. If pstore/blk comes up
+> >with the changes that has been discussed by you previously, I will further
+> >submit the corresponding changes for eMMC devices.
+> >
+> >No, I am sorry, but that's not the way it works.
+> >
+> >If you really want to move things forward, I would suggest that you try to
+> >implement something along the lines of what I have suggested.
+> >Another option is to post an RFD/RFC so as solution can be discussed with the
+> >relevant people.
+> >
+> >Kind regards
+> >Uffe
+> >
+> >>
+> >> Thanks,
+> >> Bhaskara
+> >>
+> >> >-----Original Message-----
+> >> >From: Ulf Hansson <ulf.hansson@linaro.org>
+> >> >Sent: Wednesday, January 20, 2021 8:36 PM
+> >> >To: Bhaskara Budiredla <bbudiredla@marvell.com>; Kees Cook
+> >> ><keescook@chromium.org>
+> >> >Cc: Colin Cross <ccross@android.com>; Tony Luck
+> >> ><tony.luck@intel.com>; Sunil Kovvuri Goutham <sgoutham@marvell.com>;
+> >> >linux- mmc@vger.kernel.org; Linux Kernel Mailing List <linux-
+> >> >kernel@vger.kernel.org>; linux-block <linux-block@vger.kernel.org>;
+> >> >Jens Axboe <axboe@kernel.dk>; Christoph Hellwig <hch@lst.de>
+> >> >Subject: [EXT] Re: [PATCH v5 1/2] mmc: Support kmsg dumper based on
+> >> >pstore/blk
+> >> >
+> >> >External Email
+> >> >
+> >> >---------------------------------------------------------------------
+> >> >-
+> >> >+ linux-block, Jens, Christoph
+> >> >
+> >> >On Wed, 20 Jan 2021 at 13:11, Bhaskara Budiredla
+> >> ><bbudiredla@marvell.com> wrote:
+> >> >>
+> >> >> This patch introduces to mmcpstore. The functioning of mmcpstore is
+> >> >> similar to mtdpstore. mmcpstore works on FTL based flash devices
+> >> >> whereas mtdpstore works on raw flash devices. When the system
+> >> >> crashes, mmcpstore stores the kmsg panic and oops logs to a user
+> >> >> specified MMC device.
+> >> >>
+> >> >> It collects the details about the host MMC device through
+> >> >> pstore/blk "blkdev" parameter. The user can specify the MMC device
+> >> >> in many ways by checking in Documentation/admin-guide/pstore-blk.rst.
+> >> >>
+> >> >> The individual mmc host drivers have to define suitable polling and
+> >> >> cleanup subroutines to write kmsg panic/oops logs through mmcpstore.
+> >> >> These new host operations are needed as pstore panic write runs
+> >> >> with interrupts disabled.
+> >> >
+> >> >Okay, let me again try to clarify on how I see this to move this forward.
+> >> >
+> >> >1)
+> >> >In my opinion, pstore shouldn't be using callbacks for *regular* I/O
+> >> >read/writes. It's upside-down of how the storage stack is designed to work.
+> >> >
+> >> >Instead, pstore should be implemented as a regular filesystem, that
+> >> >can be mounted on top of a regular block device partition. In this
+> >> >way, the lower layer block device drivers (as mmc), don't need
+> >> >special support for pstore, the regular I/O block read/write path will just
+> >work as is.
+> >> >
+> >> >2)
+> >> >When it comes to supporting *panic* writes for pstore, things become
+> >> >a bit more complicated. For sure some adaptations are needed in each
+> >> >block device driver to support this.
+> >> >
+> >> >However, the current method means relying on the lower level block
+> >> >device driver to figure out the pstore partition. Based on that, it
+> >> >should then register itself for pstore support and hook up callbacks
+> >> >for the corresponding block device driver instance, at least that is
+> >> >what it looks like to me. Again, I think this is upside-down from the
+> >> >storage stack perspective. The partition to use for pstore, should be based
+> >upon its file system mount point.
+> >> >
+> >> >Furthermore, I think the responsibility for lower layer block device
+> >> >drivers should instead be to just "register/announce" themselves as
+> >> >capable of supporting "panic writes", if they can. Exactly how to
+> >> >best do this, probably needs to be discussed further with the block
+> >> >device people, I think. I have looped in Jens and Christoph, perhaps they
+> >can share their opinion in this.
+> >> >
+> >> >That said, it looks to me that pstore needs more work before it's
+> >> >ready to be adopted for generic support in block device drivers.
+> >> >
+> >> >Kind regards
+> >> >Uffe
+> >> >
+> >> >>
+> >> >> Signed-off-by: Bhaskara Budiredla <bbudiredla@marvell.com>
+> >> >> ---
+> >> >>  drivers/mmc/core/Kconfig     |  14 ++-
+> >> >>  drivers/mmc/core/Makefile    |   1 +
+> >> >>  drivers/mmc/core/block.c     |  19 +++
+> >> >>  drivers/mmc/core/block.h     |   9 ++
+> >> >>  drivers/mmc/core/core.c      |  44 +++++++
+> >> >>  drivers/mmc/core/mmcpstore.c | 227
+> >> >+++++++++++++++++++++++++++++++++++
+> >> >>  include/linux/mmc/core.h     |   5 +
+> >> >>  include/linux/mmc/host.h     |  12 ++
+> >> >>  8 files changed, 330 insertions(+), 1 deletion(-)  create mode
+> >> >> 100644 drivers/mmc/core/mmcpstore.c
+> >> >>
+> >> >> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
+> >> >> index
+> >> >> c12fe13e4b14..4c651da4f2d2 100644
+> >> >> --- a/drivers/mmc/core/Kconfig
+> >> >> +++ b/drivers/mmc/core/Kconfig
+> >> >> @@ -34,9 +34,22 @@ config PWRSEQ_SIMPLE
+> >> >>           This driver can also be built as a module. If so, the module
+> >> >>           will be called pwrseq_simple.
+> >> >>
+> >> >> +config MMC_PSTORE_BACKEND
+> >> >> +       bool "Log panic/oops to a MMC buffer"
+> >> >> +       depends on MMC_BLOCK
+> >> >> +       help
+> >> >> +         This option will let you create platform backend to store kmsg
+> >> >> +         crash dumps to a user specified MMC device. This is primarily
+> >> >> +         based on pstore/blk.
+> >> >> +
+> >> >> +config MMC_PSTORE
+> >> >> +       tristate
+> >> >> +       select PSTORE_BLK
+> >> >> +
+> >> >>  config MMC_BLOCK
+> >> >>         tristate "MMC block device driver"
+> >> >>         depends on BLOCK
+> >> >> +       select MMC_PSTORE if MMC_PSTORE_BACKEND=y
+> >> >>         default y
+> >> >>         help
+> >> >>           Say Y here to enable the MMC block device driver support.
+> >> >> @@ -80,4 +93,3 @@ config MMC_TEST
+> >> >>
+> >> >>           This driver is only of interest to those developing or
+> >> >>           testing a host driver. Most people should say N here.
+> >> >> -
+> >> >> diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
+> >> >> index 95ffe008ebdf..7cb9a3af4827 100644
+> >> >> --- a/drivers/mmc/core/Makefile
+> >> >> +++ b/drivers/mmc/core/Makefile
+> >> >> @@ -16,5 +16,6 @@ obj-$(CONFIG_PWRSEQ_EMMC)     +=
+> >pwrseq_emmc.o
+> >> >>  mmc_core-$(CONFIG_DEBUG_FS)    += debugfs.o
+> >> >>  obj-$(CONFIG_MMC_BLOCK)                += mmc_block.o
+> >> >>  mmc_block-objs                 := block.o queue.o
+> >> >> +mmc_block-$(CONFIG_MMC_PSTORE) += mmcpstore.o
+> >> >>  obj-$(CONFIG_MMC_TEST)         += mmc_test.o
+> >> >>  obj-$(CONFIG_SDIO_UART)                += sdio_uart.o
+> >> >> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> >> >> index
+> >> >> 42e27a298218..6592722cd7b2 100644
+> >> >> --- a/drivers/mmc/core/block.c
+> >> >> +++ b/drivers/mmc/core/block.c
+> >> >> @@ -2870,6 +2870,21 @@ static void mmc_blk_remove_debugfs(struct
+> >> >> mmc_card *card,
+> >> >>
+> >> >>  #endif /* CONFIG_DEBUG_FS */
+> >> >>
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +sector_t mmc_blk_get_part(struct mmc_card *card, int part_num,
+> >> >> +sector_t *size) {
+> >> >> +       struct mmc_blk_data *md = dev_get_drvdata(&card->dev);
+> >> >> +       struct gendisk *disk = md->disk;
+> >> >> +       struct disk_part_tbl *part_tbl = disk->part_tbl;
+> >> >> +
+> >> >> +       if (part_num < 0 || part_num >= part_tbl->len)
+> >> >> +               return 0;
+> >> >> +
+> >> >> +       *size = part_tbl->part[part_num]->nr_sects << SECTOR_SHIFT;
+> >> >> +       return part_tbl->part[part_num]->start_sect;
+> >> >> +}
+> >> >> +#endif
+> >> >> +
+> >> >>  static int mmc_blk_probe(struct mmc_card *card)  {
+> >> >>         struct mmc_blk_data *md, *part_md; @@ -2913,6 +2928,9 @@
+> >> >> static int mmc_blk_probe(struct mmc_card *card)
+> >> >>                         goto out;
+> >> >>         }
+> >> >>
+> >> >> +       if (mmc_card_mmc(card) || mmc_card_sd(card))
+> >> >> +               mmcpstore_card_set(card, md->disk->disk_name);
+> >> >> +
+> >> >>         /* Add two debugfs entries */
+> >> >>         mmc_blk_add_debugfs(card, md);
+> >> >>
+> >> >> @@ -3060,6 +3078,7 @@ static void __exit mmc_blk_exit(void)
+> >> >>         unregister_blkdev(MMC_BLOCK_MAJOR, "mmc");
+> >> >>         unregister_chrdev_region(mmc_rpmb_devt, MAX_DEVICES);
+> >> >>         bus_unregister(&mmc_rpmb_bus_type);
+> >> >> +       unregister_mmcpstore();
+> >> >>  }
+> >> >>
+> >> >>  module_init(mmc_blk_init);
+> >> >> diff --git a/drivers/mmc/core/block.h b/drivers/mmc/core/block.h
+> >> >> index
+> >> >> 31153f656f41..2a4ee5568194 100644
+> >> >> --- a/drivers/mmc/core/block.h
+> >> >> +++ b/drivers/mmc/core/block.h
+> >> >> @@ -16,5 +16,14 @@ void mmc_blk_mq_recovery(struct mmc_queue
+> >> >*mq);
+> >> >> struct work_struct;
+> >> >>
+> >> >>  void mmc_blk_mq_complete_work(struct work_struct *work);
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +sector_t mmc_blk_get_part(struct mmc_card *card, int part_num,
+> >> >> +sector_t *size); void mmcpstore_card_set(struct mmc_card *card,
+> >> >> +const char *disk_name); void unregister_mmcpstore(void); #else
+> >> >> +static inline void mmcpstore_card_set(struct mmc_card *card,
+> >> >> +                                       const char *disk_name) {}
+> >> >> +static inline void unregister_mmcpstore(void) {} #endif
+> >> >>
+> >> >>  #endif
+> >> >> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> >> >> index 19f1ee57fb34..7ad7ff1cab8c 100644
+> >> >> --- a/drivers/mmc/core/core.c
+> >> >> +++ b/drivers/mmc/core/core.c
+> >> >> @@ -569,6 +569,30 @@ int mmc_cqe_recovery(struct mmc_host *host)
+> >}
+> >> >> EXPORT_SYMBOL(mmc_cqe_recovery);
+> >> >>
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +/**
+> >> >> + *     mmc_wait_for_pstore_req - initiate a blocking mmc request
+> >> >> + *     @host: MMC host to start command
+> >> >> + *     @mrq: MMC request to start
+> >> >> + *
+> >> >> + *     Start a blocking MMC request for a host and wait for the request
+> >> >> + *     to complete that is based on polling and timeout.
+> >> >> + */
+> >> >> +void mmc_wait_for_pstore_req(struct mmc_host *host, struct
+> >> >> +mmc_request *mrq) {
+> >> >> +       unsigned int timeout;
+> >> >> +
+> >> >> +       host->ops->req_cleanup_pending(host);
+> >> >> +       mmc_start_request(host, mrq);
+> >> >> +
+> >> >> +       if (mrq->data) {
+> >> >> +               timeout = mrq->data->timeout_ns / NSEC_PER_MSEC;
+> >> >> +               host->ops->req_completion_poll(host, timeout);
+> >> >> +       }
+> >> >> +}
+> >> >> +EXPORT_SYMBOL(mmc_wait_for_pstore_req);
+> >> >> +#endif
+> >> >> +
+> >> >>  /**
+> >> >>   *     mmc_is_req_done - Determine if a 'cap_cmd_during_tfr' request is
+> >> >done
+> >> >>   *     @host: MMC host
+> >> >> @@ -817,6 +841,26 @@ int __mmc_claim_host(struct mmc_host *host,
+> >> >> struct mmc_ctx *ctx,  }  EXPORT_SYMBOL(__mmc_claim_host);
+> >> >>
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +/**
+> >> >> + *     mmc_claim_host_async - claim host in atomic context
+> >> >> + *     @host: mmc host to claim
+> >> >> + *
+> >> >> + *     This routine may be called in panic/oops scenarios.
+> >> >> + *     Return zero with host claim success, else busy status.
+> >> >> + */
+> >> >> +int mmc_claim_host_async(struct mmc_host *host) {
+> >> >> +       if (!host->claimed && pm_runtime_active(mmc_dev(host))) {
+> >> >> +               host->claimed = 1;
+> >> >> +               return 0;
+> >> >> +       }
+> >> >> +
+> >> >> +       return -EBUSY;
+> >> >> +}
+> >> >> +EXPORT_SYMBOL(mmc_claim_host_async);
+> >> >> +#endif
+> >> >> +
+> >> >>  /**
+> >> >>   *     mmc_release_host - release a host
+> >> >>   *     @host: mmc host to release
+> >> >> diff --git a/drivers/mmc/core/mmcpstore.c
+> >> >> b/drivers/mmc/core/mmcpstore.c new file mode 100644 index
+> >> >> 000000000000..f783ea215f18
+> >> >> --- /dev/null
+> >> >> +++ b/drivers/mmc/core/mmcpstore.c
+> >> >> @@ -0,0 +1,227 @@
+> >> >> +// SPDX-License-Identifier: GPL-2.0
+> >> >> +/*
+> >> >> + * MMC pstore support based on pstore/blk
+> >> >> + *
+> >> >> + * Copyright (c) 2020 Marvell.
+> >> >> + * Author: Bhaskara Budiredla <bbudiredla@marvell.com>  */
+> >> >> +
+> >> >> +#define pr_fmt(fmt) "mmcpstore: " fmt
+> >> >> +
+> >> >> +#include <linux/kernel.h>
+> >> >> +#include <linux/module.h>
+> >> >> +#include <linux/pstore_blk.h>
+> >> >> +#include <linux/blkdev.h>
+> >> >> +#include <linux/mount.h>
+> >> >> +#include <linux/slab.h>
+> >> >> +#include <linux/mmc/mmc.h>
+> >> >> +#include <linux/mmc/host.h>
+> >> >> +#include <linux/mmc/card.h>
+> >> >> +#include <linux/scatterlist.h>
+> >> >> +#include "block.h"
+> >> >> +#include "card.h"
+> >> >> +#include "core.h"
+> >> >> +
+> >> >> +static struct mmcpstore_context {
+> >> >> +       char dev_name[BDEVNAME_SIZE];
+> >> >> +       int partno;
+> >> >> +       sector_t start_sect;
+> >> >> +       sector_t size;
+> >> >> +       struct pstore_blk_config conf;
+> >> >> +       struct pstore_blk_info info;
+> >> >> +
+> >> >> +       struct mmc_card *card;
+> >> >> +       struct mmc_request *mrq;
+> >> >> +} oops_cxt;
+> >> >> +
+> >> >> +static void mmc_prep_req(struct mmc_request *mrq,
+> >> >> +               unsigned int sect_offset, unsigned int nsects,
+> >> >> +               struct scatterlist *sg, u32 opcode, unsigned int
+> >> >> +flags) {
+> >> >> +       mrq->cmd->opcode = opcode;
+> >> >> +       mrq->cmd->arg = sect_offset;
+> >> >> +       mrq->cmd->flags = MMC_RSP_R1 | MMC_CMD_ADTC;
+> >> >> +
+> >> >> +       if (nsects == 1) {
+> >> >> +               mrq->stop = NULL;
+> >> >> +       } else {
+> >> >> +               mrq->stop->opcode = MMC_STOP_TRANSMISSION;
+> >> >> +               mrq->stop->arg = 0;
+> >> >> +               mrq->stop->flags = MMC_RSP_R1B | MMC_CMD_AC;
+> >> >> +       }
+> >> >> +
+> >> >> +       mrq->data->blksz = SECTOR_SIZE;
+> >> >> +       mrq->data->blocks = nsects;
+> >> >> +       mrq->data->flags = flags;
+> >> >> +       mrq->data->sg = sg;
+> >> >> +       mrq->data->sg_len = 1;
+> >> >> +}
+> >> >> +
+> >> >> +static int mmcpstore_panic_write_req(const char *buf,
+> >> >> +               unsigned int nsects, unsigned int sect_offset) {
+> >> >> +       struct mmcpstore_context *cxt = &oops_cxt;
+> >> >> +       struct mmc_request *mrq = cxt->mrq;
+> >> >> +       struct mmc_card *card = cxt->card;
+> >> >> +       struct mmc_host *host = card->host;
+> >> >> +       struct scatterlist sg;
+> >> >> +       u32 opcode;
+> >> >> +       int ret;
+> >> >> +
+> >> >> +       opcode = (nsects > 1) ? MMC_WRITE_MULTIPLE_BLOCK :
+> >> >MMC_WRITE_BLOCK;
+> >> >> +       mmc_prep_req(mrq, sect_offset, nsects, &sg, opcode,
+> >> >MMC_DATA_WRITE);
+> >> >> +       sg_init_one(&sg, buf, (nsects << SECTOR_SHIFT));
+> >> >> +       mmc_set_data_timeout(mrq->data, cxt->card);
+> >> >> +
+> >> >> +       ret = mmc_claim_host_async(host);
+> >> >> +       if (ret)
+> >> >> +               return ret;
+> >> >> +
+> >> >> +       mmc_wait_for_pstore_req(host, mrq);
+> >> >> +       return 0;
+> >> >> +}
+> >> >> +
+> >> >> +static int mmcpstore_panic_write(const char *buf, sector_t off,
+> >> >> +sector_t sects) {
+> >> >> +       struct mmcpstore_context *cxt = &oops_cxt;
+> >> >> +       int ret;
+> >> >> +
+> >> >> +       ret = mmcpstore_panic_write_req(buf, sects, cxt->start_sect + off);
+> >> >> +       if (ret)
+> >> >> +               return ret;
+> >> >> +
+> >> >> +       return 0;
+> >> >> +}
+> >> >> +
+> >> >> +static struct block_device *mmcpstore_open_backend(const char
+> >> >> +*device) {
+> >> >> +       struct block_device *bdev;
+> >> >> +       dev_t devt;
+> >> >> +
+> >> >> +       bdev = blkdev_get_by_path(device, FMODE_READ, NULL);
+> >> >> +       if (IS_ERR(bdev)) {
+> >> >> +               devt = name_to_dev_t(device);
+> >> >> +               if (devt == 0)
+> >> >> +                       return ERR_PTR(-ENODEV);
+> >> >> +
+> >> >> +               bdev = blkdev_get_by_dev(devt, FMODE_READ, NULL);
+> >> >> +               if (IS_ERR(bdev))
+> >> >> +                       return bdev;
+> >> >> +       }
+> >> >> +
+> >> >> +       return bdev;
+> >> >> +}
+> >> >> +
+> >> >> +static void mmcpstore_close_backend(struct block_device *bdev) {
+> >> >> +       if (!bdev)
+> >> >> +               return;
+> >> >> +       blkdev_put(bdev, FMODE_READ); }
+> >> >> +
+> >> >> +void mmcpstore_card_set(struct mmc_card *card, const char
+> >> >> +*disk_name) {
+> >> >> +       struct mmcpstore_context *cxt = &oops_cxt;
+> >> >> +       struct pstore_blk_config *conf = &cxt->conf;
+> >> >> +       struct pstore_blk_info *info = &cxt->info;
+> >> >> +       struct block_device *bdev;
+> >> >> +       struct mmc_command *stop;
+> >> >> +       struct mmc_command *cmd;
+> >> >> +       struct mmc_request *mrq;
+> >> >> +       struct mmc_data *data;
+> >> >> +       int ret;
+> >> >> +
+> >> >> +       ret = pstore_blk_get_config(conf);
+> >> >> +       if (!conf->device[0]) {
+> >> >> +               pr_debug("psblk backend is empty\n");
+> >> >> +               return;
+> >> >> +       }
+> >> >> +
+> >> >> +       /* Multiple backend devices not allowed */
+> >> >> +       if (cxt->dev_name[0])
+> >> >> +               return;
+> >> >> +
+> >> >> +       bdev =  mmcpstore_open_backend(conf->device);
+> >> >> +       if (IS_ERR(bdev)) {
+> >> >> +               pr_err("%s failed to open with %ld\n",
+> >> >> +                               conf->device, PTR_ERR(bdev));
+> >> >> +               return;
+> >> >> +       }
+> >> >> +
+> >> >> +       bdevname(bdev, cxt->dev_name);
+> >> >> +       cxt->partno = bdev->bd_part->partno;
+> >> >> +       mmcpstore_close_backend(bdev);
+> >> >> +
+> >> >> +       if (strncmp(cxt->dev_name, disk_name, strlen(disk_name)))
+> >> >> +               return;
+> >> >> +
+> >> >> +       cxt->start_sect = mmc_blk_get_part(card, cxt->partno, &cxt->size);
+> >> >> +       if (!cxt->start_sect) {
+> >> >> +               pr_err("Non-existent partition %d selected\n", cxt->partno);
+> >> >> +               return;
+> >> >> +       }
+> >> >> +
+> >> >> +       /* Check for host mmc panic write polling function definitions */
+> >> >> +       if (!card->host->ops->req_cleanup_pending ||
+> >> >> +                       !card->host->ops->req_completion_poll)
+> >> >> +               return;
+> >> >> +
+> >> >> +       cxt->card = card;
+> >> >> +
+> >> >> +       mrq = kzalloc(sizeof(struct mmc_request), GFP_KERNEL);
+> >> >> +       if (!mrq)
+> >> >> +               goto out;
+> >> >> +
+> >> >> +       cmd = kzalloc(sizeof(struct mmc_command), GFP_KERNEL);
+> >> >> +       if (!cmd)
+> >> >> +               goto free_mrq;
+> >> >> +
+> >> >> +       stop = kzalloc(sizeof(struct mmc_command), GFP_KERNEL);
+> >> >> +       if (!stop)
+> >> >> +               goto free_cmd;
+> >> >> +
+> >> >> +       data = kzalloc(sizeof(struct mmc_data), GFP_KERNEL);
+> >> >> +       if (!data)
+> >> >> +               goto free_stop;
+> >> >> +
+> >> >> +       mrq->cmd = cmd;
+> >> >> +       mrq->data = data;
+> >> >> +       mrq->stop = stop;
+> >> >> +       cxt->mrq = mrq;
+> >> >> +
+> >> >> +       info->major = MMC_BLOCK_MAJOR;
+> >> >> +       info->flags = PSTORE_FLAGS_DMESG;
+> >> >> +       info->panic_write = mmcpstore_panic_write;
+> >> >> +       ret = register_pstore_blk(info);
+> >> >> +       if (ret) {
+> >> >> +               pr_err("%s registering with psblk failed (%d)\n",
+> >> >> +                               cxt->dev_name, ret);
+> >> >> +               goto free_data;
+> >> >> +       }
+> >> >> +
+> >> >> +       pr_info("%s registered as psblk backend\n", cxt->dev_name);
+> >> >> +       return;
+> >> >> +
+> >> >> +free_data:
+> >> >> +       kfree(data);
+> >> >> +free_stop:
+> >> >> +       kfree(stop);
+> >> >> +free_cmd:
+> >> >> +       kfree(cmd);
+> >> >> +free_mrq:
+> >> >> +       kfree(mrq);
+> >> >> +out:
+> >> >> +       return;
+> >> >> +}
+> >> >> +
+> >> >> +void unregister_mmcpstore(void)
+> >> >> +{
+> >> >> +       struct mmcpstore_context *cxt = &oops_cxt;
+> >> >> +
+> >> >> +       unregister_pstore_blk(MMC_BLOCK_MAJOR);
+> >> >> +       kfree(cxt->mrq->data);
+> >> >> +       kfree(cxt->mrq->stop);
+> >> >> +       kfree(cxt->mrq->cmd);
+> >> >> +       kfree(cxt->mrq);
+> >> >> +       cxt->card = NULL;
+> >> >> +}
+> >> >> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+> >> >> index 29aa50711626..53840a361b5a 100644
+> >> >> --- a/include/linux/mmc/core.h
+> >> >> +++ b/include/linux/mmc/core.h
+> >> >> @@ -166,6 +166,11 @@ struct mmc_request {
+> >> >>
+> >> >>  struct mmc_card;
+> >> >>
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +void mmc_wait_for_pstore_req(struct mmc_host *host, struct
+> >> >> +mmc_request *mrq); int mmc_claim_host_async(struct mmc_host
+> >> >> +*host); #endif
+> >> >> +
+> >> >>  void mmc_wait_for_req(struct mmc_host *host, struct mmc_request
+> >> >> *mrq);  int mmc_wait_for_cmd(struct mmc_host *host, struct
+> >> >mmc_command *cmd,
+> >> >>                 int retries);
+> >> >> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> >> >> index
+> >> >> 01bba36545c5..ba9001498e03 100644
+> >> >> --- a/include/linux/mmc/host.h
+> >> >> +++ b/include/linux/mmc/host.h
+> >> >> @@ -178,6 +178,18 @@ struct mmc_host_ops {
+> >> >>
+> >> >>         /* Initialize an SD express card, mandatory for MMC_CAP2_SD_EXP.
+> >*/
+> >> >>         int     (*init_sd_express)(struct mmc_host *host, struct mmc_ios
+> >*ios);
+> >> >> +
+> >> >> +#if IS_ENABLED(CONFIG_MMC_PSTORE)
+> >> >> +       /*
+> >> >> +        * The following two APIs are introduced to support mmcpstore
+> >> >> +        * functionality. Cleanup API to terminate the ongoing and
+> >> >> +        * pending requests before a panic write post, and polling API
+> >> >> +        * to ensure that write succeeds before the Kernel dies.
+> >> >> +        */
+> >> >> +       void    (*req_cleanup_pending)(struct mmc_host *host);
+> >> >> +       int     (*req_completion_poll)(struct mmc_host *host,
+> >> >> +                                      unsigned long timeout);
+> >> >> +#endif
+> >> >>  };
+> >> >>
+> >> >>  struct mmc_cqe_ops {
+> >> >> --
+> >> >> 2.17.1
+> >> >>
