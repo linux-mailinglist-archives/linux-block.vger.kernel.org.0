@@ -2,48 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4874239FC08
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 18:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AA039FC2C
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 18:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234144AbhFHQK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Jun 2021 12:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
+        id S229724AbhFHQP3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Jun 2021 12:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233965AbhFHQJS (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 12:09:18 -0400
+        with ESMTP id S230205AbhFHQP2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 12:15:28 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C573BC0611FA;
-        Tue,  8 Jun 2021 09:07:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CACC061574;
+        Tue,  8 Jun 2021 09:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=1vl+lJtrWoiUzzKH0COLUmHTJyPccdOEl/SXPdFbHq8=; b=0u+MxU9gFUcqqSv2kfOmfldTkp
-        w7E+5atKEAad8wVEtQr/LZNgxJYK8mzid8YXzoNJss/ueLRaIOdg8Ffi1dL/Gr31d3tFiWQ9zGH02
-        r8KOpgP6fzxXgSr3Wh6luKs/H3q+6tXlPI0xf+/W0LGq/H8vmX4Aoa51z42VVKK7k0YCZcWxMj1Tt
-        dRbFgmR1NoyJwN2S3vD5Ob9TaDuXkzdV4d2UhmdDO+ZWpixwO5QzrOmmRQRh4pj/bDkEBisgt7Y3t
-        xHTK/IpClwmin7IxY8YmqiMy2IbAOdFj8ljzq94oVX1751YbQwmfnlpOqnpoiDcmi2lZDM5h/0VgG
-        Fle2n2Gw==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=/xv5Jd1LwNtxUXxsgwOwvaHap3qm6MsdrqO3O+zcubA=; b=KpCZpuPjzDDgo7hKOjKWoYKdrx
+        3ijnLI0y/XyeyHf4+WjkzsgiULBb4KZq5ltjJeEQWXm7DI37AWZgBzxyx5/kTWVpOQtkh4kkOsZCn
+        tOdNzMrsBUrbUCwXIAd9n9JVXQAbZYoWWUwYd7bo8zSkl7WGf75Wb2baR5K8erQQ+UA+jd5rsVYxw
+        pfi91HDJ6P1HE7FMalEUeWhL30npvOeaZo3JeyudlfanXaSWTLGWkRexoaA/TfYl3cihWiA/FOXvt
+        xY0lhA5WuHKmP4xwUAVPxB6Uq6HKUkGuom9C3j2KVXdgFON3/zqxrauY2FAlHviwkihCGC6LKiN6l
+        l/biNxJQ==;
 Received: from [2001:4bb8:192:ff5f:74ed:7c4f:a5ee:8dcb] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1lqeFo-009Rnc-4u; Tue, 08 Jun 2021 16:07:00 +0000
+        id 1lqeM5-009SvR-SW; Tue, 08 Jun 2021 16:13:30 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, dm-devel@redhat.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        ceph-devel@vger.kernel.org
-Subject: [PATCH 16/16] block: use bvec_kmap_local in bio_integrity_process
-Date:   Tue,  8 Jun 2021 18:06:03 +0200
-Message-Id: <20210608160603.1535935-17-hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, gmpy.liaowx@gmail.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mark pstore-blk as broken
+Date:   Tue,  8 Jun 2021 18:13:27 +0200
+Message-Id: <20210608161327.1537919-1-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210608160603.1535935-1-hch@lst.de>
-References: <20210608160603.1535935-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -51,43 +44,32 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Using local kmaps slightly reduces the chances to stray writes, and
-the bvec interface cleans up the code a little bit.
+pstore-blk just pokes directly into the pagecache for the block
+device without going through the file operations for that by faking
+up it's own file operations that do not match the block device ones.
 
+As this breaks the control of the block layer of it's page cache,
+and even now just works by accident only the best thing is to just
+disable this driver.
+
+Fixes: 17639f67c1d6 ("pstore/blk: Introduce backend for block devices")
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/bio-integrity.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ fs/pstore/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 4b4eb8964a6f..8f54d49dc500 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -172,18 +172,16 @@ static blk_status_t bio_integrity_process(struct bio *bio,
- 	iter.prot_buf = prot_buf;
- 
- 	__bio_for_each_segment(bv, bio, bviter, *proc_iter) {
--		void *kaddr = kmap_atomic(bv.bv_page);
-+		void *kaddr = bvec_kmap_local(&bv);
- 
--		iter.data_buf = kaddr + bv.bv_offset;
-+		iter.data_buf = kaddr;
- 		iter.data_size = bv.bv_len;
--
- 		ret = proc_fn(&iter);
--		if (ret) {
--			kunmap_atomic(kaddr);
--			return ret;
--		}
-+		kunmap_local(kaddr);
-+
-+		if (ret)
-+			break;
- 
--		kunmap_atomic(kaddr);
- 	}
- 	return ret;
- }
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index 8adabde685f1..328da35da390 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -173,6 +173,7 @@ config PSTORE_BLK
+ 	tristate "Log panic/oops to a block device"
+ 	depends on PSTORE
+ 	depends on BLOCK
++	depends on BROKEN
+ 	select PSTORE_ZONE
+ 	default n
+ 	help
 -- 
 2.30.2
 
