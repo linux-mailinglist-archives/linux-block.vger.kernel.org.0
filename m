@@ -2,49 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F0943A0775
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 01:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6973A0771
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 01:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234331AbhFHXJY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Jun 2021 19:09:24 -0400
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:45941 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234256AbhFHXJY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 19:09:24 -0400
-Received: by mail-pg1-f169.google.com with SMTP id q15so17793156pgg.12
-        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 16:07:18 -0700 (PDT)
+        id S233574AbhFHXJN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Jun 2021 19:09:13 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:44849 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232208AbhFHXJN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 19:09:13 -0400
+Received: by mail-pg1-f181.google.com with SMTP id y11so9667950pgp.11
+        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 16:07:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D0iD14Ru51kND5VtafJkBd0EUPHs/gOKbFP4JvK7IqU=;
-        b=V5NAP/8cI85V4xQb2x504x14vCsDG7H3a+6h1+jhgi0WYVnW2PQlVo173EncMrea2I
-         QP0NC0pWhAhnrpHexCSknAx7uzIq/lhjFhSBhWiHZNkvW183UeIrTS4lMC5JuEvZa6yF
-         rt5lPlDtV5cHjTheJzpfJgT/zmN8fLkktGgoZ1OWAcvHe2EOnZtQIlmDEo/wEp1GvHCv
-         RLcDp9ysV+OnUPZKvkffdszU1NoRyJOHca5NTNMKlqW+RkTUeiLNEY3eyNRoDgbbTHKu
-         DpIngF1/tlvZ9pI7XiA98lxxb5ZiSrjbc1D24RTGTI0/IaKs+RXnlt3mmJhYWxMOHEKT
-         JBog==
-X-Gm-Message-State: AOAM530s+dDTmMRq/UeI/1gsYXHAPiXhNhwhqz4CtBmoOx5am9dU7xX+
-        NZ9IBzB7D815bugUq51QceU=
-X-Google-Smtp-Source: ABdhPJyLnkBrnqhMw+F2CPAhs+fgkLaAXMS6mUMY9nu+Reqf+9ZhtXnd+VEGW2SxHHzyGaR/Oxm2GQ==
-X-Received: by 2002:a63:5c49:: with SMTP id n9mr605097pgm.223.1623193638099;
-        Tue, 08 Jun 2021 16:07:18 -0700 (PDT)
+        bh=sC//DSflrYYUUqwO5cZ8eH2Jsx8jSOvCgTNVQdA4IeM=;
+        b=SWpeOU6bhRzoXrM3xM5h9m0wlWXHcWSvZVGDQ61m2cYl4roDgRvZmi7VKeZyWAfVwX
+         Vt3QP5Q06PPquwnWc0FtbpDJlkizLlT3mUZPob5EDWJPouwvLl3hyxGJI9SWuxHfJs1V
+         gZPHzUQJFGsmHqo7AKSm6ZxdCSGzpL7qCuWoAMXADnurs8qhe1NAZq6P5jcOA16WX6U4
+         ZOeBkqj+LJ1SohpNdGWCMEZFjwYtd0+YytDSFLvseN2aTQCpiysMaUKqTKh1ficrakJx
+         QGBUzFdNaHrhle0Ob/GJoAtojhIgBy60zqVgzFz4QEojX0IOhfemyA+gEtlY7RG5ouy/
+         GjHQ==
+X-Gm-Message-State: AOAM533FOGXh5k2e2CyBjslQ13E3ScHJ7WiSx3k37despiyF/Zhm5uui
+        dFqxnvUzFdNd19YrCnWYkw8=
+X-Google-Smtp-Source: ABdhPJx/VSoaOvVnVaGwWYqpAfDQeMZUdXzjsd/WR7q5fpvGfArhtD0/WYwzgXcrT+OhB+5nP7ODpg==
+X-Received: by 2002:a62:5285:0:b029:2e9:e0d5:67dc with SMTP id g127-20020a6252850000b02902e9e0d567dcmr2302182pfb.79.1623193639782;
+        Tue, 08 Jun 2021 16:07:19 -0700 (PDT)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id s21sm11395838pfw.57.2021.06.08.16.07.16
+        by smtp.gmail.com with ESMTPSA id s21sm11395838pfw.57.2021.06.08.16.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 16:07:17 -0700 (PDT)
+        Tue, 08 Jun 2021 16:07:18 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
+        Hannes Reinecke <hare@suse.de>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 05/14] block/mq-deadline: Add several comments
-Date:   Tue,  8 Jun 2021 16:06:54 -0700
-Message-Id: <20210608230703.19510-6-bvanassche@acm.org>
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 06/14] block/mq-deadline: Add two lockdep_assert_held() statements
+Date:   Tue,  8 Jun 2021 16:06:55 -0700
+Message-Id: <20210608230703.19510-7-bvanassche@acm.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210608230703.19510-1-bvanassche@acm.org>
 References: <20210608230703.19510-1-bvanassche@acm.org>
@@ -54,80 +56,41 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make the code easier to read by adding more comments.
+Document the locking strategy by adding two lockdep_assert_held()
+statements.
 
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Cc: Damien Le Moal <damien.lemoal@wdc.com>
 Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ block/mq-deadline.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 8eea2cbf2bf4..31418e9ce9e2 100644
+index 31418e9ce9e2..191ff5ce629c 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -139,6 +139,9 @@ static void dd_request_merged(struct request_queue *q, struct request *req,
- 	}
- }
+@@ -279,6 +279,8 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd)
+ 	bool reads, writes;
+ 	int data_dir;
  
-+/*
-+ * Callback function that is invoked after @next has been merged into @req.
-+ */
- static void dd_merged_requests(struct request_queue *q, struct request *req,
- 			       struct request *next)
- {
-@@ -375,6 +378,8 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd)
- }
++	lockdep_assert_held(&dd->lock);
++
+ 	if (!list_empty(&dd->dispatch)) {
+ 		rq = list_first_entry(&dd->dispatch, struct request, queuelist);
+ 		list_del_init(&rq->queuelist);
+@@ -501,6 +503,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+ 	const int data_dir = rq_data_dir(rq);
  
- /*
-+ * Called from blk_mq_run_hw_queue() -> __blk_mq_sched_dispatch_requests().
-+ *
-  * One confusing aspect here is that we get called for a specific
-  * hardware queue, but we may return a request that is for a
-  * different hardware queue. This is because mq-deadline has shared
-@@ -438,6 +443,10 @@ static int dd_init_queue(struct request_queue *q, struct elevator_type *e)
- 	return 0;
- }
- 
-+/*
-+ * Try to merge @bio into an existing request. If @bio has been merged into
-+ * an existing request, store the pointer to that request into *@rq.
-+ */
- static int dd_request_merge(struct request_queue *q, struct request **rq,
- 			    struct bio *bio)
- {
-@@ -461,6 +470,10 @@ static int dd_request_merge(struct request_queue *q, struct request **rq,
- 	return ELEVATOR_NO_MERGE;
- }
- 
-+/*
-+ * Attempt to merge a bio into an existing request. This function is called
-+ * before @bio is associated with a request.
-+ */
- static bool dd_bio_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs)
- {
-@@ -518,6 +531,9 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	}
- }
- 
-+/*
-+ * Called from blk_mq_sched_insert_request() or blk_mq_sched_insert_requests().
-+ */
- static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
- 			       struct list_head *list, bool at_head)
- {
-@@ -544,6 +560,8 @@ static void dd_prepare_request(struct request *rq)
- }
- 
- /*
-+ * Callback from inside blk_mq_free_request().
-+ *
-  * For zoned block devices, write unlock the target zone of
-  * completed write requests. Do this while holding the zone lock
-  * spinlock so that the zone is never unlocked while deadline_fifo_request()
++	lockdep_assert_held(&dd->lock);
++
+ 	/*
+ 	 * This may be a requeue of a write request that has locked its
+ 	 * target zone. If it is the case, this releases the zone lock.
