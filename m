@@ -2,88 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A202339FDC3
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 19:33:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0F839FDCD
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 19:35:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbhFHRex (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Jun 2021 13:34:53 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:37695 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbhFHRex (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 13:34:53 -0400
-Received: by mail-pf1-f181.google.com with SMTP id y15so16240222pfl.4
-        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 10:33:00 -0700 (PDT)
+        id S233591AbhFHRgl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Jun 2021 13:36:41 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:37852 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233281AbhFHRgk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 13:36:40 -0400
+Received: by mail-pf1-f169.google.com with SMTP id y15so16244716pfl.4
+        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 10:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AHQbohLdOv212XWCgNAIki+QiBE294go+E+AnYbJF9M=;
-        b=biLwqIL1ECQDpYXkKAkiuZYqmbzWdb0jGyciw3wmlN1bVkaAqUDBkQKGemUGGKPL9U
-         Tuk/hQkeIOll0FNN/hDB8AaeP1VGf7Qh6LzsEwg0eZ8SWEGsKMvfxztXJlKPzFBPfqAq
-         9CB7AN3O47sSHxkKxthkxvZ0/1sBjuSWXLyAw=
+        bh=sWNeSL+Bq72a437AxKxQVe0Uaeu2Nm8OpDkaGtEuRXM=;
+        b=Kqic/OcsvMBiFMhntb0VgSYT7yhKK3qXwWc/y1DWmiUoAxhJFfIVM4HXXkezRAnIcb
+         eWPMHke0GAc2x5PjLRdgAIGfiDbqRT8Y90u67zBEdCXpYSTc6/lobNpcy1YkOlWjr3JU
+         n1zlDpvI6Idcz7GAiZQUyi48DdeMK9DuoM/A0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AHQbohLdOv212XWCgNAIki+QiBE294go+E+AnYbJF9M=;
-        b=IjKFZg3AfUCLwDPiccx3wbwjAkyNPnRVudv7JZwu7FtHAp3OAO79GFXZB2W9Aoq/Ku
-         YJNy+lkc2L0zy/ZFgL01H+A47Cu7B2ptUsTAk0dztbdtRVZv4+DqeIYD9Gb8trYJVudT
-         zih5Oc2Q5fXob35tNuwWYTYzx8Vpd/Zm1KYdB3GHtFSirSplX+lOrnZmvZr7z76I/Kbh
-         GU6YV615imiVFZmbSW/2jhovYwe9vPdKduLlL2op6/GpHJawdZvIux8AIl70nQfO0T10
-         tAO101J1KPzrC4X/h//0kn5hC3/daF67oIinVg5nhVXXZme6+/Ni53Y+Axynd7RADOT6
-         zyVg==
-X-Gm-Message-State: AOAM533Yydrsx1ZfQCx6SSuSGg3ZJ8gniKgqKHCecL3IWTElR5jkJOCT
-        z1H/jreyM2IflmhpwwfySaelkw==
-X-Google-Smtp-Source: ABdhPJzIuNZXhKV1ztPY/+fg/0E6Sqq1LW/i6wIG6EXJPGFBpvO72K9KL365GXBSM6yBmu+VJToBZA==
-X-Received: by 2002:a62:1481:0:b029:2c1:1e90:c54 with SMTP id 123-20020a6214810000b02902c11e900c54mr982446pfu.55.1623173520075;
-        Tue, 08 Jun 2021 10:32:00 -0700 (PDT)
+        bh=sWNeSL+Bq72a437AxKxQVe0Uaeu2Nm8OpDkaGtEuRXM=;
+        b=YYdNrsgTfRD0J0U/cnPR2/FTA/LfGSUJymxykGM17xyHbBnSZOu2iovTaUjoR8gP97
+         jH2MHyRfZBVmcv64p4CLx1PuRjGHGJu128VIEMCTlSkHVSHZdXZpLbYS5w3G1NXb48ei
+         jCOOoNy4q+9Z6dTdEXrjwo66OhQPOP07iWfiI2cHfFCn0hv/6EAoPhrHWPBBK57eTu/4
+         5x0dZc515fGPa434/tF9Sw1RWgJzIdJB7LKG4VJuNgQ16BbwB8roZDp38VuKRTF8rp8F
+         CesfNV+NJ1PlDUPZ6AagMaEqH0SrdhXL2nc7s7OD2sHLYZqNxAczE/7qbmnakT+tAXzh
+         DOpw==
+X-Gm-Message-State: AOAM5320ff8vPPkvwFMETiIh/gh4df8d8w4BH7FbFLmfDsVujV6xPwcD
+        2zoOIzaebMIk6PZ32Q0/yajMMw==
+X-Google-Smtp-Source: ABdhPJyW5o12lK2i8NyhtfF01aYhPcle5/0y9+/NtAzVkK25FOXHqk5pODvPkjT2lvLlw/rGv3M0nw==
+X-Received: by 2002:a63:5756:: with SMTP id h22mr23206898pgm.377.1623173627855;
+        Tue, 08 Jun 2021 10:33:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o7sm12557362pgs.45.2021.06.08.10.31.59
+        by smtp.gmail.com with ESMTPSA id ig1sm15535215pjb.27.2021.06.08.10.33.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 10:31:59 -0700 (PDT)
-Date:   Tue, 8 Jun 2021 10:31:58 -0700
+        Tue, 08 Jun 2021 10:33:47 -0700 (PDT)
+Date:   Tue, 8 Jun 2021 10:33:46 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Bhaskara Budiredla <bbudiredla@marvell.com>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Bhaskara Budiredla <bbudiredla@marvell.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
         Sunil Kovvuri Goutham <sgoutham@marvell.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
+        linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
 Subject: Re: [EXT] Re: [PATCH v5 1/2] mmc: Support kmsg dumper based on
  pstore/blk
-Message-ID: <202106081024.09E42DA400@keescook>
+Message-ID: <202106081032.58FEA082CF@keescook>
 References: <20210120121047.2601-1-bbudiredla@marvell.com>
  <20210120121047.2601-2-bbudiredla@marvell.com>
  <CAPDyKFoF7jz-mbsY8kPUGca5civFKRRyPpHbRkj9P=xevRRfbA@mail.gmail.com>
  <CY4PR1801MB2070F43EFCB9139D8168164FDE3A9@CY4PR1801MB2070.namprd18.prod.outlook.com>
  <CAPDyKFrVQbALjSeFBckaZQgkgwcBVuwHy563pdBxHQNA7bxRnQ@mail.gmail.com>
- <CY4PR1801MB2070B09D27404F8B7A84D446DE389@CY4PR1801MB2070.namprd18.prod.outlook.com>
+ <20210608161422.GA10298@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CY4PR1801MB2070B09D27404F8B7A84D446DE389@CY4PR1801MB2070.namprd18.prod.outlook.com>
+In-Reply-To: <20210608161422.GA10298@lst.de>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 12:37:07PM +0000, Bhaskara Budiredla wrote:
-> [...]
-> >What patches are you referring to?
-> 
-> I was referring to this patch.
-> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/pstore
+On Tue, Jun 08, 2021 at 06:14:22PM +0200, Christoph Hellwig wrote:
+> Given that Kees was unwilling to take the series to unbreak the pstore
+> block support I've sent a patch to Jens to mark it broken and thus
+> effectively disable it.  We can't really let this spread any further.
 
-I applied the first three:
-https://lore.kernel.org/lkml/160685706687.2724892.9289969466453217944.b4-ty@chromium.org/
-
-and explained my aversion to the others. Christoph never replied to my
-notes on patch 8/9:
+Hmm? You never replied to my concerns:
 https://lore.kernel.org/lkml/202012011149.5650B9796@keescook/
-
--Kees
 
 -- 
 Kees Cook
