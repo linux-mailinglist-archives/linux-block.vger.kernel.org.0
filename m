@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 840613A077A
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 01:07:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E7A73A077E
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 01:07:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235198AbhFHXJd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Jun 2021 19:09:33 -0400
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:43867 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235116AbhFHXJc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 19:09:32 -0400
-Received: by mail-pl1-f178.google.com with SMTP id v12so11509672plo.10
-        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 16:07:25 -0700 (PDT)
+        id S235308AbhFHXJg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Jun 2021 19:09:36 -0400
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:40827 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235225AbhFHXJg (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Jun 2021 19:09:36 -0400
+Received: by mail-pl1-f172.google.com with SMTP id e7so11519805plj.7
+        for <linux-block@vger.kernel.org>; Tue, 08 Jun 2021 16:07:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hFU+v6PrYbG3GwJsak4IZ52nG2edvhdZ46b6T0mqhvA=;
-        b=W7/wUjnU1uV4PZWHDRQE5Fx2ASrYwA7DN9lf4KxM5lYHs9O32NJc040ZUHNaLN6DNA
-         YUu9NZm5i6zwOoexNY4nb9BNBHJ0CF1Ix3CcpG7eMi9MWiTeXRReJVTTEaU7jtj1efzn
-         SXJJUt9XuRdKFRa4YC2ixmSvxIaNo+Y2RxWEzXoHmdUWembJmnmdq2y53xZogNT9+27C
-         u9ptBpyJDbpbn2fOGJJY9fTDxX0N+gKcCRLLN7sRvQJSlUD3tJ8TxBwJXf9eR+cULi49
-         DrVDUuf75nbrT22HKJov5yzi7+MELs71myrA8B4Y2d/I8dw1Y0SFqIhLSXGGNladCn4O
-         MvEA==
-X-Gm-Message-State: AOAM533j73i13lJ+6U1x1RwmfuCfHar9B8msSEmm5YrvW+bX1lvM8VKi
-        06WPnlQIxIk0wni4z3+ngYA=
-X-Google-Smtp-Source: ABdhPJwwauikGuzYrfCr4eZYGDSBY9DrDyFof9rAYmvnPaR4U89gMseMNZ/WTlwPYhX+igP9108mUw==
-X-Received: by 2002:a17:902:b58d:b029:114:7f9a:efd9 with SMTP id a13-20020a170902b58db02901147f9aefd9mr2024090pls.63.1623193645461;
-        Tue, 08 Jun 2021 16:07:25 -0700 (PDT)
+        bh=DKj20C0bcnYEdi2no4p//QdL1zitAi+dZIPfHAogfi4=;
+        b=HtXbnJEGzK+uG2rr4QWv7ZeNZ3/IXU2keJuEgT2A9gQdDZ2du9ztjhvA0XVgD9VUHL
+         /RZnMuISqcNblVR3dvLhdYelNyMrVfAWXG7yw06nMwyVeADTywSm6lHrVWvFNqcRrEbN
+         Y/CJjiiF8G+nRqaEPmHE3uiY2cFqkMgqMpF/yPefrX7dUA0SCqtv6YGzzmHkc0kHkKrD
+         heT6j0yWHuPpjCZNBGynqj4I/Y+JJDbOwWfizeAoNKDtcu25/sMyTKKAXZ71jd1s3l54
+         3MKuXuFLzGvyEB/h+X2uUqKEUeMYOikexo6ow3INHPV1kUVEQM0ebz8GXXhE2DZxbg5x
+         /+/A==
+X-Gm-Message-State: AOAM530OUzJYt4+mlZgtxA+wMIZHP6qf0phArVUFtEPR5r1t+C/kT24R
+        imoZN/buktp1Fsgpv5NFdYU=
+X-Google-Smtp-Source: ABdhPJzAXkQGT2eBDgLCNWGRzUpLfOZhR0WuDVmyj3TAQEa4od/srKyR6+ufSc//U+yN+QEu4D/HXg==
+X-Received: by 2002:a17:90a:5b17:: with SMTP id o23mr28175525pji.14.1623193647698;
+        Tue, 08 Jun 2021 16:07:27 -0700 (PDT)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id s21sm11395838pfw.57.2021.06.08.16.07.24
+        by smtp.gmail.com with ESMTPSA id s21sm11395838pfw.57.2021.06.08.16.07.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 16:07:24 -0700 (PDT)
+        Tue, 08 Jun 2021 16:07:27 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -42,9 +42,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         Himanshu Madhani <himanshu.madhani@oracle.com>
-Subject: [PATCH 10/14] block/mq-deadline: Improve the sysfs show and store macros
-Date:   Tue,  8 Jun 2021 16:06:59 -0700
-Message-Id: <20210608230703.19510-11-bvanassche@acm.org>
+Subject: [PATCH 11/14] block/mq-deadline: Reserve 25% of scheduler tags for synchronous requests
+Date:   Tue,  8 Jun 2021 16:07:00 -0700
+Message-Id: <20210608230703.19510-12-bvanassche@acm.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210608230703.19510-1-bvanassche@acm.org>
 References: <20210608230703.19510-1-bvanassche@acm.org>
@@ -54,9 +54,14 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Define separate macros for integers and jiffies to improve readability.
-Use sysfs_emit() and kstrtoint() instead of sprintf() and simple_strtol()
-since the former functions are the recommended functions.
+For interactive workloads it is important that synchronous requests are
+not delayed. Hence reserve 25% of scheduler tags for synchronous requests.
+This patch still allows asynchronous requests to fill the hardware queues
+since blk_mq_init_sched() makes sure that the number of scheduler requests
+is the double of the hardware queue depth. From blk_mq_init_sched():
+
+	q->nr_requests = 2 * min_t(unsigned int, q->tag_set->queue_depth,
+				   BLKDEV_MAX_RQ);
 
 Cc: Damien Le Moal <damien.lemoal@wdc.com>
 Cc: Hannes Reinecke <hare@suse.de>
@@ -66,98 +71,104 @@ Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 Cc: Himanshu Madhani <himanshu.madhani@oracle.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 66 ++++++++++++++++++++-------------------------
- 1 file changed, 29 insertions(+), 37 deletions(-)
+ block/mq-deadline.c | 52 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 69126beff77d..1d1bb7a41d2a 100644
+index 1d1bb7a41d2a..a7d0584437d1 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -605,58 +605,50 @@ static bool dd_has_work(struct blk_mq_hw_ctx *hctx)
- /*
-  * sysfs parts below
-  */
--static ssize_t
--deadline_var_show(int var, char *page)
--{
--	return sprintf(page, "%d\n", var);
--}
--
--static void
--deadline_var_store(int *var, const char *page)
--{
--	char *p = (char *) page;
--
--	*var = simple_strtol(p, &p, 10);
--}
--
--#define SHOW_FUNCTION(__FUNC, __VAR, __CONV)				\
-+#define SHOW_INT(__FUNC, __VAR)						\
- static ssize_t __FUNC(struct elevator_queue *e, char *page)		\
- {									\
- 	struct deadline_data *dd = e->elevator_data;			\
--	int __data = __VAR;						\
--	if (__CONV)							\
--		__data = jiffies_to_msecs(__data);			\
--	return deadline_var_show(__data, (page));			\
--}
--SHOW_FUNCTION(deadline_read_expire_show, dd->fifo_expire[DD_READ], 1);
--SHOW_FUNCTION(deadline_write_expire_show, dd->fifo_expire[DD_WRITE], 1);
--SHOW_FUNCTION(deadline_writes_starved_show, dd->writes_starved, 0);
--SHOW_FUNCTION(deadline_front_merges_show, dd->front_merges, 0);
--SHOW_FUNCTION(deadline_fifo_batch_show, dd->fifo_batch, 0);
--#undef SHOW_FUNCTION
-+									\
-+	return sysfs_emit((page), "%d\n", __VAR);			\
-+}
-+#define SHOW_JIFFIES(__FUNC, __VAR) SHOW_INT(__FUNC, jiffies_to_msecs(__VAR))
-+SHOW_JIFFIES(deadline_read_expire_show, dd->fifo_expire[DD_READ]);
-+SHOW_JIFFIES(deadline_write_expire_show, dd->fifo_expire[DD_WRITE]);
-+SHOW_INT(deadline_writes_starved_show, dd->writes_starved);
-+SHOW_INT(deadline_front_merges_show, dd->front_merges);
-+SHOW_INT(deadline_fifo_batch_show, dd->fifo_batch);
-+#undef SHOW_INT
-+#undef SHOW_JIFFIES
+@@ -67,6 +67,7 @@ struct deadline_data {
+ 	int fifo_batch;
+ 	int writes_starved;
+ 	int front_merges;
++	u32 async_depth;
  
- #define STORE_FUNCTION(__FUNC, __PTR, MIN, MAX, __CONV)			\
- static ssize_t __FUNC(struct elevator_queue *e, const char *page, size_t count)	\
- {									\
- 	struct deadline_data *dd = e->elevator_data;			\
--	int __data;							\
--	deadline_var_store(&__data, (page));				\
-+	int __data, __ret;						\
-+									\
-+	__ret = kstrtoint((page), 0, &__data);				\
-+	if (__ret < 0)							\
-+		return __ret;						\
- 	if (__data < (MIN))						\
- 		__data = (MIN);						\
- 	else if (__data > (MAX))					\
- 		__data = (MAX);						\
--	if (__CONV)							\
--		*(__PTR) = msecs_to_jiffies(__data);			\
--	else								\
--		*(__PTR) = __data;					\
-+	*(__PTR) = __CONV(__data);					\
- 	return count;							\
+ 	spinlock_t lock;
+ 	spinlock_t zone_lock;
+@@ -397,6 +398,44 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
+ 	return rq;
  }
--STORE_FUNCTION(deadline_read_expire_store, &dd->fifo_expire[DD_READ], 0, INT_MAX, 1);
--STORE_FUNCTION(deadline_write_expire_store, &dd->fifo_expire[DD_WRITE], 0, INT_MAX, 1);
--STORE_FUNCTION(deadline_writes_starved_store, &dd->writes_starved, INT_MIN, INT_MAX, 0);
--STORE_FUNCTION(deadline_front_merges_store, &dd->front_merges, 0, 1, 0);
--STORE_FUNCTION(deadline_fifo_batch_store, &dd->fifo_batch, 0, INT_MAX, 0);
-+#define STORE_INT(__FUNC, __PTR, MIN, MAX)				\
-+	STORE_FUNCTION(__FUNC, __PTR, MIN, MAX, )
-+#define STORE_JIFFIES(__FUNC, __PTR, MIN, MAX)				\
-+	STORE_FUNCTION(__FUNC, __PTR, MIN, MAX, msecs_to_jiffies)
-+STORE_JIFFIES(deadline_read_expire_store, &dd->fifo_expire[DD_READ], 0, INT_MAX);
-+STORE_JIFFIES(deadline_write_expire_store, &dd->fifo_expire[DD_WRITE], 0, INT_MAX);
-+STORE_INT(deadline_writes_starved_store, &dd->writes_starved, INT_MIN, INT_MAX);
-+STORE_INT(deadline_front_merges_store, &dd->front_merges, 0, 1);
-+STORE_INT(deadline_fifo_batch_store, &dd->fifo_batch, 0, INT_MAX);
- #undef STORE_FUNCTION
-+#undef STORE_INT
-+#undef STORE_JIFFIES
  
- #define DD_ATTR(name) \
- 	__ATTR(name, 0644, deadline_##name##_show, deadline_##name##_store)
++/*
++ * Called by __blk_mq_alloc_request(). The shallow_depth value set by this
++ * function is used by __blk_mq_get_tag().
++ */
++static void dd_limit_depth(unsigned int op, struct blk_mq_alloc_data *data)
++{
++	struct deadline_data *dd = data->q->elevator->elevator_data;
++
++	/* Do not throttle synchronous reads. */
++	if (op_is_sync(op) && !op_is_write(op))
++		return;
++
++	/*
++	 * Throttle asynchronous requests and writes such that these requests
++	 * do not block the allocation of synchronous requests.
++	 */
++	data->shallow_depth = dd->async_depth;
++}
++
++/* Called by blk_mq_update_nr_requests(). */
++static void dd_depth_updated(struct blk_mq_hw_ctx *hctx)
++{
++	struct request_queue *q = hctx->queue;
++	struct deadline_data *dd = q->elevator->elevator_data;
++	struct blk_mq_tags *tags = hctx->sched_tags;
++
++	dd->async_depth = max(1UL, 3 * q->nr_requests / 4);
++
++	sbitmap_queue_min_shallow_depth(tags->bitmap_tags, dd->async_depth);
++}
++
++/* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
++static int dd_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
++{
++	dd_depth_updated(hctx);
++	return 0;
++}
++
+ static void dd_exit_sched(struct elevator_queue *e)
+ {
+ 	struct deadline_data *dd = e->elevator_data;
+@@ -733,6 +772,15 @@ static int deadline_starved_show(void *data, struct seq_file *m)
+ 	return 0;
+ }
+ 
++static int dd_async_depth_show(void *data, struct seq_file *m)
++{
++	struct request_queue *q = data;
++	struct deadline_data *dd = q->elevator->elevator_data;
++
++	seq_printf(m, "%u\n", dd->async_depth);
++	return 0;
++}
++
+ static void *deadline_dispatch_start(struct seq_file *m, loff_t *pos)
+ 	__acquires(&dd->lock)
+ {
+@@ -775,6 +823,7 @@ static const struct blk_mq_debugfs_attr deadline_queue_debugfs_attrs[] = {
+ 	DEADLINE_QUEUE_DDIR_ATTRS(write),
+ 	{"batching", 0400, deadline_batching_show},
+ 	{"starved", 0400, deadline_starved_show},
++	{"async_depth", 0400, dd_async_depth_show},
+ 	{"dispatch", 0400, .seq_ops = &deadline_dispatch_seq_ops},
+ 	{},
+ };
+@@ -783,6 +832,8 @@ static const struct blk_mq_debugfs_attr deadline_queue_debugfs_attrs[] = {
+ 
+ static struct elevator_type mq_deadline = {
+ 	.ops = {
++		.depth_updated		= dd_depth_updated,
++		.limit_depth		= dd_limit_depth,
+ 		.insert_requests	= dd_insert_requests,
+ 		.dispatch_request	= dd_dispatch_request,
+ 		.prepare_request	= dd_prepare_request,
+@@ -796,6 +847,7 @@ static struct elevator_type mq_deadline = {
+ 		.has_work		= dd_has_work,
+ 		.init_sched		= dd_init_sched,
+ 		.exit_sched		= dd_exit_sched,
++		.init_hctx		= dd_init_hctx,
+ 	},
+ 
+ #ifdef CONFIG_BLK_DEBUG_FS
