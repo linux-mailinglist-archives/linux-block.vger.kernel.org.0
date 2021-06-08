@@ -2,292 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9008339F51E
-	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 13:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67AFB39F5ED
+	for <lists+linux-block@lfdr.de>; Tue,  8 Jun 2021 14:01:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232062AbhFHLiY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Jun 2021 07:38:24 -0400
-Received: from relay.smtp-ext.broadcom.com ([192.19.11.229]:43158 "EHLO
-        relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231952AbhFHLiV (ORCPT
+        id S232446AbhFHMD1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Jun 2021 08:03:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23537 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232345AbhFHMD0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 8 Jun 2021 07:38:21 -0400
-Received: from localhost.localdomain (unknown [10.157.2.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay.smtp-ext.broadcom.com (Postfix) with ESMTPS id 782A63C15F;
-        Tue,  8 Jun 2021 04:28:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 782A63C15F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1623151718;
-        bh=g7xXFYGYw/A2NaL1oMe9RdX9vnMu0psPecoHKQUtLhA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KuA2vXfa0Vt3d6fbfA2Gj4Y+C44Mm2K0VZk7byE0JG1ROZdBlrDtAbU/1MHs9Xo5K
-         Ca4S9tyClfo/RUDJQuz27TYYxL9dKHtJaG4/bCAElY56T3he9cQS1C377VMDe/VSK/
-         2d+JgJdvt1TMBYeslUC1U/XTJWFXEc6qQdfsWrDs=
-From:   Muneendra Kumar <muneendra.kumar@broadcom.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        tj@kernel.org, linux-nvme@lists.infradead.org, hare@suse.de
-Cc:     jsmart2021@gmail.com, emilne@redhat.com, mkumar@redhat.com,
-        Gaurav Srivastava <gaurav.srivastava@broadcom.com>
-Subject: [PATCH v11 13/13] lpfc: vmid: Introducing vmid in io path.
-Date:   Tue,  8 Jun 2021 10:05:56 +0530
-Message-Id: <20210608043556.274139-14-muneendra.kumar@broadcom.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210608043556.274139-1-muneendra.kumar@broadcom.com>
-References: <20210608043556.274139-1-muneendra.kumar@broadcom.com>
-MIME-Version: 1.0
+        Tue, 8 Jun 2021 08:03:26 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 158Bi5tD101563;
+        Tue, 8 Jun 2021 08:01:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
+ : message-id : date : content-type : content-transfer-encoding :
+ mime-version; s=pp1; bh=SF8iQ8wY3M8EdUhAUJGyFS7jwJUI2uMR5Wzge09zd4c=;
+ b=Mi63TgWlXkbjdESlaRoeOGVd1h5BDfReYVWwG6CSBUiE+davR+U2uMKSvHjC9LAgdWn2
+ H+Pf0ADt6cZDUFQEejD5AXJDc+KFBqKWHJnDjyI664+0dmcpuDDYjXHmSvHLileHbEhH
+ PjCTay40mvMMSJ+dMFg1TziNmFq8H6fwEdBv1OpsloAULEV3U9OaB3zLDPvqRu9Bw1Jq
+ upcrsuacehEr22quYZbmnmddnhbQ+zn1oTFXPjF92K3NU060Rrnzr7VuSISaEnhzxUeB
+ WNT3NCcMrpp35Jo+TLCKqaOdhIf0WN1VaE2YkwoqBoU2y9gSjeBVjplpcQhqZ6r0o9mr TA== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3927xe0fuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Jun 2021 08:01:32 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 158BvbVs019767;
+        Tue, 8 Jun 2021 12:01:30 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 3900w88u6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Jun 2021 12:01:30 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 158C1SZn24904086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Jun 2021 12:01:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BEA04C04A;
+        Tue,  8 Jun 2021 12:01:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 503D94C052;
+        Tue,  8 Jun 2021 12:01:28 +0000 (GMT)
+Received: from [9.145.39.189] (unknown [9.145.39.189])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  8 Jun 2021 12:01:28 +0000 (GMT)
+From:   Ingo Franzki <ifranzki@linux.ibm.com>
+Subject: loop_set_block_size: loop0 () has still dirty pages (nrpages=2)
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Juergen Christ <jchrist@linux.ibm.com>
+Message-ID: <8bed44f2-273c-856e-0018-69f127ea4258@linux.ibm.com>
+Date:   Tue, 8 Jun 2021 14:01:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zSTJAGjN6nYFhubd1GAAxConFJIBp2oc
+X-Proofpoint-ORIG-GUID: zSTJAGjN6nYFhubd1GAAxConFJIBp2oc
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-06-08_09:2021-06-04,2021-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 clxscore=1011 priorityscore=1501 mlxscore=0
+ suspectscore=0 impostorscore=0 phishscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106080077
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Gaurav Srivastava <gaurav.srivastava@broadcom.com>
+Hi all,
 
-The patch introduces the vmid in the io path. It checks if the vmid is
-enabled and if io belongs to a vm or not and acts accordingly. Other
-supporing APIs are also included in the patch.
+we occasionally encounter a problem when setting up a loop device in one of our automated testcases.
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Gaurav Srivastava  <gaurav.srivastava@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+We set up a loop device as follows:
 
----
-v11:
-No change
+    # dd if=/dev/zero of=/var/tmp/loopbackfile1.img bs=1M count=2500 status=none
+    # losetup --sector-size 4096 -fP --show /var/tmp/loopbackfile1.img
 
-v10:
-Remove redundant code and function name correction
+This works fine most of the times, but in the seldom case of the error, we get 'losetup: /var/tmp/loopbackfile1.img: failed to set up loop device: Resource temporarily unavailable'.
 
-v9:
-Added changes related to locking and new hashtable implementation
+I am sure that no other loop device is currently defined, so we don't run out of loop devices.
 
-v8:
-Added proper error codes
-updated logic while handling vmid
+We also see the following message in the syslog when the error occurs:
 
-v7:
-No change
+     loop_set_block_size: loop0 () has still dirty pages (nrpages=2)
 
-v6:
-No change
+The nrpages number varies from time to time. 
 
-v5:
-No change
+"Resource temporarily unavailable" is EAGAIN, and function loop_set_block_size() in drivers/block/loop.c returns this after printing the syslog message via pr_warn:
 
-v4:
-No change
+static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+{
+	int err = 0;
 
-v3:
-Replaced blkcg_get_app_identifier with blkcg_get_fc_appid
+	if (lo->lo_state != Lo_bound)
+		return -ENXIO;
 
-v2:
-Ported the patch on top of 5.10/scsi-queue
-Added a fix for issuing QFPA command which was not included in the
-last submit
----
- drivers/scsi/lpfc/lpfc_scsi.c | 174 ++++++++++++++++++++++++++++++++++
- 1 file changed, 174 insertions(+)
+	err = loop_validate_block_size(arg);
+	if (err)
+		return err;
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index 65637d85f9bb..1cf271bee126 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -5296,6 +5296,160 @@ static void lpfc_vmid_assign_cs_ctl(struct lpfc_vport *vport,
- 	}
- }
- 
-+/*
-+ * lpfc_vmid_get_appid- get the vmid associated with the uuid
-+ * @vport: The virtual port for which this call is being executed.
-+ * @uuid: uuid associated with the VE
-+ * @cmd: address of scsi cmmd descriptor
-+ * @tag: VMID tag
-+ * Returns status of the function
-+ */
-+static int lpfc_vmid_get_appid(struct lpfc_vport *vport, char *uuid, struct
-+			       scsi_cmnd * cmd, union lpfc_vmid_io_tag *tag)
-+{
-+	struct lpfc_vmid *vmp = NULL;
-+	int hash, len, rc, i;
-+
-+	/* check if QFPA is complete */
-+	if (lpfc_vmid_is_type_priority_tag(vport) && !(vport->vmid_flag &
-+	      LPFC_VMID_QFPA_CMPL)) {
-+		vport->work_port_events |= WORKER_CHECK_VMID_ISSUE_QFPA;
-+		return -EAGAIN;
-+	}
-+
-+	/* search if the uuid has already been mapped to the vmid */
-+	len = strlen(uuid);
-+	hash = lpfc_vmid_hash_fn(uuid, len);
-+
-+	/* search for the VMID in the table */
-+	read_lock(&vport->vmid_lock);
-+	vmp = lpfc_get_vmid_from_hashtable(vport, hash, uuid);
-+
-+	/* if found, check if its already registered  */
-+	if (vmp  && vmp->flag & LPFC_VMID_REGISTERED) {
-+		read_unlock(&vport->vmid_lock);
-+		lpfc_vmid_update_entry(vport, cmd, vmp, tag);
-+		rc = 0;
-+	} else if (vmp && (vmp->flag & LPFC_VMID_REQ_REGISTER ||
-+			   vmp->flag & LPFC_VMID_DE_REGISTER)) {
-+		/* else if register or dereg request has already been sent */
-+		/* Hence vmid tag will not be added for this IO */
-+		read_unlock(&vport->vmid_lock);
-+		rc = -EBUSY;
-+	} else {
-+		/* The vmid was not found in the hashtable. At this point, */
-+		/* drop the read lock first before proceeding further */
-+		read_unlock(&vport->vmid_lock);
-+		/* start the process to obtain one as per the */
-+		/* type of the vmid indicated */
-+		write_lock(&vport->vmid_lock);
-+		vmp = lpfc_get_vmid_from_hashtable(vport, hash, uuid);
-+
-+		/* while the read lock was released, in case the entry was */
-+		/* added by other context or is in process of being added */
-+		if (vmp && vmp->flag & LPFC_VMID_REGISTERED) {
-+			lpfc_vmid_update_entry(vport, cmd, vmp, tag);
-+			write_unlock(&vport->vmid_lock);
-+			return 0;
-+		} else if (vmp && vmp->flag & LPFC_VMID_REQ_REGISTER) {
-+			write_unlock(&vport->vmid_lock);
-+			return -EBUSY;
-+		}
-+
-+		/* else search and allocate a free slot in the hash table */
-+		if (vport->cur_vmid_cnt < vport->max_vmid) {
-+			for (i = 0; i < vport->max_vmid; i++) {
-+				vmp = vport->vmid + i;
-+				if (vmp->flag == LPFC_VMID_SLOT_FREE)
-+					break;
-+			}
-+			if (i == vport->max_vmid)
-+				vmp = NULL;
-+		} else {
-+			vmp = NULL;
-+		}
-+
-+		if (!vmp) {
-+			write_unlock(&vport->vmid_lock);
-+			return -ENOMEM;
-+		}
-+
-+		/* Add the vmid and register  */
-+		lpfc_put_vmid_in_hashtable(vport, hash, vmp);
-+		vmp->vmid_len = len;
-+		memcpy(vmp->host_vmid, uuid, vmp->vmid_len);
-+		vmp->io_rd_cnt = 0;
-+		vmp->io_wr_cnt = 0;
-+		vmp->flag = LPFC_VMID_SLOT_USED;
-+
-+		vmp->delete_inactive =
-+			vport->vmid_inactivity_timeout ? 1 : 0;
-+
-+		/* if type priority tag, get next available vmid */
-+		if (lpfc_vmid_is_type_priority_tag(vport))
-+			lpfc_vmid_assign_cs_ctl(vport, vmp);
-+
-+		/* allocate the per cpu variable for holding */
-+		/* the last access time stamp only if vmid is enabled */
-+		if (!vmp->last_io_time)
-+			vmp->last_io_time = __alloc_percpu(sizeof(u64),
-+							   __alignof__(struct
-+							   lpfc_vmid));
-+		if (!vmp->last_io_time) {
-+			hash_del(&vmp->hnode);
-+			vmp->flag = LPFC_VMID_SLOT_FREE;
-+			write_unlock(&vport->vmid_lock);
-+			return -EIO;
-+		}
-+
-+		write_unlock(&vport->vmid_lock);
-+
-+		/* complete transaction with switch */
-+		if (lpfc_vmid_is_type_priority_tag(vport))
-+			rc = lpfc_vmid_uvem(vport, vmp, true);
-+		else
-+			rc = lpfc_vmid_cmd(vport, SLI_CTAS_RAPP_IDENT, vmp);
-+		if (!rc) {
-+			write_lock(&vport->vmid_lock);
-+			vport->cur_vmid_cnt++;
-+			vmp->flag |= LPFC_VMID_REQ_REGISTER;
-+			write_unlock(&vport->vmid_lock);
-+		} else {
-+			write_lock(&vport->vmid_lock);
-+			hash_del(&vmp->hnode);
-+			vmp->flag = LPFC_VMID_SLOT_FREE;
-+			free_percpu(vmp->last_io_time);
-+			write_unlock(&vport->vmid_lock);
-+			return -EIO;
-+		}
-+
-+		/* finally, enable the idle timer once */
-+		if (!(vport->phba->pport->vmid_flag & LPFC_VMID_TIMER_ENBLD)) {
-+			mod_timer(&vport->phba->inactive_vmid_poll,
-+				  jiffies +
-+				  msecs_to_jiffies(1000 * LPFC_VMID_TIMER));
-+			vport->phba->pport->vmid_flag |= LPFC_VMID_TIMER_ENBLD;
-+		}
-+	}
-+	return rc;
-+}
-+
-+/*
-+ * lpfc_is_command_vm_io - get the uuid from blk cgroup
-+ * @cmd:Pointer to scsi_cmnd data structure
-+ * Returns uuid if present if not null
-+ */
-+static char *lpfc_is_command_vm_io(struct scsi_cmnd *cmd)
-+{
-+	char *uuid = NULL;
-+
-+	if (cmd->request) {
-+		if (cmd->request->bio)
-+			uuid = blkcg_get_fc_appid(cmd->request->bio);
-+	}
-+	return uuid;
-+}
-+
- /**
-  * lpfc_queuecommand - scsi_host_template queuecommand entry point
-  * @shost: kernel scsi host pointer.
-@@ -5321,6 +5475,7 @@ lpfc_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *cmnd)
- 	int err, idx;
- #ifdef CONFIG_SCSI_LPFC_DEBUG_FS
- 	uint64_t start = 0L;
-+	u8 *uuid = NULL;
- 
- 	if (phba->ktime_on)
- 		start = ktime_get_ns();
-@@ -5448,6 +5603,25 @@ lpfc_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *cmnd)
- 	}
- 
- 
-+	/* check the necessary and sufficient condition to support VMID */
-+	if (lpfc_is_vmid_enabled(phba) &&
-+	    (ndlp->vmid_support ||
-+	     phba->pport->vmid_priority_tagging ==
-+	     LPFC_VMID_PRIO_TAG_ALL_TARGETS)) {
-+		/* is the IO generated by a VM, get the associated virtual */
-+		/* entity id */
-+		uuid = lpfc_is_command_vm_io(cmnd);
-+
-+		if (uuid) {
-+			err = lpfc_vmid_get_appid(vport, uuid, cmnd,
-+				(union lpfc_vmid_io_tag *)
-+					&lpfc_cmd->cur_iocbq.vmid_tag);
-+			if (!err)
-+				lpfc_cmd->cur_iocbq.iocb_flag |= LPFC_IO_VMID;
-+		}
-+	}
-+
-+	atomic_inc(&ndlp->cmd_pending);
- #ifdef CONFIG_SCSI_LPFC_DEBUG_FS
- 	if (unlikely(phba->hdwqstat_on & LPFC_CHECK_SCSI_IO))
- 		this_cpu_inc(phba->sli4_hba.c_stat->xmt_io);
+	if (lo->lo_queue->limits.logical_block_size == arg)
+		return 0;
+
+	sync_blockdev(lo->lo_device);
+	invalidate_bdev(lo->lo_device);
+
+	blk_mq_freeze_queue(lo->lo_queue);
+
+	/* invalidate_bdev should have truncated all the pages */
+	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+		err = -EAGAIN;
+		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+			__func__, lo->lo_number, lo->lo_file_name,
+			lo->lo_device->bd_inode->i_mapping->nrpages);
+		goto out_unfreeze;
+	}
+
+	blk_queue_logical_block_size(lo->lo_queue, arg);
+	blk_queue_physical_block_size(lo->lo_queue, arg);
+	blk_queue_io_min(lo->lo_queue, arg);
+	loop_update_dio(lo);
+out_unfreeze:
+	blk_mq_unfreeze_queue(lo->lo_queue);
+
+	return err;
+}
+
+So looks like invalidate_bdev() did actually not truncate all the pages under some circumstances....
+
+The problem only happens when '--sector-size 4096' is specified, with the default sector size is always works. It does not call loop_set_block_size() in the default case I guess.
+
+The loop0 device has certainly be used by other testcases before, most likely with the default block size. But at the time of this run, no loop device is currently active (losetup shows nothing). 
+
+Anyone have an idea what goes wrong here? 
+
+This happens on upstream kernels on the s390x platform, but I can't tell if is related to the platform or a specific kernel version. 
+The failing use case is not that old, so I can't tell if it would have happened on earlier kernels or not, or since when it happens. 
+
+Any help is appreciated!
+
 -- 
-2.26.2
+Ingo Franzki
+ifranzki@linux.ibm.com  
+Linux on IBM Z Development, Schoenaicher Str. 220, 71032 Boeblingen, Germany
 
+IBM Deutschland Research & Development GmbH / Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM DATA Privacy Statement: https://www.ibm.com/privacy/us/en/
