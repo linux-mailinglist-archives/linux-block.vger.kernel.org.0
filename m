@@ -2,66 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A2693A19F9
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBB8A3A19FD
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233931AbhFIPpG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 11:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55302 "EHLO
+        id S234249AbhFIPpH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 11:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237059AbhFIPoZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:44:25 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD87FC06175F
-        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 08:42:30 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id g6-20020a17090adac6b029015d1a9a6f1aso3802411pjx.1
-        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:42:30 -0700 (PDT)
+        with ESMTP id S237547AbhFIPom (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:44:42 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC9CFC061574
+        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 08:42:47 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 27so19815993pgy.3
+        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=Z+kgbcTthKkRaTLerI5LIt6g96eR6yyPJbyK3XBw3oU=;
-        b=h60acMdnntT8zv6JMmqModd/J93zqAuVPxGRVBgALmvY3TyZQfVmb9+Fcr6CUWePjU
-         oJbw7fe78PBe8M+JQ+2cLcBiXtOD0dyG7c9hvh0WHJJueT4kybrq4RiEaCvAtqdEL/Vb
-         Prj7uhAkqoSE2LLYJJntt3IPg8qQHJ8lBDfIN5vY9MS10iotcj2BuagXHhkTfKhFbhXM
-         iT9InmJeOQpgDS+f/pywkFdOkKUKStlh1uFv+DF7qMUWolcLPDyFbec/2Xn8wkoNV5w2
-         gAXaUHi9O/O9DW8EprS8om8twyMCX2bu281slztLMGf6PTG8ntiYgEkyP13U78zUkAYa
-         BAjw==
+        bh=NA+8v+xy91ArXchC+ivUU8mx/+yKALoBIL984U/ng8Q=;
+        b=ri2kROF6gVCKUB2o6O2DD9vL9l5p4iWkjmQhKGsLcQoWUXYY4fFB51NifCuovhm4qu
+         fpIbuRLgmPgemyZEcwzzdPmywBPb52yl6+I8COsxyF4URVZwemgl6ghiatrsl0UdqcC0
+         /GMBQrI4lcJh1tjVaj3y2ty1pDKAJHlpTS/EVXuUf5eax04VWvSFLU/iEX7CfZ6XJMWI
+         wBl2T6mRv8M9FNatWv1m25MKvB0EJjBbfucUxSR6a2waEZl6UaiOmmkMISb02V5l6j0S
+         M4upZPaZ5QfpbrMLd6zeLcMdJgUmSSe93KRwU7seu/iDAR6gE1kZhAtaG2Zu09/YXEwx
+         9DRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Z+kgbcTthKkRaTLerI5LIt6g96eR6yyPJbyK3XBw3oU=;
-        b=YMONyrM7aKjYgAWcSj4wNcSg2bjHw+dgT9nH+BuBEgyW0uxXjrbv6VZGPOsO1ssHfg
-         NDAxHYzXSJpRnE1hZwqDk3hCoMU67J0wR17k9P8rWH87cUhYSMgKHPjJNKt+35zbE22U
-         8eLsDzbV8sbeKPAKUJjTFxKWB1+m40bXU1iGr+nqP4pYUwdtk2/teKYdhvbZpdp3N9gg
-         DvLZEdEteWskEZ93OBJ2kfuRwjcbBGjzclhZyl6HEFvNPa0t2DmBR497h8UbmvlsNJuF
-         bW0XB7A/OlHHhI4y5vg/0thRUaWhPGA4GLVfD2ZJA4fbMsdmHuQay4muCoAfeVTQSJ5E
-         1Zfw==
-X-Gm-Message-State: AOAM5337x7S4huowFcmPobot5u5cgFwVI/bYgW9XWnZM6jNw8w5IE/TB
-        i6n/J08KbK2fD4vminveZz7qPeN/wsdQDg==
-X-Google-Smtp-Source: ABdhPJwQ9FRzOk3nVmVPhkujmABcn64QD25jQWXFfZeJB8P/CBSyiQIZWrINGKD7uv2O5zl4kOT2Lg==
-X-Received: by 2002:a17:90a:4e4a:: with SMTP id t10mr124420pjl.173.1623253350154;
-        Wed, 09 Jun 2021 08:42:30 -0700 (PDT)
+        bh=NA+8v+xy91ArXchC+ivUU8mx/+yKALoBIL984U/ng8Q=;
+        b=jzL2Td2R5IQ1R53iAMkhYCGs6QsmAnw17uvqv3RKje1vyfcXFrhor3JDzNQQU91eOx
+         03stp4bQD4UcUAXyMgZPRkl/M68wuvtr86s6khD5UYHBX0DX+KWzP5V5/QlVy5nv9teX
+         7NpdCwjcVikagRaB/zG9VpA0bOWAh9WBcFnGgWBIAhXaIbois9Xs6PniKesBAhptv+hh
+         v6pIqWTTGoDaN37sGuQvW2SGNAGXz/tdY0y4ZpInzDmQgjkZQCCfiHjvzeFKlGMbbkbb
+         IIJK0/F4nAD7khfP3DSvR+8OV1p327I3R3n1BRndD0hvMqMkKT/23YxD4SgV4eZcm6fw
+         p3/A==
+X-Gm-Message-State: AOAM531YM7sU82vqXhzLK5h/zVaHnKx0PzRleo42rdg70Ob6D/xgrhJz
+        r+QGv161yDQ83iQZoVpYGVpuj4Asl6WjvQ==
+X-Google-Smtp-Source: ABdhPJyY3PDonMqUsCzRHtcF+0qPbX+IzO888xqOtT2VYP3UroLcxpWsOZt5affHvcs+NSjswdXK5w==
+X-Received: by 2002:a05:6a00:c2:b029:2ee:9cfc:af85 with SMTP id e2-20020a056a0000c2b02902ee9cfcaf85mr375494pfj.78.1623253367140;
+        Wed, 09 Jun 2021 08:42:47 -0700 (PDT)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id x33sm45811pfh.108.2021.06.09.08.42.28
+        by smtp.gmail.com with ESMTPSA id f17sm192689pgm.37.2021.06.09.08.42.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jun 2021 08:42:29 -0700 (PDT)
-Subject: Re: [PATCH 1/1] drbd: remove unnecessary oom message
+        Wed, 09 Jun 2021 08:42:46 -0700 (PDT)
+Subject: Re: [PATCH 1/1] mtip32xx: remove unnecessary oom message
 To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        drbd-dev <drbd-dev@lists.linbit.com>,
         linux-block <linux-block@vger.kernel.org>
-References: <20210609121426.13936-1-thunder.leizhen@huawei.com>
+References: <20210609121958.13992-1-thunder.leizhen@huawei.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aefad024-73b0-26b2-f02c-fe534df16bbb@kernel.dk>
-Date:   Wed, 9 Jun 2021 09:42:27 -0600
+Message-ID: <e7fab4d2-c1b7-cc61-a278-ff063f01571c@kernel.dk>
+Date:   Wed, 9 Jun 2021 09:42:45 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210609121426.13936-1-thunder.leizhen@huawei.com>
+In-Reply-To: <20210609121958.13992-1-thunder.leizhen@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,7 +66,7 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/9/21 6:14 AM, Zhen Lei wrote:
+On 6/9/21 6:19 AM, Zhen Lei wrote:
 > Fixes scripts/checkpatch.pl warning:
 > WARNING: Possible unnecessary 'out of memory' message
 > 
