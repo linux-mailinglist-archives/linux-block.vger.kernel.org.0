@@ -2,200 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACA333A0EDC
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 10:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76A9E3A0F46
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 11:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237714AbhFIIqT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 04:46:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51341 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232555AbhFIIqS (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 9 Jun 2021 04:46:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623228263;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B6Euu4KPNqLtNLo891SVSfhz6UMhcEyVNeUStw8xpU0=;
-        b=BJHPAbzo2SF4AKuvjaj5DEfTyGRbPMGuc1LNeE31wWtzCtyC7Nzv93I2oB7gvdH/K383b4
-        1uTk3R39t24y8AcPi2OZsTlArCCUZekSsJc0hQSHbjG1TuplAOn/CIO8rH4cDy9xCyAZEr
-        bkmc7reH5bBnv8k2z6EVUlsMH4pViyc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-7sRK_WTzMK2ptb7YT84tYg-1; Wed, 09 Jun 2021 04:44:20 -0400
-X-MC-Unique: 7sRK_WTzMK2ptb7YT84tYg-1
-Received: by mail-ej1-f71.google.com with SMTP id p18-20020a1709067852b02903dab2a3e1easo7740662ejm.17
-        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 01:44:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B6Euu4KPNqLtNLo891SVSfhz6UMhcEyVNeUStw8xpU0=;
-        b=Il/8AqNmyQvU35/sPPdgQJrMmIIq5TxFIyO4V/MRWzBvrHWZFVbRl38irJyPBeW5tr
-         rT1nt57wQl2B6G21WoPr5a4z0m41c3/voCh/Xx5nu08FH9LIGiSbkofoXjNUfLicdSoX
-         4cGb8dBl8kRrSOl9iwWeUrLs8Ygk7wMLSkAftkQMRRUvqiRNA+fSelGEpIUnwuP64EXd
-         1NFTZrZXGSTJsxvM1pTVNaOy/8UaozC2N+K70QWW27ta+d1B8uhqR+S0owNZJWNBO0FA
-         YTkVDpWKKa0M+rZ3KDY5945Lo1t0VnmX139Jr+/6/3GsWwdCjr7AhC/8h7EPL2XYOUMn
-         40cA==
-X-Gm-Message-State: AOAM531Qp44dmK6OgEQpBsrbnhu7aaZVR00SsGti5NJQ3yPvmv+WbMVa
-        fm2cisP1x+p5tfRnr0yecPFKiOK8fS8aWcOCXxWRtaATZrSZDk7nUJuudMmaDGBCp1eoY9r+MBq
-        BVKuunISlnDQYBpjmep1EdRq9/yFC2uwYKek/jGs=
-X-Received: by 2002:aa7:df04:: with SMTP id c4mr29804624edy.147.1623228259024;
-        Wed, 09 Jun 2021 01:44:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyDc/Qy1zIdzJhC7P+bcLMG8+o6JrmcVdRcJumUablaRYIJ9lnCeI5m56vYIWAOfmjAk+tLJdIJGwrlmGwGRMY=
-X-Received: by 2002:aa7:df04:: with SMTP id c4mr29804615edy.147.1623228258856;
- Wed, 09 Jun 2021 01:44:18 -0700 (PDT)
+        id S237815AbhFIJHi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 05:07:38 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3181 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233853AbhFIJHh (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 05:07:37 -0400
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G0LYx66Twz6G8Mq;
+        Wed,  9 Jun 2021 16:56:21 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 9 Jun 2021 11:05:36 +0200
+Received: from [10.47.80.201] (10.47.80.201) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 9 Jun 2021
+ 10:05:35 +0100
+Subject: Re: [PATCH] blk-mq: fix use-after-free in blk_mq_exit_sched
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        "Christoph Hellwig" <hch@lst.de>
+CC:     <linux-block@vger.kernel.org>,
+        <syzbot+77ba3d171a25c56756ea@syzkaller.appspotmail.com>
+References: <20210609063046.122843-1-ming.lei@redhat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <f5fbc650-5bd3-32ee-1d31-8b1dd1d7fa19@huawei.com>
+Date:   Wed, 9 Jun 2021 09:59:43 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <85F98DA6-FB28-4C1F-A47D-C410A7C22A3D@gmail.com>
- <YL4Z/QJCKc0NCV5L@T590> <C866C380-7A71-4722-957F-2CE65BDACF26@gmail.com>
- <YMAOO3XjOUl2IG+4@T590> <1C6DB607-B7BE-4257-8384-427BB490C9C0@gmail.com>
-In-Reply-To: <1C6DB607-B7BE-4257-8384-427BB490C9C0@gmail.com>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Wed, 9 Jun 2021 16:44:07 +0800
-Message-ID: <CALTww28L7afRdVdBf-KsyF6Hvf-8-CORSCpZJAvnVbDRo6chDQ@mail.gmail.com>
-Subject: Re: [Bug Report] Discard bios cannot be correctly merged in blk-mq
-To:     Wang Shanker <shankerwangmiao@gmail.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210609063046.122843-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.80.201]
+X-ClientProxiedBy: lhreml749-chm.china.huawei.com (10.201.108.199) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all
+On 09/06/2021 07:30, Ming Lei wrote:
 
-Thanks for reporting about this. I did a test in my environment.
-time blkdiscard /dev/nvme5n1  (477GB)
-real    0m0.398s
-time blkdiscard /dev/md0
-real    9m16.569s
+Thanks for the fix
 
-I'm not familiar with the block layer codes. I'll try to understand
-the codes related with discard request and
-try to fix this problem.
+> tagset can't be used after blk_cleanup_queue() is returned because
+> freeing tagset usually follows blk_clenup_queue(). Commit d97e594c5166
+> ("blk-mq: Use request queue-wide tags for tagset-wide sbitmap") adds
+> check on q->tag_set->flags in blk_mq_exit_sched(), and causes
+> use-after-free.
+> 
+> Fixes it by using hctx->flags.
+> 
 
-I have a question for raid5 discard, it needs to consider more than
-raid0 and raid10. For example, there is a raid5 with 3 disks.
-D11 D21 P1 (stripe size is 4KB)
-D12 D22 P2
-D13 D23 P3
-D14 D24 P4
-...  (chunk size is 512KB)
-If there is a discard request on D13 and D14, and there is no discard
-request on D23 D24. It can't send
-discard request to D13 and D14, right? P3 =3D D23 xor D13. If we discard
-D13 and disk2 is broken, it can't
-get the right data from D13 and P3. The discard request on D13 can
-write 0 to the discard region, right?
+The tagset is a member of the Scsi_Host structure. So it is true that 
+this memory may be freed before the request_queue is exited?
 
-If so, it can handle a discard bio at a time that is big enough at
-least to contain the data. (data disks * chunk size). In this case the
-size is 1024KB (512KB*2).
+> Reported-by: syzbot+77ba3d171a25c56756ea@syzkaller.appspotmail.com
+> Fixes: d97e594c5166 ("blk-mq: Use request queue-wide tags for tagset-wide sbitmap")
+> Cc: John Garry <john.garry@huawei.com>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>   block/blk-mq-sched.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index a9182d2f8ad3..80273245d11a 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -680,6 +680,7 @@ void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e)
+>   {
+>   	struct blk_mq_hw_ctx *hctx;
+>   	unsigned int i;
+> +	unsigned int flags = 0;
+>   
+>   	queue_for_each_hw_ctx(q, hctx, i) {
+>   		blk_mq_debugfs_unregister_sched_hctx(hctx);
+> @@ -687,12 +688,13 @@ void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e)
+>   			e->type->ops.exit_hctx(hctx, i);
+>   			hctx->sched_data = NULL;
+>   		}
+> +		flags = hctx->flags;
 
-Regards
-Xiao
+I know the choice is limited, but it is unfortunate that we must set 
+flags in a loop
 
+>   	}
+>   	blk_mq_debugfs_unregister_sched(q);
+>   	if (e->type->ops.exit_sched)
+>   		e->type->ops.exit_sched(e);
+>   	blk_mq_sched_tags_teardown(q);
+> -	if (blk_mq_is_sbitmap_shared(q->tag_set->flags))
+> +	if (blk_mq_is_sbitmap_shared(flags))
+>   		blk_mq_exit_sched_shared_sbitmap(q);
 
-On Wed, Jun 9, 2021 at 10:40 AM Wang Shanker <shankerwangmiao@gmail.com> wr=
-ote:
->
->
-> > 2021=E5=B9=B406=E6=9C=8809=E6=97=A5 08:41=EF=BC=8CMing Lei <ming.lei@re=
-dhat.com> =E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Tue, Jun 08, 2021 at 11:49:04PM +0800, Wang Shanker wrote:
-> >>
-> >>
-> >> Actually, what are received by the nvme controller are discard request=
-s
-> >> with 128 segments of 4k, instead of one segment of 512k.
-> >
-> > Right, I am just wondering if this way makes a difference wrt. single
-> > range/segment discard request from device viewpoint, but anyway it is
-> > better to send less segment.
-> It would be meaningful if more than queue_max_discard_segments() bio's
-> are sent and merged into big segments.
-> >
-> >>
-> >>>
-> >>>>
-> >>>> Similarly, the problem with scsi devices can be emulated using the f=
-ollowing
-> >>>> options for qemu:
-> >>>>
-> >>>>       -device virtio-scsi,id=3Dscsi \
-> >>>>       -device scsi-hd,drive=3Dnvme1,bus=3Dscsi.0,logical_block_size=
-=3D4096,discard_granularity=3D2097152,physical_block_size=3D4096,serial=3DN=
-VME1 \
-> >>>>       -device scsi-hd,drive=3Dnvme2,bus=3Dscsi.0,logical_block_size=
-=3D4096,discard_granularity=3D2097152,physical_block_size=3D4096,serial=3DN=
-VME2 \
-> >>>>       -device scsi-hd,drive=3Dnvme3,bus=3Dscsi.0,logical_block_size=
-=3D4096,discard_granularity=3D2097152,physical_block_size=3D4096,serial=3DN=
-VME3 \
-> >>>>       -trace scsi_disk_emulate_command_UNMAP,file=3Dscsitrace.log
-> >>>>
-> >>>>
-> >>>> Despite the discovery, I cannot come up with a proper fix of this is=
-sue due
-> >>>> to my lack of familiarity of the block subsystem. I expect your kind=
- feedback
-> >>>> on this. Thanks in advance.
-> >>>
-> >>> In the above setting and raid456 test, I observe that rq->nr_phys_seg=
-ments can
-> >>> reach 128, but queue_max_discard_segments() reports 256. So discard
-> >>> request size can be 512KB, which is the max size when you run 1MB dis=
-card on
-> >>> raid456. However, if the discard length on raid456 is increased, the
-> >>> current way will become inefficient.
-> >>
-> >> Exactly.
-> >>
-> >> I suggest that bio's can be merged and be calculated as one segment if=
- they are
-> >> contiguous and contain no data.
-> >
-> > Fine.
-> >
-> >>
-> >> And I also discovered later that, even normal long write requests, e.g=
-.
-> >> a 10m write, will be split into 4k bio's. The maximum number of bio's =
-which can
-> >> be merged into one request is limited by queue_max_segments, regardles=
-s
-> >> of whether those bio's are contiguous. In my test environment, for scs=
-i devices,
-> >> queue_max_segments can be 254, which means about 1m size of requests. =
-For nvme
-> >> devices(e.g. Intel DC P4610), queue_max_segments is only 33 since thei=
-r mdts is 5,
-> >> which results in only 132k of requests.
-> >
-> > Here what matters is queue_max_discard_segments().
-> Here I was considering normal write/read bio's, since I first took it for=
- granted
-> that normal write/read IOs would be optimal in raid456, and finally disco=
-vered
-> that those 4k IOs can only be merged into not-so-big requests.
-> >
-> >>
-> >> So, I would also suggest that raid456 should be improved to issue bigg=
-er bio's to
-> >> underlying drives.
-> >
-> > Right, that should be root solution.
-> >
-> > Cc Xiao, I remembered that he worked on this area.
->
-> Many thanks for looking into this issue.
->
-> Cheers,
->
-> Miao Wang
->
+this is
+
+blk_mq_exit_sched_shared_sbitmap(struct request_queue *queue)
+{
+	sbitmap_queue_free(&queue->sched_bitmap_tags);
+	..
+}
+
+And isn't it safe to call sbitmap_queue_free() when 
+sbitmap_queue_init_node() has not been called?
+
+I'm just wondering if we can always call 
+blk_mq_exit_sched_shared_sbitmap()? I know it's not an ideal choice either.
+
+Thanks,
+John
+
+>   	q->elevator = NULL;
+>   }
+> 
 
