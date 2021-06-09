@@ -2,105 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7A3C3A0F44
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 11:04:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19DC63A105E
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 12:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237634AbhFIJGh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 05:06:37 -0400
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:53038 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237085AbhFIJGh (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 05:06:37 -0400
-Received: by mail-pj1-f54.google.com with SMTP id h16so975392pjv.2;
-        Wed, 09 Jun 2021 02:04:27 -0700 (PDT)
+        id S238142AbhFIJn1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 05:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234720AbhFIJn0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 05:43:26 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D9DC061574;
+        Wed,  9 Jun 2021 02:41:31 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id j12so18978861pgh.7;
+        Wed, 09 Jun 2021 02:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=p509XquklGPlHgIgLviWSLP6RC8IGBzAqX0rlKOEPB0=;
-        b=arQmByQXbbDKQBLqyclwq5I0Fm2ow+XetxFCyzjadndLtrmHo+Lf/AWvEu7/LACjJS
-         2KcfUQCQRXfyX1u4c4CdC/v+L3WM6A7wTdCzA0Ih7/UKkJGcWZ2IGxum+H0y1euuO80P
-         sh1jo528WfjWEfVXbJJ9mkUuIScDKOK0ArRP9uque7qjTXfDHE+1wyBaJz92PyLTtGq/
-         Q/5RMnTncYG6Zwu55T5JUmuHQlY7x5qgUQyBDLomrrfhGBZgZ2+Euz38KsHm82KZGeMQ
-         mUnV0Fa9d65Dk5dO9vHjlHEItRx+k1WkD+bu7GSupweYzRgJNbY/3vkr7dBn8m1uE5ep
-         FC1Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mhMcjERsi3wx3J0HCHYpS+goiMXBDBgg8cMNxlYjvGA=;
+        b=ADcj1YVvHTLC+vKMpsqWPDJsBSDbQj9Juth1j7LfkjKpeyQiAv4eLJia7JtZshRFtJ
+         A+TDHANIoo9IOJ4Kh0lYPvrrYa5nHWPVMBPmA405nRsS3sz38uj/ZBeAXl2ZMbNQjV+D
+         mqkGmibxA5nlTggMZR8xaJL9mgWWlN0qvJ13j0sbvH5mcxMOF9754ReExqahIfdHqL2I
+         NGrYqKJ6VLkatC3yXMel7BVvJXeid1JTMV2nRKXWSqgMLC4VnNuNxzIDSde7bQegncwu
+         8i1TuPOBXCJ8KzJ7C/7oFxid3upfTcHVU7lyPDQqvDi7b+rtEOCs4e9uougdvb5+gY72
+         zPtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=p509XquklGPlHgIgLviWSLP6RC8IGBzAqX0rlKOEPB0=;
-        b=VMtLDqPC9kZIucM10Gu58q4Gg3NTPw/N1mgnjBuZdlEcvbFqXTj+TiTkuEUl5MgbEu
-         L3+OUwSrkQiQER71LwBL7ifWPvf6ZemMMhy+ZkeC6kBpVLP+aHSFtt9/1BlRmtop8/qR
-         vfaijGRvVTBDwbLfALCAzu1Hq7JRcJ578vvOwQa/ZqJdOQGWc8pU5QtZtX53oj/Cr/vS
-         gprXlP80S0Zty8c5xY5fZ+Eb4NG4++scZh3eUF1yehrbUXmn3lG4Sv2r2x0AUWePFgC4
-         vge1CeLTNtjm3GppanAymCiN+wCDOQJ3cHbigpuFyYnEe1Z2ZWE5mB7+CW4UXGvqLJtD
-         ouQA==
-X-Gm-Message-State: AOAM531XeMvF1iTZJ0W4XpswD9NmPPHcKAmdODnv2b7JZYocWdwHGKI6
-        zpiwMn5sXWGHDjwXjQL0EmM=
-X-Google-Smtp-Source: ABdhPJwnJjEeG/UnQ9HkZG2AGk2j8LX0p5mr5IbXIQAQlGbykdC126JUSdkQ3T1basqET5VuuDBk3Q==
-X-Received: by 2002:a17:902:8484:b029:101:7016:fb7b with SMTP id c4-20020a1709028484b02901017016fb7bmr4015286plo.23.1623229407608;
-        Wed, 09 Jun 2021 02:03:27 -0700 (PDT)
-Received: from [10.7.3.1] ([133.130.111.179])
-        by smtp.gmail.com with ESMTPSA id s3sm14846565pgs.62.2021.06.09.02.03.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Jun 2021 02:03:27 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.6\))
-Subject: Re: [Bug Report] Discard bios cannot be correctly merged in blk-mq
-From:   Wang Shanker <shankerwangmiao@gmail.com>
-In-Reply-To: <CALTww28L7afRdVdBf-KsyF6Hvf-8-CORSCpZJAvnVbDRo6chDQ@mail.gmail.com>
-Date:   Wed, 9 Jun 2021 17:03:22 +0800
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ED5B1993-9D44-4B9C-A7DF-72BD2375A216@gmail.com>
-References: <85F98DA6-FB28-4C1F-A47D-C410A7C22A3D@gmail.com>
- <YL4Z/QJCKc0NCV5L@T590> <C866C380-7A71-4722-957F-2CE65BDACF26@gmail.com>
- <YMAOO3XjOUl2IG+4@T590> <1C6DB607-B7BE-4257-8384-427BB490C9C0@gmail.com>
- <CALTww28L7afRdVdBf-KsyF6Hvf-8-CORSCpZJAvnVbDRo6chDQ@mail.gmail.com>
-To:     Xiao Ni <xni@redhat.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.6)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mhMcjERsi3wx3J0HCHYpS+goiMXBDBgg8cMNxlYjvGA=;
+        b=ZwyFoZ53V0dbFpm6oVmzTiQtyyCEfJTI9z3MPc9OY6EFJpmkkteZ466t9mbB5u0PDr
+         nAZuYLqz0rmGo0DwpVMMQRuQ3SMl8CWcW4PFTX1eUY9CiAZu6tGnMNo2XxHGqmvlddcb
+         sXnh1tIBj+z7ojFXEqIxre4fvESjSTZnpKupLIG/WJHYvUDZofFm6LojcgB+5cJfPl24
+         EwR/p11kAdrynFD3/D8gGUMMKHsGr5UHcWP6LWMZK2nnfnQhjBQTdez7GJl97vntFceA
+         0x7zb2KVcxPmywj4V2S25Jnz70/PJOW5QLnEuVsaYFh0Cf9UOoGvcd6RcxTvmFheJWxi
+         WNjw==
+X-Gm-Message-State: AOAM532QXMwSk4MEFV1rcDXVB7QZVtWxnWlHpHTZg05X2MhAeWTbBR+N
+        XeOnMRYimKy1lcoWHAL7v0u0hhqTCzQuHQS5GOXjkVZ/dhWXvg==
+X-Google-Smtp-Source: ABdhPJwAXk5XLhiYZ2SCv5KKecZJLPTCdFzz10ao0FJv/DCA2fGlPOpnYQTjWTA/Q177jVl11ZJJ3bM2RHXJ7omJZKU=
+X-Received: by 2002:a6b:287:: with SMTP id 129mr18520979ioc.182.1623231195095;
+ Wed, 09 Jun 2021 02:33:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210608160603.1535935-1-hch@lst.de> <20210608160603.1535935-5-hch@lst.de>
+In-Reply-To: <20210608160603.1535935-5-hch@lst.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 9 Jun 2021 11:33:13 +0200
+Message-ID: <CAOi1vP8Xe1ZqE8fe=8KcU00xDjRrvaRONAC_TYYctsE1dns0Og@mail.gmail.com>
+Subject: Re: [PATCH 04/16] bvec: add a bvec_kmap_local helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, dm-devel@redhat.com,
+        linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Ceph Development <ceph-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Tue, Jun 8, 2021 at 6:06 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Add a helper to call kmap_local_page on a bvec.  There is no need for
+> an unmap helper given that kunmap_local accept any address in the mapped
+> page.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/bvec.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+> index 883faf5f1523..d64d6c0ceb77 100644
+> --- a/include/linux/bvec.h
+> +++ b/include/linux/bvec.h
+> @@ -7,6 +7,7 @@
+>  #ifndef __LINUX_BVEC_H
+>  #define __LINUX_BVEC_H
+>
+> +#include <linux/highmem.h>
+>  #include <linux/bug.h>
+>  #include <linux/errno.h>
+>  #include <linux/limits.h>
+> @@ -183,4 +184,9 @@ static inline void bvec_advance(const struct bio_vec *bvec,
+>         }
+>  }
+>
+> +static inline void *bvec_kmap_local(struct bio_vec *bvec)
+> +{
+> +       return kmap_local_page(bvec->bv_page) + bvec->bv_offset;
+> +}
+> +
+>  #endif /* __LINUX_BVEC_H */
 
-> 2021=E5=B9=B406=E6=9C=8809=E6=97=A5 16:44=EF=BC=8CXiao Ni =
-<xni@redhat.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Hi all
->=20
-> Thanks for reporting about this. I did a test in my environment.
-> time blkdiscard /dev/nvme5n1  (477GB)
-> real    0m0.398s
-> time blkdiscard /dev/md0
-> real    9m16.569s
->=20
-> I'm not familiar with the block layer codes. I'll try to understand
-> the codes related with discard request and
-> try to fix this problem.
->=20
-> I have a question for raid5 discard, it needs to consider more than
-> raid0 and raid10. For example, there is a raid5 with 3 disks.
-> D11 D21 P1 (stripe size is 4KB)
-> D12 D22 P2
-> D13 D23 P3
-> D14 D24 P4
-> ...  (chunk size is 512KB)
-> If there is a discard request on D13 and D14, and there is no discard
-> request on D23 D24. It can't send
-> discard request to D13 and D14, right? P3 =3D D23 xor D13. If we =
-discard
-> D13 and disk2 is broken, it can't
-> get the right data from D13 and P3. The discard request on D13 can
-> write 0 to the discard region, right?
+Might be useful to add the second sentence of the commit message as
+a comment for bvec_kmap_local().  It could be expanded to mention the
+single-page bvec caveat too.
 
-Yes. It can be seen at the beginning of make_discard_request(), where
-the requested range being discarded is aligned to ``stripe_sectors",=20
-which should be chunk_sectors * nr_data_disks.
+Thanks,
 
-Cheers,
-
-Miao Wang
-
+                Ilya
