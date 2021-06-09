@@ -2,63 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBB8A3A19FD
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AD33A19FF
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234249AbhFIPpH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 11:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237547AbhFIPom (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:44:42 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC9CFC061574
-        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 08:42:47 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 27so19815993pgy.3
-        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:42:47 -0700 (PDT)
+        id S233188AbhFIPpu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 11:45:50 -0400
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:38736 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232165AbhFIPpt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:45:49 -0400
+Received: by mail-pl1-f175.google.com with SMTP id 69so12727637plc.5
+        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=NA+8v+xy91ArXchC+ivUU8mx/+yKALoBIL984U/ng8Q=;
-        b=ri2kROF6gVCKUB2o6O2DD9vL9l5p4iWkjmQhKGsLcQoWUXYY4fFB51NifCuovhm4qu
-         fpIbuRLgmPgemyZEcwzzdPmywBPb52yl6+I8COsxyF4URVZwemgl6ghiatrsl0UdqcC0
-         /GMBQrI4lcJh1tjVaj3y2ty1pDKAJHlpTS/EVXuUf5eax04VWvSFLU/iEX7CfZ6XJMWI
-         wBl2T6mRv8M9FNatWv1m25MKvB0EJjBbfucUxSR6a2waEZl6UaiOmmkMISb02V5l6j0S
-         M4upZPaZ5QfpbrMLd6zeLcMdJgUmSSe93KRwU7seu/iDAR6gE1kZhAtaG2Zu09/YXEwx
-         9DRw==
+        bh=EgqbQ0qmYQiVi4+TxQzK8DLdRT/rfMIV+/j8tJzJJLQ=;
+        b=PdxkE/DegMBbE8NSV6suY1PS86UjQ6B/A/6RTild4+qzDVJ/2Gg8KGe0oxjl0yJJyy
+         uQC2wMbHLtMb5v7DlnyvDljZlncdk+m6hA4UFoBqeH/lnauYSu3x1MXA0Dhrq+2SfbX1
+         AFSHEMu9M+fAZaZtm+OnafEAz3oprpyhDFXqSv5TebNzyu0q7wdG9dlIHme3S+5ULPLc
+         UcpxpMt+2wzeVIgQTFsQXTMPrhhs55UM2xw1tNARSA2X9EXSijaYNyFD/aO+j9LbB5MP
+         EyWwzWLoJQ+a0aMCsSujir72GMpgqsTdlGZQiJgiZ231GCkDXxN+M4l4kOEFN2ro0oy6
+         yUXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=NA+8v+xy91ArXchC+ivUU8mx/+yKALoBIL984U/ng8Q=;
-        b=jzL2Td2R5IQ1R53iAMkhYCGs6QsmAnw17uvqv3RKje1vyfcXFrhor3JDzNQQU91eOx
-         03stp4bQD4UcUAXyMgZPRkl/M68wuvtr86s6khD5UYHBX0DX+KWzP5V5/QlVy5nv9teX
-         7NpdCwjcVikagRaB/zG9VpA0bOWAh9WBcFnGgWBIAhXaIbois9Xs6PniKesBAhptv+hh
-         v6pIqWTTGoDaN37sGuQvW2SGNAGXz/tdY0y4ZpInzDmQgjkZQCCfiHjvzeFKlGMbbkbb
-         IIJK0/F4nAD7khfP3DSvR+8OV1p327I3R3n1BRndD0hvMqMkKT/23YxD4SgV4eZcm6fw
-         p3/A==
-X-Gm-Message-State: AOAM531YM7sU82vqXhzLK5h/zVaHnKx0PzRleo42rdg70Ob6D/xgrhJz
-        r+QGv161yDQ83iQZoVpYGVpuj4Asl6WjvQ==
-X-Google-Smtp-Source: ABdhPJyY3PDonMqUsCzRHtcF+0qPbX+IzO888xqOtT2VYP3UroLcxpWsOZt5affHvcs+NSjswdXK5w==
-X-Received: by 2002:a05:6a00:c2:b029:2ee:9cfc:af85 with SMTP id e2-20020a056a0000c2b02902ee9cfcaf85mr375494pfj.78.1623253367140;
-        Wed, 09 Jun 2021 08:42:47 -0700 (PDT)
+        bh=EgqbQ0qmYQiVi4+TxQzK8DLdRT/rfMIV+/j8tJzJJLQ=;
+        b=BBRbPcp50XpJT+XHZa93UjocyIYn7EYM/fjIBWfKv8fXwdHye93Se78ZJcWa2R0xNB
+         g1xGdndflJsMbpdy0YH7eoJqHtq8OLDCjvVo/dzpRerx0vxZjNQLcmqipy0u42B0LIJR
+         LJo6r6WQjt88jseu+Ox8Om86XsE07RN+id5v1gaJKWY2kXC8JHbDBU2uMcVsRN9t7VjY
+         h4+608zoN2jORKt2xohEQ1WTFngsiblc2AISrhISH5aPpCDsunZj2fM0G2dWaUEXl6L7
+         79ENUZKiERQW8JhByuoRhkOEn+T++lnR8VXdd+/HhM+7qguMuaAH+qth/eAzxMKSiPCx
+         K9+Q==
+X-Gm-Message-State: AOAM530ug98t9z8uHQpD/bs3mF6fkKlMwLwx0NM5+/z8Tg3NgICdlG0t
+        XEs5NwvvhumAUFQTT4PV3qLJZQIk6fTqlw==
+X-Google-Smtp-Source: ABdhPJxq96U3sFP6m54ib8ZB/ZrMhmE74Vbb4j9G9LucJSQN0yCOKWYQMhed9lStvqUpQgnpjn5SPg==
+X-Received: by 2002:a17:902:dac3:b029:105:66fc:8ed7 with SMTP id q3-20020a170902dac3b029010566fc8ed7mr233534plx.6.1623253374688;
+        Wed, 09 Jun 2021 08:42:54 -0700 (PDT)
 Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id f17sm192689pgm.37.2021.06.09.08.42.46
+        by smtp.gmail.com with ESMTPSA id 20sm35482pfi.170.2021.06.09.08.42.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jun 2021 08:42:46 -0700 (PDT)
-Subject: Re: [PATCH 1/1] mtip32xx: remove unnecessary oom message
+        Wed, 09 Jun 2021 08:42:54 -0700 (PDT)
+Subject: Re: [PATCH 1/1] sunvdc: remove unnecessary oom message
 To:     Zhen Lei <thunder.leizhen@huawei.com>,
         linux-block <linux-block@vger.kernel.org>
-References: <20210609121958.13992-1-thunder.leizhen@huawei.com>
+References: <20210609122327.14045-1-thunder.leizhen@huawei.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e7fab4d2-c1b7-cc61-a278-ff063f01571c@kernel.dk>
-Date:   Wed, 9 Jun 2021 09:42:45 -0600
+Message-ID: <e6166507-d709-6982-1627-cb878a347112@kernel.dk>
+Date:   Wed, 9 Jun 2021 09:42:53 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210609121958.13992-1-thunder.leizhen@huawei.com>
+In-Reply-To: <20210609122327.14045-1-thunder.leizhen@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/9/21 6:19 AM, Zhen Lei wrote:
+On 6/9/21 6:23 AM, Zhen Lei wrote:
 > Fixes scripts/checkpatch.pl warning:
 > WARNING: Possible unnecessary 'out of memory' message
 > 
