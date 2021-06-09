@@ -2,86 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 481453A1454
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 14:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A505E3A16FD
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 16:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232835AbhFIM3q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 08:29:46 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:5356 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231730AbhFIM3q (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 08:29:46 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4G0R9N2DQBz6tlt;
-        Wed,  9 Jun 2021 20:23:52 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 9 Jun 2021 20:27:44 +0800
-Received: from thunder-town.china.huawei.com (10.174.177.72) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 9 Jun 2021 20:27:43 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] z2ram: remove unnecessary oom message
-Date:   Wed, 9 Jun 2021 20:27:39 +0800
-Message-ID: <20210609122739.14151-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.72]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+        id S237721AbhFIOWl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 10:22:41 -0400
+Received: from flippie-beckerswealthsa.xyz ([62.173.138.170]:50156 "EHLO
+        host.flippie-beckerswealthsa.xyz" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237541AbhFIOWi (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 9 Jun 2021 10:22:38 -0400
+Received: from flippie-beckerswealthsa.xyz (ec2-18-118-29-154.us-east-2.compute.amazonaws.com [18.118.29.154])
+        by host.flippie-beckerswealthsa.xyz (Postfix) with ESMTPA id 1F6C43115AD0
+        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 15:09:31 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippie-beckerswealthsa.xyz 1F6C43115AD0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flippie-beckerswealthsa.xyz; s=default; t=1623240572;
+        bh=h0ivQLrZuUWuyEKz/TWb+FP9AASpHhVqOsJtRcwKQV4=;
+        h=Reply-To:From:To:Subject:Date:From;
+        b=UuTK/EeXPISuxnwQr99hB8/z9ucYVqVLF5tSso6n8cHQBt9MXjpLIo4AcVYjpyzKT
+         azNyEDkwORsCfkAYtGrbZZKGa0QbUR6yQkOWUGIKregkG5vMurV2/6JP54z/Bm3kUK
+         RSy+NTbolcUS8PWFNFwmVl1T2cGv0l611QPGisEw=
+DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippie-beckerswealthsa.xyz 1F6C43115AD0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flippie-beckerswealthsa.xyz; s=default; t=1623240572;
+        bh=h0ivQLrZuUWuyEKz/TWb+FP9AASpHhVqOsJtRcwKQV4=;
+        h=Reply-To:From:To:Subject:Date:From;
+        b=UuTK/EeXPISuxnwQr99hB8/z9ucYVqVLF5tSso6n8cHQBt9MXjpLIo4AcVYjpyzKT
+         azNyEDkwORsCfkAYtGrbZZKGa0QbUR6yQkOWUGIKregkG5vMurV2/6JP54z/Bm3kUK
+         RSy+NTbolcUS8PWFNFwmVl1T2cGv0l611QPGisEw=
+Reply-To: jmasuku40@flippiebeckerwealthservices.com
+From:   Jotham Masuku <jmasuku40@flippie-beckerswealthsa.xyz>
+To:     linux-block@vger.kernel.org
+Subject: Projects
+Date:   09 Jun 2021 12:09:31 +0000
+Message-ID: <20210609120931.531152C37D50C6F2@flippie-beckerswealthsa.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Fixes scripts/checkpatch.pl warning:
-WARNING: Possible unnecessary 'out of memory' message
+Hello there,
 
-Remove it can help us save a bit of memory.
+I hope this message finds you in good spirits especially during=20
+this challenging time of coronavirus pandemic. I hope you and=20
+your family are well and keeping safe. Anyway, I am Jotham=20
+Masuku, a broker working with Flippiebecker Wealth. I got your=20
+contact (along with few other contacts) through an online=20
+business directory and I thought I should contact you to see if=20
+you are interested in this opportunity. I am contacting you=20
+because one of my high profile clients is interested in investing=20
+abroad and has asked me to look for individuals and companies=20
+with interesting business ideas and projects that he can invest=20
+in. He wants to invest a substantial amount of asset abroad.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/block/z2ram.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Please kindly respond back to this email if you are interested in=20
+this opportunity. Once I receive your response, I will give you=20
+more details and we can plan a strategy that will be beneficial=20
+to all parties.
 
-diff --git a/drivers/block/z2ram.c b/drivers/block/z2ram.c
-index c1d20818e649..dce119f697a7 100644
---- a/drivers/block/z2ram.c
-+++ b/drivers/block/z2ram.c
-@@ -236,11 +236,8 @@ static int z2_open(struct block_device *bdev, fmode_t mode)
- 
- 			case Z2MINOR_Z2ONLY:
- 				z2ram_map = kmalloc(max_z2_map, GFP_KERNEL);
--				if (z2ram_map == NULL) {
--					printk(KERN_ERR DEVICE_NAME
--					       ": cannot get mem for z2ram_map\n");
-+				if (!z2ram_map)
- 					goto err_out;
--				}
- 
- 				get_z2ram();
- 
-@@ -253,11 +250,8 @@ static int z2_open(struct block_device *bdev, fmode_t mode)
- 
- 			case Z2MINOR_CHIPONLY:
- 				z2ram_map = kmalloc(max_chip_map, GFP_KERNEL);
--				if (z2ram_map == NULL) {
--					printk(KERN_ERR DEVICE_NAME
--					       ": cannot get mem for z2ram_map\n");
-+				if (!z2ram_map)
- 					goto err_out;
--				}
- 
- 				get_chipram();
- 
--- 
-2.25.1
+Best regards
 
-
+J Masuku
+Flippiebecker Wealth
