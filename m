@@ -2,109 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8CEF3A19D9
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4113A19FA
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237318AbhFIPgq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 11:36:46 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:34804 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233975AbhFIPg0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:36:26 -0400
-Received: by mail-wr1-f45.google.com with SMTP id q5so26014370wrm.1
-        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:34:31 -0700 (PDT)
+        id S234131AbhFIPpH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 11:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237087AbhFIPo1 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:44:27 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647D2C061574
+        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 08:42:19 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id q25so18680821pfh.7
+        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google;
-        h=reply-to:subject:to:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+xGVDIJuM0pLBNamxzWM55+XUbEA7UeuqWFlHqJ+KE8=;
-        b=FW8JjTUgc2QCOqDKs23TPHKlw3yC/XaDsSZbxtUminiXGSvX6HAJpYZ/Q7qFRqe2Si
-         DE2Vjjjq+7Wf6EBrGE1XCRiD68xSExd/aXNywXqdoh/MDKiUe+/uyR6PYF3uzo1cSwXC
-         c6ECS6g8TDGxRMdOv6S5AUI5s8nP8ITWozbjt+6+5LjaWGsfJYncleIqdfNY3ITWdqau
-         g8Ojt5UxSarV5I1ca2LXZWWy06+ixLut8EQIASTas6NCggBh68hH1BfyWb2OL/7sdmf6
-         wdfrIrHIygsyVh6LasGPBthjK6hsSsfAxkMeTfsIDvzSpqzHfQzvWqAtcsOOCV75u7Ce
-         9EXA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=CUyegkg0RflLGjCgW8eHZLxyCNKKbQVGdJ9HzLVtxbY=;
+        b=l8fVWqITBh1EQRTwsBgt6yru1HwzWuP0XAfNfHSl0Lf2Ojtq4pxSAnIwlDe6D76dQY
+         jVMlYnCpSls/D298cIoOJ4rqiMRoXzWZX3SPldRrYaNtTiSgTuIvxvwW+V2iBcCiwqHh
+         uglm9c0AfyIjY+f5Q6fat5/8gXFOvK6BAn0U1kwYPt1zUgb/6NhbKrCosijU9TS4E65R
+         FM3nN4EhDQhi29xCJGsNGufLTmzp1s1ghEANVa6lrpFyUukRBF3kK1GhaizyqMnWwA64
+         FwTWp/du0jsZ8eAD7zx3JEN//ej6z7Y0zTKKnVncb4SpD2PyC+9Z5VNHBkoko8Ll2gtL
+         Unaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+xGVDIJuM0pLBNamxzWM55+XUbEA7UeuqWFlHqJ+KE8=;
-        b=NXlAehGDKDC4TSzEoT7fyuNooF5SJF2sVz8MW7MObmXJy+iewQr1Offp6X3ICjMcRc
-         jFmgUyDmzmx0OlShY0R4cBFar4bBsNfqS3CpEqXcba51I5T/+4sMvutaERrtghOWqo/B
-         4+zzX7FNdUzKn2EZy4lb2zjbf+zmxu0RxJUtLmUyVDiSlfUDl9XWfDmnOuKoCSlEXJJD
-         oiEFpacEHV/xg5JQibzhy3DHpMSyoeSIZ3WWeSIuY0daWJc5MCbNZoF5qeM2tjnOk1OU
-         DUmDpAjjZRC41i/RxEBPjDehrCaouxMt/FwlJPrfrK4BEEdD3gjhJE1FiXEkyZgDKhfC
-         /IKw==
-X-Gm-Message-State: AOAM5335/1HupFXU6oMCcZ9MRNWiFQXiVwHBKWmVqqf/ECGvqIkxFOHL
-        YGX0Xg0X+xIZbRHsH0dZYgS0gg==
-X-Google-Smtp-Source: ABdhPJzK+SLvGufcFz0XZVU0UMomSVVWqdLbszEBxtzGiErlhEYmKeaPk4EqBAO1Olmr3eUobVSoZw==
-X-Received: by 2002:a5d:4848:: with SMTP id n8mr495266wrs.70.1623252811382;
-        Wed, 09 Jun 2021 08:33:31 -0700 (PDT)
-Received: from ?IPv6:2a01:e0a:410:bb00:4096:b5c5:79a3:7c0f? ([2a01:e0a:410:bb00:4096:b5c5:79a3:7c0f])
-        by smtp.gmail.com with ESMTPSA id q4sm1829995wma.32.2021.06.09.08.33.29
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CUyegkg0RflLGjCgW8eHZLxyCNKKbQVGdJ9HzLVtxbY=;
+        b=IYRxjab6OdEeJgiy3bMPP+UEiIHbdK323A9SItS9NVoTInQUun+YVX5eDNV2qcepX8
+         59JU/0EbRw2N4WyZPxobohSpnf/564RP7noxHYbmmzcSCUKauIL75V67/fvRKZkqSYbb
+         rP15/PCOBtr6nwNGeE3X+jWstryG+CxxUbccNo7B0034gOOwqtdQgiMSDYB9y3a9dH0z
+         EChQ8wRLWG6C8fK7fBgZ70ijdhKvJOGogLD9ok4eg+HEKYbQ2ScCEWQ0lSPopobnsQ8E
+         arassnQsXMlxkyLOjkzlBABTmUgblApH06IaOfABh0YcEbrhpmez1R0ULR8X3oQ1Od7j
+         6GEg==
+X-Gm-Message-State: AOAM530/I8poxTA1jFZgemRIWtbq4NDj8vk59biLoO2lyG7YN1RivSpH
+        vXw+nAgEGYqAS0tAXbVaOGQulMEAWKHvPA==
+X-Google-Smtp-Source: ABdhPJx5HZzzQsKXO2zeM69xEzWa/54x/rFWdegLhmb0ikfu4mxkAuffMvkzDRh4P9jpif+FUcCUCA==
+X-Received: by 2002:a65:4689:: with SMTP id h9mr286351pgr.347.1623253338371;
+        Wed, 09 Jun 2021 08:42:18 -0700 (PDT)
+Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id ep6sm5309263pjb.24.2021.06.09.08.42.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jun 2021 08:33:30 -0700 (PDT)
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH 1/1] lib: Fix spelling mistakes
+        Wed, 09 Jun 2021 08:42:17 -0700 (PDT)
+Subject: Re: [PATCH 1/1] aoe: remove unnecessary oom message
 To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Stefani Seibold <stefani@seibold.net>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jens Axboe <axboe@kernel.dk>, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20210607072555.12416-1-thunder.leizhen@huawei.com>
-From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
-Message-ID: <eff5217f-74b5-3067-9210-6b2eb5ea5f4d@6wind.com>
-Date:   Wed, 9 Jun 2021 17:33:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Justin Sanders <justin@coraid.com>,
+        linux-block <linux-block@vger.kernel.org>
+References: <20210609121125.13883-1-thunder.leizhen@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2c906010-5a6f-cd0a-310a-e3d38f0c3563@kernel.dk>
+Date:   Wed, 9 Jun 2021 09:42:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210607072555.12416-1-thunder.leizhen@huawei.com>
+In-Reply-To: <20210609121125.13883-1-thunder.leizhen@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Le 07/06/2021 à 09:25, Zhen Lei a écrit :
-> Fix some spelling mistakes in comments:
-> permanentely ==> permanently
-> wont ==> won't
-> remaning ==> remaining
-> succed ==> succeed
-> shouldnt ==> shouldn't
-> alpha-numeric ==> alphanumeric
-> storeing ==> storing
-> funtion ==> function
-> documenation ==> documentation
-> Determin ==> Determine
-> intepreted ==> interpreted
-> ammount ==> amount
-> obious ==> obvious
-> interupts ==> interrupts
-> occured ==> occurred
-> asssociated ==> associated
-> taking into acount ==> taking into account
-> squence ==> sequence
-> stil ==> still
-> contiguos ==> contiguous
-> matchs ==> matches
-I don't know if there is already a patch flying somewhere, but it would be good
-to add those typos in scripts/spelling.txt
+On 6/9/21 6:11 AM, Zhen Lei wrote:
+> Fixes scripts/checkpatch.pl warning:
+> WARNING: Possible unnecessary 'out of memory' message
 
+Applied, thanks.
 
-Regards,
-Nicolas
+-- 
+Jens Axboe
+
