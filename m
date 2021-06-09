@@ -2,63 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C57973A19FE
-	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 17:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A36643A1AF1
+	for <lists+linux-block@lfdr.de>; Wed,  9 Jun 2021 18:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233598AbhFIPpV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Jun 2021 11:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232165AbhFIPpV (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 11:45:21 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A188CC061574
-        for <linux-block@vger.kernel.org>; Wed,  9 Jun 2021 08:43:11 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id x19so5603956pln.2
-        for <linux-block@vger.kernel.org>; Wed, 09 Jun 2021 08:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Z8LtuiS2tzEpXTSP+uxll3VftE+3H1wCsbrsl83cEAs=;
-        b=rEx/WU5P6jExj+zmsbzqK6Pf0KkmlK2tNcMGQm5YUGWItEMmGJf1oHsKx0O/B+TcvT
-         dTO0kPYJMWwRAwAU5PuFG9SSg55BRarap6Ca+Cf0NrzY7pxNO6xrxroOjDFHR3rrXbz2
-         LsjYs5u4CcwOZl1XtdTmtFpzY/n/PbFCptg6wsCNd2km2gII2oHGbF2OSzCWJgJFi0P0
-         Cl0RVpcX3xSpBP5aXWHC2RtNDGLvvCXTc8B0D1z4zDwmtbUYaY4S/8oOpKsOx9TW7Ynn
-         vrcA+4zIyYrzLqY8YeS4+oO9pbj/3O3n5vOMcjmmzNy8QAaEVGTuCgItLiOviEatV246
-         vO9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z8LtuiS2tzEpXTSP+uxll3VftE+3H1wCsbrsl83cEAs=;
-        b=rDdr5ydfggTpiEG6dt0VR6ip2kF2y2STHBZG0DGQjpH9qHbNXUt3qwSFod4slGEkb+
-         gq3EZUSK/0YWvWhMycdoHhZOrt9XFdxQye+wc3PcyHXv9x9Zjmt3nnBgZD0hPcixNVUh
-         jtVmKitSXsh6WbWI+MAspvEW+RTEgMjGHH5pwSsUj5QjHZR1H86wZMH+pLi5PHAIsHpx
-         bBkbNhFNr5sYCUQbU87olJ2viJxEG29vp7DquEiaceRlCkJjr6ICTT4T7atYZiLXUexs
-         9lG7RLH0M+sLDff0uAjf2yLKfOdzkaHGklBJXpcpmqLcAAsugudIrubRe7IV+kqSl1rP
-         ZvYg==
-X-Gm-Message-State: AOAM532oz154gYDBalI8h6Ku9YN3r16yhiiFhC2VzRyJaOADXmeAL9qB
-        58Vs4tqZdV7TNtBMISBAARDinZwYGrDfDQ==
-X-Google-Smtp-Source: ABdhPJyLmm8IaiZtTyeYgMzfVp17Xz0Y54yT1KGpPCspVZJ3m+f58cgJ603CAFCbHepU8uSOqALW9g==
-X-Received: by 2002:a17:90a:80c5:: with SMTP id k5mr11378900pjw.129.1623253390993;
-        Wed, 09 Jun 2021 08:43:10 -0700 (PDT)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id r92sm5808414pja.6.2021.06.09.08.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jun 2021 08:43:10 -0700 (PDT)
-Subject: Re: [PATCH 1/1] z2ram: remove unnecessary oom message
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-block <linux-block@vger.kernel.org>
-References: <20210609122739.14151-1-thunder.leizhen@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <648ec864-e70e-b845-7204-e5424fa9e609@kernel.dk>
-Date:   Wed, 9 Jun 2021 09:43:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S233417AbhFIQdQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Jun 2021 12:33:16 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58891 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232165AbhFIQdQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Jun 2021 12:33:16 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 159GVKkL099910;
+        Thu, 10 Jun 2021 01:31:20 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Thu, 10 Jun 2021 01:31:20 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 159GVJHY099907
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 10 Jun 2021 01:31:19 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [syzbot] possible deadlock in del_gendisk
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        syzbot <syzbot+61e04e51b7ac86930589@syzkaller.appspotmail.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Petr Vorel <pvorel@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Tejun Heo <tj@kernel.org>
+References: <000000000000ae236f05bfde0678@google.com>
+ <1435f266-9f6d-22ef-ba7d-f031c616aede@I-love.SAKURA.ne.jp>
+Message-ID: <7b8c9eeb-789d-e5e6-04d6-130ee8be7305@i-love.sakura.ne.jp>
+Date:   Thu, 10 Jun 2021 01:31:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210609122739.14151-1-thunder.leizhen@huawei.com>
+In-Reply-To: <1435f266-9f6d-22ef-ba7d-f031c616aede@I-love.SAKURA.ne.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,14 +51,58 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/9/21 6:27 AM, Zhen Lei wrote:
-> Fixes scripts/checkpatch.pl warning:
-> WARNING: Possible unnecessary 'out of memory' message
+Hello, Christoph.
+
+I'm currently trying full bisection.
+
+  # bad: [fc0586062816559defb14c947319ef8c4c326fb3] Merge tag 'for-5.13/drivers-2021-04-27' of git://git.kernel.dk/linux-block
+  # good: [42dec9a936e7696bea1f27d3c5a0068cd9aa95fd] Merge tag 'perf-core-2021-04-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+  # good: [68a32ba14177d4a21c4a9a941cf1d7aea86d436f] Merge tag 'drm-next-2021-04-28' of git://anongit.freedesktop.org/drm/drm
+  # good: [a800abd3ecb9acc55821f7ac9bba6c956b36a595] net: enetc: move skb creation into enetc_build_skb
+  # good: [6cc8e7430801fa238bd7d3acae1eb406c6e02fe1] loop: scale loop device by introducing per device lock
+  git bisect start 'fc0586062816559defb14c947319ef8c4c326fb3' '42dec9a936e7696bea1f27d3c5a0068cd9aa95fd' '68a32ba14177d4a21c4a9a941cf1d7aea86d436f' 'a800abd3ecb9acc55821f7ac9bba6c956b36a595' '6cc8e7430801fa238bd7d3acae1eb406c6e02fe1'
+  # good: [2958a995edc94654df690318df7b9b49e5a3ef88] block/rnbd-clt: Support polling mode for IO latency optimization
+  git bisect good 2958a995edc94654df690318df7b9b49e5a3ef88
+
+I think we will bisect this problem to
+
+  commit c76f48eb5c084b1e ("block: take bd_mutex around delete_partitions in del_gendisk")
+
+because that commit introduced new locking dependency bdev_lookup_sem => disk->part0->bd_mutex
+which matches the lockdep's report.
+
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.12.0-rc6-next-20210409-syzkaller #0 Not tainted
+  ------------------------------------------------------
+  syz-executor.4/10285 is trying to acquire lock:
+  ffff8881423245a0 (&bdev->bd_mutex){+.+.}-{3:3}, at: del_gendisk+0x250/0x9e0 block/genhd.c:618
+  
+  but task is already holding lock:
+  ffffffff8c7d9430 (bdev_lookup_sem){++++}-{3:3}, at: del_gendisk+0x222/0x9e0 block/genhd.c:616
+
+Do we need to revert "partition iteration simplifications" work?
+
+On 2021/06/07 19:56, Tetsuo Handa wrote:
+> Hello.
 > 
-> Remove it can help us save a bit of memory.
-
-Applied, thanks.
-
--- 
-Jens Axboe
+> syzbot is reporting "possible deadlock in del_gendisk" problem.
+> 
+> I guess this is caused by commit 6cc8e7430801fa23 ("loop: scale loop device
+> by introducing per device lock") because it touches loop_ctl_mutex usage
+> between v5.11 and v5.12-rc1. Please have a look.
+> 
+> On 2021/04/14 2:33, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    e99d8a84 Add linux-next specific files for 20210409
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=13b01681d00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7cd69574979bfeb7
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=61e04e51b7ac86930589
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148265d9d00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a981a1d00000
+> 
 
