@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 380DA3A2566
-	for <lists+linux-block@lfdr.de>; Thu, 10 Jun 2021 09:24:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEB9E3A255D
+	for <lists+linux-block@lfdr.de>; Thu, 10 Jun 2021 09:23:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbhFJH0K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Jun 2021 03:26:10 -0400
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:33323 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230462AbhFJHZ7 (ORCPT
+        id S230409AbhFJHZx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Jun 2021 03:25:53 -0400
+Received: from mail-pf1-f179.google.com ([209.85.210.179]:41896 "EHLO
+        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230421AbhFJHZq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Jun 2021 03:25:59 -0400
-Received: by mail-pg1-f182.google.com with SMTP id e20so9928040pgg.0;
-        Thu, 10 Jun 2021 00:23:48 -0700 (PDT)
+        Thu, 10 Jun 2021 03:25:46 -0400
+Received: by mail-pf1-f179.google.com with SMTP id x73so856144pfc.8;
+        Thu, 10 Jun 2021 00:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=tfZJcsESVJJ7LF8DyaFqXDwDLdv4yW2KMDeBAC866jo=;
-        b=TNz2V8mH0uC3nWekPXPbsuGvtWuYItq3VzMzWiy5Jbg6oFkbWV6Qk5RSYzB1gF2KpC
-         eMuen0T3Tx521ZxrTcFxoe+qqXNwf5294TMuWsHBFif0JRNWvoodst6T7oMBI+1k6eoP
-         bZGqLqW4QP9SOfkNuVDAoLvbHTlahsd9wlbg2WpTQUG6PtqiubzynJuqO7pCGXaqV7S1
-         QzQtlmJ2u8fkIoP9E/UUfb2biqiGv10beuGXBgZRxtz5wc8qOKvSkVSGV0+2NP1ccVJJ
-         NWhg0tDlOqg1HxgnQGenCvDK/cxKSxuT0WG6qsxKKKUYnIiuhZMBQpthY28cUnYg8R2C
-         UAww==
+        bh=qyBuZeZX6dtvZpGO9NcSkjgX81PiW8wDc10wk8ErfMI=;
+        b=ay27z07UJe5f99aVc8Wm6XMU5pD0Jyj8cc4G0sB201LrbK836nLaI/nJ6vTIcrTV6+
+         zCRIwCx8iscVMv1YvCToeLtpzrxtG4j33C8mQBQdGctaQ7KDqIYlj1kmSL/VTylxODqi
+         t51YJEvWHzw3VGX0cFavm4z35he9sup955uSR35EBDhJPGC2FzVMxA0T5aGVmFSV5+9i
+         KLV42J5hJ1/cyG4P+RrNY0rrd9cWATHly+0B2yKbTcWuEDe3CMU3c83b2OGW4qjkkWrg
+         o+Cc1sF19JEBDewlajdjGLIqblmdtgS0Y7LRwlVz76DyAOnGbsnesiSlWNmPUy+oHi33
+         j+Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=tfZJcsESVJJ7LF8DyaFqXDwDLdv4yW2KMDeBAC866jo=;
-        b=YuvfwtNUoKHZEqVJCiNZJKyAcpkB6g2mTqJBUx72Sev5eJhkyJNbUzqfXF8d3g6fgs
-         WkJDfcmpqlQb+dRFPRxAuw8ME7tW2uscPBKRHTl2XqtVKnlHJ1IzkI/jrlx2U44H0sTl
-         YrAquIF+5wS3srjvB21CMg45aws+lSNQary0PkzrmLAy4iJQokqgVPocPXGCsrJGEjqT
-         QOA+yST/WMB/HxKEpd1vqQp0MW+CgCDHuJ+D5wn6OskmXOztBm3NpWrdTBYcm+Yi/lKx
-         JBwaKCLl2iM3xJEb+j275RXWrwzQUq9YZ/GrlFDXX0qXPFrt3Q+v8l3sZeF8FcILol5O
-         A7Mg==
-X-Gm-Message-State: AOAM531Vk+9gYeHZuyDuS7HphqZd6FPvealyOEHpP4igcyKlbLH9dQ0g
-        3ElFYWhD75yH+f9oXiNcZZQ=
-X-Google-Smtp-Source: ABdhPJwBDHbaTG0Rc07pg03y/uCEas54z9JC5z6ftDdLZOXHiVL/s5Mn9JLRh+eqZTrXtf6qd7ll3A==
-X-Received: by 2002:a63:e253:: with SMTP id y19mr3650528pgj.137.1623309768839;
-        Thu, 10 Jun 2021 00:22:48 -0700 (PDT)
+        bh=qyBuZeZX6dtvZpGO9NcSkjgX81PiW8wDc10wk8ErfMI=;
+        b=oLEzF5ru328zjF3mIfMA7+Tj7VLMlt9T6mKntWtTKuk5Odql+Kc8UynQz85oe3sXq8
+         jjubbOm1i9P50pN5StJEHDbLvgQpXGw3u2gpc1YOMDbQHzziOjsK85uVP7VRIndu/pt5
+         gndAwid44yul1pOzk7p2OPKoULaWz9Y4as3d3VLvjkYUqSJv9iYINwX94qF4rDuzSa0a
+         qA+Q/cfr7WYutj6E5UDUG7Dgz4kdZ8xDZoC0tTiHTi4451X2mJPgUqkTtJbOIR5IYV0Q
+         LBWz8+B09lX2rBt4yBTfAzyd1FKwTRMDa5GvC4Lo4w7NPhcWszvJcyZ4K/wQ4OOYBQ5r
+         w7CQ==
+X-Gm-Message-State: AOAM532/mSaQD7J2+Ysr97/LWPxJaX5OgADgmRQy+t5Z/SpF8uAvlALA
+        GDtKMPxwzlAx5qCxtO4hJ2/g5VSB0g9ieoF0
+X-Google-Smtp-Source: ABdhPJwpg1/G8MUkz24RDJhbvkoYfMyl+Op63ZYE1k330yDigifdf9MVazAJzeRZnU0rUEzXk8pHqA==
+X-Received: by 2002:a63:b30f:: with SMTP id i15mr3700331pgf.62.1623309770098;
+        Thu, 10 Jun 2021 00:22:50 -0700 (PDT)
 Received: from VM-0-3-centos.localdomain ([101.32.213.191])
-        by smtp.gmail.com with ESMTPSA id u24sm1591310pfm.200.2021.06.10.00.22.47
+        by smtp.gmail.com with ESMTPSA id u24sm1591310pfm.200.2021.06.10.00.22.49
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Jun 2021 00:22:48 -0700 (PDT)
+        Thu, 10 Jun 2021 00:22:49 -0700 (PDT)
 From:   brookxu <brookxu.cn@gmail.com>
 To:     paolo.valente@linaro.org, axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 7/8] bfq: reset entity->prio_changed in bfq_init_entity()
-Date:   Thu, 10 Jun 2021 15:22:36 +0800
-Message-Id: <34c02f3525ed632ea1878591b41174aee50e953d.1618916839.git.brookxu@tencent.com>
+Subject: [RESEND PATCH 8/8] bfq: remove unnecessary BFQ_DEFAULT_GRP_IOPRIO
+Date:   Thu, 10 Jun 2021 15:22:37 +0800
+Message-Id: <86124148b8364995021f8c53737c68b04b524421.1618916839.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1ce935f1bb10e0c7ecea7b79b826ff4cfc89acf0.1618916839.git.brookxu@tencent.com>
 References: <1ce935f1bb10e0c7ecea7b79b826ff4cfc89acf0.1618916839.git.brookxu@tencent.com>
@@ -62,29 +62,25 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Chunguang Xu <brookxu@tencent.com>
 
-Since weight, ioprio, ioprio_class will be updated in bfq_init_entity(),
-st->wsum will be updated in __bfq_activate_entity(), so when it is first
-active, it seems that __bfq_entity_update_weight_prio() has nothing to
-do. By resetting entity->prio_change in bfq_init_entity(), we can avoid
-unnecessary logic calls.
+BFQ_DEFAULT_GRP_IOPRIO seems to be unused, maybe we can remove it.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- block/bfq-cgroup.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/bfq-iosched.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index c8c68dc..79a5aaa 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -426,6 +426,7 @@ void bfq_init_entity(struct bfq_entity *entity, struct bfq_group *bfqg)
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index da636a8..91c8654 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -22,7 +22,6 @@
+ #define BFQ_DEFAULT_QUEUE_IOPRIO	4
  
- 	entity->weight = entity->new_weight;
- 	entity->orig_weight = entity->new_weight;
-+	entity->prio_changed = 0;
- 	if (bfqq) {
- 		bfqq->ioprio = bfqq->new_ioprio;
- 		bfqq->ioprio_class = bfqq->new_ioprio_class;
+ #define BFQ_WEIGHT_LEGACY_DFL	100
+-#define BFQ_DEFAULT_GRP_IOPRIO	0
+ #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
+ 
+ #define MAX_PID_STR_LENGTH 12
 -- 
 1.8.3.1
 
