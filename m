@@ -2,132 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F293A89F0
-	for <lists+linux-block@lfdr.de>; Tue, 15 Jun 2021 22:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BFE63A8AFC
+	for <lists+linux-block@lfdr.de>; Tue, 15 Jun 2021 23:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbhFOUGw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Jun 2021 16:06:52 -0400
-Received: from verein.lst.de ([213.95.11.211]:51041 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229931AbhFOUGw (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Jun 2021 16:06:52 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AA58368B05; Tue, 15 Jun 2021 22:04:43 +0200 (CEST)
-Date:   Tue, 15 Jun 2021 22:04:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>
-Subject: Re: [patch v6 3/7] genirq/affinity: Add new callback for
- (re)calculating interrupt sets
-Message-ID: <20210615200443.GA6557@lst.de>
-References: <20190216172228.512444498@linutronix.de> <20210615195707.GA2909907@bjorn-Precision-5520>
+        id S231444AbhFOVXf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Jun 2021 17:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229965AbhFOVXa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 15 Jun 2021 17:23:30 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2ECC0613A4
+        for <linux-block@vger.kernel.org>; Tue, 15 Jun 2021 14:21:25 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id mj8-20020a17090b3688b029016ee34fc1b3so500064pjb.0
+        for <linux-block@vger.kernel.org>; Tue, 15 Jun 2021 14:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PfwRUU7eVNZsvc9b0Pp6xofj5lHce4If1zuLClVqHds=;
+        b=k41872DXg9wkp86KhOxBvcu0Ci6VIoYHAyuQo8qqIykaP05jTvRdRw2iM4HROlZWB9
+         v/xBFRgNloNRzQQcKx3HdBPMzLzERLP/q43nxD2Z3VGshkG8KI6qgVYIawdS4aeRCUUN
+         QY+xm4+6E8MDYk5JQid0hjit2pFbHdVbRZWXI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PfwRUU7eVNZsvc9b0Pp6xofj5lHce4If1zuLClVqHds=;
+        b=nkQ8R8VOkmXcq96CCh0Uh4EU8QQ9ZBuWslMk64rib1KZgoI1VGtlYml7oPtw3RKEIr
+         2/jGFroeGROWyX0iA061+uX1YtFV8fRT6LXNjIIfgt/OSfgQKJQyc8TitgsUSSUrY8Ho
+         dqJO7oo07xVHIHxoRg6ts0ZhRhPW0wEdfseYQ0ml4omSO6lPwqmTh7k4jiYIRc5dq9zi
+         FYhO0ecpGx13dUaoYLB7ZK/00FPWLgugSu6MoNL7qFbayx3N9+Z46c8KKcPreryLdVJC
+         WRmbClsatWMcOgTQDCx0v9EzR+eA104OhAFPfiXN2sqNfTQD/kNN8u0t5dGTN2q+7Ehl
+         zvpA==
+X-Gm-Message-State: AOAM531GfO2vGugPuCsY2Y6anfH1LO1iaaC95BnONAk4hyInYH8ltXs3
+        VmOdZTPK75tG9VHBhn2gSJn9rA==
+X-Google-Smtp-Source: ABdhPJxpvHbLjArJ3owM3JpRLH76Noir2n39FVfDmLx1tALshgWOs9Zy3GRdpG3sW+GGql2IjG+4vA==
+X-Received: by 2002:a17:902:7c05:b029:11c:1e7d:c633 with SMTP id x5-20020a1709027c05b029011c1e7dc633mr4646731pll.48.1623792085105;
+        Tue, 15 Jun 2021 14:21:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v9sm96686pfn.22.2021.06.15.14.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Jun 2021 14:21:24 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, gmpy.liaowx@gmail.com,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-doc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 0/4] Include zone in pstore_device_info
+Date:   Tue, 15 Jun 2021 14:21:17 -0700
+Message-Id: <20210615212121.1200820-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210615195707.GA2909907@bjorn-Precision-5520>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 02:57:07PM -0500, Bjorn Helgaas wrote:
-> On Sat, Feb 16, 2019 at 06:13:09PM +0100, Thomas Gleixner wrote:
-> > From: Ming Lei <ming.lei@redhat.com>
-> > 
-> > The interrupt affinity spreading mechanism supports to spread out
-> > affinities for one or more interrupt sets. A interrupt set contains one or
-> > more interrupts. Each set is mapped to a specific functionality of a
-> > device, e.g. general I/O queues and read I/O queus of multiqueue block
-> > devices.
-> > 
-> > The number of interrupts per set is defined by the driver. It depends on
-> > the total number of available interrupts for the device, which is
-> > determined by the PCI capabilites and the availability of underlying CPU
-> > resources, and the number of queues which the device provides and the
-> > driver wants to instantiate.
-> > 
-> > The driver passes initial configuration for the interrupt allocation via a
-> > pointer to struct irq_affinity.
-> > 
-> > Right now the allocation mechanism is complex as it requires to have a loop
-> > in the driver to determine the maximum number of interrupts which are
-> > provided by the PCI capabilities and the underlying CPU resources.  This
-> > loop would have to be replicated in every driver which wants to utilize
-> > this mechanism. That's unwanted code duplication and error prone.
-> > 
-> > In order to move this into generic facilities it is required to have a
-> > mechanism, which allows the recalculation of the interrupt sets and their
-> > size, in the core code. As the core code does not have any knowledge about the
-> > underlying device, a driver specific callback is required in struct
-> > irq_affinity, which can be invoked by the core code. The callback gets the
-> > number of available interupts as an argument, so the driver can calculate the
-> > corresponding number and size of interrupt sets.
-> > 
-> > At the moment the struct irq_affinity pointer which is handed in from the
-> > driver and passed through to several core functions is marked 'const', but for
-> > the callback to be able to modify the data in the struct it's required to
-> > remove the 'const' qualifier.
-> > 
-> > Add the optional callback to struct irq_affinity, which allows drivers to
-> > recalculate the number and size of interrupt sets and remove the 'const'
-> > qualifier.
-> > 
-> > For simple invocations, which do not supply a callback, a default callback
-> > is installed, which just sets nr_sets to 1 and transfers the number of
-> > spreadable vectors to the set_size array at index 0.
-> > 
-> > This is for now guarded by a check for nr_sets != 0 to keep the NVME driver
-> > working until it is converted to the callback mechanism.
-> > 
-> > To make sure that the driver configuration is correct under all circumstances
-> > the callback is invoked even when there are no interrupts for queues left,
-> > i.e. the pre/post requirements already exhaust the numner of available
-> > interrupts.
-> > 
-> > At the PCI layer irq_create_affinity_masks() has to be invoked even for the
-> > case where the legacy interrupt is used. That ensures that the callback is
-> > invoked and the device driver can adjust to that situation.
-> > 
-> > [ tglx: Fixed the simple case (no sets required). Moved the sanity check
-> >   	for nr_sets after the invocation of the callback so it catches
-> >   	broken drivers. Fixed the kernel doc comments for struct
-> >   	irq_affinity and de-'This patch'-ed the changelog ]
-> > 
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> > @@ -1196,6 +1196,13 @@ int pci_alloc_irq_vectors_affinity(struc
-> >  	/* use legacy irq if allowed */
-> >  	if (flags & PCI_IRQ_LEGACY) {
-> >  		if (min_vecs == 1 && dev->irq) {
-> > +			/*
-> > +			 * Invoke the affinity spreading logic to ensure that
-> > +			 * the device driver can adjust queue configuration
-> > +			 * for the single interrupt case.
-> > +			 */
-> > +			if (affd)
-> > +				irq_create_affinity_masks(1, affd);
-> 
-> This looks like a leak because irq_create_affinity_masks() returns a
-> pointer to kcalloc()ed space, but we throw away the pointer.
-> 
-> Or is there something very subtle going on here, like this special
-> case doesn't allocate anything?  I do see the "Nothing to assign?"
-> case that returns NULL with no alloc, but it's not completely trivial
-> to verify that we take that case here.
-> 
-> >  			pci_intx(dev, 1);
-> >  			return 1;
-> >  		}
----end quoted text---
+Hi,
+
+This fixes up pstore/blk to avoid touching block internals, and includes
+additional fixes.
+
+-Kees
+
+v1: https://lore.kernel.org/lkml/20210614200421.2702002-1-keescook@chromium.org
+
+Kees Cook (4):
+  pstore/blk: Improve failure reporting
+  pstore/blk: Use the normal block device I/O path
+  pstore/blk: Include zone in pstore_device_info
+  pstore/blk: Fix kerndoc and redundancy on blkdev param
+
+ Documentation/admin-guide/pstore-blk.rst |  14 +-
+ drivers/mtd/mtdpstore.c                  |  10 +-
+ fs/pstore/blk.c                          | 371 ++++++++---------------
+ include/linux/pstore_blk.h               |  27 +-
+ 4 files changed, 141 insertions(+), 281 deletions(-)
+
+-- 
+2.25.1
+
