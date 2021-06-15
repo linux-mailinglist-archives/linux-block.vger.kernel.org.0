@@ -2,85 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 006553A85D3
-	for <lists+linux-block@lfdr.de>; Tue, 15 Jun 2021 17:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 641F33A85E5
+	for <lists+linux-block@lfdr.de>; Tue, 15 Jun 2021 18:00:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232274AbhFOQBI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Jun 2021 12:01:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:50038 "EHLO verein.lst.de"
+        id S231775AbhFOQCl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Jun 2021 12:02:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:50060 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231899AbhFOQA1 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Jun 2021 12:00:27 -0400
+        id S232062AbhFOQCe (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 15 Jun 2021 12:02:34 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 757AD67373; Tue, 15 Jun 2021 17:58:17 +0200 (CEST)
-Date:   Tue, 15 Jun 2021 17:58:17 +0200
+        id A407668AFE; Tue, 15 Jun 2021 18:00:27 +0200 (CEST)
+Date:   Tue, 15 Jun 2021 18:00:27 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Justin Sanders <justin@coraid.com>,
-        Denis Efremov <efremov@linux.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Tim Waugh <tim@cyberelk.net>,
-        Geoff Levand <geoff@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linuxppc-dev@lists.ozlabs.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 09/30] mtd_blkdevs: use blk_mq_alloc_disk
-Message-ID: <20210615155817.GA31047@lst.de>
-References: <20210602065345.355274-1-hch@lst.de> <20210602065345.355274-10-hch@lst.de> <CGME20210615154746eucas1p1321b6f1cf38d21899632e132cf025e61@eucas1p1.samsung.com> <13b21a07-b7c7-37db-fdc9-77bf174b6f8f@samsung.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bruno Goncalves <bgoncalv@redhat.com>,
+        CKI Project <cki-project@redhat.com>,
+        skt-results-master@redhat.com, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Fine Fan <ffan@redhat.com>,
+        Jeff Bastian <jbastian@redhat.com>
+Subject: Re: ? PANICKED: Test report for kernel 5.13.0-rc3 (block, 30ec225a)
+Message-ID: <20210615160027.GA31772@lst.de>
+References: <cki.E3198A727A.0A5WS1XUPX@redhat.com> <CA+QYu4qjrzyjM_zgJ8SSZ-zsodcK=uk8xToAVR3+kmOdNZfgZQ@mail.gmail.com> <20210615115243.GA12378@lst.de> <CAFj5m9Kp4T1R_RB1B4W3dvjU5M17wWCZ6OVbvYWjXLcGvab6=A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13b21a07-b7c7-37db-fdc9-77bf174b6f8f@samsung.com>
+In-Reply-To: <CAFj5m9Kp4T1R_RB1B4W3dvjU5M17wWCZ6OVbvYWjXLcGvab6=A@mail.gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 05:47:44PM +0200, Marek Szyprowski wrote:
-> Hi,
-> 
-> On 02.06.2021 08:53, Christoph Hellwig wrote:
-> > Use the blk_mq_alloc_disk API to simplify the gendisk and request_queue
-> > allocation.
+On Tue, Jun 15, 2021 at 09:58:03PM +0800, Ming Lei wrote:
+> On Tue, Jun 15, 2021 at 7:52 PM Christoph Hellwig <hch@lst.de> wrote:
 > >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > On Mon, Jun 14, 2021 at 02:40:58PM +0200, Bruno Goncalves wrote:
+> > > Hi,
+> > >
+> > > We've noticed a kernel oops during the stress-ng test on aarch64 more log
+> > > details on [1]. Christoph, do you think this could be related to the recent
+> > > blk_cleanup_disk changes [2]?
+> >
+> > It doesn't really look very related.  Any chance you could bisect it?
 > 
-> This patch landed in linux-next as commit 6966bb921def ("mtd_blkdevs: 
-> use blk_mq_alloc_disk"). It causes the following regression on my QEMU 
-> arm64 setup:
+> It should be the wrong order between freeing tagset and cleanup disk:
+> 
+> static void loop_remove(struct loop_device *lo)
+> {
+>         ...
+>         blk_mq_free_tag_set(&lo->tag_set);
+>         blk_cleanup_disk(lo->lo_disk);
+>         ...
+>  }
 
-Please try the patch below:
+Indeed.  Something like this should fix the issue:
 
-diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
-index 5dc4c966ea73..6ce4bc57f919 100644
---- a/drivers/mtd/mtd_blkdevs.c
-+++ b/drivers/mtd/mtd_blkdevs.c
-@@ -382,6 +382,7 @@ int add_mtd_blktrans_dev(struct mtd_blktrans_dev *new)
- 	}
- 
- 	new->disk = gd;
-+	new->rq = new->disk->queue;
- 	gd->private_data = new;
- 	gd->major = tr->major;
- 	gd->first_minor = (new->devnum) << tr->part_bits;
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 9a48b3f9a15c..e0c4de392eab 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2172,8 +2172,8 @@ static int loop_add(struct loop_device **l, int i)
+ static void loop_remove(struct loop_device *lo)
+ {
+ 	del_gendisk(lo->lo_disk);
+-	blk_mq_free_tag_set(&lo->tag_set);
+ 	blk_cleanup_disk(lo->lo_disk);
++	blk_mq_free_tag_set(&lo->tag_set);
+ 	mutex_destroy(&lo->lo_mutex);
+ 	kfree(lo);
+ }
