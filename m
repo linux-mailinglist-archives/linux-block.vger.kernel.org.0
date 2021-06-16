@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B1863AA193
-	for <lists+linux-block@lfdr.de>; Wed, 16 Jun 2021 18:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D0E3AA18D
+	for <lists+linux-block@lfdr.de>; Wed, 16 Jun 2021 18:40:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbhFPQm4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Jun 2021 12:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55082 "EHLO
+        id S230312AbhFPQmy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Jun 2021 12:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230350AbhFPQmz (ORCPT
+        with ESMTP id S229693AbhFPQmx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Jun 2021 12:42:55 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CDFC0617AD
+        Wed, 16 Jun 2021 12:42:53 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83C3C061760
         for <linux-block@vger.kernel.org>; Wed, 16 Jun 2021 09:40:47 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id a127so2631342pfa.10
+Received: by mail-pg1-x52f.google.com with SMTP id t17so2450777pga.5
         for <linux-block@vger.kernel.org>; Wed, 16 Jun 2021 09:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=epXDcsa+iB2IdU4Gd981bdI+VgdMiEH3uS5c66pfdMk=;
-        b=GkLCmFh/vzfPIF7v1q7mJc1wazpBYwrpHlrK8VamLK/tdnFXUDt3Jqpo/4zhnIgkB8
-         w2Pa4tHYHF/iTjxBxw7knQzMcGPxxObyF5+9fqOM24ruxemJU2JYyJ4aKfJ6/wO0ElHe
-         T6vfoZDbGX45mQjwQTttWWusehKNnlTA3+E6Y=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AwtgVJkhTDK7FkC0vaUra0M374ERbF8RXthI68zkQrk=;
+        b=PjKgFRjHSJToA5x31UIrlT2kQz8QWjvtUtYBHJLyMvk0e1Hb9GK88sJy3Wo1ywei+B
+         z0DhACruELJPvs+3RZ33FJaX8HsHYVzcpOxltyO2La4fkO2wGBv6zH1UaGS7yZ5me6mJ
+         vUp5deeq1o/Htj824MXRwhI+mkytJCSWrZDnU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=epXDcsa+iB2IdU4Gd981bdI+VgdMiEH3uS5c66pfdMk=;
-        b=P0W4uxkK1NiTlGiP/LQREI7rgKem+p7h489Uybhtyo8OQzHPwLikhUru2VTs/vm2h6
-         zICEJ5QyUhHxjO5gpZhV1VzJgv86OIpVTK5xmsa0z8fB+daTrvAw+7JCXiKOBz1j3KRW
-         dr3L9K8WA2h5oSVrnRoeWuAcfW2iEtZY0GAj2bR/WRFaMLyeAfdG+hBkv4+fJ+4T6j6s
-         7DREcoBhJH6xs04MfJf2TIy724jkOgHPkkkZLFZd9RdOy6ONzsyBGHV2/sLfBdCwIvz3
-         IqLI7GOX33Si4ZweQEUG03+oc7YBkObgb5/ptVa4yPE/9kkUs7SILSJHyhIDsci6Zny7
-         ZKIQ==
-X-Gm-Message-State: AOAM530INWALuP+pxgh4bXE6dZaabcU9U1PUNLFvtXC6Ju7Vuk43N1tf
-        veFurgnt/LsbbtUtiGxnyncYbw==
-X-Google-Smtp-Source: ABdhPJwSppm5irPLhD/8UhbktXBLwwAA5AGV8driRal8NYsxUQyf0Pz+CGSw19WrD/+6GFIZo7Qt8Q==
-X-Received: by 2002:a63:5c04:: with SMTP id q4mr453285pgb.127.1623861647276;
-        Wed, 16 Jun 2021 09:40:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AwtgVJkhTDK7FkC0vaUra0M374ERbF8RXthI68zkQrk=;
+        b=Ko3wI0IoFXQqmK/bErmZku6eizgTViwbCrW+MBHLWR1jH52YbYD2N7Ys4vZY/RSIAE
+         8CXOqogU9rNu1Dqmqh/XDTVxnYmnZ6RR7Dvb4iR5XtDci9SwpHLmbzvprmjxOyjm6No0
+         4OY74W3esuSitF1afTMfT/rY8hzEUAH3ctXEr8NlWtyD0rXwq6qyt1xKLfS+ObrznT/x
+         Bm7gd4Tc+1Kq5Ap/PkbuXAkOYczswN/n40t0+5ESTWSzLXBE/u9UraVbsb6TyWFGTvhf
+         ob+WKP74Pi5F7SzesBQiJAaqiNQnt1oyyXdqO4sqgjPpDXZ4aXborVbSistn5mHgWUMU
+         tNjA==
+X-Gm-Message-State: AOAM532yqKJphyN6us3bdhI7TS2SLZMp0RMo8/TNG9N8jhCA84CJM6jj
+        6ggYEDXuxCRR/6rqGoLesr6UMg==
+X-Google-Smtp-Source: ABdhPJyZY0hoVBBpbAB8LGirsSlZb/UXJaZdGclDdXDTOIGGnPZxvbdmt6gy8/o3bWoM59xye5Uu7g==
+X-Received: by 2002:a05:6a00:844:b029:2f8:5436:dc39 with SMTP id q4-20020a056a000844b02902f85436dc39mr624754pfk.10.1623861646934;
+        Wed, 16 Jun 2021 09:40:46 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c5sm2840547pfn.144.2021.06.16.09.40.45
+        by smtp.gmail.com with ESMTPSA id ip7sm2663266pjb.39.2021.06.16.09.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 16 Jun 2021 09:40:46 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -58,43 +58,56 @@ Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         linux-doc@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 0/5] Use the normal block device I/O path
-Date:   Wed, 16 Jun 2021 09:40:38 -0700
-Message-Id: <20210616164043.1221861-1-keescook@chromium.org>
+Subject: [PATCH v3 1/5] pstore/blk: Improve failure reporting
+Date:   Wed, 16 Jun 2021 09:40:39 -0700
+Message-Id: <20210616164043.1221861-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210616164043.1221861-1-keescook@chromium.org>
+References: <20210616164043.1221861-1-keescook@chromium.org>
 MIME-Version: 1.0
+X-Patch-Hashes: v=1; h=sha256; g=95c1880167375f358445fa6b36d9d46efbebcc09; i=x+eth6WIY3ZV3RikljpGvsEDOkHC4+JR/D6VkOL4MwM=; m=KWKLltarrgCHVaChKkiXTTMXR+nWhEDb2yQ+7Fx0dy0=; p=hVqcquLAjJY5MNtchTMAytKSIfiafQn164H7tkcB2Bg=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKKYkACgkQiXL039xtwCZgHhAAode R8F21Ztaztm9OD+m51tZDz9H7Jmr3b179RR3mjQtLY5uCy9QlEpGuYAsz/ABz9YrgP0QBOkMztOPC oQPxj2VnCVVuMJRSzFTue9HH70ItKKMz/VIHIFeV7GPStnetLsLWB+ndgzT9ustwokFew+5O35X/l pOmZy7Ol4tvlE44IfAyL6U9z8p9P9r+3a9UyoxW9Hm+KrSC9fxCG0wayJe8PqBkEdSvJ7VolFsRPr bT2bKgOb1F1vZFcHVIK00XvErTh0b6lTlWZWU9m91uH0S47Z7T+rnsJyiRLAldZiTQW2TMWo4zkIs 0QXC77HT2aXShl9P8FZkqmxDS/bYJqYFmt8ags6dV7EPjaOdAt42WMXdYEYuwsZBUVjFVwqpxZPm6 v+z7VzEJQYXs4rrkOOdcUVk4p+BuoyTrmR6/YbOjHkmvW8ufWZxNlndmPcAXW2+CMqV+U8p3LiHnF Yt8bHShaW175vGPMGqhldiLQpQQvJUMtlfrf35EBWHfvA4lDbhJPkvYW/nytaYgyjrnSUmdNqcLTA sb5e0RWD0gXDZqBhYJX7byjf49AFfMoBn3f/Jke02up/jENft69J+Zz4+g+yXD8yERwRPUVy/A8fG Mty73UjHC9R3wIIIG2JsoPGhsP+8rLEgD7c7d6KYl/Pu9NcT44LdTcznpdHhVMi0=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+There was no feedback on bad registration attempts. Add details on the
+failure cause.
 
-This fixes up pstore/blk to avoid touching block internals, and includes
-additional fixes and clean-ups.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/blk.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
--Kees
-
-v3:
-- split verify_size move into a separate patch
-- several changes suggested by hch from the v2 thread
-- add reviewed-bys
-v2: https://lore.kernel.org/lkml/20210615212121.1200820-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20210614200421.2702002-1-keescook@chromium.org
-
-Kees Cook (5):
-  pstore/blk: Improve failure reporting
-  pstore/blk: Move verify_size() macro out of function
-  pstore/blk: Use the normal block device I/O path
-  pstore/blk: Fix kerndoc and redundancy on blkdev param
-  pstore/blk: Include zone in pstore_device_info
-
- Documentation/admin-guide/pstore-blk.rst |  14 +-
- drivers/mtd/mtdpstore.c                  |  10 +-
- fs/pstore/blk.c                          | 403 +++++++++--------------
- include/linux/pstore_blk.h               |  27 +-
- 4 files changed, 171 insertions(+), 283 deletions(-)
-
+diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
+index 4bb8a344957a..eca83820fb5d 100644
+--- a/fs/pstore/blk.c
++++ b/fs/pstore/blk.c
+@@ -114,8 +114,22 @@ static int __register_pstore_device(struct pstore_device_info *dev)
+ 
+ 	lockdep_assert_held(&pstore_blk_lock);
+ 
+-	if (!dev || !dev->total_size || !dev->read || !dev->write)
++	if (!dev) {
++		pr_err("NULL device info\n");
+ 		return -EINVAL;
++	}
++	if (!dev->total_size) {
++		pr_err("zero sized device\n");
++		return -EINVAL;
++	}
++	if (!dev->read) {
++		pr_err("no read handler for device\n");
++		return -EINVAL;
++	}
++	if (!dev->write) {
++		pr_err("no write handler for device\n");
++		return -EINVAL;
++	}
+ 
+ 	/* someone already registered before */
+ 	if (pstore_zone_info)
 -- 
 2.25.1
 
