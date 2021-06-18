@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3B33AC03A
-	for <lists+linux-block@lfdr.de>; Fri, 18 Jun 2021 02:45:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1041A3AC03B
+	for <lists+linux-block@lfdr.de>; Fri, 18 Jun 2021 02:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233336AbhFRArj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Jun 2021 20:47:39 -0400
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:44894 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233357AbhFRArg (ORCPT
+        id S233387AbhFRAro (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Jun 2021 20:47:44 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:42883 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233384AbhFRArh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Jun 2021 20:47:36 -0400
-Received: by mail-pg1-f179.google.com with SMTP id t13so6337134pgu.11
-        for <linux-block@vger.kernel.org>; Thu, 17 Jun 2021 17:45:27 -0700 (PDT)
+        Thu, 17 Jun 2021 20:47:37 -0400
+Received: by mail-pg1-f170.google.com with SMTP id i34so737577pgl.9
+        for <linux-block@vger.kernel.org>; Thu, 17 Jun 2021 17:45:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G/NbPIPk6Fbqg0V4a4oKvZtObYD2ZQ0ESKFfnDpkuTw=;
-        b=Qo9qksV8dnbY2A02/xXQTw1gcfGOvxQO871blhvHNiBoM8gelahO6BGl+oQKq/kRLb
-         B5w+YNEOgnFodLrbELPqkVAToBdPrh3qlUNSXJtzUIuW1MNE/pZjxZHaRM8HAceB74Sj
-         iflz5LQg+JDGPEUslvR02kmb6ls92tExRVv9IkrA1wuGTSCX2xWk7fzNhjQsndSxumJz
-         oYunPLkGbVHN2hTNqO/JiUoU6bAi3p3m2b3wBvftDBS3nWSFfqIPNnuL4zRqknk5pVGS
-         lO3fjMlYp98uzPVBmAx/OBJdQJb5X6lYrYrvpZq6aVy54Lvxznca2Msq+6N3uFhyjSvU
-         NenA==
-X-Gm-Message-State: AOAM530octE4w1K+n4DOOODf4xNwa2XG/mH3nlQzbllD4tMxqnajB+rC
-        6luAWPq4HR/ww7oziuIgsfQ=
-X-Google-Smtp-Source: ABdhPJxAwz/zff1sjtKGDCfOZqUWEgdZ+gXcIkoHHgLqb0I7wNon3J/nfkHFhJC8vUWOn0BVGaxnEQ==
-X-Received: by 2002:a62:7cca:0:b029:2e9:c89d:d8a9 with SMTP id x193-20020a627cca0000b02902e9c89dd8a9mr2330431pfc.55.1623977126651;
-        Thu, 17 Jun 2021 17:45:26 -0700 (PDT)
+        bh=krSDjByFERVKQJ0itHMpJ06ziR2DnFOg0zEUhsbUegQ=;
+        b=dr0oeI0l9b2mQpIdtpgH/wcITjWZ+3Z5cYmKXTJub7jojCG5dZlLvRD2b/MFxmDF9m
+         YzWSHfRkgJwgCyX3koch3fTzuU58V5JhcWOB0+Fv3P8CEWZQ5w7LvEoxMIkBdDJot7Ap
+         dGFRlEygrf+KSC/MZ1BWXv4g86wpU0IsCl+hd+y/Us/Aj8SvuSNpiXGna9A/PCL8mcTp
+         +DlzutahPv8AxNicfwEIVXEqstCesrv8c5+pDbNFbghX7q+fM/IN/JWJwsVcsFGcIhJc
+         hHNYaVXGzw2qaaI8EVf6rVcbBjJuo97yu1vL1eAeVaasUCtXxABk8YVO6H/iSMTQAwY8
+         odEw==
+X-Gm-Message-State: AOAM530WL66Hfz0jfsXJPqhn6SkG4bNxys+2qFMAcHr3wVWl2+FPfM0B
+        mAR7Cw1dLADVYlpKX0qvNjc=
+X-Google-Smtp-Source: ABdhPJw+KWVp6XcYI2FtJ5py39Sx18QCDzWcsds9G/2hDwGyR9MviPCUsMhiWKYfQuk87duCpPhLcg==
+X-Received: by 2002:a05:6a00:168a:b029:2fb:6bb0:aba with SMTP id k10-20020a056a00168ab02902fb6bb00abamr2345425pfc.32.1623977128332;
+        Thu, 17 Jun 2021 17:45:28 -0700 (PDT)
 Received: from asus.hsd1.ca.comcast.net (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id b10sm6215573pff.14.2021.06.17.17.45.25
+        by smtp.gmail.com with ESMTPSA id b10sm6215573pff.14.2021.06.17.17.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 17:45:26 -0700 (PDT)
+        Thu, 17 Jun 2021 17:45:27 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -44,9 +44,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         Himanshu Madhani <himanshu.madhani@oracle.com>
-Subject: [PATCH v3 14/16] block/mq-deadline: Track I/O statistics
-Date:   Thu, 17 Jun 2021 17:44:54 -0700
-Message-Id: <20210618004456.7280-15-bvanassche@acm.org>
+Subject: [PATCH v3 15/16] block/mq-deadline: Add cgroup support
+Date:   Thu, 17 Jun 2021 17:44:55 -0700
+Message-Id: <20210618004456.7280-16-bvanassche@acm.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210618004456.7280-1-bvanassche@acm.org>
 References: <20210618004456.7280-1-bvanassche@acm.org>
@@ -56,8 +56,14 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Track I/O statistics per I/O priority and export these statistics to
-debugfs. These statistics help developers of the deadline scheduler.
+Maintain statistics per cgroup and export these to user space. These
+statistics are essential for verifying whether the proper I/O priorities
+have been assigned to requests. An example of the statistics data with
+this patch applied:
+
+$ cat /sys/fs/cgroup/io.stat
+11:2 rbytes=0 wbytes=0 rios=3 wios=0 dbytes=0 dios=0 [NONE] dispatched=0 inserted=0 merged=171 [RT] dispatched=0 inserted=0 merged=0 [BE] dispatched=0 inserted=0 merged=0 [IDLE] dispatched=0 inserted=0 merged=0
+8:32 rbytes=2142720 wbytes=0 rios=105 wios=0 dbytes=0 dios=0 [NONE] dispatched=0 inserted=0 merged=171 [RT] dispatched=0 inserted=0 merged=0 [BE] dispatched=0 inserted=0 merged=0 [IDLE] dispatched=0 inserted=0 merged=0
 
 Cc: Damien Le Moal <damien.lemoal@wdc.com>
 Cc: Hannes Reinecke <hare@suse.de>
@@ -67,18 +73,200 @@ Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 Cc: Himanshu Madhani <himanshu.madhani@oracle.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 100 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+ block/Kconfig.iosched                       |   6 +
+ block/Makefile                              |   2 +
+ block/mq-deadline-cgroup.c                  | 126 ++++++++++++++++++++
+ block/mq-deadline-cgroup.h                  | 114 ++++++++++++++++++
+ block/{mq-deadline.c => mq-deadline-main.c} |  74 +++++++++---
+ 5 files changed, 308 insertions(+), 14 deletions(-)
+ create mode 100644 block/mq-deadline-cgroup.c
+ create mode 100644 block/mq-deadline-cgroup.h
+ rename block/{mq-deadline.c => mq-deadline-main.c} (95%)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index aba672a5be1e..04d9d6b3745b 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -51,6 +51,19 @@ enum dd_prio {
+diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
+index 2f2158e05a91..64053d67a97b 100644
+--- a/block/Kconfig.iosched
++++ b/block/Kconfig.iosched
+@@ -9,6 +9,12 @@ config MQ_IOSCHED_DEADLINE
+ 	help
+ 	  MQ version of the deadline IO scheduler.
  
- enum { DD_PRIO_COUNT = 3 };
- 
-+/* I/O statistics per I/O priority. */
++config MQ_IOSCHED_DEADLINE_CGROUP
++       tristate
++       default y
++       depends on MQ_IOSCHED_DEADLINE
++       depends on BLK_CGROUP
++
+ config MQ_IOSCHED_KYBER
+ 	tristate "Kyber I/O scheduler"
+ 	default y
+diff --git a/block/Makefile b/block/Makefile
+index af3d044abaf1..b9db5d4edfc8 100644
+--- a/block/Makefile
++++ b/block/Makefile
+@@ -21,6 +21,8 @@ obj-$(CONFIG_BLK_CGROUP_IOPRIO)	+= blk-ioprio.o
+ obj-$(CONFIG_BLK_CGROUP_IOLATENCY)	+= blk-iolatency.o
+ obj-$(CONFIG_BLK_CGROUP_IOCOST)	+= blk-iocost.o
+ obj-$(CONFIG_MQ_IOSCHED_DEADLINE)	+= mq-deadline.o
++mq-deadline-y += mq-deadline-main.o
++mq-deadline-$(CONFIG_MQ_IOSCHED_DEADLINE_CGROUP)+= mq-deadline-cgroup.o
+ obj-$(CONFIG_MQ_IOSCHED_KYBER)	+= kyber-iosched.o
+ bfq-y				:= bfq-iosched.o bfq-wf2q.o bfq-cgroup.o
+ obj-$(CONFIG_IOSCHED_BFQ)	+= bfq.o
+diff --git a/block/mq-deadline-cgroup.c b/block/mq-deadline-cgroup.c
+new file mode 100644
+index 000000000000..3b4bfddec39f
+--- /dev/null
++++ b/block/mq-deadline-cgroup.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/blk-cgroup.h>
++#include <linux/ioprio.h>
++
++#include "mq-deadline-cgroup.h"
++
++static struct blkcg_policy dd_blkcg_policy;
++
++static struct blkcg_policy_data *dd_cpd_alloc(gfp_t gfp)
++{
++	struct dd_blkcg *pd;
++
++	pd = kzalloc(sizeof(*pd), gfp);
++	if (!pd)
++		return NULL;
++	pd->stats = alloc_percpu_gfp(typeof(*pd->stats),
++				     GFP_KERNEL | __GFP_ZERO);
++	if (!pd->stats) {
++		kfree(pd);
++		return NULL;
++	}
++	return &pd->cpd;
++}
++
++static void dd_cpd_free(struct blkcg_policy_data *cpd)
++{
++	struct dd_blkcg *dd_blkcg = container_of(cpd, typeof(*dd_blkcg), cpd);
++
++	free_percpu(dd_blkcg->stats);
++	kfree(dd_blkcg);
++}
++
++static struct dd_blkcg *dd_blkcg_from_pd(struct blkg_policy_data *pd)
++{
++	return container_of(blkcg_to_cpd(pd->blkg->blkcg, &dd_blkcg_policy),
++			    struct dd_blkcg, cpd);
++}
++
++/*
++ * Convert an association between a block cgroup and a request queue into a
++ * pointer to the mq-deadline information associated with a (blkcg, queue) pair.
++ */
++struct dd_blkcg *dd_blkcg_from_bio(struct bio *bio)
++{
++	struct blkg_policy_data *pd;
++
++	pd = blkg_to_pd(bio->bi_blkg, &dd_blkcg_policy);
++	if (!pd)
++		return NULL;
++
++	return dd_blkcg_from_pd(pd);
++}
++
++static size_t dd_pd_stat(struct blkg_policy_data *pd, char *buf, size_t size)
++{
++	static const char *const prio_class_name[] = {
++		[IOPRIO_CLASS_NONE]	= "NONE",
++		[IOPRIO_CLASS_RT]	= "RT",
++		[IOPRIO_CLASS_BE]	= "BE",
++		[IOPRIO_CLASS_IDLE]	= "IDLE",
++	};
++	struct dd_blkcg *blkcg = dd_blkcg_from_pd(pd);
++	int res = 0;
++	u8 prio;
++
++	for (prio = 0; prio < ARRAY_SIZE(blkcg->stats->stats); prio++)
++		res += scnprintf(buf + res, size - res,
++			" [%s] dispatched=%u inserted=%u merged=%u",
++			prio_class_name[prio],
++			ddcg_sum(blkcg, dispatched, prio) +
++			ddcg_sum(blkcg, merged, prio) -
++			ddcg_sum(blkcg, completed, prio),
++			ddcg_sum(blkcg, inserted, prio) -
++			ddcg_sum(blkcg, completed, prio),
++			ddcg_sum(blkcg, merged, prio));
++
++	return res;
++}
++
++static struct blkg_policy_data *dd_pd_alloc(gfp_t gfp, struct request_queue *q,
++					    struct blkcg *blkcg)
++{
++	struct dd_blkg *pd;
++
++	pd = kzalloc(sizeof(*pd), gfp);
++	if (!pd)
++		return NULL;
++	return &pd->pd;
++}
++
++static void dd_pd_free(struct blkg_policy_data *pd)
++{
++	struct dd_blkg *dd_blkg = container_of(pd, typeof(*dd_blkg), pd);
++
++	kfree(dd_blkg);
++}
++
++static struct blkcg_policy dd_blkcg_policy = {
++	.cpd_alloc_fn		= dd_cpd_alloc,
++	.cpd_free_fn		= dd_cpd_free,
++
++	.pd_alloc_fn		= dd_pd_alloc,
++	.pd_free_fn		= dd_pd_free,
++	.pd_stat_fn		= dd_pd_stat,
++};
++
++int dd_activate_policy(struct request_queue *q)
++{
++	return blkcg_activate_policy(q, &dd_blkcg_policy);
++}
++
++void dd_deactivate_policy(struct request_queue *q)
++{
++	blkcg_deactivate_policy(q, &dd_blkcg_policy);
++}
++
++int __init dd_blkcg_init(void)
++{
++	return blkcg_policy_register(&dd_blkcg_policy);
++}
++
++void __exit dd_blkcg_exit(void)
++{
++	blkcg_policy_unregister(&dd_blkcg_policy);
++}
+diff --git a/block/mq-deadline-cgroup.h b/block/mq-deadline-cgroup.h
+new file mode 100644
+index 000000000000..0143fd74f3ce
+--- /dev/null
++++ b/block/mq-deadline-cgroup.h
+@@ -0,0 +1,114 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#if !defined(_MQ_DEADLINE_CGROUP_H_)
++#define _MQ_DEADLINE_CGROUP_H_
++
++#include <linux/blk-cgroup.h>
++
++struct request_queue;
++
++/**
++ * struct io_stats_per_prio - I/O statistics per I/O priority class.
++ * @inserted: Number of inserted requests.
++ * @merged: Number of merged requests.
++ * @dispatched: Number of dispatched requests.
++ * @completed: Number of I/O completions.
++ */
 +struct io_stats_per_prio {
 +	local_t inserted;
 +	local_t merged;
@@ -86,192 +274,305 @@ index aba672a5be1e..04d9d6b3745b 100644
 +	local_t completed;
 +};
 +
-+/* I/O statistics for all I/O priorities (enum dd_prio). */
-+struct io_stats {
-+	struct io_stats_per_prio stats[DD_PRIO_COUNT];
++/* I/O statistics per I/O cgroup per I/O priority class (IOPRIO_CLASS_*). */
++struct blkcg_io_stats {
++	struct io_stats_per_prio stats[4];
 +};
 +
- /*
-  * Deadline scheduler data per I/O priority (enum dd_prio). Requests are
-  * present on both sort_list[] and fifo_list[].
-@@ -75,6 +88,8 @@ struct deadline_data {
- 	unsigned int batching;		/* number of sequential requests made */
- 	unsigned int starved;		/* times reads have starved writes */
- 
-+	struct io_stats __percpu *stats;
++/**
++ * struct dd_blkcg - Per cgroup data.
++ * @cpd: blkcg_policy_data structure.
++ * @stats: I/O statistics.
++ */
++struct dd_blkcg {
++	struct blkcg_policy_data cpd;	/* must be the first member */
++	struct blkcg_io_stats __percpu *stats;
++};
 +
- 	/*
- 	 * settings that change how the i/o scheduler behaves
- 	 */
-@@ -88,6 +103,33 @@ struct deadline_data {
- 	spinlock_t zone_lock;
- };
- 
-+/* Count one event of type 'event_type' and with I/O priority 'prio' */
-+#define dd_count(dd, event_type, prio) do {				\
-+	struct io_stats *io_stats = get_cpu_ptr((dd)->stats);		\
++/*
++ * Count one event of type 'event_type' and with I/O priority class
++ * 'prio_class'.
++ */
++#define ddcg_count(ddcg, event_type, prio_class) do {			\
++if (ddcg) {								\
++	struct blkcg_io_stats *io_stats = get_cpu_ptr((ddcg)->stats);	\
 +									\
-+	BUILD_BUG_ON(!__same_type((dd), struct deadline_data *));	\
-+	BUILD_BUG_ON(!__same_type((prio), enum dd_prio));		\
-+	local_inc(&io_stats->stats[(prio)].event_type);			\
++	BUILD_BUG_ON(!__same_type((ddcg), struct dd_blkcg *));		\
++	BUILD_BUG_ON(!__same_type((prio_class), u8));			\
++	local_inc(&io_stats->stats[(prio_class)].event_type);		\
 +	put_cpu_ptr(io_stats);						\
++}									\
 +} while (0)
 +
 +/*
-+ * Returns the total number of dd_count(dd, event_type, prio) calls across all
-+ * CPUs. No locking or barriers since it is fine if the returned sum is slightly
-+ * outdated.
++ * Returns the total number of ddcg_count(ddcg, event_type, prio_class) calls
++ * across all CPUs. No locking or barriers since it is fine if the returned
++ * sum is slightly outdated.
 + */
-+#define dd_sum(dd, event_type, prio) ({					\
++#define ddcg_sum(ddcg, event_type, prio) ({				\
 +	unsigned int cpu;						\
 +	u32 sum = 0;							\
 +									\
-+	BUILD_BUG_ON(!__same_type((dd), struct deadline_data *));	\
-+	BUILD_BUG_ON(!__same_type((prio), enum dd_prio));		\
++	BUILD_BUG_ON(!__same_type((ddcg), struct dd_blkcg *));		\
++	BUILD_BUG_ON(!__same_type((prio), u8));				\
 +	for_each_present_cpu(cpu)					\
-+		sum += local_read(&per_cpu_ptr((dd)->stats, cpu)->	\
++		sum += local_read(&per_cpu_ptr((ddcg)->stats, cpu)->	\
 +				  stats[(prio)].event_type);		\
 +	sum;								\
 +})
 +
- /* Maps an I/O priority class to a deadline scheduler priority. */
- static const enum dd_prio ioprio_class_to_prio[] = {
- 	[IOPRIO_CLASS_NONE]	= DD_BE_PRIO,
-@@ -187,9 +229,12 @@ static void dd_request_merged(struct request_queue *q, struct request *req,
- static void dd_merged_requests(struct request_queue *q, struct request *req,
- 			       struct request *next)
- {
-+	struct deadline_data *dd = q->elevator->elevator_data;
- 	const u8 ioprio_class = dd_rq_ioclass(next);
- 	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
- 
-+	dd_count(dd, merged, prio);
++#ifdef CONFIG_BLK_CGROUP
 +
- 	/*
- 	 * if next expires before rq, assign its expire time to rq
- 	 * and move into next position (next will be deleted) in fifo
-@@ -225,6 +270,12 @@ deadline_move_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
- 	deadline_remove_request(rq->q, per_prio, rq);
- }
- 
-+/* Number of requests queued for a given priority level. */
-+static u32 dd_queued(struct deadline_data *dd, enum dd_prio prio)
++/**
++ * struct dd_blkg - Per (cgroup, request queue) data.
++ * @pd: blkg_policy_data structure.
++ */
++struct dd_blkg {
++	struct blkg_policy_data pd;	/* must be the first member */
++};
++
++struct dd_blkcg *dd_blkcg_from_bio(struct bio *bio);
++int dd_activate_policy(struct request_queue *q);
++void dd_deactivate_policy(struct request_queue *q);
++int __init dd_blkcg_init(void);
++void __exit dd_blkcg_exit(void);
++
++#else /* CONFIG_BLK_CGROUP */
++
++static inline struct dd_blkcg *dd_blkcg_from_bio(struct bio *bio)
 +{
-+	return dd_sum(dd, inserted, prio) - dd_sum(dd, completed, prio);
++	return NULL;
 +}
 +
++static inline int dd_activate_policy(struct request_queue *q)
++{
++	return 0;
++}
++
++static inline void dd_deactivate_policy(struct request_queue *q)
++{
++}
++
++static inline int dd_blkcg_init(void)
++{
++	return 0;
++}
++
++static inline void dd_blkcg_exit(void)
++{
++}
++
++#endif /* CONFIG_BLK_CGROUP */
++
++#endif /* _MQ_DEADLINE_CGROUP_H_ */
+diff --git a/block/mq-deadline.c b/block/mq-deadline-main.c
+similarity index 95%
+rename from block/mq-deadline.c
+rename to block/mq-deadline-main.c
+index 04d9d6b3745b..58a401ea8f56 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline-main.c
+@@ -25,6 +25,7 @@
+ #include "blk-mq-debugfs.h"
+ #include "blk-mq-tag.h"
+ #include "blk-mq-sched.h"
++#include "mq-deadline-cgroup.h"
+ 
  /*
-  * deadline_check_fifo returns 0 if there are no expired requests on the fifo,
-  * 1 otherwise. Requires !list_empty(&dd->fifo_list[data_dir])
-@@ -319,6 +370,8 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
+  * See Documentation/block/deadline-iosched.rst
+@@ -51,14 +52,6 @@ enum dd_prio {
+ 
+ enum { DD_PRIO_COUNT = 3 };
+ 
+-/* I/O statistics per I/O priority. */
+-struct io_stats_per_prio {
+-	local_t inserted;
+-	local_t merged;
+-	local_t dispatched;
+-	local_t completed;
+-};
+-
+ /* I/O statistics for all I/O priorities (enum dd_prio). */
+ struct io_stats {
+ 	struct io_stats_per_prio stats[DD_PRIO_COUNT];
+@@ -81,6 +74,9 @@ struct deadline_data {
+ 	 * run time data
+ 	 */
+ 
++	/* Request queue that owns this data structure. */
++	struct request_queue *queue;
++
+ 	struct dd_per_prio per_prio[DD_PRIO_COUNT];
+ 
+ 	/* Data direction of latest dispatched request. */
+@@ -232,8 +228,10 @@ static void dd_merged_requests(struct request_queue *q, struct request *req,
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+ 	const u8 ioprio_class = dd_rq_ioclass(next);
+ 	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
++	struct dd_blkcg *blkcg = next->elv.priv[0];
+ 
+ 	dd_count(dd, merged, prio);
++	ddcg_count(blkcg, merged, ioprio_class);
+ 
+ 	/*
+ 	 * if next expires before rq, assign its expire time to rq
+@@ -370,6 +368,7 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
  {
  	struct request *rq, *next_rq;
  	enum dd_data_dir data_dir;
-+	enum dd_prio prio;
-+	u8 ioprio_class;
++	struct dd_blkcg *blkcg;
+ 	enum dd_prio prio;
+ 	u8 ioprio_class;
  
- 	lockdep_assert_held(&dd->lock);
- 
-@@ -408,6 +461,9 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
- 	dd->batching++;
- 	deadline_move_request(dd, per_prio, rq);
- done:
-+	ioprio_class = dd_rq_ioclass(rq);
-+	prio = ioprio_class_to_prio[ioprio_class];
-+	dd_count(dd, dispatched, prio);
+@@ -464,6 +463,8 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
+ 	ioprio_class = dd_rq_ioclass(rq);
+ 	prio = ioprio_class_to_prio[ioprio_class];
+ 	dd_count(dd, dispatched, prio);
++	blkcg = rq->elv.priv[0];
++	ddcg_count(blkcg, dispatched, ioprio_class);
  	/*
  	 * If the request needs its target zone locked, do it.
  	 */
-@@ -491,6 +547,8 @@ static void dd_exit_sched(struct elevator_queue *e)
- 		WARN_ON_ONCE(!list_empty(&per_prio->fifo_list[DD_WRITE]));
- 	}
+@@ -540,6 +541,8 @@ static void dd_exit_sched(struct elevator_queue *e)
+ 	struct deadline_data *dd = e->elevator_data;
+ 	enum dd_prio prio;
  
-+	free_percpu(dd->stats);
-+
- 	kfree(dd);
- }
- 
-@@ -514,6 +572,11 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
- 
- 	eq->elevator_data = dd;
- 
-+	dd->stats = alloc_percpu_gfp(typeof(*dd->stats),
-+				     GFP_KERNEL | __GFP_ZERO);
-+	if (!dd->stats)
-+		goto free_dd;
++	dd_deactivate_policy(dd->queue);
 +
  	for (prio = 0; prio <= DD_PRIO_MAX; prio++) {
  		struct dd_per_prio *per_prio = &dd->per_prio[prio];
  
-@@ -535,6 +598,9 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+@@ -553,7 +556,7 @@ static void dd_exit_sched(struct elevator_queue *e)
+ }
+ 
+ /*
+- * initialize elevator private data (deadline_data).
++ * Initialize elevator private data (deadline_data) and associate with blkcg.
+  */
+ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+ {
+@@ -562,6 +565,12 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+ 	enum dd_prio prio;
+ 	int ret = -ENOMEM;
+ 
++	/*
++	 * Initialization would be very tricky if the queue is not frozen,
++	 * hence the warning statement below.
++	 */
++	WARN_ON_ONCE(!percpu_ref_is_zero(&q->q_usage_counter));
++
+ 	eq = elevator_alloc(q, e);
+ 	if (!eq)
+ 		return ret;
+@@ -577,6 +586,8 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+ 	if (!dd->stats)
+ 		goto free_dd;
+ 
++	dd->queue = q;
++
+ 	for (prio = 0; prio <= DD_PRIO_MAX; prio++) {
+ 		struct dd_per_prio *per_prio = &dd->per_prio[prio];
+ 
+@@ -595,9 +606,17 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
+ 	spin_lock_init(&dd->lock);
+ 	spin_lock_init(&dd->zone_lock);
+ 
++	ret = dd_activate_policy(q);
++	if (ret)
++		goto free_stats;
++
++	ret = 0;
  	q->elevator = eq;
  	return 0;
  
-+free_dd:
-+	kfree(dd);
++free_stats:
++	free_percpu(dd->stats);
 +
- put_eq:
- 	kobject_put(&eq->kobj);
- 	return ret;
-@@ -614,6 +680,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ free_dd:
+ 	kfree(dd);
+ 
+@@ -670,6 +689,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	u8 ioprio_class = IOPRIO_PRIO_CLASS(ioprio);
+ 	struct dd_per_prio *per_prio;
+ 	enum dd_prio prio;
++	struct dd_blkcg *blkcg;
+ 
+ 	lockdep_assert_held(&dd->lock);
+ 
+@@ -679,8 +699,19 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	 */
  	blk_req_zone_write_unlock(rq);
  
++	/*
++	 * If a block cgroup has been associated with the submitter and if an
++	 * I/O priority has been set in the associated block cgroup, use the
++	 * lowest of the cgroup priority and the request priority for the
++	 * request. If no priority has been set in the request, use the cgroup
++	 * priority.
++	 */
  	prio = ioprio_class_to_prio[ioprio_class];
-+	dd_count(dd, inserted, prio);
+ 	dd_count(dd, inserted, prio);
++	blkcg = dd_blkcg_from_bio(rq->bio);
++	ddcg_count(blkcg, inserted, ioprio_class);
++	WARN_ON_ONCE(rq->elv.priv[0]);
++	rq->elv.priv[0] = blkcg;
  
  	if (blk_mq_sched_try_insert_merge(q, rq))
  		return;
-@@ -692,6 +759,8 @@ static void dd_finish_request(struct request *rq)
+@@ -727,12 +758,10 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 	spin_unlock(&dd->lock);
+ }
+ 
+-/*
+- * Nothing to do here. This is defined only to ensure that .finish_request
+- * method is called upon request completion.
+- */
++/* Callback from inside blk_mq_rq_ctx_init(). */
+ static void dd_prepare_request(struct request *rq)
+ {
++	rq->elv.priv[0] = NULL;
+ }
+ 
+ /*
+@@ -755,11 +784,13 @@ static void dd_finish_request(struct request *rq)
+ {
+ 	struct request_queue *q = rq->q;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
++	struct dd_blkcg *blkcg = rq->elv.priv[0];
+ 	const u8 ioprio_class = dd_rq_ioclass(rq);
  	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
  	struct dd_per_prio *per_prio = &dd->per_prio[prio];
  
-+	dd_count(dd, completed, prio);
-+
+ 	dd_count(dd, completed, prio);
++	ddcg_count(blkcg, completed, ioprio_class);
+ 
  	if (blk_queue_is_zoned(q)) {
  		unsigned long flags;
+@@ -1079,11 +1110,26 @@ MODULE_ALIAS("mq-deadline-iosched");
  
-@@ -873,6 +942,35 @@ static int dd_async_depth_show(void *data, struct seq_file *m)
- 	return 0;
+ static int __init deadline_init(void)
+ {
+-	return elv_register(&mq_deadline);
++	int ret;
++
++	ret = elv_register(&mq_deadline);
++	if (ret)
++		goto out;
++	ret = dd_blkcg_init();
++	if (ret)
++		goto unreg;
++
++out:
++	return ret;
++
++unreg:
++	elv_unregister(&mq_deadline);
++	goto out;
  }
  
-+static int dd_queued_show(void *data, struct seq_file *m)
-+{
-+	struct request_queue *q = data;
-+	struct deadline_data *dd = q->elevator->elevator_data;
-+
-+	seq_printf(m, "%u %u %u\n", dd_queued(dd, DD_RT_PRIO),
-+		   dd_queued(dd, DD_BE_PRIO),
-+		   dd_queued(dd, DD_IDLE_PRIO));
-+	return 0;
-+}
-+
-+/* Number of requests owned by the block driver for a given priority. */
-+static u32 dd_owned_by_driver(struct deadline_data *dd, enum dd_prio prio)
-+{
-+	return dd_sum(dd, dispatched, prio) + dd_sum(dd, merged, prio)
-+		- dd_sum(dd, completed, prio);
-+}
-+
-+static int dd_owned_by_driver_show(void *data, struct seq_file *m)
-+{
-+	struct request_queue *q = data;
-+	struct deadline_data *dd = q->elevator->elevator_data;
-+
-+	seq_printf(m, "%u %u %u\n", dd_owned_by_driver(dd, DD_RT_PRIO),
-+		   dd_owned_by_driver(dd, DD_BE_PRIO),
-+		   dd_owned_by_driver(dd, DD_IDLE_PRIO));
-+	return 0;
-+}
-+
- #define DEADLINE_DISPATCH_ATTR(prio)					\
- static void *deadline_dispatch##prio##_start(struct seq_file *m,	\
- 					     loff_t *pos)		\
-@@ -941,6 +1039,8 @@ static const struct blk_mq_debugfs_attr deadline_queue_debugfs_attrs[] = {
- 	{"dispatch0", 0400, .seq_ops = &deadline_dispatch0_seq_ops},
- 	{"dispatch1", 0400, .seq_ops = &deadline_dispatch1_seq_ops},
- 	{"dispatch2", 0400, .seq_ops = &deadline_dispatch2_seq_ops},
-+	{"owned_by_driver", 0400, dd_owned_by_driver_show},
-+	{"queued", 0400, dd_queued_show},
- 	{},
- };
- #undef DEADLINE_QUEUE_DDIR_ATTRS
+ static void __exit deadline_exit(void)
+ {
++	dd_blkcg_exit();
+ 	elv_unregister(&mq_deadline);
+ }
+ 
