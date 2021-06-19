@@ -2,74 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 496F43AD8EF
-	for <lists+linux-block@lfdr.de>; Sat, 19 Jun 2021 11:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02AC93ADA48
+	for <lists+linux-block@lfdr.de>; Sat, 19 Jun 2021 16:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233189AbhFSJaU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 19 Jun 2021 05:30:20 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:5047 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233167AbhFSJaU (ORCPT
+        id S233963AbhFSOMQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 19 Jun 2021 10:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233286AbhFSOMQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 19 Jun 2021 05:30:20 -0400
-Received: from dggeme752-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G6Vh72NlpzXhVC;
-        Sat, 19 Jun 2021 17:23:03 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggeme752-chm.china.huawei.com
- (10.3.19.98) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Sat, 19
- Jun 2021 17:28:08 +0800
-From:   Zhang Yi <yi.zhang@huawei.com>
-To:     <linux-block@vger.kernel.org>
-CC:     <axboe@kernel.dk>, <jbacik@fb.com>, <yi.zhang@huawei.com>,
-        <yukuai3@huawei.com>
-Subject: [PATCH 2/2] blk-wbt: make sure throttle is enabled properly
-Date:   Sat, 19 Jun 2021 17:37:00 +0800
-Message-ID: <20210619093700.920393-3-yi.zhang@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210619093700.920393-1-yi.zhang@huawei.com>
-References: <20210619093700.920393-1-yi.zhang@huawei.com>
+        Sat, 19 Jun 2021 10:12:16 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3329FC061574
+        for <linux-block@vger.kernel.org>; Sat, 19 Jun 2021 07:10:05 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id n23so7420395wms.2
+        for <linux-block@vger.kernel.org>; Sat, 19 Jun 2021 07:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEJvDnbb5J82kUV/Mhgm+HBZUSJpapkINClf1DyhHz4=;
+        b=BiRg+KsYxrK2ZSxYi0k94je7EFev/qrRv7IBDtkLfZh7rOaZFdO/BLFwzOnQ5ZskaJ
+         72zWXrl7G3Q4DnUPynlRF4bQwjHiZVt9FieuuvZ1rDDNjk55+EBpUIA4FlvgUTdNep29
+         owPdVYb1S+m4GiBednhI2C7+/IqRVRKJcWtqsA33Ms3SHYXPWS3glH5yDtfhJXTk7tzs
+         MnpmtjRcukY5avAcbtxBopJXtZtN5nhyL6v+K9stcE9UTCs4m0SMmp2UO1TQrnnTncNc
+         iBQyYCFHSQjbDWqeGbed2RqIW5h1lfk+xa0vRqAPDsUPcRE0A1TmIfaZ+jgYC8BrtMXn
+         EtZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEJvDnbb5J82kUV/Mhgm+HBZUSJpapkINClf1DyhHz4=;
+        b=hSxqiQY+nCG9hf2GhdqTP2wof9tMLRplmsdjO4WjDYEpAoCc6wG8FV2stlGpgrD95E
+         pA2oN30Crr0xs00SXFLn6UxXRdKQMOhuTy0BYbRl05RjxhgxdgL/1XhrtO+os3p2fXJB
+         MWJ1s8ZQPW/B9t8dugt8mPEktMlsYBtJG5DOg/fQhXCXmcQInNOj8okDT4h5QR6+dMxV
+         AdQ5bQHNgns4A1jwt6IRSujH01H7ELYhR8S1KZ+ewqWrTMyA8DqcA8RfSqxCwHewyagw
+         vfWYKM86c85Xns4Clopqb99TgAinq8dGXZAFCwui+SluqtoKk3PmT9qaTVtFKQHyne/S
+         +KZg==
+X-Gm-Message-State: AOAM530SY9KYR9n2DmV44wqIyTxqEdp9QBzx6tLBRqBY47IbM+OGS34f
+        DdhUuL++q9VVqB8ZKxwrta8kyA==
+X-Google-Smtp-Source: ABdhPJxffM8ZYybJdI95deDigEGdfCqFUJhx64SzQ+E59Mkh9KchZ4WimlUwayMULKjNoBVjTS6RKQ==
+X-Received: by 2002:a1c:32c6:: with SMTP id y189mr16496359wmy.54.1624111803520;
+        Sat, 19 Jun 2021 07:10:03 -0700 (PDT)
+Received: from localhost.localdomain ([83.216.184.132])
+        by smtp.gmail.com with ESMTPSA id y16sm8379350wrp.51.2021.06.19.07.10.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 19 Jun 2021 07:10:02 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mariottiluca1@hotmail.it, holger@applied-asynchrony.com,
+        pedroni.pietro.96@gmail.com,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH FIXES/IMPROVEMENTS 0/7] block, bfq: preserve control, boost throughput, fix bugs
+Date:   Sat, 19 Jun 2021 16:09:41 +0200
+Message-Id: <20210619140948.98712-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggeme752-chm.china.huawei.com (10.3.19.98)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-After commit a79050434b45 ("blk-rq-qos: refactor out common elements of
-blk-wbt"), if throttle was disabled by wbt_disable_default(), we could
-not enable again, fix this by set enable_state back to
-WBT_STATE_ON_DEFAULT.
+Hi Jens,
+this series contains an already proposed patch by Luca, plus six new
+patches. The goals of these patches are summarized in the subject of
+this cover letter. I'm including Luca's patch here, because it enabled
+the actual use of stable merge, and, as such, triggered an otherwise
+silent bug. This series contains also the fix for that bug ("block,
+bfq: avoid delayed merge of async queues"), tested by Holger [1].
 
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- block/blk-wbt.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks,
+Paolo
 
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index b098ac6a84f0..f5e5ac915bf7 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -637,9 +637,13 @@ void wbt_set_write_cache(struct request_queue *q, bool write_cache_on)
- void wbt_enable_default(struct request_queue *q)
- {
- 	struct rq_qos *rqos = wbt_rq_qos(q);
-+
- 	/* Throttling already enabled? */
--	if (rqos)
-+	if (rqos) {
-+		if (RQWB(rqos)->enable_state == WBT_STATE_OFF_DEFAULT)
-+			RQWB(rqos)->enable_state = WBT_STATE_ON_DEFAULT;
- 		return;
-+	}
- 
- 	/* Queue not registered? Maybe shutting down... */
- 	if (!blk_queue_registered(q))
--- 
-2.31.1
+[1] https://lkml.org/lkml/2021/5/18/384
 
+Luca Mariotti (1):
+  block, bfq: fix delayed stable merge check
+
+Paolo Valente (5):
+  block, bfq: let also stably merged queues enjoy weight raising
+  block, bfq: consider also creation time in delayed stable merge
+  block, bfq: avoid delayed merge of async queues
+  block, bfq: check waker only for queues with no in-flight I/O
+  block, bfq: reset waker pointer with shared queues
+
+Pietro Pedroni (1):
+  block, bfq: boost throughput by extending queue-merging times
+
+ block/bfq-iosched.c | 68 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 15 deletions(-)
+
+--
+2.20.1
