@@ -2,104 +2,324 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 070453ADEC1
-	for <lists+linux-block@lfdr.de>; Sun, 20 Jun 2021 15:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F19A43ADEF3
+	for <lists+linux-block@lfdr.de>; Sun, 20 Jun 2021 15:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229863AbhFTNiT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 20 Jun 2021 09:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbhFTNiJ (ORCPT
+        id S229593AbhFTN5p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 20 Jun 2021 09:57:45 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58083 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229644AbhFTN5p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 20 Jun 2021 09:38:09 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CB4C061768
-        for <linux-block@vger.kernel.org>; Sun, 20 Jun 2021 06:35:57 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s19so6093140ioc.3
-        for <linux-block@vger.kernel.org>; Sun, 20 Jun 2021 06:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=sec9fLKaTeyUvI3U/9cH5uXh5khwaRmiJ3Slq1YZSCexwKlBLvi58L8DBu55CdJDji
-         U+HuEZd9onOgJ+OTF2rj1+rkaNRkmc9mUKozs32zG54utaQ749Tn8dwDfGRCa86Y13h3
-         aTPzQqGcbZM/EAbe2+YYkP8IzEtm7OFmKWqXTdVfNhb2VSah4cfQXUGVQ0X59BkXxqUT
-         4pZGErCa13JdLdCIRor4r89BUHwblkmYb4cwi8/7Nzr0zyCOHjauEmAl4PRZ8S1C6dv6
-         acCJLW1ZaLruky9plyyHKip4E8d31xV8uUpmSHsk2ZsjBfcQBVTL2OilqasULeboqC8n
-         0h/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=pTgwyveLrnriZ5e7WGyQIuVcWY0dgYDWhP6XvFt5c/jlP7h0fLcd5hU6Eu5wCZKjm2
-         Be/zOsyEVrInKxocwNxwjI/VobsquINcYx4OyAmuDxcjtt8CiBRKIFth+vFlfPB1g1OZ
-         L9L3lneDFs4n3T1N9SfJZ9+zpTidvSqPlFx5/pcivr6Ek5oqbqj7h/QXUY5CYdQwA48e
-         h/5eGELOGDwwfrcazCv6/hVWbbuCFY2m3N6Kvsh+AZecR2BfypYvx0W29xMyIwi6+o+J
-         UwYZ2Gepdt69/HzmYagRB/0AH8gIZ/OlOGLWtrQBVwcsoUbcbUpuszfdKQC0ihGSWKm+
-         hyPw==
-X-Gm-Message-State: AOAM531F/R/1VZw6Co/8wwbZ+a9jKqp11bY3p51VdhzQubElLUIKsQpe
-        8sB1sH+Eo3XkQ1i4SSeBDbifipB9DR142H06Jp+IddRd+lE=
-X-Google-Smtp-Source: ABdhPJwO76FoleXtHusTIesxM2cuIvE9VdIlMyNt5WPTfvQkSUUR8O1MTtP/waIv/m9vsUoacT9Q2gT5SJ41poXCB/Q=
-X-Received: by 2002:a05:6602:1810:: with SMTP id t16mr15654363ioh.48.1624196145888;
- Sun, 20 Jun 2021 06:35:45 -0700 (PDT)
+        Sun, 20 Jun 2021 09:57:45 -0400
+Received: from fsav313.sakura.ne.jp (fsav313.sakura.ne.jp [153.120.85.144])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 15KDsXeT045516;
+        Sun, 20 Jun 2021 22:54:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav313.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp);
+ Sun, 20 Jun 2021 22:54:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 15KDsXLG045511
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Sun, 20 Jun 2021 22:54:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2] block: genhd: don't call probe function with
+ major_names_lock held
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, hch@infradead.org,
+        axboe@kernel.dk, desmondcheongzx@gmail.com,
+        linux-block@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        syzbot+6a8a0d93c91e8fbf2e80@syzkaller.appspotmail.com,
+        vigneshr@ti.com
+References: <f790f8fb-5758-ea4e-a527-0ee4af82dd44@i-love.sakura.ne.jp>
+ <YM2STfTN5AupWlSa@kroah.com> <20210620024403.820-1-hdanton@sina.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <24b7c3a9-e10a-f983-9fde-1ae66b0bc6b0@i-love.sakura.ne.jp>
+Date:   Sun, 20 Jun 2021 22:54:20 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1baf:0:0:0:0 with HTTP; Sun, 20 Jun 2021 06:35:45
- -0700 (PDT)
-Reply-To: sarahkoffi389@yahoo.co.jp
-From:   Sarah Koffi <sarah.koffi101@gmail.com>
-Date:   Sun, 20 Jun 2021 15:35:45 +0200
-Message-ID: <CA+ifgLGSH5KW9J+Z85axgUznJEQcab5mED6rZZnS3OBzXTnaxw@mail.gmail.com>
-Subject: Greetings From Mrs. Sarah Koffi
-To:     sarahkoffi389@yahoo.co.jp
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210620024403.820-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings From Mrs. Sarah Koffi
+On 2021/06/20 11:44, Hillf Danton wrote:
+> Good craft in regard to triggering the ABBA deadlock, but curious why not
+> move unregister_blkdev out of and before loop_ctl_mutex, given it will also
+> serialise with the prober.
+> 
 
-I'm contacting you based on your good profiles I read and for a good
-reasons, I am in search of a property to buy in your country as I
-intended to come over to your
-country for investment, Though I have not meet with you before but I
-believe that one has to risk confiding in someone to succeed sometimes
-in life.
+Well, something like this untested diff?
 
-My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
-Federal Government of Sudan and he has a personal Oil firm in Bentiu
-Oil zone town and Upper
-Nile city. What I have experience physically, I don't wish to
-experience it again in my life due to the recent civil Ethnic war
-cause by our President Mr. Salva Kiir
-and the rebel leader Mr Riek Machar, I have been Under United Nation
-refuge camp in chad to save my life and that of my little daughter.
+Call unregister_blkdev() as soon as __exit function starts, for calling
+probe function after cleanup started will be unexpected for __exit function.
 
-Though, I do not know how you will feel to my proposal, but the truth
-is that I sneaked into Chad our neighboring country where I am living
-now as a refugee.
-I escaped with my little daughter when the rebels bust into our house
-and killed my husband as one of the big oil dealers in the country,
-ever since then, I have being on the run.
+Keep probe function no-op until __init function ends, for probe function
+might be called as soon as __register_blkdev() succeeded but calling probe
+function before setup completes will be unexpected for __init function.
 
-I left my country and move to Chad our neighboring country with the
-little ceasefire we had, due to the face to face peace meeting accord
-coordinated by the US Secretary of State, Mr John Kerry and United
-Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
-and the rebel leader Mr Riek Machar to stop this war.
+ drivers/block/ataflop.c |    6 +++++-
+ drivers/block/brd.c     |    8 ++++++--
+ drivers/block/floppy.c  |    4 ++++
+ drivers/block/loop.c    |    4 ++--
+ drivers/ide/ide-probe.c |    8 +++++++-
+ drivers/md/md.c         |    5 +++++
+ drivers/scsi/sd.c       |   10 +---------
+ 7 files changed, 30 insertions(+), 15 deletions(-)
 
-I want to solicit for your partnership with trust to invest the $8
-million dollars deposited by my late husband in Bank because my life
-is no longer safe in our country, since the rebels are looking for the
-families of all the oil business men in the country to kill, saying
-that they are they one that is milking the country dry.
+diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+index d601e49f80e0..3681e8c493b1 100644
+--- a/drivers/block/ataflop.c
++++ b/drivers/block/ataflop.c
+@@ -1995,6 +1995,7 @@ static int ataflop_alloc_disk(unsigned int drive, unsigned int type)
+ }
+ 
+ static DEFINE_MUTEX(ataflop_probe_lock);
++static bool module_initialize_completed;
+ 
+ static void ataflop_probe(dev_t dev)
+ {
+@@ -2006,6 +2007,8 @@ static void ataflop_probe(dev_t dev)
+ 
+ 	if (drive >= FD_MAX_UNITS || type >= NUM_DISK_MINORS)
+ 		return;
++	if (!module_initialize_completed)
++		return;
+ 	mutex_lock(&ataflop_probe_lock);
+ 	if (!unit[drive].disk[type]) {
+ 		if (ataflop_alloc_disk(drive, type) == 0)
+@@ -2080,6 +2083,7 @@ static int __init atari_floppy_init (void)
+ 	       UseTrackbuffer ? "" : "no ");
+ 	config_types();
+ 
++	module_initialize_completed = true;
+ 	return 0;
+ 
+ err:
+@@ -2138,6 +2142,7 @@ static void __exit atari_floppy_exit(void)
+ {
+ 	int i, type;
+ 
++	unregister_blkdev(FLOPPY_MAJOR, "fd");
+ 	for (i = 0; i < FD_MAX_UNITS; i++) {
+ 		for (type = 0; type < NUM_DISK_MINORS; type++) {
+ 			if (!unit[i].disk[type])
+@@ -2148,7 +2153,6 @@ static void __exit atari_floppy_exit(void)
+ 		}
+ 		blk_mq_free_tag_set(&unit[i].tag_set);
+ 	}
+-	unregister_blkdev(FLOPPY_MAJOR, "fd");
+ 
+ 	del_timer_sync(&fd_timer);
+ 	atari_stram_free( DMABuffer );
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index 7562cf30b14e..91a10c938e65 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -371,6 +371,7 @@ __setup("ramdisk_size=", ramdisk_size);
+ static LIST_HEAD(brd_devices);
+ static DEFINE_MUTEX(brd_devices_mutex);
+ static struct dentry *brd_debugfs_dir;
++static bool module_initialize_completed;
+ 
+ static struct brd_device *brd_alloc(int i)
+ {
+@@ -439,6 +440,8 @@ static void brd_probe(dev_t dev)
+ 	struct brd_device *brd;
+ 	int i = MINOR(dev) / max_part;
+ 
++	if (!module_initialize_completed)
++		return;
+ 	mutex_lock(&brd_devices_mutex);
+ 	list_for_each_entry(brd, &brd_devices, brd_list) {
+ 		if (brd->brd_number == i)
+@@ -530,6 +533,7 @@ static int __init brd_init(void)
+ 	mutex_unlock(&brd_devices_mutex);
+ 
+ 	pr_info("brd: module loaded\n");
++	module_initialize_completed = true;
+ 	return 0;
+ 
+ out_free:
+@@ -550,13 +554,13 @@ static void __exit brd_exit(void)
+ {
+ 	struct brd_device *brd, *next;
+ 
++	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
++
+ 	debugfs_remove_recursive(brd_debugfs_dir);
+ 
+ 	list_for_each_entry_safe(brd, next, &brd_devices, brd_list)
+ 		brd_del_one(brd);
+ 
+-	unregister_blkdev(RAMDISK_MAJOR, "ramdisk");
+-
+ 	pr_info("brd: module unloaded\n");
+ }
+ 
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 8a9d22207c59..37b8e53c183d 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4523,6 +4523,7 @@ static int floppy_alloc_disk(unsigned int drive, unsigned int type)
+ }
+ 
+ static DEFINE_MUTEX(floppy_probe_lock);
++static bool module_initialize_completed;
+ 
+ static void floppy_probe(dev_t dev)
+ {
+@@ -4533,6 +4534,8 @@ static void floppy_probe(dev_t dev)
+ 	    type >= ARRAY_SIZE(floppy_type))
+ 		return;
+ 
++	if (!module_initialize_completed)
++		return;
+ 	mutex_lock(&floppy_probe_lock);
+ 	if (!disks[drive][type]) {
+ 		if (floppy_alloc_disk(drive, type) == 0)
+@@ -4705,6 +4708,7 @@ static int __init do_floppy_init(void)
+ 				NULL);
+ 	}
+ 
++	module_initialize_completed = true;
+ 	return 0;
+ 
+ out_remove_drives:
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 76e12f3482a9..08aef61ab791 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2386,13 +2386,13 @@ static int loop_exit_cb(int id, void *ptr, void *data)
+ 
+ static void __exit loop_exit(void)
+ {
++	unregister_blkdev(LOOP_MAJOR, "loop");
++
+ 	mutex_lock(&loop_ctl_mutex);
+ 
+ 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
+ 	idr_destroy(&loop_index_idr);
+ 
+-	unregister_blkdev(LOOP_MAJOR, "loop");
+-
+ 	misc_deregister(&loop_misc);
+ 
+ 	mutex_unlock(&loop_ctl_mutex);
+diff --git a/drivers/ide/ide-probe.c b/drivers/ide/ide-probe.c
+index aefd74c0d862..8c71356cdcfe 100644
+--- a/drivers/ide/ide-probe.c
++++ b/drivers/ide/ide-probe.c
+@@ -40,6 +40,8 @@
+ #include <linux/uaccess.h>
+ #include <asm/io.h>
+ 
++static bool module_initialize_completed;
++
+ /**
+  *	generic_id		-	add a generic drive id
+  *	@drive:	drive to make an ID block for
+@@ -904,6 +906,8 @@ static int init_irq (ide_hwif_t *hwif)
+ 
+ static void ata_probe(dev_t dev)
+ {
++	if (!module_initialize_completed)
++		return;
+ 	request_module("ide-disk");
+ 	request_module("ide-cd");
+ 	request_module("ide-tape");
+@@ -1475,6 +1479,8 @@ int ide_host_register(struct ide_host *host, const struct ide_port_info *d,
+ 		}
+ 	}
+ 
++	if (j)
++		module_initialize_completed = true;
+ 	return j ? 0 : -1;
+ }
+ EXPORT_SYMBOL_GPL(ide_host_register);
+@@ -1539,6 +1545,7 @@ EXPORT_SYMBOL_GPL(ide_port_unregister_devices);
+ 
+ static void ide_unregister(ide_hwif_t *hwif)
+ {
++	unregister_blkdev(hwif->major, hwif->name);
+ 	mutex_lock(&ide_cfg_mtx);
+ 
+ 	if (hwif->present) {
+@@ -1559,7 +1566,6 @@ static void ide_unregister(ide_hwif_t *hwif)
+ 	 * Remove us from the kernel's knowledge
+ 	 */
+ 	kfree(hwif->sg_table);
+-	unregister_blkdev(hwif->major, hwif->name);
+ 
+ 	ide_release_dma_engine(hwif);
+ 
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 49f897fbb89b..6603900062bc 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -68,6 +68,8 @@
+ #include "md-bitmap.h"
+ #include "md-cluster.h"
+ 
++static bool module_initialize_completed;
++
+ /* pers_list is a list of registered personalities protected
+  * by pers_lock.
+  * pers_lock does extra service to protect accesses to
+@@ -5776,6 +5778,8 @@ static void md_probe(dev_t dev)
+ {
+ 	if (MAJOR(dev) == MD_MAJOR && MINOR(dev) >= 512)
+ 		return;
++	if (!module_initialize_completed)
++		return;
+ 	if (create_on_open)
+ 		md_alloc(dev, NULL);
+ }
+@@ -9590,6 +9594,7 @@ static int __init md_init(void)
+ 	raid_table_header = register_sysctl_table(raid_root_table);
+ 
+ 	md_geninit();
++	module_initialize_completed = true;
+ 	return 0;
+ 
+ err_mdp:
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index cb3c37d1e009..4fc8f4db2ccf 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -629,14 +629,6 @@ static struct scsi_driver sd_template = {
+ 	.eh_reset		= sd_eh_reset,
+ };
+ 
+-/*
+- * Don't request a new module, as that could deadlock in multipath
+- * environment.
+- */
+-static void sd_default_probe(dev_t devt)
+-{
+-}
+-
+ /*
+  * Device no to disk mapping:
+  * 
+@@ -3715,7 +3707,7 @@ static int __init init_sd(void)
+ 	SCSI_LOG_HLQUEUE(3, printk("init_sd: sd driver entry point\n"));
+ 
+ 	for (i = 0; i < SD_MAJORS; i++) {
+-		if (__register_blkdev(sd_major(i), "sd", sd_default_probe))
++		if (register_blkdev(sd_major(i), "sd"))
+ 			continue;
+ 		majors++;
+ 	}
 
-I will offer you 20% of the total fund for your help while I will
-partner with you for the investment in your country.
-If I get your reply.
-
-I will wait to hear from you so as to give you details.With love from
-
- i need you to contact me here sarahkoffi389@yahoo.co.jp
-
-Mrs. Sarah Koffi
