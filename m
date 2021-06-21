@@ -2,214 +2,140 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 178073AF987
-	for <lists+linux-block@lfdr.de>; Tue, 22 Jun 2021 01:37:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0913AF9AF
+	for <lists+linux-block@lfdr.de>; Tue, 22 Jun 2021 01:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232052AbhFUXjM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Jun 2021 19:39:12 -0400
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:39510 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbhFUXjK (ORCPT
+        id S231268AbhFUXoh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Jun 2021 19:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232144AbhFUXog (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Jun 2021 19:39:10 -0400
-Received: by mail-pf1-f169.google.com with SMTP id g192so7212844pfb.6;
-        Mon, 21 Jun 2021 16:36:55 -0700 (PDT)
+        Mon, 21 Jun 2021 19:44:36 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EA2C061574
+        for <linux-block@vger.kernel.org>; Mon, 21 Jun 2021 16:42:18 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id z1so6936502ils.0
+        for <linux-block@vger.kernel.org>; Mon, 21 Jun 2021 16:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zz9bnVf0t3FfSTpwwRt0ie6SngOz8R7fTCpQev9Jwe8=;
+        b=wR7BhI27gd3ol0+Mjuw49ogEY6n2D4drnLlyE0yHc7j4SAY19B0pk/EoE10vj3Mx7c
+         VaLBwEjTtQTW6tujtq0GeJPIWO6JwIYIe+3zNGGrXu/ZiATpf1jjqLR26ilGXEE74wyk
+         vJpaRsZN4V3uBOBlqy6BxpY/LbgYrBfZkoWY0Sws8SQJkFqHOdbit4sEVrwYcL/MR/Al
+         c45w475rGPDI+6k2k/7sXZPDtcKET7AblQ+bB7TXASCedpcM9Za9zFzTtEyY45mlEld7
+         mAI4zI+dJQLVWU81ppgemk6WPID3TyfGZNkLcVD+R5MjHN6fbri6ykky9my41Sq/Ibr/
+         3pfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/6LKptqVooQ2yfJ0t1sAYDbvCb/8n4Fej4cQGySBTMc=;
-        b=qz2gOk9fVr2cKbgWZOuhUADP7gPmViOhwm9rBNGAoNRQvhqLHt93Ik52uVlRFrWAII
-         WhA08yxfrF1+oXGXaMxYF0vOzUpRzHDJAnOI8T3OA5oas4TdE+c77EiEoDyyulhYx8vw
-         W60gyOdRw3k747HINIvTAb8y9Gv9+kn5a3/VaL6C4+cvvWUgZKtftNtzOzgjETysd7Bl
-         tHkTvBoj1nk7rOOp+z9hmxtpA4iRXM9/ULrtpJV0E73AFBmZeHkfhXkPG9Gw49faOdau
-         eacJU+II5ksvUmZrmIvCVH404z3uEfhwB+0xAQJ/o7/VpTS6uD1GH9rPQLoDHszTR0KZ
-         0KMg==
-X-Gm-Message-State: AOAM530tRWiiPUBwY+Lga8Dy41h/thh+anN0l1Pm3qrlRMbFSc3WaCxY
-        0tG/XhjCk/uiDTJpWk5TFbmVmnlGXvY=
-X-Google-Smtp-Source: ABdhPJwPIk5wp0sG9D+mVCMCRrCFN0XjFibocXhdhrqESbBVcH2RT5zKEiyLBJfAJkIdFdOVZ9Sm7Q==
-X-Received: by 2002:a65:63ce:: with SMTP id n14mr872616pgv.273.1624318615122;
-        Mon, 21 Jun 2021 16:36:55 -0700 (PDT)
-Received: from localhost ([173.239.198.97])
-        by smtp.gmail.com with ESMTPSA id a23sm15662370pff.43.2021.06.21.16.36.53
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zz9bnVf0t3FfSTpwwRt0ie6SngOz8R7fTCpQev9Jwe8=;
+        b=r4emolXN8/JSDxSyiE1WuNutY6Uh6VIO8OGu834BPYSGZG4eyLRa9j5GuI8o5h/PQ4
+         ugg4RYrrGYqc0aaVQAzXuG7DRzbc5CYFLMfP7yw5s4h/dPQrQufEIeERpX4G9/G10n2E
+         KTQ38JBkbqh2MOgBUsCLACqR0cApwzPGGbouSQ0K4endeUy+KHLW6pfD86akf4x04qIX
+         b5Qd/0yDtFKNtDeHiLKTSzcQSALW0A6Aq0z5k7KL72V2QoRwVJXU+gtS+inaMIhuFEwc
+         i+u/5Os9cGZ4ICJefsU+tZnEyA9EYnxZLWwOZ3giZZNDlYysxTC98TT8AlaaaRKulUd7
+         mEww==
+X-Gm-Message-State: AOAM530F55jP668QQ42ZWJOJq+j+Iw3upR3UKfkQIb5zxUPvW4RxL8ZO
+        3HdT+0xCbWFyNVh4aJV2ENy8ZNgPjJQtSQ==
+X-Google-Smtp-Source: ABdhPJyDXxjc9QwChDtokHiJD3zGW6o0HBuRRgUBnmt3hzf697UKqSYAWe0nCSodn6sWk83G59shTw==
+X-Received: by 2002:a92:7b01:: with SMTP id w1mr562372ilc.100.1624318937804;
+        Mon, 21 Jun 2021 16:42:17 -0700 (PDT)
+Received: from [192.168.1.134] ([198.8.77.61])
+        by smtp.gmail.com with ESMTPSA id f7sm6972182ilk.50.2021.06.21.16.42.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Jun 2021 16:36:53 -0700 (PDT)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     minchan@kernel.org, gregkh@linuxfoundation.org, jeyu@kernel.org,
-        ngupta@vflare.org, sergey.senozhatsky.work@gmail.com
-Cc:     mcgrof@kernel.org, axboe@kernel.dk, mbenes@suse.com,
-        jpoimboe@redhat.com, tglx@linutronix.de, keescook@chromium.org,
-        jikos@kernel.org, rostedt@goodmis.org, peterz@infradead.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] drivers/base/core: refcount kobject and bus on device attribute read / store
-Date:   Mon, 21 Jun 2021 16:36:51 -0700
-Message-Id: <20210621233651.597220-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210621233013.562641-1-mcgrof@kernel.org>
-References: <20210621233013.562641-1-mcgrof@kernel.org>
+        Mon, 21 Jun 2021 16:42:17 -0700 (PDT)
+Subject: =?UTF-8?Q?Re=3a_=e2=9d=8c_FAIL=3a_Test_report_for_kernel_5=2e13=2e0?=
+ =?UTF-8?Q?-rc6_=28block=2c_b0740de3=29?=
+To:     Matthew Wilcox <willy@infradead.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Veronika Kabatova <vkabatov@redhat.com>,
+        CKI Project <cki-project@redhat.com>,
+        linux-block@vger.kernel.org
+References: <cki.3F4F097E3B.299V5OKJ7M@redhat.com>
+ <CA+tGwn=+1Evv=ZZmOdXSpfUTG_dPvHfDsxbmLyHWr9-XkXA1LQ@mail.gmail.com>
+ <CA+tGwnn4J2=WuPEFOwmC6ph30rHXJLhjH-iWmvkKLpacmR7wdQ@mail.gmail.com>
+ <42b91718-9d70-4e4c-2716-6259321abd64@kernel.dk>
+ <CA+tGwn=8KMpRi+6M-Lcs5MjKTkPd36YL5wv84Ji2dEWLjzfDmA@mail.gmail.com>
+ <YNELoqls01MVLsuT@casper.infradead.org>
+ <8a7b26a3-a17d-e851-690a-5a33b06f5dec@gmail.com>
+ <YNEhq/C5/T4J8r2/@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5cf4b5ae-c6aa-d64d-53ec-3e073a77baef@kernel.dk>
+Date:   Mon, 21 Jun 2021 17:42:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <YNEhq/C5/T4J8r2/@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It's possible today to have a device attribute read or store
-race against device removal. When this happens there is a small
-chance that the derefence for the private data area of the driver
-is NULL.
+On 6/21/21 5:32 PM, Matthew Wilcox wrote:
+> On Mon, Jun 21, 2021 at 11:57:06PM +0100, Pavel Begunkov wrote:
+>> On 6/21/21 10:58 PM, Matthew Wilcox wrote:
+>>> On Mon, Jun 21, 2021 at 11:07:16PM +0200, Veronika Kabatova wrote:
+>>>> On Mon, Jun 21, 2021 at 11:00 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>>
+>>>>> On 6/21/21 2:57 PM, Veronika Kabatova wrote:
+>>>>>> On Mon, Jun 21, 2021 at 9:20 PM Veronika Kabatova <vkabatov@redhat.com> wrote:
+>>>>>>>
+>>>>>>> On Mon, Jun 21, 2021 at 9:17 PM CKI Project <cki-project@redhat.com> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Hello,
+>>>>>>>>
+>>>>>>>> We ran automated tests on a recent commit from this kernel tree:
+>>>>>>>>
+>>>>>>>>        Kernel repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+>>>>>>>>             Commit: b0740de3330a - Merge branch 'for-5.14/drivers-late' into for-next
+>>>>>>>>
+>>>>>>>> The results of these automated tests are provided below.
+>>>>>>>>
+>>>>>>>>     Overall result: FAILED (see details below)
+>>>>>>>>              Merge: OK
+>>>>>>>>            Compile: FAILED
+>>>>>>>>
+>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> the failure is introduced between this commit and d142f908ebab64955eb48e.
+>>>>>>> Currently seeing if I can bisect it closer but maybe someone already has an
+>>>>>>> idea what went wrong.
+>>>>>>>
+>>>>>>
+>>>>>> First commit failing the compilation is 7a2b0ef2a3b83733d7.
+>>>>>
+>>>>> Where's the log? Adding Willy...
+>>>>>
+>>>>
+>>>> Logs and kernel configs for each arch are linked in the original email at
+>>>> https://arr-cki-prod-datawarehouse-public.s3.amazonaws.com/index.html?prefix=datawarehouse-public/2021/06/21/324657779
+>>>
+>>> Which aren't there by the time they get to the original commit author.
+>>> You need to do better than this; the Intel build-bot bisects to the
+>>> commit which actually causes the error.
+>>
+>> Matthew, I've just followed the link out of curiosity:
+> 
+> the link _which isn't in the first email i got_.  the redhat cki system
+> is not very useful _because it doesn't do an automatic bisect and cc the
+> author of the commit_.
 
-Let's consider the zram driver as an example. Its possible to run into
-a race where a sysfs knob is being used, we get preempted, and a zram
-device is removed before we complete use of the sysfs knob. This can happen
-for instance on block devices, where for instance the zram block devices
-just part of the private data of the block device.
+Kinks are still being worked out on that, nobody has claimed it's
+perfect yet. Some manual input/labor is still required.
 
-For instance this can happen in the following two situations
-as examples to illustrate this better:
+But it's useful, as this report has indicated. So maybe try and be a bit
+nicer and appreciative, instead of grumpy and dismissive. It did find a
+problem with YOUR patch, fwiw.
 
-        CPU 1                            CPU 2
-destroy_devices
-...
-                                 compact_store()
-                                 zram = dev_to_zram(dev);
-idr_for_each(zram_remove_cb
-  zram_remove
-  ...
-  kfree(zram)
-                                 down_read(&zram->init_lock);
-
-        CPU 1                            CPU 2
-hot_remove_store
-                                 compact_store()
-                                 zram = dev_to_zram(dev);
-  zram_remove
-    kfree(zram)
-                                 down_read(&zram->init_lock);
-
-To ensure the private data pointer is valid we could use bdget() / bdput()
-in between access, however that would mean doing that in all sysfs
-reads/stores on the driver. Instead a generic solution for all drivers
-is to ensure the device kobject is still valid and also the bus, if
-a bus is present.
-
-This issue does not fix a known crash, however this race was
-spotted by Minchan Kim through code inspection upon code review
-of another zram patch.
-
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/base/base.h |  2 ++
- drivers/base/bus.c  |  4 ++--
- drivers/base/core.c | 42 ++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 42 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index e5f9b7e656c3..3f95b125b667 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -127,6 +127,8 @@ static inline void auxiliary_bus_init(void) { }
- 
- struct kobject *virtual_device_parent(struct device *dev);
- 
-+extern struct bus_type *bus_get(struct bus_type *bus);
-+extern void bus_put(struct bus_type *bus);
- extern int bus_add_device(struct device *dev);
- extern void bus_probe_device(struct device *dev);
- extern void bus_remove_device(struct device *dev);
-diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-index 36d0c654ea61..21c80d7d6433 100644
---- a/drivers/base/bus.c
-+++ b/drivers/base/bus.c
-@@ -39,7 +39,7 @@ static struct kset *system_kset;
- static int __must_check bus_rescan_devices_helper(struct device *dev,
- 						void *data);
- 
--static struct bus_type *bus_get(struct bus_type *bus)
-+struct bus_type *bus_get(struct bus_type *bus)
- {
- 	if (bus) {
- 		kset_get(&bus->p->subsys);
-@@ -48,7 +48,7 @@ static struct bus_type *bus_get(struct bus_type *bus)
- 	return NULL;
- }
- 
--static void bus_put(struct bus_type *bus)
-+void bus_put(struct bus_type *bus)
- {
- 	if (bus)
- 		kset_put(&bus->p->subsys);
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4a8bf8cda52b..2fc52264b897 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2042,28 +2042,62 @@ EXPORT_SYMBOL(dev_driver_string);
- static ssize_t dev_attr_show(struct kobject *kobj, struct attribute *attr,
- 			     char *buf)
- {
--	struct device_attribute *dev_attr = to_dev_attr(attr);
--	struct device *dev = kobj_to_dev(kobj);
-+	struct device_attribute *dev_attr;
-+	struct device *dev;
-+	struct bus_type *bus = NULL;
- 	ssize_t ret = -EIO;
- 
-+	dev = get_device(kobj_to_dev(kobj));
-+	if (!dev)
-+		return ret;
-+
-+	if (dev->bus) {
-+		bus = bus_get(dev->bus);
-+		if (!bus)
-+			goto out;
-+	}
-+
-+	dev_attr = to_dev_attr(attr);
- 	if (dev_attr->show)
- 		ret = dev_attr->show(dev, dev_attr, buf);
- 	if (ret >= (ssize_t)PAGE_SIZE) {
- 		printk("dev_attr_show: %pS returned bad count\n",
- 				dev_attr->show);
- 	}
-+
-+	bus_put(bus);
-+out:
-+	put_device(dev);
-+
- 	return ret;
- }
- 
- static ssize_t dev_attr_store(struct kobject *kobj, struct attribute *attr,
- 			      const char *buf, size_t count)
- {
--	struct device_attribute *dev_attr = to_dev_attr(attr);
--	struct device *dev = kobj_to_dev(kobj);
-+	struct device_attribute *dev_attr;
-+	struct device *dev;
-+	struct bus_type *bus = NULL;
- 	ssize_t ret = -EIO;
- 
-+	dev = get_device(kobj_to_dev(kobj));
-+	if (!dev)
-+		return ret;
-+
-+	if (dev->bus) {
-+		bus = bus_get(dev->bus);
-+		if (!bus)
-+			goto out;
-+	}
-+
-+	dev_attr = to_dev_attr(attr);
- 	if (dev_attr->store)
- 		ret = dev_attr->store(dev, dev_attr, buf, count);
-+
-+	bus_put(bus);
-+out:
-+	put_device(dev);
-+
- 	return ret;
- }
- 
 -- 
-2.30.2
+Jens Axboe
 
