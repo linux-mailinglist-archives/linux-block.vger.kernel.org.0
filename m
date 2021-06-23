@@ -2,64 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC8E43B1484
-	for <lists+linux-block@lfdr.de>; Wed, 23 Jun 2021 09:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A551F3B14FD
+	for <lists+linux-block@lfdr.de>; Wed, 23 Jun 2021 09:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbhFWHYA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Jun 2021 03:24:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:49632 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229660AbhFWHX7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Jun 2021 03:23:59 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 409B567373; Wed, 23 Jun 2021 09:21:40 +0200 (CEST)
-Date:   Wed, 23 Jun 2021 09:21:40 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Coly Li <colyli@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.com>, Hannes Reinecke <hare@suse.com>,
-        linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
-        Jianpeng Ma <jianpeng.ma@intel.com>,
-        Qiaowei Ren <qiaowei.ren@intel.com>, axboe@kernel.dk
-Subject: Re: Ask help for code review (was Re: [PATCH 03/14] bcache: add
- initial data structures for nvm pages)
-Message-ID: <20210623072140.GA837@lst.de>
-References: <20210615054921.101421-1-colyli@suse.de> <20210615054921.101421-4-colyli@suse.de> <24ad3795-813c-b50b-e983-56dccef1b0db@suse.de> <875yy6l2a1.fsf@yhuang6-desk2.ccr.corp.intel.com> <b1597c54-16ea-c943-8af7-25c8eab342e9@suse.de> <87czsdhy0u.fsf@yhuang6-desk2.ccr.corp.intel.com> <20210623070405.GA537@lst.de> <f150a8a6-26ee-8fdd-2964-be1254835bc1@suse.de>
+        id S229864AbhFWHn7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Jun 2021 03:43:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30894 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230001AbhFWHn6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Wed, 23 Jun 2021 03:43:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624434101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yYDv1ve1pPCO/wVpdHIv+/+bdGzxC/0la2+de0MywqU=;
+        b=Plxu563rZOrSaBbGlX1wJe/aPl6AB9I8LEluPsQCC5egHTCa3yOBAPyqruWyXlc78OZ0Yw
+        znzDXtdX/2q1fotQQ3IiZCzgXN12isGjgphsitjpnrMQhFLN3x/VXMgDTOcU9Bc5t8fDzT
+        ptM/FRMBHjTsQXhvT1azU9BvrU+aYyk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-418-OJGCqLoKO3-AR_jo8QcZyg-1; Wed, 23 Jun 2021 03:40:59 -0400
+X-MC-Unique: OJGCqLoKO3-AR_jo8QcZyg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A52F100CF71;
+        Wed, 23 Jun 2021 07:40:58 +0000 (UTC)
+Received: from localhost (ovpn-12-52.pek2.redhat.com [10.72.12.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C58375D6D1;
+        Wed, 23 Jun 2021 07:40:46 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-block@vger.kernel.org,
+        Jeffle Xu <jefflexu@linux.alibaba.com>, dm-devel@redhat.com,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V3 0/3] block/dm: support bio polling
+Date:   Wed, 23 Jun 2021 15:40:29 +0800
+Message-Id: <20210623074032.1484665-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f150a8a6-26ee-8fdd-2964-be1254835bc1@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 03:19:11PM +0800, Coly Li wrote:
-> Bcache does not support endian clean indeed,
+Hello Guys,
 
-Then we need to fix that eventually rather than making it worse.  Which
-means any _new_ data structure should start that way.
+Based on Christoph's bio based polling model[1], implement DM bio polling
+with one very simple approach.
 
-> and libnvdimm only works with
-> 64bit physical address width.
+Patch 1 adds helper of blk_queue_poll().
 
-Maybe it does right now.  But ther is nothing fundamental in that, so
-please don't design stupid on-disk formats to encode that are going to
-come back to bite us sooner or later.  Be that by adding 32-bit support
-for any Linux DAX device, or by new 96 or 128bit CPUs.
+Patch 2 adds .bio_poll() callback to block_device_operations, so bio
+driver can implement its own logic for io polling.
 
-> The only restriction here by using pointer is
-> the CPU register word should be 64bits, because we use the NVDIMM as memory.
-> 
-> Is it one of the way how NVDIMM (especially Intel AEP) designed to use ?
-> As a non-volatiled memory.
+Patch 3 implements bio polling for device mapper.
 
-Not for on-disk data structures.
 
-> Does the already mapped DAX base address change in runtime during memory
-> hot plugable ?
-> If not, it won't be a problem here for this specific use case.
+V3:
+	- patch style change as suggested by Christoph(2/3)
+	- fix kernel panic issue caused by nested dm polling, which is found
+	  & figured out by Jeffle Xu (3/3)
+	- re-organize setup polling code (3/3)
+	- remove RFC
 
-It could change between one use and another.
+V2:
+	- drop patch to add new fields into bio
+	- support io polling for dm native bio splitting
+	- add comment
+
+Ming Lei (3):
+  block: add helper of blk_queue_poll
+  block: add ->poll_bio to block_device_operations
+  dm: support bio polling
+
+ block/blk-core.c         |  18 +++---
+ block/blk-sysfs.c        |   4 +-
+ block/genhd.c            |   2 +
+ drivers/md/dm-table.c    |  24 +++++++
+ drivers/md/dm.c          | 131 ++++++++++++++++++++++++++++++++++++++-
+ drivers/nvme/host/core.c |   2 +-
+ include/linux/blkdev.h   |   2 +
+ 7 files changed, 170 insertions(+), 13 deletions(-)
+
+-- 
+2.31.1
+
