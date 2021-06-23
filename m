@@ -2,89 +2,159 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BBC03B1D25
-	for <lists+linux-block@lfdr.de>; Wed, 23 Jun 2021 17:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A99593B1D10
+	for <lists+linux-block@lfdr.de>; Wed, 23 Jun 2021 17:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230243AbhFWPHO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Jun 2021 11:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbhFWPHO (ORCPT
+        id S231262AbhFWPFP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Jun 2021 11:05:15 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:41446 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230061AbhFWPFO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Jun 2021 11:07:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACA0C061574
-        for <linux-block@vger.kernel.org>; Wed, 23 Jun 2021 08:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=UCYBBM8y+++myQaSPaE2GtTh8JIwBF+yqfSzegrr3d8=; b=qyzoJDZTQNBuiZswQEuIoMiPtz
-        yV5ECC6LHiBm6OQ/F4zP9cVsSxYpvUBuaAFbAyb1KOIXoGrRA1vVoy0CFywRt6w1IYKvHu9EBkuD0
-        7QyxBVNk3AYWbU3QemL+9sZGXe9ystWK7dhuCIibYl75ThMXfNXIhKvOi800eSuTnEuFW4CaJWPwT
-        BXtxt5Z3LWPWGdZnVb/kwIJ0gLvR2zt1rDy9ccfHefBG9rYyaFD52hSjG3bJV3qlGDOpn+xGq1bAi
-        OUfAhW9QzpphbR2Rf1utlsgrh1q54dcykbnWsQDfHt1X22XBjhDUmLB3F4wYq5XP/gtm4qulwz/Br
-        OH6r2ZOg==;
-Received: from [2001:4bb8:188:3e21:6594:49:139:2b3f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1lw4QK-00FYA8-GG; Wed, 23 Jun 2021 15:04:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH 9/9] loop: rewrite loop_exit using idr_for_each_entry
-Date:   Wed, 23 Jun 2021 16:59:08 +0200
-Message-Id: <20210623145908.92973-10-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210623145908.92973-1-hch@lst.de>
-References: <20210623145908.92973-1-hch@lst.de>
+        Wed, 23 Jun 2021 11:05:14 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 188FC21978;
+        Wed, 23 Jun 2021 15:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1624460576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=obh6DR5mQUaGeW8+twsfq9NZCWFJ7UVHnJN6Unj4B50=;
+        b=ru5S6mJesX7ts+46Q0kozXXpii5x5DLinnGzNabivHHrcH9gFwGcUPQRvUVEq/yhzkkglF
+        I90n1LgXteRiF5u7ryO0pjdkb4ZinKYai4qdTNZ7xWwEpGKIjyjqXrYWPCt0jqIfrIdO3W
+        1xmRm/YFLd07PendD1DugjpShcTGN40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1624460576;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=obh6DR5mQUaGeW8+twsfq9NZCWFJ7UVHnJN6Unj4B50=;
+        b=l8OIMDRISqkjUArO6ETApVZUxIJwuG2aFtbHqQWKMw5yNkKwhHKOcTjOQgwPCOFKFoCEPv
+        7Lbw5j8BWqw/L1BQ==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 710C411A97;
+        Wed, 23 Jun 2021 15:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1624460576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=obh6DR5mQUaGeW8+twsfq9NZCWFJ7UVHnJN6Unj4B50=;
+        b=ru5S6mJesX7ts+46Q0kozXXpii5x5DLinnGzNabivHHrcH9gFwGcUPQRvUVEq/yhzkkglF
+        I90n1LgXteRiF5u7ryO0pjdkb4ZinKYai4qdTNZ7xWwEpGKIjyjqXrYWPCt0jqIfrIdO3W
+        1xmRm/YFLd07PendD1DugjpShcTGN40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1624460576;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=obh6DR5mQUaGeW8+twsfq9NZCWFJ7UVHnJN6Unj4B50=;
+        b=l8OIMDRISqkjUArO6ETApVZUxIJwuG2aFtbHqQWKMw5yNkKwhHKOcTjOQgwPCOFKFoCEPv
+        7Lbw5j8BWqw/L1BQ==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id QDJpGh9N02C/cQAALh3uQQ
+        (envelope-from <hare@suse.de>); Wed, 23 Jun 2021 15:02:55 +0000
+Subject: Re: [PATCH v3 1/6] block: add disk sequence number
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Matteo Croce <mcroce@linux.microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Boccassi <bluca@debian.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tejun Heo <tj@kernel.org>,
+        Javier Gonz??lez <javier@javigon.com>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        JeffleXu <jefflexu@linux.alibaba.com>
+References: <20210623105858.6978-1-mcroce@linux.microsoft.com>
+ <20210623105858.6978-2-mcroce@linux.microsoft.com>
+ <YNMffBWvs/Fz2ptK@infradead.org>
+ <CAFnufp1gdag0rGQ8K4_2oB6_aC+EZgfgwd2eL4-AxpG0mK+_qQ@mail.gmail.com>
+ <YNM8T44v5FTViVWM@gardel-login>
+ <3be63d9f-d8eb-7657-86dc-8d57187e5940@suse.de>
+ <YNNBOyUiztf2wxDu@gardel-login>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <adeedcd2-15a7-0655-3b3c-85eec719ed37@suse.de>
+Date:   Wed, 23 Jun 2021 17:02:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
+In-Reply-To: <YNNBOyUiztf2wxDu@gardel-login>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use idr_for_each_entry to simplify removing all devices.
+On 6/23/21 4:12 PM, Lennart Poettering wrote:
+> On Mi, 23.06.21 16:01, Hannes Reinecke (hare@suse.de) wrote:
+> 
+>>> Thus: a global instead of local sequence number counter is absolutely
+>>> *key* for the problem this is supposed to solve
+>>>
+>> Well ... except that you'll need to keep track of the numbers (otherwise you
+>> wouldn't know if the numbers changed, right?).
+>> And if you keep track of the numbers you probably will have to implement an
+>> uevent listener to get the events in time.
+> 
+> Hmm? This is backwards. The goal here is to be able to safely match up
+> uevents to specific uses of a block device, given that block device
+> names are agressively recycled.
+> 
+> you imply it was easy to know which device use a uevent belongs
+> to. But that's the problem: it is not possible to do so safely. if i
+> see a uevent for a block device "loop0" I cannot tell if it was from
+> my own use of the device or for some previous user of it.
+> 
+> And that's what we'd like to see fixed: i.e. we query the block device
+> for the seqeno now used and then we can use that to filter the uevents
+> and ignore the ones that do not carry the same sequence number as we
+> got assigned for our user.
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- drivers/block/loop.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+It is notoriously tricky to monitor the intended use-case for kernel 
+devices, precisely because we do _not_ attach any additional information 
+to it.
+I have send a proposal for LSF to implement block-namespaces, the prime 
+use-case of which is indeed attaching cgroup/namespace information to 
+block devices such that we _can_ match (block) devices to specific contexts.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 93abf6d8b88c..40b7c6c470f2 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2349,21 +2349,17 @@ static int __init loop_init(void)
- 	return err;
- }
- 
--static int loop_exit_cb(int id, void *ptr, void *data)
--{
--	struct loop_device *lo = ptr;
--
--	loop_remove(lo);
--	return 0;
--}
--
- static void __exit loop_exit(void)
- {
-+	struct loop_device *lo;
-+	int id;
-+
- 	unregister_blkdev(LOOP_MAJOR, "loop");
- 	misc_deregister(&loop_misc);
- 
- 	mutex_lock(&loop_ctl_mutex);
--	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
-+	idr_for_each_entry(&loop_index_idr, lo, id)
-+		loop_remove(lo);
- 	mutex_unlock(&loop_ctl_mutex);
- 
- 	idr_destroy(&loop_index_idr);
+Which I rather prefer than adding sequence numbers to block devices; 
+incidentally you could solve the same problem by _not_ reusing numbers 
+aggressively but rather allocate the next free one after the most 
+recently allocated one.
+Will give you much the same thing without having to burden others with it.
+
+The better alternative here would be to extend the loop ioctl to pass in 
+an UUID when allocating the device.
+That way you can easily figure out whether the loop device has been 
+modified.
+
+But in the end, it's the loop driver and I'm not particular bothered 
+with it. I am, though, if you need to touch all drivers just to support 
+one particular use-case in one particular device driver.
+
+Incidentally, we don't have this problem in SCSI as we _can_ identify 
+devices here. So in the end we couldn't care less on which /dev/sdX 
+device it ends up.
+And I guess that's what we should attempt for loop devices, too.
+
+Cheers,
+
+Hannes
 -- 
-2.30.2
-
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
