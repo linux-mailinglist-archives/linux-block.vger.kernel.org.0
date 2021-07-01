@@ -2,103 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E6013B8FBF
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 11:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34FC73B9004
+	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 11:49:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235300AbhGAJaY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jul 2021 05:30:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28016 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235118AbhGAJaY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 1 Jul 2021 05:30:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625131674;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E4vt4f18YPC/zOPJQi081FAyXYBH2ifsGDCtHaFx7Pc=;
-        b=AUJxOYgN0Fws9sDyeHpyu9PPudNTVe6U4S14prtas7V/sYxFcO4yQlOfBghi+FhAJCeDJl
-        krhCOolMVExGBkwmcqfVrEtLn62l6l9WalhW6sGPqanahLh69dymsAhlsRczsbTyAclUuS
-        gGH2uFkS1CKw0NocwO2kN3B7C8IoEtU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-527-J4VLYzknOp6fLgFjz0jKXw-1; Thu, 01 Jul 2021 05:27:53 -0400
-X-MC-Unique: J4VLYzknOp6fLgFjz0jKXw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6D8C19067E0;
-        Thu,  1 Jul 2021 09:27:51 +0000 (UTC)
-Received: from T590 (ovpn-13-92.pek2.redhat.com [10.72.13.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93E746267C;
-        Thu,  1 Jul 2021 09:27:41 +0000 (UTC)
-Date:   Thu, 1 Jul 2021 17:27:37 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org
+        id S235414AbhGAJvt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jul 2021 05:51:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:47010 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235300AbhGAJvs (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 1 Jul 2021 05:51:48 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 88A836736F; Thu,  1 Jul 2021 11:49:16 +0200 (CEST)
+Date:   Thu, 1 Jul 2021 11:49:16 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org
 Subject: Re: [PATCH 1/2] block: grab a device refcount in disk_uevent
-Message-ID: <YN2KiYTtA0ribi9i@T590>
-References: <20210701081638.246552-1-hch@lst.de>
- <20210701081638.246552-2-hch@lst.de>
- <YN2CrbtFEKwDGff0@T590>
- <20210701090232.GA31321@lst.de>
- <YN2IIiKUvquxqx6k@T590>
+Message-ID: <20210701094915.GA2066@lst.de>
+References: <20210701081638.246552-1-hch@lst.de> <20210701081638.246552-2-hch@lst.de> <YN2CrbtFEKwDGff0@T590> <20210701090232.GA31321@lst.de> <YN2IIiKUvquxqx6k@T590> <YN2KiYTtA0ribi9i@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YN2IIiKUvquxqx6k@T590>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <YN2KiYTtA0ribi9i@T590>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 05:17:22PM +0800, Ming Lei wrote:
-> On Thu, Jul 01, 2021 at 11:02:32AM +0200, Christoph Hellwig wrote:
-> > On Thu, Jul 01, 2021 at 04:54:05PM +0800, Ming Lei wrote:
-> > > On Thu, Jul 01, 2021 at 10:16:37AM +0200, Christoph Hellwig wrote:
-> > > > Sending uevents requires the struct device to be alive.  To
-> > > > ensure that grab the device refcount instead of just an inode
-> > > > reference.
-> > > > 
-> > > > Fixes: bc359d03c7ec ("block: add a disk_uevent helper")
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > ---
-> > > >  block/genhd.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/block/genhd.c b/block/genhd.c
-> > > > index 79aa40b4c39c..af4d2ab4a633 100644
-> > > > --- a/block/genhd.c
-> > > > +++ b/block/genhd.c
-> > > > @@ -365,12 +365,12 @@ void disk_uevent(struct gendisk *disk, enum kobject_action action)
-> > > >  	xa_for_each(&disk->part_tbl, idx, part) {
-> > > >  		if (bdev_is_partition(part) && !bdev_nr_sectors(part))
-> > > >  			continue;
-> > > > -		if (!bdgrab(part))
-> > > > +		if (!kobject_get_unless_zero(&part->bd_device.kobj))
-> > > >  			continue;
-> > > 
-> > > ->bd_device is embedded in the block device, and it has same lifetime
-> > > with the block device, even part_release() calls bdput() to release this
-> > > device, so why doesn't work by holding a inode reference?
-> > 
-> > Because sending a uevent on a device that has device_del called on it
-> > is going to blow up.
+On Thu, Jul 01, 2021 at 05:27:37PM +0800, Ming Lei wrote:
 > 
-> But grabbing one reference can't prevent device_del() from being called.
+> Maybe the reason is that sending uevent needs the device/kobject not
+> 'released' in viewpoint of driver core world, other device resource(such
+> as device name) may be referred but have been freed.
 > 
-> IMO, if driver core doesn't allow to sending uevent on one deleted device,
-> it should return a failure instead of kernel panic.
+> If that is the reason, this patch looks fine, and
+> kobject_get_unless_zero() may be replaced with get_device() since the
+> referred memory isn't freed yet.
 
-Maybe the reason is that sending uevent needs the device/kobject not
-'released' in viewpoint of driver core world, other device resource(such
-as device name) may be referred but have been freed.
-
-If that is the reason, this patch looks fine, and
-kobject_get_unless_zero() may be replaced with get_device() since the
-referred memory isn't freed yet.
-
-Thanks,
-Ming
-
+Yes, sorry.  Braino while looking up the cause.  But there isn't much
+of a point in sending a uevent to a partition already deleted, so
+I think the unless_zero here still makes sense.
