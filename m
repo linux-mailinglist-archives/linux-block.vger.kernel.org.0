@@ -2,50 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD4293B913B
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 13:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E2D73B930E
+	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 16:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236204AbhGALhQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jul 2021 07:37:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:47319 "EHLO verein.lst.de"
+        id S232772AbhGAOXI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jul 2021 10:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236130AbhGALhQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 1 Jul 2021 07:37:16 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 01CD567357; Thu,  1 Jul 2021 13:34:42 +0200 (CEST)
-Date:   Thu, 1 Jul 2021 13:34:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martin Wilck <mwilck@suse.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Mike Snitzer <snitzer@redhat.com>,
-        Alasdair G Kergon <agk@redhat.com>,
-        Bart Van Assche <Bart.VanAssche@sandisk.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, dm-devel@redhat.com,
-        Hannes Reinecke <hare@suse.de>,
-        Daniel Wagner <dwagner@suse.de>, linux-block@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>, nkoenig@redhat.com,
-        emilne@redhat.com
-Subject: Re: [PATCH v5 3/3] dm mpath: add CONFIG_DM_MULTIPATH_SG_IO -
- failover for SG_IO
-Message-ID: <20210701113442.GA10793@lst.de>
-References: <20210628151558.2289-1-mwilck@suse.com> <20210628151558.2289-4-mwilck@suse.com> <20210701075629.GA25768@lst.de> <de1e3dcbd26a4c680b27b557ea5384ba40fc7575.camel@suse.com>
+        id S231844AbhGAOXI (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 1 Jul 2021 10:23:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4BC2C61405;
+        Thu,  1 Jul 2021 14:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625149238;
+        bh=SQSq9ogWmtmPuajCoHS0DChPgVVgS9fw7xgf2VjK3D0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gAhdiWbK1ZiMKr2FqSbt0icJkvnU02QPQ+Cc2kzZ1o0JoSsBn5JbGiBh0oOCQlvoH
+         GQmnDLeCG78Bmgak2CYaDn2Btgbfhv5Eb4H5mP208C9uxPsa6C7NwRTvrPQD/h9Qco
+         LeYRope8VBm3ibGlSxtxYafpRPIePK52exKYJItlOIatgPjIsr6qsHIEl99VL6KmLk
+         o+J3Bzi8U0Oa2i84+8EnKjgQQsf2YHR9ZClAtyW6QfpnxKhFIvWYdfv+fhZGsU2M9z
+         L6JsVA2i66XPjjkZ9mHY8xUrM8wbUalHqWHga0tyfWCUtOkna3VGU++X2Yzwe945gR
+         agVkT71rVbwsw==
+Date:   Thu, 1 Jul 2021 07:20:35 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Wen Xiong <wenxiong@us.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 1/2] blk-mq: not deactivate hctx if the device doesn't
+ use managed irq
+Message-ID: <20210701142035.GA3370360@dhcp-10-100-145-180.wdc.com>
+References: <20210629074951.1981284-1-ming.lei@redhat.com>
+ <20210629074951.1981284-2-ming.lei@redhat.com>
+ <DM6PR04MB70814885C27FF97CFC02A456E7029@DM6PR04MB7081.namprd04.prod.outlook.com>
+ <0f8be11b-c6de-1c2b-323b-1e059c2ac4f8@grimberg.me>
+ <CH2PR04MB70781FC64AC0621F7E55B408E7019@CH2PR04MB7078.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <de1e3dcbd26a4c680b27b557ea5384ba40fc7575.camel@suse.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CH2PR04MB70781FC64AC0621F7E55B408E7019@CH2PR04MB7078.namprd04.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 12:35:53PM +0200, Martin Wilck wrote:
-> I respectfully disagree. Users of dm-multipath devices expect that IO
-> succeeds as long as there's at least one healthy path. This is a
-> fundamental property of multipath devices. Whether IO is sent
-> "normally" or via SG_IO doesn't make a difference wrt this expectation.
+On Wed, Jun 30, 2021 at 09:57:05PM +0000, Damien Le Moal wrote:
+> On 2021/07/01 3:58, Sagi Grimberg wrote:
+> > 
+> >>> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+> >>> index 21140132a30d..600c5dd1a069 100644
+> >>> --- a/include/linux/blk-mq.h
+> >>> +++ b/include/linux/blk-mq.h
+> >>> @@ -403,6 +403,7 @@ enum {
+> >>>   	 */
+> >>>   	BLK_MQ_F_STACKING	= 1 << 2,
+> >>>   	BLK_MQ_F_TAG_HCTX_SHARED = 1 << 3,
+> >>> +	BLK_MQ_F_NOT_USE_MANAGED_IRQ = 1 << 4,
+> >>
+> >> My 2 cents: BLK_MQ_F_NO_MANAGED_IRQ may be a better/shorter name.
+> > 
+> > Maybe BLK_MQ_F_UNMANAGED_IRQ?
+> 
+> Even better :)
 
-If you have those (pretty reasonable) expections don't use SG_IO.
-That is what the regular read/write path is for.  SG_IO gives you
-raw access to the SCSI logic unit, and you get to keep the pieces
-if anything goes wrong.
+Since most drivers are unmanaged, shouldn't that be the default? The
+managed irq drivers should get to set a flag instead.
