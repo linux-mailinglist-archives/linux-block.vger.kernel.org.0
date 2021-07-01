@@ -2,134 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B7943B932A
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 16:22:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085BD3B93E7
+	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 17:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232607AbhGAOZC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jul 2021 10:25:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231844AbhGAOZB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 1 Jul 2021 10:25:01 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 161E47SW128501;
-        Thu, 1 Jul 2021 10:22:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=trtc93CzZcm9S+1QkbKhiiniiHBiwcL5KBMtbOQwhps=;
- b=GTVocm/++oFIkKfiJ9PQy1fAXLjjUCqhs8iNwolC4P1szI6KNdaFLBn1j3sEwuyugPzA
- F4A3avx02SI60kBwYB1Ljfik6NsSmmJ+2v5/z7ydLcZeE5ZWfLFGAaFY6WSZF9VaShR1
- M22UlWB7Gbf9ila8jhCtLpqA1KYXsbFwje/CLxqrY3FJTGGwzK/etBo/1CzTmwHK7GVR
- cBnL9cATI4bKOX3CdnmNiEqXbLgbq51G3aZ6h/Y4D30IyQDr1illkNfKp8bX8L+YaKY6
- aZfrjPlvUueH4OdiZ32r87jj7HnuCcZp9S5k7RPaUtfMw09E4FSkK6qcWwFw8f0Ni+av 1g== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39hdyfu67w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Jul 2021 10:22:27 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 161EDLhN001959;
-        Thu, 1 Jul 2021 14:22:25 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 39h19bgemr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Jul 2021 14:22:25 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 161EKfUT32834036
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Jul 2021 14:20:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EECB64C04A;
-        Thu,  1 Jul 2021 14:22:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAAEA4C050;
-        Thu,  1 Jul 2021 14:22:21 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  1 Jul 2021 14:22:21 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 8A168E07EC; Thu,  1 Jul 2021 16:22:21 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
+        id S232817AbhGAP36 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jul 2021 11:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232969AbhGAP36 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jul 2021 11:29:58 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B06AC061764
+        for <linux-block@vger.kernel.org>; Thu,  1 Jul 2021 08:27:28 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id u11so7727700oiv.1
+        for <linux-block@vger.kernel.org>; Thu, 01 Jul 2021 08:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UEhd9RW/Z//Yet4PSyZVFj89an0siciakTKupP0jjUk=;
+        b=v3OXxJDVG1j62VuzMZjNsHSSpeT1teaZCCWItyiwvKSMkgQSsaRL811BqZPMmc7uMP
+         F91WhYOFkhKm5y30GSCdh7fwOirS/dtTUYhc0MMoMegpXDOqYP90ampyUTOtvtVqcL5/
+         oxvHF2o2opf7IulvvbB2bV/mBE1LxCvcmvWykWY1rS5d74Ljh12kJYpZeJGOp3qwRfEs
+         w4r2oQuvVsigwCDVo97pwLzRzIEjxGFwmuh0KAvOKlxguzhTKLMLDJcn6hFTGraVMObx
+         CKXUAx0XIppnaZB20rwfltyFlqO/A6FD2MY3NnmTxRiPbtEYZ96Ffg7vfCZMHJ8qVNiB
+         Ctsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UEhd9RW/Z//Yet4PSyZVFj89an0siciakTKupP0jjUk=;
+        b=epkRlWdLuOYRpgYHfvlrtPclOFXG1WBb5fkJ8okFE68x8NqFgrsuRAXOov2/DYGFWb
+         dc79+ITgk14W854qAKaCfnQI6iDyN1tN/vHFRfgnobQNDf06MhdL1qNjA5nUJ84sD334
+         bfoeDYPsxoaI6KJwA9MyFSbWYB35OjF32LcehJ9KhMrRJlYVFwOtze2Lnuf+m6scVNAP
+         1oEanEvbdWmex1NXddwyv36i6UV2FaaSNyne7YV09/1SnQciDuR425euBzFlOeprT7pk
+         i09XdPo/BdKq9jm9GvXurLhSQTdTPX+Yax11RxBSGmJ4SoJspPbBYo0Es0mVMQ5lcJ4R
+         J9Bw==
+X-Gm-Message-State: AOAM532dljvpZBFuCns/yeCWLN1EalJbY5nSifMgPTIwSpezP58ng25O
+        CCeeCxJytJXqQbSM254kU7lJSw==
+X-Google-Smtp-Source: ABdhPJzyVbaQUppYRSCuQuMpUwGsXrurdANk3sq/OBkyeTgk4oBz0yyQ+0EjqnLVYcEX2yLeBdUSig==
+X-Received: by 2002:aca:4f83:: with SMTP id d125mr26685oib.117.1625153247479;
+        Thu, 01 Jul 2021 08:27:27 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.233.147])
+        by smtp.gmail.com with ESMTPSA id m3sm8928otf.12.2021.07.01.08.27.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jul 2021 08:27:26 -0700 (PDT)
+Subject: Re: [PATCH 0/2] s390/dasd patches
+To:     Stefan Haberland <sth@linux.ibm.com>
 Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Christoph Hellwig <hch@lst.de>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH 2/2] s390/dasd: Avoid field over-reading memcpy()
-Date:   Thu,  1 Jul 2021 16:22:21 +0200
-Message-Id: <20210701142221.3408680-3-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210701142221.3408680-1-sth@linux.ibm.com>
 References: <20210701142221.3408680-1-sth@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <356adced-0e30-ac75-b3d5-83eebb292816@kernel.dk>
+Date:   Thu, 1 Jul 2021 09:27:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HAqG1i0y3nkTEPReptHdtHtH2MTzF4uj
-X-Proofpoint-ORIG-GUID: HAqG1i0y3nkTEPReptHdtHtH2MTzF4uj
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-01_08:2021-07-01,2021-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- mlxscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 impostorscore=0
- clxscore=1011 phishscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2107010088
+In-Reply-To: <20210701142221.3408680-1-sth@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On 7/1/21 8:22 AM, Stefan Haberland wrote:
+> Hi Jens,
+> 
+> please apply the following two patches that unexport a DASD symbol and improve a DASD structure.
+> 
+> 
+> Christoph Hellwig (1):
+>   dasd: unexport dasd_set_target_state
+> 
+> Kees Cook (1):
+>   s390/dasd: Avoid field over-reading memcpy()
+> 
+>  drivers/s390/block/dasd.c      | 1 -
+>  drivers/s390/block/dasd_eckd.c | 2 +-
+>  drivers/s390/block/dasd_eckd.h | 6 ++++--
+>  3 files changed, 5 insertions(+), 4 deletions(-)
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field array bounds checking for memcpy(), memmove(), and memset(),
-avoid intentionally reading across neighboring array fields.
+Applied, thanks.
 
-Add a wrapping structure to serve as the memcpy() source, so the compiler
-can do appropriate bounds checking, avoiding this future warning:
-
-In function '__fortify_memcpy',
-    inlined from 'create_uid' at drivers/s390/block/dasd_eckd.c:749:2:
-./include/linux/fortify-string.h:246:4: error: call to '__read_overflow2_field' declared with attribute error: detected read beyond size of field (2nd parameter)
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd_eckd.c | 2 +-
- drivers/s390/block/dasd_eckd.h | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index a6ac505cbdd7..0de1a463c509 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -746,7 +746,7 @@ static void create_uid(struct dasd_eckd_private *private)
- 	memcpy(uid->vendor, private->ned->HDA_manufacturer,
- 	       sizeof(uid->vendor) - 1);
- 	EBCASC(uid->vendor, sizeof(uid->vendor) - 1);
--	memcpy(uid->serial, private->ned->HDA_location,
-+	memcpy(uid->serial, &private->ned->serial,
- 	       sizeof(uid->serial) - 1);
- 	EBCASC(uid->serial, sizeof(uid->serial) - 1);
- 	uid->ssid = private->gneq->subsystemID;
-diff --git a/drivers/s390/block/dasd_eckd.h b/drivers/s390/block/dasd_eckd.h
-index 73651211789f..65e4630ad2ae 100644
---- a/drivers/s390/block/dasd_eckd.h
-+++ b/drivers/s390/block/dasd_eckd.h
-@@ -332,8 +332,10 @@ struct dasd_ned {
- 	__u8 dev_type[6];
- 	__u8 dev_model[3];
- 	__u8 HDA_manufacturer[3];
--	__u8 HDA_location[2];
--	__u8 HDA_seqno[12];
-+	struct {
-+		__u8 HDA_location[2];
-+		__u8 HDA_seqno[12];
-+	} serial;
- 	__u8 ID;
- 	__u8 unit_addr;
- } __attribute__ ((packed));
 -- 
-2.25.1
+Jens Axboe
 
