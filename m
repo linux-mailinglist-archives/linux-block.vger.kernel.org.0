@@ -2,49 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13D813B9011
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 11:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 061DF3B9060
+	for <lists+linux-block@lfdr.de>; Thu,  1 Jul 2021 12:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235883AbhGAJ5k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jul 2021 05:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235344AbhGAJ5k (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jul 2021 05:57:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008D6C0617A8
-        for <linux-block@vger.kernel.org>; Thu,  1 Jul 2021 02:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KBnHe560xh+CEY6NJFxvxkBiqtB4lC8fH7s4U/6kLMU=; b=smqhioW249pHvhstEP02wv2suR
-        XAAvB5UY8tUkWxi1lkSYpi8NWtOwO7mgde8+RsiN7EIVIQJaZnrpJcyXVMkghL1ofdHMnU0C7oZp8
-        rPzvFflRMVSdGWp8sHV1EkmMSQz7Y+HdtjY+Fw4ayrgaMDdsXA2YuuLHuLbdJjmSldu+WAmf2bN9J
-        tMXJVIJ6DGte2nHeEg6r28296muOlBZ1jvaibgIUjQUMKjd3WaP5J6Yq5YcSCFJUdYVYar/qtA5tD
-        Fgd4MIK4UDtPivvOAFBmqlof+YM9te4WPF8o90wD6wEDdzIKcMSDfBuufHKD6NBdTP/DKAxkC5j93
-        4l9X77/Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1lytP3-006Q88-Jv; Thu, 01 Jul 2021 09:54:46 +0000
-Date:   Thu, 1 Jul 2021 10:54:37 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
+        id S235860AbhGAKQZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jul 2021 06:16:25 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3337 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235300AbhGAKQZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jul 2021 06:16:25 -0400
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GFv4D0CPwz6G8Y3;
+        Thu,  1 Jul 2021 18:06:04 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 1 Jul 2021 12:13:52 +0200
+Received: from [10.47.27.103] (10.47.27.103) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 1 Jul 2021
+ 11:13:52 +0100
 Subject: Re: [PATCH] block: build default queue map via
  irq_create_affinity_masks
-Message-ID: <YN2Q3XFSS7T23bih@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>
 References: <20210630035153.2099975-1-ming.lei@redhat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5164e557-25bd-377b-da95-ac4b87c99581@huawei.com>
+Date:   Thu, 1 Jul 2021 11:06:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20210630035153.2099975-1-ming.lei@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.27.103]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 30, 2021 at 11:51:53AM +0800, Ming Lei wrote:
+On 30/06/2021 04:51, Ming Lei wrote:
 > The default queue mapping builder of blk_mq_map_queues doesn't take NUMA
 > topo into account, so the built mapping is pretty bad, since CPUs
 > belonging to different NUMA node are assigned to same queue. It is
@@ -55,34 +56,33 @@ On Wed, Jun 30, 2021 at 11:51:53AM +0800, Ming Lei wrote:
 > Address the issue by reusing irq_create_affinity_masks() for building
 > the default queue mapping, so that we can re-use the mapping created
 > for managed irq.
-
-This looks sensible, but adding Thomas to see if he is fine with
-using an irq function like this.  Maybe it needs to move out of the
-irq code and grow a new name if we use it like this.
-
 > 
 > Lots of drivers may benefit from the change, such as nvme pci poll,
 > nvme tcp, ...
 > 
 > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > ---
->  block/blk-mq-cpumap.c | 60 +++++++++----------------------------------
->  1 file changed, 12 insertions(+), 48 deletions(-)
+>   block/blk-mq-cpumap.c | 60 +++++++++----------------------------------
+>   1 file changed, 12 insertions(+), 48 deletions(-)
 > 
 > diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
 > index 3db84d3197f1..946e373296a3 100644
 > --- a/block/blk-mq-cpumap.c
 > +++ b/block/blk-mq-cpumap.c
 > @@ -10,67 +10,31 @@
->  #include <linux/mm.h>
->  #include <linux/smp.h>
->  #include <linux/cpu.h>
+>   #include <linux/mm.h>
+>   #include <linux/smp.h>
+>   #include <linux/cpu.h>
 > +#include <linux/interrupt.h>
->  
->  #include <linux/blk-mq.h>
->  #include "blk.h"
->  #include "blk-mq.h"
->  
+
+Similar to what Christoph mentioned, seems strange to be including 
+interrupt.h
+
+>   
+>   #include <linux/blk-mq.h>
+>   #include "blk.h"
+>   #include "blk-mq.h"
+>   
 > -static int queue_index(struct blk_mq_queue_map *qmap,
 > -		       unsigned int nr_queues, const int q)
 > -{
@@ -100,60 +100,26 @@ irq code and grow a new name if we use it like this.
 > -	return cpu;
 > -}
 > -
->  int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
->  {
+>   int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>   {
 > +	struct irq_affinity_desc *masks = NULL;
 > +	struct irq_affinity affd = {0};
->  	unsigned int *map = qmap->mq_map;
->  	unsigned int nr_queues = qmap->nr_queues;
+
+should this be simply {}? I forget...
+
+>   	unsigned int *map = qmap->mq_map;
+>   	unsigned int nr_queues = qmap->nr_queues;
 > -	unsigned int cpu, first_sibling, q = 0;
 > +	unsigned int q;
->  
+>   
 > -	for_each_possible_cpu(cpu)
 > -		map[cpu] = -1;
 > +	masks = irq_create_affinity_masks(nr_queues, &affd);
 > +	if (!masks)
 > +		return -ENOMEM;
->  
-> -	/*
-> -	 * Spread queues among present CPUs first for minimizing
-> -	 * count of dead queues which are mapped by all un-present CPUs
-> -	 */
-> -	for_each_present_cpu(cpu) {
-> -		if (q >= nr_queues)
-> -			break;
-> -		map[cpu] = queue_index(qmap, nr_queues, q++);
-> -	}
-> +	for (q = 0; q < nr_queues; q++) {
-> +		unsigned int cpu;
->  
-> -	for_each_possible_cpu(cpu) {
-> -		if (map[cpu] != -1)
-> -			continue;
-> -		/*
-> -		 * First do sequential mapping between CPUs and queues.
-> -		 * In case we still have CPUs to map, and we have some number of
-> -		 * threads per cores then map sibling threads to the same queue
-> -		 * for performance optimizations.
-> -		 */
-> -		if (q < nr_queues) {
-> -			map[cpu] = queue_index(qmap, nr_queues, q++);
-> -		} else {
-> -			first_sibling = get_first_sibling(cpu);
-> -			if (first_sibling == cpu)
-> -				map[cpu] = queue_index(qmap, nr_queues, q++);
-> -			else
-> -				map[cpu] = map[first_sibling];
-> -		}
-> +		for_each_cpu(cpu, &masks[q].mask)
-> +			map[cpu] = q;
->  	}
-> -
-> +	kfree(masks);
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(blk_mq_map_queues);
-> -- 
-> 2.31.1
-> 
----end quoted text---
+
+should we fall back on something else here? Seems that this function 
+does not fail just because out of memory.
+
+Thanks,
+John
