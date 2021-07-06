@@ -2,166 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2DDC3BD34A
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 13:48:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 634983BD657
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 14:30:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231467AbhGFLux (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Jul 2021 07:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47120 "EHLO
+        id S240986AbhGFMcl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Jul 2021 08:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237063AbhGFLfw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Jul 2021 07:35:52 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D2BC025474;
-        Tue,  6 Jul 2021 04:19:56 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id j16-20020a05600c1c10b0290204b096b0caso1988246wms.1;
-        Tue, 06 Jul 2021 04:19:56 -0700 (PDT)
+        with ESMTP id S242286AbhGFMCY (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Jul 2021 08:02:24 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0014C0613A0;
+        Tue,  6 Jul 2021 04:34:06 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id u8so25642951wrq.8;
+        Tue, 06 Jul 2021 04:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBpIdd3w4EmoKqEbW/BZLpVWyxmjxkVlYmKKxNmRAGs=;
-        b=N+gzKC0Z+TLx4EVOYrpeodOG9kqL2O+hnJQ+5hS8ySCTWQc6nhp5Tvn3ujyDzQAHCo
-         ZWHRLJ5Ik3XlTKzgigdSPOLEK9yViA53g8RIqyyWvLJ+vM9zqu/0/PBReDvkuFKVso1B
-         AGTpv6yuhdPZqRrPG5RskiMwvMXxdj4uSuFp8v9LCpQ6pRutc9e+osA7Xs2qSWBEE4dh
-         h4eIODblSFMTUUI25MRMw0RopkQJyyvwBoB6iCV9bJgUtgLYD02To6H27A3ZDHDQgmYQ
-         6PpEoQnFaKJfygsMIpHen2X68Xs/5ncAlvYGrsnX8CQgjIqfZtoVw7pMZe0J3ePN6jQw
-         G60A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yv7klRcSZNtoO+YCPzzJU5HrTFcadvUP9OGq8uM3AYc=;
+        b=PWJji29fyaRN+yUkhTohrKnKgIItivILKx3gmRBEowcWDHNC03lpUD1A2uAYrF67Wv
+         lakOiD2O4sRcNOUjAKWo4NfynshuJi/Y4NbGoTdyLXonJH7L5F6FQosGTcinEH7NCwCc
+         9QX0sglYfa2rNNYhi1gbX4thH/ztLyZEnXp0eQvTNJcpiiFWsmxachyvyef8pYg5eWkE
+         oyH4mLY+zImuXdFogB+MYcsCGcGCSeobmAUhNTfnd+F+gwF5Oj0FfWTgGXBcvz8QBVqr
+         HxfXyKcfel5zGYphJTucMZ5SKqHOGFMrC8Gq9LsA2IsZCpsxwmPFx8bcbdOU5i1HdcSd
+         SWbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBpIdd3w4EmoKqEbW/BZLpVWyxmjxkVlYmKKxNmRAGs=;
-        b=XHIHlKFendywTHWO8CqNQHLGMfwvYNrT8JBNV2XVXQ8AjV49pCDcXhkMOaQbe3c82X
-         gCFiwke0ArK5Ntb4GXj1FqswlvQ9TWW5hz5LuE9qqp0RphSO80F+GzU+FA3fBPAV/Py+
-         7b2GuH1lmuuE7/hPlX6jBbjGKgafAovundU75mZ4FJpmjc2UIbWF7qCsGd2F0L0qGvXD
-         eNXhktimO0GRrCBA+bpC6tUIdIbbPi2kZhYNoaQnu+Ufwj+We+qA6DP+FADcbWrjrdS9
-         YFj8UZXHSDx19t9ZS2BNj6JHk1cm0YvZ/OeeyDOFrqb5YL5inF+wKhzbBbQgiVkRGDqZ
-         j1eA==
-X-Gm-Message-State: AOAM532++KNV6o3+nYAjvkknsPXa7auTnExtdokslp9rEwwZSe+duMR0
-        FlzvWGsgFtU4dO7DEItA9EE=
-X-Google-Smtp-Source: ABdhPJwWZW6uE+qpJMpNIRo+zpfm8e6b5TBp6hQTWoVQek+iG3AtgJH7ekQHoPlpcSLjU6msHrli5w==
-X-Received: by 2002:a05:600c:2292:: with SMTP id 18mr19388741wmf.179.1625570394987;
-        Tue, 06 Jul 2021 04:19:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yv7klRcSZNtoO+YCPzzJU5HrTFcadvUP9OGq8uM3AYc=;
+        b=cgT4SFp5TMKVjZe/JmjGT+5O2fXnef17MaozvTdHRy2mRv4v925T1Q4OfGGOBoiSmf
+         QNYMsW3cYDBiVxKa28jaJNcHsdlLyVIP9GUpVTN+u/pDUGp4mIf7YizDyaY8MXPtuM3P
+         qB9GI8CwlWbSjPOwJXQdPmtQwHL61HIQGOQLbeO0n4jKwh5AZ/gdgSOXGuCtD7oRouWs
+         Zneg4WOX7BDqVB4Ewp1UGStCWKsdwqOXWemIFiixNNbVJHf+bdeXkoiBy42wauTtPC14
+         TqdAblJwkMKJYnR9s/9NImX86sMQksliPWJX3jt/IzR4XNmT1W9I3kg2C5Anm6hbesEz
+         QKHw==
+X-Gm-Message-State: AOAM532mxN6O94OmpmZhZzPPLm9paVRI7aNuDbIwThGefqfSl3jgTcCF
+        POLQA61G4Vf/AjM7psY9Feg=
+X-Google-Smtp-Source: ABdhPJxF4A3lcDvg/enPNqf57lPLvLc7ZYnnpy+MDxjHhvYiVIRmiwhj3lcXzQrRjxajIScDaOEnQQ==
+X-Received: by 2002:a05:6000:144f:: with SMTP id v15mr10328613wrx.375.1625571245485;
+        Tue, 06 Jul 2021 04:34:05 -0700 (PDT)
 Received: from masalkhi.fritz.box (dslb-178-005-073-162.178.005.pools.vodafone-ip.de. [178.5.73.162])
-        by smtp.gmail.com with ESMTPSA id p7sm5142931wrr.21.2021.07.06.04.19.53
+        by smtp.gmail.com with ESMTPSA id v18sm16496143wrr.54.2021.07.06.04.34.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 04:19:54 -0700 (PDT)
+        Tue, 06 Jul 2021 04:34:05 -0700 (PDT)
 From:   Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         dan.carpenter@oracle.com, kbuild@lists.01.org, lkp@intel.com,
-        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Subject: [PATCH v3] block: Removed a warning while compiling with a cross compiler for parisc
-Date:   Tue,  6 Jul 2021 13:19:12 +0200
-Message-Id: <20210706111912.97611-1-abd.masalkhi@gmail.com>
+        kbuild-all@lists.01.org
+Subject: Re: [PATCH v2] block: Removed a warning while compiling with a cross compiler for parisc
+Date:   Tue,  6 Jul 2021 13:33:24 +0200
+Message-Id: <20210706113324.98041-1-abd.masalkhi@gmail.com>
 X-Mailer: git-send-email 2.29.0.rc1.dirty
+In-Reply-To: <202107060648.767XjMRK-lkp@intel.com>
+References: <202107060648.767XjMRK-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I have compiled the kernel with a cross compiler "hppa-linux-gnu-" v9.3.0
-on x86-64 host machine. I got the following warning:
+Hello Dan,
 
-block/genhd.c: In function ‘diskstats_show’:
-block/genhd.c:1227:1: warning: the frame size of 1688 bytes is larger
-than 1280 bytes [-Wframe-larger-than=]
- 1227  |  }
-
-By Reduced the stack footprint, using new printf specifier to print the
-bdevname and wrapping div_u64 function with a non-inline wrapper function,
-the warning was not emitted anymore.
-
-Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- block/genhd.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 79aa40b4c39c..0b091f572bc5 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1106,6 +1106,11 @@ const struct device_type disk_type = {
- };
- 
- #ifdef CONFIG_PROC_FS
-+static noinline u64 call_div_u64(u64 dividend, u32 divisor)
-+{
-+	return div_u64(dividend, divisor);
-+}
-+
- /*
-  * aggregate disk stat collector.  Uses the same stats that the sysfs
-  * entries do, above, but makes them available through one seq_file.
-@@ -1117,7 +1122,6 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- {
- 	struct gendisk *gp = v;
- 	struct block_device *hd;
--	char buf[BDEVNAME_SIZE];
- 	unsigned int inflight;
- 	struct disk_stats stat;
- 	unsigned long idx;
-@@ -1140,40 +1144,39 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- 		else
- 			inflight = part_in_flight(hd);
- 
--		seq_printf(seqf, "%4d %7d %s "
-+		seq_printf(seqf, "%4d %7d %pg "
- 			   "%lu %lu %lu %u "
- 			   "%lu %lu %lu %u "
- 			   "%u %u %u "
- 			   "%lu %lu %lu %u "
- 			   "%lu %u"
- 			   "\n",
--			   MAJOR(hd->bd_dev), MINOR(hd->bd_dev),
--			   disk_name(gp, hd->bd_partno, buf),
-+			   MAJOR(hd->bd_dev), MINOR(hd->bd_dev), hd,
- 			   stat.ios[STAT_READ],
- 			   stat.merges[STAT_READ],
- 			   stat.sectors[STAT_READ],
--			   (unsigned int)div_u64(stat.nsecs[STAT_READ],
--							NSEC_PER_MSEC),
-+			   (unsigned int)call_div_u64(stat.nsecs[STAT_READ],
-+						      NSEC_PER_MSEC),
- 			   stat.ios[STAT_WRITE],
- 			   stat.merges[STAT_WRITE],
- 			   stat.sectors[STAT_WRITE],
--			   (unsigned int)div_u64(stat.nsecs[STAT_WRITE],
--							NSEC_PER_MSEC),
-+			   (unsigned int)call_div_u64(stat.nsecs[STAT_WRITE],
-+						      NSEC_PER_MSEC),
- 			   inflight,
- 			   jiffies_to_msecs(stat.io_ticks),
--			   (unsigned int)div_u64(stat.nsecs[STAT_READ] +
--						 stat.nsecs[STAT_WRITE] +
--						 stat.nsecs[STAT_DISCARD] +
--						 stat.nsecs[STAT_FLUSH],
--							NSEC_PER_MSEC),
-+			   (unsigned int)call_div_u64(stat.nsecs[STAT_READ] +
-+						      stat.nsecs[STAT_WRITE] +
-+						      stat.nsecs[STAT_DISCARD] +
-+						      stat.nsecs[STAT_FLUSH],
-+						      NSEC_PER_MSEC),
- 			   stat.ios[STAT_DISCARD],
- 			   stat.merges[STAT_DISCARD],
- 			   stat.sectors[STAT_DISCARD],
--			   (unsigned int)div_u64(stat.nsecs[STAT_DISCARD],
--						 NSEC_PER_MSEC),
-+			   (unsigned int)call_div_u64(stat.nsecs[STAT_DISCARD],
-+						      NSEC_PER_MSEC),
- 			   stat.ios[STAT_FLUSH],
--			   (unsigned int)div_u64(stat.nsecs[STAT_FLUSH],
--						 NSEC_PER_MSEC)
-+			   (unsigned int)call_div_u64(stat.nsecs[STAT_FLUSH],
-+						      NSEC_PER_MSEC)
- 			);
- 	}
- 	rcu_read_unlock();
--- 
-2.29.0.rc1.dirty
-
+Thank you for your comment, I have fixed the issue, added the discussed tags, and sent a new version of the patch.
