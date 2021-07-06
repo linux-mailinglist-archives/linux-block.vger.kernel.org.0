@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF653BCCA2
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 13:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB35A3BCF67
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 13:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232561AbhGFLTs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Jul 2021 07:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54548 "EHLO mail.kernel.org"
+        id S233990AbhGFL2x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Jul 2021 07:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232566AbhGFLSd (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 6 Jul 2021 07:18:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 466D261C73;
-        Tue,  6 Jul 2021 11:15:54 +0000 (UTC)
+        id S233939AbhGFL0e (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 6 Jul 2021 07:26:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7966B61D58;
+        Tue,  6 Jul 2021 11:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625570155;
+        s=k20201202; t=1625570392;
         bh=C7djTTCjYd0cKj88eqwliCRjLiPRX/To8ipnMZj28IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMBNs7TsYsMr7p8ZSpDFz4n1LrajOJjXgJAoBKpwJayIvWWKB9XVPaS25dempyp+H
-         HA0Ct9E2Ak2oe4Vvsoi+WPOct3hoZRCHOc16PpqHKp4rfTmikHYqM2yXU3TXgq0veD
-         TC+3oujimV/17NEnwbFEenv4WRtvY15L6B6nuTs4Qr4Dj3ZVD2TwUjotc7BZn3JtYH
-         GOMTGLyA+/rRcyYWvrso4o3N9M3NbcQBEL5ReKmWFljT8M95Lfe8FyF6zwoxUZ9feU
-         uKqc/sG1B/nH6aAUvxOtoGk3dJwgZKj/C29ACGXHzWqNBVnenjqUTpGij/jkAcOmHa
-         x1s21AyPgWrsw==
+        b=g8DFE81zkZ//PukuJemB3fr9eLwcAFxpkpzYG01MHcOugFmem//1x6YBgqvric/rJ
+         Y5TdZAnz7nlFHQ+Uj6H/jSkaVeGCd6DQbcOgfxUYPAheCZEvlvQBxeeEaJCj6kjCN2
+         q+wxmPBU2ZYtd9LgVX1w+IEMIXV+kpwmStvpLdR+RmekMltVXRCsjo2r2RvqEZ2Ar6
+         TnFqf+G/m0PKbjzAO5FCP+hgW8WPTNkPbambeLG8z6sJXVZ6IvZQcoaxpopKgT9Iqb
+         wkrdgIoDrQ06U494iHtidnLwwWvH2HWGOAey1SaeBlMX2dfZhKXeqQ00m3mZAkyr1L
+         rwNPqce5DFNgA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
@@ -32,12 +32,12 @@ Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         Jens Axboe <axboe@kernel.dk>,
         Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 077/189] block: introduce BIO_ZONE_WRITE_LOCKED bio flag
-Date:   Tue,  6 Jul 2021 07:12:17 -0400
-Message-Id: <20210706111409.2058071-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 064/160] block: introduce BIO_ZONE_WRITE_LOCKED bio flag
+Date:   Tue,  6 Jul 2021 07:16:50 -0400
+Message-Id: <20210706111827.2060499-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210706111409.2058071-1-sashal@kernel.org>
-References: <20210706111409.2058071-1-sashal@kernel.org>
+In-Reply-To: <20210706111827.2060499-1-sashal@kernel.org>
+References: <20210706111827.2060499-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
