@@ -2,67 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C459C3BD656
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 14:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4AC93BD658
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jul 2021 14:30:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241219AbhGFMcn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Jul 2021 08:32:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53056 "EHLO
+        id S231641AbhGFMco (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Jul 2021 08:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243273AbhGFMDZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Jul 2021 08:03:25 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E1C07751C;
-        Tue,  6 Jul 2021 04:41:34 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id i2-20020a05600c3542b02902058529ea07so2031324wmq.3;
-        Tue, 06 Jul 2021 04:41:34 -0700 (PDT)
+        with ESMTP id S245171AbhGFMMa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Jul 2021 08:12:30 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B781DC061762;
+        Tue,  6 Jul 2021 05:00:26 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id h1-20020a17090a3d01b0290172d33bb8bcso1373648pjc.0;
+        Tue, 06 Jul 2021 05:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yv7klRcSZNtoO+YCPzzJU5HrTFcadvUP9OGq8uM3AYc=;
-        b=kh0gENRgiF7456HhDfb2cjtr/8R3mpJgxXweExUckOVsD+AChfL6aXSpTG1e2l3BlH
-         31sZyt39YzrqQIBTn3KqxCnDV29dO0Bfpt9dM7v5lXNdZ3qX1yf/nbgmbxELG1TWsUFD
-         s60Vp6OuljQO+OnKk77rOM/c0/8L/RugQtrD0D4abW4e2Ovz15htqDDvRnr2cPXViS+f
-         3FcXqXTu+As1ayk8kFMiq+coq4NdR872g/cxFEmPQteIdrXKsezsS+fSTLm2OTjFdAUx
-         etifkuwW1w+oaj7vhQkSfUaMMU8i+itGKHLrtoIz/zv4tkLzPSDvmf+rI2iWl9T4sBz8
-         V1ZQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vrJqpbX+WWnMqAWnWXX6YjNds91UcrnpbpdIVx8fXWI=;
+        b=ccoO4qSCaNLuC6Ruooedshrw/mmQ/wzbQbvFchhCRtKnlNncae0TDfWSjBMdaSoJh6
+         7O2nS7DskIYbvnRwlDgLPpmEhSXlr3XWUeHmnERD95qLqndGyXAa+Z84gmpmusJ/fPMS
+         ZGUDiCWo91YVbc1jSBptfohZnZArDIB8GlWMGs9QuEsUPzHlekA0zQKD8LCqxa78+Vne
+         UopKgOJ3lh/6jmGv3jR/zKiYMz1VmM1EWjTvyMkSFiMPmqwpivQy9LLCWpoz9tQQT25x
+         w90VIMGSfYO/4l53g8e+CdFthM1nSzNIzxA5vNh4+gdQDxL3CNh3VVTynBlsysE5JU+t
+         4siw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yv7klRcSZNtoO+YCPzzJU5HrTFcadvUP9OGq8uM3AYc=;
-        b=DlPbsrpJ/pijKOipJuQTFYamhqcSkBG7RUBZbXty0NCkhX3MI/LzthRQgT3lxFBiCH
-         uBmAkwekUbranIjhFJnaWVB68AUnfXS0NWcayptNIEoBbAqJ/OvvLUaJG//VcYqNHkAe
-         ikrxxbJ3reZIMEf83JkQCUorz6nW0tAB7tIbBNWgKWDeZuGoSYzVSFSvHliicZJnsvfy
-         2PTSA3ssaZNdF8ra4pZmv5stOnDcQ8BxM9Sycp3bQ99LnfDaoDe4t9Fh99mQ8HWlpFm8
-         YL1svl/uxluXWQJErl0bOXNBgah5FUZhTFSxzpPwAyZBB9tYW61xP/I4Acer91qAaIyi
-         VYLg==
-X-Gm-Message-State: AOAM532zpeh+VAvVMiis/m7Z68FpiAIVohXg7i66G5EmJWrWpvoNBCyx
-        teBMcQZ+0WCbLMEPALzpj4dvUm7uJr6tgg==
-X-Google-Smtp-Source: ABdhPJw/ux9cwM3B9ZEoeOKZ+oL1O/ymqYB72v47d6vrhwxWsN+MpraTo66j7QOSyT9xeiWfe5phtw==
-X-Received: by 2002:a1c:2604:: with SMTP id m4mr20084439wmm.101.1625571692938;
-        Tue, 06 Jul 2021 04:41:32 -0700 (PDT)
-Received: from masalkhi.fritz.box (dslb-178-005-073-162.178.005.pools.vodafone-ip.de. [178.5.73.162])
-        by smtp.gmail.com with ESMTPSA id h9sm15232849wmb.35.2021.07.06.04.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 04:41:32 -0700 (PDT)
-From:   Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To:     linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kbuild@lists.01.org, lkp@intel.com,
-        kbuild-all@lists.01.org
-Subject: Re: [PATCH v2] block: Removed a warning while compiling with a cross compiler for parisc
-Date:   Tue,  6 Jul 2021 13:41:16 +0200
-Message-Id: <20210706114116.98267-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.29.0.rc1.dirty
-In-Reply-To: <202107060648.767XjMRK-lkp@intel.com>
-References: <202107060648.767XjMRK-lkp@intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vrJqpbX+WWnMqAWnWXX6YjNds91UcrnpbpdIVx8fXWI=;
+        b=RlEiCA3rVtTFUkeqPCXgoioz2RTOlyVlWoHFo6eQbQyHMTJPY+KXA4h/iOMJC/6Cxc
+         j5l1Mv1gNE7bFRYs76eUe8yE8EH3c6xelh3geX5GeHcjbreN394BIB6C4wovnEZ8z6XX
+         mm4M3lgIzg6mphdSuCAu6pWe5X/ZumDFhBiUCLQTokVQrELvf2X4W8YFXyjaFQMY5FNE
+         cuNyxt96dFTJEzihAyvuQc8S2m0ihT4U6PeDPsNd7uWNSOs0mEY89PRVeXJmUPi7jUi7
+         Tjb4nj0umKYX7zHAOO4SWivU0xzgHg7ifJto5xksbz9s8PmOGUlpTz2hAGNqFl42h0gw
+         cI6w==
+X-Gm-Message-State: AOAM533va3o8e+JrzUG0Qd+d6oh+lVllL/9o5Hyks/hDd18+7xVrnOWq
+        8dN71xNuADQvRTmw+giq6cMoU0/fVU6ZVxe0
+X-Google-Smtp-Source: ABdhPJxzROSEFb31vpIuXWTOuM1UhmLn8mNFGLDCdL6iFim6982PAotoXnhyrxlvumxXYlTIuKhFeQ==
+X-Received: by 2002:a17:90b:1904:: with SMTP id mp4mr19774531pjb.29.1625572825663;
+        Tue, 06 Jul 2021 05:00:25 -0700 (PDT)
+Received: from [127.0.0.1] ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id w14sm20344583pgo.75.2021.07.06.05.00.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jul 2021 05:00:25 -0700 (PDT)
+Subject: Re: [PATCH v3] block: fix the problem of io_ticks becoming smaller
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1625521646-1069-1-git-send-email-brookxu.cn@gmail.com>
+ <YOPpM6et9rFNrBOn@infradead.org>
+From:   brookxu <brookxu.cn@gmail.com>
+Message-ID: <38566226-a5d3-35c3-3e06-cdf7f3f71609@gmail.com>
+Date:   Tue, 6 Jul 2021 20:00:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <YOPpM6et9rFNrBOn@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Dan,
 
-Thank you for your comment, I have fixed the issue, added the discussed tags, and sent a new version of the patch.
+
+Christoph Hellwig wrote on 2021/7/6 13:25:
+> On Tue, Jul 06, 2021 at 05:47:26AM +0800, brookxu wrote:
+>> From: Chunguang Xu <brookxu@tencent.com>
+>>
+>> On the IO submission path, blk_account_io_start() may interrupt
+>> the system interruption. When the interruption returns, the value
+>> of part->stamp may have been updated by other cores, so the time
+>> value collected before the interruption may be less than part->
+>> stamp. So when this happens, we should do nothing to make io_ticks
+>> more accurate? For kernels less than 5.0, this may cause io_ticks
+>> to become smaller, which in turn may cause abnormal ioutil values.
+>>
+>> v3: update the commit log
+>> v2: sorry, fix compile error due to the missed ')'
+>>
+>> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+> 
+> The change looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> Although I still have trouble understanding the commit log, especially
+> the last sentence.
+
+Thanks for your time，5b18b5a73760 ("block: delete part_round_stats and
+switch to less precise counting") Merged in 5.0-rc1. Before that, we relied
+on in_flight to count the disk's io_ticks，as follows:
+
+static void part_round_stats_single(struct request_queue *q,
+				    struct hd_struct *part, unsigned long now,
+				    unsigned int inflight)
+{
+	if (inflight) {
+		__part_stat_add(part, time_in_queue,
+				inflight * (now - part->stamp));
+		__part_stat_add(part, io_ticks, (now - part->stamp));
+	}
+	part->stamp = now;
+}
+
+The value of io_ticks should increase monotonically before the count wraps
+around. However, due to the reasons mentioned above, the interrupt on the
+IO submission path may cause the time obtained before the interrupt to be
+less than part->stamp after the interrupt returns, resulting in the value
+of io_ticks becoming smaller than the previous value. If the user task
+periodically samples /proc/diskstats and calculates ioutil, since io_ticks
+increases non-monotonously, the difference between adjacent times may be
+negative, which in turn makes ioutil abnormal.Fortunately, this problem
+can be easily circumvented.
+
+
