@@ -2,382 +2,158 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298123BE182
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jul 2021 05:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF8913BE28C
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jul 2021 07:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbhGGDWL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Jul 2021 23:22:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34534 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229989AbhGGDWK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 6 Jul 2021 23:22:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625627970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BsHne6gAY0F55fynmE1bp2vAH6rhT09nZuEZZRKRf8I=;
-        b=TTVKmVEq9nRr5+XRhVrAmE3qWh8U3ANuWjVEUvogz1pZWs0V5KomGVqphxPuzqBnBwEWqh
-        cOJ3sBgMShiPSoX4aNfoXjvOkQGREJMevC+nH8rJAZ/mGbewuYD+98NR6mq10hzupER4vb
-        v228JYgXWnaAORKBAt7LBUI2jfnVyJY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-aWbUtYrYOUGHGwlOlqv-jw-1; Tue, 06 Jul 2021 23:19:27 -0400
-X-MC-Unique: aWbUtYrYOUGHGwlOlqv-jw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D43A100C661;
-        Wed,  7 Jul 2021 03:19:26 +0000 (UTC)
-Received: from T590 (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 725DD10016F4;
-        Wed,  7 Jul 2021 03:19:19 +0000 (UTC)
-Date:   Wed, 7 Jul 2021 11:19:14 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Subject: Re: [PATCH 6/6] loop: don't add worker into idle list
-Message-ID: <YOUdMjAzEw6JQjKG@T590>
-References: <20210705102607.127810-1-ming.lei@redhat.com>
- <20210705102607.127810-7-ming.lei@redhat.com>
- <YORg2KYF7X1ZYJPG@dschatzberg-fedora-PC0Y6AEN>
+        id S230240AbhGGFcd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Jul 2021 01:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230139AbhGGFcd (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jul 2021 01:32:33 -0400
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAAFC061574;
+        Tue,  6 Jul 2021 22:29:52 -0700 (PDT)
+Received: by mail-ot1-x336.google.com with SMTP id 7-20020a9d0d070000b0290439abcef697so1169270oti.2;
+        Tue, 06 Jul 2021 22:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZSlcJZUOIqUIbhFmGgrUfWTTjY7XqvjzmGDuI9MNlKE=;
+        b=h3qC31+Yfn7olTyHFFDun8KcMcvQguy/NK0hLexPuWvRkc2H8FYQ5LudRRVPGt48+z
+         J5MiA4bqndUP8cYOtk35I2EyC4ZpvPuXRmJiPjK7GJzPmjHKgdJnL/0gCWVxvMs3PI36
+         Ml8DllHiQ57SbxGW53/8FYk05jQE6tJ9cz6eBHXstdOecXM2Z6rozIhjkvW9albEqTyz
+         hLHuflRF7xsnfbAzjxkGjBMPxOH+sT4FrhQSpiSthqZyda1bOWd/MW0nQzXGEG6iaU1Z
+         4m9R8w/r+XHNvQ+WDXYZMGc3Irexj6BjOPqxdLSGg1uLgYQvSCpIoKbDKU1IXxPVFNXF
+         z26g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZSlcJZUOIqUIbhFmGgrUfWTTjY7XqvjzmGDuI9MNlKE=;
+        b=XicHcgLyDAesgxKHx8tO7m3f3rwYz7LbEjQcThs1/U5u+w1yGEcAj2aDEJeLWvv8Ct
+         Ot8xx84nL5c/QX/nRycmKuJJ9hULmszk0mQudeWZlBHkyoojhJHXZpjpUE5BRAN85LNb
+         EX326aAwiipYPqgjrh9ejSk8b7EC9j1mwggsckilnirr92JYjGf9fKhJyTZePN8Ku8m9
+         kFrBF+Ug5lcyMnuXO2qbighZVK0u35L/RYeckAgMa3V4XIjILRYgZkxYCxDresFpe/LR
+         CnEI6ihESLZnzd0o/i/ltzQS1t4rytffW1ZQHacVl03TBbnVJzuFVWg7NcDn0UvWFXgd
+         vn+Q==
+X-Gm-Message-State: AOAM5318Fu4S7Hciha13a2comAE9vM1thCxKniivGk8O+X575gWkdIWK
+        Em4bqUaDaUxn3UDOiOOrOOE9OQ88VH0=
+X-Google-Smtp-Source: ABdhPJx2BvlaG273SYSSCEzWhEaRBaAfvt7BO4gxPwH42+4hXbZ//Uk0lROFCh+5MfiZ9Kju/Ru3vg==
+X-Received: by 2002:a9d:19a9:: with SMTP id k38mr5757252otk.346.1625635792059;
+        Tue, 06 Jul 2021 22:29:52 -0700 (PDT)
+Received: from fractal.attlocal.net ([2600:1700:1151:2380:3ec5:124:b596:7a55])
+        by smtp.googlemail.com with ESMTPSA id l11sm3284843oou.0.2021.07.06.22.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jul 2021 22:29:51 -0700 (PDT)
+From:   Satya Tangirala <satyaprateek2357@gmail.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
+        Satya Tangirala <satyaprateek2357@gmail.com>
+Subject: [PATCH v4 0/9] ensure bios aren't split in middle of crypto data unit
+Date:   Tue,  6 Jul 2021 22:29:34 -0700
+Message-Id: <20210707052943.3960-1-satyaprateek2357@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YORg2KYF7X1ZYJPG@dschatzberg-fedora-PC0Y6AEN>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 09:55:36AM -0400, Dan Schatzberg wrote:
-> On Mon, Jul 05, 2021 at 06:26:07PM +0800, Ming Lei wrote:
-> > We can retrieve any workers via xarray, so not add it into idle list.
-> > Meantime reduce .lo_work_lock coverage, especially we don't need that
-> > in IO path except for adding/deleting worker into xarray.
-> > 
-> > Also simplify code a bit.
-> > 
-> > Cc: Michal Koutný <mkoutny@suse.com>
-> > Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  drivers/block/loop.c | 138 ++++++++++++++++++++++++++-----------------
-> >  1 file changed, 84 insertions(+), 54 deletions(-)
-> > 
-> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > index 6e9725521330..146eaa03629b 100644
-> > --- a/drivers/block/loop.c
-> > +++ b/drivers/block/loop.c
-> > @@ -920,10 +920,11 @@ static void loop_config_discard(struct loop_device *lo)
-> >  struct loop_worker {
-> >  	struct work_struct work;
-> >  	struct list_head cmd_list;
-> > -	struct list_head idle_list;
-> >  	struct loop_device *lo;
-> >  	struct cgroup_subsys_state *blkcg_css;
-> >  	unsigned long last_ran_at;
-> > +	spinlock_t lock;
-> > +	refcount_t refcnt;
-> >  };
-> >  
-> >  static void loop_workfn(struct work_struct *work);
-> > @@ -941,13 +942,56 @@ static inline int queue_on_root_worker(struct cgroup_subsys_state *css)
-> >  }
-> >  #endif
-> >  
-> > +static struct loop_worker *loop_alloc_or_get_worker(struct loop_device *lo,
-> > +		struct cgroup_subsys_state *blkcg_css)
-> > +{
-> > +	gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN;
-> > +	struct loop_worker *worker = kzalloc(sizeof(*worker), gfp);
-> > +	struct loop_worker *worker_old;
-> > +
-> > +	if (!worker)
-> > +		return NULL;
-> > +
-> > +	worker->blkcg_css = blkcg_css;
-> > +	INIT_WORK(&worker->work, loop_workfn);
-> > +	INIT_LIST_HEAD(&worker->cmd_list);
-> > +	worker->lo = lo;
-> > +	spin_lock_init(&worker->lock);
-> > +	refcount_set(&worker->refcnt, 2);	/* INIT + INC */
-> 
-> Can you elaborate on the reference counting a bit more here? I notice
-> you have a reference per loop_cmd, but there are a couple extra
-> refcounts that aren't obvious to me. Having a comment describing it
-> might be useful.
+When a bio has an encryption context, its size must be aligned to its
+crypto data unit size. A bio must not be split in the middle of a data
+unit. Currently, bios are split at logical block boundaries, but a crypto
+data unit size might be larger than the logical block size - e.g. a machine
+could be using fscrypt (which uses 4K crypto data units) with an eMMC block
+device with inline encryption hardware that has a logical block size of 512
+bytes.
 
-One reference is for INIT, another is for INC, so initialized as 2.
+Right now, the only user of blk-crypto is fscrypt (on ext4 and f2fs), which
+(currently) only submits bios where the size of each segment is a multiple
+of data_unit_size.  That happens to avoid most of the cases where bios
+could be split in the middle of a data unit.  However, when support for
+direct I/O on encrypted files is added, or when support for filesystem
+metadata encryption is added, it will be possible for bios to have segment
+lengths that are multiples of the logical block size, but not multiples of
+the crypto data unit size.  So the block layer needs to start handling this
+case appropriately.
 
-The counter pair of INIT reference is refcount_dec_and_test()
-in __loop_free_idle_workers(), and it is per-worker.
+So we need to support cases where the data unit size is larger than
+the logical block size.
 
-The counter pair of INC reference is refcount_sub_and_test() in
-loop_process_work(), and it is per-cmd.
+Patch 1 introduces blk_ksm_is_empty() that checks whether a keyslot manager
+advertises a non-zero number of crypto capabilities. This function helps
+clean up code a little.
 
-> 
-> > +
-> > +	spin_lock(&lo->lo_work_lock);
-> > +	/* maybe someone is storing a new worker */
-> > +	worker_old = xa_load(&lo->workers, blkcg_css->id);
-> > +	if (!worker_old || !refcount_inc_not_zero(&worker_old->refcnt)) {
-> 
-> I gather you increment the refcount here under lo_work_lock to ensure
-> the worker isn't destroyed before queueing the cmd on it.
+Patches 2 and 3 introduce blk_crypto_bio_sectors_alignment() and
+bio_required_sector_alignment() respectively. The former returns the
+required sector alignment due to any crypto requirements the bio has.  The
+latter returns the required sector alignment due to any reason.  The number
+of sectors in any bio (and in particular, the number of sectors passed to
+bio_split) *must* be aligned to the value returned by the latter function
+(which, of course, calls the former function to decide what to return).
 
-Right.
+Patch 4 introduces restrictions on the data unit sizes advertised by a
+keyslot manager. These restrictions come about due to the request_queue's
+queue_limits, and are required to ensure that blk_bio_segment_split() can
+always split a bio so that it has a limited number of sectors and segments,
+and that the number of sectors it has is non-zero and aligned to
+bio_required_sector_alignment().
 
-> 
-> > +		if (xa_err(xa_store(&lo->workers, blkcg_css->id, worker, gfp))) {
-> > +			kfree(worker);
-> > +			worker = NULL;
-> > +		} else {
-> > +			css_get(worker->blkcg_css);
-> > +		}
-> > +	} else {
-> > +		kfree(worker);
-> > +		worker = worker_old;
-> > +	}
-> > +	spin_unlock(&lo->lo_work_lock);
-> > +
-> > +	return worker;
-> > +}
-> > +
-> > +static void loop_release_worker(struct loop_worker *worker)
-> > +{
-> > +	xa_erase(&worker->lo->workers, worker->blkcg_css->id);
-> > +	css_put(worker->blkcg_css);
-> > +	kfree(worker);
-> > +}
-> > +
-> >  static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
-> >  {
-> >  	struct loop_worker *worker = NULL;
-> >  	struct work_struct *work;
-> >  	struct list_head *cmd_list;
-> >  	struct cgroup_subsys_state *blkcg_css = NULL;
-> > -	gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN;
-> > +	spinlock_t	*lock;
-> >  #ifdef CONFIG_BLK_CGROUP
-> >  	struct request *rq = blk_mq_rq_from_pdu(cmd);
-> >  
-> > @@ -955,54 +999,38 @@ static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
-> >  		blkcg_css = &bio_blkcg(rq->bio)->css;
-> >  #endif
-> >  
-> > -	spin_lock(&lo->lo_work_lock);
-> > -
-> > -	if (queue_on_root_worker(blkcg_css))
-> > -		goto queue_work;
-> > -
-> > -	/* css->id is unique in each cgroup subsystem */
-> > -	worker = xa_load(&lo->workers, blkcg_css->id);
-> > -	if (worker)
-> > -		goto queue_work;
-> > -
-> > -	worker = kzalloc(sizeof(*worker), gfp);
-> > -	/*
-> > -	 * In the event we cannot allocate a worker, just queue on the
-> > -	 * rootcg worker and issue the I/O as the rootcg
-> > -	 */
-> > -	if (!worker)
-> > -		goto queue_work;
-> > +	if (!queue_on_root_worker(blkcg_css)) {
-> > +		int ret = 0;
-> >  
-> > -	worker->blkcg_css = blkcg_css;
-> > -	css_get(worker->blkcg_css);
-> > -	INIT_WORK(&worker->work, loop_workfn);
-> > -	INIT_LIST_HEAD(&worker->cmd_list);
-> > -	INIT_LIST_HEAD(&worker->idle_list);
-> > -	worker->lo = lo;
-> > +		rcu_read_lock();
-> > +		/* css->id is unique in each cgroup subsystem */
-> > +		worker = xa_load(&lo->workers, blkcg_css->id);
-> > +		if (worker)
-> > +			ret = refcount_inc_not_zero(&worker->refcnt);
-> > +		rcu_read_unlock();
-> 
-> I don't follow the refcount decrement here. Also, what's the purpose
-> of the rcu critical section here?
+Patches 5, 6 and 7 handle the error code from blk_ksm_register() in all
+callers.  This return code was previously ignored by all callers because
+the function could only fail if the request_queue had integrity support,
+which the callers ensured would not be the case. But the patches in this
+series add more cases where this function might fail, so it's better to
+just handle the return code properly in all the callers.
 
-xa_load() requires rcu readlock, and the rcu can guarantee that the
-'worker' won't be released when grabbing its reference.
+Patch 8 updates get_max_io_size() and blk_bio_segment_split() to respect
+bio_required_sector_alignment(). get_max_io_size() always returns a
+value that is aligned to bio_required_sector_alignment(), and together
+with Patch 4, this is enough to ensure that if the bio is split, it is
+split at a crypto data unit size boundary.
 
-> 
-> >  
-> > -	if (xa_err(xa_store(&lo->workers, blkcg_css->id, worker, gfp))) {
-> > -		kfree(worker);
-> > -		worker = NULL;
-> > +		if (!worker || !ret)
-> > +			worker = loop_alloc_or_get_worker(lo, blkcg_css);
-> > +		/*
-> > +		 * In the event we cannot allocate a worker, just queue on the
-> > +		 * rootcg worker and issue the I/O as the rootcg
-> > +		 */
-> >  	}
-> >  
-> > -queue_work:
-> >  	if (worker) {
-> > -		/*
-> > -		 * We need to remove from the idle list here while
-> > -		 * holding the lock so that the idle timer doesn't
-> > -		 * free the worker
-> > -		 */
-> > -		if (!list_empty(&worker->idle_list))
-> > -			list_del_init(&worker->idle_list);
-> >  		work = &worker->work;
-> >  		cmd_list = &worker->cmd_list;
-> > +		lock = &worker->lock;
-> >  	} else {
-> >  		work = &lo->rootcg_work;
-> >  		cmd_list = &lo->rootcg_cmd_list;
-> > +		lock = &lo->lo_work_lock;
-> 
-> Is lo_work_lock special here or is it just because the root "worker"
-> lacks a lock itself? I wonder if a separate spinlock is more clear.
+Since all callers to bio_split() should have been updated by the previous
+patches, Patch 9 adds a WARN_ON() to bio_split() when sectors isn't aligned
+to bio_required_sector_alignment() (the one exception is bounce.c which is
+legacy code and won't interact with inline encryption).
 
-'->rootcg_cmd_list' is one per-loop-device list, so it needs one
-per-loop-device lock. Yeah, in theory, we can add one lock just for
-protecting the list, but it is fine to reuse it since the only extra
-use is to reclaim worker which is definitely in slow path, so no
-necessary to add a new one, IMO.
+This patch series was tested by running android xfstests on the SDM630
+chipset (which has eMMC inline encryption hardware with logical block size
+512 bytes) with test_dummy_encryption with and without the 'inlinecrypt'
+mount option.
 
-> 
-> >  	}
-> > +
-> > +	spin_lock(lock);
-> >  	list_add_tail(&cmd->list_entry, cmd_list);
-> > +	spin_unlock(lock);
-> >  	queue_work(lo->workqueue, work);
-> > -	spin_unlock(&lo->lo_work_lock);
-> >  }
-> >  
-> >  static void loop_update_rotational(struct loop_device *lo)
-> > @@ -1131,20 +1159,18 @@ static void loop_set_timer(struct loop_device *lo)
-> >  
-> >  static void __loop_free_idle_workers(struct loop_device *lo, bool force)
-> >  {
-> > -	struct loop_worker *pos, *worker;
-> > +	struct loop_worker *worker;
-> > +	unsigned long id;
-> >  
-> >  	spin_lock(&lo->lo_work_lock);
-> > -	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
-> > -				idle_list) {
-> > +	xa_for_each(&lo->workers, id, worker) {
-> >  		if (!force && time_is_after_jiffies(worker->last_ran_at +
-> >  						LOOP_IDLE_WORKER_TIMEOUT))
-> >  			break;
-> > -		list_del(&worker->idle_list);
-> > -		xa_erase(&lo->workers, worker->blkcg_css->id);
-> > -		css_put(worker->blkcg_css);
-> > -		kfree(worker);
-> > +		if (refcount_dec_and_test(&worker->refcnt))
-> > +			loop_release_worker(worker);
-> 
-> This one is puzzling to me. Can't you hit this refcount decrement
-> superfluously each time the loop timer fires?
+Changes v3 => v4
+ - Addressed comments and incorporated fixes from Eric
+ - Patch 4 in v3 has been removed (Eric points out it isn't required
+   without some of the changes in the device mapper patchset at
+   https://lore.kernel.org/linux-block/20210604210908.2105870-1-satyat@google.com/
+  so I'll add this patch to that series instead.
 
-Not sure I get your point.
+Satya Tangirala (9):
+  block: introduce blk_ksm_is_empty()
+  block: blk-crypto: introduce blk_crypto_bio_sectors_alignment()
+  block: introduce bio_required_sector_alignment()
+  block: keyslot-manager: introduce
+    blk_ksm_restrict_dus_to_queue_limits()
+  ufshcd: handle error from blk_ksm_register()
+  mmc: handle error from blk_ksm_register()
+  dm: handle error from blk_ksm_register()
+  blk-merge: Ensure bios aren't split in middle of a crypto data unit
+  block: add WARN_ON_ONCE() to bio_split() for sector alignment
 
-As I mentioned above, this one is the counter pair of INIT reference,
-but one new lo_cmd may just grab it when queueing rq before erasing the
-worker from xarray, so we can't release worker here until the command is
-completed.
+ block/bio.c                      |   1 +
+ block/blk-crypto-internal.h      |  17 +++++
+ block/blk-merge.c                |  49 ++++++++-----
+ block/blk.h                      |  17 +++++
+ block/keyslot-manager.c          | 120 +++++++++++++++++++++++++++++++
+ drivers/md/dm-table.c            |  28 +++++---
+ drivers/mmc/core/crypto.c        |  13 +++-
+ drivers/scsi/ufs/ufshcd-crypto.c |  13 +++-
+ include/linux/keyslot-manager.h  |   2 +
+ 9 files changed, 227 insertions(+), 33 deletions(-)
 
-> 
-> >  	}
-> > -	if (!list_empty(&lo->idle_worker_list))
-> > +	if (!xa_empty(&lo->workers))
-> >  		loop_set_timer(lo);
-> >  	spin_unlock(&lo->lo_work_lock);
-> >  }
-> > @@ -2148,27 +2174,29 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
-> >  }
-> >  
-> >  static void loop_process_work(struct loop_worker *worker,
-> > -			struct list_head *cmd_list, struct loop_device *lo)
-> > +			struct list_head *cmd_list, spinlock_t *lock)
-> >  {
-> >  	int orig_flags = current->flags;
-> >  	struct loop_cmd *cmd;
-> >  	LIST_HEAD(list);
-> > +	int cnt = 0;
-> >  
-> >  	current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
-> >  
-> > -	spin_lock(&lo->lo_work_lock);
-> > +	spin_lock(lock);
-> >   again:
-> >  	list_splice_init(cmd_list, &list);
-> > -	spin_unlock(&lo->lo_work_lock);
-> > +	spin_unlock(lock);
-> >  
-> >  	while (!list_empty(&list)) {
-> >  		cmd = list_first_entry(&list, struct loop_cmd, list_entry);
-> >  		list_del_init(&cmd->list_entry);
-> >  
-> >  		loop_handle_cmd(cmd);
-> > +		cnt++;
-> >  	}
-> >  
-> > -	spin_lock(&lo->lo_work_lock);
-> > +	spin_lock(lock);
-> >  	if (!list_empty(cmd_list))
-> >  		goto again;
-> >  
-> > @@ -2179,11 +2207,13 @@ static void loop_process_work(struct loop_worker *worker,
-> >  	 */
-> >  	if (worker && !work_pending(&worker->work)) {
-> >  		worker->last_ran_at = jiffies;
-> > -		list_add_tail(&worker->idle_list, &lo->idle_worker_list);
-> > -		loop_set_timer(lo);
-> > +		loop_set_timer(worker->lo);
-> >  	}
-> > -	spin_unlock(&lo->lo_work_lock);
-> > +	spin_unlock(lock);
-> >  	current->flags = orig_flags;
-> > +
-> > +	if (worker && refcount_sub_and_test(cnt, &worker->refcnt))
-> > +		loop_release_worker(worker);
-> >  }
-> >  
-> >  static void loop_workfn(struct work_struct *work)
-> > @@ -2202,7 +2232,7 @@ static void loop_workfn(struct work_struct *work)
-> >  		old_memcg = set_active_memcg(
-> >  				mem_cgroup_from_css(memcg_css));
-> >  
-> > -	loop_process_work(worker, &worker->cmd_list, worker->lo);
-> > +	loop_process_work(worker, &worker->cmd_list, &worker->lock);
-> >  
-> >  	kthread_associate_blkcg(NULL);
-> >  	if (memcg_css) {
-> > @@ -2215,7 +2245,7 @@ static void loop_rootcg_workfn(struct work_struct *work)
-> >  {
-> >  	struct loop_device *lo =
-> >  		container_of(work, struct loop_device, rootcg_work);
-> > -	loop_process_work(NULL, &lo->rootcg_cmd_list, lo);
-> > +	loop_process_work(NULL, &lo->rootcg_cmd_list, &lo->lo_work_lock);
-> >  }
-> >  
-> >  static const struct blk_mq_ops loop_mq_ops = {
-> > -- 
-> > 2.31.1
-> > 
-> 
-> The rest of this patch series looks great. Feel free to add my
-> Acked-by to the others.
-
-Thanks for your review!
-
-
-Thanks,
-Ming
+-- 
+2.25.1
 
