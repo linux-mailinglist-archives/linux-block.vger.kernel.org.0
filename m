@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDF993BE289
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jul 2021 07:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D94BF3BE28B
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jul 2021 07:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbhGGFcd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Jul 2021 01:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
+        id S230263AbhGGFcg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Jul 2021 01:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbhGGFcd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jul 2021 01:32:33 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB76AC06175F;
-        Tue,  6 Jul 2021 22:29:53 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id w74so2064179oiw.8;
-        Tue, 06 Jul 2021 22:29:53 -0700 (PDT)
+        with ESMTP id S230258AbhGGFcf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jul 2021 01:32:35 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA8EC061574;
+        Tue,  6 Jul 2021 22:29:54 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id d21-20020a9d72d50000b02904604cda7e66so1141398otk.7;
+        Tue, 06 Jul 2021 22:29:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o9mcFTax0Fd19qehKUtPE/0XWl2NOU79bLU08anZC7Q=;
-        b=GcpqxZNgsKZXPvBh4QygZBHJcRG1eADTf6M5IiMAd+7ZDDA64emuPexrPM4Sidd7/F
-         qiG/v7yvB7Uod0Nt6FDT6w720dRnj7szlICfbsXzIDwDWnuBIK78Dste03mn68NnXY7w
-         OfVKPH5bfNFmZ6+d+xNDZ40gcCK+YjZmYlQ3WotmjWzikQ9btm+RcaFb+9v7kkIaXCM2
-         0w+LlW/jbBSU6+AhvAy2EJYbOmryHIJ+aAw+sZaYI/+8sGdWGZv3vEtksFMIXbfhTkC9
-         k6FPlvU7Fl5saSSpcriHsadvao5zW/CQqVaUOHc/fhilM0FIuS6vIqc8efw+NWrH1QbA
-         KvxQ==
+        bh=9RxYTCKcZkVHS+OeXSYpWZPM6l33cLGgmxCxzTKdJGg=;
+        b=lVKq2Nn+YBMFZPkkyIrnSnegcFvQ4xPyd3sCfD8nCTRpjVugPC3CuZroVztcKeAy1O
+         gzCg7m/rm2mzt5xKLgEclpAHrUKcdHBgXLnkaw0YU9K0RdWDHdcQ8Uvp8+nRF17+RbqK
+         /xanRDAGLimCc61ANlkdXDQIdigWAf1SYc6CuIqlNM2dRh+9uhFnQkyQS59VVrjD2r9A
+         u6GpU1Nqevps+7YIfBfx3P2TbHIE+Fqt8hyUIaGKr4NLErsfU++RJobjY7JrXigM/dIS
+         3sXncDKdaK2J1H38DyVhkhxLWNaOQaRfXVwh1VYe/BB4669nvlrP3zFBvoMPPLoK/UZJ
+         JIjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o9mcFTax0Fd19qehKUtPE/0XWl2NOU79bLU08anZC7Q=;
-        b=hWFaXDJr8xwuNwaaniDgg+IzhtRm1DEuJcTxZmTSXvAqNG3vUKs5QpIie8kAKQjx2q
-         C0zPEbMoqNTJcQmttAkhUG0qUXMFsSOUKf+71jIhGbgsjABArDjslrrEayph8cm24xt9
-         Vpx0cVrI4J/gOj6kzmX6eHlXPfnzgzKufaDcHWvUDPwGFyE8k3vWs2vswxncNl7RRZ1R
-         cjKfibqtnjJT3bq/L3BnCafx01YPgTVkNmFmUWlEF9EDD2A/czlEB7VXwWR6m1TEnsx2
-         qeZ73awA0KnruK1A6TSlYjrD0D0m/eW8xvjZ8EOnhTikhjVmvfpSn4h5Fmpa27wVNzt+
-         1zHw==
-X-Gm-Message-State: AOAM530KqZertcQQA4kcD2KxOoTASVpM4XiGK6bRbKG90ZUFuqbWZc+3
-        Hhr0CItb4j9j00cl50qtOk9q+tSIdeM=
-X-Google-Smtp-Source: ABdhPJyRrbiJ+SMsGuKW7rM9XoiFiS6FbbtKxjQfdqqCWJLeTg520lSmWwulWzi2uuVIJJ1AENiAvg==
-X-Received: by 2002:aca:4fce:: with SMTP id d197mr10972346oib.16.1625635793068;
+        bh=9RxYTCKcZkVHS+OeXSYpWZPM6l33cLGgmxCxzTKdJGg=;
+        b=UxVDhpl0NRKA3lGhTYUS6kEEOgd+r8Z/d8/1rjJBUR9nWzieYyTAhQyZdSCEQKKrp5
+         alsHQCycProRRyMsiBYVoqf/ZT8DLZL75hCQa8/SB7t6Ll+OHmxltgTwl73sEDw+7ZYp
+         B3nu4p1EiMeOBeN5WGUc4dVxigYQ6ToyvujHYRfC5gqZmDpfWK7tjZVPdqO7b5e6FSkC
+         +7urQtXkgpqM69ngT8L3vK7ZzN50YtNAr2pkn4Qij6wAfEWFGoXVuSmUsDzguyGezSar
+         4FoD/1if0JxxvzeUA4R/6edb53KZfWhFESmt3hLNuapOr8Gih30Qkc74a6qT1rb+rZeU
+         Bcrw==
+X-Gm-Message-State: AOAM531vF32f2NKP7yT4HFsFk/kX7d1OOdOAbbRB9dkwVYRHBztIh4f4
+        WHFaNIOHiSz/NLJkWzgcua2P0hHcIJo=
+X-Google-Smtp-Source: ABdhPJybxnYkYobbpAVo3IbhOvQylVK1ckUFFvL1FhiQWkgtvfNfBzWqJ/OgRzxtZQ99y5LGTPgkkg==
+X-Received: by 2002:a9d:7f0b:: with SMTP id j11mr17627649otq.369.1625635793935;
         Tue, 06 Jul 2021 22:29:53 -0700 (PDT)
 Received: from fractal.attlocal.net ([2600:1700:1151:2380:3ec5:124:b596:7a55])
-        by smtp.googlemail.com with ESMTPSA id l11sm3284843oou.0.2021.07.06.22.29.52
+        by smtp.googlemail.com with ESMTPSA id l11sm3284843oou.0.2021.07.06.22.29.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 22:29:52 -0700 (PDT)
+        Tue, 06 Jul 2021 22:29:53 -0700 (PDT)
 From:   Satya Tangirala <satyaprateek2357@gmail.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>, Eric Biggers <ebiggers@google.com>,
         Satya Tangirala <satyaprateek2357@gmail.com>,
         Satya Tangirala <satyat@google.com>
-Subject: [PATCH v4 1/9] block: introduce blk_ksm_is_empty()
-Date:   Tue,  6 Jul 2021 22:29:35 -0700
-Message-Id: <20210707052943.3960-2-satyaprateek2357@gmail.com>
+Subject: [PATCH v4 2/9] block: blk-crypto: introduce blk_crypto_bio_sectors_alignment()
+Date:   Tue,  6 Jul 2021 22:29:36 -0700
+Message-Id: <20210707052943.3960-3-satyaprateek2357@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210707052943.3960-1-satyaprateek2357@gmail.com>
 References: <20210707052943.3960-1-satyaprateek2357@gmail.com>
@@ -66,101 +66,52 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Satya Tangirala <satyat@google.com>
 
-This function checks if a given keyslot manager supports any encryption
-mode/data unit size combination (and returns true if there is no such
-supported combination). Helps clean up code a little.
+The size of any bio must be aligned to the data unit size of the bio crypt
+context (if it exists) of that bio. This must also be ensured whenever a
+bio is split. Introduce blk_crypto_bio_sectors_alignment() that returns the
+required alignment in sectors. The number of sectors passed to any call of
+bio_split() must be aligned to blk_crypto_bio_sectors_alignment().
 
 Signed-off-by: Satya Tangirala <satyat@google.com>
 ---
- block/keyslot-manager.c         | 31 +++++++++++++++++++++++++++++++
- drivers/md/dm-table.c           | 11 +----------
- include/linux/keyslot-manager.h |  2 ++
- 3 files changed, 34 insertions(+), 10 deletions(-)
+ block/blk-crypto-internal.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/block/keyslot-manager.c b/block/keyslot-manager.c
-index 2c4a55bea6ca..4d0794506d43 100644
---- a/block/keyslot-manager.c
-+++ b/block/keyslot-manager.c
-@@ -437,6 +437,37 @@ void blk_ksm_destroy(struct blk_keyslot_manager *ksm)
+diff --git a/block/blk-crypto-internal.h b/block/blk-crypto-internal.h
+index 0d36aae538d7..81d10cf950ce 100644
+--- a/block/blk-crypto-internal.h
++++ b/block/blk-crypto-internal.h
+@@ -60,6 +60,18 @@ static inline bool blk_crypto_rq_is_encrypted(struct request *rq)
+ 	return rq->crypt_ctx;
  }
- EXPORT_SYMBOL_GPL(blk_ksm_destroy);
  
 +/*
-+ * Returns true iff @ksm doesn't support any crypto capabilities if
-+ * @dus_allowed_mask were applied to each crypto mode of @ksm.
++ * Return the number of sectors to which the size of this bio (and any bios
++ * split from it) must be aligned based on its encryption context.
 + */
-+static inline bool blk_ksm_is_empty_mask(struct blk_keyslot_manager *ksm,
-+					 unsigned long dus_allowed_mask)
++static inline unsigned int blk_crypto_bio_sectors_alignment(struct bio *bio)
 +{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ksm->crypto_modes_supported); i++) {
-+		if (ksm->crypto_modes_supported[i] & dus_allowed_mask)
-+			return false;
-+	}
-+
-+	return true;
++	if (!bio_has_crypt_ctx(bio))
++		return 1;
++	return bio->bi_crypt_context->bc_key->crypto_cfg.data_unit_size >>
++								SECTOR_SHIFT;
 +}
 +
-+/**
-+ * blk_ksm_is_empty() - Checks if the keyslot manager has any crypto
-+ *			capabilities at all.
-+ * @ksm: The input keyslot manager to check
-+ *
-+ * Return: true if @ksm doesn't have any crypto capabilities at all, and
-+ *	   false otherwise.
-+ */
-+bool blk_ksm_is_empty(struct blk_keyslot_manager *ksm)
+ #else /* CONFIG_BLK_INLINE_ENCRYPTION */
+ 
+ static inline bool bio_crypt_rq_ctx_compatible(struct request *rq,
+@@ -93,6 +105,11 @@ static inline bool blk_crypto_rq_is_encrypted(struct request *rq)
+ 	return false;
+ }
+ 
++static inline unsigned int blk_crypto_bio_sectors_alignment(struct bio *bio)
 +{
-+	return blk_ksm_is_empty_mask(ksm, ~0);
++	return 1;
 +}
-+EXPORT_SYMBOL_GPL(blk_ksm_is_empty);
 +
- bool blk_ksm_register(struct blk_keyslot_manager *ksm, struct request_queue *q)
- {
- 	if (blk_integrity_queue_supports_integrity(q)) {
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index ee47a332b462..29cbfc3e3c4b 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1295,7 +1295,6 @@ static int dm_table_construct_keyslot_manager(struct dm_table *t)
- 	struct blk_keyslot_manager *ksm;
- 	struct dm_target *ti;
- 	unsigned int i;
--	bool ksm_is_empty = true;
+ #endif /* CONFIG_BLK_INLINE_ENCRYPTION */
  
- 	dksm = kmalloc(sizeof(*dksm), GFP_KERNEL);
- 	if (!dksm)
-@@ -1332,15 +1331,7 @@ static int dm_table_construct_keyslot_manager(struct dm_table *t)
- 	 * If the new KSM doesn't actually support any crypto modes, we may as
- 	 * well represent it with a NULL ksm.
- 	 */
--	ksm_is_empty = true;
--	for (i = 0; i < ARRAY_SIZE(ksm->crypto_modes_supported); i++) {
--		if (ksm->crypto_modes_supported[i]) {
--			ksm_is_empty = false;
--			break;
--		}
--	}
--
--	if (ksm_is_empty) {
-+	if (blk_ksm_is_empty(ksm)) {
- 		dm_destroy_keyslot_manager(ksm);
- 		ksm = NULL;
- 	}
-diff --git a/include/linux/keyslot-manager.h b/include/linux/keyslot-manager.h
-index a27605e2f826..0f09b4f310f7 100644
---- a/include/linux/keyslot-manager.h
-+++ b/include/linux/keyslot-manager.h
-@@ -106,6 +106,8 @@ void blk_ksm_reprogram_all_keys(struct blk_keyslot_manager *ksm);
- 
- void blk_ksm_destroy(struct blk_keyslot_manager *ksm);
- 
-+bool blk_ksm_is_empty(struct blk_keyslot_manager *ksm);
-+
- void blk_ksm_intersect_modes(struct blk_keyslot_manager *parent,
- 			     const struct blk_keyslot_manager *child);
- 
+ void __bio_crypt_advance(struct bio *bio, unsigned int bytes);
 -- 
 2.25.1
 
