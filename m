@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 676D83C38BD
-	for <lists+linux-block@lfdr.de>; Sun, 11 Jul 2021 01:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAD543C3909
+	for <lists+linux-block@lfdr.de>; Sun, 11 Jul 2021 01:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232441AbhGJX4C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 10 Jul 2021 19:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40800 "EHLO mail.kernel.org"
+        id S231482AbhGJX5U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 10 Jul 2021 19:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233965AbhGJXzE (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:55:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7F7C5613F9;
-        Sat, 10 Jul 2021 23:51:38 +0000 (UTC)
+        id S234112AbhGJX4H (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:56:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C65D3613FC;
+        Sat, 10 Jul 2021 23:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961099;
-        bh=Kbh2t3UhUwFykH6852mSxWLXEXKjB4hI7B6a9yxTSOc=;
+        s=k20201202; t=1625961129;
+        bh=NtwPwY13+UkNy05MJKmtncoXJxnnGqWgemsC1i4b/Nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o0w9WX7ikdVmJZ2CYe+GAF15zWDzgRtRKLl4z0HIzdtHS4o/n/PbpsXt7cssU4RWX
-         kzlp+qVd+508TOBTs2V+I7GkLVtxTOxsWlXf2kczMKH/I7GN3pjSCj8kp2n+w2JgE1
-         ecA0UcoueOUGHwhrtBzkaFTxnQPuzKdGSWe2nNly8O59vLaUgazIW5b+yAaSQkHCo1
-         YqriV+vn6ooq1HCEqylU26bjjCi7vbeLX3lfYYpcZevbJFRg53pytJy3ydgbbJw+Wj
-         Zma7YVWz/M/k/WIZZAWDy5OjmovM1WKwZs++tLE81K4Q4POXXlYVz6OOjXw1Et3n/R
-         nuA+Ujq0aT0vQ==
+        b=VckpmkrQsqTYd3fyz0pG+Q69Oi0D6elgbfQfkkDJaaWgf5UKmu/3+ty1kRhcFRM2H
+         wwxDfm6nOtVf2J9DRehSFFpflzO4MWkiARH/W9Ew1redyNy5RfyJLq92qUaYldcJQL
+         ArSaWKPv6EwJdMQoJ4XzsAieA8jbVmdwHxBwb2JbJcjQ4xOk8jxJZJ2hbsWNdeH2TW
+         onJhk1h1DNwPE8ikOw0qtRZHpLGnQ6sZJ4dkFyEHCzm4MhajDItbSIoyEsbbF73NX3
+         k7MsobBqmH2EYcgVbTpXZoy88bhV1x5/TALr9h4Aiu7mRuBEGi/SF2fgIbF1RE5B1F
+         aC/bOcrOQD7yg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xie Yongji <xieyongji@bytedance.com>,
@@ -31,12 +31,12 @@ Cc:     Xie Yongji <xieyongji@bytedance.com>,
         Sasha Levin <sashal@kernel.org>,
         virtualization@lists.linux-foundation.org,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 25/28] virtio-blk: Fix memory leak among suspend/resume procedure
-Date:   Sat, 10 Jul 2021 19:51:04 -0400
-Message-Id: <20210710235107.3221840-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/22] virtio-blk: Fix memory leak among suspend/resume procedure
+Date:   Sat, 10 Jul 2021 19:51:41 -0400
+Message-Id: <20210710235143.3222129-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235107.3221840-1-sashal@kernel.org>
-References: <20210710235107.3221840-1-sashal@kernel.org>
+In-Reply-To: <20210710235143.3222129-1-sashal@kernel.org>
+References: <20210710235143.3222129-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +62,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 2eeb2bcb488d..816eb2db7308 100644
+index c2d9459ec5d1..dac1769146d7 100644
 --- a/drivers/block/virtio_blk.c
 +++ b/drivers/block/virtio_blk.c
-@@ -1057,6 +1057,8 @@ static int virtblk_freeze(struct virtio_device *vdev)
+@@ -944,6 +944,8 @@ static int virtblk_freeze(struct virtio_device *vdev)
  	blk_mq_quiesce_queue(vblk->disk->queue);
  
  	vdev->config->del_vqs(vdev);
