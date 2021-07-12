@@ -2,101 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 596093C61DC
+	by mail.lfdr.de (Postfix) with ESMTP id D51013C61DE
 	for <lists+linux-block@lfdr.de>; Mon, 12 Jul 2021 19:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235160AbhGLRap (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S230033AbhGLRap (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Mon, 12 Jul 2021 13:30:45 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:38010 "EHLO
+Received: from smtp-out1.suse.de ([195.135.220.28]:38014 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234728AbhGLRao (ORCPT
+        with ESMTP id S235167AbhGLRao (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Mon, 12 Jul 2021 13:30:44 -0400
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 8DCB422085;
+        by smtp-out1.suse.de (Postfix) with ESMTP id 929CD2210D;
         Mon, 12 Jul 2021 17:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1626110875; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=i8OOw3EC98mxR4MVF5Hjz1UV/zK7FKDb3M+lQc8YgU8=;
-        b=zpiHTfmpnHrfo4ipn4HP0RaKaQRXrctQqt3jTAESXjOaEkHH6dXvIbM9WOYQzOJndm6SZ1
-        pzVfj8JlzF0ezIWZGq9d2+UK5iTo07Nobc+DwvU7wynhCDSV+G9x5HyGw//mh4FlLmZOcA
-        +q5QxWeADf6KdWdeeTVJQHTXiZsT7n0=
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3/tUVLi/1ehnmWuHgEgGk245sp/nozJ2MMa9O6HKxS0=;
+        b=wFQlj4agPAQH3TQMLGDVSHAJW7SKkF05ySsCgZJr5E8MdZN7VazIkk22lJ4G+WYhTYGwAA
+        LfybVKslljmRq9247glhR081hxXmQgotM0r7Lue2EtRuq9JC/vTuLJzeGwat39Oq1ue3t2
+        4BJ6qf6Ec/ce5cignOZ747aM6++jKc8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1626110875;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=i8OOw3EC98mxR4MVF5Hjz1UV/zK7FKDb3M+lQc8YgU8=;
-        b=lm22nrTBW0PJ73HtcdzhlfhbWKhP6SDR6BTOf4E1qg8CecV8QKZu4n1vndr0qo0j3zruK+
-        wf2Jble8RtK0BJDg==
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3/tUVLi/1ehnmWuHgEgGk245sp/nozJ2MMa9O6HKxS0=;
+        b=oxi1RYM/5s3pr+8CRAr2bFgJcWhbdW1myMRst1t6eT+s5+DtL49+LDTjF5l2rIHh6GS7/U
+        c9H861zisSatvgAg==
 Received: from quack2.suse.cz (unknown [10.100.224.230])
-        by relay2.suse.de (Postfix) with ESMTP id 81302A3B81;
+        by relay2.suse.de (Postfix) with ESMTP id 854D1A3B84;
         Mon, 12 Jul 2021 17:27:55 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 60AD41F2AA9; Mon, 12 Jul 2021 19:27:55 +0200 (CEST)
+        id 632C01E0814; Mon, 12 Jul 2021 19:27:55 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     <linux-block@vger.kernel.org>
 Cc:     Paolo Valente <paolo.valente@linaro.org>,
         Jens Axboe <axboe@kernel.dk>, mkoutny@suse.cz,
         Jan Kara <jack@suse.cz>
-Subject: [PATCH 0/3] bfq: Limit number of allocated scheduler tags per cgroup
-Date:   Mon, 12 Jul 2021 19:27:36 +0200
-Message-Id: <20210712171146.12231-1-jack@suse.cz>
+Subject: [PATCH 1/3] block: Provide icq in request allocation data
+Date:   Mon, 12 Jul 2021 19:27:37 +0200
+Message-Id: <20210712172755.2414-1-jack@suse.cz>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20210712171146.12231-1-jack@suse.cz>
+References: <20210712171146.12231-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; h=from:subject:message-id; bh=DkzcLqVVCYNpH5fpkH1eNEWHcrr8DddaQVV7CRopHi4=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBg7HuIvQZpLYbbhzWof9A6rFY7wPVbCNLkFpLsAB6v mT41TSmJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYOx7iAAKCRCcnaoHP2RA2U8pB/ 9dfU/MLBeCYqN+CBU6QiVzOC431fKBnimWlZigQOGZEFOh+5sf+BG1SF/SazUt4Bb7p0eEJI7Bbn82 Rzm1WyPUgCD/YlE1vlH8GVCAktV+46PNkC6IDH5tjvm5DhGvG+d5TtdxJErVZqMQyOvKWMBVoxuh1R v8zeYjypm98P5Sruia2Ae4+0KUSFSZs5ETiktEk/ewavqQJwR3SqxwrsNEyWEW9ueaj8eW3q5r0rJE nCwCe7EpI1Pfh19Y4GZbYgMPEGj/W8N0Ev1lvNiVIoXCVcUq5XTrwiO4kkrF+ZQ4PJ3LD8YKf9b3zs UVOl/d8eBtjQQm6eZ6WCIFDLp9Pfkt
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3457; h=from:subject; bh=C9/rcXsJhybvwsy9P2BOMgpKKdd8LFIsH6x/qoBn5qE=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBg7HuJEv78bjRoD4TE+LDq/t91D9dk+MIUVgVsCKR3 N93t4vSJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYOx7iQAKCRCcnaoHP2RA2daaB/ 0RhK3qmPZ0GDjcYUqrQivuA+WUeWdPVDQ8UCwHb9wSDQm/HPXwr0IsePMS/2+ubOVTKewzU6wVb9eR Srry75Tb0QFkKI/ED+8rzaFIp6NzWMkL/SP8ZjBn6cn7hII//e/OZ9nsHBrEmX17xh2WbwOz0klkbt 3swcj5ROjuW75ZCj/Tjex1PiT5TwSpRTBK05Q7l6G19cxqbQV5iaUaH8Kdo/kiXcuTWF56Lay+7i/+ ZpI5UOsFqbFQHEDhc4HV5IgTQ4bLqnZrYlSXTUnFq6IwzUpbe7a9tp9G1gSnv35G0orLvv2chdn4iR ItwlVWY0mhmg4j+UPuTDGiMcgBYZmo
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello!
+Currently we lookup ICQ only after the request is allocated. However BFQ
+will want to decide how many scheduler tags it allows a given bfq queue
+(effectively a process) to consume based on cgroup weight. So lookup ICQ
+earlier and provide it in struct blk_mq_alloc_data so that BFQ can use
+it.
 
-I was looking into why cgroup weights do not have any measurable impact on
-writeback throughput from different cgroups. This actually a regression from
-CFQ where things work more or less OK and weights have roughly the impact they
-should. The problem can be reproduced e.g. by running the following easy fio
-job in two cgroups with different weight:
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ block/blk-mq-sched.c | 18 ++++++++++--------
+ block/blk-mq-sched.h |  3 ++-
+ block/blk-mq.c       |  7 ++++---
+ block/blk-mq.h       |  1 +
+ 4 files changed, 17 insertions(+), 12 deletions(-)
 
-[writer]
-directory=/mnt/repro/
-numjobs=1
-rw=write
-size=8g
-time_based
-runtime=30
-ramp_time=10
-blocksize=1m
-direct=0
-ioengine=sync
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index c838d81ac058..3e34f5bb24ae 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -18,9 +18,8 @@
+ #include "blk-mq-tag.h"
+ #include "blk-wbt.h"
+ 
+-void blk_mq_sched_assign_ioc(struct request *rq)
++struct io_cq *blk_mq_sched_lookup_icq(struct request_queue *q)
+ {
+-	struct request_queue *q = rq->q;
+ 	struct io_context *ioc;
+ 	struct io_cq *icq;
+ 
+@@ -29,17 +28,20 @@ void blk_mq_sched_assign_ioc(struct request *rq)
+ 	 */
+ 	ioc = current->io_context;
+ 	if (!ioc)
+-		return;
++		return NULL;
+ 
+ 	spin_lock_irq(&q->queue_lock);
+ 	icq = ioc_lookup_icq(ioc, q);
+ 	spin_unlock_irq(&q->queue_lock);
++	if (icq)
++		return icq;
++	return ioc_create_icq(ioc, q, GFP_ATOMIC);
++}
+ 
+-	if (!icq) {
+-		icq = ioc_create_icq(ioc, q, GFP_ATOMIC);
+-		if (!icq)
+-			return;
+-	}
++void blk_mq_sched_assign_ioc(struct request *rq, struct io_cq *icq)
++{
++	if (!icq)
++		return;
+ 	get_io_context(icq->ioc);
+ 	rq->elv.icq = icq;
+ }
+diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+index 5246ae040704..4529991e55e6 100644
+--- a/block/blk-mq-sched.h
++++ b/block/blk-mq-sched.h
+@@ -7,7 +7,8 @@
+ 
+ #define MAX_SCHED_RQ (16 * BLKDEV_MAX_RQ)
+ 
+-void blk_mq_sched_assign_ioc(struct request *rq);
++struct io_cq *blk_mq_sched_lookup_icq(struct request_queue *q);
++void blk_mq_sched_assign_ioc(struct request *rq, struct io_cq *icq);
+ 
+ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+ 		unsigned int nr_segs, struct request **merged_request);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 2c4ac51e54eb..b9d83644158f 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -333,9 +333,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
+ 
+ 		rq->elv.icq = NULL;
+ 		if (e && e->type->ops.prepare_request) {
+-			if (e->type->icq_cache)
+-				blk_mq_sched_assign_ioc(rq);
+-
++			blk_mq_sched_assign_ioc(rq, data->icq);
+ 			e->type->ops.prepare_request(rq);
+ 			rq->rq_flags |= RQF_ELVPRIV;
+ 		}
+@@ -360,6 +358,9 @@ static struct request *__blk_mq_alloc_request(struct blk_mq_alloc_data *data)
+ 		data->flags |= BLK_MQ_REQ_NOWAIT;
+ 
+ 	if (e) {
++		if (!op_is_flush(data->cmd_flags) && e->type->icq_cache &&
++		    e->type->ops.prepare_request)
++			data->icq = blk_mq_sched_lookup_icq(q);
+ 		/*
+ 		 * Flush/passthrough requests are special and go directly to the
+ 		 * dispatch list. Don't include reserved tags in the
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index d08779f77a26..c502232384c6 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -151,6 +151,7 @@ static inline struct blk_mq_ctx *blk_mq_get_ctx(struct request_queue *q)
+ struct blk_mq_alloc_data {
+ 	/* input parameter */
+ 	struct request_queue *q;
++	struct io_cq *icq;
+ 	blk_mq_req_flags_t flags;
+ 	unsigned int shallow_depth;
+ 	unsigned int cmd_flags;
+-- 
+2.26.2
 
-I can observe there's no significat difference in the amount of data written
-from different cgroups despite their weights are in say 1:3 ratio.
-
-After some debugging I've understood the dynamics of the system. There are two
-issues:
-
-1) The amount of scheduler tags needs to be significantly larger than the
-amount of device tags. Otherwise there are not enough requests waiting in BFQ
-to be dispatched to the device and thus there's nothing to schedule on.
-
-2) Even with enough scheduler tags, writers from two cgroups eventually start
-contending on scheduler tag allocation. These are served on first come first
-served basis so writers from both cgroups feed requests into bfq with
-approximately the same speed. Since bfq prefers IO from heavier cgroup, that is
-submitted and completed faster and eventually we end up in a situation when
-there's no IO from the heavier cgroup in bfq and all scheduler tags are
-consumed by requests from the lighter cgroup. At that point bfq just dispatches
-lots of the IO from the lighter cgroup since there's no contender for disk
-throughput. As a result observed throughput for both cgroups are the same.
-
-This series fixes this problem by accounting how many scheduler tags are
-allocated for each cgroup and if a cgroup has more tags allocated than its
-fair share (based on weights) in its service tree, we heavily limit scheduler
-tag bitmap depth for it so that it is not be able to starve other cgroups from
-scheduler tags.
-
-What do people think about this?
-
-								Honza
