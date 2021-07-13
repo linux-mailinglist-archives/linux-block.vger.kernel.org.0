@@ -2,105 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E5F3C6E41
-	for <lists+linux-block@lfdr.de>; Tue, 13 Jul 2021 12:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 518AB3C6F35
+	for <lists+linux-block@lfdr.de>; Tue, 13 Jul 2021 13:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235278AbhGMKPd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Jul 2021 06:15:33 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:23428 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235143AbhGMKPd (ORCPT
+        id S235413AbhGMLRh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Jul 2021 07:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235390AbhGMLRh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Jul 2021 06:15:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1626171163; x=1657707163;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ypADBrW7wc3lsrMDgBijmF8Vc6XUNOz7b32iCAQOfg8=;
-  b=DNfhJIMdDIHMXYzB5ipdD1jITYEW9ECk2OX4deFAWihJpQD1ZXsZwrvM
-   jt7lBoFbwO5Z+ZvlaNEOj0/NCXX5UlEPwCb8s2oRT6mlCxksUewU8kI5W
-   NpAGr11YG8VYPz8H//n77RNSbOVP5uPTvrI0cnJOUXmgZZzGvwvndjz9m
-   +OKuroAtpK1mSHOW6aIkYdNejS8VkVwS5ndK2og2EVl7q8DA3eK66Ay8U
-   dQnwLRa+GRKigMwmM15q13VH6SkIQ+CJGrGD8sNTV659Y1p1wkRgWwTLv
-   Fzvg8Bk8T6hMDEOLzZoY/wxxLe9qrF8WD5jSHOiIGFvU4eNuEFTn4d+/Q
-   Q==;
-IronPort-SDR: TrnO95G8GxGdGR+doF8SZAuiKmUUJkW7hRiv9JyBE5r9xl3XIQux1k16JBqB9OVup6kXW5ORn7
- lgxX9RenH9pAE7XSoXQagGQcV9OP0Safh5WNKHMr6Hqu3f8hpB/a1PpiM4E+aTVohqANllid4n
- ZM6RTUCk4Y7uzLhjB1U+Yx/Hq015xKhSy3ngBHZcJIsUWJoO26DGwhMyX3K3rqYkD7zf4AEr6x
- NXfrmgSgYvQo8dihOXHzb90J82L4LeJDMg22N0qoG+m5953faEMoJ4TwQv1RqFWVpPLo01WjsE
- bY8=
-X-IronPort-AV: E=Sophos;i="5.84,236,1620662400"; 
-   d="scan'208";a="173685554"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Jul 2021 18:12:43 +0800
-IronPort-SDR: J56XBGiNRRJ5webe8FEeo2/gUHEDRCEdULFhznAlkwD3S7C/R2CmX1FSaLUY6X4+FcVEwIFXm2
- riBOw1u3yKD/hqIvYZ5qgSWUiCTz2kvIqc9xtvqw1sB82QcszECbE2/VT98R5NShu961vIKbLJ
- a7vRnbRO1NFNy/HCHtOMNMCBzg0QqPWDwavVZyQtmWugzoIWY4sIU/BRK64xo/+CivDeLqA1XT
- WpdX83ubjEyTih0h/sXofctsf99o4brULah20PatboD7tyO37TW07ZE5YVli07+jWnYyuav0uX
- ZVtkuvwAGiZA3VXPS2F/qySK
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2021 02:49:26 -0700
-IronPort-SDR: lGBpPVlV1v+dgpvGenLJbN2XRggaiFrZrgQL+UuFQ64jgSmzdLop+o5e0KnGmuLnoUsIZQmjgF
- Evv/km8VimaBX+/ms2QY4bfS7nAoxRA222Mh7y5DGufnCMG5avGlP0YifV2sgoKdv6bGi/lJcL
- e1azstqUtcqr8xJ1jKvThHa5J+IBKd6eKyq4jFPDePt+F+wgdGxTzngFBKJtWkg3DLOw2J9k0i
- C/z1T7624qw0pffXY1nKb9EBlMhFAr4CDy82dGt7jEftWLiFnvBY7eRwAONge6vqKim/xa653a
- 3YI=
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.52.173])
-  by uls-op-cesaip02.wdc.com with ESMTP; 13 Jul 2021 03:12:43 -0700
-From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Omar Sandoval <osandov@fb.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 2/2] zbd/007: Reset test target zones at test end
-Date:   Tue, 13 Jul 2021 19:12:39 +0900
-Message-Id: <20210713101239.269789-3-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210713101239.269789-1-shinichiro.kawasaki@wdc.com>
-References: <20210713101239.269789-1-shinichiro.kawasaki@wdc.com>
+        Tue, 13 Jul 2021 07:17:37 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B32BC0613DD
+        for <linux-block@vger.kernel.org>; Tue, 13 Jul 2021 04:14:46 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id s23so13416019oij.0
+        for <linux-block@vger.kernel.org>; Tue, 13 Jul 2021 04:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=T9UuQwjHWzWGcYyCteF5pj3ITs8iH+zIJu2j9F2CpBc=;
+        b=QPE8ClM9bqstd9cNyS1R/hNHVDWkJisgo88ALfaVi681vb9R9QyIGEtbEk2q9qVhDZ
+         SDZgrfh21d5VsEUAHn6vZc/CjjF78uN2m9z0gO8S7PP1fOfqMVU5LzNSmENVXP/DltaD
+         oYwhE+rjCl7d4XuCuld7EzeD0a203CwLTD+JHfkTM2tv0xGvxSPvr0PJVT0xt3cL7/x6
+         OHMecMe/8Glbn/weiAbQmt/vouh2XZ1w8LtASzyfUJEs75TQdscl9FUOwkIv5U4WpiNP
+         qjLTKmrlx6ZhdPg7vaBzDEhvRle0kftmdTYxLaV1hA7ZCJ9VonFd+YbufTmWjeiAXfX7
+         KF6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=T9UuQwjHWzWGcYyCteF5pj3ITs8iH+zIJu2j9F2CpBc=;
+        b=kKI9nVIrizeenCE2bee6jJuZioVIgibzQsD9zFDFhsGmheRJT9/8NJAt4P69Xi4bgX
+         yQj4hQfsuX9SCbtaz4x9CuDkLiYpYKWG4Zgssx/CKjddKboD9waSQMbA3mjzMzazWGjA
+         8CvGsym+iTPW8GpAmOvQ4FjwhotR5/ufrlAPJCeWLMIswDyJHj6bN7gAuKbyvcctxIHF
+         nRibtm/r1KW4LDbGgIv9QVgYZ6ykVpRwFYH5Jzj6F45/whoY6GpmciSA7ZiIy27jOXGe
+         csk6UyZMnTci0h8mLg7Gp1D6hth4eKYSt8m8AZa2JWgAfh6FE92MkVYejlcrIBojy2/w
+         zAOw==
+X-Gm-Message-State: AOAM533OaEyH5PAxY9ICHemayhr6wmB6RHOCGN7ygPxqh4/72CJwOka+
+        V2KgicOu5IYk4AN3bGRi2q3jcjQ1u1Z4G6SjZ/c=
+X-Google-Smtp-Source: ABdhPJyKB8D0knBc+57cMnCxvobzpAeu8oyqE6GkxX47xdQdE+2LZ00eRnQyrT0LlP6dcp/uqiz6AcQuHdor9lPOUL8=
+X-Received: by 2002:aca:ab0b:: with SMTP id u11mr6606745oie.178.1626174885942;
+ Tue, 13 Jul 2021 04:14:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6838:4256:0:0:0:0 with HTTP; Tue, 13 Jul 2021 04:14:45
+ -0700 (PDT)
+Reply-To: mrs.bill_chantal66@europe.com
+From:   "mrs.bill.chantal" <mrsmrs462@gmail.com>
+Date:   Tue, 13 Jul 2021 13:14:45 +0200
+Message-ID: <CAJ=UUPVQMRyzOTB5-6+OPUA847UkLaRXScODGaBPAue7m+rKvw@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The test case zbd/007 checks write pointer mapping between a logical
-device and its container device. To do so, it moves write pointers of
-the container device by writing data to the container device. When the
-logical device is a dm-crypt device, this test case works as expected,
-but the data written to the container device is not encrypted, then it
-leaves broken data on the logical, dm-crypt device. This results in I/O
-errors in the following operations to the dm-crypt device.
+Dear Friend
 
-To avoid the I/O errors, reset the test target zones of the logical
-device at the test case end to wipe out the broken data.
+You have been compensated with the sum of 4 million dollars in this
+united nation the payment will be Issue into atm visa card and send to
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- tests/zbd/007 | 7 +++++++
- 1 file changed, 7 insertions(+)
+you from the Santander bank we need your address passport and
+yourwhatsapp number.
 
-diff --git a/tests/zbd/007 b/tests/zbd/007
-index 9d7ca67..2179647 100755
---- a/tests/zbd/007
-+++ b/tests/zbd/007
-@@ -109,5 +109,12 @@ test_device() {
- 	done
- 	_put_blkzone_report
- 
-+	# When the logical devices is dm-crypt, the write pointer moves on
-+	# its container device break data contents on the logical device. Reset
-+	# zones of the logical device to wipe out the broken data.
-+	for ((i=0; i < ${#test_z[@]}; i++)); do
-+		blkzone reset -o "${test_z_start[i]}" -c 1 "${TEST_DEV}"
-+	done
-+
- 	echo "Test complete"
- }
--- 
-2.31.1
-
+Thanks
+Mrs. bill Chantal
