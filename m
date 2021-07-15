@@ -2,84 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7278A3CA187
-	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 17:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4632E3CA421
+	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 19:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238976AbhGOPfs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Jul 2021 11:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
+        id S235104AbhGOR2R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Jul 2021 13:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237550AbhGOPfs (ORCPT
+        with ESMTP id S229928AbhGOR2Q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Jul 2021 11:35:48 -0400
-Received: from mail-oo1-xc33.google.com (mail-oo1-xc33.google.com [IPv6:2607:f8b0:4864:20::c33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5D6C06175F
-        for <linux-block@vger.kernel.org>; Thu, 15 Jul 2021 08:32:53 -0700 (PDT)
-Received: by mail-oo1-xc33.google.com with SMTP id a17-20020a4ad5d10000b0290263c143bcb2so198580oot.7
-        for <linux-block@vger.kernel.org>; Thu, 15 Jul 2021 08:32:53 -0700 (PDT)
+        Thu, 15 Jul 2021 13:28:16 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA7DC0613E6
+        for <linux-block@vger.kernel.org>; Thu, 15 Jul 2021 10:25:22 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id q190so5938199qkd.2
+        for <linux-block@vger.kernel.org>; Thu, 15 Jul 2021 10:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ctPsCQnCwOWC1BXWqxdnW65MNFL9SGWc9DV0HhUmFp8=;
-        b=b0Q4rQVW5qzDbmL8dXl4Xl18PnpkfjVwt3adPgkOOLeKrOPcTs7mOV+KmzlE0QlalO
-         M76Um9GwwJ6MLrZWrdh5GBZNrlEks/A4ooKQDIEqKBaeq11yk/dm1mJCfKwMvuRvqpZ6
-         +LGsjvcpnCrOUhr5cMwsFn6pyoFOP09Sfyqt6fA6sFt2UHVUFrt/XH1KdTlQEelBUmdq
-         nVyKl9c7jx+jBhZSNxYTS+bwSligsBTISOBwPBfRyKx0nwyRO/lDn6yO6cGms4tAXtXp
-         nQB/zNyAb/tg4H6EtGiWM8DXz7m3GQrQ3LO3QEdQOS9wnDI//+xh2GdnJMWjdbrwsb0A
-         lKBw==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=VEbievBeLXzXz2IFTCJlfsSW3SGnPx5BRLHAunZVXukgfJX3HSSAUxCtdiKf61hv/8
+         dEjk1vTJjxHihT0WA1OL/uEOLbisu+eOZ9QBM+pSgOr0g3iviST/L7UaXer3M8NeFmjI
+         cUcDXANijM5RzePSgHNEUg4tiAZJvw7xY2717+o5bCXGYbN3j0in5RSdJSiv5QmZpfXV
+         xJwXiiE0C1Gs4ldNfG+SItE+RoyPJtAgR4hB34JMXRrPZxzy82ifiVVChBVQnRUKYafC
+         pLvyRURLCMNCEs5zTTafGrQe1zI12ARsnWy7gNJNMcFCKTa1+89JJPFI0mohmLMeae0x
+         ASdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ctPsCQnCwOWC1BXWqxdnW65MNFL9SGWc9DV0HhUmFp8=;
-        b=UkI3eq7tQyZo6Ikjn+ZIAU39z27cZZHaQDo9tsS7nRsIN5hAtQoey/8c3uyA7zoihO
-         IqAIby9nPPzlC7WVgeoWXYCOGWQxNB0DicxD8myEQ5GAP/j1LQUyM8STaV+M7CcABVss
-         Pk8AcKyDXhLa1j3tw/2n3S/g5/ZotNDFqEQXYwcCQgGMi3k4c3OfKrpuMxmGJH5tIev9
-         uFYtPJWAsU8PgUS+5xIpQKEmiW/bdNfKPak8BPZD97YiRAiTFzs6mdSylyOIpXjCjcPY
-         6ewFukvz4TnTWLeaAb/S+nYAQjN/reaNAeuhnc4NdjJ7ylpCZYoiQIyQ3dMij2a7XSQt
-         ZtUg==
-X-Gm-Message-State: AOAM531iCMKCrXOWujSrSjr9bFjh+g4AX/kQXYUh0/6aIgs2aNwcnVK/
-        fgNF6bHdcevgTPjnRfFit3lWBA==
-X-Google-Smtp-Source: ABdhPJxKk5KqRByjITyE6sC3mMa6jH/2QpqLo9/XviaZcs14zGBZ5ciDB+yJtGrNf83V/USGE/zOpQ==
-X-Received: by 2002:a4a:bf11:: with SMTP id r17mr3859881oop.29.1626363172973;
-        Thu, 15 Jul 2021 08:32:52 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id d7sm1128969oon.18.2021.07.15.08.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jul 2021 08:32:52 -0700 (PDT)
-Subject: Re: [PATCH] xen-blkfront: sanitize the removal state machine
-To:     Christoph Hellwig <hch@lst.de>, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20210715141711.1257293-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <69452380-d55b-4329-73d4-151265351fc5@kernel.dk>
-Date:   Thu, 15 Jul 2021 09:32:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=cPxIlgAVj04hJUNcSJdfP0xAIjIfbMqDtUDSy9SNpk7u0JwvYtk7MzHOBScSAO8tPq
+         0qoE/YdKT4tv7Yy23IN/g91FBSMkzrU6gyCK9m0C6AjLm31Lz9/w99STRLCYSaseZvnF
+         sDb2AJnNntu7WNy+TkyGGMSh5k221aO/hhey264l33JXDt2UijzBUjAu9gvLTJ0pvo5U
+         wN5WFWXSuqOCla8YMCrsGgI0GUo7HpxvmPaITO74BZtGNODv+1hZlLfIRTyoUebP3wkx
+         wmMml0itOfZX8AatInOOIoeEA3ZU54ejDE14Vyd+hdaLI2Hy7ZSnH1JJbcdTOyAjnIKb
+         JOng==
+X-Gm-Message-State: AOAM533rbnf8IQv2+9VATa7QaJIagSdM1T4H+ilExpyDhIc881VuGnjG
+        0Pre0mAufxda7mDQwj+Jyi9PvjHbJ6pTFnrHqXw=
+X-Google-Smtp-Source: ABdhPJyVA6gR/njuabWs2C2fW8gelCsYJFEl6/1qckwAKb5sFvak5SWUy5PHC6/Yk0GlmffBpcH6FQwcd62hdQoqBbA=
+X-Received: by 2002:a37:9947:: with SMTP id b68mr5263725qke.56.1626369920992;
+ Thu, 15 Jul 2021 10:25:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210715141711.1257293-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a0c:e502:0:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:20
+ -0700 (PDT)
+Reply-To: faty.muhamad@gmail.com
+From:   Ms Fatima Muhammad <steveokoh.fedexdeliveryagent@gmail.com>
+Date:   Thu, 15 Jul 2021 17:25:20 +0000
+Message-ID: <CAFKwDuBfMzCdHqoenSL2rqjnW5tE27dPjiWKbgxM_hjsa-G7pg@mail.gmail.com>
+Subject: Hello Dear
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/15/21 8:17 AM, Christoph Hellwig wrote:
-> xen-blkfront has a weird protocol where close message from the remote
-> side can be delayed, and where hot removals are treated somewhat
-> differently from regular removals, all leading to potential NULL
-> pointer removals, and a del_gendisk from the block device release
-> method, which will deadlock. Fix this by just performing normal hot
-> removals even when the device is opened like all other Linux block
-> drivers.
+Hello Dear,
 
-Applied, thanks.
+My name is Ms.Fatima Muhammad., Please forgive me for stressing you
+with my predicaments and I sorry to approach you through this media
+because is serves the fastest means of  my communication right now,
 
--- 
-Jens Axboe
+I came across your Email from my personal search and I decided to
+contact you believing you will be honest to fulfill my business
+proposal which I believe that will be a very good opportunity for both
+of us. Please it is my pleasure to contact you today for a business
+partnership investments projects worth $4.6 million USD which I intend
+to establish in your country..
 
+Pls If this business proposal offends your moral and ethic values do
+accept my apology. therefore kindly contact me immediately if you are
+interested for more details.
+
+Thank you for your wiliness to help me
+Yours Sincerely Fatima Muhammad
