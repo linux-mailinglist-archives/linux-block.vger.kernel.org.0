@@ -2,165 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACE33C9F50
-	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 15:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE5E63C9F7F
+	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 15:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235142AbhGONUe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Jul 2021 09:20:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28205 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232341AbhGONUe (ORCPT
+        id S237360AbhGONdW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Jul 2021 09:33:22 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:57252 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231713AbhGONdV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Jul 2021 09:20:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626355061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fEnFR9sLZg9aNWBfSV+Jjv4oijW9gGY7ZZ8SM1EhDyo=;
-        b=YHQlsJUpfF3QI/9XcNIXyPa0W7pofD4/CsWhMvspCdwQvqhasFVHUV36oDXt7EqG1fPblS
-        pDhsBhtZehOZlBLosTrK7DuBiYwbrJuU1v0XYOWIH6Qx3j1TwqEZqAxtNtIIBU6r5Aabrq
-        iudcXqGxdejSA70z474ZJ3/GWjgGSmk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-zHF_tamqNYG5oWJcJy5VsQ-1; Thu, 15 Jul 2021 09:17:40 -0400
-X-MC-Unique: zHF_tamqNYG5oWJcJy5VsQ-1
-Received: by mail-ej1-f69.google.com with SMTP id r10-20020a170906350ab02904f12f4a8c69so2203107eja.12
-        for <linux-block@vger.kernel.org>; Thu, 15 Jul 2021 06:17:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=fEnFR9sLZg9aNWBfSV+Jjv4oijW9gGY7ZZ8SM1EhDyo=;
-        b=Dx75sPI1Qnzh4VYFKZYKwekOpqvIlN8n7bu99eG1ionREpSfFu+/iUyu5gUq5c06G0
-         KV3MpoO6tOEEmU1pNcmnL79JpChCraBAAvwcXXJbueO3gKkSfPF5hHUFRN3T1cw6z9OC
-         SB2kfGGda0KcGPMgc8Fnp+/Mr1EOhdoz+wkABlZkrtBT4DzbNlXlRi4IXmiJGVnlth2c
-         MK1pAlEMzgDoG1uh9I0yG94E1SwjVYHJffudtchJ27oE9sR6sVNCb/fm0R9kmsjlmcZ+
-         8FRIc8JmUlmkKV0EEKMRjJO+HiK/0ETk4yillJcFPu2u/prYT5wGsKGLbasIZ0dTdc75
-         +Zfw==
-X-Gm-Message-State: AOAM533sw/u5J3kuGP/543lsV+uEnUqKa0J0oDHyxvgfOT5BaJKsEVqO
-        m3LRGPKy2j5aP26CnJSLpAgAW7dGXxHzHCCioSm2BwdgCyi/+SEUUgois8Os4XfFST9fk4jH0K1
-        NVyRTQi/9Wim457rj0287cKU=
-X-Received: by 2002:a17:907:7293:: with SMTP id dt19mr5642592ejc.122.1626355058787;
-        Thu, 15 Jul 2021 06:17:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy2vEkDU4ywXlhDnjL2xOkQcJAsMfg1xLGoIUohd2Oe+LOaHxUNb/4gntVHBypGHocKBtmQLw==
-X-Received: by 2002:a17:907:7293:: with SMTP id dt19mr5642565ejc.122.1626355058533;
-        Thu, 15 Jul 2021 06:17:38 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id kb12sm1867346ejc.35.2021.07.15.06.17.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 06:17:38 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Roger Pau =?utf-8?Q?Monn=C3=A9?= <roger.pau@citrix.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [BUG report] Deadlock in xen-blkfront upon device hot-unplug
-In-Reply-To: <20210715124622.GA32693@lst.de>
-References: <87pmvk0wep.fsf@vitty.brq.redhat.com>
- <20210715124622.GA32693@lst.de>
-Date:   Thu, 15 Jul 2021 15:17:37 +0200
-Message-ID: <87k0lr1zta.fsf@vitty.brq.redhat.com>
+        Thu, 15 Jul 2021 09:33:21 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 637A51FE25;
+        Thu, 15 Jul 2021 13:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1626355827; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=QKH7/xefNqTRCod5UCsWj+PEvi0uBm27A6j8MnKfBn4=;
+        b=oNeQI0/R85RmNJYJtzF1gt4AxYd2r2puMM1f2/IloNG26ozpF4lwYjG+37yS8goa1Wt9Xy
+        Pz4KH4iLYUOk6ZwEljCN78mMwl3kKrlPb0vADbXpPilpKgpzeKWSIzQxgmn0+e5aV8CNWN
+        BA/Bm4bE0JKQC8pbfK9jpHjqhlfqSKE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1626355827;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=QKH7/xefNqTRCod5UCsWj+PEvi0uBm27A6j8MnKfBn4=;
+        b=kGYax3nPky6Sncnm7tkTSMoR4C+83I4wuY11RuEaEQTw/L0OIjohiOgf1yIFvjfwVxMUTl
+        7bPOEI0bvFtEWlCg==
+Received: from quack2.suse.cz (unknown [10.100.200.198])
+        by relay2.suse.de (Postfix) with ESMTP id 52121A3B8F;
+        Thu, 15 Jul 2021 13:30:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2F8C91E0BF2; Thu, 15 Jul 2021 15:30:27 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/3 v2] bfq: Limit number of allocated scheduler tags per cgroup
+Date:   Thu, 15 Jul 2021 15:30:16 +0200
+Message-Id: <20210715132047.20874-1-jack@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2873; h=from:subject:message-id; bh=I5aXUrFDZe2CAg9UOHFtqtL+0LvC4tU9TslHegcd9NE=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBg8DhJy2Dd/DNH7sIu9SqRmW6QVkhviwM3gGp7+T+W hz+AybKJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYPA4SQAKCRCcnaoHP2RA2RR3B/ 9ARBS+nmIhQRENKx2O5biTXpB4Ra/nvZBJTYmC25xh4FnAAIG6YR6fQ+4ZEhNl1Yz9nBoqkWIq+hNN FwN8ExY4TTqhKf/Xaut7CtIo4iReUnQwsp1YrrM6F8btelEKEwjDzvsLrYFLP9x84k6XveVGht4KfB HMvBGIoxS5uiJ3Nz79tHF14uZBxwCG7vqJAJKHUnq4vFz0BR5TWV/yc5TIy/FqwCI0aAG5uzOY6mZv f/qECMFezaozL2aE9acbY+ovWmSD8OsNKS3XbyHpSXBjvImKs4ZCpT63h33S5VriwoD+jrZ4br7KWF grji/5pAU25K0TYBQDrnupzGccSPbY
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> writes:
+Hello!
 
-> On Thu, Jul 15, 2021 at 11:16:30AM +0200, Vitaly Kuznetsov wrote:
->> I'm observing a deadlock every time I try to unplug a xen-blkfront
->> device. With 5.14-rc1+ the deadlock looks like:
->
-> I did actually stumble over this a few days ago just from code
-> inspection.  Below is what I come up with, can you give it a spin?
+Here is the second revision of my patches to fix how bfq weights apply on
+cgroup throughput. This version has only one change fixing how we compute
+number of tags that should be available to a cgroup. Previous version didn't
+combine weights at several levels correctly for deeper hierarchies. It is
+somewhat unfortunate that for really deep cgroup hierarchies we would now do
+memory allocation inside bfq_limit_depth(). I have an idea how we could avoid
+that if the rest of the approach proves OK so don't concentrate too much on
+that detail please.
 
-This eliminates the deadlock, thanks! Unfortunately, this reveals the
-same issue I observed when I just dropped taking the mutex from
-blkfront_closing():
+Changes since v1:
+* Fixed computation of appropriate proportion of scheduler tags for a cgroup
+  to work with deeper cgroup hierarchies.
 
-[   66.455122] general protection fault, probably for non-canonical address 0xf1af5e354e6da159: 0000 [#1] SMP PTI
-[   66.462802] CPU: 4 PID: 145 Comm: xenwatch Not tainted 5.14.0-rc1+ #370
-[   66.467486] Hardware name: Xen HVM domU, BIOS 4.2.amazon 08/24/2006
-[   66.472817] RIP: 0010:del_timer+0x1f/0x80
-[   66.476570] Code: 71 af a3 00 eb c1 31 c0 c3 66 90 0f 1f 44 00 00 41 55 41 54 45 31 e4 55 48 83 ec 10 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 <48> 8b 47 08 48 85 c0 74 2d 48 89 e6 48 89 fd e8 dd e8 ff ff 48 89
-[   66.493967] RSP: 0018:ffffb5c10426bcd8 EFLAGS: 00010086
-[   66.499416] RAX: a49b3c9544841100 RBX: f1af5e354e6da101 RCX: 0000000000005ebf
-[   66.506386] RDX: 0000000000005ec0 RSI: 0000000000000001 RDI: f1af5e354e6da151
-[   66.512799] RBP: ffffb5c10426bd30 R08: 0000000000000001 R09: 0000000000000001
-[   66.518372] R10: 0000000000000001 R11: 0000000000000002 R12: 0000000000000000
-[   66.523681] R13: ffff9aba8df63e40 R14: 0000000000000000 R15: ffff9aba86f40000
-[   66.529365] FS:  0000000000000000(0000) GS:ffff9af609200000(0000) knlGS:0000000000000000
-[   66.536187] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   66.540806] CR2: 00007ff024600130 CR3: 000000010117a006 CR4: 00000000001706e0
-[   66.546345] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   66.552322] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   66.558501] Call Trace:
-[   66.561449]  try_to_grab_pending+0x13f/0x2e0
-[   66.565658]  cancel_delayed_work+0x2e/0xd0
-[   66.570012]  blk_mq_stop_hw_queues+0x2d/0x50
-[   66.574110]  blkfront_remove+0x30/0x130 [xen_blkfront]
-[   66.579049]  xenbus_dev_remove+0x6d/0xf0
-[   66.582473]  __device_release_driver+0x180/0x240
-[   66.586963]  device_release_driver+0x26/0x40
-[   66.591050]  bus_remove_device+0xef/0x160
-[   66.594805]  device_del+0x18c/0x3e0
-[   66.598570]  ? xenbus_probe_devices+0x120/0x120
-[   66.602987]  ? klist_iter_exit+0x14/0x20
-[   66.606915]  device_unregister+0x13/0x60
-[   66.611135]  xenbus_dev_changed+0x174/0x1e0
-[   66.615104]  xenwatch_thread+0x94/0x190
-[   66.619028]  ? do_wait_intr_irq+0xb0/0xb0
-[   66.623052]  ? xenbus_dev_request_and_reply+0x90/0x90
-[   66.628218]  kthread+0x149/0x170
-[   66.631509]  ? set_kthread_struct+0x40/0x40
-[   66.635355]  ret_from_fork+0x22/0x30
-[   66.639162] Modules linked in: vfat fat i2c_piix4 xfs libcrc32c crct10dif_pclmul crc32_pclmul crc32c_intel xen_blkfront ghash_clmulni_intel ena
-[   66.650868] ---[ end trace 7fa9da1e39697767 ]---
-[   66.655490] RIP: 0010:del_timer+0x1f/0x80
-[   66.659813] Code: 71 af a3 00 eb c1 31 c0 c3 66 90 0f 1f 44 00 00 41 55 41 54 45 31 e4 55 48 83 ec 10 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 <48> 8b 47 08 48 85 c0 74 2d 48 89 e6 48 89 fd e8 dd e8 ff ff 48 89
-[   66.681045] RSP: 0018:ffffb5c10426bcd8 EFLAGS: 00010086
-[   66.685888] RAX: a49b3c9544841100 RBX: f1af5e354e6da101 RCX: 0000000000005ebf
-[   66.692153] RDX: 0000000000005ec0 RSI: 0000000000000001 RDI: f1af5e354e6da151
-[   66.698778] RBP: ffffb5c10426bd30 R08: 0000000000000001 R09: 0000000000000001
-[   66.705175] R10: 0000000000000001 R11: 0000000000000002 R12: 0000000000000000
-[   66.711696] R13: ffff9aba8df63e40 R14: 0000000000000000 R15: ffff9aba86f40000
-[   66.718035] FS:  0000000000000000(0000) GS:ffff9af609200000(0000) knlGS:0000000000000000
-[   66.725210] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   66.730291] CR2: 00007ff024600130 CR3: 000000010117a006 CR4: 00000000001706e0
-[   66.736235] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   66.742373] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   66.749026] BUG: sleeping function called from invalid context at include/linux/percpu-rwsem.h:49
-[   66.756118] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 145, name: xenwatch
-[   66.763473] INFO: lockdep is turned off.
-[   66.767428] irq event stamp: 24256
-[   66.770900] hardirqs last  enabled at (24255): [<ffffffff90c32aeb>] _raw_spin_unlock_irqrestore+0x4b/0x5d
-[   66.779620] hardirqs last disabled at (24256): [<ffffffff900fe21c>] try_to_grab_pending+0x15c/0x2e0
-[   66.787763] softirqs last  enabled at (24196): [<ffffffff900e0b11>] __irq_exit_rcu+0xe1/0x100
-[   66.794519] softirqs last disabled at (24191): [<ffffffff900e0b11>] __irq_exit_rcu+0xe1/0x100
-[   66.801953] CPU: 4 PID: 145 Comm: xenwatch Tainted: G      D           5.14.0-rc1+ #370
-[   66.809315] Hardware name: Xen HVM domU, BIOS 4.2.amazon 08/24/2006
-[   66.814924] Call Trace:
-[   66.817461]  dump_stack_lvl+0x6a/0x9a
-[   66.821171]  ___might_sleep.cold+0xb6/0xc6
-[   66.825436]  exit_signals+0x1c/0x2d0
-[   66.829328]  do_exit+0xc7/0xbb0
-[   66.832364]  ? kthread+0x149/0x170
-[   66.835039]  rewind_stack_do_exit+0x17/0x20
-[   66.838710] RIP: 0000:0x0
-[   66.841671] Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
-[   66.847271] RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX: 0000000000000000
-[   66.854271] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[   66.860672] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[   66.866687] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-[   66.872966] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[   66.878410] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Original cover letter:
 
--- 
-Vitaly
+I was looking into why cgroup weights do not have any measurable impact on
+writeback throughput from different cgroups. This actually a regression from
+CFQ where things work more or less OK and weights have roughly the impact they
+should. The problem can be reproduced e.g. by running the following easy fio
+job in two cgroups with different weight:
 
+[writer]
+directory=/mnt/repro/
+numjobs=1
+rw=write
+size=8g
+time_based
+runtime=30
+ramp_time=10
+blocksize=1m
+direct=0
+ioengine=sync
+
+I can observe there's no significat difference in the amount of data written
+from different cgroups despite their weights are in say 1:3 ratio.
+
+After some debugging I've understood the dynamics of the system. There are two
+issues:
+
+1) The amount of scheduler tags needs to be significantly larger than the
+amount of device tags. Otherwise there are not enough requests waiting in BFQ
+to be dispatched to the device and thus there's nothing to schedule on.
+
+2) Even with enough scheduler tags, writers from two cgroups eventually start
+contending on scheduler tag allocation. These are served on first come first
+served basis so writers from both cgroups feed requests into bfq with
+approximately the same speed. Since bfq prefers IO from heavier cgroup, that is
+submitted and completed faster and eventually we end up in a situation when
+there's no IO from the heavier cgroup in bfq and all scheduler tags are
+consumed by requests from the lighter cgroup. At that point bfq just dispatches
+lots of the IO from the lighter cgroup since there's no contender for disk
+throughput. As a result observed throughput for both cgroups are the same.
+
+This series fixes this problem by accounting how many scheduler tags are
+allocated for each cgroup and if a cgroup has more tags allocated than its
+fair share (based on weights) in its service tree, we heavily limit scheduler
+tag bitmap depth for it so that it is not be able to starve other cgroups from
+scheduler tags.
+
+What do people think about this?
+
+								Honza
+
+Previous versions:
+Link: http://lore.kernel.org/r/20210712171146.12231-1-jack@suse.cz # v1
