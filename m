@@ -2,233 +2,355 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BAAC3C9F7E
-	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 15:30:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A89E3C9FFC
+	for <lists+linux-block@lfdr.de>; Thu, 15 Jul 2021 15:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237619AbhGONdV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Jul 2021 09:33:21 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:57256 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237525AbhGONdV (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Jul 2021 09:33:21 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 66AE71FE27;
-        Thu, 15 Jul 2021 13:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1626355827; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hwo33Naj/CPFidpZeosCdaEDnv3XgY9VCBciCRXHwWw=;
-        b=FCJrhGxVLppxZASb7CGalncGBtH0S3Jb1RvaYdc/t+c8U1mPJIAhruAFzBm+v5Kmqg5Sai
-        i1Gm65iRv0RtKHkL6haH9neK/fuk6C84w45vWt+ofLgl/Qwkd2JLBLrfCttPfGgG921lKG
-        jg/O3GQ2aYKitr/QaL69kADVDhuPixM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1626355827;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hwo33Naj/CPFidpZeosCdaEDnv3XgY9VCBciCRXHwWw=;
-        b=eWQCKqD94NZUmtFrPl3D+MmBleg/RT5GAS5xVU+cW5u1mB0Ru1hpSBeyV4V7EZxhsBNUKY
-        OYU/jTi42HyAoCCg==
-Received: from quack2.suse.cz (unknown [10.100.200.198])
-        by relay2.suse.de (Postfix) with ESMTP id 58E2EA3B9B;
-        Thu, 15 Jul 2021 13:30:27 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 39ECF1E0BF8; Thu, 15 Jul 2021 15:30:27 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 3/3] bfq: Limit number of requests consumed by each cgroup
-Date:   Thu, 15 Jul 2021 15:30:19 +0200
-Message-Id: <20210715133027.23975-3-jack@suse.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210715132047.20874-1-jack@suse.cz>
-References: <20210715132047.20874-1-jack@suse.cz>
+        id S234463AbhGONtx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Jul 2021 09:49:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:38648 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229832AbhGONtx (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 15 Jul 2021 09:49:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AF04D67373; Thu, 15 Jul 2021 15:46:56 +0200 (CEST)
+Date:   Thu, 15 Jul 2021 15:46:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+Subject: Re: [BUG report] Deadlock in xen-blkfront upon device hot-unplug
+Message-ID: <20210715134656.GA4167@lst.de>
+References: <87pmvk0wep.fsf@vitty.brq.redhat.com> <20210715124622.GA32693@lst.de> <87k0lr1zta.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6369; h=from:subject; bh=Bp/OSDW5Rjr0UeO2reqvBpkYjy5sYrS7zC7p9jDV+Nc=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBg8Dhrq6VWQjZY4UnX53DHpzTqIe8h6p2MzOlj4Zap TTN89HKJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYPA4awAKCRCcnaoHP2RA2akCB/ 9mUxSBzvtUGjlpomqcV67PaLox+msu0iERsheXwT7Vsr/lukmy2JEO4q7L+Uijh4n78YET1UsJigdl Cm10Sn+EcrUDMzFV1hvDQuhWLe8fgF9CzX6vKSt1lgYZvsFU620OY1kU5yNxjOeysg+dARnGgDH19f 2NsG1G/Az7hqLDRs56JPwGbiENxZfdoUTHG1IXWl8mwrDkQM4B6nTlNAO1AUQ2RPl11m+F+l+KrsT4 JBKfH05G+iSXQgmMpb9sm52aWqiNjFnLf34I0biH65gu02Wae+q6jNUgQiCSiyRVTOD+kB7aHm8vBW 4MLmxwXD5kIHlfV7FEwuAgIqffvr+i
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k0lr1zta.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When cgroup IO scheduling is used with BFQ it does not really provide
-service differentiation if the cgroup drives a big IO depth. That for
-example happens with writeback which asynchronously submits lots of IO
-but it can happen with AIO as well. The problem is that if we have two
-cgroups that submit IO with different weights, the cgroup with higher
-weight properly gets more IO time and is able to dispatch more IO.
-However this causes lower weight cgroup to accumulate more requests
-inside BFQ and eventually lower weight cgroup consumes most of IO
-scheduler tags. At that point higher weight cgroup stops getting better
-service as it is mostly blocked waiting for a scheduler tag while its
-queues inside BFQ are empty and thus lower weight cgroup gets served.
+On Thu, Jul 15, 2021 at 03:17:37PM +0200, Vitaly Kuznetsov wrote:
+> Christoph Hellwig <hch@lst.de> writes:
+> 
+> > On Thu, Jul 15, 2021 at 11:16:30AM +0200, Vitaly Kuznetsov wrote:
+> >> I'm observing a deadlock every time I try to unplug a xen-blkfront
+> >> device. With 5.14-rc1+ the deadlock looks like:
+> >
+> > I did actually stumble over this a few days ago just from code
+> > inspection.  Below is what I come up with, can you give it a spin?
+> 
+> This eliminates the deadlock, thanks! Unfortunately, this reveals the
+> same issue I observed when I just dropped taking the mutex from
+> blkfront_closing():
 
-Check how many requests submitting cgroup has allocated in
-bfq_limit_depth() and if it consumes more requests than what would
-correspond to its weight limit available depth to 1 so that the cgroup
-cannot consume many more requests. With this limitation the higher
-weight cgroup gets proper service even with writeback.
+Yeah, this still left too much cruft in blkfront_closing.  Can you
+try this version instead?
 
-Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/bfq-iosched.c | 103 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 85 insertions(+), 18 deletions(-)
+From 4d926a44f15d2051909132182345754df23cc13d Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 29 Jun 2021 13:49:22 +0200
+Subject: xen-blkfront: sanitize the removal state machine
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 9ef057dc0028..8f9b4904934b 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -565,6 +565,71 @@ static struct request *bfq_choose_req(struct bfq_data *bfqd,
+xen-blkfront has a weird protocol where close message from the remote
+side can be delayed, and where hot removals are treated somewhat
+differently from regular removals, all leading to potential NULL
+pointer removals.  Fix this by just performing normal hot removals
+even when the device is opened like all other Linux block drivers.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/xen-blkfront.c | 208 ++++-------------------------------
+ 1 file changed, 24 insertions(+), 184 deletions(-)
+
+diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+index 8d49f8fa98bb..09ceb7bd585a 100644
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -502,34 +502,21 @@ static int blkif_getgeo(struct block_device *bd, struct hd_geometry *hg)
+ static int blkif_ioctl(struct block_device *bdev, fmode_t mode,
+ 		       unsigned command, unsigned long argument)
+ {
+-	struct blkfront_info *info = bdev->bd_disk->private_data;
+ 	int i;
+ 
+-	dev_dbg(&info->xbdev->dev, "command: 0x%x, argument: 0x%lx\n",
+-		command, (long)argument);
+-
+ 	switch (command) {
+ 	case CDROMMULTISESSION:
+-		dev_dbg(&info->xbdev->dev, "FIXME: support multisession CDs later\n");
+ 		for (i = 0; i < sizeof(struct cdrom_multisession); i++)
+ 			if (put_user(0, (char __user *)(argument + i)))
+ 				return -EFAULT;
+ 		return 0;
+-
+-	case CDROM_GET_CAPABILITY: {
+-		struct gendisk *gd = info->gd;
+-		if (gd->flags & GENHD_FL_CD)
++	case CDROM_GET_CAPABILITY:
++		if (bdev->bd_disk->flags & GENHD_FL_CD)
+ 			return 0;
+ 		return -EINVAL;
+-	}
+-
+ 	default:
+-		/*printk(KERN_ALERT "ioctl %08x not supported by Xen blkdev\n",
+-		  command);*/
+-		return -EINVAL; /* same return as native Linux */
++		return -EINVAL;
+ 	}
+-
+-	return 0;
+ }
+ 
+ static unsigned long blkif_ring_get_request(struct blkfront_ring_info *rinfo,
+@@ -1177,36 +1164,6 @@ static int xlvbd_alloc_gendisk(blkif_sector_t capacity,
+ 	return err;
+ }
+ 
+-static void xlvbd_release_gendisk(struct blkfront_info *info)
+-{
+-	unsigned int minor, nr_minors, i;
+-	struct blkfront_ring_info *rinfo;
+-
+-	if (info->rq == NULL)
+-		return;
+-
+-	/* No more blkif_request(). */
+-	blk_mq_stop_hw_queues(info->rq);
+-
+-	for_each_rinfo(info, rinfo, i) {
+-		/* No more gnttab callback work. */
+-		gnttab_cancel_free_callback(&rinfo->callback);
+-
+-		/* Flush gnttab callback work. Must be done with no locks held. */
+-		flush_work(&rinfo->work);
+-	}
+-
+-	del_gendisk(info->gd);
+-
+-	minor = info->gd->first_minor;
+-	nr_minors = info->gd->minors;
+-	xlbd_release_minors(minor, nr_minors);
+-
+-	blk_cleanup_disk(info->gd);
+-	info->gd = NULL;
+-	blk_mq_free_tag_set(&info->tag_set);
+-}
+-
+ /* Already hold rinfo->ring_lock. */
+ static inline void kick_pending_request_queues_locked(struct blkfront_ring_info *rinfo)
+ {
+@@ -2126,38 +2083,26 @@ static int blkfront_resume(struct xenbus_device *dev)
+ static void blkfront_closing(struct blkfront_info *info)
+ {
+ 	struct xenbus_device *xbdev = info->xbdev;
+-	struct block_device *bdev = NULL;
+-
+-	mutex_lock(&info->mutex);
++	struct blkfront_ring_info *rinfo;
++	unsigned int i;
+ 
+-	if (xbdev->state == XenbusStateClosing) {
+-		mutex_unlock(&info->mutex);
++	if (xbdev->state == XenbusStateClosing)
+ 		return;
+-	}
+-
+-	if (info->gd)
+-		bdev = bdgrab(info->gd->part0);
+ 
+-	mutex_unlock(&info->mutex);
+-
+-	if (!bdev) {
+-		xenbus_frontend_closed(xbdev);
+-		return;
+-	}
++	/* No more blkif_request(). */
++	blk_mq_stop_hw_queues(info->rq);
++	blk_set_queue_dying(info->rq);
++	set_capacity(info->gd, 0);
+ 
+-	mutex_lock(&bdev->bd_disk->open_mutex);
++	for_each_rinfo(info, rinfo, i) {
++		/* No more gnttab callback work. */
++		gnttab_cancel_free_callback(&rinfo->callback);
+ 
+-	if (bdev->bd_openers) {
+-		xenbus_dev_error(xbdev, -EBUSY,
+-				 "Device in use; refusing to close");
+-		xenbus_switch_state(xbdev, XenbusStateClosing);
+-	} else {
+-		xlvbd_release_gendisk(info);
+-		xenbus_frontend_closed(xbdev);
++		/* Flush gnttab callback work. Must be done with no locks held. */
++		flush_work(&rinfo->work);
+ 	}
+ 
+-	mutex_unlock(&bdev->bd_disk->open_mutex);
+-	bdput(bdev);
++	xenbus_frontend_closed(xbdev);
+ }
+ 
+ static void blkfront_setup_discard(struct blkfront_info *info)
+@@ -2472,8 +2417,7 @@ static void blkback_changed(struct xenbus_device *dev,
+ 			break;
+ 		fallthrough;
+ 	case XenbusStateClosing:
+-		if (info)
+-			blkfront_closing(info);
++		blkfront_closing(info);
+ 		break;
  	}
  }
- 
-+#define BFQ_LIMIT_INLINE_DEPTH 16
-+
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
-+static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
-+{
-+	struct bfq_data *bfqd = bfqq->bfqd;
-+	struct bfq_entity *entity = &bfqq->entity;
-+	struct bfq_entity *inline_entities[BFQ_LIMIT_INLINE_DEPTH];
-+	struct bfq_entity **entities = inline_entities;
-+	int depth, level;
-+	bool ret = false;
-+
-+	if (!entity->on_st_or_in_serv)
-+		return false;
-+
-+	/* +1 for bfqq entity, root cgroup not included */
-+	depth = bfqg_to_blkg(bfqq_group(bfqq))->blkcg->css.cgroup->level + 1;
-+	if (depth > BFQ_LIMIT_INLINE_DEPTH) {
-+		entities = kmalloc_array(depth, sizeof(*entities), GFP_NOIO);
-+		if (!entities)
-+			return false;
-+	}
-+
-+	spin_lock_irq(&bfqd->lock);
-+	if (!entity->on_st_or_in_serv)
-+		goto out;
-+	/* Gather our ancestors as we need to traverse them in reverse order */
-+	level = 0;
-+	for_each_entity(entity) {
-+		/* Uh, more parents than cgroup subsystem thinks? */
-+		if (WARN_ON_ONCE(level >= depth))
-+			break;
-+		entities[level++] = entity;
-+	}
-+	WARN_ON_ONCE(level != depth);
-+	for (level--; level >= 0; level--) {
-+		entity = entities[level];
-+		/*
-+		 * If the leaf entity has work to do, parents should be tracked
-+		 * as well.
-+		 */
-+		WARN_ON_ONCE(!entity->on_st_or_in_serv);
-+		limit = DIV_ROUND_CLOSEST(limit * entity->weight,
-+					bfq_entity_service_tree(entity)->wsum);
-+		if (entity->allocated >= limit) {
-+			bfq_log_bfqq(bfqq->bfqd, bfqq,
-+				"too many requests: allocated %d limit %d level %d",
-+				entity->allocated, limit, level);
-+			ret = true;
-+			break;
-+		}
-+	}
-+out:
-+	spin_unlock_irq(&bfqd->lock);
-+	if (entities != inline_entities)
-+		kfree(entities);
-+	return ret;
-+}
-+#else
-+static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * Async I/O can easily starve sync I/O (both sync reads and sync
-  * writes), by consuming all tags. Similarly, storms of sync writes,
-@@ -575,16 +640,28 @@ static struct request *bfq_choose_req(struct bfq_data *bfqd,
- static void bfq_limit_depth(unsigned int op, struct blk_mq_alloc_data *data)
+@@ -2481,55 +2425,19 @@ static void blkback_changed(struct xenbus_device *dev,
+ static int blkfront_remove(struct xenbus_device *xbdev)
  {
- 	struct bfq_data *bfqd = data->q->elevator->elevator_data;
-+	struct bfq_io_cq *bic = data->icq ? icq_to_bic(data->icq) : NULL;
-+	struct bfq_queue *bfqq = bic ? bic_to_bfqq(bic, op_is_sync(op)) : NULL;
-+	int depth;
+ 	struct blkfront_info *info = dev_get_drvdata(&xbdev->dev);
+-	struct block_device *bdev = NULL;
+-	struct gendisk *disk;
  
-+	/* Sync reads have full depth available */
- 	if (op_is_sync(op) && !op_is_write(op))
--		return;
-+		depth = 0;
-+	else
-+		depth = bfqd->word_depths[!!bfqd->wr_busy_queues][op_is_sync(op)];
+ 	dev_dbg(&xbdev->dev, "%s removed", xbdev->nodename);
  
--	data->shallow_depth =
--		bfqd->word_depths[!!bfqd->wr_busy_queues][op_is_sync(op)];
-+	/*
-+	 * Does queue (or any parent entity) exceed number of requests that
-+	 * should be available to it? Heavily limit depth so that it cannot
-+	 * consume more available requests and thus starve other entities.
-+	 */
-+	if (bfqq && bfqq_request_over_limit(bfqq, data->q->nr_requests))
-+		depth = 1;
+-	if (!info)
+-		return 0;
++	del_gendisk(info->gd);
  
- 	bfq_log(bfqd, "[%s] wr_busy %d sync %d depth %u",
--			__func__, bfqd->wr_busy_queues, op_is_sync(op),
--			data->shallow_depth);
-+		__func__, bfqd->wr_busy_queues, op_is_sync(op), depth);
-+	if (depth)
-+		data->shallow_depth = depth;
+ 	blkif_free(info, 0);
++	xlbd_release_minors(info->gd->first_minor, info->gd->minors);
++	blk_cleanup_disk(info->gd);
++	blk_mq_free_tag_set(&info->tag_set);
+ 
+-	mutex_lock(&info->mutex);
+-
+-	disk = info->gd;
+-	if (disk)
+-		bdev = bdgrab(disk->part0);
+-
+-	info->xbdev = NULL;
+-	mutex_unlock(&info->mutex);
+-
+-	if (!bdev) {
+-		mutex_lock(&blkfront_mutex);
+-		free_info(info);
+-		mutex_unlock(&blkfront_mutex);
+-		return 0;
+-	}
+-
+-	/*
+-	 * The xbdev was removed before we reached the Closed
+-	 * state. See if it's safe to remove the disk. If the bdev
+-	 * isn't closed yet, we let release take care of it.
+-	 */
+-
+-	mutex_lock(&disk->open_mutex);
+-	info = disk->private_data;
+-
+-	dev_warn(disk_to_dev(disk),
+-		 "%s was hot-unplugged, %d stale handles\n",
+-		 xbdev->nodename, bdev->bd_openers);
+-
+-	if (info && !bdev->bd_openers) {
+-		xlvbd_release_gendisk(info);
+-		disk->private_data = NULL;
+-		mutex_lock(&blkfront_mutex);
+-		free_info(info);
+-		mutex_unlock(&blkfront_mutex);
+-	}
+-
+-	mutex_unlock(&disk->open_mutex);
+-	bdput(bdev);
++	mutex_lock(&blkfront_mutex);
++	free_info(info);
++	mutex_unlock(&blkfront_mutex);
+ 
+ 	return 0;
+ }
+@@ -2541,77 +2449,9 @@ static int blkfront_is_ready(struct xenbus_device *dev)
+ 	return info->is_ready && info->xbdev;
  }
  
- static struct bfq_queue *
-@@ -6848,11 +6925,8 @@ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg)
-  * See the comments on bfq_limit_depth for the purpose of
-  * the depths set in the function. Return minimum shallow depth we'll use.
-  */
--static unsigned int bfq_update_depths(struct bfq_data *bfqd,
--				      struct sbitmap_queue *bt)
-+static void bfq_update_depths(struct bfq_data *bfqd, struct sbitmap_queue *bt)
+-static int blkif_open(struct block_device *bdev, fmode_t mode)
+-{
+-	struct gendisk *disk = bdev->bd_disk;
+-	struct blkfront_info *info;
+-	int err = 0;
+-
+-	mutex_lock(&blkfront_mutex);
+-
+-	info = disk->private_data;
+-	if (!info) {
+-		/* xbdev gone */
+-		err = -ERESTARTSYS;
+-		goto out;
+-	}
+-
+-	mutex_lock(&info->mutex);
+-
+-	if (!info->gd)
+-		/* xbdev is closed */
+-		err = -ERESTARTSYS;
+-
+-	mutex_unlock(&info->mutex);
+-
+-out:
+-	mutex_unlock(&blkfront_mutex);
+-	return err;
+-}
+-
+-static void blkif_release(struct gendisk *disk, fmode_t mode)
+-{
+-	struct blkfront_info *info = disk->private_data;
+-	struct xenbus_device *xbdev;
+-
+-	mutex_lock(&blkfront_mutex);
+-	if (disk->part0->bd_openers)
+-		goto out_mutex;
+-
+-	/*
+-	 * Check if we have been instructed to close. We will have
+-	 * deferred this request, because the bdev was still open.
+-	 */
+-
+-	mutex_lock(&info->mutex);
+-	xbdev = info->xbdev;
+-
+-	if (xbdev && xbdev->state == XenbusStateClosing) {
+-		/* pending switch to state closed */
+-		dev_info(disk_to_dev(disk), "releasing disk\n");
+-		xlvbd_release_gendisk(info);
+-		xenbus_frontend_closed(info->xbdev);
+- 	}
+-
+-	mutex_unlock(&info->mutex);
+-
+-	if (!xbdev) {
+-		/* sudden device removal */
+-		dev_info(disk_to_dev(disk), "releasing disk\n");
+-		xlvbd_release_gendisk(info);
+-		disk->private_data = NULL;
+-		free_info(info);
+-	}
+-
+-out_mutex:
+-	mutex_unlock(&blkfront_mutex);
+-}
+-
+ static const struct block_device_operations xlvbd_block_fops =
  {
--	unsigned int i, j, min_shallow = UINT_MAX;
--
- 	/*
- 	 * In-word depths if no bfq_queue is being weight-raised:
- 	 * leaving 25% of tags only for sync reads.
-@@ -6883,22 +6957,15 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
- 	bfqd->word_depths[1][0] = max(((1U << bt->sb.shift) * 3) >> 4, 1U);
- 	/* no more than ~37% of tags for sync writes (~20% extra tags) */
- 	bfqd->word_depths[1][1] = max(((1U << bt->sb.shift) * 6) >> 4, 1U);
--
--	for (i = 0; i < 2; i++)
--		for (j = 0; j < 2; j++)
--			min_shallow = min(min_shallow, bfqd->word_depths[i][j]);
--
--	return min_shallow;
- }
- 
- static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
- {
- 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
- 	struct blk_mq_tags *tags = hctx->sched_tags;
--	unsigned int min_shallow;
- 
--	min_shallow = bfq_update_depths(bfqd, tags->bitmap_tags);
--	sbitmap_queue_min_shallow_depth(tags->bitmap_tags, min_shallow);
-+	bfq_update_depths(bfqd, tags->bitmap_tags);
-+	sbitmap_queue_min_shallow_depth(tags->bitmap_tags, 1);
- }
- 
- static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
+ 	.owner = THIS_MODULE,
+-	.open = blkif_open,
+-	.release = blkif_release,
+ 	.getgeo = blkif_getgeo,
+ 	.ioctl = blkif_ioctl,
+ 	.compat_ioctl = blkdev_compat_ptr_ioctl,
 -- 
-2.26.2
+2.30.2
 
