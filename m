@@ -2,134 +2,158 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D39613CF230
-	for <lists+linux-block@lfdr.de>; Tue, 20 Jul 2021 04:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BABE3CF2B1
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jul 2021 05:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232185AbhGTCHY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 19 Jul 2021 22:07:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40220 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343810AbhGTB5v (ORCPT
+        id S243683AbhGTCxR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 19 Jul 2021 22:53:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40618 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240515AbhGTCut (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 19 Jul 2021 21:57:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626748709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=G3SWoqsOcAK0oX6I/hgpTqrzjtvMRxHWPl/NBHoZkvM=;
-        b=Wgr/TAYK91q27AD9JuZbgo8zXeuwkLXjHjblTy0d+6lQGIdJqUUIM0KKZkY6ljh/zdEeWr
-        db8HNFKy/hDzXsPAI6yv09sfHzqsjTQkBkwnEHAbmpJJVj0aAYhiEw7mg3AuVQeEaT3faU
-        wfR9F45XH/psNHtAZs0bjQvGVbjgIzM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-53-Ir__ZHnNMo2aKSHiw_R7PA-1; Mon, 19 Jul 2021 22:38:26 -0400
-X-MC-Unique: Ir__ZHnNMo2aKSHiw_R7PA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6318F106B7DF;
-        Tue, 20 Jul 2021 02:38:23 +0000 (UTC)
-Received: from T590 (ovpn-12-229.pek2.redhat.com [10.72.12.229])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5CFF919C79;
-        Tue, 20 Jul 2021 02:38:13 +0000 (UTC)
-Date:   Tue, 20 Jul 2021 10:38:08 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Daniel Wagner <dwagner@suse.de>,
-        Wen Xiong <wenxiong@us.ibm.com>,
-        Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH V4 1/3] driver core: mark device as irq affinity managed
- if any irq is managed
-Message-ID: <YPY3EMngyf2JFZ3j@T590>
-References: <20210715120844.636968-1-ming.lei@redhat.com>
- <20210715120844.636968-2-ming.lei@redhat.com>
- <5e534fdc-909e-39b2-521d-31f643a10558@huawei.com>
- <20210719094414.GC431@lst.de>
- <5153406c-e3ed-d466-5603-14fd919304f4@huawei.com>
+        Mon, 19 Jul 2021 22:50:49 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id D1E5020B7178; Mon, 19 Jul 2021 20:31:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D1E5020B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1626751883;
+        bh=+yPMJaQtcLTsFBtRILqc6LXrWgm8NmSEzBdhbuZktUA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LFmorg5sZOIHyaC+PyRq9EbTsBjTNI7X10BXa7e9FoOQ3px+NYgeLeNUMhbWznrES
+         xlfh83t1UJU7oecoorR87Mg5lLBsmXPoOFtBIoCalbAatJYGTR8ICpfMgKohjfb5Dh
+         uiS17hOFRh0nmsBNcNIEvsjTGpQaHZqGGpF4k6ow=
+From:   longli@linuxonhyperv.com
+To:     linux-fs@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v4 0/3] Introduce a driver to support host accelerated access to Microsoft Azure Blob
+Date:   Mon, 19 Jul 2021 20:31:03 -0700
+Message-Id: <1626751866-15765-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5153406c-e3ed-d466-5603-14fd919304f4@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 11:39:53AM +0100, John Garry wrote:
-> On 19/07/2021 10:44, Christoph Hellwig wrote:
-> > On Mon, Jul 19, 2021 at 08:51:22AM +0100, John Garry wrote:
-> > > > Address this issue by adding one field of .irq_affinity_managed into
-> > > > 'struct device'.
-> > > > 
-> > > > Suggested-by: Christoph Hellwig <hch@lst.de>
-> > > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > 
-> > > Did you consider that for PCI device we effectively have this info already:
-> > > 
-> > > bool dev_has_managed_msi_irq(struct device *dev)
-> > > {
-> > > 	struct msi_desc *desc;
-> > > 
-> > > 	list_for_each_entry(desc, dev_to_msi_list(dev), list)
-> 
-> I just noticed for_each_msi_entry(), which is the same
-> 
-> 
-> > > 		if (desc->affinity && desc->affinity->is_managed)
-> > > 			return true;
-> > > 	}
-> > > 
-> > > 	return false;
-> > 
-> > Just walking the list seems fine to me given that this is not a
-> > performance criticial path.  But what are the locking implications?
-> 
-> Since it would be used for sequential setup code, I didn't think any locking
-> was required. But would need to consider where that function lived and
-> whether it's public.
+From: Long Li <longli@microsoft.com>
 
-Yeah, the allocated irq vectors should be live when running map queues.
+Microsoft Azure Blob storage service exposes a REST API to applications
+for data access.
+(https://docs.microsoft.com/en-us/rest/api/storageservices/blob-service-rest-api)
 
-> 
-> > 
-> > Also does the above imply this won't work for your platform MSI case?
-> > .
-> > 
-> 
-> Right. I think that it may be possible to reach into the platform msi
-> descriptors to get this info, but I am not sure it's worth it. There is only
-> 1x user there and there is no generic .map_queues function, so could set the
-> flag directly:
-> 
-> int blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev
-> *pdev,
->  		for_each_cpu(cpu, mask)
->  			qmap->mq_map[cpu] = qmap->queue_offset + queue;
->  	}
-> +	qmap->use_managed_irq = dev_has_managed_msi_irq(&pdev->dev);
-> }
-> 
-> --- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-> +++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-> @@ -3563,6 +3563,8 @@ static int map_queues_v2_hw(struct Scsi_Host *shost)
->                        qmap->mq_map[cpu] = qmap->queue_offset + queue;
->        }
-> 
-> +       qmap->use_managed_irq = 1;
-> +
->        return 0;
+This patchset implements a VSC (Virtualization Service Consumer) that
+communicates with a VSP (Virtualization Service Provider) on the Hyper-V
+host to execute Blob storage access via native network stack on the host.
+This VSC doesn't implement the semantics of REST API. Those are implemented
+in user-space. The VSC provides a fast data path to VSP.
 
-virtio can be populated via platform device too, but managed irq affinity
-isn't used, so seems dev_has_managed_msi_irq() is fine.
+Answers to some previous questions discussing the driver:
 
+Q: Why this driver doesn't use the block layer
 
-Thanks,
-Ming
+A: The Azure Blob is based on a model of object oriented storage. The
+storage object is not modeled in block sectors. While it's possible to
+present the storage object as a block device (assuming it makes sense to
+fake all the block device attributes), we lose the ability to express
+functionality that are defined in the REST API. 
+
+Q: You just lost all use of caching and io_uring and loads of other kernel
+infrastructure that has been developed and relied on for decades?
+
+A: The REST API is not designed to have caching at system level. This
+driver doesn't attempt to improve on this. There are discussions on
+supporting ioctl() on io_uring (https://lwn.net/Articles/844875/), that
+will benefit this driver. The block I/O scheduling is not helpful in this
+case, as the Blob application and Blob storage server have complete
+knowledge on the I/O pattern based on storage object type. This knowledge
+doesn't get easily consumed by the block layer.
+
+Q: You also just abandoned the POSIX model and forced people to use a
+random-custom-library just to access their storage devices, breaking all
+existing programs in the world?
+
+A: The existing Blob applications access storage via HTTP (REST API). They
+don't use POSIX interface. The interface for Azure Blob is not designed
+on POSIX.
+
+Q: What programs today use this new API?
+
+A: Currently none is released. But per above, there are also none using
+POSIX.
+
+Q: Where is the API published and what ensures that it will remain stable?
+
+A: Cloud based REST protocols have similar considerations to the kernel in
+terms of interface stability. Applications depend on cloud services via
+REST in much the same way as they depend on kernel services. Because
+applications can consume cloud APIs over the Internet, there is no
+opportunity to recompile applications to ensure compatibility. This causes
+the underlying APIs to be exceptionally stable, and Azure Blob has not
+removed support for an exposed API to date. This driver is supporting a
+pass-through model where requests in a guest process can be reflected to a
+VM host environment. Like the current REST interface, the goal is to ensure
+that each host provide a high degree of compatibility with each guest, but
+that task is largely outside the scope of this driver, which exists to
+communicate requests in the same way an HTTP stack would. Just like an HTTP
+stack does not require updates to add a new custom header or receive one
+from a server, this driver does not require updates for new functionality
+so long as the high level request/response model is retained.
+
+Q: What happens when it changes over time, do we have to rebuild all
+userspace applications?
+
+A: No. We don’t rebuild them all to talk HTTP either. In the current HTTP
+scheme, applications specify the version of the protocol they talk, and the
+storage backend responds with that version.
+
+Q: What happens to the kernel code over time, how do you handle changes to
+the API there?
+
+A: The goal of this driver is to get requests to the Hyper-V host, so the
+kernel isn’t involved in API changes, in the same way that HTTP
+implementations are robust to extra functionality being added to HTTP.
+
+Long Li (3):
+  Drivers: hv: vmbus: add support to ignore certain PCIE devices
+  Drivers: hv: add Azure Blob driver
+  Drivers: hv: Add to maintainer for Azure Blob driver
+
+Changes:
+
+v2:
+Refactored the code in vmbus to scan devices
+Reworked Azure Blob driver and moved user-mode interfaces to uapi
+
+v3:
+Changed licensing language
+Patch format passed "checkpatch --strict"
+debugfs and logging, module parameter cleanup
+General code clean up
+Fix device removal race conditions
+
+v4:
+addressed licencing issues
+changed to dynamic device model
+
+Long Li (3):
+  Drivers: hv: vmbus: add support to ignore certain PCIE devices
+  Drivers: hv: add Azure Blob driver
+  Drivers: hv: Add to maintainer for Hyper-V/Azure drivers
+
+ .../userspace-api/ioctl/ioctl-number.rst      |   2 +
+ MAINTAINERS                                   |   2 +
+ drivers/hv/Kconfig                            |  11 +
+ drivers/hv/Makefile                           |   1 +
+ drivers/hv/channel_mgmt.c                     |  55 +-
+ drivers/hv/hv_azure_blob.c                    | 628 ++++++++++++++++++
+ include/linux/hyperv.h                        |   9 +
+ include/uapi/misc/hv_azure_blob.h             |  34 +
+ 8 files changed, 736 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/hv/hv_azure_blob.c
+ create mode 100644 include/uapi/misc/hv_azure_blob.h
+
+-- 
+2.25.1
 
