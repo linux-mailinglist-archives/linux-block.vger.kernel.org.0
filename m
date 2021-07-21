@@ -2,107 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 798973D1037
-	for <lists+linux-block@lfdr.de>; Wed, 21 Jul 2021 15:49:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A5373D117E
+	for <lists+linux-block@lfdr.de>; Wed, 21 Jul 2021 16:36:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238917AbhGUNIi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Jul 2021 09:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49892 "EHLO mail.kernel.org"
+        id S231139AbhGUNzn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Jul 2021 09:55:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:59002 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238705AbhGUNIG (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Jul 2021 09:08:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1FAB660FF1;
-        Wed, 21 Jul 2021 13:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1626875322;
-        bh=QKDuJ/tJFtf4bV+bZdOandh6bQNA88joil4cKFF6TrA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bIkdxnLOR8U0+4xTT4bIRFHb1fOZUu5ZyXSOj6V0wv6dPwWGY1u1kowZ6SvlC5QmL
-         3nB+hhON1j9duLDXoq3iENyN2Bubr6K/ay8NOQlPM9mZLJ1wgZqQmVBxZ7IiVPAi46
-         adBoqXnUSQO7bl/7K78f4gq4qoWvM+UueUstNcdM=
-Date:   Wed, 21 Jul 2021 15:48:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S239145AbhGUNzm (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 21 Jul 2021 09:55:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id ED76B68AFE; Wed, 21 Jul 2021 16:36:15 +0200 (CEST)
+Date:   Wed, 21 Jul 2021 16:36:15 +0200
+From:   Christoph Hellwig <hch@lst.de>
 To:     Ming Lei <ming.lei@redhat.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         John Garry <john.garry@huawei.com>,
         Sagi Grimberg <sagi@grimberg.me>,
         Daniel Wagner <dwagner@suse.de>,
         Wen Xiong <wenxiong@us.ibm.com>, Hannes Reinecke <hare@suse.de>
 Subject: Re: [PATCH V5 1/3] driver core: add device_has_managed_msi_irq
-Message-ID: <YPglty/1YLI0DW4q@kroah.com>
-References: <20210721091723.1152456-1-ming.lei@redhat.com>
- <20210721091723.1152456-2-ming.lei@redhat.com>
+Message-ID: <20210721143615.GA11058@lst.de>
+References: <20210721091723.1152456-1-ming.lei@redhat.com> <20210721091723.1152456-2-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20210721091723.1152456-2-ming.lei@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On Wed, Jul 21, 2021 at 05:17:21PM +0800, Ming Lei wrote:
-> irq vector allocation with managed affinity may be used by driver, and
-> blk-mq needs this info for draining queue because genirq core will shutdown
-> managed irq when all CPUs in the affinity mask are offline.
-> 
-> The info of using managed irq is often produced by drivers, and it is
-> consumed by blk-mq, so different subsystems are involved in this info flow.
-> 
-> Address this issue by adding one helper of device_has_managed_msi_irq()
-> which is suggested by John Garry.
-> 
-> Suggested-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  drivers/base/core.c    | 15 +++++++++++++++
->  include/linux/device.h |  2 ++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index cadcade65825..41daf9fabdfb 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -29,6 +29,7 @@
->  #include <linux/sched/mm.h>
->  #include <linux/sysfs.h>
->  #include <linux/dma-map-ops.h> /* for dma_default_coherent */
-> +#include <linux/msi.h> /* for device_has_managed_irq */
->  
->  #include "base.h"
->  #include "power/power.h"
-> @@ -4797,3 +4798,17 @@ int device_match_any(struct device *dev, const void *unused)
->  	return 1;
->  }
->  EXPORT_SYMBOL_GPL(device_match_any);
-> +
 > +bool device_has_managed_msi_irq(struct device *dev)
 > +{
 > +	struct msi_desc *desc;
 > +
 > +	if (IS_ENABLED(CONFIG_GENERIC_MSI_IRQ)) {
-> +		for_each_msi_entry(desc, dev) {
-> +			if (desc->affinity && desc->affinity->is_managed)
-> +				return true;
-> +		}
-> +	}
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(device_has_managed_msi_irq);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 59940f1744c1..b1255524ce8b 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -981,4 +981,6 @@ extern long sysfs_deprecated;
->  #define sysfs_deprecated 0
->  #endif
->  
-> +bool device_has_managed_msi_irq(struct device *dev);
 
-This really belongs in msi.h, not device.h, as it is very MSI specific.
+And inline stub for the !CONFIG_GENERIC_MSI_IRQ would seem nicer
+so that we don't even nee the call.
 
-Same for the .c change.
-
-thanks,
-
-greg k-h
+Also please add a kerneldoc comment, and as Greg said this probably
+doesn't belong into drivers/base and device.h but something in the
+irq layer.  Maybe Thomas has a preference.
