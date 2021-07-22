@@ -2,84 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 139DF3D2DA2
-	for <lists+linux-block@lfdr.de>; Thu, 22 Jul 2021 22:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD0003D2EDF
+	for <lists+linux-block@lfdr.de>; Thu, 22 Jul 2021 23:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbhGVTpQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Jul 2021 15:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        id S231336AbhGVUdT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Jul 2021 16:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230465AbhGVTpP (ORCPT
+        with ESMTP id S231298AbhGVUdS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Jul 2021 15:45:15 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF46C061575
-        for <linux-block@vger.kernel.org>; Thu, 22 Jul 2021 13:25:49 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id j1-20020a0568302701b02904d1f8b9db81so6460471otu.12
-        for <linux-block@vger.kernel.org>; Thu, 22 Jul 2021 13:25:49 -0700 (PDT)
+        Thu, 22 Jul 2021 16:33:18 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40E2C061757
+        for <linux-block@vger.kernel.org>; Thu, 22 Jul 2021 14:13:51 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id u14so4103759vsc.8
+        for <linux-block@vger.kernel.org>; Thu, 22 Jul 2021 14:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=77vPTsrHg+AlqkSv0c9UpaNnxNWtgOyY/NiB3HvMNiY=;
-        b=dTfDMiYbNhs8xTsw3ZFsNcKbQaY5+vXaaFPMar/OAyydu4oVshaP7NmfY/D5w4fK+E
-         aO1DJHApAF3UsF0GWNF7JMDveSUGDuuCDZqEZVrLsO5YtTr0aGqbACj0C+KSPZ07dICW
-         PW98MPpVgRHr96tj7WgC/Rb4G6WvJQfb9abWa6GvYvX7M2QNpiRlK6loCU0mPRnptAKB
-         FTDTm85bQJtF7H+I7f7x+mJM8EXMTVNUsRIzG4X+UMAcpCX5m/mh2W9Vb48WaZi5ZDDJ
-         0spLOWz/5vSuwj1PxoQ6ME4ayQ4psVCt3yEaJNTaum7VKGhSL9i55eLhHA47fFuGc3ES
-         /taA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vjsv8mssb1ir6x4knA7TS0EZIWN9S/SLzHffeJQU8sM=;
+        b=QCcVSajPPSVDyU5+PfSVh1pSWrpIqKvDqpsTduS/1rIfkEaHe0s6dAp21ei9V7QPkc
+         ZcF6fwwedSXr1x5XJ44P8xYuUCZue5qTgOguLL59QzlQZzQt95lejoP8mCBO117K2AfE
+         AoHFcL1KIGRdguqClwm67KkoUdKdUAZjY3d4iiwWMEVla7C2A/OyXGpgeOUjA/kn+GVc
+         ZWL33tsqGQUF25WoyDqBhhmOVUblePzgzm825kpbFIL2wF0ugR4nAVkf5mkdW+XdLIS9
+         jqit8Jzz70pC57zqJjQG/nilfS+uInCCLRzb4byWg0mh7nScyG13ib9IxMwg1JlMZdC8
+         Imdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=77vPTsrHg+AlqkSv0c9UpaNnxNWtgOyY/NiB3HvMNiY=;
-        b=jFCEEofJ7Uqs8hA2198rJsI1M+6I+xYfG/oj9fCQ7V/Zu4Nina/80BVLRupOEZalvy
-         wIDN6auVOpk4iDnpbyZzRgeDSzqb5PBkRc7bBi6RAPC5pNs+SzwU5sUsny/i5286w9YO
-         BzZW9NleXAuOy6w1AVv+dvnPflrfYpOocJ/Fol5yz9ltq1wTE5hrCmJJFrzT0YYJgbF2
-         tRGqYqubYPb8vu4pHMBp8sZjKTLMtqEBPZaTtyMGi+c4fcCIfxJSgxDF5ZcXZ61FErbl
-         EFw5cdJlPtDaQJ+1gBHmUWYZHiwaPcCecX8SCcDpjVHyJZFMQk+ox9Odg/2s6jVT0LUm
-         zRxw==
-X-Gm-Message-State: AOAM532M6RkYBQejrruRmwnZSccPPX3BDwmCe7MiJo2Q8YbPAdkcQTWS
-        5EjQjmG/3F/+YDgtcI7x1lrUEA==
-X-Google-Smtp-Source: ABdhPJzUPRGbTELnznbn4NmFgCdI5a80mGbRI2mILC+vNpGoMbaEaRDKz0H5Lo9dWeCbNcRwjQi1HQ==
-X-Received: by 2002:a05:6830:19f6:: with SMTP id t22mr1032552ott.32.1626985548993;
-        Thu, 22 Jul 2021 13:25:48 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id b70sm2901338oii.24.2021.07.22.13.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jul 2021 13:25:48 -0700 (PDT)
-Subject: Re: [GIT PULL] nvme fixes for Linux 5.14
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-References: <YPm/cHUBGJpVOS4n@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5fdf64cb-13e4-2114-b0d1-8f4cb4ac450a@kernel.dk>
-Date:   Thu, 22 Jul 2021 14:25:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vjsv8mssb1ir6x4knA7TS0EZIWN9S/SLzHffeJQU8sM=;
+        b=mlNDC1UtM45gIYQrPEy9dsEpyh0+IUng2XoBxWt3PtiF+GJDd/e6qRGwXYopDD6F3j
+         nPPhQFKYw+E4nMKunCj6XmwflKRAucVdsXAfgITxZI8eJMcDZGJWzB80Rw706EYPiAP0
+         AaPL/mY5wTcPi2uaZ68jI3Ru5ol9zamwg26BASAcDDiVmMludN35C4gzgQqcMz39joQM
+         UbXQMHyBbtf4el9x3MYDLZQvyz7jrdZeSX7eGGd7cArcJ6IhSXSfxqyGQSTTw2IaRYAa
+         Xgu8tqZ+abg9jMuHCrp4Srh48IBzz6tRWEc2h66Y0mrwb977/o1qkkqQ7Zyi+K0k89l9
+         6zkg==
+X-Gm-Message-State: AOAM53186UEvnS6/dDcn/HvHurOi23iQzWgJKF7kePE4+WZ1WWpcggt5
+        fsPBrhWRxpwyZPL2Nfvkh1IdGzQ+GbLR2yuKamo=
+X-Google-Smtp-Source: ABdhPJyuh958jXCUiEg0VZEk+BekPKfZM2qPkHQ6IRG4VoEz7k9IJGys4RRp4vAJljxYVWtKFwcO7hDh5CebXVPZR4Q=
+X-Received: by 2002:a05:6102:2143:: with SMTP id h3mr2066051vsg.9.1626988431146;
+ Thu, 22 Jul 2021 14:13:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YPm/cHUBGJpVOS4n@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:ac5:cd23:0:0:0:0:0 with HTTP; Thu, 22 Jul 2021 14:13:50
+ -0700 (PDT)
+Reply-To: Bill.Chantal.Lawrence20@europe.com
+From:   "Mrs. bill Chantal" <hassanabuhari77@gmail.com>
+Date:   Thu, 22 Jul 2021 21:13:50 +0000
+Message-ID: <CAFxY3Mda8VYyMZv6YeEEn-8WB0KgOKaHoh+Onh9p_zP9pZOEBw@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/22/21 12:56 PM, Christoph Hellwig wrote:
-> The following changes since commit ec645dc96699ea6c37b6de86c84d7288ea9a4ddf:
-> 
->   block: increase BLKCG_MAX_POLS (2021-07-17 13:07:24 -0600)
-> 
-> are available in the Git repository at:
-> 
->   git://git.infradead.org/nvme.git tags/nvme-5.14-2021-07-22
+Dear Friend
 
-Pulled, thanks.
+You have been compensated with the sum of 4.4 million dollars in this
+united nation the payment will be Issue into atm visa card and send to
+you from the Santander bank in Spain we need your address passport and
+your whatsapp number.
+Thanks
 
--- 
-Jens Axboe
-
+Mrs. bill Chantal
