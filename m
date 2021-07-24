@@ -2,41 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBDB03D4573
-	for <lists+linux-block@lfdr.de>; Sat, 24 Jul 2021 08:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE713D457E
+	for <lists+linux-block@lfdr.de>; Sat, 24 Jul 2021 09:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234060AbhGXGRU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 24 Jul 2021 02:17:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:40317 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229941AbhGXGRU (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 24 Jul 2021 02:17:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0027B67373; Sat, 24 Jul 2021 08:57:49 +0200 (CEST)
-Date:   Sat, 24 Jul 2021 08:57:49 +0200
+        id S234156AbhGXGcu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 24 Jul 2021 02:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229884AbhGXGcu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Sat, 24 Jul 2021 02:32:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC1EC061575;
+        Sat, 24 Jul 2021 00:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=y05nn3QU3uPeS1ZgmMUbAAAgTGYtUzQDUxvCUfjqrEU=; b=mGAwZbnCO2qbWAtnmPH5mzrz/U
+        vVEstPs2hk8uiikRrjpQGPBAbf3CiAg12uARs1yfS50U8qALuBV39IqKIMabziaPh19ysY2x1GDGx
+        /z6ofmXNsXJORLgPx8oIktvYLIuPVRIJc55i0JCdKiSB3eL2KvKCdYGpnu8Xb5tSYDt3omogBujV2
+        RGic7g/5wdt2U4KTj0M59mElg21U5IGwaiLD7DIt8b93FED0eh5qo8+tyYINjAIrdjzbMQl5RygVQ
+        G/BiR2Wa1UK2t+9JYySux9xgNiHBygqRbrN+DIOG4JtEq5erPJCuOIRm29AcXW6KFeAp5Kk6+sgsk
+        iIa7lYbA==;
+Received: from [2001:4bb8:184:87c5:85d0:a26b:ef67:d32c] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m7Bq6-00C4Vg-RR; Sat, 24 Jul 2021 07:12:54 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christoph Hellwig <hch@lst.de>, Petr Vorel <pvorel@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH v3] loop: reintroduce global lock for safe
- loop_validate_file() traversal
-Message-ID: <20210724065749.GA2476@lst.de>
-References: <20210702153036.8089-1-penguin-kernel@I-love.SAKURA.ne.jp> <288edd89-a33f-2561-cee9-613704c3da20@i-love.sakura.ne.jp> <20210706054622.GE17027@lst.de> <6049597b-693e-e3df-d4f0-f2cb43381b84@i-love.sakura.ne.jp> <521eb103-db46-3f34-e878-0cdd585ee8bd@i-love.sakura.ne.jp> <8031a79f-5f32-3306-821d-6c783bb73413@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: fixes and cleanups for block_device refcounting v3
+Date:   Sat, 24 Jul 2021 09:12:39 +0200
+Message-Id: <20210724071249.1284585-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8031a79f-5f32-3306-821d-6c783bb73413@kernel.dk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 10:19:39AM -0600, Jens Axboe wrote:
-> I'll queue this up for next weeks merging. Christoph, are you happy with
-> it at this point? Can't say it's a thing of beauty, but the problem does
-> seem real.
+Hi Jens,
 
-Exactly my feelings.
+this series fixes up a possible race with the block_device lookup
+changes, and the finishes off the conversion to stop using the inode
+refcount for block devices.
+
+Note that patch 1 is a 5.14 and -stable candidate.
+
+
+Changes since v2:
+ - fix a double put_disk in the add_partition error path
+ - split a patch and better document the two new ones
+ - also remove partition bdev inodes a little earlier
+
+Changes since v1:
+ - clean up btrfs even more by storing a bdev instead of the disk
+ - keep a persistent disk reference in the bdev
+ - a bunch of cleanups to make the above change easier
+
+Diffstat:
+ block/genhd.c           |   13 ++-----
+ block/partitions/core.c |   37 +++++++++------------
+ drivers/block/loop.c    |    5 --
+ fs/block_dev.c          |   83 ++++++++++++++----------------------------------
+ fs/btrfs/inode.c        |    2 -
+ fs/btrfs/ordered-data.c |    2 -
+ fs/btrfs/ordered-data.h |    3 -
+ fs/btrfs/zoned.c        |   12 ++----
+ include/linux/blkdev.h  |    2 -
+ 9 files changed, 51 insertions(+), 108 deletions(-)
