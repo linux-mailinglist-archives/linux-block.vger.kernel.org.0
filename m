@@ -2,73 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAEA73D57A3
-	for <lists+linux-block@lfdr.de>; Mon, 26 Jul 2021 12:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B07CF3D586D
+	for <lists+linux-block@lfdr.de>; Mon, 26 Jul 2021 13:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232862AbhGZJ5W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Jul 2021 05:57:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35630 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232490AbhGZJ5V (ORCPT
+        id S233143AbhGZKmP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Jul 2021 06:42:15 -0400
+Received: from p-impout006aa.msg.pkvw.co.charter.net ([47.43.26.137]:51093
+        "EHLO p-impout006.msg.pkvw.co.charter.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233132AbhGZKmP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Jul 2021 05:57:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627295868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k5ZEVbSWh7t3DiH6T7x7erAZjIhqrWggfLOykN1elKU=;
-        b=T1+AG5LEB2pmZeh25n2ENS40VhkORwCGSu25PwzaGJMhT2WdN7lzFGTwsUUPLnj5+U9GoV
-        PRCIg18ID8PVsTgwoAIq/xnLdw4rbu0mTVoczEpS+v6UDtGp7b4JQVmzyHRFEBADSYbvVi
-        3tNbe/9DFJ/WqPBwEe3YRAbrILv9qN0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-iPwaxfwOPk2lzY3tp6rC2A-1; Mon, 26 Jul 2021 06:37:47 -0400
-X-MC-Unique: iPwaxfwOPk2lzY3tp6rC2A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 361151008065;
-        Mon, 26 Jul 2021 10:37:46 +0000 (UTC)
-Received: from T590 (ovpn-13-107.pek2.redhat.com [10.72.13.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CDFC05F705;
-        Mon, 26 Jul 2021 10:37:34 +0000 (UTC)
-Date:   Mon, 26 Jul 2021 18:37:31 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [RFC PATCH 0/7] genirq/affinity: abstract new API from managed
- irq affinity spread
-Message-ID: <YP6Qa8gWmbZg+HAN@T590>
-References: <20210719095729.834332-1-ming.lei@redhat.com>
+        Mon, 26 Jul 2021 06:42:15 -0400
+Received: from [172.16.10.100] ([68.205.28.126])
+        by cmsmtp with ESMTP
+        id 7ya4mRJkTB5K57ya4mNdvS; Mon, 26 Jul 2021 11:15:33 +0000
+X-Authority-Analysis: v=2.4 cv=ZqIol/3G c=1 sm=1 tr=0 ts=60fe9955
+ a=gmNTOe8/cTguWXMaQW2Lwg==:117 a=gmNTOe8/cTguWXMaQW2Lwg==:17
+ a=IkcTkHD0fZMA:10 a=8JfSVm6LV8s24FDAgMsA:9 a=QEXdDO2ut3YA:10
+Reply-To: dmarkh@cfl.rr.com
+Subject: Re: [BUG] FLOPPY DRIVER since 5.10.20
+To:     Denis Efremov <efremov@linux.com>, markh@compro.net,
+        linux-block@vger.kernel.org,
+        Linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Jiri Kosina <jkosina@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <de10cb47-34d1-5a88-7751-225ca380f735@compro.net>
+ <e49603c2-ac36-12b0-57cf-ff5ab30115bc@linux.com>
+From:   Mark Hounschell <dmarkh@cfl.rr.com>
+Message-ID: <2f4037b6-7ab3-9592-aaf0-dfcda19d61bc@cfl.rr.com>
+Date:   Mon, 26 Jul 2021 07:15:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210719095729.834332-1-ming.lei@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <e49603c2-ac36-12b0-57cf-ff5ab30115bc@linux.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfHXMVgsuY5zc4L+8KWXwihSI6w4QyU+p/y+zUgSOrbivlz9Zt8Fs6L+YAunkrm67xFJ1qjW0u0nit6o+XDk3c69Bo0Jb03dyZhHv7R5V8t85I6TIbaub
+ oBd9qZX/Fyu1UnBkboKnA4sgDtbpCmQ6T6MZK2txahr1U18WdqR9Y1blfpy15YKII4bWpJY1ccBwGdeDJXlaLXjGaEZ2/1MFKqsuN1dGFE9bg/JYLPTqPvU5
+ DxUs9CZxGoh3r1B29+IIs6Aey6afbJGaCHzKpYtmEfhOP57n9Qj7LUYXMo0D2YStH+P36FjUWIRmIedsaXbirWuZWjX4ITzI+HBMbxFuKkTKHgKINbt5vRD2
+ 51ot9181
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Guys,
-
-On Mon, Jul 19, 2021 at 05:57:22PM +0800, Ming Lei wrote:
-> Hello,
+On 7/26/21 3:57 AM, Denis Efremov wrote:
+> Hi,
 > 
-> irq_build_affinity_masks() actually grouping CPUs evenly into each managed
-> irq vector according to NUMA and CPU locality, and it is reasonable to abstract
-> one generic API for grouping CPUs evenly, the idea is suggested by Thomas
-> Gleixner.
+> On 7/23/21 9:47 PM, Mark Hounschell wrote:
+>>
+>> These 2 incremental patches, patch-5.10.19-20 and patch-5.11.2-3 have broken the user land fd = open("/dev/fd0", (O_RDWR | O_NDELAY)); functionality.
 > 
-> group_cpus_evenly() is abstracted and put into lib/, so blk-mq can re-use
-> it to build default queue mapping.
+> Thank you for the report, I'm looking into this.
 > 
-> Please comments!
+>> Since FOREVER before the patch, when using O_NDELAY, one could open the floppy device with no media inserted or even with write protected media without error. "Read-only file system" status is returned only when we actually tried to write to it. We have software still in use today that relies on this functionality.
+> 
+> If it's a project with open sources could you please give a link?
+> 
 
-Any comments on this patchset?
-
-
-Thanks,
-Ming
+This is imatterial
 
