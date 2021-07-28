@@ -2,111 +2,141 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E243D89E0
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jul 2021 10:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7883B3D8A2F
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jul 2021 11:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235333AbhG1Ihq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jul 2021 04:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235296AbhG1Ihp (ORCPT
+        id S235315AbhG1JCK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jul 2021 05:02:10 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:42376 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234163AbhG1JCJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jul 2021 04:37:45 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88044C061757
-        for <linux-block@vger.kernel.org>; Wed, 28 Jul 2021 01:37:44 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id m19so887566wms.0
-        for <linux-block@vger.kernel.org>; Wed, 28 Jul 2021 01:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A1L2Jchg5OdnAOILbniN0YQs16Gjlig7fJyJCi+ceF0=;
-        b=slIDqxr9tZF1ghtwdCP2dadIaZSajmfMRp32wytrsrBngMSJAekeqieJuplB844Hm0
-         zL17g6cUv/tUOUtpiUMhZjrTghxTvuqYHip1N4hbaFcaFN5VxdRG/+mmW5BCG6fkyUGU
-         FdlqwAEcidBmczln7ulpep2aEng7jZd+vpyVxrQ/mqTVk4Lyxmk0N4+GTkkUiF+TIzWY
-         u/jP585y22NmxESq+2UsJgPxjdYwGZBbrRhsug7FOm/AhSdFx4meahCD/9Tuymm1a7zx
-         Q23GtdWq3wKNU2w7JsEEHXG3YEL3aX5RaM4l4y9EweNNiK5vMjxLJ39MQEBv7/QSSy66
-         H5xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A1L2Jchg5OdnAOILbniN0YQs16Gjlig7fJyJCi+ceF0=;
-        b=eh/B00k0IgzSPJdD0IngI5rzSvYJe5hUlsFou75YJ1ejeOwRf9XDYwqLtm/XN3s/qK
-         vZ5oVuGIFz64FFnrnpRuxVI0e5m3cjTZFkMRRU0p/38LDqiPskX+jq/m6Rus/null8cW
-         lWweRTdi1qITOZ/orcGNQ9Puy+L1tLiWZADPOBrV2wieJYX5ec8wnkPPFP3Zc+xDOf6g
-         py2pR8CV9FotomICepI9g8XI/gtzEurIIpts4JXkP124NGK3yIIyBPnqFq82LGHRfPck
-         QqGhSD29D8egDfVdTGd1Qbjr+kJErFIpY6S3gayRN1HcNMJ/5uc5QMolZZwJSwBMmD3e
-         Iv7A==
-X-Gm-Message-State: AOAM532SH8MW1ozcSDto50DHWaSKW1I9QO6AZ5KUFSVJ+7mX9cnXh0Ac
-        Qxg1DGUaeojdtlIhEPJBOl2aNo2DLGw=
-X-Google-Smtp-Source: ABdhPJzAA5mCJ7kdYgSW/P7puft4HReSjV75uDDD8Jty59N9zXYfieg1muOkeW/1Jok3hSGNcwimwA==
-X-Received: by 2002:a1c:a510:: with SMTP id o16mr8127946wme.162.1627461463178;
-        Wed, 28 Jul 2021 01:37:43 -0700 (PDT)
-Received: from [172.22.36.87] (redhat-nat.vtp.fi.muni.cz. [78.128.215.6])
-        by smtp.gmail.com with ESMTPSA id h8sm4845588wmb.35.2021.07.28.01.37.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jul 2021 01:37:42 -0700 (PDT)
-Subject: Re: [dm-devel] use regular gendisk registration in device mapper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com
-References: <20210725055458.29008-1-hch@lst.de> <YQAtNkd8T1w/cSLc@redhat.com>
- <20210727160226.GA17989@lst.de> <YQAxyjrGJpl7UkNG@redhat.com>
- <9c719e1d-f8da-f1f3-57a9-3802aa1312d4@gmail.com>
- <20210728070655.GA5086@lst.de>
-From:   Milan Broz <gmazyland@gmail.com>
-Message-ID: <9e668239-78cc-55ad-8998-b7e39f573c34@gmail.com>
-Date:   Wed, 28 Jul 2021 10:37:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Wed, 28 Jul 2021 05:02:09 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 2DF0A22262;
+        Wed, 28 Jul 2021 09:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1627462927;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sp2fXaO4+VkU0ewmSUxyDBIfoqxWZ/YmzoRuKp72TwU=;
+        b=QJtqaRDeD/r+6BS2RpMLHsBckRf2sr1w3iN33pezOooEqpnn8T7DqSapcRxyMPIZfjRSjm
+        7J+1lee9yCSAoX/yXx5qOnlJlNQlP5/7ZOeqDMcdtfzJJyxwr5G3M0hN/eM3VNhe4zl7mM
+        ShgAu0K7CLyKCgHUkgVaDq862Mit+3M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1627462927;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sp2fXaO4+VkU0ewmSUxyDBIfoqxWZ/YmzoRuKp72TwU=;
+        b=pmBfIB2QkmA3xf4kSvM/Kul+M1rkY2xpWB6cH5WhgISANis+5+m+8zDuM/QuNvL/ktFiFp
+        tiOqD9YAirWKVzAw==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id 15362A3B8B;
+        Wed, 28 Jul 2021 09:02:07 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 4CA03DA8A7; Wed, 28 Jul 2021 10:59:22 +0200 (CEST)
+Date:   Wed, 28 Jul 2021 10:59:22 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        nborisov@suse.com
+Subject: Re: [PATCH 01/64] media: omap3isp: Extract struct group for memcpy()
+ region
+Message-ID: <20210728085921.GV5047@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        nborisov@suse.com
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-2-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20210728070655.GA5086@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210727205855.411487-2-keescook@chromium.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 28/07/2021 09:06, Christoph Hellwig wrote:
-> On Tue, Jul 27, 2021 at 10:38:16PM +0200, Milan Broz wrote:
->> BTW it would be also nice to run cryptsetup testsuite as root - we do a lot
->> of DM operations there (and we depend on sysfs on some places).
+On Tue, Jul 27, 2021 at 01:57:52PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.  Wrap the target region
+> in a common named structure. This additionally fixes a theoretical
+> misalignment of the copy (since the size of "buf" changes between 64-bit
+> and 32-bit, but this is likely never built for 64-bit).
 > 
-> It already doesn't seem very happy in current mainline for me:
+> FWIW, I think this code is totally broken on 64-bit (which appears to
+> not be a "real" build configuration): it would either always fail (with
+> an uninitialized data->buf_size) or would cause corruption in userspace
+> due to the copy_to_user() in the call path against an uninitialized
+> data->buf value:
 > 
-> =======================
-> 13 of 17 tests failed
-> (12 tests were not run)
-> =======================
+> omap3isp_stat_request_statistics_time32(...)
+>     struct omap3isp_stat_data data64;
+>     ...
+>     omap3isp_stat_request_statistics(stat, &data64);
 > 
-> but this series doesn't seem to change anything.
+> int omap3isp_stat_request_statistics(struct ispstat *stat,
+>                                      struct omap3isp_stat_data *data)
+>     ...
+>     buf = isp_stat_buf_get(stat, data);
 > 
-> A lot of the not run tests seem to be due to broken assumptions
-> that some code must be modular.  E.g. my kernel has scsi_debug built
-> in, but it complains like this:
+> static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
+>                                                struct omap3isp_stat_data *data)
+> ...
+>     if (buf->buf_size > data->buf_size) {
+>             ...
+>             return ERR_PTR(-EINVAL);
+>     }
+>     ...
+>     rval = copy_to_user(data->buf,
+>                         buf->virt_addr,
+>                         buf->buf_size);
 > 
-> modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open moddep file '/lib/module'
-> modprobe: FATAL: Module scsi_debug not found in directory /lib/modules/5.14.0-rc3+
+> Regardless, additionally initialize data64 to be zero-filled to avoid
+> undefined behavior.
+> 
+> Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/media/platform/omap3isp/ispstat.c |  5 +--
+>  include/uapi/linux/omap3isp.h             | 44 +++++++++++++++++------
+>  2 files changed, 36 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+> index 5b9b57f4d9bf..ea8222fed38e 100644
+> --- a/drivers/media/platform/omap3isp/ispstat.c
+> +++ b/drivers/media/platform/omap3isp/ispstat.c
+> @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
+>  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+>  					struct omap3isp_stat_data_time32 *data)
+>  {
+> -	struct omap3isp_stat_data data64;
+> +	struct omap3isp_stat_data data64 = { };
 
-Hi,
+Should this be { 0 } ?
 
-there should not be many assumptions, but yes, we depend on modular scsi_debug in some tests because we simulate
-very specific hw attributes. So you have one emulated device compiled-in?
+We've seen patches trying to switch from { 0 } to {  } but the answer
+was that { 0 } is supposed to be used,
+http://www.ex-parrot.com/~chris/random/initialise.html
 
-Or there is another way how to configure scsi_debug if compiled-in? (we use module parameters, I think it is
-the same was how util-linux testsute works with scsi_debug).
-
-Anyway, this is a bug, tests should be skipped (the same way if scsi_debug is not available).
-
-I forgot to say - there is a list of packages that should be installed for make check mentioned
-in README.md - I guess this was the reason some other tests were skipped.
-
-(BTW could you send me output of the failed test run? I run it over Linus' tree and ti works so it is perhaps another
-assumption that should be fixed.)
-
-Thanks,
-Milan
+(from https://lore.kernel.org/lkml/fbddb15a-6e46-3f21-23ba-b18f66e3448a@suse.com/)
