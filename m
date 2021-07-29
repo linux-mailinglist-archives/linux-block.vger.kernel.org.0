@@ -2,155 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B733D9B55
-	for <lists+linux-block@lfdr.de>; Thu, 29 Jul 2021 03:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0147F3D9B5F
+	for <lists+linux-block@lfdr.de>; Thu, 29 Jul 2021 03:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233436AbhG2Byq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jul 2021 21:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233440AbhG2Byh (ORCPT
+        id S233310AbhG2B7O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jul 2021 21:59:14 -0400
+Received: from mail-pl1-f181.google.com ([209.85.214.181]:42797 "EHLO
+        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233241AbhG2B7O (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jul 2021 21:54:37 -0400
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F99BC0613C1;
-        Wed, 28 Jul 2021 18:54:35 -0700 (PDT)
-Received: by mail-oi1-x22f.google.com with SMTP id a19so6351530oiw.6;
-        Wed, 28 Jul 2021 18:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=As8Tkf4mRo7Mi47sb2gawTIsMDIBW35dWzDfuJXzf24=;
-        b=KAXxg7WDVZEiBctmG67MeAut2sjCZTRyAlgzgozM0u4dV10MjAmjS86P3FlU+oRh+d
-         ghx90pJrqPDbf7Bp8D/UAD3HFl51KaHhxydnKfpWLyaL/lMrpvgZ3tOl4MwjPhzpuU+m
-         HPQNjmomvkHC98rUTLOnoCCxeLQfa+I167ai5XSSD2UE721s6UCl8ozJgaYAwteTKkc/
-         10Ba3iV2uv7CC4zjuuYBIFTWALir0n3mP/oci/LS9L7K0k2CHxZKeMPFwp89VepBYeqQ
-         +aK0bJS6GnSwYJZbCRS02GZriHFHuWNQZ5GesGwVxHEC+cDkoT3Dy8sqWFM86au913Bh
-         oeVQ==
+        Wed, 28 Jul 2021 21:59:14 -0400
+Received: by mail-pl1-f181.google.com with SMTP id t3so2929816plg.9;
+        Wed, 28 Jul 2021 18:59:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=As8Tkf4mRo7Mi47sb2gawTIsMDIBW35dWzDfuJXzf24=;
-        b=KO4NOOonAyouTT5YH1+vMsSQHPCB93ltYX3Nb0cD/IL56VbrzTmhNxMayjFrjFSLMW
-         8p07DfPQCrBqCSETQCAVDgnxCd3I6zILk6axhdS1OHp/IhrXFbtS8k7Qh/m48en7MiOW
-         1HCt8gGOIeFpAYmnqfW/wewPSxT3KZmVPJv3ar3mbTBGWLjyDSCi1zBRzb8Xq9JU+5MT
-         nMmKRvdV8tC2C8VvdB/B3Pla2pomVyhLSf6KiWQvgZdLUxB12LeW7ApvKV7XcGxB31Jm
-         XWi52H9joQVkHdhSu22h5SmE03Y9MtB6ILUgpDCr5oJRi4g83RU7k6xz1FRtSChMGS+u
-         4x3Q==
-X-Gm-Message-State: AOAM532cudXDXSAyVdc9ZZj55YT7cyia7De7T6/nLLIL5qvFJSjrX1uw
-        id92Rp5hF6H9Ve1e6/DURtZLqAUbxHFieS/S
-X-Google-Smtp-Source: ABdhPJxzLQsJ5CMubDia3i29fHRTGMkjAZX1g4DtO40aQk4OXdjunp+l7c/f+gIhfdtLP3dwYUm99g==
-X-Received: by 2002:aca:d11:: with SMTP id 17mr8341809oin.19.1627523674550;
-        Wed, 28 Jul 2021 18:54:34 -0700 (PDT)
-Received: from ian.penurio.us ([47.184.51.90])
-        by smtp.gmail.com with ESMTPSA id c11sm311424otm.37.2021.07.28.18.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 18:54:33 -0700 (PDT)
-From:   Ian Pilcher <arequipeno@gmail.com>
-To:     linux-block@vger.kernel.org, linux-leds@vger.kernel.org
-Cc:     axboe@kernel.dk, pavel@ucw.cz, linux-kernel@vger.kernel.org,
-        kernelnewbies@kernelnewbies.org, Ian Pilcher <arequipeno@gmail.com>
-Subject: [RFC PATCH 8/8] block: Blink device LED when request is sent to low-level driver
-Date:   Wed, 28 Jul 2021 20:53:44 -0500
-Message-Id: <20210729015344.3366750-9-arequipeno@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210729015344.3366750-1-arequipeno@gmail.com>
-References: <20210729015344.3366750-1-arequipeno@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/EMnvbg1lkcKUNHoTGAUlLRl80RwVqD1WDQs78+Ryng=;
+        b=T9QUZci9xRPUsyFylgg8iNO/vYQvXXH1GjnR9a+ORlVU3giTSq46ZzzVStYhQzQyVX
+         mOLRviPqB0U0VzfefMBPrH2zxRJ8GXRxTSnReCaP7uZGRjeqYbmTj93lORJJYJYJ+UWt
+         spwGognRDV14UtNOyYroC6Y6TKIm0ruPupWUwVNOCUMrsBxsb31ONXNerdH/j3a918F6
+         b1iQAdIoESQs2Q/T/v45hA59MGszluDk35P6uZRV+9iIQLaLnO8CBrwXv8iBRKbboxGV
+         uMTQpXMyK7EDxu9YSaNqUtqbtZszoI002WWUymzMfCKU66bgkqv4ECGRQIqAtlfHSLyw
+         K/9A==
+X-Gm-Message-State: AOAM532Ht9g9o9CnvXn1jL8DQg1Vp5ec/nrS1+YgPRE2L2uysG8WfphN
+        eGEAyBFxq8vZAXzvyRBjlEk=
+X-Google-Smtp-Source: ABdhPJwy46rGfGzBPHT0dDc2OF3JHAeIdHBXsVA3/Hjfoi4OURPDSpbVi+xEgy37JuU2Z3C+YFQFpw==
+X-Received: by 2002:aa7:93dc:0:b029:328:d6c9:cae7 with SMTP id y28-20020aa793dc0000b0290328d6c9cae7mr2579458pff.53.1627523950822;
+        Wed, 28 Jul 2021 18:59:10 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9eeb:60dc:7a3c:6558? ([2601:647:4000:d7:9eeb:60dc:7a3c:6558])
+        by smtp.gmail.com with ESMTPSA id z16sm1344383pgu.21.2021.07.28.18.59.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 18:59:10 -0700 (PDT)
+Subject: Re: [PATCH 19/64] ip: Use struct_group() for memcpy() regions
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-20-keescook@chromium.org> <YQDxaYrHu0PeBIuX@kroah.com>
+ <202107281358.8E12638@keescook>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <45855f4f-f7cf-b7b3-bcd6-c9ebc3a55c64@acm.org>
+Date:   Wed, 28 Jul 2021 18:59:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202107281358.8E12638@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-* Don't wait to lock the device's LED trigger mutex; just don't
-  blink the LED this time if it can't be locked right away, i.e.
-  if mutex_trylock() fails.
+On 7/28/21 2:01 PM, Kees Cook wrote:
+> On Wed, Jul 28, 2021 at 07:55:53AM +0200, Greg Kroah-Hartman wrote:
+>>>  struct ethhdr {
+>>> -	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
+>>> -	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
+>>> +	union {
+>>> +		struct {
+>>> +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
+>>> +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
+>>> +		};
+>>> +		struct {
+>>> +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
+>>> +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
+>>> +		} addrs;
+>>
+>> A union of the same fields in the same structure in the same way?
+>>
+>> Ah, because struct_group() can not be used here?  Still feels odd to see
+>> in a userspace-visible header.
+> 
+> Yeah, there is some inconsistency here. I will clean this up for v2.
+> 
+> Is there a place we can put kernel-specific macros for use in UAPI
+> headers? (I need to figure out where things like __kernel_size_t get
+> defined...)
 
-Signed-off-by: Ian Pilcher <arequipeno@gmail.com>
----
- block/blk-ledtrig.c | 24 ++++++++++++++++++++++++
- block/blk-ledtrig.h |  9 +++++++++
- block/blk-mq.c      |  2 ++
- 3 files changed, 35 insertions(+)
+How about using two memset() calls to clear h_dest[] and h_source[]
+instead of modifying the uapi header?
 
-diff --git a/block/blk-ledtrig.c b/block/blk-ledtrig.c
-index 2d324df45149..1b475530ce6c 100644
---- a/block/blk-ledtrig.c
-+++ b/block/blk-ledtrig.c
-@@ -544,3 +544,27 @@ ssize_t blk_ledtrig_devattr_show(struct device *const dev,
- 
- 	return (ssize_t)(name_len + 1);
- }
-+
-+
-+/*
-+ *
-+ *	Try to blink an LED
-+ *
-+ */
-+
-+void __blk_ledtrig_try_blink(struct gendisk *const gd)
-+{
-+	if (mutex_trylock(&gd->ledtrig_mutex)) {
-+
-+		if (gd->ledtrig != NULL) {
-+
-+			unsigned long delay_on = 75;
-+			unsigned long delay_off = 25;
-+
-+			led_trigger_blink_oneshot(&gd->ledtrig->trigger,
-+						  &delay_on, &delay_off, 0);
-+		}
-+
-+		mutex_unlock(&gd->ledtrig_mutex);
-+	}
-+}
-diff --git a/block/blk-ledtrig.h b/block/blk-ledtrig.h
-index 5d228905edbf..146deda92a8e 100644
---- a/block/blk-ledtrig.h
-+++ b/block/blk-ledtrig.h
-@@ -27,10 +27,19 @@ ssize_t blk_ledtrig_devattr_show(struct device *const dev,
- 				 struct device_attribute *const attr,
- 				 char *const buf);
- 
-+void __blk_ledtrig_try_blink(struct gendisk *gd);
-+
-+static inline void blk_ledtrig_try_blink(struct gendisk *const gd)
-+{
-+	if (gd != NULL)
-+		__blk_ledtrig_try_blink(gd);
-+}
-+
- #else	// CONFIG_BLK_LED_TRIGGERS
- 
- static inline void blk_ledtrig_init(void) {}
- static inline void blk_ledtrig_disk_init(const struct gendisk *gd) {}
-+static inline void blk_ledtrig_try_blink(const struct gendisk *gd) {}
- 
- // Real function (declared in include/linux/blk-ledtrig.h) returns a bool.
- // This is only here for del_gendisk() (in genhd.c), which doesn't check
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 2c4ac51e54eb..5593ece7b676 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -40,6 +40,7 @@
- #include "blk-stat.h"
- #include "blk-mq-sched.h"
- #include "blk-rq-qos.h"
-+#include "blk-ledtrig.h"
- 
- static DEFINE_PER_CPU(struct llist_head, blk_cpu_done);
- 
-@@ -1381,6 +1382,7 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
- 		switch (ret) {
- 		case BLK_STS_OK:
- 			queued++;
-+			blk_ledtrig_try_blink(rq->rq_disk);
- 			break;
- 		case BLK_STS_RESOURCE:
- 		case BLK_STS_DEV_RESOURCE:
--- 
-2.31.1
+Thanks,
+
+Bart.
+
 
