@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B88D3DD282
-	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 11:02:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E40E3DD286
+	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 11:03:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232882AbhHBJCz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Aug 2021 05:02:55 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6555 "EHLO
+        id S232921AbhHBJDE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Aug 2021 05:03:04 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6558 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232711AbhHBJCs (ORCPT
+        with ESMTP id S232788AbhHBJCs (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Mon, 2 Aug 2021 05:02:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1627894957; x=1659430957;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Q0qi0MmsrsEfp9dtr19KJjoVUyafiktr3GhxDwTWet4=;
-  b=TfEZ+2/YRmY9ay08BK4xGHYPGDNbXzCFvRKC8hinZqwGiQA8xkq50wMN
-   pLtaNF6Ai9V+8hRNH+gMcTPoeWbTKX0LwkWonWW/k93qwT9vmkSSKJ0mv
-   7EVtLJplZaY4QMyRA4rbEWV8t4ojqVnSaaf6krK/oMSlkloELBN8djrsi
-   PSdSWO/nPiXaYksLPtcS3zNYW7rGUyeGF1XqPH/cz6pBD9EPnRrOoPHDp
-   lQZeS+CmvyK9AtTR7O8od4/N+qsp+BxD/pcm3WFxLmiuG4rBuXt2hOi17
-   OHhhhotUluZkXBzBh338WvLWMNKunVk1XXaKWc5BvkocqtvDiWIl3YYC6
-   g==;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1lJCZKzFplMb5NB2wZ+Qms6TSDfs/rcPRomXSgSO30Q=;
+  b=BG4NuLSYZeodZBLs7wo/fmWwPz+BT3CeiJB0M4j30SfYMK7af0an91Bm
+   l3zqBpgkNNOB32TkY/ikHON8DIzlYdoRrJdCq/mwBydL0knYZkB+3cudD
+   x6+BCD5RCD4+ProeUtKqKKtmUJQXWq/T6eAFFHsfzFjcYqxrKfuuhJ39R
+   v2jBF+CdYe0d8zJpWPOcJ2iPTBhb+prsstZjtkfBvOMRIcU6wmvVENZjB
+   ezGqHiKgCtnjvj1+kd0tfGQoF4KZuUcTQvbakguhf8G+acfkUZ85c384c
+   uaKZ0HJnN+zZWD4uFTkBhi1beq6WZVoNdAWO9mYbi1X29W5PUz1iAi/OH
+   w==;
 X-IronPort-AV: E=Sophos;i="5.84,288,1620662400"; 
-   d="scan'208";a="180887615"
+   d="scan'208";a="180887616"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
   by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2021 17:02:33 +0800
-IronPort-SDR: /7eJNYOEH7Dybwfr9k8mF9Vr6IC19A+HORD3feFg1oObAA437AyKYmyjONyb2YVrNNkEj49Y4n
- u/xj5ieaCPVldQCoxroinVrH4IBTe674E866IjTrx7DrSHX89JibD5Z7UecWr1iMmafdW8q08F
- KGqqQS3YtwoHr3UzldsrVla4+E/LuV5Z2V2ZOmGj0ITkytPFglr+zCb1fY2/Ya3Xwi158iw4tG
- HhEg7nIC/DdypovO7cPOQ5q3CLxI8kaND9wDqp+iU8cOD2RVbtDxnrus9+b9fEcvT68xjLWL/4
- WLsVefdGZtEaYOrR+OxGOh8s
+IronPort-SDR: LH3u78C9lsxkMuTlgbrnHoskOFTFCNSlcizlSVEIWjR8TRaJ97xHxpnU6jxSdxU3pPYlkyB8/3
+ Uficg01+ILFW9en/vPgVaiOquWVl90d+7GIwHnJdzMngrjt64T2VKHH1ON34udiRJ7NT2tyTTz
+ oX2nE+ju3wMpQxYeFPQcgfSpX1bk/Xc5AxXegaU6hpcMp0ZyT+fRKtiam2MILRjm347dNlihnT
+ 7Ia4YptOYEwFAlq1WIAtrIomV6B5YX9u0gT67IQjzmRHz8mymxmqbKyI2ixVpZzv4aQWrW+wWO
+ i/uqjJ8tec8lFe9QNylhL+e3
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 01:40:08 -0700
-IronPort-SDR: YJ1UWZNsR3Ufmh6thlc5JH78U2AyUnIaRmvgU9EsZWEMadN03/APgJ6mNSycLiOS0fo2SQMngD
- gZEPNLa+Bj98fVv1Ure0s+gE8CC8oN18wItY/QkpT6PRV8hFiI1EHmUWpZqPrLK/9CR/CVmU7v
- fxgB5LId0JLJL9NwUFrpUlJk5GxIUwQ6sKMlY34xLjAO8+tvpoK6hcrpYoURcxBHQi5goHv4Qb
- zYS9t+B9gkbRo+Ly4Vr3g1TqHkNNlSE6j/baQLIIfOYFk1htDIXQJcSLM/Q7+t1MPxgjhzM5mk
- jvg=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 01:40:10 -0700
+IronPort-SDR: cB91D50I+Uae0uto9At4gJmXxhv3HcX3NqPwi/nNr7PTsbErYOqqYqIumdguW3nSPMEdwgeEfl
+ AH0HS/QRnOwl9dTZsME/T3Ozk+sMA3VHMTyCv1HIixgnWgFEIyt7x7ac+V+z2jdOJgDJ7SIZYJ
+ p5KCGPlnHaTr79VcPAZ9MJLClJyQv/E89hKX6JAS1TNFtepBQldB2Ap9lhLQHLku1j73heVU/9
+ 8Iftpvx3I2iEIrNA2JNYMkpJp/WuIYPix6SL4U1e37ELHQh5I9XqTEzxzaOZ64KO8YDiX856Vl
+ Ez0=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Aug 2021 02:02:33 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Aug 2021 02:02:35 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-ide@vger.kernel.org,
@@ -52,42 +52,102 @@ Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
         Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
         Suganath Prabu Subramani 
         <suganath-prabu.subramani@broadcom.com>
-Subject: [PATCH 0/7] libata cleanups and improvements
-Date:   Mon,  2 Aug 2021 18:02:25 +0900
-Message-Id: <20210802090232.1166195-1-damien.lemoal@wdc.com>
+Subject: [PATCH 1/7] libata: cleanup device sleep capability detection
+Date:   Mon,  2 Aug 2021 18:02:26 +0900
+Message-Id: <20210802090232.1166195-2-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210802090232.1166195-1-damien.lemoal@wdc.com>
+References: <20210802090232.1166195-1-damien.lemoal@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The first three patches of this series cleanup libata-core code in the
-area of device configuration (ata_dev_configure() function).
-Patch 4 improves ata_read_log_page() handling to avoid unnecessary
-warning messages and patch 5 adds an informational message on device
-scan to advertize the features supported by a device.
+Move the code to retrieve the device sleep capability and timings out of
+ata_dev_configure() into the helper function ata_dev_config_devslp().
+While at it, mark the device as supporting the device sleep capability
+only if the sata settings page was retrieved successfully to ensure that
+the timing information is correctly initialized.
 
-Path 6 adds the new sysfs ahci device attribute ncq_prio_supported to
-indicate that a disk supports NCQ priority. Patch 7 does the same for
-the mpt3sas driver, adding the sas_ncq_prio_supported device attribute.
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+---
+ drivers/ata/libata-core.c | 55 +++++++++++++++++++++++----------------
+ 1 file changed, 32 insertions(+), 23 deletions(-)
 
-Damien Le Moal (7):
-  libata: cleanup device sleep capability detection
-  libata: cleanup ata_dev_configure()
-  libata: cleanup NCQ priority handling
-  libata: fix ata_read_log_page() warning
-  libata: print feature list on device scan
-  libahci: Introduce ncq_prio_supported sysfs sttribute
-  scsi: mpt3sas: Introduce sas_ncq_prio_supported sysfs sttribute
-
- drivers/ata/libahci.c              |   1 +
- drivers/ata/libata-core.c          | 249 +++++++++++++++--------------
- drivers/ata/libata-sata.c          |  61 ++++---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c |  20 +++
- include/linux/libata.h             |   5 +
- 5 files changed, 191 insertions(+), 145 deletions(-)
-
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 61c762961ca8..9b39a4e2e567 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -2363,6 +2363,37 @@ static void ata_dev_config_trusted(struct ata_device *dev)
+ 		dev->flags |= ATA_DFLAG_TRUSTED;
+ }
+ 
++static void ata_dev_config_devslp(struct ata_device *dev)
++{
++	u8 *sata_setting = dev->link->ap->sector_buf;
++	unsigned int err_mask;
++	int i, j;
++
++	/*
++	 * Check device sleep capability. Get DevSlp timing variables
++	 * from SATA Settings page of Identify Device Data Log.
++	 */
++	if (!ata_id_has_devslp(dev->id))
++		return;
++
++	err_mask = ata_read_log_page(dev,
++				     ATA_LOG_IDENTIFY_DEVICE,
++				     ATA_LOG_SATA_SETTINGS,
++				     sata_setting, 1);
++	if (err_mask) {
++		ata_dev_dbg(dev,
++			    "failed to get SATA Settings Log, Emask 0x%x\n",
++			    err_mask);
++		return;
++	}
++
++	dev->flags |= ATA_DFLAG_DEVSLP;
++	for (i = 0; i < ATA_LOG_DEVSLP_SIZE; i++) {
++		j = ATA_LOG_DEVSLP_OFFSET + i;
++		dev->devslp_timing[i] = sata_setting[j];
++	}
++}
++
+ /**
+  *	ata_dev_configure - Configure the specified ATA/ATAPI device
+  *	@dev: Target device to configure
+@@ -2565,29 +2596,7 @@ int ata_dev_configure(struct ata_device *dev)
+ 			}
+ 		}
+ 
+-		/* Check and mark DevSlp capability. Get DevSlp timing variables
+-		 * from SATA Settings page of Identify Device Data Log.
+-		 */
+-		if (ata_id_has_devslp(dev->id)) {
+-			u8 *sata_setting = ap->sector_buf;
+-			int i, j;
+-
+-			dev->flags |= ATA_DFLAG_DEVSLP;
+-			err_mask = ata_read_log_page(dev,
+-						     ATA_LOG_IDENTIFY_DEVICE,
+-						     ATA_LOG_SATA_SETTINGS,
+-						     sata_setting,
+-						     1);
+-			if (err_mask)
+-				ata_dev_dbg(dev,
+-					    "failed to get Identify Device Data, Emask 0x%x\n",
+-					    err_mask);
+-			else
+-				for (i = 0; i < ATA_LOG_DEVSLP_SIZE; i++) {
+-					j = ATA_LOG_DEVSLP_OFFSET + i;
+-					dev->devslp_timing[i] = sata_setting[j];
+-				}
+-		}
++		ata_dev_config_devslp(dev);
+ 		ata_dev_config_sense_reporting(dev);
+ 		ata_dev_config_zac(dev);
+ 		ata_dev_config_trusted(dev);
 -- 
 2.31.1
 
