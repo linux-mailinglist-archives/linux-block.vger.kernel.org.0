@@ -2,74 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53BD33DCF3B
-	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 06:24:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9B63DD171
+	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 09:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbhHBEYL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Aug 2021 00:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbhHBEYK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Aug 2021 00:24:10 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2ECC061799
-        for <linux-block@vger.kernel.org>; Sun,  1 Aug 2021 21:23:58 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id x90so22642320ede.8
-        for <linux-block@vger.kernel.org>; Sun, 01 Aug 2021 21:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=JbMtpdZj7sghISs4e5T5yryQDvERMuYalazmdQP0RcA=;
-        b=czeOQMYeZau4ejaBbgDdCuklRCyHoHRlo6xUfJcAj3bciaGtFBitiUib5a5MwOumE9
-         w7/Jn7bBNsLcP1+CHZ7cIXH8h+QOe2ioJtROZD2bqhS/lqEvaNcrldVE+LZBhK9CNKw9
-         GasUZeZx/Kcocc9jX4O3VqyeOrpbJXFle0t9OXPFTLvjA0ffc0WpqgkYu8CQSXrFRLzD
-         Yc8UR7mKpLCqpwn4ZFojN5x09EwrnOTDpyVyuL9REZStwkguR4uL/4srDE+vjWW4JCu8
-         Sy5z9ei3l3c7g9TC5s6E8Wj1tuL0hGAP5lkkVvlHQCNnMoccEAC8Z+koQ2tbRnEruEUY
-         O8Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=JbMtpdZj7sghISs4e5T5yryQDvERMuYalazmdQP0RcA=;
-        b=Klj6MrK9MLmHiwunZGQBYPAhOTJW5+DWo7pSrllIcwaszJkMnKF+gFKbCDXX4ustnN
-         NSg+UEBbcmYRoRFsQHwwBwNvoFXC3iZtHWLbhAirSxWx8GeSZsCBRZWk1n90CPX8mCAJ
-         MhhYrcPequRMUw7nKHNtKLumxQApc3w69gadHRQi2XP1U8Gze+YSYU9PK3gFJ4S/xCIV
-         x6Nr/3DRkI8UeuR7xAvx/bLIHD9V1+e3DdEBtCnJySyoQjfL652KrX5r7do/a9oSoztO
-         6mExMebspLc1+r/Qe8afnZs17aqpwfqV9Q5UiNmchk/AJ1cKHHSL+J7MFNQMO+PPnMO7
-         Q0JA==
-X-Gm-Message-State: AOAM533E/YlP0i7X+2QyVhZhuXbTdi6eQqCIT3WAXIq9C/PcaLt8yV3o
-        X2CQ1cL7dXJhMfUQ8iRNBje5hPo5JPtMRPuwE+U=
-X-Google-Smtp-Source: ABdhPJxItSnYdNOJr/eCcDJG9Ed81FEJCtux30e3VMRN30hf/TzQyuXNRWDf+H2IgaMscJY+xnmH/x8e0HLuRnwx6WI=
-X-Received: by 2002:a50:d70a:: with SMTP id t10mr16749153edi.253.1627878237019;
- Sun, 01 Aug 2021 21:23:57 -0700 (PDT)
+        id S232500AbhHBHpo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Aug 2021 03:45:44 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:13222 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232482AbhHBHpn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Aug 2021 03:45:43 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4GdVRF2dBhz1CRWS;
+        Mon,  2 Aug 2021 15:45:29 +0800 (CST)
+Received: from dggpeml500020.china.huawei.com (7.185.36.88) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 2 Aug 2021 15:45:21 +0800
+Received: from huawei.com (10.175.127.227) by dggpeml500020.china.huawei.com
+ (7.185.36.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 2 Aug 2021
+ 15:45:21 +0800
+From:   Baokun Li <libaokun1@huawei.com>
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <patchwork@huawei.com>, <libaokun1@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next v2] nbd: add the check to prevent overflow in __nbd_ioctl()
+Date:   Mon, 2 Aug 2021 15:56:15 +0800
+Message-ID: <20210802075615.4037698-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Received: by 2002:a17:907:d0b:0:0:0:0 with HTTP; Sun, 1 Aug 2021 21:23:56
- -0700 (PDT)
-Reply-To: ablahikazabl67@gmail.com
-From:   Abdoulahi Kazim <drwilliamcuthbert@gmail.com>
-Date:   Mon, 2 Aug 2021 05:23:56 +0100
-Message-ID: <CAKwBCXvLzgfEHCKMKUxki4k1yYap9oH1ox=muoK9koBZXish5g@mail.gmail.com>
-Subject: More Authentic Information
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500020.china.huawei.com (7.185.36.88)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+If user specify a large enough value of NBD blocks option, it may trigger
+signed integer overflow which may lead to nbd->config->bytesize becomes a
+large or small value, zero in particular.
+
+UBSAN: Undefined behaviour in drivers/block/nbd.c:325:31
+signed integer overflow:
+1024 * 4611686155866341414 cannot be represented in type 'long long int'
+[...]
+Call trace:
+[...]
+ handle_overflow+0x188/0x1dc lib/ubsan.c:192
+ __ubsan_handle_mul_overflow+0x34/0x44 lib/ubsan.c:213
+ nbd_size_set drivers/block/nbd.c:325 [inline]
+ __nbd_ioctl drivers/block/nbd.c:1342 [inline]
+ nbd_ioctl+0x998/0xa10 drivers/block/nbd.c:1395
+ __blkdev_driver_ioctl block/ioctl.c:311 [inline]
+[...]
+
+Although it is not a big deal, still silence the UBSAN by limit
+the input value.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+V1->V2:
+	Use check_mul_overflow().
+
+ drivers/block/nbd.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index c38317979f74..9f3e25f74e9b 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1384,6 +1384,7 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 		       unsigned int cmd, unsigned long arg)
+ {
+ 	struct nbd_config *config = nbd->config;
++	loff_t bytesize;
+ 
+ 	switch (cmd) {
+ 	case NBD_DISCONNECT:
+@@ -1398,8 +1399,10 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 	case NBD_SET_SIZE:
+ 		return nbd_set_size(nbd, arg, config->blksize);
+ 	case NBD_SET_SIZE_BLOCKS:
+-		return nbd_set_size(nbd, arg * config->blksize,
+-				    config->blksize);
++		if (unlikely(check_mul_overflow(arg, config->blksize,
++						&bytesize)))
++			return -EINVAL;
++		return nbd_set_size(nbd, bytesize, config->blksize);
+ 	case NBD_SET_TIMEOUT:
+ 		nbd_set_cmd_timeout(nbd, arg);
+ 		return 0;
 -- 
-Dear Partner,
+2.31.1
 
-I am soliciting your partnership to relocate $12.5 Million to your
-country for investment on my behalf and you will be entitled to 30% of
-the sum once the transaction is successful made.
-
-Please indicate your genuine interest if you are capable so that i
-will send you the authentic details and documents of the transaction
-in awareness with some of my fellow Directors in the bank.
-
-If you are interested, here is my private Email address:
-(ablahikazabl67@gmail.com)
-For more authentic and legit information.
-
-
-Regards :  Abdoulahi Kazim
