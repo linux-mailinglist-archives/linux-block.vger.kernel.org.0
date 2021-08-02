@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45BCF3DD284
-	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 11:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45DA73DD28C
+	for <lists+linux-block@lfdr.de>; Mon,  2 Aug 2021 11:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232782AbhHBJDA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Aug 2021 05:03:00 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6561 "EHLO
+        id S232981AbhHBJDJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Aug 2021 05:03:09 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6555 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232856AbhHBJCs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Aug 2021 05:02:48 -0400
+        with ESMTP id S232814AbhHBJCv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Aug 2021 05:02:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1627894957; x=1659430957;
+  t=1627894960; x=1659430960;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UsY3zNp+4Y74npaMKBNtjE5KDrgJ0zn2Z35nPaW5zAw=;
-  b=Gy6xEpswTaRX/cFKp1hC7z1pOCCDTymYAaDrYfwVGaKoGEs5FZ4OVgpK
-   p6dxD6yXslTPamOoMLQ7E0U3E0Wndj+rwyk4/pMJfQCGt9TcjpzsAfjVx
-   srjU13QdkNNUhmfejjvy79pNvRMkxB4m+EgYopqdOPlptD1o8U1z3pl6q
-   lgm06iJ0vYLrwpgAhhTkr3FHGDaMN7nZUZwzEkcIAiZ7PLhBkGmRjUnwr
-   lQahc4bGPsC0uy96GzzrRMOFKvVuUGxIkPL1F208m/x5NWKeyrFcf/2tg
-   UuYZMgdWoBBVzJTudkQtG4+puzG33D1JGJjyHuv6UtAnSo0XyRsEa58ML
-   g==;
+  bh=9Tbl+ZYaDpBVRwr+peFFdheaVaDWXB+rHBnYavgl5IE=;
+  b=aRQKvT3wkohCNbiKz8YBELHTGpHVPGwSh9LMoJ7+3CDPjYwCArqG16I7
+   G+qeDQcvf4jfmDQ9yzpSAmXnI461zroCJls8co1KDvAD/5JVlU+iZ7qz+
+   P/YNvs9fwJQ+HthNxvmMniYdXJ45ay3fZFiRr1AxwEGCDyK0GWNkD4Bc+
+   pN/NwNKvR2xh4t29O3Opwx8xUuVUJoJc4HphWk+LOPSWHeGo4cIghyg66
+   wAa3HuFRyMF8uXxF/zP/4ZEFj5LmIIF9+CqQecL1rL61YX1GM3Rt2IEKC
+   rvoDIcvddL0iiVqQZAmYuEJt8VKk+eltd+q5kmfvzsHmRR5rJxObCuvIw
+   w==;
 X-IronPort-AV: E=Sophos;i="5.84,288,1620662400"; 
-   d="scan'208";a="180887618"
+   d="scan'208";a="180887620"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2021 17:02:35 +0800
-IronPort-SDR: kta8M1woVs3bLcxqlGIRVr48DXQTmu1rk+dX5oRxMdJCoMPBaAPfnvw/MCiHX7tkCehVWeYeYa
- bBzrkOCJle2boHkv7Z+aoAuwjQKPWaH/r6JCdmj3GZ47elXRaGWuqPHnUAdxLoiw7rU12OdUT1
- +tSHZ7lkmPK211LUxewU7xO07amgFu1l/ocTwx0DhiHCqaIbiDcRSUjugTZmEvKgvLg8MyKwiW
- nJ6NSKs0G3fFsUHsVlRehu6MNFKdCn5vB28dWu5PBr+n2q76BqT0+q45zv0zDKBLQsrqrSaail
- b5yqENajdawuSjuB/YfNTryG
+  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2021 17:02:36 +0800
+IronPort-SDR: yANogrtc5D0nQfqLUgtfbVPJg2KifXnMx+CLlcr0xspWers4iNI+nBKk9fKT7xBgfX8Ev568yV
+ dmCYmuKxQYCTOcb83wB1fbDBzmn/BFZ0WUPL6S4YmjM3oxJtxvBVYHjPYlM+k+grsd3LA4rWSc
+ KuWQ+iPZmQdA904pn259lUcm8kqlusNVaswk69jilQrmTsNw0u2hxuTSh9IRL/VZF7p1UKN2XZ
+ 9IWq4CJD2xLaX5EOg9tdkvKk+CdAWzv9jNdV0QevkANv72DsmSZ9nZ7pVAeX33c4u/FvZpI24t
+ DT892Hu1Ylk17xpRLK0kuU+G
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 01:40:11 -0700
-IronPort-SDR: hDPe+nS0Z6HFpfRLqYn91XXcM27Q5PFchkFGfaY/sylQOz+vHRErky7KYwVB2iFBd6S42vTH+0
- vw0r/bzSv3dQSxHeEOIKZx8HAhwYxv8uCNi4wMjYt/tqpbL5ptLZtl3cSiComBHhQhD0LSrIjY
- PLjur0cBlAZGt+qOkjKg7ngkBsTDFt8Qibk+kTcdc+R/2USZKDiYsyqBY69P7K6wo3WbqKRHQo
- GBMiXDW6zfkowJLTTSVYXWT558wBXBS5rRerabXtJrZiJwSvKQR7nIguAPn1HLGSedgtMwqt33
- hFY=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 01:40:13 -0700
+IronPort-SDR: UwxAmegxJfFLnLnYo0VM7dIKc3afNkMlH6hRsiMgHAqo3pLpFeBN29h9z/KipAKTX374yX0lDn
+ bEFsV6On1RGDOLjL8JB2N3Lcg0iIaFM0EGbFx1+NbQjwjEPwtVdQQ90O4fKnw7bJvQNGVf6LkF
+ nHTuTAw3Vh0OR1EvLujZ95z++3y8/2AMr2oOLBO8S5pyQYPoOVHtxbb+8gxcQxBaDK9PJeTlgd
+ eMeo9VUL2j2aQWNyI3joGVS6x0hREYEZNVii3aILaOW/VKztBWgFIC/Rl1NexLieegcJ3izCos
+ 0J4=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Aug 2021 02:02:36 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Aug 2021 02:02:38 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-ide@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
         Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
         Suganath Prabu Subramani 
         <suganath-prabu.subramani@broadcom.com>
-Subject: [PATCH 2/7] libata: cleanup ata_dev_configure()
-Date:   Mon,  2 Aug 2021 18:02:27 +0900
-Message-Id: <20210802090232.1166195-3-damien.lemoal@wdc.com>
+Subject: [PATCH 3/7] libata: cleanup NCQ priority handling
+Date:   Mon,  2 Aug 2021 18:02:28 +0900
+Message-Id: <20210802090232.1166195-4-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210802090232.1166195-1-damien.lemoal@wdc.com>
 References: <20210802090232.1166195-1-damien.lemoal@wdc.com>
@@ -64,155 +64,176 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Introduce the helper functions ata_dev_config_lba() and
-ata_dev_config_chs() to configure the addressing capabilities of a
-device. Each helper takes a string as argument for the addressing
-information printed after these helpers execution completes.
+The ata device flag ATA_DFLAG_NCQ_PRIO indicates if a device supports
+the NCQ Priority feature while the ATA_DFLAG_NCQ_PRIO_ENABLE device
+flag indicates if the feature is enabled. Enabling NCQ priority use is
+controlled by the user through the device sysfs attribute
+ncq_prio_enable. As a result, the ATA_DFLAG_NCQ_PRIO flag should not be
+cleared when ATA_DFLAG_NCQ_PRIO_ENABLE is not set as the device still
+supports the feature even after the user disables it. This leads to the
+following cleanups:
+- In ata_build_rw_tf(), set a command high priority bit based on the
+  ATA_DFLAG_NCQ_PRIO_ENABLE flag, not on the ATA_DFLAG_NCQ flag. That
+  is, set a command high priority only if the user enabled NCQ priority
+  use.
+- In ata_dev_config_ncq_prio(), ATA_DFLAG_NCQ_PRIO should not be cleared
+  if ATA_DFLAG_NCQ_PRIO_ENABLE is not set. If the device does not
+  support NCQ priority, both ATA_DFLAG_NCQ_PRIO and
+  ATA_DFLAG_NCQ_PRIO_ENABLE must be cleared.
+
+With the above ata_dev_config_ncq_prio() change, ATA_DFLAG_NCQ_PRIO flag
+is set on device scan and revalidation. There is no need to trigger a
+device revalidation in ata_ncq_prio_enable_store() when the user enables
+the use of NCQ priority. Remove the revalidation code from that funciton
+to simplify it. Also change the return value from -EIO to -EINVAL when a
+user tries to enable NCQ priority for a device that does not support
+this feature.  While at it, also simplify ata_ncq_prio_enable_show().
+
+Overall, there is no functional change introduced by this patch.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- drivers/ata/libata-core.c | 110 ++++++++++++++++++++------------------
- 1 file changed, 59 insertions(+), 51 deletions(-)
+ drivers/ata/libata-core.c | 32 ++++++++++++++------------------
+ drivers/ata/libata-sata.c | 37 ++++++++++++-------------------------
+ 2 files changed, 26 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 9b39a4e2e567..1849f858761b 100644
+index 1849f858761b..21afb59f359f 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -2363,6 +2363,52 @@ static void ata_dev_config_trusted(struct ata_device *dev)
- 		dev->flags |= ATA_DFLAG_TRUSTED;
+@@ -706,11 +706,9 @@ int ata_build_rw_tf(struct ata_taskfile *tf, struct ata_device *dev,
+ 		if (tf->flags & ATA_TFLAG_FUA)
+ 			tf->device |= 1 << 7;
+ 
+-		if (dev->flags & ATA_DFLAG_NCQ_PRIO) {
+-			if (class == IOPRIO_CLASS_RT)
+-				tf->hob_nsect |= ATA_PRIO_HIGH <<
+-						 ATA_SHIFT_PRIO;
+-		}
++		if (dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE &&
++		    class == IOPRIO_CLASS_RT)
++			tf->hob_nsect |= ATA_PRIO_HIGH << ATA_SHIFT_PRIO;
+ 	} else if (dev->flags & ATA_DFLAG_LBA) {
+ 		tf->flags |= ATA_TFLAG_LBA;
+ 
+@@ -2173,11 +2171,6 @@ static void ata_dev_config_ncq_prio(struct ata_device *dev)
+ 	struct ata_port *ap = dev->link->ap;
+ 	unsigned int err_mask;
+ 
+-	if (!(dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE)) {
+-		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
+-		return;
+-	}
+-
+ 	err_mask = ata_read_log_page(dev,
+ 				     ATA_LOG_IDENTIFY_DEVICE,
+ 				     ATA_LOG_SATA_SETTINGS,
+@@ -2185,18 +2178,21 @@ static void ata_dev_config_ncq_prio(struct ata_device *dev)
+ 				     1);
+ 	if (err_mask) {
+ 		ata_dev_dbg(dev,
+-			    "failed to get Identify Device data, Emask 0x%x\n",
++			    "failed to get SATA settings log, Emask 0x%x\n",
+ 			    err_mask);
+-		return;
++		goto not_supported;
+ 	}
+ 
+-	if (ap->sector_buf[ATA_LOG_NCQ_PRIO_OFFSET] & BIT(3)) {
+-		dev->flags |= ATA_DFLAG_NCQ_PRIO;
+-	} else {
+-		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
+-		ata_dev_dbg(dev, "SATA page does not support priority\n");
+-	}
++	if (!(ap->sector_buf[ATA_LOG_NCQ_PRIO_OFFSET] & BIT(3)))
++		goto not_supported;
++
++	dev->flags |= ATA_DFLAG_NCQ_PRIO;
++
++	return;
+ 
++not_supported:
++	dev->flags &= ~ATA_DFLAG_NCQ_PRIO_ENABLE;
++	dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
  }
  
-+static int ata_dev_config_lba(struct ata_device *dev,
-+			      char *info, size_t infosz)
-+{
-+	const u16 *id = dev->id;
-+	int info_ofst;
-+
-+	dev->flags |= ATA_DFLAG_LBA;
-+
-+	if (ata_id_has_lba48(id)) {
-+		dev->flags |= ATA_DFLAG_LBA48;
-+		strcpy(info, "LBA48 ");
-+
-+		if (dev->n_sectors >= (1UL << 28) &&
-+		    ata_id_has_flush_ext(id))
-+			dev->flags |= ATA_DFLAG_FLUSH_EXT;
-+	} else {
-+		strcpy(info, "LBA ");
-+	}
-+	info_ofst = strlen(info);
-+
-+	/* config NCQ */
-+	return ata_dev_config_ncq(dev, info + info_ofst,
-+				  infosz - info_ofst);
-+}
-+
-+static void ata_dev_config_chs(struct ata_device *dev,
-+			       char *info, size_t infosz)
-+{
-+	const u16 *id = dev->id;
-+
-+	/* Default translation */
-+	dev->cylinders	= id[1];
-+	dev->heads	= id[3];
-+	dev->sectors	= id[6];
-+
-+	if (ata_id_current_chs_valid(id)) {
-+		/* Current CHS translation is valid. */
-+		dev->cylinders = id[54];
-+		dev->heads     = id[55];
-+		dev->sectors   = id[56];
-+	}
-+
-+	snprintf(info, infosz, "CHS %u/%u/%u",
-+		 dev->cylinders, dev->heads, dev->sectors);
-+}
-+
- static void ata_dev_config_devslp(struct ata_device *dev)
+ static int ata_dev_config_ncq(struct ata_device *dev,
+diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+index 8adeab76dd38..dc397ebda089 100644
+--- a/drivers/ata/libata-sata.c
++++ b/drivers/ata/libata-sata.c
+@@ -839,23 +839,17 @@ static ssize_t ata_ncq_prio_enable_show(struct device *device,
+ 					char *buf)
  {
- 	u8 *sata_setting = dev->link->ap->sector_buf;
-@@ -2418,6 +2464,7 @@ int ata_dev_configure(struct ata_device *dev)
- 	char revbuf[7];		/* XYZ-99\0 */
- 	char fwrevbuf[ATA_ID_FW_REV_LEN+1];
- 	char modelbuf[ATA_ID_PROD_LEN+1];
-+	char lba_info[40];
- 	int rc;
+ 	struct scsi_device *sdev = to_scsi_device(device);
+-	struct ata_port *ap;
++	struct ata_port *ap = ata_shost_to_port(sdev->host);
+ 	struct ata_device *dev;
+ 	bool ncq_prio_enable;
+ 	int rc = 0;
  
- 	if (!ata_dev_enabled(dev) && ata_msg_info(ap)) {
-@@ -2539,61 +2586,22 @@ int ata_dev_configure(struct ata_device *dev)
- 		}
+-	ap = ata_shost_to_port(sdev->host);
+-
+ 	spin_lock_irq(ap->lock);
+ 	dev = ata_scsi_find_dev(ap, sdev);
+-	if (!dev) {
++	if (!dev)
+ 		rc = -ENODEV;
+-		goto unlock;
+-	}
+-
+-	ncq_prio_enable = dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE;
+-
+-unlock:
++	else
++		ncq_prio_enable = dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE;
+ 	spin_unlock_irq(ap->lock);
  
- 		if (ata_id_has_lba(id)) {
--			const char *lba_desc;
--			char ncq_desc[24];
--
--			lba_desc = "LBA";
--			dev->flags |= ATA_DFLAG_LBA;
--			if (ata_id_has_lba48(id)) {
--				dev->flags |= ATA_DFLAG_LBA48;
--				lba_desc = "LBA48";
--
--				if (dev->n_sectors >= (1UL << 28) &&
--				    ata_id_has_flush_ext(id))
--					dev->flags |= ATA_DFLAG_FLUSH_EXT;
--			}
--
--			/* config NCQ */
--			rc = ata_dev_config_ncq(dev, ncq_desc, sizeof(ncq_desc));
-+			rc = ata_dev_config_lba(dev, lba_info, sizeof(lba_info));
- 			if (rc)
- 				return rc;
--
--			/* print device info to dmesg */
--			if (ata_msg_drv(ap) && print_info) {
--				ata_dev_info(dev, "%s: %s, %s, max %s\n",
--					     revbuf, modelbuf, fwrevbuf,
--					     ata_mode_string(xfer_mask));
--				ata_dev_info(dev,
--					     "%llu sectors, multi %u: %s %s\n",
--					(unsigned long long)dev->n_sectors,
--					dev->multi_count, lba_desc, ncq_desc);
--			}
- 		} else {
--			/* CHS */
--
--			/* Default translation */
--			dev->cylinders	= id[1];
--			dev->heads	= id[3];
--			dev->sectors	= id[6];
--
--			if (ata_id_current_chs_valid(id)) {
--				/* Current CHS translation is valid. */
--				dev->cylinders = id[54];
--				dev->heads     = id[55];
--				dev->sectors   = id[56];
--			}
-+			ata_dev_config_chs(dev, lba_info, sizeof(lba_info));
-+		}
+ 	return rc ? rc : snprintf(buf, 20, "%u\n", ncq_prio_enable);
+@@ -869,7 +863,7 @@ static ssize_t ata_ncq_prio_enable_store(struct device *device,
+ 	struct ata_port *ap;
+ 	struct ata_device *dev;
+ 	long int input;
+-	int rc;
++	int rc = 0;
  
--			/* print device info to dmesg */
--			if (ata_msg_drv(ap) && print_info) {
--				ata_dev_info(dev, "%s: %s, %s, max %s\n",
--					     revbuf,	modelbuf, fwrevbuf,
--					     ata_mode_string(xfer_mask));
--				ata_dev_info(dev,
--					     "%llu sectors, multi %u, CHS %u/%u/%u\n",
--					     (unsigned long long)dev->n_sectors,
--					     dev->multi_count, dev->cylinders,
--					     dev->heads, dev->sectors);
--			}
-+		/* print device info to dmesg */
-+		if (ata_msg_drv(ap) && print_info) {
-+			ata_dev_info(dev, "%s: %s, %s, max %s\n",
-+				     revbuf, modelbuf, fwrevbuf,
-+				     ata_mode_string(xfer_mask));
-+			ata_dev_info(dev,
-+				     "%llu sectors, multi %u, %s\n",
-+				     (unsigned long long)dev->n_sectors,
-+				     dev->multi_count, lba_info);
- 		}
+ 	rc = kstrtol(buf, 10, &input);
+ 	if (rc)
+@@ -883,27 +877,20 @@ static ssize_t ata_ncq_prio_enable_store(struct device *device,
+ 		return  -ENODEV;
  
- 		ata_dev_config_devslp(dev);
+ 	spin_lock_irq(ap->lock);
++
++	if (!(dev->flags & ATA_DFLAG_NCQ_PRIO)) {
++		rc = -EINVAL;
++		goto unlock;
++	}
++
+ 	if (input)
+ 		dev->flags |= ATA_DFLAG_NCQ_PRIO_ENABLE;
+ 	else
+ 		dev->flags &= ~ATA_DFLAG_NCQ_PRIO_ENABLE;
+ 
+-	dev->link->eh_info.action |= ATA_EH_REVALIDATE;
+-	dev->link->eh_info.flags |= ATA_EHI_QUIET;
+-	ata_port_schedule_eh(ap);
++unlock:
+ 	spin_unlock_irq(ap->lock);
+ 
+-	ata_port_wait_eh(ap);
+-
+-	if (input) {
+-		spin_lock_irq(ap->lock);
+-		if (!(dev->flags & ATA_DFLAG_NCQ_PRIO)) {
+-			dev->flags &= ~ATA_DFLAG_NCQ_PRIO_ENABLE;
+-			rc = -EIO;
+-		}
+-		spin_unlock_irq(ap->lock);
+-	}
+-
+ 	return rc ? rc : len;
+ }
+ 
 -- 
 2.31.1
 
