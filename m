@@ -2,107 +2,149 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDC513DE6F8
-	for <lists+linux-block@lfdr.de>; Tue,  3 Aug 2021 09:06:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB743DE6FF
+	for <lists+linux-block@lfdr.de>; Tue,  3 Aug 2021 09:08:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234106AbhHCHGZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Aug 2021 03:06:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29605 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233677AbhHCHGY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 3 Aug 2021 03:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627974373;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L0B7QUtlv2FOnyMQ55a9J0cwwEhFix0LxlKlBBYzOVU=;
-        b=dbNp49HpqmNqWuxBXM/6HQDaUof2ZMhFKtQjw0/pUbDIGDkC6X4P+4RzEVzmHTFNwSVXlK
-        cEMMPCW6qfKjr9q2bRBd3X1Oe66IwU1HdgBVdYP6K2Y/uMFF2Daa7WnmZf2cEYdxUFp+ap
-        iAU9MwShr8Bj3xbxmKSOSE+OS5eOYcs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-HXNv5PS1NiCZOZg2fhSebg-1; Tue, 03 Aug 2021 03:06:12 -0400
-X-MC-Unique: HXNv5PS1NiCZOZg2fhSebg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3195107ACF5;
-        Tue,  3 Aug 2021 07:06:10 +0000 (UTC)
-Received: from localhost (ovpn-13-115.pek2.redhat.com [10.72.13.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CBA760C25;
-        Tue,  3 Aug 2021 07:06:05 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Bruno Goncalves <bgoncalv@redhat.com>
-Subject: [PATCH] blk-iocost: fix lockdep warning on blkcg->lock
-Date:   Tue,  3 Aug 2021 15:06:08 +0800
-Message-Id: <20210803070608.1766400-1-ming.lei@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        id S234126AbhHCHIK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Aug 2021 03:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234146AbhHCHIJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Aug 2021 03:08:09 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1DEC0613D5
+        for <linux-block@vger.kernel.org>; Tue,  3 Aug 2021 00:07:58 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id x14so27689104edr.12
+        for <linux-block@vger.kernel.org>; Tue, 03 Aug 2021 00:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=U0jio5+xFSbV7SP/KZIWsJ9guYPyBzSqjq6PsiTDQC0=;
+        b=eLJEyLouuLRMx/jBModUrxmH+ISNHhOKpcMdKIQd9Ph7RNTyBWhDNRE0X28L3xLfVu
+         WfaYl9PvuHZSKJcDNIb/q26uEMuQlfKF2om4KnMbvTBL1Quh5DfEbmqJodg6e4Wjpvr0
+         g/4QEGzN56tIuMb2eKiaNVlCjTEO+/orr6ef+JbaIO6M5cR7kMUhyPXfcZTAsM1hFmFp
+         aHChXwWuMeKlXZSNh561ANrr/itmau9zFqxOTyZPCOYiICCfY4F14evcgIDyHY/eE7e1
+         3dgp3A3Dup+0bad0UzREiHfahwfYf10aNyV4bqi6jnQbEgaHUbAQYj4rSQkYBqMZcj4U
+         lHfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=U0jio5+xFSbV7SP/KZIWsJ9guYPyBzSqjq6PsiTDQC0=;
+        b=Cbc66DFCQClAnHPIPldJLZkcF2zaMXH0dCcYfQHFy9+s1YqVe2pUwmJbBEy4yfEHOf
+         i3BEMMKxGwShepCWQTNm4haJAihjFbzG5dMYr9RtN8WtBLGv38LSs0bCm/K39TnLi4Wt
+         p4gsgCHCjtdrbnHlRGzUh6G57PdePn/XaOK9nJ5orqMS0ckcH+onq1Otyg1sfwMdN5Cc
+         ohMfms0TuZqirtXfb3haDdjaiJoQGMY4AEUMzOXShD04zPSm7ABjwhf+vGWdiMtJX36P
+         j7bcCZbot0cIhj0ndygdil3f/stba53c8m+Eo2ZayCmkR7XgqpmFvrY+m4Vey4uHf1eI
+         Zd1A==
+X-Gm-Message-State: AOAM530IxjDr7AIJCXAuOOsyitQkaU2NVDNeyBbM0NrYmUmd9eHr2bE4
+        JyCQxIv3bAUTU5xeE08pxeOTtA==
+X-Google-Smtp-Source: ABdhPJz4M10SjISdU0pltgjPaL4f+YaI0qG47iOi1pjOPhxq/nbVQat6ri3yJpfU+tnlMkOFDIIUIg==
+X-Received: by 2002:a05:6402:1b11:: with SMTP id by17mr24060442edb.110.1627974477469;
+        Tue, 03 Aug 2021 00:07:57 -0700 (PDT)
+Received: from [192.168.61.233] ([37.160.213.115])
+        by smtp.gmail.com with ESMTPSA id i11sm7537591eds.72.2021.08.03.00.07.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Aug 2021 00:07:56 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 1/3] block, bfq: do not idle if only one cgroup is
+ activated
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <c0b97b5b-c961-6d9f-7033-6da194c6b220@huawei.com>
+Date:   Tue, 3 Aug 2021 09:07:54 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8D4774E6-0DEB-4DC4-B28B-13F5A933E12F@linaro.org>
+References: <20210714094529.758808-1-yukuai3@huawei.com>
+ <20210714094529.758808-2-yukuai3@huawei.com>
+ <7DF40BD4-8F57-4C2E-88A9-CBC3DA2A891E@linaro.org>
+ <c0b97b5b-c961-6d9f-7033-6da194c6b220@huawei.com>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-blkcg->lock depends on q->queue_lock which may depend on another driver
-lock required in irq context, one example is dm-thin:
 
-	Chain exists of:
-	  &pool->lock#3 --> &q->queue_lock --> &blkcg->lock
 
-	 Possible interrupt unsafe locking scenario:
+> Il giorno 31 lug 2021, alle ore 09:10, yukuai (C) <yukuai3@huawei.com> =
+ha scritto:
+>=20
+> On 2021/07/24 15:12, Paolo Valente wrote:
+>>> Il giorno 14 lug 2021, alle ore 11:45, Yu Kuai <yukuai3@huawei.com> =
+ha scritto:
+>>>=20
+>>> If only one group is activated, specifically
+>>> 'bfqd->num_groups_with_pending_reqs =3D=3D 1', there is no need to =
+guarantee
+>>> the same share of the throughput of queues in the same group.
+>>>=20
+>>> Thus change the condition from '> 0' to '> 1' in
+>>> bfq_asymmetric_scenario().
+>> I see your point, and I agree with your goal.  Yet, your change seems
+>> not to suffer from the following problem.
+>> In addition to the groups that are created explicitly, there is the
+>> implicit root group.  So, when bfqd->num_groups_with_pending_reqs =3D=3D=
 
-	       CPU0                    CPU1
-	       ----                    ----
-	  lock(&blkcg->lock);
-	                               local_irq_disable();
-	                               lock(&pool->lock#3);
-	                               lock(&q->queue_lock);
-	  <Interrupt>
-	    lock(&pool->lock#3);
+>> 1, there may be both active processes in the root group and active
+>> processes in the only group created explicitly.  In this case, idling
+>> is needed to preserve service guarantees.
+>> Probably your idea should be improved by making sure that there is
+>> pending I/O only from either the root group or the explicit group.
+>> Thanks,
+>> Paolo
+>=20
+>=20
+> Hi, Paolo
+>=20
 
-Fix the issue by using spin_lock_irq(&blkcg->lock) in ioc_weight_write().
+Hi
 
-Cc: Tejun Heo <tj@kernel.org>
-Reported-by: Bruno Goncalves <bgoncalv@redhat.com>
-Link: https://lore.kernel.org/linux-block/CA+QYu4rzz6079ighEanS3Qq_Dmnczcf45ZoJoHKVLVATTo1e4Q@mail.gmail.com/T/#u
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-iocost.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> I'm trying to add support to judge if root group have pending rqs, the
+> implementation involve setting and clearing the busy state.
+>=20
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 5fac3757e6e0..0e56557cacf2 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -3061,19 +3061,19 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
- 		if (v < CGROUP_WEIGHT_MIN || v > CGROUP_WEIGHT_MAX)
- 			return -EINVAL;
- 
--		spin_lock(&blkcg->lock);
-+		spin_lock_irq(&blkcg->lock);
- 		iocc->dfl_weight = v * WEIGHT_ONE;
- 		hlist_for_each_entry(blkg, &blkcg->blkg_list, blkcg_node) {
- 			struct ioc_gq *iocg = blkg_to_iocg(blkg);
- 
- 			if (iocg) {
--				spin_lock_irq(&iocg->ioc->lock);
-+				spin_lock(&iocg->ioc->lock);
- 				ioc_now(iocg->ioc, &now);
- 				weight_updated(iocg, &now);
--				spin_unlock_irq(&iocg->ioc->lock);
-+				spin_unlock(&iocg->ioc->lock);
- 			}
- 		}
--		spin_unlock(&blkcg->lock);
-+		spin_unlock_irq(&blkcg->lock);
- 
- 		return nbytes;
- 	}
--- 
-2.31.1
+I wouldn't use the busy state, as it does not take in-flight requests
+into account.  For I/O control, the latter are as important as the
+ones still queued in the scheduler.  For this reason, I take in-flight
+requests into account when counting
+bfqd->num_groups_with_pending_reqs.
+
+See, e.g., this
+
+	if (!bfqq->dispatched && !bfq_bfqq_busy(bfqq)) {
+		...
+		bfq_weights_tree_remove(bfqd, bfqq);
+	}
+
+in bfq_completed_request.
+
+I would replicate the same logic in deciding whether the root group
+has pending I/O.
+
+
+> I'm thinking about setting busy in __bfq_activate_entity() if
+> bfq_entity_to_bfqq() return valid bfqq, however I'm not sure where to
+> clear the busy state.
+>=20
+> On the other hand, do you think the way I record rq size info in patch =
+2
+> is OK?
+
+First, let's see what you reply to my suggestion above.
+
+Thanks,
+Paolo
+
+>  If so, I can do this the similar way: say that root group doesn't
+> have any pending requests if bfq haven't dispatch rq from root group =
+for
+> a period of time.
+>=20
+> Thanks
+> Kuai
 
