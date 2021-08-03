@@ -2,105 +2,184 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23B233DE61F
-	for <lists+linux-block@lfdr.de>; Tue,  3 Aug 2021 07:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4237B3DE6FA
+	for <lists+linux-block@lfdr.de>; Tue,  3 Aug 2021 09:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231386AbhHCFYL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 3 Aug 2021 01:24:11 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:41849 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbhHCFYK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 3 Aug 2021 01:24:10 -0400
-Received: by mail-pl1-f170.google.com with SMTP id z3so20988738plg.8
-        for <linux-block@vger.kernel.org>; Mon, 02 Aug 2021 22:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xZqNzR/nhRxizuGm1c26yCOPw7poH5ziksttexHxFoQ=;
-        b=oItI2MZjUSEpNnZa1aQNu+0J+l2r2W2K6tIvCtOugTvVGq98jJ5LkpoCpn42ZmCIwl
-         m104WX0Jc7HthXadfx7WX8Qk2Fi6nRnEkgdpjOJpFfzZWDFnWIJpmpAnM7nUmpsZmjtu
-         mUMfnvp9o/29fA5XiyKvm6LZAwAhJcjvWxEG8fd42iIYzs8cW1J+hIvPVmkhUlLgkrr4
-         FMr8yspD2qP4P0XGXEzIq4GeEEsBpPVKDusr2FCHvc5pkK5yrBhmGR3wVQUNHCnw+mVg
-         w+TK8X+4IU8oDcfsEeUDDbbYivlaLud7iWCZrJSG3uC0XhqeMpvmU+yZpHMPGKyUV5jW
-         igcA==
-X-Gm-Message-State: AOAM530GazQCTDdR3YOzn7Xyd/5dtYpGzXk9ntSGap+DIkLOsdDICwqa
-        ok4cFHfXmnaKtzAxUKQqz6Q=
-X-Google-Smtp-Source: ABdhPJzBU6eh00wQmrgMhWFGIE7vc+D4kqOGQyDndRJ3Y3RTkj5CtPKqzEUwEFipnaPPlbOh9rdN9Q==
-X-Received: by 2002:a17:90b:1882:: with SMTP id mn2mr2621892pjb.213.1627968239085;
-        Mon, 02 Aug 2021 22:23:59 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:8252:5460:56c3:bc73? ([2601:647:4000:d7:8252:5460:56c3:bc73])
-        by smtp.gmail.com with ESMTPSA id u13sm5416644pfn.94.2021.08.02.22.23.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Aug 2021 22:23:58 -0700 (PDT)
-Subject: Re: [PATCH 1/2] loop: Prevent that an I/O scheduler is assigned
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Martijn Coenen <maco@android.com>
-References: <20210803000200.4125318-1-bvanassche@acm.org>
- <20210803000200.4125318-2-bvanassche@acm.org> <YQihyvnN3msaNyDW@T590>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <07388685-bb67-3fc9-83e2-32a4a37fec4d@acm.org>
-Date:   Mon, 2 Aug 2021 22:23:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-MIME-Version: 1.0
-In-Reply-To: <YQihyvnN3msaNyDW@T590>
-Content-Type: text/plain; charset=utf-8
+        id S233997AbhHCHIA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 3 Aug 2021 03:08:00 -0400
+Received: from mx0a-0039f301.pphosted.com ([148.163.133.242]:17928 "EHLO
+        mx0a-0039f301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233677AbhHCHH7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 3 Aug 2021 03:07:59 -0400
+X-Greylist: delayed 404 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Aug 2021 03:07:58 EDT
+Received: from pps.filterd (m0174676.ppops.net [127.0.0.1])
+        by mx0a-0039f301.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1736ueM4028064;
+        Tue, 3 Aug 2021 07:00:54 GMT
+Received: from eur05-am6-obe.outbound.protection.outlook.com (mail-am6eur05lp2112.outbound.protection.outlook.com [104.47.18.112])
+        by mx0a-0039f301.pphosted.com with ESMTP id 3a6xcbgagh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Aug 2021 07:00:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DhkHwAhqhgTR7pV+2V/vbaDjumSk27JhuFdxhl1hz9SU4AGgTbcvFgZfvvCF/xt1E7n217oKhYfO/pxJLC6+gtVJeJO9+xfj0GMy+FEKn+ZqsTr2nCO+4jJDvAn9RJmIF4HRnZ7kyvk5nW/UhLjfGaV7OVux+K8mS8tpBkTcNFlTHGtbRdb+LvPiAS7yOB82zbZ9cBSNlcxVxIKxESllxg/5xg0sp4OJwReL234HsJCoXyGxGTjOSvzco0x4kuz1sOMkJJM/HuiNIzlJ7nB+A9pFc5z95VDgSLvE3tyymFO3xp3jRVc+nvaXqrQGf4WLQi0rnSqo6jaY0mZFP4RTOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vktSTjSfHzp8jVpY2cqL8gHhom1nvCJYQhzHgeCEtU4=;
+ b=WtDFZucKLQMRu6CKCm/ZAWPfYC0YAAt1IoMM2Bz3QMJaP7fl8Xx9CszIabt8vL0qIH7URllwUNpG78GPN7Rz3VbhADQrNRi4aDoR1UbIGxAOZ06DwPNegjQRd97/qb2hUqpLP7DEvHFJbOH3o+0UWGY1vnzkuQixCoMXqBfd+3jT7jqdcfvIo2L/MDP1l7AaccbBx9nQ+AMb8myE7zFWW6sM16+II91Z3YlVTjJ6QjdGyphnnCT0H/Mcnv4YiNjFgUDI8WeMzshJ00MwB6WL9E1AB7+12WxnraQ38v+FqkjmFRWrUaZJxlwRaOosfYWAEMz/6efKArvsX7FNEo17EQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vktSTjSfHzp8jVpY2cqL8gHhom1nvCJYQhzHgeCEtU4=;
+ b=qjauSJFxPtuaLCkh/cUDdTENhiTQV7Pkt9xNA40BZL8hi6H2PmxLrj+s7vMPwC9sBZnHb4c0zTJ0beSl0FC7/T1eimwgswf3Wx9wMy3wjSNq76SOpYE1Uckc2ruuuzAtgkNT3QIxbxJ0ztDS7A1AQovI0ZMelgcja3tCEbL+Mc2CnFut20RIRUHwEDrmbR4Zi54S5/3J7FHxiboduWDtAroyc5CrGz8uxdTHQwnJKWG3DQBvuTYOPBX9FNR9CjDC4fsl1YPOxJxB/tWfjFShyxPs6x/gVH5oEkisroqF2zyee/50/7/3X2Jo5fozPfFqGVsJdN1RwfBJo38qBxXFzg==
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com (2603:10a6:20b:153::17)
+ by AM0PR03MB3874.eurprd03.prod.outlook.com (2603:10a6:208:6c::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15; Tue, 3 Aug
+ 2021 07:00:50 +0000
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::d8d3:ecba:8917:1baa]) by AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::d8d3:ecba:8917:1baa%9]) with mapi id 15.20.4373.026; Tue, 3 Aug 2021
+ 07:00:50 +0000
+From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+To:     Julien Grall <julien@xen.org>, Juergen Gross <jgross@suse.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>, Jan Beulich <jbeulich@suse.com>
+Subject: Re: [PATCH v3 1/3] xen/blkfront: read response from backend only once
+Thread-Topic: [PATCH v3 1/3] xen/blkfront: read response from backend only
+ once
+Thread-Index: AQHXh6eJ91LWa/O//ESEGVadZuHLeatgmVWAgADB8IA=
+Date:   Tue, 3 Aug 2021 07:00:50 +0000
+Message-ID: <1eae114b-46bc-8e97-0973-1c9aad72fc2e@epam.com>
+References: <20210730103854.12681-1-jgross@suse.com>
+ <20210730103854.12681-2-jgross@suse.com>
+ <ce79a0a8-128d-1d50-d160-f612fbd52101@epam.com>
+ <feabcdc6-4166-86d9-b449-42b4abd7e4ec@xen.org>
+In-Reply-To: <feabcdc6-4166-86d9-b449-42b4abd7e4ec@xen.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: xen.org; dkim=none (message not signed)
+ header.d=none;xen.org; dmarc=none action=none header.from=epam.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c69b93de-5be2-4908-ea3a-08d9564c6d9d
+x-ms-traffictypediagnostic: AM0PR03MB3874:
+x-microsoft-antispam-prvs: <AM0PR03MB3874F5A68453A0F6359B096BE7F09@AM0PR03MB3874.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: feMRULD6KP+GHrkpXL6iEZocn/C8+DCmueOTYV3y/nv26HPvwvEC2JLPQ2mhBfrJ/1BmLVkxoORNjZan+nA1W0oTOEu0NKYqDqWpzr8AR2IZtUnEz402CcA9TA65lqt02Pxb73eER3TeDclC+r2wdDSdKnA30mqQQA9Ji5BgCD2iaUurF4FfJluzPMPOYEMx76k4+qn/delKEhmZp2hptVYs8KfSURnQbBh2OmaXYrF/tAxAwNDRk6XLP1WOsXwD8u8VRj5fz2RR9XQxfp6pkMEa7W8JohIjN+1sy38LZNMLxzc4hxQPpOVGokvNHFvm+T7JPHKqbNeammLsiSFPMRGQTXzZeIFNtZWUFff47Lf6y7YvXfSIRpult2H8ox0JRBDdswEyhPUfGv6NmoTVY1cm7lEVp8XchreGxSdoAW3YVp/VeRKUd9ZByrVTdBGwiDZlxZ7ifRLjrn+v4qeybIv79nIqvCc4GtzpqvvsVQ08lZs0clN7t6Qgv9DnmDD7K3OeMefNUgTxLFctahESjL4iibgVO8LW3hjPz+5fx4zNTVwiuN8zA+ytQEzc04FeaWIfp2pHVPbgFjqHu6GBaLNeQda572WsfFEkCwkuwVVPvrVeg75XeZ1ibILJiKE9GcRHOznuvIKyEKFodRmv5YWI88YPfuU4nYBMfhyRV/RyBjtnwemc1r8YzCO+qN5mbvrmuld1eQ6FIF0BgEwUkr1nc46c9MYqy8V5PxAzGG1dDvPr//XJanWhnNQDTHvI
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR03MB6324.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(86362001)(6486002)(8676002)(4326008)(71200400001)(8936002)(36756003)(31686004)(31696002)(478600001)(83380400001)(6512007)(110136005)(5660300002)(2616005)(54906003)(7416002)(122000001)(38100700002)(316002)(2906002)(38070700005)(53546011)(26005)(6506007)(186003)(91956017)(76116006)(66476007)(66556008)(64756008)(66446008)(66946007)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NVZVelRhcUxOV2hLeFdGT3FLWXhwZk9iS2NjUjFXRnVDYW1JUjQwRmVBditR?=
+ =?utf-8?B?ZHJGZGtPYWVTZk1iMG95RC9kVzRjNVdtR2ZLR01DU01BalJ2UGpiejh1b3Iv?=
+ =?utf-8?B?eGRiekhEdnIyTVdhTjFDNW9ncW96QUdwYTVFOEl2L3ZiLzhSU21kVzdXZ0tN?=
+ =?utf-8?B?UWJXeXBIczBLQmR2aVZla2FCYlNmK1FvbTlJSTkxSlNMaUZPMVdCczU3b0NV?=
+ =?utf-8?B?amZlN05wNlBXdE80MWM1YWRUSDFPL1hleStvM0NEelpnNisxY1pmR3kydzNr?=
+ =?utf-8?B?Z2ZCUXVIeDJOME5GU3dlVXdtN2FJa1p1cGlQUWRId2hxMTBucXE4cjkyM2ZT?=
+ =?utf-8?B?c3dsd1hmdUNtczgrWlJ5aVZrOThtVkFUWjRVbFZHb0hrNWFWN0E3d2Jlcysr?=
+ =?utf-8?B?Vm9kdFE4d3BiV1NQbnB2VTdQaWxpZWFnNmVCMFBRZEJWd1MrMnhpUFJFV2oy?=
+ =?utf-8?B?SnBlSUl2NzlvanNPR1VnbU5Gc2RTc2paOWwzZ1VWOThDQXZvZWN5ekEwdlhm?=
+ =?utf-8?B?czYvaDFaTkF5OXdCTGdUSlJQdW1QSFg0ZXRIRWNaSUgvTFJKSTN0RnFuc2w2?=
+ =?utf-8?B?UTdSQzg1eDlvNTRjZTNYNjVXeDQ0WUJVTlJYVFg0MmpQbDNlc01FSVZ4b1U0?=
+ =?utf-8?B?Z3YzRm5IK1J3SUMrTVFVWVkwU3lCL1ljbWthMDdIVndobmRLWlpScXdtcmgv?=
+ =?utf-8?B?ZkVZNTFaZitOVVdTcmtURi9lc2xZZldhL1hpVEczbHg1TkNNUk1vRWRJeFd6?=
+ =?utf-8?B?ODdoUkVINUJ5d1cxTExFVEdSVkJ0VGlnY3NiSUt1ZFJ1SFVudWhBRzF5dG5w?=
+ =?utf-8?B?UzBGWlhvS3VaQWlWL0lEY0ZWRW04U2sybHlxT1Q5MDFvQ1ZZS3hKVHIvLzlX?=
+ =?utf-8?B?VG4yeVFxTTBEMjNpdGNNdmNha0gzR1NuR3UwOXhPV2QvRXE5dHRCL0lYczQ2?=
+ =?utf-8?B?WDh2RXJSV2pTWUtKV1IxNXlTYURVTTJBNjBuRVBtVTRYbTZDY0hWZHRQVHZq?=
+ =?utf-8?B?R1U1T0ZwTWFSdHpPbEFWOUtEbURWSm9IKzZpejlCeHV4UFNoMjllbjFTUnds?=
+ =?utf-8?B?RUNlbWR2TFhYYW9aRjQ5Y3hPM0E5Rk1nVTlVbEdRNldMREp0SVZtV0xhaFFF?=
+ =?utf-8?B?emtxQm9iSFJGWkxYcEtQTEJiYVZaY0ZZUnI4b2dsYks2OTRBaGpBVUxyUE5J?=
+ =?utf-8?B?bkF1a24zK1dMbU9WSUFzZEJvRGN0YzhoQzRFQnJEeXJvRmFtbERZb29YRmtL?=
+ =?utf-8?B?cXRNSTNVVjRzei9YZHpUUlk4eGhsUVRLZnlESnJhcysydVpxRmt6aGY4MVZ1?=
+ =?utf-8?B?bHNXRElURFBHMTVZRW5udkNzQUZ5OGRIWkxGNWRqRTA0MVlCbDVNK0lnWHl4?=
+ =?utf-8?B?ZlU3TVNxVXlFc3ZDMC9BK09LeDROTEszaGJSK2lqT095Y0dyNDN6WDFTUkxL?=
+ =?utf-8?B?Y0tYeGk5ZnNaSG02Tm0xT0V0ZUpzNWxBMXAyUnhmRnZnZUVqZVN0WjRjRnZp?=
+ =?utf-8?B?eEozcHhOSzlkL3B5aUhGVWRBUlp6NVVKM3luMXpSTTVaZzgyRjR2YXpwdFBx?=
+ =?utf-8?B?K2pxdUU5SmNwT2Z5VVZ2VUNGZXRBOVBMZ0xhTmUra3BVR0hmbEdESTJqbkJW?=
+ =?utf-8?B?KzYwWEo4SnRyNE1xK1ROQUdVRE5ZMGhDSCt0N2FSa1dKVnA1S040TmN0bDl4?=
+ =?utf-8?B?ZTBzZjRYeGVZOEwxYnp6ZlQySTltaTN5ZW5CVlZaNmsrSjVJUjYvZzlXeWpJ?=
+ =?utf-8?Q?9GlrsdSuxmVey/O5VMlxf71tqcV7P1TGWJ53LIT?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ABE9D0E51CD43A4EB5B76328157059AB@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR03MB6324.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c69b93de-5be2-4908-ea3a-08d9564c6d9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2021 07:00:50.5736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K2b3iOzMN4mh2YdpeV7Jt5S2ZZMlX4IEAmUQipfkOkpUAQ7pkVxgsVYgJF0eCfp1e6Hmb49vPElk81gOVg+KCkGlyLaXVg4N+o75kk2K2FggLwSgz34PK4BsufY+QGpL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB3874
+X-Proofpoint-GUID: rvfyED4WJCIGa0zAcWKOqfDVlOlTXb9N
+X-Proofpoint-ORIG-GUID: rvfyED4WJCIGa0zAcWKOqfDVlOlTXb9N
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-03_02:2021-08-02,2021-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ spamscore=0 clxscore=1011 suspectscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2108030046
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/2/21 6:54 PM, Ming Lei wrote:
-> On Mon, Aug 02, 2021 at 05:01:59PM -0700, Bart Van Assche wrote:
->> Loop devices have a single hardware queue. Hence, the block layer function
->> elevator_get_default() selects the mq-deadline scheduler for loop devices.
->> Using the mq-deadline scheduler or any other I/O scheduler for loop devices
->> incurs unnecessary overhead. Make the loop driver pass the flag
->> BLK_MQ_F_NOSCHED to the block layer core such that no I/O scheduler can be
->> associated with block devices. This approach has an advantage compared to
->> letting udevd change the loop I/O scheduler to none, namely that
->> synchronize_rcu() does not get called.
->>
->> It is intentional that the flag BLK_MQ_F_SHOULD_MERGE is preserved.
->>
->> This patch reduces the Android boot time on my test setup with 0.5 seconds.
-> 
-> Can you investigate why none reduces Android boot time? Or reproduce &
-> understand it by a fio simulation on your setting?
-
-Hi Ming,
-
-The software process called apexd creates multiple loop devices while
-the device is booting. Using BLK_MQ_F_NO_SCHED is faster than letting
-apexd change the I/O scheduler from mq-deadline into 'none' since the
-latter involves calling synchronize_rcu() once per loop device.
-
->> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
->> index f8486d9b75a4..9fca3ab3988d 100644
->> --- a/drivers/block/loop.c
->> +++ b/drivers/block/loop.c
->> @@ -2333,7 +2333,8 @@ static int loop_add(int i)
->>  	lo->tag_set.queue_depth = 128;
->>  	lo->tag_set.numa_node = NUMA_NO_NODE;
->>  	lo->tag_set.cmd_size = sizeof(struct loop_cmd);
->> -	lo->tag_set.flags = BLK_MQ_F_SHOULD_MERGE | BLK_MQ_F_STACKING;
->> +	lo->tag_set.flags = BLK_MQ_F_SHOULD_MERGE | BLK_MQ_F_STACKING |
->> +		BLK_MQ_F_NO_SCHED;
-> 
-> Loop directio needs io merge, so it isn't good to set NO_SCHED
-> unconditionally, see:
-> 
-> 40326d8a33d5 ("block/loop: allow request merge for directio mode")
-
-Setting BLK_MQ_F_NO_SCHED only for buffered I/O mode could be tricky
-since the loop driver creates a request queue before the I/O mode is
-configured. Anyway, I will look into this.
-
-Bart.
+DQpPbiAwMi4wOC4yMSAyMjoyNiwgSnVsaWVuIEdyYWxsIHdyb3RlOg0KPiBIaSwNCj4NCj4gT24g
+MDIvMDgvMjAyMSAxNTowNiwgT2xla3NhbmRyIEFuZHJ1c2hjaGVua28gd3JvdGU6DQo+PiBPbiAz
+MC4wNy4yMSAxMzozOCwgSnVlcmdlbiBHcm9zcyB3cm90ZToNCj4+PiBJbiBvcmRlciB0byBhdm9p
+ZCBwcm9ibGVtcyBpbiBjYXNlIHRoZSBiYWNrZW5kIGlzIG1vZGlmeWluZyBhIHJlc3BvbnNlDQo+
+Pj4gb24gdGhlIHJpbmcgcGFnZSB3aGlsZSB0aGUgZnJvbnRlbmQgaGFzIGFscmVhZHkgc2VlbiBp
+dCwganVzdCByZWFkIHRoZQ0KPj4+IHJlc3BvbnNlIGludG8gYSBsb2NhbCBidWZmZXIgaW4gb25l
+IGdvIGFuZCB0aGVuIG9wZXJhdGUgb24gdGhhdCBidWZmZXINCj4+PiBvbmx5Lg0KPj4+DQo+Pj4g
+U2lnbmVkLW9mZi1ieTogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPg0KPj4+IFJldmll
+d2VkLWJ5OiBKYW4gQmV1bGljaCA8amJldWxpY2hAc3VzZS5jb20+DQo+Pj4gQWNrZWQtYnk6IFJv
+Z2VyIFBhdSBNb25uw6kgPHJvZ2VyLnBhdUBjaXRyaXguY29tPg0KPj4+IC0tLQ0KPj4+IMKgwqAg
+ZHJpdmVycy9ibG9jay94ZW4tYmxrZnJvbnQuYyB8IDM1ICsrKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLS0tDQo+Pj4gwqDCoCAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwg
+MTcgZGVsZXRpb25zKC0pDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ibG9jay94ZW4t
+YmxrZnJvbnQuYyBiL2RyaXZlcnMvYmxvY2sveGVuLWJsa2Zyb250LmMNCj4+PiBpbmRleCBkODNm
+ZWUyMWY2YzUuLjE1ZTg0MDI4NzczNCAxMDA2NDQNCj4+PiAtLS0gYS9kcml2ZXJzL2Jsb2NrL3hl
+bi1ibGtmcm9udC5jDQo+Pj4gKysrIGIvZHJpdmVycy9ibG9jay94ZW4tYmxrZnJvbnQuYw0KPj4+
+IEBAIC0xNDk2LDcgKzE0OTYsNyBAQCBzdGF0aWMgYm9vbCBibGtpZl9jb21wbGV0aW9uKHVuc2ln
+bmVkIGxvbmcgKmlkLA0KPj4+IMKgwqAgc3RhdGljIGlycXJldHVybl90IGJsa2lmX2ludGVycnVw
+dChpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+Pj4gwqDCoCB7DQo+Pj4gwqDCoMKgwqDCoMKgIHN0
+cnVjdCByZXF1ZXN0ICpyZXE7DQo+Pj4gLcKgwqDCoCBzdHJ1Y3QgYmxraWZfcmVzcG9uc2UgKmJy
+ZXQ7DQo+Pj4gK8KgwqDCoCBzdHJ1Y3QgYmxraWZfcmVzcG9uc2UgYnJldDsNCj4+PiDCoMKgwqDC
+oMKgwqAgUklOR19JRFggaSwgcnA7DQo+Pj4gwqDCoMKgwqDCoMKgIHVuc2lnbmVkIGxvbmcgZmxh
+Z3M7DQo+Pj4gwqDCoMKgwqDCoMKgIHN0cnVjdCBibGtmcm9udF9yaW5nX2luZm8gKnJpbmZvID0g
+KHN0cnVjdCBibGtmcm9udF9yaW5nX2luZm8gKilkZXZfaWQ7DQo+Pj4gQEAgLTE1MTMsOCArMTUx
+Myw5IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBibGtpZl9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAq
+ZGV2X2lkKQ0KPj4+IMKgwqDCoMKgwqDCoCBmb3IgKGkgPSByaW5mby0+cmluZy5yc3BfY29uczsg
+aSAhPSBycDsgaSsrKSB7DQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgbG9uZyBp
+ZDsNCj4+PiDCoMKgIC3CoMKgwqDCoMKgwqDCoCBicmV0ID0gUklOR19HRVRfUkVTUE9OU0UoJnJp
+bmZvLT5yaW5nLCBpKTsNCj4+PiAtwqDCoMKgwqDCoMKgwqAgaWTCoMKgID0gYnJldC0+aWQ7DQo+
+Pj4gK8KgwqDCoMKgwqDCoMKgIFJJTkdfQ09QWV9SRVNQT05TRSgmcmluZm8tPnJpbmcsIGksICZi
+cmV0KTsNCj4+DQo+PiBBcyBwZXIgbXkgdW5kZXJzdGFuZGluZyBjb3B5aW5nIGlzIHN0aWxsIG5v
+dCBhbiBhdG9taWMgb3BlcmF0aW9uIGFzIHRoZSByZXF1ZXN0L3Jlc3BvbnNlDQo+Pg0KPj4gYXJl
+IG11bHRpLWJ5dGUgc3RydWN0dXJlcyBpbiBnZW5lcmFsLiBJT1csIHdoYXQgcHJldmVudHMgdGhl
+IGJhY2tlbmQgZnJvbSBtb2RpZnlpbmcgdGhlIHJpbmcgd2hpbGUNCj4+DQo+PiB3ZSBhcmUgY29w
+eWluZz8NCj4NCj4gTm90aGluZyBhbmQsIEkgYmVsaWV2ZSwgeW91IGFyZSBuZXZlciBnb2luZyB0
+byBiZSBhYmxlIHRvIGVuc3VyZSBhdG9taWNpdHkgd2l0aCBsYXJnZSBzdHJ1Y3R1cmUgKGF0IGxl
+YXN0IGJldHdlZW4gZW50aXR5IHRoYXQgZG9lc24ndCB0cnVzdCBlYWNoIG90aGVyKS4NCj4NCj4g
+SG93ZXZlciwgd2hhdCB5b3UgY2FuIGRvIGlzIGNvcHlpbmcgdGhlIHJlc3BvbnNlIG9uY2UsIGNo
+ZWNrIHRoYXQgaXQgaXMgY29uc2lzdGVudCBhbmQgdGhlbiB1c2UgaXQuIElmIGl0IGlzIG5vdCBj
+b25zaXN0ZW50LCB0aGVuIHlvdSBjYW4gcmVwb3J0IGFuIGVycm9yLg0KPg0KPiBUaGlzIGlzIGJl
+dHRlciB0aGFuIHdoYXQncyBjdXJyZW50bHkgaW4gdHJlZS4gSU9XIHdlIG1heSBoYXZlIG11bHRp
+cGxlIHJlYWQgc28gdGhlIGNvZGUgaXMgcHJvbmUgdG8gVE9DVE9VLg0KDQpBZ3JlZSwNCg0KVGhh
+bmtzDQoNCj4NCj4gQ2hlZXJzLA0KPg==
