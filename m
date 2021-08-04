@@ -2,89 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D923DFF35
-	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 12:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 001693DFE8A
+	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 11:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237475AbhHDKMS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Aug 2021 06:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237586AbhHDKLC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Aug 2021 06:11:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5A3C0617A0;
-        Wed,  4 Aug 2021 03:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=GMfM9EsZUBHncaik750rjQrck1K0EDt7Zyd8DyDsQR8=; b=tr+JWjNanWktxua2tu8KBEVQPM
-        VyctgS15pe259rzKfF5Cnl9zsGOZwGuYm9KKXEG9KkVU/OXjXmoutUxD3KtVa1hc7sIzDOL0xBHg6
-        ouWKg49YE/w0a3I/5CyE5im2/IkgIt5h36qDG6iEVKLdm0bYYEaWZQNNpQ3/ly3BhHTT+VGChTRSA
-        t1t4AV538fKbiuL2Yzgst/hi/JUFHCOzwHqdzg8ut46IDHJ3Z60UfyB0/ffmOuu7Ku3k+weyK559G
-        73X58xMPec7XJUSNLOyS/qJ7yYdzHQEljjfYG426vMaByMMBIZ1fvI2CSO1n9hwhGNLZQ/aY/Dvn+
-        uR6ZApew==;
-Received: from [2a02:1205:5023:1f80:c068:bd3d:78b3:7d37] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mBDoj-005g7I-Ho; Wed, 04 Aug 2021 10:08:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Song Liu <song@kernel.org>, Mike Snitzer <snitzer@redhat.com>,
-        Coly Li <colyli@suse.de>, Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH 15/15] nvme: use bvec_virt
-Date:   Wed,  4 Aug 2021 11:56:34 +0200
-Message-Id: <20210804095634.460779-16-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210804095634.460779-1-hch@lst.de>
-References: <20210804095634.460779-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        id S236692AbhHDJ7p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Aug 2021 05:59:45 -0400
+Received: from mout.gmx.net ([212.227.17.21]:46709 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236659AbhHDJ7p (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 4 Aug 2021 05:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1628071170;
+        bh=HvECcGFGcJTAE2bHM41N+X3Cm759WthDQjyaOyT5cak=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=LH93GhB+5GNwtr8xe1XS4zsHhztFDQhnQaHrvkUZrUUWhhZ4Wo1C7L+bB/uvHxIod
+         9g0MjREiR4DT7RZ8mPMdtWOISzPnxngGiscQNyN99fFFShTo9QYq0KRSorx9yWIeZL
+         EYybRJZi8XRy5MOLHT9sP5T5cJXoRAdpmwvRYJqw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from Valinor ([82.203.167.171]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MfpSb-1mn3Tn1suv-00gKab; Wed, 04
+ Aug 2021 11:59:30 +0200
+Date:   Wed, 4 Aug 2021 13:01:36 +0300
+From:   Lauri Kasanen <cand@gmx.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org
+Subject: Re: [PATCH] n64cart: fix the dma address in n64cart_do_bvec
+Message-Id: <20210804130136.55f633eeb4522f844463159a@gmx.com>
+In-Reply-To: <20210804094958.460298-1-hch@lst.de>
+References: <20210804094958.460298-1-hch@lst.de>
+X-Mailer: Sylpheed 3.5.0 (GTK+ 2.18.6; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dIngT9OU74F4K/raFxfjZqZIFlSezg4YGnos4SCY4Xafl7GCk3j
+ EOU9SKS+SjUDXcBtjOOO0xJCqKbs8ipFI5CC5jJ3Cm/YFBztps7vK5+yEY3tND36c2iujhS
+ VJhdJ+O2RoFMwNSrwZ/zyYFDrV9s3HB2P4SQg/gZfoq0heVHhI/reXrrTPWhcWG/itgiSFz
+ J2dyQJOQg8FE2wlyGZr7w==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ymQh6oyFhtk=:+UxAhYL/Xu3bdLX+zIeF5r
+ 5iUunfgytZR2RGXLX91qlaTr6zVkeHgxffLxwxM0mOZ9bpMwZu1TF4jDVNH+WSoTM8E9UPJkv
+ 4azca0mNbhpmcJ1/VFVISr+/nNkM+HhADOxG7ZxgI2+ukpM6Z7RmwwGZjMWPKfzpP9IZsabbd
+ kW/J6aGn8wqGRzvi/E/XagShIGvWBV6OsHz95/0J97eFtyrskth8aUE1FC7ojNALpmp+2f1qP
+ 3vwfnEPd2t3R/1V/FUsMuI1HZ6Xm4Bc9mTRGlihUrMrUxz7MnlD6D0V2jdmfA58rzc4TySzUS
+ mJi8LQsksQbtkyyfudBCt9ax3Fj3gQXDLE6KGdc9UiWoMPCswxsl+H9aFJb6xtKVUHEQF2A7q
+ 3ljHuPVX88y0MvCLSyAwdYrprxp+yjkrc2pLAI/jtBNsnfY00W3oitCHqDIbML969evfKUPFz
+ 3JfXjCHtkHDOzCT4I4xbrx5ifwasMOX8qOgNer+IJ4FlfGPEnl7wLN1drRv47Nh2n+DsO7F+M
+ 7gybi9ggnT0bga8PCYv7IPLSVnUToelR7Zz/41lbfeSugPYep2XrEzhRwqVU+L+wQginxQHFe
+ Enq4TSBMEqRYdXJtKo6IVm0FfGxuBlgHDAgIgs/e7+jb6tjNBP+TCChaOQ76iU+H93lwQ6jai
+ C6xaF45InFIVdx6DVDc2AL1scnnxIm97RfqqR9xr/+7pRcQxClDrFhhJillVPF1O63+u1DV05
+ WX1eRNnf937Ox9E+raIosEXGiyF2YSJ7vAwRqkALDfvfwX912Li2Nit2WkF2SavDbGCsa12pJ
+ pginbMAz1BtI+Dd+Me38DnK4PjOimeifvk5pGUV8vaejra2uSW91zF+0RWmDVXOIbRtFAIVd7
+ XIzlcjDT2hPo4bzw58HdOiIbMXeW9/5uIch1JLYqvov5R+IMEIGEE6K5jCNsSk92mAH+1MjFn
+ dwV1Nz9czPLwZy74bQceopcQxRUAQRcR+yHX5GpTDQFSDp8p/6R1b0NdHZZIJ1yS9LU3qv4Lg
+ GchzbMdJc02QMm8x75wzXXX+XMZ32pzBpPCwNzDipWu1QZ3aB39Np8/ncjuu0dMnIIY8UCLoT
+ i8afrj0BMDu9yC1hSCwtGdmZttmWJ3/xJ2r
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use bvec_virt instead of open coding it.
+On Wed,  4 Aug 2021 11:49:58 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/core.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> dma_map_bvec already takes bv_offset into account.
+>
+> Fixes: 9b2a2bbbb4d0 ("block: Add n64 cart driver")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/block/n64cart.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/block/n64cart.c b/drivers/block/n64cart.c
+> index 7b4dd10af9ec..c84be0028f63 100644
+> --- a/drivers/block/n64cart.c
+> +++ b/drivers/block/n64cart.c
+> @@ -74,7 +74,7 @@ static bool n64cart_do_bvec(struct device *dev, struct=
+ bio_vec *bv, u32 pos)
+>
+>  	n64cart_wait_dma();
+>
+> -	n64cart_write_reg(PI_DRAM_REG, dma_addr + bv->bv_offset);
+> +	n64cart_write_reg(PI_DRAM_REG, dma_addr);
+>  	n64cart_write_reg(PI_CART_REG, (bstart | CART_DOMAIN) & CART_MAX);
+>  	n64cart_write_reg(PI_WRITE_REG, bv->bv_len - 1);
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index dfd9dec0c1f6..02ce94b2906b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -968,12 +968,11 @@ void nvme_cleanup_cmd(struct request *req)
- {
- 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD) {
- 		struct nvme_ctrl *ctrl = nvme_req(req)->ctrl;
--		struct page *page = req->special_vec.bv_page;
- 
--		if (page == ctrl->discard_page)
-+		if (req->special_vec.bv_page == ctrl->discard_page)
- 			clear_bit_unlock(0, &ctrl->discard_page_busy);
- 		else
--			kfree(page_address(page) + req->special_vec.bv_offset);
-+			kfree(bvec_virt(&req->special_vec));
- 	}
- }
- EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
--- 
-2.30.2
+Hm, then how did it work? Does it always happen to be zero?
 
+Have you tested this? I don't have the equipment currently.
+
+- Lauri
