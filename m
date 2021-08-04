@@ -2,91 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 001693DFE8A
-	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 11:59:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75A843DFEB6
+	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 12:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236692AbhHDJ7p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Aug 2021 05:59:45 -0400
-Received: from mout.gmx.net ([212.227.17.21]:46709 "EHLO mout.gmx.net"
+        id S237286AbhHDKCS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Aug 2021 06:02:18 -0400
+Received: from verein.lst.de ([213.95.11.211]:46473 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236659AbhHDJ7p (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 4 Aug 2021 05:59:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628071170;
-        bh=HvECcGFGcJTAE2bHM41N+X3Cm759WthDQjyaOyT5cak=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=LH93GhB+5GNwtr8xe1XS4zsHhztFDQhnQaHrvkUZrUUWhhZ4Wo1C7L+bB/uvHxIod
-         9g0MjREiR4DT7RZ8mPMdtWOISzPnxngGiscQNyN99fFFShTo9QYq0KRSorx9yWIeZL
-         EYybRJZi8XRy5MOLHT9sP5T5cJXoRAdpmwvRYJqw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from Valinor ([82.203.167.171]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MfpSb-1mn3Tn1suv-00gKab; Wed, 04
- Aug 2021 11:59:30 +0200
-Date:   Wed, 4 Aug 2021 13:01:36 +0300
-From:   Lauri Kasanen <cand@gmx.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org
+        id S237234AbhHDKCR (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 4 Aug 2021 06:02:17 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 766E967373; Wed,  4 Aug 2021 12:02:03 +0200 (CEST)
+Date:   Wed, 4 Aug 2021 12:02:03 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lauri Kasanen <cand@gmx.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org
 Subject: Re: [PATCH] n64cart: fix the dma address in n64cart_do_bvec
-Message-Id: <20210804130136.55f633eeb4522f844463159a@gmx.com>
-In-Reply-To: <20210804094958.460298-1-hch@lst.de>
-References: <20210804094958.460298-1-hch@lst.de>
-X-Mailer: Sylpheed 3.5.0 (GTK+ 2.18.6; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dIngT9OU74F4K/raFxfjZqZIFlSezg4YGnos4SCY4Xafl7GCk3j
- EOU9SKS+SjUDXcBtjOOO0xJCqKbs8ipFI5CC5jJ3Cm/YFBztps7vK5+yEY3tND36c2iujhS
- VJhdJ+O2RoFMwNSrwZ/zyYFDrV9s3HB2P4SQg/gZfoq0heVHhI/reXrrTPWhcWG/itgiSFz
- J2dyQJOQg8FE2wlyGZr7w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ymQh6oyFhtk=:+UxAhYL/Xu3bdLX+zIeF5r
- 5iUunfgytZR2RGXLX91qlaTr6zVkeHgxffLxwxM0mOZ9bpMwZu1TF4jDVNH+WSoTM8E9UPJkv
- 4azca0mNbhpmcJ1/VFVISr+/nNkM+HhADOxG7ZxgI2+ukpM6Z7RmwwGZjMWPKfzpP9IZsabbd
- kW/J6aGn8wqGRzvi/E/XagShIGvWBV6OsHz95/0J97eFtyrskth8aUE1FC7ojNALpmp+2f1qP
- 3vwfnEPd2t3R/1V/FUsMuI1HZ6Xm4Bc9mTRGlihUrMrUxz7MnlD6D0V2jdmfA58rzc4TySzUS
- mJi8LQsksQbtkyyfudBCt9ax3Fj3gQXDLE6KGdc9UiWoMPCswxsl+H9aFJb6xtKVUHEQF2A7q
- 3ljHuPVX88y0MvCLSyAwdYrprxp+yjkrc2pLAI/jtBNsnfY00W3oitCHqDIbML969evfKUPFz
- 3JfXjCHtkHDOzCT4I4xbrx5ifwasMOX8qOgNer+IJ4FlfGPEnl7wLN1drRv47Nh2n+DsO7F+M
- 7gybi9ggnT0bga8PCYv7IPLSVnUToelR7Zz/41lbfeSugPYep2XrEzhRwqVU+L+wQginxQHFe
- Enq4TSBMEqRYdXJtKo6IVm0FfGxuBlgHDAgIgs/e7+jb6tjNBP+TCChaOQ76iU+H93lwQ6jai
- C6xaF45InFIVdx6DVDc2AL1scnnxIm97RfqqR9xr/+7pRcQxClDrFhhJillVPF1O63+u1DV05
- WX1eRNnf937Ox9E+raIosEXGiyF2YSJ7vAwRqkALDfvfwX912Li2Nit2WkF2SavDbGCsa12pJ
- pginbMAz1BtI+Dd+Me38DnK4PjOimeifvk5pGUV8vaejra2uSW91zF+0RWmDVXOIbRtFAIVd7
- XIzlcjDT2hPo4bzw58HdOiIbMXeW9/5uIch1JLYqvov5R+IMEIGEE6K5jCNsSk92mAH+1MjFn
- dwV1Nz9czPLwZy74bQceopcQxRUAQRcR+yHX5GpTDQFSDp8p/6R1b0NdHZZIJ1yS9LU3qv4Lg
- GchzbMdJc02QMm8x75wzXXX+XMZ32pzBpPCwNzDipWu1QZ3aB39Np8/ncjuu0dMnIIY8UCLoT
- i8afrj0BMDu9yC1hSCwtGdmZttmWJ3/xJ2r
+Message-ID: <20210804100203.GA20072@lst.de>
+References: <20210804094958.460298-1-hch@lst.de> <20210804130136.55f633eeb4522f844463159a@gmx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210804130136.55f633eeb4522f844463159a@gmx.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed,  4 Aug 2021 11:49:58 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Aug 04, 2021 at 01:01:36PM +0300, Lauri Kasanen wrote:
+> > diff --git a/drivers/block/n64cart.c b/drivers/block/n64cart.c
+> > index 7b4dd10af9ec..c84be0028f63 100644
+> > --- a/drivers/block/n64cart.c
+> > +++ b/drivers/block/n64cart.c
+> > @@ -74,7 +74,7 @@ static bool n64cart_do_bvec(struct device *dev, struct bio_vec *bv, u32 pos)
+> >
+> >  	n64cart_wait_dma();
+> >
+> > -	n64cart_write_reg(PI_DRAM_REG, dma_addr + bv->bv_offset);
+> > +	n64cart_write_reg(PI_DRAM_REG, dma_addr);
+> >  	n64cart_write_reg(PI_CART_REG, (bstart | CART_DOMAIN) & CART_MAX);
+> >  	n64cart_write_reg(PI_WRITE_REG, bv->bv_len - 1);
+> 
+> Hm, then how did it work? Does it always happen to be zero?
 
-> dma_map_bvec already takes bv_offset into account.
->
-> Fixes: 9b2a2bbbb4d0 ("block: Add n64 cart driver")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/n64cart.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/n64cart.c b/drivers/block/n64cart.c
-> index 7b4dd10af9ec..c84be0028f63 100644
-> --- a/drivers/block/n64cart.c
-> +++ b/drivers/block/n64cart.c
-> @@ -74,7 +74,7 @@ static bool n64cart_do_bvec(struct device *dev, struct=
- bio_vec *bv, u32 pos)
->
->  	n64cart_wait_dma();
->
-> -	n64cart_write_reg(PI_DRAM_REG, dma_addr + bv->bv_offset);
-> +	n64cart_write_reg(PI_DRAM_REG, dma_addr);
->  	n64cart_write_reg(PI_CART_REG, (bstart | CART_DOMAIN) & CART_MAX);
->  	n64cart_write_reg(PI_WRITE_REG, bv->bv_len - 1);
+It isn't always zero, but for your use cases it might.  That is if
+you have a page aligned buffer (e.g. the page cache) it tends to be
+zero.
 
-Hm, then how did it work? Does it always happen to be zero?
+> Have you tested this? I don't have the equipment currently.
 
-Have you tested this? I don't have the equipment currently.
-
-- Lauri
+No, I don't.  I'm just auditing uses of bv_offset and this one is
+clearly bogus.
