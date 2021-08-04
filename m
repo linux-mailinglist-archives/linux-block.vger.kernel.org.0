@@ -2,55 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A843DFEB6
-	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 12:02:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5229E3DFF2E
+	for <lists+linux-block@lfdr.de>; Wed,  4 Aug 2021 12:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237286AbhHDKCS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Aug 2021 06:02:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:46473 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237234AbhHDKCR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 4 Aug 2021 06:02:17 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 766E967373; Wed,  4 Aug 2021 12:02:03 +0200 (CEST)
-Date:   Wed, 4 Aug 2021 12:02:03 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lauri Kasanen <cand@gmx.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH] n64cart: fix the dma address in n64cart_do_bvec
-Message-ID: <20210804100203.GA20072@lst.de>
-References: <20210804094958.460298-1-hch@lst.de> <20210804130136.55f633eeb4522f844463159a@gmx.com>
+        id S237460AbhHDKKY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Aug 2021 06:10:24 -0400
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:56360 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237455AbhHDKKX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Aug 2021 06:10:23 -0400
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1mBDqd-0007cx-Mc; Wed, 04 Aug 2021 10:10:03 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1mBDqa-00016q-Pt; Wed, 04 Aug 2021 11:10:03 +0100
+Subject: Re: [PATCH 11/15] ubd: use bvec_virt
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Geoff Levand <geoff@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Song Liu <song@kernel.org>, Mike Snitzer <snitzer@redhat.com>,
+        Coly Li <colyli@suse.de>, Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+References: <20210804095634.460779-1-hch@lst.de>
+ <20210804095634.460779-12-hch@lst.de>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <0abadeca-d0fc-26ad-088e-2b137a029957@cambridgegreys.com>
+Date:   Wed, 4 Aug 2021 11:10:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210804130136.55f633eeb4522f844463159a@gmx.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20210804095634.460779-12-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0
+X-Spam-Score: -1.0
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 01:01:36PM +0300, Lauri Kasanen wrote:
-> > diff --git a/drivers/block/n64cart.c b/drivers/block/n64cart.c
-> > index 7b4dd10af9ec..c84be0028f63 100644
-> > --- a/drivers/block/n64cart.c
-> > +++ b/drivers/block/n64cart.c
-> > @@ -74,7 +74,7 @@ static bool n64cart_do_bvec(struct device *dev, struct bio_vec *bv, u32 pos)
-> >
-> >  	n64cart_wait_dma();
-> >
-> > -	n64cart_write_reg(PI_DRAM_REG, dma_addr + bv->bv_offset);
-> > +	n64cart_write_reg(PI_DRAM_REG, dma_addr);
-> >  	n64cart_write_reg(PI_CART_REG, (bstart | CART_DOMAIN) & CART_MAX);
-> >  	n64cart_write_reg(PI_WRITE_REG, bv->bv_len - 1);
+
+
+On 04/08/2021 10:56, Christoph Hellwig wrote:
+> Use bvec_virt instead of open coding it.
 > 
-> Hm, then how did it work? Does it always happen to be zero?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/um/drivers/ubd_kern.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+> index e497185dd393..cd9dc0556e91 100644
+> --- a/arch/um/drivers/ubd_kern.c
+> +++ b/arch/um/drivers/ubd_kern.c
+> @@ -1268,8 +1268,7 @@ static void ubd_map_req(struct ubd *dev, struct io_thread_req *io_req,
+>   		rq_for_each_segment(bvec, req, iter) {
+>   			BUG_ON(i >= io_req->desc_cnt);
+>   
+> -			io_req->io_desc[i].buffer =
+> -				page_address(bvec.bv_page) + bvec.bv_offset;
+> +			io_req->io_desc[i].buffer = bvec_virt(&bvec);
+>   			io_req->io_desc[i].length = bvec.bv_len;
+>   			i++;
+>   		}
+> 
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-It isn't always zero, but for your use cases it might.  That is if
-you have a page aligned buffer (e.g. the page cache) it tends to be
-zero.
-
-> Have you tested this? I don't have the equipment currently.
-
-No, I don't.  I'm just auditing uses of bv_offset and this one is
-clearly bogus.
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
