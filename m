@@ -2,71 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC11B3E1B37
-	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 20:27:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CC063E1AC3
+	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 19:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238463AbhHES2E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Aug 2021 14:28:04 -0400
-Received: from tartarus.angband.pl ([51.83.246.204]:60480 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbhHES2D (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 14:28:03 -0400
-X-Greylist: delayed 2259 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Aug 2021 14:28:03 EDT
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.94.2)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1mBhR0-001psM-2y; Thu, 05 Aug 2021 19:45:34 +0200
-Date:   Thu, 5 Aug 2021 19:45:34 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, jlayton@kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dchinner@redhat.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Could it be made possible to offer "supplementary" data to a DIO
- write ?
-Message-ID: <YQwjvlvnBNPJbMwc@angband.pl>
-References: <YQvpDP/tdkG4MMGs@casper.infradead.org>
- <YQvbiCubotHz6cN7@casper.infradead.org>
- <1017390.1628158757@warthog.procyon.org.uk>
- <1170464.1628168823@warthog.procyon.org.uk>
- <1186271.1628174281@warthog.procyon.org.uk>
+        id S240731AbhHERts (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Aug 2021 13:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240522AbhHERtr (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 13:49:47 -0400
+Received: from mail-oo1-xc2c.google.com (mail-oo1-xc2c.google.com [IPv6:2607:f8b0:4864:20::c2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E72C061765
+        for <linux-block@vger.kernel.org>; Thu,  5 Aug 2021 10:49:32 -0700 (PDT)
+Received: by mail-oo1-xc2c.google.com with SMTP id b25-20020a4ac2990000b0290263aab95660so1525912ooq.13
+        for <linux-block@vger.kernel.org>; Thu, 05 Aug 2021 10:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kkiaRg7roULA4rPWTzyKUAotq3+PaXnsdiPOMH2IJRk=;
+        b=OkJfdu3xYIZ3l8Cdpu435rPmlDaiYqZcSiETAMiNXO43rVbnolFM4A4oO2+SN3W14x
+         C4I0zLmkb2QE07H2+cbWaaGwVyGL0IBHMytdKN/A/edp/pLWfyFI/ZUaRc4xwB1h/VtN
+         9RlNy7/iAIByh4P2eGMroSe1Z4z5LWHHUA3++LSG7iv6/C2freg/wBK1Jya96dWsuNCd
+         wBHEgVZdRXlAylUH4z9Fscg8xxOAwG+SK81D7NqvtT5CveXO0fKwwuXtgpx6cqywFVOi
+         lhVMy7x99TauWDrq358bIs1ADYoPuhadTy6UnGgpHGimoF4vyEBxGQm7gAWisw7Ffqly
+         wZOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kkiaRg7roULA4rPWTzyKUAotq3+PaXnsdiPOMH2IJRk=;
+        b=adedKV8dLxngq6j8ac7UN/2+MtM6JZZnbwDiYyGLutq1tXz6gf8Tfr0aldnFacq3y0
+         4kyh6jbTkkR2448s6bhDe/gbipOZqcjiWTmofdBuidlZue8+7OE+NysAbOoIL6dc0s2C
+         mPFaJrKCziGZctfSh+3wNpyQ0RcrJ7YDMnPZc/wARReXFYQbAPAg44OpC0q2Iha24Fyq
+         RjXwU7AW0YwvaaF86H0OIKYsKUMmKAKbDJdRnwbTjGJ/kQPTW8WJ47lVurXHQvml00Kd
+         JSZ93yo5/FXam8aETyDXIC4bKwzZ53p1CUeMgnvHcUvERcY76qMEyxQnBL0NCqFhY1bZ
+         CulQ==
+X-Gm-Message-State: AOAM530H9Hek6LTZqxWZcX4lS2UV3i2yF+VcQByfiub+9BDlvBU/EfUn
+        4V20p++XnWwE7GprFRxEjFp/kNANeBOCHUdP
+X-Google-Smtp-Source: ABdhPJxQdki8yvJX1U95w1cJrMwxV1x+iNefnRHC3YF6rqv8+GajkVBEGcdQOmYgzCF9MY0XZXnalA==
+X-Received: by 2002:a4a:6507:: with SMTP id y7mr1602072ooc.38.1628185771402;
+        Thu, 05 Aug 2021 10:49:31 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id u6sm1159251oiw.36.2021.08.05.10.49.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Aug 2021 10:49:31 -0700 (PDT)
+Subject: Re: [PATCH] block/partitions/ldm.c: Fix a kernel-doc warning
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20210805173447.3249906-1-bvanassche@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <efc3abed-09be-293d-9c8d-2f6c1f18f0aa@kernel.dk>
+Date:   Thu, 5 Aug 2021 11:49:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20210805173447.3249906-1-bvanassche@acm.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1186271.1628174281@warthog.procyon.org.uk>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 03:38:01PM +0100, David Howells wrote:
-> Generally, I prefer to write back the minimum I can get away with (as does the
-> Linux NFS client AFAICT).
+On 8/5/21 11:34 AM, Bart Van Assche wrote:
+> Fix the following kernel-doc warning that appears when building with W=1:
 > 
-> However, if everyone agrees that we should only ever write back a multiple of
-> a certain block size, even to network filesystems, what block size should that
-> be?  Note that PAGE_SIZE varies across arches and folios are going to
-> exacerbate this.  What I don't want to happen is that you read from a file, it
-> creates, say, a 4M (or larger) folio; you change three bytes and then you're
-> forced to write back the entire 4M folio.
+> block/partitions/ldm.c:31: warning: expecting prototype for ldm().
+> Prototype was for ldm_debug() instead
 
-grep . /sys/class/block/*/queue/minimum_io_size
-and also hw_sector_size, logical_block_size, physical_block_size.
+Applied, thanks.
 
-The data seems suspect to me, though.  I get 4096 for a spinner (looks
-sane), 512 for nvme (less than page size), and 4096 for pmem (I'd expect
-cacheline or ECC block).
-
-
-Meow!
 -- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁
-⢿⡄⠘⠷⠚⠋⠀ Certified airhead; got the CT scan to prove that!
-⠈⠳⣄⠀⠀⠀⠀
+Jens Axboe
+
