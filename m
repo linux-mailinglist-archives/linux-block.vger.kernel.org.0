@@ -2,76 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 961B43E14D8
-	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 14:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F9C3E1553
+	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 15:07:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240270AbhHEMg6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Aug 2021 08:36:58 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:16051 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240188AbhHEMg5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 08:36:57 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GgSgl1dh3zZxt4;
-        Thu,  5 Aug 2021 20:33:07 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Thu, 5 Aug 2021 20:36:41 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 5 Aug
- 2021 20:36:41 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>, <bo.liu@linux.alibaba.com>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH] blk-iolatency: error out if blk_get_queue() failed in iolatency_set_limit()
-Date:   Thu, 5 Aug 2021 20:46:45 +0800
-Message-ID: <20210805124645.543797-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        id S241615AbhHENHX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Aug 2021 09:07:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25173 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240351AbhHENHW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 5 Aug 2021 09:07:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628168828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=w3Cmdk9W0BCPcGY/VxLt8tV+dlv64Ayfb+LViyE6SGc=;
+        b=JKhW2Y4zRohZlKh8FNEi6QWoclphQFDwcokKewWrpriCCV0wg8sJVKkgOYHavtwrVSpB7r
+        c2BK9YO3EPz+1J438oxx+GPKqSS+v4TUncrbkiwOG/7TJ0aPKsUi1yc5PvifE4hRgCopwm
+        laScIW2MX4mhptd6CsG1Ye00wnjlyFM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-572-8QolsM8eOiiWG1zxW8RIZw-1; Thu, 05 Aug 2021 09:07:07 -0400
+X-MC-Unique: 8QolsM8eOiiWG1zxW8RIZw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAC82801A92;
+        Thu,  5 Aug 2021 13:07:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 538AA5C1B4;
+        Thu,  5 Aug 2021 13:07:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <YQvbiCubotHz6cN7@casper.infradead.org>
+References: <YQvbiCubotHz6cN7@casper.infradead.org> <1017390.1628158757@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        jlayton@kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dchinner@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Could it be made possible to offer "supplementary" data to a DIO write ?
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1170463.1628168823.1@warthog.procyon.org.uk>
+Date:   Thu, 05 Aug 2021 14:07:03 +0100
+Message-ID: <1170464.1628168823@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If queue is dying while iolatency_set_limit() is in progress,
-blk_get_queue() won't increment the refcount of the queue. However,
-blk_put_queue() will still decrement the refcount later, which will
-cause the refcout to be unbalanced.
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Thus error out in such case to fix the problem.
+> > Say, for example, I need to write a 3-byte change from a page, where that
+> > page is part of a 256K sequence in the pagecache.  Currently, I have to
+> > round the 3-bytes out to DIO size/alignment, but I could say to the API,
+> > for example, "here's a 256K iterator - I need bytes 225-227 written, but
+> > you can write more if you want to"?
+> 
+> I think you're optimising the wrong thing.  No actual storage lets you
+> write three bytes.  You're just pushing the read/modify/write cycle to
+> the remote end.  So you shouldn't even be tracking that three bytes have
+> been dirtied; you should be working in multiples of i_blocksize().
 
-Fixes: 8c772a9bfc7c ("blk-iolatency: fix IO hang due to negative inflight counter")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-iolatency.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+I'm dealing with network filesystems that don't necessarily let you know what
+i_blocksize is.  Assume it to be 1.
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 81be0096411d..d8b0d8bd132b 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -833,7 +833,11 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 
- 	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
- 	if (enable) {
--		WARN_ON_ONCE(!blk_get_queue(blkg->q));
-+		if (!blk_get_queue(blkg->q)) {
-+			ret = -ENODEV;
-+			goto out;
-+		}
-+
- 		blkg_get(blkg);
- 	}
- 
--- 
-2.31.1
+Further, only sending, say, 3 bytes and pushing RMW to the remote end is not
+necessarily wrong for a network filesystem for at least two reasons: it
+reduces the network loading and it reduces the effects of third-party write
+collisions.
+
+> I don't know of any storage which lets you ask "can I optimise this
+> further for you by using a larger size".  Maybe we have some (software)
+> compressed storage which could do a better job if given a whole 256kB
+> block to recompress.
+
+It would offer an extent-based filesystem the possibility of adjusting its
+extent list.  And if you were mad enough to put your cache on a shingled
+drive...  (though you'd probably need a much bigger block than 256K to make
+that useful).  Also, jffs2 (if someone used that as a cache) can compress its
+blocks.
+
+> So it feels like you're both tracking dirty data at too fine a granularity,
+> and getting ahead of actual hardware capabilities by trying to introduce a
+> too-flexible API.
+
+We might not know what the h/w caps are and there may be multiple destination
+servers with different h/w caps involved.  Note that NFS and AFS in the kernel
+both currently track at byte granularity and only send the bytes that changed.
+The expense of setting up the write op on the server might actually outweigh
+the RMW cycle.  With something like ceph, the server might actually have a
+whole-object RMW/COW, say 4M.
+
+Yet further, if your network fs has byte-range locks/leases and you have a
+write lock/lease that ends part way into a page, when you drop that lock/lease
+you shouldn't flush any data outside of that range lest you overwrite a range
+that someone else has a lock/lease on.
+
+David
 
