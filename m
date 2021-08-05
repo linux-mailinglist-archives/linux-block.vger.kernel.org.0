@@ -2,84 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB9EE3E1449
-	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 14:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F51F3E14E1
+	for <lists+linux-block@lfdr.de>; Thu,  5 Aug 2021 14:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241191AbhHEMBa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Aug 2021 08:01:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230446AbhHEMBa (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 5 Aug 2021 08:01:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A71D61132;
-        Thu,  5 Aug 2021 12:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628164876;
-        bh=16APo6fE3eY2p/uODzQ81+asSQi2UhYxhFw1Qx5gvPA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GBn0dlwHiVqhZLu0Fo3yWrc2WkaZ8Qxmkal+0DaBkwi+BvGzswN7HO32obdM883P8
-         GLXYp5zrCYFSooklqA/+FyCoX3FEdOBcszKoImj7aROLY8frbXu3pVDXLBfWyIDif2
-         7JZlUtaEG2Cs6EnBQrEMitiERfXIseQJZZ3Es/tUNvGXwIwE504ASrY3BUGa8BFQKq
-         Yn0f6WglLCJr4+2CLWe8GOkmTcQiNYAJ5IZ1S2rgdE92TbRixoDwaSh1iAiFVe10Uo
-         tXvaCfm8noqmXKtlQN9Az7jhyrZ6iFBXdlKQsstatDnle26sVhwJ2Qmu8JmMHb8E4/
-         AZo5dSnvsRRxg==
-Message-ID: <440e1815a8b6f1605b6bce51af6eceadf8e742f7.camel@kernel.org>
-Subject: Re: [PATCH 07/15] rbd: use bvec_virt
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Song Liu <song@kernel.org>, Mike Snitzer <snitzer@redhat.com>,
-        Coly Li <colyli@suse.de>, Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Date:   Thu, 05 Aug 2021 08:01:13 -0400
-In-Reply-To: <20210804095634.460779-8-hch@lst.de>
-References: <20210804095634.460779-1-hch@lst.de>
-         <20210804095634.460779-8-hch@lst.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        id S240417AbhHEMiX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Aug 2021 08:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240412AbhHEMiX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 08:38:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BAD2C061765;
+        Thu,  5 Aug 2021 05:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=e5vYlUPIOBxPGz/O2JkivhT5pBDV17FiEahr25m94xo=; b=VDNG8Tb6wClCKpztYtmaSD7NEq
+        SGQD7UcMobrslkmhg185QFnKUTpwyGPNwuGRrN9NXSDaOIycvUVH4S1GdYyGXDUQPFct5VRUnkOMY
+        WDClNDfDjIUSzKGZ46rT1uMOx2aGIjFHxepx+psS9IGpDuWXrCrAmKbLBvH/SeheEF6i2FSP5DXbd
+        XKSPmmIEZS4rukLqA6nkiMj28GoQ289Yemf7px5Qlp7JY5gVzI2U7rtl2dpLf/Jk15fkeZi8m52EX
+        RWshljiw5A2IVuCYg8uKdn4EvvoVAwDTWUlu3aIW/rroiwN2prJL3LZiqk6HywaVRmpu2BcMV3RoB
+        A7cNk2dA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mBccq-0070Ga-9X; Thu, 05 Aug 2021 12:37:36 +0000
+Date:   Thu, 5 Aug 2021 13:37:28 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, jlayton@kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dchinner@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Could it be made possible to offer "supplementary" data to a DIO
+ write ?
+Message-ID: <YQvbiCubotHz6cN7@casper.infradead.org>
+References: <1017390.1628158757@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1017390.1628158757@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 2021-08-04 at 11:56 +0200, Christoph Hellwig wrote:
-> Use bvec_virt instead of open coding it.
+On Thu, Aug 05, 2021 at 11:19:17AM +0100, David Howells wrote:
+> I'm working on network filesystem write helpers to go with the read helpers,
+> and I see situations where I want to write a few bytes to the cache, but have
+> more available that could be written also if it would allow the
+> filesystem/blockdev to optimise its layout.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/rbd.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 6d596c2c2cd6..e65c9d706f6f 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -2986,8 +2986,7 @@ static bool is_zero_bvecs(struct bio_vec *bvecs, u32 bytes)
->  	};
->  
->  	ceph_bvec_iter_advance_step(&it, bytes, ({
-> -		if (memchr_inv(page_address(bv.bv_page) + bv.bv_offset, 0,
-> -			       bv.bv_len))
-> +		if (memchr_inv(bvec_virt(&bv), 0, bv.bv_len))
->  			return false;
->  	}));
->  	return true;
+> Say, for example, I need to write a 3-byte change from a page, where that page
+> is part of a 256K sequence in the pagecache.  Currently, I have to round the
+> 3-bytes out to DIO size/alignment, but I could say to the API, for example,
+> "here's a 256K iterator - I need bytes 225-227 written, but you can write more
+> if you want to"?
 
-LGTM
+I think you're optimising the wrong thing.  No actual storage lets you
+write three bytes.  You're just pushing the read/modify/write cycle to
+the remote end.  So you shouldn't even be tracking that three bytes have
+been dirtied; you should be working in multiples of i_blocksize().
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I don't know of any storage which lets you ask "can I optimise this
+further for you by using a larger size".  Maybe we have some (software)
+compressed storage which could do a better job if given a whole 256kB
+block to recompress.
 
+So it feels like you're both tracking dirty data at too fine a
+granularity, and getting ahead of actual hardware capabilities by trying
+to introduce a too-flexible API.
