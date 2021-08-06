@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17F5F3E214F
-	for <lists+linux-block@lfdr.de>; Fri,  6 Aug 2021 03:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF4D3E2153
+	for <lists+linux-block@lfdr.de>; Fri,  6 Aug 2021 03:57:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbhHFB55 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Aug 2021 21:57:57 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:13286 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231893AbhHFB54 (ORCPT
+        id S242178AbhHFB56 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Aug 2021 21:57:58 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:12459 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232728AbhHFB54 (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 21:57:56 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4GgpQR1050z83BF;
-        Fri,  6 Aug 2021 09:52:47 +0800 (CST)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GgpRx1bfBzckl9;
+        Fri,  6 Aug 2021 09:54:05 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Fri, 6 Aug 2021 09:57:39 +0800
+ 15.1.2176.2; Fri, 6 Aug 2021 09:57:40 +0800
 Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
  (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Fri, 6 Aug
@@ -26,9 +26,9 @@ From:   Yu Kuai <yukuai3@huawei.com>
 To:     <paolo.valente@linaro.org>, <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH v2 3/4] block, bfq: add support to record request size information
-Date:   Fri, 6 Aug 2021 10:08:25 +0800
-Message-ID: <20210806020826.1407257-4-yukuai3@huawei.com>
+Subject: [PATCH v2 4/4] block, bfq: consider request size in bfq_asymmetric_scenario()
+Date:   Fri, 6 Aug 2021 10:08:26 +0800
+Message-ID: <20210806020826.1407257-5-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210806020826.1407257-1-yukuai3@huawei.com>
 References: <20210806020826.1407257-1-yukuai3@huawei.com>
@@ -43,82 +43,65 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If bfq keep dispatching requests with same size, the following
-information are stored if CONFIG_BFQ_GROUP_IOSCHED is enabled:
+There is a special case when bfq do not need to idle when more than
+one groups is active:
 
-1) the size
-2) the count of requests
-3) when the first request was dispatched
+ 1) all active queues have the same weight,
+ 2) all active queues have the same request size.
+ 3) all active queues belong to the same I/O-priority class,
 
-These will be used in later patch to support concurrent sync
-io in such situation.
+Each time a request is dispatched, bfq can switch in service queue
+safely, since the throughput of each active queue is guaranteed to
+be equivalent.
+
+Test procedure:
+run "fio -numjobs=1 -ioengine=psync -bs=4k -direct=1 -rw=randread..." in
+different cgroup(not root).
+
+Test result: total bandwidth(Mib/s)
+| total jobs | before this patch | after this patch      |
+| ---------- | ----------------- | --------------------- |
+| 1          | 33.8              | 33.8                  |
+| 2          | 33.8              | 65.4 (32.7 each job)  |
+| 4          | 33.8              | 106.8 (26.7 each job) |
+| 8          | 33.8              | 126.4 (15.8 each job) |
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/bfq-iosched.c | 15 +++++++++++++++
- block/bfq-iosched.h | 16 ++++++++++++++++
- 2 files changed, 31 insertions(+)
+ block/bfq-iosched.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index a780205a1be4..7df3fc0ef4ef 100644
+index 7df3fc0ef4ef..e5a07bd1fd84 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -4936,6 +4936,20 @@ static bool bfq_has_work(struct blk_mq_hw_ctx *hctx)
- 		bfq_tot_busy_queues(bfqd) > 0;
- }
+@@ -268,6 +268,16 @@ static struct kmem_cache *bfq_pool;
+  */
+ #define BFQ_RATE_SHIFT		16
  
-+static void bfq_update_dispatch_size_info(struct bfq_data *bfqd,
-+					  unsigned int size)
-+{
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
-+	if (bfqd->dispatch_size == size) {
-+		bfqd->dispatch_count++;
-+	} else {
-+		bfqd->dispatch_size = size;
-+		bfqd->dispatch_count = 1;
-+		bfqd->dispatch_time = jiffies;
-+	}
-+#endif
-+}
++/*
++ * 1) bfq keep dispatching requests with same size for at least one second.
++ * 2) bfq dispatch at lease 1024 requests
++ *
++ * We think bfq are dispatching request with same size if the above two
++ * conditions hold true.
++ */
++#define VARIED_REQUEST_SIZE(bfqd) ((bfqd)->dispatch_count < 1024 ||\
++		time_before(jiffies, (bfqd)->dispatch_time + HZ))
 +
- static struct request *__bfq_dispatch_request(struct blk_mq_hw_ctx *hctx)
- {
- 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
-@@ -5019,6 +5033,7 @@ static struct request *__bfq_dispatch_request(struct blk_mq_hw_ctx *hctx)
- 		bfqd->rq_in_driver++;
- start_rq:
- 		rq->rq_flags |= RQF_STARTED;
-+		bfq_update_dispatch_size_info(bfqd, blk_rq_bytes(rq));
- 	}
- exit:
- 	return rq;
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 610769214f72..9ab498839e7c 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -777,6 +777,22 @@ struct bfq_data {
- 	 * function)
- 	 */
- 	unsigned int word_depths[2][2];
-+
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
-+	/* the size of last dispatched request */
-+	unsigned int dispatch_size;
-+	/*
-+	 * If bfq keep dispatching requests with same size, this store the
-+	 * count of requests. We use unsigned long here, so we don't care
-+	 * about overflow.
-+	 */
-+	unsigned long dispatch_count;
-+	/*
-+	 * If bfq keep dispatching requests with same size, this store the
-+	 * time when the first request was dispatched.
-+	 */
-+	unsigned long dispatch_time;
-+#endif
- };
+ /*
+  * When configured for computing the duration of the weight-raising
+  * for interactive queues automatically (see the comments at the
+@@ -724,7 +734,8 @@ static bool bfq_asymmetric_scenario(struct bfq_data *bfqd,
+ 	bool multiple_classes_busy;
  
- enum bfqq_state_flags {
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+-	if (bfqd->num_groups_with_pending_reqs > 1)
++	if (bfqd->num_groups_with_pending_reqs > 1 &&
++	    VARIED_REQUEST_SIZE(bfqd))
+ 		return true;
+ 
+ 	if (bfqd->num_groups_with_pending_reqs &&
 -- 
 2.31.1
 
