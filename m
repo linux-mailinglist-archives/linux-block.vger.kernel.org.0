@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E57B73E2150
-	for <lists+linux-block@lfdr.de>; Fri,  6 Aug 2021 03:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C9E3E2152
+	for <lists+linux-block@lfdr.de>; Fri,  6 Aug 2021 03:57:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241743AbhHFB55 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Aug 2021 21:57:57 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:13239 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230282AbhHFB54 (ORCPT
+        id S231893AbhHFB56 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Aug 2021 21:57:58 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:7795 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231993AbhHFB54 (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 5 Aug 2021 21:57:56 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4GgpWv1HMtz1CSrh;
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GgpWv6c3LzYlXr;
         Fri,  6 Aug 2021 09:57:31 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
  15.1.2176.2; Fri, 6 Aug 2021 09:57:39 +0800
 Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
@@ -26,9 +26,9 @@ From:   Yu Kuai <yukuai3@huawei.com>
 To:     <paolo.valente@linaro.org>, <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH v2 1/4] block, bfq: add support to track if root_group have any pending requests
-Date:   Fri, 6 Aug 2021 10:08:23 +0800
-Message-ID: <20210806020826.1407257-2-yukuai3@huawei.com>
+Subject: [PATCH v2 2/4] block, bfq: do not idle if only one cgroup is activated
+Date:   Fri, 6 Aug 2021 10:08:24 +0800
+Message-ID: <20210806020826.1407257-3-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210806020826.1407257-1-yukuai3@huawei.com>
 References: <20210806020826.1407257-1-yukuai3@huawei.com>
@@ -43,124 +43,105 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add a new member in bfq_data to track number of queues that are in
-root_group with any pending requests. This will be used in next patch
-to optmize queue idle judgment when root_group doesn't have any
-pending requests.
+If only one group is activated, there is no need to guarantee the same
+share of the throughput of queues in the same group.
+
+If CONFIG_BFQ_GROUP_IOSCHED is enabled, there is no need to check
+'varied_queue_weights' and 'multiple_classes_busy':
+1) num_groups_with_pending_reqs = 0, idle is not needed
+2) num_groups_with_pending_reqs = 1
+   - if root group have any pending requests, idle is needed
+   - if root group is idle, idle is not needed
+3) num_groups_with_pending_reqs > 1, idle is needed
+
+Test procedure:
+run "fio -numjobs=1 -ioengine=psync -bs=4k -direct=1 -rw=randread..."
+multiple times in the same cgroup(not root).
+
+Test result: total bandwidth(Mib/s)
+| total jobs | before this patch | after this patch      |
+| ---------- | ----------------- | --------------------- |
+| 1          | 33.8              | 33.8                  |
+| 2          | 33.8              | 65.4 (32.7 each job)  |
+| 4          | 33.8              | 106.8 (26.7 each job) |
+| 8          | 33.8              | 126.4 (15.8 each job) |
+
+By the way, if I test with "fio -numjobs=1/2/4/8 ...", test result is
+the same with or without this patch.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/bfq-iosched.c |  8 +++++++-
- block/bfq-iosched.h | 13 +++++++++++--
- block/bfq-wf2q.c    | 37 ++++++++++++++++++++++++-------------
- 3 files changed, 42 insertions(+), 16 deletions(-)
+ block/bfq-iosched.c | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 727955918563..7c6b412f9a9c 100644
+index 7c6b412f9a9c..a780205a1be4 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -859,8 +859,14 @@ void __bfq_weights_tree_remove(struct bfq_data *bfqd,
- void bfq_weights_tree_remove(struct bfq_data *bfqd,
- 			     struct bfq_queue *bfqq)
+@@ -709,7 +709,9 @@ bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+  * much easier to maintain the needed state:
+  * 1) all active queues have the same weight,
+  * 2) all active queues belong to the same I/O-priority class,
+- * 3) there are no active groups.
++ * 3) there are one active group at most(incluing root_group).
++ * If the last condition is false, there is no need to guarantee the,
++ * same share of the throughput of queues in the same group.
+  * In particular, the last condition is always true if hierarchical
+  * support or the cgroups interface are not enabled, thus no state
+  * needs to be maintained in this case.
+@@ -717,7 +719,26 @@ bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ static bool bfq_asymmetric_scenario(struct bfq_data *bfqd,
+ 				   struct bfq_queue *bfqq)
  {
--	struct bfq_entity *entity = bfqq->entity.parent;
-+	struct bfq_entity *entity = &bfqq->entity;
+-	bool smallest_weight = bfqq &&
++	bool smallest_weight;
++	bool varied_queue_weights;
++	bool multiple_classes_busy;
 +
-+	if (entity->in_groups_with_pending_reqs) {
-+		entity->in_groups_with_pending_reqs = false;
-+		bfqd->num_queues_with_pending_reqs_in_root--;
-+	}
- 
-+	entity = entity->parent;
- 	for_each_entity(entity) {
- 		struct bfq_sched_data *sd = entity->my_sched_data;
- 
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 99c2a3cb081e..610769214f72 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -195,7 +195,12 @@ struct bfq_entity {
- 	/* flag, set to request a weight, ioprio or ioprio_class change  */
- 	int prio_changed;
- 
--	/* flag, set if the entity is counted in groups_with_pending_reqs */
-+	/*
-+	 * If entity represents bfq_group, this flag will set if the group is
-+	 * not root_group and have any pending requests; If entity represents
-+	 * bfq_queue, this flag will set if the queue is in root_group and have
-+	 * any pending requests.
-+	 */
- 	bool in_groups_with_pending_reqs;
- 
- 	/* last child queue of entity created (for non-leaf entities) */
-@@ -539,7 +544,11 @@ struct bfq_data {
- 	 * with no request waiting for completion.
- 	 */
- 	unsigned int num_groups_with_pending_reqs;
--
-+	/*
-+	 * number of queues that are in root_group with at least one request
-+	 * waiting for completion.
-+	 */
-+	unsigned int num_queues_with_pending_reqs_in_root;
- 	/*
- 	 * Per-class (RT, BE, IDLE) number of bfq_queues containing
- 	 * requests (including the queue in service, even if it is
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 7a462df71f68..188c8f907219 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -946,6 +946,29 @@ static void bfq_update_fin_time_enqueue(struct bfq_entity *entity,
- 	bfq_active_insert(st, entity);
- }
- 
-+static void bfq_update_groups_with_pending_reqs(struct bfq_entity *entity)
-+{
 +#ifdef CONFIG_BFQ_GROUP_IOSCHED
-+	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
++	if (bfqd->num_groups_with_pending_reqs > 1)
++		return true;
 +
-+	if (bfqq) {
-+		if (!entity->parent && !entity->in_groups_with_pending_reqs) {
-+			entity->in_groups_with_pending_reqs = true;
-+			bfqq->bfqd->num_queues_with_pending_reqs_in_root++;
-+		}
-+	} else {
-+		if (!entity->in_groups_with_pending_reqs) {
-+			struct bfq_group *bfqg =
-+				container_of(entity, struct bfq_group, entity);
-+			struct bfq_data *bfqd = bfqg->bfqd;
++	if (bfqd->num_groups_with_pending_reqs &&
++	    bfqd->num_queues_with_pending_reqs_in_root)
++		return true;
 +
-+			entity->in_groups_with_pending_reqs = true;
-+			bfqd->num_groups_with_pending_reqs++;
-+		}
-+	}
++	/*
++	 * Reach here means only one group(incluing root group) has pending
++	 * requests, thus it's safe to return.
++	 */
++	return false;
 +#endif
-+}
 +
- /**
-  * __bfq_activate_entity - handle activation of entity.
-  * @entity: the entity being activated.
-@@ -999,19 +1022,7 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
- 		entity->on_st_or_in_serv = true;
- 	}
++	smallest_weight = bfqq &&
+ 		bfqq->weight_counter &&
+ 		bfqq->weight_counter ==
+ 		container_of(
+@@ -729,21 +750,17 @@ static bool bfq_asymmetric_scenario(struct bfq_data *bfqd,
+ 	 * For queue weights to differ, queue_weights_tree must contain
+ 	 * at least two nodes.
+ 	 */
+-	bool varied_queue_weights = !smallest_weight &&
++	varied_queue_weights = !smallest_weight &&
+ 		!RB_EMPTY_ROOT(&bfqd->queue_weights_tree.rb_root) &&
+ 		(bfqd->queue_weights_tree.rb_root.rb_node->rb_left ||
+ 		 bfqd->queue_weights_tree.rb_root.rb_node->rb_right);
  
+-	bool multiple_classes_busy =
++	multiple_classes_busy =
+ 		(bfqd->busy_queues[0] && bfqd->busy_queues[1]) ||
+ 		(bfqd->busy_queues[0] && bfqd->busy_queues[2]) ||
+ 		(bfqd->busy_queues[1] && bfqd->busy_queues[2]);
+ 
+-	return varied_queue_weights || multiple_classes_busy
 -#ifdef CONFIG_BFQ_GROUP_IOSCHED
--	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
--		struct bfq_group *bfqg =
--			container_of(entity, struct bfq_group, entity);
--		struct bfq_data *bfqd = bfqg->bfqd;
--
--		if (!entity->in_groups_with_pending_reqs) {
--			entity->in_groups_with_pending_reqs = true;
--			bfqd->num_groups_with_pending_reqs++;
--		}
--	}
+-	       || bfqd->num_groups_with_pending_reqs > 0
 -#endif
--
-+	bfq_update_groups_with_pending_reqs(entity);
- 	bfq_update_fin_time_enqueue(entity, st, backshifted);
+-		;
++	return varied_queue_weights || multiple_classes_busy;
  }
  
+ /*
 -- 
 2.31.1
 
