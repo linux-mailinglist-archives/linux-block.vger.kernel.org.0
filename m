@@ -2,108 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8863E3FF2
-	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 08:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33D633E4055
+	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 08:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233248AbhHIG24 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Aug 2021 02:28:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27806 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233136AbhHIG24 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 9 Aug 2021 02:28:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628490515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XSB+qsiXiDt/LtGYRnCraHlctWmbZ6sfAQg7VcuKR9M=;
-        b=O+0IoCJxikctsnMIl/681rfh4xxFRgC2oeTZAVPNIh6nGOy04mObUVyAqLqyyh3usy4PeP
-        ctyqdZsO8PX0GGXdq5eJchlyS55kDOSYP0lEu1VpG6La768aAKyD03NucJOVUiCDyaZA5W
-        DqkaejWSUiaaTx9JVccJgnT6GVbNMPM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-PUrK1CkgPYeY80-D0WG0jA-1; Mon, 09 Aug 2021 02:28:33 -0400
-X-MC-Unique: PUrK1CkgPYeY80-D0WG0jA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C79C48B5DC4;
-        Mon,  9 Aug 2021 06:28:15 +0000 (UTC)
-Received: from T590 (ovpn-13-190.pek2.redhat.com [10.72.13.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE60F10013C1;
-        Mon,  9 Aug 2021 06:28:10 +0000 (UTC)
-Date:   Mon, 9 Aug 2021 14:28:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Yu Kuai <yukuai3@huawei.com>
-Cc:     axboe@kernel.dk, josef@toxicpanda.com, bvanassche@acm.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nbd@other.debian.org, yi.zhang@huawei.com
-Subject: Re: [PATCH v2 2/2] nbd: convert to use blk_mq_get_rq_by_tag()
-Message-ID: <YRDK9tBFscK5ScK8@T590>
-References: <20210809030927.1946162-1-yukuai3@huawei.com>
- <20210809030927.1946162-3-yukuai3@huawei.com>
+        id S233283AbhHIGmu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Aug 2021 02:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233234AbhHIGmt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Aug 2021 02:42:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639E3C0613CF;
+        Sun,  8 Aug 2021 23:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=gu/wdO3pWcEV2DnoEvj5RVwNNwRwRD9cxQPKa/ARsu8=; b=mYVZtFcPQ4+E3YBX+sTHOUPIrO
+        J2Bmm0o9TrUkEYjnnOoWqM+nxwMfA7G1aakmWt0bftItoCGMg7h/ssgKVMBDxZu/BaoylRTvgnMfR
+        fhDTXTSYc2+kErta8SH6dFjBhtjzsz2cXsilz0MMeqHi3uGYO+oayBPgp5YykjqCIlc3zZByQpbvu
+        VHTnwLHi1CnPz9ExfGgCWcpaHZFE7y4OUL2Jci7lYjTpjxrbObXMiJttFrqy0v0IyBeAxelCUxMir
+        gQ4ZJE3NgEI13hQHqKPBSkPMooG9toraV08VDFjqLQXUTWMmjFfB3tsCA7oxWIDMHKaDieyXinM+4
+        a4TE0ONQ==;
+Received: from [2a02:1205:5023:1f80:c068:bd3d:78b3:7d37] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mCyxZ-00AiWj-9Y; Mon, 09 Aug 2021 06:40:57 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Coly Li <colyli@suse.de>, Song Liu <song@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Subject: remove GENHD_FL_UP
+Date:   Mon,  9 Aug 2021 08:40:20 +0200
+Message-Id: <20210809064028.1198327-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210809030927.1946162-3-yukuai3@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Aug 09, 2021 at 11:09:27AM +0800, Yu Kuai wrote:
-> blk_mq_tag_to_rq() might return freed request, use
-> blk_mq_get_rq_by_tag() instead.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/block/nbd.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index c38317979f74..9e56975a8eee 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -713,11 +713,10 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
->  	tag = nbd_handle_to_tag(handle);
->  	hwq = blk_mq_unique_tag_to_hwq(tag);
->  	if (hwq < nbd->tag_set.nr_hw_queues)
-> -		req = blk_mq_tag_to_rq(nbd->tag_set.tags[hwq],
-> -				       blk_mq_unique_tag_to_tag(tag));
-> -	if (!req || !blk_mq_request_started(req)) {
-> -		dev_err(disk_to_dev(nbd->disk), "Unexpected reply (%d) %p\n",
-> -			tag, req);
-> +		req = blk_mq_get_rq_by_tag(nbd->tag_set.tags[hwq],
-> +					   blk_mq_unique_tag_to_tag(tag));
-> +	if (!req) {
-> +		dev_err(disk_to_dev(nbd->disk), "Unexpected reply %d\n", tag);
->  		return ERR_PTR(-ENOENT);
->  	}
->  	trace_nbd_header_received(req, handle);
-> @@ -779,6 +778,8 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
->  	}
->  out:
->  	trace_nbd_payload_received(req, handle);
-> +	if (req)
-> +		blk_mq_put_rq_ref(req);
->  	mutex_unlock(&cmd->lock);
->  	return ret ? ERR_PTR(ret) : cmd;
+Hi Jens,
 
-After blk_mq_put_rq_ref() returns, this request may have been freed,
-so the returned 'cmd' may have been freed too.
+this series first cleans up various drivers to not rely on the
+internal GENHD_FL_UP to decided if they need to call del_gendisk
+and then removes the flag entirely.
 
-As I replied in your another thread, it is driver's responsibility to
-cover race between normal completion and timeout/error handling, that
-means the caller of blk_mq_tag_to_rq need to make sure that the request
-represented by the passed 'tag' can't be freed.
-
-I'd suggest to understand why nbd_read_stat()/blk_mq_tag_to_rq() may return
-one freed request first, who frees the request and how when calling
-blk_mq_tag_to_rq() before figuring out solutions.
-
-
-
-Thanks,
-Ming
-
+Diffstat:
+ block/genhd.c                 |    6 -
+ block/partitions/core.c       |    4 -
+ drivers/block/sx8.c           |    2 
+ drivers/md/bcache/super.c     |   26 ++++---
+ drivers/md/md.h               |    4 -
+ drivers/mmc/core/block.c      |  143 +++++++++++++++++-------------------------
+ drivers/nvme/host/core.c      |   16 ++--
+ drivers/nvme/host/multipath.c |    2 
+ fs/block_dev.c                |    2 
+ include/linux/genhd.h         |    9 +-
+ 10 files changed, 93 insertions(+), 121 deletions(-)
