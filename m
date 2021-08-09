@@ -2,26 +2,26 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ACCA3E47B9
-	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 16:38:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1257C3E47AA
+	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 16:38:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235331AbhHIOiY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Aug 2021 10:38:24 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3614 "EHLO
+        id S235220AbhHIOiG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Aug 2021 10:38:06 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3615 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbhHIOgR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Aug 2021 10:36:17 -0400
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gjz9k5j6mz6CB0X;
-        Mon,  9 Aug 2021 22:34:18 +0800 (CST)
+        with ESMTP id S235268AbhHIOgP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Aug 2021 10:36:15 -0400
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gjz9m3Dlnz6C997;
+        Mon,  9 Aug 2021 22:34:20 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Mon, 9 Aug 2021 16:34:48 +0200
+ 15.1.2308.8; Mon, 9 Aug 2021 16:34:50 +0200
 Received: from localhost.localdomain (10.69.192.58) by
  lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 9 Aug 2021 15:34:45 +0100
+ 15.1.2176.2; Mon, 9 Aug 2021 15:34:47 +0100
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>
@@ -29,9 +29,9 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-scsi@vger.kernel.org>, <kashyap.desai@broadcom.com>,
         <hare@suse.de>, <ming.lei@redhat.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 08/11] blk-mq: Add blk_mq_ops.init_request_no_hctx()
-Date:   Mon, 9 Aug 2021 22:29:35 +0800
-Message-ID: <1628519378-211232-9-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v2 09/11] scsi: Set blk_mq_ops.init_request_no_hctx
+Date:   Mon, 9 Aug 2021 22:29:36 +0800
+Message-ID: <1628519378-211232-10-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1628519378-211232-1-git-send-email-john.garry@huawei.com>
 References: <1628519378-211232-1-git-send-email-john.garry@huawei.com>
@@ -45,72 +45,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add a variant of the init_request function which does not pass a hctx_idx
-arg.
-
-This is important for shared sbitmap support, as it needs to be ensured for
-introducing shared static rqs that the LLDD cannot think that requests
-are associated with a specific HW queue.
+The hctx_idx argument is not used in scsi_mq_init_request(), so set as the
+blk_mq_ops.init_request_no_hctx callback instead.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- block/blk-mq.c         | 15 ++++++++++-----
- include/linux/blk-mq.h |  7 +++++++
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ drivers/scsi/scsi_lib.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index f14cc2705f9b..4d6723cfa582 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2427,13 +2427,15 @@ struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
- static int blk_mq_init_request(struct blk_mq_tag_set *set, struct request *rq,
- 			       unsigned int hctx_idx, int node)
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 7456a26aef51..6ea4d0847970 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1738,7 +1738,7 @@ static enum blk_eh_timer_return scsi_timeout(struct request *req,
+ }
+ 
+ static int scsi_mq_init_request(struct blk_mq_tag_set *set, struct request *rq,
+-				unsigned int hctx_idx, unsigned int numa_node)
++				unsigned int numa_node)
  {
--	int ret;
-+	int ret = 0;
- 
--	if (set->ops->init_request) {
-+	if (set->ops->init_request)
- 		ret = set->ops->init_request(set, rq, hctx_idx, node);
--		if (ret)
--			return ret;
--	}
-+	else if (set->ops->init_request_no_hctx)
-+		ret = set->ops->init_request_no_hctx(set, rq, node);
-+
-+	if (ret)
-+		return ret;
- 
- 	WRITE_ONCE(rq->state, MQ_RQ_IDLE);
- 	return 0;
-@@ -3487,6 +3489,9 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 	if (!set->ops->get_budget ^ !set->ops->put_budget)
- 		return -EINVAL;
- 
-+	if (set->ops->init_request && set->ops->init_request_no_hctx)
-+		return -EINVAL;
-+
- 	if (set->queue_depth > BLK_MQ_MAX_DEPTH) {
- 		pr_info("blk-mq: reduced tag depth to %u\n",
- 			BLK_MQ_MAX_DEPTH);
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 22215db36122..c838b24944c2 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -357,6 +357,13 @@ struct blk_mq_ops {
- 	 */
- 	int (*init_request)(struct blk_mq_tag_set *set, struct request *,
- 			    unsigned int, unsigned int);
-+
-+	/**
-+	 * @init_request: Same as init_request, except no hw queue index is passed
-+	 */
-+	int (*init_request_no_hctx)(struct blk_mq_tag_set *set, struct request *,
-+				    unsigned int);
-+
- 	/**
- 	 * @exit_request: Ditto for exit/teardown.
- 	 */
+ 	struct Scsi_Host *shost = set->driver_data;
+ 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(rq);
+@@ -1856,7 +1856,7 @@ static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+ #ifdef CONFIG_BLK_DEBUG_FS
+ 	.show_rq	= scsi_show_rq,
+ #endif
+-	.init_request	= scsi_mq_init_request,
++	.init_request_no_hctx = scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+ 	.initialize_rq_fn = scsi_initialize_rq,
+ 	.cleanup_rq	= scsi_cleanup_rq,
+@@ -1886,7 +1886,7 @@ static const struct blk_mq_ops scsi_mq_ops = {
+ #ifdef CONFIG_BLK_DEBUG_FS
+ 	.show_rq	= scsi_show_rq,
+ #endif
+-	.init_request	= scsi_mq_init_request,
++	.init_request_no_hctx = scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+ 	.initialize_rq_fn = scsi_initialize_rq,
+ 	.cleanup_rq	= scsi_cleanup_rq,
 -- 
 2.26.2
 
