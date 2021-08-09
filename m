@@ -2,211 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E06F03E4772
-	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 16:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 641183E47B6
+	for <lists+linux-block@lfdr.de>; Mon,  9 Aug 2021 16:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233845AbhHIOXZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Aug 2021 10:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234995AbhHIOXX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Aug 2021 10:23:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0505DC0613D3;
-        Mon,  9 Aug 2021 07:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=fXjNcv6g4LXpl9OMYkaZ1/31OMLTWrjb+tumAO/Mylw=; b=EMpRx4HDRE3aq5JIirkHqECR7M
-        PmCT8BB29vmf/mLA9Hdi+4kXbQ+mrcOC7384rd9njXwsfMQnPVE6GhIJDmSykwt3bc47VuGArTDbN
-        DRPazT34U2qlCnzlDIuRgZkih4Yr8qYkaP8zodKrWkiia0mumtwGfs5VVpTuJVdmaEH6gfrnBOLNQ
-        p/KpmJRwDYup3/gZ62c+tBo3Uj+Nqj4Ac/3RQjWYUHfrZijJeL9orUOm4lXguTtSQ7wfYLFib41G5
-        7TyUQ7ocHznUwqptL65qJaA/9C8qgyJs1qBe2AArz7OBb/PN8GZ7yRuO3PmjU2bzo81ThRlDOfA6R
-        R0zTJArA==;
-Received: from [2001:4bb8:184:6215:d19a:ace4:57f0:d5ad] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mD6A9-00B4Gq-D4; Mon, 09 Aug 2021 14:22:12 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
-        linux-block@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 5/5] block: remove the bd_bdi in struct block_device
-Date:   Mon,  9 Aug 2021 16:17:44 +0200
-Message-Id: <20210809141744.1203023-6-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210809141744.1203023-1-hch@lst.de>
-References: <20210809141744.1203023-1-hch@lst.de>
+        id S235255AbhHIOiW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Aug 2021 10:38:22 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3606 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235246AbhHIOfA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Aug 2021 10:35:00 -0400
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gjz9K62K8z6D9Lc;
+        Mon,  9 Aug 2021 22:33:57 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Mon, 9 Aug 2021 16:34:24 +0200
+Received: from localhost.localdomain (10.69.192.58) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 9 Aug 2021 15:34:21 +0100
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <kashyap.desai@broadcom.com>,
+        <hare@suse.de>, <ming.lei@redhat.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 00/11] blk-mq: Reduce static requests memory footprint for shared sbitmap
+Date:   Mon, 9 Aug 2021 22:29:27 +0800
+Message-ID: <1628519378-211232-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Just retrieve the bdi from the disk.
+Currently a full set of static requests are allocated per hw queue per
+tagset when shared sbitmap is used.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/ioctl.c               |  7 ++++---
- fs/block_dev.c              | 13 +------------
- fs/nilfs2/super.c           |  2 +-
- fs/super.c                  |  2 +-
- fs/xfs/xfs_buf.c            |  2 +-
- include/linux/backing-dev.h |  2 +-
- include/linux/blk_types.h   |  1 -
- 7 files changed, 9 insertions(+), 20 deletions(-)
+However, only tagset->queue_depth number of requests may be active at
+any given time. As such, only tagset->queue_depth number of static
+requests are required.
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 0c3a4a53fa11..fff161eaab42 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -506,7 +506,7 @@ static int blkdev_common_ioctl(struct block_device *bdev, fmode_t mode,
- 	case BLKFRASET:
- 		if(!capable(CAP_SYS_ADMIN))
- 			return -EACCES;
--		bdev->bd_bdi->ra_pages = (arg * 512) / PAGE_SIZE;
-+		bdev->bd_disk->bdi->ra_pages = (arg * 512) / PAGE_SIZE;
- 		return 0;
- 	case BLKRRPART:
- 		return blkdev_reread_part(bdev, mode);
-@@ -556,7 +556,8 @@ int blkdev_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
- 	case BLKFRAGET:
- 		if (!argp)
- 			return -EINVAL;
--		return put_long(argp, (bdev->bd_bdi->ra_pages*PAGE_SIZE) / 512);
-+		return put_long(argp,
-+			(bdev->bd_disk->bdi->ra_pages * PAGE_SIZE) / 512);
- 	case BLKGETSIZE:
- 		size = i_size_read(bdev->bd_inode);
- 		if ((size >> 9) > ~0UL)
-@@ -628,7 +629,7 @@ long compat_blkdev_ioctl(struct file *file, unsigned cmd, unsigned long arg)
- 		if (!argp)
- 			return -EINVAL;
- 		return compat_put_long(argp,
--			       (bdev->bd_bdi->ra_pages * PAGE_SIZE) / 512);
-+			(bdev->bd_disk->bdi->ra_pages * PAGE_SIZE) / 512);
- 	case BLKGETSIZE:
- 		size = i_size_read(bdev->bd_inode);
- 		if ((size >> 9) > ~0UL)
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index de8c3d9cbdb1..65fc0efca26b 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -801,7 +801,6 @@ static struct inode *bdev_alloc_inode(struct super_block *sb)
- 	if (!ei)
- 		return NULL;
- 	memset(&ei->bdev, 0, sizeof(ei->bdev));
--	ei->bdev.bd_bdi = &noop_backing_dev_info;
- 	return &ei->vfs_inode;
- }
- 
-@@ -826,16 +825,11 @@ static void init_once(void *data)
- 
- static void bdev_evict_inode(struct inode *inode)
- {
--	struct block_device *bdev = &BDEV_I(inode)->bdev;
- 	truncate_inode_pages_final(&inode->i_data);
- 	invalidate_inode_buffers(inode); /* is it needed here? */
- 	clear_inode(inode);
- 	/* Detach inode from wb early as bdi_put() may free bdi->wb */
- 	inode_detach_wb(inode);
--	if (bdev->bd_bdi != &noop_backing_dev_info) {
--		bdi_put(bdev->bd_bdi);
--		bdev->bd_bdi = &noop_backing_dev_info;
--	}
- }
- 
- static const struct super_operations bdev_sops = {
-@@ -1229,11 +1223,8 @@ static int blkdev_get_whole(struct block_device *bdev, fmode_t mode)
- 		}
- 	}
- 
--	if (!bdev->bd_openers) {
-+	if (!bdev->bd_openers)
- 		set_init_blocksize(bdev);
--		if (bdev->bd_bdi == &noop_backing_dev_info)
--			bdev->bd_bdi = bdi_get(disk->bdi);
--	}
- 	if (test_bit(GD_NEED_PART_SCAN, &disk->state))
- 		bdev_disk_changed(disk, false);
- 	bdev->bd_openers++;
-@@ -1266,8 +1257,6 @@ static int blkdev_get_part(struct block_device *part, fmode_t mode)
- 
- 	disk->open_partitions++;
- 	set_init_blocksize(part);
--	if (part->bd_bdi == &noop_backing_dev_info)
--		part->bd_bdi = bdi_get(disk->bdi);
- done:
- 	part->bd_openers++;
- 	return 0;
-diff --git a/fs/nilfs2/super.c b/fs/nilfs2/super.c
-index 4abd928b0bc8..f6b2d280aab5 100644
---- a/fs/nilfs2/super.c
-+++ b/fs/nilfs2/super.c
-@@ -1053,7 +1053,7 @@ nilfs_fill_super(struct super_block *sb, void *data, int silent)
- 	sb->s_time_gran = 1;
- 	sb->s_max_links = NILFS_LINK_MAX;
- 
--	sb->s_bdi = bdi_get(sb->s_bdev->bd_bdi);
-+	sb->s_bdi = bdi_get(sb->s_bdev->bd_disk->bdi);
- 
- 	err = load_nilfs(nilfs, sb);
- 	if (err)
-diff --git a/fs/super.c b/fs/super.c
-index 91b7f156735b..bcef3a6f4c4b 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1203,7 +1203,7 @@ static int set_bdev_super(struct super_block *s, void *data)
- {
- 	s->s_bdev = data;
- 	s->s_dev = s->s_bdev->bd_dev;
--	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
-+	s->s_bdi = bdi_get(s->s_bdev->bd_disk->bdi);
- 
- 	if (blk_queue_stable_writes(s->s_bdev->bd_disk->queue))
- 		s->s_iflags |= SB_I_STABLE_WRITES;
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 8ff42b3585e0..3ab73567a0f5 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -844,7 +844,7 @@ xfs_buf_readahead_map(
- {
- 	struct xfs_buf		*bp;
- 
--	if (bdi_read_congested(target->bt_bdev->bd_bdi))
-+	if (bdi_read_congested(target->bt_bdev->bd_disk->bdi))
- 		return;
- 
- 	xfs_buf_read_map(target, map, nmaps,
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 44df4fcef65c..29530859d9ff 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -143,7 +143,7 @@ static inline struct backing_dev_info *inode_to_bdi(struct inode *inode)
- 	sb = inode->i_sb;
- #ifdef CONFIG_BLOCK
- 	if (sb_is_blkdev_sb(sb))
--		return I_BDEV(inode)->bd_bdi;
-+		return I_BDEV(inode)->bd_disk->bdi;
- #endif
- 	return sb->s_bdi;
- }
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 290f9061b29a..a6c015cedaf7 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -41,7 +41,6 @@ struct block_device {
- 	u8			bd_partno;
- 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
- 	struct gendisk *	bd_disk;
--	struct backing_dev_info *bd_bdi;
- 
- 	/* The counter of freeze processes */
- 	int			bd_fsfreeze_count;
+The same goes for using an IO scheduler, which allocates a full set of
+static requests per hw queue per request queue.
+
+This series changes shared sbitmap support by using a shared tags per
+tagset and request queue. Ming suggested something along those lines in
+v1. But we'll keep name "shared sbitmap" name as it is fimilar. In using
+a shared tags, the static rqs also become shared, reducing the number of
+sets of static rqs, reducing memory usage.
+
+Patch "blk-mq: Use shared tags for shared sbitmap support" is a bit big,
+and could be broken down. But then maintaining ability to bisect
+becomes harder and each sub-patch would get more convoluted.
+
+For megaraid sas driver on my 128-CPU arm64 system with 1x SATA disk, we
+save approx. 300MB(!) [370MB -> 60MB]
+
+Baseline is 2112f5c1330a (for-5.15/block) loop: Select I/O scheduler ...
+
+Changes since v1:
+- Switch to use blk_mq_tags for shared sbitmap
+- Add new blk_mq_ops init request callback
+- Add some RB tags (thanks!)
+
+John Garry (11):
+  blk-mq: Change rqs check in blk_mq_free_rqs()
+  block: Rename BLKDEV_MAX_RQ -> BLKDEV_DEFAULT_RQ
+  blk-mq: Relocate shared sbitmap resize in blk_mq_update_nr_requests()
+  blk-mq: Invert check in blk_mq_update_nr_requests()
+  blk-mq-sched: Rename blk_mq_sched_alloc_{tags -> map_and_request}()
+  blk-mq: Pass driver tags to blk_mq_clear_rq_mapping()
+  blk-mq: Add blk_mq_tag_update_sched_shared_sbitmap()
+  blk-mq: Add blk_mq_ops.init_request_no_hctx()
+  scsi: Set blk_mq_ops.init_request_no_hctx
+  blk-mq: Use shared tags for shared sbitmap support
+  blk-mq: Stop using pointers for blk_mq_tags bitmap tags
+
+ block/bfq-iosched.c      |   4 +-
+ block/blk-core.c         |   2 +-
+ block/blk-mq-debugfs.c   |   8 +--
+ block/blk-mq-sched.c     |  92 +++++++++++++------------
+ block/blk-mq-sched.h     |   2 +-
+ block/blk-mq-tag.c       | 111 +++++++++++++-----------------
+ block/blk-mq-tag.h       |  12 ++--
+ block/blk-mq.c           | 144 +++++++++++++++++++++++----------------
+ block/blk-mq.h           |   8 +--
+ block/kyber-iosched.c    |   4 +-
+ block/mq-deadline-main.c |   2 +-
+ drivers/block/rbd.c      |   2 +-
+ drivers/scsi/scsi_lib.c  |   6 +-
+ include/linux/blk-mq.h   |  20 +++---
+ include/linux/blkdev.h   |   5 +-
+ 15 files changed, 218 insertions(+), 204 deletions(-)
+
 -- 
-2.30.2
+2.26.2
 
