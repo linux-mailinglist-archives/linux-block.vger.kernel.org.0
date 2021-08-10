@@ -2,64 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C1CC3E5B2B
-	for <lists+linux-block@lfdr.de>; Tue, 10 Aug 2021 15:22:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD9F3E5BEF
+	for <lists+linux-block@lfdr.de>; Tue, 10 Aug 2021 15:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239552AbhHJNWl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Aug 2021 09:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241275AbhHJNWh (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Aug 2021 09:22:37 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02976C061798
-        for <linux-block@vger.kernel.org>; Tue, 10 Aug 2021 06:22:16 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id y65so1889212vsy.3
-        for <linux-block@vger.kernel.org>; Tue, 10 Aug 2021 06:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
-        b=J1UO03eOEZuQCAH1bWcfKEKq5BN5SPyduATu9zAtdU/RakoeJVptJM+gLsUtrEuonC
-         xdjUZ63bJi/qNQ5UDZHBQT/hmwjW1bdv9sPByvTJ8h/5L5XxMdVqy6Qo9WXsVmoqdiWQ
-         4Ftz7pewxY/KYf9xszWiqCYtsQFvCnK5UETJpndtJH0Uqw27XFp3UJ+uTNcza4QpjvGx
-         x9u8HXRO0yidD1GmT0+S3NKgMH35MGdW5mAtqxwerKT/2ehSyaHoRMhCCPfrjvO5Ca1w
-         yhKMTiwWuTIukqtW1PayeUqLVfPV0p+VQjbaWXU7mGfqRM/jI9IqwEdUk8GZdTJjxA8j
-         rWXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
-        b=el0d8Jw7Z1TX/qYgvGZ5V91jKYuBO6rTC93H6HgEr6I67Nmk6DFI3RHpwwyWf0UHGc
-         IfGNeeOtQvuxeR6oIlnuvDxv5tq8riw0DupiB+0kEpyFjf3Q+Asfuo5EZsXTYrAh396X
-         BAzOf6ED1s4Rdkv/kwdHba7WNjmIPCoTyg6L5MNDe0PKbRUOKjgzx9OWFsXsYEP3atFx
-         FICwRr9oM6gDCQW3W82o2DkhbHU2gnhjuO80iDNrKxMhYMOCZYKHoStLyxb+258I40Wc
-         e7dL+hhSUPT9V4kJzpGEVZFOyZefzP7xU7LNhfxYst7s57cpdHem89RsQQ60fSODAY0Y
-         yNVA==
-X-Gm-Message-State: AOAM532SUunBnxbQFV0pFqarhpupoXrZhdN1/rZtePThnMfs35KfQ+7V
-        rpxOJZdXoElal55ZXMFlWXrdddiPQmt60N7yD+g=
-X-Google-Smtp-Source: ABdhPJxGFR8diwPvQYpV37YYI8amPIHeE68wjx+g6TcpnlsWOg6QapJtOtZAzr+9JjnHmTmmodl/YrIjx7ZBaPCYCSM=
-X-Received: by 2002:a67:1c05:: with SMTP id c5mr21501896vsc.25.1628601735186;
- Tue, 10 Aug 2021 06:22:15 -0700 (PDT)
+        id S241172AbhHJNkN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Aug 2021 09:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241877AbhHJNji (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 10 Aug 2021 09:39:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DD75E60EE7;
+        Tue, 10 Aug 2021 13:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628602749;
+        bh=fObxAgs+ulfRDwt7g5xTa8zsugCY1+6fJfkNM/IsNlA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rL/ZttqfxsO2dZRUHtzy9nzwGGoLFagpqaqSVFKyYkmwEk8jLLj+VGms3FbxODWOE
+         /axtGd5S9x+7lkyR5olgKW/uQ6xIG4FAyY22EBUvi0ygIQI/V8oqo0AztKG0xH8P+D
+         i2BUBtwAKuoo5FiwRcNTvRRH5OPAvTRFsERhYmH3cPbkdyodLTyF6MqRFOB3VOotNS
+         EgJsbqMLwqFLTVqbYkoNJRWhI2ATN7S7OajsyTWegqHLoNNk3q1brbNti/WGlP5hLq
+         Dtva7zVz02U1F7tX/hFspZj7RsQEplXREoFsMoN28qsjq+2ZvBsJ6Dl4XjCpPfWmew
+         qK1BAfDETIcpw==
+Date:   Tue, 10 Aug 2021 15:38:40 +0200
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Ian Pilcher <arequipeno@gmail.com>, hch@lst.de, axboe@kernel.dk,
+        kernelnewbies@kernelnewbies.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, pavel@ucw.cz, pali@kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [RFC PATCH v2 00/10] Add configurable block device LED triggers
+Message-ID: <20210810153840.42419d06@thinkpad>
+In-Reply-To: <YRIeHH1SLl6tYCeY@kroah.com>
+References: <20210809033217.1113444-1-arequipeno@gmail.com>
+        <20210809205633.4300bbea@thinkpad>
+        <81c128a1-c1b8-0f1e-a77b-6704bade26c0@gmail.com>
+        <20210810004331.0f0094a5@thinkpad>
+        <7b5f3509-5bcd-388b-8d3b-4ea95a9483ad@gmail.com>
+        <YRIeHH1SLl6tYCeY@kroah.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Sender: immeublesourou@gmail.com
-Received: by 2002:ab0:3903:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 06:22:14
- -0700 (PDT)
-From:   John Kumor <owo219901@gmail.com>
-Date:   Wed, 11 Aug 2021 01:22:14 +1200
-X-Google-Sender-Auth: GdaTxGfrES1uUqmP8dMlmdkbdyM
-Message-ID: <CAHdg_cQcGoZmM_yLB4+7UNSD_Lwo4ySucYJOuadLSmn4W2hi7g@mail.gmail.com>
-Subject: Urgent
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-My dear,
-Greetings! I trust that all is well with you and your family. Did you
-receive my previous email?
-Regards
-John Kumor.
+On Tue, 10 Aug 2021 08:35:08 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
+
+> On Mon, Aug 09, 2021 at 06:50:44PM -0500, Ian Pilcher wrote:
+> > On 8/9/21 5:43 PM, Marek Beh=C3=BAn wrote: =20
+> > > I confess that I am not very familiar with internal blkdev API. =20
+> >=20
+> > It's mainly a matter of symbol visibility.  See this thread from a few
+> > months ago:
+> >=20
+> >   https://www.spinics.net/lists/linux-leds/msg18244.html
+> >=20
+> > Now ... my code currently lives in block/, so there isn't actually
+> > anything technically preventing it from iterating through the block
+> > devices.
+> >=20
+> > The reactions to Enzo's patch (which you can see in that thread) make me
+> > think that anything that iterates through all block devices is likely to
+> > be rejected, but maybe I'm reading too much into it.
+> >=20
+> >=20
+> > Greg / Christoph -
+> >=20
+> > (As you were the people who expressed disapproval of Enzo's patch to
+> > export block_class and disk_type ...)
+> >=20
+> > Can you weigh in on the acceptability of iterating through the block
+> > devices (searching by name) from LED trigger code within the block
+> > subsystem (i.e. no new symbols would need to be exported)?
+> >=20
+> > This would allow the trigger to implement the sysfs API that Marek and
+> > Pavel want. =20
+>=20
+> No idea, let's see the change first, we can never promise anything :)
+
+Hi Greg,
+
+Can't we use blkdev_get_by_path() (or blk_lookup_devt() with
+blkdev_get_by_dev())?
+This would open the block device and return a struct block_device *.
+When the LED trigger is disabled, it would also have to release the
+device.
+
+Marek
