@@ -2,85 +2,102 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC7E3E8816
-	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 04:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 334753E88DB
+	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 05:37:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbhHKCm6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Aug 2021 22:42:58 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:8396 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231634AbhHKCm5 (ORCPT
+        id S233408AbhHKDhe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Aug 2021 23:37:34 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:34648 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233066AbhHKDha (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Aug 2021 22:42:57 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GkvC03dnTz85nV;
-        Wed, 11 Aug 2021 10:38:36 +0800 (CST)
-Received: from dggpeml500006.china.huawei.com (7.185.36.76) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 11 Aug 2021 10:42:21 +0800
-Received: from [10.174.176.127] (10.174.176.127) by
- dggpeml500006.china.huawei.com (7.185.36.76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 11 Aug 2021 10:42:21 +0800
-Subject: Re: [PATCH 0/5] block: replace incorrect uses of GENHD_FL_UP
-To:     Luis Chamberlain <mcgrof@kernel.org>, <axboe@kernel.dk>
-CC:     <hare@suse.de>, <bvanassche@acm.org>, <ming.lei@redhat.com>,
-        <hch@infradead.org>, <jack@suse.cz>, <osandov@fb.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20210720182048.1906526-1-mcgrof@kernel.org>
-From:   luomeng <luomeng12@huawei.com>
-Message-ID: <051ab019-5163-e691-43ed-052401b6b95a@huawei.com>
-Date:   Wed, 11 Aug 2021 10:42:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 10 Aug 2021 23:37:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1628653027; x=1660189027;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TWCAljC1dx1YD2EZP0iY2/a0tIzDQsxuj/cNzvYBxDk=;
+  b=S4aQe5TWV0YSLNbmOJWlfcTmzTNuLdS9DVVjmuIL9xs0pmr2ybQX4Y7f
+   QfskoDZbZDwi20/sr9T0M4g5f1lo2aqpp/oG/Rm1KhKY2QViJkqCTvQA8
+   NVz/7DZp/tRjrK4CHUS71WpN6CQS5MyLhlnXhxwJNTDnWKY0DTFNszxNL
+   q+fPCvXx6H2zQXRjg/pyujbgNYXF29EiP3NSA8vXk6hZacncAc+teFZqJ
+   JOb4Pm+OYSm8fb8bJrBWTD8A29q6K4FpSHwgGqDKF92HeZbIU4GuLuM3Y
+   d4PgS6kQ9RxKEGrzx/qYgzMB80KQRAIxRLZb+9qUnhhoz7e+ZMnTAQrkC
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.84,311,1620662400"; 
+   d="scan'208";a="177454810"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Aug 2021 11:37:05 +0800
+IronPort-SDR: eoI9uDyeSIUFN5Igx5kyyAWTB0+Ig6i82nVD7ND6fuxhPPXZqUrB/7YxxYMuOeXyQ5FSuKyCMZ
+ SDID/uphZbxKuPNJ1/3CC68JBIfnFK2pMXJJoLr5EueHRHlJu+2XnPaPLqG+zArSRnNrA3lefL
+ diMGh45uBWvZyS3/7i+SSAXF+NmGu2B0fa9ScfrM8i2lGet2trblxkdOqJ1GEfHyrvuk0VgBPw
+ JAxZ4MsvhxNYhTk82npo+rsW4WBBuVkDAREXijsKJuBPCYKLvBF/C4AC3UqG6jbkDd9VO1iXom
+ EgjUlN8mwOtyTH+6KFeqI26r
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 20:14:25 -0700
+IronPort-SDR: qWpNUjsACDhWC0msNjVZw2DqXZyL+GyC++rO9ZylPLgNjE1KBjvCC62fAc32e19T3FsN+ZCZsu
+ Pr48HgqwZDP4ZYVne5Nuca5zS16ItAZ8fqKM65JdcrAVTi4H7KV0BtsNDaBU7w6ZyS+r/WWbvZ
+ LrycWVM9okuAhx5b33/B8rggnCgOpoD0xT20orIZGlCyA9aNFx8u80j82BvqIrfLZzlr1ayPPu
+ S+W6WGje+933Bu4FDeEhV7q+VxkfS5do7VnmhFjTdnnDF5TduzOjvQmPuSGqrDcAklhwJcdFPK
+ vzY=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 10 Aug 2021 20:37:03 -0700
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Paolo Valente <paolo.valente@linaro.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v4 0/6] IO priority fixes and improvements
+Date:   Wed, 11 Aug 2021 12:36:56 +0900
+Message-Id: <20210811033702.368488-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20210720182048.1906526-1-mcgrof@kernel.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.127]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500006.china.huawei.com (7.185.36.76)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi:
-    When the fuzz test injected memory allocation failed, I had this 
-BUG_ON: kernel BUG at fs/sysfs/group.c:116.
-   The cause of the bug_ON is that the add_disk memory fails to be 
-allocated but no error processing is performed.
-   I find your patches add error processing. So what is your next step 
-with these patches.
-Thanks.
+This series fixes problems with IO priority values handling and cleans
+up several macro names and code for clarity.
 
-Luo Meng
+Changes from v3:
+* Split former patch 2 into patches 2, 3 and 4 to facilitate review and
+  have more descriptive commit titles.
+* In patch 5, keep IOPRIO_BE_NR as an alias for the new IOPRIO_NR_LEVELS
+  macro. Change this patch title and commit message accordingly.
+* In patch 6, define IOPRIO_BE_NORM as an alias of IOPRIO_NORM.
 
-ÔÚ 2021/7/21 2:20, Luis Chamberlain Ð´µÀ:
-> I've bumped this from RFC to PATCH form as request by Christoph,
-> as it seems to line up with what he wants to do. As per Hannes
-> I also stuck to one form of naming, so went with blk_disk_added()
-> instead of blk_disk_registered() and used that instead of open
-> coding the flag check.
-> 
-> This is rebased onto next-20210720 and I've made the patch series
-> independent of my *add_disk*() error handling series. This goes
-> compile and boot tested.
-> 
-> Luis Chamberlain (5):
->    block: add flag for add_disk() completion notation
->    md: replace GENHD_FL_UP with GENHD_FL_DISK_ADDED on is_mddev_broken()
->    mmc/core/block: replace GENHD_FL_UP with GENHD_FL_DISK_ADDED
->    nvme: replace GENHD_FL_UP with GENHD_FL_DISK_ADDED
->    fs/block_dev: replace GENHD_FL_UP with GENHD_FL_DISK_ADDED
-> 
->   block/genhd.c                 |  8 ++++++++
->   drivers/md/md.h               |  4 +---
->   drivers/mmc/core/block.c      |  2 +-
->   drivers/nvme/host/core.c      |  4 ++--
->   drivers/nvme/host/multipath.c |  2 +-
->   fs/block_dev.c                |  5 +++--
->   include/linux/genhd.h         | 11 ++++++++++-
->   7 files changed, 26 insertions(+), 10 deletions(-)
-> 
+Changes from v2:
+* Fixed typo in a comment in patch 3
+* Added reviewed-by tags
+
+Changes from v1:
+* Added patch 4 to unify the default priority value used in various
+  places.
+* Fixed patch 2 as suggested by Bart: remove extra parenthesis and move
+  ioprio_valid() from the uapi header to the kernel header.
+* In patch 2, add priority value masking.
+
+Damien Le Moal (6):
+  block: bfq: fix bfq_set_next_ioprio_data()
+  block: improve ioprio class description comment
+  block: change ioprio_valid() to an inline function
+  block: fix IOPRIO_PRIO_CLASS() and IOPRIO_PRIO_VALUE() macros
+  block: Introduce IOPRIO_NR_LEVELS
+  block: fix default IO priority handling
+
+ block/bfq-iosched.c          | 10 +++++-----
+ block/bfq-iosched.h          |  4 ++--
+ block/bfq-wf2q.c             |  6 +++---
+ block/ioprio.c               |  9 ++++-----
+ drivers/nvme/host/lightnvm.c |  2 +-
+ fs/f2fs/sysfs.c              |  2 +-
+ include/linux/ioprio.h       | 17 ++++++++++++++++-
+ include/uapi/linux/ioprio.h  | 34 ++++++++++++++++++++--------------
+ 8 files changed, 52 insertions(+), 32 deletions(-)
+
+-- 
+2.31.1
+
