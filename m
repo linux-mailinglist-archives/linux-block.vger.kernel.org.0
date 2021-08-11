@@ -2,167 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCFB63E91F4
-	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 14:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9263E91D3
+	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 14:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbhHKMxH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Aug 2021 08:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhHKMxG (ORCPT
+        id S229794AbhHKMrj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Aug 2021 08:47:39 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:52654 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229719AbhHKMri (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Aug 2021 08:53:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47FE0C061765
-        for <linux-block@vger.kernel.org>; Wed, 11 Aug 2021 05:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=n0dB52Aydkl+RoqMFSS9U7kndtUkJfdL8iYMrIjWdtI=; b=N05l9onf+bOe7sJhBVqbZM0Jrz
-        RQoy13CasuMiH1Reg/xqTfIFz45BVPX2dQhLRIMpaglglght6CV1PdPE+dY9iNO59uYH0IVghkyIc
-        K+SASb6ULSE6TmNiVcPNjMW789xZ35qbcmw5nXD+oedYx4jrPWOOdAjeDGZxVAzEwenc9OKZziHvD
-        mUddRdW6mIDepp1elyA/nlZ+oxbsfqNwzsxrgJZcWPLVIo0MFxMASFWhPudsTRt00X2k3c2HEOJYm
-        G6YK5NERtthDhvPOAfBfuqxsKbbpF9r+xuwJRIPhPENY3uvaL8S+sRdWnw/A9SrKmKZBlz1Ufbsz8
-        wzNzVRzw==;
-Received: from [2001:4bb8:184:6215:7ee3:d0e9:131a:82ff] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mDnhZ-00DQLa-OL; Wed, 11 Aug 2021 12:51:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        Hou Tao <houtao1@huawei.com>
-Subject: [PATCH 6/6] nbd: reduce the nbd_index_mutex scope
-Date:   Wed, 11 Aug 2021 14:44:28 +0200
-Message-Id: <20210811124428.2368491-7-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210811124428.2368491-1-hch@lst.de>
-References: <20210811124428.2368491-1-hch@lst.de>
+        Wed, 11 Aug 2021 08:47:38 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id ACA1A20170;
+        Wed, 11 Aug 2021 12:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1628686033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nwQ4TvjjMcZX7eWrYwBnPN10bqbjG9P7T2eCYAyJQXk=;
+        b=vRr9euvpwMXH0RWDfUD0ywdhH4vM2NdmgSzf1xS2x1Ed90rCAO5rygcPXkH0xi9auM1aWN
+        5CaPl0CL/LM23oND21hPH1suDmy0Qplk2ZFKkV4XOw3A4+GFei+wWFEYqgwWNJukodF7Ke
+        IDjzdq6WV6fUBS0BE8mFP0B+h9T/hJ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1628686033;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nwQ4TvjjMcZX7eWrYwBnPN10bqbjG9P7T2eCYAyJQXk=;
+        b=pgVKegl+OIMR6AYcPyFrMsuOvSOI1CrVWEt2HwgM9Qn+HEPXhkidnjAdoKFQ64w2yOrr0q
+        cHhEhY1mmpn2KoDw==
+Received: from quack2.suse.cz (unknown [10.100.224.230])
+        by relay2.suse.de (Postfix) with ESMTP id 98216A3C59;
+        Wed, 11 Aug 2021 12:47:13 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 680061E6204; Wed, 11 Aug 2021 14:47:13 +0200 (CEST)
+Date:   Wed, 11 Aug 2021 14:47:13 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jan Kara <jack@suse.cz>, Qian Cai <quic_qiancai@quicinc.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        linux-block@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: move the bdi from the request_queue to the gendisk
+Message-ID: <20210811124713.GF14725@quack2.suse.cz>
+References: <20210809141744.1203023-1-hch@lst.de>
+ <e5e19d15-7efd-31f4-941a-a5eb2f94b898@quicinc.com>
+ <20210810200256.GA30809@lst.de>
+ <20210811112514.GC14725@quack2.suse.cz>
+ <20210811115147.GA27860@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210811115147.GA27860@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-nbd_index_mutex is currently held over add_disk and inside ->open, which
-leads to lock order reversals.  Refactor the device creation code path
-so that nbd_dev_add is called without nbd_index_mutex lock held and
-only takes it for the IDR insertation.
+On Wed 11-08-21 13:51:47, Christoph Hellwig wrote:
+> On Wed, Aug 11, 2021 at 01:25:14PM +0200, Jan Kara wrote:
+> > Well, non-default bdi_writeback structures do hold bdi reference - see
+> > wb_exit() which drops the reference. I think the problem rather was that a
+> > block device's inode->i_wb was pointing to the default bdi_writeback
+> > structure and that got freed after bdi_put() before block device inode was
+> > shutdown through bdput()... So what I think we need is that if the inode
+> > references the default writeback structure, it actually holds a reference
+> > to the bdi.
+> 
+> Qian, can you test the patch below instead of the one I sent yesterday?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/nbd.c | 55 +++++++++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+Sadly the patch below will not work because the bdi refcount will never
+drop to 0. wb_exit() for the default writeback structure is called only
+from release_bdi() (i.e., after the bdi refcount is 0). That is why I wrote
+above that references to default wb from inodes would hold the ref, not the
+default wb structure itself. So we would need to explicitely hack this into
+__inode_attach_wb() and inode_detach_wb().
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 0b46a608f879..4054cc33fc1e 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1681,7 +1681,7 @@ static const struct blk_mq_ops nbd_mq_ops = {
- 	.timeout	= nbd_xmit_timeout,
- };
- 
--static struct nbd_device *nbd_dev_add(int index)
-+static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- {
- 	struct nbd_device *nbd;
- 	struct gendisk *disk;
-@@ -1707,6 +1707,7 @@ static struct nbd_device *nbd_dev_add(int index)
- 	if (err)
- 		goto out_free_nbd;
- 
-+	mutex_lock(&nbd_index_mutex);
- 	if (index >= 0) {
- 		err = idr_alloc(&nbd_index_idr, nbd, index, index + 1,
- 				GFP_KERNEL);
-@@ -1717,6 +1718,7 @@ static struct nbd_device *nbd_dev_add(int index)
- 		if (err >= 0)
- 			index = err;
- 	}
-+	mutex_unlock(&nbd_index_mutex);
- 	if (err < 0)
- 		goto out_free_tags;
- 	nbd->index = index;
-@@ -1743,7 +1745,7 @@ static struct nbd_device *nbd_dev_add(int index)
- 
- 	mutex_init(&nbd->config_lock);
- 	refcount_set(&nbd->config_refs, 0);
--	refcount_set(&nbd->refs, 1);
-+	refcount_set(&nbd->refs, refs);
- 	INIT_LIST_HEAD(&nbd->list);
- 	disk->major = NBD_MAJOR;
- 	disk->first_minor = index << part_shift;
-@@ -1847,34 +1849,35 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
- 		nbd = idr_find(&nbd_index_idr, index);
- 	}
- 
--	if (!nbd) {
--		nbd = nbd_dev_add(index);
--		if (IS_ERR(nbd)) {
-+	if (nbd) {
-+		if (test_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags) &&
-+		    test_bit(NBD_DISCONNECT_REQUESTED, &nbd->flags)) {
-+			nbd->destroy_complete = &destroy_complete;
- 			mutex_unlock(&nbd_index_mutex);
--			pr_err("nbd: failed to add new device\n");
--			return PTR_ERR(nbd);
-+
-+			/* wait until the nbd device is completely destroyed */
-+			wait_for_completion(&destroy_complete);
-+			goto again;
- 		}
--	}
- 
--	if (test_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags) &&
--	    test_bit(NBD_DISCONNECT_REQUESTED, &nbd->flags)) {
--		nbd->destroy_complete = &destroy_complete;
-+		if (!refcount_inc_not_zero(&nbd->refs)) {
-+			mutex_unlock(&nbd_index_mutex);
-+			if (index == -1)
-+				goto again;
-+			pr_err("nbd: device at index %d is going down\n",
-+		       		index);
-+			return -EINVAL;
-+		}
- 		mutex_unlock(&nbd_index_mutex);
--
--		/* Wait untill the the nbd stuff is totally destroyed */
--		wait_for_completion(&destroy_complete);
--		goto again;
--	}
--
--	if (!refcount_inc_not_zero(&nbd->refs)) {
-+	} else {
- 		mutex_unlock(&nbd_index_mutex);
--		if (index == -1)
--			goto again;
--		printk(KERN_ERR "nbd: device at index %d is going down\n",
--		       index);
--		return -EINVAL;
-+
-+		nbd = nbd_dev_add(index, 2);
-+		if (IS_ERR(nbd)) {
-+			pr_err("nbd: failed to add new device\n");
-+			return PTR_ERR(nbd);
-+		}
- 	}
--	mutex_unlock(&nbd_index_mutex);
- 
- 	mutex_lock(&nbd->config_lock);
- 	if (refcount_read(&nbd->config_refs)) {
-@@ -2430,10 +2433,8 @@ static int __init nbd_init(void)
- 	}
- 	nbd_dbg_init();
- 
--	mutex_lock(&nbd_index_mutex);
- 	for (i = 0; i < nbds_max; i++)
--		nbd_dev_add(i);
--	mutex_unlock(&nbd_index_mutex);
-+		nbd_dev_add(i, 1);
- 	return 0;
- }
- 
+Somewhat cleaner approach might be to modify wb_get(), wb_tryget(),
+wb_put() to get reference to bdi instead of doing nothing for the default
+wb. And drop a lot of special-casing of the default wb from various
+functions. But I guess the special cases are there to avoid the performance
+overhead for the common case because getting wb ref is common. Also that's
+why wbs use percpu refcount and we would need something similar for bdis.
+I guess this needs more thinking and your quick workaround is OK for now.
+
+								Honza
+
+> 
+> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+> index cd06dca232c3..edfb7ce2cc93 100644
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -283,8 +283,7 @@ static int wb_init(struct bdi_writeback *wb, struct backing_dev_info *bdi,
+>  
+>  	memset(wb, 0, sizeof(*wb));
+>  
+> -	if (wb != &bdi->wb)
+> -		bdi_get(bdi);
+> +	bdi_get(bdi);
+>  	wb->bdi = bdi;
+>  	wb->last_old_flush = jiffies;
+>  	INIT_LIST_HEAD(&wb->b_dirty);
+> @@ -362,8 +361,7 @@ static void wb_exit(struct bdi_writeback *wb)
+>  		percpu_counter_destroy(&wb->stat[i]);
+>  
+>  	fprop_local_destroy_percpu(&wb->completions);
+> -	if (wb != &wb->bdi->wb)
+> -		bdi_put(wb->bdi);
+> +	bdi_put(wb->bdi);
+>  }
+>  
+>  #ifdef CONFIG_CGROUP_WRITEBACK
 -- 
-2.30.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
