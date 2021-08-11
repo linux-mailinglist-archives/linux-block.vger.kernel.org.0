@@ -2,180 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2423E88E0
-	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 05:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7354F3E89B1
+	for <lists+linux-block@lfdr.de>; Wed, 11 Aug 2021 07:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233301AbhHKDhv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Aug 2021 23:37:51 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:34666 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233441AbhHKDhf (ORCPT
+        id S234293AbhHKFWt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Aug 2021 01:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233813AbhHKFWt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Aug 2021 23:37:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1628653033; x=1660189033;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=aIY39d4hgoXJ5yC909GBcv4Zo1XR4CYUFpg6offLqg4=;
-  b=mkUytbje80TaCIAMY1x8mnNXFSkG959PhuCkkg0H9IvEWpxXAFl+nG5y
-   8fNOLfMnC+jie0dwGY5ZszNxYC6YhRW7I4fxim6TlPXk+iVzufI3XDZJc
-   9FEH8/wc+l97mtQR6K5RTMahnrdu2fBIlpA6aIyDy/8P6rqMmAgKITGdi
-   Wmu3qTopd4Ol1vqZIwTXfZNc/lpI17bX87Tql/vId57QBR7Zq/yBrybUX
-   UvzjfOnkK6aha6P+teG4bdRyKLZoHgqGYjNA9Il3Vu1x6UJ7ouw12dgz9
-   n/HqGxI/khgKzhWoEdNflx9vuRjSDFAn2eTq1qEAEmA1R6Bj2WDeBrl9L
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.84,311,1620662400"; 
-   d="scan'208";a="177454820"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Aug 2021 11:37:13 +0800
-IronPort-SDR: +OrEXQfJqgiy6LbfaF5wDr8J6ZvnjnZFb6Davwx7xbjSPTvRqZZJr3FcMXCF1w6bCvQnW+6vSm
- k4IPrWzW2Zh5YG9H+bDXk7NIyrkn6+TY+TSn2S6nRN/J1wGRdrnY0wCMMhfPd+PWtPL/XCmNGx
- 52rrxxnxQUSI8rznDpcOW1sm9m6Eng3GSMvyLoT+hjzbzH2DTx8KBLPAxcjwhso9xJsaxheVAl
- rjCHP2VmzozOmHzbsjolbcHQMevetz6rXbSCbV7/qhb3rPaWChTJfAVY10U/Usafd8wr+qutJw
- 6/ZL61eJMmE9Raf2KYkHL4nF
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 20:14:33 -0700
-IronPort-SDR: Xb3/7ZlwUG+JnG3iXyej6Y9GLbcebGNIfPJy6Y8FRbvgl69fAikHEiz4PTscm0LpsRymbEL1M9
- YBnLe88i40M7lEwfZSYnJZKTIf1T9bN4cyxi7cYb4aqEOiLTy8dbisxhryK4ErmqWwTyfKy4hm
- A5LhpCiaYghAo2RB2Hs5jbkSF0+hw8AxP04tIZ8olrXMvGF9hzbP2zi1i03O1QPD6UllLz1nzJ
- XeEcq0aFesgKtspnyc6Qae6mQC4uMddcX/niF19d8OlOydIhjzGC+I4d6ahrUZx/iIeZcU/G20
- i/0=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 10 Aug 2021 20:37:11 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v4 6/6] block: fix default IO priority handling
-Date:   Wed, 11 Aug 2021 12:37:02 +0900
-Message-Id: <20210811033702.368488-7-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210811033702.368488-1-damien.lemoal@wdc.com>
-References: <20210811033702.368488-1-damien.lemoal@wdc.com>
+        Wed, 11 Aug 2021 01:22:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9440BC061765;
+        Tue, 10 Aug 2021 22:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vpzaQyEKrZmYpNp17799MlfevE7lZ5qGY4jkrsTFkd4=; b=mFTzQwKJPyhWj8LabAH5uU9j4b
+        F3jWWlaCoCd0sPss8/w0SnqlNPJI8wu1qb8etX+TDJx06ZQIEe95hK5uiNHr+ZhTnAXAvc36eutjr
+        UbVeSuHd0j043Sep41pznPLKjeFojPT1aLYAbLFWCP+N14Ye3aSlhLChPTP823Be/frDLeYT8osNN
+        AXrRDcOs6rWJ06OHJ20PnCwFzsw5lZm+so3IHpxM0B7j6jHPlI97t7l6M7/ssihiqhFgvIaLJgAfH
+        6Z8R5icMjMtTLp4lRWUjNHk1TuSEbKpI7t2bdvPQj6geefGpzjrSJ+5NvezQLcXFn8cvsOISbXLSq
+        PJE9ZZJw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mDgeG-00CzyX-HN; Wed, 11 Aug 2021 05:19:44 +0000
+Date:   Wed, 11 Aug 2021 06:19:28 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     luomeng <luomeng12@huawei.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        hare@suse.de, bvanassche@acm.org, ming.lei@redhat.com,
+        hch@infradead.org, jack@suse.cz, osandov@fb.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] block: replace incorrect uses of GENHD_FL_UP
+Message-ID: <YRNd4O1uV1auj/pK@infradead.org>
+References: <20210720182048.1906526-1-mcgrof@kernel.org>
+ <051ab019-5163-e691-43ed-052401b6b95a@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <051ab019-5163-e691-43ed-052401b6b95a@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The default IO priority is the best effort (BE) class with the
-normal priority level IOPRIO_NORM (4). However, get_task_ioprio()
-returns IOPRIO_CLASS_NONE/IOPRIO_NORM as the default priority and
-get_current_ioprio() returns IOPRIO_CLASS_NONE/0. Let's be consistent
-with the defined default and have both of these functions return the
-default priority IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_NORM) when
-the user did not define another default IO priority for the task.
+On Wed, Aug 11, 2021 at 10:42:20AM +0800, luomeng wrote:
+> Hi:
+>    When the fuzz test injected memory allocation failed, I had this BUG_ON:
+> kernel BUG at fs/sysfs/group.c:116.
+>   The cause of the bug_ON is that the add_disk memory fails to be allocated
+> but no error processing is performed.
+>   I find your patches add error processing. So what is your next step with
+> these patches.
 
-In include/uapi/linux/ioprio.h, introduce the IOPRIO_BE_NORM macro as
-an alias to IOPRIO_NORM to clarify that this default level applies to
-the BE priotity class. In include/linux/ioprio.h, define the macro
-IOPRIO_DEFAULT as IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_BE_NORM)
-and use this new macro when setting a priority to the default.
+I have one more pending series on top of this one I need to submit here:
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- block/bfq-iosched.c          | 2 +-
- block/ioprio.c               | 6 +++---
- drivers/nvme/host/lightnvm.c | 2 +-
- include/linux/ioprio.h       | 7 ++++++-
- include/uapi/linux/ioprio.h  | 5 +++--
- 5 files changed, 14 insertions(+), 8 deletions(-)
+http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/alloc_disk
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 4b434369e411..e92bc0348433 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5411,7 +5411,7 @@ static struct bfq_queue **bfq_async_queue_prio(struct bfq_data *bfqd,
- 	case IOPRIO_CLASS_RT:
- 		return &bfqg->async_bfqq[0][ioprio];
- 	case IOPRIO_CLASS_NONE:
--		ioprio = IOPRIO_NORM;
-+		ioprio = IOPRIO_BE_NORM;
- 		fallthrough;
- 	case IOPRIO_CLASS_BE:
- 		return &bfqg->async_bfqq[1][ioprio];
-diff --git a/block/ioprio.c b/block/ioprio.c
-index ca6b136c5586..0e4ff245f2bf 100644
---- a/block/ioprio.c
-+++ b/block/ioprio.c
-@@ -170,7 +170,7 @@ static int get_task_ioprio(struct task_struct *p)
- 	ret = security_task_getioprio(p);
- 	if (ret)
- 		goto out;
--	ret = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, IOPRIO_NORM);
-+	ret = IOPRIO_DEFAULT;
- 	task_lock(p);
- 	if (p->io_context)
- 		ret = p->io_context->ioprio;
-@@ -182,9 +182,9 @@ static int get_task_ioprio(struct task_struct *p)
- int ioprio_best(unsigned short aprio, unsigned short bprio)
- {
- 	if (!ioprio_valid(aprio))
--		aprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_NORM);
-+		aprio = IOPRIO_DEFAULT;
- 	if (!ioprio_valid(bprio))
--		bprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_NORM);
-+		bprio = IOPRIO_DEFAULT;
- 
- 	return min(aprio, bprio);
- }
-diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
-index e9d9ad47f70f..0fbbff0b3edb 100644
---- a/drivers/nvme/host/lightnvm.c
-+++ b/drivers/nvme/host/lightnvm.c
-@@ -662,7 +662,7 @@ static struct request *nvme_nvm_alloc_request(struct request_queue *q,
- 	if (rqd->bio)
- 		blk_rq_append_bio(rq, rqd->bio);
- 	else
--		rq->ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_NORM);
-+		rq->ioprio = IOPRIO_DEFAULT;
- 
- 	return rq;
- }
-diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
-index 2ee3373684b1..3f53bc27a19b 100644
---- a/include/linux/ioprio.h
-+++ b/include/linux/ioprio.h
-@@ -8,6 +8,11 @@
- 
- #include <uapi/linux/ioprio.h>
- 
-+/*
-+ * Default IO priority.
-+ */
-+#define IOPRIO_DEFAULT	IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_BE_NORM)
-+
- /*
-  * Check that a priority value has a valid class.
-  */
-@@ -51,7 +56,7 @@ static inline int get_current_ioprio(void)
- 
- 	if (ioc)
- 		return ioc->ioprio;
--	return IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
-+	return IOPRIO_DEFAULT;
- }
- 
- /*
-diff --git a/include/uapi/linux/ioprio.h b/include/uapi/linux/ioprio.h
-index aac39338d02c..f70f2596a6bf 100644
---- a/include/uapi/linux/ioprio.h
-+++ b/include/uapi/linux/ioprio.h
-@@ -44,8 +44,9 @@ enum {
- };
- 
- /*
-- * Fallback BE priority
-+ * Fallback BE priority level.
-  */
--#define IOPRIO_NORM	(4)
-+#define IOPRIO_NORM	4
-+#define IOPRIO_BE_NORM	IOPRIO_NORM
- 
- #endif /* _UAPI_LINUX_IOPRIO_H */
--- 
-2.31.1
-
+to make sure the disk always has a valid queue reference.  After that
+Luis work to return an error from add_disk should be much easier bause
+we not have defined state.
