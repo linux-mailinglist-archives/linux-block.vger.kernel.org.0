@@ -2,85 +2,166 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4423D3E9FD4
-	for <lists+linux-block@lfdr.de>; Thu, 12 Aug 2021 09:50:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 395523EA08A
+	for <lists+linux-block@lfdr.de>; Thu, 12 Aug 2021 10:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234745AbhHLHuu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 12 Aug 2021 03:50:50 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:51846 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234907AbhHLHur (ORCPT
+        id S234110AbhHLI05 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 12 Aug 2021 04:26:57 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:54808 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233921AbhHLI05 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 12 Aug 2021 03:50:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1628754623; x=1660290623;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=mhabWCigeMf23LkXW4lJkPoqzA+1/WMbsc4DZ/vq3tw=;
-  b=SZUDLHH6LAGaGeKUER9HVRgAEdsUCFjMxA/LDudnQxEvLf0X4eEnQwwz
-   Tun21mnBuwVSLI4ylQDcdCLXC/QrqwDJWzXeJPBoqbL1bKgGubX5owUvp
-   eMxo/pdS9apGlRVA4bFSO8Y7NfLgkSoPr2Gj1pT6w8161d5gZNbJAgZQB
-   GYHMK5iK0Nv45zS8sN0i24t0NFzf37VsIOBJ7SAIx6zvjizxnzcZKWSUp
-   BrkhkQEvEdKKfmGCxxEy1KTrczLqC8aoGyS7Pvw21Ha1J0ahiso0rZPGY
-   AMmE8pAOWu0vR7wUHh/OVVpSVlnjVERwpTZmvTPCWrCkKNfMzEfGhpDen
-   g==;
-X-IronPort-AV: E=Sophos;i="5.84,315,1620662400"; 
-   d="scan'208";a="177596943"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Aug 2021 15:50:23 +0800
-IronPort-SDR: 0OesJ+fSRYY3cqX0+jeNm7DsMQkidQUVOQSryo271WGxgQG5PNI88B25ftvv8y/XudWhoBKJ66
- KyRVME5ajNA7uKdLt1/vh4ap6NslrPlTXUTmhvJAlw6lenk61d9R73GfYuOMXaOr5gdSNaR6/8
- V9UCR6KwAXU7mWelm10emiFKORQkdnn+O2TMkdTi8lkcfs9oLAmoF/ZvgZ7MrhcCen8s/6uubD
- hKVzi5xwrBVPtEurFGYsPfYrqShiLSt+q0l+6d/mHS9JO22AWQ6Rc8HSrDQpEgOAV1omA6CwJV
- San/67ncuhc1Kfv73DbB/Ew1
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 00:25:52 -0700
-IronPort-SDR: Y1Ypfv0yVGZKC3DnoHshu9G/WDLsplaRQrBahece99Kn80KD8XrHeKc7bVYk+yO+l4pwn/bM0/
- WrD3ecnXXu7gI46HrGZpwSsPKCRbBhbTAT5BElgs3AQbT9KtOlacMHJ+R3rPJIsXTNpCrUsKv/
- cUVk57YcLhsIiAO2S9+BWQXsUvh5aMoCMzMm4KSaUoxyCOv5T61YCLy35a/GKl6ZOOSecQtPLX
- NF8Q6iTjXCRjykOjSL+3mZpMeAooJwdJO/mrxCZIngdu2XxZMP1uNvxZsMFO4564Gu1idxNYD3
- 0rA=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 12 Aug 2021 00:50:21 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v5 5/5] doc: Fix typo in request queue sysfs documentation
-Date:   Thu, 12 Aug 2021 16:50:15 +0900
-Message-Id: <20210812075015.1090959-6-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210812075015.1090959-1-damien.lemoal@wdc.com>
-References: <20210812075015.1090959-1-damien.lemoal@wdc.com>
+        Thu, 12 Aug 2021 04:26:57 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id BE8731FF25;
+        Thu, 12 Aug 2021 08:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1628756791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W1siwlHTi8lS3cs+jZ0WTisGvn3OxGPBwciL9B3Rt4s=;
+        b=aSSDMf2s/7P5tBjB9VJ/z0vKpyZTppPkSJ8XLfBBqff1ejuaHy9Kv4N86QnWwp1Pq6lvfB
+        bBVUgx94DhRPKRD9vd9s0CQBFPHFlfYtYjdDkVXkRAzuoSwyoJsQXlc43wOUemAniEI8qm
+        ZMQjDDS92Lx44PF2NYIdCak9Iy8ssnI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1628756791;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W1siwlHTi8lS3cs+jZ0WTisGvn3OxGPBwciL9B3Rt4s=;
+        b=1paF8yPysFFCRHMIqOFoGezeXpOaxgGYAvQrNFvMTQSOWDwbwlUVVU35rH8zOq/Cq0P+yw
+        9CKla2iY9VnjiaAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B98CE13A09;
+        Thu, 12 Aug 2021 08:26:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id nErhIDTbFGHkKwAAMHmgww
+        (envelope-from <colyli@suse.de>); Thu, 12 Aug 2021 08:26:28 +0000
+Subject: Re: [PATCH v12 02/12] bcache: initialize the nvm pages allocator
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvdimm@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+        Hannes Reinecke <hare@suse.com>, Jan Kara <jack@suse.cz>,
+        Christoph Hellwig <hch@lst.de>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Jianpeng Ma <jianpeng.ma@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Hannes Reinecke <hare@suse.de>
+References: <20210811170224.42837-1-colyli@suse.de>
+ <20210811170224.42837-3-colyli@suse.de>
+ <CAPcyv4hhfg=mgN4AW8T2VWGVbKsQZkpPwpU5yVAVh2nFOxCBcg@mail.gmail.com>
+From:   Coly Li <colyli@suse.de>
+Message-ID: <dffaf01e-9ac4-e71b-3e38-1f2b0bfc5aed@suse.de>
+Date:   Thu, 12 Aug 2021 16:26:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4hhfg=mgN4AW8T2VWGVbKsQZkpPwpU5yVAVh2nFOxCBcg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Fix a typo (are -> as) in the introduction paragraph of
-Documentation/block/queue-sysfs.rst.
+On 8/12/21 1:43 PM, Dan Williams wrote:
+> On Wed, Aug 11, 2021 at 10:04 AM Coly Li <colyli@suse.de> wrote:
+>> From: Jianpeng Ma <jianpeng.ma@intel.com>
+>>
+>> This patch define the prototype data structures in memory and
+>> initializes the nvm pages allocator.
+>>
+>> The nvm address space which is managed by this allocator can consist of
+>> many nvm namespaces, and some namespaces can compose into one nvm set,
+>> like cache set. For this initial implementation, only one set can be
+>> supported.
+>>
+>> The users of this nvm pages allocator need to call register_namespace()
+>> to register the nvdimm device (like /dev/pmemX) into this allocator as
+>> the instance of struct nvm_namespace.
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
+>> Co-developed-by: Qiaowei Ren <qiaowei.ren@intel.com>
+>> Signed-off-by: Qiaowei Ren <qiaowei.ren@intel.com>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Hannes Reinecke <hare@suse.de>
+>> Cc: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  drivers/md/bcache/Kconfig     |  10 +
+>>  drivers/md/bcache/Makefile    |   1 +
+>>  drivers/md/bcache/nvm-pages.c | 339 ++++++++++++++++++++++++++++++++++
+>>  drivers/md/bcache/nvm-pages.h |  96 ++++++++++
+>>  drivers/md/bcache/super.c     |   3 +
+>>  5 files changed, 449 insertions(+)
+>>  create mode 100644 drivers/md/bcache/nvm-pages.c
+>>  create mode 100644 drivers/md/bcache/nvm-pages.h
+>>
+[snipped]
+>> +
+>> +       err = -EOPNOTSUPP;
+>> +       if (!bdev_dax_supported(bdev, ns->page_size)) {
+>> +               pr_err("%s don't support DAX\n", bdevname(bdev, buf));
+>> +               goto free_ns;
+>> +       }
+>> +
+>> +       err = -EINVAL;
+>> +       if (bdev_dax_pgoff(bdev, 0, ns->page_size, &pgoff)) {
+>> +               pr_err("invalid offset of %s\n", bdevname(bdev, buf));
+>> +               goto free_ns;
+>> +       }
+>> +
+>> +       err = -ENOMEM;
+>> +       ns->dax_dev = fs_dax_get_by_bdev(bdev);
+>> +       if (!ns->dax_dev) {
+>> +               pr_err("can't by dax device by %s\n", bdevname(bdev, buf));
+>> +               goto free_ns;
+>> +       }
+>> +
+>> +       err = -EINVAL;
+>> +       id = dax_read_lock();
+>> +       dax_ret = dax_direct_access(ns->dax_dev, pgoff, ns->pages_total,
+>> +                                   &ns->base_addr, &ns->start_pfn);
+>> +       if (dax_ret <= 0) {
+>> +               pr_err("dax_direct_access error\n");
+>> +               dax_read_unlock(id);
+>> +               goto free_ns;
+>> +       }
+>> +
+>> +       if (dax_ret < ns->pages_total) {
+>> +               pr_warn("mapped range %ld is less than ns->pages_total %lu\n",
+>> +                       dax_ret, ns->pages_total);
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- Documentation/block/queue-sysfs.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Dan,
 
-diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
-index 757609bbb1e2..25f4a768f450 100644
---- a/Documentation/block/queue-sysfs.rst
-+++ b/Documentation/block/queue-sysfs.rst
-@@ -4,7 +4,7 @@ Queue sysfs files
- 
- This text file will detail the queue files that are located in the sysfs tree
- for each block device. Note that stacked devices typically do not export
--any settings, since their queue merely functions are a remapping target.
-+any settings, since their queue merely functions as a remapping target.
- These files are the ones found in the /sys/block/xxx/queue/ directory.
- 
- Files denoted with a RO postfix are readonly and the RW postfix means
--- 
-2.31.1
+Many thanks for your information.
 
+> This failure will become a common occurrence with CXL namespaces that
+> will have discontiguous range support. It's already the case for
+> dax-devices for soft-reserved memory [1]. In the CXL case the
+> discontinuity will be 256MB aligned, for the soft-reserved dax-devices
+> the discontinuity granularity can be as small as 4K.
+>
+> [1]: https://elixir.bootlin.com/linux/v5.14-rc5/source/drivers/dax/device.c#L414
+
+Fortunately the on-media allocation list format works with multiple
+ranges of the namespace. For the in-memory struct bch_nvmpg_ns currently
+assumes the namespace is a flat continuous range. Yes, we need to
+consider and support multiple ranges in struct bch_nvmpg_ns for buddy
+allocation initialization to skip the discontinuous gap.
+
+It will be in the to-do list for next work. Thanks for your comments and
+hint.
+
+Coly Li
