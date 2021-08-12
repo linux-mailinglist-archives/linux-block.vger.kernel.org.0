@@ -2,130 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E2563EA001
-	for <lists+linux-block@lfdr.de>; Thu, 12 Aug 2021 09:56:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8E03E9FCB
+	for <lists+linux-block@lfdr.de>; Thu, 12 Aug 2021 09:50:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234884AbhHLH5P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 12 Aug 2021 03:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234245AbhHLH5O (ORCPT
+        id S234784AbhHLHum (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 12 Aug 2021 03:50:42 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:51846 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232348AbhHLHum (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 12 Aug 2021 03:57:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25CB2C061765;
-        Thu, 12 Aug 2021 00:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=vbzQM6aTARPCC3+R9ES/KK4HZC4Ol4Ja+NtAVkKj4Fs=; b=qZEMPMHe3mr2wd5iUcJ26aoj9t
-        Si1X+9X8oy70ughMGUzCa5MkYzM+zz0K9+CvjXyviH1HM26z+nYn2AGplJ9UnxZOTLqDq0nPtlKKJ
-        L1lW08svi+5AexRSnGoLSVrV8Nvj02ioGswnnhBkPtHJHDE86WlUCMqwzMUy8ZNSUPCo5X3AmLEp5
-        iIna5P53SiFpypNLcDUcMrG3cCSJ1DY0/P8NyXOUeefhyeU1hPyNs/5x5ZvxVX78Cd1f2+t7rNIke
-        Nuw+N1L55lLwxwVludT0GnU+5pl+ncnTl9inGlyH9G62b9bTfoT3lWCtwnAC2fKS5cqlX4iwJd/nS
-        Pc5eMnvQ==;
-Received: from [2001:4bb8:184:6215:d7d:1904:40de:694d] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mE5XV-00EJBt-5d; Thu, 12 Aug 2021 07:54:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: [PATCH 8/8] block: hold a request_queue reference for the lifetime of struct gendisk
-Date:   Thu, 12 Aug 2021 09:46:42 +0200
-Message-Id: <20210812074642.18592-9-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210812074642.18592-1-hch@lst.de>
-References: <20210812074642.18592-1-hch@lst.de>
+        Thu, 12 Aug 2021 03:50:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1628754618; x=1660290618;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4u8e9rFyNPDmv1NIZxmllueH6Qf71aOKm4JtYfad7S4=;
+  b=O2YiMC/gmNcRBmXV5fcRz4fkPAqpfbbQM1cdyb5t1+Ql43QAsVjs8iLY
+   lKlGXLg9lEuWAA/LJiCR7ua+EvEeftL4JDjgPr1s5N4cCJQ+bJ5MOLAUB
+   FQ8CU2EcaQKJg/7zKWsR59g6TvV7YRaKyXmkLBQgF8i+KVwW8czajPdWa
+   dApbO015ItBTtcDOsf32KVXSkEUB9xVS/KN2sNBSyeD4su7MAKtsTxu5R
+   EckDA86waDQnch3BGx8NBLIclV5ROj35h378Pgzamdus8Gerlx56mBM0I
+   LvBXb1Px2FNY8U/YIzBN90iDVUfaJey/2Q4qYc1xidh6izgMdvxBz/Bvy
+   A==;
+X-IronPort-AV: E=Sophos;i="5.84,315,1620662400"; 
+   d="scan'208";a="177596931"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Aug 2021 15:50:17 +0800
+IronPort-SDR: +tNerFHQTUi0RC1CH+kq2x1BZFyTsav8fNaXr2hA2/0l+f8PJacb94iSqJv44EZNS47Fy/unDf
+ maQ4y631dp5at/aJqvyVt8NFmOk8LWP/GNelaNN0Ij6P5UZ7Sw25yFC4idXYx49DKGqMnyjCJ2
+ kIZSMw78eD8s4B4LBroFS5ozA3jLwxiSbqTmx6xCAoUUAdKJgxYzxH59kTELH1t87WgTmml+s2
+ xf2saIkFi5jLEdsFGDa4DBVIgb6HagSzUKmV5GzZzrM7URQIraqRiUFNXwe8GWQ/dHBwIn/N2u
+ 7KoEgQrrsLr6JkPFCt64hCuk
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 00:25:46 -0700
+IronPort-SDR: +Bh2yLsoIrS4Vo5rs2t1Ncasyk/+FAgq9Rd/MOpoIyaztNsjj4pPwEybVx1gsD9EbPL9hIG6/S
+ KPyd1whWQOHPQu7NXbYA8fkacAwelOYyQeDltxpuMA9EzLvt+TU2wBR3y1+3ikozan9rYDRYNE
+ 0H4skHVgS+iKBv1OBb6/bNYlHWQSWGhNmGujpTzfgIS3XrEAB7akPQIAZ9nx8+LM64Nv/TCOgQ
+ kffKW34ututYaNPTowaXQJ3ajrB7BIACibD94egjjTNQlQ6SelJ8TSancjWfemGfGoNiD79tfo
+ 0Aw=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 12 Aug 2021 00:50:16 -0700
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH v5 0/5] Initial support for multi-actuator HDDs
+Date:   Thu, 12 Aug 2021 16:50:10 +0900
+Message-Id: <20210812075015.1090959-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Acquire the queue ref dropped in disk_release in __blk_alloc_disk so any
-allocate gendisk always has a queue reference.
+Single LUN multi-actuator hard-disks are cappable to seek and execute
+multiple commands in parallel. This capability is exposed to the host
+using the Concurrent Positioning Ranges VPD page (SCSI) and Log (ATA).
+Each positioning range describes the contiguous set of LBAs that an
+actuator serves.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/genhd.c         | 20 +++++++-------------
- include/linux/genhd.h |  1 -
- 2 files changed, 7 insertions(+), 14 deletions(-)
+This series adds support the scsi disk driver to retreive this
+information and advertize it to user space through sysfs. libata is also
+modified to handle ATA drives.
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 283cf0c649e1..18600f682edb 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -544,16 +544,6 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 	register_disk(parent, disk, groups);
- 	if (register_queue)
- 		blk_register_queue(disk);
--
--	/*
--	 * Take an extra ref on queue which will be put on disk_release()
--	 * so that it sticks around as long as @disk is there.
--	 */
--	if (blk_get_queue(disk->queue))
--		set_bit(GD_QUEUE_REF, &disk->state);
--	else
--		WARN_ON_ONCE(1);
--
- 	disk_add_events(disk);
- 	blk_integrity_add(disk);
- }
-@@ -1096,8 +1086,7 @@ static void disk_release(struct device *dev)
- 	disk_release_events(disk);
- 	kfree(disk->random);
- 	xa_destroy(&disk->part_tbl);
--	if (test_bit(GD_QUEUE_REF, &disk->state) && disk->queue)
--		blk_put_queue(disk->queue);
-+	blk_put_queue(disk->queue);
- 	iput(disk->part0->bd_inode);	/* frees the disk */
- }
- 
-@@ -1268,9 +1257,12 @@ struct gendisk *__alloc_disk_node(struct request_queue *q, int node_id,
- {
- 	struct gendisk *disk;
- 
-+	if (!blk_get_queue(q))
-+		return NULL;
-+
- 	disk = kzalloc_node(sizeof(struct gendisk), GFP_KERNEL, node_id);
- 	if (!disk)
--		return NULL;
-+		goto out_put_queue;
- 
- 	disk->part0 = bdev_alloc(disk, 0);
- 	if (!disk->part0)
-@@ -1297,6 +1289,8 @@ struct gendisk *__alloc_disk_node(struct request_queue *q, int node_id,
- 	iput(disk->part0->bd_inode);
- out_free_disk:
- 	kfree(disk);
-+out_put_queue:
-+	blk_put_queue(q);
- 	return NULL;
- }
- EXPORT_SYMBOL(__alloc_disk_node);
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 875be3bc8afb..e94147613d01 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -149,7 +149,6 @@ struct gendisk {
- 	unsigned long state;
- #define GD_NEED_PART_SCAN		0
- #define GD_READ_ONLY			1
--#define GD_QUEUE_REF			2
- 
- 	struct mutex open_mutex;	/* open/close mutex */
- 	unsigned open_partitions;	/* number of open partitions */
+The first patch adds the block layer plumbing to expose concurrent
+sector ranges of the device through sysfs as a sub-directory of the
+device sysfs queue directory. Patch 2 and 3 add support to sd and
+libata. Finally patch 4 documents the sysfs queue attributed changes.
+Patch 5 fixes a typo in the document file (strictly speaking, not
+related to this series).
+
+This series does not attempt in any way to optimize accesses to
+multi-actuator devices (e.g. block IO scheduler or filesystems). This
+initial support only exposes the actuators information to user space
+through sysfs.
+
+Changes from v4:
+* Fixed kdoc comment function name mismatch for disk_register_cranges()
+  in patch 1
+
+Changes from v3:
+* Modified patch 1:
+  - Prefix functions that take a struct gendisk as argument with
+    "disk_". Modified patch 2 accordingly.
+  - Added a functional release operation for struct blk_cranges kobj to
+    ensure that this structure is freed only after all references to it
+    are released, including kobject_del() execution for all crange sysfs
+    entries.
+* Added patch 5 to separate the typo fix from the crange documentation
+  addition.
+* Added reviewed-by tags
+
+Changes from v2:
+* Update patch 1 to fix a compilation warning for a potential NULL
+  pointer dereference of the cr argument of blk_queue_set_cranges().
+  Warning reported by the kernel test robot <lkp@intel.com>).
+
+Changes from v1:
+* Moved libata-scsi hunk from patch 1 to patch 3 where it belongs
+* Fixed unintialized variable in patch 2
+  Reported-by: kernel test robot <lkp@intel.com>
+  Reported-by: Dan Carpenter <dan.carpenter@oracle.com
+* Changed patch 3 adding struct ata_cpr_log to contain both the number
+  of concurrent ranges and the array of concurrent ranges.
+* Added a note in the documentation (patch 4) about the unit used for
+  the concurrent ranges attributes.
+
+Damien Le Moal (5):
+  block: Add concurrent positioning ranges support
+  scsi: sd: add concurrent positioning ranges support
+  libata: support concurrent positioning ranges log
+  doc: document sysfs queue/cranges attributes
+  doc: Fix typo in request queue sysfs documentation
+
+ Documentation/block/queue-sysfs.rst |  30 ++-
+ block/Makefile                      |   2 +-
+ block/blk-cranges.c                 | 310 ++++++++++++++++++++++++++++
+ block/blk-sysfs.c                   |  26 ++-
+ block/blk.h                         |   4 +
+ drivers/ata/libata-core.c           |  52 +++++
+ drivers/ata/libata-scsi.c           |  48 ++++-
+ drivers/scsi/sd.c                   |  81 ++++++++
+ drivers/scsi/sd.h                   |   1 +
+ include/linux/ata.h                 |   1 +
+ include/linux/blkdev.h              |  29 +++
+ include/linux/libata.h              |  15 ++
+ 12 files changed, 580 insertions(+), 19 deletions(-)
+ create mode 100644 block/blk-cranges.c
+
 -- 
-2.30.2
+2.31.1
 
