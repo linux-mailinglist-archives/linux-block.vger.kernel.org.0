@@ -2,78 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC5EB3EB1CB
-	for <lists+linux-block@lfdr.de>; Fri, 13 Aug 2021 09:44:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B06563EB1F7
+	for <lists+linux-block@lfdr.de>; Fri, 13 Aug 2021 09:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239595AbhHMHm3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Aug 2021 03:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        id S239775AbhHMHuh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Aug 2021 03:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239590AbhHMHm3 (ORCPT
+        with ESMTP id S239685AbhHMHug (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:42:29 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FCEC061756;
-        Fri, 13 Aug 2021 00:42:02 -0700 (PDT)
+        Fri, 13 Aug 2021 03:50:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57015C061756;
+        Fri, 13 Aug 2021 00:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=v5GvruCHAD5VdGVp7rPAa70pStcYZ0dgf5ANMBb+4wc=;
-        t=1628840522; x=1630050122; b=ZFr3C2+x1UejITvtIoKSlKqWMYfmd05UvxUUYJmP8dCuqZf
-        xyL7kJF2m31ZbzvXMxn0Qfo/LsIdqEv+uDFADyYhkZH/gq1wVfAYpfvvHz0euyfwDe4RouS03or0e
-        dhM0p+QuyBPDtIGV/IMKk1eKz1XNqmGv+GvQfUkGGjKbUrsOm2gJYmA2ysm9KYtgwfby3qUVcH8sl
-        Em7NK+clrwAnkRPjbj1+yEyh6lQteTdvCAFF8IgnmzxiwzICRKC0V7EKQwyQx3nhr6bgSbitEHW5S
-        L0dfMV1v8YGd5+WQxoBO0iPtQJn5nzXhREzUcX2n0+AZqqvEooJKIpQ+7q6elHMA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1mERoz-00A937-Sm; Fri, 13 Aug 2021 09:41:42 +0200
-Message-ID: <347234b097eb93a0882ad2a3a209c2b7923ff611.camel@sipsolutions.net>
-Subject: Re: [PATCH 39/64] mac80211: Use memset_after() to clear tx status
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-hardening@vger.kernel.org
-Date:   Fri, 13 Aug 2021 09:41:40 +0200
-In-Reply-To: <202107310852.551B66EE32@keescook>
-References: <20210727205855.411487-1-keescook@chromium.org>
-         <20210727205855.411487-40-keescook@chromium.org>
-         <202107310852.551B66EE32@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5bHSC0OcYYpqgVdrVVEPqREHErUnImiipx0LepG8OT0=; b=c7LqmxdmehDtJubLNfyZ6o0f/F
+        ++OEq04Wkr/NCgX5EDR+os2OTp+H8jOi2pbCLaW9LoyJS6BZwcR5vaEzmhHJysy/8elq1gfFgkeKC
+        da1u7Cxh0lscgbU/F+2aEZRUYFoyq6Rdi50Anlf5auuuXaEZSqBKlbFol1IAQ/32C+sP0NSjx6z+Y
+        B1WQI/mo88yv3iEo5i+UIpC73BHCdEmOjpQL47R7uaPWdA0WI/xy9WLNGBLd28dW4Yp8hYXz3pYDF
+        MOB7OhpGVjBILBZlrs6QNLOja9XV9W4guYJUuxMam5zUZ9z8UaLCxLbrtTQMznPUxNXbPMZGFKP1h
+        xH7l6qcA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mERw8-00FSpY-IR; Fri, 13 Aug 2021 07:49:25 +0000
+Date:   Fri, 13 Aug 2021 08:49:04 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc:     song@kernel.org, linux-raid@vger.kernel.org,
+        jens@chianterastutte.eu, linux-block@vger.kernel.org
+Subject: Re: [PATCH] raid1: ensure bio doesn't have more than BIO_MAX_VECS
+ sectors
+Message-ID: <YRYj8A+mDfAQBo/E@infradead.org>
+References: <20210813060510.3545109-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210813060510.3545109-1-guoqing.jiang@linux.dev>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, 2021-07-31 at 08:55 -0700, Kees Cook wrote:
+On Fri, Aug 13, 2021 at 02:05:10PM +0800, Guoqing Jiang wrote:
+> From: Guoqing Jiang <jiangguoqing@kylinos.cn>
 > 
-> > @@ -278,9 +278,7 @@ static void carl9170_tx_release(struct kref *ref)
-> >  	BUILD_BUG_ON(
-> >  	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
-> >  
-> > 
-> > -	memset(&txinfo->status.ack_signal, 0,
-> > -	       sizeof(struct ieee80211_tx_info) -
-> > -	       offsetof(struct ieee80211_tx_info, status.ack_signal));
-> > +	memset_after(&txinfo->status, 0, rates);
+> We can't split bio with more than BIO_MAX_VECS sectors, otherwise the
+> below call trace was triggered because we could allocate oversized
+> write behind bio later.
+> 
+> [ 8.097936] bvec_alloc+0x90/0xc0
+> [ 8.098934] bio_alloc_bioset+0x1b3/0x260
+> [ 8.099959] raid1_make_request+0x9ce/0xc50 [raid1]
 
-FWIW, I think we should also remove the BUILD_BUG_ON() now in all the
-places - that was meant to give people a hint to update if some field
-ordering etc. changed, but now that it's "after rates" this is no longer
-necessary.
+Which bio_alloc_bioset is this?  The one in alloc_behind_master_bio?
 
-johannes
+In which case I think you want to limit the reduction of max_sectors
+to just the write behind case, and clearly document what is going on.
 
+In general the size of a bio only depends on the number of vectors, not
+the total I/O size.  But alloc_behind_master_bio allocates new backing
+pages using order 0 allocations, so in this exceptional case the total
+size oes actually matter.
+
+While we're at it: this huge memory allocation looks really deadlock
+prone.
