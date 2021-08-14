@@ -2,91 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A553EBF93
-	for <lists+linux-block@lfdr.de>; Sat, 14 Aug 2021 04:06:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 153413EBFAA
+	for <lists+linux-block@lfdr.de>; Sat, 14 Aug 2021 04:13:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbhHNCGo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Aug 2021 22:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236495AbhHNCGo (ORCPT
+        id S236402AbhHNCNu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Aug 2021 22:13:50 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:8411 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236327AbhHNCNu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Aug 2021 22:06:44 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC78C0617AE
-        for <linux-block@vger.kernel.org>; Fri, 13 Aug 2021 19:06:16 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id h2so18385308lji.6
-        for <linux-block@vger.kernel.org>; Fri, 13 Aug 2021 19:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=7Xq9jb2sUMv3xaNw7Q5Cgt7yCkc3M0xn16Wn4AtIDKI=;
-        b=bMjFQnnAZpaPHPewg53a/655rlJcZF3F6tOCYZw1vRKDz/xIJdx97rNr27JLkW56nx
-         /iUhkVkrv2vt56YQtzEazhRgIPy/DINH4WyHeEexrKrG7liGbayL7Temc7NGvW0bB8Ad
-         jYLKY+nfNSoS1rYKoflW5LtIinkjSZBTTSJCtk74RyRz5/H1kPwLgMirqvm1jZ9Q2lvS
-         mysy6xLOxs0wYu9KWpVs3ZVzmyzuM6cY3iz+yVlGPkz3Lkb+v57sIQRRUb+ypy4gjifF
-         STYdF7upxk4m3MFQNQv0T7Zw+Yt5F/OYhuRsX60kpa6PLdNBh1LpNqMT51M2pasOSTPy
-         0wUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=7Xq9jb2sUMv3xaNw7Q5Cgt7yCkc3M0xn16Wn4AtIDKI=;
-        b=YJaC5VRtds3CQRpLfpem354EDxuh3TS/ac2JO0shQeFFK4D01xgKkdVjfSmnrTpXSd
-         rl0dWNEI+VgH6/piTtayJuIOr9mtsyS4iMRFjczy1uehQxMKy2oHMHddaW7A77wcDUqn
-         kWI47vPE1BovF05NkK57zgE3MrcXflM6dyss8YpF01y2E9OcoUlJTUyjXUQuGytsEvBP
-         I1UnWdXDS5d9zcsnsRri9YP6wYGLnBz4cdqN1SQ9/T3DYlDVkLxj2wEIzPqY87Ka1/RJ
-         w1elK2jh4p5zTq/7s0Hsp4jdx+nczzreq9HVQF4yuAG+WWXkPKDqFh/JK2N2KivhQF+j
-         FVaw==
-X-Gm-Message-State: AOAM532OsG2cRPbU/EGI5aErkLsXwXRKiIFUwNENZYqZP3uUywoEI8ce
-        8IPTMCAgLAgCLkqzngQ/2UjxWMoeM+/jabzV0fI=
-X-Google-Smtp-Source: ABdhPJynvegPmhEjUi/stm1v/NRwCcvEqe4+RCpcxOCwnF//w8aRyIcHmBxFidm29bl0vBPsC1zhmU0XtHDcktPhkc0=
-X-Received: by 2002:a2e:b1d3:: with SMTP id e19mr3920584lja.6.1628906774714;
- Fri, 13 Aug 2021 19:06:14 -0700 (PDT)
+        Fri, 13 Aug 2021 22:13:50 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GmkPs28pwz87Gg;
+        Sat, 14 Aug 2021 10:09:21 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Sat, 14 Aug 2021 10:13:20 +0800
+Received: from [10.174.176.73] (10.174.176.73) by
+ dggema762-chm.china.huawei.com (10.1.198.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 14 Aug 2021 10:13:20 +0800
+Subject: Re: questions about sane_behavior in cgroup v1
+To:     Tejun Heo <tj@kernel.org>
+CC:     linux-block <linux-block@vger.kernel.org>
+References: <7ecceefb-ba98-399f-38b0-5a7717a51649@huawei.com>
+ <YRacB4mYCIw+CQTl@mtj.duckdns.org>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <83635fef-7409-693f-09a7-86705a52a0b0@huawei.com>
+Date:   Sat, 14 Aug 2021 10:13:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Received: by 2002:a05:6520:380d:b029:132:4f79:3ded with HTTP; Fri, 13 Aug 2021
- 19:06:14 -0700 (PDT)
-Reply-To: deedeepaul@yandex.com
-From:   Deedee Paul <deedeepaul212@gmail.com>
-Date:   Sat, 14 Aug 2021 02:06:14 +0000
-Message-ID: <CADS-zP8AceijWYuKjjfFaC4WB2nM3FQqvpU1ob6Xb=P4w5FpkA@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <YRacB4mYCIw+CQTl@mtj.duckdns.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.73]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Attention: Beneficiary,
+On 2021/08/14 0:21, Tejun Heo wrote:
+> On Fri, Aug 13, 2021 at 05:25:12PM +0800, yukuai (C) wrote:
+>> We want to support that configuration in parent cgroup will work on
+>> child cgroup in cgroup v1. The feature was once supported and was
+>> reverted in commit 67e9c74b8a87 ("cgroup: replace __DEVEL__sane_behavior
+>> with cgroup2 fs type").
+>>
+>> Switching to cgroup v2 can support that, however, the cost is too high
+>> because all of our products are using v1, and there's a big difference
+>> in usage between v1 and v2.
+>>
+>> My question is that why is the feature reverted in cgroup v1? Is it
+>> because there are some severe problems? If not, we'll try to backport
+>> the feature to cgroup v1 again.
+> 
+> Because __DEVEL__sane_behavior, as the name clearly indicates, was a
+> temporary development vehicle to gradually implement cgroup2 and not
+> an official user-facing feature.
+> 
+> I have a hard time imagining backporting and maintaining that being
+> less painful than moving the users to cgroup2 but that's for you guys
+> to decide.
 
-This is to officially inform you that we have been having meetings for
-the past weeks now which ended Two days ago with Mr. John W. Ashe,
-President of the 68th session of the UN General Assembly, Mr. David
-R.Malpass. the World Bank President and Hon. Mrs. Christine Laggard
-(IMF) Director General, in the meeting we talked about how to
-compensate Scam victim's people and all the people that were affected
-the most by this Coronavirus pandemic.
+Hi, Tejun
 
-Your email address was successfully selected for this donation with others.
+Thanks for your response.
 
-The United Nations have agreed to compensate you with the sum of
-($150,000.00) One hundred and fifty thousand United States Dollars. We
-have arranged your payment through WORLD ATM MASTERCARD which is the
-latest instruction from the World Bank Group.
-
-For the collection of your WORLD ATM MASTERCARD contact our
-representative Rev. David Wood, send to him your contact address where
-you want your MASTERCARD to be sent to you, like
-
-1. Your Full Name: .........
-2. Your Country and Your Delivery Home Address: ........
-3. Your Telephone: ..............
-
-His e-mail address: (ddavidwood1@yandex.com) He is a Canadian (UN)
-representative Agent.
-
-Thanks.
-Tel: 1 513 452 4352.
-Mr. Michael M=C3=B8ller Director-General of the United Nations Office
+Best regards
+Kuai
