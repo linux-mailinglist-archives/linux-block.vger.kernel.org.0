@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C20C03ECC73
-	for <lists+linux-block@lfdr.de>; Mon, 16 Aug 2021 03:45:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20603ECC76
+	for <lists+linux-block@lfdr.de>; Mon, 16 Aug 2021 03:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbhHPBpm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 15 Aug 2021 21:45:42 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:37276 "EHLO
+        id S230397AbhHPBpn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 15 Aug 2021 21:45:43 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:37268 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbhHPBpi (ORCPT
+        with ESMTP id S232045AbhHPBpl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 15 Aug 2021 21:45:38 -0400
+        Sun, 15 Aug 2021 21:45:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1629078306; x=1660614306;
+  t=1629078309; x=1660614309;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QxLawA2FoU92rg8+3N60ckeNjg2itVghvmelVKXdIyI=;
-  b=AEN/KbKRW2Qc8FOcHJKUECncdxX/2z7mYIVLelSejbdmApbTSEOlEC2Z
-   VAKTWIthr/A1r2e42phFR0eHE7V4/I6uni3Nm2sBegLjzgZ+O1lIGD8dX
-   +jYEBVK6vfyAncmHed6/AMTgT6pe6PBfQ/tqcpPIDFEmoG4mSxZ1oGsuf
-   r7khdTyhBufV5q13qgyZgh9cwwXvrUTKJueN+snHdsYGHMnVmYFGGGcb0
-   asmkSit6ueY1XtKge1RQ3pOqXbXE159+3f3bDfQaD7dVc9h+pDbfTNu7A
-   svH457qi091DZaM2eBuY9eXbY8VVr9NbUfhDzPLn2X3UUErDZ0Y6lgMrg
-   w==;
+  bh=vN2oiBTls/J4Y9W2lVbQUymPeVbZdsgb/efvUuqJGVQ=;
+  b=Jv1GKwJKfkv5dMeJ/wCdekBqtq0FwoHNTxQzQnR1YrB2VhLtYHZf2Ry8
+   NXCdzdG26FnuPIWnBH/3Y+b+88+TzlFV+J56eZuz15OHZlmILCfSwnbKN
+   cLJV1MmrhR8ImAHOnT8m8Zjk9hTyYplRpSut2tiVyPzGtqtmeO0UG7qvg
+   oS5Z2cQpPFIHm7LUXrMj0CzFzAp3i55arInxtfB6mRne3wmZ6LC8Ij59A
+   yp5F7WK5Xax/4U4K1ufSHxxtCedV8B1kun0NscU7TwKeJJr68TS7DpFqK
+   NKna2sNdxgiiKAkdNg32V1YRCESGHdvv4tvljfz8XzefnK8aaZqoazkrp
+   A==;
 X-IronPort-AV: E=Sophos;i="5.84,324,1620662400"; 
-   d="scan'208";a="177326713"
+   d="scan'208";a="177326718"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 16 Aug 2021 09:45:05 +0800
-IronPort-SDR: c/qaqMjKS7wxFOlj4nsnCq/C3rytx+AG8NVhojTRpMdr0kEVDjzavnIGvYg88mk4bj0ubw//PN
- iOCA+rjt7/gXA9+wh0fRIXlBbWGS69NXnTno7cTmpdQJUtR4bckspSPmowLDnx6dvH0fIPR46W
- wpV6i7/qcLTQdbAAoHuaJ54IWwU31AO4FPYQYCO1+vPjDv3z6HZIn2iPCDl0sDINM1nRWTTq0K
- qpqVnW9cyKJlxYBL6Ul1tfTtjrUOjPvTN9sQ/z75ZW6E+FwHi4bQomYSLCCSLMhK1yQ2+7qgSP
- 7/e27zpFsdOizCpNCzbe45FH
+IronPort-SDR: G+JClcilvxvoDmWdbpBCAhGeQEe0Yf/VV9qzrKX09atA/0Erpmpw6or5/PRKbi/woAEEriJRSR
+ v9iFiFCCzwqLFEqqWvEyDxVOPREhSeTbG1ljFsRmUGZSXjuMsFu07ADoFunHx0TT0axd3kg12H
+ odQcSTZwu5NCl+fDa8hdFhHHb2ORcQOzQ5rntRcyCaXTBRfPkKrJO9yENcuwhOH/BAXRwnUe+v
+ 8FS7l5rZbWNmmdLJMe1yJTj4clhsq6CRxldHZXKEVPZnAqdM2rTYGEPcTQ0gl5SJcxQy4KMcOJ
+ aMe4naImZTLfKXET6FRsAGCD
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2021 18:20:31 -0700
-IronPort-SDR: olo9Grpn1QHqiaXEfCuRGX17u5dvPgmBITQpGmLhEKLV9jfcaQm4aDYR5z+I/h6OPlUonDncCH
- jslXCpdKF75mqFH4V0fKrbNLsTxQ5Wajkpg/rchjakK0zxZrGNizuXSNM+rBdHdwQgO1SlBfYE
- eGMVXUiKJ/B7qJj4DahVmJbnrWcRGcpA2JoC4/sEp3hM5W03dPUbVY+Q+BG9vogcfSRkj5c7+T
- T+iWmm2CXEX0CmrHi5BwG/qT1mUan7Zi//H4emt8NCBBd/ATHm0QvDaVFzjpcRoDgNFjDLLE7T
- h0g=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2021 18:20:32 -0700
+IronPort-SDR: bU9vlPLT98KheDyu1JIU5abwaiD/tqC6DjlOAjkqY93QgxNT5O0WPvbOKHMXgap482+98FPjH6
+ yUwcMGgzrz/4ubT1J33549Q3PDc0hZ0Wv0dz8fDxk8+3f1/ahrRVHVx/MtNsyQbxiyFXIGANzF
+ 9Ql0ks401UrKavI/raor4JP1K5UA3nlpFQqYFu1UFQgqUKhlhbpkv1WTy1LhLImIfV/7ogyn7B
+ 9p749VFU9zQ7bIUPv7y8G+52Cu9dxv2CkpbbBdeOPdQS/vflClac+cTehuXKk8Eazstx8HP9z2
+ 2WI=
 WDCIronportException: Internal
 Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Aug 2021 18:45:06 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 15 Aug 2021 18:45:07 -0700
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH v7 08/11] libata: print feature list on device scan
-Date:   Mon, 16 Aug 2021 10:44:53 +0900
-Message-Id: <20210816014456.2191776-9-damien.lemoal@wdc.com>
+Subject: [PATCH v7 09/11] libata: Introduce ncq_prio_supported sysfs sttribute
+Date:   Mon, 16 Aug 2021 10:44:54 +0900
+Message-Id: <20210816014456.2191776-10-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210816014456.2191776-1-damien.lemoal@wdc.com>
 References: <20210816014456.2191776-1-damien.lemoal@wdc.com>
@@ -59,69 +59,96 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Print a list of features supported by a drive when it is configured in
-ata_dev_configure() using the new function ata_dev_print_features().
-The features printed are not already advertized and are: trusted
-send-recev support, device attention support, device sleep support,
-NCQ send-recv support and NCQ priority support.
+Currently, the only way a user can determine if a SATA device supports
+NCQ priority is to try to enable the use of this feature using the
+ncq_prio_enable sysfs device attribute. If enabling the feature fails,
+it is because the device does not support NCQ priority. Otherwise, the
+feature is enabled and success indicates that the device supports NCQ
+priority.
+
+Improve this odd interface by introducing the read-only
+ncq_prio_supported sysfs device attribute to indicate if a SATA device
+supports NCQ priority. The value of this attribute reflects the status
+of device flag ATA_DFLAG_NCQ_PRIO, which is set only for devices
+supporting NCQ priority.
+
+Add this new sysfs attribute to the device attributes group of libahci
+and libata-sata.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/ata/libata-core.c | 17 +++++++++++++++++
- include/linux/libata.h    |  4 ++++
- 2 files changed, 21 insertions(+)
+ drivers/ata/libahci.c     |  1 +
+ drivers/ata/libata-sata.c | 25 +++++++++++++++++++++++++
+ include/linux/libata.h    |  1 +
+ 3 files changed, 27 insertions(+)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index bad577dbbc0d..68a55d3e977a 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -2433,6 +2433,20 @@ static void ata_dev_config_devslp(struct ata_device *dev)
- 	}
- }
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index fec2e9754aed..5b3fa2cbe722 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -125,6 +125,7 @@ EXPORT_SYMBOL_GPL(ahci_shost_attrs);
+ struct device_attribute *ahci_sdev_attrs[] = {
+ 	&dev_attr_sw_activity,
+ 	&dev_attr_unload_heads,
++	&dev_attr_ncq_prio_supported,
+ 	&dev_attr_ncq_prio_enable,
+ 	NULL
+ };
+diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+index dc397ebda089..8f3ff830ab0c 100644
+--- a/drivers/ata/libata-sata.c
++++ b/drivers/ata/libata-sata.c
+@@ -834,6 +834,30 @@ DEVICE_ATTR(link_power_management_policy, S_IRUGO | S_IWUSR,
+ 	    ata_scsi_lpm_show, ata_scsi_lpm_store);
+ EXPORT_SYMBOL_GPL(dev_attr_link_power_management_policy);
  
-+static void ata_dev_print_features(struct ata_device *dev)
++static ssize_t ata_ncq_prio_supported_show(struct device *device,
++					   struct device_attribute *attr,
++					   char *buf)
 +{
-+	if (!(dev->flags & ATA_DFLAG_FEATURES_MASK))
-+		return;
++	struct scsi_device *sdev = to_scsi_device(device);
++	struct ata_port *ap = ata_shost_to_port(sdev->host);
++	struct ata_device *dev;
++	bool ncq_prio_supported;
++	int rc = 0;
 +
-+	ata_dev_info(dev,
-+		     "Features:%s%s%s%s%s\n",
-+		     dev->flags & ATA_DFLAG_TRUSTED ? " Trust" : "",
-+		     dev->flags & ATA_DFLAG_DA ? " Dev-Attention" : "",
-+		     dev->flags & ATA_DFLAG_DEVSLP ? " Dev-Sleep" : "",
-+		     dev->flags & ATA_DFLAG_NCQ_SEND_RECV ? " NCQ-sndrcv" : "",
-+		     dev->flags & ATA_DFLAG_NCQ_PRIO ? " NCQ-prio" : "");
++	spin_lock_irq(ap->lock);
++	dev = ata_scsi_find_dev(ap, sdev);
++	if (!dev)
++		rc = -ENODEV;
++	else
++		ncq_prio_supported = dev->flags & ATA_DFLAG_NCQ_PRIO;
++	spin_unlock_irq(ap->lock);
++
++	return rc ? rc : sysfs_emit(buf, "%u\n", ncq_prio_supported);
 +}
 +
- /**
-  *	ata_dev_configure - Configure the specified ATA/ATAPI device
-  *	@dev: Target device to configure
-@@ -2595,6 +2609,9 @@ int ata_dev_configure(struct ata_device *dev)
- 		ata_dev_config_zac(dev);
- 		ata_dev_config_trusted(dev);
- 		dev->cdb_len = 32;
++DEVICE_ATTR(ncq_prio_supported, S_IRUGO, ata_ncq_prio_supported_show, NULL);
++EXPORT_SYMBOL_GPL(dev_attr_ncq_prio_supported);
 +
-+		if (ata_msg_drv(ap) && print_info)
-+			ata_dev_print_features(dev);
- 	}
- 
- 	/* ATAPI-specific feature tests */
+ static ssize_t ata_ncq_prio_enable_show(struct device *device,
+ 					struct device_attribute *attr,
+ 					char *buf)
+@@ -901,6 +925,7 @@ EXPORT_SYMBOL_GPL(dev_attr_ncq_prio_enable);
+ struct device_attribute *ata_ncq_sdev_attrs[] = {
+ 	&dev_attr_unload_heads,
+ 	&dev_attr_ncq_prio_enable,
++	&dev_attr_ncq_prio_supported,
+ 	NULL
+ };
+ EXPORT_SYMBOL_GPL(ata_ncq_sdev_attrs);
 diff --git a/include/linux/libata.h b/include/linux/libata.h
-index 3fcd24236793..b23f28cfc8e0 100644
+index b23f28cfc8e0..a2d1bae7900b 100644
 --- a/include/linux/libata.h
 +++ b/include/linux/libata.h
-@@ -161,6 +161,10 @@ enum {
- 	ATA_DFLAG_D_SENSE	= (1 << 29), /* Descriptor sense requested */
- 	ATA_DFLAG_ZAC		= (1 << 30), /* ZAC device */
- 
-+	ATA_DFLAG_FEATURES_MASK	= ATA_DFLAG_TRUSTED | ATA_DFLAG_DA | \
-+				  ATA_DFLAG_DEVSLP | ATA_DFLAG_NCQ_SEND_RECV | \
-+				  ATA_DFLAG_NCQ_PRIO,
-+
- 	ATA_DEV_UNKNOWN		= 0,	/* unknown device */
- 	ATA_DEV_ATA		= 1,	/* ATA device */
- 	ATA_DEV_ATA_UNSUP	= 2,	/* ATA device (unsupported) */
+@@ -539,6 +539,7 @@ typedef void (*ata_postreset_fn_t)(struct ata_link *link, unsigned int *classes)
+ extern struct device_attribute dev_attr_unload_heads;
+ #ifdef CONFIG_SATA_HOST
+ extern struct device_attribute dev_attr_link_power_management_policy;
++extern struct device_attribute dev_attr_ncq_prio_supported;
+ extern struct device_attribute dev_attr_ncq_prio_enable;
+ extern struct device_attribute dev_attr_em_message_type;
+ extern struct device_attribute dev_attr_em_message;
 -- 
 2.31.1
 
