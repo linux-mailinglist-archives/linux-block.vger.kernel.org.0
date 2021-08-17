@@ -2,262 +2,278 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1C293EE876
-	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 10:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A42B43EEB9D
+	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 13:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239498AbhHQIZ2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Aug 2021 04:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239458AbhHQIZX (ORCPT
+        id S239731AbhHQL3P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Aug 2021 07:29:15 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:23183 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239548AbhHQL3O (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Aug 2021 04:25:23 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088A1C0613C1
-        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 01:24:50 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id ay4so6780065uab.3
-        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 01:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NANAeHbZiQyWuhfenDwun7W+L0Tu32AbJv1dk8kR1E4=;
-        b=BO63hECkdsaSgtfDHlf58J4sqJkeHBr2/HELnfV7eRv+DvUhZu7y3vFlBpOseL+lz8
-         6+LqsRaH7FIGMZMYF676JIXQQ3Ue396tTinaiBZrTqhdKQ8GNm9WxlY0eadhcY/oCIfX
-         YgVfqleJEKkLAAA+r5HrPUm1mV6oIaSrRb6BgVGLrIgRhYh+MDubdQV8IIOtXhpE93Iu
-         wgrne4YJCfZg3NG+lzr/B3+g/7qj/Ai6XO4IJzHcCxS/iSg919iiD+CMBrviFJe+KWjW
-         DdAJvXQjpXbg9JatyowWGYbZoO6LSPBBvby8aYs3mTVCk3ODWlpey/g5lIgkk8pieJyg
-         Glyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NANAeHbZiQyWuhfenDwun7W+L0Tu32AbJv1dk8kR1E4=;
-        b=ZoSViBvXCNVxrbw3huiILxhNUHvf03Q64WpYnIen5mq8eX5AsdYlH3TJxAj7lcD7dB
-         bCABEpKr94Pwxodwg/VBxiVg7sYIr6kJMyBcYQdL5rQSbIo8otEbCJIMpQY3oC8A+Es8
-         yh3z9kkZdrWXmm5Qkb9hjXOsVG0pB0VC6fPC7vPtyKzilusgmgsNjLZBlxfg+Q40KGXh
-         VMYABxB2SStVGswjud3H2CE2rvFkDbjsqfgyWyAWAfyT5CPb0DzVXGVwyWSEpnOFKeYC
-         b8WeA5g/ju8K1EIn/3QSj5opMsgLMPfpSDwTYHPhP3Ee64GyLZEepynXNUNz38RYo4Br
-         eT+w==
-X-Gm-Message-State: AOAM532sZOABooAaUAsC4pAXj3jRF6yjZSQ43cPVt2wtXCqMrGZaFEIE
-        UVIFwo4H8F9tJ/IA2Wk0coougOupSo7P/Em6BZh1PA==
-X-Google-Smtp-Source: ABdhPJy9Sny95yIqpvu+19oA1LqUTUHjeGk3CBH8OBP6Z7x9GBG9OuU1+FI5pCNp0F6iV00JoXN9lHYUYfhPYoAKWxs=
-X-Received: by 2002:ab0:72c2:: with SMTP id g2mr1214196uap.104.1629188689169;
- Tue, 17 Aug 2021 01:24:49 -0700 (PDT)
+        Tue, 17 Aug 2021 07:29:14 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20210817112840epoutp0455fb9b94b90fc2d69c3d666afb3d68c3~cFIN1P77i0949309493epoutp04M
+        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 11:28:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20210817112840epoutp0455fb9b94b90fc2d69c3d666afb3d68c3~cFIN1P77i0949309493epoutp04M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1629199720;
+        bh=i+k6jOqZcfHbKagRSdAPINcrkFCKVp0wtCshif8Pr7s=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=BghHJLugqzPlvRCB12ErRoFvorT7/lrHPnlSDYERkHMOb93d9nLQWVEFp0Ahde5BA
+         Ci/2I76TCm3yebPOOBIOS0Zx4NS6xsZFmpsdLU8rPPdTEahZ66w4bJOJ10tgTNyTF4
+         IpF2WrIucRZUIwePJeG+soIk1qJusSK3oG5d7Txs=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20210817112838epcas5p21338d9c0ef062267eb2040ab031bd46e~cFIMNd93W0777607776epcas5p2B;
+        Tue, 17 Aug 2021 11:28:38 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.175]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4Gppgj5KL7z4x9Pr; Tue, 17 Aug
+        2021 11:28:33 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.9D.41701.16D9B116; Tue, 17 Aug 2021 20:28:33 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20210817101741epcas5p174ca0a539587da6a67b9f58cd13f2bad~cEKP9y0_02631326313epcas5p1c;
+        Tue, 17 Aug 2021 10:17:41 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210817101741epsmtrp26a0379bab088ae56ec8f47e6ad8d8222~cEKP8c5xc2759327593epsmtrp2Y;
+        Tue, 17 Aug 2021 10:17:41 +0000 (GMT)
+X-AuditID: b6c32a4b-0abff7000001a2e5-a8-611b9d6119d3
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DC.09.32548.5CC8B116; Tue, 17 Aug 2021 19:17:41 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20210817101737epsmtip298bff510fdfdc21ccde8562e9550e71c~cEKMJYzD20079500795epsmtip2f;
+        Tue, 17 Aug 2021 10:17:37 +0000 (GMT)
+From:   SelvaKumar S <selvakuma.s1@samsung.com>
+To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dm-devel@redhat.com,
+        kbusch@kernel.org, axboe@kernel.dk, damien.lemoal@wdc.com,
+        asml.silence@gmail.com, johannes.thumshirn@wdc.com, hch@lst.de,
+        willy@infradead.org, kch@kernel.org, martin.petersen@oracle.com,
+        mpatocka@redhat.com, bvanassche@acm.org, djwong@kernel.org,
+        snitzer@redhat.com, agk@redhat.com, selvajove@gmail.com,
+        joshiiitr@gmail.com, nj.shetty@samsung.com,
+        nitheshshetty@gmail.com, joshi.k@samsung.com,
+        javier.gonz@samsung.com, SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: [PATCH 0/7] add simple copy support
+Date:   Tue, 17 Aug 2021 15:44:16 +0530
+Message-Id: <20210817101423.12367-1-selvakuma.s1@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210817013643.13061-1-digetx@gmail.com> <20210817013643.13061-4-digetx@gmail.com>
-In-Reply-To: <20210817013643.13061-4-digetx@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 17 Aug 2021 10:24:12 +0200
-Message-ID: <CAPDyKFr3d5tTsKVhgvqw1C-Np=6N2onJ+bo_hoFqtD6JSPn2Bg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] partitions/efi: Support NVIDIA Tegra devices
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ion Agorria <AG0RRIA@yahoo.com>,
-        Svyatoslav Ryhel <clamor95@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf1CTZRz3fd/xblDz5oB6ApM1TjyIH5uO9eCBJiL3Ep7HFf+o0XgZb0CM
+        bbd3RHrXgRExQA2SHwkKpDuUkS6H/Ag3oy2BoR2X/Apq5sGgO0vAVk4jqI0Xzf8+z+f7+Xw/
+        z/f73MPB+Dp2ECdPqaU0SlIhxP1Y3bbwbVHk2WBS9Pe8EBqHBzB4xtCNwA7HpzisX3qMwbLy
+        hygcdW6EloUmH9jecQOFsz+72HCl8g4Kb/x7H4cj920o/Mw6gUCzqZYFO906HFqmX4Vmi50F
+        W9rm2LBqsheHFwZXUVijG0dhr/MYAruXWzA4VnsOg3cXJ9nwt0d2HH5y5S8ELj86g7++mRgd
+        SyW+bnSwic6LEcTo94WEyVCBE536YuLaVAlOPJibZhGL18dx4uRVA0K4TFuI8v4qNO35Q/nx
+        uRSZTWkElFKuys5T5iQIU9+S7ZXFSkXiKHEcfE0oUJIFVIIwaX9aVHKewrMMoeB9UlHoodJI
+        mhbG7IrXqAq1lCBXRWsThJQ6W6GWqKNpsoAuVOZEKyntTrFItD3WI8zMz10qnWGpzZIPWj6+
+        iZcgZRGViC8H8CTAWNqDViJ+HD7vGgJWrb/6eAt83h8IcFzAmYILAbX/TGBPHFML9xCm0IeA
+        lW/c7KeqSxYH4lXhvCgwoTexvDiAtxu0Pzb4eEUYb5gFGhbPsb0Ff14k6D1uXmvL4m0FJ/uv
+        rxm4vATw+fnf1+NCwOnbbjbDbwL20841DebhS7uaMG9TwOvwBW01057LcjyHJDA0rmK8/uDe
+        4FU2g4OAa8GCM7gIzFfUowwuQcDJxSIG7wY/mFdQbxuMFw6MfTEM/TKoG76MMrEbwYll57qV
+        C3qbnSiTGgaGe6QMvRks2frWkwigb7OymY1mgO65HlY1EtL4zDCNzwzT+H9wK4IZkJcoNV2Q
+        Q9Gx6h1Kqujpu8pVBSZk7UtEpPYiM3eXoq0IykGsCOBgwgDuNk4Qyedmk0eOUhqVTFOooGgr
+        EuvZcA0WFChXef6UUisTS+JEEqlUKonbIRULX+S+vT+Y5PNySC2VT1FqSvPEh3J8g0pQaSbx
+        LWqXnXKlL2Q2GPdskEV/qDO8d7auJT1w4fKEz7th6V2XbPo7BV/U1R91Zhazy3Y1N4U3V7T/
+        1FOmOHC4HL21mDIwNALdB7OOuLXdt3XFKxczu0b20erBLdYiuykgf9PNRNtkVpl0WjS8elzu
+        b98QFsud/zFGIUfj02i/fbPvJLpSTgmy9EPQmFQtTzXvqcHd3F9a588fPBRyZeGrRHu/JXBn
+        jaZ6r1KQcfhE+pusKrbe5nCIsCjB1rFXQkNzP9LxU1gNzyUvjU5NNkYbiZUMvwPyyNZOSzw9
+        ECIa4859mTzTcawuueuF2VDVreAHf8LA7Q+/S/TrSHsjEYsUsuhcUhyBaWjyP7vMBuybBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSvO7RHulEgyuXlSzWnzrGbDFn1TZG
+        i9V3+9kspn34yWzR2v6NyeLyEz6Lve9ms1qsXH2UyeLxnc/sFn+77jFZHP3/ls3i/NvDTBaT
+        Dl1jtNizaQqLxebvHWwWe29pW+zZe5LFYv6yp+wW3dd3sFksP/6PyWJix1Umix1PGhkttv2e
+        z2xxZcoiZosH76+zW7z+cZLNom3jV0aL3z/msDnIeFy+4u2xc9Zddo/NK7Q8Lp8t9di0qpPN
+        Y/OSeo/dNxvYPD4+vcXi8X7fVTaPvi2rGD0+b5LzaD/QzRTAE8Vlk5Kak1mWWqRvl8CV8aH5
+        EUvBHpOK+S2n2RoYW7W6GDk5JARMJG6+e8XYxcjFISSwg1Fi05fNrBAJGYm1dzvZIGxhiZX/
+        nrNDFH1klPiw7jczSIJNQFfi2pJNLCC2iICjxOlP25hAipgFXrFI3Lu7G6xIWEBHYkfPHjCb
+        RUBVou/APrAGXgFbiRmL3zBDbJCXmHnpOztEXFDi5MwnQDUcQIPUJdbPEwIJMwOVNG+dzTyB
+        kX8WkqpZCFWzkFQtYGRexSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHOFaWjsY96z6
+        oHeIkYmD8RCjBAezkgivOodUohBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeC10n44UE0hNLUrNT
+        UwtSi2CyTBycUg1M2VtPu+m/kMj4/HfrDOOK5aUqF9cHLi9/nt96vHqJw6RXjYxPbu7Nckr4
+        WrJoQppjGE/k5xe7RW+cKZvdtTNtu+bb933ey5IzTs652L89SP3/Rr/fbVpzD1xOk5WJ/hFe
+        oPBURHLlSietPOE/Z2sel8c59l7bob0mufZd0PHL+3b0rYk5s0tjKcMr5SNsoZfPcLgaH7q4
+        L4eJe36/oNqBC5evnZvosofpn47aPDdFlyaRJ9474+2lFhjuvSv7ZJ1/4d+63ZEv3ptXPnv7
+        mls2S2XF0YuzFU5uE/iw62zXuy2TX5Vx6lVmGc08dp/NLFnu1B/fPZNMJp+a+/hm/KK8VpXF
+        36QO7mV78TbtUECU8h4lluKMREMt5qLiRABGhdCFXwMAAA==
+X-CMS-MailID: 20210817101741epcas5p174ca0a539587da6a67b9f58cd13f2bad
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20210817101741epcas5p174ca0a539587da6a67b9f58cd13f2bad
+References: <CGME20210817101741epcas5p174ca0a539587da6a67b9f58cd13f2bad@epcas5p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 17 Aug 2021 at 03:37, Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> NVIDIA Tegra consumer devices have EMMC storage that has GPT entry at a
-> non-standard location. Support looking up GPT entry at a special sector
-> to enable such devices.
->
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  block/partitions/Kconfig  |  8 +++++
->  block/partitions/Makefile |  1 +
->  block/partitions/check.h  |  2 ++
->  block/partitions/core.c   |  3 ++
->  block/partitions/efi.c    |  9 +++++
->  block/partitions/tegra.c  | 75 +++++++++++++++++++++++++++++++++++++++
->  6 files changed, 98 insertions(+)
->  create mode 100644 block/partitions/tegra.c
->
-> diff --git a/block/partitions/Kconfig b/block/partitions/Kconfig
-> index 278593b8e4e9..5db25e7efbb7 100644
-> --- a/block/partitions/Kconfig
-> +++ b/block/partitions/Kconfig
-> @@ -267,3 +267,11 @@ config CMDLINE_PARTITION
->         help
->           Say Y here if you want to read the partition table from bootargs.
->           The format for the command line is just like mtdparts.
-> +
-> +config TEGRA_PARTITION
-> +       bool "NVIDIA Tegra Partition support" if PARTITION_ADVANCED
-> +       default y if ARCH_TEGRA
-> +       depends on EFI_PARTITION && MMC_BLOCK && (ARCH_TEGRA || COMPILE_TEST)
-> +       help
-> +         Say Y here if you would like to be able to read the hard disk
-> +         partition table format used by NVIDIA Tegra machines.
-> diff --git a/block/partitions/Makefile b/block/partitions/Makefile
-> index a7f05cdb02a8..83cb70c6d08d 100644
-> --- a/block/partitions/Makefile
-> +++ b/block/partitions/Makefile
-> @@ -20,3 +20,4 @@ obj-$(CONFIG_IBM_PARTITION) += ibm.o
->  obj-$(CONFIG_EFI_PARTITION) += efi.o
->  obj-$(CONFIG_KARMA_PARTITION) += karma.o
->  obj-$(CONFIG_SYSV68_PARTITION) += sysv68.o
-> +obj-$(CONFIG_TEGRA_PARTITION) += tegra.o
-> diff --git a/block/partitions/check.h b/block/partitions/check.h
-> index d5b28e309d64..bd4b66443cf4 100644
-> --- a/block/partitions/check.h
-> +++ b/block/partitions/check.h
-> @@ -22,6 +22,7 @@ struct parsed_partitions {
->         int limit;
->         bool access_beyond_eod;
->         char *pp_buf;
-> +       sector_t force_gpt_sector;
->  };
->
->  typedef struct {
-> @@ -67,4 +68,5 @@ int osf_partition(struct parsed_partitions *state);
->  int sgi_partition(struct parsed_partitions *state);
->  int sun_partition(struct parsed_partitions *state);
->  int sysv68_partition(struct parsed_partitions *state);
-> +int tegra_partition_forced_gpt(struct parsed_partitions *state);
->  int ultrix_partition(struct parsed_partitions *state);
-> diff --git a/block/partitions/core.c b/block/partitions/core.c
-> index 9265936df77e..bbfbb1621581 100644
-> --- a/block/partitions/core.c
-> +++ b/block/partitions/core.c
-> @@ -82,6 +82,9 @@ static int (*check_part[])(struct parsed_partitions *) = {
->  #endif
->  #ifdef CONFIG_SYSV68_PARTITION
->         sysv68_partition,
-> +#endif
-> +#ifdef CONFIG_TEGRA_PARTITION
-> +       tegra_partition_forced_gpt,
->  #endif
->         NULL
->  };
-> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-> index aaa3dc487cb5..4ad151176204 100644
-> --- a/block/partitions/efi.c
-> +++ b/block/partitions/efi.c
-> @@ -619,6 +619,15 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
->          if (!good_agpt && force_gpt)
->                  good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
->
-> +       /*
-> +        * The force_gpt_sector is used by NVIDIA Tegra partition parser in
-> +        * order to convey a non-standard location of the GPT entry for lookup.
-> +        * By default force_gpt_sector is set to 0 and has no effect.
-> +        */
-> +       if (!good_agpt && force_gpt && state->force_gpt_sector)
-> +               good_agpt = is_gpt_valid(state, state->force_gpt_sector,
-> +                                        &agpt, &aptes);
-> +
->          /* The obviously unsuccessful case */
->          if (!good_pgpt && !good_agpt)
->                  goto fail;
-> diff --git a/block/partitions/tegra.c b/block/partitions/tegra.c
-> new file mode 100644
-> index 000000000000..4937e9f62398
-> --- /dev/null
-> +++ b/block/partitions/tegra.c
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define pr_fmt(fmt) "tegra-partition: " fmt
-> +
-> +#include <linux/blkdev.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/sizes.h>
-> +
-> +#include <linux/mmc/blkdev.h>
-> +#include <linux/mmc/card.h>
-> +#include <linux/mmc/host.h>
-> +
-> +#include <soc/tegra/common.h>
-> +
-> +#include "check.h"
-> +
-> +static const struct of_device_id tegra_sdhci_match[] = {
-> +       { .compatible = "nvidia,tegra20-sdhci", },
-> +       { .compatible = "nvidia,tegra30-sdhci", },
-> +       { .compatible = "nvidia,tegra114-sdhci", },
-> +       { .compatible = "nvidia,tegra124-sdhci", },
-> +       {}
-> +};
-> +
-> +int tegra_partition_forced_gpt(struct parsed_partitions *state)
-> +{
-> +       struct gendisk *disk = state->disk;
-> +       struct block_device *bdev = disk->part0;
-> +       struct mmc_card *card = mmc_bdev_to_card(bdev);
-> +       int ret, boot_offset;
-> +
-> +       if (!soc_is_tegra())
-> +               return 0;
-> +
-> +       /* filter out unrelated and untested boot sources */
-> +       if (!card || card->ext_csd.rev < 3 ||
-> +           !mmc_card_is_blockaddr(card) ||
-> +            mmc_card_is_removable(card->host) ||
-> +            bdev_logical_block_size(bdev) != SZ_512 ||
-> +           !of_match_node(tegra_sdhci_match, card->host->parent->of_node)) {
+This started out as an attempt to support NVMe Simple Copy Command (SCC),
+and evolved during the RFC review process.
 
-I think you need to convince Rob Herring that the location of the GPT
-table in the eMMC flash memory is allowed to depend on the compatible
-string of the sdhci controller.
+The patchset, at this point, contains -
+1. SCC support in NVMe driver
+2. Block-layer infra for copy-offload operation
+3. ioctl interface to user-space
+4. copy-emulation infra in the block-layer
+5. copy-offload plumbing to dm-kcopyd (thus creating couple of in-kernel
+	users such as dm-clone)
 
-In any case, I think Christoph raised some interesting ideas in his
-reply. Moving more of this code into the mmc core/block layer seems
-reasonable to me as well.
 
-> +               pr_debug("%s: unexpected boot source\n", disk->disk_name);
-> +               return 0;
-> +       }
-> +
-> +       /*
-> +        * eMMC storage has two special boot partitions in addition to the
-> +        * main one.  NVIDIA's bootloader linearizes eMMC boot0->boot1->main
-> +        * accesses, this means that the partition table addresses are shifted
-> +        * by the size of boot partitions.  In accordance with the eMMC
-> +        * specification, the boot partition size is calculated as follows:
-> +        *
-> +        *      boot partition size = 128K byte x BOOT_SIZE_MULT
-> +        *
-> +        * This function returns number of sectors occupied by the both boot
-> +        * partitions.
-> +        */
-> +       boot_offset = card->ext_csd.raw_boot_mult * SZ_128K /
-> +                     SZ_512 * MMC_NUM_BOOT_PARTITION;
-> +
-> +       /*
-> +        * The fixed GPT entry address is calculated like this:
-> +        *
-> +        * gpt_sector = ext_csd.sectors_num - ext_csd.boot_sectors_num - 1
-> +        *
-> +        * This algorithm is defined by NVIDIA and used by Android devices.
-> +        */
-> +       state->force_gpt_sector  = get_capacity(disk);
-> +       state->force_gpt_sector -= boot_offset + 1;
-> +
-> +       ret = efi_partition(state);
-> +       state->force_gpt_sector = 0;
-> +
-> +       return ret;
-> +}
-> --
-> 2.32.0
->
+The SCC specification, i.e. TP4065a can be found in following link
 
-Kind regards
-Uffe
+https://nvmexpress.org/wp-content/uploads/NVM-Express-1.4-Ratified-TPs.zip
+
+Simple copy is a copy offloading feature and can be used to copy multiple
+contiguous ranges (source_ranges) of LBA's to a single destination LBA
+within the device, reducing traffic between host and device.
+
+We define a block ioctl for copy and copy payload format similar to
+discard. For device supporting native simple copy, we attach the control
+information as payload to the bio and submit to the device. Copy emulation
+is implemented incase underlaying device does not support copy offload or
+based on sysfs choice. Copy emulation is done by reading each source range
+into buffer and writing it to the destination.
+
+At present this implementation does not support copy offload for stacked/dm
+devices, rather copy operation is completed through emulation.
+
+One of the in-kernel use case for copy-offload is implemented by this
+patchset. dm-kcopyd infra has been changed to leverage the copy-offload if
+it is natively available. Other future use-cases could be F2FS GC, BTRFS
+relocation/balance and copy_file_range.
+
+Following limits are added to queue limits and are exposed via sysfs to
+userspace, which user can use to form a payload.
+
+ - copy_offload:
+	configurable, can be used set emulation or copy offload
+		0 to disable copy offload,
+		1 to enable copy offloading support. Offload can be only
+			enabled, if underlaying device supports offload
+
+ - max_copy_sectors:
+	total copy length supported by copy offload feature in device.
+	0 indicates copy offload is not supported.
+
+ - max_copy_nr_ranges:
+	maximum number of source range entries supported by copy offload
+			feature in device
+
+ - max_copy_range_sectors:
+	maximum copy length per source range entry
+
+*blkdev_issue_copy* takes source bdev, no of sources, array of source
+ranges (in sectors), destination bdev and destination offset(in sectors).
+If both source and destination block devices are same and queue parameter
+copy_offload is 1, then copy is done through native copy offloading.
+Copy emulation is used in otherwise.
+
+Changes from  RFC v5
+
+1. Handle copy larger than maximum copy limits
+2. Create copy context and submit copy offload asynchronously
+3. Remove BLKDEV_COPY_NOEMULATION opt-in option of copy offload and
+check for copy support before submission from dm and other layers
+4. Allocate maximum possible allocatable buffer for copy emulation
+rather failing very large copy offload.
+5. Fix copy_offload sysfs to be either have 0 or 1
+
+Changes from RFC v4
+
+1. Extend dm-kcopyd to leverage copy-offload, while copying within the
+same device. The other approach was to have copy-emulation by moving
+dm-kcopyd to block layer. But it also required moving core dm-io infra,
+causing a massive churn across multiple dm-targets.
+2. Remove export in bio_map_kern()
+3. Change copy_offload sysfs to accept 0 or else
+4. Rename copy support flag to QUEUE_FLAG_SIMPLE_COPY
+5. Rename payload entries, add source bdev field to be used while
+partition remapping, remove copy_size
+6. Change the blkdev_issue_copy() interface to accept destination and
+source values in sector rather in bytes
+7. Add payload to bio using bio_map_kern() for copy_offload case
+8. Add check to return error if one of the source range length is 0
+9. Add BLKDEV_COPY_NOEMULATION flag to allow user to not try copy
+emulation incase of copy offload is not supported. Caller can his use
+his existing copying logic to complete the io.
+10. Bug fix copy checks and reduce size of rcu_lock()
+
+Changes from RFC v3
+
+1. gfp_flag fixes.
+2. Export bio_map_kern() and use it to allocate and add pages to bio.
+3. Move copy offload, reading to buf, writing from buf to separate functions
+4. Send read bio of copy offload by chaining them and submit asynchronously
+5. Add gendisk->part0 and part->bd_start_sect changes to blk_check_copy().
+6. Move single source range limit check to blk_check_copy()
+7. Rename __blkdev_issue_copy() to blkdev_issue_copy and remove old helper.
+8. Change blkdev_issue_copy() interface generic to accepts destination bdev
+        to support XCOPY as well.
+9. Add invalidate_kernel_vmap_range() after reading data for vmalloc'ed memory.
+10. Fix buf allocoation logic to allocate buffer for the total size of copy.
+11. Reword patch commit description.
+
+Changes from RFC v2
+
+1. Add emulation support for devices not supporting copy.
+2. Add *copy_offload* sysfs entry to enable and disable copy_offload
+        in devices supporting simple copy.
+3. Remove simple copy support for stacked devices.
+
+Changes from RFC v1:
+
+1. Fix memory leak in __blkdev_issue_copy
+2. Unmark blk_check_copy inline
+3. Fix line break in blk_check_copy_eod
+4. Remove p checks and made code more readable
+5. Don't use bio_set_op_attrs and remove op and set
+   bi_opf directly
+6. Use struct_size to calculate total_size
+7. Fix partition remap of copy destination
+8. Remove mcl,mssrl,msrc from nvme_ns
+9. Initialize copy queue limits to 0 in nvme_config_copy
+10. Remove return in QUEUE_FLAG_COPY check
+11. Remove unused OCFS
+
+
+Nitesh Shetty (4):
+  block: Introduce queue limits for copy-offload support
+  block: copy offload support infrastructure
+  block: Introduce a new ioctl for simple copy
+  block: add emulation for simple copy
+
+SelvaKumar S (3):
+  block: make bio_map_kern() non static
+  nvme: add simple copy support
+  dm kcopyd: add simple copy offload support
+
+ block/blk-core.c          |  84 ++++++++-
+ block/blk-lib.c           | 352 ++++++++++++++++++++++++++++++++++++++
+ block/blk-map.c           |   2 +-
+ block/blk-settings.c      |   4 +
+ block/blk-sysfs.c         |  51 ++++++
+ block/blk-zoned.c         |   1 +
+ block/bounce.c            |   1 +
+ block/ioctl.c             |  33 ++++
+ drivers/md/dm-kcopyd.c    |  56 +++++-
+ drivers/nvme/host/core.c  |  83 +++++++++
+ drivers/nvme/host/trace.c |  19 ++
+ include/linux/bio.h       |   1 +
+ include/linux/blk_types.h |  20 +++
+ include/linux/blkdev.h    |  21 +++
+ include/linux/nvme.h      |  43 ++++-
+ include/uapi/linux/fs.h   |  20 +++
+ 16 files changed, 775 insertions(+), 16 deletions(-)
+
+-- 
+2.25.1
+
