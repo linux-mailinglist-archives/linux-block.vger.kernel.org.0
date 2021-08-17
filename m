@@ -2,79 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2273EEAC6
-	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 12:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FEB33EEC81
+	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 14:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235204AbhHQKSz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Aug 2021 06:18:55 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54874 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236486AbhHQKSz (ORCPT
+        id S231478AbhHQMdk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Aug 2021 08:33:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40623 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230323AbhHQMdh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Aug 2021 06:18:55 -0400
-Received: from fsav415.sakura.ne.jp (fsav415.sakura.ne.jp [133.242.250.114])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 17HAI8C7041403;
-        Tue, 17 Aug 2021 19:18:08 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav415.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav415.sakura.ne.jp);
- Tue, 17 Aug 2021 19:18:08 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav415.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 17HAI8V2041399
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 17 Aug 2021 19:18:08 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v3] block: genhd: don't call probe function with
- major_names_lock held
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>
-References: <f790f8fb-5758-ea4e-a527-0ee4af82dd44@i-love.sakura.ne.jp>
- <4e153910-bf60-2cca-fa02-b46d22b6e2c5@i-love.sakura.ne.jp>
- <20210816073313.GA27275@lst.de> <20210817081045.3609-1-hdanton@sina.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <3cf9d371-50e4-76a0-4024-64eca22befdf@i-love.sakura.ne.jp>
-Date:   Tue, 17 Aug 2021 19:18:09 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 17 Aug 2021 08:33:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629203584;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=U+2Yus84hIugUWcGN23eW/FcOG0akl8Mx705tKe61RM=;
+        b=BPztK/a1acLQ50BvMvkNJNziUZ1cSqiHbDYeruMfdnMPxk0Ticktz7PIemo/6IiXg23Tgi
+        tV3tAfeBwI76ZXgg/Q+ikpnEV3GHTtr1pdOTgZbmPSRNN11Wz5JSOCZdtjYJ0ZXk03ANAK
+        rNqMHTVP2kj2Enl5WsVvLS2+/CTw2Mc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-UW29Z0szPfKY3RMkeZj6ng-1; Tue, 17 Aug 2021 08:33:03 -0400
+X-MC-Unique: UW29Z0szPfKY3RMkeZj6ng-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB30D1008060;
+        Tue, 17 Aug 2021 12:33:00 +0000 (UTC)
+Received: from T590 (ovpn-8-40.pek2.redhat.com [10.72.8.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C58375DA60;
+        Tue, 17 Aug 2021 12:32:47 +0000 (UTC)
+Date:   Tue, 17 Aug 2021 20:32:42 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, song@kernel.org,
+        linux-raid@vger.kernel.org, jens@chianterastutte.eu,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH] raid1: ensure bio doesn't have more than BIO_MAX_VECS
+ sectors
+Message-ID: <YRusakafZq0NMqLe@T590>
+References: <20210813060510.3545109-1-guoqing.jiang@linux.dev>
+ <YRYj8A+mDfAQBo/E@infradead.org>
+ <0eac4589-ffd2-fb1a-43cc-87722731438a@linux.dev>
+ <YRd26VGAnBiYeHrH@infradead.org>
+ <YReFYrjtWr9MvfBr@T590>
+ <YRox8gMjl/Y5Yt/k@infradead.org>
+ <YRpOwFewTw4imskn@T590>
+ <YRtDxEw7Zp2H7mxp@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20210817081045.3609-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YRtDxEw7Zp2H7mxp@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2021/08/17 17:10, Hillf Danton wrote:
-> See if it is safe to kfree(lo) after removing it from idr, with the
-> deadlock dissolved.
-
-It is not safe to call loop_remove() after idr_remove(). Please see HIDDEN_LOOP_DEVICE magic
-in "[PATCH] loop: break loop_ctl_mutex into loop_idr_spinlock and loop_removal_mutex".
-
+On Tue, Aug 17, 2021 at 06:06:12AM +0100, Christoph Hellwig wrote:
+> On Mon, Aug 16, 2021 at 07:40:48PM +0800, Ming Lei wrote:
+> > > > 
+> > > > 0 ~ 254: each bvec's length is 512
+> > > > 255: bvec's length is 8192
+> > > > 
+> > > > the total length is just 512*255 + 8192 = 138752 bytes = 271 sectors, but it
+> > > > still may need 257 bvecs, which can't be allocated via bio_alloc_bioset().
+> > > 
+> > > Yes, we still need the rounding magic that alloc_behind_master_bio uses
+> > > here.
+> > 
+> > But it is wrong to use max sectors to limit number of bvecs(segments), isn't it?
 > 
-> --- x/drivers/block/loop.c
-> +++ y/drivers/block/loop.c
-> @@ -2459,7 +2459,9 @@ static int loop_control_remove(int idx)
->  	mutex_unlock(&lo->lo_mutex);
->  
->  	idr_remove(&loop_index_idr, lo->lo_number);
-> +	mutex_unlock(&loop_ctl_mutex);
->  	loop_remove(lo);
-> +	return 0;
->  out_unlock_ctrl:
->  	mutex_unlock(&loop_ctl_mutex);
->  	return ret;
-> --
-> 
+> The raid1 write behind code cares about the size ofa bio it can reach by
+> adding order 0 pages to it.  The bvecs are part of that and I think the
+> calculation in the patch documents that a well.
 
-"[PATCH] loop: break loop_ctl_mutex into loop_idr_spinlock and loop_removal_mutex" can be a further
-improvement after "[PATCH v3] block: genhd: don't call probe function with major_names_lock held".
+Thinking of further, your and Guoqing's patch are correct & enough since
+bio_copy_data() just copies bytes(sectors) stream from fs bio to the
+write behind bio.
 
-I really would like to apply "[PATCH v3] block: genhd: don't call probe function with major_names_lock held" first.
+
+Thanks,
+Ming
+
