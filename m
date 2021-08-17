@@ -2,49 +2,34 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 515EC3EF431
-	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 22:49:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42C5C3EF55D
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 00:02:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234122AbhHQUmY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Aug 2021 16:42:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41883 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232921AbhHQUmX (ORCPT
+        id S235464AbhHQWDJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Aug 2021 18:03:09 -0400
+Received: from mail-1.ca.inter.net ([208.85.220.69]:37403 "EHLO
+        mail-1.ca.inter.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230381AbhHQWDI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Aug 2021 16:42:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629232909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wcl4Dsri643WTYT2ZVvqT65s7dgjheTTZlEE7QZJGi0=;
-        b=cNtDwZv4I4gzlWlDkcuA9A8LcgnZ4nw7NmBcLOF6+OpgDv2ZO6OSlF8ZxXpuRNPNW729wm
-        NZ+/1UVLUp0NF37JD2i31SjDARtkfuLT0GtjFQeMWfqwd0EVJvlTXnWDq3bqn9NFAZAPVV
-        x1iL3DKXFcCXS3maVooTmvdX5SrfWSI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-OibFsp8zNtK8OL7wOrtR7Q-1; Tue, 17 Aug 2021 16:41:46 -0400
-X-MC-Unique: OibFsp8zNtK8OL7wOrtR7Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 17 Aug 2021 18:03:08 -0400
+X-Greylist: delayed 519 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Aug 2021 18:03:08 EDT
+Received: from mp-mx11.ca.inter.net (mp-mx11.ca.inter.net [208.85.217.19])
+        by mail-1.ca.inter.net (Postfix) with ESMTP id 005612EA31E;
+        Tue, 17 Aug 2021 17:53:49 -0400 (EDT)
+Received: from mail-1.ca.inter.net ([208.85.220.69])
+        by mp-mx11.ca.inter.net (mp-mx11.ca.inter.net [208.85.217.19]) (amavisd-new, port 10024)
+        with ESMTP id HJZLiWIjEmCF; Tue, 17 Aug 2021 17:53:49 -0400 (EDT)
+Received: from [192.168.48.23] (host-45-78-207-107.dyn.295.ca [45.78.207.107])
+        (using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D08F51082925;
-        Tue, 17 Aug 2021 20:41:43 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3995E60BF4;
-        Tue, 17 Aug 2021 20:41:36 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 17HKfZQS031822;
-        Tue, 17 Aug 2021 16:41:35 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 17HKfZrZ031818;
-        Tue, 17 Aug 2021 16:41:35 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 17 Aug 2021 16:41:35 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Bart Van Assche <bvanassche@acm.org>
-cc:     SelvaKumar S <selvakuma.s1@samsung.com>,
+        (Authenticated sender: dgilbert@interlog.com)
+        by mail-1.ca.inter.net (Postfix) with ESMTPSA id DC7C52EA1C8;
+        Tue, 17 Aug 2021 17:53:45 -0400 (EDT)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH 3/7] block: copy offload support infrastructure
+To:     Mikulas Patocka <mpatocka@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>
+Cc:     SelvaKumar S <selvakuma.s1@samsung.com>,
         linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
         linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, dm-devel@redhat.com,
@@ -56,55 +41,71 @@ cc:     SelvaKumar S <selvakuma.s1@samsung.com>,
         agk@redhat.com, selvajove@gmail.com, joshiiitr@gmail.com,
         nj.shetty@samsung.com, nitheshshetty@gmail.com,
         joshi.k@samsung.com, javier.gonz@samsung.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH 3/7] block: copy offload support infrastructure
-In-Reply-To: <ad3561b9-775d-dd4d-0d92-6343440b1f8f@acm.org>
-Message-ID: <alpine.LRH.2.02.2108171630120.30363@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20210817101423.12367-1-selvakuma.s1@samsung.com> <CGME20210817101758epcas5p1ec353b3838d64654e69488229256d9eb@epcas5p1.samsung.com> <20210817101423.12367-4-selvakuma.s1@samsung.com> <ad3561b9-775d-dd4d-0d92-6343440b1f8f@acm.org>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20210817101423.12367-1-selvakuma.s1@samsung.com>
+ <CGME20210817101758epcas5p1ec353b3838d64654e69488229256d9eb@epcas5p1.samsung.com>
+ <20210817101423.12367-4-selvakuma.s1@samsung.com>
+ <ad3561b9-775d-dd4d-0d92-6343440b1f8f@acm.org>
+ <alpine.LRH.2.02.2108171630120.30363@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <bbecc7e7-8bf5-3fe3-6c24-883c79fb7517@interlog.com>
+Date:   Tue, 17 Aug 2021 17:53:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <alpine.LRH.2.02.2108171630120.30363@file01.intranet.prod.int.rdu2.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On Tue, 17 Aug 2021, Bart Van Assche wrote:
-
-> On 8/17/21 3:14 AM, SelvaKumar S wrote:
-> > Introduce REQ_OP_COPY, a no-merge copy offload operation. Create
-> > bio with control information as payload and submit to the device.
-> > Larger copy operation may be divided if necessary by looking at device
-> > limits. REQ_OP_COPY(19) is a write op and takes zone_write_lock when
-> > submitted to zoned device.
-> > Native copy offload is not supported for stacked devices.
+On 2021-08-17 4:41 p.m., Mikulas Patocka wrote:
 > 
-> Using a single operation for copy-offloading instead of separate operations
-> for reading and writing is fundamentally incompatible with the device mapper.
-> I think we need a copy-offloading implementation that is compatible with the
-> device mapper.
-
-I once wrote a copy offload implementation that is compatible with device 
-mapper. The copy operation creates two bios (one for reading and one for 
-writing), passes them independently through device mapper and pairs them 
-at the physical device driver.
-
-It's here: http://people.redhat.com/~mpatocka/patches/kernel/xcopy/current
-
-I verified that it works with iSCSI. Would you be interested in continuing 
-this work?
-
-Mikulas
-
-> Storing the parameters of the copy operation in the bio payload is
-> incompatible with the current implementation of bio_split().
 > 
-> In other words, I think there are fundamental problems with this patch series.
+> On Tue, 17 Aug 2021, Bart Van Assche wrote:
 > 
-> Bart.
+>> On 8/17/21 3:14 AM, SelvaKumar S wrote:
+>>> Introduce REQ_OP_COPY, a no-merge copy offload operation. Create
+>>> bio with control information as payload and submit to the device.
+>>> Larger copy operation may be divided if necessary by looking at device
+>>> limits. REQ_OP_COPY(19) is a write op and takes zone_write_lock when
+>>> submitted to zoned device.
+>>> Native copy offload is not supported for stacked devices.
+>>
+>> Using a single operation for copy-offloading instead of separate operations
+>> for reading and writing is fundamentally incompatible with the device mapper.
+>> I think we need a copy-offloading implementation that is compatible with the
+>> device mapper.
+> 
+> I once wrote a copy offload implementation that is compatible with device
+> mapper. The copy operation creates two bios (one for reading and one for
+> writing), passes them independently through device mapper and pairs them
+> at the physical device driver.
+> 
+> It's here: http://people.redhat.com/~mpatocka/patches/kernel/xcopy/current
+
+In my copy solution the read-side and write-side bio pairs share the same 
+storage (i.e. ram) This gets around the need to copy data between the bio_s.
+See:
+    https://sg.danny.cz/sg/sg_v40.html
+in Section 8 on Request sharing. This technique can be efficiently extend to
+source --> destination1,destination2,...      copies.
+
+Doug Gilbert
+
+> I verified that it works with iSCSI. Would you be interested in continuing
+> this work?
+> 
+> Mikulas
+> 
+>> Storing the parameters of the copy operation in the bio payload is
+>> incompatible with the current implementation of bio_split().
+>>
+>> In other words, I think there are fundamental problems with this patch series.
+>>
+>> Bart.
+>>
 > 
 
