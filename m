@@ -2,100 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFE1D3EEE96
-	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 16:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C31A3EEEAE
+	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 16:42:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237475AbhHQOfh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Aug 2021 10:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57478 "EHLO
+        id S238070AbhHQOnY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Aug 2021 10:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240151AbhHQOfW (ORCPT
+        with ESMTP id S233426AbhHQOnY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Aug 2021 10:35:22 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91D5C06179A
-        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 07:33:51 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id a5so25074054plh.5
-        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 07:33:51 -0700 (PDT)
+        Tue, 17 Aug 2021 10:43:24 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFD3C061764;
+        Tue, 17 Aug 2021 07:42:50 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id y34so41818924lfa.8;
+        Tue, 17 Aug 2021 07:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tzdG91mvLikItkKHL16jMN1Imbxkt6wutxPZo5aGWC0=;
-        b=ULDbYXgdwjERpFMDjtFc9mhN1l0x5bTrtCFWHNEBPXxHUgPbNbbNRPZrkv2E/LJcYZ
-         Vir5oHUOpDl58CdByxQ/08eG6aafzUeRbJwtbd2cM9/3ZaVwqFg6U6aoqbwb80oYcgad
-         xgs1KNMRoEuzAWUCji8C9ZV/U01DEEP7H0TfLy4X2gYp/+cfw5gQVaa+lZLHorZzMwVQ
-         7R/7i6ZyfTK3AXkt6kAnuWMr9zSr4py8zxvSHVNw6sjXVIj6s6j+LWmNSroSfg9JZcVd
-         bTrrvj1fdpoKtpM+P/nA+u0IYYHz57s6siYwScqSOspm4kpzkJERkoJdLNaTJPRiwiCD
-         enWw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IYqEXJfiN18yCZI6p8+AKI7fLyyfIF/2Rhy4MgWxORs=;
+        b=Cgp4XiI/ioCeNTwNFXQjYKGi8WTg8i/ZA62xg8W1eygB/LANHDdvZYsFESebJx2ZAc
+         Vargn/+b9VLuUwubXGGnlicEBibS6etHatqnaIU46lk8Nq4ropCtsNzo8bJysznslVR/
+         wxrsfuZgKKLdz9lgV/gyyFiPtIi4v8V+10nDlf7NMCO+44d/2+1PPh90WTFfpJKbOmGl
+         ljZkn5z+W5MYjMdGbe4Nl5SivKnId+8q4e5yaJF0d+uINN/2D2+AhT+2iYqLyVZcTl3n
+         vQGsm5l8HGzrRuV1JEUYDn8d1QuhzCYgcUEdGYERT0cWlFGVVOUKaQrHF8eE813oKSvP
+         EfLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tzdG91mvLikItkKHL16jMN1Imbxkt6wutxPZo5aGWC0=;
-        b=GBXVA3l9KhzzgrEEjnVK2hdm1ybPWXkvP+eeJx4NT7r9li9KHbhMj97Bk/1Y79PJS6
-         ZNZxaBplq3xTi6Dx9KGmLrLEBr5XaYVa0FWxdahCEPjD0hkKWXN9pv4BAFJbU4NeJP0G
-         kthkCcBA53O1Vp6M1zMEeuCA0p6074ho5hJZstT+DUsNEmlOn72GobZLmI/xTSHrMIIE
-         mVRtujTphIo0c0CBaGZO3DwQ1LDgPe8+gSoMuVPjE81/fY8CpefNNht/EAwNlYLCyxXR
-         UxUd7QflbieerNal9QrH/Fq+u2e/zShJYQ1epHwyaOJsxNRHa4iONRxOFasRGgUP9R2Z
-         5LQA==
-X-Gm-Message-State: AOAM532yCkwBOuw0KTeGyzXA0Gop/DWCK7VZ5edEihwxiU2l1FiKysC3
-        QxpWnSJTsdNfhHyRz1B7j2clYg==
-X-Google-Smtp-Source: ABdhPJyzw5LxZcz/PDNPEIfypb+Gc8aylTUVDDq2GSGGiSHPW9NHLKMZKpfeg8v0fsEcu29HG27Z+Q==
-X-Received: by 2002:a05:6a00:1348:b0:3e2:c99:a7b0 with SMTP id k8-20020a056a00134800b003e20c99a7b0mr4075381pfu.62.1629210831161;
-        Tue, 17 Aug 2021 07:33:51 -0700 (PDT)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id n5sm3450665pfj.49.2021.08.17.07.33.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Aug 2021 07:33:50 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: fix kernel panic during iterating over flush
- request
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        John Garry <john.garry@huawei.com>,
-        "Blank-Burian, Markus, Dr." <blankburian@uni-muenster.de>
-References: <20210811142624.618598-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6e59e905-0ffe-ec1b-05cc-ae9d367999cd@kernel.dk>
-Date:   Tue, 17 Aug 2021 08:33:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IYqEXJfiN18yCZI6p8+AKI7fLyyfIF/2Rhy4MgWxORs=;
+        b=FpgOJsR+faR2mL8ShdThxp9do8gXwZgsYWgJUkg5LRDM4vvZtFg/SMbYWl6DcAG5gu
+         FhwA5gUkA5mw0teH7HDEkk+uRMS/0/CJlI6AoW8mIjozqXSimTfqloNhNXzXdEh3dNjn
+         51D11jGE29SL5e4LI7EmdEEifSheoDte7o3RhnOuhL2W8hcFVqubcigBrNF2tx7Hht0r
+         RWegD2zHg9VBHYTjANb+hjyq+zhyAifzTj1Xo9IQwphxMZMEvWU6vDzrTzsKm32uodI7
+         I5AJ1OobD0Pu9GXa+CuUMfYE66XBMhqPPOk2foGi2vBRleQnnIo7ZWo4AxkBDlcguel9
+         chTw==
+X-Gm-Message-State: AOAM530ritbDITvv70IJCNbIq64L798i1yQ5ms1t6+28dSyXbLm3NTba
+        Tt0TwqL/iXuEctzU/XjdDPUewtANiU3swEqsn0w=
+X-Google-Smtp-Source: ABdhPJzaMq7CWUOoMolITqe/TuYuwS1QvR8N16pqlMH4rqZKY4UMF98ZToXGodeF25valw2giFNpcKQdBw8IOwnP8Gc=
+X-Received: by 2002:ac2:5b9d:: with SMTP id o29mr2734522lfn.26.1629211368980;
+ Tue, 17 Aug 2021 07:42:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210811142624.618598-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210817101423.12367-1-selvakuma.s1@samsung.com>
+ <CGME20210817101753epcas5p4f4257f8edda27e184ecbb273b700ccbc@epcas5p4.samsung.com>
+ <20210817101423.12367-3-selvakuma.s1@samsung.com> <YRu02+RgnZekKSqi@kroah.com>
+In-Reply-To: <YRu02+RgnZekKSqi@kroah.com>
+From:   Nitesh Shetty <nitheshshetty@gmail.com>
+Date:   Tue, 17 Aug 2021 20:12:37 +0530
+Message-ID: <CAOSviJ3tziyBmeP5Op_NAPhyt5vDprjPLaGH8Fu_rbK8UcQYPA@mail.gmail.com>
+Subject: Re: [PATCH 2/7] block: Introduce queue limits for copy-offload support
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     SelvaKumar S <selvakuma.s1@samsung.com>,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dm-devel@redhat.com,
+        kbusch@kernel.org, axboe@kernel.dk, damien.lemoal@wdc.com,
+        asml.silence@gmail.com, johannes.thumshirn@wdc.com, hch@lst.de,
+        willy@infradead.org, kch@kernel.org, martin.petersen@oracle.com,
+        mpatocka@redhat.com, bvanassche@acm.org, djwong@kernel.org,
+        snitzer@redhat.com, agk@redhat.com, selvajove@gmail.com,
+        joshiiitr@gmail.com, nj.shetty@samsung.com, joshi.k@samsung.com,
+        javier.gonz@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/11/21 8:26 AM, Ming Lei wrote:
-> For fixing use-after-free during iterating over requests, we grabbed
-> request's refcount before calling ->fn in commit 2e315dc07df0 ("blk-mq:
-> grab rq->refcount before calling ->fn in blk_mq_tagset_busy_iter").
-> Turns out this way may cause kernel panic when iterating over one flush
-> request:
-> 
-> 1) old flush request's tag is just released, and this tag is reused by
-> one new request, but ->rqs[] isn't updated yet
-> 
-> 2) the flush request can be re-used for submitting one new flush command,
-> so blk_rq_init() is called at the same time
-> 
-> 3) meantime blk_mq_queue_tag_busy_iter() is called, and old flush request
-> is retrieved from ->rqs[tag]; when blk_mq_put_rq_ref() is called,
-> flush_rq->end_io may not be updated yet, so NULL pointer dereference
-> is triggered in blk_mq_put_rq_ref().
-> 
-> Fix the issue by calling refcount_set(&flush_rq->ref, 1) after
-> flush_rq->end_io is set. So far the only other caller of blk_rq_init() is
-> scsi_ioctl_reset() in which the request doesn't enter block IO stack and
-> the request reference count isn't used, so the change is safe.
+On Tue, Aug 17, 2021 at 6:38 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Aug 17, 2021 at 03:44:18PM +0530, SelvaKumar S wrote:
+> > From: Nitesh Shetty <nj.shetty@samsung.com>
+> >
+> > Add device limits as sysfs entries,
+> >         - copy_offload (READ_WRITE)
+> >         - max_copy_sectors (READ_ONLY)
+> >         - max_copy_ranges_sectors (READ_ONLY)
+> >         - max_copy_nr_ranges (READ_ONLY)
+>
+> You forgot to add Documentation/ABI/ entries for your new sysfs files,
+> so we can't properly review them :(
+>
 
-Applied, thanks.
+Sorry, we will update the documentation in the next version.
 
--- 
-Jens Axboe
-
+Thanks,
+Nitesh Shetty
