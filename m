@@ -2,146 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AAEA3EEE2D
-	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 16:11:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3252B3EEE95
+	for <lists+linux-block@lfdr.de>; Tue, 17 Aug 2021 16:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237714AbhHQOLr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Aug 2021 10:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52306 "EHLO
+        id S240213AbhHQOfc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Aug 2021 10:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237333AbhHQOLp (ORCPT
+        with ESMTP id S239873AbhHQOdm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Aug 2021 10:11:45 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F92AC061764;
-        Tue, 17 Aug 2021 07:11:12 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id g138so13802238wmg.4;
-        Tue, 17 Aug 2021 07:11:12 -0700 (PDT)
+        Tue, 17 Aug 2021 10:33:42 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49358C061764
+        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 07:33:09 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id hv22-20020a17090ae416b0290178c579e424so6675096pjb.3
+        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 07:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G+wzONEKGs2tcL1CzgRs5jjCLpQK+a9gblJaRcWbhR8=;
-        b=ayzVWjoihikSQUVCVr0EcXp3CyfdGuJ/tBbW7pe8hjodC/wu+X7xnJls9kP01pXGjE
-         YB+tJPQa1xGsCX1REs+fJNWqO8SjJJ0KUSw8HWpNf0vK/9XmBd/I8R6oh7BLtgkYJXw8
-         FHN7SnU+NNn6fftn6tuEHXF+5zQ5MoW8Lmre29ZIYwOEfbk66+L+8A3MG75rAc3ubvr3
-         YlQmk8Or/VWfeGJHxMcebnTI4r/lOsUC5VE2bdpW9vVSjJLleL/NxR+F++l54t9VSBXt
-         RWKc64Huq7oVzZ4Q1e2w+h9GWrtkWgghKFf1HziNQ8qGnpoUhfEqcCZjTrzTdtKvGMia
-         vbxQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=isGxWOTd5shMg5EAgo6PA5diCL2W6al9cYd9Z1D7xus=;
+        b=GfdPkYOtP4rhHMyKJMYfl9O4KfTR81yOpB11oGxRr4snKRGkMGuDVIFm9k4VaI3bl2
+         6YCEEmkbQ52KpyNf5HDMNNiN+rHvjFRlib6CqpQcoBwv+ehyBWIcOwBPLhkpValSuQw5
+         ck1cML3GY4EHFKS417XSfj+1v2GVsEAipQWla/6Pl2A3WY4lJ7uUDdy8USpgWIT8ouZJ
+         fIj1dlue7rt0ndSFSRAgWGkZMvKU0AuY3i8CNPpf7LxWXewHoDX7+m3bwGbckIbK0hPl
+         f6ymUA82Z/eJOMKMigFXKA5AnGE5Uhrlwzd1U4oW0vz/0NHaNOQVs843+qdRnp+Gh/PX
+         ChyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G+wzONEKGs2tcL1CzgRs5jjCLpQK+a9gblJaRcWbhR8=;
-        b=Qt7mEBgh61N3wsHpJcMK5FnDXKnu8VRyd0eZD/DXPUB+9vh63jGGw/o/S1c6WxzMV6
-         2nzfdH2heGUwuioLHuXNTDBcWIfI3wtV7RrTyFfbq4Z4pg8rM0HvPgLC+OWD3XDamhiX
-         YTJ+c7pLNOLd4sgROWgJQ/Cw3IUkNqGgZqX+FIxwJkottHiCVqIlKTx7R5JXeLhvrNvC
-         w6Cius6I1GoVMhtYPr49MvqLBXxa86j/vqXn4sIKr7qETTnQ2EuFOujcwlJ0HAizqc/Y
-         iyZ9H7Gxc+/OboieJTsuTZuYGg0gcIlPlTyiS8UyhX1kbFlO2MbN+2jB4Nc7h6sqdwAK
-         AkBg==
-X-Gm-Message-State: AOAM532cUuSJHXF6vO3H5JytDOMZ7/qdxcImRck4VVTSBFIDMVvBRNYP
-        yob/MOV3vKkjfAAVuzeNRno=
-X-Google-Smtp-Source: ABdhPJxpSCHWghNCMjKKFeb7f85rvzbQtLhlufDVDIq25OxpuhZrLPxBBB40pHeAWLXtg1+39ipmHw==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr3701902wmc.150.1629209471009;
-        Tue, 17 Aug 2021 07:11:11 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id y3sm2565385wma.32.2021.08.17.07.11.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 07:11:09 -0700 (PDT)
-Date:   Tue, 17 Aug 2021 16:11:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ion Agorria <AG0RRIA@yahoo.com>,
-        Svyatoslav Ryhel <clamor95@gmail.com>,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] partitions/efi: Support NVIDIA Tegra devices
-Message-ID: <YRvDfMiYb0q7utX5@orome.fritz.box>
-References: <20210817013643.13061-1-digetx@gmail.com>
- <20210817013643.13061-4-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=isGxWOTd5shMg5EAgo6PA5diCL2W6al9cYd9Z1D7xus=;
+        b=OwwNUvj8hkXGC3LluRSVoA0QtvS9b+fNbFx+251nPAyaI5JXct0lUJJBWS7NlMOgWb
+         LHAXfiJ57ka5e70gTRn2vMLzAzvvOiwKFYYy91Xe9MiLhqAyBQGxhioLDol05IUI2Yeo
+         n33UCB3t2n+JcPB4hHR5rEUL/eFbsefv0YoBm6kSRDj/prYSBVHcdcR9mfE3NYFIKGdv
+         OeYhx/i105TTzzqcWpNFIt2wFMifgR8ZXMRWTty3n6aO7szAvd0qUNEmPT/Z5vHzri7V
+         tF5N5JCtKgvNng+vXw7n1XDaVzjxPr3Qk4/LfYaYH4MDUA3ibWXUdQNbycC3g5lIFiVM
+         zsEw==
+X-Gm-Message-State: AOAM531RvvKOCxc5Xyv2oTcixUrX3md1/Nq5pJo1zUYuMbCEUOCIEfPl
+        +kb1mDsFIB/aTfnpeF69bBKlGg==
+X-Google-Smtp-Source: ABdhPJz6Srqy23ixsmudsSlEEYQ4uMlG6hoCFjmTuJRe3/TgL+lKhk+i3Oyev5etj53QCleXhErHOQ==
+X-Received: by 2002:a17:902:c406:b0:12d:d0ff:4aa with SMTP id k6-20020a170902c40600b0012dd0ff04aamr3145532plk.48.1629210788567;
+        Tue, 17 Aug 2021 07:33:08 -0700 (PDT)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id pj14sm2190827pjb.35.2021.08.17.07.33.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Aug 2021 07:33:08 -0700 (PDT)
+Subject: Re: [PATCH V2] blk-mq: don't grab rq's refcount in
+ blk_mq_check_expired()
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        John Garry <john.garry@huawei.com>,
+        Keith Busch <kbusch@kernel.org>
+References: <20210811155202.629575-1-ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <38484926-becf-4aea-8a92-5d209657722a@kernel.dk>
+Date:   Tue, 17 Aug 2021 08:33:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5xfW2MljllZtfrq0"
-Content-Disposition: inline
-In-Reply-To: <20210817013643.13061-4-digetx@gmail.com>
-User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
+In-Reply-To: <20210811155202.629575-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 8/11/21 9:52 AM, Ming Lei wrote:
+> Inside blk_mq_queue_tag_busy_iter() we already grabbed request's
+> refcount before calling ->fn(), so needn't to grab it one more time
+> in blk_mq_check_expired().
+> 
+> Meantime remove extra request expire check in blk_mq_check_expired().
 
---5xfW2MljllZtfrq0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied, thanks Ming.
 
-On Tue, Aug 17, 2021 at 04:36:43AM +0300, Dmitry Osipenko wrote:
-[...]
-> diff --git a/block/partitions/tegra.c b/block/partitions/tegra.c
-> new file mode 100644
-> index 000000000000..4937e9f62398
-> --- /dev/null
-> +++ b/block/partitions/tegra.c
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define pr_fmt(fmt) "tegra-partition: " fmt
-> +
-> +#include <linux/blkdev.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/sizes.h>
-> +
-> +#include <linux/mmc/blkdev.h>
-> +#include <linux/mmc/card.h>
-> +#include <linux/mmc/host.h>
-> +
-> +#include <soc/tegra/common.h>
-> +
-> +#include "check.h"
-> +
-> +static const struct of_device_id tegra_sdhci_match[] = {
-> +	{ .compatible = "nvidia,tegra20-sdhci", },
-> +	{ .compatible = "nvidia,tegra30-sdhci", },
-> +	{ .compatible = "nvidia,tegra114-sdhci", },
+-- 
+Jens Axboe
 
-I know of a couple of OEM devices using the above SoCs that support this
-alternate GPT sector mechanism...
-
-> +	{ .compatible = "nvidia,tegra124-sdhci", },
-
-... but I'm unaware of any using this. The only one that I could imagine
-employing this quirk is the SHIELD Tablet K1 (a.k.a. ST8), but I thought
-it had been changed on that device already. Do you know specifics?
-
-Thierry
-
---5xfW2MljllZtfrq0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEbw3wACgkQ3SOs138+
-s6EcqxAAvcvsn48s8izKAvWVHbKEilSvfL2kYYM/5DbYAw/UGuIQdjveoigKVO/Z
-3uZjqIp6SjZkoE0XrAandirYe8RlD/vt8M9VUmz6XMIdVkMcOhR3ZRYAtmKrwWPi
-G0nanfNzxiTzeK+df1nDJ+NhCnUPqQ1NF0HrzTTs2KXXNia8jeOLLTeEyTpvgy25
-LNcU6RsyvUBPkXUOxAuFR9mOM2GzB+a6y//h7ChCir0UAWPklzAwkqwOfse2PoFm
-gpmnbTwQ8mWMDdgtGl9/8hG29fr2RDkW1/Zehy3ek3WMBUrfce/5o+xGoGV+i7ff
-0PdZR3Y4Fg2NsfeLGTsvonRoOSLgYG2X/JEe7DLHQQITzDLwvbkflolgqZ3KmTA0
-j9jGP8YkcLcOzFr2B+k/g3bcbE7tp7ygRpuh3Pu22Me0YC9PNdkNrs/DggOUklai
-ZYhtSPtBITwrsVG0MYUwl9Wl7QdTUZ3L4vWSwMoZVnxhsqZ4Wy4v8xZlQvUJmQax
-JfC5xTw4GN6IuP00bqBZGyDnOt4QIJxeDW6IRxbGlOUnSCplFsJEmF2UfGCl8t25
-rQgGLZgJka5B02xDvmqjkVjQHr342bI9e42QlpLUA+ibIUduzxocRVj87U8h7v3t
-ST9O3w9N63x7oOAwt+c/aI7wHMfXqxquiVbHjG85dHrz0mk2y4k=
-=xDap
------END PGP SIGNATURE-----
-
---5xfW2MljllZtfrq0--
