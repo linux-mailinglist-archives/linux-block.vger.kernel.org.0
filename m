@@ -2,96 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 691203F041D
-	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 15:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AECA3F047F
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 15:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236417AbhHRNDE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Aug 2021 09:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
+        id S236690AbhHRNU4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Aug 2021 09:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235423AbhHRNDD (ORCPT
+        with ESMTP id S236615AbhHRNU4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Aug 2021 09:03:03 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF9DC061764;
-        Wed, 18 Aug 2021 06:02:29 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id f15so2127287ilk.4;
-        Wed, 18 Aug 2021 06:02:29 -0700 (PDT)
+        Wed, 18 Aug 2021 09:20:56 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8C1C0613CF
+        for <linux-block@vger.kernel.org>; Wed, 18 Aug 2021 06:20:21 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id g14so2108633pfm.1
+        for <linux-block@vger.kernel.org>; Wed, 18 Aug 2021 06:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MkYUY8hRWwEu70DXUFF8siW38IO889EQpcP0JG9olHM=;
-        b=p816tpeNXiyVNrHjM3CLMARaTaQ9Q1DNkBPMF5S/QiTyS8TtyNuS4uSDtOvWYkZ9DD
-         KQs/VrSCx51qbgHOlhlqY+ZKamKhLS30a7nBa0Wn0WLKywG5EDsLvKzBc8Q5yqbovwVx
-         JjTa60sLtZoqpUSmCE3n0/wVzWzMxMTWIHpNstWexLoJOQJ+OxMi+XyB3QXEwvmEN+f/
-         wXa6Legda4Ugp7uCGvf3V1ZSw2wJsDe8AJmzt4yb1ib7Fzm5YmC5TfAcZFARVI54/XV+
-         DmeEiBYBUtdGwSDq+flIDrO71sP+aqrSrFvrxjsUFvpe0gY8Pan4eGGNA/tuXNtoplKZ
-         TcWg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MhAcwTmHxIAd4QFbOxVpg7wOWs84Q98Cer8hoXchdek=;
+        b=NVOwObjdIFoEbxF1XKZPzChGZXuZE/g+BpaPO5TLr44UaP5tY8KjyfATi22pXQtWan
+         aw7OAVz0spM5GoRwsIffIpkgUIcl496SJQ+z3rJbwuh5JFBWltsoom4HpdOb9LbU48Th
+         atnFM2by41h6JmoCRwBucAb8RZzv/FnEkhxDXtL6/RtRkpLlj246jZxlnfnxJGuPGsM1
+         nhRdYYwOegg8rd9/YzJGsm7+UyYBJU2G2gHNkbO607/25flTYRcDLzA+p+jAvUaUDPxH
+         8gguDMfkZm1tP4k7b6YY3elYaxwj1E2M5cSX/Rrbx+iNe+kk1GrLabg4dzMyFGfe5jXQ
+         yoow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MkYUY8hRWwEu70DXUFF8siW38IO889EQpcP0JG9olHM=;
-        b=qgyZfoyFiYiTL5aNMFzViUyirAFPjdNqfFHKkBf2bU/EzmJ+wTdpbyu9Bw+i8VKva/
-         q6TeUZ04Df5USQcNsP2npho0jlnK14yN0B7oYgW5AX9IE3RdEtaU08GFL8607ZVHQ9jb
-         /T1P2sc/WgsxFLOUpyh9hiXoqYQgpXmKo4TpAJxm9xgSoRQft7DePq4SODjn3aZgGkF+
-         LSnCXL52DPQOr+7zuENVVeevW+yVYj2A4BB1F3ZmYqsdZqp8FseYuhpwtt+GujmZpOBV
-         xQbsiIeP4na7mUt8mIC4fk6mMovDg8N9BMTYwpvKhYF+WpKZBSvJde+Zbf6Th3/YxDB/
-         YjFA==
-X-Gm-Message-State: AOAM531yjGirPqgC5Pmy+20FI+k64n1Y2TiZqUuaCOD8E2IjMCINULZu
-        TV+cQofOABemlc0ZqbSBZQLtOVxR9l3het95/us=
-X-Google-Smtp-Source: ABdhPJzz3GCPM+tS9a6+M7GfZUygskgS+S/HcxGkyNlHvv5PJSFF8ixpr8ONuLYhcpUTCbKIGIlu3ps94hS6aZMTaMM=
-X-Received: by 2002:a92:b711:: with SMTP id k17mr6012067ili.247.1629291748768;
- Wed, 18 Aug 2021 06:02:28 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MhAcwTmHxIAd4QFbOxVpg7wOWs84Q98Cer8hoXchdek=;
+        b=ILy2T8dW0comNa7qOgoIzoMyMxq020ytNaSu3A7nC7PwKpNS9prnRGqogOCInNJV6Z
+         l6u8SSkZewTdsin16BNwFHafJ2/lUG4e7/lTY8X91wZsy/8CLFfHjwIVt5YJ+3wa1ug8
+         ZsV+ANvmrhv2SbIKQO9LRTZpMAetQZPx9bujhAvw9ukDkHLmt797BawZFu6UMdFDyrZ0
+         IuI66rzqmVEgJYUth9E1rW96ba/W52Bhj6Q5z0akFueDjCII5lgU3ypCbD+neOmQSHBo
+         E+V80idtte4x2erCl2/1K2u6rZ8/pp50y0Gm02zoEI2OGDPVd/mlE5bnbjgRLZQi8BrF
+         KNVw==
+X-Gm-Message-State: AOAM533ugWTOa+3SIRwCJwtt8qXxtqv/Bcn/85In4h17SMjo3wJUyAtP
+        sfpPYDq7expgDsZIfDnK9diD4BzdFQvwgiLG
+X-Google-Smtp-Source: ABdhPJwffJWAKC4Zll3QD2/A3uRNlLIUf8tiqDSzFTiSEiVs5PPdbXEKBxCy/wINIbG/mXnGa7LcOA==
+X-Received: by 2002:a05:6a00:a18:b029:382:e172:653e with SMTP id p24-20020a056a000a18b0290382e172653emr9394640pfh.19.1629292820948;
+        Wed, 18 Aug 2021 06:20:20 -0700 (PDT)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id h24sm6657086pfn.180.2021.08.18.06.20.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Aug 2021 06:20:20 -0700 (PDT)
+Subject: Re: [PATCH v7 00/11] libata cleanups and improvements
+To:     Damien Le Moal <damien.lemoal@wdc.com>, linux-ide@vger.kernel.org
+Cc:     linux-block@vger.kernel.org
+References: <20210816014456.2191776-1-damien.lemoal@wdc.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <18c2f2e2-b7b6-b8b8-35ef-89ee59001cac@kernel.dk>
+Date:   Wed, 18 Aug 2021 07:20:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20210818060533.3569517-1-keescook@chromium.org> <20210818060533.3569517-26-keescook@chromium.org>
-In-Reply-To: <20210818060533.3569517-26-keescook@chromium.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 18 Aug 2021 15:02:17 +0200
-Message-ID: <CANiq72mQQuwfpFdxeJQoKnfpUFSPuakHRm8RC+eH-xECBjwDkw@mail.gmail.com>
-Subject: Re: [PATCH v2 25/63] compiler_types.h: Remove __compiletime_object_size()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210816014456.2191776-1-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 8:14 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Since all compilers support __builtin_object_size(), and there is only
-> one user of __compiletime_object_size, remove it to avoid the needless
-> indirection. This lets Clang reason about check_copy_size() correctly.
+On 8/15/21 7:44 PM, Damien Le Moal wrote:
+> The first three patches of this series fix sparse and kernel bot
+> warnings (potential NULL pointer dereference and locking imbalance).
+> 
+> The following three patches cleanup libata-core code in the area of
+> device configuration (ata_dev_configure() function).
+> 
+> Patch 7 improves ata_read_log_page() to avoid unnecessary warning
+> messages and patch 8 adds an informational message on device scan to
+> advertize the features supported by a device.
+> 
+> Path 9 adds the new sysfs ahci device attribute ncq_prio_supported to
+> indicate that a disk supports NCQ priority.
+> 
+> Patch 10 and 11 update the ABI user documentation files.
 
-Sounds good to me, the indirection is making things more complex than
-they need to be.
+Applied 2-11, thanks.
 
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+-- 
+Jens Axboe
 
-Cheers,
-Miguel
