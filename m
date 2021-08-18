@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1BA93EFBD8
-	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 08:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52DA13EFC0B
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 08:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239230AbhHRGQb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Aug 2021 02:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
+        id S240692AbhHRGSV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Aug 2021 02:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239440AbhHRGQC (ORCPT
+        with ESMTP id S239560AbhHRGQD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:16:02 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF5EAC034619
+        Wed, 18 Aug 2021 02:16:03 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F270DC08E6D4
         for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id e15so1134258plh.8
+Received: by mail-pj1-x1029.google.com with SMTP id n5so1930641pjt.4
         for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B2pM2ucDG5zliIAHLMoXUSUCi2eG5GhvAhwNtz+MErg=;
-        b=mwg1q+Bt4QS2kDiAiYMrptxKuPiLfGTL3MbhRH+y+rtpN+PzOswpzAybX1QwsdWpC+
-         /4EJLgRYHAO0A/0MlMQ1JbRzphtUuW7CEaeih+Hg720g37V8tn+kB2YNyIeVU9s27YGJ
-         I5Nv+aE5iixSzp+8UlyJNVcSewinIrbX4uCuA=
+        bh=HZ2pMteOO7qWfOmOYtxvBybCH7dbrKV5AXIyHH8PDAo=;
+        b=I/ZOMRfdW0A1G/DcQVMDbVZ27xrUyPneZm3d4+Q2S2o/EDHaj6F19/FFLV/TwoMpwu
+         skf+ZMMooatac88oo9CLvuJrGQA7BIMv1RkJv118S5WXUAW4DfMl92HZuy1jSJK9Q8/C
+         xkWRC88V3Fuj6arr6OaRAS1UJvHk6WO+znvdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B2pM2ucDG5zliIAHLMoXUSUCi2eG5GhvAhwNtz+MErg=;
-        b=RErvi9S7XlFBwvqOGXG2MDICVkya645ooDt2PAziKr2h2pTrivUegCfphgFjpJ8mXJ
-         U8Uz1s/K6Si4p76MzGZlJpKE2UAh6oNOQ0SNypIgB0fdEsAqWZUQlF4xYGdeEExDuxHb
-         gb3fkc1F1zNPljbY5OnZjVIPWt7NWcVN8kTqE7fluWbzz4uzN7oJ9uccH/QuT3ZRmmYH
-         hGRvI2QB/6dAqCnLNtBiWuYXY8f4D6WA5B/FhGYiKMTJfDyBi0qTjyyhHuwAGXabMWMa
-         aeLMCWis5+WjWwN3V4UBVYZzCkTLqdGYJzZEnlWkACVh3ZbceIt+q1Nb2SmtbIBbwDTw
-         XNAA==
-X-Gm-Message-State: AOAM531YHvOZHc+bSCV+ZM8od1FpcUvIiMQJiD7biTAnJpLZOYp4oEHA
-        CTAqykwozgI1ofEVut5bXGTykw==
-X-Google-Smtp-Source: ABdhPJy3pLNFC0UXT9j5IspDzOvKFRoKWLAd34sfU1xG8WMyu2hdKoL/KuE0lWutReWDKTv5ir2SbA==
-X-Received: by 2002:a17:902:8e84:b029:12c:8742:1d02 with SMTP id bg4-20020a1709028e84b029012c87421d02mr6048620plb.38.1629267260326;
+        bh=HZ2pMteOO7qWfOmOYtxvBybCH7dbrKV5AXIyHH8PDAo=;
+        b=gcCLDboeLrEbp6Ry0MVodDf9b/v4e6UKj3iHbp4B86hxaZ4KWXc+MpdJ6u3V6smXtS
+         mwNIBWitstvBu8T+2sPo+EX0iGkRIuGsjK6A09e6G2loASm/zncYabYvfCWGKe9FBaTz
+         vTVjgeFfMAtgak8JdyfTKXLgTWKmhqRT/a1Q5yMhjbZ0H//6aufBkYZkhvR7TwgJPLOl
+         j6AAhJpWeSWoKKWL8VGxNNMdhkyS4PKZiQMC93AKylCaseCU4aleBAndvzf6eNM30SeQ
+         VcG9dHXNZwLT4uyxw4YCYRrAIJp12wEY51zeWjkgB4CtV30kR8aaaZLuzCqSwvjtWduZ
+         01Og==
+X-Gm-Message-State: AOAM531UfLqEI1+lGPwNt9p69LjN3YbUQOcReN1RFehhwuHr2VuF1Wxr
+        eNSDL3QF22wsQiZthlmllOGhtQ==
+X-Google-Smtp-Source: ABdhPJzGVRGNWEMl+xJPHR3RME0k4vYoAMz1qrXylbh8zmM1aqx1ZRRou6EJ/L2qyq4WBdsar+4NhA==
+X-Received: by 2002:a17:90b:1bc5:: with SMTP id oa5mr7694940pjb.170.1629267260592;
         Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c2sm4955806pfi.80.2021.08.17.23.14.15
+        by smtp.gmail.com with ESMTPSA id v20sm5270585pgi.39.2021.08.17.23.14.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:14:19 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -60,14 +60,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 38/63] xfrm: Use memset_after() to clear padding
-Date:   Tue, 17 Aug 2021 23:05:08 -0700
-Message-Id: <20210818060533.3569517-39-keescook@chromium.org>
+Subject: [PATCH v2 39/63] ipv6: Use memset_after() to zero rt6_info
+Date:   Tue, 17 Aug 2021 23:05:09 -0700
+Message-Id: <20210818060533.3569517-40-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1818; h=from:subject; bh=eNwDaozDVyCitQLryWC3/RFgBjRXkOp7KVQC946+IMc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMmAX0G1QJqNpqHK4m8y3LeJ99HmlfZlOjfOt4C XfOmkkGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJgAKCRCJcvTf3G3AJqqREA Cd9YfEItqXqOY6xygw682gXWYaNQa5IvKCcsyt4U6GdZah2FRAUQ0UxtMIwc0L2/8g3CAi4wzU83FH 5n6GD+dF8r+3cEP4bPwYLGEKzsgswWQIqJWwKGJoBvFSxG5wbfIHwbvZFOM5y+/t0aPwonqcCoJOw3 ThLBMvQUV6CpfMGRKgiedNLzbF/W83qJ2AR4sriqV/LBY6hNK46QXR861zd0a5kaRKvgMSwMV52G0c jSd0GHvFCTEnjsussKR6m695hHoQ//Grp/PmO9TMZ/3lfxTIWoYIoIcbwp7uZ54MslPdksTUwsmU0h IO8Y+uXx5pnjdZSpaSsSCIOVJL/EthakY7NQ5WVjObsr0IqBBwrY20F03r3zPRKZGy1AqQzOMGCwoZ OzA7VYExn3uUxUXRBqic+nz/P7UBIsBMqdKH9LaSVuz96021TUStdpZJm7ZJXKi0cNJAzywfSDP3HH czY6llUcG1ZRmA3/1iK36jI7I7bTyaQibsz/ss/kI2A94u+5cgagPX+YYXqa9D238TuWELhNQQbyON ahzeMR7rMXzdB40Gm0u/oCpw+3fhAQ8YcZjYa35I7aWjTr47jLo+AN/O0Es/XUUwjNu9T1tAclWZEZ SDapObM7dpmG1Ldxs4y59x6+0RFPyEN5Tb14raVdPsku576ce7lt/B+4yXMw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1045; h=from:subject; bh=Xphf8KZ59311q+SS41lPdZSHzYQuR48YTVr6kaXwlq8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMmSJWz3eXi3vB6HuJ8ZVOxVmfPJDOfgTngkXFJ Y1HtemeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJgAKCRCJcvTf3G3AJlNxD/ 9sppezWOBqAWwsgfxRdXp14+IggzlcV6Cmuy+3yoHyda/CdCTve1snqU/mJj9ikiLYc+kAugfad4F0 cTsFl+ID962FFCkUfX+wrf2rcqUBBFlgJb2t38JcXrnDO88rm3r76AL2Wma0ueNPmaH5WllhHC2rCK fXKPe24PYrG5OSOBDVj0fD/osVthtrCfm/J2MtX+UxWh2FPgLGPm8bIuPN1IO4o/bkmRAPRJf3kWdx OKIoFSgRnAQCFZAkoDmto4fssngysQ/8xlWWYJ9nL7hXj3ybM7i4Riea2vc7uMtQ/LdrD24dqEDmKe f3+J4WogRasAKWDsVi1LKZLojHKBb+ZlIs6kkWujZ6bqPTPjVxgKPF1SyrDNzFRofsvKIdmiaocbM8 7Mbap+xZuyeBTwmrqENziN5DQQZC7J8joprP3D5XEgjPSSfo10I0ZhuYGFkZImfW3drIF9MNa/UFwb K/jR9NhcwjBeArtPiUgjZ/eTrdZygthG5tuDwEvP65vF/0qwPA/rmr7iPNZkf43crxfhCRZxUf8LGs suQoBCZbvMkCKKlTKgtbFTehnkPqB2dleq9pZC86P1KKoE7a9I7zAFa0vwJ32McHUjN4QjWLWEnIo1 ySO6vVD3cBOQ7RlV165HYCseHGnNSRZD6wdVzFjMgZMzsSBDx6RZHTkAU6fQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -78,49 +78,34 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Clear trailing padding bytes using the new helper so that memset()
-doesn't get confused about writing "past the end" of the last struct
-member. There is no change to the resulting machine code.
+Use memset_after() to clear everything after the dst_entry member of
+struct rt6_info.
 
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc: David Ahern <dsahern@kernel.org>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/xfrm/xfrm_policy.c | 4 +---
- net/xfrm/xfrm_user.c   | 2 +-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ net/ipv6/route.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 37d17a79617c..1a06585022ab 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -2486,9 +2486,7 @@ static inline struct xfrm_dst *xfrm_alloc_dst(struct net *net, int family)
- 	xdst = dst_alloc(dst_ops, NULL, 1, DST_OBSOLETE_NONE, 0);
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index 6cf4bb89ca69..bd0ab3e436e7 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -327,9 +327,7 @@ static const struct rt6_info ip6_blk_hole_entry_template = {
  
- 	if (likely(xdst)) {
--		struct dst_entry *dst = &xdst->u.dst;
+ static void rt6_info_init(struct rt6_info *rt)
+ {
+-	struct dst_entry *dst = &rt->dst;
 -
--		memset(dst + 1, 0, sizeof(*xdst) - sizeof(*dst));
-+		memset_after(xdst, 0, u.dst);
- 	} else
- 		xdst = ERR_PTR(-ENOBUFS);
+-	memset(dst + 1, 0, sizeof(*rt) - sizeof(*dst));
++	memset_after(rt, 0, dst);
+ 	INIT_LIST_HEAD(&rt->rt6i_uncached);
+ }
  
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 03b66d154b2b..b7b986520dc7 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -2912,7 +2912,7 @@ static int build_expire(struct sk_buff *skb, struct xfrm_state *x, const struct
- 	copy_to_user_state(x, &ue->state);
- 	ue->hard = (c->data.hard != 0) ? 1 : 0;
- 	/* clear the padding bytes */
--	memset(&ue->hard + 1, 0, sizeof(*ue) - offsetofend(typeof(*ue), hard));
-+	memset_after(ue, 0, hard);
- 
- 	err = xfrm_mark_put(skb, &x->mark);
- 	if (err)
 -- 
 2.30.2
 
