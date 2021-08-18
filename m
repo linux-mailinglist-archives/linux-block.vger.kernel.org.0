@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B59593F0716
-	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 16:51:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7AF3F0723
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 16:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239393AbhHROv7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Aug 2021 10:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
+        id S238721AbhHROw7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Aug 2021 10:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239019AbhHROv6 (ORCPT
+        with ESMTP id S239606AbhHROw6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Aug 2021 10:51:58 -0400
+        Wed, 18 Aug 2021 10:52:58 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A58C061764
-        for <linux-block@vger.kernel.org>; Wed, 18 Aug 2021 07:51:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C258C061764
+        for <linux-block@vger.kernel.org>; Wed, 18 Aug 2021 07:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=KlTGPGXtD5pcKg1e/+kLFkuthMkxZfGhOC5GRsPi52E=; b=OTQRzpNK0Ut/NnC3H3FHEIJ2Fn
-        g7/h4lhheh3iRQpXXo12CiJAEhX9pR3fqLVz69k/gLCsh7Z9K8tllXpCWNv2JJoQSheNZnDvKjtCf
-        TDgcNAN0bz4qbAk+Bn2TsHq4o2C/oB1WkqvKN+iw/qjqdZ2+CLu0i6iW+cn9KaKwpjj9hzPRuo2tt
-        ZTAJQazW+YTdLGBF/mEht2Ml8yQqItTCARXaiC5Ane0KT9i/6rFQvSfqW1+6JrxqObT/TYX/ab2FV
-        T21qCa+04tr2RS5857VOauQbSfZK80iR2K6ujVFh3Ct+b/9uRMGItHGqOdhUP2X5nwUcmTVjwIeJi
-        R0nza+sw==;
+        bh=8mOfo5CAn4drO/2dqEnobIxexcb3A3V9vsqqifptuwA=; b=KBeCY4zh0j9yfBn+9KEHnMZeep
+        N8OZxIUp61v82ZGUqaXRCl6f02tf60FKZjzP1miwl58unQTNbqWG5D4MQugprLP2zlIlB/NxaJzOR
+        t9D/7YvuowW3Fw9e3jUoI73A7FV6pFPx2eJOc3yPqGdv6LqLMvtyWcoYe9CBSEVNHoUTarCJsrAVB
+        iL+TG69GS+RyxWRLbH2wKdAmJ5EGbvXUWz71oJ4RoxzF72nyMKp29YY9Ld75A4hGbcKM2GZ0RAh2t
+        och8DgavTK0xMv5d0Sp6xSwRnPE0h2xCmAcGU2FC6+bKkJcUkLjqYN2IfGFbmT7m4K89QMcenYOGg
+        mrLYmRtw==;
 Received: from [2001:4bb8:188:1b1:5a9e:9f39:5a86:b20c] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mGMt6-003wlK-HD; Wed, 18 Aug 2021 14:50:05 +0000
+        id 1mGMtv-003woj-Un; Wed, 18 Aug 2021 14:50:57 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
@@ -35,9 +35,9 @@ Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH 04/11] block: create the bdi link earlier in device_add_disk
-Date:   Wed, 18 Aug 2021 16:45:35 +0200
-Message-Id: <20210818144542.19305-5-hch@lst.de>
+Subject: [PATCH 05/11] block: call blk_integrity_add earlier in device_add_disk
+Date:   Wed, 18 Aug 2021 16:45:36 +0200
+Message-Id: <20210818144542.19305-6-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818144542.19305-1-hch@lst.de>
 References: <20210818144542.19305-1-hch@lst.de>
@@ -48,45 +48,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This will simplify error handling going forward.
+Doing all the sysfs file creation before adding the bdev and thus
+allowing it to be opened will simplify the about to be added error
+handling.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/genhd.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ block/genhd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/block/genhd.c b/block/genhd.c
-index ab455f110be2..f05e58f214d2 100644
+index f05e58f214d2..75d900e4c82f 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
-@@ -518,8 +518,13 @@ void device_add_disk(struct device *parent, struct gendisk *disk,
- 				   disk->major, disk->first_minor);
- 		WARN_ON(ret);
- 		bdi_set_owner(disk->bdi, ddev);
--		bdev_add(disk->part0, ddev->devt);
-+		if (disk->bdi->dev) {
-+			ret = sysfs_create_link(&ddev->kobj,
-+						&disk->bdi->dev->kobj, "bdi");
-+			WARN_ON(ret);
-+		}
+@@ -492,6 +492,8 @@ void device_add_disk(struct device *parent, struct gendisk *disk,
+ 	 */
+ 	pm_runtime_set_memalloc_noio(ddev, true);
  
-+		bdev_add(disk->part0, ddev->devt);
- 		disk_scan_partitions(disk);
- 
- 		/*
-@@ -528,12 +533,6 @@ void device_add_disk(struct device *parent, struct gendisk *disk,
- 		 */
- 		dev_set_uevent_suppress(ddev, 0);
- 		disk_uevent(disk, KOBJ_ADD);
--
--		if (disk->bdi->dev) {
--			ret = sysfs_create_link(&ddev->kobj,
--						&disk->bdi->dev->kobj, "bdi");
--			WARN_ON(ret);
--		}
- 	}
- 
++	blk_integrity_add(disk);
++
+ 	disk->part0->bd_holder_dir =
+ 		kobject_create_and_add("holders", &ddev->kobj);
+ 	disk->slave_dir = kobject_create_and_add("slaves", &ddev->kobj);
+@@ -538,7 +540,6 @@ void device_add_disk(struct device *parent, struct gendisk *disk,
  	blk_register_queue(disk);
+ 
+ 	disk_add_events(disk);
+-	blk_integrity_add(disk);
+ }
+ EXPORT_SYMBOL(device_add_disk);
+ 
 -- 
 2.30.2
 
