@@ -2,124 +2,144 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3992A3EFCE9
-	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 08:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 461F73EFCA6
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 08:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238116AbhHRGhY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Aug 2021 02:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51454 "EHLO
+        id S238377AbhHRG16 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Aug 2021 02:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237981AbhHRGhX (ORCPT
+        with ESMTP id S238168AbhHRG16 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:37:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F4BC061764
-        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 23:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=FXmTMF6Ajh70k0duCWm0jFiKANkPK/mgbhge+anQB8U=; b=AyDStgbo3Wg90sV+CuhwoX0jeQ
-        Dj7QnuifN+rI6qt9MLD2vYF/shSBkMYwnE0CATzfq5Vw+9GjFJyYme1gr3zpVMqZtM5MJOQJxtGix
-        45s01yGVl1OZ0WnBykc29PWZTInH5hjf5UCHdky/A3UysN2sHcAujxatI62TbsnWUg7zlqJCncWmt
-        yrk5MHZyxXXcSQpQwS8zGy7cTJk8LoV2t9Skm00TzgjobOfESB/NeRzYE+afMuZ1t6QpXPMDZnMQU
-        4KcePiMj57DKNg/w5dAp7IUFoLf0sY+zBOEji0p5z3m0969E8WdkqolnBBbAKBtTC3CewUMmjUJcO
-        VAuLWs0g==;
-Received: from 213-225-12-39.nat.highway.a1.net ([213.225.12.39] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mGF9p-003Rmb-10; Wed, 18 Aug 2021 06:34:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        "Reviewed-by : Tyler Hicks" <tyhicks@linux.microsoft.com>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 7/7] loop: avoid holding loop_ctl_mutex over add_disk
-Date:   Wed, 18 Aug 2021 08:24:55 +0200
-Message-Id: <20210818062455.211065-8-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210818062455.211065-1-hch@lst.de>
-References: <20210818062455.211065-1-hch@lst.de>
+        Wed, 18 Aug 2021 02:27:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AC4C061764
+        for <linux-block@vger.kernel.org>; Tue, 17 Aug 2021 23:27:22 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1mGF2W-0007Xm-Bs; Wed, 18 Aug 2021 08:27:04 +0200
+Received: from pengutronix.de (unknown [IPv6:2a02:810a:8940:aa0:ed04:8488:5061:54d4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        (Authenticated sender: mkl-all@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 7335C66975A;
+        Wed, 18 Aug 2021 06:26:59 +0000 (UTC)
+Date:   Wed, 18 Aug 2021 08:26:57 +0200
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 59/63] can: flexcan: Use struct_group() to zero struct
+ flexcan_regs regions
+Message-ID: <20210818062657.6hvn75kf5o5cgey2@pengutronix.de>
+References: <20210818060533.3569517-1-keescook@chromium.org>
+ <20210818060533.3569517-60-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kduqcl3tf4g5uel5"
+Content-Disposition: inline
+In-Reply-To: <20210818060533.3569517-60-keescook@chromium.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-block@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-To avoid complex lock ordering issues loop_ctl_mutex should not
-be held over add_disk.  Add a new Lo_new state for a loop device
-that has just been created but which is not live yet.
 
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/loop.c | 16 ++++++++++++----
- drivers/block/loop.h |  1 +
- 2 files changed, 13 insertions(+), 4 deletions(-)
+--kduqcl3tf4g5uel5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 043673bda8b3..80f462edc39f 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2329,7 +2329,7 @@ static int loop_add(int i)
- 	lo = kzalloc(sizeof(*lo), GFP_KERNEL);
- 	if (!lo)
- 		goto out;
--	lo->lo_state = Lo_unbound;
-+	lo->lo_state = Lo_new;
- 
- 	err = mutex_lock_killable(&loop_ctl_mutex);
- 	if (err)
-@@ -2343,8 +2343,9 @@ static int loop_add(int i)
- 	} else {
- 		err = idr_alloc(&loop_index_idr, lo, 0, 0, GFP_KERNEL);
- 	}
-+	mutex_unlock(&loop_ctl_mutex);
- 	if (err < 0)
--		goto out_unlock;
-+		goto out_free_dev;
- 	i = err;
- 
- 	err = -ENOMEM;
-@@ -2414,15 +2415,22 @@ static int loop_add(int i)
- 	disk->event_flags	= DISK_EVENT_FLAG_UEVENT;
- 	sprintf(disk->disk_name, "loop%d", i);
- 	add_disk(disk);
-+
-+	err = mutex_lock_killable(&loop_ctl_mutex);
-+	if (err)
-+		goto out_del_gendisk;
-+	lo->lo_state = Lo_unbound;
- 	mutex_unlock(&loop_ctl_mutex);
-+
- 	return i;
- 
-+out_del_gendisk:
-+	del_gendisk(lo->lo_disk);
-+	blk_cleanup_disk(lo->lo_disk);
- out_cleanup_tags:
- 	blk_mq_free_tag_set(&lo->tag_set);
- out_free_idr:
- 	idr_remove(&loop_index_idr, i);
--out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
- out_free_dev:
- 	kfree(lo);
- out:
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index d14ce6bdc014..608a20c23c64 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -24,6 +24,7 @@ enum {
- 	Lo_bound,
- 	Lo_rundown,
- 	Lo_deleting,
-+	Lo_new,
- };
- 
- struct loop_func_table;
--- 
-2.30.2
+On 17.08.2021 23:05:29, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
+>=20
+> Add struct_group() to mark both regions of struct flexcan_regs that get
+> initialized to zero. Avoid the future warnings:
+>=20
+> In function 'fortify_memset_chk',
+>     inlined from 'memset_io' at ./include/asm-generic/io.h:1169:2,
+>     inlined from 'flexcan_ram_init' at drivers/net/can/flexcan.c:1403:2:
+> ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflo=
+w_field' declared with attribute warning: detected write beyond size of fie=
+ld (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   199 |    __write_overflow_field(p_size_field, size);
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In function 'fortify_memset_chk',
+>     inlined from 'memset_io' at ./include/asm-generic/io.h:1169:2,
+>     inlined from 'flexcan_ram_init' at drivers/net/can/flexcan.c:1408:3:
+> ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflo=
+w_field' declared with attribute warning: detected write beyond size of fie=
+ld (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   199 |    __write_overflow_field(p_size_field, size);
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-can@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+> -	memset_io(&regs->mb[0][0], 0,
+> -		  offsetof(struct flexcan_regs, rx_smb1[3]) -
+> -		  offsetof(struct flexcan_regs, mb[0][0]) + 0x4);
+> +	memset_io(&regs->init, 0, sizeof(regs->init));
+
+This even makes the code more readable! \o/
+
+>  	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
+> -		memset_io(&regs->tx_smb_fd[0], 0,
+> -			  offsetof(struct flexcan_regs, rx_smb1_fd[17]) -
+> -			  offsetof(struct flexcan_regs, tx_smb_fd[0]) + 0x4);
+> +		memset_io(&regs->init_fd, 0, sizeof(regs->init_fd));
+> =20
+>  	reg_ctrl2 &=3D ~FLEXCAN_CTRL2_WRMFRZ;
+>  	priv->write(reg_ctrl2, &regs->ctrl2);
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+--kduqcl3tf4g5uel5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEK3kIWJt9yTYMP3ehqclaivrt76kFAmEcqC4ACgkQqclaivrt
+76lMtAf+PLTf+69ONg9/KGwncoo4yvZ5m8bSKHLYfYYuCITf4oOnHWQIBFT3P8Fn
+GMKihDcISmFKjqSbFu8aJSqtNFhYzGB0uIUjuhW+15TJRH7SUTZCuT/U6VPXrEWi
+qWCGvkl3szxqSpDVrbCW5ChnnsAZ3Nj2pXV+gkB62mvtcwTdqFBczMfbKHNhLHgv
+BYjF2uWTN51iadHR3Kese6EccsTaIoCrqZjnGrlJSBVLtt66BT101RY0pE9890e+
++p/LRFYivNeT0DnAObs8TDghwzxWlqfE3nR1QLSvENRbMBSzhEbipc7oz3DQJC4v
+WM/41iCaZScHUFfgxPrBqtGtM1p9RA==
+=LXIZ
+-----END PGP SIGNATURE-----
+
+--kduqcl3tf4g5uel5--
