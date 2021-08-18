@@ -2,79 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B0553F073C
-	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 16:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A32823F071C
+	for <lists+linux-block@lfdr.de>; Wed, 18 Aug 2021 16:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239664AbhHRO6Q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 Aug 2021 10:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239048AbhHRO6O (ORCPT
+        id S239506AbhHROwa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 Aug 2021 10:52:30 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53174 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239422AbhHROw3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 Aug 2021 10:58:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE6AC061764
-        for <linux-block@vger.kernel.org>; Wed, 18 Aug 2021 07:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=u6sEDEKJeyn9agbo4RDBEcfLQX3zqAiVl3J9mU164jo=; b=cK5PHZyBu1zPCgh9RW9JlNUKY/
-        9iH0Qc/tdTCdxS248AKd9K3H3ddDYHQJy4mQG/4PDNmYG4tBBejJAvkeFpWijr245NaUFuwVeNabU
-        PPlc6Wgr3Taco6Y0PWMwP8EjpiMw1sKbY//n8vxPj1r/NpY9dw/LGNDdJ/Sji8tPyOmeUvo0tQo+F
-        Y2tVQ3uj7mOOvenrkpwlKfoBKG/Z/R9ag+UGpNPQIXt5LK5VSf3ItbfMa/rmRl/UfpiSAajj40EhK
-        rjdL8l0ISfBhP9p/GaDpm+lOq135fDlW6n77hEFodVJ+JzigUZS/p+34l+k59BWt/dJdcrOBpXQlB
-        M+jngDmQ==;
-Received: from [2001:4bb8:188:1b1:5a9e:9f39:5a86:b20c] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mGMzd-003x9R-W7; Wed, 18 Aug 2021 14:56:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 11/11] null_blk: add error handling support for add_disk()
-Date:   Wed, 18 Aug 2021 16:45:42 +0200
-Message-Id: <20210818144542.19305-12-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210818144542.19305-1-hch@lst.de>
-References: <20210818144542.19305-1-hch@lst.de>
+        Wed, 18 Aug 2021 10:52:29 -0400
+Received: from fsav313.sakura.ne.jp (fsav313.sakura.ne.jp [153.120.85.144])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 17IEpR7x009504;
+        Wed, 18 Aug 2021 23:51:27 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav313.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp);
+ Wed, 18 Aug 2021 23:51:27 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 17IEpRL1009501
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 18 Aug 2021 23:51:27 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v4] block: genhd: don't call probe function with
+ major_names_lock held
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+References: <f790f8fb-5758-ea4e-a527-0ee4af82dd44@i-love.sakura.ne.jp>
+ <4e153910-bf60-2cca-fa02-b46d22b6e2c5@i-love.sakura.ne.jp>
+ <YRi9EQJqfK6ldrZG@kroah.com>
+ <a3f43d54-8d10-3272-1fbb-1193d9f1b6dd@i-love.sakura.ne.jp>
+ <YRjcHJE0qEIIJ9gA@kroah.com>
+ <d7d31bf1-33d3-b817-0ce3-943e6835de33@i-love.sakura.ne.jp>
+ <20210818134752.GA7453@lst.de>
+ <1f4218ca-9bfa-7d80-1c69-f5902715d8d9@i-love.sakura.ne.jp>
+ <YR0cGE1sgS8+UhXV@kroah.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <a6fee3cb-6e5b-bc91-415d-2b100a1d7c83@i-love.sakura.ne.jp>
+Date:   Wed, 18 Aug 2021 23:51:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <YR0cGE1sgS8+UhXV@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+On 2021/08/18 23:41, Greg KH wrote:
+> On Wed, Aug 18, 2021 at 11:34:15PM +0900, Tetsuo Handa wrote:
+>> On 2021/08/18 22:47, Christoph Hellwig wrote:
+>>> Hi Tetsuo,
+>>>
+>>> I might sound like a broken record, but we need to reduce the locking
+>>> complexity, not make it worse and fall down the locking cliff.  I did
+>>> send a suggested series this morning, in which you found a bunch of
+>>> bugs.  I'd appreciate it if you could use your superior skills to
+>>> actually help explain the issue and arrive at a common solution that
+>>> actually simplifies things instead of steaming down the locking cliff
+>>> full speed.  Thank you very much.
+>>
+>> I posted "[PATCH] loop: break loop_ctl_mutex into loop_idr_spinlock and loop_removal_mutex"
+>> which reduces the locking complexity while fixing bugs, but you ignored it. Instead,
+>> you decided to remove cryptoloop module (where userspace doing "modprobe cryptoloop"
+>> will break). That is, you decided not to provide patches which can be backported.
+> 
+> Do not ever worry about backporting patches.  Worry about getting the
+> changes and code correct, stable work can come afterwards, if needed.
 
-We never checked for errors on add_disk() as this function
-returned void. Now that this is fixed, use the shiny new
-error handling. The actual cleanup in case of error is
-already handled by the caller of null_gendisk_register().
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/null_blk/main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index f128242d1170..187d779c8ca0 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1717,8 +1717,7 @@ static int null_gendisk_register(struct nullb *nullb)
- 			return ret;
- 	}
- 
--	add_disk(disk);
--	return 0;
-+	return add_disk(disk);
- }
- 
- static int null_init_tag_set(struct nullb *nullb, struct blk_mq_tag_set *set)
--- 
-2.30.2
+The loop module is one of critical components for syzkaller fuzzing.
+Bugs which involves the loop module prevents syzkaller from finding/testing
+other bugs. But changes are continuously applied without careful review.
+Therefore, the changes and code are not getting correct. Stable work cannot
+come afterwards...
 
