@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6496E3F5222
-	for <lists+linux-block@lfdr.de>; Mon, 23 Aug 2021 22:30:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5316E3F523F
+	for <lists+linux-block@lfdr.de>; Mon, 23 Aug 2021 22:30:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232657AbhHWUaz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Aug 2021 16:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        id S232733AbhHWUbR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Aug 2021 16:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232577AbhHWUas (ORCPT
+        with ESMTP id S232627AbhHWUa7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Aug 2021 16:30:48 -0400
+        Mon, 23 Aug 2021 16:30:59 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199ABC061757;
-        Mon, 23 Aug 2021 13:30:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38582C061757;
+        Mon, 23 Aug 2021 13:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tBgxszXJVE3wD+DPKaKiBalHK54CRKsYwj1PqeCiYBI=; b=X51iNcfbrjsh9zw8hQIvkBv0+h
-        sjY5R1ERbqKv55YUOBYlpIhDxy8ZjM1qU+bDsC6pIVw4BHJZs6gHKGJfHyh0Qps+80/KALHr/SY0g
-        BDDRFL45dDYI8t+/x6ysYf1JyT7VCdLot+PGhA4dc+mlTzbp3NzI34LEgXHVzArHgMjbkUb8b3x/F
-        oUqYB+YYH5UA79OXmIgx1KoPPNh2XUja5D+5dtwW7OIu/T560+Rq7HgLcMVNTz0Gd3aYGbuBLICEB
-        /EOrd10yViJZGkM50qd+4XUcQhtNdWlFwL5V3RoOk9uRR10HcVcQjMHu1REx9J5c5VYJEkKFj0c1S
-        zG+NnczA==;
+        bh=FjHYiJcoMRUSOg8mXjovmoG4YYRib0Dd4tpy9VAVPrM=; b=hkHkWpB6ezJIMqnl+yvYHudFX0
+        KnNgmD/FTenq3X7xrHQXRsABnQKwgg/eDx7kD3RFpSZWUmTtlc+Fdufz8qgOhQQcoL15xaZ7MJieu
+        SUBv8DGDhp/kNOBDFMAUo+LEreTcbXrt5Z9ZqoBuxshCH1XAW1HHsTCrX598/J17imHBONknSSmEJ
+        1WtF9exW246DnTlPbNeHGfRpLBRxHS2H7I2rF9HvM8Zs+ioSxRu3EvDTNC+U5YEDSxQbNxt9zuelk
+        9PGFI2bGRt8zRan8ZuxrL3qSKPrvXiKUbSvCURZRp50A59RcYQabNse/nc9hPEFYLAtESKYmx/4mu
+        rwG28cww==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mIGZa-000Zja-EG; Mon, 23 Aug 2021 20:29:34 +0000
+        id 1mIGZa-000Zjc-Fg; Mon, 23 Aug 2021 20:29:34 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -40,9 +40,9 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 09/10] loop: add error handling support for add_disk()
-Date:   Mon, 23 Aug 2021 13:29:29 -0700
-Message-Id: <20210823202930.137278-10-mcgrof@kernel.org>
+Subject: [PATCH 10/10] nbd: add error handling support for add_disk()
+Date:   Mon, 23 Aug 2021 13:29:30 -0700
+Message-Id: <20210823202930.137278-11-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210823202930.137278-1-mcgrof@kernel.org>
 References: <20210823202930.137278-1-mcgrof@kernel.org>
@@ -60,32 +60,29 @@ error handling.
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/loop.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/block/nbd.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index fa1c298a8cfb..b8b9e2349e77 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2393,10 +2393,17 @@ static int loop_add(int i)
- 	disk->events		= DISK_EVENT_MEDIA_CHANGE;
- 	disk->event_flags	= DISK_EVENT_FLAG_UEVENT;
- 	sprintf(disk->disk_name, "loop%d", i);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index c38317979f74..95f84c9b31f2 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1730,10 +1730,14 @@ static int nbd_dev_add(int index)
+ 	disk->fops = &nbd_fops;
+ 	disk->private_data = nbd;
+ 	sprintf(disk->disk_name, "nbd%d", index);
 -	add_disk(disk);
-+
 +	err = add_disk(disk);
 +	if (err)
-+		goto out_cleanup_disk;
-+
- 	mutex_unlock(&loop_ctl_mutex);
-+
- 	return i;
++		goto out_err_disk;
+ 	nbd_total_devices++;
+ 	return index;
  
-+out_cleanup_disk:
++out_err_disk:
 +	blk_cleanup_disk(disk);
- out_cleanup_tags:
- 	blk_mq_free_tag_set(&lo->tag_set);
  out_free_idr:
+ 	idr_remove(&nbd_index_idr, index);
+ out_free_tags:
 -- 
 2.30.2
 
