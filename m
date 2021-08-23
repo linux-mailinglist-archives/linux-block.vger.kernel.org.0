@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B142A3F5220
-	for <lists+linux-block@lfdr.de>; Mon, 23 Aug 2021 22:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F029F3F5228
+	for <lists+linux-block@lfdr.de>; Mon, 23 Aug 2021 22:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbhHWUa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 Aug 2021 16:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        id S232720AbhHWUbD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 Aug 2021 16:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232404AbhHWUas (ORCPT
+        with ESMTP id S232664AbhHWUaz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 Aug 2021 16:30:48 -0400
+        Mon, 23 Aug 2021 16:30:55 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0387FC06175F;
-        Mon, 23 Aug 2021 13:30:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D136C06175F;
+        Mon, 23 Aug 2021 13:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=vcZytCs+3aE+pJZnIfeJteJaLaeBUv3H5n6Ya972Mjw=; b=aYu6mhnbiyATjp4QiEfJEQBVbf
-        OPaaXkqiH9H7Ag7hYKlVfy/SfXLFAo1BzUouJ1s4mWbb4rq7EeHKiBhpuX2mEDBG4bgJ+nP6KMsI7
-        I0U91+7njxj4QNr/sb6TGWGS/DEGCDcxRb983z2ovIXySVexXWGiVRlSV9hFXRaBKeGBo4OYpnf3u
-        zcKhdWCflmlIlZki5Pm1OPCvGe7/aSrrycL4c9juLZp8L3EC5ZEG2PnZWTJ33biaDkTyFqCtmHloC
-        r9Cu93H5ttvttqe8KIscjnkDWRtxjRf02QD6fjQchxzWOEjnKPsDe6jFpiJfD3Gt2sTIE3ss2+87T
-        pxfzrfMQ==;
+        bh=FypvegGWnnERKpPFbzVBwYTOoDfKrjdj29vUEVZP6fM=; b=dXL5wz6Yf1z+ahQ9qQ4ttU+dvq
+        DjGgq+pvaxdWUTKvohT9ASHu6tku5/rYy1EnPNgldrCFk3yD39TJVlfJquyRKLsHqIiJzFCCf9zEE
+        pm5SGGJ9nDC2hZkbGVkLPM0JZ5eJrWMVm0fcjDrep10c3KefYRbJqoDJd5BS8uFm7nWFDfvwLHsBx
+        pApfvgyB8P7yC2UUhuaOTb6nFwji1X7GiFAftJNsz19Qf0MbHX8jkKZOz8dZaYQnUc8PigRGJ7gFg
+        MUNL9wHLjR9wr4OQpbU8crnqSh1l8kz9FMqTtRNZ1OYfFbNkqVgxJN2qG6FevH6gC9dTORyE+o81W
+        fr2CZAQw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mIGZa-000ZjM-2N; Mon, 23 Aug 2021 20:29:34 +0000
+        id 1mIGZa-000ZjO-4g; Mon, 23 Aug 2021 20:29:34 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -39,9 +39,9 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         dm-devel@redhat.com, nbd@other.debian.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 02/10] scsi/sd: add error handling support for add_disk()
-Date:   Mon, 23 Aug 2021 13:29:22 -0700
-Message-Id: <20210823202930.137278-3-mcgrof@kernel.org>
+Subject: [PATCH 03/10] scsi/sr: use blk_cleanup_disk() instead of put_disk()
+Date:   Mon, 23 Aug 2021 13:29:23 -0700
+Message-Id: <20210823202930.137278-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210823202930.137278-1-mcgrof@kernel.org>
 References: <20210823202930.137278-1-mcgrof@kernel.org>
@@ -52,32 +52,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We never checked for errors on add_disk() as this function
-returned void. Now that this is fixed, use the shiny new
-error handling.
+The single put_disk() is useful if you know you're not doing
+a cleanup after add_disk(), but since we want to add support
+for that, just use the normal form of blk_cleanup_disk() to
+cleanup the queue and put the disk.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/scsi/sd.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/sr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 7d5217905374..7df6f20f28ec 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3487,7 +3487,11 @@ static int sd_probe(struct device *dev)
- 		pm_runtime_set_autosuspend_delay(dev,
- 			sdp->host->hostt->rpm_autosuspend_delay);
- 	}
--	device_add_disk(dev, gd, NULL);
-+
-+	error = device_add_disk(dev, gd, NULL);
-+	if (error)
-+		goto out_free_index;
-+
- 	if (sdkp->capacity)
- 		sd_dif_config_host(sdkp);
- 
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index a0df27db4d61..dc78ad96e6f9 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -792,7 +792,7 @@ static int sr_probe(struct device *dev)
+ 	clear_bit(minor, sr_index_bits);
+ 	spin_unlock(&sr_index_lock);
+ fail_put:
+-	put_disk(disk);
++	blk_cleanup_disk(disk);
+ 	mutex_destroy(&cd->lock);
+ fail_free:
+ 	kfree(cd);
 -- 
 2.30.2
 
