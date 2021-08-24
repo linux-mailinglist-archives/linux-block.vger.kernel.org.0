@@ -2,41 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECAB13F65A5
-	for <lists+linux-block@lfdr.de>; Tue, 24 Aug 2021 19:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF77C3F686C
+	for <lists+linux-block@lfdr.de>; Tue, 24 Aug 2021 19:53:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239464AbhHXRPO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Aug 2021 13:15:14 -0400
-Received: from mail-pj1-f47.google.com ([209.85.216.47]:46648 "EHLO
-        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234522AbhHXRNx (ORCPT
+        id S236513AbhHXRx7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 Aug 2021 13:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231228AbhHXRxy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Aug 2021 13:13:53 -0400
-Received: by mail-pj1-f47.google.com with SMTP id u11-20020a17090adb4b00b00181668a56d6so2795306pjx.5
-        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:13:09 -0700 (PDT)
+        Tue, 24 Aug 2021 13:53:54 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E6F6C033888
+        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:18:38 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d17so12608814plr.12
+        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QrRd5xVLA01AMyAhg/bjoi6q9MF0Gvz/hi+qc4bki7Q=;
+        b=CYcH5dEel/s1cyMoNJOXIuOXBAW7xpcfIChc+7Ekdo4sc+RPZVlGQVmR55q92F4Lzp
+         YoM4cypdz+xnVQ8SnVrVwKHGQjQtKRg0H7Bmt+UeYAMpXeTnlY+H8ypItfcHMpUVLvWB
+         5qBw/WxzzCeLS0Y++SQfR/cIQwhH8c6g3csd3f5rtAKNJ1KzCtgsMugNihKX9z3yGN2I
+         xT8EyH/dY6xLPxYp/8TWV14xaA0fHzzCMOVrWleFZ2Bx5faaxlCF+iZ+Y5OQp748hUnf
+         beQRkgRGqXd4X0ap7q2XBQVLl819/7pn2VsvAHLSJMTFjgJT0G57Uvql78inp+doVZy/
+         kXxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=JLsXW80R5s/b/XBuoXwCBKtFWGeQvVpfknUWAYg6KLM=;
-        b=USWn8nGn0ZOgbyz43MbH1tpSG5G55WnSPIXZ9EpxKFRF74LP4vnfMHEcdTdIj9L/hP
-         l/E47isAa9mufNkc6eXwYOVSP5jSbYGk1AgScbaiXe8osDs0fAx6u94rij/tGdcDte8M
-         z8Jyp3kHN4zZ8Byzem/6fFKNDTN3V2wy5ktxXtPZ2+XdpRFNHv0+N93w/sWi2VIxoCkG
-         PPjL+/cYF1WtfVEVm5KmombeECPmhtvUiWYfyhEywK24nyR/fQwIcOtwJb5aP5xe5LEr
-         w4RIfPrcjrnz99nJVjGVSlquyWTN/1Sn60Wu7pzAYTVvnTEffJPNbMog+9tk7clvTj+S
-         ZdjA==
-X-Gm-Message-State: AOAM5313UR87kOgJmr7K5XA+RFIZyWiB50BM2BvFdix+cUc9T5VyAhY4
-        aVqWe6fkUweytkjkc2JP6gA=
-X-Google-Smtp-Source: ABdhPJyrVAIihzXJcwSEgaDw8lRaDmG1MFjXfKssWRvR6K3aan7JgEndPrlVXCwDJ1ZWzC31CEkFmg==
-X-Received: by 2002:a17:90a:3d0d:: with SMTP id h13mr5581596pjc.20.1629825189155;
-        Tue, 24 Aug 2021 10:13:09 -0700 (PDT)
-Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:3f6e:b7f7:7ad7:acb7])
-        by smtp.gmail.com with ESMTPSA id w8sm2968930pjd.55.2021.08.24.10.13.07
+        bh=QrRd5xVLA01AMyAhg/bjoi6q9MF0Gvz/hi+qc4bki7Q=;
+        b=Y584/4du34sPR55Nsg4BHybG0B4GvYyWMFw7M7OrgtVmtkBIOWSTEuV93OSwQj2YcQ
+         kxA8iW5FMeK3x9pww9/VLqUBcuzvDabjXTfzuXyFFfiLS/ebjKGq3Xk+SuCtSqyP15K0
+         Uf5fe6mDGN9MGjXHziLRLMDum8v5UfqnikUdU0xFrjo7hsQTUkCfEDqIE19mWbR3CntD
+         REUIAxoMWnZ8P/TBN5P0UQveWANfjmBFNT63Wy0mQxmSkxHZCm23zNmFp5/jIXLOIhZD
+         EnwD2g0HKryGzctdme7HtY4mpCZ7MdKk8ZccLlMziMKF/u0Agpdm/txGMOesxCjurViO
+         TPVw==
+X-Gm-Message-State: AOAM530ii99EuTS3kBofGy5JLitR1kEz9GWLBq8paYscFw8M94Et7nxZ
+        +sgZtA/1QkSJn2g1AI8tBGCMMA==
+X-Google-Smtp-Source: ABdhPJynnh56TZhYxtnJQu3guaVURRk2kxVuM0qqIaz+dI9gvZz5MlW29zmeG6GPamuAQ3F0VXhzvQ==
+X-Received: by 2002:a17:90b:3b92:: with SMTP id pc18mr5311437pjb.149.1629825517818;
+        Tue, 24 Aug 2021 10:18:37 -0700 (PDT)
+Received: from ?IPv6:2600:380:4960:2a4d:1b63:8a6c:25bc:6edc? ([2600:380:4960:2a4d:1b63:8a6c:25bc:6edc])
+        by smtp.gmail.com with ESMTPSA id t5sm20290919pfd.133.2021.08.24.10.18.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Aug 2021 10:13:08 -0700 (PDT)
+        Tue, 24 Aug 2021 10:18:37 -0700 (PDT)
 Subject: Re: [PATCH] mq-deadline: Fix request accounting
-To:     Jens Axboe <axboe@kernel.dk>
+To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Niklas Cassel <Niklas.Cassel@wdc.com>,
@@ -44,28 +58,32 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Hannes Reinecke <hare@suse.de>
 References: <20210824170520.1659173-1-bvanassche@acm.org>
  <412b4df5-aa1c-c95b-7b71-c0fc61ae3d06@kernel.dk>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <349f4277-4370-482d-ab4d-a1ed652e1c29@acm.org>
-Date:   Tue, 24 Aug 2021 10:13:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+ <349f4277-4370-482d-ab4d-a1ed652e1c29@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <efca9ae1-0a5e-3eda-7003-3ede651da856@kernel.dk>
+Date:   Tue, 24 Aug 2021 11:18:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <412b4df5-aa1c-c95b-7b71-c0fc61ae3d06@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <349f4277-4370-482d-ab4d-a1ed652e1c29@acm.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/24/21 10:09 AM, Jens Axboe wrote:
-> Shouldn't it be:
+On 8/24/21 11:13 AM, Bart Van Assche wrote:
+> On 8/24/21 10:09 AM, Jens Axboe wrote:
+>> Shouldn't it be:
+>>
+>> Fixes: 38ba64d12d4c ("block/mq-deadline: Track I/O statistics")
 > 
-> Fixes: 38ba64d12d4c ("block/mq-deadline: Track I/O statistics")
+> Right, that's what the Fixes line should look like. Do you want me to
+> resend this patch?
 
-Right, that's what the Fixes line should look like. Do you want me to
-resend this patch?
+Nah that's fine, I'll just correct it.
 
-Thanks,
+-- 
+Jens Axboe
 
-Bart.
