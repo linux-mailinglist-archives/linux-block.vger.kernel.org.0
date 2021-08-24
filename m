@@ -2,113 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1263C3F64DB
-	for <lists+linux-block@lfdr.de>; Tue, 24 Aug 2021 19:07:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A337A3F6862
+	for <lists+linux-block@lfdr.de>; Tue, 24 Aug 2021 19:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238992AbhHXRID (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Aug 2021 13:08:03 -0400
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:33692 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238541AbhHXRGM (ORCPT
+        id S238610AbhHXRuR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 Aug 2021 13:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241999AbhHXRt1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Aug 2021 13:06:12 -0400
-Received: by mail-pf1-f172.google.com with SMTP id w68so18926985pfd.0
-        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:05:28 -0700 (PDT)
+        Tue, 24 Aug 2021 13:49:27 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EC2C0698CF
+        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:09:47 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id j10-20020a17090a94ca00b00181f17b7ef7so2223879pjw.2
+        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 10:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VkDsFQBPqAeZm/MyWtG2DOONsy7CnEGol9UBCxAr/LY=;
+        b=L6gNKT2BE6CqeJnQ3mRc1lT3IF4w/MWy147pANGJLdCINcHLJUp4JMNEKPmmXmn42z
+         TFdJ6Qe6OGCEHMMjwAlizCmzTomwTt4/mpx2ebQwsjZUarLfzEWdjcYIAggOYTdu/T2J
+         6H3nkzVzJEJm6oiwcT2jq7sdwo/JlTnAhl3I6x4Tj3UK8xHo+jHcvqtFQ9CSCif5uzXR
+         Jdr4qQ48DcULxg7tldPhIN3JdNdzwR6DC2etIFKI8eS1kXtKF3MkBcUo7/K1RWtqc7ea
+         6b7Yv0awBTumBOzIn21WCVInZH0j72YmZ14rR++YXv+nt7J3Y/ES+Y3wwWkwt3eEsZ8s
+         Zh9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=NOHZr9sjQWL47aREJziCWByq5yNZI7U5chRYYhpFbmk=;
-        b=FTkwIveIYJIykSUAF8h9SxJb1Dt1uZOA1HJ4flVZCpvBoay9m/aMl9yvY+ebSqzYIw
-         bHg+MZyCHfgmx8rCzgnAFzBNd52lVr+Lz906Er9A62wUHdUvVafvPZajgfvvo0tuPJ+c
-         Z/cqRq9a4VEsTu4HBuAtspnBNyGMlnjQQK2TQKYDEBGTzRAKqkwi+qasW0Lo/PR03uCa
-         6BSbpiBZHqluRAPXESLWzDQat/N7jQ3wjsFRbRbNIdk0UkQHwbRUI+dMF1PQwDeUrLwM
-         u2CbWU31kggmaWLgHFu+curu5AOWsjZGvCP3HT/V2Eo68NucAXCJL8BEnA4sSIrGJhqs
-         2CoQ==
-X-Gm-Message-State: AOAM531eNtOTI+/jp5DJrUVbogtF/2+J39D+NBwJKiAPevUpRaiE8VqF
-        GbTHppbQNWO63FcUU2rCEeI=
-X-Google-Smtp-Source: ABdhPJwzXcmpRmOn96XZymyngQheRQGASv7KtEXrW24aZWmL+QADM35pRiDK/es5atzOFB8sZaUmJA==
-X-Received: by 2002:a65:664f:: with SMTP id z15mr34991106pgv.252.1629824727641;
-        Tue, 24 Aug 2021 10:05:27 -0700 (PDT)
-Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:3f6e:b7f7:7ad7:acb7])
-        by smtp.gmail.com with ESMTPSA id gl12sm2950097pjb.40.2021.08.24.10.05.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 10:05:26 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
+        bh=VkDsFQBPqAeZm/MyWtG2DOONsy7CnEGol9UBCxAr/LY=;
+        b=eRf+sdfz0GpmKNdAc45TcomDbiXB8JNvP4EBRmeQ5B+71YpDt5GmdMM9BWgCBxyFja
+         EMiSUmGNjiQw7LhG4vHKpdCeMUvdpqq9/IVFMLPoKwIT63hazXOp5zVL3m24ZkE9wRcd
+         G5xX87ZhHBKWt0UkrQDfedz93cUwzC/ZtSM/Mc3rhFH3IfsCvVB+TgibHGz/UAJ9pqLA
+         gF61ke9D5yrqWmXsA7Q//0zxJo6QJzT5eKhrlmZ8l7rmhZxzEoFxEsBXDwkMpZbkQv1A
+         ZNQ/G+0sRs0K5jGNSLNPmBL4GCLu4ewcy33BTySpd1rlK5OVbHYIMW/ozDZD4PTSHpgU
+         +JUQ==
+X-Gm-Message-State: AOAM532Z06Rl0lU04k03Ikmb6AYJj8957EhL7Th+mYH4T9kZ+iSHlfqS
+        IBU1lgYg0Hu7sbTYPFH/MXdIZw==
+X-Google-Smtp-Source: ABdhPJy2kRZ7tCaQn6LD0yGHxCGwht8rvnBIT+oaxYvDUPQZ92ci2GZzNZHSxi6SX54tLPpnBywrww==
+X-Received: by 2002:a17:90a:5305:: with SMTP id x5mr5321474pjh.135.1629824986690;
+        Tue, 24 Aug 2021 10:09:46 -0700 (PDT)
+Received: from ?IPv6:2600:380:4960:2a4d:1b63:8a6c:25bc:6edc? ([2600:380:4960:2a4d:1b63:8a6c:25bc:6edc])
+        by smtp.gmail.com with ESMTPSA id p24sm15626489pgm.54.2021.08.24.10.09.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Aug 2021 10:09:46 -0700 (PDT)
+Subject: Re: [PATCH] mq-deadline: Fix request accounting
+To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
         Niklas Cassel <Niklas.Cassel@wdc.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCH] mq-deadline: Fix request accounting
-Date:   Tue, 24 Aug 2021 10:05:20 -0700
-Message-Id: <20210824170520.1659173-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
+References: <20210824170520.1659173-1-bvanassche@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <412b4df5-aa1c-c95b-7b71-c0fc61ae3d06@kernel.dk>
+Date:   Tue, 24 Aug 2021 11:09:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210824170520.1659173-1-bvanassche@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The block layer may call the I/O scheduler .finish_request() callback
-without having called the .insert_requests() callback. Make sure that the
-mq-deadline I/O statistics are correct if the block layer inserts an I/O
-request that bypasses the I/O scheduler. This patch prevents that lower
-priority I/O is delayed longer than necessary for mixed I/O priority
-workloads.
+On 8/24/21 11:05 AM, Bart Van Assche wrote:
+> The block layer may call the I/O scheduler .finish_request() callback
+> without having called the .insert_requests() callback. Make sure that the
+> mq-deadline I/O statistics are correct if the block layer inserts an I/O
+> request that bypasses the I/O scheduler. This patch prevents that lower
+> priority I/O is delayed longer than necessary for mixed I/O priority
+> workloads.
+> 
+> Cc: Niklas Cassel <Niklas.Cassel@wdc.com>
+> Cc: Damien Le Moal <damien.lemoal@wdc.com>
+> Cc: Hannes Reinecke <hare@suse.de>
+> Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+> Fixes: 08a9ad8bf607 ("block/mq-deadline: Add cgroup support")
 
-Cc: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Damien Le Moal <damien.lemoal@wdc.com>
-Cc: Hannes Reinecke <hare@suse.de>
-Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-Fixes: 08a9ad8bf607 ("block/mq-deadline: Add cgroup support")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- block/mq-deadline.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+This one is a little confusing, since that commit got reverted...
+Yet the patch still applies.
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index dbd74bae9f11..28f2e7655a5f 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -713,6 +713,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 
- 	prio = ioprio_class_to_prio[ioprio_class];
- 	dd_count(dd, inserted, prio);
-+	rq->elv.priv[0] = (void *)(uintptr_t)1;
- 
- 	if (blk_mq_sched_try_insert_merge(q, rq, &free)) {
- 		blk_mq_free_requests(&free);
-@@ -761,12 +762,10 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
- 	spin_unlock(&dd->lock);
- }
- 
--/*
-- * Nothing to do here. This is defined only to ensure that .finish_request
-- * method is called upon request completion.
-- */
-+/* Callback from inside blk_mq_rq_ctx_init(). */
- static void dd_prepare_request(struct request *rq)
- {
-+	rq->elv.priv[0] = NULL;
- }
- 
- /*
-@@ -793,7 +792,14 @@ static void dd_finish_request(struct request *rq)
- 	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
- 	struct dd_per_prio *per_prio = &dd->per_prio[prio];
- 
--	dd_count(dd, completed, prio);
-+	/*
-+	 * The block layer core may call dd_finish_request() without having
-+	 * called dd_insert_requests(). Hence only update statistics for
-+	 * requests for which dd_insert_requests() has been called. See also
-+	 * blk_mq_request_bypass_insert().
-+	 */
-+	if (rq->elv.priv[0])
-+		dd_count(dd, completed, prio);
- 
- 	if (blk_queue_is_zoned(q)) {
- 		unsigned long flags;
+Shouldn't it be:
+
+Fixes: 38ba64d12d4c ("block/mq-deadline: Track I/O statistics")
+
+
+-- 
+Jens Axboe
+
