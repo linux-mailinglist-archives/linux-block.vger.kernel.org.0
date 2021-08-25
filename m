@@ -2,97 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 789553F7ADA
-	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 18:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D5CF3F7AE1
+	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 18:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbhHYQnu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Aug 2021 12:43:50 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:54308 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230490AbhHYQnt (ORCPT
+        id S232606AbhHYQrr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Aug 2021 12:47:47 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:46822 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230363AbhHYQrr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:43:49 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 52B711FE2C;
-        Wed, 25 Aug 2021 16:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1629909783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VPOxBpzV9egRYfFSHqriwa5shlqBsBsmlHjUIAjGRmU=;
-        b=okx2qTEsHfuk6mMI6bQkcRvvFrOkHXUxurHfSZH53Zc4IzK4ApJUsHBMBGQQaxeCVNjMNf
-        z9GI8UktrV5yuOcl01YoPcqWgYbxFRz7TbZeYyzkAxx5nfYQNklJx9axo78oVm5AapF9E4
-        1lMpLTngp89pFtIk3EKU/LGBljyMXew=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1629909783;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VPOxBpzV9egRYfFSHqriwa5shlqBsBsmlHjUIAjGRmU=;
-        b=nKUYYBlz9sJ1tF9xIIYIF/XdEyCoRMCh5yNbAPy1FKq4aFgfa4oYnJuSJ9fE1wDQIKXmM0
-        FFDhZwh/vPKv59AQ==
-Received: from quack2.suse.cz (unknown [10.100.224.230])
-        by relay2.suse.de (Postfix) with ESMTP id 44D99A3B85;
-        Wed, 25 Aug 2021 16:43:03 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 10C881E0948; Wed, 25 Aug 2021 18:43:01 +0200 (CEST)
-Date:   Wed, 25 Aug 2021 18:43:01 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org
-Subject: Re: False waker detection in BFQ
-Message-ID: <20210825164301.GB14270@quack2.suse.cz>
-References: <20210505162050.GA9615@quack2.suse.cz>
- <FFFA8EE2-3635-4873-9F2C-EC3206CC002B@linaro.org>
- <20210813140111.GG11955@quack2.suse.cz>
- <A72B321A-3952-4C00-B7DB-67954B05B99A@linaro.org>
- <20210823160618.GI21467@quack2.suse.cz>
+        Wed, 25 Aug 2021 12:47:47 -0400
+Received: by mail-pg1-f182.google.com with SMTP id k14so262217pga.13;
+        Wed, 25 Aug 2021 09:47:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1UMuzaedawDrJ7sHnjIktSUIvpk6VsWPkXjY/IRHZ3A=;
+        b=KtbaY/c5YIaT+5iv2o9d4PkX6B2Gzlk/6EP42tFvA7rNKo+kRVTo64Okcj7L8J/wmV
+         76v+xRIFuIZI3pSl+0GmEddJYtLSIyzMJqZNBqCyV0cnOI2M/IhkJcFuYxZ+EqDdQ7Lb
+         2bUyvLzqvJ74xCOltSiKJVPyCI/JLI/mCWQuPgSkLeHNfzsnQ1Dx93nLTbNRSZfxNJg/
+         pS2hw+UB6nVWEc7tB9hBv904ExjMI1cCnBKFeffM4f4tmS6zhjRVAM9j1/Ix+ISPSgvB
+         tumcPe0zbo4HUVALkLCOp0EDeynQ9K7r/WWyUoY5GAfuBWd/WAczbgemrzT+/bc+9Irh
+         mhoQ==
+X-Gm-Message-State: AOAM531Qvdz64NKmFRbIpw29Xy594lEZgBnAH2Nek9kz2wS/KYIhQjZB
+        eBsueTInOR3XleMAK/g5ksZ8OlEbuyg=
+X-Google-Smtp-Source: ABdhPJyZTPqR+r8H7dS3kFtMU4hv76aDbhMxlB5PhIx5PM2s0ws5fZ1E/ns+FyqXq7r+qMqvbFf+kg==
+X-Received: by 2002:a63:fc20:: with SMTP id j32mr43007431pgi.283.1629910020302;
+        Wed, 25 Aug 2021 09:47:00 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5f7b:5bac:8246:4328])
+        by smtp.gmail.com with ESMTPSA id n3sm306936pfo.101.2021.08.25.09.46.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Aug 2021 09:46:59 -0700 (PDT)
+Subject: Re: v5.14 RXE driver broken?
+To:     Zhu Yanjun <zyjzyj2000@gmail.com>
+Cc:     Bob Pearson <rpearsonhpe@gmail.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <c3d1a966-b9b0-d015-38ec-86270b5045fc@acm.org>
+ <CAD=hENcriq-mwnvzY3UdowuGpKb=Uekvk-v8Lj0G=QB-qK0kJg@mail.gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <98fb7274-8563-e54b-3c6d-c99d3f3e68bf@acm.org>
+Date:   Wed, 25 Aug 2021 09:46:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210823160618.GI21467@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAD=hENcriq-mwnvzY3UdowuGpKb=Uekvk-v8Lj0G=QB-qK0kJg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon 23-08-21 18:06:18, Jan Kara wrote:
-> On Mon 23-08-21 15:58:25, Paolo Valente wrote:
-> > > Currently I'm running wider set of benchmarks for the patches to see
-> > > whether I didn't regress anything else. If not, I'll post the patches to
-> > > the list.
-> > 
-> > Any news?
+On 8/24/21 8:02 PM, Zhu Yanjun wrote:
+> On Tue, Aug 24, 2021 at 11:02 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>>
+>> Hi Bob,
+>>
+>> If I run the following test against Linus' master branch then that test
+>> passes (commit d5ae8d7f85b7 ("Revert "media: dvb header files: move some
+>> headers to staging"")):
+>>
+>> # export use_siw=1 && modprobe brd && (cd blktests && ./check -q srp/002)
+>> srp/002 (File I/O on top of multipath concurrently with logout and login (mq)) [passed]
+>>      runtime    ...  48.849s
+>>
+>> The following test fails:
+>>
+>> # export use_siw= && modprobe brd && (cd blktests && ./check -q srp/002)
+>> srp/002 (File I/O on top of multipath concurrently with logout and login (mq)) [failed]
+>>      runtime  48.849s  ...  15.024s
+>>      --- tests/srp/002.out       2018-09-08 19:43:42.291664821 -0700
+>>      +++ /home/bart/software/blktests/results/nodev/srp/002.out.bad      2021-08-23 19:51:05.182958728 -0700
+>>      @@ -1,2 +1 @@
+>>       Configured SRP target driver
+>>      -Passed
 > 
-> It took a while for all those benchmarks to run. Overall results look sane,
-> I'm just verifying by hand now whether some of the localized regressions
-> (usually specific to a particular fs+machine config) are due to a measurement
-> noise or real regressions...
+> Can this commit "RDMA/rxe: Zero out index member of struct rxe_queue"
+> in the link https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-rc
+> fix this problem?
+> 
+> And the commit will be merged into linux upstream very soon.
 
-OK, so after some manual analysis I've found out that dbench indeed becomes
-more noisy with my changes for high numbers of processes. I'm leaving for
-vacation soon so I will not be probably able to debug it before I leave but
-let me ask you one thing: The problematic change seems to be mostly a
-revert of 7cc4ffc55564 ("block, bfq: put reqs of waker and woken in
-dispatch list") and I'm currently puzzled why it has such an effect. What
-I've found out is that 7cc4ffc55564 results in IO of higher priority
-process being injected into the time slice of lower priority process and
-thus there's always only single busy queue (of the lower priority process)
-and thus higher priority process queue never gets scheduled. As a result
-higher priority IO always competes with lower priority IO and there's no
-service differentiation (we get 50/50 split of throughput between the
-processes despite different IO priorities).  And this scenario shows that
-always injecting IO of waker/wakee isn't desirable, especially in a way as
-done in 7cc4ffc55564 where injected IO isn't accounted within BFQ at all
-(which easily allows for service degradation unnoticed by BFQ).  That's why
-I've basically reverted that commit on the ground that on next dispatch we
-call bfq_select_queue() which will see waker/wakee has IO to do and can
-decide to inject the IO anyway. We do more CPU work but the IO pattern
-should be similar. But apparently I was wrong :) I just wanted to bounce
-this off of you if you have any suggestion what to look for or any tips
-regarding why 7cc4ffc55564 apparently achieves much more reliable request
-injection for dbench.
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Hi Zhu,
+
+Thanks for having taken a look.
+
+Isn't commit cc4f596cf85e ("RDMA/rxe: Zero out index member of struct
+rxe_queue") already in Linus' tree? I think it was merged yesterday (August
+24). Unfortunately the test I mentioned still fails on top of that patch.
+
+Thanks,
+
+Bart.
+
