@@ -2,72 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98A763F6F51
-	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 08:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 948E43F6F5D
+	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 08:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238307AbhHYGTN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 Aug 2021 02:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238691AbhHYGTM (ORCPT
+        id S238139AbhHYGVx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Aug 2021 02:21:53 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:18036 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237993AbhHYGVx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 Aug 2021 02:19:12 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F933C0613CF
-        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 23:18:27 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id qe12-20020a17090b4f8c00b00179321cbae7so3994557pjb.2
-        for <linux-block@vger.kernel.org>; Tue, 24 Aug 2021 23:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=pCZBzLAlxozgnuSq5uFqOfeDDW+RI4DGGVjVK+LP4wUPwBjtomn6JSz31qgH2uAGYQ
-         XP1bPQ8th7UtpEQaZCDoc4h4j65XhjwTcpqQcZv7+1XqVK5Sb6miDkV9nPFzP8YkSUjv
-         95kBc/4U6RuIAhLyVDNfxmJtOvSpnu/UbwPNye4oKyIOiY7W4uSTgaxPecYIWRL5wCKV
-         vaBjrULRZKgtpkUTubW9+cfjkOp9fVOlLrGeQK2FDlQLGKtlHgripCsqMGqLH0Ah0DhS
-         TfQGv3ZIKTu8yDw891mbo/dFgMc2Uug4aMzUN9yFbVaK39dKAmt2/CnoY+1Q1CV/L5wO
-         VYrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=srpwQL2wqf+P6JQSAFQxYLZqcMDIZQ+jsGJy3sz6AxxLHFkY/vxGNeglrPnMmhj9FY
-         jjP3Pbuxk70zKyvASDYDd/whlSh/l7arHknSIpflshhPztKEe6xNPV++wHt5JvTalo86
-         W9lQlOWYRs6co2rBoVRb1jcwm0OJUiKZ0xnRIMjaaoEqr/gNupxHKU9tnspPmiqkAtVg
-         ciQ3dA9+9wttSiyd7OVh+j6lp1mSBK9BdS7bckqo0bQTVUmjcQtplPXsyPIaL6rfrBnw
-         72DZauM+nGFHvE9eQySZFC51gvtf/9To8Ke9RYtIwgQRsVog+q/PPB8VfNC9iVnMMy+B
-         D/+Q==
-X-Gm-Message-State: AOAM532aZSlQcJITHHdM5ZD4xMpIKW9FJmnr9mc0Ajdhlb+PpY2MszbL
-        +DCBujv8utq7syLU+OvtmyLJT6DuO4DB0UJoYYk=
-X-Google-Smtp-Source: ABdhPJwhSgrog0H/P3e/yz9NSzw2nCuMwILBIofsC60BjURuh9fq7z58AyKJfjFvFiZ4OXR80SPcBCUzT2VdlPmlH+E=
-X-Received: by 2002:a17:90a:c481:: with SMTP id j1mr8737933pjt.164.1629872306412;
- Tue, 24 Aug 2021 23:18:26 -0700 (PDT)
+        Wed, 25 Aug 2021 02:21:53 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GvbNr2Kh4zbj4k;
+        Wed, 25 Aug 2021 14:17:16 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 25 Aug 2021 14:21:01 +0800
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 25 Aug 2021 14:21:01 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <linux-block@vger.kernel.org>
+CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] block, bfq: cleanup the repeated declaration
+Date:   Wed, 25 Aug 2021 14:19:51 +0800
+Message-ID: <1629872391-46399-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: dr.nikitarehan@gmail.com
-Received: by 2002:a05:6a10:f491:0:0:0:0 with HTTP; Tue, 24 Aug 2021 23:18:25
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Wed, 25 Aug 2021 08:18:25 +0200
-X-Google-Sender-Auth: cO_RXyZoxC8OCkCLcbyO2UeaeO8
-Message-ID: <CALd83H1JoECwFMoDnjRBjiYm+kriQwDKif0RgnyUHsidrJXKCw@mail.gmail.com>
-Subject: Important message to you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-My good friend,
+Function 'bfq_entity_to_bfqq' is declared twice, so remove the
+repeated declaration and blank line.
 
-I just want to know if you, can help me to transfer the amount of
-($6Million). After the transfer we have to share it, 50% for me, and
-50% for you. Please let me know if you can help me for more
-information in regards with the transfer. I hope you can work with me
-honestly?
+Cc: Paolo Valente <paolo.valente@linaro.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+---
+ block/bfq-iosched.h | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 385e28a843d1..a73488eec8a4 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -955,8 +955,6 @@ struct bfq_group {
+ };
+ #endif
+ 
+-struct bfq_queue *bfq_entity_to_bfqq(struct bfq_entity *entity);
+-
+ /* --------------- main algorithm interface ----------------- */
+ 
+ #define BFQ_SERVICE_TREE_INIT	((struct bfq_service_tree)		\
+-- 
+2.7.4
 
-Thanks.
-
-Godwin Peter,
