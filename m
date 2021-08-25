@@ -2,102 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BCA73F6D97
-	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 05:02:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E9853F6F1F
+	for <lists+linux-block@lfdr.de>; Wed, 25 Aug 2021 08:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236811AbhHYDDT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Aug 2021 23:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbhHYDDL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Aug 2021 23:03:11 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA1BC061757;
-        Tue, 24 Aug 2021 20:02:26 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id x10-20020a056830408a00b004f26cead745so51800824ott.10;
-        Tue, 24 Aug 2021 20:02:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6CJu4ryWmmhPfIqi+5GEQZx1ws6z7aiz7H2DyEgUiD0=;
-        b=bUvX0Wqsi/ScMzguDUhCOkuCSpWbyqEGIiW5GtyHdwfL5MHC/2miqSVPyWG+siNH7F
-         5vyszzE+XRlzUOffljQPGW1VkU1pNwbqJYF6anFXFpYOFXiL1db4XRAgFtqZtJlc0O6i
-         NYMoQj4Nf8/UpPZbIBsK0RYIJCMAT1t5+kv/f12M8lVfvyWP4OZBqB4uzuJEcZVr5W65
-         g3Rr89f5u8fKcDK7fKMtvjOXTdEFtBWv8ft81gHOm7W5fzLqi1iW5rrRZOLE4ZcZkYbG
-         CmnPaTVglo8Yxgu9G+AFAanjXg/+pehgAvvZdU/nUh+mdf/q16dFNhQGQNGv3TN7A1q7
-         1VPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6CJu4ryWmmhPfIqi+5GEQZx1ws6z7aiz7H2DyEgUiD0=;
-        b=cLV+hOjKUyJmUjq6sYzp3O470WoO27HWPx5EG6Z9+UYlMStdhAZzNBxPNrY4efgNpL
-         cgsaKlBWa+NMu+cG0rbjLwwWoVXF7R8G5/TPV0Ns1gRO2AB0bkFxl/1FrUnrisRw0E38
-         9+pf35s9KcHCJ1qiuBpfWo+qeroUIY495NDXQxL0gFG9JxssgONEB/0zmUP93AKlfhub
-         Igv/++k109E7uTcjou3kTC1OBA8WdNw8oQmsLjS9WNxsYRklFUApNfINUadaptTf04xe
-         563M5PgRTCBxruXMs+xWRkeCIwPUzyiHtfytOk4XN+o3qPyN9NFggAwu6FWgAvysqAb4
-         iidw==
-X-Gm-Message-State: AOAM532P4CPrKVFOeYJzUpuz5E1c8ii4O7M8b3Qzm/3alNpNWOHYyLC6
-        SVhsxqksdBm5aU7k6tjeT6HO2v3M9Qx1hW7OqyI=
-X-Google-Smtp-Source: ABdhPJy1p5I+xDIjsqcsw/BcyZ4dbCp03S8J7YhMHmQiCaFw4hOvoBf0h5jHc05iRp3zejVLPtCv/GLcEnnYlagLtZs=
-X-Received: by 2002:aca:2216:: with SMTP id b22mr5005428oic.163.1629860545872;
- Tue, 24 Aug 2021 20:02:25 -0700 (PDT)
+        id S232442AbhHYGA6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 Aug 2021 02:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238194AbhHYGAy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 25 Aug 2021 02:00:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6766561368;
+        Wed, 25 Aug 2021 06:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629871209;
+        bh=GVzMjVcvd7OSPgh3uqbGyGKV25w6xWDrV98w2wH1Diw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dCHpN0GVvTearzLaRTznaE/AdqMfw1ke80idU0GmN38QbTTjbY1jQv6LiSvsyh5R7
+         /3OQi3KrJhSGxyZVhNoGQbE7KwNMo+gCMxyehAvSmDzfWY4Bm/X9rdr1jnZO8VRaeK
+         VlnzsjHbdAcGxGtE6gvnpfWWd5UoffTRFqdl6lLAmHTRr/DE4+6c11ucK2DXoIL38k
+         6xAkwRa754fG9pJIpV3w/OR07Ra8a8IeeProM2VQQwn1D85oGwTU2XeFojgF+w0XhA
+         pJIlGXQSnck/+joWhqGd6o6aT+CM/GshnDrz2ovGRt8frjxPZtpENAyeeGhj5N9WWR
+         RwgJg8UhH7BoA==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org
+Cc:     Satya Tangirala <satyaprateek2357@gmail.com>
+Subject: [PATCH] blk-crypto: fix check for too-large dun_bytes
+Date:   Tue, 24 Aug 2021 22:59:18 -0700
+Message-Id: <20210825055918.51975-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <c3d1a966-b9b0-d015-38ec-86270b5045fc@acm.org>
-In-Reply-To: <c3d1a966-b9b0-d015-38ec-86270b5045fc@acm.org>
-From:   Zhu Yanjun <zyjzyj2000@gmail.com>
-Date:   Wed, 25 Aug 2021 11:02:14 +0800
-Message-ID: <CAD=hENcriq-mwnvzY3UdowuGpKb=Uekvk-v8Lj0G=QB-qK0kJg@mail.gmail.com>
-Subject: Re: v5.14 RXE driver broken?
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Bob Pearson <rpearsonhpe@gmail.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 11:02 AM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> Hi Bob,
->
-> If I run the following test against Linus' master branch then that test
-> passes (commit d5ae8d7f85b7 ("Revert "media: dvb header files: move some
-> headers to staging"")):
->
-> # export use_siw=1 && modprobe brd && (cd blktests && ./check -q srp/002)
-> srp/002 (File I/O on top of multipath concurrently with logout and login (mq)) [passed]
->     runtime    ...  48.849s
->
-> The following test fails:
->
-> # export use_siw= && modprobe brd && (cd blktests && ./check -q srp/002)
-> srp/002 (File I/O on top of multipath concurrently with logout and login (mq)) [failed]
->     runtime  48.849s  ...  15.024s
->     --- tests/srp/002.out       2018-09-08 19:43:42.291664821 -0700
->     +++ /home/bart/software/blktests/results/nodev/srp/002.out.bad      2021-08-23 19:51:05.182958728 -0700
->     @@ -1,2 +1 @@
->      Configured SRP target driver
->     -Passed
+From: Eric Biggers <ebiggers@google.com>
 
-Can this commit "RDMA/rxe: Zero out index member of struct rxe_queue"
-in the link https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-rc
-fix this problem?
+dun_bytes needs to be less than or equal to the IV size of the
+encryption mode, not just less than or equal to BLK_CRYPTO_MAX_IV_SIZE.
 
-And the commit will be merged into linux upstream very soon.
+Currently this doesn't matter since blk_crypto_init_key() is never
+actually passed invalid values, but we might as well fix this.
 
-Zhu Yanjun
+Fixes: a892c8d52c02 ("block: Inline encryption support for blk-mq")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ block/blk-crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> The only difference between these two tests is that test (1) use the siw
-> (soft-iWARP) driver while test (2) uses the rdma_rxe driver (soft-RoCE).
-> Both tests run reliably against previous Linux kernel versions, e.g.
-> v5.13. Can you take a look at this? The blktests software is available at
-> https://github.com/osandov/blktests/.
->
-> Thanks,
->
-> Bart.
+diff --git a/block/blk-crypto.c b/block/blk-crypto.c
+index c5bdaafffa29f..103c2e2d50d67 100644
+--- a/block/blk-crypto.c
++++ b/block/blk-crypto.c
+@@ -332,7 +332,7 @@ int blk_crypto_init_key(struct blk_crypto_key *blk_key, const u8 *raw_key,
+ 	if (mode->keysize == 0)
+ 		return -EINVAL;
+ 
+-	if (dun_bytes == 0 || dun_bytes > BLK_CRYPTO_MAX_IV_SIZE)
++	if (dun_bytes == 0 || dun_bytes > mode->ivsize)
+ 		return -EINVAL;
+ 
+ 	if (!is_power_of_2(data_unit_size))
+-- 
+2.32.0
+
