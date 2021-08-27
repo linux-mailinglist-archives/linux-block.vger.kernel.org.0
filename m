@@ -2,44 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 273143F9CAB
-	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 18:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F873F9CB4
+	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 18:44:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbhH0Qlm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Aug 2021 12:41:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:34539 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229560AbhH0Qlm (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Aug 2021 12:41:42 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 85A1467373; Fri, 27 Aug 2021 18:40:51 +0200 (CEST)
-Date:   Fri, 27 Aug 2021 18:40:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org
-Subject: Re: [PATCH for-5.14] cryptoloop: add a deprecation warning
-Message-ID: <20210827164051.GA26147@lst.de>
-References: <20210827163250.255325-1-hch@lst.de> <59808096-34ff-151f-b7a2-f53d4262f00a@kernel.dk>
+        id S230512AbhH0QoT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Aug 2021 12:44:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229562AbhH0QoQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Fri, 27 Aug 2021 12:44:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EFEC061757;
+        Fri, 27 Aug 2021 09:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uMi9ym/EpEMhp5XJ1/dQn3cCSXMnwFLpTt8mhm2kIVg=; b=E+NhTTurAXC+0jZgTala+SFila
+        qn6hP0CfcSsajRdaFtZ+DKG/DFc05q8YSG7HrJcixCp5FOzdmL5zOrxmk+avYz1sVXlUP/uXofVbN
+        Md9zesFSUAOK1L/B9C5im9TOUlGbQFhmNBBVliI4+0gCVIwAmypgGLJs3vCewmBKRlFzgLU2341j0
+        8wFQMaNcm8lSbSnAu78NUdawmZnGxdufcvpdc2HnK1lj2ny8ZVGJ3XHukVT2EYIGIdioGD4VANCZT
+        E+pgufM2KGTIptr57D3Kh0KiALIdJDGmLlZcRSvs91c1xX61bu0YN2+nJsqD8UBo8MUvl2kW1oeX2
+        ptQEN69Q==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mJevB-00ElKJ-CV; Fri, 27 Aug 2021 16:41:57 +0000
+Date:   Fri, 27 Aug 2021 17:41:37 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tim Walker <tim.t.walker@seagate.com>
+Cc:     Phillip Susi <phill@thesusis.net>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v6 0/5] Initial support for multi-actuator HDDs
+Message-ID: <YSkVwSfQ/9RCKfEG@infradead.org>
+References: <20210827075045.642269-1-damien.lemoal@wdc.com>
+ <874kbbugtw.fsf@vps.thesusis.net>
+ <63D90989-AFAF-410B-AD11-EDF71CEEE666@seagate.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59808096-34ff-151f-b7a2-f53d4262f00a@kernel.dk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <63D90989-AFAF-410B-AD11-EDF71CEEE666@seagate.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 27, 2021 at 10:37:41AM -0600, Jens Axboe wrote:
-> On 8/27/21 10:32 AM, Christoph Hellwig wrote:
-> > Support for cryptoloop has been officially marked broken and deprecated
-> > in favor of dm-crypt (which supports the same broken algorithms if
-> > needed) in Linux 2.6.4 (released in March 2004), and support for it has
-> > been entirely removed from losetup in util-linux 2.23 (released in April
-> > 2013).  Add a warning and a deprecation schedule.
-> 
-> Would probably look better to queue with the 5.15 patches at this point.
-> Which then begs the question of whether we want to make the removal
-> target 5.17 instead.
+On Fri, Aug 27, 2021 at 02:28:58PM +0000, Tim Walker wrote:
+> There is nothing in the spec that requires the ranges to be contiguous
+> or non-overlapping.
 
-File locking also just managed to sneak in a short-term deprecation for
-a very similar situation.
+Yikes, that is a pretty stupid standard.  Almost as bad as allowing
+non-uniform sized non-power of two sized zones :)
+
+> It's easy to imagine a HDD architecture that allows multiple heads to access the same sectors on the disk. It's also easy to imagine a workload scenario where parallel access to the same disk could be useful. (Think of a typical storage design that sequentially writes new user data gradually filling the disk, while simultaneously supporting random user reads over the written data.)
+
+But for those drivers you do not actually need this scheme at all.
+Storage devices that support higher concurrency are bog standard with
+SSDs and if you want to go back storage arrays.  The only interesting
+case is when these ranges are separate so that the access can be carved
+up based on the boundary.  Now I don't want to give people ideas with
+overlapping but not identical, which would be just horrible.
