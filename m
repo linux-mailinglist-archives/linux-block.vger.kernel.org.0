@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3C43F9F72
-	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 21:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF6B33F9F89
+	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 21:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbhH0TGU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Aug 2021 15:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
+        id S231266AbhH0TGc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Aug 2021 15:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbhH0TGT (ORCPT
+        with ESMTP id S231136AbhH0TGY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Aug 2021 15:06:19 -0400
+        Fri, 27 Aug 2021 15:06:24 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF468C0613CF;
-        Fri, 27 Aug 2021 12:05:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A5FC061757;
+        Fri, 27 Aug 2021 12:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=+F5KOCzrXZghph/UppvQA2s1yRYbitmFgtgTDMNdZxo=; b=hdN3JaT+AqcwLsMn/aaHu7lvCV
-        WPBXcM/Bc55Jl2bdP4zzl1i4OkwfgYt9QwkJ34Pba94cSPfCrXNdfGQqms73HQZ5MzJy2T6L8WRzL
-        yGgamUknYLP9Yh623OkoBvx0GPtuUBuvsnqLK6/Jy+NDw6kfK5ngmbAIqv2L2mxDW22ybKkoh0NWt
-        iTZLRbGQ8aQ2lP0Ktu7ioEUWq+Jsp94KnyLLak9pKQGugpm+fxfzA9OvNwmX+oUucTgIsK5CgWU/T
-        rKq3whJCDsNpCuDw1jnrJJ2RCr+fDFx2tLFpqxW5qzOzNUcjWo+cPgoU9rAJAWWztHoU+YteGk2nt
-        J/H7NqXw==;
+        bh=vjDH1jMfJBrZv4rfw/hLobkpUNKwZF7oRRD315NfMik=; b=UDpH5nMZgW9+w1jqkAOyg/yykO
+        b/eQOyxSjD/FSHNDKdHeqsqWQOpYPAl2Iv6eXeGvoqKvUOIgzlWNOLds/Xy4C5s+45Jps7Dou3QhW
+        nFbid6hD4iB7/hhkXH8WuBz8zN2YYTRTT6VD2074+UjhTecWpY74m6EEUm59vU7DLkvkIehNY56Tg
+        HWSM4TNMIdtPiOLovMVPSUG+1vlEHWymw+H94k5Gd871cf9CNO19EcNNhOsWogeBHcGFxEDTsSAir
+        HULNmNKF8+Mv11Q04qzjOXRg/RHI+fARzJplvvCAAUSJYj8zI5TsYx8wTMpIla2dh3e6/+V5+Spay
+        Z3/aB1NQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mJhA1-00D1L1-6a; Fri, 27 Aug 2021 19:05:05 +0000
+        id 1mJhA1-00D1L3-8t; Fri, 27 Aug 2021 19:05:05 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -40,9 +40,9 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 1/6] scsi/sd: add error handling support for add_disk()
-Date:   Fri, 27 Aug 2021 12:04:59 -0700
-Message-Id: <20210827190504.3103362-2-mcgrof@kernel.org>
+Subject: [PATCH v2 2/6] scsi/sr: add error handling support for add_disk()
+Date:   Fri, 27 Aug 2021 12:05:00 -0700
+Message-Id: <20210827190504.3103362-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210827190504.3103362-1-mcgrof@kernel.org>
 References: <20210827190504.3103362-1-mcgrof@kernel.org>
@@ -60,26 +60,25 @@ error handling.
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/scsi/sd.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/sr.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 610ebba0d66e..8c1273fff23e 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3487,7 +3487,11 @@ static int sd_probe(struct device *dev)
- 		pm_runtime_set_autosuspend_delay(dev,
- 			sdp->host->hostt->rpm_autosuspend_delay);
- 	}
--	device_add_disk(dev, gd, NULL);
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 2942a4ec9bdd..72fd21844367 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -779,7 +779,10 @@ static int sr_probe(struct device *dev)
+ 	dev_set_drvdata(dev, cd);
+ 	disk->flags |= GENHD_FL_REMOVABLE;
+ 	sr_revalidate_disk(cd);
+-	device_add_disk(&sdev->sdev_gendev, disk, NULL);
 +
-+	error = device_add_disk(dev, gd, NULL);
++	error = device_add_disk(&sdev->sdev_gendev, disk, NULL);
 +	if (error)
-+		goto out_free_index;
-+
- 	if (sdkp->capacity)
- 		sd_dif_config_host(sdkp);
++		goto fail_minor;
  
+ 	sdev_printk(KERN_DEBUG, sdev,
+ 		    "Attached scsi CD-ROM %s\n", cd->cdi.name);
 -- 
 2.30.2
 
