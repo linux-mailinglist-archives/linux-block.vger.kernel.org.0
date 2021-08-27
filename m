@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 933DB3F98CE
-	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 14:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 211883F98D8
+	for <lists+linux-block@lfdr.de>; Fri, 27 Aug 2021 14:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245185AbhH0MH6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Aug 2021 08:07:58 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3703 "EHLO
+        id S245186AbhH0MIJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Aug 2021 08:08:09 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3704 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245171AbhH0MHz (ORCPT
+        with ESMTP id S245172AbhH0MH5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Aug 2021 08:07:55 -0400
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gwz1w2XDmz67wgc;
-        Fri, 27 Aug 2021 20:05:40 +0800 (CST)
+        Fri, 27 Aug 2021 08:07:57 -0400
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gwz1y1qlfz67svh;
+        Fri, 27 Aug 2021 20:05:42 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 27 Aug 2021 14:07:05 +0200
+ 15.1.2308.8; Fri, 27 Aug 2021 14:07:07 +0200
 Received: from localhost.localdomain (10.69.192.58) by
  lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 27 Aug 2021 13:07:02 +0100
+ 15.1.2308.8; Fri, 27 Aug 2021 13:07:04 +0100
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <ming.lei@redhat.com>, <linux-scsi@vger.kernel.org>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v3 08/13] blk-mq: Don't clear driver tags own mapping
-Date:   Fri, 27 Aug 2021 20:01:59 +0800
-Message-ID: <1630065724-69146-9-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v3 09/13] blk-mq: Add blk_mq_tag_update_sched_shared_sbitmap()
+Date:   Fri, 27 Aug 2021 20:02:00 +0800
+Message-ID: <1630065724-69146-10-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1630065724-69146-1-git-send-email-john.garry@huawei.com>
 References: <1630065724-69146-1-git-send-email-john.garry@huawei.com>
@@ -44,32 +44,78 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Function blk_mq_clear_rq_mapping() is required to clear the sched tags
-mappings in driver tags rqs[].
+Put the functionality to update the sched shared sbitmap size in a common
+function.
 
-But there is no need for a driver tags to clear its own mapping, so skip
-clearing the mapping in this scenario.
+Since the same formula is always used to resize, and it can be got from
+the request queue argument, so just pass the request queue pointer.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ block/blk-mq-sched.c | 3 +--
+ block/blk-mq-tag.c   | 6 ++++++
+ block/blk-mq-tag.h   | 1 +
+ block/blk-mq.c       | 3 +--
+ 4 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 3ab26154f0ea..a3b5a5399bc8 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -575,8 +575,7 @@ static int blk_mq_init_sched_shared_sbitmap(struct request_queue *queue)
+ 					&queue->sched_breserved_tags;
+ 	}
+ 
+-	sbitmap_queue_resize(&queue->sched_bitmap_tags,
+-			     queue->nr_requests - set->reserved_tags);
++	blk_mq_tag_update_sched_shared_sbitmap(queue);
+ 
+ 	return 0;
+ }
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 86f87346232a..5f06ad6efc8f 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -634,6 +634,12 @@ void blk_mq_tag_resize_shared_sbitmap(struct blk_mq_tag_set *set, unsigned int s
+ 	sbitmap_queue_resize(&set->__bitmap_tags, size - set->reserved_tags);
+ }
+ 
++void blk_mq_tag_update_sched_shared_sbitmap(struct request_queue *q)
++{
++	sbitmap_queue_resize(&q->sched_bitmap_tags,
++			     q->nr_requests - q->tag_set->reserved_tags);
++}
++
+ /**
+  * blk_mq_unique_tag() - return a tag that is unique queue-wide
+  * @rq: request for which to compute a unique tag
+diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+index 8ed55af08427..88f3c6485543 100644
+--- a/block/blk-mq-tag.h
++++ b/block/blk-mq-tag.h
+@@ -48,6 +48,7 @@ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 					unsigned int depth, bool can_grow);
+ extern void blk_mq_tag_resize_shared_sbitmap(struct blk_mq_tag_set *set,
+ 					     unsigned int size);
++extern void blk_mq_tag_update_sched_shared_sbitmap(struct request_queue *q);
+ 
+ extern void blk_mq_tag_wakeup_all(struct blk_mq_tags *tags, bool);
+ void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 556c203e6b7c..09380274d2d6 100644
+index 09380274d2d6..d82d477c9c9d 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2316,6 +2316,10 @@ static void blk_mq_clear_rq_mapping(struct blk_mq_tags *drv_tags,
- 	struct page *page;
- 	unsigned long flags;
- 
-+	/* There is no need to clear a driver tags own mapping */
-+	if (drv_tags == tags)
-+		return;
-+
- 	list_for_each_entry(page, &tags->page_list, lru) {
- 		unsigned long start = (unsigned long)page_address(page);
- 		unsigned long end = start + order_to_size(page->private);
+@@ -3649,8 +3649,7 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 		q->nr_requests = nr;
+ 		if (blk_mq_is_sbitmap_shared(set->flags)) {
+ 			if (q->elevator)
+-				sbitmap_queue_resize(&q->sched_bitmap_tags,
+-						     nr - set->reserved_tags);
++				blk_mq_tag_update_sched_shared_sbitmap(q);
+ 			else
+ 				blk_mq_tag_resize_shared_sbitmap(set, nr);
+ 		}
 -- 
 2.26.2
 
