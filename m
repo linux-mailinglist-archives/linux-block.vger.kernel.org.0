@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2376F3FBE32
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF3AC3FBE2A
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238651AbhH3V1l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 17:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33102 "EHLO
+        id S238271AbhH3V1R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 17:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237713AbhH3V1I (ORCPT
+        with ESMTP id S230255AbhH3V1F (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 17:27:08 -0400
+        Mon, 30 Aug 2021 17:27:05 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C660FC0617AD;
-        Mon, 30 Aug 2021 14:26:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56461C061760;
+        Mon, 30 Aug 2021 14:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=vjDH1jMfJBrZv4rfw/hLobkpUNKwZF7oRRD315NfMik=; b=tfundgQK1SDY1fknDZJQYjpNpg
-        G1u4zzvbx1lH1ZSdjg08TCZpWXYwpKjbJN1LiDBgV8JotCGz6zuzU67qTKg5HiVO9KaX9vrarVgjd
-        mFDIxg2LKMxqDgHNV46zgFdSIPFVD9VkcWX1ThxsVN/E3HVzeBQEtvmdG0IgOUXGpXuPhW6yMDGAl
-        SC4ZBe9inzp2bmYF6StOwXF7JnuIyy/AWmezhayFvA71s40WOw6Ba8HAqtZdiCuXmCjf5cqEu+tWa
-        Th1p3POR6SFxhrjMgWymCr4T2+vn8UmCmi8gmv8TqsmpS48rg9iEjYeLvPN+kbIyYN9EnxPoRa9f0
-        J3yEYavw==;
+        bh=WZDOVyRqrotfblM3MrNHqoihizZi1dQWZqaOZFp5Q1M=; b=i8ELcjA/anrU1TOHpT3BXlv5sQ
+        9q5jw+XOVVb/qUvV9ig0gbEr9CrSUmV3KpTOZDXHGFakrCIS18jy03q+1JzG3IWwARLfGn1Z/7fo/
+        XOcVbLQBZElwJbcert/XSMBhSrXd977VdHJk+2AXpHpLvWfDd6FWkkd+Ie9d+lv89upJrOWSbAJSK
+        nT0oSWfCoTlrFojFLLJ3zXxMvwbM0j0ElnF6FO/lzdjKqXXgHhhs3sE1xiVRyqkLqBTwNloi2o17C
+        S6tz5a9SINyP3qxdan7AtdeT2cf48qweDik29nXili4ONS2xfgWdyOpQF8Qksp4ZnyNcDGVKJS1LK
+        1iirUqCg==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKomk-000ci8-IK; Mon, 30 Aug 2021 21:25:42 +0000
+        id 1mKomk-000ciA-Km; Mon, 30 Aug 2021 21:25:42 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -40,9 +40,9 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 2/8] scsi/sr: add error handling support for add_disk()
-Date:   Mon, 30 Aug 2021 14:25:32 -0700
-Message-Id: <20210830212538.148729-3-mcgrof@kernel.org>
+Subject: [PATCH v3 3/8] nvme: add error handling support for add_disk()
+Date:   Mon, 30 Aug 2021 14:25:33 -0700
+Message-Id: <20210830212538.148729-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210830212538.148729-1-mcgrof@kernel.org>
 References: <20210830212538.148729-1-mcgrof@kernel.org>
@@ -60,25 +60,36 @@ error handling.
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/scsi/sr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 2942a4ec9bdd..72fd21844367 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -779,7 +779,10 @@ static int sr_probe(struct device *dev)
- 	dev_set_drvdata(dev, cd);
- 	disk->flags |= GENHD_FL_REMOVABLE;
- 	sr_revalidate_disk(cd);
--	device_add_disk(&sdev->sdev_gendev, disk, NULL);
-+
-+	error = device_add_disk(&sdev->sdev_gendev, disk, NULL);
-+	if (error)
-+		goto fail_minor;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 8679a108f571..687d3be563a3 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3763,7 +3763,9 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
  
- 	sdev_printk(KERN_DEBUG, sdev,
- 		    "Attached scsi CD-ROM %s\n", cd->cdi.name);
+ 	nvme_get_ctrl(ctrl);
+ 
+-	device_add_disk(ctrl->device, ns->disk, nvme_ns_id_attr_groups);
++	if (device_add_disk(ctrl->device, ns->disk, nvme_ns_id_attr_groups))
++		goto out_cleanup_ns_from_list;
++
+ 	if (!nvme_ns_head_multipath(ns->head))
+ 		nvme_add_ns_cdev(ns);
+ 
+@@ -3773,6 +3775,11 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
+ 
+ 	return;
+ 
++ out_cleanup_ns_from_list:
++	nvme_put_ctrl(ctrl);
++	down_write(&ctrl->namespaces_rwsem);
++	list_del_init(&ns->list);
++	up_write(&ctrl->namespaces_rwsem);
+  out_unlink_ns:
+ 	mutex_lock(&ctrl->subsys->lock);
+ 	list_del_rcu(&ns->siblings);
 -- 
 2.30.2
 
