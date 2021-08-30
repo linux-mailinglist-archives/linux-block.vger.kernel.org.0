@@ -2,80 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B913FBDEA
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:09:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6CC3FBE2E
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235846AbhH3VKB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 17:10:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
+        id S238013AbhH3V1f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 17:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235412AbhH3VKB (ORCPT
+        with ESMTP id S237685AbhH3V1I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 17:10:01 -0400
+        Mon, 30 Aug 2021 17:27:08 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB32C061575;
-        Mon, 30 Aug 2021 14:09:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C43C061796;
+        Mon, 30 Aug 2021 14:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xFWTIefdsBbNHRGePjMVKB25ot+nXFfcxkVreKDH86Y=; b=FgSmTd/fRmS0xbTiIlIubbvcQF
-        l8NXkScGBRAvafpu0rVHoH9iy35oqe0ZVhZrGw9F+vPsXmVAXAHRi9bLTOz/vVwm017PysQxzjdwR
-        2Z7yKblSpY23X+mBYcbPR7HSt5+du9vMR0yd4OGtU//TsQa3L9dQPWUzn+aBwsb7TTLrFsa5Z1yBC
-        cHAjsVtZF1FFvy5cgIFuUbxSa/UXcDJEnINnwNpFBMc/dx4nsSKskeqvJF2m/6ZEJ/y+wT83/RDx5
-        Pxwk7umAbXCBGozfp+iGo+sUQFP9mBj3TSyahaTBMA85l5Ypzlz3qTA3rqa10UKRTSgpCacUNkUG2
-        tjolFDlQ==;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=1YUk7uUX188ex4Qeqb2q2FbA+vqSeistafw96wSb9q8=; b=lEZUf7GgHMbX1+8gRrsrsvmyDn
+        I+l8qrzbBpIWozAGTLTsWh0ax350SK798hajnAmKrtIYwcj70N+TaMp/HanMyyRUp054bd1I72PoR
+        tx8Hq7NMaNET0LOlyYCx0TsGyJCTqk6w1OvYvpXbRKuuMRQd2pUNw7KlIMpg2IIjBZ+zvhlvLDIXl
+        uJ3BiUfzRZCBBpNJqKtyJRWmGjjAIWHZWiJAynl3xGzd17VZHRg2LRBXRyRNRBZ7p564JgTHzY+67
+        cukqYn6bVuTsu0iduaOcSEpdZaD/+3zQZbDczNcUC1Z4qd2F8DLoqpMTdUu6EcUbL56xrdqtLrnTN
+        YcfMXpzQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKoWS-000bKI-22; Mon, 30 Aug 2021 21:08:52 +0000
-Date:   Mon, 30 Aug 2021 14:08:52 -0700
+        id 1mKomk-000ci4-DU; Mon, 30 Aug 2021 21:25:42 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     axboe@kernel.dk, colyli@suse.de, kent.overstreet@gmail.com,
-        sagi@grimberg.me, vishal.l.verma@intel.com,
-        dan.j.williams@intel.com, dave.jiang@intel.com,
-        ira.weiny@intel.com, konrad.wilk@oracle.com, roger.pau@citrix.com,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, minchan@kernel.org, ngupta@vflare.org,
-        senozhatsky@chromium.org, xen-devel@lists.xenproject.org,
-        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/10] nvme-multipath: add error handling support for
- add_disk()
-Message-ID: <YS1I5DuGr0q7/uow@bombadil.infradead.org>
-References: <20210827191809.3118103-1-mcgrof@kernel.org>
- <20210827191809.3118103-4-mcgrof@kernel.org>
- <20210827202932.GA82376@dhcp-10-100-145-180.wdc.com>
+To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
+        kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
+        beanhuo@micron.com, ulf.hansson@linaro.org, avri.altman@wdc.com,
+        swboyd@chromium.org, agk@redhat.com, snitzer@redhat.com,
+        josef@toxicpanda.com
+Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
+        ming.lei@redhat.com, linux-scsi@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-mmc@vger.kernel.org,
+        dm-devel@redhat.com, nbd@other.debian.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v3 0/8] block: first batch of add_disk() error handling conversions
+Date:   Mon, 30 Aug 2021 14:25:30 -0700
+Message-Id: <20210830212538.148729-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210827202932.GA82376@dhcp-10-100-145-180.wdc.com>
+Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 27, 2021 at 01:29:32PM -0700, Keith Busch wrote:
-> On Fri, Aug 27, 2021 at 12:18:02PM -0700, Luis Chamberlain wrote:
-> > @@ -479,13 +479,17 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
-> >  static void nvme_mpath_set_live(struct nvme_ns *ns)
-> >  {
-> >  	struct nvme_ns_head *head = ns->head;
-> > +	int rc;
-> >  
-> >  	if (!head->disk)
-> >  		return;
-> >  
-> > -	if (!test_and_set_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
-> > -		device_add_disk(&head->subsys->dev, head->disk,
-> > -				nvme_ns_id_attr_groups);
-> > +	if (!test_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
-> 
-> This should still be test_and_set_bit() because it is protecting against
-> two nvme paths simultaneously calling device_add_disk() on the same
-> namespace head.
+Jens,
 
-Interesting, I'll add a comment as well, as this was not clear with the drive
-by effort.
+I think this first set is ready, but pending review of just two patches:
 
-  Luis
+  * mmc/core/block
+  * dm
+
+All other patches have a respective Reviewed-by tag. The above two
+patches were integrated back into the series once I understood
+Christoph's concerns, and adjusted the patch as such.
+
+This goes rebased onto your for-next as of today. If anyone wants to
+explore the pending full set this is up on my linux-next branch
+20210830-for-axboe-add-disk-error-handling-next [0].
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210830-for-axboe-add-disk-error-handling-next
+
+Luis Chamberlain (8):
+  scsi/sd: add error handling support for add_disk()
+  scsi/sr: add error handling support for add_disk()
+  nvme: add error handling support for add_disk()
+  mmc/core/block: add error handling support for add_disk()
+  md: add error handling support for add_disk()
+  dm: add add_disk() error handling
+  loop: add error handling support for add_disk()
+  nbd: add error handling support for add_disk()
+
+ drivers/block/loop.c     | 9 ++++++++-
+ drivers/block/nbd.c      | 6 +++++-
+ drivers/md/dm.c          | 4 +++-
+ drivers/md/md.c          | 7 ++++++-
+ drivers/mmc/core/block.c | 7 ++++++-
+ drivers/nvme/host/core.c | 9 ++++++++-
+ drivers/scsi/sd.c        | 6 +++++-
+ drivers/scsi/sr.c        | 5 ++++-
+ 8 files changed, 45 insertions(+), 8 deletions(-)
+
+-- 
+2.30.2
+
