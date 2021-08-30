@@ -2,122 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D08B83FB89C
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 16:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F2F3FBA5B
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 18:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237266AbhH3O6h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 10:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
+        id S237866AbhH3QuU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 12:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234246AbhH3O6h (ORCPT
+        with ESMTP id S231234AbhH3QuU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 10:58:37 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C210C06175F
-        for <linux-block@vger.kernel.org>; Mon, 30 Aug 2021 07:57:43 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id f6so20381243iox.0
-        for <linux-block@vger.kernel.org>; Mon, 30 Aug 2021 07:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=n8/euC5UNogyxhXxtnFgGEzpR0kFchmYHKRyrYlnylE=;
-        b=fzWOv3yE1B7bFggJbXmtvO0vQWPodsuGZMm3dG192a4thB3k05M5zLVAJHDVlnVvNI
-         TZ86vP5GIk3jaKZZpiuRITTRftB0YmaPhmvzlghcdByuhNhvvDQIb2Ii2dqjLUTnjzdk
-         4CgJK3uLbMdFaQTX4hd62DiveNh+5VMmPNPv5fRGGoh3hK9FdgA4xSKnVSskIIS3NNF9
-         ePOg/7ur0l/tYf3wuIXj9T7B1lwftYXWO9BC/3c4zeFFmikzlWXvUfqPg+2PUUi0GDew
-         eJ3W0+uRWZa2pIGv6b2gVf7X//OlEMTScJyZSgt0It1Kosr1msph1rDHLJcIYYlH5tXd
-         pYNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=n8/euC5UNogyxhXxtnFgGEzpR0kFchmYHKRyrYlnylE=;
-        b=mfpykPFkKISKE7N+m4IxAWWbt24flVWMvUT/6QXlPfk5EUrnNY+5j5i/fZBfkE+ALR
-         HNcrUUdebR+24A23/eSAhobfG9DKvNTjm5SRWTU3dT7FoU5NDpm3faXMtnR0jgg3NHv4
-         SJ6sINb97tXcSdvt4MZM5HfHF6D/0NTt4evhNnFBlCMiVAbcMZP06PbohFYqURu7oNHD
-         dhd8w5tab+e3IYzkbF7GG63+59cwkrXXo4E9r4ir9llHcq/E3G18WeoGn5juJN2byMkG
-         3EDPK02QMfKWBz+OKYfdQpIeXq9OIYIlZOMl/KbEStvIkG1VNIPEJKhl21f9iG5jYzcg
-         cfnA==
-X-Gm-Message-State: AOAM5329l8zHij9mYkT9DPKfKaIxlo1H9ZU2yOC8/hemWz60+I8+Mwkw
-        UjHs30i8/253IPUaF+XMo0cTiy9f2HTBpQ==
-X-Google-Smtp-Source: ABdhPJytdN+IwixTzCorQN5jnuDR8avi8ltmU/6Cvm3sZv/V++7o0qN5zDbIWt/T508EOWFx7kS4nw==
-X-Received: by 2002:a02:708f:: with SMTP id f137mr20745750jac.68.1630335462619;
-        Mon, 30 Aug 2021 07:57:42 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id e14sm8607803ilr.62.2021.08.30.07.57.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Aug 2021 07:57:42 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] bio recycling support
-Message-ID: <baf16ffa-1c31-95e8-dae5-ac4b98ee984a@kernel.dk>
-Date:   Mon, 30 Aug 2021 08:57:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 30 Aug 2021 12:50:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C7EC061575;
+        Mon, 30 Aug 2021 09:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6rHApL/Np9+9ugLAs48I8ACfdCP2s/Ndc6zPCQ0cfq0=; b=f/rDqmUDQgkWbrA8o/5V0HBaL4
+        nvG1ecXU08POhUXxJ0fFrvCemil25t6qZB9NY51MaQdPngfABasVxRDYEWat0fDdDMn5M+POL0DUm
+        /o4gK5VwrFvqdh+McNmadh4EJpTbEbRtWHaNlPYjf4YW3oLqfRIEh5caabE2guzyHerkzNEIKj9xO
+        S7egjaEm2UrVqVS98UCrS4g64L7N5nmEqRz2873j8dmhQde8Gx18kWRQK9LHI7G2WNJf4rPg9U2oJ
+        ACi+HZ3ehMxleZOJhi5Yrdjd01ojYLPFPe/9e8BZm4muVHEEQLy5SgmVXk1Fwm8xw+mw4jNwXwqM9
+        cvT3pCcQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mKkST-000L1o-4j; Mon, 30 Aug 2021 16:48:46 +0000
+Date:   Mon, 30 Aug 2021 17:48:29 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        kvm@vger.kernel.org, stefanha@redhat.com, oren@nvidia.com,
+        linux-block@vger.kernel.org, axboe@kernel.dk
+Subject: Re: [PATCH 1/1] virtio-blk: add num_io_queues module parameter
+Message-ID: <YS0L3RIiPfb9d5Xx@infradead.org>
+References: <20210830120023.22202-1-mgurtovoy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210830120023.22202-1-mgurtovoy@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Linus,
+On Mon, Aug 30, 2021 at 03:00:23PM +0300, Max Gurtovoy wrote:
+> +static int virtblk_queue_count_set(const char *val,
+> +		const struct kernel_param *kp)
+> +{
+> +	unsigned int n;
+> +	int ret;
+> +
+> +	ret = kstrtouint(val, 10, &n);
+> +	if (ret != 0 || n > nr_cpu_ids)
+> +		return -EINVAL;
+> +	return param_set_uint(val, kp);
+> +}
 
-Forked off for-5.15/io_uring at some point, hence layered on top of
-that.
 
-This adds bio recycling support for polled IO, allowing quick reuse of a
-bio for high IOPS scenarios via a percpu bio_set list. It's good for
-almost a 10% improvement in performance, bumping our per-core IO limit
-from ~3.2M IOPS to ~3.5M IOPS.
-
-Please pull!
-
-
-The following changes since commit fd08e5309bba8672c1190362dff6c92bfd59218d:
-
-  io_uring: optimise hot path of ltimeout prep (2021-08-23 13:10:37 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-bio-cache.5-2021-08-30
-
-for you to fetch changes up to 3d5b3fbedad65088ec079a4c4d1a2f47e11ae1e7:
-
-  bio: improve kerneldoc documentation for bio_alloc_kiocb() (2021-08-23 13:45:40 -0600)
-
-----------------------------------------------------------------
-io_uring-bio-cache.5-2021-08-30
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      block: use the percpu bio cache in __blkdev_direct_IO
-
-Jens Axboe (7):
-      bio: optimize initialization of a bio
-      fs: add kiocb alloc cache flag
-      bio: add allocation cache abstraction
-      block: clear BIO_PERCPU_CACHE flag if polling isn't supported
-      io_uring: enable use of bio alloc cache
-      block: provide bio_clear_hipri() helper
-      bio: improve kerneldoc documentation for bio_alloc_kiocb()
-
- block/bio.c                | 169 ++++++++++++++++++++++++++++++++++++++++-----
- block/blk-core.c           |   2 +-
- block/blk-merge.c          |   2 +-
- block/blk.h                |   7 ++
- fs/block_dev.c             |   6 +-
- fs/io_uring.c              |   2 +-
- include/linux/bio.h        |  13 ++++
- include/linux/blk_types.h  |   1 +
- include/linux/cpuhotplug.h |   1 +
- include/linux/fs.h         |   2 +
- 10 files changed, 184 insertions(+), 21 deletions(-)
-
--- 
-Jens Axboe
-
+Thi can use param_set_uint_minmax.
