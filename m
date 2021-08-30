@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF3AC3FBE2A
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685B43FBE1B
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238271AbhH3V1R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 17:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        id S237821AbhH3V1J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 17:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230255AbhH3V1F (ORCPT
+        with ESMTP id S237527AbhH3V1E (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 17:27:05 -0400
+        Mon, 30 Aug 2021 17:27:04 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56461C061760;
-        Mon, 30 Aug 2021 14:26:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2098C061575;
+        Mon, 30 Aug 2021 14:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=WZDOVyRqrotfblM3MrNHqoihizZi1dQWZqaOZFp5Q1M=; b=i8ELcjA/anrU1TOHpT3BXlv5sQ
-        9q5jw+XOVVb/qUvV9ig0gbEr9CrSUmV3KpTOZDXHGFakrCIS18jy03q+1JzG3IWwARLfGn1Z/7fo/
-        XOcVbLQBZElwJbcert/XSMBhSrXd977VdHJk+2AXpHpLvWfDd6FWkkd+Ie9d+lv89upJrOWSbAJSK
-        nT0oSWfCoTlrFojFLLJ3zXxMvwbM0j0ElnF6FO/lzdjKqXXgHhhs3sE1xiVRyqkLqBTwNloi2o17C
-        S6tz5a9SINyP3qxdan7AtdeT2cf48qweDik29nXili4ONS2xfgWdyOpQF8Qksp4ZnyNcDGVKJS1LK
-        1iirUqCg==;
+        bh=vRviJ2Q+W+fdmssObz0xPBy+U2+Ms4lUuLZlXzB02dA=; b=CWTBqWKQHMMz7fTV/SMV+3/fG4
+        bg9K3W+/31wK9H28Ow3Gf9Ws76FgDom5TebADCF7mI9ZkVCU6S5l3Y+glkuKGSqNDEcIyx4g8V97v
+        AzRuNUqSzaZXfNTe4f6xeEJaFzsDOQ4dIIGkC1kNwOXmDOp9VRisA0R1PUJb/Q8EAMBWl8cKjTwgP
+        uaYMW+ZY2dpLWgRcc6ND0TYtDceOXSCXvBlHoOLpj4mruPezMq+av8z8Q5zcrL/fZq9M3BKJ+uI3y
+        6dVwTSAQ9kQKZxfWQ9BW0R7lJvJGT1pd3ZDvCPnns8x8PR3QIBi45uXBWWXCZm1pEatL1HswTX1Hi
+        UGlNq5Pw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKomk-000ciA-Km; Mon, 30 Aug 2021 21:25:42 +0000
+        id 1mKomk-000ciC-Ls; Mon, 30 Aug 2021 21:25:42 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -38,11 +38,10 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-nvme@lists.infradead.org, linux-mmc@vger.kernel.org,
         dm-devel@redhat.com, nbd@other.debian.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 3/8] nvme: add error handling support for add_disk()
-Date:   Mon, 30 Aug 2021 14:25:33 -0700
-Message-Id: <20210830212538.148729-4-mcgrof@kernel.org>
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v3 4/8] mmc/core/block: add error handling support for add_disk()
+Date:   Mon, 30 Aug 2021 14:25:34 -0700
+Message-Id: <20210830212538.148729-5-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210830212538.148729-1-mcgrof@kernel.org>
 References: <20210830212538.148729-1-mcgrof@kernel.org>
@@ -57,39 +56,35 @@ We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
 error handling.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+The caller only cleanups the disk if we pass on an allocated md
+but on error we return return ERR_PTR(ret), and so we must do all
+the unwinding ourselves.
+
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/nvme/host/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/mmc/core/block.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8679a108f571..687d3be563a3 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3763,7 +3763,9 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 6a15fdf6e5f2..9b2856aa6231 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -2453,9 +2453,14 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+ 	/* used in ->open, must be set before add_disk: */
+ 	if (area_type == MMC_BLK_DATA_AREA_MAIN)
+ 		dev_set_drvdata(&card->dev, md);
+-	device_add_disk(md->parent, md->disk, mmc_disk_attr_groups);
++	ret = device_add_disk(md->parent, md->disk, mmc_disk_attr_groups);
++	if (ret)
++		goto err_cleanup_queue;
+ 	return md;
  
- 	nvme_get_ctrl(ctrl);
- 
--	device_add_disk(ctrl->device, ns->disk, nvme_ns_id_attr_groups);
-+	if (device_add_disk(ctrl->device, ns->disk, nvme_ns_id_attr_groups))
-+		goto out_cleanup_ns_from_list;
-+
- 	if (!nvme_ns_head_multipath(ns->head))
- 		nvme_add_ns_cdev(ns);
- 
-@@ -3773,6 +3775,11 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
- 
- 	return;
- 
-+ out_cleanup_ns_from_list:
-+	nvme_put_ctrl(ctrl);
-+	down_write(&ctrl->namespaces_rwsem);
-+	list_del_init(&ns->list);
-+	up_write(&ctrl->namespaces_rwsem);
-  out_unlink_ns:
- 	mutex_lock(&ctrl->subsys->lock);
- 	list_del_rcu(&ns->siblings);
++ err_cleanup_queue:
++	blk_cleanup_queue(md->disk->queue);
++	blk_mq_free_tag_set(&md->queue.tag_set);
+  err_kfree:
+ 	kfree(md);
+  out:
 -- 
 2.30.2
 
