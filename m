@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB2B03FBEC9
-	for <lists+linux-block@lfdr.de>; Tue, 31 Aug 2021 00:11:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA4A3FBEC5
+	for <lists+linux-block@lfdr.de>; Tue, 31 Aug 2021 00:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238950AbhH3WLh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 18:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43438 "EHLO
+        id S238909AbhH3WLe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 18:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238822AbhH3WL0 (ORCPT
+        with ESMTP id S238718AbhH3WLZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 18:11:26 -0400
+        Mon, 30 Aug 2021 18:11:25 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A8DC061575;
-        Mon, 30 Aug 2021 15:10:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9761C0617AD;
+        Mon, 30 Aug 2021 15:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=BcUF+qNITddSgWWUKSwV6xy+2M578+kqxDNel0HR7xE=; b=o0TQ9UmqscxJfJ8NJhzA1rtmw9
-        25/6M0a8/6erBaku4x6rnGDwEEua4Zrl8B46jt9Ih1h25ucZTprNrGBtE9SVJWkP4vJZH45dc+Pkv
-        KJX1Apei2BWqYHqQwQ1oVlnGYqyrXjzTIlUBjZ8WTKAhdNbmlANxwyf63SPLkYGhL7szqPrTixnaj
-        laRicyXPR12pSErHI7n02kt4UJcLQZD0Xiazv8J/7yZ5sGNgoSSnpTaeDf+Mac87uSa+nCCfDqIP2
-        +sgGUYYBuQPN+cxlQx6Qy1MUNGZs96eMAChAf/iaZIktFgV8B5YgBpm7GexWeWVViYmA0IjKnjVgz
-        uOrEhLCw==;
+        bh=8Tqj5TdypJFI9LKCX1GYcX8SMXGQKJv6MnhgBe11KFw=; b=s2mRwTN9A0ayu3FLnaCaRM2c2O
+        2FWBh6vzZHYtgRmh76EyjTtWzXh2kQ9FFa60d6x5SAImBhBj+YRqHg7yA7RD93ODV5eWnIo9v+1TE
+        GLc9R75Q5HI6Fp/LOmUNOZkyyeuBEAlUHDguBEP5vTKBNyo0xOOXkUYhGv8e6LCrHlCyu8FzKEUem
+        AnUY7M86GN0BWDjYGKT2GFQ6HpJXa2aoh3Zj7ny2ZiOKWJxSeTydFgIICno9j0gq37CNAKsNsARSw
+        ogYjb1A/XK+wuHTf1FhZnInJPOjCva+/yOJyMIL9Wipztb/LFOvE5FsJQziBMIYbvjHq1Uy31kKR8
+        IUBB5zMg==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKpTk-000khe-90; Mon, 30 Aug 2021 22:10:08 +0000
+        id 1mKpTk-000khg-AZ; Mon, 30 Aug 2021 22:10:08 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 12/15] pcd: add error handling support for add_disk()
-Date:   Mon, 30 Aug 2021 15:09:57 -0700
-Message-Id: <20210830221000.179369-13-mcgrof@kernel.org>
+Subject: [PATCH 13/15] pcd: fix ordering of unregister_cdrom()
+Date:   Mon, 30 Aug 2021 15:09:58 -0700
+Message-Id: <20210830221000.179369-14-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210830221000.179369-1-mcgrof@kernel.org>
 References: <20210830221000.179369-1-mcgrof@kernel.org>
@@ -52,34 +52,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We never checked for errors on add_disk() as this function
-returned void. Now that this is fixed, use the shiny new
-error handling.
+We first register cdrom and then we add_disk() and
+so we we should likewise unregister the cdrom first and
+then del_gendisk().
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/paride/pcd.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/block/paride/pcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-index 93ed63626232..a7fab3830d7b 100644
+index a7fab3830d7b..82a654fc4db8 100644
 --- a/drivers/block/paride/pcd.c
 +++ b/drivers/block/paride/pcd.c
-@@ -941,9 +941,13 @@ static int pcd_init_unit(struct pcd_unit *cd, bool autoprobe, int port,
- 	cd->present = 1;
- 	pcd_probe_capabilities(cd);
- 	register_cdrom(cd->disk, &cd->info);
--	add_disk(cd->disk);
-+	ret = add_disk(cd->disk);
-+	if (ret)
-+		goto out_unreg_cdrom;
- 	return 0;
+@@ -1021,9 +1021,9 @@ static void __exit pcd_exit(void)
+ 		if (!cd->present)
+ 			continue;
  
-+out_unreg_cdrom:
-+	unregister_cdrom(&cd->info);
- out_pi_release:
- 	pi_release(cd->pi);
- out_free_disk:
++		unregister_cdrom(&cd->info);
+ 		del_gendisk(cd->disk);
+ 		pi_release(cd->pi);
+-		unregister_cdrom(&cd->info);
+ 		blk_cleanup_disk(cd->disk);
+ 
+ 		blk_mq_free_tag_set(&cd->tag_set);
 -- 
 2.30.2
 
