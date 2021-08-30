@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5EF3FBECA
-	for <lists+linux-block@lfdr.de>; Tue, 31 Aug 2021 00:11:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E02143FBEC2
+	for <lists+linux-block@lfdr.de>; Tue, 31 Aug 2021 00:10:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238964AbhH3WLj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 18:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43454 "EHLO
+        id S238883AbhH3WLa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 18:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238806AbhH3WLZ (ORCPT
+        with ESMTP id S238480AbhH3WLU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 18:11:25 -0400
+        Mon, 30 Aug 2021 18:11:20 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F14C06129D;
-        Mon, 30 Aug 2021 15:10:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B8AC0613D9;
+        Mon, 30 Aug 2021 15:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=08q31EIVp0CLnjZ3JOSG2pLmduRMGbbY0RWG/PagZSQ=; b=Z9QGRHP4/qZRCuv19fvI7D22T/
-        l8RKm03cpMsPlzSq19La8JUbdeDkQ0Knp6qQFynkYe8MNO81xpuptmEOyMLgTUTslrKO13ZEDKdsC
-        vOEDNeiD6h/cIFXaRUtOM5FJathp0vP7UoyZKvgl6PvR8onBXugShKRFnEiHOyenjV16gQbVd/wcu
-        amt9ZpzgL9PNLb8yhGOxii2QaBRfT4TcHACB21Gi6nKeDjp3IbkBCLPa8lZXRo7bITSVrUSN1YzbL
-        bLpRng2NCPqxlReNcpODSvgJFUAyrHBtzTBI7DkT2kjyWTKpag+ErzX4ff8tLiJMVpiW8+k+EjM+Q
-        eF/t7fcw==;
+        bh=W3apyDTfrtDGuXTYQK+OmSU4FGgmy/H9wfwEpLs5rqk=; b=eRxwtnbOuCjq+GOlqRFAWmB6hM
+        R1QtaWHhBn6o1goiAkeIQjjq4UUHDgwkh3ATvomJcleMeqo/01kIBIp8CBD4jrzkyyvCc7cCtiAyM
+        87eGsFeLkTxqfg0u+IJXTtRC+jCdE168Em0kaDvuRLkEjebgSLssu3s0uchhlPmj92BVW/eSwHKzn
+        BuOhaVd48gWDAWHxdGD8LxPPHo9XM79rF11HPb5DrRoai65XB4pOmJ9Qf9D8fMnTe9OX3IfcZo60V
+        6M1/PwcsrBS+Btgag4ox1yca3wRZJS+uAAgJm6aT1CrYjV8NGuuOvuKqtymJ18zfmC+YDV4txPYZo
+        qRuRL77g==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKpTj-000khG-MF; Mon, 30 Aug 2021 22:10:07 +0000
+        id 1mKpTj-000khI-OU; Mon, 30 Aug 2021 22:10:07 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 02/15] aoe: add error handling support for add_disk()
-Date:   Mon, 30 Aug 2021 15:09:47 -0700
-Message-Id: <20210830221000.179369-3-mcgrof@kernel.org>
+Subject: [PATCH 03/15] m68k/emu/nfblock: add error handling support for add_disk()
+Date:   Mon, 30 Aug 2021 15:09:48 -0700
+Message-Id: <20210830221000.179369-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210830221000.179369-1-mcgrof@kernel.org>
 References: <20210830221000.179369-1-mcgrof@kernel.org>
@@ -58,33 +58,44 @@ error handling.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/aoe/aoeblk.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/m68k/emu/nfblock.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
-index 06b360f7123a..e436b0e8eff5 100644
---- a/drivers/block/aoe/aoeblk.c
-+++ b/drivers/block/aoe/aoeblk.c
-@@ -417,7 +417,9 @@ aoeblk_gdalloc(void *vp)
+diff --git a/arch/m68k/emu/nfblock.c b/arch/m68k/emu/nfblock.c
+index 9a8394e96388..4de5a6087034 100644
+--- a/arch/m68k/emu/nfblock.c
++++ b/arch/m68k/emu/nfblock.c
+@@ -100,6 +100,7 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
+ {
+ 	struct nfhd_device *dev;
+ 	int dev_id = id - NFHD_DEV_OFFSET;
++	int err = -ENOMEM;
  
- 	spin_unlock_irqrestore(&d->lock, flags);
- 
--	device_add_disk(NULL, gd, aoe_attr_groups);
-+	err = device_add_disk(NULL, gd, aoe_attr_groups);
+ 	pr_info("nfhd%u: found device with %u blocks (%u bytes)\n", dev_id,
+ 		blocks, bsize);
+@@ -130,16 +131,20 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
+ 	sprintf(dev->disk->disk_name, "nfhd%u", dev_id);
+ 	set_capacity(dev->disk, (sector_t)blocks * (bsize / 512));
+ 	blk_queue_logical_block_size(dev->disk->queue, bsize);
+-	add_disk(dev->disk);
++	err = add_disk(dev->disk);
 +	if (err)
-+		goto out_disk_cleanup;
- 	aoedisk_add_debugfs(d);
++		goto out_cleanup_disk;
  
- 	spin_lock_irqsave(&d->lock, flags);
-@@ -426,6 +428,8 @@ aoeblk_gdalloc(void *vp)
- 	spin_unlock_irqrestore(&d->lock, flags);
- 	return;
+ 	list_add_tail(&dev->list, &nfhd_list);
  
-+out_disk_cleanup:
-+	blk_cleanup_disk(gd);
- err_tagset:
- 	blk_mq_free_tag_set(set);
- err_mempool:
+ 	return 0;
+ 
++out_cleanup_disk:
++	blk_cleanup_disk(dev->disk);
+ free_dev:
+ 	kfree(dev);
+ out:
+-	return -ENOMEM;
++	return err;
+ }
+ 
+ static int __init nfhd_init(void)
 -- 
 2.30.2
 
