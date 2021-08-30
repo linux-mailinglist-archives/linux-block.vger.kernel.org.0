@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BB513FB545
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 14:08:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C6C3FB549
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 14:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237032AbhH3MCq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 08:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50264 "EHLO mail.kernel.org"
+        id S237269AbhH3MCs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 08:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237070AbhH3MBy (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 08:01:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E056D61131;
-        Mon, 30 Aug 2021 12:00:59 +0000 (UTC)
+        id S237098AbhH3MB7 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 30 Aug 2021 08:01:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DD5D6103C;
+        Mon, 30 Aug 2021 12:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630324860;
-        bh=7DcOuY0O7gWl9b7yzExv33fKZSCdPDnTi+RIBRHA8Og=;
+        s=k20201202; t=1630324865;
+        bh=iXpu1rZYqTQ8qW3DgHWk59bPPAIlagU1NrgtNKQ30MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHuBpLzzDGqP3XRBKyn0Qq4hZ+BhIg73myOVyPLi+1KtjzKF1kIf8zYrQTEbx6bTe
-         Mo7YjpfLlPGsEhzvCdEKFSEsfCkiUMvPQIn2oMMlQfE7GszCJziveAJPU0TZQe0OCo
-         PKpA2586cuqF7cLmXpM/BfUlJ9Zc/yHo64TPzbRU63UTlEMBAg+v9MLdF5cWGQz6et
-         UI4YbiZk3jMk/vxghJ8+mpHquxhC3xIWlk2dfJ8HwyHnF010Lo4WF+bzV1QvyVWToo
-         fVh5Z+G7fz8/e0Ku0zlmLgD5n1hqAE7cJ4wVtlOvMVuXyFEG+rK13LR2+OZPR4H3/H
-         C3dV8O6YN5OLw==
+        b=ptyf8xsUGPuvcRUuD1pajKORBWl8CNEfq7UiAUvrCoi5jBR35XDJiBxQM7mMnfTtG
+         PJsMJmocBezBxzkH2Fk4lJjhU6Bw/52CE1P+zEyUpedUz/hvLxhutLKBb24DG4YlYw
+         MulSfFAj74W+qUwZCfMvX1PunkVnqm5/Vb1dlZIdfNYUyiFBf57tKAoPn+coF57yve
+         zSJb9pwB/ii31goBb9AadHV4Ic/8c/YPZr9gGz5ulRZsu2kuywDpnDLMoH3YliIXOf
+         5rpdp1POJoQvNPxB7i6ubLxHwErk1Bp8UGPwNVDveC0E8XxanxgWQPZmwUrOVKu/DX
+         BqpFf8NkfV/mg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 5/5] cryptoloop: add a deprecation warning
-Date:   Mon, 30 Aug 2021 08:00:53 -0400
-Message-Id: <20210830120053.1018205-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 3/3] cryptoloop: add a deprecation warning
+Date:   Mon, 30 Aug 2021 08:01:01 -0400
+Message-Id: <20210830120101.1018298-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210830120053.1018205-1-sashal@kernel.org>
-References: <20210830120053.1018205-1-sashal@kernel.org>
+In-Reply-To: <20210830120101.1018298-1-sashal@kernel.org>
+References: <20210830120101.1018298-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 894102fd5a06..b701c79f07e5 100644
+index c794e215ea3d..324abc8d53fa 100644
 --- a/drivers/block/Kconfig
 +++ b/drivers/block/Kconfig
-@@ -257,7 +257,7 @@ config BLK_DEV_LOOP_MIN_COUNT
+@@ -267,7 +267,7 @@ config BLK_DEV_LOOP_MIN_COUNT
  	  dynamically allocated with the /dev/loop-control interface.
  
  config BLK_DEV_CRYPTOLOOP
@@ -73,7 +73,7 @@ index 894102fd5a06..b701c79f07e5 100644
  	select CRYPTO
  	select CRYPTO_CBC
  	depends on BLK_DEV_LOOP
-@@ -269,7 +269,7 @@ config BLK_DEV_CRYPTOLOOP
+@@ -279,7 +279,7 @@ config BLK_DEV_CRYPTOLOOP
  	  WARNING: This device is not safe for journaled file systems like
  	  ext3 or Reiserfs. Please use the Device Mapper crypto module
  	  instead, which can be configured to be on-disk compatible with the
@@ -83,10 +83,10 @@ index 894102fd5a06..b701c79f07e5 100644
  source "drivers/block/drbd/Kconfig"
  
 diff --git a/drivers/block/cryptoloop.c b/drivers/block/cryptoloop.c
-index 3d31761c0ed0..adbfd3e2a60f 100644
+index 99e773cb70d0..d3d1f24ca7a3 100644
 --- a/drivers/block/cryptoloop.c
 +++ b/drivers/block/cryptoloop.c
-@@ -203,6 +203,8 @@ init_cryptoloop(void)
+@@ -201,6 +201,8 @@ init_cryptoloop(void)
  
  	if (rc)
  		printk(KERN_ERR "cryptoloop: loop_register_transfer failed\n");
