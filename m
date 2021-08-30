@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6CC3FBE2E
-	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 722D03FBE1E
+	for <lists+linux-block@lfdr.de>; Mon, 30 Aug 2021 23:26:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238013AbhH3V1f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 Aug 2021 17:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        id S238018AbhH3V1N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 Aug 2021 17:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237685AbhH3V1I (ORCPT
+        with ESMTP id S237560AbhH3V1E (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 Aug 2021 17:27:08 -0400
+        Mon, 30 Aug 2021 17:27:04 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C43C061796;
-        Mon, 30 Aug 2021 14:26:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8AEC06175F;
+        Mon, 30 Aug 2021 14:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=1YUk7uUX188ex4Qeqb2q2FbA+vqSeistafw96wSb9q8=; b=lEZUf7GgHMbX1+8gRrsrsvmyDn
-        I+l8qrzbBpIWozAGTLTsWh0ax350SK798hajnAmKrtIYwcj70N+TaMp/HanMyyRUp054bd1I72PoR
-        tx8Hq7NMaNET0LOlyYCx0TsGyJCTqk6w1OvYvpXbRKuuMRQd2pUNw7KlIMpg2IIjBZ+zvhlvLDIXl
-        uJ3BiUfzRZCBBpNJqKtyJRWmGjjAIWHZWiJAynl3xGzd17VZHRg2LRBXRyRNRBZ7p564JgTHzY+67
-        cukqYn6bVuTsu0iduaOcSEpdZaD/+3zQZbDczNcUC1Z4qd2F8DLoqpMTdUu6EcUbL56xrdqtLrnTN
-        YcfMXpzQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=+F5KOCzrXZghph/UppvQA2s1yRYbitmFgtgTDMNdZxo=; b=g6G7Q57H2FAHUqlaR9L+v6sDB0
+        WE9LESzO2ktJT4CDHl8/4lFV51UGHuWalXLANrTNskdjVAqbLeQcZ8MBM5huy4kZfbPTguKAY39AU
+        zdgPFPVylW1iwCJY7LzzerYbclaC6mmBMfy+P8iZQ60pvo9t9fGi0oi+6sjeVz0vgJPxSWDfhZGew
+        sd1RgARv+3wiYSr0ck6H0gtcFHWli8BiKHnTzw96sYEeXf0zgG+LAVDRvKxFG5Zt/B49B0GXm/O5b
+        UPQYep4J2WSaDfiUeDgADxGkQmW71/HwXOmaPiU9LFTGiUhjnCkokGhH3pcKcJCXtuylp79lQqqHP
+        3AfVdnNw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mKomk-000ci4-DU; Mon, 30 Aug 2021 21:25:42 +0000
+        id 1mKomk-000ci6-Fs; Mon, 30 Aug 2021 21:25:42 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -38,11 +38,14 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-nvme@lists.infradead.org, linux-mmc@vger.kernel.org,
         dm-devel@redhat.com, nbd@other.debian.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v3 0/8] block: first batch of add_disk() error handling conversions
-Date:   Mon, 30 Aug 2021 14:25:30 -0700
-Message-Id: <20210830212538.148729-1-mcgrof@kernel.org>
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3 1/8] scsi/sd: add error handling support for add_disk()
+Date:   Mon, 30 Aug 2021 14:25:31 -0700
+Message-Id: <20210830212538.148729-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210830212538.148729-1-mcgrof@kernel.org>
+References: <20210830212538.148729-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
@@ -50,43 +53,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Jens,
+We never checked for errors on add_disk() as this function
+returned void. Now that this is fixed, use the shiny new
+error handling.
 
-I think this first set is ready, but pending review of just two patches:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/scsi/sd.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-  * mmc/core/block
-  * dm
-
-All other patches have a respective Reviewed-by tag. The above two
-patches were integrated back into the series once I understood
-Christoph's concerns, and adjusted the patch as such.
-
-This goes rebased onto your for-next as of today. If anyone wants to
-explore the pending full set this is up on my linux-next branch
-20210830-for-axboe-add-disk-error-handling-next [0].
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210830-for-axboe-add-disk-error-handling-next
-
-Luis Chamberlain (8):
-  scsi/sd: add error handling support for add_disk()
-  scsi/sr: add error handling support for add_disk()
-  nvme: add error handling support for add_disk()
-  mmc/core/block: add error handling support for add_disk()
-  md: add error handling support for add_disk()
-  dm: add add_disk() error handling
-  loop: add error handling support for add_disk()
-  nbd: add error handling support for add_disk()
-
- drivers/block/loop.c     | 9 ++++++++-
- drivers/block/nbd.c      | 6 +++++-
- drivers/md/dm.c          | 4 +++-
- drivers/md/md.c          | 7 ++++++-
- drivers/mmc/core/block.c | 7 ++++++-
- drivers/nvme/host/core.c | 9 ++++++++-
- drivers/scsi/sd.c        | 6 +++++-
- drivers/scsi/sr.c        | 5 ++++-
- 8 files changed, 45 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 610ebba0d66e..8c1273fff23e 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3487,7 +3487,11 @@ static int sd_probe(struct device *dev)
+ 		pm_runtime_set_autosuspend_delay(dev,
+ 			sdp->host->hostt->rpm_autosuspend_delay);
+ 	}
+-	device_add_disk(dev, gd, NULL);
++
++	error = device_add_disk(dev, gd, NULL);
++	if (error)
++		goto out_free_index;
++
+ 	if (sdkp->capacity)
+ 		sd_dif_config_host(sdkp);
+ 
 -- 
 2.30.2
 
