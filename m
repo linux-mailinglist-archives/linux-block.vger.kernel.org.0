@@ -2,167 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E68B340070E
-	for <lists+linux-block@lfdr.de>; Fri,  3 Sep 2021 22:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55317400912
+	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351012AbhICUrS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Sep 2021 16:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41524 "EHLO
+        id S1350748AbhIDBgu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Sep 2021 21:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351048AbhICUrO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 16:47:14 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D380C061575;
-        Fri,  3 Sep 2021 13:46:12 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id h133so673379oib.7;
-        Fri, 03 Sep 2021 13:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6RxZPutweWrWoAFf03RV/RX9kRQZgKxHijlvrwy4xeA=;
-        b=RgPP6Ox8lfChSOGOvKCshakVU8K42fiVf9AekVvRd+sls6YR9BWYOJ+QnHFvLtCbUc
-         dTp3QoWjxs673/bsgaCYI017mIXxfw+Gyt+lveYDg1Q+r781kFq9zYR/EIwtWn9NXVlU
-         LhL8oIFMmsmoTliD/nwOy3xx/kXd7O3pIhX/YkHjTd7UMXS6KZPNXyPEzfRFufCyjY2f
-         HfuabWsWmYWjAFYMEEIgru67GE0vlvLvkcp4t9pYZHZ9CU4cyFBAbDocmbsf2acXLdaW
-         hwOgBKbuplFY2AEvr9tD8Dj9vF3bD/Yq3pL1mLNPJfGnD/i/3gVL2ZOfIlRZlMqRZUW/
-         TL1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6RxZPutweWrWoAFf03RV/RX9kRQZgKxHijlvrwy4xeA=;
-        b=IQwzDF23iYvXN7x1uxrszURvoBLLvHQOMRUIVC1+Jx4W/l/h8/9LBRrJpIjbJubj4Q
-         rDiVkEjS5rJYzwZo66JO1HhY40N8GoVLwvlzZ1HWbqc3lc2rKkuLOvnhzylxMMGJB4N9
-         Ic+sPpMSHEhEpxWPxJE9i2fLiv7J96HxFF1ZVCZOVc3l3+AyGt0Wm/N5A+zqnaAnvAg7
-         vcRLZAMZuu6dqLZ6K8lMdKE927Id1C6eOjpxC99rFiWWCMRE4UZmblPU9dl9K0ofI4vV
-         vNR1SB4iHZyrV5QIfyAOqxa/WoTsKhvb/EDeqTfj6ZDtaBKnTA8TxI47oiBfK3ukI6gh
-         G3qw==
-X-Gm-Message-State: AOAM532FjmSAOejPHHlOqPquVUiDcVxMri5CctzIG9HTGXlUsa03zhRm
-        Cs0g4dCUvR+/XIO31w4tGx4=
-X-Google-Smtp-Source: ABdhPJyX1DP4KjospELGfmNuC3H0LsiPs0SiUM4J8LnFz91opZoawTlnBvfOqwgEOVpLq7a95+oUaA==
-X-Received: by 2002:a05:6808:1911:: with SMTP id bf17mr536077oib.91.1630701971737;
-        Fri, 03 Sep 2021 13:46:11 -0700 (PDT)
-Received: from ian.penurio.us ([47.184.51.90])
-        by smtp.gmail.com with ESMTPSA id be5sm90023oib.10.2021.09.03.13.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 13:46:11 -0700 (PDT)
-From:   Ian Pilcher <arequipeno@gmail.com>
-To:     axboe@kernel.dk, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-block@vger.kernel.org,
-        linux@vger.kernel.org, gregkh@linuxfoundation.org, kabel@kernel.org
-Subject: [PATCH 18/18] ledtrig-blkdev: Add initialization & exit functions
-Date:   Fri,  3 Sep 2021 15:45:48 -0500
-Message-Id: <20210903204548.2745354-19-arequipeno@gmail.com>
+        with ESMTP id S1350923AbhIDBgq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:46 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D281C0613CF;
+        Fri,  3 Sep 2021 18:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=cGJBDDMa+wCOTAoBx2X4rM3BSK+QMBxNlmwyNZGWrto=; b=4g05rU+dRwu1uN1G9hh4EJRgnO
+        iK78qlSSGnVyujAe2wLb0Jnefjju/4YaE4KOKtj5Cn1RMRt8uRE9one/i3jZJC1cTTdLm8w/1Tq2P
+        Ebys9YL/JtluXvqgz0+pSHRzpErvfO2OfzFheLKrVT/ReVinzeaoXWjCbRIzWACUuXVhYDyCMCXc7
+        asS40hNzAmO/oIBu9A57VlO47SKIfNeVh86cxfmKwWak1zY3sdCK3P3toPUSz4nlku46fIUGT1sZ3
+        P+H/bxv0I+PJLuFMexCactUxvd5+VSh9RgmQ3vYVHGemzIlsv4pNg987/VZgRaHe4U+d2x1OEwcEn
+        NhX4MoLQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mMKan-00DLb0-2p; Sat, 04 Sep 2021 01:35:37 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 00/14] block: 6th batch of add_disk() error handling conversions
+Date:   Fri,  3 Sep 2021 18:35:22 -0700
+Message-Id: <20210904013536.3181237-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210903204548.2745354-1-arequipeno@gmail.com>
-References: <20210903204548.2745354-1-arequipeno@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Init function:
- * Initialize interval (convert default value to jiffies)
- * Initialize __ledtrig_blkdev_disk_cleanup function pointer
- * Register the block device LED trigger
+This is the 6th of 7 batch of driver conversions over to use the
+new add_disk() error handling. This series addresses the wonderful
+and extremely exciting world of floppy drivers. You can find the full
+set of my patches on my 20210901-for-axboe-add-disk-error-handling
+branch [0]. This is based on axboe/master.
 
-Exit functioon:
- * Unregister the LED trigger
- * Set __ledtrig_blkdev_disk_cleanup back to NULL
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210901-for-axboe-add-disk-error-handling
 
-Signed-off-by: Ian Pilcher <arequipeno@gmail.com>
----
- drivers/leds/trigger/ledtrig-blkdev.c | 78 +++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Luis Chamberlain (14):
+  block/swim3: add error handling support for add_disk()
+  floppy: fix add_disk() assumption on exit due to new developments
+  floppy: use blk_cleanup_disk()
+  floppy: fix calling platform_device_unregister() on invalid drives
+  floppy: add error handling support for add_disk()
+  amiflop: add error handling support for add_disk()
+  swim: simplify using blk_cleanup_disk() on swim_remove()
+  swim: add helper for disk cleanup
+  swim: add a floppy registration bool which triggers del_gendisk()
+  swim: add error handling support for add_disk()
+  block/ataflop: use the blk_cleanup_disk() helper
+  block/ataflop: add registration bool before calling del_gendisk()
+  block/ataflop: provide a helper for cleanup up an atari disk
+  block/ataflop add error handling support for add_disk()
 
-diff --git a/drivers/leds/trigger/ledtrig-blkdev.c b/drivers/leds/trigger/ledtrig-blkdev.c
-index ec167633e329..e6ff5baada2e 100644
---- a/drivers/leds/trigger/ledtrig-blkdev.c
-+++ b/drivers/leds/trigger/ledtrig-blkdev.c
-@@ -687,3 +687,81 @@ static ssize_t blkdev_mode_store(struct device *const dev,
- 
- static struct device_attribute ledtrig_blkdev_attr_mode =
- 	__ATTR(mode, 0644, blkdev_mode_show, blkdev_mode_store);
-+
-+
-+/*
-+ *
-+ *	Initialization - register the trigger
-+ *
-+ */
-+
-+static struct attribute *ledtrig_blkdev_attrs[] = {
-+	&ledtrig_blkdev_attr_add.attr,
-+	&ledtrig_blkdev_attr_del.attr,
-+	&ledtrig_blkdev_attr_blink_time.attr,
-+	&ledtrig_blkdev_attr_interval.attr,
-+	&ledtrig_blkdev_attr_mode.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group ledtrig_blkdev_attr_group = {
-+	.attrs	= ledtrig_blkdev_attrs,
-+};
-+
-+static const struct attribute_group *ledtrig_blkdev_attr_groups[] = {
-+	&ledtrig_blkdev_attr_group,
-+	NULL
-+};
-+
-+static struct led_trigger ledtrig_blkdev_trigger = {
-+	.name		= "blkdev",
-+	.activate	= blkdev_activate,
-+	.deactivate	= blkdev_deactivate,
-+	.groups		= ledtrig_blkdev_attr_groups,
-+};
-+
-+static int __init blkdev_init(void)
-+{
-+	int ret;
-+
-+	ret = mutex_lock_interruptible(&ledtrig_blkdev_mutex);
-+	if (ret != 0)
-+		return ret;
-+
-+	ledtrig_blkdev_interval = msecs_to_jiffies(LEDTRIG_BLKDEV_INTERVAL);
-+	__ledtrig_blkdev_disk_cleanup = blkdev_disk_cleanup;
-+
-+	/*
-+	 * Can't call led_trigger_register() with ledtrig_blkdev_mutex locked.
-+	 * If an LED has blkdev as its default_trigger, blkdev_activate() will
-+	 * be called for that LED, and it will try to lock the mutex, which will
-+	 * hang.
-+	 */
-+	mutex_unlock(&ledtrig_blkdev_mutex);
-+
-+	ret = led_trigger_register(&ledtrig_blkdev_trigger);
-+	if (ret != 0) {
-+		mutex_lock(&ledtrig_blkdev_mutex);
-+		__ledtrig_blkdev_disk_cleanup = NULL;
-+		mutex_unlock(&ledtrig_blkdev_mutex);
-+	}
-+
-+	return ret;
-+}
-+module_init(blkdev_init);
-+
-+static void __exit blkdev_exit(void)
-+{
-+	mutex_lock(&ledtrig_blkdev_mutex);
-+
-+	/*
-+	 * It's OK to call led_trigger_unregister() with the mutex locked,
-+	 * because the module can only be unloaded when no LEDs are using
-+	 * the blkdev trigger, so blkdev_deactivate() won't be called.
-+	 */
-+	led_trigger_unregister(&ledtrig_blkdev_trigger);
-+	__ledtrig_blkdev_disk_cleanup = NULL;
-+
-+	mutex_unlock(&ledtrig_blkdev_mutex);
-+}
-+module_exit(blkdev_exit);
+ drivers/block/amiflop.c |  7 ++++--
+ drivers/block/ataflop.c | 47 +++++++++++++++++++++++++----------------
+ drivers/block/floppy.c  | 34 +++++++++++------------------
+ drivers/block/swim.c    | 35 ++++++++++++++++++------------
+ drivers/block/swim3.c   |  4 +++-
+ 5 files changed, 71 insertions(+), 56 deletions(-)
+
 -- 
-2.31.1
+2.30.2
 
