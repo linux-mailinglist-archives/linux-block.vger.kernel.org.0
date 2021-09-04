@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C732400911
-	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 327DB400909
+	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350924AbhIDBgt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Sep 2021 21:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49542 "EHLO
+        id S1350900AbhIDBgn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Sep 2021 21:36:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236159AbhIDBgq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BBB4C0613C1;
-        Fri,  3 Sep 2021 18:35:46 -0700 (PDT)
+        with ESMTP id S1350858AbhIDBgk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:40 -0400
+Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6F2C061796;
+        Fri,  3 Sep 2021 18:35:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=12aNYf4JHxFW0Gi214P/st+WALXaltwzcvDZhKyLh8I=; b=FPOWeGVKUS/k/kr28P8eDjlGn4
-        MI6u+YFqxLqfFYrzGzkc6Hp9+AzRx7OtMbOa9eaR/vFBMLoa4ynlM0ajK5yF8R2QySie2qLp7YRpJ
-        x+OofyYmUMmUzM7ICnvhwqvarL16VSHHzJhw2A5ccjMRuqFerfjqwm+cjcJSOmEM5AQod+pEKfXY/
-        XyStaO+gduFSMC6m/1uNRGP8V8GmRdzvfus/1kFCLkVwlXNImlQzks/gRgmHewdMYTQ2H2DjaxhiV
-        uh9oD2RI9oD6ARt4xJhxyfluq78Ff/5XlhGLTy8QLeer/a0JZa9DSSUd90laus9N4CdtWd6cy5M8y
-        M4WnDIzQ==;
+        bh=zFQJLYbD2Zgj6Ir3zIPXJ5PGzNwoNjONV8OHW6B6xJ8=; b=vIKe4HVbrcGJe+O/Aumba1wMJN
+        kBF94W+KOj19IeRhhO/2sdeA1g7aHn3m4C9d15IGuY2OTjQ/jSf4wDeK+tCF3xbboWdiePp0ccoDD
+        MVznM5UDVyVSY52xeJJ3Bavq8m1pXLvSwKrWN5ITz0jg4gqI+ve8bqHg1tkEJtyE9JosnYHwyhH7W
+        1cPplJfMtWmAIFwbRG+9uMrvGh7GFb8Gl1MzRBhh8CPwycBK0xMiOpVbg91tUCB5H/DHViiwLAhhW
+        G+JZlkFnkUpJTWEikIDRz89LJdTd4dvt69AikhLSDKZ5SyBgpUdjpCsc4mkKRfykoKJHG6zJA3TBp
+        qdqx66Ug==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mMKan-00DLbF-IG; Sat, 04 Sep 2021 01:35:37 +0000
+        id 1mMKan-00DLbH-JX; Sat, 04 Sep 2021 01:35:37 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 07/14] swim: simplify using blk_cleanup_disk() on swim_remove()
-Date:   Fri,  3 Sep 2021 18:35:29 -0700
-Message-Id: <20210904013536.3181237-8-mcgrof@kernel.org>
+Subject: [PATCH 08/14] swim: add helper for disk cleanup
+Date:   Fri,  3 Sep 2021 18:35:30 -0700
+Message-Id: <20210904013536.3181237-9-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210904013536.3181237-1-mcgrof@kernel.org>
 References: <20210904013536.3181237-1-mcgrof@kernel.org>
@@ -43,26 +43,62 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We can simplify swim_remove() by using one call instead of two,
-just as other drivers do. Use that pattern.
+Disk cleanup can be shared between exit and bringup. Use a
+helper to do the work required. The only functional change at
+this point is we're being overly paraoid on exit to check for
+a null disk as well now, and this should be safe.
+
+We'll later expand on this, this change just makes subsequent
+changes easier to read.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/swim.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/swim.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/block/swim.c b/drivers/block/swim.c
-index 7ccc8d2a41bc..f085ea982bb7 100644
+index f085ea982bb7..3deb9d9a59c0 100644
 --- a/drivers/block/swim.c
 +++ b/drivers/block/swim.c
-@@ -911,9 +911,8 @@ static int swim_remove(struct platform_device *dev)
+@@ -771,6 +771,17 @@ static const struct blk_mq_ops swim_mq_ops = {
+ 	.queue_rq = swim_queue_rq,
+ };
+ 
++static void swim_cleanup_floppy_disk(struct floppy_state *fs)
++{
++	struct gendisk *disk = fs->disk;
++
++	if (!disk)
++		return;
++
++	blk_cleanup_disk(disk);
++	blk_mq_free_tag_set(&fs->tag_set);
++}
++
+ static int swim_floppy_init(struct swim_priv *swd)
+ {
+ 	int err;
+@@ -835,12 +846,7 @@ static int swim_floppy_init(struct swim_priv *swd)
+ exit_put_disks:
+ 	unregister_blkdev(FLOPPY_MAJOR, "fd");
+ 	do {
+-		struct gendisk *disk = swd->unit[drive].disk;
+-
+-		if (!disk)
+-			continue;
+-		blk_cleanup_disk(disk);
+-		blk_mq_free_tag_set(&swd->unit[drive].tag_set);
++		swim_cleanup_floppy_disk(&swd->unit[drive]);
+ 	} while (drive--);
+ 	return err;
+ }
+@@ -911,8 +917,7 @@ static int swim_remove(struct platform_device *dev)
  
  	for (drive = 0; drive < swd->floppy_count; drive++) {
  		del_gendisk(swd->unit[drive].disk);
--		blk_cleanup_queue(swd->unit[drive].disk->queue);
-+		blk_cleanup_disk(swd->unit[drive].disk);
- 		blk_mq_free_tag_set(&swd->unit[drive].tag_set);
--		put_disk(swd->unit[drive].disk);
+-		blk_cleanup_disk(swd->unit[drive].disk);
+-		blk_mq_free_tag_set(&swd->unit[drive].tag_set);
++		swim_cleanup_floppy_disk(&swd->unit[drive]);
  	}
  
  	unregister_blkdev(FLOPPY_MAJOR, "fd");
