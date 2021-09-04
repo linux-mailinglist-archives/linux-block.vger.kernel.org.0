@@ -2,38 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55317400912
-	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6492A40090C
+	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350748AbhIDBgu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Sep 2021 21:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
+        id S1350908AbhIDBgo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Sep 2021 21:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350923AbhIDBgq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D281C0613CF;
-        Fri,  3 Sep 2021 18:35:46 -0700 (PDT)
+        with ESMTP id S1350862AbhIDBgk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:40 -0400
+Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7ABC06179A;
+        Fri,  3 Sep 2021 18:35:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=cGJBDDMa+wCOTAoBx2X4rM3BSK+QMBxNlmwyNZGWrto=; b=4g05rU+dRwu1uN1G9hh4EJRgnO
-        iK78qlSSGnVyujAe2wLb0Jnefjju/4YaE4KOKtj5Cn1RMRt8uRE9one/i3jZJC1cTTdLm8w/1Tq2P
-        Ebys9YL/JtluXvqgz0+pSHRzpErvfO2OfzFheLKrVT/ReVinzeaoXWjCbRIzWACUuXVhYDyCMCXc7
-        asS40hNzAmO/oIBu9A57VlO47SKIfNeVh86cxfmKwWak1zY3sdCK3P3toPUSz4nlku46fIUGT1sZ3
-        P+H/bxv0I+PJLuFMexCactUxvd5+VSh9RgmQ3vYVHGemzIlsv4pNg987/VZgRaHe4U+d2x1OEwcEn
-        NhX4MoLQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=/Fh2lmOhLx61pNto8wOBpgjdx63cIFvAcZhSgHtAR7M=; b=WUi0DvwaN8T0Mb6sSB6PaZUIGw
+        vWuDGJuqwxCs3Kiku9KDVW1bKllnY5huKdYl6qSNSE+dR6X8djndvvLupIPKhMscN41u4vcE+mLMJ
+        RHOqKLhOIkNG07siin3mCNqe/noEDkSqBK7oulAzSLMS2yWA66Jx0USyv0FjS9JXQlZNm4eA56JfT
+        uHUQdZj1idszhSKUchlgYydVRC2XJoOQgRYBS+T3GeFq2g57IPFxwq1RZenv69xykp+oJZMuThmIW
+        ty0Q4gfqg2u4TO1O8/mzCzPKzINiD2RJA+f5JLZF1wJp5lz1/OAokTOA5y/4YQLbMKAzBF1YcLwNt
+        Yepalabw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mMKan-00DLb0-2p; Sat, 04 Sep 2021 01:35:37 +0000
+        id 1mMKan-00DLb2-56; Sat, 04 Sep 2021 01:35:37 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 00/14] block: 6th batch of add_disk() error handling conversions
-Date:   Fri,  3 Sep 2021 18:35:22 -0700
-Message-Id: <20210904013536.3181237-1-mcgrof@kernel.org>
+Subject: [PATCH 01/14] block/swim3: add error handling support for add_disk()
+Date:   Fri,  3 Sep 2021 18:35:23 -0700
+Message-Id: <20210904013536.3181237-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210904013536.3181237-1-mcgrof@kernel.org>
+References: <20210904013536.3181237-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
@@ -41,37 +43,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is the 6th of 7 batch of driver conversions over to use the
-new add_disk() error handling. This series addresses the wonderful
-and extremely exciting world of floppy drivers. You can find the full
-set of my patches on my 20210901-for-axboe-add-disk-error-handling
-branch [0]. This is based on axboe/master.
+We never checked for errors on add_disk() as this function
+returned void. Now that this is fixed, use the shiny new
+error handling.
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210901-for-axboe-add-disk-error-handling
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/block/swim3.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Luis Chamberlain (14):
-  block/swim3: add error handling support for add_disk()
-  floppy: fix add_disk() assumption on exit due to new developments
-  floppy: use blk_cleanup_disk()
-  floppy: fix calling platform_device_unregister() on invalid drives
-  floppy: add error handling support for add_disk()
-  amiflop: add error handling support for add_disk()
-  swim: simplify using blk_cleanup_disk() on swim_remove()
-  swim: add helper for disk cleanup
-  swim: add a floppy registration bool which triggers del_gendisk()
-  swim: add error handling support for add_disk()
-  block/ataflop: use the blk_cleanup_disk() helper
-  block/ataflop: add registration bool before calling del_gendisk()
-  block/ataflop: provide a helper for cleanup up an atari disk
-  block/ataflop add error handling support for add_disk()
-
- drivers/block/amiflop.c |  7 ++++--
- drivers/block/ataflop.c | 47 +++++++++++++++++++++++++----------------
- drivers/block/floppy.c  | 34 +++++++++++------------------
- drivers/block/swim.c    | 35 ++++++++++++++++++------------
- drivers/block/swim3.c   |  4 +++-
- 5 files changed, 71 insertions(+), 56 deletions(-)
-
+diff --git a/drivers/block/swim3.c b/drivers/block/swim3.c
+index 965af0a3e95b..f7e3482e846b 100644
+--- a/drivers/block/swim3.c
++++ b/drivers/block/swim3.c
+@@ -1229,7 +1229,9 @@ static int swim3_attach(struct macio_dev *mdev,
+ 	disk->flags |= GENHD_FL_REMOVABLE;
+ 	sprintf(disk->disk_name, "fd%d", floppy_count);
+ 	set_capacity(disk, 2880);
+-	add_disk(disk);
++	rc = add_disk(disk);
++	if (rc)
++		goto out_cleanup_disk;
+ 
+ 	disks[floppy_count++] = disk;
+ 	return 0;
 -- 
 2.30.2
 
