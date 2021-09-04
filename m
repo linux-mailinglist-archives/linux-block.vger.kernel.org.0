@@ -2,40 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8C940090F
-	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7CA40091F
+	for <lists+linux-block@lfdr.de>; Sat,  4 Sep 2021 03:56:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350928AbhIDBgr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Sep 2021 21:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
+        id S1351009AbhIDBkn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Sep 2021 21:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350922AbhIDBgq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:36:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B204C061764;
-        Fri,  3 Sep 2021 18:35:46 -0700 (PDT)
+        with ESMTP id S1351014AbhIDBkm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Sep 2021 21:40:42 -0400
+Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4B1C061575;
+        Fri,  3 Sep 2021 18:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=4imHp2CJ0meb7xhuvqWowaDJhq/kim8sGOgKxWzbOuY=; b=rsWDM6q7QeXdE2aNmyfdcVAIQa
-        kX1s1sl5PHieDOsF/uCBzFE2i27dLAOT57UmA7RdhyKQbP619LigOi6i4FAJvB/z5nQFoF4mcl/mv
-        YZRMrUmEgosi7P/06kMfThxtaQbVEl9XzN1F62M/vqliF8TcWNN3BRL9xT99RXa58IklDX2aQ3fjc
-        x2hbpZrg/cQf9mlfO25zbypVVJrBU5IuDsEQRjbyg2fd17GY+/xq/Vv+OsfnDiK+JXU876HWewXZd
-        6yRbvc88G7pmblFoRrnQ+LT6p8j7K/onrgxgcvUJ8W85OwWBBhuwLEsCz+6ypSoFveeIB6+pNJOec
-        Qff1MkRQ==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=TQ80OKAWeIbCJBkkv2wko3z0JghBDWZldcKGy2+/JtU=; b=YVIKUi+7CrVfLqKI9PLwSgdSev
+        JNLbK12ZAtZ96F7k3Dst6M0nucVGxz9HnoUVmByGsxtH2TSA+xKUDTCEggs7lTG9sPfBfHJfDQ3kV
+        iXt56Oc3YUrHM8lSudbyOpbNt/vMZYprGyVKrNsZVYt26lAh4JTZKTCUwXR9ezdoqiZPeZ+/tvGPP
+        1qkknba3VlFkhoUa7CYCiHKjq17V3BcfUVTiu9j4myKPJogUeyo1EzIzfdJJC4HoU4QBHArsyAAwy
+        +bJozZrXbIhmagg6/rh4IkZRGyuSnp+HpYoEERg+Oi/aY5b2sHBj1OZl+DKv3KijxBv8EB91o2E66
+        /oHRwPVQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mMKan-00DLbT-RT; Sat, 04 Sep 2021 01:35:37 +0000
+        id 1mMKeb-00DLzr-2J; Sat, 04 Sep 2021 01:39:33 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 14/14] block/ataflop add error handling support for add_disk()
-Date:   Fri,  3 Sep 2021 18:35:36 -0700
-Message-Id: <20210904013536.3181237-15-mcgrof@kernel.org>
+To:     axboe@kernel.dk, hch@lst.de, efremov@linux.com, song@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, hare@suse.de, jack@suse.cz,
+        ming.lei@redhat.com, tj@kernel.org
+Cc:     linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 0/2] block: 7th -- last batch of add_disk() error handling conversions
+Date:   Fri,  3 Sep 2021 18:39:30 -0700
+Message-Id: <20210904013932.3182778-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210904013536.3181237-1-mcgrof@kernel.org>
-References: <20210904013536.3181237-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
@@ -43,39 +45,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We never checked for errors on add_disk() as this function
-returned void. Now that this is fixed, use the shiny new
-error handling.
+This is the 7th and final set of changes to convert all drivers over to
+use and finally enforce add_disk() error handling. This set deals with
+those old drivers using __register_blkdev() which in turn have a
+respective add_disk() call made. The last patch ensures we won't
+add new drivers without a check for the add_disk() call.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/block/ataflop.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+You can find the full set of patches on my kernel.org linux
+20210901-for-axboe-add-disk-error-handling branch [0] which is now based
+on axboe/master.
 
-diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
-index e9d874f51597..5dc9b3d32415 100644
---- a/drivers/block/ataflop.c
-+++ b/drivers/block/ataflop.c
-@@ -2081,7 +2081,9 @@ static int __init atari_floppy_init (void)
- 	for (i = 0; i < FD_MAX_UNITS; i++) {
- 		unit[i].track = -1;
- 		unit[i].flags = 0;
--		add_disk(unit[i].disk[0]);
-+		ret = add_disk(unit[i].disk[0]);
-+		if (ret)
-+			goto err_out_dma;
- 		unit[i].registered[0] = true;
- 	}
- 
-@@ -2092,6 +2094,8 @@ static int __init atari_floppy_init (void)
- 
- 	return 0;
- 
-+err_out_dma:
-+	atari_stram_free(DMABuffer);
- err:
- 	while (--i >= 0)
- 		atari_cleanup_floppy_disk(&unit[i]);
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210901-for-axboe-add-disk-error-handling
+
+Luis Chamberlain (2):
+  block: make __register_blkdev() return an error
+  block: add __must_check for *add_disk*() callers
+
+ block/genhd.c           | 21 ++++++++++++---------
+ drivers/block/ataflop.c | 20 +++++++++++++++-----
+ drivers/block/brd.c     |  7 +++++--
+ drivers/block/floppy.c  | 14 ++++++++++----
+ drivers/block/loop.c    |  6 +++---
+ drivers/md/md.c         | 10 +++++++---
+ drivers/scsi/sd.c       |  3 ++-
+ fs/block_dev.c          |  5 ++++-
+ include/linux/genhd.h   | 10 +++++-----
+ 9 files changed, 63 insertions(+), 33 deletions(-)
+
 -- 
 2.30.2
 
