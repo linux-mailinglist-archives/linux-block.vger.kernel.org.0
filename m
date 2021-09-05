@@ -2,92 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A8DE401131
-	for <lists+linux-block@lfdr.de>; Sun,  5 Sep 2021 20:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CDAB401188
+	for <lists+linux-block@lfdr.de>; Sun,  5 Sep 2021 22:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233368AbhIESn4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 5 Sep 2021 14:43:56 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55186 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232996AbhIESn4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Sep 2021 14:43:56 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 44D921C0B77; Sun,  5 Sep 2021 20:42:51 +0200 (CEST)
-Date:   Sun, 5 Sep 2021 20:42:50 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Ian Pilcher <arequipeno@gmail.com>
-Cc:     axboe@kernel.dk, linux-leds@vger.kernel.org,
-        linux-block@vger.kernel.org, gregkh@linuxfoundation.org,
-        kabel@kernel.org
-Subject: Re: [PATCH 01/18] docs: Add block device (blkdev) LED trigger
- documentation
-Message-ID: <20210905184250.GA9022@amd>
-References: <20210903204548.2745354-1-arequipeno@gmail.com>
- <20210903204548.2745354-2-arequipeno@gmail.com>
- <20210904062938.GA25286@amd>
- <63839834-d383-d224-8bbd-d37c6803a68f@gmail.com>
+        id S233951AbhIEUf4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 5 Sep 2021 16:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232840AbhIEUf4 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Sep 2021 16:35:56 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC3FC061757
+        for <linux-block@vger.kernel.org>; Sun,  5 Sep 2021 13:34:52 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id u19so6553977edb.3
+        for <linux-block@vger.kernel.org>; Sun, 05 Sep 2021 13:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=fhYagDyZEbvghQlMPcpjPyWXklxEmoFMJ6aqd0cjOvg=;
+        b=BlhFm35qNpzZtepHetrbJti6Nbhhh8lku1eTiLv3YMNtd+gUi/EI/j7dzcdHg4jdN8
+         wXHszSi8RGbNAxXe02uN9BYQg3PMfF2gM+GJHGeknsYMO9gUxAaFOrbTrqGi7IZscPGX
+         7SxPq7S9esxaBGgY6IHjTbS2qmvOYEvEcX9oZA7F0bJvm9/bXy1ZG0Dn1jWF27hgZac4
+         E33vz1RCMTeDEZyGWV8baTmIP/KeeM72kCj+ERcP4jugNRqdPVACymprpjrPHqgflUy3
+         93N3jEF16OAPwYXzmHuIh45+Hj2EAvu8H5zfs59Y46BX0ZhMwBRyMjCOP5nfxhjI+lJc
+         f09w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=fhYagDyZEbvghQlMPcpjPyWXklxEmoFMJ6aqd0cjOvg=;
+        b=bTF3+RlPaoLiC2fTGLik+5xO95NwyqSI5iLIJtrGUjRFfrfgAjFhVy3Q0WgbearIrc
+         YzlQjy4Y3CxrTDVB70ciCXKvRoAFLHbARI2y5ryn3YnkmoyiKUVli25dznt1IBWNC9qW
+         FGI/Zu1OLSs+Wut6TEUHe7qxPBc5s/smAa37bE26pA78C2OCANx6QV/WLnMmT/98G73p
+         D1q9be2ZG6Vgeif1ChAZgNIsG3I5bAXhBvnRnPi5mEIgYUZCRU2SBM7PKpjGxWbXzOd+
+         IFVbs6dwTjbbGPPO8tjl/VbnXE/w9kdYxdKAa5PKN7ldvXY4+BqQEL7QQKa0X5RZir36
+         9sXg==
+X-Gm-Message-State: AOAM5325MNqQutcS6YnCKRqknBvwL68a2xr46vbRAmO2nJUJvtiePwWX
+        1qCq4ZCroYv+TDF8GaZQmyIUO19PPbGveHzBtlo=
+X-Google-Smtp-Source: ABdhPJwsdcc1IxXfK9GYsO1ziyXt3Lzssfnj7kTSlcNR8KhcbbcxsASmklwhBzcUwfcBhwFkU3H37CUl5rJIb/tvQik=
+X-Received: by 2002:a05:6402:1a26:: with SMTP id be6mr10137450edb.278.1630874090848;
+ Sun, 05 Sep 2021 13:34:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-In-Reply-To: <63839834-d383-d224-8bbd-d37c6803a68f@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Received: by 2002:a17:906:4c86:0:0:0:0 with HTTP; Sun, 5 Sep 2021 13:34:50
+ -0700 (PDT)
+Reply-To: geomic123@yahoo.com
+From:   George Micheal Boateng <jamesalumnilaw.litigation@gmail.com>
+Date:   Sun, 5 Sep 2021 21:34:50 +0100
+Message-ID: <CAEC0QsuoQtqqaVqRUjCPbzZsF=CEdNx50f6Ucbz9UMTJ=Ow+OA@mail.gmail.com>
+Subject: Read My Mail
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+-- 
+Dear Sir/Madam
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My name is Mr George Michael,i am the Personal Assistant to former
+President Baba Yahya Abdul-Aziz Jemus Jammeh of the Republic of Gambia
+in west Africa, who is currently in exile with his farmily. I have
+been trying on how to get in touch with you over an important issue
+concerning a project that will be profitable. I anticipate hearing
+from you for more details.
 
-Hi!
-
-> >>+What:		/sys/class/leds/<led>/add_blkdev
-> >>+Date:		September 2021
-> >>+Contact:	Ian Pilcher <arequipeno@gmail.com>
-> >>+Description:
-> >>+		Associate a block device with this LED by writing its kernel
-> >>+		name (as shown in /sys/block) to this attribute.  Multiple
-> >>+		device names may be written at once, separated by whitespace.
-> >
-> >This is seriously strange interface.
->=20
-> It's the netdev-like interface that Marek described in an earlier note
-> (adapted for the fact that the trigger supports many-to-many
-> relationships).
->=20
-> >If you have directory with symlinks, why not use symlink() syscall
-> >instead of add_blkdev, and unlink() syscall instead of delete_blkdev?
->=20
-> I'd actually had that thought as well, but I didn't see any obvious way
-> to do that in sysfs when I looked.  If you know how to do it or know of
-> an example, please let me know.
-
-We got Greg in the Cc list, he'd be right person to talk to...
-
-> If using symlink()/unlink() isn't an option, do you have a suggestion
-> for a less seriously strange interface?
-
-Let us explore this possibility, first.
-
-Best regards,
-								Pavel
-
---=20
-http://www.livejournal.com/~pavelmachek
-
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAmE1D6oACgkQMOfwapXb+vJMWgCginEN4Y9uJOdO0H7JnjicsLqx
-yjIAoJXBr/8EHsWbDG3d+hS3W5luf+HM
-=eTQh
------END PGP SIGNATURE-----
-
---HlL+5n6rz5pIUxbD--
+Yours faithfully
+Mr George Michael
