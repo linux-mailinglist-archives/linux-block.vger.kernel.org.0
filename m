@@ -2,20 +2,20 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F016C405881
-	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 16:05:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B0B40587B
+	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 16:05:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345541AbhIIOFE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Sep 2021 10:05:04 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:15313 "EHLO
+        id S236092AbhIIOE7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Sep 2021 10:04:59 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:15314 "EHLO
         szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345439AbhIIOEK (ORCPT
+        with ESMTP id S1347029AbhIIOEK (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 10:04:10 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H510f0ZJSz8srS;
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H510f4JLbz8srZ;
         Thu,  9 Sep 2021 22:02:26 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
  15.1.2308.8; Thu, 9 Sep 2021 22:02:57 +0800
 Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
@@ -27,9 +27,9 @@ To:     <axboe@kernel.dk>, <josef@toxicpanda.com>, <ming.lei@redhat.com>,
         <hch@infradead.org>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <nbd@other.debian.org>, <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH v5 3/6] nbd: check sock index in nbd_read_stat()
-Date:   Thu, 9 Sep 2021 22:12:53 +0800
-Message-ID: <20210909141256.2606682-4-yukuai3@huawei.com>
+Subject: [PATCH v5 4/6] blk-mq: export two symbols to get request by tag
+Date:   Thu, 9 Sep 2021 22:12:54 +0800
+Message-ID: <20210909141256.2606682-5-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210909141256.2606682-1-yukuai3@huawei.com>
 References: <20210909141256.2606682-1-yukuai3@huawei.com>
@@ -44,29 +44,68 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The sock that clent send request in nbd_send_cmd() and receive reply
-in nbd_read_stat() should be the same.
+nbd has a defect that blk_mq_tag_to_rq() might return a freed
+request in nbd_read_stat(). We need a new mechanism if we want to
+fix this in nbd driver, which is rather complicated.
+
+Thus use blk_mq_find_and_get_req() to replace blk_mq_tag_to_rq(),
+which can make sure the returned request is not freed, and then we
+can do more checking while 'cmd->lock' is hold.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/nbd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ block/blk-mq-tag.c     | 5 +++--
+ block/blk-mq.c         | 1 +
+ include/linux/blk-mq.h | 3 +++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 550c8dc438ac..6d8cbf8be231 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -746,6 +746,10 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 		ret = -ENOENT;
- 		goto out;
- 	}
-+	if (cmd->index != index) {
-+		dev_err(disk_to_dev(nbd->disk), "Unexpected reply %d from different sock %d (expected %d)",
-+			tag, index, cmd->index);
-+	}
- 	if (cmd->cmd_cookie != nbd_handle_to_cookie(handle)) {
- 		dev_err(disk_to_dev(nbd->disk), "Double reply on req %p, cmd_cookie %u, handle cookie %u\n",
- 			req, cmd->cmd_cookie, nbd_handle_to_cookie(handle));
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 86f87346232a..b4f66b75b4d1 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -200,8 +200,8 @@ struct bt_iter_data {
+ 	bool reserved;
+ };
+ 
+-static struct request *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
+-		unsigned int bitnr)
++struct request *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
++					unsigned int bitnr)
+ {
+ 	struct request *rq;
+ 	unsigned long flags;
+@@ -213,6 +213,7 @@ static struct request *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
+ 	spin_unlock_irqrestore(&tags->lock, flags);
+ 	return rq;
+ }
++EXPORT_SYMBOL(blk_mq_find_and_get_req);
+ 
+ static bool bt_iter(struct sbitmap *bitmap, unsigned int bitnr, void *data)
+ {
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 08626cb0534c..5113aa3788a2 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -916,6 +916,7 @@ void blk_mq_put_rq_ref(struct request *rq)
+ 	else if (refcount_dec_and_test(&rq->ref))
+ 		__blk_mq_free_request(rq);
+ }
++EXPORT_SYMBOL(blk_mq_put_rq_ref);
+ 
+ static bool blk_mq_check_expired(struct blk_mq_hw_ctx *hctx,
+ 		struct request *rq, void *priv, bool reserved)
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 13ba1861e688..03e02990609d 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -637,4 +637,7 @@ blk_qc_t blk_mq_submit_bio(struct bio *bio);
+ void blk_mq_hctx_set_fq_lock_class(struct blk_mq_hw_ctx *hctx,
+ 		struct lock_class_key *key);
+ 
++void blk_mq_put_rq_ref(struct request *rq);
++struct request *blk_mq_find_and_get_req(struct blk_mq_tags *tags,
++					unsigned int bitnr);
+ #endif
 -- 
 2.31.1
 
