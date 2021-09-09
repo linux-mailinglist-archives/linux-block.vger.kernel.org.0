@@ -2,78 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 013364058BB
-	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 16:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3322340587A
+	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 16:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244347AbhIIOQm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Sep 2021 10:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239783AbhIIOQk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 10:16:40 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1324DC06175F
-        for <linux-block@vger.kernel.org>; Thu,  9 Sep 2021 05:34:21 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id g21so2436954edw.4
-        for <linux-block@vger.kernel.org>; Thu, 09 Sep 2021 05:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oX4Dj9ZXgOv8yaBPcUaPEk5dnnNEO7xIQcrdkFjSHKA=;
-        b=E7uWS8yDE751Ij1pZzX4IMB9dvJ8U1MM4xw6zcVfKZ+vmEXQwWzK5ANY3O7DpaV969
-         5zRN8Y35JaFlIJmo13bnSJICIDtbZiqChEzk3N5yyKzSFdMn4uxT/kkgRJPQeg7jHEVY
-         GdQYjardLGHClo9/FL6L5+ufQJontEEcX/CPh3BwgEDcKrcIHSkK60b9h4xs0rGZjZ44
-         026ldb7eMP5hqAuaYydZ5NJEHeREsSq1EIYb1GL4wmO0nNuloxVxoxFuAapM7lBYY2zn
-         Gj4/HaP2E6vGv73PJjI4bzKtwfwSY5LyQy/tBbORi+jgZsWx1wDJxDiFylCOlPkE/RFy
-         1mNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oX4Dj9ZXgOv8yaBPcUaPEk5dnnNEO7xIQcrdkFjSHKA=;
-        b=2WGgrpX/LnpzWVfc7kZJAJbAcA/d/Bnn0PY+YkNbSoHIiJAr7nSObtEYLwvTIp0RGc
-         XaaRACHF24iIGHOM3D6GhXqs3mXjkQPd4L7CAOjESpkoZFdqA2d1CaWMu/p1gs6grSYe
-         TjWa3JNsVR86gDMMtJtV1sEewsM2b+pqzb1yU7zsZ6iu0YNGxCQMXhJfpSedcVai/1Aq
-         0n0sB/P0GL91s7u/lWhIr5adyBFxc9jAJHeBXmqN2qapaEM9stONFdQp10hsGJ8vMX7m
-         vceuoqDNkpbuTvmuVjXlCfAg2dX3B4/klUAUIcEBY7VaPVC7eXUiiTXiITis23bH7aLz
-         040A==
-X-Gm-Message-State: AOAM531liAa1k76cwYzAz0YEVlK0ZFKmFkB3sJ+RvMKyP5efc0xH6WHO
-        UMJZ0s15D84RVJfxP8AP/WTso1mfGJj6IGjbhB1A
-X-Google-Smtp-Source: ABdhPJz7R5rWq5PdHrd+/9R7VKFyY4khAyM8rWwNp9zT3ExKuPkyRb2KXZ0SObAbCNjw/gtpQznwZm9lJDmQ8UkOjRo=
-X-Received: by 2002:a05:6402:4247:: with SMTP id g7mr2925993edb.287.1631190859581;
- Thu, 09 Sep 2021 05:34:19 -0700 (PDT)
+        id S1351019AbhIIOE6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Sep 2021 10:04:58 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:9024 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346561AbhIIOEK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 10:04:10 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H510B2NZMzVn2G;
+        Thu,  9 Sep 2021 22:02:02 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2308.8; Thu, 9 Sep 2021 22:02:55 +0800
+Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
+ (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Thu, 9 Sep
+ 2021 22:02:54 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <josef@toxicpanda.com>, <ming.lei@redhat.com>,
+        <hch@infradead.org>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <nbd@other.debian.org>, <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH v5 0/6] handle unexpected message from server
+Date:   Thu, 9 Sep 2021 22:12:50 +0800
+Message-ID: <20210909141256.2606682-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210907121425.91-1-xieyongji@bytedance.com> <YTmqJHd7YWAQ2lZ7@infradead.org>
-In-Reply-To: <YTmqJHd7YWAQ2lZ7@infradead.org>
-From:   Yongji Xie <xieyongji@bytedance.com>
-Date:   Thu, 9 Sep 2021 20:34:12 +0800
-Message-ID: <CACycT3vHrN3tgeH91gdzr08DXd8KCXyAuxUb5k-HcwB7coi4iA@mail.gmail.com>
-Subject: Re: [PATCH] nbd: clear wb_err in bd_inode on disconnect
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        yixingchen@bytedance.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 9, 2021 at 2:31 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Sep 07, 2021 at 08:14:25PM +0800, Xie Yongji wrote:
-> > When a nbd device encounters a writeback error, that error will
-> > get propagated to the bd_inode's wb_err field. Then if this nbd
-> > device's backend is disconnected and another is attached, we will
-> > get back the previous writeback error on fsync, which is unexpected.
-> > To fix it, let's clear out the wb_err on disconnect.
->
-> I really do not like how internals of the implementation like into
-> drivers here.  Can you add a block layer helper to clear any state
-> instead? This should incude e.g. the size just cleared above and should
-> also be used by the loop driver as well.
+This patch set tries to fix that client might oops if nbd server send
+unexpected message to client, for example, our syzkaller report a uaf
+in nbd_read_stat():
 
-Sure, will do it.
+Call trace:
+ dump_backtrace+0x0/0x310 arch/arm64/kernel/time.c:78
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:158
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x144/0x1b4 lib/dump_stack.c:118
+ print_address_description+0x68/0x2d0 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x134/0x2f0 mm/kasan/report.c:409
+ check_memory_region_inline mm/kasan/kasan.c:260 [inline]
+ __asan_load4+0x88/0xb0 mm/kasan/kasan.c:699
+ __read_once_size include/linux/compiler.h:193 [inline]
+ blk_mq_rq_state block/blk-mq.h:106 [inline]
+ blk_mq_request_started+0x24/0x40 block/blk-mq.c:644
+ nbd_read_stat drivers/block/nbd.c:670 [inline]
+ recv_work+0x1bc/0x890 drivers/block/nbd.c:749
+ process_one_work+0x3ec/0x9e0 kernel/workqueue.c:2147
+ worker_thread+0x80/0x9d0 kernel/workqueue.c:2302
+ kthread+0x1d8/0x1e0 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1174
 
-Thanks,
-Yongji
+1) At first, a normal io is submitted and completed with scheduler:
+
+internel_tag = blk_mq_get_tag -> get tag from sched_tags
+ blk_mq_rq_ctx_init
+  sched_tags->rq[internel_tag] = sched_tag->static_rq[internel_tag]
+...
+blk_mq_get_driver_tag
+ __blk_mq_get_driver_tag -> get tag from tags
+ tags->rq[tag] = sched_tag->static_rq[internel_tag]
+
+So, both tags->rq[tag] and sched_tags->rq[internel_tag] are pointing
+to the request: sched_tags->static_rq[internal_tag]. Even if the
+io is finished.
+
+2) nbd server send a reply with random tag directly:
+
+recv_work
+ nbd_read_stat
+  blk_mq_tag_to_rq(tags, tag)
+   rq = tags->rq[tag]
+
+3) if the sched_tags->static_rq is freed:
+
+blk_mq_sched_free_requests
+ blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i)
+  -> step 2) access rq before clearing rq mapping
+  blk_mq_clear_rq_mapping(set, tags, hctx_idx);
+  __free_pages() -> rq is freed here
+
+4) Then, nbd continue to use the freed request in nbd_read_stat()
+
+Changes in v5:
+ - move patch 1 & 2 in v4 (patch 4 & 5 in v5) behind
+ - add some comment in patch 5
+Changes in v4:
+ - change the name of the patchset, since uaf is not the only problem
+ if server send unexpected reply message.
+ - instead of adding new interface, use blk_mq_find_and_get_req().
+ - add patch 5 to this series
+Changes in v3:
+ - v2 can't fix the problem thoroughly, add patch 3-4 to this series.
+ - modify descriptions.
+ - patch 5 is just a cleanup
+Changes in v2:
+ - as Bart suggested, add a new helper function for drivers to get
+ request by tag.
+
+Yu Kuai (6):
+  nbd: don't handle response without a corresponding request message
+  nbd: make sure request completion won't concurrent
+  nbd: check sock index in nbd_read_stat()
+  blk-mq: export two symbols to get request by tag
+  nbd: convert to use blk_mq_find_and_get_req()
+  nbd: don't start request if nbd_queue_rq() failed
+
+ block/blk-mq-tag.c     |  5 +++--
+ block/blk-mq.c         |  1 +
+ drivers/block/nbd.c    | 51 ++++++++++++++++++++++++++++++++++++------
+ include/linux/blk-mq.h |  3 +++
+ 4 files changed, 51 insertions(+), 9 deletions(-)
+
+-- 
+2.31.1
+
