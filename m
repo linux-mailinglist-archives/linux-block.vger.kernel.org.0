@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30A01405591
-	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 15:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57B76405636
+	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 15:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351040AbhIINLZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Sep 2021 09:11:25 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:19020 "EHLO
+        id S1359423AbhIINSp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Sep 2021 09:18:45 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:9023 "EHLO
         szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355446AbhIIM6v (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 08:58:51 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H4zTF5YQKzbmDw;
-        Thu,  9 Sep 2021 20:53:37 +0800 (CST)
+        with ESMTP id S1358881AbhIINJy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 09:09:54 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H4znc6gplzVnrl;
+        Thu,  9 Sep 2021 21:07:48 +0800 (CST)
 Received: from dggema773-chm.china.huawei.com (10.1.198.217) by
  dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Thu, 9 Sep 2021 20:57:39 +0800
+ 15.1.2308.8; Thu, 9 Sep 2021 21:08:42 +0800
 Received: from localhost.huawei.com (10.175.124.27) by
  dggema773-chm.china.huawei.com (10.1.198.217) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Thu, 9 Sep 2021 20:57:38 +0800
+ 15.1.2308.8; Thu, 9 Sep 2021 21:08:41 +0800
 From:   Li Jinlin <lijinlin3@huawei.com>
-To:     <paolo.valente@linaro.org>, <^C@kernel.org>, <axboe@kernel.dk>,
+To:     <paolo.valente@linaro.org>, <tj@kernel.org>, <axboe@kernel.dk>,
         <fchecconi@gmail.com>, <avanzini.arianna@gmail.com>
 CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linfeilong@huawei.com>,
         <louhongxiang@huawei.com>
 Subject: [PATCH] fix UAF in bfq_io_set_weight_legacy()
-Date:   Thu, 9 Sep 2021 21:26:46 +0800
-Message-ID: <20210909132646.1921280-1-lijinlin3@huawei.com>
+Date:   Thu, 9 Sep 2021 21:37:37 +0800
+Message-ID: <20210909133737.1930835-1-lijinlin3@huawei.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggema773-chm.china.huawei.com (10.1.198.217)
 X-CFilter-Loop: Reflected
 Precedence: bulk
