@@ -2,73 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 357CE404736
-	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 10:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C404140476F
+	for <lists+linux-block@lfdr.de>; Thu,  9 Sep 2021 11:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231549AbhIIIsA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Sep 2021 04:48:00 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:9020 "EHLO
+        id S231825AbhIIJB7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Sep 2021 05:01:59 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:19019 "EHLO
         szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231234AbhIIIsA (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 04:48:00 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H4szS6WJtzVqc0;
-        Thu,  9 Sep 2021 16:45:56 +0800 (CST)
-Received: from dggpeml500025.china.huawei.com (7.185.36.35) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+        with ESMTP id S231281AbhIIJB6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Sep 2021 05:01:58 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H4tCy73dqzbmFN;
+        Thu,  9 Sep 2021 16:56:46 +0800 (CST)
+Received: from dggpeml500017.china.huawei.com (7.185.36.243) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 9 Sep 2021 16:46:49 +0800
-Received: from huawei.com (10.175.124.27) by dggpeml500025.china.huawei.com
- (7.185.36.35) with Microsoft SMTP Server (version=TLS1_2,
+ 15.1.2308.8; Thu, 9 Sep 2021 17:00:48 +0800
+Received: from huawei.com (10.175.103.91) by dggpeml500017.china.huawei.com
+ (7.185.36.243) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Thu, 9 Sep 2021
- 16:46:49 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>
-Subject: [PATCH] block: check the existence of tags[hctx_idx] in blk_mq_clear_rq_mapping()
-Date:   Thu, 9 Sep 2021 17:00:54 +0800
-Message-ID: <20210909090054.492923-1-houtao1@huawei.com>
-X-Mailer: git-send-email 2.29.2
+ 17:00:48 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     <axboe@kernel.dk>
+Subject: [PATCH] n64cart: fix return value check in n64cart_probe()
+Date:   Thu, 9 Sep 2021 17:06:08 +0800
+Message-ID: <20210909090608.2989716-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500025.china.huawei.com (7.185.36.35)
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500017.china.huawei.com (7.185.36.243)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-According to commit 4412efecf7fd ("Revert "blk-mq: remove code for
-dealing with remapping queue""), for some devices queue hctx may not
-being mapped, and tagset->tags[hctx_idx] will be released and be NULL.
+In case of error, the function devm_platform_ioremap_resource()
+returns ERR_PTR() and never returns NULL. The NULL test in the
+return value check should be replaced with IS_ERR().
 
-If an IO scheduler is used on these devices, blk_mq_clear_rq_mapping()
-will be called for all hctxs in blk_mq_sched_free_requests() during
-scheduler switch, and these will be oops. So checking the existence of
-tags[hctx_idx] before going on in blk_mq_clear_rq_mapping().
-
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Fixes: d9b2a2bbbb4d ("block: Add n64 cart driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
- block/blk-mq.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/block/n64cart.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 65d3a63aecc6..c3d701f44e49 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2297,6 +2297,10 @@ static void blk_mq_clear_rq_mapping(struct blk_mq_tag_set *set,
- 	struct page *page;
- 	unsigned long flags;
+diff --git a/drivers/block/n64cart.c b/drivers/block/n64cart.c
+index c84be0028f63..26798da661bd 100644
+--- a/drivers/block/n64cart.c
++++ b/drivers/block/n64cart.c
+@@ -129,8 +129,8 @@ static int __init n64cart_probe(struct platform_device *pdev)
+ 	}
  
-+	/* If the hctx is unmapped, drv_tags may be NULL */
-+	if (!drv_tags)
-+		return;
-+
- 	list_for_each_entry(page, &tags->page_list, lru) {
- 		unsigned long start = (unsigned long)page_address(page);
- 		unsigned long end = start + order_to_size(page->private);
+ 	reg_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!reg_base)
+-		return -EINVAL;
++	if (IS_ERR(reg_base))
++		return PTR_ERR(reg_base);
+ 
+ 	disk = blk_alloc_disk(NUMA_NO_NODE);
+ 	if (!disk)
 -- 
-2.29.2
+2.25.1
 
