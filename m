@@ -2,96 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FA21406DC0
-	for <lists+linux-block@lfdr.de>; Fri, 10 Sep 2021 16:48:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E13F406DD8
+	for <lists+linux-block@lfdr.de>; Fri, 10 Sep 2021 17:00:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234136AbhIJOt1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Sep 2021 10:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33324 "EHLO
+        id S234100AbhIJPBg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Sep 2021 11:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234181AbhIJOt0 (ORCPT
+        with ESMTP id S233539AbhIJPBf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Sep 2021 10:49:26 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41754C061574
-        for <linux-block@vger.kernel.org>; Fri, 10 Sep 2021 07:48:15 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id z1so2630610ioh.7
-        for <linux-block@vger.kernel.org>; Fri, 10 Sep 2021 07:48:15 -0700 (PDT)
+        Fri, 10 Sep 2021 11:01:35 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B17CC061574;
+        Fri, 10 Sep 2021 08:00:24 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id y128so3280106oie.4;
+        Fri, 10 Sep 2021 08:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=8baKku/7AG9XewMLkmq1NNzE4+nYImNwUkVNnAae6NI=;
-        b=y8ADmvj/2zwU/4hG2VWMCCFE+qvtKbYthcnoyiXbXIMnZABI3jaKtX1UVj7Y3NmLQa
-         Bb5jOJ6DX489XqM+uSY9IErqtobGJcf4/RjSA00LT1NhINsKJPirLZbgVvG9he68rQUR
-         3ju358CYyPwmE0nPr0IkT9hA/638Gin1cYlWeiQ0M4PDajgP1rKRZc655yxdByG9goP8
-         Ezm/fHtc2lJEiNS+m/Kqw27iujNl2HH49A9tAV+q4SsoODkmP7TADaQKMGec0XPDrt4j
-         X3KOSzPtIPA7y+AlAl9YspgnQkyD3b83++919zu83bwuCq1k9eV4grXh36YYPWfeMSwc
-         8crg==
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wQtNDxK+stHmlXk66BKubuUVLuPTzjYg0fIt3ivIQek=;
+        b=SYDaDPYgbgJN3VcKQZKoEAgtrCd84+T7uR+OJyE6WcjV+VguQxkSsdXPtKNkx4nQha
+         JNFYscRaBlTDzffUmBCUUppIVYfajHkSlWSWzyXpqmC767U+6R/9A5ogSRbVsK3OO0o/
+         qEwlnHPEfZQ5+N5YI8TEvgWpvCS2PxWqTFn46pLYj6WYNl3lzchHoT4kW/XnVr9uoi5W
+         77DfL0xS9jrlYpgFgMQnGxYqF+OhX5t6BXuvAbdbt2OHhvsyFAeLitmz2eEJGoMrdBcM
+         DUyHiJtGWQ60NQ+8t+eSTrG1/H8I5wB/kjfR46LhMG04SBECU40Df7WWLAqHlzOwCIpk
+         TyTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=8baKku/7AG9XewMLkmq1NNzE4+nYImNwUkVNnAae6NI=;
-        b=gVZ23RJOEdjBMP5tBqNhyDdXUx0pxZOsOUZvCYGIjZFBhhBnTafnQsK0zX2yaEZY9U
-         EmyBvnsDZSv1p3PliRVPsgE9so81/0GOBb1QEBZtEcstHGOD3mB/wpzeT43ztQf/svtp
-         S9KZbfbl30MGjcmUCRjmaQZb5Sgg6mnfeIIvbEqHZBFVoLvKuwuPOwBR2gsL16NWQvHX
-         oOblgbkvWz4NkofLFN+FF/VHmAsq0Q4PAAO5+BdbEe0WekzuhaaWWldwRVyCkAN2ZO85
-         gagWwviVVVOnLxSscKxjiCgl8LKBlUwtzS8EKhwNJcDZNW2hyqyFGwjscfrLsQ018LGU
-         KOcw==
-X-Gm-Message-State: AOAM533JKgxqije7s3fhidvSmCpblTkOxiRtMK1KjaX+TCqCZAWweuJv
-        w2pqYQ5LxpQWrCVQCmh3XDA0gQ==
-X-Google-Smtp-Source: ABdhPJy0q89CLNTSLfxvRq0Dhp6wEIyc9srxstylWI9WE7EVXIxAGMJSk2L5pGToeVqWKFTHMciIBg==
-X-Received: by 2002:a05:6602:2c05:: with SMTP id w5mr7509271iov.160.1631285294605;
-        Fri, 10 Sep 2021 07:48:14 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id g23sm2489960ioc.8.2021.09.10.07.48.14
+        bh=wQtNDxK+stHmlXk66BKubuUVLuPTzjYg0fIt3ivIQek=;
+        b=nXHWRAjSHgrTI5XDLZOwHdMZu7PqjIyMezvJrTf8Gd3lyROkDy9r3X5Jt1dUDxOga9
+         e/nXteHP+ie1eR0YoWaSy3YPlnyQAwQ3xX6tHCqAcouW9z6wfGsjBOpolk3w3Vdp0D2H
+         IygWQtk/HIzkHcfJv5ocBxVw/tYHUb0NRDXySbcEucmXwHYrPH+2IcXn/mnGPjk68V7j
+         lzJt5EWZ7B5x2orvTjF/113q35UNwD7a38g5aYhalgGRS0vic+ONp+SrBsecIt1yivIv
+         IfGeL6Wk3jGXq/Cvw+7S14yvjwSZfVSGwQiU2DQn6lnSrx03HzqdWHJg7TgDSG45lqUE
+         zHUA==
+X-Gm-Message-State: AOAM530xIrAwVk2LLR9zuDIBpmty+Omz3ZeKtJzOBpDud6RNDRUIVO68
+        QpzqFes3stV+T+SxTf8qkX8=
+X-Google-Smtp-Source: ABdhPJzdUeZHCJK7gVOaL66L4g1Zgwg1Z0bGxP/5YNQqApki9OrQhrZPKoyKGL3damp5l3xmW1pi4g==
+X-Received: by 2002:aca:5f04:: with SMTP id t4mr4493370oib.53.1631286023877;
+        Fri, 10 Sep 2021 08:00:23 -0700 (PDT)
+Received: from ian.penurio.us ([47.184.51.90])
+        by smtp.gmail.com with ESMTPSA id s8sm1247577otd.76.2021.09.10.08.00.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Sep 2021 07:48:14 -0700 (PDT)
-Subject: Re: [Non-DoD Source] Re: [PATCH] blk-mq: allow 4x
- BLK_MAX_REQUEST_COUNT at blk_plug for multiple_queues
-To:     "Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil>,
-        Song Liu <songliubraving@fb.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
-References: <20210907230338.227903-1-songliubraving@fb.com>
- <f64a938a-372c-aac1-4c5c-4b9456af5a69@kernel.dk>
- <5EAED86C53DED2479E3E145969315A2385876DB8@UMECHPA7B.easf.csd.disa.mil>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <420e6629-62c4-1267-7118-229ecbf3876e@kernel.dk>
-Date:   Fri, 10 Sep 2021 08:48:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Sep 2021 08:00:23 -0700 (PDT)
+Subject: Re: [PATCH v2 04/15] block: Add block device LED trigger integrations
+To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>
+Cc:     axboe@kernel.dk, pavel@ucw.cz, linux-leds@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+References: <20210909222513.2184795-1-arequipeno@gmail.com>
+ <20210909222513.2184795-5-arequipeno@gmail.com>
+ <20210910032319.71b843d7@thinkpad>
+From:   Ian Pilcher <arequipeno@gmail.com>
+Message-ID: <4b40f4fc-4baf-c75f-e61f-310fe6d15e0c@gmail.com>
+Date:   Fri, 10 Sep 2021 10:00:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <5EAED86C53DED2479E3E145969315A2385876DB8@UMECHPA7B.easf.csd.disa.mil>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210910032319.71b843d7@thinkpad>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/10/21 8:43 AM, Finlayson, James M CIV (USA) wrote:
-> All,
-> I have a suspicion this will help my efforts increasing the IOPS
-> ability of mdraid  in 10-12 NVMe drive  per raid group situations.
+On 9/9/21 8:23 PM, Marek Behún wrote:
+> On Thu,  9 Sep 2021 17:25:02 -0500
+> Ian Pilcher <arequipeno@gmail.com> wrote:
+>> Call ledtrig_blkdev_disk_init() from device_add_disk() to ensure that
+>> ledtrig is initialized to NULL, in case a driver allocates the structure
+>> itself and doesn't use kzalloc()
 > 
-> Pure neophyte question, which I apologize for in advance, how can I
-> test this?   Does this end up in  a 5.15 release candidate kernel?
+> No, this is not needed. If someone does not use kzalloc(), they should
+> use it. No need to fix other code here.
 
-It's queued up to go into Linus's tree before -rc1, so should be in
-5.15-rc1 for you to test.
+Yeah.  I'm honestly not sure if this is necessary or not, as I don't
+know if there are any drivers that actually have this problem.  I
+decided to include this for now, because an uninitialized pointer can
+cause memory corruption, etc., when the disk cleanup function follows a
+garbage pointer.
 
-> I want to make contributions wherever I can, as I have hardware and
-> needs, so I can act as a performance validator within reason.   I know
-> I can't make contributions as a developer, but I'm willing to
-> contribute in areas where our goals are in alignment and this appears
-> to be one.
+This recent commit seems to indicate that until recently drivers were
+responsible for doing gendisk allocation.
 
-Testing is definitely valuable, particularly for something like this! So
-please do test -rc1 and report back your findings.
+> commit f525464a8000f092c20b00eead3eaa9d849c599e
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Fri May 21 07:50:55 2021 +0200
+> 
+>     block: add blk_alloc_disk and blk_cleanup_disk APIs
+>     
+>     Add two new APIs to allocate and free a gendisk including the
+>     request_queue for use with BIO based drivers.  This is to avoid
+>     boilerplate code in drivers.
+
+Were those drivers expected to use kzalloc() or otherwise zero out the
+entire structure?  I really don't know.
+
+I think that it makes sense to defer to the block subsystem maintainers
+on this question.
 
 -- 
-Jens Axboe
-
+========================================================================
+                  In Soviet Russia, Google searches you!
+========================================================================
