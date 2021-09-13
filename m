@@ -2,106 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0E3E40828E
-	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 03:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49D5E4082B2
+	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 03:44:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236841AbhIMBdK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 12 Sep 2021 21:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233133AbhIMBdJ (ORCPT
+        id S236863AbhIMBpP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 12 Sep 2021 21:45:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59621 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231810AbhIMBpO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 12 Sep 2021 21:33:09 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9E3C061574
-        for <linux-block@vger.kernel.org>; Sun, 12 Sep 2021 18:31:55 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id b10so10002498ioq.9
-        for <linux-block@vger.kernel.org>; Sun, 12 Sep 2021 18:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+kyp/8+7o4cYohhCh7JybYvQipvAXNJ+txtYiR7pHBo=;
-        b=sCG70fbmksVvNRK7g/FauezlzXfFxzghiGUp33z8JtPX4kKEAEh0fgRjFKToM80pRP
-         Bfy3JupfiT+nWntm0dvoQ7BPrNmIFZiIewFQOIL/XBRTldv1SjGygAjKwKhWQEbaTpmw
-         kHG0Z+vqSWndhfBRZOnSj1rtfd74Kif8jRCUwI7Pk3fC28wqEXm29J1TH+heEGHunQJG
-         CAtkyr3jVNgxMCYrMKRyk5SOhvazUpKxJkhzNN/XgoXnDc+7AksPFoqlmGg6BHtgphNX
-         w4tewQ80faljVmkxFjlqx2Bzq74sDw38I12H2KmMxRXguWmhgmElt83/g//DwHJwlk0f
-         kmvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+kyp/8+7o4cYohhCh7JybYvQipvAXNJ+txtYiR7pHBo=;
-        b=oxzyeKfdPrlOXOhAgO5psw3nWgGZSNBAIwLYqxpIKNVAwV6CNWABwGEVlpBUkhQFMe
-         IwrCt9m6iasnDrdOhTIYDw8Bhwhy1agLG76zZ7JJpuf0Z3n7kPJ+X/dnFmKkm0j8EN1e
-         bCpjLrVd72rhcT4jX4YLgN7hkx9tThV2fTE+/zUSsdjWrc2DwZvV3GmUzvtq7WpLutuG
-         BjejX/GARwXgBUHb0OIC34R8xB3j8mUqcgYcm/+L4T0Vdae4J9zB4nvXoCiqs6DCPR20
-         XVzlxc4dCrurjWZDIBq0xKg19qA6WdENBsdYPvdsfkhLOPNttou35u52K4WSKugJIeod
-         lgmg==
-X-Gm-Message-State: AOAM532u04I83ymM1PgS118kB6WVFwralt3cft3VcvRdyCiAsJn/cszi
-        oVJ54oDkl59x1S5/Pet1uSiNoy+RHe9D0Q==
-X-Google-Smtp-Source: ABdhPJxDePcclxUCP9q85rRO9Sr/7jL4B6ykhXiVvjNRch9X9FGhgaPz27H5hxnRzgksTMhlZl7N2w==
-X-Received: by 2002:a05:6638:4195:: with SMTP id az21mr7516413jab.40.1631496714435;
-        Sun, 12 Sep 2021 18:31:54 -0700 (PDT)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id x16sm1393590ile.63.2021.09.12.18.31.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Sep 2021 18:31:54 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: avoid to iterate over stale request
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        luojiaxing <luojiaxing@huawei.com>
-References: <20210906065003.439019-1-ming.lei@redhat.com>
- <YT6o3Lt8II2ZIOlf@T590>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <63550f2f-a6d2-f74f-d637-9b4d1d8a0fc8@kernel.dk>
-Date:   Sun, 12 Sep 2021 19:31:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Sep 2021 21:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631497439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LkmP91slQwsUP8ZD49/oIcABO5O4kc//bi/gYOi9hak=;
+        b=h7P8VISOEOrUY8EAqZ8cjXnUGUR0D3OMi1TBalvd+gXRweNWMrLQhhj1u6pLHyC+mx21hW
+        hZ+Sg83G99rQldLhzwOw9TiTmtyrEfl0n5axlrqCv80TXInXBtFs7mmF0MSq5GUthGiY9e
+        h7Q001p9fET9Aw03GDaUkN9sbR91Mfw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-57-FI2ST22FNteMNCE-0kf0kw-1; Sun, 12 Sep 2021 21:43:58 -0400
+X-MC-Unique: FI2ST22FNteMNCE-0kf0kw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D74F835DE0;
+        Mon, 13 Sep 2021 01:43:57 +0000 (UTC)
+Received: from T590 (ovpn-12-120.pek2.redhat.com [10.72.12.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 819213AB2;
+        Mon, 13 Sep 2021 01:43:51 +0000 (UTC)
+Date:   Mon, 13 Sep 2021 09:43:59 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Hou Tao <houtao1@huawei.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH] block: check the existence of tags[hctx_idx] in
+ blk_mq_clear_rq_mapping()
+Message-ID: <YT6s35QwBSiFJ1Ko@T590>
+References: <20210909090054.492923-1-houtao1@huawei.com>
+ <YTnRsxec3JfPINmu@T590>
+ <96dd1720-343f-64db-42e9-788baec4b466@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <YT6o3Lt8II2ZIOlf@T590>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96dd1720-343f-64db-42e9-788baec4b466@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/12/21 7:26 PM, Ming Lei wrote:
-> On Mon, Sep 06, 2021 at 02:50:03PM +0800, Ming Lei wrote:
->> blk-mq can't run allocating driver tag and updating ->rqs[tag]
->> atomically, meantime blk-mq doesn't clear ->rqs[tag] after the driver
->> tag is released.
->>
->> So there is chance to iterating over one stale request just after the
->> tag is allocated and before updating ->rqs[tag].
->>
->> scsi_host_busy_iter() calls scsi_host_check_in_flight() to count scsi
->> in-flight requests after scsi host is blocked, so no new scsi command can
->> be marked as SCMD_STATE_INFLIGHT. However, driver tag allocation still can
->> be run by blk-mq core. One request is marked as SCMD_STATE_INFLIGHT,
->> but this request may have been kept in another slot of ->rqs[], meantime
->> the slot can be allocated out but ->rqs[] isn't updated yet. Then this
->> in-flight request is counted twice as SCMD_STATE_INFLIGHT. This way causes
->> trouble in handling scsi error.
->>
->> Fixes the issue by not iterating over stale request.
->>
->> Cc: linux-scsi@vger.kernel.org
->> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
->> Reported-by: luojiaxing <luojiaxing@huawei.com>
->> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+On Thu, Sep 09, 2021 at 07:14:20PM +0800, Hou Tao wrote:
+> Hi,
 > 
-> Hello Jens,
+> On 9/9/2021 5:19 PM, Ming Lei wrote:
+> > Hello Hou,
+> >
+> > On Thu, Sep 09, 2021 at 05:00:54PM +0800, Hou Tao wrote:
+> >> According to commit 4412efecf7fd ("Revert "blk-mq: remove code for
+> >> dealing with remapping queue""), for some devices queue hctx may not
+> >> being mapped, and tagset->tags[hctx_idx] will be released and be NULL.
+> >>
+> >> If an IO scheduler is used on these devices, blk_mq_clear_rq_mapping()
+> >> will be called for all hctxs in blk_mq_sched_free_requests() during
+> >> scheduler switch, and these will be oops. So checking the existence of
+> >> tags[hctx_idx] before going on in blk_mq_clear_rq_mapping().
+> > unmapped hctx should be caused by blk_mq_update_nr_hw_queues() only,
+> > but scheduler tags is updated there too, so not sure it is one real
+> > issue, did you observe such kernel panic? any kernel log?
+> Not a real issue, just find the potential "problem" during code review.
 > 
-> luojiaxiang has verified that this patch fixes his issue, any chance to
-> merge it?
+> But is the case below possible ?
+> There is an unmapped hctx and a freed tags[hctx_idx] after
+> blk_mq_update_nr_hw_queues(), and IO scheduler is used. When
+> switching IO scheduler to none, the previous schedule tag
+> on each hctx will be freed in blk_mq_sched_free_requests().
+> blk_mq_sched_free_requests() will call blk_mq_free_rqs(), and
+> 
+> blk_mq_free_rqs() will access the NULLed tags[hctx_idx].
 
-I'll queue it up for 5.15-rc2, thanks.
+It isn't possible. One invariant is that the first 'q->nr_hw_queues'
+elements of ->queue_hw_ctx[] / ->tags[] are valid and the others are
+freed after blk_mq_update_nr_hw_queues() returns.
 
--- 
-Jens Axboe
+
+thanks,
+Ming
 
