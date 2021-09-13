@@ -2,96 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E838040991A
-	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 18:29:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63BC409924
+	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 18:30:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237705AbhIMQa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 13 Sep 2021 12:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237339AbhIMQa4 (ORCPT
+        id S237339AbhIMQcE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 13 Sep 2021 12:32:04 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:45182 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237856AbhIMQb7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 13 Sep 2021 12:30:56 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4F6C061574;
-        Mon, 13 Sep 2021 09:29:40 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id bg1so6172962plb.13;
-        Mon, 13 Sep 2021 09:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HzDTLjGw74e8CjqrCfWVLgo6C2sbYI/lSxwRQLVntl4=;
-        b=nDgSvSlJ4smKAm8c1xcHqnbe6jg/8lXJ0MYn2ZpG+aMxi9y1r8WvSFTRELTJcEVYP9
-         teR8yxsTUv3v497W7/jy7xBFTWZn/vbhsqfaKYuiY52cCtDmGxXhvNrAuDAsyaWcGekn
-         BAcesXdYk3jOnj/a/asM+E3cmrQD0z1vUCpNHUDj634dfPJm2QnUrO3r4VtdJLFs732t
-         zbjlJo7uSRcsNjZUEjkxeh520qmWHi6KGYQ/ZR8v3AK3GlIM9c9eEPuNUskzW5WSqWIj
-         t7HnXSOMyR4pLiDM4IJobWFFvMBjHvzRZ4GA/fkBFXYOUqFrwPJRfgE7aAf+ouixCfwo
-         yPJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=HzDTLjGw74e8CjqrCfWVLgo6C2sbYI/lSxwRQLVntl4=;
-        b=S6cgOOj57pcjsnKBR8AKmx+/x3ZAlmy5cAM9oDCTzGFUSyTAPt7qQLp1IxlcoAlL/c
-         jW0r37lvnp/nFEpFsTpoiM62BuRTKdioly0O1fR85EDrAUV6f/Rt/nKFAlysd0LOYPL+
-         f8xFAVv9ZzjMTtIbq2Kns+yAPC1Nv/1UhxbA3jBxjGOCisO7OrMQxGOkCXGjwKttaKN4
-         O+qmziYrGzfkLibxqZKXfMhFWVfjgDnSmztzWux5Gvby+4NVKPWEx1EOJngt7TcDI063
-         TRJDeO4nhrrS0DYWa4azu3N318bVNTP9JihYF2rMlmxfKAkl4X8b3X3uGfeXET6aM2Ku
-         tynA==
-X-Gm-Message-State: AOAM530A8u1cxUvMnvm9BdSa/ugfFF36e4VMZ/fOIJYEz6W21C5dau2Z
-        BK7jrrHA7hbOYcVaE5qWNJY=
-X-Google-Smtp-Source: ABdhPJwiPkgndzXzHNckVZlJdBGxTG76sHmV3+lRqtoX6mC6gzOmWzSgOi4PJn+GN6iv57bj/1sLIA==
-X-Received: by 2002:a17:90b:3a82:: with SMTP id om2mr328347pjb.67.1631550579542;
-        Mon, 13 Sep 2021 09:29:39 -0700 (PDT)
-Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
-        by smtp.gmail.com with ESMTPSA id p9sm9431053pgn.36.2021.09.13.09.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Sep 2021 09:29:39 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Mon, 13 Sep 2021 06:29:37 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/13] seq_file: mark seq_get_buf as deprecated
-Message-ID: <YT98ccRMNBmoYPdl@slm.duckdns.org>
-References: <20210913054121.616001-1-hch@lst.de>
- <20210913054121.616001-2-hch@lst.de>
+        Mon, 13 Sep 2021 12:31:59 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 442AF22028;
+        Mon, 13 Sep 2021 16:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1631550642; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Dfx9ZUh8IlSB114cbG4XVpLALI8W+1SZrDn37ByerEE=;
+        b=kXjOO0iCMoAKWnt6Opb8FFJugDUYZQ7DbzsDLuetsyrCbmiPllf/mkVR8VmNl9tWNWifs5
+        AoAoMzVmklJPB54/L4D4Nt4WVKMicnbLDU0dz1hPR58BymiqSOPOwFmy/LivFcuSEnZXFQ
+        kL2G2EhSzQDHiZwB4Uru3KeH19XW7Gw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1631550642;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Dfx9ZUh8IlSB114cbG4XVpLALI8W+1SZrDn37ByerEE=;
+        b=p64ujeY8XFsknqbEvjCTX1PfdqHjFQyxjmZkXXN2V0N30oiXhDFZdJNuK4dhWHt2m/z6RN
+        c/ccMMs18608KnBQ==
+Received: from localhost.localdomain (colyli.tcp.ovpn1.nue.suse.de [10.163.16.22])
+        by relay2.suse.de (Postfix) with ESMTP id A9A4BA3B81;
+        Mon, 13 Sep 2021 16:30:36 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org, nvdimm@lists.linux.dev
+Cc:     antlists@youngman.org.uk, Coly Li <colyli@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        NeilBrown <neilb@suse.de>,
+        Vishal L Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v2 0/7] badblocks improvement for multiple bad block ranges 
+Date:   Tue, 14 Sep 2021 00:30:09 +0800
+Message-Id: <20210913163016.10088-1-colyli@suse.de>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210913054121.616001-2-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 07:41:09AM +0200, Christoph Hellwig wrote:
-> This function pokes a big hole into the seq_file abstraction.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/seq_file.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-> index dd99569595fd3..db16b11477875 100644
-> --- a/include/linux/seq_file.h
-> +++ b/include/linux/seq_file.h
-> @@ -59,6 +59,10 @@ static inline bool seq_has_overflowed(struct seq_file *m)
->   *
->   * Return the number of bytes available in the buffer, or zero if
->   * there's no space.
-> + *
-> + * DOT NOT USE IN NEW CODE! This function pokes a hole into the whole seq_file
-        ^
-       typo
+This is the second effort to improve badblocks code APIs to handle
+multiple ranges in bad block table.
 
-Thanks.
+There are 2 changes from previous version,
+- Fixes 2 bugs in front_overwrite() which are detected by the user
+  space testing code.
+- Provide the user space testing code in last patch.
+
+There is NO in-memory or on-disk format change in the whole series, all
+existing API and data structures are consistent. This series just only
+improve the code algorithm to handle more corner cases, the interfaces
+are same and consistency to all existing callers (md raid and nvdimm
+drivers).
+
+The original motivation of the change is from the requirement from our
+customer, that current badblocks routines don't handle multiple ranges.
+For example if the bad block setting range covers multiple ranges from
+bad block table, only the first two bad block ranges merged and rested
+ranges are intact. The expected behavior should be all the covered
+ranges to be handled.
+
+All the patches are tested by modified user space code and the code
+logic works as expected. The modified user space testing code is
+provided in last patch. The testing code detects 2 defects in helper
+front_overwrite() and fixed in this version.
+
+The whole change is divided into 6 patches to make the code review more
+clear and easier. If people prefer, I'd like to post a single large
+patch finally after the code review accomplished.
+
+This version is seriously tested, and so far no more defect observed.
+
+
+Coly Li
+
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: NeilBrown <neilb@suse.de>
+Cc: Vishal L Verma <vishal.l.verma@intel.com>
+---
+
+Coly Li (6):
+  badblocks: add more helper structure and routines in badblocks.h
+  badblocks: add helper routines for badblock ranges handling
+  badblocks: improvement badblocks_set() for multiple ranges handling
+  badblocks: improve badblocks_clear() for multiple ranges handling
+  badblocks: improve badblocks_check() for multiple ranges handling
+  badblocks: switch to the improved badblock handling code
+Coly Li (1):
+  test: user space code to test badblocks APIs
+
+ block/badblocks.c         | 1599 ++++++++++++++++++++++++++++++-------
+ include/linux/badblocks.h |   32 +
+ 2 files changed, 1340 insertions(+), 291 deletions(-)
 
 -- 
-tejun
+2.31.1
+
