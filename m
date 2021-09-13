@@ -2,85 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFD9A408289
-	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 03:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B55408293
+	for <lists+linux-block@lfdr.de>; Mon, 13 Sep 2021 03:35:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236714AbhIMB2L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 12 Sep 2021 21:28:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45436 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233133AbhIMB2K (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 12 Sep 2021 21:28:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631496415;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JnmC4ls1XV9CkRZPqEmQ5Xb1rz/zwwpt+BLIzR3XI9I=;
-        b=X1/6Pdh4HwjoUunBbBVnVfk7QO05FExGpkrOKfZeSJY/vyphnOgqRRDKzD0WFZugd2EnXR
-        u5Wt7bg3L5hvEDZRvwaV/NHFNFlbSilCvtPJJi5+yMbME1tKqKJ2xuOy7IDHlF+XoWLBSh
-        BdZEGOdjkdyev/7LJpMoGL6kXRZszLM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-559-rl9BYn3WN6GgbwRDz0UGfg-1; Sun, 12 Sep 2021 21:26:54 -0400
-X-MC-Unique: rl9BYn3WN6GgbwRDz0UGfg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE3A4362F8;
-        Mon, 13 Sep 2021 01:26:52 +0000 (UTC)
-Received: from T590 (ovpn-12-120.pek2.redhat.com [10.72.12.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3625510013C1;
-        Mon, 13 Sep 2021 01:26:44 +0000 (UTC)
-Date:   Mon, 13 Sep 2021 09:26:52 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        luojiaxing <luojiaxing@huawei.com>
-Subject: Re: [PATCH] blk-mq: avoid to iterate over stale request
-Message-ID: <YT6o3Lt8II2ZIOlf@T590>
-References: <20210906065003.439019-1-ming.lei@redhat.com>
+        id S236797AbhIMBgm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 12 Sep 2021 21:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233133AbhIMBgl (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sun, 12 Sep 2021 21:36:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E0EB660FDA;
+        Mon, 13 Sep 2021 01:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631496927;
+        bh=mgWJDoM3z3cQEudIafZmHLOAdu7ULEXI+JcYrJjwpiU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PFUcFBQ3/btssDE7iEgpMLPk6x7vmw7PHATSeUYZ0g9i3ENs5PjLN6txy953GjTBE
+         Hmg765VoEe+Pdcf/1q+DBdcR+zNN0GJI8Jx7NcSU+lAew++pNHaHxbR5YkR/FuBRzI
+         7JJDrLOZLH8qbXE4zoPSQIs9J723DX1ZFJ5hJuXWjPaFSNF4kMFa6FK47vRIuj8hxW
+         8aCChUAGr9AwSqU5M6oTuSptxRfc0aPEqbYqwrF8SFxvlIAhJtWrHtSpe6Estu1+Xo
+         V3+ZM0QS/D+h4isfD7zLF5i7IXplTvkeCrjCwwOZbVp+ar4OEbmUzRsdhG4Pei3Yo/
+         CASX7DaAssPig==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        dm-devel@redhat.com, Satya Tangirala <satyaprateek2357@gmail.com>
+Subject: [PATCH 0/5] blk-crypto cleanups
+Date:   Sun, 12 Sep 2021 18:31:30 -0700
+Message-Id: <20210913013135.102404-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210906065003.439019-1-ming.lei@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 06, 2021 at 02:50:03PM +0800, Ming Lei wrote:
-> blk-mq can't run allocating driver tag and updating ->rqs[tag]
-> atomically, meantime blk-mq doesn't clear ->rqs[tag] after the driver
-> tag is released.
-> 
-> So there is chance to iterating over one stale request just after the
-> tag is allocated and before updating ->rqs[tag].
-> 
-> scsi_host_busy_iter() calls scsi_host_check_in_flight() to count scsi
-> in-flight requests after scsi host is blocked, so no new scsi command can
-> be marked as SCMD_STATE_INFLIGHT. However, driver tag allocation still can
-> be run by blk-mq core. One request is marked as SCMD_STATE_INFLIGHT,
-> but this request may have been kept in another slot of ->rqs[], meantime
-> the slot can be allocated out but ->rqs[] isn't updated yet. Then this
-> in-flight request is counted twice as SCMD_STATE_INFLIGHT. This way causes
-> trouble in handling scsi error.
-> 
-> Fixes the issue by not iterating over stale request.
-> 
-> Cc: linux-scsi@vger.kernel.org
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Reported-by: luojiaxing <luojiaxing@huawei.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+This series renames struct blk_keyslot_manager to struct
+blk_crypto_profile, as it is misnamed; it doesn't always manage
+keyslots.  It's much more logical to think of it as the
+"blk-crypto profile" of a device, similar to blk_integrity_profile.
 
-Hello Jens,
+This series also improves the inline-encryption.rst documentation file,
+and cleans up blk-crypto-fallback a bit.
 
-luojiaxiang has verified that this patch fixes his issue, any chance to
-merge it?
+This series applies to v5.15-rc1.
 
+Eric Biggers (5):
+  blk-crypto-fallback: properly prefix function and struct names
+  blk-crypto-fallback: consolidate static variables
+  blk-crypto: rename keyslot-manager files to blk-crypto-profile
+  blk-crypto: rename blk_keyslot_manager to blk_crypto_profile
+  blk-crypto: update inline encryption documentation
 
-Thanks,
-Ming
+ Documentation/block/inline-encryption.rst | 439 ++++++++--------
+ block/Makefile                            |   2 +-
+ block/blk-crypto-fallback.c               | 330 ++++++------
+ block/blk-crypto-profile.c                | 564 +++++++++++++++++++++
+ block/blk-crypto.c                        |  27 +-
+ block/blk-integrity.c                     |   2 +-
+ block/keyslot-manager.c                   | 578 ----------------------
+ drivers/md/dm-core.h                      |   4 +-
+ drivers/md/dm-table.c                     | 168 +++----
+ drivers/md/dm.c                           |  10 +-
+ drivers/mmc/core/crypto.c                 |  11 +-
+ drivers/mmc/host/cqhci-crypto.c           |  33 +-
+ drivers/scsi/ufs/ufshcd-crypto.c          |  32 +-
+ drivers/scsi/ufs/ufshcd-crypto.h          |   9 +-
+ drivers/scsi/ufs/ufshcd.c                 |   2 +-
+ drivers/scsi/ufs/ufshcd.h                 |   6 +-
+ include/linux/blk-crypto-profile.h        | 166 +++++++
+ include/linux/blkdev.h                    |  18 +-
+ include/linux/device-mapper.h             |   4 +-
+ include/linux/keyslot-manager.h           | 120 -----
+ include/linux/mmc/host.h                  |   4 +-
+ 21 files changed, 1310 insertions(+), 1219 deletions(-)
+ create mode 100644 block/blk-crypto-profile.c
+ delete mode 100644 block/keyslot-manager.c
+ create mode 100644 include/linux/blk-crypto-profile.h
+ delete mode 100644 include/linux/keyslot-manager.h
+
+-- 
+2.33.0
 
