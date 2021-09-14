@@ -2,192 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DB8440AE1D
-	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 14:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E331140AEE0
+	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 15:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232779AbhINMp3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Sep 2021 08:45:29 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:15414 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232613AbhINMp2 (ORCPT
+        id S232996AbhINN2j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Sep 2021 09:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232963AbhINN2i (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Sep 2021 08:45:28 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H82xJ20yBzQyM4;
-        Tue, 14 Sep 2021 20:40:04 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Tue, 14 Sep 2021 20:44:09 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Tue, 14
- Sep 2021 20:44:09 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <linux-block@vger.kernel.org>, <stable@vger.kernel.org>,
-        <axboe@kernel.dk>, <gregkh@linuxfoundation.org>, <hch@lst.de>
-CC:     <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH linux-4.19.y] blk-mq: fix divide by zero crash in tg_may_dispatch()
-Date:   Tue, 14 Sep 2021 20:54:02 +0800
-Message-ID: <20210914125402.4068844-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Tue, 14 Sep 2021 09:28:38 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45065C061762
+        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 06:27:21 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q3so16941032iot.3
+        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 06:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=YXA6ubmxBM3AO934Ql+xSBBVvleUU47PEWiFVU0c5sY=;
+        b=fiwvaqG4GGXAjW5tLiAM0+ySUL2AT9SeYHd9fn71oqYTOGsFB+/MsDjFkcAaMK88Rp
+         aZs9aDPldBtKCodc25n6Js9McgU0iW4m9+Bw49zldbFD5uKZijmPiPu3jnFrryWvN7U4
+         d6w/KzeA3rJ39rZhGGZjt9wSSOIt4dDJrUo/SD3fJ/twVYcdDWUZ7B9TYA/2VU68CYvH
+         gK+7/UB2WRghni/JG1vhMbLJ7+hOBTu9llVw7yv4nCQY75bmzAAEJ1fZuFLym4+PdDkQ
+         kMR0DJRnnSpuYXG3JqXLms8gHwS+qaotouPPcil2UuxFIrqHvN5wFcg05K1qGTGt+J/s
+         7rTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=YXA6ubmxBM3AO934Ql+xSBBVvleUU47PEWiFVU0c5sY=;
+        b=yMJht+N5rZNJ93JuinqlYrE4wI9WZqAt1XYVlaCxkNpfqDQiI1SlOkxXehvLaFeCn/
+         BP8nOkQ5d5TIs9j3VtsePgiUN3Iipc/ZH43Ywa3lpqjyMxlZ/nkPzgZFkUqhvNWGK+Xt
+         hpzqDr50coKfZLmfSZcpYavhEBxLeVySj7O4E8qUUk8y8q5lfKUBPtRqudHP8qG3dmex
+         qYjajhSBfL32HsmVnyhmX3mZZwzGPfXdDaw1B/ITdKA6xAdHQPcn2xYfrbRM5RNvkB+n
+         +kJMSI+hIzhjHJhu4XwXhP6VhiwHNoJMwDdrmBIIyupB344FivTmp/am3KuzLhPuoKKP
+         so4A==
+X-Gm-Message-State: AOAM530pY5R1yzzWgqdbFPGmYcAktSz3ruWj4+IxlPsSiPKkqF3kreLv
+        t/v35ZcDLZKPpyNwgxANAxUWmuYNTVcW3PGvnw==
+X-Google-Smtp-Source: ABdhPJwgD59zJYHmeFTwnln7xEB2bzRd1qnVPCsV85aLsLrCHNWv0t/rWBDgqunC5ZqZu1fD9Ez0RLwELcUOBOWniKI=
+X-Received: by 2002:a05:6638:1909:: with SMTP id p9mr9533089jal.108.1631626040628;
+ Tue, 14 Sep 2021 06:27:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+Reply-To: zahirikeen@gmail.com
+Sender: ali.wa1234ara@gmail.com
+Received: by 2002:a05:6638:378e:0:0:0:0 with HTTP; Tue, 14 Sep 2021 06:27:20
+ -0700 (PDT)
+From:   Zahiri Keen <zahirikeen2@gmail.com>
+Date:   Tue, 14 Sep 2021 15:27:20 +0200
+X-Google-Sender-Auth: 3-XSFqGXubJXMOevdCo_MBjbiwM
+Message-ID: <CA+0F4TFtb3ixA_1iNhU6tPvg8v0OmEH=s8oZtiLFp+B1VokLxA@mail.gmail.com>
+Subject: Urgent Please.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If blk-throttle is enabled and io is issued before
-blk_throtl_register_queue() is done. Divide by zero crash will be
-triggered in tg_may_dispatch() because 'throtl_slice' is uninitialized.
+Greetings,
 
-The problem is fixed in commit 75f4dca59694 ("block: call
-blk_register_queue earlier in device_add_disk") from mainline, however
-it's too hard to backport this patch due to lots of refactoring.
+            I have a Mutual/Beneficial Business Project that would be
+beneficial to you. I only have two questions to ask of you, if you are
+interested.
 
-Thus introduce a new flag QUEUE_FLAG_THROTL_INIT_DONE. It will be set
-after blk_throtl_register_queue() is done, and will be checked before
-applying any config.
+1. Can you handle this project?
+2. Can I give you this trust?
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-sysfs.c      |  2 ++
- block/blk-throttle.c   | 41 +++++++++++++++++++++++++++++++++++++++--
- include/linux/blkdev.h |  1 +
- 3 files changed, 42 insertions(+), 2 deletions(-)
+Please note that the deal requires high level of maturity, honesty and
+secrecy. This will involve moving some money from my office, on trust
+to your hands or bank account. Also note that i will do everything to
+make sure that the money is moved as a purely legitimate fund, so you
+will not be exposed to any risk.
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 07494deb1a26..7d250acf8ece 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -954,6 +954,7 @@ int blk_register_queue(struct gendisk *disk)
- 	blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);
- 	wbt_enable_default(q);
- 	blk_throtl_register_queue(q);
-+	blk_queue_flag_set(QUEUE_FLAG_THROTL_INIT_DONE, q);
- 
- 	/* Now everything is ready and send out KOBJ_ADD uevent */
- 	kobject_uevent(&q->kobj, KOBJ_ADD);
-@@ -986,6 +987,7 @@ void blk_unregister_queue(struct gendisk *disk)
- 	if (!blk_queue_registered(q))
- 		return;
- 
-+	blk_queue_flag_clear(QUEUE_FLAG_THROTL_INIT_DONE, q);
- 	/*
- 	 * Since sysfs_remove_dir() prevents adding new directory entries
- 	 * before removal of existing entries starts, protect against
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index caee658609d7..b2eeca9a9962 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -11,6 +11,8 @@
- #include <linux/bio.h>
- #include <linux/blktrace_api.h>
- #include <linux/blk-cgroup.h>
-+#include <linux/sched/signal.h>
-+#include <linux/delay.h>
- #include "blk.h"
- 
- /* Max dispatch from a group in 1 round */
-@@ -1428,6 +1430,31 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 	}
- }
- 
-+static inline int throtl_check_init_done(struct request_queue *q)
-+{
-+	if (test_bit(QUEUE_FLAG_THROTL_INIT_DONE, &q->queue_flags))
-+		return 0;
-+
-+	return blk_queue_dying(q) ? -ENODEV : -EBUSY;
-+}
-+
-+/*
-+ * If throtl_check_init_done() return -EBUSY, we should retry after a short
-+ * msleep(), since that throttle init will be completed in blk_register_queue()
-+ * soon.
-+ */
-+static inline int throtl_restart_syscall_when_busy(int errno)
-+{
-+	int ret = errno;
-+
-+	if (ret == -EBUSY) {
-+		msleep(10);
-+		ret = restart_syscall();
-+	}
-+
-+	return ret;
-+}
-+
- static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 			   char *buf, size_t nbytes, loff_t off, bool is_u64)
- {
-@@ -1441,6 +1468,10 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 	if (ret)
- 		return ret;
- 
-+	ret = throtl_check_init_done(ctx.disk->queue);
-+	if (ret)
-+		goto out_finish;
-+
- 	ret = -EINVAL;
- 	if (sscanf(ctx.body, "%llu", &v) != 1)
- 		goto out_finish;
-@@ -1448,7 +1479,6 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 		v = U64_MAX;
- 
- 	tg = blkg_to_tg(ctx.blkg);
--
- 	if (is_u64)
- 		*(u64 *)((void *)tg + of_cft(of)->private) = v;
- 	else
-@@ -1458,6 +1488,8 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 	ret = 0;
- out_finish:
- 	blkg_conf_finish(&ctx);
-+	ret = throtl_restart_syscall_when_busy(ret);
-+
- 	return ret ?: nbytes;
- }
- 
-@@ -1607,8 +1639,11 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 	if (ret)
- 		return ret;
- 
--	tg = blkg_to_tg(ctx.blkg);
-+	ret = throtl_check_init_done(ctx.disk->queue);
-+	if (ret)
-+		goto out_finish;
- 
-+	tg = blkg_to_tg(ctx.blkg);
- 	v[0] = tg->bps_conf[READ][index];
- 	v[1] = tg->bps_conf[WRITE][index];
- 	v[2] = tg->iops_conf[READ][index];
-@@ -1704,6 +1739,8 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 	ret = 0;
- out_finish:
- 	blkg_conf_finish(&ctx);
-+	ret = throtl_restart_syscall_when_busy(ret);
-+
- 	return ret ?: nbytes;
- }
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 209ba8e7bd31..22be9f090bf1 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -684,6 +684,7 @@ struct request_queue {
- #define QUEUE_FLAG_NOMERGES     5	/* disable merge attempts */
- #define QUEUE_FLAG_SAME_COMP	6	/* complete on same CPU-group */
- #define QUEUE_FLAG_FAIL_IO	7	/* fake timeout */
-+#define QUEUE_FLAG_THROTL_INIT_DONE 8	/* io throttle can be online */
- #define QUEUE_FLAG_NONROT	9	/* non-rotational device (SSD) */
- #define QUEUE_FLAG_VIRT        QUEUE_FLAG_NONROT /* paravirt device */
- #define QUEUE_FLAG_IO_STAT     10	/* do IO stats */
--- 
-2.31.1
+I request for your full co-operation. I will give you details and
+procedure when I receive your reply, to commence this transaction, I
+require you to immediately indicate your interest by a return reply. I
+will be waiting for your response in a timely manner.
 
+Contact  Email: zahirikeen@gmail.com
+Best Regard,
+Mr Zahiri Keen.
