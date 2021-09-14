@@ -2,161 +2,169 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D34C40A886
-	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 09:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E89A40A8FF
+	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 10:15:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235916AbhINHsq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Sep 2021 03:48:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50950 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237039AbhINHru (ORCPT
+        id S230182AbhINIQ4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Sep 2021 04:16:56 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:18397 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230192AbhINIQz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Sep 2021 03:47:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631605593;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HViiRnu75I46+r5aoAeD0e3kDx7NMxZUbAuKksyTKDo=;
-        b=AwC2ahWfEiqgh0WHluo7VygOcgwrlKmlgm2tRU4n6GnH8W09razsQU1Doobq+977qRK4C3
-        uCbMkhrGU+84xqMV50TTwBiAIcBsQm3QtIyeyeqtSk+GeXMLDo+GvIceuV0YfZtmmFt4Gu
-        lbXAwPBJ8ZE6BxqBj0UrXbe3OU93mEI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-537-EytKr-llMZaAcjwQWjDUtg-1; Tue, 14 Sep 2021 03:46:29 -0400
-X-MC-Unique: EytKr-llMZaAcjwQWjDUtg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14FB71017965;
-        Tue, 14 Sep 2021 07:46:28 +0000 (UTC)
-Received: from T590 (ovpn-13-174.pek2.redhat.com [10.72.13.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D650210016F5;
-        Tue, 14 Sep 2021 07:46:19 +0000 (UTC)
-Date:   Tue, 14 Sep 2021 15:46:28 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     axboe@kernel.dk, josef@toxicpanda.com, hch@infradead.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nbd@other.debian.org, yi.zhang@huawei.com
-Subject: Re: [PATCH v5 5/6] nbd: convert to use blk_mq_find_and_get_req()
-Message-ID: <YUBTVBioqJ7qas2R@T590>
-References: <20210909141256.2606682-1-yukuai3@huawei.com>
- <20210909141256.2606682-6-yukuai3@huawei.com>
- <YT/2z4PSeW5oJWMq@T590>
- <c6af73a2-f12d-eeef-616e-ae0cdb4f6f2d@huawei.com>
- <YUBE4BJ7+kN1c4l8@T590>
- <374c6b37-b4b2-fe01-66be-ca2dbbc283e9@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Tue, 14 Sep 2021 04:16:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1631607338;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=XrDpap8pmKJKkv9I71CpW+Ut00pu7KKxgmuVvD69BXw=;
+  b=NtU2FyE9W3m8wNi7BrRCWoRtmqS/hdp4DU8qTiRJA5tFkW6VAqX0YtQx
+   PSdQv1Xoy5POss0+XsuJoL2vqh/bcpKtpKaWUlfA6X47yh6ND6BYhu5s2
+   5+VTUQ32blH5cmjGEaVw/w4wJsXNUcwyZoGw2LrQ5khHHggcva/UDhYfX
+   g=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=pass (signature verified) header.i=@citrix.onmicrosoft.com
+IronPort-SDR: Y8eriGLJivOF6AdwkHQTYDT0uyp0zxMLOgklhYt7Qcep5cxc/Wak1gtFfHG1BgSjGXXnzLkRiD
+ sgGrrbRqxODqyjfDVndCIhhd8D5dgZsQ/gUY5sD2oQ2cVa+L6MrXGurcWFHnXVDfSaFQN+PauZ
+ NJtbd5KyTX1OVvQRGA+MecXLCWB2j5kEdl74eU+lJdCluFpzEasNr8G+BEQoREP0BujLeY0ha1
+ 3pvOqjgTIYZpZFiQq2kq8ZmoD+3afcZZSPWZz/anQCcTF808N1CBQucon99EBTASh2dO/HyFf8
+ duF3RQpVDnWuKxMaDlldwCE8
+X-SBRS: 5.1
+X-MesageID: 54423534
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.156.83
+X-Policy: $RELAYED
+IronPort-Data: A9a23:7DLP7qil4/+B+z50mAOoD/zVX1617xcKZh0ujC45NGQN5FlHY01je
+ htvWGuAb/mDM2qnft1waIXko05T6J/XxtUxHgpkrShkEyob9cadCdqndUqhZCn6wu8v7a5EA
+ 2fyTvGacajYm1eF/k/F3oAMKRCQ7InQLlbGILes1htZGEk0FU/NtTo5w7Rg2t8x3YDga++wk
+ YiaT/P3aQfNNwFcagr424rbwP+4lK2v0N+wlgVWicFj5DcypVFMZH4sDfjZw0/DaptVBoaHq
+ 9Prl9lVyI97EyAFUbtJmp6jGqEDryW70QKm0hK6UID66vROS7BbPg/W+5PwZG8O4whlkeydx
+ /1tuoWvexs1OZfJxvoaUxhdNxFVBaRZreqvzXiX6aR/zmXDenrohf5vEFs3LcsT/eMf7WNmr
+ KJCbmpXN1ba2rzwkOnTpupE36zPKOHxO4wSoDd4xCzxBvc6W5HTBa7N4Le02R9t2pwURquFO
+ 6L1bxJFMRCeb0Z0JmspAZ08oPaw2HKuMB9h/Qf9Sa0fvDGIkV0ZPKLWGMrYfJmGSNtYmm6cp
+ 3na5CLpDxcCLtudxDGZtHW2iYfnmSL9RZJXHrm//f1CnlKe3CoQBQcQWF/9puO24ma6WtRCO
+ wkX9zAooKwa6kOmVJ/+Uge+rXrCuQQTM/JZA+c95SmOx7DS7gLfCmtsZiBcbNUsnM4tTjUxk
+ FaC2djvbRRDubiURHTb0rqxqjq2ETcZJikJYipsZQgC5cPqrMcsjxbMZtF5GaWxg5v+HjSY/
+ tyRhHFg3fNJ15dNjvjluwCc696xmnTXZi46/xrlQn6i1AYneomlZomM2XPj5OkVee51UWK9U
+ Gg4d9m2tb5VVMvWyX3RH43hD5nyuK3Ua2S0bUpHWsB7rmXzoSbLkZV4vWkmTHqFJProbtMAj
+ KX7ggpX+JYbF3+jd6Yfj2mZWplykPSI+TgIUJnpgjtyjnpZL1TvEMJGPxf4M4XRfK8Ey/1XB
+ HtjWZzwZUv28Iw+pNZMewv47YLHOwhknT+DLXwE8/hX+eXHPyPEIVv0GHCPcvo4/Mu5nekhy
+ P4Gb5Hi40wGCIXWO3CLmaZOfQFiBSVqXvje9p0IHtNv1yI7QQnN/deKmuh/E2Gk9owI/tr1E
+ oaVARMBkwuj2iSccG1nqBlLMdvSYHq2llpiVQQENle0wXkzJ4Gp6aYUbZwserc7sudkyJZJo
+ zMtIq1s29xDFWbK/Sozd574oNAwfRinn1vWbSGkfCI+b9hrQAmQoo3oeQ7m9S8vCCurtJRh/
+ +38h12DGZdTFR5/CMv2ae60yw/jt3Yqh+8vDVDDJcNeeRuw/dEyeTDxlPI+P+oFNQ7HmmmBz
+ w+TDBpB/bvNroY5/cPnn6eBq4v1QeJyElADRzvQ7KqsNDmc9W2mmNcSXOGNdDHbdWX15KT9O
+ rkFk6CiaKUKxQ8YvZB9HrBnybMFy+Hu/7IKnB55GHjrbkiwDu8yKHexwsQS5LZGwaVUuFXqV
+ xvXqMVaI7iAJOjsDEUVeFg+du2G2PwZxmvS4PAyLBmo7SN75uPaA0BbPh3Kgy1BNrpldogix
+ L556sIR7gW+jDssM8qH0X8IpzjdcCRYXvV1rIweDa/qlhEvmwNLbpHrAyPr5I2CNodXOU4wL
+ z7I3KfPitywHKYZn6bfwZQV4ddguA==
+IronPort-HdrOrdr: A9a23:RljdXKG0+dnTIdvMpLqFcpHXdLJyesId70hD6qkvc3Nom52j+/
+ xGws536faVslcssHFJo6HmBEClewKnyXcT2/htAV7CZnichILMFu9fBOTZsl/d8kHFh4tgPO
+ JbAtRD4b7LfClHZKTBkXCF+r8bqbHtmsDY5pav854ud3ATV0gJ1XYGNu/xKDwReOApP+tcKH
+ LKjfA32AZINE5nJPiTNz0gZazuttfLnJXpbVovAAMm0hCHiXeN5KThGxaV8x8CW3cXqI1SvV
+ Ttokjc3OGOovu7whjT2yv66IlXosLozp9mCNaXgsYYBz3wgkKDZZhnWZeFoDcpydvfpWoCoZ
+ 3pmVMNLs5z43TeciWcpgbs4RDp1HIU53rr2Taj8DLeiP28YAh/J9tKhIpffBecwVEnpstA3K
+ VC2H/cn4ZLDDvb9R6NpuTgZlVPrA6ZsHAimekcgzh0So0FcoJcqoQZ4Qd8DIoAJiTn84oqed
+ MeQv003MwmMm9yUkqp/FWGmLeXLzEO91a9Mwc/U/WuonhrdCsT9Tpd+CQd9k1wgq7VBaM0oN
+ gsCZ4Y5o2mePVmGp6VNN1xMvdfNVa9NC4kEFjiaWgPR5t3cE4klfbMkcEIDaeRCdo18Kc=
+X-IronPort-AV: E=Sophos;i="5.85,292,1624334400"; 
+   d="scan'208";a="54423534"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FlqjMiNDO6xOk0y91ueXrfzcfjKks958L0WdoeH+hxZ4EUu7XWV0ctBYIQPMdAH12cMkR/Fn/9LsYOyi3sUJiTk3brkjR73T8FDj/GVs+63o5eWm2v47Zqy/BHNYjimk3svV1JI5Ydy+BbwueXX7m+c/XiEG92IckwQDC0RANp/tNUxIzyc2fcnEQ4v1xDTMsh0zGVYlb3IqfzDQsl+fGjalODkSlibDZt2Dn7vK6ztX6BfnikBzYc+fKTiEaCFiF3JbHxA330ifo5YPb8dvtCxWxfV2rpvkuZfqsNxbcLFe6H0QXjv8W0LHUCU3XhJb6e5BfrmVrCUy6wKZg4KeLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=XrDpap8pmKJKkv9I71CpW+Ut00pu7KKxgmuVvD69BXw=;
+ b=Cz/IvXD78ZF9QjV7exz7Ylo7prDl8j2wIy7J8ZIF26AqD0nkzLqINMOVYCZsx+3bXp1hc8tMaLIIJL4D0Uy3j3fLBHSPAf1iJMuju/RlEbrN0r5Pd4o1zXjsDfHdNfAud6YWxjLfbOe0HBz2/QV6jawTFFKFJikMMmgKpsiCn6hkGJ7hAgDQwnoiGIR1BADEFqjOwhat1kNSSlvQrmn39IcKPAtLjDGqIPNUDEs/sxQsgRmMmu9xC2oDUk2aiKdBWSs+7kocWrMxQ8JzZUnYRAHQAESjUMd/YfZE9l1b3MeJ922QfLaTKwpA+CNfpkCiQE2V3v2Cz6EqAsNa8OsRzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
+ dkim=pass header.d=citrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XrDpap8pmKJKkv9I71CpW+Ut00pu7KKxgmuVvD69BXw=;
+ b=ZU2V8WMb9WJM1cg6mFxCgIfbeDf3BhGzeUK3V3hC12FOTVGlBhU7+4tAGI51bv8iqfkBGSBCuoQ+uYV47SL3cYoUb4+0vxtFydmqabbfaN0AXglVHzBtNbIWZNxo4YDBEPgRHyb8Do7OKs8+ft8Ct7TYKj1LebWM/B8GqCUHEVE=
+Date:   Tue, 14 Sep 2021 09:58:46 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Xu Wang <vulab@iscas.ac.cn>
+CC:     <Damien.LeMoal@wdc.com>, <konrad.wilk@oracle.com>,
+        <axboe@kernel.dk>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] xen-blkback: Remove needless request_queue NULL
+ pointer check
+Message-ID: <YUBWNkD3lECHrhAp@MacBook-Air-de-Roger.local>
+References: <20210910035918.24907-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <374c6b37-b4b2-fe01-66be-ca2dbbc283e9@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210910035918.24907-1-vulab@iscas.ac.cn>
+X-ClientProxiedBy: LO4P123CA0117.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:192::14) To DS7PR03MB5608.namprd03.prod.outlook.com
+ (2603:10b6:5:2c9::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 200dd00c-22ad-4f3b-31fd-08d977557de4
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4220:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB422044049DBC424663C4D83E8FDA9@DM6PR03MB4220.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kD1dkEX/OIhgH5Q8Yk8YaC4GuVeMqE1CKJTsmXurRGIEi4hx3BXFK7TKKEAL5XWUw8Jkvp+6olQ1brs8sOO4YX/pmJVs1Df+bvVAxAHz+Un8za3d7JtDLBm2igpgXtOnh6coJ3vpLFZO3FuXcZLDu/3z2O7JhmajojFNrVPdOQ5KJZSZgAuOKRL/zOoXE1VNAQz7vfNPLZKoJsZcFAdFI31Np7RqIvjXZ3aWQmLjo/qVOXvhouootiA25PGe9Lpn3sAfP+PZ/+5KSnP2ZuQWQzzVgXos3pRk0mYLWzlKzT4xQ1oPSvONiiW0ptDOePEmagh9h5EUeIvvaYR1KxU0DPrFQaWHNu1yRM9jkAPSpqpzhMGtVpBHPaAXMYpUbI3rynouehxRjPGIdIj/YYE6iaR4RCFQTESVrvpANAKGiIWtbKxRGa2f8MjUCN8MXlCSv+jox039V2QxbIWSGLTgKNtXwMpfQBsh4b1O9mQ76XsLiPWG22MbposmCyqX0xl56pxxKQ2qt93ZkB+XY+V6+lxLfndKc6ISIBQ3CWpG+beHmePh2uqOsnqbkctQulyq0FE38iLxXLKl7zeoRJBYBUV4mLhqOS32fs4lf+2xIsFgRgeKnO0n3VXlf6iuVBITOMa8REsau05c2P7IxNnNUw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(39860400002)(136003)(346002)(376002)(83380400001)(6496006)(6486002)(4744005)(9686003)(6666004)(186003)(5660300002)(8676002)(85182001)(38100700002)(956004)(66946007)(66556008)(66476007)(478600001)(8936002)(2906002)(26005)(316002)(6916009)(86362001)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RzlBK0lRMHdta1dWMThadEM4QzJ3NmZaeFJGQWdzUS9HbzhyUUxCZGxYNXBy?=
+ =?utf-8?B?QnQ3VHlkeERrM09JL2hBUzhBd1hYUFAyRVNFNUlyZURCZWdYMkQwcFZpcmMy?=
+ =?utf-8?B?UkpkNlZ3YU1qeENhRkJxMU9qaUpLQW9kQnlxa24zUFFEZ2FFL21JbUsrRjVO?=
+ =?utf-8?B?R2JKRDQwSnNGakJ1aXNEeUlJekJrTWhDSzVvTTZJUnIxVGE2ZU9SMWNWZG1Z?=
+ =?utf-8?B?d0ZHdUI3K3hWVDhxd3FKVnYrU3duM3ZjM3k1dmF5YVRCS3NYdE93RzJuVlVH?=
+ =?utf-8?B?eklBQzkyMmc4RDc0bGlnay9nV0J5UFpUaEgzYkhuWk53eDBYNUovb1NiNGdN?=
+ =?utf-8?B?MlNWeVhUK2JhdnlrWS9zbjhaRVZEZ0tlYVNtRmVTWHZCZmJvSXdSQ3MyWnBV?=
+ =?utf-8?B?clA2RG5JTno3c3p4ZGdZdmFOSGs4M1A2dWlzeldBTFpNdFhhdTV1WHdPcUJH?=
+ =?utf-8?B?R044QlNjVjVSUDE3eXF6RTNTYkV2M3MwMzRXRlRua2hXWnl4bURkRHdhVGRO?=
+ =?utf-8?B?VW96dXE3WXBQTE9GajJLV0FYVW0wZS8vVU1jaC9YSWZMckp0dnpveUdZMVFk?=
+ =?utf-8?B?bFlQRVNpWThlVm0rS2Z6UlREVTFNQTlWczhOb2E0aGV0KzNkNnNnd3dJWnpj?=
+ =?utf-8?B?NFc0OFNYWnFLdXViazNpbDR1SmFtMTVtM3hVMW1KT0U4RGczcVRub2M2ZFJQ?=
+ =?utf-8?B?MFVTekorUnhBYmREWThycTRPNGVUbVZ2L2tHdklwQmxyMnlxTEFWcFl4ZW04?=
+ =?utf-8?B?ZTBtdm9rdlBzNEU5SjZWekd4aG9ZRURZTVBGTWR6UnJBTkhXN0VSY3g1aDlk?=
+ =?utf-8?B?WmhTUVU0aVdQVVFRYktaN0doeVN1eWRKNktoZ0tYOHo3ZDVROVAvMm9tSUoy?=
+ =?utf-8?B?VnVJdHBIT2JlaGVqSW5qYjc2QzBTTUIzV0g5ajFKWVUxbnJvQzZDWW04blFx?=
+ =?utf-8?B?MjhVTU10NVdwUUpUQ2NPdHFxM0czOGhVQjdYMjQrRVRNbUtheG50alFsMnVv?=
+ =?utf-8?B?eTZSN0NQYzFFUGpFWldhNHRDa2lFY0MvTitBSEwwREx5Tm1jVnZnbENHQ3BT?=
+ =?utf-8?B?VVp2aTJ4MzF2K3I4eWp5QzlUb21jcmNoU0Y0MDVZS2J1ZVovS1E2RWo3TnRK?=
+ =?utf-8?B?enhnSXQ5d2ZidGlpZ0hObWh3V01HWlg2VW1GdHJ2SEFwbDVaWjhqYWVnb1FI?=
+ =?utf-8?B?ZkNqN3huemI3QnBSTWFaOTVZZE00NWN6YWpxTVArMkwvcGZXQ21Na3FwSkRX?=
+ =?utf-8?B?cFhBRWR5aURXK0RORzhrRlUwM1dpd0R3YnVQSGNJWVRKZzRRdEtBaXRLczRv?=
+ =?utf-8?B?TkNCU2RhNGZ0d2szVFNrSSttbUxMVHlDWXZMbGxNQVB6UW5aMTRRcFg5ZElS?=
+ =?utf-8?B?dVlNYlNIdFJ2OUdCclJwempIb0hMTS9vZ0RydjBKU2MvVDA4bGY0ZjdmZWFF?=
+ =?utf-8?B?eHVkaGZKVVZrbkRhcUR6RTJNTTJHMW56Tk5FVXhFN0JkZnRaVHE3SVRIZDFN?=
+ =?utf-8?B?Wld4dkt1TGFMQWNkcUNvUXp2Y1ZwUWRxWlpZSGNWS3huSWgwcTQzSGltRXk3?=
+ =?utf-8?B?MmF5Tll3RS8vb1hKakZjRmdldFBqTU5vRnpDU1lrMkI1Vmh3cnlxNk1pUWlS?=
+ =?utf-8?B?aisyNjVIdnY3Vk4vNkNhZTdEeXJOV0xRVFk1STJDaUh6UmN2TXpjb2VjbDlH?=
+ =?utf-8?B?Y1QvWXIwbmEyVXlqZ1lUbXZacUpiZ3BCT0crMEsyVDRRQjFJVGpGQUs3K0Rk?=
+ =?utf-8?Q?r6lpcHzVBOD/bgBnviw3ZP5kImRYDj18gHpQUz8?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 200dd00c-22ad-4f3b-31fd-08d977557de4
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR03MB5608.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2021 07:58:51.8310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j3U5A3nWbujbaU3HBXAXahv/3j6GwDQmoWCfCKBLFfIZK2+5Z/kUBNFgV8VbxCwVnIyta7FGy5EsO9LbXLUBuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4220
+X-OriginatorOrg: citrix.com
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 03:13:38PM +0800, yukuai (C) wrote:
-> On 2021/09/14 14:44, Ming Lei wrote:
-> > On Tue, Sep 14, 2021 at 11:11:06AM +0800, yukuai (C) wrote:
-> > > On 2021/09/14 9:11, Ming Lei wrote:
-> > > > On Thu, Sep 09, 2021 at 10:12:55PM +0800, Yu Kuai wrote:
-> > > > > blk_mq_tag_to_rq() can only ensure to return valid request in
-> > > > > following situation:
-> > > > > 
-> > > > > 1) client send request message to server first
-> > > > > submit_bio
-> > > > > ...
-> > > > >    blk_mq_get_tag
-> > > > >    ...
-> > > > >    blk_mq_get_driver_tag
-> > > > >    ...
-> > > > >    nbd_queue_rq
-> > > > >     nbd_handle_cmd
-> > > > >      nbd_send_cmd
-> > > > > 
-> > > > > 2) client receive respond message from server
-> > > > > recv_work
-> > > > >    nbd_read_stat
-> > > > >     blk_mq_tag_to_rq
-> > > > > 
-> > > > > If step 1) is missing, blk_mq_tag_to_rq() will return a stale
-> > > > > request, which might be freed. Thus convert to use
-> > > > > blk_mq_find_and_get_req() to make sure the returned request is not
-> > > > > freed.
-> > > > 
-> > > > But NBD_CMD_INFLIGHT has been added for checking if the reply is
-> > > > expected, do we still need blk_mq_find_and_get_req() for covering
-> > > > this issue? BTW, request and its payload is pre-allocated, so there
-> > > > isn't real use-after-free.
-> > > 
-> > > Hi, Ming
-> > > 
-> > > Checking NBD_CMD_INFLIGHT relied on the request founded by tag is valid,
-> > > not the other way round.
-> > > 
-> > > nbd_read_stat
-> > >   req = blk_mq_tag_to_rq()
-> > >   cmd = blk_mq_rq_to_pdu(req)
-> > >   mutex_lock(cmd->lock)
-> > >   checking NBD_CMD_INFLIGHT
-> > 
-> > Request and its payload is pre-allocated, and either req->ref or cmd->lock can
-> > serve the same purpose here. Once cmd->lock is held, you can check if the cmd is
-> > inflight or not. If it isn't inflight, just return -ENOENT. Is there any
-> > problem to handle in this way?
-> 
-> Hi, Ming
-> 
-> in nbd_read_stat:
-> 
-> 1) get a request by tag first
-> 2) get nbd_cmd by the request
-> 3) hold cmd->lock and check if cmd is inflight
-> 
-> If we want to check if the cmd is inflight in step 3), we have to do
-> setp 1) and 2) first. As I explained in patch 0, blk_mq_tag_to_rq()
-> can't make sure the returned request is not freed:
-> 
-> nbd_read_stat
-> 			blk_mq_sched_free_requests
-> 			 blk_mq_free_rqs
->   blk_mq_tag_to_rq
->   -> get rq before clear mapping
-> 			  blk_mq_clear_rq_mapping
-> 			  __free_pages -> rq is freed
->   blk_mq_request_started -> UAF
+On Fri, Sep 10, 2021 at 03:59:18AM +0000, Xu Wang wrote:
+> The request_queue pointer returned from bdev_get_queue() shall
+> never be NULL, so the null check is unnecessary, just remove it.
 
-If the above can happen, blk_mq_find_and_get_req() may not fix it too, just
-wondering why not take the following simpler way for avoiding the UAF?
+There are other places in the code where the return of bdev_get_queue
+is checked to not be NULL, like __blkdev_issue_discard. Should those
+also be changed?
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 5170a630778d..dfa5cce71f66 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -795,9 +795,13 @@ static void recv_work(struct work_struct *work)
- 						     work);
- 	struct nbd_device *nbd = args->nbd;
- 	struct nbd_config *config = nbd->config;
-+	struct request_queue *q = nbd->disk->queue;
- 	struct nbd_cmd *cmd;
- 	struct request *rq;
- 
-+	if (!percpu_ref_tryget(&q->q_usage_counter))
-+                return;
-+
- 	while (1) {
- 		cmd = nbd_read_stat(nbd, args->index);
- 		if (IS_ERR(cmd)) {
-@@ -813,6 +817,7 @@ static void recv_work(struct work_struct *work)
- 		if (likely(!blk_should_fake_timeout(rq->q)))
- 			blk_mq_complete_request(rq);
- 	}
-+	blk_queue_exit(q);
- 	nbd_config_put(nbd);
- 	atomic_dec(&config->recv_threads);
- 	wake_up(&config->recv_wq);
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 
-Thanks,
-Ming
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
 
+Regards, Roger.
