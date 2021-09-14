@@ -2,71 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D9740A730
-	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 09:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB56B40A71A
+	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 09:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240662AbhINHPN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Sep 2021 03:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240672AbhINHPN (ORCPT
+        id S240467AbhINHLl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Sep 2021 03:11:41 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:41665 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240407AbhINHLh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Sep 2021 03:15:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27881C061574
-        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 00:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Df9SelIUYBc0yVIr3NKOtMbMq+ENDsJbIcDBQ82Woao=; b=I3S6UN9HoeiIfMU2tlMAjjNoPU
-        9+xzYED3dpLFGNCT12RtZfLNwaBM88oO5EHQ7jJ177lh0QuRJnCVQnGVNBcKcmp3HzKx54T1V2BQr
-        OmBYJ4hObv+rxOhXbxTAMMtpgaxXC6Sp/htiFsoB0mn3ngqNAsc7sbJNmEwxqfP5gjB005chvT+7U
-        Wrah02H5wY0w25rHJsmczxSk/i6ee2r5nd2YVqIaKSUUjT76VVQ14/5lqizU6lOlm1FRpI4R08Q08
-        SJP9pBsQUmuxO0iDO4+KpiyaWbE3REs6bGto6gCZwk3luBv6FhiF6fJfb9NTjlzPtvk/VN1HMePm+
-        bV7hTHZg==;
-Received: from [2001:4bb8:184:72db:7baf:b601:6734:7149] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQ2aZ-00EMxO-PE; Tue, 14 Sep 2021 07:10:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk, martin.petersen@oracle.com
+        Tue, 14 Sep 2021 03:11:37 -0400
+Received: by mail-wm1-f46.google.com with SMTP id g19-20020a1c9d13000000b003075062d4daso1709857wme.0
+        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 00:10:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=IiINBX3YO3NsYfPfcxgfWP6Ep5EKOEns/Ok0gUTvVaKKb0Z6MS3qT0iVfyCsN9A2D8
+         00Tv+X4aMkdGnmKrFyTpKCJGzB+yzBw6QuZxOAnJ3asUujU2Qfv80z+w4YC2YJutOfcC
+         XSrencJqjhaY80d1rVfXxL81pxU2fCGajD/EyDt0R3yFgDUC2l2Q0kHW3dyS/PPELsCG
+         6D89ixKvdTd65WeyLWYILaPqaotPjYL5ImCMxotTGt78Puwa4/JL2Ns2Ba6UuIqxMJs0
+         VG53XIjpBYazLonmVDGQM1kBOqL4EG0wfTrgDmGGDhURuR7gcMgFj80bZTjofUo6x0q1
+         wiWw==
+X-Gm-Message-State: AOAM533O7B+BTax73Xemv/7wNH3Te8FRzRxBUihP1v4VDGRUMdA0HF8U
+        Pw2kkVBjDPerMOgDEEhDZVM=
+X-Google-Smtp-Source: ABdhPJx7sgMPw0ZveAhlsfNR05BybpsNgXDeSWAWCXYwgqr7q8we2bjrntKcjsDyOtsJWIFczNrzsw==
+X-Received: by 2002:a7b:c447:: with SMTP id l7mr462543wmi.15.1631603419971;
+        Tue, 14 Sep 2021 00:10:19 -0700 (PDT)
+Received: from [192.168.64.123] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
+        by smtp.gmail.com with ESMTPSA id z7sm11919641wre.72.2021.09.14.00.10.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Sep 2021 00:10:19 -0700 (PDT)
+Subject: Re: [PATCH 1/3] block: check if a profile is actually registered in
+ blk_integrity_unregister
+To:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        martin.petersen@oracle.com
 Cc:     Lihong Kou <koulihong@huawei.com>, kbusch@kernel.org,
-        sagi@grimberg.me, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: [PATCH 3/3] nvme: remove the call to nvme_update_disk_info in nvme_ns_remove
-Date:   Tue, 14 Sep 2021 09:06:57 +0200
-Message-Id: <20210914070657.87677-4-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210914070657.87677-1-hch@lst.de>
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
 References: <20210914070657.87677-1-hch@lst.de>
+ <20210914070657.87677-2-hch@lst.de>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <f9ed98d5-daee-7206-59c6-88bbbc49ed25@grimberg.me>
+Date:   Tue, 14 Sep 2021 10:10:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210914070657.87677-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is no need to explicitly unregister the integrity profile when
-deleting the gendisk.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/core.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 97f8211cf92c1..6600e138945e2 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3862,8 +3862,6 @@ static void nvme_ns_remove(struct nvme_ns *ns)
- 		nvme_cdev_del(&ns->cdev, &ns->cdev_device);
- 	del_gendisk(ns->disk);
- 	blk_cleanup_queue(ns->queue);
--	if (blk_get_integrity(ns->disk))
--		blk_integrity_unregister(ns->disk);
- 
- 	down_write(&ns->ctrl->namespaces_rwsem);
- 	list_del_init(&ns->list);
--- 
-2.30.2
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
