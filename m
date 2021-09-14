@@ -2,41 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B86E240A718
-	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 09:09:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99F1640A71B
+	for <lists+linux-block@lfdr.de>; Tue, 14 Sep 2021 09:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240572AbhINHK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Sep 2021 03:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
+        id S240413AbhINHMB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Sep 2021 03:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240419AbhINHKv (ORCPT
+        with ESMTP id S240407AbhINHMA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Sep 2021 03:10:51 -0400
+        Tue, 14 Sep 2021 03:12:00 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C130DC061574
-        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 00:09:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DEF7C061574
+        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 00:10:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=dfl1sK45D1Zp1CN7VKwgHtnSAsfPpe+2vVKDvLnEe0I=; b=H5uutOkD1jWUZJMgn4amsEw11C
-        k9rBxJIBvGNbQJCkx7AVJGvPgynHibJaUg1qea8H/A9YrwCFsQ9q8yz4JX40lmNDqNQTXFUUh4Got
-        ITVTWQWZOGus/7ETddAjiGYzvE4EI3fd4IHDjTZ2pA9a9yzHLlR1fMp2L4hjXl7d48sQBnwF8UCoh
-        eD6ooTiNcN0iFg/nfL4eWZRMovzeXx+47St185N+SKV+/zKhyVVPxF+n16akmnXG2mqHQU8GIx5Fi
-        z7grx9cIY9VzEi8YjndBWpCn7AVoK2Na77XzW6q5IDZGfDE0iYNVzziAa+YIvt+w1PCTNX4gZFnS/
-        3ciQEvGg==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=KWp8vmMbO3DtgMY56aSxL6xJpVznvKrsjuA6ZN3BFII=; b=jvhcc4Dmh6JGN2s9dUbyLwHkPo
+        guM0ns2j0mujP1pPqyVnJjMoTKEikOu0LCMVU2C34ED6HjKo4V+RM/kmH9N2Hgys5pmF7cWU08Wky
+        RPpfe5+ZyPlnAw5qyulvOfPRDOEmXB+jJAEF9vUgSnW0TVgQTEQsscllqv3Q2RYA5viMDiDKZgLIP
+        /fQrEAfKkCxaKBI8osl0XUGAZspM3E+9g5+VOw1r5VPRangFrZSxD2chuTT/by01Oon5vDvqY8njR
+        RYjN/pAykXa/kkYIKYc9C/q3MkCvmsyv5jOxBhNMUZuG/40rBsgT2aaH2aQjHfBLSyw7aN5iKKg60
+        stSkZhVA==;
 Received: from [2001:4bb8:184:72db:7baf:b601:6734:7149] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQ2Wy-00EMmu-Gp; Tue, 14 Sep 2021 07:07:18 +0000
+        id 1mQ2Xx-00EMpg-FX; Tue, 14 Sep 2021 07:08:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     axboe@kernel.dk, martin.petersen@oracle.com
 Cc:     Lihong Kou <koulihong@huawei.com>, kbusch@kernel.org,
         sagi@grimberg.me, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: fix an integrity profile unregistration race
-Date:   Tue, 14 Sep 2021 09:06:54 +0200
-Message-Id: <20210914070657.87677-1-hch@lst.de>
+Subject: [PATCH 1/3] block: check if a profile is actually registered in blk_integrity_unregister
+Date:   Tue, 14 Sep 2021 09:06:55 +0200
+Message-Id: <20210914070657.87677-2-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210914070657.87677-1-hch@lst.de>
+References: <20210914070657.87677-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -44,8 +46,34 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all,
+While clearing the profile itself is harmless, we really should not clear
+the stable writes flag if it wasn't set due to a registered integrity
+profile.
 
-this series fixes a race when the integrity profile is unregistered on a
-live gendisk.  This is a slight twist on a patch sent by Lihong, which
-I've taken over as she is out on vacation for the next two weeks.
+Reported-by: Lihong Kou <koulihong@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/blk-integrity.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/block/blk-integrity.c b/block/blk-integrity.c
+index 69a12177dfb62..48bfb53aa8571 100644
+--- a/block/blk-integrity.c
++++ b/block/blk-integrity.c
+@@ -426,8 +426,12 @@ EXPORT_SYMBOL(blk_integrity_register);
+  */
+ void blk_integrity_unregister(struct gendisk *disk)
+ {
++	struct blk_integrity *bi = &disk->queue->integrity;
++
++	if (!bi->profile)
++		return;
+ 	blk_queue_flag_clear(QUEUE_FLAG_STABLE_WRITES, disk->queue);
+-	memset(&disk->queue->integrity, 0, sizeof(struct blk_integrity));
++	memset(bi, 0, sizeof(*bi));
+ }
+ EXPORT_SYMBOL(blk_integrity_unregister);
+ 
+-- 
+2.30.2
+
