@@ -2,76 +2,159 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C106940BD41
-	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 03:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A717740BD56
+	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 03:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhIOBi1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Sep 2021 21:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
+        id S229532AbhIOBvU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Sep 2021 21:51:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbhIOBi0 (ORCPT
+        with ESMTP id S230401AbhIOBvT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Sep 2021 21:38:26 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B087C061574
-        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 18:37:08 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id i25so2587411lfg.6
-        for <linux-block@vger.kernel.org>; Tue, 14 Sep 2021 18:37:08 -0700 (PDT)
+        Tue, 14 Sep 2021 21:51:19 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D49C061574;
+        Tue, 14 Sep 2021 18:50:01 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id g13-20020a17090a3c8d00b00196286963b9so3728911pjc.3;
+        Tue, 14 Sep 2021 18:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7iCnw2B0OrtB70UipD11R0kct+aw7ND2VMDI93/EMd4=;
-        b=OiVJjGf6kRyUvpzdcRekxqee2GYg4RtJOq/O/l9nMPCiMeCRryyJb0rssRMvJxJe4Y
-         NmU3SEgjAPpcIFZM7EH8Gkan+PNO0uumw7sCR5YTpR+eJyzhRHt41qxbQP7Dr7pP6Z1U
-         m/9KM1Iyayf6YJUDwku/JsMT1IRzJzF1eYiLcWKKcGUKI6anEbFfHI4AIPq4K3srmO9w
-         bP49Bk7cHIMD8soV1ez2mzl6zotRJe4jVZnUMJKHGIFd+I0UlOjZkRKh9fh5/1bFwbJL
-         IYHtK/BqVDHB52ZKoCiawSj2FbJlxC9hXEO939mwTTbEb1nf5erMKCbRxUXhlRRsAvar
-         DVHA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0duRHFk7lUou2HJyFdnkXq9ZDnwKgf88dnSVoAia5cQ=;
+        b=h7UHB1c5RiPAVdvLzyUqEyzHQyKvNQ8N5SIJYqo8r/ACiw+E0hVTpqhGzAifmalWUH
+         mGcXC/E1F4nl3+i1fxYQuQRRjaVQAfekF6Dcz4SyqObNP2kGPWQGRwjqCGmgPcC/CtzW
+         2RnGQ/Eem38Lp7Su/EcsHBqbpOQNcksg8yvMl4Q3lLWYLL2vLBheHJW2ykMmmzF5LW11
+         xlcfoO/aA7Q5Xyk4D+NNatR0OPUmifDBnheBXW9ZjIG8NIGNJsTxrguBXahZvWedo1wZ
+         gAnfKUn4uowFGhqkGreo9awcClDN0ZQOY53MoZPt+oqss9jQ5W7Aldk68w0OnAEVMlYX
+         W/mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7iCnw2B0OrtB70UipD11R0kct+aw7ND2VMDI93/EMd4=;
-        b=0IBGTMf+M3Mk54oW9rzzChtCvkS3/9JLkN7RF+jvAQbgPTj7YZv8lRN+h/yvjYMOQf
-         K65+wPwuxfXLNJOLIzj3nzPXpHxR+Tx+Mqqp+avH7biqN4xy5S+XWqNCGOx+VC2ZUr2i
-         Q0+6sw68dJM2j/373POuch5/F9TOop+thsDeTX9FH8FeAU6v+3VBTOlP+MBZ1po7yHaK
-         cpYIAX6+d/JzABnSeY7bAOuLGxA8KuOlisRJgAM6H9XpuA4n76+5TnuEBd3ZIZgAQ4ZQ
-         uKaLsInVuVm1U2lKpDGCjhe1Y1lF1wkUIpv//Jdedh9pgpDsTpmKLdCfYZJblBw7K/vq
-         3XhQ==
-X-Gm-Message-State: AOAM531nccA0G/eRQ5ai64EVsEiwR4XDM1AAmrUbxpQM+A/eLfKRbyMM
-        RVC36ozMeUvrji0W/CMcmVG1YQnzitoMAph+UkI=
-X-Google-Smtp-Source: ABdhPJxY72TNOpSuhxPaxouhvTM/1UKat/wN4IekJfrphxhX0dMoPQ0p8MMtmxoHVMBWvUNUGHPaEikb02/URi/6MFM=
-X-Received: by 2002:ac2:4306:: with SMTP id l6mr14914415lfh.641.1631669827050;
- Tue, 14 Sep 2021 18:37:07 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0duRHFk7lUou2HJyFdnkXq9ZDnwKgf88dnSVoAia5cQ=;
+        b=4LYuvSE9e4sNwD7rHSks+zzXkMx3gLQRa20sMbaBE4ilp0r+FxtkeMoprzK3XOi8Me
+         6rzrPICNxebacDTh3qjVElHM32qJJYk8XesszWTPVuTGO0UqMC1MWKiHPNQsfp853NiY
+         O66ulKmoF0zHtfN1xAJ+rp10k6D78f2iYIgc3VW9TSD4a8OK1Z4oi6nsO0zYTbPpf4Fu
+         FN33SEXX9oFFdKu4ps1plYMHtPjBl4yoDSitP1K2JMFL5lkK/a/Z1oB7/3nexSOeKsLw
+         9jql2PsQ4fS/bCX+LVS8i8kPfkBjIwJYqNFAidWj941dkaFRoRWt0UUCBcgdGTqH6Ef8
+         3D1Q==
+X-Gm-Message-State: AOAM533WSBlJ+budvLo6D2tMDjflXih2wmhZXy5BhzKMex9PnzTL3bj9
+        tZnFKxj8SbwWu72fqmC8C0l2zu8GcsnLFYXJKA==
+X-Google-Smtp-Source: ABdhPJwHC881s34EBZiNHIy8DrEYTyS/wk6mQKFICqKI08cP0+R7xMXJTyjuayfwp1a2sBcGlimf7YifmRYOdmcJpSc=
+X-Received: by 2002:a17:90b:124c:: with SMTP id gx12mr5566671pjb.106.1631670600973;
+ Tue, 14 Sep 2021 18:50:00 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac2:5df1:0:0:0:0:0 with HTTP; Tue, 14 Sep 2021 18:37:06
- -0700 (PDT)
-Reply-To: christopherduluh444@gmail.com
-From:   Christopher Duluh <christopherduluh6661@gmail.com>
-Date:   Wed, 15 Sep 2021 02:37:06 +0100
-Message-ID: <CAPpcjjLnHv02LZ07NF5doGQQVG6FvDrxoRH3WdrgH0ikHW_JPg@mail.gmail.com>
-Subject: Nice meeting you
-To:     undisclosed-recipients:;
+References: <CACkBjsZxsm=91sf-ihJgEtx7tmBJr-yTrPbrvg6tP-_J4pGdGw@mail.gmail.com>
+ <YUB9Pn4CrqYu7TMC@infradead.org>
+In-Reply-To: <YUB9Pn4CrqYu7TMC@infradead.org>
+From:   Hao Sun <sunhao.th@gmail.com>
+Date:   Wed, 15 Sep 2021 09:49:49 +0800
+Message-ID: <CACkBjsYwLYLRmX8GpsDpMthagWOjWWrNxqY6ZLNQVr6yx+f5vA@mail.gmail.com>
+Subject: Re: general protection fault in wb_timer_fn
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
+Christoph Hellwig <hch@infradead.org> =E4=BA=8E2021=E5=B9=B49=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=886:46=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Mon, Sep 13, 2021 at 10:00:27AM +0800, Hao Sun wrote:
+> > Hello,
+> >
+> > When using Healer to fuzz the latest Linux kernel, the following crash
+> > was triggered.
+> >
+> > HEAD commit:  4b93c544e90e-thunderbolt: test: split up test cases
+> > git tree: upstream
+> > console output:
+> > https://drive.google.com/file/d/1naN-5p-rFgKpHrshO_kQr5f_KlhvFGGU/view?=
+usp=3Dsharing
+> > kernel config: https://drive.google.com/file/d/1c0u2EeRDhRO-ZCxr9MP2VvA=
+tJd6kfg-p/view?usp=3Dsharing
+> > C reproducer: https://drive.google.com/file/d/19EDhssGw_V1oO2vWOPrgQqve=
+0TdFSgvh/view?usp=3Dsharing
+> > Syzlang reproducer:
+> > https://drive.google.com/file/d/13EGCCoaMe9oitrQCfy44BkGVLbKKFP6X/view?=
+usp=3Dsharing
+>
+> All these google drive links just lead me to badly localized error
+> messages.  Can you upload these to a less broken hosting platform?
 
-My name is Christopher Duluh,a renowned Togo based solicitors.
-I am writing in connection to My late client ,who
-bears the same surname with you and left the sum of Ten million five
-hundred thousand United States dollars($10,5 million) in a bank before
-his death. I contacted you to seek your consent to present you to the
-bank as a heir to my late client to enable the transfer of this fund
-transfer to your account. I would enlighten you on more details and
-clarifications when i get positive response from you.
+console output: https://paste.ubuntu.com/p/5qHqPXWmCQ/
+kernel config: https://paste.ubuntu.com/p/VsVbFh9ZpQ/
+C reproducer: https://paste.ubuntu.com/p/yrYsn4zpcn/
+Syzlang reproducer: https://paste.ubuntu.com/p/bCWyNyHncJ/
 
-Barrister Christopher Duluh, .(Esq)
-Principal Attorney of Dominion Associates
-Chambers Barristers & Solicitors
-Public Notary Lome-TOGO West Africa
-BTD/SORT-CD-00247901
-Contact Phone. 228 99793155
-Email(christopherduluh444@gmail.com)
+Just tried the C reproducer on the latest Linux kernel (6880fa6c5660
+Linux 5.15-rc1).
+The reproducer still crashed the kernel but with a different backtrace.
+
+IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+IPv6: ADDRCONF(NETDEV_CHANGE): wlan1: link becomes ready
+Bluetooth: hci0: command 0x0409 tx timeout
+------------[ cut here ]------------
+kernel BUG at fs/buffer.c:1510!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.14.0+ #15
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Workqueue: events delayed_fput
+RIP: 0010:block_invalidatepage+0x27f/0x2a0 -origin/fs/buffer.c:1510
+Code: ff ff e8 b4 07 d7 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
+c7 c2 40 4e 25 84 e8 2b c2 c4 02 e9 c9 fe ff ff e8 91 07 d7 ff <0f> 0b
+e8 8a 07 d7 ff 0f 0b e8 83 07 d7 ff 48 8d 5d ff e9 57 ff ff
+RSP: 0018:ffffc9000065bb60 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffea0000670000 RCX: 0000000000000000
+RDX: ffff8880097fa240 RSI: ffffffff81608a9f RDI: ffffea0000670000
+RBP: ffffea0000670000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffffc9000065b9f8 R11: 0000000000000003 R12: ffffffff81608820
+R13: ffffc9000065bc68 R14: 0000000000000000 R15: ffffc9000065bbf0
+FS:  0000000000000000(0000) GS:ffff88807dc00000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4aef93fb08 CR3: 0000000108cf2000 CR4: 0000000000750ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ do_invalidatepage -origin/mm/truncate.c:157 [inline]
+ truncate_cleanup_page+0x15c/0x280 -origin/mm/truncate.c:176
+ truncate_inode_pages_range+0x169/0xc30 -origin/mm/truncate.c:325
+ kill_bdev.isra.29+0x28/0x30
+ blkdev_flush_mapping+0x4c/0x130 -origin/block/bdev.c:658
+ blkdev_put_whole+0x54/0x60 -origin/block/bdev.c:689
+ blkdev_put+0x6f/0x210 -origin/block/bdev.c:953
+ blkdev_close+0x25/0x30 -origin/block/fops.c:459
+ __fput+0xdf/0x380 -origin/fs/file_table.c:280
+ delayed_fput+0x25/0x40 -origin/fs/file_table.c:308
+ process_one_work+0x359/0x850 -origin/kernel/workqueue.c:2297
+ worker_thread+0x41/0x4d0 -origin/kernel/workqueue.c:2444
+ kthread+0x178/0x1b0 -origin/kernel/kthread.c:319
+ ret_from_fork+0x1f/0x30 -origin/arch/x86/entry/entry_64.S:295
+Modules linked in:
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+---[ end trace 9dbb8f58f2109f10 ]---
+RIP: 0010:block_invalidatepage+0x27f/0x2a0 -origin/fs/buffer.c:1510
+Code: ff ff e8 b4 07 d7 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
+c7 c2 40 4e 25 84 e8 2b c2 c4 02 e9 c9 fe ff ff e8 91 07 d7 ff <0f> 0b
+e8 8a 07 d7 ff 0f 0b e8 83 07 d7 ff 48 8d 5d ff e9 57 ff ff
+RSP: 0018:ffffc9000065bb60 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffea0000670000 RCX: 0000000000000000
+RDX: ffff8880097fa240 RSI: ffffffff81608a9f RDI: ffffea0000670000
+RBP: ffffea0000670000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffffc9000065b9f8 R11: 0000000000000003 R12: ffffffff81608820
+R13: ffffc9000065bc68 R14: 0000000000000000 R15: ffffc9000065bbf0
+FS:  0000000000000000(0000) GS:ffff88807dc00000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff98674f000 CR3: 0000000106b2e000 CR4: 0000000000750ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
