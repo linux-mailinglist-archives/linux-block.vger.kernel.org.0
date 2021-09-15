@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 046BD40C279
-	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 11:11:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE47E40C271
+	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 11:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237348AbhIOJLw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Sep 2021 05:11:52 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:15420 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237228AbhIOJLp (ORCPT
+        id S237190AbhIOJLl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Sep 2021 05:11:41 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:9049 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229785AbhIOJLk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Sep 2021 05:11:45 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H8Z894VRRzRB7x;
-        Wed, 15 Sep 2021 17:06:17 +0800 (CST)
+        Wed, 15 Sep 2021 05:11:40 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H8ZCg3stmzW2gX;
+        Wed, 15 Sep 2021 17:09:19 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Wed, 15 Sep 2021 17:10:19 +0800
+ 15.1.2308.8; Wed, 15 Sep 2021 17:10:20 +0800
 Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
  (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Wed, 15
@@ -29,9 +29,9 @@ To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <hch@infradead.org>,
 CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
         <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
         <yi.zhang@huawei.com>
-Subject: [PATCH v7 3/6] nbd: check sock index in nbd_read_stat()
-Date:   Wed, 15 Sep 2021 17:20:07 +0800
-Message-ID: <20210915092010.2087371-4-yukuai3@huawei.com>
+Subject: [PATCH v7 4/6] nbd: don't start request if nbd_queue_rq() failed
+Date:   Wed, 15 Sep 2021 17:20:08 +0800
+Message-ID: <20210915092010.2087371-5-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210915092010.2087371-1-yukuai3@huawei.com>
 References: <20210915092010.2087371-1-yukuai3@huawei.com>
@@ -46,29 +46,43 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The sock that clent send request in nbd_send_cmd() and receive reply
-in nbd_read_stat() should be the same.
+Currently, blk_mq_end_request() will be called if nbd_queue_rq()
+failed, thus start request in such situation is useless.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/nbd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/block/nbd.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 614c6ab2b8fe..c724a5bd7fa4 100644
+index c724a5bd7fa4..22c91d8901f6 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -746,6 +746,10 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 		ret = -ENOENT;
- 		goto out;
+@@ -934,7 +934,6 @@ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+ 	if (!refcount_inc_not_zero(&nbd->config_refs)) {
+ 		dev_err_ratelimited(disk_to_dev(nbd->disk),
+ 				    "Socks array is empty\n");
+-		blk_mq_start_request(req);
+ 		return -EINVAL;
  	}
-+	if (cmd->index != index) {
-+		dev_err(disk_to_dev(nbd->disk), "Unexpected reply %d from different sock %d (expected %d)",
-+			tag, index, cmd->index);
-+	}
- 	if (cmd->cmd_cookie != nbd_handle_to_cookie(handle)) {
- 		dev_err(disk_to_dev(nbd->disk), "Double reply on req %p, cmd_cookie %u, handle cookie %u\n",
- 			req, cmd->cmd_cookie, nbd_handle_to_cookie(handle));
+ 	config = nbd->config;
+@@ -943,7 +942,6 @@ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+ 		dev_err_ratelimited(disk_to_dev(nbd->disk),
+ 				    "Attempted send on invalid socket\n");
+ 		nbd_config_put(nbd);
+-		blk_mq_start_request(req);
+ 		return -EINVAL;
+ 	}
+ 	cmd->status = BLK_STS_OK;
+@@ -967,7 +965,6 @@ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+ 			 */
+ 			sock_shutdown(nbd);
+ 			nbd_config_put(nbd);
+-			blk_mq_start_request(req);
+ 			return -EIO;
+ 		}
+ 		goto again;
 -- 
 2.31.1
 
