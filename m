@@ -2,128 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D27D40C27A
-	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 11:11:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF6340C2B8
+	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 11:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237258AbhIOJLx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Sep 2021 05:11:53 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:15421 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237229AbhIOJLp (ORCPT
+        id S231610AbhIOJ1X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Sep 2021 05:27:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:39266 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232009AbhIOJ1W (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Sep 2021 05:11:45 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H8Z8B1nThzRCTW;
-        Wed, 15 Sep 2021 17:06:18 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Wed, 15 Sep 2021 17:10:21 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Wed, 15
- Sep 2021 17:10:20 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <hch@infradead.org>,
-        <ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v7 6/6] nbd: fix uaf in nbd_handle_reply()
-Date:   Wed, 15 Sep 2021 17:20:10 +0800
-Message-ID: <20210915092010.2087371-7-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210915092010.2087371-1-yukuai3@huawei.com>
-References: <20210915092010.2087371-1-yukuai3@huawei.com>
+        Wed, 15 Sep 2021 05:27:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631697963;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=TKj9UapW4Cs20G2qgKI7vWmWbVaMt9DtUbGdfEmdReY=;
+        b=U2idf3GTb6ASRpjIqupyg6ZB+VhhOwDpLYHN4KczC7wawCE8Yj1PBYvhNcbxJTCTnXTSca
+        EYWGcI+xI8vTthUC15sg4YcqHZjmaHS5d2BgT95hS0h6yh6hmsC1af4ENnOe95b0qU1gRr
+        yMkICuQjDl9+3Ba7duPsphhsHs613uQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-QOXR3RS5MQSfXHKJuKdIUg-1; Wed, 15 Sep 2021 05:26:02 -0400
+X-MC-Unique: QOXR3RS5MQSfXHKJuKdIUg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6CA51926DA3;
+        Wed, 15 Sep 2021 09:26:00 +0000 (UTC)
+Received: from localhost (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97A8F60C7F;
+        Wed, 15 Sep 2021 09:25:56 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [PATCH] scsi: core: cleanup request queue before releasing gendisk
+Date:   Wed, 15 Sep 2021 17:25:47 +0800
+Message-Id: <20210915092547.990285-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is a problem that nbd_handle_reply() might access freed request:
+gendisk instance has to be released after request queue is cleaned up
+because bdi is referred from gendisk since commit edb0872f44ec ("block:
+move the bdi from the request_queue to the gendisk").
 
-1) At first, a normal io is submitted and completed with scheduler:
+For sd and sr, gendisk can be removed in the release handler(sd_remove/
+sr_remove) of sdev->sdev_gendev, which is triggered in device_del(sdev->sdev_gendev)
+in __scsi_remove_device(), when the request queue isn't cleaned up yet.
 
-internel_tag = blk_mq_get_tag -> get tag from sched_tags
- blk_mq_rq_ctx_init
-  sched_tags->rq[internel_tag] = sched_tag->static_rq[internel_tag]
-...
-blk_mq_get_driver_tag
- __blk_mq_get_driver_tag -> get tag from tags
- tags->rq[tag] = sched_tag->static_rq[internel_tag]
+So kernel oops could be triggered when referring bdi via gendisk.
 
-So, both tags->rq[tag] and sched_tags->rq[internel_tag] are pointing
-to the request: sched_tags->static_rq[internal_tag]. Even if the
-io is finished.
+Fix the issue by moving blk_cleanup_queue() into sd_remove() and
+sr_remove().
 
-2) nbd server send a reply with random tag directly:
-
-recv_work
- nbd_handle_reply
-  blk_mq_tag_to_rq(tags, tag)
-   rq = tags->rq[tag]
-
-3) if the sched_tags->static_rq is freed:
-
-blk_mq_sched_free_requests
- blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i)
-  -> step 2) access rq before clearing rq mapping
-  blk_mq_clear_rq_mapping(set, tags, hctx_idx);
-  __free_pages() -> rq is freed here
-
-4) Then, nbd continue to use the freed request in nbd_handle_reply
-
-Fix the problem by get 'q_usage_counter' before blk_mq_tag_to_rq(),
-thus request is ensured not to be freed because 'q_usage_counter' is
-not zero.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Fixes: edb0872f44ec ("block: move the bdi from the request_queue to the gendisk")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/nbd.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/scsi/scsi_priv.h   | 6 ++++++
+ drivers/scsi/scsi_sysfs.c  | 3 ++-
+ drivers/scsi/sd.c          | 2 ++
+ drivers/scsi/sr.c          | 4 +++-
+ include/scsi/scsi_device.h | 1 +
+ 5 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9a7bbf8ebe74..3e8b70b5d4f9 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -824,6 +824,7 @@ static void recv_work(struct work_struct *work)
- 						     work);
- 	struct nbd_device *nbd = args->nbd;
- 	struct nbd_config *config = nbd->config;
-+	struct request_queue *q = nbd->disk->queue;
- 	struct nbd_sock *nsock;
- 	struct nbd_cmd *cmd;
- 	struct request *rq;
-@@ -834,7 +835,24 @@ static void recv_work(struct work_struct *work)
- 		if (nbd_read_reply(nbd, args->index, &reply))
- 			break;
+diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
+index 6d9152031a40..6aef88d772a3 100644
+--- a/drivers/scsi/scsi_priv.h
++++ b/drivers/scsi/scsi_priv.h
+@@ -145,6 +145,12 @@ extern void __scsi_remove_device(struct scsi_device *);
+ extern struct bus_type scsi_bus_type;
+ extern const struct attribute_group *scsi_sysfs_shost_attr_groups[];
  
-+		/*
-+		 * Grab ref of q_usage_counter can prevent request being freed
-+		 * during nbd_handle_reply(). If q_usage_counter is zero, then
-+		 * no request is inflight, which means something is wrong since
-+		 * we expect to find a request to complete here.
-+		 */
-+		if (!percpu_ref_tryget(&q->q_usage_counter)) {
-+			dev_err(disk_to_dev(nbd->disk), "%s: no io inflight\n",
-+				__func__);
-+			break;
-+		}
++static inline void scsi_sysfs_cleanup_sdev(struct scsi_device *sdev)
++{
++	sdev->request_queue_cleaned = true;
++	blk_cleanup_queue(sdev->request_queue);
++}
 +
- 		cmd = nbd_handle_reply(nbd, args->index, &reply);
-+		/*
-+		 * It's safe to drop ref before request completion, inflight
-+		 * request will ensure q_usage_counter won't be zero.
-+		 */
-+		percpu_ref_put(&q->q_usage_counter);
- 		if (IS_ERR(cmd))
- 			break;
+ /* scsi_netlink.c */
+ #ifdef CONFIG_SCSI_NETLINK
+ extern void scsi_netlink_init(void);
+diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+index 86793259e541..9d54fc9c89ea 100644
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -1463,7 +1463,8 @@ void __scsi_remove_device(struct scsi_device *sdev)
+ 	scsi_device_set_state(sdev, SDEV_DEL);
+ 	mutex_unlock(&sdev->state_mutex);
+ 
+-	blk_cleanup_queue(sdev->request_queue);
++	if (!sdev->request_queue_cleaned)
++		blk_cleanup_queue(sdev->request_queue);
+ 	cancel_work_sync(&sdev->requeue_work);
+ 
+ 	if (sdev->host->hostt->slave_destroy)
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index cbd9999f93a6..8132f9833488 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3498,6 +3498,8 @@ static int sd_remove(struct device *dev)
+ 	del_gendisk(sdkp->disk);
+ 	sd_shutdown(dev);
+ 
++	scsi_sysfs_cleanup_sdev(to_scsi_device(dev));
++
+ 	free_opal_dev(sdkp->opal_dev);
+ 
+ 	mutex_lock(&sd_ref_mutex);
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 8b17b35283aa..ef85940f3168 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -64,7 +64,7 @@
+ 
+ #include "scsi_logging.h"
+ #include "sr.h"
+-
++#include "scsi_priv.h"
+ 
+ MODULE_DESCRIPTION("SCSI cdrom (sr) driver");
+ MODULE_LICENSE("GPL");
+@@ -1045,6 +1045,8 @@ static int sr_remove(struct device *dev)
+ 	del_gendisk(cd->disk);
+ 	dev_set_drvdata(dev, NULL);
+ 
++	scsi_sysfs_cleanup_sdev(to_scsi_device(dev));
++
+ 	mutex_lock(&sr_ref_mutex);
+ 	kref_put(&cd->kref, sr_kref_release);
+ 	mutex_unlock(&sr_ref_mutex);
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index 09a17f6e93a7..d102bc2c423b 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -207,6 +207,7 @@ struct scsi_device {
+ 	unsigned rpm_autosuspend:1;	/* Enable runtime autosuspend at device
+ 					 * creation time */
+ 	unsigned ignore_media_change:1; /* Ignore MEDIA CHANGE on resume */
++	unsigned request_queue_cleaned:1; /* Request queue has been cleaned up */
+ 
+ 	bool offline_already;		/* Device offline message logged */
  
 -- 
 2.31.1
