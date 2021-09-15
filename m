@@ -2,147 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 203B140C127
-	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 10:05:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A363840C19D
+	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 10:22:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236836AbhIOIHM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Sep 2021 04:07:12 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:16258 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236795AbhIOIHJ (ORCPT
+        id S236835AbhIOIX0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Sep 2021 04:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236869AbhIOIX0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Sep 2021 04:07:09 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H8Xng0rDHz8t3n;
-        Wed, 15 Sep 2021 16:05:11 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Wed, 15 Sep 2021 16:05:48 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Wed, 15
- Sep 2021 16:05:47 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <axboe@kernel.dk>, <josef@toxicpanda.com>, <ming.lei@redhat.com>,
-        <hch@infradead.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nbd@other.debian.org>, <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH v6 6/6] nbd: fix uaf in nbd_handle_reply()
-Date:   Wed, 15 Sep 2021 16:15:37 +0800
-Message-ID: <20210915081537.1684327-7-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210915081537.1684327-1-yukuai3@huawei.com>
+        Wed, 15 Sep 2021 04:23:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA879C061575;
+        Wed, 15 Sep 2021 01:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Cnf2Z7l1EQTLpLkBteMlHZ53Wr/+qX1SRjJPZPtj5Kw=; b=ZGI1MAyFQHmfAGyw/4YdJvqSTe
+        3ZceMG97ii7G0GcvEfojovEA55KFVfJ0iKpuGkbqRRxBQiFNHegRUap/3P45l4AqH0/gpm8tgJY98
+        wSaL1jefV1O/+7DlhLT10nF6noACc0ZCmzbwObKhXj2WVWA2gTbFqMquqnFK4PDh/vFYQCMVDHdpd
+        gdyl5S8fkt3OeoJVLrZfzeL4xpHgoxtkICPMEQd964PbN1dTXumy7/UBirodiutOW2bvMGyG34PpH
+        /8jks350ROrpgjswN+7DZ+onBrnvaLhA1Q2v05dxhJwFXmbDguPItXkfOHKzWe2x1jAGeNYaCrMK1
+        HuafnVMQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mQQ9Q-00FV1x-Mp; Wed, 15 Sep 2021 08:20:30 +0000
+Date:   Wed, 15 Sep 2021 09:20:16 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, josef@toxicpanda.com, ming.lei@redhat.com,
+        hch@infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH v6 6/6] nbd: fix uaf in nbd_handle_reply()
+Message-ID: <YUGswNyMnFHxigsW@infradead.org>
 References: <20210915081537.1684327-1-yukuai3@huawei.com>
+ <20210915081537.1684327-7-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210915081537.1684327-7-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is a problem that nbd_handle_reply() might access freed request:
+On Wed, Sep 15, 2021 at 04:15:37PM +0800, Yu Kuai wrote:
+> +++ b/block/blk-core.c
+> @@ -489,6 +489,7 @@ void blk_queue_exit(struct request_queue *q)
+>  {
+>  	percpu_ref_put(&q->q_usage_counter);
+>  }
+> +EXPORT_SYMBOL(blk_queue_exit);
 
-1) At first, a normal io is submitted and completed with scheduler:
+These needs to be an EXPORT_SYMBOL_GPL.  But more importantly it
+needs to be a separate properly documented patch, and this function
+needs to grow a kerneldoc comment as well.
 
-internel_tag = blk_mq_get_tag -> get tag from sched_tags
- blk_mq_rq_ctx_init
-  sched_tags->rq[internel_tag] = sched_tag->static_rq[internel_tag]
-...
-blk_mq_get_driver_tag
- __blk_mq_get_driver_tag -> get tag from tags
- tags->rq[tag] = sched_tag->static_rq[internel_tag]
+> +		/*
+> +		 * Get q_usage_counter can prevent accessing freed request
+> +		 * through blk_mq_tag_to_rq() in nbd_handle_reply(). If
+> +		 * q_usage_counter is zero, then no request is inflight, which
+> +		 * means something is wrong since we expect to find a request to
+> +		 * complete here.
+> +		 */
+> +		if (!percpu_ref_tryget(&q->q_usage_counter)) {
+> +			dev_err(disk_to_dev(nbd->disk), "%s: no io inflight\n",
+> +				__func__);
+> +			break;
+> +		}
 
-So, both tags->rq[tag] and sched_tags->rq[internel_tag] are pointing
-to the request: sched_tags->static_rq[internal_tag]. Even if the
-io is finished.
+And this needs a properly documented wrapper as well.
 
-2) nbd server send a reply with random tag directly:
+> +
+>  		cmd = nbd_handle_reply(nbd, args->index, &reply);
+> -		if (IS_ERR(cmd))
+> +		if (IS_ERR(cmd)) {
+> +			blk_queue_exit(q);
+>  			break;
+> +		}
+>  
+>  		rq = blk_mq_rq_from_pdu(cmd);
+>  		if (likely(!blk_should_fake_timeout(rq->q)))
+>  			blk_mq_complete_request(rq);
+> +		blk_queue_exit(q);
 
-recv_work
- nbd_handle_reply
-  blk_mq_tag_to_rq(tags, tag)
-   rq = tags->rq[tag]
-
-3) if the sched_tags->static_rq is freed:
-
-blk_mq_sched_free_requests
- blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i)
-  -> step 2) access rq before clearing rq mapping
-  blk_mq_clear_rq_mapping(set, tags, hctx_idx);
-  __free_pages() -> rq is freed here
-
-4) Then, nbd continue to use the freed request in nbd_handle_reply
-
-Fix the problem by get 'q_usage_counter' before blk_mq_tag_to_rq(),
-thus request is ensured not to be freed because 'q_usage_counter' is
-not zero.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-core.c    |  1 +
- drivers/block/nbd.c | 19 ++++++++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 5454db2fa263..2008e6903166 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -489,6 +489,7 @@ void blk_queue_exit(struct request_queue *q)
- {
- 	percpu_ref_put(&q->q_usage_counter);
- }
-+EXPORT_SYMBOL(blk_queue_exit);
- 
- static void blk_queue_usage_counter_release(struct percpu_ref *ref)
- {
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9a7bbf8ebe74..f065afcc7586 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -824,6 +824,7 @@ static void recv_work(struct work_struct *work)
- 						     work);
- 	struct nbd_device *nbd = args->nbd;
- 	struct nbd_config *config = nbd->config;
-+	struct request_queue *q = nbd->disk->queue;
- 	struct nbd_sock *nsock;
- 	struct nbd_cmd *cmd;
- 	struct request *rq;
-@@ -834,13 +835,29 @@ static void recv_work(struct work_struct *work)
- 		if (nbd_read_reply(nbd, args->index, &reply))
- 			break;
- 
-+		/*
-+		 * Get q_usage_counter can prevent accessing freed request
-+		 * through blk_mq_tag_to_rq() in nbd_handle_reply(). If
-+		 * q_usage_counter is zero, then no request is inflight, which
-+		 * means something is wrong since we expect to find a request to
-+		 * complete here.
-+		 */
-+		if (!percpu_ref_tryget(&q->q_usage_counter)) {
-+			dev_err(disk_to_dev(nbd->disk), "%s: no io inflight\n",
-+				__func__);
-+			break;
-+		}
-+
- 		cmd = nbd_handle_reply(nbd, args->index, &reply);
--		if (IS_ERR(cmd))
-+		if (IS_ERR(cmd)) {
-+			blk_queue_exit(q);
- 			break;
-+		}
- 
- 		rq = blk_mq_rq_from_pdu(cmd);
- 		if (likely(!blk_should_fake_timeout(rq->q)))
- 			blk_mq_complete_request(rq);
-+		blk_queue_exit(q);
- 	}
- 
- 	nsock = config->socks[args->index];
--- 
-2.31.1
-
+That being said I can't say I like how this exposed block layer
+internals.  We don't really need a reference to the queue here
+anywhere, you just use it as a dumb debug check.  If we really want to
+reuse (abuse?) q_usage_counter a helper to just grab a reference and
+immediately drop it might be a better fit.
