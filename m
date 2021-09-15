@@ -2,99 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7566140C0CA
-	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 09:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B4740C124
+	for <lists+linux-block@lfdr.de>; Wed, 15 Sep 2021 10:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236634AbhIOHuT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Sep 2021 03:50:19 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:15418 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236647AbhIOHtP (ORCPT
+        id S236808AbhIOIHK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Sep 2021 04:07:10 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:16257 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236705AbhIOIHH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Sep 2021 03:49:15 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H8XK06ch5zRBs0;
-        Wed, 15 Sep 2021 15:43:48 +0800 (CST)
+        Wed, 15 Sep 2021 04:07:07 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H8Xnc0K2Mz8t3B;
+        Wed, 15 Sep 2021 16:05:08 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Wed, 15 Sep 2021 15:47:55 +0800
-Received: from [10.174.176.73] (10.174.176.73) by
- dggema762-chm.china.huawei.com (10.1.198.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Wed, 15 Sep 2021 15:47:54 +0800
-Subject: Re: [PATCH v2 4/4] block, bfq: consider request size in
- bfq_asymmetric_scenario()
-To:     Paolo Valente <paolo.valente@linaro.org>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20210806020826.1407257-1-yukuai3@huawei.com>
- <20210806020826.1407257-5-yukuai3@huawei.com>
- <8601F280-2F16-446A-95BA-37A07D1A1055@linaro.org>
- <143fa1a2-de5f-b18a-73d9-8e105844709c@huawei.com>
- <68A2B4C8-48A5-45F3-8782-2440C0028161@linaro.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <bfb69bec-0ac8-c76f-51b2-fca094050121@huawei.com>
-Date:   Wed, 15 Sep 2021 15:47:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ 15.1.2308.8; Wed, 15 Sep 2021 16:05:45 +0800
+Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
+ (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Wed, 15
+ Sep 2021 16:05:44 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <josef@toxicpanda.com>, <ming.lei@redhat.com>,
+        <hch@infradead.org>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <nbd@other.debian.org>, <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH v6 0/6] handle unexpected message from server
+Date:   Wed, 15 Sep 2021 16:15:31 +0800
+Message-ID: <20210915081537.1684327-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <68A2B4C8-48A5-45F3-8782-2440C0028161@linaro.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.73]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggema762-chm.china.huawei.com (10.1.198.204)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2021/09/15 15:36, Paolo Valente wrote:
-> 
-> 
->> Il giorno 7 set 2021, alle ore 13:29, yukuai (C) <yukuai3@huawei.com> ha scritto:
->>
->> On 2021/08/27 1:00, Paolo Valente wrote:
->>>> Il giorno 6 ago 2021, alle ore 04:08, Yu Kuai <yukuai3@huawei.com> ha scritto:
->>>>
->>>> There is a special case when bfq do not need to idle when more than
->>>> one groups is active:
->>>>
->>> Unfortunately, there is a misunderstanding here.  If more than one
->>> group is active, then idling is not needed only if a lot of symmetry
->>> conditions also hold:
->>> - all active groups have the same weight
->>> - all active groups contain the same number of active queues
->>
->> Hi, Paolo
->>
->> I didn't think of this contition.
->>
->> It's seems that if we want to idle when more than one group is active,
->> there are two additional conditions:
->>
->> - all dispatched requests have the same size
->> - all active groups contain the same number of active queues
->>
-> 
-> Also the weights and the I/O priorities of the queues inside the
-> groups needs to be controlled, unfortunately.
-> 
->> Thus we still need to track how many queues are active in each group.
->> The conditions seems to be too much, do you think is it worth it to
->> add support to idle when more than one group is active?
->>
-> 
-> I think I see your point.  The problem is that these states are
-> dynamic.  So, if we suspend tracking all the above information while
-> more than one group is active, then we are with no state in case only
-> one group remains active.
+This patch set tries to fix that client might oops if nbd server send
+unexpected message to client, for example, our syzkaller report a uaf
+in nbd_read_stat():
 
-Hi, Paolo
+Call trace:
+ dump_backtrace+0x0/0x310 arch/arm64/kernel/time.c:78
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:158
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x144/0x1b4 lib/dump_stack.c:118
+ print_address_description+0x68/0x2d0 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x134/0x2f0 mm/kasan/report.c:409
+ check_memory_region_inline mm/kasan/kasan.c:260 [inline]
+ __asan_load4+0x88/0xb0 mm/kasan/kasan.c:699
+ __read_once_size include/linux/compiler.h:193 [inline]
+ blk_mq_rq_state block/blk-mq.h:106 [inline]
+ blk_mq_request_started+0x24/0x40 block/blk-mq.c:644
+ nbd_read_stat drivers/block/nbd.c:670 [inline]
+ recv_work+0x1bc/0x890 drivers/block/nbd.c:749
+ process_one_work+0x3ec/0x9e0 kernel/workqueue.c:2147
+ worker_thread+0x80/0x9d0 kernel/workqueue.c:2302
+ kthread+0x1d8/0x1e0 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1174
 
-In this case, I'll drop the last two patches in the next iteration.
+1) At first, a normal io is submitted and completed with scheduler:
 
-Thanks,
-Kuai
+internel_tag = blk_mq_get_tag -> get tag from sched_tags
+ blk_mq_rq_ctx_init
+  sched_tags->rq[internel_tag] = sched_tag->static_rq[internel_tag]
+...
+blk_mq_get_driver_tag
+ __blk_mq_get_driver_tag -> get tag from tags
+ tags->rq[tag] = sched_tag->static_rq[internel_tag]
+
+So, both tags->rq[tag] and sched_tags->rq[internel_tag] are pointing
+to the request: sched_tags->static_rq[internal_tag]. Even if the
+io is finished.
+
+2) nbd server send a reply with random tag directly:
+
+recv_work
+ nbd_read_stat
+  blk_mq_tag_to_rq(tags, tag)
+   rq = tags->rq[tag]
+
+3) if the sched_tags->static_rq is freed:
+
+blk_mq_sched_free_requests
+ blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i)
+  -> step 2) access rq before clearing rq mapping
+  blk_mq_clear_rq_mapping(set, tags, hctx_idx);
+  __free_pages() -> rq is freed here
+
+4) Then, nbd continue to use the freed request in nbd_read_stat()
+
+Changes in v6:
+ - don't set cmd->status to error if request is completed before
+ nbd_clear_req().
+ - get 'q_usage_counter' to prevent accessing freed request through
+ blk_mq_tag_to_rq(), instead of using blk_mq_find_and_get_req().
+Changes in v5:
+ - move patch 1 & 2 in v4 (patch 4 & 5 in v5) behind
+ - add some comment in patch 5
+Changes in v4:
+ - change the name of the patchset, since uaf is not the only problem
+ if server send unexpected reply message.
+ - instead of adding new interface, use blk_mq_find_and_get_req().
+ - add patch 5 to this series
+Changes in v3:
+ - v2 can't fix the problem thoroughly, add patch 3-4 to this series.
+ - modify descriptions.
+ - patch 5 is just a cleanup
+Changes in v2:
+ - as Bart suggested, add a new helper function for drivers to get
+ request by tag.
+
+Yu Kuai (6):
+  nbd: don't handle response without a corresponding request message
+  nbd: make sure request completion won't concurrent
+  nbd: check sock index in nbd_read_stat()
+  nbd: don't start request if nbd_queue_rq() failed
+  nbd: partition nbd_read_stat() into nbd_read_reply() and
+    nbd_handle_reply()
+  nbd: fix uaf in nbd_handle_reply()
+
+ block/blk-core.c    |   1 +
+ drivers/block/nbd.c | 127 ++++++++++++++++++++++++++++++++------------
+ 2 files changed, 94 insertions(+), 34 deletions(-)
+
+-- 
+2.31.1
+
