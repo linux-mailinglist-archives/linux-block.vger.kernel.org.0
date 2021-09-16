@@ -2,23 +2,23 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B51F40D608
-	for <lists+linux-block@lfdr.de>; Thu, 16 Sep 2021 11:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F8EA40D60B
+	for <lists+linux-block@lfdr.de>; Thu, 16 Sep 2021 11:24:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235550AbhIPJZ1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Sep 2021 05:25:27 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:16265 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235219AbhIPJZ0 (ORCPT
+        id S235615AbhIPJZ2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Sep 2021 05:25:28 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:9884 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235492AbhIPJZ1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Sep 2021 05:25:26 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H9BTV3jQFz8tC3;
-        Thu, 16 Sep 2021 17:23:26 +0800 (CST)
+        Thu, 16 Sep 2021 05:25:27 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H9BP56dPVz8skL;
+        Thu, 16 Sep 2021 17:19:37 +0800 (CST)
 Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 17:24:04 +0800
+ 15.1.2308.8; Thu, 16 Sep 2021 17:24:05 +0800
 Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
  (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Thu, 16
@@ -29,9 +29,9 @@ To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <ming.lei@redhat.com>,
 CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
         <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
         <yi.zhang@huawei.com>
-Subject: [patch v8 5/7] nbd: clean up return value checking of sock_xmit()
-Date:   Thu, 16 Sep 2021 17:33:48 +0800
-Message-ID: <20210916093350.1410403-6-yukuai3@huawei.com>
+Subject: [patch v8 6/7] nbd: partition nbd_read_stat() into nbd_read_reply() and nbd_handle_reply()
+Date:   Thu, 16 Sep 2021 17:33:49 +0800
+Message-ID: <20210916093350.1410403-7-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210916093350.1410403-1-yukuai3@huawei.com>
 References: <20210916093350.1410403-1-yukuai3@huawei.com>
@@ -46,73 +46,150 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Check if sock_xmit() return 0 is useless because it'll never return
-0, comment it and remove such checkings.
+Prepare to fix uaf in nbd_read_stat(), no functional changes.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/nbd.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/block/nbd.c | 74 +++++++++++++++++++++++++++------------------
+ 1 file changed, 44 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 22c91d8901f6..7f9e030e41ce 100644
+index 7f9e030e41ce..69dc5eac9ad3 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -490,7 +490,8 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+@@ -695,38 +695,45 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
+ 	return 0;
  }
  
- /*
-- *  Send or receive packet.
-+ *  Send or receive packet. Return a positive value on success and
-+ *  negtive value on failue, and never return 0.
-  */
- static int sock_xmit(struct nbd_device *nbd, int index, int send,
- 		     struct iov_iter *iter, int msg_flags, int *sent)
-@@ -616,7 +617,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 	result = sock_xmit(nbd, index, 1, &from,
- 			(type == NBD_CMD_WRITE) ? MSG_MORE : 0, &sent);
- 	trace_nbd_header_sent(req, handle);
--	if (result <= 0) {
-+	if (result < 0) {
- 		if (was_interrupted(result)) {
- 			/* If we havne't sent anything we can just return BUSY,
- 			 * however if we have sent something we need to make
-@@ -660,7 +661,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 				skip = 0;
- 			}
- 			result = sock_xmit(nbd, index, 1, &from, flags, &sent);
--			if (result <= 0) {
-+			if (result < 0) {
- 				if (was_interrupted(result)) {
- 					/* We've already sent the header, we
- 					 * have no choice but to set pending and
-@@ -712,7 +713,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 	reply.magic = 0;
- 	iov_iter_kvec(&to, READ, &iov, 1, sizeof(reply));
+-/* NULL returned = something went wrong, inform userspace */
+-static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
++static int nbd_read_reply(struct nbd_device *nbd, int index,
++			  struct nbd_reply *reply)
+ {
+-	struct nbd_config *config = nbd->config;
+-	int result;
+-	struct nbd_reply reply;
+-	struct nbd_cmd *cmd;
+-	struct request *req = NULL;
+-	u64 handle;
+-	u16 hwq;
+-	u32 tag;
+-	struct kvec iov = {.iov_base = &reply, .iov_len = sizeof(reply)};
++	struct kvec iov = {.iov_base = reply, .iov_len = sizeof(*reply)};
+ 	struct iov_iter to;
+-	int ret = 0;
++	int result;
+ 
+-	reply.magic = 0;
+-	iov_iter_kvec(&to, READ, &iov, 1, sizeof(reply));
++	reply->magic = 0;
++	iov_iter_kvec(&to, READ, &iov, 1, sizeof(*reply));
  	result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
--	if (result <= 0) {
-+	if (result < 0) {
- 		if (!nbd_disconnected(config))
+ 	if (result < 0) {
+-		if (!nbd_disconnected(config))
++		if (!nbd_disconnected(nbd->config))
  			dev_err(disk_to_dev(nbd->disk),
  				"Receive control failed (result %d)\n", result);
-@@ -783,7 +784,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+-		return ERR_PTR(result);
++		return result;
+ 	}
+ 
+-	if (ntohl(reply.magic) != NBD_REPLY_MAGIC) {
++	if (ntohl(reply->magic) != NBD_REPLY_MAGIC) {
+ 		dev_err(disk_to_dev(nbd->disk), "Wrong magic (0x%lx)\n",
+-				(unsigned long)ntohl(reply.magic));
+-		return ERR_PTR(-EPROTO);
++				(unsigned long)ntohl(reply->magic));
++		return -EPROTO;
+ 	}
+ 
+-	memcpy(&handle, reply.handle, sizeof(handle));
++	return 0;
++}
++
++/* NULL returned = something went wrong, inform userspace */
++static struct nbd_cmd *nbd_handle_reply(struct nbd_device *nbd, int index,
++					struct nbd_reply *reply)
++{
++	int result;
++	struct nbd_cmd *cmd;
++	struct request *req = NULL;
++	u64 handle;
++	u16 hwq;
++	u32 tag;
++	int ret = 0;
++
++	memcpy(&handle, reply->handle, sizeof(handle));
+ 	tag = nbd_handle_to_tag(handle);
+ 	hwq = blk_mq_unique_tag_to_hwq(tag);
+ 	if (hwq < nbd->tag_set.nr_hw_queues)
+@@ -769,9 +776,9 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 		ret = -ENOENT;
+ 		goto out;
+ 	}
+-	if (ntohl(reply.error)) {
++	if (ntohl(reply->error)) {
+ 		dev_err(disk_to_dev(nbd->disk), "Other side returned error (%d)\n",
+-			ntohl(reply.error));
++			ntohl(reply->error));
+ 		cmd->status = BLK_STS_IOERR;
+ 		goto out;
+ 	}
+@@ -780,6 +787,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 	if (rq_data_dir(req) != WRITE) {
+ 		struct req_iterator iter;
+ 		struct bio_vec bvec;
++		struct iov_iter to;
+ 
  		rq_for_each_segment(bvec, req, iter) {
  			iov_iter_bvec(&to, READ, &bvec, 1, bvec.bv_len);
- 			result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
--			if (result <= 0) {
-+			if (result < 0) {
- 				dev_err(disk_to_dev(nbd->disk), "Receive data failed (result %d)\n",
- 					result);
- 				/*
-@@ -1229,7 +1230,7 @@ static void send_disconnects(struct nbd_device *nbd)
- 		iov_iter_kvec(&from, WRITE, &iov, 1, sizeof(request));
- 		mutex_lock(&nsock->tx_lock);
- 		ret = sock_xmit(nbd, i, 1, &from, 0, NULL);
--		if (ret <= 0)
-+		if (ret < 0)
- 			dev_err(disk_to_dev(nbd->disk),
- 				"Send disconnect failed %d\n", ret);
- 		mutex_unlock(&nsock->tx_lock);
+@@ -793,7 +801,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 				 * and let the timeout stuff handle resubmitting
+ 				 * this request onto another connection.
+ 				 */
+-				if (nbd_disconnected(config)) {
++				if (nbd_disconnected(nbd->config)) {
+ 					cmd->status = BLK_STS_IOERR;
+ 					goto out;
+ 				}
+@@ -817,24 +825,30 @@ static void recv_work(struct work_struct *work)
+ 						     work);
+ 	struct nbd_device *nbd = args->nbd;
+ 	struct nbd_config *config = nbd->config;
++	struct nbd_sock *nsock;
+ 	struct nbd_cmd *cmd;
+ 	struct request *rq;
+ 
+ 	while (1) {
+-		cmd = nbd_read_stat(nbd, args->index);
+-		if (IS_ERR(cmd)) {
+-			struct nbd_sock *nsock = config->socks[args->index];
++		struct nbd_reply reply;
+ 
+-			mutex_lock(&nsock->tx_lock);
+-			nbd_mark_nsock_dead(nbd, nsock, 1);
+-			mutex_unlock(&nsock->tx_lock);
++		if (nbd_read_reply(nbd, args->index, &reply))
++			break;
++
++		cmd = nbd_handle_reply(nbd, args->index, &reply);
++		if (IS_ERR(cmd))
+ 			break;
+-		}
+ 
+ 		rq = blk_mq_rq_from_pdu(cmd);
+ 		if (likely(!blk_should_fake_timeout(rq->q)))
+ 			blk_mq_complete_request(rq);
+ 	}
++
++	nsock = config->socks[args->index];
++	mutex_lock(&nsock->tx_lock);
++	nbd_mark_nsock_dead(nbd, nsock, 1);
++	mutex_unlock(&nsock->tx_lock);
++
+ 	nbd_config_put(nbd);
+ 	atomic_dec(&config->recv_threads);
+ 	wake_up(&config->recv_wq);
 -- 
 2.31.1
 
