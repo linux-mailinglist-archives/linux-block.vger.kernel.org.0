@@ -2,141 +2,184 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F38C440EDAD
-	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 01:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5FE40EDE8
+	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 01:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241147AbhIPXJE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Sep 2021 19:09:04 -0400
-Received: from mail-bn8nam12on2061.outbound.protection.outlook.com ([40.107.237.61]:19488
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229997AbhIPXJD (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Sep 2021 19:09:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IfiTWLCOxz+WlB7gNJNaSZ2RrdXAdLYvM2mgtTk2TqcwFvF2b7xY0CWj8B8BPZywqTu1q3iP/0k7RWzeopBzXZLqWnYaHkMQAx93BM9NZc7J0a/aNlPEg9Nt9V5bS8LE9yblg1yjENboFopyzjHi8/49c5GbLkf6W22EQWzVy/MzjpF9QUSDe26RCiBUarCNEAS5FrzZMrga8rvhTLcZpfanXjgsMj4LK5tGwNX35g9L7qCOT/fo4zyLQnrZV4WpW6kzs3Sr3mowrxyV4Nrnxs2LSLVUnkFkmZKEyEzSjEpa+2b5EPDxmVF9PYWOQ46oWHVoVtWB+g4R0QYUp2lVrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=ss9d9SgsN3OPaPDK3si1V2kMh8YSw46slL+xi666vXw=;
- b=AMqfNowWAeIZy94KO/QufgDghdJLkyyrypo8h9i1aDlz7Evur2OjS6TQTrZOPNZCnQRTaAx8bRIWUE8IXANX0oBmcYrVWriwgJCypMUtHwVvfHGf7foUm+GhGso2cS1Z5cC14GiBnO00xt7C1F/HEDFlt7rUlq68bxTphmR57+XaXMJO6+ZfK4NTcdFn6gRimUgQ7lkAHFHlTdKvihffRhCbXMBfz4cuNXCpTAxvEg0fa6gkTX5g0HAff8GJVkbwTXR8tQxaHtnqUcg8SFJvZbyBTi+/6HaI8gGA96bZ7NQy3KownMRhgIFZvM/C7vXyhcQO7uGvrEtZ2HOrnq4Xxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ss9d9SgsN3OPaPDK3si1V2kMh8YSw46slL+xi666vXw=;
- b=JY0pfavXuZwPyHBHPkLoz5hfZTlo3gYPwUvaOHTc8VwoXdl0tvtRI5Hpfe1aHU+2gwSkjQCv6kInb/haiVVY+QlJplBwxhUKqWlHMGJERNNaueKF9ccwfCjlliSN8OFybg3bUAHv2ec5R5xZCR0yXslZZ4EqLMtt0DRNjL9vKgM09dFCVxZSgENQW07wAuwpIL8lZSy44ykUS0OVf8ar50l2v7nH9odd1XxOCHUx+ocSmlOe19B0HVywDawWJZiTdNi7qwILj69fXDTLTDjXB93YQKR75I0VRnL1saNB7QwapyBjccM4l2jMiBTVG5pV+YN3mI1i9WiCO93xpe7dCw==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by MWHPR12MB1584.namprd12.prod.outlook.com (2603:10b6:301:a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.16; Thu, 16 Sep
- 2021 23:07:39 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::498a:4620:df52:2e9f]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::498a:4620:df52:2e9f%5]) with mapi id 15.20.4523.016; Thu, 16 Sep 2021
- 23:07:39 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Eric Biggers <ebiggers@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Satya Tangirala <satyaprateek2357@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 1/4] blk-crypto-fallback: properly prefix function and
- struct names
-Thread-Topic: [PATCH v2 1/4] blk-crypto-fallback: properly prefix function and
- struct names
-Thread-Index: AQHXqyMBfcBXr1WhvEyyvG966VbbBqunSQSA
-Date:   Thu, 16 Sep 2021 23:07:39 +0000
-Message-ID: <550c2308-ed18-93a1-9f35-10ef037b25b1@nvidia.com>
-References: <20210916172249.45813-1-ebiggers@kernel.org>
- <20210916172249.45813-2-ebiggers@kernel.org>
-In-Reply-To: <20210916172249.45813-2-ebiggers@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7a1114b-b1bf-4364-a678-08d97966c7e1
-x-ms-traffictypediagnostic: MWHPR12MB1584:
-x-microsoft-antispam-prvs: <MWHPR12MB15841CA1DA64D3E27449150CA3DC9@MWHPR12MB1584.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T+jqL8+q+aD1OnOGOH5f8nKclo76VxK4tzdk+Z45Um+Tt1uMvh3IRZURnh3R2dkJo5jFfGZT7phH+Ydb/wtWSJMgzS+34r8wyy7Fp6Lv4Egrku+DkT3OzAdr98QUW1LQqyFv5vc6DOo6xRD3ri5a7CRYFPoghGpjgtMsAxOjWICbVwz6sf3sl68IirDsv+yJmqgKckswMq7vvlnM92XHiD4LEObNmRHIT7SVS3lkax27kjO1odwiRv/2YSbD1bkTI3PQifa9ihNIjv9R78v3afLMH3aTfKkbr1dkarQgO+x2ePiniKRRC0FUPDpq9Vn74ivD3PdmnLO3sCnF31otnP9atK1Rl5p+J4kaOc0vozi6Atf9JwtZLQwDc9MbDgRWydNytT52m8zqGL+Z/U985s4Yofr6zHfSxlM1PZQp/y8QwdKJftQ0eopvsXyKW8Jh7KULT7arlmKkBzMKblU80Y8J10ztZZzb3jlVUnQS26k8owqdoSxk4zj+vcV2P2lvUfVlgvXekcDBvJa6ETtBUPiYLkYYKEgMK0QIsw25/1rgHoK6+Z+2nrZ7vgrIdIhwnN6odRopQetvJn397nJDbv10lEKDHOGXx6lDj6EvJ95ey0BxOSoz3MbJRmq1NBND21JjBkOwpCkCYyzMuY7/D2P21FJiCXZJ3+wlkRHjmhmMIRrAOYEwBM8YRkCCn0qCM1Z9envze8vOKAEogwNhmKq5hC2MKtibYr0WnL8ab4g93R1XsAA277zeMpj1uHoTTNhxJnBGm2Anp6oCQPIa/w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(5660300002)(53546011)(2906002)(6512007)(38100700002)(122000001)(54906003)(36756003)(2616005)(110136005)(66556008)(64756008)(66476007)(66446008)(76116006)(71200400001)(66946007)(8676002)(4326008)(31696002)(31686004)(186003)(316002)(38070700005)(4744005)(86362001)(6506007)(8936002)(478600001)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?REpYOGJrbHZISm14aVRlU0dkUW9HYVpyaVZZNFFlc2Z5Z0tYeTllNEQ0QU10?=
- =?utf-8?B?SVV0R2gwR2pRLzd1Snh6RWsyRTlxMjFtNnV5OGRRbGY4eW5idFNUY2VQUjE2?=
- =?utf-8?B?MDYvckpzQ0pNSFZFTzF1VWZzRUc5a09TYUpneE0raEwyUythL0FEZTZmdVoy?=
- =?utf-8?B?SE13QTJkTmR4dGhFTTc5QU1nNHNUdWkzaXY2S3Rxd1RCNVVYa1JCc21pVDlU?=
- =?utf-8?B?ekd5bWFBa3ZkcGo0ZW5SMzhwNHdhUDJqWUFHRjVad2swQko3NlFSUzZFdDQr?=
- =?utf-8?B?M1FadHRIaWs5L1pkZGttcG9TVWVJTEgzV21zdTJEb2JOQVFxTVREd1dXTVk4?=
- =?utf-8?B?RlFvNWtXbHBETkk0c3RQOWN5dGdUbEdqeHN0eHRXVmRkR3I2Z2M3NFc5WkIz?=
- =?utf-8?B?T3B1ZnpCOHp6S05HcjArNVhpV0VhRHFIRnNyMlFqUDNUVTVPWmVqbHNOaC8v?=
- =?utf-8?B?TFl2Qm1sSTB5ZDlpTEZtZnBSS0ZjMW9XYVJ0eVhBZisvSmN3Y3NEOGJlanV6?=
- =?utf-8?B?UDZZK3BtQjNIQzVhT29Jd2Q2RlhmYWQrZVZIdnRoZVBzQ0xCa0h0SjQ1NWZ6?=
- =?utf-8?B?Q21sODRmY3BFY1NRaFFadXoyUnRoNHl1QlR6WC9MTk1DbVZ3bzZ4d0VwOXdV?=
- =?utf-8?B?VjFMZGY1ZGE3MDhUMU9FalUyYXUrQ3BNb3NubVZJUUlnZUcyS1R2TnRMV0Jt?=
- =?utf-8?B?dE1oUm1BSGdlc3lNR1NWZXVnNGlzNnFKNjN4MWhUYkRHMmZnV05ndC9uVVdy?=
- =?utf-8?B?WDRlYnEwWU00SVJkTzNFbHFwd1dIMXZuWFlmZ09jTUJqaEFkS3A2QSs4VVNY?=
- =?utf-8?B?bmFHdzh1WHUyWmVXenJuRW5vSnE0WWdoeXRSSC9wTDFtUXYxVzBlc3dORjFR?=
- =?utf-8?B?WHZKU25iNW5aN2c2Tk1XRS82WlNLVXFLcXBROFo5TWxkY0tZNytpZit4VkYy?=
- =?utf-8?B?VzJON2tHS0w0L013bDIvbWwwdTJTNGl4U0JBYTVxbnpoT1FwdFBOUlJpMThW?=
- =?utf-8?B?dGM3eDdNNTVObk1ycEZtWmJxcGFialVndVhIR2ZnbkIveXlpbWZhMTlSVVFj?=
- =?utf-8?B?Q253NmQ2aVZLdjNDcHlGVEJWajJMUlRLekhDa3FCb2hJSnJYTGQzbVFUbHZx?=
- =?utf-8?B?L1ljQ0E0cGxnb25GWWFVeXVZOWp2UXpZeXFMYUZ4TDliREJhQnczUWFJaHc2?=
- =?utf-8?B?NUVHVHJjRGJkbngyVVNPWHJ6SkxnaFUxOXkxWWN1Q0d4VHhjYnBIVnN5TXd2?=
- =?utf-8?B?Sm03WUowYXJJVzBtS0cySit2RUx5SFBqTGpXWlJtUEJpczlwMFJBOVhQRm02?=
- =?utf-8?B?cTJFTWovSE5RSEdjQ0F0RDRRN2c5UFU0NWVjL2NqelRFS2tiS25RcHpwQ0wy?=
- =?utf-8?B?cFYyVjZyVEFUOWw3blk2eDNIVHRhVjZacmhPWExzVlgwMHdLS29NQ2Q0TGpL?=
- =?utf-8?B?ZERsNW02VlpqRExtM0pyczkyM1dCeEtmWDViME5iVHBibUgxTEt3Qk9kY1Yw?=
- =?utf-8?B?cXVQdlp5cWZkMnVFSkFuaXcvUHYwbk5qclpWb1FhZ1pwbHJxTmFhVHBjN3Vx?=
- =?utf-8?B?YjdDZHNsVjZ4SUVVWnA1QXZMdVZUMktVNHpsRUd5YXE1OUtXVFBCWERZSDk3?=
- =?utf-8?B?L0orN0k3bGJiZjQvZlhIaXE2S241YXJFWVhBaHpzcXFyZjZZempDSUJzRFhN?=
- =?utf-8?B?NFQxcG9ESExtM1hmSmZzN25MbHlvaVRXNVkxMHg4RGJ0amJuWkE3Mk9BbmVI?=
- =?utf-8?B?cW9EL090RXdKYk1ZSkE2c3NidXBmOHgyY0tpNUFBeXJWKzUzVlBOeHcvSFh3?=
- =?utf-8?B?SEZmaHgzVVRJT2haUDdZUkxsU2dXWkR3SlVpYjlxSnJON2pQbktVRGpPOGZm?=
- =?utf-8?Q?VLje14OXP6p93?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5D55DEBCE0356647B40B714582C6DE63@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S241555AbhIPXme (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Sep 2021 19:42:34 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:40580 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238769AbhIPXmc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 16 Sep 2021 19:42:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=2hK6AsHc/ysDKmL7f6dXUZSSeE0kBcwrFrtpZ34IiEA=; b=dv9GSoU5q89O6QAjG6UUhsk3GS
+        +j/d9pDqmJ/2DTqV135u2egzDU+xfME9bSFt0gzd/BGOfamNWms6HmQznPJrqeDeQkwpLP0E2lxY/
+        q+z7pSlUuxGCM5Os4UOSwxQR918zGb3Ztoh71qOF8KH70g93rPysvHpD0pONYPjpFBEC7iyolydT7
+        AGMIsUK+1DL/9E5LAhIWj/PESbA3EtiPPUXe4b9zkfs8xM/0rmjpvYOvU6UGLijfJZ2BeiK4SCn5e
+        Fz0SFsYdzYgf5R6I/uMXAb59wVgnOsuKJogy5Em5DV33/17yyoPYbh6HaZGTxefqWcNRE08KJMGrd
+        sBI7uRAg==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1mR107-0008Hz-JR; Thu, 16 Sep 2021 17:41:09 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1mR103-000Vqn-Ee; Thu, 16 Sep 2021 17:41:03 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 16 Sep 2021 17:40:40 -0600
+Message-Id: <20210916234100.122368-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7a1114b-b1bf-4364-a678-08d97966c7e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2021 23:07:39.5305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F1dx9tu1cK6vMBX2cDrvHq9QkqaPeUYNzBG4aEULlNEl85T//dNR/XyzDVSI6aXJ+pi/riKe/rrHZKDfuKgt+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1584
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        MYRULES_FREE,MYRULES_NO_TEXT autolearn=no autolearn_force=no
+        version=3.4.2
+Subject: [PATCH v3 00/20] Userspace P2PDMA with O_DIRECT NVMe devices
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-T24gOS8xNi8yMSAxMDoyMiBBTSwgRXJpYyBCaWdnZXJzIHdyb3RlOg0KPiBFeHRlcm5hbCBlbWFp
-bDogVXNlIGNhdXRpb24gb3BlbmluZyBsaW5rcyBvciBhdHRhY2htZW50cw0KPiANCj4gDQo+IEZy
-b206IEVyaWMgQmlnZ2VycyA8ZWJpZ2dlcnNAZ29vZ2xlLmNvbT4NCj4gDQo+IEZvciBjbGFyaXR5
-LCBhdm9pZCB1c2luZyBqdXN0IHRoZSAiYmxrX2NyeXB0b18iIHByZWZpeCBmb3IgZnVuY3Rpb25z
-IGFuZA0KPiBzdHJ1Y3RzIHRoYXQgYXJlIHNwZWNpZmljIHRvIGJsay1jcnlwdG8tZmFsbGJhY2su
-ICBJbnN0ZWFkLCB1c2UNCj4gImJsa19jcnlwdG9fZmFsbGJhY2tfIi4gIFNvbWUgcGxhY2VzIGFs
-cmVhZHkgZGlkIHRoaXMsIGJ1dCBvdGhlcnMNCj4gZGlkbid0Lg0KPiANCj4gVGhpcyBpcyBhbHNv
-IGEgcHJlcmVxdWlzaXRlIGZvciB1c2luZyAic3RydWN0IGJsa19jcnlwdG9fa2V5c2xvdCIgdG8N
-Cj4gbWVhbiBhIGdlbmVyaWMgYmxrLWNyeXB0byBrZXlzbG90ICh3aGljaCBpcyB3aGF0IGl0IHNv
-dW5kcyBsaWtlKS4NCj4gUmVuYW1lIHRoZSBmYWxsYmFjayBvbmUgdG8gInN0cnVjdCBibGtfY3J5
-cHRvX2ZhbGxiYWNrX2tleXNsb3QiLg0KPiANCj4gUmV2aWV3ZWQtYnk6IENocmlzdG9waCBIZWxs
-d2lnIDxoY2hAbHN0LmRlPg0KPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEJpZ2dlcnMgPGViaWdnZXJz
-QGdvb2dsZS5jb20+DQoNCkxvb2tzIGdvb2QsIGl0IG1pZ2h0IGJlIHVzZWZ1bCB0byBtZW50aW9u
-IHRoaXMgcGF0Y2ggZG9lc24ndCBjaGFuZ2UNCmFueSBmdW5jdGlvbmFsaXR5LCBub3QgYSBoYXJk
-IHJlcXVpcmVtZW50IHRob3VnaC4NCg0KUmV2aWV3ZWQtYnk6IENoYWl0YW55YSBLdWxrYXJuaSA8
-a2NoQG52aWRpYS5jb20+DQoNCg0K
+Hi,
+
+This patchset continues my work to add userspace P2PDMA access using
+O_DIRECT NVMe devices. My last posting[1] just included the first 13
+patches in this series, but the early P2PDMA cleanup and map_sg error
+changes from that series have been merged into v5.15-rc1. To address
+concerns that that series did not add any new functionality, I've added
+back the userspcae functionality from the original RFC[2] (but improved
+based on the original feedback).
+
+The patchset enables userspace P2PDMA by allowing userspace to mmap()
+allocated chunks of the CMB. The resulting VMA can be passed only
+to O_DIRECT IO on NVMe backed files or block devices. A flag is added
+to GUP() in Patch 14, then Patches 15 through 17 wire this flag up based
+on whether the block queue indicates P2PDMA support. Patches 18
+through 20 enable the CMB to be mapped into userspace by mmaping
+the nvme char device.
+
+This is relatively straightforward, however the one significant
+problem is that, presently, pci_p2pdma_map_sg() requires a homogeneous
+SGL with all P2PDMA pages or all regular pages. Enhancing GUP to
+support enforcing this rule would require a huge hack that I don't
+expect would be all that pallatable. So the first 13 patches add
+support for P2PDMA pages to dma_map_sg[table]() to the dma-direct
+and dma-iommu implementations. Thus systems without an IOMMU plus
+Intel and AMD IOMMUs are supported. (Other IOMMU implementations would
+then be unsupported, notably ARM and PowerPC but support would be added
+when they convert to dma-iommu).
+
+dma_map_sgtable() is preferred when dealing with P2PDMA memory as it
+will return -EREMOTEIO when the DMA device cannot map specific P2PDMA
+pages based on the existing rules in calc_map_type_and_dist().
+
+The other issue is dma_unmap_sg() needs a flag to determine whether a
+given dma_addr_t was mapped regularly or as a PCI bus address. To allow
+this, a third flag is added to the page_link field in struct
+scatterlist. This effectively means support for P2PDMA will now depend
+on CONFIG_64BIT.
+
+Feedback welcome.
+
+This series is based on v5.15-rc1. A git branch is available here:
+
+  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v3
+
+Thanks,
+
+Logan
+
+[1] https://lkml.kernel.org/r/20210513223203.5542-1-logang@deltatee.com
+[2] https://lkml.kernel.org/r/20201106170036.18713-1-logang@deltatee.com
+
+--
+
+Logan Gunthorpe (20):
+  lib/scatterlist: add flag for indicating P2PDMA segments in an SGL
+  PCI/P2PDMA: attempt to set map_type if it has not been set
+  PCI/P2PDMA: make pci_p2pdma_map_type() non-static
+  PCI/P2PDMA: introduce helpers for dma_map_sg implementations
+  dma-mapping: allow EREMOTEIO return code for P2PDMA transfers
+  dma-direct: support PCI P2PDMA pages in dma-direct map_sg
+  dma-mapping: add flags to dma_map_ops to indicate PCI P2PDMA support
+  iommu/dma: support PCI P2PDMA pages in dma-iommu map_sg
+  nvme-pci: check DMA ops when indicating support for PCI P2PDMA
+  nvme-pci: convert to using dma_map_sgtable()
+  RDMA/core: introduce ib_dma_pci_p2p_dma_supported()
+  RDMA/rw: use dma_map_sgtable()
+  PCI/P2PDMA: remove pci_p2pdma_[un]map_sg()
+  mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
+  iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
+  block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
+  block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
+  mm: use custom page_free for P2PDMA pages
+  PCI/P2PDMA: introduce pci_mmap_p2pmem()
+  nvme-pci: allow mmaping the CMB in userspace
+
+ block/bio.c                  |   8 +-
+ block/blk-map.c              |   7 +-
+ drivers/dax/super.c          |   7 +-
+ drivers/infiniband/core/rw.c |  75 +++----
+ drivers/iommu/dma-iommu.c    |  68 +++++-
+ drivers/nvme/host/core.c     |  18 +-
+ drivers/nvme/host/nvme.h     |   4 +-
+ drivers/nvme/host/pci.c      |  98 +++++----
+ drivers/nvme/target/rdma.c   |   2 +-
+ drivers/pci/Kconfig          |   3 +-
+ drivers/pci/p2pdma.c         | 402 +++++++++++++++++++++++++++++------
+ include/linux/dma-map-ops.h  |  10 +
+ include/linux/dma-mapping.h  |   5 +
+ include/linux/memremap.h     |   4 +-
+ include/linux/mm.h           |   2 +
+ include/linux/pci-p2pdma.h   |  92 ++++++--
+ include/linux/scatterlist.h  |  50 ++++-
+ include/linux/uio.h          |  21 +-
+ include/rdma/ib_verbs.h      |  30 +++
+ include/uapi/linux/magic.h   |   1 +
+ kernel/dma/direct.c          |  44 +++-
+ kernel/dma/mapping.c         |  34 ++-
+ lib/iov_iter.c               |  28 +--
+ mm/gup.c                     |  28 ++-
+ mm/huge_memory.c             |   8 +-
+ mm/memory-failure.c          |   4 +-
+ mm/memory_hotplug.c          |   2 +-
+ mm/memremap.c                |  26 ++-
+ 28 files changed, 834 insertions(+), 247 deletions(-)
+
+
+base-commit: 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f
+--
+2.30.2
