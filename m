@@ -2,141 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16EB140DC8F
-	for <lists+linux-block@lfdr.de>; Thu, 16 Sep 2021 16:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 256B640DC6C
+	for <lists+linux-block@lfdr.de>; Thu, 16 Sep 2021 16:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235489AbhIPOSR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Sep 2021 10:18:17 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:46792 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234701AbhIPOSQ (ORCPT
+        id S238465AbhIPOJt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Sep 2021 10:09:49 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:16222 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236328AbhIPOJq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Sep 2021 10:18:16 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 4D215223D5;
-        Thu, 16 Sep 2021 14:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1631801815; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4smCv84xjzrS2IvT32QW7dEMqnHlEwo/B3oX7KHTeVA=;
-        b=SQsXmQgGIlxJMOdJB0L97ZzVglADOPxS38WgMmkU+6nlVBsAFkvIaz+cF5zb5D9gvbcqu9
-        ottoIuq7cDgEUcVI70qV7AOaakWpyme8MS2MbmQALH1iUp4ygLHE2tLQzkUuj2g+qZtsbt
-        APUgobWJBxNvIv1ujt+lPg8sbF6CsMk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1631801815;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4smCv84xjzrS2IvT32QW7dEMqnHlEwo/B3oX7KHTeVA=;
-        b=t1UZ1mBj8GapnVtgxqeDri5m1+N/D1i8pZiHo20NlhxHhzaw7rc7J4pL+SIQvyNCk7fzw5
-        IqgC3QGP5C/2fYBQ==
-Received: from quack2.suse.cz (unknown [10.100.224.230])
-        by relay2.suse.de (Postfix) with ESMTP id 3D2A6A3B90;
-        Thu, 16 Sep 2021 14:16:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2056F1E0C06; Thu, 16 Sep 2021 16:16:55 +0200 (CEST)
-Date:   Thu, 16 Sep 2021 16:16:55 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] block: hold ->invalidate_lock in blkdev_fallocate
-Message-ID: <20210916141655.GI10610@quack2.suse.cz>
-References: <20210915123545.1000534-1-ming.lei@redhat.com>
+        Thu, 16 Sep 2021 10:09:46 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4H9Jn40dyyz1DH1k;
+        Thu, 16 Sep 2021 22:07:20 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2308.8; Thu, 16 Sep 2021 22:08:22 +0800
+Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
+ (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Thu, 16
+ Sep 2021 22:08:21 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH v9] nbd: fix uaf in nbd_handle_reply()
+Date:   Thu, 16 Sep 2021 22:18:10 +0800
+Message-ID: <20210916141810.2325276-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210916093350.1410403-8-yukuai3@huawei.com>
+References: <20210916093350.1410403-8-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210915123545.1000534-1-ming.lei@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed 15-09-21 20:35:45, Ming Lei wrote:
-> When running ->fallocate(), blkdev_fallocate() should hold
-> mapping->invalidate_lock to prevent page cache from being
-> accessed, otherwise stale data may be read in page cache.
-> 
-> Without this patch, blktests block/009 fails sometimes. With
-> this patch, block/009 can pass always.
-> 
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+There is a problem that nbd_handle_reply() might access freed request:
 
-Interesting. Looking at block/009 testcase I'm somewhat struggling to see
-how it could trigger a situation where stale data would be seen. Do you
-have some independent read accesses to the block device while the testcase
-is running? That would explain it and yes, this patch should fix that.
+1) At first, a normal io is submitted and completed with scheduler:
 
-BTW, you'd need to rebase this against current Linus' tree - Christoph has
-moved this code to block/...
+internel_tag = blk_mq_get_tag -> get tag from sched_tags
+ blk_mq_rq_ctx_init
+  sched_tags->rq[internel_tag] = sched_tag->static_rq[internel_tag]
+...
+blk_mq_get_driver_tag
+ __blk_mq_get_driver_tag -> get tag from tags
+ tags->rq[tag] = sched_tag->static_rq[internel_tag]
 
-Also with the invalidate_lock held, there's no need for the second
-truncate_bdev_range() call anymore. No pages can be created in the
-discarded area while you are holding the invalidate_lock.
+So, both tags->rq[tag] and sched_tags->rq[internel_tag] are pointing
+to the request: sched_tags->static_rq[internal_tag]. Even if the
+io is finished.
 
-								Honza
+2) nbd server send a reply with random tag directly:
 
-> ---
->  fs/block_dev.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 45df6cbccf12..f55e14ae89a0 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1516,7 +1516,8 @@ static const struct address_space_operations def_blk_aops = {
->  static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->  			     loff_t len)
->  {
-> -	struct block_device *bdev = I_BDEV(bdev_file_inode(file));
-> +	struct inode *inode = bdev_file_inode(file);
-> +	struct block_device *bdev = I_BDEV(inode);
->  	loff_t end = start + len - 1;
->  	loff_t isize;
->  	int error;
-> @@ -1543,10 +1544,12 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->  	if ((start | len) & (bdev_logical_block_size(bdev) - 1))
->  		return -EINVAL;
->  
-> +	filemap_invalidate_lock(inode->i_mapping);
-> +
->  	/* Invalidate the page cache, including dirty pages. */
->  	error = truncate_bdev_range(bdev, file->f_mode, start, end);
->  	if (error)
-> -		return error;
-> +		goto fail;
->  
->  	switch (mode) {
->  	case FALLOC_FL_ZERO_RANGE:
-> @@ -1563,17 +1566,18 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->  					     GFP_KERNEL, 0);
->  		break;
->  	default:
-> -		return -EOPNOTSUPP;
-> +		error = -EOPNOTSUPP;
->  	}
-> -	if (error)
-> -		return error;
-> -
->  	/*
->  	 * Invalidate the page cache again; if someone wandered in and dirtied
->  	 * a page, we just discard it - userspace has no way of knowing whether
->  	 * the write happened before or after discard completing...
->  	 */
-> -	return truncate_bdev_range(bdev, file->f_mode, start, end);
-> +	if (!error)
-> +		error = truncate_bdev_range(bdev, file->f_mode, start, end);
-> + fail:
-> +	filemap_invalidate_unlock(inode->i_mapping);
-> +	return error;
->  }
->  
->  const struct file_operations def_blk_fops = {
-> -- 
-> 2.31.1
-> 
+recv_work
+ nbd_handle_reply
+  blk_mq_tag_to_rq(tags, tag)
+   rq = tags->rq[tag]
+
+3) if the sched_tags->static_rq is freed:
+
+blk_mq_sched_free_requests
+ blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i)
+  -> step 2) access rq before clearing rq mapping
+  blk_mq_clear_rq_mapping(set, tags, hctx_idx);
+  __free_pages() -> rq is freed here
+
+4) Then, nbd continue to use the freed request in nbd_handle_reply
+
+Fix the problem by get 'q_usage_counter' before blk_mq_tag_to_rq(),
+thus request is ensured not to be freed because 'q_usage_counter' is
+not zero.
+
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+Changes in v9:
+ - move percpu_ref_put() behind.
+
+ drivers/block/nbd.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 69dc5eac9ad3..f9d63794275e 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -825,6 +825,7 @@ static void recv_work(struct work_struct *work)
+ 						     work);
+ 	struct nbd_device *nbd = args->nbd;
+ 	struct nbd_config *config = nbd->config;
++	struct request_queue *q = nbd->disk->queue;
+ 	struct nbd_sock *nsock;
+ 	struct nbd_cmd *cmd;
+ 	struct request *rq;
+@@ -835,13 +836,28 @@ static void recv_work(struct work_struct *work)
+ 		if (nbd_read_reply(nbd, args->index, &reply))
+ 			break;
+ 
++		/*
++		 * Grab .q_usage_counter so request pool won't go away, then no
++		 * request use-after-free is possible during nbd_handle_reply().
++		 * If queue is frozen, there won't be any inflight requests, we
++		 * needn't to handle the incoming garbage message.
++		 */
++		if (!percpu_ref_tryget(&q->q_usage_counter)) {
++			dev_err(disk_to_dev(nbd->disk), "%s: no io inflight\n",
++				__func__);
++			break;
++		}
++
+ 		cmd = nbd_handle_reply(nbd, args->index, &reply);
+-		if (IS_ERR(cmd))
++		if (IS_ERR(cmd)) {
++			percpu_ref_put(&q->q_usage_counter);
+ 			break;
++		}
+ 
+ 		rq = blk_mq_rq_from_pdu(cmd);
+ 		if (likely(!blk_should_fake_timeout(rq->q)))
+ 			blk_mq_complete_request(rq);
++		percpu_ref_put(&q->q_usage_counter);
+ 	}
+ 
+ 	nsock = config->socks[args->index];
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.31.1
+
