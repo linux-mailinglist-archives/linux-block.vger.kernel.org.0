@@ -2,103 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 131E840F074
-	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 05:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B344540F1B2
+	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 07:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244047AbhIQDlD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Sep 2021 23:41:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45365 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244045AbhIQDlD (ORCPT
+        id S244906AbhIQFle (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Sep 2021 01:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244900AbhIQFle (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Sep 2021 23:41:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631849981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B9r/+Zs88h2CfccJTBLTJgNfdwtNFfPY6UfBjfQU3/E=;
-        b=Mp6aMp3JL7vVe0h3GQLlol+G61AaZvCg+ejCg3QgLgNEs1nzQy030r9d9KIq/qXY3mN9MH
-        egzYBJwzbKFABstOMzpLttoBaJw+81aB4PsMl8zzL5oa8tOQdkVmPJoUmNgXsjRZ1xGDcs
-        eb6WMJ3g/IdKbeUB0iTTs3G+fYF5k6U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-S64eqPBnPpae_FmZr_hRmw-1; Thu, 16 Sep 2021 23:39:40 -0400
-X-MC-Unique: S64eqPBnPpae_FmZr_hRmw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CB0D8145E6;
-        Fri, 17 Sep 2021 03:39:39 +0000 (UTC)
-Received: from T590.Home (ovpn-12-120.pek2.redhat.com [10.72.12.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F64D5D9D3;
-        Fri, 17 Sep 2021 03:39:35 +0000 (UTC)
-Date:   Fri, 17 Sep 2021 11:39:48 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH] scsi: core: cleanup request queue before releasing
- gendisk
-Message-ID: <YUQOBKa67R9pEunr@T590.Home>
-References: <20210915092547.990285-1-ming.lei@redhat.com>
- <20210915134008.GA13933@lst.de>
- <YUKfl9Qqsluh+5FX@T590>
- <20210916101451.GA26782@lst.de>
- <YUM6uFHqfjWMM5BH@T590>
- <20210916142009.GA12603@lst.de>
+        Fri, 17 Sep 2021 01:41:34 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD331C061574
+        for <linux-block@vger.kernel.org>; Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b8so9072481ilh.12
+        for <linux-block@vger.kernel.org>; Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=ljzsnxajinYiqm5f+V46C275QJ33e4sBZHo7jKO+UL0v8Ey9tnTRD0nd2SWjO2iaMk
+         dkqMgkTIwYI8QIY//eE0SWBGo13U1D7G/nZFaxeMHgEThWE3JEpWGlinHM+Z7zwfwuPU
+         vhQOxEwwTpkmgdSY4Yw5W/avN6DDDNOpA2ZMgJh8qNZXwgX7zlYDoekJ3a1LI9l+/nJ/
+         v1dAE+xEDQKbVvOamIFWaJuorTIZGRLCDwG7XXyAwM0neVVklJjo37W1nSzUm0CZWYiu
+         guHOyJFtJvrJ9hDMsv8XbsMGXfNO3F1aB5EUstxSvkZGLzeCi5FLaSAOy16YlSqOENNr
+         6y0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=j009azkdt1c5XAdzTNtEadApWDIgDgJxmiSUAFlw3az+QwBxX839SjIa8VMATO7kc5
+         ACq/ZNQPt7PGHs0A3rSSPlH6hfWzAX2l3WWZOjTujHxOswRnDa+MITejnPWsGhYlXMW4
+         zlRq+U9+qPFSc3qgk8ooavs1s3h/T84euBXVZpR63J/R/C7GHLXvZz6JXi9cMH7UVunt
+         GUAPeIBXF9HBikqbj+kEU0UF5X2mqsTKsu+/xF3Y8Q1MxXJQTkDLfyNBEOgGsYcqBW1T
+         fo+091Fax0ZlA0o0QSEFiVzhSrxnlDDJCp6rq7qeu0CKttk0Ukfm4lWYe++n0fdmbGAv
+         g2pw==
+X-Gm-Message-State: AOAM532mwbBUh+p1UBA5QGHgYFeslAHCLvaDM6qwQbQ/M3Kkk9qO4mJ5
+        nXoH8ahSwUt4aRB6YyeQ+pXDzz50QlCfRxZ5vOU=
+X-Google-Smtp-Source: ABdhPJyk6d7cpUAVqjRwTvuYMfiA6eZ0PtTpx84I2KQGb6c7blkC+wWDxvBZjFO7VFAHnEKkWCrbOawJbhR1Hg0bqS4=
+X-Received: by 2002:a05:6e02:eb2:: with SMTP id u18mr6737716ilj.138.1631857212022;
+ Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916142009.GA12603@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Reply-To: godwinppter@gmail.com
+Sender: mrs.raissaomar11@gmail.com
+Received: by 2002:a05:6e02:1032:0:0:0:0 with HTTP; Thu, 16 Sep 2021 22:40:11
+ -0700 (PDT)
+From:   Godwin Pete <godwinnpeter@gmail.com>
+Date:   Fri, 17 Sep 2021 07:40:11 +0200
+X-Google-Sender-Auth: ilRaJNUgvjH9MKIk7uVwFPb6xVU
+Message-ID: <CAONac3FoRZ6pednT=U2fG-ob-w2KxNA2S0ysJeL0Hc=HQW_p4g@mail.gmail.com>
+Subject: I want to use this opportunity to inform you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 04:20:09PM +0200, Christoph Hellwig wrote:
-> On Thu, Sep 16, 2021 at 08:38:16PM +0800, Ming Lei wrote:
-> > > > and it may cause other trouble at least for scsi disk since sd_shutdown()
-> > > > follows del_gendisk() and has to be called before blk_cleanup_queue().
-> > > 
-> > > Yes.  So we need to move the bits of blk_cleanup_queue that deal with
-> > > the file system I/O state to del_gendisk, and keep blk_cleanup_queue
-> > > for anything actually needed for the low-level queue.
-> > 
-> > Can you explain what the bits are in blk_cleanup_queue() for dealing with FS
-> > I/O state? blk_cleanup_queue() drains and shutdown the queue basically,
-> > all shouldn't be related with gendisk, and it is fine to implement one
-> > queue without gendisk involved, such as nvme admin, connect queue or
-> > sort of stuff.
-> > 
-> > Wrt. this reported issue, rq_qos_exit() needs to run before releasing
-> > gendisk, but queue has to put into freezing before calling
-> > rq_qos_exit(),
-> 
-> I was curious what you hit, but yes rq_qos_exit is obvious.
-> blk_flush_integrity also is very much about fs I/O state.
-> 
-> 
-> 
-> > so looks you suggest to move the following code into
-> > del_gendisk()?
-> 
-> something like that.  I think we need to split the dying flag into
-> one for the gendisk and one for the queue first, and make sure the
-> queue freeze in del_gendisk is released again so that passthrough
-> still works after.
+Hi,
 
-If we do that, q->disk is really unnecessary, so looks the fix of
-'d152c682f03c block: add an explicit ->disk backpointer to the request_queue'
-isn't good. The original issue added in 'edb0872f44ec block: move the
-bdi from the request_queue to the gendisk' can be fixed simply by moving
-the two lines code in blk_unregister_queue() to blk_cleanup_queue():
+I just want to use this little opportunity to inform you about my
+success towards the transfer. I'm currently out of the country for an
+investment with part of my share, after completing the transfer with
+an Indian business man. But i will visit your country, next year.
+After the completion of my project. Please, contact my secretary to
+send you the (ATM) card which I've already credited with the sum of
+($500,000.00). Just contact her to help you in receiving the (ATM)
+card. I've explained everything to her before my trip. This is what I
+can do for you because, you couldn't help in the transfer, but for the
+fact that you're the person whom I've contacted initially, for the
+transfer. I decided to give this ($500,000.00) as a compensation for
+being contacted initially for the transfer. I always try to make the
+difference, in dealing with people any time I come in contact with
+them. I'm also trying to show that I'm quite a different person from
+others whose may have a different purpose within them. I believe that
+you will render some help to me when I, will visit your country, for
+another investment there. So contact my secretary for the card, Her
+contact are as follows,
 
-        kobject_uevent(&q->kobj, KOBJ_REMOVE);
-        kobject_del(&q->kobj);
+Full name: Mrs, Jovita Dumuije,
+Country: Burkina Faso
+Email: jovitadumuije@gmail.com
 
+Thanks, and hope for a good corporation with you in future.
 
-Thanks,
-Ming
-
+Godwin Peter,
