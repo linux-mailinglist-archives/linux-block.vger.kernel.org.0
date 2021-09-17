@@ -2,88 +2,154 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B344540F1B2
-	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 07:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B9B40F29F
+	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 08:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244906AbhIQFle (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Sep 2021 01:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244900AbhIQFle (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Sep 2021 01:41:34 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD331C061574
-        for <linux-block@vger.kernel.org>; Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b8so9072481ilh.12
-        for <linux-block@vger.kernel.org>; Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=ljzsnxajinYiqm5f+V46C275QJ33e4sBZHo7jKO+UL0v8Ey9tnTRD0nd2SWjO2iaMk
-         dkqMgkTIwYI8QIY//eE0SWBGo13U1D7G/nZFaxeMHgEThWE3JEpWGlinHM+Z7zwfwuPU
-         vhQOxEwwTpkmgdSY4Yw5W/avN6DDDNOpA2ZMgJh8qNZXwgX7zlYDoekJ3a1LI9l+/nJ/
-         v1dAE+xEDQKbVvOamIFWaJuorTIZGRLCDwG7XXyAwM0neVVklJjo37W1nSzUm0CZWYiu
-         guHOyJFtJvrJ9hDMsv8XbsMGXfNO3F1aB5EUstxSvkZGLzeCi5FLaSAOy16YlSqOENNr
-         6y0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=j009azkdt1c5XAdzTNtEadApWDIgDgJxmiSUAFlw3az+QwBxX839SjIa8VMATO7kc5
-         ACq/ZNQPt7PGHs0A3rSSPlH6hfWzAX2l3WWZOjTujHxOswRnDa+MITejnPWsGhYlXMW4
-         zlRq+U9+qPFSc3qgk8ooavs1s3h/T84euBXVZpR63J/R/C7GHLXvZz6JXi9cMH7UVunt
-         GUAPeIBXF9HBikqbj+kEU0UF5X2mqsTKsu+/xF3Y8Q1MxXJQTkDLfyNBEOgGsYcqBW1T
-         fo+091Fax0ZlA0o0QSEFiVzhSrxnlDDJCp6rq7qeu0CKttk0Ukfm4lWYe++n0fdmbGAv
-         g2pw==
-X-Gm-Message-State: AOAM532mwbBUh+p1UBA5QGHgYFeslAHCLvaDM6qwQbQ/M3Kkk9qO4mJ5
-        nXoH8ahSwUt4aRB6YyeQ+pXDzz50QlCfRxZ5vOU=
-X-Google-Smtp-Source: ABdhPJyk6d7cpUAVqjRwTvuYMfiA6eZ0PtTpx84I2KQGb6c7blkC+wWDxvBZjFO7VFAHnEKkWCrbOawJbhR1Hg0bqS4=
-X-Received: by 2002:a05:6e02:eb2:: with SMTP id u18mr6737716ilj.138.1631857212022;
- Thu, 16 Sep 2021 22:40:12 -0700 (PDT)
+        id S232865AbhIQGya (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Sep 2021 02:54:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:43793 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229456AbhIQGya (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 17 Sep 2021 02:54:30 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CCE9B67373; Fri, 17 Sep 2021 08:53:05 +0200 (CEST)
+Date:   Fri, 17 Sep 2021 08:53:05 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH] scsi: core: cleanup request queue before releasing
+ gendisk
+Message-ID: <20210917065305.GA24012@lst.de>
+References: <20210915092547.990285-1-ming.lei@redhat.com> <20210915134008.GA13933@lst.de> <YUKfl9Qqsluh+5FX@T590> <20210916101451.GA26782@lst.de> <YUM6uFHqfjWMM5BH@T590> <20210916142009.GA12603@lst.de> <YUQOBKa67R9pEunr@T590.Home>
 MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: mrs.raissaomar11@gmail.com
-Received: by 2002:a05:6e02:1032:0:0:0:0 with HTTP; Thu, 16 Sep 2021 22:40:11
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Fri, 17 Sep 2021 07:40:11 +0200
-X-Google-Sender-Auth: ilRaJNUgvjH9MKIk7uVwFPb6xVU
-Message-ID: <CAONac3FoRZ6pednT=U2fG-ob-w2KxNA2S0ysJeL0Hc=HQW_p4g@mail.gmail.com>
-Subject: I want to use this opportunity to inform you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YUQOBKa67R9pEunr@T590.Home>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+On Fri, Sep 17, 2021 at 11:39:48AM +0800, Ming Lei wrote:
+> If we do that, q->disk is really unnecessary, so looks the fix of
+> 'd152c682f03c block: add an explicit ->disk backpointer to the request_queue'
+> isn't good.
+> The original issue added in 'edb0872f44ec block: move the
+> bdi from the request_queue to the gendisk' can be fixed simply by moving
+> the two lines code in blk_unregister_queue() to blk_cleanup_queue():
+> 
+>         kobject_uevent(&q->kobj, KOBJ_REMOVE);
+>         kobject_del(&q->kobj);
 
-I just want to use this little opportunity to inform you about my
-success towards the transfer. I'm currently out of the country for an
-investment with part of my share, after completing the transfer with
-an Indian business man. But i will visit your country, next year.
-After the completion of my project. Please, contact my secretary to
-send you the (ATM) card which I've already credited with the sum of
-($500,000.00). Just contact her to help you in receiving the (ATM)
-card. I've explained everything to her before my trip. This is what I
-can do for you because, you couldn't help in the transfer, but for the
-fact that you're the person whom I've contacted initially, for the
-transfer. I decided to give this ($500,000.00) as a compensation for
-being contacted initially for the transfer. I always try to make the
-difference, in dealing with people any time I come in contact with
-them. I'm also trying to show that I'm quite a different person from
-others whose may have a different purpose within them. I believe that
-you will render some help to me when I, will visit your country, for
-another investment there. So contact my secretary for the card, Her
-contact are as follows,
+Well, it is still useful to not do the device model dance, especially as
+uses of queue->disk will grow in 5.16.
 
-Full name: Mrs, Jovita Dumuije,
-Country: Burkina Faso
-Email: jovitadumuije@gmail.com
+Anyway, can you give this patch a spin?  I've done some basic testing
+including nvme surprise removal locally.  Note that just like
+blk_cleanup_queue this doesn't actually wait for the freeze to finish.
+Eventually we should do that, but I'm sure this will show tons of issues
+with drivers not properly cleaning up.
 
-Thanks, and hope for a good corporation with you in future.
-
-Godwin Peter,
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 5454db2fa263b..18287c443ae81 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -49,7 +49,6 @@
+ #include "blk-mq.h"
+ #include "blk-mq-sched.h"
+ #include "blk-pm.h"
+-#include "blk-rq-qos.h"
+ 
+ struct dentry *blk_debugfs_root;
+ 
+@@ -385,13 +384,8 @@ void blk_cleanup_queue(struct request_queue *q)
+ 	 */
+ 	blk_freeze_queue(q);
+ 
+-	rq_qos_exit(q);
+-
+ 	blk_queue_flag_set(QUEUE_FLAG_DEAD, q);
+ 
+-	/* for synchronous bio-based driver finish in-flight integrity i/o */
+-	blk_flush_integrity();
+-
+ 	blk_sync_queue(q);
+ 	if (queue_is_mq(q))
+ 		blk_mq_exit_queue(q);
+@@ -470,19 +464,26 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
+ 
+ static inline int bio_queue_enter(struct bio *bio)
+ {
+-	struct request_queue *q = bio->bi_bdev->bd_disk->queue;
++	struct gendisk *disk = bio->bi_bdev->bd_disk;
+ 	bool nowait = bio->bi_opf & REQ_NOWAIT;
+ 	int ret;
+ 
+-	ret = blk_queue_enter(q, nowait ? BLK_MQ_REQ_NOWAIT : 0);
++	ret = blk_queue_enter(disk->queue, nowait ? BLK_MQ_REQ_NOWAIT : 0);
+ 	if (unlikely(ret)) {
+-		if (nowait && !blk_queue_dying(q))
++		if (nowait && !blk_queue_dying(disk->queue))
+ 			bio_wouldblock_error(bio);
+ 		else
+ 			bio_io_error(bio);
++		return ret;
+ 	}
+ 
+-	return ret;
++	if (unlikely(!disk_live(disk))) {
++		blk_queue_exit(disk->queue);
++		bio_io_error(bio);
++		return -ENODEV;
++	}
++
++	return 0;
+ }
+ 
+ void blk_queue_exit(struct request_queue *q)
+diff --git a/block/genhd.c b/block/genhd.c
+index 7b6e5e1cf9564..8abe12dca76f2 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -26,6 +26,7 @@
+ #include <linux/badblocks.h>
+ 
+ #include "blk.h"
++#include "blk-rq-qos.h"
+ 
+ static struct kobject *block_depr;
+ 
+@@ -559,6 +560,8 @@ EXPORT_SYMBOL(device_add_disk);
+  */
+ void del_gendisk(struct gendisk *disk)
+ {
++	struct request_queue *q = disk->queue;
++
+ 	might_sleep();
+ 
+ 	if (WARN_ON_ONCE(!disk_live(disk) && !(disk->flags & GENHD_FL_HIDDEN)))
+@@ -572,6 +575,21 @@ void del_gendisk(struct gendisk *disk)
+ 	blk_drop_partitions(disk);
+ 	mutex_unlock(&disk->open_mutex);
+ 
++	/*
++	 * Prevent new I/O from crossing bio_queue_enter().
++	 */
++	blk_freeze_queue_start(q);
++	if (queue_is_mq(q))
++		blk_mq_wake_waiters(q);
++	/* Make blk_queue_enter() reexamine the DYING flag. */
++	wake_up_all(&q->mq_freeze_wq);
++
++	rq_qos_exit(q);
++	blk_sync_queue(q);
++	blk_flush_integrity();
++	/* allow using passthrough request again after the queue is torn down */
++	blk_mq_unfreeze_queue(q);
++
+ 	fsync_bdev(disk->part0);
+ 	__invalidate_device(disk->part0, true);
+ 
