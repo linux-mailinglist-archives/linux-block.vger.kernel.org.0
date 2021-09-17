@@ -2,185 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BF8A40EE23
-	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 01:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2751240EEB7
+	for <lists+linux-block@lfdr.de>; Fri, 17 Sep 2021 03:28:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241822AbhIPXmx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Sep 2021 19:42:53 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:40954 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241859AbhIPXmp (ORCPT
+        id S242199AbhIQBaH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Sep 2021 21:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232222AbhIQBaH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Sep 2021 19:42:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=DCe73G/87iDXLgvKp651BN9RlPv5YM0qiz8R3mNA2S8=; b=hN6uw/EdGbq0EBEeo9SVGMf1N/
-        uuccSiV6x4AlIRsHAycfNcHtP0J9xZaZqKfwq0x7kPrUaCr0xKBFHh5S57JZ2/MENkhiLWLPIDwoj
-        ZLSfDZRcjpGhjVH4ZGvhYGJf7++1l3whp1kdgiNwd0nE8fhTCduxy2vDmaeTPpc10YNnprEgUWfC1
-        o5XUV6dEkQ1zRk2gYrQYUWr2wzpOVTkGxDChsmAwu9l0CPtW9PfwL3FYuwyfeQvb7/84ST7otdSWh
-        tbMyTw1hL3+DUq1pb5+EUubk2QMB+kTHd5dyphoFznGpfOCrACya0xmAJO9cDItVH9Bf3K0z51OBh
-        pE0qZEEA==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1mR108-0008I2-IM; Thu, 16 Sep 2021 17:41:23 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1mR106-000Vry-PT; Thu, 16 Sep 2021 17:41:06 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 16 Sep 2021 17:41:00 -0600
-Message-Id: <20210916234100.122368-21-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210916234100.122368-1-logang@deltatee.com>
-References: <20210916234100.122368-1-logang@deltatee.com>
+        Thu, 16 Sep 2021 21:30:07 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7EDC061574;
+        Thu, 16 Sep 2021 18:28:45 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id c1so4709769pfp.10;
+        Thu, 16 Sep 2021 18:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=IW326X16nDke3bjh48Gr8eo8fY7bb4ZE8FAMGjGxs2s=;
+        b=ICinTdi/QwxbfCYhYmgNtQqmHQ8reNEBNLl+qtK82WbzVYplwA2Z5IeVymbYkwdYOf
+         KvgFk2LbHa7gpq6+l/+3a5QOae5RMYLcEX+4zZ+EvbobSDXPgXCUD/FfmpOQplpAnkNO
+         cjQoJgsqPU8XfN8S0ypbT+BvXQL64kACjZ8kJfDXheFIINSq+LuvG0OpES/rSkb4u32W
+         T+0R+rPxKLdKOdzTAiXkYgSq8Mxcf6noMrpQfPZ5OaPwxI5OAYAWd99mLiGAlgObj12Z
+         MeYNVtsSaVQs09aWT6BIMoL+aDBD1xIkaVpTZ4Pyy7qBGf7IxRpeuZ7FFHjtIMYaLNMy
+         01bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=IW326X16nDke3bjh48Gr8eo8fY7bb4ZE8FAMGjGxs2s=;
+        b=38xNoyN7tT8qH9aI6O4wII4f494GQpg4aUb7covELie4JKPkGayhhfdKte5ZrSZubc
+         cXM3GsLYoBVMiLeThFofeCNGOZMsmD/HXKzdNFt+B1E75IjkfsY93p+tlK3dBM87mozT
+         SH4VCz42je+VHiTVcUOSYoJbeyGU9VRWbH8PRtPg+5matEJT5LHM3BC9TXjxSlP93t0a
+         a5aDnvg9yP0u+FxUsc0Lu2STjRBboJmCfPvp7mcuP/+/9D9tcsVgphdtU5rQVH/WppF9
+         uIvZ7XU2x0Cz0sfhPXBjbw50GtJVgRTnmuqJDD8Oi08s3haKdam0+bCmjkb+gWtgkfwL
+         rVnQ==
+X-Gm-Message-State: AOAM530wfGLtuaXLWHQfuLR2EuE1XiFzwyDntT5focMAXN78yXYXixEW
+        6LifJAjUcNFtq/dBeKyZstGFfDFZTvJxvM5WoPWl1g29V3XrQQQ=
+X-Google-Smtp-Source: ABdhPJyTKE8KBatvp6pe8Zomn5+TJgE8wNyX6n7usym5uqNknPVe0LjKwYQ0SfhrIFA6WqZMKvDx+BOSLQzMWuqpEs0=
+X-Received: by 2002:a63:36c4:: with SMTP id d187mr7567715pga.205.1631842125213;
+ Thu, 16 Sep 2021 18:28:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.2
-Subject: [PATCH v3 20/20] nvme-pci: allow mmaping the CMB in userspace
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+From:   Hao Sun <sunhao.th@gmail.com>
+Date:   Fri, 17 Sep 2021 09:28:34 +0800
+Message-ID: <CACkBjsYzTQe2LB6WohxYqaFse8+7sovDh87K0ewKa0vrP9StOw@mail.gmail.com>
+Subject: WARNING in loop_control_ioctl
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow userspace to obtain CMB memory by mmaping the controller's
-char device. The mmap call allocates and returns a hunk of CMB memory,
-(the offset is ignored) so userspace does not have control over the
-address within the CMB.
+Hello,
 
-A VMA allocated in this way will only be usable by drivers that set
-FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-checked the first time the pages are mapped for DMA.
+When using Healer to fuzz the latest Linux kernel, the following crash
+was triggered.
 
-Currently this is only supported by O_DIRECT to an PCI NVMe device
-or through the NVMe passthrough IOCTL.
+HEAD commit: ff1ffd71d5f0 Merge tag 'hyperv-fixes-signed-20210915
+git tree: upstream
+console output:
+https://drive.google.com/file/d/1cQP1i5Q3j9Pl_AhjWS9smo4hPdvT0psG/view?usp=sharing
+kernel config: https://drive.google.com/file/d/1zXpDhs-IdE7tX17B7MhaYP0VGUfP6m9B/view?usp=sharing
+C reproducer: https://drive.google.com/file/d/1MScGjVksMYc8ro56o0h26qEgiFMUYhB0/view?usp=sharing
+Syzlang reproducer:
+https://drive.google.com/file/d/10DAS3f9gacZwFY_rWLjNvRt2FqGjODRd/view?usp=sharing
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 15 +++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- drivers/nvme/host/pci.c  | 18 ++++++++++++++++++
- 3 files changed, 35 insertions(+)
+If you fix this issue, please add the following tag to the commit:
+Reported-by: Hao Sun <sunhao.th@gmail.com>
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 916750a54f60..dfc18f0bdeee 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3075,6 +3075,10 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- 	}
- 
- 	file->private_data = ctrl;
-+
-+	if (ctrl->ops->mmap_file_open)
-+		ctrl->ops->mmap_file_open(ctrl, file);
-+
- 	return 0;
- }
- 
-@@ -3088,12 +3092,23 @@ static int nvme_dev_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct nvme_ctrl *ctrl = file->private_data;
-+
-+	if (!ctrl->ops->mmap_cmb)
-+		return -ENODEV;
-+
-+	return ctrl->ops->mmap_cmb(ctrl, vma);
-+}
-+
- static const struct file_operations nvme_dev_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= nvme_dev_open,
- 	.release	= nvme_dev_release,
- 	.unlocked_ioctl	= nvme_dev_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
-+	.mmap		= nvme_dev_mmap,
- };
- 
- static ssize_t nvme_sysfs_reset(struct device *dev,
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index fb9bfc52a6d7..1cc721290d4c 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -485,6 +485,8 @@ struct nvme_ctrl_ops {
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
- 	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
-+	void (*mmap_file_open)(struct nvme_ctrl *ctrl, struct file *file);
-+	int (*mmap_cmb)(struct nvme_ctrl *ctrl, struct vm_area_struct *vma);
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index e2cd73129a88..9d69e4a3d62e 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2870,6 +2870,22 @@ static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
- 	return dma_pci_p2pdma_supported(dev->dev);
- }
- 
-+static void nvme_pci_mmap_file_open(struct nvme_ctrl *ctrl,
-+				    struct file *file)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	pci_p2pdma_mmap_file_open(pdev, file);
-+}
-+
-+static int nvme_pci_mmap_cmb(struct nvme_ctrl *ctrl,
-+			     struct vm_area_struct *vma)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_mmap_p2pmem(pdev, vma);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
-@@ -2881,6 +2897,8 @@ static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
- 	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
-+	.mmap_file_open		= nvme_pci_mmap_file_open,
-+	.mmap_cmb		= nvme_pci_mmap_cmb,
- };
- 
- static int nvme_dev_map(struct nvme_dev *dev)
--- 
-2.30.2
-
+FAULT_INJECTION: forcing a failure.
+name failslab, interval 1, probability 0, space 0, times 1
+CPU: 3 PID: 7256 Comm: syz-executor Not tainted 5.15.0-rc1+ #18
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x8d/0xcf lib/dump_stack.c:106
+ fail_dump lib/fault-inject.c:52 [inline]
+ should_fail+0x13c/0x160 lib/fault-inject.c:146
+ should_failslab+0x5/0x10 mm/slab_common.c:1328
+ slab_pre_alloc_hook.constprop.99+0x4e/0xc0 mm/slab.h:494
+ slab_alloc_node mm/slub.c:3120 [inline]
+ slab_alloc mm/slub.c:3214 [inline]
+ kmem_cache_alloc+0x44/0x280 mm/slub.c:3219
+ kmem_cache_zalloc include/linux/slab.h:711 [inline]
+ __kernfs_new_node+0x68/0x350 fs/kernfs/dir.c:585
+ kernfs_new_node+0x5a/0x90 fs/kernfs/dir.c:647
+ __kernfs_create_file+0x56/0x150 fs/kernfs/file.c:985
+ sysfs_add_file_mode_ns+0xe6/0x290 fs/sysfs/file.c:317
+ create_files fs/sysfs/group.c:64 [inline]
+ internal_create_group+0x186/0x4e0 fs/sysfs/group.c:149
+ internal_create_groups.part.4+0x4d/0xb0 fs/sysfs/group.c:189
+ internal_create_groups fs/sysfs/group.c:185 [inline]
+ sysfs_create_groups+0x28/0x40 fs/sysfs/group.c:215
+ device_add_groups drivers/base/core.c:2438 [inline]
+ device_add_attrs drivers/base/core.c:2592 [inline]
+ device_add+0x4c3/0xc60 drivers/base/core.c:3310
+ device_add_disk+0x178/0x4f0 block/genhd.c:446
+ add_disk include/linux/genhd.h:221 [inline]
+ loop_add+0x27c/0x3a0 drivers/block/loop.c:2397
+ loop_control_ioctl+0x72/0x290 drivers/block/loop.c:2512
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:874 [inline]
+ __se_sys_ioctl fs/ioctl.c:860 [inline]
+ __x64_sys_ioctl+0xb6/0x100 fs/ioctl.c:860
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x34/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x46ae99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f91b3049c48 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 000000000078c0a0 RCX: 000000000046ae99
+RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000003
+RBP: 00007f91b3049c80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000042
+R13: 0000000000000000 R14: 000000000078c0a0 R15: 00007ffeef5d14f0
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 7256 at block/genhd.c:537
+device_add_disk+0x237/0x4f0 block/genhd.c:537
+Modules linked in:
+CPU: 3 PID: 7256 Comm: syz-executor Not tainted 5.15.0-rc1+ #18
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+RIP: 0010:device_add_disk+0x237/0x4f0 block/genhd.c:537
+Code: 00 0f 85 e7 fe ff ff e9 ce fe ff ff e8 12 6e 15 ff 48 89 df e8
+4a 35 01 00 81 3b 03 01 00 00 0f 84 b5 fe ff ff e8 f9 6d 15 ff <0f> 0b
+bd 01 00 00 00 e9 c5 fe ff ff e8 e8 6d 15 ff 0f 0b bd ea ff
+RSP: 0018:ffffc90003e67e70 EFLAGS: 00010216
+RAX: 0000000000023106 RBX: ffff8880192b0400 RCX: ffffc90001241000
+RDX: 0000000000040000 RSI: ffffffff82222407 RDI: ffffffff853cbf06
+RBP: 00000000fffffff4 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88800d219680
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff88800d2196c0
+FS:  00007f91b304a700(0000) GS:ffff88813dd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007efde803d148 CR3: 0000000018ef7000 CR4: 0000000000750ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+ loop_control_ioctl+0x72/0x290 drivers/block/loop.c:2512
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:874 [inline]
+ __se_sys_ioctl fs/ioctl.c:860 [inline]
+ __x64_sys_ioctl+0xb6/0x100 fs/ioctl.c:860
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RAX: ffffffffffffffda RBX: 000000000078c0a0 RCX: 000000000046ae99
+RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000003
+RBP: 00007f91b3049c80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000042
+R13: 0000000000000000 R14: 000000000078c0a0 R15: 00007ffeef5d14f0
+----------------
+Code disassembly (best guess):
+   0: f7 d8                neg    %eax
+   2: 64 89 02              mov    %eax,%fs:(%rdx)
+   5: b8 ff ff ff ff        mov    $0xffffffff,%eax
+   a: c3                    retq
+   b: 66 0f 1f 44 00 00    nopw   0x0(%rax,%rax,1)
+  11: 48 89 f8              mov    %rdi,%rax
+  14: 48 89 f7              mov    %rsi,%rdi
+  17: 48 89 d6              mov    %rdx,%rsi
+  1a: 48 89 ca              mov    %rcx,%rdx
+  1d: 4d 89 c2              mov    %r8,%r10
+  20: 4d 89 c8              mov    %r9,%r8
+  23: 4c 8b 4c 24 08        mov    0x8(%rsp),%r9
+  28: 0f 05                syscall
+* 2a: 48 3d 01 f0 ff ff    cmp    $0xfffffffffffff001,%rax <--
+trapping instruction
+  30: 73 01                jae    0x33
+  32: c3                    retq
+  33: 48 c7 c1 bc ff ff ff mov    $0xffffffffffffffbc,%rcx
+  3a: f7 d8                neg    %eax
+  3c: 64 89 01              mov    %eax,%fs:(%rcx)
+  3f: 48                    rex.W
