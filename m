@@ -2,60 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D70C410861
-	for <lists+linux-block@lfdr.de>; Sat, 18 Sep 2021 21:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20CCF4108D3
+	for <lists+linux-block@lfdr.de>; Sun, 19 Sep 2021 00:22:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236518AbhIRTcp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 18 Sep 2021 15:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233010AbhIRTcp (ORCPT
+        id S239767AbhIRWXj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 18 Sep 2021 18:23:39 -0400
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:33548 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235704AbhIRWXj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 18 Sep 2021 15:32:45 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A128FC06175F
-        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 12:31:21 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id a20so14002552ilq.7
-        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 12:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=LYDiYsT1DHNyGpLF689wghOSbRpojefBZI0dVhqbv60=;
-        b=ByCArwM4ePpBd/cKU8PxnRzYTZDXzXKPbKO/lXAuYg1sfg9nIAFxki95OhT+Y5mHte
-         3VBok/Es16AZsJYZirj3fVEEp7eOowOZPd5RjWN297gIYgCBvbhQEzmtzVTvBJAW+ygl
-         JRsdzuMhGsL1cDd/sHOguE6SXqhPkODBFXVnbiwk3E8Dvk/hmORyyhogMbYRF4xEeflP
-         eOtcdzkhZc9Hav6EravStCXOPPcHrUHCk0Nkv2WAi0VUmgOuWAuu6iw2hMWrS7dm/W/F
-         ym0eD+ZcoRWokneQAUUBA9jq2wAJosH4hQvEyF6Pxy6BjWnVwHqH0g59tSInehrB277w
-         Zfjw==
+        Sat, 18 Sep 2021 18:23:39 -0400
+Received: by mail-pg1-f171.google.com with SMTP id u18so13479990pgf.0;
+        Sat, 18 Sep 2021 15:22:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=LYDiYsT1DHNyGpLF689wghOSbRpojefBZI0dVhqbv60=;
-        b=zY9iiXqsYv9jcpROgjOhODN8mOqAERFq77WzErqeTLfNH9wH7fvLpQf2yIospe71Um
-         q+QPyfgYR1xKcRwJb13ngqbYbZy1IMH36mzTOS0H1Nt23pIv4CFwl5DozUgTMNyqsXTf
-         UtemcwlR5vMhh5gE6MFl6mW6w8k2LMy3FFDSI+bnz3A/wi2VkRJPCp87BHDUfXiSj29p
-         ew0GoKwTpvTOUxMD+H3wB/KJtVRiUpNSVAHoM7kWV5buyzD6sJQHUavfuDDDhOjOi/hr
-         fAp+VnunJCS/6l3F5laQ7HxtVRS+PtAQmlfjHvNp0GWwISzIp6C7jNObh7yS/tQOOCbB
-         h5Rg==
-X-Gm-Message-State: AOAM5304WwJuxhLBWsHyvAHmomVd3y24T4PWg/C3ESl9aZ8ZnheDfYoZ
-        /ZteFzRWJF2UMf2Wq0MOpe0t+wYK4F5z7O1NQQ4=
-X-Google-Smtp-Source: ABdhPJw3N83rGdMZRR2ICl5F2bxYxDUE+65/cQ9kkdBQWXeNwSAHQ+yFlLFtENyGJj6UvVXO5e412RLE+TvNgdDrVEQ=
-X-Received: by 2002:a92:6410:: with SMTP id y16mr12547335ilb.192.1631993480504;
- Sat, 18 Sep 2021 12:31:20 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=UmP8+XXs+eSLZ6wvZzS+PmN2+AkP9MthCeXz+zj3S80=;
+        b=WHAO1PUkq1E+lPKLUSehRyxzl5cdljt3hjMKKU+jmLpUcKToc6I9MSLkBb3f/pbyoi
+         eOvb1eqVdU2W2yNG25RYx7zOv3G8f/dUw+odlLuAFdlLlWX/YFVn/ce1qJBaHN8nPEao
+         Eq4UgEv7fUUGRrRnK7AicJwig8BNJTMUrQyKyQcnRRpJems4WGc9Wt0/HEMpzxynWbMq
+         ljiLi7wxYPio2nu+TrKJCnzTB5oK92lKF8whVxqmAhfuVDh37UD0VYnlfj+QCJFSvRBO
+         vNH0gEasvrVeIi1zitmQyOwJwEUExwafG1JKtiGwENAOpHsORGIj865b1JK5g2dsrOiy
+         GnGQ==
+X-Gm-Message-State: AOAM5336s9q0ukfxy4iycvjWiEg/7beu6kGipPf3wCdJqidKLKat1G/e
+        kyEfY4jS1XVZ7Wjp7567Ltc=
+X-Google-Smtp-Source: ABdhPJw/e+EdnGPh5NJnBTYxdFfoJnn/qQkbaPq42iCh0ncuHG2aoP7eI1rbRdU34WC679DNtiB2Eg==
+X-Received: by 2002:a62:504:0:b0:440:3a98:a9d1 with SMTP id 4-20020a620504000000b004403a98a9d1mr17927044pff.23.1632003734619;
+        Sat, 18 Sep 2021 15:22:14 -0700 (PDT)
+Received: from ?IPV6:2601:647:4000:d7:8557:823d:34a5:4f8c? ([2601:647:4000:d7:8557:823d:34a5:4f8c])
+        by smtp.gmail.com with ESMTPSA id g140sm9534357pfb.100.2021.09.18.15.22.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Sep 2021 15:22:13 -0700 (PDT)
+Message-ID: <c204fbcc-7d38-229a-772a-556333aed120@acm.org>
+Date:   Sat, 18 Sep 2021 15:22:12 -0700
 MIME-Version: 1.0
-Received: by 2002:a05:6602:2e95:0:0:0:0 with HTTP; Sat, 18 Sep 2021 12:31:19
- -0700 (PDT)
-Reply-To: hkmohammedh@gmail.com
-From:   Mohammed Hossain <rw2305041@gmail.com>
-Date:   Sat, 18 Sep 2021 12:31:19 -0700
-Message-ID: <CAF9C=j0Z2TaMXPeCrwRWhOXiQ4bo=yrQhmbR_zcSSv=bXLQZdQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.0.3
+Subject: Re: [PATCH] block/mq-deadline: Fix unused-function compilation
+ warning
+Content-Language: en-US
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210901064705.55071-1-tianjia.zhang@linux.alibaba.com>
+ <90507369-7beb-5337-5bb3-f5e2798dee2f@linux.alibaba.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <90507369-7beb-5337-5bb3-f5e2798dee2f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-I have an important message for you
+On 9/17/21 19:23, Tianjia Zhang wrote:
+> ping.
+
+Please check Linus' master branch and Jens' for-next branch before posting
+block layer patches. This patch looks like a duplicate of patch
+https://lore.kernel.org/r/20210830091128.1854266-1-geert@linux-m68k.org,
+applied as commit 55a51ea14094a1e7dd0d7f33237d246033dd39ab.
+
+Bart.
