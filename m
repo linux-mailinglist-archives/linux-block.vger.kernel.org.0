@@ -2,65 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F7694104EF
-	for <lists+linux-block@lfdr.de>; Sat, 18 Sep 2021 09:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 528A84105FB
+	for <lists+linux-block@lfdr.de>; Sat, 18 Sep 2021 12:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243406AbhIRH67 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 18 Sep 2021 03:58:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
+        id S236353AbhIRLAD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 18 Sep 2021 07:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243291AbhIRH67 (ORCPT
+        with ESMTP id S230388AbhIRLAC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 18 Sep 2021 03:58:59 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4207C061574
-        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 00:57:35 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id z62so11622735vsz.9
-        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 00:57:35 -0700 (PDT)
+        Sat, 18 Sep 2021 07:00:02 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF8FC061574
+        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 03:58:39 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id b21-20020a1c8015000000b003049690d882so11831356wmd.5
+        for <linux-block@vger.kernel.org>; Sat, 18 Sep 2021 03:58:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=aD9jOdRxf1/Q62w7li4L5DswslvGdPfKnoyAsgCD55k=;
-        b=VKO47a+ARj+n/xQ+SSWHVapAuopuboLAcfnS8UzW3IRV7k8hZBNJuAcJ0waYYmHVLk
-         Y2ZIduEFV9J9p/HmN0wvaYMmksn4bM292YfAn8QhlOjUroK6ZfcmT0GzzRroHoVdgdA2
-         5sx1sKQCK/cL2CthBmqwYIRfo1szBW6AdI/GG/tUZbGd/Vrb9gHejQLpY2vyRvAU3Qcy
-         L2kizCuvx953WCuJSAp2EQpvNMLZ7HTlONJGl2ESlzy99012unqZTuVVtFs/eBG0Ew3f
-         +j+A6UWkI26iRuZ3M6p6tV+j/wP2jNOXXy9fcap37sro5T37WA5Rwbts1VtlpnrlasVU
-         s3dA==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vWd1P9CRMg4Pz32pKAdM/AeB1mjDQwEtw2WgM5SSPF4=;
+        b=GxP0VJpMjSAQnSHcRpp4VCpSN/uRrPem/sJhQjSmYVjX2Nw2C/yttldCuXQ+f0ykbE
+         NKHX8rRdL1nNWUItN04YdRX+rBg7bQNJqbz2LXKRwRkSlhJuK8K7J4/52ih6tcghqYMF
+         y0UzTsV/V9sDOmjJatw0QpHA4Xgw6wU4n2G13STe9cLpCXX+ayk9Ezy7UovFQ+brSvfq
+         gNdOpz1gt1CTpmSBiFNNk9P4V2BihgMyJbQ1K3JW0tSyz3A4iCc64KI5kNUpkqzIYjwb
+         sAvDdTV6uk9Q583QFv5d6GR/RQd2ePJ+leMWJeZk648w+jS6YeV1v5+CIm51V7lPanpA
+         AQUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=aD9jOdRxf1/Q62w7li4L5DswslvGdPfKnoyAsgCD55k=;
-        b=pz+UnXcmWJysdWpUZMjSzBwaUbBrStLa9TQ32Bzz/ANnhEkYVN0pf5IbwZ4tAs8cRJ
-         JnW+opJVjhY3g1AvY0ZYZn+pisaZ1RtC4jzFuGLJ3ML5UqoLC6fjWedVtmuC8nrB3VY5
-         5xxzxptjFBdCZkqEButiWcFYyBBLBOYBSiGUD5eR/ZBnHvIuDH7Dae06S/WJRJvfA/Qq
-         /pxswtTNxRkXdes6BfQjB7gAS/lPZvAi7Qd2qI5lNX86kKUOZ3sxwUYkwBOFqBrhZ1R3
-         1CX2IIB6aPA0qIruLhqHnvYIHqOhrNiIfTBEDXzw7gUgc7C+cT7709AGXADxe/S28l9T
-         7jhg==
-X-Gm-Message-State: AOAM531WwJBfRIzZXjGIsjgmgSx8DCF6gxfa08tYWt46yX70vwHltTDu
-        5wqJdCp4d4Rbcf7Zhnvd61oF1FUfGu6q1PmuaCk=
-X-Google-Smtp-Source: ABdhPJwxGp3ESSyMCJqTMZ0f1hEiXT6FTXfrxsWiykc7ns5S/jJ7+ckAEys7ydz5Uq6ZEdYwZzvbglYrM7AdlVyrowg=
-X-Received: by 2002:a05:6102:3011:: with SMTP id s17mr4060877vsa.26.1631951854970;
- Sat, 18 Sep 2021 00:57:34 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a9f:30ca:0:b0:2b2:857b:9507 with HTTP; Sat, 18 Sep 2021
- 00:57:34 -0700 (PDT)
-Reply-To: bensionk92@gmail.com
-From:   benjamin ezeife <benjaminezeife1@gmail.com>
-Date:   Sat, 18 Sep 2021 08:57:34 +0100
-Message-ID: <CAFZt9LQb718Gqh-p7yLkNv7Kaa4oSpsO+oPY=go5a=Y+KXXj2A@mail.gmail.com>
-Subject: Offical....Email
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vWd1P9CRMg4Pz32pKAdM/AeB1mjDQwEtw2WgM5SSPF4=;
+        b=IB6lff4MwvJBVQ6VlN/GKf+x91fLDvoKu0lRZWqIgMsoe4ArWMostGea9hfHHMZyPp
+         T9NC5oiFiDdyMs5dQXvxH8g7y4O5adHX9dsl+k0lA183qbfvte5Z7UGi4pWK9x5mdL5P
+         kh8Ag7YxajNL9JM7MXsKSDGL1gVeF3dx5r35zNrpGAfJOsdKav0P99/6TxAyjhztW2DX
+         AIxX/Zvl/HLQaHSOGivqpUe/hwXtt2Cu9rUkozVZcFG6gw0M4oMJ4Bx4dCAsUn9WuNge
+         wvFI/mGcB/wDAfJp3KyzU9TR1s/zTZdC9rvn2b/vYn6LSd2z/XKXr0nDcYX8kXAIHz/Z
+         7pWg==
+X-Gm-Message-State: AOAM533bxceZeqy2WV5AcEuii4kjUma7gSVAyNHLxkoWhsvvuK2it9Lw
+        Rh1YDC99ri17wRjBBRGEMUUnbxrPSxAu8Sbv
+X-Google-Smtp-Source: ABdhPJxSyiFNq68PRmyizGNSlpPnsbg5rU+WBrY04XMiZa5i2IpyjvwRgxGTN6xkeBABfE2iUk2CWw==
+X-Received: by 2002:a05:600c:4a16:: with SMTP id c22mr10044589wmp.72.1631962717572;
+        Sat, 18 Sep 2021 03:58:37 -0700 (PDT)
+Received: from [192.168.136.233] ([37.160.169.152])
+        by smtp.gmail.com with ESMTPSA id v10sm9858370wri.29.2021.09.18.03.58.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Sep 2021 03:58:37 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 0/3 v2] bfq: Limit number of allocated scheduler tags per
+ cgroup
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20210915131512.GB6166@quack2.suse.cz>
+Date:   Sat, 18 Sep 2021 12:58:34 +0200
+Cc:     =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AF7AAF20-7D9E-4305-901A-86A3717A9CFB@linaro.org>
+References: <20210715132047.20874-1-jack@suse.cz>
+ <751F4AB5-1FDF-45B0-88E1-0C76ED1AAAD6@linaro.org>
+ <20210831095930.GB17119@blackbody.suse.cz>
+ <20210915131512.GB6166@quack2.suse.cz>
+To:     Jan Kara <jack@suse.cz>
+X-Mailer: Apple Mail (2.3445.104.11)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Good day,
 
-My name is Benjamin.I would like to discuss something
-important that will benefit both of us. I will send you more
-details upon your response.
 
-Regards
+> Il giorno 15 set 2021, alle ore 15:15, Jan Kara <jack@suse.cz> ha =
+scritto:
+>=20
+> On Tue 31-08-21 11:59:30, Michal Koutn=C3=BD wrote:
+>> Hello Paolo.
+>>=20
+>> On Fri, Aug 27, 2021 at 12:07:20PM +0200, Paolo Valente =
+<paolo.valente@linaro.org> wrote:
+>>> Before discussing your patches in detail, I need a little help on =
+this
+>>> point.  You state that the number of scheduler tags must be larger
+>>> than the number of device tags.  So, I expected some of your patches
+>>> to address somehow this issue, e.g., by increasing the number of
+>>> scheduler tags.  Yet I have not found such a change.  Did I miss
+>>> something?
+>>=20
+>> I believe Jan's conclusions so far are based on "manual" =
+modifications
+>> of available scheduler tags by /sys/block/$dev/queue/nr_requests.
+>> Finding a good default value may be an additional change.
+>=20
+> Exactly. So far I was manually increasing nr_requests. I agree that
+> improving the default nr_requests value selection would be desirable =
+as
+> well so that manual tuning is not needed. But for now I've left that =
+aside.
+>=20
+
+Ok. So, IIUC, to recover control on bandwidth you need to
+(1) increase nr_requests manually
+and
+(2) apply your patch
+
+If you don't do (1), then (2) is not sufficient, and viceversa. Correct?
+
+Thanks,
+Paolo
+
+> 								Honza
+> --=20
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+
