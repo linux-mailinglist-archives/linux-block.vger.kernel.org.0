@@ -2,104 +2,164 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2582E412B79
-	for <lists+linux-block@lfdr.de>; Tue, 21 Sep 2021 04:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85ECB412B76
+	for <lists+linux-block@lfdr.de>; Tue, 21 Sep 2021 04:17:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346108AbhIUCRl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Sep 2021 22:17:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
+        id S1346093AbhIUCRk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Sep 2021 22:17:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237840AbhIUB4t (ORCPT
+        with ESMTP id S237486AbhIUBy7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Sep 2021 21:56:49 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C84EC0313CE
-        for <linux-block@vger.kernel.org>; Mon, 20 Sep 2021 16:50:15 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id v19so13143308pjh.2
-        for <linux-block@vger.kernel.org>; Mon, 20 Sep 2021 16:50:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OIoT3CHcF6Ui6SUKTLSeS0m12Ndh8eiq7ywYH+1sD+8=;
-        b=XrS/I4JfqWkCKG8V0E5V7TUsfi4r56XeofNU3jWswDlz+IdF93Kj/PTaFLuvC7QgK9
-         DUBwWm+2vL7riPfws29ww+AwWsypwgSIm8sz4IX8C4bJVp3lWDJFORZFHFjbwPn5mxYR
-         Br5U/2fRwRcLcjWl3onWZ4KgpuNH0IWRLVD4IL4QdWCAK2Pp73dzL/+NSxCQVOe7wlRQ
-         LLOTdy/m78Ii2ccdfTWWpUr31N0HME/kAKd7VOAXaPY2vB5C7w00QbP8P81wjPnQofGn
-         l/G3WVeRF+GTgDOwEtOjLyErYWnL840cltdtInJuw3AvhiJiMUyx8b2PIdbGrj1DOhQ1
-         NXbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OIoT3CHcF6Ui6SUKTLSeS0m12Ndh8eiq7ywYH+1sD+8=;
-        b=UkMloLxeAtqpfHQrH370S9SyCry3ckcCzXTqq9me3jh+nEKls/nyThKftgR93pgXw1
-         +0sjEXFsbIxaXIWkqdukgHDB6U62fxaVudEqZQVGc2PULpdIrprtBHU+JspRffEi24gF
-         U5bLsmMWRbSuedTIgVjEalkMLz04sDA3sTaC/avD5ongr2Kc33CIniJKGHhNVf8B13y2
-         SurCSQBvnyAVMS/j9/l39KJJDUR2r7NGonJhAXNXZGk6k+JYcmVSUHigQ8ZaYUHD9+yY
-         1HIr+bsfn2frf8dsxDCOwWhU6xctffXzSIiMCB+MwNkP7mrAgGOaOFWARZ6XAKk68fek
-         YKCg==
-X-Gm-Message-State: AOAM531H1BpmgbegGrxuRmmw6DHCutqm7AJ6tcuc4/Q+6LWEOWpXq1iv
-        z5FX6zdPocSWMyBCkCar7W1koguxG4gh3Msd2fduLvp6dZU=
-X-Google-Smtp-Source: ABdhPJwiPF8vZVbVc35Iub4ypV+u11zyGNfpowHKQKuKj6XlQ+gogtNtDHMHWMfKf9ZJPTPqzwoOIQXgvVfgvCvtytI=
-X-Received: by 2002:a17:902:cec8:b0:13b:9ce1:b3ef with SMTP id
- d8-20020a170902cec800b0013b9ce1b3efmr24874704plg.4.1632181814749; Mon, 20 Sep
- 2021 16:50:14 -0700 (PDT)
+        Mon, 20 Sep 2021 21:54:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CCAC0313FF;
+        Mon, 20 Sep 2021 17:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dFAUFg/mX5umZGWtfy03pLeHbDGj6EjlCd5lUAE3GFQ=; b=dObeiqsndcF+lNoh24bcIlQ0Z4
+        8K6tr6/HQqzHejW7tcCx2uFWkOSwSDGccUZUOO2HSbtwyHL2bzieHlxL/ZHYYKEk4p9CFnO8yXcPK
+        f/HQ2/ZQdndlnXyIUJdZ0aJXLTxz6QwLUg1BzKdC6l5F015c1tMcwzAgGVNaIhiqeaim5LUH14T5q
+        SfrB2JGYzUuVFRpexD44YBdIJt19FFXMuXQ78E+NFAQjPzOw2KYPs158O36UwjUA4HwZgR9XHQuYE
+        ogpEbh3JR5+EHuSxOJT6kAbYkYcwK3PhKk2oYu4rhbOLPFOZheHL/NsJp3sMZeprOIKrHIsh9/J3J
+        bDfWazSw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mSTFv-003Nm8-F2; Tue, 21 Sep 2021 00:03:27 +0000
+Date:   Mon, 20 Sep 2021 17:03:27 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Tejun Heo <tj@kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>, jeyu@kernel.org,
+        shuah <shuah@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>, yzaikin@google.com,
+        Nathan Chancellor <nathan@kernel.org>, ojeda@kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        vitor@massaru.org, elver@google.com,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        rf@opensource.cirrus.com,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        David Laight <David.Laight@aculab.com>, bvanassche@acm.org,
+        jolsa@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        trishalfonso@google.com, andreyknvl@gmail.com,
+        Jiri Kosina <jikos@kernel.org>, mbenes@suse.com,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, lizefan.x@bytedance.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        senozhatsky@chromium.org, Christoph Hellwig <hch@lst.de>,
+        Joe Perches <joe@perches.com>, hkallweit1@gmail.com,
+        Jens Axboe <axboe@kernel.dk>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-spdx@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        copyleft-next@lists.fedorahosted.org
+Subject: Re: [PATCH v7 09/12] sysfs: fix deadlock race with module removal
+Message-ID: <YUkhTxhgPWRxMMJo@bombadil.infradead.org>
+References: <20210918050430.3671227-1-mcgrof@kernel.org>
+ <20210918050430.3671227-10-mcgrof@kernel.org>
+ <CAPcyv4i0xEwMQ5kSK-xGroV7aZr3j1YNrGMVLiLMr3U8nFCMKA@mail.gmail.com>
+ <YUj6TrGbqlNI0OGC@bombadil.infradead.org>
+ <CAPcyv4jFaNTfpKq6hQsFrWXTwHz-wG+5K4m-hmsPeteLX4p5AQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210920072726.1159572-1-hch@lst.de> <20210920072726.1159572-4-hch@lst.de>
-In-Reply-To: <20210920072726.1159572-4-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 20 Sep 2021 16:50:03 -0700
-Message-ID: <CAPcyv4iVL7bevm_MeFnkRK12SkwO4k5aR3-4KOAGMxThmJwOuA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] block: warn if ->groups is set when calling add_disk
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-block@vger.kernel.org,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jFaNTfpKq6hQsFrWXTwHz-wG+5K4m-hmsPeteLX4p5AQ@mail.gmail.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 12:30 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> The proper API is to pass the groups to device_add_disk, but the code
-> used to also allow groups being set before calling *add_disk.  Warn
-> about that but keep the group pointer intact for now so that it can
-> be removed again after a grace period.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Fixes: 52b85909f85d ("block: fold register_disk into device_add_disk")
-> ---
->  block/genhd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/block/genhd.c b/block/genhd.c
-> index 7b6e5e1cf9564..409cf608cc5bd 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -439,7 +439,8 @@ int device_add_disk(struct device *parent, struct gendisk *disk,
->         dev_set_uevent_suppress(ddev, 1);
->
->         ddev->parent = parent;
-> -       ddev->groups = groups;
-> +       if (!WARN_ON_ONCE(ddev->groups))
-> +               ddev->groups = groups;
+On Mon, Sep 20, 2021 at 02:55:10PM -0700, Dan Williams wrote:
+> On Mon, Sep 20, 2021 at 2:17 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Mon, Sep 20, 2021 at 01:52:21PM -0700, Dan Williams wrote:
+> > > On Fri, Sep 17, 2021 at 10:05 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > > This deadlock was first reported with the zram driver, however the live
+> > > > patching folks have acknowledged they have observed this as well with
+> > > > live patching, when a live patch is removed. I was then able to
+> > > > reproduce easily by creating a dedicated selftests.
+> > > >
+> > > > A sketch of how this can happen follows:
+> > > >
+> > > > CPU A                              CPU B
+> > > >                                    whatever_store()
+> > > > module_unload
+> > > >   mutex_lock(foo)
+> > > >                                    mutex_lock(foo)
+> > > >    del_gendisk(zram->disk);
+> > > >      device_del()
+> > > >        device_remove_groups()
+> > >
+> > > This flow seems possible to trigger with:
+> > >
+> > >    echo $dev > /sys/bus/$bus/drivers/$driver/unbind
+> > >
+> > > I am missing why module pinning
+> >
+> > The aspect of try_module_get() which comes to value to prevent the
+> > deadlock is it ensures kernfs ops do not run once exit is on the way.
+> >
+> > > is part of the solution when it's the
+> > > device_del() path that is racing?
+> >
+> > But its not, the device_del() path will yield until the kernfs op
+> > completes. It is fine to wait there.
+> >
+> > The deadlock happens if a module exit routine uses a lock which is
+> > also used on a sysfs op. If the lock was first held by module exit,
+> > and module exit is waiting for the kernfs op to complete, and the
+> > kernfs op is waiting to hold the same lock then the exit will wait
+> > forever.
+> >
+> > > Module removal is just a more coarse
+> > > grained way to trigger unbind => device_del().
+> >
+> > Right, but the device_del() path is not sharing a lock with the sysfs op.
+> 
+> The deadlock in the example comes from holding a lock over
+> device_del() [...]
 
-That feels too compact to me, and dev_WARN_ONCE() might save someone a
-git blame to look up the reason for the warning:
+No sorry, that is my mistake not making it clear that the mutex held
+in the example is on module exit. Or any lock for that matter. That is
+these locks are driver specific.
 
-    dev_WARN_ONCE(parent, ddev->groups, "unexpected pre-populated
-attribute group\n");
-    if (!ddev->groups)
-        ddev->groups = groups;
+> > > Isn't the above a bug
+> > > in the driver, not missing synchronization in kernfs?
+> >
+> > We can certainly take the position as an alternative:
+> >
+> >   "thou shalt not use a lock on exit which is also used on a syfs op"
+> >
+> > However that seems counter intuitive, specially if we can resolve the
+> > issue easily with a try_module_get().
+> 
+> Again, I don't see how try_module_get() can affect the ABBA failure
+> case of holding a lock over device_del() that is also held inside
+> sysfs op.
 
-...but not a deal breaker. Either way you can add:
+It is not device_del(), it is on module exit. Sorry for this not being
+clear before. I'll fix the commit log to make it clearer. The subject
+at least was clear but I think the example could be clearer.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
-Jens, I'm ok for the final spin of this series to go through block.git
-since the referenced commits in Fixes: went that route, just let me
-know if you want me to take them.
+  Luis
