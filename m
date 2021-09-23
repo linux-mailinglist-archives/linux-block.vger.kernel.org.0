@@ -2,125 +2,162 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1250416024
-	for <lists+linux-block@lfdr.de>; Thu, 23 Sep 2021 15:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F33F141622C
+	for <lists+linux-block@lfdr.de>; Thu, 23 Sep 2021 17:37:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241314AbhIWNlO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Sep 2021 09:41:14 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:20003 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241240AbhIWNlO (ORCPT
+        id S242031AbhIWPjX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Sep 2021 11:39:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54690 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S241995AbhIWPjX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Sep 2021 09:41:14 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HFbl42nJtzbmkf;
-        Thu, 23 Sep 2021 21:35:28 +0800 (CST)
-Received: from dggema761-chm.china.huawei.com (10.1.198.203) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Thu, 23 Sep 2021 21:39:40 +0800
-Received: from huawei.com (10.175.127.227) by dggema761-chm.china.huawei.com
- (10.1.198.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Thu, 23
- Sep 2021 21:39:40 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <axboe@kernel.dk>, <rostedt@goodmis.org>, <mingo@redhat.com>,
-        <acme@redhat.com>, <hch@infradead.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH v2] blktrace: Fix uaf in blk_trace access after removing by sysfs
-Date:   Thu, 23 Sep 2021 21:49:21 +0800
-Message-ID: <20210923134921.109194-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Thu, 23 Sep 2021 11:39:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632411471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AOSJdORroeY+L8lMWoT/k2QmeHNRD0UxneSQj0X18oA=;
+        b=SGKrJ72+QbZsCz2Wc4n0VFxztRC18W23zMWtMguGb39HpIuvz5HGcKUdCV3S8HhStgEZYg
+        41it/F7g6noEjsPXtm6KfN0lK8nBfW3EuIdEc5BOVI59svTQRH4x2BpSxUiItGW5ltxRvU
+        blViAp4dnPtzuECSNu3yBzeIv4pIxzc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-J73WndtAMrWCZNcion-_4w-1; Thu, 23 Sep 2021 11:37:49 -0400
+X-MC-Unique: J73WndtAMrWCZNcion-_4w-1
+Received: by mail-ed1-f72.google.com with SMTP id b7-20020a50e787000000b003d59cb1a923so7249247edn.5
+        for <linux-block@vger.kernel.org>; Thu, 23 Sep 2021 08:37:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AOSJdORroeY+L8lMWoT/k2QmeHNRD0UxneSQj0X18oA=;
+        b=0z5nnUdTut7SKy2HwdRr3+xB4lg/Xv7PMQCR5j1/5DUGjJjoBIl58cYP6bQwLgjk3X
+         DgscHIVH8MQaJakrB+mhPQVBGz0wXUJnosiKT7ZUpfA/Wr3AgWpYDgn0dZFYfXTBcKH4
+         gA15vmwVHBrRAs14F+QcjPWkbOi/kh6FTYbZllVAeEErpMKRvkFIVklHGEZKRdXZPIf+
+         6Rh9FzAf+zw6zmbLBNKItXQhQjSjS0LAnWhorq8A7JnuFB/Guo44XpW960snUSprArb8
+         loVZO4cUqRBrgCHRn4z0SfUdwTrNh5O+ZVI+6W8SpNDX/JICzx6yxTWt74lJ/k3ZY+9s
+         nifw==
+X-Gm-Message-State: AOAM533wAtfTFcQ0PLABMPh+6daCipJu4aEW2FaKlL5BG2sNQN8Qudq+
+        fMqqJk/IKPn6g/6zA/3vrKuLHD4UofWdNOetr6FLS0/1Za+bSGeIYDQKsCjPB71LXx6aXCauCpI
+        r58/g3YMTAcZ1k7Fx1DGrDyk=
+X-Received: by 2002:a50:d84c:: with SMTP id v12mr6078249edj.201.1632411468257;
+        Thu, 23 Sep 2021 08:37:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy8DaBe4I+LkOVyQLu6cfQoWkqvgiBaOR5+1qn3bcBVQnRix8ZU/+hekqhUIynodgC4qCiRWw==
+X-Received: by 2002:a50:d84c:: with SMTP id v12mr6078219edj.201.1632411468054;
+        Thu, 23 Sep 2021 08:37:48 -0700 (PDT)
+Received: from redhat.com ([2.55.11.56])
+        by smtp.gmail.com with ESMTPSA id d3sm3738711edv.87.2021.09.23.08.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Sep 2021 08:37:47 -0700 (PDT)
+Date:   Thu, 23 Sep 2021 11:37:42 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, hch@infradead.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        israelr@nvidia.com, nitzanc@nvidia.com, oren@nvidia.com,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] virtio-blk: avoid preallocating big SGL for data
+Message-ID: <20210923113644-mutt-send-email-mst@kernel.org>
+References: <20210901131434.31158-1-mgurtovoy@nvidia.com>
+ <YTYvOetMHvocg9UZ@stefanha-x1.localdomain>
+ <692f8e81-8585-1d39-e7a4-576ae01438a1@nvidia.com>
+ <YUCUF7co94CRGkGU@stefanha-x1.localdomain>
+ <56cf84e2-fec0-08e8-0a47-24bb1df71883@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggema761-chm.china.huawei.com (10.1.198.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56cf84e2-fec0-08e8-0a47-24bb1df71883@nvidia.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is an use-after-free problem triggered by following process:
+OK by me.
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-      P1(sda)				P2(sdb)
-			echo 0 > /sys/block/sdb/trace/enable
-			  blk_trace_remove_queue
-			    synchronize_rcu
-			    blk_trace_free
-			      relay_close
-rcu_read_lock
-__blk_add_trace
-  trace_note_tsk
-  (Iterate running_trace_list)
-			        relay_close_buf
-				  relay_destroy_buf
-				    kfree(buf)
-    trace_note(sdb's bt)
-      relay_reserve
-        buf->offset <- nullptr deference (use-after-free) !!!
-rcu_read_unlock
+I will queue it for the next kernel.
+Thanks!
 
-[  502.714379] BUG: kernel NULL pointer dereference, address:
-0000000000000010
-[  502.715260] #PF: supervisor read access in kernel mode
-[  502.715903] #PF: error_code(0x0000) - not-present page
-[  502.716546] PGD 103984067 P4D 103984067 PUD 17592b067 PMD 0
-[  502.717252] Oops: 0000 [#1] SMP
-[  502.720308] RIP: 0010:trace_note.isra.0+0x86/0x360
-[  502.732872] Call Trace:
-[  502.733193]  __blk_add_trace.cold+0x137/0x1a3
-[  502.733734]  blk_add_trace_rq+0x7b/0xd0
-[  502.734207]  blk_add_trace_rq_issue+0x54/0xa0
-[  502.734755]  blk_mq_start_request+0xde/0x1b0
-[  502.735287]  scsi_queue_rq+0x528/0x1140
-...
-[  502.742704]  sg_new_write.isra.0+0x16e/0x3e0
-[  502.747501]  sg_ioctl+0x466/0x1100
 
-Reproduce method:
-  ioctl(/dev/sda, BLKTRACESETUP, blk_user_trace_setup[buf_size=127])
-  ioctl(/dev/sda, BLKTRACESTART)
-  ioctl(/dev/sdb, BLKTRACESETUP, blk_user_trace_setup[buf_size=127])
-  ioctl(/dev/sdb, BLKTRACESTART)
-
-  echo 0 > /sys/block/sdb/trace/enable &
-  // Add delay(mdelay/msleep) before kernel enters blk_trace_free()
-
-  ioctl$SG_IO(/dev/sda, SG_IO, ...)
-  // Enters trace_note_tsk() after blk_trace_free() returned
-  // Use mdelay in rcu region rather than msleep(which may schedule out)
-
-Remove blk_trace from running_list before calling blk_trace_free() by
-sysfs if blk_trace is at Blktrace_running state.
-
-Fixes: c71a896154119f ("blktrace: add ftrace plugin")
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- kernel/trace/blktrace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index c221e4c3f625..fa91f398f28b 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1605,6 +1605,14 @@ static int blk_trace_remove_queue(struct request_queue *q)
- 	if (bt == NULL)
- 		return -EINVAL;
- 
-+	if (bt->trace_state == Blktrace_running) {
-+		bt->trace_state = Blktrace_stopped;
-+		spin_lock_irq(&running_trace_lock);
-+		list_del_init(&bt->running_list);
-+		spin_unlock_irq(&running_trace_lock);
-+		relay_flush(bt->rchan);
-+	}
-+
- 	put_probe_ref();
- 	synchronize_rcu();
- 	blk_trace_free(bt);
--- 
-2.31.1
+On Thu, Sep 23, 2021 at 04:40:56PM +0300, Max Gurtovoy wrote:
+> Hi MST/Jens,
+> 
+> Do we need more review here or are we ok with the code and the test matrix ?
+> 
+> If we're ok, we need to decide if this goes through virtio PR or block PR.
+> 
+> Cheers,
+> 
+> -Max.
+> 
+> On 9/14/2021 3:22 PM, Stefan Hajnoczi wrote:
+> > On Mon, Sep 13, 2021 at 05:50:21PM +0300, Max Gurtovoy wrote:
+> > > On 9/6/2021 6:09 PM, Stefan Hajnoczi wrote:
+> > > > On Wed, Sep 01, 2021 at 04:14:34PM +0300, Max Gurtovoy wrote:
+> > > > > No need to pre-allocate a big buffer for the IO SGL anymore. If a device
+> > > > > has lots of deep queues, preallocation for the sg list can consume
+> > > > > substantial amounts of memory. For HW virtio-blk device, nr_hw_queues
+> > > > > can be 64 or 128 and each queue's depth might be 128. This means the
+> > > > > resulting preallocation for the data SGLs is big.
+> > > > > 
+> > > > > Switch to runtime allocation for SGL for lists longer than 2 entries.
+> > > > > This is the approach used by NVMe drivers so it should be reasonable for
+> > > > > virtio block as well. Runtime SGL allocation has always been the case
+> > > > > for the legacy I/O path so this is nothing new.
+> > > > > 
+> > > > > The preallocated small SGL depends on SG_CHAIN so if the ARCH doesn't
+> > > > > support SG_CHAIN, use only runtime allocation for the SGL.
+> > > > > 
+> > > > > Re-organize the setup of the IO request to fit the new sg chain
+> > > > > mechanism.
+> > > > > 
+> > > > > No performance degradation was seen (fio libaio engine with 16 jobs and
+> > > > > 128 iodepth):
+> > > > > 
+> > > > > IO size      IOPs Rand Read (before/after)         IOPs Rand Write (before/after)
+> > > > > --------     ---------------------------------    ----------------------------------
+> > > > > 512B          318K/316K                                    329K/325K
+> > > > > 
+> > > > > 4KB           323K/321K                                    353K/349K
+> > > > > 
+> > > > > 16KB          199K/208K                                    250K/275K
+> > > > > 
+> > > > > 128KB         36K/36.1K                                    39.2K/41.7K
+> > > > I ran fio randread benchmarks with 4k, 16k, 64k, and 128k at iodepth 1,
+> > > > 8, and 64 on two vCPUs. The results look fine, there is no significant
+> > > > regression.
+> > > > 
+> > > > iodepth=1 and iodepth=64 are very consistent. For some reason the
+> > > > iodepth=8 has significant variance but I don't think it's the fault of
+> > > > this patch.
+> > > > 
+> > > > Fio results and the Jupyter notebook export are available here (check
+> > > > out benchmark.html to see the graphs):
+> > > > 
+> > > > https://gitlab.com/stefanha/virt-playbooks/-/tree/virtio-blk-sgl-allocation-benchmark/notebook
+> > > > 
+> > > > Guest:
+> > > > - Fedora 34
+> > > > - Linux v5.14
+> > > > - 2 vCPUs (pinned), 4 GB RAM (single host NUMA node)
+> > > > - 1 IOThread (pinned)
+> > > > - virtio-blk aio=native,cache=none,format=raw
+> > > > - QEMU 6.1.0
+> > > > 
+> > > > Host:
+> > > > - RHEL 8.3
+> > > > - Linux 4.18.0-240.22.1.el8_3.x86_64
+> > > > - Intel(R) Xeon(R) Silver 4214 CPU @ 2.20GHz
+> > > > - Intel Optane DC P4800X
+> > > > 
+> > > > Stefan
+> > > Thanks, Stefan.
+> > > 
+> > > Would you like me to add some of the results in my commit msg ? or Tested-By
+> > > sign ?
+> > Thanks, there's no need to change the commit description.
+> > 
+> > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > Tested-by: Stefan Hajnoczi <stefanha@redhat.com>
 
