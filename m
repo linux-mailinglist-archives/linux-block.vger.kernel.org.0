@@ -2,114 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA1B415824
-	for <lists+linux-block@lfdr.de>; Thu, 23 Sep 2021 08:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B3C41582F
+	for <lists+linux-block@lfdr.de>; Thu, 23 Sep 2021 08:19:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239291AbhIWGPt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Sep 2021 02:15:49 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:47608 "EHLO
+        id S239284AbhIWGUz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Sep 2021 02:20:55 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:48210 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239226AbhIWGPt (ORCPT
+        with ESMTP id S239226AbhIWGUz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Sep 2021 02:15:49 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7847622326;
-        Thu, 23 Sep 2021 06:14:17 +0000 (UTC)
+        Thu, 23 Sep 2021 02:20:55 -0400
+Received: from relay1.suse.de (relay1.suse.de [149.44.160.133])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 1CD0F2234A;
+        Thu, 23 Sep 2021 06:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1632377657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o0l2RHdc1VTxle7geiUN7AAnIlMhU8AgWvN0GgDIMdE=;
-        b=HyEJd+cNPg3rUBdiB/5jTWFbun2xaZfnqW48HD5bLI2EDmo3D1lUUxrT0tc1cttoXdoWE+
-        D8HhDttgCm7dq1M/s54x7rWMb2GW5A2v93X0T8Frhn6nF1aVCyOTWArX2uMQzg2XLDaBNw
-        dumzyXgB5rztuWMH6KIJx56EjmGqaIw=
+        t=1632377963; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=ySO0NWtZIUIpUWMuie7uHAGLlZagMHeoDLXHhNX1Xe0=;
+        b=IgmhpfMOIlwbiMIzDE+0NO3pPQtoh935FGMzmeUWAjx7FdhMJi6wyeyJMjFPMrCPvluqBq
+        lk+8MhhUqVaAb2JOEWgI+7wHE5w253kll1iqBgMSdp3tJqAhNjaOCzMG+jYQJ+R4ju0b4/
+        jWzfOLvhO5jSKPOFNcbjVPwig0e2G8k=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1632377657;
+        s=susede2_ed25519; t=1632377963;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o0l2RHdc1VTxle7geiUN7AAnIlMhU8AgWvN0GgDIMdE=;
-        b=9bE/juPlOpYXf9idmLGTvOH4t7+Ic5QXdOBeROUigVxpY5/fkyZIOLBdQbEhf8otiBRvvm
-        yhVIAyyCvfuU6TDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5804B13DB5;
-        Thu, 23 Sep 2021 06:14:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 1T2PCTYbTGFlWAAAMHmgww
-        (envelope-from <colyli@suse.de>); Thu, 23 Sep 2021 06:14:14 +0000
-Subject: Re: Too large badblocks sysfs file (was: [PATCH v3 0/7] badblocks
- improvement for multiple bad block ranges)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, nvdimm@lists.linux.dev,
-        antlists@youngman.org.uk, Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        NeilBrown <neilb@suse.de>, Richard Fan <richard.fan@suse.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>, rafael@kernel.org
-References: <20210913163643.10233-1-colyli@suse.de>
- <a0f7b021-4816-6785-a9a4-507464b55895@suse.de> <YUwZ95Z+L5M3aZ9V@kroah.com>
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=ySO0NWtZIUIpUWMuie7uHAGLlZagMHeoDLXHhNX1Xe0=;
+        b=bCSEMyLiFwTKcYtMGiBwacNLOyhJAafE/KspGKLR6zHx0NfmiLzBKnwuRaGHuwpvxqzrvD
+        tXJNsMIvklqZTJAg==
+Received: from localhost.localdomain (unknown [10.163.16.22])
+        by relay1.suse.de (Postfix) with ESMTP id 6EBF825CEB;
+        Thu, 23 Sep 2021 06:19:21 +0000 (UTC)
 From:   Coly Li <colyli@suse.de>
-Message-ID: <e227eb59-fcda-8f3e-d305-b4c21f0f2ef2@suse.de>
-Date:   Thu, 23 Sep 2021 14:14:12 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+To:     linux-bcache@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, Coly Li <colyli@suse.de>
+Subject: [PATCH] bcache: reserve never used bits from bkey.high
+Date:   Thu, 23 Sep 2021 14:19:13 +0800
+Message-Id: <20210923061913.25421-1-colyli@suse.de>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <YUwZ95Z+L5M3aZ9V@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/23/21 2:08 PM, Greg Kroah-Hartman wrote:
-> On Thu, Sep 23, 2021 at 01:59:28PM +0800, Coly Li wrote:
->> Hi all the kernel gurus, and folks in mailing lists,
->>
->> This is a question about exporting 4KB+ text information via sysfs
->> interface. I need advice on how to handle the problem.
+There sre 3 bits in member high of struct bkey are never used, and no
+plan to support them in future,
+- HEADER_SIZE, start at bit 58, length 2 bits
+- KEY_PINNED,  start at bit 55, length 1 bit
 
-Hi Greg,
+No any kernel code, or user space tool references or accesses the three
+bits. Therefore it is possible and feasible to reserve the valuable bits
+from bkey.high. They can be used in future for other purpose.
 
-This is the code in mainline kernel for quite long time.
+Signed-off-by: Coly Li <colyli@suse.de>
+---
+ include/uapi/linux/bcache.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Please do not do that.  Seriously, that is not what sysfs is for, and is
-> an abuse of it.
->
-> sysfs is for "one value per file" and should never even get close to a
-> 4kb limit.  If it does, you are doing something really really wrong and
-> should just remove that sysfs file from the system and redesign your
-> api.
-
-I understand this. And what I addressed is the problem I need to fix.
-
-The code is there for almost 10 years, I just find it during my work on 
-bad blocks API fixing.
-
-
->
->> Recently I work on the bad blocks API (block/badblocks.c) improvement, there
->> is a sysfs file to export the bad block ranges for me raid. E.g for a md
->> raid1 device, file
->>      /sys/block/md0/md/rd0/bad_blocks
->> may contain the following text content,
->>      64 32
->>     128 8
-> Ick, again, that's not ok at all.  sysfs files should never have to be
-> parsed like this.
-
-I cannot agree more with you. What I am asking for was ---- how to fix it ?
-
-Thanks.
-
-Coly Li
+diff --git a/include/uapi/linux/bcache.h b/include/uapi/linux/bcache.h
+index cf7399f03b71..97413586195b 100644
+--- a/include/uapi/linux/bcache.h
++++ b/include/uapi/linux/bcache.h
+@@ -43,9 +43,9 @@ static inline void SET_##name(struct bkey *k, unsigned int i, __u64 v)	\
+ #define KEY_MAX_U64S		8
+ 
+ KEY_FIELD(KEY_PTRS,	high, 60, 3)
+-KEY_FIELD(HEADER_SIZE,	high, 58, 2)
++KEY_FIELD(__PAD0,	high, 58, 2)
+ KEY_FIELD(KEY_CSUM,	high, 56, 2)
+-KEY_FIELD(KEY_PINNED,	high, 55, 1)
++KEY_FIELD(__PAD1,	high, 55, 1)
+ KEY_FIELD(KEY_DIRTY,	high, 36, 1)
+ 
+ KEY_FIELD(KEY_SIZE,	high, 20, KEY_SIZE_BITS)
+-- 
+2.31.1
 
