@@ -2,67 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EC5E4195FA
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:09:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 578EE4195FF
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234587AbhI0OKr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 10:10:47 -0400
-Received: from condef-07.nifty.com ([202.248.20.72]:28931 "EHLO
-        condef-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234583AbhI0OKq (ORCPT
+        id S234691AbhI0OMW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 10:12:22 -0400
+Received: from condef-05.nifty.com ([202.248.20.70]:26212 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234679AbhI0OMV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 10:10:46 -0400
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Sep 2021 10:10:45 EDT
-Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-07.nifty.com with ESMTP id 18RE16ag030845
+        Mon, 27 Sep 2021 10:12:21 -0400
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-05.nifty.com with ESMTP id 18RE16O3002858
         for <linux-block@vger.kernel.org>; Mon, 27 Sep 2021 23:01:07 +0900
 Received: from grover.. (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 18RE07Fv028280;
-        Mon, 27 Sep 2021 23:00:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07Fv028280
+        by conuserg-10.nifty.com with ESMTP id 18RE07Fw028280;
+        Mon, 27 Sep 2021 23:00:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07Fw028280
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1632751208;
-        bh=+Hloq7pOWn+uCkJoTRCg/87ciA9Hg53ptAbmWaWlSNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rsMuJ8ftbFfHF2vWJhdb7xNenWQmLOEYRydU83zeYdXTr2nNvryEiBJUxFEkVuUx8
-         rVFCFCFWAkyC+3JjV13cfUWgU5o7xlNy/OEMtc38cnhtt14pjNiYYeL+jyDZsxPC+S
-         BpwVxnhojJd+DA83hKqHMdidPEGZA5N/rw6uD5ABy8HvfkFfSX9yyd3xbLkn0XQi/J
-         /xZgu9AgZwsND/iM+wDqvvj3GadK+/VQkB9fkHc/D5wvd8ijOWCKAazbs9dv3QqVvF
-         D9xT18IZbpg0xo6AQEeHKuP92zeekXTJUKd0+k0F1RnIg86gBzaV4tER6bUpQIZzET
-         E6Aj3YyeWL/4w==
+        bh=sbbtG/svmz0yZkoEwS+QEl6uI6SK2Ial4jl+8NYu1LA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Vos8ho8ZBYtl4tDKRjKVnFLlrG4eMcLWMlsRfyevV5CUeJGM4sc+REIi4jOtphLAy
+         ZcXhWzgOeax02PeC1EECnKCnLOz61DrKiV6luPpEShHZ/r2zGBzN9kn9SsGPLA2HJ1
+         YJMkAGLscMy0dl1VAO4Xj2n47sWCtEH4M3nD9LlFMGs5zW0S8MORr18v4rWltNauKh
+         K5WcwaRSs8RUL6imNoZ95bRYaWIeFZDFw7KJNciRs6AsZRtyqUV/ONDmLk+GTGySaV
+         tSktkQ7I1hZHf6fGrpFDITqJD6wuQMxEHSq5UzJeRcX2U/lDSjclMTDnimXwk4rjoS
+         87d+8U0hErX2g==
 X-Nifty-SrcIP: [133.32.232.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [RESEND PATCH 0/4] block: clean up Kconfig and Makefile
-Date:   Mon, 27 Sep 2021 22:59:56 +0900
-Message-Id: <20210927140000.866249-1-masahiroy@kernel.org>
+Subject: [RESEND PATCH 1/4] block: remove redundant =y from BLK_CGROUP dependency
+Date:   Mon, 27 Sep 2021 22:59:57 +0900
+Message-Id: <20210927140000.866249-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210927140000.866249-1-masahiroy@kernel.org>
+References: <20210927140000.866249-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+CONFIG_BLK_CGROUP is a boolean option, that is, its value is 'y' or 'n'.
+The comparison to 'y' is redundant.
 
-This is a resend of
-https://lore.kernel.org/linux-block/20210528184435.252924-1-masahiroy@kernel.org/#t
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ block/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-Masahiro Yamada (4):
-  block: remove redundant =y from BLK_CGROUP dependency
-  block: simplify Kconfig files
-  block: move menu "Partition type" to block/partitions/Kconfig
-  block: move CONFIG_BLOCK guard to top Makefile
-
- Makefile                 |  3 ++-
- block/Kconfig            | 28 ++++++++++------------------
- block/Kconfig.iosched    |  4 ----
- block/Makefile           |  2 +-
- block/partitions/Kconfig |  4 ++++
- 5 files changed, 17 insertions(+), 24 deletions(-)
-
+diff --git a/block/Kconfig b/block/Kconfig
+index 8e28ae7718bd..1d83504749e7 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -73,7 +73,7 @@ config BLK_DEV_ZONED
+ 
+ config BLK_DEV_THROTTLING
+ 	bool "Block layer bio throttling support"
+-	depends on BLK_CGROUP=y
++	depends on BLK_CGROUP
+ 	select BLK_CGROUP_RWSTAT
+ 	help
+ 	Block layer bio throttling support. It can be used to limit
+@@ -112,7 +112,7 @@ config BLK_WBT_MQ
+ 
+ config BLK_CGROUP_IOLATENCY
+ 	bool "Enable support for latency based cgroup IO protection"
+-	depends on BLK_CGROUP=y
++	depends on BLK_CGROUP
+ 	help
+ 	Enabling this option enables the .latency interface for IO throttling.
+ 	The IO controller will attempt to maintain average IO latencies below
+@@ -132,7 +132,7 @@ config BLK_CGROUP_FC_APPID
+ 
+ config BLK_CGROUP_IOCOST
+ 	bool "Enable support for cost model based cgroup IO controller"
+-	depends on BLK_CGROUP=y
++	depends on BLK_CGROUP
+ 	select BLK_RQ_IO_DATA_LEN
+ 	select BLK_RQ_ALLOC_TIME
+ 	help
 -- 
 2.30.2
 
