@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0F4841A215
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3752D41A221
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237931AbhI0WDr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
+        id S238061AbhI0WEC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237767AbhI0WDe (ORCPT
+        with ESMTP id S237544AbhI0WDf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:03:34 -0400
+        Mon, 27 Sep 2021 18:03:35 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46B6AC061259;
-        Mon, 27 Sep 2021 15:01:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79010C06125D;
+        Mon, 27 Sep 2021 15:01:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=7R5PYVFPXskQk20vzfFqzumtxD4zBhl8b3RLHCGuP34=; b=u4OTo3hDr0W+U3kO5NDbdLXSvy
-        wN9PcMjyNrp7CnD5AyiT1q1aDYgWDTNv70JFUfkEjJLeHsH5gDmaelxnEnJsx+n1fZG7eKRfTQLC2
-        vev16guU/nh9p+oqdFrMbCLtMN0Ga0sPKsgbcOJArTGT5DzTXNR6iahovyDGW7tUDVE2KcWng+4I7
-        tG9rVmsKxHMRyESFR2rlhH8ZqP7agJh+WrByfti9oEP4v1O66P0KYvoFwwNkBD3OspvlfKe8qNh3G
-        ukRpJ6yrcBuKUhoqachgfXn1KfYE8NNqktQ+A6a15FMWvBCANtnJ5m75FvHisL+zNyQ55DkGpTG6e
-        EIM0V88Q==;
+        bh=08q31EIVp0CLnjZ3JOSG2pLmduRMGbbY0RWG/PagZSQ=; b=dTfOGMG3AUYtr1bbCvG0t/klmk
+        LajkDYnCSmLe5sT2mHlX5un+6JkZTlg6PVmWy4n5/jgMM/1A6QdINqzW+2KuF4kDyJ8nTkrt8z8n0
+        jjusumjxb+KSwZv+kU0wBQHA6Hkv2iykZTStpVHwwFltABaYnNs1hWEIhYff0sMAjxbUs350a55K3
+        JHrs2nbuUBT1jU9cWK+1XZTDN41Hf4nMBTqsRDCdL2otKu/9pw25SXrc2JgTutuxeRBmL442aIUba
+        XEFhwVvAydc/G8adPf7VLVpBDx4OAGF3Weps0t52oIP5WeiDl/FWVvLlY7imcJkluXUwBIZTO7S1v
+        WUzWDZGQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUygR-004TPG-LP; Mon, 27 Sep 2021 22:01:11 +0000
+        id 1mUygR-004TPI-N2; Mon, 27 Sep 2021 22:01:11 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 01/15] z2ram: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 15:00:56 -0700
-Message-Id: <20210927220110.1066271-2-mcgrof@kernel.org>
+Subject: [PATCH v2 02/15] aoe: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 15:00:57 -0700
+Message-Id: <20210927220110.1066271-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220110.1066271-1-mcgrof@kernel.org>
 References: <20210927220110.1066271-1-mcgrof@kernel.org>
@@ -54,39 +54,37 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
-error handling. Only the disk is cleaned up inside
-z2ram_register_disk() as the caller deals with the rest.
+error handling.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/z2ram.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/block/aoe/aoeblk.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/z2ram.c b/drivers/block/z2ram.c
-index 4eef218108c6..ccc52c935faf 100644
---- a/drivers/block/z2ram.c
-+++ b/drivers/block/z2ram.c
-@@ -318,6 +318,7 @@ static const struct blk_mq_ops z2_mq_ops = {
- static int z2ram_register_disk(int minor)
- {
- 	struct gendisk *disk;
-+	int err;
+diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
+index 06b360f7123a..e436b0e8eff5 100644
+--- a/drivers/block/aoe/aoeblk.c
++++ b/drivers/block/aoe/aoeblk.c
+@@ -417,7 +417,9 @@ aoeblk_gdalloc(void *vp)
  
- 	disk = blk_mq_alloc_disk(&tag_set, NULL);
- 	if (IS_ERR(disk))
-@@ -333,8 +334,10 @@ static int z2ram_register_disk(int minor)
- 		sprintf(disk->disk_name, "z2ram");
+ 	spin_unlock_irqrestore(&d->lock, flags);
  
- 	z2ram_gendisk[minor] = disk;
--	add_disk(disk);
--	return 0;
-+	err = add_disk(disk);
+-	device_add_disk(NULL, gd, aoe_attr_groups);
++	err = device_add_disk(NULL, gd, aoe_attr_groups);
 +	if (err)
-+		blk_cleanup_disk(disk);
-+	return err;
- }
++		goto out_disk_cleanup;
+ 	aoedisk_add_debugfs(d);
  
- static int __init z2_init(void)
+ 	spin_lock_irqsave(&d->lock, flags);
+@@ -426,6 +428,8 @@ aoeblk_gdalloc(void *vp)
+ 	spin_unlock_irqrestore(&d->lock, flags);
+ 	return;
+ 
++out_disk_cleanup:
++	blk_cleanup_disk(gd);
+ err_tagset:
+ 	blk_mq_free_tag_set(set);
+ err_mempool:
 -- 
 2.30.2
 
