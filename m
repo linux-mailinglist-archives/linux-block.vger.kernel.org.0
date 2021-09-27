@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B6D41A282
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A1D41A27F
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238348AbhI0WHM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
+        id S238112AbhI0WHK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238261AbhI0WGf (ORCPT
+        with ESMTP id S237886AbhI0WGe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:06:35 -0400
+        Mon, 27 Sep 2021 18:06:34 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C1AC051746;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE14C051744;
         Mon, 27 Sep 2021 15:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=YC09ub7H5zBS0+xaUnAKeTnZGFxVdKsA0MqfDrrsdEA=; b=qXe/9q0VrWzJQ6L2paDwqwlDOz
-        9ymCO7BTLZOnONaIF04YusbGQgSi/HTXHc7CH4L8jQB9OCifwbM/e8/udMQB714Tt2PKNfgc1JxGv
-        nNhmK4Jy1UGl7LOty8p0f126dlU8JOi70lbitnNl7os7wvm2gVE7+FY6PBSph0ZzWp+3hgDALhS5v
-        dRr4ALq5v9A+dsNmHau7/VVWd1NgAmi7OyP0fJMvHeYqcrwnXycfo8WyCshLUgZ09TON4YfPAaH2c
-        +u5HforcmGk1TYHOcC5dEi3oEeGwOMt5VXIe/WiJ+NoX6wzLJom9jjrw9gGganY31wRN4n4Wo8zv+
-        CxGWakbg==;
+        bh=5/KxCfQiey/MtVRClHtspmiQ1YyvZXCUQ0jBAHLWIRA=; b=csNVgJevARakf3YxKu9xt1PTJ5
+        vEXEJVMLaZ2c4SpFQUknh9mXyPk2sLqdl1je5OvqpX5EdtA/HddHtqokNvgVKZnq1YS1VjU3jJ/0n
+        MECfAsrW0LKaMvlVtza5fPWGnlqSDvo/GB+VJHpGSxJlYRKw86LeEOEewxhiDBNTuvhn6hwNmkLw1
+        C1qZnVzFt6rzSK3YY9UTwfiMv5Squn2W+ggVZOlfN2xTBxwEc/k1LAt/ZTMc+jCIkiWqJTlv0JZGD
+        odgmWSql24btfYZO70GIHxM511nTk2cMog9ZyNylt7/n5vxO1xQE0R2vKIGvo9tgDPjhhnmExT7jX
+        Iuir81Fw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUyiF-004VI9-IG; Mon, 27 Sep 2021 22:03:03 +0000
+        id 1mUyiF-004VIE-KH; Mon, 27 Sep 2021 22:03:03 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 05/14] floppy: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 15:02:53 -0700
-Message-Id: <20210927220302.1073499-6-mcgrof@kernel.org>
+Subject: [PATCH v2 06/14] amiflop: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 15:02:54 -0700
+Message-Id: <20210927220302.1073499-7-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220302.1073499-1-mcgrof@kernel.org>
 References: <20210927220302.1073499-1-mcgrof@kernel.org>
@@ -46,30 +46,39 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
-error handling.
+error handling. The caller for fd_alloc_disk() deals with
+the rest of the cleanup like the tag.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/floppy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/block/amiflop.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 3592a6277d0b..0434f28742e7 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -4696,8 +4696,10 @@ static int __init do_floppy_init(void)
+diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
+index 8b1714021498..7da6a7532cde 100644
+--- a/drivers/block/amiflop.c
++++ b/drivers/block/amiflop.c
+@@ -1780,6 +1780,7 @@ static const struct blk_mq_ops amiflop_mq_ops = {
+ static int fd_alloc_disk(int drive, int system)
+ {
+ 	struct gendisk *disk;
++	int err;
  
- 		registered[drive] = true;
+ 	disk = blk_mq_alloc_disk(&unit[drive].tag_set, NULL);
+ 	if (IS_ERR(disk))
+@@ -1798,8 +1799,10 @@ static int fd_alloc_disk(int drive, int system)
+ 	set_capacity(disk, 880 * 2);
  
--		device_add_disk(&floppy_device[drive].dev, disks[drive][0],
--				NULL);
-+		err = device_add_disk(&floppy_device[drive].dev,
-+				      disks[drive][0], NULL);
-+		if (err)
-+			goto out_remove_drives;
- 	}
+ 	unit[drive].gendisk[system] = disk;
+-	add_disk(disk);
+-	return 0;
++	err = add_disk(disk);
++	if (err)
++		blk_cleanup_disk(disk);
++	return err;
+ }
  
- 	return 0;
+ static int fd_alloc_drive(int drive)
 -- 
 2.30.2
 
