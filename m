@@ -2,88 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77D404195FB
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F250419674
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234583AbhI0OLU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 10:11:20 -0400
-Received: from condef-04.nifty.com ([202.248.20.69]:56192 "EHLO
-        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234717AbhI0OLT (ORCPT
+        id S234722AbhI0OeS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 10:34:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40556 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234909AbhI0OeQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 10:11:19 -0400
-Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-04.nifty.com with ESMTP id 18RE1AYs023449
-        for <linux-block@vger.kernel.org>; Mon, 27 Sep 2021 23:01:10 +0900
-Received: from grover.. (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 18RE07G1028280;
-        Mon, 27 Sep 2021 23:00:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07G1028280
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1632751210;
-        bh=zWeVVrMdOBNr2TwWOoBOYkVjaBDcD5y8SZG9+hIZpO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzPo6CiE3OUAdAvhYYiY7Rre3j3t1NjOWn0YHQzpTbEHsHAJKBfB3NfvyzdNhmqD3
-         XumuBqkAg1/V0VxZTtyq1AFcbR59mJKHgww3OvrbPs8WrRRzYvKQYTwm5GR+j11qCE
-         bRc7PRbcLOLj04JGs+Y+ci8VV/KVK1rUjn66B+dZDGOnmbnqSLhXSgC3SgQL0DTKoh
-         RFHwDXwMYmAIc7cKnpc7wZGj4O+E1vQOKnkQLrcR/+P/w1AN378apItyEV9dbG5k1P
-         OVqHXn3d4xiTe+QmXDhdjMjCbdskm6oseCF4v8fa8bG0UCId9U320xg75U4BV88jt6
-         TaV6jwLHLeOoQ==
-X-Nifty-SrcIP: [133.32.232.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [RESEND PATCH 4/4] block: move CONFIG_BLOCK guard to top Makefile
-Date:   Mon, 27 Sep 2021 23:00:00 +0900
-Message-Id: <20210927140000.866249-5-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210927140000.866249-1-masahiroy@kernel.org>
-References: <20210927140000.866249-1-masahiroy@kernel.org>
+        Mon, 27 Sep 2021 10:34:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632753158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RDiXGM7KM67kZstwJFIhcJQ97P5qdvgAwhAEiTRorTg=;
+        b=HUJ3FnH2fdc7iTZb972/38VsXAuxxAejB6ccJl/ak4FSHaKz4tE8KEAX/LHDYD7LPihvD8
+        EqhIuARULb1BCV4l+V36icd4JZvWRye1ChuR9anTrrvoyacr+n7oqXp3DBRNGr5D9vO7LO
+        srcPUY9edsEFW+T2zrKQthj+RWCqGj8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-569-rsH5-72jP0WynmuMYSwomg-1; Mon, 27 Sep 2021 10:32:36 -0400
+X-MC-Unique: rsH5-72jP0WynmuMYSwomg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 164D2835DE2;
+        Mon, 27 Sep 2021 14:32:35 +0000 (UTC)
+Received: from T590 (ovpn-8-37.pek2.redhat.com [10.72.8.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80D5C10023AE;
+        Mon, 27 Sep 2021 14:32:31 +0000 (UTC)
+Date:   Mon, 27 Sep 2021 22:32:26 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 3/4] block: drain file system I/O on del_gendisk
+Message-ID: <YVHV+q5Mwj/mUjU7@T590>
+References: <20210922172222.2453343-1-hch@lst.de>
+ <20210922172222.2453343-4-hch@lst.de>
+ <YUvZi2a0KjxEkiHo@T590>
+ <20210923052705.GA5314@lst.de>
+ <YUwhPy1J8lzHQF77@T590>
+ <20210927120441.GA25223@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210927120441.GA25223@lst.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Every object under block/ depends on CONFIG_BLOCK.
+On Mon, Sep 27, 2021 at 02:04:41PM +0200, Christoph Hellwig wrote:
+> On Thu, Sep 23, 2021 at 02:39:59PM +0800, Ming Lei wrote:
+> > > > After blk_mq_unfreeze_queue() returns, blk_try_enter_queue() will return
+> > > > true, so new FS I/O from opened bdev still won't be blocked, right?
+> > > 
+> > > It won't be blocked by blk_mq_unfreeze_queue, but because the capacity
+> > > is set to 0 it still won't make it to the driver.
+> > 
+> > One bio could be made & checked before set_capacity(0), then is
+> > submitted after blk_mq_unfreeze_queue() returns.
+> > 
+> > blk_mq_freeze_queue_wait() doesn't always imply RCU grace period, for
+> > example, the .q_usage_counter may have been in atomic mode before
+> > calling blk_queue_start_drain() & blk_mq_freeze_queue_wait().
+> 
+> True, but this isn't really a new issue as we never had proper quiesce
+> behavior.  I have a bunch of ideas of how to make this actually solid,
+> but none of them looks like 5.15 material.
 
-Move the guard to the top Makefile since there is no point to
-descend into block/ if CONFIG_BLOCK=n.
+It is new issue since edb0872f44ec ("block: move the bdi from the
+request_queue to the gendisk").
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Previously bdi has longer lifetime than request queue, but now it becomes
+not, then either queue_to_disk() or queue->disk may cause panic.
 
- Makefile       | 3 ++-
- block/Makefile | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 60923c2f41d5..0bcaa9e30fdf 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1115,7 +1115,8 @@ export MODORDER := $(extmod_prefix)modules.order
- export MODULES_NSDEPS := $(extmod_prefix)modules.nsdeps
- 
- ifeq ($(KBUILD_EXTMOD),)
--core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
-+core-y			+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/
-+core-$(CONFIG_BLOCK)	+= block/
- 
- vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, \
- 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
-diff --git a/block/Makefile b/block/Makefile
-index 41aa1ba69c90..74df168729ec 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the kernel block layer
- #
- 
--obj-$(CONFIG_BLOCK) := bdev.o fops.o bio.o elevator.o blk-core.o blk-sysfs.o \
-+obj-y		:= bdev.o fops.o bio.o elevator.o blk-core.o blk-sysfs.o \
- 			blk-flush.o blk-settings.o blk-ioc.o blk-map.o \
- 			blk-exec.o blk-merge.o blk-timeout.o \
- 			blk-lib.o blk-mq.o blk-mq-tag.o blk-stat.o \
--- 
-2.30.2
+Thanks,
+Ming
 
