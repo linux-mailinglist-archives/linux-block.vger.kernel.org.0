@@ -2,105 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D356419C8D
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 19:28:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A59419D16
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 19:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236985AbhI0RaD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 13:30:03 -0400
-Received: from mail-dm3nam07on2075.outbound.protection.outlook.com ([40.107.95.75]:49409
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        id S236550AbhI0Rlu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 13:41:50 -0400
+Received: from mail-bn7nam10on2074.outbound.protection.outlook.com ([40.107.92.74]:6606
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237795AbhI0R1B (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 13:27:01 -0400
+        id S237710AbhI0RlS (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 27 Sep 2021 13:41:18 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2aXOLLNAcU3KjYMs8c9AIP+KNXvUlbeYcN20/8wMB48ypJE7srW70Vde6Q+ZpxLxMAVCJfvr6aIiItFjun5woB+M+GtCaZMYmxUsIy3Fg+Ze2NVFBcnY/iHEgus64jQSup4mXg/c36bSIeMopv1ppwi3DGE4fNuiRAY5C0WqduaFLvtlsdi69lggp3l+oTBxwZCISlsWl4b/xYx/Burxnqm09ausGB+cDU9uZqAHtMy/o46LHVMBOiAwfoZl1osbm4uKqJnhdmomowKnDgX2ZogKAxIhEp/uxKOyKDZ8n3NsJzHB4V+WdaKqdNsi9RHuxG1Dn+wM/WFtnLoGsXQUQ==
+ b=jKD4d1DTFbGi6bOxHUkBNPPkOqMWvvtY+7Orn+5MWxQ/1XQ3Jv6eidt4LcydRFX98aGLzZXkKs+TYHRkZexdsCPydkcAEyl6F6ns8Om1bjgAcaW1jj7rU6pCp4CG/kJOivN5gqNjE/PsDzITp14nvcH2++hq77EKkaNuyOihlqCQ2ZKP8NRj0HNC7lvw0NQqfRikCwTNXDy+PGiAPcVmOfab43zV5X7AVKAM/rNKsvD0UFxls+iGbIVsIuxkbOnz+aBKPlYKkrgRlkpS5X04489LwwzqOXsuuGHTWRw3/vlkdvYIcGeFCgDAyWdr2kK39ZRPdYWf5y7erWax5dMqUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=E7CExuPcP6rxaeV2PFaCrKV32ZwGeNYCugkTCaN4qAI=;
- b=f3Bb9wPgzO0E7rPtHGpR9yldvjm6ilzs8jlcpWFgshPQqpaDdlQUcWXMvjsUKo7y0MLrtyfyAFYRbNy2EosfqQcZYePOYfW1dv4751jxh2/NgaRlFqZZ8J2zzH1ge7UrBFxWvBe2RWxFDXeCScLGPjk2qSlbXmUNfzzF/oqEaiVUM6XeOQ31w6bzRtxiWMOTgizQKfl2eCuN33U3XuTP7eh/3T71/QEFIhNWjzCTJcs0i29x/OEZ4u4GXaw2k5SnNt0lGgoBbXPx6hA8qqQoERj579cyHBUYPoHEhsYfQih9qwJwNip5mQSOXRb0ir/utBE4QDbvvYc9FISDd5cWFw==
+ bh=YdtXbf58qnDgrPVCnkwjcJgBHLvdzmtk6Twqhb72qZc=;
+ b=KaBaN0e9rHFxzK8rDVxl0pXpt4rGlkVFgdlAQ49/BJmtp/zd02oglrzDeanKfxufaZZhaEJTBOsnz8nzjnSKyxrPQgoYAFkjb04aNU3LxN5QF3rTx97r8thwQHVKbmWNVzMTm9uWgqoHwuHf0H8oPUiLuX6NepauJHEuxecHCOiwqpwoO1RIdrDcyzVFfVh3zsdIy9Rgm3E76chJucLp8Le5JL0F6YsDHN+2zFuIlBxjtu0Gb6/JH8wkuq/xLjaq6slbVky8hrKIwMpgeLoGhkJvGBw8mj7ZvXggy5qiOs6GtLlgACMki4Et6wa4+rCbtlOPhB/aTE4GktemQOQdFQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E7CExuPcP6rxaeV2PFaCrKV32ZwGeNYCugkTCaN4qAI=;
- b=XqQpjh6dzfZpWUmqvJv9oBPzNKhFEXyL0Be4Hc8WGWPX5Gs1lbj32VFieNhbF5hznn+OEivUsoQw5sFA4ve96w35+LPUnj4qwMbBnpMb66IpvtO/b4IAe9WWED6/PTMedGIAPBlrYdslzjJm4Y5+Rzis8gPqqIEJSovYDLOcWB/KvnQALygONnk6gyk3n1oNa61G3EnCVrr+thAUwbQdYLpSkQ9jW26ymWyJZFPSrFfl5dgq/+TIs8G6U/PQFZRRis/zPW5inQuydHhNP81rq7XGvDf0mDJ86RohmO4s3CkyGr1bKrojBK3VDO6Ro6sbOQAnF1Yt4EUmjyBxQZMHoA==
-Received: from DM3PR12CA0062.namprd12.prod.outlook.com (2603:10b6:0:56::30) by
- BN9PR12MB5147.namprd12.prod.outlook.com (2603:10b6:408:118::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15; Mon, 27 Sep
- 2021 17:25:16 +0000
-Received: from DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
- (2603:10b6:0:56:cafe::de) by DM3PR12CA0062.outlook.office365.com
- (2603:10b6:0:56::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend
- Transport; Mon, 27 Sep 2021 17:25:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ bh=YdtXbf58qnDgrPVCnkwjcJgBHLvdzmtk6Twqhb72qZc=;
+ b=lbikr1k9ojcwkm9BrF6V+TkrwuEAzA2Dm+ZADu6ZQvbxDA0GYNkOgKV3RT8si2Bpl1xksAQ6vepT77YHlO0Aj91W8mG7S3EYfvgVH3drCQKiXH0ez+syxTADVGZuKRfMKBjMYafMTNnEou2KqUWMfm8srx5/0uEfPiKE4yNAoe1yYVr1D3GXKN/9EG7qv7A4XopDCI8yBVhJIXrP8b1MgFselhwmkxTiKpcd1t/D3Dut/GXhtvk9PjMUxi20YrYAob2rVKpyNGUl7gemFW+DbBISeGtuKVY9bIOq3+98XRPUprjGJXhTIFIlCeAdmCSxEB4UEHp09v3iix7dJa+CNw==
+Received: from DM6PR06CA0073.namprd06.prod.outlook.com (2603:10b6:5:336::6) by
+ MWHPR12MB1549.namprd12.prod.outlook.com (2603:10b6:301:10::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4544.14; Mon, 27 Sep 2021 17:39:38 +0000
+Received: from DM6NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:336:cafe::4) by DM6PR06CA0073.outlook.office365.com
+ (2603:10b6:5:336::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.14 via Frontend
+ Transport; Mon, 27 Sep 2021 17:39:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
  smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT008.mail.protection.outlook.com (10.13.172.85) with Microsoft SMTP
+ 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.32; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.32) by
+ DM6NAM11FT060.mail.protection.outlook.com (10.13.173.63) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4544.13 via Frontend Transport; Mon, 27 Sep 2021 17:25:16 +0000
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 27 Sep
- 2021 17:25:15 +0000
-Received: from [172.27.0.62] (172.20.187.6) by DRHQMAIL107.nvidia.com
+ 15.20.4544.13 via Frontend Transport; Mon, 27 Sep 2021 17:39:37 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 27 Sep
+ 2021 10:39:37 -0700
+Received: from [172.27.0.62] (172.20.187.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 27 Sep
- 2021 17:25:12 +0000
+ 2021 17:39:33 +0000
 Subject: Re: [PATCH 2/2] virtio-blk: set NUMA affinity for a tagset
-To:     Leon Romanovsky <leon@kernel.org>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
 CC:     <mst@redhat.com>, <virtualization@lists.linux-foundation.org>,
-        <kvm@vger.kernel.org>, <stefanha@redhat.com>, <oren@nvidia.com>,
-        <nitzanc@nvidia.com>, <israelr@nvidia.com>, <hch@infradead.org>,
+        <kvm@vger.kernel.org>, <oren@nvidia.com>, <nitzanc@nvidia.com>,
+        <israelr@nvidia.com>, <hch@infradead.org>,
         <linux-block@vger.kernel.org>, <axboe@kernel.dk>
 References: <20210926145518.64164-1-mgurtovoy@nvidia.com>
- <20210926145518.64164-2-mgurtovoy@nvidia.com> <YVGsMsIjD2+aS3eC@unreal>
+ <20210926145518.64164-2-mgurtovoy@nvidia.com>
+ <YVF8RBZSaJs9BScd@stefanha-x1.localdomain>
 From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-Message-ID: <0c155679-e1db-3d1e-2b4e-a0f12ce5950c@nvidia.com>
-Date:   Mon, 27 Sep 2021 20:25:09 +0300
+Message-ID: <21295187-41c4-5fb6-21c3-28004eb7c5d8@nvidia.com>
+Date:   Mon, 27 Sep 2021 20:39:30 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <YVGsMsIjD2+aS3eC@unreal>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <YVF8RBZSaJs9BScd@stefanha-x1.localdomain>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
+X-Originating-IP: [172.20.187.5]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1e10660b-4f83-4d59-c8ec-08d981dbc5a5
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5147:
-X-Microsoft-Antispam-PRVS: <BN9PR12MB5147BB86AE38DB73F98492D3DEA79@BN9PR12MB5147.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: dda8de83-1633-46f6-7916-08d981ddc726
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1549:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1549CAA659524786085E2CB2DEA79@MWHPR12MB1549.namprd12.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vhap4u6sq5IUNFKiX2tK7tHi1XPDCgdOkZLNWiw4hvJHUEO4GveyN3q8CMYCyJudFopP6mu3J+z2/WvKcEDwjVuo0/+GxHsxvalyDUjqh4+L5vqvrSbrWrbvEijj+delsTaxm1unmsxx9LjyYFzbRlR0Oc/RzKGByAV9BelqeAxXc2BdQSHGQIGdmGj8RjmNxvRtXVp0hfOkoHKlznI232XXJJJ6eglatzHHFvQ2e9cotda7y6ejsSQd+Hjl77lSTQw4JTqPGOqSuTGeOt+SiYHDYRcCWGwgffBLOx48UAVHcnQO/GpJZrbnX9p/KIdfH3FQwsvFf27V4tfR/QC8IKaVdnOBeHuqHMF8wLRY1kigr4bSO/yQJC9WEjOpnLsDupR/ikwBMNccfzA0w2RcQhfhJ1SsgpGX/GexgqIhNKJD0Wc1aUqjwugZW3pvbwxDV2d9pVqjuCjYWHqtSKpSKQ2242R2QD/7sx2xfMwq66DYnwDpz069gPLY2SJYqQTUKTLnJhh/l09CUkkttgbD6KM9g0pam2chXepSUg12DTpMXP7yJQLOha0XeQPZ6Hql5MVqux1lFvBnJCyL600wmrufchld28DSNprXmFQj0lmBC9HnVJx7axy0r0yHylY3LofFgt9sCsE6sodXKDWVQx8cOs6APFJGDmX5CzVIrPmQY6w3aIz7FtRXR6EXj42TEs4XH5yEmfxC+k/015d2/3NtaQOfXHVq3gcGz9dl8iM=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(2616005)(16526019)(83380400001)(8676002)(5660300002)(36756003)(47076005)(70586007)(70206006)(6916009)(356005)(8936002)(426003)(36906005)(54906003)(26005)(31696002)(4326008)(16576012)(186003)(6666004)(336012)(316002)(7636003)(508600001)(36860700001)(2906002)(53546011)(86362001)(82310400003)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Iwhc96DqBzBxQOcG8+gNevWLaNyDe40Betsvtky1kEgnultwzG3QmEb6oOza6iKkn/b2DNnm0NBwoYu1zSJff82Mi7cxFQSL+jIcKxWya6J5fZjA78DQThYHRDA1AaEZ33kBP5ox1I2CeR7Gk8W3kxWysbfL4i/eoFhVbcfgLmJlyRAPElbJWPiY9unCZahadRKxJIXGqHZuTQyut3y6dwYAvXMW98P2+10lYjzdSvGeYSgs/jDflpCruf5FnaSFHPUnUfwDLHgC9zn2h83emz2oX4MrKRvmCwabDBqNQPbu2vBSEcGcKjOMpBIgYfqrsWjMJM0047sH3WLLT91HlhQylHHm1Obd5YXEoObH/yLOVRK1VChxTuVBwGQvNOzTWzNQqUlqSpFadPwOrjEusTgzvDAL8dJksO3sDKD/FEkNyuxZn1a6P7Jc66XZh4e+VI8YDxTZh8TUZmk7C6TUL4W+SvH3p/L6y68H6RXNoC6hJubZakyzH6Ge7Bmw5evukDe5H7ZelJLGWkzXVi5NTfzELuvda27/1Kn+NlmF5rgnawYEWINr87EnPJ5ZJTkKHDMtG8zWNXe9OlvBAUjGKnqPyjwf82D1UhJXoSBgHAjOjDU8qdfmjurD8sc6fNIOrht5SxPUPY7KiIuK+xPi1TZrssMGzlhUb74xXF5CRDbD7LSeU9Y+h4tCaBqCY9ZcluQV1TCyTDmj2OXSRDcdrmPAStK29dtmcw8zQCHkvv6kBrzA4vV9fpV/XfvJCeIa5YMz9+xjiTTwC9iG3zZmkhmBhKshbo4hQSkQOCVkjebsqrF99K4aQBEEJnzCp4zR
+X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(16526019)(186003)(70206006)(8936002)(83380400001)(2616005)(6916009)(26005)(47076005)(336012)(86362001)(2906002)(508600001)(426003)(8676002)(82310400003)(31686004)(36756003)(7636003)(53546011)(316002)(356005)(966005)(16576012)(70586007)(5660300002)(31696002)(36860700001)(54906003)(4326008)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2021 17:25:16.2363
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2021 17:39:37.7489
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e10660b-4f83-4d59-c8ec-08d981dbc5a5
+X-MS-Exchange-CrossTenant-Network-Message-Id: dda8de83-1633-46f6-7916-08d981ddc726
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT060.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5147
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1549
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 
-On 9/27/2021 2:34 PM, Leon Romanovsky wrote:
+On 9/27/2021 11:09 AM, Stefan Hajnoczi wrote:
 > On Sun, Sep 26, 2021 at 05:55:18PM +0300, Max Gurtovoy wrote:
 >> To optimize performance, set the affinity of the block device tagset
 >> according to the virtio device affinity.
@@ -120,28 +120,28 @@ On 9/27/2021 2:34 PM, Leon Romanovsky wrote:
 >>   	vblk->tag_set.queue_depth = queue_depth;
 >> -	vblk->tag_set.numa_node = NUMA_NO_NODE;
 >> +	vblk->tag_set.numa_node = virtio_dev_to_node(vdev);
-> I afraid that by doing it, you will increase chances to see OOM, because
-> in NUMA_NO_NODE, MM will try allocate memory in whole system, while in
-> the latter mode only on specific NUMA which can be depleted.
-
-This is a common methodology we use in the block layer and in NVMe 
-subsystem and we don't afraid of the OOM issue you raised.
-
-This is not new and I guess that the kernel MM will (or should) be 
-handling the fallback you raised.
-
-Anyway, if we're doing this in NVMe I don't see a reason to afraid doing 
-it in virtio-blk.
-
-Also, I've send a patch that decrease the size of the memory consumption 
-for virtio-blk few weeks ago so I guess we'll be just fine.
-
->
-> Thanks
->
 >>   	vblk->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
 >>   	vblk->tag_set.cmd_size =
 >>   		sizeof(struct virtblk_req) +
->> -- 
->> 2.18.1
->>
+> I implemented NUMA affinity in the past and could not demonstrate a
+> performance improvement:
+> https://lists.linuxfoundation.org/pipermail/virtualization/2020-June/048248.html
+>
+> The pathological case is when a guest with vNUMA has the virtio-blk-pci
+> device on the "wrong" host NUMA node. Then memory accesses should cross
+> NUMA nodes. Still, it didn't seem to matter.
+
+I think the reason you didn't see any improvement is since you didn't 
+use the right device for the node query. See my patch 1/2.
+
+I can try integrating these patches in my series and fix it.
+
+BTW, we might not see a big improvement because of other bottlenecks but 
+this is known perf optimization we use often in block storage drivers.
+
+
+>
+> Please share your benchmark results. If you haven't collected data yet
+> you could even combine our patches to see if it helps. Thanks!
+>
+> Stefan
